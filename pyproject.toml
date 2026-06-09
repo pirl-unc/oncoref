@@ -109,6 +109,9 @@ ignore = [
     "B905",   # zip() without explicit strict
     "SIM108", # use ternary operator instead of if-else
     "UP007",  # use X | Y for type unions (need Python 3.10+)
+    "RUF001", # ambiguous unicode in code (× / ⁺ / ⁻ are intentional sci notation)
+    "RUF002", # ambiguous unicode in docstrings (same)
+    "RUF003", # ambiguous unicode in comments (same)
 ]
 
 [tool.ruff.lint.per-file-ignores]

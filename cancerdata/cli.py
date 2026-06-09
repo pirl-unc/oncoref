@@ -13,9 +13,8 @@
 """``cancerdata`` command-line interface.
 
 Reference lookups over the bundled tables (cancer-type / TMB / burden) plus the
-data cache surface. The heavy per-cohort expression bundle and its
-``fetch``/``status``/``prune`` subcommands are added in a later milestone; the
-cache-dir resolution here is already the path that bundle will populate.
+data-bundle fetch/cache surface (fetch / status / cache-dir / prune) for the
+heavy per-cohort expression bundle.
 """
 
 from __future__ import annotations
@@ -24,9 +23,17 @@ import argparse
 import json
 import sys
 
-from . import cancer_types, incidence, tmb
-from .cache import bundle_cache_dir
+from . import cancer_types, data_bundle, incidence, tmb
 from .version import __version__
+
+
+def _fmt_bytes(n: int) -> str:
+    size = float(n)
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if size < 1024 or unit == "TB":
+            return f"{size:.0f} {unit}" if unit == "B" else f"{size:.1f} {unit}"
+        size /= 1024
+    return f"{size:.1f} TB"
 
 
 def _cmd_version(args: argparse.Namespace) -> int:
@@ -35,7 +42,45 @@ def _cmd_version(args: argparse.Namespace) -> int:
 
 
 def _cmd_cache_dir(args: argparse.Namespace) -> int:
-    print(bundle_cache_dir())
+    print(data_bundle.cache_dir())
+    return 0
+
+
+def _cmd_fetch(args: argparse.Namespace) -> int:
+    try:
+        if args.force or not data_bundle.is_local():
+            data_bundle.fetch()
+        else:
+            print(f"Already present at {data_bundle.cache_dir()}")
+    except Exception as e:  # network / extract failure
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    return 0
+
+
+def _cmd_status(args: argparse.Namespace) -> int:
+    snap = data_bundle.status()
+    print(f"Data version: {snap['data_version']}")
+    print(f"Cache dir:    {snap['cache_dir']}")
+    print(f"Release URL:  {snap['release_url']}")
+    print(f"All local:    {'yes' if snap['all_local'] else 'no'}")
+    print("-" * 60)
+    for name, item in snap["items"].items():
+        mark = "present" if item["present"] else "missing"
+        print(f"  {name:<48} {mark:>8}  {_fmt_bytes(item['size_bytes']):>9}")
+    return 0
+
+
+def _cmd_prune(args: argparse.Namespace) -> int:
+    deleted = data_bundle.prune_cache(keep_current=not args.include_current, dry_run=not args.yes)
+    if not deleted:
+        print("Nothing to prune.")
+        return 0
+    verb = "Would delete" if not args.yes else "Deleted"
+    for entry in deleted:
+        print(f"{verb} {entry['version']}  ({_fmt_bytes(entry['size_bytes'])})  {entry['path']}")
+    if not args.yes:
+        print("\n(dry run — pass --yes to delete)")
     return 0
 
 
@@ -89,7 +134,7 @@ def _cmd_burden(args: argparse.Namespace) -> int:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="cancerdata",
-        description="Curated cancer reference data: ontology, TMB, incidence/mortality.",
+        description="Curated cancer reference data: ontology, TMB, incidence/mortality, expression.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -97,10 +142,27 @@ def _build_parser() -> argparse.ArgumentParser:
         func=_cmd_version
     )
 
+    # --- data bundle (fetch / cache) ---
     sub.add_parser(
         "cache-dir", help="Print the on-disk cache dir for the downloadable data bundle"
     ).set_defaults(func=_cmd_cache_dir)
 
+    p_fetch = sub.add_parser("fetch", help="Download the per-cohort expression data bundle")
+    p_fetch.add_argument("--force", action="store_true", help="Re-download even if present")
+    p_fetch.set_defaults(func=_cmd_fetch)
+
+    sub.add_parser(
+        "status", help="Report which bundle paths are cached locally (no download)"
+    ).set_defaults(func=_cmd_status)
+
+    p_prune = sub.add_parser("prune", help="Delete stale version-pinned cache dirs")
+    p_prune.add_argument("--yes", action="store_true", help="Actually delete (default: dry run)")
+    p_prune.add_argument(
+        "--include-current", action="store_true", help="Also delete the current version's cache"
+    )
+    p_prune.set_defaults(func=_cmd_prune)
+
+    # --- reference lookups ---
     p_ct = sub.add_parser(
         "cancer-type", help="Resolve a cancer type/alias/name and print its registry info"
     )

@@ -45,6 +45,12 @@ from .cancer_types import (
     tissue_of_origin,
     viral_status,
 )
+from .expression import (
+    available_percentile_cohorts,
+    available_representative_cohorts,
+    cohort_gene_percentiles,
+    representative_cohort_samples,
+)
 from .incidence import (
     burden_category,
     cancer_burden,
@@ -59,6 +65,8 @@ __all__ = [
     "CANCER_TYPE_ALIASES",
     "CANCER_TYPE_NAMES",
     "__version__",
+    "available_percentile_cohorts",
+    "available_representative_cohorts",
     "burden_category",
     # incidence / mortality
     "cancer_burden",
@@ -79,6 +87,8 @@ __all__ = [
     # cohort vocabulary
     "cohort_aggregates",
     "cohort_aggregates_df",
+    # expression (read accessors over the downloadable bundle)
+    "cohort_gene_percentiles",
     "cohort_kind",
     "cohort_registry",
     "cohort_registry_df",
@@ -88,6 +98,7 @@ __all__ = [
     "is_mixture_cohort",
     "known_cohort_ids",
     "mixture_cohort_codes",
+    "representative_cohort_samples",
     "resolve_cancer_type",
     "sarcoma_lineage_codes",
     "tissue_of_origin",

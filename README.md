@@ -13,10 +13,10 @@ analysis) and `tsarina` (personalized target selection). The small curated
 tables ship in the wheel; the heavy per-cohort expression bundle downloads on
 first use from the matching GitHub Release.
 
-> **Status:** early. The first milestone ships the cancer-type ontology, TMB, and
-> incidence/mortality tables plus the lookup/cache CLI. The expression +
-> percentile data and its `fetch`/`status`/`prune` subcommands land in a
-> following milestone.
+> **Status:** early. Ships the cancer-type ontology, TMB, incidence/mortality
+> tables, and the per-cohort expression **percentile** read-accessors over a
+> lazy-downloaded data bundle, plus the full fetch/cache CLI. The within-sample
+> percentile signal lands in a following milestone.
 
 ## Install
 
@@ -35,6 +35,10 @@ cd.cancer_tmb("LUAD_EGFR")                # 6.9  (inherited from LUAD)
 cd.cancer_burden("pancreas", metric="us_mortality_pct")
 cd.burden_category("SARC_OS")             # -> "bone_and_joint"
 cd.cohort_aggregate_members("SARC")       # pan-sarcoma grand union
+
+# Per-cohort expression percentiles (downloads the data bundle on first use):
+cd.available_percentile_cohorts()         # 118 cohorts with per-sample data
+cd.cohort_gene_percentiles("PRAD")        # per-gene p0…p100 vector for the cohort
 ```
 
 ### Domains
@@ -53,7 +57,12 @@ cd.cohort_aggregate_members("SARC")       # pan-sarcoma grand union
 cancerdata cancer-type prostate     # registry info as JSON
 cancerdata tmb LUAD_EGFR            # 6.9
 cancerdata burden pancreas --metric us_mortality_pct
+
+# data bundle (per-cohort expression):
+cancerdata fetch                   # download the ~340 MB bundle
+cancerdata status                  # which bundle paths are cached (no download)
 cancerdata cache-dir               # where the data bundle is cached
+cancerdata prune --yes             # delete stale version caches
 cancerdata version
 ```
 
