@@ -38,7 +38,9 @@ cd.cohort_aggregate_members("SARC")       # pan-sarcoma grand union
 
 # Per-cohort expression percentiles (downloads the data bundle on first use):
 cd.available_percentile_cohorts()         # 118 cohorts with per-sample data
-cd.cohort_gene_percentiles("PRAD")        # per-gene p0…p100 vector for the cohort
+cd.cohort_gene_percentiles("PRAD")        # per-gene p0…p100 vector (within-cohort)
+cd.within_sample_top_fraction("PRAD")     # per-gene frac of samples where it's
+                                          # top-5% expressed (within-sample)
 ```
 
 ### Domains

@@ -40,18 +40,24 @@ from .load_dataset import _BUNDLED_DATA_DIR
 
 _REPRESENTATIVES_DIR = "cancer-reference-expression-representatives"
 _PERCENTILES_DIR = "cancer-reference-expression-percentiles"
+_WITHIN_SAMPLE_DIR = "cancer-reference-expression-within-sample-top5"
 
 
-def _bundle_subdir(name: str) -> Path:
+def _bundle_subdir(name: str, *, auto_fetch: bool = True) -> Path:
     """Locate a bundle shard directory: an in-repo checkout (``cancerdata/data/…``)
-    wins, else the downloaded bundle cache; the bundle is fetched if absent."""
+    wins, else the downloaded bundle cache; the bundle is fetched if absent.
+
+    ``auto_fetch=False`` skips the (potentially 340 MB) download — used for
+    artifacts not yet shipped in any released bundle, where a fetch couldn't
+    provide them anyway; the returned path simply won't exist."""
     in_repo = Path(_BUNDLED_DATA_DIR) / name
     if in_repo.exists():
         return in_repo
     cached = data_bundle.find(name)
     if cached is not None:
         return cached
-    data_bundle.ensure_local()
+    if auto_fetch:
+        data_bundle.ensure_local()
     return data_bundle.cache_dir() / name
 
 
@@ -215,3 +221,51 @@ def cohort_gene_percentiles(cancer_type, *, as_tpm: bool = True) -> pd.DataFrame
     if as_tpm:
         df[bp_cols] = np.expm1(df[bp_cols])
     return df
+
+
+# ---------- within-sample percentile prevalence (signal a) ----------
+
+#: within-sample percentile-rank threshold -> output column in the artifact.
+_WITHIN_SAMPLE_THRESHOLD_COLS = {
+    0.99: "frac_samples_top1pct",
+    0.95: "frac_samples_top5pct",
+    0.90: "frac_samples_top10pct",
+}
+
+
+def _within_sample_root() -> Path:
+    # Not (yet) part of a released bundle, so never trigger a 340 MB fetch.
+    return _bundle_subdir(_WITHIN_SAMPLE_DIR, auto_fetch=False)
+
+
+def available_within_sample_cohorts() -> list[str]:
+    """Cohort codes that ship a within-sample top-fraction shard (sorted)."""
+    return _available_shard_codes(_within_sample_root())
+
+
+def within_sample_top_fraction(cancer_type, *, threshold: float = 0.95) -> pd.DataFrame:
+    """Per-gene fraction of a cohort's samples in which the gene is highly
+    expressed *within that sample* — the "top ~5% expressed gene in this tumor"
+    prevalence (signal a, the producer side of the within-sample signal).
+
+    Returns one row per gene (``Ensembl_Gene_ID`` + ``Symbol``) with the
+    ``frac_samples_top{1,5,10}pct`` column for the requested ``threshold``
+    (0.99 / 0.95 / 0.90) plus ``n_samples``. Raises if the cohort has no
+    within-sample shard — that table is built offline from per-sample matrices
+    (see ``scripts/generate_within_sample_top5.py``) and shipped in the bundle.
+    """
+    col = _WITHIN_SAMPLE_THRESHOLD_COLS.get(threshold)
+    if col is None:
+        raise ValueError(f"threshold must be one of {sorted(_WITHIN_SAMPLE_THRESHOLD_COLS)}")
+    code = resolve_cancer_type(cancer_type)
+    shard = _within_sample_root() / f"{code}.parquet"
+    if not shard.exists():
+        raise ValueError(
+            f"no within-sample top-fraction vector for {code!r} — only cohorts "
+            f"with per-sample data ship one; see available_within_sample_cohorts()."
+        )
+    df = pd.read_parquet(shard)
+    keep = ["Ensembl_Gene_ID", "Symbol", col]
+    if "n_samples" in df.columns:
+        keep.append("n_samples")
+    return df[keep]

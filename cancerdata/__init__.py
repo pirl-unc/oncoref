@@ -48,8 +48,10 @@ from .cancer_types import (
 from .expression import (
     available_percentile_cohorts,
     available_representative_cohorts,
+    available_within_sample_cohorts,
     cohort_gene_percentiles,
     representative_cohort_samples,
+    within_sample_top_fraction,
 )
 from .incidence import (
     burden_category,
@@ -67,6 +69,7 @@ __all__ = [
     "__version__",
     "available_percentile_cohorts",
     "available_representative_cohorts",
+    "available_within_sample_cohorts",
     "burden_category",
     # incidence / mortality
     "cancer_burden",
@@ -103,4 +106,5 @@ __all__ = [
     "sarcoma_lineage_codes",
     "tissue_of_origin",
     "viral_status",
+    "within_sample_top_fraction",
 ]
