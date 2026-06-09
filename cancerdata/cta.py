@@ -21,9 +21,9 @@ restriction columns and filter flags.
 
 The MS-evidence restriction tiers and peptide/MHC presentation that build on top
 of this list are the target-selection layer's domain and are intentionally NOT
-here. ``restriction_confidence`` in the bundled table is currently the seed value
-(HPA + a small MS contribution); it is recomputed HPA-only once the regeneration
-pipeline (HPA fetch + restriction logic) lands.
+here. ``restriction`` and ``restriction_confidence`` in the bundled table are the
+**HPA-only** synthesis (protein + RNA modalities; see :func:`synthesize_restriction`)
+— no MS contribution — so the values match the data cancerdata owns.
 """
 
 from __future__ import annotations
@@ -54,6 +54,55 @@ NON_CTA_EXCLUDED_GENE_IDS: frozenset[str] = frozenset(
 
 _PASSES_FILTERS_COLUMN = "passes_filters"
 _LEGACY_FILTERED_COLUMN = "filtered"
+
+
+def synthesize_restriction(row) -> tuple[str, str]:
+    """HPA-only tissue restriction + confidence for a CTA row.
+
+    Best tissue modality (protein > RNA); ``restriction_confidence`` is HIGH /
+    MODERATE / LOW / NO_DATA from per-modality agreement and HPA reliability.
+    This is the **HPA-only** synthesis — the MS-evidence contribution that the
+    target-selection layer adds is intentionally excluded, so the value's
+    provenance matches the data cancerdata owns.
+    """
+    protein_r = str(row.get("protein_restriction", "") or "")
+    protein_rel = str(row.get("protein_reliability", "") or "")
+    rna_r = str(row.get("rna_restriction", "") or "")
+    rna_level = str(row.get("rna_restriction_level", "") or "")
+
+    protein_has_data = bool(protein_r) and protein_r != "NO_DATA"
+    rna_has_data = bool(rna_r) and rna_r != "NO_DATA"
+    if protein_has_data:
+        tissue = protein_r
+    elif rna_has_data:
+        tissue = rna_r
+    else:
+        tissue = "NO_DATA"
+
+    score = 0.0
+    sources = 0
+    if protein_has_data:
+        sources += 1
+        score += 1.0
+        if protein_rel in ("Enhanced", "Supported"):
+            score += 0.5
+    if rna_has_data:
+        sources += 1
+        rna_agrees = rna_r == tissue or (rna_r == "REPRODUCTIVE" and protein_has_data)
+        if rna_agrees:
+            score += 1.0
+            if rna_level == "STRICT":
+                score += 0.5
+
+    if sources == 0:
+        confidence = "NO_DATA"
+    elif score / sources >= 1.2:
+        confidence = "HIGH"
+    elif score / sources >= 0.8:
+        confidence = "MODERATE"
+    else:
+        confidence = "LOW"
+    return tissue, confidence
 
 
 @lru_cache(maxsize=1)

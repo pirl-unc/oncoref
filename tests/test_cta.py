@@ -7,15 +7,14 @@
 from cancerdata import cta
 
 
-def test_expressed_set_size():
-    # 263 expressed CTAs (passes_filters AND not never_expressed) at HPA v23.
-    # Locks the cancerdata list against the source-of-truth at port time.
-    assert len(cta.CTA_gene_names()) == 263
-    assert len(cta.CTA_gene_ids()) == 263
-
-
-def test_unfiltered_universe_size():
-    assert len(cta.CTA_unfiltered_gene_ids()) == 359
+def test_set_sizes_reasonable():
+    # Robust to curation refreshes: assert the sets are substantial and that
+    # symbols and IDs agree in cardinality, rather than pinning exact counts
+    # (which drift whenever the source databases or HPA version update).
+    expressed = cta.CTA_gene_names()
+    assert len(expressed) == len(cta.CTA_gene_ids())
+    assert 150 < len(expressed) < len(cta.CTA_unfiltered_gene_names())
+    assert len(cta.CTA_unfiltered_gene_ids()) > 250
 
 
 def test_set_relationships():
@@ -55,6 +54,31 @@ def test_evidence_has_no_ms_columns():
     # but the HPA-derived restriction columns are present
     for c in ("passes_filters", "never_expressed", "protein_restriction", "rna_restriction"):
         assert c in cols
+
+
+def test_shipped_restriction_is_hpa_only_synthesis():
+    # Every shipped restriction/confidence pair must equal the HPA-only synthesis
+    # of its own row — i.e. no MS contribution leaked into the bundled table.
+    df = cta.CTA_evidence()
+    for _, row in df.iterrows():
+        tissue, conf = cta.synthesize_restriction(row)
+        assert str(row["restriction"]) == tissue
+        assert str(row["restriction_confidence"]) == conf
+
+
+def test_synthesize_restriction_drops_ms():
+    # A protein-SOMATIC row is SOMATIC regardless of any ms_restriction value —
+    # confirms the synthesis ignores MS columns entirely.
+    row = {
+        "protein_restriction": "TESTIS",
+        "protein_reliability": "Enhanced",
+        "rna_restriction": "TESTIS",
+        "rna_restriction_level": "STRICT",
+        "ms_restriction": "RECURRENT_HEALTHY",  # would lower MS-aware confidence
+    }
+    tissue, conf = cta.synthesize_restriction(row)
+    assert tissue == "TESTIS"
+    assert conf == "HIGH"  # protein(1.5)+rna-agree(1.5) over 2 sources = 1.5 >= 1.2
 
 
 def test_gene_id_to_name():

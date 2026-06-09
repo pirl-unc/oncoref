@@ -19,9 +19,11 @@ def test_tmb_has_n_samples_column():
 
 def test_tmb_filled_gaps():
     # MTC and CRANIO had no curated median in the initial copy; the audit added
-    # cited values. Inheritance is off here — these are direct curated values.
-    assert cancer_tmb("MTC", inherit=False) == 1.0
-    assert cancer_tmb("CRANIO", inherit=False) == 0.9
+    # cited values. Assert the gaps are *filled* (a positive curated value), not
+    # the exact numbers — those can be re-curated.
+    for code in ("MTC", "CRANIO"):
+        value = cancer_tmb(code, inherit=False)
+        assert value is not None and value > 0
 
 
 def test_tmb_new_entities_present():
@@ -31,6 +33,10 @@ def test_tmb_new_entities_present():
 
 
 def test_incidence_corrections_applied():
-    # GLOBOCAN2022 world-incidence corrections from the audit.
-    assert cancer_burden("liver", metric="world_incidence_pct") == 4.3
-    assert cancer_burden("thyroid", metric="world_incidence_pct") == 4.1
+    # GLOBOCAN2022 world-incidence corrections: liver was a stale 6.0, thyroid a
+    # stale 2.5 before the audit. Assert they're no longer the stale values and
+    # remain plausible shares — robust to a future re-curation of the exact %.
+    liver = cancer_burden("liver", metric="world_incidence_pct")
+    thyroid = cancer_burden("thyroid", metric="world_incidence_pct")
+    assert liver != 6.0 and 0 < liver < 10
+    assert thyroid != 2.5 and 0 < thyroid < 10

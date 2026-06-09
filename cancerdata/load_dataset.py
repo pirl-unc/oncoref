@@ -26,6 +26,8 @@ both, :func:`cancerdata.data_bundle.ensure_local` triggers a one-time download.
 
 from __future__ import annotations
 
+import contextlib
+import warnings
 from pathlib import Path
 
 import pandas as pd
@@ -121,15 +123,29 @@ def _load_shard_directory(shard_dir: Path) -> pd.DataFrame:
     try:
         if cache_file.exists() and sig_file.exists() and sig_file.read_text() == sig:
             return pd.read_parquet(cache_file)
-    except Exception:
-        pass  # any cache-read problem -> rebuild from the authoritative CSVs
+    except Exception as e:
+        # Corrupt/unreadable cache: self-heal by removing it (so it doesn't fail
+        # every run) and surface a warning, then rebuild from the authoritative
+        # CSVs below.
+        warnings.warn(
+            f"cancerdata: rebuilding unreadable shard cache {cache_file.name}: {e}",
+            stacklevel=2,
+        )
+        for stale in (cache_file, sig_file):
+            with contextlib.suppress(OSError):
+                stale.unlink()
     df = pd.concat([pd.read_csv(str(p), low_memory=False) for p in paths], ignore_index=True)
     try:
         cache_dir.mkdir(parents=True, exist_ok=True)
         df.to_parquet(cache_file, index=False)
         sig_file.write_text(sig)
-    except Exception:
-        pass  # caching is best-effort; never fail the load on a write error
+    except Exception as e:
+        # Caching is best-effort — a write failure (disk full, read-only FS)
+        # must never fail the load, but make it visible.
+        warnings.warn(
+            f"cancerdata: could not write shard cache {cache_file.name}: {e}",
+            stacklevel=2,
+        )
     return df
 
 

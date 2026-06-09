@@ -13,7 +13,7 @@ authors = [
     {name = "Alex Rubinsteyn", email = "alex.rubinsteyn@unc.edu"}
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
