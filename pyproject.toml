@@ -1,0 +1,129 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cancerdata"
+dynamic = ["version"]
+description = "Curated cancer reference data: ontology, TMB, incidence/mortality, and expression"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+    {name = "Alex Rubinsteyn", email = "alex.rubinsteyn@unc.edu"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "pandas",
+    "numpy",
+    "pyarrow",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[project.scripts]
+cancerdata = "cancerdata.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/pirl-unc/cancerdata"
+Repository = "https://github.com/pirl-unc/cancerdata"
+
+[tool.setuptools.dynamic]
+version = {attr = "cancerdata.version.__version__"}
+
+[tool.setuptools]
+# Make the package-data list authoritative (see pirlygenes #5.3.0 wheel-bloat
+# regression): without this, VCS auto-discovery ships every git-tracked file
+# and ignores the exclude rules below.
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["cancerdata*"]
+
+[tool.setuptools.package-data]
+# Small curated tables ship in the wheel. The heavy per-cohort expression
+# bundle (added in a later milestone) downloads on first access — never bundled.
+cancerdata = [
+    "data/*.csv",
+    "data/*.csv.gz",
+    "data/*.yaml",
+]
+
+[tool.setuptools.exclude-package-data]
+cancerdata = [
+    "data/cancer-reference-expression/*",
+    "data/cancer-reference-expression-percentiles/*",
+    "data/cancer-reference-expression-representatives/*",
+    "data/cancer-reference-expression-within-sample-top5/*",
+    "data/pan-cancer-expression.csv",
+    "data/hpa-cell-type-expression.csv",
+]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+src = ["cancerdata", "tests"]
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    ".eggs",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "SIM",    # flake8-simplify
+    "RUF",    # Ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "B008",   # do not perform function calls in argument defaults
+    "B905",   # zip() without explicit strict
+    "SIM108", # use ternary operator instead of if-else
+    "UP007",  # use X | Y for type unions (need Python 3.10+)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011", "RUF012"]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cancerdata"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["cancerdata"]
+omit = ["cancerdata/version.py"]

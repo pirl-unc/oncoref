@@ -1,0 +1,101 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+import pytest
+
+import cancerdata as cd
+from cancerdata import cancer_types
+
+
+def test_resolve_common_name_alias():
+    assert cancer_types.resolve_cancer_type("prostate") == "PRAD"
+    assert cancer_types.resolve_cancer_type("melanoma") == "SKCM"
+
+
+def test_resolve_canonical_code_passthrough():
+    assert cancer_types.resolve_cancer_type("PRAD") == "PRAD"
+
+
+def test_resolve_renamed_code():
+    # Pre-rename codes resolve to the current canonical code.
+    assert cancer_types.resolve_cancer_type("OS") == "SARC_OS"
+    assert cancer_types.resolve_cancer_type("PANNET") == "NET_PANCREAS"
+
+
+def test_resolve_display_name_case_insensitive():
+    name = cd.CANCER_TYPE_NAMES["PRAD"]
+    assert cancer_types.resolve_cancer_type(name.lower()) == "PRAD"
+
+
+def test_resolve_none_passthrough():
+    assert cancer_types.resolve_cancer_type(None) is None
+
+
+def test_resolve_unknown_raises_strict():
+    with pytest.raises(ValueError):
+        cancer_types.resolve_cancer_type("not_a_real_cancer")
+
+
+def test_resolve_unknown_nonstrict_returns_none():
+    assert cancer_types.resolve_cancer_type("not_a_real_cancer", strict=False) is None
+
+
+def test_canonical_cancer_code_is_pure():
+    assert cancer_types.canonical_cancer_code("MID_NET") == "NET_MIDGUT"
+    assert cancer_types.canonical_cancer_code("PRAD") == "PRAD"
+    assert cancer_types.canonical_cancer_code("anything_else") == "anything_else"
+
+
+def test_registry_has_core_columns():
+    df = cancer_types.cancer_type_registry()
+    for col in ("code", "name", "family", "primary_tissue", "parent_code"):
+        assert col in df.columns
+    assert "PRAD" in set(df["code"])
+
+
+def test_cancer_type_info_assembles_derived_fields():
+    info = cancer_types.cancer_type_info("prostate")
+    assert info["code"] == "PRAD"
+    assert info["name"]
+    # derived fields pulled from the TMB + burden tables (cycle-safe lazy import)
+    assert "burden_category" in info
+    assert "tmb" in info
+    assert info["burden_category"] == "prostate"
+
+
+def test_cancer_type_info_none_passthrough():
+    assert cancer_types.cancer_type_info(None) is None
+
+
+def test_synonyms_roundtrip():
+    syns = cancer_types.cancer_type_synonyms("PRAD")
+    assert "prostate" in syns
+    assert "PRAD" not in syns  # the code itself is excluded
+
+
+def test_families_nonempty():
+    fams = cancer_types.cancer_type_families()
+    assert fams
+    assert all(isinstance(v, str) and v for v in fams.values())
+
+
+def test_cohort_aggregates_sarc_grand_union():
+    members = cancer_types.cohort_aggregate_members("SARC")
+    assert members
+    assert "SARC" not in members  # no self-membership
+
+
+def test_cohort_registry_is_validation_authority():
+    ids = cancer_types.known_cohort_ids()
+    assert ids
+    assert isinstance(ids, frozenset)
+
+
+def test_clear_caches_allows_reload(monkeypatch):
+    # The names view caches the registry; clearing forces a re-read.
+    assert "PRAD" in cd.CANCER_TYPE_NAMES
+    cancer_types._clear_caches()
+    assert "PRAD" in cd.CANCER_TYPE_NAMES

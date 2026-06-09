@@ -1,0 +1,48 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+import json
+
+from cancerdata import cli
+
+
+def test_version(capsys):
+    assert cli.main(["version"]) == 0
+    assert "cancerdata v" in capsys.readouterr().out
+
+
+def test_cancer_type_prints_json(capsys):
+    assert cli.main(["cancer-type", "prostate"]) == 0
+    info = json.loads(capsys.readouterr().out)
+    assert info["code"] == "PRAD"
+
+
+def test_cancer_type_unknown_errors(capsys):
+    assert cli.main(["cancer-type", "not_a_real_cancer"]) == 1
+    assert "Error" in capsys.readouterr().err
+
+
+def test_tmb_single_code(capsys):
+    assert cli.main(["tmb", "melanoma"]) == 0
+    out = capsys.readouterr().out.strip()
+    assert float(out) > 0
+
+
+def test_tmb_full_map(capsys):
+    assert cli.main(["tmb"]) == 0
+    assert "\t" in capsys.readouterr().out
+
+
+def test_burden_full_map(capsys):
+    assert cli.main(["burden", "--metric", "us_mortality_pct"]) == 0
+    assert "\t" in capsys.readouterr().out
+
+
+def test_cache_dir_respects_env(capsys, monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    assert cli.main(["cache-dir"]) == 0
+    out = capsys.readouterr().out.strip()
+    assert str(tmp_path) in out

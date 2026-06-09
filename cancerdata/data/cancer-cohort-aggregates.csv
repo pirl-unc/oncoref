@@ -1,0 +1,10 @@
+aggregate_code,member_code,basis
+SARC_RMS,SARC_RMS_ERMS,histology rollup (rhabdomyosarcoma subtypes)
+SARC_RMS,SARC_RMS_ARMS,histology rollup (rhabdomyosarcoma subtypes)
+SARC_RMS,SARC_RMS_PRMS,histology rollup (rhabdomyosarcoma subtypes)
+SARC_RMS,SARC_RMS_SSRMS,histology rollup (rhabdomyosarcoma subtypes)
+SARC_LPS,SARC_DDLPS,histology rollup (liposarcoma subtypes)
+SARC_LPS,SARC_WDLPS,histology rollup (liposarcoma subtypes)
+SARC_LPS,SARC_MYXLPS,histology rollup (liposarcoma subtypes)
+SARC_LPS,SARC_PLEOLPS,histology rollup (liposarcoma subtypes)
+SARC_LPS,SARC_LPS_UNSPEC,histology rollup (liposarcoma subtypes)

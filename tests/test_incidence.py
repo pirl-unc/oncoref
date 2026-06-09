@@ -1,0 +1,49 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+import pytest
+
+from cancerdata import incidence
+
+
+def test_burden_map_nonempty_floats():
+    mapping = incidence.cancer_burden()
+    assert mapping
+    assert all(isinstance(v, float) for v in mapping.values())
+
+
+def test_burden_metric_validation():
+    with pytest.raises(ValueError):
+        incidence.cancer_burden(metric="not_a_metric")
+
+
+def test_burden_all_metrics_resolve():
+    for metric in incidence._BURDEN_METRICS:
+        mapping = incidence.cancer_burden(metric=metric)
+        assert mapping
+
+
+def test_burden_category_from_primary_tissue():
+    assert incidence.burden_category("PRAD") == "prostate"
+    assert incidence.burden_category("LUAD") == "lung"
+
+
+def test_burden_category_sarcoma_bone_vs_soft():
+    # Sarcoma family splits on primary_tissue: bone vs soft tissue.
+    assert incidence.burden_category("SARC_OS") == "bone_and_joint"
+    assert incidence.burden_category("SARC") == "soft_tissue_sarcoma"
+
+
+def test_burden_category_override_table():
+    # cancer-code-burden-map.csv carries the true ontology exceptions.
+    overrides = incidence.cancer_code_burden_map()
+    assert overrides
+    for code, expected in overrides.items():
+        assert incidence.burden_category(code) == expected
+
+
+def test_burden_category_unknown_returns_none():
+    assert incidence.burden_category("not_a_real_cancer") is None
