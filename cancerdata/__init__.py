@@ -17,6 +17,7 @@ Bottom-of-stack: depends only on pandas/numpy/pyarrow, never on the analysis
 or target-selection libraries that consume it.
 """
 
+from .apd1 import cancer_apd1_response, cancer_apd1_response_df
 from .cancer_types import (
     CANCER_TYPE_ALIASES,
     CANCER_TYPE_NAMES,
@@ -60,6 +61,9 @@ __all__ = [
     "CANCER_TYPE_NAMES",
     "__version__",
     "burden_category",
+    # anti-PD-1 response
+    "cancer_apd1_response",
+    "cancer_apd1_response_df",
     # incidence / mortality
     "cancer_burden",
     "cancer_burden_df",
