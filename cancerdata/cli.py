@@ -23,7 +23,7 @@ import argparse
 import json
 import sys
 
-from . import apd1, cancer_types, cta, data_bundle, incidence, tmb
+from . import apd1, cancer_types, cta, data_bundle, incidence, reference_data, tmb
 from .version import __version__
 
 
@@ -162,6 +162,44 @@ def _cmd_plot(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_sources(args: argparse.Namespace) -> int:
+    if args.action == "list" or args.action == "status":
+        rows = reference_data.status()
+        print(f"{'Source':<20} {'Cached':<8} {'Version':<10} {'Size':>9}  Description")
+        print("-" * 92)
+        for r in rows:
+            cached = "yes" if r["cached"] else "no"
+            ver = r["cached_version"] or f"({r['default_version']})"
+            print(
+                f"{r['name']:<20} {cached:<8} {ver:<10} {_fmt_bytes(r['bytes']):>9}  {r['description']}"
+            )
+        print(f"\nCache directory: {reference_data.cache_dir()}")
+        return 0
+    if args.action == "fetch":
+        names = [args.name] if args.name else list(reference_data.REFERENCE_SOURCES)
+        failures = []
+        for name in names:
+            try:
+                path = reference_data.download(name, force=args.force)
+            except reference_data.ReferenceDataError as e:
+                print(f"Error: {name}: {e}", file=sys.stderr)
+                failures.append(name)
+                continue
+            print(f"Ready: {name} -> {path}")
+        return 1 if failures else 0
+    if args.action == "path":
+        if not args.name:
+            print("Error: 'sources path' requires a source name", file=sys.stderr)
+            return 1
+        try:
+            print(reference_data.ensure(args.name))
+        except reference_data.ReferenceDataError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
+        return 0
+    return 1
+
+
 def _cmd_burden(args: argparse.Namespace) -> int:
     try:
         if args.category is None:
@@ -262,6 +300,18 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Which share to report (default: us_incidence_pct)",
     )
     p_burden.set_defaults(func=_cmd_burden)
+
+    p_sources = sub.add_parser(
+        "sources", help="Manage HPA normal-tissue reference sources (RNA / IHC / single-cell)"
+    )
+    p_sources.add_argument(
+        "action",
+        choices=["list", "status", "fetch", "path"],
+        help="list/status (show cache state), fetch (download), path (print local path)",
+    )
+    p_sources.add_argument("name", nargs="?", default=None, help="Source name (omit to fetch all)")
+    p_sources.add_argument("--force", action="store_true", help="Re-download even if cached")
+    p_sources.set_defaults(func=_cmd_sources)
 
     return parser
 

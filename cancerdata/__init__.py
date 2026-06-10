@@ -67,6 +67,14 @@ from .expression import (
     representative_cohort_samples,
     within_sample_top_fraction,
 )
+from .hpa import (
+    gene_cell_type_ntpm,
+    gene_protein_tissues,
+    gene_tissue_ntpm,
+    hpa_normal_tissue,
+    hpa_rna_consensus,
+    hpa_single_cell,
+)
 from .incidence import (
     burden_category,
     cancer_burden,
@@ -127,6 +135,13 @@ __all__ = [
     "family_display_name",
     "format_cancer_code_label",
     "fusion_status",
+    "gene_cell_type_ntpm",
+    "gene_protein_tissues",
+    "gene_tissue_ntpm",
+    "hpa_normal_tissue",
+    # HPA normal-tissue reference data
+    "hpa_rna_consensus",
+    "hpa_single_cell",
     "is_mixture_cohort",
     "known_cohort_ids",
     "mixture_cohort_codes",

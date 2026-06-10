@@ -1,0 +1,84 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Loaders over the Human Protein Atlas normal-tissue reference data.
+
+These fetch (once, cached) and parse the HPA tables registered in
+:mod:`cancerdata.reference_data`:
+
+- ``hpa_rna_consensus`` — per-tissue RNA nTPM (``Gene``, ``Gene name``,
+  ``Tissue``, ``nTPM``).
+- ``hpa_normal_tissue`` — IHC protein detection (``Gene``, ``Gene name``,
+  ``Tissue``, ``Cell type``, ``Level``, ``Reliability``).
+- ``hpa_single_cell`` — single-cell-type RNA nTPM (``Gene``, ``Gene name``,
+  ``Cell type``, ``nTPM``).
+
+This is the normal-tissue expression evidence behind the cancer-testis-antigen
+tissue-restriction definition and protein-level / single-cell comparisons.
+"""
+
+from __future__ import annotations
+
+from functools import lru_cache
+
+import pandas as pd
+
+from . import reference_data
+
+
+@lru_cache(maxsize=1)
+def hpa_rna_consensus() -> pd.DataFrame:
+    """HPA RNA consensus per-tissue nTPM (downloads HPA v23 on first use)."""
+    return pd.read_csv(reference_data.ensure("hpa_rna_consensus"), sep="\t")
+
+
+@lru_cache(maxsize=1)
+def hpa_normal_tissue() -> pd.DataFrame:
+    """HPA IHC protein detection per tissue/cell type (downloads on first use)."""
+    return pd.read_csv(reference_data.ensure("hpa_normal_tissue"), sep="\t")
+
+
+@lru_cache(maxsize=1)
+def hpa_single_cell() -> pd.DataFrame:
+    """HPA single-cell-type RNA nTPM (downloads on first use)."""
+    return pd.read_csv(reference_data.ensure("hpa_single_cell"), sep="\t")
+
+
+def _strip_version(gene_id: str) -> str:
+    return str(gene_id).split(".")[0]
+
+
+def gene_tissue_ntpm(gene_id: str) -> dict[str, float]:
+    """``{tissue (lowercased): nTPM}`` of normal RNA expression for one gene
+    (unversioned Ensembl ID)."""
+    gid = _strip_version(gene_id)
+    df = hpa_rna_consensus()
+    sub = df[df["Gene"].astype(str).map(_strip_version) == gid]
+    return {str(t).strip().lower(): float(v) for t, v in zip(sub["Tissue"], sub["nTPM"])}
+
+
+def gene_cell_type_ntpm(gene_id: str) -> dict[str, float]:
+    """``{cell_type (lowercased): nTPM}`` of single-cell RNA for one gene."""
+    gid = _strip_version(gene_id)
+    df = hpa_single_cell()
+    sub = df[df["Gene"].astype(str).map(_strip_version) == gid]
+    return {str(t).strip().lower(): float(v) for t, v in zip(sub["Cell type"], sub["nTPM"])}
+
+
+def gene_protein_tissues(gene_id: str, *, levels=("Low", "Medium", "High")) -> set[str]:
+    """Tissues (lowercased) where the gene has detected IHC protein at one of
+    ``levels`` (default Low/Medium/High)."""
+    gid = _strip_version(gene_id)
+    df = hpa_normal_tissue()
+    sub = df[df["Gene"].astype(str).map(_strip_version) == gid]
+    sub = sub[sub["Level"].astype(str).isin(levels)]
+    return {str(t).strip().lower() for t in sub["Tissue"]}
