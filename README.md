@@ -60,6 +60,10 @@ cd.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 - **Cancer-testis antigens** — `CTA_gene_names`/`CTA_gene_ids`, `CTA_evidence`,
   `synthesize_restriction` (HPA-only tissue-restriction; MS evidence stays in the
   target-selection layer).
+- **HPA normal tissue** — `hpa_rna_consensus`, `hpa_normal_tissue` (IHC),
+  `hpa_single_cell`, and per-gene lookups (`gene_tissue_ntpm`,
+  `gene_protein_tissues`, `gene_cell_type_ntpm`) over HPA v23, fetched on demand
+  (`cancerdata sources fetch`).
 - **Plots** (`pip install cancerdata[plots]`) — `cancerdata.plots.apd1_vs_tmb`,
   `apd1_orr_bars`, `incidence_vs_mortality`.
 
