@@ -109,6 +109,50 @@ def test_sum_proteoform_tpm_matches_version_suffixed_ids():
     assert out.iloc[0]["s1"] == 8.0
 
 
+def test_sum_proteoform_tpm_preserves_nan_for_unmeasured():
+    # The multi-cohort outer-merge case: a gene absent from a cohort is NaN, not
+    # measured-zero. NaN must survive summation (min_count=1) for both ungrouped
+    # pass-throughs and all-NaN groups; a present member still sums over a NaN
+    # sibling.
+    import numpy as np
+
+    df = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [
+                "ENSG00000185686",  # PRAME, ungrouped
+                "ENSG00000268009",  # SSX4
+                "ENSG00000269791",  # SSX4B
+            ],
+            "Symbol": ["PRAME", "SSX4", "SSX4B"],
+            "s1": [100.0, 3.0, 5.0],
+            "s2": [np.nan, np.nan, 2.0],  # cohort 2: PRAME & SSX4 not measured
+        }
+    )
+    out = sum_proteoform_tpm(df, {"SSX4/SSX4B": ("ENSG00000268009", "ENSG00000269791")}).set_index(
+        "Symbol"
+    )
+    # Ungrouped, unmeasured -> stays NaN (not 0.0).
+    assert pd.isna(out.loc["PRAME", "s2"])
+    # Group with one present member -> that member's value (NaN sibling skipped).
+    assert out.loc["SSX4/SSX4B", "s2"] == 2.0
+    assert out.loc["SSX4/SSX4B", "s1"] == 8.0
+
+
+def test_sum_proteoform_tpm_all_nan_group_stays_nan():
+    import numpy as np
+
+    df = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000268009", "ENSG00000269791"],
+            "Symbol": ["SSX4", "SSX4B"],
+            "s1": [np.nan, np.nan],
+        }
+    )
+    out = sum_proteoform_tpm(df, {"SSX4/SSX4B": ("ENSG00000268009", "ENSG00000269791")})
+    assert len(out) == 1
+    assert pd.isna(out.iloc[0]["s1"])
+
+
 @pytest.fixture
 def representatives_cache(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))

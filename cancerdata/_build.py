@@ -61,6 +61,17 @@ def sum_proteoform_tpm(
     are matched version-insensitively. The grouped row carries the group label as
     both ``Ensembl_Gene_ID`` and ``Symbol``; ungrouped rows keep their originals.
     First-appearance row order is preserved.
+
+    Summation uses ``min_count=1`` so a missing measurement stays missing: a cell
+    that is all-NaN (e.g. a gene absent from a cohort after an outer-merge across
+    cohorts) remains NaN rather than collapsing to 0.0 — "not measured" must not
+    silently become "measured zero". Within a group, a present member still sums
+    even when a sibling is NaN.
+
+    Note: matching is best-effort by gene ID. If the frame's IDs are on a
+    different Ensembl basis than the registry, unmatched members simply pass
+    through ungrouped (no error) — the build-script anchor check guards the
+    registry side; align the bases if a known group fails to collapse.
     """
     cols = list(sample_cols) if sample_cols is not None else sample_columns(df)
     work = df.copy()
@@ -77,11 +88,10 @@ def sum_proteoform_tpm(
     work["_out_id"] = label.where(in_group, work["Ensembl_Gene_ID"].astype(str))
     work["_out_symbol"] = label.where(in_group, work["Symbol"].astype(str))
 
-    agg = work.groupby("_key", sort=False).agg(
-        Ensembl_Gene_ID=("_out_id", "first"),
-        Symbol=("_out_symbol", "first"),
-        **{c: (c, "sum") for c in cols},
-    )
+    grouped = work.groupby("_key", sort=False)
+    ids = grouped[["_out_id", "_out_symbol"]].first()
+    sums = grouped[cols].sum(min_count=1)
+    agg = ids.join(sums).rename(columns={"_out_id": "Ensembl_Gene_ID", "_out_symbol": "Symbol"})
     return agg.reset_index(drop=True)[["Ensembl_Gene_ID", "Symbol", *cols]]
 
 

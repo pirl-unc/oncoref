@@ -86,7 +86,9 @@ def proteoform_symbol_map() -> dict[str, tuple[str, ...]]:
 
 @lru_cache(maxsize=1)
 def _member_to_label() -> dict[str, str]:
-    """Both gene ID and symbol (uppercased) -> proteoform label."""
+    """Lookup keyed by BOTH the unversioned gene ID and the uppercased symbol ->
+    proteoform label. The two key spaces don't collide (``ENSG…`` vs symbols), so
+    one flat dict serves both ``proteoform_for_gene`` lookup paths."""
     df = _proteoform_frame()
     out: dict[str, str] = {}
     for _, row in df.iterrows():

@@ -26,7 +26,9 @@ def test_proteoforms_unknown_gene_errors(capsys):
 
 def test_proteoforms_count(capsys):
     assert cli.main(["proteoforms", "--count"]) == 0
-    assert int(capsys.readouterr().out.strip()) >= 4
+    # The derivation finds the four anchor pairs plus the larger families
+    # (CT47A, GAGE12, CT45A, …); a healthy registry is well into double digits.
+    assert int(capsys.readouterr().out.strip()) >= 10
 
 
 def test_cancer_type_prints_json(capsys):

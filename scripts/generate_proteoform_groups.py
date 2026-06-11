@@ -64,6 +64,14 @@ _OUTPUT_COLUMNS = (
     "n_members",
 )
 
+#: Groups that MUST be derivable from any sane Ensembl release. If a release
+#: renames or alters one of these gene IDs / sequences they would silently drop
+#: out, leaving the registry on a basis that no longer matches the expression
+#: data — so fail the build loudly instead.
+_ANCHOR_GROUPS: frozenset[str] = frozenset(
+    {"CTAG1A/CTAG1B", "XAGE1A/XAGE1B", "SSX4/SSX4B", "MAGEA2/MAGEA2B"}
+)
+
 
 def _canonical_protein(gene) -> str | None:
     """Longest protein sequence among a gene's protein-coding transcripts."""
@@ -132,6 +140,15 @@ def main() -> None:
 
     gene_ids = _candidate_gene_ids(args.cta_csv)
     groups = build_proteoform_groups(gene_ids, args.ensembl_release, args.min_members)
+
+    missing_anchors = _ANCHOR_GROUPS - set(groups["proteoform_id"])
+    if missing_anchors:
+        raise SystemExit(
+            f"expected anchor proteoform groups missing: {sorted(missing_anchors)} — "
+            f"Ensembl release {args.ensembl_release} may have changed these gene IDs or "
+            f"sequences. Refusing to write a registry on a drifted basis."
+        )
+
     args.output.parent.mkdir(parents=True, exist_ok=True)
     groups.to_csv(args.output, index=False)
 
