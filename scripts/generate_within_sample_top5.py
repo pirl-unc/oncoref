@@ -38,10 +38,16 @@ frac_samples_top10pct, n_samples``.
 Run:
     python scripts/generate_within_sample_top5.py --input <per-sample-dir>
 
-After building, add ``cancer-reference-expression-within-sample-top5`` to
-``data_bundle.DOWNLOADABLE_PATHS``, rebuild + upload the data tarball, and bump
-``DATA_VERSION`` (never bump it before the tarball is uploaded — a 404 hangs
-fetch).
+Pass ``--proteoform`` to additionally sum identical-protein paralogs (CTAG1A+
+CTAG1B, the CT47A family, …) to proteoform level *before* the within-sample
+ranking, written to a parallel ``…-within-sample-top5-proteoform`` directory — so
+a duplicated antigen ranks as one proteoform rather than several
+individually-diluted genes.
+
+After building, add ``cancer-reference-expression-within-sample-top5`` (and, if
+built, ``…-within-sample-top5-proteoform``) to ``data_bundle.DOWNLOADABLE_PATHS``,
+rebuild + upload the data tarball, and bump ``DATA_VERSION`` (never bump it before
+the tarball is uploaded — a 404 hangs fetch).
 """
 
 from __future__ import annotations
@@ -54,14 +60,11 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from cancerdata._build import sample_columns, within_sample_top_fractions
+from cancerdata._build import sample_columns, sum_proteoform_tpm, within_sample_top_fractions
 
-OUT_DIR = (
-    Path(__file__).resolve().parents[1]
-    / "cancerdata"
-    / "data"
-    / "cancer-reference-expression-within-sample-top5"
-)
+_DATA_DIR = Path(__file__).resolve().parents[1] / "cancerdata" / "data"
+OUT_DIR = _DATA_DIR / "cancer-reference-expression-within-sample-top5"
+PROTEOFORM_OUT_DIR = _DATA_DIR / "cancer-reference-expression-within-sample-top5-proteoform"
 
 
 def _load_drop_genes(path: Path | None) -> set[str]:
@@ -70,7 +73,28 @@ def _load_drop_genes(path: Path | None) -> set[str]:
     return {line.strip() for line in path.read_text().splitlines() if line.strip()}
 
 
-def build(input_dir: Path, *, drop_genes: set[str], out_dir: Path = OUT_DIR) -> None:
+def build(
+    input_dir: Path,
+    *,
+    drop_genes: set[str],
+    out_dir: Path | None = None,
+    proteoform: bool = False,
+) -> None:
+    """Build the within-sample top-fraction artifact for each cohort.
+
+    With ``proteoform=True``, each cohort's per-sample matrix is collapsed to
+    proteoform level (identical-protein members summed) *before* the within-
+    sample ranking, so a duplicated antigen ranks as one proteoform rather than
+    several individually-diluted genes. Output lands in a parallel
+    ``…-within-sample-top5-proteoform`` directory.
+    """
+    if out_dir is None:
+        out_dir = PROTEOFORM_OUT_DIR if proteoform else OUT_DIR
+    group_map = None
+    if proteoform:
+        from cancerdata.proteoforms import proteoform_group_map
+
+        group_map = proteoform_group_map()
     out_dir.mkdir(parents=True, exist_ok=True)
     shards = sorted(input_dir.glob("*.parquet"))
     if not shards:
@@ -85,10 +109,15 @@ def build(input_dir: Path, *, drop_genes: set[str], out_dir: Path = OUT_DIR) -> 
         if not cols:
             print(f"  {code}: no sample columns, skipped", flush=True)
             continue
+        if group_map is not None:
+            # Sum identical-protein members per sample first, then rank within
+            # the collapsed gene/proteoform axis.
+            df = sum_proteoform_tpm(df, group_map, cols)
+            cols = sample_columns(df)
         out = within_sample_top_fractions(df, cols)
         out.to_parquet(out_dir / f"{code}.parquet", index=False, compression="zstd")
         n += 1
-        print(f"  {code}: {len(out)} genes (n={len(cols)})", flush=True)
+        print(f"  {code}: {len(out)} rows (n={len(cols)})", flush=True)
     total_mb = sum(f.stat().st_size for f in out_dir.glob("*.parquet")) / 1e6
     print(f"\ndone: {n} cohorts, {total_mb:.1f} MB -> {out_dir}", flush=True)
 
@@ -104,8 +133,13 @@ def main(argv=None) -> None:
         default=None,
         help="Optional newline-delimited Ensembl IDs of technical genes to drop",
     )
+    p.add_argument(
+        "--proteoform",
+        action="store_true",
+        help="Sum identical-protein paralogs to proteoform level before ranking",
+    )
     args = p.parse_args(argv)
-    build(args.input, drop_genes=_load_drop_genes(args.drop_genes))
+    build(args.input, drop_genes=_load_drop_genes(args.drop_genes), proteoform=args.proteoform)
 
 
 if __name__ == "__main__":

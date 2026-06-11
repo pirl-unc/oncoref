@@ -41,6 +41,7 @@ from .load_dataset import _BUNDLED_DATA_DIR
 _REPRESENTATIVES_DIR = "cancer-reference-expression-representatives"
 _PERCENTILES_DIR = "cancer-reference-expression-percentiles"
 _WITHIN_SAMPLE_DIR = "cancer-reference-expression-within-sample-top5"
+_WITHIN_SAMPLE_PROTEOFORM_DIR = "cancer-reference-expression-within-sample-top5-proteoform"
 
 
 def _bundle_subdir(name: str, *, auto_fetch: bool = True) -> Path:
@@ -233,17 +234,23 @@ _WITHIN_SAMPLE_THRESHOLD_COLS = {
 }
 
 
-def _within_sample_root() -> Path:
+def _within_sample_root(*, proteoform: bool = False) -> Path:
     # Not (yet) part of a released bundle, so never trigger a 340 MB fetch.
-    return _bundle_subdir(_WITHIN_SAMPLE_DIR, auto_fetch=False)
+    name = _WITHIN_SAMPLE_PROTEOFORM_DIR if proteoform else _WITHIN_SAMPLE_DIR
+    return _bundle_subdir(name, auto_fetch=False)
 
 
-def available_within_sample_cohorts() -> list[str]:
-    """Cohort codes that ship a within-sample top-fraction shard (sorted)."""
-    return _available_shard_codes(_within_sample_root())
+def available_within_sample_cohorts(*, proteoform: bool = False) -> list[str]:
+    """Cohort codes that ship a within-sample top-fraction shard (sorted).
+
+    With ``proteoform=True``, the proteoform-summed variant (identical-protein
+    members collapsed before ranking — see :func:`within_sample_top_fraction`)."""
+    return _available_shard_codes(_within_sample_root(proteoform=proteoform))
 
 
-def within_sample_top_fraction(cancer_type, *, threshold: float = 0.95) -> pd.DataFrame:
+def within_sample_top_fraction(
+    cancer_type, *, threshold: float = 0.95, proteoform: bool = False
+) -> pd.DataFrame:
     """Per-gene fraction of a cohort's samples in which the gene is highly
     expressed *within that sample* — the "top ~5% expressed gene in this tumor"
     prevalence (signal a, the producer side of the within-sample signal).
@@ -253,16 +260,25 @@ def within_sample_top_fraction(cancer_type, *, threshold: float = 0.95) -> pd.Da
     (0.99 / 0.95 / 0.90) plus ``n_samples``. Raises if the cohort has no
     within-sample shard — that table is built offline from per-sample matrices
     (see ``scripts/generate_within_sample_top5.py``) and shipped in the bundle.
+
+    With ``proteoform=True``, reads the proteoform-summed variant: identical-
+    protein paralogs (CTAG1A+CTAG1B, the CT47A family, …) are summed per sample
+    *before* the within-sample ranking, so a duplicated antigen is ranked as one
+    proteoform rather than several individually-diluted genes. Rows for those
+    members are replaced by a single proteoform-labelled row; build it with
+    ``generate_within_sample_top5.py --proteoform``.
     """
     col = _WITHIN_SAMPLE_THRESHOLD_COLS.get(threshold)
     if col is None:
         raise ValueError(f"threshold must be one of {sorted(_WITHIN_SAMPLE_THRESHOLD_COLS)}")
     code = resolve_cancer_type(cancer_type)
-    shard = _within_sample_root() / f"{code}.parquet"
+    shard = _within_sample_root(proteoform=proteoform) / f"{code}.parquet"
     if not shard.exists():
+        variant = "proteoform-summed " if proteoform else ""
         raise ValueError(
-            f"no within-sample top-fraction vector for {code!r} — only cohorts "
-            f"with per-sample data ship one; see available_within_sample_cohorts()."
+            f"no {variant}within-sample top-fraction vector for {code!r} — only "
+            f"cohorts with per-sample data ship one; see "
+            f"available_within_sample_cohorts(proteoform={proteoform})."
         )
     df = pd.read_parquet(shard)
     keep = ["Ensembl_Gene_ID", "Symbol", col]
