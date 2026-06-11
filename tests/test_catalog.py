@@ -87,3 +87,24 @@ def test_fetch_all_fetches_bundle_once_and_each_hpa(monkeypatch):
     assert calls["bundle_fetch"] == 1
     assert set(calls["hpa"]) == set(reference_data.REFERENCE_SOURCES)
     assert set(fetched) == {d.name for d in catalog.datasets()}
+
+
+def test_fetch_reports_only_actual_downloads(monkeypatch):
+    # Everything already cached + no force -> nothing is reported as downloaded.
+    monkeypatch.setattr(data_bundle, "is_local", lambda: True)
+    monkeypatch.setattr(data_bundle, "fetch", lambda *a, **k: pytest.fail("should not fetch"))
+
+    class _P:
+        def exists(self):
+            return True
+
+    monkeypatch.setattr(reference_data, "local_path", lambda n, *a, **k: _P())
+    monkeypatch.setattr(reference_data, "download", lambda n, *a, **k: None)
+    assert catalog.fetch("all") == []
+
+
+def test_datasets_disjoint_backends():
+    # The catalog routes by name; the two backends must never share a name.
+    bundle = set(data_bundle.DOWNLOADABLE_PATHS)
+    hpa = set(reference_data.REFERENCE_SOURCES)
+    assert bundle.isdisjoint(hpa)

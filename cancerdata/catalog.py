@@ -63,13 +63,20 @@ class Dataset:
 
 def datasets() -> list[Dataset]:
     """Every managed dataset across both backends (bundle members + HPA sources)."""
+    bundle_names = list(data_bundle.DOWNLOADABLE_PATHS)
+    hpa_names = list(reference_data.REFERENCE_SOURCES)
+    collisions = set(bundle_names) & set(hpa_names)
+    if collisions:
+        # The catalog routes by name; a name in both backends would silently
+        # shadow one of them. Fail loudly instead of mis-routing.
+        raise RuntimeError(f"dataset name collision across backends: {sorted(collisions)}")
     out = [
         Dataset(name, _BUNDLE, _BUNDLE_DESCRIPTIONS.get(name, "expression bundle artifact"))
-        for name in data_bundle.DOWNLOADABLE_PATHS
+        for name in bundle_names
     ]
     out += [
-        Dataset(name, _HPA, spec["description"])
-        for name, spec in reference_data.REFERENCE_SOURCES.items()
+        Dataset(name, _HPA, reference_data.REFERENCE_SOURCES[name]["description"])
+        for name in hpa_names
     ]
     return out
 
@@ -116,20 +123,26 @@ def ensure(name: str) -> Path:
 
 
 def fetch(name: str = "all", *, force: bool = False) -> list[str]:
-    """Download dataset(s). ``name="all"`` materializes everything (the bundle is
-    fetched once, not once per member). Returns the dataset names fetched."""
+    """Materialize dataset(s), downloading what's missing. ``name="all"`` covers
+    everything (the bundle tarball is fetched once, not once per member).
+
+    Returns the dataset names that were **actually downloaded** — already-cached
+    datasets are skipped (unless ``force``) and not reported.
+    """
     targets = [d.name for d in datasets()] if name == "all" else [dataset(name).name]
-    fetched = []
+    downloaded = []
     # The bundle is one tarball — fetch it a single time if any member is targeted.
-    if any(dataset(n).kind == _BUNDLE for n in targets):
-        if force or not data_bundle.is_local():
-            data_bundle.fetch()
-        fetched += [n for n in targets if dataset(n).kind == _BUNDLE]
+    bundle_targets = [n for n in targets if dataset(n).kind == _BUNDLE]
+    if bundle_targets and (force or not data_bundle.is_local()):
+        data_bundle.fetch()
+        downloaded += bundle_targets
     for n in targets:
         if dataset(n).kind == _HPA:
+            already = reference_data.local_path(n).exists()
             reference_data.download(n, force=force)
-            fetched.append(n)
-    return fetched
+            if force or not already:
+                downloaded.append(n)
+    return downloaded
 
 
 def _size_bytes(p: Path | None) -> int:
