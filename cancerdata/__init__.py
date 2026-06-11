@@ -81,6 +81,13 @@ from .expression_registry import (
     registry_dataframe,
     sources_for_cancer_code,
 )
+from .fusions import (
+    cancer_fusions,
+    cancer_fusions_df,
+    cancer_types_with_fusion,
+    fusion_partners,
+    protein_family,
+)
 from .hpa import (
     gene_cell_type_ntpm,
     gene_protein_tissues,
@@ -140,6 +147,8 @@ __all__ = [
     "cancer_burden",
     "cancer_burden_df",
     "cancer_code_burden_map",
+    "cancer_fusions",
+    "cancer_fusions_df",
     "cancer_subtype_group",
     "cancer_subtype_groupings",
     # TMB
@@ -156,6 +165,7 @@ __all__ = [
     "cancer_type_tree",
     "cancer_types_by_tissue",
     "cancer_types_in_family",
+    "cancer_types_with_fusion",
     "canonical_cancer_code",
     "cohort_aggregate_members",
     # cohort vocabulary
@@ -171,6 +181,7 @@ __all__ = [
     "expression_sources",
     "family_display_name",
     "format_cancer_code_label",
+    "fusion_partners",
     "fusion_status",
     "gene_cell_type_ntpm",
     "gene_protein_tissues",
@@ -183,6 +194,7 @@ __all__ = [
     "is_mixture_cohort",
     "known_cohort_ids",
     "mixture_cohort_codes",
+    "protein_family",
     "proteoform_for_gene",
     "proteoform_group_map",
     "proteoform_groups",
