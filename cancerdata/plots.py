@@ -26,10 +26,15 @@ from __future__ import annotations
 
 from .apd1 import cancer_apd1_response
 from .cancer_types import cancer_type_registry, format_cancer_code_label
+from .cta import CTA_gene_id_to_name, CTA_gene_ids
+from .expression import available_percentile_cohorts, cohort_gene_percentiles
 from .incidence import cancer_burden
 from .tmb import cancer_tmb
 
 _PLT = None
+
+#: stat name -> the percentile breakpoint column in the shipped percentile vector.
+_STAT_PERCENTILE_COL = {"q1": "p25", "median": "p50", "q3": "p75"}
 
 
 def _plt():
@@ -157,5 +162,109 @@ def incidence_vs_mortality(*, region="us", save=None):
     ax.set_ylabel(f"{region.upper()} share of cancer mortality (%)")
     ax.set_title(f"Incidence vs mortality by burden category ({region.upper()})")
     ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    return _save(fig, save)
+
+
+def _cta_expression_matrix(stat, cohorts):
+    """cohorts × CTA-gene matrix of the requested ``stat`` TPM (NaN where a cohort
+    lacks a gene). Rows are cohort codes, columns are CTA symbols."""
+    import pandas as pd
+
+    col = _STAT_PERCENTILE_COL[stat]
+    id_to_name = CTA_gene_id_to_name()
+    cta_ids = set(CTA_gene_ids())
+    rows = {}
+    for code in cohorts:
+        df = cohort_gene_percentiles(code, as_tpm=True)
+        ids = df["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+        mask = ids.isin(cta_ids)
+        sub = df.loc[mask]
+        rows[code] = pd.Series(
+            sub[col].to_numpy(),
+            index=ids[mask].map(id_to_name),
+        )
+    matrix = pd.DataFrame(rows).T  # cohorts (rows) × CTA symbols (cols)
+    return matrix.loc[:, ~matrix.columns.duplicated()]
+
+
+def cta_expression_heatmap(
+    *,
+    stat="median",
+    cohorts=None,
+    n_cohorts=30,
+    n_ctas=30,
+    high_tpm=30.0,
+    proteoform=False,
+    save=None,
+):
+    """Heatmap of cancer-testis-antigen expression — rows are cohorts, columns are
+    CTAs, cells are the cohort's per-gene ``stat`` TPM (``"median"``/``"q1"``/``"q3"``
+    = p50/p25/p75 of the shipped percentile vector).
+
+    Rows are the ``n_cohorts`` cohorts with the highest single-CTA ``stat``; columns
+    are the ``n_ctas`` CTAs with the highest peak across cohorts, ordered by how many
+    cohorts express them above ``high_tpm`` (the actionable threshold) then by peak.
+    Colour is a log scale (dark = silent, hot = high) anchored in the clinically
+    meaningful 1–1000 TPM range.
+
+    ``cohorts`` restricts the cohort pool (default: every cohort with a percentile
+    vector). Needs the expression bundle present (percentile artifacts).
+
+    ``proteoform=True`` is not yet available: faithful paralog summation must happen
+    on per-sample matrices *before* the percentile summary (percentiles can't be
+    summed), which is the proteoform-summed percentile artifact tracked in #13.
+    """
+    import numpy as np
+    from matplotlib.colors import LogNorm
+
+    if stat not in _STAT_PERCENTILE_COL:
+        raise ValueError(f"stat must be one of {sorted(_STAT_PERCENTILE_COL)}")
+    if proteoform:
+        raise NotImplementedError(
+            "proteoform-summed CTA expression needs the proteoform-summed percentile "
+            "artifact (per-sample summation before summarizing — percentiles cannot be "
+            "summed); tracked in issue #13."
+        )
+    plt = _plt()
+    if cohorts is None:
+        cohorts = available_percentile_cohorts()
+    if not cohorts:
+        raise ValueError("no cohorts with a percentile vector — is the expression bundle present?")
+
+    matrix = _cta_expression_matrix(stat, cohorts)
+    # Columns: top CTAs by peak, ordered by breadth (#cohorts > high_tpm) then peak.
+    peak = matrix.max(axis=0, skipna=True)
+    breadth = (matrix > high_tpm).sum(axis=0)
+    top_ctas = (
+        peak.to_frame("peak")
+        .assign(breadth=breadth)
+        .sort_values(["breadth", "peak"], ascending=False)
+        .head(n_ctas)
+        .index
+    )
+    # Rows: cohorts with the highest single-CTA value, sorted descending.
+    row_score = matrix[top_ctas].max(axis=1, skipna=True)
+    top_cohorts = row_score.sort_values(ascending=False).head(n_cohorts).index
+    grid = matrix.loc[top_cohorts, top_ctas]
+
+    floor = 0.01
+    data = np.clip(grid.to_numpy(dtype=float), floor, None)
+    fig, ax = plt.subplots(figsize=(max(8, 0.42 * len(top_ctas)), max(6, 0.34 * len(top_cohorts))))
+    im = ax.imshow(
+        data,
+        aspect="auto",
+        cmap="magma",
+        norm=LogNorm(vmin=floor, vmax=max(1000.0, float(np.nanmax(data)))),
+    )
+    ax.set_xticks(range(len(top_ctas)))
+    ax.set_xticklabels(list(top_ctas), rotation=90, fontsize=6)
+    ax.set_yticks(range(len(top_cohorts)))
+    ax.set_yticklabels([format_cancer_code_label(c) for c in top_cohorts], fontsize=6)
+    ax.set_title(
+        f"CTA expression ({stat} TPM) — top {len(top_cohorts)} cohorts × {len(top_ctas)} CTAs"
+    )
+    cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
+    cbar.set_label(f"{stat} TPM (log)")
     fig.tight_layout()
     return _save(fig, save)

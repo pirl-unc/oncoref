@@ -182,9 +182,15 @@ def _cmd_plot(args: argparse.Namespace) -> int:
         "apd1-vs-tmb": plots.apd1_vs_tmb,
         "apd1-orr-bars": plots.apd1_orr_bars,
         "incidence-vs-mortality": plots.incidence_vs_mortality,
+        "cta-expression-heatmap": plots.cta_expression_heatmap,
     }
     try:
-        kwargs = {"region": args.region} if args.which == "incidence-vs-mortality" else {}
+        if args.which == "incidence-vs-mortality":
+            kwargs = {"region": args.region}
+        elif args.which == "cta-expression-heatmap":
+            kwargs = {"stat": args.stat}
+        else:
+            kwargs = {}
         fns[args.which](save=args.out, **kwargs)
     except (ValueError, ModuleNotFoundError) as e:
         print(f"Error: {e}", file=sys.stderr)
@@ -357,12 +363,23 @@ def _build_parser() -> argparse.ArgumentParser:
     p_plot = sub.add_parser("plot", help="Render a cancer-type reference plot to a PNG")
     p_plot.add_argument(
         "which",
-        choices=["apd1-vs-tmb", "apd1-orr-bars", "incidence-vs-mortality"],
+        choices=[
+            "apd1-vs-tmb",
+            "apd1-orr-bars",
+            "incidence-vs-mortality",
+            "cta-expression-heatmap",
+        ],
         help="Which plot to render",
     )
     p_plot.add_argument("--out", required=True, help="Output PNG path")
     p_plot.add_argument(
         "--region", default="us", choices=["us", "world"], help="Region for incidence-vs-mortality"
+    )
+    p_plot.add_argument(
+        "--stat",
+        default="median",
+        choices=["q1", "median", "q3"],
+        help="Statistic for cta-expression-heatmap",
     )
     p_plot.set_defaults(func=_cmd_plot)
 
