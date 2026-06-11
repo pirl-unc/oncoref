@@ -266,7 +266,10 @@ def within_sample_top_fraction(
     *before* the within-sample ranking, so a duplicated antigen is ranked as one
     proteoform rather than several individually-diluted genes. Rows for those
     members are replaced by a single proteoform-labelled row; build it with
-    ``generate_within_sample_top5.py --proteoform``.
+    ``generate_within_sample_top5.py --proteoform``. Note that collapsing members
+    shrinks the gene axis the percentiles are computed over, so an ungrouped
+    gene's fraction can shift slightly between the two variants — they are not
+    row-for-row comparable for genes outside any proteoform group.
     """
     col = _WITHIN_SAMPLE_THRESHOLD_COLS.get(threshold)
     if col is None:
