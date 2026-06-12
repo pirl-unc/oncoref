@@ -173,10 +173,12 @@ def test_inventory_covers_all_held_buckets():
     rows = catalog.inventory()
     names = {r["name"] for r in rows}
     assert set(data_manifest.WHEEL) <= names
-    assert set(data_manifest.PLANNED) <= names
     assert {"per-sample-tpm-matrices"} <= names  # the raw source matrices
+    # Every cancerdata-domain table is now captured; the held buckets present are
+    # wheel/bundle/hpa/source (planned only appears while tables remain to port).
     held = {r["held"] for r in rows}
-    assert held == {"wheel", "bundle", "hpa", "source", "planned"}
+    assert {"wheel", "bundle", "hpa", "source"} <= held
+    assert held <= {"wheel", "bundle", "hpa", "source", "planned"}
 
 
 def test_inventory_wheel_always_available():
@@ -184,17 +186,20 @@ def test_inventory_wheel_always_available():
     assert wheel and all(r["available"] for r in wheel)
 
 
-def test_inventory_planned_not_available():
-    planned = [r for r in catalog.inventory() if r["held"] == "planned"]
-    assert planned and all(not r["available"] for r in planned)
+def test_planned_fully_captured():
+    # Phase R complete: no cancerdata-domain table is still 'planned'.
+    from cancerdata import data_manifest
+
+    assert not data_manifest.PLANNED
+    assert not [r for r in catalog.inventory() if r["held"] == "planned"]
 
 
 def test_cli_data_list_shows_full_inventory(capsys):
     assert cli.main(["data", "list"]) == 0
     out = capsys.readouterr().out
-    assert "housekeeping-genes" in out  # a planned dataset appears
-    assert "per-sample-tpm-matrices" in out  # the raw source matrices appear
-    assert "planned" in out and "wheel" in out
+    assert "housekeeping-genes" in out  # a normalization reference (wheel)
+    assert "per-sample-tpm-matrices" in out  # the raw source matrices
+    assert "wheel" in out and "source" in out and "hpa" in out
 
 
 def test_cohort_count_surfaces_per_cohort_scale(monkeypatch, tmp_path):

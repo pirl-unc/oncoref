@@ -62,3 +62,40 @@ def cancer_tmb(cancer_type=None, *, inherit=True):
             break
         cur = str(reg.loc[cur].get("parent_code", "") or "").strip() or None
     return None
+
+
+def cancer_frameshift_burden_df():
+    """Return the curated ``cancer-frameshift-burden.csv`` reference: per-type
+    frameshift-indel burden (``cancer_code``, ``indel_class``, ``indel_score``,
+    ``basis``, ``pmid_doi``, ``confidence``, ``notes``). A complement to TMB —
+    frameshift indels yield disproportionately many high-affinity neoantigens."""
+    return get_data("cancer-frameshift-burden")
+
+
+def cancer_frameshift_burden(cancer_type=None, *, inherit=True):
+    """Frameshift-indel ``indel_score`` for a cancer type (alias-resolved), or the
+    full ``{code: score}`` map when ``cancer_type`` is None. Subtypes inherit a
+    parent's score if unmapped (mirrors :func:`cancer_tmb`)."""
+    df = cancer_frameshift_burden_df()
+    scores = {
+        str(c): int(s)
+        for c, s in zip(df["cancer_code"], df["indel_score"])
+        if str(s).strip() and str(s).strip().lower() != "nan"
+    }
+    if cancer_type is None:
+        return scores
+    code = resolve_cancer_type(cancer_type)
+    if code in scores:
+        return scores[code]
+    if inherit:
+        parent_of = cancer_type_registry().set_index("code")["parent_code"].to_dict()
+        cur = code
+        seen = set()
+        while cur in parent_of and isinstance(parent_of[cur], str) and parent_of[cur]:
+            cur = parent_of[cur]
+            if cur in seen:
+                break
+            seen.add(cur)
+            if cur in scores:
+                return scores[cur]
+    return None
