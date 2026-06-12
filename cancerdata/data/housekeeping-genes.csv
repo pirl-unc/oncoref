@@ -1,0 +1,31 @@
+Symbol,Ensembl_Gene_ID,Full_Name,Category,Reference
+ACTB,ENSG00000075624,Actin beta,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+GAPDH,ENSG00000111640,Glyceraldehyde-3-phosphate dehydrogenase,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+RPLP0,ENSG00000089157,Ribosomal protein lateral stalk subunit P0,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+RPL13A,ENSG00000142541,Ribosomal protein L13a,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+RPS18,ENSG00000231500,Ribosomal protein S18,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+UBC,ENSG00000150991,Ubiquitin C,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+YWHAZ,ENSG00000164924,Tyrosine 3-monooxygenase/tryptophan 5-monooxygenase activation protein zeta,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+PPIA,ENSG00000196262,Peptidylprolyl isomerase A (cyclophilin A),Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+PGK1,ENSG00000102144,Phosphoglycerate kinase 1,Core,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+HPRT1,ENSG00000165704,Hypoxanthine phosphoribosyltransferase 1,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+HMBS,ENSG00000256269,Hydroxymethylbilane synthase,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+TBP,ENSG00000112592,TATA-box binding protein,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+SDHA,ENSG00000073578,Succinate dehydrogenase complex flavoprotein subunit A,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+GUSB,ENSG00000169919,Glucuronidase beta,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+TFRC,ENSG00000072274,Transferrin receptor,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+ALAS1,ENSG00000023330,5-aminolevulinate synthase 1,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+HSP90AB1,ENSG00000096384,Heat shock protein 90 alpha family class B member 1,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+LDHA,ENSG00000134333,Lactate dehydrogenase A,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+NONO,ENSG00000147140,Non-POU domain containing octamer binding,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+IPO8,ENSG00000133704,Importin 8,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+POLR2A,ENSG00000181222,RNA polymerase II subunit A,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+EEF1A1,ENSG00000156508,Eukaryotic translation elongation factor 1 alpha 1,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+RPL19,ENSG00000108298,Ribosomal protein L19,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+RPS13,ENSG00000110700,Ribosomal protein S13,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+RPL27,ENSG00000131469,Ribosomal protein L27,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+EIF4A2,ENSG00000156976,Eukaryotic translation initiation factor 4A2,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+ATP5F1B,ENSG00000110955,ATP synthase F1 subunit beta,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+TUBB,ENSG00000196230,Tubulin beta class I,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+VCP,ENSG00000165280,Valosin containing protein,Extended,Eisenberg & Levanon 2013 Trends Genet 29:569-574
+RPS27,ENSG00000177954,Ribosomal protein S27,Extended,

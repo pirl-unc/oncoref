@@ -50,6 +50,22 @@ WHEEL: dict[str, tuple[str, str]] = {
     "cancer-apd1-response": ("response", "anti-PD-1 monotherapy ORR per type"),
     "cancer-reference-expression-samples": ("expression", "per-sample curation manifest"),
     "expression_sources": ("expression", "cohort expression-source registry"),
+    # normalization references (R-norm; consumed by the clean_tpm_v4 engine)
+    "housekeeping-genes": ("normalization", "housekeeping panel for normalization"),
+    "censored-gene-reference-tpm": ("normalization", "fixed surrogate TPM for censored genes"),
+    "clean-tpm-censored-genes": (
+        "normalization",
+        "technical+ribosomal genes censored by clean_tpm_v4",
+    ),
+    "histone-genes": ("normalization", "histone-cluster genes"),
+    "ribosomal-protein-genes": ("normalization", "ribosomal-protein genes"),
+    "ribosomal-protein-pseudogenes": ("normalization", "ribosomal-protein pseudogenes"),
+    "mitochondrial-genes": ("normalization", "mtDNA-encoded genes"),
+    "rrna-and-pseudogenes": ("normalization", "rRNA + rRNA pseudogenes"),
+    "numt-pseudogenes": ("normalization", "NUMT-like nuclear-mito pseudogenes"),
+    "small-noncoding-rnas": ("normalization", "small non-coding RNA loci"),
+    "nuclear-retained-lncrnas": ("normalization", "polyA-bias nuclear-retained lncRNAs"),
+    "hemoglobin-genes": ("normalization", "hemoglobin genes"),
 }
 
 #: {name: (category, description)} — heavy artifacts in the release tarball.
@@ -76,22 +92,6 @@ SOURCE: dict[str, tuple[str, str]] = {
 
 #: {name: (category, description)} — cancerdata-domain tables still to port.
 PLANNED: dict[str, tuple[str, str]] = {
-    # normalization references (Phase N / clean_tpm_v4)
-    "housekeeping-genes": ("normalization", "housekeeping panel for normalization"),
-    "censored-gene-reference-tpm": ("normalization", "fixed surrogate TPM for censored genes"),
-    "clean-tpm-censored-genes": (
-        "normalization",
-        "technical+ribosomal genes censored by clean_tpm_v4",
-    ),
-    "histone-genes": ("normalization", "histone-cluster genes"),
-    "ribosomal-protein-genes": ("normalization", "ribosomal-protein genes"),
-    "ribosomal-protein-pseudogenes": ("normalization", "ribosomal-protein pseudogenes"),
-    "mitochondrial-genes": ("normalization", "mtDNA-encoded genes"),
-    "rrna-and-pseudogenes": ("normalization", "rRNA + rRNA pseudogenes"),
-    "numt-pseudogenes": ("normalization", "NUMT-like nuclear-mito pseudogenes"),
-    "small-noncoding-rnas": ("normalization", "small non-coding RNA loci"),
-    "nuclear-retained-lncrnas": ("normalization", "polyA-bias nuclear-retained lncRNAs"),
-    "hemoglobin-genes": ("normalization", "hemoglobin genes"),
     # gene-id / symbol resolution
     "ensembl-id-aliases": ("gene-id", "retired→current Ensembl gene-id aliases"),
     "ncbi-symbol-synonyms": ("gene-id", "NCBI gene symbol synonyms"),
