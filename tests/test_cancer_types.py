@@ -108,3 +108,24 @@ def test_every_registry_family_has_a_curated_display_name():
     families = set(cancer_types.cancer_type_registry()["family"].dropna().astype(str))
     missing = sorted(f for f in families if f not in cancer_types._FAMILY_DISPLAY_NAMES)
     assert not missing, f"registry families without a curated display name: {missing}"
+
+
+def test_lineage_group_resolution():
+    # Coarse histogenesis rollup: family default + per-code override (inherited).
+    assert cancer_types.cancer_lineage_group("LUAD") == "Epithelial"
+    assert cancer_types.cancer_lineage_group("SARC_OS") == "Sarcoma"
+    assert cancer_types.cancer_lineage_group("SKCM") == "Melanoma"
+    assert cancer_types.cancer_lineage_group("NET_PANCREAS") == "Neuroendocrine"
+    # NBL overrides its neuroendocrine family default -> Embryonal, inherited by subtypes.
+    assert cancer_types.cancer_lineage_group("NBL") == "Embryonal"
+    assert cancer_types.cancer_lineage_group("NBL_MYCNamp") == "Embryonal"
+    assert cancer_types.cancer_lineage_group("not_a_real_cancer") is None
+
+
+def test_every_registry_family_rolls_up_to_a_lineage_group():
+    # Drift guard: the coarse rollup must cover every registry family, so a new
+    # family can't silently yield a None lineage group.
+    families = set(cancer_types.cancer_type_registry()["family"].dropna().astype(str))
+    groups = cancer_types.cancer_lineage_groups()
+    missing = sorted(f for f in families if f not in groups)
+    assert not missing, f"registry families with no lineage group: {missing}"

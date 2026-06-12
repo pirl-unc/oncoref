@@ -488,6 +488,63 @@ def cancer_type_families():
     return {f: family_display_name(f) for f in sorted(fams)}
 
 
+# ---------- Coarse histogenesis lineage groups ----------
+
+
+def cancer_lineage_groups():
+    """``{registry family -> coarse histogenesis lineage group}``.
+
+    The registry ``family`` column is intentionally uneven in granularity (CNS
+    splits into six neuro-lineages, carcinoma by organ system), so it ranges from
+    a whole organ system down to single tumours. This rolls the 27 families up to
+    8 cell-of-origin classes — **Epithelial, Sarcoma, Heme, CNS, Neuroendocrine,
+    Melanoma, Germ cell, Embryonal** — the consistent level for broad
+    cross-lineage reasoning and plot colouring (``cancer-lineage-groups.csv``)."""
+    df = get_data("cancer-lineage-groups")
+    return dict(
+        df[["family", "lineage_group"]].drop_duplicates().itertuples(index=False, name=None)
+    )
+
+
+def cancer_lineage_group_overrides():
+    """``{code -> lineage_group}`` for codes whose coarse group differs from their
+    registry ``family`` default (``cancer-lineage-group-overrides.csv``). The one
+    case is neuroblastoma -> ``Embryonal`` (a neural-crest embryonal tumour, not an
+    epithelial neuroendocrine neoplasm); it inherits down the ``parent_code`` chain
+    (so ``NBL_MYCNamp`` follows ``NBL``)."""
+    df = get_data("cancer-lineage-group-overrides")
+    return dict(df[["code", "lineage_group"]].itertuples(index=False, name=None))
+
+
+def cancer_lineage_group(cancer_type):
+    """Coarse histogenesis group (Epithelial / Sarcoma / Neuroendocrine / CNS /
+    Melanoma / Heme / Germ cell / Embryonal) for a code, alias, or display name.
+
+    Resolution: a per-code override (inherited up the ``parent_code`` chain) if one
+    applies, else the registry ``family`` default. Returns ``None`` if the type or
+    its family doesn't resolve."""
+    try:
+        code = resolve_cancer_type(cancer_type)
+    except ValueError:
+        return None
+    if code is None:
+        return None
+    reg = _registry_frame().set_index("code")
+    if code not in reg.index:
+        return None
+    overrides = cancer_lineage_group_overrides()
+    cur, seen = code, set()
+    while cur and cur not in seen:  # nearest override up the parent chain
+        seen.add(cur)
+        if cur in overrides:
+            return overrides[cur]
+        if cur not in reg.index:
+            break
+        cur = str(reg.loc[cur, "parent_code"] or "").strip() or None
+    family = str(reg.loc[code, "family"] or "")
+    return cancer_lineage_groups().get(family)
+
+
 # ---------- Cancer-type registry ----------
 
 
