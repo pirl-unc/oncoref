@@ -130,7 +130,7 @@ def representative_cohort_samples(
 
     The packaged cohort references are per-cohort aggregates; this returns a
     bounded set of real joint per-sample vectors per cohort — medoids spanning
-    the within-cohort variation — in the same ``clean_tpm_v4`` basis.
+    the within-cohort variation — in the same ``clean TPM`` basis.
 
     ``cancer_types`` accepts a code, alias, or iterable; a computed-aggregate
     code expands to its member subtypes; ``None`` returns every cohort that ships
@@ -140,7 +140,7 @@ def representative_cohort_samples(
     if normalize not in ("tpm_clean", "tpm_clean_log1p"):
         raise ValueError(
             "representative_cohort_samples normalize must be 'tpm_clean' or "
-            "'tpm_clean_log1p' (the artifact ships only in clean_tpm_v4)"
+            "'tpm_clean_log1p' (the artifact ships only in clean TPM)"
         )
     if format not in ("wide", "long"):
         raise ValueError("format must be 'wide' or 'long'")
@@ -203,7 +203,7 @@ def cohort_gene_percentiles(cancer_type, *, as_tpm: bool = True) -> pd.DataFrame
     p100`` — dense in the actionable upper tail. Lets a consumer place a sample's
     gene as a **percentile rank within the cohort** instead of an absolute TPM.
 
-    Computed on the biological clean_tpm_v4 view (technical genes dropped).
+    Computed on the biological clean TPM view (technical genes dropped).
     Stored compactly as ``log1p`` + float16; ``as_tpm=True`` (default)
     ``expm1``-restores clean-TPM values, ``as_tpm=False`` returns the stored
     log1p values. Raises if the cohort has no per-sample data (summary-only
@@ -308,7 +308,7 @@ def proteoform_representative_samples(
     when reads can't be uniquely assigned between identical-protein loci. Genes in
     no group pass through unchanged.
 
-    Always operates on linear ``clean_tpm_v4`` (summing log1p values would be
+    Always operates on linear ``clean TPM`` (summing log1p values would be
     wrong); ``log1p`` afterward if you need it. This is the runtime,
     every-cohort proteoform view over the shipped medoid samples; the same
     :func:`cancerdata._build.sum_proteoform_tpm` core can run inside the offline
