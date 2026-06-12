@@ -16,8 +16,8 @@ The curated families behind cancerdata's normalization: the technical-RNA loci
 whose RNA-seq abundance is library-prep artifact rather than biology (mtDNA, NUMT
 pseudogenes, rRNA, nuclear-retained lncRNAs), the ribosomal-protein / histone /
 hemoglobin / small-ncRNA families, the housekeeping panel, and the censored-gene
-surrogate TPMs. This is the read surface; the clean_tpm_v4 engine that consumes
-them lands in the normalization phase.
+surrogate TPMs. This is the read surface; the clean-TPM engine that consumes them
+lives in :mod:`cancerdata.normalization`.
 """
 
 from __future__ import annotations
@@ -94,10 +94,15 @@ def housekeeping_gene_ids() -> frozenset[str]:
     return _unversioned_ids(get_data("housekeeping-genes", copy=False))
 
 
-@lru_cache(maxsize=1)
-def clean_tpm_censored_gene_ids() -> frozenset[str]:
-    """Unversioned Ensembl IDs censored by clean_tpm_v4 (technical + ribosomal)."""
-    return _unversioned_ids(get_data("clean-tpm-censored-genes", copy=False))
+@lru_cache(maxsize=2)
+def clean_tpm_censored_gene_ids(*, include_ribosomal_proteins: bool = True) -> frozenset[str]:
+    """Unversioned Ensembl IDs censored by the clean-TPM transform — technical RNA
+    plus, by default, ribosomal-protein genes. Pass
+    ``include_ribosomal_proteins=False`` for the strict technical-only set."""
+    df = get_data("clean-tpm-censored-genes", copy=False)
+    if not include_ribosomal_proteins:
+        df = df[df["category"].astype(str) == "technical"]
+    return _unversioned_ids(df)
 
 
 @lru_cache(maxsize=1)

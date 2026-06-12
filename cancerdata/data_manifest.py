@@ -50,12 +50,12 @@ WHEEL: dict[str, tuple[str, str]] = {
     "cancer-apd1-response": ("response", "anti-PD-1 monotherapy ORR per type"),
     "cancer-reference-expression-samples": ("expression", "per-sample curation manifest"),
     "expression_sources": ("expression", "cohort expression-source registry"),
-    # normalization references (R-norm; consumed by the clean_tpm_v4 engine)
+    # normalization references (R-norm; consumed by the clean TPM engine)
     "housekeeping-genes": ("normalization", "housekeeping panel for normalization"),
     "censored-gene-reference-tpm": ("normalization", "fixed surrogate TPM for censored genes"),
     "clean-tpm-censored-genes": (
         "normalization",
-        "technical+ribosomal genes censored by clean_tpm_v4",
+        "technical+ribosomal genes censored by clean TPM",
     ),
     "histone-genes": ("normalization", "histone-cluster genes"),
     "ribosomal-protein-genes": ("normalization", "ribosomal-protein genes"),
