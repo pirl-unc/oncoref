@@ -84,6 +84,9 @@ WHEEL: dict[str, tuple[str, str]] = {
     "rare-cancer-fusion-rules": ("ontology", "direct fusion rules for rare cancers"),
     "fusion-surrogate-expression": ("ontology", "expression surrogates for fusions"),
     "fusion-expression-effects": ("ontology", "downstream-expression rules per fusion"),
+    # expression-source metadata + genomics (R-exprmeta)
+    "cancer-expression-source-candidates": ("expression", "candidate expression sources per type"),
+    "cancer-frameshift-burden": ("genomics", "per-type frameshift-indel burden"),
 }
 
 #: {name: (category, description)} — heavy artifacts in the release tarball.
@@ -109,11 +112,10 @@ SOURCE: dict[str, tuple[str, str]] = {
 }
 
 #: {name: (category, description)} — cancerdata-domain tables still to port.
-PLANNED: dict[str, tuple[str, str]] = {
-    # expression-source metadata (R-exprmeta)
-    "cancer-expression-source-candidates": ("expression", "candidate expression sources per type"),
-    "cancer-frameshift-burden": ("genomics", "per-type frameshift-indel burden"),
-}
+#: cancerdata-domain tables still to port. Empty — every pirlygenes table in
+#: cancerdata's domain is now captured (the remaining gap is the per-sample
+#: matrices in SOURCE, distributed per cohort).
+PLANNED: dict[str, tuple[str, str]] = {}
 
 #: pirlygenes tables cancerdata replaced with its own regenerated equivalent.
 SUPERSEDED: dict[str, str] = {

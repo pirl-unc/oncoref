@@ -143,3 +143,20 @@ def registry_dataframe() -> pd.DataFrame:
         }
         for s in load_registry()
     )
+
+
+def expression_source_candidates(cancer_code: str | None = None) -> pd.DataFrame:
+    """Candidate expression sources per cancer type (``cancer_code``,
+    ``source_status``, ``reference_code``, ``source_project``, ``accession``,
+    ``assay``, ``processing_plan``, …) — the build-planning view of which cohort
+    could back a type's reference. Filtered to one code when given. Defensive copy."""
+    from .load_dataset import get_data
+
+    df = get_data("cancer-expression-source-candidates").copy()
+    if cancer_code is not None:
+        from .cancer_types import resolve_cancer_type
+
+        df = df[df["cancer_code"].astype(str) == resolve_cancer_type(cancer_code)].reset_index(
+            drop=True
+        )
+    return df

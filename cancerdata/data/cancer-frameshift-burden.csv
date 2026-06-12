@@ -1,0 +1,37 @@
+cancer_code,indel_class,indel_score,basis,pmid_doi,confidence,notes
+KIRC,high,2,RCC lineage,PMID:28694034,high,ccRCC has the highest pan-cancer indel PROPORTION (~0.12 of mutations vs ~0.05 baseline; >2x median) despite low SNV-TMB; frameshift indels yield ~3x more high-affinity neoantigens than SNVs (Turajlic 2017)
+KIRP,high,2,RCC lineage,PMID:28694034,medium,papillary RCC; same renal indel-enriched phenotype as ccRCC (Turajlic 2017 reports RCC as a class)
+KICH,baseline,0,baseline,PMID:28694034,medium,chromophobe RCC is genomically QUIET (lowest renal TMB ~0.7); the renal indel-enrichment signal is ccRCC/papillary not chromophobe; consistent with its low ~10% ORR
+COAD_MSI,high,2,dMMR/MSI-H,PMID:28694034,high,MMR deficiency causes frameshift indels at microsatellites by definition; dMMR tumors are frameshift-neoantigen-rich
+READ_MSI,high,2,dMMR/MSI-H,PMID:28694034,high,same dMMR frameshift mechanism as COAD_MSI
+UCEC_MSI,high,2,dMMR/MSI-H,PMID:28694034,high,dMMR endometrial; frameshift-enriched
+STAD,intermediate,1,MSI/EBV subset,PMID:28694034,low,gastric has a dMMR/MSI-H subset (~22%) contributing frameshift load; bulk cohort intermediate
+UCEC_POLE,intermediate,1,POLE ultramutator,PMID:23636398,low,POLE-mutant is ultramutated but SNV-dominated; some indel contribution
+BLCA,baseline,0,baseline,PMID:28694034,medium,SNV-dominated (APOBEC); indel proportion near pan-cancer baseline
+BRCA_Basal,baseline,0,baseline,PMID:28694034,medium,baseline indel proportion
+CESC,baseline,0,baseline,PMID:28694034,low,baseline
+CHOL,baseline,0,baseline,PMID:28694034,low,baseline
+COAD,baseline,0,baseline,PMID:28694034,medium,bulk colon is MSS-dominated; baseline indel proportion
+COAD_MSS,baseline,0,baseline,PMID:28694034,high,microsatellite-stable; low frameshift load
+ESCA,baseline,0,baseline,PMID:28694034,low,baseline
+GBM,baseline,0,baseline,PMID:28694034,medium,baseline
+HL,baseline,0,baseline,PMID:28694034,low,response is 9p24/PD-L1-amp driven (not indel)
+HNSC,baseline,0,baseline,PMID:28694034,medium,baseline
+HNSC_HPVneg,baseline,0,baseline,PMID:28694034,low,baseline
+HNSC_HPVpos,baseline,0,baseline,PMID:28694034,low,baseline
+LIHC,baseline,0,baseline,PMID:28694034,low,baseline
+LUAD,baseline,0,baseline,PMID:28694034,medium,SNV-dominated (smoking); baseline indel proportion
+LUAD_STK11,baseline,0,baseline,PMID:28694034,low,baseline
+LUSC,baseline,0,baseline,PMID:28694034,medium,baseline
+MESO,baseline,0,baseline,PMID:28694034,low,baseline
+NPC,baseline,0,baseline,PMID:28694034,low,response is EBV-antigen driven (not indel)
+OV,baseline,0,baseline,PMID:28694034,medium,baseline; HRD drives structural not frameshift load
+PAAD,baseline,0,baseline,PMID:28694034,low,baseline
+PRAD,baseline,0,baseline,PMID:28694034,medium,baseline
+READ,baseline,0,baseline,PMID:28694034,medium,MSS-dominated; baseline
+READ_MSS,baseline,0,baseline,PMID:28694034,high,microsatellite-stable; low frameshift load
+SCLC,baseline,0,baseline,PMID:28694034,low,SNV-dominated (smoking); baseline
+SKCM,baseline,0,baseline,PMID:28694034,medium,high SNV-TMB (UV) but indel PROPORTION near baseline
+UCEC_CNH,baseline,0,baseline,PMID:23636398,low,copy-number-high serous-like; SNV/CNA-driven; low frameshift
+UCEC_CNL,baseline,0,baseline,PMID:23636398,low,copy-number-low; baseline
+UVM,baseline,0,baseline,PMID:28694034,medium,lowest mutation/indel burden pan-cancer
