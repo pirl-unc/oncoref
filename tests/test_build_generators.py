@@ -190,4 +190,10 @@ def test_representatives_generator_writes_shards_and_provenance(tmp_path):
     prov = pd.read_csv(out / "_provenance.csv")
     assert set(prov["representative_id"]) == set(rep_cols)
     assert (prov["n_cohort_samples"] == 6).all()
+    # The reader merges on these exact columns — all must be present (source_project
+    # is best-effort and empty for an unregistered synthetic code, but the column
+    # must exist so consumers don't KeyError).
+    for col in ("representative_id", "source_cohort", "source_project", "n_cohort_samples"):
+        assert col in prov.columns
+    # Unregistered code -> source_cohort falls back to the code itself.
     assert (prov["source_cohort"] == "COHORT_A").all()

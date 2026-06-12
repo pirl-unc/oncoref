@@ -60,6 +60,34 @@ from cancerdata._build import cohort_medoids, sample_columns
 _DATA_DIR = Path(__file__).resolve().parents[1] / "cancerdata" / "data"
 OUT_DIR = _DATA_DIR / "cancer-reference-expression-representatives"
 _BASE = ["Ensembl_Gene_ID", "Symbol"]
+#: Columns representative_cohort_samples(include_provenance=True) merges back in.
+_PROVENANCE_COLUMNS = ["representative_id", "source_cohort", "source_project", "n_cohort_samples"]
+
+
+def _cohort_provenance(code: str) -> tuple[str, str]:
+    """Best-effort ``(source_cohort, source_project)`` for a cancer code.
+
+    Looks the code up in the source-matrices registry (``cancer_code ->
+    source_cohort``) and that cohort up in the cohort registry (``-> source_project``).
+    Either lookup failing — an unregistered code, or running this generator on an
+    arbitrary input dir — falls back gracefully so the column is always present.
+    """
+    source_cohort, source_project = code, ""
+    try:
+        from cancerdata.source_matrices import cohort_info
+
+        info = cohort_info(code)
+        source_cohort = str(info.get("source_cohort") or code)
+    except Exception:
+        return source_cohort, source_project
+    try:
+        from cancerdata.cancer_types import cohort_registry
+
+        entry = cohort_registry().get(source_cohort, {})
+        source_project = str(entry.get("source_project") or "")
+    except Exception:
+        pass
+    return source_cohort, source_project
 
 
 def build(input_dir: Path, *, k: int = 5, out_dir: Path = OUT_DIR) -> None:
@@ -82,18 +110,22 @@ def build(input_dir: Path, *, k: int = 5, out_dir: Path = OUT_DIR) -> None:
         rep_ids = [f"{code}__rep{i}" for i in range(1, len(source_cols) + 1)]
         reps = reps.rename(columns=dict(zip(source_cols, rep_ids)))
         reps.to_parquet(out_dir / f"{code}.parquet", index=False, compression="zstd")
+        source_cohort, source_project = _cohort_provenance(code)
         for rep_id, src in zip(rep_ids, source_cols):
             provenance.append(
                 {
                     "representative_id": rep_id,
-                    "source_cohort": code,
+                    "source_cohort": source_cohort,
+                    "source_project": source_project,
                     "source_sample": src,
                     "n_cohort_samples": n_cohort,
                 }
             )
         n += 1
         print(f"  {code}: {len(rep_ids)} reps of {n_cohort} samples", flush=True)
-    pd.DataFrame(provenance).to_csv(out_dir / "_provenance.csv", index=False)
+    # Stable column order; source_sample is kept as extra provenance the reader ignores.
+    prov_df = pd.DataFrame(provenance, columns=[*_PROVENANCE_COLUMNS, "source_sample"])
+    prov_df.to_csv(out_dir / "_provenance.csv", index=False)
     total_mb = sum(f.stat().st_size for f in out_dir.glob("*.parquet")) / 1e6
     print(f"\ndone: {n} cohorts, {total_mb:.1f} MB -> {out_dir}", flush=True)
 
