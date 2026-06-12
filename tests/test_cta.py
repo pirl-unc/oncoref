@@ -47,6 +47,16 @@ def test_non_cta_excluded_genes_dropped():
     assert cta.NON_CTA_EXCLUDED_GENE_IDS.isdisjoint(cta.CTA_unfiltered_gene_ids())
 
 
+def test_cgb8_not_deny_listed():
+    # #20: CGB8 was hardcoded out as "placental hCG-beta" while its hCG-beta
+    # siblings (CGB1/2/3/5/7) flow through the normal HPA filter. CGB8 must be
+    # curated by that same filter, not a one-gene deny-list. It passes the filter
+    # (protein REPRODUCTIVE), so it lands in the filtered set like CGB2.
+    assert "ENSG00000213030" not in cta.NON_CTA_EXCLUDED_GENE_IDS
+    assert "CGB8" in cta.CTA_unfiltered_gene_names()
+    assert "CGB8" in cta.CTA_filtered_gene_names()
+
+
 def test_evidence_has_no_ms_columns():
     # MS-runtime columns stay in the target-selection layer, not cancerdata.
     cols = set(cta.CTA_evidence().columns)
