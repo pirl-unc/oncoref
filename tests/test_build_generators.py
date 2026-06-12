@@ -4,7 +4,9 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 
+import glob
 import importlib.util
+import os
 import sys
 from pathlib import Path
 
@@ -15,6 +17,19 @@ import pytest
 from cancerdata import _build
 
 _SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
+
+# Optional real-data parity: the per-sample matrices + pirlygenes' shipped
+# percentile artifact live only on a maintainer's machine (~22 GB cache), so this
+# is gated like the HPA-dependent tests and skips cleanly everywhere else.
+_ACC_MATRIX = glob.glob(
+    os.path.expanduser("~/.cache/pirlygenes/expression/*/derived/tcga_acc_per_sample_tpm.parquet")
+)
+_ACC_REF = Path(
+    os.path.expanduser(
+        "~/code/pirlygenes/pirlygenes/data/cancer-reference-expression-percentiles/ACC.parquet"
+    )
+)
+_PARITY_READY = bool(_ACC_MATRIX) and _ACC_REF.exists()
 
 
 def _load_script(name):
@@ -197,3 +212,35 @@ def test_representatives_generator_writes_shards_and_provenance(tmp_path):
         assert col in prov.columns
     # Unregistered code -> source_cohort falls back to the code itself.
     assert (prov["source_cohort"] == "COHORT_A").all()
+
+
+# ---------- real-data parity (skipped without the maintainer's matrix cache) ----------
+
+
+@pytest.mark.skipif(not _PARITY_READY, reason="per-sample matrix cache / pirlygenes ref absent")
+def test_percentiles_reproduce_pirlygenes_reference():
+    # End-to-end on REAL data: raw per-sample matrix -> clean_tpm -> percentile
+    # vectors must reproduce pirlygenes' shipped percentile artifact for the same
+    # cohort. Proves the generator + cancerdata's clean_tpm port are faithful.
+    from cancerdata import normalization as nz
+
+    raw = pd.read_parquet(_ACC_MATRIX[0])
+    samples = [c for c in raw.columns if c not in ("Ensembl_Gene_ID", "Symbol")]
+    gene_table = raw[["Symbol", "Ensembl_Gene_ID"]]
+    clean = nz.clean_tpm(raw[samples], gene_table=gene_table)
+    clean_df = pd.concat([gene_table, clean], axis=1)
+
+    mine = _build.cohort_percentile_vectors(clean_df, samples).set_index("Ensembl_Gene_ID")
+    ref = pd.read_parquet(_ACC_REF).set_index("Ensembl_Gene_ID")
+    # Column schema is identical.
+    assert [c for c in mine.columns if c != "Symbol"] == [c for c in ref.columns if c != "Symbol"]
+
+    common = mine.index.intersection(ref.index)
+    assert len(common) > 10_000
+    # The deterministic mid/upper percentiles match (expm1 back to TPM); tiny tail
+    # deviation at p99 is float16 rounding, so correlation must be essentially 1.
+    for col in ("p50", "p95"):
+        a = np.expm1(mine.loc[common, col].astype("float32"))
+        b = np.expm1(ref.loc[common, col].astype("float32"))
+        mask = (a > 0) | (b > 0)
+        assert np.corrcoef(a[mask], b[mask])[0, 1] > 0.999
