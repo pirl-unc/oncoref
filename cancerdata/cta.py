@@ -40,14 +40,16 @@ from .load_dataset import get_data
 MANUALLY_EXPRESSED_CTA: frozenset[str] = frozenset({"ENSG00000171405"})  # XAGE5
 
 #: Genes present in a source database but excluded from the CTA universe — core
-#: histones, placental hCG-beta, alpha-tubulins (not tumor-restricted antigens).
+#: histones and alpha-tubulins (housekeeping structural genes, not tumor-restricted
+#: antigens). The placental hCG-beta locus CGB8 is **not** excluded: it passes the
+#: HPA reproductive-restriction filter exactly like its siblings CGB1/2/3/5/7 (all
+#: kept), so excluding it alone was an inconsistency (see #20).
 NON_CTA_EXCLUDED_GENE_IDS: frozenset[str] = frozenset(
     {
         "ENSG00000274618",  # H4C6
         "ENSG00000146047",  # H2BC1
         "ENSG00000276410",  # H2BC3
         "ENSG00000124610",  # H1-1
-        "ENSG00000213030",  # CGB8 (placental hCG-beta)
         "ENSG00000198033",  # TUBA3C
         "ENSG00000152086",  # TUBA3E
     }
