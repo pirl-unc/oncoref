@@ -29,6 +29,7 @@ target-selection consumes.
 from __future__ import annotations
 
 from collections.abc import Iterable
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -37,7 +38,7 @@ import pandas as pd
 from . import data_bundle, source_matrices
 from ._build import WITHIN_SAMPLE_THRESHOLDS as _WITHIN_SAMPLE_THRESHOLD_COLS
 from .cancer_types import cohort_aggregates, resolve_cancer_type
-from .load_dataset import _BUNDLED_DATA_DIR
+from .load_dataset import _BUNDLED_DATA_DIR, _register_derived_cache
 from .normalization import clean_tpm
 
 _REPRESENTATIVES_DIR = "cancer-reference-expression-representatives"
@@ -158,6 +159,16 @@ def per_sample_expression(
                 f"per-sample matrix for {code!r} not cached at {path}. "
                 f"Run source_matrices.fetch({code!r}) to download it."
             )
+    # The read + clean_tpm of a tens-of-MB matrix is the dominant cost on every
+    # coverage / 9-mer call; memoize it (keyed on the matrix path + normalize) and
+    # hand callers a fresh copy so the shared frame can't be mutated.
+    return _load_per_sample_matrix(str(path), normalize).copy()
+
+
+@lru_cache(maxsize=2)
+def _load_per_sample_matrix(path: str, normalize: str) -> pd.DataFrame:
+    """Read + normalize one cohort's per-sample matrix (the cached canonical frame).
+    ``path`` is the resolved parquet location; the matrix must already be on disk."""
     raw = pd.read_parquet(path)
     base = ["Ensembl_Gene_ID", "Symbol"]
     samples = [c for c in raw.columns if c not in base]
@@ -168,6 +179,9 @@ def per_sample_expression(
     if normalize == "tpm_clean_log1p":
         out[samples] = np.log1p(out[samples].to_numpy(dtype=float))
     return out
+
+
+_register_derived_cache(_load_per_sample_matrix.cache_clear)
 
 
 def cohort_mean_expression(
