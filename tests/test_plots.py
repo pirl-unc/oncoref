@@ -74,9 +74,46 @@ def test_cta_expression_heatmap_bad_stat():
         plots.cta_expression_heatmap(stat="mean", cohorts=["X"])
 
 
-def test_cta_expression_heatmap_proteoform_not_implemented():
-    with pytest.raises(NotImplementedError, match="#13"):
-        plots.cta_expression_heatmap(proteoform=True, cohorts=["X"])
+def test_cta_expression_heatmap_proteoform_reads_collapsed_vectors(tmp_path, monkeypatch):
+    # proteoform=True reads the proteoform-summed percentile vectors and labels CTA
+    # columns by the proteoform symbol (NY-ESO-1). Stub the per-cohort vector.
+    import pandas as pd
+
+    from cancerdata import cta
+    from cancerdata.proteoforms import gene_to_proteoform_id
+
+    # Use two real CTAs and their real proteoform keys, so the heatmap's CTA-key filter
+    # (derived from the same CTA set) keeps both rows. At least one is a collapsed group.
+    grouped = next(g for g in sorted(cta.CTA_gene_ids()) if "/" in gene_to_proteoform_id([g])[g])
+    singleton = next(
+        g for g in sorted(cta.CTA_gene_ids()) if "/" not in gene_to_proteoform_id([g])[g]
+    )
+    keys = gene_to_proteoform_id([grouped, singleton])
+
+    def fake_pct(code, *, as_tpm=True, proteoform=False):
+        assert proteoform  # the heatmap must request the collapsed variant
+        return pd.DataFrame(
+            {
+                "proteoform_key": [keys[grouped], keys[singleton]],
+                "Ensembl_Gene_ID": [grouped, singleton],
+                "Symbol": [keys[grouped], "OTHER_CTA"],
+                "proteoform_members": ["CTAG1A/CTAG1B", "OTHER_CTA"],
+                "p25": [5.0, 1.0],
+                "p50": [40.0, 2.0],
+                "p75": [80.0, 3.0],
+            }
+        )
+
+    monkeypatch.setattr(plots, "cohort_gene_percentiles", fake_pct)
+    monkeypatch.setattr(plots, "available_percentile_cohorts", lambda *, proteoform=False: ["LUAD"])
+    out = tmp_path / "cta_pf.png"
+    fig = plots.cta_expression_heatmap(proteoform=True, n_cohorts=2, n_ctas=4, save=str(out))
+    assert out.exists() and fig is not None
+
+
+def test_cta_expression_heatmap_proteoform_missing_bundle():
+    with pytest.raises(ValueError, match="proteoform-summed percentile vector"):
+        plots.cta_expression_heatmap(proteoform=True, cohorts=[])
 
 
 def test_cta_expression_heatmap_no_cohorts():
