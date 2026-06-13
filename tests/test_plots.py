@@ -80,16 +80,23 @@ def test_cta_expression_heatmap_proteoform_reads_collapsed_vectors(tmp_path, mon
     import pandas as pd
 
     from cancerdata import cta
+    from cancerdata.proteoforms import gene_to_proteoform_id
 
-    cta_ids = sorted(cta.CTA_gene_ids())[:2]
+    # Use two real CTAs and their real proteoform keys, so the heatmap's CTA-key filter
+    # (derived from the same CTA set) keeps both rows. At least one is a collapsed group.
+    grouped = next(g for g in sorted(cta.CTA_gene_ids()) if "/" in gene_to_proteoform_id([g])[g])
+    singleton = next(
+        g for g in sorted(cta.CTA_gene_ids()) if "/" not in gene_to_proteoform_id([g])[g]
+    )
+    keys = gene_to_proteoform_id([grouped, singleton])
 
     def fake_pct(code, *, as_tpm=True, proteoform=False):
         assert proteoform  # the heatmap must request the collapsed variant
         return pd.DataFrame(
             {
-                "proteoform_key": ["NY-ESO-1", cta_ids[1]],
-                "Ensembl_Gene_ID": cta_ids,
-                "Symbol": ["NY-ESO-1", "OTHER_CTA"],
+                "proteoform_key": [keys[grouped], keys[singleton]],
+                "Ensembl_Gene_ID": [grouped, singleton],
+                "Symbol": [keys[grouped], "OTHER_CTA"],
                 "proteoform_members": ["CTAG1A/CTAG1B", "OTHER_CTA"],
                 "p25": [5.0, 1.0],
                 "p50": [40.0, 2.0],

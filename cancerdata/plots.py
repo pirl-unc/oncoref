@@ -379,6 +379,15 @@ def _cta_expression_matrix(stat, cohorts, *, proteoform=False):
     col = _STAT_PERCENTILE_COL[stat]
     id_to_name = CTA_gene_id_to_name()
     cta_ids = set(CTA_gene_ids())
+    # In the collapsed space, a CTA group's row is keyed by its proteoform_key, and the
+    # row's canonical Ensembl_Gene_ID may be an unexpressed member outside CTA_gene_ids
+    # — so match on the CTA *proteoform keys*, not the canonical ENSG (which would drop
+    # CGB3/5/8, CT45A2/8/9, …). The keys are derived from the CTA set itself.
+    cta_keys = None
+    if proteoform:
+        from .proteoforms import gene_to_proteoform_id
+
+        cta_keys = set(gene_to_proteoform_id(sorted(cta_ids)).values())
     rows = {}
     skipped = []
     for code in cohorts:
@@ -387,12 +396,15 @@ def _cta_expression_matrix(stat, cohorts, *, proteoform=False):
         except ValueError:
             skipped.append(str(code))
             continue
-        ids = df["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
-        mask = ids.isin(cta_ids)
-        sub = df.loc[mask]
-        # Label columns by the proteoform symbol when collapsed (NY-ESO-1 not CTAG1B),
-        # else the per-gene CTA symbol.
-        labels = sub["Symbol"].to_numpy() if proteoform else ids[mask].map(id_to_name).to_numpy()
+        if proteoform:
+            mask = df["proteoform_key"].astype(str).isin(cta_keys)
+            sub = df.loc[mask]
+            labels = sub["Symbol"].to_numpy()  # the proteoform symbol (NY-ESO-1, XAGE1A/B)
+        else:
+            ids = df["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+            sub = df.loc[ids.isin(cta_ids)]
+            ids_kept = sub["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+            labels = ids_kept.map(id_to_name).to_numpy()
         rows[code] = pd.Series(sub[col].to_numpy(), index=labels)
     if skipped:
         warnings.warn(
