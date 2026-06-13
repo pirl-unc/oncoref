@@ -99,7 +99,16 @@ def _family_legend_handles(plt, fam_color):
 
 
 def _family_scatter(
-    points, *, xlabel, ylabel, title, logx=False, annotate=True, figsize=(9, 7), save=None
+    points,
+    *,
+    xlabel,
+    ylabel,
+    title,
+    logx=False,
+    annotate=True,
+    figsize=(9, 7),
+    legend_loc="best",
+    save=None,
 ):
     """Scatter of ``(code, x, y)`` points coloured by registry family, with optional
     point annotations + a family legend. The shared per-cancer scatter scaffold."""
@@ -127,7 +136,7 @@ def _family_scatter(
         handles=_family_legend_handles(plt, fam_color),
         fontsize=6,
         ncol=2,
-        loc="best",
+        loc=legend_loc,
         framealpha=0.9,
     )
     fig.tight_layout()
@@ -206,12 +215,13 @@ def apd1_vs_tmb(*, save=None, annotate=True):
         logx=True,
         annotate=annotate,
         figsize=(11, 7),
+        legend_loc="upper left",
         save=save,
     )
 
 
 def apd1_orr_bars(*, save=None):
-    """Horizontal bar chart of anti-PD-1 ORR by cancer type, sorted ascending,
+    """Horizontal bar chart of anti-PD-1 ORR by cancer type, highest at the top,
     colored by lineage family."""
     orr = cancer_apd1_response()
     codes = sorted(orr, key=lambda c: orr[c], reverse=True)  # highest at top
