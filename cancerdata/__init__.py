@@ -99,6 +99,7 @@ from .fusions import (
     fusion_partners,
     protein_family,
 )
+from .gene_qc import GeneQcClass, classify_gene_qc, is_rescue_feature
 from .hpa import (
     gene_cell_type_ntpm,
     gene_protein_tissues,
@@ -148,6 +149,7 @@ __all__ = [
     "CTA_unfiltered_gene_names",
     # expression sources + per-sample curation
     "ExpressionSource",
+    "GeneQcClass",
     "__version__",
     # expression (read accessors over the downloadable bundle)
     "addressable_fraction",
@@ -186,6 +188,7 @@ __all__ = [
     "cancer_types_in_family",
     "cancer_types_with_fusion",
     "canonical_cancer_code",
+    "classify_gene_qc",
     "cohort_aggregate_members",
     # cohort vocabulary
     "cohort_aggregates",
@@ -215,6 +218,7 @@ __all__ = [
     "hpa_rna_consensus",
     "hpa_single_cell",
     "is_mixture_cohort",
+    "is_rescue_feature",
     "known_cohort_ids",
     "mixture_cohort_codes",
     "per_sample_expression",
