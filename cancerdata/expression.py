@@ -346,8 +346,27 @@ def representative_cohort_samples(
     return long
 
 
+def _biological_per_sample(code, *, proteoform: bool, auto_fetch: bool) -> pd.DataFrame:
+    """Clean-TPM per-sample matrix with technical/censored genes dropped — the
+    biological view the summary artifacts are built on — collapsed to proteoform level
+    when requested. The runtime input to the percentile / within-sample build cores,
+    so a summary can be recomputed on the fly from the per-sample matrix (no shard)."""
+    from ._build import sample_columns
+    from .gene_families import clean_tpm_censored_gene_ids
+
+    clean = per_sample_expression(code, normalize="tpm_clean", auto_fetch=auto_fetch)
+    censored = clean_tpm_censored_gene_ids()
+    unversioned = clean["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    bio = clean[~unversioned.isin(censored)].reset_index(drop=True)
+    if proteoform:
+        from .proteoforms import collapse_to_proteoforms
+
+        bio = collapse_to_proteoforms(bio, sample_cols=sample_columns(bio))
+    return bio
+
+
 def cohort_gene_percentiles(
-    cancer_type, *, as_tpm: bool = True, proteoform: bool = False
+    cancer_type, *, as_tpm: bool = True, proteoform: bool = False, auto_fetch: bool = False
 ) -> pd.DataFrame:
     """Tail-weighted per-gene percentile vector for one cohort.
 
@@ -359,23 +378,35 @@ def cohort_gene_percentiles(
     Computed on the biological clean TPM view (technical genes dropped).
     Stored compactly as ``log1p`` + float16; ``as_tpm=True`` (default)
     ``expm1``-restores clean-TPM values, ``as_tpm=False`` returns the stored
-    log1p values. Raises if the cohort has no per-sample data (summary-only
-    cohorts have no vector — see :func:`available_percentile_cohorts`).
+    log1p values.
 
-    With ``proteoform=True``, reads the proteoform-summed variant: identical-protein
-    members were summed per sample **before** the percentiles were computed, so the
-    vector is one row per proteoform key (``proteoform_key``/``Symbol`` carry the
-    collapsed identity); build it with ``generate_cohort_percentiles.py --proteoform``.
+    With ``proteoform=True``, the vector is one row per proteoform key
+    (``proteoform_key``/``Symbol`` carry the collapsed identity), identical-protein
+    members summed **before** the percentiles are computed.
+
+    The shipped percentile **shard** can't be converted to the proteoform view (you
+    can't sum already-computed percentiles), so when no shard is present the vector is
+    **recomputed on the fly** from the per-sample matrix via the same build core — the
+    live path for the proteoform variant until its shard ships. That needs the cohort's
+    per-sample matrix cached (pass ``auto_fetch=True`` to download it); otherwise a
+    clear error.
     """
     code = resolve_cancer_type(cancer_type)
     shard = _percentiles_root(proteoform=proteoform) / f"{code}.parquet"
-    if not shard.exists():
-        variant = "proteoform-summed " if proteoform else ""
-        raise ValueError(
-            f"no {variant}percentile vector for {code!r} — only cohorts with per-sample "
-            f"data ship one; see available_percentile_cohorts(proteoform={proteoform})."
-        )
-    df = pd.read_parquet(shard)
+    if shard.exists():
+        df = pd.read_parquet(shard)
+    else:
+        from ._build import cohort_percentile_vectors, sample_columns
+
+        try:
+            bio = _biological_per_sample(code, proteoform=proteoform, auto_fetch=auto_fetch)
+        except FileNotFoundError as e:
+            variant = "proteoform-summed " if proteoform else ""
+            raise ValueError(
+                f"no {variant}percentile vector for {code!r} and its per-sample matrix "
+                f"isn't cached — fetch it (source_matrices.fetch / auto_fetch=True)."
+            ) from e
+        df = cohort_percentile_vectors(bio, sample_columns(bio))
     bp_cols = [c for c in df.columns if c not in ID_COLUMNS]
     df[bp_cols] = df[bp_cols].astype("float32")
     if as_tpm:
@@ -405,7 +436,7 @@ def available_within_sample_cohorts(*, proteoform: bool = False) -> list[str]:
 
 
 def within_sample_top_fraction(
-    cancer_type, *, threshold: float = 0.95, proteoform: bool = False
+    cancer_type, *, threshold: float = 0.95, proteoform: bool = False, auto_fetch: bool = False
 ) -> pd.DataFrame:
     """Per-gene fraction of a cohort's samples in which the gene is highly
     expressed *within that sample* — the "top ~5% expressed gene in this tumor"
@@ -413,34 +444,40 @@ def within_sample_top_fraction(
 
     Returns one row per gene (``Ensembl_Gene_ID`` + ``Symbol``) with the
     ``frac_samples_top{1,5,10}pct`` column for the requested ``threshold``
-    (0.99 / 0.95 / 0.90) plus ``n_samples``. Raises if the cohort has no
-    within-sample shard — that table is built offline from per-sample matrices
-    (see ``scripts/generate_within_sample_top5.py``) and shipped in the bundle.
+    (0.99 / 0.95 / 0.90) plus ``n_samples``.
 
-    With ``proteoform=True``, reads the proteoform-summed variant: identical-
-    protein paralogs (CTAG1A+CTAG1B, the CT47A family, …) are summed per sample
-    *before* the within-sample ranking, so a duplicated antigen is ranked as one
-    proteoform rather than several individually-diluted genes. Rows for those
-    members are replaced by a single proteoform-labelled row; build it with
-    ``generate_within_sample_top5.py --proteoform``. Note that collapsing members
-    shrinks the gene axis the percentiles are computed over, so an ungrouped
-    gene's fraction can shift slightly between the two variants — they are not
-    row-for-row comparable for genes outside any proteoform group.
+    With ``proteoform=True``, identical-protein paralogs (CTAG1A+CTAG1B, the CT47A
+    family, …) are summed per sample *before* the within-sample ranking, so a
+    duplicated antigen is ranked as one proteoform rather than several individually-
+    diluted genes (``proteoform_key``/``Symbol`` carry the collapsed identity). Note
+    collapsing members shrinks the gene axis the within-sample rank is computed over,
+    so an ungrouped gene's fraction can shift slightly vs the gene variant.
+
+    Reads the shipped shard when present, else **recomputes on the fly** from the
+    per-sample matrix via the same build core (the live path for the proteoform
+    variant until its shard ships) — needs the cohort's per-sample matrix cached (pass
+    ``auto_fetch=True`` to download it), else a clear error.
     """
     col = _WITHIN_SAMPLE_THRESHOLD_COLS.get(threshold)
     if col is None:
         raise ValueError(f"threshold must be one of {sorted(_WITHIN_SAMPLE_THRESHOLD_COLS)}")
     code = resolve_cancer_type(cancer_type)
     shard = _within_sample_root(proteoform=proteoform) / f"{code}.parquet"
-    if not shard.exists():
-        variant = "proteoform-summed " if proteoform else ""
-        raise ValueError(
-            f"no {variant}within-sample top-fraction vector for {code!r} — only "
-            f"cohorts with per-sample data ship one; see "
-            f"available_within_sample_cohorts(proteoform={proteoform})."
-        )
-    df = pd.read_parquet(shard)
-    keep = ["Ensembl_Gene_ID", "Symbol", col]
+    if shard.exists():
+        df = pd.read_parquet(shard)
+    else:
+        from ._build import sample_columns, within_sample_top_fractions
+
+        try:
+            bio = _biological_per_sample(code, proteoform=proteoform, auto_fetch=auto_fetch)
+        except FileNotFoundError as e:
+            variant = "proteoform-summed " if proteoform else ""
+            raise ValueError(
+                f"no {variant}within-sample top-fraction vector for {code!r} and its "
+                f"per-sample matrix isn't cached — fetch it (auto_fetch=True)."
+            ) from e
+        df = within_sample_top_fractions(bio, sample_columns(bio))
+    keep = [c for c in ID_COLUMNS if c in df.columns] + [col]
     if "n_samples" in df.columns:
         keep.append("n_samples")
     return df[keep]
@@ -544,28 +581,43 @@ def proteoform_cohort_mean_expression(
     )
 
 
-def gene_cohort_percentiles(cancer_type, *, as_tpm: bool = True) -> pd.DataFrame:
+def gene_cohort_percentiles(
+    cancer_type, *, as_tpm: bool = True, auto_fetch: bool = False
+) -> pd.DataFrame:
     """Gene-level per-cohort **percentile vectors**. Proteoform counterpart:
     :func:`proteoform_cohort_percentiles`. (Alias of :func:`cohort_gene_percentiles`.)"""
-    return cohort_gene_percentiles(cancer_type, as_tpm=as_tpm)
+    return cohort_gene_percentiles(cancer_type, as_tpm=as_tpm, auto_fetch=auto_fetch)
 
 
-def proteoform_cohort_percentiles(cancer_type, *, as_tpm: bool = True) -> pd.DataFrame:
+def proteoform_cohort_percentiles(
+    cancer_type, *, as_tpm: bool = True, auto_fetch: bool = False
+) -> pd.DataFrame:
     """Proteoform-level per-cohort **percentile vectors** (members summed before
-    ranking). Gene-level counterpart: :func:`gene_cohort_percentiles`."""
-    return cohort_gene_percentiles(cancer_type, as_tpm=as_tpm, proteoform=True)
+    ranking). Gene-level counterpart: :func:`gene_cohort_percentiles`. Computed on the
+    fly from the per-sample matrix until the proteoform shard ships (``auto_fetch=True``
+    to download the matrix)."""
+    return cohort_gene_percentiles(
+        cancer_type, as_tpm=as_tpm, proteoform=True, auto_fetch=auto_fetch
+    )
 
 
-def gene_within_sample_top_fraction(cancer_type, *, threshold: float = 0.95) -> pd.DataFrame:
+def gene_within_sample_top_fraction(
+    cancer_type, *, threshold: float = 0.95, auto_fetch: bool = False
+) -> pd.DataFrame:
     """Gene-level within-sample top-fraction prevalence. Proteoform counterpart:
     :func:`proteoform_within_sample_top_fraction`."""
-    return within_sample_top_fraction(cancer_type, threshold=threshold)
+    return within_sample_top_fraction(cancer_type, threshold=threshold, auto_fetch=auto_fetch)
 
 
-def proteoform_within_sample_top_fraction(cancer_type, *, threshold: float = 0.95) -> pd.DataFrame:
+def proteoform_within_sample_top_fraction(
+    cancer_type, *, threshold: float = 0.95, auto_fetch: bool = False
+) -> pd.DataFrame:
     """Proteoform-level within-sample top-fraction prevalence. Gene-level counterpart:
-    :func:`gene_within_sample_top_fraction`."""
-    return within_sample_top_fraction(cancer_type, threshold=threshold, proteoform=True)
+    :func:`gene_within_sample_top_fraction`. Computed on the fly from the per-sample
+    matrix until the proteoform shard ships (``auto_fetch=True`` to download it)."""
+    return within_sample_top_fraction(
+        cancer_type, threshold=threshold, proteoform=True, auto_fetch=auto_fetch
+    )
 
 
 def gene_representative_samples(

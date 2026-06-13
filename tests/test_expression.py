@@ -55,7 +55,16 @@ def test_cohort_gene_percentiles_resolves_alias(percentile_cache):
     assert len(df) == 2
 
 
-def test_cohort_gene_percentiles_missing_raises(percentile_cache):
+def _no_cached_matrix(monkeypatch):
+    def _raise(*a, **k):
+        raise FileNotFoundError("not cached")
+
+    monkeypatch.setattr(expression, "per_sample_expression", _raise)
+
+
+def test_cohort_gene_percentiles_missing_raises(percentile_cache, monkeypatch):
+    # No shard AND no cached matrix (on-the-fly can't run) -> clear error.
+    _no_cached_matrix(monkeypatch)
     with pytest.raises(ValueError, match="no percentile vector"):
         expression.cohort_gene_percentiles("BRCA")
 
@@ -92,9 +101,38 @@ def test_cohort_gene_percentiles_proteoform(proteoform_percentile_cache):
     assert set(df.columns) >= {"proteoform_key", "Ensembl_Gene_ID", "Symbol", "proteoform_members"}
 
 
-def test_cohort_gene_percentiles_proteoform_missing_raises(proteoform_percentile_cache):
+def test_cohort_gene_percentiles_proteoform_missing_raises(
+    proteoform_percentile_cache, monkeypatch
+):
+    _no_cached_matrix(monkeypatch)
     with pytest.raises(ValueError, match="no proteoform-summed percentile vector"):
         expression.cohort_gene_percentiles("BRCA", proteoform=True)
+
+
+def test_cohort_gene_percentiles_proteoform_computed_on_the_fly(
+    proteoform_percentile_cache, monkeypatch
+):
+    # LUAD has no proteoform shard -> the percentile vector is recomputed on the fly
+    # from the (stubbed) per-sample matrix: members collapse before the percentiles.
+    import cancerdata.proteoforms as pmod
+
+    fake = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG_A1", "ENSG_A2", "ENSG_B"],
+            "Symbol": ["A1", "A2", "B"],
+            "s1": [3.0, 5.0, 1.0],
+            "s2": [9.0, 1.0, 4.0],
+        }
+    )
+    monkeypatch.setattr(expression, "per_sample_expression", lambda code, **k: fake.copy())
+    monkeypatch.setattr(
+        pmod, "proteoform_group_map", lambda *, scope="cta": {"A1/A2": ["ENSG_A1", "ENSG_A2"]}
+    )
+    out = expression.cohort_gene_percentiles("LUAD", proteoform=True)
+    assert "proteoform_key" in out.columns
+    assert "A1/2" in set(out["Symbol"]) and "A1" not in set(out["Symbol"])
+    # A1/A2 summed per sample: s1=8, s2=10 -> p100 (max) restores to 10.0 TPM
+    assert out.set_index("Symbol").loc["A1/2", "p100"] == pytest.approx(10.0, rel=1e-2)
 
 
 def test_representatives_provenance_requires_long_format():

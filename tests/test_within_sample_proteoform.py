@@ -126,6 +126,40 @@ def test_accessor_reads_proteoform_variant(proteoform_within_sample_cache):
     assert out.set_index("Symbol").loc["SSX4/SSX4B", "frac_samples_top5pct"] == 0.42
 
 
-def test_accessor_proteoform_missing_shard_raises(proteoform_within_sample_cache):
-    with pytest.raises(ValueError, match="proteoform-summed"):
+def test_accessor_proteoform_missing_shard_and_matrix_raises(
+    proteoform_within_sample_cache, monkeypatch
+):
+    # No proteoform shard AND no cached per-sample matrix -> a clear error, not a
+    # silent failure (the on-the-fly path needs the matrix).
+    from cancerdata import expression
+
+    def _no_matrix(*a, **k):
+        raise FileNotFoundError("not cached")
+
+    monkeypatch.setattr(expression, "per_sample_expression", _no_matrix)
+    with pytest.raises(ValueError, match="per-sample matrix isn't cached"):
         within_sample_top_fraction("LUAD", proteoform=True)
+
+
+def test_accessor_proteoform_computed_on_the_fly(proteoform_within_sample_cache, monkeypatch):
+    # No proteoform shard for LUAD -> the proteoform within-sample vector is recomputed
+    # on the fly from the (stubbed) per-sample matrix: members collapse before ranking.
+    import cancerdata.proteoforms as pmod
+    from cancerdata import expression
+
+    fake = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG_A1", "ENSG_A2", "ENSG_B"],
+            "Symbol": ["A1", "A2", "B"],
+            "s1": [3.0, 5.0, 1.0],
+            "s2": [4.0, 4.0, 2.0],
+            "s3": [10.0, 0.0, 50.0],
+        }
+    )
+    monkeypatch.setattr(expression, "per_sample_expression", lambda code, **k: fake.copy())
+    monkeypatch.setattr(
+        pmod, "proteoform_group_map", lambda *, scope="cta": {"A1/A2": ["ENSG_A1", "ENSG_A2"]}
+    )
+    out = within_sample_top_fraction("LUAD", threshold=0.95, proteoform=True)
+    assert "proteoform_key" in out.columns
+    assert "A1/2" in set(out["Symbol"]) and "A1" not in set(out["Symbol"])  # collapsed
