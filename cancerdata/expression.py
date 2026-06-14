@@ -29,6 +29,7 @@ target-selection consumes.
 from __future__ import annotations
 
 import os
+import warnings
 from collections.abc import Iterable
 from functools import lru_cache
 from pathlib import Path
@@ -302,6 +303,24 @@ _COHORT_STAT_PERCENTILES = {
 }
 
 
+def _write_cohort_stat_columns(out: pd.DataFrame, mat: np.ndarray) -> None:
+    """Write the ``mean``/``std`` + percentile-ladder columns onto ``out`` from a
+    ``(n_genes, n_samples)`` value matrix — **availability-aware** (``NaN`` cells are
+    skipped, so each gene reduces only over the samples that measured it). ``std`` is
+    ``NaN`` for a gene measured by fewer than two samples (a lone observation has no
+    spread — the same ``n >= 2`` rule used for ``std_between``). Shared by
+    :func:`cohort_stats` and :func:`pooled_cohort_stats` so the suite is defined once."""
+    pcts = list(_COHORT_STAT_PERCENTILES)
+    n_obs = np.sum(~np.isnan(mat), axis=1)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN gene rows -> NaN
+        out["mean"] = np.nanmean(mat, axis=1)
+        out["std"] = np.where(n_obs >= 2, np.nanstd(mat, axis=1), np.nan)
+        q = np.nanpercentile(mat, pcts, axis=1)  # (len(pcts), n_genes)
+    for i, p in enumerate(pcts):
+        out[_COHORT_STAT_PERCENTILES[p]] = q[i]
+
+
 def cohort_stats(
     cancer_type,
     *,
@@ -325,8 +344,6 @@ def cohort_stats(
     sample first, ``scope`` ``"cta"``/``"genome"``) — a proteoform-level frame carrying
     ``proteoform_key`` (see :func:`cancerdata.proteoforms.expression_level`). Returns the
     id columns plus one column per statistic."""
-    import warnings
-
     df = per_sample_expression(
         cancer_type, normalize=normalize, auto_fetch=auto_fetch, proteoform=proteoform, scope=scope
     )
@@ -334,16 +351,8 @@ def cohort_stats(
     samples = [c for c in df.columns if c not in id_cols]
     if not samples:
         raise ValueError(f"no per-sample columns to summarize for {cancer_type!r}")
-    mat = df[samples].to_numpy(dtype=float)
     out = df[id_cols].copy()
-    pcts = list(_COHORT_STAT_PERCENTILES)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN gene rows -> NaN
-        out["mean"] = np.nanmean(mat, axis=1)
-        out["std"] = np.nanstd(mat, axis=1)
-        q = np.nanpercentile(mat, pcts, axis=1)  # (len(pcts), n_genes)
-    for i, p in enumerate(pcts):
-        out[_COHORT_STAT_PERCENTILES[p]] = q[i]
+    _write_cohort_stat_columns(out, df[samples].to_numpy(dtype=float))
     return out
 
 
@@ -850,10 +859,10 @@ def pooled_cohort_stats(
     ``min_cohorts`` drops genes measured by fewer than that many cohorts (default
     ``1`` keeps everything). ``normalize`` selects the pooling space (linear clean
     TPM by default; see :func:`per_sample_expression`). ``proteoform=True`` pools
-    the reduced proteoform key space (``scope`` ``"cta"``/``"genome"``)."""
-    import warnings
-
-    codes = _resolve_cancer_types(cancer_types)
+    the reduced proteoform key space (``scope`` ``"cta"``/``"genome"``). An aggregate
+    code (e.g. ``"SARC"``) expands to its member subtypes — pooling them is exactly
+    what a rollup cohort means."""
+    codes = _resolve_cancer_types(cancer_types, expand_aggregates=True)
     codes = list(dict.fromkeys(codes or []))
     if not codes:
         raise ValueError("pooled_cohort_stats needs at least one cancer type")
@@ -890,14 +899,7 @@ def pooled_cohort_stats(
     measured = pooled.notna()
     mat = pooled.to_numpy(dtype=float)
     out = ids.reset_index()
-    pcts = list(_COHORT_STAT_PERCENTILES)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN gene rows -> NaN
-        out["mean"] = np.nanmean(mat, axis=1)
-        out["std"] = np.nanstd(mat, axis=1)
-        q = np.nanpercentile(mat, pcts, axis=1)
-    for i, p in enumerate(pcts):
-        out[_COHORT_STAT_PERCENTILES[p]] = q[i]
+    _write_cohort_stat_columns(out, mat)
     cohort_mean_mat = per_cohort_mean.to_numpy(dtype=float)
     n_cohorts = per_cohort_mean.notna().to_numpy().sum(axis=1)
     with warnings.catch_warnings():

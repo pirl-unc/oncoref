@@ -498,9 +498,28 @@ def test_pooled_cohort_stats_availability_and_heterogeneity(monkeypatch):
     assert out.loc["E2", "std_between"] == pytest.approx(np.std([2.0, 100.0]))
     # A single-cohort gene has no between-cohort spread.
     assert np.isnan(out.loc["E1", "std_between"])
+    # std is NaN for a gene with <2 measured samples (E3: one sample in SMALL); a
+    # multi-sample gene gets a real std.
+    assert np.isnan(out.loc["E3", "std"])
+    assert out.loc["E1", "std"] == pytest.approx(np.std([10.0, 20.0, 30.0]))
     # Off-panel cells are never imputed to zero: E1's max is BIG's max (30), not
     # dragged down by SMALL's missing samples.
     assert out.loc["E1", "max"] == 30.0
+
+
+def test_pooled_cohort_stats_expands_aggregate_cohorts(monkeypatch):
+    # An aggregate code (CRC = COAD + READ) pools its member subtypes, not the
+    # rollup label (which has no per-sample matrix of its own).
+    served = {
+        "COAD": pd.DataFrame({"Ensembl_Gene_ID": ["E1"], "Symbol": ["A"], "c1": [10.0]}),
+        "READ": pd.DataFrame({"Ensembl_Gene_ID": ["E1"], "Symbol": ["A"], "r1": [20.0]}),
+    }
+    monkeypatch.setattr(expression, "per_sample_expression", lambda code, **k: served[code].copy())
+    out = expression.pooled_cohort_stats(["CRC"]).set_index("Ensembl_Gene_ID")
+    # Both members contributed: 2 cohorts, 2 samples, pooled mean (10+20)/2 = 15.
+    assert out.loc["E1", "n_cohorts"] == 2
+    assert out.loc["E1", "n_samples"] == 2
+    assert out.loc["E1", "mean"] == pytest.approx(15.0)
 
 
 def test_pooled_cohort_stats_min_cohorts_filter(monkeypatch):
