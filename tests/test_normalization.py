@@ -107,6 +107,18 @@ def test_technical_rna_groups_and_families_public():
     assert "rrna_like" in cd.TECHNICAL_RNA_GROUPS and "rrna" in cd.TECHNICAL_RNA_FAMILIES
 
 
+def test_clean_tpm_noncensored_ribosomal_paralog_stays_biology():
+    # A canonical ribosomal-protein paralog the curated list deliberately keeps OUT of the
+    # censored set (testis-restricted RPL10L, a potential antigen) must stay in biology — not
+    # get pulled into the 16% ribosomal compartment from the family-file/censored-CSV gap.
+    rpl10l = "ENSG00000165496"
+    assert rpl10l in gf.gene_family_ids("ribosomal_protein")
+    assert rpl10l not in gf.clean_tpm_censored_gene_ids(include_ribosomal_proteins=True)
+    gt = pd.DataFrame({"Ensembl_Gene_ID": [rpl10l, "ENSG00000111111"], "Symbol": ["RPL10L", "BIO"]})
+    ribo, tech = norm._compartment_masks(gt, exclude_ribosomal_proteins=True)
+    assert not ribo.iloc[0] and not tech.iloc[0]  # neither compartment -> biology
+
+
 def test_clean_tpm_no_technical_mass():
     gt, vals = _matrix()
     rem = norm._censored_mask(gt, exclude_ribosomal_proteins=True)

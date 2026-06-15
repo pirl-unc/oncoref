@@ -69,20 +69,23 @@ def _compartment_masks(
     """``(ribosomal_mask, technical_mask)`` row-aligned to ``gene_table`` — the two
     non-biological clean-TPM compartments (biology is everything in neither).
 
-    ``ribosomal`` is the **canonical ribosomal-protein** genes (RPL/RPS); ``technical``
-    is **every other censored gene** (mtDNA, NUMT pseudogenes, rRNA + its pseudogenes,
-    ribosomal-protein *pseudogenes*, polyA-bias lncRNA). With
+    ``ribosomal`` is the **canonical ribosomal-protein** genes (RPL/RPS) **that are also
+    censored**; ``technical`` is **every other censored gene** (mtDNA, NUMT pseudogenes,
+    rRNA + its pseudogenes, ribosomal-protein *pseudogenes*, polyA-bias lncRNA). The
+    intersection with the censored set matters: a canonical ribosomal paralog the curated
+    list deliberately keeps in biology (e.g. testis-restricted RPL10L, a potential antigen)
+    must stay biology, not get pulled into the censored 16% budget. With
     ``exclude_ribosomal_proteins=False`` the ribosomal proteins join biology (empty
     ribosomal mask) and only the technical-RNA set is censored (the legacy view)."""
     if "Ensembl_Gene_ID" not in gene_table.columns:
         raise ValueError("clean TPM needs an 'Ensembl_Gene_ID' column (censoring is ENSG-keyed)")
     ids = _unversioned(gene_table["Ensembl_Gene_ID"])
     if exclude_ribosomal_proteins:
-        ribosomal = ids.isin(gene_families.gene_family_ids("ribosomal_protein"))
-        censored = ids.isin(
-            gene_families.clean_tpm_censored_gene_ids(include_ribosomal_proteins=True)
-        )
-        technical = censored & ~ribosomal
+        censored_ids = gene_families.clean_tpm_censored_gene_ids(include_ribosomal_proteins=True)
+        # Ribosomal compartment = canonical ribosomal proteins ∩ censored set, so the mask
+        # can never exceed the censored set (a non-censored ribosomal paralog stays biology).
+        ribosomal = ids.isin(gene_families.gene_family_ids("ribosomal_protein") & censored_ids)
+        technical = ids.isin(censored_ids) & ~ribosomal
     else:
         ribosomal = pd.Series(False, index=gene_table.index)
         technical = ids.isin(
