@@ -12,16 +12,41 @@
 
 """Expression normalization — putting per-cohort RNA-seq in a comparable space.
 
-The headline transform is **clean TPM** (:func:`clean_tpm`): a two-compartment
-renormalization that forces the technical/QC compartment (mtDNA, rRNA, the
-polyA-bias lncRNAs MALAT1/NEAT1, and — by default — ribosomal proteins) to a fixed
-fraction of the per-sample budget and the biological compartment to the rest,
-renormalizing within each. The variable, pipeline-driven technical fraction no
-longer inflates real genes, so biological clean TPM is directly comparable across
-samples and sources. Plus the supporting helpers: drop technical genes for a
-biology-only view, housekeeping/log/rank transforms.
+The headline transform is **clean TPM** (:func:`clean_tpm`): a **multi-compartment**
+renormalization. Each non-biological compartment is pinned, per sample, to a fixed
+fraction of the 1e6 budget — **ribosomal proteins → 16%** (:data:`RIBOSOMAL_PROTEIN_FRACTION`),
+**technical → 9%** (:data:`TECHNICAL_FRACTION`; mtDNA, NUMT, rRNA + pseudogenes,
+ribosomal-protein pseudogenes, polyA-bias lncRNA), **biology → 75%**
+(:data:`BIOLOGICAL_FRACTION`). The variable, pipeline-driven technical/ribosomal
+fractions no longer inflate real genes, so biological clean TPM is directly comparable
+across samples and sources.
 
-Censored-gene and gene-family lists come from :mod:`cancerdata.gene_families`.
+**Calibration.** The fractions are the *fresh-frozen polyA* median, measured on TCGA
+LUAD/SKCM raw TPM (ribosomal ~16%, technical ~9%); pinning each compartment to its
+clean-prep typical nudges a degraded / different-prep / different-depletion sample back
+toward that reference (and giving ribosomal proteins their own budget means high rRNA in
+one sample can't squeeze them). **Biology-neutrality:** the split is biology-neutral up to
+a constant — biology excludes both censored compartments and is pinned to a fixed fraction
+regardless of how the censored budget is internally divided — so it does not change
+biological comparability; it keeps the censored compartments themselves comparable and the
+budget empirically interpretable. (Verified: LUAD clean TPM lands at exactly 16/9/75 per
+sample.)
+
+**Curated membership.** Which genes are technical/ribosomal is a *curated, biology-defined*
+list (the technical-RNA families + ribosomal proteins; see :mod:`cancerdata.gene_families`),
+NOT data-derived. Never define censoring from expression variance or abundance: cancer-testis
+antigens are high-variance *by definition* (that's what makes them targets), so a
+variance-based rule would censor the very antigens this library exists to find. Use data
+only to *calibrate* the fractions and *validate completeness* of the curated list.
+
+**Single definition.** :func:`clean_tpm` is the one and only clean-TPM implementation; every
+consumer routes through it (the per-sample matrix loader, :func:`normalize_expression`'s
+reference path, and ``scripts/rebuild_expression_artifacts``). Never inline a compartment
+split anywhere; read the budgets from the public fraction constants, not magic numbers.
+
+Plus the supporting helpers: drop technical genes for a biology-only view,
+housekeeping/log/rank transforms. Censored-gene and gene-family lists come from
+:mod:`cancerdata.gene_families`.
 """
 
 from __future__ import annotations
@@ -58,8 +83,12 @@ def _censored_mask(gene_table: pd.DataFrame, *, exclude_ribosomal_proteins: bool
 # (measured on TCGA LUAD/SKCM: canonical ribosomal proteins ~16%, all other technical
 # genes ~9%); biology gets the remainder. Public so a consumer reads the applied value
 # instead of re-hardcoding the magic number, and the value survives future re-calibration.
+#: Clean-TPM budget for the canonical ribosomal-protein compartment (RPL/RPS).
 RIBOSOMAL_PROTEIN_FRACTION = 0.16
+#: Clean-TPM budget for the technical compartment (mtDNA, NUMT, rRNA + pseudogenes,
+#: ribosomal-protein pseudogenes, polyA-bias lncRNA).
 TECHNICAL_FRACTION = 0.09
+#: Clean-TPM budget for the biological compartment (everything else) — the remainder.
 BIOLOGICAL_FRACTION = round(1.0 - RIBOSOMAL_PROTEIN_FRACTION - TECHNICAL_FRACTION, 10)  # 0.75
 
 
