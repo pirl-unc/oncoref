@@ -41,9 +41,13 @@ _FAMILIES = {
     "hemoglobin": "hemoglobin-genes",
 }
 
-#: Families that make up "technical RNA" — dropped by ``filter_technical_rna``:
-#: polyA-protocol artifacts whose abundance reflects library prep, not biology.
-_TECHNICAL_RNA_FAMILIES = ("mitochondrial", "numt_pseudogene", "rrna", "nuclear_retained_lncrna")
+#: The gene families that make up "technical RNA" — polyA-protocol artifacts whose
+#: abundance reflects library prep, not biology (dropped by ``filter_technical_rna``,
+#: and the bulk of the clean-TPM technical compartment). Public so a consumer can build
+#: the technical-RNA id set itself without importing a ``_``-prefixed global.
+TECHNICAL_RNA_FAMILIES = ("mitochondrial", "numt_pseudogene", "rrna", "nuclear_retained_lncrna")
+#: Back-compat private alias (prefer :data:`TECHNICAL_RNA_FAMILIES`).
+_TECHNICAL_RNA_FAMILIES = TECHNICAL_RNA_FAMILIES
 
 
 def gene_families() -> tuple[str, ...]:
@@ -98,7 +102,16 @@ def housekeeping_gene_ids() -> frozenset[str]:
 def clean_tpm_censored_gene_ids(*, include_ribosomal_proteins: bool = True) -> frozenset[str]:
     """Unversioned Ensembl IDs censored by the clean-TPM transform — technical RNA
     plus, by default, ribosomal-protein genes. Pass
-    ``include_ribosomal_proteins=False`` for the strict technical-only set."""
+    ``include_ribosomal_proteins=False`` for the strict technical-only set.
+
+    **Curated, biology-defined membership — NOT data-derived.** Membership is the technical-
+    RNA families + ribosomal proteins: genes that are non-mRNA or library-prep artifacts by
+    their molecular nature. Never expand this set from expression variance or abundance —
+    cancer-testis antigens are high-variance *by definition* (silent in most samples, high in
+    a few, which is exactly what makes them targets), so a variance-based rule would censor the
+    very antigens cancerdata exists to find. Data (TCGA LUAD/SKCM) is used only to *calibrate*
+    the clean-TPM compartment fractions and to *validate completeness* of this list (how the
+    missing rRNA genes, incl. 28S, were found)."""
     df = get_data("clean-tpm-censored-genes", copy=False)
     if not include_ribosomal_proteins:
         df = df[df["category"].astype(str) == "technical"]

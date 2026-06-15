@@ -44,16 +44,79 @@ def _matrix():
     return gt, vals
 
 
-def test_clean_tpm_two_compartment_budget():
+def test_clean_tpm_technical_compartment_budget():
+    # _matrix() has 2 technical (mito) + 3 biological genes, no ribosomal -> the technical
+    # compartment is pinned to TECHNICAL_FRACTION (9%), biology to 75%; the empty ribosomal
+    # compartment contributes 0.
     gt, vals = _matrix()
     clean = norm.clean_tpm(vals, gt)
     rem = norm._censored_mask(gt, exclude_ribosomal_proteins=True).to_numpy()
-    # technical -> 250k, biological -> 750k, exactly, per sample.
-    assert np.allclose(clean.loc[rem].sum(), 250_000.0)
-    assert np.allclose(clean.loc[~rem].sum(), 750_000.0)
+    assert np.allclose(clean.loc[rem].sum(), norm.TECHNICAL_FRACTION * 1e6)  # 90k
+    assert np.allclose(clean.loc[~rem].sum(), norm.BIOLOGICAL_FRACTION * 1e6)  # 750k
     # within-biology ratios preserved (300:400:500)
     bio = clean.loc[~rem, "s1"].to_numpy()
     assert np.allclose(bio / bio.min(), [1.0, 4 / 3, 5 / 3])
+
+
+def test_clean_tpm_three_compartments():
+    # A canonical ribosomal protein gets its OWN 16% budget, distinct from the 9% technical.
+    rpl = next(iter(gf.gene_family_ids("ribosomal_protein")))  # e.g. RPL/RPS
+    mito = next(iter(gf.gene_family_ids("mitochondrial")))
+    gt = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [rpl, mito, "ENSG00000111111", "ENSG00000222222"],
+            "Symbol": ["RP", "MT", "BIO1", "BIO2"],
+        }
+    )
+    vals = pd.DataFrame({"s1": [5000.0, 5000.0, 300.0, 700.0]}, index=gt.index)
+    clean = norm.clean_tpm(vals, gt)
+    assert clean.loc[0, "s1"] == pytest.approx(norm.RIBOSOMAL_PROTEIN_FRACTION * 1e6)  # 160k
+    assert clean.loc[1, "s1"] == pytest.approx(norm.TECHNICAL_FRACTION * 1e6)  # 90k
+    assert clean.loc[[2, 3], "s1"].sum() == pytest.approx(norm.BIOLOGICAL_FRACTION * 1e6)  # 750k
+
+
+def test_clean_tpm_compartment_fractions_public_and_sum_to_one():
+    import cancerdata as cd
+
+    # The applied compartment budgets are public constants (no re-hardcoding the magic
+    # numbers), and ribosomal + technical + biology partition the 1e6 budget.
+    assert (cd.RIBOSOMAL_PROTEIN_FRACTION, cd.TECHNICAL_FRACTION) == (0.16, 0.09)
+    assert cd.BIOLOGICAL_FRACTION == 0.75
+    assert cd.RIBOSOMAL_PROTEIN_FRACTION + cd.TECHNICAL_FRACTION + cd.BIOLOGICAL_FRACTION == 1.0
+
+
+def test_normalize_expression_records_applied_fractions():
+    # The clean_tpm path stamps the *applied* compartment budgets into the stats dict, so
+    # a consumer reads the values actually used (survives future re-calibration).
+    df = pd.DataFrame(
+        {"Symbol": ["A", "B"], "Ensembl_Gene_ID": ["E1", "E2"], "s1_TPM": [10.0, 30.0]}
+    )
+    _, stats = norm.normalize_expression(df, value_cols=["s1_TPM"], censored_fill="fixed_fraction")
+    assert stats["ribosomal_protein_fraction"] == norm.RIBOSOMAL_PROTEIN_FRACTION
+    assert stats["technical_fraction"] == norm.TECHNICAL_FRACTION
+    assert stats["biological_fraction"] == pytest.approx(0.75)
+
+
+def test_technical_rna_groups_and_families_public():
+    import cancerdata as cd
+    from cancerdata import gene_families, gene_qc
+
+    # Public names (no _-prefixed import across the package boundary) + back-compat aliases.
+    assert cd.TECHNICAL_RNA_GROUPS == gene_qc._TECHNICAL_RNA_GROUPS
+    assert cd.TECHNICAL_RNA_FAMILIES == gene_families._TECHNICAL_RNA_FAMILIES
+    assert "rrna_like" in cd.TECHNICAL_RNA_GROUPS and "rrna" in cd.TECHNICAL_RNA_FAMILIES
+
+
+def test_clean_tpm_noncensored_ribosomal_paralog_stays_biology():
+    # A canonical ribosomal-protein paralog the curated list deliberately keeps OUT of the
+    # censored set (testis-restricted RPL10L, a potential antigen) must stay in biology — not
+    # get pulled into the 16% ribosomal compartment from the family-file/censored-CSV gap.
+    rpl10l = "ENSG00000165496"
+    assert rpl10l in gf.gene_family_ids("ribosomal_protein")
+    assert rpl10l not in gf.clean_tpm_censored_gene_ids(include_ribosomal_proteins=True)
+    gt = pd.DataFrame({"Ensembl_Gene_ID": [rpl10l, "ENSG00000111111"], "Symbol": ["RPL10L", "BIO"]})
+    ribo, tech = norm._compartment_masks(gt, exclude_ribosomal_proteins=True)
+    assert not ribo.iloc[0] and not tech.iloc[0]  # neither compartment -> biology
 
 
 def test_clean_tpm_no_technical_mass():
@@ -69,7 +132,9 @@ def test_clean_tpm_validates():
     gt, vals = _matrix()
     with pytest.raises(ValueError, match="technical_fraction"):
         norm.clean_tpm(vals, gt, technical_fraction=1.5)
-    with pytest.raises(ValueError, match="gene_table or removable"):
+    with pytest.raises(ValueError, match="biology needs a budget"):
+        norm.clean_tpm(vals, gt, ribosomal_protein_fraction=0.7, technical_fraction=0.5)
+    with pytest.raises(ValueError, match="gene_table"):
         norm.clean_tpm(vals)
 
 
