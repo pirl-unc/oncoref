@@ -47,10 +47,16 @@ _GENE_NA = {"", "NAN", "NONE", "NULL", "-"}
 #: disproportionately and creep up as a fraction of bulk TPM (MALAT1, NEAT1).
 _POLYA_BIAS_LNCRNA_SYMBOLS = frozenset({"MALAT1", "NEAT1"})
 
-#: QC groups that count as "technical RNA" — the drop-by-default set.
-_TECHNICAL_RNA_GROUPS = frozenset(
+#: The QC groups that constitute "technical RNA" — the drop-by-default / clean-TPM
+#: technical compartment (mtDNA, NUMT-like pseudogenes, rRNA-like, polyA-bias lncRNA).
+#: Public so a consumer conforming a sample to the clean-TPM space can classify each
+#: gene via :func:`classify_gene_qc` and act on ``.group ∈ TECHNICAL_RNA_GROUPS`` —
+#: without importing a ``_``-prefixed global.
+TECHNICAL_RNA_GROUPS = frozenset(
     {"mt_dna", "mt_like_pseudogene", "rrna_like", "polyadenylation_bias_lncrna"}
 )
+#: Back-compat private alias (prefer :data:`TECHNICAL_RNA_GROUPS`).
+_TECHNICAL_RNA_GROUPS = TECHNICAL_RNA_GROUPS
 
 #: cancerdata gene-family name -> (qc_label, qc_group). The family naming is
 #: biological; the QC grouping is the downstream drop-by-default view. (cancerdata
@@ -217,7 +223,7 @@ def classify_gene_qc(symbol: str | None = None, *, ensembl_id: str | None = None
 def is_rescue_feature(symbol: str | None = None, *, ensembl_id: str | None = None) -> bool:
     """True when a feature is technical RNA (removed by mtDNA/rRNA censoring) — i.e.
     its QC group is in the drop-by-default technical-RNA set."""
-    return classify_gene_qc(symbol, ensembl_id=ensembl_id).group in _TECHNICAL_RNA_GROUPS
+    return classify_gene_qc(symbol, ensembl_id=ensembl_id).group in TECHNICAL_RNA_GROUPS
 
 
 __all__ = [

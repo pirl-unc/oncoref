@@ -53,52 +53,111 @@ def _censored_mask(gene_table: pd.DataFrame, *, exclude_ribosomal_proteins: bool
     return _unversioned(gene_table["Ensembl_Gene_ID"]).isin(ids)
 
 
+# clean-TPM compartment budgets — the fraction of the 1e6 per-sample budget each
+# non-biological compartment is pinned to. CALIBRATED to the fresh-frozen-polyA median
+# (measured on TCGA LUAD/SKCM: canonical ribosomal proteins ~16%, all other technical
+# genes ~9%); biology gets the remainder. Public so a consumer reads the applied value
+# instead of re-hardcoding the magic number, and the value survives future re-calibration.
+RIBOSOMAL_PROTEIN_FRACTION = 0.16
+TECHNICAL_FRACTION = 0.09
+BIOLOGICAL_FRACTION = round(1.0 - RIBOSOMAL_PROTEIN_FRACTION - TECHNICAL_FRACTION, 10)  # 0.75
+
+
+def _compartment_masks(
+    gene_table: pd.DataFrame, *, exclude_ribosomal_proteins: bool
+) -> tuple[pd.Series, pd.Series]:
+    """``(ribosomal_mask, technical_mask)`` row-aligned to ``gene_table`` — the two
+    non-biological clean-TPM compartments (biology is everything in neither).
+
+    ``ribosomal`` is the **canonical ribosomal-protein** genes (RPL/RPS); ``technical``
+    is **every other censored gene** (mtDNA, NUMT pseudogenes, rRNA + its pseudogenes,
+    ribosomal-protein *pseudogenes*, polyA-bias lncRNA). With
+    ``exclude_ribosomal_proteins=False`` the ribosomal proteins join biology (empty
+    ribosomal mask) and only the technical-RNA set is censored (the legacy view)."""
+    if "Ensembl_Gene_ID" not in gene_table.columns:
+        raise ValueError("clean TPM needs an 'Ensembl_Gene_ID' column (censoring is ENSG-keyed)")
+    ids = _unversioned(gene_table["Ensembl_Gene_ID"])
+    if exclude_ribosomal_proteins:
+        ribosomal = ids.isin(gene_families.gene_family_ids("ribosomal_protein"))
+        censored = ids.isin(
+            gene_families.clean_tpm_censored_gene_ids(include_ribosomal_proteins=True)
+        )
+        technical = censored & ~ribosomal
+    else:
+        ribosomal = pd.Series(False, index=gene_table.index)
+        technical = ids.isin(
+            gene_families.clean_tpm_censored_gene_ids(include_ribosomal_proteins=False)
+        )
+    return ribosomal, technical
+
+
 def clean_tpm(
     values: pd.DataFrame,
     gene_table: pd.DataFrame | None = None,
     *,
-    removable: pd.Series | None = None,
     exclude_ribosomal_proteins: bool = True,
-    technical_fraction: float = 0.25,
+    ribosomal_protein_fraction: float = RIBOSOMAL_PROTEIN_FRACTION,
+    technical_fraction: float = TECHNICAL_FRACTION,
 ) -> pd.DataFrame:
-    """Two-compartment **clean TPM** on a gene×sample matrix.
+    """Multi-compartment **clean TPM** on a gene×sample matrix.
 
-    ``values`` is genes (rows) × samples (cols). Provide a ``gene_table``
-    (``Symbol`` + ``Ensembl_Gene_ID``, row-aligned to ``values``) so the censored
-    (technical/ribosomal) rows can be identified, or an explicit boolean
-    ``removable`` mask **positionally aligned to ``values``'s rows** (it is applied
-    by position, not by index label).
+    ``values`` is genes (rows) × samples (cols); ``gene_table`` (``Ensembl_Gene_ID``
+    row-aligned to ``values``) assigns each gene to a compartment. Each non-biological
+    compartment is rescaled, **per sample**, to a fixed fraction of the 1e6 budget:
 
-    The technical compartment is forced to ``technical_fraction`` of the 1e6
-    budget (default 25%) and the biological compartment to the remaining
-    ``1 - technical_fraction`` (75%), each renormalized internally. So every sample
-    is the same fraction technical, the biological compartment lands on a constant
-    750k budget, and biological clean TPM is cross-sample / cross-source comparable
-    (a sample with no technical mass keeps technical at 0; biology still fills 75%).
-    """
-    if not 0.0 < technical_fraction < 1.0:
-        raise ValueError("technical_fraction must be in (0, 1)")
-    if removable is None:
-        if gene_table is None:
-            raise ValueError("clean_tpm needs either gene_table or removable")
-        removable = _censored_mask(
-            gene_table, exclude_ribosomal_proteins=exclude_ribosomal_proteins
+      - **ribosomal proteins** (canonical RPL/RPS) → ``ribosomal_protein_fraction`` (16%);
+      - **technical** (mtDNA, NUMT, rRNA + pseudogenes, ribosomal-protein pseudogenes,
+        polyA-bias lncRNA) → ``technical_fraction`` (9%);
+      - **biology** (everything else) → the remainder (75%).
+
+    **Why two censored compartments, not one.** The fractions are calibrated to the
+    *fresh-frozen polyA* median (TCGA LUAD/SKCM: ribosomal ~16%, technical ~9%). Pinning
+    each compartment to its clean-prep typical nudges a degraded / different-prep /
+    different-depletion sample — whose rRNA or ribosomal fraction is inflated — *back
+    toward that reference*, so biological clean TPM is comparable across preps. Giving
+    ribosomal proteins their **own** budget (rather than lumping them with contamination)
+    means high rRNA in one sample can't squeeze them, and vice-versa — each is pinned
+    independently. (The split is biology-neutral up to a constant — biology excludes both
+    compartments and is pinned to a fixed fraction regardless — but it keeps the censored
+    compartments themselves comparable and the budget empirically interpretable.)
+
+    An empty/zero compartment simply contributes 0 (the others still fill their share).
+    With ``exclude_ribosomal_proteins=False`` ribosomal proteins are treated as biology
+    and only the technical-RNA set is censored (the legacy single-technical view)."""
+    for name, frac in (
+        ("ribosomal_protein_fraction", ribosomal_protein_fraction),
+        ("technical_fraction", technical_fraction),
+    ):
+        if not 0.0 <= frac < 1.0:
+            raise ValueError(f"{name} must be in [0, 1)")
+    if ribosomal_protein_fraction + technical_fraction >= 1.0:
+        raise ValueError(
+            "ribosomal_protein_fraction + technical_fraction must be < 1 (biology needs a budget)"
         )
-    rem = removable.to_numpy()
+    if gene_table is None:
+        raise ValueError(
+            "clean_tpm needs a gene_table with 'Ensembl_Gene_ID' to assign compartments"
+        )
 
-    tech_budget = technical_fraction * 1_000_000.0
-    bio_budget = (1.0 - technical_fraction) * 1_000_000.0
-    tech_sum = values.loc[rem].sum(axis=0)
-    bio_sum = values.loc[~rem].sum(axis=0)
-
-    tscale = pd.Series(0.0, index=values.columns, dtype=float)
-    bscale = pd.Series(0.0, index=values.columns, dtype=float)
-    tscale.loc[tech_sum > 0] = tech_budget / tech_sum.loc[tech_sum > 0]
-    bscale.loc[bio_sum > 0] = bio_budget / bio_sum.loc[bio_sum > 0]
+    ribosomal, technical = _compartment_masks(
+        gene_table, exclude_ribosomal_proteins=exclude_ribosomal_proteins
+    )
+    rm, tm = ribosomal.to_numpy(), technical.to_numpy()
+    bm = ~(rm | tm)
+    bio_fraction = 1.0 - ribosomal_protein_fraction - technical_fraction
 
     clean = values.astype(float).copy()
-    clean.loc[rem] = values.loc[rem].mul(tscale, axis=1)
-    clean.loc[~rem] = values.loc[~rem].mul(bscale, axis=1)
+    for mask, fraction in (
+        (rm, ribosomal_protein_fraction),
+        (tm, technical_fraction),
+        (bm, bio_fraction),
+    ):
+        if not mask.any():
+            continue
+        comp_sum = values.loc[mask].sum(axis=0)
+        scale = pd.Series(0.0, index=values.columns, dtype=float)
+        scale.loc[comp_sum > 0] = fraction * 1_000_000.0 / comp_sum.loc[comp_sum > 0]
+        clean.loc[mask] = values.loc[mask].mul(scale, axis=1)
     return clean.fillna(0.0)
 
 
@@ -239,10 +298,8 @@ def fpkm_to_tpm(df: pd.DataFrame, *, value_cols=None) -> tuple[pd.DataFrame, dic
 # ---------- technical-RNA normalization (the comparable biology view) ----------
 
 #: QC groups removed by default in the legacy zero-and-renormalize path — the
-#: technical-RNA set (mtDNA / NUMT-like / rRNA-like / polyA-bias lncRNA).
-_TECHNICAL_RNA_GROUPS = frozenset(
-    {"mt_dna", "mt_like_pseudogene", "rrna_like", "polyadenylation_bias_lncrna"}
-)
+#: technical-RNA set. Single source of truth lives in :mod:`cancerdata.gene_qc`.
+from .gene_qc import TECHNICAL_RNA_GROUPS as _TECHNICAL_RNA_GROUPS  # noqa: E402
 
 
 def _technical_mask(df, *, label_col, id_col, remove_groups) -> pd.Series:
@@ -305,7 +362,8 @@ def normalize_expression(
     value_cols=None,
     group_cols=None,
     censored_fill: str = "zero",
-    technical_fraction: float = 0.25,
+    ribosomal_protein_fraction: float = RIBOSOMAL_PROTEIN_FRACTION,
+    technical_fraction: float = TECHNICAL_FRACTION,
     exclude_ribosomal_proteins: bool = True,
     remove_groups=_TECHNICAL_RNA_GROUPS,
 ) -> tuple[pd.DataFrame, dict]:
@@ -347,13 +405,20 @@ def normalize_expression(
             out[value_cols],
             gene_table=gene_table,
             exclude_ribosomal_proteins=exclude_ribosomal_proteins,
+            ribosomal_protein_fraction=ribosomal_protein_fraction,
             technical_fraction=technical_fraction,
         )
         out[value_cols] = clean
+        # Stamp the *applied* compartment budgets into the metadata (#446-analog) so a
+        # consumer reads the values actually used, surviving future re-calibration.
         return out, {
             "applied": True,
-            "reason": "clean_tpm (two-compartment)",
+            "reason": "clean_tpm (multi-compartment)",
             "mode": censored_fill,
+            "ribosomal_protein_fraction": ribosomal_protein_fraction,
+            "technical_fraction": technical_fraction,
+            "biological_fraction": 1.0 - ribosomal_protein_fraction - technical_fraction,
+            "exclude_ribosomal_proteins": bool(exclude_ribosomal_proteins),
         }
 
     removable = _technical_mask(
@@ -393,7 +458,7 @@ def normalize_technical_rna_columns(
     label_col: str = "Symbol",
     value_cols=None,
     censored_fill: str = "zero",
-    technical_fraction: float = 0.25,
+    technical_fraction: float = TECHNICAL_FRACTION,
 ) -> tuple[pd.DataFrame, dict]:
     """Technical-RNA normalization over a wide gene×sample frame — thin wrapper on
     :func:`normalize_expression` (no grouping, no noncoding removal)."""
@@ -413,7 +478,7 @@ def normalize_technical_rna_long_table(
     group_cols=("cancer_code", "subtype"),
     value_cols=("tumor_tpm_median", "tumor_tpm_q1", "tumor_tpm_q3"),
     censored_fill: str = "zero",
-    technical_fraction: float = 0.25,
+    technical_fraction: float = TECHNICAL_FRACTION,
 ) -> tuple[pd.DataFrame, dict]:
     """Technical-RNA normalization applied **within each long-table cohort group** —
     thin wrapper on :func:`normalize_expression` with ``group_cols``."""

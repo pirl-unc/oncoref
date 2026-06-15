@@ -41,9 +41,13 @@ _FAMILIES = {
     "hemoglobin": "hemoglobin-genes",
 }
 
-#: Families that make up "technical RNA" — dropped by ``filter_technical_rna``:
-#: polyA-protocol artifacts whose abundance reflects library prep, not biology.
-_TECHNICAL_RNA_FAMILIES = ("mitochondrial", "numt_pseudogene", "rrna", "nuclear_retained_lncrna")
+#: The gene families that make up "technical RNA" — polyA-protocol artifacts whose
+#: abundance reflects library prep, not biology (dropped by ``filter_technical_rna``,
+#: and the bulk of the clean-TPM technical compartment). Public so a consumer can build
+#: the technical-RNA id set itself without importing a ``_``-prefixed global.
+TECHNICAL_RNA_FAMILIES = ("mitochondrial", "numt_pseudogene", "rrna", "nuclear_retained_lncrna")
+#: Back-compat private alias (prefer :data:`TECHNICAL_RNA_FAMILIES`).
+_TECHNICAL_RNA_FAMILIES = TECHNICAL_RNA_FAMILIES
 
 
 def gene_families() -> tuple[str, ...]:

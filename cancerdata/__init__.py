@@ -120,7 +120,8 @@ from .fusions import (
     fusion_partners,
     protein_family,
 )
-from .gene_qc import GeneQcClass, classify_gene_qc, is_rescue_feature
+from .gene_families import TECHNICAL_RNA_FAMILIES
+from .gene_qc import TECHNICAL_RNA_GROUPS, GeneQcClass, classify_gene_qc, is_rescue_feature
 from .genome import (
     aggregate_gene_expression,
     canonical_gene_id_and_name,
@@ -145,6 +146,9 @@ from .incidence import (
     cancer_code_burden_map,
 )
 from .normalization import (
+    BIOLOGICAL_FRACTION,
+    RIBOSOMAL_PROTEIN_FRACTION,
+    TECHNICAL_FRACTION,
     clean_tpm,
     drop_technical_genes,
     filter_technical_rna,
@@ -196,10 +200,16 @@ from .tmb import cancer_tmb, cancer_tmb_df
 from .version import __version__
 
 __all__ = [
+    # expression sources + per-sample curation
+    "BIOLOGICAL_FRACTION",
     # ontology / registry
     "CANCER_TYPE_ALIASES",
     "CANCER_TYPE_NAMES",
+    "RIBOSOMAL_PROTEIN_FRACTION",
     "SHARD_DATASETS",
+    "TECHNICAL_FRACTION",
+    "TECHNICAL_RNA_FAMILIES",
+    "TECHNICAL_RNA_GROUPS",
     # cancer-testis antigens
     "CTA_evidence",
     "CTA_excluded_gene_names",
@@ -211,7 +221,6 @@ __all__ = [
     "CTA_never_expressed_gene_names",
     "CTA_unfiltered_gene_ids",
     "CTA_unfiltered_gene_names",
-    # expression sources + per-sample curation
     "ExpressionSource",
     "GeneQcClass",
     "ShardDataset",
