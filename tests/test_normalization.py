@@ -60,8 +60,13 @@ def test_clean_tpm_technical_compartment_budget():
 
 def test_clean_tpm_three_compartments():
     # A canonical ribosomal protein gets its OWN 16% budget, distinct from the 9% technical.
-    rpl = next(iter(gf.gene_family_ids("ribosomal_protein")))  # e.g. RPL/RPS
-    mito = next(iter(gf.gene_family_ids("mitochondrial")))
+    # Intersect with the censored set and sort so the pick is deterministic across hash
+    # seeds AND guaranteed to be a *censored* ribosomal gene — RPL10L (ENSG00000165496) is
+    # the one ribosomal-protein gene deliberately left out of the censored set (it would
+    # land in biology, not the ribosomal compartment).
+    censored = gf.clean_tpm_censored_gene_ids()
+    rpl = sorted(gf.gene_family_ids("ribosomal_protein") & censored)[0]
+    mito = sorted(gf.gene_family_ids("mitochondrial") & censored)[0]
     gt = pd.DataFrame(
         {
             "Ensembl_Gene_ID": [rpl, mito, "ENSG00000111111", "ENSG00000222222"],
