@@ -15,7 +15,7 @@ CHOL,PD-1,6.0,pembrolizumab,KEYNOTE-158,advanced biliary,PMID:32359091,medium,bi
 CHOL,PD-L1,4.8,durvalumab,phase1 Asian expansion,advanced BTC mono,PMID:35611499,low,BTC monotherapy data thin (2/42)
 CLL,PD-1,0.0,pembrolizumab,Mayo phase 2,relapsed CLL,DOI:10.1182/blood-2017-02-765685,high,0/16 in CLL proper; Richter transformation responds (~44%) but is DLBCL-like
 COAD,PD-1,5.0,pembrolizumab,KEYNOTE-177/-164,all-comers (response is MSI-dependent),PMID:33264544,medium,All-comer ~5%; only the ~13% MSI-H/dMMR respond (MSI-H ~45%; MSS ~0%)
-COAD_MSI,PD-1,45.0,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,high,MSI-H/dMMR colon; immune-hot; the canonical aPD1-responsive subtype
+COAD_MSI,PD-1,43.8,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,high,MSI-H/dMMR colon; immune-hot; the canonical aPD1-responsive subtype
 COAD_MSI,PD-1+CTLA-4,55.0,nivolumab+ipilimumab,CheckMate-142,pretreated MSI-H/dMMR,PMID:29355075,high,Overman 2018 n=119; 1L (Lenz PMID:34637336) ~69%
 COAD_MSS,PD-1,0.0,pembrolizumab,KEYNOTE-016/-028,MSS,PMID:26028255,high,Microsatellite-stable colon; immune-cold; ~0% response
 CTCL,PD-1,38.0,pembrolizumab,CITN-10,mycosis fungoides / Sezary,PMID:31532724,high,ORR 38% (9/24); 2 CR + 7 PR; durable
@@ -68,7 +68,7 @@ PCPG,PD-1,9.0,pembrolizumab,NCT02721732,metastatic pheochromocytoma/paragangliom
 PMBCL,PD-1,41.5,pembrolizumab,KEYNOTE-170,relapsed/refractory primary mediastinal B-cell lymphoma,PMID:37130017,high,ORR 41.5% (22/53); CR 20.8%; 9p24.1/PD-L1 amplification; FDA-approved; the checkpoint-sensitive exception within DLBCL
 PRAD,PD-1,4.0,pembrolizumab,KEYNOTE-199,pretreated mCRPC,PMID:31774688,high,Near-zero anchor; ~5% PD-L1+ / ~3% PD-L1-
 READ,PD-1,5.0,pembrolizumab,KEYNOTE-177/-164,all-comers (response is MSI-dependent),PMID:33264544,medium,All-comer ~5%; MSI-H ~45% and MSS ~0%
-READ_MSI,PD-1,45.0,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,medium,MSI-H/dMMR rectal; small subset; same biology as COAD_MSI
+READ_MSI,PD-1,43.8,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,medium,MSI-H/dMMR rectal; small subset; same biology as COAD_MSI
 READ_MSS,PD-1,0.0,pembrolizumab,KEYNOTE-016,MSS,PMID:26028255,high,Microsatellite-stable rectal; immune-cold
 SARC_ANGIO,PD-1+CTLA-4,25.0,nivolumab+ipilimumab,DART/SWOG S1609 cohort 51,metastatic/unresectable angiosarcoma,PMID:34380663,medium,dual checkpoint ORR 25% (4/16); cutaneous scalp/face 60% (3/5); no anti-PD-1 monotherapy ORR
 SARC_ASPS,PD-L1,37.0,atezolizumab,ML39345 (NCT03141684),advanced ASPS,PMID:37672694,medium,alveolar soft part sarcoma; PD-L1 proxy (no anti-PD-1 monotherapy data); atezolizumab FDA-approved 2022; ORR 19/52

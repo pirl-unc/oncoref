@@ -48,10 +48,15 @@ follows three rules that matter when curating new trials or interpreting a poole
    ONLY the biomarker-selected subtype. Since no paper reports the blend, the reference
    audit marks these ``citation_matches=False`` → ``source_verified=False`` (flags
    ``orr-is-derived-estimate`` / ``orr-is-derived-blend`` / ``all-comer-figure-not-in-cited-paper``).
-   This is *why* ``verified_only=True`` returns no pooled value for them — a derived blend
-   must never be pooled as if it were trial data. When adding such an anchor, record the
-   subtype source it was blended from in ``notes``, not a citation that does not contain
-   the number.
+   In the estimates table these carry ``value_basis="derived_blend"`` (vs ``"reported"``),
+   and :func:`pooled_ici_response` drops them unconditionally — a derived blend must never
+   be pooled as if it were trial data. The blend is reconstructable from its components:
+   ``all_comer ≈ ORR_MSI · p_dMMR + ORR_MSS · (1 − p_dMMR)`` (COAD: 43.8·0.13 ≈ 5.7%;
+   READ: 43.8·0.07 ≈ 3.1%; UCEC: 50·0.28 + 6·0.72 ≈ 18% — note UCEC's table anchor of 8%
+   is *lower* than this roll-up and is flagged for review). When adding such an anchor,
+   keep the reported subtype values in the ``<code>_MSI`` / ``<code>_MSS`` rows and record
+   the prevalence weighting in ``notes`` — never cite a paper that does not contain the
+   blended number.
 
 2. **Never double-count patients.** A single trial routinely reports an all-comer cohort
    AND its own biomarker subgroup (e.g. ``BLCA`` KEYNOTE-052 all-comers + the CPS≥10 subset;
@@ -232,7 +237,9 @@ def cancer_ici_response_estimates_df():
     and ``responders``. ``role`` is ``"primary"`` (the cited representative setting) or
     ``"alternate"`` (other trials / subgroups for the same cancer + regimen).
     ``source_verified`` marks rows whose citation was confirmed against PubMed/Crossref
-    in the reference audit."""
+    in the reference audit. ``value_basis`` is ``"reported"`` (value reported in the cited
+    trial) or ``"derived_blend"`` (a curator-computed prevalence-weighted blend, e.g. the
+    all-comer MMR-dependent ORRs — :func:`pooled_ici_response` never pools these)."""
     return get_data("cancer-ici-response-estimates")
 
 
@@ -291,6 +298,10 @@ def pooled_ici_response(
     sub = df[(df["cancer_code"] == code) & (df["metric"].astype(str).str.upper() == metric)]
     if regimen is not None:
         sub = sub[sub["regimen"] == regimen]
+    # Derived blends (the all-comer MMR-dependent ORRs, value_basis="derived_blend") are
+    # computed from subtype components, not measured in a trial — never pool them as data.
+    if "value_basis" in sub.columns:
+        sub = sub[sub["value_basis"].astype(str) != "derived_blend"]
     if verified_only:
         sub = sub[sub["source_verified"].map(_truthy)]
     if not include_alternates:

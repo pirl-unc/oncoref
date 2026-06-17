@@ -21,9 +21,9 @@ NPC,25.0,pembrolizumab,KEYNOTE-028,pretreated; PD-L1+ selected,PMID:28837405,med
 PRAD,4.0,pembrolizumab,KEYNOTE-199,pretreated mCRPC,PMID:31774688,high,Near-zero anchor; ~5% PD-L1+ / ~3% PD-L1-,PD-1
 PAAD,1.0,pembrolizumab,pooled/basket,pretreated; MSS,,low,Near-zero anchor (~0-3%); no single clean monotherapy trial; rare dMMR/MSI-H PDAC responds (~37%) but is a tiny subset,PD-1
 GBM,8.0,nivolumab,CheckMate-143,recurrent; all-comers,PMID:32437507,high,Near-zero anchor; vs bevacizumab 23%,PD-1
-COAD_MSI,45.0,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,high,MSI-H/dMMR colon; immune-hot; the canonical aPD1-responsive subtype,PD-1
+COAD_MSI,43.8,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,high,MSI-H/dMMR colon; immune-hot; the canonical aPD1-responsive subtype,PD-1
 COAD_MSS,0.0,pembrolizumab,KEYNOTE-016/-028,MSS,PMID:26028255,high,Microsatellite-stable colon; immune-cold; ~0% response,PD-1
-READ_MSI,45.0,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,medium,MSI-H/dMMR rectal; small subset; same biology as COAD_MSI,PD-1
+READ_MSI,43.8,pembrolizumab,KEYNOTE-177,first-line; MSI-H/dMMR,PMID:33264544,medium,MSI-H/dMMR rectal; small subset; same biology as COAD_MSI,PD-1
 READ_MSS,0.0,pembrolizumab,KEYNOTE-016,MSS,PMID:26028255,high,Microsatellite-stable rectal; immune-cold,PD-1
 UCEC_MSI,50.0,pembrolizumab,KEYNOTE-158,dMMR/MSI-H advanced EC,PMID:34990208,high,ORR 50% (95% CI 40-61); MSI-H/dMMR cohort n=94,PD-1
 UCEC_CNL,6.0,pembrolizumab,KEYNOTE-158,pMMR/MSS NSMP,PMID:34990208,medium,non-MSI-H ORR ~7% (3-14); MSS NSMP arm,PD-1

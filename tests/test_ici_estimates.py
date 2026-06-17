@@ -66,6 +66,7 @@ def test_estimates_table_shape_and_coverage():
         "metric_n",
         "responders",
         "source_verified",
+        "value_basis",
     }
     assert expected <= set(est.columns)
     assert len(est) > 800
@@ -118,6 +119,37 @@ def test_pooled_verified_only_and_alternates_switches():
     loose = ici.pooled_ici_response("READ", regimen="PD-1", metric="ORR", verified_only=False)
     strict = ici.pooled_ici_response("READ", regimen="PD-1", metric="ORR")
     assert len(loose["sources"]) >= len(strict["sources"])
+
+
+def test_derived_blends_marked_and_never_pooled():
+    est = ici.cancer_ici_response_estimates_df()
+    derived = est[est["value_basis"] == "derived_blend"]
+    # exactly the three all-comer MMR-dependent cells are derived blends
+    assert set(zip(derived["cancer_code"], derived["regimen"])) == {
+        ("COAD", "PD-1"),
+        ("READ", "PD-1"),
+        ("UCEC", "PD-1"),
+    }
+    # the derived all-comer ORR is dropped from pooling even with verified_only=False
+    r = ici.pooled_ici_response("COAD", regimen="PD-1", metric="ORR", verified_only=False)
+    assert r["sources"] == [] and r["n_studies"] == 0 and r["pooled_pct"] is None
+
+
+def test_msi_subtype_value_corrected_and_rolls_up():
+    anchor = ici.cancer_ici_response_df()
+
+    def orr(code):
+        row = anchor[(anchor["cancer_code"] == code) & (anchor["regimen"] == "PD-1")]
+        return float(row["orr_pct"].iloc[0])
+
+    # COAD_MSI / READ_MSI corrected to the published KEYNOTE-177 value (43.8, not 45)
+    assert abs(orr("COAD_MSI") - 43.8) < 0.01
+    assert abs(orr("READ_MSI") - 43.8) < 0.01
+    # MSS components present and ~0; all-comer is the (low) prevalence-weighted blend
+    assert orr("COAD_MSS") == 0.0
+    assert orr("COAD") < orr("COAD_MSI")  # blend is far below the MSI subtype
+    # COAD all-comer ~ 43.8 * dMMR-prevalence(~0.13)
+    assert 4.0 <= orr("COAD") <= 7.0
 
 
 def test_pooled_result_contract():
