@@ -74,7 +74,9 @@ _needs_bundle = pytest.mark.skipif(
 def test_cta_expression_heatmap_renders(tmp_path):
     out = tmp_path / "cta.png"
     cohorts = __import__("oncoref").available_percentile_cohorts()[:6]
-    fig = plots.cta_expression_heatmap(cohorts=cohorts, n_cohorts=4, n_ctas=8, save=str(out))
+    fig = plots.cta_expression_heatmap(
+        cohorts=cohorts, n_cohorts=4, n_ctas=8, proteoform=False, save=str(out)
+    )
     assert out.exists() and out.stat().st_size > 0
     assert fig is not None
 
@@ -223,24 +225,24 @@ def test_cta_addressable_burden_bad_source():
 def test_cta_patient_count_heatmap_renders(tmp_path, monkeypatch):
     import pandas as pd
 
-    from oncoref import coverage
-
-    def fake_fractions(code, *, threshold_tpm):
-        # two cohorts, three CTAs with different per-patient prevalences
+    def fake_ws(code, *, threshold, proteoform, scope):
+        # within-sample p95 prevalence: two cohorts, three CTA proteoforms
         base = {"LUAD": [0.7, 0.3, 0.1], "SKCM": [0.9, 0.2, 0.5]}[code]
         return pd.DataFrame(
             {
                 "proteoform_key": ["E1", "E2", "E3"],
-                "Ensembl_Gene_ID": ["E1", "E2", "E3"],
                 "Symbol": ["GA", "GB", "GC"],
-                "fraction_expressing": base,
-                "n_patients_expressing": [int(x * 100) for x in base],
-                "n_patients": [100, 100, 100],
+                "frac_samples_top5pct": base,
+                "n_samples": [100, 100, 100],
             }
         )
 
+    from oncoref import proteoforms
+
     monkeypatch.setattr(plots, "_cached_per_sample_cohorts", lambda: ["LUAD", "SKCM"])
-    monkeypatch.setattr(coverage, "cta_patient_fractions", fake_fractions)
+    monkeypatch.setattr(plots, "within_sample_top_fraction", fake_ws)
+    monkeypatch.setattr(plots, "cta_gene_ids", lambda: ["E1", "E2", "E3"])
+    monkeypatch.setattr(proteoforms, "gene_to_proteoform_id", lambda ids: {i: i for i in ids})
     out = tmp_path / "patient_heatmap.png"
     fig = plots.cta_patient_count_heatmap(n_ctas=3, save=str(out))
     assert out.exists() and out.stat().st_size > 0
@@ -258,22 +260,22 @@ def test_cta_patient_count_heatmap_duplicate_symbols(tmp_path, monkeypatch):
     # cohort×CTA frame alignment — keying is on the unique proteoform_key.
     import pandas as pd
 
-    from oncoref import coverage
-
-    def fake_fractions(code, *, threshold_tpm):
+    def fake_ws(code, *, threshold, proteoform, scope):
         return pd.DataFrame(
             {
                 "proteoform_key": ["K1", "K2", "K3"],  # unique keys
-                "Ensembl_Gene_ID": ["E1", "E2", "E3"],
                 "Symbol": ["GA", "GA", "GB"],  # GA duplicated as a display label
-                "fraction_expressing": [0.7, 0.3, 0.1],
-                "n_patients_expressing": [70, 30, 10],
-                "n_patients": [100, 100, 100],
+                "frac_samples_top5pct": [0.7, 0.3, 0.1],
+                "n_samples": [100, 100, 100],
             }
         )
 
+    from oncoref import proteoforms
+
     monkeypatch.setattr(plots, "_cached_per_sample_cohorts", lambda: ["LUAD", "SKCM"])
-    monkeypatch.setattr(coverage, "cta_patient_fractions", fake_fractions)
+    monkeypatch.setattr(plots, "within_sample_top_fraction", fake_ws)
+    monkeypatch.setattr(plots, "cta_gene_ids", lambda: ["K1", "K2", "K3"])
+    monkeypatch.setattr(proteoforms, "gene_to_proteoform_id", lambda ids: {i: i for i in ids})
     out = tmp_path / "dup.png"
     fig = plots.cta_patient_count_heatmap(save=str(out))  # must not raise
     assert out.exists() and fig is not None
