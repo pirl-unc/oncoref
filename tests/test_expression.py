@@ -227,6 +227,45 @@ def test_representatives_provenance_requires_long_format():
         expression.representative_cohort_samples("PRAD", include_provenance=True)
 
 
+def test_representative_wide_does_not_fragment_genes(monkeypatch, tmp_path):
+    # The #465-class bug: cohorts quantified on different Ensembl releases carry the SAME
+    # locus under different alias symbols (and one as the raw id). The wide combiner must
+    # key on the canonical gene id, so the gene stays ONE row covered by all cohorts —
+    # never three mutually-disjoint sparse alias rows.
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG234", "ENSG999"],
+            "Symbol": ["AP000959.1", "PRAME"],
+            "A__rep1": [1.0, 2.0],
+        }
+    ).to_parquet(d / "A.parquet", index=False)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG234", "ENSG888"],
+            "Symbol": ["RP11-844P9.5", "MAGEA4"],
+            "B__rep1": [3.0, 4.0],
+        }
+    ).to_parquet(d / "B.parquet", index=False)
+    pd.DataFrame(
+        {"Ensembl_Gene_ID": ["ENSG234"], "Symbol": ["ENSG234"], "C__rep1": [5.0]}  # raw-id backfill
+    ).to_parquet(d / "C.parquet", index=False)
+
+    w = expression.representative_cohort_samples(format="wide")
+    assert len(w) == w["Ensembl_Gene_ID"].nunique()  # one row per gene id (no fragmentation)
+    shared = w[w["Ensembl_Gene_ID"] == "ENSG234"]
+    assert len(shared) == 1
+    assert shared["Symbol"].iloc[0] != "ENSG234"  # canonical symbol prefers a real alias
+    # all three cohorts' values land on that single row
+    assert bool(shared[["A__rep1", "B__rep1", "C__rep1"]].notna().all(axis=1).iloc[0])
+
+    # the long form carries the same canonical symbol (so a downstream pivot won't fragment)
+    lg = expression.representative_cohort_samples(format="long")
+    assert lg.loc[lg["Ensembl_Gene_ID"] == "ENSG234", "Symbol"].nunique() == 1
+
+
 def _raw_matrix(tmp_path):
     # A tiny raw-TPM per-sample matrix (genes x samples) whose columns sum near 1e6.
     df = pd.DataFrame(

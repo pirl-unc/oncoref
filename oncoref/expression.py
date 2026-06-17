@@ -59,6 +59,7 @@ from __future__ import annotations
 
 import os
 import warnings
+from collections import Counter
 from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import lru_cache
@@ -71,6 +72,7 @@ from . import data_bundle, source_matrices
 from .cancer_types import cohort_aggregates, resolve_cancer_type
 from .expression_builders import WITHIN_SAMPLE_THRESHOLDS as _WITHIN_SAMPLE_THRESHOLD_COLS
 from .expression_engine import id_columns, sample_columns
+from .gene_ids import unversioned
 from .load_dataset import _BUNDLED_DATA_DIR, _register_derived_cache, get_data
 from .normalization import clean_tpm
 
@@ -521,9 +523,16 @@ def representative_cohort_samples(
         requested = _resolve_cancer_types(cancer_types, expand_aggregates=True)
         codes = [c for c in dict.fromkeys(requested) if c in available]
 
-    base = ["Ensembl_Gene_ID", "Symbol"]  # representatives are a gene-level artifact
-    wide = None
+    base = ["Ensembl_Gene_ID", "Symbol"]
+    # Combine cohorts on a CANONICAL gene id only — never the (Ensembl_Gene_ID, Symbol)
+    # pair. Cohorts were quantified against different Ensembl releases, so the same locus
+    # carries a different release-alias symbol per cohort; merging on the pair fragments one
+    # gene into many mutually-disjoint sparse rows (the pirlygenes#465-class bug). We index
+    # each cohort by the *unversioned* gene id, outer-join on it, and resolve one canonical
+    # symbol per gene afterwards (mirrors the safe key handling in pooled_cohort_stats).
+    wide_parts = []
     long_parts = []
+    symbols: dict[str, list[str]] = {}  # canonical id -> symbols seen (for the canonical name)
     for code in codes:
         shard = pd.read_parquet(root / f"{code}.parquet")
         rep_cols = sample_columns(shard)
@@ -531,25 +540,40 @@ def representative_cohort_samples(
             rep_cols = rep_cols[:k]
         if normalize == "tpm_clean_log1p":
             shard[rep_cols] = np.log1p(shard[rep_cols].to_numpy(dtype=float))
+        gid = shard["Ensembl_Gene_ID"].astype(str).map(unversioned)
+        for g, s in zip(gid, shard["Symbol"].astype(str)):
+            symbols.setdefault(g, []).append(s)
+        mat = shard[rep_cols].set_axis(gid.to_numpy(), axis=0)
         if format == "wide":
-            part = shard[base + rep_cols]
-            wide = part if wide is None else wide.merge(part, on=base, how="outer")
+            wide_parts.append(mat)
         else:
-            melted = shard[base + rep_cols].melt(
-                id_vars=base, var_name="representative_id", value_name="expression"
+            melted = mat.reset_index(names="Ensembl_Gene_ID").melt(
+                id_vars="Ensembl_Gene_ID", var_name="representative_id", value_name="expression"
             )
-            melted.insert(2, "cancer_code", code)
+            melted.insert(1, "cancer_code", code)
             long_parts.append(melted)
 
+    def _canonical_symbol(gid: str) -> str:
+        # Prefer a real name over the raw-ENSG backfill that release-unaware cohorts carry;
+        # the most common alias wins (deterministic), else the id itself.
+        named = [s for s in symbols.get(gid, []) if s and s != gid]
+        return Counter(named).most_common(1)[0][0] if named else gid
+
     if format == "wide":
-        if wide is None:
+        if not wide_parts:
             return pd.DataFrame(columns=base)
-        return wide
+        combined = pd.concat(wide_parts, axis=1, join="outer").sort_index()
+        if combined.index.has_duplicates:  # belt-and-suspenders: one row per gene id
+            combined = combined.groupby(level=0).first()
+        out = combined.reset_index(names="Ensembl_Gene_ID")
+        out.insert(1, "Symbol", out["Ensembl_Gene_ID"].map(_canonical_symbol))
+        return out
 
     if not long_parts:
         cols = [*base, "cancer_code", "representative_id", "expression"]
         return pd.DataFrame(columns=cols)
     long = pd.concat(long_parts, ignore_index=True)
+    long.insert(1, "Symbol", long["Ensembl_Gene_ID"].map(_canonical_symbol))
     if include_provenance:
         prov_path = root / "_provenance.csv"
         if prov_path.exists():
@@ -957,11 +981,11 @@ def pan_cancer_expression(
     if genes is not None:
         wanted = {genes} if isinstance(genes, str) else set(genes)
         wanted = {str(g) for g in wanted}
-        unversioned = {g.split(".")[0] for g in wanted}
+        wanted_unversioned = {unversioned(g) for g in wanted}
         ids = df["Ensembl_Gene_ID"].astype(str)
         mask = (
             ids.isin(wanted)
-            | ids.str.split(".").str[0].isin(unversioned)
+            | ids.map(unversioned).isin(wanted_unversioned)
             | df["Symbol"].astype(str).isin(wanted)
         )
         df = df[mask].reset_index(drop=True)
