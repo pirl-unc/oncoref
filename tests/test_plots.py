@@ -30,6 +30,16 @@ def test_incidence_vs_mortality_renders(tmp_path):
     assert out.exists() and out.stat().st_size > 0
 
 
+def test_ici_orr_pooled_forest_renders(tmp_path):
+    out = tmp_path / "forest.png"
+    fig = plots.ici_orr_pooled_forest(save=str(out))
+    assert out.exists() and out.stat().st_size > 0
+    # one row per cancer type at its fallback regimen (every covered cancer)
+    assert len(fig.axes[0].get_yticklabels()) > 50
+    # pinning a regimen also works
+    plots.ici_orr_pooled_forest(regimen="PD-1", save=str(tmp_path / "f2.png"))
+
+
 def test_incidence_bad_region():
     with pytest.raises(ValueError, match="region must be"):
         plots.incidence_vs_mortality(region="moon")

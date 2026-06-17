@@ -477,6 +477,110 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
     return _save(fig, save)
 
 
+def ici_orr_pooled_forest(*, regimen=None, save=None):
+    """Forest plot of ICI objective response rate, one cancer type per row:
+
+    - **small grey dots** = each individual reported trial estimate (with a thin 95% CI
+      whisker where the trial reported one; dot size ∝ √n),
+    - **colored diamond** = the pooled responder-weighted estimate (Σresponders/Σn) with
+      its 95% Wilson CI as a thick bar, colored by lineage family.
+
+    Where no trial reports responders+n (so no pool is possible) the row shows the curated
+    representative anchor as the diamond, without a CI. With ``regimen=None`` each cancer
+    is shown at its fallback-resolved regimen (anti-PD-1 → anti-PD-L1 → combo); pass a
+    regimen to pin one. Rows are sorted by the estimate (highest at top)."""
+    from .ici import (
+        cancer_ici_regimen,
+        cancer_ici_response,
+        pooled_ici_response,
+    )
+
+    plt = _plt()
+    anchor = cancer_ici_response() if regimen is None else cancer_ici_response(regimen=regimen)
+    cells = {c: (cancer_ici_regimen(c) if regimen is None else regimen) for c in anchor}
+
+    rows = []  # (code, regimen, est, lo, hi, [(value, ci_lo, ci_hi, n), ...])
+    for code, reg in cells.items():
+        if reg is None:
+            continue
+        pooled = pooled_ici_response(code, regimen=reg, metric="ORR", verified_only=False)
+        pts = [
+            (s["value"], s["ci_low"], s["ci_high"], s["n"])
+            for s in pooled["sources"]
+            if s["value"] is not None
+        ]
+        if pooled["pooled_pct"] is not None:
+            est, lo, hi = pooled["pooled_pct"], pooled["ci_low"], pooled["ci_high"]
+        else:
+            est, lo, hi = anchor.get(code), None, None
+        if est is None:
+            continue
+        rows.append((code, reg, est, lo, hi, pts))
+
+    if not rows:
+        raise ValueError("no cancer types to plot")
+    rows.sort(key=lambda r: r[2])  # ascending; invert_yaxis puts the highest on top
+    code_color, _ = _family_colors([r[0] for r in rows])
+
+    fig, ax = plt.subplots(figsize=(9, max(5, 0.26 * len(rows))))
+    for y, (code, _reg, est, lo, hi, pts) in enumerate(rows):
+        # individual trial estimates (grey), with CI whiskers + √n sizing
+        for v, clo, chi, n in pts:
+            if clo is not None and chi is not None:
+                ax.plot([clo, chi], [y, y], color="#bbbbbb", lw=1.0, zorder=1)
+            size = 18 + 6 * (n**0.5) if n else 22
+            ax.scatter(
+                v,
+                y,
+                s=min(size, 90),
+                facecolor="none",
+                edgecolor="#888888",
+                linewidth=0.8,
+                zorder=2,
+            )
+        # pooled / anchor estimate (family-colored diamond + Wilson CI bar)
+        col = code_color[code]
+        if lo is not None and hi is not None:
+            ax.plot([lo, hi], [y, y], color=col, lw=2.6, alpha=0.85, zorder=3)
+        ax.scatter(est, y, marker="D", s=46, color=col, edgecolor="black", linewidth=0.5, zorder=4)
+
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels(
+        [f"{format_cancer_code_label(c)} [{reg}]" for c, reg, *_ in rows], fontsize=6
+    )
+    ax.set_xlabel("Objective response rate (%)")
+    ax.set_xlim(left=-2)
+    scope = "fallback-resolved regimen" if regimen is None else regimen
+    ax.set_title(
+        f"ICI ORR by cancer type — pooled estimate vs individual trials "
+        f"({len(rows)} types, {scope})"
+    )
+    ax.grid(True, axis="x", alpha=0.3)
+    # rows are sorted ascending and y grows upward, so the highest ORR is already on top
+    handles = [
+        plt.Line2D(
+            [],
+            [],
+            marker="D",
+            linestyle="",
+            color="#444444",
+            label="pooled estimate (Wilson 95% CI)",
+        ),
+        plt.Line2D(
+            [],
+            [],
+            marker="o",
+            linestyle="",
+            markerfacecolor="none",
+            markeredgecolor="#888888",
+            label="individual trial (95% CI)",
+        ),
+    ]
+    ax.legend(handles=handles, fontsize=7, loc="lower right")
+    fig.tight_layout()
+    return _save(fig, save)
+
+
 def incidence_vs_mortality(*, region="us", save=None):
     """Scatter of mortality-share vs incidence-share (%) per burden category for
     a region (``"us"`` or ``"world"``). The diagonal separates high-lethality
