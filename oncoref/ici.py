@@ -101,9 +101,10 @@ REGIMEN_LABELS = {
 
 def cancer_ici_response_df():
     """The curated ``cancer-ici-response.csv`` long table: one row per
-    (``cancer_code``, ``regimen``) with the representative ORR (%), drug, pivotal
-    trial, setting, source PMID/DOI, and confidence. A cancer type may appear under
-    several regimens."""
+    (``cancer_code``, ``regimen``) with the representative ORR (%), drug, pivotal trial
+    (split into ``trial_name`` / ``trial_alias`` / ``trial_nct`` — the acronym, the
+    distinct protocol/sponsor code if any, and the ClinicalTrials.gov id), setting,
+    source PMID/DOI, and confidence. A cancer type may appear under several regimens."""
     return get_data("cancer-ici-response")
 
 
@@ -317,7 +318,7 @@ def pooled_ici_response(
     sources, seen = [], set()
     for _, r in sub.iterrows():
         ref = None if r.get("ref") is None else str(r.get("ref"))
-        dedupe = (ref, str(r.get("trial")), str(r.get("setting")), _num(r.get("value")))
+        dedupe = (ref, str(r.get("trial_name")), str(r.get("setting")), _num(r.get("value")))
         if dedupe in seen:
             continue
         seen.add(dedupe)
@@ -325,7 +326,9 @@ def pooled_ici_response(
             {
                 "role": r.get("role"),
                 "drug": r.get("drug"),
-                "trial": r.get("trial"),
+                "trial_name": r.get("trial_name"),
+                "trial_alias": r.get("trial_alias"),
+                "trial_nct": r.get("trial_nct"),
                 "ref": ref,
                 "setting": r.get("setting"),
                 "value": _num(r.get("value")),

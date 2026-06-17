@@ -56,7 +56,9 @@ def test_estimates_table_shape_and_coverage():
         "regimen",
         "role",
         "drug",
-        "trial",
+        "trial_name",
+        "trial_alias",
+        "trial_nct",
         "ref",
         "metric",
         "value",
@@ -156,6 +158,43 @@ def test_msi_subtype_value_corrected_and_rolls_up():
     assert orr("UCEC_CNH") == 7.0 and orr("UCEC_CNL") == 7.0
     rolled = 0.20 * orr("UCEC_MSI") + 0.80 * orr("UCEC_CNH")
     assert abs(orr("UCEC") - rolled) <= 1.0
+
+
+def test_trial_columns_split_and_clean():
+    import re
+
+    df = ici.cancer_ici_response_df()
+    assert {"trial_name", "trial_alias", "trial_nct"} <= set(df.columns)
+    assert "trial" not in df.columns
+    for _, r in df.iterrows():
+        name = str(r["trial_name"]).strip()
+        assert name and name.lower() != "nan", f"{r['cancer_code']} missing trial_name"
+        assert "(" not in name, f"{r['cancer_code']} trial_name still has parentheses: {name}"
+        nct = r["trial_nct"]
+        if isinstance(nct, str) and nct.strip():
+            assert re.fullmatch(r"NCT\d{8}", nct.strip()), f"{r['cancer_code']} bad NCT {nct}"
+        alias = r["trial_alias"]
+        if isinstance(alias, str) and alias.strip():
+            assert alias.strip() != name, f"{r['cancer_code']} alias echoes trial_name"
+
+    def row(code, regimen):
+        m = df[(df["cancer_code"] == code) & (df["regimen"] == regimen)]
+        return m.iloc[0]
+
+    # the formerly acronym-less rows are now resolved
+    ifct = row("SCLC", "PD-L1")  # IFCT-1603: name IS the protocol code -> no alias
+    assert ifct["trial_name"] == "IFCT-1603" and ifct["trial_nct"] == "NCT03059667"
+    assert not str(ifct["trial_alias"]).strip() or str(ifct["trial_alias"]) == "nan"
+    # pooled/basket anchors correctly carry no NCT
+    paad = row("PAAD", "PD-1")
+    assert not (isinstance(paad["trial_nct"], str) and paad["trial_nct"].strip())
+
+
+def test_pooled_sources_expose_trial_labels():
+    r = ici.pooled_ici_response("NEC_MERKEL", regimen="PD-L1", metric="ORR")
+    assert r["sources"], "expected NEC_MERKEL PD-L1 sources"
+    s = r["sources"][0]
+    assert {"trial_name", "trial_alias", "trial_nct"} <= set(s)
 
 
 def test_pooled_result_contract():
