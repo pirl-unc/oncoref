@@ -200,11 +200,11 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
     codes = [p[0] for p in pairs]
     values = [p[1] for p in pairs]
     colors, fam_color = _family_colors(codes)
-    fig, ax = plt.subplots(figsize=(9, max(4, 0.32 * len(codes))))
+    fig, ax = plt.subplots(figsize=(10, max(5, 0.40 * len(codes))))
     y = np.arange(len(codes))
     ax.barh(y, values, color=[colors[c] for c in codes])
     ax.set_yticks(y)
-    ax.set_yticklabels([format_cancer_code_label(c) for c in codes], fontsize=7)
+    ax.set_yticklabels([format_cancer_code_label(c) for c in codes], fontsize=8)
     ax.invert_yaxis()  # first pair at the top
     ax.set_xlabel(xlabel)
     ax.set_title(title)
@@ -236,9 +236,9 @@ def _cohort_gene_heatmap(grid, *, title, cbar_label, cmap, lognorm=False, floor=
     fig, ax = plt.subplots(figsize=(max(8, 0.42 * len(cols)), max(6, 0.34 * len(rows))))
     im = ax.imshow(data, aspect="auto", cmap=cmap, norm=norm)
     ax.set_xticks(range(len(cols)))
-    ax.set_xticklabels(cols, rotation=90, fontsize=6)
+    ax.set_xticklabels(cols, rotation=90, fontsize=7)
     ax.set_yticks(range(len(rows)))
-    ax.set_yticklabels([format_cancer_code_label(c) for c in rows], fontsize=6)
+    ax.set_yticklabels([format_cancer_code_label(c) for c in rows], fontsize=7)
     ax.set_title(title)
     cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
     cbar.set_label(cbar_label)
@@ -455,7 +455,7 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
     plt = _plt()
     palette = _stable_palette()
     reg_color = {r: palette[i] for i, r in enumerate(REGIMEN_FALLBACK)}
-    fig, ax = plt.subplots(figsize=(10, max(5, 0.3 * len(ordered))))
+    fig, ax = plt.subplots(figsize=(11, max(6, 0.42 * len(ordered))))
     for y, c in enumerate(ordered):
         present = [(r, by_regimen[r][c]) for r in REGIMEN_FALLBACK if c in by_regimen[r]]
         xs = [v for _, v in present]
@@ -464,7 +464,7 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
         for r, v in present:
             ax.scatter(v, y, color=reg_color[r], s=48, edgecolor="white", linewidth=0.5, zorder=2)
     ax.set_yticks(range(len(ordered)))
-    ax.set_yticklabels([format_cancer_code_label(c) for c in ordered], fontsize=6)
+    ax.set_yticklabels([format_cancer_code_label(c) for c in ordered], fontsize=8)
     ax.set_xlabel("Objective response rate (%)")
     ax.set_title(f"ICI response by regimen and cancer type ({len(ordered)} types)")
     ax.grid(True, axis="x", alpha=0.3)
@@ -522,7 +522,9 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
     rows.sort(key=lambda r: r[2])  # ascending; invert_yaxis puts the highest on top
     code_color, _ = _family_colors([r[0] for r in rows])
 
-    fig, ax = plt.subplots(figsize=(9, max(5, 0.26 * len(rows))))
+    fig, ax = plt.subplots(figsize=(11, max(6, 0.42 * len(rows))))
+    for y in range(0, len(rows), 2):  # alternating row bands to trace label -> point
+        ax.axhspan(y - 0.5, y + 0.5, color="#f4f4f4", zorder=0)
     for y, (code, _reg, est, lo, hi, pts) in enumerate(rows):
         # individual trial estimates (grey), with CI whiskers + √n sizing
         for v, clo, chi, n in pts:
@@ -546,8 +548,9 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
 
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels(
-        [f"{format_cancer_code_label(c)} [{reg}]" for c, reg, *_ in rows], fontsize=6
+        [f"{format_cancer_code_label(c)} [{reg}]" for c, reg, *_ in rows], fontsize=8
     )
+    ax.set_ylim(-0.7, len(rows) - 0.3)
     ax.set_xlabel("Objective response rate (%)")
     ax.set_xlim(left=-2)
     scope = "fallback-resolved regimen" if regimen is None else regimen
