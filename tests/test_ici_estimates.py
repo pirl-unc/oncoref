@@ -185,9 +185,10 @@ def test_trial_columns_split_and_clean():
     ifct = row("SCLC", "PD-L1")  # IFCT-1603: name IS the protocol code -> no alias
     assert ifct["trial_name"] == "IFCT-1603" and ifct["trial_nct"] == "NCT03059667"
     assert not str(ifct["trial_alias"]).strip() or str(ifct["trial_alias"]) == "nan"
-    # pooled/basket anchors correctly carry no NCT
+    # PAAD now uses the direct KEYNOTE-028 pancreatic cohort rather than a
+    # derived no-citation near-zero anchor.
     paad = row("PAAD", "PD-1")
-    assert not (isinstance(paad["trial_nct"], str) and paad["trial_nct"].strip())
+    assert paad["trial_name"] == "KEYNOTE-028" and paad["trial_nct"] == "NCT02054806"
 
 
 def test_pooled_sources_expose_trial_labels():
@@ -219,7 +220,7 @@ def test_estimates_internal_consistency():
         assert r["value_basis"] in ("reported", "derived_blend"), f"{tag}: bad value_basis"
         ref = r["ref"]
         if isinstance(ref, str) and ref.strip():
-            assert ref.startswith(("PMID:", "DOI:")), f"{tag}: bad ref {ref!r}"
+            assert ref.startswith(("PMID:", "DOI:", "NCT")), f"{tag}: bad ref {ref!r}"
         v, resp, n = _num(r["value"]), _num(r["responders"]), _num(r["metric_n"])
         lo, hi = _num(r["ci_low"]), _num(r["ci_high"])
         if resp is not None and n is not None:
@@ -261,6 +262,7 @@ def test_audited_anchor_values_match_primary_orr():
     audited = {
         ("LIHC", "PD-1"): 20.0,  # CheckMate 040 dose-expansion ORR, PMID:28434648
         ("MDS", "PD-1"): 0.0,  # KEYNOTE-013: no CR/PR by IWG criteria
+        ("PAAD", "PD-1"): 0.0,  # KEYNOTE-028 pancreatic cohort: 0/24
     }
     for cell, expected in audited.items():
         code, regimen = cell
@@ -286,6 +288,31 @@ def test_audited_anchor_values_match_primary_orr():
         ]
         assert len(row) == 1
         assert abs(float(row["apd1_orr_pct"].iloc[0]) - expected) < 0.01
+
+
+def test_paad_keynote028_source_endpoints():
+    est = ici.cancer_ici_response_estimates_df()
+    rows = est[
+        (est["cancer_code"] == "PAAD") & (est["regimen"] == "PD-1") & (est["role"] == "primary")
+    ]
+    by_metric = {str(r["metric"]): r for _, r in rows.iterrows()}
+    assert {"ORR", "PFS", "OS"} <= set(by_metric)
+
+    orr = by_metric["ORR"]
+    assert orr["ref"] == "PMID:30557521"
+    assert float(orr["value"]) == 0.0
+    assert float(orr["ci_low"]) == 0.0 and float(orr["ci_high"]) == 14.2
+    assert float(orr["metric_n"]) == 24 and float(orr["responders"]) == 0
+
+    pfs = by_metric["PFS"]
+    assert pfs["ref"] == "NCT02054806"
+    assert float(pfs["value"]) == 1.7
+    assert float(pfs["ci_low"]) == 1.5 and float(pfs["ci_high"]) == 1.8
+
+    os = by_metric["OS"]
+    assert os["ref"] == "NCT02054806"
+    assert float(os["value"]) == 3.9
+    assert float(os["ci_low"]) == 2.8 and float(os["ci_high"]) == 5.5
 
 
 def test_pooled_result_contract():
