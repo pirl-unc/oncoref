@@ -646,7 +646,13 @@ def representative_cohort_samples(
         prov_path = root / "_provenance.csv"
         if prov_path.exists():
             prov = pd.read_csv(prov_path)
-            keep = ["representative_id", "source_cohort", "source_project", "n_cohort_samples"]
+            keep = [
+                "representative_id",
+                "source_cohort",
+                "source_version",
+                "source_project",
+                "n_cohort_samples",
+            ]
             long = long.merge(
                 prov[[c for c in keep if c in prov.columns]],
                 on="representative_id",
