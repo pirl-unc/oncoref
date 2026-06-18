@@ -26,6 +26,30 @@ def test_ensembl_id_alias_resolution():
     assert g.resolve_ensembl_id("ENSG99999999999.3") == "ENSG99999999999"
 
 
+def test_alias_table_is_migration_aware_and_acyclic():
+    # The map covers both alt-haplotype/patch copies and cross-release id turnover, and
+    # must be a clean forest: no self-maps, no duplicate keys, and no chains (a target
+    # that is itself an alias key) so a single lookup always lands on a canonical id.
+    aliases = g.ensembl_id_aliases()
+    keys, targets = set(aliases), set(aliases.values())
+    assert not (keys & targets), "alias targets must not themselves be alias keys (no chains)"
+    assert all(k != v for k, v in aliases.items()), "no self-maps"
+    # cross-release migration: GRCh37 GGNBP2 retired -> its current primary-assembly id
+    assert g.resolve_ensembl_id("ENSG00000005955") == "ENSG00000278311"
+
+
+def test_canonical_gene_id_any_identifier():
+    # The unified entry point (oncoref#135 item 1): any Ensembl id -> canonical ENSG.
+    assert g.canonical_gene_id("ENSG00000005955") == "ENSG00000278311"  # old GRCh37 id
+    assert g.canonical_gene_id("ENSG00000005955.7") == "ENSG00000278311"  # version-insensitive
+    assert g.canonical_gene_id("ENSG00000278311") == "ENSG00000278311"  # already canonical
+    assert g.canonical_gene_id("") is None and g.canonical_gene_id("   ") is None
+    assert g.canonical_gene_ids(["ENSG00000005955", "ENSG00000278311"]) == [
+        "ENSG00000278311",
+        "ENSG00000278311",
+    ]
+
+
 def test_symbol_synonym_resolution():
     syn = g.symbol_synonyms()
     assert len(syn) > 1000

@@ -51,10 +51,47 @@ def ensembl_id_aliases() -> dict[str, str]:
 
 
 def resolve_ensembl_id(gene_id: str) -> str:
-    """Map an alt-haplotype Ensembl gene id to its primary-contig id (unversioned);
-    returns the id unchanged if it isn't an alias."""
+    """Map an Ensembl gene id to its canonical primary-assembly id (unversioned),
+    resolving alt-haplotype / patch copies and cross-release ID turnover through the
+    shipped ensembl-id-aliases map; returns the id unchanged if it isn't an alias."""
     key = _unversioned(gene_id)
     return ensembl_id_aliases().get(key, key)
+
+
+def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> str | None:
+    """Map **any** gene identifier into the harmonized canonical ENSG space.
+
+    The single entry point a consumer reaches for when harmonizing arbitrary inputs
+    (oncoref#135): accepts an Ensembl gene id from *any* release/assembly — versioned or
+    not, alt-haplotype, patch, or a retired/old-release id — or an HGNC/NCBI gene
+    **symbol**, and returns the canonical (newest primary-assembly) ENSG, or ``None`` if
+    it can't be resolved.
+
+    - An ``ENSG…`` id is unversioned and run through the alias / cross-release migration
+      map (:func:`resolve_ensembl_id`) — so e.g. GRCh37 ``GGNBP2`` ``ENSG00000005955`` →
+      ``ENSG00000278311``. The id is returned as-is when it's already canonical / unknown.
+    - Anything else is treated as a symbol and resolved via the installed Ensembl
+      releases + NCBI synonyms (lazy import of the genome layer; needs the ``genome``
+      extra). Symbol resolution already returns a canonical primary-assembly id.
+
+    ``source_version`` (e.g. ``"GRCh37"`` / ``"75"``) is accepted for forward
+    compatibility and caller intent; the migration map is release-agnostic today."""
+    s = str(identifier).strip()
+    if not s:
+        return None
+    if s.upper().startswith("ENSG"):
+        return resolve_ensembl_id(s)
+    from .genome import canonical_gene_id_and_name  # lazy: avoids genome/pyensembl dep here
+
+    gid, _ = canonical_gene_id_and_name(s)
+    return gid
+
+
+def canonical_gene_ids(
+    identifiers: list[str], *, source_version: str | None = None
+) -> list[str | None]:
+    """Batch :func:`canonical_gene_id` → one canonical ENSG (or ``None``) per input."""
+    return [canonical_gene_id(x, source_version=source_version) for x in identifiers]
 
 
 @lru_cache(maxsize=1)

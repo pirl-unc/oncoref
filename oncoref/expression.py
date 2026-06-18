@@ -489,22 +489,35 @@ def _canonicalize_gene_rows(df: pd.DataFrame) -> pd.DataFrame:
     fragmented across cohorts (the pirlygenes#465-class bug).
 
     Each ``Ensembl_Gene_ID`` is unversioned *and* migration-resolved through the shipped
-    ensembl-id-aliases map (:func:`resolve_ensembl_id`), so an alt-haplotype / archived id
-    collapses onto its primary-contig id. When a cohort carries BOTH an alt id and its
-    primary (they now share a canonical id), the **primary-contig row is kept
-    deterministically** — the row whose unversioned id already equals its canonical id is
-    sorted first, then one row per canonical id survives. Returns ``df`` with
-    ``Ensembl_Gene_ID`` rewritten and at most one row per gene; the fast path (no
-    collisions) only rewrites the column."""
+    ensembl-id-aliases map (:func:`resolve_ensembl_id`), so an alt-haplotype / patch /
+    retired id collapses onto its canonical primary-assembly id. When a cohort carries
+    BOTH an alias id and its canonical sibling (a full-assembly quantification annotates
+    the gene on the primary contig *and* its alt-haplotype copy), their per-sample TPMs
+    are **summed** under the canonical id: RNA-seq reads multi-map between the copies, so
+    each row individually under-counts the gene — the same rationale as proteoform
+    summation, one level up (gene rather than protein). A cross-release retired id and its
+    successor never co-occur in one sample, so summing them degenerates to the lone value
+    (a relabel). All-``NaN`` cells stay ``NaN`` (``min_count=1``) so an unmeasured gene is
+    never turned into a measured zero — the canonical symbol is taken from the
+    primary-contig row (sorted first) deterministically. The fast path (no collisions)
+    only rewrites the id column."""
     canon = df["Ensembl_Gene_ID"].astype(str).map(resolve_ensembl_id)
     if not canon.duplicated().any():
         return df.assign(Ensembl_Gene_ID=canon.to_numpy())
     orig = df["Ensembl_Gene_ID"].astype(str).map(unversioned)
     is_primary = orig.to_numpy() == canon.to_numpy()
-    out = df.assign(Ensembl_Gene_ID=canon.to_numpy(), _primary=is_primary)
-    out = out.sort_values("_primary", ascending=False, kind="stable")
-    out = out.groupby("Ensembl_Gene_ID", as_index=False, sort=False).first()
-    return out.drop(columns="_primary")
+    df = df.assign(Ensembl_Gene_ID=canon.to_numpy(), _primary=is_primary)
+    df = df.sort_values("_primary", ascending=False, kind="stable").drop(columns="_primary")
+    num_cols = df.select_dtypes("number").columns.tolist()
+    obj_cols = [c for c in df.columns if c != "Ensembl_Gene_ID" and c not in num_cols]
+    grouped = df.groupby("Ensembl_Gene_ID", sort=False)
+    parts = []
+    if obj_cols:  # canonical symbol / id columns: keep the primary-contig row's value
+        parts.append(grouped[obj_cols].first())
+    if num_cols:  # per-sample TPM: SUM alt-haplotype reads into the canonical gene
+        parts.append(grouped[num_cols].sum(min_count=1))
+    out = pd.concat(parts, axis=1).reset_index()
+    return out[list(df.columns)]
 
 
 def representative_cohort_samples(

@@ -122,6 +122,14 @@ from .fusions import (
     protein_family,
 )
 from .gene_families import TECHNICAL_RNA_FAMILIES
+from .gene_ids import (
+    canonical_gene_id,
+    canonical_gene_ids,
+    ensembl_id_aliases,
+    resolve_ensembl_id,
+    resolve_symbol,
+    unversioned,
+)
 from .gene_qc import TECHNICAL_RNA_GROUPS, GeneQcClass, classify_gene_qc, is_rescue_feature
 from .genome import (
     aggregate_gene_expression,
@@ -274,7 +282,9 @@ __all__ = [
     "cancer_types_in_family",
     "cancer_types_with_fusion",
     "canonical_cancer_code",
+    "canonical_gene_id",
     "canonical_gene_id_and_name",
+    "canonical_gene_ids",
     "canonical_gene_ids_and_names",
     "classify_gene_qc",
     "clean_tpm",
@@ -307,6 +317,7 @@ __all__ = [
     "cta_unfiltered_gene_ids",
     "cta_unfiltered_gene_names",
     "drop_technical_rna",
+    "ensembl_id_aliases",
     "expression_level",
     "expression_source",
     "expression_sources",
@@ -377,6 +388,8 @@ __all__ = [
     "renormalize_to_million",
     "representative_cohort_samples",
     "resolve_cancer_type",
+    "resolve_ensembl_id",
+    "resolve_symbol",
     "response_signature_direction",
     "response_signature_genes",
     "response_signature_names",
@@ -391,6 +404,7 @@ __all__ = [
     "sources_for_cancer_code",
     "tissue_of_origin",
     "tpm_to_housekeeping_normalized",
+    "unversioned",
     "viral_status",
     "within_sample_top_fraction",
 ]

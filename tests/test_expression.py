@@ -288,6 +288,30 @@ def test_representative_wide_merges_alt_haplotype_aliases(monkeypatch, tmp_path)
     assert bool(w[["A__rep1", "B__rep1"]].notna().all(axis=1).iloc[0])  # both cohorts on it
 
 
+def test_representative_wide_sums_alt_haplotype_within_cohort(monkeypatch, tmp_path):
+    # When one cohort carries BOTH an alt-haplotype id and its primary (a full-assembly
+    # quantification annotates the gene on both contigs), their per-sample TPMs must be
+    # SUMMED under the canonical id (reads multi-map between copies), not deduped to one.
+    from oncoref.gene_ids import ensembl_id_aliases
+
+    alt, primary = next((a, p) for a, p in ensembl_id_aliases().items() if a != p)
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    # one cohort, one representative, the gene present under both ids
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [primary, alt],
+            "Symbol": ["G", "G-alt"],
+            "A__rep1": [10.0, 3.0],
+        }
+    ).to_parquet(d / "A.parquet", index=False)
+
+    w = expression.representative_cohort_samples(format="wide")
+    assert list(w["Ensembl_Gene_ID"]) == [primary]  # collapsed onto the canonical id
+    assert w["A__rep1"].iloc[0] == pytest.approx(13.0)  # 10 + 3 summed, not 10 or 3
+
+
 def _raw_matrix(tmp_path):
     # A tiny raw-TPM per-sample matrix (genes x samples) whose columns sum near 1e6.
     df = pd.DataFrame(
