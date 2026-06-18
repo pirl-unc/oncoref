@@ -40,7 +40,7 @@ The wider evidence base (``cancer-ici-response-estimates.csv``, exposed by
 follows three rules that matter when curating new trials or interpreting a pooled value:
 
 1. **Reported vs. derived values.** Most estimate rows are ORR/CRR/DCR/… *directly
-   reported* in the cited paper. A handful of anchors in ``cancer-ici-response.csv`` are
+   reported* in the cited paper or trial-results record. A handful of anchors in ``cancer-ici-response.csv`` are
    instead **curator-derived blends** — no single trial reports them. The clearest case is
    the "all-comer" ORR for MSI/MMR-dependent cancers: ``READ`` 5%, ``COAD`` 5%, ``UCEC``
    8% are *prevalence-weighted blends* of the MSI-H/dMMR responders (~45–50%) and the
@@ -237,9 +237,9 @@ def cancer_ici_response_estimates_df():
     (``ci_low`` / ``ci_high``), ``timepoint``, sample size (``metric_n`` / ``source_n``)
     and ``responders``. ``role`` is ``"primary"`` (the cited representative setting) or
     ``"alternate"`` (other trials / subgroups for the same cancer + regimen).
-    ``source_verified`` marks rows whose citation was confirmed against PubMed/Crossref
-    in the reference audit. ``value_basis`` is ``"reported"`` (value reported in the cited
-    trial) or ``"derived_blend"`` (a curator-computed prevalence-weighted blend, e.g. the
+    ``source_verified`` marks rows whose citation was confirmed against PubMed/Crossref or
+    a ClinicalTrials.gov results record in the reference audit. ``value_basis`` is
+    ``"reported"`` (value reported in the cited trial source) or ``"derived_blend"`` (a curator-computed prevalence-weighted blend, e.g. the
     all-comer MMR-dependent ORRs — :func:`pooled_ici_response` never pools these)."""
     return get_data("cancer-ici-response-estimates")
 

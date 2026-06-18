@@ -63,7 +63,7 @@ NET_PANCREAS,PD-1+CTLA-4,11.0,nivolumab+ipilimumab,DART/SWOG S1609,,NCT02834013,
 NPC,PD-1,25.0,pembrolizumab,KEYNOTE-028,MK-3475-028,NCT02054806,pretreated; PD-L1+ selected,PMID:28837405,medium,KN-028 NPC cohort ~26%
 OV,PD-1,8.0,pembrolizumab,KEYNOTE-100,MK-3475-100,NCT02674061,recurrent ovarian (all-comers),PMID:31046082,medium,pembro monotherapy ORR 8.0%
 OV,PD-L1,9.6,avelumab,JAVELIN Solid Tumor,,NCT01772004,recurrent post-platinum,PMID:30676622,high,heavily pretreated; modest
-PAAD,PD-1,1.0,pembrolizumab,pooled/basket MSS PDAC anchor,,,pretreated; MSS,,low,Near-zero anchor (~0-3%); no single clean monotherapy trial; rare dMMR/MSI-H PDAC responds (~18%; KEYNOTE-158 pancreatic subset 4/22) but tiny subset
+PAAD,PD-1,0.0,pembrolizumab,KEYNOTE-028,MK-3475-028,NCT02054806,PD-L1-positive advanced pancreatic cancer,PMID:30557521,medium,ORR 0% (0/24; 95% CI 0.0-14.2) in KEYNOTE-028 pancreatic cohort; rare MSI-H/dMMR PDAC is a biomarker-selected exception
 PCPG,PD-1,9.0,pembrolizumab,pembrolizumab metastatic pheochromocytoma/paraganglioma phase II,,NCT02721732,metastatic pheochromocytoma/paraganglioma,DOI:10.3390/cancers12082307,medium,ORR 9% (1/11); non-progression 27wk 40%; CBR 73%
 PMBCL,PD-1,41.5,pembrolizumab,KEYNOTE-170,MK-3475-170,NCT02576990,relapsed/refractory primary mediastinal B-cell lymphoma,PMID:37130017,high,ORR 41.5% (22/53); CR 20.8%; 9p24.1/PD-L1 amplification; FDA-approved; the checkpoint-sensitive exception within DLBCL
 PRAD,PD-1,4.0,pembrolizumab,KEYNOTE-199,MK-3475-199,NCT02787005,pretreated mCRPC,PMID:31774688,high,Near-zero anchor; ~5% PD-L1+ / ~3% PD-L1-

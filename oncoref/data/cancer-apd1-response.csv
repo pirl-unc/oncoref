@@ -19,7 +19,7 @@ SCLC,13.0,nivolumab,CheckMate 032,CA209-032,NCT01928394,pretreated; all-comers,P
 MESO,10.0,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,pretreated; all-comers,PMID:33836153,low,Reported ~8-20% across studies,PD-1
 NPC,25.0,pembrolizumab,KEYNOTE-028,MK-3475-028,NCT02054806,pretreated; PD-L1+ selected,PMID:28837405,medium,KN-028 NPC cohort ~26%,PD-1
 PRAD,4.0,pembrolizumab,KEYNOTE-199,MK-3475-199,NCT02787005,pretreated mCRPC,PMID:31774688,high,Near-zero anchor; ~5% PD-L1+ / ~3% PD-L1-,PD-1
-PAAD,1.0,pembrolizumab,pooled/basket MSS PDAC anchor,,,pretreated; MSS,,low,Near-zero anchor (~0-3%); no single clean monotherapy trial; rare dMMR/MSI-H PDAC responds (~18%; KEYNOTE-158 pancreatic subset 4/22) but tiny subset,PD-1
+PAAD,0.0,pembrolizumab,KEYNOTE-028,MK-3475-028,NCT02054806,PD-L1-positive advanced pancreatic cancer,PMID:30557521,medium,ORR 0% (0/24; 95% CI 0.0-14.2) in KEYNOTE-028 pancreatic cohort; rare MSI-H/dMMR PDAC is a biomarker-selected exception,PD-1
 GBM,8.0,nivolumab,CheckMate 143,CA209-143,NCT02017717,recurrent; all-comers,PMID:32437507,high,Near-zero anchor; vs bevacizumab 23%,PD-1
 COAD_MSI,43.8,pembrolizumab,KEYNOTE-177,MK-3475-177,NCT02563002,first-line; MSI-H/dMMR,PMID:33264544,high,MSI-H/dMMR colon; immune-hot; the canonical aPD1-responsive subtype,PD-1
 COAD_MSS,0.0,pembrolizumab,KEYNOTE-016,,NCT01876511,MSS,PMID:26028255,high,Microsatellite-stable colon; immune-cold; ~0% response,PD-1
