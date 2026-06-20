@@ -229,6 +229,10 @@ def test_nbl_response_rows_require_source_denominator():
             assert has_source_denominator, f"{table_name}: NBL row requires source-denominated ORR"
 
 
+def _truthy(v):
+    return str(v).strip().lower() in {"true", "1", "yes"}
+
+
 def test_estimates_internal_consistency():
     """Machine-checkable invariants on the estimates table — catches transcription / drift
     errors without re-verifying every paper. (Per-paper correctness rests on the audit.)"""
@@ -238,10 +242,14 @@ def test_estimates_internal_consistency():
         m = str(r["metric"]).upper()
         tag = f"{r['cancer_code']}/{r['regimen']}/{m}/{r['role']}"
         assert r["role"] in ("primary", "alternate"), f"{tag}: bad role"
-        assert r["value_basis"] in ("reported", "derived_blend"), f"{tag}: bad value_basis"
+        assert r["value_basis"] in (
+            "reported",
+            "derived_blend",
+            "reported_context",
+        ), f"{tag}: bad value_basis"
         ref = r["ref"]
         if isinstance(ref, str) and ref.strip():
-            assert ref.startswith(("PMID:", "DOI:")), f"{tag}: bad ref {ref!r}"
+            assert ref.startswith(("PMID:", "DOI:", "NCT")), f"{tag}: bad ref {ref!r}"
         v, resp, n = _num(r["value"]), _num(r["responders"]), _num(r["metric_n"])
         lo, hi = _num(r["ci_low"]), _num(r["ci_high"])
         if resp is not None and n is not None:
@@ -252,6 +260,30 @@ def test_estimates_internal_consistency():
                 assert abs(v - 100 * resp / n) <= 2.0, f"{tag}: value {v} != {resp}/{n}"
         if lo is not None and hi is not None and v is not None:
             assert lo - 0.6 <= v <= hi + 0.6, f"{tag}: value {v} outside CI [{lo},{hi}]"
+
+
+def test_unverified_rows_do_not_claim_source_verification():
+    df = ici.cancer_ici_response_estimates_df()
+    reported = df[
+        (df["value_basis"].astype(str) == "reported") & (~df["source_verified"].map(_truthy))
+    ]
+    notes = reported["note"].fillna("").astype(str)
+    claims_verified = notes.str.contains(
+        r"verified|confirmed|matches full text|confirmed exactly",
+        case=False,
+        regex=True,
+    )
+    explicit_uncertainty = notes.str.contains(
+        r"unverified|not independently confirmed|not confirmed|could not confirm|"
+        r"pending primary confirmation|not supported|does not report|not in abstract|"
+        r"not captured|not source-verified",
+        case=False,
+        regex=True,
+    )
+    bad = reported[claims_verified & ~explicit_uncertainty]
+    assert bad.empty, bad[
+        ["cancer_code", "regimen", "trial_name", "ref", "metric", "note"]
+    ].to_dict("records")
 
 
 def test_anchor_orr_in_ballpark_of_estimates_primary():
@@ -275,6 +307,215 @@ def test_anchor_orr_in_ballpark_of_estimates_primary():
             assert abs(float(a["orr_pct"]) - by_cell[cell]) <= 5.0, (
                 f"{cell}: anchor {a['orr_pct']} far from estimates primary {by_cell[cell]}"
             )
+
+
+def test_audited_anchor_values_match_primary_orr():
+    anchor = ici.cancer_ici_response_df()
+    est = ici.cancer_ici_response_estimates_df()
+    audited = {
+        ("LIHC", "PD-1"): 20.0,  # CheckMate 040 dose-expansion ORR, PMID:28434648
+        ("MDS", "PD-1"): 0.0,  # KEYNOTE-013: no CR/PR by IWG criteria
+        ("PAAD", "PD-1"): 0.0,  # KEYNOTE-028 pancreatic cohort: 0/24
+        ("SCLC", "PD-1"): 10.0,  # CheckMate 032 nivolumab monotherapy: 10/98
+        ("EPN", "PD-1"): 4.5,  # CheckMate 908 pooled EPN arms: 1/22
+    }
+    for cell, expected in audited.items():
+        code, regimen = cell
+        a = anchor[(anchor["cancer_code"] == code) & (anchor["regimen"] == regimen)]
+        assert len(a) == 1
+        assert abs(float(a["orr_pct"].iloc[0]) - expected) < 0.01
+
+        p = est[
+            (est["cancer_code"] == code)
+            & (est["regimen"] == regimen)
+            & (est["role"] == "primary")
+            & (est["metric"].str.upper() == "ORR")
+        ]
+        assert len(p) == 1
+        assert abs(float(p["value"].iloc[0]) - expected) < 0.01
+
+    from oncoref import apd1
+
+    apd1_anchor = apd1.cancer_apd1_response_df()
+    for (code, regimen), expected in audited.items():
+        row = apd1_anchor[
+            (apd1_anchor["cancer_code"] == code) & (apd1_anchor["drug_target"] == regimen)
+        ]
+        assert len(row) == 1
+        assert abs(float(row["apd1_orr_pct"].iloc[0]) - expected) < 0.01
+
+
+def test_paad_keynote028_source_endpoints():
+    est = ici.cancer_ici_response_estimates_df()
+    rows = est[
+        (est["cancer_code"] == "PAAD") & (est["regimen"] == "PD-1") & (est["role"] == "primary")
+    ]
+    by_metric = {str(r["metric"]): r for _, r in rows.iterrows()}
+    assert {"ORR", "PFS", "OS"} <= set(by_metric)
+
+    orr = by_metric["ORR"]
+    assert orr["ref"] == "PMID:30557521"
+    assert float(orr["value"]) == 0.0
+    assert float(orr["ci_low"]) == 0.0 and float(orr["ci_high"]) == 14.2
+    assert float(orr["metric_n"]) == 24 and float(orr["responders"]) == 0
+
+    pfs = by_metric["PFS"]
+    assert pfs["ref"] == "NCT02054806"
+    assert float(pfs["value"]) == 1.7
+    assert float(pfs["ci_low"]) == 1.5 and float(pfs["ci_high"]) == 1.8
+
+    os = by_metric["OS"]
+    assert os["ref"] == "NCT02054806"
+    assert float(os["value"]) == 3.9
+    assert float(os["ci_low"]) == 2.8 and float(os["ci_high"]) == 5.5
+
+
+def test_sclc_checkmate032_source_endpoints():
+    est = ici.cancer_ici_response_estimates_df()
+    rows = est[(est["cancer_code"] == "SCLC") & (est["ref"] == "PMID:27269741")]
+
+    def row(regimen, role, drug, metric, metric_n=None):
+        m = rows[
+            (rows["regimen"] == regimen)
+            & (rows["role"] == role)
+            & (rows["drug"] == drug)
+            & (rows["metric"] == metric)
+        ]
+        if metric_n is not None:
+            m = m[m["metric_n"] == metric_n]
+        assert len(m) == 1
+        return m.iloc[0]
+
+    mono = row("PD-1", "primary", "nivolumab", "ORR")
+    assert mono["trial_alias"] == "CA209-032"
+    assert mono["trial_nct"] == "NCT01928394"
+    assert float(mono["value"]) == 10.0
+    assert float(mono["ci_low"]) == 5.0 and float(mono["ci_high"]) == 18.0
+    assert float(mono["metric_n"]) == 98 and float(mono["responders"]) == 10
+
+    combo_hi_ipi = row("PD-1", "alternate", "nivolumab + ipilimumab", "ORR", 61)
+    assert float(combo_hi_ipi["value"]) == 23.0
+    assert float(combo_hi_ipi["ci_low"]) == 13.0 and float(combo_hi_ipi["ci_high"]) == 36.0
+    assert float(combo_hi_ipi["metric_n"]) == 61 and float(combo_hi_ipi["responders"]) == 14
+    assert bool(combo_hi_ipi["source_verified"]) is True
+
+    combo_hi_nivo = row("PD-1", "alternate", "nivolumab + ipilimumab", "ORR", 54)
+    assert float(combo_hi_nivo["value"]) == 19.0
+    assert float(combo_hi_nivo["ci_low"]) == 9.0 and float(combo_hi_nivo["ci_high"]) == 31.0
+    assert float(combo_hi_nivo["responders"]) == 10
+    assert bool(combo_hi_nivo["source_verified"]) is True
+
+
+def test_epn_checkmate908_pooled_orr_counts():
+    est = ici.cancer_ici_response_estimates_df()
+    rows = est[
+        (est["cancer_code"] == "EPN")
+        & (est["regimen"] == "PD-1")
+        & (est["ref"] == "PMID:36808285")
+        & (est["metric"] == "ORR")
+    ]
+
+    primary = rows[rows["role"] == "primary"]
+    assert len(primary) == 1
+    primary = primary.iloc[0]
+    assert primary["drug"] == "nivolumab +/- ipilimumab"
+    assert float(primary["source_n"]) == 22
+    assert float(primary["metric_n"]) == 22
+    assert float(primary["responders"]) == 1
+    assert float(primary["value"]) == 4.5
+    assert bool(primary["source_verified"]) is True
+    assert primary["value_basis"] == "reported"
+    assert _num(primary["ci_low"]) is None and _num(primary["ci_high"]) is None
+
+    combo = rows[rows["role"] == "alternate"]
+    assert len(combo) == 1
+    combo = combo.iloc[0]
+    assert float(combo["metric_n"]) == 10
+    assert float(combo["responders"]) == 0
+    assert combo["value_basis"] == "reported_context"
+
+    pooled = ici.pooled_ici_response("EPN", regimen="PD-1", metric="ORR", verified_only=False)
+    assert pooled["responders_total"] == 1
+    assert pooled["n_total"] == 22
+    assert pooled["n_pooled"] == 1
+    assert pooled["n_studies"] == 1
+    assert pooled["pooled_pct"] == 4.5
+    assert pooled["refs"] == ["PMID:36808285"]
+
+
+def test_sarc028_expansion_source_endpoints_and_pools():
+    est = ici.cancer_ici_response_estimates_df()
+    doi = "DOI:10.1200/JCO.2019.37.15_suppl.11015"
+
+    def row(code, metric, role="primary"):
+        m = est[
+            (est["cancer_code"] == code)
+            & (est["regimen"] == "PD-1")
+            & (est["role"] == role)
+            & (est["metric"] == metric)
+            & (est["ref"] == doi)
+        ]
+        assert len(m) == 1
+        return m.iloc[0]
+
+    ddlps_orr = row("SARC_DDLPS", "ORR")
+    assert float(ddlps_orr["source_n"]) == 40
+    assert float(ddlps_orr["value"]) == 10.0
+    assert float(ddlps_orr["metric_n"]) == 39 and float(ddlps_orr["responders"]) == 4
+    assert bool(ddlps_orr["source_verified"]) is True
+
+    ddlps_pfs = row("SARC_DDLPS", "PFS")
+    assert float(ddlps_pfs["value"]) == 2.0
+    assert float(ddlps_pfs["ci_low"]) == 2.0 and float(ddlps_pfs["ci_high"]) == 4.0
+    ddlps_pfs_rate = row("SARC_DDLPS", "PFS_RATE")
+    assert float(ddlps_pfs_rate["value"]) == 44.0
+    assert float(ddlps_pfs_rate["ci_low"]) == 28.0 and float(ddlps_pfs_rate["ci_high"]) == 60.0
+    ddlps_os = row("SARC_DDLPS", "OS")
+    assert float(ddlps_os["value"]) == 13.0 and float(ddlps_os["ci_low"]) == 8.0
+
+    ups_orr = row("SARC_UPS", "ORR")
+    assert float(ups_orr["source_n"]) == 40
+    assert float(ups_orr["value"]) == 23.0
+    assert float(ups_orr["metric_n"]) == 40 and float(ups_orr["responders"]) == 9
+    ups_crr = row("SARC_UPS", "CRR")
+    assert float(ups_crr["value"]) == 5.0
+    assert float(ups_crr["metric_n"]) == 40 and float(ups_crr["responders"]) == 2
+    ups_pfs = row("SARC_UPS", "PFS")
+    assert float(ups_pfs["value"]) == 3.0
+    assert float(ups_pfs["ci_low"]) == 2.0 and float(ups_pfs["ci_high"]) == 5.0
+    ups_pfs_rate = row("SARC_UPS", "PFS_RATE")
+    assert float(ups_pfs_rate["value"]) == 50.0
+    assert float(ups_pfs_rate["ci_low"]) == 35.0 and float(ups_pfs_rate["ci_high"]) == 65.0
+    ups_os = row("SARC_UPS", "OS")
+    assert float(ups_os["value"]) == 12.0
+    assert float(ups_os["ci_low"]) == 7.0 and float(ups_os["ci_high"]) == 34.0
+
+    for code, responders, n, pooled in (
+        ("SARC_DDLPS", 4, 39, 10.3),
+        ("SARC_UPS", 9, 40, 22.5),
+    ):
+        pooled_orr = ici.pooled_ici_response(
+            code,
+            regimen="PD-1",
+            metric="ORR",
+            verified_only=False,
+        )
+        assert pooled_orr["responders_total"] == responders
+        assert pooled_orr["n_total"] == n
+        assert pooled_orr["n_pooled"] == 1
+        assert pooled_orr["pooled_pct"] == pooled
+        assert pooled_orr["refs"] == [doi]
+        assert all("context" not in str(s["setting"]).lower() for s in pooled_orr["sources"])
+        assert all("comparator" not in str(s["setting"]).lower() for s in pooled_orr["sources"])
+        assert all("initial" not in str(s["setting"]).lower() for s in pooled_orr["sources"])
+
+    context = est[
+        (est["cancer_code"].isin(["SARC_DDLPS", "SARC_UPS"]))
+        & (est["regimen"] == "PD-1")
+        & (est["role"] == "alternate")
+        & (est["metric"] == "ORR")
+    ]
+    assert set(context["value_basis"]) == {"reported_context"}
 
 
 def test_pooled_result_contract():

@@ -40,7 +40,7 @@ The wider evidence base (``cancer-ici-response-estimates.csv``, exposed by
 follows three rules that matter when curating new trials or interpreting a pooled value:
 
 1. **Reported vs. derived values.** Most estimate rows are ORR/CRR/DCR/… *directly
-   reported* in the cited paper. A handful of anchors in ``cancer-ici-response.csv`` are
+   reported* in the cited paper or trial-results record. A handful of anchors in ``cancer-ici-response.csv`` are
    instead **curator-derived blends** — no single trial reports them. The clearest case is
    the "all-comer" ORR for MSI/MMR-dependent cancers: ``READ`` 5%, ``COAD`` 5%, ``UCEC``
    8% are *prevalence-weighted blends* of the MSI-H/dMMR responders (~45–50%) and the
@@ -50,7 +50,10 @@ follows three rules that matter when curating new trials or interpreting a poole
    ``orr-is-derived-estimate`` / ``orr-is-derived-blend`` / ``all-comer-figure-not-in-cited-paper``).
    In the estimates table these carry ``value_basis="derived_blend"`` (vs ``"reported"``),
    and :func:`pooled_ici_response` drops them unconditionally — a derived blend must never
-   be pooled as if it were trial data. The blend is reconstructable from its components:
+   be pooled as if it were trial data. Rows with ``value_basis="reported_context"`` are
+   source-reported values from overlapping or comparator cohorts kept for audit context,
+   and are also excluded from subtype-specific pooling. The blend is reconstructable from
+   its components:
    ``all_comer ≈ ORR_MSI · p_dMMR + ORR_MSS · (1 − p_dMMR)`` (COAD: 43.8·0.13 ≈ 5.7%;
    READ: 43.8·0.07 ≈ 3.1%; UCEC: 48·0.20 + 7·0.80 ≈ 15%, using the KEYNOTE-158 dMMR/pMMR
    cohorts at an advanced-EC dMMR prevalence ~20%). When adding such an anchor,
@@ -86,6 +89,9 @@ from .load_dataset import _register_derived_cache, get_data
 #: responder count and a denominator n). Time-to-event medians and landmark rates are
 #: deliberately excluded — see :func:`pooled_ici_response`.
 PROPORTION_METRICS: tuple[str, ...] = ("ORR", "CRR", "DCR", "PR")
+
+#: Values that are useful audit context but should not enter pooled estimates.
+NON_POOLABLE_VALUE_BASIS: frozenset[str] = frozenset({"derived_blend", "reported_context"})
 
 #: Regimen tags in preference order — the default fallback when no regimen is pinned:
 #: anti-PD-1 monotherapy first, then anti-PD-L1, then the anti-PD-1+anti-CTLA-4 doublet.
@@ -237,10 +243,13 @@ def cancer_ici_response_estimates_df():
     (``ci_low`` / ``ci_high``), ``timepoint``, sample size (``metric_n`` / ``source_n``)
     and ``responders``. ``role`` is ``"primary"`` (the cited representative setting) or
     ``"alternate"`` (other trials / subgroups for the same cancer + regimen).
-    ``source_verified`` marks rows whose citation was confirmed against PubMed/Crossref
-    in the reference audit. ``value_basis`` is ``"reported"`` (value reported in the cited
-    trial) or ``"derived_blend"`` (a curator-computed prevalence-weighted blend, e.g. the
-    all-comer MMR-dependent ORRs — :func:`pooled_ici_response` never pools these)."""
+    ``source_verified`` marks rows whose citation was confirmed against PubMed/Crossref or
+    a ClinicalTrials.gov results record in the reference audit. ``value_basis`` is
+    ``"reported"`` (value reported in the cited trial source), ``"reported_context"``
+    (source-reported overlapping or comparator cohort kept for audit context but excluded
+    from pooling), or ``"derived_blend"`` (a curator-computed prevalence-weighted blend,
+    e.g. the all-comer MMR-dependent ORRs — :func:`pooled_ici_response` never pools
+    these)."""
     return get_data("cancer-ici-response-estimates")
 
 
@@ -301,10 +310,11 @@ def pooled_ici_response(
     sub = df[(df["cancer_code"] == code) & (df["metric"].astype(str).str.upper() == metric)]
     if regimen is not None:
         sub = sub[sub["regimen"] == regimen]
-    # Derived blends (the all-comer MMR-dependent ORRs, value_basis="derived_blend") are
-    # computed from subtype components, not measured in a trial — never pool them as data.
+    # Derived blends and contextual comparator/overlapping rows are audit evidence, not
+    # subtype-specific pool inputs.
     if "value_basis" in sub.columns:
-        sub = sub[sub["value_basis"].astype(str) != "derived_blend"]
+        basis = sub["value_basis"].astype(str)
+        sub = sub[~basis.isin(NON_POOLABLE_VALUE_BASIS)]
     if verified_only:
         sub = sub[sub["source_verified"].map(_truthy)]
     if not include_alternates:
