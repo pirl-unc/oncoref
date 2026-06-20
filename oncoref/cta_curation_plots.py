@@ -36,9 +36,7 @@ from .load_dataset import get_data
 PRIMARY_SOURCES = {
     "CTpedia": lambda tags: "CTpedia" in tags,
     "CTexploreR": lambda tags: "CTexploreR_CT" in tags or "CTexploreR_CTP" in tags,
-    "daSilva2017_protein": lambda tags: (
-        "daSilva2017_protein" in tags or "daSilva2017" in tags
-    ),
+    "daSilva2017_protein": lambda tags: "daSilva2017_protein" in tags or "daSilva2017" in tags,
     "placental_antigen": lambda tags: "placental_antigen" in tags,
 }
 
@@ -225,8 +223,7 @@ def _fig_protein_vs_rna(df, path, plt):
     ax.set_xlabel("protein reliability (HPA IHC)")
     ax.set_ylabel("deflated reproductive fraction")
     ax.set_title(
-        "Protein reliability vs RNA fraction\n"
-        "(red line = required RNA threshold for that tier)"
+        "Protein reliability vs RNA fraction\n(red line = required RNA threshold for that tier)"
     )
     _save(fig, path, plt)
 

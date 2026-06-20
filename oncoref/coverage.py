@@ -364,9 +364,11 @@ def patient_coverage(
 
     _label, gene_ids = resolve_gene_set(gene_set)
     thresholds = tuple(float(t) for t in thresholds)
-    codes = list(cohorts) if cohorts is not None else [
-        c for c in source_matrices.available_cohorts() if source_matrices.is_cached(c)
-    ]
+    codes = (
+        list(cohorts)
+        if cohorts is not None
+        else [c for c in source_matrices.available_cohorts() if source_matrices.is_cached(c)]
+    )
     rows: list[dict] = []
     for code in codes:
         sub, samples, _hits, id_cols = _hit_matrix(
@@ -393,10 +395,15 @@ def patient_coverage(
                 row[f"pct_gt{suffix}"] = 100.0 * count / n if n else 0.0
             if any_hit:
                 rows.append(row)
-    columns = ["cancer_code", "label"] + [
-        c for c in ("Ensembl_Gene_ID", "Symbol", "proteoform_key", "proteoform_members")
-        if any(c in r for r in rows)
-    ] + ["n_patients"]
+    columns = (
+        ["cancer_code", "label"]
+        + [
+            c
+            for c in ("Ensembl_Gene_ID", "Symbol", "proteoform_key", "proteoform_members")
+            if any(c in r for r in rows)
+        ]
+        + ["n_patients"]
+    )
     for t in thresholds:
         suffix = f"{t:g}"
         columns.extend([f"n_gt{suffix}", f"pct_gt{suffix}"])
@@ -554,8 +561,7 @@ def _stacked_bar(per, label, threshold, path, plt):
     )
     ax.grid(axis="x", alpha=0.3)
     ax.set_title(
-        f"{label} coverage by cancer type, split by gene "
-        f"(> {threshold:g} TPM, {len(per)} cohorts)",
+        f"{label} coverage by cancer type, split by gene (> {threshold:g} TPM, {len(per)} cohorts)",
         fontsize=11,
     )
     fig.tight_layout()
@@ -598,7 +604,7 @@ def _coverage_curves(per, label, threshold, path, plt):
         ax.set_ylim(0, 100)
         ax.tick_params(labelsize=5)
         ax.grid(alpha=0.25)
-    for ax in axes[len(ordered):]:
+    for ax in axes[len(ordered) :]:
         ax.axis("off")
     fig.suptitle(
         f"{label} panel coverage by cancer type - distinct patients "

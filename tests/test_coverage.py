@@ -86,13 +86,8 @@ def test_resolve_gene_set_from_file(tmp_path):
 def test_patient_coverage_counts_gene_set_file(patched, tmp_path):
     panel = tmp_path / "panel.csv"
     panel.write_text("Ensembl_Gene_ID\nENSG_A\nENSG_B\nENSG_C\n")
-    counts = coverage.patient_coverage(
-        str(panel), cohorts=["X"], thresholds=(5,), proteoform=False
-    )
-    got = {
-        row.Ensembl_Gene_ID: (row.n_gt5, row.pct_gt5)
-        for row in counts.itertuples()
-    }
+    counts = coverage.patient_coverage(str(panel), cohorts=["X"], thresholds=(5,), proteoform=False)
+    got = {row.Ensembl_Gene_ID: (row.n_gt5, row.pct_gt5) for row in counts.itertuples()}
     assert got == {
         "ENSG_A": (2, 50.0),
         "ENSG_B": (1, 25.0),
