@@ -28,6 +28,7 @@ from functools import lru_cache
 
 from .apd1 import cancer_apd1_response
 from .cancer_types import (
+    cancer_evidence_source_code,
     cancer_lineage_group,
     cancer_type_registry,
     format_cancer_code_label,
@@ -113,6 +114,42 @@ def _family_colors(codes):
     present = sorted({fam_by_code.get(c, "other") for c in codes})
     fam_color = {f: full.get(f, full["other"]) for f in present}
     return {c: full.get(fam_by_code.get(c, "other"), full["other"]) for c in codes}, fam_color
+
+
+def _plot_evidence_code(code):
+    return cancer_evidence_source_code(code, strict=False) or str(code)
+
+
+def _cohort_sample_weight(code) -> float:
+    try:
+        from . import source_matrices
+
+        weight = float(source_matrices.cohort_info(code).get("n_samples") or 0)
+    except Exception:
+        return 1.0
+    return weight if weight > 0 else 1.0
+
+
+def _collapse_metric_points(cohorts, metric_map, value_fn):
+    grouped: dict[str, list[tuple[float, float]]] = {}
+    for cohort in cohorts:
+        code = _plot_evidence_code(cohort)
+        if code not in metric_map:
+            continue
+        value = float(value_fn(cohort))
+        if value != value:  # NaN
+            continue
+        grouped.setdefault(code, []).append((value, _cohort_sample_weight(cohort)))
+
+    points = []
+    for code, values in grouped.items():
+        total_weight = sum(w for _, w in values)
+        if total_weight:
+            x = sum(v * w for v, w in values) / total_weight
+        else:
+            x = sum(v for v, _ in values) / len(values)
+        points.append((code, x, float(metric_map[code])))
+    return points
 
 
 def _save(fig, save):
@@ -1118,12 +1155,11 @@ def cta_burden_vs_response(*, against="apd1", threshold_tpm=50.0, cohorts=None, 
         raise ValueError("against must be 'apd1' or 'tmb'")
 
     cohorts = list(cohorts) if cohorts is not None else _cached_per_sample_cohorts()
-    points = []
-    for code in cohorts:
-        if code not in ymap:
-            continue
-        load = mean_antigens_per_patient(code, threshold_tpm=threshold_tpm)
-        points.append((code, load, float(ymap[code])))
+    points = _collapse_metric_points(
+        cohorts,
+        ymap,
+        lambda code: mean_antigens_per_patient(code, threshold_tpm=threshold_tpm),
+    )
     if not points:
         raise ValueError(
             f"no cohort with both a cached per-sample matrix and a {against} value — "
@@ -1154,13 +1190,7 @@ def apd1_response_signature_scatter(signature="t_cell_inflamed", *, cohorts=None
     direction = response_signature_direction(signature)  # validates the name
     orr = cancer_apd1_response()
     cohorts = list(cohorts) if cohorts is not None else _cached_per_sample_cohorts()
-    points = []
-    for code in cohorts:
-        if code not in orr:
-            continue
-        score = signature_score(code, signature)
-        if score == score:  # not NaN
-            points.append((code, score, float(orr[code])))
+    points = _collapse_metric_points(cohorts, orr, lambda code: signature_score(code, signature))
     if not points:
         raise ValueError(
             "no cohort with both a cached per-sample matrix and an aPD1 ORR — fetch "
@@ -1200,12 +1230,11 @@ def cta_specific_9mer_load(*, against="tmb", threshold_tpm=50.0, cohorts=None, s
         raise ValueError("against must be 'tmb' or 'apd1'")
 
     cohorts = list(cohorts) if cohorts is not None else _cached_per_sample_cohorts()
-    points = []
-    for code in cohorts:
-        if code not in xmap:
-            continue
-        load = _load(code, threshold_tpm=threshold_tpm)
-        points.append((code, load, float(xmap[code])))
+    points = _collapse_metric_points(
+        cohorts,
+        xmap,
+        lambda code: _load(code, threshold_tpm=threshold_tpm),
+    )
     if not points:
         raise ValueError(
             f"no cohort with both a cached per-sample matrix and a {against} value — "

@@ -343,6 +343,31 @@ def test_cta_specific_9mer_load_renders(tmp_path, monkeypatch):
     assert out.exists() and fig is not None
 
 
+def test_cta_specific_9mer_load_collapses_crc_msi_source_scope(tmp_path, monkeypatch):
+    from oncoref import peptides, source_matrices
+
+    monkeypatch.setattr(plots, "_cached_per_sample_cohorts", lambda: ["COAD_MSI", "READ_MSI"])
+    monkeypatch.setattr(plots, "cancer_tmb", lambda: {"CRC_MSI": 46.0})
+    monkeypatch.setattr(
+        peptides,
+        "cta_specific_9mer_load",
+        lambda code, **k: {"COAD_MSI": 10.0, "READ_MSI": 30.0}[code],
+    )
+    monkeypatch.setattr(
+        source_matrices,
+        "cohort_info",
+        lambda code: {"n_samples": {"COAD_MSI": 3, "READ_MSI": 1}[code]},
+    )
+
+    out = tmp_path / "crc_msi_9mer.png"
+    fig = plots.cta_specific_9mer_load(against="tmb", save=str(out))
+    offsets = [tuple(coll.get_offsets()[0]) for coll in fig.axes[0].collections]
+    assert len(offsets) == 1
+    assert offsets[0][0] == pytest.approx(15.0)
+    assert offsets[0][1] == pytest.approx(46.0)
+    assert [t.get_text() for t in fig.axes[0].texts] == ["CRC_MSI"]
+
+
 def test_cta_specific_9mer_load_bad_against():
     with pytest.raises(ValueError, match="against must be"):
         plots.cta_specific_9mer_load(against="nonsense")
