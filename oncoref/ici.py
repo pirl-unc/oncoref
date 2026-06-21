@@ -186,7 +186,9 @@ def cancer_ici_response(cancer_type=None, *, regimen=None, fallback=True, inheri
             return per
         source_code = cancer_evidence_source_code(code)
         if source_code != code:
-            hit = {r: maps[r][source_code] for r in REGIMEN_FALLBACK if source_code in maps.get(r, {})}
+            hit = {
+                r: maps[r][source_code] for r in REGIMEN_FALLBACK if source_code in maps.get(r, {})
+            }
             if hit:
                 return hit
         # walk ancestors for a per-regimen mapping

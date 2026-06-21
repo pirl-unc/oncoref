@@ -25,9 +25,7 @@ def test_apd1_vs_tmb_strict_pd1_filters_proxy_targets(tmp_path):
     fig = plots.apd1_vs_tmb(strict_pd1=True, save=str(tmp_path / "strict.png"))
     labels = {t.get_text() for t in fig.axes[0].texts}
     proxy_codes = set(
-        plots.cancer_apd1_response_df()
-        .query("drug_target != 'PD-1'")["cancer_code"]
-        .astype(str)
+        plots.cancer_apd1_response_df().query("drug_target != 'PD-1'")["cancer_code"].astype(str)
     )
     assert labels.isdisjoint(proxy_codes)
 

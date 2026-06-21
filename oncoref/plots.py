@@ -168,10 +168,15 @@ def _apd1_axis(*, strict_pd1=False):
 
 def _burden_metric_axis(against):
     pieces = str(against).split("_", 1)
-    if len(pieces) != 2 or pieces[0] not in {"us", "world"} or pieces[1] not in {
-        "incidence",
-        "mortality",
-    }:
+    if (
+        len(pieces) != 2
+        or pieces[0] not in {"us", "world"}
+        or pieces[1]
+        not in {
+            "incidence",
+            "mortality",
+        }
+    ):
         raise ValueError("against must be 'apd1', 'tmb', or a burden metric")
     region, metric = pieces
     burden = cancer_burden(metric=f"{region}_{metric}_pct")
@@ -205,10 +210,15 @@ def _burden_metric_label(metric):
     if base.endswith("_pct"):
         base = base[: -len("_pct")]
     pieces = base.split("_", 1)
-    if len(pieces) == 2 and pieces[0] in {"us", "world"} and pieces[1] in {
-        "incidence",
-        "mortality",
-    }:
+    if (
+        len(pieces) == 2
+        and pieces[0] in {"us", "world"}
+        and pieces[1]
+        in {
+            "incidence",
+            "mortality",
+        }
+    ):
         region, measure = pieces
         return f"{region.upper()} {measure} share"
     return "burden share"

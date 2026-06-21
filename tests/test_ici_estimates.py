@@ -169,9 +169,7 @@ def test_crc_msi_estimates_are_source_scoped_and_detailed():
     assert not est["cancer_code"].isin(["COAD_MSI", "READ_MSI"]).any()
 
     primary = est[
-        (est["cancer_code"] == "CRC_MSI")
-        & (est["regimen"] == "PD-1")
-        & (est["role"] == "primary")
+        (est["cancer_code"] == "CRC_MSI") & (est["regimen"] == "PD-1") & (est["role"] == "primary")
     ]
     by_metric = {str(r["metric"]).upper(): r for _, r in primary.iterrows()}
     assert set(by_metric) >= {"ORR", "CRR", "PFS", "DOR"}
