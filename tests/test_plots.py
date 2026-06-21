@@ -607,6 +607,56 @@ def test_cta_burden_vs_response_supports_burden_axis(tmp_path, monkeypatch):
     assert fig.axes[0].get_ylabel() == "US incidence share (%)"
 
 
+def test_cta_burden_vs_ici_includes_ici_only_anchor(tmp_path, monkeypatch):
+    from oncoref import coverage
+
+    assert "THYM" not in plots.cancer_apd1_response()
+    monkeypatch.setattr(plots, "_cached_per_sample_cohorts", lambda: ["THYM"])
+    monkeypatch.setattr(
+        coverage,
+        "mean_antigens_per_patient",
+        lambda code, **k: {"THYM": 2.5}[code],
+    )
+    out = tmp_path / "ici_only.png"
+    fig = plots.cta_burden_vs_response(against="ici", save=str(out))
+    assert out.exists() and fig is not None
+    assert [t.get_text() for t in fig.axes[0].texts] == ["THYM"]
+
+
+def test_cta_burden_vs_burden_axis_keeps_direct_msi_cohorts(tmp_path, monkeypatch):
+    from oncoref import coverage
+
+    monkeypatch.setattr(plots, "_cached_per_sample_cohorts", lambda: ["COAD_MSI", "READ_MSI"])
+    monkeypatch.setattr(
+        coverage,
+        "mean_antigens_per_patient",
+        lambda code, **k: {"COAD_MSI": 10.0, "READ_MSI": 30.0}[code],
+    )
+    out = tmp_path / "burden_msi.png"
+    fig = plots.cta_burden_vs_response(against="us_incidence", save=str(out))
+    assert out.exists() and fig is not None
+    assert {t.get_text() for t in fig.axes[0].texts} == {"COAD_MSI", "READ_MSI"}
+    xs = sorted(float(coll.get_offsets()[0][0]) for coll in fig.axes[0].collections)
+    assert xs == [10.0, 30.0]
+
+
+def test_cta_specific_9mer_burden_axis_keeps_direct_msi_cohorts(tmp_path, monkeypatch):
+    from oncoref import peptides
+
+    monkeypatch.setattr(plots, "_cached_per_sample_cohorts", lambda: ["COAD_MSI", "READ_MSI"])
+    monkeypatch.setattr(
+        peptides,
+        "cta_specific_9mer_load",
+        lambda code, **k: {"COAD_MSI": 100.0, "READ_MSI": 300.0}[code],
+    )
+    out = tmp_path / "9mer_burden_msi.png"
+    fig = plots.cta_specific_9mer_load(against="us_incidence", save=str(out))
+    assert out.exists() and fig is not None
+    assert {t.get_text() for t in fig.axes[0].texts} == {"COAD_MSI", "READ_MSI"}
+    xs = sorted(float(coll.get_offsets()[0][0]) for coll in fig.axes[0].collections)
+    assert xs == [100.0, 300.0]
+
+
 def test_cta_burden_vs_response_bad_against():
     with pytest.raises(ValueError, match="against must be"):
         plots.cta_burden_vs_response(against="nonsense")

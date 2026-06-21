@@ -40,6 +40,7 @@ from .expression import (
     cohort_gene_percentiles,
     within_sample_top_fraction,
 )
+from .ici import cancer_ici_response
 from .incidence import burden_category, cancer_burden
 from .tmb import cancer_tmb
 
@@ -130,11 +131,21 @@ def _cohort_sample_weight(code) -> float:
     return weight if weight > 0 else 1.0
 
 
+def _metric_code_for_cohort(cohort, metric_map):
+    code = str(cohort)
+    if code in metric_map:
+        return code
+    source_code = _plot_evidence_code(code)
+    if source_code in metric_map:
+        return source_code
+    return None
+
+
 def _collapse_metric_points(cohorts, metric_map, value_fn):
     grouped: dict[str, list[tuple[float, float]]] = {}
     for cohort in cohorts:
-        code = _plot_evidence_code(cohort)
-        if code not in metric_map:
+        code = _metric_code_for_cohort(cohort, metric_map)
+        if code is None:
             continue
         value = float(value_fn(cohort))
         if value != value:  # NaN
@@ -153,10 +164,14 @@ def _collapse_metric_points(cohorts, metric_map, value_fn):
 
 
 def _apd1_axis(*, strict_pd1=False):
-    mapping = cancer_apd1_response()
     if not strict_pd1:
-        return mapping, "Immune-checkpoint (ICI) ORR (%)", "immune-checkpoint (ICI)"
+        return (
+            cancer_ici_response(),
+            "Immune-checkpoint (ICI) ORR (%)",
+            "immune-checkpoint (ICI)",
+        )
 
+    mapping = cancer_apd1_response()
     df = cancer_apd1_response_df()
     strict_codes = set(df.loc[df["drug_target"] == "PD-1", "cancer_code"].astype(str))
     return (
