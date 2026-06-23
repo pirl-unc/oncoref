@@ -80,6 +80,14 @@ def test_clean_tpm_three_compartments():
     assert clean.loc[[2, 3], "s1"].sum() == pytest.approx(norm.BIOLOGICAL_FRACTION * 1e6)  # 750k
 
 
+def test_clean_tpm_rejects_alternate_compartment_contracts():
+    gt, vals = _matrix()
+    with pytest.raises(ValueError, match="one canonical 16/9/75 contract"):
+        norm.clean_tpm(vals, gt, exclude_ribosomal_proteins=False)
+    with pytest.raises(ValueError, match="fraction knobs are deprecated"):
+        norm.clean_tpm(vals, gt, other_technical_fraction=0.10)
+
+
 def test_clean_tpm_compartment_fractions_public_and_sum_to_one():
     import oncoref as cd
 
@@ -137,9 +145,9 @@ def test_clean_tpm_no_technical_mass():
 
 def test_clean_tpm_validates():
     gt, vals = _matrix()
-    with pytest.raises(ValueError, match="other_technical_fraction"):
+    with pytest.raises(ValueError, match="fraction knobs are deprecated"):
         norm.clean_tpm(vals, gt, other_technical_fraction=1.5)
-    with pytest.raises(ValueError, match="biology needs a budget"):
+    with pytest.raises(ValueError, match="fraction knobs are deprecated"):
         norm.clean_tpm(vals, gt, ribosomal_protein_fraction=0.7, other_technical_fraction=0.5)
     with pytest.raises(ValueError, match="gene_table"):
         norm.clean_tpm(vals)
@@ -281,6 +289,30 @@ def test_normalize_expression_fixed_fraction_delegates_to_clean_tpm():
     # no technical genes -> biological compartment fills 750k
     assert out["s1_TPM"].sum() == pytest.approx(750000.0, rel=1e-6)
     assert stats["mode"] == "fixed_fraction"
+
+
+def test_normalize_expression_fixed_fraction_rejects_clean_tpm_knobs():
+    df = pd.DataFrame(
+        {
+            "Symbol": ["A", "B"],
+            "Ensembl_Gene_ID": ["E1", "E2"],
+            "s1_TPM": [10.0, 30.0],
+        }
+    )
+    with pytest.raises(ValueError, match="fraction knobs are deprecated"):
+        norm.normalize_expression(
+            df,
+            value_cols=["s1_TPM"],
+            censored_fill="fixed_fraction",
+            other_technical_fraction=0.10,
+        )
+    with pytest.raises(ValueError, match="one canonical 16/9/75 contract"):
+        norm.normalize_expression(
+            df,
+            value_cols=["s1_TPM"],
+            censored_fill="fixed_fraction",
+            exclude_ribosomal_proteins=False,
+        )
 
 
 def test_normalize_long_table_groups_independently():
