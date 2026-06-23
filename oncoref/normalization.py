@@ -160,10 +160,25 @@ def clean_tpm(
     compartments themselves comparable and the budget empirically interpretable.)
 
     An empty/zero compartment simply contributes 0 (the others still fill their share).
-    With ``exclude_ribosomal_proteins=False``, ribosomal proteins are treated as
-    biology, only the strict technical-RNA set is pinned, and the omitted ribosomal
-    budget is intentionally reallocated into biology so no budget compartment is
-    silently dropped."""
+    The public clean-TPM contract is deliberately singular: 16% ribosomal proteins,
+    9% other technical RNA, and 75% biological genes. Use separately named helpers
+    such as :func:`drop_technical_rna` / :func:`filter_technical_rna` for biology-only
+    or technical-drop views, not alternate clean-TPM definitions."""
+    if not exclude_ribosomal_proteins:
+        raise ValueError(
+            "clean_tpm has one canonical 16/9/75 contract and always censors "
+            "ribosomal proteins; use drop_technical_rna(..., "
+            "exclude_ribosomal_proteins=False) or filter_technical_rna for "
+            "non-clean-TPM biology-only/drop views"
+        )
+    if (
+        ribosomal_protein_fraction != RIBOSOMAL_PROTEIN_FRACTION
+        or other_technical_fraction != OTHER_TECHNICAL_FRACTION
+    ):
+        raise ValueError(
+            "clean_tpm fraction knobs are deprecated: clean_tpm always uses the "
+            "canonical 16% ribosomal / 9% other-technical / 75% biological budget"
+        )
     for name, frac in (
         ("ribosomal_protein_fraction", ribosomal_protein_fraction),
         ("other_technical_fraction", other_technical_fraction),
@@ -185,8 +200,6 @@ def clean_tpm(
     rm, tm = ribosomal.to_numpy(), technical.to_numpy()
     bm = ~(rm | tm)
     bio_fraction = 1.0 - ribosomal_protein_fraction - other_technical_fraction
-    if not exclude_ribosomal_proteins:
-        bio_fraction += ribosomal_protein_fraction
 
     clean = values.astype(float).copy()
     for mask, fraction in (
@@ -418,10 +431,10 @@ def normalize_expression(
         mtDNA / NUMT-like / rRNA-like / polyA-bias lncRNA) and rescale the kept rows
         so each column's **original total** is preserved. With ``group_cols``,
         normalizes within each group independently (e.g. per cohort in a long table).
-      - any other value — apply the two-compartment reference :func:`clean_tpm`
-        (clean_tpm_v4) over the value columns instead (the basis the packaged
-        references ship on); ``other_technical_fraction`` / ``exclude_ribosomal_proteins``
-        tune it.
+      - any other value — apply the canonical :func:`clean_tpm` 16/9/75 transform
+        over the value columns instead (the basis the packaged references ship on).
+        Historical budget knobs remain in the signature only to reject noncanonical
+        transition uses; they do not define alternate clean-TPM modes.
 
     Classification is ENSG-first when ``id_col`` is present, else symbol-only.
     """
