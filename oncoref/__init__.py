@@ -135,6 +135,7 @@ from .expression import (
     proteoform_representative_samples,
     proteoform_within_sample_top_fraction,
     representative_cohort_samples,
+    sample_expression_qc,
     within_sample_top_fraction,
 )
 from .expression_engine import aggregate_transcripts_to_genes, id_columns, sample_columns
@@ -488,6 +489,7 @@ __all__ = [
     "response_signatures_df",
     "sample_columns",
     "sample_counts_by_cancer_code",
+    "sample_expression_qc",
     "sample_manifest",
     "samples_for_cancer_code",
     "samples_for_cohort",

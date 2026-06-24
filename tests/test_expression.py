@@ -463,6 +463,65 @@ def test_housekeeping_normalize_divides_by_panel_geomean(monkeypatch):
     assert out.loc[1, "s1"] / out.loc[0, "s1"] == pytest.approx(0.5)
 
 
+def test_housekeeping_normalize_blanks_sparse_housekeeping_denominator(monkeypatch):
+    import oncoref.gene_families as gf
+
+    panel = frozenset({"HK1", "HK2", "HK3"})
+    monkeypatch.setattr(gf, "clean_tpm_biological_housekeeping_gene_ids", lambda: panel)
+    df = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["HK1", "HK2", "HK3", "ENSG_X"],
+            "Symbol": ["HK1", "HK2", "HK3", "X"],
+            "good": [100.0, 120.0, 80.0, 50.0],
+            "sparse": [0.0, 0.0, 100.0, 50.0],
+        }
+    )
+
+    with pytest.warns(RuntimeWarning, match="housekeeping normalization skipped"):
+        out = expression._housekeeping_normalize(df, ["good", "sparse"])
+
+    assert out.loc[out["Symbol"] == "X", "good"].iloc[0] > 0
+    assert out["sparse"].isna().all()
+
+
+def test_sample_expression_qc_flags_sparse_samples(tmp_path, monkeypatch):
+    import oncoref.gene_families as gf
+
+    panel = frozenset({"HK1", "HK2", "HK3"})
+    monkeypatch.setattr(gf, "clean_tpm_biological_housekeeping_gene_ids", lambda: panel)
+    raw = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["HK1", "HK2", "HK3", "ENSG_A", "ENSG_B", "ENSG_C"],
+            "Symbol": ["HK1", "HK2", "HK3", "A", "B", "C"],
+            "good": [100.0, 120.0, 80.0, 100.0, 100.0, 100.0],
+            "sparse": [0.0, 0.0, 20.0, 1000.0, 0.0, 0.0],
+        }
+    )
+    path = tmp_path / "X.parquet"
+    raw.to_parquet(path, index=False)
+    monkeypatch.setattr(expression.source_matrices, "ensure", lambda code: path)
+    monkeypatch.setattr(
+        expression.source_matrices,
+        "cohort_info",
+        lambda code: {"source_cohort": "TEST_SOURCE", "n_samples": 2},
+    )
+
+    qc = expression.sample_expression_qc(
+        "X",
+        min_detected_genes=3,
+        min_housekeeping_detected=2,
+        max_top_gene_fraction=0.8,
+    ).set_index("sample_id")
+
+    assert bool(qc.loc["good", "passes_expression_qc"]) is True
+    assert qc.loc["good", "housekeeping_genes_detected"] == 3
+    assert bool(qc.loc["sparse", "passes_expression_qc"]) is False
+    assert qc.loc["sparse", "n_detected_genes"] == 2
+    assert qc.loc["sparse", "housekeeping_genes_detected"] == 1
+    assert "low_housekeeping_detection" in qc.loc["sparse", "qc_flags"]
+    assert "high_top_gene_fraction" in qc.loc["sparse", "qc_flags"]
+
+
 def test_per_sample_expression_gene_and_proteoform_levels(tmp_path, monkeypatch):
     # ENSG1+ENSG2 are an identical-protein group; per_sample_expression(proteoform=True)
     # sums them per sample. Gene-level and proteoform-level are both available.

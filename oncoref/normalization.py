@@ -53,6 +53,8 @@ housekeeping/log/rank transforms. Censored-gene and gene-family lists come from
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -556,6 +558,9 @@ def tpm_to_housekeeping_normalized(
     panel_ids=None,
     panel_name: str | None = None,
     pseudocount: float = 0.1,
+    min_panel_detected: int | None = None,
+    drop_zero_panel_values: bool = False,
+    warn_on_unreliable: bool = False,
 ) -> tuple[pd.DataFrame, dict]:
     """Divide each expression column by the **geometric mean** of a housekeeping
     panel, putting expression on a unit-free ratio-to-baseline scale that survives
@@ -579,7 +584,12 @@ def tpm_to_housekeeping_normalized(
     explicitly or use :func:`normalize_to_housekeeping` (which defaults to all sample
     columns). Returns ``(normalized_df, stats)`` with per-column denominator + panel
     coverage; a column with no measurable panel gene is blanked to NaN (never left on
-    the input scale beside normalized siblings)."""
+    the input scale beside normalized siblings).
+
+    For source matrices where literal zeros may represent sample/source sparsity rather
+    than credible absence, callers can set ``drop_zero_panel_values=True`` and require a
+    minimum number of nonzero panel genes via ``min_panel_detected``. Columns that fail
+    that reliability gate are blanked to NaN and optionally warn."""
     if df is None:
         return None, {"applied": False, "reason": "no table", "columns": {}}
     out = df.copy()
@@ -616,8 +626,35 @@ def tpm_to_housekeeping_normalized(
     applied = False
     for col in value_cols:
         vals = pd.to_numeric(out.loc[panel_rows, col], errors="coerce").dropna()
-        denom = float(np.exp(np.log(vals.to_numpy() + pseudocount).mean())) if len(vals) else 0.0
-        columns[col] = {"denominator": denom, "panel_genes_present": n_panel}
+        detected = vals[vals > 0]
+        denominator_vals = detected if drop_zero_panel_values else vals
+        n_detected = len(detected)
+        n_zero = int((vals == 0).sum())
+        reliable = min_panel_detected is None or n_detected >= int(min_panel_detected)
+        denom = (
+            float(np.exp(np.log(denominator_vals.to_numpy() + pseudocount).mean()))
+            if reliable and len(denominator_vals)
+            else 0.0
+        )
+        reason = (
+            "divided by housekeeping geometric mean"
+            if denom > 0
+            else (
+                f"only {n_detected} nonzero housekeeping panel genes"
+                if not reliable
+                else "panel denominator <= 0"
+            )
+        )
+        columns[col] = {
+            "denominator": denom,
+            "panel_genes_present": n_panel,
+            "panel_genes_measured": len(vals),
+            "panel_genes_detected": n_detected,
+            "panel_genes_zero": n_zero,
+            "min_panel_detected": min_panel_detected,
+            "drop_zero_panel_values": bool(drop_zero_panel_values),
+            "reason": reason,
+        }
         if denom > 0:
             out[col] = pd.to_numeric(out[col], errors="coerce") / denom
             applied = True
@@ -627,6 +664,13 @@ def tpm_to_housekeeping_normalized(
             # it on the raw-TPM scale alongside normalized siblings (the scale-mixing
             # trap).
             out[col] = np.nan
+            if warn_on_unreliable and not reliable:
+                warnings.warn(
+                    f"{col}: housekeeping normalization skipped; only {n_detected} "
+                    f"nonzero genes in {panel_name} panel (minimum {min_panel_detected})",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
     return out, {
         "applied": applied,
         "reason": "divided by housekeeping geometric mean" if applied else "panel denominator <= 0",

@@ -273,6 +273,159 @@ def available_percentile_cohorts(*, proteoform: bool = False, scope: str = "cta"
 
 
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
+DEFAULT_MIN_DETECTED_GENES_FOR_QC = 5000
+DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC = 10
+DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC = 0.20
+DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC = 0.50
+
+
+def _clean_tpm_housekeeping_panel_ids() -> frozenset[str]:
+    from .gene_families import clean_tpm_biological_housekeeping_gene_ids
+
+    return clean_tpm_biological_housekeeping_gene_ids()
+
+
+def _min_housekeeping_detected(panel_ids) -> int | None:
+    n = len(panel_ids)
+    return min(DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC, n) if n else None
+
+
+def _selected_expression_source_metadata(code: str) -> dict[str, str | bool | None]:
+    source_type = unit = None
+    try:
+        info = source_matrices.cohort_info(code)
+        source_cohort = str(info.get("source_cohort") or "")
+    except source_matrices.SourceMatrixError:
+        source_cohort = ""
+
+    from .expression_registry import sources_for_cancer_code
+
+    sources = sources_for_cancer_code(code)
+    selected = next(
+        (s for s in sources if source_cohort and s.source_cohort == source_cohort),
+        sources[0] if sources else None,
+    )
+    if selected is not None:
+        source_type = selected.source_type
+        unit = selected.unit
+        if not source_cohort:
+            source_cohort = selected.source_cohort or ""
+        special = selected.special_handling or ""
+    else:
+        special = ""
+    text = " ".join(str(x or "") for x in (source_type, unit, special)).lower()
+    return {
+        "source_cohort": source_cohort or None,
+        "source_type": source_type,
+        "unit": unit,
+        "tpm_proxy": "microarray" in text or "tpm-proxy" in text or "tpm proxy" in text,
+    }
+
+
+def sample_expression_qc(
+    cancer_type,
+    *,
+    auto_fetch: bool = True,
+    min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
+    min_housekeeping_detected: int | None = None,
+    max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
+    max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
+) -> pd.DataFrame:
+    """Per-sample QC metrics for a cohort's raw expression matrix.
+
+    This is an audit surface over the raw per-sample matrix before clean-TPM
+    normalization. It is designed to catch source/sample artifacts such as literal-zero
+    sparsity in otherwise universal genes, while still making source-type caveats
+    explicit (for example microarray TPM-proxy sources). It does not exclude samples by
+    itself; downstream code can use ``passes_expression_qc`` or inspect ``qc_flags``.
+    """
+    code = resolve_cancer_type(cancer_type, strict=False) or cancer_type
+    raw = per_sample_expression(code, normalize="tpm_raw", auto_fetch=auto_fetch)
+    samples = sample_columns(raw)
+    if not samples:
+        return pd.DataFrame()
+
+    ids = raw["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    panel_ids = _clean_tpm_housekeeping_panel_ids()
+    panel = {str(g).split(".")[0] for g in panel_ids}
+    hk_rows = ids.isin(panel)
+    min_hk = (
+        min_housekeeping_detected
+        if min_housekeeping_detected is not None
+        else _min_housekeeping_detected(panel_ids)
+    )
+    meta = _selected_expression_source_metadata(str(code))
+
+    rows: list[dict] = []
+    for sample in samples:
+        vals = pd.to_numeric(raw[sample], errors="coerce")
+        measured = vals.notna()
+        positive = vals > 0
+        n_measured = int(measured.sum())
+        n_detected = int(positive.sum())
+        total = float(vals.sum(skipna=True))
+        top_idx = vals.idxmax(skipna=True) if n_measured else None
+        top_tpm = float(vals.loc[top_idx]) if top_idx is not None and pd.notna(top_idx) else 0.0
+        top10_tpm = float(vals.nlargest(min(10, n_measured)).sum()) if n_measured else 0.0
+        hk_vals = vals[hk_rows]
+        hk_measured = int(hk_vals.notna().sum())
+        hk_detected = int((hk_vals > 0).sum())
+        hk_zero = int((hk_vals == 0).sum())
+        top_fraction = top_tpm / total if total > 0 else np.nan
+        top10_fraction = top10_tpm / total if total > 0 else np.nan
+        detected_fraction = n_detected / n_measured if n_measured else np.nan
+        hk_zero_fraction = hk_zero / hk_measured if hk_measured else np.nan
+
+        flags: list[str] = []
+        if n_detected < min_detected_genes:
+            flags.append("low_detected_genes")
+        if min_hk is not None and hk_detected < min_hk:
+            flags.append("low_housekeeping_detection")
+        if pd.notna(top_fraction) and top_fraction > max_top_gene_fraction:
+            flags.append("high_top_gene_fraction")
+        if (
+            n_measured > 10
+            and pd.notna(top10_fraction)
+            and top10_fraction > max_top10_gene_fraction
+        ):
+            flags.append("high_top10_gene_fraction")
+        if meta["tpm_proxy"]:
+            flags.append("tpm_proxy_scale")
+
+        blocking = {
+            "low_detected_genes",
+            "low_housekeeping_detection",
+            "high_top_gene_fraction",
+            "high_top10_gene_fraction",
+        }
+        rows.append(
+            {
+                "cancer_code": code,
+                "source_cohort": meta["source_cohort"],
+                "source_type": meta["source_type"],
+                "unit": meta["unit"],
+                "sample_id": sample,
+                "n_measured_genes": n_measured,
+                "n_detected_genes": n_detected,
+                "detected_gene_fraction": detected_fraction,
+                "total_tpm": total,
+                "top_gene_id": raw.loc[top_idx, "Ensembl_Gene_ID"] if top_idx is not None else None,
+                "top_gene_symbol": raw.loc[top_idx, "Symbol"] if top_idx is not None else None,
+                "top_gene_tpm": top_tpm,
+                "top_gene_fraction": top_fraction,
+                "top10_tpm": top10_tpm,
+                "top10_fraction": top10_fraction,
+                "housekeeping_genes_present": hk_measured,
+                "housekeeping_genes_detected": hk_detected,
+                "housekeeping_zero_fraction": hk_zero_fraction,
+                "tpm_proxy": bool(meta["tpm_proxy"]),
+                "qc_flags": ";".join(flags),
+                "passes_expression_qc": not bool(set(flags) & blocking),
+                "recommended_for_absolute_tpm_floor": not bool(set(flags) & blocking)
+                and not bool(meta["tpm_proxy"]),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def per_sample_expression(
@@ -379,14 +532,17 @@ def _housekeeping_normalize(df: pd.DataFrame, sample_cols) -> pd.DataFrame:
     """Divide each clean-TPM sample column by the biological housekeeping-panel geometric
     mean. Commutes with the proteoform sum (the denominator is per-column), so it can
     be applied before or after collapse."""
-    from .gene_families import clean_tpm_biological_housekeeping_gene_ids
     from .normalization import tpm_to_housekeeping_normalized
 
+    panel_ids = _clean_tpm_housekeeping_panel_ids()
     out, _ = tpm_to_housekeeping_normalized(
         df,
         value_cols=list(sample_cols),
-        panel_ids=clean_tpm_biological_housekeeping_gene_ids(),
+        panel_ids=panel_ids,
         panel_name="clean_tpm_biological_housekeeping",
+        min_panel_detected=_min_housekeeping_detected(panel_ids),
+        drop_zero_panel_values=True,
+        warn_on_unreliable=True,
     )
     return out
 
@@ -1230,13 +1386,15 @@ def pan_cancer_expression(
     if modes & {"housekeeping", "hk"}:
         hk_input_cols = clean_cols or raw_cols
         hk_input = out[id_cols + hk_input_cols].copy()
-        from .gene_families import clean_tpm_biological_housekeeping_gene_ids
-
+        panel_ids = _clean_tpm_housekeeping_panel_ids()
         hk, _ = tpm_to_housekeeping_normalized(
             hk_input,
             value_cols=hk_input_cols,
-            panel_ids=clean_tpm_biological_housekeeping_gene_ids(),
+            panel_ids=panel_ids,
             panel_name="clean_tpm_biological_housekeeping",
+            min_panel_detected=_min_housekeeping_detected(panel_ids),
+            drop_zero_panel_values=True,
+            warn_on_unreliable=True,
         )
         for col in hk_input_cols:
             target = col.rsplit("_", 1)[0] + "_hk"

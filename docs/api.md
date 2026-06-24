@@ -79,7 +79,10 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
 
 - `oncoref.expression` — read-time accessors for per-sample expression,
   percentile vectors, representative samples, within-sample top fractions, and
-  pan-cancer reference tables.
+  pan-cancer reference tables. `sample_expression_qc` reports per-sample
+  detected-gene counts, top-gene/top-10 concentration, biological-housekeeping
+  detection, and source-type caveats so sparse source-matrix artifacts can be
+  audited before using absolute TPM floors or housekeeping normalization.
 - `oncoref.expression_builders` — pure build-time cores used by data-bundle
   generation scripts.
 - `oncoref.normalization` — TPM conversion, clean TPM, technical-RNA filtering,
