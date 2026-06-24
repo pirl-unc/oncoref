@@ -391,3 +391,35 @@ def test_tpm_to_housekeeping_normalized_blanks_column_with_no_panel():
     )
     assert out["empty_TPM"].isna().all()
     assert stats["columns"]["empty_TPM"]["denominator"] == 0.0
+
+
+def test_tpm_to_housekeeping_normalized_gates_sparse_detected_panel():
+    hk = ["HK1", "HK2", "HK3"]
+    df = pd.DataFrame(
+        {
+            "Symbol": ["HK1", "HK2", "HK3", "GENE"],
+            "Ensembl_Gene_ID": [*hk, "ENSG_X"],
+            "good_TPM": [0.0, 100.0, 100.0, 50.0],
+            "sparse_TPM": [0.0, 0.0, 100.0, 50.0],
+        }
+    )
+
+    with pytest.warns(RuntimeWarning, match="housekeeping normalization skipped"):
+        out, stats = norm.tpm_to_housekeeping_normalized(
+            df,
+            value_cols=["good_TPM", "sparse_TPM"],
+            panel_ids=hk,
+            panel_name="test_housekeeping",
+            min_panel_detected=2,
+            drop_zero_panel_values=True,
+            warn_on_unreliable=True,
+        )
+
+    assert out.loc[out["Symbol"] == "GENE", "good_TPM"].iloc[0] == pytest.approx(
+        50 / 100.1, rel=1e-3
+    )
+    assert out["sparse_TPM"].isna().all()
+    assert stats["columns"]["good_TPM"]["panel_genes_detected"] == 2
+    assert stats["columns"]["good_TPM"]["panel_genes_zero"] == 1
+    assert stats["columns"]["sparse_TPM"]["panel_genes_detected"] == 1
+    assert stats["columns"]["sparse_TPM"]["reason"] == "only 1 nonzero housekeeping panel genes"
