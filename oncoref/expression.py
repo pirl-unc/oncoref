@@ -274,6 +274,7 @@ def available_percentile_cohorts(*, proteoform: bool = False, scope: str = "cta"
 
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
+SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v1"
 DEFAULT_MIN_DETECTED_GENES_FOR_QC = 5000
 DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC = 10
 DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC = 0.20
@@ -378,25 +379,28 @@ def _apply_sample_qc_filter(
     return df[[*id_columns(df), *keep_samples]].copy()
 
 
-def sample_expression_qc(
-    cancer_type,
+def sample_expression_qc_from_matrix(
+    raw: pd.DataFrame,
     *,
-    auto_fetch: bool = True,
+    cancer_type=None,
+    source_metadata: dict[str, str | bool | None] | None = None,
     min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
     min_housekeeping_detected: int | None = None,
     max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
     max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
 ) -> pd.DataFrame:
-    """Per-sample QC metrics for a cohort's raw expression matrix.
+    """Per-sample QC metrics for an already-loaded raw expression matrix.
 
-    This is an audit surface over the raw per-sample matrix before clean-TPM
-    normalization. It is designed to catch source/sample artifacts such as literal-zero
-    sparsity in otherwise universal genes, while still making source-type caveats
-    explicit (for example microarray TPM-proxy sources). It does not exclude samples by
-    itself; downstream code can use ``passes_expression_qc`` or inspect ``qc_flags``.
+    This is the shared policy core behind the public read-path QC and the offline
+    artifact rebuild. It canonicalizes gene rows before measuring sparsity so the QC
+    contract is evaluated in the same gene-ID space used by expression accessors.
     """
-    code = resolve_cancer_type(cancer_type, strict=False) or cancer_type
-    raw = per_sample_expression(code, normalize="tpm_raw", auto_fetch=auto_fetch, sample_qc="all")
+    code = (
+        resolve_cancer_type(cancer_type, strict=False) or cancer_type
+        if cancer_type is not None
+        else None
+    )
+    raw = _canonicalize_gene_rows(raw, sample_cols=sample_columns(raw)).reset_index(drop=True)
     samples = sample_columns(raw)
     if not samples:
         return pd.DataFrame()
@@ -415,7 +419,29 @@ def sample_expression_qc(
         if min_housekeeping_detected is not None
         else _min_housekeeping_detected(panel_ids)
     )
-    meta = _selected_expression_source_metadata(str(code))
+    if source_metadata is None:
+        meta = (
+            _selected_expression_source_metadata(str(code))
+            if code is not None
+            else {
+                "source_cohort": None,
+                "source_type": None,
+                "unit": None,
+                "source_scale_class": "unknown",
+                "linear_tpm_comparable": False,
+                "tpm_proxy": False,
+            }
+        )
+    else:
+        meta = {
+            "source_cohort": None,
+            "source_type": None,
+            "unit": None,
+            "source_scale_class": "unknown",
+            "linear_tpm_comparable": False,
+            "tpm_proxy": False,
+            **source_metadata,
+        }
 
     rows: list[dict] = []
     for sample in samples:
@@ -472,6 +498,7 @@ def sample_expression_qc(
         rows.append(
             {
                 "cancer_code": code,
+                "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
                 "source_cohort": meta["source_cohort"],
                 "source_type": meta["source_type"],
                 "unit": meta["unit"],
@@ -513,6 +540,35 @@ def sample_expression_qc(
             }
         )
     return pd.DataFrame(rows)
+
+
+def sample_expression_qc(
+    cancer_type,
+    *,
+    auto_fetch: bool = True,
+    min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
+    min_housekeeping_detected: int | None = None,
+    max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
+    max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
+) -> pd.DataFrame:
+    """Per-sample QC metrics for a cohort's raw expression matrix.
+
+    This is an audit surface over the raw per-sample matrix before clean-TPM
+    normalization. It is designed to catch source/sample artifacts such as literal-zero
+    sparsity in otherwise universal genes, while still making source-type caveats
+    explicit (for example microarray TPM-proxy sources). It does not exclude samples by
+    itself; downstream code can use ``passes_expression_qc`` or inspect ``qc_flags``.
+    """
+    code = resolve_cancer_type(cancer_type, strict=False) or cancer_type
+    raw = per_sample_expression(code, normalize="tpm_raw", auto_fetch=auto_fetch, sample_qc="all")
+    return sample_expression_qc_from_matrix(
+        raw,
+        cancer_type=code,
+        min_detected_genes=min_detected_genes,
+        min_housekeeping_detected=min_housekeeping_detected,
+        max_top_gene_fraction=max_top_gene_fraction,
+        max_top10_gene_fraction=max_top10_gene_fraction,
+    )
 
 
 def per_sample_expression(

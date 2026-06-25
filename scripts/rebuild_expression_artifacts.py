@@ -18,6 +18,7 @@ expression bundle:
     raw per-sample TPM matrices  (candidate source cohorts per cancer code)
         -> select ONE source per code  (the source-matrices.csv choice; never pool)
         -> clean_tpm                   (two-compartment biological view)
+        -> sample QC filter            (pass by default; opt out with --sample-qc all)
         -> drop technical genes        (biology-only, matching the shipped artifact)
         -> percentile vectors / n=5 representatives / within-sample top-fractions
 
@@ -32,10 +33,12 @@ one source per code; it never pools) — so the artifacts match the shipped refe
 Outputs land under ``--out`` (a staging dir, NOT ``oncoref/data`` — the artifacts
 are large and ship via the release tarball, so they're never committed):
 
-    <out>/clean/<CODE>.parquet                                 (clean-TPM matrix, full)
+    <out>/clean/<CODE>.parquet                                 (QC-filtered clean TPM)
     <out>/cancer-reference-expression-percentiles/<CODE>.parquet      (biology-only)
     <out>/cancer-reference-expression-representatives/<CODE>.parquet + _provenance.csv
     <out>/cancer-reference-expression-within-sample-top5/<CODE>.parquet (biology-only)
+    <out>/source-matrix-sample-qc.csv                          (per-sample QC manifest)
+    <out>/expression-artifact-build-metadata.json              (QC/build policy metadata)
 
 ``--validate`` additionally correlates each rebuilt percentile vector against the
 reference artifact in ``--ref`` and prints the per-code agreement.
@@ -50,6 +53,7 @@ Run:
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -60,7 +64,14 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from oncoref.cancer_types import cohort_source_version
-from oncoref.expression import SHARD_DATASETS, _canonicalize_gene_rows, sample_columns
+from oncoref.expression import (
+    SAMPLE_EXPRESSION_QC_POLICY_VERSION,
+    SHARD_DATASETS,
+    _canonicalize_gene_rows,
+    _validate_sample_qc,
+    sample_columns,
+    sample_expression_qc_from_matrix,
+)
 from oncoref.expression_builders import (
     cohort_medoids,
     cohort_percentile_vectors,
@@ -142,15 +153,19 @@ def _select_source(code: str, candidates: list[tuple[str, Path]], code_to_source
     return max(candidates, key=lambda c: pd.read_parquet(c[1]).shape[1])[1]
 
 
-def build_clean(path: Path) -> pd.DataFrame:
-    """Clean-TPM matrix for one source's per-sample matrix (genes x samples + ids).
+def read_raw(path: Path) -> pd.DataFrame:
+    """Canonical raw per-sample matrix for one source (genes x samples + ids).
 
     Canonicalize the raw matrix first (sum alt-haplotype/patch copies in LINEAR TPM,
     relabel retired ids), exactly as the runtime `_load_per_sample_matrix` does, so the
     shipped percentile/representative shards are natively dense in the canonical gene-ID
     space and match the on-the-fly recompute path (oncoref#135 item 6)."""
     raw = pd.read_parquet(path)
-    raw = _canonicalize_gene_rows(raw, sample_cols=sample_columns(raw))
+    return _canonicalize_gene_rows(raw, sample_cols=sample_columns(raw)).reset_index(drop=True)
+
+
+def build_clean(raw: pd.DataFrame) -> pd.DataFrame:
+    """Clean-TPM matrix for one source's per-sample matrix (genes x samples + ids)."""
     samples = [c for c in raw.columns if c not in _BASE]
     gene_table = raw[_BASE]
     clean = clean_tpm(raw[samples], gene_table=gene_table)
@@ -167,7 +182,35 @@ def _drop_technical(df: pd.DataFrame) -> pd.DataFrame:
     return df[~unversioned.isin(censored)].reset_index(drop=True)
 
 
-def rebuild(cache: Path, ref: Path, out: Path, *, limit: int | None, validate: bool) -> None:
+def _samples_for_qc(samples: list[str], qc: pd.DataFrame, sample_qc: str) -> list[str]:
+    mode = _validate_sample_qc(sample_qc)
+    if mode == "all":
+        return samples
+    if qc.empty:
+        return []
+    status = dict(zip(qc["sample_id"].astype(str), qc["sample_qc_status"].astype(str)))
+    if mode == "pass":
+        allowed = {"pass"}
+    else:
+        allowed = {"pass", "warn"}
+    return [s for s in samples if status.get(str(s)) in allowed]
+
+
+def _qc_counts(qc: pd.DataFrame) -> dict[str, int]:
+    counts = qc["sample_qc_status"].value_counts().to_dict() if not qc.empty else {}
+    return {f"n_qc_{name}": int(counts.get(name, 0)) for name in ("pass", "warn", "fail")}
+
+
+def rebuild(
+    cache: Path,
+    ref: Path,
+    out: Path,
+    *,
+    limit: int | None,
+    validate: bool,
+    sample_qc: str = "pass",
+) -> None:
+    sample_qc = _validate_sample_qc(sample_qc)
     by_code = discover(cache, ref)
     reg = source_registry()
     code_to_source = dict(zip(reg["cancer_code"].astype(str), reg["source_cohort"].astype(str)))
@@ -186,11 +229,23 @@ def rebuild(cache: Path, ref: Path, out: Path, *, limit: int | None, validate: b
         d.mkdir(parents=True, exist_ok=True)
 
     provenance: list[dict] = []
+    qc_manifest: list[pd.DataFrame] = []
+    build_rows: list[dict] = []
     corrs: list[float] = []
     for code in codes:
         source_path = _select_source(code, by_code[code], code_to_source)
-        clean_df = build_clean(source_path)
-        samples = [c for c in clean_df.columns if c not in _BASE]
+        raw_df = read_raw(source_path)
+        source_samples = [c for c in raw_df.columns if c not in _BASE]
+        qc = sample_expression_qc_from_matrix(raw_df, cancer_type=code)
+        if not qc.empty:
+            qc = qc.assign(source_matrix_path=str(source_path))
+            qc_manifest.append(qc)
+        samples = _samples_for_qc(source_samples, qc, sample_qc)
+        if not samples:
+            raise ValueError(f"{code}: sample_qc={sample_qc!r} leaves no source samples")
+
+        clean_df = build_clean(raw_df)
+        clean_df = clean_df[[*_BASE, *samples]].copy()
         clean_df.to_parquet(clean_dir / f"{code}.parquet", index=False, compression="zstd")
 
         # Biological view (technical genes dropped) for the percentile + within-sample
@@ -206,13 +261,31 @@ def rebuild(cache: Path, ref: Path, out: Path, *, limit: int | None, validate: b
         reps = reps.rename(columns=dict(zip(rep_cols, rep_ids)))
         reps.to_parquet(rep_dir / f"{code}.parquet", index=False, compression="zstd")
         source_version = cohort_source_version(code)
+        qc_counts = _qc_counts(qc)
+        build_row = {
+            "cancer_code": code,
+            "source_cohort": code_to_source.get(code, code),
+            "source_version": source_version,
+            "source_matrix_path": str(source_path),
+            "sample_qc": sample_qc,
+            "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
+            "n_source_samples": len(source_samples),
+            "n_cohort_samples": len(samples),
+            **qc_counts,
+        }
+        build_rows.append(build_row)
         for rep_id in rep_ids:
             provenance.append(
                 {
                     "representative_id": rep_id,
                     "source_cohort": code_to_source.get(code, code),
                     "source_version": source_version,  # harmonized Ensembl release
+                    "source_matrix_path": str(source_path),
+                    "sample_qc": sample_qc,
+                    "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
+                    "n_source_samples": len(source_samples),
                     "n_cohort_samples": len(samples),
+                    **qc_counts,
                 }
             )
 
@@ -222,7 +295,6 @@ def rebuild(cache: Path, ref: Path, out: Path, *, limit: int | None, validate: b
         # Proteoform key space: collapse identical-protein members per sample, then
         # build the same percentile + within-sample summaries on the reduced space so
         # every downstream read can compare/quantify/plot on one collapsed key space.
-        from oncoref.expression_builders import sample_columns
         from oncoref.proteoforms import collapse_to_proteoforms
 
         bio_pf = collapse_to_proteoforms(bio_df, scope=_PROTEOFORM_SCOPE, sample_cols=samples)
@@ -240,9 +312,37 @@ def rebuild(cache: Path, ref: Path, out: Path, *, limit: int | None, validate: b
             if corr is not None:
                 corrs.append(corr)
                 msg += f"  p95-corr={corr:.4f}"
+        if len(samples) != len(source_samples):
+            msg += f"  sample_qc={sample_qc}:{len(samples)}/{len(source_samples)}"
         print(msg, flush=True)
 
     pd.DataFrame(provenance).to_csv(rep_dir / "_provenance.csv", index=False)
+    if qc_manifest:
+        pd.concat(qc_manifest, ignore_index=True).to_csv(
+            out / "source-matrix-sample-qc.csv", index=False
+        )
+    pd.DataFrame(build_rows).to_csv(out / "expression-artifact-build-metadata.csv", index=False)
+    metadata = {
+        "artifact": "expression-derived-shards",
+        "sample_qc": sample_qc,
+        "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
+        "sample_qc_manifest": "source-matrix-sample-qc.csv",
+        "cohort_metadata": "expression-artifact-build-metadata.csv",
+        "n_cohorts": len(build_rows),
+        "n_source_samples": int(sum(row["n_source_samples"] for row in build_rows)),
+        "n_cohort_samples": int(sum(row["n_cohort_samples"] for row in build_rows)),
+        "derived_artifacts": [
+            "clean",
+            _PCT_DS.gene_dir,
+            _PCT_DS.subdir(proteoform=True, scope=_PROTEOFORM_SCOPE),
+            SHARD_DATASETS["representatives"].gene_dir,
+            _WS_DS.gene_dir,
+            _WS_DS.subdir(proteoform=True, scope=_PROTEOFORM_SCOPE),
+        ],
+    }
+    (out / "expression-artifact-build-metadata.json").write_text(
+        json.dumps(metadata, indent=2, sort_keys=True) + "\n"
+    )
     if validate and corrs:
         # nan-robust: a cohort whose reference vector is constant/empty yields a
         # nan correlation that must not poison the summary.
@@ -287,6 +387,12 @@ def main(argv=None) -> None:
     p.add_argument("--out", required=True, type=Path, help="Staging output dir (not oncoref/data)")
     p.add_argument("--limit", type=int, default=None, help="Only the first N codes (a test run)")
     p.add_argument("--validate", action="store_true", help="Correlate vs the reference artifacts")
+    p.add_argument(
+        "--sample-qc",
+        choices=("pass", "pass_or_warn", "all"),
+        default="pass",
+        help="Which source-matrix samples feed rebuilt artifacts (default: pass)",
+    )
     args = p.parse_args(argv)
     rebuild(
         args.cache.expanduser(),
@@ -294,6 +400,7 @@ def main(argv=None) -> None:
         args.out.expanduser(),
         limit=args.limit,
         validate=args.validate,
+        sample_qc=args.sample_qc,
     )
 
 
