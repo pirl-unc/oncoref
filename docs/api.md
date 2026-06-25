@@ -88,7 +88,11 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   defaults to `"all"` for forensic access, while live summaries such as
   `cohort_stats` and `pooled_cohort_stats` default to QC-passing samples.
 - `oncoref.expression_builders` — pure build-time cores used by data-bundle
-  generation scripts.
+  generation scripts. `scripts/rebuild_expression_artifacts.py` applies the same
+  sample-QC policy to derived shards by default (`--sample-qc pass`) and emits
+  `source-matrix-sample-qc.csv` plus `expression-artifact-build-metadata.*` in
+  the staging directory so bundle releases can record which source samples fed
+  percentiles, representatives, and within-sample summaries.
 - `oncoref.normalization` — TPM conversion, clean TPM, technical-RNA filtering,
   log transforms, percentile ranks, and housekeeping normalization.
 
