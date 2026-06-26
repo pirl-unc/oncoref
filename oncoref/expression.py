@@ -273,6 +273,246 @@ def available_percentile_cohorts(*, proteoform: bool = False, scope: str = "cta"
 
 
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
+_SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
+DEFAULT_MIN_DETECTED_GENES_FOR_QC = 5000
+DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC = 10
+DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC = 0.20
+DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC = 0.50
+_BLOCKING_SAMPLE_QC_REASONS = frozenset(
+    {
+        "low_detected_genes",
+        "low_housekeeping_detection",
+        "high_top_gene_fraction",
+        "high_top10_gene_fraction",
+    }
+)
+
+
+def _clean_tpm_housekeeping_panel_ids() -> frozenset[str]:
+    from .gene_families import clean_tpm_biological_housekeeping_gene_ids
+
+    return clean_tpm_biological_housekeeping_gene_ids()
+
+
+def _min_housekeeping_detected(panel_ids) -> int | None:
+    n = len(panel_ids)
+    return min(DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC, n) if n else None
+
+
+def _selected_expression_source_metadata(code: str) -> dict[str, str | bool | None]:
+    source_type = unit = None
+    try:
+        info = source_matrices.cohort_info(code)
+        source_cohort = str(info.get("source_cohort") or "")
+    except source_matrices.SourceMatrixError:
+        source_cohort = ""
+
+    from .expression_registry import sources_for_cancer_code
+
+    sources = sources_for_cancer_code(code)
+    selected = next(
+        (s for s in sources if source_cohort and s.source_cohort == source_cohort),
+        sources[0] if sources else None,
+    )
+    if selected is not None:
+        source_type = selected.source_type
+        unit = selected.unit
+        if not source_cohort:
+            source_cohort = selected.source_cohort or ""
+        special = selected.special_handling or ""
+    else:
+        special = ""
+    text = " ".join(str(x or "") for x in (source_type, unit, special)).lower()
+    tpm_proxy = "microarray" in text or "tpm-proxy" in text or "tpm proxy" in text
+    if tpm_proxy:
+        source_scale_class = "microarray_tpm_proxy"
+        linear_tpm_comparable = False
+    elif selected is not None:
+        source_scale_class = "linear_rnaseq_tpm"
+        linear_tpm_comparable = True
+    else:
+        source_scale_class = "unknown"
+        linear_tpm_comparable = False
+    return {
+        "source_cohort": source_cohort or None,
+        "source_type": source_type,
+        "unit": unit,
+        "source_scale_class": source_scale_class,
+        "linear_tpm_comparable": linear_tpm_comparable,
+        "tpm_proxy": tpm_proxy,
+    }
+
+
+def _sample_qc_status(reasons: list[str]) -> str:
+    if set(reasons) & _BLOCKING_SAMPLE_QC_REASONS:
+        return "fail"
+    return "warn" if reasons else "pass"
+
+
+def _validate_sample_qc(sample_qc: str) -> str:
+    mode = str(sample_qc).lower()
+    if mode not in _SAMPLE_QC_MODES:
+        raise ValueError(f"sample_qc must be one of {_SAMPLE_QC_MODES}")
+    return mode
+
+
+def _apply_sample_qc_filter(
+    df: pd.DataFrame, code: str, *, sample_qc: str, auto_fetch: bool
+) -> pd.DataFrame:
+    mode = _validate_sample_qc(sample_qc)
+    if mode == "all":
+        return df
+    samples = sample_columns(df)
+    if not samples:
+        return df
+    qc = sample_expression_qc(code, auto_fetch=auto_fetch)
+    if qc.empty:
+        return df[id_columns(df)].copy()
+    if mode == "pass":
+        allowed = set(qc.loc[qc["sample_qc_status"] == "pass", "sample_id"].astype(str))
+    else:
+        allowed = set(
+            qc.loc[qc["sample_qc_status"].isin(["pass", "warn"]), "sample_id"].astype(str)
+        )
+    keep_samples = [s for s in samples if s in allowed]
+    return df[[*id_columns(df), *keep_samples]].copy()
+
+
+def sample_expression_qc(
+    cancer_type,
+    *,
+    auto_fetch: bool = True,
+    min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
+    min_housekeeping_detected: int | None = None,
+    max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
+    max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
+) -> pd.DataFrame:
+    """Per-sample QC metrics for a cohort's raw expression matrix.
+
+    This is an audit surface over the raw per-sample matrix before clean-TPM
+    normalization. It is designed to catch source/sample artifacts such as literal-zero
+    sparsity in otherwise universal genes, while still making source-type caveats
+    explicit (for example microarray TPM-proxy sources). It does not exclude samples by
+    itself; downstream code can use ``passes_expression_qc`` or inspect ``qc_flags``.
+    """
+    code = resolve_cancer_type(cancer_type, strict=False) or cancer_type
+    raw = per_sample_expression(code, normalize="tpm_raw", auto_fetch=auto_fetch, sample_qc="all")
+    samples = sample_columns(raw)
+    if not samples:
+        return pd.DataFrame()
+
+    id_cols = id_columns(raw)
+    ids = raw["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    panel_ids = _clean_tpm_housekeeping_panel_ids()
+    panel = {str(g).split(".")[0] for g in panel_ids}
+    hk_rows = ids.isin(panel)
+    from .gene_families import clean_tpm_censored_gene_ids
+
+    biological_rows = ~ids.isin(clean_tpm_censored_gene_ids())
+    clean = clean_tpm(raw[samples], gene_table=raw[id_cols])
+    min_hk = (
+        min_housekeeping_detected
+        if min_housekeeping_detected is not None
+        else _min_housekeeping_detected(panel_ids)
+    )
+    meta = _selected_expression_source_metadata(str(code))
+
+    rows: list[dict] = []
+    for sample in samples:
+        vals = pd.to_numeric(raw[sample], errors="coerce")
+        clean_vals = pd.to_numeric(clean[sample], errors="coerce")
+        measured = vals.notna()
+        positive = vals > 0
+        n_measured = int(measured.sum())
+        n_detected = int(positive.sum())
+        n_zero = int((vals == 0).sum())
+        n_missing = int(vals.isna().sum())
+        n_detected_clean = int((clean_vals > 0).sum())
+        n_detected_clean_biological = int((clean_vals[biological_rows] > 0).sum())
+        total = float(vals.sum(skipna=True))
+        top_idx = vals.idxmax(skipna=True) if n_measured else None
+        top_tpm = float(vals.loc[top_idx]) if top_idx is not None and pd.notna(top_idx) else 0.0
+        top10_tpm = float(vals.nlargest(min(10, n_measured)).sum()) if n_measured else 0.0
+        clean_total = float(clean_vals.sum(skipna=True))
+        clean_top_tpm = float(clean_vals.max(skipna=True)) if n_measured else 0.0
+        clean_top10_tpm = (
+            float(clean_vals.nlargest(min(10, n_measured)).sum()) if n_measured else 0.0
+        )
+        hk_vals = vals[hk_rows]
+        hk_measured = int(hk_vals.notna().sum())
+        hk_detected = int((hk_vals > 0).sum())
+        hk_zero = int((hk_vals == 0).sum())
+        hk_floor_count = int((hk_vals >= 30).sum())
+        top_fraction = top_tpm / total if total > 0 else np.nan
+        top10_fraction = top10_tpm / total if total > 0 else np.nan
+        clean_top_fraction = clean_top_tpm / clean_total if clean_total > 0 else np.nan
+        clean_top10_fraction = clean_top10_tpm / clean_total if clean_total > 0 else np.nan
+        detected_fraction = n_detected / n_measured if n_measured else np.nan
+        zero_fraction = n_zero / n_measured if n_measured else np.nan
+        parse_missing_fraction = n_missing / len(vals) if len(vals) else np.nan
+        hk_zero_fraction = hk_zero / hk_measured if hk_measured else np.nan
+
+        flags: list[str] = []
+        if n_detected < min_detected_genes:
+            flags.append("low_detected_genes")
+        if min_hk is not None and hk_detected < min_hk:
+            flags.append("low_housekeeping_detection")
+        if pd.notna(top_fraction) and top_fraction > max_top_gene_fraction:
+            flags.append("high_top_gene_fraction")
+        if (
+            n_measured > 10
+            and pd.notna(top10_fraction)
+            and top10_fraction > max_top10_gene_fraction
+        ):
+            flags.append("high_top10_gene_fraction")
+        if meta["tpm_proxy"]:
+            flags.append("tpm_proxy_scale")
+
+        status = _sample_qc_status(flags)
+        rows.append(
+            {
+                "cancer_code": code,
+                "source_cohort": meta["source_cohort"],
+                "source_type": meta["source_type"],
+                "unit": meta["unit"],
+                "source_scale_class": meta["source_scale_class"],
+                "linear_tpm_comparable": bool(meta["linear_tpm_comparable"]),
+                "sample_id": sample,
+                "n_measured_genes": n_measured,
+                "n_detected_genes": n_detected,
+                "n_detected_raw": n_detected,
+                "n_detected_clean": n_detected_clean,
+                "n_detected_clean_biological": n_detected_clean_biological,
+                "detected_gene_fraction": detected_fraction,
+                "zero_fraction_raw": zero_fraction,
+                "parse_missing_fraction": parse_missing_fraction,
+                "total_tpm": total,
+                "top_gene_id": raw.loc[top_idx, "Ensembl_Gene_ID"] if top_idx is not None else None,
+                "top_gene_symbol": raw.loc[top_idx, "Symbol"] if top_idx is not None else None,
+                "top_gene_tpm": top_tpm,
+                "top_gene_fraction": top_fraction,
+                "top1_fraction_raw": top_fraction,
+                "top10_tpm": top10_tpm,
+                "top10_fraction": top10_fraction,
+                "top10_fraction_raw": top10_fraction,
+                "top1_fraction_clean": clean_top_fraction,
+                "top10_fraction_clean": clean_top10_fraction,
+                "housekeeping_genes_present": hk_measured,
+                "housekeeping_genes_detected": hk_detected,
+                "housekeeping_genes_above_30": hk_floor_count,
+                "housekeeping_zero_fraction": hk_zero_fraction,
+                "tpm_proxy": bool(meta["tpm_proxy"]),
+                "qc_flags": ";".join(flags),
+                "qc_status": status,
+                "qc_reasons": ";".join(flags),
+                "sample_qc_status": status,
+                "sample_qc_reasons": ";".join(flags),
+                "passes_expression_qc": status != "fail",
+                "recommended_for_absolute_tpm_floor": status != "fail"
+                and bool(meta["linear_tpm_comparable"]),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def per_sample_expression(
@@ -282,6 +522,7 @@ def per_sample_expression(
     auto_fetch: bool = True,
     proteoform: bool = False,
     scope: str = "cta",
+    sample_qc: str = "all",
 ) -> pd.DataFrame:
     """Full per-sample expression matrix (genes x **every** sample) for a cohort —
     the raw **TPM values** at gene level (default) or proteoform level.
@@ -313,11 +554,15 @@ def per_sample_expression(
     (``scope`` is ignored when ``proteoform=False``.)
 
     ``auto_fetch=False`` raises instead of downloading if the matrix isn't cached.
+    ``sample_qc`` can be ``"all"`` (default), ``"pass"``, or ``"pass_or_warn"``; the
+    latter two use :func:`sample_expression_qc` to drop failing sample columns while
+    retaining the gene rows.
     Returns ``Ensembl_Gene_ID``, ``Symbol`` and one column per sample (plus the
     proteoform identity columns when collapsed).
     """
     if normalize not in _PER_SAMPLE_NORMALIZE:
         raise ValueError(f"normalize must be one of {_PER_SAMPLE_NORMALIZE}")
+    sample_qc = _validate_sample_qc(sample_qc)
     code = resolve_cancer_type(cancer_type, strict=False) or cancer_type
     if auto_fetch:
         path = source_matrices.ensure(code)
@@ -334,7 +579,8 @@ def per_sample_expression(
     # The mtime in the key self-invalidates the cache if the matrix is re-fetched.
     mtime = os.path.getmtime(path)
     if not proteoform:
-        return _load_per_sample_matrix(str(path), mtime, normalize).copy()
+        out = _load_per_sample_matrix(str(path), mtime, normalize).copy()
+        return _apply_sample_qc_filter(out, str(code), sample_qc=sample_qc, auto_fetch=auto_fetch)
     # Proteoform level: sum members in LINEAR TPM, then apply the requested transform.
     from .proteoforms import collapse_to_proteoforms
 
@@ -345,7 +591,7 @@ def per_sample_expression(
         out[samples] = np.log1p(out[samples].to_numpy(dtype=float))
     elif normalize == "tpm_clean_hk":
         out = _housekeeping_normalize(out, samples)
-    return out
+    return _apply_sample_qc_filter(out, str(code), sample_qc=sample_qc, auto_fetch=auto_fetch)
 
 
 @lru_cache(maxsize=_PER_SAMPLE_CACHE_SIZE)
@@ -379,14 +625,17 @@ def _housekeeping_normalize(df: pd.DataFrame, sample_cols) -> pd.DataFrame:
     """Divide each clean-TPM sample column by the biological housekeeping-panel geometric
     mean. Commutes with the proteoform sum (the denominator is per-column), so it can
     be applied before or after collapse."""
-    from .gene_families import clean_tpm_biological_housekeeping_gene_ids
     from .normalization import tpm_to_housekeeping_normalized
 
+    panel_ids = _clean_tpm_housekeeping_panel_ids()
     out, _ = tpm_to_housekeeping_normalized(
         df,
         value_cols=list(sample_cols),
-        panel_ids=clean_tpm_biological_housekeeping_gene_ids(),
+        panel_ids=panel_ids,
         panel_name="clean_tpm_biological_housekeeping",
+        min_panel_detected=_min_housekeeping_detected(panel_ids),
+        drop_zero_panel_values=True,
+        warn_on_unreliable=True,
     )
     return out
 
@@ -402,6 +651,7 @@ def cohort_mean_expression(
     auto_fetch: bool = True,
     proteoform: bool = False,
     scope: str = "cta",
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Per-gene **across-patient summary** of a cohort's expression (one value per
     gene, collapsed over all patients).
@@ -417,7 +667,9 @@ def cohort_mean_expression(
     (:func:`oncoref.proteoforms.collapse_to_proteoforms`) **before** the
     across-patient reduction, so the summary is over the reduced proteoform key space
     (rows carry ``proteoform_key`` — a **proteoform-level** frame, see
-    :func:`oncoref.proteoforms.expression_level`). ``scope`` selects the gene
+    :func:`oncoref.proteoforms.expression_level`). ``sample_qc`` defaults to
+    ``"pass"`` so live summaries exclude source/sample QC failures; pass ``"all"`` for
+    forensic parity with the current source matrix. ``scope`` selects the gene
     universe to collapse: ``"cta"`` (focused) or ``"genome"`` (every protein-coding
     gene). Returns ``Ensembl_Gene_ID``, ``Symbol`` (plus the proteoform identity
     columns when collapsed) and one ``expression`` column."""
@@ -429,6 +681,7 @@ def cohort_mean_expression(
         auto_fetch=auto_fetch,
         proteoform=proteoform,
         scope=scope,
+        sample_qc=sample_qc,
     )
     id_cols = id_columns(df)
     samples = sample_columns(df)
@@ -598,6 +851,7 @@ def cohort_stats(
     auto_fetch: bool = True,
     proteoform: bool = False,
     scope: str = "cta",
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Per-gene **summary statistics** across a cohort's samples, in one pass —
     ``mean``, ``std`` and a uniform percentile ladder ``min, p1, p5, p10, p15, p20,
@@ -613,9 +867,15 @@ def cohort_stats(
     ``proteoform=True`` summarizes the reduced proteoform key space (members summed per
     sample first, ``scope`` ``"cta"``/``"genome"``) — a proteoform-level frame carrying
     ``proteoform_key`` (see :func:`oncoref.proteoforms.expression_level`). Returns the
-    id columns plus one column per statistic."""
+    id columns plus one column per statistic. ``sample_qc`` defaults to ``"pass"``
+    for live summaries; use ``"all"`` to include every source-matrix sample."""
     df = per_sample_expression(
-        cancer_type, normalize=normalize, auto_fetch=auto_fetch, proteoform=proteoform, scope=scope
+        cancer_type,
+        normalize=normalize,
+        auto_fetch=auto_fetch,
+        proteoform=proteoform,
+        scope=scope,
+        sample_qc=sample_qc,
     )
     id_cols = id_columns(df)
     samples = sample_columns(df)
@@ -796,7 +1056,7 @@ def representative_cohort_samples(
 
 
 def _biological_per_sample(
-    code, *, proteoform: bool, auto_fetch: bool, scope: str = "cta"
+    code, *, proteoform: bool, auto_fetch: bool, scope: str = "cta", sample_qc: str = "pass"
 ) -> pd.DataFrame:
     """Clean-TPM per-sample matrix with technical/censored genes dropped — the
     biological view the summary artifacts are built on — collapsed to proteoform level
@@ -805,7 +1065,9 @@ def _biological_per_sample(
     (no shard). ``scope`` is ignored when ``proteoform`` is False."""
     from .gene_families import clean_tpm_censored_gene_ids
 
-    clean = per_sample_expression(code, normalize="tpm_clean", auto_fetch=auto_fetch)
+    clean = per_sample_expression(
+        code, normalize="tpm_clean", auto_fetch=auto_fetch, sample_qc=sample_qc
+    )
     censored = clean_tpm_censored_gene_ids()
     unversioned = clean["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
     bio = clean[~unversioned.isin(censored)].reset_index(drop=True)
@@ -817,7 +1079,13 @@ def _biological_per_sample(
 
 
 def _read_shard_or_recompute(
-    dataset: ShardDataset, code: str, *, proteoform: bool, auto_fetch: bool, scope: str = "cta"
+    dataset: ShardDataset,
+    code: str,
+    *,
+    proteoform: bool,
+    auto_fetch: bool,
+    scope: str = "cta",
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Read ``code``'s shard for ``dataset`` (the ``scope``-specific one at proteoform
     level); if no shard is present, recompute it on the fly from the per-sample matrix
@@ -833,7 +1101,11 @@ def _read_shard_or_recompute(
         return pd.read_parquet(shard)
     try:
         bio = _biological_per_sample(
-            code, proteoform=proteoform, auto_fetch=auto_fetch, scope=scope
+            code,
+            proteoform=proteoform,
+            auto_fetch=auto_fetch,
+            scope=scope,
+            sample_qc=sample_qc,
         )
     except FileNotFoundError as e:
         variant = "proteoform-summed " if proteoform else ""
@@ -998,30 +1270,51 @@ def proteoform_representative_samples(
 
 
 def gene_per_sample_expression(
-    cancer_type, *, normalize: str = "tpm_clean", auto_fetch: bool = True
+    cancer_type, *, normalize: str = "tpm_clean", auto_fetch: bool = True, sample_qc: str = "all"
 ) -> pd.DataFrame:
     """Gene-level per-sample **TPM values** (one row per Ensembl gene). Proteoform
     counterpart: :func:`proteoform_per_sample_expression`."""
-    return per_sample_expression(cancer_type, normalize=normalize, auto_fetch=auto_fetch)
+    return per_sample_expression(
+        cancer_type, normalize=normalize, auto_fetch=auto_fetch, sample_qc=sample_qc
+    )
 
 
 def proteoform_per_sample_expression(
-    cancer_type, *, normalize: str = "tpm_clean", auto_fetch: bool = True, scope: str = "cta"
+    cancer_type,
+    *,
+    normalize: str = "tpm_clean",
+    auto_fetch: bool = True,
+    scope: str = "cta",
+    sample_qc: str = "all",
 ) -> pd.DataFrame:
     """Proteoform-level per-sample **TPM values** — identical-protein paralogs summed
     per sample. Gene-level counterpart: :func:`gene_per_sample_expression`."""
     return per_sample_expression(
-        cancer_type, normalize=normalize, auto_fetch=auto_fetch, proteoform=True, scope=scope
+        cancer_type,
+        normalize=normalize,
+        auto_fetch=auto_fetch,
+        proteoform=True,
+        scope=scope,
+        sample_qc=sample_qc,
     )
 
 
 def gene_cohort_mean_expression(
-    cancer_type, *, normalize: str = "tpm_clean", statistic: str = "mean", auto_fetch: bool = True
+    cancer_type,
+    *,
+    normalize: str = "tpm_clean",
+    statistic: str = "mean",
+    auto_fetch: bool = True,
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Gene-level across-patient **TPM** summary. Proteoform counterpart:
     :func:`proteoform_cohort_mean_expression`."""
     return cohort_mean_expression(
-        cancer_type, normalize=normalize, statistic=statistic, auto_fetch=auto_fetch
+        cancer_type,
+        normalize=normalize,
+        statistic=statistic,
+        auto_fetch=auto_fetch,
+        sample_qc=sample_qc,
     )
 
 
@@ -1032,6 +1325,7 @@ def proteoform_cohort_mean_expression(
     statistic: str = "mean",
     auto_fetch: bool = True,
     scope: str = "cta",
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Proteoform-level across-patient **TPM** summary. Gene-level counterpart:
     :func:`gene_cohort_mean_expression`."""
@@ -1042,35 +1336,57 @@ def proteoform_cohort_mean_expression(
         auto_fetch=auto_fetch,
         proteoform=True,
         scope=scope,
+        sample_qc=sample_qc,
     )
 
 
 def gene_cohort_stats(
-    cancer_type, *, normalize: str = "tpm_clean", auto_fetch: bool = True
+    cancer_type, *, normalize: str = "tpm_clean", auto_fetch: bool = True, sample_qc: str = "pass"
 ) -> pd.DataFrame:
     """Gene-level per-gene cohort **summary statistics** (mean/std + the percentile ladder
     min/p1/p5/p10/p15/p20/p25/p50/p75/p80/p85/p90/p95/p99/max). Proteoform counterpart:
     :func:`proteoform_cohort_stats`."""
-    return cohort_stats(cancer_type, normalize=normalize, auto_fetch=auto_fetch)
+    return cohort_stats(
+        cancer_type, normalize=normalize, auto_fetch=auto_fetch, sample_qc=sample_qc
+    )
 
 
 def proteoform_cohort_stats(
-    cancer_type, *, normalize: str = "tpm_clean", auto_fetch: bool = True, scope: str = "cta"
+    cancer_type,
+    *,
+    normalize: str = "tpm_clean",
+    auto_fetch: bool = True,
+    scope: str = "cta",
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Proteoform-level per-gene cohort **summary statistics**. Gene-level counterpart:
     :func:`gene_cohort_stats`."""
     return cohort_stats(
-        cancer_type, normalize=normalize, auto_fetch=auto_fetch, proteoform=True, scope=scope
+        cancer_type,
+        normalize=normalize,
+        auto_fetch=auto_fetch,
+        proteoform=True,
+        scope=scope,
+        sample_qc=sample_qc,
     )
 
 
 def gene_pooled_cohort_stats(
-    cancer_types, *, normalize: str = "tpm_clean", auto_fetch: bool = True, min_cohorts: int = 1
+    cancer_types,
+    *,
+    normalize: str = "tpm_clean",
+    auto_fetch: bool = True,
+    min_cohorts: int = 1,
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Gene-level heterogeneity-safe cross-cohort pool. Proteoform counterpart:
     :func:`proteoform_pooled_cohort_stats`. (Alias of :func:`pooled_cohort_stats`.)"""
     return pooled_cohort_stats(
-        cancer_types, normalize=normalize, auto_fetch=auto_fetch, min_cohorts=min_cohorts
+        cancer_types,
+        normalize=normalize,
+        auto_fetch=auto_fetch,
+        min_cohorts=min_cohorts,
+        sample_qc=sample_qc,
     )
 
 
@@ -1081,6 +1397,7 @@ def proteoform_pooled_cohort_stats(
     auto_fetch: bool = True,
     scope: str = "cta",
     min_cohorts: int = 1,
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """Proteoform-level heterogeneity-safe cross-cohort pool. Gene-level counterpart:
     :func:`gene_pooled_cohort_stats`."""
@@ -1091,6 +1408,7 @@ def proteoform_pooled_cohort_stats(
         proteoform=True,
         scope=scope,
         min_cohorts=min_cohorts,
+        sample_qc=sample_qc,
     )
 
 
@@ -1230,13 +1548,15 @@ def pan_cancer_expression(
     if modes & {"housekeeping", "hk"}:
         hk_input_cols = clean_cols or raw_cols
         hk_input = out[id_cols + hk_input_cols].copy()
-        from .gene_families import clean_tpm_biological_housekeeping_gene_ids
-
+        panel_ids = _clean_tpm_housekeeping_panel_ids()
         hk, _ = tpm_to_housekeeping_normalized(
             hk_input,
             value_cols=hk_input_cols,
-            panel_ids=clean_tpm_biological_housekeeping_gene_ids(),
+            panel_ids=panel_ids,
             panel_name="clean_tpm_biological_housekeeping",
+            min_panel_detected=_min_housekeeping_detected(panel_ids),
+            drop_zero_panel_values=True,
+            warn_on_unreliable=True,
         )
         for col in hk_input_cols:
             target = col.rsplit("_", 1)[0] + "_hk"
@@ -1310,6 +1630,7 @@ def pooled_cohort_stats(
     proteoform: bool = False,
     scope: str = "cta",
     min_cohorts: int = 1,
+    sample_qc: str = "pass",
 ) -> pd.DataFrame:
     """**Heterogeneity-safe** per-gene summary pooled across several cohorts.
 
@@ -1336,11 +1657,12 @@ def pooled_cohort_stats(
     - ``n_cohorts`` — how many of the pooled cohorts measured the gene.
 
     ``min_cohorts`` drops genes measured by fewer than that many cohorts (default
-    ``1`` keeps everything). ``normalize`` selects the pooling space (linear clean
-    TPM by default; see :func:`per_sample_expression`). ``proteoform=True`` pools
-    the reduced proteoform key space (``scope`` ``"cta"``/``"genome"``). An aggregate
-    code (e.g. ``"SARC"``) expands to its member subtypes — pooling them is exactly
-    what a rollup cohort means."""
+    ``1`` keeps everything). ``sample_qc`` defaults to ``"pass"`` so QC-failed
+    sample columns do not affect live pooled summaries. ``normalize`` selects the
+    pooling space (linear clean TPM by default; see :func:`per_sample_expression`).
+    ``proteoform=True`` pools the reduced proteoform key space (``scope`` ``"cta"``/
+    ``"genome"``). An aggregate code (e.g. ``"SARC"``) expands to its member subtypes
+    — pooling them is exactly what a rollup cohort means."""
     codes = _resolve_cancer_types(cancer_types, expand_aggregates=True)
     codes = list(dict.fromkeys(codes or []))
     if not codes:
@@ -1355,7 +1677,12 @@ def pooled_cohort_stats(
     # can't stand as a separate sparse row here — no extra canonicalization needed.
     for code in codes:
         df = per_sample_expression(
-            code, normalize=normalize, auto_fetch=auto_fetch, proteoform=proteoform, scope=scope
+            code,
+            normalize=normalize,
+            auto_fetch=auto_fetch,
+            proteoform=proteoform,
+            scope=scope,
+            sample_qc=sample_qc,
         )
         id_cols = id_columns(df)
         samples = sample_columns(df)
