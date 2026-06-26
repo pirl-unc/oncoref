@@ -6,6 +6,7 @@
 
 import glob
 import importlib.util
+import json
 import os
 import sys
 from pathlib import Path
@@ -212,6 +213,106 @@ def test_representatives_generator_writes_shards_and_provenance(tmp_path):
         assert col in prov.columns
     # Unregistered code -> source_cohort falls back to the code itself.
     assert (prov["source_cohort"] == "COHORT_A").all()
+
+
+def _write_rebuild_inputs(tmp_path):
+    cache = tmp_path / "cache"
+    ref = tmp_path / "ref"
+    source_dir = cache / "TEST_SOURCE" / "derived"
+    source_dir.mkdir(parents=True)
+    ref.mkdir()
+    _matrix(
+        ["ENSG000001", "ENSG000002", "ENSG000003"],
+        ["pass_sample", "warn_sample", "fail_sample"],
+        np.array(
+            [
+                [10.0, 20.0, 30.0],
+                [40.0, 50.0, 60.0],
+                [70.0, 80.0, 90.0],
+            ]
+        ),
+    ).to_parquet(source_dir / "X_per_sample_tpm.parquet", index=False)
+    _write_cohort(ref, "X", ["ENSG000001"], ["reference"], np.array([[1.0]]))
+    return cache, ref
+
+
+def _patch_rebuild_registry(monkeypatch, gen):
+    monkeypatch.setattr(
+        gen,
+        "source_registry",
+        lambda: pd.DataFrame({"cancer_code": ["X"], "source_cohort": ["TEST_SOURCE"]}),
+    )
+    monkeypatch.setattr(gen, "cohort_source_version", lambda code: "test-source-version")
+    monkeypatch.setattr(
+        gen,
+        "sample_expression_qc_from_matrix",
+        lambda raw, cancer_type: pd.DataFrame(
+            {
+                "cancer_code": [cancer_type, cancer_type, cancer_type],
+                "sample_id": ["pass_sample", "warn_sample", "fail_sample"],
+                "sample_qc_status": ["pass", "warn", "fail"],
+                "sample_qc_reasons": ["", "tpm_proxy_scale", "low_detected_genes"],
+            }
+        ),
+    )
+
+
+def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, monkeypatch):
+    gen = _load_script("rebuild_expression_artifacts")
+    cache, ref = _write_rebuild_inputs(tmp_path)
+    _patch_rebuild_registry(monkeypatch, gen)
+    out = tmp_path / "out"
+
+    gen.rebuild(cache, ref, out, limit=None, validate=False, sample_qc="pass")
+
+    clean = pd.read_parquet(out / "clean" / "X.parquet")
+    assert [c for c in clean.columns if c not in ("Ensembl_Gene_ID", "Symbol")] == ["pass_sample"]
+
+    reps = pd.read_parquet(out / "cancer-reference-expression-representatives" / "X.parquet")
+    assert [c for c in reps.columns if c not in ("Ensembl_Gene_ID", "Symbol")] == ["X__rep1"]
+
+    prov = pd.read_csv(out / "cancer-reference-expression-representatives" / "_provenance.csv")
+    assert prov.loc[0, "n_source_samples"] == 3
+    assert prov.loc[0, "n_cohort_samples"] == 1
+    assert prov.loc[0, "sample_qc"] == "pass"
+    assert prov.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v1"
+    assert prov.loc[0, "n_qc_pass"] == 1
+    assert prov.loc[0, "n_qc_warn"] == 1
+    assert prov.loc[0, "n_qc_fail"] == 1
+
+    qc = pd.read_csv(out / "source-matrix-sample-qc.csv")
+    assert list(qc["sample_id"]) == ["pass_sample", "warn_sample", "fail_sample"]
+
+    build_meta = pd.read_csv(out / "expression-artifact-build-metadata.csv")
+    assert build_meta.loc[0, "n_source_samples"] == 3
+    assert build_meta.loc[0, "n_cohort_samples"] == 1
+    assert build_meta.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v1"
+
+    metadata = json.loads((out / "expression-artifact-build-metadata.json").read_text())
+    assert metadata["sample_qc"] == "pass"
+    assert metadata["sample_qc_manifest"] == "source-matrix-sample-qc.csv"
+    assert metadata["n_source_samples"] == 3
+    assert metadata["n_cohort_samples"] == 1
+
+
+def test_rebuild_expression_artifacts_keeps_all_samples_when_requested(tmp_path, monkeypatch):
+    gen = _load_script("rebuild_expression_artifacts")
+    cache, ref = _write_rebuild_inputs(tmp_path)
+    _patch_rebuild_registry(monkeypatch, gen)
+    out = tmp_path / "out"
+
+    gen.rebuild(cache, ref, out, limit=None, validate=False, sample_qc="all")
+
+    clean = pd.read_parquet(out / "clean" / "X.parquet")
+    assert [c for c in clean.columns if c not in ("Ensembl_Gene_ID", "Symbol")] == [
+        "pass_sample",
+        "warn_sample",
+        "fail_sample",
+    ]
+    build_meta = pd.read_csv(out / "expression-artifact-build-metadata.csv")
+    assert build_meta.loc[0, "sample_qc"] == "all"
+    assert build_meta.loc[0, "n_source_samples"] == 3
+    assert build_meta.loc[0, "n_cohort_samples"] == 3
 
 
 # ---------- real-data parity (skipped without the maintainer's matrix cache) ----------
