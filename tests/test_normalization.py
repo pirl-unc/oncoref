@@ -260,9 +260,28 @@ def test_fpkm_to_tpm_equals_renormalize():
     assert out["x_FPKM"].to_numpy() == pytest.approx([2e5, 6e5, 2e5])
 
 
+def test_fpkm_to_tpm_auto_detects_source_style_fpkm_columns():
+    df = pd.DataFrame(
+        {
+            "FPKM_LUAD": [2.0, 8.0],
+            "TPM_LUAD": [2.0, 8.0],
+            "nTPM_liver": [3.0, 7.0],
+        }
+    )
+    out, stats = norm.fpkm_to_tpm(df)
+    assert out["FPKM_LUAD"].to_numpy() == pytest.approx([2e5, 8e5])
+    assert out["TPM_LUAD"].to_numpy() == pytest.approx([2.0, 8.0])
+    assert out["nTPM_liver"].to_numpy() == pytest.approx([3.0, 7.0])
+    assert stats["value_cols"] == ["FPKM_LUAD"]
+
+
 def test_is_expression_value_col():
     assert norm.is_expression_value_col("LUAD_TPM_clean")
     assert norm.is_expression_value_col("TPM")
+    assert norm.is_expression_value_col("FPKM")
+    assert norm.is_expression_value_col("FPKM_LUAD")
+    assert not norm.is_expression_value_col("TPM_LUAD")
+    assert not norm.is_expression_value_col("nTPM_liver")
     assert not norm.is_expression_value_col("LUAD_TPM_raw")
     assert not norm.is_expression_value_col("Ensembl_Gene_ID")
 

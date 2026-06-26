@@ -280,10 +280,12 @@ def percentile_rank(df: pd.DataFrame, value_cols=None) -> pd.DataFrame:
 
 # ---------- TPM-scale rescaling (FPKM->TPM, renormalize to 1e6) ----------
 
-#: Column-name conventions for "an expression value column" — TPM/nTPM/FPKM named
-#: (mirrors the pirlygenes expression schema), excluding the ``_raw`` provenance
-#: copies that must never be rescaled.
-_VALUE_COL_PREFIXES = ("TPM", "nTPM_", "FPKM_")
+#: Column-name conventions for "an expression value column" — exact scalar TPM/
+#: nTPM/FPKM labels, source-style FPKM columns, and entity-first measurement
+#: suffixes. Excludes legacy unit-first ``TPM_<entity>`` / ``nTPM_<entity>`` public
+#: names and ``_raw`` provenance copies that must never be rescaled.
+_VALUE_COL_EXACT = ("TPM", "nTPM", "FPKM")
+_VALUE_COL_PREFIXES = ("FPKM_",)
 _VALUE_COL_SUFFIXES = (
     "_TPM",
     "_nTPM",
@@ -307,9 +309,11 @@ def is_expression_value_col(col: object) -> bool:
     """True if ``col`` names an expression value column (TPM/nTPM/FPKM-named),
     excluding the ``_raw`` provenance copies."""
     name = str(col)
-    return (name.startswith(_VALUE_COL_PREFIXES) or name.endswith(_VALUE_COL_SUFFIXES)) and not (
-        name.startswith(_RAW_VALUE_COL_PREFIXES) or name.endswith(_RAW_VALUE_COL_SUFFIXES)
-    )
+    return (
+        name in _VALUE_COL_EXACT
+        or name.startswith(_VALUE_COL_PREFIXES)
+        or name.endswith(_VALUE_COL_SUFFIXES)
+    ) and not (name.startswith(_RAW_VALUE_COL_PREFIXES) or name.endswith(_RAW_VALUE_COL_SUFFIXES))
 
 
 def renormalize_to_million(df: pd.DataFrame, *, value_cols=None) -> tuple[pd.DataFrame, dict]:
