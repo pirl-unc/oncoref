@@ -223,8 +223,10 @@ def _extra_transcript_gene_index() -> dict[str, tuple[str, str]]:
         raw_gid = _nonempty_text(gid)
         if raw_gid is not None:
             gene_id = resolve_ensembl_id(raw_gid)
-            out.setdefault(tx_key, (unversioned(gene_id), str(sym)))
-            continue
+            hit = _canonical_gene_index().get(unversioned(gene_id))
+            if hit is not None:
+                out.setdefault(tx_key, hit)
+                continue
         hit_id, hit_symbol, _, _ = _resolve_symbol(str(sym))
         if hit_id is not None and hit_symbol is not None:
             out.setdefault(tx_key, (hit_id, hit_symbol))
@@ -323,7 +325,9 @@ def map_source_gene_rows(
             reason = "unsupported_entrez_id"
 
         if canonical_id is None:
-            symbol_candidate = source_symbol or (raw_id if raw_id is not None else None)
+            symbol_candidate = source_symbol
+            if symbol_candidate is None and row_type == "symbol":
+                symbol_candidate = raw_id
             if symbol_candidate is not None:
                 canonical_id, canonical_symbol, method, reason = _resolve_symbol(symbol_candidate)
 
@@ -359,14 +363,26 @@ def map_source_gene_rows(
 
 
 def coerce_source_expression_values(
-    df: pd.DataFrame, value_cols=None
+    df: pd.DataFrame,
+    value_cols=None,
+    *,
+    row_id_col: str | None = None,
+    symbol_col: str | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Coerce source expression values to numeric and report parse/missing diagnostics.
 
     Literal zeros, input missing values, and non-parsing cells are counted separately so
     builders do not have to collapse missingness into measured zero before QC.
     """
-    cols = list(value_cols) if value_cols is not None else sample_columns(df)
+    if value_cols is None:
+        row_id_col = row_id_col or _find_optional_column(df, _DEFAULT_GENE_ROW_ID_COLUMN_CANDIDATES)
+        if symbol_col is None:
+            symbol_col = _find_optional_column(df, _DEFAULT_GENE_SYMBOL_COLUMN_CANDIDATES)
+            if symbol_col == row_id_col:
+                symbol_col = None
+        cols = _source_value_columns(df, row_id_col, symbol_col, None)
+    else:
+        cols = list(value_cols)
     out = df.copy()
     rows: list[dict] = []
     for col in cols:

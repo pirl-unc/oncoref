@@ -101,6 +101,33 @@ def test_map_source_gene_rows_resolves_ids_symbols_and_transcripts():
     assert stats["n_high_expression_unresolved_rows"] == 1
 
 
+def test_map_source_gene_rows_falls_back_from_noncanonical_transcript_gene_id():
+    df = pd.DataFrame({"gene_id": ["ENST00000644628"], "s1": [11.0]})
+    audit = ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["s1"])
+    row = audit.iloc[0]
+
+    assert row["mapping_status"] == "resolved"
+    assert row["mapping_method"] == "extra_transcript_mapping"
+    assert row["canonical_ensembl_gene_id"] == "ENSG00000171862"
+    assert row["canonical_symbol"] == "PTEN"
+
+
+def test_map_source_gene_rows_preserves_identifier_unresolved_reasons():
+    df = pd.DataFrame(
+        {
+            "gene_id": ["ENSG99999999999", "123456789"],
+            "s1": [10.0, 20.0],
+        }
+    )
+    audit = ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["s1"])
+    by_id = audit.set_index("source_row_id")
+
+    assert by_id.loc["ENSG99999999999", "unresolved_reason"] == "unknown_ensembl_gene_id"
+    assert by_id.loc["ENSG99999999999", "mapping_method"] == "unresolved"
+    assert by_id.loc["123456789", "unresolved_reason"] == "unsupported_entrez_id"
+    assert by_id.loc["123456789", "mapping_method"] == "unresolved"
+
+
 def test_canonicalize_source_gene_matrix_sums_duplicate_canonical_ids():
     df = pd.DataFrame(
         {
@@ -142,3 +169,19 @@ def test_coerce_source_expression_values_distinguishes_missing_nonparse_and_zero
     assert by_col.loc["s1", "n_input_missing"] == 1
     assert by_col.loc["s2", "n_literal_zero"] == 1
     assert by_col.loc["s2", "n_parse_missing"] == 1
+
+
+def test_coerce_source_expression_values_default_preserves_source_identifiers():
+    df = pd.DataFrame(
+        {
+            "gene_id": ["ENSG00000141510", "ENSG00000278311"],
+            "symbol": ["TP53", "GGNBP2"],
+            "sample_a": ["1.5", "0"],
+        }
+    )
+    out, diag = ee.coerce_source_expression_values(df)
+
+    assert out["gene_id"].tolist() == ["ENSG00000141510", "ENSG00000278311"]
+    assert out["symbol"].tolist() == ["TP53", "GGNBP2"]
+    assert out["sample_a"].tolist() == [1.5, 0.0]
+    assert diag["value_col"].tolist() == ["sample_a"]
