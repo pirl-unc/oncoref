@@ -112,6 +112,25 @@ def test_map_source_gene_rows_falls_back_from_noncanonical_transcript_gene_id():
     assert row["canonical_symbol"] == "PTEN"
 
 
+def test_map_source_gene_rows_normalizes_case_varied_ensembl_identifiers():
+    df = pd.DataFrame(
+        {
+            "gene_id": ["ensg00000141510.17", "enst00000644628"],
+            "s1": [3.0, 4.0],
+        }
+    )
+    audit = ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["s1"])
+    by_id = audit.set_index("source_row_id")
+
+    assert by_id.loc["ensg00000141510.17", "mapping_status"] == "resolved"
+    assert by_id.loc["ensg00000141510.17", "canonical_ensembl_gene_id"] == "ENSG00000141510"
+    assert by_id.loc["enst00000644628", "mapping_status"] == "resolved"
+    assert by_id.loc["enst00000644628", "canonical_ensembl_gene_id"] == "ENSG00000171862"
+
+    matrix, _ = ee.canonicalize_source_gene_matrix(df, row_id_col="gene_id", value_cols=["s1"])
+    assert set(matrix["Ensembl_Gene_ID"]) == {"ENSG00000141510", "ENSG00000171862"}
+
+
 def test_map_source_gene_rows_preserves_identifier_unresolved_reasons():
     df = pd.DataFrame(
         {
@@ -222,3 +241,14 @@ def test_coerce_source_expression_values_default_preserves_source_identifiers():
     assert out["symbol"].tolist() == ["TP53", "GGNBP2"]
     assert out["sample_a"].tolist() == [1.5, 0.0]
     assert diag["value_col"].tolist() == ["sample_a"]
+
+
+def test_source_expression_helpers_reject_missing_requested_value_columns():
+    df = pd.DataFrame({"gene_id": ["TP53"], "sample_a": [1.0]})
+
+    with pytest.raises(ValueError, match="missing"):
+        ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["sample_b"])
+    with pytest.raises(ValueError, match="missing"):
+        ee.canonicalize_source_gene_matrix(df, row_id_col="gene_id", value_cols=["sample_b"])
+    with pytest.raises(ValueError, match="missing"):
+        ee.coerce_source_expression_values(df, value_cols=["sample_b"])

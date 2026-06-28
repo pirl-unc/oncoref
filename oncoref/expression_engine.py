@@ -271,10 +271,10 @@ def _extra_transcript_gene_index() -> dict[str, tuple[str, str]]:
     df = extra_transcript_mappings()
     out: dict[str, tuple[str, str]] = {}
     for tx, gid, sym in zip(df["transcript_id"], df["ensembl_gene_id"], df["gene_symbol"]):
-        tx_key = str(tx).split(".", 1)[0]
+        tx_key = str(tx).split(".", 1)[0].upper()
         raw_gid = _nonempty_text(gid)
         if raw_gid is not None:
-            gene_id = resolve_ensembl_id(raw_gid)
+            gene_id = resolve_ensembl_id(raw_gid.upper())
             hit = _canonical_gene_index().get(unversioned(gene_id))
             if hit is not None:
                 out.setdefault(tx_key, hit)
@@ -289,7 +289,11 @@ def _source_value_columns(
     df: pd.DataFrame, row_id_col: str | None, symbol_col: str | None, value_cols
 ) -> list[str]:
     if value_cols is not None:
-        return [str(c) for c in value_cols if str(c) in df.columns]
+        cols = [str(c) for c in value_cols]
+        missing = [c for c in cols if c not in df.columns]
+        if missing:
+            raise ValueError(f"requested source expression value columns are missing: {missing}")
+        return cols
     excluded = {c for c in (row_id_col, symbol_col) if c is not None}
     return [c for c in df.columns if c not in excluded]
 
@@ -297,7 +301,7 @@ def _source_value_columns(
 def _resolve_gene_id(raw_id: str) -> tuple[str | None, str | None, str, str | None]:
     from .gene_ids import resolve_ensembl_id, unversioned
 
-    raw = unversioned(raw_id)
+    raw = unversioned(raw_id).upper()
     canonical = resolve_ensembl_id(raw)
     hit = _canonical_gene_index().get(canonical)
     if hit is None:
@@ -360,7 +364,7 @@ def map_source_gene_rows(
         if raw_id is not None and row_type == "ensembl_gene_id":
             canonical_id, canonical_symbol, method, reason = _resolve_gene_id(raw_id)
         elif raw_id is not None and row_type == "ensembl_transcript_id":
-            tx = transcript_index.get(str(raw_id).split(".", 1)[0])
+            tx = transcript_index.get(str(raw_id).split(".", 1)[0].upper())
             if tx is not None and tx[0] in _canonical_gene_index():
                 canonical_id, canonical_symbol = tx
                 method = "extra_transcript_mapping"
@@ -427,7 +431,7 @@ def coerce_source_expression_values(
         )
         cols = _source_value_columns(df, row_id_col, symbol_col, None)
     else:
-        cols = list(value_cols)
+        cols = _source_value_columns(df, None, None, value_cols)
     out = df.copy()
     rows: list[dict] = []
     for col in cols:
