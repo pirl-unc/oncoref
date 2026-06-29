@@ -45,6 +45,7 @@ Public API:
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 import shutil
 import sys
@@ -75,6 +76,9 @@ FALLBACK_RELEASE_URL = _release_url(FALLBACK_GITHUB_REPO, FALLBACK_TARBALL_FILEN
 
 #: Release URLs tried in order until one downloads.
 RELEASE_URLS: tuple[str, ...] = (RELEASE_URL, FALLBACK_RELEASE_URL)
+
+CACHE_COMPLETE_FILENAME = ".oncoref-bundle-complete.json"
+CACHE_MANIFEST_VERSION = 1
 
 #: Env var that overrides the cache (points at the version-pinned dir).
 CACHE_DIR_ENV_VAR = "CANCERDATA_BUNDLED_DATA"
@@ -140,7 +144,76 @@ def _path_complete(path: Path) -> bool:
         return False
     if path.is_dir():
         return any(f.is_file() for f in path.rglob("*"))
-    return True
+    try:
+        return path.stat().st_size > 0
+    except OSError:
+        return False
+
+
+def _entry_inventory(path: Path) -> dict:
+    file_count = 0
+    size_bytes = 0
+    if path.exists():
+        if path.is_dir():
+            files = [f for f in path.rglob("*") if f.is_file()]
+            file_count = len(files)
+            size_bytes = sum((f.stat().st_size for f in files), start=0)
+        else:
+            file_count = 1
+            size_bytes = path.stat().st_size
+    return {
+        "present": path.exists(),
+        "complete": _path_complete(path),
+        "file_count": file_count,
+        "size_bytes": size_bytes,
+    }
+
+
+def _bundle_inventory(root: Path) -> dict[str, dict]:
+    return {p: _entry_inventory(root / p) for p in DOWNLOADABLE_PATHS}
+
+
+def _incomplete_bundle_paths(root: Path) -> list[str]:
+    return [p for p in DOWNLOADABLE_PATHS if not _path_complete(root / p)]
+
+
+def _completion_marker_path(root: Path) -> Path:
+    return root / CACHE_COMPLETE_FILENAME
+
+
+def _read_completion_marker(root: Path) -> dict | None:
+    marker = _completion_marker_path(root)
+    if not marker.exists():
+        return None
+    try:
+        return json.loads(marker.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _completion_marker_valid(root: Path) -> bool:
+    marker = _read_completion_marker(root)
+    return bool(
+        marker
+        and marker.get("manifest_version") == CACHE_MANIFEST_VERSION
+        and marker.get("data_version") == DATA_VERSION
+        and tuple(marker.get("downloadable_paths", ())) == DOWNLOADABLE_PATHS
+        and not _incomplete_bundle_paths(root)
+    )
+
+
+def _write_completion_marker(root: Path, *, source_url: str) -> None:
+    marker = _completion_marker_path(root)
+    payload = {
+        "manifest_version": CACHE_MANIFEST_VERSION,
+        "data_version": DATA_VERSION,
+        "source_url": source_url,
+        "downloadable_paths": list(DOWNLOADABLE_PATHS),
+        "inventory": _bundle_inventory(root),
+    }
+    tmp = marker.with_suffix(marker.suffix + ".part")
+    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    os.replace(tmp, marker)
 
 
 def is_local() -> bool:
@@ -179,7 +252,13 @@ def _download_and_extract(url: str, root: Path, *, verbose: bool) -> None:
                 tf.extractall(staging, filter="data")
             except TypeError:
                 tf.extractall(staging)
+        incomplete = _incomplete_bundle_paths(staging)
+        if incomplete:
+            raise tarfile.TarError(
+                "bundle tarball is missing or has empty required paths: " + ", ".join(incomplete)
+            )
         # Promote staged entries into the cache, replacing any prior copy.
+        _completion_marker_path(root).unlink(missing_ok=True)
         for entry in staging.iterdir():
             dest = root / entry.name
             if dest.is_dir():
@@ -187,6 +266,7 @@ def _download_and_extract(url: str, root: Path, *, verbose: bool) -> None:
             elif dest.exists():
                 dest.unlink()
             shutil.move(str(entry), str(dest))
+        _write_completion_marker(root, source_url=url)
     finally:
         tmp_path.unlink(missing_ok=True)
         shutil.rmtree(staging, ignore_errors=True)
@@ -252,31 +332,45 @@ def ensure_local(*, auto_fetch: bool = True, verbose: bool = True) -> Path:
 def status() -> dict:
     """Snapshot of cache state — used by ``oncoref data status bundle``."""
     root = cache_dir()
-    items: dict[str, dict] = {}
-    for p in DOWNLOADABLE_PATHS:
-        path = root / p
-        size_bytes = 0
-        if path.exists():
-            if path.is_dir():
-                size_bytes = sum(
-                    (f.stat().st_size for f in path.rglob("*") if f.is_file()),
-                    start=0,
-                )
-            else:
-                size_bytes = path.stat().st_size
-        items[p] = {
-            "present": path.exists(),
-            "path": str(path),
-            "size_bytes": size_bytes,
-        }
+    items = _bundle_inventory(root)
+    for p, item in items.items():
+        item["path"] = str(root / p)
+    marker = _read_completion_marker(root)
     return {
         "data_version": DATA_VERSION,
         "cache_dir": str(root),
         "release_url": RELEASE_URL,
         "release_urls": list(RELEASE_URLS),
+        "completion_marker": {
+            "path": str(_completion_marker_path(root)),
+            "present": marker is not None,
+            "valid": _completion_marker_valid(root),
+            "source_url": marker.get("source_url") if marker else None,
+        },
         "items": items,
         "all_local": is_local(),
     }
+
+
+def verify_local() -> dict:
+    """Return :func:`status` only when the current cache has a valid completion marker.
+
+    This is stricter than :func:`is_local`: legacy complete caches remain readable, but
+    callers that need a post-fetch integrity boundary can require the marker written by
+    current oncoref fetches.
+    """
+    snap = status()
+    if not snap["all_local"]:
+        missing = [p for p, item in snap["items"].items() if not item["complete"]]
+        raise FileNotFoundError(
+            f"oncoref data bundle is incomplete at {cache_dir()}: {', '.join(missing)}"
+        )
+    if not snap["completion_marker"]["valid"]:
+        raise RuntimeError(
+            "oncoref data bundle lacks a valid completion marker; "
+            "run `oncoref data fetch bundle` to refresh it"
+        )
+    return snap
 
 
 def is_downloadable(relative_path: str) -> bool:
@@ -358,6 +452,7 @@ def prune_cache(*, keep_current: bool = True, dry_run: bool = False) -> list[dic
 
 
 __all__ = [
+    "CACHE_COMPLETE_FILENAME",
     "DOWNLOADABLE_PATHS",
     "FALLBACK_GITHUB_REPO",
     "FALLBACK_RELEASE_URL",
@@ -376,4 +471,5 @@ __all__ = [
     "list_cache_versions",
     "prune_cache",
     "status",
+    "verify_local",
 ]

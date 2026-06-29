@@ -44,8 +44,32 @@ def test_status_reports_missing_without_download(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
     snap = data_bundle.status()
     assert snap["all_local"] is False
+    assert snap["completion_marker"]["present"] is False
+    assert snap["completion_marker"]["valid"] is False
     assert set(snap["items"]) == set(data_bundle.DOWNLOADABLE_PATHS)
     assert all(not v["present"] for v in snap["items"].values())
+
+
+def _write_bundle_fixture(root):
+    for p in data_bundle.DOWNLOADABLE_PATHS:
+        target = root / p
+        if target.suffix:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(f"{p}\n")
+        else:
+            target.mkdir(parents=True, exist_ok=True)
+            (target / "shard.parquet").write_text(f"{p}\n")
+
+
+def _bundle_tarball(tmp_path, source_root, *, missing=()):
+    tar_path = tmp_path / "bundle.tar.gz"
+    missing = set(missing)
+    with tarfile.open(tar_path, "w:gz") as tf:
+        for p in data_bundle.DOWNLOADABLE_PATHS:
+            if p in missing:
+                continue
+            tf.add(source_root / p, arcname=p)
+    return tar_path
 
 
 def test_is_local_requires_nonempty_dirs(monkeypatch, tmp_path):
@@ -68,6 +92,46 @@ def test_is_local_requires_nonempty_dirs(monkeypatch, tmp_path):
         if not target.suffix:
             (target / "shard.parquet").write_text("data")
     assert data_bundle.is_local() is True
+    with pytest.raises(RuntimeError, match="completion marker"):
+        data_bundle.verify_local()
+
+
+def test_download_and_extract_writes_completion_marker(monkeypatch, tmp_path):
+    root = tmp_path / f"v{DATA_VERSION}"
+    root.mkdir()
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
+    src = tmp_path / "src"
+    _write_bundle_fixture(src)
+    tar_path = _bundle_tarball(tmp_path, src)
+    monkeypatch.setattr(data_bundle.urllib.request, "urlopen", lambda url: tar_path.open("rb"))
+
+    data_bundle._download_and_extract("https://example.test/bundle.tar.gz", root, verbose=False)
+
+    snap = data_bundle.status()
+    assert data_bundle.is_local() is True
+    assert data_bundle.verify_local()["completion_marker"]["valid"] is True
+    assert snap["completion_marker"]["present"] is True
+    assert snap["completion_marker"]["valid"] is True
+    assert snap["completion_marker"]["source_url"] == "https://example.test/bundle.tar.gz"
+    assert all(item["complete"] for item in snap["items"].values())
+    assert all(item["file_count"] >= 1 for item in snap["items"].values())
+
+
+def test_download_and_extract_rejects_incomplete_tarball(monkeypatch, tmp_path):
+    root = tmp_path / f"v{DATA_VERSION}"
+    root.mkdir()
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
+    src = tmp_path / "src"
+    _write_bundle_fixture(src)
+    missing = "hpa-cell-type-expression.csv"
+    tar_path = _bundle_tarball(tmp_path, src, missing={missing})
+    monkeypatch.setattr(data_bundle.urllib.request, "urlopen", lambda url: tar_path.open("rb"))
+
+    with pytest.raises(tarfile.TarError, match=missing):
+        data_bundle._download_and_extract("https://example.test/bad.tar.gz", root, verbose=False)
+
+    assert not (root / missing).exists()
+    assert data_bundle.status()["completion_marker"]["present"] is False
 
 
 def test_prune_keeps_current(monkeypatch, tmp_path):
