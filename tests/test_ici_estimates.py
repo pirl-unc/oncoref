@@ -306,6 +306,25 @@ def test_dlbc_estimates_do_not_include_pmbcl_keynote170_rows():
     assert int(crr["responders"]) == 7
 
 
+def test_luad_stk11_estimates_do_not_include_keynote042_all_comer_nsclc_rows():
+    est = ici.cancer_ici_response_estimates_df()
+
+    stk11 = est[(est["cancer_code"] == "LUAD_STK11") & (est["regimen"] == "PD-1")]
+    assert "KEYNOTE-042" not in set(stk11["trial_name"])
+    assert "PMID:30955977" not in set(stk11["ref"])
+
+    primary = stk11[stk11["role"] == "primary"]
+    assert set(primary["trial_name"]) == {"Skoulidis STK11/LKB1 aPD1-resistance analysis"}
+    assert set(primary["metric"].str.upper()) == {"ORR"}
+    assert set(primary["ref"]) == {"PMID:29773717"}
+
+    alternate_trials = set(stk11[stk11["role"] == "alternate"]["trial_name"])
+    assert alternate_trials == {
+        "Skoulidis STK11/LKB1 aPD1-resistance analysis",
+        "SU2C cohort + CheckMate-057",
+    }
+
+
 def test_lusc_checkmate017_orr_and_crr_match_table2():
     est = ici.cancer_ici_response_estimates_df()
     rows = est[
