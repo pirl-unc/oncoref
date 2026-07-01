@@ -71,7 +71,7 @@ def test_estimates_table_shape_and_coverage():
         "value_basis",
     }
     assert expected <= set(est.columns)
-    assert len(est) >= 780
+    assert len(est) >= 770
     # every (cancer, regimen) in the curated anchor table has >=1 estimate row
     anchor = ici.cancer_ici_response_df()
     anchor_cells = set(zip(anchor["cancer_code"], anchor["regimen"]))
@@ -196,6 +196,34 @@ def test_crc_msi_estimates_are_source_scoped_and_detailed():
     assert pooled["pooled_pct"] == 43.8
     assert pooled["n_total"] == 153
     assert pooled["responders_total"] == 67
+
+
+def test_mss_crc_rows_do_not_carry_msi_h_or_dmmr_contrast_rows():
+    est = ici.cancer_ici_response_estimates_df()
+    mss = est[est["cancer_code"].isin(["COAD_MSS", "READ_MSS"])]
+    text = mss["setting"].fillna("").str.cat(mss["note"].fillna(""), sep=" ")
+    assert not text.str.contains(
+        r"MSI-H|dMMR|MMR-deficient|mismatch-repair-DEFICIENT",
+        case=False,
+        regex=True,
+    ).any()
+    assert not (
+        mss["trial_name"].astype(str).str.contains("KEYNOTE-177") & mss["ref"].eq("PMID:33264544")
+    ).any()
+
+    crc_msi = est[
+        (est["cancer_code"] == "CRC_MSI") & (est["trial_name"] == "KEYNOTE-016 dMMR CRC cohort")
+    ]
+    by_metric = {str(r["metric"]).upper(): r for _, r in crc_msi.iterrows()}
+    assert set(by_metric) == {"ORR", "PFS_RATE", "PFS", "OS"}
+    assert float(by_metric["ORR"]["value"]) == 40.0
+    assert float(by_metric["ORR"]["ci_low"]) == 12.0
+    assert float(by_metric["ORR"]["ci_high"]) == 74.0
+    assert int(by_metric["ORR"]["metric_n"]) == 10
+    assert int(by_metric["ORR"]["responders"]) == 4
+    assert float(by_metric["PFS_RATE"]["value"]) == 78.0
+    assert int(by_metric["PFS_RATE"]["metric_n"]) == 9
+    assert int(by_metric["PFS_RATE"]["responders"]) == 7
 
 
 def test_net_nonpancreatic_estimates_are_source_scoped_and_detailed():
