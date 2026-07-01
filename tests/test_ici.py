@@ -149,6 +149,20 @@ def test_btc_ici_is_single_pan_biliary_source_scope_row():
     assert ici.cancer_ici_response("GBC", inherit=False) is None
 
 
+def test_sgc_ici_is_single_pan_salivary_source_scope_row():
+    full = ici.cancer_ici_response()
+    per = ici.cancer_ici_response(fallback=False)
+    assert full["SGC"] == 4.6
+    assert per["SGC"] == {"PD-1": 4.6}
+    assert "ACINIC" not in full
+    assert ici.cancer_ici_response("ACINIC") == full["SGC"]
+    assert ici.cancer_ici_response("ACINIC", inherit=False) is None
+    # ADCC has direct combination data, but pinned anti-PD-1 uses the pan-salivary row.
+    assert full["ADCC"] == 6.0
+    assert ici.cancer_ici_response("ADCC", regimen="PD-1") == full["SGC"]
+    assert ici.cancer_ici_response("ADCC", regimen="PD-1", inherit=False) is None
+
+
 def test_crc_msi_ici_record_preserves_inheritance_metadata():
     record = ici.cancer_ici_response_record("COAD_MSI")
     assert record["requested_cancer_code"] == "COAD_MSI"
@@ -194,6 +208,29 @@ def test_btc_ici_record_preserves_inheritance_metadata():
         record["endpoint_population"]
         == "advanced biliary tract cancer, prior-treated pan-biliary cohort"
     )
+
+
+def test_sgc_ici_record_preserves_inheritance_metadata():
+    record = ici.cancer_ici_response_record("ACINIC")
+    assert record["requested_cancer_code"] == "ACINIC"
+    assert record["resolved_cancer_code"] == "SGC"
+    assert record["inheritance_kind"] == "source_scope"
+    assert record["is_inherited_evidence"] is True
+    assert record["regimen"] == "PD-1"
+    assert record["orr_pct"] == 4.6
+    assert record["response_numerator"] == 5
+    assert record["response_denominator"] == 109
+    assert record["response_ci_low"] == 1.5
+    assert record["response_ci_high"] == 10.4
+    assert record["source_scope"] == "aggregate_source"
+    assert (
+        record["endpoint_population"] == "previously treated advanced salivary gland carcinoma "
+        "(pan-salivary source-scope estimate)"
+    )
+
+    adcc_pd1 = ici.cancer_ici_response_record("ADCC", regimen="PD-1")
+    assert adcc_pd1["resolved_cancer_code"] == "SGC"
+    assert adcc_pd1["inheritance_kind"] == "source_scope"
 
 
 def test_resolve_ici_response_source_reports_direct_proxy_and_missing():

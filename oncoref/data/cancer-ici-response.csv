@@ -1,6 +1,6 @@
 cancer_code,regimen,orr_pct,drug,trial_name,trial_alias,trial_nct,setting,pmid_doi,confidence,notes
 ACC,PD-1+CTLA-4,14.0,nivolumab+ipilimumab,DART/SWOG S1609,,NCT02834013,advanced adrenocortical,PMID:39067873,high,dual checkpoint ORR 14% (3/21); iORR 19%; no anti-PD-1 monotherapy ORR
-ACINIC,PD-1,4.6,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,advanced salivary gland carcinoma,PMID:35777186,low,pan-salivary ORR 4.6% (5/109); not acinic-isolated; non-ACC salivary dual ipi+nivo ~16%
+SGC,PD-1,4.6,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,advanced salivary gland carcinoma (pan-salivary),PMID:35777186,low,pan-salivary ORR 4.6% (5/109); source-scope row for ACINIC/ADCC anti-PD-1 lookups
 ADCC,PD-1+CTLA-4,6.0,nivolumab+ipilimumab,phase 2 nivolumab plus ipilimumab salivary gland cancer trial,17-219,NCT03172624,adenoid cystic carcinoma,DOI:10.1038/s41591-023-02518-x,medium,dual checkpoint ORR 6% (2/32); pan-salivary pembro ~4.6%; checkpoint-resistant
 ANSC,PD-1,24.0,nivolumab,NCI9673,,NCT02314169,refractory metastatic anal SCC,PMID:28223062,high,nivo mono ORR 24% (9/37); pembro KEYNOTE-158 anal ~11%
 ATC,PD-1+CTLA-4,30.0,nivolumab+ipilimumab,nivolumab plus ipilimumab in aggressive thyroid cancer,,NCT03246958,anaplastic thyroid carcinoma,DOI:10.1200/JCO.2020.38.15_suppl.6513,low,dual checkpoint ORR 30% (3/10); abstract-level; lenvatinib+pembrolizumab ~52% (ATLEP combo; not monotherapy); no single-agent anti-PD-1 ORR

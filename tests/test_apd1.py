@@ -52,3 +52,13 @@ def test_btc_apd1_is_single_pan_biliary_source_scope_row():
     assert apd1.cancer_apd1_response("CHOL") == mapping["BTC"]
     assert apd1.cancer_apd1_response("GBC") == mapping["BTC"]
     assert apd1.cancer_apd1_response("GBC", inherit=False) is None
+
+
+def test_sgc_apd1_is_single_pan_salivary_source_scope_row():
+    mapping = apd1.cancer_apd1_response()
+    assert mapping["SGC"] == 4.6
+    assert "ACINIC" not in mapping
+    assert apd1.cancer_apd1_response("ACINIC") == mapping["SGC"]
+    assert apd1.cancer_apd1_response("ACINIC", inherit=False) is None
+    # ADCC still has a direct dual-checkpoint anchor in the compact fallback table.
+    assert mapping["ADCC"] == 6.0

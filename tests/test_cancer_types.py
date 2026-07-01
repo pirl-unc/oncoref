@@ -295,6 +295,23 @@ def test_btc_records_source_scope_chol_and_gbc():
     assert records.loc["GBC", "evidence_source_kind"] == "source_scope"
 
 
+def test_sgc_records_source_scope_salivary_children():
+    assert cancer_types.resolve_cancer_type("salivary gland") == "SGC"
+    records = cancer_types.cancer_type_records(["SGC", "ACINIC", "ADCC"]).set_index("code")
+    assert records.loc["SGC", "evidence_source_code"] == "SGC"
+    assert records.loc["SGC", "evidence_source_kind"] == "direct"
+    assert records.loc["SGC", "children"] == ("ACINIC", "ADCC")
+    assert records.loc["SGC", "normal_tissue_code"] == "salivary_gland"
+    assert records.loc["SGC", "hpa_tissues"] == ("salivary gland",)
+
+    assert records.loc["ACINIC", "parent_code"] == "SGC"
+    assert records.loc["ACINIC", "evidence_source_code"] == "SGC"
+    assert records.loc["ACINIC", "evidence_source_kind"] == "source_scope"
+    assert records.loc["ADCC", "parent_code"] == "SGC"
+    assert records.loc["ADCC", "evidence_source_code"] == "SGC"
+    assert records.loc["ADCC", "evidence_source_kind"] == "source_scope"
+
+
 def test_normal_tissue_map_uses_hpa_rna_v23_tissue_names():
     tissue_map = cancer_types.cancer_normal_tissue_map().set_index("primary_tissue")
     used = {
@@ -306,6 +323,7 @@ def test_normal_tissue_map_uses_hpa_rna_v23_tissue_names():
     assert tissue_map.loc["oral_cavity", "hpa_tissues"] == ("tongue",)
     assert tissue_map.loc["pharynx", "hpa_tissues"] == ("tonsil",)
     assert tissue_map.loc["biliary_tract", "hpa_tissues"] == ("gallbladder",)
+    assert tissue_map.loc["salivary_gland", "hpa_tissues"] == ("salivary gland",)
 
 
 def test_cancer_type_reference_data_joins_scalar_oncoref_metrics():
