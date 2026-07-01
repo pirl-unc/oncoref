@@ -734,6 +734,39 @@ def test_sample_expression_qc_flags_sparse_samples(tmp_path, monkeypatch):
     assert "high_top_gene_fraction" in qc.loc["sparse", "qc_flags"]
 
 
+def test_sample_expression_qc_flags_high_literal_zero_fraction():
+    raw = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [f"ENSG{i:011d}" for i in range(10)],
+            "Symbol": [f"G{i}" for i in range(10)],
+            "sparse_zero": [1.0, 1.0, *([0.0] * 8)],
+            "less_sparse": [1.0, 1.0, 1.0, 1.0, *([0.0] * 6)],
+        }
+    )
+
+    qc = expression.sample_expression_qc_from_matrix(
+        raw,
+        cancer_type="X",
+        source_metadata={
+            "source_type": "geo",
+            "unit": "TPM",
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+        },
+        min_detected_genes=1,
+        min_housekeeping_detected=0,
+        max_zero_fraction=0.7,
+        max_top_gene_fraction=1.0,
+        max_top10_gene_fraction=1.0,
+    ).set_index("sample_id")
+
+    assert qc.loc["sparse_zero", "zero_fraction_raw"] == pytest.approx(0.8)
+    assert qc.loc["sparse_zero", "sample_qc_status"] == "fail"
+    assert "high_zero_fraction" in qc.loc["sparse_zero", "sample_qc_reasons"]
+    assert qc.loc["less_sparse", "zero_fraction_raw"] == pytest.approx(0.6)
+    assert qc.loc["less_sparse", "sample_qc_status"] == "pass"
+
+
 def test_per_sample_expression_filters_by_sample_qc(tmp_path, monkeypatch):
     raw = pd.DataFrame(
         {

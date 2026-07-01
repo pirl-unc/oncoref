@@ -338,7 +338,7 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert prov.loc[0, "n_source_samples"] == 3
     assert prov.loc[0, "n_cohort_samples"] == 1
     assert prov.loc[0, "sample_qc"] == "pass"
-    assert prov.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v1"
+    assert prov.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v2"
     assert prov.loc[0, "n_qc_pass"] == 1
     assert prov.loc[0, "n_qc_warn"] == 1
     assert prov.loc[0, "n_qc_fail"] == 1
@@ -349,7 +349,7 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     build_meta = pd.read_csv(out / "expression-artifact-build-metadata.csv")
     assert build_meta.loc[0, "n_source_samples"] == 3
     assert build_meta.loc[0, "n_cohort_samples"] == 1
-    assert build_meta.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v1"
+    assert build_meta.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v2"
 
     metadata = json.loads((out / "expression-artifact-build-metadata.json").read_text())
     assert metadata["sample_qc"] == "pass"

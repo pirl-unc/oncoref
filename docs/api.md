@@ -120,11 +120,11 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
 - `oncoref.expression` — read-time accessors for per-sample expression,
   percentile vectors, representative samples, within-sample top fractions, and
   pan-cancer reference tables. `sample_expression_qc` reports per-sample
-  detected-gene counts, top-gene/top-10 concentration, biological-housekeeping
-  detection, source-scale class, and source-type caveats so sparse source-matrix
-  artifacts can be audited before using absolute TPM floors or housekeeping
-  normalization. `per_sample_expression(..., sample_qc="pass" | "pass_or_warn"
-  | "all")` filters sample columns at read time; the raw per-sample accessor
+  detected-gene counts, literal-zero fraction, top-gene/top-10 concentration,
+  biological-housekeeping detection, source-scale class, and source-type caveats
+  so sparse source-matrix artifacts can be audited before using absolute TPM
+  floors or housekeeping normalization. `per_sample_expression(...,
+  sample_qc="pass" | "pass_or_warn" | "all")` filters sample columns at read time; the raw per-sample accessor
   defaults to `"all"` for forensic access, while live summaries such as
   `cohort_stats` and `pooled_cohort_stats` default to QC-passing samples.
   `source_matrix_sample_qc_manifest`, `expression_artifact_build_metadata`, and
