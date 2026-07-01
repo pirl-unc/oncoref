@@ -80,6 +80,9 @@ CANCER_TYPE_ALIASES = {
     "cholangiocarcinoma": "CHOL",
     "bile_duct": "CHOL",
     "gallbladder": "GBC",
+    "salivary": "SGC",
+    "salivary_gland": "SGC",
+    "sgc": "SGC",
     "dlbcl": "DLBC",
     "lymphoma": "DLBC",
     "esophageal": "ESCA",
@@ -320,6 +323,10 @@ _EVIDENCE_SOURCE_CODE = {
     # cohorts, not cholangiocarcinoma- or gallbladder-specific ICI estimates.
     "CHOL": "BTC",
     "GBC": "BTC",
+    # KEYNOTE-158 reports advanced salivary-gland carcinoma overall, not
+    # acinic-cell- or adenoid-cystic-specific anti-PD-1 monotherapy estimates.
+    "ACINIC": "SGC",
+    "ADCC": "SGC",
 }
 
 
@@ -331,7 +338,9 @@ def cancer_evidence_source_code(cancer_type, *, strict=True):
     ``READ_MSI`` inherit biomarker-selected colorectal MSI-H/dMMR estimates from
     ``CRC_MSI`` because the published sources report mCRC-level cohorts. Similarly,
     ``CHOL`` and ``GBC`` inherit ICI source rows from ``BTC`` when the trial reports
-    pan-biliary cohorts rather than site-isolated estimates.
+    pan-biliary cohorts rather than site-isolated estimates. ``ACINIC`` and
+    ``ADCC`` similarly resolve anti-PD-1 source rows through the pan-salivary
+    ``SGC`` aggregate when no histology-specific row is available.
     """
     code = resolve_cancer_type(cancer_type, strict=strict)
     if code is None:

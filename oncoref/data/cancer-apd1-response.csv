@@ -58,7 +58,7 @@ SARC_EPITH,16.7,pembrolizumab,AcSe Pembrolizumab,,NCT03012620,advanced epithelio
 SARC_DSRCT,12.5,pembrolizumab,AcSe Pembrolizumab,,NCT03012620,desmoplastic small round cell tumor,PMID:37429302,low,1/8 PR; otherwise immune-cold,PD-1
 SARC_GIST,0.0,nivolumab,Alliance A091401,NCI-2015-00260,NCT02500797,advanced GIST,PMID:39343511,medium,0/9 nivo and 0/9 nivo+ipi; immune-cold; ICI inactive,PD-1
 TGCT,0.0,pembrolizumab,Hoosier GU14-206,,NCT02499952,platinum-refractory germ cell,PMID:29045540,high,0/12; checkpoint monotherapy inactive in GCT,PD-1
-ACINIC,4.6,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,advanced salivary gland carcinoma,PMID:35777186,low,pan-salivary ORR 4.6% (5/109); not acinic-isolated; non-ACC salivary dual ipi+nivo ~16%,PD-1
+SGC,4.6,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,advanced salivary gland carcinoma (pan-salivary),PMID:35777186,low,pan-salivary ORR 4.6% (5/109); source-scope row for ACINIC/ADCC anti-PD-1 lookups,PD-1
 DLBC,10.0,nivolumab,CheckMate 139,CA209-139,NCT02038933,relapsed/refractory DLBCL post-ASCT,PMID:30620669,medium,auto-HCT-failed ORR 10% (3/34); transplant-ineligible 3%; PMBCL exception (pembro ~41% KEYNOTE-170),PD-1
 FL,4.0,nivolumab,CheckMate 140,,NCT02038946,relapsed/refractory follicular,DOI:10.1182/blood.2019004753,high,ORR 4% (4/92); checkpoint monotherapy largely inactive,PD-1
 MDS,0.0,pembrolizumab,KEYNOTE-013,MK-3475-013,NCT01953692,post-HMA myelodysplastic syndrome,DOI:10.1080/10428194.2022.2034155,medium,No CR/PR by IWG criteria (0/28); marrow CR 19% (5/28); essentially inactive by ORR,PD-1
