@@ -535,7 +535,7 @@ def expression_artifact_gene_universe_delta_summary() -> pd.DataFrame:
 
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
-SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v1"
+SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v2"
 SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION = "source_matrix_sample_qc_manifest_v1"
 EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION = "expression_artifact_build_metadata_v1"
 SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH = "source-matrix-sample-qc.csv"
@@ -600,12 +600,14 @@ _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS = [
 ]
 DEFAULT_MIN_DETECTED_GENES_FOR_QC = 5000
 DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC = 10
+DEFAULT_MAX_ZERO_FRACTION_FOR_QC = 0.70
 DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC = 0.20
 DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC = 0.50
 _BLOCKING_SAMPLE_QC_REASONS = frozenset(
     {
         "low_detected_genes",
         "low_housekeeping_detection",
+        "high_zero_fraction",
         "high_top_gene_fraction",
         "high_top10_gene_fraction",
     }
@@ -709,6 +711,7 @@ def sample_expression_qc_from_matrix(
     source_metadata: dict[str, str | bool | None] | None = None,
     min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
     min_housekeeping_detected: int | None = None,
+    max_zero_fraction: float = DEFAULT_MAX_ZERO_FRACTION_FOR_QC,
     max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
     max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
 ) -> pd.DataFrame:
@@ -806,6 +809,8 @@ def sample_expression_qc_from_matrix(
             flags.append("low_detected_genes")
         if min_hk is not None and hk_detected < min_hk:
             flags.append("low_housekeeping_detection")
+        if pd.notna(zero_fraction) and zero_fraction > max_zero_fraction:
+            flags.append("high_zero_fraction")
         if pd.notna(top_fraction) and top_fraction > max_top_gene_fraction:
             flags.append("high_top_gene_fraction")
         if (
@@ -871,6 +876,7 @@ def sample_expression_qc(
     auto_fetch: bool = True,
     min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
     min_housekeeping_detected: int | None = None,
+    max_zero_fraction: float = DEFAULT_MAX_ZERO_FRACTION_FOR_QC,
     max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
     max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
 ) -> pd.DataFrame:
@@ -889,6 +895,7 @@ def sample_expression_qc(
         cancer_type=code,
         min_detected_genes=min_detected_genes,
         min_housekeeping_detected=min_housekeeping_detected,
+        max_zero_fraction=max_zero_fraction,
         max_top_gene_fraction=max_top_gene_fraction,
         max_top10_gene_fraction=max_top10_gene_fraction,
     )

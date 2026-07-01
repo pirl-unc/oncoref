@@ -94,11 +94,20 @@ def test_sample_qc_facade_uses_shared_expression_policy(monkeypatch):
 
     monkeypatch.setattr(expression, "sample_expression_qc", fake_sample_expression_qc)
 
-    out = sm.sample_qc("lung_adeno", auto_fetch=False, min_detected_genes=123)
+    out = sm.sample_qc(
+        "lung_adeno",
+        auto_fetch=False,
+        min_detected_genes=123,
+        max_zero_fraction=0.7,
+    )
 
     assert calls == {
         "code": "lung_adeno",
-        "kwargs": {"auto_fetch": False, "min_detected_genes": 123},
+        "kwargs": {
+            "auto_fetch": False,
+            "min_detected_genes": 123,
+            "max_zero_fraction": 0.7,
+        },
     }
     assert out["sample_qc_status"].tolist() == ["pass"]
 

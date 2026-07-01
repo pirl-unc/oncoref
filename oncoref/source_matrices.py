@@ -153,6 +153,7 @@ def sample_qc(
     auto_fetch: bool = True,
     min_detected_genes: int | None = None,
     min_housekeeping_detected: int | None = None,
+    max_zero_fraction: float | None = None,
     max_top_gene_fraction: float | None = None,
     max_top10_gene_fraction: float | None = None,
 ) -> pd.DataFrame:
@@ -175,6 +176,8 @@ def sample_qc(
         kwargs["min_detected_genes"] = min_detected_genes
     if min_housekeeping_detected is not None:
         kwargs["min_housekeeping_detected"] = min_housekeeping_detected
+    if max_zero_fraction is not None:
+        kwargs["max_zero_fraction"] = max_zero_fraction
     if max_top_gene_fraction is not None:
         kwargs["max_top_gene_fraction"] = max_top_gene_fraction
     if max_top10_gene_fraction is not None:
