@@ -119,6 +119,16 @@ def _cmd_data(args: argparse.Namespace) -> int:
         print(json.dumps(data_bundle.bundle_contract(), indent=2, sort_keys=True, default=str))
         return 0
 
+    if args.action == "metadata":
+        source = args.name or "oncoref"
+        try:
+            metadata = data_bundle.bundle_metadata(source)
+        except (ValueError, data_bundle.BundleIntegrityError, OSError) as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
+        print(json.dumps(metadata, indent=2, sort_keys=True, default=str))
+        return 0
+
     if args.action == "release-manifest":
         source = args.name or "oncoref"
         try:
@@ -598,6 +608,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "list",
             "status",
             "contract",
+            "metadata",
             "release-manifest",
             "dir",
             "fetch",
@@ -606,8 +617,9 @@ def _build_parser() -> argparse.ArgumentParser:
         ],
         help=(
             "list (catalog), status (cache state), contract (bundle contract JSON), "
-            "release-manifest (release metadata JSON), dir (cache roots), fetch (download), "
-            "path (ensure + print), prune (bundle cache cleanup)"
+            "metadata (contract + local/release state JSON), release-manifest "
+            "(release metadata JSON), dir (cache roots), fetch (download), path "
+            "(ensure + print), prune (bundle cache cleanup)"
         ),
     )
     p_data.add_argument(

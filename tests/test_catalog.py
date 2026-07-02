@@ -171,6 +171,27 @@ def test_cli_data_contract_json(capsys):
     assert payload["primary_release_source"]["name"] == "oncoref"
 
 
+def test_cli_data_metadata_json(monkeypatch, capsys):
+    monkeypatch.setattr(
+        data_bundle,
+        "bundle_metadata",
+        lambda source="oncoref": {
+            "release_source": source,
+            "data_version": data_bundle.DATA_VERSION,
+            "local_cache": {"all_local": False},
+        },
+    )
+
+    assert cli.main(["data", "metadata", "oncoref"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+
+    assert payload == {
+        "release_source": "oncoref",
+        "data_version": data_bundle.DATA_VERSION,
+        "local_cache": {"all_local": False},
+    }
+
+
 def test_cli_data_release_manifest_json(monkeypatch, capsys):
     monkeypatch.setattr(
         data_bundle,

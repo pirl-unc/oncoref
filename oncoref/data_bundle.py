@@ -490,6 +490,38 @@ def bundle_release_manifest(source: str = "oncoref") -> dict | None:
     return _fetch_release_manifest(source_record)
 
 
+def bundle_metadata(
+    source: str = "oncoref",
+    *,
+    include_release_manifest: bool = True,
+) -> dict:
+    """Machine-readable bundle dependency state for downstream packages.
+
+    This composes the static bundle contract, local cache status, and optionally
+    the small validated release manifest for the active ``DATA_VERSION``. It never
+    downloads or extracts the heavy tarball; callers that only need to decide
+    whether a dependency is usable can inspect this first, then call
+    :func:`ensure_local` or :func:`fetch` deliberately.
+    """
+    snap = status()
+    release_manifest = bundle_release_manifest(source) if include_release_manifest else None
+    return {
+        "contract_version": BUNDLE_CONTRACT_VERSION,
+        "package_version": __version__,
+        "data_version": DATA_VERSION,
+        "source_matrix_version": SOURCE_MATRIX_VERSION,
+        "release_source": source,
+        "contract": snap["contract"],
+        "local_cache": {
+            "cache_dir": snap["cache_dir"],
+            "all_local": snap["all_local"],
+            "completion_marker": snap["completion_marker"],
+            "inventory": snap["items"],
+        },
+        "release_manifest": release_manifest,
+    }
+
+
 def _download_and_extract(
     url: str,
     root: Path,
