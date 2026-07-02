@@ -320,11 +320,16 @@ but it is not the clean-TPM biological denominator.
   `data_bundle.bundle_release_manifest()` to fetch and validate only the small
   release manifest/checksum for the active `DATA_VERSION`, including tarball
   sha256 plus any artifact inventory, builder commit, source-matrix version, and
-  sample-QC policy metadata published with the release.
+  sample-QC policy metadata published with the release. Use
+  `data_bundle.bundle_metadata()` when a downstream package needs one
+  no-heavy-download JSON object containing the static contract, local cache path
+  and completeness state, local artifact inventory, and validated release
+  manifest.
   CLI equivalents are available for CI/notebooks: `oncoref data contract` prints
-  the active bundle contract as JSON, and `oncoref data release-manifest
-  [oncoref|pirlygenes]` prints the validated release manifest/checksum metadata
-  as JSON.
+  the static bundle contract, `oncoref data metadata [oncoref|pirlygenes]`
+  prints the composed dependency state, and `oncoref data release-manifest
+  [oncoref|pirlygenes]` prints only the validated release manifest/checksum
+  metadata.
 - `oncoref.reference_data` / `oncoref.hpa` — HPA reference-data cache and HPA
   tissue/cell-type accessors.
 

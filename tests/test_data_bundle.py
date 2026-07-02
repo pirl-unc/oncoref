@@ -184,6 +184,56 @@ def test_bundle_release_manifest_preserves_inventory_and_build_metadata(monkeypa
     assert manifest["inventory"]["pan-cancer-expression.csv"]["file_count"] == 1
 
 
+def test_bundle_metadata_composes_contract_local_status_and_release_manifest(monkeypatch, tmp_path):
+    root = tmp_path / f"v{DATA_VERSION}"
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
+    release_manifest = {
+        "source": "oncoref",
+        "data_version": DATA_VERSION,
+        "tarball": {"sha256": "a" * 64},
+        "inventory": {
+            "pan-cancer-expression.csv": {
+                "path": "pan-cancer-expression.csv",
+                "file_count": 1,
+                "size_bytes": 10,
+            }
+        },
+    }
+    monkeypatch.setattr(
+        data_bundle,
+        "bundle_release_manifest",
+        lambda source="oncoref": release_manifest | {"source": source},
+    )
+
+    metadata = data_bundle.bundle_metadata("oncoref")
+
+    assert metadata["contract_version"] == data_bundle.BUNDLE_CONTRACT_VERSION
+    assert metadata["package_version"] == __version__
+    assert metadata["data_version"] == DATA_VERSION
+    assert metadata["source_matrix_version"] == SOURCE_MATRIX_VERSION
+    assert metadata["release_source"] == "oncoref"
+    assert metadata["contract"] == data_bundle.bundle_contract()
+    assert metadata["local_cache"]["cache_dir"] == str(root)
+    assert metadata["local_cache"]["all_local"] is False
+    assert set(metadata["local_cache"]["inventory"]) == set(data_bundle.DOWNLOADABLE_PATHS)
+    assert metadata["release_manifest"]["tarball"]["sha256"] == "a" * 64
+
+
+def test_bundle_metadata_can_skip_release_manifest(monkeypatch, tmp_path):
+    root = tmp_path / f"v{DATA_VERSION}"
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
+    monkeypatch.setattr(
+        data_bundle,
+        "bundle_release_manifest",
+        lambda source="oncoref": pytest.fail("release manifest should not be fetched"),
+    )
+
+    metadata = data_bundle.bundle_metadata(include_release_manifest=False)
+
+    assert metadata["release_manifest"] is None
+    assert metadata["local_cache"]["cache_dir"] == str(root)
+
+
 def test_bundle_release_manifest_source_validation_and_legacy_absence(monkeypatch):
     with pytest.raises(ValueError, match="unknown bundle release source"):
         data_bundle.bundle_release_manifest("other")
