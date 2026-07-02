@@ -122,6 +122,34 @@ def test_cohort_gene_percentiles_resolves_alias(percentile_cache):
     assert len(df) == 2
 
 
+def test_cohort_gene_percentiles_can_return_pirlygenes_legacy_gene_ids(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    shard_dir = tmp_path / "cancer-reference-expression-percentiles"
+    shard_dir.mkdir(parents=True)
+    row = {
+        "Ensembl_Gene_ID": "ENSG00000310560",
+        "Symbol": "PAXX",
+    }
+    for bp in _BREAKPOINTS:
+        row[f"p{bp}"] = np.log1p(float(bp))
+    pd.DataFrame([row]).to_parquet(shard_dir / "PRAD.parquet", index=False)
+
+    canonical = expression.cohort_gene_percentiles("PRAD")
+    legacy = expression.cohort_gene_percentiles("PRAD", gene_id_style="pirlygenes")
+
+    assert canonical.loc[0, "Ensembl_Gene_ID"] == "ENSG00000310560"
+    assert canonical.attrs["gene_id_style"] == "oncoref"
+    assert legacy.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
+    assert legacy.loc[0, "Symbol"] == "PAXX"
+    assert legacy.loc[0, "p95"] == pytest.approx(canonical.loc[0, "p95"])
+    assert legacy.attrs["gene_id_style"] == "pirlygenes"
+
+
+def test_cohort_gene_percentiles_rejects_pirlygenes_ids_for_proteoform_artifacts():
+    with pytest.raises(ValueError, match="gene-level artifacts"):
+        expression.cohort_gene_percentiles("PRAD", proteoform=True, gene_id_style="pirlygenes")
+
+
 def _no_cached_matrix(monkeypatch):
     def _raise(*a, **k):
         raise FileNotFoundError("not cached")
@@ -410,6 +438,37 @@ def test_representative_id_style_validation(monkeypatch, tmp_path):
 
     with pytest.raises(ValueError, match="representative_id_style"):
         expression.representative_cohort_samples("PRAD", representative_id_style="legacy")
+
+    with pytest.raises(ValueError, match="gene_id_style"):
+        expression.representative_cohort_samples("PRAD", gene_id_style="legacy")
+
+
+def test_representatives_can_return_pirlygenes_legacy_gene_ids(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000310560"],
+            "Symbol": ["PAXX"],
+            "PRAD__rep1": [7.0],
+        }
+    ).to_parquet(d / "PRAD.parquet", index=False)
+
+    canonical = expression.representative_cohort_samples("PRAD")
+    legacy = expression.representative_cohort_samples("PRAD", gene_id_style="pirlygenes")
+    legacy_long = expression.representative_cohort_samples(
+        "PRAD", format="long", gene_id_style="pirlygenes"
+    )
+
+    assert canonical.loc[0, "Ensembl_Gene_ID"] == "ENSG00000310560"
+    assert canonical.attrs["gene_id_style"] == "oncoref"
+    assert legacy.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
+    assert legacy.loc[0, "Symbol"] == "PAXX"
+    assert legacy.loc[0, "PRAD_rep01"] == pytest.approx(7.0)
+    assert legacy.attrs["gene_id_style"] == "pirlygenes"
+    assert legacy_long.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
+    assert legacy_long.attrs["gene_id_style"] == "pirlygenes"
 
 
 def test_representative_wide_does_not_fragment_genes(monkeypatch, tmp_path):
