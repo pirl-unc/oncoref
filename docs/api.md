@@ -231,6 +231,12 @@ contracts:
 - `expression.cohort_gene_percentiles(..., include_provenance=True)` appends the
   cohort code, normalization, expression unit, percentile basis, artifact schema
   version, `DATA_VERSION`, and `SOURCE_MATRIX_VERSION`.
+- Gene-level representative and percentile readers default to canonical oncoref
+  ENSG IDs. For pirlygenes migration wrappers, pass
+  `gene_id_style="pirlygenes"` to present known one-to-one
+  `remapped_to_oncoref` rows with their legacy pirlygenes ENSG IDs. This is
+  intentionally a presentation shim: it does not synthesize missing rows or alter
+  expression values.
 - Missing percentile shards still raise by default. Use
   `on_missing="empty"` to return an empty but schema-stable frame with
   `df.attrs["missing_reason"]`, which is useful for compatibility adapters that

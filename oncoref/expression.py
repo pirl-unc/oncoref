@@ -322,6 +322,65 @@ def _validate_representative_id_style(style: str) -> None:
         raise ValueError("representative_id_style must be 'pirlygenes' or 'internal'")
 
 
+def _validate_gene_id_style(style: str) -> None:
+    if style not in {"oncoref", "pirlygenes"}:
+        raise ValueError("gene_id_style must be 'oncoref' or 'pirlygenes'")
+
+
+def _artifact_legacy_gene_id_map(
+    *,
+    product: str,
+    cancer_codes: Iterable[str],
+) -> tuple[dict[str, str], dict[str, str]]:
+    code_set = {str(c) for c in cancer_codes}
+    if not code_set:
+        return {}, {}
+    deltas = expression_artifact_gene_universe_deltas(
+        product=product,
+        delta_kind="pirlygenes_only",
+        status="remapped_to_oncoref",
+    )
+
+    def _matches(cell: object) -> bool:
+        codes = {c for c in str(cell or "").split(";") if c}
+        return bool(codes & code_set)
+
+    deltas = deltas[deltas["cancer_code"].map(_matches)]
+    if deltas.empty:
+        return {}, {}
+    deltas = deltas.drop_duplicates("oncoref_ensembl_gene_id", keep="first")
+    id_map = dict(zip(deltas["oncoref_ensembl_gene_id"], deltas["legacy_ensembl_gene_id"]))
+    symbol_map = dict(zip(deltas["oncoref_ensembl_gene_id"], deltas["symbol"]))
+    return id_map, symbol_map
+
+
+def _apply_gene_id_style(
+    df: pd.DataFrame,
+    *,
+    product: str,
+    cancer_codes: Iterable[str],
+    gene_id_style: str,
+) -> pd.DataFrame:
+    _validate_gene_id_style(gene_id_style)
+    if gene_id_style == "oncoref" or "Ensembl_Gene_ID" not in df.columns:
+        return df
+    id_map, symbol_map = _artifact_legacy_gene_id_map(
+        product=product,
+        cancer_codes=cancer_codes,
+    )
+    if not id_map:
+        return df
+    out = df.copy()
+    current = out["Ensembl_Gene_ID"].astype(str)
+    legacy_ids = current.map(id_map)
+    mapped = legacy_ids.notna()
+    out.loc[mapped, "Ensembl_Gene_ID"] = legacy_ids[mapped].to_numpy()
+    if "Symbol" in out.columns:
+        legacy_symbols = current.map(symbol_map)
+        out.loc[mapped, "Symbol"] = legacy_symbols[mapped].to_numpy()
+    return out
+
+
 def _representative_attrs(
     *,
     codes: Iterable[str],
@@ -329,6 +388,7 @@ def _representative_attrs(
     format: str,
     k: int | None,
     representative_id_style: str,
+    gene_id_style: str,
 ) -> dict[str, object]:
     return {
         "artifact": "representative_samples",
@@ -340,6 +400,7 @@ def _representative_attrs(
         "format": format,
         "k": k,
         "representative_id_style": representative_id_style,
+        "gene_id_style": gene_id_style,
         "selection_method": REPRESENTATIVE_SELECTION_METHOD,
         "selection_basis": REPRESENTATIVE_SELECTION_BASIS,
     }
@@ -410,6 +471,7 @@ def _percentile_attrs(
     proteoform: bool,
     scope: str,
     source: str,
+    gene_id_style: str,
     missing_reason: str | None = None,
 ) -> dict[str, object]:
     attrs: dict[str, object] = {
@@ -422,6 +484,7 @@ def _percentile_attrs(
         "proteoform": proteoform,
         "scope": scope,
         "source": source,
+        "gene_id_style": gene_id_style,
         "normalization": "tpm_clean" if as_tpm else "tpm_clean_log1p",
         "expression_unit": "tpm_clean" if as_tpm else "log1p_tpm_clean",
         "percentile_basis": "biological_clean_tpm_across_samples",
@@ -438,6 +501,7 @@ def _empty_percentile_frame(
     proteoform: bool,
     scope: str,
     include_provenance: bool,
+    gene_id_style: str,
     missing_reason: str,
 ) -> pd.DataFrame:
     cols = [*_percentile_identity_cols(proteoform=proteoform), *_percentile_cols()]
@@ -451,6 +515,7 @@ def _empty_percentile_frame(
             proteoform=proteoform,
             scope=scope,
             source="missing",
+            gene_id_style=gene_id_style,
             missing_reason=missing_reason,
         )
     )
@@ -1808,6 +1873,7 @@ def representative_cohort_samples(
     format: str = "wide",
     include_provenance: bool = False,
     representative_id_style: str = "pirlygenes",
+    gene_id_style: str = "oncoref",
 ) -> pd.DataFrame:
     """Representative real per-sample expression vectors per cohort.
 
@@ -1824,8 +1890,14 @@ def representative_cohort_samples(
     (``CODE__rep1``). Long output can attach representative-level provenance:
     source cohort/project/sample, selection rank, selection method/basis, and
     package/data schema versions.
+
+    ``gene_id_style="oncoref"`` returns canonical oncoref ENSG IDs. Opt into
+    ``"pirlygenes"`` only for migration wrappers that need known legacy ENSG IDs
+    for rows recorded as ``remapped_to_oncoref`` in the expression artifact delta
+    table; missing rows and values are not synthesized.
     """
     _validate_representative_id_style(representative_id_style)
+    _validate_gene_id_style(gene_id_style)
     if normalize not in ("tpm_clean", "tpm_clean_log1p"):
         raise ValueError(
             "representative_cohort_samples normalize must be 'tpm_clean' or "
@@ -1911,6 +1983,7 @@ def representative_cohort_samples(
                     format=format,
                     k=k,
                     representative_id_style=representative_id_style,
+                    gene_id_style=gene_id_style,
                 )
             )
             return out
@@ -1919,6 +1992,12 @@ def representative_cohort_samples(
             combined = combined.groupby(level=0).first()
         out = combined.reset_index(names="Ensembl_Gene_ID")
         out.insert(1, "Symbol", out["Ensembl_Gene_ID"].map(_canonical_symbol))
+        out = _apply_gene_id_style(
+            out,
+            product="representative_cohort_samples",
+            cancer_codes=codes,
+            gene_id_style=gene_id_style,
+        )
         out.attrs.update(
             _representative_attrs(
                 codes=codes,
@@ -1926,6 +2005,7 @@ def representative_cohort_samples(
                 format=format,
                 k=k,
                 representative_id_style=representative_id_style,
+                gene_id_style=gene_id_style,
             )
         )
         return out
@@ -1939,6 +2019,7 @@ def representative_cohort_samples(
                 format=format,
                 k=k,
                 representative_id_style=representative_id_style,
+                gene_id_style=gene_id_style,
             )
         )
         return out
@@ -1949,6 +2030,12 @@ def representative_cohort_samples(
     long["representative_id"] = long["representative_id"].map(
         lambda x: _representative_id_for_style(x, style=representative_id_style)
     )
+    long = _apply_gene_id_style(
+        long,
+        product="representative_cohort_samples",
+        cancer_codes=codes,
+        gene_id_style=gene_id_style,
+    )
     long.attrs.update(
         _representative_attrs(
             codes=codes,
@@ -1956,6 +2043,7 @@ def representative_cohort_samples(
             format=format,
             k=k,
             representative_id_style=representative_id_style,
+            gene_id_style=gene_id_style,
         )
     )
     return long
@@ -2034,6 +2122,7 @@ def cohort_gene_percentiles(
     auto_fetch: bool = False,
     include_provenance: bool = False,
     on_missing: str = "raise",
+    gene_id_style: str = "oncoref",
 ) -> pd.DataFrame:
     """Tail-weighted per-gene percentile vector for one cohort.
 
@@ -2051,6 +2140,11 @@ def cohort_gene_percentiles(
     cohorts still raise by default; pass ``on_missing="empty"`` to return an
     empty schema-stable frame with ``attrs["missing_reason"]`` instead.
 
+    ``gene_id_style="oncoref"`` returns canonical oncoref ENSG IDs. Opt into
+    ``"pirlygenes"`` only for gene-level migration wrappers that need known
+    legacy ENSG IDs for rows recorded as ``remapped_to_oncoref`` in the
+    expression artifact delta table; missing rows and values are not synthesized.
+
     With ``proteoform=True``, the vector is one row per proteoform key
     (``proteoform_key``/``Symbol`` carry the collapsed identity), identical-protein
     members summed **before** the percentiles are computed (``scope`` ``"cta"``/``"genome"``,
@@ -2064,6 +2158,9 @@ def cohort_gene_percentiles(
     """
     if on_missing not in ("raise", "empty"):
         raise ValueError("on_missing must be 'raise' or 'empty'")
+    _validate_gene_id_style(gene_id_style)
+    if proteoform and gene_id_style != "oncoref":
+        raise ValueError("gene_id_style='pirlygenes' is only supported for gene-level artifacts")
 
     code = resolve_cancer_type(cancer_type)
     try:
@@ -2080,6 +2177,7 @@ def cohort_gene_percentiles(
             proteoform=proteoform,
             scope=scope,
             include_provenance=include_provenance,
+            gene_id_style=gene_id_style,
             missing_reason=str(e),
         )
     bp_cols = sample_columns(df)
@@ -2088,6 +2186,12 @@ def cohort_gene_percentiles(
         df[bp_cols] = np.expm1(df[bp_cols])
     if include_provenance:
         df = _attach_percentile_provenance(df, code=code, as_tpm=as_tpm)
+    df = _apply_gene_id_style(
+        df,
+        product="cohort_gene_percentiles",
+        cancer_codes=[code],
+        gene_id_style=gene_id_style,
+    )
     df.attrs.update(
         _percentile_attrs(
             code=code,
@@ -2095,6 +2199,7 @@ def cohort_gene_percentiles(
             proteoform=proteoform,
             scope=scope,
             source=source,
+            gene_id_style=gene_id_style,
         )
     )
     return df
@@ -2356,6 +2461,7 @@ def gene_cohort_percentiles(
     auto_fetch: bool = False,
     include_provenance: bool = False,
     on_missing: str = "raise",
+    gene_id_style: str = "oncoref",
 ) -> pd.DataFrame:
     """Gene-level per-cohort **percentile vectors**. Proteoform counterpart:
     :func:`proteoform_cohort_percentiles`. (Alias of :func:`cohort_gene_percentiles`.)"""
@@ -2365,6 +2471,7 @@ def gene_cohort_percentiles(
         auto_fetch=auto_fetch,
         include_provenance=include_provenance,
         on_missing=on_missing,
+        gene_id_style=gene_id_style,
     )
 
 
@@ -2422,6 +2529,7 @@ def gene_representative_samples(
     normalize: str = "tpm_clean",
     format: str = "wide",
     include_provenance: bool = False,
+    gene_id_style: str = "oncoref",
 ) -> pd.DataFrame:
     """Gene-level representative per-sample vectors. Proteoform counterpart:
     :func:`proteoform_representative_samples`. (Alias of
@@ -2432,6 +2540,7 @@ def gene_representative_samples(
         normalize=normalize,
         format=format,
         include_provenance=include_provenance,
+        gene_id_style=gene_id_style,
     )
 
 
