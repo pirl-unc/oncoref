@@ -827,6 +827,17 @@ SARC,MPNST,MDM2,target,brigimadlin (BI 907828),small_molecule,phase_1,trial_foll
 SARC,MPNST,EZH2,target,tazemetostat,small_molecule,phase_2,trial_follow_up,clinical_trial,clinical-trial follow-up; not default standard,PRC2-null / SMARCB1-null MPNST,Synthetic lethal with PRC2 loss; FDA-approved for epithelioid sarcoma (SMARCB1-null) precedent,PMID:32507290
 SARC,MPNST,PTPN11,target,SHP2 inhibitors (trials),small_molecule,phase_1,trial_follow_up,clinical_trial,clinical-trial follow-up; not default standard,RAS-driven MPNST (MEK-combo trials),SHP2 inhibition as MEK-resistance mitigator in NF1-associated MPNST models,PMID:33032988; PMID:39793045
 SARC,MPNST,BRD4,target,BET inhibitors (trials),small_molecule,phase_1,trial_follow_up,clinical_trial,clinical-trial follow-up; not default standard,MPNST (preclinical / early-phase),BRD4 dependency in PRC2-null contexts — synergy with MEK inhibition,PMID:29203800
+SARC,MMNST,TYR,biomarker,,,,,,,,HIGH — tyrosinase; melanin-synthesis genes up-regulated on expression profiling; tyrosinase IHC-positive in ~100% of cases (melanocytic differentiation),PMID:24145644
+SARC,MMNST,PMEL,biomarker,,,,,,,,HIGH — melanosomal gp100 (HMB45 antigen); HMB45 IHC-positive in ~100%; melanocytic-differentiation marker up-regulated,PMID:24145644
+SARC,MMNST,MLANA,biomarker,,,,,,,,HIGH — Melan-A melanocytic-differentiation marker; IHC-positive in ~92% of cases; up-regulated melanogenesis program,PMID:24145644
+SARC,MMNST,DCT,biomarker,,,,,,,,HIGH — dopachrome tautomerase (TYRP2); melanin-synthesis gene up-regulated relative to conventional schwannoma,PMID:24145644
+SARC,MMNST,MITF,biomarker,,,,,,,,HIGH — master melanocytic transcription factor driving the melanogenesis program; up-regulated (melanocytic differentiation),PMID:24145644
+SARC,MMNST,SOX10,biomarker,,,,,,,,HIGH — neural-crest Schwann-and-melanocytic lineage transcription factor; retained/expressed (dual Schwann + melanocytic differentiation),PMID:24145644
+SARC,MMNST,S100B,biomarker,,,,,,,,HIGH — Schwann-cell/neural-crest lineage marker; S100 IHC-positive in ~84% of cases,PMID:24145644
+SARC,MMNST,PMP22,biomarker,,,,,,,,LOW — Schwann-cell myelin gene down-regulated in MMNST relative to conventional schwannoma,PMID:24145644
+SARC,MMNST,PMP2,biomarker,,,,,,,,LOW — peripheral myelin protein 2 down-regulated relative to conventional schwannoma,PMID:24145644
+SARC,MMNST,MPZ,biomarker,,,,,,,,LOW — myelin protein zero (Schwann myelin program) down-regulated relative to conventional schwannoma,PMID:24145644
+SARC,MMNST,PRKAR1A,biomarker,,,,,,,,LOW — recurrent inactivating loss (Carney-complex-associated); protein expression lost in ~35% of cases and a defining genetic hallmark; low/absent expression,PMID:24145644; PMID:37284154
 BCC,,SMO,target,vismodegib,small_molecule,approved,approved_standard,standard_or_frontline,confirm locally-advanced or metastatic eligibility,locally advanced / metastatic BCC,Hedgehog SMO inhibitor; first approved targeted therapy for advanced BCC,PMID:22670903
 BCC,,SMO,target,sonidegib,small_molecule,approved,approved_indication_matched,standard_or_frontline,confirm locally-advanced eligibility,locally advanced BCC,Second SMO inhibitor for advanced BCC,PMID:26159756
 BCC,,PTCH1,biomarker,,,,,,,,Hedgehog-pathway tumor suppressor; loss drives constitutive SMO/GLI signaling in BCC,PMID:33997165
