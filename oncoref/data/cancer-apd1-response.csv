@@ -57,6 +57,7 @@ SARC_KS,62.1,pembrolizumab,CITN-12,NCI-2015-01906,NCT02595866,HIV-associated Kap
 SARC_CHOR,12.0,pembrolizumab,AcSe Pembrolizumab,UC-0105/1612,NCT03012620,advanced chordoma,PMID:37429302,medium,chordoma ORR 12% (4/34),PD-1
 SARC_SMARCA4,25.0,pembrolizumab,AcSe Pembrolizumab,UC-0105/1612,NCT03012620,SMARCA4/SMARCB1-deficient sarcoma,PMID:37429302,medium,ORR 25% (3/12); rhabdoid/SMARCA4-deficient immunogenic despite low TMB,PD-1
 SARC_EPITH,16.7,pembrolizumab,AcSe Pembrolizumab,,NCT03012620,advanced epithelioid sarcoma,PMID:37429302,low,1/6 PR; small n; consistent with KEYNOTE-051 single PR,PD-1
+SARC_MPNST,12.5,pembrolizumab,Pembrolizumab advanced MPNST phase 2,,NCT02691026,advanced/metastatic MPNST,PMID:41760889,low,ORR 12.5% (1/8) — 1 durable objective response; 1 additional mixed response; single-arm phase 2 (Oslo) closed early for slow accrual,PD-1
 SARC_DSRCT,12.5,pembrolizumab,AcSe Pembrolizumab,,NCT03012620,desmoplastic small round cell tumor,PMID:37429302,low,1/8 PR; otherwise immune-cold,PD-1
 SARC_GIST,0.0,nivolumab,Alliance A091401,NCI-2015-00260,NCT02500797,advanced GIST,PMID:39343511,medium,0/9 nivo and 0/9 nivo+ipi; immune-cold; ICI inactive,PD-1
 TGCT,0.0,pembrolizumab,Hoosier GU14-206,,NCT02499952,platinum-refractory germ cell,PMID:29045540,high,0/12; checkpoint monotherapy inactive in GCT,PD-1
