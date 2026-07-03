@@ -296,6 +296,33 @@ gene_families.clean_tpm_biological_housekeeping_genes()
 gene_families.clean_tpm_biological_housekeeping_genes(primary_only=False)
 ```
 
+Housekeeping normalization is defined as a median-of-ratios size factor against a
+fixed, versioned per-gene reference profile:
+
+```python
+from oncoref import normalization
+
+normalization.housekeeping_reference_profile()
+normalization.tpm_to_housekeeping_normalized(matrix)
+```
+
+For each sample, oncoref computes:
+
+```text
+size_factor = median(housekeeping_clean_tpm[g] / reference_tpm[g])
+normalized_expression[g] = clean_tpm[g] / size_factor
+```
+
+The default reference is the HPA v23-derived clean-TPM biological housekeeping
+panel (`HOUSEKEEPING_REFERENCE_PROFILE_VERSION`). This is a sample-scale estimate
+relative to a fixed biological HK profile, not the old "divide by the panel's
+geometric mean" ratio. Prefer log1p clean TPM or percentile-rank clean TPM unless
+the analysis specifically needs an HK-derived size factor.
+
+The old geNorm-style denominator is deliberately buried behind
+`method="legacy_geomean"` for explicit audits of historical outputs. The shorter
+`method="geomean"` spelling is not accepted.
+
 The legacy qPCR/reference-gene panel remains available as
 `legacy_qpcr_housekeeping_*` and through the historical `housekeeping_*` helpers,
 but it is not the clean-TPM biological denominator.
