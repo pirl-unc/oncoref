@@ -153,6 +153,21 @@ def test_type_gene_sets():
     assert sets  # non-empty role->{ensembl:symbol}
     assert all(isinstance(v, dict) for v in sets.values())
 
+    mmnst = cg.cancer_biomarker_genes("SARC", subtype="MMNST")
+    assert {
+        "TYR",
+        "PMEL",
+        "MLANA",
+        "DCT",
+        "MITF",
+        "SOX10",
+        "S100B",
+        "PMP22",
+        "PMP2",
+        "MPZ",
+        "PRKAR1A",
+    } <= set(mmnst)
+
 
 def test_narrative_and_rule_loaders():
     assert {"set_name", "members"} <= set(cg.narrative_gene_sets_df().columns)

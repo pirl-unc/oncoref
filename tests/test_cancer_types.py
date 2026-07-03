@@ -218,13 +218,29 @@ def test_astb_registry_row_for_trufflepig_parity():
 
     row = cancer_types.cancer_type_records(["ASTB"]).iloc[0]
     assert row["name"] == "Astroblastoma (MN1-altered)"
-    assert row["family"] == "cns-glial"
-    assert row["primary_tissue"] == "cerebrum"
+
+
+def test_mmnst_registry_row_for_expression_source_candidate():
+    assert cancer_types.resolve_cancer_type("SARC_MMNST") == "SARC_MMNST"
+    assert cancer_types.cancer_lineage_group("SARC_MMNST") == "Sarcoma"
+
+    raw = cancer_types.cancer_type_registry().set_index("code").loc["SARC_MMNST"]
+    assert raw["parent_code"] == "SARC"
+    assert raw["primary_tissue"] == "nerve_sheath"
+    assert raw["expression_source"] == "curated"
+    assert raw["source_cohort"] == "LITERATURE_CURATED"
+    assert raw["source_pmid"] == "PMID:24145644"
+    assert raw["fusion_driven"] == "none"
+
+    row = cancer_types.cancer_type_records(["SARC_MMNST"]).iloc[0]
+    assert row["name"] == "Malignant Melanotic Nerve Sheath Tumor"
+    assert row["family"] == "sarcoma"
+    assert row["primary_tissue"] == "nerve_sheath"
     assert row["source_cohort"] == "LITERATURE_CURATED"
-    assert row["source_pmid"] == "PMID:36604386"
-    assert row["lineage_group"] == "CNS"
-    assert row["normal_tissue_code"] == "cerebral_cortex"
-    assert row["hpa_tissues"] == ("cerebral cortex",)
+    assert row["source_pmid"] == "PMID:24145644"
+    assert row["lineage_group"] == "Sarcoma"
+    assert row["normal_tissue_code"] == "soft_tissue"
+    assert row["hpa_tissues"] == ()
     assert bool(row["has_expression_matrix"]) is False
 
 

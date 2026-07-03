@@ -75,11 +75,11 @@ SARC_CHOR,PD-1,12.0,pembrolizumab,AcSe Pembrolizumab,UC-0105/1612,NCT03012620,ad
 SARC_DDLPS,PD-1,10,pembrolizumab,SARC028,,NCT02301039,advanced/metastatic 2L+,DOI:10.1200/JCO.2019.37.15_suppl.11015,low,"LPS final expansion ORR 10% (4/39 evaluable; 40 enrolled); PFS 2 mo (95% CI 2-4); initial 2/10 cohort overlaps and is context only"
 SARC_DSRCT,PD-1,12.5,pembrolizumab,AcSe Pembrolizumab,,NCT03012620,desmoplastic small round cell tumor,PMID:37429302,low,1/8 PR; otherwise immune-cold
 SARC_EPITH,PD-1,16.7,pembrolizumab,AcSe Pembrolizumab,,NCT03012620,advanced epithelioid sarcoma,PMID:37429302,low,1/6 PR; small n; consistent with KEYNOTE-051 single PR
-SARC_MPNST,PD-1,12.5,pembrolizumab,Pembrolizumab advanced MPNST phase 2,,NCT02691026,advanced/metastatic MPNST,PMID:41760889,low,ORR 12.5% (1/8) — 1 durable objective response; 1 additional mixed response; single-arm phase 2 (Oslo) closed early for slow accrual; response linked to PD-1+CD8+ T-cell density
 SARC_EWS,PD-1,0.0,pembrolizumab,SARC028,,NCT02301039,advanced/metastatic bone cohort,PMID:28988646,low,Ewing sarcoma 0/13; immune-cold
 SARC_GIST,PD-1,0.0,nivolumab,Alliance A091401,NCI-2015-00260,NCT02500797,advanced GIST,PMID:39343511,medium,0/9 nivo and 0/9 nivo+ipi; immune-cold; ICI inactive
 SARC_KS,PD-1,62.1,pembrolizumab,CITN-12,NCI-2015-01906,NCT02595866,HIV-associated Kaposi sarcoma,PMID:39356983,high,ORR 62.1% (18/29); treatment-naive subset ~88%; strong responder
 SARC_LMS,PD-1,0.0,pembrolizumab,SARC028,,NCT02301039,advanced/metastatic 2L+,PMID:28988646,low,leiomyosarcoma 0/10; immune-cold
+SARC_MPNST,PD-1,12.5,pembrolizumab,Pembrolizumab advanced MPNST phase 2,,NCT02691026,advanced/metastatic MPNST,PMID:41760889,low,ORR 12.5% (1/8) — 1 durable objective response; 1 additional mixed response; single-arm phase 2 (Oslo) closed early for slow accrual; response linked to PD-1+CD8+ T-cell density
 SARC_OS,PD-1,5.0,pembrolizumab,SARC028,,NCT02301039,advanced/metastatic bone cohort,PMID:28988646,low,osteosarcoma 1/22 in the bone cohort
 SARC_SMARCA4,PD-1,25.0,pembrolizumab,AcSe Pembrolizumab,UC-0105/1612,NCT03012620,SMARCA4/SMARCB1-deficient sarcoma,PMID:37429302,medium,ORR 25% (3/12); rhabdoid/SMARCA4-deficient immunogenic despite low TMB
 SARC_SYN,PD-1,10.0,pembrolizumab,SARC028,,NCT02301039,advanced/metastatic 2L+,PMID:28988646,low,synovial sarcoma 1/10; translocation sarcoma; immune-cold

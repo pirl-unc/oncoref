@@ -30,3 +30,11 @@ def test_expression_source_candidates():
     assert {"cancer_code", "source_status", "reference_code"} <= set(df.columns)
     one = expression_source_candidates("BRCA_Basal")
     assert len(one) >= 1 and (one["cancer_code"] == "BRCA_Basal").all()
+
+    mmnst = expression_source_candidates("SARC_MMNST").iloc[0]
+    assert mmnst["source_status"] == "bulk_candidate_ready"
+    assert mmnst["reference_code"] == "SARC"
+    assert mmnst["source_project"] == "SRA"
+    assert mmnst["source_cohort"] == "SRP493407_MMNST_2024"
+    assert mmnst["accession"] == "PRJNA1083972"
+    assert int(mmnst["estimated_samples"]) == 3
