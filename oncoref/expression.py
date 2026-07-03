@@ -269,10 +269,17 @@ def _gene_filter_mask(df: pd.DataFrame, genes: str | Iterable[str] | None) -> pd
         return pd.Series(True, index=df.index)
     wanted = {genes} if isinstance(genes, str) else set(genes)
     wanted = {str(g) for g in wanted}
+    wanted_ids = set(wanted)
     wanted_unversioned = {unversioned(g) for g in wanted}
+    for gene in wanted:
+        base = unversioned(gene)
+        if base.upper().startswith("ENSG"):
+            resolved = resolve_ensembl_id(base)
+            wanted_ids.add(resolved)
+            wanted_unversioned.add(unversioned(resolved))
     ids = df["Ensembl_Gene_ID"].astype(str)
     return (
-        ids.isin(wanted)
+        ids.isin(wanted_ids)
         | ids.map(unversioned).isin(wanted_unversioned)
         | df["Symbol"].astype(str).isin(wanted)
     )
@@ -1334,6 +1341,7 @@ def cancer_reference_expression(
     on_missing: str = "omit",
     auto_fetch: bool = False,
     sample_qc: str = "pass",
+    gene_id_style: str = "oncoref",
 ) -> pd.DataFrame:
     """Observed tumor expression references as cohort-level clean TPM summaries.
 
@@ -1353,6 +1361,10 @@ def cancer_reference_expression(
     ``auto_fetch=True`` to download it. Raw-TPM summaries default to
     ``sample_qc="pass"`` so sparse/source-QC-failed samples do not shape new
     derived summaries; use ``"pass_or_warn"`` or ``"all"`` for audit/parity views.
+    ``gene_id_style="oncoref"`` returns canonical oncoref ENSG IDs. Opt into
+    ``"pirlygenes"`` only for migration wrappers that need known legacy ENSG IDs
+    for rows with one-to-one remaps recorded in
+    ``expression-artifact-gene-universe-deltas.csv``.
     Missing requested cohorts are omitted by default to preserve the historical
     behavior; pass ``on_missing="empty"`` to preserve a schema-stable empty result
     with missing-request metadata in ``df.attrs["missing_requests"]`` or
@@ -1360,6 +1372,7 @@ def cancer_reference_expression(
     """
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_sample_qc(sample_qc)
+    _validate_gene_id_style(gene_id_style)
     if format not in ("long", "wide"):
         raise ValueError("format must be 'long' or 'wide'")
     if on_missing not in ("omit", "empty", "raise"):
@@ -1399,6 +1412,12 @@ def cancer_reference_expression(
                 code, mode, auto_fetch=auto_fetch, sample_qc=sample_qc
             )
             ref = ref[_gene_filter_mask(ref, genes)].reset_index(drop=True)
+            ref = _apply_gene_id_style(
+                ref,
+                product="cohort_gene_percentiles",
+                cancer_codes=[code],
+                gene_id_style=gene_id_style,
+            )
             label = _REFERENCE_NORMALIZE_LABELS[mode]
             if format == "long":
                 part = ref[["Ensembl_Gene_ID", "Symbol", "p25", "p50", "p75"]].copy()
@@ -1433,14 +1452,18 @@ def cancer_reference_expression(
             out = pd.DataFrame(columns=cols)
         else:
             out = pd.concat(long_parts, ignore_index=True)
-        _attach_reference_expression_attrs(out, availability if on_missing != "omit" else None)
+        _attach_reference_expression_attrs(
+            out, availability if on_missing != "omit" else None, gene_id_style=gene_id_style
+        )
         return out
 
     if not wide_parts:
         out = pd.DataFrame(columns=["Ensembl_Gene_ID", "Symbol"])
     else:
         out = _merge_cancer_reference_wide_parts(wide_parts)
-    _attach_reference_expression_attrs(out, availability if on_missing != "omit" else None)
+    _attach_reference_expression_attrs(
+        out, availability if on_missing != "omit" else None, gene_id_style=gene_id_style
+    )
     return out
 
 
@@ -1624,10 +1647,13 @@ def _reference_expected_method(mode: str) -> str:
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
 
 
-def _attach_reference_expression_attrs(df: pd.DataFrame, availability: pd.DataFrame | None) -> None:
+def _attach_reference_expression_attrs(
+    df: pd.DataFrame, availability: pd.DataFrame | None, *, gene_id_style: str
+) -> None:
     df.attrs["artifact_schema_version"] = REFERENCE_EXPRESSION_SCHEMA_VERSION
     df.attrs["data_version"] = DATA_VERSION
     df.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
+    df.attrs["gene_id_style"] = gene_id_style
     if availability is None:
         return
     missing = availability.loc[~availability["available"]]

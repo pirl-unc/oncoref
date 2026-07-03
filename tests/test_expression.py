@@ -1116,6 +1116,49 @@ def test_cancer_reference_expression_long_and_wide(monkeypatch):
     assert wide.loc[wide["Symbol"] == "A", "X_TPM_clean"].iloc[0] == 3.0
 
 
+def test_cancer_reference_expression_can_return_pirlygenes_legacy_gene_ids(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    shard_dir = tmp_path / "cancer-reference-expression-percentiles"
+    shard_dir.mkdir(parents=True)
+    row = {
+        "Ensembl_Gene_ID": "ENSG00000310560",
+        "Symbol": "PAXX",
+    }
+    for bp in sorted({*_BREAKPOINTS, 25, 75}):
+        row[f"p{bp}"] = np.log1p(float(bp))
+    pd.DataFrame([row]).to_parquet(shard_dir / "PRAD.parquet", index=False)
+
+    canonical = expression.cancer_reference_expression(
+        "PRAD",
+        genes="ENSG00000148362",
+    )
+    legacy = expression.cancer_reference_expression(
+        "PRAD",
+        genes="ENSG00000148362",
+        gene_id_style="pirlygenes",
+    )
+    wide = expression.cancer_reference_expression(
+        "PRAD",
+        genes="PAXX",
+        format="wide",
+        gene_id_style="pirlygenes",
+    )
+
+    assert canonical.loc[0, "Ensembl_Gene_ID"] == "ENSG00000310560"
+    assert canonical.attrs["gene_id_style"] == "oncoref"
+    assert legacy.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
+    assert legacy.loc[0, "Symbol"] == "PAXX"
+    assert legacy.loc[0, "expression"] == pytest.approx(canonical.loc[0, "expression"])
+    assert legacy.attrs["gene_id_style"] == "pirlygenes"
+    assert wide.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
+    assert wide.attrs["gene_id_style"] == "pirlygenes"
+
+
+def test_cancer_reference_expression_bad_gene_id_style():
+    with pytest.raises(ValueError, match="gene_id_style"):
+        expression.cancer_reference_expression("PRAD", gene_id_style="legacy")
+
+
 def test_cancer_reference_expression_multiple_normalizations(monkeypatch):
     pct_tpm = pd.DataFrame(
         {
