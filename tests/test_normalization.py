@@ -30,6 +30,22 @@ def test_public_normalization_functions_are_all_exported():
     assert not missing, f"normalization publics not exported from oncoref: {missing}"
 
 
+def test_housekeeping_reference_profile_contract():
+    profile = norm.housekeeping_reference_profile()
+
+    assert not profile.empty
+    assert set(profile.columns) == {
+        "Symbol",
+        "Ensembl_Gene_ID",
+        "reference_tpm",
+        "reference_source",
+        "profile_version",
+    }
+    assert set(profile["profile_version"]) == {norm.HOUSEKEEPING_REFERENCE_PROFILE_VERSION}
+    assert set(profile["reference_source"]) == {norm.HOUSEKEEPING_REFERENCE_PROFILE_SOURCE}
+    assert (profile["reference_tpm"] > 0).all()
+
+
 def _matrix():
     tech = list(gf.gene_family_ids("mitochondrial"))[:2]
     gt = pd.DataFrame(
@@ -175,7 +191,7 @@ def test_clean_tpm_validates():
 def test_value_cols_excludes_proteoform_members():
     # A proteoform-collapsed frame carries a proteoform_members provenance column; the
     # "everything-not-id" value-column rule must not treat it as a sample (it would
-    # crash/poison geomean normalization). Uses the shared ID_COLUMNS constant.
+    # crash/poison housekeeping normalization). Uses the shared ID_COLUMNS constant.
     df = pd.DataFrame(
         {
             "Ensembl_Gene_ID": ["E1"],
@@ -207,14 +223,14 @@ def test_log_and_rank_helpers():
 
 
 def test_normalize_to_housekeeping():
-    # housekeeping genes present -> column scaled by their panel GEOMEAN (the single
-    # housekeeping method; this convenience delegates to tpm_to_housekeeping_normalized).
-    hk = list(gf.housekeeping_gene_ids())[:2]
+    # housekeeping genes present -> column scaled by the median-of-ratios size factor
+    # against the fixed per-gene reference profile.
+    hk = ["HK1", "HK2"]
+    ref = pd.DataFrame({"Ensembl_Gene_ID": hk, "reference_tpm": [5.0, 10.0]})
     gt = pd.DataFrame({"Ensembl_Gene_ID": [*hk, "ENSG00000999999"], "Symbol": ["H1", "H2", "X"]})
-    df = gt.assign(s1=[10.0, 30.0, 100.0])
-    denom = np.exp(np.mean(np.log(np.array([10.0, 30.0]) + 0.1)))  # geomean(+pseudocount)
-    out = norm.normalize_to_housekeeping(df)
-    assert np.allclose(out["s1"], np.array([10.0, 30.0, 100.0]) / denom)
+    df = gt.assign(s1=[10.0, 30.0, 100.0])  # HK ratios: 2.0, 3.0 -> size factor 2.5
+    out = norm.normalize_to_housekeeping(df, panel_ids=hk, reference_profile=ref)
+    assert np.allclose(out["s1"], np.array([10.0, 30.0, 100.0]) / 2.5)
 
 
 def test_normalize_to_housekeeping_raises_when_no_panel_rows():
@@ -242,25 +258,29 @@ def test_normalize_to_housekeeping_raises_without_id_column():
 
 
 def test_normalize_to_housekeeping_raises_for_mixed_failed_columns():
-    hk = list(gf.housekeeping_gene_ids())[:2]
+    hk = ["HK1", "HK2"]
+    ref = pd.DataFrame({"Ensembl_Gene_ID": hk, "reference_tpm": [5.0, 15.0]})
     gt = pd.DataFrame({"Ensembl_Gene_ID": [*hk, "ENSG00000999999"], "Symbol": ["H1", "H2", "X"]})
     df = gt.assign(good=[10.0, 30.0, 100.0], failed=[0.0, 0.0, 100.0])
 
     with pytest.raises(ValueError, match="failed"):
         norm.normalize_to_housekeeping(
             df,
+            panel_ids=hk,
+            reference_profile=ref,
             drop_zero_panel_values=True,
             min_panel_detected=1,
         )
 
     out = norm.normalize_to_housekeeping(
         df,
+        panel_ids=hk,
+        reference_profile=ref,
         drop_zero_panel_values=True,
         min_panel_detected=1,
         errors="nan",
     )
-    denom = np.exp(np.mean(np.log(np.array([10.0, 30.0]) + 0.1)))
-    assert np.allclose(out["good"], np.array([10.0, 30.0, 100.0]) / denom)
+    assert np.allclose(out["good"], np.array([10.0, 30.0, 100.0]) / 2.0)
     assert out["failed"].isna().all()
 
 
@@ -424,9 +444,47 @@ def test_normalize_long_table_groups_independently():
 
 
 def test_tpm_to_housekeeping_normalized():
-    from oncoref import gene_families
+    hk = ["HK1", "HK2"]
+    ref = pd.DataFrame({"Ensembl_Gene_ID": hk, "reference_tpm": [50.0, 100.0]})
+    df = pd.DataFrame(
+        {
+            "Symbol": ["HK1", "HK2", "GENE"],
+            "Ensembl_Gene_ID": [hk[0], hk[1], "ENSG_X"],
+            "s1_TPM": [100.0, 300.0, 50.0],
+        }
+    )
+    out, stats = norm.tpm_to_housekeeping_normalized(
+        df, value_cols=["s1_TPM"], panel_ids=hk, reference_profile=ref
+    )
+    # HK ratios are [2, 3] -> size factor 2.5 -> GENE 50 / 2.5 = 20.
+    assert stats["applied"] is True
+    assert stats["method"] == "median_of_ratios"
+    assert stats["columns"]["s1_TPM"]["denominator"] == pytest.approx(2.5)
+    assert out.loc[out["Symbol"] == "GENE", "s1_TPM"].iloc[0] == pytest.approx(20.0)
 
-    hk = list(gene_families.housekeeping_gene_ids())[:2]
+
+def test_tpm_to_housekeeping_normalized_handles_duplicate_index_labels():
+    hk = ["HK1", "HK2"]
+    ref = pd.DataFrame({"Ensembl_Gene_ID": hk, "reference_tpm": [50.0, 100.0]})
+    df = pd.DataFrame(
+        {
+            "Symbol": ["HK1", "HK2", "GENE"],
+            "Ensembl_Gene_ID": [hk[0], hk[1], "ENSG_X"],
+            "s1_TPM": [100.0, 300.0, 50.0],
+        },
+        index=[0, 0, 1],
+    )
+
+    out, stats = norm.tpm_to_housekeeping_normalized(
+        df, value_cols=["s1_TPM"], panel_ids=hk, reference_profile=ref
+    )
+
+    assert stats["columns"]["s1_TPM"]["denominator"] == pytest.approx(2.5)
+    assert out.loc[out["Symbol"] == "GENE", "s1_TPM"].iloc[0] == pytest.approx(20.0)
+
+
+def test_tpm_to_housekeeping_normalized_legacy_geomean_method_is_explicit():
+    hk = ["HK1", "HK2"]
     df = pd.DataFrame(
         {
             "Symbol": ["HK1", "HK2", "GENE"],
@@ -434,9 +492,16 @@ def test_tpm_to_housekeeping_normalized():
             "s1_TPM": [100.0, 100.0, 50.0],
         }
     )
-    out, stats = norm.tpm_to_housekeeping_normalized(df, value_cols=["s1_TPM"])
-    # geomean of [100,100] (+0.1) ~ 100.1 -> GENE 50 / 100.1 ~ 0.4995
-    assert stats["applied"] is True
+    with pytest.raises(ValueError, match="legacy_geomean"):
+        norm.tpm_to_housekeeping_normalized(
+            df, value_cols=["s1_TPM"], panel_ids=hk, method="geomean"
+        )
+
+    out, stats = norm.tpm_to_housekeeping_normalized(
+        df, value_cols=["s1_TPM"], panel_ids=hk, method="legacy_geomean"
+    )
+    assert stats["method"] == "legacy_geomean"
+    assert stats["columns"]["s1_TPM"]["denominator"] == pytest.approx(100.1, rel=1e-3)
     assert out.loc[out["Symbol"] == "GENE", "s1_TPM"].iloc[0] == pytest.approx(50 / 100.1, rel=1e-3)
 
 
@@ -444,9 +509,8 @@ def test_tpm_to_housekeeping_normalized_blanks_column_with_no_panel():
     # A column whose housekeeping panel rows are all NaN can't be put on the
     # ratio-to-baseline scale; it must become NaN, not silently stay raw-TPM
     # alongside normalized siblings (the scale-mixing trap).
-    from oncoref import gene_families
-
-    hk = list(gene_families.housekeeping_gene_ids())[:2]
+    hk = ["HK1", "HK2"]
+    ref = pd.DataFrame({"Ensembl_Gene_ID": hk, "reference_tpm": [100.0, 100.0]})
     df = pd.DataFrame(
         {
             "Symbol": ["HK1", "HK2", "GENE"],
@@ -455,17 +519,18 @@ def test_tpm_to_housekeeping_normalized_blanks_column_with_no_panel():
             "empty_TPM": [np.nan, np.nan, 50.0],  # panel genes unmeasured here
         }
     )
-    out, stats = norm.tpm_to_housekeeping_normalized(df, value_cols=["good_TPM", "empty_TPM"])
-    # The measurable column is normalized; the panel-less column is fully NaN, not 50.0.
-    assert out.loc[out["Symbol"] == "GENE", "good_TPM"].iloc[0] == pytest.approx(
-        50 / 100.1, rel=1e-3
+    out, stats = norm.tpm_to_housekeeping_normalized(
+        df, value_cols=["good_TPM", "empty_TPM"], panel_ids=hk, reference_profile=ref
     )
+    # The measurable column is normalized; the panel-less column is fully NaN, not 50.0.
+    assert out.loc[out["Symbol"] == "GENE", "good_TPM"].iloc[0] == pytest.approx(50.0)
     assert out["empty_TPM"].isna().all()
     assert stats["columns"]["empty_TPM"]["denominator"] == 0.0
 
 
 def test_tpm_to_housekeeping_normalized_gates_sparse_detected_panel():
     hk = ["HK1", "HK2", "HK3"]
+    ref = pd.DataFrame({"Ensembl_Gene_ID": hk, "reference_tpm": [100.0, 100.0, 100.0]})
     df = pd.DataFrame(
         {
             "Symbol": ["HK1", "HK2", "HK3", "GENE"],
@@ -481,14 +546,13 @@ def test_tpm_to_housekeeping_normalized_gates_sparse_detected_panel():
             value_cols=["good_TPM", "sparse_TPM"],
             panel_ids=hk,
             panel_name="test_housekeeping",
+            reference_profile=ref,
             min_panel_detected=2,
             drop_zero_panel_values=True,
             warn_on_unreliable=True,
         )
 
-    assert out.loc[out["Symbol"] == "GENE", "good_TPM"].iloc[0] == pytest.approx(
-        50 / 100.1, rel=1e-3
-    )
+    assert out.loc[out["Symbol"] == "GENE", "good_TPM"].iloc[0] == pytest.approx(50.0)
     assert out["sparse_TPM"].isna().all()
     assert stats["columns"]["good_TPM"]["panel_genes_detected"] == 2
     assert stats["columns"]["good_TPM"]["panel_genes_zero"] == 1

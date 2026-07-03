@@ -101,6 +101,9 @@ OTHER_TECHNICAL_FRACTION = 0.09
 TECHNICAL_FRACTION = round(RIBOSOMAL_PROTEIN_FRACTION + OTHER_TECHNICAL_FRACTION, 10)  # 0.25
 #: Clean-TPM budget for the biological compartment (everything else) — the remainder.
 BIOLOGICAL_FRACTION = round(1.0 - TECHNICAL_FRACTION, 10)  # 0.75
+HOUSEKEEPING_NORMALIZATION_METHOD = "median_of_ratios"
+HOUSEKEEPING_REFERENCE_PROFILE_VERSION = "clean_tpm_biological_hpa_v23_mean_tpm_v1"
+HOUSEKEEPING_REFERENCE_PROFILE_SOURCE = "hpa_v23_rna_consensus_mean_tpm"
 
 
 def _compartment_masks(
@@ -235,6 +238,71 @@ def filter_technical_rna(df: pd.DataFrame) -> pd.DataFrame:
     return df.loc[~mask].reset_index(drop=True)
 
 
+def housekeeping_reference_profile(
+    *,
+    panel_ids=None,
+    primary_only: bool = True,
+) -> pd.DataFrame:
+    """Fixed per-gene reference profile for median-of-ratios HK normalization.
+
+    The default profile is the HPA v23-derived, clean-TPM biological housekeeping
+    panel. ``reference_tpm`` is the curated per-gene mean TPM from the HPA-stable
+    panel table; it is versioned by
+    :data:`HOUSEKEEPING_REFERENCE_PROFILE_VERSION`. Callers with custom panels should
+    pass an explicit matching reference profile to
+    :func:`tpm_to_housekeeping_normalized`.
+
+    Median-of-ratios uses this profile as the denominator for each housekeeping gene:
+    ``size_factor(sample) = median(sample_tpm[g] / reference_tpm[g])``. The normalized
+    expression values are the original values divided by that sample-level size
+    factor.
+    """
+    profile = gene_families.clean_tpm_biological_housekeeping_genes(primary_only=primary_only)
+    if panel_ids is not None:
+        wanted = {str(g).split(".")[0] for g in panel_ids}
+        profile = profile[_unversioned(profile["Ensembl_Gene_ID"]).isin(wanted)]
+    out = profile[["Symbol", "Ensembl_Gene_ID", "mean_tpm"]].copy()
+    out = out.rename(columns={"mean_tpm": "reference_tpm"})
+    out["reference_source"] = HOUSEKEEPING_REFERENCE_PROFILE_SOURCE
+    out["profile_version"] = HOUSEKEEPING_REFERENCE_PROFILE_VERSION
+    return out.reset_index(drop=True)
+
+
+def _housekeeping_reference_map(
+    reference_profile,
+    *,
+    reference_id_col: str,
+    reference_value_col: str,
+) -> dict[str, float]:
+    if reference_profile is None:
+        reference_profile = housekeeping_reference_profile()
+    if isinstance(reference_profile, pd.Series):
+        ref = reference_profile.copy()
+        ref.index = ref.index.astype(str).str.split(".").str[0]
+        return {
+            str(idx): float(value)
+            for idx, value in ref.items()
+            if pd.notna(value) and float(value) > 0.0
+        }
+    if not isinstance(reference_profile, pd.DataFrame):
+        reference_profile = pd.DataFrame(
+            {
+                reference_id_col: list(reference_profile.keys()),
+                reference_value_col: list(reference_profile.values()),
+            }
+        )
+    if reference_id_col not in reference_profile.columns:
+        raise ValueError(f"reference profile needs {reference_id_col!r}")
+    if reference_value_col not in reference_profile.columns:
+        raise ValueError(f"reference profile needs {reference_value_col!r}")
+    ref = reference_profile[[reference_id_col, reference_value_col]].copy()
+    ref[reference_id_col] = _unversioned(ref[reference_id_col])
+    ref[reference_value_col] = pd.to_numeric(ref[reference_value_col], errors="coerce")
+    ref = ref.dropna(subset=[reference_id_col, reference_value_col])
+    ref = ref[ref[reference_value_col] > 0.0].drop_duplicates(reference_id_col, keep="first")
+    return dict(zip(ref[reference_id_col], ref[reference_value_col]))
+
+
 def normalize_to_housekeeping(
     df: pd.DataFrame,
     value_cols=None,
@@ -242,16 +310,23 @@ def normalize_to_housekeeping(
     panel_ids=None,
     panel_name: str | None = None,
     pseudocount: float = 0.1,
+    method: str = HOUSEKEEPING_NORMALIZATION_METHOD,
+    reference_profile=None,
+    reference_id_col: str = "Ensembl_Gene_ID",
+    reference_value_col: str = "reference_tpm",
     min_panel_detected: int | None = None,
     drop_zero_panel_values: bool = False,
     errors: str = "raise",
 ) -> pd.DataFrame:
-    """Rescale each value column to its housekeeping-panel baseline (unitless: 1.0 =
-    panel level). The df-only convenience over :func:`tpm_to_housekeeping_normalized`
-    (the canonical normalizer, which also returns per-column diagnostics) — both use the
-    **geometric mean** of the housekeeping panel, the single housekeeping method (see
-    that function for why geomean over median). A column with no measurable panel gene
-    becomes NaN rather than silently staying on the input scale.
+    """Rescale each value column by a housekeeping-derived sample size factor.
+
+    This is the df-only convenience over :func:`tpm_to_housekeeping_normalized`
+    (the canonical normalizer, which also returns per-column diagnostics). By default
+    both use median-of-ratios against the fixed clean-TPM biological reference profile:
+    compute ``sample_tpm[g] / reference_tpm[g]`` for each usable housekeeping gene,
+    take the median ratio as the sample size factor, then divide every gene in that
+    sample by the factor. A column with no measurable panel gene or no matching
+    reference profile becomes NaN rather than silently staying on the input scale.
 
     ``value_cols`` defaults to every per-sample value column (not just named-TPM
     columns), so a plain ``genes × samples`` frame normalizes as expected.
@@ -274,6 +349,10 @@ def normalize_to_housekeeping(
         panel_ids=panel_ids,
         panel_name=panel_name,
         pseudocount=pseudocount,
+        method=method,
+        reference_profile=reference_profile,
+        reference_id_col=reference_id_col,
+        reference_value_col=reference_value_col,
         min_panel_detected=min_panel_detected,
         drop_zero_panel_values=drop_zero_panel_values,
     )
@@ -615,27 +694,33 @@ def tpm_to_housekeeping_normalized(
     panel_ids=None,
     panel_name: str | None = None,
     pseudocount: float = 0.1,
+    method: str = HOUSEKEEPING_NORMALIZATION_METHOD,
+    reference_profile=None,
+    reference_id_col: str = "Ensembl_Gene_ID",
+    reference_value_col: str = "reference_tpm",
     min_panel_detected: int | None = None,
     drop_zero_panel_values: bool = False,
     warn_on_unreliable: bool = False,
 ) -> tuple[pd.DataFrame, dict]:
-    """Divide each expression column by the **geometric mean** of a housekeeping
-    panel, putting expression on a unit-free ratio-to-baseline scale that survives
-    library-prep depth drift in a way TPM doesn't.
+    """Divide each expression column by a housekeeping-panel size factor.
 
     The single, canonical housekeeping normalizer — the method behind
     ``per_sample_expression(normalize="tpm_clean_hk")`` and the df-only convenience
-    :func:`normalize_to_housekeeping`. The geometric mean (the geNorm convention) is
-    used over the median because it is the natural centre for multiplicative
-    log-normal expression and is dominated by no single deviating reference gene; a
-    small ``pseudocount`` keeps it finite through zeros.
+    :func:`normalize_to_housekeeping`. The default method is ``"median_of_ratios"``:
+    for each column, compute ``sample_tpm[g] / reference_tpm[g]`` over the usable
+    housekeeping genes, take the median ratio as that sample's size factor, and divide
+    all genes in the sample by the factor. The default reference profile is the HPA
+    v23-derived clean-TPM biological housekeeping profile from
+    :func:`housekeeping_reference_profile`.
 
-    The panel defaults to oncoref's legacy qPCR/reference housekeeping gene set
+    ``method="legacy_geomean"`` preserves the old geNorm-style denominator for
+    explicit audits of historical outputs. It is intentionally named as a legacy path;
+    new callers should use median-of-ratios, log1p clean TPM, or percentile ranks.
+
+    With ``method="median_of_ratios"``, ``panel_ids`` defaults to the ids present in
+    the reference profile. With ``method="legacy_geomean"``, it defaults to oncoref's
+    legacy qPCR/reference housekeeping gene set
     (:func:`oncoref.gene_families.housekeeping_gene_ids`), matched by Ensembl id.
-    Clean-TPM callers should pass
-    :func:`oncoref.gene_families.clean_tpm_biological_housekeeping_gene_ids`
-    explicitly, because ribosomal legacy references live in clean TPM's non-biological
-    ribosomal compartment.
     Because HK-normalized values are ratios to this panel, numerical thresholds are
     panel-dependent; prefer clean TPM, log1p(clean TPM), or percentile-rank clean TPM
     when the analysis needs an absolute, compressed, or rank-only expression space.
@@ -650,6 +735,8 @@ def tpm_to_housekeeping_normalized(
     than credible absence, callers can set ``drop_zero_panel_values=True`` and require a
     minimum number of nonzero panel genes via ``min_panel_detected``. Columns that fail
     that reliability gate are blanked to NaN and optionally warn."""
+    if method not in {"median_of_ratios", "legacy_geomean"}:
+        raise ValueError("method must be 'median_of_ratios' or 'legacy_geomean'")
     if df is None:
         return None, {"applied": False, "reason": "no table", "columns": {}}
     out = df.copy()
@@ -659,7 +746,17 @@ def tpm_to_housekeeping_normalized(
     if not value_cols:
         return out, {"applied": False, "reason": "no expression value columns", "columns": {}}
 
-    if panel_ids is None:
+    reference_map: dict[str, float] = {}
+    if method == "median_of_ratios":
+        reference_map = _housekeeping_reference_map(
+            reference_profile,
+            reference_id_col=reference_id_col,
+            reference_value_col=reference_value_col,
+        )
+    if panel_ids is None and method == "median_of_ratios":
+        panel = set(reference_map)
+        panel_name = panel_name or "clean_tpm_biological_housekeeping"
+    elif panel_ids is None:
         panel = set(gene_families.housekeeping_gene_ids())
         panel_name = panel_name or "legacy_qpcr_housekeeping"
     else:
@@ -672,32 +769,56 @@ def tpm_to_housekeeping_normalized(
             "panel": panel_name,
             "columns": {},
         }
-    panel_rows = _unversioned(out[id_col]).isin({str(g).split(".")[0] for g in panel})
+    row_ids = _unversioned(out[id_col])
+    panel_unversioned = {str(g).split(".")[0] for g in panel}
+    if method == "median_of_ratios":
+        panel_unversioned &= set(reference_map)
+    panel_rows = row_ids.isin(panel_unversioned)
     n_panel = int(panel_rows.sum())
     if n_panel == 0:
         return out, {
             "applied": False,
-            "reason": "no housekeeping panel genes present",
+            "reason": "no housekeeping panel genes present with reference profile"
+            if method == "median_of_ratios"
+            else "no housekeeping panel genes present",
             "panel": panel_name,
+            "method": method,
             "columns": {},
         }
 
     columns: dict = {}
     applied = False
+    panel_reference = (
+        row_ids.loc[panel_rows].map(reference_map) if method == "median_of_ratios" else None
+    )
     for col in value_cols:
-        vals = pd.to_numeric(out.loc[panel_rows, col], errors="coerce").dropna()
+        vals_raw = pd.to_numeric(out.loc[panel_rows, col], errors="coerce")
+        measured = vals_raw.notna()
+        vals = vals_raw[measured]
+        refs = panel_reference[measured] if panel_reference is not None else None
+        if refs is not None:
+            valid_ref = refs.notna() & (refs > 0)
+            vals = vals[valid_ref]
+            refs = refs[valid_ref]
         detected = vals[vals > 0]
-        denominator_vals = detected if drop_zero_panel_values else vals
+        denominator_mask = vals > 0 if drop_zero_panel_values else pd.Series(True, index=vals.index)
+        denominator_vals = vals[denominator_mask]
+        denominator_refs = refs[denominator_mask] if refs is not None else None
         n_detected = len(detected)
         n_zero = int((vals == 0).sum())
         reliable = min_panel_detected is None or n_detected >= int(min_panel_detected)
-        denom = (
-            float(np.exp(np.log(denominator_vals.to_numpy() + pseudocount).mean()))
-            if reliable and len(denominator_vals)
-            else 0.0
-        )
+        if not reliable or len(denominator_vals) == 0:
+            denom = 0.0
+        elif method == "median_of_ratios":
+            ratios = denominator_vals.to_numpy(dtype=float) / denominator_refs.to_numpy(dtype=float)
+            ratios = ratios[np.isfinite(ratios)]
+            denom = float(np.median(ratios)) if len(ratios) else 0.0
+        else:
+            denom = float(np.exp(np.log(denominator_vals.to_numpy() + pseudocount).mean()))
         reason = (
-            "divided by housekeeping geometric mean"
+            "divided by housekeeping median-of-ratios size factor"
+            if denom > 0 and method == "median_of_ratios"
+            else "divided by legacy housekeeping geometric mean"
             if denom > 0
             else (
                 f"only {n_detected} nonzero housekeeping panel genes"
@@ -707,12 +828,19 @@ def tpm_to_housekeeping_normalized(
         )
         columns[col] = {
             "denominator": denom,
+            "method": method,
             "panel_genes_present": n_panel,
             "panel_genes_measured": len(vals),
             "panel_genes_detected": n_detected,
             "panel_genes_zero": n_zero,
             "min_panel_detected": min_panel_detected,
             "drop_zero_panel_values": bool(drop_zero_panel_values),
+            "reference_profile_version": HOUSEKEEPING_REFERENCE_PROFILE_VERSION
+            if method == "median_of_ratios"
+            else "",
+            "reference_profile_source": HOUSEKEEPING_REFERENCE_PROFILE_SOURCE
+            if method == "median_of_ratios"
+            else "",
             "reason": reason,
         }
         if denom > 0:
@@ -733,8 +861,19 @@ def tpm_to_housekeeping_normalized(
                 )
     return out, {
         "applied": applied,
-        "reason": "divided by housekeeping geometric mean" if applied else "panel denominator <= 0",
+        "reason": "divided by housekeeping median-of-ratios size factor"
+        if applied and method == "median_of_ratios"
+        else "divided by legacy housekeeping geometric mean"
+        if applied
+        else "panel denominator <= 0",
         "panel": panel_name,
+        "method": method,
+        "reference_profile_version": HOUSEKEEPING_REFERENCE_PROFILE_VERSION
+        if method == "median_of_ratios"
+        else "",
+        "reference_profile_source": HOUSEKEEPING_REFERENCE_PROFILE_SOURCE
+        if method == "median_of_ratios"
+        else "",
         "columns": columns,
         "value_cols": value_cols,
         "panel_genes_present": n_panel,

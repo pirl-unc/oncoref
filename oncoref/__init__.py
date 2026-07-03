@@ -248,6 +248,9 @@ from .incidence import (
 )
 from .normalization import (
     BIOLOGICAL_FRACTION,
+    HOUSEKEEPING_NORMALIZATION_METHOD,
+    HOUSEKEEPING_REFERENCE_PROFILE_SOURCE,
+    HOUSEKEEPING_REFERENCE_PROFILE_VERSION,
     OTHER_TECHNICAL_FRACTION,
     RIBOSOMAL_PROTEIN_FRACTION,
     TECHNICAL_FRACTION,
@@ -255,6 +258,7 @@ from .normalization import (
     drop_technical_rna,
     filter_technical_rna,
     fpkm_to_tpm,
+    housekeeping_reference_profile,
     is_expression_value_col,
     log1p_transform,
     log2_transform,
@@ -310,6 +314,9 @@ __all__ = [
     "CANCER_TYPE_ALIASES",
     "CANCER_TYPE_NAMES",
     "EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION",
+    "HOUSEKEEPING_NORMALIZATION_METHOD",
+    "HOUSEKEEPING_REFERENCE_PROFILE_SOURCE",
+    "HOUSEKEEPING_REFERENCE_PROFILE_VERSION",
     "OTHER_TECHNICAL_FRACTION",
     "PROPORTION_METRICS",
     "REFERENCE_EXPRESSION_SCHEMA_VERSION",
@@ -492,6 +499,7 @@ __all__ = [
     "gene_within_sample_top_fraction",
     "genomes",
     "greedy_coverage",
+    "housekeeping_reference_profile",
     # HPA normal-tissue reference data
     "hpa_cell_type_expression",
     "hpa_housekeeping_candidates",

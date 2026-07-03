@@ -738,25 +738,39 @@ def test_pan_cancer_expression_canonicalizes_alias_genes(monkeypatch):
     assert out.loc[primary, "liver_nTPM_raw"] == pytest.approx(10.0)  # 3 + 7 summed
 
 
-def test_housekeeping_normalize_divides_by_panel_geomean(monkeypatch):
+def test_housekeeping_normalize_divides_by_panel_size_factor(monkeypatch):
     import oncoref.gene_families as gf
+    import oncoref.normalization as norm
 
     monkeypatch.setattr(
         gf, "clean_tpm_biological_housekeeping_gene_ids", lambda: frozenset({"ENSG_HK"})
+    )
+    monkeypatch.setattr(
+        norm,
+        "housekeeping_reference_profile",
+        lambda: pd.DataFrame({"Ensembl_Gene_ID": ["ENSG_HK"], "reference_tpm": [100.0]}),
     )
     df = pd.DataFrame(
         {"Ensembl_Gene_ID": ["ENSG_HK", "ENSG_X"], "Symbol": ["HK", "X"], "s1": [100.0, 50.0]}
     )
     out = expression._housekeeping_normalize(df, ["s1"])
-    # Each column divided by its housekeeping geomean -> the gene/HK *ratio* is preserved.
+    # Each column divided by its housekeeping size factor -> gene/HK ratio is preserved.
     assert out.loc[1, "s1"] / out.loc[0, "s1"] == pytest.approx(0.5)
 
 
 def test_housekeeping_normalize_blanks_sparse_housekeeping_denominator(monkeypatch):
     import oncoref.gene_families as gf
+    import oncoref.normalization as norm
 
     panel = frozenset({"HK1", "HK2", "HK3"})
     monkeypatch.setattr(gf, "clean_tpm_biological_housekeeping_gene_ids", lambda: panel)
+    monkeypatch.setattr(
+        norm,
+        "housekeeping_reference_profile",
+        lambda: pd.DataFrame(
+            {"Ensembl_Gene_ID": ["HK1", "HK2", "HK3"], "reference_tpm": [100.0, 100.0, 100.0]}
+        ),
+    )
     df = pd.DataFrame(
         {
             "Ensembl_Gene_ID": ["HK1", "HK2", "HK3", "ENSG_X"],
