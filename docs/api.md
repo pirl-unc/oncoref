@@ -308,7 +308,9 @@ but it is not the clean-TPM biological denominator.
   `tmb.cancer_tmb_df()` includes evidence-schema columns (`estimate_type`,
   `source_scope`, `missing_reason`), and `tmb.cancer_tmb_record()` /
   `tmb.resolve_tmb_source()` preserve requested-code metadata for source-scoped
-  lookups such as `COAD_MSI` or `READ_MSI` resolving through `CRC_MSI`.
+  lookups such as `COAD_MSI` or `READ_MSI` resolving through `CRC_MSI`. Direct
+  audited gaps use `inheritance_kind="direct_missing"` so callers can distinguish
+  “known no supported site-specific estimate” from an unmapped cancer code.
 - `oncoref.incidence` — incidence/mortality burden and burden categories.
 - `oncoref.fusions` — defining fusions and partner-family lookups.
 - `oncoref.response_signatures` — therapy-response gene signatures and scoring.

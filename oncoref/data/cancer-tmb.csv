@@ -95,8 +95,8 @@ SARC_DSRCT,0.72,,Bertucci 2022,PMID:35379887,high,EWSR1-WT1-driven; immune-cold;
 SARC_GIST,0.67,,Wu 2024 Nat Commun,PMID:39489749,high,KIT/PDGFRA-driven; very low SNV TMB but high CNV. Overrides pan-SARC.
 NEC_LUNG_LARGECELL,8.6,,George 2018 Nat Commun,PMID:29535388,high,LCNEC; smoking signature; TMB-high tier with SCLC.
 SARC_SMARCA4,10.6,,Cooper 2024,PMID:39802817,high,SMARCA4-deficient thoracic; smoking signature (really an undiff carcinoma); TMB-H. Overrides pan-SARC.
-NET_MIDGUT,1.09,,GEP-NEN TMB 2023,PMID:37720428,medium,Well-diff GEP-NET; low TMB (~1) vs NEC ~5.5.
-NET_RECTAL,1.09,,GEP-NEN TMB 2023,PMID:37720428,medium,Well-diff hindgut NET; ~GEP-NET low TMB.
+NET_MIDGUT,,,Jeong 2023,PMID:37720428,none,Jeong 2023 reports GEP-NEN median 4.7 mut/Mb with IQR 3.1-6.3 across 31 patients including small bowel n=2 and rectum n=7; TMB did not vary by primary tumor site or WHO grade; no supported site-specific midgut median curated.
+NET_RECTAL,,,Jeong 2023,PMID:37720428,none,Jeong 2023 reports GEP-NEN median 4.7 mut/Mb with IQR 3.1-6.3 across 31 patients including rectum n=7; TMB did not vary by primary tumor site or WHO grade; no supported site-specific rectal median curated.
 NET_LUNG,0.4,,Fernandez-Cuesta 2014,PMID:24670920,medium,Typical/atypical pulmonary carcinoid; very low (chromatin-remodeling driven).
 SARC_CIC,1.2,,Antonescu 2017,PMID:29901569,medium,CIC-DUX4-driven; low TMB (range 0.8-1.6). Overrides pan-SARC.
 NBL_MYCNamp,0.6,,Wang 2018 JNCI,PMID:30307503,medium,Pediatric; very low TMB; MYCN amp does NOT raise total TMB.

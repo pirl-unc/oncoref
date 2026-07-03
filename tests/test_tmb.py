@@ -31,18 +31,21 @@ def test_tmb_df_exposes_evidence_schema():
     assert {"estimate_type", "source_scope", "missing_reason"} <= set(df.columns)
 
     crc_msi = df.set_index("cancer_code").loc["CRC_MSI"]
-    assert crc_msi["estimate_type"] == "aggregate_source_scope_estimate"
-    assert crc_msi["source_scope"] == "aggregate_source_scope"
+    assert crc_msi["estimate_type"] == "published_median"
+    assert crc_msi["source_scope"] == "aggregate_source"
     assert pd.isna(crc_msi["missing_reason"])
 
     net_midgut = df.set_index("cancer_code").loc["NET_MIDGUT"]
-    assert net_midgut["estimate_type"] == "proxy_estimate"
-    assert net_midgut["source_scope"] == "pooled_gep_net_proxy"
+    assert pd.isna(net_midgut["median_tmb_mut_mb"])
+    assert net_midgut["confidence"] == "none"
+    assert net_midgut["estimate_type"] == "unknown"
+    assert net_midgut["source_scope"] == "source_rejected_for_site_specific_value"
+    assert net_midgut["missing_reason"] == "no_supported_site_specific_median"
 
     missing = df.set_index("cancer_code").loc["PITNET"]
-    assert missing["estimate_type"] == "missing"
-    assert missing["source_scope"] == "none"
-    assert missing["missing_reason"]
+    assert missing["estimate_type"] == "unknown"
+    assert missing["source_scope"] == "no_direct_source"
+    assert missing["missing_reason"] == "no_published_per_mb_median_curated"
 
 
 def test_tmb_resolves_alias():
@@ -87,8 +90,8 @@ def test_crc_msi_tmb_record_preserves_source_scope_metadata():
     assert record["inheritance_kind"] == "source_scope"
     assert record["is_inherited_evidence"] is True
     assert record["median_tmb_mut_mb"] == 46.0
-    assert record["source_scope"] == "aggregate_source_scope"
-    assert record["estimate_type"] == "aggregate_source_scope_estimate"
+    assert record["source_scope"] == "aggregate_source"
+    assert record["estimate_type"] == "published_median"
 
     direct = tmb.resolve_tmb_source("CRC_MSI")
     assert direct["requested_cancer_code"] == "CRC_MSI"
@@ -111,6 +114,21 @@ def test_tmb_record_missing_and_bulk_direct_rows():
     assert "CRC_MSI" in bulk
     assert "COAD_MSI" not in bulk
     assert bulk["CRC_MSI"]["inheritance_kind"] == "direct"
+
+
+def test_net_site_specific_tmb_rows_are_audited_gaps():
+    mapping = tmb.cancer_tmb()
+    assert "NET_MIDGUT" not in mapping
+    assert "NET_RECTAL" not in mapping
+    assert tmb.cancer_tmb("NET_MIDGUT") is None
+    assert tmb.cancer_tmb("NET_RECTAL") is None
+
+    midgut = tmb.resolve_tmb_source("NET_MIDGUT")
+    assert midgut["has_tmb_source"] is True
+    assert midgut["inheritance_kind"] == "direct_missing"
+    assert midgut["estimate_type"] == "unknown"
+    assert midgut["source_scope"] == "source_rejected_for_site_specific_value"
+    assert midgut["missing_reason"] == "no_supported_site_specific_median"
 
 
 def test_tmb_unknown_value_returns_none():

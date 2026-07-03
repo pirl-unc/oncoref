@@ -19,15 +19,40 @@ import pandas as pd
 from .cancer_types import cancer_evidence_source_code, cancer_type_registry, resolve_cancer_type
 from .load_dataset import get_data
 
-_TMB_SOURCE_SCOPE_OVERRIDES = {
+_TMB_EVIDENCE_OVERRIDES = {
     # MSI-H/dMMR colorectal estimates are published at the CRC source scope; anatomical
     # children such as COAD_MSI/READ_MSI resolve through this row rather than duplicating
     # the same source estimate.
-    "CRC_MSI": ("aggregate_source_scope", "aggregate_source_scope_estimate"),
-    # The cited GEP-NEN source is not a direct site-specific median for these children.
-    # Keep the numeric value available, but expose that it is a pooled/proxy estimate.
-    "NET_MIDGUT": ("pooled_gep_net_proxy", "proxy_estimate"),
-    "NET_RECTAL": ("pooled_gep_net_proxy", "proxy_estimate"),
+    "CRC_MSI": {
+        "estimate_type": "published_median",
+        "source_scope": "aggregate_source",
+    },
+    # The cited GEP-NEN source is pooled across primary sites and WHO grades.
+    # Preserve the source audit as explicit missing site-specific estimates.
+    "NET_MIDGUT": {
+        "estimate_type": "unknown",
+        "source_scope": "source_rejected_for_site_specific_value",
+        "missing_reason": "no_supported_site_specific_median",
+    },
+    "NET_RECTAL": {
+        "estimate_type": "unknown",
+        "source_scope": "source_rejected_for_site_specific_value",
+        "missing_reason": "no_supported_site_specific_median",
+    },
+    "KIRP": {"estimate_type": "approximate_literature"},
+    "UCS": {"estimate_type": "approximate_literature"},
+    "SARC_RMS_ERMS": {"estimate_type": "approximate_literature"},
+    "SARC_RMS_ARMS": {"estimate_type": "approximate_literature"},
+    "WILMS": {"estimate_type": "approximate_literature"},
+    "MCL": {"estimate_type": "approximate_literature"},
+    "HL": {"estimate_type": "approximate_literature"},
+    "BL": {"estimate_type": "approximate_literature"},
+    "T_ALL": {"estimate_type": "approximate_literature"},
+    "MTC": {"estimate_type": "panel_inferred"},
+    "CRANIO": {"estimate_type": "small_n"},
+    "HCL": {"estimate_type": "small_n"},
+    "UCEC_POLE": {"estimate_type": "order_of_magnitude"},
+    "SARC_CIC": {"source_scope": "renal_cic_rearranged_sarcoma_proxy"},
 }
 
 
@@ -51,21 +76,18 @@ def cancer_tmb_df():
 
 def _tmb_evidence_fields(row) -> dict[str, object]:
     code = str(row.get("cancer_code", ""))
+    override = _TMB_EVIDENCE_OVERRIDES.get(code, {})
     value = row.get("median_tmb_mut_mb")
     if pd.isna(value):
-        notes = str(row.get("notes", "") or "").strip()
         return {
-            "estimate_type": "missing",
-            "source_scope": "none",
-            "missing_reason": notes or "no curated median TMB",
+            "estimate_type": override.get("estimate_type", "unknown"),
+            "source_scope": override.get("source_scope", "no_direct_source"),
+            "missing_reason": override.get("missing_reason", "no_published_per_mb_median_curated"),
         }
-    source_scope, estimate_type = _TMB_SOURCE_SCOPE_OVERRIDES.get(
-        code, ("direct", "curated_estimate")
-    )
     return {
-        "estimate_type": estimate_type,
-        "source_scope": source_scope,
-        "missing_reason": None,
+        "estimate_type": override.get("estimate_type", "published_median"),
+        "source_scope": override.get("source_scope", "cancer_code_direct"),
+        "missing_reason": override.get("missing_reason", float("nan")),
     }
 
 
@@ -113,6 +135,8 @@ def _resolve_tmb_row(requested_code: str, *, inherit: bool):
 
     if requested_code in values:
         return requested_code, "direct", rows.loc[requested_code]
+    if requested_code in rows.index:
+        return requested_code, "direct_missing", rows.loc[requested_code]
     if not inherit:
         return requested_code, "missing", None
 
@@ -138,8 +162,8 @@ def resolve_tmb_source(cancer_type, *, inherit=True) -> dict:
 
     - ``requested_cancer_code``: canonical code requested by the caller.
     - ``resolved_cancer_code``: direct/source-scope/ancestor row used, if any.
-    - ``inheritance_kind``: ``"direct"``, ``"source_scope"``, ``"ancestor"``, or
-      ``"missing"``.
+    - ``inheritance_kind``: ``"direct"``, ``"direct_missing"``, ``"source_scope"``,
+      ``"ancestor"``, or ``"missing"``.
     - source/provenance fields from the selected row when available.
 
     This makes aggregate evidence explicit. For example, ``COAD_MSI`` and
