@@ -101,6 +101,31 @@ def test_fallback_prefers_pd1_then_pdl1():
     )
 
 
+def test_mpnst_pd1_response_row():
+    assert ici.cancer_ici_regimen("SARC_MPNST") == "PD-1"
+    assert ici.cancer_ici_response("SARC_MPNST") == 12.5
+
+    record = ici.cancer_ici_response_record("SARC_MPNST")
+    assert record["resolved_cancer_code"] == "SARC_MPNST"
+    assert record["selected_regimen"] == "PD-1"
+    assert record["source_anchor"] == "PMID:41760889"
+    assert record["response_numerator"] == 1
+    assert record["response_denominator"] == 8
+
+    estimates = ici.cancer_ici_response_estimates_df()
+    rows = estimates[
+        (estimates["cancer_code"] == "SARC_MPNST") & (estimates["regimen"] == "PD-1")
+    ].set_index("metric")
+    assert rows.loc["ORR", "responders"] == 1
+    assert rows.loc["ORR", "metric_n"] == 8
+    assert rows.loc["CBR", "value"] == 12.5
+    assert rows.loc["DCR", "responders"] == 5
+    assert rows.loc["PFS", "value"] == 3.9
+    assert rows.loc["PFS", "ci_high"] == 8.1
+    assert rows.loc["OS", "value"] == 7.3
+    assert rows.loc["OS", "ci_high"] == 26.3
+
+
 def test_maps_and_alias():
     assert ici.cancer_ici_response("melanoma") == ici.cancer_ici_response("SKCM")
     full = ici.cancer_ici_response()

@@ -19,6 +19,16 @@ def test_apd1_resolves_alias():
     assert apd1.cancer_apd1_response("SKCM") > 0
 
 
+def test_mpnst_apd1_response_row():
+    assert apd1.cancer_apd1_response("SARC_MPNST") == 12.5
+    record = apd1.cancer_apd1_response_record("SARC_MPNST")
+    assert record["resolved_cancer_code"] == "SARC_MPNST"
+    assert record["selected_regimen"] == "PD-1"
+    assert record["source_anchor"] == "PMID:41760889"
+    assert record["response_numerator"] == 1
+    assert record["response_denominator"] == 8
+
+
 def test_apd1_inherits_from_parent():
     mapping = apd1.cancer_apd1_response()
     reg = apd1.cancer_type_registry()
