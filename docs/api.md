@@ -11,10 +11,11 @@ pirlygenes owns purpose-specific gene sets and panels; trufflepig owns
 per-sample interpretation, QC narration, and rule firing. As a rule of thumb,
 source-anchored measurements with denominators, confidence intervals, cohorts,
 PMIDs/DOIs, or shared ontology implications belong in oncoref. Opinionated gene
-selections belong in pirlygenes. One-sample rules belong in trufflepig. When a
-missing data field, gene universe, bundle-integrity rule, or source-QC decision
-affects shared reference artifacts, the durable fix should live or be exposed
-here rather than only in a downstream compatibility layer.
+selections and target-to-therapy registries belong in pirlygenes. One-sample
+rules belong in trufflepig. When a missing data field, gene universe,
+bundle-integrity rule, or source-QC decision affects shared reference artifacts,
+the durable fix should live or be exposed here rather than only in a downstream
+compatibility layer.
 
 ## Cancer Vocabulary
 
@@ -357,8 +358,9 @@ but it is not the clean-TPM biological denominator.
 - `oncoref.incidence` — incidence/mortality burden and burden categories.
 - `oncoref.fusions` — defining fusions and partner-family lookups.
 - `oncoref.response_signatures` — legacy/compatibility response-signature
-  surface used by oncoref plots. New therapy-response signature panels belong in
-  pirlygenes unless they are recast as source-anchored empirical fact tables.
+  surface used by oncoref plots. Treat it as transitional: new or extended
+  therapy-response signature panels belong in pirlygenes unless they are recast
+  as source-anchored empirical fact/provenance rows.
 
 ## Data Management
 

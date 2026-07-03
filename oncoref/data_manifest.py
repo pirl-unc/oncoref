@@ -23,8 +23,8 @@ Ownership rule:
   oncoref owns empirical base facts and reference mechanics: canonical gene IDs,
   cancer ontology, reference expression/normalization, epidemiology, TMB, ICI/aPD1,
   source-anchored CTA facts, and measurement/provenance tables. pirlygenes owns
-  purpose-specific gene sets/panels. trufflepig owns per-sample rules and QC
-  interpretation.
+  purpose-specific gene sets/panels and target-to-therapy registries. trufflepig
+  owns per-sample rules and QC interpretation.
 
 Held buckets (oncoref domain):
   WHEEL     — small base-layer tables shipped in the wheel (no fetch). A
@@ -194,7 +194,7 @@ SOURCE: dict[str, tuple[str, str]] = {
 PLANNED: dict[str, tuple[str, str]] = {
     "therapy-benefit-toxicity-evidence": (
         "therapy-evidence",
-        "source-anchored therapy benefit/toxicity fact rows; not therapy signature panels",
+        "source-anchored therapy benefit/toxicity fact rows; not target registries or panels",
     ),
 }
 
@@ -225,7 +225,7 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "cancer-response-signatures": (
         "legacy-compat",
-        "legacy small response-signature surface; new therapy signature panels belong in pirlygenes",
+        "transitional response-signature surface; new/extended therapy panels belong in pirlygenes",
     ),
 }
 

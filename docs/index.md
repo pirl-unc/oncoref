@@ -23,7 +23,8 @@ module map, with examples and notes about compatibility modules.
   usually belongs here.
 - **pirlygenes**: curated gene selections. Use it for lineage/family/compartment
   panels, discriminators, surfaceome, TME and stem-cell markers, response
-  signature panels, and other purpose-specific gene sets keyed to oncoref IDs.
+  signature panels, target-to-therapy registries, and other purpose-specific
+  gene sets keyed to oncoref IDs.
 - **trufflepig**: per-sample application. Use it for sample QC narration,
   library-prep/source warnings, deconvolution, scoring, and tumor-sample rules.
 
@@ -59,7 +60,7 @@ ici_response.best_available_ici_response("COAD_MSI")
 | Normalization | [`oncoref.normalization`](api.md#expression-and-normalization), [`oncoref.gene_families`](api.md#expression-and-normalization) | Clean TPM, housekeeping normalization, technical-RNA filtering, normalization/QC reference families |
 | Genes and proteoforms | [`oncoref.gene_ids`](api.md#genes-and-proteoforms), [`oncoref.genome`](api.md#genes-and-proteoforms), [`oncoref.proteoforms`](api.md#genes-and-proteoforms) | Gene ID resolution, Ensembl lookup, proteoform grouping |
 | Other references | [`oncoref.tmb`](api.md#burden-tmb-fusions-and-signatures), [`oncoref.incidence`](api.md#burden-tmb-fusions-and-signatures), [`oncoref.fusions`](api.md#burden-tmb-fusions-and-signatures) | TMB, incidence/mortality burden, defining fusions |
-| Legacy compatibility | [`oncoref.response_signatures`](api.md#burden-tmb-fusions-and-signatures) | Small historical response-signature surface; new therapy-signature panels belong in pirlygenes |
+| Legacy compatibility | [`oncoref.response_signatures`](api.md#burden-tmb-fusions-and-signatures) | Transitional historical response-signature surface; new or extended therapy-signature panels belong in pirlygenes |
 | Data management | [`oncoref.catalog`](api.md#data-management), [`oncoref.data_bundle`](api.md#data-management), [`oncoref.reference_data`](api.md#data-management), [`oncoref.hpa`](api.md#data-management) | Dataset inventory, download/cache status, HPA reference data |
 
 ## Install

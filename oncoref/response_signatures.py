@@ -14,7 +14,8 @@
 
 These helpers remain importable for existing callers and oncoref's historical
 plots, but they are not the future home for therapy-response signature curation.
-Purpose-specific response panels belong in pirlygenes. oncoref should only own a
+Purpose-specific response panels belong in pirlygenes, and this compatibility
+surface should move there rather than grow in oncoref. oncoref should only own a
 future response-signature table if it is recast as a source-anchored empirical
 fact/provenance table rather than a marker-panel catalog.
 

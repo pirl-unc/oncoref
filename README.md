@@ -24,9 +24,9 @@ Newcomers should think of the stack as three layers:
 - [**pirlygenes**](https://github.com/pirl-unc/pirlygenes) owns curated gene
   sets and panels: which genes are useful for a purpose. That includes
   lineage/family/compartment/supertype panels, discriminators, surfaceome, TME
-  and stem-cell markers, response-signature panels, and other opinionated
-  selections keyed to oncoref cancer codes and gene IDs. An empty set can be a
-  valid pirlygenes answer.
+  and stem-cell markers, response-signature panels, target-to-therapy registries,
+  and other opinionated selections keyed to oncoref cancer codes and gene IDs. An
+  empty set can be a valid pirlygenes answer.
 - [**trufflepig**](https://github.com/pirl-unc/trufflepig) owns per-sample
   interpretation: QC narration, library-prep/source warnings, deconvolution,
   scoring, and rule tables that fire against one tumor sample.
@@ -143,8 +143,9 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   `None` until then).
 - **Legacy/compat response signatures** — `oncoref.response_signatures` ships a
   small historical checkpoint-response signature surface used by oncoref plots.
-  New therapy-response signature panels belong in pirlygenes unless they are
-  recast as source-anchored empirical fact tables.
+  Treat it as transitional: new therapy-response signature panels belong in
+  pirlygenes, and this small surface should not be extended in oncoref unless it
+  is recast as source-anchored empirical fact/provenance rows.
 - **Plots** (`pip install oncoref[plots]`) — `oncoref.plots.apd1_vs_tmb`,
   `apd1_orr_bars`, `incidence_vs_mortality`, the CTA/coverage figures, and
   `oncoref.cta_curation_plots.render`.
