@@ -237,6 +237,13 @@ contracts:
   `remapped_to_oncoref` rows with their legacy pirlygenes ENSG IDs. This is
   intentionally a presentation shim: it does not synthesize missing rows or alter
   expression values.
+- Gene-level reference, representative, and percentile readers attach
+  `df.attrs["gene_universe_delta_summary"]` and
+  `df.attrs["gene_universe_delta_n"]` for the requested cohort/product. These
+  attrs summarize the known pirlygenes/oncoref row-universe deltas that still
+  apply to the returned artifact, so migration wrappers can separate remapped
+  rows, missing upstream data, and intentional oncoref-only rows without
+  reimplementing the audit-table matching logic.
 - Missing percentile shards still raise by default. Use
   `on_missing="empty"` to return an empty but schema-stable frame with
   `df.attrs["missing_reason"]`, which is useful for compatibility adapters that
@@ -257,9 +264,11 @@ that are known but absent from the current output, representative-sample rows
 missing from oncoref, and the full current set of oncoref-only representative
 technical/noncoding, immune-receptor, Y-linked, and unresolved extra rows.
 Use `expression.expression_artifact_gene_universe_delta_summary()` for counts by
-product/cohort/status. This table is intentionally provenance: it makes
-differences explicit for migration code, but does not synthesize missing
-expression rows or alter artifact values.
+product/cohort/status, or
+`expression.expression_artifact_gene_universe_delta_report(product, cancer_types)`
+for the compact request-scoped report used by accessor attrs. This table is
+intentionally provenance: it makes differences explicit for migration code, but
+does not synthesize missing expression rows or alter artifact values.
 
 Clean TPM has one public compartment contract:
 

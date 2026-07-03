@@ -605,6 +605,127 @@ def expression_artifact_gene_universe_delta_summary() -> pd.DataFrame:
     )
 
 
+_DELTA_REPORT_COLUMNS = [
+    "accessor",
+    "product",
+    "cancer_code",
+    "delta_kind",
+    "status",
+    "n",
+    "legacy_ensembl_gene_ids",
+    "oncoref_ensembl_gene_ids",
+    "symbols",
+    "issues",
+]
+
+
+def _delta_source_product(product: str) -> str:
+    aliases = {
+        "cancer_reference_expression": "cohort_gene_percentiles",
+        "cohort_gene_percentiles": "cohort_gene_percentiles",
+        "representative_cohort_samples": "representative_cohort_samples",
+    }
+    try:
+        return aliases[str(product)]
+    except KeyError as e:
+        allowed = "', '".join(sorted(aliases))
+        raise ValueError(f"product must be one of '{allowed}'") from e
+
+
+def _resolve_delta_report_codes(cancer_types: str | Iterable[str] | None) -> list[str] | None:
+    if cancer_types is None:
+        return None
+    if isinstance(cancer_types, str):
+        requested = [cancer_types]
+    else:
+        requested = list(cancer_types)
+    if not requested:
+        return []
+    return _resolve_cancer_types(requested, expand_aggregates=True) or []
+
+
+def _filter_delta_rows_by_codes(df: pd.DataFrame, codes: list[str] | None) -> pd.DataFrame:
+    if codes is None:
+        return df
+    if not codes:
+        return df.iloc[0:0].copy()
+    code_set = set(codes)
+
+    def _matches(cell: object) -> bool:
+        cell_codes = {c for c in str(cell or "").split(";") if c}
+        return bool(cell_codes & code_set)
+
+    return df[df["cancer_code"].map(_matches)].copy()
+
+
+def _join_unique(values: pd.Series) -> str:
+    out = sorted({str(v) for v in values if pd.notna(v) and str(v)})
+    return ";".join(out)
+
+
+def _expression_artifact_gene_universe_delta_report_for_codes(
+    product: str,
+    codes: list[str] | None,
+) -> pd.DataFrame:
+    source_product = _delta_source_product(product)
+    df = expression_artifact_gene_universe_deltas(product=source_product)
+    df = _filter_delta_rows_by_codes(df, codes)
+    if df.empty:
+        out = pd.DataFrame(columns=_DELTA_REPORT_COLUMNS)
+    else:
+        grouped = df.groupby(["product", "cancer_code", "delta_kind", "status"], dropna=False)
+        out = grouped.agg(
+            n=("status", "size"),
+            legacy_ensembl_gene_ids=("legacy_ensembl_gene_id", _join_unique),
+            oncoref_ensembl_gene_ids=("oncoref_ensembl_gene_id", _join_unique),
+            symbols=("symbol", _join_unique),
+            issues=("issue", _join_unique),
+        ).reset_index()
+        out.insert(0, "accessor", str(product))
+        out = out[_DELTA_REPORT_COLUMNS]
+    out.attrs["comparison"] = "pirlygenes_5.23.2_vs_oncoref_5.23.3"
+    out.attrs["issues"] = ["#191", "#193"]
+    out.attrs["requested_cancer_codes"] = None if codes is None else list(codes)
+    return out
+
+
+def expression_artifact_gene_universe_delta_report(
+    product: str,
+    cancer_types: str | Iterable[str] | None = None,
+) -> pd.DataFrame:
+    """Request-scoped row-universe delta report for expression accessors.
+
+    This is a compact companion to
+    :func:`expression_artifact_gene_universe_deltas`. It filters the known
+    pirlygenes/oncoref row-set audit to the accessor/product and requested cancer
+    codes, then returns counts by ``delta_kind`` and ``status`` with the affected
+    legacy/oncoref identifiers summarized. It does not filter, synthesize, or alter
+    expression values.
+
+    ``product="cancer_reference_expression"`` reports against the underlying
+    ``cohort_gene_percentiles`` artifact used by clean-TPM reference-expression
+    modes. Empty ``cancer_types`` is preserved as an empty report.
+    """
+    codes = _resolve_delta_report_codes(cancer_types)
+    return _expression_artifact_gene_universe_delta_report_for_codes(product, codes)
+
+
+def _attach_gene_universe_delta_attrs(
+    df: pd.DataFrame,
+    *,
+    product: str,
+    cancer_codes: Iterable[str],
+) -> None:
+    report = _expression_artifact_gene_universe_delta_report_for_codes(
+        product, [str(code) for code in cancer_codes]
+    )
+    records = report.to_dict("records")
+    df.attrs["gene_universe_delta_summary"] = records
+    df.attrs["gene_universe_delta_n"] = int(report["n"].sum()) if "n" in report else 0
+    df.attrs["gene_universe_delta_comparison"] = report.attrs["comparison"]
+    df.attrs["gene_universe_delta_issues"] = report.attrs["issues"]
+
+
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
 SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v2"
@@ -1455,6 +1576,12 @@ def cancer_reference_expression(
         _attach_reference_expression_attrs(
             out, availability if on_missing != "omit" else None, gene_id_style=gene_id_style
         )
+        if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
+            _attach_gene_universe_delta_attrs(
+                out,
+                product="cancer_reference_expression",
+                cancer_codes=[r["cancer_code"] for r in requests],
+            )
         return out
 
     if not wide_parts:
@@ -1464,6 +1591,12 @@ def cancer_reference_expression(
     _attach_reference_expression_attrs(
         out, availability if on_missing != "omit" else None, gene_id_style=gene_id_style
     )
+    if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
+        _attach_gene_universe_delta_attrs(
+            out,
+            product="cancer_reference_expression",
+            cancer_codes=[r["cancer_code"] for r in requests],
+        )
     return out
 
 
@@ -2012,6 +2145,9 @@ def representative_cohort_samples(
                     gene_id_style=gene_id_style,
                 )
             )
+            _attach_gene_universe_delta_attrs(
+                out, product="representative_cohort_samples", cancer_codes=codes
+            )
             return out
         combined = pd.concat(wide_parts, axis=1, join="outer").sort_index()
         if combined.index.has_duplicates:  # belt-and-suspenders: one row per gene id
@@ -2034,6 +2170,9 @@ def representative_cohort_samples(
                 gene_id_style=gene_id_style,
             )
         )
+        _attach_gene_universe_delta_attrs(
+            out, product="representative_cohort_samples", cancer_codes=codes
+        )
         return out
 
     if not long_parts:
@@ -2047,6 +2186,9 @@ def representative_cohort_samples(
                 representative_id_style=representative_id_style,
                 gene_id_style=gene_id_style,
             )
+        )
+        _attach_gene_universe_delta_attrs(
+            out, product="representative_cohort_samples", cancer_codes=codes
         )
         return out
     long = pd.concat(long_parts, ignore_index=True)
@@ -2071,6 +2213,9 @@ def representative_cohort_samples(
             representative_id_style=representative_id_style,
             gene_id_style=gene_id_style,
         )
+    )
+    _attach_gene_universe_delta_attrs(
+        long, product="representative_cohort_samples", cancer_codes=codes
     )
     return long
 
@@ -2197,7 +2342,7 @@ def cohort_gene_percentiles(
     except ValueError as e:
         if on_missing != "empty" or "per-sample matrix isn't cached" not in str(e):
             raise
-        return _empty_percentile_frame(
+        out = _empty_percentile_frame(
             code=code,
             as_tpm=as_tpm,
             proteoform=proteoform,
@@ -2206,6 +2351,11 @@ def cohort_gene_percentiles(
             gene_id_style=gene_id_style,
             missing_reason=str(e),
         )
+        if not proteoform:
+            _attach_gene_universe_delta_attrs(
+                out, product="cohort_gene_percentiles", cancer_codes=[code]
+            )
+        return out
     bp_cols = sample_columns(df)
     df[bp_cols] = df[bp_cols].astype("float32")
     if as_tpm:
@@ -2228,6 +2378,10 @@ def cohort_gene_percentiles(
             gene_id_style=gene_id_style,
         )
     )
+    if not proteoform:
+        _attach_gene_universe_delta_attrs(
+            df, product="cohort_gene_percentiles", cancer_codes=[code]
+        )
     return df
 
 

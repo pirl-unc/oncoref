@@ -103,11 +103,50 @@ def test_expression_artifact_gene_universe_delta_summary():
     assert representative["n"].sum() == 249
 
 
+def test_expression_artifact_gene_universe_delta_report_scopes_requests():
+    report = expression.expression_artifact_gene_universe_delta_report(
+        "representative_cohort_samples", "PRAD"
+    )
+
+    assert report.attrs["comparison"] == "pirlygenes_5.23.2_vs_oncoref_5.23.3"
+    assert report.attrs["issues"] == ["#191", "#193"]
+    assert report.attrs["requested_cancer_codes"] == ["PRAD"]
+    assert int(report["n"].sum()) == 264
+    assert {
+        "technical_or_noncoding_extra",
+        "canonical_row_absent_from_oncoref_output",
+        "remapped_to_oncoref",
+    } <= set(report["status"])
+
+    ref_report = expression.expression_artifact_gene_universe_delta_report(
+        "cancer_reference_expression", "CLL"
+    )
+    assert set(ref_report["product"]) == {"cohort_gene_percentiles"}
+    assert int(ref_report["n"].sum()) == 20
+
+    empty = expression.expression_artifact_gene_universe_delta_report("cohort_gene_percentiles", [])
+    assert empty.empty
+    assert list(empty.columns) == [
+        "accessor",
+        "product",
+        "cancer_code",
+        "delta_kind",
+        "status",
+        "n",
+        "legacy_ensembl_gene_ids",
+        "oncoref_ensembl_gene_ids",
+        "symbols",
+        "issues",
+    ]
+
+
 def test_cohort_gene_percentiles_as_tpm(percentile_cache):
     df = expression.cohort_gene_percentiles("PRAD", as_tpm=True)
     assert list(df["Symbol"]) == ["TSPAN6", "TNMD"]
     # gene 0, p95 breakpoint should restore to ~95 tpm (stored as log1p(95)).
     assert df.loc[0, "p95"] == pytest.approx(95.0, rel=1e-2)
+    assert df.attrs["gene_universe_delta_n"] == 10
+    assert df.attrs["gene_universe_delta_issues"] == ["#191", "#193"]
 
 
 def test_cohort_gene_percentiles_log_space(percentile_cache):
@@ -467,6 +506,7 @@ def test_representatives_can_return_pirlygenes_legacy_gene_ids(monkeypatch, tmp_
     assert legacy.loc[0, "Symbol"] == "PAXX"
     assert legacy.loc[0, "PRAD_rep01"] == pytest.approx(7.0)
     assert legacy.attrs["gene_id_style"] == "pirlygenes"
+    assert legacy.attrs["gene_universe_delta_n"] == 264
     assert legacy_long.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
     assert legacy_long.attrs["gene_id_style"] == "pirlygenes"
 
@@ -1150,6 +1190,7 @@ def test_cancer_reference_expression_can_return_pirlygenes_legacy_gene_ids(monke
     assert legacy.loc[0, "Symbol"] == "PAXX"
     assert legacy.loc[0, "expression"] == pytest.approx(canonical.loc[0, "expression"])
     assert legacy.attrs["gene_id_style"] == "pirlygenes"
+    assert legacy.attrs["gene_universe_delta_n"] == 10
     assert wide.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
     assert wide.attrs["gene_id_style"] == "pirlygenes"
 
