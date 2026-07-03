@@ -10,13 +10,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""A small curated set of anti-PD-1 response/resistance expression signatures.
+"""Legacy compatibility surface for a small checkpoint-response signature set.
 
-Cancer-type-level reference describing the *biology* of checkpoint response — the
-companion to the aPD1 ORR table oncoref already owns. Deliberately a **few**
-foundational, well-cited signatures (T-cell-inflamed / IFN-γ, cytotoxic effector,
-MHC-I antigen presentation, TGF-β immune exclusion), not pirlygenes' full
-therapy-signature catalog: oncoref stays the base layer, not the analysis layer.
+These helpers remain importable for existing callers and oncoref's historical
+plots, but they are not the future home for therapy-response signature curation.
+Purpose-specific response panels belong in pirlygenes, and this compatibility
+surface should move there rather than grow in oncoref. oncoref should only own a
+future response-signature table if it is recast as a source-anchored empirical
+fact/provenance table rather than a marker-panel catalog.
 
 ``cancer-response-signatures.csv``: ``signature, gene_symbol, direction``
 (``positive`` = response-associated, ``negative`` = resistance-associated),

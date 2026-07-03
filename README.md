@@ -9,6 +9,34 @@ RNA-seq expression, HPA normal-tissue expression, and HPA-derived
 cancer-testis antigen references — behind one small Python API, a data
 fetch/cache CLI, and a set of reference plots.
 
+## Where oncoref fits
+
+The openvax/PIRL tools are split by ownership boundary, not by file format.
+Newcomers should think of the stack as three layers:
+
+- **oncoref** is the empirical base: what is true, measured, or canonically named
+  about cancer types, cohorts, genes, and reference datasets. It owns gene
+  identity and canonicalization, the cancer-type ontology/registry, expression
+  reference data and normalization, epidemiology, TMB, ICI/aPD1 response, and
+  source-anchored CTA facts. If a row has an `n`, a confidence interval, a
+  source cohort, or a PMID/DOI anchoring a measurement, it is usually an oncoref
+  fact.
+- [**pirlygenes**](https://github.com/pirl-unc/pirlygenes) owns curated gene
+  sets and panels: which genes are useful for a purpose. That includes
+  lineage/family/compartment/supertype panels, discriminators, surfaceome, TME
+  and stem-cell markers, response-signature panels, target-to-therapy registries,
+  and other opinionated selections keyed to oncoref cancer codes and gene IDs. An
+  empty set can be a valid pirlygenes answer.
+- [**trufflepig**](https://github.com/pirl-unc/trufflepig) owns per-sample
+  interpretation: QC narration, library-prep/source warnings, deconvolution,
+  scoring, and rule tables that fire against one tumor sample.
+
+That division keeps the dependency direction simple: pirlygenes and trufflepig
+can depend on oncoref, but oncoref never imports its consumers. When a shared
+fact is wrong, incomplete, or poorly anchored, fix it in oncoref. When a panel
+or rule is purpose-specific, keep it in the downstream package and key it to
+oncoref's ontology and gene identifiers.
+
 ## oncoref is the base layer
 
 `oncoref` is **designed as the base layer** of the openvax/PIRL stack — the
@@ -101,7 +129,8 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 - **CTA coverage / peptides** — `oncoref.cta_coverage` for patient coverage and
   `oncoref.cta_peptides` for CTA-specific 9-mer count maps and load.
 - **Generic antigen-panel coverage** — `oncoref.antigen_coverage` for explicit
-  non-CTA panels.
+  non-CTA gene lists supplied by the caller. This computes coverage for a panel;
+  it does not make oncoref the owner of downstream panel curation.
 - **HPA normal tissue** — `hpa_rna_consensus`, `hpa_normal_tissue` (IHC),
   `hpa_single_cell`, and per-gene lookups (`gene_tissue_ntpm`,
   `gene_protein_tissues`, `gene_cell_type_ntpm`) over HPA v23, fetched on demand
@@ -112,6 +141,11 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   package, but resolution needs a downloaded human release once:
   `pyensembl install --release 111 --species homo_sapiens` (the accessors return
   `None` until then).
+- **Legacy/compat response signatures** — `oncoref.response_signatures` ships a
+  small historical checkpoint-response signature surface used by oncoref plots.
+  Treat it as transitional: new therapy-response signature panels belong in
+  pirlygenes, and this small surface should not be extended in oncoref unless it
+  is recast as source-anchored empirical fact/provenance rows.
 - **Plots** (`pip install oncoref[plots]`) — `oncoref.plots.apd1_vs_tmb`,
   `apd1_orr_bars`, `incidence_vs_mortality`, the CTA/coverage figures, and
   `oncoref.cta_curation_plots.render`.

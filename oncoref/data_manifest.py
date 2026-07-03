@@ -19,17 +19,26 @@ asserts the buckets partition the frozen pirlygenes inventory exhaustively and
 disjointly — so as oncoref absorbs pirlygenes, nothing is silently dropped or
 double-owned.
 
+Ownership rule:
+  oncoref owns empirical base facts and reference mechanics: canonical gene IDs,
+  cancer ontology, reference expression/normalization, epidemiology, TMB, ICI/aPD1,
+  source-anchored CTA facts, and measurement/provenance tables. pirlygenes owns
+  purpose-specific gene sets/panels and target-to-therapy registries. trufflepig
+  owns per-sample rules and QC interpretation.
+
 Held buckets (oncoref domain):
-  WHEEL     — small curated tables shipped in the wheel (no fetch).
+  WHEEL     — small base-layer tables shipped in the wheel (no fetch). A
+              ``legacy-compat`` category marks shipped historical surfaces that
+              remain importable but are not the intended future ownership boundary.
   BUNDLE    — heavy expression artifacts in the version-pinned release tarball.
   HPA       — Human Protein Atlas reference tables fetched per-source on demand.
   SOURCE    — the raw per-sample TPM matrices (a separate large optional bundle).
-  PLANNED   — oncoref-domain tables still to port (they feed the normalization
-              / CTA-regeneration / ontology phases).
+  PLANNED   — oncoref-domain fact tables still to port.
   SUPERSEDED— a pirlygenes table oncoref replaced with its own regenerated one.
 
-OUT_OF_SCOPE — pirlygenes data that is NOT oncoref's domain (target selection,
-  therapy/modality, surfaceome, analysis gene sets) and stays in tsarina/hitlist.
+OUT_OF_SCOPE — pirlygenes or trufflepig data that is NOT oncoref's domain:
+  target-selection panels, marker/signature gene sets, therapy modality catalogs,
+  sample-rule tables, and artifact/QC interpretation rules.
 
 The catalog (:mod:`oncoref.catalog`) manages the fetchable subset; this module
 is the inventory + classification.
@@ -74,18 +83,50 @@ WHEEL: dict[str, tuple[str, str]] = {
     "extra-tx-mappings": ("gene-id", "supplemental transcript→gene mappings"),
     "cdna-identical-gene-groups": ("gene-id", "cDNA-identical gene groups"),
     "proteoform-collapse-overrides": ("gene-id", "manual proteoform-collapse overrides"),
-    # ontology metadata (R-onto / O5)
-    "cancer-key-genes": ("ontology", "per-type biomarkers + therapy targets"),
-    "cancer-driver-genes": ("ontology", "per-type driver genes"),
-    "cancer-driver-variants": ("ontology", "per-type driver variants"),
-    "cancer-type-genes": ("ontology", "role-stratified per-type genes"),
-    "cancer-viral-antigens": ("ontology", "per-oncovirus targetable antigens"),
-    "disease-state-rules": ("ontology", "narrative disease-state rules"),
-    "narrative-gene-sets": ("ontology", "named narrative gene sets"),
+    # Legacy compatibility tables imported before the stack boundary was clarified.
+    # Keep shipped/readable for old callers, but do not treat them as the future
+    # oncoref ownership surface for marker panels, target selection, or sample rules.
+    "cancer-key-genes": (
+        "legacy-compat",
+        "legacy per-type biomarker/target rows; future purpose-specific panels live downstream",
+    ),
+    "cancer-driver-genes": (
+        "legacy-compat",
+        "legacy per-type driver-gene rows; source-anchored fact model still unresolved",
+    ),
+    "cancer-driver-variants": (
+        "legacy-compat",
+        "legacy per-type driver-variant rows; source-anchored fact model still unresolved",
+    ),
+    "cancer-type-genes": (
+        "legacy-compat",
+        "legacy role-stratified per-type gene rows; not a general panel-ownership surface",
+    ),
+    "cancer-viral-antigens": (
+        "legacy-compat",
+        "legacy per-oncovirus targetable-antigen rows; target-selection curation lives downstream",
+    ),
+    "disease-state-rules": (
+        "legacy-compat",
+        "legacy narrative disease-state rules; per-sample rule ownership belongs downstream",
+    ),
+    "narrative-gene-sets": (
+        "legacy-compat",
+        "legacy named narrative gene sets; purpose-specific gene-set ownership belongs to pirlygenes",
+    ),
     "degenerate-subtype-pairs": ("ontology", "expression-degenerate subtype pairs"),
-    "rare-cancer-fusion-rules": ("ontology", "direct fusion rules for rare cancers"),
-    "fusion-surrogate-expression": ("ontology", "expression surrogates for fusions"),
-    "fusion-expression-effects": ("ontology", "downstream-expression rules per fusion"),
+    "rare-cancer-fusion-rules": (
+        "legacy-compat",
+        "legacy direct fusion rules for rare cancers; per-sample interpretation belongs downstream",
+    ),
+    "fusion-surrogate-expression": (
+        "legacy-compat",
+        "legacy fusion-expression surrogate rows; sample-rule use belongs downstream",
+    ),
+    "fusion-expression-effects": (
+        "legacy-compat",
+        "legacy downstream-expression rules per fusion; sample-rule use belongs downstream",
+    ),
     # expression-source metadata + genomics (R-exprmeta)
     "cancer-expression-source-candidates": ("expression", "candidate expression sources per type"),
     "cancer-frameshift-burden": ("genomics", "per-type frameshift-indel burden"),
@@ -149,11 +190,13 @@ SOURCE: dict[str, tuple[str, str]] = {
     "per-sample-tpm-matrices": ("expression", "raw per-sample cohort TPM (build inputs)"),
 }
 
-#: {name: (category, description)} — oncoref-domain tables still to port.
-#: oncoref-domain tables still to port. Empty — every pirlygenes table in
-#: oncoref's domain is now captured (the remaining gap is the per-sample
-#: matrices in SOURCE, distributed per cohort).
-PLANNED: dict[str, tuple[str, str]] = {}
+#: {name: (category, description)} — oncoref-domain fact tables still to port.
+PLANNED: dict[str, tuple[str, str]] = {
+    "therapy-benefit-toxicity-evidence": (
+        "therapy-evidence",
+        "source-anchored therapy benefit/toxicity fact rows; not target registries or panels",
+    ),
+}
 
 #: pirlygenes tables oncoref replaced with its own regenerated equivalent.
 SUPERSEDED: dict[str, str] = {
@@ -181,13 +224,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "HPA-stable biological housekeeping denominator candidates for clean TPM",
     ),
     "cancer-response-signatures": (
-        "response",
-        "curated aPD1 response/resistance expression signatures (T-cell-inflamed, TGF-β, …)",
+        "legacy-compat",
+        "transitional response-signature surface; new/extended therapy panels belong in pirlygenes",
     ),
 }
 
-#: pirlygenes data that is NOT oncoref's domain — target selection / therapy /
-#: surfaceome / analysis gene sets. These stay in tsarina / hitlist.
+#: pirlygenes/trufflepig data that is NOT oncoref's domain — target selection /
+#: therapy modality catalogs, marker/signature panels, surfaceome, and per-sample
+#: interpretation/rule tables. These stay downstream and key to oncoref IDs.
 OUT_OF_SCOPE: frozenset[str] = frozenset(
     {
         # therapeutic modality / drug data
@@ -204,7 +248,6 @@ OUT_OF_SCOPE: frozenset[str] = frozenset(
         "surface-proteins",
         "cancer-surfaceome",
         # therapy signatures / evidence
-        "therapy-benefit-toxicity-evidence",
         "therapy-response-signatures",
         "estimate-signatures",
         "immune-receptor-segments",
@@ -318,10 +361,10 @@ PIRLYGENES_DATA: frozenset[str] = frozenset(
 
 
 def captured() -> set[str]:
-    """oncoref-domain datasets already held (wheel + bundle + superseded)."""
+    """Datasets already held or shipped for compatibility."""
     return set(WHEEL) | set(BUNDLE) | set(SUPERSEDED)
 
 
 def in_scope() -> set[str]:
-    """Every oncoref-domain dataset — captured plus still-planned."""
+    """Base-layer inventory: captured datasets plus still-planned fact tables."""
     return captured() | set(PLANNED)

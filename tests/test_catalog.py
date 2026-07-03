@@ -280,12 +280,16 @@ def test_inventory_wheel_always_available():
     assert wheel and all(r["available"] for r in wheel)
 
 
-def test_planned_fully_captured():
-    # Phase R complete: no oncoref-domain table is still 'planned'.
+def test_planned_tables_are_boundary_scoped():
+    # The remaining planned table is an empirical oncoref fact surface. Marker
+    # panels, therapy-signature panels, and one-sample rules stay downstream.
     from oncoref import data_manifest
 
-    assert not data_manifest.PLANNED
-    assert not [r for r in catalog.inventory() if r["held"] == "planned"]
+    assert set(data_manifest.PLANNED) == {"therapy-benefit-toxicity-evidence"}
+    planned = [r for r in catalog.inventory() if r["held"] == "planned"]
+    assert {r["name"] for r in planned} == set(data_manifest.PLANNED)
+    assert all(not r["available"] for r in planned)
+    assert {r["category"] for r in planned} == {"therapy-evidence"}
 
 
 def test_cli_data_list_shows_full_inventory(capsys):
