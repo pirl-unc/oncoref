@@ -5,11 +5,15 @@ code should prefer the semantic submodules below. They make the domain boundary
 clear and avoid guessing whether a broad name such as `coverage` or `peptides` is
 general or CTA-specific.
 
-Package boundary: oncoref is the upstream home for shared reference mechanics
-and data that are ready to be reused across the PIRL stack. Downstream packages
-can keep package-specific curation, generated artifacts, and compatibility APIs;
-when a missing data field, gene universe, bundle-integrity rule, or source-QC
-decision affects generated artifacts, the durable fix should live or be exposed
+Package boundary: oncoref is the upstream home for empirical base facts and
+canonical identifiers that are ready to be reused across the PIRL stack.
+pirlygenes owns purpose-specific gene sets and panels; trufflepig owns
+per-sample interpretation, QC narration, and rule firing. As a rule of thumb,
+source-anchored measurements with denominators, confidence intervals, cohorts,
+PMIDs/DOIs, or shared ontology implications belong in oncoref. Opinionated gene
+selections belong in pirlygenes. One-sample rules belong in trufflepig. When a
+missing data field, gene universe, bundle-integrity rule, or source-QC decision
+affects shared reference artifacts, the durable fix should live or be exposed
 here rather than only in a downstream compatibility layer.
 
 ## Cancer Vocabulary
@@ -103,10 +107,12 @@ cta_peptides.cta_specific_9mer_count_map(by="proteoform_key")
 
 ## Generic Antigen Panels
 
-- `oncoref.antigen_coverage` — explicit-gene-panel coverage helpers.
+- `oncoref.antigen_coverage` — coverage helpers for caller-supplied gene lists.
 
 Use this when the panel is not necessarily CTA. The function names require
-`gene_ids=` so a caller cannot accidentally rely on the CTA default.
+`gene_ids=` so a caller cannot accidentally rely on the CTA default. This module
+computes coverage for a supplied list; it does not make oncoref the owner of
+downstream panel curation.
 
 ```python
 from oncoref import antigen_coverage
@@ -336,7 +342,8 @@ but it is not the clean-TPM biological denominator.
 - `oncoref.proteoforms` — identical-protein paralog grouping and expression
   collapse helpers.
 - `oncoref.gene_qc` / `oncoref.gene_families` — technical-RNA and gene-family
-  classification used by normalization.
+  classification used by normalization. These are normalization/QC reference
+  families, not the general home for pirlygenes marker panels.
 
 ## Burden, TMB, Fusions, and Signatures
 
@@ -349,7 +356,9 @@ but it is not the clean-TPM biological denominator.
   “known no supported site-specific estimate” from an unmapped cancer code.
 - `oncoref.incidence` — incidence/mortality burden and burden categories.
 - `oncoref.fusions` — defining fusions and partner-family lookups.
-- `oncoref.response_signatures` — therapy-response gene signatures and scoring.
+- `oncoref.response_signatures` — legacy/compatibility response-signature
+  surface used by oncoref plots. New therapy-response signature panels belong in
+  pirlygenes unless they are recast as source-anchored empirical fact tables.
 
 ## Data Management
 
