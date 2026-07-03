@@ -15,7 +15,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from oncoref import cancer_type_registry, cancer_type_subtypes_of
+from oncoref import (
+    cancer_type_records,
+    cancer_type_registry,
+    cancer_type_subtypes_of,
+    cohort_aggregate_members,
+    cohort_registry_df,
+)
 
 _CSV = Path(__file__).resolve().parents[1] / "oncoref" / "data" / "cancer-type-registry.csv"
 
@@ -62,6 +68,44 @@ def test_parent_code_referential_integrity():
 
 def test_crc_hierarchy():
     assert set(cancer_type_subtypes_of("CRC")) >= {"COAD", "READ"}
+
+
+def test_computed_expression_sources_have_members():
+    df = pd.read_csv(_CSV, dtype=str, keep_default_na=False)
+    cohorts = cohort_registry_df().set_index("cohort_id")
+    bad: list[str] = []
+    for row in df[df["expression_source"].str.lower() == "computed"].to_dict("records"):
+        code = row["code"]
+        source_cohort = row["source_cohort"]
+        direct_members = cohort_aggregate_members(code)
+        source_members = ()
+        if source_cohort and source_cohort in cohorts.index:
+            source_members = tuple(
+                m for m in str(cohorts.loc[source_cohort, "member_cohorts"]).split(";") if m
+            )
+        if not direct_members and not source_members:
+            bad.append(code)
+    assert not bad, f"computed registry rows with no aggregate members: {bad}"
+
+
+def test_source_scoped_clinical_aggregates_are_not_expression_computed():
+    records = cancer_type_records(["CRC_MSI", "NSCLC"]).set_index("code")
+    assert records.loc["CRC_MSI", "expression_source"] == "curated"
+    assert records.loc["CRC_MSI", "source_cohort"] == "LITERATURE_CURATED"
+    assert bool(records.loc["CRC_MSI", "has_expression_matrix"]) is False
+
+    assert records.loc["NSCLC", "expression_source"] == "curated"
+    assert records.loc["NSCLC", "source_cohort"] == "LITERATURE_CURATED"
+    assert bool(records.loc["NSCLC", "has_expression_matrix"]) is False
+
+
+def test_nec_merkel_registry_points_to_built_expression_source():
+    records = cancer_type_records(["NEC_MERKEL"]).set_index("code")
+    assert records.loc["NEC_MERKEL", "expression_source"] == "GEO"
+    assert records.loc["NEC_MERKEL", "source_cohort"] == "GSE235092_MERKEL_2024"
+    assert records.loc["NEC_MERKEL", "source_matrix_cohort"] == "GSE235092_MERKEL_2024"
+    assert records.loc["NEC_MERKEL", "source_matrix_n_samples"] == 91
+    assert bool(records.loc["NEC_MERKEL", "has_expression_matrix"]) is True
 
 
 def test_registry_has_expected_scale():
