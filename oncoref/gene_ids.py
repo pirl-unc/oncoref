@@ -81,9 +81,17 @@ def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> 
         return None
     if s.upper().startswith("ENSG"):
         return resolve_ensembl_id(s)
+    symbol_index = _canonical_symbol_index()
+    direct = symbol_index.get(s.upper())
+    if direct is not None:
+        return direct
+    official = resolve_symbol(s)
+    resolved = symbol_index.get(official.upper())
+    if resolved is not None:
+        return resolved
     from .genome import canonical_gene_id_and_name  # lazy: avoids genome/pyensembl dep here
 
-    gid, _ = canonical_gene_id_and_name(s)
+    gid, _ = canonical_gene_id_and_name(official)
     return gid
 
 
@@ -92,6 +100,67 @@ def canonical_gene_ids(
 ) -> list[str | None]:
     """Batch :func:`canonical_gene_id` → one canonical ENSG (or ``None``) per input."""
     return [canonical_gene_id(x, source_version=source_version) for x in identifiers]
+
+
+def canonical_gene_symbol(identifier: str, *, source_version: str | None = None) -> str | None:
+    """Map any supported gene identifier to its canonical display symbol.
+
+    This is the symbol companion to :func:`canonical_gene_id`: Ensembl ids are
+    migrated through the alias/cross-release table, and symbols or synonyms are
+    resolved through the same any-identifier path. Returns ``None`` when the input
+    cannot be mapped into oncoref's canonical gene space.
+    """
+    gid = canonical_gene_id(identifier, source_version=source_version)
+    if gid is None:
+        return None
+    hit = _canonical_gene_index().get(resolve_ensembl_id(gid))
+    return hit[0] if hit else None
+
+
+def canonical_gene_symbols(
+    identifiers: list[str], *, source_version: str | None = None
+) -> list[str | None]:
+    """Batch :func:`canonical_gene_symbol` → one canonical symbol (or ``None``) per input."""
+    return [canonical_gene_symbol(x, source_version=source_version) for x in identifiers]
+
+
+def _looks_like_ensembl_gene_id(identifier: str) -> bool:
+    return unversioned(identifier).upper().startswith("ENSG")
+
+
+def display_gene_name(
+    identifier: str | None, *, source_version: str | None = None, fallback: bool = True
+) -> str | None:
+    """Report-facing gene label for an arbitrary identifier.
+
+    Prefer the canonical oncoref symbol. If a non-Ensembl text label cannot be
+    resolved and ``fallback=True``, return the stripped input after synonym cleanup
+    so reports can still show the caller's label. Unknown Ensembl ids return
+    ``None`` rather than pretending the id is a gene symbol.
+    """
+    if identifier is None:
+        return None
+    raw = str(identifier).strip()
+    if not raw:
+        return None
+    symbol = canonical_gene_symbol(raw, source_version=source_version)
+    if symbol is not None:
+        return symbol
+    if not fallback or _looks_like_ensembl_gene_id(raw):
+        return None
+    return resolve_symbol(raw).strip() or None
+
+
+def short_gene_name(
+    identifier: str | None, *, source_version: str | None = None, fallback: bool = True
+) -> str | None:
+    """Compact report label for a gene identifier.
+
+    Currently this is the same stable symbol chosen by :func:`display_gene_name`.
+    It exists as an explicit public hook so downstream report code does not invent
+    its own resolver or silently bypass oncoref's canonical gene space.
+    """
+    return display_gene_name(identifier, source_version=source_version, fallback=fallback)
 
 
 def canonical_gene_space() -> pd.DataFrame:
@@ -111,6 +180,18 @@ def _canonical_gene_index() -> dict[str, tuple[str, str]]:
         _unversioned(str(g)): (str(s), str(b))
         for g, s, b in zip(df["ensembl_gene_id"], df["symbol"], df["biotype"])
     }
+
+
+@lru_cache(maxsize=1)
+def _canonical_symbol_index() -> dict[str, str]:
+    """``{official_symbol.upper(): canonical_ensembl_gene_id}`` over canonical genes."""
+    df = get_data("canonical-gene-space", copy=False)
+    out: dict[str, str] = {}
+    for gid, symbol in zip(df["ensembl_gene_id"], df["symbol"]):
+        sym = str(symbol).strip()
+        if sym:
+            out.setdefault(sym.upper(), _unversioned(str(gid)))
+    return out
 
 
 def is_canonical_gene(gene_id: str) -> bool:

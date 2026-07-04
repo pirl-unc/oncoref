@@ -135,10 +135,12 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   `hpa_single_cell`, and per-gene lookups (`gene_tissue_ntpm`,
   `gene_protein_tissues`, `gene_cell_type_ntpm`) over HPA v23, fetched on demand
   (`oncoref data fetch hpa`).
-- **Genome reference** — `canonical_gene_id_and_name`, `find_gene_id_by_name`,
-  `find_gene_name_from_ensembl_{gene,transcript}_id`, `aggregate_gene_expression`
-  (pyensembl-backed symbol ↔ Ensembl-ID resolution). pyensembl ships with the
-  package, but resolution needs a downloaded human release once:
+- **Genome reference** — `canonical_gene_id`, `canonical_gene_symbol`,
+  `display_gene_name`, `short_gene_name`, `canonical_gene_id_and_name`,
+  `find_gene_id_by_name`, `find_gene_name_from_ensembl_{gene,transcript}_id`,
+  and `aggregate_gene_expression` (symbol/synonym/legacy-Ensembl-ID ↔ canonical
+  Ensembl-ID resolution). pyensembl ships with the package, but some
+  pyensembl-backed symbol resolution needs a downloaded human release once:
   `pyensembl install --release 111 --species homo_sapiens` (the accessors return
   `None` until then).
 - **Legacy/compat response signatures** — `oncoref.response_signatures` ships a
