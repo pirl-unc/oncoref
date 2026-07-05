@@ -78,7 +78,7 @@ from .expression_builders import (
     WITHIN_SAMPLE_THRESHOLDS as _WITHIN_SAMPLE_THRESHOLD_COLS,
 )
 from .expression_engine import id_columns, sample_columns
-from .gene_ids import ensembl_id_alias_symbols, resolve_ensembl_id, unversioned
+from .gene_ids import ensembl_id_alias_symbols, gene_biotype, resolve_ensembl_id, unversioned
 from .load_dataset import _BUNDLED_DATA_DIR, _register_derived_cache, get_data
 from .normalization import clean_tpm, percentile_rank, tpm_to_housekeeping_normalized
 from .version import DATA_VERSION, SOURCE_MATRIX_VERSION
@@ -553,6 +553,79 @@ def available_percentile_cohorts(*, proteoform: bool = False, scope: str = "cta"
     return _available_cohorts(_PERCENTILES, proteoform=proteoform, scope=scope)
 
 
+_ARTIFACT_TECHNICAL_EXTRA_STATUSES = frozenset(
+    {
+        "technical_or_noncoding_extra",
+        "y_linked_extra",
+        "immune_receptor_segment_extra",
+    }
+)
+_ARTIFACT_MISSING_BIOLOGICAL_STATUSES = frozenset(
+    {
+        "canonical_replacement_absent_from_output",
+        "canonical_row_absent_from_oncoref_output",
+        "unresolved_missing_oncoref_row",
+    }
+)
+_ARTIFACT_CANONICALIZATION_STATUSES = frozenset(
+    {
+        "intentional_canonicalization",
+        "remapped_to_oncoref",
+    }
+)
+
+
+def _delta_nonempty(value: object) -> str | None:
+    text = str(value or "").strip()
+    if not text or text.lower() == "nan":
+        return None
+    return text
+
+
+def _delta_gene_biotype(row) -> str | None:
+    gene_id = _delta_nonempty(row.oncoref_ensembl_gene_id) or _delta_nonempty(
+        row.legacy_ensembl_gene_id
+    )
+    return gene_biotype(gene_id) if gene_id else None
+
+
+def _artifact_delta_class(status: object) -> str:
+    status = str(status)
+    if status in _ARTIFACT_TECHNICAL_EXTRA_STATUSES:
+        return "technical_extra"
+    if status == "unresolved_oncoref_extra":
+        return "unresolved_extra"
+    if status in _ARTIFACT_MISSING_BIOLOGICAL_STATUSES:
+        return "missing_biological"
+    if status in _ARTIFACT_CANONICALIZATION_STATUSES:
+        return "canonicalized"
+    return "unclassified"
+
+
+def _artifact_delta_consumer_action(status: object) -> str:
+    status = str(status)
+    if status in _ARTIFACT_TECHNICAL_EXTRA_STATUSES:
+        return "filter_from_signal_views"
+    if status == "unresolved_oncoref_extra":
+        return "audit_before_filtering"
+    if status in _ARTIFACT_MISSING_BIOLOGICAL_STATUSES:
+        return "restore_or_remap_in_next_bundle"
+    if status in _ARTIFACT_CANONICALIZATION_STATUSES:
+        return "accept_canonical_mapping"
+    return "audit_status"
+
+
+def _annotate_expression_artifact_gene_universe_deltas(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy()
+    statuses = out["status"].astype(str)
+    out["gene_biotype"] = [_delta_gene_biotype(row) for row in out.itertuples(index=False)]
+    out["artifact_row_class"] = statuses.map(_artifact_delta_class)
+    out["is_technical_extra"] = statuses.isin(_ARTIFACT_TECHNICAL_EXTRA_STATUSES)
+    out["is_missing_biological"] = statuses.isin(_ARTIFACT_MISSING_BIOLOGICAL_STATUSES)
+    out["recommended_consumer_action"] = statuses.map(_artifact_delta_consumer_action)
+    return out
+
+
 def expression_artifact_gene_universe_deltas(
     *,
     product: str | None = None,
@@ -564,14 +637,18 @@ def expression_artifact_gene_universe_deltas(
 
     This is a provenance/audit table, not a value-transforming compatibility shim. It
     records the known remapped, missing, and extra rows from the pirlygenes 5.23.2 vs
-    oncoref 5.23.3 parity run tracked in #191/#193 so downstream migration code can
-    distinguish intentional canonicalization from unresolved artifact differences.
+    oncoref 5.23.3 parity run tracked in #191/#193/#278 so downstream migration code can
+    distinguish intentional canonicalization, biological rows missing from oncoref
+    artifacts, and oncoref-only technical extras that should be filtered from signal
+    views until the heavy artifacts are regenerated.
 
     Optional filters are exact for ``product``, ``delta_kind``, and ``status``.
     ``cancer_type`` resolves aliases and matches semicolon-separated cohort lists in the
     table (for deltas shared by PRAD/COAD_MSI/READ_MSI, for example).
     """
-    df = get_data("expression-artifact-gene-universe-deltas")
+    df = _annotate_expression_artifact_gene_universe_deltas(
+        get_data("expression-artifact-gene-universe-deltas")
+    )
     if product is not None:
         df = df[df["product"].astype(str) == str(product)]
     if delta_kind is not None:
@@ -588,17 +665,65 @@ def expression_artifact_gene_universe_deltas(
         df = df[df["cancer_code"].map(_matches)]
     df = df.reset_index(drop=True)
     df.attrs["comparison"] = "pirlygenes_5.23.2_vs_oncoref_5.23.3"
-    df.attrs["issues"] = ["#191", "#193"]
+    df.attrs["issues"] = ["#191", "#193", "#278"]
     return df
+
+
+def expression_artifact_technical_extra_gene_ids(
+    *,
+    product: str | None = None,
+    cancer_type: str | None = None,
+) -> list[str]:
+    """Oncoref artifact row IDs that are known technical extras for a request.
+
+    This is the machine-readable subset of
+    :func:`expression_artifact_gene_universe_deltas` where ``is_technical_extra`` is
+    true: small/noncoding RNA, Y-linked rows, and immune-receptor segments that appear
+    in oncoref artifacts but are not expected in pirlygenes-compatible tumor-signal
+    views. It is an audit/filter list over the current bundle; it does not mutate
+    expression values or claim those rows have been removed from shipped shards.
+    """
+    df = expression_artifact_gene_universe_deltas(
+        product=product,
+        cancer_type=cancer_type,
+        delta_kind="oncoref_only",
+    )
+    df = df[df["is_technical_extra"]]
+    ids = {gid for gid in df["oncoref_ensembl_gene_id"].map(_delta_nonempty) if gid is not None}
+    return sorted(ids)
 
 
 def expression_artifact_gene_universe_delta_summary() -> pd.DataFrame:
     """Counts of known expression-artifact row-universe deltas by product/status."""
     df = expression_artifact_gene_universe_deltas()
     if df.empty:
-        return pd.DataFrame(columns=["product", "cancer_code", "delta_kind", "status", "n"])
+        return pd.DataFrame(
+            columns=[
+                "product",
+                "cancer_code",
+                "delta_kind",
+                "status",
+                "artifact_row_class",
+                "is_technical_extra",
+                "is_missing_biological",
+                "recommended_consumer_action",
+                "n",
+            ]
+        )
     return (
-        df.groupby(["product", "cancer_code", "delta_kind", "status"], dropna=False)
+        df.groupby(
+            [
+                "product",
+                "cancer_code",
+                "delta_kind",
+                "status",
+                "artifact_row_class",
+                "is_technical_extra",
+                "is_missing_biological",
+                "recommended_consumer_action",
+            ],
+            dropna=False,
+        )
         .size()
         .rename("n")
         .reset_index()
@@ -611,9 +736,14 @@ _DELTA_REPORT_COLUMNS = [
     "cancer_code",
     "delta_kind",
     "status",
+    "artifact_row_class",
+    "is_technical_extra",
+    "is_missing_biological",
+    "recommended_consumer_action",
     "n",
     "legacy_ensembl_gene_ids",
     "oncoref_ensembl_gene_ids",
+    "gene_biotypes",
     "symbols",
     "issues",
 ]
@@ -673,18 +803,31 @@ def _expression_artifact_gene_universe_delta_report_for_codes(
     if df.empty:
         out = pd.DataFrame(columns=_DELTA_REPORT_COLUMNS)
     else:
-        grouped = df.groupby(["product", "cancer_code", "delta_kind", "status"], dropna=False)
+        grouped = df.groupby(
+            [
+                "product",
+                "cancer_code",
+                "delta_kind",
+                "status",
+                "artifact_row_class",
+                "is_technical_extra",
+                "is_missing_biological",
+                "recommended_consumer_action",
+            ],
+            dropna=False,
+        )
         out = grouped.agg(
             n=("status", "size"),
             legacy_ensembl_gene_ids=("legacy_ensembl_gene_id", _join_unique),
             oncoref_ensembl_gene_ids=("oncoref_ensembl_gene_id", _join_unique),
+            gene_biotypes=("gene_biotype", _join_unique),
             symbols=("symbol", _join_unique),
             issues=("issue", _join_unique),
         ).reset_index()
         out.insert(0, "accessor", str(product))
         out = out[_DELTA_REPORT_COLUMNS]
     out.attrs["comparison"] = "pirlygenes_5.23.2_vs_oncoref_5.23.3"
-    out.attrs["issues"] = ["#191", "#193"]
+    out.attrs["issues"] = ["#191", "#193", "#278"]
     out.attrs["requested_cancer_codes"] = None if codes is None else list(codes)
     return out
 

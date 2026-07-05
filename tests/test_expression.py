@@ -50,6 +50,14 @@ def test_expression_artifact_gene_universe_deltas_expose_known_remaps():
     assert not paxx.empty
     assert set(paxx["symbol"]) == {"PAXX"}
     assert df.attrs["comparison"] == "pirlygenes_5.23.2_vs_oncoref_5.23.3"
+    assert df.attrs["issues"] == ["#191", "#193", "#278"]
+    assert {
+        "gene_biotype",
+        "artifact_row_class",
+        "is_technical_extra",
+        "is_missing_biological",
+        "recommended_consumer_action",
+    } <= set(df.columns)
 
 
 def test_expression_artifact_gene_universe_deltas_filter_by_product_and_code():
@@ -82,6 +90,45 @@ def test_expression_artifact_gene_universe_deltas_expose_full_representative_ext
         "intentional_canonicalization",
         "unresolved_oncoref_extra",
     } <= set(prad["status"])
+    technical = prad[prad["is_technical_extra"]]
+    assert len(technical) == 142
+    assert set(technical["artifact_row_class"]) == {"technical_extra"}
+    assert set(technical["recommended_consumer_action"]) == {"filter_from_signal_views"}
+
+
+def test_expression_artifact_gene_universe_deltas_flag_technical_and_missing_rows():
+    df = expression.expression_artifact_gene_universe_deltas()
+
+    technical = df[df["is_technical_extra"]]
+    assert len(technical) == 563
+    assert set(technical["status"]) == {
+        "technical_or_noncoding_extra",
+        "y_linked_extra",
+        "immune_receptor_segment_extra",
+    }
+    assert set(technical["artifact_row_class"]) == {"technical_extra"}
+    assert set(technical["recommended_consumer_action"]) == {"filter_from_signal_views"}
+
+    missing = df[df["is_missing_biological"]]
+    assert set(missing["status"]) == {
+        "canonical_replacement_absent_from_output",
+        "canonical_row_absent_from_oncoref_output",
+        "unresolved_missing_oncoref_row",
+    }
+    assert set(missing["artifact_row_class"]) == {"missing_biological"}
+    assert set(missing["recommended_consumer_action"]) == {"restore_or_remap_in_next_bundle"}
+
+
+def test_expression_artifact_technical_extra_gene_ids_filters_request_scope():
+    ids = expression.expression_artifact_technical_extra_gene_ids(
+        product="representative_cohort_samples",
+        cancer_type="PRAD",
+    )
+
+    assert len(ids) == 142
+    assert ids == sorted(ids)
+    assert "ENSG00000199334" in ids
+    assert "ENSG00000310560" not in ids
 
 
 def test_expression_artifact_gene_universe_delta_summary():
@@ -94,6 +141,8 @@ def test_expression_artifact_gene_universe_delta_summary():
         & (summary["status"] == "canonical_replacement_absent_from_output")
     ]
     assert hit["n"].iloc[0] == 14
+    assert hit["artifact_row_class"].iloc[0] == "missing_biological"
+    assert hit["is_missing_biological"].iloc[0]
 
     representative = summary[
         (summary["product"] == "representative_cohort_samples")
@@ -109,7 +158,7 @@ def test_expression_artifact_gene_universe_delta_report_scopes_requests():
     )
 
     assert report.attrs["comparison"] == "pirlygenes_5.23.2_vs_oncoref_5.23.3"
-    assert report.attrs["issues"] == ["#191", "#193"]
+    assert report.attrs["issues"] == ["#191", "#193", "#278"]
     assert report.attrs["requested_cancer_codes"] == ["PRAD"]
     assert int(report["n"].sum()) == 264
     assert {
@@ -117,6 +166,13 @@ def test_expression_artifact_gene_universe_delta_report_scopes_requests():
         "canonical_row_absent_from_oncoref_output",
         "remapped_to_oncoref",
     } <= set(report["status"])
+    assert (
+        report.loc[
+            report["status"].eq("technical_or_noncoding_extra"), "recommended_consumer_action"
+        ]
+        .eq("filter_from_signal_views")
+        .all()
+    )
 
     ref_report = expression.expression_artifact_gene_universe_delta_report(
         "cancer_reference_expression", "CLL"
@@ -132,9 +188,14 @@ def test_expression_artifact_gene_universe_delta_report_scopes_requests():
         "cancer_code",
         "delta_kind",
         "status",
+        "artifact_row_class",
+        "is_technical_extra",
+        "is_missing_biological",
+        "recommended_consumer_action",
         "n",
         "legacy_ensembl_gene_ids",
         "oncoref_ensembl_gene_ids",
+        "gene_biotypes",
         "symbols",
         "issues",
     ]
@@ -146,7 +207,7 @@ def test_cohort_gene_percentiles_as_tpm(percentile_cache):
     # gene 0, p95 breakpoint should restore to ~95 tpm (stored as log1p(95)).
     assert df.loc[0, "p95"] == pytest.approx(95.0, rel=1e-2)
     assert df.attrs["gene_universe_delta_n"] == 10
-    assert df.attrs["gene_universe_delta_issues"] == ["#191", "#193"]
+    assert df.attrs["gene_universe_delta_issues"] == ["#191", "#193", "#278"]
 
 
 def test_cohort_gene_percentiles_log_space(percentile_cache):
