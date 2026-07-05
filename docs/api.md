@@ -74,14 +74,18 @@ Use the gene-id helpers before building expression artifacts or joining
 downstream gene sets to oncoref references. `canonical_gene_id()` is the primary
 any-identifier entry point. `canonical_gene_symbol()`, `display_gene_name()`, and
 `short_gene_name()` use the same resolver so report code does not invent a
-separate symbol mapping.
+separate symbol mapping. `gene_identifier_mapping_coverage()` and
+`gene_identifier_mapping_summary()` make the shipped ENSG, symbol/synonym, and
+Ensembl-alias coverage explicit for migration audits; they do not claim that
+RefSeq, UniProt, or Entrez coverage is complete.
 
 ```python
-from oncoref import canonical_gene_id, canonical_gene_symbol, display_gene_name
+from oncoref import canonical_gene_id, canonical_gene_symbol, display_gene_name, gene_ids
 
 canonical_gene_id("GNB2L1")        # previous symbol -> ENSG00000204628
 canonical_gene_symbol("GNB2L1")    # previous symbol -> RACK1
 display_gene_name("ENSG00000005955")  # retired Ensembl id -> GGNBP2
+gene_ids.gene_identifier_mapping_summary()
 ```
 
 ## ICI Response

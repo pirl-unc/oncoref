@@ -240,6 +240,97 @@ def resolve_symbol(symbol: str) -> str:
     return symbol_synonyms().get(str(symbol).upper(), str(symbol))
 
 
+def gene_identifier_mapping_coverage() -> pd.DataFrame:
+    """Coverage report for oncoref's shipped gene identifier mappings.
+
+    One row per canonical gene-space entry, with explicit flags for whether its
+    canonical ENSG and symbol round-trip through the public resolver, whether any
+    prior/alt Ensembl ids resolve to it, and whether the NCBI synonym table carries
+    aliases for its current symbol. Lack of aliases is not itself an error; this
+    table makes those boundaries visible for downstream parity audits (#279).
+    """
+    out = canonical_gene_space()
+    out["ensembl_gene_id"] = out["ensembl_gene_id"].map(_unversioned)
+    out["symbol"] = out["symbol"].fillna("").astype(str).str.strip()
+    out["has_symbol"] = out["symbol"].ne("")
+
+    symbol_index = _canonical_symbol_index()
+    out["canonical_id_roundtrip"] = (
+        out["ensembl_gene_id"].map(resolve_ensembl_id).eq(out["ensembl_gene_id"])
+    )
+    out["symbol_roundtrip"] = [
+        bool(sym) and symbol_index.get(sym.upper()) == gid
+        for gid, sym in zip(out["ensembl_gene_id"], out["symbol"])
+    ]
+
+    syn_df = get_data("ncbi-symbol-synonyms", copy=False)
+    synonym_counts = (
+        syn_df.assign(_official=syn_df["official_symbol"].astype(str).str.upper())
+        .groupby("_official", sort=False)
+        .size()
+        .to_dict()
+    )
+    out["n_symbol_aliases"] = [int(synonym_counts.get(sym.upper(), 0)) for sym in out["symbol"]]
+    out["has_symbol_alias"] = out["n_symbol_aliases"].gt(0)
+
+    alias_counts: dict[str, int] = {}
+    for primary in ensembl_id_aliases().values():
+        alias_counts[primary] = alias_counts.get(primary, 0) + 1
+    out["n_ensembl_aliases"] = [int(alias_counts.get(gid, 0)) for gid in out["ensembl_gene_id"]]
+    out["has_ensembl_alias"] = out["n_ensembl_aliases"].gt(0)
+
+    def _status(row) -> str:
+        if not row.has_symbol:
+            return "missing_symbol"
+        if not row.canonical_id_roundtrip:
+            return "canonical_id_roundtrip_failed"
+        if not row.symbol_roundtrip:
+            return "symbol_roundtrip_failed"
+        return "ok"
+
+    out["mapping_status"] = [_status(row) for row in out.itertuples(index=False)]
+    return out[
+        [
+            "ensembl_gene_id",
+            "symbol",
+            "biotype",
+            "seqname",
+            "ensembl_release",
+            "has_symbol",
+            "canonical_id_roundtrip",
+            "symbol_roundtrip",
+            "n_symbol_aliases",
+            "has_symbol_alias",
+            "n_ensembl_aliases",
+            "has_ensembl_alias",
+            "mapping_status",
+        ]
+    ]
+
+
+def gene_identifier_mapping_summary() -> pd.DataFrame:
+    """One-row summary of :func:`gene_identifier_mapping_coverage`."""
+    coverage = gene_identifier_mapping_coverage()
+    syn_df = get_data("ncbi-symbol-synonyms", copy=False)
+    alias_map = ensembl_id_aliases()
+    return pd.DataFrame(
+        [
+            {
+                "n_genes": len(coverage),
+                "n_protein_coding": int(coverage["biotype"].eq("protein_coding").sum()),
+                "n_without_symbol": int((~coverage["has_symbol"]).sum()),
+                "n_canonical_id_roundtrip_failed": int((~coverage["canonical_id_roundtrip"]).sum()),
+                "n_symbol_roundtrip_failed": int((~coverage["symbol_roundtrip"]).sum()),
+                "n_with_symbol_aliases": int(coverage["has_symbol_alias"].sum()),
+                "n_with_ensembl_aliases": int(coverage["has_ensembl_alias"].sum()),
+                "n_symbol_alias_rows": len(syn_df),
+                "n_ensembl_alias_rows": len(alias_map),
+                "mapping_statuses": ";".join(sorted(coverage["mapping_status"].unique())),
+            }
+        ]
+    )
+
+
 def extra_transcript_mappings() -> pd.DataFrame:
     """Supplemental transcript→gene mappings (``transcript_id``, ``gene_symbol``,
     ``ensembl_gene_id``, ``biotype``, …). Defensive copy."""
