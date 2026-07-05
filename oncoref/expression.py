@@ -1301,7 +1301,8 @@ def per_sample_expression(
         biological view the summaries are built on);
       - ``"tpm_clean_log1p"`` — clean TPM, ``log1p``-transformed;
       - ``"tpm_clean_hk"`` — clean TPM divided per sample by the biological
-        clean-TPM housekeeping-panel geometric mean (unit-free ratio-to-baseline,
+        clean-TPM housekeeping-panel median-of-ratios size factor against the
+        fixed HPA-derived reference profile (unit-free ratio-to-baseline,
         robust to library-depth drift);
       - ``"tpm_raw"`` — the matrix as shipped (raw TPM), no normalization.
 
@@ -1382,9 +1383,11 @@ def _load_per_sample_matrix(path: str, mtime: float, normalize: str) -> pd.DataF
 
 
 def _housekeeping_normalize(df: pd.DataFrame, sample_cols) -> pd.DataFrame:
-    """Divide each clean-TPM sample column by the biological housekeeping-panel geometric
-    mean. Commutes with the proteoform sum (the denominator is per-column), so it can
-    be applied before or after collapse."""
+    """Divide each clean-TPM sample column by its housekeeping median-of-ratios factor.
+
+    The factor is per-column, so this commutes with the proteoform sum and can be
+    applied before or after collapse.
+    """
     from .normalization import tpm_to_housekeeping_normalized
 
     panel_ids = _clean_tpm_housekeeping_panel_ids()
