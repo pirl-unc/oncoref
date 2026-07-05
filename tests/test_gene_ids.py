@@ -56,9 +56,11 @@ def test_canonical_gene_id_any_identifier():
     assert g.canonical_gene_id("ENSG00000005955") == "ENSG00000278311"  # old GRCh37 id
     assert g.canonical_gene_id("ENSG00000005955.7") == "ENSG00000278311"  # version-insensitive
     assert g.canonical_gene_id("ENSG00000278311") == "ENSG00000278311"  # already canonical
+    assert g.canonical_gene_id("ensg00000141510.17") == "ENSG00000141510"  # case-insensitive
     assert g.canonical_gene_id("TP53") == "ENSG00000141510"  # direct canonical symbol
     assert g.canonical_gene_id("GNB2L1") == "ENSG00000204628"  # prior symbol -> RACK1
     assert g.canonical_gene_id("TCEB2") == "ENSG00000103363"  # prior symbol -> ELOB
+    assert g.canonical_gene_id("ENSG99999999999") is None  # unknown ENSG is not canonicalized
     assert g.canonical_gene_id("") is None and g.canonical_gene_id("   ") is None
     assert g.canonical_gene_ids(["ENSG00000005955", "ENSG00000278311"]) == [
         "ENSG00000278311",
@@ -106,6 +108,9 @@ def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
         "has_symbol",
         "canonical_id_roundtrip",
         "symbol_roundtrip",
+        "symbol_roundtrip_issue",
+        "n_genes_with_symbol",
+        "symbol_resolves_to_ensembl_gene_id",
         "n_symbol_aliases",
         "has_symbol_alias",
         "n_ensembl_aliases",
@@ -120,6 +125,10 @@ def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
     assert keyed.loc["TP53", "symbol_roundtrip"]
     assert keyed.loc["RACK1", "n_symbol_aliases"] > 0
     assert keyed.loc["GGNBP2", "n_ensembl_aliases"] > 0
+    assert (
+        coverage["symbol_roundtrip_issue"].isin({"ok", "missing_symbol", "non_unique_symbol"}).all()
+    )
+    assert coverage["symbol_roundtrip_issue"].eq("non_unique_symbol").sum() > 0
 
     summary = g.gene_identifier_mapping_summary().iloc[0]
     assert summary["n_genes"] == len(coverage)
@@ -127,7 +136,11 @@ def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
     assert summary["n_ensembl_alias_rows"] >= 6_000
     assert summary["n_without_symbol"] > 0
     assert summary["n_symbol_roundtrip_failed"] > 0
+    assert summary["n_symbol_roundtrip_failed"] == summary["n_non_unique_symbols"]
+    assert summary["n_symbol_not_resolvable"] == 0
+    assert summary["n_symbol_resolves_to_other_gene"] == 0
     assert "ok" in summary["mapping_statuses"].split(";")
+    assert "non_unique_symbol" in summary["symbol_roundtrip_issues"].split(";")
 
 
 def test_symbol_synonym_resolution():

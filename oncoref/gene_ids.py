@@ -55,6 +55,8 @@ def resolve_ensembl_id(gene_id: str) -> str:
     resolving alt-haplotype / patch copies and cross-release ID turnover through the
     shipped ensembl-id-aliases map; returns the id unchanged if it isn't an alias."""
     key = _unversioned(gene_id)
+    if key.upper().startswith("ENSG"):
+        key = key.upper()
     return ensembl_id_aliases().get(key, key)
 
 
@@ -69,7 +71,8 @@ def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> 
 
     - An ``ENSG…`` id is unversioned and run through the alias / cross-release migration
       map (:func:`resolve_ensembl_id`) — so e.g. GRCh37 ``GGNBP2`` ``ENSG00000005955`` →
-      ``ENSG00000278311``. The id is returned as-is when it's already canonical / unknown.
+      ``ENSG00000278311``. The resolved id is returned only if it is in oncoref's
+      canonical gene space; unknown Ensembl-like ids return ``None``.
     - Anything else is treated as a symbol and resolved via the installed Ensembl
       releases + NCBI synonyms (lazy import of the genome layer; needs the ``genome``
       extra). Symbol resolution already returns a canonical primary-assembly id.
@@ -80,7 +83,8 @@ def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> 
     if not s:
         return None
     if s.upper().startswith("ENSG"):
-        return resolve_ensembl_id(s)
+        resolved = resolve_ensembl_id(s)
+        return resolved if resolved in _canonical_gene_index() else None
     symbol_index = _canonical_symbol_index()
     direct = symbol_index.get(s.upper())
     if direct is not None:
@@ -253,15 +257,31 @@ def gene_identifier_mapping_coverage() -> pd.DataFrame:
     out["ensembl_gene_id"] = out["ensembl_gene_id"].map(_unversioned)
     out["symbol"] = out["symbol"].fillna("").astype(str).str.strip()
     out["has_symbol"] = out["symbol"].ne("")
+    out["_symbol_key"] = out["symbol"].str.upper()
 
     symbol_index = _canonical_symbol_index()
     out["canonical_id_roundtrip"] = (
         out["ensembl_gene_id"].map(resolve_ensembl_id).eq(out["ensembl_gene_id"])
     )
-    out["symbol_roundtrip"] = [
-        bool(sym) and symbol_index.get(sym.upper()) == gid
-        for gid, sym in zip(out["ensembl_gene_id"], out["symbol"])
+    symbol_counts = out.loc[out["has_symbol"], "_symbol_key"].value_counts().to_dict()
+    out["n_genes_with_symbol"] = [int(symbol_counts.get(sym, 0)) for sym in out["_symbol_key"]]
+    out["symbol_resolves_to_ensembl_gene_id"] = [
+        symbol_index.get(sym) if sym else None for sym in out["_symbol_key"]
     ]
+
+    def _symbol_issue(row) -> str:
+        if not row.has_symbol:
+            return "missing_symbol"
+        if row.n_genes_with_symbol > 1:
+            return "non_unique_symbol"
+        if row.symbol_resolves_to_ensembl_gene_id is None:
+            return "symbol_not_resolvable"
+        if row.symbol_resolves_to_ensembl_gene_id != row.ensembl_gene_id:
+            return "symbol_resolves_to_other_gene"
+        return "ok"
+
+    out["symbol_roundtrip_issue"] = [_symbol_issue(row) for row in out.itertuples(index=False)]
+    out["symbol_roundtrip"] = out["symbol_roundtrip_issue"].eq("ok")
 
     syn_df = get_data("ncbi-symbol-synonyms", copy=False)
     synonym_counts = (
@@ -284,7 +304,7 @@ def gene_identifier_mapping_coverage() -> pd.DataFrame:
             return "missing_symbol"
         if not row.canonical_id_roundtrip:
             return "canonical_id_roundtrip_failed"
-        if not row.symbol_roundtrip:
+        if row.symbol_roundtrip_issue != "ok":
             return "symbol_roundtrip_failed"
         return "ok"
 
@@ -299,6 +319,9 @@ def gene_identifier_mapping_coverage() -> pd.DataFrame:
             "has_symbol",
             "canonical_id_roundtrip",
             "symbol_roundtrip",
+            "symbol_roundtrip_issue",
+            "n_genes_with_symbol",
+            "symbol_resolves_to_ensembl_gene_id",
             "n_symbol_aliases",
             "has_symbol_alias",
             "n_ensembl_aliases",
@@ -320,12 +343,26 @@ def gene_identifier_mapping_summary() -> pd.DataFrame:
                 "n_protein_coding": int(coverage["biotype"].eq("protein_coding").sum()),
                 "n_without_symbol": int((~coverage["has_symbol"]).sum()),
                 "n_canonical_id_roundtrip_failed": int((~coverage["canonical_id_roundtrip"]).sum()),
-                "n_symbol_roundtrip_failed": int((~coverage["symbol_roundtrip"]).sum()),
+                "n_symbol_roundtrip_failed": int(
+                    coverage["mapping_status"].eq("symbol_roundtrip_failed").sum()
+                ),
+                "n_non_unique_symbols": int(
+                    coverage["symbol_roundtrip_issue"].eq("non_unique_symbol").sum()
+                ),
+                "n_symbol_not_resolvable": int(
+                    coverage["symbol_roundtrip_issue"].eq("symbol_not_resolvable").sum()
+                ),
+                "n_symbol_resolves_to_other_gene": int(
+                    coverage["symbol_roundtrip_issue"].eq("symbol_resolves_to_other_gene").sum()
+                ),
                 "n_with_symbol_aliases": int(coverage["has_symbol_alias"].sum()),
                 "n_with_ensembl_aliases": int(coverage["has_ensembl_alias"].sum()),
                 "n_symbol_alias_rows": len(syn_df),
                 "n_ensembl_alias_rows": len(alias_map),
                 "mapping_statuses": ";".join(sorted(coverage["mapping_status"].unique())),
+                "symbol_roundtrip_issues": ";".join(
+                    sorted(coverage["symbol_roundtrip_issue"].unique())
+                ),
             }
         ]
     )
