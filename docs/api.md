@@ -298,7 +298,12 @@ technical/noncoding, immune-receptor, Y-linked, and unresolved extra rows.
 Use `expression.expression_artifact_gene_universe_delta_summary()` for counts by
 product/cohort/status, or
 `expression.expression_artifact_gene_universe_delta_report(product, cancer_types)`
-for the compact request-scoped report used by accessor attrs. This table is
+for the compact request-scoped report used by accessor attrs. These tables include
+`gene_biotype`, `artifact_row_class`, `is_technical_extra`,
+`is_missing_biological`, and `recommended_consumer_action` so current-bundle row
+classes do not have to be inferred from prose. Use
+`expression.expression_artifact_technical_extra_gene_ids(...)` to get the
+oncoref-only technical-extra ENSG IDs for a product/cohort filter. This surface is
 intentionally provenance: it makes differences explicit for migration code, but
 does not synthesize missing expression rows or alter artifact values.
 
