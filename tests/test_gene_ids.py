@@ -6,6 +6,7 @@
 
 """Gene-id / symbol resolution references (#35, R-resolve)."""
 
+import oncoref
 from oncoref import gene_ids as g
 
 
@@ -55,11 +56,43 @@ def test_canonical_gene_id_any_identifier():
     assert g.canonical_gene_id("ENSG00000005955") == "ENSG00000278311"  # old GRCh37 id
     assert g.canonical_gene_id("ENSG00000005955.7") == "ENSG00000278311"  # version-insensitive
     assert g.canonical_gene_id("ENSG00000278311") == "ENSG00000278311"  # already canonical
+    assert g.canonical_gene_id("TP53") == "ENSG00000141510"  # direct canonical symbol
+    assert g.canonical_gene_id("GNB2L1") == "ENSG00000204628"  # prior symbol -> RACK1
+    assert g.canonical_gene_id("TCEB2") == "ENSG00000103363"  # prior symbol -> ELOB
     assert g.canonical_gene_id("") is None and g.canonical_gene_id("   ") is None
     assert g.canonical_gene_ids(["ENSG00000005955", "ENSG00000278311"]) == [
         "ENSG00000278311",
         "ENSG00000278311",
     ]
+
+
+def test_canonical_gene_symbol_display_and_short_names():
+    assert g.canonical_gene_symbol("ENSG00000141510") == "TP53"
+    assert g.canonical_gene_symbol("ENSG00000005955") == "GGNBP2"  # retired id -> current
+    assert g.canonical_gene_symbol("GNB2L1") == "RACK1"  # previous symbol / alias
+    assert g.canonical_gene_symbol("TCEB2") == "ELOB"  # previous symbol / alias
+    assert g.canonical_gene_symbols(["TP53", "GNB2L1", "NOT_A_REAL_GENE"]) == [
+        "TP53",
+        "RACK1",
+        None,
+    ]
+
+    assert g.display_gene_name("GNB2L1") == "RACK1"
+    assert g.display_gene_name("NOT_A_REAL_GENE") == "NOT_A_REAL_GENE"
+    assert g.display_gene_name("NOT_A_REAL_GENE", fallback=False) is None
+    assert g.display_gene_name("ENSG99999999999") is None
+    assert g.short_gene_name("ENSG00000005955") == "GGNBP2"
+
+
+def test_gene_display_helpers_are_top_level_exports():
+    for name in (
+        "canonical_gene_symbol",
+        "canonical_gene_symbols",
+        "display_gene_name",
+        "short_gene_name",
+    ):
+        assert name in oncoref.__all__
+        assert hasattr(oncoref, name)
 
 
 def test_symbol_synonym_resolution():

@@ -63,6 +63,27 @@ cancer_ontology.matched_normal_tissue_expression("COAD", genes=["ENSG00000141510
 cohorts.cohort_registry_df()
 ```
 
+## Gene Identity
+
+- `oncoref.gene_ids` — canonical ENSG space, alt-haplotype / retired Ensembl ID
+  migration, symbol/synonym resolution, and report-facing gene labels.
+- `oncoref.genome` — pyensembl-backed transcript/gene lookup and transcript to
+  gene aggregation for source matrices.
+
+Use the gene-id helpers before building expression artifacts or joining
+downstream gene sets to oncoref references. `canonical_gene_id()` is the primary
+any-identifier entry point. `canonical_gene_symbol()`, `display_gene_name()`, and
+`short_gene_name()` use the same resolver so report code does not invent a
+separate symbol mapping.
+
+```python
+from oncoref import canonical_gene_id, canonical_gene_symbol, display_gene_name
+
+canonical_gene_id("GNB2L1")        # previous symbol -> ENSG00000204628
+canonical_gene_symbol("GNB2L1")    # previous symbol -> RACK1
+display_gene_name("ENSG00000005955")  # retired Ensembl id -> GGNBP2
+```
+
 ## ICI Response
 
 - `oncoref.ici_response` — checkpoint-inhibitor response anchors, anti-PD-1
