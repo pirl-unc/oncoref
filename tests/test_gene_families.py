@@ -40,7 +40,7 @@ def test_clean_tpm_compartment_ids_follow_censored_table_categories():
     ribosomal = gf.clean_tpm_ribosomal_gene_ids()
     other_technical = gf.clean_tpm_other_technical_gene_ids()
 
-    assert len(ribosomal) == 1764
+    assert len(ribosomal) == 1767
     assert len(other_technical) == 1022
     assert ribosomal | other_technical == censored
     assert ribosomal.isdisjoint(other_technical)
@@ -49,6 +49,26 @@ def test_clean_tpm_compartment_ids_follow_censored_table_categories():
     # is ribosomal_protein, so it belongs to the 16% budget, not the 9% remainder.
     assert "ENSG00000244691" in ribosomal
     assert "ENSG00000244691" not in other_technical
+
+
+def test_clean_tpm_ribosomal_pseudogene_audit_ids_in_both_references():
+    audited_ids = {
+        "ENSG00000292328",  # RPL14P5
+        "ENSG00000280437",  # RPL23AP53
+        "ENSG00000293173",  # RPL31P11
+        "ENSG00000283120",  # RPL11P3
+        "ENSG00000283753",  # RPL21P121
+        "ENSG00000283660",  # RPL23AP84
+        "ENSG00000284212",  # RPL7AP65
+        "ENSG00000242150",  # RPS10P7
+        "ENSG00000282862",  # RPS21P1
+        "ENSG00000282942",  # RPS26P3
+        "ENSG00000284153",  # RPS4XP17
+        "ENSG00000282839",  # RPS4XP18
+    }
+
+    assert audited_ids <= gf.clean_tpm_ribosomal_gene_ids()
+    assert audited_ids <= gf.gene_family_ids("ribosomal_protein_pseudogene")
 
 
 def test_clean_tpm_censoring_is_cta_safe():
