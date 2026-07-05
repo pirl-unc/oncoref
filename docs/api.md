@@ -72,12 +72,17 @@ cohorts.cohort_registry_df()
 
 Use the gene-id helpers before building expression artifacts or joining
 downstream gene sets to oncoref references. `canonical_gene_id()` is the primary
-any-identifier entry point. `canonical_gene_symbol()`, `display_gene_name()`, and
-`short_gene_name()` use the same resolver so report code does not invent a
-separate symbol mapping. `gene_identifier_mapping_coverage()` and
+any-identifier entry point for the shipped ENSG + symbol/synonym space: it
+normalizes versioned or case-varied Ensembl gene IDs, follows retired/alt ENSG
+aliases into the canonical space, resolves symbols and synonyms, and returns
+`None` for inputs that cannot be mapped to a canonical oncoref gene.
+`canonical_gene_symbol()`, `display_gene_name()`, and `short_gene_name()` use
+the same resolver so report code does not invent a separate symbol mapping.
+`gene_identifier_mapping_coverage()` and
 `gene_identifier_mapping_summary()` make the shipped ENSG, symbol/synonym, and
-Ensembl-alias coverage explicit for migration audits; they do not claim that
-RefSeq, UniProt, or Entrez coverage is complete.
+Ensembl-alias coverage explicit for migration audits, including non-unique
+symbols and missing-symbol rows. They do not claim that RefSeq, UniProt, or
+Entrez coverage is complete.
 
 ```python
 from oncoref import canonical_gene_id, canonical_gene_symbol, display_gene_name, gene_ids
