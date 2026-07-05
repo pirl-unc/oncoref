@@ -89,10 +89,45 @@ def test_gene_display_helpers_are_top_level_exports():
         "canonical_gene_symbol",
         "canonical_gene_symbols",
         "display_gene_name",
+        "gene_identifier_mapping_coverage",
+        "gene_identifier_mapping_summary",
         "short_gene_name",
     ):
         assert name in oncoref.__all__
         assert hasattr(oncoref, name)
+
+
+def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
+    coverage = g.gene_identifier_mapping_coverage()
+    expected = {
+        "ensembl_gene_id",
+        "symbol",
+        "biotype",
+        "has_symbol",
+        "canonical_id_roundtrip",
+        "symbol_roundtrip",
+        "n_symbol_aliases",
+        "has_symbol_alias",
+        "n_ensembl_aliases",
+        "has_ensembl_alias",
+        "mapping_status",
+    }
+    assert expected <= set(coverage.columns)
+    assert len(coverage) == len(g.canonical_gene_space())
+    assert "ok" in set(coverage["mapping_status"])
+
+    keyed = coverage.set_index("symbol")
+    assert keyed.loc["TP53", "symbol_roundtrip"]
+    assert keyed.loc["RACK1", "n_symbol_aliases"] > 0
+    assert keyed.loc["GGNBP2", "n_ensembl_aliases"] > 0
+
+    summary = g.gene_identifier_mapping_summary().iloc[0]
+    assert summary["n_genes"] == len(coverage)
+    assert summary["n_symbol_alias_rows"] >= 60_000
+    assert summary["n_ensembl_alias_rows"] >= 6_000
+    assert summary["n_without_symbol"] > 0
+    assert summary["n_symbol_roundtrip_failed"] > 0
+    assert "ok" in summary["mapping_statuses"].split(";")
 
 
 def test_symbol_synonym_resolution():
