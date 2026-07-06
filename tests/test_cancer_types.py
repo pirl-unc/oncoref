@@ -317,6 +317,67 @@ def test_cancer_type_records_include_evidence_expression_and_normal_tissue():
     assert bool(records.loc["CRC_MSI", "has_expression_matrix"]) is False
 
 
+def test_expression_reference_coverage_contract():
+    coverage = cancer_types.expression_reference_coverage(["COAD_MSI", "CRC_MSI", "ASTB"])
+    expected = {
+        "code",
+        "lineage_group",
+        "ontology_depth",
+        "has_direct_expression_reference",
+        "observed_bulk_reference",
+        "expression_reference_kind",
+        "source_matrix_cohort",
+        "source_matrix_n_samples",
+        "normalization_method",
+        "gene_id_space",
+        "data_version",
+        "source_matrix_version",
+        "has_molecular_definition",
+        "molecular_definition_kind",
+        "consumer_recommendation",
+        "missing_reason",
+    }
+    assert expected <= set(coverage.columns)
+
+    keyed = coverage.set_index("code")
+    assert bool(keyed.loc["COAD_MSI", "has_direct_expression_reference"]) is True
+    assert keyed.loc["COAD_MSI", "expression_reference_kind"] == "observed_bulk"
+    assert keyed.loc["COAD_MSI", "consumer_recommendation"] == "direct_reference"
+    assert keyed.loc["COAD_MSI", "normalization_method"] == "clean_tpm_16_9_75"
+    assert keyed.loc["COAD_MSI", "gene_id_space"] == "oncoref_canonical_ensg"
+
+    assert bool(keyed.loc["CRC_MSI", "has_direct_expression_reference"]) is False
+    assert keyed.loc["CRC_MSI", "consumer_recommendation"] == "unsupported"
+    assert keyed.loc["CRC_MSI", "molecular_definition_kind"] == ()
+    assert keyed.loc["CRC_MSI", "missing_reason"] == "no_direct_expression_matrix"
+
+    assert bool(keyed.loc["ASTB", "has_direct_expression_reference"]) is False
+    assert keyed.loc["ASTB", "consumer_recommendation"] == "molecular_only"
+    assert keyed.loc["ASTB", "molecular_definition_kind"] == ("fusion",)
+
+
+def test_expression_reference_coverage_filters_and_empty_results():
+    crc = cancer_types.expression_reference_coverage(subtype_group="MSI", under="CRC")
+    assert crc["code"].tolist() == ["COAD_MSI", "READ_MSI"]
+    assert set(crc["consumer_recommendation"]) == {"direct_reference"}
+
+    empty = cancer_types.expression_reference_coverage([])
+    assert empty.empty
+    assert list(empty.columns) == list(cancer_types.expression_reference_coverage(["PRAD"]).columns)
+
+
+def test_coverage_for_cancer_type_single_record_and_exports():
+    record = cancer_types.coverage_for_cancer_type("prostate")
+    assert record["code"] == "PRAD"
+    assert record["consumer_recommendation"] == "direct_reference"
+    assert cancer_types.coverage_for_cancer_type(None) is None
+    with pytest.raises(ValueError):
+        cancer_types.coverage_for_cancer_type("not_a_real_cancer")
+    assert cd.coverage_for_cancer_type("PRAD")["code"] == "PRAD"
+    assert cd.expression_reference_coverage(["PRAD"]).iloc[0]["code"] == "PRAD"
+    assert cd.cancer_ontology.coverage_for_cancer_type("PRAD")["code"] == "PRAD"
+
+
 def test_btc_records_source_scope_chol_and_gbc():
     records = cancer_types.cancer_type_records(["BTC", "CHOL", "GBC"]).set_index("code")
     assert records.loc["BTC", "evidence_source_code"] == "BTC"
