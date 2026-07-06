@@ -212,3 +212,50 @@ def test_cta_candidate_references_registry():
     # a gene already sitting non-passing in the table can't sneak in here.
     table_ids = set(cta.cta_df()["Ensembl_Gene_ID"].astype(str).str.split(".").str[0])
     assert not (set(cand["Ensembl_Gene_ID"]) & table_ids)
+
+
+def test_clinical_cta_target_tier_keeps_strict_default_conservative():
+    clinical = {
+        "CTAG2",
+        "MAGEA11",
+        "CT45A1",
+        "CT45A3",
+        "CT45A5",
+        "MAGEC3",
+        "PAGE4",
+        "CSAG1",
+    }
+    leaky = {"CTAG2", "MAGEA11", "CT45A1", "CT45A3", "CT45A5"}
+
+    assert clinical <= cta.cta_clinical_target_gene_names()
+    assert leaky <= cta.cta_excluded_clinical_target_gene_names()
+    assert leaky <= cta.cta_excluded_gene_names()
+    assert not (leaky & cta.cta_filtered_gene_names())
+    assert not ({"MAGEC3", "PAGE4", "CSAG1"} & cta.cta_unfiltered_gene_names())
+
+    evidence = cta.cta_clinical_target_evidence().set_index("Symbol")
+    assert set(evidence.loc[sorted(leaky), "evidence_tier"]) == {"excluded"}
+    assert evidence.loc["CTAG2", "exclusion_driver_tissue"] == "heart muscle"
+    assert evidence.loc["CT45A3", "exclusion_driver_tissue"] == "hippocampal formation"
+    assert evidence.loc["CT45A5", "exclusion_driver_tissue"] == "basal ganglia"
+    assert float(evidence.loc["CTAG2", "exclusion_driver_ntpm"]) == 5.1
+
+    assert evidence.loc["MAGEC3", "evidence_tier"] == "candidate"
+    assert evidence.loc["PAGE4", "evidence_tier"] == "candidate"
+    assert evidence.loc["CSAG1", "evidence_tier"] == "candidate"
+    assert evidence.loc["CSAG1", "candidate_source"] == "literature_cta"
+    assert "PMID:12039054" in evidence.loc["CSAG1", "pmids"]
+    assert "ENSG00000198930" in cta.cta_clinical_target_gene_ids()
+    assert "ENSG00000198930" not in cta.cta_excluded_clinical_target_gene_ids()
+
+
+def test_clinical_cta_helpers_are_top_level_exports():
+    for name in (
+        "cta_clinical_target_references",
+        "cta_clinical_target_evidence",
+        "cta_clinical_target_gene_names",
+        "cta_clinical_target_gene_ids",
+        "cta_excluded_clinical_target_gene_names",
+        "cta_excluded_clinical_target_gene_ids",
+    ):
+        assert getattr(oncoref, name) is getattr(cta, name)

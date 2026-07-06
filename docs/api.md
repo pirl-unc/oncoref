@@ -133,7 +133,11 @@ ici_response.ici_response_estimates_df()
 ## CTA Antigens
 
 - `oncoref.cta` — CTA definition, HPA restriction tiers, axes, aliases, and gene
-  ID/name sets.
+  ID/name sets. Strict helpers such as `cta_gene_names()` and
+  `cta_filtered_gene_names()` preserve the HPA reproductive-restriction default;
+  `cta_clinical_target_evidence()` exposes a separate clinical/canonical tier for
+  source-anchored CTA targets that may be strict-pass, HPA-excluded, or
+  candidate-only.
 - `oncoref.cta_coverage` — CTA patient coverage over per-sample expression
   matrices.
 - `oncoref.cta_peptides` — CTA-specific 9-mer counts and load.
@@ -150,6 +154,7 @@ live in consumer packages while they remain package-specific.
 from oncoref import cta, cta_coverage, cta_peptides
 
 cta.cta_gene_names()
+cta.cta_clinical_target_evidence()
 cta_coverage.cta_addressable_fraction("LUAD")
 cta_peptides.cta_specific_9mer_count_map(by="proteoform_key")
 ```

@@ -209,6 +209,10 @@ SUPERSEDED: dict[str, str] = {
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     "cancer-testis-antigens": ("cta", "CTA definition (HPA tissue-restriction over candidates)"),
+    "cta-clinical-targets": (
+        "cta",
+        "explicit clinical/canonical CTA target tier joined to HPA evidence",
+    ),
     "proteoform-groups": ("gene-id", "byte-identical CTA proteoform groups"),
     "proteoform-groups-genome": ("gene-id", "byte-identical proteoform groups (genome-wide)"),
     "source-matrices": ("expression", "per-cohort raw-matrix registry (code/source/n_samples)"),

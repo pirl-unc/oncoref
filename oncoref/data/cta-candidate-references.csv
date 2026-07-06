@@ -11,3 +11,4 @@ PAGE4,ENSG00000101951,literature_cta,CT16,PAGE,5.5,166.6,prostate,False,21357425
 PNMA2,ENSG00000240694,literature_cta,-,PNMA,1.6,113.4,cerebral cortex,False,10362822,Ma2/Ta paraneoplastic onconeural antigen; seminoma-linked (strong CNS signal)
 MAGEC3,ENSG00000165509,paralog_cta,CT7.2,MAGE-C,1.0,3.6,spinal cord,False,10861452,MAGE-C member; tumor-specific (HPA shows some CNS signal — verify)
 TEX15,ENSG00000133636,registry_cta,CT42,TEX,0.3,161.0,small intestine,False,18283110,Meiotic recombination; CTdatabase CT42 (bulk under-detects testis)
+CSAG1,ENSG00000198930,literature_cta,CT24,CSAG,,,,,12039054,CSAG/CSAGE cancer-testis antigen reported with MAGE in chondrosarcoma; HPA restriction audit pending
