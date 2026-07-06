@@ -92,16 +92,20 @@ aliases into the canonical space, resolves symbols and synonyms, and returns
 `None` for inputs that cannot be mapped to a canonical oncoref gene.
 `canonical_gene_symbol()`, `display_gene_name()`, and `short_gene_name()` use
 the same resolver so report code does not invent a separate symbol mapping.
+`entrez_gene_mappings()` and `resolve_entrez_id()` expose the filtered NCBI
+Entrez/GeneID table used by the resolver; it covers live IDs from NCBI dbXrefs
+or current symbols plus discontinued IDs redirected through NCBI gene_history.
 `gene_identifier_mapping_coverage()` and
 `gene_identifier_mapping_summary()` make the shipped ENSG, symbol/synonym, and
 Ensembl-alias coverage explicit for migration audits, including non-unique
-symbols and missing-symbol rows. They do not claim that RefSeq, UniProt, or
-Entrez coverage is complete.
+symbols and missing-symbol rows. They do not claim that RefSeq or UniProt
+coverage is complete.
 
 ```python
 from oncoref import canonical_gene_id, canonical_gene_symbol, display_gene_name, gene_ids
 
 canonical_gene_id("GNB2L1")        # previous symbol -> ENSG00000204628
+canonical_gene_id("7157")          # Entrez/GeneID -> ENSG00000141510
 canonical_gene_symbol("GNB2L1")    # previous symbol -> RACK1
 display_gene_name("ENSG00000005955")  # retired Ensembl id -> GGNBP2
 gene_ids.gene_identifier_mapping_summary()

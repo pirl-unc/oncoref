@@ -78,10 +78,11 @@ def test_map_source_gene_rows_resolves_ids_symbols_and_transcripts():
             "gene_id": [
                 "ENSG00000005955.7",  # old GGNBP2 id -> canonical alias
                 "TP53",
+                "7157",
                 "ENST00000264036",
                 "NOT_A_REAL_GENE",
             ],
-            "s1": [2.0, 3.0, 4.0, 10.0],
+            "s1": [2.0, 3.0, 5.0, 4.0, 10.0],
         }
     )
     audit = ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["s1"])
@@ -91,13 +92,15 @@ def test_map_source_gene_rows_resolves_ids_symbols_and_transcripts():
     assert by_id.loc["ENSG00000005955.7", "mapping_method"] == "ensembl_gene_id_alias"
     assert by_id.loc["TP53", "canonical_ensembl_gene_id"] == "ENSG00000141510"
     assert by_id.loc["TP53", "mapping_method"] == "symbol"
+    assert by_id.loc["7157", "canonical_ensembl_gene_id"] == "ENSG00000141510"
+    assert by_id.loc["7157", "mapping_method"] == "entrez_dbxrefs"
     assert by_id.loc["ENST00000264036", "mapping_method"] == "extra_transcript_mapping"
     assert by_id.loc["NOT_A_REAL_GENE", "mapping_status"] == "unresolved"
     assert bool(by_id.loc["NOT_A_REAL_GENE", "high_expression_unresolved"]) is True
 
     stats = ee.source_gene_mapping_stats(audit)
-    assert stats["n_source_rows"] == 4
-    assert stats["n_resolved_rows"] == 3
+    assert stats["n_source_rows"] == 5
+    assert stats["n_resolved_rows"] == 4
     assert stats["n_high_expression_unresolved_rows"] == 1
 
 
@@ -161,7 +164,7 @@ def test_map_source_gene_rows_normalizes_case_varied_ensembl_identifiers():
 def test_map_source_gene_rows_preserves_identifier_unresolved_reasons():
     df = pd.DataFrame(
         {
-            "gene_id": ["ENSG99999999999", "123456789"],
+            "gene_id": ["ENSG99999999999", "999999999999"],
             "s1": [10.0, 20.0],
         }
     )
@@ -170,8 +173,8 @@ def test_map_source_gene_rows_preserves_identifier_unresolved_reasons():
 
     assert by_id.loc["ENSG99999999999", "unresolved_reason"] == "unknown_ensembl_gene_id"
     assert by_id.loc["ENSG99999999999", "mapping_method"] == "unresolved"
-    assert by_id.loc["123456789", "unresolved_reason"] == "unsupported_entrez_id"
-    assert by_id.loc["123456789", "mapping_method"] == "unresolved"
+    assert by_id.loc["999999999999", "unresolved_reason"] == "unknown_entrez_id"
+    assert by_id.loc["999999999999", "mapping_method"] == "unresolved"
 
 
 def test_map_source_gene_rows_accepts_symbol_only_matrix_by_default():

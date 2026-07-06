@@ -342,9 +342,10 @@ def map_source_gene_rows(
 
     Builders can use this before aggregation to make identifier handling explicit:
     versioned/alt Ensembl IDs are migrated to the canonical gene space, known
-    transcript IDs use oncoref's supplemental transcript map, symbols/synonyms map
-    through the bundled canonical gene space, and unresolved/ambiguous rows remain
-    visible in the audit rather than disappearing.
+    transcript IDs use oncoref's supplemental transcript map, Entrez/NCBI GeneIDs use
+    the shipped NCBI-derived Entrez map, symbols/synonyms map through the bundled
+    canonical gene space, and unresolved/ambiguous rows remain visible in the audit
+    rather than disappearing.
     """
     row_id_col, symbol_col = _source_row_columns(df, row_id_col, symbol_col, require_row_id=True)
     cols = _source_value_columns(df, row_id_col, symbol_col, value_cols)
@@ -355,6 +356,7 @@ def map_source_gene_rows(
     row_sum_values = row_sums.to_numpy(dtype=float)
     id_type = detect_source_row_id_type(df[row_id_col])
     transcript_index = _extra_transcript_gene_index()
+    from .gene_ids import resolve_entrez_id
 
     rows: list[dict] = []
     for pos, (idx, raw_value) in enumerate(df[row_id_col].items()):
@@ -375,8 +377,12 @@ def map_source_gene_rows(
                 method = "unresolved"
                 reason = "unknown_ensembl_transcript_id"
         elif raw_id is not None and row_type == "entrez_id":
-            method = "unresolved"
-            reason = "unsupported_entrez_id"
+            hit = resolve_entrez_id(raw_id)
+            if hit is not None:
+                canonical_id, canonical_symbol, method = hit
+            else:
+                method = "unresolved"
+                reason = "unknown_entrez_id"
 
         if canonical_id is None:
             symbol_candidate = source_symbol
