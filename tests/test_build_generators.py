@@ -314,7 +314,11 @@ def _patch_rebuild_registry(monkeypatch, gen):
                 "cancer_code": [cancer_type, cancer_type, cancer_type],
                 "sample_id": ["pass_sample", "warn_sample", "fail_sample"],
                 "sample_qc_status": ["pass", "warn", "fail"],
-                "sample_qc_reasons": ["", "tpm_proxy_scale", "low_detected_genes"],
+                "sample_qc_reasons": [
+                    "",
+                    "nonlinear_or_proxy_expression_scale",
+                    "low_detected_genes",
+                ],
             }
         ),
     )
@@ -377,7 +381,11 @@ def test_rebuild_expression_artifacts_keeps_warn_proxy_source_when_pass_empty(
                 "cancer_code": [cancer_type, cancer_type, cancer_type],
                 "sample_id": ["pass_sample", "warn_sample", "fail_sample"],
                 "sample_qc_status": ["warn", "warn", "warn"],
-                "sample_qc_reasons": ["tpm_proxy_scale", "tpm_proxy_scale", "tpm_proxy_scale"],
+                "sample_qc_reasons": [
+                    "nonlinear_or_proxy_expression_scale",
+                    "nonlinear_or_proxy_expression_scale",
+                    "nonlinear_or_proxy_expression_scale",
+                ],
                 "source_scale_class": [
                     "microarray_tpm_proxy",
                     "microarray_tpm_proxy",

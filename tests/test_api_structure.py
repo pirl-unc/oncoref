@@ -27,15 +27,15 @@ def test_expression_engine_builder_audit_surface_is_public():
     assert callable(oncoref.expression_engine.coerce_source_expression_values)
     assert callable(oncoref.expression_engine.source_gene_mapping_stats)
     assert (
-        "source_gene_mapping_schema_version"
+        "source_expression_sample_with_max"
         in oncoref.expression_engine.SOURCE_GENE_MAPPING_AUDIT_COLUMNS
     )
-    assert (
-        "source_value_parse_schema_version"
-        in oncoref.expression_engine.SOURCE_VALUE_PARSE_DIAGNOSTIC_COLUMNS
+    assert "source_gene_mapping_schema_version" not in (
+        oncoref.expression_engine.SOURCE_GENE_MAPPING_AUDIT_COLUMNS
     )
-    assert oncoref.expression_engine.SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION
-    assert oncoref.expression_engine.SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION
+    assert "source_value_parse_schema_version" not in (
+        oncoref.expression_engine.SOURCE_VALUE_PARSE_DIAGNOSTIC_COLUMNS
+    )
 
 
 def test_clearer_names_stay_in_semantic_modules_not_flat_namespace():

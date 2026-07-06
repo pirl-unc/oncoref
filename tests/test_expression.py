@@ -903,9 +903,13 @@ def test_sample_expression_qc_flags_sparse_samples(tmp_path, monkeypatch):
     assert qc.loc["sparse", "n_detected_clean_biological"] == 2
     assert qc.loc["sparse", "n_detected_genes"] == 2
     assert qc.loc["sparse", "housekeeping_genes_detected"] == 1
-    assert "low_housekeeping_detection" in qc.loc["sparse", "qc_flags"]
     assert "low_housekeeping_detection" in qc.loc["sparse", "sample_qc_reasons"]
-    assert "high_top_gene_fraction" in qc.loc["sparse", "qc_flags"]
+    assert "high_top_gene_fraction" in qc.loc["sparse", "sample_qc_reasons"]
+    assert "qc_flags" not in qc.columns
+    assert "qc_status" not in qc.columns
+    assert "qc_reasons" not in qc.columns
+    assert "top1_fraction_raw" not in qc.columns
+    assert "top10_fraction_raw" not in qc.columns
 
 
 def test_sample_expression_qc_flags_high_literal_zero_fraction():
@@ -939,6 +943,70 @@ def test_sample_expression_qc_flags_high_literal_zero_fraction():
     assert "high_zero_fraction" in qc.loc["sparse_zero", "sample_qc_reasons"]
     assert qc.loc["less_sparse", "zero_fraction_raw"] == pytest.approx(0.6)
     assert qc.loc["less_sparse", "sample_qc_status"] == "pass"
+
+
+def test_sample_expression_qc_proxy_scale_warns_without_rnaseq_fail_gates():
+    raw = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [f"ENSG{i:011d}" for i in range(20)],
+            "Symbol": [f"G{i}" for i in range(20)],
+            "proxy": [1000.0, *([0.0] * 19)],
+        }
+    )
+
+    qc = expression.sample_expression_qc_from_matrix(
+        raw,
+        cancer_type="X",
+        source_metadata={
+            "source_type": "microarray",
+            "unit": "TPM proxy",
+            "source_scale_class": "microarray_tpm_proxy",
+            "linear_tpm_comparable": False,
+            "tpm_proxy": True,
+        },
+        min_detected_genes=5000,
+        min_housekeeping_detected=10,
+        max_zero_fraction=0.1,
+        max_top_gene_fraction=0.1,
+        max_top10_gene_fraction=0.1,
+    ).set_index("sample_id")
+
+    assert qc.loc["proxy", "sample_qc_status"] == "warn"
+    assert qc.loc["proxy", "passes_expression_qc"]
+    assert qc.loc["proxy", "sample_qc_reasons"] == "nonlinear_or_proxy_expression_scale"
+    assert not qc.loc["proxy", "recommended_for_absolute_tpm_floor"]
+
+
+def test_sample_expression_qc_records_configurable_housekeeping_floor():
+    raw = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000188612", "ENSG00000143761", "ENSG00000141510"],
+            "Symbol": ["SUMO2", "ARF1", "TP53"],
+            "sample": [25.0, 75.0, 2.0],
+        }
+    )
+
+    qc = expression.sample_expression_qc_from_matrix(
+        raw,
+        cancer_type="X",
+        source_metadata={
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+        },
+        min_detected_genes=1,
+        min_housekeeping_detected=1,
+        housekeeping_detection_floor_tpm=50.0,
+        min_housekeeping_fraction_above_floor=0.75,
+        max_zero_fraction=1.0,
+        max_top_gene_fraction=1.0,
+        max_top10_gene_fraction=1.0,
+    ).set_index("sample_id")
+
+    assert qc.loc["sample", "housekeeping_detection_floor_tpm"] == 50.0
+    assert qc.loc["sample", "housekeeping_genes_above_floor"] == 1
+    assert qc.loc["sample", "housekeeping_fraction_above_floor"] == pytest.approx(0.5)
+    assert qc.loc["sample", "sample_qc_status"] == "fail"
+    assert "low_housekeeping_floor_fraction" in qc.loc["sample", "sample_qc_reasons"]
 
 
 def test_per_sample_expression_filters_by_sample_qc(tmp_path, monkeypatch):
@@ -985,7 +1053,7 @@ def test_source_matrix_sample_qc_manifest_missing_is_schema_stable(tmp_path, mon
 
     assert out.empty
     assert "sample_qc_status" in out.columns
-    assert out.attrs["schema_version"] == expression.SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION
+    assert "schema_version" not in out.attrs
     assert out.attrs["data_version"] == expression.DATA_VERSION
     assert "missing_reason" in out.attrs
     with pytest.raises(FileNotFoundError, match="source-matrix-sample-qc"):
@@ -1014,10 +1082,7 @@ def test_source_matrix_sample_qc_manifest_reads_filters_and_exports(tmp_path, mo
     assert out["custom_future_column"].tolist() == [1, 2]
     assert out.attrs["path"].endswith(expression.SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH)
     assert oncoref.source_matrix_sample_qc_manifest is expression.source_matrix_sample_qc_manifest
-    assert (
-        oncoref.SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION
-        == expression.SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION
-    )
+    assert not hasattr(oncoref, "SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION")
 
 
 def test_expression_artifact_build_metadata_and_summary(tmp_path, monkeypatch):
