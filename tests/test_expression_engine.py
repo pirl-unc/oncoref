@@ -101,8 +101,10 @@ def test_map_source_gene_rows_resolves_ids_symbols_and_transcripts():
     assert stats["n_high_expression_unresolved_rows"] == 1
 
 
-def test_source_audit_outputs_include_persisted_schema_versions():
-    df = pd.DataFrame({"gene_id": ["TP53"], "sample_a": ["1.5"]})
+def test_source_audit_outputs_clean_unversioned_contract_and_expression_triage():
+    df = pd.DataFrame(
+        {"gene_id": ["TP53", "NOT_A_REAL_GENE", "ZERO"], "sample_a": ["1.5", "0", "0"]}
+    )
 
     audit = ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["sample_a"])
     coerced, diagnostics = ee.coerce_source_expression_values(df, value_cols=["sample_a"])
@@ -110,22 +112,20 @@ def test_source_audit_outputs_include_persisted_schema_versions():
         df, row_id_col="gene_id", value_cols=["sample_a"]
     )
 
-    assert audit.attrs["schema_version"] == ee.SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION
-    assert audit["source_gene_mapping_schema_version"].unique().tolist() == [
-        ee.SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION
-    ]
-    assert diagnostics.attrs["schema_version"] == ee.SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION
-    assert diagnostics["source_value_parse_schema_version"].unique().tolist() == [
-        ee.SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION
-    ]
-    assert matrix_audit["source_gene_mapping_schema_version"].unique().tolist() == [
-        ee.SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION
-    ]
+    assert "schema_version" not in audit.attrs
+    assert "source_gene_mapping_schema_version" not in audit.columns
+    assert "schema_version" not in diagnostics.attrs
+    assert "source_value_parse_schema_version" not in diagnostics.columns
+    assert "source_gene_mapping_schema_version" not in matrix_audit.columns
+    assert audit.loc[0, "source_expression_max"] == 1.5
+    assert audit.loc[0, "source_expression_sample_with_max"] == "sample_a"
+    assert audit.loc[0, "source_expression_nonzero_samples"] == 1
+    assert audit.loc[1, "source_expression_max"] == 0.0
+    assert pd.isna(audit.loc[1, "source_expression_sample_with_max"])
+    assert audit.loc[1, "source_expression_nonzero_samples"] == 0
     parse = matrix.attrs["source_value_parse_diagnostics"]
-    assert parse["source_value_parse_schema_version"].unique().tolist() == [
-        ee.SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION
-    ]
-    assert coerced["sample_a"].tolist() == [1.5]
+    assert "source_value_parse_schema_version" not in parse.columns
+    assert coerced["sample_a"].tolist() == [1.5, 0.0, 0.0]
 
 
 def test_map_source_gene_rows_falls_back_from_noncanonical_transcript_gene_id():

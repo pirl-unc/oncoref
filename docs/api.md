@@ -205,10 +205,12 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   `canonicalize_source_gene_matrix`, and `coerce_source_expression_values`
   without reaching into scripts. Use these in builders before committing a
   source matrix so unresolved high-expression rows and duplicate canonical IDs
-  are explicit artifacts rather than hidden cleanup. Source audit CSV contracts
-  are versioned by `SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION` and
-  `SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION`, and the emitted audit frames
-  include those versions as persisted columns.
+  are explicit artifacts rather than hidden cleanup. The source audit frames are
+  intentionally unversioned public API objects: provenance belongs in build
+  metadata, while the frames themselves use stable canonical columns such as
+  `sample_qc_status`, `sample_qc_reasons`,
+  `source_expression_nonzero_samples`, and
+  `source_expression_sample_with_max`.
 - `oncoref.source_matrices` — raw per-cohort source-matrix cache/fetch helpers.
   Use `source_matrices.sample_qc(code)` for the live source-matrix QC audit and
   `source_matrices.sample_qc_manifest(...)` for the optional generated-bundle QC

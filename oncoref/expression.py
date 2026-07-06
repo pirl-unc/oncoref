@@ -872,7 +872,6 @@ def _attach_gene_universe_delta_attrs(
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
 SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v2"
-SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION = "source_matrix_sample_qc_manifest_v1"
 EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION = "expression_artifact_build_metadata_v1"
 SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH = "source-matrix-sample-qc.csv"
 EXPRESSION_ARTIFACT_BUILD_METADATA_PATH = "expression-artifact-build-metadata.csv"
@@ -880,7 +879,6 @@ EXPRESSION_ARTIFACT_BUILD_METADATA_JSON_PATH = "expression-artifact-build-metada
 
 _SOURCE_MATRIX_SAMPLE_QC_MANIFEST_COLUMNS = [
     "cancer_code",
-    "sample_qc_policy_version",
     "source_cohort",
     "source_type",
     "unit",
@@ -900,20 +898,17 @@ _SOURCE_MATRIX_SAMPLE_QC_MANIFEST_COLUMNS = [
     "top_gene_symbol",
     "top_gene_tpm",
     "top_gene_fraction",
-    "top1_fraction_raw",
     "top10_tpm",
     "top10_fraction",
-    "top10_fraction_raw",
     "top1_fraction_clean",
     "top10_fraction_clean",
     "housekeeping_genes_present",
     "housekeeping_genes_detected",
-    "housekeeping_genes_above_30",
+    "housekeeping_detection_floor_tpm",
+    "housekeeping_genes_above_floor",
+    "housekeeping_fraction_above_floor",
     "housekeeping_zero_fraction",
     "tpm_proxy",
-    "qc_flags",
-    "qc_status",
-    "qc_reasons",
     "sample_qc_status",
     "sample_qc_reasons",
     "passes_expression_qc",
@@ -939,10 +934,12 @@ DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC = 10
 DEFAULT_MAX_ZERO_FRACTION_FOR_QC = 0.70
 DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC = 0.20
 DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC = 0.50
+DEFAULT_HOUSEKEEPING_DETECTION_FLOOR_TPM = 30.0
 _BLOCKING_SAMPLE_QC_REASONS = frozenset(
     {
         "low_detected_genes",
         "low_housekeeping_detection",
+        "low_housekeeping_floor_fraction",
         "high_zero_fraction",
         "high_top_gene_fraction",
         "high_top10_gene_fraction",
@@ -1047,6 +1044,8 @@ def sample_expression_qc_from_matrix(
     source_metadata: dict[str, str | bool | None] | None = None,
     min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
     min_housekeeping_detected: int | None = None,
+    min_housekeeping_fraction_above_floor: float | None = None,
+    housekeeping_detection_floor_tpm: float = DEFAULT_HOUSEKEEPING_DETECTION_FLOOR_TPM,
     max_zero_fraction: float = DEFAULT_MAX_ZERO_FRACTION_FOR_QC,
     max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
     max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
@@ -1130,7 +1129,7 @@ def sample_expression_qc_from_matrix(
         hk_measured = int(hk_vals.notna().sum())
         hk_detected = int((hk_vals > 0).sum())
         hk_zero = int((hk_vals == 0).sum())
-        hk_floor_count = int((hk_vals >= 30).sum())
+        hk_floor_count = int((hk_vals >= housekeeping_detection_floor_tpm).sum())
         top_fraction = top_tpm / total if total > 0 else np.nan
         top10_fraction = top10_tpm / total if total > 0 else np.nan
         clean_top_fraction = clean_top_tpm / clean_total if clean_total > 0 else np.nan
@@ -1139,30 +1138,37 @@ def sample_expression_qc_from_matrix(
         zero_fraction = n_zero / n_measured if n_measured else np.nan
         parse_missing_fraction = n_missing / len(vals) if len(vals) else np.nan
         hk_zero_fraction = hk_zero / hk_measured if hk_measured else np.nan
+        hk_floor_fraction = hk_floor_count / hk_measured if hk_measured else np.nan
 
         flags: list[str] = []
-        if n_detected < min_detected_genes:
-            flags.append("low_detected_genes")
-        if min_hk is not None and hk_detected < min_hk:
-            flags.append("low_housekeeping_detection")
-        if pd.notna(zero_fraction) and zero_fraction > max_zero_fraction:
-            flags.append("high_zero_fraction")
-        if pd.notna(top_fraction) and top_fraction > max_top_gene_fraction:
-            flags.append("high_top_gene_fraction")
-        if (
-            n_measured > 10
-            and pd.notna(top10_fraction)
-            and top10_fraction > max_top10_gene_fraction
-        ):
-            flags.append("high_top10_gene_fraction")
-        if meta["tpm_proxy"]:
-            flags.append("tpm_proxy_scale")
+        if bool(meta["linear_tpm_comparable"]):
+            if n_detected < min_detected_genes:
+                flags.append("low_detected_genes")
+            if min_hk is not None and hk_detected < min_hk:
+                flags.append("low_housekeeping_detection")
+            if (
+                min_housekeeping_fraction_above_floor is not None
+                and pd.notna(hk_floor_fraction)
+                and hk_floor_fraction < min_housekeeping_fraction_above_floor
+            ):
+                flags.append("low_housekeeping_floor_fraction")
+            if pd.notna(zero_fraction) and zero_fraction > max_zero_fraction:
+                flags.append("high_zero_fraction")
+            if pd.notna(top_fraction) and top_fraction > max_top_gene_fraction:
+                flags.append("high_top_gene_fraction")
+            if (
+                n_measured > 10
+                and pd.notna(top10_fraction)
+                and top10_fraction > max_top10_gene_fraction
+            ):
+                flags.append("high_top10_gene_fraction")
+        else:
+            flags.append("nonlinear_or_proxy_expression_scale")
 
         status = _sample_qc_status(flags)
         rows.append(
             {
                 "cancer_code": code,
-                "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
                 "source_cohort": meta["source_cohort"],
                 "source_type": meta["source_type"],
                 "unit": meta["unit"],
@@ -1182,20 +1188,17 @@ def sample_expression_qc_from_matrix(
                 "top_gene_symbol": raw.loc[top_idx, "Symbol"] if top_idx is not None else None,
                 "top_gene_tpm": top_tpm,
                 "top_gene_fraction": top_fraction,
-                "top1_fraction_raw": top_fraction,
                 "top10_tpm": top10_tpm,
                 "top10_fraction": top10_fraction,
-                "top10_fraction_raw": top10_fraction,
                 "top1_fraction_clean": clean_top_fraction,
                 "top10_fraction_clean": clean_top10_fraction,
                 "housekeeping_genes_present": hk_measured,
                 "housekeeping_genes_detected": hk_detected,
-                "housekeeping_genes_above_30": hk_floor_count,
+                "housekeeping_detection_floor_tpm": float(housekeeping_detection_floor_tpm),
+                "housekeeping_genes_above_floor": hk_floor_count,
+                "housekeeping_fraction_above_floor": hk_floor_fraction,
                 "housekeeping_zero_fraction": hk_zero_fraction,
                 "tpm_proxy": bool(meta["tpm_proxy"]),
-                "qc_flags": ";".join(flags),
-                "qc_status": status,
-                "qc_reasons": ";".join(flags),
                 "sample_qc_status": status,
                 "sample_qc_reasons": ";".join(flags),
                 "passes_expression_qc": status != "fail",
@@ -1212,6 +1215,8 @@ def sample_expression_qc(
     auto_fetch: bool = True,
     min_detected_genes: int = DEFAULT_MIN_DETECTED_GENES_FOR_QC,
     min_housekeeping_detected: int | None = None,
+    min_housekeeping_fraction_above_floor: float | None = None,
+    housekeeping_detection_floor_tpm: float = DEFAULT_HOUSEKEEPING_DETECTION_FLOOR_TPM,
     max_zero_fraction: float = DEFAULT_MAX_ZERO_FRACTION_FOR_QC,
     max_top_gene_fraction: float = DEFAULT_MAX_TOP_GENE_FRACTION_FOR_QC,
     max_top10_gene_fraction: float = DEFAULT_MAX_TOP10_GENE_FRACTION_FOR_QC,
@@ -1222,7 +1227,8 @@ def sample_expression_qc(
     normalization. It is designed to catch source/sample artifacts such as literal-zero
     sparsity in otherwise universal genes, while still making source-type caveats
     explicit (for example microarray TPM-proxy sources). It does not exclude samples by
-    itself; downstream code can use ``passes_expression_qc`` or inspect ``qc_flags``.
+    itself; downstream code can use ``passes_expression_qc`` or inspect
+    ``sample_qc_reasons``.
     """
     code = resolve_cancer_type(cancer_type, strict=False) or cancer_type
     raw = per_sample_expression(code, normalize="tpm_raw", auto_fetch=auto_fetch, sample_qc="all")
@@ -1231,6 +1237,8 @@ def sample_expression_qc(
         cancer_type=code,
         min_detected_genes=min_detected_genes,
         min_housekeeping_detected=min_housekeeping_detected,
+        min_housekeeping_fraction_above_floor=min_housekeeping_fraction_above_floor,
+        housekeeping_detection_floor_tpm=housekeeping_detection_floor_tpm,
         max_zero_fraction=max_zero_fraction,
         max_top_gene_fraction=max_top_gene_fraction,
         max_top10_gene_fraction=max_top10_gene_fraction,
@@ -1246,7 +1254,8 @@ def _validate_metadata_on_missing(on_missing: str) -> str:
 
 def _empty_metadata_frame(columns: list[str], *, schema_version: str, missing_reason: str):
     out = pd.DataFrame(columns=columns)
-    out.attrs["schema_version"] = schema_version
+    if schema_version:
+        out.attrs["schema_version"] = schema_version
     out.attrs["data_version"] = DATA_VERSION
     out.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
     out.attrs["missing_reason"] = missing_reason
@@ -1300,7 +1309,7 @@ def source_matrix_sample_qc_manifest(
             )
         return _empty_metadata_frame(
             _SOURCE_MATRIX_SAMPLE_QC_MANIFEST_COLUMNS,
-            schema_version=SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION,
+            schema_version="",
             missing_reason="source-matrix sample QC manifest not present in bundle",
         )
 
@@ -1325,7 +1334,6 @@ def source_matrix_sample_qc_manifest(
     elif qc_mode == "pass_or_warn":
         out = out[out["sample_qc_status"].astype(str).isin(["pass", "warn"])].copy()
 
-    out.attrs["schema_version"] = SOURCE_MATRIX_SAMPLE_QC_MANIFEST_SCHEMA_VERSION
     out.attrs["data_version"] = DATA_VERSION
     out.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
     out.attrs["path"] = str(path)

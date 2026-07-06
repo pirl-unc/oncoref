@@ -90,7 +90,6 @@ _DEFAULT_GENE_SYMBOL_COLUMN_CANDIDATES = (
 )
 
 SOURCE_GENE_MAPPING_AUDIT_COLUMNS = (
-    "source_gene_mapping_schema_version",
     "source_row_index",
     "source_row_id",
     "source_row_id_type",
@@ -101,11 +100,13 @@ SOURCE_GENE_MAPPING_AUDIT_COLUMNS = (
     "canonical_symbol",
     "unresolved_reason",
     "source_value_sum",
+    "source_expression_max",
+    "source_expression_sample_with_max",
+    "source_expression_nonzero_samples",
     "high_expression_unresolved",
 )
 
 SOURCE_VALUE_PARSE_DIAGNOSTIC_COLUMNS = (
-    "source_value_parse_schema_version",
     "value_col",
     "n_values",
     "n_input_missing",
@@ -114,9 +115,6 @@ SOURCE_VALUE_PARSE_DIAGNOSTIC_COLUMNS = (
     "parse_missing_fraction",
     "literal_zero_fraction",
 )
-
-SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION = "source_gene_mapping_audit_v1"
-SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION = "source_value_parse_diagnostics_v1"
 
 
 def find_column(df: pd.DataFrame, candidates, column_name: str) -> str:
@@ -398,9 +396,23 @@ def map_source_gene_rows(
             reason = reason or "missing_row_identifier"
 
         source_value_sum = float(row_sum_values[pos]) if pos < len(row_sum_values) else 0.0
+        if cols:
+            row_values = numeric.iloc[pos]
+            source_expression_nonzero_samples = int((row_values > 0).sum())
+            source_expression_max = row_values.max(skipna=True)
+            if pd.isna(source_expression_max):
+                source_expression_max = 0.0
+            source_expression_max = float(source_expression_max)
+            if source_expression_max > 0:
+                source_expression_sample_with_max = str(row_values.idxmax(skipna=True))
+            else:
+                source_expression_sample_with_max = None
+        else:
+            source_expression_max = 0.0
+            source_expression_sample_with_max = None
+            source_expression_nonzero_samples = 0
         rows.append(
             {
-                "source_gene_mapping_schema_version": SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION,
                 "source_row_index": idx,
                 "source_row_id": raw_id,
                 "source_row_id_type": row_type if row_type != "unknown" else id_type,
@@ -411,13 +423,15 @@ def map_source_gene_rows(
                 "canonical_symbol": canonical_symbol,
                 "unresolved_reason": reason,
                 "source_value_sum": source_value_sum,
+                "source_expression_max": source_expression_max,
+                "source_expression_sample_with_max": source_expression_sample_with_max,
+                "source_expression_nonzero_samples": source_expression_nonzero_samples,
                 "high_expression_unresolved": bool(
                     status != "resolved" and source_value_sum >= high_expression_threshold
                 ),
             }
         )
     out = pd.DataFrame(rows, columns=SOURCE_GENE_MAPPING_AUDIT_COLUMNS)
-    out.attrs["schema_version"] = SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION
     return out
 
 
@@ -453,7 +467,6 @@ def coerce_source_expression_values(
         n = len(raw)
         rows.append(
             {
-                "source_value_parse_schema_version": SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION,
                 "value_col": col,
                 "n_values": n,
                 "n_input_missing": int(input_missing.sum()),
@@ -465,7 +478,6 @@ def coerce_source_expression_values(
         )
         out[col] = coerced
     diagnostics = pd.DataFrame(rows, columns=SOURCE_VALUE_PARSE_DIAGNOSTIC_COLUMNS)
-    diagnostics.attrs["schema_version"] = SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION
     return out, diagnostics
 
 
@@ -608,9 +620,7 @@ def aggregate_transcripts_to_genes(
 
 __all__ = [
     "SOURCE_GENE_MAPPING_AUDIT_COLUMNS",
-    "SOURCE_GENE_MAPPING_AUDIT_SCHEMA_VERSION",
     "SOURCE_VALUE_PARSE_DIAGNOSTIC_COLUMNS",
-    "SOURCE_VALUE_PARSE_DIAGNOSTIC_SCHEMA_VERSION",
     "aggregate_transcripts_to_genes",
     "canonicalize_source_gene_matrix",
     "coerce_source_expression_values",

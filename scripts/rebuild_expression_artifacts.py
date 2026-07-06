@@ -257,7 +257,8 @@ def _sample_selection_for_qc(
     scale_classes = set(qc.get("source_scale_class", pd.Series(dtype=str)).fillna("").astype(str))
     statuses = set(qc["sample_qc_status"].astype(str))
     if statuses <= {"warn"} and (
-        "tpm_proxy_scale" in reasons or "microarray_tpm_proxy" in scale_classes
+        "nonlinear_or_proxy_expression_scale" in reasons
+        or "microarray_tpm_proxy" in scale_classes
     ):
         warn_samples = [s for s in samples if status.get(str(s)) == "warn"]
         return warn_samples, "pass_or_warn", "no_pass_samples_tpm_proxy_source"
