@@ -60,6 +60,7 @@ def test_canonical_gene_id_any_identifier():
     assert g.canonical_gene_id("TP53") == "ENSG00000141510"  # direct canonical symbol
     assert g.canonical_gene_id("GNB2L1") == "ENSG00000204628"  # prior symbol -> RACK1
     assert g.canonical_gene_id("TCEB2") == "ENSG00000103363"  # prior symbol -> ELOB
+    assert g.canonical_gene_id("7157") == "ENSG00000141510"  # Entrez/GeneID -> TP53
     assert g.canonical_gene_id("ENSG99999999999") is None  # unknown ENSG is not canonicalized
     assert g.canonical_gene_id("") is None and g.canonical_gene_id("   ") is None
     assert g.canonical_gene_ids(["ENSG00000005955", "ENSG00000278311"]) == [
@@ -71,6 +72,7 @@ def test_canonical_gene_id_any_identifier():
 def test_canonical_gene_symbol_display_and_short_names():
     assert g.canonical_gene_symbol("ENSG00000141510") == "TP53"
     assert g.canonical_gene_symbol("ENSG00000005955") == "GGNBP2"  # retired id -> current
+    assert g.canonical_gene_symbol("7157") == "TP53"  # Entrez/GeneID -> symbol
     assert g.canonical_gene_symbol("GNB2L1") == "RACK1"  # previous symbol / alias
     assert g.canonical_gene_symbol("TCEB2") == "ELOB"  # previous symbol / alias
     assert g.canonical_gene_symbols(["TP53", "GNB2L1", "NOT_A_REAL_GENE"]) == [
@@ -91,12 +93,35 @@ def test_gene_display_helpers_are_top_level_exports():
         "canonical_gene_symbol",
         "canonical_gene_symbols",
         "display_gene_name",
+        "entrez_gene_mappings",
         "gene_identifier_mapping_coverage",
         "gene_identifier_mapping_summary",
+        "resolve_entrez_id",
         "short_gene_name",
     ):
         assert name in oncoref.__all__
         assert hasattr(oncoref, name)
+
+
+def test_entrez_gene_mapping_helpers():
+    mappings = g.entrez_gene_mappings()
+    assert len(mappings) > 60_000
+    assert {
+        "entrez_id",
+        "live_entrez_id",
+        "canonical_ensembl_gene_id",
+        "canonical_symbol",
+        "mapping_method",
+        "current_mapping_method",
+    } <= set(mappings.columns)
+
+    assert g.resolve_entrez_id("7157") == (
+        "ENSG00000141510",
+        "TP53",
+        "entrez_dbxrefs",
+    )
+    assert g.resolve_entrez_id("not_numeric") is None
+    assert oncoref.resolve_entrez_id("5728")[:2] == ("ENSG00000171862", "PTEN")
 
 
 def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
@@ -115,6 +140,8 @@ def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
         "has_symbol_alias",
         "n_ensembl_aliases",
         "has_ensembl_alias",
+        "n_entrez_ids",
+        "has_entrez_id",
         "mapping_status",
     }
     assert expected <= set(coverage.columns)
@@ -123,6 +150,7 @@ def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
 
     keyed = coverage.set_index("symbol")
     assert keyed.loc["TP53", "symbol_roundtrip"]
+    assert keyed.loc["TP53", "has_entrez_id"]
     assert keyed.loc["RACK1", "n_symbol_aliases"] > 0
     assert keyed.loc["GGNBP2", "n_ensembl_aliases"] > 0
     assert (
@@ -134,6 +162,8 @@ def test_gene_identifier_mapping_coverage_reports_shipped_mapping_boundaries():
     assert summary["n_genes"] == len(coverage)
     assert summary["n_symbol_alias_rows"] >= 60_000
     assert summary["n_ensembl_alias_rows"] >= 6_000
+    assert summary["n_entrez_mapping_rows"] > 60_000
+    assert summary["n_with_entrez_ids"] > 40_000
     assert summary["n_without_symbol"] > 0
     assert summary["n_symbol_roundtrip_failed"] > 0
     assert summary["n_symbol_roundtrip_failed"] == summary["n_non_unique_symbols"]

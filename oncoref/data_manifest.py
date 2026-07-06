@@ -216,6 +216,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "expression",
         "known pirlygenes/oncoref expression artifact row-universe deltas",
     ),
+    "ncbi-entrez-gene-mappings": (
+        "gene-id",
+        "filtered NCBI Entrez/GeneID -> canonical Ensembl gene mappings",
+    ),
     "tissue-burden-map": ("ontology", "primary_tissue -> anatomic burden category"),
     "family-burden-map": ("ontology", "registry family -> burden category (fallback)"),
     "cta-ihc-unreliable": ("cta", "CTAs whose HPA IHC is cross-reactive (RNA-only fallback)"),

@@ -73,6 +73,8 @@ def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> 
       map (:func:`resolve_ensembl_id`) — so e.g. GRCh37 ``GGNBP2`` ``ENSG00000005955`` →
       ``ENSG00000278311``. The resolved id is returned only if it is in oncoref's
       canonical gene space; unknown Ensembl-like ids return ``None``.
+    - A numeric identifier is treated as an Entrez / NCBI GeneID and resolved through
+      the shipped NCBI-derived Entrez→canonical ENSG map.
     - Anything else is treated as a symbol and resolved via the installed Ensembl
       releases + NCBI synonyms (lazy import of the genome layer; needs the ``genome``
       extra). Symbol resolution already returns a canonical primary-assembly id.
@@ -85,6 +87,9 @@ def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> 
     if s.upper().startswith("ENSG"):
         resolved = resolve_ensembl_id(s)
         return resolved if resolved in _canonical_gene_index() else None
+    if s.isdigit():
+        hit = resolve_entrez_id(s)
+        return hit[0] if hit is not None else None
     symbol_index = _canonical_symbol_index()
     direct = symbol_index.get(s.upper())
     if direct is not None:
@@ -126,6 +131,55 @@ def canonical_gene_symbols(
 ) -> list[str | None]:
     """Batch :func:`canonical_gene_symbol` → one canonical symbol (or ``None``) per input."""
     return [canonical_gene_symbol(x, source_version=source_version) for x in identifiers]
+
+
+def entrez_gene_mappings() -> pd.DataFrame:
+    """NCBI Entrez / GeneID mappings into oncoref's canonical gene space.
+
+    The wheel ships a filtered table built from pinned NCBI ``gene_info`` and
+    ``gene_history`` snapshots: live Entrez IDs resolve through direct Ensembl dbXrefs
+    when possible, otherwise through the current NCBI symbol; discontinued Entrez IDs
+    resolve through their live replacement. The raw NCBI files are intentionally not
+    shipped in the wheel.
+    """
+    out = get_data("ncbi-entrez-gene-mappings").copy()
+    for col in (
+        "entrez_id",
+        "live_entrez_id",
+        "canonical_ensembl_gene_id",
+        "canonical_symbol",
+        "mapping_method",
+        "current_mapping_method",
+    ):
+        out[col] = out[col].astype(str)
+    return out
+
+
+@lru_cache(maxsize=1)
+def _entrez_gene_index() -> dict[str, tuple[str, str, str]]:
+    df = get_data("ncbi-entrez-gene-mappings", copy=False)
+    return {
+        str(entrez_id): (str(gene_id), str(symbol), str(method))
+        for entrez_id, gene_id, symbol, method in zip(
+            df["entrez_id"],
+            df["canonical_ensembl_gene_id"],
+            df["canonical_symbol"],
+            df["mapping_method"],
+        )
+    }
+
+
+def resolve_entrez_id(entrez_id: str) -> tuple[str, str, str] | None:
+    """Map an Entrez / NCBI GeneID to ``(canonical_ensg, symbol, method)``.
+
+    ``method`` is one of ``"entrez_dbxrefs"``, ``"entrez_current_symbol"``, or
+    ``"entrez_gene_history"``. Returns ``None`` when the ID is blank, non-numeric, or
+    absent from the shipped NCBI-derived mapping table.
+    """
+    raw = str(entrez_id).strip()
+    if not raw or not raw.isdigit():
+        return None
+    return _entrez_gene_index().get(raw)
 
 
 def _looks_like_ensembl_gene_id(identifier: str) -> bool:
@@ -284,6 +338,7 @@ def gene_identifier_mapping_coverage() -> pd.DataFrame:
     out["symbol_roundtrip"] = out["symbol_roundtrip_issue"].eq("ok")
 
     syn_df = get_data("ncbi-symbol-synonyms", copy=False)
+    entrez_df = get_data("ncbi-entrez-gene-mappings", copy=False)
     synonym_counts = (
         syn_df.assign(_official=syn_df["official_symbol"].astype(str).str.upper())
         .groupby("_official", sort=False)
@@ -298,6 +353,10 @@ def gene_identifier_mapping_coverage() -> pd.DataFrame:
         alias_counts[primary] = alias_counts.get(primary, 0) + 1
     out["n_ensembl_aliases"] = [int(alias_counts.get(gid, 0)) for gid in out["ensembl_gene_id"]]
     out["has_ensembl_alias"] = out["n_ensembl_aliases"].gt(0)
+
+    entrez_counts = entrez_df.groupby("canonical_ensembl_gene_id", sort=False).size().to_dict()
+    out["n_entrez_ids"] = [int(entrez_counts.get(gid, 0)) for gid in out["ensembl_gene_id"]]
+    out["has_entrez_id"] = out["n_entrez_ids"].gt(0)
 
     def _status(row) -> str:
         if not row.has_symbol:
@@ -326,6 +385,8 @@ def gene_identifier_mapping_coverage() -> pd.DataFrame:
             "has_symbol_alias",
             "n_ensembl_aliases",
             "has_ensembl_alias",
+            "n_entrez_ids",
+            "has_entrez_id",
             "mapping_status",
         ]
     ]
@@ -335,6 +396,7 @@ def gene_identifier_mapping_summary() -> pd.DataFrame:
     """One-row summary of :func:`gene_identifier_mapping_coverage`."""
     coverage = gene_identifier_mapping_coverage()
     syn_df = get_data("ncbi-symbol-synonyms", copy=False)
+    entrez_df = get_data("ncbi-entrez-gene-mappings", copy=False)
     alias_map = ensembl_id_aliases()
     return pd.DataFrame(
         [
@@ -357,8 +419,10 @@ def gene_identifier_mapping_summary() -> pd.DataFrame:
                 ),
                 "n_with_symbol_aliases": int(coverage["has_symbol_alias"].sum()),
                 "n_with_ensembl_aliases": int(coverage["has_ensembl_alias"].sum()),
+                "n_with_entrez_ids": int(coverage["has_entrez_id"].sum()),
                 "n_symbol_alias_rows": len(syn_df),
                 "n_ensembl_alias_rows": len(alias_map),
+                "n_entrez_mapping_rows": len(entrez_df),
                 "mapping_statuses": ";".join(sorted(coverage["mapping_status"].unique())),
                 "symbol_roundtrip_issues": ";".join(
                     sorted(coverage["symbol_roundtrip_issue"].unique())
