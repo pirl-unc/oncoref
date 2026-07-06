@@ -294,6 +294,15 @@ contracts:
   `remapped_to_oncoref` rows with their legacy pirlygenes ENSG IDs. This is
   intentionally a presentation shim: it does not synthesize missing rows or alter
   expression values.
+- Gene-level reference, representative, and percentile readers default to
+  `gene_universe="artifact"`, which preserves the exact shipped row set. Pass
+  `gene_universe="tumor_signal"` to drop only rows explicitly audited as
+  oncoref-only technical extras for the requested artifact/cohort. Pass
+  `include_gene_universe_flags=True` for long reference output or any
+  representative/percentile output to append row-level `artifact_row_class`,
+  `is_technical_extra`, `is_missing_biological`, and
+  `recommended_consumer_action` columns. These options filter or label known
+  artifact row classes; they never invent missing biological expression rows.
 - Gene-level reference, representative, and percentile readers attach
   `df.attrs["gene_universe_delta_summary"]` and
   `df.attrs["gene_universe_delta_n"]` for the requested cohort/product. These
@@ -316,9 +325,8 @@ parity issues.
 
 `expression.expression_artifact_gene_universe_deltas()` exposes the known
 pirlygenes/oncoref row-universe deltas from the current parity audit: canonical
-remaps such as legacy `PAXX` to its oncoref ENSG, CLL percentile replacement rows
-that are known but absent from the current output, representative-sample rows
-missing from oncoref, and the full current set of oncoref-only representative
+remaps such as legacy `PAXX` to its oncoref ENSG, representative-sample rows
+missing from oncoref source/artifact rows, and the full current set of oncoref-only representative
 technical/noncoding, immune-receptor, Y-linked, and unresolved extra rows.
 Use `expression.expression_artifact_gene_universe_delta_summary()` for counts by
 product/cohort/status, or

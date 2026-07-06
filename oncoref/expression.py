@@ -396,6 +396,7 @@ def _representative_attrs(
     k: int | None,
     representative_id_style: str,
     gene_id_style: str,
+    gene_universe: str,
 ) -> dict[str, object]:
     return {
         "artifact": "representative_samples",
@@ -408,6 +409,7 @@ def _representative_attrs(
         "k": k,
         "representative_id_style": representative_id_style,
         "gene_id_style": gene_id_style,
+        "gene_universe": gene_universe,
         "selection_method": REPRESENTATIVE_SELECTION_METHOD,
         "selection_basis": REPRESENTATIVE_SELECTION_BASIS,
     }
@@ -479,6 +481,7 @@ def _percentile_attrs(
     scope: str,
     source: str,
     gene_id_style: str,
+    gene_universe: str,
     missing_reason: str | None = None,
 ) -> dict[str, object]:
     attrs: dict[str, object] = {
@@ -492,6 +495,7 @@ def _percentile_attrs(
         "scope": scope,
         "source": source,
         "gene_id_style": gene_id_style,
+        "gene_universe": gene_universe,
         "normalization": "tpm_clean" if as_tpm else "tpm_clean_log1p",
         "expression_unit": "tpm_clean" if as_tpm else "log1p_tpm_clean",
         "percentile_basis": "biological_clean_tpm_across_samples",
@@ -509,11 +513,15 @@ def _empty_percentile_frame(
     scope: str,
     include_provenance: bool,
     gene_id_style: str,
+    gene_universe: str,
+    include_gene_universe_flags: bool,
     missing_reason: str,
 ) -> pd.DataFrame:
     cols = [*_percentile_identity_cols(proteoform=proteoform), *_percentile_cols()]
     if include_provenance:
         cols.extend(_percentile_provenance_columns())
+    if include_gene_universe_flags:
+        cols.extend(_ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS)
     out = pd.DataFrame(columns=cols)
     out.attrs.update(
         _percentile_attrs(
@@ -523,6 +531,7 @@ def _empty_percentile_frame(
             scope=scope,
             source="missing",
             gene_id_style=gene_id_style,
+            gene_universe=gene_universe,
             missing_reason=missing_reason,
         )
     )
@@ -573,6 +582,13 @@ _ARTIFACT_CANONICALIZATION_STATUSES = frozenset(
         "remapped_to_oncoref",
     }
 )
+_ARTIFACT_GENE_UNIVERSE_MODES = ("artifact", "tumor_signal")
+_ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS = [
+    "artifact_row_class",
+    "is_technical_extra",
+    "is_missing_biological",
+    "recommended_consumer_action",
+]
 
 
 def _delta_nonempty(value: object) -> str | None:
@@ -691,6 +707,123 @@ def expression_artifact_technical_extra_gene_ids(
     df = df[df["is_technical_extra"]]
     ids = {gid for gid in df["oncoref_ensembl_gene_id"].map(_delta_nonempty) if gid is not None}
     return sorted(ids)
+
+
+def _validate_artifact_gene_universe(gene_universe: str) -> str:
+    mode = str(gene_universe)
+    if mode not in _ARTIFACT_GENE_UNIVERSE_MODES:
+        allowed = "', '".join(_ARTIFACT_GENE_UNIVERSE_MODES)
+        raise ValueError(f"gene_universe must be one of '{allowed}'")
+    return mode
+
+
+def _artifact_row_key(series: pd.Series) -> pd.Series:
+    return series.astype(str).str.split(".").str[0]
+
+
+def _row_universe_annotation_frame(product: str, cancer_codes: Iterable[str]) -> pd.DataFrame:
+    """Per-output-row annotations for known oncoref-side artifact deltas."""
+    source_product = _delta_source_product(product)
+    df = expression_artifact_gene_universe_deltas(
+        product=source_product,
+        delta_kind="oncoref_only",
+    )
+    df = _filter_delta_rows_by_codes(df, [str(code) for code in cancer_codes])
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "Ensembl_Gene_ID",
+                *_ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS,
+            ]
+        )
+    work = df.copy()
+    work["Ensembl_Gene_ID"] = work["oncoref_ensembl_gene_id"].map(_delta_nonempty)
+    work = work.dropna(subset=["Ensembl_Gene_ID"])
+
+    rows: list[dict[str, object]] = []
+    class_priority = (
+        "technical_extra",
+        "unresolved_extra",
+        "canonicalized",
+        "missing_biological",
+        "unclassified",
+    )
+    action_by_class = {
+        "technical_extra": "filter_from_signal_views",
+        "unresolved_extra": "audit_before_filtering",
+        "canonicalized": "accept_canonical_mapping",
+        "missing_biological": "restore_or_remap_in_next_bundle",
+        "unclassified": "audit_status",
+    }
+    for gene_id, group in work.groupby("Ensembl_Gene_ID", sort=False):
+        classes = set(group["artifact_row_class"].astype(str))
+        row_class = next((name for name in class_priority if name in classes), "artifact")
+        rows.append(
+            {
+                "Ensembl_Gene_ID": str(gene_id),
+                "artifact_row_class": row_class,
+                "is_technical_extra": row_class == "technical_extra",
+                "is_missing_biological": row_class == "missing_biological",
+                "recommended_consumer_action": action_by_class.get(row_class, "keep"),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _apply_artifact_gene_universe(
+    df: pd.DataFrame,
+    *,
+    product: str,
+    cancer_codes: Iterable[str],
+    gene_universe: str,
+    include_gene_universe_flags: bool,
+) -> pd.DataFrame:
+    """Filter/annotate known expression-artifact row-universe deltas.
+
+    ``gene_universe="artifact"`` preserves the exact shipped row set.
+    ``"tumor_signal"`` drops only rows explicitly audited as technical extras
+    (small/noncoding RNA, Y-linked, or immune-receptor artifact rows). It never
+    synthesizes missing biological rows.
+    """
+    mode = _validate_artifact_gene_universe(gene_universe)
+    if "Ensembl_Gene_ID" not in df.columns:
+        return df
+    attrs = dict(df.attrs)
+    out = df.copy()
+    annotations = _row_universe_annotation_frame(product, cancer_codes)
+    ann = annotations.set_index("Ensembl_Gene_ID") if not annotations.empty else annotations
+
+    if mode == "tumor_signal" and not annotations.empty:
+        technical_ids = set(
+            annotations.loc[annotations["is_technical_extra"], "Ensembl_Gene_ID"].astype(str)
+        )
+        if technical_ids:
+            keys = _artifact_row_key(out["Ensembl_Gene_ID"])
+            out = out.loc[~keys.isin(technical_ids)].reset_index(drop=True)
+
+    if include_gene_universe_flags:
+        keys = _artifact_row_key(out["Ensembl_Gene_ID"])
+        if annotations.empty:
+            out["artifact_row_class"] = "artifact"
+            out["is_technical_extra"] = False
+            out["is_missing_biological"] = False
+            out["recommended_consumer_action"] = "keep"
+        else:
+            out["artifact_row_class"] = (
+                keys.map(ann["artifact_row_class"]).fillna("artifact").to_numpy()
+            )
+            out["is_technical_extra"] = keys.map(ann["is_technical_extra"]).eq(True).to_numpy()
+            out["is_missing_biological"] = (
+                keys.map(ann["is_missing_biological"]).eq(True).to_numpy()
+            )
+            out["recommended_consumer_action"] = (
+                keys.map(ann["recommended_consumer_action"]).fillna("keep").to_numpy()
+            )
+
+    out.attrs.update(attrs)
+    out.attrs["gene_universe"] = mode
+    out.attrs["include_gene_universe_flags"] = bool(include_gene_universe_flags)
+    return out
 
 
 def expression_artifact_gene_universe_delta_summary() -> pd.DataFrame:
@@ -1617,6 +1750,8 @@ def cancer_reference_expression(
     auto_fetch: bool = False,
     sample_qc: str = "pass",
     gene_id_style: str = "oncoref",
+    gene_universe: str = "artifact",
+    include_gene_universe_flags: bool = False,
 ) -> pd.DataFrame:
     """Observed tumor expression references as cohort-level clean TPM summaries.
 
@@ -1640,6 +1775,11 @@ def cancer_reference_expression(
     ``"pirlygenes"`` only for migration wrappers that need known legacy ENSG IDs
     for rows with one-to-one remaps recorded in
     ``expression-artifact-gene-universe-deltas.csv``.
+    ``gene_universe="artifact"`` preserves exact shipped rows.
+    ``gene_universe="tumor_signal"`` drops only rows audited as technical artifact
+    extras for the requested cohort/product; ``include_gene_universe_flags=True``
+    appends row-level audit columns in long output. Neither option synthesizes missing
+    biological rows.
     Missing requested cohorts are omitted by default to preserve the historical
     behavior; pass ``on_missing="empty"`` to preserve a schema-stable empty result
     with missing-request metadata in ``df.attrs["missing_requests"]`` or
@@ -1648,12 +1788,15 @@ def cancer_reference_expression(
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_sample_qc(sample_qc)
     _validate_gene_id_style(gene_id_style)
+    gene_universe = _validate_artifact_gene_universe(gene_universe)
     if format not in ("long", "wide"):
         raise ValueError("format must be 'long' or 'wide'")
     if on_missing not in ("omit", "empty", "raise"):
         raise ValueError("on_missing must be 'omit', 'empty', or 'raise'")
     if include_request_metadata and format != "long":
         raise ValueError("include_request_metadata=True requires format='long'")
+    if include_gene_universe_flags and format != "long":
+        raise ValueError("include_gene_universe_flags=True requires format='long'")
 
     requests = _reference_expression_requests(cancer_types, modes)
     availability = _reference_expression_availability_for_requests(
@@ -1687,6 +1830,13 @@ def cancer_reference_expression(
                 code, mode, auto_fetch=auto_fetch, sample_qc=sample_qc
             )
             ref = ref[_gene_filter_mask(ref, genes)].reset_index(drop=True)
+            ref = _apply_artifact_gene_universe(
+                ref,
+                product="cancer_reference_expression",
+                cancer_codes=[code],
+                gene_universe=gene_universe,
+                include_gene_universe_flags=include_gene_universe_flags,
+            )
             ref = _apply_gene_id_style(
                 ref,
                 product="cohort_gene_percentiles",
@@ -1695,7 +1845,10 @@ def cancer_reference_expression(
             )
             label = _REFERENCE_NORMALIZE_LABELS[mode]
             if format == "long":
-                part = ref[["Ensembl_Gene_ID", "Symbol", "p25", "p50", "p75"]].copy()
+                value_cols = ["Ensembl_Gene_ID", "Symbol", "p25", "p50", "p75"]
+                if include_gene_universe_flags:
+                    value_cols.extend(_ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS)
+                part = ref[value_cols].copy()
                 part.insert(2, "cancer_code", code)
                 part["normalization"] = label
                 if include_request_metadata:
@@ -1712,7 +1865,13 @@ def cancer_reference_expression(
                     for col, value in provenance.items():
                         part[col] = value
                 long_parts.append(
-                    part[_reference_long_columns(include_provenance, include_request_metadata)]
+                    part[
+                        _reference_long_columns(
+                            include_provenance,
+                            include_request_metadata,
+                            include_gene_universe_flags,
+                        )
+                    ]
                 )
             else:
                 suffix = _REFERENCE_WIDE_SUFFIXES[mode]
@@ -1722,13 +1881,21 @@ def cancer_reference_expression(
                 wide_parts.append(part)
 
     if format == "long":
-        cols = _reference_long_columns(include_provenance, include_request_metadata)
+        cols = _reference_long_columns(
+            include_provenance,
+            include_request_metadata,
+            include_gene_universe_flags,
+        )
         if not long_parts:
             out = pd.DataFrame(columns=cols)
         else:
             out = pd.concat(long_parts, ignore_index=True)
         _attach_reference_expression_attrs(
-            out, availability if on_missing != "omit" else None, gene_id_style=gene_id_style
+            out,
+            availability if on_missing != "omit" else None,
+            gene_id_style=gene_id_style,
+            gene_universe=gene_universe,
+            include_gene_universe_flags=include_gene_universe_flags,
         )
         if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
             _attach_gene_universe_delta_attrs(
@@ -1743,7 +1910,11 @@ def cancer_reference_expression(
     else:
         out = _merge_cancer_reference_wide_parts(wide_parts)
     _attach_reference_expression_attrs(
-        out, availability if on_missing != "omit" else None, gene_id_style=gene_id_style
+        out,
+        availability if on_missing != "omit" else None,
+        gene_id_style=gene_id_style,
+        gene_universe=gene_universe,
+        include_gene_universe_flags=include_gene_universe_flags,
     )
     if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
         _attach_gene_universe_delta_attrs(
@@ -1935,12 +2106,19 @@ def _reference_expected_method(mode: str) -> str:
 
 
 def _attach_reference_expression_attrs(
-    df: pd.DataFrame, availability: pd.DataFrame | None, *, gene_id_style: str
+    df: pd.DataFrame,
+    availability: pd.DataFrame | None,
+    *,
+    gene_id_style: str,
+    gene_universe: str,
+    include_gene_universe_flags: bool,
 ) -> None:
     df.attrs["artifact_schema_version"] = REFERENCE_EXPRESSION_SCHEMA_VERSION
     df.attrs["data_version"] = DATA_VERSION
     df.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
     df.attrs["gene_id_style"] = gene_id_style
+    df.attrs["gene_universe"] = gene_universe
+    df.attrs["include_gene_universe_flags"] = bool(include_gene_universe_flags)
     if availability is None:
         return
     missing = availability.loc[~availability["available"]]
@@ -1968,12 +2146,18 @@ def _reference_normalize_modes(normalize: str | Iterable[str]) -> list[str]:
     return modes
 
 
-def _reference_long_columns(include_provenance: bool, include_request_metadata: bool) -> list[str]:
+def _reference_long_columns(
+    include_provenance: bool,
+    include_request_metadata: bool,
+    include_gene_universe_flags: bool,
+) -> list[str]:
     cols = ["Ensembl_Gene_ID", "Symbol", "cancer_code", "normalization"]
     if include_request_metadata:
         cols += _REFERENCE_REQUEST_COLUMNS
     if include_provenance:
         cols += _REFERENCE_PROVENANCE_COLUMNS
+    if include_gene_universe_flags:
+        cols += _ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS
     return [*cols, "expression", "q1", "q3"]
 
 
@@ -2187,6 +2371,8 @@ def representative_cohort_samples(
     include_provenance: bool = False,
     representative_id_style: str = "pirlygenes",
     gene_id_style: str = "oncoref",
+    gene_universe: str = "artifact",
+    include_gene_universe_flags: bool = False,
 ) -> pd.DataFrame:
     """Representative real per-sample expression vectors per cohort.
 
@@ -2208,9 +2394,13 @@ def representative_cohort_samples(
     ``"pirlygenes"`` only for migration wrappers that need known legacy ENSG IDs
     for rows recorded as ``remapped_to_oncoref`` in the expression artifact delta
     table; missing rows and values are not synthesized.
+    ``gene_universe="artifact"`` preserves exact shipped rows.
+    ``gene_universe="tumor_signal"`` drops rows audited as technical artifact extras;
+    ``include_gene_universe_flags=True`` appends row-level audit columns.
     """
     _validate_representative_id_style(representative_id_style)
     _validate_gene_id_style(gene_id_style)
+    gene_universe = _validate_artifact_gene_universe(gene_universe)
     if normalize not in ("tpm_clean", "tpm_clean_log1p"):
         raise ValueError(
             "representative_cohort_samples normalize must be 'tpm_clean' or "
@@ -2297,7 +2487,15 @@ def representative_cohort_samples(
                     k=k,
                     representative_id_style=representative_id_style,
                     gene_id_style=gene_id_style,
+                    gene_universe=gene_universe,
                 )
+            )
+            out = _apply_artifact_gene_universe(
+                out,
+                product="representative_cohort_samples",
+                cancer_codes=codes,
+                gene_universe=gene_universe,
+                include_gene_universe_flags=include_gene_universe_flags,
             )
             _attach_gene_universe_delta_attrs(
                 out, product="representative_cohort_samples", cancer_codes=codes
@@ -2308,6 +2506,13 @@ def representative_cohort_samples(
             combined = combined.groupby(level=0).first()
         out = combined.reset_index(names="Ensembl_Gene_ID")
         out.insert(1, "Symbol", out["Ensembl_Gene_ID"].map(_canonical_symbol))
+        out = _apply_artifact_gene_universe(
+            out,
+            product="representative_cohort_samples",
+            cancer_codes=codes,
+            gene_universe=gene_universe,
+            include_gene_universe_flags=include_gene_universe_flags,
+        )
         out = _apply_gene_id_style(
             out,
             product="representative_cohort_samples",
@@ -2322,6 +2527,7 @@ def representative_cohort_samples(
                 k=k,
                 representative_id_style=representative_id_style,
                 gene_id_style=gene_id_style,
+                gene_universe=gene_universe,
             )
         )
         _attach_gene_universe_delta_attrs(
@@ -2339,7 +2545,15 @@ def representative_cohort_samples(
                 k=k,
                 representative_id_style=representative_id_style,
                 gene_id_style=gene_id_style,
+                gene_universe=gene_universe,
             )
+        )
+        out = _apply_artifact_gene_universe(
+            out,
+            product="representative_cohort_samples",
+            cancer_codes=codes,
+            gene_universe=gene_universe,
+            include_gene_universe_flags=include_gene_universe_flags,
         )
         _attach_gene_universe_delta_attrs(
             out, product="representative_cohort_samples", cancer_codes=codes
@@ -2351,6 +2565,13 @@ def representative_cohort_samples(
         long = _attach_representative_provenance(long, root)
     long["representative_id"] = long["representative_id"].map(
         lambda x: _representative_id_for_style(x, style=representative_id_style)
+    )
+    long = _apply_artifact_gene_universe(
+        long,
+        product="representative_cohort_samples",
+        cancer_codes=codes,
+        gene_universe=gene_universe,
+        include_gene_universe_flags=include_gene_universe_flags,
     )
     long = _apply_gene_id_style(
         long,
@@ -2366,6 +2587,7 @@ def representative_cohort_samples(
             k=k,
             representative_id_style=representative_id_style,
             gene_id_style=gene_id_style,
+            gene_universe=gene_universe,
         )
     )
     _attach_gene_universe_delta_attrs(
@@ -2448,6 +2670,8 @@ def cohort_gene_percentiles(
     include_provenance: bool = False,
     on_missing: str = "raise",
     gene_id_style: str = "oncoref",
+    gene_universe: str = "artifact",
+    include_gene_universe_flags: bool = False,
 ) -> pd.DataFrame:
     """Tail-weighted per-gene percentile vector for one cohort.
 
@@ -2469,6 +2693,9 @@ def cohort_gene_percentiles(
     ``"pirlygenes"`` only for gene-level migration wrappers that need known
     legacy ENSG IDs for rows recorded as ``remapped_to_oncoref`` in the
     expression artifact delta table; missing rows and values are not synthesized.
+    ``gene_universe="artifact"`` preserves exact shipped rows.
+    ``gene_universe="tumor_signal"`` drops rows audited as technical artifact extras;
+    ``include_gene_universe_flags=True`` appends row-level audit columns.
 
     With ``proteoform=True``, the vector is one row per proteoform key
     (``proteoform_key``/``Symbol`` carry the collapsed identity), identical-protein
@@ -2484,8 +2711,13 @@ def cohort_gene_percentiles(
     if on_missing not in ("raise", "empty"):
         raise ValueError("on_missing must be 'raise' or 'empty'")
     _validate_gene_id_style(gene_id_style)
+    gene_universe = _validate_artifact_gene_universe(gene_universe)
     if proteoform and gene_id_style != "oncoref":
         raise ValueError("gene_id_style='pirlygenes' is only supported for gene-level artifacts")
+    if proteoform and (gene_universe != "artifact" or include_gene_universe_flags):
+        raise ValueError(
+            "gene_universe filtering/flags are only supported for gene-level artifacts"
+        )
 
     code = resolve_cancer_type(cancer_type)
     try:
@@ -2503,6 +2735,8 @@ def cohort_gene_percentiles(
             scope=scope,
             include_provenance=include_provenance,
             gene_id_style=gene_id_style,
+            gene_universe=gene_universe,
+            include_gene_universe_flags=include_gene_universe_flags,
             missing_reason=str(e),
         )
         if not proteoform:
@@ -2516,6 +2750,13 @@ def cohort_gene_percentiles(
         df[bp_cols] = np.expm1(df[bp_cols])
     if include_provenance:
         df = _attach_percentile_provenance(df, code=code, as_tpm=as_tpm)
+    df = _apply_artifact_gene_universe(
+        df,
+        product="cohort_gene_percentiles",
+        cancer_codes=[code],
+        gene_universe=gene_universe,
+        include_gene_universe_flags=include_gene_universe_flags,
+    )
     df = _apply_gene_id_style(
         df,
         product="cohort_gene_percentiles",
@@ -2530,6 +2771,7 @@ def cohort_gene_percentiles(
             scope=scope,
             source=source,
             gene_id_style=gene_id_style,
+            gene_universe=gene_universe,
         )
     )
     if not proteoform:
