@@ -53,6 +53,11 @@ msi_crc[["code", "evidence_source_code", "normal_tissue_code", "hpa_tissues"]]
 # Join scalar references for the returned codes.
 cancer_ontology.cancer_type_reference_data(msi_crc)
 
+# Ask whether each ontology node has a direct expression reference or only
+# molecular/no expression evidence.
+cancer_ontology.expression_reference_coverage(subtype_group="MSI", under="CRC")
+cancer_ontology.coverage_for_cancer_type("ASTB")
+
 # Use codes directly with expression accessors.
 codes = cancer_ontology.cancer_type_codes(subtype_group="MSI", under="CRC")
 expression.cancer_reference_expression(codes)
@@ -62,6 +67,15 @@ cancer_ontology.matched_normal_tissue_expression("COAD", genes=["ENSG00000141510
 
 cohorts.cohort_registry_df()
 ```
+
+`expression_reference_coverage()` is the ontology-wide readiness table for
+classifier consumers. It reports direct observed-bulk source-matrix coverage,
+matched normal tissue availability, molecular/fusion-only definitions, canonical
+gene/proteoform space, data/source-matrix versions, and a conservative
+`consumer_recommendation`: `direct_reference`, `molecular_only`, or
+`unsupported`. It intentionally does not synthesize marker-program or
+discriminator fallbacks; those remain consumer-layer choices in packages such as
+trufflepig.
 
 ## Gene Identity
 

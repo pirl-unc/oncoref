@@ -916,6 +916,166 @@ def cancer_type_codes(*args, **kwargs) -> list[str]:
     return cancer_type_records(*args, **kwargs)["code"].tolist()
 
 
+_EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
+    "code",
+    "name",
+    "parent_code",
+    "lineage_group",
+    "family",
+    "family_name",
+    "primary_tissue",
+    "ontology_depth",
+    "is_leaf",
+    "subtype_groups",
+    "subtype_axes",
+    "normal_tissue_code",
+    "hpa_tissues",
+    "has_matched_normal_expression",
+    "has_direct_expression_reference",
+    "observed_bulk_reference",
+    "deconvolved_tumor_reference",
+    "subtype_deconvolved_reference",
+    "cell_line_reference",
+    "single_cell_pseudobulk_reference",
+    "expression_reference_kind",
+    "expression_reference_source_code",
+    "source_matrix_cohort",
+    "source_matrix_n_samples",
+    "source_cohort",
+    "source_pmid",
+    "normalization_method",
+    "gene_id_space",
+    "proteoform_space",
+    "data_version",
+    "source_matrix_version",
+    "has_molecular_definition",
+    "molecular_definition_kind",
+    "consumer_recommendation",
+    "missing_reason",
+]
+
+
+def _definition_kind(record, raw_record) -> tuple[str, ...]:
+    kinds = []
+    if record["subtype_groups"] or record["subtype_axes"]:
+        kinds.append("subtype_group")
+    fusion_driver = raw_record.get("fusion_driver")
+    fusion_driven = raw_record.get("fusion_driven")
+    if (
+        fusion_driver is not None
+        and not pd.isna(fusion_driver)
+        and str(fusion_driver).strip()
+        and str(fusion_driven).strip().lower() == "defining"
+    ):
+        kinds.append("fusion")
+    return tuple(kinds)
+
+
+def _coverage_recommendation(*, has_direct: bool, molecular_kinds: tuple[str, ...]) -> str:
+    if has_direct:
+        return "direct_reference"
+    if molecular_kinds:
+        return "molecular_only"
+    return "unsupported"
+
+
+def _none_if_missing(value):
+    return None if _row_is_missing(value) else value
+
+
+def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataFrame:
+    """Ontology-wide expression-reference coverage for classifier consumers.
+
+    This is a source-data contract over oncoref-owned facts: registry hierarchy,
+    matched normal tissue, direct raw/source expression matrix availability, and
+    explicit molecular definitions. It deliberately does not synthesize marker
+    programs or downstream classifier rules; those belong in consumer packages.
+
+    ``cancer_types`` and ``query_kwargs`` follow :func:`cancer_type_records`, so
+    callers can ask for all records, a subtree (``under="CRC"``), molecular axes
+    (``subtype_group="MSI"``), or a specific list of codes. The return type is
+    always a stable DataFrame, including for empty selections.
+    """
+    from .version import DATA_VERSION, SOURCE_MATRIX_VERSION
+
+    records = cancer_type_records(cancer_types, **query_kwargs)
+    raw = cancer_type_registry().set_index("code", drop=False)
+    rows = []
+    for record in records.to_dict("records"):
+        code = record["code"]
+        raw_record = raw.loc[code] if code in raw.index else {}
+        has_direct = bool(record["has_expression_matrix"])
+        molecular_kinds = _definition_kind(record, raw_record)
+        has_normal = not _row_is_missing(record["normal_tissue_code"]) and bool(
+            record["hpa_tissues"]
+        )
+        rows.append(
+            {
+                "code": code,
+                "name": record["name"],
+                "parent_code": _none_if_missing(record["parent_code"]),
+                "lineage_group": record["lineage_group"],
+                "family": record["family"],
+                "family_name": record["family_name"],
+                "primary_tissue": record["primary_tissue"],
+                "ontology_depth": max(len(record["path"]) - 1, 0),
+                "is_leaf": bool(record["is_leaf"]),
+                "subtype_groups": record["subtype_groups"],
+                "subtype_axes": record["subtype_axes"],
+                "normal_tissue_code": _none_if_missing(record["normal_tissue_code"]),
+                "hpa_tissues": record["hpa_tissues"],
+                "has_matched_normal_expression": has_normal,
+                "has_direct_expression_reference": has_direct,
+                "observed_bulk_reference": has_direct,
+                "deconvolved_tumor_reference": False,
+                "subtype_deconvolved_reference": False,
+                "cell_line_reference": False,
+                "single_cell_pseudobulk_reference": False,
+                "expression_reference_kind": "observed_bulk" if has_direct else "none",
+                "expression_reference_source_code": code if has_direct else None,
+                "source_matrix_cohort": _none_if_missing(record["source_matrix_cohort"]),
+                "source_matrix_n_samples": _none_if_missing(record["source_matrix_n_samples"]),
+                "source_cohort": _none_if_missing(record["source_cohort"]),
+                "source_pmid": _none_if_missing(record["source_pmid"]),
+                "normalization_method": "clean_tpm_16_9_75" if has_direct else None,
+                "gene_id_space": "oncoref_canonical_ensg" if has_direct else None,
+                "proteoform_space": "oncoref_proteoform_groups" if has_direct else None,
+                "data_version": DATA_VERSION if has_direct else None,
+                "source_matrix_version": SOURCE_MATRIX_VERSION if has_direct else None,
+                "has_molecular_definition": bool(molecular_kinds),
+                "molecular_definition_kind": molecular_kinds,
+                "consumer_recommendation": _coverage_recommendation(
+                    has_direct=has_direct, molecular_kinds=molecular_kinds
+                ),
+                "missing_reason": (
+                    None
+                    if has_direct
+                    else (
+                        "molecular_definition_without_expression_matrix"
+                        if molecular_kinds
+                        else "no_direct_expression_matrix"
+                    )
+                ),
+            }
+        )
+    return pd.DataFrame(rows, columns=_EXPRESSION_REFERENCE_COVERAGE_COLUMNS)
+
+
+def coverage_for_cancer_type(cancer_type: str | None) -> dict | None:
+    """Single-code expression-reference coverage record.
+
+    Returns ``None`` for ``None`` input and raises the same ``ValueError`` as
+    :func:`resolve_cancer_type` for unknown cancer labels.
+    """
+    if cancer_type is None:
+        return None
+    code = resolve_cancer_type(cancer_type)
+    frame = expression_reference_coverage([code])
+    if frame.empty:
+        return None
+    return frame.iloc[0].to_dict()
+
+
 _CANCER_TYPE_PATH_COLUMNS = [
     "level",
     "kind",
