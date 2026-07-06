@@ -252,6 +252,178 @@ def cta_candidate_references() -> pd.DataFrame:
     return get_data("cta-candidate-references").copy()
 
 
+def cta_clinical_target_references() -> pd.DataFrame:
+    """Source-anchored clinical/canonical CTA target tier.
+
+    This table is deliberately separate from :func:`cta_filtered_gene_names`: the
+    strict default remains the HPA reproductive-restriction view, while this tier
+    keeps well-known clinical or registry CTAs discoverable even when they fail the
+    strict normal-tissue screen or have not yet been promoted out of the candidate
+    watchlist.
+    """
+    return get_data("cta-clinical-targets").copy()
+
+
+def _boolish(values: pd.Series) -> pd.Series:
+    return values.astype(str).str.strip().str.lower() == "true"
+
+
+def _clinical_evidence_tier(row: pd.Series) -> str:
+    if pd.notna(row.get("passes_filters")):
+        if bool(row.get("_passes_filters")):
+            return (
+                "filtered_never_expressed"
+                if bool(row.get("_never_expressed"))
+                else "filtered_expressed"
+            )
+        return "excluded"
+    if pd.notna(row.get("candidate_source")):
+        return "candidate"
+    return "clinical_only"
+
+
+def cta_clinical_target_evidence() -> pd.DataFrame:
+    """Clinical/canonical CTA target tier joined to HPA and candidate evidence.
+
+    The joined ``evidence_tier`` makes the safety boundary explicit:
+
+    - ``filtered_expressed`` / ``filtered_never_expressed``: already in the strict
+      oncoref CTA table;
+    - ``excluded``: in the CTA table but failed the HPA filter, with
+      ``exclusion_driver_tissue`` / ``exclusion_driver_ntpm`` exposing the somatic
+      RNA signal that drove exclusion;
+    - ``candidate``: in the referenced candidate watchlist but not the curated CTA
+      table;
+    - ``clinical_only``: source-anchored target row without bundled HPA evidence.
+
+    This helper is for explicit clinical/canonical CTA workflows. It does not alter
+    the default strict CTA helpers.
+    """
+    refs = cta_clinical_target_references()
+    refs["Ensembl_Gene_ID"] = refs["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+
+    table_cols = [
+        "Symbol",
+        "Ensembl_Gene_ID",
+        "source_databases",
+        "passes_filters",
+        "never_expressed",
+        "rna_testis_ntpm",
+        "rna_ovary_ntpm",
+        "rna_placenta_ntpm",
+        "rna_max_somatic_tissue",
+        "rna_max_somatic_ntpm",
+        "rna_somatic_detected_count",
+        "rna_brain_max_ntpm",
+        "rna_heart_max_ntpm",
+        "protein_restriction",
+        "rna_restriction",
+        "rna_restriction_level",
+        "restriction",
+        "restriction_confidence",
+        "safety_flags",
+    ]
+    table = cta_df()[table_cols].copy()
+    table["Ensembl_Gene_ID"] = table["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    table["_passes_filters"] = passes_filters_mask(table)
+    table["_never_expressed"] = _boolish(table["never_expressed"])
+
+    out = refs.merge(
+        table.drop(columns=["Symbol"]).rename(columns={"source_databases": "cta_source_databases"}),
+        on="Ensembl_Gene_ID",
+        how="left",
+    )
+
+    candidates = cta_candidate_references().copy()
+    candidates["Ensembl_Gene_ID"] = candidates["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    candidate_cols = [
+        "Ensembl_Gene_ID",
+        "candidate_source",
+        "ct_designation",
+        "family",
+        "hpa_testis_ntpm",
+        "hpa_max_somatic_ntpm",
+        "hpa_max_somatic_tissue",
+        "hpa_testis_restricted",
+        "pmids",
+    ]
+    out = out.merge(
+        candidates[candidate_cols].rename(columns={"pmids": "candidate_pmids"}),
+        on="Ensembl_Gene_ID",
+        how="left",
+    )
+    out["evidence_tier"] = out.apply(_clinical_evidence_tier, axis=1)
+    excluded = out["evidence_tier"] == "excluded"
+    out["exclusion_driver_tissue"] = out["rna_max_somatic_tissue"].where(excluded)
+    out["exclusion_driver_ntpm"] = pd.to_numeric(
+        out["rna_max_somatic_ntpm"], errors="coerce"
+    ).where(excluded)
+    out = out.drop(columns=["_passes_filters", "_never_expressed"])
+
+    cols = [
+        "Symbol",
+        "Ensembl_Gene_ID",
+        "clinical_tier",
+        "evidence_tier",
+        "source_anchor",
+        "pmids",
+        "rationale",
+        "passes_filters",
+        "never_expressed",
+        "exclusion_driver_tissue",
+        "exclusion_driver_ntpm",
+        "rna_testis_ntpm",
+        "rna_ovary_ntpm",
+        "rna_placenta_ntpm",
+        "rna_max_somatic_tissue",
+        "rna_max_somatic_ntpm",
+        "rna_somatic_detected_count",
+        "rna_brain_max_ntpm",
+        "rna_heart_max_ntpm",
+        "protein_restriction",
+        "rna_restriction",
+        "rna_restriction_level",
+        "restriction",
+        "restriction_confidence",
+        "safety_flags",
+        "cta_source_databases",
+        "candidate_source",
+        "ct_designation",
+        "family",
+        "hpa_testis_ntpm",
+        "hpa_max_somatic_ntpm",
+        "hpa_max_somatic_tissue",
+        "hpa_testis_restricted",
+        "candidate_pmids",
+    ]
+    return out[cols].copy()
+
+
+def cta_clinical_target_gene_names() -> set[str]:
+    """Symbols in the explicit clinical/canonical CTA target tier."""
+    return set(cta_clinical_target_references()["Symbol"].astype(str))
+
+
+def cta_clinical_target_gene_ids() -> set[str]:
+    """Ensembl IDs in the explicit clinical/canonical CTA target tier."""
+    return set(
+        cta_clinical_target_references()["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    )
+
+
+def cta_excluded_clinical_target_gene_names() -> set[str]:
+    """Clinical/canonical CTA targets present in the CTA table but excluded by the
+    strict HPA filter."""
+    df = cta_clinical_target_evidence()
+    return set(df.loc[df["evidence_tier"] == "excluded", "Symbol"].astype(str))
+
+
+def cta_excluded_clinical_target_gene_ids() -> set[str]:
+    """Ensembl IDs for :func:`cta_excluded_clinical_target_gene_names`."""
+    df = cta_clinical_target_evidence()
+    return set(df.loc[df["evidence_tier"] == "excluded", "Ensembl_Gene_ID"].astype(str))
+
+
 def passes_filters_mask(df: pd.DataFrame) -> pd.Series:
     """Boolean mask for rows passing the HPA curation filter (reproductive
     restriction). Accepts the legacy ``filtered`` column too."""

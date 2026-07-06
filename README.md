@@ -99,6 +99,7 @@ od.cancer_ici_response("SKCM", regimen="PD-1+CTLA-4")   # 57.6  (pin a regimen)
 # Cancer-testis antigens (HPA-derived tissue-restriction):
 od.cta_gene_names()                       # expressed CTA symbols (MAGEA4, CT83, …)
 od.cta_evidence()                         # full HPA restriction table
+od.cta_clinical_target_evidence()         # explicit clinical/canonical tier + leak flags
 
 # Per-cohort expression percentiles (downloads the data bundle on first use):
 od.cohort_gene_percentiles("PRAD")        # per-gene p0…p100 vector (within-cohort)
@@ -124,8 +125,11 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   compartment transform and `oncoref.gene_families` for clean-TPM censored
   compartment IDs plus the biological housekeeping denominator panel.
 - **Cancer-testis antigens** — `oncoref.cta`: `cta_gene_names`/`cta_gene_ids`,
-  `cta_evidence`, `synthesize_restriction` (HPA-only tissue-restriction; MS
-  evidence stays in the target-selection layer).
+  `cta_evidence`, `cta_clinical_target_evidence`, `synthesize_restriction`
+  (HPA-only tissue-restriction; MS evidence stays in the target-selection layer).
+  The strict default keeps normal-tissue safety conservative; clinical/canonical
+  targets that fail that filter remain discoverable through the explicit clinical
+  tier with exclusion-driving tissue and nTPM values attached.
 - **CTA coverage / peptides** — `oncoref.cta_coverage` for patient coverage and
   `oncoref.cta_peptides` for CTA-specific 9-mer count maps and load.
 - **Generic antigen-panel coverage** — `oncoref.antigen_coverage` for explicit
