@@ -68,10 +68,7 @@ def test_expression_artifact_gene_universe_deltas_filter_by_product_and_code():
     )
 
     assert len(cll) == 17
-    assert set(cll["status"]) == {
-        "canonical_replacement_absent_from_output",
-        "remapped_to_oncoref",
-    }
+    assert set(cll["status"]) == {"remapped_to_oncoref"}
     assert "ENSG00000225489" in set(cll["legacy_ensembl_gene_id"])
 
 
@@ -111,7 +108,6 @@ def test_expression_artifact_gene_universe_deltas_flag_technical_and_missing_row
 
     missing = df[df["is_missing_biological"]]
     assert set(missing["status"]) == {
-        "canonical_replacement_absent_from_output",
         "canonical_row_absent_from_oncoref_output",
         "unresolved_missing_oncoref_row",
     }
@@ -131,6 +127,43 @@ def test_expression_artifact_technical_extra_gene_ids_filters_request_scope():
     assert "ENSG00000310560" not in ids
 
 
+def test_representatives_filter_and_flag_artifact_technical_extras(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000199334", "ENSG00000000003"],
+            "Symbol": ["RNA5S11", "TSPAN6"],
+            "PRAD__rep1": [1.0, 2.0],
+        }
+    ).to_parquet(d / "PRAD.parquet", index=False)
+
+    flagged = expression.representative_cohort_samples("PRAD", include_gene_universe_flags=True)
+    keyed = flagged.set_index("Ensembl_Gene_ID")
+    assert keyed.loc["ENSG00000199334", "artifact_row_class"] == "technical_extra"
+    assert bool(keyed.loc["ENSG00000199334", "is_technical_extra"]) is True
+    assert keyed.loc["ENSG00000199334", "recommended_consumer_action"] == (
+        "filter_from_signal_views"
+    )
+    assert keyed.loc["ENSG00000000003", "artifact_row_class"] == "artifact"
+    assert flagged.attrs["gene_universe"] == "artifact"
+    assert flagged.attrs["include_gene_universe_flags"] is True
+
+    filtered = expression.representative_cohort_samples("PRAD", gene_universe="tumor_signal")
+    assert list(filtered["Ensembl_Gene_ID"]) == ["ENSG00000000003"]
+    assert filtered.attrs["gene_universe"] == "tumor_signal"
+
+    long = expression.representative_cohort_samples(
+        "PRAD",
+        format="long",
+        gene_universe="tumor_signal",
+        include_gene_universe_flags=True,
+    )
+    assert list(long["Ensembl_Gene_ID"]) == ["ENSG00000000003"]
+    assert "artifact_row_class" in long.columns
+
+
 def test_expression_artifact_gene_universe_delta_summary():
     summary = expression.expression_artifact_gene_universe_delta_summary()
 
@@ -138,11 +171,11 @@ def test_expression_artifact_gene_universe_delta_summary():
         (summary["product"] == "cohort_gene_percentiles")
         & (summary["cancer_code"] == "CLL")
         & (summary["delta_kind"] == "pirlygenes_only")
-        & (summary["status"] == "canonical_replacement_absent_from_output")
+        & (summary["status"] == "remapped_to_oncoref")
     ]
-    assert hit["n"].iloc[0] == 14
-    assert hit["artifact_row_class"].iloc[0] == "missing_biological"
-    assert hit["is_missing_biological"].iloc[0]
+    assert hit["n"].iloc[0] == 17
+    assert hit["artifact_row_class"].iloc[0] == "canonicalized"
+    assert not hit["is_missing_biological"].iloc[0]
 
     representative = summary[
         (summary["product"] == "representative_cohort_samples")
