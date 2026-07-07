@@ -210,7 +210,11 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   data-bundle generation scripts. `GeoMatrixSource` /
   `build_source_matrices` own the generic supplementary-matrix path from raw
   source file to canonical per-code per-sample TPM parquet, mapping audit, parse
-  diagnostics, and sample-QC sidecars. `geo_matrix_source_from_registry` and
+  diagnostics, sample-QC sidecars, and `SourceMatrixBuildResult.summary_rows`.
+  `summarize_source_matrix` is the standalone producer for those
+  per-gene-per-cohort reference-expression rows: raw TPM stats, clean-TPM
+  16/9/75 stats, `n_samples`, `n_detected`, and source provenance in one schema.
+  `geo_matrix_source_from_registry` and
   `scripts/build_geo_matrix.py` make `source_type: geo-matrix` entries in the
   packaged source registry directly buildable; `GeoMatrixSource` also preserves
   summary-row provenance (`notes`, `pipeline_stem`, `tumor_origin`,
