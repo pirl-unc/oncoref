@@ -168,6 +168,10 @@ def test_geo_matrix_source_from_entry_compiles_yaml_filters_and_routing():
                     {"match": "^tumor_b", "cancer_code": "CODE_B"},
                 ]
             },
+            "notes": "source-level summary row notes",
+            "pipeline_stem": "synthetic_pipeline",
+            "tumor_origin": "metastasis",
+            "metastasis_site": "liver",
         }
     )
 
@@ -180,6 +184,26 @@ def test_geo_matrix_source_from_entry_compiles_yaml_filters_and_routing():
     assert source.sample_to_cancer_code("tumor_a1") == "CODE_A"
     assert source.sample_to_cancer_code("tumor_b1") == "CODE_B"
     assert source.sample_to_cancer_code("normal_a1") is None
+    assert source.notes == "source-level summary row notes"
+    assert source.pipeline_stem == "synthetic_pipeline"
+    assert source.tumor_origin == "metastasis"
+    assert source.metastasis_site == "liver"
+
+
+def test_geo_matrix_source_from_entry_validates_tumor_origin():
+    with pytest.raises(ValueError, match="tumor_origin"):
+        expression_builders.geo_matrix_source_from_entry(
+            {
+                "id": "synthetic",
+                "source_type": "geo-matrix",
+                "cancer_codes": ["CODE_A"],
+                "source_cohort": "SYNTHETIC",
+                "file_url": "https://example.org/source.tsv.gz",
+                "file_name": "source.tsv.gz",
+                "unit": "TPM",
+                "tumor_origin": "metastatic",
+            }
+        )
 
 
 def test_geo_matrix_source_from_registry_loads_packaged_geo_entry():
@@ -189,6 +213,10 @@ def test_geo_matrix_source_from_registry_loads_packaged_geo_entry():
     assert source.source_cohort == "GSE328026_PECOMA_2026"
     assert source.unit == "TPM"
     assert source.file_name == "GSE328026_TPMs_all_Samples.txt.gz"
+    assert source.notes.startswith("n=69 PEComa tumors")
+    assert source.pipeline_stem == ""
+    assert source.tumor_origin == "primary"
+    assert source.metastasis_site is None
 
 
 def test_recount3_source_from_registry_loads_packaged_routes():
@@ -198,6 +226,7 @@ def test_recount3_source_from_registry_loads_packaged_routes():
     assert source.srp == "SRP107025"
     assert source.cancer_code == ["NET_MIDGUT", "NET_PANCREAS", "NET_RECTAL"]
     assert source.expected_n == {"NET_MIDGUT": 81, "NET_PANCREAS": 113, "NET_RECTAL": 18}
+    assert source.tumor_origin == "primary"
     assert source.sample_to_cancer_code({"origin": "ileum"}, "") == "NET_MIDGUT"
     assert source.sample_to_cancer_code({"origin": "pancreas"}, "") == "NET_PANCREAS"
     assert source.sample_to_cancer_code({"origin": "rectal"}, "") == "NET_RECTAL"

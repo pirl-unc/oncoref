@@ -62,6 +62,17 @@ from .gene_ids import unversioned
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
 GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
 RECOUNT3_SOURCE_TYPE = "recount3"
+TUMOR_ORIGIN_VALUES: frozenset[str] = frozenset(
+    {
+        "primary",
+        "metastasis",
+        "recurrence",
+        "cell_line",
+        "pdx",
+        "normal_tissue",
+        "mixed",
+    }
+)
 RECOUNT3_ANNOTATION = "G026"  # recount3 Gencode v26 gene summaries
 _RECOUNT3_S3_BASE = "https://recount-opendata.s3.amazonaws.com/recount3/release/human"
 _RECOUNT3_ANNOTATION_GTF = (
@@ -149,6 +160,10 @@ class GeoMatrixSource:
     source_scale_class: str | None = None
     linear_tpm_comparable: bool | None = None
     tpm_proxy: bool | None = None
+    notes: str = ""
+    pipeline_stem: str = ""
+    tumor_origin: str = "primary"
+    metastasis_site: str | None = None
 
 
 @dataclass(frozen=True)
@@ -163,6 +178,10 @@ class Recount3Source:
     citation: str | None = None
     sample_to_cancer_code: Callable[[dict[str, str], str], str | None] | None = None
     expected_n: Mapping[str, int] | None = None
+    notes: str = ""
+    pipeline_stem: str = ""
+    tumor_origin: str = "primary"
+    metastasis_site: str | None = None
 
 
 @dataclass(frozen=True)
@@ -265,6 +284,23 @@ def _coerce_source_expression_unit(unit: str) -> SourceExpressionUnit:
     return coerced  # type: ignore[return-value]
 
 
+def _coerce_tumor_origin(value: str | None) -> str:
+    origin = str(value or "primary").strip()
+    if origin not in TUMOR_ORIGIN_VALUES:
+        raise ValueError(
+            f"tumor_origin={origin!r} is not supported; allowed values are "
+            f"{sorted(TUMOR_ORIGIN_VALUES)}"
+        )
+    return origin
+
+
+def _coerce_optional_text(value) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
 def geo_matrix_source_from_entry(entry: Mapping) -> GeoMatrixSource:
     """Convert one registry YAML entry into an executable :class:`GeoMatrixSource`."""
     if entry.get("source_type") != GEO_MATRIX_SOURCE_TYPE:
@@ -294,6 +330,10 @@ def geo_matrix_source_from_entry(entry: Mapping) -> GeoMatrixSource:
         source_scale_class=entry.get("source_scale_class"),
         linear_tpm_comparable=entry.get("linear_tpm_comparable"),
         tpm_proxy=entry.get("tpm_proxy"),
+        notes=str(entry.get("notes") or ""),
+        pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin")),
+        metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
     )
 
 
@@ -382,6 +422,10 @@ def recount3_source_from_entry(entry: Mapping) -> Recount3Source:
         citation=entry.get("citation"),
         sample_to_cancer_code=route,
         expected_n=expected,
+        notes=str(entry.get("notes") or ""),
+        pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin")),
+        metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
     )
 
 

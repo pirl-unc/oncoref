@@ -212,7 +212,12 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   source file to canonical per-code per-sample TPM parquet, mapping audit, parse
   diagnostics, and sample-QC sidecars. `geo_matrix_source_from_registry` and
   `scripts/build_geo_matrix.py` make `source_type: geo-matrix` entries in the
-  packaged source registry directly buildable. `Recount3Source`,
+  packaged source registry directly buildable; `GeoMatrixSource` also preserves
+  summary-row provenance (`notes`, `pipeline_stem`, `tumor_origin`,
+  `metastasis_site`) so downstream shard writers do not need a parallel source
+  registry. `tumor_origin` is validated against
+  `TUMOR_ORIGIN_VALUES` (`primary`, `metastasis`, `recurrence`, `cell_line`,
+  `pdx`, `normal_tissue`, `mixed`). `Recount3Source`,
   `recount3_gene_sums_to_tpm`, `build_recount3_source_matrices`, and
   `scripts/build_recount3_source.py` do the same for `source_type: recount3`
   entries, including run-to-sample aggregation and metadata-based routing before
