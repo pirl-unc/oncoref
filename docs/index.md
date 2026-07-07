@@ -45,6 +45,11 @@ from oncoref import cancer_ontology, ici_response
 crc_msi = cancer_ontology.cancer_type_records(subtype_group="MSI", under="CRC")
 crc_msi[["code", "evidence_source_code", "normal_tissue_code"]]
 
+# MMR/MSI classifier queries keep positive, negative, and confounder classes
+# explicit, and can be restricted to direct expression-backed codes.
+cancer_ontology.mmrd_cancer_codes(expression_only=True)
+cancer_ontology.mmr_confounder_cancer_codes()
+
 ici_response.best_available_ici_response("COAD_MSI")
 ```
 
@@ -52,7 +57,7 @@ ici_response.best_available_ici_response("COAD_MSI")
 
 | Domain | Public modules | Use for |
 | --- | --- | --- |
-| Cancer vocabulary | [`oncoref.cancer_ontology`](api.md#cancer-vocabulary), [`oncoref.cohorts`](api.md#cancer-vocabulary) | Registry records, aliases, hierarchy, subtype axes, cohort IDs, matched normal tissues |
+| Cancer vocabulary | [`oncoref.cancer_ontology`](api.md#cancer-vocabulary), [`oncoref.cohorts`](api.md#cancer-vocabulary) | Registry records, aliases, hierarchy, subtype axes, MMR/MSI classifier status, cohort IDs, matched normal tissues |
 | ICI response | [`oncoref.ici_response`](api.md#ici-response) | Anti-PD-1 and broader ICI references, regimen-aware lookups, extracted endpoint estimates |
 | CTA references | [`oncoref.cta`](api.md#cta-antigens), [`oncoref.cta_coverage`](api.md#cta-antigens), [`oncoref.cta_peptides`](api.md#cta-antigens) | HPA-derived CTA facts, patient coverage, CTA-specific 9-mer counts and load |
 | Antigen panels | [`oncoref.antigen_coverage`](api.md#generic-antigen-panels) | Coverage calculations for caller-supplied non-CTA gene lists |

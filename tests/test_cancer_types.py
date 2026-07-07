@@ -317,6 +317,61 @@ def test_cancer_type_records_include_evidence_expression_and_normal_tissue():
     assert bool(records.loc["CRC_MSI", "has_expression_matrix"]) is False
 
 
+def test_stad_molecular_subtype_rows_are_curated_not_expression_shards():
+    records = cancer_types.cancer_type_records(
+        ["STAD", "STAD_MSI", "STAD_EBV", "STAD_CIN", "STAD_GS"]
+    ).set_index("code")
+
+    assert records.loc["STAD_MSI", "parent_code"] == "STAD"
+    assert records.loc["STAD_MSI", "subtype_groups"] == ("MSI",)
+    assert records.loc["STAD_MSI", "normal_tissue_code"] == "stomach"
+    assert records.loc["STAD_MSI", "hpa_tissues"] == ("stomach",)
+    assert records.loc["STAD_MSI", "source_pmid"] == "PMID:25079317"
+    assert bool(records.loc["STAD_MSI", "has_expression_matrix"]) is False
+
+    assert records.loc["STAD_EBV", "subtype_groups"] == ("EBV_POS",)
+    assert records.loc["STAD_EBV", "subtype_axes"] == ("viral_ebv",)
+    assert records.loc["STAD_EBV", "mmr_classifier_role"] == "exclude_confounder"
+
+    assert records.loc["STAD_CIN", "subtype_groups"] == ("MSS",)
+    assert records.loc["STAD_GS", "subtype_groups"] == ("MSS",)
+    assert bool(records.loc["STAD", "has_expression_matrix"]) is True
+
+
+def test_mmr_status_axis_queries_and_exports():
+    positive = cancer_types.mmrd_cancer_codes()
+    assert {"CRC_MSI", "COAD_MSI", "READ_MSI", "UCEC_MSI", "STAD_MSI"} <= set(positive)
+    assert cancer_types.cancer_mismatch_repair_codes(state="dMMR") == positive
+    assert cancer_types.cancer_mismatch_repair_codes(classifier_role="positive") == positive
+
+    assert set(cancer_types.mmrd_cancer_codes(under="CRC")) == {"COAD_MSI", "READ_MSI"}
+    assert cancer_types.mmrd_cancer_codes(under="STAD") == ["STAD_MSI"]
+    assert set(cancer_types.pmmr_cancer_codes(under="UCEC")) == {"UCEC_CNL", "UCEC_CNH"}
+    assert cancer_types.pmmr_cancer_codes(under="STAD") == ["STAD_CIN", "STAD_GS"]
+
+    assert set(cancer_types.mmr_confounder_cancer_codes()) >= {"UCEC_POLE", "STAD_EBV"}
+    assert cancer_types.mmr_hypermutated_confounder_codes() == ["UCEC_POLE"]
+
+    direct_positive = cancer_types.mmrd_cancer_codes(expression_only=True)
+    assert direct_positive == ["COAD_MSI", "READ_MSI"]
+    direct_negative = cancer_types.pmmr_cancer_codes(expression_only=True)
+    assert direct_negative == ["COAD_MSS", "READ_MSS"]
+
+    record = cancer_types.cancer_mismatch_repair_status("STAD_MSI")
+    assert record["mmr_axis_state"] == "mmrd"
+    assert record["mmr_classifier_role"] == "positive"
+    from_records = cancer_types.cancer_mismatch_repair_statuses(
+        cancer_types=cancer_types.cancer_type_records(subtype_group="MSI")
+    )
+    assert from_records["cancer_code"].tolist() == ["COAD_MSI", "READ_MSI", "UCEC_MSI", "STAD_MSI"]
+    assert cancer_types.cancer_mismatch_repair_status(None) is None
+    assert cancer_types.cancer_type_records(mmr_state=[]).empty
+
+    ontology = cd.cancer_ontology
+    assert ontology.mmrd_cancer_codes(under="STAD") == ["STAD_MSI"]
+    assert cd.mmrd_cancer_codes(under="CRC") == ["COAD_MSI", "READ_MSI"]
+
+
 def test_expression_reference_coverage_contract():
     coverage = cancer_types.expression_reference_coverage(["COAD_MSI", "CRC_MSI", "ASTB"])
     expected = {

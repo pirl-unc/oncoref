@@ -230,6 +230,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "tissue-burden-map": ("ontology", "primary_tissue -> anatomic burden category"),
     "family-burden-map": ("ontology", "registry family -> burden category (fallback)"),
+    "cancer-mismatch-repair-statuses": (
+        "ontology",
+        "cross-cancer MMRd/MSI-H vs pMMR/MSS-like classifier state semantics",
+    ),
     "cta-ihc-unreliable": ("cta", "CTAs whose HPA IHC is cross-reactive (RNA-only fallback)"),
     "clean-tpm-biological-housekeeping-genes": (
         "normalization",

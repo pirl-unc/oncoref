@@ -2,9 +2,13 @@ group_code,axis,member_code,basis
 MSI,microsatellite,COAD_MSI,MSI-H/dMMR colon
 MSI,microsatellite,READ_MSI,MSI-H/dMMR rectum
 MSI,microsatellite,UCEC_MSI,MSI-H/dMMR endometrial
+MSI,microsatellite,STAD_MSI,MSI-H/dMMR gastric
 MSS,microsatellite,COAD_MSS,microsatellite-stable colon
 MSS,microsatellite,READ_MSS,microsatellite-stable rectum
+MSS,microsatellite,STAD_CIN,microsatellite-stable / pMMR-like gastric CIN
+MSS,microsatellite,STAD_GS,microsatellite-stable / pMMR-like gastric GS
 POLE,hypermutation,UCEC_POLE,POLE-ultramutated endometrial
+EBV_POS,viral_ebv,STAD_EBV,EBV-positive gastric
 HPV_POS,viral_hpv,HNSC_HPVpos,HPV-driven head and neck
 HPV_POS,viral_hpv,CESC,HPV-driven cervical (entity is HPV-defining)
 HPV_NEG,viral_hpv,HNSC_HPVneg,HPV-negative head and neck

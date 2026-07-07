@@ -1,0 +1,15 @@
+cancer_code,mmr_axis_state,mmr_state_label,mmr_classifier_role,mmr_assay_basis,mmr_source_scope,mmr_status_notes
+CRC_MSI,mmrd,MMR-deficient/MSI-H,positive,MSI-H/dMMR biomarker-selected colorectal,source_scope,CRC-level evidence aggregate; not a direct expression cohort
+COAD_MSI,mmrd,MMR-deficient/MSI-H,positive,MSIsensor high / MSI-H / dMMR,anatomic_expression_subtype,Colon MSI-H expression subtype; clinical evidence resolves through CRC_MSI when source-scoped
+READ_MSI,mmrd,MMR-deficient/MSI-H,positive,MSIsensor high / MSI-H / dMMR,anatomic_expression_subtype,Rectum MSI-H expression subtype; clinical evidence resolves through CRC_MSI when source-scoped
+UCEC_MSI,mmrd,MMR-deficient/MSI-H,positive,MSI-H / MMRd endometrial subtype,curated_molecular_subtype,Endometrial MSI-H/MMRd subtype; no direct expression matrix in current bundle
+STAD_MSI,mmrd,MMR-deficient/MSI-H,positive,TCGA gastric MSI subtype,curated_molecular_subtype,Gastric MSI-H/MMRd subtype; registry code exists but no direct expression matrix in current bundle
+COAD_MSS,pmmr,MMR-proficient/MSS-like,negative,microsatellite-stable,anatomic_expression_subtype,Colon MSS expression subtype
+READ_MSS,pmmr,MMR-proficient/MSS-like,negative,microsatellite-stable,anatomic_expression_subtype,Rectum MSS expression subtype
+UCEC_CNL,pmmr,MMR-proficient/MSS-like,negative,copy-number-low / NSMP / pMMR-like,curated_molecular_subtype,Endometrial copy-number-low NSMP subtype; treated as pMMR/MSS-like negative for binary MMRd-vs-pMMR classifiers
+UCEC_CNH,pmmr,MMR-proficient/MSS-like,negative,copy-number-high / p53-abnormal / pMMR-like,curated_molecular_subtype,Endometrial copy-number-high p53-abnormal subtype; treated as pMMR/MSS-like negative for binary MMRd-vs-pMMR classifiers
+STAD_CIN,pmmr,MMR-proficient/MSS-like,negative,TCGA gastric chromosomal-instability subtype,curated_molecular_subtype,Gastric CIN subtype; treated as pMMR/MSS-like negative for binary MMRd-vs-pMMR classifiers until split expression shards exist
+STAD_GS,pmmr,MMR-proficient/MSS-like,negative,TCGA gastric genomically-stable subtype,curated_molecular_subtype,Gastric GS subtype; treated as pMMR/MSS-like negative for binary MMRd-vs-pMMR classifiers until split expression shards exist
+UCEC_POLE,pole_ultramutated,POLE-ultramutated hypermutated,exclude_confounder,POLE exonuclease-domain mutant hypermutation,curated_molecular_subtype,Keep separate from MMRd/MSI-H positives because POLE tumors can be pMMR/MSS but immune-hot and hypermutated
+STAD_EBV,ebv_positive,EBV-positive immune-hot,exclude_confounder,TCGA gastric EBV-positive subtype,curated_molecular_subtype,Keep separate from MSI/dMMR positives and pMMR/MSS-like negatives unless a classifier explicitly includes EBV-positive gastric tumors
+STAD,mixed_unsplit,MSI-prone unsplit parent,mixed_unlabeled,TCGA stomach includes MSI subset,parent_context,MSI-prone gastric parent with no explicit STAD_MSI/STAD_MSS expression children in the current ontology

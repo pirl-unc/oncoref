@@ -735,6 +735,216 @@ def _codes_under(roots, *, include_self: bool) -> set[str]:
     return out
 
 
+def _normalize_cancer_code_filter(values) -> set[str] | None:
+    if values is None:
+        return None
+    if isinstance(values, pd.DataFrame):
+        if "code" in values.columns:
+            raw = values["code"].tolist()
+        elif "cancer_code" in values.columns:
+            raw = values["cancer_code"].tolist()
+        else:
+            raise ValueError("DataFrame cancer_types input must contain 'code' or 'cancer_code'")
+    elif isinstance(values, str):
+        raw = [values]
+    else:
+        raw = list(values)
+    out: set[str] = set()
+    for value in raw:
+        if _row_is_missing(value):
+            continue
+        item = str(value)
+        out.add(resolve_cancer_type(item, strict=False) or item)
+    return out
+
+
+_MMR_STATUS_COLUMNS = [
+    "cancer_code",
+    "mmr_axis_state",
+    "mmr_state_label",
+    "mmr_classifier_role",
+    "mmr_assay_basis",
+    "mmr_source_scope",
+    "mmr_status_notes",
+]
+
+_MMR_STATE_ALIASES = {
+    "dmmr": "mmrd",
+    "mmr_d": "mmrd",
+    "mmrd": "mmrd",
+    "mismatch_repair_deficient": "mmrd",
+    "msi": "mmrd",
+    "msi_h": "mmrd",
+    "msih": "mmrd",
+    "msi_high": "mmrd",
+    "positive": "mmrd",
+    "pmmr": "pmmr",
+    "mmr_p": "pmmr",
+    "mismatch_repair_proficient": "pmmr",
+    "microsatellite_stable": "pmmr",
+    "ms_stable": "pmmr",
+    "msi_stable": "pmmr",
+    "msi_low": "pmmr",
+    "msil": "pmmr",
+    "mss": "pmmr",
+    "negative": "pmmr",
+    "non_msi": "pmmr",
+    "pole": "pole_ultramutated",
+    "pole_ultramutated": "pole_ultramutated",
+    "pole_mutant": "pole_ultramutated",
+    "hypermutation": "pole_ultramutated",
+    "hypermutated": "pole_ultramutated",
+    "ebv": "ebv_positive",
+    "ebv_positive": "ebv_positive",
+    "mixed": "mixed_unsplit",
+    "mixed_unlabeled": "mixed_unsplit",
+    "mixed_unsplit": "mixed_unsplit",
+    "msi_prone": "mixed_unsplit",
+    "unsplit": "mixed_unsplit",
+}
+
+_MMR_ROLE_ALIASES = {
+    "dmmr": "positive",
+    "mmrd": "positive",
+    "mismatch_repair_deficient": "positive",
+    "msi": "positive",
+    "msi_h": "positive",
+    "msih": "positive",
+    "msi_high": "positive",
+    "positive": "positive",
+    "pmmr": "negative",
+    "mss": "negative",
+    "msi_stable": "negative",
+    "msi_low": "negative",
+    "microsatellite_stable": "negative",
+    "negative": "negative",
+    "non_msi": "negative",
+    "pole": "exclude_confounder",
+    "ebv": "exclude_confounder",
+    "exclude": "exclude_confounder",
+    "excluded": "exclude_confounder",
+    "confounder": "exclude_confounder",
+    "exclude_confounder": "exclude_confounder",
+    "hypermutation": "exclude_confounder",
+    "hypermutated": "exclude_confounder",
+    "mixed": "mixed_unlabeled",
+    "mixed_unlabeled": "mixed_unlabeled",
+    "mixed_unsplit": "mixed_unlabeled",
+    "unsplit": "mixed_unlabeled",
+}
+
+
+def _normalize_mmr_token(value, aliases: dict[str, str]) -> str | None:
+    if _row_is_missing(value):
+        return None
+    key = re.sub(r"[^a-z0-9]+", "_", str(value).strip().lower()).strip("_")
+    return aliases.get(key, key) if key else None
+
+
+def _normalize_mmr_filter_values(values, aliases: dict[str, str]) -> set[str] | None:
+    if values is None:
+        return None
+    raw = [values] if isinstance(values, str) else list(values)
+    out: set[str] = set()
+    for value in raw:
+        normalized = _normalize_mmr_token(value, aliases)
+        if normalized:
+            out.add(normalized)
+    return out
+
+
+def _filter_mmr_values(
+    df: pd.DataFrame, column: str, values, aliases: dict[str, str]
+) -> pd.DataFrame:
+    wanted = _normalize_mmr_filter_values(values, aliases)
+    if wanted is None:
+        return df
+    if not wanted:
+        return df.iloc[0:0]
+    lowered = {v.lower() for v in wanted}
+    return df[df[column].astype(str).str.lower().isin(lowered)]
+
+
+def _mismatch_repair_status_frame() -> pd.DataFrame:
+    df = get_data("cancer-mismatch-repair-statuses").copy()
+    for col in _MMR_STATUS_COLUMNS:
+        if col not in df.columns:
+            df[col] = None
+    return df[_MMR_STATUS_COLUMNS].copy()
+
+
+def cancer_mismatch_repair_statuses(
+    cancer_types=None,
+    *,
+    state=None,
+    classifier_role=None,
+    under=None,
+    expression_only: bool = False,
+) -> pd.DataFrame:
+    """Curated MMR/MSI classifier-axis semantics for cancer-type codes.
+
+    This table is narrower than the general subtype-grouping table. It answers
+    binary MMRd/MSI-H classifier questions with explicit positive
+    (``mmrd``/``positive``), negative (``pmmr``/``negative``), and excluded
+    confounder classes (for example ``UCEC_POLE`` and ``STAD_EBV``). MSI-H and
+    dMMR/MMRd aliases resolve to the same positive state; MSS/MSI-stable/MSI-low
+    and pMMR aliases resolve to the negative state. ``expression_only=True``
+    keeps only codes with direct source matrices in the current bundle.
+    """
+    df = _mismatch_repair_status_frame()
+    exact_codes = _normalize_cancer_code_filter(cancer_types)
+    if exact_codes is not None:
+        df = df[df["cancer_code"].isin(exact_codes)]
+    if under is not None:
+        df = df[df["cancer_code"].isin(_codes_under(under, include_self=True))]
+    df = _filter_mmr_values(df, "mmr_axis_state", state, _MMR_STATE_ALIASES)
+    df = _filter_mmr_values(df, "mmr_classifier_role", classifier_role, _MMR_ROLE_ALIASES)
+    if expression_only:
+        source_codes = set(_source_matrix_frame()["cancer_code"].dropna().astype(str))
+        df = df[df["cancer_code"].isin(source_codes)]
+    return df[_MMR_STATUS_COLUMNS].reset_index(drop=True)
+
+
+def cancer_mismatch_repair_status(cancer_type) -> dict | None:
+    """Single-code MMR/MSI status record, or ``None`` when the code is not curated."""
+    if _row_is_missing(cancer_type):
+        return None
+    code = resolve_cancer_type(cancer_type)
+    df = cancer_mismatch_repair_statuses([code])
+    if df.empty:
+        return None
+    return df.iloc[0].to_dict()
+
+
+def cancer_mismatch_repair_codes(*args, **kwargs) -> list[str]:
+    """Cancer codes from :func:`cancer_mismatch_repair_statuses` in table order."""
+    return cancer_mismatch_repair_statuses(*args, **kwargs)["cancer_code"].tolist()
+
+
+def mmrd_cancer_codes(*, under=None, expression_only: bool = False) -> list[str]:
+    """MMR-deficient / MSI-H positive codes for binary MMRd-vs-pMMR classifiers."""
+    return cancer_mismatch_repair_codes(state="mmrd", under=under, expression_only=expression_only)
+
+
+def pmmr_cancer_codes(*, under=None, expression_only: bool = False) -> list[str]:
+    """MMR-proficient / MSS-like negative codes for binary MMRd-vs-pMMR classifiers."""
+    return cancer_mismatch_repair_codes(state="pmmr", under=under, expression_only=expression_only)
+
+
+def mmr_confounder_cancer_codes(*, under=None, expression_only: bool = False) -> list[str]:
+    """Codes explicitly excluded from default MMRd-vs-pMMR binary labels."""
+    return cancer_mismatch_repair_codes(
+        classifier_role="exclude_confounder", under=under, expression_only=expression_only
+    )
+
+
+def mmr_hypermutated_confounder_codes(*, under=None, expression_only: bool = False) -> list[str]:
+    """Hypermutated non-MMRd confounder codes such as POLE-ultramutated UCEC."""
+    return cancer_mismatch_repair_codes(
+        state="pole_ultramutated", under=under, expression_only=expression_only
+    )
+
+
 _CANCER_TYPE_RECORD_COLUMNS = [
     "code",
     "name",
@@ -755,6 +965,12 @@ _CANCER_TYPE_RECORD_COLUMNS = [
     "is_leaf",
     "subtype_groups",
     "subtype_axes",
+    "mmr_axis_state",
+    "mmr_state_label",
+    "mmr_classifier_role",
+    "mmr_assay_basis",
+    "mmr_source_scope",
+    "mmr_status_notes",
     "evidence_source_code",
     "evidence_source_kind",
     "burden_category",
@@ -784,6 +1000,8 @@ def _cancer_type_record_frame() -> pd.DataFrame:
     df = df.merge(_source_matrix_frame(), how="left", left_on="code", right_on="cancer_code")
     if "cancer_code" in df.columns:
         df = df.drop(columns=["cancer_code"])
+    mmr = _mismatch_repair_status_frame().rename(columns={"cancer_code": "code"})
+    df = df.merge(mmr, how="left", on="code", validate="one_to_one")
 
     children = _children_map()
     groups, axes = _subtype_group_maps()
@@ -808,6 +1026,9 @@ def _cancer_type_record_frame() -> pd.DataFrame:
     df["has_expression_matrix"] = df["source_matrix_cohort"].notna()
     for col in ("source_matrix_n_samples",):
         df[col] = df[col].where(df[col].notna(), None)
+    for col in _MMR_STATUS_COLUMNS[1:]:
+        if col in df.columns:
+            df[col] = df[col].astype("object").where(df[col].notna(), None)
     for col in _CANCER_TYPE_RECORD_COLUMNS:
         if col not in df.columns:
             df[col] = None
@@ -826,6 +1047,8 @@ def cancer_type_records(
     normal_tissue=None,
     subtype_group=None,
     subtype_axis=None,
+    mmr_state=None,
+    mmr_classifier_role=None,
     evidence_source=None,
     expression_only: bool = False,
     leaves_only: bool = False,
@@ -837,7 +1060,8 @@ def cancer_type_records(
     result has the same columns, including hierarchy fields (``path``,
     ``ancestors``, ``children``), semantic rollups (``lineage_group``,
     ``family``), cross-cutting molecular groupings (``subtype_groups`` /
-    ``subtype_axes``), source-scoped evidence resolution
+    ``subtype_axes``), explicit MMR/MSI classifier-axis fields
+    (``mmr_axis_state`` / ``mmr_classifier_role``), source-scoped evidence resolution
     (``evidence_source_code``), expression-matrix availability, and matched
     normal-tissue metadata.
 
@@ -854,9 +1078,7 @@ def cancer_type_records(
     """
     df = _cancer_type_record_frame()
 
-    exact_codes = _normalize_filter_values(
-        cancer_types, resolver=lambda x: resolve_cancer_type(x, strict=False) or x
-    )
+    exact_codes = _normalize_cancer_code_filter(cancer_types)
     if exact_codes is not None:
         if include_descendants:
             allowed: set[str] = set()
@@ -886,6 +1108,8 @@ def cancer_type_records(
 
     df = _filter_tuple_values(df, "subtype_groups", subtype_group)
     df = _filter_tuple_values(df, "subtype_axes", subtype_axis)
+    df = _filter_mmr_values(df, "mmr_axis_state", mmr_state, _MMR_STATE_ALIASES)
+    df = _filter_mmr_values(df, "mmr_classifier_role", mmr_classifier_role, _MMR_ROLE_ALIASES)
     df = _filter_string_values(df, "evidence_source_code", evidence_source)
 
     if expression_only:
