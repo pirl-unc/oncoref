@@ -110,6 +110,8 @@ sources:
     source_type: recount3
     accession: GSE114922
     recount3_srp: SRP149374
+    recount3_route: mds_cd34
+    expected_samples_by_code: {MDS: 82}
     source_cohort: GSE114922_SHIOZAWA_2018
     builder: scripts/build_recount3_source.py
     unit: recount3 Gencode-v26 coverage gene-sums
@@ -249,6 +251,8 @@ sources:
     source_type: recount3
     accession: GSE118014
     recount3_srp: SRP156049
+    recount3_route: all
+    expected_samples_by_code: {NET_PANCREAS: 33}
     source_cohort: GSE118014_ALVAREZ_2018
     builder: scripts/build_recount3_source.py
     unit: recount3 Gencode-v26 coverage gene-sums
@@ -700,6 +704,8 @@ sources:
     source_type: recount3
     accession: GSE120328
     recount3_srp: SRP162356
+    recount3_route: hl_tumor_title
+    expected_samples_by_code: {HL: 5}
     source_cohort: GSE120328_LAMPRECHT_2018
     source_project: GEO
     builder: scripts/build_recount3_source.py
@@ -895,6 +901,8 @@ sources:
     source_type: recount3
     accession: GSE98894
     recount3_srp: SRP107025
+    recount3_route: net_origin
+    expected_samples_by_code: {NET_MIDGUT: 81, NET_PANCREAS: 113, NET_RECTAL: 18}
     source_cohort: GSE98894_ALVAREZ_2018_NET
     builder: scripts/build_recount3_source.py
     unit: recount3 Gencode-v26 coverage gene-sums

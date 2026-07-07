@@ -191,6 +191,146 @@ def test_geo_matrix_source_from_registry_loads_packaged_geo_entry():
     assert source.file_name == "GSE328026_TPMs_all_Samples.txt.gz"
 
 
+def test_recount3_source_from_registry_loads_packaged_routes():
+    source = expression_builders.recount3_source_from_registry("gse98894-midnet")
+
+    assert source.source_id == "gse98894-midnet"
+    assert source.srp == "SRP107025"
+    assert source.cancer_code == ["NET_MIDGUT", "NET_PANCREAS", "NET_RECTAL"]
+    assert source.expected_n == {"NET_MIDGUT": 81, "NET_PANCREAS": 113, "NET_RECTAL": 18}
+    assert source.sample_to_cancer_code({"origin": "ileum"}, "") == "NET_MIDGUT"
+    assert source.sample_to_cancer_code({"origin": "pancreas"}, "") == "NET_PANCREAS"
+    assert source.sample_to_cancer_code({"origin": "rectal"}, "") == "NET_RECTAL"
+    assert source.sample_to_cancer_code({"origin": "lung"}, "") is None
+
+
+def test_recount3_gene_sums_to_tpm_length_normalizes_and_collapses_versions():
+    gene_sums = pd.DataFrame(
+        {"S1": [1000.0, 1000.0], "S2": [0.0, 500.0]},
+        index=["ENSG00000000001.5", "ENSG00000000002.3"],
+    )
+    bp_length = pd.Series({"ENSG00000000001": 1000.0, "ENSG00000000002": 2000.0})
+
+    tpm = expression_builders.recount3_gene_sums_to_tpm(gene_sums, bp_length)
+
+    np.testing.assert_allclose(tpm.sum(axis=0).to_numpy(), [1e6, 1e6])
+    np.testing.assert_allclose(tpm["S1"].to_numpy(), [2e6 / 3, 1e6 / 3], rtol=1e-9)
+    np.testing.assert_allclose(tpm["S2"].to_numpy(), [0.0, 1e6])
+
+    dup = pd.DataFrame(
+        {"S1": [600.0, 400.0]},
+        index=["ENSG00000000003.1", "ENSG00000000003.1_PAR_Y"],
+    )
+    collapsed = expression_builders.recount3_gene_sums_to_tpm(
+        dup,
+        pd.Series({"ENSG00000000003": 1000.0}),
+    )
+    assert collapsed.index.tolist() == ["ENSG00000000003"]
+    np.testing.assert_allclose(collapsed["S1"].to_numpy(), [1e6])
+
+
+def test_recount3_parse_attributes_and_aggregate_runs_to_samples():
+    attrs = expression_builders.parse_recount3_sample_attributes(
+        "origin;;pancreas|type;;liver metastasis|n;;1"
+    )
+    assert attrs == {"origin": "pancreas", "type": "liver metastasis", "n": "1"}
+    assert expression_builders.parse_recount3_sample_attributes("") == {}
+
+    gene_sums = pd.DataFrame(
+        {"R1": [10.0, 1.0], "R2": [20.0, 3.0], "R3": [5.0, 5.0], "R4": [99.0, 99.0]},
+        index=["g1", "g2"],
+    )
+    meta = pd.DataFrame(
+        {
+            "external_id": ["R1", "R2", "R3", "R4"],
+            "sample_acc": ["A", "A", "B", "C"],
+        }
+    )
+
+    sample_gs, sample_meta = expression_builders.aggregate_recount3_runs_to_samples(
+        gene_sums,
+        meta,
+        keep_runs={"R1", "R2", "R3"},
+    )
+
+    assert set(sample_gs.columns) == {"A", "B"}
+    np.testing.assert_allclose(sample_gs.loc["g1", "A"], 30.0)
+    np.testing.assert_allclose(sample_gs.loc["g2", "A"], 4.0)
+    np.testing.assert_allclose(sample_gs.loc["g1", "B"], 5.0)
+    assert list(sample_meta.index) == list(sample_gs.columns)
+
+
+def test_build_recount3_source_matrices_writes_canonical_artifacts(tmp_path, monkeypatch):
+    annotation = pd.DataFrame(
+        {
+            "bp_length": [1000.0, 2000.0],
+            "Symbol": ["TP53", "EGFR"],
+        },
+        index=["ENSG00000141510", "ENSG00000146648"],
+    )
+    gene_sums = pd.DataFrame(
+        {
+            "R1": [100.0, 50.0],
+            "R2": [50.0, 25.0],
+            "R3": [0.0, 80.0],
+            "R4": [999.0, 999.0],
+        },
+        index=["ENSG00000141510.1", "ENSG00000146648.2"],
+    )
+    metadata = pd.DataFrame(
+        {
+            "external_id": ["R1", "R2", "R3", "R4"],
+            "sample_acc": ["SAMPLE_A", "SAMPLE_A", "SAMPLE_B", "CONTROL"],
+            "sample_attributes": [
+                "code;;CODE_A",
+                "code;;CODE_A",
+                "code;;CODE_B",
+                "code;;CONTROL",
+            ],
+            "sample_title": ["A1", "A2", "B1", "C1"],
+        }
+    )
+    monkeypatch.setattr(
+        expression_builders,
+        "fetch_recount3_gene_annotation",
+        lambda _cache: annotation,
+    )
+    monkeypatch.setattr(
+        expression_builders,
+        "fetch_recount3_gene_sums",
+        lambda _srp, _cache: gene_sums,
+    )
+    monkeypatch.setattr(
+        expression_builders,
+        "fetch_recount3_sample_metadata",
+        lambda _srp, _cache: metadata,
+    )
+    source = expression_builders.Recount3Source(
+        source_id="synthetic-recount3",
+        srp="SRP000000",
+        source_cohort="SYNTHETIC_RECOUNT3",
+        cancer_code=["CODE_A", "CODE_B"],
+        sample_to_cancer_code=lambda attrs, _title: (
+            attrs.get("code") if attrs.get("code") != "CONTROL" else None
+        ),
+        expected_n={"CODE_A": 1, "CODE_B": 1},
+    )
+
+    result = expression_builders.build_recount3_source_matrices(source, cache_dir=tmp_path)
+
+    assert set(result.matrix_paths) == {"CODE_A", "CODE_B"}
+    assert result.sidecar_paths["mapping_audit"].exists()
+    assert result.sidecar_paths["parse_diagnostics"].exists()
+    code_a = pd.read_parquet(result.matrix_paths["CODE_A"])
+    code_b = pd.read_parquet(result.matrix_paths["CODE_B"])
+    assert list(code_a.columns) == ["Ensembl_Gene_ID", "Symbol", "SAMPLE_A"]
+    assert list(code_b.columns) == ["Ensembl_Gene_ID", "Symbol", "SAMPLE_B"]
+    assert set(code_a["Ensembl_Gene_ID"]) == {"ENSG00000141510", "ENSG00000146648"}
+    assert np.isclose(code_a["SAMPLE_A"].sum(), 1_000_000.0)
+    assert np.isclose(code_b["SAMPLE_B"].sum(), 1_000_000.0)
+    assert set(result.sample_qc["cancer_code"]) == {"CODE_A", "CODE_B"}
+
+
 def test_build_geo_matrix_script_uses_registry_config(tmp_path, capsys):
     source_path = tmp_path / "source.tsv"
     pd.DataFrame(
@@ -241,6 +381,49 @@ sources:
     assert np.isclose(out["tumor_a"].sum(), 1_000_000.0)
     stdout = capsys.readouterr().out
     assert '"sample_counts": {' in stdout
+    assert '"CODE_A": 1' in stdout
+
+
+def test_build_recount3_script_uses_registry_config(tmp_path, monkeypatch, capsys):
+    mod = _load_script("build_recount3_source")
+    source = expression_builders.Recount3Source(
+        source_id="synthetic-recount3",
+        srp="SRP000000",
+        source_cohort="SYNTHETIC_RECOUNT3",
+        cancer_code="CODE_A",
+    )
+
+    def _fake_build(source_obj, *, cache_dir, output_dir=None, **_kwargs):
+        assert source_obj is source
+        assert Path(cache_dir) == tmp_path / "cache"
+        assert output_dir is None
+        matrix = pd.DataFrame(
+            {
+                "Ensembl_Gene_ID": ["ENSG00000141510"],
+                "Symbol": ["TP53"],
+                "S1": [1_000_000.0],
+            }
+        )
+        return expression_builders.SourceMatrixBuildResult(
+            source=source,
+            matrices={"CODE_A": matrix},
+            matrix_paths={"CODE_A": tmp_path / "CODE_A_per_sample_tpm.parquet"},
+            mapping_audit=pd.DataFrame(),
+            parse_diagnostics=pd.DataFrame(),
+            sample_qc=pd.DataFrame(),
+            sidecar_paths={"mapping_audit": tmp_path / "mapping_audit.csv"},
+        )
+
+    monkeypatch.setattr(
+        mod,
+        "recount3_source_from_registry",
+        lambda source_id, registry_path=None: source,
+    )
+    monkeypatch.setattr(mod, "build_recount3_source_matrices", _fake_build)
+
+    assert mod.main(["synthetic-recount3", "--cache-dir", str(tmp_path / "cache")]) == 0
+    stdout = capsys.readouterr().out
+    assert '"source_id": "synthetic-recount3"' in stdout
     assert '"CODE_A": 1' in stdout
 
 

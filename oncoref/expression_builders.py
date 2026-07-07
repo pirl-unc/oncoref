@@ -37,11 +37,13 @@ referenced and documented as the public build-time API.
 
 from __future__ import annotations
 
+import gzip
 import re
 import shutil
 import urllib.request
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Callable, Literal
 
@@ -55,9 +57,16 @@ from .expression_engine import (
     id_columns,
     sample_columns,
 )
+from .gene_ids import unversioned
 
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
 GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
+RECOUNT3_SOURCE_TYPE = "recount3"
+RECOUNT3_ANNOTATION = "G026"  # recount3 Gencode v26 gene summaries
+_RECOUNT3_S3_BASE = "https://recount-opendata.s3.amazonaws.com/recount3/release/human"
+_RECOUNT3_ANNOTATION_GTF = (
+    f"{_RECOUNT3_S3_BASE}/annotations/gene_sums/human.gene_sums.{RECOUNT3_ANNOTATION}.gtf.gz"
+)
 
 _SOURCE_SYMBOL_COLUMN_CANDIDATES = (
     "Symbol",
@@ -143,10 +152,24 @@ class GeoMatrixSource:
 
 
 @dataclass(frozen=True)
+class Recount3Source:
+    """One recount3 study routed into one or more oncoref cancer codes."""
+
+    source_id: str
+    srp: str
+    source_cohort: str
+    cancer_code: str | list[str]
+    source_project: str | None = None
+    citation: str | None = None
+    sample_to_cancer_code: Callable[[dict[str, str], str], str | None] | None = None
+    expected_n: Mapping[str, int] | None = None
+
+
+@dataclass(frozen=True)
 class SourceMatrixBuildResult:
     """Artifacts produced by :func:`build_source_matrices`."""
 
-    source: GeoMatrixSource
+    source: GeoMatrixSource | Recount3Source
     matrices: dict[str, pd.DataFrame]
     matrix_paths: dict[str, Path]
     mapping_audit: pd.DataFrame
@@ -282,6 +305,94 @@ def geo_matrix_source_from_registry(
     for entry in _source_entries_from_registry(registry_path):
         if entry.get("id") == source_id:
             return geo_matrix_source_from_entry(entry)
+    raise KeyError(f"source id {source_id!r} not found in expression source registry")
+
+
+def recount3_source_entries(registry_path: str | Path | None = None) -> list[dict]:
+    """Raw ``source_type: recount3`` entries from ``expression_sources.yaml``."""
+    return [
+        entry
+        for entry in _source_entries_from_registry(registry_path)
+        if entry.get("source_type") == RECOUNT3_SOURCE_TYPE
+    ]
+
+
+def _net_origin_recount3_route(attrs: dict[str, str], _title: str) -> str | None:
+    origin = attrs.get("origin", "").lower()
+    for needle, code in (
+        ("small intest", "NET_MIDGUT"),
+        ("ileum", "NET_MIDGUT"),
+        ("jejunum", "NET_MIDGUT"),
+        ("duodenum", "NET_MIDGUT"),
+        ("pancrea", "NET_PANCREAS"),
+        ("rect", "NET_RECTAL"),
+    ):
+        if needle in origin:
+            return code
+    return None
+
+
+def _compile_recount3_sample_route(
+    route_name: str | None,
+    cancer_code: str | list[str],
+) -> Callable[[dict[str, str], str], str | None]:
+    codes = [cancer_code] if isinstance(cancer_code, str) else list(cancer_code)
+
+    if route_name in {None, "", "all"}:
+        if len(codes) != 1:
+            raise ValueError("recount3 route='all' requires exactly one cancer code")
+        code = str(codes[0])
+        return lambda _attrs, _title: code
+    if route_name == "mds_cd34":
+        return lambda attrs, _title: (
+            "MDS"
+            if (
+                attrs.get("cell type", "").startswith("CD34+")
+                and attrs.get("disease status") == "Myelodysplastic Syndrome"
+            )
+            else None
+        )
+    if route_name == "hl_tumor_title":
+        return lambda _attrs, title: "HL" if str(title).endswith("_TU") else None
+    if route_name == "net_origin":
+        return _net_origin_recount3_route
+    raise ValueError(f"unsupported recount3 route {route_name!r}")
+
+
+def recount3_source_from_entry(entry: Mapping) -> Recount3Source:
+    """Convert one registry YAML entry into an executable :class:`Recount3Source`."""
+    if entry.get("source_type") != RECOUNT3_SOURCE_TYPE:
+        raise ValueError(
+            f"source {entry.get('id')!r} has source_type={entry.get('source_type')!r}, "
+            f"not {RECOUNT3_SOURCE_TYPE!r}"
+        )
+    cancer_codes = [str(code) for code in entry.get("cancer_codes", [])]
+    if not cancer_codes:
+        raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
+    cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
+    route = _compile_recount3_sample_route(entry.get("recount3_route"), cancer_code)
+    expected_raw = entry.get("expected_samples_by_code") or {}
+    expected = {str(code): int(n) for code, n in dict(expected_raw).items()}
+    return Recount3Source(
+        source_id=str(entry["id"]),
+        srp=str(entry["recount3_srp"]),
+        source_cohort=str(entry["source_cohort"]),
+        cancer_code=cancer_code,
+        source_project=entry.get("source_project") or entry.get("accession"),
+        citation=entry.get("citation"),
+        sample_to_cancer_code=route,
+        expected_n=expected,
+    )
+
+
+def recount3_source_from_registry(
+    source_id: str,
+    registry_path: str | Path | None = None,
+) -> Recount3Source:
+    """Load one ``source_type: recount3`` entry from ``expression_sources.yaml``."""
+    for entry in _source_entries_from_registry(registry_path):
+        if entry.get("id") == source_id:
+            return recount3_source_from_entry(entry)
     raise KeyError(f"source id {source_id!r} not found in expression source registry")
 
 
@@ -497,6 +608,158 @@ def _download(url: str, dest: Path, *, force: bool = False) -> Path:
     return dest
 
 
+def recount3_gene_sums_url(srp: str) -> str:
+    """S3 URL of the recount3 SRA gene-sums matrix for one study accession."""
+    return (
+        f"{_RECOUNT3_S3_BASE}/data_sources/sra/gene_sums/{srp[-2:]}/{srp}/"
+        f"sra.gene_sums.{srp}.{RECOUNT3_ANNOTATION}.gz"
+    )
+
+
+def recount3_metadata_url(srp: str, kind: str = "sra") -> str:
+    """S3 URL of a recount3 SRA metadata table for one study accession."""
+    return f"{_RECOUNT3_S3_BASE}/data_sources/sra/metadata/{srp[-2:]}/{srp}/sra.{kind}.{srp}.MD.gz"
+
+
+def _recount3_gene_id(value: str) -> str:
+    text = str(value).strip()
+    if text.endswith("_PAR_Y"):
+        text = text[: -len("_PAR_Y")]
+    return unversioned(text)
+
+
+@lru_cache(maxsize=2)
+def fetch_recount3_gene_annotation(
+    cache_dir: str | Path,
+    *,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """Gencode-v26 recount3 gene annotation indexed by unversioned Ensembl ID.
+
+    The recount3 gene-sums GTF stores the exonic disjoint-base length in the
+    score column. That length is the denominator used by
+    :func:`recount3_gene_sums_to_tpm`.
+    """
+    cache = Path(cache_dir)
+    path = _download(
+        _RECOUNT3_ANNOTATION_GTF,
+        cache / f"human.gene_sums.{RECOUNT3_ANNOTATION}.gtf.gz",
+        force=force_download,
+    )
+    rows: list[tuple[str, int, str]] = []
+    name_re = re.compile(r'gene_id "([^"]+)".*?gene_name "([^"]+)"')
+    with gzip.open(path, "rt") as handle:
+        for line in handle:
+            if line.startswith("#"):
+                continue
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) < 9 or fields[2] != "gene":
+                continue
+            match = name_re.search(fields[8])
+            if match is None:
+                continue
+            rows.append((_recount3_gene_id(match.group(1)), int(float(fields[5])), match.group(2)))
+    ann = pd.DataFrame(rows, columns=["Ensembl_Gene_ID", "bp_length", "Symbol"])
+    ann = ann.groupby("Ensembl_Gene_ID", as_index=False).agg(
+        bp_length=("bp_length", "sum"),
+        Symbol=("Symbol", "first"),
+    )
+    return ann.set_index("Ensembl_Gene_ID")
+
+
+def fetch_recount3_gene_sums(
+    srp: str,
+    cache_dir: str | Path,
+    *,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """recount3 gene-sums matrix: rows are versioned Gencode IDs, columns are runs."""
+    cache = Path(cache_dir)
+    path = _download(
+        recount3_gene_sums_url(srp),
+        cache / f"sra.gene_sums.{srp}.{RECOUNT3_ANNOTATION}.gz",
+        force=force_download,
+    )
+    return pd.read_csv(path, sep="\t", comment="#", index_col=0)
+
+
+def fetch_recount3_sample_metadata(
+    srp: str,
+    cache_dir: str | Path,
+    *,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """recount3 ``sra`` metadata table for one study accession."""
+    cache = Path(cache_dir)
+    path = _download(
+        recount3_metadata_url(srp),
+        cache / f"sra.sra.{srp}.MD.gz",
+        force=force_download,
+    )
+    return pd.read_csv(path, sep="\t", comment="#", low_memory=False)
+
+
+def recount3_gene_sums_to_tpm(
+    gene_sums: pd.DataFrame,
+    bp_length: pd.Series,
+) -> pd.DataFrame:
+    """Length-normalize recount3 coverage gene-sums to per-sample TPM.
+
+    recount3 gene-sums are coverage area over exonic bases, so this divides by
+    recount3's exonic ``bp_length`` and then renormalizes each sample to one
+    million. Version and ``_PAR_Y`` duplicates are collapsed before normalization.
+    """
+    gs = gene_sums.copy()
+    gs.index = [_recount3_gene_id(idx) for idx in gs.index]
+    gs = gs.groupby(level=0).sum()
+    lengths_kb = (pd.Series(bp_length, dtype=float) / 1000.0).rename("gene_length_kb")
+    frame = gs.reset_index().rename(columns={"index": "Ensembl_Gene_ID"})
+    tpm = normalize_source_matrix_to_tpm(
+        frame,
+        unit="raw_counts",
+        row_id_col="Ensembl_Gene_ID",
+        value_cols=list(gs.columns),
+        gene_lengths_kb=lengths_kb,
+    )
+    return tpm.set_index("Ensembl_Gene_ID")[list(gs.columns)]
+
+
+def parse_recount3_sample_attributes(packed: str) -> dict[str, str]:
+    """Unpack recount3's ``key;;value|key;;value`` sample attribute field."""
+    out: dict[str, str] = {}
+    for item in str(packed).split("|"):
+        if ";;" not in item:
+            continue
+        key, value = item.split(";;", 1)
+        out[key.strip()] = value.strip()
+    return out
+
+
+def aggregate_recount3_runs_to_samples(
+    gene_sums: pd.DataFrame,
+    metadata: pd.DataFrame,
+    *,
+    keep_runs: set[str] | None = None,
+    run_col: str = "external_id",
+    sample_col: str = "sample_acc",
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Sum recount3 run-level coverage columns into biological samples."""
+    meta = metadata.copy()
+    meta[run_col] = meta[run_col].astype(str)
+    runs = [col for col in gene_sums.columns if col in set(meta[run_col])]
+    if keep_runs is not None:
+        runs = [run for run in runs if run in keep_runs]
+    meta = meta[meta[run_col].isin(runs)].copy()
+    run_to_sample = dict(zip(meta[run_col], meta[sample_col].astype(str)))
+    sample_gene_sums = gene_sums[runs].copy()
+    sample_gene_sums.columns = [run_to_sample[col] for col in sample_gene_sums.columns]
+    sample_gene_sums = sample_gene_sums.T.groupby(level=0).sum().T
+    sample_meta = meta.drop_duplicates(sample_col).copy()
+    sample_meta[sample_col] = sample_meta[sample_col].astype(str)
+    sample_meta = sample_meta.set_index(sample_col).reindex(sample_gene_sums.columns)
+    return sample_gene_sums, sample_meta
+
+
 def _artifact_stem(value: str) -> str:
     return "".join(c if c.isalnum() or c in "._-" else "_" for c in value)
 
@@ -640,6 +903,159 @@ def build_source_matrices(
 
     if not matrices:
         raise ValueError("no samples were routed to a cancer code")
+    sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
+    return SourceMatrixBuildResult(
+        source=source,
+        matrices=matrices,
+        matrix_paths=matrix_paths,
+        mapping_audit=audit,
+        parse_diagnostics=parse_diagnostics,
+        sample_qc=sample_qc,
+        sidecar_paths=sidecar_paths,
+    )
+
+
+def build_recount3_source_matrices(
+    source: Recount3Source,
+    *,
+    cache_dir: str | Path,
+    output_dir: str | Path | None = None,
+    force_download: bool = False,
+    high_expression_threshold: float = 1.0,
+) -> SourceMatrixBuildResult:
+    """Build oncoref source-matrix artifacts for one recount3 study.
+
+    recount3 inputs are run-level coverage gene-sums, not ordinary expression
+    matrices. This builder fetches annotation, gene sums, and SRA metadata,
+    routes runs by source-specific metadata rules, sums runs into biological
+    samples, converts coverage gene-sums to TPM, canonicalizes genes, and writes
+    the same per-code parquet + audit/QC sidecars as :func:`build_source_matrices`.
+    """
+    cache = Path(cache_dir)
+    out_dir = Path(output_dir) if output_dir is not None else cache / "derived"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if force_download:
+        annotation = fetch_recount3_gene_annotation(cache, force_download=True)
+        gene_sums = fetch_recount3_gene_sums(source.srp, cache, force_download=True)
+        metadata = fetch_recount3_sample_metadata(source.srp, cache, force_download=True)
+    else:
+        annotation = fetch_recount3_gene_annotation(cache)
+        gene_sums = fetch_recount3_gene_sums(source.srp, cache)
+        metadata = fetch_recount3_sample_metadata(source.srp, cache)
+    route = source.sample_to_cancer_code
+    if route is None:
+        route = _compile_recount3_sample_route(None, source.cancer_code)
+
+    if "external_id" not in metadata.columns or "sample_acc" not in metadata.columns:
+        raise ValueError("recount3 metadata must include external_id and sample_acc columns")
+    attr_values = (
+        metadata["sample_attributes"]
+        if "sample_attributes" in metadata.columns
+        else pd.Series([""] * len(metadata), index=metadata.index)
+    )
+    title_values = (
+        metadata["sample_title"]
+        if "sample_title" in metadata.columns
+        else pd.Series([""] * len(metadata), index=metadata.index)
+    )
+    attrs = {
+        str(run): parse_recount3_sample_attributes(raw)
+        for run, raw in zip(metadata["external_id"], attr_values)
+    }
+    titles = dict(zip(metadata["external_id"].astype(str), title_values))
+    run_code = {run: route(attrs.get(run, {}), str(titles.get(run, ""))) for run in attrs}
+    keep_runs = {run for run, code in run_code.items() if code is not None}
+    if not keep_runs:
+        raise ValueError(f"no recount3 runs routed for source {source.source_id!r}")
+
+    sample_gene_sums, sample_meta = aggregate_recount3_runs_to_samples(
+        gene_sums,
+        metadata,
+        keep_runs=keep_runs,
+    )
+    sample_code: dict[str, str] = {}
+    for sample_id, row in sample_meta.iterrows():
+        code = run_code.get(str(row["external_id"]))
+        if code is not None:
+            sample_code[str(sample_id)] = str(code)
+    counts = pd.Series(list(sample_code.values()), dtype="object").value_counts().to_dict()
+    for code, expected in (source.expected_n or {}).items():
+        got = int(counts.get(code, 0))
+        if got != int(expected):
+            raise ValueError(f"{source.source_id} routed {code} n={got}; expected {expected}")
+
+    tpm = recount3_gene_sums_to_tpm(sample_gene_sums, annotation["bp_length"])
+    symbol = annotation["Symbol"].reindex(tpm.index).fillna(pd.Series(tpm.index, index=tpm.index))
+    tpm_frame = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": tpm.index.astype(str),
+            "Symbol": symbol.to_numpy(),
+        }
+    )
+    for col in tpm.columns:
+        tpm_frame[str(col)] = tpm[col].to_numpy(dtype=float)
+
+    value_cols = [str(col) for col in tpm.columns]
+    _, parse_diagnostics = coerce_source_expression_values(
+        tpm_frame,
+        value_cols=value_cols,
+        row_id_col="Ensembl_Gene_ID",
+        symbol_col="Symbol",
+    )
+    matrix, audit = canonicalize_source_gene_matrix(
+        tpm_frame,
+        row_id_col="Ensembl_Gene_ID",
+        symbol_col="Symbol",
+        value_cols=value_cols,
+        high_expression_threshold=high_expression_threshold,
+    )
+    matrix.attrs["source_value_parse_diagnostics"] = parse_diagnostics
+
+    stem = _artifact_stem(source.source_cohort)
+    sidecar_paths: dict[str, Path] = {}
+    audit_path = out_dir / f"{stem}_mapping_audit.csv"
+    parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
+    audit.to_csv(audit_path, index=False)
+    parse_diagnostics.to_csv(parse_path, index=False)
+    sidecar_paths["mapping_audit"] = audit_path
+    sidecar_paths["parse_diagnostics"] = parse_path
+
+    meta = source_metadata(
+        source_cohort=source.source_cohort,
+        source_type=RECOUNT3_SOURCE_TYPE,
+        unit="recount3 gene_sums to TPM",
+        source_scale_class="linear_rnaseq_tpm",
+        linear_tpm_comparable=True,
+        tpm_proxy=False,
+    )
+
+    from .expression import sample_expression_qc_from_matrix
+
+    matrices: dict[str, pd.DataFrame] = {}
+    matrix_paths: dict[str, Path] = {}
+    qc_frames: list[pd.DataFrame] = []
+    for code, cols in split_source_matrix_by_code(
+        matrix,
+        source.cancer_code,
+        sample_to_cancer_code=lambda sample: sample_code.get(str(sample)),
+    ).items():
+        if not cols:
+            continue
+        sub = matrix[[*id_columns(matrix), *cols]].copy()
+        sub.attrs = {}
+        path = out_dir / f"{_artifact_stem(code)}_per_sample_tpm.parquet"
+        sub.to_parquet(path, index=False)
+        qc = sample_expression_qc_from_matrix(sub, cancer_type=code, source_metadata=meta)
+        qc_path = out_dir / f"{_artifact_stem(code)}_sample_qc.csv"
+        qc.to_csv(qc_path, index=False)
+        matrices[code] = sub
+        matrix_paths[code] = path
+        sidecar_paths[f"{code}_sample_qc"] = qc_path
+        qc_frames.append(qc)
+
+    if not matrices:
+        raise ValueError("no recount3 samples were routed to a cancer code")
     sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
     return SourceMatrixBuildResult(
         source=source,
