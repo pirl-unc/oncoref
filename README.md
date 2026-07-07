@@ -133,7 +133,9 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   (HPA-only tissue-restriction; MS evidence stays in the target-selection layer).
   The strict default keeps normal-tissue safety conservative; clinical/canonical
   targets that fail that filter remain discoverable through the explicit clinical
-  tier with exclusion-driving tissue and nTPM values attached.
+  tier with exclusion-driving tissue and nTPM values attached. Use
+  `cta_specificity_audit()` for machine-readable demotion and candidate-only
+  specificity decisions.
 - **CTA coverage / peptides** — `oncoref.cta_coverage` for patient coverage and
   `oncoref.cta_peptides` for CTA-specific 9-mer count maps and load.
 - **Generic antigen-panel coverage** — `oncoref.antigen_coverage` for explicit
