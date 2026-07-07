@@ -350,6 +350,14 @@ contracts:
   `recommended_consumer_action` columns. These options filter or label known
   artifact row classes; they never invent missing biological expression rows
   and they do not drop biological oncoref-only rows.
+- Representative and percentile readers default to `sample_qc="pass"` and
+  validate any shipped `expression-artifact-build-metadata.csv` rows before
+  returning a precomputed shard. If the metadata says a shard was built with
+  `sample_qc="all"` or another policy, the reader raises rather than silently
+  treating the shard as QC-pass. Use `sample_qc="artifact"` only for explicit
+  legacy/audit reads where the caller wants exactly whatever policy the bundle
+  used. Metadata-missing legacy bundles remain readable but expose
+  `df.attrs["artifact_sample_qc_verified"] = False`.
 - Gene-level reference, representative, and percentile readers attach
   `df.attrs["gene_universe_delta_summary"]` and
   `df.attrs["gene_universe_delta_n"]` for the requested cohort/product. These

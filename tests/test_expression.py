@@ -26,6 +26,25 @@ def _write_percentile_shard(cache_dir, code, tpm_values):
     pd.DataFrame(cols).to_parquet(shard_dir / f"{code}.parquet", index=False)
 
 
+def _write_artifact_build_metadata(cache_dir, code, *, sample_qc="pass"):
+    pd.DataFrame(
+        {
+            "cancer_code": [code],
+            "source_cohort": [code],
+            "source_version": ["test"],
+            "source_matrix_path": [str(cache_dir / "source.parquet")],
+            "sample_qc": [sample_qc],
+            "sample_qc_effective": [sample_qc],
+            "sample_qc_policy_version": ["test_policy"],
+            "n_source_samples": [2],
+            "n_cohort_samples": [2],
+            "n_qc_pass": [2 if sample_qc == "pass" else 0],
+            "n_qc_warn": [0],
+            "n_qc_fail": [0],
+        }
+    ).to_csv(cache_dir / "expression-artifact-build-metadata.csv", index=False)
+
+
 @pytest.fixture
 def percentile_cache(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
@@ -275,6 +294,8 @@ def test_cohort_gene_percentiles_as_tpm(percentile_cache):
     assert df.loc[0, "p95"] == pytest.approx(95.0, rel=1e-2)
     assert df.attrs["gene_universe_delta_n"] == 10
     assert df.attrs["gene_universe_delta_issues"] == ["#191", "#193", "#278"]
+    assert df.attrs["sample_qc"] == "pass"
+    assert df.attrs["artifact_sample_qc_verified"] is False
 
 
 def test_cohort_gene_percentiles_log_space(percentile_cache):
@@ -345,6 +366,7 @@ def test_cohort_gene_percentiles_missing_empty_schema(percentile_cache, monkeypa
 
 
 def test_cohort_gene_percentiles_provenance_columns_and_attrs(percentile_cache):
+    _write_artifact_build_metadata(percentile_cache, "PRAD", sample_qc="pass")
     df = expression.cohort_gene_percentiles("PRAD", include_provenance=True)
 
     assert set(df.columns) >= {
@@ -355,11 +377,28 @@ def test_cohort_gene_percentiles_provenance_columns_and_attrs(percentile_cache):
         "artifact_schema_version",
         "data_version",
         "source_matrix_version",
+        "sample_qc",
+        "sample_qc_policy_version",
     }
     assert set(df["cancer_code"]) == {"PRAD"}
     assert set(df["normalization"]) == {"tpm_clean"}
+    assert set(df["sample_qc"]) == {"pass"}
+    assert set(df["sample_qc_policy_version"]) == {"test_policy"}
     assert df.attrs["schema_version"] == expression.PERCENTILE_ARTIFACT_SCHEMA_VERSION
     assert df.attrs["cancer_code"] == "PRAD"
+    assert df.attrs["artifact_sample_qc"] == "pass"
+    assert df.attrs["artifact_sample_qc_verified"] is True
+
+
+def test_cohort_gene_percentiles_rejects_mismatched_artifact_sample_qc(percentile_cache):
+    _write_artifact_build_metadata(percentile_cache, "PRAD", sample_qc="all")
+
+    with pytest.raises(ValueError, match="sample_qc mismatch"):
+        expression.cohort_gene_percentiles("PRAD")
+
+    audit = expression.cohort_gene_percentiles("PRAD", sample_qc="artifact")
+    assert audit.attrs["sample_qc"] == "artifact"
+    assert audit.attrs["artifact_sample_qc"] == "all"
 
 
 @pytest.fixture
@@ -570,6 +609,27 @@ def test_representative_provenance_includes_source_sample_and_selection_metadata
     assert internal.loc[0, "representative_id"] == "PRAD__rep1"
 
 
+def test_representatives_reject_mismatched_artifact_sample_qc(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG1"],
+            "Symbol": ["GENE1"],
+            "PRAD__rep1": [1.0],
+        }
+    ).to_parquet(d / "PRAD.parquet", index=False)
+    _write_artifact_build_metadata(tmp_path, "PRAD", sample_qc="all")
+
+    with pytest.raises(ValueError, match="sample_qc mismatch"):
+        expression.representative_cohort_samples("PRAD")
+
+    audit = expression.representative_cohort_samples("PRAD", sample_qc="artifact")
+    assert audit.attrs["sample_qc"] == "artifact"
+    assert audit.attrs["artifact_sample_qc"] == "all"
+
+
 def test_representative_empty_long_schema_includes_requested_provenance(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
     (tmp_path / "cancer-reference-expression-representatives").mkdir(parents=True)
@@ -588,6 +648,12 @@ def test_representative_empty_long_schema_includes_requested_provenance(monkeypa
         "source_project",
         "source_sample",
         "n_cohort_samples",
+        "sample_qc",
+        "sample_qc_effective",
+        "sample_qc_policy_version",
+        "n_qc_pass",
+        "n_qc_warn",
+        "n_qc_fail",
         "selection_rank",
         "selection_method",
         "selection_basis",
@@ -1351,7 +1417,7 @@ def test_cancer_reference_expression_long_and_wide(monkeypatch):
     assert long["cancer_code"].tolist() == ["X"]
     assert long["normalization"].tolist() == ["tpm_clean"]
     assert long["reference_method"].tolist() == ["percentile_shard"]
-    assert long["sample_qc"].tolist() == ["artifact"]
+    assert long["sample_qc"].tolist() == ["pass"]
     assert long["expression"].tolist() == [3.0]
     assert long["q1"].tolist() == [1.0] and long["q3"].tolist() == [5.0]
     assert expression.cancer_reference_expression("x", genes=["E1"], normalize="clean_tpm").equals(
@@ -1475,7 +1541,7 @@ def test_cancer_reference_expression_availability_reports_missing(monkeypatch):
     assert out.attrs["artifact_schema_version"] == expression.REFERENCE_EXPRESSION_SCHEMA_VERSION
     keyed = out.set_index(["cancer_code", "normalization"])
     assert bool(keyed.loc[("X", "tpm_clean"), "available"]) is True
-    assert keyed.loc[("X", "tpm_clean"), "sample_qc"] == "artifact"
+    assert keyed.loc[("X", "tpm_clean"), "sample_qc"] == "pass"
     assert keyed.loc[("X", "tpm_raw"), "sample_qc"] == "pass"
     assert keyed.loc[("X", "tpm_raw"), "missing_reason"] == "no_source_matrix"
     assert keyed.loc[("Z", "tpm_clean"), "missing_reason"] == "no_percentile_artifact"

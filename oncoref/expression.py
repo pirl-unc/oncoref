@@ -234,6 +234,16 @@ def _available_cohorts(
     return _available_shard_codes(_shard_dir(dataset, proteoform=proteoform, scope=scope))
 
 
+def _shard_path(
+    dataset: ShardDataset,
+    code: str,
+    *,
+    proteoform: bool = False,
+    scope: str = "cta",
+) -> Path:
+    return _shard_dir(dataset, proteoform=proteoform, scope=scope) / f"{code}.parquet"
+
+
 def _resolve_cancer_types(
     cancer_types: str | Iterable[str] | None,
     *,
@@ -292,6 +302,12 @@ _REPRESENTATIVE_PROVENANCE_COLUMNS = [
     "source_project",
     "source_sample",
     "n_cohort_samples",
+    "sample_qc",
+    "sample_qc_effective",
+    "sample_qc_policy_version",
+    "n_qc_pass",
+    "n_qc_warn",
+    "n_qc_fail",
     "selection_rank",
     "selection_method",
     "selection_basis",
@@ -398,8 +414,10 @@ def _representative_attrs(
     representative_id_style: str,
     gene_id_style: str,
     gene_universe: str,
+    sample_qc: str,
+    artifact_qc_meta: pd.DataFrame | None = None,
 ) -> dict[str, object]:
-    return {
+    attrs = {
         "artifact": "representative_samples",
         "schema_version": REPRESENTATIVE_ARTIFACT_SCHEMA_VERSION,
         "data_version": DATA_VERSION,
@@ -414,6 +432,9 @@ def _representative_attrs(
         "selection_method": REPRESENTATIVE_SELECTION_METHOD,
         "selection_basis": REPRESENTATIVE_SELECTION_BASIS,
     }
+    if artifact_qc_meta is not None:
+        attrs.update(_artifact_qc_attrs(artifact_qc_meta, requested_sample_qc=sample_qc))
+    return attrs
 
 
 def _representative_empty_frame(*, include_provenance: bool) -> pd.DataFrame:
@@ -436,7 +457,16 @@ def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.Data
     for col in ("source_cohort", "source_version", "source_project", "source_sample"):
         if col not in long.columns:
             long[col] = pd.NA
-    for col in ("n_cohort_samples", "selection_rank"):
+    for col in (
+        "n_cohort_samples",
+        "selection_rank",
+        "n_qc_pass",
+        "n_qc_warn",
+        "n_qc_fail",
+    ):
+        if col not in long.columns:
+            long[col] = pd.NA
+    for col in ("sample_qc", "sample_qc_effective", "sample_qc_policy_version"):
         if col not in long.columns:
             long[col] = pd.NA
     if "selection_rank" in long.columns:
@@ -471,6 +501,8 @@ def _percentile_provenance_columns() -> list[str]:
         "artifact_schema_version",
         "data_version",
         "source_matrix_version",
+        "sample_qc",
+        "sample_qc_policy_version",
     ]
 
 
@@ -483,6 +515,8 @@ def _percentile_attrs(
     source: str,
     gene_id_style: str,
     gene_universe: str,
+    sample_qc: str,
+    artifact_qc_meta: pd.DataFrame | None = None,
     missing_reason: str | None = None,
 ) -> dict[str, object]:
     attrs: dict[str, object] = {
@@ -501,6 +535,8 @@ def _percentile_attrs(
         "expression_unit": "tpm_clean" if as_tpm else "log1p_tpm_clean",
         "percentile_basis": "biological_clean_tpm_across_samples",
     }
+    if artifact_qc_meta is not None:
+        attrs.update(_artifact_qc_attrs(artifact_qc_meta, requested_sample_qc=sample_qc))
     if missing_reason is not None:
         attrs["missing_reason"] = missing_reason
     return attrs
@@ -515,6 +551,8 @@ def _empty_percentile_frame(
     include_provenance: bool,
     gene_id_style: str,
     gene_universe: str,
+    sample_qc: str,
+    artifact_qc_meta: pd.DataFrame | None = None,
     include_gene_universe_flags: bool,
     missing_reason: str,
 ) -> pd.DataFrame:
@@ -533,13 +571,22 @@ def _empty_percentile_frame(
             source="missing",
             gene_id_style=gene_id_style,
             gene_universe=gene_universe,
+            sample_qc=sample_qc,
+            artifact_qc_meta=artifact_qc_meta,
             missing_reason=missing_reason,
         )
     )
     return out
 
 
-def _attach_percentile_provenance(df: pd.DataFrame, *, code: str, as_tpm: bool) -> pd.DataFrame:
+def _attach_percentile_provenance(
+    df: pd.DataFrame,
+    *,
+    code: str,
+    as_tpm: bool,
+    sample_qc: str,
+    artifact_qc_meta: pd.DataFrame,
+) -> pd.DataFrame:
     out = df.copy()
     out["cancer_code"] = code
     out["normalization"] = "tpm_clean" if as_tpm else "tpm_clean_log1p"
@@ -548,6 +595,18 @@ def _attach_percentile_provenance(df: pd.DataFrame, *, code: str, as_tpm: bool) 
     out["artifact_schema_version"] = PERCENTILE_ARTIFACT_SCHEMA_VERSION
     out["data_version"] = DATA_VERSION
     out["source_matrix_version"] = SOURCE_MATRIX_VERSION
+    qc_values = sorted(
+        {_artifact_build_metadata_qc_value(row) for _, row in artifact_qc_meta.iterrows()} - {""}
+    )
+    out["sample_qc"] = ",".join(qc_values) if qc_values else sample_qc
+    policy_versions = sorted(
+        {
+            str(v)
+            for v in artifact_qc_meta.get("sample_qc_policy_version", pd.Series(dtype=object))
+            if pd.notna(v) and str(v)
+        }
+    )
+    out["sample_qc_policy_version"] = ",".join(policy_versions) if policy_versions else pd.NA
     return out
 
 
@@ -1073,6 +1132,7 @@ def _attach_gene_universe_delta_attrs(
 
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
+_ARTIFACT_SAMPLE_QC_MODES = ("artifact", *_SAMPLE_QC_MODES)
 SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v2"
 EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION = "expression_artifact_build_metadata_v1"
 SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH = "source-matrix-sample-qc.csv"
@@ -1214,6 +1274,13 @@ def _validate_sample_qc(sample_qc: str) -> str:
     mode = str(sample_qc).lower()
     if mode not in _SAMPLE_QC_MODES:
         raise ValueError(f"sample_qc must be one of {_SAMPLE_QC_MODES}")
+    return mode
+
+
+def _validate_artifact_sample_qc(sample_qc: str) -> str:
+    mode = str(sample_qc).lower()
+    if mode not in _ARTIFACT_SAMPLE_QC_MODES:
+        raise ValueError(f"sample_qc must be one of {_ARTIFACT_SAMPLE_QC_MODES}")
     return mode
 
 
@@ -1590,6 +1657,73 @@ def expression_artifact_build_metadata(
     out.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
     out.attrs["path"] = str(path)
     return out.reset_index(drop=True)
+
+
+def _artifact_build_metadata_qc_value(row) -> str:
+    for col in ("sample_qc_effective", "sample_qc"):
+        value = row.get(col)
+        if pd.notna(value) and str(value).strip():
+            return str(value).strip().lower()
+    return ""
+
+
+def _artifact_qc_attrs(
+    meta: pd.DataFrame,
+    *,
+    requested_sample_qc: str,
+) -> dict[str, object]:
+    values = sorted({_artifact_build_metadata_qc_value(row) for _, row in meta.iterrows()} - {""})
+    missing_reason = str(meta.attrs.get("missing_reason", ""))
+    return {
+        "sample_qc": requested_sample_qc,
+        "artifact_sample_qc": ",".join(values) if values else "unknown",
+        "artifact_sample_qc_verified": bool(values),
+        "artifact_build_metadata_n": len(meta),
+        "artifact_build_metadata_missing_reason": missing_reason,
+    }
+
+
+def _require_expression_artifact_sample_qc(
+    codes: Iterable[str],
+    *,
+    sample_qc: str,
+) -> pd.DataFrame:
+    requested = _validate_artifact_sample_qc(sample_qc)
+    code_list = list(dict.fromkeys(str(c) for c in codes))
+    # Do not fetch as part of read-path validation. The artifact reader already picked a
+    # shard root; validation should inspect metadata that is present beside that bundle,
+    # not populate an override/test cache with the global release as a side effect.
+    meta = expression_artifact_build_metadata(code_list, auto_fetch=False, on_missing="empty")
+    if requested == "artifact" or not code_list:
+        return meta
+
+    # Legacy/current-development bundles may not yet ship build metadata. Keep those
+    # readable, but mark attrs as unverified rather than pretending the QC policy is known.
+    if meta.empty and meta.attrs.get("missing_reason"):
+        return meta
+
+    present = set(meta["cancer_code"].astype(str)) if "cancer_code" in meta.columns else set()
+    missing = [code for code in code_list if code not in present]
+    if missing:
+        raise ValueError(
+            "expression artifact build metadata lacks rows for requested cohort(s): "
+            + ", ".join(missing)
+            + "; pass sample_qc='artifact' only for explicit legacy/audit reads"
+        )
+
+    mismatches: list[str] = []
+    for _, row in meta.iterrows():
+        effective = _artifact_build_metadata_qc_value(row)
+        if effective != requested:
+            mismatches.append(f"{row.get('cancer_code')}={effective or 'unknown'}")
+    if mismatches:
+        raise ValueError(
+            "expression artifact sample_qc mismatch for requested cohort(s): "
+            + ", ".join(mismatches)
+            + f"; requested {requested!r}. Regenerate the bundle with that policy or "
+            "pass sample_qc='artifact' for an explicit legacy/audit read."
+        )
+    return meta
 
 
 def expression_artifact_build_summary(
@@ -2234,10 +2368,13 @@ def _reference_expression_frame(
     code: str, mode: str, *, auto_fetch: bool, sample_qc: str
 ) -> tuple[pd.DataFrame, str]:
     if mode in {"tpm_clean", "tpm_clean_biological"}:
-        return cohort_gene_percentiles(code, as_tpm=True, auto_fetch=auto_fetch), "percentile_shard"
+        return (
+            cohort_gene_percentiles(code, as_tpm=True, auto_fetch=auto_fetch, sample_qc=sample_qc),
+            "percentile_shard",
+        )
     if mode == "tpm_clean_log1p":
         return (
-            cohort_gene_percentiles(code, as_tpm=False, auto_fetch=auto_fetch),
+            cohort_gene_percentiles(code, as_tpm=False, auto_fetch=auto_fetch, sample_qc=sample_qc),
             "percentile_shard_log1p",
         )
     if mode == "tpm_raw":
@@ -2249,7 +2386,7 @@ def _reference_expression_frame(
 
 
 def _reference_sample_qc_label(mode: str, sample_qc: str) -> str:
-    return sample_qc if mode == "tpm_raw" else "artifact"
+    return sample_qc
 
 
 def _reference_expression_provenance(code: str, mode: str, method: str, *, sample_qc: str) -> dict:
@@ -2441,6 +2578,7 @@ def representative_cohort_samples(
     representative_id_style: str = "pirlygenes",
     gene_id_style: str = "oncoref",
     gene_universe: str = "artifact",
+    sample_qc: str = "pass",
     include_gene_universe_flags: bool = False,
 ) -> pd.DataFrame:
     """Representative real per-sample expression vectors per cohort.
@@ -2467,10 +2605,15 @@ def representative_cohort_samples(
     ``gene_universe="tumor_signal"`` drops filterable extras while retaining
     biological oncoref-only rows; ``include_gene_universe_flags=True`` appends
     row-level audit columns.
+    ``sample_qc="pass"`` requires any shipped build metadata to show the
+    representative shard was built from QC-passing samples. Pass
+    ``sample_qc="artifact"`` only for explicit legacy/audit reads of whatever
+    policy the bundle used.
     """
     _validate_representative_id_style(representative_id_style)
     _validate_gene_id_style(gene_id_style)
     gene_universe = _validate_artifact_gene_universe(gene_universe)
+    sample_qc = _validate_artifact_sample_qc(sample_qc)
     if normalize not in ("tpm_clean", "tpm_clean_log1p"):
         raise ValueError(
             "representative_cohort_samples normalize must be 'tpm_clean' or "
@@ -2490,6 +2633,7 @@ def representative_cohort_samples(
     else:
         requested = _resolve_cancer_types(cancer_types, expand_aggregates=True)
         codes = [c for c in dict.fromkeys(requested) if c in available]
+    artifact_qc_meta = _require_expression_artifact_sample_qc(codes, sample_qc=sample_qc)
 
     base = ["Ensembl_Gene_ID", "Symbol"]
     # Combine cohorts on a CANONICAL gene id only — never the (Ensembl_Gene_ID, Symbol)
@@ -2558,6 +2702,8 @@ def representative_cohort_samples(
                     representative_id_style=representative_id_style,
                     gene_id_style=gene_id_style,
                     gene_universe=gene_universe,
+                    sample_qc=sample_qc,
+                    artifact_qc_meta=artifact_qc_meta,
                 )
             )
             out = _apply_artifact_gene_universe(
@@ -2598,6 +2744,8 @@ def representative_cohort_samples(
                 representative_id_style=representative_id_style,
                 gene_id_style=gene_id_style,
                 gene_universe=gene_universe,
+                sample_qc=sample_qc,
+                artifact_qc_meta=artifact_qc_meta,
             )
         )
         _attach_gene_universe_delta_attrs(
@@ -2616,6 +2764,8 @@ def representative_cohort_samples(
                 representative_id_style=representative_id_style,
                 gene_id_style=gene_id_style,
                 gene_universe=gene_universe,
+                sample_qc=sample_qc,
+                artifact_qc_meta=artifact_qc_meta,
             )
         )
         out = _apply_artifact_gene_universe(
@@ -2658,6 +2808,8 @@ def representative_cohort_samples(
             representative_id_style=representative_id_style,
             gene_id_style=gene_id_style,
             gene_universe=gene_universe,
+            sample_qc=sample_qc,
+            artifact_qc_meta=artifact_qc_meta,
         )
     )
     _attach_gene_universe_delta_attrs(
@@ -2697,6 +2849,7 @@ def _read_shard_or_recompute(
     auto_fetch: bool,
     scope: str = "cta",
     sample_qc: str = "pass",
+    shard: Path | None = None,
 ) -> pd.DataFrame:
     """Read ``code``'s shard for ``dataset`` (the ``scope``-specific one at proteoform
     level); if no shard is present, recompute it on the fly from the per-sample matrix
@@ -2707,7 +2860,8 @@ def _read_shard_or_recompute(
     within-sample readers. Raises a clear :class:`ValueError` — not a bare
     ``FileNotFoundError`` — when neither the shard nor the per-sample matrix is available
     (the proteoform variant has no shipped shard yet, so it always takes this path)."""
-    shard = _shard_dir(dataset, proteoform=proteoform, scope=scope) / f"{code}.parquet"
+    if shard is None:
+        shard = _shard_path(dataset, code, proteoform=proteoform, scope=scope)
     if shard.exists():
         return pd.read_parquet(shard)
     try:
@@ -2741,6 +2895,7 @@ def cohort_gene_percentiles(
     on_missing: str = "raise",
     gene_id_style: str = "oncoref",
     gene_universe: str = "artifact",
+    sample_qc: str = "pass",
     include_gene_universe_flags: bool = False,
 ) -> pd.DataFrame:
     """Tail-weighted per-gene percentile vector for one cohort.
@@ -2767,6 +2922,10 @@ def cohort_gene_percentiles(
     ``gene_universe="tumor_signal"`` drops filterable extras while retaining
     biological oncoref-only rows; ``include_gene_universe_flags=True`` appends
     row-level audit columns.
+    ``sample_qc="pass"`` requires any shipped build metadata to show the
+    percentile shard was built from QC-passing samples. Pass
+    ``sample_qc="artifact"`` only for explicit legacy/audit reads of whatever
+    policy the bundle used.
 
     With ``proteoform=True``, the vector is one row per proteoform key
     (``proteoform_key``/``Symbol`` carry the collapsed identity), identical-protein
@@ -2783,6 +2942,7 @@ def cohort_gene_percentiles(
         raise ValueError("on_missing must be 'raise' or 'empty'")
     _validate_gene_id_style(gene_id_style)
     gene_universe = _validate_artifact_gene_universe(gene_universe)
+    sample_qc = _validate_artifact_sample_qc(sample_qc)
     if proteoform and gene_id_style != "oncoref":
         raise ValueError("gene_id_style='pirlygenes' is only supported for gene-level artifacts")
     if proteoform and (gene_universe != "artifact" or include_gene_universe_flags):
@@ -2791,11 +2951,27 @@ def cohort_gene_percentiles(
         )
 
     code = resolve_cancer_type(cancer_type)
+    shard = _shard_path(_PERCENTILES, code, proteoform=proteoform, scope=scope)
+    if shard.exists():
+        artifact_qc_meta = _require_expression_artifact_sample_qc([code], sample_qc=sample_qc)
+    else:
+        artifact_qc_meta = _empty_metadata_frame(
+            _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS,
+            schema_version=EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
+            missing_reason="no precomputed percentile artifact shard; recomputing from source matrix",
+        )
+    recompute_sample_qc = "pass" if sample_qc == "artifact" else sample_qc
     try:
         df = _read_shard_or_recompute(
-            _PERCENTILES, code, proteoform=proteoform, auto_fetch=auto_fetch, scope=scope
+            _PERCENTILES,
+            code,
+            proteoform=proteoform,
+            auto_fetch=auto_fetch,
+            scope=scope,
+            sample_qc=recompute_sample_qc,
+            shard=shard,
         )
-        source = "shard_or_recomputed"
+        source = "shard" if shard.exists() else "recomputed"
     except ValueError as e:
         if on_missing != "empty" or "per-sample matrix isn't cached" not in str(e):
             raise
@@ -2807,6 +2983,8 @@ def cohort_gene_percentiles(
             include_provenance=include_provenance,
             gene_id_style=gene_id_style,
             gene_universe=gene_universe,
+            sample_qc=sample_qc,
+            artifact_qc_meta=artifact_qc_meta,
             include_gene_universe_flags=include_gene_universe_flags,
             missing_reason=str(e),
         )
@@ -2820,7 +2998,13 @@ def cohort_gene_percentiles(
     if as_tpm:
         df[bp_cols] = np.expm1(df[bp_cols])
     if include_provenance:
-        df = _attach_percentile_provenance(df, code=code, as_tpm=as_tpm)
+        df = _attach_percentile_provenance(
+            df,
+            code=code,
+            as_tpm=as_tpm,
+            sample_qc=sample_qc,
+            artifact_qc_meta=artifact_qc_meta,
+        )
     df = _apply_artifact_gene_universe(
         df,
         product="cohort_gene_percentiles",
@@ -2843,6 +3027,8 @@ def cohort_gene_percentiles(
             source=source,
             gene_id_style=gene_id_style,
             gene_universe=gene_universe,
+            sample_qc=sample_qc,
+            artifact_qc_meta=artifact_qc_meta,
         )
     )
     if not proteoform:
