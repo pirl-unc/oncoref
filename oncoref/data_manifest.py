@@ -213,6 +213,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "explicit clinical/canonical CTA target tier joined to HPA evidence",
     ),
+    "cta-specificity-audit": (
+        "cta",
+        "machine-readable CTA specificity demotion and candidate-only audit decisions",
+    ),
     "proteoform-groups": ("gene-id", "byte-identical CTA proteoform groups"),
     "proteoform-groups-genome": ("gene-id", "byte-identical proteoform groups (genome-wide)"),
     "source-matrices": ("expression", "per-cohort raw-matrix registry (code/source/n_samples)"),

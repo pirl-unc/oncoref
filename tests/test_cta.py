@@ -249,6 +249,44 @@ def test_clinical_cta_target_tier_keeps_strict_default_conservative():
     assert "ENSG00000198930" not in cta.cta_excluded_clinical_target_gene_ids()
 
 
+def test_cta_specificity_audit_surfaces_demotions_and_candidate_only_rows():
+    audit = cta.cta_specificity_audit().set_index("Symbol")
+    expected = {
+        "CTAG2",
+        "MAGEA11",
+        "CT45A1",
+        "CT45A3",
+        "CT45A5",
+        "MAGEC3",
+        "PAGE4",
+        "CSAG1",
+    }
+    assert expected <= set(audit.index)
+
+    assert audit.loc["CTAG2", "specificity_status"] == "excluded_somatic_leak"
+    assert audit.loc["CTAG2", "specificity_action"] == "exclude_default_keep_clinical"
+    assert audit.loc["CTAG2", "rna_max_somatic_tissue"] == "heart muscle"
+    assert float(audit.loc["CTAG2", "rna_max_somatic_ntpm"]) == 5.1
+    assert audit.loc["CTAG2", "in_cta_table"]
+
+    assert audit.loc["PAGE4", "specificity_status"] == "candidate_weak_specificity"
+    assert audit.loc["PAGE4", "candidate_source"] == "literature_cta"
+    assert not audit.loc["PAGE4", "in_cta_table"]
+    assert audit.loc["CSAG1", "specificity_status"] == "candidate_pending_hpa_audit"
+    assert "PMID:12039054" in audit.loc["CSAG1", "pmids"]
+
+
+def test_cta_evidence_includes_specificity_status_for_audited_and_default_rows():
+    evidence = cta.cta_evidence().set_index("Symbol")
+
+    assert evidence.loc["CTAG2", "specificity_status"] == "excluded_somatic_leak"
+    assert evidence.loc["CTAG2", "specificity_action"] == "exclude_default_keep_clinical"
+    assert "heart" in evidence.loc["CTAG2", "specificity_rationale"]
+    assert evidence.loc["CTAG1B", "specificity_status"] == "canonical_default"
+    assert evidence.loc["CTAG1B", "specificity_action"] == "include_default"
+    assert "CTAG2" not in cta.cta_gene_names()
+
+
 def test_clinical_cta_helpers_are_top_level_exports():
     for name in (
         "cta_clinical_target_references",
@@ -257,5 +295,7 @@ def test_clinical_cta_helpers_are_top_level_exports():
         "cta_clinical_target_gene_ids",
         "cta_excluded_clinical_target_gene_names",
         "cta_excluded_clinical_target_gene_ids",
+        "cta_specificity_audit_references",
+        "cta_specificity_audit",
     ):
         assert getattr(oncoref, name) is getattr(cta, name)

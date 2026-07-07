@@ -137,7 +137,9 @@ ici_response.ici_response_estimates_df()
   `cta_filtered_gene_names()` preserve the HPA reproductive-restriction default;
   `cta_clinical_target_evidence()` exposes a separate clinical/canonical tier for
   source-anchored CTA targets that may be strict-pass, HPA-excluded, or
-  candidate-only.
+  candidate-only. `cta_specificity_audit()` exposes machine-readable specificity
+  demotion and candidate-only decisions for genes whose normal-tissue evidence
+  makes strict-default inclusion unsafe or unresolved.
 - `oncoref.cta_coverage` — CTA patient coverage over per-sample expression
   matrices.
 - `oncoref.cta_peptides` — CTA-specific 9-mer counts and load.
@@ -155,6 +157,7 @@ from oncoref import cta, cta_coverage, cta_peptides
 
 cta.cta_gene_names()
 cta.cta_clinical_target_evidence()
+cta.cta_specificity_audit()
 cta_coverage.cta_addressable_fraction("LUAD")
 cta_peptides.cta_specific_9mer_count_map(by="proteoform_key")
 ```

@@ -184,13 +184,73 @@ _register_derived_cache(_cta_frame.cache_clear)
 def cta_df() -> pd.DataFrame:
     """Full CTA evidence table (one row per candidate), with the non-CTA
     excluded genes (histones, etc.) dropped. Returns a defensive copy."""
-    return _cta_frame().copy()
+    return _with_specificity_columns(_cta_frame())
 
 
 #: Alias matching the target-selection layer's public name.
 def cta_evidence() -> pd.DataFrame:
     """The CTA evidence DataFrame (alias of :func:`cta_df`)."""
     return cta_df()
+
+
+def _specificity_defaults(df: pd.DataFrame) -> pd.DataFrame:
+    out = pd.DataFrame(index=df.index)
+    passes = passes_filters_mask(df)
+    never = _boolish(df["never_expressed"]) if "never_expressed" in df.columns else False
+    rescued = _never_expressed_rescue_mask(df)
+    default_included = passes & ~(never & ~rescued)
+    out["specificity_status"] = "excluded_normal_expression"
+    out.loc[passes & ~default_included, "specificity_status"] = "canonical_low_expression"
+    out.loc[default_included, "specificity_status"] = "canonical_default"
+    out["specificity_action"] = "exclude_default"
+    out.loc[default_included, "specificity_action"] = "include_default"
+    out["specificity_source_anchor"] = "derived:oncoref.cta.passes_filters"
+    out["specificity_rationale"] = (
+        "Derived from HPA reproductive-restriction filters and never-expressed rescue policy."
+    )
+    return out
+
+
+def _with_specificity_columns(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy()
+    if "Ensembl_Gene_ID" not in out.columns:
+        return out
+    defaults = _specificity_defaults(out)
+    for col in defaults.columns:
+        out[col] = defaults[col].to_numpy()
+
+    audit = cta_specificity_audit_references()
+    if audit.empty:
+        return out
+    audit = audit.copy()
+    audit["Ensembl_Gene_ID"] = audit["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    audit_cols = [
+        "Ensembl_Gene_ID",
+        "specificity_status",
+        "specificity_action",
+        "source_anchor",
+        "rationale",
+    ]
+    joined = out.assign(
+        Ensembl_Gene_ID=out["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    ).merge(
+        audit[audit_cols].rename(
+            columns={
+                "source_anchor": "specificity_source_anchor",
+                "rationale": "specificity_rationale",
+            }
+        ),
+        on="Ensembl_Gene_ID",
+        how="left",
+        suffixes=("", "_audit"),
+    )
+    for col in ("specificity_status", "specificity_action"):
+        audit_col = f"{col}_audit"
+        out[col] = joined[audit_col].where(joined[audit_col].notna(), out[col]).to_numpy()
+    for col in ("specificity_source_anchor", "specificity_rationale"):
+        audit_col = f"{col}_audit"
+        out[col] = joined[audit_col].where(joined[audit_col].notna(), out[col]).to_numpy()
+    return out
 
 
 @lru_cache(maxsize=1)
@@ -250,6 +310,72 @@ def cta_candidate_references() -> pd.DataFrame:
     vs. which carry somatic signal that needs a cross-reactivity/leakiness call
     before entering the curated table. Returns a defensive copy."""
     return get_data("cta-candidate-references").copy()
+
+
+def cta_specificity_audit_references() -> pd.DataFrame:
+    """Machine-readable specificity audit decisions for flagged CTA candidates.
+
+    This is the source table for explicit demotion/candidate-only calls. It is
+    intentionally narrower than :func:`cta_df`: rows appear here when a gene needs
+    a curator-visible specificity decision beyond the derived HPA filter status.
+    """
+    return get_data("cta-specificity-audit").copy()
+
+
+def cta_specificity_audit() -> pd.DataFrame:
+    """Specificity audit rows joined to HPA/candidate evidence.
+
+    The raw audit table records the decision, action, source anchor, and rationale.
+    This helper adds the normal-tissue columns needed to review or reproduce the
+    decision without searching the broader CTA and candidate tables.
+    """
+    audit = cta_specificity_audit_references()
+    audit["Ensembl_Gene_ID"] = audit["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+
+    table_cols = [
+        "Symbol",
+        "Ensembl_Gene_ID",
+        "passes_filters",
+        "never_expressed",
+        "rna_testis_ntpm",
+        "rna_ovary_ntpm",
+        "rna_placenta_ntpm",
+        "rna_max_somatic_tissue",
+        "rna_max_somatic_ntpm",
+        "rna_somatic_detected_count",
+        "rna_brain_max_ntpm",
+        "rna_heart_max_ntpm",
+        "protein_restriction",
+        "rna_restriction",
+        "rna_restriction_level",
+        "restriction",
+        "restriction_confidence",
+        "safety_flags",
+    ]
+    table = _cta_frame()[table_cols].copy()
+    table["Ensembl_Gene_ID"] = table["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    out = audit.merge(
+        table.drop(columns=["Symbol"]).rename(columns={"passes_filters": "cta_passes_filters"}),
+        on="Ensembl_Gene_ID",
+        how="left",
+    )
+
+    candidates = cta_candidate_references().copy()
+    candidates["Ensembl_Gene_ID"] = candidates["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    candidate_cols = [
+        "Ensembl_Gene_ID",
+        "candidate_source",
+        "ct_designation",
+        "family",
+        "hpa_testis_ntpm",
+        "hpa_max_somatic_ntpm",
+        "hpa_max_somatic_tissue",
+        "hpa_testis_restricted",
+    ]
+    out = out.merge(candidates[candidate_cols], on="Ensembl_Gene_ID", how="left")
+    out["in_cta_table"] = out["cta_passes_filters"].notna()
+    out["in_candidate_watchlist"] = out["candidate_source"].notna()
+    return out.copy()
 
 
 def cta_clinical_target_references() -> pd.DataFrame:
