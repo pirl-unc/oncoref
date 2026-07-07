@@ -37,12 +37,32 @@ referenced and documented as the public build-time API.
 
 from __future__ import annotations
 
+import shutil
+import urllib.request
 from collections.abc import Iterable, Mapping
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable, Literal
 
 import numpy as np
 import pandas as pd
 
-from .expression_engine import sample_columns
+from .expression_engine import (
+    canonicalize_source_gene_matrix,
+    coerce_source_expression_values,
+    id_columns,
+    sample_columns,
+)
+
+SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
+
+_SOURCE_SYMBOL_COLUMN_CANDIDATES = (
+    "Symbol",
+    "symbol",
+    "gene_symbol",
+    "gene_name",
+    "external_gene_name",
+)
 
 #: Per-gene cohort percentile breakpoints — dense in the actionable upper tail so
 #: a consumer can place a sample's gene as a percentile rank within the cohort
@@ -84,6 +104,419 @@ WITHIN_SAMPLE_THRESHOLDS = {
     0.95: "frac_samples_top5pct",
     0.90: "frac_samples_top10pct",
 }
+
+
+@dataclass(frozen=True)
+class GeoMatrixSource:
+    """One generic supplementary expression matrix source.
+
+    The source file is a row-by-gene matrix with one column per sample plus a
+    gene identifier column (or, with ``transposed=True``, a sample-by-row matrix
+    that is transposed before processing). This is the oncoref-owned replacement
+    for the generic pirlygenes GEO/GSA/cBioPortal matrix builder: it handles
+    source download, raw parse diagnostics, unit-to-TPM conversion, canonical gene
+    mapping, per-code routing, per-sample QC, and oncoref-style per-sample parquet
+    output. Source-specific wrappers should supply the routing/filter functions;
+    the identity/QC contract remains here.
+    """
+
+    cancer_code: str | list[str]
+    source_cohort: str
+    file_name: str
+    unit: SourceExpressionUnit
+    file_url: str | None = None
+    source_project: str | None = None
+    citation: str | None = None
+    gene_id_col: str = ""
+    symbol_col: str | None = None
+    drop_cols: tuple[str, ...] = ()
+    sep: str = "\t"
+    transposed: bool = False
+    sample_filter: Callable[[list[str]], list[str]] | None = None
+    sample_to_cancer_code: Callable[[str], str | None] | None = None
+    source_scale_class: str | None = None
+    linear_tpm_comparable: bool | None = None
+    tpm_proxy: bool | None = None
+
+
+@dataclass(frozen=True)
+class SourceMatrixBuildResult:
+    """Artifacts produced by :func:`build_source_matrices`."""
+
+    source: GeoMatrixSource
+    matrices: dict[str, pd.DataFrame]
+    matrix_paths: dict[str, Path]
+    mapping_audit: pd.DataFrame
+    parse_diagnostics: pd.DataFrame
+    sample_qc: pd.DataFrame
+    sidecar_paths: dict[str, Path]
+
+
+def _csv_engine(sep: str) -> str:
+    return "python" if len(sep) > 1 or "\\" in sep else "c"
+
+
+def _rename_unnamed_row_id(df: pd.DataFrame, row_id_col: str) -> tuple[pd.DataFrame, str]:
+    if str(row_id_col).startswith("Unnamed"):
+        df = df.rename(columns={row_id_col: "source_row_id"})
+        row_id_col = "source_row_id"
+    return df, row_id_col
+
+
+def _detect_symbol_col(df: pd.DataFrame, row_id_col: str, symbol_col: str | None) -> str | None:
+    if symbol_col is not None:
+        if symbol_col not in df.columns:
+            raise ValueError(f"source symbol column {symbol_col!r} is not in expression data")
+        return symbol_col
+    by_lower = {str(col).lower(): col for col in df.columns}
+    for candidate in _SOURCE_SYMBOL_COLUMN_CANDIDATES:
+        col = by_lower.get(candidate.lower())
+        if col is not None and col != row_id_col:
+            return str(col)
+    return None
+
+
+def source_expression_value_columns(
+    df: pd.DataFrame,
+    *,
+    row_id_col: str | None = None,
+    symbol_col: str | None = None,
+    value_cols: Iterable[str] | None = None,
+) -> list[str]:
+    """Sample/value columns in a raw source expression matrix.
+
+    Explicit ``value_cols`` are validated. Otherwise this excludes the source row
+    identifier and optional symbol column. This is intentionally source-matrix
+    scoped, distinct from :func:`oncoref.expression_engine.sample_columns`, whose
+    identity columns apply after canonicalization.
+    """
+    if value_cols is not None:
+        cols = [str(c) for c in value_cols]
+        missing = [c for c in cols if c not in df.columns]
+        if missing:
+            raise ValueError(f"requested source expression value columns are missing: {missing}")
+        return cols
+    excluded = {c for c in (row_id_col, symbol_col) if c is not None}
+    return [str(c) for c in df.columns if c not in excluded]
+
+
+def read_source_expression_matrix(
+    path: str | Path,
+    *,
+    sep: str = "\t",
+    gene_id_col: str = "",
+    symbol_col: str | None = None,
+    drop_cols: Iterable[str] = (),
+    transposed: bool = False,
+) -> pd.DataFrame:
+    """Read a source expression matrix while preserving raw value strings.
+
+    Non-sample annotation columns that are neither the row-id column nor a known
+    symbol column are dropped when they contain no parseable numeric values. Value
+    coercion is deliberately deferred to
+    :func:`oncoref.expression_engine.coerce_source_expression_values` so parse
+    diagnostics can distinguish missing, non-parsing, literal-zero, and measured
+    numeric cells.
+
+    The returned frame stores ``row_id_col`` and ``symbol_col`` in ``DataFrame``
+    attrs for downstream builder helpers.
+    """
+    read_kwargs = {"sep": sep, "engine": _csv_engine(sep), "dtype": str}
+    df = pd.read_csv(Path(path), **read_kwargs)
+    if df.empty:
+        raise ValueError(f"source expression matrix is empty: {path}")
+
+    if transposed:
+        source_sample_col = gene_id_col or str(df.columns[0])
+        if source_sample_col not in df.columns:
+            raise ValueError(f"sample ID column {source_sample_col!r} is not in expression data")
+        df = df.dropna(subset=[source_sample_col]).set_index(source_sample_col).T.reset_index()
+        row_id_col = "source_row_id"
+        df = df.rename(columns={"index": row_id_col})
+        symbol_col = None
+    else:
+        row_id_col = gene_id_col or str(df.columns[0])
+        if row_id_col not in df.columns:
+            raise ValueError(f"gene_id_col={row_id_col!r} is not in columns: {list(df.columns)}")
+        df, row_id_col = _rename_unnamed_row_id(df, row_id_col)
+        symbol_col = _detect_symbol_col(df, row_id_col, symbol_col)
+
+    df[row_id_col] = df[row_id_col].astype(str).str.strip()
+    df = df[df[row_id_col] != ""].reset_index(drop=True)
+    for col in drop_cols:
+        if col in df.columns and col not in {row_id_col, symbol_col}:
+            df = df.drop(columns=col)
+    for col in list(df.columns):
+        if col in {row_id_col, symbol_col}:
+            continue
+        numeric = pd.to_numeric(df[col], errors="coerce")
+        if numeric.notna().sum() == 0:
+            df = df.drop(columns=col)
+
+    df.attrs["row_id_col"] = row_id_col
+    df.attrs["symbol_col"] = symbol_col
+    return df
+
+
+def _per_sample_to_tpm(values: pd.DataFrame) -> pd.DataFrame:
+    sums = values.sum(axis=0)
+    return values.div(sums.where(sums > 0), axis=1).fillna(0.0) * 1_000_000.0
+
+
+def _inverse_log2_tpm(values: pd.DataFrame) -> pd.DataFrame:
+    arr = np.power(2.0, values.to_numpy(dtype=float)) - 1.0
+    arr[arr < 0] = 0.0
+    return pd.DataFrame(arr, index=values.index, columns=values.columns)
+
+
+def normalize_source_matrix_to_tpm(
+    df: pd.DataFrame,
+    *,
+    unit: SourceExpressionUnit,
+    row_id_col: str | None = None,
+    symbol_col: str | None = None,
+    value_cols: Iterable[str] | None = None,
+    gene_lengths_kb: pd.Series | Mapping[str, float] | None = None,
+) -> pd.DataFrame:
+    """Convert a raw source matrix to linear per-sample TPM values.
+
+    ``TPM``, ``FPKM``, and ``RPKM`` inputs are renormalized per sample to sum to
+    one million because many published matrices are filtered before release.
+    ``log2(TPM+1)`` is inverse-transformed but not renormalized, matching the
+    Treehouse-style input contract. ``raw_counts`` requires ``gene_lengths_kb``
+    indexed by source row ID and performs length normalization before the TPM
+    renormalization.
+    """
+    row_id_col = row_id_col or df.attrs.get("row_id_col") or str(df.columns[0])
+    symbol_col = symbol_col if symbol_col is not None else df.attrs.get("symbol_col")
+    cols = source_expression_value_columns(
+        df, row_id_col=row_id_col, symbol_col=symbol_col, value_cols=value_cols
+    )
+    numeric = df[cols].apply(pd.to_numeric, errors="coerce").fillna(0.0).clip(lower=0.0)
+
+    if unit in {"TPM", "FPKM", "RPKM"}:
+        values = _per_sample_to_tpm(numeric)
+    elif unit == "log2(TPM+1)":
+        values = _inverse_log2_tpm(numeric)
+    elif unit == "raw_counts":
+        if gene_lengths_kb is None:
+            raise ValueError("unit='raw_counts' requires gene_lengths_kb")
+        lengths = pd.Series(gene_lengths_kb, dtype=float)
+        row_ids = df[row_id_col].astype(str).str.split(".", n=1).str[0]
+        aligned = row_ids.map(lengths).replace(0, np.nan)
+        if aligned.notna().sum() == 0:
+            raise ValueError("gene_lengths_kb does not match any source row IDs")
+        rpk = numeric.div(aligned.to_numpy(), axis=0).fillna(0.0)
+        values = _per_sample_to_tpm(rpk)
+    else:  # pragma: no cover - typing should prevent this; keep runtime guard.
+        raise ValueError(f"unsupported source expression unit: {unit!r}")
+
+    out_cols = [row_id_col]
+    if symbol_col is not None and symbol_col in df.columns:
+        out_cols.append(symbol_col)
+    out = df[out_cols].copy()
+    for col in cols:
+        out[col] = values[col].to_numpy(dtype=float)
+    out.attrs["row_id_col"] = row_id_col
+    out.attrs["symbol_col"] = symbol_col
+    out.attrs["source_expression_unit"] = unit
+    return out
+
+
+def source_metadata(
+    *,
+    source_cohort: str | None = None,
+    source_type: str | None = None,
+    unit: SourceExpressionUnit | str | None = None,
+    source_scale_class: str | None = None,
+    linear_tpm_comparable: bool | None = None,
+    tpm_proxy: bool | None = None,
+) -> dict[str, str | bool | None]:
+    """Metadata shape consumed by :func:`expression.sample_expression_qc_from_matrix`."""
+    if source_scale_class is None:
+        source_scale_class = (
+            "linear_rnaseq_tpm"
+            if unit in {"TPM", "FPKM", "RPKM", "raw_counts", "log2(TPM+1)"}
+            else "unknown"
+        )
+    if linear_tpm_comparable is None:
+        linear_tpm_comparable = source_scale_class == "linear_rnaseq_tpm"
+    if tpm_proxy is None:
+        tpm_proxy = not bool(linear_tpm_comparable)
+    return {
+        "source_cohort": source_cohort,
+        "source_type": source_type,
+        "unit": unit,
+        "source_scale_class": source_scale_class,
+        "linear_tpm_comparable": bool(linear_tpm_comparable),
+        "tpm_proxy": bool(tpm_proxy),
+    }
+
+
+def _download(url: str, dest: Path, *, force: bool = False) -> Path:
+    if dest.exists() and dest.stat().st_size > 0 and not force:
+        return dest
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dest.with_suffix(dest.suffix + ".part")
+    with urllib.request.urlopen(url) as resp, tmp.open("wb") as handle:
+        shutil.copyfileobj(resp, handle, length=1024 * 1024)
+    tmp.replace(dest)
+    return dest
+
+
+def _artifact_stem(value: str) -> str:
+    return "".join(c if c.isalnum() or c in "._-" else "_" for c in value)
+
+
+def split_source_matrix_by_code(
+    matrix: pd.DataFrame,
+    cancer_code: str | list[str],
+    *,
+    sample_to_cancer_code: Callable[[str], str | None] | None = None,
+) -> dict[str, list[str]]:
+    """Route canonicalized sample columns to cancer codes."""
+    samples = sample_columns(matrix)
+    if sample_to_cancer_code is None:
+        if isinstance(cancer_code, list):
+            raise ValueError("cancer_code is a list but no sample_to_cancer_code was provided")
+        return {str(cancer_code): samples}
+
+    out: dict[str, list[str]] = {}
+    for sample in samples:
+        code = sample_to_cancer_code(str(sample))
+        if code is not None:
+            out.setdefault(str(code), []).append(sample)
+    return out
+
+
+def build_source_matrices(
+    source: GeoMatrixSource,
+    *,
+    cache_dir: str | Path,
+    output_dir: str | Path | None = None,
+    source_path: str | Path | None = None,
+    force_download: bool = False,
+    gene_lengths_kb: pd.Series | Mapping[str, float] | None = None,
+    high_expression_threshold: float = 1.0,
+) -> SourceMatrixBuildResult:
+    """Build oncoref source-matrix artifacts for one generic expression source.
+
+    Output matrices are written as ``<CODE>_per_sample_tpm.parquet`` under
+    ``output_dir`` (default ``cache_dir / "derived"``), matching the layout that
+    :mod:`scripts.stage_source_matrices` consumes before release upload. Sidecars
+    include source-row mapping audit, source-value parse diagnostics, and per-sample
+    QC manifests. Samples are not dropped here; read/build-time consumers choose
+    ``all``/``pass``/``pass_or_warn`` filtering from the QC manifest.
+    """
+    cache = Path(cache_dir)
+    out_dir = Path(output_dir) if output_dir is not None else cache / "derived"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    file_path = Path(source_path) if source_path is not None else cache / source.file_name
+    if not file_path.exists() or force_download:
+        if not source.file_url:
+            raise ValueError("source_path is absent and GeoMatrixSource.file_url is not set")
+        file_path = _download(source.file_url, file_path, force=force_download)
+
+    raw = read_source_expression_matrix(
+        file_path,
+        sep=source.sep,
+        gene_id_col=source.gene_id_col,
+        symbol_col=source.symbol_col,
+        drop_cols=source.drop_cols,
+        transposed=source.transposed,
+    )
+    row_id_col = raw.attrs["row_id_col"]
+    symbol_col = raw.attrs.get("symbol_col")
+    raw_value_cols = source_expression_value_columns(
+        raw, row_id_col=row_id_col, symbol_col=symbol_col
+    )
+    if source.sample_filter is not None:
+        keep = source.sample_filter(raw_value_cols)
+        missing = [c for c in keep if c not in raw.columns]
+        if missing:
+            raise ValueError(f"sample_filter returned missing sample columns: {missing}")
+        raw = raw[[c for c in (row_id_col, symbol_col) if c is not None] + keep].copy()
+        raw.attrs["row_id_col"] = row_id_col
+        raw.attrs["symbol_col"] = symbol_col
+        raw_value_cols = keep
+    if not raw_value_cols:
+        raise ValueError("source matrix has no sample/value columns")
+
+    _, parse_diagnostics = coerce_source_expression_values(
+        raw, value_cols=raw_value_cols, row_id_col=row_id_col, symbol_col=symbol_col
+    )
+    tpm = normalize_source_matrix_to_tpm(
+        raw,
+        unit=source.unit,
+        row_id_col=row_id_col,
+        symbol_col=symbol_col,
+        value_cols=raw_value_cols,
+        gene_lengths_kb=gene_lengths_kb,
+    )
+    matrix, audit = canonicalize_source_gene_matrix(
+        tpm,
+        row_id_col=row_id_col,
+        symbol_col=symbol_col,
+        value_cols=raw_value_cols,
+        high_expression_threshold=high_expression_threshold,
+    )
+    matrix.attrs["source_value_parse_diagnostics"] = parse_diagnostics
+
+    stem = _artifact_stem(source.source_cohort)
+    sidecar_paths: dict[str, Path] = {}
+    audit_path = out_dir / f"{stem}_mapping_audit.csv"
+    parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
+    audit.to_csv(audit_path, index=False)
+    parse_diagnostics.to_csv(parse_path, index=False)
+    sidecar_paths["mapping_audit"] = audit_path
+    sidecar_paths["parse_diagnostics"] = parse_path
+
+    meta = source_metadata(
+        source_cohort=source.source_cohort,
+        source_type=source.source_project,
+        unit=source.unit,
+        source_scale_class=source.source_scale_class,
+        linear_tpm_comparable=source.linear_tpm_comparable,
+        tpm_proxy=source.tpm_proxy,
+    )
+
+    from .expression import sample_expression_qc_from_matrix
+
+    matrices: dict[str, pd.DataFrame] = {}
+    matrix_paths: dict[str, Path] = {}
+    qc_frames: list[pd.DataFrame] = []
+    for code, cols in split_source_matrix_by_code(
+        matrix,
+        source.cancer_code,
+        sample_to_cancer_code=source.sample_to_cancer_code,
+    ).items():
+        if not cols:
+            continue
+        sub = matrix[[*id_columns(matrix), *cols]].copy()
+        sub.attrs = {}
+        path = out_dir / f"{_artifact_stem(code)}_per_sample_tpm.parquet"
+        sub.to_parquet(path, index=False)
+        qc = sample_expression_qc_from_matrix(sub, cancer_type=code, source_metadata=meta)
+        qc_path = out_dir / f"{_artifact_stem(code)}_sample_qc.csv"
+        qc.to_csv(qc_path, index=False)
+        matrices[code] = sub
+        matrix_paths[code] = path
+        sidecar_paths[f"{code}_sample_qc"] = qc_path
+        qc_frames.append(qc)
+
+    if not matrices:
+        raise ValueError("no samples were routed to a cancer code")
+    sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
+    return SourceMatrixBuildResult(
+        source=source,
+        matrices=matrices,
+        matrix_paths=matrix_paths,
+        mapping_audit=audit,
+        parse_diagnostics=parse_diagnostics,
+        sample_qc=sample_qc,
+        sidecar_paths=sidecar_paths,
+    )
 
 
 def sum_proteoform_tpm(

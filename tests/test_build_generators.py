@@ -49,6 +49,107 @@ def _matrix(genes, samples, values):
     return df
 
 
+# ---------- source-matrix ingestion builders ----------
+
+
+def test_geo_matrix_builder_writes_canonical_per_sample_matrix_and_sidecars(tmp_path):
+    path = tmp_path / "geo.csv"
+    pd.DataFrame(
+        {
+            "GeneID": ["ENSG00000141510.17", "ENSG00000141510", "ENSG00000146648"],
+            "Symbol": ["TP53", "TP53", "EGFR"],
+            "annotation": ["a", "b", "c"],
+            "sample_1": ["2", "3", "5"],
+            "sample_2": ["4", "6", "0"],
+        }
+    ).to_csv(path, index=False)
+    source = expression_builders.GeoMatrixSource(
+        cancer_code="X",
+        source_cohort="TEST_GEO",
+        source_project="GEO",
+        file_name=path.name,
+        unit="FPKM",
+        gene_id_col="GeneID",
+        symbol_col="Symbol",
+        drop_cols=("annotation",),
+        sep=",",
+    )
+
+    result = expression_builders.build_source_matrices(
+        source,
+        cache_dir=tmp_path,
+        source_path=path,
+    )
+
+    out = pd.read_parquet(result.matrix_paths["X"])
+    assert list(out.columns) == ["Ensembl_Gene_ID", "Symbol", "sample_1", "sample_2"]
+    assert set(out["Ensembl_Gene_ID"]) == {"ENSG00000141510", "ENSG00000146648"}
+    assert np.allclose(out[["sample_1", "sample_2"]].sum(axis=0), [1_000_000.0, 1_000_000.0])
+    by_id = out.set_index("Ensembl_Gene_ID")
+    assert np.isclose(by_id.loc["ENSG00000141510", "sample_1"], 500_000.0)
+    assert np.isclose(by_id.loc["ENSG00000141510", "sample_2"], 1_000_000.0)
+
+    stats = result.mapping_audit["mapping_status"].value_counts().to_dict()
+    assert stats == {"resolved": 3}
+    literal_zero = result.parse_diagnostics.set_index("value_col").loc["sample_2", "n_literal_zero"]
+    assert literal_zero == 1
+    assert result.sidecar_paths["mapping_audit"].exists()
+    assert result.sidecar_paths["parse_diagnostics"].exists()
+    assert result.sidecar_paths["X_sample_qc"].exists()
+    assert set(result.sample_qc["sample_id"]) == {"sample_1", "sample_2"}
+    assert set(result.sample_qc["source_cohort"]) == {"TEST_GEO"}
+
+
+def test_geo_matrix_builder_routes_samples_and_reads_transposed_matrix(tmp_path):
+    path = tmp_path / "transposed.tsv"
+    pd.DataFrame(
+        {
+            "sample_id": ["tumor_a", "tumor_b"],
+            "TP53": ["1", "3"],
+            "EGFR": ["1", "1"],
+        }
+    ).to_csv(path, sep="\t", index=False)
+    source = expression_builders.GeoMatrixSource(
+        cancer_code=["CODE_A", "CODE_B"],
+        source_cohort="TEST_TRANSPOSED",
+        file_name=path.name,
+        unit="TPM",
+        gene_id_col="sample_id",
+        transposed=True,
+        sample_to_cancer_code=lambda sample: "CODE_A" if sample == "tumor_a" else "CODE_B",
+    )
+
+    result = expression_builders.build_source_matrices(
+        source,
+        cache_dir=tmp_path,
+        source_path=path,
+    )
+
+    assert set(result.matrix_paths) == {"CODE_A", "CODE_B"}
+    code_a = pd.read_parquet(result.matrix_paths["CODE_A"])
+    code_b = pd.read_parquet(result.matrix_paths["CODE_B"])
+    assert list(code_a.columns) == ["Ensembl_Gene_ID", "Symbol", "tumor_a"]
+    assert list(code_b.columns) == ["Ensembl_Gene_ID", "Symbol", "tumor_b"]
+    assert set(code_a["Symbol"]) == {"TP53", "EGFR"}
+    assert np.isclose(code_a["tumor_a"].sum(), 1_000_000.0)
+    assert np.isclose(code_b["tumor_b"].sum(), 1_000_000.0)
+
+
+def test_source_matrix_unit_helpers_validate_raw_counts_lengths():
+    df = pd.DataFrame({"gene_id": ["g1", "g2"], "s1": [10.0, 10.0]})
+    out = expression_builders.normalize_source_matrix_to_tpm(
+        df,
+        unit="raw_counts",
+        row_id_col="gene_id",
+        gene_lengths_kb={"g1": 1.0, "g2": 2.0},
+    )
+
+    assert np.isclose(out["s1"].sum(), 1_000_000.0)
+    assert np.isclose(out.loc[out["gene_id"] == "g1", "s1"].iloc[0], 666_666.6666666666)
+    with pytest.raises(ValueError, match="gene_lengths_kb"):
+        expression_builders.normalize_source_matrix_to_tpm(df, unit="raw_counts")
+
+
 # ---------- cohort_percentile_vectors ----------
 
 
