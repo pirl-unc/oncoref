@@ -96,8 +96,25 @@ def test_geo_matrix_builder_writes_canonical_per_sample_matrix_and_sidecars(tmp_
     assert result.sidecar_paths["mapping_audit"].exists()
     assert result.sidecar_paths["parse_diagnostics"].exists()
     assert result.sidecar_paths["X_sample_qc"].exists()
+    assert result.sidecar_paths["summary_rows"].exists()
     assert set(result.sample_qc["sample_id"]) == {"sample_1", "sample_2"}
     assert set(result.sample_qc["source_cohort"]) == {"TEST_GEO"}
+    summary = result.summary_rows.set_index("Ensembl_Gene_ID")
+    assert list(result.summary_rows.columns) == list(
+        expression_builders.REFERENCE_EXPRESSION_COLUMNS
+    )
+    assert set(summary["cancer_code"]) == {"X"}
+    assert set(summary["source_cohort"]) == {"TEST_GEO"}
+    assert set(summary["source_project"]) == {"GEO"}
+    assert set(summary["tumor_origin"]) == {"primary"}
+    assert summary.loc["ENSG00000141510", "n_samples"] == 2
+    assert summary.loc["ENSG00000141510", "n_detected"] == 2
+    assert summary.loc["ENSG00000141510", "TPM_median"] == pytest.approx(750_000.0)
+    assert summary.loc["ENSG00000141510", "TPM_clean_median"] == pytest.approx(562_500.0)
+    assert (
+        summary.loc["ENSG00000141510", "processing_pipeline"]
+        == "test_geo_fpkm_to_tpm_oncoref_canonical_clean_tpm_16_9_75"
+    )
 
 
 def test_geo_matrix_builder_routes_samples_and_reads_transposed_matrix(tmp_path):
@@ -148,6 +165,92 @@ def test_source_matrix_unit_helpers_validate_raw_counts_lengths():
     assert np.isclose(out.loc[out["gene_id"] == "g1", "s1"].iloc[0], 666_666.6666666666)
     with pytest.raises(ValueError, match="gene_lengths_kb"):
         expression_builders.normalize_source_matrix_to_tpm(df, unit="raw_counts")
+
+
+def test_source_matrix_builder_emits_summary_rows_for_raw_counts(tmp_path):
+    path = tmp_path / "raw_counts.csv"
+    pd.DataFrame(
+        {
+            "GeneID": ["ENSG00000141510", "ENSG00000146648"],
+            "Symbol": ["TP53", "EGFR"],
+            "sample_1": [10, 10],
+            "sample_2": [30, 10],
+        }
+    ).to_csv(path, index=False)
+    source = expression_builders.GeoMatrixSource(
+        cancer_code="RAW",
+        source_cohort="TEST_RAW",
+        source_project="GEO",
+        citation="PMID:1",
+        file_name=path.name,
+        unit="raw_counts",
+        gene_id_col="GeneID",
+        symbol_col="Symbol",
+        sep=",",
+        pipeline_stem="test_raw",
+        notes="raw count source notes",
+        tumor_origin="metastasis",
+        metastasis_site="liver",
+    )
+
+    result = expression_builders.build_source_matrices(
+        source,
+        cache_dir=tmp_path,
+        source_path=path,
+        gene_lengths_kb={"ENSG00000141510": 1.0, "ENSG00000146648": 2.0},
+    )
+
+    summary = result.summary_rows.set_index("Symbol")
+    assert set(summary["cancer_code"]) == {"RAW"}
+    assert set(summary["notes"]) == {"raw count source notes"}
+    assert set(summary["tumor_origin"]) == {"metastasis"}
+    assert set(summary["metastasis_site"]) == {"liver"}
+    assert set(summary["processing_pipeline"]) == {
+        "test_raw_raw_counts_to_tpm_oncoref_canonical_clean_tpm_16_9_75"
+    }
+    assert summary.loc["TP53", "source_version"].startswith("PMID:1; unit=raw_counts")
+    assert summary.loc["TP53", "n_samples"] == 2
+    assert summary.loc["TP53", "n_detected"] == 2
+    assert summary.loc["TP53", "TPM_median"] > summary.loc["EGFR", "TPM_median"]
+    assert pd.read_csv(result.sidecar_paths["summary_rows"]).shape == result.summary_rows.shape
+
+
+def test_summarize_source_matrix_matches_reference_stat_contract():
+    matrix = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000141510", "ENSG00000146648"],
+            "Symbol": ["TP53", "EGFR"],
+            "s0": [0.0, 10.0],
+            "s1": [1.0, 10.0],
+            "s2": [2.0, 10.0],
+            "s3": [3.0, 10.0],
+            "s4": [4.0, 10.0],
+        }
+    )
+    source = expression_builders.GeoMatrixSource(
+        cancer_code="X",
+        source_cohort="TEST_STATS",
+        file_name="unused.tsv",
+        unit="TPM",
+    )
+
+    summary = expression_builders.summarize_source_matrix(
+        matrix,
+        cancer_code="X",
+        source=source,
+    ).set_index("Symbol")
+
+    assert summary.loc["TP53", "TPM_median"] == 2.0
+    assert summary.loc["TP53", "TPM_mean"] == 2.0
+    assert summary.loc["TP53", "TPM_q1"] == 1.0
+    assert summary.loc["TP53", "TPM_q3"] == 3.0
+    assert summary.loc["TP53", "TPM_min"] == 0.0
+    assert summary.loc["TP53", "TPM_max"] == 4.0
+    assert summary.loc["TP53", "TPM_std"] == pytest.approx(round(np.sqrt(2.5), 6))
+    assert summary.loc["TP53", "TPM_p10"] == 0.4
+    assert summary.loc["TP53", "TPM_p90"] == 3.6
+    assert summary.loc["TP53", "n_samples"] == 5
+    assert summary.loc["TP53", "n_detected"] == 4
 
 
 def test_geo_matrix_source_from_entry_compiles_yaml_filters_and_routing():
@@ -437,6 +540,9 @@ def test_build_recount3_script_uses_registry_config(tmp_path, monkeypatch, capsy
             source=source,
             matrices={"CODE_A": matrix},
             matrix_paths={"CODE_A": tmp_path / "CODE_A_per_sample_tpm.parquet"},
+            summary_rows=pd.DataFrame(
+                columns=list(expression_builders.REFERENCE_EXPRESSION_COLUMNS)
+            ),
             mapping_audit=pd.DataFrame(),
             parse_diagnostics=pd.DataFrame(),
             sample_qc=pd.DataFrame(),

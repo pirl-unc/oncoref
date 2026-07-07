@@ -123,12 +123,14 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 - **Expression** — `cohort_gene_percentiles`, `within_sample_top_fraction`,
   `representative_cohort_samples` over the lazy-downloaded per-cohort bundle;
   `oncoref.expression_builders` for source-matrix ingestion into canonical
-  per-code per-sample TPM parquet plus mapping/parse/QC sidecars. Generic
+  per-code per-sample TPM parquet plus mapping/parse/QC sidecars and
+  per-gene-per-cohort `summary_rows` for reference-expression shards. Generic
   `source_type: geo-matrix` entries in `expression_sources.yaml` are executable
   via `scripts/build_geo_matrix.py`, and `source_type: recount3` entries via
   `scripts/build_recount3_source.py`; downstream packages should read the
-  bundled source registry through `expression_source_registry_entries()` rather
-  than shipping a second YAML copy.
+  bundled source registry through `expression_source_registry_entries()` and
+  consume builder-produced `summary_rows` rather than shipping a second YAML copy
+  or re-deriving the stat suite.
 - **Clean TPM / normalization** — `oncoref.normalization` for the 16/9/75
   compartment transform and `oncoref.gene_families` for clean-TPM censored
   compartment IDs plus the biological housekeeping denominator panel.

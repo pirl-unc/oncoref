@@ -58,6 +58,7 @@ from .expression_engine import (
     sample_columns,
 )
 from .gene_ids import unversioned
+from .normalization import clean_tpm
 
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
 GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
@@ -128,6 +129,59 @@ WITHIN_SAMPLE_THRESHOLDS = {
     0.90: "frac_samples_top10pct",
 }
 
+REFERENCE_EXPRESSION_STAT_COLUMNS: tuple[str, ...] = (
+    "TPM_median",
+    "TPM_q1",
+    "TPM_q3",
+    "TPM_mean",
+    "TPM_std",
+    "TPM_min",
+    "TPM_max",
+    "TPM_p5",
+    "TPM_p10",
+    "TPM_p90",
+    "TPM_p95",
+)
+REFERENCE_EXPRESSION_CLEAN_STAT_COLUMNS: tuple[str, ...] = tuple(
+    f"TPM_clean_{col.removeprefix('TPM_')}" for col in REFERENCE_EXPRESSION_STAT_COLUMNS
+)
+REFERENCE_EXPRESSION_COUNT_COLUMNS: tuple[str, ...] = ("n_samples", "n_detected")
+REFERENCE_EXPRESSION_COLUMNS: tuple[str, ...] = (
+    "Ensembl_Gene_ID",
+    "Symbol",
+    "cancer_code",
+    "source_cohort",
+    "source_project",
+    "source_version",
+    "TPM_median",
+    "TPM_q1",
+    "TPM_q3",
+    "TPM_mean",
+    "TPM_clean_median",
+    "TPM_clean_q1",
+    "TPM_clean_q3",
+    *REFERENCE_EXPRESSION_COUNT_COLUMNS,
+    "processing_pipeline",
+    "notes",
+    "TPM_std",
+    "TPM_min",
+    "TPM_max",
+    "TPM_p5",
+    "TPM_p10",
+    "TPM_p90",
+    "TPM_p95",
+    "TPM_clean_mean",
+    "TPM_clean_std",
+    "TPM_clean_min",
+    "TPM_clean_max",
+    "TPM_clean_p5",
+    "TPM_clean_p10",
+    "TPM_clean_p90",
+    "TPM_clean_p95",
+    "tumor_origin",
+    "metastasis_site",
+)
+
 
 @dataclass(frozen=True)
 class GeoMatrixSource:
@@ -191,10 +245,133 @@ class SourceMatrixBuildResult:
     source: GeoMatrixSource | Recount3Source
     matrices: dict[str, pd.DataFrame]
     matrix_paths: dict[str, Path]
+    summary_rows: pd.DataFrame
     mapping_audit: pd.DataFrame
     parse_diagnostics: pd.DataFrame
     sample_qc: pd.DataFrame
     sidecar_paths: dict[str, Path]
+
+
+def _unit_slug(unit: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "_", str(unit).lower()).strip("_")
+    return slug or "expression"
+
+
+def _summary_processing_pipeline(
+    source: GeoMatrixSource | Recount3Source,
+    *,
+    native_unit: str,
+) -> str:
+    stem = source.pipeline_stem or source.source_cohort.lower()
+    return f"{stem}_{_unit_slug(native_unit)}_to_tpm_oncoref_canonical_clean_tpm_16_9_75"
+
+
+def _summary_source_version(
+    source: GeoMatrixSource | Recount3Source,
+    *,
+    native_unit: str,
+) -> str:
+    pieces = []
+    if source.citation:
+        pieces.append(str(source.citation))
+    pieces.extend(
+        [
+            f"unit={native_unit}",
+            "canonicalized with oncoref expression_engine",
+            "clean_tpm=16/9/75",
+        ]
+    )
+    return "; ".join(pieces)
+
+
+def _summary_notes(
+    source: GeoMatrixSource | Recount3Source,
+    *,
+    n_samples: int,
+) -> str:
+    if source.notes:
+        return source.notes
+    return (
+        f"Per-sample expression from {source.source_cohort} (n={n_samples}). "
+        "Unit-normalized to TPM; summarized as raw TPM and clean TPM."
+    )
+
+
+def _compute_reference_expression_stats(
+    values: pd.DataFrame,
+    *,
+    prefix: str = "TPM_",
+) -> dict[str, np.ndarray]:
+    if values.empty:
+        raise ValueError("cannot summarize an empty value matrix")
+    return {
+        f"{prefix}median": values.median(axis=1).to_numpy(),
+        f"{prefix}q1": values.quantile(0.25, axis=1).to_numpy(),
+        f"{prefix}q3": values.quantile(0.75, axis=1).to_numpy(),
+        f"{prefix}mean": values.mean(axis=1).to_numpy(),
+        f"{prefix}std": values.std(axis=1, ddof=1).to_numpy()
+        if values.shape[1] >= 2
+        else np.full(values.shape[0], np.nan, dtype=float),
+        f"{prefix}min": values.min(axis=1).to_numpy(),
+        f"{prefix}max": values.max(axis=1).to_numpy(),
+        f"{prefix}p5": values.quantile(0.05, axis=1).to_numpy(),
+        f"{prefix}p10": values.quantile(0.10, axis=1).to_numpy(),
+        f"{prefix}p90": values.quantile(0.90, axis=1).to_numpy(),
+        f"{prefix}p95": values.quantile(0.95, axis=1).to_numpy(),
+    }
+
+
+def summarize_source_matrix(
+    matrix: pd.DataFrame,
+    *,
+    cancer_code: str,
+    source: GeoMatrixSource | Recount3Source,
+    native_unit: str | None = None,
+) -> pd.DataFrame:
+    """Return pirlygenes-compatible reference-expression summary rows.
+
+    ``matrix`` is a canonical per-sample TPM matrix for one cancer code. The output
+    is one row per gene with the source-shard stat suite consumed by
+    ``cancer_reference_expression``-style accessors: raw TPM statistics, canonical
+    16/9/75 clean-TPM statistics, detection counts, and source provenance.
+    """
+    ids = id_columns(matrix)
+    if "Ensembl_Gene_ID" not in ids or "Symbol" not in ids:
+        raise ValueError("source matrix must include Ensembl_Gene_ID and Symbol columns")
+    samples = sample_columns(matrix)
+    if not samples:
+        raise ValueError("source matrix has no sample/value columns to summarize")
+    native = native_unit or getattr(source, "unit", "TPM")
+
+    gene_table = matrix[["Ensembl_Gene_ID", "Symbol"]].copy()
+    raw_values = matrix[samples].apply(pd.to_numeric, errors="coerce")
+    clean_values = clean_tpm(raw_values, gene_table=gene_table)
+
+    out = gene_table.copy()
+    out["cancer_code"] = str(cancer_code)
+    out["source_cohort"] = source.source_cohort
+    out["source_project"] = source.source_project
+    out["source_version"] = _summary_source_version(source, native_unit=str(native))
+    for key, arr in _compute_reference_expression_stats(raw_values, prefix="TPM_").items():
+        out[key] = arr
+    for key, arr in _compute_reference_expression_stats(
+        clean_values,
+        prefix="TPM_clean_",
+    ).items():
+        out[key] = arr
+    out["n_samples"] = len(samples)
+    out["n_detected"] = (raw_values > 0).sum(axis=1).astype(int).to_numpy()
+    out["processing_pipeline"] = _summary_processing_pipeline(source, native_unit=str(native))
+    out["notes"] = _summary_notes(source, n_samples=len(samples))
+    out["tumor_origin"] = source.tumor_origin
+    out["metastasis_site"] = source.metastasis_site if source.metastasis_site else pd.NA
+
+    numeric = [
+        *REFERENCE_EXPRESSION_STAT_COLUMNS,
+        *REFERENCE_EXPRESSION_CLEAN_STAT_COLUMNS,
+    ]
+    out[numeric] = out[numeric].round(6)
+    return out.reindex(columns=list(REFERENCE_EXPRESSION_COLUMNS))
 
 
 def _source_entries_from_registry(registry_path: str | Path | None = None) -> list[dict]:
@@ -926,6 +1103,7 @@ def build_source_matrices(
     matrices: dict[str, pd.DataFrame] = {}
     matrix_paths: dict[str, Path] = {}
     qc_frames: list[pd.DataFrame] = []
+    summary_frames: list[pd.DataFrame] = []
     for code, cols in split_source_matrix_by_code(
         matrix,
         source.cancer_code,
@@ -944,14 +1122,31 @@ def build_source_matrices(
         matrix_paths[code] = path
         sidecar_paths[f"{code}_sample_qc"] = qc_path
         qc_frames.append(qc)
+        summary_frames.append(
+            summarize_source_matrix(
+                sub,
+                cancer_code=code,
+                source=source,
+                native_unit=source.unit,
+            )
+        )
 
     if not matrices:
         raise ValueError("no samples were routed to a cancer code")
     sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
+    summary_rows = (
+        pd.concat(summary_frames, ignore_index=True)
+        if summary_frames
+        else pd.DataFrame(columns=list(REFERENCE_EXPRESSION_COLUMNS))
+    )
+    summary_path = out_dir / f"{stem}_summary_rows.csv"
+    summary_rows.to_csv(summary_path, index=False)
+    sidecar_paths["summary_rows"] = summary_path
     return SourceMatrixBuildResult(
         source=source,
         matrices=matrices,
         matrix_paths=matrix_paths,
+        summary_rows=summary_rows,
         mapping_audit=audit,
         parse_diagnostics=parse_diagnostics,
         sample_qc=sample_qc,
@@ -1079,6 +1274,7 @@ def build_recount3_source_matrices(
     matrices: dict[str, pd.DataFrame] = {}
     matrix_paths: dict[str, Path] = {}
     qc_frames: list[pd.DataFrame] = []
+    summary_frames: list[pd.DataFrame] = []
     for code, cols in split_source_matrix_by_code(
         matrix,
         source.cancer_code,
@@ -1097,14 +1293,31 @@ def build_recount3_source_matrices(
         matrix_paths[code] = path
         sidecar_paths[f"{code}_sample_qc"] = qc_path
         qc_frames.append(qc)
+        summary_frames.append(
+            summarize_source_matrix(
+                sub,
+                cancer_code=code,
+                source=source,
+                native_unit="recount3_gene_sums",
+            )
+        )
 
     if not matrices:
         raise ValueError("no recount3 samples were routed to a cancer code")
     sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
+    summary_rows = (
+        pd.concat(summary_frames, ignore_index=True)
+        if summary_frames
+        else pd.DataFrame(columns=list(REFERENCE_EXPRESSION_COLUMNS))
+    )
+    summary_path = out_dir / f"{stem}_summary_rows.csv"
+    summary_rows.to_csv(summary_path, index=False)
+    sidecar_paths["summary_rows"] = summary_path
     return SourceMatrixBuildResult(
         source=source,
         matrices=matrices,
         matrix_paths=matrix_paths,
+        summary_rows=summary_rows,
         mapping_audit=audit,
         parse_diagnostics=parse_diagnostics,
         sample_qc=sample_qc,
