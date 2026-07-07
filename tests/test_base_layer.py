@@ -13,9 +13,12 @@ fails the build if any consumer leaks into the shipped package.
 """
 
 import ast
+import subprocess
+import sys
 from pathlib import Path
 
 _PACKAGE = Path(__file__).resolve().parents[1] / "oncoref"
+_PROJECT = _PACKAGE.parent
 
 # Downstream consumers that depend on oncoref; importing any of them would
 # invert the dependency pyramid.
@@ -43,3 +46,46 @@ def test_package_imports_no_consumer():
             if mod in _CONSUMERS:
                 offenders.append(f"{py.relative_to(_PACKAGE)} imports {mod}")
     assert not offenders, "oncoref must not import its consumers:\n  " + "\n  ".join(offenders)
+
+
+def test_import_oncoref_does_not_configure_root_logging():
+    code = """
+import logging
+root = logging.getLogger()
+assert len(root.handlers) == 0
+assert root.level == logging.WARNING
+import oncoref
+assert len(root.handlers) == 0, root.handlers
+assert root.level == logging.WARNING, logging.getLevelName(root.level)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=_PROJECT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr + result.stdout
+
+
+def test_genome_release_probe_preserves_root_logging():
+    code = """
+import logging
+from oncoref import genome
+root = logging.getLogger()
+assert len(root.handlers) == 0
+assert root.level == logging.WARNING
+genome.genomes()
+assert len(root.handlers) == 0, root.handlers
+assert root.level == logging.WARNING, logging.getLevelName(root.level)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=_PROJECT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr + result.stdout

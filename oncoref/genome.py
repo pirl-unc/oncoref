@@ -30,9 +30,8 @@ against the newest release first, falling back to older installed releases.
 
 from __future__ import annotations
 
+import logging
 from functools import lru_cache
-
-from pyensembl.shell import collect_all_installed_ensembl_releases
 
 from .gene_ids import resolve_symbol, unversioned
 
@@ -56,15 +55,38 @@ for _k, _v in _DISPLAY_ALIASES.items():
     _REVERSE_ALIASES.setdefault(_v, []).append(_k)
 
 
+def _restore_root_logger(root, handlers, level, disabled) -> None:
+    for handler in list(root.handlers):
+        if handler not in handlers:
+            root.removeHandler(handler)
+            handler.close()
+    for handler in handlers:
+        if handler not in root.handlers:
+            root.addHandler(handler)
+    root.setLevel(level)
+    root.disabled = disabled
+
+
+@lru_cache(maxsize=1)
+def _installed_ensembl_releases():
+    """Collect pyensembl releases without inheriting gtfparse root logging setup."""
+    root = logging.getLogger()
+    handlers = list(root.handlers)
+    level = root.level
+    disabled = root.disabled
+    try:
+        from pyensembl.shell import collect_all_installed_ensembl_releases
+
+        return tuple(collect_all_installed_ensembl_releases())
+    finally:
+        _restore_root_logger(root, handlers, level, disabled)
+
+
 @lru_cache(maxsize=1)
 def genomes():
     """Installed human Ensembl releases, newest first. Empty if none installed."""
     return sorted(
-        (
-            g
-            for g in collect_all_installed_ensembl_releases()
-            if g.species.latin_name == "homo_sapiens"
-        ),
+        (g for g in _installed_ensembl_releases() if g.species.latin_name == "homo_sapiens"),
         key=lambda g: g.release,
         reverse=True,
     )
