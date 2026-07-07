@@ -20,8 +20,9 @@ compatibility layer.
 ## Cancer Vocabulary
 
 - `oncoref.cancer_ontology` — cancer-type registry, aliases, parent/child tree,
-  lineage/family groupings, molecular subtype axes, matched normal tissues,
-  source-scoped evidence resolution, and display helpers.
+  lineage/family groupings, molecular subtype axes, MMR/MSI classifier-status
+  semantics, matched normal tissues, source-scoped evidence resolution, and
+  display helpers.
 - `oncoref.cohorts` — expression/source cohort IDs, computed aggregate cohorts,
   source versions, and mixture-cohort flags.
 
@@ -45,6 +46,16 @@ msi_crc = cancer_ontology.cancer_type_records(subtype_group="MSI", under="CRC")
 epithelial_msi = cancer_ontology.cancer_type_records(
     subtype_group="MSI", lineage_group="Epithelial"
 )
+
+# The MMR/MSI classifier axis keeps positive, negative, and confounder classes
+# explicit. STAD_MSI exists as an ontology code, but expression_only=True
+# excludes it until split STAD subtype expression shards are built.
+cancer_ontology.mmrd_cancer_codes()
+cancer_ontology.pmmr_cancer_codes(under="CRC")
+cancer_ontology.mmr_confounder_cancer_codes()
+cancer_ontology.mmr_hypermutated_confounder_codes()
+cancer_ontology.mmrd_cancer_codes(expression_only=True)
+cancer_ontology.cancer_mismatch_repair_status("UCEC_POLE")
 
 # COAD_MSI / READ_MSI keep anatomical expression context but resolve evidence
 # rows through CRC_MSI when published sources are colorectal-level.
