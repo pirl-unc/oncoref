@@ -192,13 +192,16 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   by regenerated expression bundles. Until a regenerated heavy bundle ships those
   files, they return schema-stable empty metadata by default; use
   `on_missing="raise"` when a downstream migration requires the manifests.
-- `oncoref.expression_builders` — pure build-time cores used by data-bundle
-  generation scripts. `scripts/rebuild_expression_artifacts.py` applies the same
-  sample-QC policy to derived shards by default (`--sample-qc pass`) and emits
-  `source-matrix-sample-qc.csv` plus `expression-artifact-build-metadata.*` in
-  the staging directory so bundle releases record which source samples fed
-  percentiles, representatives, proteoform summaries, and within-sample
-  summaries. Representative
+- `oncoref.expression_builders` — build-time ingestion and artifact cores used by
+  data-bundle generation scripts. `GeoMatrixSource` /
+  `build_source_matrices` own the generic supplementary-matrix path from raw
+  source file to canonical per-code per-sample TPM parquet, mapping audit, parse
+  diagnostics, and sample-QC sidecars. `scripts/rebuild_expression_artifacts.py`
+  then applies the same sample-QC policy to derived shards by default
+  (`--sample-qc pass`) and emits `source-matrix-sample-qc.csv` plus
+  `expression-artifact-build-metadata.*` in the staging directory so bundle
+  releases record which source samples fed percentiles, representatives,
+  proteoform summaries, and within-sample summaries. Representative
   sample selection uses `representative_sample_columns` / `cohort_medoids` on the
   biological clean-TPM view, then stores the selected samples' full
   clean_tpm_16_9_75 vectors. Release builds retain curated cohorts that have no
