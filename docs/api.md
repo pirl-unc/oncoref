@@ -374,10 +374,14 @@ parity issues.
 pirlygenes/oncoref row-universe deltas from the current parity audit: canonical
 remaps such as legacy `PAXX` to its oncoref ENSG, representative-sample rows
 missing from oncoref source/artifact rows, and the full current set of
-oncoref-only representative extras. The unresolved oncoref-only bucket is
-resolved where possible by current oncoref gene metadata into strict technical
-extras, broader filterable non-signal extras, biological extras to keep, or a
-small remaining unresolved set with no current biotype.
+oncoref-only representative extras. The prior broad
+`unresolved_oncoref_extra` bucket is resolved where possible by current oncoref
+gene metadata into strict technical extras, `non_signal_oncoref_extra` rows that
+`gene_universe="tumor_signal"` filters, `biological_oncoref_extra` rows that stay
+visible, or a small remaining unresolved set with no current biotype. In the
+current audit table, only 29 oncoref-only rows remain truly
+`unresolved_oncoref_extra`; the resolved status labels are deliberately explicit
+so downstream wrappers do not need to infer policy from biotypes.
 Use `expression.expression_artifact_gene_universe_delta_summary()` for counts by
 product/cohort/status, or
 `expression.expression_artifact_gene_universe_delta_report(product, cancer_types)`

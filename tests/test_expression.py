@@ -84,6 +84,8 @@ def test_expression_artifact_gene_universe_deltas_expose_full_representative_ext
     assert "ENSG00000131548" in set(prad["oncoref_ensembl_gene_id"])
     assert {
         "technical_or_noncoding_extra",
+        "non_signal_oncoref_extra",
+        "biological_oncoref_extra",
         "y_linked_extra",
         "intentional_canonicalization",
         "unresolved_oncoref_extra",
@@ -121,17 +123,19 @@ def test_expression_artifact_gene_universe_deltas_flag_technical_and_missing_row
     assert len(non_signal) == 237
     assert non_signal["is_filterable_extra"].all()
     assert not non_signal["is_technical_extra"].any()
-    assert set(non_signal["status"]) == {"unresolved_oncoref_extra"}
+    assert set(non_signal["status"]) == {"non_signal_oncoref_extra"}
     assert set(non_signal["recommended_consumer_action"]) == {"filter_from_signal_views"}
 
     biological = df[df["artifact_row_class"].eq("biological_extra")]
     assert len(biological) == 196
     assert not biological["is_filterable_extra"].any()
+    assert set(biological["status"]) == {"biological_oncoref_extra"}
     assert set(biological["gene_biotype"]) == {"lncRNA", "protein_coding"}
     assert set(biological["recommended_consumer_action"]) == {"keep_oncoref_biological_row"}
 
     unresolved = df[df["artifact_row_class"].eq("unresolved_extra")]
     assert len(unresolved) == 29
+    assert set(unresolved["status"]) == {"unresolved_oncoref_extra"}
     assert set(unresolved["gene_biotype"].dropna()) == set()
     assert set(unresolved["recommended_consumer_action"]) == {"audit_before_filtering"}
 
