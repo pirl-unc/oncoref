@@ -38,8 +38,10 @@ referenced and documented as the public build-time API.
 from __future__ import annotations
 
 import gzip
+import os
 import re
 import shutil
+import tempfile
 import urllib.request
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
@@ -985,6 +987,41 @@ def _artifact_stem(value: str) -> str:
     return "".join(c if c.isalnum() or c in "._-" else "_" for c in value)
 
 
+def _atomic_write(path: Path, writer: Callable[[Path], None]) -> None:
+    """Write ``path`` via a same-directory temp file, then atomically replace."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    os.close(fd)
+    tmp_path = Path(tmp_name)
+    try:
+        writer(tmp_path)
+        os.replace(tmp_path, path)
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+
+def _write_csv_atomic(df: pd.DataFrame, path: Path) -> None:
+    _atomic_write(path, lambda tmp_path: df.to_csv(tmp_path, index=False))
+
+
+def _write_parquet_atomic(df: pd.DataFrame, path: Path) -> None:
+    _atomic_write(path, lambda tmp_path: df.to_parquet(tmp_path, index=False))
+
+
+def _reconcile_per_code_artifacts(out_dir: Path, current_codes: Iterable[str]) -> None:
+    """Remove stale per-code matrix/QC sidecars from a per-source output directory."""
+    current_stems = {_artifact_stem(code) for code in current_codes}
+    for suffix in ("_per_sample_tpm.parquet", "_sample_qc.csv"):
+        for path in out_dir.glob(f"*{suffix}"):
+            code_stem = path.name[: -len(suffix)]
+            if code_stem not in current_stems:
+                path.unlink(missing_ok=True)
+
+
 def split_source_matrix_by_code(
     matrix: pd.DataFrame,
     cancer_code: str | list[str],
@@ -1024,6 +1061,8 @@ def build_source_matrices(
     include source-row mapping audit, source-value parse diagnostics, and per-sample
     QC manifests. Samples are not dropped here; read/build-time consumers choose
     ``all``/``pass``/``pass_or_warn`` filtering from the QC manifest.
+    ``output_dir`` is treated as this source's derived-artifact directory; after a
+    successful build, stale per-code matrix/QC sidecars in it are removed.
     """
     cache = Path(cache_dir)
     out_dir = Path(output_dir) if output_dir is not None else cache / "derived"
@@ -1084,8 +1123,8 @@ def build_source_matrices(
     sidecar_paths: dict[str, Path] = {}
     audit_path = out_dir / f"{stem}_mapping_audit.csv"
     parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
-    audit.to_csv(audit_path, index=False)
-    parse_diagnostics.to_csv(parse_path, index=False)
+    _write_csv_atomic(audit, audit_path)
+    _write_csv_atomic(parse_diagnostics, parse_path)
     sidecar_paths["mapping_audit"] = audit_path
     sidecar_paths["parse_diagnostics"] = parse_path
 
@@ -1114,10 +1153,10 @@ def build_source_matrices(
         sub = matrix[[*id_columns(matrix), *cols]].copy()
         sub.attrs = {}
         path = out_dir / f"{_artifact_stem(code)}_per_sample_tpm.parquet"
-        sub.to_parquet(path, index=False)
+        _write_parquet_atomic(sub, path)
         qc = sample_expression_qc_from_matrix(sub, cancer_type=code, source_metadata=meta)
         qc_path = out_dir / f"{_artifact_stem(code)}_sample_qc.csv"
-        qc.to_csv(qc_path, index=False)
+        _write_csv_atomic(qc, qc_path)
         matrices[code] = sub
         matrix_paths[code] = path
         sidecar_paths[f"{code}_sample_qc"] = qc_path
@@ -1140,7 +1179,8 @@ def build_source_matrices(
         else pd.DataFrame(columns=list(REFERENCE_EXPRESSION_COLUMNS))
     )
     summary_path = out_dir / f"{stem}_summary_rows.csv"
-    summary_rows.to_csv(summary_path, index=False)
+    _write_csv_atomic(summary_rows, summary_path)
+    _reconcile_per_code_artifacts(out_dir, matrices)
     sidecar_paths["summary_rows"] = summary_path
     return SourceMatrixBuildResult(
         source=source,
@@ -1255,8 +1295,8 @@ def build_recount3_source_matrices(
     sidecar_paths: dict[str, Path] = {}
     audit_path = out_dir / f"{stem}_mapping_audit.csv"
     parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
-    audit.to_csv(audit_path, index=False)
-    parse_diagnostics.to_csv(parse_path, index=False)
+    _write_csv_atomic(audit, audit_path)
+    _write_csv_atomic(parse_diagnostics, parse_path)
     sidecar_paths["mapping_audit"] = audit_path
     sidecar_paths["parse_diagnostics"] = parse_path
 
@@ -1285,10 +1325,10 @@ def build_recount3_source_matrices(
         sub = matrix[[*id_columns(matrix), *cols]].copy()
         sub.attrs = {}
         path = out_dir / f"{_artifact_stem(code)}_per_sample_tpm.parquet"
-        sub.to_parquet(path, index=False)
+        _write_parquet_atomic(sub, path)
         qc = sample_expression_qc_from_matrix(sub, cancer_type=code, source_metadata=meta)
         qc_path = out_dir / f"{_artifact_stem(code)}_sample_qc.csv"
-        qc.to_csv(qc_path, index=False)
+        _write_csv_atomic(qc, qc_path)
         matrices[code] = sub
         matrix_paths[code] = path
         sidecar_paths[f"{code}_sample_qc"] = qc_path
@@ -1311,7 +1351,8 @@ def build_recount3_source_matrices(
         else pd.DataFrame(columns=list(REFERENCE_EXPRESSION_COLUMNS))
     )
     summary_path = out_dir / f"{stem}_summary_rows.csv"
-    summary_rows.to_csv(summary_path, index=False)
+    _write_csv_atomic(summary_rows, summary_path)
+    _reconcile_per_code_artifacts(out_dir, matrices)
     sidecar_paths["summary_rows"] = summary_path
     return SourceMatrixBuildResult(
         source=source,

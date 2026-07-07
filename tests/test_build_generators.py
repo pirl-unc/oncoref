@@ -52,6 +52,21 @@ def _matrix(genes, samples, values):
 # ---------- source-matrix ingestion builders ----------
 
 
+def test_atomic_write_preserves_existing_artifact_on_failure(tmp_path):
+    path = tmp_path / "artifact.csv"
+    path.write_text("old\n")
+
+    def _write_then_fail(tmp_path):
+        tmp_path.write_text("new\n")
+        raise RuntimeError("boom")
+
+    with pytest.raises(RuntimeError, match="boom"):
+        expression_builders._atomic_write(path, _write_then_fail)
+
+    assert path.read_text() == "old\n"
+    assert not list(tmp_path.glob("*.tmp"))
+
+
 def test_geo_matrix_builder_writes_canonical_per_sample_matrix_and_sidecars(tmp_path):
     path = tmp_path / "geo.csv"
     pd.DataFrame(
@@ -115,6 +130,83 @@ def test_geo_matrix_builder_writes_canonical_per_sample_matrix_and_sidecars(tmp_
         summary.loc["ENSG00000141510", "processing_pipeline"]
         == "test_geo_fpkm_to_tpm_oncoref_canonical_clean_tpm_16_9_75"
     )
+
+
+def test_geo_matrix_builder_reconciles_stale_per_code_artifacts(tmp_path):
+    out_dir = tmp_path / "derived"
+    out_dir.mkdir()
+    stale_matrix = out_dir / "STALE_per_sample_tpm.parquet"
+    stale_qc = out_dir / "STALE_sample_qc.csv"
+    stale_matrix.write_text("stale matrix")
+    stale_qc.write_text("stale qc")
+    path = tmp_path / "geo.csv"
+    pd.DataFrame(
+        {
+            "GeneID": ["ENSG00000141510", "ENSG00000146648"],
+            "Symbol": ["TP53", "EGFR"],
+            "sample_1": ["2", "3"],
+        }
+    ).to_csv(path, index=False)
+    source = expression_builders.GeoMatrixSource(
+        cancer_code="LIVE",
+        source_cohort="TEST_GEO_STALE",
+        source_project="GEO",
+        file_name=path.name,
+        unit="TPM",
+        gene_id_col="GeneID",
+        symbol_col="Symbol",
+        sep=",",
+    )
+
+    result = expression_builders.build_source_matrices(
+        source,
+        cache_dir=tmp_path,
+        source_path=path,
+    )
+
+    assert set(result.matrix_paths) == {"LIVE"}
+    assert not stale_matrix.exists()
+    assert not stale_qc.exists()
+    assert (out_dir / "LIVE_per_sample_tpm.parquet").exists()
+    assert (out_dir / "LIVE_sample_qc.csv").exists()
+
+
+def test_geo_matrix_builder_preserves_stale_artifacts_when_no_samples_route(tmp_path):
+    out_dir = tmp_path / "derived"
+    out_dir.mkdir()
+    stale_matrix = out_dir / "STALE_per_sample_tpm.parquet"
+    stale_qc = out_dir / "STALE_sample_qc.csv"
+    stale_matrix.write_text("stale matrix")
+    stale_qc.write_text("stale qc")
+    path = tmp_path / "geo.csv"
+    pd.DataFrame(
+        {
+            "GeneID": ["ENSG00000141510"],
+            "Symbol": ["TP53"],
+            "sample_1": ["2"],
+        }
+    ).to_csv(path, index=False)
+    source = expression_builders.GeoMatrixSource(
+        cancer_code=["LIVE"],
+        source_cohort="TEST_GEO_EMPTY",
+        source_project="GEO",
+        file_name=path.name,
+        unit="TPM",
+        gene_id_col="GeneID",
+        symbol_col="Symbol",
+        sep=",",
+        sample_to_cancer_code=lambda _sample: None,
+    )
+
+    with pytest.raises(ValueError, match="no samples were routed"):
+        expression_builders.build_source_matrices(
+            source,
+            cache_dir=tmp_path,
+            source_path=path,
+        )
+
+    assert stale_matrix.exists()
+    assert stale_qc.exists()
 
 
 def test_geo_matrix_builder_routes_samples_and_reads_transposed_matrix(tmp_path):
@@ -447,10 +539,18 @@ def test_build_recount3_source_matrices_writes_canonical_artifacts(tmp_path, mon
         ),
         expected_n={"CODE_A": 1, "CODE_B": 1},
     )
+    out_dir = tmp_path / "derived"
+    out_dir.mkdir()
+    stale_matrix = out_dir / "STALE_per_sample_tpm.parquet"
+    stale_qc = out_dir / "STALE_sample_qc.csv"
+    stale_matrix.write_text("stale matrix")
+    stale_qc.write_text("stale qc")
 
     result = expression_builders.build_recount3_source_matrices(source, cache_dir=tmp_path)
 
     assert set(result.matrix_paths) == {"CODE_A", "CODE_B"}
+    assert not stale_matrix.exists()
+    assert not stale_qc.exists()
     assert result.sidecar_paths["mapping_audit"].exists()
     assert result.sidecar_paths["parse_diagnostics"].exists()
     code_a = pd.read_parquet(result.matrix_paths["CODE_A"])
