@@ -37,15 +37,18 @@ referenced and documented as the public build-time API.
 
 from __future__ import annotations
 
+import re
 import shutil
 import urllib.request
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from importlib.resources import files
 from pathlib import Path
 from typing import Callable, Literal
 
 import numpy as np
 import pandas as pd
+import yaml
 
 from .expression_engine import (
     canonicalize_source_gene_matrix,
@@ -55,6 +58,7 @@ from .expression_engine import (
 )
 
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
+GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
 
 _SOURCE_SYMBOL_COLUMN_CANDIDATES = (
     "Symbol",
@@ -150,6 +154,135 @@ class SourceMatrixBuildResult:
     parse_diagnostics: pd.DataFrame
     sample_qc: pd.DataFrame
     sidecar_paths: dict[str, Path]
+
+
+def _source_entries_from_registry(registry_path: str | Path | None = None) -> list[dict]:
+    if registry_path is None:
+        with files("oncoref").joinpath("data/expression_sources.yaml").open() as handle:
+            payload = yaml.safe_load(handle) or {}
+    else:
+        with Path(registry_path).open() as handle:
+            payload = yaml.safe_load(handle) or {}
+    entries = payload.get("sources", [])
+    if not isinstance(entries, list):
+        raise ValueError("expression source registry must contain a list-valued 'sources' key")
+    return [dict(entry) for entry in entries]
+
+
+def geo_matrix_source_entries(registry_path: str | Path | None = None) -> list[dict]:
+    """Raw ``source_type: geo-matrix`` entries from ``expression_sources.yaml``.
+
+    This is the registry/config half of the source-matrix builder contract. The
+    returned dictionaries preserve the source YAML fields so build scripts can
+    inspect provenance or source-specific notes, while
+    :func:`geo_matrix_source_from_entry` converts one entry into the executable
+    :class:`GeoMatrixSource` object used by :func:`build_source_matrices`.
+    """
+    return [
+        entry
+        for entry in _source_entries_from_registry(registry_path)
+        if entry.get("source_type") == GEO_MATRIX_SOURCE_TYPE
+    ]
+
+
+def _compile_sample_filter(spec: Mapping | None) -> Callable[[list[str]], list[str]] | None:
+    if not spec:
+        return None
+    include = str(spec["include_match"]) if "include_match" in spec else None
+    exclude = str(spec["exclude_match"]) if "exclude_match" in spec else None
+    include_re = re.compile(include) if include else None
+    exclude_re = re.compile(exclude) if exclude else None
+
+    def _filter(samples: list[str]) -> list[str]:
+        out = []
+        for sample in samples:
+            if include_re is not None and not include_re.search(str(sample)):
+                continue
+            if exclude_re is not None and exclude_re.search(str(sample)):
+                continue
+            out.append(str(sample))
+        return out
+
+    return _filter
+
+
+def _compile_sample_to_cancer_code(
+    spec: Mapping | None,
+) -> Callable[[str], str | None] | None:
+    rules = (spec or {}).get("rules", [])
+    if not rules:
+        return None
+    compiled = [(re.compile(str(rule["match"])), str(rule["cancer_code"])) for rule in rules]
+
+    def _dispatch(sample_id: str) -> str | None:
+        for regex, code in compiled:
+            if regex.search(str(sample_id)):
+                return code
+        return None
+
+    return _dispatch
+
+
+def _coerce_source_expression_unit(unit: str) -> SourceExpressionUnit:
+    normalized = str(unit).strip()
+    aliases = {
+        "tpm": "TPM",
+        "fpkm": "FPKM",
+        "rpkm": "RPKM",
+        "raw_counts": "raw_counts",
+        "raw counts": "raw_counts",
+        "log2-tpm": "log2(TPM+1)",
+        "log2_tpm": "log2(TPM+1)",
+        "log2(tpm+1)": "log2(TPM+1)",
+        "log2(tpm + 1)": "log2(TPM+1)",
+    }
+    coerced = aliases.get(normalized.lower(), normalized)
+    if coerced not in {"TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"}:
+        raise ValueError(f"unsupported geo-matrix source unit: {unit!r}")
+    return coerced  # type: ignore[return-value]
+
+
+def geo_matrix_source_from_entry(entry: Mapping) -> GeoMatrixSource:
+    """Convert one registry YAML entry into an executable :class:`GeoMatrixSource`."""
+    if entry.get("source_type") != GEO_MATRIX_SOURCE_TYPE:
+        raise ValueError(
+            f"source {entry.get('id')!r} has source_type={entry.get('source_type')!r}, "
+            f"not {GEO_MATRIX_SOURCE_TYPE!r}"
+        )
+    cancer_codes = [str(code) for code in entry.get("cancer_codes", [])]
+    if not cancer_codes:
+        raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
+    cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
+    return GeoMatrixSource(
+        cancer_code=cancer_code,
+        source_cohort=str(entry["source_cohort"]),
+        source_project=entry.get("source_project"),
+        citation=entry.get("citation"),
+        file_url=entry.get("file_url"),
+        file_name=str(entry["file_name"]),
+        unit=_coerce_source_expression_unit(str(entry["unit"])),
+        gene_id_col=str(entry.get("gene_id_col", "")),
+        symbol_col=entry.get("symbol_col"),
+        drop_cols=tuple(str(col) for col in entry.get("drop_cols", [])),
+        sep=str(entry.get("sep", "\t")),
+        transposed=bool(entry.get("transposed", False)),
+        sample_filter=_compile_sample_filter(entry.get("sample_filter")),
+        sample_to_cancer_code=_compile_sample_to_cancer_code(entry.get("sample_to_cancer_code")),
+        source_scale_class=entry.get("source_scale_class"),
+        linear_tpm_comparable=entry.get("linear_tpm_comparable"),
+        tpm_proxy=entry.get("tpm_proxy"),
+    )
+
+
+def geo_matrix_source_from_registry(
+    source_id: str,
+    registry_path: str | Path | None = None,
+) -> GeoMatrixSource:
+    """Load one ``source_type: geo-matrix`` entry from ``expression_sources.yaml``."""
+    for entry in _source_entries_from_registry(registry_path):
+        if entry.get("id") == source_id:
+            return geo_matrix_source_from_entry(entry)
+    raise KeyError(f"source id {source_id!r} not found in expression source registry")
 
 
 def _csv_engine(sep: str) -> str:

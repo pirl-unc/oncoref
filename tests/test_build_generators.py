@@ -150,6 +150,130 @@ def test_source_matrix_unit_helpers_validate_raw_counts_lengths():
         expression_builders.normalize_source_matrix_to_tpm(df, unit="raw_counts")
 
 
+def test_geo_matrix_source_from_entry_compiles_yaml_filters_and_routing():
+    source = expression_builders.geo_matrix_source_from_entry(
+        {
+            "id": "synthetic",
+            "source_type": "geo-matrix",
+            "cancer_codes": ["CODE_A", "CODE_B"],
+            "source_cohort": "SYNTHETIC",
+            "file_url": "https://example.org/source.tsv.gz",
+            "file_name": "source.tsv.gz",
+            "unit": "log2-TPM",
+            "gene_id_col": "",
+            "sample_filter": {"include_match": "tumor", "exclude_match": "bad"},
+            "sample_to_cancer_code": {
+                "rules": [
+                    {"match": "^tumor_a", "cancer_code": "CODE_A"},
+                    {"match": "^tumor_b", "cancer_code": "CODE_B"},
+                ]
+            },
+        }
+    )
+
+    assert source.cancer_code == ["CODE_A", "CODE_B"]
+    assert source.unit == "log2(TPM+1)"
+    assert source.sample_filter(["tumor_a1", "normal_a1", "tumor_bad", "tumor_b1"]) == [
+        "tumor_a1",
+        "tumor_b1",
+    ]
+    assert source.sample_to_cancer_code("tumor_a1") == "CODE_A"
+    assert source.sample_to_cancer_code("tumor_b1") == "CODE_B"
+    assert source.sample_to_cancer_code("normal_a1") is None
+
+
+def test_geo_matrix_source_from_registry_loads_packaged_geo_entry():
+    source = expression_builders.geo_matrix_source_from_registry("gse328026-sarc-pec")
+
+    assert source.cancer_code == "SARC_PEC"
+    assert source.source_cohort == "GSE328026_PECOMA_2026"
+    assert source.unit == "TPM"
+    assert source.file_name == "GSE328026_TPMs_all_Samples.txt.gz"
+
+
+def test_build_geo_matrix_script_uses_registry_config(tmp_path, capsys):
+    source_path = tmp_path / "source.tsv"
+    pd.DataFrame(
+        {
+            "gene": ["TP53", "EGFR"],
+            "tumor_a": ["1", "3"],
+            "normal_a": ["10", "10"],
+        }
+    ).to_csv(source_path, sep="\t", index=False)
+    registry_path = tmp_path / "expression_sources.yaml"
+    registry_path.write_text(
+        """
+sources:
+  - id: synthetic-geo
+    source_type: geo-matrix
+    cancer_codes: [CODE_A]
+    file_url: https://example.org/source.tsv.gz
+    file_name: source.tsv.gz
+    unit: TPM
+    gene_id_col: gene
+    source_cohort: SYNTHETIC_GEO
+    source_project: GEO
+    sample_filter:
+      include_match: "^tumor_"
+""".lstrip()
+    )
+    mod = _load_script("build_geo_matrix")
+
+    status = mod.main(
+        [
+            "--source-id",
+            "synthetic-geo",
+            "--registry",
+            str(registry_path),
+            "--cache-dir",
+            str(tmp_path / "cache"),
+            "--output-dir",
+            str(tmp_path / "out"),
+            "--source-path",
+            str(source_path),
+        ]
+    )
+
+    assert status == 0
+    out = pd.read_parquet(tmp_path / "out" / "CODE_A_per_sample_tpm.parquet")
+    assert list(out.columns) == ["Ensembl_Gene_ID", "Symbol", "tumor_a"]
+    assert set(out["Symbol"]) == {"TP53", "EGFR"}
+    assert np.isclose(out["tumor_a"].sum(), 1_000_000.0)
+    stdout = capsys.readouterr().out
+    assert '"sample_counts": {' in stdout
+    assert '"CODE_A": 1' in stdout
+
+
+def test_build_geo_matrix_script_requires_gene_lengths_for_raw_counts(tmp_path):
+    registry_path = tmp_path / "expression_sources.yaml"
+    registry_path.write_text(
+        """
+sources:
+  - id: synthetic-counts
+    source_type: geo-matrix
+    cancer_codes: [CODE_A]
+    file_url: https://example.org/source.tsv.gz
+    file_name: source.tsv.gz
+    unit: raw_counts
+    gene_id_col: gene
+    source_cohort: SYNTHETIC_COUNTS
+""".lstrip()
+    )
+    mod = _load_script("build_geo_matrix")
+
+    with pytest.raises(SystemExit, match="raw_counts"):
+        mod.main(
+            [
+                "--source-id",
+                "synthetic-counts",
+                "--registry",
+                str(registry_path),
+                "--cache-dir",
+                str(tmp_path / "cache"),
+            ]
+        )
+
+
 # ---------- cohort_percentile_vectors ----------
 
 
