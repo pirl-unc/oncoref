@@ -224,6 +224,12 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   strict QC-pass samples only through explicit source-aware fallbacks recorded in
   the build metadata, and clip invalid negative source expression values to zero
   with per-cohort counts.
+- `oncoref.expression_registry` — source-registry inspection helpers over the
+  bundled `expression_sources.yaml`. Use `expression_source_registry_entries()`
+  for the full raw YAML dictionaries, `expression_source_registry_entries(source_type="geo-matrix")`
+  for generic GEO build configs, or `expression_source_registry_path()` only when
+  a subprocess needs the packaged registry path. Downstream packages should use
+  these helpers instead of shipping a second copy of the registry.
 - `oncoref.expression_engine` — reusable low-level builder primitives for
   expression tables: identity/value column detection, transcript-to-gene
   aggregation, source row ID-type detection, source gene-row mapping audits,

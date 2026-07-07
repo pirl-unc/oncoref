@@ -42,7 +42,6 @@ import shutil
 import urllib.request
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from importlib.resources import files
 from pathlib import Path
 from typing import Callable, Literal
 
@@ -158,8 +157,9 @@ class SourceMatrixBuildResult:
 
 def _source_entries_from_registry(registry_path: str | Path | None = None) -> list[dict]:
     if registry_path is None:
-        with files("oncoref").joinpath("data/expression_sources.yaml").open() as handle:
-            payload = yaml.safe_load(handle) or {}
+        from .expression_registry import expression_source_registry_entries
+
+        return [dict(entry) for entry in expression_source_registry_entries()]
     else:
         with Path(registry_path).open() as handle:
             payload = yaml.safe_load(handle) or {}
