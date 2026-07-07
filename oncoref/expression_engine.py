@@ -192,10 +192,13 @@ def detect_source_row_id_type(values: Iterable) -> str:
     if s.empty:
         return "unknown"
     upper = s.str.upper()
-    ensg = upper.str.match(r"^ENSG\d+(?:\.\d+)?$")
+    ensg = upper.str.match(r"^ENSG\d+(?:\.\d+)?(?:_PAR_[XY])?$")
     enst = upper.str.match(r"^ENST\d+(?:\.\d+)?$")
     entrez = upper.str.match(r"^\d+$")
-    symbol = upper.str.match(r"^[A-Z][A-Z0-9_.-]*$") & ~(ensg | enst | entrez)
+    leading_digit_ncrna = upper.str.match(r"^(?:\d+SK|\d+SL|\d+(?:_\d+)?S(?:_RRNA)?)$")
+    symbol = (upper.str.match(r"^[A-Z][A-Z0-9_.-]*$") | leading_digit_ncrna) & ~(
+        ensg | enst | entrez
+    )
     patterns = {
         "ensembl_gene_id": ensg,
         "ensembl_transcript_id": enst,
@@ -304,7 +307,7 @@ def _source_value_columns(
 def _resolve_gene_id(raw_id: str) -> tuple[str | None, str | None, str, str | None]:
     from .gene_ids import resolve_ensembl_id, unversioned
 
-    raw = unversioned(raw_id).upper()
+    raw = unversioned(str(raw_id).upper().removesuffix("_PAR_X").removesuffix("_PAR_Y"))
     canonical = resolve_ensembl_id(raw)
     hit = _canonical_gene_index().get(canonical)
     if hit is None:

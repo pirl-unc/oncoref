@@ -64,10 +64,12 @@ def test_detect_source_row_id_type():
     assert ee.detect_source_row_id_type(["ENSG00000141510.17", "ENSG00000278311"]) == (
         "ensembl_gene_id"
     )
+    assert ee.detect_source_row_id_type(["ENSG00000182162.11_PAR_Y"]) == "ensembl_gene_id"
     assert ee.detect_source_row_id_type(["ENST00000264036", "ENST00000367770.8"]) == (
         "ensembl_transcript_id"
     )
     assert ee.detect_source_row_id_type(["TP53", "GGNBP2"]) == "symbol"
+    assert ee.detect_source_row_id_type(["7SK", "7SL", "5S_rRNA", "5_8S_rRNA"]) == "symbol"
     assert ee.detect_source_row_id_type(["7157", "1234"]) == "entrez_id"
     assert ee.detect_source_row_id_type(["ENSG00000141510", "TP53"]) == "mixed"
 
@@ -159,6 +161,41 @@ def test_map_source_gene_rows_normalizes_case_varied_ensembl_identifiers():
 
     matrix, _ = ee.canonicalize_source_gene_matrix(df, row_id_col="gene_id", value_cols=["s1"])
     assert set(matrix["Ensembl_Gene_ID"]) == {"ENSG00000141510", "ENSG00000171862"}
+
+
+def test_map_source_gene_rows_folds_pseudoautosomal_ensembl_suffixes():
+    df = pd.DataFrame(
+        {
+            "gene_id": ["ENSG00000182162", "ENSG00000182162.11_PAR_Y"],
+            "s1": [2.0, 3.0],
+        }
+    )
+    audit = ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["s1"])
+    by_id = audit.set_index("source_row_id")
+
+    assert by_id.loc["ENSG00000182162.11_PAR_Y", "source_row_id_type"] == "ensembl_gene_id"
+    assert by_id.loc["ENSG00000182162.11_PAR_Y", "canonical_ensembl_gene_id"] == ("ENSG00000182162")
+    assert by_id.loc["ENSG00000182162.11_PAR_Y", "canonical_symbol"] == "P2RY8"
+
+    matrix, _ = ee.canonicalize_source_gene_matrix(df, row_id_col="gene_id", value_cols=["s1"])
+    row = matrix.set_index("Ensembl_Gene_ID").loc["ENSG00000182162"]
+    assert row["Symbol"] == "P2RY8"
+    assert row["s1"] == 5.0
+
+
+def test_map_source_gene_rows_resolves_leading_digit_ncrna_symbols():
+    df = pd.DataFrame({"gene_id": ["7SL", "5_8S_rRNA", "45S"], "s1": [3.0, 4.0, 5.0]})
+    audit = ee.map_source_gene_rows(df, row_id_col="gene_id", value_cols=["s1"])
+    by_id = audit.set_index("source_row_id")
+
+    assert by_id.loc["7SL", "source_row_id_type"] == "symbol"
+    assert by_id.loc["7SL", "canonical_ensembl_gene_id"] == "ENSG00000276168"
+    assert by_id.loc["7SL", "canonical_symbol"] == "RN7SL1"
+    assert by_id.loc["5_8S_rRNA", "source_row_id_type"] == "symbol"
+    assert by_id.loc["5_8S_rRNA", "mapping_status"] == "ambiguous"
+    assert by_id.loc["5_8S_rRNA", "unresolved_reason"] == "ambiguous_symbol"
+    assert by_id.loc["45S", "source_row_id_type"] == "symbol"
+    assert by_id.loc["45S", "unresolved_reason"] == "unknown_symbol"
 
 
 def test_map_source_gene_rows_preserves_identifier_unresolved_reasons():
