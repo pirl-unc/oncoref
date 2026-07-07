@@ -583,6 +583,8 @@ _ARTIFACT_CANONICALIZATION_STATUSES = frozenset(
         "remapped_to_oncoref",
     }
 )
+_ARTIFACT_NON_SIGNAL_EXTRA_STATUSES = frozenset({"non_signal_oncoref_extra"})
+_ARTIFACT_BIOLOGICAL_EXTRA_STATUSES = frozenset({"biological_oncoref_extra"})
 _ARTIFACT_GENE_UNIVERSE_MODES = ("artifact", "tumor_signal")
 _ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS = [
     "artifact_row_class",
@@ -632,6 +634,10 @@ def _artifact_delta_class(row) -> str:
     status = str(row.status)
     if status in _ARTIFACT_TECHNICAL_EXTRA_STATUSES:
         return "technical_extra"
+    if status in _ARTIFACT_NON_SIGNAL_EXTRA_STATUSES:
+        return "non_signal_extra"
+    if status in _ARTIFACT_BIOLOGICAL_EXTRA_STATUSES:
+        return "biological_extra"
     if status == "unresolved_oncoref_extra":
         qc = classify_gene_qc(
             _delta_nonempty(row.symbol),
@@ -662,6 +668,10 @@ def _artifact_delta_consumer_action(row) -> str:
     status = str(row.status)
     if status in _ARTIFACT_TECHNICAL_EXTRA_STATUSES:
         return "filter_from_signal_views"
+    if status in _ARTIFACT_NON_SIGNAL_EXTRA_STATUSES:
+        return "filter_from_signal_views"
+    if status in _ARTIFACT_BIOLOGICAL_EXTRA_STATUSES:
+        return "keep_oncoref_biological_row"
     if status == "unresolved_oncoref_extra":
         row_class = _artifact_delta_class(row)
         if row_class in _ARTIFACT_FILTERABLE_EXTRA_CLASSES:
@@ -704,7 +714,8 @@ def expression_artifact_gene_universe_deltas(
     distinguish intentional canonicalization, biological rows missing from oncoref
     artifacts, strict technical extras, broader filterable non-signal extras, and
     biological oncoref-only rows that should stay visible until the heavy artifacts are
-    regenerated.
+    regenerated. The explicit ``non_signal_oncoref_extra`` and
+    ``biological_oncoref_extra`` statuses encode those policy decisions directly.
 
     Optional filters are exact for ``product``, ``delta_kind``, and ``status``.
     ``cancer_type`` resolves aliases and matches semicolon-separated cohort lists in the
