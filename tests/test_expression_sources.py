@@ -4,8 +4,9 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 
+import oncoref
+from oncoref import expression_builders, samples
 from oncoref import expression_registry as es
-from oncoref import samples
 
 
 def test_registry_loads_all_sources():
@@ -34,6 +35,28 @@ def test_expression_sources_df_shape():
     df = es.expression_sources_df()
     assert {"id", "source_type", "cancer_codes", "citation"} <= set(df.columns)
     assert len(df) == len(es.expression_sources())
+
+
+def test_expression_source_registry_raw_helpers_are_public():
+    path = es.expression_source_registry_path()
+    assert path.name == "expression_sources.yaml"
+    assert path.exists()
+
+    text = es.expression_source_registry_text()
+    assert "sources:" in text
+    assert "source_type: geo-matrix" in text
+
+    entries = es.expression_source_registry_entries()
+    assert len(entries) == len(es.expression_sources())
+    assert any(entry["id"] == "gse328026-sarc-pec" for entry in entries)
+
+    geo = es.expression_source_registry_entries(source_type="geo-matrix")
+    assert geo
+    assert {entry["source_type"] for entry in geo} == {"geo-matrix"}
+    assert geo == tuple(expression_builders.geo_matrix_source_entries())
+    assert es.expression_source_registry_entries(source_type=["not-a-source-type"]) == ()
+    assert oncoref.expression_source_registry_entries() == entries
+    assert "expression_source_registry_entries" in oncoref.__all__
 
 
 def test_sample_manifest_loads():

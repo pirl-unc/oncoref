@@ -22,6 +22,7 @@ and (incrementally) the fetch + regeneration of the per-cohort summaries.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -78,14 +79,47 @@ def _clean(value):
     return text or None
 
 
+def expression_source_registry_path() -> Path:
+    """Filesystem path to the bundled ``expression_sources.yaml`` registry.
+
+    This is the stable public path helper for downstream build tooling that
+    needs to pass oncoref's source registry to a subprocess or watcher. Prefer
+    :func:`expression_source_registry_entries` for ordinary Python access.
+    """
+    return _REGISTRY_PATH
+
+
+def expression_source_registry_text() -> str:
+    """Raw text of the bundled ``expression_sources.yaml`` registry."""
+    return _REGISTRY_PATH.read_text()
+
+
+def expression_source_registry_entries(
+    source_type: str | Iterable[str] | None = None,
+) -> tuple[dict, ...]:
+    """Raw source-registry entries from ``expression_sources.yaml``.
+
+    The typed :func:`expression_sources` view intentionally exposes the stable
+    inspection fields. This helper preserves the full YAML dictionaries for
+    build tools that need source-specific fields such as ``file_name``,
+    ``sample_filter``, or ``sample_to_cancer_code``. ``source_type`` optionally
+    filters to one or more source families, e.g. ``"geo-matrix"``.
+    """
+    import yaml
+
+    doc = yaml.safe_load(expression_source_registry_text()) or {}
+    entries = tuple(dict(entry) for entry in doc.get("sources", []))
+    if source_type is None:
+        return entries
+    wanted = {source_type} if isinstance(source_type, str) else set(source_type)
+    return tuple(entry for entry in entries if entry.get("source_type") in wanted)
+
+
 @lru_cache(maxsize=1)
 def load_registry() -> tuple[ExpressionSource, ...]:
     """Parse the bundled ``expression_sources.yaml`` into ``ExpressionSource``s."""
-    import yaml
-
-    doc = yaml.safe_load(_REGISTRY_PATH.read_text())
     out = []
-    for entry in doc.get("sources", []):
+    for entry in expression_source_registry_entries():
         out.append(
             ExpressionSource(
                 id=str(entry["id"]),
