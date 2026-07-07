@@ -122,7 +122,9 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 - **Expression** — `cohort_gene_percentiles`, `within_sample_top_fraction`,
   `representative_cohort_samples` over the lazy-downloaded per-cohort bundle;
   `oncoref.expression_builders` for source-matrix ingestion into canonical
-  per-code per-sample TPM parquet plus mapping/parse/QC sidecars.
+  per-code per-sample TPM parquet plus mapping/parse/QC sidecars. Generic
+  `source_type: geo-matrix` entries in `expression_sources.yaml` are executable
+  via `scripts/build_geo_matrix.py`.
 - **Clean TPM / normalization** — `oncoref.normalization` for the 16/9/75
   compartment transform and `oncoref.gene_families` for clean-TPM censored
   compartment IDs plus the biological housekeeping denominator panel.
