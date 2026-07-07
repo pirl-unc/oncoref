@@ -309,13 +309,17 @@ contracts:
   expression values.
 - Gene-level reference, representative, and percentile readers default to
   `gene_universe="artifact"`, which preserves the exact shipped row set. Pass
-  `gene_universe="tumor_signal"` to drop only rows explicitly audited as
-  oncoref-only technical extras for the requested artifact/cohort. Pass
+  `gene_universe="tumor_signal"` to drop rows explicitly audited as
+  oncoref-only filterable extras for the requested artifact/cohort: strict
+  technical extras plus biotype-resolved non-signal extras such as pseudogene,
+  small-RNA, and immune-receptor segment rows. Protein-coding and lncRNA
+  oncoref-only rows are retained as biological extras. Pass
   `include_gene_universe_flags=True` for long reference output or any
   representative/percentile output to append row-level `artifact_row_class`,
-  `is_technical_extra`, `is_missing_biological`, and
+  `is_filterable_extra`, `is_technical_extra`, `is_missing_biological`, and
   `recommended_consumer_action` columns. These options filter or label known
-  artifact row classes; they never invent missing biological expression rows.
+  artifact row classes; they never invent missing biological expression rows
+  and they do not drop biological oncoref-only rows.
 - Gene-level reference, representative, and percentile readers attach
   `df.attrs["gene_universe_delta_summary"]` and
   `df.attrs["gene_universe_delta_n"]` for the requested cohort/product. These
@@ -339,15 +343,19 @@ parity issues.
 `expression.expression_artifact_gene_universe_deltas()` exposes the known
 pirlygenes/oncoref row-universe deltas from the current parity audit: canonical
 remaps such as legacy `PAXX` to its oncoref ENSG, representative-sample rows
-missing from oncoref source/artifact rows, and the full current set of oncoref-only representative
-technical/noncoding, immune-receptor, Y-linked, and unresolved extra rows.
+missing from oncoref source/artifact rows, and the full current set of
+oncoref-only representative extras. The unresolved oncoref-only bucket is
+resolved where possible by current oncoref gene metadata into strict technical
+extras, broader filterable non-signal extras, biological extras to keep, or a
+small remaining unresolved set with no current biotype.
 Use `expression.expression_artifact_gene_universe_delta_summary()` for counts by
 product/cohort/status, or
 `expression.expression_artifact_gene_universe_delta_report(product, cancer_types)`
 for the compact request-scoped report used by accessor attrs. These tables include
-`gene_biotype`, `artifact_row_class`, `is_technical_extra`,
-`is_missing_biological`, and `recommended_consumer_action` so current-bundle row
-classes do not have to be inferred from prose. Use
+`gene_biotype`, `artifact_row_class`, `is_filterable_extra`,
+`is_technical_extra`, `is_missing_biological`, and
+`recommended_consumer_action` so current-bundle row classes do not have to be
+inferred from prose. Use
 `expression.expression_artifact_technical_extra_gene_ids(...)` to get the
 oncoref-only technical-extra ENSG IDs for a product/cohort filter. This surface is
 intentionally provenance: it makes differences explicit for migration code, but

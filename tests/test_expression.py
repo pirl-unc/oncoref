@@ -54,6 +54,7 @@ def test_expression_artifact_gene_universe_deltas_expose_known_remaps():
     assert {
         "gene_biotype",
         "artifact_row_class",
+        "is_filterable_extra",
         "is_technical_extra",
         "is_missing_biological",
         "recommended_consumer_action",
@@ -92,6 +93,16 @@ def test_expression_artifact_gene_universe_deltas_expose_full_representative_ext
     assert set(technical["artifact_row_class"]) == {"technical_extra"}
     assert set(technical["recommended_consumer_action"]) == {"filter_from_signal_views"}
 
+    non_signal = prad[prad["artifact_row_class"].eq("non_signal_extra")]
+    assert len(non_signal) == 56
+    assert set(non_signal["recommended_consumer_action"]) == {"filter_from_signal_views"}
+    assert non_signal["is_filterable_extra"].all()
+
+    biological = prad[prad["artifact_row_class"].eq("biological_extra")]
+    assert len(biological) == 45
+    assert set(biological["recommended_consumer_action"]) == {"keep_oncoref_biological_row"}
+    assert not biological["is_filterable_extra"].any()
+
 
 def test_expression_artifact_gene_universe_deltas_flag_technical_and_missing_rows():
     df = expression.expression_artifact_gene_universe_deltas()
@@ -105,6 +116,24 @@ def test_expression_artifact_gene_universe_deltas_flag_technical_and_missing_row
     }
     assert set(technical["artifact_row_class"]) == {"technical_extra"}
     assert set(technical["recommended_consumer_action"]) == {"filter_from_signal_views"}
+
+    non_signal = df[df["artifact_row_class"].eq("non_signal_extra")]
+    assert len(non_signal) == 237
+    assert non_signal["is_filterable_extra"].all()
+    assert not non_signal["is_technical_extra"].any()
+    assert set(non_signal["status"]) == {"unresolved_oncoref_extra"}
+    assert set(non_signal["recommended_consumer_action"]) == {"filter_from_signal_views"}
+
+    biological = df[df["artifact_row_class"].eq("biological_extra")]
+    assert len(biological) == 196
+    assert not biological["is_filterable_extra"].any()
+    assert set(biological["gene_biotype"]) == {"lncRNA", "protein_coding"}
+    assert set(biological["recommended_consumer_action"]) == {"keep_oncoref_biological_row"}
+
+    unresolved = df[df["artifact_row_class"].eq("unresolved_extra")]
+    assert len(unresolved) == 29
+    assert set(unresolved["gene_biotype"].dropna()) == set()
+    assert set(unresolved["recommended_consumer_action"]) == {"audit_before_filtering"}
 
     missing = df[df["is_missing_biological"]]
     assert set(missing["status"]) == {
@@ -222,6 +251,7 @@ def test_expression_artifact_gene_universe_delta_report_scopes_requests():
         "delta_kind",
         "status",
         "artifact_row_class",
+        "is_filterable_extra",
         "is_technical_extra",
         "is_missing_biological",
         "recommended_consumer_action",
