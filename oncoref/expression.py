@@ -79,6 +79,7 @@ from .expression_builders import (
 )
 from .expression_engine import id_columns, sample_columns
 from .gene_ids import ensembl_id_alias_symbols, gene_biotype, resolve_ensembl_id, unversioned
+from .gene_qc import TECHNICAL_RNA_GROUPS, classify_gene_qc
 from .load_dataset import _BUNDLED_DATA_DIR, _register_derived_cache, get_data
 from .normalization import clean_tpm, percentile_rank, tpm_to_housekeeping_normalized
 from .version import DATA_VERSION, SOURCE_MATRIX_VERSION
@@ -585,10 +586,32 @@ _ARTIFACT_CANONICALIZATION_STATUSES = frozenset(
 _ARTIFACT_GENE_UNIVERSE_MODES = ("artifact", "tumor_signal")
 _ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS = [
     "artifact_row_class",
+    "is_filterable_extra",
     "is_technical_extra",
     "is_missing_biological",
     "recommended_consumer_action",
 ]
+_ARTIFACT_NON_SIGNAL_EXTRA_BIOTYPES = frozenset(
+    {
+        "misc_RNA",
+        "snRNA",
+        "snoRNA",
+        "scaRNA",
+        "rRNA",
+        "Mt_rRNA",
+        "Mt_tRNA",
+        "IG_C_gene",
+        "IG_D_gene",
+        "IG_J_gene",
+        "IG_V_gene",
+        "TR_C_gene",
+        "TR_D_gene",
+        "TR_J_gene",
+        "TR_V_gene",
+    }
+)
+_ARTIFACT_BIOLOGICAL_EXTRA_BIOTYPES = frozenset({"protein_coding", "lncRNA"})
+_ARTIFACT_FILTERABLE_EXTRA_CLASSES = frozenset({"technical_extra", "non_signal_extra"})
 
 
 def _delta_nonempty(value: object) -> str | None:
@@ -605,11 +628,28 @@ def _delta_gene_biotype(row) -> str | None:
     return gene_biotype(gene_id) if gene_id else None
 
 
-def _artifact_delta_class(status: object) -> str:
-    status = str(status)
+def _artifact_delta_class(row) -> str:
+    status = str(row.status)
     if status in _ARTIFACT_TECHNICAL_EXTRA_STATUSES:
         return "technical_extra"
     if status == "unresolved_oncoref_extra":
+        qc = classify_gene_qc(
+            _delta_nonempty(row.symbol),
+            ensembl_id=_delta_nonempty(row.oncoref_ensembl_gene_id),
+        )
+        biotype = _delta_nonempty(_delta_gene_biotype(row))
+        if qc.group in TECHNICAL_RNA_GROUPS or qc.group in {
+            "small_ncrna",
+            "immune_receptor",
+            "ribosomal_protein_pseudogene",
+        }:
+            return "technical_extra"
+        if biotype in _ARTIFACT_NON_SIGNAL_EXTRA_BIOTYPES or (
+            biotype is not None and "pseudogene" in biotype
+        ):
+            return "non_signal_extra"
+        if biotype in _ARTIFACT_BIOLOGICAL_EXTRA_BIOTYPES:
+            return "biological_extra"
         return "unresolved_extra"
     if status in _ARTIFACT_MISSING_BIOLOGICAL_STATUSES:
         return "missing_biological"
@@ -618,11 +658,16 @@ def _artifact_delta_class(status: object) -> str:
     return "unclassified"
 
 
-def _artifact_delta_consumer_action(status: object) -> str:
-    status = str(status)
+def _artifact_delta_consumer_action(row) -> str:
+    status = str(row.status)
     if status in _ARTIFACT_TECHNICAL_EXTRA_STATUSES:
         return "filter_from_signal_views"
     if status == "unresolved_oncoref_extra":
+        row_class = _artifact_delta_class(row)
+        if row_class in _ARTIFACT_FILTERABLE_EXTRA_CLASSES:
+            return "filter_from_signal_views"
+        if row_class == "biological_extra":
+            return "keep_oncoref_biological_row"
         return "audit_before_filtering"
     if status in _ARTIFACT_MISSING_BIOLOGICAL_STATUSES:
         return "restore_or_remap_in_next_bundle"
@@ -635,10 +680,12 @@ def _annotate_expression_artifact_gene_universe_deltas(df: pd.DataFrame) -> pd.D
     out = df.copy()
     statuses = out["status"].astype(str)
     out["gene_biotype"] = [_delta_gene_biotype(row) for row in out.itertuples(index=False)]
-    out["artifact_row_class"] = statuses.map(_artifact_delta_class)
-    out["is_technical_extra"] = statuses.isin(_ARTIFACT_TECHNICAL_EXTRA_STATUSES)
+    rows = list(out.itertuples(index=False))
+    out["artifact_row_class"] = [_artifact_delta_class(row) for row in rows]
+    out["is_filterable_extra"] = out["artifact_row_class"].isin(_ARTIFACT_FILTERABLE_EXTRA_CLASSES)
+    out["is_technical_extra"] = out["artifact_row_class"].eq("technical_extra")
     out["is_missing_biological"] = statuses.isin(_ARTIFACT_MISSING_BIOLOGICAL_STATUSES)
-    out["recommended_consumer_action"] = statuses.map(_artifact_delta_consumer_action)
+    out["recommended_consumer_action"] = [_artifact_delta_consumer_action(row) for row in rows]
     return out
 
 
@@ -655,8 +702,9 @@ def expression_artifact_gene_universe_deltas(
     records the known remapped, missing, and extra rows from the pirlygenes 5.23.2 vs
     oncoref 5.23.3 parity run tracked in #191/#193/#278 so downstream migration code can
     distinguish intentional canonicalization, biological rows missing from oncoref
-    artifacts, and oncoref-only technical extras that should be filtered from signal
-    views until the heavy artifacts are regenerated.
+    artifacts, strict technical extras, broader filterable non-signal extras, and
+    biological oncoref-only rows that should stay visible until the heavy artifacts are
+    regenerated.
 
     Optional filters are exact for ``product``, ``delta_kind``, and ``status``.
     ``cancer_type`` resolves aliases and matches semicolon-separated cohort lists in the
@@ -743,14 +791,18 @@ def _row_universe_annotation_frame(product: str, cancer_codes: Iterable[str]) ->
     rows: list[dict[str, object]] = []
     class_priority = (
         "technical_extra",
+        "non_signal_extra",
         "unresolved_extra",
+        "biological_extra",
         "canonicalized",
         "missing_biological",
         "unclassified",
     )
     action_by_class = {
         "technical_extra": "filter_from_signal_views",
+        "non_signal_extra": "filter_from_signal_views",
         "unresolved_extra": "audit_before_filtering",
+        "biological_extra": "keep_oncoref_biological_row",
         "canonicalized": "accept_canonical_mapping",
         "missing_biological": "restore_or_remap_in_next_bundle",
         "unclassified": "audit_status",
@@ -763,6 +815,7 @@ def _row_universe_annotation_frame(product: str, cancer_codes: Iterable[str]) ->
                 "Ensembl_Gene_ID": str(gene_id),
                 "artifact_row_class": row_class,
                 "is_technical_extra": row_class == "technical_extra",
+                "is_filterable_extra": row_class in _ARTIFACT_FILTERABLE_EXTRA_CLASSES,
                 "is_missing_biological": row_class == "missing_biological",
                 "recommended_consumer_action": action_by_class.get(row_class, "keep"),
             }
@@ -781,9 +834,10 @@ def _apply_artifact_gene_universe(
     """Filter/annotate known expression-artifact row-universe deltas.
 
     ``gene_universe="artifact"`` preserves the exact shipped row set.
-    ``"tumor_signal"`` drops only rows explicitly audited as technical extras
-    (small/noncoding RNA, Y-linked, or immune-receptor artifact rows). It never
-    synthesizes missing biological rows.
+    ``"tumor_signal"`` drops rows explicitly audited as filterable extras
+    (strict technical rows plus biotype-resolved non-signal extras such as
+    pseudogene, small-RNA, and immune-receptor rows). It keeps biological
+    oncoref-only rows and never synthesizes missing biological rows.
     """
     mode = _validate_artifact_gene_universe(gene_universe)
     if "Ensembl_Gene_ID" not in df.columns:
@@ -794,17 +848,18 @@ def _apply_artifact_gene_universe(
     ann = annotations.set_index("Ensembl_Gene_ID") if not annotations.empty else annotations
 
     if mode == "tumor_signal" and not annotations.empty:
-        technical_ids = set(
-            annotations.loc[annotations["is_technical_extra"], "Ensembl_Gene_ID"].astype(str)
+        filterable_ids = set(
+            annotations.loc[annotations["is_filterable_extra"], "Ensembl_Gene_ID"].astype(str)
         )
-        if technical_ids:
+        if filterable_ids:
             keys = _artifact_row_key(out["Ensembl_Gene_ID"])
-            out = out.loc[~keys.isin(technical_ids)].reset_index(drop=True)
+            out = out.loc[~keys.isin(filterable_ids)].reset_index(drop=True)
 
     if include_gene_universe_flags:
         keys = _artifact_row_key(out["Ensembl_Gene_ID"])
         if annotations.empty:
             out["artifact_row_class"] = "artifact"
+            out["is_filterable_extra"] = False
             out["is_technical_extra"] = False
             out["is_missing_biological"] = False
             out["recommended_consumer_action"] = "keep"
@@ -813,6 +868,7 @@ def _apply_artifact_gene_universe(
                 keys.map(ann["artifact_row_class"]).fillna("artifact").to_numpy()
             )
             out["is_technical_extra"] = keys.map(ann["is_technical_extra"]).eq(True).to_numpy()
+            out["is_filterable_extra"] = keys.map(ann["is_filterable_extra"]).eq(True).to_numpy()
             out["is_missing_biological"] = (
                 keys.map(ann["is_missing_biological"]).eq(True).to_numpy()
             )
@@ -870,6 +926,7 @@ _DELTA_REPORT_COLUMNS = [
     "delta_kind",
     "status",
     "artifact_row_class",
+    "is_filterable_extra",
     "is_technical_extra",
     "is_missing_biological",
     "recommended_consumer_action",
@@ -951,6 +1008,7 @@ def _expression_artifact_gene_universe_delta_report_for_codes(
         )
         out = grouped.agg(
             n=("status", "size"),
+            is_filterable_extra=("is_filterable_extra", "first"),
             legacy_ensembl_gene_ids=("legacy_ensembl_gene_id", _join_unique),
             oncoref_ensembl_gene_ids=("oncoref_ensembl_gene_id", _join_unique),
             gene_biotypes=("gene_biotype", _join_unique),
@@ -1776,10 +1834,10 @@ def cancer_reference_expression(
     for rows with one-to-one remaps recorded in
     ``expression-artifact-gene-universe-deltas.csv``.
     ``gene_universe="artifact"`` preserves exact shipped rows.
-    ``gene_universe="tumor_signal"`` drops only rows audited as technical artifact
-    extras for the requested cohort/product; ``include_gene_universe_flags=True``
-    appends row-level audit columns in long output. Neither option synthesizes missing
-    biological rows.
+    ``gene_universe="tumor_signal"`` drops filterable extras audited for the requested
+    cohort/product while retaining biological oncoref-only rows;
+    ``include_gene_universe_flags=True`` appends row-level audit columns in long output.
+    Neither option synthesizes missing biological rows.
     Missing requested cohorts are omitted by default to preserve the historical
     behavior; pass ``on_missing="empty"`` to preserve a schema-stable empty result
     with missing-request metadata in ``df.attrs["missing_requests"]`` or
@@ -2395,8 +2453,9 @@ def representative_cohort_samples(
     for rows recorded as ``remapped_to_oncoref`` in the expression artifact delta
     table; missing rows and values are not synthesized.
     ``gene_universe="artifact"`` preserves exact shipped rows.
-    ``gene_universe="tumor_signal"`` drops rows audited as technical artifact extras;
-    ``include_gene_universe_flags=True`` appends row-level audit columns.
+    ``gene_universe="tumor_signal"`` drops filterable extras while retaining
+    biological oncoref-only rows; ``include_gene_universe_flags=True`` appends
+    row-level audit columns.
     """
     _validate_representative_id_style(representative_id_style)
     _validate_gene_id_style(gene_id_style)
@@ -2694,8 +2753,9 @@ def cohort_gene_percentiles(
     legacy ENSG IDs for rows recorded as ``remapped_to_oncoref`` in the
     expression artifact delta table; missing rows and values are not synthesized.
     ``gene_universe="artifact"`` preserves exact shipped rows.
-    ``gene_universe="tumor_signal"`` drops rows audited as technical artifact extras;
-    ``include_gene_universe_flags=True`` appends row-level audit columns.
+    ``gene_universe="tumor_signal"`` drops filterable extras while retaining
+    biological oncoref-only rows; ``include_gene_universe_flags=True`` appends
+    row-level audit columns.
 
     With ``proteoform=True``, the vector is one row per proteoform key
     (``proteoform_key``/``Symbol`` carry the collapsed identity), identical-protein
