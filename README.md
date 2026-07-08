@@ -111,9 +111,10 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 - **Cancer ontology** — `oncoref.cancer_ontology`: `cancer_type_registry`,
   `resolve_cancer_type`, `cancer_type_records`, `cancer_type_codes`,
   `cancer_type_path`, `cancer_type_reference_data`, tree/family/lineage helpers,
-  molecular subtype groups, MMR/MSI classifier-axis helpers, source-scoped
-  evidence resolution, matched normal tissue helpers, `viral_status`,
-  `fusion_status`.
+  explicit `ontology_level` / `ontology_kind` fields, molecular subtype groups,
+  MMR/MSI classifier-axis helpers, source-scoped evidence resolution, matched
+  normal tissue helpers, `viral_status`, `fusion_status`. Use these level fields
+  for category-aware code, not the legacy `mixture_cohort` flag.
 - **Cohorts** — `oncoref.cohorts`: `cohort_registry`, `cohort_aggregates`,
   `cohort_source_version`, and mixture-cohort helpers.
 - **TMB** — `cancer_tmb`, `cancer_tmb_df` (parent-chain inheritance).

@@ -30,6 +30,16 @@ Use these when asking "what cancer type or cohort does this code mean?"
 Prefer the DataFrame-returning query helpers when code will be passed into
 other oncoref domains; they keep the result type and columns stable.
 
+The registry separates hierarchy from taxonomic level. `parent_code` is the
+tree edge, while `ontology_level` (`grouping`, `type`,
+`molecular_subtype`) and `ontology_kind` (`computed_union`, `source_scope`,
+`anatomic_type`, `molecular_status_subtype`, etc.) say what kind of node a row
+is. Do not infer semantic level from `mixture_cohort`; that legacy flag only
+says the reference cohort/source is pooled or source-scoped. For example
+`CRC_MSI` is a `molecular_subtype` under `CRC` but remains a source-scope
+clinical evidence row, while `OV` is an anatomical grouping and `FTC` / `PPC`
+are anatomical cancer types.
+
 ```python
 from oncoref import cancer_ontology, cohorts, expression
 
@@ -40,11 +50,15 @@ cancer_ontology.cancer_type_path("COAD_MSI")
 # CRC plus anatomical children and molecular leaves.
 crc = cancer_ontology.cancer_type_records(under="CRC")
 crc["code"].tolist()
+crc[["code", "parent_code", "ontology_level", "ontology_kind"]]
 
 # Cross-cutting molecular axes can be intersected with hierarchy or lineage.
 msi_crc = cancer_ontology.cancer_type_records(subtype_group="MSI", under="CRC")
 epithelial_msi = cancer_ontology.cancer_type_records(
     subtype_group="MSI", lineage_group="Epithelial"
+)
+source_scope_msi = cancer_ontology.cancer_type_records(
+    under="CRC", ontology_level="molecular_subtype", ontology_kind="molecular_source_scope"
 )
 
 # The MMR/MSI classifier axis keeps positive, negative, and confounder classes

@@ -33,6 +33,8 @@ REGISTRY_COLUMNS = [
     "primary_tissue",
     "primary_template",
     "parent_code",
+    "ontology_level",
+    "ontology_kind",
     "subtype_key",
     "expression_source",
     "source_cohort",
