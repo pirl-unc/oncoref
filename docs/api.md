@@ -402,15 +402,18 @@ parity issues.
 
 `expression.expression_artifact_gene_universe_deltas()` exposes the known
 pirlygenes/oncoref row-universe deltas from the current parity audit: canonical
-remaps such as legacy `PAXX` to its oncoref ENSG, representative-sample rows
-missing from oncoref source/artifact rows, and the full current set of
-oncoref-only representative extras. The prior broad
+remaps such as legacy `PAXX` to its oncoref ENSG, sequence-identical
+representative-sample remaps where the measured oncoref artifact row can be
+presented under the pirlygenes legacy ID, and the full current set of oncoref-only
+representative extras. The prior broad
 `unresolved_oncoref_extra` bucket is resolved where possible by current oncoref
 gene metadata into strict technical extras, `non_signal_oncoref_extra` rows that
 `gene_universe="tumor_signal"` filters, `biological_oncoref_extra` rows that stay
-visible, or a small remaining unresolved set with no current biotype. In the
-current audit table, only 29 oncoref-only rows remain truly
-`unresolved_oncoref_extra`; the resolved status labels are deliberately explicit
+visible, `sequence_identical_remapped_to_oncoref` rows that
+`gene_id_style="pirlygenes"` can present without synthesizing values, or a small
+remaining unresolved set with no current biotype. In the current audit table, no
+rows remain flagged as missing biological; only 29 oncoref-only rows remain truly
+`unresolved_oncoref_extra`. The resolved status labels are deliberately explicit
 so downstream wrappers do not need to infer policy from biotypes.
 Use `expression.expression_artifact_gene_universe_delta_summary()` for counts by
 product/cohort/status, or

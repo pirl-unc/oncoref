@@ -362,8 +362,8 @@ def _artifact_legacy_gene_id_map(
     deltas = expression_artifact_gene_universe_deltas(
         product=product,
         delta_kind="pirlygenes_only",
-        status="remapped_to_oncoref",
     )
+    deltas = deltas[deltas["status"].isin(_ARTIFACT_CANONICALIZATION_STATUSES)]
 
     def _matches(cell: object) -> bool:
         codes = {c for c in str(cell or "").split(";") if c}
@@ -640,6 +640,7 @@ _ARTIFACT_CANONICALIZATION_STATUSES = frozenset(
     {
         "intentional_canonicalization",
         "remapped_to_oncoref",
+        "sequence_identical_remapped_to_oncoref",
     }
 )
 _ARTIFACT_NON_SIGNAL_EXTRA_STATUSES = frozenset({"non_signal_oncoref_extra"})
