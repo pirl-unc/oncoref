@@ -169,7 +169,7 @@ _WITHIN_SAMPLE = SHARD_DATASETS["within_sample"]
 
 REPRESENTATIVE_ARTIFACT_SCHEMA_VERSION = "representative_expression_v1"
 PERCENTILE_ARTIFACT_SCHEMA_VERSION = "cohort_percentile_expression_v1"
-REFERENCE_EXPRESSION_SCHEMA_VERSION = "cancer_reference_expression_v2"
+REFERENCE_EXPRESSION_SCHEMA_VERSION = "cancer_reference_expression_v3"
 REPRESENTATIVE_SELECTION_METHOD = "central_medoid_then_farthest_first"
 REPRESENTATIVE_SELECTION_BASIS = "biological_clean_tpm_log1p_distance"
 
@@ -1220,13 +1220,20 @@ def _min_housekeeping_detected(panel_ids) -> int | None:
     return min(DEFAULT_MIN_HOUSEKEEPING_GENES_FOR_QC, n) if n else None
 
 
-def _selected_expression_source_metadata(code: str) -> dict[str, str | bool | None]:
+def _selected_expression_source_metadata(
+    code: str, *, source_cohort: str | None = None
+) -> dict[str, str | bool | int | float | None]:
     source_type = unit = None
-    try:
-        info = source_matrices.cohort_info(code)
-        source_cohort = str(info.get("source_cohort") or "")
-    except source_matrices.SourceMatrixError:
-        source_cohort = ""
+    n_reference_samples = None
+    if source_cohort is None:
+        try:
+            info = source_matrices.cohort_info(code)
+            source_cohort = str(info.get("source_cohort") or "")
+            n_reference_samples = info.get("n_samples")
+        except source_matrices.SourceMatrixError:
+            source_cohort = ""
+    else:
+        source_cohort = str(source_cohort)
 
     from .expression_registry import sources_for_cancer_code
 
@@ -1256,10 +1263,17 @@ def _selected_expression_source_metadata(code: str) -> dict[str, str | bool | No
         linear_tpm_comparable = False
     return {
         "source_cohort": source_cohort or None,
+        "source_project": getattr(selected, "project_id", None)
+        or getattr(selected, "accession", None),
+        "source_version": None,
         "source_type": source_type,
         "unit": unit,
         "source_scale_class": source_scale_class,
         "linear_tpm_comparable": linear_tpm_comparable,
+        "tumor_origin": None,
+        "metastasis_site": None,
+        "n_reference_genes": None,
+        "n_reference_samples": n_reference_samples,
         "tpm_proxy": tpm_proxy,
     }
 
@@ -1952,6 +1966,7 @@ def cancer_reference_expression(
     on_missing: str = "omit",
     auto_fetch: bool = False,
     sample_qc: str = "pass",
+    reference_source: str = "artifact",
     gene_id_style: str = "oncoref",
     gene_universe: str = "artifact",
     include_gene_universe_flags: bool = False,
@@ -1969,6 +1984,16 @@ def cancer_reference_expression(
       - ``"tpm_clean_log1p"``: stored log1p biological clean-TPM percentiles;
       - ``"tpm_raw"`` / ``"tpm"`` / ``"raw_tpm"``: raw-TPM cohort stats recomputed from
         the source matrix.
+
+    ``reference_source="artifact"`` preserves the historical behavior: shipped
+    percentile artifacts supply clean/log clean TPM and raw TPM is recomputed from
+    source matrices. ``reference_source="summary_rows"`` reads the shipped
+    per-source ``cancer-reference-expression`` sidecars for ``sample_qc="all"`` and
+    chooses one source per cancer code by a deterministic richest-source-wins policy
+    (most genes, then most samples, then primary before mixed/metastatic, then source
+    name). For ``sample_qc="pass"`` or ``"pass_or_warn"``, it recomputes the same
+    reference summaries from source matrices at read time so QC-filtered views are not
+    silently backed by all-sample build artifacts.
 
     Raw-TPM mode needs the per-sample source matrix available; pass
     ``auto_fetch=True`` to download it. Raw-TPM summaries default to
@@ -1990,6 +2015,7 @@ def cancer_reference_expression(
     """
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_sample_qc(sample_qc)
+    reference_source = _validate_reference_source(reference_source)
     _validate_gene_id_style(gene_id_style)
     gene_universe = _validate_artifact_gene_universe(gene_universe)
     if format not in ("long", "wide"):
@@ -2001,9 +2027,11 @@ def cancer_reference_expression(
     if include_gene_universe_flags and format != "long":
         raise ValueError("include_gene_universe_flags=True requires format='long'")
 
-    requests = _reference_expression_requests(cancer_types, modes)
+    requests = _reference_expression_requests(
+        cancer_types, modes, reference_source=reference_source, sample_qc=sample_qc
+    )
     availability = _reference_expression_availability_for_requests(
-        requests, modes, sample_qc=sample_qc
+        requests, modes, sample_qc=sample_qc, reference_source=reference_source
     )
     missing = availability.loc[~availability["available"]].reset_index(drop=True)
     if on_missing == "raise" and not missing.empty:
@@ -2030,7 +2058,11 @@ def cancer_reference_expression(
             if request_key not in available_keys:
                 continue
             ref, method = _reference_expression_frame(
-                code, mode, auto_fetch=auto_fetch, sample_qc=sample_qc
+                code,
+                mode,
+                auto_fetch=auto_fetch,
+                sample_qc=sample_qc,
+                reference_source=reference_source,
             )
             ref = ref[_gene_filter_mask(ref, genes)].reset_index(drop=True)
             ref = _apply_artifact_gene_universe(
@@ -2063,7 +2095,11 @@ def cancer_reference_expression(
                 part = part.rename(columns={"p50": "expression", "p25": "q1", "p75": "q3"})
                 if include_provenance:
                     provenance = _reference_expression_provenance(
-                        code, mode, method, sample_qc=sample_qc
+                        code,
+                        mode,
+                        method,
+                        sample_qc=sample_qc,
+                        reference_source=reference_source,
                     )
                     for col, value in provenance.items():
                         part[col] = value
@@ -2099,6 +2135,7 @@ def cancer_reference_expression(
             gene_id_style=gene_id_style,
             gene_universe=gene_universe,
             include_gene_universe_flags=include_gene_universe_flags,
+            reference_source=reference_source,
         )
         if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
             _attach_gene_universe_delta_attrs(
@@ -2118,6 +2155,7 @@ def cancer_reference_expression(
         gene_id_style=gene_id_style,
         gene_universe=gene_universe,
         include_gene_universe_flags=include_gene_universe_flags,
+        reference_source=reference_source,
     )
     if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
         _attach_gene_universe_delta_attrs(
@@ -2133,6 +2171,7 @@ def cancer_reference_expression_availability(
     normalize: str | Iterable[str] = "tpm_clean",
     *,
     sample_qc: str = "pass",
+    reference_source: str = "artifact",
 ) -> pd.DataFrame:
     """Availability/provenance table for :func:`cancer_reference_expression`.
 
@@ -2143,8 +2182,13 @@ def cancer_reference_expression_availability(
     """
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_sample_qc(sample_qc)
-    requests = _reference_expression_requests(cancer_types, modes)
-    return _reference_expression_availability_for_requests(requests, modes, sample_qc=sample_qc)
+    reference_source = _validate_reference_source(reference_source)
+    requests = _reference_expression_requests(
+        cancer_types, modes, reference_source=reference_source, sample_qc=sample_qc
+    )
+    return _reference_expression_availability_for_requests(
+        requests, modes, sample_qc=sample_qc, reference_source=reference_source
+    )
 
 
 _REFERENCE_NORMALIZE_ALIASES = {
@@ -2176,15 +2220,31 @@ _REFERENCE_WIDE_SUFFIXES = {
 
 _REFERENCE_PROVENANCE_COLUMNS = [
     "source_cohort",
+    "source_project",
+    "source_version",
     "source_type",
     "source_unit",
     "source_scale_class",
     "linear_tpm_comparable",
+    "tumor_origin",
+    "metastasis_site",
+    "n_reference_genes",
+    "n_reference_samples",
     "reference_method",
     "sample_qc",
     "data_version",
     "source_matrix_version",
 ]
+
+_REFERENCE_SOURCES = {"artifact", "summary_rows"}
+_REFERENCE_SUMMARY_DATASET = "cancer-reference-expression"
+_REFERENCE_SUMMARY_METHOD = "source_summary_rows"
+_REFERENCE_RECOMPUTED_METHOD = "source_matrix_stats"
+_REFERENCE_TUMOR_ORIGIN_RANK = {
+    "primary": 0,
+    "mixed": 1,
+    "metastasis": 2,
+}
 
 _REFERENCE_REQUEST_COLUMNS = [
     "requested_code",
@@ -2195,13 +2255,19 @@ _REFERENCE_REQUEST_COLUMNS = [
 
 
 def _reference_expression_requests(
-    cancer_types: str | Iterable[str] | None, modes: list[str]
+    cancer_types: str | Iterable[str] | None,
+    modes: list[str],
+    *,
+    reference_source: str,
+    sample_qc: str,
 ) -> list[dict[str, str]]:
     """Resolved request rows while preserving aggregate-vs-direct intent."""
     if cancer_types is None:
         return [
             {"requested_code": code, "cancer_code": code, "request_kind": "default_available"}
-            for code in _reference_available_codes_for_modes(modes)
+            for code in _reference_available_codes_for_modes(
+                modes, reference_source=reference_source, sample_qc=sample_qc
+            )
         ]
     raw_values = [cancer_types] if isinstance(cancer_types, str) else list(cancer_types)
     aggregates = cohort_aggregates()
@@ -2223,7 +2289,13 @@ def _reference_expression_requests(
     return rows
 
 
-def _reference_available_codes_for_modes(modes: list[str]) -> list[str]:
+def _reference_available_codes_for_modes(
+    modes: list[str], *, reference_source: str, sample_qc: str
+) -> list[str]:
+    if reference_source == "summary_rows":
+        if sample_qc == "all":
+            return _reference_summary_available_codes()
+        return sorted(source_matrices.available_cohorts())
     out: set[str] = set()
     if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
         out.update(available_percentile_cohorts())
@@ -2233,18 +2305,33 @@ def _reference_available_codes_for_modes(modes: list[str]) -> list[str]:
 
 
 def _reference_expression_availability_for_requests(
-    requests: list[dict[str, str]], modes: list[str], *, sample_qc: str
+    requests: list[dict[str, str]],
+    modes: list[str],
+    *,
+    sample_qc: str,
+    reference_source: str,
 ) -> pd.DataFrame:
     percentile_available = set(available_percentile_cohorts())
     source_matrix_available = set(source_matrices.available_cohorts())
+    summary_available = (
+        set(_reference_summary_available_codes()) if reference_source == "summary_rows" else set()
+    )
     rows: list[dict] = []
     for request in requests:
         code = request["cancer_code"]
         for mode in modes:
             available, missing_reason = _reference_mode_availability(
-                code, mode, percentile_available, source_matrix_available
+                code,
+                mode,
+                percentile_available,
+                source_matrix_available,
+                summary_available,
+                sample_qc=sample_qc,
+                reference_source=reference_source,
             )
-            method = _reference_expected_method(mode)
+            method = _reference_expected_method(
+                mode, sample_qc=sample_qc, reference_source=reference_source
+            )
             row = {
                 "requested_code": request["requested_code"],
                 "cancer_code": code,
@@ -2257,7 +2344,15 @@ def _reference_expression_availability_for_requests(
                 "data_version": DATA_VERSION,
                 "source_matrix_version": SOURCE_MATRIX_VERSION,
             }
-            row.update(_reference_expression_provenance(code, mode, method, sample_qc=sample_qc))
+            row.update(
+                _reference_expression_provenance(
+                    code,
+                    mode,
+                    method,
+                    sample_qc=sample_qc,
+                    reference_source=reference_source,
+                )
+            )
             rows.append(row)
     columns = [
         "requested_code",
@@ -2267,10 +2362,16 @@ def _reference_expression_availability_for_requests(
         "available",
         "missing_reason",
         "source_cohort",
+        "source_project",
+        "source_version",
         "source_type",
         "source_unit",
         "source_scale_class",
         "linear_tpm_comparable",
+        "tumor_origin",
+        "metastasis_site",
+        "n_reference_genes",
+        "n_reference_samples",
         "reference_method",
         "sample_qc",
         "artifact_schema_version",
@@ -2290,7 +2391,15 @@ def _reference_mode_availability(
     mode: str,
     percentile_available: set[str],
     source_matrix_available: set[str],
+    summary_available: set[str],
+    *,
+    sample_qc: str,
+    reference_source: str,
 ) -> tuple[bool, str]:
+    if reference_source == "summary_rows":
+        if sample_qc == "all":
+            return (True, "") if code in summary_available else (False, "no_reference_summary_rows")
+        return (True, "") if code in source_matrix_available else (False, "no_source_matrix")
     if mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"}:
         return (True, "") if code in percentile_available else (False, "no_percentile_artifact")
     if mode == "tpm_raw":
@@ -2298,7 +2407,9 @@ def _reference_mode_availability(
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
 
 
-def _reference_expected_method(mode: str) -> str:
+def _reference_expected_method(mode: str, *, sample_qc: str, reference_source: str) -> str:
+    if reference_source == "summary_rows":
+        return _REFERENCE_SUMMARY_METHOD if sample_qc == "all" else _REFERENCE_RECOMPUTED_METHOD
     if mode in {"tpm_clean", "tpm_clean_biological"}:
         return "percentile_shard"
     if mode == "tpm_clean_log1p":
@@ -2315,6 +2426,7 @@ def _attach_reference_expression_attrs(
     gene_id_style: str,
     gene_universe: str,
     include_gene_universe_flags: bool,
+    reference_source: str,
 ) -> None:
     df.attrs["artifact_schema_version"] = REFERENCE_EXPRESSION_SCHEMA_VERSION
     df.attrs["data_version"] = DATA_VERSION
@@ -2322,6 +2434,7 @@ def _attach_reference_expression_attrs(
     df.attrs["gene_id_style"] = gene_id_style
     df.attrs["gene_universe"] = gene_universe
     df.attrs["include_gene_universe_flags"] = bool(include_gene_universe_flags)
+    df.attrs["reference_source"] = reference_source
     if availability is None:
         return
     missing = availability.loc[~availability["available"]]
@@ -2349,6 +2462,14 @@ def _reference_normalize_modes(normalize: str | Iterable[str]) -> list[str]:
     return modes
 
 
+def _validate_reference_source(reference_source: str) -> str:
+    source = str(reference_source).lower()
+    if source not in _REFERENCE_SOURCES:
+        supported = ", ".join(sorted(_REFERENCE_SOURCES))
+        raise ValueError(f"reference_source must be one of {supported}")
+    return source
+
+
 def _reference_long_columns(
     include_provenance: bool,
     include_request_metadata: bool,
@@ -2365,8 +2486,21 @@ def _reference_long_columns(
 
 
 def _reference_expression_frame(
-    code: str, mode: str, *, auto_fetch: bool, sample_qc: str
+    code: str,
+    mode: str,
+    *,
+    auto_fetch: bool,
+    sample_qc: str,
+    reference_source: str,
 ) -> tuple[pd.DataFrame, str]:
+    if reference_source == "summary_rows":
+        if sample_qc == "all":
+            return _reference_summary_expression_frame(code, mode), _REFERENCE_SUMMARY_METHOD
+        normalize = "tpm_clean" if mode == "tpm_clean_biological" else mode
+        return (
+            cohort_stats(code, normalize=normalize, auto_fetch=auto_fetch, sample_qc=sample_qc),
+            _REFERENCE_RECOMPUTED_METHOD,
+        )
     if mode in {"tpm_clean", "tpm_clean_biological"}:
         return (
             cohort_gene_percentiles(code, as_tpm=True, auto_fetch=auto_fetch, sample_qc=sample_qc),
@@ -2385,18 +2519,164 @@ def _reference_expression_frame(
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
 
 
+def _reference_summary_frame() -> pd.DataFrame:
+    return get_data(_REFERENCE_SUMMARY_DATASET, copy=False)
+
+
+def _reference_summary_available_codes() -> list[str]:
+    table = _reference_summary_source_table()
+    if table.empty:
+        return []
+    return sorted(table["cancer_code"].astype(str).unique())
+
+
+@lru_cache(maxsize=1)
+def _reference_summary_source_table() -> pd.DataFrame:
+    df = _reference_summary_frame()
+    columns = [
+        "cancer_code",
+        "source_cohort",
+        "source_project",
+        "source_version",
+        "tumor_origin",
+        "metastasis_site",
+        "n_reference_genes",
+        "n_reference_samples",
+        "selected",
+    ]
+    if df.empty:
+        return pd.DataFrame(columns=columns)
+    work = df.copy()
+    work["cancer_code"] = work["cancer_code"].astype(str)
+    work["source_cohort"] = work["source_cohort"].fillna("").astype(str)
+    grouped = (
+        work.groupby(["cancer_code", "source_cohort"], dropna=False, sort=False)
+        .agg(
+            source_project=("source_project", "first"),
+            source_version=("source_version", "first"),
+            tumor_origin=("tumor_origin", "first"),
+            metastasis_site=("metastasis_site", "first"),
+            n_reference_genes=("Ensembl_Gene_ID", "nunique"),
+            n_reference_samples=("n_samples", "max"),
+        )
+        .reset_index()
+    )
+    grouped["_origin_rank"] = (
+        grouped["tumor_origin"]
+        .fillna("")
+        .astype(str)
+        .str.lower()
+        .map(_REFERENCE_TUMOR_ORIGIN_RANK)
+        .fillna(99)
+        .astype(int)
+    )
+    grouped["_source_sort"] = grouped["source_cohort"].fillna("").astype(str)
+    grouped = grouped.sort_values(
+        ["cancer_code", "n_reference_genes", "n_reference_samples", "_origin_rank", "_source_sort"],
+        ascending=[True, False, False, True, True],
+        kind="stable",
+    )
+    grouped["selected"] = ~grouped["cancer_code"].duplicated()
+    grouped = grouped.drop(columns=["_origin_rank", "_source_sort"])
+    return grouped[columns]
+
+
+_register_derived_cache(_reference_summary_source_table.cache_clear)
+
+
+def _reference_summary_selected_source(code: str) -> dict | None:
+    table = _reference_summary_source_table()
+    if table.empty:
+        return None
+    matches = table.loc[(table["cancer_code"].astype(str) == code) & table["selected"]]
+    if matches.empty:
+        return None
+    return matches.iloc[0].to_dict()
+
+
+def _reference_summary_selected_rows(code: str) -> pd.DataFrame:
+    selected = _reference_summary_selected_source(code)
+    if selected is None:
+        return pd.DataFrame(columns=_reference_summary_frame().columns)
+    df = _reference_summary_frame()
+    mask = (df["cancer_code"].astype(str) == code) & (
+        df["source_cohort"].fillna("").astype(str) == str(selected["source_cohort"])
+    )
+    return df.loc[mask].copy()
+
+
+def _reference_summary_expression_frame(code: str, mode: str) -> pd.DataFrame:
+    rows = _reference_summary_selected_rows(code)
+    if rows.empty:
+        return pd.DataFrame(columns=["Ensembl_Gene_ID", "Symbol", "p25", "p50", "p75"])
+    if mode == "tpm_raw":
+        col_map = {"TPM_q1": "p25", "TPM_median": "p50", "TPM_q3": "p75"}
+    elif mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"}:
+        col_map = {"TPM_clean_q1": "p25", "TPM_clean_median": "p50", "TPM_clean_q3": "p75"}
+    else:
+        raise AssertionError(f"unhandled reference normalize mode: {mode}")
+    out = rows[["Ensembl_Gene_ID", "Symbol", *col_map]].rename(columns=col_map).copy()
+    if mode == "tpm_clean_log1p":
+        for col in ("p25", "p50", "p75"):
+            out[col] = np.log1p(pd.to_numeric(out[col], errors="coerce"))
+    return out
+
+
+def _reference_summary_source_metadata(code: str) -> dict[str, str | bool | int | float | None]:
+    selected = _reference_summary_selected_source(code)
+    if selected is None:
+        return _selected_expression_source_metadata(code)
+    meta = _selected_expression_source_metadata(code, source_cohort=str(selected["source_cohort"]))
+    text = " ".join(
+        str(selected.get(c) or "")
+        for c in ("source_cohort", "source_project", "source_version", "tumor_origin")
+    ).lower()
+    tpm_proxy = bool(meta.get("tpm_proxy")) or "microarray" in text or "tpm-proxy" in text
+    meta.update(
+        {
+            "source_cohort": selected.get("source_cohort"),
+            "source_project": selected.get("source_project"),
+            "source_version": selected.get("source_version"),
+            "tumor_origin": selected.get("tumor_origin"),
+            "metastasis_site": selected.get("metastasis_site"),
+            "n_reference_genes": selected.get("n_reference_genes"),
+            "n_reference_samples": selected.get("n_reference_samples"),
+            "unit": meta.get("unit") or "TPM",
+            "source_scale_class": "microarray_tpm_proxy"
+            if tpm_proxy
+            else meta.get("source_scale_class") or "linear_rnaseq_tpm",
+            "linear_tpm_comparable": False
+            if tpm_proxy
+            else bool(meta.get("linear_tpm_comparable", True)),
+            "tpm_proxy": tpm_proxy,
+        }
+    )
+    return meta
+
+
 def _reference_sample_qc_label(mode: str, sample_qc: str) -> str:
     return sample_qc
 
 
-def _reference_expression_provenance(code: str, mode: str, method: str, *, sample_qc: str) -> dict:
-    meta = _selected_expression_source_metadata(code)
+def _reference_expression_provenance(
+    code: str, mode: str, method: str, *, sample_qc: str, reference_source: str
+) -> dict:
+    if method == _REFERENCE_SUMMARY_METHOD:
+        meta = _reference_summary_source_metadata(code)
+    else:
+        meta = _selected_expression_source_metadata(code)
     return {
         "source_cohort": meta["source_cohort"] or code,
-        "source_type": meta["source_type"],
-        "source_unit": meta["unit"],
-        "source_scale_class": meta["source_scale_class"],
-        "linear_tpm_comparable": bool(meta["linear_tpm_comparable"]),
+        "source_project": meta.get("source_project"),
+        "source_version": meta.get("source_version"),
+        "source_type": meta.get("source_type"),
+        "source_unit": meta.get("unit"),
+        "source_scale_class": meta.get("source_scale_class"),
+        "linear_tpm_comparable": bool(meta.get("linear_tpm_comparable")),
+        "tumor_origin": meta.get("tumor_origin"),
+        "metastasis_site": meta.get("metastasis_site"),
+        "n_reference_genes": meta.get("n_reference_genes"),
+        "n_reference_samples": meta.get("n_reference_samples"),
         "reference_method": method,
         "sample_qc": _reference_sample_qc_label(mode, sample_qc),
         "data_version": DATA_VERSION,

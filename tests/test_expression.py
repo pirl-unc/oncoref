@@ -1402,10 +1402,16 @@ def test_cancer_reference_expression_long_and_wide(monkeypatch):
         "cancer_code",
         "normalization",
         "source_cohort",
+        "source_project",
+        "source_version",
         "source_type",
         "source_unit",
         "source_scale_class",
         "linear_tpm_comparable",
+        "tumor_origin",
+        "metastasis_site",
+        "n_reference_genes",
+        "n_reference_samples",
         "reference_method",
         "sample_qc",
         "data_version",
@@ -1528,10 +1534,16 @@ def test_cancer_reference_expression_availability_reports_missing(monkeypatch):
         "available",
         "missing_reason",
         "source_cohort",
+        "source_project",
+        "source_version",
         "source_type",
         "source_unit",
         "source_scale_class",
         "linear_tpm_comparable",
+        "tumor_origin",
+        "metastasis_site",
+        "n_reference_genes",
+        "n_reference_samples",
         "reference_method",
         "sample_qc",
         "artifact_schema_version",
@@ -1560,10 +1572,16 @@ def test_cancer_reference_expression_missing_empty_and_raise(monkeypatch):
         "cancer_code",
         "normalization",
         "source_cohort",
+        "source_project",
+        "source_version",
         "source_type",
         "source_unit",
         "source_scale_class",
         "linear_tpm_comparable",
+        "tumor_origin",
+        "metastasis_site",
+        "n_reference_genes",
+        "n_reference_samples",
         "reference_method",
         "sample_qc",
         "data_version",
@@ -1645,6 +1663,124 @@ def test_cancer_reference_expression_raw_tpm_uses_source_stats(monkeypatch):
     assert long["source_type"].tolist() == ["gdc"]
     assert long["reference_method"].tolist() == ["source_matrix_stats"]
     assert long["expression"].tolist() == [20.0]
+
+
+def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeypatch):
+    expression._reference_summary_source_table.cache_clear()
+    summary = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1", "E2", "E1", "E2", "E3"],
+            "Symbol": ["A", "B", "A", "B", "C"],
+            "cancer_code": ["X", "X", "X", "X", "X"],
+            "source_cohort": ["SMALL", "SMALL", "RICH", "RICH", "RICH"],
+            "source_project": ["GEO_SMALL", "GEO_SMALL", "GEO_RICH", "GEO_RICH", "GEO_RICH"],
+            "source_version": ["v1", "v1", "v2", "v2", "v2"],
+            "TPM_median": [100.0, 200.0, 10.0, 20.0, 30.0],
+            "TPM_q1": [90.0, 190.0, 9.0, 19.0, 29.0],
+            "TPM_q3": [110.0, 210.0, 11.0, 21.0, 31.0],
+            "TPM_clean_median": [50.0, 60.0, 1.0, 2.0, 3.0],
+            "TPM_clean_q1": [45.0, 55.0, 0.5, 1.5, 2.5],
+            "TPM_clean_q3": [55.0, 65.0, 1.5, 2.5, 3.5],
+            "n_samples": [20, 20, 5, 5, 5],
+            "tumor_origin": ["primary", "primary", "primary", "primary", "primary"],
+            "metastasis_site": [pd.NA, pd.NA, pd.NA, pd.NA, pd.NA],
+        }
+    )
+    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: [])
+    monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: [])
+    monkeypatch.setattr(
+        expression,
+        "cohort_stats",
+        lambda *a, **k: (_ for _ in ()).throw(AssertionError("should use summary rows")),
+    )
+
+    out = expression.cancer_reference_expression(
+        "x", reference_source="summary_rows", sample_qc="all"
+    )
+
+    assert out.attrs["reference_source"] == "summary_rows"
+    assert out["source_cohort"].unique().tolist() == ["RICH"]
+    assert out["source_project"].unique().tolist() == ["GEO_RICH"]
+    assert out["source_version"].unique().tolist() == ["v2"]
+    assert out["reference_method"].unique().tolist() == ["source_summary_rows"]
+    assert out["n_reference_genes"].unique().tolist() == [3]
+    assert out["n_reference_samples"].unique().tolist() == [5]
+    keyed = out.set_index("Ensembl_Gene_ID")
+    assert keyed.loc["E1", "expression"] == pytest.approx(1.0)
+    assert keyed.loc["E1", "q1"] == pytest.approx(0.5)
+    assert keyed.loc["E1", "q3"] == pytest.approx(1.5)
+
+    raw_log = expression.cancer_reference_expression(
+        "x",
+        genes="E1",
+        normalize=["tpm_raw", "tpm_clean_log1p"],
+        reference_source="summary_rows",
+        sample_qc="all",
+    ).set_index("normalization")
+    assert raw_log.loc["tpm_raw", "expression"] == pytest.approx(10.0)
+    assert raw_log.loc["tpm_clean_log1p", "expression"] == pytest.approx(np.log1p(1.0))
+    expression._reference_summary_source_table.cache_clear()
+
+
+def test_cancer_reference_expression_summary_rows_qc_filtered_recomputes(monkeypatch):
+    stats = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1"],
+            "Symbol": ["A"],
+            "p25": [1.0],
+            "p50": [2.0],
+            "p75": [3.0],
+        }
+    )
+    seen = {}
+    expression._reference_summary_source_table.cache_clear()
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: [])
+    monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(
+        expression,
+        "cohort_stats",
+        lambda code, **k: seen.update(code=code, **k) or stats.copy(),
+    )
+    monkeypatch.setattr(
+        expression,
+        "_selected_expression_source_metadata",
+        lambda code: {
+            "source_cohort": "SRC_X",
+            "source_project": "TCGA",
+            "source_version": "v1",
+            "source_type": "gdc",
+            "unit": "TPM",
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+            "tumor_origin": None,
+            "metastasis_site": None,
+            "n_reference_genes": None,
+            "n_reference_samples": 7,
+        },
+    )
+
+    out = expression.cancer_reference_expression(
+        "x",
+        reference_source="summary_rows",
+        sample_qc="pass_or_warn",
+        auto_fetch=True,
+        normalize="tpm_clean",
+    )
+
+    assert seen == {
+        "code": "X",
+        "normalize": "tpm_clean",
+        "auto_fetch": True,
+        "sample_qc": "pass_or_warn",
+    }
+    assert out["reference_method"].tolist() == ["source_matrix_stats"]
+    assert out["sample_qc"].tolist() == ["pass_or_warn"]
+    assert out["source_cohort"].tolist() == ["SRC_X"]
+    assert out["n_reference_samples"].tolist() == [7]
+    assert out["expression"].tolist() == [2.0]
 
 
 def test_cancer_reference_expression_wide_merges_by_gene_id_not_symbol(monkeypatch):

@@ -292,16 +292,24 @@ return one or more normalization modes in one call:
   through `cohort_stats`.
 
 Long output includes source/provenance columns by default, including source
-cohort, source type/unit, source scale class, reference method, `DATA_VERSION`,
-and `SOURCE_MATRIX_VERSION`. This accessor is the compatibility surface for
-reference-expression reads; expression artifact row-set/value parity is still
-tracked separately in the upstream parity issues.
-Raw source-matrix summaries default to `sample_qc="pass"` so sparse or
-source-QC-failed samples do not shape newly computed reference rows. Use
-`sample_qc="pass_or_warn"` or `"all"` for forensic audits or exact parity with
-the current unfiltered source matrices. Long-form provenance and availability
-rows report the live QC mode for raw source-matrix summaries and `artifact` for
-existing shard-backed clean-TPM rows.
+cohort, source project/version, tumor origin, source type/unit, source scale
+class, reference method, selected source gene/sample counts, `DATA_VERSION`, and
+`SOURCE_MATRIX_VERSION`. This accessor is the compatibility surface for
+reference-expression reads; expression artifact row-set/value parity is tracked
+separately in the upstream parity issues.
+
+`reference_source="artifact"` is the historical default: clean/log clean TPM
+comes from shipped percentile shards, and raw TPM is recomputed from source
+matrices. `reference_source="summary_rows"` uses the shipped
+`cancer-reference-expression` per-source sidecars when `sample_qc="all"` and
+selects one source per cancer code by a deterministic richest-source-wins rule:
+most genes, then most samples, then primary before mixed/metastatic, then source
+cohort name. For `sample_qc="pass"` or `"pass_or_warn"`, the summary-row source
+selector intentionally recomputes via `cohort_stats(..., sample_qc=...)` so
+QC-filtered reference-expression views are shaped at read time rather than by a
+build-time drop. This keeps the source sidecars as all-sample evidence while
+allowing downstream code to ask for QC-passing summaries without maintaining a
+private filtered bundle.
 
 Use `expression.cancer_reference_expression_availability()` before delegating a
 downstream reference-expression accessor that must distinguish unavailable
