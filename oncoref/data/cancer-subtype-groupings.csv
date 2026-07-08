@@ -1,4 +1,5 @@
 group_code,axis,member_code,basis
+MSI,microsatellite,CRC_MSI,MSI-H/dMMR colorectal source-scope evidence subtype
 MSI,microsatellite,COAD_MSI,MSI-H/dMMR colon
 MSI,microsatellite,READ_MSI,MSI-H/dMMR rectum
 MSI,microsatellite,UCEC_MSI,MSI-H/dMMR endometrial

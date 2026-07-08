@@ -257,6 +257,7 @@ def test_cancer_type_records_query_hierarchy_and_molecular_groups():
     crc = cancer_types.cancer_type_records(under="CRC")
     assert crc["code"].tolist() == [
         "CRC",
+        "CRC_MSI",
         "COAD",
         "READ",
         "COAD_MSI",
@@ -265,6 +266,7 @@ def test_cancer_type_records_query_hierarchy_and_molecular_groups():
         "READ_MSS",
     ]
     assert cancer_types.cancer_type_codes(subtype_group="MSI", under="CRC") == [
+        "CRC_MSI",
         "COAD_MSI",
         "READ_MSI",
     ]
@@ -273,6 +275,8 @@ def test_cancer_type_records_query_hierarchy_and_molecular_groups():
     )
     assert {"COAD_MSI", "READ_MSI", "UCEC_MSI"} <= set(epithelial_msi["code"])
     assert set(epithelial_msi["lineage_group"]) == {"Epithelial"}
+    assert cancer_types.cancer_type_records(ontology_level=[]).empty
+    assert cancer_types.cancer_type_records(subtype_group=[]).empty
 
 
 def test_cancer_type_records_empty_selection_stays_empty():
@@ -294,10 +298,64 @@ def test_cancer_type_path_makes_semantic_levels_explicit():
     ]
     assert path.iloc[-1]["normal_tissue_code"] == "colon"
 
+    crc_msi = cancer_types.cancer_type_path("CRC_MSI")
+    assert crc_msi[["kind", "code"]].apply(tuple, axis=1).tolist() == [
+        ("lineage_group", "Epithelial"),
+        ("family", "carcinoma-gi"),
+        ("cancer_type", "CRC"),
+        ("cancer_type", "CRC_MSI"),
+    ]
+
+
+def test_cancer_type_records_expose_explicit_ontology_levels():
+    records = cancer_types.cancer_type_records(
+        ["CRC", "CRC_MSI", "OV", "FTC", "PPC", "ALCL", "ATC", "PMBCL", "PCN"]
+    ).set_index("code")
+
+    assert records.loc["CRC", "ontology_level"] == "grouping"
+    assert records.loc["CRC", "ontology_kind"] == "computed_union"
+    assert records.loc["CRC_MSI", "parent_code"] == "CRC"
+    assert records.loc["CRC_MSI", "ontology_level"] == "molecular_subtype"
+    assert records.loc["CRC_MSI", "ontology_kind"] == "molecular_source_scope"
+
+    assert bool(cancer_types.is_mixture_cohort("OV")) is True
+    assert records.loc["OV", "ontology_level"] == "grouping"
+    assert records.loc["OV", "ontology_kind"] == "anatomic_group"
+    assert records.loc["FTC", "ontology_level"] == "type"
+    assert records.loc["FTC", "ontology_kind"] == "anatomic_type"
+    assert records.loc["PPC", "ontology_level"] == "type"
+    assert records.loc["PPC", "ontology_kind"] == "anatomic_type"
+
+    assert records.loc["ALCL", "ontology_level"] == "type"
+    assert records.loc["ALCL", "ontology_kind"] == "primary_type"
+    assert records.loc["ATC", "ontology_level"] == "type"
+    assert records.loc["ATC", "ontology_kind"] == "differentiation_type"
+    assert records.loc["PMBCL", "ontology_level"] == "type"
+    assert records.loc["PMBCL", "ontology_kind"] == "histologic_type"
+    assert records.loc["PCN", "ontology_level"] == "type"
+    assert records.loc["PCN", "ontology_kind"] == "clinical_type"
+
+    assert cancer_types.cancer_type_codes(
+        under="CRC", ontology_level="molecular_subtype", ontology_kind="molecular_source_scope"
+    ) == ["CRC_MSI"]
+
+    sarcoma = cancer_types.cancer_type_records(
+        ["SARC", "SARC_OS", "SARC_RMS", "SARC_RMS_ARMS"]
+    ).set_index("code")
+    assert sarcoma.loc["SARC", "ontology_level"] == "grouping"
+    assert sarcoma.loc["SARC_OS", "ontology_level"] == "type"
+    assert sarcoma.loc["SARC_RMS", "ontology_level"] == "type"
+    assert sarcoma.loc["SARC_RMS", "ontology_kind"] == "histologic_type"
+    assert sarcoma.loc["SARC_RMS_ARMS", "ontology_level"] == "molecular_subtype"
+    assert sarcoma.loc["SARC_RMS_ARMS", "ontology_kind"] == "fusion_molecular_subtype"
+
 
 def test_cancer_type_siblings_use_parent_hierarchy():
     siblings = cancer_types.cancer_type_siblings("COAD")
     assert siblings["code"].tolist() == ["READ"]
+    cross_level = cancer_types.cancer_type_siblings("COAD", same_ontology_level=False)
+    assert cross_level["code"].tolist() == ["CRC_MSI", "READ"]
+    assert cancer_types.cancer_type_siblings("CRC_MSI").empty
     molecular_siblings = cancer_types.cancer_type_siblings("COAD_MSI")
     assert molecular_siblings["code"].tolist() == ["COAD_MSS"]
 
@@ -344,7 +402,11 @@ def test_mmr_status_axis_queries_and_exports():
     assert cancer_types.cancer_mismatch_repair_codes(state="dMMR") == positive
     assert cancer_types.cancer_mismatch_repair_codes(classifier_role="positive") == positive
 
-    assert set(cancer_types.mmrd_cancer_codes(under="CRC")) == {"COAD_MSI", "READ_MSI"}
+    assert set(cancer_types.mmrd_cancer_codes(under="CRC")) == {
+        "CRC_MSI",
+        "COAD_MSI",
+        "READ_MSI",
+    }
     assert cancer_types.mmrd_cancer_codes(under="STAD") == ["STAD_MSI"]
     assert set(cancer_types.pmmr_cancer_codes(under="UCEC")) == {"UCEC_CNL", "UCEC_CNH"}
     assert cancer_types.pmmr_cancer_codes(under="STAD") == ["STAD_CIN", "STAD_GS"]
@@ -363,13 +425,19 @@ def test_mmr_status_axis_queries_and_exports():
     from_records = cancer_types.cancer_mismatch_repair_statuses(
         cancer_types=cancer_types.cancer_type_records(subtype_group="MSI")
     )
-    assert from_records["cancer_code"].tolist() == ["COAD_MSI", "READ_MSI", "UCEC_MSI", "STAD_MSI"]
+    assert from_records["cancer_code"].tolist() == [
+        "CRC_MSI",
+        "COAD_MSI",
+        "READ_MSI",
+        "UCEC_MSI",
+        "STAD_MSI",
+    ]
     assert cancer_types.cancer_mismatch_repair_status(None) is None
     assert cancer_types.cancer_type_records(mmr_state=[]).empty
 
     ontology = cd.cancer_ontology
     assert ontology.mmrd_cancer_codes(under="STAD") == ["STAD_MSI"]
-    assert cd.mmrd_cancer_codes(under="CRC") == ["COAD_MSI", "READ_MSI"]
+    assert cd.mmrd_cancer_codes(under="CRC") == ["CRC_MSI", "COAD_MSI", "READ_MSI"]
 
 
 def test_expression_reference_coverage_contract():
@@ -377,6 +445,8 @@ def test_expression_reference_coverage_contract():
     expected = {
         "code",
         "lineage_group",
+        "ontology_level",
+        "ontology_kind",
         "ontology_depth",
         "has_direct_expression_reference",
         "observed_bulk_reference",
@@ -402,9 +472,11 @@ def test_expression_reference_coverage_contract():
     assert keyed.loc["COAD_MSI", "gene_id_space"] == "oncoref_canonical_ensg"
 
     assert bool(keyed.loc["CRC_MSI", "has_direct_expression_reference"]) is False
-    assert keyed.loc["CRC_MSI", "consumer_recommendation"] == "unsupported"
-    assert keyed.loc["CRC_MSI", "molecular_definition_kind"] == ()
-    assert keyed.loc["CRC_MSI", "missing_reason"] == "no_direct_expression_matrix"
+    assert keyed.loc["CRC_MSI", "consumer_recommendation"] == "molecular_only"
+    assert keyed.loc["CRC_MSI", "molecular_definition_kind"] == ("subtype_group",)
+    assert keyed.loc["CRC_MSI", "missing_reason"] == (
+        "molecular_definition_without_expression_matrix"
+    )
 
     assert bool(keyed.loc["ASTB", "has_direct_expression_reference"]) is False
     assert keyed.loc["ASTB", "consumer_recommendation"] == "molecular_only"
@@ -413,8 +485,8 @@ def test_expression_reference_coverage_contract():
 
 def test_expression_reference_coverage_filters_and_empty_results():
     crc = cancer_types.expression_reference_coverage(subtype_group="MSI", under="CRC")
-    assert crc["code"].tolist() == ["COAD_MSI", "READ_MSI"]
-    assert set(crc["consumer_recommendation"]) == {"direct_reference"}
+    assert crc["code"].tolist() == ["CRC_MSI", "COAD_MSI", "READ_MSI"]
+    assert set(crc["consumer_recommendation"]) == {"direct_reference", "molecular_only"}
 
     empty = cancer_types.expression_reference_coverage([])
     assert empty.empty

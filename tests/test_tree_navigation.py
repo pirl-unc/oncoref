@@ -26,6 +26,7 @@ def test_ancestors_of_root_is_empty():
 
 def test_descendants_full_subtree():
     assert cancer_type_descendants("CRC") == [
+        "CRC_MSI",
         "COAD",
         "COAD_MSI",
         "COAD_MSS",
@@ -51,6 +52,7 @@ def test_lineage_root_to_leaf():
 def test_tree_subtree_shape():
     assert cancer_type_tree("CRC") == {
         "CRC": {
+            "CRC_MSI": {},
             "COAD": {"COAD_MSI": {}, "COAD_MSS": {}},
             "READ": {"READ_MSI": {}, "READ_MSS": {}},
         }
@@ -79,4 +81,4 @@ def test_descendants_consistent_with_direct_subtypes():
     direct = set(cancer_type_subtypes_of("CRC"))
     desc = set(cancer_type_descendants("CRC"))
     assert direct <= desc
-    assert direct == {"COAD", "READ"}
+    assert direct == {"CRC_MSI", "COAD", "READ"}

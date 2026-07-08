@@ -391,10 +391,11 @@ def cancer_type_info(cancer_type):
     an unknown input (same contract as :func:`resolve_cancer_type`).
 
     Keys: ``code``, ``name``, ``family``, ``primary_tissue``,
-    ``primary_template``, ``parent_code``, ``subtype_key``, ``pediatric``,
-    ``differentiation``, ``expression_source``, ``source_cohort``,
-    ``source_pmid``, ``notes``, ``viral_etiology``, ``viral_agent``,
-    ``fusion_driven``, ``fusion_driver``, ``burden_category``, ``tmb``.
+    ``primary_template``, ``parent_code``, ``ontology_level``,
+    ``ontology_kind``, ``subtype_key``, ``pediatric``, ``differentiation``,
+    ``expression_source``, ``source_cohort``, ``source_pmid``, ``notes``,
+    ``viral_etiology``, ``viral_agent``, ``fusion_driven``,
+    ``fusion_driver``, ``burden_category``, ``tmb``.
     """
     # Lazy imports avoid an import cycle: tmb/incidence depend on this module's
     # resolve_cancer_type + cancer_type_registry.
@@ -412,6 +413,8 @@ def cancer_type_info(cancer_type):
         "primary_tissue",
         "primary_template",
         "parent_code",
+        "ontology_level",
+        "ontology_kind",
         "subtype_key",
         "pediatric",
         "differentiation",
@@ -707,16 +710,20 @@ def _normalize_filter_values(values, *, resolver=None) -> set[str] | None:
 
 def _filter_string_values(df: pd.DataFrame, column: str, values) -> pd.DataFrame:
     wanted = _normalize_filter_values(values)
-    if not wanted:
+    if wanted is None:
         return df
+    if not wanted:
+        return df.iloc[0:0]
     lowered = {v.lower() for v in wanted}
     return df[df[column].astype(str).str.lower().isin(lowered)]
 
 
 def _filter_tuple_values(df: pd.DataFrame, column: str, values) -> pd.DataFrame:
     wanted = _normalize_filter_values(values)
-    if not wanted:
+    if wanted is None:
         return df
+    if not wanted:
+        return df.iloc[0:0]
     wanted_lower = {v.lower() for v in wanted}
     return df[
         df[column].map(lambda items: bool({str(x).lower() for x in (items or ())} & wanted_lower))
@@ -951,6 +958,8 @@ _CANCER_TYPE_RECORD_COLUMNS = [
     "lineage_group",
     "family",
     "family_name",
+    "ontology_level",
+    "ontology_kind",
     "primary_tissue",
     "normal_tissue_code",
     "normal_tissue_name",
@@ -1043,6 +1052,8 @@ def cancer_type_records(
     include_descendants: bool = False,
     lineage_group=None,
     family=None,
+    ontology_level=None,
+    ontology_kind=None,
     primary_tissue=None,
     normal_tissue=None,
     subtype_group=None,
@@ -1059,7 +1070,8 @@ def cancer_type_records(
     This is the structured companion to the older single-purpose helpers. Every
     result has the same columns, including hierarchy fields (``path``,
     ``ancestors``, ``children``), semantic rollups (``lineage_group``,
-    ``family``), cross-cutting molecular groupings (``subtype_groups`` /
+    ``family``), explicit registry level fields (``ontology_level`` /
+    ``ontology_kind``), cross-cutting molecular groupings (``subtype_groups`` /
     ``subtype_axes``), explicit MMR/MSI classifier-axis fields
     (``mmr_axis_state`` / ``mmr_classifier_role``), source-scoped evidence resolution
     (``evidence_source_code``), expression-matrix availability, and matched
@@ -1092,6 +1104,8 @@ def cancer_type_records(
 
     df = _filter_string_values(df, "lineage_group", lineage_group)
     df = _filter_string_values(df, "family", family)
+    df = _filter_string_values(df, "ontology_level", ontology_level)
+    df = _filter_string_values(df, "ontology_kind", ontology_kind)
     df = _filter_string_values(df, "primary_tissue", primary_tissue)
 
     if normal_tissue is not None:
@@ -1147,6 +1161,8 @@ _EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
     "lineage_group",
     "family",
     "family_name",
+    "ontology_level",
+    "ontology_kind",
     "primary_tissue",
     "ontology_depth",
     "is_leaf",
@@ -1241,6 +1257,8 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
                 "lineage_group": record["lineage_group"],
                 "family": record["family"],
                 "family_name": record["family_name"],
+                "ontology_level": record["ontology_level"],
+                "ontology_kind": record["ontology_kind"],
                 "primary_tissue": record["primary_tissue"],
                 "ontology_depth": max(len(record["path"]) - 1, 0),
                 "is_leaf": bool(record["is_leaf"]),
@@ -1371,12 +1389,19 @@ def cancer_type_path(cancer_type, *, include_semantic_groups: bool = True) -> pd
     return pd.DataFrame(rows, columns=_CANCER_TYPE_PATH_COLUMNS)
 
 
-def cancer_type_siblings(cancer_type, *, include_self: bool = False) -> pd.DataFrame:
+def cancer_type_siblings(
+    cancer_type,
+    *,
+    include_self: bool = False,
+    same_ontology_level: bool = True,
+) -> pd.DataFrame:
     """Cancer types that share the same immediate ``parent_code``.
 
     For example ``cancer_type_siblings("COAD")`` returns ``READ`` because both
-    are direct children of ``CRC``. The return type is the same record DataFrame
-    as :func:`cancer_type_records`.
+    are direct anatomical children of ``CRC``. By default siblings are restricted
+    to the requested code's ``ontology_level`` so source-scope molecular rows such
+    as ``CRC_MSI`` do not appear as siblings of anatomical types. The return type
+    is the same record DataFrame as :func:`cancer_type_records`.
     """
     code = resolve_cancer_type(cancer_type)
     reg = _registry_frame().set_index("code")
@@ -1390,7 +1415,11 @@ def cancer_type_siblings(cancer_type, *, include_self: bool = False) -> pd.DataF
         codes = cancer_type_subtypes_of(parent)
         if not include_self:
             codes = [c for c in codes if c != code]
-    return cancer_type_records(codes)
+    records = cancer_type_records(codes)
+    if same_ontology_level and code in set(reg.index) and not records.empty:
+        level = reg.loc[code].get("ontology_level")
+        records = records[records["ontology_level"].astype(str) == str(level)]
+    return records.reset_index(drop=True)
 
 
 def matched_normal_tissues(cancer_types=None, **query_kwargs) -> pd.DataFrame:
@@ -1731,10 +1760,11 @@ def cancer_type_tree(root=None):
 
 
 def mixture_cohort_codes():
-    """Return parent codes flagged as mixture cohorts in the registry.
+    """Return codes flagged as pooled/source-scoped cohorts in the registry.
 
-    A mixture cohort is a parent code whose reference median is a biological
-    union of lineage-distinct subtypes.
+    This is a legacy cohort/source flag, not a taxonomic-level flag. Use
+    ``cancer_type_records()[["ontology_level", "ontology_kind"]]`` for
+    grouping/type/molecular-subtype semantics.
     """
     df = cancer_type_registry()
     if "mixture_cohort" not in df.columns:

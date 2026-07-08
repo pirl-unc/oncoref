@@ -43,7 +43,7 @@ module map, with examples and notes about compatibility modules.
 from oncoref import cancer_ontology, ici_response
 
 crc_msi = cancer_ontology.cancer_type_records(subtype_group="MSI", under="CRC")
-crc_msi[["code", "evidence_source_code", "normal_tissue_code"]]
+crc_msi[["code", "parent_code", "ontology_level", "ontology_kind", "evidence_source_code"]]
 
 # MMR/MSI classifier queries keep positive, negative, and confounder classes
 # explicit, and can be restricted to direct expression-backed codes.

@@ -14,7 +14,13 @@ from oncoref import (
 
 
 def test_all_msi_types():
-    assert cancer_subtype_group("MSI") == ["COAD_MSI", "READ_MSI", "UCEC_MSI", "STAD_MSI"]
+    assert cancer_subtype_group("MSI") == [
+        "CRC_MSI",
+        "COAD_MSI",
+        "READ_MSI",
+        "UCEC_MSI",
+        "STAD_MSI",
+    ]
 
 
 def test_all_pole_subtypes():
@@ -23,7 +29,7 @@ def test_all_pole_subtypes():
 
 def test_under_scopes_to_descendants():
     # MSI across all cancers vs colorectal-only (descendants of CRC).
-    assert cancer_subtype_group("MSI", under="CRC") == ["COAD_MSI", "READ_MSI"]
+    assert cancer_subtype_group("MSI", under="CRC") == ["CRC_MSI", "COAD_MSI", "READ_MSI"]
     assert cancer_subtype_group("MSI", under="UCEC") == ["UCEC_MSI"]
     assert cancer_subtype_group("MSI", under="STAD") == ["STAD_MSI"]
     assert cancer_subtype_group("MSS", under="STAD") == ["STAD_CIN", "STAD_GS"]
