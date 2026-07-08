@@ -244,6 +244,46 @@ def test_geo_matrix_builder_routes_samples_and_reads_transposed_matrix(tmp_path)
     assert np.isclose(code_b["tumor_b"].sum(), 1_000_000.0)
 
 
+def test_geo_matrix_builder_transposed_all_blank_sample_is_missing_not_zero(tmp_path):
+    path = tmp_path / "transposed_blank_sample.tsv"
+    pd.DataFrame(
+        {
+            "sample_id": ["tumor_a", "blank_sample", "tumor_b"],
+            "TP53": ["1", "", "3"],
+            "EGFR": ["1", "", "1"],
+        }
+    ).to_csv(path, sep="\t", index=False)
+    source = expression_builders.GeoMatrixSource(
+        cancer_code=["CODE_A", "CODE_B", "CODE_BLANK"],
+        source_cohort="TEST_TRANSPOSED_BLANK",
+        file_name=path.name,
+        unit="TPM",
+        gene_id_col="sample_id",
+        transposed=True,
+        sample_to_cancer_code=lambda sample: {
+            "tumor_a": "CODE_A",
+            "tumor_b": "CODE_B",
+            "blank_sample": "CODE_BLANK",
+        }.get(sample),
+    )
+
+    result = expression_builders.build_source_matrices(
+        source,
+        cache_dir=tmp_path,
+        source_path=path,
+    )
+
+    assert set(result.matrix_paths) == {"CODE_A", "CODE_B"}
+    assert "CODE_BLANK" not in result.matrices
+    assert "blank_sample" not in set(result.parse_diagnostics["value_col"])
+    assert "blank_sample" not in set(result.sample_qc["sample_id"])
+    for matrix in result.matrices.values():
+        assert "blank_sample" not in matrix.columns
+        assert np.allclose(
+            matrix[expression_builders.sample_columns(matrix)].sum(axis=0), 1_000_000.0
+        )
+
+
 def test_source_matrix_unit_helpers_validate_raw_counts_lengths():
     df = pd.DataFrame({"gene_id": ["g1", "g2"], "s1": [10.0, 10.0]})
     out = expression_builders.normalize_source_matrix_to_tpm(
