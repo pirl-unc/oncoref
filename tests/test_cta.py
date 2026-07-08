@@ -287,6 +287,31 @@ def test_cta_evidence_includes_specificity_status_for_audited_and_default_rows()
     assert "CTAG2" not in cta.cta_gene_names()
 
 
+def test_default_cta_sets_honor_specificity_audit_actions():
+    evidence = cta.cta_evidence()
+    default = evidence["specificity_action"].astype(str) == "include_default"
+    filtered = default | evidence["specificity_status"].astype(str).eq("canonical_low_expression")
+
+    assert cta.cta_gene_names() == set(evidence.loc[default, "Symbol"].astype(str))
+    assert cta.cta_gene_ids() == set(
+        evidence.loc[default, "Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    )
+    assert cta.cta_filtered_gene_names() == set(evidence.loc[filtered, "Symbol"].astype(str))
+    assert cta.cta_filtered_gene_ids() == set(
+        evidence.loc[filtered, "Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    )
+
+    audited_demotions = set(
+        evidence.loc[
+            evidence["specificity_action"].astype(str) == "exclude_default_keep_clinical",
+            "Symbol",
+        ].astype(str)
+    )
+    assert audited_demotions
+    assert not (audited_demotions & cta.cta_filtered_gene_names())
+    assert audited_demotions <= cta.cta_excluded_clinical_target_gene_names()
+
+
 def test_clinical_cta_helpers_are_top_level_exports():
     for name in (
         "cta_clinical_target_references",

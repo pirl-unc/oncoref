@@ -562,17 +562,51 @@ def passes_filters_mask(df: pd.DataFrame) -> pd.Series:
     return values.astype(str).str.lower() == "true"
 
 
+def _cta_with_specificity_frame() -> pd.DataFrame:
+    """CTA table with machine-readable specificity decisions joined in."""
+    return _with_specificity_columns(_cta_frame())
+
+
+def _canonical_filtered_mask(df: pd.DataFrame) -> pd.Series:
+    """Rows in the canonical CTA specificity tier, including low-expression CTAs.
+
+    ``passes_filters`` is the raw HPA reproductive-restriction filter. Public CTA
+    set helpers use the explicit specificity decision on top of that raw filter,
+    so audited demotions are excluded from defaults even if they otherwise pass
+    the mechanical HPA gate.
+    """
+    if {"specificity_action", "specificity_status"} <= set(df.columns):
+        action = df["specificity_action"].astype(str)
+        status = df["specificity_status"].astype(str)
+        return action.eq("include_default") | status.eq("canonical_low_expression")
+    return passes_filters_mask(df)
+
+
+def _canonical_default_mask(df: pd.DataFrame) -> pd.Series:
+    """Rows in the recommended expressed canonical CTA default set."""
+    if "specificity_action" in df.columns:
+        return df["specificity_action"].astype(str).eq("include_default")
+    mask = passes_filters_mask(df)
+    if "never_expressed" in df.columns:
+        never = df["never_expressed"].astype(str).str.lower() == "true"
+        never = never & ~_never_expressed_rescue_mask(df)
+        mask = mask & ~never
+    return mask
+
+
 def _cta_by_column(
     column: str,
     *,
     filtered_only: bool = False,
     exclude_never_expressed: bool = False,
 ) -> set[str]:
-    df = _cta_frame()
+    df = _cta_with_specificity_frame() if filtered_only else _cta_frame()
     mask = pd.Series(True, index=df.index)
-    if filtered_only:
-        mask = passes_filters_mask(df)
-    if exclude_never_expressed and "never_expressed" in df.columns:
+    if filtered_only and exclude_never_expressed:
+        mask = _canonical_default_mask(df)
+    elif filtered_only:
+        mask = _canonical_filtered_mask(df)
+    elif exclude_never_expressed and "never_expressed" in df.columns:
         never = df["never_expressed"].astype(str).str.lower() == "true"
         never = never & ~_never_expressed_rescue_mask(df)
         mask = mask & ~never
@@ -596,23 +630,28 @@ def _all_by_column(column: str) -> set[str]:
 
 
 def cta_gene_names() -> set[str]:
-    """CTA gene symbols that pass the HPA filter AND are expressed (>= 2 nTPM
-    somewhere) — the recommended default set."""
+    """Canonical default CTA gene symbols: genes with explicit specificity action
+    ``include_default`` after HPA filtering, never-expressed rescue, and audited
+    specificity demotions."""
     return _cta_by_column("Symbol", filtered_only=True, exclude_never_expressed=True)
 
 
 def cta_gene_ids() -> set[str]:
-    """CTA Ensembl gene IDs that pass the HPA filter AND are expressed."""
+    """Canonical default CTA Ensembl gene IDs."""
     return _cta_by_column("Ensembl_Gene_ID", filtered_only=True, exclude_never_expressed=True)
 
 
 def cta_filtered_gene_names() -> set[str]:
-    """All CTA symbols passing the HPA filter (including never-expressed)."""
+    """Canonical filtered CTA symbols, including low-expression CTAs.
+
+    This is stricter than the raw ``passes_filters`` column when a row has an
+    explicit specificity-audit demotion.
+    """
     return _cta_by_column("Symbol", filtered_only=True)
 
 
 def cta_filtered_gene_ids() -> set[str]:
-    """All CTA Ensembl gene IDs passing the HPA filter (including never-expressed)."""
+    """Canonical filtered CTA Ensembl gene IDs, including low-expression CTAs."""
     return _cta_by_column("Ensembl_Gene_ID", filtered_only=True)
 
 
@@ -637,12 +676,12 @@ def cta_unfiltered_gene_ids() -> set[str]:
 
 
 def cta_excluded_gene_names() -> set[str]:
-    """Candidate CTAs that FAIL the reproductive-restriction filter (somatic leakage)."""
+    """Candidate CTAs outside the canonical specificity tier."""
     return cta_unfiltered_gene_names() - cta_filtered_gene_names()
 
 
 def cta_excluded_gene_ids() -> set[str]:
-    """Candidate CTA Ensembl IDs that fail the reproductive-restriction filter."""
+    """Candidate CTA Ensembl IDs outside the canonical specificity tier."""
     return cta_unfiltered_gene_ids() - cta_filtered_gene_ids()
 
 
@@ -698,10 +737,10 @@ def cta_by_axes(
     table with no MS column, the result is deliberately empty rather than an
     accidentally unfiltered set.
     """
-    df = _cta_frame()
+    df = _cta_with_specificity_frame()
     if column not in df.columns:
         return set()
-    mask = passes_filters_mask(df) if filtered_only else pd.Series(True, index=df.index)
+    mask = _canonical_filtered_mask(df) if filtered_only else pd.Series(True, index=df.index)
     for axis_col, values in (
         ("restriction", restriction),
         ("protein_restriction", protein_restriction),
