@@ -468,6 +468,116 @@ def test_recount3_source_from_registry_loads_packaged_routes():
     assert source.sample_to_cancer_code({"origin": "lung"}, "") is None
 
 
+def test_treehouse_source_from_registry_loads_direct_cohort_routes():
+    source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01")
+
+    assert source.source_id == "treehouse-polya-25-01"
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01"
+    assert source.tpm_file.startswith("Tumor-25.01-Polya")
+    assert source.clinical_file.startswith("clinical_Treehouse")
+    assert len(source.cohorts) == 26
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["SARC_EWS"].disease_label == "Ewing sarcoma"
+    assert by_code["SARC_MPNST"].group == "sarc_rare_direct"
+    assert by_code["SARC_GIST"].group == "sarc_subtypes"
+
+    rare = expression_builders.treehouse_cohorts_for_group("sarc_rare_direct")
+    assert "SARC_MPNST" in {cohort.cancer_code for cohort in rare}
+
+    ribod = expression_builders.treehouse_source_from_registry("treehouse-ribod-25-01")
+    assert [cohort.cancer_code for cohort in ribod.cohorts] == ["SARC_CHOR", "RB"]
+
+
+def test_treehouse_sample_ids_filter_disease_and_tcga_selection():
+    clinical = pd.DataFrame(
+        [
+            {"th_dataset_id": "TREEHOUSE-1", "disease": "Ewing sarcoma"},
+            {"th_dataset_id": "TREEHOUSE-2", "disease": "ewing sarcoma"},
+            {"th_dataset_id": "TCGA-AB-1234-01A", "disease": "Ewing sarcoma"},
+            {"th_dataset_id": "TCGA-XY-9999-01A", "disease": "osteosarcoma"},
+        ]
+    )
+    cohort = expression_builders.TreehouseCohort("SARC_EWS", "Ewing sarcoma")
+    assert expression_builders.treehouse_sample_ids(clinical, cohort) == [
+        "TREEHOUSE-1",
+        "TREEHOUSE-2",
+        "TCGA-AB-1234-01A",
+    ]
+
+    tcga = expression_builders.TreehouseCohort(
+        "SARC_EWS",
+        "Ewing sarcoma",
+        selection="tcga",
+    )
+    assert expression_builders.treehouse_sample_ids(clinical, tcga) == ["TCGA-AB-1234-01A"]
+
+    unsupported = expression_builders.TreehouseCohort(
+        "SARC_EWS",
+        "Ewing sarcoma",
+        selection="pam50:BRCA_Basal",
+    )
+    with pytest.raises(ValueError, match="unsupported Treehouse cohort selection"):
+        expression_builders.treehouse_sample_ids(clinical, unsupported)
+
+
+def test_build_treehouse_source_matrices_writes_canonical_artifacts(tmp_path):
+    clinical_path = tmp_path / "clinical.tsv"
+    pd.DataFrame(
+        [
+            {"th_dataset_id": "SAMPLE_A", "disease": "synthetic tumor"},
+            {"th_dataset_id": "SAMPLE_B", "disease": "Synthetic Tumor"},
+            {"th_dataset_id": "CONTROL", "disease": "other"},
+        ]
+    ).to_csv(clinical_path, sep="\t", index=False)
+    tpm_path = tmp_path / "treehouse.tsv"
+    pd.DataFrame(
+        {
+            "Gene": ["TP53", "EGFR"],
+            "SAMPLE_A": np.log2(np.array([2.0, 1.0]) + 1.0),
+            "SAMPLE_B": np.log2(np.array([4.0, 0.0]) + 1.0),
+            "CONTROL": np.log2(np.array([100.0, 100.0]) + 1.0),
+        }
+    ).to_csv(tpm_path, sep="\t", index=False)
+    source = expression_builders.TreehouseSource(
+        source_id="synthetic-treehouse",
+        source_cohort="SYNTHETIC_TREEHOUSE",
+        cancer_code="CODE_A",
+        tpm_file=tpm_path.name,
+        clinical_file=clinical_path.name,
+        source_project="Treehouse",
+        cohorts=(
+            expression_builders.TreehouseCohort(
+                "CODE_A",
+                "synthetic tumor",
+                extra_notes="Synthetic cohort note.",
+            ),
+        ),
+        notes="Synthetic source note.",
+        pipeline_stem="synthetic_treehouse",
+    )
+
+    result = expression_builders.build_treehouse_source_matrices(source, cache_dir=tmp_path)
+
+    assert set(result.matrix_paths) == {"CODE_A"}
+    out = pd.read_parquet(result.matrix_paths["CODE_A"]).set_index("Symbol")
+    assert list(out.columns) == ["Ensembl_Gene_ID", "SAMPLE_A", "SAMPLE_B"]
+    np.testing.assert_allclose(
+        out.loc["TP53", ["SAMPLE_A", "SAMPLE_B"]].astype(float).to_numpy(),
+        [2.0, 4.0],
+    )
+    np.testing.assert_allclose(
+        out.loc["EGFR", ["SAMPLE_A", "SAMPLE_B"]].astype(float).to_numpy(),
+        [1.0, 0.0],
+    )
+    assert result.sidecar_paths["mapping_audit"].exists()
+    assert result.sidecar_paths["parse_diagnostics"].exists()
+    assert result.sidecar_paths["summary_rows"].exists()
+    assert result.summary_rows["notes"].str.contains("Synthetic cohort note").all()
+    summary = result.summary_rows.set_index("Symbol")
+    assert summary.loc["TP53", "TPM_median"] == 3.0
+    assert set(result.sample_qc["sample_id"]) == {"SAMPLE_A", "SAMPLE_B"}
+
+
 def test_recount3_gene_sums_to_tpm_length_normalizes_and_collapses_versions():
     gene_sums = pd.DataFrame(
         {"S1": [1000.0, 1000.0], "S2": [0.0, 500.0]},
@@ -699,6 +809,54 @@ def test_build_recount3_script_uses_registry_config(tmp_path, monkeypatch, capsy
     assert mod.main(["synthetic-recount3", "--cache-dir", str(tmp_path / "cache")]) == 0
     stdout = capsys.readouterr().out
     assert '"source_id": "synthetic-recount3"' in stdout
+    assert '"CODE_A": 1' in stdout
+
+
+def test_build_treehouse_script_uses_registry_config(tmp_path, monkeypatch, capsys):
+    mod = _load_script("build_treehouse_source")
+    source = expression_builders.TreehouseSource(
+        source_id="synthetic-treehouse",
+        source_cohort="SYNTHETIC_TREEHOUSE",
+        cancer_code="CODE_A",
+        tpm_file="treehouse.tsv",
+        clinical_file="clinical.tsv",
+        cohorts=(expression_builders.TreehouseCohort("CODE_A", "synthetic tumor"),),
+    )
+
+    def _fake_build(source_obj, *, cache_dir, output_dir=None, **_kwargs):
+        assert source_obj is source
+        assert Path(cache_dir) == tmp_path / "cache"
+        assert output_dir is None
+        matrix = pd.DataFrame(
+            {
+                "Ensembl_Gene_ID": ["ENSG00000141510"],
+                "Symbol": ["TP53"],
+                "S1": [10.0],
+            }
+        )
+        return expression_builders.SourceMatrixBuildResult(
+            source=source,
+            matrices={"CODE_A": matrix},
+            matrix_paths={"CODE_A": tmp_path / "CODE_A_per_sample_tpm.parquet"},
+            summary_rows=pd.DataFrame(
+                columns=list(expression_builders.REFERENCE_EXPRESSION_COLUMNS)
+            ),
+            mapping_audit=pd.DataFrame(),
+            parse_diagnostics=pd.DataFrame(),
+            sample_qc=pd.DataFrame(),
+            sidecar_paths={"mapping_audit": tmp_path / "mapping_audit.csv"},
+        )
+
+    monkeypatch.setattr(
+        mod,
+        "treehouse_source_from_registry",
+        lambda source_id, registry_path=None: source,
+    )
+    monkeypatch.setattr(mod, "build_treehouse_source_matrices", _fake_build)
+
+    assert mod.main(["synthetic-treehouse", "--cache-dir", str(tmp_path / "cache")]) == 0
+    stdout = capsys.readouterr().out
+    assert '"source_id": "synthetic-treehouse"' in stdout
     assert '"CODE_A": 1' in stdout
 
 
