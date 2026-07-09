@@ -40,22 +40,26 @@ cohort/source is pooled or source-scoped. For example `CRC_MSI` is a
 `molecular_subtype` under `CRC` but remains a source-scope clinical evidence
 row, while `OV` is an anatomical grouping and `FTC` / `PPC` are anatomical
 cancer types. Pure clinical fact scopes such as `NET_NONPANCREATIC` and
-`NEN_G3_EXTRAPULMONARY` use `ontology_level="evidence_scope"` so they do not
-look like groupings with missing children.
+`NEN_EXTRAPULMONARY_HG` use `ontology_level="evidence_scope"` so they do not
+look like groupings with missing children. Differentiation and grade are
+orthogonal sparse axes: use `differentiation="NEC"` for native neuroendocrine
+lineage labels, or `grade_tier="high"` for normalized high-grade rows, without
+treating either one as a parentless cancer type.
 
 Classifiability is a separate curated axis. Use `is_classification_target`,
 `classification_target_codes`, or `cancer_type_records(classification_target=True)`
 when a downstream sample classifier needs codes a sample can be assigned to.
-Pure source-scope evidence rows such as `CRC_MSI`, `NET_NONPANCREATIC`, and
-`NEN_G3_EXTRAPULMONARY` remain available for TMB/ICI lookups, but are not
-sample-classification targets. This flag is intentionally independent of
-expression-reference availability.
+Non-target grouping and source-scope rows such as `NEN`, `NET`, `NEC`, `RCC`,
+`THYM_EPITHELIAL`, `CRC_MSI`, `NET_NONPANCREATIC`, and
+`NEN_EXTRAPULMONARY_HG` remain available for expression pooling or TMB/ICI
+lookups, but are not sample-classification targets. This flag is intentionally
+independent of expression-reference availability.
 
 Computed expression pools are also explicit. Use `computed_union_codes()` for
 the canonical set of rows whose expression/reference values are member unions;
 this follows `expression_source="computed"` and includes both broad groupings
-(`CRC`, `NET`, `SARC`) and typed tiers with computed references
-(`SARC_RMS`, `SARC_LPS`, `SARC_ESS`, `NEC_LUNG`).
+(`CRC`, `RCC`, `NEN`, `NET`, `NEC`, `THYM_EPITHELIAL`, `SARC`) and typed tiers
+with computed references (`SARC_RMS`, `SARC_LPS`, `SARC_ESS`, `NEC_LUNG`).
 
 ```python
 from oncoref import cancer_ontology, cohorts, expression

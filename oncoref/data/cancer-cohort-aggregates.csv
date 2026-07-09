@@ -17,3 +17,17 @@ CRC,READ,organ rollup (colorectal: rectum curated as colorectal)
 SARC_ESS,SARC_ESS_LG,histology rollup (endometrial stromal sarcoma grades)
 SARC_ESS,SARC_ESS_HG,histology rollup (endometrial stromal sarcoma grades)
 NEC_LUNG,NEC_LUNG_LARGECELL,histology rollup (pulmonary high-grade neuroendocrine carcinoma)
+NEN,NET_PANCREAS,neuroendocrine neoplasm rollup (well-differentiated NET)
+NEN,NET_MIDGUT,neuroendocrine neoplasm rollup (well-differentiated NET)
+NEN,NET_RECTAL,neuroendocrine neoplasm rollup (well-differentiated NET)
+NEN,NET_LUNG,neuroendocrine neoplasm rollup (well-differentiated NET)
+NEN,NEC_LUNG_LARGECELL,neuroendocrine neoplasm rollup (high-grade NEC)
+NEN,SCLC,neuroendocrine neoplasm rollup (high-grade NEC)
+NEN,NEC_MERKEL,neuroendocrine neoplasm rollup (high-grade NEC)
+NEC,NEC_LUNG_LARGECELL,high-grade neuroendocrine carcinoma rollup
+NEC,SCLC,high-grade neuroendocrine carcinoma rollup
+NEC,NEC_MERKEL,high-grade neuroendocrine carcinoma rollup
+RCC,KICH,renal cell carcinoma rollup
+RCC,KIRC,renal cell carcinoma rollup
+RCC,KIRP,renal cell carcinoma rollup
+THYM_EPITHELIAL,THYM,thymic epithelial tumor rollup (available expression matrix)

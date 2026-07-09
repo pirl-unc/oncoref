@@ -44,6 +44,7 @@ REGISTRY_COLUMNS = [
     "mixture_cohort",
     "pediatric",
     "differentiation",
+    "grade_tier",
     "viral_etiology",
     "viral_agent",
     "fusion_driven",
