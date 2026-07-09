@@ -368,13 +368,15 @@ artifacts, this source-union mode intentionally rejects `format="wide"`,
 reference artifacts remain part of the expression-artifact rebuild work.
 
 For compatibility with pirlygenes reference-expression consumers, the accessor
-can also fold identical loci at read time. Use
+also exposes the gene-to-proteoform bridge columns on every long-form row:
+`Proteoform_ID` is the cDNA/read-recovery identity that the row maps to, and
+`Member_Ensembl_Gene_IDs` is the row's member ENSG list. Without a collapse flag
+this is only an annotation; it does not fold rows. Use
 `collapse_cdna_identical=True` for the read-recovery space: byte-identical CDS
 groups plus the curated proteoform-collapse overrides. Use
 `collapse_protein_identical=True` for the genome-wide identical-protein space.
 Set at most one. These modes sum `expression`, `q1`, and `q3` in linear TPM
-space inside each source context, add `Proteoform_ID` and
-`Member_Ensembl_Gene_IDs` in long output, and leave wide output in the historical
+space inside each source context and leave wide output in the historical
 `Ensembl_Gene_ID`, `Symbol`, value-column shape.
 
 Use `expression.cancer_reference_expression_availability()` before delegating a

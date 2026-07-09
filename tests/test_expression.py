@@ -1502,6 +1502,8 @@ def test_cancer_reference_expression_long_and_wide(monkeypatch):
     assert list(long.columns) == [
         "Ensembl_Gene_ID",
         "Symbol",
+        "Proteoform_ID",
+        "Member_Ensembl_Gene_IDs",
         "cancer_code",
         "normalization",
         "source_cohort",
@@ -1584,6 +1586,46 @@ def test_cancer_reference_expression_can_return_pirlygenes_legacy_gene_ids(monke
 def test_cancer_reference_expression_bad_gene_id_style():
     with pytest.raises(ValueError, match="gene_id_style"):
         expression.cancer_reference_expression("PRAD", gene_id_style="legacy")
+
+
+def test_cancer_reference_expression_adds_proteoform_bridge_without_collapse(monkeypatch):
+    pct = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [
+                "ENSG00000154545",  # MAGED4 cDNA-identical group member
+                "ENSG00000187243",  # MAGED4B cDNA-identical group member
+                "ENSG00000141510",
+            ],
+            "Symbol": ["MAGED4", "MAGED4B", "TP53"],
+            "p25": [1.0, 10.0, 100.0],
+            "p50": [2.0, 20.0, 200.0],
+            "p75": [3.0, 30.0, 300.0],
+        }
+    )
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
+
+    out = expression.cancer_reference_expression("x", include_provenance=False)
+
+    assert list(out.columns) == [
+        "Ensembl_Gene_ID",
+        "Symbol",
+        "Proteoform_ID",
+        "Member_Ensembl_Gene_IDs",
+        "cancer_code",
+        "normalization",
+        "expression",
+        "q1",
+        "q3",
+    ]
+    assert len(out) == 3
+    by_id = out.set_index("Ensembl_Gene_ID")
+    assert by_id.loc["ENSG00000154545", "Proteoform_ID"] == "MAGED4"
+    assert by_id.loc["ENSG00000187243", "Proteoform_ID"] == "MAGED4"
+    assert by_id.loc["ENSG00000154545", "Member_Ensembl_Gene_IDs"] == "ENSG00000154545"
+    assert by_id.loc["ENSG00000187243", "Member_Ensembl_Gene_IDs"] == "ENSG00000187243"
+    assert by_id.loc["ENSG00000141510", "Proteoform_ID"] == "ENSG00000141510"
 
 
 def test_cancer_reference_expression_cdna_identical_collapse(monkeypatch):
@@ -1768,6 +1810,8 @@ def test_cancer_reference_expression_missing_empty_and_raise(monkeypatch):
     assert list(empty.columns) == [
         "Ensembl_Gene_ID",
         "Symbol",
+        "Proteoform_ID",
+        "Member_Ensembl_Gene_IDs",
         "cancer_code",
         "normalization",
         "source_cohort",
