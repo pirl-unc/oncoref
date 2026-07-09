@@ -105,8 +105,24 @@ def test_canonical_cancer_code_is_pure():
 
 def test_registry_has_core_columns():
     df = cancer_types.cancer_type_registry()
-    for col in ("code", "name", "family", "primary_tissue", "parent_code"):
+    for col in (
+        "code",
+        "name",
+        "family",
+        "primary_tissue",
+        "parent_code",
+        "reference_source",
+        "classification_reference_code",
+        "is_classification_target",
+    ):
         assert col in df.columns
+    records = df.set_index("code")
+    assert records.loc["CRC_MSI", "reference_source"] == "member_union"
+    assert records.loc["CRC_MSI", "classification_reference_code"] == "CRC_MSI"
+    assert bool(records.loc["CRC_MSI", "is_classification_target"]) is True
+    assert records.loc["STAD_MSI", "reference_source"] == "parent"
+    assert records.loc["STAD_MSI", "classification_reference_code"] == "STAD"
+    assert bool(records.loc["STAD_MSI", "is_classification_target"]) is False
     assert "PRAD" in set(df["code"])
 
 
@@ -382,16 +398,20 @@ def test_computed_union_and_evidence_scope_semantics_are_consistent():
     )
 
 
-def test_classification_target_flag_distinguishes_response_scopes():
+def test_reference_source_enum_drives_classification_targets():
     records = cancer_types.cancer_type_records(
         [
             "CRC_MSI",
+            "COAD_MSI",
+            "READ_MSI",
             "NEN_EXTRAPULMONARY_HG",
             "NET_NONPANCREATIC",
             "NEN",
             "NET",
             "NEC",
             "SARC",
+            "SARC_LPS",
+            "STAD_MSI",
             "CRC",
             "NSCLC",
             "OV",
@@ -399,52 +419,60 @@ def test_classification_target_flag_distinguishes_response_scopes():
             "SGC",
             "RCC",
             "RCC_NCC",
+            "RCC_NCC_UNCLASSIFIED",
             "THYM_EPITHELIAL",
+            "THYMCA",
             "NEC_LUNG",
         ]
     ).set_index("code")
 
-    non_targets = {
+    assert set(records.loc[records["reference_source"] == "own_cohort"].index) == {
+        "COAD_MSI",
+        "READ_MSI",
+        "OV",
+    }
+    assert set(records.loc[records["reference_source"] == "member_union"].index) == {
         "CRC_MSI",
-        "RCC",
-        "RCC_NCC",
-        "THYM_EPITHELIAL",
         "NEN",
         "NET",
-        "NET_NONPANCREATIC",
-        "NEN_EXTRAPULMONARY_HG",
         "NEC",
+        "SARC",
+        "SARC_LPS",
+        "CRC",
+        "NSCLC",
+        "BTC",
+        "SGC",
+        "RCC",
+        "THYM_EPITHELIAL",
         "NEC_LUNG",
     }
-    assert set(records.loc[~records["is_classification_target"], :].index) == non_targets
-    assert cancer_types.cancer_type_codes(classification_target=False) == [
-        "CRC_MSI",
-        "RCC",
+    assert set(records.loc[records["reference_source"] == "parent"].index) == {
+        "STAD_MSI",
+        "RCC_NCC_UNCLASSIFIED",
+        "THYMCA",
+    }
+    assert set(records.loc[records["reference_source"] == "none"].index) == {
         "RCC_NCC",
-        "THYM_EPITHELIAL",
-        "NEN",
-        "NET",
         "NET_NONPANCREATIC",
         "NEN_EXTRAPULMONARY_HG",
-        "NEC",
-        "NEC_LUNG",
-    ]
-    assert cancer_types.cancer_type_codes(classification_target="false") == [
-        "CRC_MSI",
-        "RCC",
+    }
+
+    non_targets = {
         "RCC_NCC",
-        "THYM_EPITHELIAL",
-        "NEN",
-        "NET",
+        "RCC_NCC_UNCLASSIFIED",
+        "STAD_MSI",
+        "THYMCA",
         "NET_NONPANCREATIC",
         "NEN_EXTRAPULMONARY_HG",
-        "NEC",
-        "NEC_LUNG",
-    ]
+    }
+    assert not records.loc[list(non_targets), "is_classification_target"].any()
+    assert (
+        set(records.index[records["is_classification_target"]]) == set(records.index) - non_targets
+    )
     with pytest.raises(ValueError, match="classification_target"):
         cancer_types.cancer_type_codes(classification_target="maybe")
 
-    for code in ["SARC", "CRC", "NSCLC", "OV", "BTC", "SGC"]:
+    for code in ["CRC_MSI", "SARC", "CRC", "NET", "NSCLC", "OV", "BTC", "SGC"]:
         assert bool(records.loc[code, "is_classification_target"]) is True
         assert cancer_types.is_classification_target(code) is True
 
@@ -452,12 +480,29 @@ def test_classification_target_flag_distinguishes_response_scopes():
         assert cancer_types.is_classification_target(code) is False
         assert code not in cancer_types.classification_target_codes()
 
+    assert cancer_types.classification_target_codes() == cancer_types.cancer_type_codes(
+        reference_source={"own_cohort", "member_union"}
+    )
+    assert cancer_types.reference_source_codes("member_union") == cancer_types.cancer_type_codes(
+        reference_source="member_union"
+    )
+    assert cancer_types.cancer_type_reference_source("CRC_MSI") == "member_union"
+    assert cancer_types.cancer_type_reference_code("CRC_MSI") == "CRC_MSI"
+    assert cancer_types.cancer_type_reference_source("STAD_MSI") == "parent"
+    assert cancer_types.cancer_type_reference_code("STAD_MSI") == "STAD"
+    assert cancer_types.cancer_type_reference_source("NET_NONPANCREATIC") == "none"
+    assert cancer_types.cancer_type_reference_code("NET_NONPANCREATIC") == "NET"
+
     assert cancer_types.is_classification_target(None) is False
-    assert cd.is_classification_target("NET") is False
+    assert cancer_types.cancer_type_reference_source(None) is None
+    assert cancer_types.cancer_type_reference_code(None) is None
+    assert cd.is_classification_target("NET") is True
     assert (
         cd.cancer_ontology.classification_target_codes()
         == cancer_types.classification_target_codes()
     )
+    assert cd.cancer_ontology.cancer_type_reference_source("CRC_MSI") == "member_union"
+    assert cd.cancer_ontology.cancer_type_reference_code("THYMCA") == "THYM_EPITHELIAL"
 
 
 def test_cancer_type_siblings_use_parent_hierarchy():
@@ -557,6 +602,8 @@ def test_expression_reference_coverage_contract():
         "lineage_group",
         "ontology_level",
         "ontology_kind",
+        "reference_source",
+        "classification_reference_code",
         "ontology_depth",
         "has_expression_reference",
         "has_direct_expression_reference",
@@ -579,6 +626,8 @@ def test_expression_reference_coverage_contract():
 
     keyed = coverage.set_index("code")
     assert bool(keyed.loc["COAD_MSI", "has_expression_reference"]) is True
+    assert keyed.loc["COAD_MSI", "reference_source"] == "own_cohort"
+    assert keyed.loc["COAD_MSI", "classification_reference_code"] == "COAD_MSI"
     assert bool(keyed.loc["COAD_MSI", "has_direct_expression_reference"]) is True
     assert bool(keyed.loc["COAD_MSI", "has_computed_expression_reference"]) is False
     assert keyed.loc["COAD_MSI", "expression_reference_kind"] == "observed_bulk"
@@ -587,46 +636,54 @@ def test_expression_reference_coverage_contract():
     assert keyed.loc["COAD_MSI", "gene_id_space"] == "oncoref_canonical_ensg"
 
     assert bool(keyed.loc["CRC_MSI", "has_direct_expression_reference"]) is False
-    assert keyed.loc["CRC_MSI", "consumer_recommendation"] == "molecular_only"
+    assert bool(keyed.loc["CRC_MSI", "has_computed_expression_reference"]) is True
+    assert keyed.loc["CRC_MSI", "reference_source"] == "member_union"
+    assert keyed.loc["CRC_MSI", "classification_reference_code"] == "CRC_MSI"
+    assert keyed.loc["CRC_MSI", "computed_expression_member_codes"] == ("COAD_MSI", "READ_MSI")
+    assert keyed.loc["CRC_MSI", "consumer_recommendation"] == "computed_reference"
     assert keyed.loc["CRC_MSI", "molecular_definition_kind"] == ("subtype_group",)
-    assert keyed.loc["CRC_MSI", "missing_reason"] == (
-        "molecular_definition_without_expression_matrix"
-    )
+    assert pd.isna(keyed.loc["CRC_MSI", "missing_reason"])
 
     assert bool(keyed.loc["ASTB", "has_direct_expression_reference"]) is False
+    assert keyed.loc["ASTB", "reference_source"] == "none"
     assert keyed.loc["ASTB", "consumer_recommendation"] == "molecular_only"
     assert keyed.loc["ASTB", "molecular_definition_kind"] == ("fusion",)
 
 
 def test_expression_reference_coverage_computed_groupings():
     coverage = cancer_types.expression_reference_coverage(
-        ["NET", "CRC", "NSCLC", "BTC", "SGC", "SARC", "OV"]
+        ["NET", "CRC", "CRC_MSI", "NSCLC", "BTC", "SGC", "SARC", "SARC_LPS", "OV", "STAD_MSI"]
     ).set_index("code")
 
-    for code in ["NET", "CRC", "NSCLC", "BTC", "SGC"]:
+    for code in ["NET", "CRC", "CRC_MSI", "NSCLC", "BTC", "SGC", "SARC", "SARC_LPS"]:
         row = coverage.loc[code]
         assert bool(row["has_expression_reference"]) is True
         assert bool(row["has_direct_expression_reference"]) is False
         assert bool(row["has_computed_expression_reference"]) is True
         assert row["expression_reference_kind"] == "computed_union"
         assert row["expression_reference_source_code"] == code
+        assert row["reference_source"] == "member_union"
+        assert row["classification_reference_code"] == code
         assert row["consumer_recommendation"] == "computed_reference"
         assert pd.isna(row["missing_reason"])
         assert row["computed_expression_member_codes"]
 
-    # Existing SARC/OV behavior is deliberately unchanged by the source-scope fix:
-    # SARC still has no direct reference row here, while OV remains a direct matrix.
-    assert bool(coverage.loc["SARC", "has_expression_reference"]) is False
-    assert coverage.loc["SARC", "expression_reference_kind"] == "none"
+    assert coverage.loc["CRC_MSI", "computed_expression_member_codes"] == ("COAD_MSI", "READ_MSI")
     assert bool(coverage.loc["OV", "has_direct_expression_reference"]) is True
     assert bool(coverage.loc["OV", "has_computed_expression_reference"]) is False
     assert coverage.loc["OV", "expression_reference_kind"] == "observed_bulk"
+    assert coverage.loc["OV", "reference_source"] == "own_cohort"
+
+    assert bool(coverage.loc["STAD_MSI", "has_expression_reference"]) is False
+    assert coverage.loc["STAD_MSI", "reference_source"] == "parent"
+    assert coverage.loc["STAD_MSI", "classification_reference_code"] == "STAD"
+    assert coverage.loc["STAD_MSI", "consumer_recommendation"] == "parent_reference"
 
 
 def test_expression_reference_coverage_filters_and_empty_results():
     crc = cancer_types.expression_reference_coverage(subtype_group="MSI", under="CRC")
     assert crc["code"].tolist() == ["CRC_MSI", "COAD_MSI", "READ_MSI"]
-    assert set(crc["consumer_recommendation"]) == {"direct_reference", "molecular_only"}
+    assert set(crc["consumer_recommendation"]) == {"direct_reference", "computed_reference"}
 
     empty = cancer_types.expression_reference_coverage([])
     assert empty.empty

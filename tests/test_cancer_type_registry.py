@@ -97,10 +97,14 @@ def test_source_scoped_clinical_aggregates_are_not_expression_computed():
     assert records.loc["CRC_MSI", "expression_source"] == "curated"
     assert records.loc["CRC_MSI", "source_cohort"] == "LITERATURE_CURATED"
     assert bool(records.loc["CRC_MSI", "has_expression_matrix"]) is False
+    assert records.loc["CRC_MSI", "reference_source"] == "member_union"
+    assert records.loc["CRC_MSI", "classification_reference_code"] == "CRC_MSI"
+    assert cohort_aggregate_members("CRC_MSI") == ["COAD_MSI", "READ_MSI"]
 
     assert records.loc["NSCLC", "expression_source"] == "curated"
     assert records.loc["NSCLC", "source_cohort"] == "LITERATURE_CURATED"
     assert bool(records.loc["NSCLC", "has_expression_matrix"]) is False
+    assert records.loc["NSCLC", "reference_source"] == "member_union"
 
 
 def test_nec_merkel_registry_points_to_built_expression_source():

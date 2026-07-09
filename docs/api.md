@@ -46,20 +46,35 @@ orthogonal sparse axes: use `differentiation="NEC"` for native neuroendocrine
 lineage labels, or `grade_tier="high"` for normalized high-grade rows, without
 treating either one as a parentless cancer type.
 
-Classifiability is a separate curated axis. Use `is_classification_target`,
-`classification_target_codes`, or `cancer_type_records(classification_target=True)`
-when a downstream sample classifier needs codes a sample can be assigned to.
-Non-target grouping and source-scope rows such as `NEN`, `NET`, `NEC`, `RCC`,
-`THYM_EPITHELIAL`, `CRC_MSI`, `NET_NONPANCREATIC`, and
-`NEN_EXTRAPULMONARY_HG` remain available for expression pooling or TMB/ICI
-lookups, but are not sample-classification targets. This flag is intentionally
-independent of expression-reference availability.
+Expression/classification backing is explicit. Use `reference_source`,
+`cancer_type_reference_source()`, `cancer_type_reference_code()`, or
+`cancer_type_records(reference_source=...)` instead of inferring from
+`mixture_cohort` or from whether a code is anatomical or molecular. The enum is
+data-driven:
+
+- `own_cohort` — this code has its own separable expression cohort.
+- `member_union` — this code is backed by a union of expression-bearing member
+  cohorts and can be reported as a coarser call.
+- `parent` — this code carries an annotation/slice but should be reported at
+  its nearest reportable ancestor.
+- `none` — pure provenance or unsupported scope; walk up the tree if a coarser
+  call is needed.
+
+`is_classification_target`, `classification_target_codes`, and
+`cancer_type_records(classification_target=True)` are compatibility views over
+that enum: a code is returnable when `reference_source` is `own_cohort` or
+`member_union`. For example `COAD_MSI`, `COAD_MSS`, `READ_MSI`, and `READ_MSS`
+are `own_cohort` because the TCGA COAD/READ MSI partitions have separable
+expression; `CRC_MSI` is a legitimate `member_union` over
+`COAD_MSI ∪ READ_MSI`, not merely an annotation. A molecular slice only falls to
+`parent` when oncoref has not measured a separable cohort, as with the current
+STAD/UCEC molecular subtype rows.
 
 Computed expression pools are also explicit. Use `computed_union_codes()` for
-the canonical set of rows whose expression/reference values are member unions;
-this follows `expression_source="computed"` and includes both broad groupings
-(`CRC`, `RCC`, `NEN`, `NET`, `NEC`, `THYM_EPITHELIAL`, `SARC`) and typed tiers
-with computed references (`SARC_RMS`, `SARC_LPS`, `SARC_ESS`, `NEC_LUNG`).
+registry rows whose `expression_source="computed"` and
+`reference_source_codes("member_union")` for all reportable member-union
+references, including source-scope unions such as `CRC_MSI`, `NSCLC`, `BTC`, and
+`SGC`.
 
 ```python
 from oncoref import cancer_ontology, cohorts, expression
@@ -84,6 +99,9 @@ source_scope_msi = cancer_ontology.cancer_type_records(
 classification_targets = cancer_ontology.cancer_type_records(classification_target=True)
 clinical_fact_scopes = cancer_ontology.cancer_type_records(classification_target=False)
 computed_pools = cancer_ontology.computed_union_codes()
+member_union_refs = cancer_ontology.reference_source_codes("member_union")
+cancer_ontology.cancer_type_reference_source("CRC_MSI")
+cancer_ontology.cancer_type_reference_code("STAD_MSI")
 
 # The MMR/MSI classifier axis keeps positive, negative, and confounder classes
 # explicit. STAD_MSI exists as an ontology code, but expression_only=True
@@ -103,7 +121,7 @@ msi_crc[["code", "evidence_source_code", "normal_tissue_code", "hpa_tissues"]]
 cancer_ontology.cancer_type_reference_data(msi_crc)
 
 # Ask whether each ontology node has a direct expression reference, a computed
-# member-union reference, or only molecular/no expression evidence.
+# member-union reference, parent fallback, or no expression backing.
 cancer_ontology.expression_reference_coverage(subtype_group="MSI", under="CRC")
 cancer_ontology.coverage_for_cancer_type("ASTB")
 
@@ -120,10 +138,12 @@ cohorts.cohort_registry_df()
 `expression_reference_coverage()` is the ontology-wide readiness table for
 classifier consumers. It reports direct observed-bulk source-matrix coverage,
 computed member-union references for curated grouping/source-scope codes such as
-`NET`, `CRC`, `NSCLC`, `BTC`, and `SGC`, matched normal tissue availability,
+`NET`, `CRC`, `CRC_MSI`, `NSCLC`, `BTC`, and `SGC`, parent fallback via
+`classification_reference_code`, matched normal tissue availability,
 molecular/fusion-only definitions, canonical gene/proteoform space, data/source
 matrix versions, and a conservative `consumer_recommendation`:
-`direct_reference`, `computed_reference`, `molecular_only`, or `unsupported`.
+`direct_reference`, `computed_reference`, `parent_reference`, `molecular_only`,
+or `unsupported`.
 `has_direct_expression_reference` remains literal; computed groupings use
 `expression_reference_kind="computed_union"` and expose their pooled member codes
 in `computed_expression_member_codes`. The table intentionally does not
