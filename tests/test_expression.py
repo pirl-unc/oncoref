@@ -1776,7 +1776,7 @@ def test_cancer_reference_expression_summary_rows_qc_filtered_recomputes(monkeyp
     expression._reference_summary_source_table.cache_clear()
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: [])
     monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: ["X"])
-    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
     monkeypatch.setattr(
         expression,
         "cohort_stats",
@@ -1819,6 +1819,65 @@ def test_cancer_reference_expression_summary_rows_qc_filtered_recomputes(monkeyp
     assert out["source_cohort"].tolist() == ["SRC_X"]
     assert out["n_reference_samples"].tolist() == [7]
     assert out["expression"].tolist() == [2.0]
+
+
+def test_cancer_reference_expression_summary_rows_reports_no_samples_after_qc(monkeypatch):
+    stats = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1"],
+            "Symbol": ["A"],
+            "p25": [1.0],
+            "p50": [2.0],
+            "p75": [3.0],
+        }
+    )
+    qc = pd.DataFrame(
+        {
+            "sample_id": ["S1", "S2"],
+            "sample_qc_status": ["warn", "warn"],
+        }
+    )
+    seen = {}
+    expression._source_matrix_effective_sample_count.cache_clear()
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: [])
+    monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
+    monkeypatch.setattr(expression, "sample_expression_qc", lambda *a, **k: qc.copy())
+    monkeypatch.setattr(
+        expression,
+        "cohort_stats",
+        lambda code, **k: seen.update(code=code, **k) or stats.copy(),
+    )
+
+    empty = expression.cancer_reference_expression(
+        "x", reference_source="summary_rows", sample_qc="pass", on_missing="empty"
+    )
+
+    assert empty.empty
+    assert seen == {}
+    assert empty.attrs["missing_requests"][0]["missing_reason"] == (
+        "no_source_matrix_samples_matching_pass_qc"
+    )
+
+    availability = expression.cancer_reference_expression_availability(
+        "x", reference_source="summary_rows", sample_qc="pass"
+    )
+    assert availability["available"].tolist() == [False]
+    assert availability["missing_reason"].tolist() == ["no_source_matrix_samples_matching_pass_qc"]
+
+    out = expression.cancer_reference_expression(
+        "x", reference_source="summary_rows", sample_qc="pass_or_warn"
+    )
+
+    assert seen == {
+        "code": "X",
+        "normalize": "tpm_clean",
+        "auto_fetch": False,
+        "sample_qc": "pass_or_warn",
+    }
+    assert out["expression"].tolist() == [2.0]
+    assert out["sample_qc"].tolist() == ["pass_or_warn"]
+    expression._source_matrix_effective_sample_count.cache_clear()
 
 
 def test_cancer_reference_expression_wide_merges_by_gene_id_not_symbol(monkeypatch):
