@@ -38,10 +38,12 @@ referenced and documented as the public build-time API.
 from __future__ import annotations
 
 import gzip
+import json
 import os
 import re
 import shutil
 import tempfile
+import urllib.parse
 import urllib.request
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
@@ -967,12 +969,17 @@ def _treehouse_tcga_case_id(sample_id: str) -> str | None:
     return "-".join(text.split("-")[:3])
 
 
-def _treehouse_sample_matches_selection(row: Mapping, selection: str) -> bool:
+def _treehouse_sample_matches_selection(
+    row: Mapping,
+    selection: str,
+    *,
+    selection_case_sets: Mapping[str, set[str]] | None = None,
+) -> bool:
     """Return whether a Treehouse clinical row passes a declarative selector.
 
-    The initial oncoref-owned wrapper supports the selection grammar that can be
-    evaluated from the Treehouse clinical table alone. Molecular/histology
-    selectors that require cBioPortal/GDC side tables remain source-specific
+    Supports selectors that can be evaluated from the Treehouse clinical table
+    alone, plus GDC project membership via precomputed case sets. Molecular and
+    histology selectors that require cBioPortal/GDC labels remain source-specific
     follow-ups under #296.
     """
     selector = str(selection or "").strip()
@@ -980,15 +987,23 @@ def _treehouse_sample_matches_selection(row: Mapping, selection: str) -> bool:
         return True
     if selector == "tcga":
         return _treehouse_tcga_case_id(str(row.get("th_dataset_id", ""))) is not None
+    if selector.startswith("gdc_project:"):
+        case_sets = selection_case_sets or {}
+        if selector not in case_sets:
+            raise ValueError(f"Treehouse selector {selector!r} requires a precomputed GDC case set")
+        case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
+        return case_id in case_sets[selector] if case_id is not None else False
     raise ValueError(
         f"unsupported Treehouse cohort selection {selector!r}; "
-        "only '' and 'tcga' are registry-native so far"
+        "only '', 'tcga', and 'gdc_project:<TCGA-project>' are registry-native so far"
     )
 
 
 def treehouse_sample_ids(
     clinical: pd.DataFrame,
     cohort: TreehouseCohort,
+    *,
+    selection_case_sets: Mapping[str, set[str]] | None = None,
 ) -> list[str]:
     """Sample IDs in ``clinical`` matching one Treehouse cohort definition."""
     required = {"th_dataset_id", "disease"}
@@ -999,7 +1014,11 @@ def treehouse_sample_ids(
     subset = clinical.loc[disease.eq(cohort.disease_label.strip().lower())].copy()
     if cohort.selection:
         keep = subset.apply(
-            lambda row: _treehouse_sample_matches_selection(row.to_dict(), cohort.selection),
+            lambda row: _treehouse_sample_matches_selection(
+                row.to_dict(),
+                cohort.selection,
+                selection_case_sets=selection_case_sets,
+            ),
             axis=1,
         )
         subset = subset.loc[keep]
@@ -1010,6 +1029,77 @@ def treehouse_sample_ids(
             f"(disease_label={cohort.disease_label!r}, selection={cohort.selection!r})"
         )
     return ids
+
+
+def treehouse_gdc_case_project_map(
+    project_ids: Iterable[str],
+    *,
+    cache_path: str | Path | None = None,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """TCGA case submitter IDs and GDC project IDs for Treehouse splits."""
+    projects = sorted({str(project).strip() for project in project_ids if str(project).strip()})
+    if not projects:
+        return pd.DataFrame(columns=["submitter_id", "project_id"])
+    cache = Path(cache_path) if cache_path is not None else None
+    if cache is not None and cache.exists() and not force_download:
+        return pd.read_csv(cache)
+
+    filters = {
+        "op": "in",
+        "content": {
+            "field": "project.project_id",
+            "value": projects,
+        },
+    }
+    params = {
+        "filters": json.dumps(filters),
+        "fields": "submitter_id,project.project_id",
+        "format": "JSON",
+        "size": "5000",
+    }
+    url = "https://api.gdc.cancer.gov/cases?" + urllib.parse.urlencode(params)
+    with urllib.request.urlopen(url, timeout=60) as response:
+        hits = json.load(response)["data"]["hits"]
+    rows = [
+        {
+            "submitter_id": str(hit["submitter_id"]),
+            "project_id": str(hit["project"]["project_id"]),
+        }
+        for hit in hits
+    ]
+    out = pd.DataFrame(rows, columns=["submitter_id", "project_id"])
+    if cache is not None:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        out.to_csv(cache, index=False)
+    return out
+
+
+def _treehouse_selection_case_sets(
+    source: TreehouseSource,
+    *,
+    cache_dir: str | Path,
+    force_download: bool = False,
+) -> dict[str, set[str]]:
+    gdc_projects = {
+        cohort.selection.split(":", 1)[1]
+        for cohort in source.cohorts
+        if cohort.selection.startswith("gdc_project:")
+    }
+    if not gdc_projects:
+        return {}
+    cache_path = Path(cache_dir) / "derived" / f"{_artifact_stem(source.source_id)}_gdc_cases.csv"
+    case_map = treehouse_gdc_case_project_map(
+        gdc_projects,
+        cache_path=cache_path,
+        force_download=force_download,
+    )
+    case_sets: dict[str, set[str]] = {
+        f"gdc_project:{project_id}": set() for project_id in gdc_projects
+    }
+    for project_id, sub in case_map.groupby("project_id"):
+        case_sets[f"gdc_project:{project_id}"] = set(sub["submitter_id"].astype(str))
+    return case_sets
 
 
 def read_treehouse_tpm_columns(path: str | Path, sample_cols: Iterable[str]) -> pd.DataFrame:
@@ -1626,8 +1716,18 @@ def build_treehouse_source_matrices(
         clinical_file = _download(source.clinical_url, clinical_file, force=force_download)
 
     clinical = pd.read_csv(clinical_file, sep="\t")
+    selection_case_sets = _treehouse_selection_case_sets(
+        source,
+        cache_dir=cache,
+        force_download=force_download,
+    )
     buckets = {
-        cohort.cancer_code: treehouse_sample_ids(clinical, cohort) for cohort in source.cohorts
+        cohort.cancer_code: treehouse_sample_ids(
+            clinical,
+            cohort,
+            selection_case_sets=selection_case_sets,
+        )
+        for cohort in source.cohorts
     }
     all_samples = sorted({sample for samples in buckets.values() for sample in samples})
     if not all_samples:

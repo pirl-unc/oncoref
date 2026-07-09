@@ -514,6 +514,25 @@ def test_treehouse_source_from_registry_loads_tcga_subset_routes():
     assert {cohort.selection for cohort in tcga_direct} == {"tcga"}
 
 
+def test_treehouse_source_from_registry_loads_glioma_gdc_project_routes():
+    source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-glioma")
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_glioma_split"
+    assert source.cancer_code == ["GBM", "LGG"]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["GBM"].disease_label == "glioma"
+    assert by_code["GBM"].selection == "gdc_project:TCGA-GBM"
+    assert by_code["GBM"].effective_cache_stem == "tcga_gbm"
+    assert by_code["LGG"].selection == "gdc_project:TCGA-LGG"
+
+    glioma = expression_builders.treehouse_cohorts_for_group(
+        "tcga_glioma",
+        source_id="treehouse-polya-25-01-tcga-glioma",
+    )
+    assert [cohort.cancer_code for cohort in glioma] == ["GBM", "LGG"]
+
+
 def test_treehouse_sample_ids_filter_disease_and_tcga_selection():
     clinical = pd.DataFrame(
         [
@@ -544,6 +563,31 @@ def test_treehouse_sample_ids_filter_disease_and_tcga_selection():
     )
     with pytest.raises(ValueError, match="unsupported Treehouse cohort selection"):
         expression_builders.treehouse_sample_ids(clinical, unsupported)
+
+
+def test_treehouse_sample_ids_filter_gdc_project_selection():
+    clinical = pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-GB-0001-01A", "disease": "glioma"},
+            {"th_dataset_id": "TCGA-LG-0002-01A", "disease": "glioma"},
+            {"th_dataset_id": "TREEHOUSE-3", "disease": "glioma"},
+        ]
+    )
+    cohort = expression_builders.TreehouseCohort(
+        "GBM",
+        "glioma",
+        selection="gdc_project:TCGA-GBM",
+    )
+    case_sets = {"gdc_project:TCGA-GBM": {"TCGA-GB-0001"}}
+
+    assert expression_builders.treehouse_sample_ids(
+        clinical,
+        cohort,
+        selection_case_sets=case_sets,
+    ) == ["TCGA-GB-0001-01A"]
+
+    with pytest.raises(ValueError, match="requires a precomputed GDC case set"):
+        expression_builders.treehouse_sample_ids(clinical, cohort)
 
 
 def test_build_treehouse_source_matrices_writes_canonical_artifacts(tmp_path):
@@ -602,6 +646,76 @@ def test_build_treehouse_source_matrices_writes_canonical_artifacts(tmp_path):
     summary = result.summary_rows.set_index("Symbol")
     assert summary.loc["TP53", "TPM_median"] == 3.0
     assert set(result.sample_qc["sample_id"]) == {"SAMPLE_A", "SAMPLE_B"}
+
+
+def test_build_treehouse_source_matrices_splits_gdc_project_cohorts(
+    tmp_path,
+    monkeypatch,
+):
+    clinical_path = tmp_path / "clinical.tsv"
+    pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-GB-0001-01A", "disease": "glioma"},
+            {"th_dataset_id": "TCGA-LG-0002-01A", "disease": "glioma"},
+            {"th_dataset_id": "TREEHOUSE-3", "disease": "glioma"},
+        ]
+    ).to_csv(clinical_path, sep="\t", index=False)
+    tpm_path = tmp_path / "treehouse.tsv"
+    pd.DataFrame(
+        {
+            "Gene": ["TP53", "EGFR"],
+            "TCGA-GB-0001-01A": np.log2(np.array([2.0, 1.0]) + 1.0),
+            "TCGA-LG-0002-01A": np.log2(np.array([4.0, 0.0]) + 1.0),
+            "TREEHOUSE-3": np.log2(np.array([100.0, 100.0]) + 1.0),
+        }
+    ).to_csv(tpm_path, sep="\t", index=False)
+    source = expression_builders.TreehouseSource(
+        source_id="synthetic-treehouse-glioma",
+        source_cohort="SYNTHETIC_TREEHOUSE_TCGA",
+        cancer_code=["GBM", "LGG"],
+        tpm_file=tpm_path.name,
+        clinical_file=clinical_path.name,
+        source_project="Treehouse (TCGA samples)",
+        cohorts=(
+            expression_builders.TreehouseCohort(
+                "GBM",
+                "glioma",
+                selection="gdc_project:TCGA-GBM",
+                cache_stem="tcga_gbm",
+            ),
+            expression_builders.TreehouseCohort(
+                "LGG",
+                "glioma",
+                selection="gdc_project:TCGA-LGG",
+                cache_stem="tcga_lgg",
+            ),
+        ),
+    )
+
+    def fake_case_map(project_ids, *, cache_path=None, force_download=False):
+        assert set(project_ids) == {"TCGA-GBM", "TCGA-LGG"}
+        assert cache_path is not None
+        return pd.DataFrame(
+            {
+                "submitter_id": ["TCGA-GB-0001", "TCGA-LG-0002"],
+                "project_id": ["TCGA-GBM", "TCGA-LGG"],
+            }
+        )
+
+    monkeypatch.setattr(
+        expression_builders,
+        "treehouse_gdc_case_project_map",
+        fake_case_map,
+    )
+    result = expression_builders.build_treehouse_source_matrices(source, cache_dir=tmp_path)
+
+    assert set(result.matrix_paths) == {"GBM", "LGG"}
+    gbm = pd.read_parquet(result.matrix_paths["GBM"]).set_index("Symbol")
+    lgg = pd.read_parquet(result.matrix_paths["LGG"]).set_index("Symbol")
+    assert list(gbm.columns) == ["Ensembl_Gene_ID", "TCGA-GB-0001-01A"]
+    assert list(lgg.columns) == ["Ensembl_Gene_ID", "TCGA-LG-0002-01A"]
+    np.testing.assert_allclose(gbm.loc["TP53", "TCGA-GB-0001-01A"], 2.0)
+    np.testing.assert_allclose(lgg.loc["TP53", "TCGA-LG-0002-01A"], 4.0)
 
 
 def test_recount3_gene_sums_to_tpm_length_normalizes_and_collapses_versions():
