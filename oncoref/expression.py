@@ -2108,12 +2108,14 @@ def cancer_reference_expression(
     extras without a pirlygenes counterpart while keeping documented remap targets;
     ``include_gene_universe_flags=True`` appends row-level audit columns in long output.
     Neither option synthesizes missing biological rows.
-    ``collapse_cdna_identical=True`` or ``collapse_protein_identical=True`` sums
+    Long output always carries ``Proteoform_ID`` and ``Member_Ensembl_Gene_IDs`` so
+    gene-level and folded views share one schema. By default this is a bridge over
+    the cDNA/read-recovery identity space without folding rows. Set
+    ``collapse_cdna_identical=True`` or ``collapse_protein_identical=True`` to sum
     identical-locus rows in linear expression space before output. cDNA collapse is
     the read-recovery view (byte-identical CDS plus curated overrides); protein
-    collapse is the genome-wide identical-protein view. Set at most one. Long output
-    gains ``Proteoform_ID`` and ``Member_Ensembl_Gene_IDs`` columns; wide output keeps
-    the historical ``Ensembl_Gene_ID``/``Symbol`` plus value columns shape.
+    collapse is the genome-wide identical-protein view. Set at most one. Wide output
+    keeps the historical ``Ensembl_Gene_ID``/``Symbol`` plus value columns shape.
     Missing requested cohorts are omitted by default to preserve the historical
     behavior; pass ``on_missing="empty"`` to preserve a schema-stable empty result
     with missing-request metadata in ``df.attrs["missing_requests"]`` or
@@ -2230,11 +2232,19 @@ def cancer_reference_expression(
                 gene_id_style=gene_id_style,
                 alias_expand_remaps=gene_universe == "pirlygenes",
             )
+            if collapse_kind is None:
+                ref = _annotate_reference_proteoform_bridge(ref, kind="cdna")
             label = _REFERENCE_NORMALIZE_LABELS[mode]
             if format == "long":
-                value_cols = ["Ensembl_Gene_ID", "Symbol", "p25", "p50", "p75"]
-                if collapse_kind is not None:
-                    value_cols.extend(["Proteoform_ID", "Member_Ensembl_Gene_IDs"])
+                value_cols = [
+                    "Ensembl_Gene_ID",
+                    "Symbol",
+                    "p25",
+                    "p50",
+                    "p75",
+                    "Proteoform_ID",
+                    "Member_Ensembl_Gene_IDs",
+                ]
                 if include_gene_universe_flags:
                     value_cols.extend(_ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS)
                 part = ref[value_cols].copy()
@@ -2279,7 +2289,7 @@ def cancer_reference_expression(
                             include_request_metadata,
                             include_gene_universe_flags,
                             source_union_identity=source_union_identity,
-                            include_proteoform_columns=collapse_kind is not None,
+                            include_proteoform_columns=True,
                         )
                     ]
                 )
@@ -2296,7 +2306,7 @@ def cancer_reference_expression(
             include_request_metadata,
             include_gene_universe_flags,
             source_union_identity=reference_source == "summary_rows_all",
-            include_proteoform_columns=collapse_cdna_identical or collapse_protein_identical,
+            include_proteoform_columns=True,
         )
         if not long_parts:
             out = pd.DataFrame(columns=cols)
@@ -2885,6 +2895,24 @@ def _collapse_reference_identical_loci(
         if col not in keep:
             keep.append(col)
     return out.sort_values("_ord").reset_index(drop=True)[keep]
+
+
+def _annotate_reference_proteoform_bridge(df: pd.DataFrame, *, kind: str) -> pd.DataFrame:
+    """Add pirlygenes-compatible gene/proteoform bridge columns without folding rows."""
+    out = df.copy()
+    if "Proteoform_ID" not in out.columns:
+        if out.empty:
+            out["Proteoform_ID"] = pd.Series(dtype="object")
+        else:
+            member_to_identity, _ = _identical_locus_identity_maps(kind)
+            gene_ids = out["Ensembl_Gene_ID"].astype(str).map(unversioned)
+            out["Proteoform_ID"] = gene_ids.map(member_to_identity).fillna(gene_ids).to_numpy()
+    if "Member_Ensembl_Gene_IDs" not in out.columns:
+        if out.empty:
+            out["Member_Ensembl_Gene_IDs"] = pd.Series(dtype="object")
+        else:
+            out["Member_Ensembl_Gene_IDs"] = out["Ensembl_Gene_ID"].astype(str).to_numpy()
+    return out
 
 
 def _reference_long_columns(
