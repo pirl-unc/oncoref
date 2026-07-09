@@ -2115,10 +2115,12 @@ def cancer_reference_expression(
             "source_kind, source_cohort, exclude_microarray_proxy, and pool are "
             "only supported with reference_source='summary_rows_all'"
         )
-    if pool and format != "long":
-        raise ValueError("pool=True requires format='long'")
     if format not in ("long", "wide"):
         raise ValueError("format must be 'long' or 'wide'")
+    if reference_source == "summary_rows_all" and format != "long":
+        raise ValueError('reference_source="summary_rows_all" requires format="long"')
+    if pool and format != "long":
+        raise ValueError("pool=True requires format='long'")
     if on_missing not in ("omit", "empty", "raise"):
         raise ValueError("on_missing must be 'omit', 'empty', or 'raise'")
     if include_request_metadata and format != "long":
@@ -2127,7 +2129,13 @@ def cancer_reference_expression(
         raise ValueError("include_gene_universe_flags=True requires format='long'")
 
     requests = _reference_expression_requests(
-        cancer_types, modes, reference_source=reference_source, sample_qc=sample_qc
+        cancer_types,
+        modes,
+        reference_source=reference_source,
+        sample_qc=sample_qc,
+        source_kinds=source_kinds,
+        source_cohorts=source_cohorts,
+        exclude_microarray_proxy=exclude_microarray_proxy,
     )
     availability = _reference_expression_availability_for_requests(
         requests,
@@ -2202,6 +2210,13 @@ def cancer_reference_expression(
                     part["available"] = bool(request_row.available)
                     part["missing_reason"] = str(request_row.missing_reason)
                 part = part.rename(columns={"p50": "expression", "p25": "q1", "p75": "q3"})
+                source_union_identity = method == _REFERENCE_SUMMARY_ALL_METHOD
+                if source_union_identity:
+                    for col in _REFERENCE_SOURCE_UNION_IDENTITY_COLUMNS:
+                        if col in ref.columns:
+                            part[col] = ref[col].to_numpy()
+                        else:
+                            part[col] = pd.NA
                 if include_provenance:
                     if method == _REFERENCE_SUMMARY_ALL_METHOD:
                         for col in _REFERENCE_PROVENANCE_COLUMNS:
@@ -2226,6 +2241,7 @@ def cancer_reference_expression(
                             include_provenance,
                             include_request_metadata,
                             include_gene_universe_flags,
+                            source_union_identity=source_union_identity,
                         )
                     ]
                 )
@@ -2241,6 +2257,7 @@ def cancer_reference_expression(
             include_provenance,
             include_request_metadata,
             include_gene_universe_flags,
+            source_union_identity=reference_source == "summary_rows_all",
         )
         if not long_parts:
             out = pd.DataFrame(columns=cols)
@@ -2317,7 +2334,13 @@ def cancer_reference_expression_availability(
             "supported with reference_source='summary_rows_all'"
         )
     requests = _reference_expression_requests(
-        cancer_types, modes, reference_source=reference_source, sample_qc=sample_qc
+        cancer_types,
+        modes,
+        reference_source=reference_source,
+        sample_qc=sample_qc,
+        source_kinds=source_kinds,
+        source_cohorts=source_cohorts,
+        exclude_microarray_proxy=exclude_microarray_proxy,
     )
     return _reference_expression_availability_for_requests(
         requests,
@@ -2379,6 +2402,13 @@ _REFERENCE_PROVENANCE_COLUMNS = [
     "source_matrix_version",
 ]
 
+_REFERENCE_SOURCE_UNION_IDENTITY_COLUMNS = [
+    "source_cohort",
+    "n_reference_samples",
+    "n_samples",
+    "n_detected",
+]
+
 _REFERENCE_SOURCES = {"artifact", "summary_rows", "summary_rows_all"}
 _REFERENCE_SUMMARY_DATASET = "cancer-reference-expression"
 _REFERENCE_SUMMARY_METHOD = "source_summary_rows"
@@ -2404,13 +2434,21 @@ def _reference_expression_requests(
     *,
     reference_source: str,
     sample_qc: str,
+    source_kinds: set[str] | None = None,
+    source_cohorts: set[str] | None = None,
+    exclude_microarray_proxy: bool = False,
 ) -> list[dict[str, str]]:
     """Resolved request rows while preserving aggregate-vs-direct intent."""
     if cancer_types is None:
         return [
             {"requested_code": code, "cancer_code": code, "request_kind": "default_available"}
             for code in _reference_available_codes_for_modes(
-                modes, reference_source=reference_source, sample_qc=sample_qc
+                modes,
+                reference_source=reference_source,
+                sample_qc=sample_qc,
+                source_kinds=source_kinds,
+                source_cohorts=source_cohorts,
+                exclude_microarray_proxy=exclude_microarray_proxy,
             )
         ]
     raw_values = [cancer_types] if isinstance(cancer_types, str) else list(cancer_types)
@@ -2434,11 +2472,21 @@ def _reference_expression_requests(
 
 
 def _reference_available_codes_for_modes(
-    modes: list[str], *, reference_source: str, sample_qc: str
+    modes: list[str],
+    *,
+    reference_source: str,
+    sample_qc: str,
+    source_kinds: set[str] | None = None,
+    source_cohorts: set[str] | None = None,
+    exclude_microarray_proxy: bool = False,
 ) -> list[str]:
     if reference_source in {"summary_rows", "summary_rows_all"}:
         if sample_qc == "all":
-            return _reference_summary_available_codes()
+            return _reference_summary_available_codes(
+                source_kinds=source_kinds,
+                source_cohorts=source_cohorts,
+                exclude_microarray_proxy=exclude_microarray_proxy,
+            )
         return sorted(source_matrices.available_cohorts())
     out: set[str] = set()
     if any(mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"} for mode in modes):
@@ -2663,12 +2711,16 @@ def _reference_long_columns(
     include_provenance: bool,
     include_request_metadata: bool,
     include_gene_universe_flags: bool,
+    *,
+    source_union_identity: bool = False,
 ) -> list[str]:
     cols = ["Ensembl_Gene_ID", "Symbol", "cancer_code", "normalization"]
     if include_request_metadata:
         cols += _REFERENCE_REQUEST_COLUMNS
     if include_provenance:
         cols += _REFERENCE_PROVENANCE_COLUMNS
+    elif source_union_identity:
+        cols += _REFERENCE_SOURCE_UNION_IDENTITY_COLUMNS
     if include_gene_universe_flags:
         cols += _ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS
     return [*cols, "expression", "q1", "q3"]

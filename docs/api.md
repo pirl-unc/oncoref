@@ -327,13 +327,15 @@ private filtered bundle.
 
 Use `reference_source="summary_rows_all", sample_qc="all"` when downstream code
 needs the full source-union table rather than one selected source per cancer
-code. This mode returns one row per gene, cancer code, normalization, and source
-cohort, preserving sidecar provenance such as `n_samples`, `n_detected`,
-`processing_pipeline`, and `notes`. It also accepts `source_kind=...`,
-`source_cohort=...`, `exclude_microarray_proxy=True`, and long-form `pool=True`
-for an explicit n-sample-weighted pooled view. Because these sidecars are
-all-sample artifacts, this source-union mode intentionally rejects
-`sample_qc="pass"` and `sample_qc="pass_or_warn"`; QC-filtered all-source
+code. This long-only mode returns one row per gene, cancer code, normalization,
+and source cohort; even with `include_provenance=False`, it keeps
+`source_cohort` and sample-count columns because they are part of the source-row
+identity. With provenance enabled, it also preserves sidecar fields such as
+`processing_pipeline` and `notes`. It accepts `source_kind=...`,
+`source_cohort=...`, `exclude_microarray_proxy=True`, and `pool=True` for an
+explicit n-sample-weighted pooled view. Because these sidecars are all-sample
+artifacts, this source-union mode intentionally rejects `format="wide"`,
+`sample_qc="pass"`, and `sample_qc="pass_or_warn"`; QC-filtered all-source
 reference artifacts remain part of the expression-artifact rebuild work.
 
 Use `expression.cancer_reference_expression_availability()` before delegating a
