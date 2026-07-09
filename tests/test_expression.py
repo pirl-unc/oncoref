@@ -228,6 +228,71 @@ def test_representatives_filter_and_flag_artifact_technical_extras(monkeypatch, 
     assert "artifact_row_class" in long.columns
 
 
+def test_representatives_pirlygenes_universe_keeps_remaps_and_drops_audited_extras(
+    monkeypatch, tmp_path
+):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [
+                "ENSG00000199334",  # technical extra
+                "ENSG00000206034",  # sequence-identical pirlygenes remap target
+                "ENSG00000178287",  # biological oncoref-only extra
+                "ENSG00000261190",  # unresolved oncoref-only extra
+                "ENSG00000000003",  # shared artifact row
+            ],
+            "Symbol": ["RNA5S11", "DEFB109B", "SPAG11A", "LINC02911", "TSPAN6"],
+            "PRAD__rep1": [1.0, 2.0, 3.0, 4.0, 5.0],
+        }
+    ).to_parquet(d / "PRAD.parquet", index=False)
+
+    tumor_signal = expression.representative_cohort_samples(
+        "PRAD", gene_universe="tumor_signal", gene_id_style="pirlygenes"
+    )
+    pirlygenes = expression.representative_cohort_samples(
+        "PRAD", gene_universe="pirlygenes", gene_id_style="pirlygenes"
+    )
+
+    assert set(tumor_signal["Ensembl_Gene_ID"]) == {
+        "ENSG00000205989",
+        "ENSG00000178287",
+        "ENSG00000261190",
+        "ENSG00000000003",
+    }
+    assert set(pirlygenes["Ensembl_Gene_ID"]) == {
+        "ENSG00000205989",
+        "ENSG00000000003",
+    }
+    remapped = pirlygenes.set_index("Ensembl_Gene_ID").loc["ENSG00000205989"]
+    assert remapped["Symbol"] == "DEFB109C"
+    assert remapped["PRAD_rep01"] == pytest.approx(2.0)
+
+
+def test_representatives_pirlygenes_universe_matches_known_parity_counts():
+    expected = {
+        "PRAD": 34337,
+        "CLL": 51796,
+        "COAD_MSI": 34337,
+        "READ_MSI": 34337,
+    }
+
+    for code, count in expected.items():
+        out = expression.representative_cohort_samples(
+            code,
+            k=1,
+            format="long",
+            gene_universe="pirlygenes",
+            gene_id_style="pirlygenes",
+        )
+        assert len(out) == count
+        assert out["Ensembl_Gene_ID"].nunique() == count
+        assert out.attrs["gene_universe"] == "pirlygenes"
+        if code == "CLL":
+            assert {"ENSG00000226079", "ENSG00000232395"} <= set(out["Ensembl_Gene_ID"])
+
+
 def test_expression_artifact_gene_universe_delta_summary():
     summary = expression.expression_artifact_gene_universe_delta_summary()
 

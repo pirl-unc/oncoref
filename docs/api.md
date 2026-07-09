@@ -366,12 +366,20 @@ contracts:
   technical extras plus biotype-resolved non-signal extras such as pseudogene,
   small-RNA, and immune-receptor segment rows. Protein-coding and lncRNA
   oncoref-only rows are retained as biological extras. Pass
+  `gene_universe="pirlygenes"` only for migration parity: it starts from the
+  tumor-signal policy, then also drops audited oncoref-only biological or
+  unresolved extras unless the row is a documented remap target for a pirlygenes
+  legacy ENSG ID. Combined with `gene_id_style="pirlygenes"`, this can
+  alias-expand a documented remap row when current pirlygenes exposes both the
+  legacy and canonical ENSG IDs for the same measured vector. This reproduces
+  pirlygenes row-universe expectations without inventing missing expression
+  measurements. Pass
   `include_gene_universe_flags=True` for long reference output or any
   representative/percentile output to append row-level `artifact_row_class`,
   `is_filterable_extra`, `is_technical_extra`, `is_missing_biological`, and
   `recommended_consumer_action` columns. These options filter or label known
   artifact row classes; they never invent missing biological expression rows
-  and they do not drop biological oncoref-only rows.
+  and only the explicit `pirlygenes` mode drops biological oncoref-only extras.
 - Representative and percentile readers default to `sample_qc="pass"` and
   validate any shipped `expression-artifact-build-metadata.csv` rows before
   returning a precomputed shard. If the metadata says a shard was built with
@@ -409,8 +417,9 @@ representative extras. The prior broad
 `unresolved_oncoref_extra` bucket is resolved where possible by current oncoref
 gene metadata into strict technical extras, `non_signal_oncoref_extra` rows that
 `gene_universe="tumor_signal"` filters, `biological_oncoref_extra` rows that stay
-visible, `sequence_identical_remapped_to_oncoref` rows that
-`gene_id_style="pirlygenes"` can present without synthesizing values, or a small
+visible in the default and tumor-signal views, `sequence_identical_remapped_to_oncoref`
+rows that `gene_id_style="pirlygenes"` can present or alias-expand without
+inventing missing expression measurements, or a small
 remaining unresolved set with no current biotype. In the current audit table, no
 rows remain flagged as missing biological; only 29 oncoref-only rows remain truly
 `unresolved_oncoref_extra`. The resolved status labels are deliberately explicit
