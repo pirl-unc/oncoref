@@ -547,6 +547,33 @@ def test_treehouse_source_from_registry_loads_brca_pam50_routes():
     assert [cohort.cancer_code for cohort in pam50] == source.cancer_code
 
 
+def test_treehouse_source_from_registry_loads_hnsc_hpv_routes():
+    source = expression_builders.treehouse_source_from_registry(
+        "treehouse-polya-25-01-tcga-hnsc-hpv"
+    )
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_HNSC_HPV"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_hnsc_hpv"
+    assert source.cancer_code == ["HNSC_HPVneg", "HNSC_HPVpos"]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["HNSC_HPVneg"].disease_label == "head & neck squamous cell carcinoma"
+    assert (
+        by_code["HNSC_HPVneg"].selection
+        == "cbio_clinical:hnsc_tcga_pan_can_atlas_2018:SUBTYPE:HNSC_HPV-"
+    )
+    assert (
+        by_code["HNSC_HPVpos"].selection
+        == "cbio_clinical:hnsc_tcga_pan_can_atlas_2018:SUBTYPE:HNSC_HPV+"
+    )
+    assert by_code["HNSC_HPVpos"].effective_cache_stem == "tcga_hnsc_hpvpos"
+
+    hpv = expression_builders.treehouse_cohorts_for_group(
+        "tcga_hnsc_hpv",
+        source_id="treehouse-polya-25-01-tcga-hnsc-hpv",
+    )
+    assert [cohort.cancer_code for cohort in hpv] == source.cancer_code
+
+
 def test_treehouse_source_from_registry_loads_glioma_gdc_project_routes():
     source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-glioma")
 

@@ -299,9 +299,9 @@ sources:
       TCGA-only subset of the Treehouse 25.01 PolyA compendium. Samples
       are selected by matching the Treehouse clinical disease label and
       requiring `th_dataset_id` to start with `TCGA`. This deliberately
-      excludes GBM/LGG, SARC, and molecular subtype cohorts that require
-      cBioPortal or GDC side tables; those remain source-specific follow-ups
-      under oncoref#296. Uses its own source_cohort so a future authoritative
+      excludes GBM/LGG, SARC, and subtype cohorts that require additional
+      cBioPortal, GDC, or histology side tables; those remain source-specific
+      follow-ups under oncoref#296. Uses its own source_cohort so a future authoritative
       GDC STAR-counts build can coexist without clobbering Treehouse-derived
       artifacts.
 
@@ -340,6 +340,40 @@ sources:
       prefix to cBioPortal PanCancer Atlas patient SUBTYPE calls and routes
       the five PAM50 cohorts separately. It uses a distinct source_cohort from
       the unsplit BRCA cohort so subtype-derived references remain auditable.
+
+  - id: treehouse-polya-25-01-tcga-hnsc-hpv
+    category: expression
+    cancer_codes: [HNSC_HPVneg, HNSC_HPVpos]
+    source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_HNSC_HPV
+    source_project: Treehouse (TCGA-HNSC) x cBioPortal HPV
+    url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/sweep_treehouse_tcga_hnsc_hpv.py  # superseded cBioPortal HPV split
+    unit: log2(TPM+1)
+    expected_size_gb: 6.2
+    citation: >
+      Treehouse Childhood Cancer Initiative, Tumor Compendium 25.01
+      PolyA, TCGA-HNSC subset split by cBioPortal HPV subtype calls
+      from hnsc_tcga_pan_can_atlas_2018. PMID 27568064.
+    files:
+      tpm: Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+      tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01_tcga_hnsc_hpv
+    tumor_origin: primary
+    treehouse_cohorts:
+      - {cancer_code: HNSC_HPVneg, disease_label: head & neck squamous cell carcinoma, group: tcga_hnsc_hpv, selection: "cbio_clinical:hnsc_tcga_pan_can_atlas_2018:SUBTYPE:HNSC_HPV-", cache_stem: tcga_hnsc_hpvneg}
+      - {cancer_code: HNSC_HPVpos, disease_label: head & neck squamous cell carcinoma, group: tcga_hnsc_hpv, selection: "cbio_clinical:hnsc_tcga_pan_can_atlas_2018:SUBTYPE:HNSC_HPV+", cache_stem: tcga_hnsc_hpvpos}
+    special_handling: >
+      Treehouse carries TCGA-HNSC samples in the parent head and neck squamous
+      cell carcinoma disease bucket. This source joins each TCGA sample barcode
+      prefix to cBioPortal PanCancer Atlas patient SUBTYPE calls and routes
+      HPV-negative and HPV-positive cohorts separately. It uses a distinct
+      source_cohort from the unsplit HNSC cohort so subtype-derived references
+      remain auditable.
 
   - id: treehouse-polya-25-01-tcga-glioma
     category: expression
