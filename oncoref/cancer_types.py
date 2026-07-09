@@ -1171,7 +1171,10 @@ _EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
     "normal_tissue_code",
     "hpa_tissues",
     "has_matched_normal_expression",
+    "has_expression_reference",
     "has_direct_expression_reference",
+    "has_computed_expression_reference",
+    "computed_expression_member_codes",
     "observed_bulk_reference",
     "deconvolved_tumor_reference",
     "subtype_deconvolved_reference",
@@ -1194,6 +1197,8 @@ _EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
     "missing_reason",
 ]
 
+_COMPUTED_EXPRESSION_REFERENCE_CODES = frozenset({"NET", "CRC", "NSCLC", "BTC", "SGC"})
+
 
 def _definition_kind(record, raw_record) -> tuple[str, ...]:
     kinds = []
@@ -1211,9 +1216,36 @@ def _definition_kind(record, raw_record) -> tuple[str, ...]:
     return tuple(kinds)
 
 
-def _coverage_recommendation(*, has_direct: bool, molecular_kinds: tuple[str, ...]) -> str:
+def _computed_expression_reference_members(code: str) -> tuple[str, ...]:
+    """Direct-expression members that define a computed reference for a grouping code."""
+    code = str(code)
+    if code not in _COMPUTED_EXPRESSION_REFERENCE_CODES:
+        return ()
+    members = cohort_aggregate_members(code)
+    if members is None:
+        members = _children_map().get(code, ())
+    if not members:
+        return ()
+    source_codes = set(_source_matrix_frame()["cancer_code"].dropna().astype(str))
+    return tuple(member for member in members if member in source_codes)
+
+
+def _computed_expression_reference_sample_count(member_codes: tuple[str, ...]) -> int | None:
+    if not member_codes:
+        return None
+    sm = _source_matrix_frame()
+    hits = sm.loc[sm["cancer_code"].astype(str).isin(member_codes), "source_matrix_n_samples"]
+    counts = pd.to_numeric(hits, errors="coerce").dropna()
+    return int(counts.sum()) if not counts.empty else None
+
+
+def _coverage_recommendation(
+    *, has_direct: bool, has_computed: bool, molecular_kinds: tuple[str, ...]
+) -> str:
     if has_direct:
         return "direct_reference"
+    if has_computed:
+        return "computed_reference"
     if molecular_kinds:
         return "molecular_only"
     return "unsupported"
@@ -1245,9 +1277,32 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
         code = record["code"]
         raw_record = raw.loc[code] if code in raw.index else {}
         has_direct = bool(record["has_expression_matrix"])
+        computed_members = _computed_expression_reference_members(code)
+        has_computed = bool(computed_members)
+        has_reference = has_direct or has_computed
         molecular_kinds = _definition_kind(record, raw_record)
         has_normal = not _row_is_missing(record["normal_tissue_code"]) and bool(
             record["hpa_tissues"]
+        )
+        reference_kind = (
+            "observed_bulk" if has_direct else "computed_union" if has_computed else "none"
+        )
+        source_matrix_n_samples = (
+            _none_if_missing(record["source_matrix_n_samples"])
+            if has_direct
+            else _computed_expression_reference_sample_count(computed_members)
+        )
+        source_matrix_cohort = (
+            _none_if_missing(record["source_matrix_cohort"])
+            if has_direct
+            else (
+                _none_if_missing(record["source_cohort"])
+                if str(record["expression_source"]) == "computed"
+                and not _row_is_missing(record["source_cohort"])
+                else f"COMPUTED_{code}"
+            )
+            if has_computed
+            else None
         )
         rows.append(
             {
@@ -1267,31 +1322,36 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
                 "normal_tissue_code": _none_if_missing(record["normal_tissue_code"]),
                 "hpa_tissues": record["hpa_tissues"],
                 "has_matched_normal_expression": has_normal,
+                "has_expression_reference": has_reference,
                 "has_direct_expression_reference": has_direct,
+                "has_computed_expression_reference": has_computed,
+                "computed_expression_member_codes": computed_members,
                 "observed_bulk_reference": has_direct,
                 "deconvolved_tumor_reference": False,
                 "subtype_deconvolved_reference": False,
                 "cell_line_reference": False,
                 "single_cell_pseudobulk_reference": False,
-                "expression_reference_kind": "observed_bulk" if has_direct else "none",
-                "expression_reference_source_code": code if has_direct else None,
-                "source_matrix_cohort": _none_if_missing(record["source_matrix_cohort"]),
-                "source_matrix_n_samples": _none_if_missing(record["source_matrix_n_samples"]),
+                "expression_reference_kind": reference_kind,
+                "expression_reference_source_code": code if has_reference else None,
+                "source_matrix_cohort": source_matrix_cohort,
+                "source_matrix_n_samples": source_matrix_n_samples,
                 "source_cohort": _none_if_missing(record["source_cohort"]),
                 "source_pmid": _none_if_missing(record["source_pmid"]),
-                "normalization_method": "clean_tpm_16_9_75" if has_direct else None,
-                "gene_id_space": "oncoref_canonical_ensg" if has_direct else None,
-                "proteoform_space": "oncoref_proteoform_groups" if has_direct else None,
-                "data_version": DATA_VERSION if has_direct else None,
-                "source_matrix_version": SOURCE_MATRIX_VERSION if has_direct else None,
+                "normalization_method": "clean_tpm_16_9_75" if has_reference else None,
+                "gene_id_space": "oncoref_canonical_ensg" if has_reference else None,
+                "proteoform_space": "oncoref_proteoform_groups" if has_reference else None,
+                "data_version": DATA_VERSION if has_reference else None,
+                "source_matrix_version": SOURCE_MATRIX_VERSION if has_reference else None,
                 "has_molecular_definition": bool(molecular_kinds),
                 "molecular_definition_kind": molecular_kinds,
                 "consumer_recommendation": _coverage_recommendation(
-                    has_direct=has_direct, molecular_kinds=molecular_kinds
+                    has_direct=has_direct,
+                    has_computed=has_computed,
+                    molecular_kinds=molecular_kinds,
                 ),
                 "missing_reason": (
                     None
-                    if has_direct
+                    if has_reference
                     else (
                         "molecular_definition_without_expression_matrix"
                         if molecular_kinds
