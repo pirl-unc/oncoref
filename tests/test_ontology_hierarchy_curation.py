@@ -17,9 +17,9 @@ from oncoref import (
 
 
 def test_net_umbrella_navigation():
-    # The headline example: NET -> NET_PANCREAS ("NET_PAN").
-    assert cancer_type_lineage("NET_PANCREAS") == ["NET", "NET_PANCREAS"]
-    assert cancer_type_lineage("NET_NONPANCREATIC") == ["NET", "NET_NONPANCREATIC"]
+    # The headline example: NEN -> NET -> NET_PANCREAS ("NET_PAN").
+    assert cancer_type_lineage("NET_PANCREAS") == ["NEN", "NET", "NET_PANCREAS"]
+    assert cancer_type_lineage("NET_NONPANCREATIC") == ["NEN", "NET", "NET_NONPANCREATIC"]
     assert set(cancer_type_descendants("NET")) == {
         "NET_PANCREAS",
         "NET_MIDGUT",
@@ -32,6 +32,7 @@ def test_net_umbrella_navigation():
 def test_net_excludes_carcinomas_and_pituitary():
     # Poorly-differentiated NEC_* and pituitary PITNET are distinct, not children.
     desc = set(cancer_type_descendants("NET"))
+    assert "NEC" not in desc
     assert "NEC_MERKEL" not in desc
     assert "NEC_LUNG_LARGECELL" not in desc
     assert "PITNET" not in desc
@@ -74,12 +75,61 @@ def test_sarc_ess_subtypes_reparented_under_sarc_ess():
 
 def test_lung_nec_tier_contains_lcnec_but_not_sclc():
     assert cancer_type_lineage("NEC_LUNG_LARGECELL") == [
+        "NEN",
+        "NEC",
         "NEC_LUNG",
         "NEC_LUNG_LARGECELL",
     ]
     assert set(cancer_type_subtypes_of("NEC_LUNG")) == {"NEC_LUNG_LARGECELL"}
     assert set(cohort_aggregate_members("NEC_LUNG")) == {"NEC_LUNG_LARGECELL"}
-    assert cancer_type_lineage("SCLC") == ["SCLC"]
+    assert cancer_type_lineage("SCLC") == ["NEN", "NEC", "SCLC"]
+
+
+def test_neuroendocrine_rollups_are_explicit_non_targets():
+    assert set(cancer_type_descendants("NEN")) >= {
+        "NET",
+        "NEC",
+        "NEN_EXTRAPULMONARY_HG",
+        "NET_PANCREAS",
+        "NEC_LUNG_LARGECELL",
+        "SCLC",
+        "NEC_MERKEL",
+    }
+    assert set(cancer_type_descendants("NEC")) == {
+        "NEC_LUNG",
+        "NEC_LUNG_LARGECELL",
+        "SCLC",
+        "SCLC_ASCL1",
+        "SCLC_NEUROD1",
+        "SCLC_POU2F3",
+        "SCLC_YAP1",
+        "NEC_MERKEL",
+    }
+    assert set(cohort_aggregate_members("NEC")) == {
+        "NEC_LUNG_LARGECELL",
+        "SCLC",
+        "NEC_MERKEL",
+    }
+
+
+def test_rcc_and_thymic_parent_rollups_are_explicit():
+    assert cancer_type_lineage("KIRC") == ["RCC", "KIRC"]
+    assert cancer_type_lineage("RCC_NCC_UNCLASSIFIED") == [
+        "RCC",
+        "RCC_NCC",
+        "RCC_NCC_UNCLASSIFIED",
+    ]
+    assert set(cancer_type_descendants("RCC")) >= {
+        "KICH",
+        "KIRC",
+        "KIRP",
+        "RCC_NCC",
+        "RCC_NCC_UNCLASSIFIED",
+    }
+    assert set(cohort_aggregate_members("RCC")) == {"KICH", "KIRC", "KIRP"}
+    assert cancer_type_lineage("THYMCA") == ["THYM_EPITHELIAL", "THYMCA"]
+    assert set(cancer_type_subtypes_of("THYM_EPITHELIAL")) == {"THYM", "THYMCA"}
+    assert set(cohort_aggregate_members("THYM_EPITHELIAL")) == {"THYM"}
 
 
 def test_sarc_rms_fusion_rollup():

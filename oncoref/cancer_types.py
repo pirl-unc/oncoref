@@ -96,8 +96,9 @@ CANCER_TYPE_ALIASES = {
     "glioma": "LGG",
     "net_nonpancreatic": "NET_NONPANCREATIC",
     "nonpancreatic_net": "NET_NONPANCREATIC",
-    "extrapulmonary_g3_nen": "NEN_G3_EXTRAPULMONARY",
-    "g3_extrapulmonary_nen": "NEN_G3_EXTRAPULMONARY",
+    "extrapulmonary_g3_nen": "NEN_EXTRAPULMONARY_HG",
+    "g3_extrapulmonary_nen": "NEN_EXTRAPULMONARY_HG",
+    "extrapulmonary_high_grade_nen": "NEN_EXTRAPULMONARY_HG",
     "mesothelioma": "MESO",
     "pheochromocytoma": "PCPG",
     "paraganglioma": "PCPG",
@@ -140,6 +141,9 @@ _RENAMED_CODE_ALIASES = {
     "LAML_ELN_Fav": "LAML_ELNfav",
     "LAML_ELN_Int": "LAML_ELNint",
     "LAML_ELN_Adv": "LAML_ELNadv",
+    # #337: grade is an orthogonal axis; keep the old source-scope code as
+    # an alias for the canonical high-grade extrapulmonary NEN evidence row.
+    "NEN_G3_EXTRAPULMONARY": "NEN_EXTRAPULMONARY_HG",
 }
 _RENAMED_CODE_ALIASES_UPPER = {k.upper(): v for k, v in _RENAMED_CODE_ALIASES.items()}
 
@@ -393,7 +397,7 @@ def cancer_type_info(cancer_type):
     Keys: ``code``, ``name``, ``family``, ``primary_tissue``,
     ``primary_template``, ``parent_code``, ``ontology_level``,
     ``ontology_kind``, ``is_classification_target``, ``subtype_key``,
-    ``pediatric``, ``differentiation``, ``expression_source``,
+    ``pediatric``, ``differentiation``, ``grade_tier``, ``expression_source``,
     ``source_cohort``, ``source_pmid``, ``notes``, ``viral_etiology``,
     ``viral_agent``, ``fusion_driven``, ``fusion_driver``,
     ``burden_category``, ``tmb``.
@@ -420,6 +424,7 @@ def cancer_type_info(cancer_type):
         "subtype_key",
         "pediatric",
         "differentiation",
+        "grade_tier",
         "expression_source",
         "source_cohort",
         "source_pmid",
@@ -983,6 +988,8 @@ _CANCER_TYPE_RECORD_COLUMNS = [
     "mmr_assay_basis",
     "mmr_source_scope",
     "mmr_status_notes",
+    "differentiation",
+    "grade_tier",
     "evidence_source_code",
     "evidence_source_kind",
     "burden_category",
@@ -1058,6 +1065,8 @@ def cancer_type_records(
     ontology_level=None,
     ontology_kind=None,
     classification_target: bool | None = None,
+    differentiation=None,
+    grade_tier=None,
     primary_tissue=None,
     normal_tissue=None,
     subtype_group=None,
@@ -1077,8 +1086,9 @@ def cancer_type_records(
     ``family``), explicit registry level fields (``ontology_level`` /
     ``ontology_kind``), a curated sample-classification target flag
     (``is_classification_target``), cross-cutting molecular groupings
-    (``subtype_groups`` / ``subtype_axes``), explicit MMR/MSI classifier-axis fields
-    (``mmr_axis_state`` / ``mmr_classifier_role``), source-scoped evidence resolution
+    (``subtype_groups`` / ``subtype_axes``), sparse differentiation and grade
+    axes (``differentiation`` / ``grade_tier``), explicit MMR/MSI classifier-axis
+    fields (``mmr_axis_state`` / ``mmr_classifier_role``), source-scoped evidence resolution
     (``evidence_source_code``), expression-matrix availability, and matched
     normal-tissue metadata.
 
@@ -1114,6 +1124,8 @@ def cancer_type_records(
     if classification_target is not None:
         wanted = _coerce_bool_filter(classification_target, name="classification_target")
         df = df[_truthy_registry_flag(df["is_classification_target"]) == wanted]
+    df = _filter_string_values(df, "differentiation", differentiation)
+    df = _filter_string_values(df, "grade_tier", grade_tier)
     df = _filter_string_values(df, "primary_tissue", primary_tissue)
 
     if normal_tissue is not None:
@@ -1868,8 +1880,9 @@ def computed_union_codes():
 
     This is the stable signal for oncoref-computed member unions: rows whose
     registry ``expression_source`` is ``"computed"``. Some are broad grouping
-    nodes (``CRC``, ``NET``, ``SARC``), while others remain histologic type
-    nodes with pooled expression references (``SARC_RMS``, ``NEC_LUNG``).
+    nodes (``CRC``, ``NEN``, ``NET``, ``RCC``, ``SARC``), while others are
+    narrower computed tiers with pooled expression references (``SARC_RMS``,
+    ``NEC_LUNG``).
     """
     df = cancer_type_registry()
     source = df["expression_source"].astype(str).str.strip().str.lower()

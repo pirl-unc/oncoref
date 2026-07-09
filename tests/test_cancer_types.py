@@ -359,21 +359,25 @@ def test_computed_union_and_evidence_scope_semantics_are_consistent():
     assert computed_codes == computed_kind_codes
     assert cancer_types.computed_union_codes() == [
         "CRC",
+        "RCC",
         "SARC",
+        "THYM_EPITHELIAL",
+        "NEN",
+        "NET",
+        "NEC",
         "NEC_LUNG",
         "SARC_RMS",
         "SARC_LPS",
         "SARC_ESS",
-        "NET",
     ]
     assert cd.computed_union_codes() == cancer_types.computed_union_codes()
     assert cd.cancer_ontology.computed_union_codes() == cancer_types.computed_union_codes()
 
-    evidence_scopes = records.loc[["NET_NONPANCREATIC", "NEN_G3_EXTRAPULMONARY"]]
+    evidence_scopes = records.loc[["NET_NONPANCREATIC", "NEN_EXTRAPULMONARY_HG"]]
     assert set(evidence_scopes["ontology_level"]) == {"evidence_scope"}
     assert set(evidence_scopes["ontology_kind"]) == {"source_scope"}
     assert set(evidence_scopes["is_classification_target"]) == {False}
-    assert not {"NET_NONPANCREATIC", "NEN_G3_EXTRAPULMONARY"} & set(
+    assert not {"NET_NONPANCREATIC", "NEN_EXTRAPULMONARY_HG"} & set(
         cancer_types.cancer_type_codes(ontology_level="grouping")
     )
 
@@ -382,35 +386,65 @@ def test_classification_target_flag_distinguishes_response_scopes():
     records = cancer_types.cancer_type_records(
         [
             "CRC_MSI",
-            "NEN_G3_EXTRAPULMONARY",
+            "NEN_EXTRAPULMONARY_HG",
             "NET_NONPANCREATIC",
+            "NEN",
+            "NET",
+            "NEC",
             "SARC",
             "CRC",
             "NSCLC",
             "OV",
             "BTC",
             "SGC",
+            "RCC",
             "RCC_NCC",
-            "NET",
+            "THYM_EPITHELIAL",
+            "NEC_LUNG",
         ]
     ).set_index("code")
 
-    non_targets = {"CRC_MSI", "NEN_G3_EXTRAPULMONARY", "NET_NONPANCREATIC"}
+    non_targets = {
+        "CRC_MSI",
+        "RCC",
+        "RCC_NCC",
+        "THYM_EPITHELIAL",
+        "NEN",
+        "NET",
+        "NET_NONPANCREATIC",
+        "NEN_EXTRAPULMONARY_HG",
+        "NEC",
+        "NEC_LUNG",
+    }
     assert set(records.loc[~records["is_classification_target"], :].index) == non_targets
     assert cancer_types.cancer_type_codes(classification_target=False) == [
         "CRC_MSI",
+        "RCC",
+        "RCC_NCC",
+        "THYM_EPITHELIAL",
+        "NEN",
+        "NET",
         "NET_NONPANCREATIC",
-        "NEN_G3_EXTRAPULMONARY",
+        "NEN_EXTRAPULMONARY_HG",
+        "NEC",
+        "NEC_LUNG",
     ]
     assert cancer_types.cancer_type_codes(classification_target="false") == [
         "CRC_MSI",
+        "RCC",
+        "RCC_NCC",
+        "THYM_EPITHELIAL",
+        "NEN",
+        "NET",
         "NET_NONPANCREATIC",
-        "NEN_G3_EXTRAPULMONARY",
+        "NEN_EXTRAPULMONARY_HG",
+        "NEC",
+        "NEC_LUNG",
     ]
     with pytest.raises(ValueError, match="classification_target"):
         cancer_types.cancer_type_codes(classification_target="maybe")
 
-    for code in ["SARC", "CRC", "NSCLC", "OV", "BTC", "SGC", "RCC_NCC", "NET"]:
+    for code in ["SARC", "CRC", "NSCLC", "OV", "BTC", "SGC"]:
         assert bool(records.loc[code, "is_classification_target"]) is True
         assert cancer_types.is_classification_target(code) is True
 
@@ -419,7 +453,7 @@ def test_classification_target_flag_distinguishes_response_scopes():
         assert code not in cancer_types.classification_target_codes()
 
     assert cancer_types.is_classification_target(None) is False
-    assert cd.is_classification_target("NET") is True
+    assert cd.is_classification_target("NET") is False
     assert (
         cd.cancer_ontology.classification_target_codes()
         == cancer_types.classification_target_codes()
@@ -662,15 +696,21 @@ def test_net_nonpancreatic_records_source_scope_site_codes():
     assert records.loc["NET_PANCREAS", "evidence_source_kind"] == "direct"
 
 
-def test_extrapulmonary_g3_nen_is_context_aggregate_not_lung_lcnec():
-    assert cancer_types.resolve_cancer_type("extrapulmonary G3 NEN") == "NEN_G3_EXTRAPULMONARY"
+def test_extrapulmonary_high_grade_nen_is_context_aggregate_not_lung_lcnec():
+    assert cancer_types.resolve_cancer_type("extrapulmonary G3 NEN") == ("NEN_EXTRAPULMONARY_HG")
+    assert cancer_types.resolve_cancer_type("NEN_G3_EXTRAPULMONARY") == ("NEN_EXTRAPULMONARY_HG")
     records = cancer_types.cancer_type_records(
-        ["NEN_G3_EXTRAPULMONARY", "NEC_LUNG_LARGECELL"]
+        ["NEN_EXTRAPULMONARY_HG", "NEC_LUNG_LARGECELL"]
     ).set_index("code")
-    assert cancer_types.is_mixture_cohort("NEN_G3_EXTRAPULMONARY") is True
-    assert records.loc["NEN_G3_EXTRAPULMONARY", "primary_tissue"] == "neuroendocrine"
-    assert records.loc["NEN_G3_EXTRAPULMONARY", "evidence_source_code"] == ("NEN_G3_EXTRAPULMONARY")
+    assert cancer_types.is_mixture_cohort("NEN_EXTRAPULMONARY_HG") is True
+    assert records.loc["NEN_EXTRAPULMONARY_HG", "parent_code"] == "NEN"
+    assert records.loc["NEN_EXTRAPULMONARY_HG", "primary_tissue"] == "neuroendocrine"
+    assert records.loc["NEN_EXTRAPULMONARY_HG", "differentiation"] == "NEN_G3"
+    assert records.loc["NEN_EXTRAPULMONARY_HG", "grade_tier"] == "high"
+    assert records.loc["NEN_EXTRAPULMONARY_HG", "evidence_source_code"] == ("NEN_EXTRAPULMONARY_HG")
     assert records.loc["NEC_LUNG_LARGECELL", "evidence_source_code"] == ("NEC_LUNG_LARGECELL")
+    assert "NEN_EXTRAPULMONARY_HG" in cancer_types.cancer_type_codes(grade_tier="high")
+    assert "NEN_EXTRAPULMONARY_HG" in cancer_types.cancer_type_codes(differentiation="NEN_G3")
 
 
 def test_normal_tissue_map_uses_hpa_rna_v23_tissue_names():

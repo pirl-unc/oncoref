@@ -242,8 +242,8 @@ def test_net_nonpancreatic_ici_is_single_source_scope_row():
 def test_extrapulmonary_g3_nen_ici_is_not_lung_lcnec():
     full = ici.cancer_ici_response()
     per = ici.cancer_ici_response(fallback=False)
-    assert full["NEN_G3_EXTRAPULMONARY"] == 3.4
-    assert per["NEN_G3_EXTRAPULMONARY"] == {"PD-1": 3.4}
+    assert full["NEN_EXTRAPULMONARY_HG"] == 3.4
+    assert per["NEN_EXTRAPULMONARY_HG"] == {"PD-1": 3.4}
     assert full["NEC_LUNG_LARGECELL"] == 29.4
     assert ici.cancer_ici_response("extrapulmonary G3 NEN") == 3.4
 
@@ -353,8 +353,8 @@ def test_net_nonpancreatic_ici_record_preserves_inheritance_metadata():
 
 def test_extrapulmonary_g3_nen_record_is_direct_context_aggregate():
     record = ici.cancer_ici_response_record("NEN_G3_EXTRAPULMONARY")
-    assert record["requested_cancer_code"] == "NEN_G3_EXTRAPULMONARY"
-    assert record["resolved_cancer_code"] == "NEN_G3_EXTRAPULMONARY"
+    assert record["requested_cancer_code"] == "NEN_EXTRAPULMONARY_HG"
+    assert record["resolved_cancer_code"] == "NEN_EXTRAPULMONARY_HG"
     assert record["inheritance_kind"] == "direct"
     assert record["is_inherited_evidence"] is False
     assert record["orr_pct"] == 3.4

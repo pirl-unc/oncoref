@@ -278,7 +278,7 @@ def test_extrapulmonary_g3_nen_estimates_are_not_lung_lcnec_primary_rows():
     assert not lung_primary["setting"].str.contains("extrapulmonary", case=False).any()
 
     g3 = est[
-        (est["cancer_code"] == "NEN_G3_EXTRAPULMONARY")
+        (est["cancer_code"] == "NEN_EXTRAPULMONARY_HG")
         & (est["regimen"] == "PD-1")
         & (est["role"] == "primary")
     ]

@@ -147,6 +147,6 @@ def test_net_nonpancreatic_apd1_is_single_source_scope_row():
 
 def test_extrapulmonary_g3_nen_apd1_is_not_lung_lcnec():
     mapping = apd1.cancer_apd1_response()
-    assert mapping["NEN_G3_EXTRAPULMONARY"] == 3.4
+    assert mapping["NEN_EXTRAPULMONARY_HG"] == 3.4
     assert mapping["NEC_LUNG_LARGECELL"] == 29.4
     assert apd1.cancer_apd1_response("extrapulmonary G3 NEN") == 3.4
