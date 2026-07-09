@@ -488,6 +488,32 @@ def test_treehouse_source_from_registry_loads_direct_cohort_routes():
     assert [cohort.cancer_code for cohort in ribod.cohorts] == ["SARC_CHOR", "RB"]
 
 
+def test_treehouse_source_from_registry_loads_tcga_subset_routes():
+    source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-subset")
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+    assert source.source_project == "Treehouse (TCGA samples)"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_subset"
+    assert isinstance(source.cancer_code, list)
+    assert len(source.cancer_code) == 30
+    assert len(source.cohorts) == 30
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["BRCA"].disease_label == "breast invasive carcinoma"
+    assert by_code["BRCA"].selection == "tcga"
+    assert by_code["BRCA"].effective_cache_stem == "tcga_brca"
+    assert by_code["UCEC"].disease_label == "uterine corpus endometrioid carcinoma"
+    assert "GBM" not in by_code
+    assert "LGG" not in by_code
+    assert "SARC" not in by_code
+
+    tcga_direct = expression_builders.treehouse_cohorts_for_group(
+        "tcga_direct",
+        source_id="treehouse-polya-25-01-tcga-subset",
+    )
+    assert [cohort.cancer_code for cohort in tcga_direct] == source.cancer_code
+    assert {cohort.selection for cohort in tcga_direct} == {"tcga"}
+
+
 def test_treehouse_sample_ids_filter_disease_and_tcga_selection():
     clinical = pd.DataFrame(
         [

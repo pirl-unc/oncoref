@@ -238,6 +238,73 @@ sources:
       `source_cohort=TREEHOUSE_POLYA_25_01_TCGA_SUBSET` so a future
       authoritative GDC build can land alongside without clobbering.
 
+  - id: treehouse-polya-25-01-tcga-subset
+    category: expression
+    cancer_codes:
+      [ACC, BLCA, BRCA, CESC, CHOL, COAD, DLBC, ESCA, HNSC, KICH,
+       KIRC, KIRP, LAML, LIHC, LUAD, LUSC, MESO, OV, PAAD, PCPG,
+       PRAD, READ, SKCM, STAD, TGCT, THCA, THYM, UCEC, UCS, UVM]
+    source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_SUBSET
+    source_project: Treehouse (TCGA samples)
+    url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/sweep_treehouse_tcga_cohorts.py  # superseded TCGA-only sweep
+    unit: log2(TPM+1)
+    expected_size_gb: 6.2
+    citation: >
+      Treehouse Childhood Cancer Initiative, Tumor Compendium 25.01
+      PolyA, TCGA subset (released Jan 2025; clinical 20250131v1,
+      TPM matrix 2025-02-27). GSE294351.
+    files:
+      tpm: Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+      tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01_tcga_subset
+    tumor_origin: mixed
+    treehouse_cohorts:
+      - {cancer_code: ACC, disease_label: adrenocortical carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_acc}
+      - {cancer_code: BLCA, disease_label: bladder urothelial carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_blca}
+      - {cancer_code: BRCA, disease_label: breast invasive carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_brca}
+      - {cancer_code: CESC, disease_label: cervical & endocervical cancer, group: tcga_direct, selection: tcga, cache_stem: tcga_cesc}
+      - {cancer_code: CHOL, disease_label: cholangiocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_chol}
+      - {cancer_code: COAD, disease_label: colon adenocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_coad}
+      - {cancer_code: DLBC, disease_label: diffuse large B-cell lymphoma, group: tcga_direct, selection: tcga, cache_stem: tcga_dlbc}
+      - {cancer_code: ESCA, disease_label: esophageal carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_esca}
+      - {cancer_code: HNSC, disease_label: head & neck squamous cell carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_hnsc}
+      - {cancer_code: KICH, disease_label: kidney chromophobe, group: tcga_direct, selection: tcga, cache_stem: tcga_kich}
+      - {cancer_code: KIRC, disease_label: kidney clear cell carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_kirc}
+      - {cancer_code: KIRP, disease_label: kidney papillary cell carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_kirp}
+      - {cancer_code: LAML, disease_label: acute myeloid leukemia, group: tcga_direct, selection: tcga, cache_stem: tcga_laml}
+      - {cancer_code: LIHC, disease_label: hepatocellular carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_lihc}
+      - {cancer_code: LUAD, disease_label: lung adenocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_luad}
+      - {cancer_code: LUSC, disease_label: lung squamous cell carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_lusc}
+      - {cancer_code: MESO, disease_label: mesothelioma, group: tcga_direct, selection: tcga, cache_stem: tcga_meso}
+      - {cancer_code: OV, disease_label: ovarian serous cystadenocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_ov}
+      - {cancer_code: PAAD, disease_label: pancreatic adenocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_paad}
+      - {cancer_code: PCPG, disease_label: pheochromocytoma & paraganglioma, group: tcga_direct, selection: tcga, cache_stem: tcga_pcpg}
+      - {cancer_code: PRAD, disease_label: prostate adenocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_prad}
+      - {cancer_code: READ, disease_label: rectum adenocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_read}
+      - {cancer_code: SKCM, disease_label: skin cutaneous melanoma, group: tcga_direct, selection: tcga, cache_stem: tcga_skcm}
+      - {cancer_code: STAD, disease_label: stomach adenocarcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_stad}
+      - {cancer_code: TGCT, disease_label: testicular germ cell tumor, group: tcga_direct, selection: tcga, cache_stem: tcga_tgct}
+      - {cancer_code: THCA, disease_label: thyroid carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_thca}
+      - {cancer_code: THYM, disease_label: thymoma, group: tcga_direct, selection: tcga, cache_stem: tcga_thym}
+      - {cancer_code: UCEC, disease_label: uterine corpus endometrioid carcinoma, group: tcga_direct, selection: tcga, cache_stem: tcga_ucec}
+      - {cancer_code: UCS, disease_label: uterine carcinosarcoma, group: tcga_direct, selection: tcga, cache_stem: tcga_ucs}
+      - {cancer_code: UVM, disease_label: uveal melanoma, group: tcga_direct, selection: tcga, cache_stem: tcga_uvm}
+    special_handling: >
+      TCGA-only subset of the Treehouse 25.01 PolyA compendium. Samples
+      are selected by matching the Treehouse clinical disease label and
+      requiring `th_dataset_id` to start with `TCGA`. This deliberately
+      excludes GBM/LGG, SARC, and molecular subtype cohorts that require
+      cBioPortal or GDC side tables; those remain source-specific follow-ups
+      under oncoref#296. Uses its own source_cohort so a future authoritative
+      GDC STAR-counts build can coexist without clobbering Treehouse-derived
+      artifacts.
+
   - id: treehouse-ribod-25-01
     category: expression
     cancer_codes: [SARC_CHOR, RB]
