@@ -367,6 +367,16 @@ artifacts, this source-union mode intentionally rejects `format="wide"`,
 `sample_qc="pass"`, and `sample_qc="pass_or_warn"`; QC-filtered all-source
 reference artifacts remain part of the expression-artifact rebuild work.
 
+For compatibility with pirlygenes reference-expression consumers, the accessor
+can also fold identical loci at read time. Use
+`collapse_cdna_identical=True` for the read-recovery space: byte-identical CDS
+groups plus the curated proteoform-collapse overrides. Use
+`collapse_protein_identical=True` for the genome-wide identical-protein space.
+Set at most one. These modes sum `expression`, `q1`, and `q3` in linear TPM
+space inside each source context, add `Proteoform_ID` and
+`Member_Ensembl_Gene_IDs` in long output, and leave wide output in the historical
+`Ensembl_Gene_ID`, `Symbol`, value-column shape.
+
 Use `expression.cancer_reference_expression_availability()` before delegating a
 downstream reference-expression accessor that must distinguish unavailable
 oncoref artifacts from empty gene filters. It returns one row per requested
