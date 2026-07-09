@@ -375,6 +375,78 @@ sources:
       source_cohort from the unsplit HNSC cohort so subtype-derived references
       remain auditable.
 
+  - id: treehouse-polya-25-01-tcga-ucec-subtype
+    category: expression
+    cancer_codes: [UCEC_POLE, UCEC_MSI, UCEC_CNL, UCEC_CNH]
+    source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE
+    source_project: Treehouse (TCGA-UCEC) x cBioPortal molecular subtype
+    url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/build_tcga_ucec_subtype_split.py  # superseded cBioPortal subtype split
+    unit: log2(TPM+1)
+    expected_size_gb: 6.2
+    citation: >
+      Treehouse Childhood Cancer Initiative, Tumor Compendium 25.01
+      PolyA, TCGA-UCEC subset split by cBioPortal molecular subtype calls
+      from ucec_tcga_pan_can_atlas_2018. PMID 23636398.
+    files:
+      tpm: Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+      tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01_tcga_ucec_subtype
+    tumor_origin: primary
+    treehouse_cohorts:
+      - {cancer_code: UCEC_POLE, disease_label: endometrial carcinoma, group: tcga_ucec_subtype, selection: "cbio_clinical:ucec_tcga_pan_can_atlas_2018:SUBTYPE:UCEC_POLE", cache_stem: tcga_ucec_pole}
+      - {cancer_code: UCEC_MSI, disease_label: endometrial carcinoma, group: tcga_ucec_subtype, selection: "cbio_clinical:ucec_tcga_pan_can_atlas_2018:SUBTYPE:UCEC_MSI", cache_stem: tcga_ucec_msi}
+      - {cancer_code: UCEC_CNL, disease_label: endometrial carcinoma, group: tcga_ucec_subtype, selection: "cbio_clinical:ucec_tcga_pan_can_atlas_2018:SUBTYPE:UCEC_CN_LOW", cache_stem: tcga_ucec_cnl}
+      - {cancer_code: UCEC_CNH, disease_label: endometrial carcinoma, group: tcga_ucec_subtype, selection: "cbio_clinical:ucec_tcga_pan_can_atlas_2018:SUBTYPE:UCEC_CN_HIGH", cache_stem: tcga_ucec_cnh}
+    special_handling: >
+      Treehouse carries TCGA-UCEC samples in a parent uterine/endometrial
+      disease bucket. This source joins each TCGA sample barcode prefix to
+      cBioPortal PanCancer Atlas patient SUBTYPE calls and routes POLE, MSI,
+      copy-number-low, and copy-number-high cohorts separately. It uses a
+      distinct source_cohort from the unsplit UCEC cohort so subtype-derived
+      references remain auditable.
+
+  - id: treehouse-polya-25-01-tcga-stad-subtype
+    category: expression
+    cancer_codes: [STAD_EBV, STAD_MSI, STAD_GS, STAD_CIN]
+    source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE
+    source_project: Treehouse (TCGA-STAD) x cBioPortal molecular subtype
+    url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/build_tcga_stad_subtype_split.py  # superseded cBioPortal subtype split
+    unit: log2(TPM+1)
+    expected_size_gb: 6.2
+    citation: >
+      Treehouse Childhood Cancer Initiative, Tumor Compendium 25.01
+      PolyA, TCGA-STAD subset split by cBioPortal molecular subtype calls
+      from stad_tcga_pan_can_atlas_2018. PMID 25079317.
+    files:
+      tpm: Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+      tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01_tcga_stad_subtype
+    tumor_origin: primary
+    treehouse_cohorts:
+      - {cancer_code: STAD_EBV, disease_label: stomach adenocarcinoma, group: tcga_stad_subtype, selection: "cbio_clinical:stad_tcga_pan_can_atlas_2018:SUBTYPE:STAD_EBV", cache_stem: tcga_stad_ebv}
+      - {cancer_code: STAD_MSI, disease_label: stomach adenocarcinoma, group: tcga_stad_subtype, selection: "cbio_clinical:stad_tcga_pan_can_atlas_2018:SUBTYPE:STAD_MSI", cache_stem: tcga_stad_msi}
+      - {cancer_code: STAD_GS, disease_label: stomach adenocarcinoma, group: tcga_stad_subtype, selection: "cbio_clinical:stad_tcga_pan_can_atlas_2018:SUBTYPE:STAD_GS", cache_stem: tcga_stad_gs}
+      - {cancer_code: STAD_CIN, disease_label: stomach adenocarcinoma, group: tcga_stad_subtype, selection: "cbio_clinical:stad_tcga_pan_can_atlas_2018:SUBTYPE:STAD_CIN", cache_stem: tcga_stad_cin}
+    special_handling: >
+      Treehouse carries TCGA-STAD samples in the parent stomach adenocarcinoma
+      disease bucket. This source joins each TCGA sample barcode prefix to
+      cBioPortal PanCancer Atlas patient SUBTYPE calls and routes EBV, MSI,
+      genomically stable, and chromosomal-instability cohorts separately. The
+      cBioPortal STAD_POLE label is intentionally not routed because oncoref
+      does not currently carry a STAD_POLE registry code.
+
   - id: treehouse-polya-25-01-tcga-glioma
     category: expression
     cancer_codes: [GBM, LGG]

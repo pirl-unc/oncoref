@@ -16,6 +16,7 @@ import pandas as pd
 import pytest
 
 from oncoref import expression_builders
+from oncoref.cancer_types import cohort_registry
 
 _SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 
@@ -572,6 +573,70 @@ def test_treehouse_source_from_registry_loads_hnsc_hpv_routes():
         source_id="treehouse-polya-25-01-tcga-hnsc-hpv",
     )
     assert [cohort.cancer_code for cohort in hpv] == source.cancer_code
+
+
+def test_treehouse_source_from_registry_loads_ucec_subtype_routes():
+    source = expression_builders.treehouse_source_from_registry(
+        "treehouse-polya-25-01-tcga-ucec-subtype"
+    )
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_ucec_subtype"
+    assert source.cancer_code == ["UCEC_POLE", "UCEC_MSI", "UCEC_CNL", "UCEC_CNH"]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["UCEC_POLE"].disease_label == "endometrial carcinoma"
+    assert (
+        by_code["UCEC_POLE"].selection
+        == "cbio_clinical:ucec_tcga_pan_can_atlas_2018:SUBTYPE:UCEC_POLE"
+    )
+    assert (
+        by_code["UCEC_CNL"].selection
+        == "cbio_clinical:ucec_tcga_pan_can_atlas_2018:SUBTYPE:UCEC_CN_LOW"
+    )
+    assert (
+        by_code["UCEC_CNH"].selection
+        == "cbio_clinical:ucec_tcga_pan_can_atlas_2018:SUBTYPE:UCEC_CN_HIGH"
+    )
+    assert by_code["UCEC_CNH"].effective_cache_stem == "tcga_ucec_cnh"
+
+    subtypes = expression_builders.treehouse_cohorts_for_group(
+        "tcga_ucec_subtype",
+        source_id="treehouse-polya-25-01-tcga-ucec-subtype",
+    )
+    assert [cohort.cancer_code for cohort in subtypes] == source.cancer_code
+
+    registry = cohort_registry()
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE"]["n_samples"] == 172
+
+
+def test_treehouse_source_from_registry_loads_stad_subtype_routes():
+    source = expression_builders.treehouse_source_from_registry(
+        "treehouse-polya-25-01-tcga-stad-subtype"
+    )
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_stad_subtype"
+    assert source.cancer_code == ["STAD_EBV", "STAD_MSI", "STAD_GS", "STAD_CIN"]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["STAD_EBV"].disease_label == "stomach adenocarcinoma"
+    assert (
+        by_code["STAD_EBV"].selection
+        == "cbio_clinical:stad_tcga_pan_can_atlas_2018:SUBTYPE:STAD_EBV"
+    )
+    assert (
+        by_code["STAD_CIN"].selection
+        == "cbio_clinical:stad_tcga_pan_can_atlas_2018:SUBTYPE:STAD_CIN"
+    )
+    assert by_code["STAD_CIN"].effective_cache_stem == "tcga_stad_cin"
+
+    subtypes = expression_builders.treehouse_cohorts_for_group(
+        "tcga_stad_subtype",
+        source_id="treehouse-polya-25-01-tcga-stad-subtype",
+    )
+    assert [cohort.cancer_code for cohort in subtypes] == source.cancer_code
+
+    registry = cohort_registry()
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE"]["n_samples"] == 374
 
 
 def test_treehouse_source_from_registry_loads_glioma_gdc_project_routes():
