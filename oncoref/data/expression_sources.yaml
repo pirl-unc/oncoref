@@ -305,6 +305,42 @@ sources:
       GDC STAR-counts build can coexist without clobbering Treehouse-derived
       artifacts.
 
+  - id: treehouse-polya-25-01-tcga-brca-pam50
+    category: expression
+    cancer_codes: [BRCA_Basal, BRCA_HER2, BRCA_LumA, BRCA_LumB, BRCA_Normal]
+    source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_BRCA_PAM50
+    source_project: Treehouse (TCGA-BRCA) x cBioPortal PAM50
+    url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/sweep_treehouse_tcga_brca_pam50.py  # superseded cBioPortal subtype split
+    unit: log2(TPM+1)
+    expected_size_gb: 6.2
+    citation: >
+      Treehouse Childhood Cancer Initiative, Tumor Compendium 25.01
+      PolyA, TCGA-BRCA subset split by cBioPortal PAM50 subtype calls
+      from brca_tcga_pan_can_atlas_2018. PMID 29625050.
+    files:
+      tpm: Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+      tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01_tcga_brca_pam50
+    tumor_origin: primary
+    treehouse_cohorts:
+      - {cancer_code: BRCA_Basal, disease_label: breast invasive carcinoma, group: tcga_brca_pam50, selection: "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Basal", cache_stem: tcga_brca_basal}
+      - {cancer_code: BRCA_HER2, disease_label: breast invasive carcinoma, group: tcga_brca_pam50, selection: "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Her2", cache_stem: tcga_brca_her2}
+      - {cancer_code: BRCA_LumA, disease_label: breast invasive carcinoma, group: tcga_brca_pam50, selection: "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_LumA", cache_stem: tcga_brca_luma}
+      - {cancer_code: BRCA_LumB, disease_label: breast invasive carcinoma, group: tcga_brca_pam50, selection: "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_LumB", cache_stem: tcga_brca_lumb}
+      - {cancer_code: BRCA_Normal, disease_label: breast invasive carcinoma, group: tcga_brca_pam50, selection: "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Normal", cache_stem: tcga_brca_normal}
+    special_handling: >
+      Treehouse carries TCGA-BRCA samples in the parent breast invasive
+      carcinoma disease bucket. This source joins each TCGA sample barcode
+      prefix to cBioPortal PanCancer Atlas patient SUBTYPE calls and routes
+      the five PAM50 cohorts separately. It uses a distinct source_cohort from
+      the unsplit BRCA cohort so subtype-derived references remain auditable.
+
   - id: treehouse-polya-25-01-tcga-glioma
     category: expression
     cancer_codes: [GBM, LGG]

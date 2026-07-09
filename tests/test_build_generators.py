@@ -514,6 +514,39 @@ def test_treehouse_source_from_registry_loads_tcga_subset_routes():
     assert {cohort.selection for cohort in tcga_direct} == {"tcga"}
 
 
+def test_treehouse_source_from_registry_loads_brca_pam50_routes():
+    source = expression_builders.treehouse_source_from_registry(
+        "treehouse-polya-25-01-tcga-brca-pam50"
+    )
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_BRCA_PAM50"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_brca_pam50"
+    assert source.cancer_code == [
+        "BRCA_Basal",
+        "BRCA_HER2",
+        "BRCA_LumA",
+        "BRCA_LumB",
+        "BRCA_Normal",
+    ]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["BRCA_Basal"].disease_label == "breast invasive carcinoma"
+    assert (
+        by_code["BRCA_Basal"].selection
+        == "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Basal"
+    )
+    assert (
+        by_code["BRCA_HER2"].selection
+        == "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Her2"
+    )
+    assert by_code["BRCA_HER2"].effective_cache_stem == "tcga_brca_her2"
+
+    pam50 = expression_builders.treehouse_cohorts_for_group(
+        "tcga_brca_pam50",
+        source_id="treehouse-polya-25-01-tcga-brca-pam50",
+    )
+    assert [cohort.cancer_code for cohort in pam50] == source.cancer_code
+
+
 def test_treehouse_source_from_registry_loads_glioma_gdc_project_routes():
     source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-glioma")
 
@@ -559,7 +592,7 @@ def test_treehouse_sample_ids_filter_disease_and_tcga_selection():
     unsupported = expression_builders.TreehouseCohort(
         "SARC_EWS",
         "Ewing sarcoma",
-        selection="pam50:BRCA_Basal",
+        selection="legacy_pam50:BRCA_Basal",
     )
     with pytest.raises(ValueError, match="unsupported Treehouse cohort selection"):
         expression_builders.treehouse_sample_ids(clinical, unsupported)
@@ -587,6 +620,32 @@ def test_treehouse_sample_ids_filter_gdc_project_selection():
     ) == ["TCGA-GB-0001-01A"]
 
     with pytest.raises(ValueError, match="requires a precomputed GDC case set"):
+        expression_builders.treehouse_sample_ids(clinical, cohort)
+
+
+def test_treehouse_sample_ids_filter_cbio_clinical_selection():
+    clinical = pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-BR-0001-01A", "disease": "breast invasive carcinoma"},
+            {"th_dataset_id": "TCGA-BR-0002-01A", "disease": "breast invasive carcinoma"},
+            {"th_dataset_id": "TREEHOUSE-3", "disease": "breast invasive carcinoma"},
+        ]
+    )
+    selector = "cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Basal"
+    cohort = expression_builders.TreehouseCohort(
+        "BRCA_Basal",
+        "breast invasive carcinoma",
+        selection=selector,
+    )
+    case_sets = {selector: {"TCGA-BR-0001"}}
+
+    assert expression_builders.treehouse_sample_ids(
+        clinical,
+        cohort,
+        selection_case_sets=case_sets,
+    ) == ["TCGA-BR-0001-01A"]
+
+    with pytest.raises(ValueError, match="requires a precomputed cBioPortal case set"):
         expression_builders.treehouse_sample_ids(clinical, cohort)
 
 
@@ -716,6 +775,85 @@ def test_build_treehouse_source_matrices_splits_gdc_project_cohorts(
     assert list(lgg.columns) == ["Ensembl_Gene_ID", "TCGA-LG-0002-01A"]
     np.testing.assert_allclose(gbm.loc["TP53", "TCGA-GB-0001-01A"], 2.0)
     np.testing.assert_allclose(lgg.loc["TP53", "TCGA-LG-0002-01A"], 4.0)
+
+
+def test_build_treehouse_source_matrices_splits_cbio_clinical_cohorts(
+    tmp_path,
+    monkeypatch,
+):
+    clinical_path = tmp_path / "clinical.tsv"
+    pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-BR-0001-01A", "disease": "breast invasive carcinoma"},
+            {"th_dataset_id": "TCGA-BR-0002-01A", "disease": "breast invasive carcinoma"},
+            {"th_dataset_id": "TREEHOUSE-3", "disease": "breast invasive carcinoma"},
+        ]
+    ).to_csv(clinical_path, sep="\t", index=False)
+    tpm_path = tmp_path / "treehouse.tsv"
+    pd.DataFrame(
+        {
+            "Gene": ["TP53", "ERBB2"],
+            "TCGA-BR-0001-01A": np.log2(np.array([2.0, 1.0]) + 1.0),
+            "TCGA-BR-0002-01A": np.log2(np.array([4.0, 8.0]) + 1.0),
+            "TREEHOUSE-3": np.log2(np.array([100.0, 100.0]) + 1.0),
+        }
+    ).to_csv(tpm_path, sep="\t", index=False)
+    source = expression_builders.TreehouseSource(
+        source_id="synthetic-treehouse-brca-pam50",
+        source_cohort="SYNTHETIC_TREEHOUSE_BRCA_PAM50",
+        cancer_code=["BRCA_Basal", "BRCA_HER2"],
+        tpm_file=tpm_path.name,
+        clinical_file=clinical_path.name,
+        source_project="Treehouse (TCGA-BRCA) x cBioPortal PAM50",
+        cohorts=(
+            expression_builders.TreehouseCohort(
+                "BRCA_Basal",
+                "breast invasive carcinoma",
+                selection="cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Basal",
+                cache_stem="tcga_brca_basal",
+            ),
+            expression_builders.TreehouseCohort(
+                "BRCA_HER2",
+                "breast invasive carcinoma",
+                selection="cbio_clinical:brca_tcga_pan_can_atlas_2018:SUBTYPE:BRCA_Her2",
+                cache_stem="tcga_brca_her2",
+            ),
+        ),
+    )
+
+    def fake_clinical_map(
+        study_id,
+        attribute_id,
+        *,
+        clinical_data_type="PATIENT",
+        cache_path=None,
+        force_download=False,
+    ):
+        assert study_id == "brca_tcga_pan_can_atlas_2018"
+        assert attribute_id == "SUBTYPE"
+        assert clinical_data_type == "PATIENT"
+        assert cache_path is not None
+        return pd.DataFrame(
+            {
+                "case_id": ["TCGA-BR-0001", "TCGA-BR-0002"],
+                "value": ["BRCA_Basal", "BRCA_Her2"],
+            }
+        )
+
+    monkeypatch.setattr(
+        expression_builders,
+        "treehouse_cbioportal_clinical_attribute_map",
+        fake_clinical_map,
+    )
+    result = expression_builders.build_treehouse_source_matrices(source, cache_dir=tmp_path)
+
+    assert set(result.matrix_paths) == {"BRCA_Basal", "BRCA_HER2"}
+    basal = pd.read_parquet(result.matrix_paths["BRCA_Basal"]).set_index("Symbol")
+    her2 = pd.read_parquet(result.matrix_paths["BRCA_HER2"]).set_index("Symbol")
+    assert list(basal.columns) == ["Ensembl_Gene_ID", "TCGA-BR-0001-01A"]
+    assert list(her2.columns) == ["Ensembl_Gene_ID", "TCGA-BR-0002-01A"]
+    np.testing.assert_allclose(basal.loc["TP53", "TCGA-BR-0001-01A"], 2.0)
+    np.testing.assert_allclose(her2.loc["ERBB2", "TCGA-BR-0002-01A"], 8.0)
 
 
 def test_recount3_gene_sums_to_tpm_length_normalizes_and_collapses_versions():

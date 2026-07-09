@@ -969,6 +969,19 @@ def _treehouse_tcga_case_id(sample_id: str) -> str | None:
     return "-".join(text.split("-")[:3])
 
 
+def _parse_cbio_clinical_selector(selection: str) -> tuple[str, str, str] | None:
+    selector = str(selection or "").strip()
+    if not selector.startswith("cbio_clinical:"):
+        return None
+    parts = selector.split(":", 3)
+    if len(parts) != 4 or not all(part.strip() for part in parts[1:]):
+        raise ValueError(
+            "Treehouse cbio_clinical selectors must have the form "
+            "'cbio_clinical:<study_id>:<attribute_id>:<value>'"
+        )
+    return parts[1].strip(), parts[2].strip(), parts[3].strip()
+
+
 def _treehouse_sample_matches_selection(
     row: Mapping,
     selection: str,
@@ -993,9 +1006,19 @@ def _treehouse_sample_matches_selection(
             raise ValueError(f"Treehouse selector {selector!r} requires a precomputed GDC case set")
         case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
         return case_id in case_sets[selector] if case_id is not None else False
+    if selector.startswith("cbio_clinical:"):
+        _parse_cbio_clinical_selector(selector)
+        case_sets = selection_case_sets or {}
+        if selector not in case_sets:
+            raise ValueError(
+                f"Treehouse selector {selector!r} requires a precomputed cBioPortal case set"
+            )
+        case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
+        return case_id in case_sets[selector] if case_id is not None else False
     raise ValueError(
         f"unsupported Treehouse cohort selection {selector!r}; "
-        "only '', 'tcga', and 'gdc_project:<TCGA-project>' are registry-native so far"
+        "only '', 'tcga', 'gdc_project:<TCGA-project>', and "
+        "'cbio_clinical:<study_id>:<attribute_id>:<value>' are registry-native so far"
     )
 
 
@@ -1075,6 +1098,51 @@ def treehouse_gdc_case_project_map(
     return out
 
 
+def treehouse_cbioportal_clinical_attribute_map(
+    study_id: str,
+    attribute_id: str,
+    *,
+    clinical_data_type: str = "PATIENT",
+    cache_path: str | Path | None = None,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """cBioPortal clinical attribute values keyed by TCGA case submitter ID."""
+    study = str(study_id).strip()
+    attribute = str(attribute_id).strip()
+    data_type = str(clinical_data_type or "PATIENT").strip().upper()
+    if not study or not attribute:
+        return pd.DataFrame(columns=["case_id", "value"])
+    cache = Path(cache_path) if cache_path is not None else None
+    if cache is not None and cache.exists() and not force_download:
+        return pd.read_csv(cache)
+
+    params = {
+        "clinicalDataType": data_type,
+        "attributeId": attribute,
+    }
+    url = (
+        f"https://www.cbioportal.org/api/studies/{urllib.parse.quote(study)}/clinical-data?"
+        + urllib.parse.urlencode(params)
+    )
+    with urllib.request.urlopen(url, timeout=60) as response:
+        data = json.load(response)
+    rows = []
+    for item in data:
+        raw_id = item.get("patientId") or item.get("sampleId")
+        value = item.get("value")
+        if raw_id is None or value is None:
+            continue
+        case_id = _treehouse_tcga_case_id(str(raw_id))
+        if case_id is None:
+            continue
+        rows.append({"case_id": case_id, "value": str(value)})
+    out = pd.DataFrame(rows, columns=["case_id", "value"]).drop_duplicates()
+    if cache is not None:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        out.to_csv(cache, index=False)
+    return out
+
+
 def _treehouse_selection_case_sets(
     source: TreehouseSource,
     *,
@@ -1086,19 +1154,49 @@ def _treehouse_selection_case_sets(
         for cohort in source.cohorts
         if cohort.selection.startswith("gdc_project:")
     }
-    if not gdc_projects:
-        return {}
-    cache_path = Path(cache_dir) / "derived" / f"{_artifact_stem(source.source_id)}_gdc_cases.csv"
-    case_map = treehouse_gdc_case_project_map(
-        gdc_projects,
-        cache_path=cache_path,
-        force_download=force_download,
-    )
-    case_sets: dict[str, set[str]] = {
-        f"gdc_project:{project_id}": set() for project_id in gdc_projects
+    cbio_selectors = {
+        cohort.selection
+        for cohort in source.cohorts
+        if cohort.selection.startswith("cbio_clinical:")
     }
-    for project_id, sub in case_map.groupby("project_id"):
-        case_sets[f"gdc_project:{project_id}"] = set(sub["submitter_id"].astype(str))
+    if not gdc_projects and not cbio_selectors:
+        return {}
+    derived = Path(cache_dir) / "derived"
+    case_sets: dict[str, set[str]] = {}
+    if gdc_projects:
+        cache_path = derived / f"{_artifact_stem(source.source_id)}_gdc_cases.csv"
+        case_map = treehouse_gdc_case_project_map(
+            gdc_projects,
+            cache_path=cache_path,
+            force_download=force_download,
+        )
+        case_sets.update({f"gdc_project:{project_id}": set() for project_id in gdc_projects})
+        for project_id, sub in case_map.groupby("project_id"):
+            case_sets[f"gdc_project:{project_id}"] = set(sub["submitter_id"].astype(str))
+
+    cbio_requests: dict[tuple[str, str], list[tuple[str, str]]] = {}
+    for selector in cbio_selectors:
+        parsed = _parse_cbio_clinical_selector(selector)
+        if parsed is None:
+            continue
+        study_id, attribute_id, value = parsed
+        cbio_requests.setdefault((study_id, attribute_id), []).append((selector, value))
+    for (study_id, attribute_id), selectors in cbio_requests.items():
+        cache_stem = "_".join(
+            part.lower().replace("-", "_")
+            for part in (_artifact_stem(source.source_id), study_id, attribute_id)
+        )
+        cache_path = derived / f"{cache_stem}_cbio_clinical.csv"
+        clinical = treehouse_cbioportal_clinical_attribute_map(
+            study_id,
+            attribute_id,
+            cache_path=cache_path,
+            force_download=force_download,
+        )
+        for selector, value in selectors:
+            case_sets[selector] = set(
+                clinical.loc[clinical["value"].astype(str).eq(value), "case_id"].astype(str)
+            )
     return case_sets
 
 
