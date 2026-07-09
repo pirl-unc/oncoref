@@ -91,6 +91,18 @@ def test_expression_artifact_gene_universe_deltas_filter_by_product_and_code():
     assert set(cll["status"]) == {"remapped_to_oncoref"}
     assert "ENSG00000225489" in set(cll["legacy_ensembl_gene_id"])
 
+    reps = expression.expression_artifact_gene_universe_deltas(
+        product="representative_cohort_samples",
+        cancer_type="PRAD",
+        delta_kind="pirlygenes_only",
+        status="sequence_identical_remapped_to_oncoref",
+    )
+    assert len(reps) == 10
+    assert {
+        ("ENSG00000205989", "ENSG00000206034"),
+        ("ENSG00000272681", "ENSG00000279245"),
+    } <= set(zip(reps["legacy_ensembl_gene_id"], reps["oncoref_ensembl_gene_id"]))
+
 
 def test_expression_artifact_gene_universe_deltas_expose_full_representative_extras():
     prad = expression.expression_artifact_gene_universe_deltas(
@@ -159,12 +171,12 @@ def test_expression_artifact_gene_universe_deltas_flag_technical_and_missing_row
     assert set(unresolved["recommended_consumer_action"]) == {"audit_before_filtering"}
 
     missing = df[df["is_missing_biological"]]
-    assert set(missing["status"]) == {
-        "canonical_row_absent_from_oncoref_output",
-        "unresolved_missing_oncoref_row",
-    }
-    assert set(missing["artifact_row_class"]) == {"missing_biological"}
-    assert set(missing["recommended_consumer_action"]) == {"restore_or_remap_in_next_bundle"}
+    assert missing.empty
+
+    sequence = df[df["status"].eq("sequence_identical_remapped_to_oncoref")]
+    assert len(sequence) == 32
+    assert set(sequence["artifact_row_class"]) == {"canonicalized"}
+    assert set(sequence["recommended_consumer_action"]) == {"accept_canonical_mapping"}
 
 
 def test_expression_artifact_technical_extra_gene_ids_filters_request_scope():
@@ -248,7 +260,7 @@ def test_expression_artifact_gene_universe_delta_report_scopes_requests():
     assert int(report["n"].sum()) == 264
     assert {
         "technical_or_noncoding_extra",
-        "canonical_row_absent_from_oncoref_output",
+        "sequence_identical_remapped_to_oncoref",
         "remapped_to_oncoref",
     } <= set(report["status"])
     assert (
@@ -703,6 +715,32 @@ def test_representatives_can_return_pirlygenes_legacy_gene_ids(monkeypatch, tmp_
     assert legacy.attrs["gene_universe_delta_n"] == 264
     assert legacy_long.loc[0, "Ensembl_Gene_ID"] == "ENSG00000148362"
     assert legacy_long.attrs["gene_id_style"] == "pirlygenes"
+
+
+def test_representatives_can_return_pirlygenes_sequence_identical_gene_ids(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000206034"],
+            "Symbol": ["DEFB109B"],
+            "PRAD__rep1": [11.0],
+        }
+    ).to_parquet(d / "PRAD.parquet", index=False)
+
+    canonical = expression.representative_cohort_samples("PRAD")
+    legacy = expression.representative_cohort_samples("PRAD", gene_id_style="pirlygenes")
+    legacy_long = expression.representative_cohort_samples(
+        "PRAD", format="long", gene_id_style="pirlygenes"
+    )
+
+    assert canonical.loc[0, "Ensembl_Gene_ID"] == "ENSG00000206034"
+    assert legacy.loc[0, "Ensembl_Gene_ID"] == "ENSG00000205989"
+    assert legacy.loc[0, "Symbol"] == "DEFB109C"
+    assert legacy.loc[0, "PRAD_rep01"] == pytest.approx(11.0)
+    assert legacy_long.loc[0, "Ensembl_Gene_ID"] == "ENSG00000205989"
+    assert legacy_long.loc[0, "Symbol"] == "DEFB109C"
 
 
 def test_representative_wide_does_not_fragment_genes(monkeypatch, tmp_path):
