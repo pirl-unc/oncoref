@@ -396,8 +396,9 @@ def cancer_type_info(cancer_type):
 
     Keys: ``code``, ``name``, ``family``, ``primary_tissue``,
     ``primary_template``, ``parent_code``, ``ontology_level``,
-    ``ontology_kind``, ``is_classification_target``, ``subtype_key``,
-    ``pediatric``, ``differentiation``, ``grade_tier``, ``expression_source``,
+    ``ontology_kind``, ``reference_source``, ``classification_reference_code``,
+    ``is_classification_target``, ``subtype_key``, ``pediatric``,
+    ``differentiation``, ``grade_tier``, ``expression_source``,
     ``source_cohort``, ``source_pmid``, ``notes``, ``viral_etiology``,
     ``viral_agent``, ``fusion_driven``, ``fusion_driver``,
     ``burden_category``, ``tmb``.
@@ -420,7 +421,6 @@ def cancer_type_info(cancer_type):
         "parent_code",
         "ontology_level",
         "ontology_kind",
-        "is_classification_target",
         "subtype_key",
         "pediatric",
         "differentiation",
@@ -441,6 +441,10 @@ def cancer_type_info(cancer_type):
             info[col] = val.item() if hasattr(val, "item") else val
         else:
             info[col] = None
+    reference_source = cancer_type_reference_source(code)
+    info["reference_source"] = reference_source
+    info["classification_reference_code"] = cancer_type_reference_code(code)
+    info["is_classification_target"] = reference_source in _RETURNABLE_REFERENCE_SOURCES
     info["burden_category"] = burden_category(code)
     tmb = cancer_tmb(code)
     info["tmb"] = float(tmb) if tmb is not None else None
@@ -636,10 +640,22 @@ def cancer_type_registry():
     The registry is a richer superset of TCGA — it covers non-TCGA heme
     malignancies, pediatric cancers, the neuroendocrine axis, and rare
     entities. Each row carries ``code``, ``family``, ``primary_tissue``,
-    ``primary_template``, ``parent_code``, ``expression_source``, ``notes`` and
-    more. Returns a defensive copy so callers can mutate freely.
+    ``primary_template``, ``parent_code``, ``expression_source``, the derived
+    ``reference_source`` / ``classification_reference_code`` classification
+    backing contract, ``notes`` and more. Returns a defensive copy so callers
+    can mutate freely. The shipped CSV still carries the historical
+    ``is_classification_target`` column, but this public frame overwrites it
+    from ``reference_source`` so the enum is the source of truth.
     """
-    return _registry_frame().copy()
+    df = _registry_frame().copy()
+    reference_sources = _reference_source_map()
+    classification_refs = _classification_reference_code_map()
+    df["reference_source"] = [reference_sources.get(str(code), "none") for code in df["code"]]
+    df["classification_reference_code"] = [
+        classification_refs.get(str(code)) for code in df["code"]
+    ]
+    df["is_classification_target"] = df["reference_source"].isin(_RETURNABLE_REFERENCE_SOURCES)
+    return df
 
 
 def _split_semicolon(value) -> tuple[str, ...]:
@@ -967,6 +983,8 @@ _CANCER_TYPE_RECORD_COLUMNS = [
     "family_name",
     "ontology_level",
     "ontology_kind",
+    "reference_source",
+    "classification_reference_code",
     "is_classification_target",
     "primary_tissue",
     "normal_tissue_code",
@@ -1035,6 +1053,13 @@ def _cancer_type_record_frame() -> pd.DataFrame:
     df["is_leaf"] = df["children"].map(lambda x: len(x) == 0)
     df["subtype_groups"] = [groups.get(str(code), ()) for code in df["code"]]
     df["subtype_axes"] = [axes.get(str(code), ()) for code in df["code"]]
+    reference_sources = _reference_source_map()
+    classification_refs = _classification_reference_code_map()
+    df["reference_source"] = [reference_sources.get(str(code), "none") for code in df["code"]]
+    df["classification_reference_code"] = [
+        classification_refs.get(str(code)) for code in df["code"]
+    ]
+    df["is_classification_target"] = df["reference_source"].isin(_RETURNABLE_REFERENCE_SOURCES)
     df["evidence_source_code"] = [cancer_evidence_source_code(code) for code in df["code"]]
     df["evidence_source_kind"] = [
         "direct" if code == source else "source_scope"
@@ -1065,6 +1090,7 @@ def cancer_type_records(
     ontology_level=None,
     ontology_kind=None,
     classification_target: bool | None = None,
+    reference_source=None,
     differentiation=None,
     grade_tier=None,
     primary_tissue=None,
@@ -1084,13 +1110,15 @@ def cancer_type_records(
     result has the same columns, including hierarchy fields (``path``,
     ``ancestors``, ``children``), semantic rollups (``lineage_group``,
     ``family``), explicit registry level fields (``ontology_level`` /
-    ``ontology_kind``), a curated sample-classification target flag
-    (``is_classification_target``), cross-cutting molecular groupings
-    (``subtype_groups`` / ``subtype_axes``), sparse differentiation and grade
-    axes (``differentiation`` / ``grade_tier``), explicit MMR/MSI classifier-axis
-    fields (``mmr_axis_state`` / ``mmr_classifier_role``), source-scoped evidence resolution
-    (``evidence_source_code``), expression-matrix availability, and matched
-    normal-tissue metadata.
+    ``ontology_kind``), expression/classification backing
+    (``reference_source`` / ``classification_reference_code``), a derived
+    sample-classification target flag (``is_classification_target``),
+    cross-cutting molecular groupings (``subtype_groups`` / ``subtype_axes``),
+    sparse differentiation and grade axes (``differentiation`` /
+    ``grade_tier``), explicit MMR/MSI classifier-axis fields
+    (``mmr_axis_state`` / ``mmr_classifier_role``), source-scoped evidence
+    resolution (``evidence_source_code``), expression-matrix availability, and
+    matched normal-tissue metadata.
 
     Examples:
 
@@ -1124,6 +1152,7 @@ def cancer_type_records(
     if classification_target is not None:
         wanted = _coerce_bool_filter(classification_target, name="classification_target")
         df = df[_truthy_registry_flag(df["is_classification_target"]) == wanted]
+    df = _filter_string_values(df, "reference_source", reference_source)
     df = _filter_string_values(df, "differentiation", differentiation)
     df = _filter_string_values(df, "grade_tier", grade_tier)
     df = _filter_string_values(df, "primary_tissue", primary_tissue)
@@ -1174,6 +1203,99 @@ def cancer_type_codes(*args, **kwargs) -> list[str]:
     return cancer_type_records(*args, **kwargs)["code"].tolist()
 
 
+REFERENCE_SOURCE_VALUES = ("own_cohort", "member_union", "parent", "none")
+_RETURNABLE_REFERENCE_SOURCES = frozenset({"own_cohort", "member_union"})
+_SOURCE_SCOPE_MEMBER_UNION_CODES = frozenset({"BTC", "NSCLC", "SGC"})
+
+
+def _direct_expression_codes() -> set[str]:
+    return set(_source_matrix_frame()["cancer_code"].dropna().astype(str))
+
+
+@lru_cache(maxsize=1)
+def _reference_source_map() -> dict[str, str]:
+    """Derived per-code expression/classification backing strategy.
+
+    ``own_cohort`` and ``member_union`` are reportable sample-classification
+    targets. ``parent`` rows can be annotated but should report the nearest
+    reportable ancestor, and ``none`` rows are pure unsupported/provenance
+    scopes unless a consumer explicitly abstains up the tree.
+    """
+
+    df = _registry_frame()
+    direct = _direct_expression_codes()
+    parent_of = _parent_of_map()
+    out: dict[str, str] = {}
+    for row in df.to_dict("records"):
+        code = str(row["code"])
+        level = str(row.get("ontology_level") or "").strip().lower()
+        kind = str(row.get("ontology_kind") or "").strip().lower()
+        if code in direct:
+            out[code] = "own_cohort"
+        elif _computed_expression_reference_members(code):
+            out[code] = "member_union"
+        elif level == "evidence_scope" or kind == "source_scope":
+            out[code] = "none"
+        elif parent_of.get(code):
+            out[code] = "parent"
+        else:
+            out[code] = "none"
+    return out
+
+
+@lru_cache(maxsize=1)
+def _classification_reference_code_map() -> dict[str, str | None]:
+    reference_sources = _reference_source_map()
+    parent_of = _parent_of_map()
+    out: dict[str, str | None] = {}
+    for code, reference_source in reference_sources.items():
+        if reference_source in _RETURNABLE_REFERENCE_SOURCES:
+            out[code] = code
+            continue
+        target = None
+        for ancestor in _walk_ancestors(code, parent_of):
+            if reference_sources.get(ancestor) in _RETURNABLE_REFERENCE_SOURCES:
+                target = ancestor
+                break
+        out[code] = target
+    return out
+
+
+def cancer_type_reference_source(cancer_type) -> str | None:
+    """Return the expression/classification backing enum for ``cancer_type``.
+
+    Values are ``own_cohort``, ``member_union``, ``parent``, and ``none``.
+    ``None`` input returns ``None``; unknown labels raise via
+    :func:`resolve_cancer_type`.
+    """
+
+    code = resolve_cancer_type(cancer_type)
+    if code is None:
+        return None
+    return _reference_source_map().get(code, "none")
+
+
+def cancer_type_reference_code(cancer_type) -> str | None:
+    """Nearest reportable reference code for a cancer type.
+
+    For ``own_cohort`` and ``member_union`` rows this is the code itself. For
+    ``parent``/``none`` rows it walks ``parent_code`` to the nearest ancestor
+    whose ``reference_source`` is reportable, or returns ``None`` if no backing
+    reference exists.
+    """
+
+    code = resolve_cancer_type(cancer_type)
+    if code is None:
+        return None
+    return _classification_reference_code_map().get(code)
+
+
+def reference_source_codes(reference_source=None) -> list[str]:
+    """Registry codes filtered by the derived ``reference_source`` enum."""
+
+    return cancer_type_records(reference_source=reference_source)["code"].tolist()
+
+
 _EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
     "code",
     "name",
@@ -1183,6 +1305,8 @@ _EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
     "family_name",
     "ontology_level",
     "ontology_kind",
+    "reference_source",
+    "classification_reference_code",
     "primary_tissue",
     "ontology_depth",
     "is_leaf",
@@ -1217,8 +1341,6 @@ _EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
     "missing_reason",
 ]
 
-_COMPUTED_EXPRESSION_REFERENCE_CODES = frozenset({"NET", "CRC", "NSCLC", "BTC", "SGC"})
-
 
 def _definition_kind(record, raw_record) -> tuple[str, ...]:
     kinds = []
@@ -1239,11 +1361,9 @@ def _definition_kind(record, raw_record) -> tuple[str, ...]:
 def _computed_expression_reference_members(code: str) -> tuple[str, ...]:
     """Direct-expression members that define a computed reference for a grouping code."""
     code = str(code)
-    if code not in _COMPUTED_EXPRESSION_REFERENCE_CODES:
-        return ()
     members = cohort_aggregate_members(code)
     if members is None:
-        members = _children_map().get(code, ())
+        members = _children_map().get(code, ()) if code in _SOURCE_SCOPE_MEMBER_UNION_CODES else ()
     if not members:
         return ()
     source_codes = set(_source_matrix_frame()["cancer_code"].dropna().astype(str))
@@ -1260,12 +1380,18 @@ def _computed_expression_reference_sample_count(member_codes: tuple[str, ...]) -
 
 
 def _coverage_recommendation(
-    *, has_direct: bool, has_computed: bool, molecular_kinds: tuple[str, ...]
+    *,
+    has_direct: bool,
+    has_computed: bool,
+    reference_source: str,
+    molecular_kinds: tuple[str, ...],
 ) -> str:
     if has_direct:
         return "direct_reference"
     if has_computed:
         return "computed_reference"
+    if reference_source == "parent":
+        return "parent_reference"
     if molecular_kinds:
         return "molecular_only"
     return "unsupported"
@@ -1300,6 +1426,7 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
         computed_members = _computed_expression_reference_members(code)
         has_computed = bool(computed_members)
         has_reference = has_direct or has_computed
+        reference_source = record["reference_source"]
         molecular_kinds = _definition_kind(record, raw_record)
         has_normal = not _row_is_missing(record["normal_tissue_code"]) and bool(
             record["hpa_tissues"]
@@ -1334,6 +1461,10 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
                 "family_name": record["family_name"],
                 "ontology_level": record["ontology_level"],
                 "ontology_kind": record["ontology_kind"],
+                "reference_source": reference_source,
+                "classification_reference_code": _none_if_missing(
+                    record["classification_reference_code"]
+                ),
                 "primary_tissue": record["primary_tissue"],
                 "ontology_depth": max(len(record["path"]) - 1, 0),
                 "is_leaf": bool(record["is_leaf"]),
@@ -1367,6 +1498,7 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
                 "consumer_recommendation": _coverage_recommendation(
                     has_direct=has_direct,
                     has_computed=has_computed,
+                    reference_source=reference_source,
                     molecular_kinds=molecular_kinds,
                 ),
                 "missing_reason": (
@@ -1862,17 +1994,13 @@ def _coerce_bool_filter(value, *, name: str) -> bool:
 def classification_target_codes():
     """Return cancer codes that are valid sample-classification targets.
 
-    This is the curated discriminator between diagnosable cancer types and
-    source-scope response cohorts that exist only to anchor empirical facts
-    such as ICI response or TMB. It is intentionally separate from expression
-    availability: a target can be classifiable even when no expression matrix is
-    currently bundled for it.
+    Compatibility view over ``reference_source``. A code is returnable as a
+    sample-classification call when its backing source is ``own_cohort`` or
+    ``member_union``. Codes marked ``parent`` should be annotated but reported
+    at their nearest reportable ancestor; ``none`` rows are unsupported or pure
+    provenance scopes.
     """
-    df = cancer_type_registry()
-    if "is_classification_target" not in df.columns:
-        return df["code"].tolist()
-    flag = _truthy_registry_flag(df["is_classification_target"])
-    return df.loc[flag, "code"].tolist()
+    return cancer_type_records(reference_source=_RETURNABLE_REFERENCE_SOURCES)["code"].tolist()
 
 
 def computed_union_codes():
@@ -1891,10 +2019,7 @@ def computed_union_codes():
 
 def is_classification_target(cancer_type):
     """True when ``cancer_type`` resolves to a classifiable cancer target."""
-    code = resolve_cancer_type(cancer_type)
-    if code is None:
-        return False
-    return code in set(classification_target_codes())
+    return cancer_type_reference_source(cancer_type) in _RETURNABLE_REFERENCE_SOURCES
 
 
 def mixture_cohort_codes():
@@ -1928,7 +2053,7 @@ def sarcoma_lineage_codes(*, with_expression_only=False):
     (the literature-curated entries), leaving only codes that contribute
     samples to a pooled aggregate.
     """
-    df = cancer_type_registry()
+    df = _registry_frame()
     sub = df[df["family"].astype(str) == "sarcoma"]
     if with_expression_only:
         src = sub["expression_source"].astype(str).str.lower()
