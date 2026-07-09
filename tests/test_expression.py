@@ -1586,6 +1586,94 @@ def test_cancer_reference_expression_bad_gene_id_style():
         expression.cancer_reference_expression("PRAD", gene_id_style="legacy")
 
 
+def test_cancer_reference_expression_cdna_identical_collapse(monkeypatch):
+    pct = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [
+                "ENSG00000154545",  # MAGED4 cDNA-identical group member
+                "ENSG00000187243",  # MAGED4B cDNA-identical group member
+                "ENSG00000141510",
+            ],
+            "Symbol": ["MAGED4", "MAGED4B", "TP53"],
+            "p25": [1.0, 10.0, 100.0],
+            "p50": [2.0, 20.0, 200.0],
+            "p75": [3.0, 30.0, 300.0],
+        }
+    )
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
+
+    out = expression.cancer_reference_expression(
+        "x", include_provenance=False, collapse_cdna_identical=True
+    )
+
+    assert list(out.columns) == [
+        "Ensembl_Gene_ID",
+        "Symbol",
+        "Proteoform_ID",
+        "Member_Ensembl_Gene_IDs",
+        "cancer_code",
+        "normalization",
+        "expression",
+        "q1",
+        "q3",
+    ]
+    maged4 = out.set_index("Ensembl_Gene_ID").loc["MAGED4"]
+    assert maged4["Symbol"] == "MAGED4"
+    assert maged4["Proteoform_ID"] == "MAGED4"
+    assert maged4["Member_Ensembl_Gene_IDs"] == "ENSG00000154545;ENSG00000187243"
+    assert maged4["q1"] == 11.0
+    assert maged4["expression"] == 22.0
+    assert maged4["q3"] == 33.0
+    tp53 = out.set_index("Ensembl_Gene_ID").loc["ENSG00000141510"]
+    assert tp53["Proteoform_ID"] == "ENSG00000141510"
+    assert tp53["Member_Ensembl_Gene_IDs"] == "ENSG00000141510"
+
+
+def test_cancer_reference_expression_protein_identical_collapse_and_wide_shape(monkeypatch):
+    pct = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [
+                "ENSG00000268651",  # CTAG1A protein-identical group member
+                "ENSG00000184033",  # CTAG1B protein-identical group member
+            ],
+            "Symbol": ["CTAG1A", "CTAG1B"],
+            "p25": [1.0, 4.0],
+            "p50": [2.0, 5.0],
+            "p75": [3.0, 6.0],
+        }
+    )
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
+
+    long = expression.cancer_reference_expression(
+        "x", include_provenance=False, collapse_protein_identical=True
+    )
+    row = long.set_index("Ensembl_Gene_ID").loc["CTAG1A/CTAG1B"]
+    assert row["Symbol"] == "CTAG1A/CTAG1B"
+    assert row["Proteoform_ID"] == "CTAG1A/CTAG1B"
+    assert row["Member_Ensembl_Gene_IDs"] == "ENSG00000184033;ENSG00000268651"
+    assert row["expression"] == 7.0
+
+    wide = expression.cancer_reference_expression(
+        "x", format="wide", collapse_protein_identical=True
+    )
+    assert list(wide.columns) == ["Ensembl_Gene_ID", "Symbol", "X_TPM_clean"]
+    assert wide.loc[0, "Ensembl_Gene_ID"] == "CTAG1A/CTAG1B"
+    assert wide.loc[0, "X_TPM_clean"] == 7.0
+
+
+def test_cancer_reference_expression_rejects_two_collapse_modes():
+    with pytest.raises(ValueError, match="at most one"):
+        expression.cancer_reference_expression(
+            "PRAD",
+            collapse_cdna_identical=True,
+            collapse_protein_identical=True,
+        )
+
+
 def test_cancer_reference_expression_multiple_normalizations(monkeypatch):
     pct_tpm = pd.DataFrame(
         {

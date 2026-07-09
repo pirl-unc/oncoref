@@ -83,7 +83,14 @@ from .expression_builders import (
     WITHIN_SAMPLE_THRESHOLDS as _WITHIN_SAMPLE_THRESHOLD_COLS,
 )
 from .expression_engine import id_columns, sample_columns
-from .gene_ids import ensembl_id_alias_symbols, gene_biotype, resolve_ensembl_id, unversioned
+from .gene_ids import (
+    cdna_identical_groups,
+    ensembl_id_alias_symbols,
+    gene_biotype,
+    proteoform_collapse_overrides,
+    resolve_ensembl_id,
+    unversioned,
+)
 from .gene_qc import TECHNICAL_RNA_GROUPS, classify_gene_qc
 from .load_dataset import _BUNDLED_DATA_DIR, _register_derived_cache, get_data
 from .normalization import clean_tpm, percentile_rank, tpm_to_housekeeping_normalized
@@ -2053,6 +2060,8 @@ def cancer_reference_expression(
     source_cohort: str | Iterable[str] | None = None,
     exclude_microarray_proxy: bool = False,
     pool: bool = False,
+    collapse_cdna_identical: bool = False,
+    collapse_protein_identical: bool = False,
 ) -> pd.DataFrame:
     """Observed tumor expression references as cohort-level clean TPM summaries.
 
@@ -2099,6 +2108,12 @@ def cancer_reference_expression(
     extras without a pirlygenes counterpart while keeping documented remap targets;
     ``include_gene_universe_flags=True`` appends row-level audit columns in long output.
     Neither option synthesizes missing biological rows.
+    ``collapse_cdna_identical=True`` or ``collapse_protein_identical=True`` sums
+    identical-locus rows in linear expression space before output. cDNA collapse is
+    the read-recovery view (byte-identical CDS plus curated overrides); protein
+    collapse is the genome-wide identical-protein view. Set at most one. Long output
+    gains ``Proteoform_ID`` and ``Member_Ensembl_Gene_IDs`` columns; wide output keeps
+    the historical ``Ensembl_Gene_ID``/``Symbol`` plus value columns shape.
     Missing requested cohorts are omitted by default to preserve the historical
     behavior; pass ``on_missing="empty"`` to preserve a schema-stable empty result
     with missing-request metadata in ``df.attrs["missing_requests"]`` or
@@ -2126,6 +2141,8 @@ def cancer_reference_expression(
         raise ValueError('reference_source="summary_rows_all" requires format="long"')
     if pool and format != "long":
         raise ValueError("pool=True requires format='long'")
+    if collapse_cdna_identical and collapse_protein_identical:
+        raise ValueError("set at most one of collapse_cdna_identical or collapse_protein_identical")
     if on_missing not in ("omit", "empty", "raise"):
         raise ValueError("on_missing must be 'omit', 'empty', or 'raise'")
     if include_request_metadata and format != "long":
@@ -2193,6 +2210,19 @@ def cancer_reference_expression(
                 gene_universe=gene_universe,
                 include_gene_universe_flags=include_gene_universe_flags,
             )
+            collapse_kind = (
+                "cdna"
+                if collapse_cdna_identical
+                else "protein"
+                if collapse_protein_identical
+                else None
+            )
+            if collapse_kind is not None:
+                ref = _collapse_reference_identical_loci(
+                    ref,
+                    kind=collapse_kind,
+                    group_keys=_reference_collapse_group_keys(ref),
+                )
             ref = _apply_gene_id_style(
                 ref,
                 product="cohort_gene_percentiles",
@@ -2203,6 +2233,8 @@ def cancer_reference_expression(
             label = _REFERENCE_NORMALIZE_LABELS[mode]
             if format == "long":
                 value_cols = ["Ensembl_Gene_ID", "Symbol", "p25", "p50", "p75"]
+                if collapse_kind is not None:
+                    value_cols.extend(["Proteoform_ID", "Member_Ensembl_Gene_IDs"])
                 if include_gene_universe_flags:
                     value_cols.extend(_ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS)
                 part = ref[value_cols].copy()
@@ -2247,6 +2279,7 @@ def cancer_reference_expression(
                             include_request_metadata,
                             include_gene_universe_flags,
                             source_union_identity=source_union_identity,
+                            include_proteoform_columns=collapse_kind is not None,
                         )
                     ]
                 )
@@ -2263,6 +2296,7 @@ def cancer_reference_expression(
             include_request_metadata,
             include_gene_universe_flags,
             source_union_identity=reference_source == "summary_rows_all",
+            include_proteoform_columns=collapse_cdna_identical or collapse_protein_identical,
         )
         if not long_parts:
             out = pd.DataFrame(columns=cols)
@@ -2712,14 +2746,159 @@ def _validate_reference_source(reference_source: str) -> str:
     return source
 
 
+def _reference_collapse_group_keys(ref: pd.DataFrame) -> list[str]:
+    """Columns that keep identical-locus summation inside one source context."""
+    return [c for c in _REFERENCE_SOURCE_UNION_IDENTITY_COLUMNS if c in ref.columns]
+
+
+def _clean_identity_label(value) -> str | None:
+    if pd.isna(value):
+        return None
+    label = str(value).strip()
+    if not label or label.lower() == "nan":
+        return None
+    return label
+
+
+@lru_cache(maxsize=2)
+def _identical_locus_identity_maps(kind: str) -> tuple[dict[str, str], dict[str, str]]:
+    """Return ``({member ENSG -> identity}, {identity -> member ENSGs})``.
+
+    ``kind="cdna"`` is the read-recovery collapse: byte-identical CDS groups plus
+    the curated override table. ``kind="protein"`` is the genome-wide
+    identical-protein collapse. The public registry/accessor remains gene-level by
+    default; these maps are used only by explicit compatibility collapse requests.
+    """
+    if kind == "cdna":
+        groups = cdna_identical_groups()
+        member_to_canonical = {
+            unversioned(member): unversioned(canon)
+            for member, canon in zip(
+                groups["ensembl_gene_id"],
+                groups["group_canonical_ensembl_gene_id"],
+            )
+        }
+        canonical_to_identity = {
+            unversioned(canon): _clean_identity_label(symbol) or unversioned(canon)
+            for canon, symbol in zip(
+                groups["group_canonical_ensembl_gene_id"],
+                groups["group_canonical_symbol"],
+            )
+        }
+        overrides = proteoform_collapse_overrides()
+        if not overrides.empty:
+            from .proteoforms import proteoform_groups
+
+            protein_groups = proteoform_groups(scope="genome")
+            override_symbols = {
+                unversioned(canon): _clean_identity_label(symbol) or unversioned(canon)
+                for canon, symbol in zip(
+                    overrides["group_canonical_ensembl_gene_id"],
+                    overrides["group_symbol"],
+                )
+            }
+            for canonical_id, identity in override_symbols.items():
+                labels = protein_groups.loc[
+                    protein_groups["member_gene_id"].astype(str).map(unversioned) == canonical_id,
+                    "proteoform_id",
+                ]
+                if labels.empty:
+                    continue
+                label = str(labels.iloc[0])
+                members = protein_groups.loc[
+                    protein_groups["proteoform_id"].astype(str) == label,
+                    "member_gene_id",
+                ]
+                for member in members:
+                    member_to_canonical[unversioned(member)] = canonical_id
+                canonical_to_identity[canonical_id] = identity
+        member_to_identity = {
+            member: canonical_to_identity.get(canonical, canonical)
+            for member, canonical in member_to_canonical.items()
+        }
+    elif kind == "protein":
+        from .proteoforms import proteoform_groups
+
+        groups = proteoform_groups(scope="genome")
+        member_to_identity = {
+            unversioned(member): str(identity)
+            for member, identity in zip(groups["member_gene_id"], groups["proteoform_id"])
+        }
+    else:
+        raise ValueError("kind must be 'cdna' or 'protein'")
+
+    identity_to_members: dict[str, set[str]] = defaultdict(set)
+    for member, identity in member_to_identity.items():
+        identity_to_members[identity].add(member)
+    return member_to_identity, {
+        identity: ";".join(sorted(members)) for identity, members in identity_to_members.items()
+    }
+
+
+def _collapse_reference_identical_loci(
+    df: pd.DataFrame, *, kind: str, group_keys: list[str]
+) -> pd.DataFrame:
+    """Collapse identical loci in a reference-expression long-like frame."""
+    if df.empty:
+        out = df.copy()
+        out["Proteoform_ID"] = []
+        out["Member_Ensembl_Gene_IDs"] = []
+        return out
+    member_to_identity, identity_members = _identical_locus_identity_maps(kind)
+    work = df.reset_index(drop=True).copy()
+    work["_ord"] = range(len(work))
+    gene_ids = work["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    identity = gene_ids.map(member_to_identity).fillna(gene_ids)
+    work["_identity"] = identity
+    work["_is_singleton"] = ~gene_ids.isin(member_to_identity)
+    full_keys = ["_identity", *group_keys]
+
+    sum_cols = [c for c in ("p25", "p50", "p75") if c in work.columns]
+    max_cols = [c for c in ("n_detected",) if c in work.columns]
+    rep = (
+        work.sort_values([*full_keys, "_is_singleton", "_ord"], ascending=True)
+        .drop_duplicates(full_keys, keep="first")
+        .drop(columns=sum_cols + max_cols, errors="ignore")
+    )
+    out = rep
+    if sum_cols:
+        out = out.merge(
+            work.groupby(full_keys, as_index=False)[sum_cols].sum(min_count=1),
+            on=full_keys,
+            how="left",
+        )
+    if max_cols:
+        out = out.merge(
+            work.groupby(full_keys, as_index=False)[max_cols].max(),
+            on=full_keys,
+            how="left",
+        )
+    folded = out["_identity"].isin(identity_members)
+    out.loc[folded, "Ensembl_Gene_ID"] = out.loc[folded, "_identity"]
+    out.loc[folded, "Symbol"] = out.loc[folded, "_identity"]
+    out["Proteoform_ID"] = out["_identity"]
+    out["Member_Ensembl_Gene_IDs"] = [
+        identity_members.get(identity_id, identity_id) for identity_id in out["_identity"]
+    ]
+    keep = list(df.columns)
+    for col in ("Proteoform_ID", "Member_Ensembl_Gene_IDs"):
+        if col not in keep:
+            keep.append(col)
+    return out.sort_values("_ord").reset_index(drop=True)[keep]
+
+
 def _reference_long_columns(
     include_provenance: bool,
     include_request_metadata: bool,
     include_gene_universe_flags: bool,
     *,
     source_union_identity: bool = False,
+    include_proteoform_columns: bool = False,
 ) -> list[str]:
-    cols = ["Ensembl_Gene_ID", "Symbol", "cancer_code", "normalization"]
+    cols = ["Ensembl_Gene_ID", "Symbol"]
+    if include_proteoform_columns:
+        cols += ["Proteoform_ID", "Member_Ensembl_Gene_IDs"]
+    cols += ["cancer_code", "normalization"]
     if include_request_metadata:
         cols += _REFERENCE_REQUEST_COLUMNS
     if include_provenance:
