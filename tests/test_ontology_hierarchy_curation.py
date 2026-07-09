@@ -55,6 +55,33 @@ def test_rms_subtypes_reparented_under_sarc_rms():
     }
 
 
+def test_sarc_lps_subtypes_reparented_under_sarc_lps():
+    assert set(cancer_type_subtypes_of("SARC_LPS")) == {
+        "SARC_DDLPS",
+        "SARC_WDLPS",
+        "SARC_MYXLPS",
+        "SARC_PLEOLPS",
+        "SARC_LPS_UNSPEC",
+    }
+
+
+def test_sarc_ess_subtypes_reparented_under_sarc_ess():
+    assert set(cancer_type_subtypes_of("SARC_ESS")) == {
+        "SARC_ESS_LG",
+        "SARC_ESS_HG",
+    }
+
+
+def test_lung_nec_tier_contains_lcnec_but_not_sclc():
+    assert cancer_type_lineage("NEC_LUNG_LARGECELL") == [
+        "NEC_LUNG",
+        "NEC_LUNG_LARGECELL",
+    ]
+    assert set(cancer_type_subtypes_of("NEC_LUNG")) == {"NEC_LUNG_LARGECELL"}
+    assert set(cohort_aggregate_members("NEC_LUNG")) == {"NEC_LUNG_LARGECELL"}
+    assert cancer_type_lineage("SCLC") == ["SCLC"]
+
+
 def test_sarc_rms_fusion_rollup():
     # "Characteristic driver fusions of all SARC_RMS subtypes" now rolls up via the tree.
     roll = cancer_fusions("SARC_RMS", include_subtypes=True)
