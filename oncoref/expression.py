@@ -70,7 +70,12 @@ import numpy as np
 import pandas as pd
 
 from . import data_bundle, source_matrices
-from .cancer_types import cohort_aggregates, cohort_registry_df, resolve_cancer_type
+from .cancer_types import (
+    _computed_expression_reference_members,
+    cohort_aggregates,
+    cohort_registry_df,
+    resolve_cancer_type,
+)
 from .expression_builders import (
     PERCENTILE_BREAKPOINTS as _PERCENTILE_BREAKPOINTS,
 )
@@ -4237,6 +4242,8 @@ def pan_cancer_expression(
     if raw_parts:
         out = pd.concat([out, *raw_parts], axis=1)
 
+    out, raw_cols, computed_aggregate_cols = _add_computed_pan_cancer_raw_columns(out, raw_cols)
+
     modes = _pan_cancer_normalize_modes(normalize)
     clean_cols: list[str] = []
     if modes & {"tpm_clean", "housekeeping", "hk", "percentile", "tpm_clean_log1p"}:
@@ -4307,8 +4314,89 @@ def pan_cancer_expression(
         "data_version": DATA_VERSION,
         "source_matrix_version": SOURCE_MATRIX_VERSION,
         "column_style": column_style,
+        "computed_aggregate_columns": tuple(computed_aggregate_cols),
     }
     return out
+
+
+_PAN_CANCER_COMPUTED_AGGREGATES = ("NET", "CRC", "NSCLC", "BTC", "SGC")
+
+
+def _add_computed_pan_cancer_raw_columns(
+    out: pd.DataFrame, raw_cols: list[str]
+) -> tuple[pd.DataFrame, list[str], list[str]]:
+    """Append TPM columns for grouping codes whose references are computed from members."""
+    if out.empty:
+        return out, raw_cols, []
+    added: list[str] = []
+    raw_cols = list(raw_cols)
+    gene_key = out["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    frames: list[pd.DataFrame] = []
+    for aggregate_code in _PAN_CANCER_COMPUTED_AGGREGATES:
+        target = f"{aggregate_code}_TPM_raw"
+        if target in out.columns:
+            continue
+        members = _computed_expression_reference_members(aggregate_code)
+        if not members:
+            continue
+        values = _pooled_reference_expression_series_for_pan_cancer(members)
+        if values.empty:
+            continue
+        frames.append(pd.DataFrame({target: gene_key.map(values)}, index=out.index))
+        raw_cols.append(target)
+        added.append(target)
+    if frames:
+        out = pd.concat([out, *frames], axis=1)
+    return out, raw_cols, added
+
+
+def _pooled_reference_expression_series_for_pan_cancer(member_codes: tuple[str, ...]) -> pd.Series:
+    """n-sample-weighted raw TPM medians for a computed pan-cancer aggregate."""
+    try:
+        rows = _selected_reference_summary_rows_for_pan_cancer(member_codes)
+    except (FileNotFoundError, KeyError, TypeError):
+        return pd.Series(dtype=float)
+    if rows.empty:
+        return pd.Series(dtype=float)
+    work = rows.copy()
+    work["_gene_key"] = work["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    work["_expression"] = pd.to_numeric(work["TPM_median"], errors="coerce")
+    weights = pd.to_numeric(work.get("n_samples"), errors="coerce")
+    if not isinstance(weights, pd.Series):
+        weights = pd.Series(1.0, index=work.index)
+    work["_weight"] = weights.reindex(work.index).fillna(0.0)
+    rows: dict[str, float] = {}
+    for gene_id, group in work.groupby("_gene_key", sort=False):
+        valid = group["_expression"].notna() & (group["_weight"] > 0)
+        if not valid.any():
+            continue
+        rows[str(gene_id)] = float(
+            np.average(group.loc[valid, "_expression"], weights=group.loc[valid, "_weight"])
+        )
+    return pd.Series(rows, dtype=float)
+
+
+def _selected_reference_summary_rows_for_pan_cancer(member_codes: tuple[str, ...]) -> pd.DataFrame:
+    source_table = _reference_summary_source_table()
+    if source_table.empty:
+        return pd.DataFrame()
+    wanted = {str(code) for code in member_codes}
+    selected = source_table.loc[
+        source_table["cancer_code"].astype(str).isin(wanted) & source_table["selected"]
+    ].copy()
+    if selected.empty:
+        return pd.DataFrame()
+    selected["_source_key"] = selected["source_cohort"].fillna("").astype(str)
+    summary = _reference_summary_frame().copy()
+    if summary.empty:
+        return pd.DataFrame()
+    summary["_source_key"] = summary["source_cohort"].fillna("").astype(str)
+    rows = summary.merge(
+        selected[["cancer_code", "_source_key"]],
+        how="inner",
+        on=["cancer_code", "_source_key"],
+    )
+    return rows.drop(columns=["_source_key"])
 
 
 def _pan_cancer_column_style(column_style: str | None) -> str:

@@ -4,6 +4,7 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 
+import pandas as pd
 import pytest
 
 import oncoref as cd
@@ -448,7 +449,10 @@ def test_expression_reference_coverage_contract():
         "ontology_level",
         "ontology_kind",
         "ontology_depth",
+        "has_expression_reference",
         "has_direct_expression_reference",
+        "has_computed_expression_reference",
+        "computed_expression_member_codes",
         "observed_bulk_reference",
         "expression_reference_kind",
         "source_matrix_cohort",
@@ -465,7 +469,9 @@ def test_expression_reference_coverage_contract():
     assert expected <= set(coverage.columns)
 
     keyed = coverage.set_index("code")
+    assert bool(keyed.loc["COAD_MSI", "has_expression_reference"]) is True
     assert bool(keyed.loc["COAD_MSI", "has_direct_expression_reference"]) is True
+    assert bool(keyed.loc["COAD_MSI", "has_computed_expression_reference"]) is False
     assert keyed.loc["COAD_MSI", "expression_reference_kind"] == "observed_bulk"
     assert keyed.loc["COAD_MSI", "consumer_recommendation"] == "direct_reference"
     assert keyed.loc["COAD_MSI", "normalization_method"] == "clean_tpm_16_9_75"
@@ -481,6 +487,31 @@ def test_expression_reference_coverage_contract():
     assert bool(keyed.loc["ASTB", "has_direct_expression_reference"]) is False
     assert keyed.loc["ASTB", "consumer_recommendation"] == "molecular_only"
     assert keyed.loc["ASTB", "molecular_definition_kind"] == ("fusion",)
+
+
+def test_expression_reference_coverage_computed_groupings():
+    coverage = cancer_types.expression_reference_coverage(
+        ["NET", "CRC", "NSCLC", "BTC", "SGC", "SARC", "OV"]
+    ).set_index("code")
+
+    for code in ["NET", "CRC", "NSCLC", "BTC", "SGC"]:
+        row = coverage.loc[code]
+        assert bool(row["has_expression_reference"]) is True
+        assert bool(row["has_direct_expression_reference"]) is False
+        assert bool(row["has_computed_expression_reference"]) is True
+        assert row["expression_reference_kind"] == "computed_union"
+        assert row["expression_reference_source_code"] == code
+        assert row["consumer_recommendation"] == "computed_reference"
+        assert pd.isna(row["missing_reason"])
+        assert row["computed_expression_member_codes"]
+
+    # Existing SARC/OV behavior is deliberately unchanged by the source-scope fix:
+    # SARC still has no direct reference row here, while OV remains a direct matrix.
+    assert bool(coverage.loc["SARC", "has_expression_reference"]) is False
+    assert coverage.loc["SARC", "expression_reference_kind"] == "none"
+    assert bool(coverage.loc["OV", "has_direct_expression_reference"]) is True
+    assert bool(coverage.loc["OV", "has_computed_expression_reference"]) is False
+    assert coverage.loc["OV", "expression_reference_kind"] == "observed_bulk"
 
 
 def test_expression_reference_coverage_filters_and_empty_results():

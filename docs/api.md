@@ -78,8 +78,8 @@ msi_crc[["code", "evidence_source_code", "normal_tissue_code", "hpa_tissues"]]
 # Join scalar references for the returned codes.
 cancer_ontology.cancer_type_reference_data(msi_crc)
 
-# Ask whether each ontology node has a direct expression reference or only
-# molecular/no expression evidence.
+# Ask whether each ontology node has a direct expression reference, a computed
+# member-union reference, or only molecular/no expression evidence.
 cancer_ontology.expression_reference_coverage(subtype_group="MSI", under="CRC")
 cancer_ontology.coverage_for_cancer_type("ASTB")
 
@@ -95,12 +95,16 @@ cohorts.cohort_registry_df()
 
 `expression_reference_coverage()` is the ontology-wide readiness table for
 classifier consumers. It reports direct observed-bulk source-matrix coverage,
-matched normal tissue availability, molecular/fusion-only definitions, canonical
-gene/proteoform space, data/source-matrix versions, and a conservative
-`consumer_recommendation`: `direct_reference`, `molecular_only`, or
-`unsupported`. It intentionally does not synthesize marker-program or
-discriminator fallbacks; those remain consumer-layer choices in packages such as
-trufflepig.
+computed member-union references for curated grouping/source-scope codes such as
+`NET`, `CRC`, `NSCLC`, `BTC`, and `SGC`, matched normal tissue availability,
+molecular/fusion-only definitions, canonical gene/proteoform space, data/source
+matrix versions, and a conservative `consumer_recommendation`:
+`direct_reference`, `computed_reference`, `molecular_only`, or `unsupported`.
+`has_direct_expression_reference` remains literal; computed groupings use
+`expression_reference_kind="computed_union"` and expose their pooled member codes
+in `computed_expression_member_codes`. The table intentionally does not
+synthesize marker-program or discriminator fallbacks; those remain consumer-layer
+choices in packages such as trufflepig.
 
 ## Gene Identity
 
@@ -291,6 +295,11 @@ columns are `<CODE>_FPKM_raw`, deterministic TCGA TPM companions are
 `_log1p`. For migration code that needs pirlygenes' unsuffixed column names, use
 `column_style="pirlygenes"`; the legacy `to_tpm=True` keyword is accepted as a
 compatibility alias for that view and maps the default call to `normalize="tpm"`.
+The pan-cancer view also emits raw-TPM companion columns for member-backed
+grouping/source-scope references (`NET`, `CRC`, `NSCLC`, `BTC`, `SGC`) by pooling
+the selected `cancer-reference-expression` summary rows with n-sample weights.
+Existing directly sourced columns, including `SARC` and `OV`, keep their current
+source-table behavior.
 
 `expression.cancer_reference_expression()` returns cohort-level tumor reference
 expression with stable long or wide output. It accepts canonical cancer codes,

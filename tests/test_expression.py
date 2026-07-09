@@ -2344,6 +2344,87 @@ def test_pan_cancer_expression_pirlygenes_column_style(monkeypatch):
     assert out.attrs["oncoref"]["column_style"] == "pirlygenes"
 
 
+def test_pan_cancer_expression_adds_computed_aggregate_tpm_columns(monkeypatch):
+    source_table = pd.DataFrame(
+        {
+            "cancer_code": [
+                "NET_PANCREAS",
+                "COAD",
+                "READ",
+                "LUAD",
+                "LUSC",
+                "CHOL",
+                "ADCC",
+            ],
+            "source_cohort": [
+                "NET_SRC",
+                "COAD_SRC",
+                "READ_SRC",
+                "LUAD_SRC",
+                "LUSC_SRC",
+                "CHOL_SRC",
+                "ADCC_SRC",
+            ],
+            "selected": [True, True, True, True, True, True, True],
+        }
+    )
+    summary_rows = []
+    values = {
+        "NET_PANCREAS": ([7.0, 9.0], 5, "NET_SRC"),
+        "COAD": ([10.0, 20.0], 2, "COAD_SRC"),
+        "READ": ([30.0, 40.0], 6, "READ_SRC"),
+        "LUAD": ([100.0, 200.0], 1, "LUAD_SRC"),
+        "LUSC": ([300.0, 400.0], 3, "LUSC_SRC"),
+        "CHOL": ([11.0, 12.0], 4, "CHOL_SRC"),
+        "ADCC": ([21.0, 22.0], 8, "ADCC_SRC"),
+    }
+    for code, (exprs, n_samples, source) in values.items():
+        for gene_id, symbol, expr in zip(
+            ["ENSG00000001", "ENSG00000002"], ["GENE1", "GENE2"], exprs
+        ):
+            summary_rows.append(
+                {
+                    "Ensembl_Gene_ID": gene_id,
+                    "Symbol": symbol,
+                    "cancer_code": code,
+                    "source_cohort": source,
+                    "TPM_median": expr,
+                    "n_samples": n_samples,
+                }
+            )
+    summary = pd.DataFrame(summary_rows)
+    members = {
+        "NET": ("NET_PANCREAS",),
+        "CRC": ("COAD", "READ"),
+        "NSCLC": ("LUAD", "LUSC"),
+        "BTC": ("CHOL",),
+        "SGC": ("ADCC",),
+    }
+
+    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    monkeypatch.setattr(
+        expression, "_computed_expression_reference_members", lambda code: members.get(code, ())
+    )
+    monkeypatch.setattr(expression, "_reference_summary_source_table", lambda: source_table)
+    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+
+    out = expression.pan_cancer_expression(normalize="tpm", column_style="pirlygenes")
+
+    assert {"NET_TPM", "CRC_TPM", "NSCLC_TPM", "BTC_TPM", "SGC_TPM"} <= set(out.columns)
+    assert out["NET_TPM"].tolist() == pytest.approx([7.0, 9.0])
+    assert out["CRC_TPM"].tolist() == pytest.approx([25.0, 35.0])
+    assert out["NSCLC_TPM"].tolist() == pytest.approx([250.0, 350.0])
+    assert out["BTC_TPM"].tolist() == pytest.approx([11.0, 12.0])
+    assert out["SGC_TPM"].tolist() == pytest.approx([21.0, 22.0])
+    assert out.attrs["oncoref"]["computed_aggregate_columns"] == (
+        "NET_TPM_raw",
+        "CRC_TPM_raw",
+        "NSCLC_TPM_raw",
+        "BTC_TPM_raw",
+        "SGC_TPM_raw",
+    )
+
+
 def test_pan_cancer_expression_to_tpm_legacy_keyword(monkeypatch):
     monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
     out = expression.pan_cancer_expression(genes=["ENSG00000001"], to_tpm=True)
