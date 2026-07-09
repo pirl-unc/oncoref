@@ -346,9 +346,36 @@ def test_cancer_type_records_expose_explicit_ontology_levels():
     assert sarcoma.loc["SARC", "ontology_level"] == "grouping"
     assert sarcoma.loc["SARC_OS", "ontology_level"] == "type"
     assert sarcoma.loc["SARC_RMS", "ontology_level"] == "type"
-    assert sarcoma.loc["SARC_RMS", "ontology_kind"] == "histologic_type"
+    assert sarcoma.loc["SARC_RMS", "ontology_kind"] == "computed_union"
     assert sarcoma.loc["SARC_RMS_ARMS", "ontology_level"] == "molecular_subtype"
     assert sarcoma.loc["SARC_RMS_ARMS", "ontology_kind"] == "fusion_molecular_subtype"
+
+
+def test_computed_union_and_evidence_scope_semantics_are_consistent():
+    records = cancer_types.cancer_type_records().set_index("code")
+    computed_codes = set(records.index[records["expression_source"].astype(str) == "computed"])
+    computed_kind_codes = set(records.index[records["ontology_kind"] == "computed_union"])
+
+    assert computed_codes == computed_kind_codes
+    assert cancer_types.computed_union_codes() == [
+        "CRC",
+        "SARC",
+        "NEC_LUNG",
+        "SARC_RMS",
+        "SARC_LPS",
+        "SARC_ESS",
+        "NET",
+    ]
+    assert cd.computed_union_codes() == cancer_types.computed_union_codes()
+    assert cd.cancer_ontology.computed_union_codes() == cancer_types.computed_union_codes()
+
+    evidence_scopes = records.loc[["NET_NONPANCREATIC", "NEN_G3_EXTRAPULMONARY"]]
+    assert set(evidence_scopes["ontology_level"]) == {"evidence_scope"}
+    assert set(evidence_scopes["ontology_kind"]) == {"source_scope"}
+    assert set(evidence_scopes["is_classification_target"]) == {False}
+    assert not {"NET_NONPANCREATIC", "NEN_G3_EXTRAPULMONARY"} & set(
+        cancer_types.cancer_type_codes(ontology_level="grouping")
+    )
 
 
 def test_classification_target_flag_distinguishes_response_scopes():

@@ -32,13 +32,16 @@ other oncoref domains; they keep the result type and columns stable.
 
 The registry separates hierarchy from taxonomic level. `parent_code` is the
 tree edge, while `ontology_level` (`grouping`, `type`,
-`molecular_subtype`) and `ontology_kind` (`computed_union`, `source_scope`,
-`anatomic_type`, `molecular_status_subtype`, etc.) say what kind of node a row
-is. Do not infer semantic level from `mixture_cohort`; that legacy flag only
-says the reference cohort/source is pooled or source-scoped. For example
-`CRC_MSI` is a `molecular_subtype` under `CRC` but remains a source-scope
-clinical evidence row, while `OV` is an anatomical grouping and `FTC` / `PPC`
-are anatomical cancer types.
+`molecular_subtype`, `evidence_scope`) and `ontology_kind`
+(`computed_union`, `source_scope`, `anatomic_type`,
+`molecular_status_subtype`, etc.) say what kind of node a row is. Do not infer
+semantic level from `mixture_cohort`; that legacy flag only says the reference
+cohort/source is pooled or source-scoped. For example `CRC_MSI` is a
+`molecular_subtype` under `CRC` but remains a source-scope clinical evidence
+row, while `OV` is an anatomical grouping and `FTC` / `PPC` are anatomical
+cancer types. Pure clinical fact scopes such as `NET_NONPANCREATIC` and
+`NEN_G3_EXTRAPULMONARY` use `ontology_level="evidence_scope"` so they do not
+look like groupings with missing children.
 
 Classifiability is a separate curated axis. Use `is_classification_target`,
 `classification_target_codes`, or `cancer_type_records(classification_target=True)`
@@ -47,6 +50,12 @@ Pure source-scope evidence rows such as `CRC_MSI`, `NET_NONPANCREATIC`, and
 `NEN_G3_EXTRAPULMONARY` remain available for TMB/ICI lookups, but are not
 sample-classification targets. This flag is intentionally independent of
 expression-reference availability.
+
+Computed expression pools are also explicit. Use `computed_union_codes()` for
+the canonical set of rows whose expression/reference values are member unions;
+this follows `expression_source="computed"` and includes both broad groupings
+(`CRC`, `NET`, `SARC`) and typed tiers with computed references
+(`SARC_RMS`, `SARC_LPS`, `SARC_ESS`, `NEC_LUNG`).
 
 ```python
 from oncoref import cancer_ontology, cohorts, expression
@@ -70,6 +79,7 @@ source_scope_msi = cancer_ontology.cancer_type_records(
 )
 classification_targets = cancer_ontology.cancer_type_records(classification_target=True)
 clinical_fact_scopes = cancer_ontology.cancer_type_records(classification_target=False)
+computed_pools = cancer_ontology.computed_union_codes()
 
 # The MMR/MSI classifier axis keeps positive, negative, and confounder classes
 # explicit. STAD_MSI exists as an ontology code, but expression_only=True

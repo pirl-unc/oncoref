@@ -1863,6 +1863,19 @@ def classification_target_codes():
     return df.loc[flag, "code"].tolist()
 
 
+def computed_union_codes():
+    """Return cancer codes whose expression/reference values are computed pools.
+
+    This is the stable signal for oncoref-computed member unions: rows whose
+    registry ``expression_source`` is ``"computed"``. Some are broad grouping
+    nodes (``CRC``, ``NET``, ``SARC``), while others remain histologic type
+    nodes with pooled expression references (``SARC_RMS``, ``NEC_LUNG``).
+    """
+    df = cancer_type_registry()
+    source = df["expression_source"].astype(str).str.strip().str.lower()
+    return df.loc[source == "computed", "code"].tolist()
+
+
 def is_classification_target(cancer_type):
     """True when ``cancer_type`` resolves to a classifiable cancer target."""
     code = resolve_cancer_type(cancer_type)
