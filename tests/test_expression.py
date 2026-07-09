@@ -1515,6 +1515,10 @@ def test_cancer_reference_expression_long_and_wide(monkeypatch):
         "metastasis_site",
         "n_reference_genes",
         "n_reference_samples",
+        "n_samples",
+        "n_detected",
+        "processing_pipeline",
+        "notes",
         "reference_method",
         "sample_qc",
         "data_version",
@@ -1647,6 +1651,10 @@ def test_cancer_reference_expression_availability_reports_missing(monkeypatch):
         "metastasis_site",
         "n_reference_genes",
         "n_reference_samples",
+        "n_samples",
+        "n_detected",
+        "processing_pipeline",
+        "notes",
         "reference_method",
         "sample_qc",
         "artifact_schema_version",
@@ -1685,6 +1693,10 @@ def test_cancer_reference_expression_missing_empty_and_raise(monkeypatch):
         "metastasis_site",
         "n_reference_genes",
         "n_reference_samples",
+        "n_samples",
+        "n_detected",
+        "processing_pipeline",
+        "notes",
         "reference_method",
         "sample_qc",
         "data_version",
@@ -1824,6 +1836,195 @@ def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeyp
     ).set_index("normalization")
     assert raw_log.loc["tpm_raw", "expression"] == pytest.approx(10.0)
     assert raw_log.loc["tpm_clean_log1p", "expression"] == pytest.approx(np.log1p(1.0))
+    expression._reference_summary_source_table.cache_clear()
+
+
+def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filters(monkeypatch):
+    expression._reference_summary_source_table.cache_clear()
+    expression._source_cohort_kind_map.cache_clear()
+    summary = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1", "E1", "E2", "E1"],
+            "Symbol": ["A", "A", "B", "A"],
+            "cancer_code": ["X", "X", "X", "Y"],
+            "source_cohort": ["GEO_X", "TREE_X", "TREE_X", "GEO_Y"],
+            "source_project": ["GEO", "Treehouse", "Treehouse", "GEO"],
+            "source_version": ["v1", "v2", "v2", "v1"],
+            "TPM_median": [10.0, 20.0, 30.0, 40.0],
+            "TPM_q1": [9.0, 19.0, 29.0, 39.0],
+            "TPM_q3": [11.0, 21.0, 31.0, 41.0],
+            "TPM_clean_median": [1.0, 2.0, 3.0, 4.0],
+            "TPM_clean_q1": [0.9, 1.9, 2.9, 3.9],
+            "TPM_clean_q3": [1.1, 2.1, 3.1, 4.1],
+            "n_samples": [4, 8, 8, 3],
+            "n_detected": [3, 8, 7, 2],
+            "processing_pipeline": [
+                "geo_microarray_tpm_proxy_clean_tpm_16_9_75",
+                "treehouse_polya_tpm_clean_tpm_16_9_75",
+                "treehouse_polya_tpm_clean_tpm_16_9_75",
+                "geo_microarray_tpm_proxy_clean_tpm_16_9_75",
+            ],
+            "notes": ["geo notes", "tree notes", "tree notes", "geo y notes"],
+            "tumor_origin": ["primary", "mixed", "mixed", "primary"],
+            "metastasis_site": [pd.NA, pd.NA, pd.NA, pd.NA],
+        }
+    )
+    registry = pd.DataFrame(
+        {
+            "cohort_id": ["GEO_X", "TREE_X", "GEO_Y"],
+            "kind": ["geo", "treehouse", "geo"],
+        }
+    )
+    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    monkeypatch.setattr(expression, "cohort_registry_df", lambda: registry)
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
+    monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: [])
+
+    out = expression.cancer_reference_expression(
+        "x",
+        genes="E1",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+    )
+
+    assert out.attrs["reference_source"] == "summary_rows_all"
+    assert out["source_cohort"].tolist() == ["GEO_X", "TREE_X"]
+    assert out["processing_pipeline"].tolist() == [
+        "geo_microarray_tpm_proxy_clean_tpm_16_9_75",
+        "treehouse_polya_tpm_clean_tpm_16_9_75",
+    ]
+    assert out["n_samples"].tolist() == [4, 8]
+    assert out["n_detected"].tolist() == [3, 8]
+    assert out["reference_method"].unique().tolist() == ["source_summary_rows_all"]
+
+    compact = expression.cancer_reference_expression(
+        "x",
+        genes="E1",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        include_provenance=False,
+    )
+    assert compact["source_cohort"].tolist() == ["GEO_X", "TREE_X"]
+    assert compact["n_reference_samples"].tolist() == [4, 8]
+    assert compact["n_samples"].tolist() == [4, 8]
+    assert "processing_pipeline" not in compact.columns
+
+    with pytest.raises(ValueError, match='requires format="long"'):
+        expression.cancer_reference_expression(
+            "x",
+            reference_source="summary_rows_all",
+            sample_qc="all",
+            format="wide",
+        )
+
+    tree = expression.cancer_reference_expression(
+        "x",
+        genes="E1",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_kind="treehouse",
+    )
+    assert tree["source_cohort"].tolist() == ["TREE_X"]
+
+    non_proxy = expression.cancer_reference_expression(
+        "x",
+        genes="E1",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        exclude_microarray_proxy=True,
+    )
+    assert non_proxy["source_cohort"].tolist() == ["TREE_X"]
+
+    all_tree = expression.cancer_reference_expression(
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_kind="treehouse",
+        on_missing="raise",
+    )
+    assert all_tree["cancer_code"].unique().tolist() == ["X"]
+    assert all_tree["source_cohort"].unique().tolist() == ["TREE_X"]
+
+    filtered_availability = expression.cancer_reference_expression_availability(
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_kind="treehouse",
+    )
+    assert filtered_availability["cancer_code"].tolist() == ["X"]
+    assert filtered_availability["available"].tolist() == [True]
+
+    empty = expression.cancer_reference_expression_availability(
+        "x",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_kind="curated",
+    )
+    assert bool(empty.loc[0, "available"]) is False
+    assert empty.loc[0, "missing_reason"] == "no_reference_summary_rows"
+
+    expression._reference_summary_source_table.cache_clear()
+    expression._source_cohort_kind_map.cache_clear()
+
+
+def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
+    expression._reference_summary_source_table.cache_clear()
+    summary = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1", "E1"],
+            "Symbol": ["A", "A"],
+            "cancer_code": ["X", "X"],
+            "source_cohort": ["SRC1", "SRC2"],
+            "source_project": ["P1", "P2"],
+            "source_version": ["v1", "v2"],
+            "TPM_median": [10.0, 20.0],
+            "TPM_q1": [9.0, 19.0],
+            "TPM_q3": [11.0, 21.0],
+            "TPM_clean_median": [1.0, 2.0],
+            "TPM_clean_q1": [0.9, 1.9],
+            "TPM_clean_q3": [1.1, 2.1],
+            "n_samples": [2, 6],
+            "n_detected": [2, 5],
+            "processing_pipeline": ["rna_seq", "rna_seq"],
+            "notes": ["a", "b"],
+            "tumor_origin": ["primary", "primary"],
+            "metastasis_site": [pd.NA, pd.NA],
+        }
+    )
+    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
+
+    pooled = expression.cancer_reference_expression(
+        "x",
+        normalize="tpm",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        pool=True,
+    )
+
+    assert len(pooled) == 1
+    row = pooled.iloc[0]
+    assert row["source_cohort"] == "POOLED"
+    assert row["expression"] == pytest.approx((10.0 * 2 + 20.0 * 6) / 8)
+    assert pd.isna(row["q1"]) and pd.isna(row["q3"])
+    assert row["n_reference_samples"] == pytest.approx(8)
+    assert row["processing_pipeline"] == "pooled_n_weighted"
+
+    compact = expression.cancer_reference_expression(
+        "x",
+        normalize="tpm",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        pool=True,
+        include_provenance=False,
+    )
+    assert len(compact) == 1
+    assert compact.loc[0, "source_cohort"] == "POOLED"
+    assert compact.loc[0, "expression"] == pytest.approx((10.0 * 2 + 20.0 * 6) / 8)
+    assert compact.loc[0, "n_reference_samples"] == pytest.approx(8)
+    assert "processing_pipeline" not in compact.columns
+
+    with pytest.raises(ValueError, match='requires sample_qc="all"'):
+        expression.cancer_reference_expression("x", reference_source="summary_rows_all")
+
     expression._reference_summary_source_table.cache_clear()
 
 
