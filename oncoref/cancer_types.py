@@ -392,10 +392,11 @@ def cancer_type_info(cancer_type):
 
     Keys: ``code``, ``name``, ``family``, ``primary_tissue``,
     ``primary_template``, ``parent_code``, ``ontology_level``,
-    ``ontology_kind``, ``subtype_key``, ``pediatric``, ``differentiation``,
-    ``expression_source``, ``source_cohort``, ``source_pmid``, ``notes``,
-    ``viral_etiology``, ``viral_agent``, ``fusion_driven``,
-    ``fusion_driver``, ``burden_category``, ``tmb``.
+    ``ontology_kind``, ``is_classification_target``, ``subtype_key``,
+    ``pediatric``, ``differentiation``, ``expression_source``,
+    ``source_cohort``, ``source_pmid``, ``notes``, ``viral_etiology``,
+    ``viral_agent``, ``fusion_driven``, ``fusion_driver``,
+    ``burden_category``, ``tmb``.
     """
     # Lazy imports avoid an import cycle: tmb/incidence depend on this module's
     # resolve_cancer_type + cancer_type_registry.
@@ -415,6 +416,7 @@ def cancer_type_info(cancer_type):
         "parent_code",
         "ontology_level",
         "ontology_kind",
+        "is_classification_target",
         "subtype_key",
         "pediatric",
         "differentiation",
@@ -960,6 +962,7 @@ _CANCER_TYPE_RECORD_COLUMNS = [
     "family_name",
     "ontology_level",
     "ontology_kind",
+    "is_classification_target",
     "primary_tissue",
     "normal_tissue_code",
     "normal_tissue_name",
@@ -1054,6 +1057,7 @@ def cancer_type_records(
     family=None,
     ontology_level=None,
     ontology_kind=None,
+    classification_target: bool | None = None,
     primary_tissue=None,
     normal_tissue=None,
     subtype_group=None,
@@ -1071,8 +1075,9 @@ def cancer_type_records(
     result has the same columns, including hierarchy fields (``path``,
     ``ancestors``, ``children``), semantic rollups (``lineage_group``,
     ``family``), explicit registry level fields (``ontology_level`` /
-    ``ontology_kind``), cross-cutting molecular groupings (``subtype_groups`` /
-    ``subtype_axes``), explicit MMR/MSI classifier-axis fields
+    ``ontology_kind``), a curated sample-classification target flag
+    (``is_classification_target``), cross-cutting molecular groupings
+    (``subtype_groups`` / ``subtype_axes``), explicit MMR/MSI classifier-axis fields
     (``mmr_axis_state`` / ``mmr_classifier_role``), source-scoped evidence resolution
     (``evidence_source_code``), expression-matrix availability, and matched
     normal-tissue metadata.
@@ -1106,6 +1111,9 @@ def cancer_type_records(
     df = _filter_string_values(df, "family", family)
     df = _filter_string_values(df, "ontology_level", ontology_level)
     df = _filter_string_values(df, "ontology_kind", ontology_kind)
+    if classification_target is not None:
+        wanted = _coerce_bool_filter(classification_target, name="classification_target")
+        df = df[_truthy_registry_flag(df["is_classification_target"]) == wanted]
     df = _filter_string_values(df, "primary_tissue", primary_tissue)
 
     if normal_tissue is not None:
@@ -1819,6 +1827,50 @@ def cancer_type_tree(root=None):
     return {r: _subtree(r) for r in roots}
 
 
+def _truthy_registry_flag(series: pd.Series) -> pd.Series:
+    if pd.api.types.is_bool_dtype(series):
+        return series.fillna(False)
+    return series.astype(str).str.strip().str.lower().isin({"true", "1", "yes"})
+
+
+def _coerce_bool_filter(value, *, name: str) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int) and value in {0, 1}:
+        return bool(value)
+    if isinstance(value, str):
+        v = value.strip().lower()
+        if v in {"true", "1", "yes"}:
+            return True
+        if v in {"false", "0", "no"}:
+            return False
+    raise ValueError(f"{name} must be True or False")
+
+
+def classification_target_codes():
+    """Return cancer codes that are valid sample-classification targets.
+
+    This is the curated discriminator between diagnosable cancer types and
+    source-scope response cohorts that exist only to anchor empirical facts
+    such as ICI response or TMB. It is intentionally separate from expression
+    availability: a target can be classifiable even when no expression matrix is
+    currently bundled for it.
+    """
+    df = cancer_type_registry()
+    if "is_classification_target" not in df.columns:
+        return df["code"].tolist()
+    flag = _truthy_registry_flag(df["is_classification_target"])
+    return df.loc[flag, "code"].tolist()
+
+
+def is_classification_target(cancer_type):
+    """True when ``cancer_type`` resolves to a classifiable cancer target."""
+    code = resolve_cancer_type(cancer_type)
+    if code is None:
+        return False
+    return code in set(classification_target_codes())
+
+
 def mixture_cohort_codes():
     """Return codes flagged as pooled/source-scoped cohorts in the registry.
 
@@ -1829,7 +1881,7 @@ def mixture_cohort_codes():
     df = cancer_type_registry()
     if "mixture_cohort" not in df.columns:
         return []
-    flag = df["mixture_cohort"].astype(str).str.strip().str.lower().isin({"true", "1", "yes"})
+    flag = _truthy_registry_flag(df["mixture_cohort"])
     return df.loc[flag, "code"].tolist()
 
 

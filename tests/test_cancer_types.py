@@ -351,6 +351,54 @@ def test_cancer_type_records_expose_explicit_ontology_levels():
     assert sarcoma.loc["SARC_RMS_ARMS", "ontology_kind"] == "fusion_molecular_subtype"
 
 
+def test_classification_target_flag_distinguishes_response_scopes():
+    records = cancer_types.cancer_type_records(
+        [
+            "CRC_MSI",
+            "NEN_G3_EXTRAPULMONARY",
+            "NET_NONPANCREATIC",
+            "SARC",
+            "CRC",
+            "NSCLC",
+            "OV",
+            "BTC",
+            "SGC",
+            "RCC_NCC",
+            "NET",
+        ]
+    ).set_index("code")
+
+    non_targets = {"CRC_MSI", "NEN_G3_EXTRAPULMONARY", "NET_NONPANCREATIC"}
+    assert set(records.loc[~records["is_classification_target"], :].index) == non_targets
+    assert cancer_types.cancer_type_codes(classification_target=False) == [
+        "CRC_MSI",
+        "NET_NONPANCREATIC",
+        "NEN_G3_EXTRAPULMONARY",
+    ]
+    assert cancer_types.cancer_type_codes(classification_target="false") == [
+        "CRC_MSI",
+        "NET_NONPANCREATIC",
+        "NEN_G3_EXTRAPULMONARY",
+    ]
+    with pytest.raises(ValueError, match="classification_target"):
+        cancer_types.cancer_type_codes(classification_target="maybe")
+
+    for code in ["SARC", "CRC", "NSCLC", "OV", "BTC", "SGC", "RCC_NCC", "NET"]:
+        assert bool(records.loc[code, "is_classification_target"]) is True
+        assert cancer_types.is_classification_target(code) is True
+
+    for code in non_targets:
+        assert cancer_types.is_classification_target(code) is False
+        assert code not in cancer_types.classification_target_codes()
+
+    assert cancer_types.is_classification_target(None) is False
+    assert cd.is_classification_target("NET") is True
+    assert (
+        cd.cancer_ontology.classification_target_codes()
+        == cancer_types.classification_target_codes()
+    )
+
+
 def test_cancer_type_siblings_use_parent_hierarchy():
     siblings = cancer_types.cancer_type_siblings("COAD")
     assert siblings["code"].tolist() == ["READ"]

@@ -40,6 +40,14 @@ says the reference cohort/source is pooled or source-scoped. For example
 clinical evidence row, while `OV` is an anatomical grouping and `FTC` / `PPC`
 are anatomical cancer types.
 
+Classifiability is a separate curated axis. Use `is_classification_target`,
+`classification_target_codes`, or `cancer_type_records(classification_target=True)`
+when a downstream sample classifier needs codes a sample can be assigned to.
+Pure source-scope evidence rows such as `CRC_MSI`, `NET_NONPANCREATIC`, and
+`NEN_G3_EXTRAPULMONARY` remain available for TMB/ICI lookups, but are not
+sample-classification targets. This flag is intentionally independent of
+expression-reference availability.
+
 ```python
 from oncoref import cancer_ontology, cohorts, expression
 
@@ -60,6 +68,8 @@ epithelial_msi = cancer_ontology.cancer_type_records(
 source_scope_msi = cancer_ontology.cancer_type_records(
     under="CRC", ontology_level="molecular_subtype", ontology_kind="molecular_source_scope"
 )
+classification_targets = cancer_ontology.cancer_type_records(classification_target=True)
+clinical_fact_scopes = cancer_ontology.cancer_type_records(classification_target=False)
 
 # The MMR/MSI classifier axis keeps positive, negative, and confounder classes
 # explicit. STAD_MSI exists as an ontology code, but expression_only=True
