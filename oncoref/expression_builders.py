@@ -44,7 +44,7 @@ import shutil
 import tempfile
 import urllib.request
 from collections.abc import Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
 from typing import Callable, Literal
@@ -65,6 +65,7 @@ from .normalization import clean_tpm
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
 GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
 RECOUNT3_SOURCE_TYPE = "recount3"
+TREEHOUSE_SOURCE_TYPE = "treehouse-compendium"
 TUMOR_ORIGIN_VALUES: frozenset[str] = frozenset(
     {
         "primary",
@@ -241,10 +242,49 @@ class Recount3Source:
 
 
 @dataclass(frozen=True)
+class TreehouseCohort:
+    """One cohort routed from a Treehouse compendium clinical table."""
+
+    cancer_code: str
+    disease_label: str
+    group: str = "direct"
+    selection: str = ""
+    cache_stem: str | None = None
+    source_cohort: str | None = None
+    extra_notes: str = ""
+
+    @property
+    def effective_cache_stem(self) -> str:
+        return self.cache_stem or self.cancer_code
+
+
+@dataclass(frozen=True)
+class TreehouseSource:
+    """One Treehouse compendium release plus its declarative cohort routing."""
+
+    source_id: str
+    source_cohort: str
+    cancer_code: str | list[str]
+    tpm_file: str
+    clinical_file: str
+    tpm_url: str | None = None
+    clinical_url: str | None = None
+    source_project: str | None = "Treehouse"
+    citation: str | None = None
+    release_label: str = ""
+    unit: SourceExpressionUnit = "log2(TPM+1)"
+    cohorts: tuple[TreehouseCohort, ...] = ()
+    notes: str = ""
+    pipeline_stem: str = ""
+    tumor_origin: str = "mixed"
+    metastasis_site: str | None = None
+
+
+@dataclass(frozen=True)
 class SourceMatrixBuildResult:
     """Artifacts produced by :func:`build_source_matrices`."""
 
-    source: GeoMatrixSource | Recount3Source
+    source: GeoMatrixSource | Recount3Source | TreehouseSource
     matrices: dict[str, pd.DataFrame]
     matrix_paths: dict[str, Path]
     summary_rows: pd.DataFrame
@@ -260,7 +300,7 @@ def _unit_slug(unit: str) -> str:
 
 
 def _summary_processing_pipeline(
-    source: GeoMatrixSource | Recount3Source,
+    source: GeoMatrixSource | Recount3Source | TreehouseSource,
     *,
     native_unit: str,
 ) -> str:
@@ -269,7 +309,7 @@ def _summary_processing_pipeline(
 
 
 def _summary_source_version(
-    source: GeoMatrixSource | Recount3Source,
+    source: GeoMatrixSource | Recount3Source | TreehouseSource,
     *,
     native_unit: str,
 ) -> str:
@@ -287,7 +327,7 @@ def _summary_source_version(
 
 
 def _summary_notes(
-    source: GeoMatrixSource | Recount3Source,
+    source: GeoMatrixSource | Recount3Source | TreehouseSource,
     *,
     n_samples: int,
 ) -> str:
@@ -619,6 +659,106 @@ def recount3_source_from_registry(
     raise KeyError(f"source id {source_id!r} not found in expression source registry")
 
 
+def treehouse_source_entries(registry_path: str | Path | None = None) -> list[dict]:
+    """Raw ``source_type: treehouse-compendium`` entries from the source registry."""
+    return [
+        entry
+        for entry in _source_entries_from_registry(registry_path)
+        if entry.get("source_type") == TREEHOUSE_SOURCE_TYPE
+    ]
+
+
+def _treehouse_cohort_from_entry(entry: Mapping) -> TreehouseCohort:
+    code = str(entry.get("cancer_code") or entry.get("code") or "").strip()
+    label = str(entry.get("disease_label") or "").strip()
+    if not code:
+        raise ValueError("treehouse cohort entry lacks cancer_code")
+    if not label:
+        raise ValueError(f"treehouse cohort {code!r} lacks disease_label")
+    return TreehouseCohort(
+        cancer_code=code,
+        disease_label=label,
+        group=str(entry.get("group") or "direct"),
+        selection=str(entry.get("selection") or ""),
+        cache_stem=_coerce_optional_text(entry.get("cache_stem")),
+        source_cohort=_coerce_optional_text(entry.get("source_cohort")),
+        extra_notes=str(entry.get("extra_notes") or ""),
+    )
+
+
+def treehouse_source_from_entry(entry: Mapping) -> TreehouseSource:
+    """Convert one registry YAML entry into an executable :class:`TreehouseSource`."""
+    if entry.get("source_type") != TREEHOUSE_SOURCE_TYPE:
+        raise ValueError(
+            f"source {entry.get('id')!r} has source_type={entry.get('source_type')!r}, "
+            f"not {TREEHOUSE_SOURCE_TYPE!r}"
+        )
+    cancer_codes = [str(code) for code in entry.get("cancer_codes", [])]
+    cohorts = tuple(
+        _treehouse_cohort_from_entry(cohort) for cohort in entry.get("treehouse_cohorts", [])
+    )
+    if not cancer_codes and cohorts:
+        cancer_codes = [cohort.cancer_code for cohort in cohorts]
+    if not cancer_codes:
+        raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
+    if not cohorts:
+        raise ValueError(f"source {entry.get('id')!r} has no treehouse_cohorts")
+    files = dict(entry.get("files") or {})
+    tpm_file = str(files.get("tpm") or entry.get("tpm_file") or "").strip()
+    clinical_file = str(files.get("clinical") or entry.get("clinical_file") or "").strip()
+    if not tpm_file or not clinical_file:
+        raise ValueError(f"source {entry.get('id')!r} lacks Treehouse TPM/clinical files")
+    cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
+    source_cohort = str(entry.get("source_cohort") or "").strip()
+    if not source_cohort:
+        raise ValueError(f"source {entry.get('id')!r} lacks source_cohort")
+    return TreehouseSource(
+        source_id=str(entry["id"]),
+        source_cohort=source_cohort,
+        cancer_code=cancer_code,
+        tpm_file=tpm_file,
+        clinical_file=clinical_file,
+        tpm_url=files.get("tpm_url") or entry.get("tpm_url"),
+        clinical_url=files.get("clinical_url") or entry.get("clinical_url"),
+        source_project=entry.get("source_project") or "Treehouse",
+        citation=entry.get("citation"),
+        release_label=str(entry.get("release_label") or entry.get("citation") or source_cohort),
+        unit=_coerce_source_expression_unit(str(entry.get("unit") or "log2(TPM+1)")),
+        cohorts=cohorts,
+        notes=str(entry.get("notes") or entry.get("special_handling") or ""),
+        pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin") or "mixed"),
+        metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
+    )
+
+
+def treehouse_source_from_registry(
+    source_id: str,
+    registry_path: str | Path | None = None,
+) -> TreehouseSource:
+    """Load one ``source_type: treehouse-compendium`` source from the registry."""
+    for entry in _source_entries_from_registry(registry_path):
+        if entry.get("id") == source_id:
+            return treehouse_source_from_entry(entry)
+    raise KeyError(f"source id {source_id!r} not found in expression source registry")
+
+
+def treehouse_cohorts_for_group(
+    group: str,
+    *,
+    source_id: str | None = None,
+    registry_path: str | Path | None = None,
+) -> list[TreehouseCohort]:
+    """Treehouse cohort definitions in a build group, preserving registry order."""
+    out: list[TreehouseCohort] = []
+    for entry in treehouse_source_entries(registry_path):
+        if source_id is not None and entry.get("id") != source_id:
+            continue
+        source = treehouse_source_from_entry(entry)
+        out.extend(cohort for cohort in source.cohorts if cohort.group == group)
+    return out
+
+
 def _csv_engine(sep: str) -> str:
     return "python" if len(sep) > 1 or "\\" in sep else "c"
 
@@ -818,6 +958,89 @@ def source_metadata(
         "linear_tpm_comparable": bool(linear_tpm_comparable),
         "tpm_proxy": bool(tpm_proxy),
     }
+
+
+def _treehouse_tcga_case_id(sample_id: str) -> str | None:
+    text = str(sample_id)
+    if not text.startswith("TCGA"):
+        return None
+    return "-".join(text.split("-")[:3])
+
+
+def _treehouse_sample_matches_selection(row: Mapping, selection: str) -> bool:
+    """Return whether a Treehouse clinical row passes a declarative selector.
+
+    The initial oncoref-owned wrapper supports the selection grammar that can be
+    evaluated from the Treehouse clinical table alone. Molecular/histology
+    selectors that require cBioPortal/GDC side tables remain source-specific
+    follow-ups under #296.
+    """
+    selector = str(selection or "").strip()
+    if not selector:
+        return True
+    if selector == "tcga":
+        return _treehouse_tcga_case_id(str(row.get("th_dataset_id", ""))) is not None
+    raise ValueError(
+        f"unsupported Treehouse cohort selection {selector!r}; "
+        "only '' and 'tcga' are registry-native so far"
+    )
+
+
+def treehouse_sample_ids(
+    clinical: pd.DataFrame,
+    cohort: TreehouseCohort,
+) -> list[str]:
+    """Sample IDs in ``clinical`` matching one Treehouse cohort definition."""
+    required = {"th_dataset_id", "disease"}
+    missing = required - set(clinical.columns)
+    if missing:
+        raise ValueError(f"Treehouse clinical table lacks required columns: {sorted(missing)}")
+    disease = clinical["disease"].astype(str).str.strip().str.lower()
+    subset = clinical.loc[disease.eq(cohort.disease_label.strip().lower())].copy()
+    if cohort.selection:
+        keep = subset.apply(
+            lambda row: _treehouse_sample_matches_selection(row.to_dict(), cohort.selection),
+            axis=1,
+        )
+        subset = subset.loc[keep]
+    ids = subset["th_dataset_id"].astype(str).tolist()
+    if not ids:
+        raise ValueError(
+            f"no Treehouse samples matched {cohort.cancer_code!r} "
+            f"(disease_label={cohort.disease_label!r}, selection={cohort.selection!r})"
+        )
+    return ids
+
+
+def read_treehouse_tpm_columns(path: str | Path, sample_cols: Iterable[str]) -> pd.DataFrame:
+    """Read selected sample columns from a Treehouse HUGO log2(TPM+1) matrix."""
+    samples = [str(col) for col in sample_cols]
+    header = pd.read_csv(Path(path), sep="\t", nrows=0).columns.astype(str).tolist()
+    if not header:
+        raise ValueError(f"Treehouse TPM matrix is empty: {path}")
+    gene_col = header[0]
+    available = set(header)
+    missing = [col for col in samples if col not in available]
+    if missing:
+        raise ValueError(
+            f"{len(missing)} Treehouse samples are missing from TPM matrix; "
+            f"first few: {missing[:5]}"
+        )
+    keep = [gene_col, *samples]
+    df = pd.read_csv(Path(path), sep="\t", usecols=keep, low_memory=False)
+    return df.set_index(gene_col)
+
+
+def _treehouse_cohort_source(
+    source: TreehouseSource,
+    cohort: TreehouseCohort,
+) -> TreehouseSource:
+    notes = " ".join(part for part in (source.notes, cohort.extra_notes) if part).strip()
+    return replace(
+        source,
+        source_cohort=cohort.source_cohort or source.source_cohort,
+        notes=notes,
+    )
 
 
 def _download(url: str, dest: Path, *, force: bool = False) -> Path:
@@ -1353,6 +1576,162 @@ def build_recount3_source_matrices(
     summary_path = out_dir / f"{stem}_summary_rows.csv"
     _write_csv_atomic(summary_rows, summary_path)
     _reconcile_per_code_artifacts(out_dir, matrices)
+    sidecar_paths["summary_rows"] = summary_path
+    return SourceMatrixBuildResult(
+        source=source,
+        matrices=matrices,
+        matrix_paths=matrix_paths,
+        summary_rows=summary_rows,
+        mapping_audit=audit,
+        parse_diagnostics=parse_diagnostics,
+        sample_qc=sample_qc,
+        sidecar_paths=sidecar_paths,
+    )
+
+
+def build_treehouse_source_matrices(
+    source: TreehouseSource,
+    *,
+    cache_dir: str | Path,
+    output_dir: str | Path | None = None,
+    tpm_path: str | Path | None = None,
+    clinical_path: str | Path | None = None,
+    force_download: bool = False,
+    high_expression_threshold: float = 1.0,
+) -> SourceMatrixBuildResult:
+    """Build source-matrix artifacts for one Treehouse compendium release.
+
+    Treehouse matrices are HUGO-symbol rows and sample columns stored as
+    ``log2(TPM+1)``. This wrapper filters samples via the declarative cohort
+    definitions in ``expression_sources.yaml``, inverse-transforms to linear TPM,
+    canonicalizes symbols through oncoref's gene-ID resolver, then writes the same
+    per-code parquet, parse/mapping audit, sample-QC, and summary-row sidecars as
+    the generic GEO/recount3 builders.
+    """
+    cache = Path(cache_dir)
+    out_dir = Path(output_dir) if output_dir is not None else cache / "derived"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    tpm_file = Path(tpm_path) if tpm_path is not None else cache / source.tpm_file
+    if not tpm_file.exists() or force_download:
+        if not source.tpm_url:
+            raise ValueError("tpm_path is absent and TreehouseSource.tpm_url is not set")
+        tpm_file = _download(source.tpm_url, tpm_file, force=force_download)
+    clinical_file = (
+        Path(clinical_path) if clinical_path is not None else cache / source.clinical_file
+    )
+    if not clinical_file.exists() or force_download:
+        if not source.clinical_url:
+            raise ValueError("clinical_path is absent and TreehouseSource.clinical_url is not set")
+        clinical_file = _download(source.clinical_url, clinical_file, force=force_download)
+
+    clinical = pd.read_csv(clinical_file, sep="\t")
+    buckets = {
+        cohort.cancer_code: treehouse_sample_ids(clinical, cohort) for cohort in source.cohorts
+    }
+    all_samples = sorted({sample for samples in buckets.values() for sample in samples})
+    if not all_samples:
+        raise ValueError(f"no Treehouse samples routed for source {source.source_id!r}")
+
+    log_values = read_treehouse_tpm_columns(tpm_file, all_samples)
+    raw = log_values.reset_index()
+    source_symbol_col = "source_symbol"
+    raw = raw.rename(columns={raw.columns[0]: source_symbol_col})
+    raw.attrs["row_id_col"] = source_symbol_col
+    raw.attrs["symbol_col"] = None
+    _, parse_diagnostics = coerce_source_expression_values(
+        raw,
+        value_cols=all_samples,
+        row_id_col=source_symbol_col,
+        symbol_col=None,
+    )
+    tpm = normalize_source_matrix_to_tpm(
+        raw,
+        unit=source.unit,
+        row_id_col=source_symbol_col,
+        symbol_col=None,
+        value_cols=all_samples,
+    )
+    matrix, audit = canonicalize_source_gene_matrix(
+        tpm,
+        row_id_col=source_symbol_col,
+        symbol_col=None,
+        value_cols=all_samples,
+        high_expression_threshold=high_expression_threshold,
+    )
+    matrix.attrs["source_value_parse_diagnostics"] = parse_diagnostics
+
+    stem = _artifact_stem(source.source_cohort)
+    sidecar_paths: dict[str, Path] = {}
+    audit_path = out_dir / f"{stem}_mapping_audit.csv"
+    parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
+    _write_csv_atomic(audit, audit_path)
+    _write_csv_atomic(parse_diagnostics, parse_path)
+    sidecar_paths["mapping_audit"] = audit_path
+    sidecar_paths["parse_diagnostics"] = parse_path
+
+    from .expression import sample_expression_qc_from_matrix
+
+    matrices: dict[str, pd.DataFrame] = {}
+    matrix_paths: dict[str, Path] = {}
+    qc_frames: list[pd.DataFrame] = []
+    summary_frames: list[pd.DataFrame] = []
+    source_by_code = {
+        cohort.cancer_code: _treehouse_cohort_source(source, cohort) for cohort in source.cohorts
+    }
+    written_stems: list[str] = []
+    for code, cols in buckets.items():
+        if not cols:
+            continue
+        missing = [col for col in cols if col not in matrix.columns]
+        if missing:
+            raise ValueError(
+                f"{len(missing)} routed Treehouse samples are absent after read: {missing[:5]}"
+            )
+        cohort_source = source_by_code[code]
+        sub = matrix[[*id_columns(matrix), *cols]].copy()
+        sub.attrs = {}
+        cache_stem = next(
+            cohort.effective_cache_stem for cohort in source.cohorts if cohort.cancer_code == code
+        )
+        path = out_dir / f"{_artifact_stem(cache_stem)}_per_sample_tpm.parquet"
+        _write_parquet_atomic(sub, path)
+        meta = source_metadata(
+            source_cohort=cohort_source.source_cohort,
+            source_type=TREEHOUSE_SOURCE_TYPE,
+            unit=source.unit,
+            source_scale_class="linear_rnaseq_tpm",
+            linear_tpm_comparable=True,
+            tpm_proxy=False,
+        )
+        qc = sample_expression_qc_from_matrix(sub, cancer_type=code, source_metadata=meta)
+        qc_path = out_dir / f"{_artifact_stem(cache_stem)}_sample_qc.csv"
+        _write_csv_atomic(qc, qc_path)
+        matrices[code] = sub
+        matrix_paths[code] = path
+        written_stems.append(cache_stem)
+        sidecar_paths[f"{code}_sample_qc"] = qc_path
+        qc_frames.append(qc)
+        summary_frames.append(
+            summarize_source_matrix(
+                sub,
+                cancer_code=code,
+                source=cohort_source,
+                native_unit=source.unit,
+            )
+        )
+
+    if not matrices:
+        raise ValueError("no Treehouse samples were routed to a cancer code")
+    sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
+    summary_rows = (
+        pd.concat(summary_frames, ignore_index=True)
+        if summary_frames
+        else pd.DataFrame(columns=list(REFERENCE_EXPRESSION_COLUMNS))
+    )
+    summary_path = out_dir / f"{stem}_summary_rows.csv"
+    _write_csv_atomic(summary_rows, summary_path)
+    _reconcile_per_code_artifacts(out_dir, written_stems)
     sidecar_paths["summary_rows"] = summary_path
     return SourceMatrixBuildResult(
         source=source,

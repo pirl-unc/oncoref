@@ -287,7 +287,14 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   `recount3_gene_sums_to_tpm`, `build_recount3_source_matrices`, and
   `scripts/build_recount3_source.py` do the same for `source_type: recount3`
   entries, including run-to-sample aggregation and metadata-based routing before
-  writing the standard source-matrix artifact set. `scripts/rebuild_expression_artifacts.py`
+  writing the standard source-matrix artifact set. `TreehouseSource`,
+  `treehouse_source_from_registry`, `treehouse_cohorts_for_group`, and
+  `scripts/build_treehouse_source.py` own the direct Treehouse-compendium path:
+  clinical disease-label routing, log2(TPM+1) inverse transform, symbol
+  canonicalization, sample QC, and summary-row sidecars. Treehouse selectors that
+  can be evaluated from the clinical table itself (`""` and `tcga`) are
+  registry-native; molecular/histology selectors that require cBioPortal/GDC side
+  tables remain separate #296 follow-ups. `scripts/rebuild_expression_artifacts.py`
   then applies the same sample-QC policy to derived shards by default
   (`--sample-qc pass`) and emits `source-matrix-sample-qc.csv` plus
   `expression-artifact-build-metadata.*` in the staging directory so bundle

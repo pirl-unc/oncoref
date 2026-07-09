@@ -173,11 +173,16 @@ sources:
     cancer_codes:
       [ATRT, SARC_EWS, HEPB, MBL, NUTM, SARC_OS,
        SARC_RMS_ARMS, SARC_RMS_ERMS, SARC_RMS_PRMS, SARC_RMS_SSRMS,
-       SARC_LMS, SARC_LPS_UNSPEC, SARC_MYXFIB, SARC_SYN, SARC_UPS]
+       SARC_LMS, SARC_LPS_UNSPEC, SARC_MYXFIB, SARC_SYN, SARC_UPS,
+       SARC_ANGIO, SARC_ASPS, SARC_DSRCT, SARC_EPITH, SARC_IMT, SARC_IFS,
+       SARC_MPNST, SARC_EHE, SARC_LGFMS, NPC, SARC_GIST]
     source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01
+    source_project: Treehouse
     url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
-    builder: scripts/sweep_treehouse_polya_cohorts.py
+    builder: scripts/build_treehouse_source.py
     sibling_builders:
+      - scripts/sweep_treehouse_polya_cohorts.py  # superseded direct-cohort sweep
       - scripts/sweep_treehouse_tcga_cohorts.py  # TCGA subset of this file
       - scripts/build_treehouse_reference_expression.py  # single-cohort CLI
     unit: log2(TPM+1)
@@ -191,6 +196,35 @@ sources:
       clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
       tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
       clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01
+    tumor_origin: mixed
+    treehouse_cohorts:
+      - {cancer_code: ATRT, disease_label: atypical teratoid/rhabdoid tumor, group: polya_pediatric}
+      - {cancer_code: SARC_EWS, disease_label: Ewing sarcoma, group: polya_pediatric}
+      - {cancer_code: HEPB, disease_label: hepatoblastoma, group: polya_pediatric}
+      - {cancer_code: MBL, disease_label: medulloblastoma, group: polya_pediatric}
+      - {cancer_code: NUTM, disease_label: NUT midline carcinoma, group: polya_pediatric}
+      - {cancer_code: SARC_OS, disease_label: osteosarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_RMS_ARMS, disease_label: alveolar rhabdomyosarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_RMS_ERMS, disease_label: embryonal rhabdomyosarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_RMS_PRMS, disease_label: pleomorphic rhabdomyosarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_RMS_SSRMS, disease_label: spindle cell/sclerosing rhabdomyosarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_LMS, disease_label: leiomyosarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_LPS_UNSPEC, disease_label: liposarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_MYXFIB, disease_label: myxofibrosarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_SYN, disease_label: synovial sarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_UPS, disease_label: undifferentiated pleomorphic sarcoma, group: polya_pediatric}
+      - {cancer_code: SARC_ANGIO, disease_label: angiosarcoma, group: sarc_rare_direct}
+      - {cancer_code: SARC_ASPS, disease_label: alveolar soft part sarcoma, group: sarc_rare_direct}
+      - {cancer_code: SARC_DSRCT, disease_label: desmoplastic small round cell tumor, group: sarc_rare_direct}
+      - {cancer_code: SARC_EPITH, disease_label: epithelioid sarcoma, group: sarc_rare_direct}
+      - {cancer_code: SARC_IMT, disease_label: inflammatory myofibroblastic tumor, group: sarc_rare_direct}
+      - {cancer_code: SARC_IFS, disease_label: infantile fibrosarcoma, group: sarc_rare_direct}
+      - {cancer_code: SARC_MPNST, disease_label: malignant peripheral nerve sheath tumor, group: sarc_rare_direct}
+      - {cancer_code: SARC_EHE, disease_label: epithelioid hemangioendothelioma, group: sarc_rare_direct}
+      - {cancer_code: SARC_LGFMS, disease_label: low grade fibromyxoid sarcoma, group: sarc_rare_direct}
+      - {cancer_code: NPC, disease_label: nasopharyngeal carcinoma, group: sarc_rare_direct}
+      - {cancer_code: SARC_GIST, disease_label: gastrointestinal stromal tumor, group: sarc_subtypes}
     special_handling: >
       13,359 samples × 58,581 genes; matrix is RSEM log2(TPM+1) keyed
       by HUGO symbol. Builder inverse-transforms to TPM, subsets by
@@ -208,8 +242,12 @@ sources:
     category: expression
     cancer_codes: [SARC_CHOR, RB]
     source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_RIBOD_25_01
+    source_project: Treehouse
     url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_ribodeplete
-    builder: scripts/sweep_treehouse_ribod_cohorts.py
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/sweep_treehouse_ribod_cohorts.py  # superseded direct-cohort sweep
     unit: log2(TPM+1)
     expected_size_gb: 1
     citation: >
@@ -221,6 +259,11 @@ sources:
       clinical: clinical_Treehouse-Tumor-Compendium-25.01-RiboD_20250306v1.tsv
       tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Ribodeplete_hugo_log2tpm_58581genes_2025-03-19.tsv
       clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-RiboD_20250306v1.tsv
+    pipeline_stem: treehouse_ribod_25_01
+    tumor_origin: mixed
+    treehouse_cohorts:
+      - {cancer_code: SARC_CHOR, disease_label: chordoma, group: ribod}
+      - {cancer_code: RB, disease_label: retinoblastoma, group: ribod}
     special_handling: >
       RiboD (ribo-depleted) sibling of treehouse-polya-25-01; 2,079
       samples. Same builder works after pointing `--cache-dir` /
