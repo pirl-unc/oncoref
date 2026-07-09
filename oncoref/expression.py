@@ -63,7 +63,7 @@ import warnings
 from collections import Counter, defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache, lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -2400,12 +2400,40 @@ def _reference_mode_availability(
     if reference_source == "summary_rows":
         if sample_qc == "all":
             return (True, "") if code in summary_available else (False, "no_reference_summary_rows")
-        return (True, "") if code in source_matrix_available else (False, "no_source_matrix")
+        if code not in source_matrix_available:
+            return False, "no_source_matrix"
+        n_samples = _source_matrix_effective_sample_count(code, sample_qc)
+        if n_samples == 0:
+            return False, f"no_source_matrix_samples_matching_{sample_qc}_qc"
+        return True, ""
     if mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"}:
         return (True, "") if code in percentile_available else (False, "no_percentile_artifact")
     if mode == "tpm_raw":
         return (True, "") if code in source_matrix_available else (False, "no_source_matrix")
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
+
+
+@cache
+def _source_matrix_effective_sample_count(code: str, sample_qc: str) -> int | None:
+    """Return selected sample count for cached source matrices, or ``None`` if unknown.
+
+    Availability should not fetch source matrices. When a matrix is cached, use the same
+    read-time QC contract as :func:`per_sample_expression` so strict reference summaries
+    do not claim availability and then fail after every sample is filtered out.
+    """
+    mode = _validate_sample_qc(sample_qc)
+    if mode == "all":
+        return None
+    try:
+        qc = sample_expression_qc(code, auto_fetch=False)
+    except (FileNotFoundError, source_matrices.SourceMatrixError):
+        return None
+    if qc.empty or "sample_qc_status" not in qc.columns:
+        return 0
+    statuses = qc["sample_qc_status"].astype(str)
+    if mode == "pass":
+        return int((statuses == "pass").sum())
+    return int(statuses.isin(["pass", "warn"]).sum())
 
 
 def _reference_expected_method(mode: str, *, sample_qc: str, reference_source: str) -> str:
