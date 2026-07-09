@@ -35,6 +35,7 @@ REGISTRY_COLUMNS = [
     "parent_code",
     "ontology_level",
     "ontology_kind",
+    "is_classification_target",
     "subtype_key",
     "expression_source",
     "source_cohort",
