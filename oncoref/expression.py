@@ -378,12 +378,38 @@ def _artifact_legacy_gene_id_map(
     return id_map, symbol_map
 
 
+def _artifact_current_only_gene_ids(
+    *,
+    product: str,
+    cancer_codes: Iterable[str],
+) -> set[str]:
+    code_set = {str(c) for c in cancer_codes}
+    if not code_set:
+        return set()
+    deltas = expression_artifact_gene_universe_deltas(
+        product=product,
+        delta_kind="oncoref_only",
+    )
+
+    def _matches(cell: object) -> bool:
+        codes = {c for c in str(cell or "").split(";") if c}
+        return bool(codes & code_set)
+
+    deltas = deltas[deltas["cancer_code"].map(_matches)]
+    return {
+        gene_id
+        for gene_id in deltas["oncoref_ensembl_gene_id"].map(_delta_nonempty)
+        if gene_id is not None
+    }
+
+
 def _apply_gene_id_style(
     df: pd.DataFrame,
     *,
     product: str,
     cancer_codes: Iterable[str],
     gene_id_style: str,
+    alias_expand_remaps: bool = False,
 ) -> pd.DataFrame:
     _validate_gene_id_style(gene_id_style)
     if gene_id_style == "oncoref" or "Ensembl_Gene_ID" not in df.columns:
@@ -396,12 +422,43 @@ def _apply_gene_id_style(
         return df
     out = df.copy()
     current = out["Ensembl_Gene_ID"].astype(str)
-    legacy_ids = current.map(id_map)
+    current_only_ids = _artifact_current_only_gene_ids(
+        product=product,
+        cancer_codes=cancer_codes,
+    )
+    replacement_id_map = {
+        gene_id: legacy for gene_id, legacy in id_map.items() if gene_id in current_only_ids
+    }
+    duplicate_id_map = (
+        {gene_id: legacy for gene_id, legacy in id_map.items() if gene_id not in current_only_ids}
+        if alias_expand_remaps
+        else {}
+    )
+    replacement_symbol_map = {
+        gene_id: symbol for gene_id, symbol in symbol_map.items() if gene_id in replacement_id_map
+    }
+    duplicate_symbol_map = {
+        gene_id: symbol for gene_id, symbol in symbol_map.items() if gene_id in duplicate_id_map
+    }
+
+    legacy_ids = current.map(replacement_id_map)
     mapped = legacy_ids.notna()
     out.loc[mapped, "Ensembl_Gene_ID"] = legacy_ids[mapped].to_numpy()
     if "Symbol" in out.columns:
-        legacy_symbols = current.map(symbol_map)
+        legacy_symbols = current.map(replacement_symbol_map)
         out.loc[mapped, "Symbol"] = legacy_symbols[mapped].to_numpy()
+    duplicate_legacy_ids = current.map(duplicate_id_map)
+    duplicate_mask = duplicate_legacy_ids.notna()
+    if duplicate_mask.any():
+        existing_ids = set(out["Ensembl_Gene_ID"].astype(str))
+        duplicate_mask &= ~duplicate_legacy_ids.isin(existing_ids)
+    if duplicate_mask.any():
+        duplicates = out.loc[duplicate_mask].copy()
+        duplicates.loc[:, "Ensembl_Gene_ID"] = duplicate_legacy_ids[duplicate_mask].to_numpy()
+        if "Symbol" in duplicates.columns:
+            duplicate_symbols = current.map(duplicate_symbol_map)
+            duplicates.loc[:, "Symbol"] = duplicate_symbols[duplicate_mask].to_numpy()
+        out = pd.concat([out, duplicates], ignore_index=True)
     return out
 
 
@@ -645,7 +702,7 @@ _ARTIFACT_CANONICALIZATION_STATUSES = frozenset(
 )
 _ARTIFACT_NON_SIGNAL_EXTRA_STATUSES = frozenset({"non_signal_oncoref_extra"})
 _ARTIFACT_BIOLOGICAL_EXTRA_STATUSES = frozenset({"biological_oncoref_extra"})
-_ARTIFACT_GENE_UNIVERSE_MODES = ("artifact", "tumor_signal")
+_ARTIFACT_GENE_UNIVERSE_MODES = ("artifact", "tumor_signal", "pirlygenes")
 _ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS = [
     "artifact_row_class",
     "is_filterable_extra",
@@ -894,6 +951,16 @@ def _row_universe_annotation_frame(product: str, cancer_codes: Iterable[str]) ->
     return pd.DataFrame(rows)
 
 
+def _pirlygenes_compatible_row_ids(product: str, cancer_codes: Iterable[str]) -> set[str]:
+    """Oncoref artifact rows with a documented pirlygenes legacy counterpart."""
+    source_product = _delta_source_product(product)
+    id_map, _ = _artifact_legacy_gene_id_map(
+        product=source_product,
+        cancer_codes=[str(code) for code in cancer_codes],
+    )
+    return set(id_map)
+
+
 def _apply_artifact_gene_universe(
     df: pd.DataFrame,
     *,
@@ -909,6 +976,10 @@ def _apply_artifact_gene_universe(
     (strict technical rows plus biotype-resolved non-signal extras such as
     pseudogene, small-RNA, and immune-receptor rows). It keeps biological
     oncoref-only rows and never synthesizes missing biological rows.
+    ``"pirlygenes"`` is a stricter migration-compatibility view: it keeps the
+    artifact rows and documented canonical/remap targets needed to reproduce the
+    pirlygenes row universe, but drops oncoref-only audited extras that have no
+    pirlygenes counterpart. It still never synthesizes rows or values.
     """
     mode = _validate_artifact_gene_universe(gene_universe)
     if "Ensembl_Gene_ID" not in df.columns:
@@ -918,13 +989,15 @@ def _apply_artifact_gene_universe(
     annotations = _row_universe_annotation_frame(product, cancer_codes)
     ann = annotations.set_index("Ensembl_Gene_ID") if not annotations.empty else annotations
 
-    if mode == "tumor_signal" and not annotations.empty:
-        filterable_ids = set(
-            annotations.loc[annotations["is_filterable_extra"], "Ensembl_Gene_ID"].astype(str)
-        )
-        if filterable_ids:
+    if mode in {"tumor_signal", "pirlygenes"} and not annotations.empty:
+        drop_mask = annotations["is_filterable_extra"]
+        if mode == "pirlygenes":
+            compatible_ids = _pirlygenes_compatible_row_ids(product, cancer_codes)
+            drop_mask = ~annotations["Ensembl_Gene_ID"].astype(str).isin(compatible_ids)
+        drop_ids = set(annotations.loc[drop_mask, "Ensembl_Gene_ID"].astype(str))
+        if drop_ids:
             keys = _artifact_row_key(out["Ensembl_Gene_ID"])
-            out = out.loc[~keys.isin(filterable_ids)].reset_index(drop=True)
+            out = out.loc[~keys.isin(drop_ids)].reset_index(drop=True)
 
     if include_gene_universe_flags:
         keys = _artifact_row_key(out["Ensembl_Gene_ID"])
@@ -2006,7 +2079,9 @@ def cancer_reference_expression(
     ``expression-artifact-gene-universe-deltas.csv``.
     ``gene_universe="artifact"`` preserves exact shipped rows.
     ``gene_universe="tumor_signal"`` drops filterable extras audited for the requested
-    cohort/product while retaining biological oncoref-only rows;
+    cohort/product while retaining biological oncoref-only rows.
+    ``gene_universe="pirlygenes"`` is stricter: it drops audited oncoref-only
+    extras without a pirlygenes counterpart while keeping documented remap targets;
     ``include_gene_universe_flags=True`` appends row-level audit columns in long output.
     Neither option synthesizes missing biological rows.
     Missing requested cohorts are omitted by default to preserve the historical
@@ -2078,6 +2153,7 @@ def cancer_reference_expression(
                 product="cohort_gene_percentiles",
                 cancer_codes=[code],
                 gene_id_style=gene_id_style,
+                alias_expand_remaps=gene_universe == "pirlygenes",
             )
             label = _REFERENCE_NORMALIZE_LABELS[mode]
             if format == "long":
@@ -2912,8 +2988,10 @@ def representative_cohort_samples(
     table; missing rows and values are not synthesized.
     ``gene_universe="artifact"`` preserves exact shipped rows.
     ``gene_universe="tumor_signal"`` drops filterable extras while retaining
-    biological oncoref-only rows; ``include_gene_universe_flags=True`` appends
-    row-level audit columns.
+    biological oncoref-only rows. ``gene_universe="pirlygenes"`` additionally
+    drops audited oncoref-only biological/unresolved extras unless they are
+    documented remap targets; ``include_gene_universe_flags=True`` appends row-level
+    audit columns.
     ``sample_qc="pass"`` requires any shipped build metadata to show the
     representative shard was built from QC-passing samples. Pass
     ``sample_qc="artifact"`` only for explicit legacy/audit reads of whatever
@@ -3043,6 +3121,7 @@ def representative_cohort_samples(
             product="representative_cohort_samples",
             cancer_codes=codes,
             gene_id_style=gene_id_style,
+            alias_expand_remaps=gene_universe == "pirlygenes",
         )
         out.attrs.update(
             _representative_attrs(
@@ -3107,6 +3186,7 @@ def representative_cohort_samples(
         product="representative_cohort_samples",
         cancer_codes=codes,
         gene_id_style=gene_id_style,
+        alias_expand_remaps=gene_universe == "pirlygenes",
     )
     long.attrs.update(
         _representative_attrs(
@@ -3229,8 +3309,10 @@ def cohort_gene_percentiles(
     expression artifact delta table; missing rows and values are not synthesized.
     ``gene_universe="artifact"`` preserves exact shipped rows.
     ``gene_universe="tumor_signal"`` drops filterable extras while retaining
-    biological oncoref-only rows; ``include_gene_universe_flags=True`` appends
-    row-level audit columns.
+    biological oncoref-only rows. ``gene_universe="pirlygenes"`` additionally
+    drops audited oncoref-only biological/unresolved extras unless they are
+    documented remap targets; ``include_gene_universe_flags=True`` appends row-level
+    audit columns.
     ``sample_qc="pass"`` requires any shipped build metadata to show the
     percentile shard was built from QC-passing samples. Pass
     ``sample_qc="artifact"`` only for explicit legacy/audit reads of whatever
@@ -3326,6 +3408,7 @@ def cohort_gene_percentiles(
         product="cohort_gene_percentiles",
         cancer_codes=[code],
         gene_id_style=gene_id_style,
+        alias_expand_remaps=gene_universe == "pirlygenes",
     )
     df.attrs.update(
         _percentile_attrs(
