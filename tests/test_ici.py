@@ -126,6 +126,23 @@ def test_mpnst_pd1_response_row():
     assert rows.loc["OS", "ci_high"] == 26.3
 
 
+def test_ucec_pole_pd1_anchor_is_direct_not_bulk_parent_blend():
+    assert apd1.cancer_apd1_response("UCEC_POLE") == 100.0
+    assert ici.cancer_ici_response("UCEC_POLE") == 100.0
+    assert ici.cancer_ici_response("UCEC_POLE", inherit=False) == 100.0
+
+    record = ici.cancer_ici_response_record("UCEC_POLE")
+    assert record["requested_cancer_code"] == "UCEC_POLE"
+    assert record["resolved_cancer_code"] == "UCEC_POLE"
+    assert record["inheritance_kind"] == "direct"
+    assert record["is_inherited_evidence"] is False
+    assert record["confidence"] == "low"
+    assert record["source_anchor"] == "PMID:27159395"
+    assert record["response_numerator"] == 1
+    assert record["response_denominator"] == 1
+    assert record["orr_pct"] > ici.cancer_ici_response("UCEC")
+
+
 def test_maps_and_alias():
     assert ici.cancer_ici_response("melanoma") == ici.cancer_ici_response("SKCM")
     full = ici.cancer_ici_response()
