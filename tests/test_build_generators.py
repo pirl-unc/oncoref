@@ -575,6 +575,32 @@ def test_treehouse_source_from_registry_loads_hnsc_hpv_routes():
     assert [cohort.cancer_code for cohort in hpv] == source.cancer_code
 
 
+def test_treehouse_source_from_registry_loads_luad_mutation_routes():
+    source = expression_builders.treehouse_source_from_registry(
+        "treehouse-polya-25-01-tcga-luad-mut"
+    )
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_LUAD_MUT"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_luad_mut"
+    assert source.cancer_code == ["LUAD_EGFR", "LUAD_KRAS", "LUAD_STK11"]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["LUAD_EGFR"].disease_label == "lung adenocarcinoma"
+    assert by_code["LUAD_EGFR"].selection == "cbio_mutation:luad_tcga_pan_can_atlas_2018:EGFR"
+    assert (
+        by_code["LUAD_STK11"].selection == "cbio_mutation:luad_tcga_pan_can_atlas_2018:STK11,KEAP1"
+    )
+    assert by_code["LUAD_STK11"].effective_cache_stem == "tcga_luad_stk11"
+
+    luad_mut = expression_builders.treehouse_cohorts_for_group(
+        "tcga_luad_mut",
+        source_id="treehouse-polya-25-01-tcga-luad-mut",
+    )
+    assert [cohort.cancer_code for cohort in luad_mut] == source.cancer_code
+
+    registry = cohort_registry()
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_LUAD_MUT"]["n_samples"] == 362
+
+
 def test_treehouse_source_from_registry_loads_ucec_subtype_routes():
     source = expression_builders.treehouse_source_from_registry(
         "treehouse-polya-25-01-tcga-ucec-subtype"
@@ -793,6 +819,32 @@ def test_treehouse_sample_ids_filter_cbio_sample_clinical_numeric_selection():
         cohort,
         selection_case_sets=case_sets,
     ) == ["TCGA-CO-0001-01A"]
+
+    with pytest.raises(ValueError, match="requires a precomputed cBioPortal case set"):
+        expression_builders.treehouse_sample_ids(clinical, cohort)
+
+
+def test_treehouse_sample_ids_filter_cbio_mutation_selection():
+    clinical = pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-LU-0001-01A", "disease": "lung adenocarcinoma"},
+            {"th_dataset_id": "TCGA-LU-0002-01A", "disease": "lung adenocarcinoma"},
+            {"th_dataset_id": "TREEHOUSE-3", "disease": "lung adenocarcinoma"},
+        ]
+    )
+    selector = "cbio_mutation:luad_tcga_pan_can_atlas_2018:STK11,KEAP1"
+    cohort = expression_builders.TreehouseCohort(
+        "LUAD_STK11",
+        "lung adenocarcinoma",
+        selection=selector,
+    )
+    case_sets = {selector: {"TCGA-LU-0002"}}
+
+    assert expression_builders.treehouse_sample_ids(
+        clinical,
+        cohort,
+        selection_case_sets=case_sets,
+    ) == ["TCGA-LU-0002-01A"]
 
     with pytest.raises(ValueError, match="requires a precomputed cBioPortal case set"):
         expression_builders.treehouse_sample_ids(clinical, cohort)
@@ -1082,6 +1134,101 @@ def test_build_treehouse_source_matrices_splits_cbio_sample_numeric_cohorts(
     assert list(mss.columns) == ["Ensembl_Gene_ID", "TCGA-CO-0002-01A"]
     np.testing.assert_allclose(msi.loc["TP53", "TCGA-CO-0001-01A"], 2.0)
     np.testing.assert_allclose(mss.loc["MLH1", "TCGA-CO-0002-01A"], 8.0)
+
+
+def test_build_treehouse_source_matrices_splits_cbio_mutation_cohorts(
+    tmp_path,
+    monkeypatch,
+):
+    clinical_path = tmp_path / "clinical.tsv"
+    pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-LU-0001-01A", "disease": "lung adenocarcinoma"},
+            {"th_dataset_id": "TCGA-LU-0002-01A", "disease": "lung adenocarcinoma"},
+            {"th_dataset_id": "TCGA-LU-0003-01A", "disease": "lung adenocarcinoma"},
+        ]
+    ).to_csv(clinical_path, sep="\t", index=False)
+    tpm_path = tmp_path / "treehouse.tsv"
+    pd.DataFrame(
+        {
+            "Gene": ["TP53", "EGFR"],
+            "TCGA-LU-0001-01A": np.log2(np.array([2.0, 1.0]) + 1.0),
+            "TCGA-LU-0002-01A": np.log2(np.array([4.0, 8.0]) + 1.0),
+            "TCGA-LU-0003-01A": np.log2(np.array([6.0, 3.0]) + 1.0),
+        }
+    ).to_csv(tpm_path, sep="\t", index=False)
+    source = expression_builders.TreehouseSource(
+        source_id="synthetic-treehouse-luad-mut",
+        source_cohort="SYNTHETIC_TREEHOUSE_LUAD_MUT",
+        cancer_code=["LUAD_EGFR", "LUAD_STK11"],
+        tpm_file=tpm_path.name,
+        clinical_file=clinical_path.name,
+        source_project="Treehouse (TCGA-LUAD) x cBioPortal mutation calls",
+        cohorts=(
+            expression_builders.TreehouseCohort(
+                "LUAD_EGFR",
+                "lung adenocarcinoma",
+                selection="cbio_mutation:luad_tcga_pan_can_atlas_2018:EGFR",
+                cache_stem="tcga_luad_egfr",
+            ),
+            expression_builders.TreehouseCohort(
+                "LUAD_STK11",
+                "lung adenocarcinoma",
+                selection="cbio_mutation:luad_tcga_pan_can_atlas_2018:STK11,KEAP1",
+                cache_stem="tcga_luad_stk11",
+            ),
+        ),
+    )
+
+    def fake_mutation_case_set(
+        study_id,
+        gene_symbols,
+        *,
+        molecular_profile_id=None,
+        sample_list_id=None,
+        cache_path=None,
+        force_download=False,
+    ):
+        assert study_id == "luad_tcga_pan_can_atlas_2018"
+        assert cache_path is not None
+        genes = tuple(gene_symbols)
+        if genes == ("EGFR",):
+            return pd.DataFrame(
+                {
+                    "case_id": ["TCGA-LU-0001"],
+                    "sample_id": ["TCGA-LU-0001-01"],
+                    "gene_symbol": ["EGFR"],
+                    "entrez_gene_id": [1956],
+                }
+            )
+        assert genes == ("STK11", "KEAP1")
+        return pd.DataFrame(
+            {
+                "case_id": ["TCGA-LU-0002", "TCGA-LU-0003"],
+                "sample_id": ["TCGA-LU-0002-01", "TCGA-LU-0003-01"],
+                "gene_symbol": ["STK11", "KEAP1"],
+                "entrez_gene_id": [6794, 9817],
+            }
+        )
+
+    monkeypatch.setattr(
+        expression_builders,
+        "treehouse_cbioportal_mutation_case_set",
+        fake_mutation_case_set,
+    )
+    result = expression_builders.build_treehouse_source_matrices(source, cache_dir=tmp_path)
+
+    assert set(result.matrix_paths) == {"LUAD_EGFR", "LUAD_STK11"}
+    egfr = pd.read_parquet(result.matrix_paths["LUAD_EGFR"]).set_index("Symbol")
+    stk11 = pd.read_parquet(result.matrix_paths["LUAD_STK11"]).set_index("Symbol")
+    assert list(egfr.columns) == ["Ensembl_Gene_ID", "TCGA-LU-0001-01A"]
+    assert list(stk11.columns) == [
+        "Ensembl_Gene_ID",
+        "TCGA-LU-0002-01A",
+        "TCGA-LU-0003-01A",
+    ]
+    np.testing.assert_allclose(egfr.loc["TP53", "TCGA-LU-0001-01A"], 2.0)
+    np.testing.assert_allclose(stk11.loc["EGFR", "TCGA-LU-0002-01A"], 8.0)
 
 
 def test_recount3_gene_sums_to_tpm_length_normalizes_and_collapses_versions():

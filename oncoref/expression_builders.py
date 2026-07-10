@@ -61,7 +61,7 @@ from .expression_engine import (
     id_columns,
     sample_columns,
 )
-from .gene_ids import unversioned
+from .gene_ids import entrez_gene_mappings, unversioned
 from .normalization import clean_tpm
 
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
@@ -989,6 +989,53 @@ def _parse_cbio_clinical_selector(selection: str) -> tuple[str, str, str, str] |
     return clinical_data_type, parts[0].strip(), parts[1].strip(), parts[2].strip()
 
 
+def _split_cbio_gene_list(value: str) -> tuple[str, ...]:
+    genes = tuple(
+        part.strip().upper() for part in re.split(r"[,|+]", str(value or "")) if part.strip()
+    )
+    if not genes:
+        raise ValueError("cBioPortal mutation selectors require at least one gene symbol")
+    return genes
+
+
+def _parse_cbio_mutation_selector(selection: str) -> tuple[str, tuple[str, ...], str | None] | None:
+    selector = str(selection or "").strip()
+    if not selector.startswith("cbio_mutation:"):
+        return None
+    remainder = selector.split(":", 1)[1]
+    parts = remainder.split(":", 2)
+    if len(parts) not in {2, 3} or not all(part.strip() for part in parts[:2]):
+        raise ValueError(
+            "Treehouse cbio_mutation selectors must have the form "
+            "'cbio_mutation:<study_id>:<gene>[,<gene>...]' or "
+            "'cbio_mutation:<study_id>:<gene>[,<gene>...]:<molecular_profile_id>'"
+        )
+    profile = parts[2].strip() if len(parts) == 3 and parts[2].strip() else None
+    return parts[0].strip(), _split_cbio_gene_list(parts[1]), profile
+
+
+def _entrez_ids_for_gene_symbols(gene_symbols: Iterable[str]) -> dict[str, int]:
+    mappings = entrez_gene_mappings()
+    symbol_series = mappings["canonical_symbol"].astype(str).str.upper()
+    out: dict[str, int] = {}
+    for gene in gene_symbols:
+        symbol = str(gene).strip().upper()
+        if not symbol:
+            continue
+        sub = mappings.loc[symbol_series.eq(symbol)].copy()
+        if sub.empty:
+            raise ValueError(f"no Entrez GeneID mapping found for {symbol!r}")
+        # cBioPortal mutation endpoints expect current Entrez IDs. Historical IDs
+        # may be present for resolver compatibility, but should not be queried.
+        live = sub.loc[sub["entrez_id"].astype(str).eq(sub["live_entrez_id"].astype(str))]
+        candidates = live if not live.empty else sub
+        ids = sorted({int(value) for value in candidates["live_entrez_id"].astype(str)})
+        if len(ids) != 1:
+            raise ValueError(f"ambiguous Entrez GeneID mapping for {symbol!r}: {ids}")
+        out[symbol] = ids[0]
+    return out
+
+
 def _cbio_clinical_value_mask(values: pd.Series, selector_value: str) -> pd.Series:
     target = str(selector_value).strip()
     match = re.fullmatch(r"(>=|<=|>|<|==|=)\s*(-?(?:\d+(?:\.\d*)?|\.\d+))", target)
@@ -1041,11 +1088,21 @@ def _treehouse_sample_matches_selection(
             )
         case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
         return case_id in case_sets[selector] if case_id is not None else False
+    if selector.startswith("cbio_mutation:"):
+        _parse_cbio_mutation_selector(selector)
+        case_sets = selection_case_sets or {}
+        if selector not in case_sets:
+            raise ValueError(
+                f"Treehouse selector {selector!r} requires a precomputed cBioPortal case set"
+            )
+        case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
+        return case_id in case_sets[selector] if case_id is not None else False
     raise ValueError(
         f"unsupported Treehouse cohort selection {selector!r}; "
         "only '', 'tcga', 'gdc_project:<TCGA-project>', and "
         "'cbio_clinical:<study_id>:<attribute_id>:<value>' / "
-        "'cbio_sample_clinical:<study_id>:<attribute_id>:<value>' are registry-native so far"
+        "'cbio_sample_clinical:<study_id>:<attribute_id>:<value>' / "
+        "'cbio_mutation:<study_id>:<gene>[,<gene>...]' are registry-native so far"
     )
 
 
@@ -1170,6 +1227,77 @@ def treehouse_cbioportal_clinical_attribute_map(
     return out
 
 
+def treehouse_cbioportal_mutation_case_set(
+    study_id: str,
+    gene_symbols: str | Iterable[str],
+    *,
+    molecular_profile_id: str | None = None,
+    sample_list_id: str | None = None,
+    cache_path: str | Path | None = None,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """cBioPortal mutation-positive TCGA cases for one or more gene symbols."""
+    study = str(study_id).strip()
+    if isinstance(gene_symbols, str):
+        genes = _split_cbio_gene_list(gene_symbols)
+    else:
+        genes = _split_cbio_gene_list(",".join(str(gene) for gene in gene_symbols))
+    if not study:
+        return pd.DataFrame(columns=["case_id", "sample_id", "gene_symbol", "entrez_gene_id"])
+    cache = Path(cache_path) if cache_path is not None else None
+    if cache is not None and cache.exists() and not force_download:
+        return pd.read_csv(cache)
+
+    gene_to_entrez = _entrez_ids_for_gene_symbols(genes)
+    entrez_to_gene = {entrez: gene for gene, entrez in gene_to_entrez.items()}
+    profile = str(molecular_profile_id or f"{study}_mutations").strip()
+    sample_list = str(sample_list_id or f"{study}_sequenced").strip()
+    payload = {
+        "entrezGeneIds": sorted(gene_to_entrez.values()),
+        "sampleListId": sample_list,
+    }
+    url = (
+        "https://www.cbioportal.org/api/molecular-profiles/"
+        f"{urllib.parse.quote(profile)}/mutations/fetch?projection=SUMMARY"
+    )
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(request, timeout=60) as response:
+        data = json.load(response)
+
+    rows = []
+    for item in data:
+        raw_id = item.get("patientId") or item.get("sampleId")
+        sample_id = item.get("sampleId")
+        entrez_id = item.get("entrezGeneId")
+        if raw_id is None or entrez_id is None:
+            continue
+        case_id = _treehouse_tcga_case_id(str(raw_id))
+        if case_id is None:
+            continue
+        gene_symbol = entrez_to_gene.get(int(entrez_id), str(entrez_id))
+        rows.append(
+            {
+                "case_id": case_id,
+                "sample_id": str(sample_id) if sample_id is not None else pd.NA,
+                "gene_symbol": gene_symbol,
+                "entrez_gene_id": int(entrez_id),
+            }
+        )
+    out = pd.DataFrame(
+        rows,
+        columns=["case_id", "sample_id", "gene_symbol", "entrez_gene_id"],
+    ).drop_duplicates()
+    if cache is not None:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        out.to_csv(cache, index=False)
+    return out
+
+
 def _treehouse_selection_case_sets(
     source: TreehouseSource,
     *,
@@ -1187,7 +1315,12 @@ def _treehouse_selection_case_sets(
         if cohort.selection.startswith("cbio_clinical:")
         or cohort.selection.startswith("cbio_sample_clinical:")
     }
-    if not gdc_projects and not cbio_selectors:
+    cbio_mutation_selectors = {
+        cohort.selection
+        for cohort in source.cohorts
+        if cohort.selection.startswith("cbio_mutation:")
+    }
+    if not gdc_projects and not cbio_selectors and not cbio_mutation_selectors:
         return {}
     derived = Path(cache_dir) / "derived"
     case_sets: dict[str, set[str]] = {}
@@ -1230,6 +1363,23 @@ def _treehouse_selection_case_sets(
                     str
                 )
             )
+    for selector in cbio_mutation_selectors:
+        parsed = _parse_cbio_mutation_selector(selector)
+        if parsed is None:
+            continue
+        study_id, gene_symbols, molecular_profile_id = parsed
+        genes_slug = "_".join(gene.lower() for gene in gene_symbols)
+        cache_parts = [_artifact_stem(source.source_id), study_id, genes_slug]
+        cache_stem = "_".join(part.lower().replace("-", "_") for part in cache_parts)
+        cache_path = derived / f"{cache_stem}_cbio_mutations.csv"
+        mutations = treehouse_cbioportal_mutation_case_set(
+            study_id,
+            gene_symbols,
+            molecular_profile_id=molecular_profile_id,
+            cache_path=cache_path,
+            force_download=force_download,
+        )
+        case_sets[selector] = set(mutations["case_id"].astype(str))
     return case_sets
 
 

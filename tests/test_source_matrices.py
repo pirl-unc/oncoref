@@ -56,6 +56,19 @@ def test_crc_msi_subtypes_use_split_source_matrix_cohort():
         assert info["n_samples"] == n_samples
 
 
+def test_luad_mutation_subtypes_use_split_source_matrix_cohort():
+    expected = {
+        "LUAD_EGFR": 67,
+        "LUAD_KRAS": 153,
+        "LUAD_STK11": 142,
+    }
+
+    for code, n_samples in expected.items():
+        info = sm.cohort_info(code)
+        assert info["source_cohort"] == "TREEHOUSE_POLYA_25_01_TCGA_LUAD_MUT"
+        assert info["n_samples"] == n_samples
+
+
 def test_alias_resolves():
     assert sm.local_path("lung_adeno").name == "LUAD.parquet"
 
