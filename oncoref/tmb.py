@@ -52,6 +52,9 @@ _TMB_EVIDENCE_OVERRIDES = {
     "CRANIO": {"estimate_type": "small_n"},
     "HCL": {"estimate_type": "small_n"},
     "UCEC_POLE": {"estimate_type": "order_of_magnitude"},
+    # TCGA-SARC is a soft-tissue sarcoma cohort. It does not span the full oncoref
+    # SARC member-union scope, which also includes bone sarcomas and RMS.
+    "SARC": {"source_scope": "soft_tissue_sarcoma_subset"},
     "SARC_CIC": {"source_scope": "renal_cic_rearranged_sarcoma_proxy"},
 }
 

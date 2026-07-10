@@ -101,6 +101,23 @@ def test_crc_msi_tmb_record_preserves_source_scope_metadata():
     assert direct["missing_reason"] is None
 
 
+def test_sarc_tmb_row_is_soft_tissue_subset_not_grand_union_direct():
+    row = tmb.cancer_tmb_df().set_index("cancer_code").loc["SARC"]
+
+    assert row["median_tmb_mut_mb"] == 1.8
+    assert row["source_scope"] == "soft_tissue_sarcoma_subset"
+    assert row["source_scope"] != "cancer_code_direct"
+    assert "soft-tissue" in row["notes"]
+
+    record = tmb.cancer_tmb_record("SARC")
+    assert record["resolved_cancer_code"] == "SARC"
+    assert record["inheritance_kind"] == "direct"
+    assert record["source_scope"] == "soft_tissue_sarcoma_subset"
+
+    registry_row = cancer_types.cancer_type_records(["SARC"]).iloc[0]
+    assert registry_row["reference_source"] == "member_union"
+
+
 def test_tmb_record_missing_and_bulk_direct_rows():
     assert tmb.cancer_tmb_record("COAD_MSI", inherit=False) is None
 
