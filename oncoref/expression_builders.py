@@ -969,17 +969,43 @@ def _treehouse_tcga_case_id(sample_id: str) -> str | None:
     return "-".join(text.split("-")[:3])
 
 
-def _parse_cbio_clinical_selector(selection: str) -> tuple[str, str, str] | None:
+def _parse_cbio_clinical_selector(selection: str) -> tuple[str, str, str, str] | None:
     selector = str(selection or "").strip()
-    if not selector.startswith("cbio_clinical:"):
+    if selector.startswith("cbio_clinical:"):
+        clinical_data_type = "PATIENT"
+        remainder = selector.split(":", 1)[1]
+    elif selector.startswith("cbio_sample_clinical:"):
+        clinical_data_type = "SAMPLE"
+        remainder = selector.split(":", 1)[1]
+    else:
         return None
-    parts = selector.split(":", 3)
-    if len(parts) != 4 or not all(part.strip() for part in parts[1:]):
+    parts = remainder.split(":", 2)
+    if len(parts) != 3 or not all(part.strip() for part in parts):
         raise ValueError(
             "Treehouse cbio_clinical selectors must have the form "
-            "'cbio_clinical:<study_id>:<attribute_id>:<value>'"
+            "'cbio_clinical:<study_id>:<attribute_id>:<value>' or "
+            "'cbio_sample_clinical:<study_id>:<attribute_id>:<value>'"
         )
-    return parts[1].strip(), parts[2].strip(), parts[3].strip()
+    return clinical_data_type, parts[0].strip(), parts[1].strip(), parts[2].strip()
+
+
+def _cbio_clinical_value_mask(values: pd.Series, selector_value: str) -> pd.Series:
+    target = str(selector_value).strip()
+    match = re.fullmatch(r"(>=|<=|>|<|==|=)\s*(-?(?:\d+(?:\.\d*)?|\.\d+))", target)
+    if match is None:
+        return values.astype(str).eq(target)
+    op, threshold_text = match.groups()
+    numeric = pd.to_numeric(values, errors="coerce")
+    threshold = float(threshold_text)
+    if op == ">=":
+        return numeric.ge(threshold)
+    if op == "<=":
+        return numeric.le(threshold)
+    if op == ">":
+        return numeric.gt(threshold)
+    if op == "<":
+        return numeric.lt(threshold)
+    return numeric.eq(threshold)
 
 
 def _treehouse_sample_matches_selection(
@@ -1006,7 +1032,7 @@ def _treehouse_sample_matches_selection(
             raise ValueError(f"Treehouse selector {selector!r} requires a precomputed GDC case set")
         case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
         return case_id in case_sets[selector] if case_id is not None else False
-    if selector.startswith("cbio_clinical:"):
+    if selector.startswith("cbio_clinical:") or selector.startswith("cbio_sample_clinical:"):
         _parse_cbio_clinical_selector(selector)
         case_sets = selection_case_sets or {}
         if selector not in case_sets:
@@ -1018,7 +1044,8 @@ def _treehouse_sample_matches_selection(
     raise ValueError(
         f"unsupported Treehouse cohort selection {selector!r}; "
         "only '', 'tcga', 'gdc_project:<TCGA-project>', and "
-        "'cbio_clinical:<study_id>:<attribute_id>:<value>' are registry-native so far"
+        "'cbio_clinical:<study_id>:<attribute_id>:<value>' / "
+        "'cbio_sample_clinical:<study_id>:<attribute_id>:<value>' are registry-native so far"
     )
 
 
@@ -1158,6 +1185,7 @@ def _treehouse_selection_case_sets(
         cohort.selection
         for cohort in source.cohorts
         if cohort.selection.startswith("cbio_clinical:")
+        or cohort.selection.startswith("cbio_sample_clinical:")
     }
     if not gdc_projects and not cbio_selectors:
         return {}
@@ -1174,28 +1202,33 @@ def _treehouse_selection_case_sets(
         for project_id, sub in case_map.groupby("project_id"):
             case_sets[f"gdc_project:{project_id}"] = set(sub["submitter_id"].astype(str))
 
-    cbio_requests: dict[tuple[str, str], list[tuple[str, str]]] = {}
+    cbio_requests: dict[tuple[str, str, str], list[tuple[str, str]]] = {}
     for selector in cbio_selectors:
         parsed = _parse_cbio_clinical_selector(selector)
         if parsed is None:
             continue
-        study_id, attribute_id, value = parsed
-        cbio_requests.setdefault((study_id, attribute_id), []).append((selector, value))
-    for (study_id, attribute_id), selectors in cbio_requests.items():
-        cache_stem = "_".join(
-            part.lower().replace("-", "_")
-            for part in (_artifact_stem(source.source_id), study_id, attribute_id)
+        clinical_data_type, study_id, attribute_id, value = parsed
+        cbio_requests.setdefault((clinical_data_type, study_id, attribute_id), []).append(
+            (selector, value)
         )
+    for (clinical_data_type, study_id, attribute_id), selectors in cbio_requests.items():
+        cache_parts = [_artifact_stem(source.source_id), study_id, attribute_id]
+        if clinical_data_type != "PATIENT":
+            cache_parts.append(clinical_data_type.lower())
+        cache_stem = "_".join(part.lower().replace("-", "_") for part in cache_parts)
         cache_path = derived / f"{cache_stem}_cbio_clinical.csv"
         clinical = treehouse_cbioportal_clinical_attribute_map(
             study_id,
             attribute_id,
+            clinical_data_type=clinical_data_type,
             cache_path=cache_path,
             force_download=force_download,
         )
         for selector, value in selectors:
             case_sets[selector] = set(
-                clinical.loc[clinical["value"].astype(str).eq(value), "case_id"].astype(str)
+                clinical.loc[_cbio_clinical_value_mask(clinical["value"], value), "case_id"].astype(
+                    str
+                )
             )
     return case_sets
 
