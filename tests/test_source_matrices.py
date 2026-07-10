@@ -69,6 +69,22 @@ def test_luad_mutation_subtypes_use_split_source_matrix_cohort():
         assert info["n_samples"] == n_samples
 
 
+def test_sarc_histology_overlays_use_split_source_matrix_cohort():
+    expected = {
+        "SARC_WDLPS": 5,
+        "SARC_DDLPS": 48,
+    }
+
+    for code, n_samples in expected.items():
+        info = sm.cohort_info(code)
+        assert info["source_cohort"] == "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
+        assert info["n_samples"] == n_samples
+
+    # PLEOLPS stays on the current four-sample GSE75885 RNA-seq source; the
+    # TCGA-SARC overlay has only two samples and should not silently replace it.
+    assert sm.cohort_info("SARC_PLEOLPS")["source_cohort"] == "GSE75885_DELESPAUL_2017"
+
+
 def test_alias_resolves():
     assert sm.local_path("lung_adeno").name == "LUAD.parquet"
 
