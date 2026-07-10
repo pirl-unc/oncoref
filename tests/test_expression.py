@@ -293,6 +293,31 @@ def test_representatives_pirlygenes_universe_matches_known_parity_counts():
             assert {"ENSG00000226079", "ENSG00000232395"} <= set(out["Ensembl_Gene_ID"])
 
 
+def test_stad_ucec_subtype_expression_artifacts_ship():
+    expected = {
+        "STAD_CIN",
+        "STAD_MSI",
+        "STAD_GS",
+        "STAD_EBV",
+        "UCEC_CNH",
+        "UCEC_MSI",
+        "UCEC_CNL",
+        "UCEC_POLE",
+    }
+
+    assert expected <= set(expression.available_representative_cohorts())
+    assert expected <= set(expression.available_percentile_cohorts())
+
+    metadata = expression.expression_artifact_build_metadata(expected)
+    assert set(metadata["cancer_code"]) == expected
+    assert set(metadata["source_cohort"]) == {
+        "TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE",
+        "TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE",
+    }
+    assert metadata.set_index("cancer_code").loc["UCEC_CNH", "n_source_samples"] == 85
+    assert metadata.set_index("cancer_code").loc["UCEC_CNH", "n_cohort_samples"] == 83
+
+
 def test_expression_artifact_gene_universe_delta_summary():
     summary = expression.expression_artifact_gene_universe_delta_summary()
 

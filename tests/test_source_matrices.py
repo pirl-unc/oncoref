@@ -17,10 +17,29 @@ from oncoref import source_matrices as sm
 
 def test_registry_and_available_cohorts():
     cohorts = sm.available_cohorts()
-    assert len(cohorts) >= 118
+    assert len(cohorts) >= 126
     assert "LUAD" in cohorts and "BRCA" in cohorts
     info = sm.cohort_info("LUAD")
     assert info["source_cohort"] and info["n_samples"] > 0
+
+
+def test_stad_ucec_molecular_subtypes_are_source_matrix_cohorts():
+    expected = {
+        "STAD_CIN": ("TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE", 221),
+        "STAD_MSI": ("TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE", 73),
+        "STAD_GS": ("TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE", 50),
+        "STAD_EBV": ("TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE", 30),
+        "UCEC_CNH": ("TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE", 85),
+        "UCEC_MSI": ("TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE", 41),
+        "UCEC_CNL": ("TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE", 30),
+        "UCEC_POLE": ("TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE", 16),
+    }
+
+    for code, (source_cohort, n_samples) in expected.items():
+        assert code in sm.available_cohorts()
+        info = sm.cohort_info(code)
+        assert info["source_cohort"] == source_cohort
+        assert info["n_samples"] == n_samples
 
 
 def test_alias_resolves():
