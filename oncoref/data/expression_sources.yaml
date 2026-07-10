@@ -410,6 +410,42 @@ sources:
       KEAP1 are treated as a union because the oncoref registry code
       LUAD_STK11 represents the immune-cold STK11/KEAP1 axis.
 
+  - id: treehouse-polya-25-01-tcga-sarc-histology
+    category: expression
+    cancer_codes: [SARC_WDLPS, SARC_DDLPS]
+    source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY
+    source_project: Treehouse (TCGA-SARC) x GDC primary diagnosis
+    url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/sweep_treehouse_sarc_subtypes.py  # superseded WDLPS GDC histology split
+      - scripts/sweep_sarc_rare_subtypes.py  # superseded DDLPS GDC histology split
+    unit: log2(TPM+1)
+    expected_size_gb: 6.2
+    citation: >
+      Treehouse Childhood Cancer Initiative, Tumor Compendium 25.01
+      PolyA, TCGA-SARC liposarcoma samples split by GDC
+      diagnoses.primary_diagnosis. PMID 24071852.
+    files:
+      tpm: Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+      tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01_tcga_sarc_histology
+    tumor_origin: primary
+    treehouse_cohorts:
+      - {cancer_code: SARC_WDLPS, disease_label: liposarcoma, group: tcga_sarc_histology, selection: "gdc_primary_diagnosis:TCGA-SARC:Liposarcoma, well differentiated", cache_stem: tcga_sarc_wdlps}
+      - {cancer_code: SARC_DDLPS, disease_label: liposarcoma, group: tcga_sarc_histology, selection: "gdc_primary_diagnosis:TCGA-SARC:Dedifferentiated liposarcoma", cache_stem: tcga_sarc_ddlps}
+    special_handling: >
+      Treehouse carries TCGA-SARC liposarcoma samples in one parent
+      liposarcoma disease bucket. This source joins each TCGA sample barcode
+      prefix to the GDC TCGA-SARC diagnoses.primary_diagnosis table and routes
+      well-differentiated and dedifferentiated liposarcoma separately. PLEOLPS
+      has only two TCGA-SARC overlay samples and remains on the current
+      four-sample GSE75885 RNA-seq source until a source-matrix refresh
+      deliberately chooses otherwise.
+
   - id: treehouse-polya-25-01-tcga-ucec-subtype
     category: expression
     cancer_codes: [UCEC_POLE, UCEC_MSI, UCEC_CNL, UCEC_CNH]

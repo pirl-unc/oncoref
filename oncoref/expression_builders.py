@@ -1014,6 +1014,20 @@ def _parse_cbio_mutation_selector(selection: str) -> tuple[str, tuple[str, ...],
     return parts[0].strip(), _split_cbio_gene_list(parts[1]), profile
 
 
+def _parse_gdc_primary_diagnosis_selector(selection: str) -> tuple[str, str] | None:
+    selector = str(selection or "").strip()
+    if not selector.startswith("gdc_primary_diagnosis:"):
+        return None
+    remainder = selector.split(":", 1)[1]
+    parts = remainder.split(":", 1)
+    if len(parts) != 2 or not all(part.strip() for part in parts):
+        raise ValueError(
+            "Treehouse gdc_primary_diagnosis selectors must have the form "
+            "'gdc_primary_diagnosis:<GDC-project>:<primary_diagnosis>'"
+        )
+    return parts[0].strip(), parts[1].strip()
+
+
 def _entrez_ids_for_gene_symbols(gene_symbols: Iterable[str]) -> dict[str, int]:
     mappings = entrez_gene_mappings()
     symbol_series = mappings["canonical_symbol"].astype(str).str.upper()
@@ -1064,9 +1078,7 @@ def _treehouse_sample_matches_selection(
     """Return whether a Treehouse clinical row passes a declarative selector.
 
     Supports selectors that can be evaluated from the Treehouse clinical table
-    alone, plus GDC project membership via precomputed case sets. Molecular and
-    histology selectors that require cBioPortal/GDC labels remain source-specific
-    follow-ups under #296.
+    alone, plus precomputed case sets from GDC/cBioPortal side tables.
     """
     selector = str(selection or "").strip()
     if not selector:
@@ -1077,6 +1089,15 @@ def _treehouse_sample_matches_selection(
         case_sets = selection_case_sets or {}
         if selector not in case_sets:
             raise ValueError(f"Treehouse selector {selector!r} requires a precomputed GDC case set")
+        case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
+        return case_id in case_sets[selector] if case_id is not None else False
+    if selector.startswith("gdc_primary_diagnosis:"):
+        _parse_gdc_primary_diagnosis_selector(selector)
+        case_sets = selection_case_sets or {}
+        if selector not in case_sets:
+            raise ValueError(
+                f"Treehouse selector {selector!r} requires a precomputed GDC diagnosis case set"
+            )
         case_id = _treehouse_tcga_case_id(str(row.get("th_dataset_id", "")))
         return case_id in case_sets[selector] if case_id is not None else False
     if selector.startswith("cbio_clinical:") or selector.startswith("cbio_sample_clinical:"):
@@ -1100,6 +1121,7 @@ def _treehouse_sample_matches_selection(
     raise ValueError(
         f"unsupported Treehouse cohort selection {selector!r}; "
         "only '', 'tcga', 'gdc_project:<TCGA-project>', and "
+        "'gdc_primary_diagnosis:<GDC-project>:<primary_diagnosis>' / "
         "'cbio_clinical:<study_id>:<attribute_id>:<value>' / "
         "'cbio_sample_clinical:<study_id>:<attribute_id>:<value>' / "
         "'cbio_mutation:<study_id>:<gene>[,<gene>...]' are registry-native so far"
@@ -1176,6 +1198,53 @@ def treehouse_gdc_case_project_map(
         for hit in hits
     ]
     out = pd.DataFrame(rows, columns=["submitter_id", "project_id"])
+    if cache is not None:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        out.to_csv(cache, index=False)
+    return out
+
+
+def treehouse_gdc_primary_diagnosis_map(
+    project_id: str,
+    *,
+    cache_path: str | Path | None = None,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """GDC case submitter IDs and primary diagnoses for a Treehouse split."""
+    project = str(project_id).strip()
+    if not project:
+        return pd.DataFrame(columns=["submitter_id", "primary_diagnosis"])
+    cache = Path(cache_path) if cache_path is not None else None
+    if cache is not None and cache.exists() and not force_download:
+        return pd.read_csv(cache)
+
+    filters = {
+        "op": "in",
+        "content": {
+            "field": "project.project_id",
+            "value": [project],
+        },
+    }
+    params = {
+        "filters": json.dumps(filters),
+        "fields": "submitter_id,diagnoses.primary_diagnosis",
+        "format": "JSON",
+        "size": "5000",
+    }
+    url = "https://api.gdc.cancer.gov/cases?" + urllib.parse.urlencode(params)
+    with urllib.request.urlopen(url, timeout=60) as response:
+        hits = json.load(response)["data"]["hits"]
+    rows = []
+    for hit in hits:
+        diagnoses = hit.get("diagnoses") or [{}]
+        diagnosis = diagnoses[0].get("primary_diagnosis", "")
+        rows.append(
+            {
+                "submitter_id": str(hit["submitter_id"]),
+                "primary_diagnosis": str(diagnosis),
+            }
+        )
+    out = pd.DataFrame(rows, columns=["submitter_id", "primary_diagnosis"])
     if cache is not None:
         cache.parent.mkdir(parents=True, exist_ok=True)
         out.to_csv(cache, index=False)
@@ -1309,6 +1378,11 @@ def _treehouse_selection_case_sets(
         for cohort in source.cohorts
         if cohort.selection.startswith("gdc_project:")
     }
+    gdc_diagnosis_selectors = {
+        cohort.selection
+        for cohort in source.cohorts
+        if cohort.selection.startswith("gdc_primary_diagnosis:")
+    }
     cbio_selectors = {
         cohort.selection
         for cohort in source.cohorts
@@ -1320,7 +1394,12 @@ def _treehouse_selection_case_sets(
         for cohort in source.cohorts
         if cohort.selection.startswith("cbio_mutation:")
     }
-    if not gdc_projects and not cbio_selectors and not cbio_mutation_selectors:
+    if (
+        not gdc_projects
+        and not gdc_diagnosis_selectors
+        and not cbio_selectors
+        and not cbio_mutation_selectors
+    ):
         return {}
     derived = Path(cache_dir) / "derived"
     case_sets: dict[str, set[str]] = {}
@@ -1334,6 +1413,31 @@ def _treehouse_selection_case_sets(
         case_sets.update({f"gdc_project:{project_id}": set() for project_id in gdc_projects})
         for project_id, sub in case_map.groupby("project_id"):
             case_sets[f"gdc_project:{project_id}"] = set(sub["submitter_id"].astype(str))
+
+    gdc_diagnosis_requests: dict[str, list[tuple[str, str]]] = {}
+    for selector in gdc_diagnosis_selectors:
+        parsed = _parse_gdc_primary_diagnosis_selector(selector)
+        if parsed is None:
+            continue
+        project_id, diagnosis = parsed
+        gdc_diagnosis_requests.setdefault(project_id, []).append((selector, diagnosis))
+    for project_id, selectors in gdc_diagnosis_requests.items():
+        cache_parts = [_artifact_stem(source.source_id), project_id, "primary_diagnosis"]
+        cache_stem = "_".join(part.lower().replace("-", "_") for part in cache_parts)
+        cache_path = derived / f"{cache_stem}_gdc_diagnosis.csv"
+        diagnosis_map = treehouse_gdc_primary_diagnosis_map(
+            project_id,
+            cache_path=cache_path,
+            force_download=force_download,
+        )
+        primary_diagnosis = diagnosis_map["primary_diagnosis"].astype(str)
+        for selector, diagnosis in selectors:
+            case_sets[selector] = set(
+                diagnosis_map.loc[
+                    primary_diagnosis.eq(diagnosis),
+                    "submitter_id",
+                ].astype(str)
+            )
 
     cbio_requests: dict[tuple[str, str, str], list[tuple[str, str]]] = {}
     for selector in cbio_selectors:

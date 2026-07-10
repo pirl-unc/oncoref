@@ -601,6 +601,36 @@ def test_treehouse_source_from_registry_loads_luad_mutation_routes():
     assert registry["TREEHOUSE_POLYA_25_01_TCGA_LUAD_MUT"]["n_samples"] == 362
 
 
+def test_treehouse_source_from_registry_loads_sarc_histology_routes():
+    source = expression_builders.treehouse_source_from_registry(
+        "treehouse-polya-25-01-tcga-sarc-histology"
+    )
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_sarc_histology"
+    assert source.cancer_code == ["SARC_WDLPS", "SARC_DDLPS"]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["SARC_WDLPS"].disease_label == "liposarcoma"
+    assert (
+        by_code["SARC_WDLPS"].selection
+        == "gdc_primary_diagnosis:TCGA-SARC:Liposarcoma, well differentiated"
+    )
+    assert (
+        by_code["SARC_DDLPS"].selection
+        == "gdc_primary_diagnosis:TCGA-SARC:Dedifferentiated liposarcoma"
+    )
+
+    sarc = expression_builders.treehouse_cohorts_for_group(
+        "tcga_sarc_histology",
+        source_id="treehouse-polya-25-01-tcga-sarc-histology",
+    )
+    assert [cohort.cancer_code for cohort in sarc] == source.cancer_code
+
+    registry = cohort_registry()
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"]["n_samples"] == 53
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"]["n_codes"] == 2
+
+
 def test_treehouse_source_from_registry_loads_ucec_subtype_routes():
     source = expression_builders.treehouse_source_from_registry(
         "treehouse-polya-25-01-tcga-ucec-subtype"
@@ -769,6 +799,32 @@ def test_treehouse_sample_ids_filter_gdc_project_selection():
     ) == ["TCGA-GB-0001-01A"]
 
     with pytest.raises(ValueError, match="requires a precomputed GDC case set"):
+        expression_builders.treehouse_sample_ids(clinical, cohort)
+
+
+def test_treehouse_sample_ids_filter_gdc_primary_diagnosis_selection():
+    clinical = pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-DX-0001-01A", "disease": "liposarcoma"},
+            {"th_dataset_id": "TCGA-DX-0002-01A", "disease": "liposarcoma"},
+            {"th_dataset_id": "TREEHOUSE-3", "disease": "liposarcoma"},
+        ]
+    )
+    selector = "gdc_primary_diagnosis:TCGA-SARC:Liposarcoma, well differentiated"
+    cohort = expression_builders.TreehouseCohort(
+        "SARC_WDLPS",
+        "liposarcoma",
+        selection=selector,
+    )
+    case_sets = {selector: {"TCGA-DX-0001"}}
+
+    assert expression_builders.treehouse_sample_ids(
+        clinical,
+        cohort,
+        selection_case_sets=case_sets,
+    ) == ["TCGA-DX-0001-01A"]
+
+    with pytest.raises(ValueError, match="requires a precomputed GDC diagnosis case set"):
         expression_builders.treehouse_sample_ids(clinical, cohort)
 
 
@@ -976,6 +1032,86 @@ def test_build_treehouse_source_matrices_splits_gdc_project_cohorts(
     assert list(lgg.columns) == ["Ensembl_Gene_ID", "TCGA-LG-0002-01A"]
     np.testing.assert_allclose(gbm.loc["TP53", "TCGA-GB-0001-01A"], 2.0)
     np.testing.assert_allclose(lgg.loc["TP53", "TCGA-LG-0002-01A"], 4.0)
+
+
+def test_build_treehouse_source_matrices_splits_gdc_primary_diagnosis_cohorts(
+    tmp_path,
+    monkeypatch,
+):
+    clinical_path = tmp_path / "clinical.tsv"
+    pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-DX-0001-01A", "disease": "liposarcoma"},
+            {"th_dataset_id": "TCGA-DX-0002-01A", "disease": "liposarcoma"},
+            {"th_dataset_id": "TCGA-DX-0003-01A", "disease": "liposarcoma"},
+            {"th_dataset_id": "TREEHOUSE-4", "disease": "liposarcoma"},
+        ]
+    ).to_csv(clinical_path, sep="\t", index=False)
+    tpm_path = tmp_path / "treehouse.tsv"
+    pd.DataFrame(
+        {
+            "Gene": ["TP53", "MDM2"],
+            "TCGA-DX-0001-01A": np.log2(np.array([2.0, 1.0]) + 1.0),
+            "TCGA-DX-0002-01A": np.log2(np.array([4.0, 8.0]) + 1.0),
+            "TCGA-DX-0003-01A": np.log2(np.array([6.0, 3.0]) + 1.0),
+            "TREEHOUSE-4": np.log2(np.array([100.0, 100.0]) + 1.0),
+        }
+    ).to_csv(tpm_path, sep="\t", index=False)
+    source = expression_builders.TreehouseSource(
+        source_id="synthetic-treehouse-sarc-histology",
+        source_cohort="SYNTHETIC_TREEHOUSE_SARC_HISTOLOGY",
+        cancer_code=["SARC_WDLPS", "SARC_DDLPS"],
+        tpm_file=tpm_path.name,
+        clinical_file=clinical_path.name,
+        source_project="Treehouse (TCGA-SARC) x GDC primary diagnosis",
+        cohorts=(
+            expression_builders.TreehouseCohort(
+                "SARC_WDLPS",
+                "liposarcoma",
+                selection="gdc_primary_diagnosis:TCGA-SARC:Liposarcoma, well differentiated",
+                cache_stem="tcga_sarc_wdlps",
+            ),
+            expression_builders.TreehouseCohort(
+                "SARC_DDLPS",
+                "liposarcoma",
+                selection="gdc_primary_diagnosis:TCGA-SARC:Dedifferentiated liposarcoma",
+                cache_stem="tcga_sarc_ddlps",
+            ),
+        ),
+    )
+
+    def fake_diagnosis_map(project_id, *, cache_path=None, force_download=False):
+        assert project_id == "TCGA-SARC"
+        assert cache_path is not None
+        return pd.DataFrame(
+            {
+                "submitter_id": ["TCGA-DX-0001", "TCGA-DX-0002", "TCGA-DX-0003"],
+                "primary_diagnosis": [
+                    "Liposarcoma, well differentiated",
+                    "Dedifferentiated liposarcoma",
+                    "Dedifferentiated liposarcoma",
+                ],
+            }
+        )
+
+    monkeypatch.setattr(
+        expression_builders,
+        "treehouse_gdc_primary_diagnosis_map",
+        fake_diagnosis_map,
+    )
+    result = expression_builders.build_treehouse_source_matrices(source, cache_dir=tmp_path)
+
+    assert set(result.matrix_paths) == {"SARC_WDLPS", "SARC_DDLPS"}
+    wdlps = pd.read_parquet(result.matrix_paths["SARC_WDLPS"]).set_index("Symbol")
+    ddlps = pd.read_parquet(result.matrix_paths["SARC_DDLPS"]).set_index("Symbol")
+    assert list(wdlps.columns) == ["Ensembl_Gene_ID", "TCGA-DX-0001-01A"]
+    assert list(ddlps.columns) == [
+        "Ensembl_Gene_ID",
+        "TCGA-DX-0002-01A",
+        "TCGA-DX-0003-01A",
+    ]
+    np.testing.assert_allclose(wdlps.loc["TP53", "TCGA-DX-0001-01A"], 2.0)
+    np.testing.assert_allclose(ddlps.loc["MDM2", "TCGA-DX-0002-01A"], 8.0)
 
 
 def test_build_treehouse_source_matrices_splits_cbio_clinical_cohorts(
