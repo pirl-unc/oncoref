@@ -19,7 +19,9 @@ __version__ = "1.8.115"
 # shards dense in the canonical gene-ID space (oncoref#135 item 6). 5.23.3 is the
 # first oncoref-owned QC-policy bundle: derived expression artifacts are rebuilt from
 # source matrices with sample_qc="pass" by default and ship build/QC metadata.
-DATA_VERSION = "5.23.3"
+# 5.23.4 adds TCGA-STAD and TCGA-UCEC molecular-subtype representative,
+# percentile, within-sample, source-QC, and reference-expression shards.
+DATA_VERSION = "5.23.4"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION

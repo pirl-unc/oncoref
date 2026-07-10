@@ -120,9 +120,9 @@ def test_registry_has_core_columns():
     assert records.loc["CRC_MSI", "reference_source"] == "member_union"
     assert records.loc["CRC_MSI", "classification_reference_code"] == "CRC_MSI"
     assert bool(records.loc["CRC_MSI", "is_classification_target"]) is True
-    assert records.loc["STAD_MSI", "reference_source"] == "parent"
-    assert records.loc["STAD_MSI", "classification_reference_code"] == "STAD"
-    assert bool(records.loc["STAD_MSI", "is_classification_target"]) is False
+    assert records.loc["STAD_MSI", "reference_source"] == "own_cohort"
+    assert records.loc["STAD_MSI", "classification_reference_code"] == "STAD_MSI"
+    assert bool(records.loc["STAD_MSI", "is_classification_target"]) is True
     assert "PRAD" in set(df["code"])
 
 
@@ -429,6 +429,7 @@ def test_reference_source_enum_drives_classification_targets():
     assert set(records.loc[records["reference_source"] == "own_cohort"].index) == {
         "COAD_MSI",
         "READ_MSI",
+        "STAD_MSI",
         "OV",
     }
     assert set(records.loc[records["reference_source"] == "member_union"].index) == {
@@ -447,7 +448,6 @@ def test_reference_source_enum_drives_classification_targets():
         "NEC_LUNG",
     }
     assert set(records.loc[records["reference_source"] == "parent"].index) == {
-        "STAD_MSI",
         "RCC_NCC_UNCLASSIFIED",
         "THYMCA",
     }
@@ -460,7 +460,6 @@ def test_reference_source_enum_drives_classification_targets():
     non_targets = {
         "RCC_NCC",
         "RCC_NCC_UNCLASSIFIED",
-        "STAD_MSI",
         "THYMCA",
         "NET_NONPANCREATIC",
         "NEN_EXTRAPULMONARY_HG",
@@ -488,8 +487,8 @@ def test_reference_source_enum_drives_classification_targets():
     )
     assert cancer_types.cancer_type_reference_source("CRC_MSI") == "member_union"
     assert cancer_types.cancer_type_reference_code("CRC_MSI") == "CRC_MSI"
-    assert cancer_types.cancer_type_reference_source("STAD_MSI") == "parent"
-    assert cancer_types.cancer_type_reference_code("STAD_MSI") == "STAD"
+    assert cancer_types.cancer_type_reference_source("STAD_MSI") == "own_cohort"
+    assert cancer_types.cancer_type_reference_code("STAD_MSI") == "STAD_MSI"
     assert cancer_types.cancer_type_reference_source("NET_NONPANCREATIC") == "none"
     assert cancer_types.cancer_type_reference_code("NET_NONPANCREATIC") == "NET"
 
@@ -530,7 +529,7 @@ def test_cancer_type_records_include_evidence_expression_and_normal_tissue():
     assert bool(records.loc["CRC_MSI", "has_expression_matrix"]) is False
 
 
-def test_stad_molecular_subtype_rows_are_curated_not_expression_shards():
+def test_stad_molecular_subtype_rows_have_direct_expression_shards():
     records = cancer_types.cancer_type_records(
         ["STAD", "STAD_MSI", "STAD_EBV", "STAD_CIN", "STAD_GS"]
     ).set_index("code")
@@ -540,14 +539,21 @@ def test_stad_molecular_subtype_rows_are_curated_not_expression_shards():
     assert records.loc["STAD_MSI", "normal_tissue_code"] == "stomach"
     assert records.loc["STAD_MSI", "hpa_tissues"] == ("stomach",)
     assert records.loc["STAD_MSI", "source_pmid"] == "PMID:25079317"
-    assert bool(records.loc["STAD_MSI", "has_expression_matrix"]) is False
+    assert bool(records.loc["STAD_MSI", "has_expression_matrix"]) is True
+    assert (
+        records.loc["STAD_MSI", "source_matrix_cohort"] == "TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE"
+    )
+    assert records.loc["STAD_MSI", "source_matrix_n_samples"] == 73
 
     assert records.loc["STAD_EBV", "subtype_groups"] == ("EBV_POS",)
     assert records.loc["STAD_EBV", "subtype_axes"] == ("viral_ebv",)
     assert records.loc["STAD_EBV", "mmr_classifier_role"] == "exclude_confounder"
+    assert bool(records.loc["STAD_EBV", "has_expression_matrix"]) is True
 
     assert records.loc["STAD_CIN", "subtype_groups"] == ("MSS",)
     assert records.loc["STAD_GS", "subtype_groups"] == ("MSS",)
+    assert bool(records.loc["STAD_CIN", "has_expression_matrix"]) is True
+    assert bool(records.loc["STAD_GS", "has_expression_matrix"]) is True
     assert bool(records.loc["STAD", "has_expression_matrix"]) is True
 
 
@@ -570,9 +576,16 @@ def test_mmr_status_axis_queries_and_exports():
     assert cancer_types.mmr_hypermutated_confounder_codes() == ["UCEC_POLE"]
 
     direct_positive = cancer_types.mmrd_cancer_codes(expression_only=True)
-    assert direct_positive == ["COAD_MSI", "READ_MSI"]
+    assert direct_positive == ["COAD_MSI", "READ_MSI", "UCEC_MSI", "STAD_MSI"]
     direct_negative = cancer_types.pmmr_cancer_codes(expression_only=True)
-    assert direct_negative == ["COAD_MSS", "READ_MSS"]
+    assert direct_negative == [
+        "COAD_MSS",
+        "READ_MSS",
+        "UCEC_CNL",
+        "UCEC_CNH",
+        "STAD_CIN",
+        "STAD_GS",
+    ]
 
     record = cancer_types.cancer_mismatch_repair_status("STAD_MSI")
     assert record["mmr_axis_state"] == "mmrd"
@@ -652,7 +665,25 @@ def test_expression_reference_coverage_contract():
 
 def test_expression_reference_coverage_computed_groupings():
     coverage = cancer_types.expression_reference_coverage(
-        ["NET", "CRC", "CRC_MSI", "NSCLC", "BTC", "SGC", "SARC", "SARC_LPS", "OV", "STAD_MSI"]
+        [
+            "NET",
+            "CRC",
+            "CRC_MSI",
+            "NSCLC",
+            "BTC",
+            "SGC",
+            "SARC",
+            "SARC_LPS",
+            "OV",
+            "STAD_CIN",
+            "STAD_MSI",
+            "STAD_GS",
+            "STAD_EBV",
+            "UCEC_CNH",
+            "UCEC_MSI",
+            "UCEC_CNL",
+            "UCEC_POLE",
+        ]
     ).set_index("code")
 
     for code in ["NET", "CRC", "CRC_MSI", "NSCLC", "BTC", "SGC", "SARC", "SARC_LPS"]:
@@ -674,10 +705,23 @@ def test_expression_reference_coverage_computed_groupings():
     assert coverage.loc["OV", "expression_reference_kind"] == "observed_bulk"
     assert coverage.loc["OV", "reference_source"] == "own_cohort"
 
-    assert bool(coverage.loc["STAD_MSI", "has_expression_reference"]) is False
-    assert coverage.loc["STAD_MSI", "reference_source"] == "parent"
-    assert coverage.loc["STAD_MSI", "classification_reference_code"] == "STAD"
-    assert coverage.loc["STAD_MSI", "consumer_recommendation"] == "parent_reference"
+    for code, n_samples in {
+        "STAD_CIN": 221,
+        "STAD_MSI": 73,
+        "STAD_GS": 50,
+        "STAD_EBV": 30,
+        "UCEC_CNH": 85,
+        "UCEC_MSI": 41,
+        "UCEC_CNL": 30,
+        "UCEC_POLE": 16,
+    }.items():
+        assert bool(coverage.loc[code, "has_expression_reference"]) is True
+        assert bool(coverage.loc[code, "has_direct_expression_reference"]) is True
+        assert bool(coverage.loc[code, "has_computed_expression_reference"]) is False
+        assert coverage.loc[code, "expression_reference_kind"] == "observed_bulk"
+        assert coverage.loc[code, "expression_reference_source_code"] == code
+        assert coverage.loc[code, "source_matrix_n_samples"] == n_samples
+        assert coverage.loc[code, "consumer_recommendation"] == "direct_reference"
 
 
 def test_expression_reference_coverage_filters_and_empty_results():
