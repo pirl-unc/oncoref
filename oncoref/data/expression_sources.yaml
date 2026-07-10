@@ -447,6 +447,42 @@ sources:
       cBioPortal STAD_POLE label is intentionally not routed because oncoref
       does not currently carry a STAD_POLE registry code.
 
+  - id: treehouse-polya-25-01-tcga-coadread-msi
+    category: expression
+    cancer_codes: [COAD_MSI, COAD_MSS, READ_MSI, READ_MSS]
+    source_type: treehouse-compendium
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_COADREAD_MSI
+    source_project: Treehouse (TCGA-COAD/READ) x cBioPortal MSIsensor
+    url: https://public.gi.ucsc.edu/~ekephart/public-data/#tumor_25.01_polya
+    builder: scripts/build_treehouse_source.py
+    sibling_builders:
+      - scripts/sweep_treehouse_tcga_coadread_msi.py  # superseded cBioPortal MSIsensor split
+    unit: log2(TPM+1)
+    expected_size_gb: 6.2
+    citation: >
+      Treehouse Childhood Cancer Initiative, Tumor Compendium 25.01
+      PolyA, TCGA-COAD/READ subset split by cBioPortal MSIsensor score
+      from coadread_tcga_pan_can_atlas_2018. PMID 26028255.
+    files:
+      tpm: Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical: clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+      tpm_url: https://xena.treehouse.gi.ucsc.edu/download/Tumor-25.01-Polya_hugo_log2tpm_58581genes_2025-02-27.tsv
+      clinical_url: https://xena.treehouse.gi.ucsc.edu/download/clinical_Treehouse-Tumor-Compendium-25.01-PolyA_20250131v1.tsv
+    pipeline_stem: treehouse_polya_25_01_tcga_coadread_msi
+    tumor_origin: primary
+    treehouse_cohorts:
+      - {cancer_code: COAD_MSI, disease_label: colon adenocarcinoma, group: tcga_coadread_msi, selection: "cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:>=10", cache_stem: tcga_coad_msi}
+      - {cancer_code: COAD_MSS, disease_label: colon adenocarcinoma, group: tcga_coadread_msi, selection: "cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:<10", cache_stem: tcga_coad_mss}
+      - {cancer_code: READ_MSI, disease_label: rectum adenocarcinoma, group: tcga_coadread_msi, selection: "cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:>=10", cache_stem: tcga_read_msi}
+      - {cancer_code: READ_MSS, disease_label: rectum adenocarcinoma, group: tcga_coadread_msi, selection: "cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:<10", cache_stem: tcga_read_mss}
+    special_handling: >
+      Treehouse carries TCGA-COAD and TCGA-READ samples in separate colon and
+      rectum disease buckets. This source joins each TCGA sample barcode prefix
+      to cBioPortal PanCancer Atlas sample-level MSIsensor scores and routes
+      MSI-H as MSI_SENSOR_SCORE >= 10, matching the existing oncoref
+      TREEHOUSE_POLYA_25_01_TCGA_COADREAD_MSI source-cohort provenance. MSS
+      rows use MSI_SENSOR_SCORE < 10.
+
   - id: treehouse-polya-25-01-tcga-glioma
     category: expression
     cancer_codes: [GBM, LGG]

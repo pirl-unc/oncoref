@@ -639,6 +639,37 @@ def test_treehouse_source_from_registry_loads_stad_subtype_routes():
     assert registry["TREEHOUSE_POLYA_25_01_TCGA_STAD_SUBTYPE"]["n_samples"] == 374
 
 
+def test_treehouse_source_from_registry_loads_coadread_msi_routes():
+    source = expression_builders.treehouse_source_from_registry(
+        "treehouse-polya-25-01-tcga-coadread-msi"
+    )
+
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_COADREAD_MSI"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_coadread_msi"
+    assert source.cancer_code == ["COAD_MSI", "COAD_MSS", "READ_MSI", "READ_MSS"]
+    by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
+    assert by_code["COAD_MSI"].disease_label == "colon adenocarcinoma"
+    assert by_code["READ_MSI"].disease_label == "rectum adenocarcinoma"
+    assert (
+        by_code["COAD_MSI"].selection
+        == "cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:>=10"
+    )
+    assert (
+        by_code["COAD_MSS"].selection
+        == "cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:<10"
+    )
+    assert by_code["READ_MSS"].effective_cache_stem == "tcga_read_mss"
+
+    subtypes = expression_builders.treehouse_cohorts_for_group(
+        "tcga_coadread_msi",
+        source_id="treehouse-polya-25-01-tcga-coadread-msi",
+    )
+    assert [cohort.cancer_code for cohort in subtypes] == source.cancer_code
+
+    registry = cohort_registry()
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_COADREAD_MSI"]["n_samples"] == 361
+
+
 def test_treehouse_source_from_registry_loads_glioma_gdc_project_routes():
     source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-glioma")
 
@@ -736,6 +767,32 @@ def test_treehouse_sample_ids_filter_cbio_clinical_selection():
         cohort,
         selection_case_sets=case_sets,
     ) == ["TCGA-BR-0001-01A"]
+
+    with pytest.raises(ValueError, match="requires a precomputed cBioPortal case set"):
+        expression_builders.treehouse_sample_ids(clinical, cohort)
+
+
+def test_treehouse_sample_ids_filter_cbio_sample_clinical_numeric_selection():
+    clinical = pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-CO-0001-01A", "disease": "colon adenocarcinoma"},
+            {"th_dataset_id": "TCGA-CO-0002-01A", "disease": "colon adenocarcinoma"},
+            {"th_dataset_id": "TCGA-RE-0003-01A", "disease": "rectum adenocarcinoma"},
+        ]
+    )
+    selector = "cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:>=10"
+    cohort = expression_builders.TreehouseCohort(
+        "COAD_MSI",
+        "colon adenocarcinoma",
+        selection=selector,
+    )
+    case_sets = {selector: {"TCGA-CO-0001", "TCGA-RE-0003"}}
+
+    assert expression_builders.treehouse_sample_ids(
+        clinical,
+        cohort,
+        selection_case_sets=case_sets,
+    ) == ["TCGA-CO-0001-01A"]
 
     with pytest.raises(ValueError, match="requires a precomputed cBioPortal case set"):
         expression_builders.treehouse_sample_ids(clinical, cohort)
@@ -946,6 +1003,85 @@ def test_build_treehouse_source_matrices_splits_cbio_clinical_cohorts(
     assert list(her2.columns) == ["Ensembl_Gene_ID", "TCGA-BR-0002-01A"]
     np.testing.assert_allclose(basal.loc["TP53", "TCGA-BR-0001-01A"], 2.0)
     np.testing.assert_allclose(her2.loc["ERBB2", "TCGA-BR-0002-01A"], 8.0)
+
+
+def test_build_treehouse_source_matrices_splits_cbio_sample_numeric_cohorts(
+    tmp_path,
+    monkeypatch,
+):
+    clinical_path = tmp_path / "clinical.tsv"
+    pd.DataFrame(
+        [
+            {"th_dataset_id": "TCGA-CO-0001-01A", "disease": "colon adenocarcinoma"},
+            {"th_dataset_id": "TCGA-CO-0002-01A", "disease": "colon adenocarcinoma"},
+            {"th_dataset_id": "TCGA-RE-0003-01A", "disease": "rectum adenocarcinoma"},
+        ]
+    ).to_csv(clinical_path, sep="\t", index=False)
+    tpm_path = tmp_path / "treehouse.tsv"
+    pd.DataFrame(
+        {
+            "Gene": ["TP53", "MLH1"],
+            "TCGA-CO-0001-01A": np.log2(np.array([2.0, 1.0]) + 1.0),
+            "TCGA-CO-0002-01A": np.log2(np.array([4.0, 8.0]) + 1.0),
+            "TCGA-RE-0003-01A": np.log2(np.array([6.0, 3.0]) + 1.0),
+        }
+    ).to_csv(tpm_path, sep="\t", index=False)
+    source = expression_builders.TreehouseSource(
+        source_id="synthetic-treehouse-coadread-msi",
+        source_cohort="SYNTHETIC_TREEHOUSE_COADREAD_MSI",
+        cancer_code=["COAD_MSI", "COAD_MSS"],
+        tpm_file=tpm_path.name,
+        clinical_file=clinical_path.name,
+        source_project="Treehouse (TCGA-COAD/READ) x cBioPortal MSIsensor",
+        cohorts=(
+            expression_builders.TreehouseCohort(
+                "COAD_MSI",
+                "colon adenocarcinoma",
+                selection="cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:>=10",
+                cache_stem="tcga_coad_msi",
+            ),
+            expression_builders.TreehouseCohort(
+                "COAD_MSS",
+                "colon adenocarcinoma",
+                selection="cbio_sample_clinical:coadread_tcga_pan_can_atlas_2018:MSI_SENSOR_SCORE:<10",
+                cache_stem="tcga_coad_mss",
+            ),
+        ),
+    )
+
+    def fake_clinical_map(
+        study_id,
+        attribute_id,
+        *,
+        clinical_data_type="PATIENT",
+        cache_path=None,
+        force_download=False,
+    ):
+        assert study_id == "coadread_tcga_pan_can_atlas_2018"
+        assert attribute_id == "MSI_SENSOR_SCORE"
+        assert clinical_data_type == "SAMPLE"
+        assert cache_path is not None
+        return pd.DataFrame(
+            {
+                "case_id": ["TCGA-CO-0001", "TCGA-CO-0002", "TCGA-RE-0003"],
+                "value": ["12.5", "2.0", "14.0"],
+            }
+        )
+
+    monkeypatch.setattr(
+        expression_builders,
+        "treehouse_cbioportal_clinical_attribute_map",
+        fake_clinical_map,
+    )
+    result = expression_builders.build_treehouse_source_matrices(source, cache_dir=tmp_path)
+
+    assert set(result.matrix_paths) == {"COAD_MSI", "COAD_MSS"}
+    msi = pd.read_parquet(result.matrix_paths["COAD_MSI"]).set_index("Symbol")
+    mss = pd.read_parquet(result.matrix_paths["COAD_MSS"]).set_index("Symbol")
+    assert list(msi.columns) == ["Ensembl_Gene_ID", "TCGA-CO-0001-01A"]
+    assert list(mss.columns) == ["Ensembl_Gene_ID", "TCGA-CO-0002-01A"]
+    np.testing.assert_allclose(msi.loc["TP53", "TCGA-CO-0001-01A"], 2.0)
+    np.testing.assert_allclose(mss.loc["MLH1", "TCGA-CO-0002-01A"], 8.0)
 
 
 def test_recount3_gene_sums_to_tpm_length_normalizes_and_collapses_versions():

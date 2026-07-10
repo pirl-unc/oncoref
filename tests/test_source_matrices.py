@@ -42,6 +42,20 @@ def test_stad_ucec_molecular_subtypes_are_source_matrix_cohorts():
         assert info["n_samples"] == n_samples
 
 
+def test_crc_msi_subtypes_use_split_source_matrix_cohort():
+    expected = {
+        "COAD_MSI": 50,
+        "COAD_MSS": 226,
+        "READ_MSI": 2,
+        "READ_MSS": 83,
+    }
+
+    for code, n_samples in expected.items():
+        info = sm.cohort_info(code)
+        assert info["source_cohort"] == "TREEHOUSE_POLYA_25_01_TCGA_COADREAD_MSI"
+        assert info["n_samples"] == n_samples
+
+
 def test_alias_resolves():
     assert sm.local_path("lung_adeno").name == "LUAD.parquet"
 
