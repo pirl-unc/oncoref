@@ -158,6 +158,7 @@ def test_msi_subtype_value_corrected_and_rolls_up():
     assert 4.0 <= orr("COAD") <= 7.0
     # UCEC corrected to KEYNOTE-158 components (dMMR 48, pMMR 7); all-comer is the
     # roll-up at advanced-EC dMMR prevalence ~20% (0.20*48 + 0.80*7 = 15.2), not 8.
+    assert orr("UCEC_POLE") == 100.0
     assert abs(orr("UCEC_MSI") - 48.0) < 0.01
     assert orr("UCEC_CNH") == 7.0 and orr("UCEC_CNL") == 7.0
     rolled = 0.20 * orr("UCEC_MSI") + 0.80 * orr("UCEC_CNH")

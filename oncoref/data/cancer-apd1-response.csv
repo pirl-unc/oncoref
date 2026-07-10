@@ -25,6 +25,7 @@ CRC_MSI,43.8,pembrolizumab,KEYNOTE-177,MK-3475-177,NCT02563002,first-line MSI-H/
 COAD_MSS,0.0,pembrolizumab,KEYNOTE-016,,NCT01876511,MSS,PMID:26028255,high,Microsatellite-stable colon; immune-cold; ~0% response,PD-1
 READ_MSS,0.0,pembrolizumab,KEYNOTE-016,NCT01876511,NCT01876511,MSS,PMID:26028255,high,Microsatellite-stable rectal; immune-cold,PD-1
 UCEC_MSI,48,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,dMMR/MSI-H advanced EC,PMID:39847999,high,ORR 48% (95% CI 37-60); MSI-H/dMMR cohort n~94 (KEYNOTE-158 long-term FU),PD-1
+UCEC_POLE,100,pembrolizumab,Mehnert POLE-mutant EC exceptional responder,,,POLE-mutant ultramutated recurrent/metastatic EC case report,PMID:27159395,low,single-patient exceptional response to pembrolizumab (1/1); low-confidence qualitative responder anchor; prevents fallback to derived all-comer UCEC blend,PD-1
 UCEC_CNL,7,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,pMMR/MSS NSMP,PMID:39847999,medium,"non-MSI-H/pMMR ORR 7% (95% CI 3-14), KEYNOTE-158; MSS NSMP arm",PD-1
 UCEC_CNH,7,pembrolizumab,KEYNOTE-158,MK-3475-158,NCT02628067,pMMR/MSS p53-abnormal,PMID:39847999,medium,"non-MSI-H/pMMR ORR 7% (95% CI 3-14), KEYNOTE-158; p53-abnormal most immune-cold",PD-1
 OV,8.0,pembrolizumab,KEYNOTE-100,MK-3475-100,NCT02674061,recurrent ovarian (all-comers),PMID:31046082,medium,pembro monotherapy ORR 8.0%,PD-1
