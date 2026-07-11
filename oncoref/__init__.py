@@ -181,6 +181,8 @@ from .expression import (
     gene_pooled_cohort_stats,
     gene_representative_samples,
     gene_within_sample_top_fraction,
+    housekeeping_cancer_expression_coverage,
+    housekeeping_cancer_expression_coverage_from_matrix,
     pan_cancer_expression,
     per_sample_expression,
     pooled_cohort_stats,
@@ -561,6 +563,8 @@ __all__ = [
     "gene_within_sample_top_fraction",
     "genomes",
     "greedy_coverage",
+    "housekeeping_cancer_expression_coverage",
+    "housekeeping_cancer_expression_coverage_from_matrix",
     "housekeeping_reference_profile",
     # HPA normal-tissue reference data
     "hpa_cell_type_expression",

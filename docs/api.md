@@ -268,6 +268,13 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   by regenerated expression bundles. Until a regenerated heavy bundle ships those
   files, they return schema-stable empty metadata by default; use
   `on_missing="raise"` when a downstream migration requires the manifests.
+  `housekeeping_cancer_expression_coverage(...)` is the reusable #202 audit
+  surface for evaluating clean-TPM biological housekeeping candidates across
+  cancer cohorts: it reports per-gene detection, `>= floor` coverage, p1/p5/
+  median clean TPM, sample-QC mode, and source-scale metadata. Treat absolute TPM
+  floors as hard evidence only where `recommended_for_absolute_tpm_floor` is true;
+  microarray/proxy or otherwise non-linear sources stay visible as warning/rank
+  calibration inputs, not vetoes.
 - `oncoref.expression_builders` — build-time ingestion and artifact cores used by
   data-bundle generation scripts. `GeoMatrixSource` /
   `build_source_matrices` own the generic supplementary-matrix path from raw

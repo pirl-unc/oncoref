@@ -1270,6 +1270,95 @@ def test_sample_expression_qc_records_configurable_housekeeping_floor():
     assert "low_housekeeping_floor_fraction" in qc.loc["sample", "sample_qc_reasons"]
 
 
+def test_housekeeping_cancer_expression_coverage_from_matrix_reports_low_tail_stats():
+    df = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG_HK1", "ENSG_HK2", "ENSG_OTHER"],
+            "Symbol": ["HK1", "HK2", "OTHER"],
+            "s1": [40.0, 0.0, 10.0],
+            "s2": [20.0, 50.0, 20.0],
+        }
+    )
+
+    out = expression.housekeeping_cancer_expression_coverage_from_matrix(
+        df,
+        cancer_type="LUAD",
+        source_metadata={
+            "source_cohort": "TEST_SOURCE",
+            "source_type": "test",
+            "unit": "TPM_clean",
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+        },
+        panel_ids=["ENSG_HK1", "ENSG_HK2", "ENSG_MISSING"],
+        housekeeping_detection_floor_tpm=30.0,
+        sample_qc="provided",
+    )
+
+    keyed = out.set_index("Ensembl_Gene_ID")
+    assert list(keyed.index) == ["ENSG_HK1", "ENSG_HK2", "ENSG_MISSING"]
+    assert keyed.loc["ENSG_HK1", "panel_member_present"]
+    assert keyed.loc["ENSG_HK1", "n_samples"] == 2
+    assert keyed.loc["ENSG_HK1", "n_detected_samples"] == 2
+    assert keyed.loc["ENSG_HK1", "n_above_floor_samples"] == 1
+    assert keyed.loc["ENSG_HK1", "fraction_above_floor"] == pytest.approx(0.5)
+    assert keyed.loc["ENSG_HK1", "min_tpm"] == pytest.approx(20.0)
+    assert keyed.loc["ENSG_HK1", "median_tpm"] == pytest.approx(30.0)
+    assert not keyed.loc["ENSG_HK1", "passes_p5_floor"]
+
+    assert keyed.loc["ENSG_HK2", "n_detected_samples"] == 1
+    assert not keyed.loc["ENSG_MISSING", "panel_member_present"]
+    assert keyed.loc["ENSG_MISSING", "n_measured_samples"] == 0
+    assert keyed.loc["ENSG_MISSING", "fraction_above_floor"] == pytest.approx(0.0)
+    assert pd.isna(keyed.loc["ENSG_MISSING", "p5_tpm"])
+    assert keyed["recommended_for_absolute_tpm_floor"].all()
+    assert out.attrs["issue"] == "#202"
+
+
+def test_housekeeping_cancer_expression_coverage_threads_sample_qc_and_source_scale(monkeypatch):
+    matrix = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG_HK"],
+            "Symbol": ["HK"],
+            "sample": [100.0],
+        }
+    )
+
+    def fake_per_sample_expression(code, *, normalize, sample_qc, auto_fetch):
+        assert normalize == "tpm_clean"
+        assert sample_qc == "pass"
+        assert auto_fetch is False
+        return matrix.copy()
+
+    def fake_source_metadata(code):
+        return {
+            "source_cohort": f"{code}_SOURCE",
+            "source_type": "microarray" if code == "MTC" else "bulk RNA-seq",
+            "unit": "TPM proxy" if code == "MTC" else "TPM",
+            "source_scale_class": "microarray_tpm_proxy" if code == "MTC" else "linear_rnaseq_tpm",
+            "linear_tpm_comparable": code != "MTC",
+        }
+
+    monkeypatch.setattr(expression, "per_sample_expression", fake_per_sample_expression)
+    monkeypatch.setattr(expression, "_selected_expression_source_metadata", fake_source_metadata)
+
+    out = expression.housekeeping_cancer_expression_coverage(
+        ["LUAD", "MTC"],
+        sample_qc="pass",
+        auto_fetch=False,
+        panel_ids=["ENSG_HK"],
+        housekeeping_detection_floor_tpm=30.0,
+    )
+
+    keyed = out.set_index("cancer_code")
+    assert set(keyed.index) == {"LUAD", "MTC"}
+    assert keyed.loc["LUAD", "recommended_for_absolute_tpm_floor"]
+    assert not keyed.loc["MTC", "recommended_for_absolute_tpm_floor"]
+    assert keyed.loc["MTC", "source_scale_class"] == "microarray_tpm_proxy"
+    assert set(out["sample_qc"]) == {"pass"}
+    assert set(out["expression_space"]) == {"tpm_clean"}
+
+
 def test_per_sample_expression_filters_by_sample_qc(tmp_path, monkeypatch):
     raw = pd.DataFrame(
         {
