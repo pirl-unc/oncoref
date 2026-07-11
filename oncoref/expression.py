@@ -1614,6 +1614,251 @@ def sample_expression_qc(
     )
 
 
+_HOUSEKEEPING_CANCER_COVERAGE_COLUMNS = [
+    "cancer_code",
+    "source_cohort",
+    "source_type",
+    "unit",
+    "source_scale_class",
+    "linear_tpm_comparable",
+    "recommended_for_absolute_tpm_floor",
+    "sample_qc",
+    "expression_space",
+    "housekeeping_detection_floor_tpm",
+    "Ensembl_Gene_ID",
+    "Symbol",
+    "panel_member_present",
+    "n_samples",
+    "n_measured_samples",
+    "n_detected_samples",
+    "n_above_floor_samples",
+    "fraction_measured",
+    "fraction_detected",
+    "fraction_above_floor",
+    "min_tpm",
+    "p1_tpm",
+    "p5_tpm",
+    "median_tpm",
+    "mean_tpm",
+    "max_tpm",
+    "passes_all_samples_floor",
+    "passes_p5_floor",
+]
+
+
+def _housekeeping_panel_rows(panel_ids=None) -> pd.DataFrame:
+    from .gene_families import clean_tpm_biological_housekeeping_genes
+
+    if panel_ids is None:
+        panel = clean_tpm_biological_housekeeping_genes()[["Ensembl_Gene_ID", "Symbol"]].copy()
+    else:
+        ids = [unversioned(str(g)) for g in panel_ids]
+        full = clean_tpm_biological_housekeeping_genes(primary_only=False)
+        symbol_by_id = dict(
+            zip(full["Ensembl_Gene_ID"].astype(str).map(unversioned), full["Symbol"].astype(str))
+        )
+        panel = pd.DataFrame(
+            {
+                "Ensembl_Gene_ID": ids,
+                "Symbol": [symbol_by_id.get(gid, gid) for gid in ids],
+            }
+        )
+    panel["Ensembl_Gene_ID"] = panel["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    panel = panel.drop_duplicates("Ensembl_Gene_ID", keep="first").reset_index(drop=True)
+    return panel
+
+
+def _coverage_quantile(values: pd.Series, q: float) -> float:
+    measured = pd.to_numeric(values, errors="coerce").dropna()
+    if measured.empty:
+        return np.nan
+    return float(np.nanquantile(measured.to_numpy(dtype=float), q))
+
+
+def housekeeping_cancer_expression_coverage_from_matrix(
+    matrix: pd.DataFrame,
+    *,
+    cancer_type=None,
+    source_metadata: dict[str, str | bool | None] | None = None,
+    panel_ids=None,
+    value_cols=None,
+    housekeeping_detection_floor_tpm: float = DEFAULT_HOUSEKEEPING_DETECTION_FLOOR_TPM,
+    sample_qc: str = "provided",
+    expression_space: str = "tpm_clean",
+) -> pd.DataFrame:
+    """Per-housekeeping-gene cancer expression coverage for one cohort matrix.
+
+    ``matrix`` should be in the expression space being audited, normally clean TPM.
+    The helper does not select a new housekeeping panel; it reports the empirical
+    coverage and low-tail statistics needed to evaluate one. Absolute TPM floor
+    decisions should use ``recommended_for_absolute_tpm_floor``: RNA-seq-like linear
+    TPM sources are comparable, while microarray/proxy sources should be warnings or
+    rank-calibrated audits rather than hard floor vetoes.
+    """
+    if matrix is None or matrix.empty:
+        return pd.DataFrame(columns=_HOUSEKEEPING_CANCER_COVERAGE_COLUMNS)
+
+    samples = [str(c) for c in (value_cols if value_cols is not None else sample_columns(matrix))]
+    samples = [c for c in samples if c in matrix.columns]
+    if not samples:
+        return pd.DataFrame(columns=_HOUSEKEEPING_CANCER_COVERAGE_COLUMNS)
+
+    df = _canonicalize_gene_rows(matrix, sample_cols=samples).reset_index(drop=True)
+    ids = df["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    row_by_id = {gid: idx for idx, gid in ids.items()}
+    symbols = dict(zip(ids, df["Symbol"].astype(str)))
+    panel = _housekeeping_panel_rows(panel_ids)
+
+    code = (
+        resolve_cancer_type(cancer_type, strict=False) or cancer_type
+        if cancer_type is not None
+        else None
+    )
+    if source_metadata is None:
+        meta = (
+            _selected_expression_source_metadata(str(code))
+            if code is not None
+            else {
+                "source_cohort": None,
+                "source_type": None,
+                "unit": None,
+                "source_scale_class": "unknown",
+                "linear_tpm_comparable": False,
+            }
+        )
+    else:
+        meta = {
+            "source_cohort": None,
+            "source_type": None,
+            "unit": None,
+            "source_scale_class": "unknown",
+            "linear_tpm_comparable": False,
+            **source_metadata,
+        }
+
+    floor = float(housekeeping_detection_floor_tpm)
+    n_samples = len(samples)
+    rows: list[dict] = []
+    for panel_row in panel.itertuples(index=False):
+        gid = unversioned(str(panel_row.Ensembl_Gene_ID))
+        idx = row_by_id.get(gid)
+        present = idx is not None
+        values = (
+            pd.to_numeric(df.loc[idx, samples], errors="coerce")
+            if present
+            else pd.Series([np.nan] * n_samples, index=samples, dtype=float)
+        )
+        measured = values.notna()
+        detected = values > 0
+        above_floor = values >= floor
+        n_measured = int(measured.sum())
+        n_detected = int(detected.sum())
+        n_above_floor = int(above_floor.sum())
+        symbol = symbols.get(gid, str(panel_row.Symbol))
+        p5 = _coverage_quantile(values, 0.05)
+        rows.append(
+            {
+                "cancer_code": code,
+                "source_cohort": meta.get("source_cohort"),
+                "source_type": meta.get("source_type"),
+                "unit": meta.get("unit"),
+                "source_scale_class": meta.get("source_scale_class"),
+                "linear_tpm_comparable": bool(meta.get("linear_tpm_comparable")),
+                "recommended_for_absolute_tpm_floor": bool(meta.get("linear_tpm_comparable")),
+                "sample_qc": sample_qc,
+                "expression_space": expression_space,
+                "housekeeping_detection_floor_tpm": floor,
+                "Ensembl_Gene_ID": gid,
+                "Symbol": symbol,
+                "panel_member_present": bool(present),
+                "n_samples": n_samples,
+                "n_measured_samples": n_measured,
+                "n_detected_samples": n_detected,
+                "n_above_floor_samples": n_above_floor,
+                "fraction_measured": n_measured / n_samples if n_samples else np.nan,
+                "fraction_detected": n_detected / n_samples if n_samples else np.nan,
+                "fraction_above_floor": n_above_floor / n_samples if n_samples else np.nan,
+                "min_tpm": _coverage_quantile(values, 0.0),
+                "p1_tpm": _coverage_quantile(values, 0.01),
+                "p5_tpm": p5,
+                "median_tpm": _coverage_quantile(values, 0.5),
+                "mean_tpm": float(values.mean(skipna=True)) if n_measured else np.nan,
+                "max_tpm": _coverage_quantile(values, 1.0),
+                "passes_all_samples_floor": bool(n_samples and n_above_floor == n_samples),
+                "passes_p5_floor": bool(pd.notna(p5) and p5 >= floor),
+            }
+        )
+    out = pd.DataFrame(rows, columns=_HOUSEKEEPING_CANCER_COVERAGE_COLUMNS)
+    out.attrs["issue"] = "#202"
+    out.attrs["sample_qc"] = sample_qc
+    out.attrs["expression_space"] = expression_space
+    return out
+
+
+def housekeeping_cancer_expression_coverage(
+    cancer_types=None,
+    *,
+    sample_qc: str = "pass_or_warn",
+    auto_fetch: bool = True,
+    panel_ids=None,
+    housekeeping_detection_floor_tpm: float = DEFAULT_HOUSEKEEPING_DETECTION_FLOOR_TPM,
+    on_missing: str = "empty",
+) -> pd.DataFrame:
+    """Audit clean-TPM housekeeping-gene coverage across cancer cohorts.
+
+    ``cancer_types=None`` audits every cohort listed in
+    :func:`oncoref.source_matrices.available_cohorts`. Rows are returned for every
+    requested housekeeping-panel gene in every readable cohort, including source-scale
+    metadata. Use ``recommended_for_absolute_tpm_floor`` before treating ``p5_tpm`` or
+    ``fraction_above_floor`` as a hard RNA-seq TPM floor; proxy/non-linear sources are
+    retained for visibility but are not comparable on an absolute TPM scale.
+    """
+    mode = str(on_missing).lower()
+    if mode not in {"empty", "raise"}:
+        raise ValueError("on_missing must be 'empty' or 'raise'")
+    if cancer_types is None:
+        codes = source_matrices.available_cohorts()
+    elif isinstance(cancer_types, str):
+        codes = [cancer_types]
+    else:
+        codes = list(cancer_types)
+
+    frames: list[pd.DataFrame] = []
+    for requested in codes:
+        code = resolve_cancer_type(requested, strict=False) or requested
+        try:
+            clean = per_sample_expression(
+                code,
+                normalize="tpm_clean",
+                sample_qc=sample_qc,
+                auto_fetch=auto_fetch,
+            )
+        except (FileNotFoundError, source_matrices.SourceMatrixError):
+            if mode == "raise":
+                raise
+            continue
+        meta = _selected_expression_source_metadata(str(code))
+        frames.append(
+            housekeeping_cancer_expression_coverage_from_matrix(
+                clean,
+                cancer_type=code,
+                source_metadata=meta,
+                panel_ids=panel_ids,
+                housekeeping_detection_floor_tpm=housekeeping_detection_floor_tpm,
+                sample_qc=sample_qc,
+                expression_space="tpm_clean",
+            )
+        )
+
+    if not frames:
+        return pd.DataFrame(columns=_HOUSEKEEPING_CANCER_COVERAGE_COLUMNS)
+    out = pd.concat(frames, ignore_index=True)
+    out.attrs["issue"] = "#202"
+    out.attrs["sample_qc"] = sample_qc
+    out.attrs["expression_space"] = "tpm_clean"
+    return out
+
+
 def _validate_metadata_on_missing(on_missing: str) -> str:
     mode = str(on_missing).lower()
     if mode not in {"empty", "raise"}:
