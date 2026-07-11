@@ -50,6 +50,30 @@ def _matrix(genes, samples, values):
     return df
 
 
+def _write_gdc_star_counts(path: Path, values: dict[str, float]) -> None:
+    rows = [
+        {
+            "gene_id": "ENSG00000141510.17",
+            "gene_name": "TP53",
+            "gene_type": "protein_coding",
+            "tpm_unstranded": values.get("TP53", 0.0),
+        },
+        {
+            "gene_id": "ENSG00000146648.16",
+            "gene_name": "EGFR",
+            "gene_type": "protein_coding",
+            "tpm_unstranded": values.get("EGFR", 0.0),
+        },
+        {
+            "gene_id": "N_unmapped",
+            "gene_name": "N_unmapped",
+            "gene_type": "",
+            "tpm_unstranded": 999.0,
+        },
+    ]
+    pd.DataFrame(rows).to_csv(path, sep="\t", index=False)
+
+
 # ---------- source-matrix ingestion builders ----------
 
 
@@ -453,6 +477,158 @@ def test_geo_matrix_source_from_registry_loads_packaged_geo_entry():
     assert source.pipeline_stem == ""
     assert source.tumor_origin == "primary"
     assert source.metastasis_site is None
+
+
+def test_gdc_source_from_entry_parses_project_and_filters():
+    source = expression_builders.gdc_source_from_entry(
+        {
+            "id": "synthetic-gdc",
+            "source_type": "gdc",
+            "cancer_codes": ["CODE_A"],
+            "project_id": "TCGA-A;TCGA-B",
+            "source_cohort": "SYNTHETIC_GDC",
+            "gdc_sample_types": ["Primary Tumor"],
+            "gdc_primary_diagnosis_contains": ["synthetic carcinoma"],
+            "gdc_sample_id_include_match": "01A$",
+            "notes": "synthetic GDC notes",
+            "pipeline_stem": "synthetic_gdc",
+        }
+    )
+
+    assert source.source_id == "synthetic-gdc"
+    assert source.project_ids == ("TCGA-A", "TCGA-B")
+    assert source.source_cohort == "SYNTHETIC_GDC"
+    assert source.cancer_code == "CODE_A"
+    assert source.primary_sample_types == ("Primary Tumor",)
+    assert source.primary_diagnosis_contains == ("synthetic carcinoma",)
+    assert source.sample_id_include_match == "01A$"
+    assert source.notes == "synthetic GDC notes"
+    assert source.pipeline_stem == "synthetic_gdc"
+
+
+def test_gdc_source_from_registry_loads_packaged_entry():
+    source = expression_builders.gdc_source_from_registry("cgci-blgsp")
+
+    assert source.source_id == "cgci-blgsp"
+    assert source.project_ids == ("CGCI-BLGSP",)
+    assert source.cancer_code == "BL"
+    assert source.source_cohort == "CGCI_BLGSP"
+
+
+def test_build_gdc_source_matrices_writes_canonical_artifacts(tmp_path):
+    file_a = tmp_path / "sample_a.tsv"
+    file_b = tmp_path / "sample_b.tsv"
+    file_duplicate = tmp_path / "sample_duplicate.tsv"
+    file_normal = tmp_path / "normal.tsv"
+    _write_gdc_star_counts(file_a, {"TP53": 10.0, "EGFR": 30.0})
+    _write_gdc_star_counts(file_b, {"TP53": 20.0, "EGFR": 0.0})
+    _write_gdc_star_counts(file_duplicate, {"TP53": 100.0, "EGFR": 100.0})
+    _write_gdc_star_counts(file_normal, {"TP53": 1000.0, "EGFR": 1000.0})
+    hits = [
+        {
+            "file_id": "file-a",
+            "file_name": file_a.name,
+            "analysis": {"workflow_type": "STAR - Counts"},
+            "cases": [
+                {
+                    "submitter_id": "case-a",
+                    "project": {"project_id": "TCGA-SYN"},
+                    "samples": [{"submitter_id": "sample-a", "sample_type": "Primary Tumor"}],
+                    "diagnoses": [{"primary_diagnosis": "Synthetic carcinoma"}],
+                }
+            ],
+        },
+        {
+            "file_id": "file-dup",
+            "file_name": file_duplicate.name,
+            "analysis": {"workflow_type": "STAR - Counts"},
+            "cases": [
+                {
+                    "submitter_id": "case-a",
+                    "project": {"project_id": "TCGA-SYN"},
+                    "samples": [{"submitter_id": "sample-z", "sample_type": "Primary Tumor"}],
+                    "diagnoses": [{"primary_diagnosis": "Synthetic carcinoma"}],
+                }
+            ],
+        },
+        {
+            "file_id": "file-b",
+            "file_name": file_b.name,
+            "analysis": {"workflow_type": "STAR - Counts"},
+            "cases": [
+                {
+                    "submitter_id": "case-b",
+                    "project": {"project_id": "TCGA-SYN"},
+                    "samples": [{"submitter_id": "sample-b", "sample_type": "Primary Tumor"}],
+                    "diagnoses": [{"primary_diagnosis": "Synthetic carcinoma"}],
+                }
+            ],
+        },
+        {
+            "file_id": "file-normal",
+            "file_name": file_normal.name,
+            "analysis": {"workflow_type": "STAR - Counts"},
+            "cases": [
+                {
+                    "submitter_id": "case-normal",
+                    "project": {"project_id": "TCGA-SYN"},
+                    "samples": [{"submitter_id": "normal", "sample_type": "Solid Tissue Normal"}],
+                    "diagnoses": [{"primary_diagnosis": "Synthetic carcinoma"}],
+                }
+            ],
+        },
+    ]
+    source = expression_builders.GdcSource(
+        source_id="synthetic-gdc",
+        project_ids=("TCGA-SYN",),
+        source_cohort="SYNTHETIC_GDC",
+        cancer_code="CODE_A",
+        source_project="GDC synthetic",
+        primary_sample_types=("Primary Tumor",),
+        primary_diagnosis_contains=("Synthetic",),
+        pipeline_stem="synthetic_gdc",
+        notes="synthetic GDC source notes",
+    )
+    manifest = expression_builders.build_gdc_sample_manifest(source, hits)
+
+    result = expression_builders.build_gdc_source_matrices(
+        source,
+        cache_dir=tmp_path,
+        manifest=manifest,
+        file_paths={
+            "file-a": file_a,
+            "file-b": file_b,
+            "file-dup": file_duplicate,
+            "file-normal": file_normal,
+        },
+    )
+
+    assert set(result.matrix_paths) == {"CODE_A"}
+    out = pd.read_parquet(result.matrix_paths["CODE_A"])
+    assert list(out.columns) == ["Ensembl_Gene_ID", "Symbol", "sample-a", "sample-b"]
+    assert set(out["Ensembl_Gene_ID"]) == {"ENSG00000141510", "ENSG00000146648"}
+    by_symbol = out.set_index("Symbol")
+    assert by_symbol.loc["TP53", "sample-a"] == 10.0
+    assert by_symbol.loc["EGFR", "sample-b"] == 0.0
+    selected_manifest = pd.read_csv(result.sidecar_paths["gdc_sample_manifest"])
+    assert selected_manifest["included"].sum() == 2
+    assert set(selected_manifest.loc[selected_manifest["included"].astype(bool), "sample_id"]) == {
+        "sample-a",
+        "sample-b",
+    }
+    assert "duplicate_sample_for_case_code" in set(selected_manifest["exclusion_reason"])
+    assert result.sidecar_paths["mapping_audit"].exists()
+    assert result.sidecar_paths["parse_diagnostics"].exists()
+    assert result.sidecar_paths["summary_rows"].exists()
+    assert result.sample_qc["sample_id"].tolist() == ["sample-a", "sample-b"]
+    summary = result.summary_rows.set_index("Symbol")
+    assert set(summary["source_project"]) == {"GDC synthetic"}
+    assert set(summary["notes"]) == {"synthetic GDC source notes"}
+    assert set(summary["processing_pipeline"]) == {
+        "synthetic_gdc_gdc_star_counts_tpm_to_tpm_oncoref_canonical_clean_tpm_16_9_75"
+    }
+    assert summary.loc["TP53", "TPM_median"] == 15.0
+    assert summary.loc["TP53", "n_samples"] == 2
 
 
 def test_recount3_source_from_registry_loads_packaged_routes():
@@ -1646,6 +1822,53 @@ def test_build_treehouse_script_uses_registry_config(tmp_path, monkeypatch, caps
     assert mod.main(["synthetic-treehouse", "--cache-dir", str(tmp_path / "cache")]) == 0
     stdout = capsys.readouterr().out
     assert '"source_id": "synthetic-treehouse"' in stdout
+    assert '"CODE_A": 1' in stdout
+
+
+def test_build_gdc_script_uses_registry_config(tmp_path, monkeypatch, capsys):
+    mod = _load_script("build_gdc_source")
+    source = expression_builders.GdcSource(
+        source_id="synthetic-gdc",
+        project_ids=("TCGA-SYN",),
+        source_cohort="SYNTHETIC_GDC",
+        cancer_code="CODE_A",
+    )
+
+    def _fake_build(source_obj, *, cache_dir, output_dir=None, manifest=None, **_kwargs):
+        assert source_obj is source
+        assert Path(cache_dir) == tmp_path / "cache"
+        assert output_dir is None
+        assert manifest is None
+        matrix = pd.DataFrame(
+            {
+                "Ensembl_Gene_ID": ["ENSG00000141510"],
+                "Symbol": ["TP53"],
+                "S1": [10.0],
+            }
+        )
+        return expression_builders.SourceMatrixBuildResult(
+            source=source,
+            matrices={"CODE_A": matrix},
+            matrix_paths={"CODE_A": tmp_path / "CODE_A_per_sample_tpm.parquet"},
+            summary_rows=pd.DataFrame(
+                columns=list(expression_builders.REFERENCE_EXPRESSION_COLUMNS)
+            ),
+            mapping_audit=pd.DataFrame(),
+            parse_diagnostics=pd.DataFrame(),
+            sample_qc=pd.DataFrame(),
+            sidecar_paths={"mapping_audit": tmp_path / "mapping_audit.csv"},
+        )
+
+    monkeypatch.setattr(
+        mod,
+        "gdc_source_from_registry",
+        lambda source_id, registry_path=None: source,
+    )
+    monkeypatch.setattr(mod, "build_gdc_source_matrices", _fake_build)
+
+    assert mod.main(["synthetic-gdc", "--cache-dir", str(tmp_path / "cache")]) == 0
+    stdout = capsys.readouterr().out
+    assert '"source_id": "synthetic-gdc"' in stdout
     assert '"CODE_A": 1' in stdout
 
 

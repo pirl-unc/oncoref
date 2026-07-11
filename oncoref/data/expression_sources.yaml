@@ -36,7 +36,12 @@ sources:
     cancer_codes: [BL]
     source_type: gdc
     project_id: CGCI-BLGSP
-    builder: scripts/build_bl_gdc_reference_expression.py
+    source_cohort: CGCI_BLGSP
+    source_project: CGCI Burkitt Lymphoma Genome Sequencing Project
+    builder: scripts/build_gdc_source.py
+    expected_samples_by_code: {BL: 184}
+    gdc_sample_types: [Primary Tumor]
+    gdc_primary_diagnosis_contains: [Burkitt]
     unit: TPM
     library_prep: polyA RNA-seq   # CGCI Illumina TruSeq mRNA (polyA)
     expected_size_gb: 2
@@ -50,7 +55,13 @@ sources:
     cancer_codes: [MM]
     source_type: gdc
     project_id: MMRF-COMMPASS
-    builder: scripts/build_mmrf_reference_expression.py
+    source_cohort: MMRF_COMMPASS
+    source_project: MMRF CoMMpass
+    builder: scripts/build_gdc_source.py
+    expected_samples_by_code: {MM: 764}
+    gdc_sample_types: [Primary Blood Derived Cancer - Bone Marrow]
+    gdc_primary_diagnosis_contains: [Multiple myeloma]
+    gdc_sample_id_include_match: "BM_CD138pos$"
     unit: TPM
     library_prep: polyA RNA-seq   # CoMMpass Illumina TruSeq stranded mRNA (polyA)
     expected_size_gb: 5

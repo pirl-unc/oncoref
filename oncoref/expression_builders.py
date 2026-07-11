@@ -38,6 +38,7 @@ referenced and documented as the public build-time API.
 from __future__ import annotations
 
 import gzip
+import hashlib
 import json
 import os
 import re
@@ -65,6 +66,7 @@ from .gene_ids import entrez_gene_mappings, unversioned
 from .normalization import clean_tpm
 
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
+GDC_SOURCE_TYPE = "gdc"
 GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
 RECOUNT3_SOURCE_TYPE = "recount3"
 TREEHOUSE_SOURCE_TYPE = "treehouse-compendium"
@@ -80,10 +82,27 @@ TUMOR_ORIGIN_VALUES: frozenset[str] = frozenset(
     }
 )
 RECOUNT3_ANNOTATION = "G026"  # recount3 Gencode v26 gene summaries
+GDC_FILES_ENDPOINT = "https://api.gdc.cancer.gov/files"
+GDC_DATA_ENDPOINT = "https://api.gdc.cancer.gov/data"
+GDC_STAR_TPM_COLUMN = "tpm_unstranded"
 _RECOUNT3_S3_BASE = "https://recount-opendata.s3.amazonaws.com/recount3/release/human"
 _RECOUNT3_ANNOTATION_GTF = (
     f"{_RECOUNT3_S3_BASE}/annotations/gene_sums/human.gene_sums.{RECOUNT3_ANNOTATION}.gtf.gz"
 )
+
+GDC_PRIMARY_SAMPLE_TYPES: tuple[str, ...] = (
+    "Primary Tumor",
+    "Primary Blood Derived Cancer - Bone Marrow",
+    "Primary Blood Derived Cancer - Peripheral Blood",
+)
+_GDC_SAMPLE_TYPE_RANK = {
+    "Primary Tumor": 0,
+    "Primary Blood Derived Cancer - Bone Marrow": 1,
+    "Primary Blood Derived Cancer - Peripheral Blood": 2,
+    "Recurrent Tumor": 3,
+    "Metastatic": 4,
+    "Additional - New Primary": 5,
+}
 
 _SOURCE_SYMBOL_COLUMN_CANDIDATES = (
     "Symbol",
@@ -189,6 +208,36 @@ REFERENCE_EXPRESSION_COLUMNS: tuple[str, ...] = (
 
 
 @dataclass(frozen=True)
+class GdcSource:
+    """One GDC STAR-counts expression source.
+
+    GDC publishes one STAR-counts TSV per aliquot/sample. This source object
+    describes how to query those files, filter them to the intended tumor
+    population, choose one deterministic sample per case/code, and route sample
+    columns into one or more oncoref cancer codes. The emitted artifacts use the
+    same per-code TPM parquet + mapping/parse/sample-QC/summary-row contract as
+    the generic GEO, recount3, and Treehouse builders.
+    """
+
+    source_id: str
+    project_ids: tuple[str, ...]
+    source_cohort: str
+    cancer_code: str | list[str]
+    source_project: str | None = None
+    citation: str | None = None
+    source_url: str | None = None
+    primary_sample_types: tuple[str, ...] = GDC_PRIMARY_SAMPLE_TYPES
+    primary_diagnosis_contains: tuple[str, ...] = ()
+    sample_id_include_match: str | None = None
+    sample_to_cancer_code: Callable[[Mapping], str | None] | None = None
+    expected_n: Mapping[str, int] | None = None
+    notes: str = ""
+    pipeline_stem: str = ""
+    tumor_origin: str = "primary"
+    metastasis_site: str | None = None
+
+
+@dataclass(frozen=True)
 class GeoMatrixSource:
     """One generic supplementary expression matrix source.
 
@@ -286,7 +335,7 @@ class TreehouseSource:
 class SourceMatrixBuildResult:
     """Artifacts produced by :func:`build_source_matrices`."""
 
-    source: GeoMatrixSource | Recount3Source | TreehouseSource
+    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource
     matrices: dict[str, pd.DataFrame]
     matrix_paths: dict[str, Path]
     summary_rows: pd.DataFrame
@@ -302,7 +351,7 @@ def _unit_slug(unit: str) -> str:
 
 
 def _summary_processing_pipeline(
-    source: GeoMatrixSource | Recount3Source | TreehouseSource,
+    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
     *,
     native_unit: str,
 ) -> str:
@@ -311,7 +360,7 @@ def _summary_processing_pipeline(
 
 
 def _summary_source_version(
-    source: GeoMatrixSource | Recount3Source | TreehouseSource,
+    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
     *,
     native_unit: str,
 ) -> str:
@@ -329,7 +378,7 @@ def _summary_source_version(
 
 
 def _summary_notes(
-    source: GeoMatrixSource | Recount3Source | TreehouseSource,
+    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
     *,
     n_samples: int,
 ) -> str:
@@ -369,7 +418,7 @@ def summarize_source_matrix(
     matrix: pd.DataFrame,
     *,
     cancer_code: str,
-    source: GeoMatrixSource | Recount3Source,
+    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
     native_unit: str | None = None,
 ) -> pd.DataFrame:
     """Return pirlygenes-compatible reference-expression summary rows.
@@ -430,6 +479,96 @@ def _source_entries_from_registry(registry_path: str | Path | None = None) -> li
     if not isinstance(entries, list):
         raise ValueError("expression source registry must contain a list-valued 'sources' key")
     return [dict(entry) for entry in entries]
+
+
+def _coerce_gdc_project_ids(value) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        pieces = re.split(r"[+,;]", value)
+    else:
+        pieces = [str(part) for part in value]
+    return tuple(part.strip() for part in pieces if part.strip())
+
+
+def _source_cohort_from_entry(entry: Mapping) -> str:
+    explicit = str(entry.get("source_cohort") or "").strip()
+    if explicit:
+        return explicit
+    raw = str(entry.get("project_id") or entry.get("id") or "").strip()
+    stem = re.sub(r"[^A-Za-z0-9]+", "_", raw).strip("_").upper()
+    return stem or str(entry["id"]).upper()
+
+
+def _coerce_string_tuple(value) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        return (value,)
+    return tuple(str(part) for part in value)
+
+
+def gdc_source_entries(registry_path: str | Path | None = None) -> list[dict]:
+    """Raw ``source_type: gdc`` entries from ``expression_sources.yaml``."""
+    return [
+        entry
+        for entry in _source_entries_from_registry(registry_path)
+        if entry.get("source_type") == GDC_SOURCE_TYPE
+    ]
+
+
+def gdc_source_from_entry(entry: Mapping) -> GdcSource:
+    """Convert one registry YAML entry into an executable :class:`GdcSource`."""
+    if entry.get("source_type") != GDC_SOURCE_TYPE:
+        raise ValueError(
+            f"source {entry.get('id')!r} has source_type={entry.get('source_type')!r}, "
+            f"not {GDC_SOURCE_TYPE!r}"
+        )
+    cancer_codes = [str(code) for code in entry.get("cancer_codes", [])]
+    if not cancer_codes:
+        raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
+    project_ids = _coerce_gdc_project_ids(entry.get("project_ids") or entry.get("project_id"))
+    if not project_ids:
+        raise ValueError(f"source {entry.get('id')!r} has no GDC project_id/project_ids")
+    cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
+    expected_raw = entry.get("expected_samples_by_code") or {}
+    expected = {str(code): int(n) for code, n in dict(expected_raw).items()}
+    sample_types = _coerce_string_tuple(entry.get("gdc_sample_types")) or GDC_PRIMARY_SAMPLE_TYPES
+    source_url = entry.get("url") or (
+        f"https://portal.gdc.cancer.gov/projects/{project_ids[0]}"
+        if len(project_ids) == 1
+        else "https://portal.gdc.cancer.gov/"
+    )
+    return GdcSource(
+        source_id=str(entry["id"]),
+        project_ids=project_ids,
+        source_cohort=_source_cohort_from_entry(entry),
+        cancer_code=cancer_code,
+        source_project=entry.get("source_project") or entry.get("project_id"),
+        citation=entry.get("citation"),
+        source_url=source_url,
+        primary_sample_types=sample_types,
+        primary_diagnosis_contains=_coerce_string_tuple(
+            entry.get("gdc_primary_diagnosis_contains")
+        ),
+        sample_id_include_match=_coerce_optional_text(entry.get("gdc_sample_id_include_match")),
+        expected_n=expected,
+        notes=str(entry.get("notes") or entry.get("special_handling") or ""),
+        pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin")),
+        metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
+    )
+
+
+def gdc_source_from_registry(
+    source_id: str,
+    registry_path: str | Path | None = None,
+) -> GdcSource:
+    """Load one ``source_type: gdc`` entry from ``expression_sources.yaml``."""
+    for entry in _source_entries_from_registry(registry_path):
+        if entry.get("id") == source_id:
+            return gdc_source_from_entry(entry)
+    raise KeyError(f"source id {source_id!r} not found in expression source registry")
 
 
 def geo_matrix_source_entries(registry_path: str | Path | None = None) -> list[dict]:
@@ -1529,6 +1668,319 @@ def _download(url: str, dest: Path, *, force: bool = False) -> Path:
     return dest
 
 
+def gdc_star_count_filters(project_ids: Iterable[str]) -> dict:
+    """GDC files filter for open RNA-seq STAR-count gene-expression files."""
+    projects = sorted({str(project).strip() for project in project_ids if str(project).strip()})
+    if not projects:
+        raise ValueError("GDC STAR-count query requires at least one project id")
+    return {
+        "op": "and",
+        "content": [
+            {
+                "op": "in",
+                "content": {
+                    "field": "cases.project.project_id",
+                    "value": projects,
+                },
+            },
+            {
+                "op": "in",
+                "content": {
+                    "field": "data_type",
+                    "value": ["Gene Expression Quantification"],
+                },
+            },
+            {
+                "op": "in",
+                "content": {
+                    "field": "experimental_strategy",
+                    "value": ["RNA-Seq"],
+                },
+            },
+            {
+                "op": "in",
+                "content": {
+                    "field": "analysis.workflow_type",
+                    "value": ["STAR - Counts"],
+                },
+            },
+            {
+                "op": "in",
+                "content": {
+                    "field": "access",
+                    "value": ["open"],
+                },
+            },
+        ],
+    }
+
+
+def query_gdc_star_count_manifest(
+    project_ids: Iterable[str],
+    *,
+    size: int = 5000,
+) -> list[dict]:
+    """Return raw GDC file hits for open STAR-count gene-expression files."""
+    fields = [
+        "file_id",
+        "file_name",
+        "md5sum",
+        "file_size",
+        "cases.submitter_id",
+        "cases.project.project_id",
+        "cases.samples.submitter_id",
+        "cases.samples.sample_type",
+        "cases.diagnoses.primary_diagnosis",
+        "analysis.workflow_type",
+    ]
+    params = {
+        "filters": gdc_star_count_filters(project_ids),
+        "fields": ",".join(fields),
+        "format": "JSON",
+        "size": str(size),
+    }
+    request = urllib.request.Request(
+        GDC_FILES_ENDPOINT,
+        data=json.dumps(params).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(request, timeout=120) as response:
+        payload = json.load(response)
+    hits = payload["data"]["hits"]
+    total = int(payload["data"]["pagination"]["total"])
+    if len(hits) != total:
+        raise RuntimeError(f"GDC query returned {len(hits)} of {total} files")
+    return hits
+
+
+def _first_dict(items) -> dict:
+    if isinstance(items, list) and items:
+        return dict(items[0])
+    return {}
+
+
+def _flatten_gdc_hit(hit: Mapping, source: GdcSource) -> dict:
+    case = _first_dict(hit.get("cases"))
+    sample = _first_dict(case.get("samples"))
+    diagnosis = _first_dict(case.get("diagnoses"))
+    project = dict(case.get("project") or {})
+    return {
+        "cancer_code": "",
+        "source_cohort": source.source_cohort,
+        "source_project": source.source_project or "",
+        "case_id": str(case.get("submitter_id") or ""),
+        "sample_id": str(sample.get("submitter_id") or ""),
+        "source_file_id": str(hit.get("file_id") or ""),
+        "source_file_name": str(hit.get("file_name") or ""),
+        "source_project_id": str(project.get("project_id") or ""),
+        "sample_type": str(sample.get("sample_type") or ""),
+        "primary_diagnosis": str(diagnosis.get("primary_diagnosis") or ""),
+        "md5sum": str(hit.get("md5sum") or ""),
+        "file_size": hit.get("file_size") or "",
+        "workflow_type": str(dict(hit.get("analysis") or {}).get("workflow_type") or ""),
+        "raw_unit": "TPM",
+        "processing_pipeline": _summary_processing_pipeline(source, native_unit="TPM"),
+        "source_url": source.source_url or "",
+        "lineage_evidence_source": "",
+        "included": False,
+        "exclusion_reason": "",
+        "lineage_label": "",
+    }
+
+
+def _gdc_default_cancer_code(source: GdcSource, row: Mapping) -> str | None:
+    if source.sample_to_cancer_code is not None:
+        return source.sample_to_cancer_code(row)
+    codes = (
+        [source.cancer_code] if isinstance(source.cancer_code, str) else list(source.cancer_code)
+    )
+    if len(codes) == 1:
+        return str(codes[0])
+    return None
+
+
+def _gdc_manifest_sample_type_rank(value: str) -> int:
+    return _GDC_SAMPLE_TYPE_RANK.get(str(value), 99)
+
+
+def build_gdc_sample_manifest(source: GdcSource, hits: Iterable[Mapping]) -> pd.DataFrame:
+    """Flatten and deterministically select GDC STAR-count files for a source."""
+    manifest = pd.DataFrame([_flatten_gdc_hit(hit, source) for hit in hits])
+    if manifest.empty:
+        return pd.DataFrame(
+            columns=[
+                "cancer_code",
+                "source_cohort",
+                "source_project",
+                "case_id",
+                "sample_id",
+                "source_file_id",
+                "source_file_name",
+                "source_project_id",
+                "sample_type",
+                "primary_diagnosis",
+                "md5sum",
+                "file_size",
+                "workflow_type",
+                "raw_unit",
+                "processing_pipeline",
+                "source_url",
+                "lineage_evidence_source",
+                "included",
+                "exclusion_reason",
+                "lineage_label",
+            ]
+        )
+
+    row_codes = manifest.apply(lambda row: _gdc_default_cancer_code(source, row.to_dict()), axis=1)
+    manifest["cancer_code"] = row_codes.fillna("").astype(str)
+    manifest["lineage_label"] = manifest["cancer_code"]
+    manifest["lineage_evidence_source"] = (
+        "GDC STAR-counts project/sample metadata routed by oncoref.expression_builders"
+    )
+
+    eligible = row_codes.notna() & row_codes.astype(str).ne("")
+    if source.primary_sample_types:
+        eligible &= manifest["sample_type"].isin(set(source.primary_sample_types))
+    if source.primary_diagnosis_contains:
+        diag = manifest["primary_diagnosis"].astype(str).str.lower()
+        diag_mask = pd.Series(False, index=manifest.index)
+        for needle in source.primary_diagnosis_contains:
+            diag_mask |= diag.str.contains(str(needle).lower(), na=False, regex=False)
+        eligible &= diag_mask
+    if source.sample_id_include_match:
+        sample_re = re.compile(source.sample_id_include_match)
+        eligible &= (
+            manifest["sample_id"].astype(str).map(lambda value: bool(sample_re.search(value)))
+        )
+
+    manifest.loc[~eligible, "exclusion_reason"] = "not_included_by_gdc_source_filters"
+    manifest.loc[eligible, "exclusion_reason"] = ""
+
+    for (_case_id, _code), group in manifest.loc[eligible].groupby(
+        ["case_id", "cancer_code"],
+        sort=False,
+    ):
+        ordered = group.assign(
+            _sample_type_rank=group["sample_type"].map(_gdc_manifest_sample_type_rank),
+        ).sort_values(["_sample_type_rank", "sample_id", "source_file_id"])
+        keep_idx = ordered.index[0]
+        manifest.loc[keep_idx, "included"] = True
+        duplicate_idx = ordered.index[1:]
+        manifest.loc[duplicate_idx, "exclusion_reason"] = "duplicate_sample_for_case_code"
+
+    included = manifest["included"].astype(bool)
+    manifest.loc[included, "exclusion_reason"] = ""
+    return manifest.sort_values(["case_id", "sample_id", "source_file_id"]).reset_index(drop=True)
+
+
+def _md5(path: Path) -> str:
+    digest = hashlib.md5()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def download_gdc_file(
+    row: Mapping,
+    cache_dir: str | Path,
+    *,
+    force_download: bool = False,
+) -> Path:
+    """Download one GDC file row, validating MD5 when the manifest provides it."""
+    cache = Path(cache_dir)
+    cache.mkdir(parents=True, exist_ok=True)
+    file_name = str(row.get("source_file_name") or row.get("file_name") or row["source_file_id"])
+    path = cache / file_name
+    expected_md5 = str(row.get("md5sum") or "")
+    if path.exists() and not force_download and (not expected_md5 or _md5(path) == expected_md5):
+        return path
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    url = f"{GDC_DATA_ENDPOINT}/{row['source_file_id']}"
+    with urllib.request.urlopen(url, timeout=180) as response, tmp.open("wb") as handle:
+        shutil.copyfileobj(response, handle)
+    if expected_md5:
+        observed = _md5(tmp)
+        if observed != expected_md5:
+            tmp.unlink(missing_ok=True)
+            raise RuntimeError(
+                f"MD5 mismatch for {row['source_file_id']}: {observed} != {expected_md5}"
+            )
+    tmp.replace(path)
+    return path
+
+
+def read_gdc_star_counts_tpm(
+    path: str | Path,
+    *,
+    tpm_col: str = GDC_STAR_TPM_COLUMN,
+) -> pd.DataFrame:
+    """Read one GDC STAR-counts TSV as source gene ID, symbol, and TPM."""
+    df = pd.read_csv(
+        Path(path),
+        sep="\t",
+        comment="#",
+        usecols=["gene_id", "gene_name", "gene_type", tpm_col],
+        low_memory=False,
+    )
+    df = df[df["gene_id"].astype(str).str.startswith("ENSG")].copy()
+    df["source_gene_id"] = df["gene_id"].map(unversioned)
+    df["Symbol"] = df["gene_name"].fillna("").astype(str)
+    df["TPM"] = pd.to_numeric(df[tpm_col], errors="coerce").fillna(0.0).clip(lower=0.0)
+    return df[["source_gene_id", "Symbol", "TPM"]]
+
+
+def _gdc_file_path_for_row(
+    row: Mapping,
+    *,
+    cache_dir: Path,
+    file_paths: Mapping[str, str | Path] | None = None,
+    force_download: bool = False,
+) -> Path:
+    if file_paths:
+        for key in (row.get("source_file_id"), row.get("source_file_name")):
+            if key is not None and str(key) in file_paths:
+                return Path(file_paths[str(key)])
+    return download_gdc_file(row, cache_dir / "star_counts", force_download=force_download)
+
+
+def _gdc_raw_tpm_matrix(
+    included: pd.DataFrame,
+    *,
+    cache_dir: Path,
+    file_paths: Mapping[str, str | Path] | None = None,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    merged: pd.DataFrame | None = None
+    for row in included.to_dict("records"):
+        path = _gdc_file_path_for_row(
+            row,
+            cache_dir=cache_dir,
+            file_paths=file_paths,
+            force_download=force_download,
+        )
+        sample_id = str(row["sample_id"])
+        tpm = read_gdc_star_counts_tpm(path)
+        tpm = (
+            tpm.groupby("source_gene_id", as_index=False)
+            .agg(Symbol=("Symbol", "first"), TPM=("TPM", "sum"))
+            .rename(columns={"TPM": sample_id})
+        )
+        merged = (
+            tpm
+            if merged is None
+            else merged.merge(tpm, on=["source_gene_id", "Symbol"], how="outer")
+        )
+    if merged is None or merged.empty:
+        raise ValueError("no GDC STAR-count TPM files were read")
+    sample_ids = included["sample_id"].astype(str).tolist()
+    merged[sample_ids] = merged[sample_ids].fillna(0.0)
+    merged.attrs["row_id_col"] = "source_gene_id"
+    merged.attrs["symbol_col"] = "Symbol"
+    return merged[["source_gene_id", "Symbol", *sample_ids]]
+
+
 def recount3_gene_sums_url(srp: str) -> str:
     """S3 URL of the recount3 SRA gene-sums matrix for one study accession."""
     return (
@@ -2042,6 +2494,185 @@ def build_recount3_source_matrices(
 
     if not matrices:
         raise ValueError("no recount3 samples were routed to a cancer code")
+    sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
+    summary_rows = (
+        pd.concat(summary_frames, ignore_index=True)
+        if summary_frames
+        else pd.DataFrame(columns=list(REFERENCE_EXPRESSION_COLUMNS))
+    )
+    summary_path = out_dir / f"{stem}_summary_rows.csv"
+    _write_csv_atomic(summary_rows, summary_path)
+    _reconcile_per_code_artifacts(out_dir, matrices)
+    sidecar_paths["summary_rows"] = summary_path
+    return SourceMatrixBuildResult(
+        source=source,
+        matrices=matrices,
+        matrix_paths=matrix_paths,
+        summary_rows=summary_rows,
+        mapping_audit=audit,
+        parse_diagnostics=parse_diagnostics,
+        sample_qc=sample_qc,
+        sidecar_paths=sidecar_paths,
+    )
+
+
+def build_gdc_source_matrices(
+    source: GdcSource,
+    *,
+    cache_dir: str | Path,
+    output_dir: str | Path | None = None,
+    manifest: pd.DataFrame | None = None,
+    file_paths: Mapping[str, str | Path] | None = None,
+    force_download: bool = False,
+    high_expression_threshold: float = 1.0,
+) -> SourceMatrixBuildResult:
+    """Build source-matrix artifacts from GDC STAR-counts TPM files.
+
+    ``manifest`` may be a pre-flattened manifest for tests or offline builds. If
+    omitted, the builder queries GDC for open RNA-seq STAR-counts files in
+    ``source.project_ids``. File paths can be injected via ``file_paths`` keyed
+    by ``source_file_id`` or ``source_file_name``; otherwise files are downloaded
+    from the GDC data endpoint into ``cache_dir / "star_counts"``.
+    """
+    cache = Path(cache_dir)
+    out_dir = Path(output_dir) if output_dir is not None else cache / "derived"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if manifest is None:
+        hits = query_gdc_star_count_manifest(source.project_ids)
+        manifest = build_gdc_sample_manifest(source, hits)
+    else:
+        manifest = manifest.copy()
+        if "included" not in manifest.columns:
+            records = []
+            for row in manifest.to_dict("records"):
+                records.append(
+                    {
+                        "file_id": row.get("source_file_id") or row.get("file_id"),
+                        "file_name": row.get("source_file_name") or row.get("file_name"),
+                        "md5sum": row.get("md5sum", ""),
+                        "file_size": row.get("file_size", ""),
+                        "analysis": {"workflow_type": row.get("workflow_type", "STAR - Counts")},
+                        "cases": [
+                            {
+                                "submitter_id": row.get("case_id", ""),
+                                "project": {"project_id": row.get("source_project_id", "")},
+                                "samples": [
+                                    {
+                                        "submitter_id": row.get("sample_id", ""),
+                                        "sample_type": row.get("sample_type", ""),
+                                    }
+                                ],
+                                "diagnoses": [
+                                    {
+                                        "primary_diagnosis": row.get(
+                                            "primary_diagnosis",
+                                            "",
+                                        )
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            manifest = build_gdc_sample_manifest(source, records)
+
+    included = manifest.loc[manifest["included"].astype(bool)].reset_index(drop=True)
+    if included.empty:
+        raise ValueError(f"no GDC samples passed inclusion filters for {source.source_id!r}")
+    counts = included["cancer_code"].astype(str).value_counts().to_dict()
+    for code, expected in (source.expected_n or {}).items():
+        got = int(counts.get(code, 0))
+        if got != int(expected):
+            raise ValueError(f"{source.source_id} routed {code} n={got}; expected {expected}")
+
+    raw = _gdc_raw_tpm_matrix(
+        included,
+        cache_dir=cache,
+        file_paths=file_paths,
+        force_download=force_download,
+    )
+    row_id_col = raw.attrs["row_id_col"]
+    symbol_col = raw.attrs.get("symbol_col")
+    raw_value_cols = source_expression_value_columns(
+        raw,
+        row_id_col=row_id_col,
+        symbol_col=symbol_col,
+    )
+    _, parse_diagnostics = coerce_source_expression_values(
+        raw,
+        value_cols=raw_value_cols,
+        row_id_col=row_id_col,
+        symbol_col=symbol_col,
+    )
+    matrix, audit = canonicalize_source_gene_matrix(
+        raw,
+        row_id_col=row_id_col,
+        symbol_col=symbol_col,
+        value_cols=raw_value_cols,
+        high_expression_threshold=high_expression_threshold,
+    )
+    matrix.attrs["source_value_parse_diagnostics"] = parse_diagnostics
+
+    stem = _artifact_stem(source.source_cohort)
+    sidecar_paths: dict[str, Path] = {}
+    audit_path = out_dir / f"{stem}_mapping_audit.csv"
+    parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
+    manifest_path = out_dir / f"{stem}_gdc_sample_manifest.csv"
+    _write_csv_atomic(audit, audit_path)
+    _write_csv_atomic(parse_diagnostics, parse_path)
+    _write_csv_atomic(manifest, manifest_path)
+    sidecar_paths["mapping_audit"] = audit_path
+    sidecar_paths["parse_diagnostics"] = parse_path
+    sidecar_paths["gdc_sample_manifest"] = manifest_path
+
+    meta = source_metadata(
+        source_cohort=source.source_cohort,
+        source_type=GDC_SOURCE_TYPE,
+        unit="TPM",
+        source_scale_class="linear_rnaseq_tpm",
+        linear_tpm_comparable=True,
+        tpm_proxy=False,
+    )
+
+    from .expression import sample_expression_qc_from_matrix
+
+    sample_to_code = dict(
+        zip(included["sample_id"].astype(str), included["cancer_code"].astype(str))
+    )
+    matrices: dict[str, pd.DataFrame] = {}
+    matrix_paths: dict[str, Path] = {}
+    qc_frames: list[pd.DataFrame] = []
+    summary_frames: list[pd.DataFrame] = []
+    for code, cols in split_source_matrix_by_code(
+        matrix,
+        source.cancer_code,
+        sample_to_cancer_code=lambda sample: sample_to_code.get(str(sample)),
+    ).items():
+        if not cols:
+            continue
+        sub = matrix[[*id_columns(matrix), *cols]].copy()
+        sub.attrs = {}
+        path = out_dir / f"{_artifact_stem(code)}_per_sample_tpm.parquet"
+        _write_parquet_atomic(sub, path)
+        qc = sample_expression_qc_from_matrix(sub, cancer_type=code, source_metadata=meta)
+        qc_path = out_dir / f"{_artifact_stem(code)}_sample_qc.csv"
+        _write_csv_atomic(qc, qc_path)
+        matrices[code] = sub
+        matrix_paths[code] = path
+        sidecar_paths[f"{code}_sample_qc"] = qc_path
+        qc_frames.append(qc)
+        summary_frames.append(
+            summarize_source_matrix(
+                sub,
+                cancer_code=code,
+                source=source,
+                native_unit="GDC STAR-counts TPM",
+            )
+        )
+
+    if not matrices:
+        raise ValueError("no GDC samples were routed to a cancer code")
     sample_qc = pd.concat(qc_frames, ignore_index=True) if qc_frames else pd.DataFrame()
     summary_rows = (
         pd.concat(summary_frames, ignore_index=True)
