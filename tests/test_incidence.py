@@ -50,6 +50,44 @@ def test_burden_all_metrics_resolve():
         assert mapping
 
 
+def test_burden_table_exposes_source_provenance_schema():
+    df = incidence.cancer_burden_df()
+    expected = {
+        "us_incidence_count",
+        "us_incidence_total",
+        "us_mortality_count",
+        "us_mortality_total",
+        "world_incidence_count",
+        "world_incidence_total",
+        "world_mortality_count",
+        "world_mortality_total",
+        "us_source_locator",
+        "us_source_locator_status",
+        "world_source_locator",
+        "world_source_locator_status",
+        "source_site_labels",
+        "source_site_codes",
+        "included_source_sites",
+        "excluded_source_sites",
+        "derivation_basis",
+        "rounding_rule",
+        "provenance_notes",
+    }
+    assert expected <= set(df.columns)
+    assert set(df["us_source_locator_status"]) == {"not_extracted"}
+    assert set(df["world_source_locator_status"]) == {"not_extracted"}
+    assert set(df["rounding_rule"]) == {"not_extracted"}
+    assert set(df["derivation_basis"]) <= {
+        "not_extracted",
+        "sum_of_sites",
+        "residual",
+        "literature_approximation",
+    }
+    by_category = df.set_index("burden_category")
+    assert by_category.loc["colorectal", "derivation_basis"] == "sum_of_sites"
+    assert by_category.loc["other_and_unknown_primary", "derivation_basis"] == "residual"
+
+
 def test_burden_category_from_primary_tissue():
     assert incidence.burden_category("PRAD") == "prostate"
     assert incidence.burden_category("LUAD") == "lung"

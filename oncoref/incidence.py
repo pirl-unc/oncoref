@@ -32,8 +32,15 @@ def cancer_burden_df():
     """Return the curated ``cancer-incidence-mortality.csv`` reference: each
     cancer **burden category**'s share (%) of annual cancer incidence and
     mortality, for the US and worldwide, cited per row (ACS Cancer Facts &
-    Figures 2024 / GLOBOCAN 2022). Rows flagged in ``notes`` as subsets/rollups
-    overlap others — don't sum them blindly."""
+    Figures 2024 / GLOBOCAN 2022).
+
+    The percentage columns are the current public lookup surface. The companion
+    ``*_count`` / ``*_total`` columns, ``*_source_locator`` fields, source-site
+    fields, ``derivation_basis``, and ``rounding_rule`` are the audit/provenance
+    contract. Legacy rows keep ``*_source_locator_status="not_extracted"`` until
+    exact ACS/GLOBOCAN table/export anchors and raw counts are filled in. Rows
+    flagged in ``notes`` as subsets/rollups overlap others — don't sum them
+    blindly."""
     return get_data("cancer-incidence-mortality")
 
 

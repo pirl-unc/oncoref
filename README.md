@@ -126,7 +126,12 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 - **Cohorts** — `oncoref.cohorts`: `cohort_registry`, `cohort_aggregates`,
   `cohort_source_version`, and mixture-cohort helpers.
 - **TMB** — `cancer_tmb`, `cancer_tmb_df` (parent-chain inheritance).
-- **Incidence / mortality** — `cancer_burden`, `burden_category` (ACS / GLOBOCAN).
+- **Incidence / mortality** — `cancer_burden`, `burden_category` (ACS /
+  GLOBOCAN). `cancer_burden_df()` is the auditable source table: percentage
+  columns are the current lookup surface, while raw-count, source-locator,
+  source-site, derivation, and rounding columns are explicit provenance fields.
+  Legacy rows mark source-local anchors as `not_extracted` until the row-level
+  ACS/GLOBOCAN audit fills them.
 - **Checkpoint response** — `oncoref.ici_response`: regimen-aware ORR anchors,
   anti-PD-1 shortcuts, endpoint estimates, and pooled response summaries. The
   long endpoint table exposes stable `estimate_id` values plus structured
