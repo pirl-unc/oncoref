@@ -290,7 +290,14 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   `metastasis_site`) so downstream shard writers do not need a parallel source
   registry. `tumor_origin` is validated against
   `TUMOR_ORIGIN_VALUES` (`primary`, `metastasis`, `recurrence`, `cell_line`,
-  `pdx`, `normal_tissue`, `mixed`). `Recount3Source`,
+  `pdx`, `normal_tissue`, `mixed`). `GdcSource`,
+  `query_gdc_star_count_manifest`, `build_gdc_sample_manifest`,
+  `read_gdc_star_counts_tpm`, `build_gdc_source_matrices`, and
+  `scripts/build_gdc_source.py` own the common GDC STAR-counts path: open
+  RNA-seq file discovery, deterministic sample-per-case selection, per-sample
+  TPM matrix assembly, canonicalization, sample QC, and summary-row sidecars.
+  Source-specific GDC lineage routing can now attach to this shared contract
+  instead of carrying separate BL/MM/TARGET-style builders. `Recount3Source`,
   `recount3_gene_sums_to_tpm`, `build_recount3_source_matrices`, and
   `scripts/build_recount3_source.py` do the same for `source_type: recount3`
   entries, including run-to-sample aggregation and metadata-based routing before

@@ -133,7 +133,8 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   per-code per-sample TPM parquet plus mapping/parse/QC sidecars and
   per-gene-per-cohort `summary_rows` for reference-expression shards. Generic
   `source_type: geo-matrix` entries in `expression_sources.yaml` are executable
-  via `scripts/build_geo_matrix.py`, and `source_type: recount3` entries via
+  via `scripts/build_geo_matrix.py`, registry-encoded GDC STAR-counts sources
+  via `scripts/build_gdc_source.py`, and `source_type: recount3` entries via
   `scripts/build_recount3_source.py`; downstream packages should read the
   bundled source registry through `expression_source_registry_entries()` and
   consume builder-produced `summary_rows` rather than shipping a second YAML copy
