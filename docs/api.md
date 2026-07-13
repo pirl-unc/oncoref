@@ -76,6 +76,14 @@ registry rows whose `expression_source="computed"` and
 references, including source-scope unions such as `CRC_MSI`, `NSCLC`, `BTC`, and
 `SGC`.
 
+For category-aware downstream code, start with
+`cancer_type_category_schema()` and `cancer_type_category_summary()`. The schema
+is the compact public vocabulary for `ontology_level`, the observed
+`ontology_kind` values, and `reference_source`; the summary reports counts and
+example codes for every observed level/kind/reference-source combination. This
+is the intended replacement for ad hoc tests like "has children", "is
+mixture_cohort", or "does the code name contain MSI".
+
 ```python
 from oncoref import cancer_ontology, cohorts, expression
 
@@ -100,6 +108,8 @@ classification_targets = cancer_ontology.cancer_type_records(classification_targ
 clinical_fact_scopes = cancer_ontology.cancer_type_records(classification_target=False)
 computed_pools = cancer_ontology.computed_union_codes()
 member_union_refs = cancer_ontology.reference_source_codes("member_union")
+cancer_ontology.cancer_type_category_schema()
+cancer_ontology.cancer_type_category_summary()
 cancer_ontology.cancer_type_reference_source("CRC_MSI")
 cancer_ontology.cancer_type_reference_code("STAD_MSI")
 

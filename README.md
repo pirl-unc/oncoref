@@ -110,17 +110,19 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 
 - **Cancer ontology** — `oncoref.cancer_ontology`: `cancer_type_registry`,
   `resolve_cancer_type`, `cancer_type_records`, `cancer_type_codes`,
-  `cancer_type_path`, `cancer_type_reference_data`, tree/family/lineage helpers,
-  explicit `ontology_level` / `ontology_kind` fields, molecular subtype groups,
-  typed `reference_source` backing (`own_cohort`, `member_union`, `parent`,
-  `none`), `cancer_type_reference_source`, `cancer_type_reference_code`,
+  `cancer_type_path`, `cancer_type_reference_data`, `cancer_type_category_schema`,
+  `cancer_type_category_summary`, tree/family/lineage helpers, explicit
+  `ontology_level` / `ontology_kind` fields, molecular subtype groups, typed
+  `reference_source` backing (`own_cohort`, `member_union`, `parent`, `none`),
+  `cancer_type_reference_source`, `cancer_type_reference_code`,
   compatibility `is_classification_target` / `classification_target_codes`,
   `computed_union_codes`, MMR/MSI classifier-axis helpers, source-scoped
   evidence resolution, matched normal tissue helpers, `viral_status`,
   `fusion_status`. Use these level, reference-source, and computed-union fields
   for category-aware code, not the legacy `mixture_cohort` flag. For example
   `COAD_MSI` / `READ_MSI` are own cohorts, while `CRC_MSI` is the member union
-  over those two MSI expression partitions.
+  over those two MSI expression partitions. Use `cancer_type_category_schema()`
+  before building filters that depend on ontology/category vocabulary.
 - **Cohorts** — `oncoref.cohorts`: `cohort_registry`, `cohort_aggregates`,
   `cohort_source_version`, and mixture-cohort helpers.
 - **TMB** — `cancer_tmb`, `cancer_tmb_df` (parent-chain inheritance).
