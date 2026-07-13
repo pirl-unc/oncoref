@@ -128,7 +128,10 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 - **TMB** — `cancer_tmb`, `cancer_tmb_df` (parent-chain inheritance).
 - **Incidence / mortality** — `cancer_burden`, `burden_category` (ACS / GLOBOCAN).
 - **Checkpoint response** — `oncoref.ici_response`: regimen-aware ORR anchors,
-  anti-PD-1 shortcuts, endpoint estimates, and pooled response summaries.
+  anti-PD-1 shortcuts, endpoint estimates, and pooled response summaries. The
+  long endpoint table exposes stable `estimate_id` values plus structured
+  CI/value status fields; compact ORR records point back to those estimate rows
+  via `source_estimate_id`.
 - **Expression** — `cohort_gene_percentiles`, `within_sample_top_fraction`,
   `representative_cohort_samples` over the lazy-downloaded per-cohort bundle;
   `oncoref.expression_builders` for source-matrix ingestion into canonical

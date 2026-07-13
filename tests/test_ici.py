@@ -25,8 +25,17 @@ def test_ici_anchor_table_exposes_evidence_schema():
         "response_unit",
         "response_ci_low",
         "response_ci_high",
+        "response_ci_basis",
+        "response_ci_low_status",
+        "response_ci_high_status",
+        "response_value_status",
         "response_numerator",
         "response_denominator",
+        "source_estimate_id",
+        "source_locator",
+        "source_locator_status",
+        "source_endpoint_label",
+        "source_population_label",
         "source_n",
         "source_verified",
         "value_basis",
@@ -48,6 +57,12 @@ def test_ici_anchor_table_exposes_evidence_schema():
     assert crc["response_denominator"] == 153
     assert crc["response_ci_low"] == 35.8
     assert crc["response_ci_high"] == 52.0
+    assert crc["response_ci_basis"] == "reported"
+    assert crc["response_ci_low_status"] == "numeric"
+    assert crc["response_ci_high_status"] == "numeric"
+    assert crc["response_value_status"] == "numeric"
+    assert crc["source_estimate_id"].startswith("ICI-")
+    assert crc["source_locator_status"] == "not_extracted"
     assert crc["therapy_regimen_class"] == "anti_pd1_monotherapy"
     assert crc["evidence_type"] == "direct_reported"
     assert crc["histology_match"] == "direct"
@@ -62,6 +77,61 @@ def test_ici_anchor_table_exposes_evidence_schema():
     assert coad["source_scope"] == "derived_blend"
     assert pd.isna(coad["response_denominator"])
     assert pd.isna(coad["source_anchor"])
+
+
+def test_ici_estimates_expose_structured_source_and_ci_provenance():
+    df = ici.cancer_ici_response_estimates_df()
+    expected = {
+        "estimate_id",
+        "source_locator",
+        "source_locator_status",
+        "source_endpoint_label",
+        "source_population_label",
+        "value_status",
+        "ci_low_status",
+        "ci_high_status",
+        "ci_basis",
+    }
+    assert expected <= set(df.columns)
+    assert df["estimate_id"].is_unique
+    assert df["estimate_id"].str.match(r"^ICI-[0-9a-f]{10}-[0-9]{2}$").all()
+    assert set(df["source_locator_status"]) == {"not_extracted"}
+    assert set(df["value_status"]) <= {"numeric", "not_reached", "not_estimable", "not_extracted"}
+    assert set(df["ci_low_status"]) <= {"numeric", "NR", "NE", "not_extracted"}
+    assert set(df["ci_high_status"]) <= {"numeric", "NR", "NE", "not_extracted"}
+    assert set(df["ci_basis"]) <= {"reported", "not_applicable", "not_extracted"}
+
+    adcc_os = df[
+        (df["cancer_code"] == "ADCC") & (df["regimen"] == "PD-1+CTLA-4") & (df["metric"] == "OS")
+    ].iloc[0]
+    assert adcc_os["ci_low_status"] == "numeric"
+    assert adcc_os["ci_high_status"] == "NR"
+    assert adcc_os["ci_basis"] == "reported"
+
+    bcc_pfs = df[
+        (df["cancer_code"] == "BCC")
+        & (df["regimen"] == "PD-1")
+        & (df["metric"] == "PFS")
+        & (df["ci_high_status"] == "NE")
+    ].iloc[0]
+    assert bcc_pfs["ci_low_status"] == "numeric"
+    assert bcc_pfs["ci_basis"] == "reported"
+
+    chordoma_os = df[
+        (df["cancer_code"] == "SARC_CHOR")
+        & (df["regimen"] == "PD-1")
+        & (df["metric"] == "OS")
+        & (df["value_status"] == "not_reached")
+    ].iloc[0]
+    assert chordoma_os["ci_low_status"] == "numeric"
+    assert chordoma_os["ci_high_status"] == "NR"
+
+    coad_blend = df[
+        (df["cancer_code"] == "COAD")
+        & (df["metric"] == "ORR")
+        & (df["value_basis"] == "derived_blend")
+    ].iloc[0]
+    assert coad_blend["ci_basis"] == "not_applicable"
 
 
 def test_apd1_anchor_table_uses_same_evidence_schema_for_fallback_targets():

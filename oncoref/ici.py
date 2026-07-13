@@ -163,14 +163,23 @@ def response_anchor_evidence_df(
         [
             "cancer_code",
             "regimen",
+            "estimate_id",
             "ref",
+            "source_locator",
+            "source_locator_status",
+            "source_endpoint_label",
+            "source_population_label",
             "setting",
             "source_n",
             "metric",
             "value",
+            "value_status",
             "unit",
             "ci_low",
+            "ci_low_status",
             "ci_high",
+            "ci_high_status",
+            "ci_basis",
             "metric_n",
             "responders",
             "source_verified",
@@ -185,9 +194,14 @@ def response_anchor_evidence_df(
             "value": "_response_value",
             "unit": "response_unit",
             "ci_low": "response_ci_low",
+            "ci_low_status": "response_ci_low_status",
             "ci_high": "response_ci_high",
+            "ci_high_status": "response_ci_high_status",
+            "ci_basis": "response_ci_basis",
             "metric_n": "response_denominator",
             "responders": "response_numerator",
+            "estimate_id": "source_estimate_id",
+            "value_status": "response_value_status",
         }
     )
     merged = df.merge(
@@ -238,7 +252,10 @@ def cancer_ici_response_df():
     (split into ``trial_name`` / ``trial_alias`` / ``trial_nct`` — the acronym, the
     distinct protocol/sponsor code if any, and the ClinicalTrials.gov id), setting,
     source PMID/DOI, confidence, and evidence/provenance fields joined from the
-    audited estimates table. A cancer type may appear under several regimens."""
+    audited estimates table. The joined fields include ``source_estimate_id`` (the
+    exact primary ORR row in ``cancer_ici_response_estimates_df``), source-locator
+    extraction status, and structured CI/value status. A cancer type may appear under
+    several regimens."""
     return response_anchor_evidence_df(get_data("cancer-ici-response"), value_col="orr_pct")
 
 
@@ -635,8 +652,13 @@ def cancer_ici_response_estimates_df():
     endpoints — ORR, CRR, DCR, DOR, PFS, OS and landmark PFS/OS rates — each with
     ``value``, ``unit`` (``percent`` / ``months`` / ``rate_percent``), 95% CI
     (``ci_low`` / ``ci_high``), ``timepoint``, sample size (``metric_n`` / ``source_n``)
-    and ``responders``. ``role`` is ``"primary"`` (the cited representative setting) or
-    ``"alternate"`` (other trials / subgroups for the same cancer + regimen).
+    and ``responders``. ``estimate_id`` is a stable row identifier used by compact
+    anchor tables to point back to the exact supporting estimate. ``value_status``,
+    ``ci_basis``, ``ci_low_status``, ``ci_high_status``, and
+    ``source_locator_status`` make missing/not-reached/not-estimable provenance
+    explicit while the source-local locator audit is still incomplete. ``role`` is
+    ``"primary"`` (the cited representative setting) or ``"alternate"`` (other trials
+    / subgroups for the same cancer + regimen).
     ``source_verified`` marks rows whose citation was confirmed against PubMed/Crossref or
     a ClinicalTrials.gov results record in the reference audit. ``value_basis`` is
     ``"reported"`` (value reported in the cited trial source), ``"reported_context"``

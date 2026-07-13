@@ -213,6 +213,15 @@ ici_response.ici_response_by_regimen("SKCM")
 ici_response.ici_response_estimates_df()
 ```
 
+`ici_response_estimates_df()` is the auditable long table behind the compact
+ORR anchors. Each row has a stable `estimate_id`; compact
+`ici_response_record(...)` / `apd1_response_df()` rows expose that pointer as
+`source_estimate_id`. CI provenance is explicit through `ci_basis`,
+`ci_low_status`, `ci_high_status`, and `value_status`, so `NR`/`NE` bounds and
+not-reached medians are distinguishable from fields that still need extraction.
+`source_locator_status` is currently `not_extracted` for legacy rows until each
+paper/table/supplement locator is audited row by row.
+
 ## CTA Antigens
 
 - `oncoref.cta` — CTA definition, HPA restriction tiers, axes, aliases, and gene
