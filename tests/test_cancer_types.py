@@ -398,6 +398,64 @@ def test_computed_union_and_evidence_scope_semantics_are_consistent():
     )
 
 
+def test_cancer_type_category_schema_and_summary_are_public_contract():
+    records = cancer_types.cancer_type_records()
+    schema = cancer_types.cancer_type_category_schema()
+
+    assert list(schema.columns) == [
+        "dimension",
+        "value",
+        "description",
+        "n_codes",
+        "example_codes",
+        "is_reportable_reference",
+    ]
+    assert set(records["ontology_level"]) <= set(cancer_types.ONTOLOGY_LEVEL_VALUES)
+    assert schema[schema["dimension"] == "ontology_level"]["value"].tolist() == list(
+        cancer_types.ONTOLOGY_LEVEL_VALUES
+    )
+    assert schema[schema["dimension"] == "reference_source"]["value"].tolist() == list(
+        cancer_types.REFERENCE_SOURCE_VALUES
+    )
+    ref_rows = schema[schema["dimension"] == "reference_source"].set_index("value")
+    assert bool(ref_rows.loc["own_cohort", "is_reportable_reference"]) is True
+    assert bool(ref_rows.loc["member_union", "is_reportable_reference"]) is True
+    assert bool(ref_rows.loc["parent", "is_reportable_reference"]) is False
+    assert bool(ref_rows.loc["none", "is_reportable_reference"]) is False
+    assert ref_rows.loc["own_cohort", "n_codes"] == len(
+        records[records["reference_source"] == "own_cohort"]
+    )
+    assert ref_rows.loc["member_union", "example_codes"]
+
+    summary = cancer_types.cancer_type_category_summary()
+    assert list(summary.columns) == [
+        "ontology_level",
+        "ontology_kind",
+        "reference_source",
+        "n_codes",
+        "n_classification_targets",
+        "n_expression_matrices",
+        "example_codes",
+    ]
+    assert summary["n_codes"].sum() == len(records)
+    assert summary["n_classification_targets"].sum() == int(
+        records["is_classification_target"].sum()
+    )
+    assert summary["n_expression_matrices"].sum() == int(records["has_expression_matrix"].sum())
+    crc_msi_combo = summary[
+        (summary["ontology_level"] == "molecular_subtype")
+        & (summary["ontology_kind"] == "molecular_source_scope")
+        & (summary["reference_source"] == "member_union")
+    ]
+    assert "CRC_MSI" in crc_msi_combo.iloc[0]["example_codes"]
+
+    assert cd.ONTOLOGY_LEVEL_VALUES == cancer_types.ONTOLOGY_LEVEL_VALUES
+    assert (
+        cd.cancer_ontology.cancer_type_category_summary()["n_codes"].sum()
+        == summary["n_codes"].sum()
+    )
+
+
 def test_reference_source_enum_drives_classification_targets():
     records = cancer_types.cancer_type_records(
         [

@@ -21,6 +21,7 @@ from __future__ import annotations
 from .cancer_types import (
     CANCER_TYPE_ALIASES,
     CANCER_TYPE_NAMES,
+    ONTOLOGY_LEVEL_VALUES,
     REFERENCE_SOURCE_VALUES,
     cancer_evidence_source_code,
     cancer_lineage_group,
@@ -33,6 +34,8 @@ from .cancer_types import (
     cancer_subtype_group,
     cancer_subtype_groupings,
     cancer_type_ancestors,
+    cancer_type_category_schema,
+    cancer_type_category_summary,
     cancer_type_codes,
     cancer_type_descendants,
     cancer_type_families,
@@ -76,6 +79,7 @@ from .cancer_types import (
 __all__ = [
     "CANCER_TYPE_ALIASES",
     "CANCER_TYPE_NAMES",
+    "ONTOLOGY_LEVEL_VALUES",
     "REFERENCE_SOURCE_VALUES",
     "cancer_evidence_source_code",
     "cancer_lineage_group",
@@ -88,6 +92,8 @@ __all__ = [
     "cancer_subtype_group",
     "cancer_subtype_groupings",
     "cancer_type_ancestors",
+    "cancer_type_category_schema",
+    "cancer_type_category_summary",
     "cancer_type_codes",
     "cancer_type_descendants",
     "cancer_type_families",

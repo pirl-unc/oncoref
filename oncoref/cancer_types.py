@@ -1203,9 +1203,127 @@ def cancer_type_codes(*args, **kwargs) -> list[str]:
     return cancer_type_records(*args, **kwargs)["code"].tolist()
 
 
+ONTOLOGY_LEVEL_VALUES = ("grouping", "type", "molecular_subtype", "evidence_scope")
 REFERENCE_SOURCE_VALUES = ("own_cohort", "member_union", "parent", "none")
 _RETURNABLE_REFERENCE_SOURCES = frozenset({"own_cohort", "member_union"})
 _SOURCE_SCOPE_MEMBER_UNION_CODES = frozenset({"BTC", "NSCLC", "SGC"})
+
+_ONTOLOGY_LEVEL_DESCRIPTIONS = {
+    "grouping": (
+        "coarser ontology node that groups distinct cancer types or source "
+        "cohorts, often backed by a computed or source-scoped union"
+    ),
+    "type": "primary anatomical, histologic, clinical, or lineage cancer type",
+    "molecular_subtype": (
+        "biomarker, fusion, viral, transcriptomic, or molecular-status subtype "
+        "nested under a cancer type or grouping"
+    ),
+    "evidence_scope": (
+        "clinical/provenance evidence scope that should not be treated as a "
+        "standalone expression/classification type"
+    ),
+}
+
+_REFERENCE_SOURCE_DESCRIPTIONS = {
+    "own_cohort": "code has its own observed expression/source cohort",
+    "member_union": "code is backed by a computed union of member cohorts",
+    "parent": "code resolves to the nearest reportable ancestor for classification",
+    "none": "code has no reportable expression/classification backing",
+}
+
+_CATEGORY_SCHEMA_COLUMNS = [
+    "dimension",
+    "value",
+    "description",
+    "n_codes",
+    "example_codes",
+    "is_reportable_reference",
+]
+
+_CATEGORY_SUMMARY_COLUMNS = [
+    "ontology_level",
+    "ontology_kind",
+    "reference_source",
+    "n_codes",
+    "n_classification_targets",
+    "n_expression_matrices",
+    "example_codes",
+]
+
+
+def cancer_type_category_schema() -> pd.DataFrame:
+    """Ontology/category vocabulary with registry usage counts.
+
+    This is the discoverable contract for code that needs to reason about
+    cancer-type level and reference-source semantics without scraping docs or
+    inferring from legacy flags. ``ontology_level`` says what kind of registry
+    node a row is; ``ontology_kind`` gives the more specific subtype; and
+    ``reference_source`` says whether a code has direct, computed, inherited, or
+    unsupported expression/classification backing.
+    """
+
+    records = cancer_type_records()
+    rows: list[dict] = []
+
+    for value in ONTOLOGY_LEVEL_VALUES:
+        hits = records[records["ontology_level"].astype(str) == value]
+        rows.append(
+            {
+                "dimension": "ontology_level",
+                "value": value,
+                "description": _ONTOLOGY_LEVEL_DESCRIPTIONS[value],
+                "n_codes": len(hits),
+                "example_codes": tuple(hits["code"].head(5)),
+                "is_reportable_reference": None,
+            }
+        )
+
+    for value in sorted(records["ontology_kind"].dropna().astype(str).unique()):
+        hits = records[records["ontology_kind"].astype(str) == value]
+        rows.append(
+            {
+                "dimension": "ontology_kind",
+                "value": value,
+                "description": None,
+                "n_codes": len(hits),
+                "example_codes": tuple(hits["code"].head(5)),
+                "is_reportable_reference": None,
+            }
+        )
+
+    for value in REFERENCE_SOURCE_VALUES:
+        hits = records[records["reference_source"].astype(str) == value]
+        rows.append(
+            {
+                "dimension": "reference_source",
+                "value": value,
+                "description": _REFERENCE_SOURCE_DESCRIPTIONS[value],
+                "n_codes": len(hits),
+                "example_codes": tuple(hits["code"].head(5)),
+                "is_reportable_reference": value in _RETURNABLE_REFERENCE_SOURCES,
+            }
+        )
+
+    return pd.DataFrame(rows, columns=_CATEGORY_SCHEMA_COLUMNS)
+
+
+def cancer_type_category_summary() -> pd.DataFrame:
+    """Counts/examples for observed level/kind/reference-source combinations."""
+
+    records = cancer_type_records()
+    if records.empty:
+        return pd.DataFrame(columns=_CATEGORY_SUMMARY_COLUMNS)
+    grouped = (
+        records.groupby(["ontology_level", "ontology_kind", "reference_source"], dropna=False)
+        .agg(
+            n_codes=("code", "size"),
+            n_classification_targets=("is_classification_target", "sum"),
+            n_expression_matrices=("has_expression_matrix", "sum"),
+            example_codes=("code", lambda x: tuple(list(x)[:5])),
+        )
+        .reset_index()
+    )
+    return grouped[_CATEGORY_SUMMARY_COLUMNS].copy()
 
 
 def _direct_expression_codes() -> set[str]:
