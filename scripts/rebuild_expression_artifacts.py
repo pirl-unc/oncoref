@@ -345,9 +345,16 @@ def rebuild(
         reps.to_parquet(rep_dir / f"{code}.parquet", index=False, compression="zstd")
         source_version = cohort_source_version(code)
         qc_counts = _qc_counts(qc)
+        source_cohort = code_to_source.get(code, code)
+        sample_qc_by_id = dict(
+            zip(
+                qc.get("sample_id", pd.Series(dtype=str)).astype(str),
+                qc.get("sample_qc_status", pd.Series(dtype=str)).astype(str),
+            )
+        )
         build_row = {
             "cancer_code": code,
-            "source_cohort": code_to_source.get(code, code),
+            "source_cohort": source_cohort,
             "source_version": source_version,
             "source_matrix_path": str(source_path),
             "sample_qc": sample_qc,
@@ -360,20 +367,38 @@ def rebuild(
             **qc_counts,
         }
         build_rows.append(build_row)
-        for rep_id in rep_ids:
+        for rep_id, source_sample in zip(rep_ids, rep_cols):
+            source_sample_qc = sample_qc_by_id.get(str(source_sample), effective_sample_qc)
+            benchmark_eligible = bool(
+                effective_sample_qc in {"pass", "pass_or_warn"}
+                and source_sample_qc in {"pass", "warn"}
+            )
             provenance.append(
                 {
                     "representative_id": rep_id,
-                    "source_cohort": code_to_source.get(code, code),
+                    "source_cohort": source_cohort,
                     "source_version": source_version,  # harmonized Ensembl release
                     "source_matrix_path": str(source_path),
-                    "sample_qc": sample_qc,
+                    "source_sample": source_sample,
+                    "source_group_id": f"{source_cohort}:{source_sample}",
+                    # Row-level sample_qc is the selected source sample's actual
+                    # status. Preserve the requested and effective artifact policies
+                    # separately so an all-fail fallback can never look like a pass.
+                    "sample_qc": source_sample_qc,
+                    "sample_qc_requested": sample_qc,
+                    "source_sample_qc": source_sample_qc,
                     "sample_qc_effective": effective_sample_qc,
                     "sample_qc_fallback_reason": sample_qc_fallback_reason,
                     "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
                     "n_source_samples": len(source_samples),
                     "n_cohort_samples": len(samples),
                     "n_negative_values_clipped": n_negative_values_clipped,
+                    "representative_role": (
+                        "standard"
+                        if benchmark_eligible
+                        else "source_qc_fallback_audit_only"
+                    ),
+                    "benchmark_eligible": benchmark_eligible,
                     **qc_counts,
                 }
             )

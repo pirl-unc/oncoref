@@ -63,7 +63,14 @@ _DATA_DIR = Path(__file__).resolve().parents[1] / "oncoref" / "data"
 OUT_DIR = _DATA_DIR / "cancer-reference-expression-representatives"
 _BASE = ["Ensembl_Gene_ID", "Symbol"]
 #: Columns representative_cohort_samples(include_provenance=True) merges back in.
-_PROVENANCE_COLUMNS = ["representative_id", "source_cohort", "source_project", "n_cohort_samples"]
+_PROVENANCE_COLUMNS = [
+    "representative_id",
+    "source_cohort",
+    "source_project",
+    "source_sample",
+    "source_group_id",
+    "n_cohort_samples",
+]
 
 
 def _drop_technical(df: pd.DataFrame) -> pd.DataFrame:
@@ -128,13 +135,13 @@ def build(input_dir: Path, *, k: int = 5, out_dir: Path = OUT_DIR) -> None:
                     "source_cohort": source_cohort,
                     "source_project": source_project,
                     "source_sample": src,
+                    "source_group_id": f"{source_cohort}:{src}",
                     "n_cohort_samples": n_cohort,
                 }
             )
         n += 1
         print(f"  {code}: {len(rep_ids)} reps of {n_cohort} samples", flush=True)
-    # Stable column order; source_sample is kept as extra provenance the reader ignores.
-    prov_df = pd.DataFrame(provenance, columns=[*_PROVENANCE_COLUMNS, "source_sample"])
+    prov_df = pd.DataFrame(provenance, columns=_PROVENANCE_COLUMNS)
     prov_df.to_csv(out_dir / "_provenance.csv", index=False)
     total_mb = sum(f.stat().st_size for f in out_dir.glob("*.parquet")) / 1e6
     print(f"\ndone: {n} cohorts, {total_mb:.1f} MB -> {out_dir}", flush=True)

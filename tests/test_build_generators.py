@@ -2094,10 +2094,19 @@ def test_representatives_generator_writes_shards_and_provenance(tmp_path):
     # The reader merges on these exact columns — all must be present (source_project
     # is best-effort and empty for an unregistered synthetic code, but the column
     # must exist so consumers don't KeyError).
-    for col in ("representative_id", "source_cohort", "source_project", "n_cohort_samples"):
+    for col in (
+        "representative_id",
+        "source_cohort",
+        "source_project",
+        "source_sample",
+        "source_group_id",
+        "n_cohort_samples",
+    ):
         assert col in prov.columns
     # Unregistered code -> source_cohort falls back to the code itself.
     assert (prov["source_cohort"] == "COHORT_A").all()
+    assert set(prov["source_sample"]) <= {f"s{i}" for i in range(6)}
+    assert (prov["source_group_id"] == prov["source_cohort"] + ":" + prov["source_sample"]).all()
 
 
 def test_representatives_generator_selects_on_biological_view(tmp_path, monkeypatch):
@@ -2195,6 +2204,12 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert prov.loc[0, "n_source_samples"] == 3
     assert prov.loc[0, "n_cohort_samples"] == 1
     assert prov.loc[0, "sample_qc"] == "pass"
+    assert prov.loc[0, "sample_qc_requested"] == "pass"
+    assert prov.loc[0, "source_sample_qc"] == "pass"
+    assert prov.loc[0, "source_sample"] == "pass_sample"
+    assert prov.loc[0, "source_group_id"] == "TEST_SOURCE:pass_sample"
+    assert prov.loc[0, "representative_role"] == "standard"
+    assert bool(prov.loc[0, "benchmark_eligible"]) is True
     assert prov.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v2"
     assert prov.loc[0, "n_qc_pass"] == 1
     assert prov.loc[0, "n_qc_warn"] == 1
@@ -2309,6 +2324,14 @@ def test_rebuild_expression_artifacts_keeps_concentration_only_source_when_pass_
         build_meta.loc[0, "sample_qc_fallback_reason"]
         == "no_pass_samples_high_concentration_source"
     )
+    prov = pd.read_csv(out / "cancer-reference-expression-representatives" / "_provenance.csv")
+    assert set(prov["sample_qc"]) == {"fail"}
+    assert set(prov["sample_qc_requested"]) == {"pass"}
+    assert set(prov["source_sample_qc"]) == {"fail"}
+    assert set(prov["representative_role"]) == {"source_qc_fallback_audit_only"}
+    assert not prov["benchmark_eligible"].any()
+    assert prov["source_sample"].notna().all()
+    assert prov["source_group_id"].str.startswith("TEST_SOURCE:").all()
 
 
 def test_rebuild_expression_artifacts_clips_negative_source_values():

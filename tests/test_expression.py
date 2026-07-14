@@ -686,6 +686,12 @@ def test_representative_provenance_includes_source_sample_and_selection_metadata
             "source_cohort": ["PRAD"],
             "source_project": ["TCGA"],
             "source_sample": ["TCGA-XX-0001"],
+            "source_group_id": ["TCGA:TCGA-XX-0001"],
+            "sample_qc": ["pass"],
+            "sample_qc_requested": ["pass"],
+            "source_sample_qc": ["pass"],
+            "representative_role": ["standard"],
+            "benchmark_eligible": [True],
             "n_cohort_samples": [10],
         }
     ).to_csv(d / "_provenance.csv", index=False)
@@ -694,6 +700,10 @@ def test_representative_provenance_includes_source_sample_and_selection_metadata
 
     assert df.loc[0, "representative_id"] == "PRAD_rep01"
     assert df.loc[0, "source_sample"] == "TCGA-XX-0001"
+    assert df.loc[0, "source_group_id"] == "TCGA:TCGA-XX-0001"
+    assert df.loc[0, "source_sample_qc"] == "pass"
+    assert df.loc[0, "representative_role"] == "standard"
+    assert bool(df.loc[0, "benchmark_eligible"]) is True
     assert df.loc[0, "selection_rank"] == 1
     assert df.loc[0, "selection_method"] == expression.REPRESENTATIVE_SELECTION_METHOD
     assert df.loc[0, "selection_basis"] == expression.REPRESENTATIVE_SELECTION_BASIS
@@ -749,13 +759,18 @@ def test_representative_empty_long_schema_includes_requested_provenance(monkeypa
         "source_version",
         "source_project",
         "source_sample",
+        "source_group_id",
         "n_cohort_samples",
         "sample_qc",
+        "sample_qc_requested",
+        "source_sample_qc",
         "sample_qc_effective",
         "sample_qc_policy_version",
         "n_qc_pass",
         "n_qc_warn",
         "n_qc_fail",
+        "representative_role",
+        "benchmark_eligible",
         "selection_rank",
         "selection_method",
         "selection_basis",
