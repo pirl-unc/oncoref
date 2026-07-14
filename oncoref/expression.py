@@ -2469,6 +2469,7 @@ def cancer_reference_expression(
                     ref,
                     kind=collapse_kind,
                     group_keys=_reference_collapse_group_keys(ref),
+                    identity_style=gene_id_style,
                 )
             ref = _apply_gene_id_style(
                 ref,
@@ -2478,7 +2479,9 @@ def cancer_reference_expression(
                 alias_expand_remaps=gene_universe == "pirlygenes",
             )
             if collapse_kind is None:
-                ref = _annotate_reference_proteoform_bridge(ref, kind="cdna")
+                ref = _annotate_reference_proteoform_bridge(
+                    ref, kind="cdna", identity_style=gene_id_style
+                )
             label = _REFERENCE_NORMALIZE_LABELS[mode]
             if format == "long":
                 value_cols = [
@@ -3002,8 +3005,17 @@ def _validate_reference_source(reference_source: str) -> str:
 
 
 def _reference_collapse_group_keys(ref: pd.DataFrame) -> list[str]:
-    """Columns that keep identical-locus summation inside one source context."""
-    return [c for c in _REFERENCE_SOURCE_UNION_IDENTITY_COLUMNS if c in ref.columns]
+    """Columns that keep identical-locus summation inside one source context.
+
+    ``n_detected`` varies by gene and is aggregated with ``max`` during a fold;
+    treating it as an identity key would split valid groups and then remove the
+    key before the aggregate merge.
+    """
+    return [
+        c
+        for c in _REFERENCE_SOURCE_UNION_IDENTITY_COLUMNS
+        if c in ref.columns and c != "n_detected"
+    ]
 
 
 def _clean_identity_label(value) -> str | None:
@@ -3015,8 +3027,52 @@ def _clean_identity_label(value) -> str | None:
     return label
 
 
-@lru_cache(maxsize=2)
-def _identical_locus_identity_maps(kind: str) -> tuple[dict[str, str], dict[str, str]]:
+_PIRLYGENES_PROTEIN_GROUP_EXCLUSIONS = frozenset(
+    {
+        frozenset({"ENSG00000169789", "ENSG00000169807"}),  # PRY/PRY2
+    }
+)
+
+_PIRLYGENES_PROTEIN_LABEL_OVERRIDES = {
+    frozenset({"ENSG00000183889", "ENSG00000233024"}): "NPIPA6/9",
+    frozenset({"ENSG00000163611", "ENSG00000285943"}): "SPICE1/SPICE1-CFAP44",
+}
+
+
+def _pirlygenes_identity_label(symbols: Iterable[object], *, fallback: str) -> str:
+    """Recreate pirlygenes' compact identical-locus group identifier."""
+    parts: list[str] = []
+    for value in symbols:
+        label = _clean_identity_label(value)
+        if label is None or re.fullmatch(r"ENSG\d+", label) or label in parts:
+            continue
+        parts.append(label)
+    parts.sort(
+        key=lambda value: [
+            int(token) if token.isdigit() else token for token in re.split(r"(\d+)", value)
+        ]
+    )
+    if not parts:
+        return fallback
+    if len(parts) == 1:
+        return parts[0]
+    prefix = os.path.commonprefix(parts)
+    if (
+        prefix
+        and prefix[-1].isdigit()
+        and any(len(value) > len(prefix) and value[len(prefix)].isdigit() for value in parts)
+    ):
+        prefix = prefix.rstrip("0123456789")
+    suffixes = [value[len(prefix) :] for value in parts]
+    if prefix and all(suffixes):
+        return prefix + "/".join(suffixes)
+    return "/".join(parts)
+
+
+@lru_cache(maxsize=4)
+def _identical_locus_identity_maps(
+    kind: str, identity_style: str = "oncoref"
+) -> tuple[dict[str, str], dict[str, str]]:
     """Return ``({member ENSG -> identity}, {identity -> member ENSGs})``.
 
     ``kind="cdna"`` is the read-recovery collapse: byte-identical CDS groups plus
@@ -3024,6 +3080,7 @@ def _identical_locus_identity_maps(kind: str) -> tuple[dict[str, str], dict[str,
     identical-protein collapse. The public registry/accessor remains gene-level by
     default; these maps are used only by explicit compatibility collapse requests.
     """
+    _validate_gene_id_style(identity_style)
     if kind == "cdna":
         groups = cdna_identical_groups()
         member_to_canonical = {
@@ -3033,13 +3090,23 @@ def _identical_locus_identity_maps(kind: str) -> tuple[dict[str, str], dict[str,
                 groups["group_canonical_ensembl_gene_id"],
             )
         }
-        canonical_to_identity = {
-            unversioned(canon): _clean_identity_label(symbol) or unversioned(canon)
-            for canon, symbol in zip(
-                groups["group_canonical_ensembl_gene_id"],
-                groups["group_canonical_symbol"],
-            )
-        }
+        if identity_style == "pirlygenes":
+            canonical_to_identity = {
+                unversioned(canonical): _pirlygenes_identity_label(
+                    group["symbol"], fallback=unversioned(canonical)
+                )
+                for canonical, group in groups.groupby(
+                    "group_canonical_ensembl_gene_id", sort=False
+                )
+            }
+        else:
+            canonical_to_identity = {
+                unversioned(canon): _clean_identity_label(symbol) or unversioned(canon)
+                for canon, symbol in zip(
+                    groups["group_canonical_ensembl_gene_id"],
+                    groups["group_canonical_symbol"],
+                )
+            }
         overrides = proteoform_collapse_overrides()
         if not overrides.empty:
             from .proteoforms import proteoform_groups
@@ -3075,10 +3142,23 @@ def _identical_locus_identity_maps(kind: str) -> tuple[dict[str, str], dict[str,
         from .proteoforms import proteoform_groups
 
         groups = proteoform_groups(scope="genome")
-        member_to_identity = {
-            unversioned(member): str(identity)
-            for member, identity in zip(groups["member_gene_id"], groups["proteoform_id"])
-        }
+        if identity_style == "pirlygenes":
+            member_to_identity = {}
+            for _, group in groups.groupby("proteoform_id", sort=False):
+                members = frozenset(group["member_gene_id"].astype(str).map(unversioned))
+                if members in _PIRLYGENES_PROTEIN_GROUP_EXCLUSIONS:
+                    continue
+                identity = _PIRLYGENES_PROTEIN_LABEL_OVERRIDES.get(members)
+                if identity is None:
+                    identity = _pirlygenes_identity_label(
+                        group["member_symbol"], fallback=min(members)
+                    )
+                member_to_identity.update(dict.fromkeys(members, identity))
+        else:
+            member_to_identity = {
+                unversioned(member): str(identity)
+                for member, identity in zip(groups["member_gene_id"], groups["proteoform_id"])
+            }
     else:
         raise ValueError("kind must be 'cdna' or 'protein'")
 
@@ -3091,7 +3171,11 @@ def _identical_locus_identity_maps(kind: str) -> tuple[dict[str, str], dict[str,
 
 
 def _collapse_reference_identical_loci(
-    df: pd.DataFrame, *, kind: str, group_keys: list[str]
+    df: pd.DataFrame,
+    *,
+    kind: str,
+    group_keys: list[str],
+    identity_style: str = "oncoref",
 ) -> pd.DataFrame:
     """Collapse identical loci in a reference-expression long-like frame."""
     if df.empty:
@@ -3099,7 +3183,7 @@ def _collapse_reference_identical_loci(
         out["Proteoform_ID"] = []
         out["Member_Ensembl_Gene_IDs"] = []
         return out
-    member_to_identity, identity_members = _identical_locus_identity_maps(kind)
+    member_to_identity, identity_members = _identical_locus_identity_maps(kind, identity_style)
     work = df.reset_index(drop=True).copy()
     work["_ord"] = range(len(work))
     gene_ids = work["Ensembl_Gene_ID"].astype(str).map(unversioned)
@@ -3142,14 +3226,16 @@ def _collapse_reference_identical_loci(
     return out.sort_values("_ord").reset_index(drop=True)[keep]
 
 
-def _annotate_reference_proteoform_bridge(df: pd.DataFrame, *, kind: str) -> pd.DataFrame:
+def _annotate_reference_proteoform_bridge(
+    df: pd.DataFrame, *, kind: str, identity_style: str = "oncoref"
+) -> pd.DataFrame:
     """Add pirlygenes-compatible gene/proteoform bridge columns without folding rows."""
     out = df.copy()
     if "Proteoform_ID" not in out.columns:
         if out.empty:
             out["Proteoform_ID"] = pd.Series(dtype="object")
         else:
-            member_to_identity, _ = _identical_locus_identity_maps(kind)
+            member_to_identity, _ = _identical_locus_identity_maps(kind, identity_style)
             gene_ids = out["Ensembl_Gene_ID"].astype(str).map(unversioned)
             out["Proteoform_ID"] = gene_ids.map(member_to_identity).fillna(gene_ids).to_numpy()
     if "Member_Ensembl_Gene_IDs" not in out.columns:
@@ -3557,7 +3643,20 @@ def _pool_reference_expression_rows(long: pd.DataFrame) -> pd.DataFrame:
     if long.empty:
         return long
     out_rows: list[dict[str, object]] = []
-    group_cols = ["Ensembl_Gene_ID", "Symbol", "cancer_code", "normalization"]
+    group_cols = [
+        col
+        for col in (
+            "Ensembl_Gene_ID",
+            "Symbol",
+            "Proteoform_ID",
+            "Member_Ensembl_Gene_IDs",
+            "cancer_code",
+            "normalization",
+            *_REFERENCE_REQUEST_COLUMNS,
+            *_ARTIFACT_GENE_UNIVERSE_FLAG_COLUMNS,
+        )
+        if col in long.columns
+    ]
     for keys, group in long.groupby(group_cols, dropna=False, sort=False):
         row = dict(zip(group_cols, keys))
         expr = pd.to_numeric(group["expression"], errors="coerce")
