@@ -635,6 +635,11 @@ but it is not the clean-TPM biological denominator.
   audited gaps use `inheritance_kind="direct_missing"` so callers can distinguish
   “known no supported site-specific estimate” from an unmapped cancer code.
 - `oncoref.incidence` — incidence/mortality burden and burden categories.
+  `incidence.cancer_burden_df()` is the auditable burden table: percentages are
+  the public lookup values, and raw-count, source-locator, source-site,
+  derivation, and rounding columns are preserved as provenance fields. Existing
+  legacy rows keep locator status values such as `not_extracted` until exact
+  ACS/GLOBOCAN table/export anchors are filled in.
 - `oncoref.fusions` — defining fusions and partner-family lookups.
 - `oncoref.response_signatures` — legacy/compatibility response-signature
   surface used by oncoref plots. Treat it as transitional: new or extended
