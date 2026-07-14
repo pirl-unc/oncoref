@@ -313,13 +313,18 @@ _REPRESENTATIVE_PROVENANCE_COLUMNS = [
     "source_version",
     "source_project",
     "source_sample",
+    "source_group_id",
     "n_cohort_samples",
     "sample_qc",
+    "sample_qc_requested",
+    "source_sample_qc",
     "sample_qc_effective",
     "sample_qc_policy_version",
     "n_qc_pass",
     "n_qc_warn",
     "n_qc_fail",
+    "representative_role",
+    "benchmark_eligible",
     "selection_rank",
     "selection_method",
     "selection_basis",
@@ -523,7 +528,14 @@ def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.Data
             on="representative_id",
             how="left",
         )
-    for col in ("source_cohort", "source_version", "source_project", "source_sample"):
+    for col in (
+        "source_cohort",
+        "source_version",
+        "source_project",
+        "source_sample",
+        "source_group_id",
+        "representative_role",
+    ):
         if col not in long.columns:
             long[col] = pd.NA
     for col in (
@@ -535,7 +547,14 @@ def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.Data
     ):
         if col not in long.columns:
             long[col] = pd.NA
-    for col in ("sample_qc", "sample_qc_effective", "sample_qc_policy_version"):
+    for col in (
+        "sample_qc",
+        "sample_qc_requested",
+        "source_sample_qc",
+        "sample_qc_effective",
+        "sample_qc_policy_version",
+        "benchmark_eligible",
+    ):
         if col not in long.columns:
             long[col] = pd.NA
     if "selection_rank" in long.columns:
@@ -3962,8 +3981,14 @@ def representative_cohort_samples(
     IDs default to pirlygenes-compatible ``CODE_rep01`` columns/values; pass
     ``representative_id_style="internal"`` for the shard/provenance IDs
     (``CODE__rep1``). Long output can attach representative-level provenance:
-    source cohort/project/sample, selection rank, selection method/basis, and
-    package/data schema versions.
+    source cohort/project/sample, a stable source-group ID shared by aliases of
+    the same physical vector, selection rank/method/basis, and package/data
+    schema versions. Row-level ``sample_qc`` and ``source_sample_qc`` are the
+    selected sample's actual status; ``sample_qc_requested`` and
+    ``sample_qc_effective`` preserve the artifact policies separately.
+    ``benchmark_eligible=False`` with a QC-fallback ``representative_role``
+    keeps an all-fail representative inspectable without presenting it as
+    ordinary validation truth.
 
     ``gene_id_style="oncoref"`` returns canonical oncoref ENSG IDs. Opt into
     ``"pirlygenes"`` only for migration wrappers that need known legacy ENSG IDs
