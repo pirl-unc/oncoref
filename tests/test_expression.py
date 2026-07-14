@@ -2211,6 +2211,34 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
     expression._source_cohort_kind_map.cache_clear()
 
 
+def test_reference_summary_row_index_reuses_positions_and_tracks_frame_identity(
+    monkeypatch,
+):
+    first = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1", "E2", "E3", "E4"],
+            "cancer_code": ["X", "Y", "X", "X"],
+            "source_cohort": ["SRC1", "SRC2", "SRC2", "SRC1"],
+        }
+    )
+    current = [first]
+    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: current[0])
+    expression._clear_reference_summary_row_index()
+
+    index = expression._reference_summary_row_index()
+    assert index[("X", "SRC1")].tolist() == [0, 3]
+    assert index[("X", "SRC2")].tolist() == [2]
+    assert expression._reference_summary_row_index() is index
+
+    second = first.iloc[[2, 0]].reset_index(drop=True)
+    current[0] = second
+    rebuilt = expression._reference_summary_row_index()
+    assert rebuilt is not index
+    assert rebuilt[("X", "SRC2")].tolist() == [0]
+    assert rebuilt[("X", "SRC1")].tolist() == [1]
+    expression._clear_reference_summary_row_index()
+
+
 def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
     expression._reference_summary_source_table.cache_clear()
     summary = pd.DataFrame(
