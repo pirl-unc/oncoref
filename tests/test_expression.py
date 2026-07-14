@@ -1787,6 +1787,75 @@ def test_cancer_reference_expression_cdna_identical_collapse(monkeypatch):
     assert tp53["Member_Ensembl_Gene_IDs"] == "ENSG00000141510"
 
 
+def test_reference_summary_collapse_aggregates_n_detected_outside_identity_key():
+    ref = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000154545", "ENSG00000187243"],
+            "Symbol": ["MAGED4", "MAGED4B"],
+            "source_cohort": ["SRC", "SRC"],
+            "n_reference_samples": [10, 10],
+            "n_samples": [10, 10],
+            "n_detected": [2, 7],
+            "p25": [1.0, 10.0],
+            "p50": [2.0, 20.0],
+            "p75": [3.0, 30.0],
+        }
+    )
+
+    group_keys = expression._reference_collapse_group_keys(ref)
+    assert "n_detected" not in group_keys
+    out = expression._collapse_reference_identical_loci(
+        ref,
+        kind="cdna",
+        group_keys=group_keys,
+    )
+
+    assert len(out) == 1
+    assert out.loc[0, "Ensembl_Gene_ID"] == "MAGED4"
+    assert out.loc[0, "p50"] == pytest.approx(22.0)
+    assert out.loc[0, "n_detected"] == 7
+
+
+def test_pirlygenes_identity_style_preserves_legacy_compact_group_ids():
+    cdna, _ = expression._identical_locus_identity_maps("cdna", "pirlygenes")
+    protein, _ = expression._identical_locus_identity_maps("protein", "pirlygenes")
+
+    assert cdna["ENSG00000184033"] == "CTAG1A/B"
+    assert cdna["ENSG00000187243"] == "MAGED4/MAGED4B"
+    assert protein["ENSG00000184033"] == "CTAG1A/B"
+    assert protein["ENSG00000183889"] == "NPIPA6/9"
+    assert "ENSG00000169789" not in protein  # PRY group post-dates the legacy snapshot.
+
+
+def test_cancer_reference_expression_uses_pirlygenes_identity_style(monkeypatch):
+    pct = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000268651", "ENSG00000184033"],
+            "Symbol": ["CTAG1A", "CTAG1B"],
+            "p25": [1.0, 4.0],
+            "p50": [2.0, 5.0],
+            "p75": [3.0, 6.0],
+        }
+    )
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
+
+    bridge = expression.cancer_reference_expression(
+        "x", include_provenance=False, gene_id_style="pirlygenes"
+    )
+    assert set(bridge["Proteoform_ID"]) == {"CTAG1A/B"}
+
+    collapsed = expression.cancer_reference_expression(
+        "x",
+        include_provenance=False,
+        gene_id_style="pirlygenes",
+        collapse_cdna_identical=True,
+    )
+    assert collapsed.loc[0, "Ensembl_Gene_ID"] == "CTAG1A/B"
+    assert collapsed.loc[0, "expression"] == pytest.approx(7.0)
+
+
 def test_cancer_reference_expression_protein_identical_collapse_and_wide_shape(monkeypatch):
     pct = pd.DataFrame(
         {
@@ -2281,6 +2350,8 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
     assert pd.isna(row["q1"]) and pd.isna(row["q3"])
     assert row["n_reference_samples"] == pytest.approx(8)
     assert row["processing_pipeline"] == "pooled_n_weighted"
+    assert row["Proteoform_ID"] == "E1"
+    assert row["Member_Ensembl_Gene_IDs"] == "E1"
 
     compact = expression.cancer_reference_expression(
         "x",
@@ -2294,6 +2365,8 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
     assert compact.loc[0, "source_cohort"] == "POOLED"
     assert compact.loc[0, "expression"] == pytest.approx((10.0 * 2 + 20.0 * 6) / 8)
     assert compact.loc[0, "n_reference_samples"] == pytest.approx(8)
+    assert compact.loc[0, "Proteoform_ID"] == "E1"
+    assert compact.loc[0, "Member_Ensembl_Gene_IDs"] == "E1"
     assert "processing_pipeline" not in compact.columns
 
     with pytest.raises(ValueError, match='requires sample_qc="all"'):
