@@ -3236,6 +3236,47 @@ def _reference_summary_frame() -> pd.DataFrame:
     return get_data(_REFERENCE_SUMMARY_DATASET, copy=False)
 
 
+_REFERENCE_SUMMARY_ROW_INDEX: (
+    tuple[
+        pd.DataFrame,
+        dict[tuple[str, str], np.ndarray],
+    ]
+    | None
+) = None
+
+
+def _reference_summary_row_index() -> dict[tuple[str, str], np.ndarray]:
+    """Map ``(cancer_code, source_cohort)`` to summary row positions.
+
+    The source-summary artifact currently has roughly five million rows.  A
+    boolean scan for each accessor call made small gene queries take tens of
+    seconds and multiplied that cost by every requested normalization.  The
+    frame is process-global and read-only, so build the positional index once;
+    keying the cache on object identity keeps monkeypatched/test frames safe.
+    """
+    global _REFERENCE_SUMMARY_ROW_INDEX
+    df = _reference_summary_frame()
+    cached = _REFERENCE_SUMMARY_ROW_INDEX
+    if cached is not None and cached[0] is df:
+        return cached[1]
+    code = df["cancer_code"].astype(str)
+    source = df["source_cohort"].fillna("").astype(str)
+    index = {
+        (str(key[0]), str(key[1])): positions
+        for key, positions in df.groupby([code, source], sort=False).indices.items()
+    }
+    _REFERENCE_SUMMARY_ROW_INDEX = (df, index)
+    return index
+
+
+def _clear_reference_summary_row_index() -> None:
+    global _REFERENCE_SUMMARY_ROW_INDEX
+    _REFERENCE_SUMMARY_ROW_INDEX = None
+
+
+_register_derived_cache(_clear_reference_summary_row_index)
+
+
 def _reference_summary_available_codes(
     *,
     source_kinds: set[str] | None = None,
@@ -3326,13 +3367,15 @@ def _reference_summary_selected_source(code: str) -> dict | None:
 
 def _reference_summary_selected_rows(code: str) -> pd.DataFrame:
     selected = _reference_summary_selected_source(code)
-    if selected is None:
-        return pd.DataFrame(columns=_reference_summary_frame().columns)
     df = _reference_summary_frame()
-    mask = (df["cancer_code"].astype(str) == code) & (
-        df["source_cohort"].fillna("").astype(str) == str(selected["source_cohort"])
+    if selected is None:
+        return pd.DataFrame(columns=df.columns)
+    positions = _reference_summary_row_index().get(
+        (str(code), str(selected["source_cohort"])),
     )
-    return df.loc[mask].copy()
+    if positions is None:
+        return pd.DataFrame(columns=df.columns)
+    return df.iloc[positions].copy()
 
 
 def _normalize_source_filter_values(values: str | Iterable[str] | None) -> set[str] | None:
@@ -3389,14 +3432,20 @@ def _reference_summary_all_rows(
         exclude_microarray_proxy=exclude_microarray_proxy,
     )
     sources = sources.loc[sources["cancer_code"].astype(str) == str(code)]
-    if sources.empty:
-        return pd.DataFrame(columns=_reference_summary_frame().columns)
-    allowed = set(sources["source_cohort"].astype(str))
     df = _reference_summary_frame()
-    mask = (df["cancer_code"].astype(str) == str(code)) & (
-        df["source_cohort"].fillna("").astype(str).isin(allowed)
-    )
-    return df.loc[mask].copy()
+    if sources.empty:
+        return pd.DataFrame(columns=df.columns)
+    row_index = _reference_summary_row_index()
+    parts = [
+        row_index[(str(code), source)]
+        for source in sources["source_cohort"].astype(str)
+        if (str(code), source) in row_index
+    ]
+    if not parts:
+        return pd.DataFrame(columns=df.columns)
+    # Preserve authoritative artifact order across multiple source cohorts.
+    positions = np.sort(np.concatenate(parts))
+    return df.iloc[positions].copy()
 
 
 def _reference_summary_expression_frame(
