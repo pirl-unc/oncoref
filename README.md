@@ -138,7 +138,8 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   CI/value status fields; compact ORR records point back to those estimate rows
   via `source_estimate_id`.
 - **Expression** — `cohort_gene_percentiles`, `within_sample_top_fraction`,
-  `representative_cohort_samples` over the lazy-downloaded per-cohort bundle;
+  `representative_cohort_samples` over the lazy-downloaded per-cohort bundle, plus
+  `representative_cohort_availability` for source-scale and benchmark qualification;
   `oncoref.expression_builders` for source-matrix ingestion into canonical
   per-code per-sample TPM parquet plus mapping/parse/QC sidecars and
   per-gene-per-cohort `summary_rows` for reference-expression shards. Generic

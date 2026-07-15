@@ -721,6 +721,116 @@ def test_representative_provenance_includes_source_sample_and_selection_metadata
     assert internal.loc[0, "representative_id"] == "PRAD__rep1"
 
 
+def test_representative_availability_routes_proxy_and_qc_fallback_cohorts(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    d = tmp_path / "cancer-reference-expression-representatives"
+    d.mkdir(parents=True)
+    rows = []
+    qc_rows = []
+    fixtures = {
+        "MTC": {
+            "sample": "GSM810624",
+            "source": "GSE32662_PRINGLE_2012",
+            "status": "warn",
+            "reasons": "nonlinear_or_proxy_expression_scale",
+            "scale": "microarray_tpm_proxy",
+            "linear": False,
+            "floor": False,
+            "effective": "pass_or_warn",
+            "fallback": "no_pass_samples_tpm_proxy_source",
+            "role": "standard",
+            "benchmark": True,
+        },
+        "RB": {
+            "sample": "THR24_3114_S01",
+            "source": "TREEHOUSE_RIBOD_25_01",
+            "status": "fail",
+            "reasons": "high_top10_gene_fraction",
+            "scale": "linear_rnaseq_tpm",
+            "linear": True,
+            "floor": False,
+            "effective": "all",
+            "fallback": "no_pass_samples_high_concentration_source",
+            "role": "source_qc_fallback_audit_only",
+            "benchmark": False,
+        },
+        "PRAD": {
+            "sample": "TCGA-XX-0001",
+            "source": "TCGA_PRAD",
+            "status": "pass",
+            "reasons": "",
+            "scale": "linear_rnaseq_tpm",
+            "linear": True,
+            "floor": True,
+            "effective": "pass",
+            "fallback": "",
+            "role": "standard",
+            "benchmark": True,
+        },
+    }
+    for code, fixture in fixtures.items():
+        pd.DataFrame(
+            {
+                "Ensembl_Gene_ID": ["ENSG1"],
+                "Symbol": ["GENE1"],
+                f"{code}__rep1": [1.0],
+            }
+        ).to_parquet(d / f"{code}.parquet", index=False)
+        rows.append(
+            {
+                "representative_id": f"{code}__rep1",
+                "source_cohort": fixture["source"],
+                "source_sample": fixture["sample"],
+                "sample_qc_requested": "pass",
+                "sample_qc_effective": fixture["effective"],
+                "sample_qc_fallback_reason": fixture["fallback"],
+                "sample_qc_policy_version": "test_policy",
+                "representative_role": fixture["role"],
+                "benchmark_eligible": fixture["benchmark"],
+            }
+        )
+        qc_rows.append(
+            {
+                "cancer_code": code,
+                "source_cohort": fixture["source"],
+                "sample_id": fixture["sample"],
+                "sample_qc_status": fixture["status"],
+                "sample_qc_reasons": fixture["reasons"],
+                "source_scale_class": fixture["scale"],
+                "linear_tpm_comparable": fixture["linear"],
+                "recommended_for_absolute_tpm_floor": fixture["floor"],
+            }
+        )
+    pd.DataFrame(rows).to_csv(d / "_provenance.csv", index=False)
+    pd.DataFrame(qc_rows).to_csv(
+        tmp_path / expression.SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH, index=False
+    )
+
+    availability = expression.representative_cohort_availability()
+    keyed = availability.set_index("cancer_code")
+
+    assert keyed.loc["MTC", "source_scale_class"] == "microarray_tpm_proxy"
+    assert not keyed.loc["MTC", "linear_tpm_comparable"]
+    assert keyed.loc["MTC", "benchmark_eligible"]
+    assert keyed.loc["MTC", "availability_reason"] == "nonlinear_or_proxy_expression_scale"
+    assert keyed.loc["RB", "linear_tpm_comparable"]
+    assert not keyed.loc["RB", "benchmark_eligible"]
+    assert keyed.loc["RB", "availability_reason"] == "no_pass_samples_high_concentration_source"
+    assert expression.available_representative_cohorts(
+        linear_tpm_comparable=True,
+        benchmark_eligible=True,
+    ) == ["PRAD"]
+
+    mtc = expression.representative_cohort_samples(
+        "MTC", format="long", include_provenance=True, sample_qc="artifact"
+    )
+    assert set(mtc["source_sample_qc_reasons"]) == {"nonlinear_or_proxy_expression_scale"}
+    assert set(mtc["source_scale_class"]) == {"microarray_tpm_proxy"}
+    assert not mtc["linear_tpm_comparable"].any()
+    assert mtc.attrs["source_scale_class"] == "microarray_tpm_proxy"
+    assert mtc.attrs["linear_tpm_comparable"] is False
+
+
 def test_representatives_reject_mismatched_artifact_sample_qc(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
     d = tmp_path / "cancer-reference-expression-representatives"
@@ -765,10 +875,16 @@ def test_representative_empty_long_schema_includes_requested_provenance(monkeypa
         "sample_qc_requested",
         "source_sample_qc",
         "sample_qc_effective",
+        "sample_qc_fallback_reason",
         "sample_qc_policy_version",
+        "source_sample_qc_reasons",
         "n_qc_pass",
         "n_qc_warn",
         "n_qc_fail",
+        "source_scale_class",
+        "linear_tpm_comparable",
+        "recommended_for_absolute_tpm_floor",
+        "selection_scale_class",
         "representative_role",
         "benchmark_eligible",
         "selection_rank",
