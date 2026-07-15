@@ -162,9 +162,7 @@ def _select_source(
         # duplicate per-study cache aliases when it is unique.
         want_without_trailing_digits = want.rstrip("0123456789")
         if want_without_trailing_digits and want_without_trailing_digits != want:
-            hits = [
-                p for d, p in candidates if _source_key(d) == want_without_trailing_digits
-            ]
+            hits = [p for d, p in candidates if _source_key(d) == want_without_trailing_digits]
             if len(hits) == 1:
                 return hits[0]
     if code_to_n_samples:
@@ -257,8 +255,7 @@ def _sample_selection_for_qc(
     scale_classes = set(qc.get("source_scale_class", pd.Series(dtype=str)).fillna("").astype(str))
     statuses = set(qc["sample_qc_status"].astype(str))
     if statuses <= {"warn"} and (
-        "nonlinear_or_proxy_expression_scale" in reasons
-        or "microarray_tpm_proxy" in scale_classes
+        "nonlinear_or_proxy_expression_scale" in reasons or "microarray_tpm_proxy" in scale_classes
     ):
         warn_samples = [s for s in samples if status.get(str(s)) == "warn"]
         return warn_samples, "pass_or_warn", "no_pass_samples_tpm_proxy_source"
@@ -352,6 +349,11 @@ def rebuild(
                 qc.get("sample_qc_status", pd.Series(dtype=str)).astype(str),
             )
         )
+        qc_by_id = (
+            qc.set_index(qc["sample_id"].astype(str), drop=False).to_dict("index")
+            if not qc.empty and "sample_id" in qc
+            else {}
+        )
         build_row = {
             "cancer_code": code,
             "source_cohort": source_cohort,
@@ -369,6 +371,19 @@ def rebuild(
         build_rows.append(build_row)
         for rep_id, source_sample in zip(rep_ids, rep_cols):
             source_sample_qc = sample_qc_by_id.get(str(source_sample), effective_sample_qc)
+            source_qc = qc_by_id.get(str(source_sample), {})
+            source_scale_value = source_qc.get("source_scale_class")
+            source_scale_class = (
+                str(source_scale_value) if pd.notna(source_scale_value) else "unknown"
+            )
+            linear_value = source_qc.get("linear_tpm_comparable")
+            linear_tpm_comparable = bool(linear_value) if pd.notna(linear_value) else False
+            floor_value = source_qc.get("recommended_for_absolute_tpm_floor")
+            recommended_for_absolute_tpm_floor = (
+                bool(floor_value) if pd.notna(floor_value) else False
+            )
+            reasons_value = source_qc.get("sample_qc_reasons")
+            source_sample_qc_reasons = str(reasons_value) if pd.notna(reasons_value) else ""
             benchmark_eligible = bool(
                 effective_sample_qc in {"pass", "pass_or_warn"}
                 and source_sample_qc in {"pass", "warn"}
@@ -390,13 +405,16 @@ def rebuild(
                     "sample_qc_effective": effective_sample_qc,
                     "sample_qc_fallback_reason": sample_qc_fallback_reason,
                     "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
+                    "source_sample_qc_reasons": source_sample_qc_reasons,
                     "n_source_samples": len(source_samples),
                     "n_cohort_samples": len(samples),
                     "n_negative_values_clipped": n_negative_values_clipped,
+                    "source_scale_class": source_scale_class,
+                    "linear_tpm_comparable": linear_tpm_comparable,
+                    "recommended_for_absolute_tpm_floor": (recommended_for_absolute_tpm_floor),
+                    "selection_scale_class": source_scale_class,
                     "representative_role": (
-                        "standard"
-                        if benchmark_eligible
-                        else "source_qc_fallback_audit_only"
+                        "standard" if benchmark_eligible else "source_qc_fallback_audit_only"
                     ),
                     "benchmark_eligible": benchmark_eligible,
                     **qc_counts,

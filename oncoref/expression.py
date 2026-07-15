@@ -319,10 +319,16 @@ _REPRESENTATIVE_PROVENANCE_COLUMNS = [
     "sample_qc_requested",
     "source_sample_qc",
     "sample_qc_effective",
+    "sample_qc_fallback_reason",
     "sample_qc_policy_version",
+    "source_sample_qc_reasons",
     "n_qc_pass",
     "n_qc_warn",
     "n_qc_fail",
+    "source_scale_class",
+    "linear_tpm_comparable",
+    "recommended_for_absolute_tpm_floor",
+    "selection_scale_class",
     "representative_role",
     "benchmark_eligible",
     "selection_rank",
@@ -331,6 +337,28 @@ _REPRESENTATIVE_PROVENANCE_COLUMNS = [
     "artifact_schema_version",
     "data_version",
     "source_matrix_version",
+]
+
+_REPRESENTATIVE_AVAILABILITY_COLUMNS = [
+    "cancer_code",
+    "n_representatives",
+    "source_cohort",
+    "source_scale_class",
+    "linear_tpm_comparable",
+    "recommended_for_absolute_tpm_floor",
+    "sample_qc_requested",
+    "sample_qc_effective",
+    "sample_qc_fallback_reason",
+    "sample_qc_policy_version",
+    "n_qc_pass",
+    "n_qc_warn",
+    "n_qc_fail",
+    "representative_role",
+    "benchmark_eligible",
+    "selection_scale_class",
+    "selection_method",
+    "selection_basis",
+    "availability_reason",
 ]
 
 
@@ -508,6 +536,24 @@ def _representative_attrs(
     }
     if artifact_qc_meta is not None:
         attrs.update(_artifact_qc_attrs(artifact_qc_meta, requested_sample_qc=sample_qc))
+    availability = representative_cohort_availability(codes)
+    if not availability.empty:
+        scale_classes = sorted(
+            {str(v) for v in availability["source_scale_class"] if pd.notna(v) and str(v)}
+        )
+        attrs["source_scale_class"] = (
+            scale_classes[0]
+            if len(scale_classes) == 1
+            else ("mixed" if scale_classes else "unknown")
+        )
+        for col in (
+            "linear_tpm_comparable",
+            "recommended_for_absolute_tpm_floor",
+            "benchmark_eligible",
+        ):
+            values = [_optional_bool(v) for v in availability[col]]
+            known = [v for v in values if v is not None]
+            attrs[col] = bool(known and len(known) == len(values) and all(known))
     return attrs
 
 
@@ -518,10 +564,70 @@ def _representative_empty_frame(*, include_provenance: bool) -> pd.DataFrame:
     return pd.DataFrame(columns=cols)
 
 
-def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.DataFrame:
+def _optional_bool(value: object) -> bool | None:
+    if pd.isna(value):
+        return None
+    if isinstance(value, (bool, np.bool_)):
+        return bool(value)
+    text = str(value).strip().lower()
+    if text in {"true", "1", "yes"}:
+        return True
+    if text in {"false", "0", "no"}:
+        return False
+    return None
+
+
+def _representative_provenance(root: Path) -> pd.DataFrame:
     prov_path = root / "_provenance.csv"
-    if prov_path.exists():
-        prov = pd.read_csv(prov_path)
+    if not prov_path.exists():
+        return pd.DataFrame(columns=["representative_id", "cancer_code"])
+    prov = pd.read_csv(prov_path)
+    if "cancer_code" not in prov.columns:
+        prov["cancer_code"] = (
+            prov["representative_id"].astype(str).str.replace(r"__rep\d+$", "", regex=True)
+        )
+    enrich_cols = {
+        "sample_qc_status": "source_sample_qc",
+        "sample_qc_reasons": "source_sample_qc_reasons",
+        "source_scale_class": "source_scale_class",
+        "linear_tpm_comparable": "linear_tpm_comparable",
+        "recommended_for_absolute_tpm_floor": "recommended_for_absolute_tpm_floor",
+    }
+    needs_enrichment = any(
+        col not in prov.columns or prov[col].isna().any() for col in enrich_cols.values()
+    )
+    if needs_enrichment and "source_sample" in prov.columns:
+        qc = source_matrix_sample_qc_manifest(
+            prov["cancer_code"].dropna().astype(str).unique(),
+            auto_fetch=False,
+        )
+        if not qc.empty:
+            qc_keep = ["cancer_code", "sample_id", *enrich_cols]
+            qc = qc[[col for col in qc_keep if col in qc.columns]].rename(
+                columns={"sample_id": "source_sample", **enrich_cols}
+            )
+            prov = prov.merge(
+                qc.drop_duplicates(["cancer_code", "source_sample"]),
+                on=["cancer_code", "source_sample"],
+                how="left",
+                suffixes=("", "__qc"),
+            )
+            for col in enrich_cols.values():
+                qc_col = f"{col}__qc"
+                if qc_col in prov.columns:
+                    if col in prov.columns:
+                        prov[col] = prov[col].where(prov[col].notna(), prov[qc_col])
+                    else:
+                        prov[col] = prov[qc_col]
+                    prov = prov.drop(columns=qc_col)
+    if "selection_scale_class" not in prov.columns:
+        prov["selection_scale_class"] = prov.get("source_scale_class", pd.NA)
+    return prov
+
+
+def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.DataFrame:
+    prov = _representative_provenance(root)
+    if not prov.empty:
         keep = ["representative_id", *_REPRESENTATIVE_PROVENANCE_COLUMNS]
         long = long.merge(
             prov[[c for c in keep if c in prov.columns]],
@@ -552,7 +658,13 @@ def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.Data
         "sample_qc_requested",
         "source_sample_qc",
         "sample_qc_effective",
+        "sample_qc_fallback_reason",
         "sample_qc_policy_version",
+        "source_sample_qc_reasons",
+        "source_scale_class",
+        "linear_tpm_comparable",
+        "recommended_for_absolute_tpm_floor",
+        "selection_scale_class",
         "benchmark_eligible",
     ):
         if col not in long.columns:
@@ -568,6 +680,23 @@ def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.Data
     long["data_version"] = DATA_VERSION
     long["source_matrix_version"] = SOURCE_MATRIX_VERSION
     return long
+
+
+def _one_provenance_value(group: pd.DataFrame, col: str, default=pd.NA):
+    if col not in group:
+        return default
+    values = [v for v in group[col] if pd.notna(v) and str(v) != ""]
+    unique = list(dict.fromkeys(values))
+    return unique[0] if len(unique) == 1 else ("mixed" if unique else default)
+
+
+def _all_provenance_values_true(group: pd.DataFrame, col: str):
+    if col not in group or group.empty:
+        return pd.NA
+    values = [_optional_bool(v) for v in group[col]]
+    if any(v is None for v in values):
+        return pd.NA
+    return all(values)
 
 
 def _percentile_cols() -> list[str]:
@@ -698,9 +827,113 @@ def _attach_percentile_provenance(
     return out
 
 
-def available_representative_cohorts() -> list[str]:
-    """Registry codes that ship a representative-samples shard (sorted)."""
-    return _available_cohorts(_REPRESENTATIVES)
+def representative_cohort_availability(
+    cancer_types: str | Iterable[str] | None = None,
+    *,
+    linear_tpm_comparable: bool | None = None,
+    benchmark_eligible: bool | None = None,
+) -> pd.DataFrame:
+    """One row per shipped representative cohort with classifier compatibility.
+
+    Proxy-scale cohorts remain available for rank/percentile consumers, while
+    ``linear_tpm_comparable`` and ``benchmark_eligible`` let classifiers fail closed
+    without privately joining the source-matrix QC manifest. Boolean filters retain
+    only cohorts whose released provenance explicitly matches the requested value.
+    """
+    root = _shard_dir(_REPRESENTATIVES)
+    shipped = _available_shard_codes(root)
+    if cancer_types is None:
+        codes = shipped
+    else:
+        raw = [cancer_types] if isinstance(cancer_types, str) else list(cancer_types)
+        aggregates = cohort_aggregates()
+        requested = []
+        for value in raw:
+            text = str(value)
+            if text in shipped:
+                requested.append(text)
+                continue
+            resolved = resolve_cancer_type(value, strict=False)
+            if resolved is not None:
+                requested.extend(aggregates.get(resolved, [resolved]))
+        codes = [code for code in dict.fromkeys(requested) if code in shipped]
+    provenance = _representative_provenance(root)
+    rows = []
+    for code in codes:
+        group = provenance[provenance.get("cancer_code", pd.Series(dtype=str)) == code]
+        comparable = _all_provenance_values_true(group, "linear_tpm_comparable")
+        benchmark = _all_provenance_values_true(group, "benchmark_eligible")
+        role = _one_provenance_value(group, "representative_role")
+        fallback_reason = _one_provenance_value(group, "sample_qc_fallback_reason")
+        if benchmark is False:
+            availability_reason = str(fallback_reason if pd.notna(fallback_reason) else role)
+        elif comparable is False:
+            availability_reason = "nonlinear_or_proxy_expression_scale"
+        elif benchmark is True and comparable is True:
+            availability_reason = "available"
+        else:
+            availability_reason = "provenance_unavailable"
+        rows.append(
+            {
+                "cancer_code": code,
+                "n_representatives": (
+                    int(group["representative_id"].nunique())
+                    if not group.empty and "representative_id" in group
+                    else pd.NA
+                ),
+                "source_cohort": _one_provenance_value(group, "source_cohort"),
+                "source_scale_class": _one_provenance_value(group, "source_scale_class"),
+                "linear_tpm_comparable": comparable,
+                "recommended_for_absolute_tpm_floor": _all_provenance_values_true(
+                    group, "recommended_for_absolute_tpm_floor"
+                ),
+                "sample_qc_requested": _one_provenance_value(group, "sample_qc_requested"),
+                "sample_qc_effective": _one_provenance_value(group, "sample_qc_effective"),
+                "sample_qc_fallback_reason": fallback_reason,
+                "sample_qc_policy_version": _one_provenance_value(
+                    group, "sample_qc_policy_version"
+                ),
+                "n_qc_pass": _one_provenance_value(group, "n_qc_pass"),
+                "n_qc_warn": _one_provenance_value(group, "n_qc_warn"),
+                "n_qc_fail": _one_provenance_value(group, "n_qc_fail"),
+                "representative_role": role,
+                "benchmark_eligible": benchmark,
+                "selection_scale_class": _one_provenance_value(group, "selection_scale_class"),
+                "selection_method": REPRESENTATIVE_SELECTION_METHOD,
+                "selection_basis": REPRESENTATIVE_SELECTION_BASIS,
+                "availability_reason": availability_reason,
+            }
+        )
+    out = pd.DataFrame(rows, columns=_REPRESENTATIVE_AVAILABILITY_COLUMNS)
+    for col, expected in (
+        ("linear_tpm_comparable", linear_tpm_comparable),
+        ("benchmark_eligible", benchmark_eligible),
+    ):
+        if expected is not None:
+            out = out[out[col].map(_optional_bool) == bool(expected)].copy()
+    out.attrs["schema_version"] = REPRESENTATIVE_ARTIFACT_SCHEMA_VERSION
+    out.attrs["data_version"] = DATA_VERSION
+    out.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
+    return out.reset_index(drop=True)
+
+
+def available_representative_cohorts(
+    *,
+    linear_tpm_comparable: bool | None = None,
+    benchmark_eligible: bool | None = None,
+) -> list[str]:
+    """Sorted cohort codes with a representative shard.
+
+    Optional compatibility filters are backed by released representative provenance;
+    for example, both ``True`` filters return classifier-ready linear-TPM cohorts.
+    """
+    if linear_tpm_comparable is None and benchmark_eligible is None:
+        return _available_cohorts(_REPRESENTATIVES)
+    availability = representative_cohort_availability(
+        linear_tpm_comparable=linear_tpm_comparable,
+        benchmark_eligible=benchmark_eligible,
+    )
+    return availability["cancer_code"].astype(str).tolist()
 
 
 def available_percentile_cohorts(*, proteoform: bool = False, scope: str = "cta") -> list[str]:

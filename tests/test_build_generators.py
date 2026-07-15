@@ -2181,6 +2181,13 @@ def _patch_rebuild_registry(monkeypatch, gen):
                     "nonlinear_or_proxy_expression_scale",
                     "low_detected_genes",
                 ],
+                "source_scale_class": [
+                    "linear_rnaseq_tpm",
+                    "microarray_tpm_proxy",
+                    "linear_rnaseq_tpm",
+                ],
+                "linear_tpm_comparable": [True, False, True],
+                "recommended_for_absolute_tpm_floor": [True, False, False],
             }
         ),
     )
@@ -2210,6 +2217,10 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert prov.loc[0, "source_group_id"] == "TEST_SOURCE:pass_sample"
     assert prov.loc[0, "representative_role"] == "standard"
     assert bool(prov.loc[0, "benchmark_eligible"]) is True
+    assert prov.loc[0, "source_scale_class"] == "linear_rnaseq_tpm"
+    assert bool(prov.loc[0, "linear_tpm_comparable"]) is True
+    assert bool(prov.loc[0, "recommended_for_absolute_tpm_floor"]) is True
+    assert prov.loc[0, "selection_scale_class"] == "linear_rnaseq_tpm"
     assert prov.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v2"
     assert prov.loc[0, "n_qc_pass"] == 1
     assert prov.loc[0, "n_qc_warn"] == 1
@@ -2259,6 +2270,8 @@ def test_rebuild_expression_artifacts_keeps_warn_proxy_source_when_pass_empty(
                     "microarray_tpm_proxy",
                     "microarray_tpm_proxy",
                 ],
+                "linear_tpm_comparable": [False, False, False],
+                "recommended_for_absolute_tpm_floor": [False, False, False],
             }
         ),
     )
@@ -2276,6 +2289,12 @@ def test_rebuild_expression_artifacts_keeps_warn_proxy_source_when_pass_empty(
     assert build_meta.loc[0, "sample_qc"] == "pass"
     assert build_meta.loc[0, "sample_qc_effective"] == "pass_or_warn"
     assert build_meta.loc[0, "sample_qc_fallback_reason"] == "no_pass_samples_tpm_proxy_source"
+    prov = pd.read_csv(out / "cancer-reference-expression-representatives" / "_provenance.csv")
+    assert set(prov["source_sample_qc_reasons"]) == {"nonlinear_or_proxy_expression_scale"}
+    assert set(prov["source_scale_class"]) == {"microarray_tpm_proxy"}
+    assert not prov["linear_tpm_comparable"].any()
+    assert not prov["recommended_for_absolute_tpm_floor"].any()
+    assert set(prov["selection_scale_class"]) == {"microarray_tpm_proxy"}
     metadata = json.loads((out / "expression-artifact-build-metadata.json").read_text())
     assert metadata["sample_qc_fallbacks"] == 1
 
