@@ -165,6 +165,8 @@ def clean_tpm(
     compartments themselves comparable and the budget empirically interpretable.)
 
     An empty/zero compartment simply contributes 0 (the others still fill their share).
+    Missing source values remain ``NaN``: an unmeasured gene is not evidence of
+    measured zero expression.
     The public clean-TPM contract is deliberately singular: 16% ribosomal proteins,
     9% other technical RNA, and 75% biological genes. Use separately named helpers
     such as :func:`drop_technical_rna` / :func:`filter_technical_rna` for biology-only
@@ -218,7 +220,7 @@ def clean_tpm(
         scale = pd.Series(0.0, index=values.columns, dtype=float)
         scale.loc[comp_sum > 0] = fraction * 1_000_000.0 / comp_sum.loc[comp_sum > 0]
         clean.loc[mask] = values.loc[mask].mul(scale, axis=1)
-    return clean.fillna(0.0)
+    return clean
 
 
 def drop_technical_rna(
