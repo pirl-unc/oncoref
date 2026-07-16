@@ -2626,9 +2626,7 @@ def cancer_reference_expression(
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_artifact_sample_qc(sample_qc)
     reference_source = _validate_reference_source(reference_source)
-    if sample_qc == "artifact" and (
-        reference_source != "artifact" or "tpm_raw" in modes
-    ):
+    if sample_qc == "artifact" and (reference_source != "artifact" or "tpm_raw" in modes):
         raise ValueError(
             "sample_qc='artifact' requires reference_source='artifact' and "
             "clean/log-clean artifact-backed normalization"
