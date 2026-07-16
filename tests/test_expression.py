@@ -2226,6 +2226,43 @@ def test_cancer_reference_expression_raw_tpm_uses_source_stats(monkeypatch):
     assert long["expression"].tolist() == [20.0]
 
 
+def test_cancer_reference_expression_accepts_artifact_qc_for_clean_shards(monkeypatch):
+    pct = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1"],
+            "Symbol": ["A"],
+            "p25": [1.0],
+            "p50": [2.0],
+            "p75": [3.0],
+        }
+    )
+    seen = {}
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(
+        expression,
+        "cohort_gene_percentiles",
+        lambda code, **kwargs: seen.update(kwargs) or pct.copy(),
+    )
+
+    out = expression.cancer_reference_expression("x", sample_qc="artifact")
+
+    assert seen["sample_qc"] == "artifact"
+    assert out["sample_qc"].tolist() == ["artifact"]
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"normalize": "tpm", "sample_qc": "artifact"},
+        {"reference_source": "summary_rows", "sample_qc": "artifact"},
+    ],
+)
+def test_cancer_reference_expression_rejects_artifact_qc_for_live_views(kwargs):
+    with pytest.raises(ValueError, match="requires reference_source='artifact'"):
+        expression.cancer_reference_expression("PRAD", **kwargs)
+
+
 def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeypatch):
     expression._reference_summary_source_table.cache_clear()
     summary = pd.DataFrame(
