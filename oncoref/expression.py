@@ -2590,6 +2590,11 @@ def cancer_reference_expression(
     this mode requires ``sample_qc="all"``; use ``summary_rows`` for the current
     QC-filtered richest-source recompute path.
 
+    ``sample_qc="artifact"`` reads each clean/log-clean percentile shard using
+    the QC policy recorded when that shard was built. It is intentionally valid
+    only with ``reference_source="artifact"`` and artifact-backed normalization
+    modes; raw TPM and summary-row modes require an explicit live-sample policy.
+
     Raw-TPM mode needs the per-sample source matrix available; pass
     ``auto_fetch=True`` to download it. Raw-TPM summaries default to
     ``sample_qc="pass"`` so sparse/source-QC-failed samples do not shape new
@@ -2619,8 +2624,15 @@ def cancer_reference_expression(
     ``on_missing="raise"`` to fail when any requested cohort/mode is unavailable.
     """
     modes = _reference_normalize_modes(normalize)
-    sample_qc = _validate_sample_qc(sample_qc)
+    sample_qc = _validate_artifact_sample_qc(sample_qc)
     reference_source = _validate_reference_source(reference_source)
+    if sample_qc == "artifact" and (
+        reference_source != "artifact" or "tpm_raw" in modes
+    ):
+        raise ValueError(
+            "sample_qc='artifact' requires reference_source='artifact' and "
+            "clean/log-clean artifact-backed normalization"
+        )
     _validate_gene_id_style(gene_id_style)
     gene_universe = _validate_artifact_gene_universe(gene_universe)
     source_kinds = _normalize_source_filter_values(source_kind)
