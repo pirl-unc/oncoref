@@ -3113,6 +3113,9 @@ def _reference_expression_availability_for_requests(
                     method,
                     sample_qc=sample_qc,
                     reference_source=reference_source,
+                    source_kinds=source_kinds,
+                    source_cohorts=source_cohorts,
+                    exclude_microarray_proxy=exclude_microarray_proxy,
                 )
             )
             rows.append(row)
@@ -3580,8 +3583,37 @@ def _reference_expression_frame(
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
 
 
+_SARC_HISTOLOGY_SUMMARY_CODES = frozenset({"SARC_DDLPS", "SARC_WDLPS"})
+_STALE_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
+
+
+def _canonical_reference_summary_source_labels(df: pd.DataFrame) -> pd.DataFrame:
+    """Expose canonical registry labels for two legacy SARC summary shards."""
+
+    if df.empty:
+        return df
+    codes = df["cancer_code"]
+    sources = df["source_cohort"].fillna("")
+    stale = codes.isin(_SARC_HISTOLOGY_SUMMARY_CODES) & sources.eq(_STALE_SARC_HISTOLOGY_COHORT)
+    if not stale.any():
+        return df
+    out = df.copy(deep=False)
+    canonical_sources = df["source_cohort"].copy()
+    canonical_sources.loc[stale] = _SARC_HISTOLOGY_COHORT
+    out["source_cohort"] = canonical_sources
+    return out
+
+
+@lru_cache(maxsize=1)
 def _reference_summary_frame() -> pd.DataFrame:
-    return get_data(_REFERENCE_SUMMARY_DATASET, copy=False)
+    """Shared read-only summary frame with canonical source labels."""
+
+    frame = get_data(_REFERENCE_SUMMARY_DATASET, copy=False)
+    return _canonical_reference_summary_source_labels(frame)
+
+
+_register_derived_cache(_reference_summary_frame.cache_clear)
 
 
 _REFERENCE_SUMMARY_ROW_INDEX: (
@@ -3607,12 +3639,24 @@ def _reference_summary_row_index() -> dict[tuple[str, str], np.ndarray]:
     cached = _REFERENCE_SUMMARY_ROW_INDEX
     if cached is not None and cached[0] is df:
         return cached[1]
-    code = df["cancer_code"].astype(str)
-    source = df["source_cohort"].fillna("").astype(str)
-    index = {
-        (str(key[0]), str(key[1])): positions
-        for key, positions in df.groupby([code, source], sort=False).indices.items()
-    }
+    if df.empty:
+        index = {}
+    else:
+        codes = df["cancer_code"].to_numpy(copy=False)
+        sources = df["source_cohort"].fillna("").to_numpy(copy=False)
+        starts_new_source = np.empty(len(df), dtype=bool)
+        starts_new_source[0] = True
+        starts_new_source[1:] = (codes[1:] != codes[:-1]) | (sources[1:] != sources[:-1])
+        starts = np.flatnonzero(starts_new_source)
+        ends = np.append(starts[1:], len(df))
+        all_positions = np.arange(len(df), dtype=np.int64)
+        index = {}
+        for start, end in zip(starts, ends):
+            key = (str(codes[start]), str(sources[start]))
+            positions = all_positions[start:end]
+            if key in index:
+                positions = np.concatenate([index[key], positions])
+            index[key] = positions
     _REFERENCE_SUMMARY_ROW_INDEX = (df, index)
     return index
 
@@ -3660,26 +3704,42 @@ def _reference_summary_source_table() -> pd.DataFrame:
     ]
     if df.empty:
         return pd.DataFrame(columns=columns)
-    work = df.copy()
-    work["cancer_code"] = work["cancer_code"].astype(str)
-    work["source_cohort"] = work["source_cohort"].fillna("").astype(str)
-    for optional_col in ("processing_pipeline", "notes"):
-        if optional_col not in work.columns:
-            work[optional_col] = pd.NA
-    grouped = (
-        work.groupby(["cancer_code", "source_cohort"], dropna=False, sort=False)
-        .agg(
-            source_project=("source_project", "first"),
-            source_version=("source_version", "first"),
-            tumor_origin=("tumor_origin", "first"),
-            metastasis_site=("metastasis_site", "first"),
-            n_reference_genes=("Ensembl_Gene_ID", "nunique"),
-            n_reference_samples=("n_samples", "max"),
-            processing_pipeline=("processing_pipeline", "first"),
-            notes=("notes", "first"),
+    source_columns = [
+        column
+        for column in (
+            "Ensembl_Gene_ID",
+            "n_samples",
+            "source_project",
+            "source_version",
+            "tumor_origin",
+            "metastasis_site",
+            "processing_pipeline",
+            "notes",
         )
-        .reset_index()
-    )
+        if column in df.columns
+    ]
+    source_column_positions = [df.columns.get_loc(column) for column in source_columns]
+    records = []
+    for (code, source), positions in _reference_summary_row_index().items():
+        source_rows = df.iloc[positions, source_column_positions]
+        first = source_rows.iloc[0]
+        records.append(
+            {
+                "cancer_code": code,
+                "source_cohort": source,
+                "source_project": first.get("source_project"),
+                "source_version": first.get("source_version"),
+                "tumor_origin": first.get("tumor_origin"),
+                "metastasis_site": first.get("metastasis_site"),
+                "n_reference_genes": source_rows["Ensembl_Gene_ID"].nunique(),
+                "n_reference_samples": pd.to_numeric(
+                    source_rows["n_samples"], errors="coerce"
+                ).max(),
+                "processing_pipeline": first.get("processing_pipeline"),
+                "notes": first.get("notes"),
+            }
+        )
+    grouped = pd.DataFrame.from_records(records)
     grouped["_origin_rank"] = (
         grouped["tumor_origin"]
         .fillna("")
@@ -3972,10 +4032,40 @@ def _pool_reference_expression_rows(long: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(out_rows, columns=cols)
 
 
-def _reference_summary_source_metadata(code: str) -> dict[str, str | bool | int | float | None]:
-    selected = _reference_summary_selected_source(code)
+def _unavailable_reference_summary_metadata() -> dict[str, str | bool | int | float | None]:
+    return {
+        "source_cohort": None,
+        "source_project": None,
+        "source_version": None,
+        "source_type": None,
+        "unit": None,
+        "source_scale_class": "unknown",
+        "linear_tpm_comparable": False,
+        "tumor_origin": None,
+        "metastasis_site": None,
+        "n_reference_genes": None,
+        "n_reference_samples": None,
+        "tpm_proxy": False,
+    }
+
+
+def _reference_summary_source_metadata(
+    code: str,
+    *,
+    source_kinds: set[str] | None = None,
+    source_cohorts: set[str] | None = None,
+    exclude_microarray_proxy: bool = False,
+) -> dict[str, str | bool | int | float | None] | None:
+    sources = _filter_reference_summary_sources(
+        _reference_summary_source_table(),
+        source_kinds=source_kinds,
+        source_cohorts=source_cohorts,
+        exclude_microarray_proxy=exclude_microarray_proxy,
+    )
+    matches = sources.loc[sources["cancer_code"].astype(str) == str(code)]
+    selected = None if matches.empty else matches.iloc[0].to_dict()
     if selected is None:
-        return _selected_expression_source_metadata(code)
+        return None
     meta = _selected_expression_source_metadata(code, source_cohort=str(selected["source_cohort"]))
     text = " ".join(
         str(selected.get(c) or "")
@@ -4009,14 +4099,35 @@ def _reference_sample_qc_label(mode: str, sample_qc: str) -> str:
 
 
 def _reference_expression_provenance(
-    code: str, mode: str, method: str, *, sample_qc: str, reference_source: str
+    code: str,
+    mode: str,
+    method: str,
+    *,
+    sample_qc: str,
+    reference_source: str,
+    source_kinds: set[str] | None = None,
+    source_cohorts: set[str] | None = None,
+    exclude_microarray_proxy: bool = False,
 ) -> dict:
-    if method == _REFERENCE_SUMMARY_METHOD:
-        meta = _reference_summary_source_metadata(code)
+    if method == _REFERENCE_SUMMARY_ALL_METHOD:
+        meta = (
+            _reference_summary_source_metadata(
+                code,
+                source_kinds=source_kinds,
+                source_cohorts=source_cohorts,
+                exclude_microarray_proxy=exclude_microarray_proxy,
+            )
+            or _unavailable_reference_summary_metadata()
+        )
+    elif method == _REFERENCE_SUMMARY_METHOD:
+        meta = _reference_summary_source_metadata(code) or _selected_expression_source_metadata(
+            code
+        )
     else:
         meta = _selected_expression_source_metadata(code)
     return {
-        "source_cohort": meta["source_cohort"] or code,
+        "source_cohort": meta["source_cohort"]
+        or (None if method == _REFERENCE_SUMMARY_ALL_METHOD else code),
         "source_project": meta.get("source_project"),
         "source_version": meta.get("source_version"),
         "source_type": meta.get("source_type"),
@@ -5218,8 +5329,31 @@ def _add_computed_pan_cancer_raw_columns(
     return out, raw_cols, added
 
 
+_PAN_CANCER_POOLED_SERIES_CACHE: tuple[pd.DataFrame, dict[tuple[str, ...], pd.Series]] | None = None
+
+
+def _clear_pan_cancer_pooled_series_cache() -> None:
+    global _PAN_CANCER_POOLED_SERIES_CACHE
+    _PAN_CANCER_POOLED_SERIES_CACHE = None
+
+
+_register_derived_cache(_clear_pan_cancer_pooled_series_cache)
+
+
 def _pooled_reference_expression_series_for_pan_cancer(member_codes: tuple[str, ...]) -> pd.Series:
     """n-sample-weighted raw TPM medians for a computed pan-cancer aggregate."""
+    global _PAN_CANCER_POOLED_SERIES_CACHE
+    summary = _reference_summary_frame()
+    cached = _PAN_CANCER_POOLED_SERIES_CACHE
+    if cached is None or cached[0] is not summary:
+        cached = (summary, {})
+        _PAN_CANCER_POOLED_SERIES_CACHE = cached
+    if member_codes not in cached[1]:
+        cached[1][member_codes] = _compute_pooled_reference_expression_series(member_codes)
+    return cached[1][member_codes]
+
+
+def _compute_pooled_reference_expression_series(member_codes: tuple[str, ...]) -> pd.Series:
     try:
         rows = _selected_reference_summary_rows_for_pan_cancer(member_codes)
     except (FileNotFoundError, KeyError, TypeError):
@@ -5254,17 +5388,21 @@ def _selected_reference_summary_rows_for_pan_cancer(member_codes: tuple[str, ...
     ].copy()
     if selected.empty:
         return pd.DataFrame()
-    selected["_source_key"] = selected["source_cohort"].fillna("").astype(str)
-    summary = _reference_summary_frame().copy()
+    summary = _reference_summary_frame()
     if summary.empty:
         return pd.DataFrame()
-    summary["_source_key"] = summary["source_cohort"].fillna("").astype(str)
-    rows = summary.merge(
-        selected[["cancer_code", "_source_key"]],
-        how="inner",
-        on=["cancer_code", "_source_key"],
-    )
-    return rows.drop(columns=["_source_key"])
+    row_index = _reference_summary_row_index()
+    positions = []
+    for row in selected.itertuples(index=False):
+        source_key = (str(row.cancer_code), str(row.source_cohort))
+        if source_key in row_index:
+            positions.append(row_index[source_key])
+    if not positions:
+        return pd.DataFrame(columns=["Ensembl_Gene_ID", "TPM_median", "n_samples"])
+    selected_positions = np.sort(np.concatenate(positions))
+    needed_columns = ["Ensembl_Gene_ID", "TPM_median", "n_samples"]
+    column_positions = [summary.columns.get_loc(column) for column in needed_columns]
+    return summary.iloc[selected_positions, column_positions].copy()
 
 
 def _pan_cancer_column_style(column_style: str | None) -> str:
