@@ -69,6 +69,14 @@ def test_resolve_common_name_alias():
     assert cancer_types.resolve_cancer_type("melanoma") == "SKCM"
 
 
+def test_resolve_mplps_aliases_without_collapsing_other_liposarcomas():
+    assert cancer_types.resolve_cancer_type("MPLPS") == "SARC_MPLPS"
+    assert cancer_types.resolve_cancer_type("myxoid pleomorphic liposarcoma") == "SARC_MPLPS"
+    assert cancer_types.resolve_cancer_type("pleomorphic myxoid liposarcoma") == "SARC_MPLPS"
+    assert cancer_types.resolve_cancer_type("myxoid liposarcoma") == "SARC_MYXLPS"
+    assert cancer_types.resolve_cancer_type("pleomorphic liposarcoma") == "SARC_PLEOLPS"
+
+
 def test_resolve_canonical_code_passthrough():
     assert cancer_types.resolve_cancer_type("PRAD") == "PRAD"
 
@@ -259,6 +267,47 @@ def test_mmnst_registry_row_for_expression_source_candidate():
     assert row["normal_tissue_code"] == "soft_tissue"
     assert row["hpa_tissues"] == ()
     assert bool(row["has_expression_matrix"]) is False
+
+
+def test_mplps_registry_and_reference_gap_are_explicit():
+    raw = cancer_types.cancer_type_registry().set_index("code").loc["SARC_MPLPS"]
+    assert bool(raw["pediatric"]) is True
+    assert raw["grade_tier"] == "high"
+    assert raw["fusion_driven"] == "none"
+    assert "lacks DDIT3 rearrangement and MDM2 amplification" in raw["notes"]
+    assert "RB1/13q14 loss" in raw["notes"]
+
+    row = cancer_types.cancer_type_records(["SARC_MPLPS"]).iloc[0]
+    assert row["parent_code"] == "SARC_LPS"
+    assert row["ontology_kind"] == "histologic_type"
+    assert row["reference_source"] == "parent"
+    assert row["classification_reference_code"] == "SARC_LPS"
+    assert bool(row["is_classification_target"]) is False
+    assert bool(row["has_expression_matrix"]) is False
+
+
+def test_unspecified_liposarcoma_is_a_source_bucket_not_a_tumor_entity():
+    row = cancer_types.cancer_type_records(["SARC_LPS_UNSPEC"]).iloc[0]
+    assert row["ontology_level"] == "evidence_scope"
+    assert row["ontology_kind"] == "source_scope"
+    assert row["reference_source"] == "none"
+    assert row["classification_reference_code"] == "SARC_LPS"
+    assert bool(row["is_classification_target"]) is False
+    assert bool(row["has_expression_matrix"]) is True
+
+    coverage = cancer_types.expression_reference_coverage(
+        ["SARC_LPS", "SARC_MPLPS", "SARC_LPS_UNSPEC"]
+    ).set_index("code")
+    assert coverage.loc["SARC_LPS", "computed_expression_member_codes"] == (
+        "SARC_DDLPS",
+        "SARC_WDLPS",
+        "SARC_MYXLPS",
+        "SARC_PLEOLPS",
+        "SARC_LPS_UNSPEC",
+    )
+    assert not bool(coverage.loc["SARC_MPLPS", "has_expression_reference"])
+    assert coverage.loc["SARC_MPLPS", "consumer_recommendation"] == "parent_reference"
+    assert not bool(coverage.loc["SARC_LPS_UNSPEC", "has_direct_expression_reference"])
 
 
 def test_every_registry_family_rolls_up_to_a_lineage_group():
