@@ -14,6 +14,14 @@ pytest.importorskip("matplotlib")
 from oncoref import cli, plots
 
 
+@pytest.fixture(autouse=True)
+def _close_figures_after_test():
+    yield
+    import matplotlib.pyplot as plt
+
+    plt.close("all")
+
+
 def test_apd1_vs_tmb_renders(tmp_path):
     out = tmp_path / "apd1_vs_tmb.png"
     fig = plots.apd1_vs_tmb(save=str(out))
@@ -754,3 +762,48 @@ def test_regenerate_plots_runner_writes_all_figures_pdf(tmp_path):
     assert pdf == tmp_path / "all-figures.pdf"
     assert pdf.exists()
     assert pdf.stat().st_size > 0
+
+
+def test_regenerate_plots_runner_closes_each_returned_figure(tmp_path, monkeypatch):
+    import importlib.util
+    import sys
+
+    import matplotlib.pyplot as plt
+
+    runner = Path(__file__).resolve().parent.parent / "scripts" / "regenerate_plots.py"
+    spec = importlib.util.spec_from_file_location("_regen_plots_memory", runner)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    def stub_plot(*, save, label):
+        fig, ax = plt.subplots()
+        ax.set_title(label)
+        fig.savefig(save)
+        return fig
+
+    monkeypatch.setattr(mod.plots, "_memory_test_plot", stub_plot, raising=False)
+    monkeypatch.setattr(
+        mod,
+        "_jobs",
+        lambda: [
+            ("memory", "first", "_memory_test_plot", {"label": "first"}),
+            ("memory", "second", "_memory_test_plot", {"label": "second"}),
+        ],
+    )
+    monkeypatch.setattr(
+        mod.cta_curation_plots,
+        "render",
+        lambda **kwargs: {"n_genes": 0, "paths": {}},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["regenerate_plots.py", "--out-dir", str(tmp_path), "--no-timestamp"],
+    )
+
+    existing_figures = set(plt.get_fignums())
+    assert mod.main() == 0
+    assert set(plt.get_fignums()) == existing_figures
+    assert (tmp_path / "memory" / "first.png").exists()
+    assert (tmp_path / "memory" / "second.png").exists()
+    assert (tmp_path / "all-figures.pdf").exists()
