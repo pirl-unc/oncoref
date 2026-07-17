@@ -77,6 +77,28 @@ CANCER_TYPE_ALIASES = {
     "mplps": "SARC_MPLPS",
     "myxoid_pleomorphic_liposarcoma": "SARC_MPLPS",
     "pleomorphic_myxoid_liposarcoma": "SARC_MPLPS",
+    "sclerosing_epithelioid_fibrosarcoma": "SARC_SEF",
+    "ewsr1_non_ets_round_cell_sarcoma": "SARC_EWSR1_NONETS",
+    "round_cell_sarcoma_with_ewsr1_non_ets_fusions": "SARC_EWSR1_NONETS",
+    "ntrk_rearranged_spindle_cell_neoplasm": "SARC_NTRK_SPINDLE",
+    "intimal_sarcoma": "SARC_INTIMAL",
+    "ectomesenchymoma": "SARC_ECTOMES",
+    "inflammatory_leiomyosarcoma": "SARC_ILMS",
+    "adult_fibrosarcoma": "SARC_AFS",
+    "intracranial_mesenchymal_tumor": "SARC_ICMT",
+    "intracranial_mesenchymal_tumour": "SARC_ICMT",
+    "mesenchymal_chondrosarcoma": "SARC_CHON_MESENCHYMAL",
+    "clear_cell_chondrosarcoma": "SARC_CHON_CLEAR_CELL",
+    "dedifferentiated_chondrosarcoma": "SARC_CHON_DEDIFF",
+    "conventional_chordoma": "SARC_CHOR_CONVENTIONAL",
+    "dedifferentiated_chordoma": "SARC_CHOR_DEDIFF",
+    "poorly_differentiated_chordoma": "SARC_CHOR_POORLY_DIFF",
+    "conventional_osteosarcoma": "SARC_OS_CONVENTIONAL",
+    "parosteal_osteosarcoma": "SARC_OS_PAROSTEAL",
+    "periosteal_osteosarcoma": "SARC_OS_PERIOSTEAL",
+    "extraskeletal_osteosarcoma": "SARC_OS_EXTRASKELETAL",
+    "extrarenal_rhabdoid_tumor": "RT",
+    "extrarenal_rhabdoid_tumour": "RT",
     "adrenocortical": "ACC",
     "adrenal": "ACC",
     "biliary": "BTC",
@@ -251,6 +273,8 @@ def _clear_caches():
 
     CANCER_TYPE_NAMES.clear_cache()
     _registry_frame.cache_clear()
+    _who_audit_frame.cache_clear()
+    _who_registry_metadata.cache_clear()
     _clear_cache()  # frame cache + registered derived caches (burden maps, CTA, …)
 
 
@@ -399,7 +423,8 @@ def cancer_type_info(cancer_type):
 
     Keys: ``code``, ``name``, ``family``, ``primary_tissue``,
     ``primary_template``, ``parent_code``, ``ontology_level``,
-    ``ontology_kind``, ``reference_source``, ``classification_reference_code``,
+    ``ontology_kind``, ``who_category``, ``who_behavior``, ``reference_source``,
+    ``classification_reference_code``,
     ``is_classification_target``, ``subtype_key``, ``pediatric``,
     ``differentiation``, ``grade_tier``, ``expression_source``,
     ``source_cohort``, ``source_pmid``, ``notes``, ``viral_etiology``,
@@ -424,6 +449,8 @@ def cancer_type_info(cancer_type):
         "parent_code",
         "ontology_level",
         "ontology_kind",
+        "who_category",
+        "who_behavior",
         "subtype_key",
         "pediatric",
         "differentiation",
@@ -636,6 +663,44 @@ def _registry_frame():
     return get_data("cancer-type-registry", copy=False)
 
 
+WHO_AUDIT_STATUS_VALUES = ("represented", "alias", "axis", "missing", "out_of_scope")
+
+
+@lru_cache(maxsize=1)
+def _who_audit_frame():
+    """Cached WHO audit frame. Public callers receive a defensive copy."""
+    return get_data("cancer-who-soft-tissue-bone-audit", copy=False)
+
+
+@lru_cache(maxsize=1)
+def _who_registry_metadata() -> pd.DataFrame:
+    """One WHO category/behavior row per directly represented registry code."""
+    audit = _who_audit_frame()
+    represented = audit[audit["registry_status"].astype(str) == "represented"]
+    return represented[["registry_code", "who_category", "who_behavior"]].rename(
+        columns={"registry_code": "code"}
+    )
+
+
+def cancer_who_soft_tissue_bone_audit(
+    *, registry_status=None, who_category=None, who_behavior=None
+) -> pd.DataFrame:
+    """Return the checked WHO soft-tissue/bone-to-registry mapping.
+
+    Each WHO row states its histogenesis category, behavior, mapping status,
+    registry code when applicable, source URL, and an explicit mapping note.
+    ``represented`` means the code is a direct ontology entity; ``alias`` uses
+    an existing code; ``axis`` is represented as site/grade metadata;
+    ``missing`` tracks a known registry gap; and ``out_of_scope`` is an
+    intentional exclusion such as a benign tumour.
+    """
+    df = _who_audit_frame().copy()
+    df = _filter_string_values(df, "registry_status", registry_status)
+    df = _filter_string_values(df, "who_category", who_category)
+    df = _filter_string_values(df, "who_behavior", who_behavior)
+    return df.reset_index(drop=True)
+
+
 def cancer_type_registry():
     """Return the cancer-type registry: one row per code with family / tissue /
     template / parent / source.
@@ -645,12 +710,14 @@ def cancer_type_registry():
     entities. Each row carries ``code``, ``family``, ``primary_tissue``,
     ``primary_template``, ``parent_code``, ``expression_source``, the derived
     ``reference_source`` / ``classification_reference_code`` classification
-    backing contract, ``notes`` and more. Returns a defensive copy so callers
-    can mutate freely. The shipped CSV still carries the historical
+    backing contract, and the independently audited ``who_category`` /
+    ``who_behavior`` fields. Returns a defensive copy so callers can mutate
+    freely. The shipped CSV still carries the historical
     ``is_classification_target`` column, but this public frame overwrites it
     from ``reference_source`` so the enum is the source of truth.
     """
     df = _registry_frame().copy()
+    df = df.merge(_who_registry_metadata(), how="left", on="code", validate="one_to_one")
     reference_sources = _reference_source_map()
     classification_refs = _classification_reference_code_map()
     df["reference_source"] = [reference_sources.get(str(code), "none") for code in df["code"]]
@@ -986,6 +1053,8 @@ _CANCER_TYPE_RECORD_COLUMNS = [
     "family_name",
     "ontology_level",
     "ontology_kind",
+    "who_category",
+    "who_behavior",
     "reference_source",
     "classification_reference_code",
     "is_classification_target",
@@ -1092,6 +1161,8 @@ def cancer_type_records(
     family=None,
     ontology_level=None,
     ontology_kind=None,
+    who_category=None,
+    who_behavior=None,
     classification_target: bool | None = None,
     reference_source=None,
     differentiation=None,
@@ -1113,7 +1184,8 @@ def cancer_type_records(
     result has the same columns, including hierarchy fields (``path``,
     ``ancestors``, ``children``), semantic rollups (``lineage_group``,
     ``family``), explicit registry level fields (``ontology_level`` /
-    ``ontology_kind``), expression/classification backing
+    ``ontology_kind``), WHO histogenesis and behavior fields
+    (``who_category`` / ``who_behavior``), expression/classification backing
     (``reference_source`` / ``classification_reference_code``), a derived
     sample-classification target flag (``is_classification_target``),
     cross-cutting molecular groupings (``subtype_groups`` / ``subtype_axes``),
@@ -1152,6 +1224,8 @@ def cancer_type_records(
     df = _filter_string_values(df, "family", family)
     df = _filter_string_values(df, "ontology_level", ontology_level)
     df = _filter_string_values(df, "ontology_kind", ontology_kind)
+    df = _filter_string_values(df, "who_category", who_category)
+    df = _filter_string_values(df, "who_behavior", who_behavior)
     if classification_target is not None:
         wanted = _coerce_bool_filter(classification_target, name="classification_target")
         df = df[_truthy_registry_flag(df["is_classification_target"]) == wanted]
@@ -1190,6 +1264,8 @@ def cancer_type_records(
             "lineage_group",
             "family",
             "family_name",
+            "who_category",
+            "who_behavior",
             "primary_tissue",
             "normal_tissue_code",
             "normal_tissue_name",
@@ -2259,8 +2335,13 @@ def cohort_aggregates():
         out[str(agg)] = list(dict.fromkeys(grp["member_code"].astype(str)))
     # pan-sarcoma grand union under the bare SARC code, computed from family;
     # exclude the aggregates AND SARC itself (no self-membership / circularity).
-    aggs = set(out) | {"SARC"}
-    out["SARC"] = [c for c in sarcoma_lineage_codes() if c not in aggs]
+    aggregate_codes = set(out) | {"SARC"}
+    registry = _registry_frame()
+    grouping_codes = set(
+        registry.loc[registry["ontology_level"].astype(str) == "grouping", "code"].astype(str)
+    )
+    excluded_codes = aggregate_codes | grouping_codes
+    out["SARC"] = [code for code in sarcoma_lineage_codes() if code not in excluded_codes]
     return out
 
 
