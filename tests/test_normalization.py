@@ -93,6 +93,29 @@ def test_clean_tpm_three_compartments():
     assert clean.loc[[2, 3], "s1"].sum() == pytest.approx(norm.BIOLOGICAL_FRACTION * 1e6)  # 750k
 
 
+def test_clean_tpm_preserves_missing_source_values():
+    rpl = sorted(gf.clean_tpm_ribosomal_gene_ids())[0]
+    mito = sorted(gf.clean_tpm_other_technical_gene_ids())[0]
+    gt = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [rpl, mito, "ENSG00000111111"],
+            "Symbol": ["RP", "MT", "BIO"],
+        }
+    )
+    values = pd.DataFrame(
+        {
+            "missing_ribosomal": [np.nan, 10.0, 20.0],
+            "missing_technical": [10.0, np.nan, 20.0],
+            "missing_biological": [10.0, 20.0, np.nan],
+        },
+        index=gt.index,
+    )
+
+    clean = norm.clean_tpm(values, gt)
+
+    assert clean.isna().equals(values.isna())
+
+
 def test_clean_tpm_uses_censored_table_categories_for_ribosomal_budget():
     rpl10ap1 = "ENSG00000244691"
     rpl10l = "ENSG00000165496"

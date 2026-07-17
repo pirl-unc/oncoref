@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oncoref import expression
+from oncoref import expression, normalization
 
 _BREAKPOINTS = [0, 1, 5, 10, 50, 90, 95, 99, 100]
 
@@ -2836,6 +2836,18 @@ def test_pan_cancer_expression_converts_fpkm_to_tpm(monkeypatch):
     # Each TCGA column is rescaled to sum 1e6: FPKM_LUAD [2,8] -> [200000, 800000].
     assert out["LUAD_TPM_raw"].tolist() == pytest.approx([200000.0, 800000.0])
     assert out["BLCA_TPM_raw"].sum() == pytest.approx(1e6)
+
+
+def test_pan_cancer_expression_preserves_unmeasured_source_values(monkeypatch):
+    fixture = _pan_cancer_fixture()
+    fixture.loc[0, "FPKM_LUAD"] = np.nan
+    monkeypatch.setattr(expression, "get_data", lambda name: fixture.copy())
+
+    out = expression.pan_cancer_expression()
+
+    assert pd.isna(out.loc[0, "LUAD_TPM_raw"])
+    assert pd.isna(out.loc[0, "LUAD_TPM_clean"])
+    assert out.loc[1, "LUAD_TPM_clean"] == pytest.approx(normalization.BIOLOGICAL_FRACTION * 1e6)
 
 
 def test_pan_cancer_expression_raw_only(monkeypatch):
