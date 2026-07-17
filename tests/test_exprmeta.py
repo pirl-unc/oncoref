@@ -38,3 +38,10 @@ def test_expression_source_candidates():
     assert mmnst["source_cohort"] == "SRP493407_MMNST_2024"
     assert mmnst["accession"] == "PRJNA1083972"
     assert int(mmnst["estimated_samples"]) == 3
+
+    mplps = expression_source_candidates("SARC_MPLPS").iloc[0]
+    assert mplps["source_status"] == "source_needed"
+    assert mplps["reference_code"] == "SARC_LPS"
+    assert mplps["accession"] == "DOI:10.1038/s41379-021-00862-2"
+    assert int(mplps["estimated_samples"]) == 12
+    assert "no RNA expression matrix" in mplps["source_scope"]

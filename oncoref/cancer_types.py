@@ -74,6 +74,9 @@ CANCER_TYPE_ALIASES = {
     "testicular": "TGCT",
     "testis": "TGCT",
     "sarcoma": "SARC",
+    "mplps": "SARC_MPLPS",
+    "myxoid_pleomorphic_liposarcoma": "SARC_MPLPS",
+    "pleomorphic_myxoid_liposarcoma": "SARC_MPLPS",
     "adrenocortical": "ACC",
     "adrenal": "ACC",
     "biliary": "BTC",
@@ -1348,7 +1351,12 @@ def _reference_source_map() -> dict[str, str]:
         code = str(row["code"])
         level = str(row.get("ontology_level") or "").strip().lower()
         kind = str(row.get("ontology_kind") or "").strip().lower()
-        if code in direct:
+        # Evidence-scope rows describe mixed source buckets, not tumor entities.
+        # Their matrices may contribute to a parent union, but the scope itself
+        # must never become a sample-classification target.
+        if level == "evidence_scope":
+            out[code] = "none"
+        elif code in direct:
             out[code] = "own_cohort"
         elif _computed_expression_reference_members(code):
             out[code] = "member_union"
@@ -1540,11 +1548,11 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
     for record in records.to_dict("records"):
         code = record["code"]
         raw_record = raw.loc[code] if code in raw.index else {}
-        has_direct = bool(record["has_expression_matrix"])
+        reference_source = record["reference_source"]
+        has_direct = reference_source == "own_cohort"
         computed_members = _computed_expression_reference_members(code)
         has_computed = bool(computed_members)
         has_reference = has_direct or has_computed
-        reference_source = record["reference_source"]
         molecular_kinds = _definition_kind(record, raw_record)
         has_normal = not _row_is_missing(record["normal_tissue_code"]) and bool(
             record["hpa_tissues"]

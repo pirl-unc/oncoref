@@ -62,6 +62,18 @@ def test_sarc_lps_subtypes_reparented_under_sarc_lps():
         "SARC_WDLPS",
         "SARC_MYXLPS",
         "SARC_PLEOLPS",
+        "SARC_MPLPS",
+        "SARC_LPS_UNSPEC",
+    }
+
+    assert cancer_type_lineage("SARC_MPLPS") == ["SARC", "SARC_LPS", "SARC_MPLPS"]
+    assert "SARC_MPLPS" in cancer_type_descendants("SARC")
+    assert set(cohort_aggregate_members("SARC_LPS")) == {
+        "SARC_DDLPS",
+        "SARC_WDLPS",
+        "SARC_MYXLPS",
+        "SARC_PLEOLPS",
+        "SARC_MPLPS",
         "SARC_LPS_UNSPEC",
     }
 
