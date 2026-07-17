@@ -84,8 +84,6 @@ CANCER_TYPE_ALIASES = {
     "intimal_sarcoma": "SARC_INTIMAL",
     "ectomesenchymoma": "SARC_ECTOMES",
     "inflammatory_leiomyosarcoma": "SARC_ILMS",
-    "ebv_associated_smooth_muscle_tumor": "SARC_EBV_SMT",
-    "ebv_associated_smooth_muscle_tumour": "SARC_EBV_SMT",
     "adult_fibrosarcoma": "SARC_AFS",
     "intracranial_mesenchymal_tumor": "SARC_ICMT",
     "intracranial_mesenchymal_tumour": "SARC_ICMT",

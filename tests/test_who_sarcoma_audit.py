@@ -26,7 +26,6 @@ NEW_ENTITY_CODES = {
     "SARC_CHOR_CONVENTIONAL",
     "SARC_CHOR_DEDIFF",
     "SARC_CHOR_POORLY_DIFF",
-    "SARC_EBV_SMT",
     "SARC_ECTOMES",
     "SARC_EIMS",
     "SARC_EWSR1_NONETS",
@@ -195,7 +194,6 @@ def test_common_who_name_variants_resolve():
     assert resolve_cancer_type("mesenchymal chondrosarcoma") == "SARC_CHON_MESENCHYMAL"
     assert resolve_cancer_type("extrarenal rhabdoid tumour") == "RT"
     assert resolve_cancer_type("intracranial mesenchymal tumor") == "SARC_ICMT"
-    assert resolve_cancer_type("EBV-associated smooth muscle tumor") == "SARC_EBV_SMT"
 
 
 def test_registry_still_has_no_dangling_parents():
