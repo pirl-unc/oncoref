@@ -746,7 +746,7 @@ SARC_CHON,,IDH2,biomarker,,,,,,,,Recurrent mutation; complementary to IDH1; enas
 SARC_CHON,,EXT1,biomarker,,,,,,,,Germline inactivation — hereditary multiple exostoses + secondary chondrosarcoma risk,PMID:19255577
 SARC_CHON,,EXT2,biomarker,,,,,,,,Germline inactivation — hereditary multiple exostoses,PMID:19255577
 SARC_CHON,,COL2A1,biomarker,,,,,,,,Mutation in small subset; cartilage-lineage driver in hereditary enchondromatosis,PMID:21643004
-SARC_CHON,,HEY1,biomarker,,,,,,,,HEY1-NCOA2 fusion — defining for mesenchymal chondrosarcoma variant,PMID:22836606
+SARC_CHON_MESENCHYMAL,,HEY1,biomarker,,,,,,,,HEY1-NCOA2 fusion — defining for mesenchymal chondrosarcoma,PMID:22836606
 SARC_CHON,,IDH1,target,ivosidenib,small_molecule,phase_1,trial_follow_up,clinical_trial,clinical-trial follow-up; not default standard,IDH1-mut advanced chondrosarcoma,Selective IDH1 inhibitor — activity in IDH1-R132 chondrosarcoma subset,PMID:32679069
 SARC_CHON,,VEGFA,target,pazopanib,small_molecule,phase_2,trial_follow_up,clinical_trial,clinical-trial follow-up; not default standard,advanced chondrosarcoma,VEGFR multi-TKI — modest PFS benefit; pan-sarcoma data,PMID:22749852
 BL,,MYC,biomarker,,,,,,,,"Defining oncogene — t(8;14) IGH-MYC (~80%), t(2;8) or t(8;22) variants; drives aggressive proliferation",PMID:16760443

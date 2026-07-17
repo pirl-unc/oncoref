@@ -234,6 +234,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "ontology",
         "cross-cancer MMRd/MSI-H vs pMMR/MSS-like classifier state semantics",
     ),
+    "cancer-who-soft-tissue-bone-audit": (
+        "ontology",
+        "WHO soft-tissue/bone category and behavior parity audit",
+    ),
     "cta-ihc-unreliable": ("cta", "CTAs whose HPA IHC is cross-reactive (RNA-only fallback)"),
     "clean-tpm-biological-housekeeping-genes": (
         "normalization",
