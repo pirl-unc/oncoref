@@ -303,14 +303,18 @@ def main() -> int:
         fam_dir = run_dir / family
         fam_dir.mkdir(parents=True, exist_ok=True)
         out = fam_dir / f"{name}.png"
+        figure = None
         try:
-            getattr(plots, fn_attr)(save=out, **kwargs)
+            figure = getattr(plots, fn_attr)(save=out, **kwargs)
             done.append(f"{family}/{name}.png")
             print(f"  ok    {family}/{name}.png")
         except Exception as e:
             skipped.append((f"{family}/{name}", f"{type(e).__name__}: {e}"))
             print(f"  SKIP  {family}/{name}  ({type(e).__name__}: {e})", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
+        finally:
+            if figure is not None:
+                plt.close(figure)
 
     curation_dir = run_dir / "cta_curation"
     try:
