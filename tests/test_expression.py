@@ -1172,6 +1172,13 @@ def test_per_sample_expression_canonicalizes_alias_genes(tmp_path, monkeypatch):
     )
 
 
+def _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, frame):
+    monkeypatch.setattr(expression, "get_data", lambda *args, **kwargs: frame.copy())
+    monkeypatch.setattr(
+        expression, "_computed_expression_reference_members", lambda cancer_code: ()
+    )
+
+
 def test_pan_cancer_expression_canonicalizes_alias_genes(monkeypatch):
     # pan_cancer_expression is dense canonical too: cohort/tissue columns are linear
     # abundances (nTPM/FPKM), so summing an alt copy into its primary row is exact.
@@ -1185,7 +1192,7 @@ def test_pan_cancer_expression_canonicalizes_alias_genes(monkeypatch):
             "nTPM_liver": [3.0, 7.0],
         }
     )
-    monkeypatch.setattr(expression, "get_data", lambda name: fixture.copy())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, fixture)
     out = expression.pan_cancer_expression(normalize=None).set_index("Ensembl_Gene_ID")
     assert list(out.index) == [primary]  # alt folded into primary
     assert out.loc[primary, "liver_nTPM_raw"] == pytest.approx(10.0)  # 3 + 7 summed
@@ -2444,6 +2451,21 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
     assert bool(empty.loc[0, "available"]) is False
     assert empty.loc[0, "missing_reason"] == "no_reference_summary_rows"
 
+    selected = expression.cancer_reference_expression(
+        ["x", "y"],
+        genes="E1",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_kind="treehouse",
+        on_missing="empty",
+    )
+    availability = pd.DataFrame(selected.attrs["availability"]).set_index("cancer_code")
+    assert availability.loc["X", "source_cohort"] == "TREE_X"
+    assert bool(availability.loc["X", "available"]) is True
+    assert pd.isna(availability.loc["Y", "source_cohort"])
+    assert bool(availability.loc["Y", "available"]) is False
+    assert availability.loc["Y", "missing_reason"] == "no_reference_summary_rows"
+
     expression._reference_summary_source_table.cache_clear()
     expression._source_cohort_kind_map.cache_clear()
 
@@ -2474,6 +2496,37 @@ def test_reference_summary_row_index_reuses_positions_and_tracks_frame_identity(
     assert rebuilt[("X", "SRC2")].tolist() == [0]
     assert rebuilt[("X", "SRC1")].tolist() == [1]
     expression._clear_reference_summary_row_index()
+
+
+def test_reference_summary_frame_is_shared_and_canonicalizes_sarc_histology_labels(
+    monkeypatch,
+):
+    raw = pd.DataFrame(
+        {
+            "cancer_code": ["SARC_DDLPS", "SARC_WDLPS", "SARC_PLEOLPS", "LUAD"],
+            "source_cohort": [
+                "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+                "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+                "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+                "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+            ],
+        }
+    )
+    monkeypatch.setattr(expression, "get_data", lambda *args, **kwargs: raw)
+    expression._reference_summary_frame.cache_clear()
+    try:
+        first = expression._reference_summary_frame()
+        second = expression._reference_summary_frame()
+        assert first is second
+        assert first["source_cohort"].tolist() == [
+            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+        ]
+        assert raw["source_cohort"].nunique() == 1
+    finally:
+        expression._reference_summary_frame.cache_clear()
 
 
 def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
@@ -2536,6 +2589,23 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
     assert compact.loc[0, "Proteoform_ID"] == "E1"
     assert compact.loc[0, "Member_Ensembl_Gene_IDs"] == "E1"
     assert "processing_pipeline" not in compact.columns
+
+    selected_source = expression.cancer_reference_expression(
+        "x",
+        normalize="tpm",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_cohort="SRC2",
+        pool=True,
+        on_missing="empty",
+    )
+    assert len(selected_source) == 1
+    assert selected_source.loc[0, "source_cohort"] == "POOLED"
+    assert selected_source.loc[0, "expression"] == pytest.approx(20.0)
+    availability = selected_source.attrs["availability"]
+    assert len(availability) == 1
+    assert availability[0]["available"] is True
+    assert availability[0]["source_cohort"] == "SRC2"
 
     with pytest.raises(ValueError, match='requires sample_qc="all"'):
         expression.cancer_reference_expression("x", reference_source="summary_rows_all")
@@ -2823,7 +2893,7 @@ def _pan_cancer_fixture():
 
 
 def test_pan_cancer_expression_converts_fpkm_to_tpm(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     out = expression.pan_cancer_expression()
     # FPKM_<CODE> tumor columns become entity-first <CODE>_TPM_raw;
     # HPA nTPM columns become <tissue>_nTPM_raw. Clean companions are default.
@@ -2841,7 +2911,7 @@ def test_pan_cancer_expression_converts_fpkm_to_tpm(monkeypatch):
 def test_pan_cancer_expression_preserves_unmeasured_source_values(monkeypatch):
     fixture = _pan_cancer_fixture()
     fixture.loc[0, "FPKM_LUAD"] = np.nan
-    monkeypatch.setattr(expression, "get_data", lambda name: fixture.copy())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, fixture)
 
     out = expression.pan_cancer_expression()
 
@@ -2851,7 +2921,7 @@ def test_pan_cancer_expression_preserves_unmeasured_source_values(monkeypatch):
 
 
 def test_pan_cancer_expression_raw_only(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     out = expression.pan_cancer_expression(normalize=None)
     assert "LUAD_FPKM_raw" in out.columns
     assert "LUAD_TPM_raw" in out.columns
@@ -2861,7 +2931,7 @@ def test_pan_cancer_expression_raw_only(monkeypatch):
 
 
 def test_pan_cancer_expression_pirlygenes_column_style(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     out = expression.pan_cancer_expression(normalize="tpm", column_style="pirlygenes")
 
     assert {"liver_nTPM", "LUAD_FPKM", "LUAD_TPM"} <= set(out.columns)
@@ -2928,7 +2998,7 @@ def test_pan_cancer_expression_adds_computed_aggregate_tpm_columns(monkeypatch):
         "SGC": ("ADCC",),
     }
 
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    monkeypatch.setattr(expression, "get_data", lambda *args, **kwargs: _pan_cancer_fixture())
     monkeypatch.setattr(
         expression, "_computed_expression_reference_members", lambda code: members.get(code, ())
     )
@@ -2953,7 +3023,7 @@ def test_pan_cancer_expression_adds_computed_aggregate_tpm_columns(monkeypatch):
 
 
 def test_pan_cancer_expression_to_tpm_legacy_keyword(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     out = expression.pan_cancer_expression(genes=["ENSG00000001"], to_tpm=True)
 
     assert out["Symbol"].tolist() == ["GENE1"]
@@ -2963,7 +3033,7 @@ def test_pan_cancer_expression_to_tpm_legacy_keyword(monkeypatch):
 
 
 def test_pan_cancer_expression_empty_gene_filter_preserves_schema(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     empty = expression.pan_cancer_expression(genes=[], normalize="tpm", column_style="pirlygenes")
     full = expression.pan_cancer_expression(normalize="tpm", column_style="pirlygenes")
 
@@ -2973,13 +3043,13 @@ def test_pan_cancer_expression_empty_gene_filter_preserves_schema(monkeypatch):
 
 
 def test_pan_cancer_expression_bad_column_style(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     with pytest.raises(ValueError, match="column_style"):
         expression.pan_cancer_expression(column_style="source")
 
 
 def test_pan_cancer_expression_accepts_clean_tpm_alias(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     canonical = expression.pan_cancer_expression(normalize="tpm_clean")
     alias = expression.pan_cancer_expression(normalize="clean_tpm")
     assert "LUAD_TPM_clean" in alias.columns
@@ -2989,7 +3059,7 @@ def test_pan_cancer_expression_accepts_clean_tpm_alias(monkeypatch):
 def test_pan_cancer_expression_housekeeping_mode(monkeypatch):
     import oncoref.gene_families as gf
 
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     monkeypatch.setattr(
         gf, "clean_tpm_biological_housekeeping_gene_ids", lambda: frozenset({"ENSG00000001"})
     )
@@ -3000,7 +3070,7 @@ def test_pan_cancer_expression_housekeeping_mode(monkeypatch):
 
 
 def test_pan_cancer_expression_log_modes(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     raw_logged = expression.pan_cancer_expression(normalize="tpm_log1p")
     clean_logged = expression.pan_cancer_expression(normalize="tpm_clean_log1p")
     assert "LUAD_TPM_raw_log1p" in raw_logged.columns
@@ -3012,7 +3082,7 @@ def test_pan_cancer_expression_log_modes(monkeypatch):
 
 
 def test_pan_cancer_expression_gene_filter(monkeypatch):
-    monkeypatch.setattr(expression, "get_data", lambda name: _pan_cancer_fixture())
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     # Filter by symbol, and by unversioned Ensembl id (fixture id is versioned).
     by_symbol = expression.pan_cancer_expression(genes="GENE2")
     assert by_symbol["Symbol"].tolist() == ["GENE2"]
