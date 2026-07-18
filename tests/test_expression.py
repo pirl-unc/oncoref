@@ -2470,6 +2470,179 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
     expression._source_cohort_kind_map.cache_clear()
 
 
+def test_reference_availability_all_sources_uses_compact_manifest(monkeypatch):
+    sidecar = pd.DataFrame(
+        {
+            "cancer_code": [
+                "SARC_DDLPS",
+                "SARC_DDLPS",
+                "SARC_DDLPS",
+                "NET_PANCREAS",
+                "NET_PANCREAS",
+            ],
+            "source_cohort": [
+                "GSE30929_SINGER_2007_LPS",
+                "GSE75885_DELESPAUL_2017",
+                "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+                "GSE118014_ALVAREZ_2018",
+                "GSE98894_ALVAREZ_2018_NET",
+            ],
+            "source_project": ["GEO", "GEO", "Treehouse", "GEO", "GEO"],
+            "source_version": ["v1"] * 5,
+            "tumor_origin": ["primary"] * 5,
+            "metastasis_site": [pd.NA] * 5,
+            "n_reference_genes": [10, 11, 12, 13, 14],
+            "n_reference_samples": [5, 6, 7, 8, 9],
+            "processing_pipeline": ["rnaseq"] * 5,
+            "notes": [""] * 5,
+        }
+    )
+    expression._reference_summary_availability_table.cache_clear()
+    monkeypatch.setattr(
+        expression,
+        "get_data",
+        lambda name, **kwargs: (
+            sidecar
+            if name == "cancer-reference-expression-availability"
+            else (_ for _ in ()).throw(AssertionError(f"unexpected dataset load: {name}"))
+        ),
+    )
+    monkeypatch.setattr(
+        expression,
+        "_reference_summary_frame",
+        lambda: (_ for _ in ()).throw(AssertionError("full summary frame must not load")),
+    )
+    monkeypatch.setattr(
+        expression,
+        "_selected_expression_source_metadata",
+        lambda code, *, source_cohort=None: {
+            "source_cohort": source_cohort,
+            "source_type": "geo",
+            "unit": "TPM",
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+            "tpm_proxy": False,
+        },
+    )
+
+    availability = expression.cancer_reference_expression_availability(
+        ["SARC_DDLPS", "NET_PANCREAS"],
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        all_sources=True,
+    )
+
+    assert len(availability) == 5
+    assert set(zip(availability["cancer_code"], availability["source_cohort"])) == set(
+        zip(sidecar["cancer_code"], sidecar["source_cohort"])
+    )
+    assert availability["available"].all()
+    assert availability["n_samples"].tolist() == availability["n_reference_samples"].tolist()
+
+    filtered = expression.cancer_reference_expression_availability(
+        "NET_PANCREAS",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_cohort="GSE98894_ALVAREZ_2018_NET",
+        all_sources=True,
+    )
+    assert filtered["source_cohort"].tolist() == ["GSE98894_ALVAREZ_2018_NET"]
+    assert filtered["n_reference_samples"].tolist() == [9]
+    expression._reference_summary_availability_table.cache_clear()
+
+
+def test_reference_availability_all_sources_preserves_aggregate_requests(monkeypatch):
+    sidecar = pd.DataFrame(
+        {
+            "cancer_code": ["X", "X", "Y"],
+            "source_cohort": ["X_ONE", "X_TWO", "Y_ONE"],
+            "n_reference_genes": [2, 3, 4],
+            "n_reference_samples": [5, 6, 7],
+        }
+    )
+    expression._reference_summary_availability_table.cache_clear()
+    monkeypatch.setattr(expression, "get_data", lambda *args, **kwargs: sidecar)
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "cohort_aggregates", lambda: {"AGG": ["X", "Y"]})
+    monkeypatch.setattr(
+        expression,
+        "_selected_expression_source_metadata",
+        lambda code, *, source_cohort=None: {
+            "source_cohort": source_cohort,
+            "unit": "TPM",
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+            "tpm_proxy": False,
+        },
+    )
+
+    availability = expression.cancer_reference_expression_availability(
+        "AGG",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        all_sources=True,
+    )
+
+    assert availability["requested_code"].unique().tolist() == ["AGG"]
+    assert set(availability["cancer_code"]) == {"X", "Y"}
+    assert set(availability["request_kind"]) == {"aggregate_member"}
+    assert len(availability) == 3
+    expression._reference_summary_availability_table.cache_clear()
+
+
+def test_reference_availability_all_sources_requires_source_union_mode():
+    with pytest.raises(ValueError, match="all_sources=True requires"):
+        expression.cancer_reference_expression_availability(all_sources=True)
+
+
+def test_reference_availability_sources_are_registry_backed_and_filterable():
+    sidecar = expression._reference_summary_availability_table()
+    assert set(sidecar["source_cohort"].astype(str)) <= set(
+        expression.cohort_registry_df()["cohort_id"]
+    )
+
+    merkel = expression.cancer_reference_expression_availability(
+        "NEC_MERKEL",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        source_kind="geo",
+        all_sources=True,
+    )
+    assert merkel["source_cohort"].tolist() == ["GSE235092_MERKEL_2024"]
+    assert merkel["source_type"].tolist() == ["geo-matrix"]
+
+
+def test_explicit_source_metadata_does_not_fall_back_to_another_source(monkeypatch):
+    from types import SimpleNamespace
+
+    from oncoref import expression_registry
+
+    monkeypatch.setattr(
+        expression_registry,
+        "sources_for_cancer_code",
+        lambda code: [
+            SimpleNamespace(
+                source_cohort="SELECTED_SOURCE",
+                source_type="gdc",
+                unit="TPM",
+                special_handling="",
+                project_id="TCGA-X",
+                accession=None,
+            )
+        ],
+    )
+
+    metadata = expression._selected_expression_source_metadata(
+        "X", source_cohort="EXPLICIT_OTHER_SOURCE"
+    )
+
+    assert metadata["source_cohort"] == "EXPLICIT_OTHER_SOURCE"
+    assert metadata["source_type"] is None
+    assert metadata["source_project"] is None
+    assert metadata["source_scale_class"] == "unknown"
+    assert not metadata["linear_tpm_comparable"]
+
+
 def test_reference_summary_row_index_reuses_positions_and_tracks_frame_identity(
     monkeypatch,
 ):

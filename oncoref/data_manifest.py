@@ -208,6 +208,10 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "cancer-reference-expression-availability": (
+        "expression",
+        "one-row-per-source reference-expression availability manifest",
+    ),
     "cancer-testis-antigens": ("cta", "CTA definition (HPA tissue-restriction over candidates)"),
     "cta-clinical-targets": (
         "cta",
