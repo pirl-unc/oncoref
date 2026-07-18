@@ -2265,6 +2265,19 @@ def _artifact_build_metadata_qc_value(row) -> str:
     return ""
 
 
+def _artifact_build_metadata_qc_policies(meta: pd.DataFrame) -> dict[str, tuple[str, ...]]:
+    """Return the recorded effective QC policies for each artifact cohort."""
+    if meta.empty or "cancer_code" not in meta.columns:
+        return {}
+    policies: dict[str, tuple[str, ...]] = {}
+    for code, group in meta.groupby("cancer_code", sort=False):
+        values = sorted(
+            {_artifact_build_metadata_qc_value(row) for _, row in group.iterrows()} - {""}
+        )
+        policies[str(code)] = tuple(values)
+    return policies
+
+
 def _artifact_qc_attrs(
     meta: pd.DataFrame,
     *,
@@ -2300,8 +2313,8 @@ def _require_expression_artifact_sample_qc(
     if meta.empty and meta.attrs.get("missing_reason"):
         return meta
 
-    present = set(meta["cancer_code"].astype(str)) if "cancer_code" in meta.columns else set()
-    missing = [code for code in code_list if code not in present]
+    policies = _artifact_build_metadata_qc_policies(meta)
+    missing = [code for code in code_list if code not in policies]
     if missing:
         raise ValueError(
             "expression artifact build metadata lacks rows for requested cohort(s): "
@@ -2309,11 +2322,11 @@ def _require_expression_artifact_sample_qc(
             + "; pass sample_qc='artifact' only for explicit legacy/audit reads"
         )
 
-    mismatches: list[str] = []
-    for _, row in meta.iterrows():
-        effective = _artifact_build_metadata_qc_value(row)
-        if effective != requested:
-            mismatches.append(f"{row.get('cancer_code')}={effective or 'unknown'}")
+    mismatches = [
+        f"{code}={','.join(policies[code]) or 'unknown'}"
+        for code in code_list
+        if policies[code] != (requested,)
+    ]
     if mismatches:
         raise ValueError(
             "expression artifact sample_qc mismatch for requested cohort(s): "
@@ -2879,13 +2892,21 @@ def cancer_reference_expression_availability(
     aggregate requests to member cohorts) and normalization mode. With
     ``all_sources=True`` and ``reference_source="summary_rows_all"``, it instead
     returns one row per source cohort and normalization without loading the
-    multi-million-row expression frame. Both modes are gene-independent.
+    multi-million-row expression frame. Both modes are gene-independent, so callers
+    can distinguish an empty gene filter from unavailable upstream data. For
+    percentile artifacts, ``artifact_sample_qc`` reports the effective build policy
+    recorded in the compact artifact metadata manifest.
     """
     modes = _reference_normalize_modes(normalize)
-    sample_qc = _validate_sample_qc(sample_qc)
+    sample_qc = _validate_artifact_sample_qc(sample_qc)
     reference_source = _validate_reference_source(reference_source)
     source_kinds = _normalize_source_filter_values(source_kind)
     source_cohorts = _normalize_source_filter_values(source_cohort)
+    if sample_qc == "artifact" and (reference_source != "artifact" or "tpm_raw" in modes):
+        raise ValueError(
+            "sample_qc='artifact' requires reference_source='artifact' and "
+            "clean/log-clean artifact-backed normalization"
+        )
     if reference_source == "summary_rows_all" and sample_qc != "all":
         raise ValueError('reference_source="summary_rows_all" requires sample_qc="all"')
     if all_sources and reference_source != "summary_rows_all":
@@ -3024,6 +3045,7 @@ _REFERENCE_AVAILABILITY_COLUMNS = [
     "notes",
     "reference_method",
     "sample_qc",
+    "artifact_sample_qc",
     "artifact_schema_version",
     "data_version",
     "source_matrix_version",
@@ -3121,6 +3143,13 @@ def _reference_expression_availability_for_requests(
         if reference_source in {"summary_rows", "summary_rows_all"}
         else set()
     )
+    artifact_modes = {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"}
+    artifact_qc_policies: dict[str, tuple[str, ...]] = {}
+    artifact_qc_metadata_present = False
+    if reference_source == "artifact" and any(mode in artifact_modes for mode in modes):
+        artifact_qc_meta = expression_artifact_build_metadata(auto_fetch=False, on_missing="empty")
+        artifact_qc_policies = _artifact_build_metadata_qc_policies(artifact_qc_meta)
+        artifact_qc_metadata_present = not bool(artifact_qc_meta.attrs.get("missing_reason"))
     rows: list[dict] = []
     for request in requests:
         code = request["cancer_code"]
@@ -3133,6 +3162,8 @@ def _reference_expression_availability_for_requests(
                 summary_available,
                 sample_qc=sample_qc,
                 reference_source=reference_source,
+                artifact_qc_policies=artifact_qc_policies,
+                artifact_qc_metadata_present=artifact_qc_metadata_present,
             )
             method = _reference_expected_method(
                 mode, sample_qc=sample_qc, reference_source=reference_source
@@ -3148,7 +3179,11 @@ def _reference_expression_availability_for_requests(
                 "artifact_schema_version": REFERENCE_EXPRESSION_SCHEMA_VERSION,
                 "data_version": DATA_VERSION,
                 "source_matrix_version": SOURCE_MATRIX_VERSION,
+                "artifact_sample_qc": pd.NA,
             }
+            if reference_source == "artifact" and mode in artifact_modes:
+                policies = artifact_qc_policies.get(code, ())
+                row["artifact_sample_qc"] = ",".join(policies) if policies else pd.NA
             row.update(
                 _reference_expression_provenance(
                     code,
@@ -3289,6 +3324,8 @@ def _reference_mode_availability(
     *,
     sample_qc: str,
     reference_source: str,
+    artifact_qc_policies: dict[str, tuple[str, ...]],
+    artifact_qc_metadata_present: bool,
 ) -> tuple[bool, str]:
     if reference_source in {"summary_rows", "summary_rows_all"}:
         if sample_qc == "all":
@@ -3300,7 +3337,15 @@ def _reference_mode_availability(
             return False, f"no_source_matrix_samples_matching_{sample_qc}_qc"
         return True, ""
     if mode in {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"}:
-        return (True, "") if code in percentile_available else (False, "no_percentile_artifact")
+        if code not in percentile_available:
+            return False, "no_percentile_artifact"
+        if sample_qc == "artifact" or not artifact_qc_metadata_present:
+            return True, ""
+        if code not in artifact_qc_policies:
+            return False, "artifact_build_metadata_missing"
+        if artifact_qc_policies[code] != (sample_qc,):
+            return False, "artifact_sample_qc_mismatch"
+        return True, ""
     if mode == "tpm_raw":
         return (True, "") if code in source_matrix_available else (False, "no_source_matrix")
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
