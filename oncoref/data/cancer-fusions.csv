@@ -41,6 +41,18 @@ SARC_RMS_SSRMS,TEAD1-NCOA2,TEAD1,TEAD,NCOA2,NR coactivator,subset,true,true,yes,
 SARC_RMS_SSRMS,(none),,,,,,false,false,no,other,high,,"older child/adult sclerosing-spindle RMS driven by MYOD1 L122R point mutation, not a fusion"
 SARC_CHON_MESENCHYMAL,HEY1-NCOA2,HEY1,bHLH,NCOA2,NR coactivator,~80%,true,true,yes,fusion_transcript,high,PMID:22034177,mesenchymal chondrosarcoma; ins(8;8) or t(8;8)
 SARC_CHON_MESENCHYMAL,IRF2BP2-CDX1,IRF2BP2,,CDX1,homeobox,rare,false,false,yes,fusion_transcript,low,PMID:23185413,rare mesenchymal chondrosarcoma variant
+SARC_EWSR1_NONETS,EWSR1-NFATC2,EWSR1,FET,NFATC2,NFAT,recurrent,true,false,yes,fusion_transcript,high,PMID:19318479,EWSR1-non-ETS round cell sarcoma; fusion amplification supports malignant context
+SARC_EWSR1_NONETS,EWSR1-PATZ1,EWSR1,FET,PATZ1,zinc-finger TF,recurrent,true,false,yes,fusion_transcript,high,PMID:31189996,EWSR1-PATZ1 spindle and round cell sarcoma; polyphenotypic and morphologically variable
+SARC_EWSR1_NONETS,EWSR1-SMARCA5,EWSR1,FET,SMARCA5,chromatin remodeler,rare,true,false,yes,fusion_transcript,medium,PMID:21113140,originally reported as extraskeletal Ewing/PNET before recognition of EWSR1-non-ETS sarcomas
+SARC_SEF,EWSR1-CREB3L1,EWSR1,FET,CREB3L1,bZIP(CREB/ATF),common,true,false,yes,fusion_transcript,high,PMID:24441665,recurrent fusion in pure sclerosing epithelioid fibrosarcoma; also occurs rarely in LGFMS
+SARC_SEF,EWSR1-CREB3L2,EWSR1,FET,CREB3L2,bZIP(CREB/ATF),rare,true,false,yes,fusion_transcript,medium,PMID:31675134,rare alternative fusion in primary osseous sclerosing epithelioid fibrosarcoma
+SARC_SEF,EWSR1-CREB3L3,EWSR1,FET,CREB3L3,bZIP(CREB/ATF),rare,true,false,yes,fusion_transcript,medium,PMID:28569045,rare alternative fusion in sclerosing epithelioid fibrosarcoma
+SARC_NTRK_SPINDLE,TPM3-NTRK1,TPM3,tropomyosin,NTRK1,RTK,reported,true,false,yes,fusion_transcript,high,PMID:35149769,NTRK-rearranged spindle cell neoplasm; molecular class is defining but this pair is not entity-specific
+SARC_NTRK_SPINDLE,LMNA-NTRK1,LMNA,nuclear lamina,NTRK1,RTK,reported,true,false,yes,fusion_transcript,high,PMID:35149769,NTRK-rearranged spindle cell neoplasm; molecular class is defining but this pair is not entity-specific
+SARC_NTRK_SPINDLE,STRN-NTRK2,STRN,striatin,NTRK2,RTK,reported,true,false,yes,fusion_transcript,medium,PMID:38525823,NTRK-rearranged spindle cell neoplasm; molecular class is defining but this pair is not entity-specific
+SARC_NTRK_SPINDLE,SQSTM1-NTRK3,SQSTM1,autophagy adaptor,NTRK3,RTK,reported,true,false,yes,fusion_transcript,medium,PMID:35149769,NTRK-rearranged spindle cell neoplasm; molecular class is defining but this pair is not entity-specific
+SARC_PMT_MALIGNANT,FN1-FGFR1,FN1,extracellular matrix,FGFR1,RTK,reported,false,false,yes,fusion_transcript,medium,PMID:31066955,reported in a possible malignant phosphaturic mesenchymal tumour; associated with PMT but not defining malignant behavior
+SARC_EIMS,RANBP2-ALK,RANBP2,nucleoporin,ALK,RTK,majority,true,false,surrogate,fusion_transcript,high,PMID:26139079,epithelioid inflammatory myofibroblastic sarcoma; nuclear-membrane ALK staining is a diagnostic surrogate
 SARC_CHON,(none),,,,,,false,false,no,other,high,,"conventional chondrosarcoma driven by IDH1/IDH2 mutation, not a fusion"
 SARC_ESS_LG,JAZF1-SUZ12,JAZF1,,SUZ12,PRC2/Polycomb,~50%,true,true,yes,fusion_transcript,high,PMID:16049311,low-grade endometrial stromal sarcoma; t(7;17); SUZ12=JJAZ1
 SARC_ESS_LG,JAZF1-PHF1,JAZF1,,PHF1,PRC2/Polycomb,minority,true,true,yes,fusion_transcript,medium,PMID:16397222,variant; PHF1 (6p21) recurrent partner

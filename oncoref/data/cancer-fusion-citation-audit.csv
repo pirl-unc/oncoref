@@ -138,3 +138,15 @@ SARC_MYOEP,FUS-POU5F1,FUS,POU5F1,PMID:25066216,Myoepithelioma of bone with a nov
 SARC_MYOEP,EWSR1-PBX1,EWSR1,PBX1,PMID:18383210,Detection of a t(1;22)(q23;q12) translocation leading to an EWSR1-PBX1 fusion gene in a myoepithelioma.,2008,true,true,2026-07-17
 SARC_MYOEP,EWSR1-ZNF444,EWSR1,ZNF444,PMID:19760602,t(19;22)(q13;q12) Translocation leading to the novel fusion gene EWSR1-ZNF444 in soft tissue myoepithelial carcinoma.,2009,true,true,2026-07-17
 ALCL,ALK_rearrangement,NPM1,ALK,PMID:8122112,"Fusion of a kinase gene, ALK, to a nucleolar protein gene, NPM, in non-Hodgkin's lymphoma.",1994,true,true,2026-07-17
+SARC_EWSR1_NONETS,EWSR1-NFATC2,EWSR1,NFATC2,PMID:19318479,The NFATc2 gene is involved in a novel cloned translocation in a Ewing sarcoma variant that couples its function in immunology to oncology.,2009,true,true,2026-07-18
+SARC_EWSR1_NONETS,EWSR1-PATZ1,EWSR1,PATZ1,PMID:31189996,"Clinical, pathological, and genomic features of EWSR1-PATZ1 fusion sarcoma.",2019,true,true,2026-07-18
+SARC_EWSR1_NONETS,EWSR1-SMARCA5,EWSR1,SMARCA5,PMID:21113140,A novel t(4;22)(q31;q12) produces an EWSR1-SMARCA5 fusion in extraskeletal Ewing sarcoma/primitive neuroectodermal tumor.,2011,true,true,2026-07-18
+SARC_SEF,EWSR1-CREB3L1,EWSR1,CREB3L1,PMID:24441665,Recurrent EWSR1-CREB3L1 gene fusions in sclerosing epithelioid fibrosarcoma.,2014,true,true,2026-07-18
+SARC_SEF,EWSR1-CREB3L2,EWSR1,CREB3L2,PMID:31675134,Clinical and molecular characterization of primary sclerosing epithelioid fibrosarcoma of bone and review of the literature.,2020,true,true,2026-07-18
+SARC_SEF,EWSR1-CREB3L3,EWSR1,CREB3L3,PMID:28569045,A novel EWS-CREB3L3 gene fusion in a mesenteric sclerosing epithelioid fibrosarcoma.,2017,true,true,2026-07-18
+SARC_NTRK_SPINDLE,TPM3-NTRK1,TPM3,NTRK1,PMID:35149769,Adult NTRK-rearranged spindle cell neoplasms of the viscera: with an emphasis on rare locations and heterologous elements.,2022,true,true,2026-07-18
+SARC_NTRK_SPINDLE,LMNA-NTRK1,LMNA,NTRK1,PMID:35149769,Adult NTRK-rearranged spindle cell neoplasms of the viscera: with an emphasis on rare locations and heterologous elements.,2022,true,true,2026-07-18
+SARC_NTRK_SPINDLE,STRN-NTRK2,STRN,NTRK2,PMID:38525823,Primary NTRK-rearranged Spindle Cell Neoplasm of the Gastrointestinal Tract: A Clinicopathological and Molecular Analysis of 8 Cases.,2024,true,true,2026-07-18
+SARC_NTRK_SPINDLE,SQSTM1-NTRK3,SQSTM1,NTRK3,PMID:35149769,Adult NTRK-rearranged spindle cell neoplasms of the viscera: with an emphasis on rare locations and heterologous elements.,2022,true,true,2026-07-18
+SARC_PMT_MALIGNANT,FN1-FGFR1,FN1,FGFR1,PMID:31066955,"Genetic profiling of a chondroblastoma-like osteosarcoma/malignant phosphaturic mesenchymal tumor of bone reveals a homozygous deletion of CDKN2A, intragenic deletion of DMD, and a targetable FN1-FGFR1 gene fusion.",2019,true,true,2026-07-18
+SARC_EIMS,RANBP2-ALK,RANBP2,ALK,PMID:26139079,"Cytopathologic features of epithelioid inflammatory myofibroblastic sarcoma with correlation of histopathology, immunohistochemistry, and molecular cytogenetic analysis.",2015,true,true,2026-07-18

@@ -95,6 +95,46 @@ def test_every_fusion_code_is_a_registry_code():
     assert not missing, f"fusion cancer_codes not in the registry: {missing}"
 
 
+def test_every_fusion_defined_registry_entity_has_defining_detail_rows():
+    registry = cancer_type_registry()
+    expected = set(registry.loc[registry["fusion_driven"] == "defining", "code"])
+    details = cancer_fusions(defining_only=True)
+    represented = set(details["cancer_code"])
+
+    assert expected <= represented
+
+
+def test_new_who_fusion_entities_own_their_detail_rows():
+    expected_pairs = {
+        "SARC_EWSR1_NONETS": {
+            ("EWSR1", "NFATC2"),
+            ("EWSR1", "PATZ1"),
+            ("EWSR1", "SMARCA5"),
+        },
+        "SARC_SEF": {
+            ("EWSR1", "CREB3L1"),
+            ("EWSR1", "CREB3L2"),
+            ("EWSR1", "CREB3L3"),
+        },
+        "SARC_NTRK_SPINDLE": {
+            ("TPM3", "NTRK1"),
+            ("LMNA", "NTRK1"),
+            ("STRN", "NTRK2"),
+            ("SQSTM1", "NTRK3"),
+        },
+        "SARC_EIMS": {("RANBP2", "ALK")},
+    }
+    for code, pairs in expected_pairs.items():
+        rows = cancer_fusions(code, defining_only=True)
+        assert set(zip(rows["gene_5prime"], rows["gene_3prime"])) == pairs
+
+    malignant_pmt = cancer_fusions("SARC_PMT_MALIGNANT")
+    assert set(zip(malignant_pmt["gene_5prime"], malignant_pmt["gene_3prime"])) == {
+        ("FN1", "FGFR1")
+    }
+    assert not malignant_pmt["is_defining"].astype(str).str.lower().eq("true").any()
+
+
 def test_every_positive_fusion_or_alteration_has_a_citation():
     fusions_df = cancer_fusions_df().fillna("")
     positive_rows = fusions_df[fusions_df["fusion_family"] != "(none)"]
