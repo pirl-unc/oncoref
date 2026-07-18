@@ -1,0 +1,789 @@
+cancer_code,subtype,symbol,role,agent,pmid,pubmed_title,publication_year,supports_gene_or_agent,supports_disease_context,supports_role_and_phase,reviewed_on
+PRAD,,AR,biomarker,,PMID:22894553,Increased survival with enzalutamide in prostate cancer after chemotherapy.,2012,true,true,true,2026-07-17
+PRAD,,KLK3,biomarker,,PMID:25153393,"Analysis of androgen and anti-androgen regulation of KLK-related peptidase 2, 3, and 4 alternative transcripts in prostate cancer.",2014,true,true,true,2026-07-17
+PRAD,,KLK2,biomarker,,PMID:25153393,"Analysis of androgen and anti-androgen regulation of KLK-related peptidase 2, 3, and 4 alternative transcripts in prostate cancer.",2014,true,true,true,2026-07-17
+PRAD,,NKX3-1,biomarker,,PMID:35265947,"Expression of NKX3.1, Prostatic Specific Antigen and Prostatic Specific Alkaline Phosphatase in Cytology Specimens of Metastatic Prostatic Carcinoma.",2021,true,true,true,2026-07-17
+PRAD,,HOXB13,biomarker,,PMID:33916521,"Hereditary Prostate Cancer: Genes Related, Target Therapy and Prevention.",2021,true,true,true,2026-07-17
+PRAD,,TMPRSS2,biomarker,,PMID:16254181,Recurrent fusion of TMPRSS2 and ETS transcription factor genes in prostate cancer.,2005,true,true,true,2026-07-17
+PRAD,,ENO2,biomarker,,PMID:34784097,Neuroendocrine cells in prostate cancer correlate with poor outcomes: a systematic review and meta-analysis.,2022,true,true,true,2026-07-17
+PRAD,,CHGA,biomarker,,PMID:41608640,GSTA1 deficiency drives neuroendocrine differentiation via TNFRSF13B/c-FOS/CHGA axis in prostate cancer.,2026,true,true,true,2026-07-17
+PRAD,,SYP,biomarker,,PMID:31953400,MUC1-C regulates lineage plasticity driving progression to neuroendocrine prostate cancer.,2020,true,true,true,2026-07-17
+PRAD,,ASCL1,biomarker,,PMID:39264686,Neuroendocrine Differentiation in Prostate Cancer Requires ASCL1.,2024,true,true,true,2026-07-17
+PRAD,,INSM1,biomarker,,PMID:34431104,Reciprocal YAP1 loss and INSM1 expression in neuroendocrine prostate cancer.,2021,true,true,true,2026-07-17
+PRAD,,FOLH1,target,177Lu-PSMA-617,PMID:34161051,Lutetium-177-PSMA-617 for Metastatic Castration-Resistant Prostate Cancer.,2021,true,true,true,2026-07-17
+PRAD,,FOLH1,target,225Ac-PSMA-617,PMID:27390158,225Ac-PSMA-617 for PSMA-Targeted α-Radiation Therapy of Metastatic Castration-Resistant Prostate Cancer.,2016,true,true,true,2026-07-17
+PRAD,,STEAP1,target,AMG-509 (xaluritamig),PMID:37861461,"Xaluritamig, a STEAP1 × CD3 XmAb 2+1 Immune Therapy for Metastatic Castration-Resistant Prostate Cancer: Results from Dose Exploration in a First-in-Human Study.",2024,true,true,true,2026-07-17
+PRAD,,STEAP2,target,AZD0754,PMID:37966111,"Antitumor activity of AZD0754, a dnTGFβRII-armored, STEAP2-targeted CAR-T cell therapy, in prostate cancer.",2023,true,true,true,2026-07-17
+PRAD,,DLL3,target,tarlatamab,PMID:40689871,Safety and Efficacy of Tarlatamab in Patients with Neuroendocrine Prostate Cancer: Results from the Phase 1b DeLLpro-300 Study.,2025,true,true,true,2026-07-17
+PRAD,,KLK2,target,pasritamig,PMID:40450573,"Pasritamig, a First-in-Class, Bispecific T-Cell Engager Targeting Human Kallikrein 2, in Metastatic Castration-Resistant Prostate Cancer: A Phase I Study.",2025,true,true,true,2026-07-17
+PRAD,,TACSTD2,target,sacituzumab govitecan,PMID:38895886,Preclinical evidence for the use of anti-Trop-2 antibody-drug conjugate Sacituzumab govitecan in cerebral metastasized castration-resistant prostate cancer.,2024,true,true,true,2026-07-17
+PRAD,,AR,target,enzalutamide,PMID:22894553,Increased survival with enzalutamide in prostate cancer after chemotherapy.,2012,true,true,true,2026-07-17
+PRAD,,AR,target,apalutamide,PMID:29420164,Apalutamide Treatment and Metastasis-free Survival in Prostate Cancer.,2018,true,true,true,2026-07-17
+PRAD,,PSCA,biomarker,,PMID:15342669,Prostate stem cell antigen (PSCA) expression in human prostate cancer tissues: implications for prostate carcinogenesis and progression of prostate cancer.,2004,true,true,true,2026-07-17
+PRAD,,PSCA,target,BPX-601,PMID:39737899,PSCA-targeted BPX-601 CAR T cells with pharmacological activation by rimiducid in metastatic pancreatic and prostate cancer: a phase 1 dose escalation trial.,2024,true,true,true,2026-07-17
+PRAD,,PSCA,target,PSMA-PSCA bispecific,PMID:34675084,Novel Redirected T-Cell Immunotherapies for Advanced Prostate Cancer.,2022,true,true,true,2026-07-17
+PRAD,,CD276,biomarker,,PMID:37380802,Effect of tumor CD276 expression on infiltrating immune cells and clinicopathological features of prostate cancer.,2024,true,true,true,2026-07-17
+PRAD,,CD276,target,enoblituzumab,PMID:37012549,"Neoadjuvant enoblituzumab in localized prostate cancer: a single-arm, phase 2 trial.",2023,true,true,true,2026-07-17
+PRAD,,CEACAM5,biomarker,,PMID:38760413,"Assessment of TROP2, CEACAM5 and DLL3 in metastatic prostate cancer: Expression landscape and molecular correlates.",2024,true,true,true,2026-07-17
+PRAD,,CEACAM5,target,labetuzumab govitecan,PMID:33199493,Regulation of CEACAM5 and Therapeutic Efficacy of an Anti-CEACAM5-SN38 Antibody-drug Conjugate in Neuroendocrine Prostate Cancer.,2021,true,true,true,2026-07-17
+PRAD,,FAP,biomarker,,PMID:36874403,Stromal FAP Expression is Associated with MRI Visibility and Patient Survival in Prostate Cancer.,2022,true,true,true,2026-07-17
+BRCA,,ESR1,biomarker,,PMID:34392831,ESR1 mutation as an emerging clinical biomarker in metastatic hormone receptor-positive breast cancer.,2021,true,true,true,2026-07-17
+BRCA,,PGR,biomarker,,PMID:26493064,"Predictive value and clinical utility of centrally assessed ER, PgR, and Ki-67 to select adjuvant endocrine therapy for premenopausal women with hormone receptor-positive, HER2-negative early breast cancer: TEXT and SOFT trials.",2015,true,true,true,2026-07-17
+BRCA,,ERBB2,biomarker,,PMID:11248153,Use of chemotherapy plus a monoclonal antibody against HER2 for metastatic breast cancer that overexpresses HER2.,2001,true,true,true,2026-07-17
+BRCA,,MKI67,biomarker,,PMID:34371382,"ESR1, PGR, ERBB2, and MKi67 mRNA expression in postmenopausal women with hormone receptor-positive early breast cancer: results from ABCSG Trial 6.",2021,true,true,true,2026-07-17
+BRCA,,GATA3,biomarker,,PMID:26637396,GATA3 in Breast Cancer: Tumor Suppressor or Oncogene?,2015,true,true,true,2026-07-17
+BRCA,,FOXA1,biomarker,,PMID:32888433,FOXA1 Mutations Reveal Distinct Chromatin Profiles and Influence Therapeutic Response in Breast Cancer.,2020,true,true,true,2026-07-17
+BRCA,,BRCA1,biomarker,,PMID:19553641,Inhibition of poly(ADP-ribose) polymerase in tumors from BRCA mutation carriers.,2009,true,true,true,2026-07-17
+BRCA,,BRCA2,biomarker,,PMID:19553641,Inhibition of poly(ADP-ribose) polymerase in tumors from BRCA mutation carriers.,2009,true,true,true,2026-07-17
+BRCA,,ERBB2,target,trastuzumab,PMID:11248153,Use of chemotherapy plus a monoclonal antibody against HER2 for metastatic breast cancer that overexpresses HER2.,2001,true,true,true,2026-07-17
+BRCA,,ERBB2,target,trastuzumab deruxtecan,PMID:35665782,Trastuzumab Deruxtecan in Previously Treated HER2-Low Advanced Breast Cancer.,2022,true,true,true,2026-07-17
+BRCA,,ERBB2,target,pertuzumab,PMID:22149875,Pertuzumab plus trastuzumab plus docetaxel for metastatic breast cancer.,2012,true,true,true,2026-07-17
+BRCA,,TACSTD2,target,sacituzumab govitecan,PMID:33882206,Sacituzumab Govitecan in Metastatic Triple-Negative Breast Cancer.,2021,true,true,true,2026-07-17
+BRCA,,FOLR1,target,mirvetuximab soravtansine,PMID:32984932,A phase II study of Mirvetuximab Soravtansine in triple-negative breast cancer.,2021,true,true,true,2026-07-17
+BRCA,,ESR1,target,elacestrant,PMID:35584336,"Elacestrant (oral selective estrogen receptor degrader) Versus Standard Endocrine Therapy for Estrogen Receptor-Positive, Human Epidermal Growth Factor Receptor 2-Negative Advanced Breast Cancer: Results From the Randomized Phase III EMERALD Trial.",2022,true,true,true,2026-07-17
+BRCA,,CDK4,target,palbociclib,PMID:25524798,"The cyclin-dependent kinase 4/6 inhibitor palbociclib in combination with letrozole versus letrozole alone as first-line treatment of oestrogen receptor-positive, HER2-negative, advanced breast cancer (PALOMA-1/TRIO-18): a randomised phase 2 study.",2015,true,true,true,2026-07-17
+BRCA,,CDK6,target,abemaciclib,PMID:39693591,Abemaciclib Plus Fulvestrant in Advanced Breast Cancer After Progression on CDK4/6 Inhibition: Results From the Phase III postMONARCH Trial.,2025,true,true,true,2026-07-17
+LUAD,,EGFR,biomarker,,PMID:15118073,Activating mutations in the epidermal growth factor receptor underlying responsiveness of non-small-cell lung cancer to gefitinib.,2004,true,true,true,2026-07-17
+LUAD,,KRAS,biomarker,,PMID:34096690,Sotorasib for Lung Cancers with KRAS p.G12C Mutation.,2021,true,true,true,2026-07-17
+LUAD,,ALK,biomarker,,PMID:17625570,Identification of the transforming EML4-ALK fusion gene in non-small-cell lung cancer.,2007,true,true,true,2026-07-17
+LUAD,,ROS1,biomarker,,PMID:22215748,ROS1 rearrangements define a unique molecular class of lung cancers.,2012,true,true,true,2026-07-17
+LUAD,,BRAF,biomarker,,PMID:27283860,"Dabrafenib plus trametinib in patients with previously treated BRAF(V600E)-mutant metastatic non-small cell lung cancer: an open-label, multicentre phase 2 trial.",2016,true,true,true,2026-07-17
+LUAD,,RET,biomarker,,PMID:32846060,Efficacy of Selpercatinib in RET Fusion-Positive Non-Small-Cell Lung Cancer.,2020,true,true,true,2026-07-17
+LUAD,,MET,biomarker,,PMID:32877583,Capmatinib in MET Exon 14-Mutated or MET-Amplified Non-Small-Cell Lung Cancer.,2020,true,true,true,2026-07-17
+LUAD,,NTRK1,biomarker,,PMID:29466156,Efficacy of Larotrectinib in TRK Fusion-Positive Cancers in Adults and Children.,2018,true,true,true,2026-07-17
+LUAD,,CD274,biomarker,,PMID:27718847,Pembrolizumab versus Chemotherapy for PD-L1-Positive Non-Small-Cell Lung Cancer.,2016,true,true,true,2026-07-17
+LUAD,,KEAP1,biomarker,,PMID:37889752,KEAP1 mutation in lung adenocarcinoma promotes immune evasion and immunotherapy resistance.,2023,true,true,true,2026-07-17
+LUAD,,STK11,biomarker,,PMID:29773717,STK11/LKB1 Mutations and PD-1 Inhibitor Resistance in KRAS-Mutant Lung Adenocarcinoma.,2018,true,true,true,2026-07-17
+LUAD,,NKX2-1,biomarker,,PMID:39113226,Neutrophils Recruited by NKX2-1 Suppression via Activation of CXCLs/CXCR2 Axis Promote Lung Adenocarcinoma Progression.,2024,true,true,true,2026-07-17
+LUAD,,EGFR,target,osimertinib,PMID:29151359,Osimertinib in Untreated EGFR-Mutated Advanced Non-Small-Cell Lung Cancer.,2018,true,true,true,2026-07-17
+LUAD,,ALK,target,alectinib,PMID:28586279,Alectinib versus Crizotinib in Untreated ALK-Positive Non-Small-Cell Lung Cancer.,2017,true,true,true,2026-07-17
+LUAD,,KRAS,target,sotorasib,PMID:34096690,Sotorasib for Lung Cancers with KRAS p.G12C Mutation.,2021,true,true,true,2026-07-17
+LUAD,,KRAS,target,adagrasib,PMID:35658005,Adagrasib in Non-Small-Cell Lung Cancer Harboring a KRASG12C Mutation.,2022,true,true,true,2026-07-17
+LUAD,,BRAF,target,dabrafenib + trametinib,PMID:27283860,"Dabrafenib plus trametinib in patients with previously treated BRAF(V600E)-mutant metastatic non-small cell lung cancer: an open-label, multicentre phase 2 trial.",2016,true,true,true,2026-07-17
+LUAD,,MET,target,capmatinib,PMID:32877583,Capmatinib in MET Exon 14-Mutated or MET-Amplified Non-Small-Cell Lung Cancer.,2020,true,true,true,2026-07-17
+LUAD,,RET,target,selpercatinib,PMID:32846060,Efficacy of Selpercatinib in RET Fusion-Positive Non-Small-Cell Lung Cancer.,2020,true,true,true,2026-07-17
+LUAD,,PDCD1,target,pembrolizumab,PMID:27718847,Pembrolizumab versus Chemotherapy for PD-L1-Positive Non-Small-Cell Lung Cancer.,2016,true,true,true,2026-07-17
+LUAD,,TACSTD2,target,datopotamab deruxtecan,PMID:39250535,"Datopotamab Deruxtecan Versus Docetaxel for Previously Treated Advanced or Metastatic Non-Small Cell Lung Cancer: The Randomized, Open-Label Phase III TROPION-Lung01 Study.",2025,true,true,true,2026-07-17
+COAD,,KRAS,biomarker,,PMID:18316791,Wild-type KRAS is required for panitumumab efficacy in patients with metastatic colorectal cancer.,2008,true,true,true,2026-07-17
+COAD,,NRAS,biomarker,,PMID:20921462,"Randomized phase III study of panitumumab with fluorouracil, leucovorin, and irinotecan (FOLFIRI) compared with FOLFIRI alone as second-line treatment in patients with metastatic colorectal cancer.",2010,true,true,true,2026-07-17
+COAD,,BRAF,biomarker,,PMID:31566309,"Encorafenib, Binimetinib, and Cetuximab in BRAF V600E-Mutated Colorectal Cancer.",2019,true,true,true,2026-07-17
+COAD,,MLH1,biomarker,,PMID:15849733,"Spectrum and frequencies of mutations in MSH2 and MLH1 identified in 1,721 German families suspected of hereditary nonpolyposis colorectal cancer.",2005,true,true,true,2026-07-17
+COAD,,MSH2,biomarker,,PMID:21642682,"Cancer risks associated with germline mutations in MLH1, MSH2, and MSH6 genes in Lynch syndrome.",2011,true,true,true,2026-07-17
+COAD,,MSH6,biomarker,,PMID:21642682,"Cancer risks associated with germline mutations in MLH1, MSH2, and MSH6 genes in Lynch syndrome.",2011,true,true,true,2026-07-17
+COAD,,PMS2,biomarker,,PMID:40612862,Lynch syndrome and colorectal cancer: A review of current perspectives in molecular genetics and clinical strategies.,2025,true,true,true,2026-07-17
+COAD,,CDX2,biomarker,,PMID:30631044,CDX2 inhibits the proliferation and tumor formation of colon cancer cells by suppressing Wnt/β-catenin signaling via transactivation of GSK-3β and Axin2 expression.,2019,true,true,true,2026-07-17
+COAD,,CEACAM5,biomarker,,PMID:17060676,ASCO 2006 update of recommendations for the use of tumor markers in gastrointestinal cancer.,2006,true,true,true,2026-07-17
+COAD,,ERBB2,biomarker,,PMID:27108243,"Dual-targeted therapy with trastuzumab and lapatinib in treatment-refractory, KRAS codon 12/13 wild-type, HER2-positive metastatic colorectal cancer (HERACLES): a proof-of-concept, multicentre, open-label, phase 2 trial.",2016,true,true,true,2026-07-17
+COAD,,TP53,biomarker,,PMID:22810696,Comprehensive molecular characterization of human colon and rectal cancer.,2012,true,true,true,2026-07-17
+COAD,,APC,biomarker,,PMID:11978510,The APC gene in colorectal cancer.,2002,true,true,true,2026-07-17
+COAD,,BRAF,target,encorafenib + cetuximab,PMID:31566309,"Encorafenib, Binimetinib, and Cetuximab in BRAF V600E-Mutated Colorectal Cancer.",2019,true,true,true,2026-07-17
+COAD,,KRAS,target,sotorasib,PMID:40215429,Overall Survival Analysis of the Phase III CodeBreaK 300 Study of Sotorasib Plus Panitumumab Versus Investigator's Choice in Chemorefractory KRAS G12C Colorectal Cancer.,2025,true,true,true,2026-07-17
+COAD,,KRAS,target,adagrasib,PMID:36546659,Adagrasib with or without Cetuximab in Colorectal Cancer with Mutated KRAS G12C.,2023,true,true,true,2026-07-17
+COAD,,ERBB2,target,trastuzumab + tucatinib,PMID:37142372,"Tucatinib plus trastuzumab for chemotherapy-refractory, HER2-positive, RAS wild-type unresectable or metastatic colorectal cancer (MOUNTAINEER): a multicentre, open-label, phase 2 study.",2023,true,true,true,2026-07-17
+COAD,,EGFR,target,cetuximab,PMID:19339720,Cetuximab and chemotherapy as initial treatment for metastatic colorectal cancer.,2009,true,true,true,2026-07-17
+COAD,,EGFR,target,panitumumab,PMID:20921462,"Randomized phase III study of panitumumab with fluorouracil, leucovorin, and irinotecan (FOLFIRI) compared with FOLFIRI alone as second-line treatment in patients with metastatic colorectal cancer.",2010,true,true,true,2026-07-17
+COAD,,PDCD1,target,pembrolizumab,PMID:33264544,Pembrolizumab in Microsatellite-Instability-High Advanced Colorectal Cancer.,2020,true,true,true,2026-07-17
+COAD,,CEACAM5,target,labetuzumab govitecan,PMID:28817371,Phase I/II Trial of Labetuzumab Govitecan (Anti-CEACAM5/SN-38 Antibody-Drug Conjugate) in Patients With Refractory or Relapsing Metastatic Colorectal Cancer.,2017,true,true,true,2026-07-17
+SKCM,,BRAF,biomarker,,PMID:37627054,"BRAF Mutations in Melanoma: Biological Aspects, Therapeutic Implications, and Circulating Biomarkers.",2023,true,true,true,2026-07-17
+SKCM,,NRAS,biomarker,,PMID:23414587,"MEK162 for patients with advanced melanoma harbouring NRAS or Val600 BRAF mutations: a non-randomised, open-label phase 2 study.",2013,true,true,true,2026-07-17
+SKCM,,MITF,biomarker,,PMID:39277608,"MITF regulates IDH1, NNT, and a transcriptional program protecting melanoma from reactive oxygen species.",2024,true,true,true,2026-07-17
+SKCM,,S100B,biomarker,,PMID:19617299,Biomarkers in melanoma.,2009,true,true,true,2026-07-17
+SKCM,,MLANA,biomarker,,PMID:12819038,MLANA/MART1 and SILV/PMEL17/GP100 are transcriptionally regulated by MITF in melanocytes and melanoma.,2003,true,true,true,2026-07-17
+SKCM,,TYR,biomarker,,PMID:40651969,Endogenous tyrosinase-catalyzed therapeutics.,2025,true,true,true,2026-07-17
+SKCM,,PMEL,biomarker,,PMID:12819038,MLANA/MART1 and SILV/PMEL17/GP100 are transcriptionally regulated by MITF in melanocytes and melanoma.,2003,true,true,true,2026-07-17
+SKCM,,PRAME,biomarker,,PMID:38338862,"PRAME Updated: Diagnostic, Prognostic, and Therapeutic Role in Skin Cancer.",2024,true,true,true,2026-07-17
+SKCM,,CD274,biomarker,,PMID:38718296,The Circadian Clock Component RORA Increases Immunosurveillance in Melanoma by Inhibiting PD-L1 Expression.,2024,true,true,true,2026-07-17
+SKCM,,BRAF,target,dabrafenib + trametinib,PMID:25399551,Improved overall survival in melanoma with combined dabrafenib and trametinib.,2015,true,true,true,2026-07-17
+SKCM,,BRAF,target,encorafenib + binimetinib,PMID:29573941,"Encorafenib plus binimetinib versus vemurafenib or encorafenib in patients with BRAF-mutant melanoma (COLUMBUS): a multicentre, open-label, randomised phase 3 trial.",2018,true,true,true,2026-07-17
+SKCM,,BRAF,target,vemurafenib,PMID:21639808,Improved survival with vemurafenib in melanoma with BRAF V600E mutation.,2011,true,true,true,2026-07-17
+SKCM,,PDCD1,target,pembrolizumab,PMID:25891173,Pembrolizumab versus Ipilimumab in Advanced Melanoma.,2015,true,true,true,2026-07-17
+SKCM,,PDCD1,target,nivolumab,PMID:26027431,Combined Nivolumab and Ipilimumab or Monotherapy in Untreated Melanoma.,2015,true,true,true,2026-07-17
+SKCM,,CTLA4,target,ipilimumab,PMID:20525992,Improved survival with ipilimumab in patients with metastatic melanoma.,2010,true,true,true,2026-07-17
+SKCM,,LAG3,target,relatlimab,PMID:34986285,Relatlimab and Nivolumab versus Nivolumab in Untreated Advanced Melanoma.,2022,true,true,true,2026-07-17
+SKCM,,PRAME,target,IMA203,PMID:40205198,Autologous T cell therapy for PRAME+ advanced solid tumors in HLA-A*02+ patients: a phase 1 trial.,2025,true,true,true,2026-07-17
+SKCM,,TYR,target,TYR-directed TCR-T,PMID:31054264,Engineering antigen-specific NK cell lines against the melanoma-associated antigen tyrosinase via TCR gene transfer.,2019,true,true,true,2026-07-17
+HNSC,,CDKN2A,biomarker,,PMID:29355614,Head and neck squamous cell carcinoma: Genomics and emerging biomarkers for immunomodulatory cancer treatments.,2018,true,true,true,2026-07-17
+HNSC,,EGFR,biomarker,,PMID:40996745,Emerging EGFR-Targeted Therapy in Head and Neck Cancer: A Review.,2025,true,true,true,2026-07-17
+HNSC,,CD274,biomarker,,PMID:29355614,Head and neck squamous cell carcinoma: Genomics and emerging biomarkers for immunomodulatory cancer treatments.,2018,true,true,true,2026-07-17
+HNSC,,CCND1,biomarker,,PMID:42268368,Oncogene amplification of CCND1 via extrachromosomal DNA impacts overall survival in head and neck squamous cell carcinoma.,2026,true,true,true,2026-07-17
+HNSC,,TP53,biomarker,,PMID:40885710,Transcriptional activation of PHKG2 by TP53 promotes ferroptosis through nuclear export of NRF2 in head and neck squamous cell carcinoma.,2025,true,true,true,2026-07-17
+HNSC,,PIK3CA,biomarker,,PMID:34779417,Therapeutic implications of activating noncanonical PIK3CA mutations in head and neck squamous cell carcinoma.,2021,true,true,true,2026-07-17
+HNSC,,FADD,biomarker,,PMID:40370064,FADD Functions as an Oncogene in Chr11q13.3-Amplified Head and Neck Squamous Cell Carcinoma.,2025,true,true,true,2026-07-17
+HNSC,,EGFR,target,cetuximab,PMID:18784101,Platinum-based chemotherapy plus cetuximab in head and neck cancer.,2008,true,true,true,2026-07-17
+HNSC,,PDCD1,target,pembrolizumab,PMID:31679945,"Pembrolizumab alone or with chemotherapy versus cetuximab with chemotherapy for recurrent or metastatic squamous cell carcinoma of the head and neck (KEYNOTE-048): a randomised, open-label, phase 3 study.",2019,true,true,true,2026-07-17
+HNSC,,PDCD1,target,nivolumab,PMID:27718784,Nivolumab for Recurrent Squamous-Cell Carcinoma of the Head and Neck.,2016,true,true,true,2026-07-17
+DLBC,,MS4A1,biomarker,,PMID:39017945,"Advances in biology, diagnosis and treatment of DLBCL.",2024,true,true,true,2026-07-17
+DLBC,,CD19,biomarker,,PMID:30501490,Tisagenlecleucel in Adult Relapsed or Refractory Diffuse Large B-Cell Lymphoma.,2019,true,true,true,2026-07-17
+DLBC,,CD79A,biomarker,,PMID:40523447,"Correlation with CD79B expression and clinicopathological parameters including cell of origin, CD79A and CD19 expression, and CD79B mutation in diffuse large B-cell lymphoma.",2025,true,true,true,2026-07-17
+DLBC,,CD79B,biomarker,,PMID:34904799,Polatuzumab Vedotin in Previously Untreated Diffuse Large B-Cell Lymphoma.,2022,true,true,true,2026-07-17
+DLBC,,BCL6,biomarker,,PMID:37032379,Simplified algorithm for genetic subtyping in diffuse large B-cell lymphoma.,2023,true,true,true,2026-07-17
+DLBC,,MME,biomarker,,PMID:18615101,The expression of 16 genes related to the cell of origin and immune response predicts survival in elderly patients with diffuse large B-cell lymphoma treated with CHOP and rituximab.,2008,true,true,true,2026-07-17
+DLBC,,IRF4,biomarker,,PMID:37555980,"Emerging entities: high-grade/large B-cell lymphoma with 11q aberration, large B-cell lymphoma with IRF4 rearrangement, and new molecular subgroups in large B-cell lymphomas. A report of the 2022 EA4HP/SH lymphoma workshop.",2023,true,true,true,2026-07-17
+DLBC,,MYC,biomarker,,PMID:38184753,Non-IG::MYC in diffuse large B-cell lymphoma confers variable genomic configurations and MYC transactivation potential.,2024,true,true,true,2026-07-17
+DLBC,,BCL2,biomarker,,PMID:37032379,Simplified algorithm for genetic subtyping in diffuse large B-cell lymphoma.,2023,true,true,true,2026-07-17
+DLBC,,MS4A1,target,rituximab,PMID:16702182,Randomised phase III study of R-ICE versus R-DHAP in relapsed patients with CD20 diffuse large B-cell lymphoma (DLBCL) followed by high-dose therapy and a second randomisation to maintenance treatment with rituximab or not: an update of the CORAL study.,2006,true,true,true,2026-07-17
+DLBC,,CD19,target,axicabtagene ciloleucel,PMID:29226797,Axicabtagene Ciloleucel CAR T-Cell Therapy in Refractory Large B-Cell Lymphoma.,2017,true,true,true,2026-07-17
+DLBC,,CD19,target,tisagenlecleucel,PMID:30501490,Tisagenlecleucel in Adult Relapsed or Refractory Diffuse Large B-Cell Lymphoma.,2019,true,true,true,2026-07-17
+DLBC,,CD19,target,lisocabtagene maraleucel,PMID:32888407,Lisocabtagene maraleucel for patients with relapsed or refractory large B-cell lymphomas (TRANSCEND NHL 001): a multicentre seamless design study.,2020,true,true,true,2026-07-17
+DLBC,,CD19,target,loncastuximab tesirine,PMID:37646659,Loncastuximab tesirine in relapsed/refractory diffuse large B-cell lymphoma: long-term efficacy and safety from the phase II LOTIS-2 study.,2024,true,true,true,2026-07-17
+DLBC,,CD19,target,tafasitamab,PMID:32511983,"Tafasitamab plus lenalidomide in relapsed or refractory diffuse large B-cell lymphoma (L-MIND): a multicentre, prospective, single-arm, phase 2 study.",2020,true,true,true,2026-07-17
+DLBC,,CD79B,target,polatuzumab vedotin,PMID:34904799,Polatuzumab Vedotin in Previously Untreated Diffuse Large B-Cell Lymphoma.,2022,true,true,true,2026-07-17
+DLBC,,CD22,target,inotuzumab ozogamicin,PMID:25707288,"A phase 2 study of inotuzumab ozogamicin and rituximab, followed by autologous stem cell transplant in patients with relapsed/refractory diffuse large B-cell lymphoma.",2015,true,true,true,2026-07-17
+DLBC,,MS4A1,target,glofitamab,PMID:39550172,"Glofitamab plus gemcitabine and oxaliplatin (GemOx) versus rituximab-GemOx for relapsed or refractory diffuse large B-cell lymphoma (STARGLO): a global phase 3, randomised, open-label trial.",2024,true,true,true,2026-07-17
+DLBC,,MS4A1,target,epcoritamab,PMID:40663785,Real-world outcomes of patients with aggressive B-cell lymphoma treated with epcoritamab or glofitamab.,2025,true,true,true,2026-07-17
+DLBC,,BCL2,target,venetoclax,PMID:39270702,"Atezolizumab, venetoclax, and obinutuzumab combination in Richter transformation diffuse large B-cell lymphoma (MOLTO): a multicentre, single-arm, phase 2 trial.",2024,true,true,true,2026-07-17
+LAML,,CD33,biomarker,,PMID:22482940,"Effect of gemtuzumab ozogamicin on survival of adult patients with de-novo acute myeloid leukaemia (ALFA-0701): a randomised, open-label, phase 3 study.",2012,true,true,true,2026-07-17
+LAML,,KIT,biomarker,,PMID:31899799,Prospective evaluation of prognostic impact of KIT mutations on acute myeloid leukemia with RUNX1-RUNX1T1 and CBFB-MYH11.,2020,true,true,true,2026-07-17
+LAML,,FLT3,biomarker,,PMID:28644114,Midostaurin plus Chemotherapy for Acute Myeloid Leukemia with a FLT3 Mutation.,2017,true,true,true,2026-07-17
+LAML,,NPM1,biomarker,,PMID:39901865,Biology and Management of Acute Myeloid Leukemia With Mutated NPM1.,2025,true,true,true,2026-07-17
+LAML,,CEBPA,biomarker,,PMID:34448807,Prognostic impact of CEBPA bZIP domain mutation in acute myeloid leukemia.,2022,true,true,true,2026-07-17
+LAML,,IDH1,biomarker,,PMID:29860938,Durable Remissions with Ivosidenib in IDH1-Mutated Relapsed or Refractory AML.,2018,true,true,true,2026-07-17
+LAML,,IDH2,biomarker,,PMID:28588020,Enasidenib in mutant IDH2 relapsed or refractory acute myeloid leukemia.,2017,true,true,true,2026-07-17
+LAML,,RUNX1,biomarker,,PMID:28179279,Role of RUNX1 in hematological malignancies.,2017,true,true,true,2026-07-17
+LAML,,TP53,biomarker,,PMID:40459096,TP53-Mutated Acute Myeloid Leukemia: Unanswered Questions.,2025,true,true,true,2026-07-17
+LAML,,DNMT3A,biomarker,,PMID:21067377,DNMT3A mutations in acute myeloid leukemia.,2010,true,true,true,2026-07-17
+LAML,,KMT2A,biomarker,,PMID:40105906,"Therapeutic horizon of acute myeloid leukemia: Success, optimism, and challenges.",2025,true,true,true,2026-07-17
+LAML,,MPO,biomarker,,PMID:35716019,Acute promyelocytic leukemia: Immunophenotype and differential diagnosis by flow cytometry.,2022,true,true,true,2026-07-17
+LAML,,CD33,target,gemtuzumab ozogamicin,PMID:30076173,"Gemtuzumab ozogamicin for de novo acute myeloid leukemia: final efficacy and safety updates from the open-label, phase III ALFA-0701 trial.",2019,true,true,true,2026-07-17
+LAML,,FLT3,target,midostaurin,PMID:28644114,Midostaurin plus Chemotherapy for Acute Myeloid Leukemia with a FLT3 Mutation.,2017,true,true,true,2026-07-17
+LAML,,FLT3,target,gilteritinib,PMID:31665578,Gilteritinib or Chemotherapy for Relapsed or Refractory FLT3-Mutated AML.,2019,true,true,true,2026-07-17
+LAML,,IDH1,target,ivosidenib,PMID:29860938,Durable Remissions with Ivosidenib in IDH1-Mutated Relapsed or Refractory AML.,2018,true,true,true,2026-07-17
+LAML,,IDH2,target,enasidenib,PMID:28588020,Enasidenib in mutant IDH2 relapsed or refractory acute myeloid leukemia.,2017,true,true,true,2026-07-17
+LAML,,BCL2,target,venetoclax,PMID:32786187,Azacitidine and Venetoclax in Previously Untreated Acute Myeloid Leukemia.,2020,true,true,true,2026-07-17
+LAML,,KMT2A,target,revumenib,PMID:39121437,Menin Inhibition With Revumenib for KMT2A-Rearranged Relapsed or Refractory Acute Leukemia (AUGMENT-101).,2025,true,true,true,2026-07-17
+LAML,,NPM1,target,revumenib,PMID:40332046,Menin inhibition with revumenib for NPM1-mutated relapsed or refractory acute myeloid leukemia: the AUGMENT-101 study.,2025,true,true,true,2026-07-17
+LAML,apl,PML,biomarker,,PMID:39017850,Function of PML-RARA in Acute Promyelocytic Leukemia.,2024,true,true,true,2026-07-17
+LAML,apl,RARA,biomarker,,PMID:39017850,Function of PML-RARA in Acute Promyelocytic Leukemia.,2024,true,true,true,2026-07-17
+LAML,apl,FLT3,biomarker,,PMID:34774343,A review of FLT3 inhibitors in acute myeloid leukemia.,2022,true,true,true,2026-07-17
+LAML,apl,RARA,target,tretinoin,PMID:23841729,Retinoic acid and arsenic trioxide for acute promyelocytic leukemia.,2013,true,true,true,2026-07-17
+LAML,apl,PML,target,arsenic trioxide,PMID:23841729,Retinoic acid and arsenic trioxide for acute promyelocytic leukemia.,2013,true,true,true,2026-07-17
+UCEC,,MLH1,biomarker,,PMID:21642682,"Cancer risks associated with germline mutations in MLH1, MSH2, and MSH6 genes in Lynch syndrome.",2011,true,true,true,2026-07-17
+UCEC,,MSH2,biomarker,,PMID:21642682,"Cancer risks associated with germline mutations in MLH1, MSH2, and MSH6 genes in Lynch syndrome.",2011,true,true,true,2026-07-17
+UCEC,,MSH6,biomarker,,PMID:21642682,"Cancer risks associated with germline mutations in MLH1, MSH2, and MSH6 genes in Lynch syndrome.",2011,true,true,true,2026-07-17
+UCEC,,PMS2,biomarker,,PMID:34398969,Endometrial cancer in Lynch syndrome.,2022,true,true,true,2026-07-17
+UCEC,,POLE,biomarker,,PMID:23636398,Integrated genomic characterization of endometrial carcinoma.,2013,true,true,true,2026-07-17
+UCEC,,PTEN,biomarker,,PMID:23636398,Integrated genomic characterization of endometrial carcinoma.,2013,true,true,true,2026-07-17
+UCEC,,TP53,biomarker,,PMID:23636398,Integrated genomic characterization of endometrial carcinoma.,2013,true,true,true,2026-07-17
+UCEC,,PAX8,biomarker,,PMID:40138919,Excess heme orchestrates progesterone resistance in uterine endometrial cancer through macrophage polarization and the IL-33/PAX8/PGR axis.,2025,true,true,true,2026-07-17
+UCEC,,ERBB2,biomarker,,PMID:39768892,HER2-Positive Serous Endometrial Cancer Treatment: Current Clinical Practice and Future Directions.,2024,true,true,true,2026-07-17
+UCEC,,ARID1A,biomarker,,PMID:23636398,Integrated genomic characterization of endometrial carcinoma.,2013,true,true,true,2026-07-17
+UCEC,,CTNNB1,biomarker,,PMID:23636398,Integrated genomic characterization of endometrial carcinoma.,2013,true,true,true,2026-07-17
+UCEC,,PDCD1,target,pembrolizumab + chemotherapy,PMID:36972022,Pembrolizumab plus Chemotherapy in Advanced Endometrial Cancer.,2023,true,true,true,2026-07-17
+UCEC,,PDCD1,target,dostarlimab,PMID:38866180,Overall survival in patients with endometrial cancer treated with dostarlimab plus carboplatin-paclitaxel in the randomized ENGOT-EN6/GOG-3031/RUBY trial.,2024,true,true,true,2026-07-17
+UCEC,,PDCD1,target,pembrolizumab + lenvatinib,PMID:37058687,Lenvatinib Plus Pembrolizumab in Previously Treated Advanced Endometrial Cancer: Updated Efficacy and Safety From the Randomized Phase III Study 309/KEYNOTE-775.,2023,true,true,true,2026-07-17
+UCEC,,ERBB2,target,trastuzumab,PMID:32601075,Randomized Phase II Trial of Carboplatin-Paclitaxel Compared with Carboplatin-Paclitaxel-Trastuzumab in Advanced (Stage III-IV) or Recurrent Uterine Serous Carcinomas that Overexpress Her2/Neu (NCT01367002): Updated Overall Survival Analysis.,2020,true,true,true,2026-07-17
+UCEC,,ERBB2,target,trastuzumab deruxtecan,PMID:37595181,Fam-Trastuzumab Deruxtecan in HER2/Neu-Expressing Serous Endometrial Cancer.,2023,true,true,true,2026-07-17
+STAD,,ERBB2,biomarker,,PMID:20728210,"Trastuzumab in combination with chemotherapy versus chemotherapy alone for treatment of HER2-positive advanced gastric or gastro-oesophageal junction cancer (ToGA): a phase 3, open-label, randomised controlled trial.",2010,true,true,true,2026-07-17
+STAD,,CLDN18,biomarker,,PMID:35811317,Multiplex immunohistochemistry defines the tumor immune microenvironment and immunotherapeutic outcome in CLDN18.2-positive gastric cancer.,2022,true,true,true,2026-07-17
+STAD,,MLH1,biomarker,,PMID:38922524,Potent therapeutic strategy in gastric cancer with microsatellite instability-high and/or deficient mismatch repair.,2024,true,true,true,2026-07-17
+STAD,,MSH2,biomarker,,PMID:38016120,Lnc-PTCHD4-AS inhibits gastric cancer through MSH2-MSH6 dimerization and ATM-p53-p21 activation.,2023,true,true,true,2026-07-17
+STAD,,EBER1,biomarker,,PMID:38462175,Regulation mechanism of EBV-encoded EBER1 and LMP2A on YAP1 and the impact of YAP1 on the EBV infection status in EBV-associated gastric carcinoma.,2024,true,true,true,2026-07-17
+STAD,,CD274,biomarker,,PMID:36260159,Predictive biomarkers in gastric cancer.,2023,true,true,true,2026-07-17
+STAD,,FGFR2,biomarker,,PMID:36260159,Predictive biomarkers in gastric cancer.,2023,true,true,true,2026-07-17
+STAD,,MET,biomarker,,PMID:26690587,MET-targeted therapy for gastric cancer: the importance of a biomarker-based strategy.,2016,true,true,true,2026-07-17
+STAD,,ERBB2,target,trastuzumab,PMID:20728210,"Trastuzumab in combination with chemotherapy versus chemotherapy alone for treatment of HER2-positive advanced gastric or gastro-oesophageal junction cancer (ToGA): a phase 3, open-label, randomised controlled trial.",2010,true,true,true,2026-07-17
+STAD,,ERBB2,target,trastuzumab deruxtecan,PMID:32469182,Trastuzumab Deruxtecan in Previously Treated HER2-Positive Gastric Cancer.,2020,true,true,true,2026-07-17
+STAD,,CLDN18,target,zolbetuximab,PMID:38188462,Zolbetuximab for Claudin18.2-positive gastric or gastroesophageal junction cancer.,2024,true,true,true,2026-07-17
+STAD,,PDCD1,target,pembrolizumab,PMID:37875143,"Pembrolizumab plus chemotherapy versus placebo plus chemotherapy for HER2-negative advanced gastric cancer (KEYNOTE-859): a multicentre, randomised, double-blind, phase 3 trial.",2023,true,true,true,2026-07-17
+STAD,,PDCD1,target,nivolumab + chemotherapy,PMID:34102137,"First-line nivolumab plus chemotherapy versus chemotherapy alone for advanced gastric, gastro-oesophageal junction, and oesophageal adenocarcinoma (CheckMate 649): a randomised, open-label, phase 3 trial.",2021,true,true,true,2026-07-17
+STAD,,KDR,target,ramucirumab,PMID:25240821,"Ramucirumab plus paclitaxel versus placebo plus paclitaxel in patients with previously treated advanced gastric or gastro-oesophageal junction adenocarcinoma (RAINBOW): a double-blind, randomised phase 3 trial.",2014,true,true,true,2026-07-17
+STAD,,FGFR2,target,bemarituzumab,PMID:38308771,Bemarituzumab as first-line treatment for locally advanced or metastatic gastric/gastroesophageal junction adenocarcinoma: final analysis of the randomized phase 2 FIGHT trial.,2024,true,true,true,2026-07-17
+BLCA,,FGFR3,biomarker,,PMID:36898352,Role of FGFR3 in bladder cancer: Treatment landscape and future challenges.,2023,true,true,true,2026-07-17
+BLCA,,NECTIN4,biomarker,,PMID:34108177,Heterogeneity in NECTIN4 Expression Across Molecular Subtypes of Urothelial Cancer Mediates Sensitivity to Enfortumab Vedotin.,2021,true,true,true,2026-07-17
+BLCA,,TACSTD2,biomarker,,PMID:38986529,"Genomic, immunologic, and prognostic associations of TROP2 (TACSTD2) expression in solid tumors.",2024,true,true,true,2026-07-17
+BLCA,,CD274,biomarker,,PMID:37410239,Assessment of PD-L1 Status in Urothelial Cancer.,2023,true,true,true,2026-07-17
+BLCA,,ERBB2,biomarker,,PMID:40540011,ERBB2/HER2 Alterations in ctDNA and Metachronous Tissues of Patients with Metastatic Urothelial Cancer.,2025,true,true,true,2026-07-17
+BLCA,,FOXA1,biomarker,,PMID:34108177,Heterogeneity in NECTIN4 Expression Across Molecular Subtypes of Urothelial Cancer Mediates Sensitivity to Enfortumab Vedotin.,2021,true,true,true,2026-07-17
+BLCA,,UPK2,biomarker,,PMID:25449628,Utility of uroplakin II expression as a marker of urothelial carcinoma.,2015,true,true,true,2026-07-17
+BLCA,,GATA3,biomarker,,PMID:38908022,HER2 overexpression in urothelial carcinoma with GATA3 and PPARG copy number gains.,2024,true,true,true,2026-07-17
+BLCA,,KRT5,biomarker,,PMID:30550540,The urothelial cell line UROtsa transformed by arsenite and cadmium display basal characteristics associated with muscle invasive urothelial cancers.,2018,true,true,true,2026-07-17
+BLCA,,FGFR3,target,erdafitinib,PMID:37871702,Erdafitinib versus pembrolizumab in pretreated patients with advanced or metastatic urothelial cancer with select FGFR alterations: cohort 2 of the randomized phase III THOR trial.,2024,true,true,true,2026-07-17
+BLCA,,NECTIN4,target,enfortumab vedotin,PMID:38446675,Enfortumab Vedotin and Pembrolizumab in Untreated Advanced Urothelial Cancer.,2024,true,true,true,2026-07-17
+BLCA,,TACSTD2,target,sacituzumab govitecan + pembrolizumab,PMID:38261969,Sacituzumab Govitecan in Combination With Pembrolizumab for Patients With Metastatic Urothelial Cancer That Progressed After Platinum-Based Chemotherapy: TROPHY-U-01 Cohort 3.,2024,true,true,true,2026-07-17
+BLCA,,PDCD1,target,enfortumab vedotin + pembrolizumab,PMID:38446675,Enfortumab Vedotin and Pembrolizumab in Untreated Advanced Urothelial Cancer.,2024,true,true,true,2026-07-17
+BLCA,,CD274,target,atezolizumab + platinum chemotherapy,PMID:32416780,"Atezolizumab with or without chemotherapy in metastatic urothelial cancer (IMvigor130): a multicentre, randomised, placebo-controlled phase 3 trial.",2020,true,true,true,2026-07-17
+BLCA,,CD274,target,avelumab,PMID:32945632,Avelumab Maintenance Therapy for Advanced or Metastatic Urothelial Carcinoma.,2020,true,true,true,2026-07-17
+BLCA,,ERBB2,target,trastuzumab deruxtecan,PMID:39405343,Trastuzumab Deruxtecan with Nivolumab in HER2-Expressing Metastatic Breast or Urothelial Cancer: Analysis of the Phase Ib DS8201-A-U105 Study.,2024,true,true,true,2026-07-17
+KIRC,,MET,biomarker,,PMID:40454929,Increased Expression of AXL and c-MET in High-Grade Clear Cell Renal Cell Carcinoma and Its Association With VEGFR-TKI Treatment and PD-L1 Expression.,2025,true,true,true,2026-07-17
+KIRC,,AXL,biomarker,,PMID:40454929,Increased Expression of AXL and c-MET in High-Grade Clear Cell Renal Cell Carcinoma and Its Association With VEGFR-TKI Treatment and PD-L1 Expression.,2025,true,true,true,2026-07-17
+KIRC,,CD274,biomarker,,PMID:39014460,"PD1/PD-L1 blockade in clear cell renal cell carcinoma: mechanistic insights, clinical efficacy, and future perspectives.",2024,true,true,true,2026-07-17
+KIRC,,PBRM1,biomarker,,PMID:29301960,Genomic correlates of response to immune checkpoint therapies in clear cell renal cell carcinoma.,2018,true,true,true,2026-07-17
+KIRC,,BAP1,biomarker,,PMID:22683710,BAP1 loss defines a new class of renal cell carcinoma.,2012,true,true,true,2026-07-17
+KIRC,,VHL,biomarker,,PMID:39051572,"Clear Cell Renal Cell Carcinoma: A Comprehensive Review of its Histopathology, Genetics, and Differential Diagnosis.",2025,true,true,true,2026-07-17
+KIRC,,HIF1A,biomarker,,PMID:38698165,Von Hippel-Lindau protein signalling in clear cell renal cell carcinoma.,2024,true,true,true,2026-07-17
+KIRC,,CA9,biomarker,,PMID:33276608,"Characterization of CD147, CA9, and CD70 as Tumor-Specific Markers on Extracellular Vesicles in Clear Cell Renal Cell Carcinoma.",2020,true,true,true,2026-07-17
+KIRC,,PAX8,biomarker,,PMID:35676472,The renal lineage factor PAX8 controls oncogenic signalling in kidney cancer.,2022,true,true,true,2026-07-17
+KIRC,,KDR,target,sunitinib,PMID:17215529,Sunitinib versus interferon alfa in metastatic renal-cell carcinoma.,2007,true,true,true,2026-07-17
+KIRC,,KDR,target,pazopanib,PMID:20100962,Pazopanib in locally advanced or metastatic renal cell carcinoma: results of a randomized phase III trial.,2010,true,true,true,2026-07-17
+KIRC,,KDR,target,cabozantinib,PMID:26406150,Cabozantinib versus Everolimus in Advanced Renal-Cell Carcinoma.,2015,true,true,true,2026-07-17
+KIRC,,KDR,target,axitinib,PMID:30779529,Pembrolizumab plus Axitinib versus Sunitinib for Advanced Renal-Cell Carcinoma.,2019,true,true,true,2026-07-17
+KIRC,,KDR,target,lenvatinib,PMID:33616314,Lenvatinib plus Pembrolizumab or Everolimus for Advanced Renal Cell Carcinoma.,2021,true,true,true,2026-07-17
+KIRC,,PDCD1,target,pembrolizumab,PMID:30779529,Pembrolizumab plus Axitinib versus Sunitinib for Advanced Renal-Cell Carcinoma.,2019,true,true,true,2026-07-17
+KIRC,,PDCD1,target,nivolumab + ipilimumab,PMID:29562145,Nivolumab plus Ipilimumab versus Sunitinib in Advanced Renal-Cell Carcinoma.,2018,true,true,true,2026-07-17
+KIRC,,CD274,target,avelumab + axitinib,PMID:30779531,Avelumab plus Axitinib versus Sunitinib for Advanced Renal-Cell Carcinoma.,2019,true,true,true,2026-07-17
+KIRC,,EPAS1,target,belzutifan,PMID:39167807,Belzutifan versus Everolimus for Advanced Renal-Cell Carcinoma.,2024,true,true,true,2026-07-17
+CESC,,CDKN2A,biomarker,,PMID:32594303,CDKN2A inhibits cell proliferation and invasion in cervical cancer through LDHA-mediated AKT/mTOR pathway.,2021,true,true,true,2026-07-17
+CESC,,CD274,biomarker,,PMID:28112728,Integrated genomic and molecular characterization of cervical cancer.,2017,true,true,true,2026-07-17
+CESC,,F3,biomarker,,PMID:36415085,A review of the novel tissue factor antibody-drug conjugate: Tisotumab vedotin.,2023,true,true,true,2026-07-17
+CESC,,MUC16,biomarker,,PMID:31736008,MUC16 facilitates cervical cancer progression via JAK2/STAT3 phosphorylation-mediated cyclooxygenase-2 expression.,2020,true,true,true,2026-07-17
+CESC,,PDCD1,target,pembrolizumab,PMID:34534429,"Pembrolizumab for Persistent, Recurrent, or Metastatic Cervical Cancer.",2021,true,true,true,2026-07-17
+CESC,,PDCD1,target,cemiplimab,PMID:39798514,Cemiplimab in recurrent cervical cancer: Final analysis of overall survival in the phase III EMPOWER-Cervical 1/GOG-3016/ENGOT-cx9 trial.,2025,true,true,true,2026-07-17
+CESC,,F3,target,tisotumab vedotin,PMID:33845034,"Efficacy and safety of tisotumab vedotin in previously treated recurrent or metastatic cervical cancer (innovaTV 204/GOG-3023/ENGOT-cx6): a multicentre, open-label, single-arm, phase 2 study.",2021,true,true,true,2026-07-17
+CESC,,PDCD1,target,nivolumab,PMID:38608691,"Nivolumab with or without ipilimumab in patients with recurrent or metastatic cervical cancer (CheckMate 358): a phase 1-2, open-label, multicohort trial.",2024,true,true,true,2026-07-17
+ESCA,,ERBB2,biomarker,,PMID:35038433,"Trastuzumab with trimodality treatment for oesophageal adenocarcinoma with HER2 overexpression (NRG Oncology/RTOG 1010): a multicentre, randomised, phase 3 trial.",2022,true,true,true,2026-07-17
+ESCA,,CD274,biomarker,,PMID:33026938,Randomized Phase III KEYNOTE-181 Study of Pembrolizumab Versus Chemotherapy in Advanced Esophageal Cancer.,2020,true,true,true,2026-07-17
+ESCA,,MLH1,biomarker,,PMID:41163511,Defect of MLH1 expression sensitized esophageal squamous cell carcinoma cells to Polθ inhibitor.,2025,true,true,true,2026-07-17
+ESCA,,TP53,biomarker,,PMID:36966136,Integrative proteogenomic characterization of early esophageal cancer.,2023,true,true,true,2026-07-17
+ESCA,,CLDN18,biomarker,,PMID:41989337,"Efficacy and safety of anti-CLDN18.2 therapies in advanced or metastatic gastric, gastro-oesophageal junction, and oesophageal carcinomas with CLDN18.2 positivity: a systematic review and meta-analysis.",2026,true,true,true,2026-07-17
+ESCA,,PDCD1,target,nivolumab,PMID:35108470,Nivolumab Combination Therapy in Advanced Esophageal Squamous-Cell Carcinoma.,2022,true,true,true,2026-07-17
+ESCA,,PDCD1,target,pembrolizumab,PMID:34454674,"Pembrolizumab plus chemotherapy versus chemotherapy alone for first-line treatment of advanced oesophageal cancer (KEYNOTE-590): a randomised, placebo-controlled, phase 3 study.",2021,true,true,true,2026-07-17
+PAAD,,KRAS,biomarker,,PMID:38686056,Targeting KRAS in pancreatic cancer.,2024,true,true,true,2026-07-17
+PAAD,,BRCA1,biomarker,,PMID:31157963,Maintenance Olaparib for Germline BRCA-Mutated Metastatic Pancreatic Cancer.,2019,true,true,true,2026-07-17
+PAAD,,BRCA2,biomarker,,PMID:31157963,Maintenance Olaparib for Germline BRCA-Mutated Metastatic Pancreatic Cancer.,2019,true,true,true,2026-07-17
+PAAD,,PALB2,biomarker,,PMID:35171259,Prevalence of Germline Sequence Variations Among Patients With Pancreatic Cancer in China.,2022,true,true,true,2026-07-17
+PAAD,,TP53,biomarker,,PMID:27158978,Pancreatic cancer.,2016,true,true,true,2026-07-17
+PAAD,,CDKN2A,biomarker,,PMID:27158978,Pancreatic cancer.,2016,true,true,true,2026-07-17
+PAAD,,SMAD4,biomarker,,PMID:40440097,SMAD4 Deficiency Promotes Pancreatic Cancer Progression and Confers Susceptibility to TGFβ Inhibition.,2025,true,true,true,2026-07-17
+PAAD,,CLDN18,biomarker,,PMID:37507075,CLDN18.2 BiTE Engages Effector and Regulatory T Cells for Antitumor Immune Response in Preclinical Models of Pancreatic Cancer.,2023,true,true,true,2026-07-17
+PAAD,,NRG1,biomarker,,PMID:39908431,Efficacy of Zenocutuzumab in NRG1 Fusion-Positive Cancer.,2025,true,true,true,2026-07-17
+PAAD,,KRT19,biomarker,,PMID:39280598,KRT19 is regulated by miR-642a-5p and promotes pancreatic cancer progression through the Wnt/β-catenin pathway.,2024,true,true,true,2026-07-17
+PAAD,,PDX1,biomarker,,PMID:17056599,The PDX1 homeodomain transcription factor negatively regulates the pancreatic ductal cell-specific keratin 19 promoter.,2006,true,true,true,2026-07-17
+PAAD,,BRCA1,target,olaparib,PMID:31157963,Maintenance Olaparib for Germline BRCA-Mutated Metastatic Pancreatic Cancer.,2019,true,true,true,2026-07-17
+PAAD,,NRG1,target,zenocutuzumab,PMID:39908431,Efficacy of Zenocutuzumab in NRG1 Fusion-Positive Cancer.,2025,true,true,true,2026-07-17
+PAAD,,KRAS,target,adagrasib,PMID:38637634,Targeting KRAS in cancer.,2024,true,true,true,2026-07-17
+PAAD,,KRAS,target,sotorasib,PMID:36546651,Sotorasib in KRAS p.G12C-Mutated Advanced Pancreatic Cancer.,2023,true,true,true,2026-07-17
+PAAD,,KRAS,target,MRTX1133,PMID:37831007,A Small Molecule with Big Impact: MRTX1133 Targets the KRASG12D Mutation in Pancreatic Cancer.,2024,true,true,true,2026-07-17
+PAAD,,CLDN18,target,zolbetuximab,PMID:30546962,Characterization of zolbetuximab in pancreatic cancer models.,2019,true,true,true,2026-07-17
+LIHC,,AFP,biomarker,,PMID:37683735,AFP-L3 and DCP strongly predict early hepatocellular carcinoma recurrence after liver transplantation.,2023,true,true,true,2026-07-17
+LIHC,,GPC3,biomarker,,PMID:28621802,Glypican-3: A promising biomarker for hepatocellular carcinoma diagnosis and treatment.,2018,true,true,true,2026-07-17
+LIHC,,CTNNB1,biomarker,,PMID:38123979,Targeting MMP9 in CTNNB1 mutant hepatocellular carcinoma restores CD8+ T cell-mediated antitumour immunity and improves anti-PD-1 efficacy.,2024,true,true,true,2026-07-17
+LIHC,,TERT,biomarker,,PMID:26099527,Genetic Landscape and Biomarkers of Hepatocellular Carcinoma.,2015,true,true,true,2026-07-17
+LIHC,,TP53,biomarker,,PMID:31585088,Integrated Proteogenomic Characterization of HBV-Related Hepatocellular Carcinoma.,2019,true,true,true,2026-07-17
+LIHC,,AXIN1,biomarker,,PMID:41804058,AXIN1 Mutated Hepatocellular Carcinoma.,2026,true,true,true,2026-07-17
+LIHC,,FGF19,biomarker,,PMID:36907560,FGF19/FGFR4-mediated elevation of ETV4 facilitates hepatocellular carcinoma metastasis by upregulating PD-L1 and CCL2.,2023,true,true,true,2026-07-17
+LIHC,,VEGFA,biomarker,,PMID:36157115,Prognostic role of expression of angiogenesis markers in hepatocellular carcinoma: A bioinformatics analysis.,2022,true,true,true,2026-07-17
+LIHC,,MET,biomarker,,PMID:35634427,AXL and MET in Hepatocellular Carcinoma: A Systematic Literature Review.,2022,true,true,true,2026-07-17
+LIHC,,CD274,biomarker,,PMID:36601120,PD-1/PD-L1 checkpoint inhibitors in advanced hepatocellular carcinoma immunotherapy.,2022,true,true,true,2026-07-17
+LIHC,,CD274,target,atezolizumab + bevacizumab,PMID:32402160,Atezolizumab plus Bevacizumab in Unresectable Hepatocellular Carcinoma.,2020,true,true,true,2026-07-17
+LIHC,,CD274,target,durvalumab + tremelimumab,PMID:38382875,Four-year overall survival update from the phase III HIMALAYA study of tremelimumab plus durvalumab in unresectable hepatocellular carcinoma.,2024,true,true,true,2026-07-17
+LIHC,,KDR,target,sorafenib,PMID:18650514,Sorafenib in advanced hepatocellular carcinoma.,2008,true,true,true,2026-07-17
+LIHC,,KDR,target,lenvatinib,PMID:29433850,Lenvatinib versus sorafenib in first-line treatment of patients with unresectable hepatocellular carcinoma: a randomised phase 3 non-inferiority trial.,2018,true,true,true,2026-07-17
+LIHC,,MET,target,cabozantinib,PMID:29972759,Cabozantinib in Patients with Advanced and Progressing Hepatocellular Carcinoma.,2018,true,true,true,2026-07-17
+LIHC,,KDR,target,regorafenib,PMID:27932229,"Regorafenib for patients with hepatocellular carcinoma who progressed on sorafenib treatment (RESORCE): a randomised, double-blind, placebo-controlled, phase 3 trial.",2017,true,true,true,2026-07-17
+LIHC,,KDR,target,ramucirumab,PMID:30665869,"Ramucirumab after sorafenib in patients with advanced hepatocellular carcinoma and increased α-fetoprotein concentrations (REACH-2): a randomised, double-blind, placebo-controlled, phase 3 trial.",2019,true,true,true,2026-07-17
+LIHC,,FGF19,target,fisogatinib,PMID:31575541,First-in-Human Phase I Study of Fisogatinib (BLU-554) Validates Aberrant FGF19 Signaling as a Driver Event in Hepatocellular Carcinoma.,2019,true,true,true,2026-07-17
+SARC,leiomyosarcoma,ACTA2,biomarker,,PMID:12944549,Expression of smooth muscle markers in so called malignant fibrous histiocytomas.,2003,true,true,true,2026-07-17
+SARC,leiomyosarcoma,CALD1,biomarker,,PMID:12944549,Expression of smooth muscle markers in so called malignant fibrous histiocytomas.,2003,true,true,true,2026-07-17
+SARC,leiomyosarcoma,MYH11,biomarker,,PMID:20004935,Pleomorphic and dedifferentiated leiomyosarcoma: clinicopathologic and immunohistochemical study of 41 cases.,2010,true,true,true,2026-07-17
+SARC,leiomyosarcoma,DES,biomarker,,PMID:12944549,Expression of smooth muscle markers in so called malignant fibrous histiocytomas.,2003,true,true,true,2026-07-17
+SARC,leiomyosarcoma,CDKN2A,biomarker,,PMID:28283584,Clinical Benefit in Response to Palbociclib Treatment in Refractory Uterine Leiomyosarcomas with a Common CDKN2A Alteration.,2017,true,true,true,2026-07-17
+SARC,leiomyosarcoma,TP53,biomarker,,PMID:33015533,"CDKN2C-Null Leiomyosarcoma: A Novel, Genomically Distinct Class of TP53/RB1-Wild-Type Tumor With Frequent CIC Genomic Alterations and 1p/19q-Codeletion.",2020,true,true,true,2026-07-17
+SARC,leiomyosarcoma,RB1,biomarker,,PMID:33015533,"CDKN2C-Null Leiomyosarcoma: A Novel, Genomically Distinct Class of TP53/RB1-Wild-Type Tumor With Frequent CIC Genomic Alterations and 1p/19q-Codeletion.",2020,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,MDM2,biomarker,,PMID:36439412,Targeting the MDM2-p53 pathway in dedifferentiated liposarcoma.,2022,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,CDK4,biomarker,,PMID:30852045,Well-differentiated liposarcoma and dedifferentiated liposarcoma: An updated review.,2019,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,HMGA2,biomarker,,PMID:37698344,A novel HMGA2::KITLG fusion in a dedifferentiated liposarcoma with amplification of MDM2 and HMGA2.,2024,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,FRS2,biomarker,,PMID:23393200,Amplification of FRS2 and activation of FGFR/FRS2 signaling pathway in high-grade liposarcoma.,2013,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,TP53,biomarker,,PMID:30852045,Well-differentiated liposarcoma and dedifferentiated liposarcoma: An updated review.,2019,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,MDM2,target,brigimadlin (BI 907828),PMID:42268294,"Brigimadlin Versus Doxorubicin in Advanced Dedifferentiated Liposarcoma: Efficacy, Safety and Translational Data from Brightline-1, a Randomized Phase 2/3 Trial.",2026,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,CDK4,target,palbociclib,PMID:42082272,Phase 2 study of palbociclib plus retifanlimab in patients with advanced dedifferentiated liposarcoma.,2026,true,true,true,2026-07-17
+SARC,dedifferentiated_liposarcoma,CDK4,target,abemaciclib,PMID:37695642,Therapy-Induced Senescence Contributes to the Efficacy of Abemaciclib in Patients with Dedifferentiated Liposarcoma.,2024,true,true,true,2026-07-17
+SARC,myxoid_liposarcoma,DDIT3,biomarker,,PMID:39456230,FUS::DDIT3 Fusion Protein in the Development of Myxoid Liposarcoma and Possible Implications for Therapy.,2024,true,true,true,2026-07-17
+SARC,myxoid_liposarcoma,MAGEA4,biomarker,,PMID:30881511,Immunohistochemical expression and clinicopathological assessment of the cancer testis antigens NY-ESO-1 and MAGE-A4 in high-grade soft-tissue sarcoma.,2019,true,true,true,2026-07-17
+SARC,myxoid_liposarcoma,CTAG1B,biomarker,,PMID:34845972,Expression of CTAG1B clone EPR13780 versus DDIT3 gene rearrangement distinguishes myxoid liposarcoma from its mimics with detection of novel DDIT3 gene copy number variations.,2022,true,true,true,2026-07-17
+SARC,myxoid_liposarcoma,PRAME,biomarker,,PMID:27499900,Cancer-testis antigens PRAME and NY-ESO-1 correlate with tumour grade and poor prognosis in myxoid liposarcoma.,2015,true,true,true,2026-07-17
+SARC,myxoid_liposarcoma,PPARG,biomarker,,PMID:27401457,Clinical relevance of peroxisome proliferator-activated receptor-gamma expression in myxoid liposarcoma.,2016,true,true,true,2026-07-17
+SARC,myxoid_liposarcoma,MAGEA4,target,afami-cel (afamitresgene autoleucel),PMID:38554725,"Afamitresgene autoleucel for advanced synovial sarcoma and myxoid round cell liposarcoma (SPEARHEAD-1): an international, open-label, phase 2 trial.",2024,true,true,true,2026-07-17
+SARC,myxoid_liposarcoma,CTAG1B,target,letetresgene autoleucel,PMID:39836945,Letetresgene Autoleucel in Advanced/Metastatic Myxoid/Round Cell Liposarcoma.,2025,true,true,true,2026-07-17
+SARC,synovial_sarcoma,SS18,biomarker,,PMID:39528099,Advances of SS18-SSX fusion gene in synovial sarcoma: Emerging novel functions and therapeutic potentials.,2024,true,true,true,2026-07-17
+SARC,synovial_sarcoma,MAGEA4,biomarker,,PMID:27993576,"Cancer-testis antigen expression in synovial sarcoma: NY-ESO-1, PRAME, MAGEA4, and MAGEA1.",2017,true,true,true,2026-07-17
+SARC,synovial_sarcoma,CTAG1B,biomarker,,PMID:27993576,"Cancer-testis antigen expression in synovial sarcoma: NY-ESO-1, PRAME, MAGEA4, and MAGEA1.",2017,true,true,true,2026-07-17
+SARC,synovial_sarcoma,PRAME,biomarker,,PMID:30524904,PRAME and HLA Class I expression patterns make synovial sarcoma a suitable target for PRAME specific T-cell receptor gene therapy.,2018,true,true,true,2026-07-17
+SARC,synovial_sarcoma,TLE1,biomarker,,PMID:31614009,"TLE1 expression fails to distinguish between synovial sarcoma, atypical fibroxanthoma, and dermatofibrosarcoma protuberans.",2020,true,true,true,2026-07-17
+SARC,synovial_sarcoma,BCL2,biomarker,,PMID:36765545,Synovial Sarcoma Preclinical Modeling: Integrating Transgenic Mouse Models and Patient-Derived Models for Translational Research.,2023,true,true,true,2026-07-17
+SARC,synovial_sarcoma,MAGEA4,target,afami-cel (Tecelra),PMID:38554725,"Afamitresgene autoleucel for advanced synovial sarcoma and myxoid round cell liposarcoma (SPEARHEAD-1): an international, open-label, phase 2 trial.",2024,true,true,true,2026-07-17
+SARC,synovial_sarcoma,CTAG1B,target,letetresgene autoleucel (lete-cel),PMID:36075914,Biomarker correlates with response to NY-ESO-1 TCR T cells in patients with synovial sarcoma.,2022,true,true,true,2026-07-17
+SARC,dsrct,EWSR1,biomarker,,PMID:42054145,Desmoplastic small round cell tumor.,2026,true,true,true,2026-07-17
+SARC,dsrct,WT1,biomarker,,PMID:39198430,EWS-WT1 fusion isoforms establish oncogenic programs and therapeutic vulnerabilities in desmoplastic small round cell tumors.,2024,true,true,true,2026-07-17
+SARC,dsrct,DES,biomarker,,PMID:11955420,[Desmoplastic small round cell tumor: report of 2 cases].,2002,true,true,true,2026-07-17
+SARC,dsrct,VIM,biomarker,,PMID:40103885,Computed tomography manifestations and pathological features of intra-abdominal desmoplastic small round cell tumor.,2025,true,true,true,2026-07-17
+SARC,dsrct,WT1,target,WT1 peptide vaccine,PMID:35069874,WT1 epitope-specific IgG and IgM antibodies for immune-monitoring in patients with advanced sarcoma treated with a WT1 peptide cancer vaccine.,2022,true,true,true,2026-07-17
+SARC,dsrct,WT1,target,WT1 peptide vaccine,PMID:39139449,"Desmoplastic small round cell tumor: from genomics to targets, potential paths to future therapeutics.",2024,true,true,true,2026-07-17
+SARC,gist,KIT,biomarker,,PMID:12522257,PDGFRA activating mutations in gastrointestinal stromal tumors.,2003,true,true,true,2026-07-17
+SARC,gist,PDGFRA,biomarker,,PMID:12522257,PDGFRA activating mutations in gastrointestinal stromal tumors.,2003,true,true,true,2026-07-17
+SARC,gist,SDHB,biomarker,,PMID:36387130,"Bladder paraganglioma, gastrointestinal stromal tumor, and SDHB germline mutation in a patient with Carney-Stratakis syndrome: A case report and literature review.",2022,true,true,true,2026-07-17
+SARC,gist,SDHA,biomarker,,PMID:36915446,An unusual paraesophageal and diaphragmatic SDHA-deficient gastrointestinal stromal tumor (GIST) metastases case report.,2023,true,true,true,2026-07-17
+SARC,gist,BRAF,biomarker,,PMID:18615679,Novel V600E BRAF mutations in imatinib-naive and imatinib-resistant gastrointestinal stromal tumors.,2008,true,true,true,2026-07-17
+SARC,gist,NF1,biomarker,,PMID:29441367,Molecular characterization and pathogenesis of gastrointestinal stromal tumor.,2018,true,true,true,2026-07-17
+SARC,gist,KIT,target,imatinib,PMID:12181401,Efficacy and safety of imatinib mesylate in advanced gastrointestinal stromal tumors.,2002,true,true,true,2026-07-17
+SARC,gist,KIT,target,sunitinib,PMID:17046465,Efficacy and safety of sunitinib in patients with advanced gastrointestinal stromal tumour after failure of imatinib: a randomised controlled trial.,2006,true,true,true,2026-07-17
+SARC,gist,KIT,target,regorafenib,PMID:23177515,"Efficacy and safety of regorafenib for advanced gastrointestinal stromal tumours after failure of imatinib and sunitinib (GRID): an international, multicentre, randomised, placebo-controlled, phase 3 trial.",2013,true,true,true,2026-07-17
+SARC,gist,KIT,target,ripretinib,PMID:32511981,"Ripretinib in patients with advanced gastrointestinal stromal tumours (INVICTUS): a double-blind, randomised, placebo-controlled, phase 3 trial.",2020,true,true,true,2026-07-17
+SARC,gist,PDGFRA,target,avapritinib,PMID:32615108,"Avapritinib in advanced PDGFRA D842V-mutant gastrointestinal stromal tumour (NAVIGATOR): a multicentre, open-label, phase 1 trial.",2020,true,true,true,2026-07-17
+SARC,gist,NTRK1,target,larotrectinib,PMID:41553644,Clinicopathologic and molecular spectrum of gastrointestinal stromal tumor (GIST) with NTRK fusion and marked response to larotrectinib in GIST with NTRK fusion: a case report.,2026,true,true,true,2026-07-17
+SARC,ewing_sarcoma,EWSR1,biomarker,,PMID:29977059,Ewing sarcoma.,2018,true,true,true,2026-07-17
+SARC,ewing_sarcoma,FLI1,biomarker,,PMID:29513652,EWS-FLI1 increases transcription to cause R-loops and block BRCA1 repair in Ewing sarcoma.,2018,true,true,true,2026-07-17
+SARC,ewing_sarcoma,NKX2-2,biomarker,,PMID:34584801,Ewing Sarcoma and Ewing-Like Sarcoma and the Role of NKX2.2 Immunoreactivity.,2021,true,true,true,2026-07-17
+SARC,ewing_sarcoma,CD99,biomarker,,PMID:38051221,Engagement of CD99 Activates Distinct Programs in Ewing Sarcoma and Macrophages.,2024,true,true,true,2026-07-17
+SARC,ewing_sarcoma,CAV1,biomarker,,PMID:27487136,Caveolin-1 promotes Ewing sarcoma metastasis regulating MMP-9 expression through MAPK/ERK pathway.,2016,true,true,true,2026-07-17
+SARC,ewing_sarcoma,PRAME,biomarker,,PMID:24973179,Common Ewing sarcoma-associated antigens fail to induce natural T cell responses in both patients and healthy individuals.,2014,true,true,true,2026-07-17
+SARC,ewing_sarcoma,CDK4,target,palbociclib,PMID:37306107,Phase 2 trial of palbociclib and ganitumab in patients with relapsed Ewing sarcoma.,2023,true,true,true,2026-07-17
+SARC,kinase_driven_sarcoma,EGFR,biomarker,,PMID:39863531,[Infantile rhabdomyofibrosarcoma with EGFR kinase domain duplication: a clinicopathological analysis of three cases].,2025,true,true,true,2026-07-17
+SARC,kinase_driven_sarcoma,EGFR,target,EGFR TKI (afatinib / osimertinib),PMID:39863531,[Infantile rhabdomyofibrosarcoma with EGFR kinase domain duplication: a clinicopathological analysis of three cases].,2025,true,true,true,2026-07-17
+SARC,kinase_driven_sarcoma,EGFR,target,EGFR TKI (afatinib / osimertinib),PMID:30255937,Clinical outcomes of EGFR kinase domain duplication to targeted therapies in NSCLC.,2019,true,true,true,2026-07-17
+THCA,,BRAF,biomarker,,PMID:37647391,TERT accelerates BRAF mutant-induced thyroid cancer dedifferentiation and progression by regulating ribosome biogenesis.,2023,true,true,true,2026-07-17
+THCA,,RET,biomarker,,PMID:32846061,Efficacy of Selpercatinib in RET-Altered Thyroid Cancers.,2020,true,true,true,2026-07-17
+THCA,,HRAS,biomarker,,PMID:41031922,Genetic alterations in papillary thyroid cancer: clinicopathological correlations and diagnostic implications.,2025,true,true,true,2026-07-17
+THCA,,NRAS,biomarker,,PMID:28323937,"TERT, BRAF, and NRAS in Primary Thyroid Cancer and Metastatic Disease.",2017,true,true,true,2026-07-17
+THCA,,NTRK1,biomarker,,PMID:37548775,NTRK fusion events and targeted treatment of advanced radioiodine refractory thyroid cancer.,2023,true,true,true,2026-07-17
+THCA,,TERT,biomarker,,PMID:37647391,TERT accelerates BRAF mutant-induced thyroid cancer dedifferentiation and progression by regulating ribosome biogenesis.,2023,true,true,true,2026-07-17
+THCA,,TG,biomarker,,PMID:28493290,Circulating thyroid cancer biomarkers: Current limitations and future prospects.,2017,true,true,true,2026-07-17
+THCA,,NKX2-1,biomarker,,PMID:34748583,NKX2-1 re-expression induces cell death through apoptosis and necrosis in dedifferentiated thyroid carcinoma cells.,2021,true,true,true,2026-07-17
+THCA,,PAX8,biomarker,,PMID:38993572,METTL3 regulates thyroid cancer differentiation and chemosensitivity by modulating PAX8.,2024,true,true,true,2026-07-17
+THCA,,TP53,biomarker,,PMID:26878173,Genomic and transcriptomic hallmarks of poorly differentiated and anaplastic thyroid cancers.,2016,true,true,true,2026-07-17
+THCA,,KDR,target,lenvatinib,PMID:25671254,Lenvatinib versus placebo in radioiodine-refractory thyroid cancer.,2015,true,true,true,2026-07-17
+THCA,,KDR,target,sorafenib,PMID:24768112,"Sorafenib in radioactive iodine-refractory, locally advanced or metastatic differentiated thyroid cancer: a randomised, double-blind, phase 3 trial.",2014,true,true,true,2026-07-17
+THCA,,KDR,target,cabozantinib,PMID:34237250,"Cabozantinib for radioiodine-refractory differentiated thyroid cancer (COSMIC-311): a randomised, double-blind, placebo-controlled, phase 3 trial.",2021,true,true,true,2026-07-17
+THCA,,BRAF,target,dabrafenib + trametinib,PMID:29072975,Dabrafenib and Trametinib Treatment in Patients With Locally Advanced or Metastatic BRAF V600-Mutant Anaplastic Thyroid Cancer.,2018,true,true,true,2026-07-17
+THCA,,RET,target,selpercatinib,PMID:32846061,Efficacy of Selpercatinib in RET-Altered Thyroid Cancers.,2020,true,true,true,2026-07-17
+THCA,,RET,target,pralsetinib,PMID:34118198,"Pralsetinib for patients with advanced or metastatic RET-altered thyroid cancer (ARROW): a multi-cohort, open-label, registrational, phase 1/2 study.",2021,true,true,true,2026-07-17
+THCA,,NTRK1,target,larotrectinib,PMID:29466156,Efficacy of Larotrectinib in TRK Fusion-Positive Cancers in Adults and Children.,2018,true,true,true,2026-07-17
+LGG,,IDH1,biomarker,,PMID:37272516,Vorasidenib in IDH1- or IDH2-Mutant Low-Grade Glioma.,2023,true,true,true,2026-07-17
+LGG,,IDH2,biomarker,,PMID:37272516,Vorasidenib in IDH1- or IDH2-Mutant Low-Grade Glioma.,2023,true,true,true,2026-07-17
+LGG,,ATRX,biomarker,,PMID:25664944,The evolving molecular genetics of low-grade glioma.,2015,true,true,true,2026-07-17
+LGG,,CDKN2A,biomarker,,PMID:33492489,"IDH-Mutant Low-grade Glioma: Advances in Molecular Diagnosis, Management, and Future Directions.",2021,true,true,true,2026-07-17
+LGG,,TERT,biomarker,,PMID:26948366,Low-grade and anaplastic oligodendroglioma.,2016,true,true,true,2026-07-17
+LGG,,MGMT,biomarker,,PMID:32706640,"Comprehensive Genomic Analysis in NRG Oncology/RTOG 9802: A Phase III Trial of Radiation Versus Radiation Plus Procarbazine, Lomustine (CCNU), and Vincristine in High-Risk Low-Grade Glioma.",2020,true,true,true,2026-07-17
+LGG,,TP53,biomarker,,PMID:34771529,TP53 Mutation Is a Prognostic Factor in Lower Grade Glioma and May Influence Chemotherapy Efficacy.,2021,true,true,true,2026-07-17
+LGG,,BRAF,biomarker,,PMID:36375115,Efficacy and Safety of Trametinib Monotherapy or in Combination With Dabrafenib in Pediatric BRAF V600-Mutant Low-Grade Glioma.,2023,true,true,true,2026-07-17
+LGG,,IDH1,target,vorasidenib,PMID:37272516,Vorasidenib in IDH1- or IDH2-Mutant Low-Grade Glioma.,2023,true,true,true,2026-07-17
+LGG,,IDH2,target,vorasidenib,PMID:37272516,Vorasidenib in IDH1- or IDH2-Mutant Low-Grade Glioma.,2023,true,true,true,2026-07-17
+LGG,,BRAF,target,dabrafenib + trametinib,PMID:36375115,Efficacy and Safety of Trametinib Monotherapy or in Combination With Dabrafenib in Pediatric BRAF V600-Mutant Low-Grade Glioma.,2023,true,true,true,2026-07-17
+GBM,,IDH1,biomarker,,PMID:20129251,"Integrated genomic analysis identifies clinically relevant subtypes of glioblastoma characterized by abnormalities in PDGFRA, IDH1, EGFR, and NF1.",2010,true,true,true,2026-07-17
+GBM,,MGMT,biomarker,,PMID:15758010,MGMT gene silencing and benefit from temozolomide in glioblastoma.,2005,true,true,true,2026-07-17
+GBM,,EGFR,biomarker,,PMID:29321659,Epidermal growth factor receptor and EGFRvIII in glioblastoma: signaling pathways and targeted therapies.,2018,true,true,true,2026-07-17
+GBM,,PTEN,biomarker,,PMID:30738865,Mechanisms of PTEN loss in cancer: It's all about diversity.,2019,true,true,true,2026-07-17
+GBM,,CDKN2A,biomarker,,PMID:37236196,CDKN2A deletion remodels lipid metabolism to prime glioblastoma for ferroptosis.,2023,true,true,true,2026-07-17
+GBM,,TP53,biomarker,,PMID:33577785,Proteogenomic and metabolomic characterization of human glioblastoma.,2021,true,true,true,2026-07-17
+GBM,,TERT,biomarker,,PMID:30187121,"Distribution of EGFR amplification, combined chromosome 7 gain and chromosome 10 loss, and TERT promoter mutation in brain tumors and their potential for the reclassification of IDHwt astrocytoma to glioblastoma.",2018,true,true,true,2026-07-17
+GBM,,NF1,biomarker,,PMID:20129251,"Integrated genomic analysis identifies clinically relevant subtypes of glioblastoma characterized by abnormalities in PDGFRA, IDH1, EGFR, and NF1.",2010,true,true,true,2026-07-17
+GBM,,H3F3A,biomarker,,PMID:22286061,Driver mutations in histone H3.3 and chromatin remodelling genes in paediatric glioblastoma.,2012,true,true,true,2026-07-17
+GBM,,MGMT,target,temozolomide,PMID:15758009,Radiotherapy plus concomitant and adjuvant temozolomide for glioblastoma.,2005,true,true,true,2026-07-17
+GBM,,VEGFA,target,bevacizumab,PMID:19114704,Phase II trial of single-agent bevacizumab followed by bevacizumab plus irinotecan at tumor progression in recurrent glioblastoma.,2009,true,true,true,2026-07-17
+CHOL,,FGFR2,biomarker,,PMID:36652354,Futibatinib for FGFR2-Rearranged Intrahepatic Cholangiocarcinoma.,2023,true,true,true,2026-07-17
+CHOL,,IDH1,biomarker,,PMID:32416072,"Ivosidenib in IDH1-mutant, chemotherapy-refractory cholangiocarcinoma (ClarIDHy): a multicentre, randomised, double-blind, placebo-controlled, phase 3 study.",2020,true,true,true,2026-07-17
+CHOL,,BRCA1,biomarker,,PMID:38903278,Report of Cholangiocarcinoma With Transheterozygous BRCA1 and BRCA2 Co-mutation.,2024,true,true,true,2026-07-17
+CHOL,,BRCA2,biomarker,,PMID:38903278,Report of Cholangiocarcinoma With Transheterozygous BRCA1 and BRCA2 Co-mutation.,2024,true,true,true,2026-07-17
+CHOL,,BAP1,biomarker,,PMID:28667006,Whole-Genome and Epigenomic Landscapes of Etiologically Distinct Subtypes of Cholangiocarcinoma.,2017,true,true,true,2026-07-17
+CHOL,,ARID1A,biomarker,,PMID:40489743,Arid1a deficiency promotes hepatocyte hyperpolyploidy and drives intrahepatic cholangiocarcinoma in mice.,2026,true,true,true,2026-07-17
+CHOL,,TP53,biomarker,,PMID:28667006,Whole-Genome and Epigenomic Landscapes of Etiologically Distinct Subtypes of Cholangiocarcinoma.,2017,true,true,true,2026-07-17
+CHOL,,KRAS,biomarker,,PMID:39854318,Mutant KRAS and CK2 Cooperatively Stimulate SLC16A3 Activity to Drive Intrahepatic Cholangiocarcinoma Progression.,2025,true,true,true,2026-07-17
+CHOL,,ERBB2,biomarker,,PMID:28667006,Whole-Genome and Epigenomic Landscapes of Etiologically Distinct Subtypes of Cholangiocarcinoma.,2017,true,true,true,2026-07-17
+CHOL,,MLH1,biomarker,,PMID:28545228,Aberrant DNA Methylation as a Biomarker and a Therapeutic Target of Cholangiocarcinoma.,2017,true,true,true,2026-07-17
+CHOL,,NTRK1,biomarker,,PMID:29466156,Efficacy of Larotrectinib in TRK Fusion-Positive Cancers in Adults and Children.,2018,true,true,true,2026-07-17
+CHOL,,FGFR2,target,pemigatinib,PMID:32203698,"Pemigatinib for previously treated, locally advanced or metastatic cholangiocarcinoma: a multicentre, open-label, phase 2 study.",2020,true,true,true,2026-07-17
+CHOL,,FGFR2,target,futibatinib,PMID:36652354,Futibatinib for FGFR2-Rearranged Intrahepatic Cholangiocarcinoma.,2023,true,true,true,2026-07-17
+CHOL,,IDH1,target,ivosidenib,PMID:32416072,"Ivosidenib in IDH1-mutant, chemotherapy-refractory cholangiocarcinoma (ClarIDHy): a multicentre, randomised, double-blind, placebo-controlled, phase 3 study.",2020,true,true,true,2026-07-17
+CHOL,,BRAF,target,dabrafenib + trametinib,PMID:32818466,"Dabrafenib plus trametinib in patients with BRAFV600E-mutated biliary tract cancer (ROAR): a phase 2, open-label, single-arm, multicentre basket trial.",2020,true,true,true,2026-07-17
+CHOL,,ERBB2,target,trastuzumab + pertuzumab,PMID:34339623,"Pertuzumab and trastuzumab for HER2-positive, metastatic biliary tract cancer (MyPathway): a multicentre, open-label, phase 2a, multiple basket study.",2021,true,true,true,2026-07-17
+CHOL,,NTRK1,target,larotrectinib,PMID:29466156,Efficacy of Larotrectinib in TRK Fusion-Positive Cancers in Adults and Children.,2018,true,true,true,2026-07-17
+CHOL,,PDCD1,target,pembrolizumab,PMID:31682550,Efficacy of Pembrolizumab in Patients With Noncolorectal High Microsatellite Instability/Mismatch Repair-Deficient Cancer: Results From the Phase II KEYNOTE-158 Study.,2020,true,true,true,2026-07-17
+OV,,BRCA1,biomarker,,PMID:22452356,Olaparib maintenance therapy in platinum-sensitive relapsed ovarian cancer.,2012,true,true,true,2026-07-17
+OV,,BRCA2,biomarker,,PMID:22452356,Olaparib maintenance therapy in platinum-sensitive relapsed ovarian cancer.,2012,true,true,true,2026-07-17
+OV,,PALB2,biomarker,,PMID:26315354,"Germline Mutations in the BRIP1, BARD1, PALB2, and NBN Genes in Women With Ovarian Cancer.",2015,true,true,true,2026-07-17
+OV,,RAD51C,biomarker,,PMID:32359370,"BRIP1, RAD51C, and RAD51D mutations are associated with high susceptibility to ovarian cancer: mutation prevalence and precise risk estimates based on a pooled analysis of ~30,000 cases.",2020,true,true,true,2026-07-17
+OV,,RAD51D,biomarker,,PMID:32359370,"BRIP1, RAD51C, and RAD51D mutations are associated with high susceptibility to ovarian cancer: mutation prevalence and precise risk estimates based on a pooled analysis of ~30,000 cases.",2020,true,true,true,2026-07-17
+OV,,TP53,biomarker,,PMID:12619114,TP53 and ovarian cancer.,2003,true,true,true,2026-07-17
+OV,,PAX8,biomarker,,PMID:36275185,PAX8 as a Potential Target for Ovarian Cancer: What We Know so Far.,2022,true,true,true,2026-07-17
+OV,,WT1,biomarker,,PMID:35053578,The Evolution of Ovarian Carcinoma Subclassification.,2022,true,true,true,2026-07-17
+OV,,FOLR1,biomarker,,PMID:37711615,Therapeutic strategies targeting folate receptor α for ovarian cancer.,2023,true,true,true,2026-07-17
+OV,,BRCA1,target,olaparib,PMID:38129136,Updated progression-free survival and final overall survival with maintenance olaparib plus bevacizumab according to clinical risk in patients with newly diagnosed advanced ovarian cancer in the phase III PAOLA-1/ENGOT-ov25 trial.,2024,true,true,true,2026-07-17
+OV,,BRCA2,target,olaparib,PMID:38129136,Updated progression-free survival and final overall survival with maintenance olaparib plus bevacizumab according to clinical risk in patients with newly diagnosed advanced ovarian cancer in the phase III PAOLA-1/ENGOT-ov25 trial.,2024,true,true,true,2026-07-17
+OV,,BRCA1,target,niraparib,PMID:31562799,Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer.,2019,true,true,true,2026-07-17
+OV,,BRCA1,target,rucaparib,PMID:27908594,"Rucaparib in relapsed, platinum-sensitive high-grade ovarian carcinoma (ARIEL2 Part 1): an international, multicentre, open-label, phase 2 trial.",2017,true,true,true,2026-07-17
+OV,,FOLR1,target,mirvetuximab soravtansine (Elahere),PMID:38055253,"Mirvetuximab Soravtansine in FRα-Positive, Platinum-Resistant Ovarian Cancer.",2023,true,true,true,2026-07-17
+OV,,VEGFA,target,bevacizumab,PMID:24637997,Bevacizumab combined with chemotherapy for platinum-resistant recurrent ovarian cancer: The AURELIA open-label randomized phase III trial.,2014,true,true,true,2026-07-17
+OV,,PDCD1,target,pembrolizumab,PMID:31682550,Efficacy of Pembrolizumab in Patients With Noncolorectal High Microsatellite Instability/Mismatch Repair-Deficient Cancer: Results From the Phase II KEYNOTE-158 Study.,2020,true,true,true,2026-07-17
+TGCT,,KIT,biomarker,,PMID:23771924,Cyclic AMP and c-KIT signaling in familial testicular germ cell tumor predisposition.,2013,true,true,true,2026-07-17
+TGCT,,AFP,biomarker,,PMID:30539249,Serum tumor markers and testicular germ cell tumors: a primer for radiologists.,2019,true,true,true,2026-07-17
+TGCT,,CGB1,biomarker,,PMID:30359635,"Cytokeratin 7, inhibin, and p63 in testicular germ cell tumor: superior markers of choriocarcinoma compared to β-human chorionic gonadotropin.",2019,true,true,true,2026-07-17
+TGCT,,POU5F1,biomarker,,PMID:36835562,Epigenetic Regulation of Driver Genes in Testicular Tumorigenesis.,2023,true,true,true,2026-07-17
+TGCT,,NANOG,biomarker,,PMID:29259864,An up-date on epigenetic and molecular markers in testicular germ cell tumors.,2017,true,true,true,2026-07-17
+TGCT,,SOX2,biomarker,,PMID:36713456,"Comprehensive characteristics of pathological subtypes in testicular germ cell tumor: Gene expression, mutation and alternative splicing.",2022,true,true,true,2026-07-17
+TGCT,,SALL4,biomarker,,PMID:37508506,Testicular Germ Cell Tumor Tissue Biomarker Analysis: A Comparison of Human Protein Atlas and Individual Testicular Germ Cell Tumor Component Immunohistochemistry.,2023,true,true,true,2026-07-17
+TGCT,,LDHA,biomarker,,PMID:39711015,Differential expression of metabolic enzymes in testicular germ cell tumors: The impact of glycolytic metabolism in embryonal carcinoma histotype.,2024,true,true,true,2026-07-17
+NUTM,,NUTM1,biomarker,,PMID:35372003,"NUT Carcinoma: Clinicopathologic Features, Molecular Genetics and Epigenetics.",2022,true,true,true,2026-07-17
+NUTM,,BRD4,biomarker,,PMID:37819236,The BRD4-NUT Fusion Alone Drives Malignant Transformation of NUT Carcinoma.,2023,true,true,true,2026-07-17
+NUTM,,BRD3,biomarker,,PMID:34482332,Cutaneous Primary NUT Carcinoma With BRD3-NUTM1 Fusion.,2021,true,true,true,2026-07-17
+NUTM,,NSD3,biomarker,,PMID:34997561,Thyroid Carcinoma with NSD3::NUTM1 Fusion: a Case with Thyrocyte Differentiation and Colloid Production.,2022,true,true,true,2026-07-17
+NUTM,,MYC,biomarker,,PMID:37819236,The BRD4-NUT Fusion Alone Drives Malignant Transformation of NUT Carcinoma.,2023,true,true,true,2026-07-17
+NUTM,,TP63,biomarker,,PMID:33452461,Supercharging BRD4 with NUT in carcinoma.,2021,true,true,true,2026-07-17
+NUTM,,SOX2,biomarker,,PMID:41266112,SOX2 is a dispensable modulator of NUT carcinoma oncogenesis in mice.,2026,true,true,true,2026-07-17
+NUTM,,KRT5,biomarker,,PMID:35372003,"NUT Carcinoma: Clinicopathologic Features, Molecular Genetics and Epigenetics.",2022,true,true,true,2026-07-17
+NUTM,,BRD4,target,molibresib (GSK525762),PMID:32328561,"Phase 1 Study of Molibresib (GSK525762), a Bromodomain and Extra-Terminal Domain Protein Inhibitor, in NUT Carcinoma and Other Solid Tumors.",2020,true,true,true,2026-07-17
+NUTM,,BRD4,target,BMS-986158,PMID:36077617,"BMS-986158, a Small Molecule Inhibitor of the Bromodomain and Extraterminal Domain Proteins, in Patients with Selected Advanced Solid Tumors: Results from a Phase 1/2a Trial.",2022,true,true,true,2026-07-17
+NUTM,,HDAC1,target,vorinostat,PMID:41592880,NUT carcinoma of the cheek managed with chemotherapy and surgical resection.,2026,true,true,true,2026-07-17
+ACC,,INHA,biomarker,,PMID:25111790,Inhibin alpha-subunit (INHA) expression in adrenocortical cancer is linked to genetic and epigenetic INHA promoter variation.,2014,true,true,true,2026-07-17
+ACC,,NR5A1,biomarker,,PMID:38155952,A reappraisal of transcriptional regulation by NR5A1 and beta-catenin in adrenocortical carcinoma.,2023,true,true,true,2026-07-17
+ACC,,STAR,biomarker,,PMID:27165744,Comprehensive Pan-Genomic Characterization of Adrenocortical Carcinoma.,2016,true,true,true,2026-07-17
+ACC,,TP53,biomarker,,PMID:27165744,Comprehensive Pan-Genomic Characterization of Adrenocortical Carcinoma.,2016,true,true,true,2026-07-17
+ACC,,CTNNB1,biomarker,,PMID:27165744,Comprehensive Pan-Genomic Characterization of Adrenocortical Carcinoma.,2016,true,true,true,2026-07-17
+ACC,,IGF2,biomarker,,PMID:31378849,IGF2 role in adrenocortical carcinoma biology.,2019,true,true,true,2026-07-17
+ACC,,MKI67,biomarker,,PMID:25559399,Major prognostic role of Ki67 in localized adrenocortical carcinoma after complete resection.,2015,true,true,true,2026-07-17
+ACC,,NR5A1,target,mitotane,PMID:17554118,Adjuvant mitotane treatment for adrenocortical carcinoma.,2007,true,true,true,2026-07-17
+ACC,,CTLA4,target,ipilimumab,PMID:33889439,Combination immunotherapy with ipilimumab and nivolumab in patients with advanced adrenocortical carcinoma: a subgroup analysis of CA209-538.,2021,true,true,true,2026-07-17
+ACC,,PDCD1,target,pembrolizumab,PMID:41143139,Phase 2 Study of Monotherapy with Pembrolizumab for Advanced Adrenocortical Carcinoma.,2025,true,true,true,2026-07-17
+KICH,,KIT,biomarker,,PMID:17683191,"Immunohistochemical analysis of chromophobe renal cell carcinoma, renal oncocytoma, and clear cell carcinoma: an optimal and practical panel for differential diagnosis.",2007,true,true,true,2026-07-17
+KICH,,KRT7,biomarker,,PMID:17683191,"Immunohistochemical analysis of chromophobe renal cell carcinoma, renal oncocytoma, and clear cell carcinoma: an optimal and practical panel for differential diagnosis.",2007,true,true,true,2026-07-17
+KICH,,TP53,biomarker,,PMID:38775158,Molecular underpinnings of dedifferentiation and aggressiveness in chromophobe renal cell carcinoma.,2024,true,true,true,2026-07-17
+KICH,,PTEN,biomarker,,PMID:33183792,Chromophobe renal cell carcinoma: current and controversial issues.,2021,true,true,true,2026-07-17
+KICH,,KDR,target,sunitinib,PMID:27382030,Outcome of Patients With Metastatic Chromophobe Renal Cell Carcinoma Treated With Sunitinib.,2016,true,true,true,2026-07-17
+KICH,,PDCD1,target,nivolumab,PMID:32718906,Safety and Efficacy of Nivolumab in Patients With Advanced Non-Clear Cell Renal Cell Carcinoma: Results From the Phase IIIb/IV CheckMate 374 Study.,2020,true,true,true,2026-07-17
+KIRP,,MET,biomarker,,PMID:26536169,Comprehensive Molecular Characterization of Papillary Renal-Cell Carcinoma.,2016,true,true,true,2026-07-17
+KIRP,,CDKN2A,biomarker,,PMID:26536169,Comprehensive Molecular Characterization of Papillary Renal-Cell Carcinoma.,2016,true,true,true,2026-07-17
+KIRP,,NF2,biomarker,,PMID:26536169,Comprehensive Molecular Characterization of Papillary Renal-Cell Carcinoma.,2016,true,true,true,2026-07-17
+KIRP,,FH,biomarker,,PMID:26536169,Comprehensive Molecular Characterization of Papillary Renal-Cell Carcinoma.,2016,true,true,true,2026-07-17
+KIRP,,SETD2,biomarker,,PMID:26536169,Comprehensive Molecular Characterization of Papillary Renal-Cell Carcinoma.,2016,true,true,true,2026-07-17
+KIRP,,MET,target,cabozantinib,PMID:33592176,"A comparison of sunitinib with cabozantinib, crizotinib, and savolitinib for treatment of advanced papillary renal cell carcinoma: a randomised, open-label, phase 2 trial.",2021,true,true,true,2026-07-17
+KIRP,,MET,target,savolitinib,PMID:32469384,Efficacy of Savolitinib vs Sunitinib in Patients With MET-Driven Papillary Renal Cell Carcinoma: The SAVOIR Phase 3 Randomized Clinical Trial.,2020,true,true,true,2026-07-17
+KIRP,,PDCD1,target,pembrolizumab,PMID:33529058,"Open-Label, Single-Arm, Phase II Study of Pembrolizumab Monotherapy as First-Line Therapy in Patients With Advanced Non-Clear Cell Renal Cell Carcinoma.",2021,true,true,true,2026-07-17
+MESO,,BAP1,biomarker,,PMID:21642991,The nuclear deubiquitinase BAP1 is commonly inactivated by somatic mutations and 3p21.1 losses in malignant pleural mesothelioma.,2011,true,true,true,2026-07-17
+MESO,,NF2,biomarker,,PMID:26928227,"Comprehensive genomic analysis of malignant pleural mesothelioma identifies recurrent mutations, gene fusions and splicing alterations.",2016,true,true,true,2026-07-17
+MESO,,CDKN2A,biomarker,,PMID:40578509,"Immune Composition and Immunotherapy Outcomes of Mesothelioma With BAP1, CDKN2A, MTAP, and NF2 Alterations.",2025,true,true,true,2026-07-17
+MESO,,WT1,biomarker,,PMID:35636988,Pleural mesothelioma.,2022,true,true,true,2026-07-17
+MESO,,MSLN,biomarker,,PMID:21775819,The relationship between tumor MSLN methylation and serum mesothelin (SMRP) in mesothelioma.,2011,true,true,true,2026-07-17
+MESO,,CALB2,biomarker,,PMID:29699512,Regulation of calretinin in malignant mesothelioma is mediated by septin 7 binding to the CALB2 promoter.,2018,true,true,true,2026-07-17
+MESO,,PDCD1,target,nivolumab + ipilimumab,PMID:33485464,"First-line nivolumab plus ipilimumab in unresectable malignant pleural mesothelioma (CheckMate 743): a multicentre, randomised, open-label, phase 3 trial.",2021,true,true,true,2026-07-17
+MESO,,TYMS,target,pemetrexed + cisplatin,PMID:12860938,Phase III study of pemetrexed in combination with cisplatin versus cisplatin alone in patients with malignant pleural mesothelioma.,2003,true,true,true,2026-07-17
+MESO,,MSLN,target,anetumab ravtansine (BAY 94-9343),PMID:35358455,"Anetumab ravtansine versus vinorelbine in patients with relapsed, mesothelin-positive malignant pleural mesothelioma (ARCS-M): a randomised, open-label phase 2 trial.",2022,true,true,true,2026-07-17
+MESO,,VEGFA,target,bevacizumab + pemetrexed/cisplatin,PMID:26719230,"Bevacizumab for newly diagnosed pleural mesothelioma in the Mesothelioma Avastin Cisplatin Pemetrexed Study (MAPS): a randomised, controlled, open-label, phase 3 trial.",2016,true,true,true,2026-07-17
+PCPG,,SDHB,biomarker,,PMID:39457697,Pheochromocytoma-Paraganglioma Syndrome: A Multiform Disease with Different Genotype and Phenotype Features.,2024,true,true,true,2026-07-17
+PCPG,,VHL,biomarker,,PMID:39457697,Pheochromocytoma-Paraganglioma Syndrome: A Multiform Disease with Different Genotype and Phenotype Features.,2024,true,true,true,2026-07-17
+PCPG,,RET,biomarker,,PMID:28162975,Comprehensive Molecular Characterization of Pheochromocytoma and Paraganglioma.,2017,true,true,true,2026-07-17
+PCPG,,NF1,biomarker,,PMID:28162975,Comprehensive Molecular Characterization of Pheochromocytoma and Paraganglioma.,2017,true,true,true,2026-07-17
+PCPG,,CHGA,biomarker,,PMID:31027285,Chromogranin A in the Laboratory Diagnosis of Pheochromocytoma and Paraganglioma.,2019,true,true,true,2026-07-17
+PCPG,,CHGA,biomarker,,PMID:6375394,Detection of chromogranin in neuroendocrine cells with a monoclonal antibody.,1984,true,true,true,2026-07-17
+PCPG,,TH,biomarker,,PMID:41922199,Double faces of pheochromocytoma and paraganglioma-a review of integrated pathologic diagnosis.,2026,true,true,true,2026-07-17
+PCPG,,MAX,biomarker,,PMID:28384794,"Clinical Characterization of the Pheochromocytoma and Paraganglioma Susceptibility Genes SDHA, TMEM127, MAX, and SDHAF2 for Gene-Informed Prevention.",2017,true,true,true,2026-07-17
+PCPG,,SLC6A2,target,iobenguane I-131 ([131I]-MIBG),PMID:30291194,Efficacy and Safety of High-Specific-Activity 131I-MIBG Therapy in Patients with Advanced Pheochromocytoma or Paraganglioma.,2019,true,true,true,2026-07-17
+PCPG,,KDR,target,sunitinib,PMID:35973976,Targeted Therapies in Pheochromocytoma and Paraganglioma.,2022,true,true,true,2026-07-17
+READ,,MLH1,biomarker,,PMID:15849733,"Spectrum and frequencies of mutations in MSH2 and MLH1 identified in 1,721 German families suspected of hereditary nonpolyposis colorectal cancer.",2005,true,true,true,2026-07-17
+READ,,MSH2,biomarker,,PMID:34798986,Identification of Lynch Syndrome.,2022,true,true,true,2026-07-17
+READ,,KRAS,biomarker,,PMID:18316791,Wild-type KRAS is required for panitumumab efficacy in patients with metastatic colorectal cancer.,2008,true,true,true,2026-07-17
+READ,,NRAS,biomarker,,PMID:24024839,Panitumumab-FOLFOX4 treatment and RAS mutations in colorectal cancer.,2013,true,true,true,2026-07-17
+READ,,BRAF,biomarker,,PMID:31566309,"Encorafenib, Binimetinib, and Cetuximab in BRAF V600E-Mutated Colorectal Cancer.",2019,true,true,true,2026-07-17
+READ,,ERBB2,biomarker,,PMID:27108243,"Dual-targeted therapy with trastuzumab and lapatinib in treatment-refractory, KRAS codon 12/13 wild-type, HER2-positive metastatic colorectal cancer (HERACLES): a proof-of-concept, multicentre, open-label, phase 2 trial.",2016,true,true,true,2026-07-17
+READ,,TP53,biomarker,,PMID:22810696,Comprehensive molecular characterization of human colon and rectal cancer.,2012,true,true,true,2026-07-17
+READ,,EGFR,target,cetuximab,PMID:19339720,Cetuximab and chemotherapy as initial treatment for metastatic colorectal cancer.,2009,true,true,true,2026-07-17
+READ,,BRAF,target,encorafenib + cetuximab,PMID:31566309,"Encorafenib, Binimetinib, and Cetuximab in BRAF V600E-Mutated Colorectal Cancer.",2019,true,true,true,2026-07-17
+READ,,PDCD1,target,pembrolizumab,PMID:33264544,Pembrolizumab in Microsatellite-Instability-High Advanced Colorectal Cancer.,2020,true,true,true,2026-07-17
+READ,,ERBB2,target,trastuzumab + tucatinib,PMID:37142372,"Tucatinib plus trastuzumab for chemotherapy-refractory, HER2-positive, RAS wild-type unresectable or metastatic colorectal cancer (MOUNTAINEER): a multicentre, open-label, phase 2 study.",2023,true,true,true,2026-07-17
+THYM,,GTF2I,biomarker,,PMID:24974848,A specific missense mutation in GTF2I occurs at high frequency in thymic epithelial tumors.,2014,true,true,true,2026-07-17
+THYM,,CD5,biomarker,,PMID:7519823,CD5 expression in thymic carcinoma.,1994,true,true,true,2026-07-17
+THYM,,KIT,biomarker,,PMID:18448188,Mutational status of EGFR and KIT in thymoma and thymic carcinoma.,2008,true,true,true,2026-07-17
+THYM,,MCM2,biomarker,,PMID:41044692,Expression and prognostic value of MCM2 in type B thymomas.,2025,true,true,true,2026-07-17
+THYM,,KDR,target,sunitinib,PMID:25592632,Sunitinib in patients with chemotherapy-refractory thymoma and thymic carcinoma: an open-label phase 2 trial.,2015,true,true,true,2026-07-17
+THYM,,PDCD1,target,pembrolizumab,PMID:29906252,Pembrolizumab for Patients With Refractory or Relapsed Thymic Epithelial Tumor: An Open-Label Phase II Trial.,2019,true,true,true,2026-07-17
+THYM,,KIT,target,sunitinib,PMID:37094664,STYLE (NCT03449173): A Phase 2 Trial of Sunitinib in Patients With Type B3 Thymoma or Thymic Carcinoma in Second and Further Lines.,2023,true,true,true,2026-07-17
+UCS,,TP53,biomarker,,PMID:40446429,Molecular diversity in uterine carcinosarcoma: Beyond TP53.,2025,true,true,true,2026-07-17
+UCS,,PIK3CA,biomarker,,PMID:25078343,"Molecular alterations of PIK3CA in uterine carcinosarcoma, clear cell, and serous tumors.",2014,true,true,true,2026-07-17
+UCS,,ERBB2,biomarker,,PMID:37627113,HER2 Oncogene as Molecular Target in Uterine Serous Carcinoma and Uterine Carcinosarcoma.,2023,true,true,true,2026-07-17
+UCS,,PPP2R1A,biomarker,,PMID:28292439,Integrated Molecular Characterization of Uterine Carcinosarcoma.,2017,true,true,true,2026-07-17
+UCS,,FBXW7,biomarker,,PMID:31772025,Fbxw7 is a driver of uterine carcinosarcoma by promoting epithelial-mesenchymal transition.,2019,true,true,true,2026-07-17
+UCS,,ERBB2,target,trastuzumab deruxtecan,PMID:36977309,Trastuzumab Deruxtecan for Human Epidermal Growth Factor Receptor 2-Expressing Advanced or Recurrent Uterine Carcinosarcoma (NCCH1615): The STATICE Trial.,2023,true,true,true,2026-07-17
+UCS,,PDCD1,target,pembrolizumab + lenvatinib,PMID:41349346,Efficacy and safety of pembrolizumab with or without lenvatinib in recurrent uterine carcinosarcoma: a real-world single-center study.,2026,true,true,true,2026-07-17
+UVM,,GNAQ,biomarker,,PMID:32273508,Uveal melanoma.,2020,true,true,true,2026-07-17
+UVM,,GNA11,biomarker,,PMID:32273508,Uveal melanoma.,2020,true,true,true,2026-07-17
+UVM,,BAP1,biomarker,,PMID:28810145,Integrative Analysis Identifies Four Molecular and Clinical Subsets in Uveal Melanoma.,2017,true,true,true,2026-07-17
+UVM,,SF3B1,biomarker,,PMID:28810145,Integrative Analysis Identifies Four Molecular and Clinical Subsets in Uveal Melanoma.,2017,true,true,true,2026-07-17
+UVM,,EIF1AX,biomarker,,PMID:28810145,Integrative Analysis Identifies Four Molecular and Clinical Subsets in Uveal Melanoma.,2017,true,true,true,2026-07-17
+UVM,,PMEL,biomarker,,PMID:34551229,Overall Survival Benefit with Tebentafusp in Metastatic Uveal Melanoma.,2021,true,true,true,2026-07-17
+UVM,,PMEL,target,tebentafusp,PMID:34551229,Overall Survival Benefit with Tebentafusp in Metastatic Uveal Melanoma.,2021,true,true,true,2026-07-17
+UVM,,PDCD1,target,nivolumab + ipilimumab,PMID:33125309,Nivolumab and Ipilimumab in Metastatic Uveal Melanoma: Results From a Single-Arm Phase II Study.,2021,true,true,true,2026-07-17
+UVM,,PRKCB,target,darovasertib (IDE196),PMID:38198520,"Discovery of Darovasertib (NVP-LXS196), a Pan-PKC Inhibitor for the Treatment of Metastatic Uveal Melanoma.",2024,true,true,true,2026-07-17
+LUSC,,TP53,biomarker,,PMID:22960745,Comprehensive genomic characterization of squamous cell lung cancers.,2012,true,true,true,2026-07-17
+LUSC,,PIK3CA,biomarker,,PMID:22960745,Comprehensive genomic characterization of squamous cell lung cancers.,2012,true,true,true,2026-07-17
+LUSC,,SOX2,biomarker,,PMID:22960745,Comprehensive genomic characterization of squamous cell lung cancers.,2012,true,true,true,2026-07-17
+LUSC,,FGFR1,biomarker,,PMID:23154548,FGFR1 amplification in squamous cell carcinoma of the lung.,2012,true,true,true,2026-07-17
+LUSC,,KEAP1,biomarker,,PMID:22960745,Comprehensive genomic characterization of squamous cell lung cancers.,2012,true,true,true,2026-07-17
+LUSC,,NFE2L2,biomarker,,PMID:22960745,Comprehensive genomic characterization of squamous cell lung cancers.,2012,true,true,true,2026-07-17
+LUSC,,CDKN2A,biomarker,,PMID:22960745,Comprehensive genomic characterization of squamous cell lung cancers.,2012,true,true,true,2026-07-17
+LUSC,,PTEN,biomarker,,PMID:22960745,Comprehensive genomic characterization of squamous cell lung cancers.,2012,true,true,true,2026-07-17
+LUSC,,PDCD1,target,pembrolizumab + chemotherapy,PMID:30280635,Pembrolizumab plus Chemotherapy for Squamous Non-Small-Cell Lung Cancer.,2018,true,true,true,2026-07-17
+LUSC,,PDCD1,target,cemiplimab,PMID:33581821,"Cemiplimab monotherapy for first-line treatment of advanced non-small-cell lung cancer with PD-L1 of at least 50%: a multicentre, open-label, global, phase 3, randomised, controlled trial.",2021,true,true,true,2026-07-17
+LUSC,,PDCD1,target,nivolumab + ipilimumab,PMID:31562796,Nivolumab plus Ipilimumab in Advanced Non-Small-Cell Lung Cancer.,2019,true,true,true,2026-07-17
+LUSC,,FGFR1,target,AZD4547,PMID:31195180,"SWOG S1400D (NCT02965378), a Phase II Study of the Fibroblast Growth Factor Receptor Inhibitor AZD4547 in Previously Treated Patients With Fibroblast Growth Factor Pathway-Activated Stage IV Squamous Cell Lung Cancer (Lung-MAP Substudy).",2019,true,true,true,2026-07-17
+MM,,CD38,biomarker,,PMID:35404740,Anti CD38 monoclonal antibodies for multiple myeloma treatment.,2022,true,true,true,2026-07-17
+MM,,TNFRSF17,biomarker,,PMID:37653344,Mechanisms of antigen escape from BCMA- or GPRC5D-targeted immunotherapies in multiple myeloma.,2023,true,true,true,2026-07-17
+MM,,SLAMF7,biomarker,,PMID:37754488,SLAMF7 as a Promising Immunotherapeutic Target in Multiple Myeloma Treatments.,2023,true,true,true,2026-07-17
+MM,,FCRH5,biomarker,,PMID:39145912,"Management of Toxicities Associated with BCMA, GPRC5D, and FcRH5-Targeting Bispecific Antibodies in Multiple Myeloma.",2024,true,true,true,2026-07-17
+MM,,GPRC5D,biomarker,,PMID:36507686,"Talquetamab, a T-Cell-Redirecting GPRC5D Bispecific Antibody for Multiple Myeloma.",2022,true,true,true,2026-07-17
+MM,,MYC,biomarker,,PMID:29467490,Targeting MYC in multiple myeloma.,2018,true,true,true,2026-07-17
+MM,,CCND1,biomarker,,PMID:38199896,Molecular Pathogenesis of Multiple Myeloma: Clinical Implications.,2024,true,true,true,2026-07-17
+MM,,FGFR3,biomarker,,PMID:12028033,FGFR3 dysregulation in multiple myeloma: frequency and prognostic relevance.,2002,true,true,true,2026-07-17
+MM,,TP53,biomarker,,PMID:38546638,TP53 function over forms in multiple myeloma.,2024,true,true,true,2026-07-17
+MM,,TNFRSF17,target,teclistamab,PMID:35661166,Teclistamab in Relapsed or Refractory Multiple Myeloma.,2022,true,true,true,2026-07-17
+MM,,TNFRSF17,target,elranatamab,PMID:37582952,Elranatamab in relapsed or refractory multiple myeloma: phase 2 MagnetisMM-3 trial results.,2023,true,true,true,2026-07-17
+MM,,TNFRSF17,target,cilta-cel (ciltacabtagene autoleucel),PMID:34175021,"Ciltacabtagene autoleucel, a B-cell maturation antigen-directed chimeric antigen receptor T-cell therapy in patients with relapsed or refractory multiple myeloma (CARTITUDE-1): a phase 1b/2 open-label study.",2021,true,true,true,2026-07-17
+MM,,TNFRSF17,target,ide-cel (idecabtagene vicleucel),PMID:33626253,Idecabtagene Vicleucel in Relapsed and Refractory Multiple Myeloma.,2021,true,true,true,2026-07-17
+MM,,TNFRSF17,target,belantamab mafodotin,PMID:40680754,"Belantamab mafodotin plus bortezomib and dexamethasone in patients with relapsed or refractory multiple myeloma (DREAMM-7): updated overall survival analysis from a global, randomised, open-label, phase 3 trial.",2025,true,true,true,2026-07-17
+MM,,GPRC5D,target,talquetamab,PMID:40090350,"Safety and activity of talquetamab in patients with relapsed or refractory multiple myeloma (MonumenTAL-1): a multicentre, open-label, phase 1-2 study.",2025,true,true,true,2026-07-17
+MM,,CD38,target,daratumumab,PMID:27705267,"Daratumumab, Lenalidomide, and Dexamethasone for Multiple Myeloma.",2016,true,true,true,2026-07-17
+MM,,CD38,target,isatuximab,PMID:31735560,"Isatuximab plus pomalidomide and low-dose dexamethasone versus pomalidomide and low-dose dexamethasone in patients with relapsed and refractory multiple myeloma (ICARIA-MM): a randomised, multicentre, open-label, phase 3 study.",2019,true,true,true,2026-07-17
+MM,,SLAMF7,target,elotuzumab,PMID:35960908,Elotuzumab Plus Pomalidomide and Dexamethasone for Relapsed/Refractory Multiple Myeloma: Final Overall Survival Analysis From the Randomized Phase II ELOQUENT-3 Trial.,2023,true,true,true,2026-07-17
+MM,,BCL2,target,venetoclax,PMID:33129376,"Venetoclax or placebo in combination with bortezomib and dexamethasone in patients with relapsed or refractory multiple myeloma (BELLINI): a randomised, double-blind, multicentre, phase 3 trial.",2020,true,true,true,2026-07-17
+CLL,,MS4A1,biomarker,,PMID:10561025,Chronic lymphocytic leukemia.,1999,true,true,true,2026-07-17
+CLL,,CD5,biomarker,,PMID:32249238,"Differential diagnosis of chronic lymphocytic leukemia/small lymphocytic lymphoma and other indolent lymphomas, including mantle cell lymphoma.",2020,true,true,true,2026-07-17
+CLL,,CD23,biomarker,,PMID:32249238,"Differential diagnosis of chronic lymphocytic leukemia/small lymphocytic lymphoma and other indolent lymphomas, including mantle cell lymphoma.",2020,true,true,true,2026-07-17
+CLL,,IGHV,biomarker,,PMID:39799061,Guidelines for the diagnosis and treatment of chronic lymphocytic leukemia and small lymphocytic lymphoma from Chronic Lymphocytic Leukemia Spanish Group (GELLC).,2025,true,true,true,2026-07-17
+CLL,,TP53,biomarker,,PMID:38755420,ERIC recommendations for TP53 mutation analysis in chronic lymphocytic leukemia-2024 update.,2024,true,true,true,2026-07-17
+CLL,,NOTCH1,biomarker,,PMID:22150006,SF3B1 and other novel cancer genes in chronic lymphocytic leukemia.,2011,true,true,true,2026-07-17
+CLL,,BTK,target,ibrutinib,PMID:26639149,Ibrutinib as Initial Therapy for Patients with Chronic Lymphocytic Leukemia.,2015,true,true,true,2026-07-17
+CLL,,BTK,target,acalabrutinib,PMID:34310172,Acalabrutinib Versus Ibrutinib in Previously Treated Chronic Lymphocytic Leukemia: Results of the First Randomized Phase III Trial.,2021,true,true,true,2026-07-17
+CLL,,BTK,target,zanubrutinib,PMID:35810754,"Zanubrutinib versus bendamustine and rituximab in untreated chronic lymphocytic leukaemia and small lymphocytic lymphoma (SEQUOIA): a randomised, controlled, phase 3 trial.",2022,true,true,true,2026-07-17
+CLL,,BTK,target,pirtobrutinib,PMID:40479620,Phase III Trial of Pirtobrutinib Versus Idelalisib/Rituximab or Bendamustine/Rituximab in Covalent Bruton Tyrosine Kinase Inhibitor-Pretreated Chronic Lymphocytic Leukemia/Small Lymphocytic Lymphoma (BRUIN CLL-321).,2025,true,true,true,2026-07-17
+CLL,,BCL2,target,venetoclax,PMID:37163621,First-Line Venetoclax Combinations in Chronic Lymphocytic Leukemia.,2023,true,true,true,2026-07-17
+CLL,,MS4A1,target,obinutuzumab,PMID:39082668,Venetoclax-obinutuzumab for previously untreated chronic lymphocytic leukemia: 6-year results of the randomized phase 3 CLL14 study.,2024,true,true,true,2026-07-17
+MCL,,CCND1,biomarker,,PMID:34114641,The pathologic diagnosis of mantle cell lymphoma.,2021,true,true,true,2026-07-17
+MCL,,CCND1,biomarker,,PMID:40381701,Optical genome mapping reveals diverse mechanisms of cyclin activation in mantle cell lymphomas lacking IGH::CCND1.,2025,true,true,true,2026-07-17
+MCL,,SOX11,biomarker,,PMID:19801969,Nuclear expression of sox11 is highly associated with mantle cell lymphoma but is independent of t(11;14)(q13;q32) in non-mantle cell B-cell neoplasms.,2010,true,true,true,2026-07-17
+MCL,,TP53,biomarker,,PMID:39437708,"Zanubrutinib, obinutuzumab, and venetoclax for first-line treatment of mantle cell lymphoma with a TP53 mutation.",2025,true,true,true,2026-07-17
+MCL,,BTK,target,acalabrutinib,PMID:29241979,"Acalabrutinib in relapsed or refractory mantle cell lymphoma (ACE-LY-004): a single-arm, multicentre, phase 2 trial.",2018,true,true,true,2026-07-17
+MCL,,BTK,target,zanubrutinib,PMID:32985902,"A Phase III study of zanubrutinib plus rituximab versus bendamustine plus rituximab in transplant-ineligible, untreated mantle cell lymphoma.",2021,true,true,true,2026-07-17
+MCL,,CD19,target,brexucabtagene autoleucel (brexu-cel),PMID:36753699,Brexucabtagene Autoleucel for Relapsed or Refractory Mantle Cell Lymphoma in Standard-of-Care Practice: Results From the US Lymphoma CAR T Consortium.,2023,true,true,true,2026-07-17
+MCL,,BCL2,target,venetoclax,PMID:39914418,"Ibrutinib plus venetoclax in relapsed or refractory mantle cell lymphoma (SYMPATICO): a multicentre, randomised, double-blind, placebo-controlled, phase 3 study.",2025,true,true,true,2026-07-17
+HL,,TNFRSF8,biomarker,,PMID:32701411,Anti-CD30 CAR-T Cell Therapy in Relapsed and Refractory Hodgkin Lymphoma.,2020,true,true,true,2026-07-17
+HL,,PDCD1LG2,biomarker,,PMID:32401663,PD-L1 and PD-L2 Mutations in Pediatric Hodgkin Lymphoma: Do They Have Any Prognostic Significance?,2022,true,true,true,2026-07-17
+HL,,CD274,biomarker,,PMID:26047524,PD-1/PD-L1 inhibitors.,2015,true,true,true,2026-07-17
+HL,,TNFRSF8,target,brentuximab vedotin,PMID:22684302,Brentuximab vedotin.,2012,true,true,true,2026-07-17
+HL,,PDCD1,target,nivolumab,PMID:25482239,PD-1 blockade with nivolumab in relapsed or refractory Hodgkin's lymphoma.,2015,true,true,true,2026-07-17
+HL,,PDCD1,target,pembrolizumab,PMID:33721562,"Pembrolizumab versus brentuximab vedotin in relapsed or refractory classical Hodgkin lymphoma (KEYNOTE-204): an interim analysis of a multicentre, randomised, open-label, phase 3 study.",2021,true,true,true,2026-07-17
+B_ALL,,CD19,biomarker,,PMID:33627493,CRISPR/Cas9-Engineered Universal CD19/CD22 Dual-Targeted CAR-T Cell Therapy for Relapsed/Refractory B-cell Acute Lymphoblastic Leukemia.,2021,true,true,true,2026-07-17
+B_ALL,,CD22,biomarker,,PMID:28152223,Inotuzumab ozogamicin in relapsed B-cell acute lymphoblastic leukemia.,2017,true,true,true,2026-07-17
+B_ALL,,MS4A1,biomarker,,PMID:32600932,Outcome of CD20-positive Adult B-cell Acute Lymphoblastic Leukemia and the Impact of Rituximab Therapy.,2020,true,true,true,2026-07-17
+B_ALL,,BCR,biomarker,,PMID:36755897,Treatment de-escalation in Philadelphia chromosome-positive B-cell acute lymphoblastic leukemia: the emerging role of chemotherapy-free regimens.,2023,true,true,true,2026-07-17
+B_ALL,,ABL1,target,imatinib + chemo,PMID:36755897,Treatment de-escalation in Philadelphia chromosome-positive B-cell acute lymphoblastic leukemia: the emerging role of chemotherapy-free regimens.,2023,true,true,true,2026-07-17
+B_ALL,,ABL1,target,ponatinib + chemo,PMID:36755897,Treatment de-escalation in Philadelphia chromosome-positive B-cell acute lymphoblastic leukemia: the emerging role of chemotherapy-free regimens.,2023,true,true,true,2026-07-17
+B_ALL,,CD19,target,blinatumomab,PMID:33651090,"Effect of Postreinduction Therapy Consolidation With Blinatumomab vs Chemotherapy on Disease-Free Survival in Children, Adolescents, and Young Adults With First Relapse of B-Cell Acute Lymphoblastic Leukemia: A Randomized Clinical Trial.",2021,true,true,true,2026-07-17
+B_ALL,,CD19,target,tisagenlecleucel (tisa-cel),PMID:29385370,Tisagenlecleucel in Children and Young Adults with B-Cell Lymphoblastic Leukemia.,2018,true,true,true,2026-07-17
+B_ALL,,CD19,target,brexucabtagene autoleucel (brexu-cel),PMID:40108332,Three-year analysis of adult patients with relapsed or refractory B-cell acute lymphoblastic leukemia treated with brexucabtagene autoleucel in ZUMA-3.,2025,true,true,true,2026-07-17
+B_ALL,,CD22,target,inotuzumab ozogamicin,PMID:35007127,Phase II Trial of Inotuzumab Ozogamicin in Children and Adolescents With Relapsed or Refractory B-Cell Acute Lymphoblastic Leukemia: Children's Oncology Group Protocol AALL1621.,2022,true,true,true,2026-07-17
+SARC_OS,,RB1,biomarker,,PMID:36996377,Clinical Targeted Next-Generation Panel Sequencing Reveals MYC Amplification Is a Poor Prognostic Factor in Osteosarcoma.,2023,true,true,true,2026-07-17
+SARC_OS,,TP53,biomarker,,PMID:36996377,Clinical Targeted Next-Generation Panel Sequencing Reveals MYC Amplification Is a Poor Prognostic Factor in Osteosarcoma.,2023,true,true,true,2026-07-17
+SARC_OS,,ATRX,biomarker,,PMID:36996377,Clinical Targeted Next-Generation Panel Sequencing Reveals MYC Amplification Is a Poor Prognostic Factor in Osteosarcoma.,2023,true,true,true,2026-07-17
+SARC_OS,,MDM2,biomarker,,PMID:24786129,Parosteal osteosarcoma.,2014,true,true,true,2026-07-17
+SARC_OS,,CDK4,biomarker,,PMID:24786129,Parosteal osteosarcoma.,2014,true,true,true,2026-07-17
+SARC_OS,,RUNX2,biomarker,,PMID:25738872,RUNX2 and Osteosarcoma.,2015,true,true,true,2026-07-17
+SARC_OS,,ERBB2,target,trastuzumab deruxtecan,PMID:42131734,"PEPN1924, A Phase II Study of Trastuzumab Deruxtecan in Patients With Recurrent Human Epidermal Growth Factor Receptor 2+ Osteosarcoma: A Children's Oncology Group Pediatric Early-Phase Clinical Trial Network Study.",2025,true,true,true,2026-07-17
+SARC_OS,,KDR,target,cabozantinib,PMID:32078813,"Cabozantinib in patients with advanced Ewing sarcoma or osteosarcoma (CABONE): a multicentre, single-arm, phase 2 trial.",2020,true,true,true,2026-07-17
+SARC_EWS,,EWSR1,biomarker,,PMID:29977059,Ewing sarcoma.,2018,true,true,true,2026-07-17
+SARC_EWS,,FLI1,biomarker,,PMID:29513652,EWS-FLI1 increases transcription to cause R-loops and block BRCA1 repair in Ewing sarcoma.,2018,true,true,true,2026-07-17
+SARC_EWS,,ERG,biomarker,,PMID:29977059,Ewing sarcoma.,2018,true,true,true,2026-07-17
+SARC_EWS,,CD99,biomarker,,PMID:38051221,Engagement of CD99 Activates Distinct Programs in Ewing Sarcoma and Macrophages.,2024,true,true,true,2026-07-17
+SARC_EWS,,NKX2-2,biomarker,,PMID:34985580,Does PAX7 and NKX2.2 immunoreactivity in Ewing sarcoma have prognostic significance?,2022,true,true,true,2026-07-17
+SARC_EWS,,STAG2,biomarker,,PMID:34129824,STAG2 loss rewires oncogenic and developmental programs to promote metastasis in Ewing sarcoma.,2021,true,true,true,2026-07-17
+SARC_RMS_ERMS,,MYOD1,biomarker,,PMID:11688574,"Are myogenin and myoD1 expression specific for rhabdomyosarcoma? A study of 150 cases, with emphasis on spindle cell mimics.",2001,true,true,true,2026-07-17
+SARC_RMS_ERMS,,MYOG,biomarker,,PMID:11688574,"Are myogenin and myoD1 expression specific for rhabdomyosarcoma? A study of 150 cases, with emphasis on spindle cell mimics.",2001,true,true,true,2026-07-17
+SARC_RMS_ERMS,,DES,biomarker,,PMID:11688574,"Are myogenin and myoD1 expression specific for rhabdomyosarcoma? A study of 150 cases, with emphasis on spindle cell mimics.",2001,true,true,true,2026-07-17
+SARC_RMS_ERMS,,NRAS,biomarker,,PMID:24436047,Comprehensive genomic analysis of rhabdomyosarcoma reveals a landscape of alterations affecting a common genetic axis in fusion-positive and fusion-negative tumors.,2014,true,true,true,2026-07-17
+SARC_RMS_ARMS,,FOXO1,biomarker,,PMID:24436047,Comprehensive genomic analysis of rhabdomyosarcoma reveals a landscape of alterations affecting a common genetic axis in fusion-positive and fusion-negative tumors.,2014,true,true,true,2026-07-17
+SARC_RMS_ARMS,,PAX3,biomarker,,PMID:24436047,Comprehensive genomic analysis of rhabdomyosarcoma reveals a landscape of alterations affecting a common genetic axis in fusion-positive and fusion-negative tumors.,2014,true,true,true,2026-07-17
+SARC_RMS_ARMS,,PAX7,biomarker,,PMID:24436047,Comprehensive genomic analysis of rhabdomyosarcoma reveals a landscape of alterations affecting a common genetic axis in fusion-positive and fusion-negative tumors.,2014,true,true,true,2026-07-17
+SARC_RMS_ARMS,,MYOG,biomarker,,PMID:11007039,Myogenin is a specific marker for rhabdomyosarcoma: an immunohistochemical study in paraffin-embedded tissues.,2000,true,true,true,2026-07-17
+SARC_RMS_ARMS,,FGFR4,biomarker,,PMID:21882254,PAX3-FOXO1 and FGFR4 in alveolar rhabdomyosarcoma.,2012,true,true,true,2026-07-17
+WILMS,,WT1,biomarker,,PMID:11103785,Frequent association of beta-catenin and WT1 mutations in Wilms tumors.,2000,true,true,true,2026-07-17
+WILMS,,CTNNB1,biomarker,,PMID:28825729,A Children's Oncology Group and TARGET initiative exploring the genetic landscape of Wilms tumor.,2017,true,true,true,2026-07-17
+WILMS,,AMER1,biomarker,,PMID:40399763,Wilms Tumor in Children With AMER1/WTX Germline Pathogenic Variants: A Multicenter Case Series.,2025,true,true,true,2026-07-17
+WILMS,,TP53,biomarker,,PMID:32066305,Association Between TP53 Mutation and Prognosis in Wilms Tumor: A Meta-Analysis.,2021,true,true,true,2026-07-17
+WILMS,,DROSHA,biomarker,,PMID:28825729,A Children's Oncology Group and TARGET initiative exploring the genetic landscape of Wilms tumor.,2017,true,true,true,2026-07-17
+WILMS,,DGCR8,biomarker,,PMID:28825729,A Children's Oncology Group and TARGET initiative exploring the genetic landscape of Wilms tumor.,2017,true,true,true,2026-07-17
+NBL,,MYCN,biomarker,,PMID:24086065,Neuroblastoma and MYCN.,2013,true,true,true,2026-07-17
+NBL,,ALK,biomarker,,PMID:33155698,Molecular targeting therapies for neuroblastoma: Progress and challenges.,2021,true,true,true,2026-07-17
+NBL,,ATRX,biomarker,,PMID:22367537,Sequencing of neuroblastoma identifies chromothripsis and defects in neuritogenesis genes.,2012,true,true,true,2026-07-17
+NBL,,PHOX2B,biomarker,,PMID:28740262,Heterogeneity of neuroblastoma cell identity defined by transcriptional circuitries.,2017,true,true,true,2026-07-17
+NBL,,TH,biomarker,,PMID:2879374,Correlation between tyrosine hydroxylase immunoreactive cells in tumors and urinary catecholamine output in neuroblastoma patients.,1986,true,true,true,2026-07-17
+NBL,,ALK,target,lorlatinib,PMID:37012551,Lorlatinib with or without chemotherapy in ALK-driven refractory/relapsed neuroblastoma: phase 1 trial results.,2023,true,true,true,2026-07-17
+NBL,,ALK,target,crizotinib,PMID:33568345,Activity of Crizotinib in Patients with ALK-Aberrant Relapsed/Refractory Neuroblastoma: A Children's Oncology Group Study (ADVL0912).,2021,true,true,true,2026-07-17
+MBL,,MYC,biomarker,,PMID:39377358,Molecular and clinical heterogeneity within MYC-family amplified medulloblastoma is associated with survival outcomes: A multicenter cohort study.,2025,true,true,true,2026-07-17
+MBL,,MYCN,biomarker,,PMID:22265402,Genome sequencing of pediatric medulloblastoma links catastrophic DNA rearrangements with TP53 mutations.,2012,true,true,true,2026-07-17
+MBL,,CTNNB1,biomarker,,PMID:20921458,"Definition of disease-risk stratification groups in childhood medulloblastoma using combined clinical, pathologic, and molecular variables.",2011,true,true,true,2026-07-17
+MBL,,PTCH1,biomarker,,PMID:22265402,Genome sequencing of pediatric medulloblastoma links catastrophic DNA rearrangements with TP53 mutations.,2012,true,true,true,2026-07-17
+MBL,,SMO,biomarker,,PMID:22265402,Genome sequencing of pediatric medulloblastoma links catastrophic DNA rearrangements with TP53 mutations.,2012,true,true,true,2026-07-17
+MBL,,TP53,biomarker,,PMID:24493713,Cytogenetic prognostication within medulloblastoma subgroups.,2014,true,true,true,2026-07-17
+MBL,,SMO,target,vismodegib,PMID:33825892,MEVITEM-a phase I/II trial of vismodegib + temozolomide vs temozolomide in patients with recurrent/refractory medulloblastoma with Sonic Hedgehog pathway activation.,2021,true,true,true,2026-07-17
+ATRT,,SMARCB1,biomarker,,PMID:32105509,Efficacy of High-Dose Chemotherapy and Three-Dimensional Conformal Radiation for Atypical Teratoid/Rhabdoid Tumor: A Report From the Children's Oncology Group Trial ACNS0333.,2020,true,true,true,2026-07-17
+ATRT,,VIM,biomarker,,PMID:15105808,Double immunolabeling of central nervous system atypical teratoid/rhabdoid tumors.,2004,true,true,true,2026-07-17
+ATRT,,EZH2,target,tazemetostat,PMID:37228094,Tazemetostat for tumors harboring SMARCB1/SMARCA4 or EZH2 alterations: results from NCI-COG pediatric MATCH APEC1621C.,2023,true,true,true,2026-07-17
+RB,,RB1,biomarker,,PMID:38615905,"Recent progress in retinoblastoma: Pathogenesis, presentation, diagnosis and management.",2024,true,true,true,2026-07-17
+RB,,MYCN,biomarker,,PMID:39079981,A MYCN-driven de-differentiation profile identifies a subgroup of aggressive retinoblastoma.,2024,true,true,true,2026-07-17
+HEPB,,CTNNB1,biomarker,,PMID:39567475,Divergent WNT signaling and drug sensitivity profiles within hepatoblastoma tumors and organoids.,2024,true,true,true,2026-07-17
+HEPB,,AFP,biomarker,,PMID:38143081,An update on diagnosis and treatment of hepatoblastoma.,2024,true,true,true,2026-07-17
+NET_PANCREAS,,MEN1,biomarker,,PMID:21252315,"DAXX/ATRX, MEN1, and mTOR pathway genes are frequently altered in pancreatic neuroendocrine tumors.",2011,true,true,true,2026-07-17
+NET_PANCREAS,,ATRX,biomarker,,PMID:21252315,"DAXX/ATRX, MEN1, and mTOR pathway genes are frequently altered in pancreatic neuroendocrine tumors.",2011,true,true,true,2026-07-17
+NET_PANCREAS,,DAXX,biomarker,,PMID:21252315,"DAXX/ATRX, MEN1, and mTOR pathway genes are frequently altered in pancreatic neuroendocrine tumors.",2011,true,true,true,2026-07-17
+NET_PANCREAS,,MTOR,biomarker,,PMID:21306238,Everolimus for advanced pancreatic neuroendocrine tumors.,2011,true,true,true,2026-07-17
+NET_PANCREAS,,CHGA,biomarker,,PMID:39556246,Diagnostic and prognostic biomarkers for pancreatic neuroendocrine neoplasms.,2024,true,true,true,2026-07-17
+NET_PANCREAS,,SYP,biomarker,,PMID:39556246,Diagnostic and prognostic biomarkers for pancreatic neuroendocrine neoplasms.,2024,true,true,true,2026-07-17
+NET_PANCREAS,,SSTR2,biomarker,,PMID:39556246,Diagnostic and prognostic biomarkers for pancreatic neuroendocrine neoplasms.,2024,true,true,true,2026-07-17
+NET_PANCREAS,,SSTR2,target,octreotide long-acting,PMID:25911185,The expanding role of somatostatin analogs in gastroenteropancreatic and lung neuroendocrine tumors.,2015,true,true,true,2026-07-17
+NET_PANCREAS,,SSTR2,target,lanreotide,PMID:25014687,Lanreotide in metastatic enteropancreatic neuroendocrine tumors.,2014,true,true,true,2026-07-17
+NET_PANCREAS,,SSTR2,target,[177Lu]Lu-DOTA-TATE,PMID:38851203,"[177Lu]Lu-DOTA-TATE plus long-acting octreotide versus high‑dose long-acting octreotide for the treatment of newly diagnosed, advanced grade 2-3, well-differentiated, gastroenteropancreatic neuroendocrine tumours (NETTER-2): an open-label, randomised, phase 3 study.",2024,true,true,true,2026-07-17
+NET_PANCREAS,,MTOR,target,everolimus,PMID:21306238,Everolimus for advanced pancreatic neuroendocrine tumors.,2011,true,true,true,2026-07-17
+NET_PANCREAS,,KDR,target,sunitinib,PMID:21306237,Sunitinib malate for the treatment of pancreatic neuroendocrine tumors.,2011,true,true,true,2026-07-17
+NET_MIDGUT,,CHGA,biomarker,,PMID:30057604,Chromogranin A: From Laboratory to Clinical Aspects of Patients with Neuroendocrine Tumors.,2018,true,true,true,2026-07-17
+NET_MIDGUT,,SYP,biomarker,,PMID:9744317,Immunohistologic analysis of gastrointestinal and pulmonary carcinoid tumors.,1998,true,true,true,2026-07-17
+NET_MIDGUT,,SSTR2,biomarker,,PMID:28076709,Phase 3 Trial of 177Lu-Dotatate for Midgut Neuroendocrine Tumors.,2017,true,true,true,2026-07-17
+NET_MIDGUT,,TPH1,biomarker,,PMID:27817224,Telotristat ethyl: a new option for the management of carcinoid syndrome.,2016,true,true,true,2026-07-17
+NET_MIDGUT,,SSTR2,target,octreotide long-acting,PMID:19704057,"Placebo-controlled, double-blind, prospective, randomized study on the effect of octreotide LAR in the control of tumor growth in patients with metastatic neuroendocrine midgut tumors: a report from the PROMID Study Group.",2009,true,true,true,2026-07-17
+NET_MIDGUT,,SSTR2,target,[177Lu]Lu-DOTA-TATE,PMID:28076709,Phase 3 Trial of 177Lu-Dotatate for Midgut Neuroendocrine Tumors.,2017,true,true,true,2026-07-17
+NET_MIDGUT,,TPH1,target,telotristat ethyl,PMID:29330194,Telotristat ethyl in carcinoid syndrome: safety and efficacy in the TELECAST phase 3 trial.,2018,true,true,true,2026-07-17
+NET_LUNG,,CHGA,biomarker,,PMID:39523440,RepID as a potential biomarker and therapeutic target for lung neuroendocrine tumor.,2024,true,true,true,2026-07-17
+NET_LUNG,,SYP,biomarker,,PMID:39523440,RepID as a potential biomarker and therapeutic target for lung neuroendocrine tumor.,2024,true,true,true,2026-07-17
+NET_LUNG,,SSTR2,biomarker,,PMID:38375032,Concomitant inhibition of PI3K/mTOR signaling pathways boosts antiproliferative effects of lanreotide in bronchopulmonary neuroendocrine tumor cells.,2024,true,true,true,2026-07-17
+NET_LUNG,,MEN1,biomarker,,PMID:9361035,Identification of MEN1 gene mutations in sporadic carcinoid tumors of the lung.,1997,true,true,true,2026-07-17
+NET_LUNG,,SSTR2,target,octreotide long-acting,PMID:25911185,The expanding role of somatostatin analogs in gastroenteropancreatic and lung neuroendocrine tumors.,2015,true,true,true,2026-07-17
+NET_LUNG,,MTOR,target,everolimus,PMID:26703889,"Everolimus for the treatment of advanced, non-functional neuroendocrine tumours of the lung or gastrointestinal tract (RADIANT-4): a randomised, placebo-controlled, phase 3 study.",2016,true,true,true,2026-07-17
+NEC_MERKEL,,KRT20,biomarker,,PMID:16625069,Immunohistochemical distinction between merkel cell carcinoma and small cell carcinoma of the lung.,2006,true,true,true,2026-07-17
+NEC_MERKEL,,CD274,biomarker,,PMID:27093365,PD-1 Blockade with Pembrolizumab in Advanced Merkel-Cell Carcinoma.,2016,true,true,true,2026-07-17
+NEC_MERKEL,,CHGA,biomarker,,PMID:30067951,Immunohistochemical profiles of different subsets of Merkel cell carcinoma.,2018,true,true,true,2026-07-17
+NEC_MERKEL,,SYP,biomarker,,PMID:30067951,Immunohistochemical profiles of different subsets of Merkel cell carcinoma.,2018,true,true,true,2026-07-17
+NEC_MERKEL,,CD274,target,avelumab,PMID:34301810,First-line avelumab in a cohort of 116 patients with metastatic Merkel cell carcinoma (JAVELIN Merkel 200): primary and biomarker analyses of a phase II study.,2021,true,true,true,2026-07-17
+NEC_MERKEL,,PDCD1,target,pembrolizumab,PMID:39377880,"Pembrolizumab for the First-Line Treatment of Recurrent Locally Advanced or Metastatic Merkel Cell Carcinoma: Results from the Single-Arm, Open-Label, Phase III KEYNOTE-913 Study.",2024,true,true,true,2026-07-17
+NEC_MERKEL,,PDCD1,target,nivolumab + ipilimumab,PMID:36108657,"Combined nivolumab and ipilimumab with or without stereotactic body radiation therapy for advanced Merkel cell carcinoma: a randomised, open label, phase 2 trial.",2022,true,true,true,2026-07-17
+MTC,,RET,biomarker,,PMID:37870969,Phase 3 Trial of Selpercatinib in Advanced RET-Mutant Medullary Thyroid Cancer.,2023,true,true,true,2026-07-17
+MTC,,CALCA,biomarker,,PMID:39030177,The neurotransmitter calcitonin gene-related peptide shapes an immunosuppressive microenvironment in medullary thyroid cancer.,2024,true,true,true,2026-07-17
+MTC,,CEACAM5,biomarker,,PMID:37646181,Medullary thyroid carcinoma.,2023,true,true,true,2026-07-17
+MTC,,CHGA,biomarker,,PMID:37646181,Medullary thyroid carcinoma.,2023,true,true,true,2026-07-17
+MTC,,RET,target,selpercatinib,PMID:37870969,Phase 3 Trial of Selpercatinib in Advanced RET-Mutant Medullary Thyroid Cancer.,2023,true,true,true,2026-07-17
+MTC,,RET,target,pralsetinib,PMID:34118198,"Pralsetinib for patients with advanced or metastatic RET-altered thyroid cancer (ARROW): a multi-cohort, open-label, registrational, phase 1/2 study.",2021,true,true,true,2026-07-17
+MTC,,RET,target,cabozantinib,PMID:29045520,"Overall survival analysis of EXAM, a phase III trial of cabozantinib in patients with radiographically progressive medullary thyroid carcinoma.",2017,true,true,true,2026-07-17
+MTC,,RET,target,vandetanib,PMID:22025146,"Vandetanib in patients with locally advanced or metastatic medullary thyroid cancer: a randomized, double-blind phase III trial.",2012,true,true,true,2026-07-17
+NPC,,EBV_LMP1,biomarker,,PMID:39402748,Targeting the LMP1-ALIX axis in EBV+ nasopharyngeal carcinoma inhibits immunosuppressive small extracellular vesicle secretion and boosts anti-tumor immunity.,2024,true,true,true,2026-07-17
+NPC,,EBV_BZLF1,biomarker,,PMID:10664244,Elevation of antibody against Epstein-Barr virus genes BRLF1 and BZLF1 in nasopharyngeal carcinoma.,2000,true,true,true,2026-07-17
+NPC,,CD274,biomarker,,PMID:39542656,FOXA1 enhances antitumor immunity via repressing interferon-induced PD-L1 expression in nasopharyngeal carcinoma.,2024,true,true,true,2026-07-17
+NPC,,PDCD1,target,toripalimab + gemcitabine/cisplatin,PMID:38015220,Toripalimab Plus Chemotherapy for Recurrent or Metastatic Nasopharyngeal Carcinoma: The JUPITER-02 Randomized Clinical Trial.,2023,true,true,true,2026-07-17
+NPC,,PDCD1,target,tislelizumab,PMID:37207654,Tislelizumab plus chemotherapy as first-line treatment for recurrent or metastatic nasopharyngeal cancer: A multicenter phase 3 trial (RATIONALE-309).,2023,true,true,true,2026-07-17
+ACINIC,,DOG1,biomarker,,PMID:36077107,DOG1 as an Immunohistochemical Marker of Acinic Cell Carcinoma: A Systematic Review and Meta-Analysis.,2022,true,true,true,2026-07-17
+ACINIC,,NR4A3,biomarker,,PMID:38682454,PON3::LCN1 and HTN3::MSANTD3 Gene Fusions With NR4A3/NR4A2 Expression in Salivary Acinic Cell Carcinoma.,2024,true,true,true,2026-07-17
+ADCC,,MYB,biomarker,,PMID:35738530,MYB-NFIB fusion transcript in adenoid cystic carcinoma: Current state of knowledge and future directions.,2022,true,true,true,2026-07-17
+ADCC,,NFIB,biomarker,,PMID:35738530,MYB-NFIB fusion transcript in adenoid cystic carcinoma: Current state of knowledge and future directions.,2022,true,true,true,2026-07-17
+ADCC,,NOTCH1,biomarker,,PMID:36879115,Increased retinoic acid signaling decreases lung metastasis in salivary adenoid cystic carcinoma by inhibiting the noncanonical Notch1 pathway.,2023,true,true,true,2026-07-17
+ADCC,,KIT,biomarker,,PMID:14681323,Expression of KIT (CD117) in neoplasms of the head and neck: an ancillary marker for adenoid cystic carcinoma.,2003,true,true,true,2026-07-17
+ADCC,,NOTCH1,target,brontictuzumab,PMID:29726923,A phase I dose-escalation and dose-expansion study of brontictuzumab in subjects with selected solid tumors.,2018,true,true,true,2026-07-17
+ADCC,,KDR,target,lenvatinib,PMID:30939095,"Phase II Study of Lenvatinib in Patients With Progressive, Recurrent or Metastatic Adenoid Cystic Carcinoma.",2019,true,true,true,2026-07-17
+SARC_CHOR,,TBXT,biomarker,,PMID:38892063,Chordoma: Genetics and Contemporary Management.,2024,true,true,true,2026-07-17
+SARC_CHOR,,CDKN2A,biomarker,,PMID:18071362,Frequent deletion of the CDKN2A locus in chordoma: analysis of chromosomal imbalances using array comparative genomic hybridisation.,2008,true,true,true,2026-07-17
+SARC_CHOR,,LYST,biomarker,,PMID:29026114,The driver landscape of sporadic chordoma.,2017,true,true,true,2026-07-17
+SARC_CHOR,,EGFR,target,erlotinib / gefitinib,PMID:38731241,Chordoma Genetic Aberrations and Targeted Therapies Panorama: A Systematic Literature Review.,2024,true,true,true,2026-07-17
+SARC_CHOR,,PDGFRB,target,imatinib,PMID:30216418,Imatinib and everolimus in patients with progressing advanced chordoma: A phase 2 clinical study.,2018,true,true,true,2026-07-17
+SARC_CHOR,,TBXT,target,brachyury vaccine,PMID:33594772,"Randomized, Double-Blind, Placebo-Controlled Phase II Study of Yeast-Brachyury Vaccine (GI-6301) in Combination with Standard-of-Care Radiotherapy in Locally Advanced, Unresectable Chordoma.",2021,true,true,true,2026-07-17
+SARC_CHON,,IDH1,biomarker,,PMID:40100120,Phase I Study of the Mutant IDH1 Inhibitor Ivosidenib: Long-term Safety and Clinical Activity in Patients with Conventional Chondrosarcoma.,2025,true,true,true,2026-07-17
+SARC_CHON,,IDH2,biomarker,,PMID:31615936,Genomic Profiling Identifies Association of IDH1/IDH2 Mutation with Longer Relapse-Free and Metastasis-Free Survival in High-Grade Chondrosarcoma.,2020,true,true,true,2026-07-17
+SARC_CHON,,EXT1,biomarker,,PMID:18271966,Multiple osteochondromas.,2008,true,true,true,2026-07-17
+SARC_CHON,,EXT2,biomarker,,PMID:18271966,Multiple osteochondromas.,2008,true,true,true,2026-07-17
+SARC_CHON,,COL2A1,biomarker,,PMID:25024164,Unique mutation portraits and frequent COL2A1 gene alteration in chondrosarcoma.,2014,true,true,true,2026-07-17
+SARC_CHON_MESENCHYMAL,,HEY1,biomarker,,PMID:37212282,HEY1-NCOA2 expression modulates chondrogenic differentiation and induces mesenchymal chondrosarcoma in mice.,2023,true,true,true,2026-07-17
+SARC_CHON,,IDH1,target,ivosidenib,PMID:40100120,Phase I Study of the Mutant IDH1 Inhibitor Ivosidenib: Long-term Safety and Clinical Activity in Patients with Conventional Chondrosarcoma.,2025,true,true,true,2026-07-17
+BL,,MYC,biomarker,,PMID:16760443,Molecular diagnosis of Burkitt's lymphoma.,2006,true,true,true,2026-07-17
+BL,,MS4A1,biomarker,,PMID:16760443,Molecular diagnosis of Burkitt's lymphoma.,2006,true,true,true,2026-07-17
+BL,,CD79A,biomarker,,PMID:16760443,Molecular diagnosis of Burkitt's lymphoma.,2006,true,true,true,2026-07-17
+BL,,BCL6,biomarker,,PMID:16760443,Molecular diagnosis of Burkitt's lymphoma.,2006,true,true,true,2026-07-17
+BL,,TP53,biomarker,,PMID:36201743,Genetic subgroups inform on pathobiology in adult and pediatric Burkitt lymphoma.,2023,true,true,true,2026-07-17
+BL,,MS4A1,target,rituximab,PMID:26423805,Effect of rituximab on adult Burkitt's lymphoma: a systematic review and meta-analysis.,2016,true,true,true,2026-07-17
+FL,,MS4A1,biomarker,,PMID:34210513,"Follicular lymphoma: an update on diagnosis, prognosis, and management.",2021,true,true,true,2026-07-17
+FL,,BCL2,biomarker,,PMID:36765742,Follicular Lymphoma in the 5th Edition of the WHO-Classification of Haematolymphoid Neoplasms-Updated Classification and New Biological Data.,2023,true,true,true,2026-07-17
+FL,,BCL6,biomarker,,PMID:35297566,"Clinicopathological analysis of follicular lymphoma with BCL2, BCL6, and MYC rearrangements.",2022,true,true,true,2026-07-17
+FL,,CD10,biomarker,,PMID:40393874,Distinct genetic alterations in CD10-negative MUM1-positive follicular lymphoma.,2025,true,true,true,2026-07-17
+FL,,EZH2,biomarker,,PMID:33035457,"Tazemetostat for patients with relapsed or refractory follicular lymphoma: an open-label, single-arm, multicentre, phase 2 trial.",2020,true,true,true,2026-07-17
+FL,,MS4A1,target,rituximab,PMID:21176949,"Rituximab maintenance for 2 years in patients with high tumour burden follicular lymphoma responding to rituximab plus chemotherapy (PRIMA): a phase 3, randomised controlled trial.",2011,true,true,true,2026-07-17
+FL,,MS4A1,target,obinutuzumab,PMID:28276536,Obinutuzumab in follicular lymphoma.,2016,true,true,true,2026-07-17
+FL,,EZH2,target,tazemetostat,PMID:33035457,"Tazemetostat for patients with relapsed or refractory follicular lymphoma: an open-label, single-arm, multicentre, phase 2 trial.",2020,true,true,true,2026-07-17
+FL,,MS4A1,target,mosunetuzumab,PMID:35803286,"Safety and efficacy of mosunetuzumab, a bispecific antibody, in patients with relapsed or refractory follicular lymphoma: a single-arm, multicentre, phase 2 study.",2022,true,true,true,2026-07-17
+FL,,MS4A1,target,epcoritamab,PMID:41371238,"Epcoritamab, lenalidomide, and rituximab versus lenalidomide and rituximab for relapsed or refractory follicular lymphoma (EPCORE FL-1): a global, open-label, randomised, phase 3 trial.",2026,true,true,true,2026-07-17
+FL,,CD19,target,axicabtagene ciloleucel (axi-cel),PMID:35403693,FDA Approval Summary: Axicabtagene Ciloleucel for Relapsed or Refractory Follicular Lymphoma.,2022,true,true,true,2026-07-17
+FL,,CD19,target,lisocabtagene maraleucel (liso-cel),PMID:38830991,Lisocabtagene maraleucel in follicular lymphoma: the phase 2 TRANSCEND FL study.,2024,true,true,true,2026-07-17
+HCL,,BRAF,biomarker,,PMID:38440808,"Hairy cell leukemia 2024: Update on diagnosis, risk-stratification, and treatment-Annual updates in hematological malignancies.",2024,true,true,true,2026-07-17
+HCL,,MS4A1,biomarker,,PMID:31068044,Hairy cell leukemia: present and future directions.,2019,true,true,true,2026-07-17
+HCL,,CD22,biomarker,,PMID:31068044,Hairy cell leukemia: present and future directions.,2019,true,true,true,2026-07-17
+HCL,,CD25,biomarker,,PMID:38440808,"Hairy cell leukemia 2024: Update on diagnosis, risk-stratification, and treatment-Annual updates in hematological malignancies.",2024,true,true,true,2026-07-17
+HCL,,BRAF,target,vemurafenib,PMID:26352686,Targeting Mutant BRAF in Relapsed or Refractory Hairy-Cell Leukemia.,2015,true,true,true,2026-07-17
+HCL,,BRAF,target,dabrafenib + trametinib,PMID:36108341,Dabrafenib plus trametinib in patients with relapsed/refractory BRAF V600E mutation-positive hairy cell leukemia.,2023,true,true,true,2026-07-17
+CML,,BCR,biomarker,,PMID:38280275,The impact of the BCR-ABL oncogene in the pathology and treatment of chronic myeloid leukemia.,2024,true,true,true,2026-07-17
+CML,,ABL1,biomarker,,PMID:33773846,"Chronic Myeloid Leukemia: Modern therapies, current challenges and future directions.",2021,true,true,true,2026-07-17
+CML,,ABL1,target,imatinib,PMID:12637609,Imatinib compared with interferon and low-dose cytarabine for newly diagnosed chronic-phase chronic myeloid leukemia.,2003,true,true,true,2026-07-17
+CML,,ABL1,target,dasatinib,PMID:27217448,Final 5-Year Study Results of DASISION: The Dasatinib Versus Imatinib Study in Treatment-Naïve Chronic Myeloid Leukemia Patients Trial.,2016,true,true,true,2026-07-17
+CML,,ABL1,target,nilotinib,PMID:26837842,Long-term benefits and risks of frontline nilotinib vs imatinib for chronic myeloid leukemia in chronic phase: 5-year update of the randomized ENESTnd trial.,2016,true,true,true,2026-07-17
+CML,,ABL1,target,bosutinib,PMID:29091516,Bosutinib Versus Imatinib for Newly Diagnosed Chronic Myeloid Leukemia: Results From the Randomized BFORE Trial.,2018,true,true,true,2026-07-17
+CML,,ABL1,target,ponatinib,PMID:34407543,"Ponatinib dose-ranging study in chronic-phase chronic myeloid leukemia: a randomized, open-label phase 2 clinical trial.",2021,true,true,true,2026-07-17
+CML,,ABL1,target,asciminib,PMID:38820078,Asciminib in Newly Diagnosed Chronic Myeloid Leukemia.,2024,true,true,true,2026-07-17
+SCLC,,DLL3,biomarker,,PMID:31215500,DLL3: an emerging target in small cell lung cancer.,2019,true,true,true,2026-07-17
+SCLC,,ASCL1,biomarker,,PMID:30926931,Molecular subtypes of small cell lung cancer: a synthesis of human and mouse model data.,2019,true,true,true,2026-07-17
+SCLC,,NEUROD1,biomarker,,PMID:30926931,Molecular subtypes of small cell lung cancer: a synthesis of human and mouse model data.,2019,true,true,true,2026-07-17
+SCLC,,POU2F3,biomarker,,PMID:37357936,POU2F3: A Sensitive and Specific Diagnostic Marker for Neuroendocrine-low/negative Small Cell Lung Cancer.,2023,true,true,true,2026-07-17
+SCLC,,YAP1,biomarker,,PMID:38180245,Molecular and Pathologic Characterization of YAP1-Expressing Small Cell Lung Cancer Cell Lines Leads to Reclassification as SMARCA4-Deficient Malignancies.,2024,true,true,true,2026-07-17
+SCLC,,TP53,biomarker,,PMID:26168399,Comprehensive genomic profiles of small cell lung cancer.,2015,true,true,true,2026-07-17
+SCLC,,RB1,biomarker,,PMID:26168399,Comprehensive genomic profiles of small cell lung cancer.,2015,true,true,true,2026-07-17
+SCLC,,DLL3,target,tarlatamab,PMID:37861218,Tarlatamab for Patients with Previously Treated Small-Cell Lung Cancer.,2023,true,true,true,2026-07-17
+SCLC,,TOP1,target,topotecan,PMID:10080612,"Topotecan versus cyclophosphamide, doxorubicin, and vincristine for the treatment of recurrent small-cell lung cancer.",1999,true,true,true,2026-07-17
+SCLC,,CD274,target,atezolizumab,PMID:30280641,First-Line Atezolizumab plus Chemotherapy in Extensive-Stage Small-Cell Lung Cancer.,2018,true,true,true,2026-07-17
+SCLC,,CD274,target,durvalumab,PMID:31590988,"Durvalumab plus platinum-etoposide versus platinum-etoposide in first-line treatment of extensive-stage small-cell lung cancer (CASPIAN): a randomised, controlled, open-label, phase 3 trial.",2019,true,true,true,2026-07-17
+T_ALL,,CD7,biomarker,,PMID:37314354,Base-Edited CAR7 T Cells for Relapsed T-Cell Acute Lymphoblastic Leukemia.,2023,true,true,true,2026-07-17
+T_ALL,,NOTCH1,biomarker,,PMID:15472075,Activating mutations of NOTCH1 in human T cell acute lymphoblastic leukemia.,2004,true,true,true,2026-07-17
+T_ALL,,FBXW7,biomarker,,PMID:38848537,NGS-based stratification refines the risk stratification in T-ALL and identifies a very-high-risk subgroup of patients.,2024,true,true,true,2026-07-17
+T_ALL,,TP53,biomarker,,PMID:34440292,T-Cell Acute Lymphoblastic Leukemia: Biomarkers and Their Clinical Usefulness.,2021,true,true,true,2026-07-17
+T_ALL,,CD7,target,WU-CART-007,PMID:40445850,Phase 1/2 trial of anti-CD7 allogeneic WU-CART-007 for patients with relapsed/refractory T-cell malignancies.,2025,true,true,true,2026-07-17
+T_ALL,,CD38,target,daratumumab,PMID:29305553,Preclinical efficacy of daratumumab in T-cell acute lymphoblastic leukemia.,2018,true,true,true,2026-07-17
+CTCL,,CD4,biomarker,,PMID:24438969,Primary cutaneous T-cell lymphoma (mycosis fungoides and Sézary syndrome): part I. Diagnosis: clinical and histopathologic features and new molecular and biologic markers.,2014,true,true,true,2026-07-17
+CTCL,,DPP4,biomarker,,PMID:16412210,On the diagnosis of erythrodermic cutaneous T-cell lymphoma.,2006,true,true,true,2026-07-17
+CTCL,,CCR4,biomarker,,PMID:33811642,CCR4 in cutaneous T-cell lymphoma: Therapeutic targeting of a pathogenic driver.,2021,true,true,true,2026-07-17
+CTCL,,TNFRSF8,biomarker,,PMID:28600132,"Brentuximab vedotin or physician's choice in CD30-positive cutaneous T-cell lymphoma (ALCANZA): an international, open-label, randomised, phase 3, multicentre trial.",2017,true,true,true,2026-07-17
+CTCL,,CCR4,target,mogamulizumab,PMID:30100375,"Mogamulizumab versus vorinostat in previously treated cutaneous T-cell lymphoma (MAVORIC): an international, open-label, randomised, controlled phase 3 trial.",2018,true,true,true,2026-07-17
+CTCL,,TNFRSF8,target,brentuximab vedotin,PMID:34507350,Randomized phase 3 ALCANZA study of brentuximab vedotin vs physician's choice in cutaneous T-cell lymphoma: final data.,2021,true,true,true,2026-07-17
+CTCL,,HDAC1,target,romidepsin,PMID:20126671,Romidepsin for the treatment of cutaneous T-cell lymphoma.,2009,true,true,true,2026-07-17
+CTCL,,HDAC1,target,vorinostat,PMID:17940636,Vorinostat in cutaneous T-cell lymphoma.,2007,true,true,true,2026-07-17
+SARC,MPNST,NF1,biomarker,,PMID:36598417,Genomic Patterns of Malignant Peripheral Nerve Sheath Tumor (MPNST) Evolution Correlate with Clinical Outcome and Are Detectable in Cell-Free DNA.,2023,true,true,true,2026-07-17
+SARC,MPNST,CDKN2A,biomarker,,PMID:36598417,Genomic Patterns of Malignant Peripheral Nerve Sheath Tumor (MPNST) Evolution Correlate with Clinical Outcome and Are Detectable in Cell-Free DNA.,2023,true,true,true,2026-07-17
+SARC,MPNST,CDKN2B,biomarker,,PMID:14519636,"p15INK4b, p14ARF, and p16INK4a inactivation in sporadic and neurofibromatosis type 1-related malignant peripheral nerve sheath tumors.",2003,true,true,true,2026-07-17
+SARC,MPNST,TP53,biomarker,,PMID:36598417,Genomic Patterns of Malignant Peripheral Nerve Sheath Tumor (MPNST) Evolution Correlate with Clinical Outcome and Are Detectable in Cell-Free DNA.,2023,true,true,true,2026-07-17
+SARC,MPNST,SUZ12,biomarker,,PMID:31023785,Malignant Peripheral Nerve Sheath Tumors: From Epigenome to Bedside.,2019,true,true,true,2026-07-17
+SARC,MPNST,EED,biomarker,,PMID:31023785,Malignant Peripheral Nerve Sheath Tumors: From Epigenome to Bedside.,2019,true,true,true,2026-07-17
+SARC,MPNST,SMARCB1,biomarker,,PMID:41881192,Defining Prognostic Markers and Clinical Outcomes in Epithelioid Malignant Peripheral Nerve Sheath Tumor.,2026,true,true,true,2026-07-17
+SARC,MPNST,SOX10,biomarker,,PMID:28551330,Histopathologic evaluation of atypical neurofibromatous tumors and their transformation into malignant peripheral nerve sheath tumor in patients with neurofibromatosis 1-a consensus overview.,2017,true,true,true,2026-07-17
+SARC,MPNST,S100B,biomarker,,PMID:28551330,Histopathologic evaluation of atypical neurofibromatous tumors and their transformation into malignant peripheral nerve sheath tumor in patients with neurofibromatosis 1-a consensus overview.,2017,true,true,true,2026-07-17
+SARC,MPNST,MAP2K1,target,trametinib,PMID:32975370,Functional imaging of RAS pathway targeting in malignant peripheral nerve sheath tumor cells and xenografts.,2020,true,true,true,2026-07-17
+SARC,MPNST,MAP2K1,target,selumetinib,PMID:41504652,SARC031: A Phase II Trial of Selumetinib and Sirolimus for Patients with Unresectable or Metastatic Malignant Peripheral Nerve Sheath Tumors (MPNST).,2026,true,true,true,2026-07-17
+SARC,MPNST,PTPN11,target,SHP2 inhibitors,PMID:33032988,Combined Inhibition of SHP2 and MEK Is Effective in Models of NF1-Deficient Malignant Peripheral Nerve Sheath Tumors.,2020,true,true,true,2026-07-17
+SARC,MMNST,TYR,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,PMEL,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,MLANA,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,DCT,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,MITF,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,SOX10,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,S100B,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,PMP22,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,PMP2,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,MPZ,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,PRKAR1A,biomarker,,PMID:24145644,"Malignant melanotic schwannian tumor: a clinicopathologic, immunohistochemical, and gene expression profiling study of 40 cases, with a proposal for the reclassification of ""melanotic schwannoma"".",2014,true,true,true,2026-07-17
+SARC,MMNST,PRKAR1A,biomarker,,PMID:37284154,"Malignant melanotic nerve sheath tumor with PRKAR1A, KMT2C, and GNAQ mutations.",2022,true,true,true,2026-07-17
+BCC,,SMO,target,vismodegib,PMID:22670903,Efficacy and safety of vismodegib in advanced basal-cell carcinoma.,2012,true,true,true,2026-07-17
+BCC,,SMO,target,sonidegib,PMID:27189494,Sonidegib for the treatment of advanced basal cell carcinoma: a comprehensive review of sonidegib and the BOLT trial with 12-month update.,2016,true,true,true,2026-07-17
+BCC,,PTCH1,biomarker,,PMID:33997165,Distinct transcriptomic landscapes of cutaneous basal cell carcinomas and squamous cell carcinomas.,2021,true,true,true,2026-07-17
+cSCC,,PDCD1,target,cemiplimab,PMID:29863979,PD-1 Blockade with Cemiplimab in Advanced Cutaneous Squamous-Cell Carcinoma.,2018,true,true,true,2026-07-17
+cSCC,,CD274,biomarker,,PMID:29863979,PD-1 Blockade with Cemiplimab in Advanced Cutaneous Squamous-Cell Carcinoma.,2018,true,true,true,2026-07-17
+GBC,,ERBB2,target,trastuzumab,PMID:34339623,"Pertuzumab and trastuzumab for HER2-positive, metastatic biliary tract cancer (MyPathway): a multicentre, open-label, phase 2a, multiple basket study.",2021,true,true,true,2026-07-17
+CRANIO,papillary,BRAF,target,dabrafenib+trametinib,PMID:35155453,Dramatic Therapeutic Response to Dabrafenib Plus Trametinib in BRAF V600E Mutated Papillary Craniopharyngiomas: A Case Report and Literature Review.,2021,true,true,true,2026-07-17
+CRANIO,adamantinomatous,CTNNB1,biomarker,,PMID:28859336,Molecular Analyses Reveal Inflammatory Mediators in the Solid Component and Cyst Fluid of Human Adamantinomatous Craniopharyngioma.,2017,true,true,true,2026-07-17
+DIPG,,H3F3A,biomarker,,PMID:22389665,Mesenchymal transition and PDGFRA amplification/mutation are key distinct oncogenic events in pediatric diffuse intrinsic pontine gliomas.,2012,true,true,true,2026-07-17
+DIPG,,ACVR1,biomarker,,PMID:24705250,Recurrent somatic mutations in ACVR1 in pediatric midline high-grade astrocytoma.,2014,true,true,true,2026-07-17
+EPN,,ZFTA,biomarker,,PMID:24553141,C11orf95-RELA fusions drive oncogenic NF-κB signalling in ependymoma.,2014,true,true,true,2026-07-17
+SARC,well_differentiated_liposarcoma,MDM2,biomarker,,PMID:30852045,Well-differentiated liposarcoma and dedifferentiated liposarcoma: An updated review.,2019,true,true,true,2026-07-17
+SARC,well_differentiated_liposarcoma,CDK4,biomarker,,PMID:30852045,Well-differentiated liposarcoma and dedifferentiated liposarcoma: An updated review.,2019,true,true,true,2026-07-17
+SARC,well_differentiated_liposarcoma,HMGA2,biomarker,,PMID:26336885,"Prognostic value of HMGA2, CDK4, and JUN amplification in well-differentiated and dedifferentiated liposarcomas.",2015,true,true,true,2026-07-17
+ALCL,,TNFRSF8,biomarker,,PMID:22614995,Brentuximab vedotin (SGN-35) in patients with relapsed or refractory systemic anaplastic large-cell lymphoma: results of a phase II study.,2012,true,true,true,2026-07-17
+ALCL,,TNFRSF8,target,brentuximab vedotin,PMID:22614995,Brentuximab vedotin (SGN-35) in patients with relapsed or refractory systemic anaplastic large-cell lymphoma: results of a phase II study.,2012,true,true,true,2026-07-17
+ALCL,ALK-positive,ALK,target,crizotinib,PMID:41457564,Phase 1/2 Study of Crizotinib in Children With Relapsed/Refractory ALK-Positive Anaplastic Large Cell Lymphoma or Neuroblastoma in Japan.,2026,true,true,true,2026-07-17
+MENINGIOMA,,NF2,biomarker,,PMID:38001599,"Unveiling a Biomarker Signature of Meningioma: The Need for a Panel of Genomic, Epigenetic, Proteomic, and RNA Biomarkers to Advance Diagnosis and Prognosis.",2023,true,true,true,2026-07-17
+MENINGIOMA,,SSTR2,biomarker,,PMID:38048045,Evaluation of the SSTR2-targeted Radiopharmaceutical 177Lu-DOTATATE and SSTR2-specific 68Ga-DOTATATE PET as Imaging Biomarker in Patients with Intracranial Meningioma.,2024,true,true,true,2026-07-17
+MENINGIOMA,,PGR,biomarker,,PMID:11517968,"Different distribution of c-myc and MIB-1 positive cells in malignant meningiomas with reference to TGFs, PDGF, and PgR expression.",2001,true,true,true,2026-07-17
+MENINGIOMA,,SSTR2,target,177Lu-DOTATATE,PMID:38048045,Evaluation of the SSTR2-targeted Radiopharmaceutical 177Lu-DOTATATE and SSTR2-specific 68Ga-DOTATATE PET as Imaging Biomarker in Patients with Intracranial Meningioma.,2024,true,true,true,2026-07-17
+CHOROID_PLEXUS,,TP53,biomarker,,PMID:31660579,Moderate-to-strong expression of FGFR3 and TP53 alterations in a subpopulation of choroid plexus tumors.,2020,true,true,true,2026-07-17
+CHOROID_PLEXUS,,TTR,biomarker,,PMID:2356863,A marker for primary choroid plexus neoplasms.,1990,true,true,true,2026-07-17
