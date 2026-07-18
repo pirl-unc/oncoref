@@ -34,7 +34,7 @@ jobs:
           assert oncoref.canonical_gene_id("TP53") == "ENSG00000141510"
           assert oncoref.canonical_gene_id("NOT_A_REAL_GENE") is None
           assert not oncoref.cancer_tmb_df().empty
-          assert not oncoref.cancer_type_registry_df().empty
+          assert not oncoref.cancer_type_registry().empty
 
           try:
               oncoref.genomes()
