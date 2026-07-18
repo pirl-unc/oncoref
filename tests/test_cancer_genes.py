@@ -159,7 +159,6 @@ def test_key_gene_nonexistent_pmids_are_replaced():
         assert _split_refs(rows.iloc[0]["source"]) == expected
 
 
-
 def test_key_gene_claims_are_structurally_unambiguous():
     key = cg.cancer_key_genes_df().fillna("")
     claim_key = ["cancer_code", "subtype", "symbol", "role", "agent"]
@@ -208,9 +207,7 @@ def test_issue_161_status_and_context_corrections():
     assert removed_claims.isdisjoint(current_claims)
 
     thca_ret = key[
-        (key["cancer_code"] == "THCA")
-        & (key["symbol"] == "RET")
-        & (key["role"] == "target")
+        (key["cancer_code"] == "THCA") & (key["symbol"] == "RET") & (key["role"] == "target")
     ]
     assert thca_ret["indication"].str.contains("RET-fusion-positive").all()
     assert "PMID:37870969" not in set(thca_ret["source"])
