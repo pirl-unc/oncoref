@@ -9,6 +9,7 @@ import pytest
 
 import oncoref as cd
 from oncoref import cancer_types
+from oncoref.load_dataset import get_data
 
 HPA_RNA_V23_TISSUES = {
     "adipose tissue",
@@ -170,6 +171,27 @@ def test_cohort_registry_is_validation_authority():
     ids = cancer_types.known_cohort_ids()
     assert ids
     assert isinstance(ids, frozenset)
+
+
+def test_computed_cohort_registry_members_are_derived_from_live_aggregates():
+    registry = cancer_types.cohort_registry_df().set_index("cohort_id")
+    shipped_registry = get_data("cohort-registry").set_index("cohort_id")
+    for code, cohort_id in (
+        ("SARC", "COMPUTED_PAN_SARCOMA"),
+        ("CRC", "COMPUTED_COLORECTAL"),
+    ):
+        expected = cancer_types.cohort_aggregate_members(code)
+        row = registry.loc[cohort_id]
+        members = str(row["member_cohorts"]).split(";")
+        assert members == expected
+        assert int(row["n_codes"]) == len(expected)
+
+        shipped_row = shipped_registry.loc[cohort_id]
+        assert str(shipped_row["member_cohorts"]).split(";") == expected
+        assert int(shipped_row["n_codes"]) == len(expected)
+
+    sarcoma_members = set(cancer_types.cohort_aggregate_members("SARC"))
+    assert {"SARC_MMNST", "SARC_MPLPS"} <= sarcoma_members
 
 
 def test_cohort_source_version_parses_ensembl_release():
