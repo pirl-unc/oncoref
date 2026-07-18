@@ -98,9 +98,12 @@ def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> 
     resolved = symbol_index.get(official.upper())
     if resolved is not None:
         return resolved
-    from .genome import canonical_gene_id_and_name  # lazy: avoids genome/pyensembl dep here
+    from .genome import GenomeDependencyError, canonical_gene_id_and_name
 
-    gid, _ = canonical_gene_id_and_name(official)
+    try:
+        gid, _ = canonical_gene_id_and_name(official)
+    except GenomeDependencyError:
+        return None
     return gid
 
 

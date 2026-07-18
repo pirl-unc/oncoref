@@ -17,10 +17,10 @@ This is the genome-reference resolver that the curated pandas ID layer
 Ensembl transcript or gene ID to a gene, and a symbol to its canonical Ensembl gene
 ID, against the installed Ensembl release(s).
 
-``pyensembl`` is a core dependency, but it still needs a **downloaded** human Ensembl
-release at runtime (``pyensembl install --release N --species homo_sapiens``); with no
-release installed, :func:`genomes` is empty and the resolvers return ``None`` rather
-than raising.
+Install the optional ``genome`` extra to use this module (``pip install
+'oncoref[genome]'``). pyensembl still needs a **downloaded** human Ensembl release at
+runtime (``pyensembl install --release N --species homo_sapiens``); with the extra but
+no release installed, :func:`genomes` is empty and the resolvers return ``None``.
 
 Resolution order for a symbol mirrors pirlygenes: each installed release (newest
 first) by name + curated display aliases, then the bundled NCBI symbol-synonym
@@ -34,6 +34,16 @@ import logging
 from functools import lru_cache
 
 from .gene_ids import resolve_symbol, unversioned
+
+
+class GenomeDependencyError(ImportError):
+    """Raised when a pyensembl-backed API is used without the genome extra."""
+
+
+_GENOME_EXTRA_MESSAGE = (
+    "pyensembl is required for genome and peptide APIs; "
+    "install it with `pip install 'oncoref[genome]'`"
+)
 
 #: Curated literary display aliases used as extra symbol candidates (NY-ESO-1 ↔
 #: CTAG1B, gp100 ↔ PMEL, …). Small, base-layer reference — not a full alias table.
@@ -75,7 +85,12 @@ def _installed_ensembl_releases():
     level = root.level
     disabled = root.disabled
     try:
-        from pyensembl.shell import collect_all_installed_ensembl_releases
+        try:
+            from pyensembl.shell import collect_all_installed_ensembl_releases
+        except ModuleNotFoundError as exc:
+            if exc.name and exc.name.split(".", 1)[0] == "pyensembl":
+                raise GenomeDependencyError(_GENOME_EXTRA_MESSAGE) from exc
+            raise
 
         return tuple(collect_all_installed_ensembl_releases())
     finally:

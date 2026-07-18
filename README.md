@@ -174,10 +174,11 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
   `display_gene_name`, `short_gene_name`, `canonical_gene_id_and_name`,
   `find_gene_id_by_name`, `find_gene_name_from_ensembl_{gene,transcript}_id`,
   and `aggregate_gene_expression` (symbol/synonym/legacy-Ensembl-ID ↔ canonical
-  Ensembl-ID resolution). pyensembl ships with the package, but some
-  pyensembl-backed symbol resolution needs a downloaded human release once:
+  Ensembl-ID resolution). The bundled canonical gene space and aliases work in the
+  base install. Install `oncoref[genome]` for arbitrary pyensembl-backed lookup, then
+  download a human release once:
   `pyensembl install --release 111 --species homo_sapiens` (the accessors return
-  `None` until then).
+  `None` until a release is installed).
 - **Legacy/compat response signatures** — `oncoref.response_signatures` ships a
   small historical checkpoint-response signature surface used by oncoref plots.
   Treat it as transitional: new therapy-response signature panels belong in

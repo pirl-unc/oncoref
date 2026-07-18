@@ -31,10 +31,12 @@ dependencies = [
     "numpy",
     "pyarrow",
     "PyYAML",
-    "pyensembl",
 ]
 
 [project.optional-dependencies]
+genome = [
+    "pyensembl",
+]
 plots = [
     "matplotlib",
     "adjustText",
@@ -47,6 +49,7 @@ dev = [
     "matplotlib",
     "adjustText",
     "matplotlib_venn>=1.0",
+    "pyensembl",
 ]
 
 [project.scripts]

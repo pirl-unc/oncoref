@@ -9,7 +9,7 @@ import pytest
 
 from oncoref import genome as gx
 
-# pyensembl is a core dependency, but resolution still needs a downloaded human
+# The dev extra installs pyensembl, but resolution still needs a downloaded human
 # Ensembl release; skip when none is installed.
 pytestmark = pytest.mark.skipif(
     not gx.genomes(), reason="no human Ensembl release installed (pyensembl install ...)"
