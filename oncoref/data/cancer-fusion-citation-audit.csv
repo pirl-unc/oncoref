@@ -1,0 +1,140 @@
+cancer_code,fusion_family,gene_5prime,gene_3prime,pmid,pubmed_title,publication_year,supports_fusion_or_alteration,supports_disease_context,reviewed_on
+SARC_EWS,EWSR1-ETS,EWSR1,FLI1,PMID:1522903,Gene fusion with an ETS DNA-binding domain caused by chromosome translocation in human tumours.,1992,true,true,2026-07-17
+SARC_EWS,EWSR1-ETS,EWSR1,ERG,PMID:8162068,"A second Ewing's sarcoma translocation, t(21;22), fuses the EWS gene to another ETS-family transcription factor, ERG.",1994,true,true,2026-07-17
+SARC_EWS,EWSR1-ETS,EWSR1,ETV1,PMID:7700648,A variant Ewing's sarcoma translocation (7;22) fuses the EWS gene to the ETS gene ETV1.,1995,true,true,2026-07-17
+SARC_EWS,EWSR1-ETS,EWSR1,ETV4,PMID:9858836,The genomic breakpoint and chimeric transcripts in the EWSR1-ETV4/E1AF gene fusion in Ewing sarcoma.,1998,true,true,2026-07-17
+SARC_EWS,EWSR1-ETS,EWSR1,FEV,PMID:31756779,Ewing sarcoma with FEV gene rearrangements is a rare subset with predilection for extraskeletal locations and aggressive behavior.,2020,true,true,2026-07-17
+SARC_EWS,FUS-ETS,FUS,ERG,PMID:12907633,FUS/ERG gene fusions in Ewing's tumors.,2003,true,true,2026-07-17
+SARC_SYN,SS18-SSX,SS18,SSX1,PMID:7951320,"Identification of novel genes, SYT and SSX, involved in the t(X;18)(p11.2;q11.2) translocation found in human synovial sarcoma.",1994,true,true,2026-07-17
+SARC_SYN,SS18-SSX,SS18,SSX2,PMID:7951320,"Identification of novel genes, SYT and SSX, involved in the t(X;18)(p11.2;q11.2) translocation found in human synovial sarcoma.",1994,true,true,2026-07-17
+SARC_SYN,SS18-SSX,SS18,SSX4,PMID:11368913,"Cloning and characterization of spliced fusion transcript variants of synovial sarcoma: SYT/SSX4, SYT/SSX4v, and SYT/SSX2v. Possible regulatory role of the fusion gene product in wild type SYT expression.",2001,true,true,2026-07-17
+SARC_DSRCT,EWSR1-WT1,EWSR1,WT1,PMID:7862627,Characterization of the genomic breakpoint and chimeric transcripts in the EWS-WT1 gene fusion of desmoplastic small round cell tumor.,1995,true,true,2026-07-17
+SARC_ASPS,ASPSCR1-TFE3,ASPSCR1,TFE3,PMID:17543078,Detection of the ASPSCR1-TFE3 gene fusion in paraffin-embedded alveolar soft part sarcomas.,2007,true,true,2026-07-17
+SARC_CCS,EWSR1-ATF1,EWSR1,ATF1,PMID:19561568,Detection and characterization of EWSR1/ATF1 and EWSR1/CREB1 chimeric transcripts in clear cell sarcoma (melanoma of soft parts).,2009,true,true,2026-07-17
+SARC_CCS,EWSR1-CREB1,EWSR1,CREB1,PMID:19561568,Detection and characterization of EWSR1/ATF1 and EWSR1/CREB1 chimeric transcripts in clear cell sarcoma (melanoma of soft parts).,2009,true,true,2026-07-17
+SARC_IFS,ETV6-NTRK3,ETV6,NTRK3,PMID:9462753,A novel ETV6-NTRK3 gene fusion in congenital fibrosarcoma.,1998,true,true,2026-07-17
+SARC_EHE,WWTR1-CAMTA1,WWTR1,CAMTA1,PMID:21885404,Identification of a disease-defining gene fusion in epithelioid hemangioendothelioma.,2011,true,true,2026-07-17
+SARC_EHE,YAP1-TFE3,YAP1,TFE3,PMID:23737213,Novel YAP1-TFE3 fusion defines a distinct subset of epithelioid hemangioendothelioma.,2013,true,true,2026-07-17
+SARC_LGFMS,FUS-CREB3L2,FUS,CREB3L2,PMID:15139001,The chimeric FUS/CREB3l2 gene is specific for low-grade fibromyxoid sarcoma.,2004,true,true,2026-07-17
+SARC_LGFMS,FUS-CREB3L1,FUS,CREB3L1,PMID:15640831,"Clinicopathologic and molecular genetic characterization of low-grade fibromyxoid sarcoma, and cloning of a novel FUS/CREB3L1 fusion gene.",2005,true,true,2026-07-17
+SARC_LGFMS,EWSR1-CREB3L1,EWSR1,CREB3L1,PMID:23588368,EWSR1-CREB3L1 gene fusion: a novel alternative molecular aberration of low-grade fibromyxoid sarcoma.,2013,true,true,2026-07-17
+SARC_EMC,EWSR1-NR4A3,EWSR1,NR4A3,PMID:18855877,The EWSR1/NR4A3 fusion protein of extraskeletal myxoid chondrosarcoma activates the PPARG nuclear receptor gene.,2009,true,true,2026-07-17
+SARC_EMC,TAF15-NR4A3,TAF15,NR4A3,PMID:24746215,Extraskeletal myxoid chondrosarcoma with non-EWSR1-NR4A3 variant fusions correlate with rhabdoid phenotype and high-grade morphology.,2014,true,true,2026-07-17
+SARC_EMC,TCF12-NR4A3,TCF12,NR4A3,PMID:24746215,Extraskeletal myxoid chondrosarcoma with non-EWSR1-NR4A3 variant fusions correlate with rhabdoid phenotype and high-grade morphology.,2014,true,true,2026-07-17
+SARC_SFT,NAB2-STAT6,NAB2,STAT6,PMID:23313952,Identification of recurrent NAB2-STAT6 gene fusions in solitary fibrous tumor by integrative sequencing.,2013,true,true,2026-07-17
+SARC_IMT,TPM3-ALK,TPM3,ALK,PMID:10934142,TPM3-ALK and TPM4-ALK oncogenes in inflammatory myofibroblastic tumors.,2000,true,true,2026-07-17
+SARC_IMT,TPM4-ALK,TPM4,ALK,PMID:10934142,TPM3-ALK and TPM4-ALK oncogenes in inflammatory myofibroblastic tumors.,2000,true,true,2026-07-17
+SARC_IMT,EML4-ALK,EML4,ALK,PMID:24277751,Pulmonary inflammatory myofibroblastic tumor harboring EML4-ALK fusion gene.,2014,true,true,2026-07-17
+SARC_IMT,RANBP2-ALK,RANBP2,ALK,PMID:24034896,Inflammatory myofibroblastic tumor with RANBP2 and ALK gene rearrangement: a report of two cases and literature review.,2013,true,true,2026-07-17
+SARC_IMT,CARS1-ALK,CARS1,ALK,PMID:13679433,Identification of CARS-ALK fusion in primary and metastatic lesions of an inflammatory myofibroblastic tumor.,2003,true,true,2026-07-17
+SARC_IMT,ETV6-NTRK3,ETV6,NTRK3,PMID:26647767,"ALK, ROS1 and NTRK3 gene rearrangements in inflammatory myofibroblastic tumours.",2016,true,true,2026-07-17
+SARC_IMT,TFG-ROS1,TFG,ROS1,PMID:26647767,"ALK, ROS1 and NTRK3 gene rearrangements in inflammatory myofibroblastic tumours.",2016,true,true,2026-07-17
+SARC_DFSP,COL1A1-PDGFB,COL1A1,PDGFB,PMID:31949795,COL1A1-PDGFB gene fusion in dermatofibrosarcoma protuberans: a useful diagnostic tool and clinicopathological analysis.,2018,true,true,2026-07-17
+SARC_MYXLPS,FUS-DDIT3,FUS,DDIT3,PMID:16651630,The myxoid/round cell liposarcoma fusion oncogene FUS-DDIT3 and the normal DDIT3 induce a liposarcoma phenotype in transfected human fibrosarcoma cells.,2006,true,true,2026-07-17
+SARC_MYXLPS,EWSR1-DDIT3,EWSR1,DDIT3,PMID:17647282,Relevance of translocation type in myxoid liposarcoma and identification of a novel EWSR1-DDIT3 fusion.,2007,true,true,2026-07-17
+SARC_PEC,SFPQ-TFE3,SFPQ,TFE3,PMID:40239600,SFPQ::TFE3-rearranged PEComa: Differences and analogies with renal cell carcinoma carrying the same translocation.,2025,true,true,2026-07-17
+SARC_PEC,DVL2-TFE3,DVL2,TFE3,PMID:25651471,Dichotomy of Genetic Abnormalities in PEComas With Therapeutic Implications.,2015,true,true,2026-07-17
+SARC_RMS_ARMS,PAX3-FOXO1,PAX3,FOXO1,PMID:8275086,Fusion of a fork head domain gene to PAX3 in the solid tumour alveolar rhabdomyosarcoma.,1993,true,true,2026-07-17
+SARC_RMS_ARMS,PAX7-FOXO1,PAX7,FOXO1,PMID:8187070,Fusion of PAX7 to FKHR by the variant t(1;13)(p36;q14) translocation in alveolar rhabdomyosarcoma.,1994,true,true,2026-07-17
+SARC_RMS_SSRMS,VGLL2-NCOA2,VGLL2,NCOA2,PMID:26501226,A Molecular Study of Pediatric Spindle and Sclerosing Rhabdomyosarcoma: Identification of Novel and Recurrent VGLL2-related Fusions in Infantile Cases.,2016,true,true,2026-07-17
+SARC_RMS_SSRMS,TEAD1-NCOA2,TEAD1,NCOA2,PMID:26501226,A Molecular Study of Pediatric Spindle and Sclerosing Rhabdomyosarcoma: Identification of Novel and Recurrent VGLL2-related Fusions in Infantile Cases.,2016,true,true,2026-07-17
+SARC_CHON_MESENCHYMAL,HEY1-NCOA2,HEY1,NCOA2,PMID:22034177,"Identification of a novel, recurrent HEY1-NCOA2 fusion in mesenchymal chondrosarcoma based on a genome-wide screen of exon-level expression data.",2012,true,true,2026-07-17
+SARC_CHON_MESENCHYMAL,IRF2BP2-CDX1,IRF2BP2,CDX1,PMID:23185413,Whole-transcriptome sequencing identifies novel IRF2BP2-CDX1 fusion gene brought about by translocation t(1;5)(q42;q32) in mesenchymal chondrosarcoma.,2012,true,true,2026-07-17
+SARC_ESS_LG,JAZF1-SUZ12,JAZF1,SUZ12,PMID:16049311,JAZF1/JJAZ1 gene fusion in endometrial stromal sarcomas: molecular analysis by reverse transcriptase-polymerase chain reaction optimized for paraffin-embedded tissue.,2005,true,true,2026-07-17
+SARC_ESS_LG,JAZF1-PHF1,JAZF1,PHF1,PMID:16397222,Consistent rearrangement of chromosomal band 6p21 with generation of fusion genes JAZF1/PHF1 and EPC1/PHF1 in endometrial stromal sarcoma.,2006,true,true,2026-07-17
+SARC_ESS_LG,EPC1-PHF1,EPC1,PHF1,PMID:16397222,Consistent rearrangement of chromosomal band 6p21 with generation of fusion genes JAZF1/PHF1 and EPC1/PHF1 in endometrial stromal sarcoma.,2006,true,true,2026-07-17
+SARC_ESS_HG,YWHAE-NUTM2A,YWHAE,NUTM2A,PMID:22456610,The clinicopathologic features of YWHAE-FAM22 endometrial stromal sarcomas: a histologically high-grade and clinically aggressive tumor.,2012,true,true,2026-07-17
+SARC_ESS_HG,YWHAE-NUTM2B,YWHAE,NUTM2B,PMID:22456610,The clinicopathologic features of YWHAE-FAM22 endometrial stromal sarcomas: a histologically high-grade and clinically aggressive tumor.,2012,true,true,2026-07-17
+SARC_ESS_HG,ZC3H7B-BCOR,ZC3H7B,BCOR,PMID:23580382,Fusion of the ZC3H7B and BCOR genes in endometrial stromal sarcomas carrying an X;22-translocation.,2013,true,true,2026-07-17
+LAML,RUNX1-RUNX1T1,RUNX1,RUNX1T1,PMID:31935293,An update on the molecular pathogenesis and potential therapeutic targeting of AML with t(8;21)(q22;q22.1);RUNX1-RUNX1T1.,2020,true,true,2026-07-17
+LAML,CBFB-MYH11,CBFB,MYH11,PMID:8142642,Detection of fusion transcripts generated by the inversion 16 chromosome in acute myelogenous leukemia.,1994,true,true,2026-07-17
+LAML,KMT2A-MLLT3,KMT2A,MLLT3,PMID:15188459,Cryptic insertion of MLL gene into 9p22 leads to MLL-MLLT3 (AF9) fusion in a case of acute myelogenous leukemia.,2004,true,true,2026-07-17
+LAML,KMT2A-MLLT10,KMT2A,MLLT10,PMID:9305618,A novel MLL-AF10 fusion mRNA variant in a patient with acute myeloid leukemia detected by a new asymmetric reverse transcription PCR method.,1997,true,true,2026-07-17
+LAML,KMT2A-ELL,KMT2A,ELL,PMID:26949571,Rare MLL-ELL fusion transcripts in childhood acute myeloid leukemia-association with young age and myeloid sarcomas?,2015,true,true,2026-07-17
+LAML,KMT2A-MLLT1,KMT2A,MLLT1,PMID:16875930,"Establishment of a myeloid leukemia cell line, TRL-01, with MLL-ENL fusion gene.",2006,true,true,2026-07-17
+LAML,DEK-NUP214,DEK,NUP214,PMID:32526729,Acute Myeloid Leukemia with t(6;9)(p23;q34.1); DEK-NUP214: The Pathogenesis and Potential.,2020,true,true,2026-07-17
+LAML,NUP98-NSD1,NUP98,NSD1,PMID:11493482,"A novel gene, NSD1, is fused to NUP98 in the t(5;11)(q35;p15.5) in de novo childhood acute myeloid leukemia.",2001,true,true,2026-07-17
+LAML,NUP98-KDM5A,NUP98,KDM5A,PMID:23531517,NUP98/JARID1A is a novel recurrent abnormality in pediatric acute megakaryoblastic leukemia with a distinct HOX gene expression pattern.,2013,true,true,2026-07-17
+LAML,RBM15-MKL1,RBM15,MKL1,PMID:11746984,Recurrence of OTT-MAL fusion in t(1;22) of infant AML-M7.,2002,true,true,2026-07-17
+LAML_APL,PML-RARA,PML,RARA,PMID:1652369,The PML-RAR alpha fusion mRNA generated by the t(15;17) translocation in acute promyelocytic leukemia encodes a functionally altered RAR.,1991,true,true,2026-07-17
+LAML_APL,ZBTB16-RARA,ZBTB16,RARA,PMID:8302850,PLZF-RAR alpha fusion proteins generated from the variant t(11;17)(q23;q21) translocation in acute promyelocytic leukemia inhibit ligand-dependent transactivation of wild-type retinoic acid receptors.,1994,true,true,2026-07-17
+LAML_APL,NPM1-RARA,NPM1,RARA,PMID:8562957,The t(5;17) variant of acute promyelocytic leukemia expresses a nucleophosmin-retinoic acid receptor fusion.,1996,true,true,2026-07-17
+CML,BCR-ABL1,BCR,ABL1,PMID:40360311,BCR-ABL: The molecular mastermind behind chronic myeloid leukemia.,2025,true,true,2026-07-17
+B_ALL,BCR-ABL1,BCR,ABL1,PMID:35834222,Treatment of Adults With Philadelphia Chromosome-Positive Acute Lymphoblastic Leukemia-From Intensive Chemotherapy Combinations to Chemotherapy-Free Regimens: A Review.,2022,true,true,2026-07-17
+B_ALL,ETV6-RUNX1,ETV6,RUNX1,PMID:28418909,Pathogenesis of ETV6/RUNX1-positive childhood acute lymphoblastic leukemia and mechanisms underlying its relapse.,2017,true,true,2026-07-17
+B_ALL,TCF3-PBX1,TCF3,PBX1,PMID:19713226,Clinical features and prognostic implications of TCF3-PBX1 and ETV6-RUNX1 in adult acute lymphoblastic leukemia.,2010,true,true,2026-07-17
+B_ALL,KMT2A-AFF1,KMT2A,AFF1,PMID:26463423,Revisiting the biology of infant t(4;11)/MLL-AF4+ B-cell acute lymphoblastic leukemia.,2015,true,true,2026-07-17
+B_ALL,DUX4-IGH,IGH,DUX4,PMID:27019113,Recurrent DUX4 fusions in B cell acute lymphoblastic leukemia of adolescents and young adults.,2016,true,true,2026-07-17
+B_ALL,P2RY8-CRLF2,P2RY8,CRLF2,PMID:19838194,Rearrangement of CRLF2 in B-progenitor- and Down syndrome-associated acute lymphoblastic leukemia.,2009,true,true,2026-07-17
+B_ALL,IGH-CRLF2,IGH,CRLF2,PMID:28033648,Characterisation of the genomic landscape of CRLF2-rearranged acute lymphoblastic leukemia.,2017,true,true,2026-07-17
+T_ALL,STIL-TAL1,STIL,TAL1,PMID:8350619,SIL-TAL1 deletion in T-cell acute lymphoblastic leukemia.,1993,true,true,2026-07-17
+T_ALL,TLX1-TRD,TRD,TLX1,PMID:7719228,Dysregulation of HOX11 by chromosome translocations in T-cell acute lymphoblastic leukemia: a paradigm for homeobox gene involvement in human cancer.,1995,true,true,2026-07-17
+T_ALL,TLX3-BCL11B,BCL11B,TLX3,PMID:17308084,Activation of TLX3 and NKX2-5 in t(5;14)(q35;q32) T-cell acute lymphoblastic leukemia by remote 3'-BCL11B enhancers and coregulation by PU.1 and HMGA1.,2007,true,true,2026-07-17
+T_ALL,NUP214-ABL1,NUP214,ABL1,PMID:15361874,Fusion of NUP214 to ABL1 on amplified episomes in T-cell acute lymphoblastic leukemia.,2004,true,true,2026-07-17
+T_ALL,KMT2A-MLLT10,KMT2A,MLLT10,PMID:30203571,KMT2A (MLL) rearrangements observed in pediatric/young adult T-lymphoblastic leukemia/lymphoma: A 10-year review from a single cytogenetic laboratory.,2018,true,true,2026-07-17
+MCL,CCND1-IGH,IGH,CCND1,PMID:40381701,Optical genome mapping reveals diverse mechanisms of cyclin activation in mantle cell lymphomas lacking IGH::CCND1.,2025,true,true,2026-07-17
+FL,BCL2-IGH,IGH,BCL2,PMID:18684042,Practical detection of t(14;18)(IgH/BCL2) in follicular lymphoma.,2008,true,true,2026-07-17
+BL,MYC-IGH,IGH,MYC,PMID:23673335,Erroneous class switching and false VDJ recombination: molecular dissection of t(8;14)/MYC-IGH translocations in Burkitt-type lymphoblastic leukemia/B-cell lymphoma.,2013,true,true,2026-07-17
+BL,MYC-IGK,IGK,MYC,PMID:11795942,Topological organization of the MYC/IGK locus in Burkitt's lymphoma cells assessed by nuclear halo preparations.,2002,true,true,2026-07-17
+BL,MYC-IGL,IGL,MYC,PMID:16888615,Novel FISH probes designed to detect IGK-MYC and IGL-MYC rearrangements in B-cell lineage malignancy identify a new breakpoint cluster region designated BVR2.,2006,true,true,2026-07-17
+DLBC,BCL6-IGH,IGH,BCL6,PMID:36575004,Biallelic BCL6 rearrangements by dual t(3;14)(q27;q32) and t(3;22)(q27;q11) translocations in diffuse large B-cell lymphoma.,2022,true,true,2026-07-17
+DLBC,MYC-IGH,IGH,MYC,PMID:25229766,Diffuse large B-cell lymphomas of immunoblastic type are a major reservoir for MYC-IGH translocations.,2015,true,true,2026-07-17
+DLBC,BCL2-IGH,IGH,BCL2,PMID:20660332,Expression of LMO2 is associated with t(14;18)/IGH-BCL2 fusion but not BCL6 translocations in diffuse large B-cell lymphoma.,2010,true,true,2026-07-17
+MM,CCND1-IGH,IGH,CCND1,PMID:35982976,Exploring the current molecular landscape and management of multiple myeloma patients with the t(11;14) translocation.,2022,true,true,2026-07-17
+MM,NSD2-IGH,IGH,NSD2,PMID:12139740,A molecular study of the t(4;14) in multiple myeloma.,2002,true,true,2026-07-17
+MM,FGFR3-IGH,IGH,FGFR3,PMID:12139740,A molecular study of the t(4;14) in multiple myeloma.,2002,true,true,2026-07-17
+MM,MAF-IGH,IGH,MAF,PMID:9616139,Frequent dysregulation of the c-maf proto-oncogene at 16q23 by translocation to an Ig locus in multiple myeloma.,1998,true,true,2026-07-17
+MM,CCND3-IGH,IGH,CCND3,PMID:42418658,Clinicopathologic characterization of plasma cell neoplasms with IGH::CCND3.,2026,true,true,2026-07-17
+MM,MAFB-IGH,IGH,MAFB,PMID:15257707,The recurrent translocation t(14;20)(q32;q12) in multiple myeloma results in aberrant expression of MAFB: a molecular and genetic analysis of the chromosomal breakpoint.,2004,true,true,2026-07-17
+NUTM,BRD4-NUTM1,BRD4,NUTM1,PMID:12543779,BRD4-NUT fusion oncogene: a novel mechanism in aggressive carcinoma.,2003,true,true,2026-07-17
+NUTM,BRD3-NUTM1,BRD3,NUTM1,PMID:34672128,"BRD3-NUTM1-expressing NUT carcinoma of lung on endobronchial ultrasound-guided transbronchial needle aspiration cytology, a diagnostic pitfall.",2022,true,true,2026-07-17
+NUTM,NSD3-NUTM1,NSD3,NUTM1,PMID:35325484,Cytological features of NUT-carcinoma harbouring an NSD3-NUTM1 fusion.,2022,true,true,2026-07-17
+NUTM,ZNF532-NUTM1,ZNF532,NUTM1,PMID:34232599,Misleading Germ Cell Phenotype in Pulmonary NUT Carcinoma Harboring the ZNF532-NUTM1 Fusion.,2022,true,true,2026-07-17
+ADCC,MYB-NFIB,MYB,NFIB,PMID:19841262,Recurrent fusion of MYB and NFIB transcription factor genes in carcinomas of the breast and head and neck.,2009,true,true,2026-07-17
+ADCC,MYBL1-NFIB,MYBL1,NFIB,PMID:26851182,Adenoid Cystic Carcinoma Can Be Driven by MYB or MYBL1 Rearrangements: New Insights into MYB and Tumor Biology.,2016,true,true,2026-07-17
+ACINIC,HTN3-MSANTD3,HTN3,MSANTD3,PMID:30520817,The HTN3-MSANTD3 Fusion Gene Defines a Subset of Acinic Cell Carcinoma of the Salivary Gland.,2019,true,true,2026-07-17
+ACINIC,(none),,,PMID:30664630,Enhancer hijacking activates oncogenic transcription factor NR4A3 in acinic cell carcinomas of the salivary glands.,2019,true,true,2026-07-17
+THCA,CCDC6-RET,CCDC6,RET,PMID:39212716,Clinicopathological Features of CCDC6-RET and NCOA4-RET Fusions in Thyroid Cancer: A Single-Center Retrospective Cohort Study in a Chinese Population.,2024,true,true,2026-07-17
+THCA,NCOA4-RET,NCOA4,RET,PMID:39212716,Clinicopathological Features of CCDC6-RET and NCOA4-RET Fusions in Thyroid Cancer: A Single-Center Retrospective Cohort Study in a Chinese Population.,2024,true,true,2026-07-17
+THCA,PAX8-PPARG,PAX8,PPARG,PMID:25069464,Pax-8-PPAR-γ fusion protein in thyroid carcinoma.,2014,true,true,2026-07-17
+THCA,ETV6-NTRK3,ETV6,NTRK3,PMID:29046324,ETV6-NTRK3 and STRN-ALK kinase fusions are recurrent events in papillary thyroid cancer of adult population.,2018,true,true,2026-07-17
+THCA,STRN-ALK,STRN,ALK,PMID:29046324,ETV6-NTRK3 and STRN-ALK kinase fusions are recurrent events in papillary thyroid cancer of adult population.,2018,true,true,2026-07-17
+LUAD,EML4-ALK,EML4,ALK,PMID:17625570,Identification of the transforming EML4-ALK fusion gene in non-small-cell lung cancer.,2007,true,true,2026-07-17
+LUAD,CD74-ROS1,CD74,ROS1,PMID:23877438,CD74-ROS1 fusion transcripts in resected non-small cell lung carcinoma.,2013,true,true,2026-07-17
+LUAD,EZR-ROS1,EZR,ROS1,PMID:25230898,Response to crizotinib observed in metastatic mediastinum lymph node from a non-small cell lung cancer patient harboring EZR-ROS1 fusion.,2015,true,true,2026-07-17
+LUAD,SLC34A2-ROS1,SLC34A2,ROS1,PMID:28860822,Response to crizotinib in a lung adenocarcinoma patient harboring a novel SLC34A2-ROS1 fusion variant.,2017,true,true,2026-07-17
+LUAD,KIF5B-RET,KIF5B,RET,PMID:22327623,"RET, ROS1 and ALK fusions in lung cancer.",2012,true,true,2026-07-17
+LUAD,CCDC6-RET,CCDC6,RET,PMID:22327623,"RET, ROS1 and ALK fusions in lung cancer.",2012,true,true,2026-07-17
+LUAD,CD74-NRG1,CD74,NRG1,PMID:24469108,CD74-NRG1 fusions in lung adenocarcinoma.,2014,true,true,2026-07-17
+LUAD,SLC3A2-NRG1,SLC3A2,NRG1,PMID:34743207,Oncogenic KRAS promotes growth of lung cancer cells expressing SLC3A2-NRG1 fusion via ADAM17-mediated shedding of NRG1.,2022,true,true,2026-07-17
+LUAD,NTRK,,NTRK1,PMID:24162815,Oncogenic and drug-sensitive NTRK1 rearrangements in lung cancer.,2013,true,true,2026-07-17
+PRAD,TMPRSS2-ERG,TMPRSS2,ERG,PMID:16254181,Recurrent fusion of TMPRSS2 and ETS transcription factor genes in prostate cancer.,2005,true,true,2026-07-17
+PRAD,SLC45A3-ERG,SLC45A3,ERG,PMID:20118910,Prevalence of TMPRSS2-ERG and SLC45A3-ERG gene fusions in a large prostatectomy cohort.,2010,true,true,2026-07-17
+PRAD,TMPRSS2-ETV1,TMPRSS2,ETV1,PMID:16254181,Recurrent fusion of TMPRSS2 and ETS transcription factor genes in prostate cancer.,2005,true,true,2026-07-17
+PRAD,TMPRSS2-ETV4,TMPRSS2,ETV4,PMID:16585160,TMPRSS2:ETV4 gene fusions define a third molecular subtype of prostate cancer.,2006,true,true,2026-07-17
+PRAD,TMPRSS2-ETV5,TMPRSS2,ETV5,PMID:18172298,Characterization of TMPRSS2:ETV5 and SLC45A3:ETV5 gene fusions in prostate cancer.,2008,true,true,2026-07-17
+GBM,FGFR3-TACC3,FGFR3,TACC3,PMID:22837387,Transforming fusions of FGFR and TACC genes in human glioblastoma.,2012,true,true,2026-07-17
+LGG,KIAA1549-BRAF,KIAA1549,BRAF,PMID:26083571,KIAA1549: BRAF Gene Fusion and FGFR1 Hotspot Mutations Are Prognostic Factors in Pilocytic Astrocytomas.,2015,true,true,2026-07-17
+LGG,FGFR3-TACC3,FGFR3,TACC3,PMID:28976058,Diffuse gliomas with FGFR3-TACC3 fusion have characteristic histopathological and molecular features.,2018,true,true,2026-07-17
+ASTB,MN1-BEND2,MN1,BEND2,PMID:36366964,Recurrent high-grade astroblastoma with MN1-BEND2 fusion in spinal cord and literature review.,2023,true,true,2026-07-17
+CHOL,FGFR2-BICC1,FGFR2,BICC1,PMID:31807010,FGFR2-BICC1: A Subtype Of FGFR2 Oncogenic Fusion Variant In Cholangiocarcinoma And The Response To Sorafenib.,2019,true,true,2026-07-17
+CHOL,FGFR2-AHCYL1,FGFR2,AHCYL1,PMID:24122810,Fibroblast growth factor receptor 2 tyrosine kinase fusions define a unique molecular subtype of cholangiocarcinoma.,2014,true,true,2026-07-17
+LIHC,DNAJB1-PRKACA,DNAJB1,PRKACA,PMID:24578576,Detection of a recurrent DNAJB1-PRKACA chimeric transcript in fibrolamellar hepatocellular carcinoma.,2014,true,true,2026-07-17
+BRCA,ETV6-NTRK3,ETV6,NTRK3,PMID:12450792,Expression of the ETV6-NTRK3 gene fusion as a primary event in human secretory breast carcinoma.,2002,true,true,2026-07-17
+SARC_RMS_ARMS,PAX-FOXO/alt,PAX3,NCOA1,PMID:19953635,Recurrent t(2;2) and t(2;8) translocations in rhabdomyosarcoma without the canonical PAX-FOXO1 fuse PAX3 to members of the nuclear receptor transcriptional coactivator family.,2010,true,true,2026-07-17
+SARC_RMS_ARMS,PAX-FOXO/alt,PAX3,NCOA2,PMID:19953635,Recurrent t(2;2) and t(2;8) translocations in rhabdomyosarcoma without the canonical PAX-FOXO1 fuse PAX3 to members of the nuclear receptor transcriptional coactivator family.,2010,true,true,2026-07-17
+SARC_RMS_SSRMS,FET-TFCP2,EWSR1,TFCP2,PMID:32556562,Epithelioid and spindle cell rhabdomyosarcoma with FUS-TFCP2 or EWSR1-TFCP2 fusion: report of two cases.,2020,true,true,2026-07-17
+SARC_RMS_SSRMS,FET-TFCP2,FUS,TFCP2,PMID:32556562,Epithelioid and spindle cell rhabdomyosarcoma with FUS-TFCP2 or EWSR1-TFCP2 fusion: report of two cases.,2020,true,true,2026-07-17
+SARC_RMS_SSRMS,NCOA2-fusion,SRF,NCOA2,PMID:23463663,Recurrent NCOA2 gene rearrangements in congenital/infantile spindle cell rhabdomyosarcoma.,2013,true,true,2026-07-17
+SARC_CIC,CIC-DUX4,CIC,DUX4,PMID:16717057,Fusion between CIC and DUX4 up-regulates PEA3 family genes in Ewing-like sarcomas with t(4;19)(q35;q13) translocation.,2006,true,true,2026-07-17
+SARC_CIC,CIC-FOXO4,CIC,FOXO4,PMID:25007147,A novel CIC-FOXO4 gene fusion in undifferentiated small round cell sarcoma: a genetically distinct variant of Ewing-like sarcoma.,2014,true,true,2026-07-17
+SARC_CIC,CIC-NUTM1,CIC,NUTM1,PMID:38851744,CIC::NUTM1 sarcomas occurred in soft tissues of upper limbs : a rare case report and literature review.,2024,true,true,2026-07-17
+SARC_BCOR,BCOR-CCNB3,BCOR,CCNB3,PMID:22387997,A new subtype of bone sarcoma defined by BCOR-CCNB3 gene fusion.,2012,true,true,2026-07-17
+SARC_BCOR,ZC3H7B-BCOR,ZC3H7B,BCOR,PMID:26752546,Novel BCOR-MAML3 and ZC3H7B-BCOR Gene Fusions in Undifferentiated Small Blue Round Cell Sarcomas.,2016,true,true,2026-07-17
+SARC_BCOR,BCOR-MAML3,BCOR,MAML3,PMID:26752546,Novel BCOR-MAML3 and ZC3H7B-BCOR Gene Fusions in Undifferentiated Small Blue Round Cell Sarcomas.,2016,true,true,2026-07-17
+SARC_BCOR,(none-ITD),,,PMID:32372022,Undifferentiated round cell sarcoma with BCOR internal tandem duplications (ITD) or YWHAE fusions: a clinicopathologic and molecular study.,2020,true,true,2026-07-17
+SARC_MYOEP,EWSR1-POU5F1,EWSR1,POU5F1,PMID:20815032,"EWSR1-POU5F1 fusion in soft tissue myoepithelial tumors. A molecular analysis of sixty-six cases, including soft tissue, bone, and visceral lesions, showing common involvement of the EWSR1 gene.",2010,true,true,2026-07-17
+SARC_MYOEP,FUS-POU5F1,FUS,POU5F1,PMID:25066216,Myoepithelioma of bone with a novel FUS-POU5F1 fusion gene.,2014,true,true,2026-07-17
+SARC_MYOEP,EWSR1-PBX1,EWSR1,PBX1,PMID:18383210,Detection of a t(1;22)(q23;q12) translocation leading to an EWSR1-PBX1 fusion gene in a myoepithelioma.,2008,true,true,2026-07-17
+SARC_MYOEP,EWSR1-ZNF444,EWSR1,ZNF444,PMID:19760602,t(19;22)(q13;q12) Translocation leading to the novel fusion gene EWSR1-ZNF444 in soft tissue myoepithelial carcinoma.,2009,true,true,2026-07-17
+ALCL,ALK_rearrangement,NPM1,ALK,PMID:8122112,"Fusion of a kinase gene, ALK, to a nucleolar protein gene, NPM, in non-Hodgkin's lymphoma.",1994,true,true,2026-07-17

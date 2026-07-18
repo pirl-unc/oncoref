@@ -6,9 +6,11 @@
 
 """Driver fusions per cancer type + reverse lookups (#27, O4)."""
 
+import pandas as pd
 import pytest
 
 from oncoref import (
+    cancer_fusion_citation_audit,
     cancer_fusions,
     cancer_fusions_df,
     cancer_type_registry,
@@ -93,6 +95,34 @@ def test_every_fusion_code_is_a_registry_code():
     assert not missing, f"fusion cancer_codes not in the registry: {missing}"
 
 
+def test_every_positive_fusion_or_alteration_has_a_citation():
+    fusions_df = cancer_fusions_df().fillna("")
+    positive_rows = fusions_df[fusions_df["fusion_family"] != "(none)"]
+    assert positive_rows["pmid"].str.fullmatch(r"PMID:\d+").all()
+
+
+def test_fusion_citation_audit_covers_every_cited_row():
+    key = ["cancer_code", "fusion_family", "gene_5prime", "gene_3prime", "pmid"]
+    fusions_df = cancer_fusions_df().fillna("")
+    cited = fusions_df[fusions_df["pmid"] != ""][key].sort_values(key).reset_index(drop=True)
+
+    audit = cancer_fusion_citation_audit().fillna("")
+    audited = audit[key].sort_values(key).reset_index(drop=True)
+    pd.testing.assert_frame_equal(audited, cited)
+
+    assert audit["pubmed_title"].str.strip().ne("").all()
+    assert audit["publication_year"].between(1900, 2100).all()
+    assert audit["supports_fusion_or_alteration"].all()
+    assert audit["supports_disease_context"].all()
+    assert audit["reviewed_on"].eq("2026-07-17").all()
+
+
+def test_fusion_citation_audit_returns_a_defensive_copy():
+    first = cancer_fusion_citation_audit()
+    first.loc[0, "pubmed_title"] = "changed"
+    assert cancer_fusion_citation_audit().loc[0, "pubmed_title"] != "changed"
+
+
 def test_known_wrong_fusion_pmids_are_replaced():
     """Issue #160 examples: real PMIDs that resolved to unrelated papers."""
 
@@ -144,3 +174,47 @@ def test_known_wrong_fusion_pmids_are_replaced():
         ]
         assert len(row) == 1
         assert row.iloc[0]["pmid"] == expected_pmid
+
+
+def test_issue_160_claim_corrections():
+    fusions_df = cancer_fusions_df().fillna("")
+    imt_pairs = set(
+        zip(
+            fusions_df.loc[fusions_df["cancer_code"] == "SARC_IMT", "gene_5prime"],
+            fusions_df.loc[fusions_df["cancer_code"] == "SARC_IMT", "gene_3prime"],
+        )
+    )
+    assert ("CARS1", "ALK") in imt_pairs
+    assert ("CARS1", "ROS1") not in imt_pairs
+
+    rms_pairs = set(
+        zip(
+            fusions_df.loc[fusions_df["cancer_code"] == "SARC_RMS_ARMS", "gene_5prime"],
+            fusions_df.loc[fusions_df["cancer_code"] == "SARC_RMS_ARMS", "gene_3prime"],
+        )
+    )
+    assert ("PAX3", "FOXO4") not in rms_pairs
+
+
+def test_registry_fusion_drivers_are_present_in_fusion_table():
+    fusions_df = cancer_fusions_df().fillna("")
+    registry = cancer_type_registry().fillna("")
+
+    pairs_by_code = {}
+    for row in fusions_df.itertuples():
+        if row.gene_5prime and row.gene_3prime:
+            pairs_by_code.setdefault(row.cancer_code, set()).add(
+                f"{row.gene_5prime}-{row.gene_3prime}"
+            )
+
+    missing = []
+    for row in registry.itertuples():
+        # Some ontology-only entities declare a driver before a detailed fusion
+        # row exists. Compare only codes represented in both tables.
+        if row.code not in pairs_by_code:
+            continue
+        declared = {value.strip() for value in row.fusion_driver.split(";") if value.strip()}
+        for fusion in sorted(declared - pairs_by_code.get(row.code, set())):
+            missing.append((row.code, fusion))
+
+    assert not missing, f"registry fusion drivers missing from cancer-fusions.csv: {missing}"

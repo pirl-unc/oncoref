@@ -216,6 +216,7 @@ from .expression_registry import (
     sources_for_cancer_code,
 )
 from .fusions import (
+    cancer_fusion_citation_audit,
     cancer_fusions,
     cancer_fusions_df,
     cancer_types_with_fusion,
