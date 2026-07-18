@@ -6,6 +6,8 @@
 
 """Per-type gene biology + fusion-rule tables (#35, R-onto)."""
 
+import pandas as pd
+
 from oncoref import cancer_genes as cg
 from oncoref import fusions as f
 
@@ -34,6 +36,31 @@ def test_key_genes_roles():
     assert (targets["role"].astype(str) == "target").all()
 
 
+def test_key_gene_citation_audit_covers_every_citation():
+    key_columns = ["cancer_code", "subtype", "symbol", "role", "agent", "pmid"]
+    key_genes = cg.cancer_key_genes_df().fillna("")
+    cited = key_genes.assign(pmid=key_genes["source"].str.split("; ")).explode("pmid")
+    cited = cited[key_columns].sort_values(key_columns).reset_index(drop=True)
+
+    audit = cg.cancer_key_gene_citation_audit().fillna("")
+    audited = audit[key_columns].sort_values(key_columns).reset_index(drop=True)
+    pd.testing.assert_frame_equal(audited, cited)
+
+    assert audit["pubmed_title"].str.strip().ne("").all()
+    assert audit["publication_year"].between(1900, 2100).all()
+    assert audit["supports_gene_or_agent"].all()
+    assert audit["supports_disease_context"].all()
+    assert audit["supports_role_and_phase"].all()
+    reviewed_on = pd.to_datetime(audit["reviewed_on"], format="%Y-%m-%d", errors="raise")
+    assert reviewed_on.notna().all()
+
+
+def test_key_gene_citation_audit_returns_a_defensive_copy():
+    first = cg.cancer_key_gene_citation_audit()
+    first.loc[0, "pubmed_title"] = "changed"
+    assert cg.cancer_key_gene_citation_audit().loc[0, "pubmed_title"] != "changed"
+
+
 def test_key_gene_known_wrong_pmids_are_replaced():
     key = cg.cancer_key_genes_df()
 
@@ -51,8 +78,8 @@ def test_key_gene_known_wrong_pmids_are_replaced():
         ("LUAD", "EGFR", "target", "osimertinib"): "PMID:29151359",
         ("COAD", "BRAF", "biomarker", ""): "PMID:31566309",
         ("COAD", "CEACAM5", "biomarker", ""): "PMID:17060676",
-        ("DLBC", "MS4A1", "biomarker", ""): "PMID:11807147",
-        ("DLBC", "MS4A1", "target", "rituximab"): "PMID:11807147",
+        ("DLBC", "MS4A1", "biomarker", ""): "PMID:39017945",
+        ("DLBC", "MS4A1", "target", "rituximab"): "PMID:16702182",
         ("DLBC", "CD19", "target", "axicabtagene ciloleucel"): "PMID:29226797",
         ("LAML", "CD33", "biomarker", ""): "PMID:22482940",
         ("LAML", "CD33", "target", "gemtuzumab ozogamicin"): "PMID:30076173",
@@ -88,12 +115,13 @@ def test_key_gene_known_wrong_pmids_are_replaced():
         "PMID:31634902",
         "PMID:12075054",
         "PMID:15178638",
+        "PMID:20181787",
+        "PMID:32427717",
+        "PMID:33667670",
+        "PMID:36535566",
     }
-    audited_codes = {code for code, _, _, _ in expected_sources}
-    audited_refs = set().union(
-        *(_split_refs(v) for v in key[key["cancer_code"].isin(audited_codes)]["source"])
-    )
-    assert bad_pmids.isdisjoint(audited_refs)
+    all_refs = set().union(*(_split_refs(v) for v in key["source"]))
+    assert bad_pmids.isdisjoint(all_refs)
 
 
 def test_key_gene_nonexistent_pmids_are_replaced():
@@ -109,22 +137,14 @@ def test_key_gene_nonexistent_pmids_are_replaced():
         ("SARC", "myxoid_liposarcoma", "PRAME", "biomarker", ""): {"PMID:27499900"},
         ("SARC", "synovial_sarcoma", "PRAME", "biomarker", ""): {"PMID:30524904"},
         ("SARC", "ewing_sarcoma", "PRAME", "biomarker", ""): {"PMID:24973179"},
-        ("SARC", "ewing_sarcoma", "PRAME", "target", "IMA203"): {"PMID:40205198"},
-        ("SARC", "dsrct", "WT1", "target", ""): {"PMID:35069874", "PMID:39139449"},
         ("SARC", "MPNST", "NF1", "biomarker", ""): {"PMID:36598417"},
         ("SARC", "MPNST", "CDKN2A", "biomarker", ""): {"PMID:36598417"},
         ("SARC", "MPNST", "CDKN2B", "biomarker", ""): {"PMID:14519636"},
         ("SARC", "MPNST", "TP53", "biomarker", ""): {"PMID:36598417"},
         ("SARC", "MPNST", "SOX10", "biomarker", ""): {"PMID:28551330"},
         ("SARC", "MPNST", "S100B", "biomarker", ""): {"PMID:28551330"},
-        ("SARC", "MPNST", "MEK1", "target", "trametinib"): {
-            "PMID:33032988",
-            "PMID:33203698",
-        },
-        ("SARC", "MPNST", "PTPN11", "target", "SHP2 inhibitors (trials)"): {
-            "PMID:33032988",
-            "PMID:39793045",
-        },
+        ("SARC", "MPNST", "MAP2K1", "target", "trametinib"): {"PMID:32975370"},
+        ("SARC", "MPNST", "PTPN11", "target", "SHP2 inhibitors"): {"PMID:33032988"},
     }
     for (code, subtype, symbol, role, agent), expected in expected_refs.items():
         mask = (
@@ -138,14 +158,66 @@ def test_key_gene_nonexistent_pmids_are_replaced():
         assert len(rows) == 1, (code, subtype, symbol, role, agent)
         assert _split_refs(rows.iloc[0]["source"]) == expected
 
-    wt1 = key[
-        (key["cancer_code"] == "SARC")
-        & (key["subtype"] == "dsrct")
-        & (key["symbol"] == "WT1")
+
+
+def test_key_gene_claims_are_structurally_unambiguous():
+    key = cg.cancer_key_genes_df().fillna("")
+    claim_key = ["cancer_code", "subtype", "symbol", "role", "agent"]
+
+    assert not key.duplicated(claim_key).any()
+    assert key["symbol"].str.strip().ne("").all()
+    assert key["source"].str.fullmatch(r"PMID:\d+(; PMID:\d+)*").all()
+    assert key.loc[key["role"] == "target", "agent"].str.strip().ne("").all()
+
+    noncanonical_symbols = {
+        "CD20",
+        "CD123",
+        "HIF2A",
+        "MAGE-A4",
+        "MEK1",
+        "T",
+        "TROP2",
+        "VEGFR2",
+    }
+    assert noncanonical_symbols.isdisjoint(set(key["symbol"]))
+
+
+def test_issue_161_status_and_context_corrections():
+    key = cg.cancer_key_genes_df().fillna("")
+
+    corrected_phases = {
+        ("BLCA", "sacituzumab govitecan + pembrolizumab"): "phase_2",
+        ("BLCA", "atezolizumab + platinum chemotherapy"): "phase_3",
+        ("KIRP", "pembrolizumab"): "phase_2",
+        ("MESO", "bevacizumab + pemetrexed/cisplatin"): "phase_3",
+        ("MTC", "pralsetinib"): "phase_2",
+        ("THYM", "pembrolizumab"): "phase_2",
+        ("THYM", "sunitinib"): "phase_2",
+        ("FL", "tazemetostat"): "phase_2",
+    }
+    for (cancer_code, agent), expected_phase in corrected_phases.items():
+        rows = key[(key["cancer_code"] == cancer_code) & (key["agent"] == agent)]
+        assert not rows.empty, (cancer_code, agent)
+        assert set(rows["phase"]) == {expected_phase}
+
+    removed_claims = {
+        ("LGG", "temozolomide"),
+        ("NPC", "pembrolizumab"),
+    }
+    current_claims = set(zip(key["cancer_code"], key["agent"]))
+    assert removed_claims.isdisjoint(current_claims)
+
+    thca_ret = key[
+        (key["cancer_code"] == "THCA")
+        & (key["symbol"] == "RET")
         & (key["role"] == "target")
-    ].iloc[0]
-    assert wt1["agent_class"] == "vaccine"
-    assert "TCR-T" not in str(wt1["rationale"])
+    ]
+    assert thca_ret["indication"].str.contains("RET-fusion-positive").all()
+    assert "PMID:37870969" not in set(thca_ret["source"])
+
+    assert not (
+        (key["symbol"] == "B4GALNT1") & key["rationale"].str.contains("GD2", case=False)
+    ).any()
 
 
 def test_type_gene_sets():

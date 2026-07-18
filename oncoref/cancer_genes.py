@@ -52,6 +52,15 @@ def cancer_key_genes_df() -> pd.DataFrame:
     return get_data("cancer-key-genes").copy()
 
 
+def cancer_key_gene_citation_audit() -> pd.DataFrame:
+    """Reviewed PubMed evidence for each citation in :func:`cancer_key_genes_df`.
+
+    Each row records one cited PMID and confirms that it supports the named
+    gene or agent, disease context, role, and therapeutic phase. Defensive copy.
+    """
+    return get_data("cancer-key-gene-citation-audit").copy()
+
+
 def _key_genes_for(cancer_type, *, subtype=None) -> pd.DataFrame:
     df = cancer_key_genes_df()
     df = df[df["cancer_code"].astype(str) == resolve_cancer_type(cancer_type)]
