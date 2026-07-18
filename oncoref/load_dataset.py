@@ -38,6 +38,27 @@ _BUNDLED_DATA_DIR = Path(__file__).parent / "data"
 _DATASET_PATHS = None
 _CACHED_DATAFRAMES: dict = {}
 
+# Bump this when the representation written to the concatenated-shard parquet
+# cache changes. The source-file signature alone cannot invalidate an older
+# parquet file whose dtypes no longer match the owning cache contract.
+_SHARD_CACHE_SCHEMA_VERSION = 2
+
+# These columns repeat a small set of provenance values across millions of gene
+# rows. Keeping them as Python objects dominates the resident size of the
+# cancer-reference-expression frame. Categoricals preserve the values and
+# comparisons while storing one compact integer code per row.
+_CATEGORICAL_COLUMNS_BY_DATASET = {
+    "cancer-reference-expression": (
+        "cancer_code",
+        "source_cohort",
+        "source_project",
+        "source_version",
+        "processing_pipeline",
+        "notes",
+        "tumor_origin",
+    ),
+}
+
 # Back-compat alias.
 _DATA_DIR = _BUNDLED_DATA_DIR
 
@@ -119,6 +140,23 @@ def get_all_csv_paths() -> list:
     return list(seen.values())
 
 
+def _optimize_cached_dataframe(dataset_name: str, df: pd.DataFrame) -> pd.DataFrame:
+    """Apply the owning cache's compact dtype policy for ``dataset_name``."""
+    for column in _CATEGORICAL_COLUMNS_BY_DATASET.get(dataset_name, ()):
+        if column in df.columns and not isinstance(df[column].dtype, pd.CategoricalDtype):
+            df[column] = df[column].astype("category")
+    return df
+
+
+def _read_shards_for_cache(shard_dir: Path, paths: list[Path]) -> list[pd.DataFrame]:
+    """Read shards while compacting each one before the next is retained."""
+    frames = []
+    for path in paths:
+        frame = pd.read_csv(str(path), low_memory=False)
+        frames.append(_optimize_cached_dataframe(shard_dir.name, frame))
+    return frames
+
+
 def _load_shard_directory(shard_dir: Path) -> pd.DataFrame:
     """Concatenate every ``*.csv[.gz]`` shard in a sharded dataset directory.
 
@@ -130,14 +168,20 @@ def _load_shard_directory(shard_dir: Path) -> pd.DataFrame:
     if not paths:
         raise FileNotFoundError(f"no CSV shards found under {shard_dir}")
     sig = repr(
-        (len(paths), sum(p.stat().st_size for p in paths), max(p.stat().st_mtime_ns for p in paths))
+        (
+            _SHARD_CACHE_SCHEMA_VERSION,
+            len(paths),
+            sum(p.stat().st_size for p in paths),
+            max(p.stat().st_mtime_ns for p in paths),
+        )
     )
     cache_dir = Path.home() / ".cache" / "oncoref" / "shard_cache"
     cache_file = cache_dir / f"{shard_dir.name}.parquet"
     sig_file = cache_dir / f"{shard_dir.name}.sig"
     try:
         if cache_file.exists() and sig_file.exists() and sig_file.read_text() == sig:
-            return pd.read_parquet(cache_file)
+            cached = pd.read_parquet(cache_file)
+            return _optimize_cached_dataframe(shard_dir.name, cached)
     except Exception as e:
         # Corrupt/unreadable cache: self-heal by removing it (so it doesn't fail
         # every run) and surface a warning, then rebuild from the authoritative
@@ -149,7 +193,8 @@ def _load_shard_directory(shard_dir: Path) -> pd.DataFrame:
         for stale in (cache_file, sig_file):
             with contextlib.suppress(OSError):
                 stale.unlink()
-    df = pd.concat([pd.read_csv(str(p), low_memory=False) for p in paths], ignore_index=True)
+    df = pd.concat(_read_shards_for_cache(shard_dir, paths), ignore_index=True)
+    _optimize_cached_dataframe(shard_dir.name, df)
     try:
         cache_dir.mkdir(parents=True, exist_ok=True)
         df.to_parquet(cache_file, index=False)

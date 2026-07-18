@@ -3594,13 +3594,21 @@ def _canonical_reference_summary_source_labels(df: pd.DataFrame) -> pd.DataFrame
     if df.empty:
         return df
     codes = df["cancer_code"]
-    sources = df["source_cohort"].fillna("")
+    sources = df["source_cohort"]
     stale = codes.isin(_SARC_HISTOLOGY_SUMMARY_CODES) & sources.eq(_STALE_SARC_HISTOLOGY_COHORT)
     if not stale.any():
         return df
     out = df.copy(deep=False)
-    canonical_sources = df["source_cohort"].copy()
+    canonical_sources = sources
+    if isinstance(sources.dtype, pd.CategoricalDtype):
+        if _SARC_HISTOLOGY_COHORT not in sources.cat.categories:
+            canonical_sources = sources.cat.add_categories([_SARC_HISTOLOGY_COHORT])
+        canonical_sources = canonical_sources.copy()
+    else:
+        canonical_sources = sources.copy()
     canonical_sources.loc[stale] = _SARC_HISTOLOGY_COHORT
+    if isinstance(canonical_sources.dtype, pd.CategoricalDtype):
+        canonical_sources = canonical_sources.cat.remove_unused_categories()
     out["source_cohort"] = canonical_sources
     return out
 
@@ -3642,8 +3650,10 @@ def _reference_summary_row_index() -> dict[tuple[str, str], np.ndarray]:
     if df.empty:
         index = {}
     else:
-        codes = df["cancer_code"].to_numpy(copy=False)
-        sources = df["source_cohort"].fillna("").to_numpy(copy=False)
+        code_series = df["cancer_code"]
+        source_series = df["source_cohort"]
+        codes = _compact_comparison_values(code_series)
+        sources = _compact_comparison_values(source_series)
         starts_new_source = np.empty(len(df), dtype=bool)
         starts_new_source[0] = True
         starts_new_source[1:] = (codes[1:] != codes[:-1]) | (sources[1:] != sources[:-1])
@@ -3652,13 +3662,24 @@ def _reference_summary_row_index() -> dict[tuple[str, str], np.ndarray]:
         all_positions = np.arange(len(df), dtype=np.int64)
         index = {}
         for start, end in zip(starts, ends):
-            key = (str(codes[start]), str(sources[start]))
+            source = source_series.iloc[start]
+            key = (
+                str(code_series.iloc[start]),
+                "" if pd.isna(source) else str(source),
+            )
             positions = all_positions[start:end]
             if key in index:
                 positions = np.concatenate([index[key], positions])
             index[key] = positions
     _REFERENCE_SUMMARY_ROW_INDEX = (df, index)
     return index
+
+
+def _compact_comparison_values(series: pd.Series) -> np.ndarray:
+    """Return category codes when available, avoiding a large object array."""
+    if isinstance(series.dtype, pd.CategoricalDtype):
+        return series.cat.codes.to_numpy(copy=False)
+    return series.to_numpy(copy=False)
 
 
 def _clear_reference_summary_row_index() -> None:
@@ -3749,7 +3770,7 @@ def _reference_summary_source_table() -> pd.DataFrame:
         .fillna(99)
         .astype(int)
     )
-    grouped["_source_sort"] = grouped["source_cohort"].fillna("").astype(str)
+    grouped["_source_sort"] = grouped["source_cohort"].astype("string").fillna("")
     grouped = grouped.sort_values(
         ["cancer_code", "n_reference_genes", "n_reference_samples", "_origin_rank", "_source_sort"],
         ascending=[True, False, False, True, True],
@@ -3820,7 +3841,8 @@ def _filter_reference_summary_sources(
         kind_map = _source_cohort_kind_map()
         out = out.loc[out["source_cohort"].astype(str).map(kind_map).isin(source_kinds)]
     if exclude_microarray_proxy:
-        pipeline = out.get("processing_pipeline", pd.Series("", index=out.index)).fillna("")
+        pipeline = out.get("processing_pipeline", pd.Series("", index=out.index))
+        pipeline = pipeline.astype("string").fillna("")
         text = pipeline.astype(str).str.lower()
         out = out.loc[~text.str.contains("microarray|tpm_proxy|tpm-proxy", regex=True)]
     return out
@@ -3922,9 +3944,9 @@ def _attach_summary_row_provenance(df: pd.DataFrame, *, code: str) -> pd.DataFra
     source_meta = source_counts.set_index("source_cohort").to_dict("index")
     meta_by_source = {
         str(source): _selected_expression_source_metadata(code, source_cohort=str(source))
-        for source in out["source_cohort"].fillna("").astype(str).unique()
+        for source in out["source_cohort"].astype("string").fillna("").unique()
     }
-    source_key = out["source_cohort"].fillna("").astype(str)
+    source_key = out["source_cohort"].astype("string").fillna("")
     out["source_type"] = source_key.map(
         lambda source: meta_by_source.get(source, {}).get("source_type")
     )
