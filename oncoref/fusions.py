@@ -38,6 +38,17 @@ def cancer_fusions_df():
     return get_data("cancer-fusions").copy()
 
 
+def cancer_fusion_citation_audit():
+    """Reviewed PubMed evidence for every cited row in :func:`cancer_fusions_df`.
+
+    The table records the PubMed title and review date, plus separate flags for
+    support of the alteration and its disease context. It is kept separate from
+    the fusion table so citation review metadata does not complicate fusion
+    queries.
+    """
+    return get_data("cancer-fusion-citation-audit").copy()
+
+
 def _truthy(series):
     # is_defining / pathognomonic load as bool, but compare via lowercased string
     # so the filter is robust whether the column is bool or str.
