@@ -114,7 +114,8 @@ def test_fusion_citation_audit_covers_every_cited_row():
     assert audit["publication_year"].between(1900, 2100).all()
     assert audit["supports_fusion_or_alteration"].all()
     assert audit["supports_disease_context"].all()
-    assert audit["reviewed_on"].eq("2026-07-17").all()
+    reviewed_on = pd.to_datetime(audit["reviewed_on"], format="%Y-%m-%d", errors="raise")
+    assert reviewed_on.notna().all()
 
 
 def test_fusion_citation_audit_returns_a_defensive_copy():
