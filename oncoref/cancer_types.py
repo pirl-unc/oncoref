@@ -2281,7 +2281,35 @@ def cohort_registry_df():
     member_cohorts, provenance``. The authority to validate any
     ``source_cohort`` against — includes the computed aggregates and
     literature-curated cohorts."""
-    return get_data("cohort-registry")
+    df = get_data("cohort-registry")
+    for cohort_id, members in _live_computed_cohort_members().items():
+        matching_rows = df.index[df["cohort_id"].astype(str) == cohort_id]
+        if len(matching_rows) != 1:
+            raise ValueError(f"computed cohort {cohort_id!r} must have exactly one registry row")
+        row_index = matching_rows[0]
+        df.at[row_index, "n_codes"] = len(members)
+        df.at[row_index, "member_cohorts"] = ";".join(members)
+    return df
+
+
+def _live_computed_cohort_members() -> dict[str, list[str]]:
+    """Map named computed cohort IDs to the aggregate members they expose today.
+
+    Computed ontology-only groupings without a ``source_cohort`` are not cohort
+    registry entries and therefore do not participate in this synchronization.
+    """
+    registry = _registry_frame()
+    computed = registry[registry["expression_source"].astype(str).str.lower() == "computed"]
+    members_by_cohort = {}
+    for record in computed.itertuples():
+        if _row_is_missing(record.source_cohort):
+            continue
+        cohort_id = str(record.source_cohort).strip()
+        members = cohort_aggregate_members(record.code)
+        if members is None:
+            raise ValueError(f"computed cancer type {record.code!r} has no aggregate members")
+        members_by_cohort[cohort_id] = members
+    return members_by_cohort
 
 
 def cohort_registry():
