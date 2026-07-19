@@ -11,7 +11,7 @@ import pytest
 
 pytest.importorskip("matplotlib")
 
-from oncoref import cli, plots
+from oncoref import cli, data_bundle, plots
 
 
 @pytest.fixture(autouse=True)
@@ -236,7 +236,7 @@ def test_cli_plot_threshold_tpm_is_opt_in(monkeypatch, tmp_path):
 
 # ---- CTA expression heatmap (needs the expression bundle / percentile data) ----
 
-_HAS_PERCENTILES = bool(__import__("oncoref").available_percentile_cohorts())
+_HAS_PERCENTILES = data_bundle.is_local()
 _needs_bundle = pytest.mark.skipif(
     not _HAS_PERCENTILES, reason="expression bundle (percentile artifacts) not present"
 )
