@@ -1563,6 +1563,7 @@ def _selected_expression_source_metadata(
 ) -> dict[str, str | bool | int | float | None]:
     source_type = unit = None
     n_reference_samples = None
+    source_was_explicit = source_cohort is not None
     if source_cohort is None:
         try:
             info = source_matrices.cohort_info(code)
@@ -1578,7 +1579,7 @@ def _selected_expression_source_metadata(
     sources = sources_for_cancer_code(code)
     selected = next(
         (s for s in sources if source_cohort and s.source_cohort == source_cohort),
-        sources[0] if sources else None,
+        None if source_was_explicit or not sources else sources[0],
     )
     if selected is not None:
         source_type = selected.source_type
@@ -2870,13 +2871,15 @@ def cancer_reference_expression_availability(
     source_kind: str | Iterable[str] | None = None,
     source_cohort: str | Iterable[str] | None = None,
     exclude_microarray_proxy: bool = False,
+    all_sources: bool = False,
 ) -> pd.DataFrame:
     """Availability/provenance table for :func:`cancer_reference_expression`.
 
-    The result is one row per requested cancer code (expanding computed aggregate
-    requests to member cohorts) and normalization mode. It is intentionally
-    gene-independent: use it to decide whether an empty expression frame means an
-    empty gene filter or an unavailable upstream artifact.
+    By default the result is one row per requested cancer code (expanding computed
+    aggregate requests to member cohorts) and normalization mode. With
+    ``all_sources=True`` and ``reference_source="summary_rows_all"``, it instead
+    returns one row per source cohort and normalization without loading the
+    multi-million-row expression frame. Both modes are gene-independent.
     """
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_sample_qc(sample_qc)
@@ -2885,12 +2888,22 @@ def cancer_reference_expression_availability(
     source_cohorts = _normalize_source_filter_values(source_cohort)
     if reference_source == "summary_rows_all" and sample_qc != "all":
         raise ValueError('reference_source="summary_rows_all" requires sample_qc="all"')
+    if all_sources and reference_source != "summary_rows_all":
+        raise ValueError('all_sources=True requires reference_source="summary_rows_all"')
     if (source_kinds or source_cohorts or exclude_microarray_proxy) and (
         reference_source != "summary_rows_all"
     ):
         raise ValueError(
             "source_kind, source_cohort, and exclude_microarray_proxy are only "
             "supported with reference_source='summary_rows_all'"
+        )
+    if all_sources:
+        return _reference_source_union_availability(
+            cancer_types,
+            modes,
+            source_kinds=source_kinds,
+            source_cohorts=source_cohorts,
+            exclude_microarray_proxy=exclude_microarray_proxy,
         )
     requests = _reference_expression_requests(
         cancer_types,
@@ -2970,6 +2983,7 @@ _REFERENCE_SOURCE_UNION_IDENTITY_COLUMNS = [
 
 _REFERENCE_SOURCES = {"artifact", "summary_rows", "summary_rows_all"}
 _REFERENCE_SUMMARY_DATASET = "cancer-reference-expression"
+_REFERENCE_SUMMARY_AVAILABILITY_DATASET = "cancer-reference-expression-availability"
 _REFERENCE_SUMMARY_METHOD = "source_summary_rows"
 _REFERENCE_SUMMARY_ALL_METHOD = "source_summary_rows_all"
 _REFERENCE_RECOMPUTED_METHOD = "source_matrix_stats"
@@ -2984,6 +2998,35 @@ _REFERENCE_REQUEST_COLUMNS = [
     "request_kind",
     "available",
     "missing_reason",
+]
+
+_REFERENCE_AVAILABILITY_COLUMNS = [
+    "requested_code",
+    "cancer_code",
+    "request_kind",
+    "normalization",
+    "available",
+    "missing_reason",
+    "source_cohort",
+    "source_project",
+    "source_version",
+    "source_type",
+    "source_unit",
+    "source_scale_class",
+    "linear_tpm_comparable",
+    "tumor_origin",
+    "metastasis_site",
+    "n_reference_genes",
+    "n_reference_samples",
+    "n_samples",
+    "n_detected",
+    "processing_pipeline",
+    "notes",
+    "reference_method",
+    "sample_qc",
+    "artifact_schema_version",
+    "data_version",
+    "source_matrix_version",
 ]
 
 
@@ -3119,40 +3162,122 @@ def _reference_expression_availability_for_requests(
                 )
             )
             rows.append(row)
-    columns = [
-        "requested_code",
-        "cancer_code",
-        "request_kind",
-        "normalization",
-        "available",
-        "missing_reason",
-        "source_cohort",
-        "source_project",
-        "source_version",
-        "source_type",
-        "source_unit",
-        "source_scale_class",
-        "linear_tpm_comparable",
-        "tumor_origin",
-        "metastasis_site",
-        "n_reference_genes",
-        "n_reference_samples",
-        "n_samples",
-        "n_detected",
-        "processing_pipeline",
-        "notes",
-        "reference_method",
-        "sample_qc",
-        "artifact_schema_version",
-        "data_version",
-        "source_matrix_version",
-    ]
-    out = pd.DataFrame(rows, columns=columns)
+    return _reference_availability_frame(rows)
+
+
+def _reference_availability_frame(rows: list[dict]) -> pd.DataFrame:
+    """Build the stable public availability schema and attach version metadata."""
+    out = pd.DataFrame(rows, columns=_REFERENCE_AVAILABILITY_COLUMNS)
     out.attrs["artifact_schema_version"] = REFERENCE_EXPRESSION_SCHEMA_VERSION
     out.attrs["data_version"] = DATA_VERSION
     out.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
     out.attrs["issues"] = ["#207"]
     return out
+
+
+@lru_cache(maxsize=1)
+def _reference_summary_availability_table() -> pd.DataFrame:
+    """Read the compact one-row-per-source summary manifest."""
+    table = get_data(_REFERENCE_SUMMARY_AVAILABILITY_DATASET, copy=False)
+    required = {
+        "cancer_code",
+        "source_cohort",
+        "n_reference_genes",
+        "n_reference_samples",
+    }
+    missing = sorted(required - set(table.columns))
+    if missing:
+        raise ValueError(f"{_REFERENCE_SUMMARY_AVAILABILITY_DATASET} is missing columns: {missing}")
+    return table
+
+
+_register_derived_cache(_reference_summary_availability_table.cache_clear)
+
+
+def _reference_source_union_availability(
+    cancer_types: str | Iterable[str] | None,
+    modes: list[str],
+    *,
+    source_kinds: set[str] | None,
+    source_cohorts: set[str] | None,
+    exclude_microarray_proxy: bool,
+) -> pd.DataFrame:
+    """Return lightweight availability rows for every loadable summary source."""
+    sources = _filter_reference_summary_sources(
+        _reference_summary_availability_table(),
+        source_kinds=source_kinds,
+        source_cohorts=source_cohorts,
+        exclude_microarray_proxy=exclude_microarray_proxy,
+    )
+    if cancer_types is None:
+        requests = [
+            {"requested_code": code, "cancer_code": code, "request_kind": "default_available"}
+            for code in sorted(sources["cancer_code"].astype(str).unique())
+        ]
+    else:
+        requests = _reference_expression_requests(
+            cancer_types,
+            modes,
+            reference_source="summary_rows_all",
+            sample_qc="all",
+            source_kinds=source_kinds,
+            source_cohorts=source_cohorts,
+            exclude_microarray_proxy=exclude_microarray_proxy,
+        )
+
+    rows = []
+    for request in requests:
+        matching_sources = sources.loc[sources["cancer_code"].astype(str) == request["cancer_code"]]
+        source_records = [None] if matching_sources.empty else matching_sources.to_dict("records")
+        for mode in modes:
+            rows.extend(
+                _reference_source_availability_row(request, mode, source)
+                for source in source_records
+            )
+    return _reference_availability_frame(rows)
+
+
+def _reference_source_availability_row(
+    request: dict[str, str], mode: str, source: dict | None
+) -> dict:
+    """Build one source-specific availability row for a resolved request."""
+    available = source is not None
+    row = {
+        "requested_code": request["requested_code"],
+        "cancer_code": request["cancer_code"],
+        "request_kind": request["request_kind"],
+        "normalization": _REFERENCE_NORMALIZE_LABELS[mode],
+        "available": available,
+        "missing_reason": "" if available else "no_reference_summary_rows",
+        "reference_method": _REFERENCE_SUMMARY_ALL_METHOD,
+        "sample_qc": "all",
+        "artifact_schema_version": REFERENCE_EXPRESSION_SCHEMA_VERSION,
+        "data_version": DATA_VERSION,
+        "source_matrix_version": SOURCE_MATRIX_VERSION,
+    }
+    if source is None:
+        return row
+
+    metadata = _reference_summary_metadata_from_row(request["cancer_code"], source)
+    row.update(
+        {
+            "source_cohort": metadata.get("source_cohort"),
+            "source_project": metadata.get("source_project"),
+            "source_version": metadata.get("source_version"),
+            "source_type": metadata.get("source_type"),
+            "source_unit": metadata.get("unit"),
+            "source_scale_class": metadata.get("source_scale_class"),
+            "linear_tpm_comparable": bool(metadata.get("linear_tpm_comparable")),
+            "tumor_origin": metadata.get("tumor_origin"),
+            "metastasis_site": metadata.get("metastasis_site"),
+            "n_reference_genes": metadata.get("n_reference_genes"),
+            "n_reference_samples": metadata.get("n_reference_samples"),
+            "n_samples": metadata.get("n_reference_samples"),
+            "processing_pipeline": source.get("processing_pipeline"),
+            "notes": source.get("notes"),
+        }
+    )
+    return row
 
 
 def _reference_mode_availability(
@@ -4088,21 +4213,30 @@ def _reference_summary_source_metadata(
     selected = None if matches.empty else matches.iloc[0].to_dict()
     if selected is None:
         return None
-    meta = _selected_expression_source_metadata(code, source_cohort=str(selected["source_cohort"]))
+    return _reference_summary_metadata_from_row(code, selected)
+
+
+def _reference_summary_metadata_from_row(
+    code: str, source: dict
+) -> dict[str, str | bool | int | float | None]:
+    """Combine one compact summary-source row with the source registry."""
+    meta = _selected_expression_source_metadata(code, source_cohort=str(source["source_cohort"]))
     text = " ".join(
-        str(selected.get(c) or "")
+        str(source.get(c) or "")
         for c in ("source_cohort", "source_project", "source_version", "tumor_origin")
     ).lower()
     tpm_proxy = bool(meta.get("tpm_proxy")) or "microarray" in text or "tpm-proxy" in text
     meta.update(
         {
-            "source_cohort": selected.get("source_cohort"),
-            "source_project": selected.get("source_project"),
-            "source_version": selected.get("source_version"),
-            "tumor_origin": selected.get("tumor_origin"),
-            "metastasis_site": selected.get("metastasis_site"),
-            "n_reference_genes": selected.get("n_reference_genes"),
-            "n_reference_samples": selected.get("n_reference_samples"),
+            "source_cohort": source.get("source_cohort"),
+            "source_project": source.get("source_project"),
+            "source_version": source.get("source_version"),
+            "source_type": meta.get("source_type")
+            or _source_cohort_kind_map().get(str(source.get("source_cohort"))),
+            "tumor_origin": source.get("tumor_origin"),
+            "metastasis_site": source.get("metastasis_site"),
+            "n_reference_genes": source.get("n_reference_genes"),
+            "n_reference_samples": source.get("n_reference_samples"),
             "unit": meta.get("unit") or "TPM",
             "source_scale_class": "microarray_tpm_proxy"
             if tpm_proxy

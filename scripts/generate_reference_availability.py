@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+"""Generate the compact cancer-reference-expression source manifest."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import pandas as pd
+
+SOURCE_COLUMNS = [
+    "cancer_code",
+    "source_cohort",
+    "source_project",
+    "source_version",
+    "tumor_origin",
+    "metastasis_site",
+    "processing_pipeline",
+    "notes",
+]
+OUTPUT_COLUMNS = [
+    *SOURCE_COLUMNS,
+    "n_reference_genes",
+    "n_reference_samples",
+    "selected",
+]
+_SARC_HISTOLOGY_CODES = frozenset({"SARC_DDLPS", "SARC_WDLPS"})
+_STALE_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
+
+
+def _first_present(values: pd.Series):
+    for value in values:
+        if pd.notna(value) and str(value):
+            return " ".join(str(value).split()) if isinstance(value, str) else value
+    return pd.NA
+
+
+def _canonicalize_source_labels(frame: pd.DataFrame) -> pd.DataFrame:
+    stale = frame["cancer_code"].isin(_SARC_HISTOLOGY_CODES) & frame["source_cohort"].eq(
+        _STALE_SARC_HISTOLOGY_COHORT
+    )
+    if not stale.any():
+        return frame
+    out = frame.copy()
+    out.loc[stale, "source_cohort"] = _SARC_HISTOLOGY_COHORT
+    return out
+
+
+def _shard_source_records(path: Path, *, chunksize: int) -> list[dict]:
+    records: dict[tuple[str, str], dict] = {}
+    gene_ids: dict[tuple[str, str], set[str]] = {}
+    for chunk in pd.read_csv(path, chunksize=chunksize, low_memory=False):
+        chunk = _canonicalize_source_labels(chunk)
+        for (code, source), group in chunk.groupby(
+            ["cancer_code", "source_cohort"], dropna=False, sort=False
+        ):
+            key = (str(code), str(source))
+            if key not in records:
+                records[key] = {
+                    "cancer_code": key[0],
+                    "source_cohort": key[1],
+                    **{
+                        column: _first_present(group[column]) if column in group.columns else pd.NA
+                        for column in SOURCE_COLUMNS[2:]
+                    },
+                    "n_reference_samples": pd.NA,
+                }
+                gene_ids[key] = set()
+            gene_ids[key].update(group["Ensembl_Gene_ID"].dropna().astype(str))
+            if "n_samples" in group.columns:
+                n_samples = pd.to_numeric(group["n_samples"], errors="coerce").max()
+                current = records[key]["n_reference_samples"]
+                if pd.notna(n_samples) and (pd.isna(current) or n_samples > current):
+                    records[key]["n_reference_samples"] = n_samples
+
+    for key, record in records.items():
+        record["n_reference_genes"] = len(gene_ids[key])
+    return list(records.values())
+
+
+def build_reference_availability(shard_dir: Path, *, chunksize: int = 100_000) -> pd.DataFrame:
+    """Build one row per ``(cancer_code, source_cohort)`` without concatenating shards."""
+    records = []
+    seen = set()
+    paths = sorted(list(shard_dir.glob("*.csv")) + list(shard_dir.glob("*.csv.gz")))
+    if not paths:
+        raise FileNotFoundError(f"no reference-expression CSV shards under {shard_dir}")
+    for path in paths:
+        for record in _shard_source_records(path, chunksize=chunksize):
+            key = (record["cancer_code"], record["source_cohort"])
+            if key in seen:
+                raise ValueError(f"source identity {key!r} is split across multiple shards")
+            seen.add(key)
+            records.append(record)
+
+    table = pd.DataFrame.from_records(records)
+    origin_rank = (
+        table["tumor_origin"]
+        .fillna("")
+        .astype(str)
+        .str.lower()
+        .map({"primary": 0, "mixed": 1, "metastasis": 2})
+    )
+    table["_origin_rank"] = origin_rank.fillna(99).astype(int)
+    table = table.sort_values(
+        [
+            "cancer_code",
+            "n_reference_genes",
+            "n_reference_samples",
+            "_origin_rank",
+            "source_cohort",
+        ],
+        ascending=[True, False, False, True, True],
+        kind="stable",
+    )
+    table["selected"] = ~table["cancer_code"].duplicated()
+    return table.drop(columns="_origin_rank").reset_index(drop=True)[OUTPUT_COLUMNS]
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("shard_dir", type=Path)
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("oncoref/data/cancer-reference-expression-availability.csv"),
+    )
+    parser.add_argument("--chunksize", type=int, default=100_000)
+    args = parser.parse_args()
+
+    table = build_reference_availability(args.shard_dir, chunksize=args.chunksize)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    table.to_csv(args.output, index=False)
+    print(f"wrote {len(table)} source rows to {args.output}")
+
+
+if __name__ == "__main__":
+    main()
