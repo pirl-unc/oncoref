@@ -447,6 +447,16 @@ def _no_cached_matrix(monkeypatch):
     monkeypatch.setattr(expression, "per_sample_expression", _raise)
 
 
+def _mock_missing_artifact_build_metadata(monkeypatch):
+    missing = pd.DataFrame()
+    missing.attrs["missing_reason"] = "artifact_build_metadata_not_installed"
+    monkeypatch.setattr(
+        expression,
+        "expression_artifact_build_metadata",
+        lambda *args, **kwargs: missing.copy(),
+    )
+
+
 def test_cohort_gene_percentiles_missing_raises(percentile_cache, monkeypatch):
     # No shard AND no cached matrix (on-the-fly can't run) -> clear error.
     _no_cached_matrix(monkeypatch)
@@ -1747,6 +1757,7 @@ def test_cancer_reference_expression_long_and_wide(monkeypatch):
         }
     )
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X", "Y"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
 
@@ -1855,6 +1866,7 @@ def test_cancer_reference_expression_adds_proteoform_bridge_without_collapse(mon
         }
     )
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
 
@@ -1895,6 +1907,7 @@ def test_cancer_reference_expression_cdna_identical_collapse(monkeypatch):
         }
     )
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
 
@@ -1976,6 +1989,7 @@ def test_cancer_reference_expression_uses_pirlygenes_identity_style(monkeypatch)
         }
     )
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
 
@@ -2008,6 +2022,7 @@ def test_cancer_reference_expression_protein_identical_collapse_and_wide_shape(m
         }
     )
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
 
@@ -2061,6 +2076,7 @@ def test_cancer_reference_expression_multiple_normalizations(monkeypatch):
         return pct_tpm.copy() if as_tpm else pct_log.copy()
 
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "cohort_gene_percentiles", fake_pct)
 
@@ -2079,6 +2095,7 @@ def test_cancer_reference_expression_availability_reports_missing(monkeypatch):
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
     monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: ["Y"])
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    _mock_missing_artifact_build_metadata(monkeypatch)
 
     out = expression.cancer_reference_expression_availability(
         ["x", "z"], normalize=["tpm_clean", "tpm_raw"]
@@ -2108,6 +2125,7 @@ def test_cancer_reference_expression_availability_reports_missing(monkeypatch):
         "notes",
         "reference_method",
         "sample_qc",
+        "artifact_sample_qc",
         "artifact_schema_version",
         "data_version",
         "source_matrix_version",
@@ -2116,9 +2134,68 @@ def test_cancer_reference_expression_availability_reports_missing(monkeypatch):
     keyed = out.set_index(["cancer_code", "normalization"])
     assert bool(keyed.loc[("X", "tpm_clean"), "available"]) is True
     assert keyed.loc[("X", "tpm_clean"), "sample_qc"] == "pass"
+    assert pd.isna(keyed.loc[("X", "tpm_clean"), "artifact_sample_qc"])
     assert keyed.loc[("X", "tpm_raw"), "sample_qc"] == "pass"
     assert keyed.loc[("X", "tpm_raw"), "missing_reason"] == "no_source_matrix"
     assert keyed.loc[("Z", "tpm_clean"), "missing_reason"] == "no_percentile_artifact"
+
+
+def test_cancer_reference_expression_availability_matches_artifact_qc_policy(
+    percentile_cache,
+):
+    shard_path = percentile_cache / "cancer-reference-expression-percentiles" / "PRAD.parquet"
+    shard = pd.read_parquet(shard_path)
+    shard["p25"] = np.log1p([25.0, 50.0]).astype("float16")
+    shard["p75"] = np.log1p([75.0, 150.0]).astype("float16")
+    shard.to_parquet(shard_path, index=False)
+    _write_artifact_build_metadata(percentile_cache, "PRAD", sample_qc="pass_or_warn")
+
+    strict = expression.cancer_reference_expression_availability("PRAD", sample_qc="pass")
+    assert strict["available"].tolist() == [False]
+    assert strict["missing_reason"].tolist() == ["artifact_sample_qc_mismatch"]
+    assert strict["sample_qc"].tolist() == ["pass"]
+    assert strict["artifact_sample_qc"].tolist() == ["pass_or_warn"]
+
+    strict_load = expression.cancer_reference_expression(
+        "PRAD", sample_qc="pass", on_missing="empty"
+    )
+    assert strict_load.empty
+    assert strict_load.attrs["missing_requests"][0]["missing_reason"] == (
+        "artifact_sample_qc_mismatch"
+    )
+
+    compatible = expression.cancer_reference_expression_availability(
+        "PRAD", sample_qc="pass_or_warn"
+    )
+    assert compatible["available"].tolist() == [True]
+    assert compatible["artifact_sample_qc"].tolist() == ["pass_or_warn"]
+    assert not expression.cancer_reference_expression(
+        "PRAD", sample_qc="pass_or_warn", on_missing="empty"
+    ).empty
+
+    audit = expression.cancer_reference_expression_availability("PRAD", sample_qc="artifact")
+    assert audit["available"].tolist() == [True]
+    assert audit["artifact_sample_qc"].tolist() == ["pass_or_warn"]
+
+
+def test_cancer_reference_expression_availability_rejects_missing_artifact_metadata_row(
+    monkeypatch,
+):
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(
+        expression,
+        "expression_artifact_build_metadata",
+        lambda *args, **kwargs: pd.DataFrame(
+            {"cancer_code": ["Y"], "sample_qc_effective": ["pass"]}
+        ),
+    )
+
+    out = expression.cancer_reference_expression_availability("X", sample_qc="pass")
+
+    assert out["available"].tolist() == [False]
+    assert out["missing_reason"].tolist() == ["artifact_build_metadata_missing"]
+    assert out["artifact_sample_qc"].isna().all()
 
 
 def test_cancer_reference_expression_missing_empty_and_raise(monkeypatch):
@@ -2175,6 +2252,7 @@ def test_cancer_reference_expression_request_metadata_for_aggregate(monkeypatch)
         }
     )
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X", "Y"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "cohort_aggregates", lambda: {"AGG": ["X", "Y"]})
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "cohort_gene_percentiles", lambda *a, **k: pct.copy())
@@ -2926,6 +3004,7 @@ def test_cancer_reference_expression_wide_merges_by_gene_id_not_symbol(monkeypat
         ),
     }
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X", "Y"])
+    _mock_missing_artifact_build_metadata(monkeypatch)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(
         expression, "cohort_gene_percentiles", lambda code, *a, **k: by_code[code].copy()
