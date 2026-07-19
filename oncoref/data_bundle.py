@@ -37,10 +37,12 @@ is reused as-is. The ``PIRLYGENES_BUNDLED_DATA`` env var is still honored;
 
 Public API:
   cache_dir()      → version-pinned cache Path
-  is_local()       → bool: every downloadable path present?
+  bundle_is_local() → bool: every downloadable path present in the cache?
+  item_is_local()  → bool: one item present in the package or cache?
   fetch()          → download + extract from the GitHub Release
   ensure_local()   → fetch if missing; safe to call on every access
   find(path)       → cached path or None
+  find_local_item(path) → packaged or cached path, without fetching
   status()         → dict summarizing local state
 """
 
@@ -127,6 +129,7 @@ LEGACY_CACHE_DIR_ENV_VAR = "PIRLYGENES_BUNDLED_DATA"
 #: pirlygenes cache for the current version is reused to avoid a re-download.
 _DEFAULT_CACHE_PARENT = Path.home() / ".cache" / "oncoref" / "bundled_data"
 _LEGACY_CACHE_PARENT = Path.home() / ".cache" / "pirlygenes" / "bundled_data"
+_PACKAGE_DATA_DIR = Path(__file__).parent / "data"
 
 # Names that live in the downloadable tarball (relative to the cache root) and
 # are NOT bundled in the wheel. load_dataset checks here after the wheel data dir.
@@ -425,16 +428,45 @@ def _write_completion_marker(
     os.replace(tmp, marker)
 
 
-def is_local() -> bool:
-    """Every downloadable path is present AND non-empty in the cache."""
+def bundle_is_local() -> bool:
+    """Whether every downloadable item is non-empty in the active cache."""
     root = cache_dir()
     return all(_path_complete(root / p) for p in DOWNLOADABLE_PATHS)
 
 
+def is_local() -> bool:
+    """Backward-compatible alias for :func:`bundle_is_local`."""
+    return bundle_is_local()
+
+
 def find(relative_path: str) -> Path | None:
-    """Resolve a downloadable file to its on-disk cached location, or None."""
+    """Resolve a non-empty item in the active bundle cache, or return ``None``."""
     candidate = cache_dir() / relative_path
-    return candidate if candidate.exists() else None
+    return candidate if _path_complete(candidate) else None
+
+
+def find_local_item(relative_path: str) -> Path | None:
+    """Resolve one non-empty data item without downloading anything.
+
+    The package data directory is checked before the active bundle cache, matching
+    normal read precedence. This deliberately answers a narrower question than
+    :func:`bundle_is_local`: whether this exact item is locally present and non-empty,
+    including an artifact checkout or a partial developer cache. It does not perform
+    checksum or schema validation.
+    """
+    path = Path(relative_path)
+    if path.is_absolute() or not path.parts or ".." in path.parts:
+        raise ValueError("relative_path must stay within a data root")
+    for root in (_PACKAGE_DATA_DIR, cache_dir()):
+        candidate = root / path
+        if _path_complete(candidate):
+            return candidate
+    return None
+
+
+def item_is_local(relative_path: str) -> bool:
+    """Whether one data item is non-empty in the package or active cache."""
+    return find_local_item(relative_path) is not None
 
 
 def bundle_contract() -> dict:
@@ -657,7 +689,7 @@ def ensure_local(*, auto_fetch: bool = True, verbose: bool = True) -> Path:
     triggering a network call — for read-only inspection paths that shouldn't
     surprise users with a large download.
     """
-    if is_local():
+    if bundle_is_local():
         return cache_dir()
     if not auto_fetch:
         raise FileNotFoundError(
@@ -693,7 +725,7 @@ def status() -> dict:
             "verified_sha256": bool(marker and marker.get("verified_sha256")),
         },
         "items": items,
-        "all_local": is_local(),
+        "all_local": bundle_is_local(),
         "contract": contract,
     }
 
@@ -701,9 +733,9 @@ def status() -> dict:
 def verify_local() -> dict:
     """Return :func:`status` only when the current cache has a valid completion marker.
 
-    This is stricter than :func:`is_local`: legacy complete caches remain readable, but
-    callers that need a post-fetch integrity boundary can require the marker written by
-    current oncoref fetches.
+    This is stricter than :func:`bundle_is_local`: legacy complete caches remain
+    readable, but callers that need a post-fetch integrity boundary can require the
+    marker written by current oncoref fetches.
     """
     snap = status()
     if not snap["all_local"]:
@@ -820,14 +852,17 @@ __all__ = [
     "TARBALL_FILENAME",
     "BundleIntegrityError",
     "bundle_contract",
+    "bundle_is_local",
     "bundle_release_manifest",
     "cache_dir",
     "cache_root",
     "ensure_local",
     "fetch",
     "find",
+    "find_local_item",
     "is_downloadable",
     "is_local",
+    "item_is_local",
     "list_cache_versions",
     "prune_cache",
     "status",

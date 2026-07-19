@@ -864,7 +864,15 @@ def test_representatives_reject_mismatched_artifact_sample_qc(monkeypatch, tmp_p
 
 def test_representative_empty_long_schema_includes_requested_provenance(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
-    (tmp_path / "cancer-reference-expression-representatives").mkdir(parents=True)
+    shard_dir = tmp_path / "cancer-reference-expression-representatives"
+    shard_dir.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG1"],
+            "Symbol": ["GENE1"],
+            "OTHER__rep1": [1.0],
+        }
+    ).to_parquet(shard_dir / "OTHER.parquet", index=False)
 
     df = expression.representative_cohort_samples("PRAD", format="long", include_provenance=True)
 
