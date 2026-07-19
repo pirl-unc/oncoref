@@ -236,9 +236,9 @@ def test_cli_plot_threshold_tpm_is_opt_in(monkeypatch, tmp_path):
 
 # ---- CTA expression heatmap (needs the expression bundle / percentile data) ----
 
-_HAS_PERCENTILES = data_bundle.is_local()
+_HAS_PERCENTILES = data_bundle.item_is_local("cancer-reference-expression-percentiles")
 _needs_bundle = pytest.mark.skipif(
-    not _HAS_PERCENTILES, reason="expression bundle (percentile artifacts) not present"
+    not _HAS_PERCENTILES, reason="percentile artifacts not present locally"
 )
 
 

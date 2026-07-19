@@ -92,7 +92,7 @@ from .gene_ids import (
     unversioned,
 )
 from .gene_qc import TECHNICAL_RNA_GROUPS, classify_gene_qc
-from .load_dataset import _BUNDLED_DATA_DIR, _register_derived_cache, get_data
+from .load_dataset import _register_derived_cache, get_data
 from .normalization import clean_tpm, percentile_rank, tpm_to_housekeeping_normalized
 from .version import DATA_VERSION, SOURCE_MATRIX_VERSION
 
@@ -209,12 +209,9 @@ def _bundle_subdir(name: str, *, auto_fetch: bool = True) -> Path:
 
     ``auto_fetch=False`` skips the potentially large bundle download; the
     returned path simply won't exist when the shard is absent locally."""
-    in_repo = Path(_BUNDLED_DATA_DIR) / name
-    if in_repo.exists():
-        return in_repo
-    cached = data_bundle.find(name)
-    if cached is not None:
-        return cached
+    local = data_bundle.find_local_item(name)
+    if local is not None:
+        return local
     if auto_fetch:
         data_bundle.ensure_local()
     return data_bundle.cache_dir() / name

@@ -662,7 +662,12 @@ but it is not the clean-TPM biological denominator.
   marker policy, and expected artifact inventory for the active bundle. The
   inventory includes the generated sample-QC manifest, per-cohort build metadata,
   within-sample prevalence shards, and CTA-scope proteoform percentile/prevalence
-  shards, not just the legacy pirlygenes expression tables. Use
+  shards, not just the legacy pirlygenes expression tables.
+  `data_bundle.bundle_is_local()` reports whether the entire downloadable cache is
+  populated. For a side-effect-free check of one required artifact across both an
+  in-repository/package data directory and a partial cache, use
+  `data_bundle.item_is_local(path)` or `data_bundle.find_local_item(path)`. These
+  item-level probes never fetch data and reject empty files or directories. Use
   `data_bundle.bundle_release_manifest()` to fetch and validate only the small
   release manifest/checksum for the active `DATA_VERSION`, including tarball
   sha256 plus any artifact inventory, builder commit, source-matrix version, and

@@ -26,6 +26,49 @@ def test_is_downloadable_distinguishes_bundle_from_wheel():
     assert not data_bundle.is_downloadable("cancer-tmb")
 
 
+def test_item_availability_checks_package_then_partial_cache(monkeypatch, tmp_path):
+    package_root = tmp_path / "package"
+    cache_root = tmp_path / "cache"
+    item = "cancer-reference-expression-percentiles"
+    monkeypatch.setattr(data_bundle, "_PACKAGE_DATA_DIR", package_root)
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(cache_root))
+
+    packaged = package_root / item
+    packaged.mkdir(parents=True)
+    (packaged / "LUAD.parquet").write_text("packaged")
+    cached = cache_root / item
+    cached.mkdir(parents=True)
+    (cached / "SKCM.parquet").write_text("cached")
+
+    assert data_bundle.item_is_local(item)
+    assert data_bundle.find_local_item(item) == packaged
+
+    (packaged / "LUAD.parquet").unlink()
+    assert data_bundle.find_local_item(item) == cached
+
+
+def test_item_availability_rejects_missing_and_empty_items(monkeypatch, tmp_path):
+    package_root = tmp_path / "package"
+    cache_root = tmp_path / "cache"
+    item = "cancer-reference-expression-percentiles"
+    monkeypatch.setattr(data_bundle, "_PACKAGE_DATA_DIR", package_root)
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(cache_root))
+
+    (package_root / item).mkdir(parents=True)
+    (cache_root / item).mkdir(parents=True)
+
+    assert not data_bundle.item_is_local(item)
+    assert data_bundle.find_local_item(item) is None
+
+
+def test_find_rejects_empty_cached_item(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    empty = tmp_path / "cancer-reference-expression-percentiles"
+    empty.mkdir()
+
+    assert data_bundle.find(empty.name) is None
+
+
 def test_cache_dir_env_override(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path / "vX"))
     assert data_bundle.cache_dir() == tmp_path / "vX"

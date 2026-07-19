@@ -98,9 +98,7 @@ def _ensure_downloadable(name: str) -> None:
     for cand in candidates:
         if not data_bundle.is_downloadable(cand):
             continue
-        if (_BUNDLED_DATA_DIR / cand).exists():
-            return
-        if data_bundle.find(cand) is not None:
+        if data_bundle.find_local_item(cand) is not None:
             return
         data_bundle.ensure_local()
         return
