@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "1.8.135"
+__version__ = "1.8.136"
 
 # Version of the downloadable data bundle (the heavy per-cohort percentile +
 # representative shards). Bump when the DERIVED reference artifacts change — it pins
@@ -23,7 +23,8 @@ __version__ = "1.8.135"
 # percentile, within-sample, source-QC, and reference-expression shards.
 # 5.23.5 adds physical source grouping, actual source-sample QC, representative
 # roles, and benchmark-eligibility provenance to representative artifacts.
-DATA_VERSION = "5.23.5"
+# 5.23.6 canonicalizes the physical DDLPS/WDLPS TCGA-SARC source identities.
+DATA_VERSION = "5.23.6"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION
