@@ -106,6 +106,7 @@ sources:
     cancer_codes: [CML]
     source_type: geo
     accession: GSE100026
+    source_cohort: GSE100026_DING_2017
     builder: scripts/build_geo_heme_reference_expression.py
     unit: RPKM
     expected_size_gb: 0.1
@@ -140,6 +141,7 @@ sources:
     cancer_codes: [MCL]
     source_type: geo
     accession: GSE271664
+    source_cohort: GSE271664_BODOR_2025
     builder: scripts/build_geo_heme_reference_expression.py
     unit: HTSeq counts
     expected_size_gb: 0.1
@@ -153,6 +155,7 @@ sources:
     cancer_codes: [MPN]
     source_type: geo
     accession: GSE283710
+    source_cohort: GSE283710_WASHU_2024
     builder: scripts/build_geo_heme_reference_expression.py
     unit: raw counts
     expected_size_gb: 0.1
@@ -1345,6 +1348,8 @@ sources:
     expected_size_gb: 0.05
     source_cohort: GSE32662_PRINGLE_2012_MTC
     tumor_origin: primary
+    unit: TPM proxy
+    processing_pipeline: GPL6480 series-matrix log2 intensity to TPM proxy; Ensembl 112
     special_handling: >
       Agilent Human Genome 4x44K v1 (GPL6480) microarray series; 49
       primary MTC cases × ~3 hybridization replicates = 52 samples.
@@ -1353,6 +1358,40 @@ sources:
       preserved; absolute TPM-proxy NOT comparable to RNA-seq cohorts.
       Biology sanity check: CALCA (calcitonin, defining MTC marker)
       p95 ~3400 TPM-proxy; CHGA ~948; CEACAM5 ~481.
+
+  - id: gse85383-ess
+    category: expression
+    cancer_codes: [SARC_ESS_LG, SARC_ESS_HG]
+    source_type: geo-microarray
+    accession: GSE85383
+    source_project: GEO
+    source_cohort: GSE85383_YOSHIDA_2017_ESS
+    source_version: GSE85383/GPL22303
+    unit: TPM proxy
+    tumor_origin: primary
+    expected_samples_by_code: {SARC_ESS_LG: 9, SARC_ESS_HG: 4}
+    citation: PMID 29066508 (Yoshida 2017 ESS / UUS)
+    processing_pipeline: GPL22303 series-matrix log2 intensity with GPL13497 symbol bridge to TPM proxy; Ensembl 112
+    special_handling: >
+      Primary endometrial stromal sarcoma samples only: 9 low-grade and
+      4 high-grade tumors selected from the 25-sample study. UUS and LMS
+      samples are excluded. Microarray-derived TPM proxy preserves gene rank
+      but is not directly comparable to absolute RNA-seq TPM.
+
+  - id: unc-nutm1
+    category: expression
+    cancer_codes: [NUTM]
+    source_type: unc-case-series
+    source_project: UNC NUTM1 case series
+    source_cohort: UNC_NUTM1
+    source_version: UNC NUTM1 case series; Ensembl 112
+    unit: TPM
+    tumor_origin: primary
+    processing_pipeline: Whole-transcriptome RNA-seq gene-level TPM renormalized to 1e6; Ensembl 112
+    special_handling: >
+      Three primary NUT carcinoma cases. This is the only per-sample NUTM
+      expression cohort; public NUT data are otherwise cell-line or
+      controlled-access datasets.
 
   - id: gse30929-lps
     category: expression

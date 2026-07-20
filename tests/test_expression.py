@@ -2448,6 +2448,7 @@ def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeyp
 def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filters(monkeypatch):
     expression._reference_summary_source_table.cache_clear()
     expression._source_cohort_kind_map.cache_clear()
+    expression._source_cohort_metadata_map.cache_clear()
     summary = pd.DataFrame(
         {
             "Ensembl_Gene_ID": ["E1", "E1", "E2", "E1"],
@@ -2584,6 +2585,7 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
 
     expression._reference_summary_source_table.cache_clear()
     expression._source_cohort_kind_map.cache_clear()
+    expression._source_cohort_metadata_map.cache_clear()
 
 
 def test_source_filter_normalization_distinguishes_unfiltered_from_no_matches():
@@ -2637,6 +2639,7 @@ def test_explicit_empty_source_filters_match_nothing(monkeypatch, filter_kwargs,
     registry = pd.DataFrame({"cohort_id": ["SRC_X"], "kind": ["test"]})
     expression._reference_summary_source_table.cache_clear()
     expression._source_cohort_kind_map.cache_clear()
+    expression._source_cohort_metadata_map.cache_clear()
     monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
     monkeypatch.setattr(expression, "_reference_summary_availability_table", lambda: compact)
     monkeypatch.setattr(expression, "cohort_registry_df", lambda: registry)
@@ -2673,6 +2676,7 @@ def test_explicit_empty_source_filters_match_nothing(monkeypatch, filter_kwargs,
 
     expression._reference_summary_source_table.cache_clear()
     expression._source_cohort_kind_map.cache_clear()
+    expression._source_cohort_metadata_map.cache_clear()
 
 
 def test_summary_provenance_uses_only_observed_source_categories(monkeypatch):
@@ -2843,6 +2847,86 @@ def test_reference_availability_sources_are_registry_backed_and_filterable():
     )
     assert merkel["source_cohort"].tolist() == ["GSE235092_MERKEL_2024"]
     assert merkel["source_type"].tolist() == ["geo-matrix"]
+
+
+def test_artifact_sources_are_registry_backed_with_effective_sample_counts():
+    registry_ids = set(expression.cohort_registry_df()["cohort_id"].astype(str))
+    matrix_registry = expression.source_matrices.registry()
+    matrix_source_ids = set(matrix_registry["source_cohort"].astype(str))
+    assert matrix_source_ids <= registry_ids
+
+    all_availability = expression.cancer_reference_expression_availability(
+        matrix_registry["cancer_code"].astype(str).tolist(),
+        reference_source="artifact",
+        sample_qc="artifact",
+    )
+    assert len(all_availability) == len(matrix_registry)
+    assert (
+        all_availability[
+            [
+                "source_cohort",
+                "source_project",
+                "source_type",
+                "source_unit",
+                "processing_pipeline",
+                "n_samples",
+            ]
+        ]
+        .notna()
+        .all()
+        .all()
+    )
+    assert "unknown" not in set(all_availability["source_scale_class"])
+
+    availability = expression.cancer_reference_expression_availability(
+        ["SARC_ESS_HG", "SARC_ESS_LG"],
+        reference_source="artifact",
+        sample_qc="artifact",
+    ).set_index("cancer_code")
+
+    assert set(availability["source_cohort"]) == {"GSE85383_YOSHIDA_2017_ESS"}
+    assert availability["source_project"].tolist() == ["GEO", "GEO"]
+    assert availability["source_type"].tolist() == ["geo-microarray", "geo-microarray"]
+    assert availability["source_unit"].tolist() == ["TPM proxy", "TPM proxy"]
+    assert availability["source_scale_class"].tolist() == [
+        "microarray_tpm_proxy",
+        "microarray_tpm_proxy",
+    ]
+    assert not availability["linear_tpm_comparable"].any()
+    assert availability["tumor_origin"].tolist() == ["primary", "primary"]
+    assert availability["n_reference_samples"].tolist() == [4, 9]
+    assert availability["n_samples"].tolist() == [4, 9]
+    assert availability["processing_pipeline"].notna().all()
+
+
+def test_artifact_availability_uses_selected_build_sample_count(monkeypatch):
+    metadata = pd.DataFrame(
+        {
+            "cancer_code": ["MCL"],
+            "sample_qc_effective": ["pass_or_warn"],
+            "n_cohort_samples": [10],
+        }
+    )
+    monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["MCL"])
+    monkeypatch.setattr(expression, "expression_artifact_build_metadata", lambda **kwargs: metadata)
+
+    availability = expression.cancer_reference_expression_availability(
+        "MCL",
+        reference_source="artifact",
+        sample_qc="artifact",
+    )
+
+    assert expression.source_matrices.cohort_info("MCL")["n_samples"] == 51
+    assert availability.loc[0, "n_reference_samples"] == 10
+    assert availability.loc[0, "n_samples"] == 10
+
+
+@pytest.mark.parametrize("invalid_count", [-1, 1.5])
+def test_artifact_build_metadata_rejects_invalid_sample_counts(invalid_count):
+    metadata = pd.DataFrame({"cancer_code": ["X"], "n_cohort_samples": [invalid_count]})
+
+    with pytest.raises(ValueError, match="invalid sample count for X"):
+        expression._artifact_build_metadata_sample_counts(metadata)
 
 
 def test_explicit_source_metadata_does_not_fall_back_to_another_source(monkeypatch):

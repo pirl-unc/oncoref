@@ -1587,30 +1587,51 @@ def _selected_expression_source_metadata(
         special = selected.special_handling or ""
     else:
         special = ""
-    text = " ".join(str(x or "") for x in (source_type, unit, special)).lower()
+    cohort_metadata = _source_cohort_metadata_map().get(source_cohort, {})
+    source_type = source_type or cohort_metadata.get("kind")
+    source_project = (
+        getattr(selected, "source_project", None)
+        or cohort_metadata.get("source_project")
+        or getattr(selected, "project_id", None)
+        or getattr(selected, "accession", None)
+    )
+    processing_pipeline = getattr(selected, "processing_pipeline", None) or cohort_metadata.get(
+        "provenance"
+    )
+    scale_evidence = (
+        source_type,
+        unit,
+        special,
+        cohort_metadata.get("assay"),
+        processing_pipeline,
+    )
+    text = " ".join(str(value or "") for value in scale_evidence).lower()
     tpm_proxy = "microarray" in text or "tpm-proxy" in text or "tpm proxy" in text
     if tpm_proxy:
         source_scale_class = "microarray_tpm_proxy"
         linear_tpm_comparable = False
-    elif selected is not None:
+        unit = unit or "TPM proxy"
+    elif selected is not None or "rna-seq" in text or "rnaseq" in text:
         source_scale_class = "linear_rnaseq_tpm"
         linear_tpm_comparable = True
+        unit = unit or "TPM"
     else:
         source_scale_class = "unknown"
         linear_tpm_comparable = False
     return {
         "source_cohort": source_cohort or None,
-        "source_project": getattr(selected, "project_id", None)
-        or getattr(selected, "accession", None),
-        "source_version": None,
+        "source_project": source_project,
+        "source_version": getattr(selected, "source_version", None),
         "source_type": source_type,
         "unit": unit,
         "source_scale_class": source_scale_class,
         "linear_tpm_comparable": linear_tpm_comparable,
-        "tumor_origin": None,
-        "metastasis_site": None,
+        "tumor_origin": getattr(selected, "tumor_origin", None),
+        "metastasis_site": getattr(selected, "metastasis_site", None),
         "n_reference_genes": None,
         "n_reference_samples": n_reference_samples,
+        "processing_pipeline": processing_pipeline,
+        "notes": getattr(selected, "notes", None) or special or None,
         "tpm_proxy": tpm_proxy,
     }
 
@@ -2276,6 +2297,23 @@ def _artifact_build_metadata_qc_policies(meta: pd.DataFrame) -> dict[str, tuple[
     return policies
 
 
+def _artifact_build_metadata_sample_counts(meta: pd.DataFrame) -> dict[str, int]:
+    """Return the selected sample count used to build each artifact cohort."""
+    if meta.empty or not {"cancer_code", "n_cohort_samples"} <= set(meta.columns):
+        return {}
+    counts: dict[str, int] = {}
+    for code, group in meta.groupby("cancer_code", sort=False):
+        values = pd.to_numeric(group["n_cohort_samples"], errors="coerce").dropna().unique()
+        if len(values) > 1:
+            raise ValueError(f"artifact build metadata has conflicting sample counts for {code}")
+        if len(values) == 1:
+            value = float(values[0])
+            if value < 0 or not value.is_integer():
+                raise ValueError(f"artifact build metadata has invalid sample count for {code}")
+            counts[str(code)] = int(value)
+    return counts
+
+
 def _artifact_qc_attrs(
     meta: pd.DataFrame,
     *,
@@ -2895,7 +2933,11 @@ def cancer_reference_expression_availability(
     multi-million-row expression frame. Both modes are gene-independent, so callers
     can distinguish an empty gene filter from unavailable upstream data. For
     percentile artifacts, ``artifact_sample_qc`` reports the effective build policy
-    recorded in the compact artifact metadata manifest.
+    recorded in the compact artifact metadata manifest. ``n_samples`` mirrors
+    ``n_reference_samples``. With current build metadata it is the selected sample
+    count used to build the artifact, not necessarily the wider raw source-matrix
+    count; legacy bundles without build metadata fall back to the registered matrix
+    width.
     """
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_artifact_sample_qc(sample_qc)
@@ -3144,10 +3186,12 @@ def _reference_expression_availability_for_requests(
     )
     artifact_modes = {"tpm_clean", "tpm_clean_biological", "tpm_clean_log1p"}
     artifact_qc_policies: dict[str, tuple[str, ...]] = {}
+    artifact_sample_counts: dict[str, int] = {}
     artifact_qc_metadata_present = False
     if reference_source == "artifact" and any(mode in artifact_modes for mode in modes):
         artifact_qc_meta = expression_artifact_build_metadata(auto_fetch=False, on_missing="empty")
         artifact_qc_policies = _artifact_build_metadata_qc_policies(artifact_qc_meta)
+        artifact_sample_counts = _artifact_build_metadata_sample_counts(artifact_qc_meta)
         artifact_qc_metadata_present = not bool(artifact_qc_meta.attrs.get("missing_reason"))
     rows: list[dict] = []
     for request in requests:
@@ -3195,6 +3239,11 @@ def _reference_expression_availability_for_requests(
                     exclude_microarray_proxy=exclude_microarray_proxy,
                 )
             )
+            if reference_source == "artifact" and mode in artifact_modes:
+                selected_count = artifact_sample_counts.get(code)
+                if selected_count is not None:
+                    row["n_reference_samples"] = selected_count
+                    row["n_samples"] = selected_count
             rows.append(row)
     return _reference_availability_frame(rows)
 
@@ -4014,13 +4063,30 @@ def _normalize_source_cohort_filter_values(
 
 @lru_cache(maxsize=1)
 def _source_cohort_kind_map() -> dict[str, str]:
-    cr = cohort_registry_df()
-    if cr.empty or "cohort_id" not in cr.columns or "kind" not in cr.columns:
+    registry = cohort_registry_df()
+    if registry.empty or not {"cohort_id", "kind"} <= set(registry.columns):
         return {}
-    return dict(zip(cr["cohort_id"].astype(str), cr["kind"].astype(str)))
+    return dict(zip(registry["cohort_id"].astype(str), registry["kind"].astype(str)))
+
+
+@lru_cache(maxsize=1)
+def _source_cohort_metadata_map() -> dict[str, dict]:
+    """Metadata keyed by exact first-class source cohort ID."""
+    registry = cohort_registry_df()
+    if registry.empty or "cohort_id" not in registry.columns:
+        return {}
+    return {
+        str(row["cohort_id"]): {
+            column: None if pd.isna(row[column]) else row[column]
+            for column in ("kind", "source_project", "assay", "provenance")
+            if column in registry.columns
+        }
+        for _, row in registry.iterrows()
+    }
 
 
 _register_derived_cache(_source_cohort_kind_map.cache_clear)
+_register_derived_cache(_source_cohort_metadata_map.cache_clear)
 
 
 def _filter_reference_summary_sources(
@@ -4265,6 +4331,8 @@ def _unavailable_reference_summary_metadata() -> dict[str, str | bool | int | fl
         "metastasis_site": None,
         "n_reference_genes": None,
         "n_reference_samples": None,
+        "processing_pipeline": None,
+        "notes": None,
         "tpm_proxy": False,
     }
 
@@ -4310,6 +4378,8 @@ def _reference_summary_metadata_from_row(
             "metastasis_site": source.get("metastasis_site"),
             "n_reference_genes": source.get("n_reference_genes"),
             "n_reference_samples": source.get("n_reference_samples"),
+            "processing_pipeline": source.get("processing_pipeline"),
+            "notes": source.get("notes"),
             "unit": meta.get("unit") or "TPM",
             "source_scale_class": "microarray_tpm_proxy"
             if tpm_proxy
@@ -4367,6 +4437,9 @@ def _reference_expression_provenance(
         "metastasis_site": meta.get("metastasis_site"),
         "n_reference_genes": meta.get("n_reference_genes"),
         "n_reference_samples": meta.get("n_reference_samples"),
+        "n_samples": meta.get("n_reference_samples"),
+        "processing_pipeline": meta.get("processing_pipeline"),
+        "notes": meta.get("notes"),
         "reference_method": method,
         "sample_qc": _reference_sample_qc_label(mode, sample_qc),
         "data_version": DATA_VERSION,

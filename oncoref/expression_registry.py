@@ -53,6 +53,12 @@ class ExpressionSource:
     recount3_srp: str | None = None
     source_cohort: str | None = None
     library_prep: str | None = None
+    source_project: str | None = None
+    source_version: str | None = None
+    tumor_origin: str | None = None
+    metastasis_site: str | None = None
+    processing_pipeline: str | None = None
+    notes: str | None = None
 
 
 def _coerce_tuple(value) -> tuple[str, ...]:
@@ -138,6 +144,12 @@ def load_registry() -> tuple[ExpressionSource, ...]:
                 recount3_srp=_clean(entry.get("recount3_srp")),
                 source_cohort=_clean(entry.get("source_cohort")),
                 library_prep=_clean(entry.get("library_prep")),
+                source_project=_clean(entry.get("source_project")),
+                source_version=_clean(entry.get("source_version")),
+                tumor_origin=_clean(entry.get("tumor_origin")),
+                metastasis_site=_clean(entry.get("metastasis_site")),
+                processing_pipeline=_clean(entry.get("processing_pipeline")),
+                notes=_clean(entry.get("notes")),
             )
         )
     return tuple(out)
@@ -169,9 +181,16 @@ def expression_sources_df() -> pd.DataFrame:
             "source_type": s.source_type,
             "cancer_codes": ";".join(s.cancer_codes),
             "n_codes": len(s.cancer_codes),
+            "source_cohort": s.source_cohort,
+            "source_project": s.source_project,
+            "source_version": s.source_version,
             "unit": s.unit,
             "library_prep": s.library_prep,
             "project_id": s.project_id or s.accession or s.recount3_srp,
+            "tumor_origin": s.tumor_origin,
+            "metastasis_site": s.metastasis_site,
+            "processing_pipeline": s.processing_pipeline,
+            "notes": s.notes,
             "expected_size_gb": s.expected_size_gb,
             "citation": s.citation,
         }
