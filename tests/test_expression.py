@@ -5,6 +5,7 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 
 import json
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -1975,6 +1976,35 @@ def test_reference_summary_collapse_aggregates_n_detected_outside_identity_key()
     assert out.loc[0, "n_detected"] == 7
 
 
+def test_reference_summary_collapse_uses_only_observed_categorical_groups():
+    ref = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["ENSG00000154545", "ENSG00000187243"],
+            "Symbol": ["MAGED4", "MAGED4B"],
+            "cancer_code": pd.Categorical(["X", "X"], categories=["X", "UNUSED_CODE"]),
+            "source_cohort": pd.Categorical(["SRC", "SRC"], categories=["SRC", "UNUSED_SOURCE"]),
+            "n_detected": [2, 7],
+            "p25": [1.0, 10.0],
+            "p50": [2.0, 20.0],
+            "p75": [3.0, 30.0],
+        }
+    )
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", FutureWarning)
+        out = expression._collapse_reference_identical_loci(
+            ref,
+            kind="cdna",
+            group_keys=["cancer_code", "source_cohort"],
+        )
+
+    assert len(out) == 1
+    assert out.loc[0, "cancer_code"] == "X"
+    assert out.loc[0, "source_cohort"] == "SRC"
+    assert out.loc[0, "p50"] == pytest.approx(22.0)
+    assert out.loc[0, "n_detected"] == 7
+
+
 def test_pirlygenes_identity_style_preserves_legacy_compact_group_ids():
     cdna, _ = expression._identical_locus_identity_maps("cdna", "pirlygenes")
     protein, _ = expression._identical_locus_identity_maps("protein", "pirlygenes")
@@ -2556,6 +2586,34 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
     expression._source_cohort_kind_map.cache_clear()
 
 
+def test_summary_provenance_uses_only_observed_source_categories(monkeypatch):
+    summary = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1", "E2"],
+            "source_cohort": pd.Categorical(["SRC", "SRC"], categories=["SRC", "UNUSED_SOURCE"]),
+            "n_samples": [4, 4],
+        }
+    )
+    monkeypatch.setattr(
+        expression,
+        "_selected_expression_source_metadata",
+        lambda code, *, source_cohort=None: {
+            "source_type": "geo",
+            "unit": "TPM",
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+        },
+    )
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", FutureWarning)
+        out = expression._attach_summary_row_provenance(summary, code="X")
+
+    assert out["source_cohort"].astype("string").tolist() == ["SRC", "SRC"]
+    assert out["n_reference_genes"].tolist() == [2, 2]
+    assert out["n_reference_samples"].tolist() == [4, 4]
+
+
 def test_reference_availability_all_sources_uses_compact_manifest(monkeypatch):
     sidecar = pd.DataFrame(
         {
@@ -2757,7 +2815,7 @@ def test_reference_summary_row_index_reuses_positions_and_tracks_frame_identity(
     expression._clear_reference_summary_row_index()
 
 
-def test_reference_summary_frame_is_shared_and_canonicalizes_sarc_histology_labels(
+def test_reference_summary_frame_canonicalizes_legacy_treehouse_tcga_labels(
     monkeypatch,
 ):
     raw = pd.DataFrame(
@@ -2780,12 +2838,32 @@ def test_reference_summary_frame_is_shared_and_canonicalizes_sarc_histology_labe
         assert first["source_cohort"].tolist() == [
             "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
             "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
-            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
-            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
+            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
         ]
         assert raw["source_cohort"].nunique() == 1
     finally:
         expression._reference_summary_frame.cache_clear()
+
+
+def test_legacy_treehouse_tcga_filter_is_exact_and_excludes_derived_cohorts():
+    table = pd.DataFrame(
+        {
+            "cancer_code": ["LUAD", "SARC_DDLPS", "UCEC_POLE"],
+            "source_cohort": [
+                "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
+                "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+                "TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE",
+            ],
+        }
+    )
+    with pytest.warns(DeprecationWarning, match="TCGA_SUBSET"):
+        filters = expression._normalize_source_cohort_filter_values(
+            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+        )
+    filtered = expression._filter_reference_summary_sources(table, source_cohorts=filters)
+
+    assert filtered["source_cohort"].tolist() == ["TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"]
 
 
 def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
@@ -2794,8 +2872,10 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
         {
             "Ensembl_Gene_ID": ["E1", "E1"],
             "Symbol": ["A", "A"],
-            "cancer_code": ["X", "X"],
-            "source_cohort": ["SRC1", "SRC2"],
+            "cancer_code": pd.Categorical(["X", "X"], categories=["X", "UNUSED_CODE"]),
+            "source_cohort": pd.Categorical(
+                ["SRC1", "SRC2"], categories=["SRC1", "SRC2", "UNUSED_SOURCE"]
+            ),
             "source_project": ["P1", "P2"],
             "source_version": ["v1", "v2"],
             "TPM_median": [10.0, 20.0],
@@ -2815,13 +2895,15 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
     monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
 
-    pooled = expression.cancer_reference_expression(
-        "x",
-        normalize="tpm",
-        reference_source="summary_rows_all",
-        sample_qc="all",
-        pool=True,
-    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", FutureWarning)
+        pooled = expression.cancer_reference_expression(
+            "x",
+            normalize="tpm",
+            reference_source="summary_rows_all",
+            sample_qc="all",
+            pool=True,
+        )
 
     assert len(pooled) == 1
     row = pooled.iloc[0]

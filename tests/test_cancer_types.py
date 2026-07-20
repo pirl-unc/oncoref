@@ -173,6 +173,30 @@ def test_cohort_registry_is_validation_authority():
     assert isinstance(ids, frozenset)
 
 
+def test_treehouse_tcga_cohort_uses_canonical_identity_and_exact_legacy_alias():
+    canonical = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
+    legacy = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+    derived = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
+    registry = cancer_types.cohort_registry_df().set_index("cohort_id")
+    matrices = get_data("source-matrices")
+    availability = get_data("cancer-reference-expression-availability")
+    canonical_matrices = matrices.loc[matrices["source_cohort"] == canonical]
+    canonical_sources = availability.loc[availability["source_cohort"] == canonical]
+
+    assert canonical in cancer_types.known_cohort_ids()
+    assert legacy not in cancer_types.known_cohort_ids()
+    assert registry.loc[canonical, "n_samples"] == 9543
+    assert registry.loc[canonical, "n_codes"] == 33
+    assert len(canonical_matrices) == 32
+    assert canonical_matrices["n_samples"].sum() == 9541
+    assert len(canonical_sources) == 33
+    assert canonical_sources["n_reference_samples"].sum() == 9543
+    assert derived in registry.index
+    with pytest.warns(DeprecationWarning, match="TCGA_SUBSET"):
+        assert cancer_types.resolve_cohort_id(legacy) == canonical
+    assert cancer_types.canonical_cohort_id(f"{legacy}_DERIVED") == f"{legacy}_DERIVED"
+
+
 def test_computed_cohort_registry_members_are_derived_from_live_aggregates():
     registry = cancer_types.cohort_registry_df().set_index("cohort_id")
     shipped_registry = get_data("cohort-registry").set_index("cohort_id")

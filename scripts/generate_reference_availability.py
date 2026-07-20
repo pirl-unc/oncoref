@@ -25,7 +25,8 @@ OUTPUT_COLUMNS = [
     "selected",
 ]
 _SARC_HISTOLOGY_CODES = frozenset({"SARC_DDLPS", "SARC_WDLPS"})
-_STALE_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+_LEGACY_TREEHOUSE_TCGA_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+_TREEHOUSE_TCGA_SAMPLES_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
 _SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
 
 
@@ -37,13 +38,13 @@ def _first_present(values: pd.Series):
 
 
 def _canonicalize_source_labels(frame: pd.DataFrame) -> pd.DataFrame:
-    stale = frame["cancer_code"].isin(_SARC_HISTOLOGY_CODES) & frame["source_cohort"].eq(
-        _STALE_SARC_HISTOLOGY_COHORT
-    )
-    if not stale.any():
+    legacy = frame["source_cohort"].eq(_LEGACY_TREEHOUSE_TCGA_COHORT)
+    if not legacy.any():
         return frame
     out = frame.copy()
-    out.loc[stale, "source_cohort"] = _SARC_HISTOLOGY_COHORT
+    sarc_histology = legacy & frame["cancer_code"].isin(_SARC_HISTOLOGY_CODES)
+    out.loc[sarc_histology, "source_cohort"] = _SARC_HISTOLOGY_COHORT
+    out.loc[legacy & ~sarc_histology, "source_cohort"] = _TREEHOUSE_TCGA_SAMPLES_COHORT
     return out
 
 
