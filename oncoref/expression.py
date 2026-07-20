@@ -1470,7 +1470,7 @@ _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_h
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
 _ARTIFACT_SAMPLE_QC_MODES = ("artifact", *_SAMPLE_QC_MODES)
 SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v2"
-EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION = "expression_artifact_build_metadata_v1"
+EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION = "expression_artifact_build_metadata_v2"
 SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH = "source-matrix-sample-qc.csv"
 EXPRESSION_ARTIFACT_BUILD_METADATA_PATH = "expression-artifact-build-metadata.csv"
 EXPRESSION_ARTIFACT_BUILD_METADATA_JSON_PATH = "expression-artifact-build-metadata.json"
@@ -1517,6 +1517,7 @@ _SOURCE_MATRIX_SAMPLE_QC_MANIFEST_COLUMNS = [
 _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS = [
     "cancer_code",
     "source_cohort",
+    "build_source_cohort",
     "source_version",
     "source_matrix_path",
     "sample_qc",
@@ -2234,10 +2235,12 @@ def expression_artifact_build_metadata(
 ) -> pd.DataFrame:
     """Read per-cohort build metadata for generated expression artifacts.
 
-    The rows are emitted by ``scripts/rebuild_expression_artifacts.py`` and record the
-    selected source matrix, QC policy, selected sample count, and QC pass/warn/fail
-    counts for each cohort. Missing current-bundle metadata returns a schema-stable
-    empty frame by default.
+    ``source_cohort`` is the canonical cohort identity used by the source-matrix and
+    expression artifact loaders. ``build_source_cohort`` preserves the cohort label
+    physically recorded when the bundle was built, which can differ in older bundles.
+    The remaining fields record the selected source matrix, QC policy, selected sample
+    count, and QC pass/warn/fail counts. Missing current-bundle metadata returns a
+    schema-stable empty frame by default.
     """
     mode = _validate_metadata_on_missing(on_missing)
     path = _optional_bundle_metadata_path(
@@ -2256,9 +2259,20 @@ def expression_artifact_build_metadata(
         )
 
     out = pd.read_csv(path)
+    if "source_cohort" not in out.columns:
+        out["source_cohort"] = pd.NA
+    if "build_source_cohort" not in out.columns:
+        out["build_source_cohort"] = out["source_cohort"]
     for col in _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS:
         if col not in out.columns:
             out[col] = pd.NA
+
+    registry = source_matrices.registry()
+    loader_source_by_code = dict(
+        zip(registry["cancer_code"].astype(str), registry["source_cohort"].astype(str))
+    )
+    loader_sources = out["cancer_code"].astype(str).map(loader_source_by_code)
+    out["source_cohort"] = loader_sources.where(loader_sources.notna(), out["source_cohort"])
     extra_cols = [
         col for col in out.columns if col not in _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS
     ]
