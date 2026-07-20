@@ -2600,7 +2600,8 @@ def cancer_reference_expression(
     supports ``source_kind``, ``source_cohort``, ``exclude_microarray_proxy``, and
     long-form ``pool=True``. Because the shipped sidecars are all-sample summaries,
     this mode requires ``sample_qc="all"``; use ``summary_rows`` for the current
-    QC-filtered richest-source recompute path.
+    QC-filtered richest-source recompute path. For both source filters, ``None``
+    means unfiltered; an empty iterable or blank scalar explicitly matches no sources.
 
     ``sample_qc="artifact"`` reads each clean/log-clean percentile shard using
     the QC policy recorded when that shard was built. It is intentionally valid
@@ -2647,9 +2648,10 @@ def cancer_reference_expression(
     gene_universe = _validate_artifact_gene_universe(gene_universe)
     source_kinds = _normalize_source_filter_values(source_kind)
     source_cohorts = _normalize_source_cohort_filter_values(source_cohort)
+    has_source_filter = source_kinds is not None or source_cohorts is not None
     if reference_source == "summary_rows_all" and sample_qc != "all":
         raise ValueError('reference_source="summary_rows_all" requires sample_qc="all"')
-    if (source_kinds or source_cohorts or exclude_microarray_proxy or pool) and (
+    if (has_source_filter or exclude_microarray_proxy or pool) and (
         reference_source != "summary_rows_all"
     ):
         raise ValueError(
@@ -2900,6 +2902,7 @@ def cancer_reference_expression_availability(
     reference_source = _validate_reference_source(reference_source)
     source_kinds = _normalize_source_filter_values(source_kind)
     source_cohorts = _normalize_source_cohort_filter_values(source_cohort)
+    has_source_filter = source_kinds is not None or source_cohorts is not None
     if sample_qc == "artifact" and (reference_source != "artifact" or "tpm_raw" in modes):
         raise ValueError(
             "sample_qc='artifact' requires reference_source='artifact' and "
@@ -2909,9 +2912,7 @@ def cancer_reference_expression_availability(
         raise ValueError('reference_source="summary_rows_all" requires sample_qc="all"')
     if all_sources and reference_source != "summary_rows_all":
         raise ValueError('all_sources=True requires reference_source="summary_rows_all"')
-    if (source_kinds or source_cohorts or exclude_microarray_proxy) and (
-        reference_source != "summary_rows_all"
-    ):
+    if (has_source_filter or exclude_microarray_proxy) and (reference_source != "summary_rows_all"):
         raise ValueError(
             "source_kind, source_cohort, and exclude_microarray_proxy are only "
             "supported with reference_source='summary_rows_all'"
@@ -3994,6 +3995,7 @@ def _reference_summary_selected_rows(code: str) -> pd.DataFrame:
 
 
 def _normalize_source_filter_values(values: str | Iterable[str] | None) -> set[str] | None:
+    """Normalize a source filter while preserving ``None`` versus no matches."""
     if values is None:
         return None
     raw = [values] if isinstance(values, str) else list(values)
@@ -4031,9 +4033,9 @@ def _filter_reference_summary_sources(
     out = table.copy()
     if out.empty:
         return out
-    if source_cohorts:
+    if source_cohorts is not None:
         out = out.loc[out["source_cohort"].astype(str).isin(source_cohorts)]
-    if source_kinds:
+    if source_kinds is not None:
         kind_map = _source_cohort_kind_map()
         out = out.loc[out["source_cohort"].astype(str).map(kind_map).isin(source_kinds)]
     if exclude_microarray_proxy:

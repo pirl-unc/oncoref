@@ -2586,6 +2586,95 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
     expression._source_cohort_kind_map.cache_clear()
 
 
+def test_source_filter_normalization_distinguishes_unfiltered_from_no_matches():
+    assert expression._normalize_source_filter_values(None) is None
+    assert expression._normalize_source_filter_values([]) == set()
+    assert expression._normalize_source_filter_values("") == set()
+    assert expression._normalize_source_cohort_filter_values(None) is None
+    assert expression._normalize_source_cohort_filter_values([]) == set()
+
+
+@pytest.mark.parametrize(
+    "filter_kwargs",
+    [
+        pytest.param({"source_cohort": []}, id="empty-cohort-list"),
+        pytest.param({"source_cohort": ""}, id="blank-cohort-scalar"),
+        pytest.param({"source_kind": []}, id="empty-kind-list"),
+    ],
+)
+@pytest.mark.parametrize("pool", [False, True])
+def test_explicit_empty_source_filters_match_nothing(monkeypatch, filter_kwargs, pool):
+    summary = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1"],
+            "Symbol": ["A"],
+            "cancer_code": ["X"],
+            "source_cohort": ["SRC_X"],
+            "source_project": ["TEST"],
+            "source_version": ["v1"],
+            "TPM_median": [10.0],
+            "TPM_q1": [9.0],
+            "TPM_q3": [11.0],
+            "TPM_clean_median": [1.0],
+            "TPM_clean_q1": [0.9],
+            "TPM_clean_q3": [1.1],
+            "n_samples": [4],
+            "n_detected": [3],
+            "processing_pipeline": ["rna_seq"],
+            "notes": [""],
+            "tumor_origin": ["primary"],
+            "metastasis_site": [pd.NA],
+        }
+    )
+    compact = pd.DataFrame(
+        {
+            "cancer_code": ["X"],
+            "source_cohort": ["SRC_X"],
+            "n_reference_genes": [1],
+            "n_reference_samples": [4],
+        }
+    )
+    registry = pd.DataFrame({"cohort_id": ["SRC_X"], "kind": ["test"]})
+    expression._reference_summary_source_table.cache_clear()
+    expression._source_cohort_kind_map.cache_clear()
+    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    monkeypatch.setattr(expression, "_reference_summary_availability_table", lambda: compact)
+    monkeypatch.setattr(expression, "cohort_registry_df", lambda: registry)
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
+    monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: [])
+
+    out = expression.cancer_reference_expression(
+        "x",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        on_missing="empty",
+        pool=pool,
+        **filter_kwargs,
+    )
+
+    assert out.empty
+    assert len(out.attrs["availability"]) == 1
+    assert out.attrs["availability"][0]["available"] is False
+    assert out.attrs["availability"][0]["missing_reason"] == "no_reference_summary_rows"
+    assert len(out.attrs["missing_requests"]) == 1
+    assert out.attrs["missing_requests"][0]["cancer_code"] == "X"
+    assert out.attrs["missing_requests"][0]["missing_reason"] == "no_reference_summary_rows"
+
+    availability = expression.cancer_reference_expression_availability(
+        "x",
+        reference_source="summary_rows_all",
+        sample_qc="all",
+        all_sources=True,
+        **filter_kwargs,
+    )
+    assert len(availability) == 1
+    assert not bool(availability.loc[0, "available"])
+    assert availability.loc[0, "missing_reason"] == "no_reference_summary_rows"
+
+    expression._reference_summary_source_table.cache_clear()
+    expression._source_cohort_kind_map.cache_clear()
+
+
 def test_summary_provenance_uses_only_observed_source_categories(monkeypatch):
     summary = pd.DataFrame(
         {
