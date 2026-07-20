@@ -164,8 +164,8 @@ choices in packages such as trufflepig.
 
 - `oncoref.gene_ids` — canonical ENSG space, alt-haplotype / retired Ensembl ID
   migration, symbol/synonym resolution, and report-facing gene labels.
-- `oncoref.genome` — pyensembl-backed transcript/gene lookup and transcript to
-  gene aggregation for source matrices.
+- `oncoref.genome` — optional (`pip install 'oncoref[genome]'`) pyensembl-backed
+  transcript/gene lookup and transcript-to-gene aggregation for source matrices.
 
 Use the gene-id helpers before building expression artifacts or joining
 downstream gene sets to oncoref references. `canonical_gene_id()` is the primary
@@ -624,8 +624,8 @@ but it is not the clean-TPM biological denominator.
 
 - `oncoref.gene_ids` — bundled canonical Ensembl gene space, cross-release alias
   resolution, symbol synonyms, and biotype checks.
-- `oncoref.genome` — pyensembl-backed gene/transcript lookup against installed
-  Ensembl releases.
+- `oncoref.genome` — optional (`pip install 'oncoref[genome]'`) pyensembl-backed
+  gene/transcript lookup against installed Ensembl releases.
 - `oncoref.proteoforms` — identical-protein paralog grouping and expression
   collapse helpers.
 - `oncoref.gene_qc` / `oncoref.gene_families` — technical-RNA and gene-family

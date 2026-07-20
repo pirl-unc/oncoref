@@ -24,7 +24,8 @@ primary gene via the alias map, so they are never their own canonical entry.
 Versioned by the Ensembl release it derives from (``--target-release``, default 115);
 the release is recorded in the ``ensembl_release`` column for auditability.
 
-pyensembl is a BUILD-TIME tool only (cf. the alias/proteoform generators). Run:
+This generator requires the optional genome dependency (``pip install
+'oncoref[genome]'``); pyensembl is not part of oncoref's core dependency set. Run:
 
     python scripts/generate_canonical_gene_space.py
 

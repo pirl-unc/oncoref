@@ -76,7 +76,10 @@ from oncoref import genome
 root = logging.getLogger()
 assert len(root.handlers) == 0
 assert root.level == logging.WARNING
-genome.genomes()
+try:
+    genome.genomes()
+except genome.GenomeDependencyError:
+    pass
 assert len(root.handlers) == 0, root.handlers
 assert root.level == logging.WARNING, logging.getLevelName(root.level)
 """

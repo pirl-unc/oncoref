@@ -13,8 +13,9 @@
 """oncoref — curated cancer reference data (ontology, TMB, incidence/
 mortality, and expression) with a single fetch/cache surface.
 
-Bottom-of-stack: depends only on pandas/numpy/pyarrow, never on the analysis
-or target-selection libraries that consume it.
+Bottom-of-stack: the core install depends only on pandas/numpy/pyarrow/PyYAML and
+never on the analysis or target-selection libraries that consume it. Optional
+genome and plotting features add only their named extras.
 """
 
 from . import (
