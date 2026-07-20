@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import re
 import threading
+import warnings
 from functools import lru_cache
 
 import pandas as pd
@@ -33,6 +34,11 @@ from .load_dataset import get_data
 #: Ensembl release a cohort's gene ids were harmonized to, parsed from registry provenance
 #: (e.g. "…harmonized to Ensembl release 112…" / "…Ensembl release 112 gene lengths…").
 _ENSEMBL_RELEASE_RE = re.compile(r"Ensembl\s+release\s+(\d{2,3})", re.I)
+
+TREEHOUSE_TCGA_SAMPLES_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
+_DEPRECATED_COHORT_ALIASES = {
+    "TREEHOUSE_POLYA_25_01_TCGA_SUBSET": TREEHOUSE_TCGA_SAMPLES_COHORT,
+}
 
 # Hand-curated common-name aliases. Keyed by lowercase / underscored
 # variant; values are canonical codes from cancer-type-registry.csv.
@@ -2321,11 +2327,57 @@ def cohort_registry():
     }
 
 
+def canonical_cohort_id(cohort_id):
+    """Return the current identity for an exact deprecated cohort ID.
+
+    This is a pure alias lookup: it does not validate arbitrary values or match
+    prefixes. In particular, the legacy generic Treehouse TCGA alias resolves
+    only to :data:`TREEHOUSE_TCGA_SAMPLES_COHORT`, never to a derived TCGA cohort.
+    """
+    if cohort_id is None:
+        return None
+    raw = str(cohort_id).strip()
+    return _DEPRECATED_COHORT_ALIASES.get(raw, raw)
+
+
+def resolve_cohort_id(cohort_id, *, strict=True):
+    """Resolve a canonical or exact deprecated cohort ID.
+
+    Deprecated aliases emit :class:`DeprecationWarning`. Unknown input raises
+    ``ValueError`` when ``strict=True`` and returns ``None`` otherwise.
+    """
+    if cohort_id is None:
+        return None
+    raw = str(cohort_id).strip()
+    if not raw:
+        if strict:
+            raise ValueError("Empty cohort ID")
+        return None
+    canonical = canonical_cohort_id(raw)
+    if canonical != raw:
+        warnings.warn(
+            f"cohort ID {raw!r} is deprecated; use {canonical!r}",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+    known = known_cohort_ids()
+    if canonical in known:
+        return canonical
+    if not strict:
+        return None
+    raise ValueError(
+        f"Unknown cohort ID {cohort_id!r}. Valid cohort IDs: {sorted(known)}."
+    )
+
+
 def cohort_kind(cohort_id):
     """The ``kind`` (pipeline family) of a cohort_id (``treehouse``, ``geo``,
     ``computed``, …), or ``None`` if unknown."""
+    cohort_id = resolve_cohort_id(cohort_id, strict=False)
+    if cohort_id is None:
+        return None
     df = cohort_registry_df()
-    hit = df.loc[df["cohort_id"].astype(str) == str(cohort_id), "kind"]
+    hit = df.loc[df["cohort_id"].astype(str) == cohort_id, "kind"]
     return str(hit.iloc[0]) if len(hit) else None
 
 
@@ -2340,7 +2392,9 @@ def cohort_source_version(cancer_type):
     code = resolve_cancer_type(cancer_type, strict=False) or str(cancer_type)
     sm = get_data("source-matrices", copy=False)
     hit = sm.loc[sm["cancer_code"].astype(str) == str(code), "source_cohort"]
-    cohort_id = str(hit.iloc[0]) if len(hit) else str(cancer_type)
+    cohort_id = str(hit.iloc[0]) if len(hit) else resolve_cohort_id(cancer_type, strict=False)
+    if cohort_id is None:
+        cohort_id = str(cancer_type)
     reg = cohort_registry_df()
     prov = reg.loc[reg["cohort_id"].astype(str) == cohort_id, "provenance"]
     m = _ENSEMBL_RELEASE_RE.search(str(prov.iloc[0]) if len(prov) else "")

@@ -23,7 +23,15 @@ def _write_shard(path: Path, code: str, source: str) -> bytes:
     with gzip.open(path, "wt", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["Ensembl_Gene_ID", "cancer_code", "source_cohort", "TPM_median"],
+            fieldnames=[
+                "Ensembl_Gene_ID",
+                "cancer_code",
+                "source_cohort",
+                "source_version",
+                "processing_pipeline",
+                "notes",
+                "TPM_median",
+            ],
         )
         writer.writeheader()
         writer.writerow(
@@ -31,6 +39,11 @@ def _write_shard(path: Path, code: str, source: str) -> bytes:
                 "Ensembl_Gene_ID": "ENSG000001",
                 "cancer_code": code,
                 "source_cohort": source,
+                "source_version": (
+                    "Treehouse Tumor Compendium 25.01 PolyA, TCGA subset; release 2025"
+                ),
+                "processing_pipeline": "treehouse_polya_25_01_tcga_subset_clean_tpm",
+                "notes": "TCGA subset only: selected from the Treehouse compendium.",
                 "TPM_median": "1.5",
             }
         )
@@ -83,3 +96,34 @@ def test_canonicalize_sarc_histology_sources_preserves_invalid_input(tmp_path):
 
     assert invalid.read_bytes() == original
     assert not (summary / f"{migration.CANONICAL_SOURCE}__SARC_DDLPS.csv.gz").exists()
+
+
+def test_canonicalize_reference_summary_sources_migrates_generic_and_sarc_destinations(
+    tmp_path,
+):
+    summary = tmp_path / migration.SUMMARY_DIR
+    for code in ("LUAD", "SARC_PLEOLPS", "SARC_DDLPS"):
+        _write_shard(
+            summary / f"{migration.LEGACY_SOURCE}__{code}.csv.gz",
+            code,
+            migration.LEGACY_SOURCE,
+        )
+
+    result = migration.canonicalize_reference_summary_sources(tmp_path)
+
+    assert [row["cancer_code"] for row in result] == ["LUAD", "SARC_DDLPS", "SARC_PLEOLPS"]
+    for code in ("LUAD", "SARC_PLEOLPS"):
+        path = summary / f"{migration.TCGA_SAMPLES_SOURCE}__{code}.csv.gz"
+        row = _read_rows(path)[0]
+        assert row["source_cohort"] == migration.TCGA_SAMPLES_SOURCE
+        assert row["source_version"] == (
+            "Treehouse Tumor Compendium 25.01 PolyA samples selected by TCGA provenance; "
+            "release 2025"
+        )
+        assert row["processing_pipeline"] == "treehouse_polya_25_01_tcga_samples_clean_tpm"
+        assert row["notes"] == (
+            "TCGA-provenance samples only: selected from the Treehouse compendium."
+        )
+    sarc = summary / f"{migration.SARC_HISTOLOGY_SOURCE}__SARC_DDLPS.csv.gz"
+    assert _read_rows(sarc)[0]["source_cohort"] == migration.SARC_HISTOLOGY_SOURCE
+    assert migration.canonicalize_reference_summary_sources(tmp_path) == []

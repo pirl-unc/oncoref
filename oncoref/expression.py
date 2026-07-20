@@ -75,6 +75,7 @@ from .cancer_types import (
     cohort_aggregates,
     cohort_registry_df,
     resolve_cancer_type,
+    resolve_cohort_id,
 )
 from .expression_builders import (
     PERCENTILE_BREAKPOINTS as _PERCENTILE_BREAKPOINTS,
@@ -2645,7 +2646,7 @@ def cancer_reference_expression(
     _validate_gene_id_style(gene_id_style)
     gene_universe = _validate_artifact_gene_universe(gene_universe)
     source_kinds = _normalize_source_filter_values(source_kind)
-    source_cohorts = _normalize_source_filter_values(source_cohort)
+    source_cohorts = _normalize_source_cohort_filter_values(source_cohort)
     if reference_source == "summary_rows_all" and sample_qc != "all":
         raise ValueError('reference_source="summary_rows_all" requires sample_qc="all"')
     if (source_kinds or source_cohorts or exclude_microarray_proxy or pool) and (
@@ -2898,7 +2899,7 @@ def cancer_reference_expression_availability(
     sample_qc = _validate_artifact_sample_qc(sample_qc)
     reference_source = _validate_reference_source(reference_source)
     source_kinds = _normalize_source_filter_values(source_kind)
-    source_cohorts = _normalize_source_filter_values(source_cohort)
+    source_cohorts = _normalize_source_cohort_filter_values(source_cohort)
     if sample_qc == "artifact" and (reference_source != "artifact" or "tpm_raw" in modes):
         raise ValueError(
             "sample_qc='artifact' requires reference_source='artifact' and "
@@ -3752,29 +3753,46 @@ def _reference_expression_frame(
 
 
 _SARC_HISTOLOGY_SUMMARY_CODES = frozenset({"SARC_DDLPS", "SARC_WDLPS"})
-_STALE_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+_LEGACY_TREEHOUSE_TCGA_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+_TREEHOUSE_TCGA_SAMPLES_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
 _SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
 
 
 def _canonical_reference_summary_source_labels(df: pd.DataFrame) -> pd.DataFrame:
-    """Expose canonical registry labels for two legacy SARC summary shards."""
+    """Map the one legacy Treehouse TCGA identity to its exact replacement.
+
+    DDLPS and WDLPS belong to the separately curated SARC-histology cohort. All
+    other rows belong to the generic cohort selected by TCGA sample provenance.
+    """
 
     if df.empty:
         return df
     codes = df["cancer_code"]
     sources = df["source_cohort"]
-    stale = codes.isin(_SARC_HISTOLOGY_SUMMARY_CODES) & sources.eq(_STALE_SARC_HISTOLOGY_COHORT)
-    if not stale.any():
+    legacy = sources.eq(_LEGACY_TREEHOUSE_TCGA_COHORT)
+    if not legacy.any():
         return df
+    sarc_histology = legacy & codes.isin(_SARC_HISTOLOGY_SUMMARY_CODES)
+    generic_tcga = legacy & ~sarc_histology
+
     out = df.copy(deep=False)
     canonical_sources = sources
     if isinstance(sources.dtype, pd.CategoricalDtype):
-        if _SARC_HISTOLOGY_COHORT not in sources.cat.categories:
-            canonical_sources = sources.cat.add_categories([_SARC_HISTOLOGY_COHORT])
+        missing_categories = [
+            replacement
+            for replacement, mask in (
+                (_SARC_HISTOLOGY_COHORT, sarc_histology),
+                (_TREEHOUSE_TCGA_SAMPLES_COHORT, generic_tcga),
+            )
+            if mask.any() and replacement not in sources.cat.categories
+        ]
+        if missing_categories:
+            canonical_sources = sources.cat.add_categories(missing_categories)
         canonical_sources = canonical_sources.copy()
     else:
         canonical_sources = sources.copy()
-    canonical_sources.loc[stale] = _SARC_HISTOLOGY_COHORT
+    canonical_sources.loc[sarc_histology] = _SARC_HISTOLOGY_COHORT
+    canonical_sources.loc[generic_tcga] = _TREEHOUSE_TCGA_SAMPLES_COHORT
     if isinstance(canonical_sources.dtype, pd.CategoricalDtype):
         canonical_sources = canonical_sources.cat.remove_unused_categories()
     out["source_cohort"] = canonical_sources
@@ -3980,6 +3998,16 @@ def _normalize_source_filter_values(values: str | Iterable[str] | None) -> set[s
         return None
     raw = [values] if isinstance(values, str) else list(values)
     return {str(v) for v in raw if str(v)}
+
+
+def _normalize_source_cohort_filter_values(
+    values: str | Iterable[str] | None,
+) -> set[str] | None:
+    """Normalize exact cohort IDs while preserving unknown filters as no-match values."""
+    normalized = _normalize_source_filter_values(values)
+    if normalized is None:
+        return None
+    return {resolve_cohort_id(value, strict=False) or value for value in normalized}
 
 
 @lru_cache(maxsize=1)

@@ -2815,7 +2815,7 @@ def test_reference_summary_row_index_reuses_positions_and_tracks_frame_identity(
     expression._clear_reference_summary_row_index()
 
 
-def test_reference_summary_frame_is_shared_and_canonicalizes_sarc_histology_labels(
+def test_reference_summary_frame_canonicalizes_legacy_treehouse_tcga_labels(
     monkeypatch,
 ):
     raw = pd.DataFrame(
@@ -2838,12 +2838,32 @@ def test_reference_summary_frame_is_shared_and_canonicalizes_sarc_histology_labe
         assert first["source_cohort"].tolist() == [
             "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
             "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
-            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
-            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
+            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
         ]
         assert raw["source_cohort"].nunique() == 1
     finally:
         expression._reference_summary_frame.cache_clear()
+
+
+def test_legacy_treehouse_tcga_filter_is_exact_and_excludes_derived_cohorts():
+    table = pd.DataFrame(
+        {
+            "cancer_code": ["LUAD", "SARC_DDLPS", "UCEC_POLE"],
+            "source_cohort": [
+                "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
+                "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+                "TREEHOUSE_POLYA_25_01_TCGA_UCEC_SUBTYPE",
+            ],
+        }
+    )
+    with pytest.warns(DeprecationWarning, match="TCGA_SUBSET"):
+        filters = expression._normalize_source_cohort_filter_values(
+            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+        )
+    filtered = expression._filter_reference_summary_sources(table, source_cohorts=filters)
+
+    assert filtered["source_cohort"].tolist() == ["TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"]
 
 
 def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):

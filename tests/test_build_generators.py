@@ -665,12 +665,12 @@ def test_treehouse_source_from_registry_loads_direct_cohort_routes():
     assert [cohort.cancer_code for cohort in ribod.cohorts] == ["SARC_CHOR", "RB"]
 
 
-def test_treehouse_source_from_registry_loads_tcga_subset_routes():
+def test_treehouse_source_from_registry_loads_tcga_sample_routes():
     source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-subset")
 
-    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
     assert source.source_project == "Treehouse (TCGA samples)"
-    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_subset"
+    assert source.pipeline_stem == "treehouse_polya_25_01_tcga_samples"
     assert isinstance(source.cancer_code, list)
     assert len(source.cancer_code) == 30
     assert len(source.cohorts) == 30
@@ -905,7 +905,7 @@ def test_treehouse_source_from_registry_loads_coadread_msi_routes():
 def test_treehouse_source_from_registry_loads_glioma_gdc_project_routes():
     source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-glioma")
 
-    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
     assert source.pipeline_stem == "treehouse_polya_25_01_tcga_glioma_split"
     assert source.cancer_code == ["GBM", "LGG"]
     by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
