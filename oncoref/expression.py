@@ -3631,16 +3631,17 @@ def _collapse_reference_identical_loci(
         .drop_duplicates(full_keys, keep="first")
         .drop(columns=sum_cols + max_cols, errors="ignore")
     )
+    observed_groups = work.groupby(full_keys, as_index=False, observed=True)
     out = rep
     if sum_cols:
         out = out.merge(
-            work.groupby(full_keys, as_index=False)[sum_cols].sum(min_count=1),
+            observed_groups[sum_cols].sum(min_count=1),
             on=full_keys,
             how="left",
         )
     if max_cols:
         out = out.merge(
-            work.groupby(full_keys, as_index=False)[max_cols].max(),
+            observed_groups[max_cols].max(),
             on=full_keys,
             how="left",
         )
@@ -4101,7 +4102,7 @@ def _attach_summary_row_provenance(df: pd.DataFrame, *, code: str) -> pd.DataFra
         return df
     out = df.copy()
     source_counts = (
-        out.groupby("source_cohort", dropna=False)
+        out.groupby("source_cohort", dropna=False, observed=True)
         .agg(
             n_reference_genes=("Ensembl_Gene_ID", "nunique"),
             n_reference_samples=("n_samples", "max"),
@@ -4168,7 +4169,7 @@ def _pool_reference_expression_rows(long: pd.DataFrame) -> pd.DataFrame:
         )
         if col in long.columns
     ]
-    for keys, group in long.groupby(group_cols, dropna=False, sort=False):
+    for keys, group in long.groupby(group_cols, dropna=False, sort=False, observed=True):
         row = dict(zip(group_cols, keys))
         expr = pd.to_numeric(group["expression"], errors="coerce")
         weights = pd.to_numeric(
