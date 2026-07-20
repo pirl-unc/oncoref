@@ -2365,9 +2365,7 @@ def resolve_cohort_id(cohort_id, *, strict=True):
         return canonical
     if not strict:
         return None
-    raise ValueError(
-        f"Unknown cohort ID {cohort_id!r}. Valid cohort IDs: {sorted(known)}."
-    )
+    raise ValueError(f"Unknown cohort ID {cohort_id!r}. Valid cohort IDs: {sorted(known)}.")
 
 
 def cohort_kind(cohort_id):
