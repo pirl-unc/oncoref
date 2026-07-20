@@ -2230,11 +2230,14 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert list(qc["sample_id"]) == ["pass_sample", "warn_sample", "fail_sample"]
 
     build_meta = pd.read_csv(out / "expression-artifact-build-metadata.csv")
+    assert build_meta.loc[0, "source_cohort"] == "TEST_SOURCE"
+    assert build_meta.loc[0, "build_source_cohort"] == "TEST_SOURCE"
     assert build_meta.loc[0, "n_source_samples"] == 3
     assert build_meta.loc[0, "n_cohort_samples"] == 1
     assert build_meta.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v2"
 
     metadata = json.loads((out / "expression-artifact-build-metadata.json").read_text())
+    assert metadata["schema_version"] == "expression_artifact_build_metadata_v2"
     assert metadata["sample_qc"] == "pass"
     assert metadata["sample_qc_manifest"] == "source-matrix-sample-qc.csv"
     assert metadata["n_source_samples"] == 3

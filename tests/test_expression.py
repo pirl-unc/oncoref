@@ -1594,6 +1594,16 @@ def test_source_matrix_sample_qc_manifest_reads_filters_and_exports(tmp_path, mo
 
 def test_expression_artifact_build_metadata_and_summary(tmp_path, monkeypatch):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    monkeypatch.setattr(
+        expression.source_matrices,
+        "registry",
+        lambda: pd.DataFrame(
+            {
+                "cancer_code": ["PRAD", "BRCA"],
+                "source_cohort": ["CANONICAL_PRAD", "CANONICAL_BRCA"],
+            }
+        ),
+    )
     pd.DataFrame(
         {
             "cancer_code": ["PRAD", "BRCA"],
@@ -1618,7 +1628,8 @@ def test_expression_artifact_build_metadata_and_summary(tmp_path, monkeypatch):
     meta = expression.expression_artifact_build_metadata("PRAD", auto_fetch=False)
     summary = expression.expression_artifact_build_summary(auto_fetch=False)
 
-    assert meta["source_cohort"].tolist() == ["SRC_PRAD"]
+    assert meta["source_cohort"].tolist() == ["CANONICAL_PRAD"]
+    assert meta["build_source_cohort"].tolist() == ["SRC_PRAD"]
     assert meta["extra_future_column"].tolist() == ["x"]
     assert "n_qc_pass" in meta.columns
     assert (
@@ -2897,6 +2908,36 @@ def test_artifact_sources_are_registry_backed_with_effective_sample_counts():
     assert availability["n_reference_samples"].tolist() == [4, 9]
     assert availability["n_samples"].tolist() == [4, 9]
     assert availability["processing_pipeline"].notna().all()
+
+
+def test_artifact_build_metadata_uses_loader_source_cohort_identity():
+    matrix_registry = expression.source_matrices.registry()
+    codes = matrix_registry["cancer_code"].astype(str).tolist()
+    metadata = expression.expression_artifact_build_metadata(
+        codes, auto_fetch=False, on_missing="raise"
+    )
+    availability = expression.cancer_reference_expression_availability(
+        codes,
+        reference_source="artifact",
+        sample_qc="artifact",
+    )
+
+    comparison = availability.loc[
+        availability["available"], ["cancer_code", "source_cohort"]
+    ].merge(
+        metadata[["cancer_code", "source_cohort", "build_source_cohort"]],
+        on="cancer_code",
+        suffixes=("_loader", "_metadata"),
+        validate="one_to_one",
+    )
+    assert len(comparison) == len(matrix_registry)
+    assert (comparison["source_cohort_loader"] == comparison["source_cohort_metadata"]).all()
+
+    by_code = comparison.set_index("cancer_code")
+    assert by_code.loc["LUAD", "source_cohort_metadata"] == ("TREEHOUSE_POLYA_25_01_TCGA_SAMPLES")
+    assert by_code.loc["LUAD", "build_source_cohort"] == "TREEHOUSE_POLYA_25_01"
+    assert by_code.loc["CML", "source_cohort_metadata"] == "GSE100026_DING_2017"
+    assert by_code.loc["CML", "build_source_cohort"] == "GEO_HEME_2022"
 
 
 def test_artifact_availability_uses_selected_build_sample_count(monkeypatch):

@@ -38,6 +38,7 @@ are large and ship via the release tarball, so they're never committed):
     <out>/cancer-reference-expression-representatives/<CODE>.parquet + _provenance.csv
     <out>/cancer-reference-expression-within-sample-top5/<CODE>.parquet (biology-only)
     <out>/source-matrix-sample-qc.csv                          (per-sample QC manifest)
+    <out>/expression-artifact-build-metadata.csv               (per-cohort provenance)
     <out>/expression-artifact-build-metadata.json              (QC/build policy metadata)
 
 ``--validate`` additionally correlates each rebuilt percentile vector against the
@@ -65,6 +66,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from oncoref.cancer_types import cohort_source_version
 from oncoref.expression import (
+    EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
     SAMPLE_EXPRESSION_QC_POLICY_VERSION,
     SHARD_DATASETS,
     _canonicalize_gene_rows,
@@ -357,6 +359,7 @@ def rebuild(
         build_row = {
             "cancer_code": code,
             "source_cohort": source_cohort,
+            "build_source_cohort": source_cohort,
             "source_version": source_version,
             "source_matrix_path": str(source_path),
             "sample_qc": sample_qc,
@@ -460,6 +463,7 @@ def rebuild(
     pd.DataFrame(build_rows).to_csv(out / "expression-artifact-build-metadata.csv", index=False)
     metadata = {
         "artifact": "expression-derived-shards",
+        "schema_version": EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
         "sample_qc": sample_qc,
         "sample_qc_policy_version": SAMPLE_EXPRESSION_QC_POLICY_VERSION,
         "sample_qc_fallbacks": int(
