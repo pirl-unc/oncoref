@@ -69,6 +69,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    env:
+      # Keep pyensembl data under the workspace so actions/cache can archive it.
+      PYENSEMBL_CACHE_DIR: ${{ github.workspace }}/.ci-cache/pyensembl
     strategy:
       fail-fast: true
       matrix:
@@ -88,6 +91,28 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+
+      - name: Cache Ensembl genome data
+        uses: actions/cache@v4
+        with:
+          path: .ci-cache/pyensembl
+          key: pyensembl-v2-human93
+
+      - name: Install Ensembl release
+        run: |
+          pyensembl install \
+            --release 93 \
+            --species human \
+            --custom-mirror https://github.com/openvax/ensembl-data/releases/download/GRCh38.93/
+
+      - name: Verify Ensembl release
+        run: |
+          python - <<'PY'
+          import oncoref
+
+          releases = oncoref.genomes()
+          assert any(genome.release == 93 for genome in releases), releases
+          PY
 
       - name: Run unit tests
         run: pytest tests/ -v --cov=oncoref --cov-report=xml
