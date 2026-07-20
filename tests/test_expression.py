@@ -2934,7 +2934,7 @@ def test_artifact_build_metadata_uses_loader_source_cohort_identity():
     assert (comparison["source_cohort_loader"] == comparison["source_cohort_metadata"]).all()
 
     by_code = comparison.set_index("cancer_code")
-    assert by_code.loc["LUAD", "source_cohort_metadata"] == ("TREEHOUSE_POLYA_25_01_TCGA_SAMPLES")
+    assert by_code.loc["LUAD", "source_cohort_metadata"] == "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
     assert by_code.loc["LUAD", "build_source_cohort"] == "TREEHOUSE_POLYA_25_01"
     assert by_code.loc["CML", "source_cohort_metadata"] == "GSE100026_DING_2017"
     assert by_code.loc["CML", "build_source_cohort"] == "GEO_HEME_2022"
