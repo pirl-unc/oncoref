@@ -11,8 +11,13 @@ from oncoref import genome as gx
 
 # The dev extra installs pyensembl, but resolution still needs a downloaded human
 # Ensembl release; skip when none is installed.
+try:
+    _GENOMES = gx.genomes()
+except gx.GenomeDependencyError:
+    _GENOMES = []
 pytestmark = pytest.mark.skipif(
-    not gx.genomes(), reason="no human Ensembl release installed (pyensembl install ...)"
+    not _GENOMES,
+    reason="genome extra or installed human Ensembl release is unavailable",
 )
 
 
