@@ -37,9 +37,9 @@ EXCLUDED: a short gene nested in a host gene's intron (a snoRNA, an antisense ln
 overlaps it ~100% yet is a *distinct* gene — empirically those "successors" co-occur
 with the old gene in ~all modern cohorts, proving they are not the same gene.
 
-pyensembl is a BUILD-TIME tool only (not a runtime dependency of oncoref, cf. the
-percentile/proteoform generators); it reads each release's GTF, which this script
-queries directly for speed. Run:
+This generator requires the optional genome dependency (``pip install
+'oncoref[genome]'``); pyensembl is not part of oncoref's core dependency set. It
+reads each release's GTF, which this script queries directly for speed. Run:
 
     python scripts/generate_ensembl_id_aliases.py
 

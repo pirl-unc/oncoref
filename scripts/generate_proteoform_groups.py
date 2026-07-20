@@ -35,8 +35,8 @@ The genome registry is the opt-in variant (issue #12): genome-wide summation
 shifts many more genes' expression than the focused CTA subset, so it is offered,
 not shipped as the default for the percentile/within-sample artifacts.
 
-pyensembl is a BUILD-TIME tool only — it is deliberately not a runtime dependency
-of oncoref (cf. the within-sample/percentile generators). Run:
+This generator requires the optional genome dependency (``pip install
+'oncoref[genome]'``); pyensembl is not part of oncoref's core dependency set. Run:
 
     python scripts/generate_proteoform_groups.py               # CTA-scoped (default)
     python scripts/generate_proteoform_groups.py --scope genome  # genome-wide
