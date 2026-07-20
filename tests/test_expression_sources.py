@@ -31,9 +31,30 @@ def test_lookup_by_id_and_code():
     assert any(s.id == "mmrf-commpass" for s in es.sources_for_cancer_code("MM"))
 
 
+def test_ess_artifact_source_has_typed_provenance():
+    source = es.expression_source("gse85383-ess")
+
+    assert source is not None
+    assert source.cancer_codes == ("SARC_ESS_LG", "SARC_ESS_HG")
+    assert source.source_cohort == "GSE85383_YOSHIDA_2017_ESS"
+    assert source.source_project == "GEO"
+    assert source.source_type == "geo-microarray"
+    assert source.unit == "TPM proxy"
+    assert source.tumor_origin == "primary"
+    assert source.processing_pipeline
+
+
 def test_expression_sources_df_shape():
     df = es.expression_sources_df()
-    assert {"id", "source_type", "cancer_codes", "citation"} <= set(df.columns)
+    assert {
+        "id",
+        "source_type",
+        "cancer_codes",
+        "source_cohort",
+        "source_project",
+        "processing_pipeline",
+        "citation",
+    } <= set(df.columns)
     assert len(df) == len(es.expression_sources())
 
 
