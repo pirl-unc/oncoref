@@ -39,6 +39,9 @@ from oncoref.expression import (
 )
 
 _REPRESENTATIVE_PROVENANCE = "cancer-reference-expression-representatives/_provenance.csv"
+_FOCUSED_SHARD_DIRS = tuple(
+    path for path in DOWNLOADABLE_PATHS if path.startswith("cancer-reference-expression-")
+)
 
 
 def _replace_rows(
@@ -76,17 +79,21 @@ def _copy_rebuilt_shards(
     *,
     cancer_codes: set[str],
 ) -> None:
-    for relative in DOWNLOADABLE_PATHS:
+    copies: list[tuple[Path, Path]] = []
+    for relative in _FOCUSED_SHARD_DIRS:
         rebuilt_subdir = rebuild_dir / relative
         if not rebuilt_subdir.is_dir():
-            continue
+            raise FileNotFoundError(f"focused rebuild lacks artifact directory: {relative}")
         bundle_subdir = bundle_dir / relative
-        bundle_subdir.mkdir(parents=True, exist_ok=True)
         for code in sorted(cancer_codes):
             source = rebuilt_subdir / f"{code}.parquet"
             if not source.exists():
                 raise FileNotFoundError(f"focused rebuild lacks {relative}/{code}.parquet")
-            shutil.copy2(source, bundle_subdir / source.name)
+            copies.append((source, bundle_subdir / source.name))
+
+    for source, destination in copies:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
 
 
 def _metadata_sum(metadata: pd.DataFrame, column: str) -> int:

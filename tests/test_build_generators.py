@@ -732,10 +732,7 @@ def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path)
     script = _load_script("merge_expression_artifact_rebuild")
     bundle = tmp_path / "bundle"
     rebuild = tmp_path / "rebuild"
-    shard_dirs = [
-        "cancer-reference-expression-percentiles",
-        "cancer-reference-expression-representatives",
-    ]
+    shard_dirs = script._FOCUSED_SHARD_DIRS
     for base in (bundle, rebuild):
         for relative in shard_dirs:
             (base / relative).mkdir(parents=True, exist_ok=True)
@@ -819,6 +816,21 @@ def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path)
     assert summary["n_cohort_samples"] == 5
     assert summary["n_negative_values_clipped"] == 2
     assert summary["sample_qc_fallbacks"] == 0
+
+
+def test_merge_expression_artifact_rebuild_requires_every_shard_family(tmp_path):
+    script = _load_script("merge_expression_artifact_rebuild")
+    bundle = tmp_path / "bundle"
+    rebuild = tmp_path / "rebuild"
+    missing_dir = script._FOCUSED_SHARD_DIRS[-1]
+    for relative in script._FOCUSED_SHARD_DIRS[:-1]:
+        directory = rebuild / relative
+        directory.mkdir(parents=True)
+        pd.DataFrame({"value": [1.0]}).to_parquet(directory / "X.parquet", index=False)
+
+    with pytest.raises(FileNotFoundError, match=f"artifact directory: {missing_dir}"):
+        script._copy_rebuilt_shards(bundle, rebuild, cancer_codes={"X"})
+    assert not bundle.exists()
 
 
 def test_stage_source_matrices_can_reuse_a_prior_version_cache(tmp_path, monkeypatch):
