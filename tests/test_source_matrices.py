@@ -11,7 +11,7 @@ import urllib.error
 import pandas as pd
 import pytest
 
-from oncoref import catalog
+from oncoref import cancer_types, catalog
 from oncoref import source_matrices as sm
 
 
@@ -21,6 +21,21 @@ def test_registry_and_available_cohorts():
     assert "LUAD" in cohorts and "BRCA" in cohorts
     info = sm.cohort_info("LUAD")
     assert info["source_cohort"] and info["n_samples"] > 0
+
+
+def test_mbl_molecular_subgroups_are_source_matrix_cohorts():
+    expected = {
+        "MBL_WNT": 17,
+        "MBL_SHH": 25,
+        "MBL_G3": 44,
+        "MBL_G4": 39,
+    }
+
+    for code, n_samples in expected.items():
+        info = sm.cohort_info(code)
+        assert info["source_cohort"] == "TREEHOUSE_POLYA_25_01_MBL_SUBGROUP_MARKERS"
+        assert info["n_samples"] == n_samples
+        assert cancer_types.cohort_source_version(code) == "112"
 
 
 def test_stad_ucec_molecular_subtypes_are_source_matrix_cohorts():

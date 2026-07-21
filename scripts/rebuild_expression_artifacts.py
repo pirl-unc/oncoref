@@ -24,9 +24,8 @@ expression bundle:
 
 Input matrices are discovered under ``--cache`` as
 ``<cohort>/derived/<NAME>_per_sample_tpm.parquet``. The derived ``<NAME>`` is mapped
-to a cancer code case-insensitively (``tcga_acc`` -> ``ACC``, ``LAML_ELNadv`` kept),
-matched against the reference codes in ``--ref`` (a dir of ``<CODE>.parquet`` whose
-names define the canonical casing). A code with several candidate source cohorts is
+to a registered source-matrix cancer code case-insensitively (``tcga_acc`` -> ``ACC``,
+``LAML_ELNadv`` kept). A code with several candidate source cohorts is
 resolved to the single one recorded in ``source-matrices.csv`` (pirlygenes selects
 one source per code; it never pools) — so the artifacts match the shipped reference.
 
@@ -118,15 +117,15 @@ def _parquet_sample_count(path: Path) -> int:
     return len([c for c in names if c not in _BASE])
 
 
-def discover(cache: Path, ref: Path) -> dict[str, list[tuple[str, Path]]]:
+def discover(cache: Path, cancer_codes: list[str]) -> dict[str, list[tuple[str, Path]]]:
     """Map each reference cancer code to its candidate ``(cohort_dir, matrix path)``."""
-    ref_by_key = {_code_key(p.stem): p.stem for p in ref.glob("*.parquet")}
+    code_by_key = {_code_key(code): code for code in cancer_codes}
     by_code: dict[str, list[tuple[str, Path]]] = defaultdict(list)
     unmatched = []
     for m in cache.glob("*/derived/*_per_sample_tpm.parquet"):
         cohort_dir = m.parent.parent.name
         stem = m.name.replace("_per_sample_tpm.parquet", "")
-        code = ref_by_key.get(_code_key(stem))
+        code = code_by_key.get(_code_key(stem))
         if code is None:
             unmatched.append(stem)
             continue
@@ -283,8 +282,8 @@ def rebuild(
     sample_qc: str = "pass",
 ) -> None:
     sample_qc = _validate_sample_qc(sample_qc)
-    by_code = discover(cache, ref)
     reg = source_registry()
+    by_code = discover(cache, reg["cancer_code"].astype(str).tolist())
     code_to_source = dict(zip(reg["cancer_code"].astype(str), reg["source_cohort"].astype(str)))
     code_to_n_samples = (
         dict(zip(reg["cancer_code"].astype(str), reg["n_samples"].astype(int)))
@@ -528,7 +527,7 @@ def main(argv=None) -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--cache", required=True, type=Path, help="Per-sample matrix cache root")
     p.add_argument(
-        "--ref", required=True, type=Path, help="Reference percentile dir (defines codes)"
+        "--ref", required=True, type=Path, help="Reference percentile dir (validation only)"
     )
     p.add_argument("--out", required=True, type=Path, help="Staging output dir (not oncoref/data)")
     p.add_argument("--limit", type=int, default=None, help="Only the first N codes (a test run)")

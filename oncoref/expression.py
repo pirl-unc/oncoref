@@ -2263,6 +2263,12 @@ def expression_artifact_build_metadata(
         out["source_cohort"] = pd.NA
     if "build_source_cohort" not in out.columns:
         out["build_source_cohort"] = out["source_cohort"]
+    else:
+        build_source = out["build_source_cohort"].astype("string")
+        missing_build_source = build_source.isna() | build_source.str.strip().eq("")
+        out.loc[missing_build_source, "build_source_cohort"] = out.loc[
+            missing_build_source, "source_cohort"
+        ]
     for col in _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS:
         if col not in out.columns:
             out[col] = pd.NA
