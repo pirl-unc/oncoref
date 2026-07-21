@@ -665,6 +665,279 @@ def test_treehouse_source_from_registry_loads_direct_cohort_routes():
     assert [cohort.cancer_code for cohort in ribod.cohorts] == ["SARC_CHOR", "RB"]
 
 
+def _synthetic_mbl_matrix():
+    marker_ids = expression_builders.MEDULLOBLASTOMA_SUBGROUP_MARKER_GENE_IDS
+    return pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [*marker_ids.values(), "ENSG_OTHER"],
+            "Symbol": ["WIF1", "GLI2", "MYC", "KCNA1", "OTHER"],
+            "wnt_sample": [10.0, 2.0, 3.0, 4.0, 1.0],
+            "shh_sample": [1.0, 10.0, 3.0, 4.0, 1.0],
+            "g3_sample": [1.0, 2.0, 10.0, 4.0, 1.0],
+            "g4_sample": [1.0, 2.0, 3.0, 10.0, 1.0],
+        }
+    )
+
+
+def test_medulloblastoma_subgroup_matrices_use_one_explicit_marker_winner():
+    groups = expression_builders.medulloblastoma_subgroup_sample_ids(_synthetic_mbl_matrix())
+    matrices = expression_builders.medulloblastoma_subgroup_matrices(_synthetic_mbl_matrix())
+
+    assert groups == {
+        "MBL_WNT": ["wnt_sample"],
+        "MBL_SHH": ["shh_sample"],
+        "MBL_G3": ["g3_sample"],
+        "MBL_G4": ["g4_sample"],
+    }
+    assert list(matrices["MBL_G3"].columns) == [
+        "Ensembl_Gene_ID",
+        "Symbol",
+        "g3_sample",
+    ]
+
+
+def test_medulloblastoma_subgroup_assignment_rejects_ties_and_missing_markers():
+    tied = _synthetic_mbl_matrix()
+    tied.loc[tied["Symbol"].isin(["WIF1", "GLI2"]), "wnt_sample"] = 10.0
+    with pytest.raises(ValueError, match=r"maximum is tied.*wnt_sample"):
+        expression_builders.medulloblastoma_subgroup_sample_ids(tied)
+
+    missing = _synthetic_mbl_matrix().query("Symbol != 'WIF1'")
+    with pytest.raises(ValueError, match="one row for each subgroup marker"):
+        expression_builders.medulloblastoma_subgroup_sample_ids(missing)
+
+
+def test_derive_mbl_subgroup_source_matrices_writes_cache_and_release_assets(tmp_path):
+    script = _load_script("derive_mbl_subgroup_source_matrices")
+    parent = tmp_path / "MBL.parquet"
+    cache_dir = tmp_path / "cache"
+    release_dir = tmp_path / "release"
+    _synthetic_mbl_matrix().to_parquet(parent, index=False)
+
+    paths = script.derive(parent, output_dir=cache_dir, release_dir=release_dir)
+
+    assert set(paths) == {"MBL_WNT", "MBL_SHH", "MBL_G3", "MBL_G4"}
+    for code, path in paths.items():
+        assert path == cache_dir / f"{code}.parquet"
+        assert path.exists()
+        assert (release_dir / f"{code}_per_sample_tpm.parquet").exists()
+
+
+def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path):
+    script = _load_script("merge_expression_artifact_rebuild")
+    bundle = tmp_path / "bundle"
+    rebuild = tmp_path / "rebuild"
+    shard_dirs = [
+        "cancer-reference-expression-percentiles",
+        "cancer-reference-expression-representatives",
+    ]
+    for base in (bundle, rebuild):
+        for relative in shard_dirs:
+            (base / relative).mkdir(parents=True, exist_ok=True)
+
+    for code, value in (("KEEP", 1.0), ("REPLACE", 2.0)):
+        for relative in shard_dirs:
+            pd.DataFrame({"value": [value]}).to_parquet(
+                bundle / relative / f"{code}.parquet", index=False
+            )
+    for relative in shard_dirs:
+        pd.DataFrame({"value": [3.0]}).to_parquet(
+            rebuild / relative / "REPLACE.parquet", index=False
+        )
+
+    pd.DataFrame(
+        {
+            "representative_id": ["KEEP__rep1", "REPLACE__rep1"],
+            "source_cohort": ["KEEP_OLD", "REPLACE_OLD"],
+        }
+    ).to_csv(bundle / script._REPRESENTATIVE_PROVENANCE, index=False)
+    pd.DataFrame(
+        {
+            "representative_id": ["REPLACE__rep1"],
+            "source_cohort": ["REPLACE_NEW"],
+        }
+    ).to_csv(rebuild / script._REPRESENTATIVE_PROVENANCE, index=False)
+
+    old_metadata = pd.DataFrame(
+        {
+            "cancer_code": ["KEEP", "REPLACE"],
+            "source_cohort": ["KEEP_OLD", "REPLACE_OLD"],
+            "n_source_samples": [2, 3],
+            "n_cohort_samples": [1, 2],
+            "n_negative_values_clipped": [0, 1],
+            "sample_qc_fallback_reason": ["", "old"],
+        }
+    )
+    new_metadata = pd.DataFrame(
+        {
+            "cancer_code": ["REPLACE"],
+            "source_cohort": ["REPLACE_NEW"],
+            "build_source_cohort": ["REPLACE_BUILD"],
+            "n_source_samples": [5],
+            "n_cohort_samples": [4],
+            "n_negative_values_clipped": [2],
+            "sample_qc_fallback_reason": [""],
+        }
+    )
+    old_metadata.to_csv(bundle / script.EXPRESSION_ARTIFACT_BUILD_METADATA_PATH, index=False)
+    new_metadata.to_csv(rebuild / script.EXPRESSION_ARTIFACT_BUILD_METADATA_PATH, index=False)
+    pd.DataFrame({"cancer_code": ["KEEP", "REPLACE"], "sample_id": ["a", "b"]}).to_csv(
+        bundle / script.SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH, index=False
+    )
+    pd.DataFrame({"cancer_code": ["REPLACE"], "sample_id": ["c"]}).to_csv(
+        rebuild / script.SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH, index=False
+    )
+    (bundle / script.EXPRESSION_ARTIFACT_BUILD_METADATA_JSON_PATH).write_text("{}\n")
+
+    assert script.merge(bundle, rebuild) == {"REPLACE"}
+    assert (
+        pd.read_parquet(bundle / "cancer-reference-expression-percentiles" / "KEEP.parquet").loc[
+            0, "value"
+        ]
+        == 1.0
+    )
+    assert (
+        pd.read_parquet(bundle / "cancer-reference-expression-percentiles" / "REPLACE.parquet").loc[
+            0, "value"
+        ]
+        == 3.0
+    )
+    merged_metadata = pd.read_csv(bundle / script.EXPRESSION_ARTIFACT_BUILD_METADATA_PATH)
+    assert set(merged_metadata["cancer_code"]) == {"KEEP", "REPLACE"}
+    indexed_metadata = merged_metadata.set_index("cancer_code")
+    assert indexed_metadata.loc["REPLACE", "n_source_samples"] == 5
+    assert indexed_metadata.loc["KEEP", "build_source_cohort"] == "KEEP_OLD"
+    assert indexed_metadata.loc["REPLACE", "build_source_cohort"] == "REPLACE_BUILD"
+    summary = json.loads((bundle / script.EXPRESSION_ARTIFACT_BUILD_METADATA_JSON_PATH).read_text())
+    assert summary["n_cohorts"] == 2
+    assert summary["n_source_samples"] == 7
+    assert summary["n_cohort_samples"] == 5
+    assert summary["n_negative_values_clipped"] == 2
+    assert summary["sample_qc_fallbacks"] == 0
+
+
+def test_stage_source_matrices_can_reuse_a_prior_version_cache(tmp_path, monkeypatch):
+    script = _load_script("stage_source_matrices")
+    builder_cache = tmp_path / "builder-cache"
+    existing_cache = tmp_path / "source-v-old"
+    active_cache = tmp_path / "source-v-new"
+    release_dir = tmp_path / "release"
+    historical_dir = builder_cache / "historical-name" / "derived"
+    historical_dir.mkdir(parents=True)
+    existing_cache.mkdir()
+    matrix = pd.DataFrame({"Ensembl_Gene_ID": ["E1"], "Symbol": ["G1"], "sample": [1.0]})
+    matrix.to_parquet(existing_cache / "X.parquet", index=False)
+    matrix.to_parquet(historical_dir / "Y_per_sample_tpm.parquet", index=False)
+    monkeypatch.setattr(
+        script.sm,
+        "registry",
+        lambda: pd.DataFrame(
+            {
+                "cancer_code": ["X", "Y"],
+                "source_cohort": ["RENAMED_SOURCE", "OTHER_RENAMED_SOURCE"],
+            }
+        ),
+    )
+    monkeypatch.setattr(script.sm, "cache_dir", lambda: active_cache)
+
+    script.stage(
+        builder_cache,
+        release_dir=release_dir,
+        codes=None,
+        limit=None,
+        existing_cache=existing_cache,
+    )
+
+    assert (active_cache / "X.parquet").exists()
+    assert (release_dir / "X_per_sample_tpm.parquet").exists()
+    assert (active_cache / "Y.parquet").exists()
+    assert (release_dir / "Y_per_sample_tpm.parquet").exists()
+
+
+def test_stage_source_matrices_does_not_misroute_partial_shared_source(tmp_path, monkeypatch):
+    script = _load_script("stage_source_matrices")
+    builder_cache = tmp_path / "builder-cache"
+    source_dir = builder_cache / "shared-source" / "derived"
+    existing_cache = tmp_path / "source-v-old"
+    active_cache = tmp_path / "source-v-new"
+    source_dir.mkdir(parents=True)
+    existing_cache.mkdir()
+    x = pd.DataFrame({"Ensembl_Gene_ID": ["E1"], "Symbol": ["G1"], "x": [1.0]})
+    y = pd.DataFrame({"Ensembl_Gene_ID": ["E1"], "Symbol": ["G1"], "y": [2.0]})
+    x.to_parquet(source_dir / "X_per_sample_tpm.parquet", index=False)
+    y.to_parquet(existing_cache / "Y.parquet", index=False)
+    monkeypatch.setattr(
+        script.sm,
+        "registry",
+        lambda: pd.DataFrame(
+            {
+                "cancer_code": ["X", "Y"],
+                "source_cohort": ["SHARED_SOURCE", "SHARED_SOURCE"],
+            }
+        ),
+    )
+    monkeypatch.setattr(script.sm, "cache_dir", lambda: active_cache)
+
+    script.stage(
+        builder_cache,
+        release_dir=None,
+        codes=None,
+        limit=None,
+        existing_cache=existing_cache,
+    )
+
+    assert list(pd.read_parquet(active_cache / "X.parquet").columns) == [
+        "Ensembl_Gene_ID",
+        "Symbol",
+        "x",
+    ]
+    assert list(pd.read_parquet(active_cache / "Y.parquet").columns) == [
+        "Ensembl_Gene_ID",
+        "Symbol",
+        "y",
+    ]
+
+
+def test_stage_source_matrices_rejects_missing_or_wrong_width_assets(tmp_path, monkeypatch):
+    script = _load_script("stage_source_matrices")
+    builder_cache = tmp_path / "builder-cache"
+    source_dir = builder_cache / "source-x" / "derived"
+    active_cache = tmp_path / "source-v-new"
+    source_dir.mkdir(parents=True)
+    pd.DataFrame({"Ensembl_Gene_ID": ["E1"], "Symbol": ["G1"], "only_sample": [1.0]}).to_parquet(
+        source_dir / "X_per_sample_tpm.parquet", index=False
+    )
+    monkeypatch.setattr(script.sm, "cache_dir", lambda: active_cache)
+
+    monkeypatch.setattr(
+        script.sm,
+        "registry",
+        lambda: pd.DataFrame(
+            {
+                "cancer_code": ["X"],
+                "source_cohort": ["SOURCE_X"],
+                "n_samples": [2],
+            }
+        ),
+    )
+    with pytest.raises(ValueError, match="selected matrix has 1 samples; registry expects 2"):
+        script.stage(builder_cache, release_dir=None, codes=None, limit=None)
+
+    monkeypatch.setattr(
+        script.sm,
+        "registry",
+        lambda: pd.DataFrame(
+            {
+                "cancer_code": ["X", "Y"],
+                "source_cohort": ["SOURCE_X", "SOURCE_Y"],
+            }
+        ),
+    )
+    with pytest.raises(FileNotFoundError, match="missing for 1 cohort"):
+        script.stage(builder_cache, release_dir=None, codes=None, limit=None)
+    assert not list(active_cache.glob("*.parquet"))
+
+
 def test_treehouse_source_from_registry_loads_tcga_sample_routes():
     source = expression_builders.treehouse_source_from_registry("treehouse-polya-25-01-tcga-subset")
 

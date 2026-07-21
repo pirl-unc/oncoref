@@ -319,6 +319,47 @@ def test_stad_ucec_subtype_expression_artifacts_ship():
     assert metadata.set_index("cancer_code").loc["UCEC_CNH", "n_cohort_samples"] == 83
 
 
+def test_mbl_molecular_subgroup_expression_artifacts_ship_with_provenance():
+    expected_source_samples = {
+        "MBL_WNT": 17,
+        "MBL_SHH": 25,
+        "MBL_G3": 44,
+        "MBL_G4": 39,
+    }
+    expected_reference_samples = {
+        "MBL_WNT": 4,
+        "MBL_SHH": 7,
+        "MBL_G3": 29,
+        "MBL_G4": 18,
+    }
+    codes = set(expected_source_samples)
+
+    assert codes <= set(expression.available_representative_cohorts())
+    assert codes <= set(expression.available_percentile_cohorts())
+    assert codes <= set(expression.available_within_sample_cohorts())
+
+    metadata = expression.expression_artifact_build_metadata(
+        codes, auto_fetch=False, on_missing="raise"
+    ).set_index("cancer_code")
+    availability = expression.cancer_reference_expression_availability(
+        sorted(codes),
+        reference_source="artifact",
+        sample_qc="artifact",
+    ).set_index("cancer_code")
+
+    assert metadata["n_source_samples"].to_dict() == expected_source_samples
+    assert metadata["n_cohort_samples"].to_dict() == expected_reference_samples
+    assert set(metadata["sample_qc_effective"]) == {"pass"}
+    assert set(metadata["source_cohort"]) == {"TREEHOUSE_POLYA_25_01_MBL_SUBGROUP_MARKERS"}
+    assert availability["available"].all()
+    assert availability["n_reference_samples"].to_dict() == expected_reference_samples
+    assert availability["source_project"].tolist() == ["Treehouse"] * 4
+    assert availability["source_type"].tolist() == ["treehouse-derived"] * 4
+    assert availability["source_scale_class"].tolist() == ["linear_rnaseq_tpm"] * 4
+    assert availability["linear_tpm_comparable"].all()
+    assert availability["processing_pipeline"].notna().all()
+
+
 def test_expression_artifact_gene_universe_delta_summary():
     summary = expression.expression_artifact_gene_universe_delta_summary()
 

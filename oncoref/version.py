@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "1.8.142"
+__version__ = "1.8.143"
 
 # Version of the downloadable data bundle (the heavy per-cohort percentile +
 # representative shards). Bump when the DERIVED reference artifacts change — it pins
@@ -25,14 +25,15 @@ __version__ = "1.8.142"
 # roles, and benchmark-eligibility provenance to representative artifacts.
 # 5.23.6 canonicalizes the physical DDLPS/WDLPS TCGA-SARC source identities.
 # 5.23.7 renames the generic Treehouse-reprocessed TCGA sample cohort and shards.
-DATA_VERSION = "5.23.7"
+# 5.23.8 adds MBL molecular-subgroup source matrices and derived artifacts.
+DATA_VERSION = "5.23.8"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION
 # tracks the derived bundle that's rebuilt from them. Canonicalization happens downstream
 # (read/build time), so a canonical-space bundle bump must NOT repoint — or orphan the
 # local caches of — these raw matrices. Bump only when a cohort's raw matrix changes.
-SOURCE_MATRIX_VERSION = "5.22.6"
+SOURCE_MATRIX_VERSION = "5.22.7"
 
 version_string = f"v{__version__}"
 

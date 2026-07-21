@@ -253,6 +253,28 @@ sources:
       `source_cohort=TREEHOUSE_POLYA_25_01_TCGA_SAMPLES` so a future
       authoritative GDC build can land alongside without clobbering.
 
+  - id: treehouse-polya-25-01-mbl-subgroup-markers
+    category: expression
+    cancer_codes: [MBL_WNT, MBL_SHH, MBL_G3, MBL_G4]
+    source_type: treehouse-derived
+    source_cohort: TREEHOUSE_POLYA_25_01_MBL_SUBGROUP_MARKERS
+    source_project: Treehouse
+    source_version: "25.01"
+    builder: scripts/derive_mbl_subgroup_source_matrices.py
+    unit: TPM
+    library_prep: polyA RNA-seq
+    expected_size_gb: 0.04
+    citation: GSE294351; PMID:28617753
+    tumor_origin: primary
+    processing_pipeline: treehouse_polya_25_01_mbl_subgroup_markers_ensembl112_clean_tpm_16_9_75
+    special_handling: >
+      Deterministic partition of the 125-sample canonical MBL source matrix.
+      Each sample is assigned to the largest-TPM marker among WIF1 (WNT),
+      GLI2 (SHH), MYC (Group 3), and KCNA1 (Group 4). This reproduces the
+      historical 17/25/44/39 approximation; ties or missing marker values are
+      rejected. It is not a replacement for published per-sample methylation
+      or transcriptomic subgroup labels.
+
   - id: treehouse-polya-25-01-tcga-subset
     category: expression
     cancer_codes:

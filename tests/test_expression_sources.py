@@ -44,6 +44,20 @@ def test_ess_artifact_source_has_typed_provenance():
     assert source.processing_pipeline
 
 
+def test_mbl_subgroup_source_has_typed_derivation_provenance():
+    source = es.expression_source("treehouse-polya-25-01-mbl-subgroup-markers")
+
+    assert source is not None
+    assert source.cancer_codes == ("MBL_WNT", "MBL_SHH", "MBL_G3", "MBL_G4")
+    assert source.source_cohort == "TREEHOUSE_POLYA_25_01_MBL_SUBGROUP_MARKERS"
+    assert source.source_project == "Treehouse"
+    assert source.source_type == "treehouse-derived"
+    assert source.source_version == "25.01"
+    assert source.unit == "TPM"
+    assert source.tumor_origin == "primary"
+    assert source.processing_pipeline
+
+
 def test_expression_sources_df_shape():
     df = es.expression_sources_df()
     assert {

@@ -14,12 +14,12 @@
 
 These are the rawest cohort expression — the build inputs every derived artifact
 (percentiles, exemplars, within-sample, proteoform sums, CTA regen) is computed
-from. They total ~21 GB across 118 cohorts, so each cohort's matrix is an
+from. They total ~21 GB across 130 cohorts, so each cohort's matrix is an
 individually fetchable release asset: pull only the cohorts you need rather than
 one monolithic blob.
 
     from oncoref import source_matrices as sm
-    sm.available_cohorts()            # the 118 cohorts with a per-sample matrix
+    sm.available_cohorts()            # the 130 cohorts with a per-sample matrix
     sm.ensure("LUAD")                 # download LUAD's matrix -> Path
     pd.read_parquet(sm.ensure("LUAD"))
 

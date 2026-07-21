@@ -70,6 +70,12 @@ GDC_SOURCE_TYPE = "gdc"
 GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
 RECOUNT3_SOURCE_TYPE = "recount3"
 TREEHOUSE_SOURCE_TYPE = "treehouse-compendium"
+MEDULLOBLASTOMA_SUBGROUP_MARKER_GENE_IDS: dict[str, str] = {
+    "MBL_WNT": "ENSG00000156076",  # WIF1
+    "MBL_SHH": "ENSG00000074047",  # GLI2
+    "MBL_G3": "ENSG00000136997",  # MYC
+    "MBL_G4": "ENSG00000111262",  # KCNA1
+}
 TUMOR_ORIGIN_VALUES: frozenset[str] = frozenset(
     {
         "primary",
@@ -2160,6 +2166,69 @@ def _write_csv_atomic(df: pd.DataFrame, path: Path) -> None:
 
 def _write_parquet_atomic(df: pd.DataFrame, path: Path) -> None:
     _atomic_write(path, lambda tmp_path: df.to_parquet(tmp_path, index=False))
+
+
+def medulloblastoma_subgroup_sample_ids(matrix: pd.DataFrame) -> dict[str, list[str]]:
+    """Assign MBL samples by the historical four-marker maximum-TPM rule.
+
+    WIF1, GLI2, MYC, and KCNA1 identify WNT, SHH, Group 3, and Group 4,
+    respectively. Every sample must have one unambiguous winning marker; ties,
+    missing markers, and nonnumeric marker values are rejected rather than routed
+    by an arbitrary column order.
+    """
+    required_columns = {"Ensembl_Gene_ID", "Symbol"}
+    missing_columns = required_columns - set(matrix.columns)
+    if missing_columns:
+        raise ValueError(
+            "MBL source matrix lacks required columns: " + ", ".join(sorted(missing_columns))
+        )
+
+    samples = sample_columns(matrix)
+    if not samples:
+        raise ValueError("MBL source matrix has no sample columns")
+
+    marker_ids = set(MEDULLOBLASTOMA_SUBGROUP_MARKER_GENE_IDS.values())
+    gene_ids = matrix["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    marker_rows = matrix.loc[gene_ids.isin(marker_ids), ["Ensembl_Gene_ID", *samples]].copy()
+    marker_rows["Ensembl_Gene_ID"] = marker_rows["Ensembl_Gene_ID"].astype(str).map(unversioned)
+    marker_counts = marker_rows["Ensembl_Gene_ID"].value_counts()
+    invalid_markers = sorted(
+        marker_id for marker_id in marker_ids if marker_counts.get(marker_id) != 1
+    )
+    if invalid_markers:
+        raise ValueError(
+            "MBL source matrix must contain one row for each subgroup marker; invalid: "
+            + ", ".join(invalid_markers)
+        )
+
+    marker_expression = marker_rows.set_index("Ensembl_Gene_ID")[samples].T
+    marker_expression = marker_expression.apply(pd.to_numeric, errors="coerce")
+    if marker_expression.isna().any().any():
+        bad_samples = marker_expression.index[marker_expression.isna().any(axis=1)].tolist()
+        raise ValueError(
+            "MBL subgroup marker expression is missing or nonnumeric for sample(s): "
+            + ", ".join(bad_samples[:5])
+        )
+
+    winning_markers = marker_expression.eq(marker_expression.max(axis=1), axis=0)
+    ambiguous_samples = winning_markers.index[winning_markers.sum(axis=1) != 1].tolist()
+    if ambiguous_samples:
+        raise ValueError(
+            "MBL subgroup marker maximum is tied for sample(s): " + ", ".join(ambiguous_samples[:5])
+        )
+
+    winning_gene_id = winning_markers.idxmax(axis=1)
+    return {
+        code: winning_gene_id.index[winning_gene_id.eq(marker_id)].tolist()
+        for code, marker_id in MEDULLOBLASTOMA_SUBGROUP_MARKER_GENE_IDS.items()
+    }
+
+
+def medulloblastoma_subgroup_matrices(matrix: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """Split a canonical MBL per-sample TPM matrix into four subgroup matrices."""
+    groups = medulloblastoma_subgroup_sample_ids(matrix)
+    identifiers = id_columns(matrix)
+    return {code: matrix[[*identifiers, *samples]].copy() for code, samples in groups.items()}
 
 
 def _reconcile_per_code_artifacts(out_dir: Path, current_codes: Iterable[str]) -> None:
