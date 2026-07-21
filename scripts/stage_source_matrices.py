@@ -19,7 +19,7 @@ cohort's raw per-sample matrix in a local matrix cache and copy it to:
     per-patient coverage analyses work locally without a release; and
   - (with ``--release-dir``) an upload staging dir as ``<CODE>_per_sample_tpm.parquet``,
     the exact asset names ``source_matrices.release_url`` expects on the
-    ``source-v<DATA_VERSION>`` GitHub release.
+    ``source-v<SOURCE_MATRIX_VERSION>`` GitHub release.
 
 The matrix cache is laid out ``<cache>/<cohort>/derived/<NAME>_per_sample_tpm.parquet``.
 The cohort directory is matched to the registry's ``source_cohort`` by GSE accession
@@ -28,6 +28,7 @@ multi-source code stages exactly the one matrix the shipped artifacts were built
 
 Run:
     python scripts/stage_source_matrices.py --cache ~/.cache/pirlygenes/expression \
+        [--existing-cache ~/.cache/oncoref/source-matrices/v<previous-version>] \
         [--release-dir ~/oncoref-source-upload] [--codes LUAD,SKCM] [--limit N]
 """
 
@@ -116,7 +117,7 @@ def stage(
     codes: list[str] | None,
     limit: int | None,
     existing_cache: Path | None = None,
-):
+) -> None:
     reg = sm.registry()
     by_source = _matrices_by_source(cache)
     by_code = _matrices_by_code(cache)

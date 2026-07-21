@@ -706,6 +706,11 @@ def test_medulloblastoma_subgroup_assignment_rejects_ties_and_missing_markers():
     with pytest.raises(ValueError, match="one row for each subgroup marker"):
         expression_builders.medulloblastoma_subgroup_sample_ids(missing)
 
+    non_finite = _synthetic_mbl_matrix()
+    non_finite.loc[non_finite["Symbol"].eq("MYC"), "g3_sample"] = np.inf
+    with pytest.raises(ValueError, match=r"non-finite.*g3_sample"):
+        expression_builders.medulloblastoma_subgroup_sample_ids(non_finite)
+
 
 def test_derive_mbl_subgroup_source_matrices_writes_cache_and_release_assets(tmp_path):
     script = _load_script("derive_mbl_subgroup_source_matrices")

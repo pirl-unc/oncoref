@@ -2203,11 +2203,12 @@ def medulloblastoma_subgroup_sample_ids(matrix: pd.DataFrame) -> dict[str, list[
 
     marker_expression = marker_rows.set_index("Ensembl_Gene_ID")[samples].T
     marker_expression = marker_expression.apply(pd.to_numeric, errors="coerce")
-    if marker_expression.isna().any().any():
-        bad_samples = marker_expression.index[marker_expression.isna().any(axis=1)].tolist()
+    finite_values = np.isfinite(marker_expression.to_numpy(dtype=float))
+    if not finite_values.all():
+        bad_samples = marker_expression.index[~finite_values.all(axis=1)].tolist()
         raise ValueError(
-            "MBL subgroup marker expression is missing or nonnumeric for sample(s): "
-            + ", ".join(bad_samples[:5])
+            "MBL subgroup marker expression is missing, nonnumeric, or non-finite "
+            "for sample(s): " + ", ".join(bad_samples[:5])
         )
 
     winning_markers = marker_expression.eq(marker_expression.max(axis=1), axis=0)
