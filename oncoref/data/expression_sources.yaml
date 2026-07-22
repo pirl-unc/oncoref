@@ -1233,34 +1233,43 @@ sources:
       normals excluded by sample_filter. Companion GI shard adds
       another n=12 KS lesions if needed.
 
-  # GSE76354 turned out to be NIH3T3 mouse cell-line ± MSANTD3
-  # transfection, NOT primary AcCC tumor RNA-seq. The agent's recon
-  # mismatched. Removing the entry; ACINIC stays in the
-  # "no clean public RNA-seq" bucket (closest is Lee 2020
-  # PRJNA433667 raw FASTQ for 21 AcCC — needs an alignment pipeline).
+  # GSE76354 is a NIH3T3 mouse transfection experiment, not AcCC tumor RNA-seq.
+  # GSE294016 below now supplies the diagnosis-filtered human AcCC cohort.
 
-  - id: gse294016-adcc
+  - id: gse294016-salivary-histology
     category: expression
-    cancer_codes: [ADCC]
+    cancer_codes: [ADCC, ACINIC]
     source_type: geo-matrix
     builder: scripts/build_geo_matrix.py
+    accession: GSE294016
+    url: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE294016
     file_url: https://ftp.ncbi.nlm.nih.gov/geo/series/GSE294nnn/GSE294016/suppl/GSE294016_TPM_mat.tsv.gz
     file_name: GSE294016_TPM_mat.tsv.gz
     unit: TPM
     gene_id_col: ""
     gene_id_type: ensembl
     transposed: true   # matrix is samples-as-rows × genes-as-cols (ENSG headers)
+    sample_to_cancer_code:
+      mapping_file: gse294016-sample-diagnoses.csv
+    expected_source_samples: 95
+    expected_samples_by_code:
+      ADCC: 57
+      ACINIC: 3
     source_cohort: GSE294016_BARTL_2025_SGC
     source_project: GEO
-    citation: PMID 40506428 (Bartl 2025 salivary gland cancer panel)
+    source_version: Bartl 2025 Supplementary Dataset 1 Table 1 diagnosis mapping
+    tumor_origin: mixed
+    pipeline_stem: gse294016_bartl_2025_diagnosis_split
+    processing_pipeline: gse294016_bartl_2025_diagnosis_split_tpm_to_tpm_oncoref_canonical_clean_tpm_16_9_75
+    citation: PMID 40506428 (Bartl 2025 salivary gland cancer panel, Supplementary Dataset 1)
     expected_size_gb: 0.02
     notes: >
-      Bartl 2025 salivary-gland cancer bulk RNA-seq panel (n=95
-      total: includes ACC, AcCC, MEC, etc.). Matrix is transposed
-      (rows = samples, cols = Ensembl IDs versioned). Currently
-      routes ALL samples to ADCC; per-sample histology split (ACC
-      vs AcCC vs MEC) needs Bartl 2025 Supplementary Table 1
-      sample-→-diagnosis lookup — pending.
+      Bartl 2025 salivary-gland cancer bulk RNA-seq panel: 95 matrix rows from
+      93 RNA-sequenced patients. Supplementary Dataset 1 Table 1 routes ACC to
+      ADCC (n=57, including repeated P-58 and P-77 biopsies) and AciCC to ACINIC
+      (n=3). The remaining 35 adenocarcinoma, BCC, CEPA, MEC, SDC, mesenchymal,
+      and other samples are excluded from histology-specific artifacts. The
+      matrix is transposed (rows = samples, cols = versioned Ensembl IDs).
 
   - id: gse235092-merkel
     category: expression

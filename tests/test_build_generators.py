@@ -269,6 +269,153 @@ def test_geo_matrix_builder_routes_samples_and_reads_transposed_matrix(tmp_path)
     assert np.isclose(code_b["tumor_b"].sum(), 1_000_000.0)
 
 
+def test_transposed_matrix_uses_implicit_sample_index_and_uniquifies_duplicates(tmp_path):
+    path = tmp_path / "implicit_sample_ids.tsv"
+    path.write_text("TP53\tEGFR\nP-1\t1\t2\nP-1\t3\t4\nP-1.1\t5\t6\n")
+
+    matrix = expression_builders.read_source_expression_matrix(path, transposed=True)
+
+    assert list(matrix.columns) == ["source_row_id", "P-1", "P-1.2", "P-1.1"]
+    assert matrix["source_row_id"].tolist() == ["TP53", "EGFR"]
+    assert matrix[["P-1", "P-1.2", "P-1.1"]].astype(float).to_numpy().tolist() == [
+        [1.0, 3.0, 5.0],
+        [2.0, 4.0, 6.0],
+    ]
+
+
+def test_geo_matrix_builder_routes_from_exact_sample_mapping(tmp_path):
+    path = tmp_path / "implicit_sample_ids.tsv"
+    path.write_text("TP53\tEGFR\nP-1\t1\t2\nP-1\t3\t4\nP-2\t5\t6\nP-3\t7\t8\n")
+    pd.DataFrame(
+        {
+            "sample_id": ["P-1", "P-1.1", "P-2", "P-3"],
+            "cancer_code": ["CODE_A", "CODE_A", "CODE_B", ""],
+        }
+    ).to_csv(tmp_path / "sample_mapping.csv", index=False)
+    source = expression_builders.geo_matrix_source_from_entry(
+        {
+            "id": "mapped-source",
+            "source_type": "geo-matrix",
+            "cancer_codes": ["CODE_A", "CODE_B"],
+            "source_cohort": "MAPPED_SOURCE",
+            "file_name": path.name,
+            "unit": "TPM",
+            "transposed": True,
+            "sample_to_cancer_code": {"mapping_file": "sample_mapping.csv"},
+            "expected_samples_by_code": {"CODE_A": 2, "CODE_B": 1},
+        },
+        data_root=tmp_path,
+    )
+
+    result = expression_builders.build_source_matrices(
+        source,
+        cache_dir=tmp_path,
+        source_path=path,
+    )
+
+    assert list(result.matrices["CODE_A"].columns) == [
+        "Ensembl_Gene_ID",
+        "Symbol",
+        "P-1",
+        "P-1.1",
+    ]
+    assert list(result.matrices["CODE_B"].columns) == [
+        "Ensembl_Gene_ID",
+        "Symbol",
+        "P-2",
+    ]
+    for code, matrix in result.matrices.items():
+        assert {
+            source.sample_to_cancer_code(sample)
+            for sample in expression_builders.sample_columns(matrix)
+        } == {code}
+    assert "P-3" not in set(result.sample_qc["sample_id"])
+
+
+def test_geo_matrix_source_rejects_invalid_declared_routing_contract(tmp_path):
+    pd.DataFrame({"sample_id": ["P-1"], "cancer_code": ["UNDECLARED"]}).to_csv(
+        tmp_path / "sample_mapping.csv", index=False
+    )
+    entry = {
+        "id": "bad-mapped-source",
+        "source_type": "geo-matrix",
+        "cancer_codes": ["CODE_A"],
+        "source_cohort": "BAD_MAPPED_SOURCE",
+        "file_name": "matrix.tsv",
+        "unit": "TPM",
+        "sample_to_cancer_code": {"mapping_file": "sample_mapping.csv"},
+    }
+
+    with pytest.raises(ValueError, match="undeclared cancer codes"):
+        expression_builders.geo_matrix_source_from_entry(entry, data_root=tmp_path)
+
+    entry["sample_to_cancer_code"] = None
+    entry["expected_samples_by_code"] = {"UNDECLARED": 1}
+    with pytest.raises(ValueError, match="expected counts for undeclared"):
+        expression_builders.geo_matrix_source_from_entry(entry, data_root=tmp_path)
+
+    entry["expected_samples_by_code"] = {"CODE_A": 1.5}
+    with pytest.raises(ValueError, match="must be a non-negative integer"):
+        expression_builders.geo_matrix_source_from_entry(entry, data_root=tmp_path)
+
+
+def test_geo_matrix_builder_rejects_wrong_routed_sample_count_before_writing(tmp_path):
+    path = tmp_path / "matrix.tsv"
+    pd.DataFrame(
+        {
+            "sample_id": ["sample_a", "sample_b"],
+            "TP53": [1, 3],
+            "EGFR": [2, 4],
+        }
+    ).to_csv(path, sep="\t", index=False)
+    output_dir = tmp_path / "derived"
+    source = expression_builders.GeoMatrixSource(
+        cancer_code="CODE_A",
+        source_cohort="COUNTED_SOURCE",
+        file_name=path.name,
+        unit="TPM",
+        gene_id_col="sample_id",
+        transposed=True,
+        expected_source_samples=2,
+        expected_samples_by_code={"CODE_A": 3},
+    )
+
+    with pytest.raises(ValueError, match=r"routed CODE_A n=2; expected 3"):
+        expression_builders.build_source_matrices(
+            source,
+            cache_dir=tmp_path,
+            output_dir=output_dir,
+            source_path=path,
+        )
+
+    assert list(output_dir.iterdir()) == []
+
+
+def test_geo_matrix_builder_rejects_wrong_source_sample_count_before_writing(tmp_path):
+    path = tmp_path / "matrix.tsv"
+    path.write_text("sample_id\tTP53\nsample_a\t1\nsample_b\t2\n")
+    output_dir = tmp_path / "derived"
+    source = expression_builders.GeoMatrixSource(
+        cancer_code="CODE_A",
+        source_cohort="COUNTED_SOURCE",
+        file_name=path.name,
+        unit="TPM",
+        gene_id_col="sample_id",
+        transposed=True,
+        expected_source_samples=3,
+    )
+
+    with pytest.raises(ValueError, match=r"contains 2 source samples; expected 3"):
+        expression_builders.build_source_matrices(
+            source,
+            cache_dir=tmp_path,
+            output_dir=output_dir,
+            source_path=path,
+        )
+
+    assert list(output_dir.iterdir()) == []
+
+
 def test_geo_matrix_builder_transposed_all_blank_sample_is_missing_not_zero(tmp_path):
     path = tmp_path / "transposed_blank_sample.tsv"
     pd.DataFrame(

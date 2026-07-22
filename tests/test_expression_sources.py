@@ -4,9 +4,14 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 
+from pathlib import Path
+
+import pandas as pd
+
 import oncoref
 from oncoref import expression_builders, samples
 from oncoref import expression_registry as es
+from oncoref.load_dataset import get_data
 
 
 def test_registry_loads_all_sources():
@@ -56,6 +61,66 @@ def test_mbl_subgroup_source_has_typed_derivation_provenance():
     assert source.unit == "TPM"
     assert source.tumor_origin == "primary"
     assert source.processing_pipeline
+
+
+def test_gse294016_source_uses_authoritative_histology_mapping():
+    entries = es.expression_source_registry_entries()
+    source = next(row for row in entries if row["id"] == "gse294016-salivary-histology")
+    typed_source = es.expression_source(source["id"])
+    build_source = expression_builders.geo_matrix_source_from_registry(source["id"])
+    mapping_path = (
+        Path(__file__).resolve().parents[1]
+        / "oncoref"
+        / "data"
+        / source["sample_to_cancer_code"]["mapping_file"]
+    )
+    mapping = pd.read_csv(mapping_path, keep_default_na=False)
+
+    assert source["cancer_codes"] == ["ADCC", "ACINIC"]
+    assert source["expected_source_samples"] == 95
+    assert source["expected_samples_by_code"] == {"ADCC": 57, "ACINIC": 3}
+    assert typed_source is not None
+    assert typed_source.source_version == (
+        "Bartl 2025 Supplementary Dataset 1 Table 1 diagnosis mapping"
+    )
+    assert typed_source.tumor_origin == "mixed"
+    assert typed_source.processing_pipeline
+    assert build_source.expected_source_samples == 95
+    assert build_source.expected_samples_by_code == {"ADCC": 57, "ACINIC": 3}
+    assert build_source.sample_to_cancer_code is not None
+    assert build_source.sample_to_cancer_code("P-58.1") == "ADCC"
+    assert build_source.sample_to_cancer_code("P-76") == "ACINIC"
+    assert build_source.sample_to_cancer_code("P-89") is None
+    assert len(mapping) == 95
+    assert mapping["sample_id"].is_unique
+    assert mapping["source_sample_id"].nunique() == 93
+    assert mapping["cancer_code"].value_counts().to_dict() == {
+        "ADCC": 57,
+        "": 35,
+        "ACINIC": 3,
+    }
+    by_sample = mapping.set_index("sample_id")
+    assert by_sample.loc["P-58.1", "source_sample_id"] == "P-58"
+    assert by_sample.loc["P-77.1", "source_sample_id"] == "P-77"
+    expected_route = mapping["cancer_code"].replace("", None).tolist()
+    actual_route = mapping["sample_id"].map(build_source.sample_to_cancer_code).tolist()
+    assert actual_route == expected_route
+
+    expected_counts = source["expected_samples_by_code"]
+    source_counts = (
+        get_data("source-matrices")
+        .set_index("cancer_code")
+        .loc[list(expected_counts), "n_samples"]
+        .to_dict()
+    )
+    availability_counts = (
+        get_data("cancer-reference-expression-availability")
+        .set_index("cancer_code")
+        .loc[list(expected_counts), "n_reference_samples"]
+        .to_dict()
+    )
+    assert source_counts == expected_counts
+    assert availability_counts == expected_counts
 
 
 def test_expression_sources_df_shape():
