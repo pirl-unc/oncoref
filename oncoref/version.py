@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "1.8.145"
+__version__ = "1.8.146"
 
 # Version of the downloadable data bundle (the heavy per-cohort percentile +
 # representative shards). Bump when the DERIVED reference artifacts change — it pins
@@ -28,7 +28,9 @@ __version__ = "1.8.145"
 # 5.23.8 adds MBL molecular-subgroup source matrices and derived artifacts.
 # 5.23.9 splits the mixed GSE294016 salivary panel into diagnosis-backed ADCC
 # and ACINIC artifacts and removes nonmatching histologies from both cohorts.
-DATA_VERSION = "5.23.9"
+# 5.23.10 rebuilds BL and SARC_PEC summaries from the same QC-pass samples used
+# by their percentile, representative, and within-sample artifacts.
+DATA_VERSION = "5.23.10"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION

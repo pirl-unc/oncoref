@@ -46,6 +46,12 @@ sources:
     library_prep: polyA RNA-seq   # CGCI Illumina TruSeq mRNA (polyA)
     expected_size_gb: 2
     citation: https://portal.gdc.cancer.gov/projects/CGCI-BLGSP
+    source_version: GDC STAR - Counts, GENCODE v36; Ensembl IDs harmonized to Ensembl release 112; queried 2026-05-19
+    processing_pipeline: gdc_star_counts_tpm_ensembl112_clean_tpm_16_9_75
+    notes: >
+      Open GDC CGCI-BLGSP STAR-counts TPMs; one deterministic primary
+      Burkitt/Burkitt-like tumor sample per case; source matrix n=184 and
+      released reference artifacts use 175 sample_expression_qc_v2 pass samples.
     special_handling: >
       Open GDC STAR-counts; one deterministic primary-tumor sample per
       case. GENCODE v36 → Ensembl 112.
@@ -1207,9 +1213,12 @@ sources:
     source_cohort: GSE328026_PECOMA_2026
     source_project: GEO
     citation: GSE328026 (PEComa TPMs, public Apr 2026)
+    source_version: GSE328026 (PEComa TPMs, public Apr 2026); gene-id-type=hugo; unit=TPM; harmonized to Ensembl release 112
+    processing_pipeline: gse328026_pecoma_2026_tpm_to_tpm_ensembl112_clean_tpm_16_9_75
     expected_size_gb: 0.01
     notes: >
-      n=69 PEComa tumors. TPM directly; harmonized to Ensembl 112.
+      PEComa TPM source matrix n=69; released reference artifacts use 60
+      sample_expression_qc_v2 pass samples; harmonized to Ensembl 112.
 
   - id: gse241095-sarc-ks-skin
     category: expression

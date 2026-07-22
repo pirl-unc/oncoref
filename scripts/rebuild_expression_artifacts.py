@@ -33,6 +33,7 @@ Outputs land under ``--out`` (a staging dir, NOT ``oncoref/data`` — the artifa
 are large and ship via the release tarball, so they're never committed):
 
     <out>/clean/<CODE>.parquet                                 (QC-filtered clean TPM)
+    <out>/cancer-reference-expression/<SOURCE>.csv.gz          (raw + clean summary rows)
     <out>/cancer-reference-expression-percentiles/<CODE>.parquet      (biology-only)
     <out>/cancer-reference-expression-representatives/<CODE>.parquet + _provenance.csv
     <out>/cancer-reference-expression-within-sample-top5/<CODE>.parquet (biology-only)
@@ -54,8 +55,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -76,9 +79,12 @@ from oncoref.expression import (
 from oncoref.expression_builders import (
     cohort_medoids,
     cohort_percentile_vectors,
+    summarize_source_matrix,
     within_sample_top_fractions,
 )
+from oncoref.expression_registry import expression_source_registry_entries
 from oncoref.gene_families import clean_tpm_censored_gene_ids
+from oncoref.load_dataset import get_data
 from oncoref.normalization import clean_tpm
 from oncoref.source_matrices import registry as source_registry
 
@@ -88,8 +94,95 @@ from oncoref.source_matrices import registry as source_registry
 _PCT_DS = SHARD_DATASETS["percentiles"]
 _WS_DS = SHARD_DATASETS["within_sample"]
 _PROTEOFORM_SCOPE = "cta"
+_SUMMARY_DIR = "cancer-reference-expression"
 
 _BASE = ["Ensembl_Gene_ID", "Symbol"]
+
+
+@dataclass(frozen=True)
+class _SummarySourceMetadata:
+    """Static provenance copied into a rebuilt reference-summary shard."""
+
+    source_cohort: str
+    source_project: str | None
+    source_version: str | None
+    processing_pipeline: str | None
+    notes: str
+    tumor_origin: str
+    metastasis_site: str | None
+    unit: str = "TPM"
+    citation: str | None = None
+    pipeline_stem: str = ""
+
+
+def _optional_text(value) -> str | None:
+    if value is None or pd.isna(value):
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _summary_source_metadata(code: str, source_cohort: str) -> _SummarySourceMetadata:
+    """Load static summary provenance without reusing the stale sample count."""
+    registry_matches = [
+        entry
+        for entry in expression_source_registry_entries()
+        if code in {str(value) for value in entry.get("cancer_codes", [])}
+        and str(entry.get("source_cohort") or "") == source_cohort
+    ]
+    if len(registry_matches) > 1:
+        raise ValueError(f"{code}: multiple expression sources for {source_cohort}")
+    if registry_matches:
+        entry = registry_matches[0]
+        return _SummarySourceMetadata(
+            source_cohort=source_cohort,
+            source_project=_optional_text(entry.get("source_project")),
+            source_version=_optional_text(entry.get("source_version")),
+            processing_pipeline=_optional_text(entry.get("processing_pipeline")),
+            notes=_optional_text(entry.get("notes") or entry.get("special_handling")) or "",
+            tumor_origin=_optional_text(entry.get("tumor_origin")) or "primary",
+            metastasis_site=_optional_text(entry.get("metastasis_site")),
+            unit=_optional_text(entry.get("unit")) or "TPM",
+            citation=_optional_text(entry.get("citation")),
+            pipeline_stem=_optional_text(entry.get("pipeline_stem")) or "",
+        )
+
+    # Some legacy source-matrix labels predate the source registry's canonical
+    # cohort ids. Its compact summary manifest remains the static-provenance fallback.
+    availability = get_data("cancer-reference-expression-availability")
+    matches = availability[
+        availability["cancer_code"].astype(str).eq(code)
+        & availability["source_cohort"].astype(str).eq(source_cohort)
+    ]
+    if len(matches) > 1:
+        raise ValueError(f"{code}: multiple summary metadata rows for {source_cohort}")
+    if matches.empty:
+        return _SummarySourceMetadata(
+            source_cohort=source_cohort,
+            source_project=None,
+            source_version=str(cohort_source_version(code)),
+            processing_pipeline=None,
+            notes="",
+            tumor_origin="primary",
+            metastasis_site=None,
+        )
+
+    row = matches.iloc[0]
+    return _SummarySourceMetadata(
+        source_cohort=source_cohort,
+        source_project=_optional_text(row.get("source_project")),
+        source_version=_optional_text(row.get("source_version")),
+        processing_pipeline=_optional_text(row.get("processing_pipeline")),
+        notes=_optional_text(row.get("notes")) or "",
+        tumor_origin=_optional_text(row.get("tumor_origin")) or "primary",
+        metastasis_site=_optional_text(row.get("metastasis_site")),
+    )
+
+
+def _summary_shard_name(source_cohort: str) -> str:
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+", source_cohort):
+        raise ValueError(f"source cohort is not safe as a summary shard name: {source_cohort!r}")
+    return f"{source_cohort}.csv.gz"
 
 
 def _code_key(name: str) -> str:
@@ -103,8 +196,6 @@ def _source_key(name: str) -> str:
     by GSE accession when present, else alphanumeric-only (so ``treehouse-polya-25-01``
     and ``TREEHOUSE_POLYA_25_01`` match, and ``gse75885-sarc`` matches its registry
     id ``GSE75885_DELESPAUL_2017`` on the shared GSE accession)."""
-    import re
-
     m = re.search(r"GSE\d+", name.upper())
     return m.group() if m else re.sub(r"[^A-Z0-9]", "", name.upper())
 
@@ -299,14 +390,16 @@ def rebuild(
     pct_dir = out / _PCT_DS.gene_dir
     pct_pf_dir = out / _PCT_DS.subdir(proteoform=True, scope=_PROTEOFORM_SCOPE)
     rep_dir = out / SHARD_DATASETS["representatives"].gene_dir
+    summary_dir = out / _SUMMARY_DIR
     ws_dir = out / _WS_DS.gene_dir
     ws_pf_dir = out / _WS_DS.subdir(proteoform=True, scope=_PROTEOFORM_SCOPE)
-    for d in (clean_dir, pct_dir, pct_pf_dir, rep_dir, ws_dir, ws_pf_dir):
+    for d in (clean_dir, pct_dir, pct_pf_dir, rep_dir, summary_dir, ws_dir, ws_pf_dir):
         d.mkdir(parents=True, exist_ok=True)
 
     provenance: list[dict] = []
     qc_manifest: list[pd.DataFrame] = []
     build_rows: list[dict] = []
+    summary_frames: list[pd.DataFrame] = []
     corrs: list[float] = []
     for code in codes:
         source_path = _select_source(code, by_code[code], code_to_source, code_to_n_samples)
@@ -327,6 +420,17 @@ def rebuild(
         clean_df = clean_df[[*_BASE, *samples]].copy()
         clean_df.to_parquet(clean_dir / f"{code}.parquet", index=False, compression="zstd")
 
+        source_cohort = code_to_source.get(code, code)
+        selected_raw = raw_df[[*_BASE, *samples]].copy()
+        summary_frames.append(
+            summarize_source_matrix(
+                selected_raw,
+                cancer_code=code,
+                source=_summary_source_metadata(code, source_cohort),
+                clean_matrix=clean_df,
+            )
+        )
+
         # Biological view (technical genes dropped) for the percentile, within-sample,
         # and representative-selection geometry, matching the shared contract:
         # choose representatives on biological signal but store full clean TPM vectors.
@@ -343,7 +447,6 @@ def rebuild(
         reps.to_parquet(rep_dir / f"{code}.parquet", index=False, compression="zstd")
         source_version = cohort_source_version(code)
         qc_counts = _qc_counts(qc)
-        source_cohort = code_to_source.get(code, code)
         sample_qc_by_id = dict(
             zip(
                 qc.get("sample_id", pd.Series(dtype=str)).astype(str),
@@ -454,6 +557,16 @@ def rebuild(
             msg += f"  clipped_negative_values={n_negative_values_clipped}"
         print(msg, flush=True)
 
+    if summary_frames:
+        summary_rows = pd.concat(summary_frames, ignore_index=True)
+        for source_cohort, rows in summary_rows.groupby("source_cohort", sort=True, dropna=False):
+            source_name = str(source_cohort)
+            rows.to_csv(
+                summary_dir / _summary_shard_name(source_name),
+                index=False,
+                compression="gzip",
+            )
+
     pd.DataFrame(provenance).to_csv(rep_dir / "_provenance.csv", index=False)
     if qc_manifest:
         pd.concat(qc_manifest, ignore_index=True).to_csv(
@@ -478,6 +591,7 @@ def rebuild(
         ),
         "derived_artifacts": [
             "clean",
+            _SUMMARY_DIR,
             _PCT_DS.gene_dir,
             _PCT_DS.subdir(proteoform=True, scope=_PROTEOFORM_SCOPE),
             SHARD_DATASETS["representatives"].gene_dir,
