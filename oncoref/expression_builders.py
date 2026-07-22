@@ -271,6 +271,8 @@ class GeoMatrixSource:
     transposed: bool = False
     sample_filter: Callable[[list[str]], list[str]] | None = None
     sample_to_cancer_code: Callable[[str], str | None] | None = None
+    expected_source_samples: int | None = None
+    expected_samples_by_code: Mapping[str, int] | None = None
     source_scale_class: str | None = None
     linear_tpm_comparable: bool | None = None
     tpm_proxy: bool | None = None
@@ -514,6 +516,42 @@ def _coerce_string_tuple(value) -> tuple[str, ...]:
     return tuple(str(part) for part in value)
 
 
+def _nonnegative_sample_count(value, *, description: str) -> int:
+    text = str(value).strip()
+    if isinstance(value, bool) or re.fullmatch(r"\d+", text) is None:
+        raise ValueError(f"{description} must be a non-negative integer; got {value!r}")
+    return int(text)
+
+
+def _expected_samples_by_code(entry: Mapping, cancer_codes: Iterable[str]) -> dict[str, int]:
+    expected_raw = entry.get("expected_samples_by_code") or {}
+    expected = {
+        str(code): _nonnegative_sample_count(
+            count,
+            description=f"source {entry.get('id')!r} expected count for {code}",
+        )
+        for code, count in dict(expected_raw).items()
+    }
+    declared = {str(code) for code in cancer_codes}
+    unexpected = sorted(set(expected) - declared)
+    if unexpected:
+        raise ValueError(
+            f"source {entry.get('id')!r} has expected counts for undeclared cancer codes: "
+            f"{unexpected}"
+        )
+    return expected
+
+
+def _expected_source_samples(entry: Mapping) -> int | None:
+    value = entry.get("expected_source_samples")
+    if value is None:
+        return None
+    return _nonnegative_sample_count(
+        value,
+        description=f"source {entry.get('id')!r} expected source sample count",
+    )
+
+
 def gdc_source_entries(registry_path: str | Path | None = None) -> list[dict]:
     """Raw ``source_type: gdc`` entries from ``expression_sources.yaml``."""
     return [
@@ -537,8 +575,7 @@ def gdc_source_from_entry(entry: Mapping) -> GdcSource:
     if not project_ids:
         raise ValueError(f"source {entry.get('id')!r} has no GDC project_id/project_ids")
     cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
-    expected_raw = entry.get("expected_samples_by_code") or {}
-    expected = {str(code): int(n) for code, n in dict(expected_raw).items()}
+    expected = _expected_samples_by_code(entry, cancer_codes)
     sample_types = _coerce_string_tuple(entry.get("gdc_sample_types")) or GDC_PRIMARY_SAMPLE_TYPES
     source_url = entry.get("url") or (
         f"https://portal.gdc.cancer.gov/projects/{project_ids[0]}"
@@ -614,21 +651,81 @@ def _compile_sample_filter(spec: Mapping | None) -> Callable[[list[str]], list[s
     return _filter
 
 
-def _compile_sample_to_cancer_code(
-    spec: Mapping | None,
-) -> Callable[[str], str | None] | None:
-    rules = (spec or {}).get("rules", [])
-    if not rules:
-        return None
-    compiled = [(re.compile(str(rule["match"])), str(rule["cancer_code"])) for rule in rules]
+def _compile_file_sample_router(
+    spec: Mapping,
+    *,
+    allowed_codes: set[str],
+    data_root: str | Path | None = None,
+) -> Callable[[str], str | None]:
+    path = Path(str(spec["mapping_file"]))
+    if not path.is_absolute():
+        root = Path(data_root) if data_root is not None else Path(__file__).parent / "data"
+        path = root / path
+    mapping_df = pd.read_csv(path, dtype=str, keep_default_na=False)
+    sample_col = str(spec.get("sample_id_column", "sample_id"))
+    code_col = str(spec.get("cancer_code_column", "cancer_code"))
+    missing = [col for col in (sample_col, code_col) if col not in mapping_df.columns]
+    if missing:
+        raise ValueError(f"sample routing mapping {path} is missing columns: {missing}")
 
-    def _dispatch(sample_id: str) -> str | None:
+    sample_ids = mapping_df[sample_col].astype(str).str.strip()
+    if (sample_ids == "").any():
+        raise ValueError(f"sample routing mapping {path} contains blank sample IDs")
+    duplicates = sorted(sample_ids[sample_ids.duplicated(keep=False)].unique())
+    if duplicates:
+        raise ValueError(f"sample routing mapping {path} has duplicate sample IDs: {duplicates}")
+
+    codes = mapping_df[code_col].astype(str).str.strip()
+    unexpected = sorted(set(codes[codes != ""]) - allowed_codes) if allowed_codes else []
+    if unexpected:
+        raise ValueError(
+            f"sample routing mapping {path} contains undeclared cancer codes: {unexpected}"
+        )
+    mapping = {sample_id: code for sample_id, code in zip(sample_ids, codes) if code}
+
+    def _route(sample_id: str) -> str | None:
+        return mapping.get(str(sample_id))
+
+    return _route
+
+
+def _compile_rule_sample_router(
+    rules: Iterable[Mapping],
+    *,
+    allowed_codes: set[str],
+) -> Callable[[str], str | None]:
+    compiled = [(re.compile(str(rule["match"])), str(rule["cancer_code"])) for rule in rules]
+    unexpected = sorted({code for _, code in compiled} - allowed_codes) if allowed_codes else []
+    if unexpected:
+        raise ValueError(f"sample routing rules contain undeclared cancer codes: {unexpected}")
+
+    def _route(sample_id: str) -> str | None:
         for regex, code in compiled:
             if regex.search(str(sample_id)):
                 return code
         return None
 
-    return _dispatch
+    return _route
+
+
+def _compile_sample_to_cancer_code(
+    spec: Mapping | None,
+    *,
+    allowed_codes: Iterable[str] = (),
+    data_root: str | Path | None = None,
+) -> Callable[[str], str | None] | None:
+    config = spec or {}
+    rules = config.get("rules", [])
+    mapping_file = config.get("mapping_file")
+    if rules and mapping_file:
+        raise ValueError("sample routing must use rules or mapping_file, not both")
+
+    allowed = {str(code) for code in allowed_codes}
+    if mapping_file:
+        return _compile_file_sample_router(config, allowed_codes=allowed, data_root=data_root)
+    if rules:
+        return _compile_rule_sample_router(rules, allowed_codes=allowed)
+    return None
 
 
 def _coerce_source_expression_unit(unit: str) -> SourceExpressionUnit:
@@ -667,7 +764,11 @@ def _coerce_optional_text(value) -> str | None:
     return text or None
 
 
-def geo_matrix_source_from_entry(entry: Mapping) -> GeoMatrixSource:
+def geo_matrix_source_from_entry(
+    entry: Mapping,
+    *,
+    data_root: str | Path | None = None,
+) -> GeoMatrixSource:
     """Convert one registry YAML entry into an executable :class:`GeoMatrixSource`."""
     if entry.get("source_type") != GEO_MATRIX_SOURCE_TYPE:
         raise ValueError(
@@ -678,6 +779,7 @@ def geo_matrix_source_from_entry(entry: Mapping) -> GeoMatrixSource:
     if not cancer_codes:
         raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
     cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
+    expected = _expected_samples_by_code(entry, cancer_codes)
     return GeoMatrixSource(
         cancer_code=cancer_code,
         source_cohort=str(entry["source_cohort"]),
@@ -692,7 +794,13 @@ def geo_matrix_source_from_entry(entry: Mapping) -> GeoMatrixSource:
         sep=str(entry.get("sep", "\t")),
         transposed=bool(entry.get("transposed", False)),
         sample_filter=_compile_sample_filter(entry.get("sample_filter")),
-        sample_to_cancer_code=_compile_sample_to_cancer_code(entry.get("sample_to_cancer_code")),
+        sample_to_cancer_code=_compile_sample_to_cancer_code(
+            entry.get("sample_to_cancer_code"),
+            allowed_codes=cancer_codes,
+            data_root=data_root,
+        ),
+        expected_source_samples=_expected_source_samples(entry),
+        expected_samples_by_code=expected,
         source_scale_class=entry.get("source_scale_class"),
         linear_tpm_comparable=entry.get("linear_tpm_comparable"),
         tpm_proxy=entry.get("tpm_proxy"),
@@ -710,7 +818,8 @@ def geo_matrix_source_from_registry(
     """Load one ``source_type: geo-matrix`` entry from ``expression_sources.yaml``."""
     for entry in _source_entries_from_registry(registry_path):
         if entry.get("id") == source_id:
-            return geo_matrix_source_from_entry(entry)
+            data_root = Path(registry_path).parent if registry_path is not None else None
+            return geo_matrix_source_from_entry(entry, data_root=data_root)
     raise KeyError(f"source id {source_id!r} not found in expression source registry")
 
 
@@ -954,6 +1063,27 @@ def source_expression_value_columns(
     return [str(c) for c in df.columns if c not in excluded]
 
 
+def _unique_source_sample_ids(values: Iterable) -> list[str]:
+    """Return stable, non-colliding labels for repeated source sample IDs."""
+    labels = [str(value).strip() for value in values]
+    reserved = set(labels)
+    used: set[str] = set()
+    next_suffix: dict[str, int] = {}
+    unique = []
+    for label in labels:
+        candidate = label
+        if candidate in used:
+            suffix = next_suffix.get(label, 1)
+            candidate = f"{label}.{suffix}"
+            while candidate in used or candidate in reserved:
+                suffix += 1
+                candidate = f"{label}.{suffix}"
+            next_suffix[label] = suffix + 1
+        used.add(candidate)
+        unique.append(candidate)
+    return unique
+
+
 def read_source_expression_matrix(
     path: str | Path,
     *,
@@ -981,10 +1111,28 @@ def read_source_expression_matrix(
         raise ValueError(f"source expression matrix is empty: {path}")
 
     if transposed:
-        source_sample_col = gene_id_col or str(df.columns[0])
-        if source_sample_col not in df.columns:
-            raise ValueError(f"sample ID column {source_sample_col!r} is not in expression data")
-        df = df.dropna(subset=[source_sample_col]).set_index(source_sample_col).T.reset_index()
+        if isinstance(df.index, pd.RangeIndex):
+            source_sample_col = gene_id_col or str(df.columns[0])
+            if source_sample_col not in df.columns:
+                raise ValueError(
+                    f"sample ID column {source_sample_col!r} is not in expression data"
+                )
+        else:
+            # pandas uses the unlabeled leading field as the index when each data
+            # row has one more field than the header, as in the GSE294016 matrix.
+            source_sample_col = "source_sample_id"
+            if source_sample_col in df.columns:
+                raise ValueError(
+                    "source matrix has both an implicit sample index and a source_sample_id column"
+                )
+            df.insert(0, source_sample_col, df.index)
+            df = df.reset_index(drop=True)
+        df = df.dropna(subset=[source_sample_col]).copy()
+        sample_ids = df[source_sample_col].astype(str).str.strip()
+        if (sample_ids == "").any():
+            raise ValueError("source expression matrix contains blank sample IDs")
+        df[source_sample_col] = _unique_source_sample_ids(sample_ids)
+        df = df.set_index(source_sample_col).T.reset_index()
         row_id_col = "source_row_id"
         df = df.rename(columns={"index": row_id_col})
         symbol_col = None
@@ -2263,6 +2411,29 @@ def split_source_matrix_by_code(
     return out
 
 
+def _validate_routed_sample_counts(
+    source_cohort: str,
+    routed_samples: Mapping[str, list[str]],
+    expected_counts: Mapping[str, int] | None,
+) -> None:
+    """Fail when diagnosis routing does not produce its declared cohort sizes."""
+    for code, expected_count in (expected_counts or {}).items():
+        actual_count = len(routed_samples.get(str(code), []))
+        if actual_count != int(expected_count):
+            raise ValueError(
+                f"{source_cohort} routed {code} n={actual_count}; expected {expected_count}"
+            )
+
+
+def _validate_source_sample_count(source: GeoMatrixSource, actual_count: int) -> None:
+    expected_count = source.expected_source_samples
+    if expected_count is not None and actual_count != expected_count:
+        raise ValueError(
+            f"{source.source_cohort} contains {actual_count} source samples; "
+            f"expected {expected_count}"
+        )
+
+
 def build_source_matrices(
     source: GeoMatrixSource,
     *,
@@ -2307,6 +2478,7 @@ def build_source_matrices(
     raw_value_cols = source_expression_value_columns(
         raw, row_id_col=row_id_col, symbol_col=symbol_col
     )
+    _validate_source_sample_count(source, len(raw_value_cols))
     if source.sample_filter is not None:
         keep = source.sample_filter(raw_value_cols)
         missing = [c for c in keep if c not in raw.columns]
@@ -2339,15 +2511,6 @@ def build_source_matrices(
     )
     matrix.attrs["source_value_parse_diagnostics"] = parse_diagnostics
 
-    stem = _artifact_stem(source.source_cohort)
-    sidecar_paths: dict[str, Path] = {}
-    audit_path = out_dir / f"{stem}_mapping_audit.csv"
-    parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
-    _write_csv_atomic(audit, audit_path)
-    _write_csv_atomic(parse_diagnostics, parse_path)
-    sidecar_paths["mapping_audit"] = audit_path
-    sidecar_paths["parse_diagnostics"] = parse_path
-
     meta = source_metadata(
         source_cohort=source.source_cohort,
         source_type=source.source_project,
@@ -2359,15 +2522,39 @@ def build_source_matrices(
 
     from .expression import sample_expression_qc_from_matrix
 
+    routed = split_source_matrix_by_code(
+        matrix,
+        source.cancer_code,
+        sample_to_cancer_code=source.sample_to_cancer_code,
+    )
+    declared_codes = (
+        {str(source.cancer_code)}
+        if isinstance(source.cancer_code, str)
+        else {str(code) for code in source.cancer_code}
+    )
+    unexpected_codes = sorted(set(routed) - declared_codes)
+    if unexpected_codes:
+        raise ValueError(f"samples routed to undeclared cancer codes: {unexpected_codes}")
+    _validate_routed_sample_counts(
+        source.source_cohort,
+        routed,
+        source.expected_samples_by_code,
+    )
+
+    stem = _artifact_stem(source.source_cohort)
+    sidecar_paths: dict[str, Path] = {}
+    audit_path = out_dir / f"{stem}_mapping_audit.csv"
+    parse_path = out_dir / f"{stem}_parse_diagnostics.csv"
+    _write_csv_atomic(audit, audit_path)
+    _write_csv_atomic(parse_diagnostics, parse_path)
+    sidecar_paths["mapping_audit"] = audit_path
+    sidecar_paths["parse_diagnostics"] = parse_path
+
     matrices: dict[str, pd.DataFrame] = {}
     matrix_paths: dict[str, Path] = {}
     qc_frames: list[pd.DataFrame] = []
     summary_frames: list[pd.DataFrame] = []
-    for code, cols in split_source_matrix_by_code(
-        matrix,
-        source.cancer_code,
-        sample_to_cancer_code=source.sample_to_cancer_code,
-    ).items():
+    for code, cols in routed.items():
         if not cols:
             continue
         sub = matrix[[*id_columns(matrix), *cols]].copy()
