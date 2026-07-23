@@ -2662,10 +2662,12 @@ def cancer_reference_expression(
     ``reference_source="summary_rows_all"`` is the source-union view over those
     sidecars: it preserves one row per ``(gene, cancer_code, source_cohort)`` and
     supports ``source_kind``, ``source_cohort``, ``exclude_microarray_proxy``, and
-    long-form ``pool=True``. Because the shipped sidecars are all-sample summaries,
-    this mode requires ``sample_qc="all"``; use ``summary_rows`` for the current
-    QC-filtered richest-source recompute path. For both source filters, ``None``
-    means unfiltered; an empty iterable or blank scalar explicitly matches no sources.
+    long-form ``pool=True``. Source/code/gene filters are applied while reading the
+    selected per-source shards, before any concatenation. Because the shipped
+    sidecars are all-sample summaries, this mode requires ``sample_qc="all"``. Use
+    ``summary_rows`` for the current QC-filtered richest-source recompute path. For
+    both source filters, ``None`` means unfiltered; an empty iterable or blank scalar
+    explicitly matches no sources.
 
     ``sample_qc="artifact"`` reads each clean/log-clean percentile shard using
     the QC policy recorded when that shard was built. It is intentionally valid
@@ -2773,8 +2775,12 @@ def cancer_reference_expression(
 
     long_parts: list[pd.DataFrame] = []
     wide_parts: list[pd.DataFrame] = []
+    reads_summary_shards = reference_source == "summary_rows_all" or (
+        reference_source == "summary_rows" and sample_qc == "all"
+    )
     for request in requests:
         code = request["cancer_code"]
+        summary_shard_cache: dict[Path, pd.DataFrame] | None = {} if reads_summary_shards else None
         for mode in modes:
             request_key = (request["requested_code"], code, mode)
             if request_key not in available_keys:
@@ -2788,8 +2794,11 @@ def cancer_reference_expression(
                 source_kinds=source_kinds,
                 source_cohorts=source_cohorts,
                 exclude_microarray_proxy=exclude_microarray_proxy,
+                genes=genes,
+                summary_shard_cache=summary_shard_cache,
             )
-            ref = ref[_gene_filter_mask(ref, genes)].reset_index(drop=True)
+            if method not in {_REFERENCE_SUMMARY_METHOD, _REFERENCE_SUMMARY_ALL_METHOD}:
+                ref = ref[_gene_filter_mask(ref, genes)].reset_index(drop=True)
             ref = _apply_artifact_gene_universe(
                 ref,
                 product="cancer_reference_expression",
@@ -3796,6 +3805,8 @@ def _reference_expression_frame(
     source_kinds: set[str] | None = None,
     source_cohorts: set[str] | None = None,
     exclude_microarray_proxy: bool = False,
+    genes: str | Iterable[str] | None = None,
+    summary_shard_cache: dict[Path, pd.DataFrame] | None = None,
 ) -> tuple[pd.DataFrame, str]:
     if reference_source == "summary_rows_all":
         return (
@@ -3806,12 +3817,22 @@ def _reference_expression_frame(
                 source_kinds=source_kinds,
                 source_cohorts=source_cohorts,
                 exclude_microarray_proxy=exclude_microarray_proxy,
+                genes=genes,
+                shard_cache=summary_shard_cache,
             ),
             _REFERENCE_SUMMARY_ALL_METHOD,
         )
     if reference_source == "summary_rows":
         if sample_qc == "all":
-            return _reference_summary_expression_frame(code, mode), _REFERENCE_SUMMARY_METHOD
+            return (
+                _reference_summary_expression_frame(
+                    code,
+                    mode,
+                    genes=genes,
+                    shard_cache=summary_shard_cache,
+                ),
+                _REFERENCE_SUMMARY_METHOD,
+            )
         normalize = "tpm_clean" if mode == "tpm_clean_biological" else mode
         return (
             cohort_stats(code, normalize=normalize, auto_fetch=auto_fetch, sample_qc=sample_qc),
@@ -3877,83 +3898,6 @@ def _canonical_reference_summary_source_labels(df: pd.DataFrame) -> pd.DataFrame
     return out
 
 
-@lru_cache(maxsize=1)
-def _reference_summary_frame() -> pd.DataFrame:
-    """Shared read-only summary frame with canonical source labels."""
-
-    frame = get_data(_REFERENCE_SUMMARY_DATASET, copy=False)
-    return _canonical_reference_summary_source_labels(frame)
-
-
-_register_derived_cache(_reference_summary_frame.cache_clear)
-
-
-_REFERENCE_SUMMARY_ROW_INDEX: (
-    tuple[
-        pd.DataFrame,
-        dict[tuple[str, str], np.ndarray],
-    ]
-    | None
-) = None
-
-
-def _reference_summary_row_index() -> dict[tuple[str, str], np.ndarray]:
-    """Map ``(cancer_code, source_cohort)`` to summary row positions.
-
-    The source-summary artifact currently has roughly five million rows.  A
-    boolean scan for each accessor call made small gene queries take tens of
-    seconds and multiplied that cost by every requested normalization.  The
-    frame is process-global and read-only, so build the positional index once;
-    keying the cache on object identity keeps monkeypatched/test frames safe.
-    """
-    global _REFERENCE_SUMMARY_ROW_INDEX
-    df = _reference_summary_frame()
-    cached = _REFERENCE_SUMMARY_ROW_INDEX
-    if cached is not None and cached[0] is df:
-        return cached[1]
-    if df.empty:
-        index = {}
-    else:
-        code_series = df["cancer_code"]
-        source_series = df["source_cohort"]
-        codes = _compact_comparison_values(code_series)
-        sources = _compact_comparison_values(source_series)
-        starts_new_source = np.empty(len(df), dtype=bool)
-        starts_new_source[0] = True
-        starts_new_source[1:] = (codes[1:] != codes[:-1]) | (sources[1:] != sources[:-1])
-        starts = np.flatnonzero(starts_new_source)
-        ends = np.append(starts[1:], len(df))
-        all_positions = np.arange(len(df), dtype=np.int64)
-        index = {}
-        for start, end in zip(starts, ends):
-            source = source_series.iloc[start]
-            key = (
-                str(code_series.iloc[start]),
-                "" if pd.isna(source) else str(source),
-            )
-            positions = all_positions[start:end]
-            if key in index:
-                positions = np.concatenate([index[key], positions])
-            index[key] = positions
-    _REFERENCE_SUMMARY_ROW_INDEX = (df, index)
-    return index
-
-
-def _compact_comparison_values(series: pd.Series) -> np.ndarray:
-    """Return category codes when available, avoiding a large object array."""
-    if isinstance(series.dtype, pd.CategoricalDtype):
-        return series.cat.codes.to_numpy(copy=False)
-    return series.to_numpy(copy=False)
-
-
-def _clear_reference_summary_row_index() -> None:
-    global _REFERENCE_SUMMARY_ROW_INDEX
-    _REFERENCE_SUMMARY_ROW_INDEX = None
-
-
-_register_derived_cache(_clear_reference_summary_row_index)
-
-
 def _reference_summary_available_codes(
     *,
     source_kinds: set[str] | None = None,
@@ -3973,7 +3917,8 @@ def _reference_summary_available_codes(
 
 @lru_cache(maxsize=1)
 def _reference_summary_source_table() -> pd.DataFrame:
-    df = _reference_summary_frame()
+    """Rank sources from the compact manifest without loading expression rows."""
+
     columns = [
         "cancer_code",
         "source_cohort",
@@ -3987,46 +3932,16 @@ def _reference_summary_source_table() -> pd.DataFrame:
         "notes",
         "selected",
     ]
-    if df.empty:
+    table = _canonical_reference_summary_source_labels(
+        _reference_summary_availability_table()
+    ).copy()
+    if table.empty:
         return pd.DataFrame(columns=columns)
-    source_columns = [
-        column
-        for column in (
-            "Ensembl_Gene_ID",
-            "n_samples",
-            "source_project",
-            "source_version",
-            "tumor_origin",
-            "metastasis_site",
-            "processing_pipeline",
-            "notes",
-        )
-        if column in df.columns
-    ]
-    source_column_positions = [df.columns.get_loc(column) for column in source_columns]
-    records = []
-    for (code, source), positions in _reference_summary_row_index().items():
-        source_rows = df.iloc[positions, source_column_positions]
-        first = source_rows.iloc[0]
-        records.append(
-            {
-                "cancer_code": code,
-                "source_cohort": source,
-                "source_project": first.get("source_project"),
-                "source_version": first.get("source_version"),
-                "tumor_origin": first.get("tumor_origin"),
-                "metastasis_site": first.get("metastasis_site"),
-                "n_reference_genes": source_rows["Ensembl_Gene_ID"].nunique(),
-                "n_reference_samples": pd.to_numeric(
-                    source_rows["n_samples"], errors="coerce"
-                ).max(),
-                "processing_pipeline": first.get("processing_pipeline"),
-                "notes": first.get("notes"),
-            }
-        )
-    grouped = pd.DataFrame.from_records(records)
-    grouped["_origin_rank"] = (
-        grouped["tumor_origin"]
+    for column in columns:
+        if column not in table.columns:
+            table[column] = pd.NA
+    table["_origin_rank"] = (
+        table["tumor_origin"]
         .fillna("")
         .astype(str)
         .str.lower()
@@ -4034,15 +3949,14 @@ def _reference_summary_source_table() -> pd.DataFrame:
         .fillna(99)
         .astype(int)
     )
-    grouped["_source_sort"] = grouped["source_cohort"].astype("string").fillna("")
-    grouped = grouped.sort_values(
+    table["_source_sort"] = table["source_cohort"].astype("string").fillna("")
+    table = table.sort_values(
         ["cancer_code", "n_reference_genes", "n_reference_samples", "_origin_rank", "_source_sort"],
         ascending=[True, False, False, True, True],
         kind="stable",
     )
-    grouped["selected"] = ~grouped["cancer_code"].duplicated()
-    grouped = grouped.drop(columns=["_origin_rank", "_source_sort"])
-    return grouped[columns]
+    table["selected"] = ~table["cancer_code"].astype(str).duplicated()
+    return table.drop(columns=["_origin_rank", "_source_sort"])[columns].reset_index(drop=True)
 
 
 _register_derived_cache(_reference_summary_source_table.cache_clear)
@@ -4058,17 +3972,87 @@ def _reference_summary_selected_source(code: str) -> dict | None:
     return matches.iloc[0].to_dict()
 
 
-def _reference_summary_selected_rows(code: str) -> pd.DataFrame:
-    selected = _reference_summary_selected_source(code)
-    df = _reference_summary_frame()
-    if selected is None:
-        return pd.DataFrame(columns=df.columns)
-    positions = _reference_summary_row_index().get(
-        (str(code), str(selected["source_cohort"])),
+def _reference_summary_shard_path(root: Path, code: str, source_cohort: str) -> Path:
+    """Resolve the one physical shard that contains a source/code pair."""
+
+    source_names = [source_cohort]
+    if source_cohort == TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT and code in (
+        TREEHOUSE_TCGA_SARC_HISTOLOGY_CODES
+    ):
+        source_names.extend([TREEHOUSE_TCGA_SAMPLES_COHORT, TREEHOUSE_TCGA_LEGACY_COHORT])
+    elif source_cohort == TREEHOUSE_TCGA_SAMPLES_COHORT:
+        source_names.append(TREEHOUSE_TCGA_LEGACY_COHORT)
+    stems = tuple(stem for source in source_names for stem in (f"{source}__{code}", source))
+    for stem in stems:
+        for suffix in (".csv.gz", ".csv"):
+            path = root / f"{stem}{suffix}"
+            if path.is_file():
+                return path
+    expected = ", ".join(f"{stem}.csv[.gz]" for stem in stems)
+    raise FileNotFoundError(
+        f"no cancer reference expression shard for {code}/{source_cohort}; expected {expected}"
     )
-    if positions is None:
-        return pd.DataFrame(columns=df.columns)
-    return df.iloc[positions].copy()
+
+
+def _read_reference_summary_shard(
+    path: Path,
+    *,
+    shard_cache: dict[Path, pd.DataFrame] | None,
+) -> pd.DataFrame:
+    """Read one source shard, optionally reusing it within one public request."""
+
+    if shard_cache is not None and path in shard_cache:
+        return shard_cache[path]
+    frame = _canonical_reference_summary_source_labels(pd.read_csv(path, low_memory=False))
+    if shard_cache is not None:
+        shard_cache[path] = frame
+    return frame
+
+
+def _reference_summary_rows_for_sources(
+    code: str,
+    sources: pd.DataFrame,
+    *,
+    genes: str | Iterable[str] | None = None,
+    shard_cache: dict[Path, pd.DataFrame] | None = None,
+) -> pd.DataFrame:
+    """Load only the shards named by ``sources`` and filter before concatenation."""
+
+    if sources.empty:
+        return pd.DataFrame()
+    root = _bundle_subdir(_REFERENCE_SUMMARY_DATASET, auto_fetch=True)
+    source_ids = set(sources["source_cohort"].dropna().astype(str))
+    paths = {_reference_summary_shard_path(root, str(code), source) for source in source_ids}
+    parts = []
+    for path in sorted(paths):
+        frame = _read_reference_summary_shard(path, shard_cache=shard_cache)
+        mask = frame["cancer_code"].astype(str).eq(str(code))
+        mask &= frame["source_cohort"].astype(str).isin(source_ids)
+        selected = frame.loc[mask]
+        if genes is not None and not selected.empty:
+            selected = selected.loc[_gene_filter_mask(selected, genes)]
+        if not selected.empty:
+            parts.append(selected.copy())
+    if not parts:
+        return pd.DataFrame()
+    return pd.concat(parts, ignore_index=True)
+
+
+def _reference_summary_selected_rows(
+    code: str,
+    *,
+    genes: str | Iterable[str] | None = None,
+    shard_cache: dict[Path, pd.DataFrame] | None = None,
+) -> pd.DataFrame:
+    selected = _reference_summary_selected_source(code)
+    if selected is None:
+        return pd.DataFrame()
+    return _reference_summary_rows_for_sources(
+        code,
+        pd.DataFrame([selected]),
+        genes=genes,
+        shard_cache=shard_cache,
+    )
 
 
 def _normalize_source_filter_values(values: str | Iterable[str] | None) -> set[str] | None:
@@ -4146,6 +4130,8 @@ def _reference_summary_all_rows(
     source_kinds: set[str] | None = None,
     source_cohorts: set[str] | None = None,
     exclude_microarray_proxy: bool = False,
+    genes: str | Iterable[str] | None = None,
+    shard_cache: dict[Path, pd.DataFrame] | None = None,
 ) -> pd.DataFrame:
     sources = _filter_reference_summary_sources(
         _reference_summary_source_table(),
@@ -4154,20 +4140,12 @@ def _reference_summary_all_rows(
         exclude_microarray_proxy=exclude_microarray_proxy,
     )
     sources = sources.loc[sources["cancer_code"].astype(str) == str(code)]
-    df = _reference_summary_frame()
-    if sources.empty:
-        return pd.DataFrame(columns=df.columns)
-    row_index = _reference_summary_row_index()
-    parts = [
-        row_index[(str(code), source)]
-        for source in sources["source_cohort"].astype(str)
-        if (str(code), source) in row_index
-    ]
-    if not parts:
-        return pd.DataFrame(columns=df.columns)
-    # Preserve authoritative artifact order across multiple source cohorts.
-    positions = np.sort(np.concatenate(parts))
-    return df.iloc[positions].copy()
+    return _reference_summary_rows_for_sources(
+        code,
+        sources,
+        genes=genes,
+        shard_cache=shard_cache,
+    )
 
 
 def _reference_summary_expression_frame(
@@ -4178,6 +4156,8 @@ def _reference_summary_expression_frame(
     source_kinds: set[str] | None = None,
     source_cohorts: set[str] | None = None,
     exclude_microarray_proxy: bool = False,
+    genes: str | Iterable[str] | None = None,
+    shard_cache: dict[Path, pd.DataFrame] | None = None,
 ) -> pd.DataFrame:
     rows = (
         _reference_summary_all_rows(
@@ -4185,9 +4165,15 @@ def _reference_summary_expression_frame(
             source_kinds=source_kinds,
             source_cohorts=source_cohorts,
             exclude_microarray_proxy=exclude_microarray_proxy,
+            genes=genes,
+            shard_cache=shard_cache,
         )
         if all_sources
-        else _reference_summary_selected_rows(code)
+        else _reference_summary_selected_rows(
+            code,
+            genes=genes,
+            shard_cache=shard_cache,
+        )
     )
     if rows.empty:
         return pd.DataFrame(columns=["Ensembl_Gene_ID", "Symbol", "p25", "p50", "p75"])
@@ -4225,15 +4211,21 @@ def _attach_summary_row_provenance(df: pd.DataFrame, *, code: str) -> pd.DataFra
     if df.empty:
         return df
     out = df.copy()
-    source_counts = (
+    observed_counts = (
         out.groupby("source_cohort", dropna=False, observed=True)
         .agg(
             n_reference_genes=("Ensembl_Gene_ID", "nunique"),
             n_reference_samples=("n_samples", "max"),
         )
         .reset_index()
+        .set_index("source_cohort")
+        .to_dict("index")
     )
-    source_meta = source_counts.set_index("source_cohort").to_dict("index")
+    source_table = _reference_summary_source_table()
+    source_table = source_table.loc[source_table["cancer_code"].astype(str).eq(str(code))]
+    manifest_counts = source_table.set_index("source_cohort")[
+        ["n_reference_genes", "n_reference_samples"]
+    ].to_dict("index")
     meta_by_source = {
         str(source): _selected_expression_source_metadata(code, source_cohort=str(source))
         for source in out["source_cohort"].astype("string").fillna("").unique()
@@ -4250,10 +4242,14 @@ def _attach_summary_row_provenance(df: pd.DataFrame, *, code: str) -> pd.DataFra
         lambda source: bool(meta_by_source.get(source, {}).get("linear_tpm_comparable"))
     )
     out["n_reference_genes"] = source_key.map(
-        lambda source: source_meta.get(source, {}).get("n_reference_genes")
+        lambda source: manifest_counts.get(source, observed_counts.get(source, {})).get(
+            "n_reference_genes"
+        )
     )
     out["n_reference_samples"] = source_key.map(
-        lambda source: source_meta.get(source, {}).get("n_reference_samples")
+        lambda source: manifest_counts.get(source, observed_counts.get(source, {})).get(
+            "n_reference_samples"
+        )
     )
     out["reference_method"] = _REFERENCE_SUMMARY_ALL_METHOD
     out["sample_qc"] = "all"
@@ -4374,16 +4370,15 @@ def _reference_summary_source_metadata(
 ) -> dict[str, str | bool | int | float | None] | None:
     """Read one source's provenance from the compact availability manifest."""
     sources = _filter_reference_summary_sources(
-        _reference_summary_availability_table(),
+        _reference_summary_source_table(),
         source_kinds=source_kinds,
         source_cohorts=source_cohorts,
         exclude_microarray_proxy=exclude_microarray_proxy,
     )
     matches = sources.loc[sources["cancer_code"].astype(str) == str(code)]
-    if "selected" in matches:
-        selected_matches = matches.loc[matches["selected"].fillna(False).astype(bool)]
-        if not selected_matches.empty:
-            matches = selected_matches
+    selected_matches = matches.loc[matches["selected"].fillna(False).astype(bool)]
+    if not selected_matches.empty:
+        matches = selected_matches
     selected = None if matches.empty else matches.iloc[0].to_dict()
     if selected is None:
         return None
@@ -5664,12 +5659,11 @@ def _add_computed_pan_cancer_raw_columns(
     return out, raw_cols, added
 
 
-_PAN_CANCER_POOLED_SERIES_CACHE: tuple[pd.DataFrame, dict[tuple[str, ...], pd.Series]] | None = None
+_PAN_CANCER_POOLED_SERIES_CACHE: dict[tuple[str, ...], pd.Series] = {}
 
 
 def _clear_pan_cancer_pooled_series_cache() -> None:
-    global _PAN_CANCER_POOLED_SERIES_CACHE
-    _PAN_CANCER_POOLED_SERIES_CACHE = None
+    _PAN_CANCER_POOLED_SERIES_CACHE.clear()
 
 
 _register_derived_cache(_clear_pan_cancer_pooled_series_cache)
@@ -5677,15 +5671,11 @@ _register_derived_cache(_clear_pan_cancer_pooled_series_cache)
 
 def _pooled_reference_expression_series_for_pan_cancer(member_codes: tuple[str, ...]) -> pd.Series:
     """n-sample-weighted raw TPM medians for a computed pan-cancer aggregate."""
-    global _PAN_CANCER_POOLED_SERIES_CACHE
-    summary = _reference_summary_frame()
-    cached = _PAN_CANCER_POOLED_SERIES_CACHE
-    if cached is None or cached[0] is not summary:
-        cached = (summary, {})
-        _PAN_CANCER_POOLED_SERIES_CACHE = cached
-    if member_codes not in cached[1]:
-        cached[1][member_codes] = _compute_pooled_reference_expression_series(member_codes)
-    return cached[1][member_codes]
+    if member_codes not in _PAN_CANCER_POOLED_SERIES_CACHE:
+        _PAN_CANCER_POOLED_SERIES_CACHE[member_codes] = _compute_pooled_reference_expression_series(
+            member_codes
+        )
+    return _PAN_CANCER_POOLED_SERIES_CACHE[member_codes]
 
 
 def _compute_pooled_reference_expression_series(member_codes: tuple[str, ...]) -> pd.Series:
@@ -5723,21 +5713,18 @@ def _selected_reference_summary_rows_for_pan_cancer(member_codes: tuple[str, ...
     ].copy()
     if selected.empty:
         return pd.DataFrame()
-    summary = _reference_summary_frame()
-    if summary.empty:
-        return pd.DataFrame()
-    row_index = _reference_summary_row_index()
-    positions = []
-    for row in selected.itertuples(index=False):
-        source_key = (str(row.cancer_code), str(row.source_cohort))
-        if source_key in row_index:
-            positions.append(row_index[source_key])
-    if not positions:
+    parts = [
+        _reference_summary_rows_for_sources(
+            str(code),
+            sources,
+        )
+        for code, sources in selected.groupby("cancer_code", sort=False, observed=True)
+    ]
+    parts = [part for part in parts if not part.empty]
+    if not parts:
         return pd.DataFrame(columns=["Ensembl_Gene_ID", "TPM_median", "n_samples"])
-    selected_positions = np.sort(np.concatenate(positions))
     needed_columns = ["Ensembl_Gene_ID", "TPM_median", "n_samples"]
-    column_positions = [summary.columns.get_loc(column) for column in needed_columns]
-    return summary.iloc[selected_positions, column_positions].copy()
+    return pd.concat([part[needed_columns] for part in parts], ignore_index=True)
 
 
 def _pan_cancer_column_style(column_style: str | None) -> str:

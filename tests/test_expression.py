@@ -6,6 +6,7 @@
 
 import json
 import warnings
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -44,6 +45,21 @@ def _write_artifact_build_metadata(cache_dir, code, *, sample_qc="pass"):
             "n_qc_fail": [0],
         }
     ).to_csv(cache_dir / "expression-artifact-build-metadata.csv", index=False)
+
+
+def _mock_reference_summary_shards(monkeypatch, summary):
+    """Serve synthetic summary rows through the bounded shard-reader boundary."""
+
+    def load(code, sources, *, genes=None, shard_cache=None):
+        source_ids = set(sources["source_cohort"].dropna().astype(str))
+        mask = summary["cancer_code"].astype(str).eq(str(code))
+        mask &= summary["source_cohort"].astype(str).isin(source_ids)
+        selected = summary.loc[mask]
+        if genes is not None and not selected.empty:
+            selected = selected.loc[expression._gene_filter_mask(selected, genes)]
+        return selected.copy()
+
+    monkeypatch.setattr(expression, "_reference_summary_rows_for_sources", load)
 
 
 @pytest.fixture
@@ -2530,7 +2546,7 @@ def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeyp
             "selected": [False, True],
         }
     )
-    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    _mock_reference_summary_shards(monkeypatch, summary)
     monkeypatch.setattr(
         expression,
         "_reference_summary_availability_table",
@@ -2571,6 +2587,114 @@ def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeyp
     assert raw_log.loc["tpm_raw", "expression"] == pytest.approx(10.0)
     assert raw_log.loc["tpm_clean_log1p", "expression"] == pytest.approx(np.log1p(1.0))
     expression._reference_summary_source_table.cache_clear()
+
+
+def test_cancer_reference_expression_reads_only_bounded_summary_shards(monkeypatch, tmp_path):
+    shard_dir = tmp_path / "cancer-reference-expression"
+    shard_dir.mkdir()
+    columns = {
+        "Symbol": ["A", "B", "A"],
+        "cancer_code": ["X", "X", "Y"],
+        "source_project": ["TEST"] * 3,
+        "source_version": ["v1"] * 3,
+        "TPM_median": [10.0, 20.0, 999.0],
+        "TPM_q1": [9.0, 19.0, 998.0],
+        "TPM_q3": [11.0, 21.0, 1000.0],
+        "TPM_clean_median": [1.0, 2.0, 99.0],
+        "TPM_clean_q1": [0.9, 1.9, 98.0],
+        "TPM_clean_q3": [1.1, 2.1, 100.0],
+        "n_samples": [4, 4, 1],
+        "n_detected": [4, 3, 1],
+        "processing_pipeline": ["rna_seq"] * 3,
+        "notes": [""] * 3,
+        "tumor_origin": ["primary"] * 3,
+        "metastasis_site": [pd.NA] * 3,
+    }
+    for source, filename in (("SRC_A", "SRC_A.csv.gz"), ("SRC_B", "SRC_B__X.csv.gz")):
+        frame = pd.DataFrame(
+            {
+                "Ensembl_Gene_ID": ["E1", "E2", "E1"],
+                "source_cohort": [source] * 3,
+                **columns,
+            }
+        )
+        frame.to_csv(shard_dir / filename, index=False, compression="gzip")
+
+    availability = pd.DataFrame(
+        {
+            "cancer_code": ["X", "X"],
+            "source_cohort": ["SRC_A", "SRC_B"],
+            "source_project": ["TEST", "TEST"],
+            "source_version": ["v1", "v1"],
+            "tumor_origin": ["primary", "primary"],
+            "n_reference_genes": [2, 2],
+            "n_reference_samples": [4, 4],
+            "processing_pipeline": ["rna_seq", "rna_seq"],
+            "selected": [True, False],
+        }
+    )
+    expression._reference_summary_source_table.cache_clear()
+    monkeypatch.setattr(expression, "_reference_summary_availability_table", lambda: availability)
+    monkeypatch.setattr(expression, "_bundle_subdir", lambda *args, **kwargs: shard_dir)
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **kwargs: str(code).upper())
+    read_paths = []
+    read_csv = pd.read_csv
+
+    def recording_read_csv(path, *args, **kwargs):
+        path = Path(path)
+        if path.parent == shard_dir:
+            read_paths.append(path)
+        return read_csv(path, *args, **kwargs)
+
+    monkeypatch.setattr(expression.pd, "read_csv", recording_read_csv)
+    out = expression.cancer_reference_expression(
+        "x",
+        genes="E1",
+        normalize=["tpm_raw", "tpm_clean"],
+        reference_source="summary_rows_all",
+        sample_qc="all",
+    )
+
+    assert set(out["Ensembl_Gene_ID"]) == {"E1"}
+    assert set(out["cancer_code"]) == {"X"}
+    assert set(out["source_cohort"]) == {"SRC_A", "SRC_B"}
+    assert set(out["normalization"]) == {"tpm_raw", "tpm_clean"}
+    assert set(out["n_reference_genes"]) == {2}
+    assert set(out["n_reference_samples"]) == {4}
+    assert sorted(path.name for path in read_paths) == [
+        "SRC_A.csv.gz",
+        "SRC_B__X.csv.gz",
+    ]
+    expression._reference_summary_source_table.cache_clear()
+
+
+@pytest.mark.parametrize(
+    ("code", "source_cohort", "legacy_filename"),
+    [
+        (
+            "SARC_PLEOLPS",
+            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES__SARC_PLEOLPS.csv.gz",
+        ),
+        (
+            "SARC_DDLPS",
+            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET__SARC_DDLPS.csv.gz",
+        ),
+        (
+            "LUAD",
+            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
+            "TREEHOUSE_POLYA_25_01_TCGA_SUBSET__LUAD.csv.gz",
+        ),
+    ],
+)
+def test_reference_summary_shard_path_supports_legacy_treehouse_names(
+    tmp_path, code, source_cohort, legacy_filename
+):
+    legacy_path = tmp_path / legacy_filename
+    legacy_path.touch()
+
+    assert expression._reference_summary_shard_path(tmp_path, code, source_cohort) == legacy_path
 
 
 def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filters(monkeypatch):
@@ -2629,7 +2753,7 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
             "kind": ["geo", "treehouse", "geo"],
         }
     )
-    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    _mock_reference_summary_shards(monkeypatch, summary)
     monkeypatch.setattr(
         expression,
         "_reference_summary_availability_table",
@@ -2792,7 +2916,7 @@ def test_explicit_empty_source_filters_match_nothing(monkeypatch, filter_kwargs,
     expression._reference_summary_source_table.cache_clear()
     expression._source_cohort_kind_map.cache_clear()
     expression._source_cohort_metadata_map.cache_clear()
-    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    _mock_reference_summary_shards(monkeypatch, summary)
     monkeypatch.setattr(expression, "_reference_summary_availability_table", lambda: compact)
     monkeypatch.setattr(expression, "cohort_registry_df", lambda: registry)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
@@ -2888,6 +3012,7 @@ def test_reference_availability_all_sources_uses_compact_manifest(monkeypatch):
         }
     )
     expression._reference_summary_availability_table.cache_clear()
+    expression._reference_summary_source_table.cache_clear()
     monkeypatch.setattr(
         expression,
         "get_data",
@@ -2896,11 +3021,6 @@ def test_reference_availability_all_sources_uses_compact_manifest(monkeypatch):
             if name == "cancer-reference-expression-availability"
             else (_ for _ in ()).throw(AssertionError(f"unexpected dataset load: {name}"))
         ),
-    )
-    monkeypatch.setattr(
-        expression,
-        "_reference_summary_frame",
-        lambda: (_ for _ in ()).throw(AssertionError("full summary frame must not load")),
     )
     monkeypatch.setattr(
         expression,
@@ -2947,6 +3067,7 @@ def test_reference_availability_all_sources_uses_compact_manifest(monkeypatch):
     assert selected["source_cohort"].tolist() == ["GSE98894_ALVAREZ_2018_NET"]
     assert selected["n_reference_samples"].tolist() == [9]
     expression._reference_summary_availability_table.cache_clear()
+    expression._reference_summary_source_table.cache_clear()
 
 
 def test_reference_availability_all_sources_preserves_aggregate_requests(monkeypatch):
@@ -3151,37 +3272,7 @@ def test_explicit_source_metadata_does_not_fall_back_to_another_source(monkeypat
     assert not metadata["linear_tpm_comparable"]
 
 
-def test_reference_summary_row_index_reuses_positions_and_tracks_frame_identity(
-    monkeypatch,
-):
-    first = pd.DataFrame(
-        {
-            "Ensembl_Gene_ID": ["E1", "E2", "E3", "E4"],
-            "cancer_code": ["X", "Y", "X", "X"],
-            "source_cohort": ["SRC1", "SRC2", "SRC2", "SRC1"],
-        }
-    )
-    current = [first]
-    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: current[0])
-    expression._clear_reference_summary_row_index()
-
-    index = expression._reference_summary_row_index()
-    assert index[("X", "SRC1")].tolist() == [0, 3]
-    assert index[("X", "SRC2")].tolist() == [2]
-    assert expression._reference_summary_row_index() is index
-
-    second = first.iloc[[2, 0]].reset_index(drop=True)
-    current[0] = second
-    rebuilt = expression._reference_summary_row_index()
-    assert rebuilt is not index
-    assert rebuilt[("X", "SRC2")].tolist() == [0]
-    assert rebuilt[("X", "SRC1")].tolist() == [1]
-    expression._clear_reference_summary_row_index()
-
-
-def test_reference_summary_frame_canonicalizes_treehouse_tcga_labels(
-    monkeypatch,
-):
+def test_reference_summary_source_labels_canonicalize_treehouse_tcga_cohorts():
     raw = pd.DataFrame(
         {
             "cancer_code": ["SARC_DDLPS", "SARC_WDLPS", "SARC_PLEOLPS", "LUAD"],
@@ -3193,21 +3284,15 @@ def test_reference_summary_frame_canonicalizes_treehouse_tcga_labels(
             ],
         }
     )
-    monkeypatch.setattr(expression, "get_data", lambda *args, **kwargs: raw)
-    expression._reference_summary_frame.cache_clear()
-    try:
-        first = expression._reference_summary_frame()
-        second = expression._reference_summary_frame()
-        assert first is second
-        assert first["source_cohort"].tolist() == [
-            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
-            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
-            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
-            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
-        ]
-        assert raw["source_cohort"].tolist()[2] == "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
-    finally:
-        expression._reference_summary_frame.cache_clear()
+    canonical = expression._canonical_reference_summary_source_labels(raw)
+
+    assert canonical["source_cohort"].tolist() == [
+        "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+        "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+        "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
+        "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
+    ]
+    assert raw["source_cohort"].tolist()[2] == "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
 
 
 def test_legacy_treehouse_tcga_filter_is_exact_and_excludes_derived_cohorts():
@@ -3268,7 +3353,7 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
             "selected": [False, True],
         }
     )
-    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    _mock_reference_summary_shards(monkeypatch, summary)
     monkeypatch.setattr(
         expression,
         "_reference_summary_availability_table",
@@ -3726,7 +3811,7 @@ def test_pan_cancer_expression_adds_computed_aggregate_tpm_columns(monkeypatch):
         expression, "_computed_expression_reference_members", lambda code: members.get(code, ())
     )
     monkeypatch.setattr(expression, "_reference_summary_source_table", lambda: source_table)
-    monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    _mock_reference_summary_shards(monkeypatch, summary)
 
     out = expression.pan_cancer_expression(normalize="tpm", column_style="pirlygenes")
 
