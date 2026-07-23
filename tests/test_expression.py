@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oncoref import expression, normalization
+from oncoref import data_bundle, expression, normalization
 
 _BREAKPOINTS = [0, 1, 5, 10, 50, 90, 95, 99, 100]
 
@@ -358,6 +358,66 @@ def test_mbl_molecular_subgroup_expression_artifacts_ship_with_provenance():
     assert availability["source_scale_class"].tolist() == ["linear_rnaseq_tpm"] * 4
     assert availability["linear_tpm_comparable"].all()
     assert availability["processing_pipeline"].notna().all()
+
+
+def test_sparse_source_qc_release_artifacts_have_count_and_diagnostic_parity():
+    expected = {
+        "BL": {"source": 184, "pass": 175, "fail": 9},
+        "SARC_PEC": {"source": 69, "pass": 60, "fail": 9},
+    }
+    codes = list(expected)
+
+    metadata = expression.expression_artifact_build_metadata(
+        codes, auto_fetch=False, on_missing="raise"
+    ).set_index("cancer_code")
+    summary_availability = expression.cancer_reference_expression_availability(
+        codes,
+        reference_source="summary_rows_all",
+        sample_qc="all",
+    ).set_index("cancer_code")
+    artifact_availability = expression.cancer_reference_expression_availability(
+        codes,
+        reference_source="artifact",
+        sample_qc="artifact",
+    ).set_index("cancer_code")
+
+    provenance_path = data_bundle.find(
+        "cancer-reference-expression-representatives/_provenance.csv"
+    )
+    assert provenance_path is not None
+    provenance = pd.read_csv(provenance_path)
+    provenance_codes = provenance["representative_id"].astype(str).str.split("__").str[0]
+
+    for code, counts in expected.items():
+        assert metadata.loc[code, "n_source_samples"] == counts["source"]
+        assert metadata.loc[code, "n_cohort_samples"] == counts["pass"]
+        assert metadata.loc[code, "n_qc_pass"] == counts["pass"]
+        assert metadata.loc[code, "n_qc_fail"] == counts["fail"]
+        assert metadata.loc[code, "sample_qc_effective"] == "pass"
+        assert summary_availability.loc[code, "n_reference_samples"] == counts["pass"]
+        assert artifact_availability.loc[code, "n_reference_samples"] == counts["pass"]
+        assert set(provenance.loc[provenance_codes.eq(code), "n_cohort_samples"]) == {
+            counts["pass"]
+        }
+        assert set(expression.within_sample_top_fraction(code)["n_samples"]) == {counts["pass"]}
+        assert not expression.cohort_gene_percentiles(code).empty
+
+    diagnostics = {
+        "JNGR150": "low_detected_genes;low_housekeeping_detection;high_zero_fraction",
+        "JNGR175": "high_zero_fraction",
+        "JNGR178": "high_top_gene_fraction",
+        "JNGR179": "low_detected_genes;high_zero_fraction",
+        "BLGSP-71-23-00437-01A": "high_zero_fraction",
+    }
+    qc = expression.source_matrix_sample_qc_manifest(
+        codes, auto_fetch=False, on_missing="raise"
+    ).set_index("sample_id")
+    for sample_id, reasons in diagnostics.items():
+        assert qc.loc[sample_id, "sample_qc_status"] == "fail"
+        assert qc.loc[sample_id, "sample_qc_reasons"] == reasons
+        assert qc.loc[sample_id, "parse_missing_fraction"] == 0.0
+        assert qc.loc[sample_id, "zero_fraction_raw"] > 0.0
+    assert qc.loc["JNGR150", "n_detected_genes"] == 1223
 
 
 def test_expression_artifact_gene_universe_delta_summary():
@@ -2459,7 +2519,23 @@ def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeyp
             "metastasis_site": [pd.NA, pd.NA, pd.NA, pd.NA, pd.NA],
         }
     )
+    summary_availability = pd.DataFrame(
+        {
+            "cancer_code": ["X", "X"],
+            "source_cohort": ["SMALL", "RICH"],
+            "source_project": ["GEO_SMALL", "GEO_RICH"],
+            "source_version": ["v1", "v2"],
+            "n_reference_genes": [2, 3],
+            "n_reference_samples": [20, 5],
+            "selected": [False, True],
+        }
+    )
     monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    monkeypatch.setattr(
+        expression,
+        "_reference_summary_availability_table",
+        lambda: summary_availability,
+    )
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: [])
     monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: [])
@@ -2528,6 +2604,25 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
             "metastasis_site": [pd.NA, pd.NA, pd.NA, pd.NA],
         }
     )
+    summary_availability = pd.DataFrame(
+        {
+            "cancer_code": ["X", "X", "Y"],
+            "source_cohort": ["GEO_X", "TREE_X", "GEO_Y"],
+            "source_project": ["GEO", "Treehouse", "GEO"],
+            "source_version": ["v1", "v2", "v1"],
+            "tumor_origin": ["primary", "mixed", "primary"],
+            "metastasis_site": [pd.NA, pd.NA, pd.NA],
+            "n_reference_genes": [1, 2, 1],
+            "n_reference_samples": [4, 8, 3],
+            "processing_pipeline": [
+                "geo_microarray_tpm_proxy_clean_tpm_16_9_75",
+                "treehouse_polya_tpm_clean_tpm_16_9_75",
+                "geo_microarray_tpm_proxy_clean_tpm_16_9_75",
+            ],
+            "notes": ["geo notes", "tree notes", "geo y notes"],
+            "selected": [False, True, True],
+        }
+    )
     registry = pd.DataFrame(
         {
             "cohort_id": ["GEO_X", "TREE_X", "GEO_Y"],
@@ -2535,6 +2630,11 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
         }
     )
     monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    monkeypatch.setattr(
+        expression,
+        "_reference_summary_availability_table",
+        lambda: summary_availability,
+    )
     monkeypatch.setattr(expression, "cohort_registry_df", lambda: registry)
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
     monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: [])
@@ -2784,6 +2884,7 @@ def test_reference_availability_all_sources_uses_compact_manifest(monkeypatch):
             "n_reference_samples": [5, 6, 7, 8, 9],
             "processing_pipeline": ["rnaseq"] * 5,
             "notes": [""] * 5,
+            "selected": [False, False, True, False, True],
         }
     )
     expression._reference_summary_availability_table.cache_clear()
@@ -2837,6 +2938,14 @@ def test_reference_availability_all_sources_uses_compact_manifest(monkeypatch):
     )
     assert filtered["source_cohort"].tolist() == ["GSE98894_ALVAREZ_2018_NET"]
     assert filtered["n_reference_samples"].tolist() == [9]
+
+    selected = expression.cancer_reference_expression_availability(
+        "NET_PANCREAS",
+        reference_source="summary_rows",
+        sample_qc="all",
+    )
+    assert selected["source_cohort"].tolist() == ["GSE98894_ALVAREZ_2018_NET"]
+    assert selected["n_reference_samples"].tolist() == [9]
     expression._reference_summary_availability_table.cache_clear()
 
 
@@ -3147,7 +3256,24 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
             "metastasis_site": [pd.NA, pd.NA],
         }
     )
+    summary_availability = pd.DataFrame(
+        {
+            "cancer_code": ["X", "X"],
+            "source_cohort": ["SRC1", "SRC2"],
+            "source_project": ["P1", "P2"],
+            "source_version": ["v1", "v2"],
+            "n_reference_genes": [1, 1],
+            "n_reference_samples": [2, 6],
+            "processing_pipeline": ["rna_seq", "rna_seq"],
+            "selected": [False, True],
+        }
+    )
     monkeypatch.setattr(expression, "_reference_summary_frame", lambda: summary)
+    monkeypatch.setattr(
+        expression,
+        "_reference_summary_availability_table",
+        lambda: summary_availability,
+    )
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code, **k: str(code).upper())
 
     with warnings.catch_warnings():

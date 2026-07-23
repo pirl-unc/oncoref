@@ -50,7 +50,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
-from typing import Callable, Literal
+from typing import Callable, Literal, Protocol
 
 import numpy as np
 import pandas as pd
@@ -239,6 +239,8 @@ class GdcSource:
     expected_n: Mapping[str, int] | None = None
     notes: str = ""
     pipeline_stem: str = ""
+    source_version: str | None = None
+    processing_pipeline: str | None = None
     tumor_origin: str = "primary"
     metastasis_site: str | None = None
 
@@ -278,6 +280,8 @@ class GeoMatrixSource:
     tpm_proxy: bool | None = None
     notes: str = ""
     pipeline_stem: str = ""
+    source_version: str | None = None
+    processing_pipeline: str | None = None
     tumor_origin: str = "primary"
     metastasis_site: str | None = None
 
@@ -296,6 +300,8 @@ class Recount3Source:
     expected_n: Mapping[str, int] | None = None
     notes: str = ""
     pipeline_stem: str = ""
+    source_version: str | None = None
+    processing_pipeline: str | None = None
     tumor_origin: str = "primary"
     metastasis_site: str | None = None
 
@@ -335,6 +341,8 @@ class TreehouseSource:
     cohorts: tuple[TreehouseCohort, ...] = ()
     notes: str = ""
     pipeline_stem: str = ""
+    source_version: str | None = None
+    processing_pipeline: str | None = None
     tumor_origin: str = "mixed"
     metastasis_site: str | None = None
 
@@ -353,25 +361,43 @@ class SourceMatrixBuildResult:
     sidecar_paths: dict[str, Path]
 
 
+class _ReferenceSummarySource(Protocol):
+    """Source metadata required to build reference-expression summary rows."""
+
+    source_cohort: str
+    source_project: str | None
+    citation: str | None
+    notes: str
+    pipeline_stem: str
+    tumor_origin: str
+    metastasis_site: str | None
+
+
 def _unit_slug(unit: str) -> str:
     slug = re.sub(r"[^a-z0-9]+", "_", str(unit).lower()).strip("_")
     return slug or "expression"
 
 
 def _summary_processing_pipeline(
-    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
+    source: _ReferenceSummarySource,
     *,
     native_unit: str,
 ) -> str:
+    explicit = getattr(source, "processing_pipeline", None)
+    if explicit:
+        return str(explicit)
     stem = source.pipeline_stem or source.source_cohort.lower()
     return f"{stem}_{_unit_slug(native_unit)}_to_tpm_oncoref_canonical_clean_tpm_16_9_75"
 
 
 def _summary_source_version(
-    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
+    source: _ReferenceSummarySource,
     *,
     native_unit: str,
 ) -> str:
+    explicit = getattr(source, "source_version", None)
+    if explicit:
+        return str(explicit)
     pieces = []
     if source.citation:
         pieces.append(str(source.citation))
@@ -386,7 +412,7 @@ def _summary_source_version(
 
 
 def _summary_notes(
-    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
+    source: _ReferenceSummarySource,
     *,
     n_samples: int,
 ) -> str:
@@ -426,8 +452,9 @@ def summarize_source_matrix(
     matrix: pd.DataFrame,
     *,
     cancer_code: str,
-    source: GdcSource | GeoMatrixSource | Recount3Source | TreehouseSource,
+    source: _ReferenceSummarySource,
     native_unit: str | None = None,
+    clean_matrix: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Return pirlygenes-compatible reference-expression summary rows.
 
@@ -446,7 +473,16 @@ def summarize_source_matrix(
 
     gene_table = matrix[["Ensembl_Gene_ID", "Symbol"]].copy()
     raw_values = matrix[samples].apply(pd.to_numeric, errors="coerce")
-    clean_values = clean_tpm(raw_values, gene_table=gene_table)
+    if clean_matrix is None:
+        clean_values = clean_tpm(raw_values, gene_table=gene_table)
+    else:
+        clean_samples = sample_columns(clean_matrix)
+        if clean_samples != samples:
+            raise ValueError("clean matrix sample columns must exactly match the source matrix")
+        clean_gene_table = clean_matrix[["Ensembl_Gene_ID", "Symbol"]].reset_index(drop=True)
+        if not clean_gene_table.equals(gene_table.reset_index(drop=True)):
+            raise ValueError("clean matrix gene rows must exactly match the source matrix")
+        clean_values = clean_matrix[samples].apply(pd.to_numeric, errors="coerce")
 
     out = gene_table.copy()
     out["cancer_code"] = str(cancer_code)
@@ -598,6 +634,8 @@ def gdc_source_from_entry(entry: Mapping) -> GdcSource:
         expected_n=expected,
         notes=str(entry.get("notes") or entry.get("special_handling") or ""),
         pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        source_version=_coerce_optional_text(entry.get("source_version")),
+        processing_pipeline=_coerce_optional_text(entry.get("processing_pipeline")),
         tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin")),
         metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
     )
@@ -806,6 +844,8 @@ def geo_matrix_source_from_entry(
         tpm_proxy=entry.get("tpm_proxy"),
         notes=str(entry.get("notes") or ""),
         pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        source_version=_coerce_optional_text(entry.get("source_version")),
+        processing_pipeline=_coerce_optional_text(entry.get("processing_pipeline")),
         tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin")),
         metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
     )
@@ -899,6 +939,8 @@ def recount3_source_from_entry(entry: Mapping) -> Recount3Source:
         expected_n=expected,
         notes=str(entry.get("notes") or ""),
         pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        source_version=_coerce_optional_text(entry.get("source_version")),
+        processing_pipeline=_coerce_optional_text(entry.get("processing_pipeline")),
         tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin")),
         metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
     )
@@ -983,6 +1025,8 @@ def treehouse_source_from_entry(entry: Mapping) -> TreehouseSource:
         cohorts=cohorts,
         notes=str(entry.get("notes") or entry.get("special_handling") or ""),
         pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        source_version=_coerce_optional_text(entry.get("source_version")),
+        processing_pipeline=_coerce_optional_text(entry.get("processing_pipeline")),
         tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin") or "mixed"),
         metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
     )

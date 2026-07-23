@@ -26,12 +26,21 @@ _SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 _ACC_MATRIX = glob.glob(
     os.path.expanduser("~/.cache/pirlygenes/expression/*/derived/tcga_acc_per_sample_tpm.parquet")
 )
-_ACC_REF = Path(
-    os.path.expanduser(
-        "~/code/pirlygenes/pirlygenes/data/cancer-reference-expression-percentiles/ACC.parquet"
-    )
+_ACC_REF_LOCATIONS = (
+    Path(
+        os.path.expanduser(
+            "~/code/pirlygenes/pirlygenes/data/cancer-reference-expression-percentiles/ACC.parquet"
+        )
+    ),
+    Path(
+        os.path.expanduser(
+            "~/.cache/pirlygenes/bundled_data/v5.23.2/"
+            "cancer-reference-expression-percentiles/ACC.parquet"
+        )
+    ),
 )
-_PARITY_READY = bool(_ACC_MATRIX) and _ACC_REF.exists()
+_ACC_REF = next((path for path in _ACC_REF_LOCATIONS if path.exists()), None)
+_PARITY_READY = bool(_ACC_MATRIX) and _ACC_REF is not None
 
 
 def _load_script(name):
@@ -557,6 +566,35 @@ def test_summarize_source_matrix_matches_reference_stat_contract():
     assert summary.loc["TP53", "n_detected"] == 4
 
 
+def test_summarize_source_matrix_reuses_exact_selected_clean_matrix(monkeypatch):
+    matrix = _matrix(["G1"], ["pass", "fail"], np.array([[1.0, 100.0]]))
+    selected = matrix[["Ensembl_Gene_ID", "Symbol", "pass"]].copy()
+    clean = selected.copy()
+    clean["pass"] = 7.0
+    source = expression_builders.GeoMatrixSource(
+        cancer_code="X",
+        source_cohort="TEST",
+        file_name="unused.tsv",
+        unit="TPM",
+    )
+    monkeypatch.setattr(
+        expression_builders,
+        "clean_tpm",
+        lambda *args, **kwargs: pytest.fail("selected clean matrix should be reused"),
+    )
+
+    summary = expression_builders.summarize_source_matrix(
+        selected,
+        cancer_code="X",
+        source=source,
+        clean_matrix=clean,
+    )
+
+    assert summary.loc[0, "n_samples"] == 1
+    assert summary.loc[0, "TPM_median"] == 1.0
+    assert summary.loc[0, "TPM_clean_median"] == 7.0
+
+
 def test_geo_matrix_source_from_entry_compiles_yaml_filters_and_routing():
     source = expression_builders.geo_matrix_source_from_entry(
         {
@@ -620,8 +658,13 @@ def test_geo_matrix_source_from_registry_loads_packaged_geo_entry():
     assert source.source_cohort == "GSE328026_PECOMA_2026"
     assert source.unit == "TPM"
     assert source.file_name == "GSE328026_TPMs_all_Samples.txt.gz"
-    assert source.notes.startswith("n=69 PEComa tumors")
+    assert source.notes.startswith("PEComa TPM source matrix n=69")
     assert source.pipeline_stem == ""
+    assert source.source_version.endswith("harmonized to Ensembl release 112")
+    assert (
+        source.processing_pipeline
+        == "gse328026_pecoma_2026_tpm_to_tpm_ensembl112_clean_tpm_16_9_75"
+    )
     assert source.tumor_origin == "primary"
     assert source.metastasis_site is None
 
@@ -883,6 +926,7 @@ def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path)
     for base in (bundle, rebuild):
         for relative in shard_dirs:
             (base / relative).mkdir(parents=True, exist_ok=True)
+        (base / script._REFERENCE_SUMMARY_DIR).mkdir(parents=True, exist_ok=True)
 
     for code, value in (("KEEP", 1.0), ("REPLACE", 2.0)):
         for relative in shard_dirs:
@@ -893,6 +937,13 @@ def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path)
         pd.DataFrame({"value": [3.0]}).to_parquet(
             rebuild / relative / "REPLACE.parquet", index=False
         )
+
+    pd.DataFrame(
+        {"cancer_code": ["KEEP", "REPLACE"], "n_samples": [1, 2], "value": [1.0, 2.0]}
+    ).to_csv(bundle / script._REFERENCE_SUMMARY_DIR / "SHARED.csv.gz", index=False)
+    pd.DataFrame({"cancer_code": ["REPLACE"], "n_samples": [4], "value": [3.0]}).to_csv(
+        rebuild / script._REFERENCE_SUMMARY_DIR / "SHARED.csv.gz", index=False
+    )
 
     pd.DataFrame(
         {
@@ -957,12 +1008,18 @@ def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path)
     assert indexed_metadata.loc["REPLACE", "n_source_samples"] == 5
     assert indexed_metadata.loc["KEEP", "build_source_cohort"] == "KEEP_OLD"
     assert indexed_metadata.loc["REPLACE", "build_source_cohort"] == "REPLACE_BUILD"
+    merged_reference = pd.read_csv(bundle / script._REFERENCE_SUMMARY_DIR / "SHARED.csv.gz")
+    merged_reference = merged_reference.set_index("cancer_code")
+    assert merged_reference.loc["KEEP", "n_samples"] == 1
+    assert merged_reference.loc["REPLACE", "n_samples"] == 4
+    assert merged_reference.loc["REPLACE", "value"] == 3.0
     summary = json.loads((bundle / script.EXPRESSION_ARTIFACT_BUILD_METADATA_JSON_PATH).read_text())
     assert summary["n_cohorts"] == 2
     assert summary["n_source_samples"] == 7
     assert summary["n_cohort_samples"] == 5
     assert summary["n_negative_values_clipped"] == 2
     assert summary["sample_qc_fallbacks"] == 0
+    assert script._REFERENCE_SUMMARY_DIR in summary["derived_artifacts"]
 
 
 def test_merge_expression_artifact_rebuild_requires_every_shard_family(tmp_path):
@@ -2640,6 +2697,10 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
 
     clean = pd.read_parquet(out / "clean" / "X.parquet")
     assert [c for c in clean.columns if c not in ("Ensembl_Gene_ID", "Symbol")] == ["pass_sample"]
+
+    summary = pd.read_csv(out / "cancer-reference-expression" / "TEST_SOURCE.csv.gz")
+    assert set(summary["n_samples"]) == {1}
+    assert summary.set_index("Ensembl_Gene_ID").loc["ENSG000001", "TPM_median"] == 10.0
 
     reps = pd.read_parquet(out / "cancer-reference-expression-representatives" / "X.parquet")
     assert [c for c in reps.columns if c not in ("Ensembl_Gene_ID", "Symbol")] == ["X__rep1"]

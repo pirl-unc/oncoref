@@ -3191,8 +3191,15 @@ def _reference_expression_availability_for_requests(
     source_cohorts: set[str] | None = None,
     exclude_microarray_proxy: bool = False,
 ) -> pd.DataFrame:
-    percentile_available = set(available_percentile_cohorts())
-    source_matrix_available = set(source_matrices.available_cohorts())
+    percentile_available = (
+        set(available_percentile_cohorts()) if reference_source == "artifact" else set()
+    )
+    needs_source_matrix = reference_source == "artifact" or (
+        reference_source == "summary_rows" and sample_qc != "all"
+    )
+    source_matrix_available = (
+        set(source_matrices.available_cohorts()) if needs_source_matrix else set()
+    )
     summary_available = (
         set(
             _reference_summary_available_codes(
@@ -3953,7 +3960,7 @@ def _reference_summary_available_codes(
     exclude_microarray_proxy: bool = False,
 ) -> list[str]:
     table = _filter_reference_summary_sources(
-        _reference_summary_source_table(),
+        _reference_summary_availability_table(),
         source_kinds=source_kinds,
         source_cohorts=source_cohorts,
         exclude_microarray_proxy=exclude_microarray_proxy,
@@ -4364,13 +4371,18 @@ def _reference_summary_source_metadata(
     source_cohorts: set[str] | None = None,
     exclude_microarray_proxy: bool = False,
 ) -> dict[str, str | bool | int | float | None] | None:
+    """Read one source's provenance from the compact availability manifest."""
     sources = _filter_reference_summary_sources(
-        _reference_summary_source_table(),
+        _reference_summary_availability_table(),
         source_kinds=source_kinds,
         source_cohorts=source_cohorts,
         exclude_microarray_proxy=exclude_microarray_proxy,
     )
     matches = sources.loc[sources["cancer_code"].astype(str) == str(code)]
+    if "selected" in matches:
+        selected_matches = matches.loc[matches["selected"].fillna(False).astype(bool)]
+        if not selected_matches.empty:
+            matches = selected_matches
     selected = None if matches.empty else matches.iloc[0].to_dict()
     if selected is None:
         return None

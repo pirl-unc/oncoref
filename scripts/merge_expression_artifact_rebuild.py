@@ -39,6 +39,7 @@ from oncoref.expression import (
 )
 
 _REPRESENTATIVE_PROVENANCE = "cancer-reference-expression-representatives/_provenance.csv"
+_REFERENCE_SUMMARY_DIR = "cancer-reference-expression"
 _FOCUSED_SHARD_DIRS = tuple(
     path for path in DOWNLOADABLE_PATHS if path.startswith("cancer-reference-expression-")
 )
@@ -96,6 +97,47 @@ def _copy_rebuilt_shards(
         shutil.copy2(source, destination)
 
 
+def _merge_reference_summaries(
+    bundle_dir: Path,
+    rebuild_dir: Path,
+    *,
+    cancer_codes: set[str],
+) -> None:
+    """Replace focused cancer-code rows while preserving other rows in each source shard."""
+    rebuilt_dir = rebuild_dir / _REFERENCE_SUMMARY_DIR
+    rebuilt_paths = sorted(rebuilt_dir.glob("*.csv")) + sorted(rebuilt_dir.glob("*.csv.gz"))
+    if not rebuilt_paths:
+        raise FileNotFoundError(
+            f"focused rebuild lacks reference summary shards under {_REFERENCE_SUMMARY_DIR}"
+        )
+
+    seen_codes: set[str] = set()
+    merges: list[tuple[Path, pd.DataFrame]] = []
+    for source in rebuilt_paths:
+        rebuilt = pd.read_csv(source)
+        shard_codes = set(rebuilt["cancer_code"].astype(str))
+        unexpected = sorted(shard_codes - cancer_codes)
+        if unexpected:
+            raise ValueError(
+                f"focused summary shard {source.name} contains unexpected codes: {unexpected}"
+            )
+        seen_codes.update(shard_codes)
+
+        destination = bundle_dir / _REFERENCE_SUMMARY_DIR / source.name
+        if destination.exists():
+            existing = pd.read_csv(destination)
+            existing = existing[~existing["cancer_code"].astype(str).isin(shard_codes)]
+            rebuilt = pd.concat([existing, rebuilt], ignore_index=True, sort=False)
+        merges.append((destination, rebuilt))
+
+    missing = sorted(cancer_codes - seen_codes)
+    if missing:
+        raise ValueError(f"focused rebuild lacks reference summary rows for: {missing}")
+    for destination, rows in merges:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        rows.to_csv(destination, index=False, compression="infer")
+
+
 def _metadata_sum(metadata: pd.DataFrame, column: str) -> int:
     if column not in metadata:
         return 0
@@ -111,6 +153,7 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
         raise ValueError("focused rebuild metadata contains no cancer codes")
 
     _copy_rebuilt_shards(bundle_dir, rebuild_dir, cancer_codes=cancer_codes)
+    _merge_reference_summaries(bundle_dir, rebuild_dir, cancer_codes=cancer_codes)
     _merge_representative_provenance(
         bundle_dir,
         rebuild_dir,
@@ -139,6 +182,9 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
     summary_path = bundle_dir / EXPRESSION_ARTIFACT_BUILD_METADATA_JSON_PATH
     summary = json.loads(summary_path.read_text())
     fallback = metadata.get("sample_qc_fallback_reason", pd.Series(dtype="string"))
+    derived_artifacts = list(summary.get("derived_artifacts") or [])
+    if _REFERENCE_SUMMARY_DIR not in derived_artifacts:
+        derived_artifacts.append(_REFERENCE_SUMMARY_DIR)
     summary.update(
         {
             "schema_version": EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
@@ -147,6 +193,7 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
             "n_cohort_samples": _metadata_sum(metadata, "n_cohort_samples"),
             "n_negative_values_clipped": _metadata_sum(metadata, "n_negative_values_clipped"),
             "sample_qc_fallbacks": int(fallback.fillna("").astype(str).str.strip().ne("").sum()),
+            "derived_artifacts": derived_artifacts,
         }
     )
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
