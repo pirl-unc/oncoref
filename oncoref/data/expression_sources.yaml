@@ -456,7 +456,7 @@ sources:
 
   - id: treehouse-polya-25-01-tcga-sarc-histology
     category: expression
-    cancer_codes: [SARC_WDLPS, SARC_DDLPS]
+    cancer_codes: [SARC_WDLPS, SARC_DDLPS, SARC_PLEOLPS]
     source_type: treehouse-compendium
     source_cohort: TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY
     source_project: Treehouse (TCGA-SARC) x GDC primary diagnosis
@@ -481,14 +481,15 @@ sources:
     treehouse_cohorts:
       - {cancer_code: SARC_WDLPS, disease_label: liposarcoma, group: tcga_sarc_histology, selection: "gdc_primary_diagnosis:TCGA-SARC:Liposarcoma, well differentiated", cache_stem: tcga_sarc_wdlps}
       - {cancer_code: SARC_DDLPS, disease_label: liposarcoma, group: tcga_sarc_histology, selection: "gdc_primary_diagnosis:TCGA-SARC:Dedifferentiated liposarcoma", cache_stem: tcga_sarc_ddlps}
+      - {cancer_code: SARC_PLEOLPS, disease_label: liposarcoma, group: tcga_sarc_histology, selection: "gdc_primary_diagnosis:TCGA-SARC:Pleomorphic liposarcoma", cache_stem: tcga_sarc_pleolps}
     special_handling: >
       Treehouse carries TCGA-SARC liposarcoma samples in one parent
       liposarcoma disease bucket. This source joins each TCGA sample barcode
       prefix to the GDC TCGA-SARC diagnoses.primary_diagnosis table and routes
-      well-differentiated and dedifferentiated liposarcoma separately. PLEOLPS
-      has only two TCGA-SARC overlay samples and remains on the current
-      four-sample GSE75885 RNA-seq source until a source-matrix refresh
-      deliberately chooses otherwise.
+      well-differentiated, dedifferentiated, and pleomorphic liposarcoma
+      separately. The two-sample PLEOLPS overlay is published as an additional
+      source; the four-sample GSE75885 RNA-seq matrix remains its selected raw
+      source matrix.
 
   - id: treehouse-polya-25-01-tcga-ucec-subtype
     category: expression

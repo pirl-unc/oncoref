@@ -8,6 +8,13 @@ from pathlib import Path
 
 import pandas as pd
 
+from oncoref._reference_sources import (
+    TREEHOUSE_TCGA_LEGACY_COHORT,
+    TREEHOUSE_TCGA_SAMPLES_COHORT,
+    TREEHOUSE_TCGA_SARC_HISTOLOGY_CODES,
+    TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT,
+)
+
 SOURCE_COLUMNS = [
     "cancer_code",
     "source_cohort",
@@ -24,10 +31,6 @@ OUTPUT_COLUMNS = [
     "n_reference_samples",
     "selected",
 ]
-_SARC_HISTOLOGY_CODES = frozenset({"SARC_DDLPS", "SARC_WDLPS"})
-_LEGACY_TREEHOUSE_TCGA_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
-_TREEHOUSE_TCGA_SAMPLES_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
-_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
 
 
 def _first_present(values: pd.Series):
@@ -38,13 +41,16 @@ def _first_present(values: pd.Series):
 
 
 def _canonicalize_source_labels(frame: pd.DataFrame) -> pd.DataFrame:
-    legacy = frame["source_cohort"].eq(_LEGACY_TREEHOUSE_TCGA_COHORT)
-    if not legacy.any():
+    sources = frame["source_cohort"]
+    sarc_histology = frame["cancer_code"].isin(TREEHOUSE_TCGA_SARC_HISTOLOGY_CODES) & sources.isin(
+        [TREEHOUSE_TCGA_LEGACY_COHORT, TREEHOUSE_TCGA_SAMPLES_COHORT]
+    )
+    generic_tcga = sources.eq(TREEHOUSE_TCGA_LEGACY_COHORT) & ~sarc_histology
+    if not (sarc_histology.any() or generic_tcga.any()):
         return frame
     out = frame.copy()
-    sarc_histology = legacy & frame["cancer_code"].isin(_SARC_HISTOLOGY_CODES)
-    out.loc[sarc_histology, "source_cohort"] = _SARC_HISTOLOGY_COHORT
-    out.loc[legacy & ~sarc_histology, "source_cohort"] = _TREEHOUSE_TCGA_SAMPLES_COHORT
+    out.loc[sarc_histology, "source_cohort"] = TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT
+    out.loc[generic_tcga, "source_cohort"] = TREEHOUSE_TCGA_SAMPLES_COHORT
     return out
 
 

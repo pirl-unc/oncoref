@@ -55,7 +55,7 @@ def _read_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def test_canonicalize_sarc_histology_sources_rewrites_only_two_shards(tmp_path):
+def test_canonicalize_sarc_histology_sources_rewrites_all_three_shards(tmp_path):
     summary = tmp_path / migration.SUMMARY_DIR
     for code in migration.SARC_HISTOLOGY_CODES:
         _write_shard(
@@ -63,18 +63,22 @@ def test_canonicalize_sarc_histology_sources_rewrites_only_two_shards(tmp_path):
             code,
             migration.LEGACY_SOURCE,
         )
-    pleolps = summary / f"{migration.LEGACY_SOURCE}__SARC_PLEOLPS.csv.gz"
-    pleolps_bytes = _write_shard(pleolps, "SARC_PLEOLPS", migration.LEGACY_SOURCE)
+    luad = summary / f"{migration.LEGACY_SOURCE}__LUAD.csv.gz"
+    luad_bytes = _write_shard(luad, "LUAD", migration.LEGACY_SOURCE)
 
     result = migration.canonicalize_sarc_histology_sources(tmp_path)
 
-    assert [row["cancer_code"] for row in result] == ["SARC_DDLPS", "SARC_WDLPS"]
+    assert [row["cancer_code"] for row in result] == [
+        "SARC_DDLPS",
+        "SARC_PLEOLPS",
+        "SARC_WDLPS",
+    ]
     assert all(row["changed"] is True and row["rows"] == 1 for row in result)
     for code in migration.SARC_HISTOLOGY_CODES:
         assert not (summary / f"{migration.LEGACY_SOURCE}__{code}.csv.gz").exists()
         canonical = summary / f"{migration.CANONICAL_SOURCE}__{code}.csv.gz"
         assert _read_rows(canonical)[0]["source_cohort"] == migration.CANONICAL_SOURCE
-    assert pleolps.read_bytes() == pleolps_bytes
+    assert luad.read_bytes() == luad_bytes
 
     repeated = migration.canonicalize_sarc_histology_sources(tmp_path)
     assert all(row["changed"] is False for row in repeated)
@@ -112,7 +116,7 @@ def test_canonicalize_reference_summary_sources_migrates_generic_and_sarc_destin
     result = migration.canonicalize_reference_summary_sources(tmp_path)
 
     assert [row["cancer_code"] for row in result] == ["LUAD", "SARC_DDLPS", "SARC_PLEOLPS"]
-    for code in ("LUAD", "SARC_PLEOLPS"):
+    for code in ("LUAD",):
         path = summary / f"{migration.TCGA_SAMPLES_SOURCE}__{code}.csv.gz"
         row = _read_rows(path)[0]
         assert row["source_cohort"] == migration.TCGA_SAMPLES_SOURCE
@@ -124,6 +128,20 @@ def test_canonicalize_reference_summary_sources_migrates_generic_and_sarc_destin
         assert row["notes"] == (
             "TCGA-provenance samples only: selected from the Treehouse compendium."
         )
-    sarc = summary / f"{migration.SARC_HISTOLOGY_SOURCE}__SARC_DDLPS.csv.gz"
-    assert _read_rows(sarc)[0]["source_cohort"] == migration.SARC_HISTOLOGY_SOURCE
+    for code in ("SARC_DDLPS", "SARC_PLEOLPS"):
+        sarc = summary / f"{migration.SARC_HISTOLOGY_SOURCE}__{code}.csv.gz"
+        assert _read_rows(sarc)[0]["source_cohort"] == migration.SARC_HISTOLOGY_SOURCE
     assert migration.canonicalize_reference_summary_sources(tmp_path) == []
+
+
+def test_canonicalize_reference_summary_sources_repairs_misrouted_pleolps(tmp_path):
+    summary = tmp_path / migration.SUMMARY_DIR
+    stale = summary / f"{migration.TCGA_SAMPLES_SOURCE}__SARC_PLEOLPS.csv.gz"
+    _write_shard(stale, "SARC_PLEOLPS", migration.TCGA_SAMPLES_SOURCE)
+
+    result = migration.canonicalize_reference_summary_sources(tmp_path)
+
+    assert result[0]["changed"] is True
+    assert not stale.exists()
+    canonical = summary / f"{migration.SARC_HISTOLOGY_SOURCE}__SARC_PLEOLPS.csv.gz"
+    assert _read_rows(canonical)[0]["source_cohort"] == migration.SARC_HISTOLOGY_SOURCE
