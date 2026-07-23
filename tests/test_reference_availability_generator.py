@@ -41,3 +41,19 @@ def test_build_reference_availability_rejects_split_source_identity(tmp_path):
 
     with pytest.raises(ValueError, match="split across multiple shards"):
         build_reference_availability(tmp_path, chunksize=1)
+
+
+def test_build_reference_availability_routes_all_sarc_histology_overlays(tmp_path):
+    legacy = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
+    generic = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
+    histology = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
+    _write_shard(tmp_path / "ddlps.csv", "SARC_DDLPS", legacy, ["E1"], 48)
+    _write_shard(tmp_path / "wdlps.csv", "SARC_WDLPS", legacy, ["E1"], 5)
+    _write_shard(tmp_path / "pleolps.csv", "SARC_PLEOLPS", generic, ["E1"], 2)
+    _write_shard(tmp_path / "luad.csv", "LUAD", legacy, ["E1"], 20)
+
+    table = build_reference_availability(tmp_path, chunksize=1)
+    by_code = table.set_index("cancer_code")["source_cohort"]
+
+    assert by_code.loc[["SARC_DDLPS", "SARC_PLEOLPS", "SARC_WDLPS"]].eq(histology).all()
+    assert by_code.loc["LUAD"] == generic

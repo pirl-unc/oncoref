@@ -70,6 +70,12 @@ import numpy as np
 import pandas as pd
 
 from . import data_bundle, source_matrices
+from ._reference_sources import (
+    TREEHOUSE_TCGA_LEGACY_COHORT,
+    TREEHOUSE_TCGA_SAMPLES_COHORT,
+    TREEHOUSE_TCGA_SARC_HISTOLOGY_CODES,
+    TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT,
+)
 from .cancer_types import (
     _computed_expression_reference_members,
     cohort_aggregates,
@@ -3829,28 +3835,23 @@ def _reference_expression_frame(
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
 
 
-_SARC_HISTOLOGY_SUMMARY_CODES = frozenset({"SARC_DDLPS", "SARC_WDLPS"})
-_LEGACY_TREEHOUSE_TCGA_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
-_TREEHOUSE_TCGA_SAMPLES_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
-_SARC_HISTOLOGY_COHORT = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
-
-
 def _canonical_reference_summary_source_labels(df: pd.DataFrame) -> pd.DataFrame:
-    """Map the one legacy Treehouse TCGA identity to its exact replacement.
+    """Expose exact Treehouse TCGA source identities in old summary bundles.
 
-    DDLPS and WDLPS belong to the separately curated SARC-histology cohort. All
-    other rows belong to the generic cohort selected by TCGA sample provenance.
+    DDLPS, WDLPS, and PLEOLPS are GDC-histology-derived overlays. All other
+    legacy rows belong to the generic cohort selected by TCGA provenance.
     """
 
     if df.empty:
         return df
     codes = df["cancer_code"]
     sources = df["source_cohort"]
-    legacy = sources.eq(_LEGACY_TREEHOUSE_TCGA_COHORT)
-    if not legacy.any():
+    sarc_histology = codes.isin(TREEHOUSE_TCGA_SARC_HISTOLOGY_CODES) & sources.isin(
+        [TREEHOUSE_TCGA_LEGACY_COHORT, TREEHOUSE_TCGA_SAMPLES_COHORT]
+    )
+    generic_tcga = sources.eq(TREEHOUSE_TCGA_LEGACY_COHORT) & ~sarc_histology
+    if not (sarc_histology.any() or generic_tcga.any()):
         return df
-    sarc_histology = legacy & codes.isin(_SARC_HISTOLOGY_SUMMARY_CODES)
-    generic_tcga = legacy & ~sarc_histology
 
     out = df.copy(deep=False)
     canonical_sources = sources
@@ -3858,8 +3859,8 @@ def _canonical_reference_summary_source_labels(df: pd.DataFrame) -> pd.DataFrame
         missing_categories = [
             replacement
             for replacement, mask in (
-                (_SARC_HISTOLOGY_COHORT, sarc_histology),
-                (_TREEHOUSE_TCGA_SAMPLES_COHORT, generic_tcga),
+                (TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT, sarc_histology),
+                (TREEHOUSE_TCGA_SAMPLES_COHORT, generic_tcga),
             )
             if mask.any() and replacement not in sources.cat.categories
         ]
@@ -3868,8 +3869,8 @@ def _canonical_reference_summary_source_labels(df: pd.DataFrame) -> pd.DataFrame
         canonical_sources = canonical_sources.copy()
     else:
         canonical_sources = sources.copy()
-    canonical_sources.loc[sarc_histology] = _SARC_HISTOLOGY_COHORT
-    canonical_sources.loc[generic_tcga] = _TREEHOUSE_TCGA_SAMPLES_COHORT
+    canonical_sources.loc[sarc_histology] = TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT
+    canonical_sources.loc[generic_tcga] = TREEHOUSE_TCGA_SAMPLES_COHORT
     if isinstance(canonical_sources.dtype, pd.CategoricalDtype):
         canonical_sources = canonical_sources.cat.remove_unused_categories()
     out["source_cohort"] = canonical_sources

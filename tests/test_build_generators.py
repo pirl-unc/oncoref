@@ -1278,7 +1278,7 @@ def test_treehouse_source_from_registry_loads_sarc_histology_routes():
 
     assert source.source_cohort == "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
     assert source.pipeline_stem == "treehouse_polya_25_01_tcga_sarc_histology"
-    assert source.cancer_code == ["SARC_WDLPS", "SARC_DDLPS"]
+    assert source.cancer_code == ["SARC_WDLPS", "SARC_DDLPS", "SARC_PLEOLPS"]
     by_code = {cohort.cancer_code: cohort for cohort in source.cohorts}
     assert by_code["SARC_WDLPS"].disease_label == "liposarcoma"
     assert (
@@ -1289,6 +1289,10 @@ def test_treehouse_source_from_registry_loads_sarc_histology_routes():
         by_code["SARC_DDLPS"].selection
         == "gdc_primary_diagnosis:TCGA-SARC:Dedifferentiated liposarcoma"
     )
+    assert (
+        by_code["SARC_PLEOLPS"].selection
+        == "gdc_primary_diagnosis:TCGA-SARC:Pleomorphic liposarcoma"
+    )
 
     sarc = expression_builders.treehouse_cohorts_for_group(
         "tcga_sarc_histology",
@@ -1297,8 +1301,8 @@ def test_treehouse_source_from_registry_loads_sarc_histology_routes():
     assert [cohort.cancer_code for cohort in sarc] == source.cancer_code
 
     registry = cohort_registry()
-    assert registry["TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"]["n_samples"] == 53
-    assert registry["TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"]["n_codes"] == 2
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"]["n_samples"] == 55
+    assert registry["TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"]["n_codes"] == 3
 
 
 def test_treehouse_source_from_registry_loads_ucec_subtype_routes():

@@ -19,13 +19,21 @@ import io
 import json
 from pathlib import Path
 
+from oncoref._reference_sources import (
+    TREEHOUSE_TCGA_LEGACY_COHORT,
+    TREEHOUSE_TCGA_SAMPLES_COHORT,
+    TREEHOUSE_TCGA_SARC_HISTOLOGY_CODES,
+    TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT,
+    canonical_treehouse_tcga_summary_cohort,
+)
+
 SUMMARY_DIR = "cancer-reference-expression"
-LEGACY_SOURCE = "TREEHOUSE_POLYA_25_01_TCGA_SUBSET"
-TCGA_SAMPLES_SOURCE = "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
-SARC_HISTOLOGY_SOURCE = "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY"
+LEGACY_SOURCE = TREEHOUSE_TCGA_LEGACY_COHORT
+TCGA_SAMPLES_SOURCE = TREEHOUSE_TCGA_SAMPLES_COHORT
+SARC_HISTOLOGY_SOURCE = TREEHOUSE_TCGA_SARC_HISTOLOGY_COHORT
 # Backward-compatible name used by the original two-shard migration.
 CANONICAL_SOURCE = SARC_HISTOLOGY_SOURCE
-SARC_HISTOLOGY_CODES = ("SARC_DDLPS", "SARC_WDLPS")
+SARC_HISTOLOGY_CODES = tuple(sorted(TREEHOUSE_TCGA_SARC_HISTOLOGY_CODES))
 
 
 def _shard_path(root: Path, source: str, code: str) -> Path:
@@ -57,9 +65,15 @@ def _validate_rows(path: Path, *, code: str, source: str) -> int:
 
 
 def _canonical_source(code: str) -> str:
-    if code in SARC_HISTOLOGY_CODES:
-        return SARC_HISTOLOGY_SOURCE
-    return TCGA_SAMPLES_SOURCE
+    return canonical_treehouse_tcga_summary_cohort(code)
+
+
+def _stale_sources(code: str, canonical_source: str) -> tuple[str, ...]:
+    """Source labels that may need rewriting for one cancer code."""
+
+    if canonical_source == SARC_HISTOLOGY_SOURCE:
+        return (LEGACY_SOURCE, TCGA_SAMPLES_SOURCE)
+    return (LEGACY_SOURCE,)
 
 
 def _canonicalize_metadata(row: dict[str, str]) -> None:
@@ -84,10 +98,14 @@ def _rewrite_shard(
     root: Path, code: str, *, canonical_source: str | None = None
 ) -> dict[str, object]:
     canonical_source = canonical_source or _canonical_source(code)
-    legacy_path = _shard_path(root, LEGACY_SOURCE, code)
     canonical_path = _shard_path(root, canonical_source, code)
-    if legacy_path.exists() and canonical_path.exists():
-        raise FileExistsError(f"both legacy and canonical shards exist for {code}")
+    stale_shards = [
+        (source, _shard_path(root, source, code))
+        for source in _stale_sources(code, canonical_source)
+        if _shard_path(root, source, code).exists()
+    ]
+    if canonical_path.exists() and stale_shards:
+        raise FileExistsError(f"both stale and canonical shards exist for {code}")
     if canonical_path.exists():
         return {
             "cancer_code": code,
@@ -95,18 +113,22 @@ def _rewrite_shard(
             "changed": False,
             "path": str(canonical_path),
         }
-    if not legacy_path.exists():
-        raise FileNotFoundError(f"missing legacy summary shard for {code}: {legacy_path}")
+    if not stale_shards:
+        raise FileNotFoundError(f"missing stale summary shard for {code}")
+    if len(stale_shards) > 1:
+        paths = [path for _, path in stale_shards]
+        raise FileExistsError(f"multiple stale summary shards exist for {code}: {paths}")
+    stale_source, stale_path = stale_shards[0]
 
     temporary_path = canonical_path.with_name(f".{canonical_path.name}.tmp")
     try:
-        with gzip.open(legacy_path, "rt", encoding="utf-8", newline="") as source_handle:
+        with gzip.open(stale_path, "rt", encoding="utf-8", newline="") as source_handle:
             reader = csv.DictReader(source_handle)
             required = {"cancer_code", "source_cohort"}
             missing = required - set(reader.fieldnames or ())
             if missing:
                 raise ValueError(
-                    f"{legacy_path} lacks required columns: {', '.join(sorted(missing))}"
+                    f"{stale_path} lacks required columns: {', '.join(sorted(missing))}"
                 )
             with (
                 temporary_path.open("wb") as raw_handle,
@@ -123,23 +145,23 @@ def _rewrite_shard(
                 for row_number, row in enumerate(reader, start=2):
                     if row["cancer_code"] != code:
                         raise ValueError(
-                            f"{legacy_path}:{row_number} has "
+                            f"{stale_path}:{row_number} has "
                             f"cancer_code={row['cancer_code']!r}; expected {code!r}"
                         )
-                    if row["source_cohort"] != LEGACY_SOURCE:
+                    if row["source_cohort"] != stale_source:
                         raise ValueError(
-                            f"{legacy_path}:{row_number} has "
+                            f"{stale_path}:{row_number} has "
                             f"source_cohort={row['source_cohort']!r}; "
-                            f"expected {LEGACY_SOURCE!r}"
+                            f"expected {stale_source!r}"
                         )
                     row["source_cohort"] = canonical_source
                     _canonicalize_metadata(row)
                     writer.writerow(row)
                     n_rows += 1
         if n_rows == 0:
-            raise ValueError(f"{legacy_path} contains no data rows")
+            raise ValueError(f"{stale_path} contains no data rows")
         temporary_path.replace(canonical_path)
-        legacy_path.unlink()
+        stale_path.unlink()
     except BaseException:
         temporary_path.unlink(missing_ok=True)
         raise
@@ -153,7 +175,7 @@ def _rewrite_shard(
 
 
 def canonicalize_sarc_histology_sources(root: Path) -> list[dict[str, object]]:
-    """Canonicalize the DDLPS/WDLPS physical shards under a staged bundle root."""
+    """Canonicalize the DDLPS/WDLPS/PLEOLPS shards under a staged bundle root."""
     return [
         _rewrite_shard(root, code, canonical_source=SARC_HISTOLOGY_SOURCE)
         for code in SARC_HISTOLOGY_CODES
@@ -166,8 +188,11 @@ def canonicalize_reference_summary_sources(root: Path) -> list[dict[str, object]
     prefix = f"{LEGACY_SOURCE}__"
     suffix = ".csv.gz"
     legacy_paths = sorted(summary_dir.glob(f"{LEGACY_SOURCE}__*{suffix}"))
-    codes = [path.name[len(prefix) : -len(suffix)] for path in legacy_paths]
-    return [_rewrite_shard(root, code) for code in codes]
+    codes = {path.name[len(prefix) : -len(suffix)] for path in legacy_paths}
+    for code in SARC_HISTOLOGY_CODES:
+        if _shard_path(root, TCGA_SAMPLES_SOURCE, code).exists():
+            codes.add(code)
+    return [_rewrite_shard(root, code) for code in sorted(codes)]
 
 
 def main() -> None:

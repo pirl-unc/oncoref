@@ -185,13 +185,20 @@ def test_treehouse_tcga_cohort_uses_canonical_identity_and_exact_legacy_alias():
 
     assert canonical in cancer_types.known_cohort_ids()
     assert legacy not in cancer_types.known_cohort_ids()
-    assert registry.loc[canonical, "n_samples"] == 9543
-    assert registry.loc[canonical, "n_codes"] == 33
+    assert registry.loc[canonical, "n_samples"] == 9541
+    assert registry.loc[canonical, "n_codes"] == 32
     assert len(canonical_matrices) == 32
     assert canonical_matrices["n_samples"].sum() == 9541
-    assert len(canonical_sources) == 33
-    assert canonical_sources["n_reference_samples"].sum() == 9543
+    assert len(canonical_sources) == 32
+    assert canonical_sources["n_reference_samples"].sum() == 9541
     assert derived in registry.index
+    derived_sources = availability.loc[availability["source_cohort"] == derived]
+    assert set(derived_sources["cancer_code"]) == {
+        "SARC_DDLPS",
+        "SARC_PLEOLPS",
+        "SARC_WDLPS",
+    }
+    assert derived_sources["n_reference_samples"].sum() == 55
     with pytest.warns(DeprecationWarning, match="TCGA_SUBSET"):
         assert cancer_types.resolve_cohort_id(legacy) == canonical
     assert cancer_types.canonical_cohort_id(f"{legacy}_DERIVED") == f"{legacy}_DERIVED"

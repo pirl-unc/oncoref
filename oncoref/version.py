@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "1.8.146"
+__version__ = "1.8.147"
 
 # Version of the downloadable data bundle (the heavy per-cohort percentile +
 # representative shards). Bump when the DERIVED reference artifacts change — it pins
@@ -30,7 +30,9 @@ __version__ = "1.8.146"
 # and ACINIC artifacts and removes nonmatching histologies from both cohorts.
 # 5.23.10 rebuilds BL and SARC_PEC summaries from the same QC-pass samples used
 # by their percentile, representative, and within-sample artifacts.
-DATA_VERSION = "5.23.10"
+# 5.23.11 classifies the GDC-derived SARC_PLEOLPS Treehouse overlay with the
+# other TCGA-SARC histology cohorts instead of the generic TCGA sample cohort.
+DATA_VERSION = "5.23.11"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION

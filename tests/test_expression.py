@@ -3179,7 +3179,7 @@ def test_reference_summary_row_index_reuses_positions_and_tracks_frame_identity(
     expression._clear_reference_summary_row_index()
 
 
-def test_reference_summary_frame_canonicalizes_legacy_treehouse_tcga_labels(
+def test_reference_summary_frame_canonicalizes_treehouse_tcga_labels(
     monkeypatch,
 ):
     raw = pd.DataFrame(
@@ -3188,7 +3188,7 @@ def test_reference_summary_frame_canonicalizes_legacy_treehouse_tcga_labels(
             "source_cohort": [
                 "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
                 "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
-                "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
+                "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
                 "TREEHOUSE_POLYA_25_01_TCGA_SUBSET",
             ],
         }
@@ -3202,10 +3202,10 @@ def test_reference_summary_frame_canonicalizes_legacy_treehouse_tcga_labels(
         assert first["source_cohort"].tolist() == [
             "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
             "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
-            "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
+            "TREEHOUSE_POLYA_25_01_TCGA_SARC_HISTOLOGY",
             "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES",
         ]
-        assert raw["source_cohort"].nunique() == 1
+        assert raw["source_cohort"].tolist()[2] == "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
     finally:
         expression._reference_summary_frame.cache_clear()
 
