@@ -188,7 +188,7 @@ _WITHIN_SAMPLE = SHARD_DATASETS["within_sample"]
 
 REPRESENTATIVE_ARTIFACT_SCHEMA_VERSION = "representative_expression_v1"
 PERCENTILE_ARTIFACT_SCHEMA_VERSION = "cohort_percentile_expression_v1"
-REFERENCE_EXPRESSION_SCHEMA_VERSION = "cancer_reference_expression_v3"
+REFERENCE_EXPRESSION_SCHEMA_VERSION = "cancer_reference_expression_v4"
 REPRESENTATIVE_SELECTION_METHOD = "central_medoid_then_farthest_first"
 REPRESENTATIVE_SELECTION_BASIS = "biological_clean_tpm_log1p_distance"
 
@@ -2323,6 +2323,22 @@ def _artifact_build_metadata_qc_policies(meta: pd.DataFrame) -> dict[str, tuple[
     return policies
 
 
+def _artifact_effective_sample_qc(
+    code: str,
+    policies: dict[str, tuple[str, ...]],
+) -> tuple[str | None, str]:
+    """Resolve one live-sample QC policy for an artifact-backed cohort."""
+    recorded = policies.get(code, ())
+    if not recorded:
+        return None, "artifact_build_metadata_missing"
+    if len(recorded) != 1:
+        return None, "artifact_sample_qc_conflict"
+    effective = recorded[0]
+    if effective not in _SAMPLE_QC_MODES:
+        return None, "artifact_sample_qc_invalid"
+    return effective, ""
+
+
 def _artifact_build_metadata_sample_counts(meta: pd.DataFrame) -> dict[str, int]:
     """Return the selected sample count used to build each artifact cohort."""
     if meta.empty or not {"cancer_code", "n_cohort_samples"} <= set(meta.columns):
@@ -2669,10 +2685,12 @@ def cancer_reference_expression(
     both source filters, ``None`` means unfiltered; an empty iterable or blank scalar
     explicitly matches no sources.
 
-    ``sample_qc="artifact"`` reads each clean/log-clean percentile shard using
-    the QC policy recorded when that shard was built. It is intentionally valid
-    only with ``reference_source="artifact"`` and artifact-backed normalization
-    modes; raw TPM and summary-row modes require an explicit live-sample policy.
+    ``sample_qc="artifact"`` uses the QC policy recorded when each requested
+    artifact was built. Clean/log-clean modes read the shipped percentile shard;
+    raw TPM is recomputed from the bounded per-code source matrix with that code's
+    recorded effective policy. Long-form provenance keeps ``sample_qc="artifact"``
+    and reports the applied policy in ``sample_qc_effective``. This mode requires
+    ``reference_source="artifact"``.
 
     Raw-TPM mode needs the per-sample source matrix available; pass
     ``auto_fetch=True`` to download it. Raw-TPM summaries default to
@@ -2705,11 +2723,8 @@ def cancer_reference_expression(
     modes = _reference_normalize_modes(normalize)
     sample_qc = _validate_artifact_sample_qc(sample_qc)
     reference_source = _validate_reference_source(reference_source)
-    if sample_qc == "artifact" and (reference_source != "artifact" or "tpm_raw" in modes):
-        raise ValueError(
-            "sample_qc='artifact' requires reference_source='artifact' and "
-            "clean/log-clean artifact-backed normalization"
-        )
+    if sample_qc == "artifact" and reference_source != "artifact":
+        raise ValueError("sample_qc='artifact' requires reference_source='artifact'")
     _validate_gene_id_style(gene_id_style)
     gene_universe = _validate_artifact_gene_universe(gene_universe)
     source_kinds = _normalize_source_filter_values(source_kind)
@@ -2785,11 +2800,18 @@ def cancer_reference_expression(
             request_key = (request["requested_code"], code, mode)
             if request_key not in available_keys:
                 continue
+            request_row = request_lookup[request_key]
+            effective_sample_qc = request_row.sample_qc_effective
+            load_sample_qc = sample_qc
+            if sample_qc == "artifact" and mode == "tpm_raw":
+                if pd.isna(effective_sample_qc):
+                    raise AssertionError(f"available raw artifact request lacks QC policy: {code}")
+                load_sample_qc = _validate_sample_qc(str(effective_sample_qc))
             ref, method = _reference_expression_frame(
                 code,
                 mode,
                 auto_fetch=auto_fetch,
-                sample_qc=sample_qc,
+                sample_qc=load_sample_qc,
                 reference_source=reference_source,
                 source_kinds=source_kinds,
                 source_cohorts=source_cohorts,
@@ -2848,7 +2870,6 @@ def cancer_reference_expression(
                 part.insert(2, "cancer_code", code)
                 part["normalization"] = label
                 if include_request_metadata:
-                    request_row = request_lookup[request_key]
                     part["requested_code"] = request_row.requested_code
                     part["request_kind"] = request_row.request_kind
                     part["available"] = bool(request_row.available)
@@ -2869,9 +2890,9 @@ def cancer_reference_expression(
                     else:
                         provenance = _reference_expression_provenance(
                             code,
-                            mode,
                             method,
                             sample_qc=sample_qc,
+                            sample_qc_effective=effective_sample_qc,
                             reference_source=reference_source,
                         )
                         for col, value in provenance.items():
@@ -2967,8 +2988,9 @@ def cancer_reference_expression_availability(
     returns one row per source cohort and normalization without loading the
     multi-million-row expression frame. Both modes are gene-independent, so callers
     can distinguish an empty gene filter from unavailable upstream data. For
-    percentile artifacts, ``artifact_sample_qc`` reports the effective build policy
-    recorded in the compact artifact metadata manifest. ``n_samples`` mirrors
+    percentile artifacts and raw artifact-policy requests, ``artifact_sample_qc``
+    reports the build policy recorded in the compact metadata manifest;
+    ``sample_qc_effective`` reports the policy applied by that row. ``n_samples`` mirrors
     ``n_reference_samples``. With current build metadata it is the selected sample
     count used to build the artifact, not necessarily the wider raw source-matrix
     count; legacy bundles without build metadata fall back to the registered matrix
@@ -2980,11 +3002,8 @@ def cancer_reference_expression_availability(
     source_kinds = _normalize_source_filter_values(source_kind)
     source_cohorts = _normalize_source_cohort_filter_values(source_cohort)
     has_source_filter = source_kinds is not None or source_cohorts is not None
-    if sample_qc == "artifact" and (reference_source != "artifact" or "tpm_raw" in modes):
-        raise ValueError(
-            "sample_qc='artifact' requires reference_source='artifact' and "
-            "clean/log-clean artifact-backed normalization"
-        )
+    if sample_qc == "artifact" and reference_source != "artifact":
+        raise ValueError("sample_qc='artifact' requires reference_source='artifact'")
     if reference_source == "summary_rows_all" and sample_qc != "all":
         raise ValueError('reference_source="summary_rows_all" requires sample_qc="all"')
     if all_sources and reference_source != "summary_rows_all":
@@ -3067,6 +3086,7 @@ _REFERENCE_PROVENANCE_COLUMNS = [
     "notes",
     "reference_method",
     "sample_qc",
+    "sample_qc_effective",
     "data_version",
     "source_matrix_version",
 ]
@@ -3121,6 +3141,7 @@ _REFERENCE_AVAILABILITY_COLUMNS = [
     "notes",
     "reference_method",
     "sample_qc",
+    "sample_qc_effective",
     "artifact_sample_qc",
     "artifact_schema_version",
     "data_version",
@@ -3230,7 +3251,10 @@ def _reference_expression_availability_for_requests(
     artifact_qc_policies: dict[str, tuple[str, ...]] = {}
     artifact_sample_counts: dict[str, int] = {}
     artifact_qc_metadata_present = False
-    if reference_source == "artifact" and any(mode in artifact_modes for mode in modes):
+    needs_artifact_qc_metadata = any(mode in artifact_modes for mode in modes) or (
+        sample_qc == "artifact" and "tpm_raw" in modes
+    )
+    if reference_source == "artifact" and needs_artifact_qc_metadata:
         artifact_qc_meta = expression_artifact_build_metadata(auto_fetch=False, on_missing="empty")
         artifact_qc_policies = _artifact_build_metadata_qc_policies(artifact_qc_meta)
         artifact_sample_counts = _artifact_build_metadata_sample_counts(artifact_qc_meta)
@@ -3239,6 +3263,13 @@ def _reference_expression_availability_for_requests(
     for request in requests:
         code = request["cancer_code"]
         for mode in modes:
+            recorded_policies = artifact_qc_policies.get(code, ())
+            reports_artifact_policy = reference_source == "artifact" and (
+                mode in artifact_modes or sample_qc == "artifact"
+            )
+            effective_sample_qc: str | None = sample_qc
+            if sample_qc == "artifact":
+                effective_sample_qc, _ = _artifact_effective_sample_qc(code, artifact_qc_policies)
             available, missing_reason = _reference_mode_availability(
                 code,
                 mode,
@@ -3264,24 +3295,25 @@ def _reference_expression_availability_for_requests(
                 "artifact_schema_version": REFERENCE_EXPRESSION_SCHEMA_VERSION,
                 "data_version": DATA_VERSION,
                 "source_matrix_version": SOURCE_MATRIX_VERSION,
-                "artifact_sample_qc": pd.NA,
+                "artifact_sample_qc": (
+                    ",".join(recorded_policies)
+                    if reports_artifact_policy and recorded_policies
+                    else pd.NA
+                ),
             }
-            if reference_source == "artifact" and mode in artifact_modes:
-                policies = artifact_qc_policies.get(code, ())
-                row["artifact_sample_qc"] = ",".join(policies) if policies else pd.NA
             row.update(
                 _reference_expression_provenance(
                     code,
-                    mode,
                     method,
                     sample_qc=sample_qc,
+                    sample_qc_effective=effective_sample_qc,
                     reference_source=reference_source,
                     source_kinds=source_kinds,
                     source_cohorts=source_cohorts,
                     exclude_microarray_proxy=exclude_microarray_proxy,
                 )
             )
-            if reference_source == "artifact" and mode in artifact_modes:
+            if reports_artifact_policy:
                 selected_count = artifact_sample_counts.get(code)
                 if selected_count is not None:
                     row["n_reference_samples"] = selected_count
@@ -3376,6 +3408,7 @@ def _reference_source_availability_row(
         "missing_reason": "" if available else "no_reference_summary_rows",
         "reference_method": _REFERENCE_SUMMARY_ALL_METHOD,
         "sample_qc": "all",
+        "sample_qc_effective": "all",
         "artifact_schema_version": REFERENCE_EXPRESSION_SCHEMA_VERSION,
         "data_version": DATA_VERSION,
         "source_matrix_version": SOURCE_MATRIX_VERSION,
@@ -3437,7 +3470,22 @@ def _reference_mode_availability(
             return False, "artifact_sample_qc_mismatch"
         return True, ""
     if mode == "tpm_raw":
-        return (True, "") if code in source_matrix_available else (False, "no_source_matrix")
+        if code not in source_matrix_available:
+            return False, "no_source_matrix"
+        if sample_qc != "artifact":
+            return True, ""
+        if not artifact_qc_metadata_present:
+            return False, "artifact_build_metadata_missing"
+        effective_sample_qc, missing_reason = _artifact_effective_sample_qc(
+            code, artifact_qc_policies
+        )
+        if missing_reason:
+            return False, missing_reason
+        assert effective_sample_qc is not None
+        n_samples = _source_matrix_effective_sample_count(code, effective_sample_qc)
+        if n_samples == 0:
+            return False, f"no_source_matrix_samples_matching_{effective_sample_qc}_qc"
+        return True, ""
     raise AssertionError(f"unhandled reference normalize mode: {mode}")
 
 
@@ -4253,6 +4301,7 @@ def _attach_summary_row_provenance(df: pd.DataFrame, *, code: str) -> pd.DataFra
     )
     out["reference_method"] = _REFERENCE_SUMMARY_ALL_METHOD
     out["sample_qc"] = "all"
+    out["sample_qc_effective"] = "all"
     out["data_version"] = DATA_VERSION
     out["source_matrix_version"] = SOURCE_MATRIX_VERSION
     return out
@@ -4335,6 +4384,9 @@ def _pool_reference_expression_rows(long: pd.DataFrame) -> pd.DataFrame:
         row["notes"] = _join_nonempty(group.get("notes", pd.Series(dtype=object)))
         row["reference_method"] = "pooled_source_summary_rows"
         row["sample_qc"] = _first_nonempty(group.get("sample_qc", pd.Series(dtype=object)))
+        row["sample_qc_effective"] = _first_nonempty(
+            group.get("sample_qc_effective", pd.Series(dtype=object))
+        )
         row["data_version"] = DATA_VERSION
         row["source_matrix_version"] = SOURCE_MATRIX_VERSION
         out_rows.append(row)
@@ -4421,16 +4473,12 @@ def _reference_summary_metadata_from_row(
     return meta
 
 
-def _reference_sample_qc_label(mode: str, sample_qc: str) -> str:
-    return sample_qc
-
-
 def _reference_expression_provenance(
     code: str,
-    mode: str,
     method: str,
     *,
     sample_qc: str,
+    sample_qc_effective: str | None,
     reference_source: str,
     source_kinds: set[str] | None = None,
     source_cohorts: set[str] | None = None,
@@ -4469,7 +4517,8 @@ def _reference_expression_provenance(
         "processing_pipeline": meta.get("processing_pipeline"),
         "notes": meta.get("notes"),
         "reference_method": method,
-        "sample_qc": _reference_sample_qc_label(mode, sample_qc),
+        "sample_qc": sample_qc,
+        "sample_qc_effective": sample_qc_effective,
         "data_version": DATA_VERSION,
         "source_matrix_version": SOURCE_MATRIX_VERSION,
     }
