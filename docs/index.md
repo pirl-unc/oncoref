@@ -18,9 +18,9 @@ module map, with examples and notes about compatibility modules.
 
 - **oncoref**: empirical base facts and canonical identifiers. Use it for cancer
   codes, gene IDs, reference expression/normalization, epidemiology, TMB, ICI/aPD1
-  response, HPA normal tissue, and source-anchored CTA facts. If a row has an
-  `n`, confidence interval, source cohort, or PMID/DOI anchoring a measurement, it
-  usually belongs here.
+  response, HPA normal tissue, and source-anchored cancer-testis antigen (CTA)
+  facts. If a row has an `n`, confidence interval, source cohort, or PMID/DOI
+  anchoring a measurement, it usually belongs here.
 - **pirlygenes**: curated gene selections. Use it for lineage/family/compartment
   panels, discriminators, surfaceome, TME and stem-cell markers, response
   signature panels, target-to-therapy registries, and other purpose-specific

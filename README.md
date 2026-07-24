@@ -18,9 +18,9 @@ Newcomers should think of the stack as three layers:
   about cancer types, cohorts, genes, and reference datasets. It owns gene
   identity and canonicalization, the cancer-type ontology/registry, expression
   reference data and normalization, epidemiology, TMB, ICI/aPD1 response, and
-  source-anchored CTA facts. If a row has an `n`, a confidence interval, a
-  source cohort, or a PMID/DOI anchoring a measurement, it is usually an oncoref
-  fact.
+  source-anchored cancer-testis antigen (CTA) facts. If a row has an `n`, a
+  confidence interval, a source cohort, or a PMID/DOI anchoring a measurement,
+  it is usually an oncoref fact.
 - [**pirlygenes**](https://github.com/pirl-unc/pirlygenes) owns curated gene
   sets and panels: which genes are useful for a purpose. That includes
   lineage/family/compartment/supertype panels, discriminators, surfaceome, TME
