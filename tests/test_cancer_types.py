@@ -558,7 +558,7 @@ def test_cancer_type_category_schema_and_summary_are_public_contract():
     )
 
 
-def test_reference_source_enum_drives_classification_targets():
+def test_reference_source_and_review_policy_drive_classification_targets():
     records = cancer_types.cancer_type_records(
         [
             "CRC_MSI",
@@ -620,6 +620,7 @@ def test_reference_source_enum_drives_classification_targets():
     non_targets = {
         "RCC_NCC",
         "RCC_NCC_UNCLASSIFIED",
+        "SGC",
         "THYMCA",
         "NET_NONPANCREATIC",
         "NEN_EXTRAPULMONARY_HG",
@@ -631,7 +632,7 @@ def test_reference_source_enum_drives_classification_targets():
     with pytest.raises(ValueError, match="classification_target"):
         cancer_types.cancer_type_codes(classification_target="maybe")
 
-    for code in ["CRC_MSI", "SARC", "CRC", "NET", "NSCLC", "OV", "BTC", "SGC"]:
+    for code in ["CRC_MSI", "SARC", "CRC", "NET", "NSCLC", "OV", "BTC"]:
         assert bool(records.loc[code, "is_classification_target"]) is True
         assert cancer_types.is_classification_target(code) is True
 
@@ -639,9 +640,10 @@ def test_reference_source_enum_drives_classification_targets():
         assert cancer_types.is_classification_target(code) is False
         assert code not in cancer_types.classification_target_codes()
 
-    assert cancer_types.classification_target_codes() == cancer_types.cancer_type_codes(
+    reference_backed_codes = cancer_types.cancer_type_codes(
         reference_source={"own_cohort", "member_union"}
     )
+    assert set(reference_backed_codes) - set(cancer_types.classification_target_codes()) == {"SGC"}
     assert cancer_types.reference_source_codes("member_union") == cancer_types.cancer_type_codes(
         reference_source="member_union"
     )
@@ -651,6 +653,8 @@ def test_reference_source_enum_drives_classification_targets():
     assert cancer_types.cancer_type_reference_code("STAD_MSI") == "STAD_MSI"
     assert cancer_types.cancer_type_reference_source("NET_NONPANCREATIC") == "none"
     assert cancer_types.cancer_type_reference_code("NET_NONPANCREATIC") == "NET"
+    assert cancer_types.cancer_type_reference_source("SGC") == "member_union"
+    assert cancer_types.cancer_type_reference_code("SGC") is None
 
     assert cancer_types.is_classification_target(None) is False
     assert cancer_types.cancer_type_reference_source(None) is None
@@ -776,6 +780,7 @@ def test_expression_reference_coverage_contract():
         "ontology_level",
         "ontology_kind",
         "reference_source",
+        "is_classification_target",
         "classification_reference_code",
         "ontology_depth",
         "has_expression_reference",
@@ -846,7 +851,7 @@ def test_expression_reference_coverage_computed_groupings():
         ]
     ).set_index("code")
 
-    for code in ["NET", "CRC", "CRC_MSI", "NSCLC", "BTC", "SGC", "SARC", "SARC_LPS"]:
+    for code in ["NET", "CRC", "CRC_MSI", "NSCLC", "BTC", "SARC", "SARC_LPS"]:
         row = coverage.loc[code]
         assert bool(row["has_expression_reference"]) is True
         assert bool(row["has_direct_expression_reference"]) is False
@@ -858,6 +863,15 @@ def test_expression_reference_coverage_computed_groupings():
         assert row["consumer_recommendation"] == "computed_reference"
         assert pd.isna(row["missing_reason"])
         assert row["computed_expression_member_codes"]
+
+    sgc = coverage.loc["SGC"]
+    assert bool(sgc["has_computed_expression_reference"]) is True
+    assert sgc["expression_reference_kind"] == "computed_union"
+    assert sgc["expression_reference_source_code"] == "SGC"
+    assert sgc["reference_source"] == "member_union"
+    assert pd.isna(sgc["classification_reference_code"])
+    assert bool(sgc["is_classification_target"]) is False
+    assert sgc["consumer_recommendation"] == "reference_only"
 
     assert coverage.loc["CRC_MSI", "computed_expression_member_codes"] == ("COAD_MSI", "READ_MSI")
     assert bool(coverage.loc["OV", "has_direct_expression_reference"]) is True
@@ -924,11 +938,19 @@ def test_btc_records_source_scope_chol_and_gbc():
 def test_sgc_records_source_scope_salivary_children():
     assert cancer_types.resolve_cancer_type("salivary gland") == "SGC"
     records = cancer_types.cancer_type_records(["SGC", "ACINIC", "ADCC"]).set_index("code")
+    registry = cancer_types.cancer_type_registry().set_index("code")
+    info = cancer_types.cancer_type_info("SGC")
     assert records.loc["SGC", "evidence_source_code"] == "SGC"
     assert records.loc["SGC", "evidence_source_kind"] == "direct"
     assert records.loc["SGC", "children"] == ("ACINIC", "ADCC")
     assert records.loc["SGC", "normal_tissue_code"] == "salivary_gland"
     assert records.loc["SGC", "hpa_tissues"] == ("salivary gland",)
+    assert records.loc["SGC", "reference_source"] == "member_union"
+    assert bool(records.loc["SGC", "is_classification_target"]) is False
+    assert pd.isna(records.loc["SGC", "classification_reference_code"])
+    assert bool(registry.loc["SGC", "is_classification_target"]) is False
+    assert info["is_classification_target"] is False
+    assert info["classification_reference_code"] is None
 
     assert records.loc["ACINIC", "parent_code"] == "SGC"
     assert records.loc["ACINIC", "evidence_source_code"] == "SGC"

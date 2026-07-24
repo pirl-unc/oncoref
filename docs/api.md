@@ -149,11 +149,14 @@ cohorts.cohort_registry_df()
 classifier consumers. It reports direct observed-bulk source-matrix coverage,
 computed member-union references for curated grouping/source-scope codes such as
 `NET`, `CRC`, `CRC_MSI`, `NSCLC`, `BTC`, and `SGC`, parent fallback via
-`classification_reference_code`, matched normal tissue availability,
+`classification_reference_code`, explicit `is_classification_target` eligibility,
+matched normal tissue availability,
 molecular/fusion-only definitions, canonical gene/proteoform space, data/source
 matrix versions, and a conservative `consumer_recommendation`:
-`direct_reference`, `computed_reference`, `parent_reference`, `molecular_only`,
-or `unsupported`.
+`direct_reference`, `computed_reference`, `reference_only`, `parent_reference`,
+`molecular_only`, or `unsupported`. SGC is `reference_only`: its histology-member
+union remains available for comparison, but the source/therapy grouping is not a
+valid final classification label.
 `has_direct_expression_reference` remains literal; computed groupings use
 `expression_reference_kind="computed_union"` and expose their pooled member codes
 in `computed_expression_member_codes`. The table intentionally does not

@@ -281,6 +281,9 @@ def _clear_caches():
     _registry_frame.cache_clear()
     _who_audit_frame.cache_clear()
     _who_registry_metadata.cache_clear()
+    _reference_source_map.cache_clear()
+    _classification_target_map.cache_clear()
+    _classification_reference_code_map.cache_clear()
     _clear_cache()  # frame cache + registered derived caches (burden maps, CTA, …)
 
 
@@ -480,7 +483,7 @@ def cancer_type_info(cancer_type):
     reference_source = cancer_type_reference_source(code)
     info["reference_source"] = reference_source
     info["classification_reference_code"] = cancer_type_reference_code(code)
-    info["is_classification_target"] = reference_source in _RETURNABLE_REFERENCE_SOURCES
+    info["is_classification_target"] = is_classification_target(code)
     info["burden_category"] = burden_category(code)
     tmb = cancer_tmb(code)
     info["tmb"] = float(tmb) if tmb is not None else None
@@ -718,9 +721,9 @@ def cancer_type_registry():
     ``reference_source`` / ``classification_reference_code`` classification
     backing contract, and the independently audited ``who_category`` /
     ``who_behavior`` fields. Returns a defensive copy so callers can mutate
-    freely. The shipped CSV still carries the historical
-    ``is_classification_target`` column, but this public frame overwrites it
-    from ``reference_source`` so the enum is the source of truth.
+    freely. The shipped CSV still carries a historical
+    ``is_classification_target`` column. This public frame derives the value
+    from reference availability plus the reviewed source-scope policy.
     """
     df = _registry_frame().copy()
     df = df.merge(_who_registry_metadata(), how="left", on="code", validate="one_to_one")
@@ -730,7 +733,8 @@ def cancer_type_registry():
     df["classification_reference_code"] = [
         classification_refs.get(str(code)) for code in df["code"]
     ]
-    df["is_classification_target"] = df["reference_source"].isin(_RETURNABLE_REFERENCE_SOURCES)
+    target_map = _classification_target_map()
+    df["is_classification_target"] = [target_map.get(str(code), False) for code in df["code"]]
     return df
 
 
@@ -1137,7 +1141,8 @@ def _cancer_type_record_frame() -> pd.DataFrame:
     df["classification_reference_code"] = [
         classification_refs.get(str(code)) for code in df["code"]
     ]
-    df["is_classification_target"] = df["reference_source"].isin(_RETURNABLE_REFERENCE_SOURCES)
+    target_map = _classification_target_map()
+    df["is_classification_target"] = [target_map.get(str(code), False) for code in df["code"]]
     df["evidence_source_code"] = [cancer_evidence_source_code(code) for code in df["code"]]
     df["evidence_source_kind"] = [
         "direct" if code == source else "source_scope"
@@ -1293,6 +1298,14 @@ REFERENCE_SOURCE_VALUES = ("own_cohort", "member_union", "parent", "none")
 _RETURNABLE_REFERENCE_SOURCES = frozenset({"own_cohort", "member_union"})
 _SOURCE_SCOPE_MEMBER_UNION_CODES = frozenset({"BTC", "NSCLC", "SGC"})
 
+# A pooled source/therapy scope is not a classification label by default. These
+# two established diagnostic umbrellas are the reviewed exceptions. The reason
+# map makes each exception auditable instead of hiding it in branching logic.
+_REVIEWED_SOURCE_SCOPE_CLASSIFICATION_TARGETS = {
+    "BTC": "established clinicopathologic biliary-tract diagnosis umbrella",
+    "NSCLC": "established histologic non-small-cell lung diagnosis umbrella",
+}
+
 _ONTOLOGY_LEVEL_DESCRIPTIONS = {
     "grouping": (
         "coarser ontology node that groups distinct cancer types or source "
@@ -1417,12 +1430,12 @@ def _direct_expression_codes() -> set[str]:
 
 @lru_cache(maxsize=1)
 def _reference_source_map() -> dict[str, str]:
-    """Derived per-code expression/classification backing strategy.
+    """Derived per-code expression-reference backing strategy.
 
-    ``own_cohort`` and ``member_union`` are reportable sample-classification
-    targets. ``parent`` rows can be annotated but should report the nearest
-    reportable ancestor, and ``none`` rows are pure unsupported/provenance
-    scopes unless a consumer explicitly abstains up the tree.
+    ``own_cohort`` and ``member_union`` provide usable reference data, but
+    classification eligibility is decided separately by
+    :func:`_classification_target_map`. ``parent`` rows can be annotated at a
+    classifiable ancestor, while ``none`` rows have no reference backing.
     """
 
     df = _registry_frame()
@@ -1452,17 +1465,46 @@ def _reference_source_map() -> dict[str, str]:
 
 
 @lru_cache(maxsize=1)
-def _classification_reference_code_map() -> dict[str, str | None]:
+def _classification_target_map() -> dict[str, bool]:
+    """Whether each code may be emitted as a sample-classification label.
+
+    Usable direct and member-union references are normally eligible. A
+    source-scoped mixture backed by a member union is eligible only when it is
+    named in the reviewed exception map above.
+    """
+
+    registry = _registry_frame().set_index("code")
     reference_sources = _reference_source_map()
+    out: dict[str, bool] = {}
+    for code, reference_source in reference_sources.items():
+        has_returnable_reference = reference_source in _RETURNABLE_REFERENCE_SOURCES
+        row = registry.loc[code]
+        ontology_kind = str(row.get("ontology_kind", "")).strip().lower()
+        mixture_flag = str(row.get("mixture_cohort", "")).strip().lower()
+        is_source_scope_mixture = ontology_kind == "source_scope" and mixture_flag in {
+            "true",
+            "1",
+            "yes",
+        }
+        needs_reviewed_exception = reference_source == "member_union" and is_source_scope_mixture
+        out[code] = has_returnable_reference and (
+            not needs_reviewed_exception or code in _REVIEWED_SOURCE_SCOPE_CLASSIFICATION_TARGETS
+        )
+    return out
+
+
+@lru_cache(maxsize=1)
+def _classification_reference_code_map() -> dict[str, str | None]:
+    classification_targets = _classification_target_map()
     parent_of = _parent_of_map()
     out: dict[str, str | None] = {}
-    for code, reference_source in reference_sources.items():
-        if reference_source in _RETURNABLE_REFERENCE_SOURCES:
+    for code, is_target in classification_targets.items():
+        if is_target:
             out[code] = code
             continue
         target = None
         for ancestor in _walk_ancestors(code, parent_of):
-            if reference_sources.get(ancestor) in _RETURNABLE_REFERENCE_SOURCES:
+            if classification_targets.get(ancestor, False):
                 target = ancestor
                 break
         out[code] = target
@@ -1484,12 +1526,12 @@ def cancer_type_reference_source(cancer_type) -> str | None:
 
 
 def cancer_type_reference_code(cancer_type) -> str | None:
-    """Nearest reportable reference code for a cancer type.
+    """Nearest classification-eligible reference code for a cancer type.
 
-    For ``own_cohort`` and ``member_union`` rows this is the code itself. For
-    ``parent``/``none`` rows it walks ``parent_code`` to the nearest ancestor
-    whose ``reference_source`` is reportable, or returns ``None`` if no backing
-    reference exists.
+    A classification target returns itself. Other rows walk ``parent_code`` to
+    the nearest classification target, or return ``None`` when no eligible
+    target exists. Reference data can still exist for a non-target source scope;
+    inspect :func:`cancer_type_reference_source` for that separate contract.
     """
 
     code = resolve_cancer_type(cancer_type)
@@ -1514,6 +1556,7 @@ _EXPRESSION_REFERENCE_COVERAGE_COLUMNS = [
     "ontology_level",
     "ontology_kind",
     "reference_source",
+    "is_classification_target",
     "classification_reference_code",
     "primary_tissue",
     "ontology_depth",
@@ -1591,13 +1634,16 @@ def _coverage_recommendation(
     *,
     has_direct: bool,
     has_computed: bool,
+    is_classification_target: bool,
     reference_source: str,
     molecular_kinds: tuple[str, ...],
 ) -> str:
-    if has_direct:
+    if has_direct and is_classification_target:
         return "direct_reference"
-    if has_computed:
+    if has_computed and is_classification_target:
         return "computed_reference"
+    if has_direct or has_computed:
+        return "reference_only"
     if reference_source == "parent":
         return "parent_reference"
     if molecular_kinds:
@@ -1670,6 +1716,7 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
                 "ontology_level": record["ontology_level"],
                 "ontology_kind": record["ontology_kind"],
                 "reference_source": reference_source,
+                "is_classification_target": bool(record["is_classification_target"]),
                 "classification_reference_code": _none_if_missing(
                     record["classification_reference_code"]
                 ),
@@ -1706,6 +1753,7 @@ def expression_reference_coverage(cancer_types=None, **query_kwargs) -> pd.DataF
                 "consumer_recommendation": _coverage_recommendation(
                     has_direct=has_direct,
                     has_computed=has_computed,
+                    is_classification_target=bool(record["is_classification_target"]),
                     reference_source=reference_source,
                     molecular_kinds=molecular_kinds,
                 ),
@@ -2202,13 +2250,12 @@ def _coerce_bool_filter(value, *, name: str) -> bool:
 def classification_target_codes():
     """Return cancer codes that are valid sample-classification targets.
 
-    Compatibility view over ``reference_source``. A code is returnable as a
-    sample-classification call when its backing source is ``own_cohort`` or
-    ``member_union``. Codes marked ``parent`` should be annotated but reported
-    at their nearest reportable ancestor; ``none`` rows are unsupported or pure
-    provenance scopes.
+    Direct and member-union references are normally eligible. Source-scoped
+    mixtures require an explicit reviewed exception; this keeps therapy/source
+    aggregates such as SGC from becoming expression diagnoses merely because a
+    pooled reference can be constructed.
     """
-    return cancer_type_records(reference_source=_RETURNABLE_REFERENCE_SOURCES)["code"].tolist()
+    return cancer_type_records(classification_target=True)["code"].tolist()
 
 
 def computed_union_codes():
@@ -2227,7 +2274,10 @@ def computed_union_codes():
 
 def is_classification_target(cancer_type):
     """True when ``cancer_type`` resolves to a classifiable cancer target."""
-    return cancer_type_reference_source(cancer_type) in _RETURNABLE_REFERENCE_SOURCES
+    code = resolve_cancer_type(cancer_type)
+    if code is None:
+        return False
+    return _classification_target_map().get(code, False)
 
 
 def mixture_cohort_codes():
