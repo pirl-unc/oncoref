@@ -57,6 +57,7 @@ oncoref = "oncoref.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/pirl-unc/oncoref"
+Documentation = "https://pirl-unc.github.io/oncoref/"
 Repository = "https://github.com/pirl-unc/oncoref"
 
 [tool.setuptools.dynamic]
