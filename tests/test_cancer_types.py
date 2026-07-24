@@ -869,7 +869,7 @@ def test_expression_reference_coverage_computed_groupings():
     assert sgc["expression_reference_kind"] == "computed_union"
     assert sgc["expression_reference_source_code"] == "SGC"
     assert sgc["reference_source"] == "member_union"
-    assert sgc["classification_reference_code"] is None
+    assert pd.isna(sgc["classification_reference_code"])
     assert bool(sgc["is_classification_target"]) is False
     assert sgc["consumer_recommendation"] == "reference_only"
 
@@ -947,7 +947,7 @@ def test_sgc_records_source_scope_salivary_children():
     assert records.loc["SGC", "hpa_tissues"] == ("salivary gland",)
     assert records.loc["SGC", "reference_source"] == "member_union"
     assert bool(records.loc["SGC", "is_classification_target"]) is False
-    assert records.loc["SGC", "classification_reference_code"] is None
+    assert pd.isna(records.loc["SGC", "classification_reference_code"])
     assert bool(registry.loc["SGC", "is_classification_target"]) is False
     assert info["is_classification_target"] is False
     assert info["classification_reference_code"] is None
