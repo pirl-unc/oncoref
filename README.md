@@ -5,71 +5,53 @@
 
 Curated cancer reference data — cancer-type ontology, tumor mutational burden
 (TMB), incidence/mortality, checkpoint-inhibitor (ICI) response, per-cohort
-RNA-seq expression, HPA normal-tissue expression, and HPA-derived
-cancer-testis antigen references — behind one small Python API, a data
-fetch/cache CLI, and a set of reference plots.
+RNA-seq expression, Human Protein Atlas (HPA) normal-tissue expression, and
+HPA-derived cancer-testis antigen references — behind one small Python API, a
+data fetch/cache CLI, and a set of reference plots.
 
-## Where oncoref fits
+## Role in the stack
 
 The openvax/PIRL tools are split by ownership boundary, not by file format.
-Newcomers should think of the stack as three layers:
+`oncoref` is the base layer: downstream packages can depend on it, but it never
+imports its consumers.
 
 - **oncoref** is the empirical base: what is true, measured, or canonically named
   about cancer types, cohorts, genes, and reference datasets. It owns gene
   identity and canonicalization, the cancer-type ontology/registry, expression
-  reference data and normalization, epidemiology, TMB, ICI/aPD1 response, and
+  reference data and normalization, epidemiology, TMB, ICI/anti-PD-1 response, and
   source-anchored cancer-testis antigen (CTA) facts. If a row has an `n`, a
   confidence interval, a source cohort, or a PMID/DOI anchoring a measurement,
   it is usually an oncoref fact.
 - [**pirlygenes**](https://github.com/pirl-unc/pirlygenes) owns curated gene
   sets and panels: which genes are useful for a purpose. That includes
-  lineage/family/compartment/supertype panels, discriminators, surfaceome, TME
-  and stem-cell markers, response-signature panels, target-to-therapy registries,
-  and other opinionated selections keyed to oncoref cancer codes and gene IDs. An
-  empty set can be a valid pirlygenes answer.
+  lineage/family/compartment/supertype panels, discriminators, surfaceome, tumor
+  microenvironment (TME) and stem-cell markers, response-signature panels,
+  target-to-therapy registries, and other opinionated selections keyed to
+  oncoref cancer codes and gene IDs. An empty set can be a valid pirlygenes
+  answer.
 - [**trufflepig**](https://github.com/pirl-unc/trufflepig) owns per-sample
-  interpretation: QC narration, library-prep/source warnings, deconvolution,
-  scoring, and rule tables that fire against one tumor sample.
+  interpretation: quality-control (QC) narration, library-prep/source warnings,
+  deconvolution, scoring, and rule tables that fire against one tumor sample.
 
-That division keeps the dependency direction simple: pirlygenes and trufflepig
-can depend on oncoref, but oncoref never imports its consumers. When a shared
-fact is wrong, incomplete, or poorly anchored, fix it in oncoref. When a panel
-or rule is purpose-specific, keep it in the downstream package and key it to
-oncoref's ontology and gene identifiers.
+Adoption is staged: consumers can delegate parity-clean primitives while
+retaining their own curated artifacts and compatibility APIs. Shared facts and
+identifiers should be fixed here; purpose-specific panels and per-sample rules
+stay downstream.
 
-## oncoref is the base layer
+## Core model
 
-`oncoref` is **designed as the base layer** of the openvax/PIRL stack — the
-intended upstream home for shared cancer reference mechanics and data, meant to
-become a common dependency of
-[pirlygenes](https://github.com/pirl-unc/pirlygenes),
-[trufflepig](https://github.com/pirl-unc/trufflepig), and
-[tsarina](https://github.com/pirl-unc/tsarina). Adoption is staged: downstream
-packages can delegate parity-clean primitives while keeping their own curated
-tables, packaged artifacts, and compatibility APIs until those surfaces are
-ready to move. Architecturally oncoref stays at the bottom: it depends only on
-pandas / numpy / pyarrow / PyYAML, it **never imports its consumers** (data and
-logic flow only downward), and shared definitions should be fixed or exposed
-here rather than reimplemented separately downstream.
-
-Use oncoref for shared questions about
-
-- **gene expression of cancer samples** — per-cohort RNA-seq in a normalized,
-  comparable space: summary stats, tail-weighted percentiles, and medoid/exemplar
-  samples per cancer type/subtype. Downstream packages may still keep packaged
-  expression artifacts and compatibility wrappers while parity checks converge;
-- **HPA protein / RNA** normal-tissue expression;
-- the **HPA-derived cancer-testis antigen call** — the HPA tissue-restriction
-  call over the candidate list (HPA-only; no pirlygenes therapy/MS curation
-  layer);
-- the **ontology of cancer types** — codes, the parent/child hierarchy, subtypes,
-  families, characteristic driver fusions, and the cross-cutting MSI/POLE/HPV
-  groupings; and
-- **checkpoint-inhibitor response rates** and **TMB** per cancer type.
-
-Everything keys on the cancer-type registry. The small curated tables ship in the
-wheel; the heavy per-cohort expression bundle downloads on first use from
-oncoref's own GitHub Release.
+- **Canonical identities first.** Cancer facts key on the cancer-type registry;
+  expression cohorts and evidence scopes are explicit rather than inferred from
+  names. Gene APIs resolve to a canonical Ensembl space.
+- **Small facts in the wheel, large matrices on demand.** Ontology, gene,
+  burden, response, and provenance tables install with the package. The large
+  expression bundle and HPA datasets use versioned download caches.
+- **Provenance is part of the result.** Reference rows expose source scope,
+  sample counts, versions, and review status. Missing or ineligible data stays
+  distinguishable from a valid empty result.
+- **Consumer policy stays downstream.** oncoref exposes HPA-derived CTA calls
+  and empirical expression facts; it does not turn them into therapy panels or
+  one-sample decisions.
 
 ## Install
 
@@ -77,13 +59,20 @@ oncoref's own GitHub Release.
 pip install oncoref
 ```
 
-## Python API
+Optional integrations are explicit extras:
+
+```bash
+pip install 'oncoref[genome]'  # pyensembl-backed transcript and gene lookup
+pip install 'oncoref[plots]'   # reference plotting
+```
+
+## Quick start
 
 The flat `oncoref` namespace remains available for compatibility and quick
 interactive use. For new code, prefer the semantic submodules in
-[docs/api.md](docs/api.md); they make it clearer whether you are working with
-the cancer ontology, cohorts, ICI response, CTA coverage, generic antigen-panel
-coverage, or CTA-specific peptides.
+the [API guide](https://pirl-unc.github.io/oncoref/api/); they make it clearer
+whether you are working with the cancer ontology, cohorts, ICI response, CTA
+coverage, generic antigen-panel coverage, or CTA-specific peptides.
 
 ```python
 import oncoref as od
@@ -93,7 +82,7 @@ od.cancer_type_info("SARC_RMS_ARMS")      # full registry record + burden + tmb
 od.cancer_tmb("LUAD_EGFR")                # 6.9  (inherited from LUAD)
 od.cancer_burden("pancreas", metric="us_mortality_pct")
 od.burden_category("SARC_OS")             # -> "bone_and_joint" (incidence/mortality bucket)
-od.cancer_ici_response("SKCM")            # 42  (anti-PD-1 ORR %; fallback aPD-1 → aPD-L1 → combo)
+od.cancer_ici_response("SKCM")            # 42% objective response rate
 od.cancer_ici_response("SKCM", regimen="PD-1+CTLA-4")   # 57.6  (pin a regimen)
 
 # Cancer-testis antigens (HPA-derived tissue-restriction):
@@ -106,89 +95,23 @@ od.cohort_gene_percentiles("PRAD")        # per-gene p0…p100 vector (within-co
 od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (within-sample)
 ```
 
-### Domains
+## Domain map
 
-- **Cancer ontology** — `oncoref.cancer_ontology`: `cancer_type_registry`,
-  `resolve_cancer_type`, `cancer_type_records`, `cancer_type_codes`,
-  `cancer_type_path`, `cancer_type_reference_data`, `cancer_type_category_schema`,
-  `cancer_type_category_summary`, tree/family/lineage helpers, explicit
-  `ontology_level` / `ontology_kind` fields, molecular subtype groups, typed
-  `reference_source` backing (`own_cohort`, `member_union`, `parent`, `none`),
-  `cancer_type_reference_source`, `cancer_type_reference_code`,
-  compatibility `is_classification_target` / `classification_target_codes`,
-  `computed_union_codes`, MMR/MSI classifier-axis helpers, source-scoped
-  evidence resolution, matched normal tissue helpers, `viral_status`,
-  `fusion_status`. Use these level, reference-source, and computed-union fields
-  for category-aware code, not the legacy `mixture_cohort` flag. For example
-  `COAD_MSI` / `READ_MSI` are own cohorts, while `CRC_MSI` is the member union
-  over those two MSI expression partitions. Use `cancer_type_category_schema()`
-  before building filters that depend on ontology/category vocabulary.
-- **Cohorts** — `oncoref.cohorts`: `cohort_registry`, `cohort_aggregates`,
-  `cohort_source_version`, and mixture-cohort helpers.
-- **TMB** — `cancer_tmb`, `cancer_tmb_df` (parent-chain inheritance).
-- **Incidence / mortality** — `cancer_burden`, `burden_category` (ACS /
-  GLOBOCAN). `cancer_burden_df()` is the auditable source table: percentage
-  columns are the current lookup surface, while raw-count, source-locator,
-  source-site, derivation, and rounding columns are explicit provenance fields.
-  Legacy rows mark source-local anchors as `not_extracted` until the row-level
-  ACS/GLOBOCAN audit fills them.
-- **Checkpoint response** — `oncoref.ici_response`: regimen-aware ORR anchors,
-  anti-PD-1 shortcuts, endpoint estimates, and pooled response summaries. The
-  long endpoint table exposes stable `estimate_id` values plus structured
-  CI/value status fields; compact ORR records point back to those estimate rows
-  via `source_estimate_id`.
-- **Expression** — `cohort_gene_percentiles`, `within_sample_top_fraction`,
-  `representative_cohort_samples` over the lazy-downloaded per-cohort bundle, plus
-  `representative_cohort_availability` for source-scale and benchmark qualification;
-  `oncoref.expression_builders` for source-matrix ingestion into canonical
-  per-code per-sample TPM parquet plus mapping/parse/QC sidecars and
-  per-gene-per-cohort `summary_rows` for reference-expression shards. Generic
-  `source_type: geo-matrix` entries in `expression_sources.yaml` are executable
-  via `scripts/build_geo_matrix.py`, registry-encoded GDC STAR-counts sources
-  via `scripts/build_gdc_source.py`, and `source_type: recount3` entries via
-  `scripts/build_recount3_source.py`; downstream packages should read the
-  bundled source registry through `expression_source_registry_entries()` and
-  consume builder-produced `summary_rows` rather than shipping a second YAML copy
-  or re-deriving the stat suite.
-- **Clean TPM / normalization** — `oncoref.normalization` for the 16/9/75
-  compartment transform and `oncoref.gene_families` for clean-TPM censored
-  compartment IDs plus the biological housekeeping denominator panel.
-- **Cancer-testis antigens** — `oncoref.cta`: `cta_gene_names`/`cta_gene_ids`,
-  `cta_evidence`, `cta_clinical_target_evidence`, `synthesize_restriction`
-  (HPA-only tissue-restriction; MS evidence stays in the target-selection layer).
-  The strict default keeps normal-tissue safety conservative; clinical/canonical
-  targets that fail that filter remain discoverable through the explicit clinical
-  tier with exclusion-driving tissue and nTPM values attached. Use
-  `cta_specificity_audit()` for machine-readable demotion and candidate-only
-  specificity decisions.
-- **CTA coverage / peptides** — `oncoref.cta_coverage` for patient coverage and
-  `oncoref.cta_peptides` for CTA-specific 9-mer count maps and load.
-- **Generic antigen-panel coverage** — `oncoref.antigen_coverage` for explicit
-  non-CTA gene lists supplied by the caller. This computes coverage for a panel;
-  it does not make oncoref the owner of downstream panel curation.
-- **HPA normal tissue** — `hpa_rna_consensus`, `hpa_normal_tissue` (IHC),
-  `hpa_single_cell`, and per-gene lookups (`gene_tissue_ntpm`,
-  `gene_protein_tissues`, `gene_cell_type_ntpm`) over HPA v23, fetched on demand
-  (`oncoref data fetch hpa`).
-- **Genome reference** — `canonical_gene_id`, `canonical_gene_symbol`,
-  `display_gene_name`, `short_gene_name`, `canonical_gene_id_and_name`,
-  `find_gene_id_by_name`, `find_gene_name_from_ensembl_{gene,transcript}_id`,
-  and `aggregate_gene_expression` (symbol/synonym/legacy-Ensembl-ID ↔ canonical
-  Ensembl-ID resolution). The bundled canonical gene space and aliases work in the
-  base install. Install `oncoref[genome]` for arbitrary pyensembl-backed lookup, then
-  download a human release once:
-  `pyensembl install --release 111 --species homo_sapiens` (the accessors return
-  `None` until a release is installed).
-- **Legacy/compat response signatures** — `oncoref.response_signatures` ships a
-  small historical checkpoint-response signature surface used by oncoref plots.
-  Treat it as transitional: new therapy-response signature panels belong in
-  pirlygenes, and this small surface should not be extended in oncoref unless it
-  is recast as source-anchored empirical fact/provenance rows.
-- **Plots** (`pip install oncoref[plots]`) — `oncoref.plots.apd1_vs_tmb`,
-  `apd1_orr_bars`, `incidence_vs_mortality`, the CTA/coverage figures, and
-  `oncoref.cta_curation_plots.render`.
+| Question | Preferred modules |
+| --- | --- |
+| What does this cancer code mean? | `oncoref.cancer_ontology`, `oncoref.cohorts` |
+| What expression reference is available? | `oncoref.expression`, `oncoref.source_matrices` |
+| How is expression normalized or filtered? | `oncoref.normalization`, `oncoref.gene_families` |
+| What is the canonical gene identity? | `oncoref.gene_ids`, `oncoref.genome`, `oncoref.proteoforms` |
+| What is the TMB, burden, or ICI response evidence? | `oncoref.tmb`, `oncoref.incidence`, `oncoref.ici_response` |
+| Which genes meet the HPA-derived CTA definition? | `oncoref.cta`, `oncoref.cta_coverage`, `oncoref.cta_peptides` |
+| Where is a dataset cached or downloaded? | `oncoref.catalog`, `oncoref.data_bundle`, `oncoref.hpa` |
 
-## CLI
+The [API guide](https://pirl-unc.github.io/oncoref/api/) explains each domain,
+its provenance contract, and the distinction between reader, builder, and
+compatibility APIs.
+
+## Command line
 
 ```bash
 oncoref cancer-type prostate     # registry info as JSON
@@ -199,13 +122,16 @@ oncoref cta --count             # number of expressed CTAs
 oncoref plot apd1-vs-tmb --out apd1_vs_tmb.png
 oncoref plot patient-coverage --gene-set cta --out coverage_out
 oncoref plot cta-curation --out cta_curation_out
+```
 
-# managed data downloads/cache:
+### Data cache
+
+```bash
 oncoref data list               # every wheel/bundle/HPA/source dataset
 oncoref data status bundle      # expression-bundle cache state (no download)
 oncoref data metadata           # package/data/cache/release contract JSON
 oncoref data fetch bundle       # download the large expression bundle
-oncoref data fetch hpa          # download HPA reference data (RNA / IHC / single-cell)
+oncoref data fetch hpa          # HPA RNA / immunohistochemistry / single-cell data
 oncoref data dir bundle         # where the data bundle is cached
 oncoref data prune --yes        # delete stale bundle version caches
 oncoref version

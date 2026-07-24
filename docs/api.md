@@ -17,18 +17,36 @@ bundle-integrity rule, or source-QC decision affects shared reference artifacts,
 the durable fix should live or be exposed here rather than only in a downstream
 compatibility layer.
 
+## Guide Map
+
+Read the guide from concepts to operations:
+
+| Layer | Start here |
+| --- | --- |
+| Canonical cancer and gene identities | [Cancer Vocabulary](#cancer-vocabulary), [Gene Identity](#gene-identity) |
+| Expression reads, artifacts, and normalization | [Expression And Normalization](#expression-and-normalization) |
+| Clinical and epidemiological reference facts | [ICI Response](#ici-response), [Burden, TMB, Fusions, and Signatures](#burden-tmb-fusions-and-signatures) |
+| Cancer-testis antigen and panel calculations | [CTA Antigens](#cta-antigens), [Generic Antigen Panels](#generic-antigen-panels) |
+| Downloads, caches, and release metadata | [Data Management](#data-management) |
+| Historical import paths | [Compatibility Modules](#compatibility-modules) |
+
+Within each section, the intended use and primary modules come first. Detailed
+schema, provenance, fallback, and migration contracts follow.
+
 ## Cancer Vocabulary
 
 - `oncoref.cancer_ontology` — cancer-type registry, aliases, parent/child tree,
-  lineage/family groupings, molecular subtype axes, MMR/MSI classifier-status
-  semantics, matched normal tissues, source-scoped evidence resolution, and
-  display helpers.
+  lineage/family groupings, molecular subtype axes, mismatch repair (MMR) and
+  microsatellite instability (MSI) classifier-status semantics, matched normal
+  tissues, source-scoped evidence resolution, and display helpers.
 - `oncoref.cohorts` — expression/source cohort IDs, computed aggregate cohorts,
   source versions, and mixture-cohort flags.
 
 Use these when asking "what cancer type or cohort does this code mean?"
 Prefer the DataFrame-returning query helpers when code will be passed into
 other oncoref domains; they keep the result type and columns stable.
+
+### Ontology and category model
 
 The registry separates hierarchy from taxonomic level. `parent_code` is the
 tree edge, while `ontology_level` (`grouping`, `type`,
@@ -45,6 +63,8 @@ look like groupings with missing children. Differentiation and grade are
 orthogonal sparse axes: use `differentiation="NEC"` for native neuroendocrine
 lineage labels, or `grade_tier="high"` for normalized high-grade rows, without
 treating either one as a parentless cancer type.
+
+### Expression and classification backing
 
 Expression/classification backing is explicit. Use `reference_source`,
 `cancer_type_reference_source()`, `cancer_type_reference_code()`, or
@@ -76,6 +96,8 @@ registry rows whose `expression_source="computed"` and
 references, including source-scope unions such as `CRC_MSI`, `NSCLC`, `BTC`, and
 `SGC`.
 
+### Category queries
+
 For category-aware downstream code, start with
 `cancer_type_category_schema()` and `cancer_type_category_summary()`. The schema
 is the compact public vocabulary for `ontology_level`, the observed
@@ -83,6 +105,8 @@ is the compact public vocabulary for `ontology_level`, the observed
 example codes for every observed level/kind/reference-source combination. This
 is the intended replacement for ad hoc tests like "has children", "is
 mixture_cohort", or "does the code name contain MSI".
+
+### Examples
 
 ```python
 from oncoref import cancer_ontology, cohorts, expression
@@ -145,6 +169,8 @@ cancer_ontology.matched_normal_tissue_expression("COAD", genes=["ENSG00000141510
 cohorts.cohort_registry_df()
 ```
 
+### Consumer readiness
+
 `expression_reference_coverage()` is the ontology-wide readiness table for
 classifier consumers. It reports direct observed-bulk source-matrix coverage,
 computed member-union references for curated grouping/source-scope codes such as
@@ -170,6 +196,8 @@ choices in packages such as trufflepig.
 - `oncoref.genome` — optional (`pip install 'oncoref[genome]'`) pyensembl-backed
   transcript/gene lookup and transcript-to-gene aggregation for source matrices.
 
+### Resolution contract
+
 Use the gene-id helpers before building expression artifacts or joining
 downstream gene sets to oncoref references. `canonical_gene_id()` is the primary
 any-identifier entry point for the shipped ENSG + symbol/synonym space: it
@@ -187,6 +215,8 @@ Ensembl-alias coverage explicit for migration audits, including non-unique
 symbols and missing-symbol rows. They do not claim that RefSeq or UniProt
 coverage is complete.
 
+### Examples
+
 ```python
 from oncoref import canonical_gene_id, canonical_gene_symbol, display_gene_name, gene_ids
 
@@ -200,12 +230,16 @@ gene_ids.gene_identifier_mapping_summary()
 ## ICI Response
 
 - `oncoref.ici_response` — checkpoint-inhibitor response anchors, anti-PD-1
-  shortcuts, regimen-aware lookups, extracted endpoint estimates, and pooled
-  response summaries.
+  shortcuts, regimen-aware lookups, extracted objective response rate (ORR)
+  estimates, and pooled response summaries.
+
+### Regimen selection
 
 `DEFAULT_ICI_REGIMEN_PRIORITY` is the unpinned regimen priority
 (`PD-1`, then `PD-L1`, then `PD-1+CTLA-4`). The older
 `REGIMEN_FALLBACK` name remains available in `oncoref.ici` for compatibility.
+
+### Examples
 
 ```python
 from oncoref import ici_response
@@ -215,6 +249,8 @@ ici_response.best_available_ici_response("SARC_ASPS")
 ici_response.ici_response_by_regimen("SKCM")
 ici_response.ici_response_estimates_df()
 ```
+
+### Evidence rows
 
 `ici_response_estimates_df()` is the auditable long table behind the compact
 ORR anchors. Each row has a stable `estimate_id`; compact
@@ -229,9 +265,9 @@ paper/table/supplement locator is audited row by row.
 
 A cancer-testis antigen (CTA) is encoded by a gene that is normally restricted
 to reproductive tissues but can be reactivated in tumors. In oncoref, a
-candidate is called a CTA by an explicit HPA normal-tissue expression rule; the
-call is not evidence that its antigen is presented by MHC or that it is a
-validated therapy target.
+candidate is called a CTA by an explicit Human Protein Atlas (HPA) normal-tissue
+expression rule; the call is not evidence that its antigen is presented by the
+major histocompatibility complex (MHC) or that it is a validated therapy target.
 
 - `oncoref.cta` — CTA definition, HPA restriction tiers, axes, aliases, and gene
   ID/name sets. Strict helpers such as `cta_gene_names()` and
@@ -281,6 +317,14 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
 
 ## Expression And Normalization
 
+Expression readers are the stable downstream surface. Builder, registry, and
+engine modules produce and audit those artifacts; they are separated below so
+read-time choices do not get mixed with source-ingestion details.
+Expression values use transcripts per million (TPM) unless a section states a
+different unit.
+
+### Reader APIs
+
 - `oncoref.expression` — read-time accessors for per-sample expression,
   percentile vectors, representative samples, within-sample top fractions, and
   pan-cancer reference tables. `sample_expression_qc` reports per-sample
@@ -303,6 +347,9 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   floors as hard evidence only where `recommended_for_absolute_tpm_floor` is true;
   microarray/proxy or otherwise non-linear sources stay visible as warning/rank
   calibration inputs, not vetoes.
+
+### Builder APIs
+
 - `oncoref.expression_builders` — build-time ingestion and artifact cores used by
   data-bundle generation scripts. `GeoMatrixSource` /
   `build_source_matrices` own the generic supplementary-matrix path from raw
@@ -349,6 +396,9 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   strict QC-pass samples only through explicit source-aware fallbacks recorded in
   the build metadata, and clip invalid negative source expression values to zero
   with per-cohort counts.
+
+### Registry and low-level APIs
+
 - `oncoref.expression_registry` — source-registry inspection helpers over the
   bundled `expression_sources.yaml`. Use `expression_source_registry_entries()`
   for the full raw YAML dictionaries, `expression_source_registry_entries(source_type="geo-matrix")`
@@ -374,6 +424,9 @@ antigen_coverage.greedy_antigen_coverage("LUAD", gene_ids={"ENSG00000141510"})
   Use `source_matrices.sample_qc(code)` for the live source-matrix QC audit and
   `source_matrices.sample_qc_manifest(...)` for the optional generated-bundle QC
   manifest that records which samples fed derived artifacts.
+
+### Normalization API
+
 - `oncoref.normalization` — TPM conversion, clean TPM, technical-RNA filtering,
   log transforms, percentile ranks, and housekeeping normalization.
 
@@ -381,6 +434,8 @@ The normalization helpers are intended to be reusable directly. Expression
 accessors and bundles are also reusable, but downstream packages may keep their
 own packaged expression artifacts until row-set, value, provenance, and QC
 contracts are parity-clean for the specific accessor they want to replace.
+
+### Pan-cancer table
 
 `expression.pan_cancer_expression()` defaults to oncoref's entity-first schema:
 HPA normal tissue columns are `<tissue>_nTPM_raw`, TCGA source/provenance
@@ -394,6 +449,8 @@ grouping/source-scope references (`NET`, `CRC`, `NSCLC`, `BTC`, `SGC`) by poolin
 the selected `cancer-reference-expression` summary rows with n-sample weights.
 Existing directly sourced columns, including `SARC` and `OV`, keep their current
 source-table behavior.
+
+### Cohort reference expression
 
 `expression.cancer_reference_expression()` returns cohort-level tumor reference
 expression with stable long or wide output. It accepts canonical cancer codes,
@@ -453,6 +510,8 @@ Set at most one. These modes sum `expression`, `q1`, and `q3` in linear TPM
 space inside each source context and leave wide output in the historical
 `Ensembl_Gene_ID`, `Symbol`, value-column shape.
 
+### Availability and missing data
+
 Use `expression.cancer_reference_expression_availability()` before delegating a
 downstream reference-expression accessor that must distinguish unavailable
 oncoref artifacts from empty gene filters. It returns one row per requested
@@ -464,6 +523,8 @@ missing rows in `df.attrs["missing_requests"]`; `on_missing="raise"` fails fast
 for required cohorts. `include_request_metadata=True` adds request/availability
 columns to long expression output, which is useful when a requested aggregate
 expands to child expression cohorts.
+
+### Derived artifact contracts
 
 Representative and percentile artifact readers have explicit downstream-facing
 contracts:
@@ -541,6 +602,8 @@ contracts:
   need to distinguish unavailable upstream data from private downstream fallback
   data.
 
+### Bundle contents and gene-universe parity
+
 The QC-policy expression bundle ships representative, percentile,
 within-sample, CTA-scope proteoform percentile, CTA-scope proteoform
 within-sample, sample-QC, and build-metadata artifacts. Non-shipped proteoform
@@ -577,6 +640,8 @@ oncoref-only technical-extra ENSG IDs for a product/cohort filter. This surface 
 intentionally provenance: it makes differences explicit for migration code, but
 does not synthesize missing expression rows or alter artifact values.
 
+### Clean TPM compartments
+
 Clean TPM has one public compartment contract:
 
 - `clean-tpm-censored-genes.csv:category == "ribosomal_protein"` — 16%
@@ -594,6 +659,8 @@ gene_families.clean_tpm_ribosomal_gene_ids()
 gene_families.clean_tpm_other_technical_gene_ids()
 gene_families.clean_tpm_censored_gene_ids()
 ```
+
+### Housekeeping normalization
 
 For clean-TPM housekeeping denominators, use the biological HPA-stable panel:
 
@@ -669,7 +736,12 @@ but it is not the clean-TPM biological denominator.
 
 ## Data Management
 
+### Dataset catalog
+
 - `oncoref.catalog` — unified dataset inventory and fetch/status/path operations.
+
+### Expression bundle
+
 - `oncoref.data_bundle` — heavy expression bundle cache. Use
   `data_bundle.bundle_contract()` to inspect the downstream-stable package/data
   version linkage, release asset URLs, cache environment variables, completion
@@ -695,6 +767,9 @@ but it is not the clean-TPM biological denominator.
   prints the composed dependency state, and `oncoref data release-manifest
   [oncoref|pirlygenes]` prints only the validated release manifest/checksum
   metadata.
+
+### HPA data
+
 - `oncoref.reference_data` / `oncoref.hpa` — HPA reference-data cache and HPA
   tissue/cell-type accessors.
 
