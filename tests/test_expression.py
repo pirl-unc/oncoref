@@ -1923,6 +1923,7 @@ def test_cancer_reference_expression_long_and_wide(monkeypatch):
         "notes",
         "reference_method",
         "sample_qc",
+        "sample_qc_effective",
         "data_version",
         "source_matrix_version",
         "expression",
@@ -2291,6 +2292,7 @@ def test_cancer_reference_expression_availability_reports_missing(monkeypatch):
         "notes",
         "reference_method",
         "sample_qc",
+        "sample_qc_effective",
         "artifact_sample_qc",
         "artifact_schema_version",
         "data_version",
@@ -2395,6 +2397,7 @@ def test_cancer_reference_expression_missing_empty_and_raise(monkeypatch):
         "notes",
         "reference_method",
         "sample_qc",
+        "sample_qc_effective",
         "data_version",
         "source_matrix_version",
         "expression",
@@ -2488,8 +2491,14 @@ def test_cancer_reference_expression_accepts_artifact_qc_for_clean_shards(monkey
         }
     )
     seen = {}
+    metadata = pd.DataFrame({"cancer_code": ["X"], "sample_qc_effective": ["pass_or_warn"]})
     monkeypatch.setattr(expression, "available_percentile_cohorts", lambda: ["X"])
     monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(
+        expression,
+        "expression_artifact_build_metadata",
+        lambda *args, **kwargs: metadata,
+    )
     monkeypatch.setattr(
         expression,
         "cohort_gene_percentiles",
@@ -2500,18 +2509,108 @@ def test_cancer_reference_expression_accepts_artifact_qc_for_clean_shards(monkey
 
     assert seen["sample_qc"] == "artifact"
     assert out["sample_qc"].tolist() == ["artifact"]
+    assert out["sample_qc_effective"].tolist() == ["pass_or_warn"]
 
 
-@pytest.mark.parametrize(
-    "kwargs",
-    [
-        {"normalize": "tpm", "sample_qc": "artifact"},
-        {"reference_source": "summary_rows", "sample_qc": "artifact"},
-    ],
-)
-def test_cancer_reference_expression_rejects_artifact_qc_for_live_views(kwargs):
+def test_cancer_reference_expression_uses_per_code_artifact_qc_for_raw_tpm(monkeypatch):
+    stats = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": ["E1"],
+            "Symbol": ["A"],
+            "p25": [10.0],
+            "p50": [20.0],
+            "p75": [30.0],
+        }
+    )
+    metadata = pd.DataFrame(
+        {
+            "cancer_code": ["X", "Y"],
+            "sample_qc_effective": ["pass", "pass_or_warn"],
+            "n_cohort_samples": [3, 4],
+        }
+    )
+    calls = []
+    monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: ["X", "Y"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(expression, "cohort_aggregates", lambda: {})
+    monkeypatch.setattr(
+        expression,
+        "expression_artifact_build_metadata",
+        lambda *args, **kwargs: metadata,
+    )
+    monkeypatch.setattr(
+        expression,
+        "_source_matrix_effective_sample_count",
+        lambda code, sample_qc: None,
+    )
+    monkeypatch.setattr(
+        expression,
+        "cohort_stats",
+        lambda code, **kwargs: calls.append((code, kwargs["sample_qc"])) or stats.copy(),
+    )
+    monkeypatch.setattr(
+        expression,
+        "_selected_expression_source_metadata",
+        lambda code: {
+            "source_cohort": f"SRC_{code}",
+            "source_type": "gdc",
+            "unit": "TPM",
+            "source_scale_class": "linear_rnaseq_tpm",
+            "linear_tpm_comparable": True,
+        },
+    )
+
+    availability = expression.cancer_reference_expression_availability(
+        ["x", "y"], normalize="tpm_raw", sample_qc="artifact"
+    ).set_index("cancer_code")
+    assert availability["artifact_sample_qc"].to_dict() == {
+        "X": "pass",
+        "Y": "pass_or_warn",
+    }
+    assert availability["sample_qc_effective"].to_dict() == {
+        "X": "pass",
+        "Y": "pass_or_warn",
+    }
+    assert availability["n_reference_samples"].to_dict() == {"X": 3, "Y": 4}
+
+    out = expression.cancer_reference_expression(
+        ["x", "y"], normalize="tpm_raw", sample_qc="artifact"
+    )
+
+    assert calls == [("X", "pass"), ("Y", "pass_or_warn")]
+    provenance = out.set_index("cancer_code")
+    assert provenance["sample_qc"].to_dict() == {"X": "artifact", "Y": "artifact"}
+    assert provenance["sample_qc_effective"].to_dict() == {
+        "X": "pass",
+        "Y": "pass_or_warn",
+    }
+
+
+def test_raw_artifact_qc_reports_missing_build_metadata(monkeypatch):
+    metadata = pd.DataFrame()
+    metadata.attrs["missing_reason"] = "expression artifact build metadata not present in bundle"
+    monkeypatch.setattr(expression.source_matrices, "available_cohorts", lambda: ["X"])
+    monkeypatch.setattr(expression, "resolve_cancer_type", lambda code: str(code).upper())
+    monkeypatch.setattr(
+        expression,
+        "expression_artifact_build_metadata",
+        lambda *args, **kwargs: metadata,
+    )
+
+    availability = expression.cancer_reference_expression_availability(
+        "x", normalize="tpm_raw", sample_qc="artifact"
+    )
+
+    assert availability["available"].tolist() == [False]
+    assert availability["missing_reason"].tolist() == ["artifact_build_metadata_missing"]
+    assert pd.isna(availability.loc[0, "sample_qc_effective"])
+
+
+def test_cancer_reference_expression_rejects_artifact_qc_for_summary_rows():
     with pytest.raises(ValueError, match="requires reference_source='artifact'"):
-        expression.cancer_reference_expression("PRAD", **kwargs)
+        expression.cancer_reference_expression(
+            "PRAD", reference_source="summary_rows", sample_qc="artifact"
+        )
 
 
 def test_cancer_reference_expression_summary_rows_selects_richest_source(monkeypatch):
@@ -2779,6 +2878,7 @@ def test_cancer_reference_expression_summary_rows_all_preserves_sources_and_filt
     assert out["n_samples"].tolist() == [4, 8]
     assert out["n_detected"].tolist() == [3, 8]
     assert out["reference_method"].unique().tolist() == ["source_summary_rows_all"]
+    assert out["sample_qc_effective"].unique().tolist() == ["all"]
 
     compact = expression.cancer_reference_expression(
         "x",
@@ -3241,6 +3341,19 @@ def test_artifact_build_metadata_rejects_invalid_sample_counts(invalid_count):
         expression._artifact_build_metadata_sample_counts(metadata)
 
 
+@pytest.mark.parametrize(
+    ("policies", "expected"),
+    [
+        ({}, (None, "artifact_build_metadata_missing")),
+        ({"X": ("all", "pass")}, (None, "artifact_sample_qc_conflict")),
+        ({"X": ("unknown",)}, (None, "artifact_sample_qc_invalid")),
+        ({"X": ("pass_or_warn",)}, ("pass_or_warn", "")),
+    ],
+)
+def test_artifact_effective_sample_qc_requires_one_valid_policy(policies, expected):
+    assert expression._artifact_effective_sample_qc("X", policies) == expected
+
+
 def test_explicit_source_metadata_does_not_fall_back_to_another_source(monkeypatch):
     from types import SimpleNamespace
 
@@ -3378,6 +3491,7 @@ def test_cancer_reference_expression_summary_rows_all_pool(monkeypatch):
     assert pd.isna(row["q1"]) and pd.isna(row["q3"])
     assert row["n_reference_samples"] == pytest.approx(8)
     assert row["processing_pipeline"] == "pooled_n_weighted"
+    assert row["sample_qc_effective"] == "all"
     assert row["Proteoform_ID"] == "E1"
     assert row["Member_Ensembl_Gene_IDs"] == "E1"
 
