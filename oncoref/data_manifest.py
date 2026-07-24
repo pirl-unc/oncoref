@@ -228,6 +228,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "expression",
         "known pirlygenes/oncoref expression artifact row-universe deltas",
     ),
+    "representative-source-adjudications": (
+        "expression",
+        "reviewed source-sample roles and benchmark eligibility for representative artifacts",
+    ),
     "ncbi-entrez-gene-mappings": (
         "gene-id",
         "filtered NCBI Entrez/GeneID -> canonical Ensembl gene mappings",

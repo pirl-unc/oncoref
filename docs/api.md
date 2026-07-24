@@ -3,7 +3,7 @@
 `oncoref` keeps its historical flat top-level imports for compatibility, but new
 code should prefer the semantic submodules below. They make the domain boundary
 clear and avoid guessing whether a broad name such as `coverage` or `peptides` is
-general or CTA-specific.
+general or specific to cancer-testis antigens (CTAs).
 
 Package boundary: oncoref is the upstream home for empirical base facts and
 canonical identifiers that are ready to be reused across the PIRL stack.
@@ -227,6 +227,12 @@ paper/table/supplement locator is audited row by row.
 
 ## CTA Antigens
 
+A cancer-testis antigen (CTA) is encoded by a gene that is normally restricted
+to reproductive tissues but can be reactivated in tumors. In oncoref, a
+candidate is called a CTA by an explicit HPA normal-tissue expression rule; the
+call is not evidence that its antigen is presented by MHC or that it is a
+validated therapy target.
+
 - `oncoref.cta` — CTA definition, HPA restriction tiers, axes, aliases, and gene
   ID/name sets. Strict helpers such as `cta_gene_names()` and
   `cta_filtered_gene_names()` preserve the HPA reproductive-restriction default;
@@ -243,9 +249,9 @@ paper/table/supplement locator is audited row by row.
 `n_specific_9mers`; those counts are used as weights when computing
 `cta_specific_9mer_load()`.
 
-The CTA definition here is the HPA-derived tissue-restriction call. Broader
-therapy-target curation, MS evidence, and downstream prioritization rules can
-live in consumer packages while they remain package-specific.
+Broader therapy-target curation, mass-spectrometry evidence, and downstream
+prioritization rules can live in consumer packages while they remain
+package-specific.
 
 ```python
 from oncoref import cta, cta_coverage, cta_peptides
@@ -464,10 +470,15 @@ contracts:
 
 - `expression.representative_cohort_samples(..., format="long",
   include_provenance=True)` includes the representative id, source cohort/project,
-  source sample id, effective QC status/reasons, source scale class, linear-TPM and
-  absolute-floor comparability flags, cohort sample count, deterministic selection
-  rank/method/basis, artifact schema version, `DATA_VERSION`, and
+  source sample id and stable source-group id, source diagnosis/morphology when a
+  sample has been reviewed, effective QC status/reasons, source scale class,
+  linear-TPM and absolute-floor comparability flags, representative role and
+  benchmark eligibility, review evidence, cohort sample count, deterministic
+  selection rank/method/basis, artifact schema version, `DATA_VERSION`, and
   `SOURCE_MATRIX_VERSION`.
+  Treehouse PolyA parent, subset, and annotation-derived cohorts share one physical
+  sample namespace, so aliases of the same source vector receive the same
+  `source_group_id` even when their displayed source cohorts differ.
   Public representative ids default to pirlygenes-compatible `CODE_rep01`
   columns/values. Pass `representative_id_style="internal"` to expose the
   underlying bundle/provenance ids (`CODE__rep1`).

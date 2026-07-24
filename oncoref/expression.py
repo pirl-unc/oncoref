@@ -316,6 +316,8 @@ _REPRESENTATIVE_PROVENANCE_COLUMNS = [
     "source_cohort",
     "source_version",
     "source_project",
+    "source_diagnosis",
+    "source_morphology",
     "source_sample",
     "source_group_id",
     "n_cohort_samples",
@@ -335,6 +337,8 @@ _REPRESENTATIVE_PROVENANCE_COLUMNS = [
     "selection_scale_class",
     "representative_role",
     "benchmark_eligible",
+    "review_source",
+    "review_note",
     "selection_rank",
     "selection_method",
     "selection_basis",
@@ -642,9 +646,13 @@ def _attach_representative_provenance(long: pd.DataFrame, root: Path) -> pd.Data
         "source_cohort",
         "source_version",
         "source_project",
+        "source_diagnosis",
+        "source_morphology",
         "source_sample",
         "source_group_id",
         "representative_role",
+        "review_source",
+        "review_note",
     ):
         if col not in long.columns:
             long[col] = pd.NA
@@ -4714,9 +4722,10 @@ def representative_cohort_samples(
     IDs default to pirlygenes-compatible ``CODE_rep01`` columns/values; pass
     ``representative_id_style="internal"`` for the shard/provenance IDs
     (``CODE__rep1``). Long output can attach representative-level provenance:
-    source cohort/project/sample, a stable source-group ID shared by aliases of
-    the same physical vector, selection rank/method/basis, and package/data
-    schema versions. Row-level ``sample_qc`` and ``source_sample_qc`` are the
+    source cohort/project/sample and diagnosis, a stable source-group ID shared
+    by aliases of the same physical vector, any reviewed role/evidence, selection
+    rank/method/basis, and package/data schema versions. Row-level ``sample_qc``
+    and ``source_sample_qc`` are the
     selected sample's actual status; ``sample_qc_requested`` and
     ``sample_qc_effective`` preserve the artifact policies separately.
     ``benchmark_eligible=False`` with a QC-fallback ``representative_role``

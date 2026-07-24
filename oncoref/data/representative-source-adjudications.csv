@@ -1,0 +1,2 @@
+source_group_id,source_project,source_diagnosis,source_morphology,representative_role,benchmark_eligible,review_source,review_note
+TREEHOUSE_POLYA_25_01:TCGA-AC-A2QH-01,TCGA-BRCA,"Metaplastic carcinoma, NOS",8575/3,atypical_metaplastic_dual_lineage_audit_only,False,https://portal.gdc.cancer.gov/cases/67c5f371-3fa9-47c5-8b15-c2dd9acc8519,"Physical source of both BRCA__rep2 and BRCA_Basal__rep2; retain for biological inspection but exclude from ordinary lineage benchmark truth."

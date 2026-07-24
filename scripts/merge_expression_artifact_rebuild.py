@@ -97,6 +97,32 @@ def _copy_rebuilt_shards(
         shutil.copy2(source, destination)
 
 
+def _code_specific_summary_path(summary_dir: Path, source_stem: str, code: str) -> Path | None:
+    candidates = (
+        summary_dir / f"{source_stem}__{code}.csv.gz",
+        summary_dir / f"{source_stem}__{code}.csv",
+    )
+    return next((path for path in candidates if path.exists()), None)
+
+
+def _without_summary_codes(frame: pd.DataFrame, *, codes: set[str]) -> pd.DataFrame:
+    if frame.empty:
+        return frame
+    return frame[~frame["cancer_code"].astype(str).isin(codes)]
+
+
+def _replace_summary_codes(
+    existing: pd.DataFrame,
+    rebuilt: pd.DataFrame,
+    *,
+    codes: set[str],
+) -> pd.DataFrame:
+    """Replace ``codes`` in one summary frame, preserving all other rows."""
+    kept = _without_summary_codes(existing, codes=codes)
+    replacements = rebuilt[rebuilt["cancer_code"].astype(str).isin(codes)]
+    return pd.concat([kept, replacements], ignore_index=True, sort=False)
+
+
 def _merge_reference_summaries(
     bundle_dir: Path,
     rebuild_dir: Path,
@@ -112,7 +138,8 @@ def _merge_reference_summaries(
         )
 
     seen_codes: set[str] = set()
-    merges: list[tuple[Path, pd.DataFrame]] = []
+    writes: list[tuple[Path, pd.DataFrame]] = []
+    deletes: list[Path] = []
     for source in rebuilt_paths:
         rebuilt = pd.read_csv(source)
         shard_codes = set(rebuilt["cancer_code"].astype(str))
@@ -121,19 +148,45 @@ def _merge_reference_summaries(
             raise ValueError(
                 f"focused summary shard {source.name} contains unexpected codes: {unexpected}"
             )
+        duplicates = sorted(shard_codes & seen_codes)
+        if duplicates:
+            raise ValueError(f"focused summary rows occur in multiple shards: {duplicates}")
         seen_codes.update(shard_codes)
 
-        destination = bundle_dir / _REFERENCE_SUMMARY_DIR / source.name
-        if destination.exists():
+        bundle_summary_dir = bundle_dir / _REFERENCE_SUMMARY_DIR
+        source_stem = source.name.removesuffix(".gz").removesuffix(".csv")
+        code_specific: dict[str, Path] = {}
+        for code in sorted(shard_codes):
+            destination = _code_specific_summary_path(bundle_summary_dir, source_stem, code)
+            if destination is not None:
+                code_specific[code] = destination
+
+        for code, destination in code_specific.items():
             existing = pd.read_csv(destination)
-            existing = existing[~existing["cancer_code"].astype(str).isin(shard_codes)]
-            rebuilt = pd.concat([existing, rebuilt], ignore_index=True, sort=False)
-        merges.append((destination, rebuilt))
+            writes.append((destination, _replace_summary_codes(existing, rebuilt, codes={code})))
+
+        consolidated = bundle_summary_dir / source.name
+        consolidated_codes = shard_codes - set(code_specific)
+        if consolidated.exists() or consolidated_codes:
+            existing = pd.read_csv(consolidated) if consolidated.exists() else pd.DataFrame()
+            kept = _without_summary_codes(existing, codes=shard_codes)
+            replacements = rebuilt[rebuilt["cancer_code"].astype(str).isin(consolidated_codes)]
+            merged = pd.concat(
+                [kept, replacements],
+                ignore_index=True,
+                sort=False,
+            )
+            if merged.empty:
+                deletes.append(consolidated)
+            else:
+                writes.append((consolidated, merged))
 
     missing = sorted(cancer_codes - seen_codes)
     if missing:
         raise ValueError(f"focused rebuild lacks reference summary rows for: {missing}")
-    for destination, rows in merges:
+    for destination in deletes:
+        destination.unlink(missing_ok=True)
+    for destination, rows in writes:
         destination.parent.mkdir(parents=True, exist_ok=True)
         rows.to_csv(destination, index=False, compression="infer")
 
