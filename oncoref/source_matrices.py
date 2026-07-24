@@ -54,6 +54,10 @@ RELEASE_TAG = f"source-v{SOURCE_MATRIX_VERSION}"
 #: Env var overriding the per-cohort cache root.
 CACHE_DIR_ENV_VAR = "CANCERDATA_SOURCE_MATRICES"
 
+# The named Treehouse PolyA cohorts are filtered or annotated views of one
+# physical compendium matrix. A sample present in two views is the same vector.
+_TREEHOUSE_POLYA_SAMPLE_NAMESPACE = "TREEHOUSE_POLYA_25_01"
+
 
 class SourceMatrixError(RuntimeError):
     """Unknown cohort or per-cohort download failure."""
@@ -87,6 +91,21 @@ def _resolve(code: str) -> str:
 def cohort_info(code: str) -> dict:
     """Registry row for a cohort (``source_cohort``, ``n_samples``)."""
     return _registry_index()[_resolve(code)]
+
+
+def source_sample_namespace(source_cohort: str) -> str:
+    """Stable namespace for physical sample identity across derived cohorts.
+
+    Treehouse PolyA selection cohorts all originate from one compendium matrix,
+    so their identical sample IDs must group together. Other sources keep their
+    exact cohort name as the namespace.
+    """
+    source_cohort = str(source_cohort)
+    if source_cohort == _TREEHOUSE_POLYA_SAMPLE_NAMESPACE or source_cohort.startswith(
+        f"{_TREEHOUSE_POLYA_SAMPLE_NAMESPACE}_"
+    ):
+        return _TREEHOUSE_POLYA_SAMPLE_NAMESPACE
+    return source_cohort
 
 
 def cache_dir() -> Path:

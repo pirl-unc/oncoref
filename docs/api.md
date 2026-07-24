@@ -464,10 +464,15 @@ contracts:
 
 - `expression.representative_cohort_samples(..., format="long",
   include_provenance=True)` includes the representative id, source cohort/project,
-  source sample id, effective QC status/reasons, source scale class, linear-TPM and
-  absolute-floor comparability flags, cohort sample count, deterministic selection
-  rank/method/basis, artifact schema version, `DATA_VERSION`, and
+  source sample id and stable source-group id, source diagnosis/morphology when a
+  sample has been reviewed, effective QC status/reasons, source scale class,
+  linear-TPM and absolute-floor comparability flags, representative role and
+  benchmark eligibility, review evidence, cohort sample count, deterministic
+  selection rank/method/basis, artifact schema version, `DATA_VERSION`, and
   `SOURCE_MATRIX_VERSION`.
+  Treehouse PolyA parent, subset, and annotation-derived cohorts share one physical
+  sample namespace, so aliases of the same source vector receive the same
+  `source_group_id` even when their displayed source cohorts differ.
   Public representative ids default to pirlygenes-compatible `CODE_rep01`
   columns/values. Pass `representative_id_style="internal"` to expose the
   underlying bundle/provenance ids (`CODE__rep1`).

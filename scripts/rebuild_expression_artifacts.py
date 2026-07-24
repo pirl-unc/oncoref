@@ -87,6 +87,7 @@ from oncoref.gene_families import clean_tpm_censored_gene_ids
 from oncoref.load_dataset import get_data
 from oncoref.normalization import clean_tpm
 from oncoref.source_matrices import registry as source_registry
+from oncoref.source_matrices import source_sample_namespace
 
 # Rebuilt artifacts must land in the exact directories the reader resolves; derive every
 # name from the shared registry so producer and reader can't drift. Proteoform shards are
@@ -115,11 +116,103 @@ class _SummarySourceMetadata:
     pipeline_stem: str = ""
 
 
+@dataclass(frozen=True)
+class _RepresentativeAdjudication:
+    """Reviewed provenance override for one physical source sample."""
+
+    source_project: str
+    source_diagnosis: str
+    source_morphology: str
+    representative_role: str
+    benchmark_eligible: bool
+    review_source: str
+    review_note: str
+
+
+_REPRESENTATIVE_ADJUDICATION_COLUMNS = (
+    "source_group_id",
+    "source_project",
+    "source_diagnosis",
+    "source_morphology",
+    "representative_role",
+    "benchmark_eligible",
+    "review_source",
+    "review_note",
+)
+
+
 def _optional_text(value) -> str | None:
     if value is None or pd.isna(value):
         return None
     text = str(value).strip()
     return text or None
+
+
+def _required_adjudication_text(row: dict, column: str) -> str:
+    value = _optional_text(row[column])
+    if value is None:
+        raise ValueError(f"representative source adjudication has blank {column}")
+    return value
+
+
+def _representative_adjudications() -> dict[str, _RepresentativeAdjudication]:
+    """Load reviewed source-sample decisions keyed by stable source-group ID."""
+
+    df = get_data("representative-source-adjudications")
+    missing = sorted(set(_REPRESENTATIVE_ADJUDICATION_COLUMNS) - set(df.columns))
+    if missing:
+        raise ValueError(f"representative source adjudications lack columns: {missing}")
+    if df["source_group_id"].astype(str).duplicated().any():
+        raise ValueError("representative source adjudications contain duplicate source_group_id")
+
+    out: dict[str, _RepresentativeAdjudication] = {}
+    for row in df.to_dict("records"):
+        source_group_id = _required_adjudication_text(row, "source_group_id")
+        benchmark_text = str(row["benchmark_eligible"]).strip().lower()
+        if benchmark_text not in {"true", "false"}:
+            raise ValueError("representative benchmark_eligible must be true or false")
+        out[source_group_id] = _RepresentativeAdjudication(
+            source_project=_required_adjudication_text(row, "source_project"),
+            source_diagnosis=_required_adjudication_text(row, "source_diagnosis"),
+            source_morphology=_required_adjudication_text(row, "source_morphology"),
+            representative_role=_required_adjudication_text(row, "representative_role"),
+            benchmark_eligible=benchmark_text == "true",
+            review_source=_required_adjudication_text(row, "review_source"),
+            review_note=_required_adjudication_text(row, "review_note"),
+        )
+    return out
+
+
+def _representative_provenance_fields(
+    *,
+    source_group_id: str,
+    default_source_project: str | None,
+    default_benchmark_eligible: bool,
+    adjudications: dict[str, _RepresentativeAdjudication],
+) -> dict:
+    """Resolve normal QC provenance or one explicit reviewed override."""
+
+    default_role = "standard" if default_benchmark_eligible else "source_qc_fallback_audit_only"
+    adjudication = adjudications.get(source_group_id)
+    if adjudication is None:
+        return {
+            "source_project": default_source_project,
+            "source_diagnosis": None,
+            "source_morphology": None,
+            "representative_role": default_role,
+            "benchmark_eligible": default_benchmark_eligible,
+            "review_source": None,
+            "review_note": None,
+        }
+    return {
+        "source_project": adjudication.source_project,
+        "source_diagnosis": adjudication.source_diagnosis,
+        "source_morphology": adjudication.source_morphology,
+        "representative_role": adjudication.representative_role,
+        "benchmark_eligible": adjudication.benchmark_eligible,
+        "review_source": adjudication.review_source,
+        "review_note": adjudication.review_note,
+    }
 
 
 def _summary_source_metadata(code: str, source_cohort: str) -> _SummarySourceMetadata:
@@ -397,6 +490,7 @@ def rebuild(
         d.mkdir(parents=True, exist_ok=True)
 
     provenance: list[dict] = []
+    adjudications = _representative_adjudications()
     qc_manifest: list[pd.DataFrame] = []
     build_rows: list[dict] = []
     summary_frames: list[pd.DataFrame] = []
@@ -416,18 +510,18 @@ def rebuild(
         if not samples:
             raise ValueError(f"{code}: sample_qc={sample_qc!r} leaves no source samples")
 
-        clean_df = build_clean(raw_df)
-        clean_df = clean_df[[*_BASE, *samples]].copy()
+        all_sample_clean_df = build_clean(raw_df)
+        clean_df = all_sample_clean_df[[*_BASE, *samples]].copy()
         clean_df.to_parquet(clean_dir / f"{code}.parquet", index=False, compression="zstd")
 
         source_cohort = code_to_source.get(code, code)
-        selected_raw = raw_df[[*_BASE, *samples]].copy()
+        source_metadata = _summary_source_metadata(code, source_cohort)
         summary_frames.append(
             summarize_source_matrix(
-                selected_raw,
+                raw_df,
                 cancer_code=code,
-                source=_summary_source_metadata(code, source_cohort),
-                clean_matrix=clean_df,
+                source=source_metadata,
+                clean_matrix=all_sample_clean_df,
             )
         )
 
@@ -475,6 +569,8 @@ def rebuild(
         }
         build_rows.append(build_row)
         for rep_id, source_sample in zip(rep_ids, rep_cols):
+            sample_namespace = source_sample_namespace(source_cohort)
+            source_group_id = f"{sample_namespace}:{source_sample}"
             source_sample_qc = sample_qc_by_id.get(str(source_sample), effective_sample_qc)
             source_qc = qc_by_id.get(str(source_sample), {})
             source_scale_value = source_qc.get("source_scale_class")
@@ -493,6 +589,12 @@ def rebuild(
                 effective_sample_qc in {"pass", "pass_or_warn"}
                 and source_sample_qc in {"pass", "warn"}
             )
+            reviewed_fields = _representative_provenance_fields(
+                source_group_id=source_group_id,
+                default_source_project=source_metadata.source_project,
+                default_benchmark_eligible=benchmark_eligible,
+                adjudications=adjudications,
+            )
             provenance.append(
                 {
                     "representative_id": rep_id,
@@ -500,7 +602,7 @@ def rebuild(
                     "source_version": source_version,  # harmonized Ensembl release
                     "source_matrix_path": str(source_path),
                     "source_sample": source_sample,
-                    "source_group_id": f"{source_cohort}:{source_sample}",
+                    "source_group_id": source_group_id,
                     # Row-level sample_qc is the selected source sample's actual
                     # status. Preserve the requested and effective artifact policies
                     # separately so an all-fail fallback can never look like a pass.
@@ -518,10 +620,7 @@ def rebuild(
                     "linear_tpm_comparable": linear_tpm_comparable,
                     "recommended_for_absolute_tpm_floor": (recommended_for_absolute_tpm_floor),
                     "selection_scale_class": source_scale_class,
-                    "representative_role": (
-                        "standard" if benchmark_eligible else "source_qc_fallback_audit_only"
-                    ),
-                    "benchmark_eligible": benchmark_eligible,
+                    **reviewed_fields,
                     **qc_counts,
                 }
             )

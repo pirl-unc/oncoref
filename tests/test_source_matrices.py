@@ -57,6 +57,21 @@ def test_stad_ucec_molecular_subtypes_are_source_matrix_cohorts():
         assert info["n_samples"] == n_samples
 
 
+def test_brca_pam50_subtypes_use_split_source_matrix_cohort():
+    expected = {
+        "BRCA_Basal": 172,
+        "BRCA_HER2": 77,
+        "BRCA_LumA": 501,
+        "BRCA_LumB": 199,
+        "BRCA_Normal": 35,
+    }
+
+    for code, n_samples in expected.items():
+        info = sm.cohort_info(code)
+        assert info["source_cohort"] == "TREEHOUSE_POLYA_25_01_TCGA_BRCA_PAM50"
+        assert info["n_samples"] == n_samples
+
+
 def test_crc_msi_subtypes_use_split_source_matrix_cohort():
     expected = {
         "COAD_MSI": 50,
@@ -102,6 +117,16 @@ def test_sarc_histology_overlays_use_split_source_matrix_cohort():
 
 def test_alias_resolves():
     assert sm.local_path("lung_adeno").name == "LUAD.parquet"
+
+
+def test_treehouse_polya_views_share_physical_sample_namespace():
+    root = "TREEHOUSE_POLYA_25_01"
+
+    assert sm.source_sample_namespace(root) == root
+    assert sm.source_sample_namespace(f"{root}_TCGA_SAMPLES") == root
+    assert sm.source_sample_namespace(f"{root}_TCGA_BRCA_PAM50") == root
+    assert sm.source_sample_namespace("TREEHOUSE_RIBOD_25_01") == "TREEHOUSE_RIBOD_25_01"
+    assert sm.source_sample_namespace("GSE294016_BARTL_2025_SGC") == ("GSE294016_BARTL_2025_SGC")
 
 
 def test_unknown_cohort_raises():

@@ -813,6 +813,8 @@ def test_representative_provenance_includes_source_sample_and_selection_metadata
             "representative_id": ["PRAD__rep1"],
             "source_cohort": ["PRAD"],
             "source_project": ["TCGA"],
+            "source_diagnosis": ["Adenocarcinoma, NOS"],
+            "source_morphology": ["8140/3"],
             "source_sample": ["TCGA-XX-0001"],
             "source_group_id": ["TCGA:TCGA-XX-0001"],
             "sample_qc": ["pass"],
@@ -820,6 +822,8 @@ def test_representative_provenance_includes_source_sample_and_selection_metadata
             "source_sample_qc": ["pass"],
             "representative_role": ["standard"],
             "benchmark_eligible": [True],
+            "review_source": ["https://example.test/review"],
+            "review_note": ["reviewed source"],
             "n_cohort_samples": [10],
         }
     ).to_csv(d / "_provenance.csv", index=False)
@@ -829,9 +833,13 @@ def test_representative_provenance_includes_source_sample_and_selection_metadata
     assert df.loc[0, "representative_id"] == "PRAD_rep01"
     assert df.loc[0, "source_sample"] == "TCGA-XX-0001"
     assert df.loc[0, "source_group_id"] == "TCGA:TCGA-XX-0001"
+    assert df.loc[0, "source_diagnosis"] == "Adenocarcinoma, NOS"
+    assert df.loc[0, "source_morphology"] == "8140/3"
     assert df.loc[0, "source_sample_qc"] == "pass"
     assert df.loc[0, "representative_role"] == "standard"
     assert bool(df.loc[0, "benchmark_eligible"]) is True
+    assert df.loc[0, "review_source"] == "https://example.test/review"
+    assert df.loc[0, "review_note"] == "reviewed source"
     assert df.loc[0, "selection_rank"] == 1
     assert df.loc[0, "selection_method"] == expression.REPRESENTATIVE_SELECTION_METHOD
     assert df.loc[0, "selection_basis"] == expression.REPRESENTATIVE_SELECTION_BASIS
@@ -1004,6 +1012,8 @@ def test_representative_empty_long_schema_includes_requested_provenance(monkeypa
         "source_cohort",
         "source_version",
         "source_project",
+        "source_diagnosis",
+        "source_morphology",
         "source_sample",
         "source_group_id",
         "n_cohort_samples",
@@ -1023,6 +1033,8 @@ def test_representative_empty_long_schema_includes_requested_provenance(monkeypa
         "selection_scale_class",
         "representative_role",
         "benchmark_eligible",
+        "review_source",
+        "review_note",
         "selection_rank",
         "selection_method",
         "selection_basis",

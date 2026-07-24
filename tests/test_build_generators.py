@@ -1037,6 +1037,43 @@ def test_merge_expression_artifact_rebuild_requires_every_shard_family(tmp_path)
     assert not bundle.exists()
 
 
+def test_merge_expression_artifact_rebuild_replaces_preferred_code_specific_summary(
+    tmp_path,
+):
+    script = _load_script("merge_expression_artifact_rebuild")
+    bundle = tmp_path / "bundle"
+    rebuild = tmp_path / "rebuild"
+    bundle_summary = bundle / script._REFERENCE_SUMMARY_DIR
+    rebuild_summary = rebuild / script._REFERENCE_SUMMARY_DIR
+    bundle_summary.mkdir(parents=True)
+    rebuild_summary.mkdir(parents=True)
+
+    pd.DataFrame({"cancer_code": ["REPLACE"], "source_cohort": ["SHARED"], "value": [1.0]}).to_csv(
+        bundle_summary / "SHARED__REPLACE.csv.gz", index=False
+    )
+    pd.DataFrame(
+        {
+            "cancer_code": ["KEEP", "REPLACE"],
+            "source_cohort": ["SHARED", "SHARED"],
+            "value": [2.0, 1.0],
+        }
+    ).to_csv(bundle_summary / "SHARED.csv.gz", index=False)
+    pd.DataFrame({"cancer_code": ["REPLACE"], "source_cohort": ["SHARED"], "value": [3.0]}).to_csv(
+        rebuild_summary / "SHARED.csv.gz", index=False
+    )
+
+    script._merge_reference_summaries(bundle, rebuild, cancer_codes={"REPLACE"})
+
+    specific = pd.read_csv(bundle_summary / "SHARED__REPLACE.csv.gz")
+    consolidated = pd.read_csv(bundle_summary / "SHARED.csv.gz")
+    assert specific[["cancer_code", "value"]].to_dict("records") == [
+        {"cancer_code": "REPLACE", "value": 3.0}
+    ]
+    assert consolidated[["cancer_code", "value"]].to_dict("records") == [
+        {"cancer_code": "KEEP", "value": 2.0}
+    ]
+
+
 def test_stage_source_matrices_can_reuse_a_prior_version_cache(tmp_path, monkeypatch):
     script = _load_script("stage_source_matrices")
     builder_cache = tmp_path / "builder-cache"
@@ -2638,6 +2675,25 @@ def test_representatives_generator_selects_on_biological_view(tmp_path, monkeypa
     }
 
 
+def test_representatives_generator_groups_treehouse_views_by_physical_sample(tmp_path, monkeypatch):
+    gen = _load_script("generate_representatives")
+    inp = tmp_path / "in"
+    inp.mkdir()
+    _write_cohort(inp, "BRCA", ["BIO"], ["TCGA-AC-A2QH-01"], np.array([[5.0]]))
+    monkeypatch.setattr(
+        gen,
+        "_cohort_provenance",
+        lambda code: ("TREEHOUSE_POLYA_25_01_TCGA_SAMPLES", "Treehouse"),
+    )
+
+    out = tmp_path / "out"
+    gen.build(inp, k=1, out_dir=out)
+
+    provenance = pd.read_csv(out / "_provenance.csv").iloc[0]
+    assert provenance["source_cohort"] == "TREEHOUSE_POLYA_25_01_TCGA_SAMPLES"
+    assert provenance["source_group_id"] == ("TREEHOUSE_POLYA_25_01:TCGA-AC-A2QH-01")
+
+
 def _write_rebuild_inputs(tmp_path):
     cache = tmp_path / "cache"
     ref = tmp_path / "ref"
@@ -2703,8 +2759,8 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert [c for c in clean.columns if c not in ("Ensembl_Gene_ID", "Symbol")] == ["pass_sample"]
 
     summary = pd.read_csv(out / "cancer-reference-expression" / "TEST_SOURCE.csv.gz")
-    assert set(summary["n_samples"]) == {1}
-    assert summary.set_index("Ensembl_Gene_ID").loc["ENSG000001", "TPM_median"] == 10.0
+    assert set(summary["n_samples"]) == {3}
+    assert summary.set_index("Ensembl_Gene_ID").loc["ENSG000001", "TPM_median"] == 20.0
 
     reps = pd.read_parquet(out / "cancer-reference-expression-representatives" / "X.parquet")
     assert [c for c in reps.columns if c not in ("Ensembl_Gene_ID", "Symbol")] == ["X__rep1"]
@@ -2717,8 +2773,12 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert prov.loc[0, "source_sample_qc"] == "pass"
     assert prov.loc[0, "source_sample"] == "pass_sample"
     assert prov.loc[0, "source_group_id"] == "TEST_SOURCE:pass_sample"
+    assert pd.isna(prov.loc[0, "source_diagnosis"])
+    assert pd.isna(prov.loc[0, "source_morphology"])
     assert prov.loc[0, "representative_role"] == "standard"
     assert bool(prov.loc[0, "benchmark_eligible"]) is True
+    assert pd.isna(prov.loc[0, "review_source"])
+    assert pd.isna(prov.loc[0, "review_note"])
     assert prov.loc[0, "source_scale_class"] == "linear_rnaseq_tpm"
     assert bool(prov.loc[0, "linear_tpm_comparable"]) is True
     assert bool(prov.loc[0, "recommended_for_absolute_tpm_floor"]) is True
@@ -2744,6 +2804,52 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert metadata["sample_qc_manifest"] == "source-matrix-sample-qc.csv"
     assert metadata["n_source_samples"] == 3
     assert metadata["n_cohort_samples"] == 1
+
+
+def test_rebuild_expression_artifacts_applies_reviewed_source_adjudication(tmp_path, monkeypatch):
+    gen = _load_script("rebuild_expression_artifacts")
+    cache, ref = _write_rebuild_inputs(tmp_path)
+    _patch_rebuild_registry(monkeypatch, gen)
+    adjudication = gen._RepresentativeAdjudication(
+        source_project="TCGA-BRCA",
+        source_diagnosis="Metaplastic carcinoma, NOS",
+        source_morphology="8575/3",
+        representative_role="atypical_metaplastic_dual_lineage_audit_only",
+        benchmark_eligible=False,
+        review_source="https://example.test/review",
+        review_note="reviewed physical source",
+    )
+    monkeypatch.setattr(
+        gen,
+        "_representative_adjudications",
+        lambda: {"TEST_SOURCE:pass_sample": adjudication},
+    )
+
+    out = tmp_path / "out"
+    gen.rebuild(cache, ref, out, limit=None, validate=False, sample_qc="pass")
+
+    provenance = pd.read_csv(
+        out / "cancer-reference-expression-representatives" / "_provenance.csv"
+    ).iloc[0]
+    assert provenance["source_project"] == "TCGA-BRCA"
+    assert provenance["source_diagnosis"] == "Metaplastic carcinoma, NOS"
+    assert provenance["source_morphology"] == "8575/3"
+    assert provenance["representative_role"] == ("atypical_metaplastic_dual_lineage_audit_only")
+    assert bool(provenance["benchmark_eligible"]) is False
+    assert provenance["review_source"] == "https://example.test/review"
+    assert provenance["review_note"] == "reviewed physical source"
+
+
+def test_representative_source_adjudication_records_metaplastic_brca_source():
+    gen = _load_script("rebuild_expression_artifacts")
+    adjudication = gen._representative_adjudications()["TREEHOUSE_POLYA_25_01:TCGA-AC-A2QH-01"]
+
+    assert adjudication.source_project == "TCGA-BRCA"
+    assert adjudication.source_diagnosis == "Metaplastic carcinoma, NOS"
+    assert adjudication.source_morphology == "8575/3"
+    assert adjudication.representative_role == ("atypical_metaplastic_dual_lineage_audit_only")
+    assert adjudication.benchmark_eligible is False
+    assert "67c5f371-3fa9-47c5-8b15-c2dd9acc8519" in adjudication.review_source
 
 
 def test_rebuild_expression_artifacts_keeps_warn_proxy_source_when_pass_empty(

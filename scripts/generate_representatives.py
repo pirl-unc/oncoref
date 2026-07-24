@@ -58,6 +58,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from oncoref.expression_builders import cohort_medoids, sample_columns
 from oncoref.gene_families import clean_tpm_censored_gene_ids
+from oncoref.source_matrices import source_sample_namespace
 
 _DATA_DIR = Path(__file__).resolve().parents[1] / "oncoref" / "data"
 OUT_DIR = _DATA_DIR / "cancer-reference-expression-representatives"
@@ -135,7 +136,7 @@ def build(input_dir: Path, *, k: int = 5, out_dir: Path = OUT_DIR) -> None:
                     "source_cohort": source_cohort,
                     "source_project": source_project,
                     "source_sample": src,
-                    "source_group_id": f"{source_cohort}:{src}",
+                    "source_group_id": f"{source_sample_namespace(source_cohort)}:{src}",
                     "n_cohort_samples": n_cohort,
                 }
             )
