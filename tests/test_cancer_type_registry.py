@@ -19,6 +19,7 @@ from oncoref import (
     cancer_type_records,
     cancer_type_registry,
     cancer_type_subtypes_of,
+    cancer_types,
     cohort_aggregate_members,
     cohort_registry_df,
 )
@@ -105,6 +106,34 @@ def test_source_scoped_clinical_aggregates_are_not_expression_computed():
     assert records.loc["NSCLC", "source_cohort"] == "LITERATURE_CURATED"
     assert bool(records.loc["NSCLC", "has_expression_matrix"]) is False
     assert records.loc["NSCLC", "reference_source"] == "member_union"
+
+
+def test_source_scope_mixture_targets_require_reviewed_exceptions():
+    raw = pd.read_csv(_CSV, dtype=str, keep_default_na=False).set_index("code")
+    records = cancer_type_records().set_index("code")
+    source_scope_mixtures = raw[
+        (raw["ontology_kind"].str.lower() == "source_scope")
+        & raw["mixture_cohort"].str.lower().isin({"true", "1", "yes"})
+        & (records["reference_source"] == "member_union")
+    ]
+
+    declared_targets = set(
+        source_scope_mixtures.index[
+            source_scope_mixtures["is_classification_target"].str.lower().isin({"true", "1", "yes"})
+        ]
+    )
+    effective_targets = set(
+        source_scope_mixtures.index[
+            records.loc[source_scope_mixtures.index, "is_classification_target"].to_numpy(
+                dtype=bool
+            )
+        ]
+    )
+    reviewed_targets = set(cancer_types._REVIEWED_SOURCE_SCOPE_CLASSIFICATION_TARGETS)
+
+    assert declared_targets == reviewed_targets
+    assert effective_targets == reviewed_targets
+    assert set(source_scope_mixtures.index) == {"BTC", "NSCLC", "SGC"}
 
 
 def test_nec_merkel_registry_points_to_built_expression_source():
