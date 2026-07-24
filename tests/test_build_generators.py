@@ -2852,6 +2852,27 @@ def test_representative_source_adjudication_records_metaplastic_brca_source():
     assert "67c5f371-3fa9-47c5-8b15-c2dd9acc8519" in adjudication.review_source
 
 
+def test_representative_source_adjudication_cannot_override_failed_qc():
+    gen = _load_script("rebuild_expression_artifacts")
+    adjudication = gen._RepresentativeAdjudication(
+        source_project="TEST",
+        source_diagnosis="Reviewed diagnosis",
+        source_morphology="0000/0",
+        representative_role="standard",
+        benchmark_eligible=True,
+        review_source="https://example.test/review",
+        review_note="reviewed source",
+    )
+
+    with pytest.raises(ValueError, match="cannot override source QC"):
+        gen._representative_provenance_fields(
+            source_group_id="TEST_SOURCE:failed_sample",
+            default_source_project="TEST",
+            default_benchmark_eligible=False,
+            adjudications={"TEST_SOURCE:failed_sample": adjudication},
+        )
+
+
 def test_rebuild_expression_artifacts_keeps_warn_proxy_source_when_pass_empty(
     tmp_path, monkeypatch
 ):

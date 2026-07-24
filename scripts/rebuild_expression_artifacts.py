@@ -204,6 +204,11 @@ def _representative_provenance_fields(
             "review_source": None,
             "review_note": None,
         }
+    if adjudication.benchmark_eligible and not default_benchmark_eligible:
+        raise ValueError(
+            f"{source_group_id}: representative source adjudication cannot override "
+            "source QC to make a sample benchmark-eligible"
+        )
     return {
         "source_project": adjudication.source_project,
         "source_diagnosis": adjudication.source_diagnosis,
