@@ -96,21 +96,33 @@ _TMB_EVIDENCE_OVERRIDES = {
     "BL": {"estimate_type": "approximate_literature"},
     "T_ALL": {"estimate_type": "approximate_literature"},
     "CRANIO": {"source_scope": "adamantinomatous_and_papillary_discovery_cohort"},
-    **{
-        code: {
-            "estimate_type": "unknown",
-            "source_scope": "source_rejected_for_population_median",
-            "missing_reason": "no_supported_population_median_curated",
-        }
-        for code in (
-            "HCL",
-            "LUAD_EGFR",
-            "CTCL",
-            "HL",
-            "BRCA_Normal",
-            "UCEC_CNL",
-            "UCEC_CNH",
-        )
+    "HCL": {
+        "estimate_type": "approximate_capture_normalized",
+        "source_scope": "classic_hcl_five_exome_cohort",
+    },
+    "LUAD_EGFR": {
+        "estimate_type": "broader_cohort_proxy",
+        "source_scope": "egfr_mutant_lung_proxy_for_luad",
+    },
+    "CTCL": {
+        "estimate_type": "subtype_proxy",
+        "source_scope": "mycosis_fungoides_proxy_for_ctcl",
+    },
+    "HL": {
+        "estimate_type": "reported_summary",
+        "source_scope": "newly_diagnosed_classical_hodgkin_sorted_hrs",
+    },
+    "BRCA_Normal": {
+        "estimate_type": "sample_recomputed",
+        "source_scope": "tcga_pancancer_normal_like_expression_subtype",
+    },
+    "UCEC_CNL": {
+        "estimate_type": "reported_summary",
+        "source_scope": "tcga_copy_number_low_molecular_class",
+    },
+    "UCEC_CNH": {
+        "estimate_type": "reported_summary",
+        "source_scope": "tcga_copy_number_high_molecular_class",
     },
     # TCGA-SARC is a soft-tissue sarcoma cohort. It does not span the full oncoref
     # SARC member-union scope, which also includes bone sarcomas and RMS.
@@ -125,7 +137,7 @@ _TMB_EVIDENCE_OVERRIDES = {
     "UCEC_MSI": {"source_scope": "msi_high_pole_wild_type_cohort"},
     "NBL": {"source_scope": "high_risk_neuroblastoma_cohort"},
     "NBL_MYCNamp": {
-        "estimate_type": "sample_recomputed_median",
+        "estimate_type": "sample_recomputed",
         "source_scope": "high_risk_mycn_amplified_cohort",
     },
     "NBL_MYCNnonamp": {"source_scope": "east_asian_mycn_nonamplified_all_risk_cohort"},
@@ -157,9 +169,11 @@ _register_derived_cache(_checked_tmb_codes.cache_clear)
 def cancer_tmb_df():
     """Return curated TMB estimates (mut/Mb) with source-review provenance.
 
-    ``tmb_mut_mb`` selects the median when available, otherwise the mean;
+    ``tmb_mut_mb`` selects the median, then mean, then explicitly typed estimate;
     ``tmb_statistic`` identifies that choice. The original statistic-specific
-    columns remain separate. Cohorts with neither estimate have blank values
+    columns remain separate. ``unspecified`` means a reported summary whose
+    statistic was not established; ``approximate`` marks a derived approximation.
+    Cohorts with no estimate have blank values
     (and a ``confidence`` of ``none``) so the gap is
     explicit rather than silently absent. Retained estimates span WES
     (Lawrence 2013), panels (Chalmers 2017), genome-wide WGS and disease-specific
@@ -174,10 +188,23 @@ def cancer_tmb_df():
 def _tmb_evidence_frame():
     """Cached annotated TMB frame. Internal callers treat it as read-only."""
     df = get_data("cancer-tmb").copy()
-    df["tmb_mut_mb"] = df["median_tmb_mut_mb"].combine_first(df["mean_tmb_mut_mb"])
+    estimates = df["estimate_tmb_mut_mb"].notna()
+    if not df.loc[estimates, "estimate_statistic"].isin({"unspecified", "approximate"}).all():
+        raise ValueError("Explicit TMB estimates require an unspecified or approximate statistic")
+    df["tmb_mut_mb"] = (
+        df["median_tmb_mut_mb"]
+        .combine_first(df["mean_tmb_mut_mb"])
+        .combine_first(df["estimate_tmb_mut_mb"])
+    )
     df["tmb_statistic"] = [
-        "median" if pd.notna(median) else "mean" if pd.notna(mean) else None
-        for median, mean in zip(df["median_tmb_mut_mb"], df["mean_tmb_mut_mb"])
+        "median"
+        if pd.notna(row.median_tmb_mut_mb)
+        else "mean"
+        if pd.notna(row.mean_tmb_mut_mb)
+        else row.estimate_statistic
+        if pd.notna(row.estimate_tmb_mut_mb)
+        else None
+        for row in df.itertuples()
     ]
     evidence = [
         tmb_evidence_fields(
@@ -208,7 +235,8 @@ def tmb_evidence_fields(
     ``cancer_type`` accepts a canonical registry code, display name, or alias.
     ``median_tmb_mut_mb`` is the row's numeric estimate, or ``None``/``NaN``
     when no defensible estimate is available. The parameter name is retained for
-    compatibility; pass ``statistic="mean"`` for a mean. The returned mapping contains
+    compatibility; ``statistic`` can be ``median``, ``mean``, ``unspecified``
+    (reported summary), or ``approximate`` (derived estimate). The mapping contains
     ``estimate_type``, ``source_scope``, and ``missing_reason``.
 
     This helper classifies the supplied row; it does not search parent or
@@ -217,8 +245,14 @@ def tmb_evidence_fields(
     mixed source-scope cohorts are reported as ``source_scope="aggregate_source"``.
     Reviewed per-code overrides take precedence over that registry default.
     """
-    if statistic not in {"median", "mean"}:
-        raise ValueError("statistic must be 'median' or 'mean'")
+    statistic_types = {
+        "median": "published_median",
+        "mean": "published_mean",
+        "unspecified": "reported_summary",
+        "approximate": "approximate_derived",
+    }
+    if statistic not in statistic_types:
+        raise ValueError("statistic must be 'median', 'mean', 'unspecified', or 'approximate'")
     code = resolve_cancer_type(cancer_type)
     override = _TMB_EVIDENCE_OVERRIDES.get(code, {})
     if pd.isna(median_tmb_mut_mb):
@@ -230,11 +264,14 @@ def tmb_evidence_fields(
     default_scope = (
         "aggregate_source" if code in _aggregate_tmb_source_codes() else "cancer_code_direct"
     )
+    estimate_type = override.get(
+        "estimate_type",
+        statistic_types[statistic] if code in _checked_tmb_codes() else "curated_estimate",
+    )
+    if estimate_type == "sample_recomputed" and statistic in {"median", "mean"}:
+        estimate_type += f"_{statistic}"
     return {
-        "estimate_type": override.get(
-            "estimate_type",
-            f"published_{statistic}" if code in _checked_tmb_codes() else "curated_estimate",
-        ),
+        "estimate_type": estimate_type,
         "source_scope": override.get("source_scope", default_scope),
         "missing_reason": override.get("missing_reason", float("nan")),
     }
@@ -319,7 +356,7 @@ def resolve_tmb_source(cancer_type, *, inherit=True) -> dict:
 
 
 def cancer_tmb(cancer_type=None, *, inherit=True):
-    """TMB (mut/Mb), preferring the curated median and falling back to a mean.
+    """TMB (mut/Mb), preferring median, then mean, then an explicitly typed estimate.
 
     With no cancer type, return the whole ``{code: tmb}`` map, omitting gaps.
     Use :func:`cancer_tmb_record` to inspect the statistic, assay and population.
@@ -327,8 +364,8 @@ def cancer_tmb(cancer_type=None, *, inherit=True):
     ``cancer_type`` is resolved through :func:`resolve_cancer_type`, so aliases
     and display names work. When ``inherit`` (default), a code with no curated
     value of its own inherits its nearest ancestor's TMB by walking the registry
-    ``parent_code`` chain — so molecular / histology subtypes (``LUAD_EGFR`` ->
-    ``LUAD``, ``SCLC_ASCL1`` -> ``SCLC``, rare ``SARC_*`` -> ``SARC``) resolve
+    ``parent_code`` chain — so molecular / histology subtypes (``SCLC_ASCL1`` ->
+    ``SCLC``, rare ``SARC_*`` -> ``SARC``) resolve
     without a curated row each. Explicit audited gaps block inheritance. Returns
     ``None`` if no eligible source has a value."""
     mapping = _tmb_value_map()

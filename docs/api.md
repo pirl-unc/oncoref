@@ -1424,9 +1424,11 @@ order.
 ## Burden, TMB, Fusions, and Signatures
 
 - `oncoref.tmb` — tumor mutational burden reference values.
-  `tmb.cancer_tmb()` selects the curated median when available, otherwise a
-  supported mean. Structured records retain `median_tmb_mut_mb` and
-  `mean_tmb_mut_mb` separately, plus the selected `tmb_mut_mb` and `tmb_statistic`.
+  `tmb.cancer_tmb()` selects the curated median, then mean, then an explicitly
+  typed best-effort estimate. Structured records retain `median_tmb_mut_mb`,
+  `mean_tmb_mut_mb`, and `estimate_tmb_mut_mb` separately, plus the selected
+  `tmb_mut_mb` and `tmb_statistic`. `estimate_statistic` labels fallback values
+  as `unspecified` (reported summary) or `approximate` (derived approximation).
   A mean-only source leaves the median field empty. Preserve the statistic and
   assay when comparing values; genome-wide substitution rates and coding TMB
   are different measurements.
@@ -1440,12 +1442,16 @@ order.
   non-inheriting helper for classifying one explicit estimate; it applies reviewed
   per-code overrides and derives aggregate source scope from the cancer registry.
   The numeric parameter name is retained for compatibility; pass
-  `statistic="mean"` when supplying a mean.
+  `statistic="mean"`, `"unspecified"`, or `"approximate"` as appropriate.
   TMB records also expose `source_review_status`, `source_locator`, `tmb_assay`,
   and `source_review_notes`. `published_median` and `published_mean` require
   source-checked rows; sample-level recomputation is labeled
-  `sample_recomputed_median`. Legacy numeric entries are `curated_estimate` or an explicitly approximate
-  type. Filter `source_review_status == 'source_checked'` for the revalidated
+  `sample_recomputed_median`. A reported summary with an unestablished statistic
+  is `reported_summary`. Explicit population proxies use `source_checked_proxy`
+  review status and `subtype_proxy` / `broader_cohort_proxy` estimate types. The
+  HCL capture-size calculation uses `approximation_reviewed` status and
+  `approximate_capture_normalized` type; it is not a validated callable-coding TMB.
+  Legacy numeric entries are `curated_estimate` or an explicitly approximate type. Filter `source_review_status == 'source_checked'` for the revalidated
   subset, and preserve assay and cohort scope when comparing values. See the
   [curation audit](curation-audit.md) for corrections and unresolved rows.
 - `oncoref.incidence` — incidence/mortality burden and burden categories.

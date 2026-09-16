@@ -3,11 +3,13 @@
 import csv
 import json
 from pathlib import Path
+from statistics import median
 
 import pandas as pd
 import pytest
 from scripts import audit_tmb_ici_apd1 as audit
 from scripts.recompute_neuroblastoma_tmb import summarize
+from scripts.recompute_normal_like_breast_tmb import summarize as summarize_normal_like
 
 from oncoref import apd1, ici, tmb
 from oncoref.load_dataset import get_data
@@ -25,12 +27,100 @@ def test_rejected_response_anchor_blocks_numeric_fallback(code):
     assert ici.pooled_ici_response(code, include_alternates=True)["pooled_pct"] is None
 
 
-@pytest.mark.parametrize("code", ["BRCA_Normal", "UCEC_CNL", "HL", "CTCL", "LUAD_EGFR"])
-def test_rejected_tmb_median_stays_missing_even_with_numeric_ancestor(code):
+@pytest.mark.parametrize("code", ["STAD_MSI", "RCC", "PITNET"])
+def test_remaining_tmb_gap_stays_missing_even_with_numeric_ancestor(code):
     assert tmb.cancer_tmb(code) is None
     source = tmb.resolve_tmb_source(code)
     assert source["inheritance_kind"] == "direct_missing"
-    assert source["source_review_status"] == "rejected_population_median"
+    assert source["source_review_status"] == "audited_gap"
+
+
+@pytest.mark.parametrize(
+    "code,value,statistic,estimate_type,status",
+    [
+        ("HL", 7.66, "unspecified", "reported_summary", "source_checked"),
+        ("UCEC_CNL", 2.9, "unspecified", "reported_summary", "source_checked"),
+        ("UCEC_CNH", 2.3, "unspecified", "reported_summary", "source_checked"),
+        ("CTCL", 3.5, "median", "subtype_proxy", "source_checked_proxy"),
+        ("LUAD_EGFR", 3.8, "median", "broader_cohort_proxy", "source_checked_proxy"),
+        ("BRCA_Normal", 1.28, "median", "sample_recomputed_median", "source_checked"),
+        ("HCL", 0.2, "approximate", "approximate_capture_normalized", "approximation_reviewed"),
+    ],
+)
+def test_best_effort_estimates_preserve_statistic_and_population_limits(
+    code, value, statistic, estimate_type, status
+):
+    assert tmb.cancer_tmb(code) == value
+    row = tmb.cancer_tmb_record(code)
+    assert row["inheritance_kind"] == "direct"
+    assert row["tmb_statistic"] == statistic
+    assert row["estimate_type"] == estimate_type
+    assert row["source_review_status"] == status
+    assert row["missing_reason"] is None
+    assert row["source_locator"] and row["source_scope"] and row["tmb_assay"]
+    if statistic in {"unspecified", "approximate"}:
+        assert row["median_tmb_mut_mb"] is None
+        assert row["mean_tmb_mut_mb"] is None
+        assert row["estimate_tmb_mut_mb"] == value
+
+
+def test_normal_like_calculation_and_hcl_approximation_remain_reproducible():
+    audit_dir = Path(__file__).resolve().parents[1] / "docs/audits"
+    with (audit_dir / "tmb-normal-like-sample-rates.csv").open(newline="") as handle:
+        samples = list(csv.DictReader(handle))
+    result = summarize_normal_like(samples)
+    assert (
+        result == json.loads((audit_dir / "tmb-normal-like-recomputed.json").read_text())["results"]
+    )
+    assert result["n"] == 36
+    assert {r["subtype"] for r in samples} == {"BRCA_Normal"}
+    row = tmb.cancer_tmb_record("BRCA_Normal")
+    assert row["median_tmb_mut_mb"] == round(result["median"], 2) == 1.28
+    assert row["mean_tmb_mut_mb"] == round(result["mean"], 2) == 1.93
+    assert (
+        tmb.tmb_evidence_fields("BRCA_Normal", 1.93, statistic="mean")["estimate_type"]
+        == "sample_recomputed_mean"
+    )
+    assert row["confidence"] == "low"
+    with pytest.raises(ValueError, match="Duplicate"):
+        summarize_normal_like([*samples, samples[0]])
+    with (audit_dir / "tmb-hcl-source-counts.csv").open(newline="") as handle:
+        counts = list(csv.DictReader(handle))
+    hcl = json.loads((audit_dir / "tmb-hcl-approximation.json").read_text())
+    assert len(counts) == 5
+    for sensitivity in hcl["sensitivity"]:
+        count = median(int(r[sensitivity["count_definition"]]) for r in counts)
+        assert count == sensitivity["median_count"]
+        assert [count / d for d in hcl["nominal_capture_mb"]] == sensitivity[
+            "median_count_per_nominal_mb"
+        ]
+    assert hcl["selected_rounded_estimate_mut_mb"] == tmb.cancer_tmb("HCL") == 0.2
+    assert tmb.cancer_tmb_record("HCL")["confidence"] == "low"
+
+
+def test_proxy_median_and_same_cohort_mean_stay_distinct():
+    row = tmb.cancer_tmb_record("LUAD_EGFR")
+    assert row["tmb_mut_mb"] == row["median_tmb_mut_mb"] == 3.8
+    assert row["mean_tmb_mut_mb"] == 5.6
+    assert row["n_samples"] == 383
+    assert row["source_scope"] == "egfr_mutant_lung_proxy_for_luad"
+    row = tmb.cancer_tmb_record("CTCL")
+    assert row["n_samples"] == 67
+    assert row["source_scope"] == "mycosis_fungoides_proxy_for_ctcl"
+
+
+def test_typed_estimate_columns_are_consistent_and_inventory_flags_survive():
+    raw = get_data("cancer-tmb")
+    selected = raw[raw["estimate_tmb_mut_mb"].notna()]
+    assert selected["estimate_statistic"].isin({"unspecified", "approximate"}).all()
+    assert selected[["median_tmb_mut_mb", "mean_tmb_mut_mb"]].isna().all().all()
+    assert raw.loc[raw["estimate_tmb_mut_mb"].isna(), "estimate_statistic"].isna().all()
+    rows = {r["cancer_code"]: r for r in audit.audit() if r["dataset"] == "cancer-tmb"}
+    assert "summary_statistic_unspecified" in rows["HL"]["findings"]
+    assert rows["HL"]["metric"] == "TMB_UNSPECIFIED"
+    assert "population_proxy" in rows["CTCL"]["findings"]
+    assert "approximate_tmb_estimate" in rows["HCL"]["findings"]
+    assert rows["HCL"]["metric"] == "TMB_APPROXIMATE"
 
 
 def test_tmb_review_covers_exactly_the_curated_rows_and_gates_median_provenance():
@@ -46,6 +136,7 @@ def test_tmb_review_covers_exactly_the_curated_rows_and_gates_median_provenance(
         "published_median",
         "published_mean",
         "sample_recomputed_median",
+        "reported_summary",
     }
     unpublished = frame[frame["source_review_status"] != "source_checked"]
     assert "published_median" not in set(unpublished["estimate_type"])

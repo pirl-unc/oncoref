@@ -104,14 +104,17 @@ def audit(data_dir=ROOT / "oncoref" / "data"):
             if dataset == "cancer-tmb" and not raw_value and row.get("mean_tmb_mut_mb"):
                 raw_value = row["mean_tmb_mut_mb"]
                 tmb_statistic = "mean"
+            if dataset == "cancer-tmb" and not raw_value and row.get("estimate_tmb_mut_mb"):
+                raw_value = row["estimate_tmb_mut_mb"]
+                tmb_statistic = row.get("estimate_statistic", "")
             value = number(raw_value)
             regimen = row.get("regimen", row.get("drug_target", ""))
             key = row.get("estimate_id", row["cancer_code"] + (f"/{regimen}" if regimen else ""))
             findings = []
             source = row
             metric = row.get("metric", "TMB" if dataset == "cancer-tmb" else "ORR")
-            if dataset == "cancer-tmb" and tmb_statistic == "mean":
-                metric = "TMB_MEAN"
+            if dataset == "cancer-tmb" and tmb_statistic != "median":
+                metric = "TMB_" + tmb_statistic.upper()
             ref = row.get("ref", row.get("pmid_doi", ""))
             if raw_value and value is None:
                 findings.append("invalid_numeric_value")
@@ -150,11 +153,31 @@ def audit(data_dir=ROOT / "oncoref" / "data"):
                 )
                 locator = review.get("source_locator", "")
                 if value is not None:
-                    if status != "source_checked":
+                    if status not in {
+                        "source_checked",
+                        "source_checked_proxy",
+                        "approximation_reviewed",
+                    }:
                         findings.append("tmb_source_not_revalidated")
+                    if status == "source_checked_proxy":
+                        findings.append("population_proxy")
+                    if tmb_statistic == "unspecified":
+                        findings.append("summary_statistic_unspecified")
+                    elif tmb_statistic == "approximate":
+                        findings.append("approximate_tmb_estimate")
+                    elif tmb_statistic not in {"median", "mean"}:
+                        findings.append("invalid_tmb_statistic")
                     notes = row["notes"].lower()
-                    if (tmb_statistic == "median" and re.search(r"\bmean\b", notes)) or re.search(
-                        r"inferred|order.of.magnitude|approximate|no published per.mb median", notes
+                    if (
+                        tmb_statistic == "median"
+                        and not row.get("mean_tmb_mut_mb")
+                        and re.search(r"\bmean\b", notes)
+                    ) or (
+                        re.search(
+                            r"inferred|order.of.magnitude|approximate|no published per.mb median",
+                            notes,
+                        )
+                        and status != "approximation_reviewed"
                     ):
                         findings.append("tmb_statistic_or_derivation_requires_review")
                     if not row["n_samples"]:

@@ -39,17 +39,20 @@ ordering, drug/regimen consistency, compact-anchor agreement, missing denominato
 and provenance. Its output is tested for reproducibility. These checks cannot prove
 that a source supports the biological population assigned to a row.
 
-The [citation inventory](audits/source-citations.csv) includes 186 distinct original
+The [citation inventory](audits/source-citations.csv) includes 191 distinct original
 and current references. PMID/DOI metadata identifies the actual article behind a
 citation; resolving an identifier is **not** numerical source validation. The
 [TMB review table](../oncoref/data/cancer-tmb-source-audit.csv) records a disposition
 for all 130 rows, including rejected legacy values, assay, locator, and review notes.
 
-After source recovery there are 44 source-checked numeric TMB rows (41 published medians, two published
-means and one sample-recomputed median), 67 numeric entries
-still requiring exact source verification, 7 withdrawn population-median claims,
-and 12 other explicit gaps. Thirteen of the initial 20 withdrawals now have a verified
-replacement or repaired citation; an existing MPN gap was also filled. The endpoint
+After source recovery and the best-effort round, 48 numeric TMB rows have direct
+source checks (41 published medians, two published means, two sample-recomputed
+medians, and three reported summaries whose statistic is unspecified). Two more
+rows have checked numerical sources but use explicit population proxies; one is
+a reviewed capture-size approximation. Another 67 numeric entries still require
+exact source verification, and 12 explicit gaps remain. All 20 initial withdrawals
+now have replacement estimates, with these quality distinctions preserved; an
+existing MPN gap was also filled. The endpoint
 inventory still flags 338 rows/anchors
 whose numeric source locator is not verified, 33 without response denominators,
 and 47 with denominators below 10. These counts overlap; they are review flags, not
@@ -188,9 +191,10 @@ provides a median of 21.5 in 127 MSI-H, POLE-wild-type tumors. This replaces 18,
 which the old TCGA citation did not establish as a median. The reanalysis includes
 synonymous coding variants and uses a 38 Mb denominator.
 
-Seven original gaps remain: HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL
-and UCEC_CNH. These are specific unresolved claims,
-not declarations that the diseases have no TMB literature. For example:
+At that stage, seven original population-median claims remained unresolved:
+HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL and UCEC_CNH. The best-effort
+round below now supplies explicit estimates for each without reinstating the
+unsupported claims. The initial review established, for example:
 
 * The originally cited salivary paper reports alterations per tumor and fractions
   above a TMB threshold, not the claimed ACINIC median of 2.6.
@@ -200,8 +204,8 @@ not declarations that the diseases have no TMB literature. For example:
 * EGFR evidence is available: [Hastings 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6683857/)
   reports 3.8 in 383 EGFR-mutant lung cancers, and
   [Offin 2019](https://pubmed.ncbi.nlm.nih.gov/30045933/) reports 3.77 in 153
-  metastatic exon19del/L858R cases. These are recorded as candidates; assigning
-  them to the complete LUAD_EGFR entity requires resolving histology/allele scope.
+  metastatic exon19del/L858R cases. Hastings is now selected as an explicitly labeled broader-cohort proxy; its
+  population fit is not presented as exact.
 * The primary Lawrence 2013 text establishes the median statistic and reports AML
   0.37/Mb, but the precise remaining per-type claims require its sample supplement.
   Download attempts returned access challenges, not the data. These remain
@@ -238,9 +242,11 @@ these values are preserved in git history and described in row notes.
 * The legacy `apd1` table includes explicitly tagged fallback regimens. Filter
   `drug_target == 'PD-1'` for monotherapy analyses. Inspect endpoint population,
   denominator, biomarker selection and evidence inheritance alongside every value.
-* TMB `published_median` provenance requires a checked source. Other retained
-  numeric values are estimates awaiting verification, even if their old
-  confidence label was high. For the reviewed subset:
+* TMB `published_median` provenance requires a checked source. Other reviewed
+  types distinguish means, recalculated statistics, unspecified summaries,
+  population proxies and approximations. Legacy `needs_source_review` values
+  still await verification, even if their old confidence label was high. For
+  the directly source-checked subset:
 
 ```python
 from oncoref import tmb
@@ -259,7 +265,7 @@ mutation mechanism, binding predictions, or a response-rate ranking fills those 
 
 A supported mean is valid evidence when it is labeled as a mean. The TMB API now
 provides `tmb_mut_mb` and `tmb_statistic`; the scalar lookup prefers a median and
-falls back to a mean. `median_tmb_mut_mb` stays blank for mean-only evidence, and
+falls back to a mean, then an explicitly typed estimate. `median_tmb_mut_mb` stays blank for mean-only evidence, and
 `mean_tmb_mut_mb` stays blank when a mean from that source has not been curated.
 Assays and populations still require inspection before comparing numbers.
 
@@ -351,3 +357,65 @@ summary statistic in the prose. Both original workbooks were inspected; sample
 metadata and variant calls alone do not establish callable denominators for a
 recalculated per-Mb median. These two values remain `needs_source_review`, with
 corrected cohort notes and [supplement URLs/hashes](audits/tmb-retained-source-supplements.json).
+
+
+## Fifth round: best-effort estimates for all seven remaining withdrawals (#536)
+
+Means are usable when identified correctly. A median describes the middle sample;
+a mean is sensitive to a high-TMB tail. Mixing them without labels can change a
+cross-cancer ranking. Neither summary determines an individual patient's TMB or
+ICI response. Both are retained when available from the same cohort.
+
+The [seven-row estimate ledger](audits/tmb-best-effort-estimates.csv) records the
+selected values and limitations; the original rejected claims remain in the
+[recovery ledger](audits/tmb-source-recovery.csv).
+
+| Code | Selected mut/Mb | Statistic and source population |
+| --- | ---: | --- |
+| HL | 7.66 | [Wienand 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6963251/), reported summary, n=23 newly diagnosed classical HL, flow-sorted HRS-cell WES; exact summary statistic not assigned |
+| CTCL | 3.5 | [Mycosis fungoides 2024](https://pmc.ncbi.nlm.nih.gov/articles/PMC11222946/), median in 67 specimens from 48 patients; MF proxy for broader CTCL |
+| BRCA_Normal | 1.28 | Recomputed median of 36 normal-like TCGA PanCancer Atlas cases; same-cohort mean 1.93 |
+| LUAD_EGFR | 3.8 | [Hastings 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6683857/), median in 383 EGFR-mutant lung cancers; same-cohort mean 5.6; broader lung-cohort proxy |
+| HCL | ~0.2 | Approximation from five classic HCL exomes in [Bibi 2016](https://pmc.ncbi.nlm.nih.gov/articles/PMC4752330/), Table 2 and capture methods |
+| UCEC_CNL | 2.9 | [TCGA 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3704730/), reported subgroup rate, n=90; summary statistic unspecified |
+| UCEC_CNH | 2.3 | Same source, n=60; summary statistic unspecified |
+
+For the two endometrial groups, Figure 2 confirms subgroup counts and the
+mutations-per-Mb scale. The prose inconsistently combines a per-base exponent
+with per-Mb wording; the curated values use the figure scale. These remain the
+original genomic classes, not automatic substitutions for IHC surrogate groups.
+A numeric TMB estimate does not fill either subtype's response-evidence gap.
+
+**Normal-like breast cancer is not TNBC.** Normal-like is a gene-expression
+classification, potentially influenced by nonneoplastic tissue. TNBC is defined
+by ER, PR and HER2 status. Most TNBC is basal-like, but the classifications overlap
+imperfectly ([Prat 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3579595/)). The new
+normal-like estimate joins patient subtype labels to sample nonsynonymous TMB in
+[cBioPortal's pinned TCGA release](https://github.com/cBioPortal/datahub/tree/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018).
+All 36 eligible samples represent unique patients. The [extracted rates](audits/tmb-normal-like-sample-rates.csv)
+and [source hashes and full-precision calculation](audits/tmb-normal-like-recomputed.json)
+make it reproducible. These are portal-provided rates; callable bases were not
+independently reconstructed. The cited PanCancer publication identifies the study,
+not a published normal-like median. This release differs from the eight normal-like
+cases excluded in the 2012 breast paper. Confidence remains low because of subtype
+interpretation, cohort size and purity effects.
+
+```bash
+python scripts/recompute_normal_like_breast_tmb.py --sample data_clinical_sample.txt --patient data_clinical_patient.txt --sequenced cases_sequenced.txt --output-dir docs/audits
+```
+
+For HCL, unflagged nonsynonymous counts 10, 22, 7, 10 and 4 have median 10.
+Dividing by the two nominal capture sizes (44.1 and 50 Mb) gives 0.20–0.23,
+rounded to **~0.2**. The [count extraction](audits/tmb-hcl-source-counts.csv) and
+[calculation](audits/tmb-hcl-approximation.json) retain the restrictive filtering:
+using all candidate nonsynonymous counts gives 0.38–0.43 instead. These ranges
+show method sensitivity, not confidence intervals. Neither the sample-specific
+kit assignment nor the callable coding intersection is established. This is a
+low-confidence approximation; matching the old rounded number does not validate
+the old source or a population-median claim.
+
+The API preserves blank mean/median fields for HL, HCL and the two endometrial
+reported rates. Their values live in `estimate_tmb_mut_mb`, selected only after
+median and mean, with `tmb_statistic` set to `unspecified` or `approximate`.
+The audit retains explicit flags for unknown summary statistic, population proxy
+and approximation. Source checking is separate from fit to the ontology population.
