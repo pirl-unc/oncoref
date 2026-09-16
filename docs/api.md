@@ -1424,18 +1424,27 @@ order.
 ## Burden, TMB, Fusions, and Signatures
 
 - `oncoref.tmb` — tumor mutational burden reference values.
+  `tmb.cancer_tmb()` selects the curated median when available, otherwise a
+  supported mean. Structured records retain `median_tmb_mut_mb` and
+  `mean_tmb_mut_mb` separately, plus the selected `tmb_mut_mb` and `tmb_statistic`.
+  A mean-only source leaves the median field empty. Preserve the statistic and
+  assay when comparing values; genome-wide substitution rates and coding TMB
+  are different measurements.
   `tmb.cancer_tmb_df()` includes evidence-schema columns (`estimate_type`,
   `source_scope`, `missing_reason`), and `tmb.cancer_tmb_record()` /
   `tmb.resolve_tmb_source()` preserve requested-code metadata for source-scoped
   lookups such as `COAD_MSI` or `READ_MSI` resolving through `CRC_MSI`. Direct
   audited gaps use `inheritance_kind="direct_missing"` so callers can distinguish
   “known no supported site-specific estimate” from an unmapped cancer code.
-  `tmb.tmb_evidence_fields(cancer_type, median_tmb_mut_mb)` is the public,
+  `tmb.tmb_evidence_fields(cancer_type, median_tmb_mut_mb, statistic="median")` is the public,
   non-inheriting helper for classifying one explicit estimate; it applies reviewed
   per-code overrides and derives aggregate source scope from the cancer registry.
+  The numeric parameter name is retained for compatibility; pass
+  `statistic="mean"` when supplying a mean.
   TMB records also expose `source_review_status`, `source_locator`, `tmb_assay`,
-  and `source_review_notes`. `published_median` is reserved for source-checked
-  rows; legacy numeric entries are `curated_estimate` or an explicitly approximate
+  and `source_review_notes`. `published_median` and `published_mean` require
+  source-checked rows; sample-level recomputation is labeled
+  `sample_recomputed_median`. Legacy numeric entries are `curated_estimate` or an explicitly approximate
   type. Filter `source_review_status == 'source_checked'` for the revalidated
   subset, and preserve assay and cohort scope when comparing values. See the
   [curation audit](curation-audit.md) for corrections and unresolved rows.
