@@ -3,7 +3,7 @@ ACC,1.0,,Chalmers 2017,PMID:28420421,low,Adrenocortical; panel-based; low. Metas
 BLCA,7.1,,Lawrence 2013,PMID:23770567,high,WES median; APOBEC-driven long tail.
 BRCA,1.2,,Lawrence 2013,PMID:23770567,high,WES median; higher in basal/HER2; MSI rare.
 CESC,5.0,,Lawrence 2013,PMID:23770567,medium,Cervical squamous; APOBEC + HPV; wide range.
-BTC,1.23,803,Lin 2021,PMID:33754015,medium,"Pan-biliary cohort: gallbladder n=164, intrahepatic cholangiocarcinoma n=475, extrahepatic cholangiocarcinoma n=164; panel-derived median 1.23 mut/Mb; preserves the pooled source scope rather than replacing anatomic subtype rows."
+BTC,1.23,803,Lin 2021,PMID:33754015,medium,"Chinese pan-biliary cohort; mixed WES and targeted-panel assays, not solely a panel assay."
 CHOL,2.0,,Chalmers 2017,PMID:28420421,medium,Cholangiocarcinoma; panel ~1.8-2.4.
 COAD,3.1,,Lawrence 2013,PMID:23770567,high,Colon MSS median; MSI-H/POLE subset >40.
 DLBC,3.3,,Lawrence 2013,PMID:23770567,high,DLBCL WES median.
@@ -17,7 +17,7 @@ KIRP,1.3,,Chalmers 2017,PMID:28420421,low,Kidney papillary; panel approx ~1-1.5.
 LAML,0.4,,Lawrence 2013,PMID:23770567,high,AML WES median; among lowest of all cancers.
 LGG,1.0,,Lawrence 2013,PMID:23770567,medium,IDH-mutant low; temozolomide recurrences hypermutate.
 LIHC,4.0,,Chalmers 2017,PMID:28420421,medium,Liver HCC; panel/WES ~3-4.
-NSCLC,8.0,970,Jonna 2021,PMID:33889505,medium,"Annotated NSCLC specimens assayed by clinical targeted sequencing; median 8 mut/Mb in both treatment-naive and previously treated groups; aggregate retained alongside histology-specific LUAD/LUSC WES rows."
+NSCLC,8.0,970,Jonna 2021,PMID:33889505,medium,Median 8 in each treatment-naive and treatment-experienced group; 970 annotated specimens in total.
 LUAD,8.1,,Lawrence 2013,PMID:23770567,high,Lung adeno WES median; smoking-dependent (never-smokers far lower).
 LUSC,9.9,,Lawrence 2013,PMID:23770567,high,Lung squamous WES median; smoking signature.
 MESO,1.8,,Chalmers 2017,PMID:28420421,medium,Mesothelioma; low; panel ~1.1-2.
@@ -27,101 +27,101 @@ PCPG,0.5,,Chalmers 2017,PMID:28420421,low,Pheo/paraganglioma; very low; among lo
 PRAD,0.7,,Lawrence 2013,PMID:23770567,high,Prostate adeno WES median; CDK12/MMR subset higher.
 READ,3.1,,Lawrence 2013,PMID:23770567,medium,Treated as colorectal; MSI-H subset much higher.
 SKCM,12.9,,Lawrence 2013,PMID:23770567,high,Cutaneous melanoma WES median; UV signature; highest common solid tumor.
-STAD,5.0,,Chalmers 2017,PMID:28420421,medium,Stomach intestinal type; EBV+ / MSI-H subsets much higher.
+STAD,5.0,58,Chalmers 2017,PMID:28420421,medium,Intestinal-type stomach subset; not an MSI-stratified or all-histology gastric median.
 TGCT,0.5,,Chalmers 2017,PMID:28420421,low,Testicular germ cell; very low SNV TMB; aneuploidy-driven.
 THCA,0.4,,Chalmers 2017,PMID:28420421,high,Thyroid papillary; among lowest; single-driver BRAF/RAS.
 THYM_EPITHELIAL,,,Schirosi 2022,PMID:35749302,none,"Combined thymic epithelial aggregate intentionally blank: the 274-case targeted-sequencing cohort reports separate medians of 1.92 mut/Mb for thymoma and 3.84 mut/Mb for thymic carcinoma, but no combined median."
 THYM,0.5,,Chalmers 2017,PMID:28420421,low,Thymoma; very low; among lowest in TCGA.
 UCEC,2.5,,Lawrence 2013,PMID:23770567,high,Endometrioid median; POLE-ultramutated and MSI-H subsets very high.
 UCS,2.5,,Chalmers 2017,PMID:28420421,low,Uterine carcinosarcoma; approx; small cohorts.
-UVM,0.34,,Wu 2019,DOI:10.21037/atm.2019.09.49,high,Uveal melanoma; lowest median across TCGA; GNAQ/GNA11-driven no UV.
+UVM,,,Wu 2019,DOI:10.21037/atm.2019.09.49,none,"Withdrawn legacy estimate 0.34: cited DOI10.21037/atm.2019.09.49 concerns lung radiotherapy, not uveal melanoma TMB; no supported population median curated. See #527."
 SARC_LMS,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Leiomyosarcoma; complex-karyotype STS; low SNV TMB.
 SARC_DDLPS,1.5,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Dedifferentiated liposarcoma; MDM2/CDK4 amplicon-driven; low TMB.
 SARC_UPS,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Undifferentiated pleomorphic sarcoma; among higher STS TMB.
 SARC_MYXFIB,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Myxofibrosarcoma ~2 mut/Mb.
 SARC_SYN,1.7,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Synovial sarcoma; lowest STS TMB; SS18-SSX fusion-driven simple karyotype.
-SARC_MPNST,2.5,,Chalmers 2017,PMID:28420421,low,MPNST; panel ~2.5.
+SARC_MPNST,2.5,134,Chalmers 2017,PMID:28420421,medium,Explicit histology-specific panel median.
 SARC_OS,1.2,,Grobner 2018,PMID:29489754,medium,Osteosarcoma pediatric WGS ~1.2; high SV/chromothripsis burden.
 SARC_EWS,0.6,,Grobner 2018,PMID:29489754,high,Ewing sarcoma ~0.6; EWSR1-FLI1 fusion-driven; very few SNVs.
 SARC_RMS_ERMS,0.8,,Grobner 2018,PMID:29489754,low,Embryonal RMS; low pediatric TMB; RAS-pathway; subtype median approximate.
 SARC_RMS_ARMS,0.4,,Grobner 2018,PMID:29489754,low,Alveolar RMS; PAX3/7-FOXO1 fusion-driven; very low SNV burden; approximate.
-SARC_CHON,0.9,,Meijer 2025,PMID:40117529,low,Chondrosarcoma; low TMB; IDH1/2-driven.
+SARC_CHON,,,Meijer 2025,PMID:40117529,none,"Withdrawn legacy estimate 0.9: PMID40117529 reports separate conventional, dedifferentiated and mesenchymal histology medians; no pooled median of 0.9 is established. See #527."
 SARC_CHOR,0.53,,Chordoma WGS,PMID:38892063,medium,Chordoma skull-base WGS; brachyury-driven; rare MMR cases hypermutate.
 NBL,0.6,,Grobner 2018,PMID:29489754,high,Neuroblastoma ~0.6; relapse higher.
 WILMS,0.2,,Grobner 2018,PMID:29489754,low,Wilms tumor; very low pediatric TMB; per-entity median approximate.
 RT,0.1,,Lawrence 2013,PMID:23770567,medium,Rhabdoid tumor ~0.1; SMARCB1-driven near-silent genome.
 ATRT,0.2,,Grobner 2018,PMID:29489754,medium,AT/RT; lowest-mutation pediatric brain tumor; SMARCB1/SMARCA4-driven.
 MBL,0.3,,Lawrence 2013,PMID:23770567,high,Medulloblastoma ~0.3; rare germline-MMR/POLE hypermutant cases.
-RB,0.085,,Retinoblastoma WGS,PMID:33670346,medium,Retinoblastoma ~0.085 substitutions/Mb; RB1-loss driven near-silent.
+RB,,,Retinoblastoma WGS,PMID:33670346,none,"Withdrawn legacy estimate 0.085: PMID33670346 reports an average substitution density of 0.085/Mb, not a population median. See #527."
 HEPB,0.02,,Grobner 2018,PMID:29489754,medium,Hepatoblastoma; lowest pediatric TMB; CTNNB1-driven.
 MM,1.6,,Lawrence 2013,PMID:23770567,high,Multiple myeloma WES median ~1.6; increases at relapse.
 CLL,0.6,,Lawrence 2013,PMID:23770567,high,CLL WES median ~0.6; low.
-MCL,1.0,,Bea 2013,PMID:23770587,medium,Mantle cell lymphoma WES ~1; approximate per-Mb.
-FL,1.35,,Follicular-lymphoma TMB 2026,DOI:10.3390/cancers18050737,medium,WES-scale mean 1.35; high-TMB(>2.55) better PFS/OS.
-HL,2.0,,Liang 2019,PMID:30108156,low,Hodgkin; panel TMB inflated vs WES; approximate.
+MCL,,,Bea 2013,PMID:23770587,none,"Withdrawn legacy estimate 1.0: The cited PMID23770587 concerns MeCP2 regulation, not mantle-cell lymphoma. See #527."
+FL,5.05,119,Lafuente 2026,DOI:10.3390/cancers18050737,medium,Median at diagnosis in 119 de novo grade 1-3A FL patients; Oncomine 409-gene targeted panel (~1.2 Mb coding); Results 3.2. Replaces unsupported 1.35/WES label.
+HL,,,Liang 2019,PMID:30108156,none,"Withdrawn legacy estimate 2.0: PMID30108156 reports clinical-panel TMB in 34 patients, including 23 with TMB >=6; it does not support the approximate WES median of 2.0. See #527."
 BL,2.0,,Love 2012,PMID:23143597,medium,Burkitt; AID/MYC-driven moderate burden; ~2 approximate WES.
 B_ALL,0.3,,Grobner 2018,PMID:29489754,low,B-ALL; very low pediatric TMB; CMMRD/relapse cases far higher.
 T_ALL,0.5,,Grobner 2018,PMID:29489754,low,T-ALL; low; slightly higher than B-ALL; approximate.
-MDS,0.3,,MDS genomics review,PMID:23290440,medium,MDS ~9 somatic mutations/exome; rises with IPSS risk.
+MDS,0.8,,Chalmers 2017,PMID:28420421,medium,Explicit bone-marrow MDS median; replaces unsupported conversion of approximately 9 mutations/exome to 0.3/Mb.
 MPN,,,,,none,Myeloproliferative neoplasm; driver-defined (JAK2/CALR/MPL); no published per-Mb median.
 CML,,,,,none,Chronic myeloid leukemia; BCR-ABL1-defined; very few additional mutations in chronic phase.
-CTCL,3.0,,Park 2021,PMID:33574607,low,CTCL/mycosis fungoides; UV-signature; stage-dependent; advanced much higher.
-NET_PANCREAS,1.9,,Backman 2021,PMID:34326338,medium,Pancreatic NET well-diff median ~1.9 (vs NEC ~5.0); low.
-NEN,,,Backman 2021,PMID:34326338,none,"Broad neuroendocrine-neoplasm aggregate intentionally blank: the 85-case WGS cohort reports mean TMB by differentiation (NET 1.09 and NEC 5.45 mut/Mb), not a pooled median compatible with this table."
-NET,,,Backman 2021,PMID:34326338,none,"Broad well-differentiated NET aggregate intentionally blank: the source reports a mean of 1.09 mut/Mb rather than a median and spans multiple primary sites."
-NEC,,,Backman 2021,PMID:34326338,none,"Broad poorly differentiated NEC aggregate intentionally blank: the source reports a mean of 5.45 mut/Mb rather than a median and spans multiple primary sites."
+CTCL,,,Park 2021,PMID:33574607,none,"Withdrawn legacy estimate 3.0: The cited PMID33574607 is a general intratumoral-heterogeneity review, not the attributed CTCL cohort. See #527."
+NET_PANCREAS,1.35,,van Riet 2021,PMID:34326338,medium,"Advanced pancreatic NET; genome-wide WGS median 1.35 mut/Mb (IQR 0.90-2.12); Results, Differences within the advanced neuroendocrine tumor population based on primary localization. Not coding-exome TMB."
+NEN,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection."
+NET,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection."
+NEC,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection."
 NEC_LUNG,,,George 2015;George 2018,PMID:26168399;PMID:29535388,none,"Pulmonary NEC union intentionally blank: SCLC and LCNEC have independently curated rows, but no defensible sample-weighted combined median is published."
 SCLC,8.6,,George 2015,PMID:26168399,high,Small cell lung; high ~8.6; smoking signature.
 NEC_MERKEL,5.3,,Knepper 2019,PMID:31399473,medium,Merkel cell carcinoma median ~5.3; bimodal MCPyV-neg(UV) high vs MCPyV-pos low.
-MTC,1.0,148,Romei 2019,PMID:31605946,low,"Sporadic medullary thyroid; single-driver RET/RAS; ~1 mut/Mb inferred from panel (148 cases, 89% single-mutation)."
-ADCC,0.31,,Ho 2013,PMID:23685749,high,Adenoid cystic carcinoma ~0.31; MYB-NFIB fusion-driven; very low.
+MTC,,148,Romei 2019,PMID:31605946,none,"Legacy value 1.0 removed: no supported population median with a reproducible per-Mb denominator curated. Sporadic medullary thyroid; single-driver RET/RAS; ~1 mut/Mb inferred from panel (148 cases, 89% single-mutation)."
+ADCC,,,Ho 2013,PMID:23685749,none,"Withdrawn legacy estimate 0.31: PMID23685749 reports a mean of 22 mutations per sample and approximately 0.31 nonsilent mutations/Mb, not a median. See #527."
 NPC,0.95,,Nasopharyngeal WES,PMID:36135044,medium,Nasopharyngeal carcinoma median ~0.95-1.0; EBV-driven low SNV burden.
-NUTM,1.0,,Stathis 2019,PMID:31180909,high,NUTM1 fusion sole driver; very low TMB (range 0-16).
-BRCA_Basal,1.8,,TCGA-Breast;Barroso-Sousa 2020,PMID:23000897;PMID:31504112,low,TNBC/basal-like: highest TMB among breast subtypes
-BRCA_HER2,1.6,,TCGA-Breast;Barroso-Sousa 2020,PMID:23000897;PMID:31504112,low,HER2-enriched: elevated vs luminal
+NUTM,,,Stathis 2019,PMID:31180909,none,Withdrawn legacy estimate 1.0: PMID31180909 is a three-case study with individual tumor rates; it does not establish a representative median of 1.0. See #527.
+BRCA_Basal,1.8,,TCGA-Breast,PMID:23000897,low,TNBC/basal-like: highest TMB among breast subtypes. Exact subtype median not revalidated. Removed misattributed PMID31504112; clinical TNBC and PAM50 basal-like are not interchangeable.
+BRCA_HER2,1.6,,TCGA-Breast,PMID:23000897,low,HER2-enriched: elevated vs luminal. Exact subtype median not revalidated. Removed misattributed PMID31504112; clinical TNBC and PAM50 basal-like are not interchangeable.
 BRCA_LumB,1.2,,TCGA-Breast,PMID:23000897,low,luminal B
 BRCA_LumA,0.9,,TCGA-Breast,PMID:23000897,low,luminal A: lowest-TMB subtype
-BRCA_Normal,1.0,,TCGA-Breast,PMID:23000897,low,normal-like
-HNSC_HPVneg,4.6,,TCGA-HNSC,PMID:25631445,medium,"HPV-negative, smoking-associated: higher TMB"
-HNSC_HPVpos,2.8,,TCGA-HNSC,PMID:25631445,medium,HPV-positive: lower TMB than HPV-negative
+BRCA_Normal,,,TCGA-Breast,PMID:23000897,none,Withdrawn legacy estimate 1.0: TCGA-Breast excluded the eight normal-like samples from subsequent subtype analyses; no normal-like median of 1.0 was established. See #527.
+HNSC_HPVneg,4.6,,TCGA-HNSC,PMID:25631445,low,Legacy subtype estimate; exact median not revalidated. TCGA-HNSC states mutation rates did not differ by HPV status; a systematic higher/lower claim is not supported by this citation.
+HNSC_HPVpos,2.8,,TCGA-HNSC,PMID:25631445,low,Legacy subtype estimate; exact median not revalidated. TCGA-HNSC states mutation rates did not differ by HPV status; a systematic higher/lower claim is not supported by this citation.
 SARC,1.8,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,pan soft-tissue sarcoma (TCGA-SARC overall)
 SARC_LPS_UNSPEC,1.5,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,low,liposarcoma NOS ~ dedifferentiated
 SARC_RMS_PRMS,1.2,,Grobner 2018,PMID:29489754,low,pleomorphic RMS (adult): higher than pediatric RMS
 SARC_RMS_SSRMS,0.6,,Grobner 2018,PMID:29489754,low,spindle/sclerosing RMS
-BCC,65,,Bonilla 2016,PMID:27158114,medium,Basal cell carcinoma; UV signature; among the highest TMB of any tumor.
-cSCC,45,,Pickering 2014,PMID:24927297,medium,Cutaneous SCC; UV-driven; very high TMB.
+BCC,47.3,92,Chalmers 2017,PMID:28420421,medium,Replaces 65 and an unrelated Zika-virus PMID; panel median from the stated histology cohort.
+cSCC,45.2,266,Chalmers 2017,PMID:28420421,medium,Replaces 45 and an unrelated chemistry PMID; panel median from the stated histology cohort.
 EPN,0.5,,Grobner 2018,PMID:29489754,medium,Ependymoma; very low SNV TMB; fusion/epigenetic-driven.
 DIPG,1.0,,Mackay 2017,PMID:28966033,medium,Diffuse midline glioma; low TMB; H3 K27M epigenetic driver.
-VSCC,5.6,,Han 2018,PMID:29328067,medium,Vulvar SCC; HPV-neg (TP53/CDKN2A) higher TMB than HPV-pos.
+VSCC,,,Han 2018,PMID:29328067,none,"Withdrawn legacy estimate 5.6: The cited PMID29328067 concerns retinal microvasculature, not vulvar-cancer TMB. See #527."
 VAGC,,,,,none,Vaginal SCC; HPV-associated; ~5 mut/Mb estimate; no cited median curated.
-PENSCC,4.5,,Jacob 2024,DOI:10.1200/PO.23.00406,low,Penile SCC; 15% TMB-H>=10; HPV-neg+PD-L1 higher TMB.
-ANSC,5.0,,Cacheux 2018,PMID:29133614,medium,"HPV-driven anal SCC; mean ~8.6, median ~5."
+PENSCC,4.5,60,Chalmers 2017,PMID:28420421,medium,"Table 1, penis squamous cell carcinoma; targeted-panel median. Replaces unrelated FGFR erdafitinib trial DOI10.1200/PO.23.00406."
+ANSC,,,Cacheux 2018,PMID:29133614,none,"Withdrawn legacy estimate 5.0: The cited PMID29133614 concerns cardiac-arrest prognosis, not anal-cancer TMB. See #527."
 GBC,5.5,,Comprehensive GBC 2023,DOI:10.1038/s41698-022-00327-y,high,Median 5.5 (range 0-161); 17.7% TMB-H>10.
 CRANIO,0.9,3,Brastianos 2014,PMID:24413733,low,Papillary craniopharyngioma; ~0.9/Mb nonsynonymous rate (WES n=3); CTNNB1-driven adamantinomatous also low-TMB.
 PITNET,,,,,none,Pituitary NET; very low TMB; no cited median curated.
-SARC_DSRCT,0.72,,Bertucci 2022,PMID:35379887,high,EWSR1-WT1-driven; immune-cold; among lowest STS TMB.
-SARC_GIST,0.67,,Wu 2024 Nat Commun,PMID:39489749,high,KIT/PDGFRA-driven; very low SNV TMB but high CNV. Overrides pan-SARC.
-NEC_LUNG_LARGECELL,8.6,,George 2018 Nat Commun,PMID:29535388,high,LCNEC; smoking signature; TMB-high tier with SCLC.
-SARC_SMARCA4,10.6,,Cooper 2024,PMID:39802817,high,SMARCA4-deficient thoracic; smoking signature (really an undiff carcinoma); TMB-H. Overrides pan-SARC.
-NET_MIDGUT,,,Jeong 2023,PMID:37720428,none,Jeong 2023 reports GEP-NEN median 4.7 mut/Mb with IQR 3.1-6.3 across 31 patients including small bowel n=2 and rectum n=7; TMB did not vary by primary tumor site or WHO grade; no supported site-specific midgut median curated.
-NET_RECTAL,1.15,18,Li 2023,PMID:36645718,medium,"Rectal NET whole-exome sequencing; median 1.15 mut/Mb (range 0.03-23.28) across 18 tumors; supersedes the earlier pooled GEP-NEN source that lacked a site-specific median."
+SARC_DSRCT,0.72,22,Wu 2022,PMID:35379887,medium,22 specimens from 14 patients; multisite specimens are correlated. Corrects misattributed author Bertucci.
+SARC_GIST,0.67,78,Wu 2024,PMID:39489749,medium,"Coding mutation median across 78 tumors (59 WES, 19 WGS); specimens include repeated sampling of patients; not 78 independent patients."
+NEC_LUNG_LARGECELL,9.9,288,Chalmers 2017,PMID:28420421,medium,Replaces George 2018 average exonic rate 8.6 with an explicitly reported panel median in a different LCNEC cohort; assays differ.
+SARC_SMARCA4,10.6,48,Cooper 2024,PMID:39802817,medium,"TMB available in 48/92 thoracic SMARCA4-deficient undifferentiated tumors; table/body median 10.6, abstract rounded differently to 10.5. Thoracic subset."
+NET_MIDGUT,1.05,,van Riet 2021,PMID:34326338,medium,Advanced midgut NET; genome-wide WGS median 1.05 mut/Mb (IQR 0.75-1.40); primary-localization Results section. Replaces prior gap based on a different mixed-site source.
+NET_RECTAL,1.15,18,Li 2023,PMID:36645718,medium,"Median across 18 rectal NET tumors, range 0.03-23.28."
 NET_LUNG,0.4,,Fernandez-Cuesta 2014,PMID:24670920,medium,Typical/atypical pulmonary carcinoid; very low (chromatin-remodeling driven).
 SARC_CIC,1.2,,Antonescu 2017,PMID:29901569,medium,CIC-DUX4-driven; low TMB (range 0.8-1.6). Overrides pan-SARC.
-NBL_MYCNamp,0.6,,Wang 2018 JNCI,PMID:30307503,medium,Pediatric; very low TMB; MYCN amp does NOT raise total TMB.
-NBL_MYCNnonamp,0.6,,Wang 2018 JNCI,PMID:30307503,medium,Pediatric; very low TMB (~= MYCN-amp).
+NBL_MYCNamp,,,Wang 2018 JNCI,PMID:30307503,none,"Withdrawn legacy estimate 0.6: PMID30307503 reports coding mutations per tumor, not a supported MYCN-amplified per-Mb median of 0.6. See #527."
+NBL_MYCNnonamp,,,Wang 2018 JNCI,PMID:30307503,none,Withdrawn legacy estimate 0.6: PMID30307503 does not establish the curated MYCN-nonamplified per-Mb median of 0.6. See #527.
 MBL_WNT,0.6,,Northcott 2017,PMID:28726821,low,MB subgroup; near baseline ~0.5; excellent prognosis.
 MBL_SHH,0.8,,Northcott 2017,PMID:28726821,low,Higher than other MB subgroups; adult/TP53-mut SHH can be hypermutated.
 MBL_G3,0.5,,Northcott 2017,PMID:28726821,low,MB Group 3; baseline low TMB.
 MBL_G4,0.5,,Northcott 2017,PMID:28726821,low,MB Group 4; lowest mutation rate of the four.
-LUAD_EGFR,3.5,,Wang 2021,PMID:33846346,medium,Never-smoker; LOWER TMB than parent LUAD (8.1).
-HCL,0.2,1,Tiacci 2011,PMID:22072557,low,"Hairy cell leukemia; BRAF V600E-driven, genomically near-silent (~5 somatic mutations, WES n=1)."
-ACINIC,2.6,,Salivary gland CGP,PMID:28961851,low,Acinic cell carcinoma (salivary); low TMB; no published per-Mb median.
+LUAD_EGFR,,,Wang 2021,PMID:33846346,none,"Withdrawn legacy estimate 3.5: The cited PMID33846346 concerns RIG-I/XRCC4, not an EGFR-mutant lung cohort median. See #527."
+HCL,,1,Tiacci 2011,PMID:22072557,none,"Legacy value 0.2 removed: no supported population median with a reproducible per-Mb denominator curated. Hairy cell leukemia; BRAF V600E-driven, genomically near-silent (~5 somatic mutations, WES n=1)."
+ACINIC,,,Salivary gland CGP,PMID:28961851,none,Legacy value 2.6 removed: no supported population median with a reproducible per-Mb denominator curated. Acinic cell carcinoma (salivary); low TMB; no published per-Mb median.
 ALCL,,,,,none,Anaplastic large cell lymphoma; ALK+ has the lowest lymphoma mutation burden; no published per-Mb median.
 URETH,,,,,none,Urethral carcinoma; rare; no published per-Mb median.
-UCEC_POLE,100,,TCGA endometrial (Kandoth 2013),PMID:23636398,low,POLE-ultramutated; median TMB very high (>100 mut/Mb) - order-of-magnitude estimate
+UCEC_POLE,,,TCGA endometrial (Kandoth 2013),PMID:23636398,none,Legacy value 100 removed: no supported population median with a reproducible per-Mb denominator curated. POLE-ultramutated; median TMB very high (>100 mut/Mb) - order-of-magnitude estimate
 UCEC_MSI,18,,TCGA endometrial (Kandoth 2013),PMID:23636398,low,MSI-H hypermutated; elevated TMB estimate
-UCEC_CNL,2.5,,TCGA endometrial (Kandoth 2013),PMID:23636398,low,copy-number-low endometrioid; low TMB
-UCEC_CNH,2.8,,TCGA endometrial (Kandoth 2013),PMID:23636398,low,copy-number-high serous-like; low TMB
+UCEC_CNL,,,TCGA endometrial (Kandoth 2013),PMID:23636398,none,"Withdrawn legacy estimate 2.5: TCGA reports a subgroup mutation rate of 2.9, not the curated median of 2.5; no reproducible median calculation is curated. See #527."
+UCEC_CNH,,,TCGA endometrial (Kandoth 2013),PMID:23636398,none,"Withdrawn legacy estimate 2.8: TCGA reports a subgroup mutation rate of 2.3, not the curated median of 2.8; no reproducible median calculation is curated. See #527."
 CRC_MSI,46,,Chalmers 2017,PMID:28420421,medium,MSI-H/dMMR hypermutated colorectal source-scope estimate; applies to COAD_MSI/READ_MSI by evidence-source inheritance; no colon- or rectum-specific denominator in curated source
 CRC,4.5,6004,Fabrizio 2018,PMID:30151257,high,Colorectal all-comers pooled median; MSS ~3.5 and MSI-H ~46 (Chalmers); umbrella value for CRC pooling
 MENINGIOMA,0.5,,Anaplastic meningioma WGS,DOI:10.1038/s41598-018-31659-0,low,Among the lowest-TMB tumors; grade I dominant ~0.5; atypical/anaplastic rise to ~2

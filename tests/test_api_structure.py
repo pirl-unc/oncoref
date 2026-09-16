@@ -83,7 +83,7 @@ def test_ici_response_facade_delegates_to_compatibility_api():
     )
 
 
-@pytest.mark.parametrize("code, orr", [("LUAD_EGFR", 19.0), ("STAD_CIN", 12.0)])
+@pytest.mark.parametrize("code, orr", [("LUAD_EGFR", 19.0), ("STAD_CIN", 11.6)])
 def test_selected_ici_regimen_defaults_to_inherited_response(code, orr):
     assert ici_response.best_available_ici_response(code) == orr
     assert ici_response.selected_ici_regimen(code) == "PD-1"

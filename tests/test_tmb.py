@@ -32,16 +32,17 @@ def test_tmb_df_exposes_evidence_schema():
     assert {"estimate_type", "source_scope", "missing_reason"} <= set(df.columns)
 
     crc_msi = df.set_index("cancer_code").loc["CRC_MSI"]
-    assert crc_msi["estimate_type"] == "published_median"
+    assert crc_msi["estimate_type"] == "curated_estimate"
+    assert crc_msi["source_review_status"] == "needs_source_review"
     assert crc_msi["source_scope"] == "aggregate_source"
     assert pd.isna(crc_msi["missing_reason"])
 
     net_midgut = df.set_index("cancer_code").loc["NET_MIDGUT"]
-    assert pd.isna(net_midgut["median_tmb_mut_mb"])
-    assert net_midgut["confidence"] == "none"
-    assert net_midgut["estimate_type"] == "unknown"
-    assert net_midgut["source_scope"] == "source_rejected_for_site_specific_value"
-    assert net_midgut["missing_reason"] == "no_supported_site_specific_median"
+    assert net_midgut["median_tmb_mut_mb"] == 1.05
+    assert net_midgut["estimate_type"] == "published_median"
+    assert net_midgut["source_scope"] == "advanced_site_specific_cohort"
+    assert net_midgut["tmb_assay"] == "WGS_genome_wide"
+    assert net_midgut["source_review_status"] == "source_checked"
 
     missing = df.set_index("cancer_code").loc["PITNET"]
     assert missing["estimate_type"] == "unknown"
@@ -60,10 +61,10 @@ def test_tmb_evidence_fields_is_public_and_registry_aware():
     direct = tmb.tmb_evidence_fields("LUAD", 6.3)
     assert direct["source_scope"] == "cancer_code_direct"
 
-    audited_gap = tmb.tmb_evidence_fields("NET_MIDGUT", None)
+    audited_gap = tmb.tmb_evidence_fields("STAD_MSI", None)
     assert audited_gap["estimate_type"] == "unknown"
-    assert audited_gap["source_scope"] == "source_rejected_for_site_specific_value"
-    assert audited_gap["missing_reason"] == "no_supported_site_specific_median"
+    assert audited_gap["source_scope"] == "source_rejected_for_subtype_value"
+    assert audited_gap["missing_reason"] == "no_supported_subtype_median"
 
 
 def test_tmb_resolves_alias():
@@ -82,7 +83,7 @@ def test_tmb_inherits_from_parent():
     found = False
     for _, row in reg.iterrows():
         code, parent = str(row["code"]), str(row["parent_code"])
-        if code not in mapping and parent in mapping:
+        if code not in set(tmb.cancer_tmb_df()["cancer_code"]) and parent in mapping:
             assert tmb.cancer_tmb(code) == mapping[parent]
             assert tmb.cancer_tmb(code, inherit=False) is None
             found = True
@@ -109,7 +110,7 @@ def test_crc_msi_tmb_record_preserves_source_scope_metadata():
     assert record["is_inherited_evidence"] is True
     assert record["median_tmb_mut_mb"] == 46.0
     assert record["source_scope"] == "aggregate_source"
-    assert record["estimate_type"] == "published_median"
+    assert record["estimate_type"] == "curated_estimate"
 
     direct = tmb.resolve_tmb_source("CRC_MSI")
     assert direct["requested_cancer_code"] == "CRC_MSI"
@@ -151,18 +152,18 @@ def test_tmb_record_missing_and_bulk_direct_rows():
     assert bulk["CRC_MSI"]["inheritance_kind"] == "direct"
 
 
-def test_net_site_specific_tmb_rows_are_audited_gaps():
+def test_net_site_specific_tmb_preserves_statistic_and_assay():
     mapping = tmb.cancer_tmb()
-    assert "NET_MIDGUT" not in mapping
-    assert tmb.cancer_tmb("NET_MIDGUT") is None
+    assert mapping["NET_MIDGUT"] == 1.05
+    assert tmb.cancer_tmb("NET_PANCREAS") == 1.35
     assert tmb.cancer_tmb("NET_RECTAL") == 1.15
 
     midgut = tmb.resolve_tmb_source("NET_MIDGUT")
     assert midgut["has_tmb_source"] is True
-    assert midgut["inheritance_kind"] == "direct_missing"
-    assert midgut["estimate_type"] == "unknown"
-    assert midgut["source_scope"] == "source_rejected_for_site_specific_value"
-    assert midgut["missing_reason"] == "no_supported_site_specific_median"
+    assert midgut["inheritance_kind"] == "direct"
+    assert midgut["estimate_type"] == "published_median"
+    assert midgut["source_scope"] == "advanced_site_specific_cohort"
+    assert midgut["tmb_assay"] == "WGS_genome_wide"
 
     rectal = tmb.resolve_tmb_source("NET_RECTAL")
     assert rectal["inheritance_kind"] == "direct"
@@ -193,9 +194,18 @@ def test_new_aggregate_tmb_rows_preserve_source_scope_and_missing_boundaries():
             "subtype_sources_not_aggregated",
             "source_reports_subtype_medians_only",
         ),
-        "NEN": ("source_rejected_for_metric_mismatch", "source_reports_mean_not_median"),
-        "NET": ("source_rejected_for_metric_mismatch", "source_reports_mean_not_median"),
-        "NEC": ("source_rejected_for_metric_mismatch", "source_reports_mean_not_median"),
+        "NEN": (
+            "source_rejected_for_aggregate_scope",
+            "advanced_subcohorts_do_not_establish_full_aggregate_median",
+        ),
+        "NET": (
+            "source_rejected_for_aggregate_scope",
+            "advanced_subcohorts_do_not_establish_full_aggregate_median",
+        ),
+        "NEC": (
+            "source_rejected_for_aggregate_scope",
+            "advanced_subcohorts_do_not_establish_full_aggregate_median",
+        ),
         "NEC_LUNG": ("subtype_sources_not_aggregated", "no_supported_aggregate_median"),
     }
     for code, (scope, reason) in expected_missing.items():

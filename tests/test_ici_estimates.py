@@ -98,10 +98,10 @@ def test_wilson_ci_basics():
 
 
 def test_pooled_proportion_responder_weighted():
-    # NEC_MERKEL anti-PD-L1 has >=2 verified trials reporting responders + n.
+    # Default pooling uses the single primary setting, avoiding overlapping readouts.
     r = ici.pooled_ici_response("NEC_MERKEL", regimen="PD-L1", metric="ORR")
     assert r["poolable"] is True
-    assert r["n_studies"] >= 2 and r["n_total"] > 0
+    assert r["n_studies"] == 1 and r["n_total"] > 0
     assert r["responders_total"] is not None
     # pooled point estimate must sit inside its own Wilson CI
     assert r["ci_low"] <= r["pooled_pct"] <= r["ci_high"]
@@ -227,18 +227,11 @@ def test_msi_subtype_value_corrected_and_rolls_up():
     assert "READ_MSI" not in set(anchor["cancer_code"])
     assert ici.cancer_ici_response("COAD_MSI") == orr("CRC_MSI")
     assert ici.cancer_ici_response("READ_MSI") == orr("CRC_MSI")
-    # MSS components present and ~0; all-comer is the (low) prevalence-weighted blend
+    # MSS components remain; modeled all-comer values are not clinical anchors.
     assert orr("COAD_MSS") == 0.0
-    assert orr("COAD") < orr("CRC_MSI")  # blend is far below the MSI subtype
-    # COAD all-comer ~ 43.8 * dMMR-prevalence(~0.13)
-    assert 4.0 <= orr("COAD") <= 7.0
-    # UCEC corrected to KEYNOTE-158 components (dMMR 48, pMMR 7); all-comer is the
-    # roll-up at advanced-EC dMMR prevalence ~20% (0.20*48 + 0.80*7 = 15.2), not 8.
-    assert orr("UCEC_POLE") == 100.0
+    for code in ("COAD", "READ", "UCEC", "UCEC_POLE", "UCEC_CNL", "UCEC_CNH"):
+        assert ici.cancer_ici_response(code) is None
     assert abs(orr("UCEC_MSI") - 48.0) < 0.01
-    assert orr("UCEC_CNH") == 7.0 and orr("UCEC_CNL") == 7.0
-    rolled = 0.20 * orr("UCEC_MSI") + 0.80 * orr("UCEC_CNH")
-    assert abs(orr("UCEC") - rolled) <= 1.0
 
 
 def test_crc_msi_estimates_are_source_scoped_and_detailed():
@@ -419,9 +412,10 @@ def test_luad_stk11_estimates_do_not_include_keynote042_all_comer_nsclc_rows():
     assert "PMID:30955977" not in set(stk11["ref"])
 
     primary = stk11[stk11["role"] == "primary"]
-    assert set(primary["trial_name"]) == {"Skoulidis STK11/LKB1 aPD1-resistance analysis"}
-    assert set(primary["metric"].str.upper()) == {"ORR"}
-    assert set(primary["ref"]) == {"PMID:29773717"}
+    assert primary.empty  # KRAS/STK11 is narrower than the STK11/KEAP1 code.
+    assert set(stk11["value_basis"]) == {"reported_context"}
+    assert set(stk11["metric"].str.upper()) == {"ORR"}
+    assert set(stk11["ref"]) == {"PMID:29773717"}
 
     alternate_trials = set(stk11[stk11["role"] == "alternate"]["trial_name"])
     assert alternate_trials == {
@@ -780,7 +774,7 @@ def test_audited_anchor_values_match_primary_orr():
         ("MDS", "PD-1"): 0.0,  # KEYNOTE-013: no CR/PR by IWG criteria
         ("PAAD", "PD-1"): 0.0,  # KEYNOTE-028 pancreatic cohort: 0/24
         ("SCLC", "PD-1"): 10.0,  # CheckMate 032 nivolumab monotherapy: 10/98
-        ("EPN", "PD-1"): 4.5,  # CheckMate 908 pooled EPN arms: 1/22
+        ("EPN", "PD-1"): 8.3,  # CheckMate 908 NIVO3 monotherapy: 1/12
     }
     for cell, expected in audited.items():
         code, regimen = cell
@@ -856,38 +850,35 @@ def test_sclc_checkmate032_source_endpoints():
     assert float(mono["ci_low"]) == 5.0 and float(mono["ci_high"]) == 18.0
     assert float(mono["metric_n"]) == 98 and float(mono["responders"]) == 10
 
-    combo_hi_ipi = row("PD-1", "alternate", "nivolumab + ipilimumab", "ORR", 61)
+    combo_hi_ipi = row("PD-1+CTLA-4", "alternate", "nivolumab + ipilimumab", "ORR", 61)
     assert float(combo_hi_ipi["value"]) == 23.0
     assert float(combo_hi_ipi["ci_low"]) == 13.0 and float(combo_hi_ipi["ci_high"]) == 36.0
     assert float(combo_hi_ipi["metric_n"]) == 61 and float(combo_hi_ipi["responders"]) == 14
     assert bool(combo_hi_ipi["source_verified"]) is True
 
-    combo_hi_nivo = row("PD-1", "alternate", "nivolumab + ipilimumab", "ORR", 54)
+    combo_hi_nivo = row("PD-1+CTLA-4", "alternate", "nivolumab + ipilimumab", "ORR", 54)
     assert float(combo_hi_nivo["value"]) == 19.0
     assert float(combo_hi_nivo["ci_low"]) == 9.0 and float(combo_hi_nivo["ci_high"]) == 31.0
     assert float(combo_hi_nivo["responders"]) == 10
     assert bool(combo_hi_nivo["source_verified"]) is True
 
 
-def test_epn_checkmate908_pooled_orr_counts():
+def test_epn_checkmate908_monotherapy_orr_counts():
     est = ici.cancer_ici_response_estimates_df()
     rows = est[
-        (est["cancer_code"] == "EPN")
-        & (est["regimen"] == "PD-1")
-        & (est["ref"] == "PMID:36808285")
-        & (est["metric"] == "ORR")
+        (est["cancer_code"] == "EPN") & (est["ref"] == "PMID:36808285") & (est["metric"] == "ORR")
     ]
 
     primary = rows[rows["role"] == "primary"]
     assert len(primary) == 1
     primary = primary.iloc[0]
-    assert primary["drug"] == "nivolumab +/- ipilimumab"
-    assert float(primary["source_n"]) == 22
-    assert float(primary["metric_n"]) == 22
+    assert primary["drug"] == "nivolumab"
+    assert float(primary["source_n"]) == 12
+    assert float(primary["metric_n"]) == 12
     assert float(primary["responders"]) == 1
-    assert float(primary["value"]) == 4.5
+    assert float(primary["value"]) == 8.3
     assert bool(primary["source_verified"]) is True
-    assert primary["value_basis"] == "derived_cross_cohort"
+    assert primary["value_basis"] == "computed_from_counts"
     assert primary["ci_basis"] == "computed_wilson"
 
     combo = rows[rows["role"] == "alternate"]
@@ -895,15 +886,16 @@ def test_epn_checkmate908_pooled_orr_counts():
     combo = combo.iloc[0]
     assert float(combo["metric_n"]) == 10
     assert float(combo["responders"]) == 0
-    assert combo["value_basis"] == "reported_context"
+    assert combo["regimen"] == "PD-1+CTLA-4"
+    assert combo["value_basis"] == "inferred_from_outcomes"
 
     pooled = ici.pooled_ici_response("EPN", regimen="PD-1", metric="ORR", verified_only=False)
-    assert pooled["responders_total"] is None
-    assert pooled["n_total"] is None
-    assert pooled["n_pooled"] == 0
-    assert pooled["n_studies"] == 0
-    assert pooled["pooled_pct"] is None
-    assert pooled["refs"] == []
+    assert pooled["responders_total"] == 1
+    assert pooled["n_total"] == 12
+    assert pooled["n_pooled"] == 1
+    assert pooled["n_studies"] == 1
+    assert pooled["pooled_pct"] == 8.3
+    assert pooled["refs"] == ["PMID:36808285"]
 
 
 def test_sarc028_expansion_source_endpoints_and_pools():

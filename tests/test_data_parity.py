@@ -17,13 +17,15 @@ def test_tmb_has_n_samples_column():
     assert "n_samples" in cancer_tmb_df().columns
 
 
-def test_tmb_filled_gaps():
-    # MTC and CRANIO had no curated median in the initial copy; the audit added
-    # cited values. Assert the gaps are *filled* (a positive curated value), not
-    # the exact numbers — those can be re-curated.
-    for code in ("MTC", "CRANIO"):
-        value = cancer_tmb(code, inherit=False)
-        assert value is not None and value > 0
+def test_tmb_source_review_can_withdraw_a_previously_filled_gap():
+    # A driver-panel mutation count does not establish a per-Mb population median.
+    assert cancer_tmb("MTC", inherit=False) is None
+    mtc = cancer_tmb_df().set_index("cancer_code").loc["MTC"]
+    assert mtc["source_review_status"] == "rejected_population_median"
+    # Small-cohort estimates remain explicitly distinguished from checked medians.
+    cranio = cancer_tmb_df().set_index("cancer_code").loc["CRANIO"]
+    assert cranio["estimate_type"] == "small_n"
+    assert cranio["source_review_status"] == "needs_source_review"
 
 
 def test_tmb_new_entities_present():

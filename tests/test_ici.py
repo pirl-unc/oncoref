@@ -81,11 +81,11 @@ def test_ici_anchor_table_exposes_evidence_schema():
     assert crc["source_scope"] == "aggregate_source"
     assert crc["source_anchor"] == "PMID:33264544"
 
-    coad = df[(df["cancer_code"] == "COAD") & (df["regimen"] == "PD-1")].iloc[0]
-    assert coad["evidence_type"] == "derived_blend"
-    assert coad["histology_match"] == "derived"
+    coad = df[df["cancer_code"] == "COAD"].iloc[0]
+    assert coad["evidence_type"] == "unknown"
+    assert pd.isna(coad["histology_match"])
     assert bool(coad["is_direct_cancer_code_evidence"]) is False
-    assert coad["source_scope"] == "derived_blend"
+    assert coad["source_scope"] == "modeled_value_not_population_evidence"
     assert pd.isna(coad["response_denominator"])
     assert pd.isna(coad["source_anchor"])
 
@@ -336,7 +336,9 @@ def test_aml_combination_stays_out_of_monotherapy_anchor_and_mpn_scope_is_explic
     monotherapy = ici.pooled_ici_response("LAML", regimen="PD-1", metric="ORR")
     assert monotherapy["n_studies"] == 0
     assert monotherapy["pooled_pct"] is None
-    combination = ici.pooled_ici_response("LAML", regimen="PD-1+HMA", metric="ORR")
+    combination = ici.pooled_ici_response(
+        "LAML", regimen="PD-1+HMA", metric="ORR", include_alternates=True
+    )
     assert combination["n_studies"] == 1
     assert combination["n_total"] == 70
     assert combination["responders_total"] == 23
@@ -423,21 +425,29 @@ def test_mpnst_pd1_response_row():
     assert rows.loc["OS", "ci_high"] == 26.3
 
 
-def test_ucec_pole_pd1_anchor_is_direct_not_bulk_parent_blend():
-    assert apd1.cancer_apd1_response("UCEC_POLE") == 100.0
-    assert ici.cancer_ici_response("UCEC_POLE") == 100.0
-    assert ici.cancer_ici_response("UCEC_POLE", inherit=False) == 100.0
-
+def test_ucec_pole_case_report_is_not_a_population_response_rate():
+    assert apd1.cancer_apd1_response("UCEC_POLE") is None
+    assert ici.cancer_ici_response("UCEC_POLE") is None
+    assert ici.cancer_ici_response("UCEC_POLE", inherit=False) is None
     record = ici.cancer_ici_response_record("UCEC_POLE")
     assert record["requested_cancer_code"] == "UCEC_POLE"
     assert record["resolved_cancer_code"] == "UCEC_POLE"
-    assert record["inheritance_kind"] == "direct"
+    assert record["inheritance_kind"] == "direct_missing"
     assert record["is_inherited_evidence"] is False
-    assert record["confidence"] == "low"
-    assert record["source_anchor"] == "PMID:27159395"
-    assert record["response_numerator"] == 1
-    assert record["response_denominator"] == 1
-    assert record["orr_pct"] > ici.cancer_ici_response("UCEC")
+    assert record["confidence"] == "none"
+    assert record["orr_pct"] is None
+    assert record["response_denominator"] is None
+    case = ici.cancer_ici_response_estimates_df().set_index("estimate_id").loc["ICI-64a41d348a-01"]
+    assert case["metric"] == "PR_COUNT"
+    assert case["value"] == 1
+    assert case["value_basis"] == "reported_context"
+    assert case["ci_basis"] == "not_applicable"
+    assert (
+        ici.pooled_ici_response("UCEC_POLE", verified_only=False, include_alternates=True)[
+            "pooled_pct"
+        ]
+        is None
+    )
 
 
 def test_maps_and_alias():
@@ -452,7 +462,7 @@ def test_whole_table_per_regimen_mapping():
     # cancer_type=None with fallback=False -> {code: {regimen: orr}} for every cancer.
     per = ici.cancer_ici_response(fallback=False)
     assert isinstance(per["SKCM"], dict)
-    assert per["SKCM"] == {"PD-1": 42.0, "PD-1+CTLA-4": 57.6}
+    assert per["SKCM"] == {"PD-1": 43.7, "PD-1+CTLA-4": 57.6}
     # single-regimen cancers carry a one-entry mapping
     assert set(per["SARC_ASPS"]) == {"PD-L1"}
     # the PD-L1 members match the pinned PD-L1 map
@@ -814,7 +824,7 @@ def test_subtype_stratified_aggregates_do_not_report_a_pooled_orr():
 def test_stad_msi_uses_reported_subgroup_orr_while_tmb_stays_an_audited_gap():
     registry = ici.cancer_type_registry().set_index("code")
     assert registry.loc["STAD_MSI", "parent_code"] == "STAD"
-    assert ici.cancer_ici_response("STAD") == 12.0
+    assert ici.cancer_ici_response("STAD") == 11.6
 
     # KEYNOTE-059 reported this subgroup directly, so neither public anti-PD-1
     # surface may inherit the all-comer STAD value.
@@ -834,7 +844,7 @@ def test_stad_msi_uses_reported_subgroup_orr_while_tmb_stays_an_audited_gap():
     assert tmb.resolve_tmb_source("STAD_MSI")["inheritance_kind"] == "direct_missing"
 
     # A sibling without a direct subtype anchor still inherits normally.
-    assert ici.cancer_ici_response("STAD_CIN") == 12.0
+    assert ici.cancer_ici_response("STAD_CIN") == 11.6
 
 
 def test_ici_gap_row_blocks_inheritance_instead_of_borrowing_an_ancestor(monkeypatch):
@@ -901,16 +911,16 @@ def test_only_declared_codes_may_carry_a_blank_orr():
             gap_overrides=empty_reason,
         )
 
-    # A code cannot be both valued and an audited gap. COAD keeps its valued anchor
+    # A code cannot be both valued and an audited gap. LUAD keeps its valued anchor
     # (which has a backing estimate), so only the contradiction itself can raise.
-    blank_coad = anchors[anchors["cancer_code"] == "COAD"].iloc[[0]].copy()
+    blank_coad = anchors[anchors["cancer_code"] == "LUAD"].iloc[[0]].copy()
     blank_coad["orr_pct"] = float("nan")
     blank_coad["regimen"] = None
     with pytest.raises(ValueError, match="both valued and an audited gap"):
         ici.response_anchor_evidence_df(
             pd.concat([anchors, blank_coad], ignore_index=True),
             value_col="orr_pct",
-            gap_overrides={**declared, "COAD": {"source_scope": "s", "missing_reason": "r"}},
+            gap_overrides={**declared, "LUAD": {"source_scope": "s", "missing_reason": "r"}},
         )
 
     # Two gap rows for one code would collapse the code-keyed lookup to whichever came
@@ -951,7 +961,7 @@ def test_gap_rows_do_not_publish_fabricated_evidence_fields():
     """A gap row names no regimen and cites no evidence, so derived fields stay empty."""
     df = ici.cancer_ici_response_df()
     gaps = df[df["orr_pct"].isna()]
-    assert set(gaps["cancer_code"]) == {"CRC", "RCC", "BRCA", "SARC"}
+    assert set(gaps["cancer_code"]) == set(ici._ICI_EVIDENCE_OVERRIDES)
     assert gaps["regimen"].isna().all()
     assert gaps["therapy_regimen_class"].isna().all()
     assert gaps["evidence_source_code"].isna().all()
@@ -977,7 +987,7 @@ def test_gap_note_citations_resolve_to_real_anchor_rows():
         str(code): set(group["pmid_doi"].dropna().astype(str))
         for code, group in valued.groupby("cancer_code")
     }
-    gaps = df[df["cancer_code"].isin(ici._ICI_EVIDENCE_OVERRIDES)]
+    gaps = df[df["source_scope"] == "subtype_sources_not_aggregated"]
     assert not gaps.empty
 
     for _, row in gaps.iterrows():
@@ -1011,13 +1021,13 @@ def test_gap_note_quoted_values_match_the_curated_anchors():
     assert orr("CRC_MSI") == 43.8
     # RCC note: "KIRC 25.0% ... 42.0% ... KIRP 28.8% and KICH 9.5% ... spanning 9.5% to 42%"
     assert orr("KIRC") == 25.0
-    assert orr("KIRC", "PD-1+CTLA-4") == 42.0
+    assert orr("KIRC", "PD-1+CTLA-4") == 41.6
     assert orr("KIRP") == 28.8
     assert orr("KICH") == 9.5
     renal = [orr("KIRC"), orr("KIRC", "PD-1+CTLA-4"), orr("KIRP"), orr("KICH")]
-    assert (min(renal), max(renal)) == (9.5, 42.0)
+    assert (min(renal), max(renal)) == (9.5, 41.6)
     # BRCA note: "pembrolizumab 5.0% ... atezolizumab 10.0%"
-    assert orr("BRCA_Basal") == 5.0
+    assert orr("BRCA_Basal") == 5.3
     assert orr("BRCA_Basal", "PD-L1") == 10.0
     # SARC note: "0% in SARC_LMS and SARC_EWS ... 23% in SARC_UPS ... 25% in
     # SARC_SMARCA4 ... 0% in SARC_GIST"

@@ -634,7 +634,9 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
             continue
         # Dots = every reported source; diamond = the *primary-only* pool so it never
         # double-counts a trial's overlapping subgroups (include_alternates=False).
-        allsrc = pooled_ici_response(code, regimen=reg, metric="ORR", verified_only=False)
+        allsrc = pooled_ici_response(
+            code, regimen=reg, metric="ORR", verified_only=False, include_alternates=True
+        )
         clean = pooled_ici_response(
             code, regimen=reg, metric="ORR", verified_only=False, include_alternates=False
         )

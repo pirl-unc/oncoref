@@ -32,23 +32,21 @@ _TMB_EVIDENCE_OVERRIDES = {
     # children such as COAD_MSI/READ_MSI resolve through this row rather than duplicating
     # the same source estimate.
     "CRC_MSI": {
-        "estimate_type": "published_median",
         "source_scope": "aggregate_source",
     },
-    # The cited GEP-NEN source is pooled across primary sites and WHO grades.
-    # Preserve the source audit as explicit missing site-specific estimates.
+    # The full-text WGS study explicitly separates pancreatic and midgut NET.
     "NET_MIDGUT": {
-        "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_site_specific_value",
-        "missing_reason": "no_supported_site_specific_median",
+        "source_scope": "advanced_site_specific_cohort",
+    },
+    "NET_PANCREAS": {
+        "source_scope": "advanced_site_specific_cohort",
     },
     # The curated stomach median is the pooled intestinal-type panel value (5.0 mut/Mb,
     # Chalmers 2017 Table 1). TCGA-STAD analysed its 215 tumours below 11.4 mut/Mb,
     # "none of which were MSI-positive", separately from 74 hypermutated tumours, so
     # that pooled median demonstrably does not cover MSI-H disease. Neither source
     # publishes an MSI-stratified gastric median, so this stays an explicit audited gap
-    # rather than an invented estimate (compare CRC_MSI / UCEC_MSI, which do have
-    # published subtype estimates).
+    # rather than an invented estimate.
     "STAD_MSI": {
         "estimate_type": "unknown",
         "source_scope": "source_rejected_for_subtype_value",
@@ -68,18 +66,18 @@ _TMB_EVIDENCE_OVERRIDES = {
     },
     "NEN": {
         "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_metric_mismatch",
-        "missing_reason": "source_reports_mean_not_median",
+        "source_scope": "source_rejected_for_aggregate_scope",
+        "missing_reason": "advanced_subcohorts_do_not_establish_full_aggregate_median",
     },
     "NET": {
         "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_metric_mismatch",
-        "missing_reason": "source_reports_mean_not_median",
+        "source_scope": "source_rejected_for_aggregate_scope",
+        "missing_reason": "advanced_subcohorts_do_not_establish_full_aggregate_median",
     },
     "NEC": {
         "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_metric_mismatch",
-        "missing_reason": "source_reports_mean_not_median",
+        "source_scope": "source_rejected_for_aggregate_scope",
+        "missing_reason": "advanced_subcohorts_do_not_establish_full_aggregate_median",
     },
     "NEC_LUNG": {
         "estimate_type": "unknown",
@@ -101,14 +99,38 @@ _TMB_EVIDENCE_OVERRIDES = {
     "SARC_RMS_ERMS": {"estimate_type": "approximate_literature"},
     "SARC_RMS_ARMS": {"estimate_type": "approximate_literature"},
     "WILMS": {"estimate_type": "approximate_literature"},
-    "MCL": {"estimate_type": "approximate_literature"},
-    "HL": {"estimate_type": "approximate_literature"},
     "BL": {"estimate_type": "approximate_literature"},
     "T_ALL": {"estimate_type": "approximate_literature"},
-    "MTC": {"estimate_type": "panel_inferred"},
     "CRANIO": {"estimate_type": "small_n"},
-    "HCL": {"estimate_type": "small_n"},
-    "UCEC_POLE": {"estimate_type": "order_of_magnitude"},
+    **{
+        code: {
+            "estimate_type": "unknown",
+            "source_scope": "source_rejected_for_population_median",
+            "missing_reason": "no_supported_population_median_curated",
+        }
+        for code in (
+            "UCEC_POLE",
+            "ACINIC",
+            "MTC",
+            "HCL",
+            "VSCC",
+            "ANSC",
+            "MCL",
+            "LUAD_EGFR",
+            "CTCL",
+            "RB",
+            "ADCC",
+            "SARC_CHON",
+            "NUTM",
+            "HL",
+            "BRCA_Normal",
+            "UCEC_CNL",
+            "UCEC_CNH",
+            "NBL_MYCNamp",
+            "NBL_MYCNnonamp",
+            "UVM",
+        )
+    },
     # TCGA-SARC is a soft-tissue sarcoma cohort. It does not span the full oncoref
     # SARC member-union scope, which also includes bone sarcomas and RMS.
     "SARC": {"source_scope": "soft_tissue_sarcoma_subset"},
@@ -129,17 +151,26 @@ def _aggregate_tmb_source_codes() -> frozenset[str]:
 _register_derived_cache(_aggregate_tmb_source_codes.cache_clear)
 
 
+@lru_cache(maxsize=1)
+def _checked_tmb_codes() -> frozenset[str]:
+    audit = get_data("cancer-tmb-source-audit")
+    return frozenset(audit.loc[audit["source_review_status"] == "source_checked", "cancer_code"])
+
+
+_register_derived_cache(_checked_tmb_codes.cache_clear)
+
+
 def cancer_tmb_df():
-    """Return the curated ``cancer-tmb.csv`` reference: median tumor mutational
-    burden (mut/Mb) per cancer-type code, with a per-row published source/PMID
-    and a confidence flag.
+    """Return curated TMB estimates (mut/Mb) with source-review provenance.
 
     Cohorts with no defensible published per-Mb median are present with a blank
     ``median_tmb_mut_mb`` (and a ``confidence`` of ``none``) so the gap is
-    explicit rather than silently absent. Values mix WES-anchored medians
-    (Lawrence 2013) with panel-based medians (Chalmers 2017) and disease-specific
+    explicit rather than silently absent. Retained estimates span WES
+    (Lawrence 2013), panels (Chalmers 2017), genome-wide WGS and disease-specific
     studies; see the ``source``/``notes`` columns — panel and WES TMB are not
-    strictly comparable in the low-TMB range."""
+    strictly comparable in the low-TMB range. ``source_review_status`` and
+    ``source_locator`` distinguish rechecked numbers from legacy estimates awaiting
+    source review. A citation alone does not imply ``published_median``."""
     return _tmb_evidence_frame().copy()
 
 
@@ -153,7 +184,9 @@ def _tmb_evidence_frame():
     ]
     for col in ("estimate_type", "source_scope", "missing_reason"):
         df[col] = [record[col] for record in evidence]
-    return df
+    return df.merge(
+        get_data("cancer-tmb-source-audit"), on="cancer_code", how="left", validate="one_to_one"
+    )
 
 
 _register_derived_cache(_tmb_evidence_frame.cache_clear)
@@ -188,7 +221,10 @@ def tmb_evidence_fields(
         "aggregate_source" if code in _aggregate_tmb_source_codes() else "cancer_code_direct"
     )
     return {
-        "estimate_type": override.get("estimate_type", "published_median"),
+        "estimate_type": override.get(
+            "estimate_type",
+            "published_median" if code in _checked_tmb_codes() else "curated_estimate",
+        ),
         "source_scope": override.get("source_scope", default_scope),
         "missing_reason": override.get("missing_reason", float("nan")),
     }

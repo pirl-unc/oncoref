@@ -10,11 +10,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Anti-PD-1 monotherapy response (objective response rate) by cancer type."""
+"""Representative checkpoint response, preferring anti-PD-1 monotherapy."""
 
 from __future__ import annotations
 
 from functools import lru_cache
+
+import pandas as pd
 
 from ._evidence_resolution import evidence_record, resolve_evidence
 from .cancer_types import (
@@ -23,14 +25,14 @@ from .cancer_types import (
     cancer_type_registry,  # noqa: F401 - retained as an existing module attribute
     resolve_cancer_type,
 )
-from .ici import response_anchor_evidence_df
+from .ici import _ICI_EVIDENCE_OVERRIDES, response_anchor_evidence_df
 from .load_dataset import _register_derived_cache, get_data
 
 
 def cancer_apd1_response_df():
     """Return the curated ``cancer-apd1-response.csv`` reference: representative
-    objective response rate (ORR, %) to anti-PD-1 **monotherapy**
-    (pembrolizumab / nivolumab) per cancer-type code, with the drug, pivotal
+    objective response rate (ORR, %), preferring anti-PD-1 monotherapy,
+    per cancer-type code, with the drug, pivotal
     trial, treatment setting, a published source PMID/DOI, and a confidence flag.
 
     Intended as a per-cancer-type plotting axis (e.g. TMB vs aPD1 ORR, CTA burden
@@ -39,7 +41,9 @@ def cancer_apd1_response_df():
     selection (PD-L1 / MSI / MMR); the ``setting`` and ``notes`` columns record
     that context. Evidence/provenance fields are joined from the audited ICI estimates
     table, keyed by ``drug_target`` (``PD-1`` / ``PD-L1`` / ``PD-1+CTLA-4``), so
-    non-monotherapy fallback anchors remain explicit."""
+    non-monotherapy fallback anchors remain explicit. Filter ``drug_target == 'PD-1'``
+    for a monotherapy-only analysis. Audited gaps retain their provenance and never
+    silently borrow a numeric ancestor anchor."""
     return _apd1_response_evidence_frame().copy()
 
 
@@ -53,6 +57,7 @@ def _apd1_response_evidence_frame():
         get_data("cancer-apd1-response"),
         value_col="apd1_orr_pct",
         regimen_col="drug_target",
+        gap_overrides=_ICI_EVIDENCE_OVERRIDES,
     )
 
 
@@ -78,6 +83,17 @@ _register_derived_cache(_apd1_rows_by_code.cache_clear)
 
 
 @lru_cache(maxsize=1)
+def _apd1_gap_rows() -> dict[str, object]:
+    frame = _apd1_response_evidence_frame()
+    return {
+        str(row["cancer_code"]): row for _, row in frame[frame["apd1_orr_pct"].isna()].iterrows()
+    }
+
+
+_register_derived_cache(_apd1_gap_rows.cache_clear)
+
+
+@lru_cache(maxsize=1)
 def _apd1_value_map() -> dict[str, float]:
     """Cached direct numeric map. Callers must treat it as read-only."""
     return {code: float(row["apd1_orr_pct"]) for code, row in _apd1_rows_by_code().items()}
@@ -92,7 +108,8 @@ def cancer_apd1_response(cancer_type=None, *, inherit=True, include_inherited=Fa
     :func:`resolve_cancer_type`; with ``inherit`` (default) a code with no
     curated row of its own inherits its nearest ancestor's value via the registry
     ``parent_code`` chain. Returns ``None`` if neither the code nor any ancestor
-    has a value. Mirrors :func:`oncoref.cancer_tmb`.
+    has a value. An explicit audited gap blocks inheritance and returns ``None``.
+    Mirrors :func:`oncoref.cancer_tmb`.
 
     With ``cancer_type=None`` the default map contains direct source rows only. Pass
     ``include_inherited=True`` to expand across registry codes with the same resolver
@@ -112,7 +129,7 @@ def cancer_apd1_response(cancer_type=None, *, inherit=True, include_inherited=Fa
         return dict(mapping)
     code = resolve_cancer_type(cancer_type)
     _, _, row = _resolve_apd1_response_row(code, inherit=inherit)
-    return None if row is None else float(row["apd1_orr_pct"])
+    return None if row is None or pd.isna(row["apd1_orr_pct"]) else float(row["apd1_orr_pct"])
 
 
 def _record_from_row(row, *, requested_code: str, resolved_code: str, inheritance_kind: str):
@@ -132,6 +149,7 @@ def _resolve_apd1_response_row(requested_code: str, *, inherit: bool):
     resolution = resolve_evidence(
         requested_code,
         direct_lookup=rows.get,
+        direct_gap_lookup=_apd1_gap_rows().get,
         source_code_for=cancer_evidence_source_code,
         parent_by_code=_registry_parent_by_code,
         inherit=inherit,
@@ -195,6 +213,7 @@ def cancer_apd1_response_record(cancer_type=None, *, inherit=True, include_inher
             str(code): record
             for code in codes
             if (record := cancer_apd1_response_record(code, inherit=record_inherit))
+            and record["apd1_orr_pct"] is not None
         }
 
     requested_code = resolve_cancer_type(cancer_type)

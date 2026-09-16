@@ -343,6 +343,9 @@ quotes from the paper.
 - `not_verified`: no supporting source block was confirmed.
 - `not_applicable`: a curator-derived value has no single source location.
 
+These are locator checks, not independent validation of the population, endpoint,
+or denominator. The [TMB/ICI/aPD1 audit](curation-audit.md) records source failures
+that passed earlier numeric matching and identifies outstanding review work.
 
 `ci_basis` distinguishes source-reported intervals from calculated 95% intervals:
 `computed_wilson` for the standard pooled/count-derived interval and
@@ -370,6 +373,11 @@ not-estimable, not-reported, and unverified values. There are no remaining legac
 
 `pooled_ici_response()` prefers direct evidence for the requested metric and regimen
 before trying the code's evidence-source fallback; it does not walk ancestors.
+The default uses primary rows only (`include_alternates=False`) and selects one
+regimen, recorded as `selected_regimen`. Explicit alternate pooling is blocked
+when contributors share a citation, NCT identifier, or normalized trial identity.
+The source records remain available when `pooling_block_reason` explains a block.
+This conservative check does not establish independence or clinical comparability.
 Non-poolable value bases are removed before selecting the source. Verification and
 primary/alternate filters then apply to that source without silently substituting
 a different population. For example, ADCC combination pooling uses its direct
@@ -421,18 +429,24 @@ Current gaps, with the reason recorded on each row:
 | Code | Why there is no representative ORR | Use instead |
 | --- | --- | --- |
 | `CRC` | mismatch-repair stratified: MSI-H/dMMR responds, MSS essentially does not | `CRC_MSI` |
-| `RCC` | member histologies anchored on separate trials spanning 9.5% to 42% | `KIRC`, `KIRP`, `KICH`, `RCC_NCC` |
+| `RCC` | member histologies anchored on separate trials spanning 9.5% to 41.6% | `KIRC`, `KIRP`, `KICH`, `RCC_NCC` |
 | `BRCA` | curated anchors are receptor-subtype (TNBC) anchors only | `BRCA_Basal` |
 | `SARC` | histology-determined, from 0% (LMS, EWS, GIST) to 62% (KS) across curated histologies | per-histology `SARC_*` |
+| `UCEC_POLE` | selected case reports and small subgroups do not establish a representative subtype ORR | source-specific evidence in the audit |
+| `COAD`, `READ`, `UCEC` | legacy prevalence models are not measured ORRs | molecularly specified cohorts |
+| `UCEC_CNH`, `UCEC_CNL`, `LUAD_STK11` | the source population does not isolate the ontology subtype | original source populations |
+| `UVM` | the former PD-1 anchor combined PD-1 and PD-L1 agents | regimen-specific evidence in the endpoint table |
+| `DIPG`, `MBL` | inferred zero responses were not formal reported ORR endpoints | contextual trial outcomes |
 
 `STAD_MSI` is not an ICI gap: KEYNOTE-059 reports a 57.1% ORR (4/7; 95% CI
 18.4–90.1) for its MSI-high gastric/GEJ subgroup, so the subtype has its own
-low-confidence anchor instead of inheriting `STAD`'s 12% all-comer ORR. Its TMB remains
+low-confidence anchor instead of inheriting `STAD`'s 11.6% all-comer ORR. Its TMB remains
 an audited gap because the curated genomic sources do not report an MSI-stratified
 gastric median.
 
-Note also that `COAD` and `READ` are prevalence-weighted `derived_blend` values over
-the MSI-H and MSS populations, not measured all-comer ORRs. A code with no curated row
+The same gap contract applies to the legacy aPD1 accessors. The removed `COAD`,
+`READ`, and `UCEC` models remain non-poolable audit context in the endpoint table.
+A code with no curated row
 at all still reports `inheritance_kind="missing"` with
 `has_ici_response_source=False`, so a reviewed gap stays distinguishable from an
 uncurated one on the resolver, record, and CLI surfaces. The scalar value accessor
@@ -1419,6 +1433,12 @@ order.
   `tmb.tmb_evidence_fields(cancer_type, median_tmb_mut_mb)` is the public,
   non-inheriting helper for classifying one explicit estimate; it applies reviewed
   per-code overrides and derives aggregate source scope from the cancer registry.
+  TMB records also expose `source_review_status`, `source_locator`, `tmb_assay`,
+  and `source_review_notes`. `published_median` is reserved for source-checked
+  rows; legacy numeric entries are `curated_estimate` or an explicitly approximate
+  type. Filter `source_review_status == 'source_checked'` for the revalidated
+  subset, and preserve assay and cohort scope when comparing values. See the
+  [curation audit](curation-audit.md) for corrections and unresolved rows.
 - `oncoref.incidence` — incidence/mortality burden and burden categories.
   `incidence.cancer_burden_df()` is the auditable burden table: percentages are
   the public lookup values, and raw-count, source-locator, source-site,

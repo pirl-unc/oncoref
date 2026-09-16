@@ -46,18 +46,10 @@ follows three rules that matter when curating new trials or interpreting a poole
    same-cohort count calculations; it excludes inferred, cross-cohort, contextual,
    and modeled values.
 
-   The clearest modeled case is the "all-comer" ORR for MSI/MMR-dependent cancers:
-   ``READ`` 5%, ``COAD`` 5%, and ``UCEC`` 8% are prevalence-weighted blends of the
-   MSI-H/dMMR responders and MSS/pMMR non-responders because the pivotal trials enroll
-   only biomarker-selected subtypes. These rows carry
-   ``value_basis="derived_blend"`` and ``source_verified=False`` because no paper
-   reports the modeled result. The blend is reconstructable from its components:
-   ``all_comer ≈ ORR_MSI · p_dMMR + ORR_MSS · (1 − p_dMMR)`` (COAD: 43.8·0.13 ≈ 5.7%;
-   READ: 43.8·0.07 ≈ 3.1%; UCEC: 48·0.20 + 7·0.80 ≈ 15%, using the KEYNOTE-158 dMMR/pMMR
-   cohorts at an advanced-EC dMMR prevalence ~20%). When adding such an anchor,
-   keep the reported subtype values in the ``<code>_MSI`` / ``<code>_MSS`` rows and record
-   the prevalence weighting in ``notes`` — never cite a paper that does not contain the
-   blended number.
+   Legacy prevalence models for all-comer ``COAD``, ``READ`` and ``UCEC`` remain
+   ``derived_blend`` audit context. They are excluded from both representative
+   anchors and pooling. Selected exceptional-responder cases likewise cannot
+   establish a population ORR: ``UCEC_POLE`` is an explicit evidence gap.
 
 2. **Never double-count patients.** A single trial routinely reports an all-comer cohort
    AND its own biomarker subgroup (e.g. ``BLCA`` KEYNOTE-052 all-comers + the CPS≥10 subset;
@@ -65,10 +57,10 @@ follows three rules that matter when curating new trials or interpreting a poole
    inflates ``n``. Each estimate row therefore carries a ``role``: ``"primary"`` (the one
    representative cited setting) or ``"alternate"`` (other trials/subgroups). Pool only
    rows describing the **same population and line of therapy**, and never an all-comer
-   cohort together with a subgroup drawn from it. ``pooled_ici_response`` does *not*
-   auto-dedupe overlapping subgroups — it returns the full ``sources`` list and
-   ``value_range`` so the overlap stays visible; ``include_alternates=False`` restricts
-   the pool to ``primary`` rows (one per cancer+regimen), which can never overlap.
+   cohort together with a subgroup drawn from it. The default uses only primary
+   rows within one regimen. Explicit ``include_alternates=True`` requests retain
+   the full source list but block pooling when shared trial identities indicate
+   possible overlap. This guard is conservative, not a proof of independence.
 
 3. **Comparability.** ORR shifts with line of therapy, PD-L1/MSI selection, and data
    cutoff; medians (PFS/OS/DOR) cannot be pooled at all without patient-level data. Treat
@@ -78,6 +70,7 @@ follows three rules that matter when curating new trials or interpreting a poole
 from __future__ import annotations
 
 import math
+import re
 from functools import lru_cache
 
 import pandas as pd
@@ -116,6 +109,13 @@ REGIMEN_LABELS = {
     "PD-L1": "anti-PD-L1 monotherapy",
     "PD-1+CTLA-4": "anti-PD-1 + anti-CTLA-4",
     "PD-1+HMA": "anti-PD-1 + hypomethylating agent",
+    "PD-L1+CTLA-4": "anti-PD-L1 + anti-CTLA-4",
+    "PD-L1+VEGF": "anti-PD-L1 + anti-VEGF",
+    "PD-L1+TIGIT": "anti-PD-L1 + anti-TIGIT",
+    "PD-1+chemotherapy": "anti-PD-1 + chemotherapy",
+    "CTLA-4": "anti-CTLA-4 monotherapy",
+    "PD-(L)1": "mixed anti-PD-1 / anti-PD-L1 cohort",
+    "non-ICI": "non-ICI comparator",
 }
 
 REGIMEN_CLASSES = {
@@ -139,6 +139,35 @@ def _mixture_cohort_code_set() -> frozenset[str]:
 #: audited gaps, not unreviewed holes: a reviewer has recorded *why* no single ORR
 #: describes the code. Mirrors ``oncoref.tmb._TMB_EVIDENCE_OVERRIDES``.
 _ICI_EVIDENCE_OVERRIDES = {
+    **{
+        code: {
+            "source_scope": "source_rejected_for_endpoint_value",
+            "missing_reason": "inferred_zero_is_not_a_reported_population_orr",
+        }
+        for code in ("DIPG", "MBL")
+    },
+    "UVM": {
+        "source_scope": "source_rejected_for_regimen_value",
+        "missing_reason": "mixed_pd1_pdl1_cohort_is_not_pd1_monotherapy",
+    },
+    "UCEC_POLE": {
+        "source_scope": "insufficient_representative_evidence",
+        "missing_reason": "case_reports_and_small_subgroups_do_not_establish_subtype_orr",
+    },
+    **{
+        code: {
+            "source_scope": "modeled_value_not_population_evidence",
+            "missing_reason": "prevalence_blend_is_not_a_reported_orr",
+        }
+        for code in ("COAD", "READ", "UCEC")
+    },
+    **{
+        code: {
+            "source_scope": "source_rejected_for_subtype_value",
+            "missing_reason": "source_population_does_not_isolate_requested_subtype",
+        }
+        for code in ("UCEC_CNH", "UCEC_CNL", "LUAD_STK11")
+    },
     # Checkpoint response in colorectal cancer is determined by mismatch-repair
     # status, not by the anatomical aggregate: MSI-H/dMMR disease responds and MSS
     # disease essentially does not. A pooled CRC ORR would average two populations
@@ -212,7 +241,7 @@ def response_anchor_evidence_df(
 
     ``gap_overrides`` maps a cancer code to its reviewed ``{"source_scope",
     "missing_reason"}`` for codes allowed to carry a blank ``value_col`` — the audited
-    gaps. Each table owns its own mapping (the aPD-1 table has none), and a blank value
+    gaps. Each table supplies its reviewed mapping, and a blank value
     for any code outside it is rejected.
     """
     gap_overrides = gap_overrides or {}
@@ -313,7 +342,7 @@ def response_anchor_evidence_df(
     # value, so the comparison was never made and the answer is NA rather than False.
     # Cast unconditionally so both tables that use this helper share one schema.
     merged["response_value_matches_anchor"] = (
-        (merged[value_col].astype(float) - merged["_response_value"].astype(float)).abs() <= 2.0
+        (merged[value_col].astype(float) - merged["_response_value"].astype(float)).abs() <= 0.05
     ).astype("boolean")
     merged["therapy_regimen_class"] = (
         merged[regimen_col].map(REGIMEN_CLASSES).fillna("other_ici_regimen")
@@ -939,7 +968,7 @@ def pooled_ici_response(
     regimen=None,
     metric="ORR",
     verified_only=True,
-    include_alternates=True,
+    include_alternates=False,
 ):
     """Pool every audited estimate for one cancer + regimen + endpoint.
 
@@ -962,9 +991,10 @@ def pooled_ici_response(
     ``value_range`` are returned.
 
     Setting heterogeneity is real (all-comer vs PD-L1/MSI-selected vs different lines).
-    By default the pool includes the cited primary setting *and* the ``alternate`` rows;
-    pass ``include_alternates=False`` to pool only the representative primary setting, or
-    inspect each source's ``setting`` in ``sources`` to judge comparability. The
+    By default the pool includes only the cited primary setting. Pass
+    ``include_alternates=True`` to inspect additional studies; possible overlap
+    blocks numerical pooling with an explicit ``pooling_block_reason``. Inspect
+    each source's ``setting`` in ``sources`` to judge comparability. The
     per-source breakdown and ``value_range`` are always returned so heterogeneity (and
     any overlapping subgroups) stays visible. ``verified_only`` (default) keeps only
     audit-confirmed citations.
@@ -975,11 +1005,16 @@ def pooled_ici_response(
     the source code; contextual rows cannot mask that fallback. ``verified_only`` and
     ``include_alternates`` then filter the chosen source without switching populations.
     Parent-tree inheritance is not applied.
+
+    With no explicit ``regimen``, select one using ``REGIMEN_FALLBACK`` within
+    the resolved source population. ``selected_regimen`` records that choice.
+    Control arms and mixed-agent contextual cohorts never enter the pool.
     """
     requested_code = resolve_cancer_type(cancer_type)
     metric = str(metric).upper()
     df = cancer_ici_response_estimates_df()
     candidates = df[df["metric"].astype(str).str.upper() == metric]
+    candidates = candidates[~candidates["regimen"].isin({"non-ICI", "PD-(L)1"})]
     if regimen is not None:
         candidates = candidates[candidates["regimen"] == regimen]
     # Derived blends and contextual comparator/overlapping rows are audit evidence, not
@@ -993,6 +1028,17 @@ def pooled_ici_response(
         code = cancer_evidence_source_code(requested_code)
         if code != requested_code:
             sub = candidates[candidates["cancer_code"] == code]
+    # Choose a single regimen within the resolved source population. An omitted
+    # regimen must never combine monotherapy with combinations or control arms.
+    selected_regimen = regimen
+    if selected_regimen is None and not sub.empty:
+        available = set(sub["regimen"].dropna().astype(str))
+        selected_regimen = next((r for r in REGIMEN_FALLBACK if r in available), None)
+        if selected_regimen is None and len(available) == 1:
+            selected_regimen = next(iter(available))
+        if selected_regimen is None:
+            raise ValueError("multiple nonstandard regimens; select regimen explicitly")
+        sub = sub[sub["regimen"] == selected_regimen]
     if verified_only:
         sub = sub[sub["source_verified"].map(_truthy)]
     if not include_alternates:
@@ -1014,6 +1060,8 @@ def pooled_ici_response(
         seen.add(dedupe)
         sources.append(
             {
+                "estimate_id": r.get("estimate_id"),
+                "regimen": r.get("regimen"),
                 "role": r.get("role"),
                 "drug": r.get("drug"),
                 "trial_name": r.get("trial_name"),
@@ -1045,6 +1093,7 @@ def pooled_ici_response(
         "cancer_code": code,
         "requested_cancer_code": requested_code,
         "regimen": regimen,
+        "selected_regimen": selected_regimen,
         "metric": metric,
         "poolable": metric in PROPORTION_METRICS,
         "pooled_pct": None,
@@ -1058,6 +1107,46 @@ def pooled_ici_response(
         "value_range": (min(values), max(values)) if values else None,
         "sources": sources,
     }
+
+    # Repeated reports/subgroups of one trial are not independent cohorts. Keep
+    # their source records inspectable, but require curation before pooling them.
+    trial_keys = set()
+    for source in contrib:
+        n, k = source["n"], source["responders"]
+        if not (
+            math.isfinite(n)
+            and math.isfinite(k)
+            and n > 0
+            and 0 <= k <= n
+            and n.is_integer()
+            and k.is_integer()
+        ):
+            result.update(
+                poolable=False, n_pooled=0, pooling_block_reason="invalid_response_counts"
+            )
+            return result
+        trial_name = str(source["trial_name"])
+        named_trial = re.search(r"(KEYNOTE|CheckMate)[ -]*0*(\d+)", trial_name, re.I)
+        keys = {("ref", source["ref"])} if source["ref"] else set()
+        nct = source["trial_nct"]
+        if pd.notna(nct) and str(nct).strip():
+            keys.add(("nct", str(nct)))
+        if named_trial:
+            keys.add(("trial", named_trial.group(1).upper(), int(named_trial.group(2))))
+        if keys & trial_keys:
+            result.update(
+                poolable=False, n_pooled=0, pooling_block_reason="potentially_overlapping_cohorts"
+            )
+            return result
+        trial_keys.update(keys)
+        if (
+            source["value"] is not None
+            and abs(source["value"] - 100 * source["responders"] / source["n"]) > 0.6
+        ):
+            result.update(
+                poolable=False, n_pooled=0, pooling_block_reason="inconsistent_response_counts"
+            )
+            return result
 
     if contrib:
         k = sum(s["responders"] for s in contrib)
