@@ -70,15 +70,16 @@ the figure.
 Only plots whose marks are per-cancer-code can carry a highlight. A burden-category
 chart has no single row to light up, so those are excluded rather than approximated.
 
-`scripts/regenerate_plots.py` also writes a `tnbc/` subdirectory of highlighted
+`scripts/regenerate_plots.py` also writes a `basal/` subdirectory of highlighted
 landscape variants into every run, and those pages appear in the combined PDF
 alongside the plain figures.
 
-**On TNBC specifically:** the registry has no `TNBC` code. `BRCA_Basal` (PAM50
-basal-like) is the closest available stand-in, and the two are overlapping but not
-identical populations — roughly 80% of basal-like tumours are triple-negative and
-most but not all TNBC is basal-like. The figures therefore keep the registry code
-`BRCA_Basal` on the mark rather than relabelling it "TNBC".
+**On basal-like vs TNBC:** the highlighted type is `BRCA_Basal`, the registry's
+PAM50 basal-like breast subtype. It overlaps triple-negative breast cancer heavily
+but is not the same population — roughly 80% of basal-like tumours are
+triple-negative, and not all TNBC is basal-like. Both the mark and the output
+directory are named for what is actually plotted, so a figure lifted into a deck
+does not silently become a claim about TNBC.
 
 ## Style
 

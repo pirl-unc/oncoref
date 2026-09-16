@@ -72,10 +72,11 @@ _PERCENTILE_COVERAGE_PLOTS = frozenset(
 
 
 #: ``(cancer_code, output_subdir)`` rendered as highlighted landscape variants.
-#: BRCA_Basal is the registry's PAM50 basal-like subtype, the closest available
-#: stand-in for TNBC — overlapping but NOT identical populations, which is why the
-#: figures keep the registry code on the mark rather than relabelling it "TNBC".
-HIGHLIGHT_TARGETS = (("BRCA_Basal", "tnbc"),)
+#: The directory is named for what is actually plotted. BRCA_Basal is the registry's
+#: PAM50 basal-like subtype; it overlaps TNBC heavily but is not the same population
+#: (~80% of basal-like tumours are triple-negative, and not all TNBC is basal-like),
+#: so calling the output "tnbc" would claim more than the data supports.
+HIGHLIGHT_TARGETS = (("BRCA_Basal", "basal"),)
 
 
 def _highlight_jobs(availability=None) -> list[tuple[str, str, str, dict]]:
@@ -87,16 +88,16 @@ def _highlight_jobs(availability=None) -> list[tuple[str, str, str, dict]]:
     availability = availability or _plot_data_availability()
     cached = list(availability["per_sample"])
     jobs = [
-        ("tnbc", "apd1_vs_tmb_ici", "apd1_vs_tmb", {"strict_pd1": False}),
-        ("tnbc", "apd1_vs_tmb_strict_pd1", "apd1_vs_tmb", {"strict_pd1": True}),
-        ("tnbc", "apd1_orr_bars_ici", "apd1_orr_bars", {"strict_pd1": False}),
-        ("tnbc", "ici_orr_pooled_forest", "ici_orr_pooled_forest", {}),
-        ("tnbc", "ici_regimen_comparison", "ici_regimen_comparison", {}),
-        ("tnbc", "ici_response_by_regimen", "ici_response_by_regimen", {}),
+        ("basal", "apd1_vs_tmb_ici", "apd1_vs_tmb", {"strict_pd1": False}),
+        ("basal", "apd1_vs_tmb_strict_pd1", "apd1_vs_tmb", {"strict_pd1": True}),
+        ("basal", "apd1_orr_bars_ici", "apd1_orr_bars", {"strict_pd1": False}),
+        ("basal", "ici_orr_pooled_forest", "ici_orr_pooled_forest", {}),
+        ("basal", "ici_regimen_comparison", "ici_regimen_comparison", {}),
+        ("basal", "ici_response_by_regimen", "ici_response_by_regimen", {}),
     ]
     jobs.extend(
         (
-            "tnbc",
+            "basal",
             f"apd1_response_signature_{sig}",
             "apd1_response_signature_scatter",
             {"signature": sig},
@@ -106,15 +107,15 @@ def _highlight_jobs(availability=None) -> list[tuple[str, str, str, dict]]:
     if cached:
         jobs.extend(
             [
-                ("tnbc", "cta_burden_vs_apd1", "cta_burden_vs_response", {"against": "apd1"}),
-                ("tnbc", "cta_burden_vs_tmb", "cta_burden_vs_response", {"against": "tmb"}),
+                ("basal", "cta_burden_vs_apd1", "cta_burden_vs_response", {"against": "apd1"}),
+                ("basal", "cta_burden_vs_tmb", "cta_burden_vs_response", {"against": "tmb"}),
                 (
-                    "tnbc",
+                    "basal",
                     "cta_specific_9mer_load_vs_tmb",
                     "cta_specific_9mer_load",
                     {"against": "tmb"},
                 ),
-                ("tnbc", "cta_addressable_burden_us_incidence", "cta_addressable_burden", {}),
+                ("basal", "cta_addressable_burden_us_incidence", "cta_addressable_burden", {}),
             ]
         )
     return jobs
