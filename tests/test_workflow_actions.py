@@ -56,12 +56,6 @@ def test_test_workflow_stages_required_real_data():
     assert test_job["env"]["CI_ACC_SOURCE_URL"].endswith(
         "/source-v5.22.8/ACC_per_sample_tpm.parquet"
     )
-    assert test_job["env"]["CI_ACC_REFERENCE_SHA256"] == (
-        "eab4da92aa12067f9f51d14532d3629d4a91732f9a3eb2fb03eb26f9f5fa4658"
-    )
-    assert test_job["env"]["CI_ACC_REFERENCE_URL"].endswith(
-        "/ci-fixtures-v1/ACC_reference_percentiles_v5.23.2.parquet"
-    )
     assert "CANCERDATA_DATA_DIR" in test_job["env"]
     assert "CANCERDATA_BUNDLED_DATA" in test_job["env"]
     assert test_job["env"]["CI_HPA_RNA_SHA256"] == (
@@ -88,12 +82,13 @@ def test_test_workflow_stages_required_real_data():
     reference_step = next(
         step for step in test_job["steps"] if step["name"] == "Stage required reference data"
     )
-    assert 'os.environ["ONCOREF_CI_ACC_PERCENTILE_REFERENCE"]' in reference_step["run"]
-    assert "import shutil" in reference_step["run"]
     assert "from oncoref import data_bundle, reference_data" in reference_step["run"]
-    assert "data_bundle.cache_dir()" in reference_step["run"]
-    assert '"cancer-reference-expression-percentiles"' in reference_step["run"]
-    assert "shutil.copy2(acc_reference, bundle_acc_reference)" in reference_step["run"]
+    # The bundle is staged as published. Nothing overwrites a cohort's percentiles
+    # with an external artifact, so CI reads the same data local runs do.
+    assert "shutil.copy2" not in reference_step["run"]
+    assert "ONCOREF_CI_ACC_PERCENTILE_REFERENCE" not in reference_step["run"]
+    assert "data_bundle.ensure_local" in reference_step["run"]
+    assert "data_bundle.verify_local" in reference_step["run"]
     assert '"hpa_rna_consensus": os.environ["CI_HPA_RNA_SHA256"]' in reference_step["run"]
     assert '"hpa_normal_tissue": os.environ["CI_HPA_NORMAL_TISSUE_SHA256"]' in reference_step["run"]
 

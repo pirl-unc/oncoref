@@ -9,6 +9,7 @@ from pathlib import Path
 from types import ModuleType
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -195,14 +196,46 @@ def test_cta_curation_source_counts_partition():
 def test_cta_curation_tag_sets_cover_primary_sources():
     from oncoref import cta_curation_plots as ccp
 
-    sets = ccp._tag_sets(ccp._evidence())
+    df = ccp._evidence()
+    sets = ccp._tag_sets(df)
     assert set(sets) == set(ccp.PRIMARY_SOURCES)
     assert sets["CTpedia"]
     assert sets["CTexploreR"]
     assert sets["daSilva2017_protein"]
 
+    # The da Silva primary source is the mass-spec-validated subset only. The broad
+    # ``daSilva2017`` cross-reference tag (the full 1,103-gene 0.9-threshold set)
+    # shares a prefix with it and must not leak into the source figures.
+    tagged = {
+        str(ensg)
+        for ensg, raw in zip(df["Ensembl_Gene_ID"], df["source_databases"].fillna(""))
+        if "daSilva2017_protein" in {t.strip() for t in str(raw).split(";")}
+    }
+    assert sets["daSilva2017_protein"] == tagged
 
-def test_cta_curation_renderer_writes_five_figures(tmp_path):
+
+def test_cta_curation_stage_counts_are_monotonic():
+    from oncoref import cta_curation_plots as ccp
+
+    stages = ccp.stage_counts()
+    assert next(label for label, _, _ in stages) == "source union"
+    remaining = [n for _, n, _ in stages]
+    assert remaining == sorted(remaining, reverse=True)
+    # Each stage's drop is exactly the step down from the previous stage.
+    for (_, prev, _), (_, cur, dropped) in zip(stages, stages[1:]):
+        assert prev - cur == dropped
+
+
+def test_cta_curation_stage_funnel_lands_on_shipped_set():
+    from oncoref import cta
+    from oncoref import cta_curation_plots as ccp
+
+    # The funnel's last stage must equal what cta_gene_ids() actually returns,
+    # not the raw passes_filters column (which is one adjudication short).
+    assert ccp.stage_counts()[-1][1] == len(cta.cta_gene_ids())
+
+
+def test_cta_curation_renderer_writes_every_figure(tmp_path):
     from oncoref import cta_curation_plots as ccp
 
     result = ccp.render(out_dir=tmp_path)
@@ -377,8 +410,10 @@ def test_cta_addressable_burden_labels_mortality_metric(tmp_path, monkeypatch):
     fig = plots.cta_addressable_burden(metric="world_mortality_pct", n=10, save=str(out))
     assert out.exists() and fig is not None
     ax = fig.axes[0]
+    # The metric rides the axis label. The in-figure title is stripped by the
+    # publication style (figure_style minimal mode) and restored when it is off.
     assert "WORLD mortality share" in ax.get_xlabel()
-    assert "WORLD mortality share" in ax.get_title()
+    assert ax.get_title() == ""
 
 
 def test_cta_addressable_burden_no_within_sample(monkeypatch):
@@ -1013,3 +1048,147 @@ def test_regenerate_plots_runner_closes_each_returned_figure(tmp_path, monkeypat
     assert (tmp_path / "memory" / "first.png").exists()
     assert (tmp_path / "memory" / "second.png").exists()
     assert (tmp_path / "all-figures.pdf").exists()
+
+
+def test_burden_weights_split_a_category_across_its_codes():
+    # A burden category's incidence share is divided among the codes that map to
+    # it, so a heavily sub-typed cancer is not counted once per subtype.
+    from oncoref.incidence import burden_category, cancer_burden
+
+    weights = plots._burden_weights(["LUAD", "LUSC", "SKCM"])
+    assert set(weights.index) == {"LUAD", "LUSC", "SKCM"}
+    assert (weights > 0).all()
+    lung = cancer_burden().get(burden_category("LUAD"))
+    assert weights["LUAD"] + weights["LUSC"] == pytest.approx(lung)
+
+
+def test_greedy_cover_is_deterministic_and_monotonic():
+    matrix = pd.DataFrame(
+        {"A": [100.0, 100.0, 0.0], "B": [0.0, 100.0, 100.0], "C": [0.0, 0.0, 0.0]},
+        index=["X", "Y", "Z"],
+    )
+    weights = pd.Series({"X": 1.0, "Y": 1.0, "Z": 5.0})
+    steps, coverable = plots._greedy_cover(matrix, 30.0, weights)
+    assert sorted(coverable) == ["X", "Y", "Z"]
+    # B first: it reaches Z (weight 5) plus Y, beating A's X+Y.
+    assert [s[0] for s in steps] == ["B", "A"]
+    assert [s[3] for s in steps] == [2, 3]
+    assert [s[2] for s in steps] == [6.0, 7.0]
+    # A gene covering nothing is never selected.
+    assert "C" not in [s[0] for s in steps]
+    assert plots._greedy_cover(matrix, 30.0, weights)[0] == steps
+
+
+def test_greedy_cover_ignores_genes_below_threshold():
+    matrix = pd.DataFrame({"A": [10.0, 20.0]}, index=["X", "Y"])
+    steps, coverable = plots._greedy_cover(matrix, 30.0, pd.Series({"X": 1.0, "Y": 1.0}))
+    assert steps == [] and list(coverable) == []
+
+
+def test_cta_covering_set_renders(tmp_path):
+    out = tmp_path / "covering.png"
+    fig = plots.cta_covering_set(save=str(out), n_genes=8)
+    assert out.exists() and out.stat().st_size > 0
+    ax = fig.axes[0]
+    assert ax.get_ylabel() == "cumulative coverage (%)"
+    assert len(ax.get_xticklabels()) <= 8
+    # Both curves are cumulative, so they never decrease.
+    for line in ax.get_lines():
+        ydata = list(line.get_ydata())
+        assert ydata == sorted(ydata)
+
+
+def test_cta_covering_set_rejects_an_unknown_stat():
+    with pytest.raises(ValueError, match="stat must be one of"):
+        plots.cta_covering_set(stat="p99")
+
+
+def test_cli_stat_is_opt_in_so_each_plot_keeps_its_default(monkeypatch, tmp_path):
+    # --stat unset must not force "median" onto cta-covering-set, whose own
+    # default is q3 (the subset-antigen-appropriate statistic).
+    seen = {}
+    monkeypatch.setattr(plots, "cta_covering_set", lambda **kw: seen.update(kw))
+
+    assert cli.main(["plot", "cta-covering-set", "--out", str(tmp_path / "a.png")]) == 0
+    assert "stat" not in seen
+
+    seen.clear()
+    assert (
+        cli.main(["plot", "cta-covering-set", "--stat", "q1", "--out", str(tmp_path / "b.png")])
+        == 0
+    )
+    assert seen["stat"] == "q1"
+
+
+def test_cli_expression_heatmap_still_defaults_to_median(monkeypatch, tmp_path):
+    seen = {}
+    monkeypatch.setattr(plots, "cta_expression_heatmap", lambda **kw: seen.update(kw))
+    assert cli.main(["plot", "cta-expression-heatmap", "--out", str(tmp_path / "h.png")]) == 0
+    assert seen["stat"] == "median"
+
+
+def test_heatmap_missing_cells_are_not_the_figure_ground(tmp_path):
+    # On a white ground an unpainted NaN cell reads as magma's pale-yellow top end,
+    # inverting "absent" into "highest". It must get a colour outside the ramp.
+    grid = pd.DataFrame(
+        {"GENE_A": [10.0, float("nan")], "GENE_B": [1.0, 2.0]}, index=["LUAD", "SKCM"]
+    )
+    fig = plots._cohort_gene_heatmap(
+        grid,
+        title="t",
+        cbar_label="c",
+        cmap="magma",
+        lognorm=True,
+        save=str(tmp_path / "h.png"),
+    )
+    bad = np.asarray(fig.axes[0].images[0].cmap.get_bad(), dtype=float)
+    assert bad[3] > 0, "missing cells must be painted, not left transparent"
+    assert not np.allclose(bad[:3], 1.0), "missing cells must not be the white ground"
+
+
+def test_stack_size_is_bounded_however_many_rows():
+    from oncoref import figure_style
+
+    # Unclamped, the per-row spacing applies directly.
+    inches, density = figure_style.stack_size(10, per_item=0.42, floor=6)
+    assert inches == pytest.approx(4.2 if 4.2 > 6 else 6)
+    assert density == 1.0
+
+    # Past the cap, the figure stops growing and reports how far it compressed.
+    inches, density = figure_style.stack_size(1000, per_item=0.42, floor=6)
+    assert inches == figure_style.MAX_FIGURE_INCHES
+    assert 0 < density < 1
+    # No row count, however absurd, can exceed the cap.
+    for n in (85, 500, 10_000, 1_000_000):
+        got, _ = figure_style.stack_size(n, per_item=0.42, floor=6)
+        assert got <= figure_style.MAX_FIGURE_INCHES
+
+
+def test_tick_fontsize_shrinks_with_density_but_has_a_floor():
+    from oncoref import figure_style
+
+    assert figure_style.tick_fontsize(1.0, 8.0) == 8.0
+    assert figure_style.tick_fontsize(0.5, 8.0) == 4.0
+    # Never vanishes, however dense.
+    assert figure_style.tick_fontsize(0.0001, 8.0) == figure_style.MIN_TICK_FONTSIZE
+
+
+def test_ici_regimen_comparison_stays_within_the_page_cap(tmp_path):
+    from oncoref import figure_style
+
+    # This is the figure that reached 36 inches: every cancer type on its own row.
+    out = tmp_path / "ici.png"
+    fig = plots.ici_regimen_comparison(save=str(out), min_regimens=1)
+    width, height = fig.get_size_inches()
+    assert height <= figure_style.MAX_FIGURE_INCHES
+    assert width <= figure_style.MAX_FIGURE_INCHES
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_every_cta_expression_heatmap_axis_is_capped(tmp_path):
+    from oncoref import figure_style
+
+    fig = plots.cta_expression_heatmap(stat="q3", save=str(tmp_path / "h.png"))
+    width, height = fig.get_size_inches()
+    assert width <= figure_style.MAX_FIGURE_INCHES
+    assert height <= figure_style.MAX_FIGURE_INCHES

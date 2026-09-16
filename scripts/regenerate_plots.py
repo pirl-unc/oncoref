@@ -14,7 +14,7 @@
 """Regenerate **all** oncoref figures into one timestamped run directory.
 
 Mirrors the pirlygenes ``analyses/regenerate_plots.py`` convention: every run
-writes into a fresh ``outputs/run_<YYYYMMDD-HHMMSS>/`` snapshot (gitignored),
+writes into a fresh ``figures/run_<YYYYMMDD-HHMMSS>/`` snapshot (gitignored),
 organised by plot family in subfolders, so a new run never overwrites an older
 one. A ``latest`` symlink points at the most recent run; an ``index.md`` lists
 what was produced (and what was skipped).
@@ -47,7 +47,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
-from oncoref import cta_curation_plots, plots  # noqa: E402
+from oncoref import cta_curation_plots, expression_provenance_plots, plots  # noqa: E402
 from oncoref.coverage import within_sample_percentile_coverage_sweep  # noqa: E402
 from oncoref.expression import locally_available_percentile_cohorts  # noqa: E402
 from oncoref.plots import _cached_per_sample_cohorts  # noqa: E402
@@ -181,6 +181,23 @@ def _jobs(
                 {"stat": stat, "cohorts": percentile_proteoform},
             )
             for stat in ("q1", "median", "q3")
+        )
+    if percentile_proteoform:
+        # Panel design: the greedy covering set at both the actionable (30 TPM) bar
+        # and a looser one, on q3 (the subset-antigen-appropriate statistic).
+        jobs.extend(
+            (
+                "cta_covering_set",
+                f"cta_covering_set_{stat}_t{int(threshold)}",
+                "cta_covering_set",
+                {
+                    "stat": stat,
+                    "threshold_tpm": threshold,
+                    "cohorts": percentile_proteoform,
+                },
+            )
+            for stat in ("median", "q3")
+            for threshold in (10.0, 30.0)
         )
     if percentile_gene:
         jobs.append(
@@ -347,7 +364,7 @@ def _availability_index_lines(availability, percentile_coverage):
 
 
 def _resolve_run_dir(args: argparse.Namespace) -> Path:
-    base = args.out_dir.resolve() if args.out_dir else _REPO_ROOT / "outputs"
+    base = args.out_dir.resolve() if args.out_dir else _REPO_ROOT / "figures"
     base.mkdir(parents=True, exist_ok=True)
     if args.no_timestamp:
         return base
@@ -394,7 +411,7 @@ def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
-        "--out-dir", type=Path, default=None, help="base output dir (default: ./outputs)"
+        "--out-dir", type=Path, default=None, help="base output dir (default: ./figures)"
     )
     ap.add_argument(
         "--run-name", default=None, help="run subfolder name (default: run_<timestamp>)"
@@ -436,6 +453,17 @@ def main() -> int:
     except Exception as e:
         skipped.append(("cta_curation", f"{type(e).__name__}: {e}"))
         print(f"  SKIP  cta_curation  ({type(e).__name__}: {e})", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
+
+    provenance_dir = run_dir / "expression_provenance"
+    try:
+        result = expression_provenance_plots.render(out_dir=provenance_dir)
+        for path in result["paths"].values():
+            done.append(f"expression_provenance/{path.name}")
+            print(f"  ok    expression_provenance/{path.name}")
+    except Exception as e:
+        skipped.append(("expression_provenance", f"{type(e).__name__}: {e}"))
+        print(f"  SKIP  expression_provenance  ({type(e).__name__}: {e})", file=sys.stderr)
         traceback.print_exc(file=sys.stderr)
 
     pdf = _write_all_figures_pdf(run_dir, done)

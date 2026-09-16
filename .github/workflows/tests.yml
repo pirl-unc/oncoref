@@ -83,9 +83,6 @@ jobs:
       CI_LUAD_SHA256: 001ebb9ad18aea86599ff5d808851007523f6d8f0927dfdf2a2f39372f83ffc5
       CI_ACC_SOURCE_URL: https://github.com/pirl-unc/oncoref/releases/download/source-v5.22.8/ACC_per_sample_tpm.parquet
       CI_ACC_SHA256: c871d0255d4aea60b55069da4eddbcea3d45a7e7b21358e77b829368df5b54f5
-      CI_ACC_REFERENCE_URL: https://github.com/pirl-unc/oncoref/releases/download/ci-fixtures-v1/ACC_reference_percentiles_v5.23.2.parquet
-      CI_ACC_REFERENCE_SHA256: eab4da92aa12067f9f51d14532d3629d4a91732f9a3eb2fb03eb26f9f5fa4658
-      ONCOREF_CI_ACC_PERCENTILE_REFERENCE: ${{ github.workspace }}/.ci-cache/reference-data/ci-fixtures/ACC_reference_percentiles_v5.23.2.parquet
       CI_HPA_RNA_SHA256: c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb
       CI_HPA_NORMAL_TISSUE_SHA256: 1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc
     strategy:
@@ -150,16 +147,13 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .ci-cache/reference-data
-          key: reference-data-${{ env.CI_ACC_REFERENCE_SHA256 }}-${{ env.CI_HPA_RNA_SHA256 }}-${{ env.CI_HPA_NORMAL_TISSUE_SHA256 }}
+          key: reference-data-${{ env.CI_HPA_RNA_SHA256 }}-${{ env.CI_HPA_NORMAL_TISSUE_SHA256 }}
 
       - name: Stage required reference data
         run: |
           python - <<'PY'
           import hashlib
           import os
-          import shutil
-          import urllib.request
-          from pathlib import Path
 
           from oncoref import data_bundle, reference_data
 
@@ -173,33 +167,6 @@ jobs:
           # Make the complete real-data dependency available before xdist starts.
           data_bundle.ensure_local(verbose=True)
           data_bundle.verify_local()
-
-          acc_reference = Path(os.environ["ONCOREF_CI_ACC_PERCENTILE_REFERENCE"])
-          expected_acc_sha256 = os.environ["CI_ACC_REFERENCE_SHA256"]
-          if acc_reference.is_file() and sha256(acc_reference) != expected_acc_sha256:
-              acc_reference.unlink()
-          if not acc_reference.is_file():
-              acc_reference.parent.mkdir(parents=True, exist_ok=True)
-              temporary_path = acc_reference.with_suffix(".parquet.part")
-              urllib.request.urlretrieve(os.environ["CI_ACC_REFERENCE_URL"], temporary_path)
-              observed_sha256 = sha256(temporary_path)
-              assert observed_sha256 == expected_acc_sha256, (
-                  observed_sha256,
-                  expected_acc_sha256,
-              )
-              temporary_path.replace(acc_reference)
-
-          bundle_acc_reference = (
-              data_bundle.cache_dir()
-              / "cancer-reference-expression-percentiles"
-              / "ACC.parquet"
-          )
-          if (
-              not bundle_acc_reference.is_file()
-              or sha256(bundle_acc_reference) != expected_acc_sha256
-          ):
-              bundle_acc_reference.parent.mkdir(parents=True, exist_ok=True)
-              shutil.copy2(acc_reference, bundle_acc_reference)
 
           hpa_sources = {
               "hpa_rna_consensus": os.environ["CI_HPA_RNA_SHA256"],

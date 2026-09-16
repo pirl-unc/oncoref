@@ -315,8 +315,23 @@ def _cmd_proteoforms(args: argparse.Namespace) -> int:
     return 0
 
 
+#: Plot families that write several figures into a directory rather than one PNG.
+_DIRECTORY_PLOTS = frozenset({"patient-coverage", "cta-curation", "expression-provenance"})
+
+
 def _cmd_plot(args: argparse.Namespace) -> int:
-    from . import plots
+    from . import figure_output, plots
+
+    # An explicit --out is used verbatim; omitting it opens a fresh timestamped run
+    # directory under figures/, so a figure can always be traced to the run that
+    # made it and no run overwrites another.
+    args.out = str(
+        figure_output.resolve(
+            args.out,
+            name=args.which,
+            suffix="" if args.which in _DIRECTORY_PLOTS else ".png",
+        )
+    )
 
     fns = {
         "apd1-vs-tmb": plots.apd1_vs_tmb,
@@ -329,6 +344,7 @@ def _cmd_plot(args: argparse.Namespace) -> int:
         "cta-coverage-stacked": plots.cta_coverage_stacked_bars,
         "cta-burden-vs-response": plots.cta_burden_vs_response,
         "cta-specific-9mer-load": plots.cta_specific_9mer_load,
+        "cta-covering-set": plots.cta_covering_set,
         "burden-category-bars": plots.burden_category_bars,
         "apd1-response-signature": plots.apd1_response_signature_scatter,
     }
@@ -367,6 +383,28 @@ def _cmd_plot(args: argparse.Namespace) -> int:
 
             result = cta_curation_plots.render(out_dir=args.out)
             print(f"CTA curation figures ({result['n_genes']} evidence rows):")
+            for label, remaining, dropped in result.get("stages", ()):
+                suffix = f"  (-{dropped})" if dropped else ""
+                print(f"  stage {label:<18} {remaining:>5}{suffix}")
+            for kind, path in result["paths"].items():
+                print(f"  {kind}: {path}")
+            return 0
+        if args.which == "expression-provenance":
+            from . import expression_provenance_plots
+
+            result = expression_provenance_plots.render(out_dir=args.out, region=args.region)
+            summary, burden = result["summary"], result["burden"]
+            print(
+                f"Expression provenance figures: {summary['n_samples']:,} samples, "
+                f"{summary['n_codes_covered']}/{summary['n_codes_total']} cancer types, "
+                f"{summary['n_sources']} source projects"
+            )
+            inc = 100 * burden["incidence_covered"] / burden["incidence_total"]
+            mor = 100 * burden["mortality_covered"] / burden["mortality_total"]
+            print(
+                f"  {args.region.upper()} burden covered: "
+                f"{inc:.0f}% of incidence, {mor:.0f}% of mortality"
+            )
             for kind, path in result["paths"].items():
                 print(f"  {kind}: {path}")
             return 0
@@ -375,7 +413,11 @@ def _cmd_plot(args: argparse.Namespace) -> int:
         elif args.which == "apd1-response-signature":
             kwargs = {"signature": args.signature}
         elif args.which == "cta-expression-heatmap":
-            kwargs = {"stat": args.stat}
+            kwargs = {"stat": args.stat or "median"}
+        elif args.which == "cta-covering-set":
+            kwargs = dict(tpm)
+            if args.stat is not None:
+                kwargs["stat"] = args.stat
         elif args.which == "cta-addressable-burden":
             kwargs = {"source": args.source, **tpm}
         elif args.which == "cta-patient-heatmap":
@@ -533,17 +575,23 @@ def _build_parser() -> argparse.ArgumentParser:
             "cta-coverage-stacked",
             "cta-burden-vs-response",
             "cta-specific-9mer-load",
+            "cta-covering-set",
             "burden-category-bars",
             "apd1-response-signature",
             "patient-coverage",
             "cta-curation",
+            "expression-provenance",
         ],
         help="Which plot to render",
     )
     p_plot.add_argument(
         "--out",
-        required=True,
-        help="Output PNG path, or output directory for patient-coverage/cta-curation",
+        default=None,
+        help=(
+            "Output PNG path, or output directory for the multi-figure families "
+            "(patient-coverage, cta-curation, expression-provenance). Omit to write "
+            "into a fresh figures/run_<YYYYMMDD-HHMMSS>/ directory."
+        ),
     )
     p_plot.add_argument(
         "--signature",
@@ -551,13 +599,19 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Response signature for apd1-response-signature (e.g. t_cell_inflamed, tgfb_exclusion)",
     )
     p_plot.add_argument(
-        "--region", default="us", choices=["us", "world"], help="Region for incidence-vs-mortality"
+        "--region",
+        default="us",
+        choices=["us", "world"],
+        help="Region for incidence-vs-mortality and expression-provenance",
     )
     p_plot.add_argument(
         "--stat",
-        default="median",
+        default=None,
         choices=["q1", "median", "q3"],
-        help="Statistic for cta-expression-heatmap",
+        help=(
+            "Statistic for cta-expression-heatmap and cta-covering-set. Omit to use "
+            "each plot's own default (median for the heatmap, q3 for the covering set)."
+        ),
     )
     p_plot.add_argument(
         "--source",

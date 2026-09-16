@@ -6,5 +6,6 @@ theme:
   name: mkdocs
 nav:
   - Home: index.md
+  - Figures: figures.md
   - SRA Expression Sources: sra-expression-integration.md
   - API Guide: api.md

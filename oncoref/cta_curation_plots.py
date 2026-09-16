@@ -12,10 +12,24 @@
 
 """CTA curation documentation figures over oncoref's packaged CTA table.
 
-This mirrors the shipped ``pirlygenes plot cta-curation`` surface while using
-only oncoref-owned data. The figures summarize the CTA source overlap, filter
-funnel/outcome, deflated reproductive-fraction distribution, and
-protein-reliability-vs-RNA thresholds from ``cancer-testis-antigens.csv``.
+Six figures describing how the CTA panel is defined: where the candidate genes
+come from (source venn), how many survive each curation stage (stage funnel),
+how that attrition splits by source (per-source funnel and outcome), and the two
+evidence axes the filter actually thresholds on (deflated reproductive-fraction
+distribution, protein-reliability-vs-RNA).
+
+Two frames are in play and they are not interchangeable:
+
+``_evidence()``
+    The raw packaged table — every candidate ever considered, including rows that
+    fail curation. This is the denominator the source and filter figures describe.
+
+``_curated()``
+    The same table after :mod:`oncoref.cta` drops explicitly non-CTA genes and
+    joins the machine-readable specificity adjudication. Its
+    ``specificity_action == "include_default"`` rows are exactly what
+    ``cta_gene_ids()`` returns, so the stage funnel lands on the shipped set
+    rather than on the raw ``passes_filters`` column (which is one stage short).
 
 The standard oncoref installation includes ``matplotlib_venn`` for the
 source-overlap figure.
@@ -27,16 +41,19 @@ from pathlib import Path
 
 import numpy as np
 
+from . import figure_style
+from .figure_style import ACCENT, DROP, KEPT, THRESHOLD, WEAK
 from .load_dataset import get_data
 
-# Primary gene-contributing sources. The broad da Silva cross-reference tag and
-# tiny paralog/candidate tags are deliberately excluded from the primary-source
-# overlap, matching the pirlygenes plot. Some oncoref rows carry the older
-# ``daSilva2017`` tag without the protein suffix, so accept both forms.
+# Primary gene-contributing sources. The broad ``daSilva2017`` cross-reference tag
+# (the full 1,103-gene 0.9-threshold set) and the tiny paralog/candidate tags are
+# deliberately excluded: only ``daSilva2017_protein``, the mass-spec-validated
+# subset, is a primary source. Both tags coexist in the packaged table, so the
+# predicate has to test for the protein suffix specifically.
 PRIMARY_SOURCES = {
     "CTpedia": lambda tags: "CTpedia" in tags,
     "CTexploreR": lambda tags: "CTexploreR_CT" in tags or "CTexploreR_CTP" in tags,
-    "daSilva2017_protein": lambda tags: "daSilva2017_protein" in tags or "daSilva2017" in tags,
+    "daSilva2017_protein": lambda tags: "daSilva2017_protein" in tags,
     "placental_antigen": lambda tags: "placental_antigen" in tags,
 }
 
@@ -50,13 +67,10 @@ RELIABILITY_THRESHOLD = {
 }
 RELIABILITY_ORDER = ["no data", "Uncertain", "Approved", "Supported", "Enhanced"]
 
-KEPT = "#2a7f4f"
-DROP = "#b0b0b0"
-WEAK = "#f0c419"
-
 # Hyphenated filenames match pirlygenes/docs references.
 FILENAMES = {
     "source_venn": "cta-source-venn.png",
+    "stage_funnel": "cta-stage-funnel.png",
     "filter_funnel": "cta-filter-funnel.png",
     "filter_outcome": "cta-filter-outcome.png",
     "deflated_dist": "cta-deflated-frac-dist.png",
@@ -67,6 +81,13 @@ FILENAMES = {
 def _evidence():
     """Raw packaged CTA evidence table, including rows that fail curation filters."""
     return get_data("cancer-testis-antigens").copy()
+
+
+def _curated():
+    """CTA table with non-CTA exclusions dropped and specificity decisions joined."""
+    from . import cta
+
+    return cta._cta_with_specificity_frame().copy()
 
 
 def _bool_series(series):
@@ -103,8 +124,32 @@ def _per_source_counts(df):
     return sorted(rows, key=lambda r: r["total"], reverse=True)
 
 
+def stage_counts():
+    """Sequential curation stages, as ``[(label, n_remaining, n_dropped), ...]``.
+
+    The four stages a candidate has to survive, in the order the pipeline applies
+    them: the raw source union, removal of genes reclassified as non-CTA, the
+    tiered HPA protein/RNA restriction filter, and the specificity adjudication
+    that produces the shipped default set.
+    """
+    raw = _evidence()
+    cur = _curated()
+    passes = _bool_series(cur["passes_filters"])
+    action = cur["specificity_action"].astype(str) if "specificity_action" in cur else None
+    n_source = len(raw)
+    n_kept_cta = len(cur)
+    n_passes = int(passes.sum())
+    n_default = int((action == "include_default").sum()) if action is not None else n_passes
+    return [
+        ("source union", n_source, 0),
+        ("non-CTA removed", n_kept_cta, n_source - n_kept_cta),
+        ("HPA restriction", n_passes, n_kept_cta - n_passes),
+        ("specificity", n_default, n_passes - n_default),
+    ]
+
+
 def _save(fig, path, plt):
-    fig.savefig(path, dpi=150, bbox_inches="tight")
+    figure_style.save(fig, path)
     plt.close(fig)
 
 
@@ -112,17 +157,39 @@ def _fig_source_venn(df, path, plt):
     from matplotlib_venn import venn3
 
     sets = _tag_sets(df)
-    fig, ax = plt.subplots(figsize=(7, 6))
+    fig, ax = plt.subplots(figsize=(6.5, 5.5))
     keys = ("CTpedia", "CTexploreR", "daSilva2017_protein")
-    placental = len(sets["placental_antigen"])
-    venn3(
+    v = venn3(
         [sets[k] for k in keys],
-        set_labels=("CTpedia", "CTexploreR", "da Silva 2017\n(protein)"),
+        set_labels=("CTpedia", "CTexploreR", "da Silva 2017"),
+        set_colors=(KEPT, ACCENT, WEAK),
+        alpha=0.55,
         ax=ax,
     )
-    ax.set_title(
-        f"CTA source overlap (primary databases)\n+{placental} placental-antigen genes folded in"
-    )
+    for text in list(v.set_labels or []) + list(v.subset_labels or []):
+        if text is not None:
+            text.set_fontsize(10)
+    _save(fig, path, plt)
+
+
+def _fig_stage_funnel(df, path, plt):
+    """Sequential attrition through the four curation stages."""
+    stages = stage_counts()
+    labels = [s[0] for s in stages]
+    remaining = np.array([s[1] for s in stages])
+    dropped = np.array([s[2] for s in stages])
+    y = np.arange(len(labels))
+    fig, ax = plt.subplots(figsize=(7, 3.2))
+    ax.barh(y, remaining, color=KEPT, height=0.62)
+    ax.barh(y, dropped, left=remaining, color=DROP, height=0.62)
+    for i, (n, d) in enumerate(zip(remaining, dropped)):
+        ax.text(n - max(remaining) * 0.015, i, str(n), va="center", ha="right", color="white")
+        if d:
+            ax.text(n + d + max(remaining) * 0.012, i, f"−{d}", va="center", fontsize=9)
+    ax.set_yticks(y, labels)
+    ax.invert_yaxis()
+    ax.set_xlabel("genes")
+    ax.set_xlim(0, max(remaining) * 1.1)
     _save(fig, path, plt)
 
 
@@ -132,15 +199,21 @@ def _fig_filter_funnel(df, path, plt):
     kept = np.array([r["kept_confident"] + r["kept_weak"] for r in rows])
     dropped = np.array([r["excluded"] for r in rows])
     y = np.arange(len(labels))
-    fig, ax = plt.subplots(figsize=(8, 0.7 * len(labels) + 2))
-    ax.barh(y, kept, color=KEPT, label="passes filter")
-    ax.barh(y, dropped, left=kept, color=DROP, label="excluded")
+    fig, ax = plt.subplots(figsize=(7, 0.62 * len(labels) + 1.4))
+    ax.barh(y, kept, color=KEPT, label="kept", height=0.62)
+    ax.barh(y, dropped, left=kept, color=DROP, label="excluded", height=0.62)
     for i, r in enumerate(rows):
-        ax.text(r["total"] + 1, i, f"{kept[i]}/{r['total']}", va="center", fontsize=9)
+        ax.text(
+            r["total"] + max(kept + dropped) * 0.012,
+            i,
+            f"{kept[i]}/{r['total']}",
+            va="center",
+            fontsize=9,
+        )
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
-    ax.set_xlabel("genes in source")
-    ax.set_title("CTA filter funnel by source (kept vs excluded)")
+    ax.set_xlabel("genes")
+    ax.set_xlim(0, max(kept + dropped) * 1.14)
     ax.legend(loc="lower right")
     _save(fig, path, plt)
 
@@ -152,14 +225,13 @@ def _fig_filter_outcome(df, path, plt):
     weak = np.array([r["kept_weak"] for r in rows])
     excl = np.array([r["excluded"] for r in rows])
     y = np.arange(len(labels))
-    fig, ax = plt.subplots(figsize=(8, 0.7 * len(labels) + 2))
-    ax.barh(y, conf, color=KEPT, label="kept (HPA-confident)")
-    ax.barh(y, weak, left=conf, color=WEAK, label="kept (weak evidence)")
-    ax.barh(y, excl, left=conf + weak, color=DROP, label="excluded")
+    fig, ax = plt.subplots(figsize=(7, 0.62 * len(labels) + 1.4))
+    ax.barh(y, conf, color=KEPT, label="kept", height=0.62)
+    ax.barh(y, weak, left=conf, color=WEAK, label="kept, weak evidence", height=0.62)
+    ax.barh(y, excl, left=conf + weak, color=DROP, label="excluded", height=0.62)
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
     ax.set_xlabel("genes")
-    ax.set_title("CTA filter outcome by source")
     ax.legend(loc="lower right")
     _save(fig, path, plt)
 
@@ -168,30 +240,19 @@ def _fig_deflated_dist(df, path, plt):
     frac = df["rna_deflated_reproductive_frac"].astype(float).to_numpy()
     passes = _bool_series(df["passes_filters"]).to_numpy()
     bins = np.linspace(0, 1, 41)
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(7, 4.2))
     ax.hist(
         [frac[passes], frac[~passes]],
         bins=bins,
         stacked=True,
         color=[KEPT, DROP],
-        label=["passes filter", "excluded"],
+        label=["kept", "excluded"],
     )
     for thr in (0.80, 0.90, 0.95, 0.98):
-        ax.axvline(thr, color="#555", ls="--", lw=0.8)
-        ax.text(
-            thr,
-            ax.get_ylim()[1] * 0.97,
-            f"{thr:.2f}",
-            rotation=90,
-            va="top",
-            ha="right",
-            fontsize=8,
-            color="#555",
-        )
+        ax.axvline(thr, color=THRESHOLD, ls="--", lw=0.7, alpha=0.7)
     ax.set_xlabel("deflated reproductive fraction")
-    ax.set_ylabel("CTA genes")
-    ax.set_title("Deflated reproductive-fraction distribution")
-    ax.legend()
+    ax.set_ylabel("genes")
+    ax.legend(loc="upper left")
     _save(fig, path, plt)
 
 
@@ -199,28 +260,26 @@ def _fig_protein_vs_rna(df, path, plt):
     frac = df["rna_deflated_reproductive_frac"].astype(float)
     rel = df["protein_reliability"].fillna("no data").astype(str)
     passes = _bool_series(df["passes_filters"])
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(7, 4.2))
     rng = np.random.default_rng(0)
     for i, tier in enumerate(RELIABILITY_ORDER):
         m = rel == tier
         if not m.any():
             continue
         x = i + (rng.random(int(m.sum())) - 0.5) * 0.6
-        ax.scatter(x, frac[m], s=14, alpha=0.6, c=np.where(passes[m], KEPT, DROP))
+        ax.scatter(x, frac[m], s=12, alpha=0.6, linewidths=0, c=np.where(passes[m], KEPT, DROP))
         thr = RELIABILITY_THRESHOLD.get(tier)
         if thr is not None:
-            ax.plot([i - 0.4, i + 0.4], [thr, thr], color="#c0392b", lw=2)
+            ax.plot([i - 0.42, i + 0.42], [thr, thr], color=THRESHOLD, lw=1.8)
     ax.set_xticks(range(len(RELIABILITY_ORDER)), RELIABILITY_ORDER)
-    ax.set_xlabel("protein reliability (HPA IHC)")
+    ax.set_xlabel("HPA protein reliability")
     ax.set_ylabel("deflated reproductive fraction")
-    ax.set_title(
-        "Protein reliability vs RNA fraction\n(red line = required RNA threshold for that tier)"
-    )
     _save(fig, path, plt)
 
 
 _BUILDERS = {
     "source_venn": _fig_source_venn,
+    "stage_funnel": _fig_stage_funnel,
     "filter_funnel": _fig_filter_funnel,
     "filter_outcome": _fig_filter_outcome,
     "deflated_dist": _fig_deflated_dist,
@@ -229,13 +288,11 @@ _BUILDERS = {
 
 
 def render(out_dir="cta_curation_out") -> dict:
-    """Write the five CTA-curation figures into ``out_dir``.
+    """Write the CTA-curation figures into ``out_dir``.
 
-    Returns ``{"n_genes": int, "paths": {key: Path}}``.
+    Returns ``{"n_genes": int, "stages": [...], "paths": {key: Path}}``.
     """
-    import matplotlib
-
-    matplotlib.use("Agg", force=False)
+    figure_style.apply()
     import matplotlib.pyplot as plt
 
     out = Path(out_dir)
@@ -246,4 +303,4 @@ def render(out_dir="cta_curation_out") -> dict:
         path = out / FILENAMES[key]
         builder(df, path, plt)
         paths[key] = path
-    return {"n_genes": len(df), "paths": paths}
+    return {"n_genes": len(df), "stages": stage_counts(), "paths": paths}
