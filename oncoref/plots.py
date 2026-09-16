@@ -211,7 +211,7 @@ def _reference_metric_axis(against):
         ymap, ylabel, _ = _apd1_axis(strict_pd1=False)
         return ymap, ylabel
     if against == "tmb":
-        return cancer_tmb(), "Median tumor mutational burden (mut/Mb)"
+        return cancer_tmb(), "Tumor mutational burden estimate (mut/Mb)"
     if against in {"us_incidence", "us_mortality", "world_incidence", "world_mortality"}:
         return _burden_metric_axis(against)
     raise ValueError(
@@ -593,7 +593,7 @@ def _grouped_barh(categories, series, *, xlabel, title, save=None):
 
 
 def apd1_vs_tmb(*, save=None, annotate=True, strict_pd1=False):
-    """Scatter of anti-PD-1 ORR (%) vs median TMB (log x), one point per cancer
+    """Scatter of anti-PD-1 ORR (%) vs curated TMB estimate (log x), one point per cancer
     type with a curated value for both, colored by lineage family. The classic
     "more mutations -> more neoantigens -> better checkpoint response" view."""
     tmb = cancer_tmb()
@@ -603,7 +603,7 @@ def apd1_vs_tmb(*, save=None, annotate=True, strict_pd1=False):
         raise ValueError("no cancer types with both a TMB and a checkpoint-response value")
     return _family_scatter(
         [(c, tmb[c], orr[c]) for c in codes],
-        xlabel="Median tumor mutational burden (mut/Mb, log scale)",
+        xlabel="Tumor mutational burden estimate (mut/Mb, log scale)",
         ylabel=ylabel,
         title=f"{scope} response vs TMB ({len(codes)} cancer types)",
         logx=True,
@@ -1486,7 +1486,7 @@ def cta_burden_vs_response(*, against="apd1", threshold_tpm=50.0, cohorts=None, 
     """Scatter of a cohort's **mean CTA antigen load** (mean number of CTAs a patient
     expresses above ``threshold_tpm``, from
     :func:`oncoref.coverage.mean_antigens_per_patient`) vs its anti-PD-1 ORR
-    (``against="apd1"``), broader ICI response (``"ici"``), median TMB
+    (``against="apd1"``), broader ICI response (``"ici"``), curated TMB estimate
     (``"tmb"``), or a burden axis (``"us_incidence"``, ``"us_mortality"``,
     ``"world_incidence"``, ``"world_mortality"``), one point per cancer type,
     coloured by lineage family.
@@ -1552,7 +1552,7 @@ def apd1_response_signature_scatter(signature="t_cell_inflamed", *, cohorts=None
 
 def cta_specific_9mer_load(*, against="tmb", threshold_tpm=50.0, cohorts=None, save=None):
     """Scatter of a cohort's **mean per-patient CTA-specific 9-mer load**
-    (:func:`oncoref.peptides.cta_specific_9mer_load`) vs its median TMB
+    (:func:`oncoref.peptides.cta_specific_9mer_load`) vs its curated TMB estimate
     (``against="tmb"``), anti-PD-1 ORR (``against="apd1"``), broader ICI response
     (``"ici"``), or a burden axis (``"us_incidence"``, ``"us_mortality"``,
     ``"world_incidence"``, ``"world_mortality"``), one point per cancer type,

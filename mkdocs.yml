@@ -7,5 +7,6 @@ theme:
 nav:
   - Home: index.md
   - Figures: figures.md
+  - Curation Audit: curation-audit.md
   - SRA Expression Sources: sra-expression-integration.md
   - API Guide: api.md
