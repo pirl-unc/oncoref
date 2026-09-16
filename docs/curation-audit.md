@@ -19,7 +19,8 @@ Issues were filed before their corresponding fixes:
 [#530](https://github.com/pirl-unc/oncoref/issues/530) (PR review and source recovery),
 [#532](https://github.com/pirl-unc/oncoref/issues/532) (means and all withdrawn claims),
 [#533](https://github.com/pirl-unc/oncoref/issues/533) (STK11 subgroup denominators), and
-[#534](https://github.com/pirl-unc/oncoref/issues/534) (neuroblastoma source recovery).
+[#534](https://github.com/pirl-unc/oncoref/issues/534) (neuroblastoma source recovery), and
+[#535](https://github.com/pirl-unc/oncoref/issues/535) (retained statistics/cohort review).
 
 ## Scope and reproducible evidence
 
@@ -44,8 +45,8 @@ citation; resolving an identifier is **not** numerical source validation. The
 [TMB review table](../oncoref/data/cancer-tmb-source-audit.csv) records a disposition
 for all 130 rows, including rejected legacy values, assay, locator, and review notes.
 
-After source recovery there are 42 source-checked numeric TMB rows (40 published medians, one published
-mean and one sample-recomputed median), 69 numeric entries
+After source recovery there are 44 source-checked numeric TMB rows (41 published medians, two published
+means and one sample-recomputed median), 67 numeric entries
 still requiring exact source verification, 7 withdrawn population-median claims,
 and 12 other explicit gaps. Thirteen of the initial 20 withdrawals now have a verified
 replacement or repaired citation; an existing MPN gap was also filled. The endpoint
@@ -328,3 +329,25 @@ The alternative ledger preserves both statistics for both mutation definitions.
 The default amplified and nonamplified values come from different risk/ancestry
 cohorts and cannot establish an effect of MYCN amplification on TMB. Use the
 within-Pugh subgroup summaries for a like-assay comparison, with high-risk scope.
+
+
+## Fourth round: retained statistics and cohort denominators
+
+[Fernandez-Cuesta 2014](https://pmc.ncbi.nlm.nih.gov/articles/PMC4132974/) explicitly
+reports lung carcinoid **mean 0.4 nonsynonymous mutations/Mb**, from 44 independent
+pairs (29 WGS and 15 WES). `NET_LUNG` now uses the mean field, with no invented median.
+
+[de Bitter 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9637208/) supports GBC
+**median 5.5 in 96 TMB-evaluable samples**. TSO500 TMB includes synonymous variants;
+the separate 54-gene actionable panel is not the TMB assay. The cohort was selected
+for at least pT2a disease and 30% tumor content. Results define TMB-high as >=10,
+although the abstract uses >10; the detailed Results support the curated threshold.
+
+The [craniopharyngioma source](https://pmc.ncbi.nlm.nih.gov/articles/PMC3982316/)
+places 0.9/Mb in its mixed **15-case discovery cohort**, not three papillary cases.
+Its exact statistic remains unresolved. [George 2015](https://pmc.ncbi.nlm.nih.gov/articles/PMC4861069/)
+reports SCLC 8.62 nonsynonymous mutations/Mb in 110 WGS specimens without naming the
+summary statistic in the prose. Both original workbooks were inspected; sample
+metadata and variant calls alone do not establish callable denominators for a
+recalculated per-Mb median. These two values remain `needs_source_review`, with
+corrected cohort notes and [supplement URLs/hashes](audits/tmb-retained-source-supplements.json).

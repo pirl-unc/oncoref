@@ -71,7 +71,7 @@ cancer-tmb,NEN,NEN,,TMB,,PMID:34326338,audited_gap,"Results, mutational landscap
 cancer-tmb,NET,NET,,TMB,,PMID:34326338,audited_gap,"Results, mutational landscape",
 cancer-tmb,NEC,NEC,,TMB,,PMID:34326338,audited_gap,"Results, mutational landscape",
 cancer-tmb,NEC_LUNG,NEC_LUNG,,TMB,,PMID:26168399;PMID:29535388,audited_gap,,
-cancer-tmb,SCLC,SCLC,,TMB,8.6,PMID:26168399,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SCLC,SCLC,,TMB,8.6,PMID:26168399,needs_source_review,Results: Recurrent somatic alterations in SCLC; Supplementary Tables 1-3; https://pmc.ncbi.nlm.nih.gov/articles/PMC4861069/,tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
 cancer-tmb,NEC_MERKEL,NEC_MERKEL,,TMB,5.3,PMID:31399473,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,MTC,MTC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A124:C124; thyroid medullary carcinoma,
 cancer-tmb,ADCC,ADCC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A128:C128; salivary gland adenoid cystic carcinoma,
@@ -96,8 +96,8 @@ cancer-tmb,VSCC,VSCC,,TMB,5.2,PMID:28420421,source_checked,Additional file 3 Tab
 cancer-tmb,VAGC,VAGC,,TMB,,,audited_gap,,
 cancer-tmb,PENSCC,PENSCC,,TMB,4.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A39:C39; penis squamous cell carcinoma (scc),
 cancer-tmb,ANSC,ANSC,,TMB,5.4,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A24:C24; anus squamous cell carcinoma (scc),
-cancer-tmb,GBC,GBC,,TMB,5.5,DOI:10.1038/s41698-022-00327-y,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,CRANIO,CRANIO,,TMB,0.9,PMID:24413733,needs_source_review,,assay_not_structured;tmb_source_not_revalidated
+cancer-tmb,GBC,GBC,,TMB,5.5,DOI:10.1038/s41698-022-00327-y,source_checked,"Results: Molecular analysis, Figure 3A/C; Methods: Next generation sequencing; https://pmc.ncbi.nlm.nih.gov/articles/PMC9637208/",
+cancer-tmb,CRANIO,CRANIO,,TMB,0.9,PMID:24413733,needs_source_review,Main text preceding Figure 1; Figure 1 legend; Supplementary Tables 1-2; https://pmc.ncbi.nlm.nih.gov/articles/PMC3982316/,tmb_source_not_revalidated
 cancer-tmb,PITNET,PITNET,,TMB,,,audited_gap,,
 cancer-tmb,SARC_DSRCT,SARC_DSRCT,,TMB,0.72,PMID:35379887,source_checked,"Results, DSRCT has low mutation burden; Figure 1A",
 cancer-tmb,SARC_GIST,SARC_GIST,,TMB,0.67,PMID:39489749,source_checked,"Results, Aggressive GISTs harbor more genomic aberrations; Figure 1A",
@@ -105,7 +105,7 @@ cancer-tmb,NEC_LUNG_LARGECELL,NEC_LUNG_LARGECELL,,TMB,9.9,PMID:28420421,source_c
 cancer-tmb,SARC_SMARCA4,SARC_SMARCA4,,TMB,10.6,PMID:39802817,source_checked,"Table 1; Results, Tumor Pathologic Characteristics",
 cancer-tmb,NET_MIDGUT,NET_MIDGUT,,TMB,1.05,PMID:34326338,source_checked,"Results, primary-localization comparison",sample_size_not_curated
 cancer-tmb,NET_RECTAL,NET_RECTAL,,TMB,1.15,PMID:36645718,source_checked,"Abstract; Methods, Whole-exome sequencing",
-cancer-tmb,NET_LUNG,NET_LUNG,,TMB,0.4,PMID:24670920,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,NET_LUNG,NET_LUNG,,TMB_MEAN,0.4,PMID:24670920,source_checked,Results first paragraph; Figure 1c; https://pmc.ncbi.nlm.nih.gov/articles/PMC4132974/,
 cancer-tmb,SARC_CIC,SARC_CIC,,TMB,1.2,PMID:29901569,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,NBL_MYCNamp,NBL_MYCNamp,,TMB,0.43,PMID:23334666,source_checked,"Supplementary Table 1, Master_Table; MYCNamp column J and Nonsilent per Mb column BB; rows 3-242",
 cancer-tmb,NBL_MYCNnonamp,NBL_MYCNnonamp,,TMB,0.66,PMID:33172452,source_checked,"Results, TMB and mutational signature; Figure 3c; Methods, Sequence analysis",

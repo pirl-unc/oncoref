@@ -1,0 +1,16 @@
+[
+  {
+    "reference": "PMID:26168399",
+    "source_url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnature14664/MediaObjects/41586_2015_BFnature14664_MOESM72_ESM.xlsx",
+    "sha256": "a285b83871580c7ceab179e66570c39d43ea235192aff257f36292694e79cbc8",
+    "reviewed_on": "2026-09-16",
+    "review_locator": "Suppl_Table1-3: cohort, coverage percentages, variant calls; no directly labeled per-sample TMB rates recovered"
+  },
+  {
+    "reference": "PMID:24413733",
+    "source_url": "https://static-content.springer.com/esm/art%3A10.1038%2Fng.2868/MediaObjects/41588_2014_BFng2868_MOESM30_ESM.xlsx",
+    "sha256": "817f541c60f456274ec35b690d0383e8f01da4a5a764e20f96901f4540e8ea5d",
+    "reviewed_on": "2026-09-16",
+    "review_locator": "Supplementary Table 1 discovery cohort and Table 2 MAF; no sample callable-region denominator validated"
+  }
+]

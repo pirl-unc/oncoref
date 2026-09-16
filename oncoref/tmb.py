@@ -95,7 +95,7 @@ _TMB_EVIDENCE_OVERRIDES = {
     "WILMS": {"estimate_type": "approximate_literature"},
     "BL": {"estimate_type": "approximate_literature"},
     "T_ALL": {"estimate_type": "approximate_literature"},
-    "CRANIO": {"estimate_type": "small_n"},
+    "CRANIO": {"source_scope": "adamantinomatous_and_papillary_discovery_cohort"},
     **{
         code: {
             "estimate_type": "unknown",
