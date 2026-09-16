@@ -146,10 +146,6 @@ _ICI_EVIDENCE_OVERRIDES = {
         }
         for code in ("DIPG", "MBL")
     },
-    "UVM": {
-        "source_scope": "source_rejected_for_regimen_value",
-        "missing_reason": "mixed_pd1_pdl1_cohort_is_not_pd1_monotherapy",
-    },
     "UCEC_POLE": {
         "source_scope": "insufficient_representative_evidence",
         "missing_reason": "case_reports_and_small_subgroups_do_not_establish_subtype_orr",

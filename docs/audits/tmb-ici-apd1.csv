@@ -231,7 +231,7 @@ cancer-ici-response,UCEC_CNH,UCEC_CNH,,ORR,,PMID:39847999,audited_gap,,
 cancer-ici-response,UCEC_CNL,UCEC_CNL,,ORR,,PMID:39847999,audited_gap,,
 cancer-ici-response,UCEC_MSI/PD-1,UCEC_MSI,PD-1,ORR,48,PMID:39847999,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
 cancer-ici-response,UCEC_POLE,UCEC_POLE,,ORR,,PMID:27159395,audited_gap,,
-cancer-ici-response,UVM,UVM,,ORR,,PMID:27533448,audited_gap,,
+cancer-ici-response,UVM/PD-1,UVM,PD-1,ORR,11.7,PMID:31175402,prior_locator_verified,"Results, Figure 1; Patients and methods, Treatment and study design",
 cancer-ici-response,VSCC/PD-1,VSCC,PD-1,ORR,10.9,PMID:35361487,prior_locator_verified,"Abstract, Results",
 cancer-ici-response,cSCC/PD-1,cSCC,PD-1,ORR,34.3,PMID:32673170,prior_locator_verified,RESULTS > Efficacy,
 cancer-ici-response,CRC,CRC,,ORR,,,audited_gap,,
@@ -276,7 +276,7 @@ cancer-apd1-response,KICH/PD-1,KICH,PD-1,ORR,9.5,PMID:33529058,prior_locator_ver
 cancer-apd1-response,RCC_NCC/PD-1,RCC_NCC,PD-1,ORR,26.7,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
 cancer-apd1-response,RCC_NCC_UNCLASSIFIED/PD-1,RCC_NCC_UNCLASSIFIED,PD-1,ORR,30.8,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
 cancer-apd1-response,BTC/PD-1,BTC,PD-1,ORR,5.8,PMID:32359091,prior_locator_verified,Abstract,
-cancer-apd1-response,UVM,UVM,,ORR,,PMID:27533448,audited_gap,,
+cancer-apd1-response,UVM/PD-1,UVM,PD-1,ORR,11.7,PMID:31175402,prior_locator_verified,"Results, Figure 1; Patients and methods, Treatment and study design",
 cancer-apd1-response,SARC_UPS/PD-1,SARC_UPS,PD-1,ORR,23,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
 cancer-apd1-response,SARC_DDLPS/PD-1,SARC_DDLPS,PD-1,ORR,10,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
 cancer-apd1-response,SARC_SYN/PD-1,SARC_SYN,PD-1,ORR,10.0,PMID:28988646,prior_locator_source_section,"Abstract, Findings:",numeric_source_location_not_verified
@@ -700,8 +700,8 @@ cancer-ici-response-estimates,ICI-ab42735a77-01,LUAD,PD-L1,OS,13.8,PMID:27979383
 cancer-ici-response-estimates,ICI-b3d0d4438b-01,LUAD_STK11,PD-1,ORR,8,PMID:29773717,prior_locator_not_verified,,excluded_from_pooling;numeric_source_location_not_verified;response_denominator_missing
 cancer-ici-response-estimates,ICI-40ee4f78ab-01,LUAD_STK11,PD-1,ORR,8,PMID:29773717,prior_locator_not_verified,,excluded_from_pooling;numeric_source_location_not_verified;response_denominator_missing
 cancer-ici-response-estimates,ICI-40ee4f78ab-02,LUAD_STK11,PD-1,ORR,8,PMID:29773717,prior_locator_not_verified,,excluded_from_pooling;numeric_source_location_not_verified;response_denominator_missing
-cancer-ici-response-estimates,ICI-2e06c5f7d3-01,LUAD_STK11,PD-1,ORR,7.4,PMID:29773717,prior_locator_verified,Abstract,excluded_from_pooling
-cancer-ici-response-estimates,ICI-1c401c554d-01,LUAD_STK11,PD-1,ORR,0,PMID:29773717,prior_locator_verified,Results > Co-mutations in STK11/LKB1 are associated with inferior clinical outcome with PD-1 blockade in multiple independent cohorts of KRAS-mutant LUAC,excluded_from_pooling
+cancer-ici-response-estimates,ICI-2e06c5f7d3-01,LUAD_STK11,PD-1+/-CTLA-4,ORR,7.4,PMID:29773717,prior_locator_verified,"Figure 1A; Results, Patient characteristics",excluded_from_pooling
+cancer-ici-response-estimates,ICI-1c401c554d-01,LUAD_STK11,PD-1,ORR,0,PMID:29773717,prior_locator_verified,"Figure 1B; Results, Co-mutations in STK11/LKB1",excluded_from_pooling;small_denominator
 cancer-ici-response-estimates,ICI-be21515948-01,LUSC,PD-1,ORR,20,PMID:26028407,prior_locator_verified,Table 2,
 cancer-ici-response-estimates,ICI-5b813640a5-01,LUSC,PD-1,CRR,0.7407407407407407,PMID:26028407,prior_locator_verified,Table 2,
 cancer-ici-response-estimates,ICI-79f3d709fb-01,LUSC,PD-1,PFS,3.5,PMID:26028407,prior_locator_verified,"Abstract, Results",
@@ -1109,3 +1109,4 @@ cancer-ici-response-estimates,ICI-897a51cb7a-01,cSCC,PD-1,ORR,47,PMID:29863979,p
 cancer-ici-response-estimates,ICI-8b126eef2c-01,LAML,PD-1+HMA,ORR,33,PMID:30409776,prior_locator_verified,"Abstract, Findings; Results, Clinical outcomes",
 cancer-ici-response-estimates,ICI-4b4990885c-01,MPN,PD-1,ORR,0,PMID:34581778,prior_locator_verified,"Abstract; Results, Safety and efficacy",excluded_from_pooling
 cancer-ici-response-estimates,ICI-2a7de231fa-01,STAD_MSI,PD-1,ORR,57.1,PMID:29543932,prior_locator_verified,"Results, Microsatellite Instability",small_denominator
+cancer-ici-response-estimates,ICI-e23fe5ef46-01,UVM,PD-1,ORR,11.7,PMID:31175402,prior_locator_verified,"Results, Figure 1; Patients and methods, Treatment and study design",

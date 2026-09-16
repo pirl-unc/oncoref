@@ -62,6 +62,58 @@ def test_recovered_source_medians_preserve_genomic_and_response_distinction():
     assert apd1.cancer_apd1_response("UCEC_POLE") is None
 
 
+def test_recovered_uveal_anchor_is_a_prospective_pd1_cohort():
+    assert ici.cancer_ici_response("UVM") == 11.7
+    assert apd1.cancer_apd1_response("UVM") == 11.7
+    pool = ici.pooled_ici_response("UVM")
+    assert pool["selected_regimen"] == "PD-1"
+    assert pool["n_studies"] == 1
+    row = ici.cancer_ici_response_estimates_df().set_index("estimate_id").loc["ICI-e23fe5ef46-01"]
+    assert row["ref"] == "PMID:31175402"
+    assert row["responders"] == 2
+    assert row["metric_n"] == 17
+    assert "first-line" in row["setting"]
+
+
+def test_stk11_subgroup_denominators_and_regimens_are_not_whole_cohorts():
+    rows = ici.cancer_ici_response_estimates_df().set_index("estimate_id")
+    su2c = rows.loc["ICI-2e06c5f7d3-01"]
+    assert su2c["metric_n"] == 54
+    assert su2c["responders"] == 4
+    assert su2c["source_n"] == 174
+    assert su2c["regimen"] == "PD-1+/-CTLA-4"
+    cm057 = rows.loc["ICI-1c401c554d-01"]
+    assert cm057["metric_n"] == 6
+    assert cm057["responders"] == 0
+    assert cm057["source_n"] == 24
+    assert pd.isna(cm057["ci_high"])
+    assert cm057["ci_basis"] == "not_reported"
+    assert cm057["trial_nct"] == "NCT01673867"
+
+
+def test_withdrawn_claim_ledgers_cover_all_original_withdrawals():
+    audit_dir = Path(__file__).resolve().parents[1] / "docs/audits"
+    with (audit_dir / "tmb-source-recovery.csv").open(newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == len({r["cancer_code"] for r in rows}) == 20
+    assert all(r["original_source_assessment"] and r["decision_notes"] for r in rows)
+    with (audit_dir / "ici-withdrawn-anchor-verification.csv").open(newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    assert {r["cancer_code"] for r in rows} == {
+        "COAD",
+        "READ",
+        "UCEC",
+        "UCEC_CNL",
+        "UCEC_CNH",
+        "UCEC_POLE",
+        "LUAD_STK11",
+        "DIPG",
+        "MBL",
+        "UVM",
+    }
+    assert all(r["claimed_source_result"] and r["source_locator"] for r in rows)
+
+
 def test_chalmers_claims_match_extracted_published_rows_and_specimen_counts():
     path = Path(__file__).resolve().parents[1] / "docs/audits/tmb-chalmers-source-rows.csv"
     rows = tmb.cancer_tmb_df().set_index("cancer_code")

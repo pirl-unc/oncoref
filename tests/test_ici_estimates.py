@@ -420,7 +420,7 @@ def test_luad_stk11_estimates_do_not_include_keynote042_all_comer_nsclc_rows():
     alternate_trials = set(stk11[stk11["role"] == "alternate"]["trial_name"])
     assert alternate_trials == {
         "Skoulidis STK11/LKB1 aPD1-resistance analysis",
-        "SU2C cohort + CheckMate-057",
+        "CheckMate 057, KRAS/STK11 subgroup",
     }
 
 

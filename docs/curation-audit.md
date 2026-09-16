@@ -1,6 +1,6 @@
 # TMB, ICI and aPD1 curation audit
 
-Reviewed 2026-09-15, against repository baseline `52f423e`.
+Reviewed 2026-09-16, against repository baseline `52f423e`.
 
 The former `UCEC_POLE` 100% response anchor was a selected exceptional-responder
 case, not a population response rate. It has been withdrawn. The broader audit
@@ -21,8 +21,8 @@ Issues were filed before their corresponding fixes:
 ## Scope and reproducible evidence
 
 Every row in the four numerical reference tables is inventoried, including blanks
-and contextual estimates: 130 TMB, 110 ICI anchors, 84 aPD1 anchors, and 786 endpoint
-estimates (1,110 total). No estimate IDs were deleted. The
+and contextual estimates: 130 TMB, 110 ICI anchors, 84 aPD1 anchors, and 787 endpoint
+estimates (1,111 total). No estimate IDs were deleted. The
 [row ledger](audits/tmb-ici-apd1.csv) records each value, citation, locator status and
 unresolved checks. Run:
 
@@ -35,19 +35,19 @@ ordering, drug/regimen consistency, compact-anchor agreement, missing denominato
 and provenance. Its output is tested for reproducibility. These checks cannot prove
 that a source supports the biological population assigned to a row.
 
-The [citation inventory](audits/source-citations.csv) includes 183 distinct original
+The [citation inventory](audits/source-citations.csv) includes 184 distinct original
 and current references. PMID/DOI metadata identifies the actual article behind a
 citation; resolving an identifier is **not** numerical source validation. The
 [TMB review table](../oncoref/data/cancer-tmb-source-audit.csv) records a disposition
 for all 130 rows, including rejected legacy values, assay, locator, and review notes.
 
-After source recovery there are 38 source-checked numeric TMB rows, 70 numeric entries
-still requiring exact source verification, 10 withdrawn population-median claims,
-and 12 other explicit gaps. Ten of the initial 20 withdrawals now have a verified
+After source recovery there are 39 source-checked numeric TMB rows (38 medians and one mean), 70 numeric entries
+still requiring exact source verification, 9 withdrawn population-median claims,
+and 12 other explicit gaps. Eleven of the initial 20 withdrawals now have a verified
 replacement or repaired citation; an existing MPN gap was also filled. The endpoint
 inventory still flags 338 rows/anchors
 whose numeric source locator is not verified, 33 without response denominators,
-and 46 with denominators below 10. These counts overlap; they are review flags, not
+and 47 with denominators below 10. These counts overlap; they are review flags, not
 338 independently demonstrated errors. Earlier `source_verified` and locator
 `verified` fields remain historical curation metadata, not a fresh scientific
 certification. #524 remains open for this source work.
@@ -108,7 +108,7 @@ response rates.
 | COAD, READ, UCEC | prevalence-weighted modeled ORRs | models retained as context; canonical anchors blank |
 | UCEC_CNH/CNL | pMMR/MSS response assigned to molecular subtypes | gap: source does not isolate those subtypes |
 | LUAD_STK11 | KRAS/STK11 evidence assigned to STK11/KEAP1 union; genomic n=637 used as response n | gap; invalid denominator removed |
-| UVM ICI | mixed anti-PD-1/PD-L1 cohort labeled PD-1 | mixed-agent context; no PD-1 anchor |
+| UVM ICI | mixed anti-PD-1/PD-L1 cohort labeled PD-1 | mixed-agent context retained; first-line PD-1 anchor 11.7% (2/17) from a separate prospective cohort |
 | Ependymoma | 1/22 across mono and combo arms | nivolumab 1/12 = 8.3%; combination n=10 kept separate |
 | DIPG, medulloblastoma | inferred zero ORRs with ordinary anchor confidence | formal-ORR gaps; outcome inferences remain context |
 | GBM | enrolled n=184 used for ORR | response-evaluable n=153; bevacizumab comparator n=156 |
@@ -262,3 +262,30 @@ SNV-plus-indel rate. [Ho 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3708595/
 supports **mean approximately 0.31 nonsilent mutations/Mb, n=60** for ADCC.
 That independent estimate is retained in the [alternative-source ledger](audits/tmb-alternative-source-estimates.csv),
 without attributing it to the cohort supplying the selected panel median.
+
+## Second verification round: every withdrawn response anchor
+
+The [10-code response recovery ledger](audits/ici-withdrawn-anchor-verification.csv)
+accounts for every original canonical response withdrawal in both ICI and aPD1.
+It distinguishes observed outcomes, modeled prevalence blends, inferred zeros,
+regimen mismatches, and population mismatches. Means cannot remedy those issues.
+
+[Rossi 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6584707/) restores a UVM
+PD-1 anchor: **11.7%, 2/17**, with first-line setting, prospective observational
+design, RECIST 1.1 endpoint, and low confidence explicit. The old mixed-agent
+3.6% estimate remains separately available as context.
+
+Further review of [Skoulidis 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/)
+found subgroup denominator errors (#533). SU2C KL is **4/54**, with PD-1 alone
+or combined with CTLA-4, rather than 7.4% over all 174 patients. CheckMate-057 KL
+is **0/6**, not 0/24; its spurious computed CI is removed. Both remain contextual
+for the broader STK11/KEAP1 ontology code.
+
+The alternative TMB ledger now preserves verified EGFR-mutant lung mean/median,
+MF and Sezary estimates, and a newer Hodgkin panel mean/median with their actual
+cohort limits. The original Hodgkin table contains 37 numeric entries while its
+text reports 34; we do not conceal that discrepancy with a computed cohort median.
+TCGA endometrial supplements were downloaded and inspected: their selected-gene
+SMG tables cannot be summed into whole-exome per-patient TMB. These source limits,
+and checks of classic HCL, normal-like breast, and the original high-risk
+neuroblastoma report, are recorded for all remaining TMB gaps.
