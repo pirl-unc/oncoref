@@ -1239,3 +1239,65 @@ def test_bar_rows_stay_legible_relative_to_the_figure():
     n_rows = len(fig.axes[0].get_yticks())
     assert height / n_rows < 0.4, "rows too tall; labels will be dwarfed by bars"
     assert height / width < 2.0, "figure too tall and narrow to read as one chart"
+
+
+@pytest.fixture
+def _print_preset():
+    from oncoref import figure_style
+
+    yield
+    figure_style.use("print")
+
+
+def test_slide_preset_trims_rows_and_says_so(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("slide")
+    fig = plots.burden_category_bars(region="us")
+    ax = fig.axes[0]
+    assert len(ax.get_yticks()) == figure_style.max_items()
+    # Trimming is disclosed on the axis, never silent.
+    assert "top 12 of 37" in ax.get_xlabel()
+    # And it keeps the head of the ranking, not an arbitrary slice.
+    assert "prostate" in [t.get_text() for t in ax.get_yticklabels()]
+
+
+def test_slide_preset_fits_a_slide(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("slide")
+    width, height = plots.burden_category_bars(region="us").get_size_inches()
+    assert (width, height) <= figure_style.SLIDE_ASPECT
+    assert width / height > 1.0, "a slide is landscape"
+
+
+def test_slide_preset_keeps_every_scatter_point_and_rations_only_labels(_print_preset):
+    from oncoref import figure_style
+
+    printed = plots.apd1_vs_tmb()
+    n_points = sum(len(c.get_offsets()) for c in printed.axes[0].collections)
+
+    figure_style.use("slide")
+    slide = plots.apd1_vs_tmb()
+    ax = slide.axes[0]
+    # Every point survives — trimming a scatter would misstate the distribution.
+    assert sum(len(c.get_offsets()) for c in ax.collections) == n_points
+    # But only the top slice is labelled, so the text is readable.
+    labels = [t for t in ax.texts if t.get_text()]
+    assert 0 < len(labels) <= figure_style.max_items()
+
+
+def test_slide_labels_drop_underscores_and_print_keeps_them(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("print")
+    assert figure_style.label("non_hodgkin_lymphoma") == "non_hodgkin_lymphoma"
+    figure_style.use("slide")
+    assert figure_style.label("non_hodgkin_lymphoma") == "non hodgkin lymphoma"
+
+
+def test_unknown_preset_is_rejected(_print_preset):
+    from oncoref import figure_style
+
+    with pytest.raises(ValueError, match="unknown preset"):
+        figure_style.use("poster")

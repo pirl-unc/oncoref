@@ -22,6 +22,36 @@ explicitly overrides this and writes exactly where you say.
 
 `figures/` is gitignored. Set `ONCOREF_FIGURES_DIR` to relocate the root.
 
+## Presets
+
+Every command takes `--preset`:
+
+| | `print` (default) | `slide` |
+|---|---|---|
+| Type | 10pt base | 17pt base |
+| Page | up to 20in | 16:9, up to 12 x 6.75in |
+| Rows | all of them | top 12, disclosed on the axis |
+| Scatter labels | every point | top 12 points; all points still drawn |
+| Category labels | `non_hodgkin_lymphoma` | `non hodgkin lymphoma` |
+
+```bash
+oncoref plot burden-category-bars --preset slide
+python scripts/regenerate_plots.py --preset slide
+```
+
+A slide is not a small manuscript page. A figure in a paper is read at 30cm by
+one person who can stop and study it; a figure on a slide is read at 5m by a room
+that gets it for thirty seconds. Bigger type alone does not bridge that — the
+figure also has to carry fewer things, which is why `slide` trims rows and rations
+labels rather than only scaling the font.
+
+Trimming is never silent: a trimmed axis says `— top 12 of 37`. Scatter plots keep
+**every** point and ration only the labels, because dropping points would misstate
+the distribution.
+
+Slide runs land in their own `run_<stamp>-slide/` directory, so the two presets
+never overwrite each other.
+
 ## Style
 
 All figures render publication-ready by default: opaque white ground (figure,

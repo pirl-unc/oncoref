@@ -47,7 +47,12 @@ from matplotlib.backends.backend_pdf import PdfPages
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
-from oncoref import cta_curation_plots, expression_provenance_plots, plots  # noqa: E402
+from oncoref import (  # noqa: E402
+    cta_curation_plots,
+    expression_provenance_plots,
+    figure_style,
+    plots,
+)
 from oncoref.coverage import within_sample_percentile_coverage_sweep  # noqa: E402
 from oncoref.expression import locally_available_percentile_cohorts  # noqa: E402
 from oncoref.plots import _cached_per_sample_cohorts  # noqa: E402
@@ -368,7 +373,9 @@ def _resolve_run_dir(args: argparse.Namespace) -> Path:
     base.mkdir(parents=True, exist_ok=True)
     if args.no_timestamp:
         return base
-    run = args.run_name or f"run_{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    suffix = "" if getattr(args, "preset", "print") == "print" else f"-{args.preset}"
+    run = args.run_name or f"run_{stamp}{suffix}"
     run_dir = base / run
     run_dir.mkdir(parents=True, exist_ok=True)
     return run_dir
@@ -417,8 +424,15 @@ def main() -> int:
         "--run-name", default=None, help="run subfolder name (default: run_<timestamp>)"
     )
     ap.add_argument("--no-timestamp", action="store_true", help="write straight into the base dir")
+    ap.add_argument(
+        "--preset",
+        default="print",
+        choices=["print", "slide"],
+        help="figure preset (default: print; 'slide' = big type, 16:9, top rows only)",
+    )
     args = ap.parse_args()
 
+    figure_style.use(args.preset)
     run_dir = _resolve_run_dir(args)
     availability = _plot_data_availability()
     jobs = _jobs(availability)

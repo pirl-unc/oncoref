@@ -320,15 +320,20 @@ _DIRECTORY_PLOTS = frozenset({"patient-coverage", "cta-curation", "expression-pr
 
 
 def _cmd_plot(args: argparse.Namespace) -> int:
-    from . import figure_output, plots
+    from . import figure_output, figure_style, plots
+
+    # Before any figure exists: the preset governs rcParams, page geometry and how
+    # many rows survive, so it has to be chosen ahead of the first subplot.
+    figure_style.use(args.preset)
 
     # An explicit --out is used verbatim; omitting it opens a fresh timestamped run
     # directory under figures/, so a figure can always be traced to the run that
     # made it and no run overwrites another.
+    name = args.which if args.preset == "print" else f"{args.which}-{args.preset}"
     args.out = str(
         figure_output.resolve(
             args.out,
-            name=args.which,
+            name=name,
             suffix="" if args.which in _DIRECTORY_PLOTS else ".png",
         )
     )
@@ -591,6 +596,16 @@ def _build_parser() -> argparse.ArgumentParser:
             "Output PNG path, or output directory for the multi-figure families "
             "(patient-coverage, cta-curation, expression-provenance). Omit to write "
             "into a fresh figures/run_<YYYYMMDD-HHMMSS>/ directory."
+        ),
+    )
+    p_plot.add_argument(
+        "--preset",
+        default="print",
+        choices=["print", "slide"],
+        help=(
+            "Figure preset. 'print' is the dense manuscript figure; 'slide' uses large "
+            "type, a 16:9 page, and keeps only the top rows so it reads from the back "
+            "of a room."
         ),
     )
     p_plot.add_argument(

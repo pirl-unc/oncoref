@@ -38,6 +38,10 @@ _MINIMAL = True
 
 _APPLIED = False
 
+#: Active preset name. ``"print"`` is the dense manuscript figure; ``"slide"`` is the
+#: same data cut down to what reads from the back of a room.
+_PRESET = "print"
+
 #: Categorical palette (colour-blind safe), shared by the curation and provenance
 #: figure families so a multi-panel display reads as one system.
 PALETTE = (
@@ -113,7 +117,8 @@ def minimal() -> bool:
 
 
 def apply(force: bool = False) -> None:
-    """Install the publication rcParams (once per process unless ``force``)."""
+    """Install the figure rcParams for the active preset (once per process unless
+    ``force``). ``use()`` forces a re-apply when the preset changes."""
     global _APPLIED
     if _APPLIED and not force:
         return
@@ -121,6 +126,7 @@ def apply(force: bool = False) -> None:
 
     matplotlib.use("Agg", force=False)
     matplotlib.rcParams.update(_RC)
+    matplotlib.rcParams.update(PRESETS[_PRESET]["rc"])
     _APPLIED = True
 
 
@@ -179,7 +185,11 @@ def stack_size(n, *, per_item, floor, cap=MAX_FIGURE_INCHES):
     honest fix is to filter the rows (``min_regimens``, ``n=``, ``only_multi``),
     because no font size makes 85 rows on one page a readable figure.
     """
-    want = max(float(floor), float(per_item) * int(n))
+    params = PRESETS[_PRESET]
+    if cap is MAX_FIGURE_INCHES:  # caller took the default: honour the preset's page
+        cap = params["max_inches"]
+    per_item = float(per_item) * params["per_item_scale"]
+    want = max(float(floor), per_item * int(n))
     inches = min(want, float(cap))
     density = (inches / want) if want > 0 else 1.0
     return inches, density
@@ -188,3 +198,119 @@ def stack_size(n, *, per_item, floor, cap=MAX_FIGURE_INCHES):
 def tick_fontsize(density, base=8.0):
     """Tick-label size for a figure clamped to ``density`` (see :func:`stack_size`)."""
     return max(MIN_TICK_FONTSIZE, base * density)
+
+
+# ---------------------------------------------------------------- presets ----
+#
+# A slide is not a small manuscript page. A figure in a paper is read at ~30cm by
+# one person who can stop and study it; a figure on a slide is read at 5m by a
+# room that gets it for thirty seconds. Bigger type alone does not bridge that —
+# the figure also has to carry fewer things. So a preset sets three knobs
+# together: type scale, page geometry, and how many rows/points survive.
+#
+# Presets never change what the data says. A slide figure shows the top slice and
+# says so on the axis; it does not re-rank, re-scale, or quietly drop outliers.
+
+#: Per-preset geometry. ``max_inches`` caps any figure dimension, ``per_item_scale``
+#: multiplies the per-row spacing, and ``max_items`` is the row/point budget a plot
+#: trims to (``None`` = no trimming).
+PRESETS = {
+    "print": {
+        "max_inches": 20.0,
+        "per_item_scale": 1.0,
+        "max_items": None,
+        "marker_size": 70,
+        "rc": {},
+    },
+    "slide": {
+        # 16:9 at a size that drops onto a standard slide without rescaling, which
+        # is what keeps the type at the size it was designed at.
+        "max_inches": 12.0,
+        "per_item_scale": 1.9,
+        "max_items": 12,
+        "marker_size": 190,
+        "rc": {
+            "font.size": 17,
+            "axes.labelsize": 19,
+            "axes.titlesize": 21,
+            "xtick.labelsize": 16,
+            "ytick.labelsize": 16,
+            "legend.fontsize": 16,
+            "axes.linewidth": 1.4,
+            "xtick.major.width": 1.4,
+            "ytick.major.width": 1.4,
+            "xtick.major.size": 5.0,
+            "ytick.major.size": 5.0,
+            "lines.linewidth": 3.0,
+            "legend.handlelength": 1.0,
+        },
+    },
+}
+
+#: Slide figures cap here rather than at MAX_FIGURE_INCHES.
+SLIDE_ASPECT = (12.0, 6.75)
+
+
+def preset() -> str:
+    """The active preset name."""
+    return _PRESET
+
+
+def use(name: str) -> None:
+    """Select a preset (``"print"`` or ``"slide"``) and re-apply the style."""
+    global _PRESET
+    if name not in PRESETS:
+        raise ValueError(f"unknown preset {name!r}; expected one of {sorted(PRESETS)}")
+    _PRESET = name
+    apply(force=True)
+
+
+def _params() -> dict:
+    return PRESETS[_PRESET]
+
+
+def max_items():
+    """Row/point budget for the active preset, or ``None`` when unlimited.
+
+    A plot with more rows than this trims to the top slice and says so in its axis
+    label, rather than shrinking type until the figure is unreadable on a wall.
+    """
+    return _params()["max_items"]
+
+
+def trim(items, budget=None):
+    """Return ``(kept, n_dropped)`` for a ranked sequence under the item budget.
+
+    ``items`` must already be in the order that matters (best first, or the order
+    the figure will draw). Trimming keeps the head, so a chart sorted by magnitude
+    keeps its largest rows.
+    """
+    budget = max_items() if budget is None else budget
+    items = list(items)
+    if budget is None or len(items) <= budget:
+        return items, 0
+    return items[:budget], len(items) - budget
+
+
+def marker_size() -> int:
+    """Scatter marker area for the active preset."""
+    return _params()["marker_size"]
+
+
+def figure_size(width, height):
+    """Clamp a ``(width, height)`` to the active preset's page."""
+    cap = _params()["max_inches"]
+    if _PRESET == "slide":
+        return (min(width, SLIDE_ASPECT[0]), min(height, SLIDE_ASPECT[1]))
+    return (min(width, cap), min(height, cap))
+
+
+def label(text) -> str:
+    """Display form of a machine label for the active preset.
+
+    Slide labels lose their underscores: ``non_hodgkin_lymphoma`` is a column name,
+    ``non hodgkin lymphoma`` is a phrase a room can read. Print keeps the literal
+    identifier, which is what a methods section and a data table should agree on.
+    """
+    text = str(text)
+    return text.replace("_", " ") if _PRESET == "slide" else text

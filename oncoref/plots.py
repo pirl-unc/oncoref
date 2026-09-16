@@ -267,6 +267,12 @@ def _family_legend_handles(plt, fam_color):
     ]
 
 
+def _label_fontsize():
+    """Point-label size: small enough to pack on a dense print figure, large enough
+    to read on a wall when only a dozen labels survive."""
+    return 13 if figure_style.preset() == "slide" else 7
+
+
 def _repel_labels(ax, texts, xs=None, ys=None):
     """Nudge point labels apart so they don't overlap, drawing thin leader lines back to
     the points (uses ``adjustText`` when installed; a no-op fallback otherwise).
@@ -321,12 +327,23 @@ def _family_scatter(
     plt = _plt()
     codes = [p[0] for p in points]
     colors, fam_color = _family_colors(codes)
-    fig, ax = plt.subplots(figsize=figsize)
+    fig, ax = plt.subplots(figsize=figure_style.figure_size(*figsize))
+    # Every point is drawn — trimming a scatter would misrepresent the distribution.
+    # Only the LABELS are rationed, to the highest-y points, so a slide shows the
+    # named leaders against the full cloud instead of an illegible mat of text.
+    budget = figure_style.max_items()
+    labelled = set()
+    if annotate:
+        ranked = sorted(points, key=lambda pt: pt[2], reverse=True)
+        labelled = {pt[0] for pt in (ranked[:budget] if budget is not None else ranked)}
+    marker = figure_style.marker_size()
     texts, xs, ys = [], [], []
     for code, x, y in points:
-        ax.scatter(x, y, color=colors[code], s=70, edgecolor="white", linewidth=0.6, zorder=3)
-        if annotate:
-            texts.append(ax.text(x, y, format_cancer_code_label(code), fontsize=7, zorder=4))
+        ax.scatter(x, y, color=colors[code], s=marker, edgecolor="white", linewidth=0.8, zorder=3)
+        if annotate and code in labelled:
+            texts.append(
+                ax.text(x, y, format_cancer_code_label(code), fontsize=_label_fontsize(), zorder=4)
+            )
             xs.append(x)
             ys.append(y)
     if logx:
@@ -360,6 +377,9 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
     import numpy as np
 
     plt = _plt()
+    pairs, dropped = figure_style.trim(pairs)
+    if dropped:
+        xlabel = f"{xlabel} — top {len(pairs)} of {len(pairs) + dropped}"
     codes = [p[0] for p in pairs]
     values = [p[1] for p in pairs]
     colors, fam_color = _family_colors(codes)
@@ -484,6 +504,9 @@ def _stacked_barh(rows, *, xlabel, title, legend=None, annotate=True, save=None)
     ``legend`` is an optional ``{label: color}`` shown as a colour key. Segments wide
     enough are annotated with their ``seg_label``. The shared stacked-bar scaffold."""
     plt = _plt()
+    rows, dropped = figure_style.trim(rows)
+    if dropped:
+        xlabel = f"{xlabel} — top {len(rows)} of {len(rows) + dropped}"
     height, row_density = figure_style.stack_size(len(rows), per_item=0.30, floor=4)
     fig, ax = plt.subplots(figsize=(12, height))
     total = max((sum(v for _, v, _ in segs) for _, segs in rows), default=1.0) or 1.0
@@ -526,6 +549,12 @@ def _grouped_barh(categories, series, *, xlabel, title, save=None):
     import numpy as np
 
     plt = _plt()
+    budget = figure_style.max_items()
+    if budget is not None and len(categories) > budget:
+        keep = budget
+        xlabel = f"{xlabel} — top {keep} of {len(categories)}"
+        categories = list(categories)[:keep]
+        series = [(name, list(values)[:keep], color) for name, values, color in series]
     n_series = max(1, len(series))
     base = np.arange(len(categories))
     bar_height = 0.8 / n_series
@@ -535,7 +564,10 @@ def _grouped_barh(categories, series, *, xlabel, title, save=None):
         offset = (k - (n_series - 1) / 2) * bar_height
         ax.barh(base + offset, values, height=bar_height, label=name, color=color)
     ax.set_yticks(base)
-    ax.set_yticklabels(categories, fontsize=figure_style.tick_fontsize(density, 9))
+    ax.set_yticklabels(
+        [figure_style.label(c) for c in categories],
+        fontsize=figure_style.tick_fontsize(density, 9),
+    )
     ax.invert_yaxis()
     ax.set_xlabel(xlabel)
     ax.set_title(title)
