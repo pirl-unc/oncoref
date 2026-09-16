@@ -114,7 +114,21 @@ def _family_colors(codes):
     full = _family_color_map()
     present = sorted({fam_by_code.get(c, "other") for c in codes})
     fam_color = {f: full.get(f, full["other"]) for f in present}
-    return {c: full.get(fam_by_code.get(c, "other"), full["other"]) for c in codes}, fam_color
+    by_code = {c: full.get(fam_by_code.get(c, "other"), full["other"]) for c in codes}
+    if figure_style.highlight() is not None:
+        # Same points, same places — only the emphasis changes. The context keeps its
+        # lineage hue (faded toward the page) so the landscape still reads as a
+        # landscape rather than collapsing into undifferentiated grey.
+        by_code = {
+            c: (
+                figure_style.HIGHLIGHT_COLOR
+                if figure_style.is_highlighted(c)
+                else figure_style.mute(col)
+            )
+            for c, col in by_code.items()
+        }
+        fam_color = {f: figure_style.mute(col) for f, col in fam_color.items()}
+    return by_code, fam_color
 
 
 def _plot_evidence_code(code):
@@ -260,6 +274,17 @@ def _save(fig, save):
 # the data, pick a primitive", not "re-derive the matplotlib boilerplate".
 
 
+def _mark_highlighted_ticks(ax, codes, axis="y"):
+    """Colour and embolden the tick label for the highlighted cancer type."""
+    if figure_style.highlight() is None:
+        return
+    ticks = ax.get_yticklabels() if axis == "y" else ax.get_xticklabels()
+    for tick, code in zip(ticks, codes):
+        if figure_style.is_highlighted(code):
+            tick.set_color(figure_style.HIGHLIGHT_COLOR)
+            tick.set_fontweight("bold")
+
+
 def _family_legend_handles(plt, fam_color):
     return [
         plt.Line2D([], [], marker="o", linestyle="", color=col, label=fam)
@@ -339,13 +364,33 @@ def _family_scatter(
     if annotate:
         ranked = sorted(points, key=lambda pt: pt[2], reverse=True)
         labelled = {pt[0] for pt in (ranked[:budget] if budget is not None else ranked)}
+        # The highlighted type is the point of the figure, so it keeps its label even
+        # when it falls outside the slide label budget.
+        labelled |= {c for c, _, _ in points if figure_style.is_highlighted(c)}
     marker = figure_style.marker_size()
     texts, xs, ys = [], [], []
     for code, x, y in points:
-        ax.scatter(x, y, color=colors[code], s=marker, edgecolor="white", linewidth=0.8, zorder=3)
+        hot = figure_style.is_highlighted(code)
+        ax.scatter(
+            x,
+            y,
+            color=colors[code],
+            s=marker * (2.2 if hot else 1.0),
+            edgecolor="#222222" if hot else "white",
+            linewidth=1.6 if hot else 0.8,
+            zorder=5 if hot else 3,
+        )
         if annotate and code in labelled:
             texts.append(
-                ax.text(x, y, format_cancer_code_label(code), fontsize=_label_fontsize(), zorder=4)
+                ax.text(
+                    x,
+                    y,
+                    format_cancer_code_label(code),
+                    fontsize=_label_fontsize() * (1.25 if hot else 1.0),
+                    fontweight="bold" if hot else "normal",
+                    color=figure_style.HIGHLIGHT_COLOR if hot else "#222222",
+                    zorder=6 if hot else 4,
+                )
             )
             xs.append(x)
             ys.append(y)
@@ -403,6 +448,7 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
         [format_cancer_code_label(c) for c in codes],
         fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
     )
+    _mark_highlighted_ticks(ax, codes)
     ax.invert_yaxis()  # first pair at the top
     ax.set_xlabel(xlabel)
     ax.set_title(title)

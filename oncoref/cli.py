@@ -325,11 +325,14 @@ def _cmd_plot(args: argparse.Namespace) -> int:
     # Before any figure exists: the preset governs rcParams, page geometry and how
     # many rows survive, so it has to be chosen ahead of the first subplot.
     figure_style.use(args.preset)
+    figure_style.set_highlight(args.highlight)
 
     # An explicit --out is used verbatim; omitting it opens a fresh timestamped run
     # directory under figures/, so a figure can always be traced to the run that
     # made it and no run overwrites another.
     name = args.which if args.preset == "print" else f"{args.which}-{args.preset}"
+    if args.highlight:
+        name = f"{name}-{args.highlight}"
     args.out = str(
         figure_output.resolve(
             args.out,
@@ -596,6 +599,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "Output PNG path, or output directory for the multi-figure families "
             "(patient-coverage, cta-curation, expression-provenance). Omit to write "
             "into a fresh figures/run_<YYYYMMDD-HHMMSS>/ directory."
+        ),
+    )
+    p_plot.add_argument(
+        "--highlight",
+        default=None,
+        help=(
+            "Pick one cancer code out of the landscape (e.g. BRCA_Basal). Nothing is "
+            "filtered or re-ranked: the same points stay in the same places, the rest "
+            "fade to context."
         ),
     )
     p_plot.add_argument(

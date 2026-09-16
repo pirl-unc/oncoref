@@ -71,6 +71,55 @@ _PERCENTILE_COVERAGE_PLOTS = frozenset(
 )
 
 
+#: ``(cancer_code, output_subdir)`` rendered as highlighted landscape variants.
+#: BRCA_Basal is the registry's PAM50 basal-like subtype, the closest available
+#: stand-in for TNBC — overlapping but NOT identical populations, which is why the
+#: figures keep the registry code on the mark rather than relabelling it "TNBC".
+HIGHLIGHT_TARGETS = (("BRCA_Basal", "tnbc"),)
+
+
+def _highlight_jobs(availability=None) -> list[tuple[str, str, str, dict]]:
+    """Landscape figures whose marks are per-cancer-code, so a highlight lands.
+
+    Deliberately a subset of :func:`_jobs`: heatmaps, curation figures and
+    burden-category charts have no single cancer-code mark to pick out.
+    """
+    availability = availability or _plot_data_availability()
+    cached = list(availability["per_sample"])
+    jobs = [
+        ("tnbc", "apd1_vs_tmb_ici", "apd1_vs_tmb", {"strict_pd1": False}),
+        ("tnbc", "apd1_vs_tmb_strict_pd1", "apd1_vs_tmb", {"strict_pd1": True}),
+        ("tnbc", "apd1_orr_bars_ici", "apd1_orr_bars", {"strict_pd1": False}),
+        ("tnbc", "ici_orr_pooled_forest", "ici_orr_pooled_forest", {}),
+        ("tnbc", "ici_regimen_comparison", "ici_regimen_comparison", {}),
+        ("tnbc", "ici_response_by_regimen", "ici_response_by_regimen", {}),
+    ]
+    jobs.extend(
+        (
+            "tnbc",
+            f"apd1_response_signature_{sig}",
+            "apd1_response_signature_scatter",
+            {"signature": sig},
+        )
+        for sig in ("t_cell_inflamed", "tgfb_exclusion")
+    )
+    if cached:
+        jobs.extend(
+            [
+                ("tnbc", "cta_burden_vs_apd1", "cta_burden_vs_response", {"against": "apd1"}),
+                ("tnbc", "cta_burden_vs_tmb", "cta_burden_vs_response", {"against": "tmb"}),
+                (
+                    "tnbc",
+                    "cta_specific_9mer_load_vs_tmb",
+                    "cta_specific_9mer_load",
+                    {"against": "tmb"},
+                ),
+                ("tnbc", "cta_addressable_burden_us_incidence", "cta_addressable_burden", {}),
+            ]
+        )
+    return jobs
+
+
 def _plot_data_availability() -> dict[str, tuple[str, ...]]:
     """Side-effect-free local inputs available to the plot batch."""
     per_sample = tuple(sorted(_cached_per_sample_cohorts()))
@@ -489,6 +538,32 @@ def main() -> int:
         skipped.append(("cta_curation", f"{type(e).__name__}: {e}"))
         print(f"  SKIP  cta_curation  ({type(e).__name__}: {e})", file=sys.stderr)
         traceback.print_exc(file=sys.stderr)
+
+    # ---- highlighted landscape variants -------------------------------------
+    #
+    # The same landscape figures with one cancer type picked out. Only plots whose
+    # marks are per-cancer-code can carry a highlight, so this is a named subset
+    # rather than "every figure": a burden-category chart has no TNBC row to light up.
+    for code, label in HIGHLIGHT_TARGETS:
+        hl_dir = run_dir / label
+        figure_style.set_highlight(code)
+        try:
+            for family, name, fn_attr, kwargs in _highlight_jobs(availability):
+                out = hl_dir / f"{name}.png"
+                out.parent.mkdir(parents=True, exist_ok=True)
+                figure = None
+                try:
+                    figure = getattr(plots, fn_attr)(save=out, **kwargs)
+                    done.append(f"{label}/{out.name}")
+                    print(f"  ok    {label}/{out.name}")
+                except Exception as e:
+                    skipped.append((f"{label}/{name}", f"{type(e).__name__}: {e}"))
+                    print(f"  SKIP  {label}/{name}  ({type(e).__name__}: {e})", file=sys.stderr)
+                finally:
+                    if figure is not None:
+                        plt.close(figure)
+        finally:
+            figure_style.set_highlight(None)
 
     provenance_dir = run_dir / "expression_provenance"
     try:

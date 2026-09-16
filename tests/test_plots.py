@@ -1350,3 +1350,69 @@ def test_log_axis_stays_plain_log_when_every_value_is_positive():
         points, xlabel="x", ylabel="y", title="t", logx=True, annotate=False
     )
     assert fig.axes[0].get_xscale() == "log"
+
+
+@pytest.fixture
+def _no_highlight():
+    from oncoref import figure_style
+
+    yield
+    figure_style.set_highlight(None)
+
+
+def test_highlight_mutes_context_without_changing_positions(_no_highlight):
+    from oncoref import figure_style
+
+    plain = plots.apd1_vs_tmb(annotate=False)
+    plain_xy = np.vstack([c.get_offsets() for c in plain.axes[0].collections])
+
+    figure_style.set_highlight("BRCA_Basal")
+    hot = plots.apd1_vs_tmb(annotate=False)
+    hot_xy = np.vstack([c.get_offsets() for c in hot.axes[0].collections])
+
+    # A highlight is a display decision: same points, same places, nothing filtered.
+    assert plain_xy.shape == hot_xy.shape
+    assert np.allclose(np.sort(plain_xy, axis=0), np.sort(hot_xy, axis=0))
+
+
+def test_highlighted_mark_is_emphasised(_no_highlight):
+    from oncoref import figure_style
+
+    figure_style.set_highlight("BRCA_Basal")
+    ax = plots.apd1_vs_tmb(annotate=False).axes[0]
+    sizes = sorted({float(s) for c in ax.collections for s in np.atleast_1d(c.get_sizes())})
+    # Exactly one mark is enlarged, and it is bigger than the rest.
+    assert len(sizes) == 2 and sizes[1] > sizes[0]
+
+
+def test_highlighted_point_is_labelled_even_past_the_slide_budget(_no_highlight):
+    from oncoref import figure_style
+
+    figure_style.use("slide")
+    figure_style.set_highlight("BRCA_Basal")
+    try:
+        ax = plots.apd1_vs_tmb().axes[0]
+        labels = [t.get_text() for t in ax.texts if t.get_text()]
+        # BRCA_Basal has a low ORR so it is nowhere near the top-12 by y.
+        assert "BRCA_Basal" in labels
+    finally:
+        figure_style.use("print")
+
+
+def test_mute_blends_toward_the_page_not_toward_black(_no_highlight):
+    from oncoref import figure_style
+
+    muted = figure_style.mute("#2a7f4f")
+    # Fading must lighten, so overlapping context marks do not compound into blobs.
+    assert all(ch > 0.5 for ch in muted)
+
+
+def test_no_highlight_leaves_colours_untouched(_no_highlight):
+    from oncoref import figure_style
+
+    figure_style.set_highlight(None)
+    plain, _ = plots._family_colors(["LUAD", "BRCA_Basal"])
+    figure_style.set_highlight("BRCA_Basal")
+    hot, _ = plots._family_colors(["LUAD", "BRCA_Basal"])
+    assert plain["LUAD"] != hot["LUAD"]
+    assert hot["BRCA_Basal"] == figure_style.HIGHLIGHT_COLOR

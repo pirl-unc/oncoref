@@ -52,6 +52,34 @@ the distribution.
 Slide runs land in their own `run_<stamp>-slide/` directory, so the two presets
 never overwrite each other.
 
+## Highlighting one cancer type
+
+```bash
+oncoref plot apd1-vs-tmb --highlight BRCA_Basal
+```
+
+Picks one cancer type out of a landscape figure: it gets the highlight colour, a
+larger mark, a dark ring and a bold label, while the rest fade toward the page but
+keep their lineage hue so the landscape still reads as a landscape.
+
+Nothing is filtered, re-ranked or re-scaled — the highlighted figure and its plain
+twin show the same points in the same places. A highlighted point is labelled even
+when it falls outside the `slide` preset's label budget, because it is the point of
+the figure.
+
+Only plots whose marks are per-cancer-code can carry a highlight. A burden-category
+chart has no single row to light up, so those are excluded rather than approximated.
+
+`scripts/regenerate_plots.py` also writes a `tnbc/` subdirectory of highlighted
+landscape variants into every run, and those pages appear in the combined PDF
+alongside the plain figures.
+
+**On TNBC specifically:** the registry has no `TNBC` code. `BRCA_Basal` (PAM50
+basal-like) is the closest available stand-in, and the two are overlapping but not
+identical populations — roughly 80% of basal-like tumours are triple-negative and
+most but not all TNBC is basal-like. The figures therefore keep the registry code
+`BRCA_Basal` on the mark rather than relabelling it "TNBC".
+
 ## Style
 
 All figures render publication-ready by default: opaque white ground (figure,
