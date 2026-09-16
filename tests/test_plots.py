@@ -1017,7 +1017,7 @@ def test_regenerate_plots_runner_writes_all_figures_pdf(tmp_path):
 
     pdf = mod._write_all_figures_pdf(tmp_path, rels)
 
-    assert pdf == tmp_path / "all-figures.pdf"
+    assert pdf == tmp_path / "oncoref-all-figures.pdf"
     assert pdf.exists()
     assert pdf.stat().st_size > 0
 
@@ -1072,7 +1072,7 @@ def test_regenerate_plots_runner_closes_each_returned_figure(tmp_path, monkeypat
     assert set(plt.get_fignums()) == existing_figures
     assert (tmp_path / "memory" / "first.png").exists()
     assert (tmp_path / "memory" / "second.png").exists()
-    assert (tmp_path / "all-figures.pdf").exists()
+    assert (tmp_path / "oncoref-all-figures.pdf").exists()
 
 
 def test_burden_weights_split_a_category_across_its_codes():

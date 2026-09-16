@@ -129,6 +129,6 @@ python scripts/regenerate_plots.py
 
 Writes every figure into one `figures/run_<timestamp>/` snapshot, organised by
 family, plus an `index.md` listing what was produced and what was skipped, and a
-combined `all-figures.pdf` contact sheet. Figures that cannot be drawn (missing
+combined `oncoref-all-figures.pdf` contact sheet. Figures that cannot be drawn (missing
 per-sample matrix, empty data) are reported and skipped rather than aborting the
 batch.

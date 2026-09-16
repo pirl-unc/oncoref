@@ -410,7 +410,7 @@ def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
     if not pngs:
         return None
 
-    pdf = run_dir / "all-figures.pdf"
+    pdf = run_dir / "oncoref-all-figures.pdf"
     with PdfPages(pdf) as pages:
         for png in pngs:
             image = mpimg.imread(png)
