@@ -24,9 +24,11 @@ def test_tmb_source_review_can_replace_an_unsupported_estimate():
     assert mtc["source_review_status"] == "source_checked"
     assert mtc["pmid_doi"] == "PMID:28420421"
     assert mtc["n_samples"] == 96
-    # Small-cohort estimates remain explicitly distinguished from checked medians.
+    # The source covers both histologies; its exact summary statistic is unresolved.
     cranio = cancer_tmb_df().set_index("cancer_code").loc["CRANIO"]
-    assert cranio["estimate_type"] == "small_n"
+    assert cranio["n_samples"] == 15
+    assert cranio["source_scope"] == "adamantinomatous_and_papillary_discovery_cohort"
+    assert cranio["estimate_type"] == "curated_estimate"
     assert cranio["source_review_status"] == "needs_source_review"
 
 
