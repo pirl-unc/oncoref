@@ -14,7 +14,7 @@
 """Regenerate **all** oncoref figures into one timestamped run directory.
 
 Mirrors the pirlygenes ``analyses/regenerate_plots.py`` convention: every run
-writes into a fresh ``outputs/run_<YYYYMMDD-HHMMSS>/`` snapshot (gitignored),
+writes into a fresh ``figures/run_<YYYYMMDD-HHMMSS>/`` snapshot (gitignored),
 organised by plot family in subfolders, so a new run never overwrites an older
 one. A ``latest`` symlink points at the most recent run; an ``index.md`` lists
 what was produced (and what was skipped).
@@ -47,7 +47,12 @@ from matplotlib.backends.backend_pdf import PdfPages
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
-from oncoref import cta_curation_plots, plots  # noqa: E402
+from oncoref import (  # noqa: E402
+    cta_curation_plots,
+    expression_provenance_plots,
+    figure_style,
+    plots,
+)
 from oncoref.coverage import within_sample_percentile_coverage_sweep  # noqa: E402
 from oncoref.expression import locally_available_percentile_cohorts  # noqa: E402
 from oncoref.plots import _cached_per_sample_cohorts  # noqa: E402
@@ -181,6 +186,23 @@ def _jobs(
                 {"stat": stat, "cohorts": percentile_proteoform},
             )
             for stat in ("q1", "median", "q3")
+        )
+    if percentile_proteoform:
+        # Panel design: the greedy covering set at both the actionable (30 TPM) bar
+        # and a looser one, on q3 (the subset-antigen-appropriate statistic).
+        jobs.extend(
+            (
+                "cta_covering_set",
+                f"cta_covering_set_{stat}_t{int(threshold)}",
+                "cta_covering_set",
+                {
+                    "stat": stat,
+                    "threshold_tpm": threshold,
+                    "cohorts": percentile_proteoform,
+                },
+            )
+            for stat in ("median", "q3")
+            for threshold in (10.0, 30.0)
         )
     if percentile_gene:
         jobs.append(
@@ -347,11 +369,13 @@ def _availability_index_lines(availability, percentile_coverage):
 
 
 def _resolve_run_dir(args: argparse.Namespace) -> Path:
-    base = args.out_dir.resolve() if args.out_dir else _REPO_ROOT / "outputs"
+    base = args.out_dir.resolve() if args.out_dir else _REPO_ROOT / "figures"
     base.mkdir(parents=True, exist_ok=True)
     if args.no_timestamp:
         return base
-    run = args.run_name or f"run_{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    suffix = "" if getattr(args, "preset", "print") == "print" else f"-{args.preset}"
+    run = args.run_name or f"run_{stamp}{suffix}"
     run_dir = base / run
     run_dir.mkdir(parents=True, exist_ok=True)
     return run_dir
@@ -368,7 +392,20 @@ def _update_latest(run_dir: Path) -> None:
         pass  # symlinks may be unavailable (e.g. some Windows setups)
 
 
+#: Never rasterize a contact-sheet page below this, or above it (a 5,900px-tall
+#: figure at 600 dpi is a page nothing can open).
+_PDF_MIN_DPI = 150
+_PDF_MAX_DPI = 400
+
+
 def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
+    """Contact sheet of every figure, one page each, captioned with its path.
+
+    Each page is sized and rasterized so the embedded PNG lands at **at least** its
+    native pixel resolution. Fitting a 3,000px figure into an 11in page at the
+    default 100 dpi resamples it down 3x and the contact sheet comes out blurry —
+    which makes it useless for the one thing it is for, checking the figures.
+    """
     pngs = [run_dir / rel for rel in generated if rel.endswith(".png")]
     if not pngs:
         return None
@@ -377,16 +414,24 @@ def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
     with PdfPages(pdf) as pages:
         for png in pngs:
             image = mpimg.imread(png)
-            height, width = image.shape[:2]
-            aspect = width / height if height else 1
-            fig_width = 11
-            fig_height = max(4, min(11, fig_width / aspect + 0.6))
+            src_h, src_w = image.shape[:2]
+            aspect = (src_w / src_h) if src_h else 1.0
+            # Page: long side 11in, short side follows the image's own aspect, so a
+            # tall figure gets a tall page instead of being squeezed into a square.
+            if aspect >= 1:
+                fig_width, fig_height = 11.0, 11.0 / aspect
+            else:
+                fig_width, fig_height = 11.0 * aspect, 11.0
+            fig_height += 0.4  # caption strip
+            # dpi that maps at least one output pixel per source pixel.
+            needed = max(src_w / fig_width, src_h / fig_height)
+            dpi = int(min(_PDF_MAX_DPI, max(_PDF_MIN_DPI, needed)))
             fig, ax = plt.subplots(figsize=(fig_width, fig_height))
-            ax.imshow(image)
+            ax.imshow(image, interpolation="none")
             ax.set_axis_off()
-            fig.suptitle(png.relative_to(run_dir).as_posix(), fontsize=10)
-            fig.tight_layout(rect=(0, 0, 1, 0.96))
-            pages.savefig(fig)
+            fig.suptitle(png.relative_to(run_dir).as_posix(), fontsize=9)
+            fig.tight_layout(rect=(0, 0, 1, 1 - 0.4 / fig_height))
+            pages.savefig(fig, dpi=dpi)
             plt.close(fig)
     return pdf
 
@@ -394,14 +439,21 @@ def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
-        "--out-dir", type=Path, default=None, help="base output dir (default: ./outputs)"
+        "--out-dir", type=Path, default=None, help="base output dir (default: ./figures)"
     )
     ap.add_argument(
         "--run-name", default=None, help="run subfolder name (default: run_<timestamp>)"
     )
     ap.add_argument("--no-timestamp", action="store_true", help="write straight into the base dir")
+    ap.add_argument(
+        "--preset",
+        default="print",
+        choices=["print", "slide"],
+        help="figure preset (default: print; 'slide' = big type, 16:9, top rows only)",
+    )
     args = ap.parse_args()
 
+    figure_style.use(args.preset)
     run_dir = _resolve_run_dir(args)
     availability = _plot_data_availability()
     jobs = _jobs(availability)
@@ -436,6 +488,17 @@ def main() -> int:
     except Exception as e:
         skipped.append(("cta_curation", f"{type(e).__name__}: {e}"))
         print(f"  SKIP  cta_curation  ({type(e).__name__}: {e})", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
+
+    provenance_dir = run_dir / "expression_provenance"
+    try:
+        result = expression_provenance_plots.render(out_dir=provenance_dir)
+        for path in result["paths"].values():
+            done.append(f"expression_provenance/{path.name}")
+            print(f"  ok    expression_provenance/{path.name}")
+    except Exception as e:
+        skipped.append(("expression_provenance", f"{type(e).__name__}: {e}"))
+        print(f"  SKIP  expression_provenance  ({type(e).__name__}: {e})", file=sys.stderr)
         traceback.print_exc(file=sys.stderr)
 
     pdf = _write_all_figures_pdf(run_dir, done)

@@ -9,6 +9,7 @@ from pathlib import Path
 from types import ModuleType
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -30,7 +31,10 @@ def test_apd1_vs_tmb_renders(tmp_path):
     assert fig is not None
 
 
-def test_scatter_label_adjustment_has_a_runtime_bound(monkeypatch):
+def test_scatter_label_adjustment_is_bounded_by_iterations_not_wall_clock(monkeypatch):
+    # A time_lim makes label layout depend on machine load: the same command renders
+    # a clean figure on an idle box and a pile of overlapping labels on a busy one.
+    # The bound must be deterministic, so iterations, never seconds.
     observed = {}
     fake_adjust_text = ModuleType("adjustText")
 
@@ -47,7 +51,26 @@ def test_scatter_label_adjustment_has_a_runtime_bound(monkeypatch):
 
     assert observed["texts"] == texts
     assert observed["ax"] is axis
-    assert observed["time_lim"] == 1.0
+    assert "time_lim" not in observed
+    assert observed["iter_lim"] > 0
+    # Leader lines back to the anchor point, so a moved label stays traceable.
+    assert observed["arrowprops"]["arrowstyle"] == "-"
+
+
+def test_scatter_label_adjustment_passes_anchor_points_when_given(monkeypatch):
+    observed = {}
+    fake_adjust_text = ModuleType("adjustText")
+
+    def adjust_text(texts, **kwargs):
+        observed.update(kwargs)
+
+    fake_adjust_text.adjust_text = adjust_text
+    monkeypatch.setitem(sys.modules, "adjustText", fake_adjust_text)
+
+    plots._repel_labels(object(), [object()], [1.0], [2.0])
+    # Anchors let adjustText spring a label back toward its own point rather than
+    # leaving it wherever repulsion pushed it.
+    assert observed["x"] == [1.0] and observed["y"] == [2.0]
 
 
 def test_apd1_vs_tmb_strict_pd1_filters_proxy_targets(tmp_path):
@@ -195,14 +218,46 @@ def test_cta_curation_source_counts_partition():
 def test_cta_curation_tag_sets_cover_primary_sources():
     from oncoref import cta_curation_plots as ccp
 
-    sets = ccp._tag_sets(ccp._evidence())
+    df = ccp._evidence()
+    sets = ccp._tag_sets(df)
     assert set(sets) == set(ccp.PRIMARY_SOURCES)
     assert sets["CTpedia"]
     assert sets["CTexploreR"]
     assert sets["daSilva2017_protein"]
 
+    # The da Silva primary source is the mass-spec-validated subset only. The broad
+    # ``daSilva2017`` cross-reference tag (the full 1,103-gene 0.9-threshold set)
+    # shares a prefix with it and must not leak into the source figures.
+    tagged = {
+        str(ensg)
+        for ensg, raw in zip(df["Ensembl_Gene_ID"], df["source_databases"].fillna(""))
+        if "daSilva2017_protein" in {t.strip() for t in str(raw).split(";")}
+    }
+    assert sets["daSilva2017_protein"] == tagged
 
-def test_cta_curation_renderer_writes_five_figures(tmp_path):
+
+def test_cta_curation_stage_counts_are_monotonic():
+    from oncoref import cta_curation_plots as ccp
+
+    stages = ccp.stage_counts()
+    assert next(label for label, _, _ in stages) == "source union"
+    remaining = [n for _, n, _ in stages]
+    assert remaining == sorted(remaining, reverse=True)
+    # Each stage's drop is exactly the step down from the previous stage.
+    for (_, prev, _), (_, cur, dropped) in zip(stages, stages[1:]):
+        assert prev - cur == dropped
+
+
+def test_cta_curation_stage_funnel_lands_on_shipped_set():
+    from oncoref import cta
+    from oncoref import cta_curation_plots as ccp
+
+    # The funnel's last stage must equal what cta_gene_ids() actually returns,
+    # not the raw passes_filters column (which is one adjudication short).
+    assert ccp.stage_counts()[-1][1] == len(cta.cta_gene_ids())
+
+
+def test_cta_curation_renderer_writes_every_figure(tmp_path):
     from oncoref import cta_curation_plots as ccp
 
     result = ccp.render(out_dir=tmp_path)
@@ -377,8 +432,10 @@ def test_cta_addressable_burden_labels_mortality_metric(tmp_path, monkeypatch):
     fig = plots.cta_addressable_burden(metric="world_mortality_pct", n=10, save=str(out))
     assert out.exists() and fig is not None
     ax = fig.axes[0]
+    # The metric rides the axis label. The in-figure title is stripped by the
+    # publication style (figure_style minimal mode) and restored when it is off.
     assert "WORLD mortality share" in ax.get_xlabel()
-    assert "WORLD mortality share" in ax.get_title()
+    assert ax.get_title() == ""
 
 
 def test_cta_addressable_burden_no_within_sample(monkeypatch):
@@ -1013,3 +1070,280 @@ def test_regenerate_plots_runner_closes_each_returned_figure(tmp_path, monkeypat
     assert (tmp_path / "memory" / "first.png").exists()
     assert (tmp_path / "memory" / "second.png").exists()
     assert (tmp_path / "all-figures.pdf").exists()
+
+
+def test_burden_weights_split_a_category_across_its_codes():
+    # A burden category's incidence share is divided among the codes that map to
+    # it, so a heavily sub-typed cancer is not counted once per subtype.
+    from oncoref.incidence import burden_category, cancer_burden
+
+    weights = plots._burden_weights(["LUAD", "LUSC", "SKCM"])
+    assert set(weights.index) == {"LUAD", "LUSC", "SKCM"}
+    assert (weights > 0).all()
+    lung = cancer_burden().get(burden_category("LUAD"))
+    assert weights["LUAD"] + weights["LUSC"] == pytest.approx(lung)
+
+
+def test_greedy_cover_is_deterministic_and_monotonic():
+    matrix = pd.DataFrame(
+        {"A": [100.0, 100.0, 0.0], "B": [0.0, 100.0, 100.0], "C": [0.0, 0.0, 0.0]},
+        index=["X", "Y", "Z"],
+    )
+    weights = pd.Series({"X": 1.0, "Y": 1.0, "Z": 5.0})
+    steps, coverable = plots._greedy_cover(matrix, 30.0, weights)
+    assert sorted(coverable) == ["X", "Y", "Z"]
+    # B first: it reaches Z (weight 5) plus Y, beating A's X+Y.
+    assert [s[0] for s in steps] == ["B", "A"]
+    assert [s[3] for s in steps] == [2, 3]
+    assert [s[2] for s in steps] == [6.0, 7.0]
+    # A gene covering nothing is never selected.
+    assert "C" not in [s[0] for s in steps]
+    assert plots._greedy_cover(matrix, 30.0, weights)[0] == steps
+
+
+def test_greedy_cover_ignores_genes_below_threshold():
+    matrix = pd.DataFrame({"A": [10.0, 20.0]}, index=["X", "Y"])
+    steps, coverable = plots._greedy_cover(matrix, 30.0, pd.Series({"X": 1.0, "Y": 1.0}))
+    assert steps == [] and list(coverable) == []
+
+
+def test_cta_covering_set_renders(tmp_path):
+    out = tmp_path / "covering.png"
+    fig = plots.cta_covering_set(save=str(out), n_genes=8)
+    assert out.exists() and out.stat().st_size > 0
+    ax = fig.axes[0]
+    assert ax.get_ylabel() == "cumulative coverage (%)"
+    assert len(ax.get_xticklabels()) <= 8
+    # Both curves are cumulative, so they never decrease.
+    for line in ax.get_lines():
+        ydata = list(line.get_ydata())
+        assert ydata == sorted(ydata)
+
+
+def test_cta_covering_set_rejects_an_unknown_stat():
+    with pytest.raises(ValueError, match="stat must be one of"):
+        plots.cta_covering_set(stat="p99")
+
+
+def test_cli_stat_is_opt_in_so_each_plot_keeps_its_default(monkeypatch, tmp_path):
+    # --stat unset must not force "median" onto cta-covering-set, whose own
+    # default is q3 (the subset-antigen-appropriate statistic).
+    seen = {}
+    monkeypatch.setattr(plots, "cta_covering_set", lambda **kw: seen.update(kw))
+
+    assert cli.main(["plot", "cta-covering-set", "--out", str(tmp_path / "a.png")]) == 0
+    assert "stat" not in seen
+
+    seen.clear()
+    assert (
+        cli.main(["plot", "cta-covering-set", "--stat", "q1", "--out", str(tmp_path / "b.png")])
+        == 0
+    )
+    assert seen["stat"] == "q1"
+
+
+def test_cli_expression_heatmap_still_defaults_to_median(monkeypatch, tmp_path):
+    seen = {}
+    monkeypatch.setattr(plots, "cta_expression_heatmap", lambda **kw: seen.update(kw))
+    assert cli.main(["plot", "cta-expression-heatmap", "--out", str(tmp_path / "h.png")]) == 0
+    assert seen["stat"] == "median"
+
+
+def test_heatmap_missing_cells_are_not_the_figure_ground(tmp_path):
+    # On a white ground an unpainted NaN cell reads as magma's pale-yellow top end,
+    # inverting "absent" into "highest". It must get a colour outside the ramp.
+    grid = pd.DataFrame(
+        {"GENE_A": [10.0, float("nan")], "GENE_B": [1.0, 2.0]}, index=["LUAD", "SKCM"]
+    )
+    fig = plots._cohort_gene_heatmap(
+        grid,
+        title="t",
+        cbar_label="c",
+        cmap="magma",
+        lognorm=True,
+        save=str(tmp_path / "h.png"),
+    )
+    bad = np.asarray(fig.axes[0].images[0].cmap.get_bad(), dtype=float)
+    assert bad[3] > 0, "missing cells must be painted, not left transparent"
+    assert not np.allclose(bad[:3], 1.0), "missing cells must not be the white ground"
+
+
+def test_stack_size_is_bounded_however_many_rows():
+    from oncoref import figure_style
+
+    # Unclamped, the per-row spacing applies directly.
+    inches, density = figure_style.stack_size(10, per_item=0.42, floor=6)
+    assert inches == pytest.approx(4.2 if 4.2 > 6 else 6)
+    assert density == 1.0
+
+    # Past the cap, the figure stops growing and reports how far it compressed.
+    inches, density = figure_style.stack_size(1000, per_item=0.42, floor=6)
+    assert inches == figure_style.MAX_FIGURE_INCHES
+    assert 0 < density < 1
+    # No row count, however absurd, can exceed the cap.
+    for n in (85, 500, 10_000, 1_000_000):
+        got, _ = figure_style.stack_size(n, per_item=0.42, floor=6)
+        assert got <= figure_style.MAX_FIGURE_INCHES
+
+
+def test_tick_fontsize_shrinks_with_density_but_has_a_floor():
+    from oncoref import figure_style
+
+    assert figure_style.tick_fontsize(1.0, 8.0) == 8.0
+    assert figure_style.tick_fontsize(0.5, 8.0) == 4.0
+    # Never vanishes, however dense.
+    assert figure_style.tick_fontsize(0.0001, 8.0) == figure_style.MIN_TICK_FONTSIZE
+
+
+def test_ici_regimen_comparison_stays_within_the_page_cap(tmp_path):
+    from oncoref import figure_style
+
+    # This is the figure that reached 36 inches: every cancer type on its own row.
+    out = tmp_path / "ici.png"
+    fig = plots.ici_regimen_comparison(save=str(out), min_regimens=1)
+    width, height = fig.get_size_inches()
+    assert height <= figure_style.MAX_FIGURE_INCHES
+    assert width <= figure_style.MAX_FIGURE_INCHES
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_every_cta_expression_heatmap_axis_is_capped(tmp_path):
+    from oncoref import figure_style
+
+    fig = plots.cta_expression_heatmap(stat="q3", save=str(tmp_path / "h.png"))
+    width, height = fig.get_size_inches()
+    assert width <= figure_style.MAX_FIGURE_INCHES
+    assert height <= figure_style.MAX_FIGURE_INCHES
+
+
+def test_grouped_barh_bars_are_row_sized_not_figure_sized():
+    # The figure-height and bar-height variables must stay distinct: shadowing one
+    # with the other drew every bar 18.5 DATA units tall, so the bars detached from
+    # their row labels entirely and merged into solid blocks.
+    fig = plots.burden_category_bars(region="us")
+    ax = fig.axes[0]
+    heights = {round(p.get_height(), 3) for p in ax.patches}
+    assert heights == {0.4}, heights
+    # Two series share a row, so a bar must be at most half a row.
+    assert max(heights) <= 0.5
+    # And the axis spans the categories, not some multiple of them.
+    lo, hi = sorted(ax.get_ylim())
+    assert hi - lo < len(ax.get_yticks()) + 4
+
+
+def test_bar_rows_stay_legible_relative_to_the_figure():
+    # "Tiny labels, fat bars" is an aspect-ratio failure: a 37-row chart at 0.5 in/row
+    # is an 18in ribbon. Keep rows dense enough that label and bar weight are comparable.
+    fig = plots.burden_category_bars(region="us")
+    width, height = fig.get_size_inches()
+    n_rows = len(fig.axes[0].get_yticks())
+    assert height / n_rows < 0.4, "rows too tall; labels will be dwarfed by bars"
+    assert height / width < 2.0, "figure too tall and narrow to read as one chart"
+
+
+@pytest.fixture
+def _print_preset():
+    from oncoref import figure_style
+
+    yield
+    figure_style.use("print")
+
+
+def test_slide_preset_trims_rows_and_says_so(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("slide")
+    fig = plots.burden_category_bars(region="us")
+    ax = fig.axes[0]
+    assert len(ax.get_yticks()) == figure_style.max_items()
+    # Trimming is disclosed on the axis, never silent.
+    assert "top 12 of 37" in ax.get_xlabel()
+    # And it keeps the head of the ranking, not an arbitrary slice.
+    assert "prostate" in [t.get_text() for t in ax.get_yticklabels()]
+
+
+def test_slide_preset_fits_a_slide(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("slide")
+    width, height = plots.burden_category_bars(region="us").get_size_inches()
+    assert (width, height) <= figure_style.SLIDE_ASPECT
+    assert width / height > 1.0, "a slide is landscape"
+
+
+def test_slide_preset_keeps_every_scatter_point_and_rations_only_labels(_print_preset):
+    from oncoref import figure_style
+
+    printed = plots.apd1_vs_tmb()
+    n_points = sum(len(c.get_offsets()) for c in printed.axes[0].collections)
+
+    figure_style.use("slide")
+    slide = plots.apd1_vs_tmb()
+    ax = slide.axes[0]
+    # Every point survives — trimming a scatter would misstate the distribution.
+    assert sum(len(c.get_offsets()) for c in ax.collections) == n_points
+    # But only the top slice is labelled, so the text is readable.
+    labels = [t for t in ax.texts if t.get_text()]
+    assert 0 < len(labels) <= figure_style.max_items()
+
+
+def test_slide_labels_drop_underscores_and_print_keeps_them(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("print")
+    assert figure_style.label("non_hodgkin_lymphoma") == "non_hodgkin_lymphoma"
+    figure_style.use("slide")
+    assert figure_style.label("non_hodgkin_lymphoma") == "non hodgkin lymphoma"
+
+
+def test_unknown_preset_is_rejected(_print_preset):
+    from oncoref import figure_style
+
+    with pytest.raises(ValueError, match="unknown preset"):
+        figure_style.use("poster")
+
+
+def test_font_scale_preserves_the_size_hierarchy(_print_preset):
+    from oncoref import figure_style
+
+    # Scaling must multiply, not lift to a floor: a 4pt label in a dense panel and a
+    # 9pt row label encode how crowded each panel is, and flattening them collides.
+    figure_style.use("print")
+    small, large = figure_style.fs(4), figure_style.fs(9)
+    figure_style.use("slide")
+    assert figure_style.fs(4) / small == pytest.approx(figure_style.fs(9) / large, rel=1e-3)
+    assert figure_style.fs(4) < figure_style.fs(9)
+
+
+def test_row_height_grows_sublinearly_with_the_text_scale(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("print")
+    base = figure_style.row_height(0.30)
+    figure_style.use("slide")
+    slide = figure_style.row_height(0.30)
+    scale = figure_style.font_scale()
+    # Taller labels need more room...
+    assert slide > base
+    # ...but strictly proportional growth would make a slide chart taller than the slide.
+    assert slide < base * scale
+
+
+def test_log_axis_keeps_non_positive_points_via_symlog():
+    # A plain log axis deletes every non-positive point without warning. A cohort at
+    # 0 mut/Mb belongs in the low-burden quadrant; dropping it inverts the message.
+    points = [("A", 0.0, 10.0), ("B", 1.0, 20.0), ("C", 10.0, 30.0)]
+    fig = plots._family_scatter(
+        points, xlabel="x", ylabel="y", title="t", logx=True, annotate=False
+    )
+    ax = fig.axes[0]
+    assert ax.get_xscale() == "symlog"
+    assert sum(len(c.get_offsets()) for c in ax.collections) == 3
+
+
+def test_log_axis_stays_plain_log_when_every_value_is_positive():
+    points = [("A", 1.0, 10.0), ("B", 10.0, 20.0)]
+    fig = plots._family_scatter(
+        points, xlabel="x", ylabel="y", title="t", logx=True, annotate=False
+    )
+    assert fig.axes[0].get_xscale() == "log"

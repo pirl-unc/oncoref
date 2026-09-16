@@ -25,6 +25,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from . import figure_style
 from .apd1 import cancer_apd1_response, cancer_apd1_response_df
 from .cancer_types import (
     cancer_evidence_source_code,
@@ -61,6 +62,9 @@ def _plt():
     matplotlib.use("Agg", force=False)
     import matplotlib.pyplot as plt
 
+    # Publication rcParams before the first figure exists, so every plot in this
+    # module inherits the white ground and type scale rather than restyling itself.
+    figure_style.apply()
     _PLT = plt
     return _PLT
 
@@ -236,8 +240,14 @@ def _burden_metric_label(metric):
 
 
 def _save(fig, save):
+    """Finalize to the shared publication style, then write ``save`` if given.
+
+    Finalizing unconditionally (not just when saving) keeps a returned-but-unsaved
+    figure identical to the one on disk.
+    """
+    figure_style.finalize(fig)
     if save is not None:
-        fig.savefig(save, dpi=150, bbox_inches="tight")
+        fig.savefig(save, dpi=300, bbox_inches="tight", facecolor="white", transparent=False)
     return fig
 
 
@@ -257,23 +267,47 @@ def _family_legend_handles(plt, fam_color):
     ]
 
 
-def _repel_labels(ax, texts):
+def _label_fontsize():
+    """Point-label size, scaled with the preset.
+
+    7pt is right for a dense print scatter; the preset's scale carries it up for a
+    slide rather than a second hand-picked constant that can drift from the rest.
+    """
+    return figure_style.fs(7)
+
+
+def _repel_labels(ax, texts, xs=None, ys=None):
     """Nudge point labels apart so they don't overlap, drawing thin leader lines back to
-    the points (uses ``adjustText`` when installed; a no-op fallback otherwise). Best-effort
-    and cosmetic: work is capped at one second, and any failure degrades to un-repelled
-    labels rather than breaking figure generation."""
+    the points (uses ``adjustText`` when installed; a no-op fallback otherwise).
+
+    Bounded by an **iteration** cap, never a wall-clock one. A ``time_lim`` makes the
+    label layout depend on how busy the machine is, so the same command renders a clean
+    figure on an idle box and a pile of overlapping labels on a loaded one — the figure
+    stops being reproducible. Iterations cost the same everywhere.
+
+    Repulsion stays mild with a stronger pull back to the anchor: a label that cannot
+    find room should sit slightly over its own point rather than fly across the panel
+    trailing a long leader line.
+    """
     if not texts:
         return
     try:
         from adjustText import adjust_text
 
-        adjust_text(
-            texts,
-            ax=ax,
-            expand=(1.05, 1.2),
-            time_lim=1.0,
-            arrowprops={"arrowstyle": "-", "color": "0.6", "lw": 0.4},
-        )
+        params = {
+            "ax": ax,
+            "expand": (1.08, 1.18),
+            "force_text": (0.12, 0.24),
+            "force_pull": (0.03, 0.03),
+            "max_move": 16,
+            "iter_lim": 150,
+            "min_arrow_len": 6,
+            "arrowprops": {"arrowstyle": "-", "color": "0.6", "lw": 0.4},
+        }
+        if xs is not None and ys is not None:
+            adjust_text(texts, x=list(xs), y=list(ys), **params)
+        else:
+            adjust_text(texts, **params)
     except Exception:  # cosmetic label placement — never fatal to figure generation
         return
 
@@ -296,26 +330,54 @@ def _family_scatter(
     plt = _plt()
     codes = [p[0] for p in points]
     colors, fam_color = _family_colors(codes)
-    fig, ax = plt.subplots(figsize=figsize)
-    texts = []
+    fig, ax = plt.subplots(figsize=figure_style.figure_size(*figsize, wide=True))
+    # Every point is drawn — trimming a scatter would misrepresent the distribution.
+    # Only the LABELS are rationed, to the highest-y points, so a slide shows the
+    # named leaders against the full cloud instead of an illegible mat of text.
+    budget = figure_style.max_items()
+    labelled = set()
+    if annotate:
+        ranked = sorted(points, key=lambda pt: pt[2], reverse=True)
+        labelled = {pt[0] for pt in (ranked[:budget] if budget is not None else ranked)}
+    marker = figure_style.marker_size()
+    texts, xs, ys = [], [], []
     for code, x, y in points:
-        ax.scatter(x, y, color=colors[code], s=70, edgecolor="white", linewidth=0.6, zorder=3)
-        if annotate:
-            texts.append(ax.text(x, y, format_cancer_code_label(code), fontsize=6, zorder=4))
+        ax.scatter(x, y, color=colors[code], s=marker, edgecolor="white", linewidth=0.8, zorder=3)
+        if annotate and code in labelled:
+            texts.append(
+                ax.text(x, y, format_cancer_code_label(code), fontsize=_label_fontsize(), zorder=4)
+            )
+            xs.append(x)
+            ys.append(y)
     if logx:
-        ax.set_xscale("log")
+        # A plain log axis silently deletes every non-positive point. Zeros are real
+        # data here (a 0 mut/Mb cohort belongs in the low-burden quadrant), so fall
+        # back to symlog — linear below the smallest positive value — and keep them.
+        non_positive = [x for _, x, _ in points if x is not None and x <= 0]
+        positive = [x for _, x, _ in points if x is not None and x > 0]
+        if non_positive and positive:
+            ax.set_xscale("symlog", linthresh=min(positive), linscale=0.45)
+        else:
+            ax.set_xscale("log")
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
-    ax.grid(True, which="both" if logx else "major", alpha=0.3)
+    ax.grid(True, which="both" if logx else "major", alpha=0.25, linewidth=0.5)
+    ax.set_axisbelow(True)
+    # Legend outside the axes: with this many points any in-plot corner sits on data,
+    # and "best" just picks the least-bad occlusion. A reserved column occludes nothing.
     ax.legend(
         handles=_family_legend_handles(plt, fam_color),
-        fontsize=6,
-        ncol=2,
-        loc=legend_loc,
-        framealpha=0.9,
+        fontsize=8,
+        loc="upper left",
+        bbox_to_anchor=(1.01, 1.0),
+        borderaxespad=0,
+        title="lineage",
+        title_fontsize=9,
     )
-    _repel_labels(ax, texts)  # keep labels from overlapping (no-op without adjustText)
+    # Repel after the axes are final, so label boxes are measured against the real
+    # transform rather than the pre-log one.
+    _repel_labels(ax, texts, xs, ys)
     fig.tight_layout()
     return _save(fig, save)
 
@@ -326,14 +388,21 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
     import numpy as np
 
     plt = _plt()
+    pairs, dropped = figure_style.trim(pairs)
+    if dropped:
+        xlabel = f"{xlabel} — top {len(pairs)} of {len(pairs) + dropped}"
     codes = [p[0] for p in pairs]
     values = [p[1] for p in pairs]
     colors, fam_color = _family_colors(codes)
-    fig, ax = plt.subplots(figsize=(10, max(5, 0.40 * len(codes))))
+    height, density = figure_style.stack_size(len(codes), per_item=0.28, floor=4)
+    fig, ax = plt.subplots(figsize=(10, height))
     y = np.arange(len(codes))
     ax.barh(y, values, color=[colors[c] for c in codes])
     ax.set_yticks(y)
-    ax.set_yticklabels([format_cancer_code_label(c) for c in codes], fontsize=8)
+    ax.set_yticklabels(
+        [format_cancer_code_label(c) for c in codes],
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
+    )
     ax.invert_yaxis()  # first pair at the top
     ax.set_xlabel(xlabel)
     ax.set_title(title)
@@ -362,12 +431,25 @@ def _cohort_gene_heatmap(grid, *, title, cbar_label, cmap, lognorm=False, floor=
         norm = LogNorm(vmin=floor, vmax=max(1000.0, float(np.nanmax(data))))
     else:
         data = np.nan_to_num(data, nan=0.0)
-    fig, ax = plt.subplots(figsize=(max(8, 0.42 * len(cols)), max(6, 0.34 * len(rows))))
-    im = ax.imshow(data, aspect="auto", cmap=cmap, norm=norm)
+    width, col_density = figure_style.stack_size(len(cols), per_item=0.42, floor=8)
+    height, row_density = figure_style.stack_size(len(rows), per_item=0.34, floor=6)
+    fig, ax = plt.subplots(figsize=(width, height))
+    # Missing cells (a gene absent from that cohort's vector) must not inherit the
+    # white figure ground: against magma's pale-yellow top end white reads as the
+    # highest value, exactly inverting the meaning. Grey is outside the ramp.
+    from matplotlib import colormaps
+
+    shaded = colormaps[cmap].with_extremes(bad="#d9d9d9") if isinstance(cmap, str) else cmap
+    im = ax.imshow(data, aspect="auto", cmap=shaded, norm=norm)
     ax.set_xticks(range(len(cols)))
-    ax.set_xticklabels(cols, rotation=90, fontsize=7)
+    ax.set_xticklabels(
+        cols, rotation=90, fontsize=figure_style.tick_fontsize(col_density, figure_style.fs(8))
+    )
     ax.set_yticks(range(len(rows)))
-    ax.set_yticklabels([format_cancer_code_label(c) for c in rows], fontsize=7)
+    ax.set_yticklabels(
+        [format_cancer_code_label(c) for c in rows],
+        fontsize=figure_style.tick_fontsize(row_density, figure_style.fs(9)),
+    )
     ax.set_title(title)
     cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
     cbar.set_label(cbar_label)
@@ -435,7 +517,11 @@ def _stacked_barh(rows, *, xlabel, title, legend=None, annotate=True, save=None)
     ``legend`` is an optional ``{label: color}`` shown as a colour key. Segments wide
     enough are annotated with their ``seg_label``. The shared stacked-bar scaffold."""
     plt = _plt()
-    fig, ax = plt.subplots(figsize=(12, max(4, 0.5 * len(rows))))
+    rows, dropped = figure_style.trim(rows)
+    if dropped:
+        xlabel = f"{xlabel} — top {len(rows)} of {len(rows) + dropped}"
+    height, row_density = figure_style.stack_size(len(rows), per_item=0.30, floor=4)
+    fig, ax = plt.subplots(figsize=(12, height))
     total = max((sum(v for _, v, _ in segs) for _, segs in rows), default=1.0) or 1.0
     for i, (_, segs) in enumerate(rows):
         left = 0.0
@@ -457,7 +543,9 @@ def _stacked_barh(rows, *, xlabel, title, legend=None, annotate=True, save=None)
                 )
             left += value
     ax.set_yticks(range(len(rows)))
-    ax.set_yticklabels([r[0] for r in rows], fontsize=7)
+    ax.set_yticklabels(
+        [r[0] for r in rows], fontsize=figure_style.tick_fontsize(row_density, figure_style.fs(9))
+    )
     ax.invert_yaxis()  # first row at the top
     ax.set_xlabel(xlabel)
     ax.set_title(title)
@@ -476,15 +564,25 @@ def _grouped_barh(categories, series, *, xlabel, title, save=None):
     import numpy as np
 
     plt = _plt()
+    budget = figure_style.max_items()
+    if budget is not None and len(categories) > budget:
+        keep = budget
+        xlabel = f"{xlabel} — top {keep} of {len(categories)}"
+        categories = list(categories)[:keep]
+        series = [(name, list(values)[:keep], color) for name, values, color in series]
     n_series = max(1, len(series))
     base = np.arange(len(categories))
-    height = 0.8 / n_series
-    fig, ax = plt.subplots(figsize=(9, max(4, 0.5 * len(categories))))
+    bar_height = 0.8 / n_series
+    fig_height, density = figure_style.stack_size(len(categories), per_item=0.30, floor=4)
+    fig, ax = plt.subplots(figsize=(9, fig_height))
     for k, (name, values, color) in enumerate(series):
-        offset = (k - (n_series - 1) / 2) * height
-        ax.barh(base + offset, values, height=height, label=name, color=color)
+        offset = (k - (n_series - 1) / 2) * bar_height
+        ax.barh(base + offset, values, height=bar_height, label=name, color=color)
     ax.set_yticks(base)
-    ax.set_yticklabels(categories, fontsize=7)
+    ax.set_yticklabels(
+        [figure_style.label(c) for c in categories],
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(9)),
+    )
     ax.invert_yaxis()
     ax.set_xlabel(xlabel)
     ax.set_title(title)
@@ -584,7 +682,8 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
     plt = _plt()
     palette = _stable_palette()
     reg_color = {r: palette[i] for i, r in enumerate(REGIMEN_FALLBACK)}
-    fig, ax = plt.subplots(figsize=(11, max(6, 0.42 * len(ordered))))
+    height, density = figure_style.stack_size(len(ordered), per_item=0.30, floor=5)
+    fig, ax = plt.subplots(figsize=(11, height))
     for y, c in enumerate(ordered):
         present = [(r, by_regimen[r][c]) for r in REGIMEN_FALLBACK if c in by_regimen[r]]
         xs = [v for _, v in present]
@@ -593,7 +692,10 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
         for r, v in present:
             ax.scatter(v, y, color=reg_color[r], s=48, edgecolor="white", linewidth=0.5, zorder=2)
     ax.set_yticks(range(len(ordered)))
-    ax.set_yticklabels([format_cancer_code_label(c) for c in ordered], fontsize=8)
+    ax.set_yticklabels(
+        [format_cancer_code_label(c) for c in ordered],
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
+    )
     ax.set_xlabel("Objective response rate (%)")
     ax.set_title(f"ICI response by regimen and cancer type ({len(ordered)} types)")
     ax.grid(True, axis="x", alpha=0.3)
@@ -656,7 +758,8 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
     rows.sort(key=lambda r: r[2])  # ascending; invert_yaxis puts the highest on top
     code_color, _ = _family_colors([r[0] for r in rows])
 
-    fig, ax = plt.subplots(figsize=(11, max(6, 0.42 * len(rows))))
+    height, density = figure_style.stack_size(len(rows), per_item=0.30, floor=5)
+    fig, ax = plt.subplots(figsize=(11, height))
     for y in range(0, len(rows), 2):  # alternating row bands to trace label -> point
         ax.axhspan(y - 0.5, y + 0.5, color="#f4f4f4", zorder=0)
     for y, (code, _reg, est, lo, hi, pts) in enumerate(rows):
@@ -682,7 +785,8 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
 
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels(
-        [f"{format_cancer_code_label(c)} [{reg}]" for c, reg, *_ in rows], fontsize=8
+        [f"{format_cancer_code_label(c)} [{reg}]" for c, reg, *_ in rows],
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
     )
     ax.set_ylim(-0.7, len(rows) - 0.3)
     ax.set_xlabel("Objective response rate (%)")
@@ -1483,3 +1587,139 @@ def cta_specific_9mer_load(*, against="tmb", threshold_tpm=50.0, cohorts=None, s
         title=f"CTA-specific 9-mer load vs {against} — {len(points)} cancers",
         save=save,
     )
+
+
+# ---------- CTA panel design: minimal covering set across cancer types ----------
+
+
+def _burden_weights(codes):
+    """``{cancer code: US incidence share}``, the patient weight for set cover.
+
+    A code inherits its burden category's share, split evenly across whichever of
+    ``codes`` map to that category, so a heavily sub-typed cancer is not counted
+    once per subtype. The split is over the codes actually passed in (the ones with
+    expression data), not over every code in the registry — the category's patients
+    are being distributed among the types the panel can actually be scored on.
+
+    Codes with no mapped category get the smallest non-zero share in the burden
+    table, so a rare cancer still registers rather than dropping out entirely.
+    """
+    import pandas as pd
+
+    from .incidence import burden_category, cancer_burden
+
+    shares = cancer_burden()
+    by_category = {}
+    for code in codes:
+        by_category.setdefault(burden_category(str(code)), []).append(str(code))
+    floor = min((v for v in shares.values() if v > 0), default=0.01)
+    weights = {}
+    for category, members in by_category.items():
+        share = shares.get(category, floor) if category is not None else floor
+        per_code = float(share) / len(members)
+        for code in members:
+            weights[code] = per_code
+    return pd.Series(weights, dtype=float)
+
+
+def _greedy_cover(matrix, threshold, weights):
+    """Greedy weighted set cover over a ``codes × CTA`` TPM matrix.
+
+    Returns ``(steps, coverable)`` where each step is
+    ``(cta, newly_covered_codes, cumulative_weight, cumulative_codes)``. Ties are
+    broken by gene symbol so the order is deterministic across runs.
+    """
+    hits = matrix > threshold
+    coverable = list(hits.index[hits.any(axis=1)])
+    remaining = set(coverable)
+    steps = []
+    while remaining:
+        best_cta, best_codes, best_gain = None, set(), 0.0
+        for cta in sorted(hits.columns):
+            covered = {c for c in hits.index[hits[cta]] if c in remaining}
+            if not covered:
+                continue
+            gain = float(weights.reindex(sorted(covered)).fillna(0.0).sum())
+            if gain > best_gain:
+                best_cta, best_codes, best_gain = cta, covered, gain
+        if best_cta is None:
+            break
+        remaining -= best_codes
+        so_far = sorted(set(coverable) - remaining)
+        steps.append(
+            (
+                best_cta,
+                sorted(best_codes),
+                float(weights.reindex(so_far).fillna(0.0).sum()),
+                len(so_far),
+            )
+        )
+    return steps, coverable
+
+
+def cta_covering_set(
+    *,
+    stat="q3",
+    threshold_tpm=30.0,
+    cohorts=None,
+    n_genes=25,
+    proteoform=True,
+    save=None,
+):
+    """Greedy minimal CTA panel: cumulative cancer-type and patient coverage.
+
+    Answers "how few CTAs cover most patients". A CTA *covers* a cancer type when
+    that type's ``stat`` TPM for it clears ``threshold_tpm``; greedy weighted set
+    cover then adds, at each step, whichever CTA picks up the most still-uncovered
+    US incidence. Two curves: coverage weighted by cancer TYPE (each type counts
+    once) and by PATIENTS (types weighted by US incidence share).
+
+    ``stat="q3"`` by default, not ``"median"``: CTAs are subset antigens expressed
+    heterogeneously within a tumor type, so the upper quartile ("at least 25% of
+    patients") is the clinically meaningful bar — a median cut hides targets that
+    a quarter of patients actually express.
+
+    Needs the expression bundle (percentile artifacts); no per-sample matrices.
+    """
+    plt = _plt()
+    if stat not in _STAT_PERCENTILE_COL:
+        raise ValueError(f"stat must be one of {sorted(_STAT_PERCENTILE_COL)}")
+    if cohorts is None:
+        cohorts = available_percentile_cohorts(proteoform=proteoform)
+        if not cohorts and proteoform:
+            cohorts = _cached_per_sample_cohorts()
+            if not cohorts:
+                proteoform = False
+                cohorts = available_percentile_cohorts(proteoform=False)
+    if not cohorts:
+        raise ValueError("no cohorts with a percentile vector — is the expression bundle present?")
+
+    matrix = _cta_expression_matrix(stat, cohorts, proteoform=proteoform)
+    if matrix.empty or matrix.shape[1] == 0:
+        raise ValueError("no CTA expression data for the selected cohorts")
+
+    weights = _burden_weights(matrix.index)
+    steps, coverable = _greedy_cover(matrix, threshold_tpm, weights)
+    if not steps:
+        raise ValueError(f"no CTA clears {threshold_tpm:g} TPM in any cancer type at stat={stat!r}")
+
+    steps = steps[:n_genes]
+    labels = [s[0] for s in steps]
+    x = range(1, len(steps) + 1)
+    total_weight = float(weights.reindex(sorted(coverable)).fillna(0.0).sum())
+    by_patients = [100.0 * s[2] / total_weight for s in steps]
+    by_type = [100.0 * s[3] / len(coverable) for s in steps]
+
+    width, _ = figure_style.stack_size(len(steps), per_item=0.32, floor=7.0)
+    fig, ax = plt.subplots(figsize=(width, 4.4))
+    ax.plot(x, by_patients, marker="o", ms=4, color=figure_style.KEPT, label="patients")
+    ax.plot(x, by_type, marker="s", ms=4, color=figure_style.ACCENT, label="cancer types")
+    ax.set_xticks(list(x), labels, rotation=90)
+    ax.set_ylabel("cumulative coverage (%)")
+    ax.set_ylim(0, 102)
+    ax.legend(loc="lower right")
+    ax.set_title(
+        f"Greedy CTA covering set ({stat} > {threshold_tpm:g} TPM, "
+        f"{len(coverable)} coverable types)"
+    )
+    return _save(fig, save)
