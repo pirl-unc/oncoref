@@ -23,7 +23,7 @@ def test_rejected_response_anchor_blocks_numeric_fallback(code):
     assert ici.pooled_ici_response(code, include_alternates=True)["pooled_pct"] is None
 
 
-@pytest.mark.parametrize("code", ["BRCA_Normal", "UCEC_CNL", "RB", "HL", "CTCL", "LUAD_EGFR"])
+@pytest.mark.parametrize("code", ["BRCA_Normal", "UCEC_CNL", "HL", "CTCL", "LUAD_EGFR"])
 def test_rejected_tmb_median_stays_missing_even_with_numeric_ancestor(code):
     assert tmb.cancer_tmb(code) is None
     source = tmb.resolve_tmb_source(code)
@@ -40,9 +40,10 @@ def test_tmb_review_covers_exactly_the_curated_rows_and_gates_median_provenance(
     checked = frame[frame["source_review_status"] == "source_checked"]
     assert checked["source_locator"].notna().all()
     assert checked["tmb_assay"].notna().all()
-    assert set(checked["estimate_type"]) == {"published_median"}
+    assert set(checked["estimate_type"]) == {"published_median", "published_mean"}
     unpublished = frame[frame["source_review_status"] != "source_checked"]
     assert "published_median" not in set(unpublished["estimate_type"])
+    assert "published_mean" not in set(unpublished["estimate_type"])
     assert frame.set_index("cancer_code").loc["FL", "median_tmb_mut_mb"] == 5.05
     assert frame.set_index("cancer_code").loc["BCC", "median_tmb_mut_mb"] == 47.3
 

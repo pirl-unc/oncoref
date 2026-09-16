@@ -1,131 +1,131 @@
-cancer_code,median_tmb_mut_mb,n_samples,source,pmid_doi,confidence,notes
-ACC,2.7,204,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: adrenal gland cortical carcinoma; 204 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-BLCA,7.1,,Lawrence 2013,PMID:23770567,high,WES median; APOBEC-driven long tail.
-BRCA,1.2,,Lawrence 2013,PMID:23770567,high,WES median; higher in basal/HER2; MSI rare.
-CESC,5.0,,Lawrence 2013,PMID:23770567,medium,Cervical squamous; APOBEC + HPV; wide range.
-BTC,1.23,803,Lin 2021,PMID:33754015,medium,"Chinese pan-biliary cohort; mixed WES and targeted-panel assays, not solely a panel assay."
-CHOL,2.5,1456,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: liver cholangiocarcinoma; 1456 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-COAD,3.1,,Lawrence 2013,PMID:23770567,high,Colon MSS median; MSI-H/POLE subset >40.
-DLBC,3.3,,Lawrence 2013,PMID:23770567,high,DLBCL WES median.
-ESCA,4.0,,Lawrence 2013,PMID:23770567,medium,ESCC vs EAC differ; range wide.
-GBM,2.2,,Lawrence 2013,PMID:23770567,high,WES median; post-temozolomide/MMR-deficient subset hypermutates.
-HNSC,3.9,,Lawrence 2013,PMID:23770567,high,WES median; HPV+ vs HPV- differ slightly.
-RCC,,,,,none,"Broad renal-cell aggregate intentionally blank: clear-cell, papillary, chromophobe, translocation, and other non-clear histologies have distinct published distributions; use the histology-specific rows."
-KICH,0.7,,Chalmers 2017,PMID:28420421,low,Kidney chromophobe; very low; among lowest renal subtypes.
-KIRC,1.9,,Lawrence 2013,PMID:23770567,high,Kidney clear cell WES median.
-KIRP,2.7,152,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: kidney renal papillary carcinoma; 152 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-LAML,0.4,,Lawrence 2013,PMID:23770567,high,AML WES median; among lowest of all cancers.
-LGG,1.0,,Lawrence 2013,PMID:23770567,medium,IDH-mutant low; temozolomide recurrences hypermutate.
-LIHC,3.6,602,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: liver hepatocellular carcinoma (hcc); 602 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-NSCLC,8.0,970,Jonna 2021,PMID:33889505,medium,Median 8 in each treatment-naive and treatment-experienced group; 970 annotated specimens in total.
-LUAD,8.1,,Lawrence 2013,PMID:23770567,high,Lung adeno WES median; smoking-dependent (never-smokers far lower).
-LUSC,9.9,,Lawrence 2013,PMID:23770567,high,Lung squamous WES median; smoking signature.
-MESO,1.8,414,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: pleura mesothelioma; 414 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB. Pleural cohort only; peritoneal n=135 also has median 1.8; cohorts are not pooled."
-OV,1.7,,Lawrence 2013,PMID:23770567,high,Ovarian serous WES median; HRD/SCNA-driven not SNV.
-PAAD,1.8,2483,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: pancreas ductal adenocarcinoma; 2483 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-PCPG,0.5,,Chalmers 2017,PMID:28420421,low,Pheo/paraganglioma; very low; among lowest.
-PRAD,0.7,,Lawrence 2013,PMID:23770567,high,Prostate adeno WES median; CDK12/MMR subset higher.
-READ,3.1,,Lawrence 2013,PMID:23770567,medium,Treated as colorectal; MSI-H subset much higher.
-SKCM,12.9,,Lawrence 2013,PMID:23770567,high,Cutaneous melanoma WES median; UV signature; highest common solid tumor.
-STAD,5,58,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: stomach adenocarcinoma intestinal type; 58 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB. Intestinal-type subset only; not an all-histology or MSI-stratified gastric median."
-TGCT,0.5,,Chalmers 2017,PMID:28420421,low,Testicular germ cell; very low SNV TMB; aneuploidy-driven.
-THCA,1.8,350,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thyroid papillary carcinoma; 350 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-THYM_EPITHELIAL,,,Schirosi 2022,PMID:35749302,none,"Combined thymic epithelial aggregate intentionally blank: the 274-case targeted-sequencing cohort reports separate medians of 1.92 mut/Mb for thymoma and 3.84 mut/Mb for thymic carcinoma, but no combined median."
-THYM,1.3,108,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thymus thymoma (nos); 108 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-UCEC,2.5,,Lawrence 2013,PMID:23770567,high,Endometrioid median; POLE-ultramutated and MSI-H subsets very high.
-UCS,3.6,245,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: uterus carcinosarcoma; 245 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-UVM,0.34,80,Wu 2019,PMID:31930041,medium,"TCGA MC3 UVM cohort; median 0.34 (IQR 0.26-0.45) mut/Mb, n=80. Nonsynonymous coding substitutions and indels divided by 38 Mb. Restores the old number with the correct source DOI 10.21037/atm.2019.10.116."
-SARC_LMS,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Leiomyosarcoma; complex-karyotype STS; low SNV TMB.
-SARC_DDLPS,1.5,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Dedifferentiated liposarcoma; MDM2/CDK4 amplicon-driven; low TMB.
-SARC_UPS,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Undifferentiated pleomorphic sarcoma; among higher STS TMB.
-SARC_MYXFIB,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Myxofibrosarcoma ~2 mut/Mb.
-SARC_SYN,1.7,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Synovial sarcoma; lowest STS TMB; SS18-SSX fusion-driven simple karyotype.
-SARC_MPNST,2.5,134,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: soft tissue malignant peripheral nerve sheath tumor (mpnst); 134 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-SARC_OS,1.2,,Grobner 2018,PMID:29489754,medium,Osteosarcoma pediatric WGS ~1.2; high SV/chromothripsis burden.
-SARC_EWS,0.6,,Grobner 2018,PMID:29489754,high,Ewing sarcoma ~0.6; EWSR1-FLI1 fusion-driven; very few SNVs.
-SARC_RMS_ERMS,0.8,,Grobner 2018,PMID:29489754,low,Embryonal RMS; low pediatric TMB; RAS-pathway; subtype median approximate.
-SARC_RMS_ARMS,0.4,,Grobner 2018,PMID:29489754,low,Alveolar RMS; PAX3/7-FOXO1 fusion-driven; very low SNV burden; approximate.
-SARC_CHON,1.7,93,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: bone chondrosarcoma; 93 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB. Bone cohort only; separate soft-tissue cohort n=124 also has median 1.7; no patient-level pooled median calculated."
-SARC_CHOR,0.53,,Chordoma WGS,PMID:38892063,medium,Chordoma skull-base WGS; brachyury-driven; rare MMR cases hypermutate.
-NBL,0.6,,Grobner 2018,PMID:29489754,high,Neuroblastoma ~0.6; relapse higher.
-WILMS,0.2,,Grobner 2018,PMID:29489754,low,Wilms tumor; very low pediatric TMB; per-entity median approximate.
-RT,0.1,,Lawrence 2013,PMID:23770567,medium,Rhabdoid tumor ~0.1; SMARCB1-driven near-silent genome.
-ATRT,0.2,,Grobner 2018,PMID:29489754,medium,AT/RT; lowest-mutation pediatric brain tumor; SMARCB1/SMARCA4-driven.
-MBL,0.3,,Lawrence 2013,PMID:23770567,high,Medulloblastoma ~0.3; rare germline-MMR/POLE hypermutant cases.
-RB,,,Retinoblastoma WGS,PMID:33670346,none,"Withdrawn legacy estimate 0.085: PMID33670346 reports an average substitution density of 0.085/Mb, not a population median. See #527."
-HEPB,0.02,,Grobner 2018,PMID:29489754,medium,Hepatoblastoma; lowest pediatric TMB; CTNNB1-driven.
-MM,1.6,,Lawrence 2013,PMID:23770567,high,Multiple myeloma WES median ~1.6; increases at relapse.
-CLL,0.6,,Lawrence 2013,PMID:23770567,high,CLL WES median ~0.6; low.
-MCL,3.3,75,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: lymph node lymphoma mantle cell; 75 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-FL,5.05,119,Lafuente 2026,DOI:10.3390/cancers18050737,medium,Median at diagnosis in 119 de novo grade 1-3A FL patients; Oncomine 409-gene targeted panel (~1.2 Mb coding); Results 3.2. Replaces unsupported 1.35/WES label.
-HL,,,Liang 2019,PMID:30108156,none,"Withdrawn legacy estimate 2.0: PMID30108156 reports clinical-panel TMB in 34 patients, including 23 with TMB >=6; it does not support the approximate WES median of 2.0. See #527."
-BL,2.0,,Love 2012,PMID:23143597,medium,Burkitt; AID/MYC-driven moderate burden; ~2 approximate WES.
-B_ALL,0.3,,Grobner 2018,PMID:29489754,low,B-ALL; very low pediatric TMB; CMMRD/relapse cases far higher.
-T_ALL,0.5,,Grobner 2018,PMID:29489754,low,T-ALL; low; slightly higher than B-ALL; approximate.
-MDS,0.8,513,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: bone marrow myelodysplastic syndrome (mds); 513 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-MPN,0.8,138,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: bone marrow myeloproliferative neoplasm (mpn); 138 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-CML,,,,,none,Chronic myeloid leukemia; BCR-ABL1-defined; very few additional mutations in chronic phase.
-CTCL,,,Park 2021,PMID:33574607,none,"Withdrawn legacy estimate 3.0: The cited PMID33574607 is a general intratumoral-heterogeneity review, not the attributed CTCL cohort. See #527."
-NET_PANCREAS,1.35,,van Riet 2021,PMID:34326338,medium,"Advanced pancreatic NET; genome-wide WGS median 1.35 mut/Mb (IQR 0.90-2.12); Results, Differences within the advanced neuroendocrine tumor population based on primary localization. Not coding-exome TMB."
-NEN,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection."
-NET,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection."
-NEC,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection."
-NEC_LUNG,,,George 2015;George 2018,PMID:26168399;PMID:29535388,none,"Pulmonary NEC union intentionally blank: SCLC and LCNEC have independently curated rows, but no defensible sample-weighted combined median is published."
-SCLC,8.6,,George 2015,PMID:26168399,high,Small cell lung; high ~8.6; smoking signature.
-NEC_MERKEL,5.3,,Knepper 2019,PMID:31399473,medium,Merkel cell carcinoma median ~5.3; bimodal MCPyV-neg(UV) high vs MCPyV-pos low.
-MTC,1.8,96,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thyroid medullary carcinoma; 96 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-ADCC,1.8,184,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: salivary gland adenoid cystic carcinoma; 184 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-NPC,0.95,,Nasopharyngeal WES,PMID:36135044,medium,Nasopharyngeal carcinoma median ~0.95-1.0; EBV-driven low SNV burden.
-NUTM,1.0,71,Kim 2025,PMID:40704901,medium,"NUT carcinoma registry: median 1.0 mut/Mb (range 0-16) among 71 with known TMB, from 116 total patients. Heterogeneous clinical NGS assays; replaces unsupported attribution to a three-case series."
-BRCA_Basal,1.8,,TCGA-Breast,PMID:23000897,low,TNBC/basal-like: highest TMB among breast subtypes. Exact subtype median not revalidated. Removed misattributed PMID31504112; clinical TNBC and PAM50 basal-like are not interchangeable.
-BRCA_HER2,1.6,,TCGA-Breast,PMID:23000897,low,HER2-enriched: elevated vs luminal. Exact subtype median not revalidated. Removed misattributed PMID31504112; clinical TNBC and PAM50 basal-like are not interchangeable.
-BRCA_LumB,1.2,,TCGA-Breast,PMID:23000897,low,luminal B
-BRCA_LumA,0.9,,TCGA-Breast,PMID:23000897,low,luminal A: lowest-TMB subtype
-BRCA_Normal,,,TCGA-Breast,PMID:23000897,none,Withdrawn legacy estimate 1.0: TCGA-Breast excluded the eight normal-like samples from subsequent subtype analyses; no normal-like median of 1.0 was established. See #527.
-HNSC_HPVneg,4.6,,TCGA-HNSC,PMID:25631445,low,Legacy subtype estimate; exact median not revalidated. TCGA-HNSC states mutation rates did not differ by HPV status; a systematic higher/lower claim is not supported by this citation.
-HNSC_HPVpos,2.8,,TCGA-HNSC,PMID:25631445,low,Legacy subtype estimate; exact median not revalidated. TCGA-HNSC states mutation rates did not differ by HPV status; a systematic higher/lower claim is not supported by this citation.
-SARC,1.8,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,pan soft-tissue sarcoma (TCGA-SARC overall)
-SARC_LPS_UNSPEC,1.5,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,low,liposarcoma NOS ~ dedifferentiated
-SARC_RMS_PRMS,1.2,,Grobner 2018,PMID:29489754,low,pleomorphic RMS (adult): higher than pediatric RMS
-SARC_RMS_SSRMS,0.6,,Grobner 2018,PMID:29489754,low,spindle/sclerosing RMS
-BCC,47.3,92,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: skin basal cell carcinoma; 92 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-cSCC,45.2,266,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: skin squamous cell carcinoma (scc); 266 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-EPN,0.5,,Grobner 2018,PMID:29489754,medium,Ependymoma; very low SNV TMB; fusion/epigenetic-driven.
-DIPG,1.0,,Mackay 2017,PMID:28966033,medium,Diffuse midline glioma; low TMB; H3 K27M epigenetic driver.
-VSCC,5.2,72,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: vulva squamous cell carcinoma (scc); 72 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-VAGC,,,,,none,Vaginal SCC; HPV-associated; ~5 mut/Mb estimate; no cited median curated.
-PENSCC,4.5,60,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: penis squamous cell carcinoma (scc); 60 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-ANSC,5.4,232,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: anus squamous cell carcinoma (scc); 232 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-GBC,5.5,,Comprehensive GBC 2023,DOI:10.1038/s41698-022-00327-y,high,Median 5.5 (range 0-161); 17.7% TMB-H>10.
-CRANIO,0.9,3,Brastianos 2014,PMID:24413733,low,Papillary craniopharyngioma; ~0.9/Mb nonsynonymous rate (WES n=3); CTNNB1-driven adamantinomatous also low-TMB.
-PITNET,,,,,none,Pituitary NET; very low TMB; no cited median curated.
-SARC_DSRCT,0.72,22,Wu 2022,PMID:35379887,medium,22 specimens from 14 patients; multisite specimens are correlated. Corrects misattributed author Bertucci.
-SARC_GIST,0.67,78,Wu 2024,PMID:39489749,medium,"Coding mutation median across 78 tumors (59 WES, 19 WGS); specimens include repeated sampling of patients; not 78 independent patients."
-NEC_LUNG_LARGECELL,9.9,288,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: lung large cell neuroendocrine carcinoma; 288 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-SARC_SMARCA4,10.6,48,Cooper 2024,PMID:39802817,medium,"TMB available in 48/92 thoracic SMARCA4-deficient undifferentiated tumors; table/body median 10.6, abstract rounded differently to 10.5. Thoracic subset."
-NET_MIDGUT,1.05,,van Riet 2021,PMID:34326338,medium,Advanced midgut NET; genome-wide WGS median 1.05 mut/Mb (IQR 0.75-1.40); primary-localization Results section. Replaces prior gap based on a different mixed-site source.
-NET_RECTAL,1.15,18,Li 2023,PMID:36645718,medium,"Median across 18 rectal NET tumors, range 0.03-23.28."
-NET_LUNG,0.4,,Fernandez-Cuesta 2014,PMID:24670920,medium,Typical/atypical pulmonary carcinoid; very low (chromatin-remodeling driven).
-SARC_CIC,1.2,,Antonescu 2017,PMID:29901569,medium,CIC-DUX4-driven; low TMB (range 0.8-1.6). Overrides pan-SARC.
-NBL_MYCNamp,,,Wang 2018 JNCI,PMID:30307503,none,"The cited neuroblastoma paper mentions an approximately 0.6 exonic mut/Mb median for neuroblastoma overall (citing Pugh 2013); its own analysis uses per-tumor counts. It does not establish a separate MYCN subgroup per-Mb median. Gap is subtype-specific, not absence of overall neuroblastoma evidence."
-NBL_MYCNnonamp,,,Wang 2018 JNCI,PMID:30307503,none,"The cited neuroblastoma paper mentions an approximately 0.6 exonic mut/Mb median for neuroblastoma overall (citing Pugh 2013); its own analysis uses per-tumor counts. It does not establish a separate MYCN subgroup per-Mb median. Gap is subtype-specific, not absence of overall neuroblastoma evidence."
-MBL_WNT,0.6,,Northcott 2017,PMID:28726821,low,MB subgroup; near baseline ~0.5; excellent prognosis.
-MBL_SHH,0.8,,Northcott 2017,PMID:28726821,low,Higher than other MB subgroups; adult/TP53-mut SHH can be hypermutated.
-MBL_G3,0.5,,Northcott 2017,PMID:28726821,low,MB Group 3; baseline low TMB.
-MBL_G4,0.5,,Northcott 2017,PMID:28726821,low,MB Group 4; lowest mutation rate of the four.
-LUAD_EGFR,,,Wang 2021,PMID:33846346,none,"Withdrawn legacy estimate 3.5: The cited PMID33846346 concerns RIG-I/XRCC4, not an EGFR-mutant lung cohort median. See #527."
-HCL,,1,Tiacci 2011,PMID:22072557,none,"Legacy value 0.2 removed: no supported population median with a reproducible per-Mb denominator curated. Hairy cell leukemia; BRAF V600E-driven, genomically near-silent (~5 somatic mutations, WES n=1)."
-ACINIC,1.8,81,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: salivary gland acinic cell tumor; 81 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-ALCL,,,,,none,Anaplastic large cell lymphoma; ALK+ has the lowest lymphoma mutation burden; no source-checked per-Mb median curated.
-URETH,,,,,none,Urethral carcinoma; rare; no source-checked per-Mb median curated.
-UCEC_POLE,150.8,61,Nero 2025,PMID:39865420,medium,"Median 150.8 mut/Mb in 61 endometrial cancers with one of 11 pathogenic POLE hotspot variants; TSO500 tumor-only 523-gene panel. Includes 16 multiple-classifier tumors; not unselected POLE VUS. A genomic cohort, not an ICI response trial."
-UCEC_MSI,21.5,127,Leon-Castillo 2020,PMID:31829442,medium,TCGA reanalysis: median 21.5 mut/Mb in 127 MSI-H endometrial cancers without POLE mutations. Coding substitutions (including synonymous) and indels divided by 38 Mb. Replaces the unsupported median label on the TCGA 2013 subgroup rate of 18.
-UCEC_CNL,,,TCGA endometrial (Kandoth 2013),PMID:23636398,none,"Withdrawn legacy estimate 2.5: TCGA reports a subgroup mutation rate of 2.9, not the curated median of 2.5; no reproducible median calculation is curated. See #527."
-UCEC_CNH,,,TCGA endometrial (Kandoth 2013),PMID:23636398,none,"Withdrawn legacy estimate 2.8: TCGA reports a subgroup mutation rate of 2.3, not the curated median of 2.8; no reproducible median calculation is curated. See #527."
-CRC_MSI,46,,Chalmers 2017,PMID:28420421,medium,MSI-H/dMMR hypermutated colorectal source-scope estimate; applies to COAD_MSI/READ_MSI by evidence-source inheritance; no colon- or rectum-specific denominator in curated source
-CRC,4.5,6004,Fabrizio 2018,PMID:30151257,high,Colorectal all-comers pooled median; MSS ~3.5 and MSI-H ~46 (Chalmers); umbrella value for CRC pooling
-MENINGIOMA,0.5,,Anaplastic meningioma WGS,DOI:10.1038/s41598-018-31659-0,low,Among the lowest-TMB tumors; grade I dominant ~0.5; atypical/anaplastic rise to ~2
-CHOROID_PLEXUS,0.5,,Choroid plexus tumor landscape,PMID:33249490,low,Very low (median ~20 coding mutations/tumor); hypermutant Li-Fraumeni/RRD subset is the exception
-ATC,3.8,141,ATC genomic landscape,DOI:10.1016/j.celrep.2024.113826,medium,Anaplastic thyroid; higher than differentiated (~0.4) but below TMB-high; dedifferentiated drivers
-THYMCA,2.5,168,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thymus carcinoma (nos); 168 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB."
-STAD_MSI,,,Chalmers 2017;TCGA-STAD 2014,PMID:28420421;PMID:25079317,none,"MSI-H gastric intentionally blank: the STAD row is the pooled stomach intestinal-type panel median (5.0 mut/Mb, n=58, Chalmers 2017 Table 1) and cannot describe MSI-H disease. TCGA-STAD analysed the 215 tumours below 11.4 mut/Mb, 'none of which were MSI-positive', separately from 74 hypermutated tumours; Chalmers reports that in stomach adenocarcinoma MSI-High and high TMB (>20 mut/Mb) almost always co-occur. Neither source publishes an MSI-stratified gastric median, so this is an audited gap rather than an invented estimate."
+cancer_code,median_tmb_mut_mb,n_samples,source,pmid_doi,confidence,notes,mean_tmb_mut_mb
+ACC,2.7,204,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: adrenal gland cortical carcinoma; 204 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+BLCA,7.1,,Lawrence 2013,PMID:23770567,high,WES median; APOBEC-driven long tail.,
+BRCA,1.2,,Lawrence 2013,PMID:23770567,high,WES median; higher in basal/HER2; MSI rare.,
+CESC,5.0,,Lawrence 2013,PMID:23770567,medium,Cervical squamous; APOBEC + HPV; wide range.,
+BTC,1.23,803,Lin 2021,PMID:33754015,medium,"Chinese pan-biliary cohort; mixed WES and targeted-panel assays, not solely a panel assay.",
+CHOL,2.5,1456,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: liver cholangiocarcinoma; 1456 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+COAD,3.1,,Lawrence 2013,PMID:23770567,high,Colon MSS median; MSI-H/POLE subset >40.,
+DLBC,3.3,,Lawrence 2013,PMID:23770567,high,DLBCL WES median.,
+ESCA,4.0,,Lawrence 2013,PMID:23770567,medium,ESCC vs EAC differ; range wide.,
+GBM,2.2,,Lawrence 2013,PMID:23770567,high,WES median; post-temozolomide/MMR-deficient subset hypermutates.,
+HNSC,3.9,,Lawrence 2013,PMID:23770567,high,WES median; HPV+ vs HPV- differ slightly.,
+RCC,,,,,none,"Broad renal-cell aggregate intentionally blank: clear-cell, papillary, chromophobe, translocation, and other non-clear histologies have distinct published distributions; use the histology-specific rows.",
+KICH,0.7,,Chalmers 2017,PMID:28420421,low,Kidney chromophobe; very low; among lowest renal subtypes.,
+KIRC,1.9,,Lawrence 2013,PMID:23770567,high,Kidney clear cell WES median.,
+KIRP,2.7,152,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: kidney renal papillary carcinoma; 152 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+LAML,0.4,,Lawrence 2013,PMID:23770567,high,AML WES median; among lowest of all cancers.,
+LGG,1.0,,Lawrence 2013,PMID:23770567,medium,IDH-mutant low; temozolomide recurrences hypermutate.,
+LIHC,3.6,602,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: liver hepatocellular carcinoma (hcc); 602 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+NSCLC,8.0,970,Jonna 2021,PMID:33889505,medium,Median 8 in each treatment-naive and treatment-experienced group; 970 annotated specimens in total.,
+LUAD,8.1,,Lawrence 2013,PMID:23770567,high,Lung adeno WES median; smoking-dependent (never-smokers far lower).,
+LUSC,9.9,,Lawrence 2013,PMID:23770567,high,Lung squamous WES median; smoking signature.,
+MESO,1.8,414,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: pleura mesothelioma; 414 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB. Pleural cohort only; peritoneal n=135 also has median 1.8; cohorts are not pooled.",
+OV,1.7,,Lawrence 2013,PMID:23770567,high,Ovarian serous WES median; HRD/SCNA-driven not SNV.,
+PAAD,1.8,2483,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: pancreas ductal adenocarcinoma; 2483 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+PCPG,0.5,,Chalmers 2017,PMID:28420421,low,Pheo/paraganglioma; very low; among lowest.,
+PRAD,0.7,,Lawrence 2013,PMID:23770567,high,Prostate adeno WES median; CDK12/MMR subset higher.,
+READ,3.1,,Lawrence 2013,PMID:23770567,medium,Treated as colorectal; MSI-H subset much higher.,
+SKCM,12.9,,Lawrence 2013,PMID:23770567,high,Cutaneous melanoma WES median; UV signature; highest common solid tumor.,
+STAD,5,58,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: stomach adenocarcinoma intestinal type; 58 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB. Intestinal-type subset only; not an all-histology or MSI-stratified gastric median.",
+TGCT,0.5,,Chalmers 2017,PMID:28420421,low,Testicular germ cell; very low SNV TMB; aneuploidy-driven.,
+THCA,1.8,350,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thyroid papillary carcinoma; 350 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+THYM_EPITHELIAL,,,Schirosi 2022,PMID:35749302,none,"Combined thymic epithelial aggregate intentionally blank: the 274-case targeted-sequencing cohort reports separate medians of 1.92 mut/Mb for thymoma and 3.84 mut/Mb for thymic carcinoma, but no combined median.",
+THYM,1.3,108,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thymus thymoma (nos); 108 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+UCEC,2.5,,Lawrence 2013,PMID:23770567,high,Endometrioid median; POLE-ultramutated and MSI-H subsets very high.,
+UCS,3.6,245,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: uterus carcinosarcoma; 245 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+UVM,0.34,80,Wu 2019,PMID:31930041,medium,"TCGA MC3 UVM cohort; median 0.34 (IQR 0.26-0.45) mut/Mb, n=80. Nonsynonymous coding substitutions and indels divided by 38 Mb. Restores the old number with the correct source DOI 10.21037/atm.2019.10.116.",
+SARC_LMS,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Leiomyosarcoma; complex-karyotype STS; low SNV TMB.,
+SARC_DDLPS,1.5,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Dedifferentiated liposarcoma; MDM2/CDK4 amplicon-driven; low TMB.,
+SARC_UPS,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Undifferentiated pleomorphic sarcoma; among higher STS TMB.,
+SARC_MYXFIB,2.2,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Myxofibrosarcoma ~2 mut/Mb.,
+SARC_SYN,1.7,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,Synovial sarcoma; lowest STS TMB; SS18-SSX fusion-driven simple karyotype.,
+SARC_MPNST,2.5,134,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: soft tissue malignant peripheral nerve sheath tumor (mpnst); 134 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+SARC_OS,1.2,,Grobner 2018,PMID:29489754,medium,Osteosarcoma pediatric WGS ~1.2; high SV/chromothripsis burden.,
+SARC_EWS,0.6,,Grobner 2018,PMID:29489754,high,Ewing sarcoma ~0.6; EWSR1-FLI1 fusion-driven; very few SNVs.,
+SARC_RMS_ERMS,0.8,,Grobner 2018,PMID:29489754,low,Embryonal RMS; low pediatric TMB; RAS-pathway; subtype median approximate.,
+SARC_RMS_ARMS,0.4,,Grobner 2018,PMID:29489754,low,Alveolar RMS; PAX3/7-FOXO1 fusion-driven; very low SNV burden; approximate.,
+SARC_CHON,1.7,93,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: bone chondrosarcoma; 93 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB. Bone cohort only; separate soft-tissue cohort n=124 also has median 1.7; no patient-level pooled median calculated.",
+SARC_CHOR,0.53,,Chordoma WGS,PMID:38892063,medium,Chordoma skull-base WGS; brachyury-driven; rare MMR cases hypermutate.,
+NBL,0.6,,Grobner 2018,PMID:29489754,high,Neuroblastoma ~0.6; relapse higher.,
+WILMS,0.2,,Grobner 2018,PMID:29489754,low,Wilms tumor; very low pediatric TMB; per-entity median approximate.,
+RT,0.1,,Lawrence 2013,PMID:23770567,medium,Rhabdoid tumor ~0.1; SMARCB1-driven near-silent genome.,
+ATRT,0.2,,Grobner 2018,PMID:29489754,medium,AT/RT; lowest-mutation pediatric brain tumor; SMARCB1/SMARCA4-driven.,
+MBL,0.3,,Lawrence 2013,PMID:23770567,high,Medulloblastoma ~0.3; rare germline-MMR/POLE hypermutant cases.,
+RB,,21,Retinoblastoma WGS,PMID:33670346,medium,Published mean genome-wide substitution density 0.085/Mb in 21 retinoblastomas (average 275 substitutions per tumor). WGS substitutions only; excludes indels and is not nonsynonymous coding TMB. No population median reported.,0.085
+HEPB,0.02,,Grobner 2018,PMID:29489754,medium,Hepatoblastoma; lowest pediatric TMB; CTNNB1-driven.,
+MM,1.6,,Lawrence 2013,PMID:23770567,high,Multiple myeloma WES median ~1.6; increases at relapse.,
+CLL,0.6,,Lawrence 2013,PMID:23770567,high,CLL WES median ~0.6; low.,
+MCL,3.3,75,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: lymph node lymphoma mantle cell; 75 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+FL,5.05,119,Lafuente 2026,DOI:10.3390/cancers18050737,medium,Median at diagnosis in 119 de novo grade 1-3A FL patients; Oncomine 409-gene targeted panel (~1.2 Mb coding); Results 3.2. Replaces unsupported 1.35/WES label.,
+HL,,,Liang 2019,PMID:30108156,none,"Withdrawn legacy estimate 2.0: PMID30108156 reports clinical-panel TMB in 34 patients, including 23 with TMB >=6; it does not support the approximate WES median of 2.0. See #527.",
+BL,2.0,,Love 2012,PMID:23143597,medium,Burkitt; AID/MYC-driven moderate burden; ~2 approximate WES.,
+B_ALL,0.3,,Grobner 2018,PMID:29489754,low,B-ALL; very low pediatric TMB; CMMRD/relapse cases far higher.,
+T_ALL,0.5,,Grobner 2018,PMID:29489754,low,T-ALL; low; slightly higher than B-ALL; approximate.,
+MDS,0.8,513,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: bone marrow myelodysplastic syndrome (mds); 513 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+MPN,0.8,138,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: bone marrow myeloproliferative neoplasm (mpn); 138 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+CML,,,,,none,Chronic myeloid leukemia; BCR-ABL1-defined; very few additional mutations in chronic phase.,
+CTCL,,,Park 2021,PMID:33574607,none,"Withdrawn legacy estimate 3.0: The cited PMID33574607 is a general intratumoral-heterogeneity review, not the attributed CTCL cohort. See #527.",
+NET_PANCREAS,1.35,,van Riet 2021,PMID:34326338,medium,"Advanced pancreatic NET; genome-wide WGS median 1.35 mut/Mb (IQR 0.90-2.12); Results, Differences within the advanced neuroendocrine tumor population based on primary localization. Not coding-exome TMB.",
+NEN,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection.",
+NET,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection.",
+NEC,,,van Riet 2021,PMID:34326338,none,"Full text reports advanced NET median 1.09 (n=69) and advanced NEC median 5.45 (n=16), genome-wide WGS. Broad ontology aggregate remains blank because this selected advanced cohort does not cover its full site/stage scope; not a mean-versus-median rejection.",
+NEC_LUNG,,,George 2015;George 2018,PMID:26168399;PMID:29535388,none,"Pulmonary NEC union intentionally blank: SCLC and LCNEC have independently curated rows, but no defensible sample-weighted combined median is published.",
+SCLC,8.6,,George 2015,PMID:26168399,high,Small cell lung; high ~8.6; smoking signature.,
+NEC_MERKEL,5.3,,Knepper 2019,PMID:31399473,medium,Merkel cell carcinoma median ~5.3; bimodal MCPyV-neg(UV) high vs MCPyV-pos low.,
+MTC,1.8,96,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thyroid medullary carcinoma; 96 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+ADCC,1.8,184,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: salivary gland adenoid cystic carcinoma; 184 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+NPC,0.95,,Nasopharyngeal WES,PMID:36135044,medium,Nasopharyngeal carcinoma median ~0.95-1.0; EBV-driven low SNV burden.,
+NUTM,1.0,71,Kim 2025,PMID:40704901,medium,"NUT carcinoma registry: median 1.0 mut/Mb (range 0-16) among 71 with known TMB, from 116 total patients. Heterogeneous clinical NGS assays; replaces unsupported attribution to a three-case series.",
+BRCA_Basal,1.8,,TCGA-Breast,PMID:23000897,low,TNBC/basal-like: highest TMB among breast subtypes. Exact subtype median not revalidated. Removed misattributed PMID31504112; clinical TNBC and PAM50 basal-like are not interchangeable.,
+BRCA_HER2,1.6,,TCGA-Breast,PMID:23000897,low,HER2-enriched: elevated vs luminal. Exact subtype median not revalidated. Removed misattributed PMID31504112; clinical TNBC and PAM50 basal-like are not interchangeable.,
+BRCA_LumB,1.2,,TCGA-Breast,PMID:23000897,low,luminal B,
+BRCA_LumA,0.9,,TCGA-Breast,PMID:23000897,low,luminal A: lowest-TMB subtype,
+BRCA_Normal,,,TCGA-Breast,PMID:23000897,none,Withdrawn legacy estimate 1.0: TCGA-Breast excluded the eight normal-like samples from subsequent subtype analyses; no normal-like median of 1.0 was established. See #527.,
+HNSC_HPVneg,4.6,,TCGA-HNSC,PMID:25631445,low,Legacy subtype estimate; exact median not revalidated. TCGA-HNSC states mutation rates did not differ by HPV status; a systematic higher/lower claim is not supported by this citation.,
+HNSC_HPVpos,2.8,,TCGA-HNSC,PMID:25631445,low,Legacy subtype estimate; exact median not revalidated. TCGA-HNSC states mutation rates did not differ by HPV status; a systematic higher/lower claim is not supported by this citation.,
+SARC,1.8,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,medium,pan soft-tissue sarcoma (TCGA-SARC overall),
+SARC_LPS_UNSPEC,1.5,,TCGA-SARC 2017,DOI:10.1016/j.cell.2017.10.014,low,liposarcoma NOS ~ dedifferentiated,
+SARC_RMS_PRMS,1.2,,Grobner 2018,PMID:29489754,low,pleomorphic RMS (adult): higher than pediatric RMS,
+SARC_RMS_SSRMS,0.6,,Grobner 2018,PMID:29489754,low,spindle/sclerosing RMS,
+BCC,47.3,92,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: skin basal cell carcinoma; 92 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+cSCC,45.2,266,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: skin squamous cell carcinoma (scc); 266 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+EPN,0.5,,Grobner 2018,PMID:29489754,medium,Ependymoma; very low SNV TMB; fusion/epigenetic-driven.,
+DIPG,1.0,,Mackay 2017,PMID:28966033,medium,Diffuse midline glioma; low TMB; H3 K27M epigenetic driver.,
+VSCC,5.2,72,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: vulva squamous cell carcinoma (scc); 72 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+VAGC,,,,,none,Vaginal SCC; HPV-associated; ~5 mut/Mb estimate; no cited median curated.,
+PENSCC,4.5,60,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: penis squamous cell carcinoma (scc); 60 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+ANSC,5.4,232,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: anus squamous cell carcinoma (scc); 232 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+GBC,5.5,,Comprehensive GBC 2023,DOI:10.1038/s41698-022-00327-y,high,Median 5.5 (range 0-161); 17.7% TMB-H>10.,
+CRANIO,0.9,3,Brastianos 2014,PMID:24413733,low,Papillary craniopharyngioma; ~0.9/Mb nonsynonymous rate (WES n=3); CTNNB1-driven adamantinomatous also low-TMB.,
+PITNET,,,,,none,Pituitary NET; very low TMB; no cited median curated.,
+SARC_DSRCT,0.72,22,Wu 2022,PMID:35379887,medium,22 specimens from 14 patients; multisite specimens are correlated. Corrects misattributed author Bertucci.,
+SARC_GIST,0.67,78,Wu 2024,PMID:39489749,medium,"Coding mutation median across 78 tumors (59 WES, 19 WGS); specimens include repeated sampling of patients; not 78 independent patients.",
+NEC_LUNG_LARGECELL,9.9,288,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: lung large cell neuroendocrine carcinoma; 288 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+SARC_SMARCA4,10.6,48,Cooper 2024,PMID:39802817,medium,"TMB available in 48/92 thoracic SMARCA4-deficient undifferentiated tumors; table/body median 10.6, abstract rounded differently to 10.5. Thoracic subset.",
+NET_MIDGUT,1.05,,van Riet 2021,PMID:34326338,medium,Advanced midgut NET; genome-wide WGS median 1.05 mut/Mb (IQR 0.75-1.40); primary-localization Results section. Replaces prior gap based on a different mixed-site source.,
+NET_RECTAL,1.15,18,Li 2023,PMID:36645718,medium,"Median across 18 rectal NET tumors, range 0.03-23.28.",
+NET_LUNG,0.4,,Fernandez-Cuesta 2014,PMID:24670920,medium,Typical/atypical pulmonary carcinoid; very low (chromatin-remodeling driven).,
+SARC_CIC,1.2,,Antonescu 2017,PMID:29901569,medium,CIC-DUX4-driven; low TMB (range 0.8-1.6). Overrides pan-SARC.,
+NBL_MYCNamp,,,Wang 2018 JNCI,PMID:30307503,none,"The cited neuroblastoma paper mentions an approximately 0.6 exonic mut/Mb median for neuroblastoma overall (citing Pugh 2013); its own analysis uses per-tumor counts. It does not establish a separate MYCN subgroup per-Mb median. Gap is subtype-specific, not absence of overall neuroblastoma evidence.",
+NBL_MYCNnonamp,,,Wang 2018 JNCI,PMID:30307503,none,"The cited neuroblastoma paper mentions an approximately 0.6 exonic mut/Mb median for neuroblastoma overall (citing Pugh 2013); its own analysis uses per-tumor counts. It does not establish a separate MYCN subgroup per-Mb median. Gap is subtype-specific, not absence of overall neuroblastoma evidence.",
+MBL_WNT,0.6,,Northcott 2017,PMID:28726821,low,MB subgroup; near baseline ~0.5; excellent prognosis.,
+MBL_SHH,0.8,,Northcott 2017,PMID:28726821,low,Higher than other MB subgroups; adult/TP53-mut SHH can be hypermutated.,
+MBL_G3,0.5,,Northcott 2017,PMID:28726821,low,MB Group 3; baseline low TMB.,
+MBL_G4,0.5,,Northcott 2017,PMID:28726821,low,MB Group 4; lowest mutation rate of the four.,
+LUAD_EGFR,,,Wang 2021,PMID:33846346,none,"Withdrawn legacy estimate 3.5: The cited PMID33846346 concerns RIG-I/XRCC4, not an EGFR-mutant lung cohort median. See #527.",
+HCL,,1,Tiacci 2011,PMID:22072557,none,"Legacy value 0.2 removed: no supported population median with a reproducible per-Mb denominator curated. Hairy cell leukemia; BRAF V600E-driven, genomically near-silent (~5 somatic mutations, WES n=1).",
+ACINIC,1.8,81,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: salivary gland acinic cell tumor; 81 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+ALCL,,,,,none,Anaplastic large cell lymphoma; ALK+ has the lowest lymphoma mutation burden; no source-checked per-Mb median curated.,
+URETH,,,,,none,Urethral carcinoma; rare; no source-checked per-Mb median curated.,
+UCEC_POLE,150.8,61,Nero 2025,PMID:39865420,medium,"Median 150.8 mut/Mb in 61 endometrial cancers with one of 11 pathogenic POLE hotspot variants; TSO500 tumor-only 523-gene panel. Includes 16 multiple-classifier tumors; not unselected POLE VUS. A genomic cohort, not an ICI response trial.",
+UCEC_MSI,21.5,127,Leon-Castillo 2020,PMID:31829442,medium,TCGA reanalysis: median 21.5 mut/Mb in 127 MSI-H endometrial cancers without POLE mutations. Coding substitutions (including synonymous) and indels divided by 38 Mb. Replaces the unsupported median label on the TCGA 2013 subgroup rate of 18.,
+UCEC_CNL,,,TCGA endometrial (Kandoth 2013),PMID:23636398,none,"Withdrawn legacy estimate 2.5: TCGA reports a subgroup mutation rate of 2.9, not the curated median of 2.5; no reproducible median calculation is curated. See #527.",
+UCEC_CNH,,,TCGA endometrial (Kandoth 2013),PMID:23636398,none,"Withdrawn legacy estimate 2.8: TCGA reports a subgroup mutation rate of 2.3, not the curated median of 2.8; no reproducible median calculation is curated. See #527.",
+CRC_MSI,46,,Chalmers 2017,PMID:28420421,medium,MSI-H/dMMR hypermutated colorectal source-scope estimate; applies to COAD_MSI/READ_MSI by evidence-source inheritance; no colon- or rectum-specific denominator in curated source,
+CRC,4.5,6004,Fabrizio 2018,PMID:30151257,high,Colorectal all-comers pooled median; MSS ~3.5 and MSI-H ~46 (Chalmers); umbrella value for CRC pooling,
+MENINGIOMA,0.5,,Anaplastic meningioma WGS,DOI:10.1038/s41598-018-31659-0,low,Among the lowest-TMB tumors; grade I dominant ~0.5; atypical/anaplastic rise to ~2,
+CHOROID_PLEXUS,0.5,,Choroid plexus tumor landscape,PMID:33249490,low,Very low (median ~20 coding mutations/tumor); hypermutant Li-Fraumeni/RRD subset is the exception,
+ATC,3.8,141,ATC genomic landscape,DOI:10.1016/j.celrep.2024.113826,medium,Anaplastic thyroid; higher than differentiated (~0.4) but below TMB-high; dedifferentiated drivers,
+THYMCA,2.5,168,Chalmers 2017,PMID:28420421,medium,"Chalmers Additional file 3 Table S1: thymus carcinoma (nos); 168 specimens. Coding targeted-panel TMB includes synonymous substitutions and indels, with driver/germline filtering; not interchangeable with nonsynonymous WES TMB.",
+STAD_MSI,,,Chalmers 2017;TCGA-STAD 2014,PMID:28420421;PMID:25079317,none,"MSI-H gastric intentionally blank: the STAD row is the pooled stomach intestinal-type panel median (5.0 mut/Mb, n=58, Chalmers 2017 Table 1) and cannot describe MSI-H disease. TCGA-STAD analysed the 215 tumours below 11.4 mut/Mb, 'none of which were MSI-positive', separately from 74 hypermutated tumours; Chalmers reports that in stomach adenocarcinoma MSI-High and high TMB (>20 mut/Mb) almost always co-occur. Neither source publishes an MSI-stratified gastric median, so this is an audited gap rather than an invented estimate.",

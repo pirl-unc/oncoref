@@ -52,7 +52,7 @@ cancer-tmb,WILMS,WILMS,,TMB,0.2,PMID:29489754,needs_source_review,,assay_not_str
 cancer-tmb,RT,RT,,TMB,0.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,ATRT,ATRT,,TMB,0.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,MBL,MBL,,TMB,0.3,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,RB,RB,,TMB,,PMID:33670346,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,RB,RB,,TMB_MEAN,0.085,PMID:33670346,source_checked,Results 2.2 Somatic Mutational Burden and Mutational Signatures; Figure 1,
 cancer-tmb,HEPB,HEPB,,TMB,0.02,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,MM,MM,,TMB,1.6,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,CLL,CLL,,TMB,0.6,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated

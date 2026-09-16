@@ -133,7 +133,7 @@ Primary sources for these corrections:
 [Chalmers Table 1 and Results](https://pmc.ncbi.nlm.nih.gov/articles/PMC5395719/).
 
 The rejected ADCC and RB values were means, not medians. ADCC now has a replacement
-panel median; RB remains a gap. Other directly checked medians include rectal NET, GIST, DSRCT,
+panel median and its original mean is retained separately; RB is restored as a mean. Other directly checked medians include rectal NET, GIST, DSRCT,
 BTC, NSCLC and thoracic SMARCA4-deficient tumors; their source populations, assay
 methods and specimen-versus-patient distinctions remain explicit.
 
@@ -180,7 +180,7 @@ provides a median of 21.5 in 127 MSI-H, POLE-wild-type tumors. This replaces 18,
 which the old TCGA citation did not establish as a median. The reanalysis includes
 synonymous coding variants and uses a 38 Mb denominator.
 
-Ten original gaps remain: RB, HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL,
+Nine original gaps remain: HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL,
 UCEC_CNH, NBL_MYCNamp and NBL_MYCNnonamp. These are specific unresolved claims,
 not declarations that the diseases have no TMB literature. For example:
 
@@ -246,3 +246,19 @@ medians, resolving unmatched Chalmers populations, validating pediatric and mole
 resolving review-derived citations, and checking all remaining ICI endpoint
 populations and denominators against their original tables. No inference from TMB,
 mutation mechanism, binding predictions, or a response-rate ranking fills those gaps.
+
+## Typed means and continued verification (#532)
+
+A supported mean is valid evidence when it is labeled as a mean. The TMB API now
+provides `tmb_mut_mb` and `tmb_statistic`; the scalar lookup prefers a median and
+falls back to a mean. `median_tmb_mut_mb` stays blank for mean-only evidence, and
+`mean_tmb_mut_mb` stays blank when a mean from that source has not been curated.
+Assays and populations still require inspection before comparing numbers.
+
+[Retinoblastoma WGS Results 2.2](https://pmc.ncbi.nlm.nih.gov/articles/PMC7918943/)
+supports **mean 0.085 genome-wide substitutions/Mb, n=21**. This restores the
+original value with `published_mean` provenance; it is not coding TMB or an
+SNV-plus-indel rate. [Ho 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3708595/)
+supports **mean approximately 0.31 nonsilent mutations/Mb, n=60** for ADCC.
+That independent estimate is retained in the [alternative-source ledger](audits/tmb-alternative-source-estimates.csv),
+without attributing it to the cohort supplying the selected panel median.

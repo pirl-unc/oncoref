@@ -5,6 +5,7 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 
 import pandas as pd
+import pytest
 
 import oncoref
 from oncoref import cancer_types, tmb
@@ -25,6 +26,27 @@ def test_tmb_map_nonempty_floats():
     mapping = tmb.cancer_tmb()
     assert mapping
     assert all(isinstance(v, float) for v in mapping.values())
+
+
+def test_mean_fallback_preserves_statistic_assay_and_blank_median():
+    assert tmb.cancer_tmb("RB") == 0.085
+    row = tmb.cancer_tmb_record("RB")
+    assert row["tmb_mut_mb"] == row["mean_tmb_mut_mb"] == 0.085
+    assert row["median_tmb_mut_mb"] is None
+    assert row["tmb_statistic"] == "mean"
+    assert row["estimate_type"] == "published_mean"
+    assert row["tmb_assay"] == "WGS_genome_wide_substitutions"
+    assert row["n_samples"] == 21
+    assert row["inheritance_kind"] == "direct"
+    median = tmb.cancer_tmb_record("ADCC")
+    assert median["tmb_mut_mb"] == median["median_tmb_mut_mb"] == 1.8
+    assert median["mean_tmb_mut_mb"] is None
+    assert median["tmb_statistic"] == "median"
+    gap = tmb.cancer_tmb_record("STAD_MSI")
+    assert gap["tmb_mut_mb"] is None
+    assert gap["tmb_statistic"] is None
+    with pytest.raises(ValueError, match="statistic"):
+        tmb.tmb_evidence_fields("RB", 0.085, statistic="count")
 
 
 def test_tmb_df_exposes_evidence_schema():

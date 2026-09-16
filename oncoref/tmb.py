@@ -106,7 +106,6 @@ _TMB_EVIDENCE_OVERRIDES = {
             "HCL",
             "LUAD_EGFR",
             "CTCL",
-            "RB",
             "HL",
             "BRCA_Normal",
             "UCEC_CNL",
@@ -154,14 +153,16 @@ _register_derived_cache(_checked_tmb_codes.cache_clear)
 def cancer_tmb_df():
     """Return curated TMB estimates (mut/Mb) with source-review provenance.
 
-    Cohorts with no defensible published per-Mb median are present with a blank
-    ``median_tmb_mut_mb`` (and a ``confidence`` of ``none``) so the gap is
+    ``tmb_mut_mb`` selects the median when available, otherwise the mean;
+    ``tmb_statistic`` identifies that choice. The original statistic-specific
+    columns remain separate. Cohorts with neither estimate have blank values
+    (and a ``confidence`` of ``none``) so the gap is
     explicit rather than silently absent. Retained estimates span WES
     (Lawrence 2013), panels (Chalmers 2017), genome-wide WGS and disease-specific
     studies; see the ``source``/``notes`` columns — panel and WES TMB are not
     strictly comparable in the low-TMB range. ``source_review_status`` and
     ``source_locator`` distinguish rechecked numbers from legacy estimates awaiting
-    source review. A citation alone does not imply ``published_median``."""
+    source review. A citation alone does not imply a published statistic."""
     return _tmb_evidence_frame().copy()
 
 
@@ -169,8 +170,17 @@ def cancer_tmb_df():
 def _tmb_evidence_frame():
     """Cached annotated TMB frame. Internal callers treat it as read-only."""
     df = get_data("cancer-tmb").copy()
+    df["tmb_mut_mb"] = df["median_tmb_mut_mb"].combine_first(df["mean_tmb_mut_mb"])
+    df["tmb_statistic"] = [
+        "median" if pd.notna(median) else "mean" if pd.notna(mean) else None
+        for median, mean in zip(df["median_tmb_mut_mb"], df["mean_tmb_mut_mb"])
+    ]
     evidence = [
-        tmb_evidence_fields(row["cancer_code"], row["median_tmb_mut_mb"])
+        tmb_evidence_fields(
+            row["cancer_code"],
+            row["tmb_mut_mb"],
+            statistic=row["tmb_statistic"] if pd.notna(row["tmb_statistic"]) else "median",
+        )
         for _, row in df.iterrows()
     ]
     for col in ("estimate_type", "source_scope", "missing_reason"):
@@ -186,12 +196,15 @@ _register_derived_cache(_tmb_evidence_frame.cache_clear)
 def tmb_evidence_fields(
     cancer_type: str,
     median_tmb_mut_mb: float | None,
+    *,
+    statistic: str = "median",
 ) -> dict[str, object]:
     """Classify the provenance of one explicit TMB estimate.
 
     ``cancer_type`` accepts a canonical registry code, display name, or alias.
     ``median_tmb_mut_mb`` is the row's numeric estimate, or ``None``/``NaN``
-    when no defensible estimate is available. The returned mapping contains
+    when no defensible estimate is available. The parameter name is retained for
+    compatibility; pass ``statistic="mean"`` for a mean. The returned mapping contains
     ``estimate_type``, ``source_scope``, and ``missing_reason``.
 
     This helper classifies the supplied row; it does not search parent or
@@ -200,6 +213,8 @@ def tmb_evidence_fields(
     mixed source-scope cohorts are reported as ``source_scope="aggregate_source"``.
     Reviewed per-code overrides take precedence over that registry default.
     """
+    if statistic not in {"median", "mean"}:
+        raise ValueError("statistic must be 'median' or 'mean'")
     code = resolve_cancer_type(cancer_type)
     override = _TMB_EVIDENCE_OVERRIDES.get(code, {})
     if pd.isna(median_tmb_mut_mb):
@@ -214,7 +229,7 @@ def tmb_evidence_fields(
     return {
         "estimate_type": override.get(
             "estimate_type",
-            "published_median" if code in _checked_tmb_codes() else "curated_estimate",
+            f"published_{statistic}" if code in _checked_tmb_codes() else "curated_estimate",
         ),
         "source_scope": override.get("source_scope", default_scope),
         "missing_reason": override.get("missing_reason", float("nan")),
@@ -224,8 +239,8 @@ def tmb_evidence_fields(
 @lru_cache(maxsize=1)
 def _tmb_value_map() -> dict[str, float]:
     """Cached direct numeric map. Callers must treat it as read-only."""
-    vals = _tmb_evidence_frame().dropna(subset=["median_tmb_mut_mb"])
-    return dict(zip(vals["cancer_code"].astype(str), vals["median_tmb_mut_mb"].astype(float)))
+    vals = _tmb_evidence_frame().dropna(subset=["tmb_mut_mb"])
+    return dict(zip(vals["cancer_code"].astype(str), vals["tmb_mut_mb"].astype(float)))
 
 
 _register_derived_cache(_tmb_value_map.cache_clear)
@@ -300,16 +315,18 @@ def resolve_tmb_source(cancer_type, *, inherit=True) -> dict:
 
 
 def cancer_tmb(cancer_type=None, *, inherit=True):
-    """Median TMB (mut/Mb) for one cancer type, or the whole
-    ``{code: median_tmb}`` map (codes with no published value omitted).
+    """TMB (mut/Mb), preferring the curated median and falling back to a mean.
+
+    With no cancer type, return the whole ``{code: tmb}`` map, omitting gaps.
+    Use :func:`cancer_tmb_record` to inspect the statistic, assay and population.
 
     ``cancer_type`` is resolved through :func:`resolve_cancer_type`, so aliases
     and display names work. When ``inherit`` (default), a code with no curated
     value of its own inherits its nearest ancestor's TMB by walking the registry
     ``parent_code`` chain — so molecular / histology subtypes (``LUAD_EGFR`` ->
     ``LUAD``, ``SCLC_ASCL1`` -> ``SCLC``, rare ``SARC_*`` -> ``SARC``) resolve
-    without a curated row each. Returns ``None`` if neither the code nor any
-    ancestor has a value."""
+    without a curated row each. Explicit audited gaps block inheritance. Returns
+    ``None`` if no eligible source has a value."""
     mapping = _tmb_value_map()
     if cancer_type is None:
         return dict(mapping)
@@ -322,7 +339,8 @@ def cancer_tmb_record(cancer_type=None, *, inherit=True):
     """Metadata-bearing TMB lookup.
 
     Mirrors :func:`cancer_tmb`, but returns the resolved source row as a dict instead
-    of only the numeric median. The record includes the derived evidence columns from
+    of only the numeric estimate. The record includes ``tmb_mut_mb``,
+    ``tmb_statistic``, and the derived evidence columns from
     :func:`cancer_tmb_df` plus lookup metadata:
 
     - ``requested_cancer_code``
