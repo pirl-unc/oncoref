@@ -42,7 +42,7 @@ that a source supports the biological population assigned to a row.
 The [citation inventory](audits/source-citations.csv) includes 191 distinct original
 and current references. PMID/DOI metadata identifies the actual article behind a
 citation; resolving an identifier is **not** numerical source validation. The
-[TMB review table](../oncoref/data/cancer-tmb-source-audit.csv) records a disposition
+[TMB review table](https://github.com/pirl-unc/oncoref/blob/main/oncoref/data/cancer-tmb-source-audit.csv) records a disposition
 for all 130 rows, including rejected legacy values, assay, locator, and review notes.
 
 After source recovery and the best-effort round, 48 numeric TMB rows have direct

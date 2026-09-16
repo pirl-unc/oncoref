@@ -29,6 +29,9 @@ def test_apd1_vs_tmb_renders(tmp_path):
     fig = plots.apd1_vs_tmb(annotate=False, save=str(out))
     assert out.exists() and out.stat().st_size > 0
     assert fig is not None
+    # The lookup includes means, unspecified summaries and approximations.
+    assert fig.axes[0].get_xlabel() == "Tumor mutational burden estimate (mut/Mb, log scale)"
+    assert plots._reference_metric_axis("tmb")[1] == "Tumor mutational burden estimate (mut/Mb)"
 
 
 def test_scatter_label_adjustment_is_bounded_by_iterations_not_wall_clock(monkeypatch):
