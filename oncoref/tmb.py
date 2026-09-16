@@ -110,8 +110,6 @@ _TMB_EVIDENCE_OVERRIDES = {
             "BRCA_Normal",
             "UCEC_CNL",
             "UCEC_CNH",
-            "NBL_MYCNamp",
-            "NBL_MYCNnonamp",
         )
     },
     # TCGA-SARC is a soft-tissue sarcoma cohort. It does not span the full oncoref
@@ -125,6 +123,12 @@ _TMB_EVIDENCE_OVERRIDES = {
     "ADCC": {"source_scope": "salivary_adenoid_cystic_cohort"},
     "UCEC_POLE": {"source_scope": "pathogenic_pole_including_multiple_classifiers"},
     "UCEC_MSI": {"source_scope": "msi_high_pole_wild_type_cohort"},
+    "NBL": {"source_scope": "high_risk_neuroblastoma_cohort"},
+    "NBL_MYCNamp": {
+        "estimate_type": "sample_recomputed_median",
+        "source_scope": "high_risk_mycn_amplified_cohort",
+    },
+    "NBL_MYCNnonamp": {"source_scope": "east_asian_mycn_nonamplified_all_risk_cohort"},
 }
 
 

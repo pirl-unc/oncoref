@@ -16,7 +16,10 @@ Issues were filed before their corresponding fixes:
 [#526](https://github.com/pirl-unc/oncoref/issues/526) (TMB statistics/provenance),
 [#527](https://github.com/pirl-unc/oncoref/issues/527) (incorrect citations), and
 [#528](https://github.com/pirl-unc/oncoref/issues/528) (anchors/denominators), and
-[#530](https://github.com/pirl-unc/oncoref/issues/530) (PR review and source recovery).
+[#530](https://github.com/pirl-unc/oncoref/issues/530) (PR review and source recovery),
+[#532](https://github.com/pirl-unc/oncoref/issues/532) (means and all withdrawn claims),
+[#533](https://github.com/pirl-unc/oncoref/issues/533) (STK11 subgroup denominators), and
+[#534](https://github.com/pirl-unc/oncoref/issues/534) (neuroblastoma source recovery).
 
 ## Scope and reproducible evidence
 
@@ -35,15 +38,16 @@ ordering, drug/regimen consistency, compact-anchor agreement, missing denominato
 and provenance. Its output is tested for reproducibility. These checks cannot prove
 that a source supports the biological population assigned to a row.
 
-The [citation inventory](audits/source-citations.csv) includes 184 distinct original
+The [citation inventory](audits/source-citations.csv) includes 186 distinct original
 and current references. PMID/DOI metadata identifies the actual article behind a
 citation; resolving an identifier is **not** numerical source validation. The
 [TMB review table](../oncoref/data/cancer-tmb-source-audit.csv) records a disposition
 for all 130 rows, including rejected legacy values, assay, locator, and review notes.
 
-After source recovery there are 39 source-checked numeric TMB rows (38 medians and one mean), 70 numeric entries
-still requiring exact source verification, 9 withdrawn population-median claims,
-and 12 other explicit gaps. Eleven of the initial 20 withdrawals now have a verified
+After source recovery there are 42 source-checked numeric TMB rows (40 published medians, one published
+mean and one sample-recomputed median), 69 numeric entries
+still requiring exact source verification, 7 withdrawn population-median claims,
+and 12 other explicit gaps. Thirteen of the initial 20 withdrawals now have a verified
 replacement or repaired citation; an existing MPN gap was also filled. The endpoint
 inventory still flags 338 rows/anchors
 whose numeric source locator is not verified, 33 without response denominators,
@@ -133,7 +137,10 @@ Primary sources for these corrections:
 [Chalmers Table 1 and Results](https://pmc.ncbi.nlm.nih.gov/articles/PMC5395719/).
 
 The rejected ADCC and RB values were means, not medians. ADCC now has a replacement
-panel median and its original mean is retained separately; RB is restored as a mean. Other directly checked medians include rectal NET, GIST, DSRCT,
+panel median and its original mean is retained separately; RB is restored as a mean.
+The old FL value 1.35 cannot be rescued by relabeling it a mean: the cited paper
+reports a 409-gene panel median of 5.05, with the observed range starting at 1.69.
+Other directly checked medians include rectal NET, GIST, DSRCT,
 BTC, NSCLC and thoracic SMARCA4-deficient tumors; their source populations, assay
 methods and specimen-versus-patient distinctions remain explicit.
 
@@ -180,8 +187,8 @@ provides a median of 21.5 in 127 MSI-H, POLE-wild-type tumors. This replaces 18,
 which the old TCGA citation did not establish as a median. The reanalysis includes
 synonymous coding variants and uses a 38 Mb denominator.
 
-Nine original gaps remain: HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL,
-UCEC_CNH, NBL_MYCNamp and NBL_MYCNnonamp. These are specific unresolved claims,
+Seven original gaps remain: HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL
+and UCEC_CNH. These are specific unresolved claims,
 not declarations that the diseases have no TMB literature. For example:
 
 * The originally cited salivary paper reports alterations per tumor and fractions
@@ -284,8 +291,40 @@ for the broader STK11/KEAP1 ontology code.
 The alternative TMB ledger now preserves verified EGFR-mutant lung mean/median,
 MF and Sezary estimates, and a newer Hodgkin panel mean/median with their actual
 cohort limits. The original Hodgkin table contains 37 numeric entries while its
-text reports 34; we do not conceal that discrepancy with a computed cohort median.
+text reports 34; the [transcribed table column](audits/tmb-hodgkin-table-discrepancy.csv)
+preserves patient row numbers and the source-image hash. Its tabular median is
+8.8, but the mismatch prevents labeling that as the paper's n=34 cohort median.
 TCGA endometrial supplements were downloaded and inspected: their selected-gene
 SMG tables cannot be summed into whole-exome per-patient TMB. These source limits,
 and checks of classic HCL, normal-like breast, and the original high-risk
 neuroblastoma report, are recorded for all remaining TMB gaps.
+
+## Third round: recover MYCN subgroup data and recheck retained NBL
+
+[Lee 2020](https://pmc.ncbi.nlm.nih.gov/articles/PMC7653769/) reports a **0.66 mut/Mb
+median in 58 MYCN-nonamplified tumors**, after excluding synonymous variants.
+It spans 26 high-risk and 32 non-high-risk East Asian patients. This restores
+`NBL_MYCNnonamp` using a directly relevant cohort.
+
+[Pugh 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3682833/) supplies actual
+per-sample total-exonic and nonsilent rates in Supplementary Table 1. Reanalysis
+of its **77 MYCN-amplified high-risk cases** yields a nonsilent median of
+**0.4330966 mut/Mb**, curated as 0.43 and labeled `sample_recomputed_median`.
+The separate nonamplified high-risk group has n=158; five unknown-status cases
+are excluded only from subgroup calculations. The complete 240-case extraction
+reproduces the paper's rounded overall medians, 0.60 total exonic and 0.48 nonsilent.
+The retained parent NBL value 0.60 now cites this direct primary source with
+high-risk scope and synonymous inclusion explicit.
+
+[Extracted sample rates](audits/tmb-pugh2013-sample-rates.csv) and
+[recomputed means/medians with source hash](audits/tmb-pugh2013-recomputed.json)
+make the calculation reviewable. Reproduce the extraction from the original workbook:
+
+```bash
+python scripts/recompute_neuroblastoma_tmb.py --workbook Pugh-TableS1.xlsx --output-dir docs/audits
+```
+
+The alternative ledger preserves both statistics for both mutation definitions.
+The default amplified and nonamplified values come from different risk/ancestry
+cohorts and cannot establish an effect of MYCN amplification on TMB. Use the
+within-Pugh subgroup summaries for a like-assay comparison, with high-risk scope.

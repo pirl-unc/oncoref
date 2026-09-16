@@ -47,7 +47,7 @@ cancer-tmb,SARC_RMS_ERMS,SARC_RMS_ERMS,,TMB,0.8,PMID:29489754,needs_source_revie
 cancer-tmb,SARC_RMS_ARMS,SARC_RMS_ARMS,,TMB,0.4,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
 cancer-tmb,SARC_CHON,SARC_CHON,,TMB,1.7,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A146:C146; bone chondrosarcoma,
 cancer-tmb,SARC_CHOR,SARC_CHOR,,TMB,0.53,PMID:38892063,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,NBL,NBL,,TMB,0.6,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,NBL,NBL,,TMB,0.6,PMID:23334666,source_checked,Abstract; Results; Supplementary Table 1,
 cancer-tmb,WILMS,WILMS,,TMB,0.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
 cancer-tmb,RT,RT,,TMB,0.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,ATRT,ATRT,,TMB,0.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
@@ -107,8 +107,8 @@ cancer-tmb,NET_MIDGUT,NET_MIDGUT,,TMB,1.05,PMID:34326338,source_checked,"Results
 cancer-tmb,NET_RECTAL,NET_RECTAL,,TMB,1.15,PMID:36645718,source_checked,"Abstract; Methods, Whole-exome sequencing",
 cancer-tmb,NET_LUNG,NET_LUNG,,TMB,0.4,PMID:24670920,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_CIC,SARC_CIC,,TMB,1.2,PMID:29901569,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,NBL_MYCNamp,NBL_MYCNamp,,TMB,,PMID:30307503,rejected_population_median,Source identity/abstract/full text; see review notes,
-cancer-tmb,NBL_MYCNnonamp,NBL_MYCNnonamp,,TMB,,PMID:30307503,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,NBL_MYCNamp,NBL_MYCNamp,,TMB,0.43,PMID:23334666,source_checked,"Supplementary Table 1, Master_Table; MYCNamp column J and Nonsilent per Mb column BB; rows 3-242",
+cancer-tmb,NBL_MYCNnonamp,NBL_MYCNnonamp,,TMB,0.66,PMID:33172452,source_checked,"Results, TMB and mutational signature; Figure 3c; Methods, Sequence analysis",
 cancer-tmb,MBL_WNT,MBL_WNT,,TMB,0.6,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,MBL_SHH,MBL_SHH,,TMB,0.8,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,MBL_G3,MBL_G3,,TMB,0.5,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated

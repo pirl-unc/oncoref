@@ -1,11 +1,13 @@
 """Scientific curation regressions: gaps, distinct arms, and audit completeness."""
 
 import csv
+import json
 from pathlib import Path
 
 import pandas as pd
 import pytest
 from scripts import audit_tmb_ici_apd1 as audit
+from scripts.recompute_neuroblastoma_tmb import summarize
 
 from oncoref import apd1, ici, tmb
 from oncoref.load_dataset import get_data
@@ -40,7 +42,11 @@ def test_tmb_review_covers_exactly_the_curated_rows_and_gates_median_provenance(
     checked = frame[frame["source_review_status"] == "source_checked"]
     assert checked["source_locator"].notna().all()
     assert checked["tmb_assay"].notna().all()
-    assert set(checked["estimate_type"]) == {"published_median", "published_mean"}
+    assert set(checked["estimate_type"]) == {
+        "published_median",
+        "published_mean",
+        "sample_recomputed_median",
+    }
     unpublished = frame[frame["source_review_status"] != "source_checked"]
     assert "published_median" not in set(unpublished["estimate_type"])
     assert "published_mean" not in set(unpublished["estimate_type"])
@@ -112,6 +118,31 @@ def test_withdrawn_claim_ledgers_cover_all_original_withdrawals():
         "UVM",
     }
     assert all(r["claimed_source_result"] and r["source_locator"] for r in rows)
+
+
+def test_neuroblastoma_reanalysis_reproduces_published_overall_and_separates_subgroups():
+    audit_dir = Path(__file__).resolve().parents[1] / "docs/audits"
+    with (audit_dir / "tmb-pugh2013-sample-rates.csv").open(newline="") as handle:
+        samples = list(csv.DictReader(handle))
+    assert len(samples) == len({r["case_id"] for r in samples}) == 240
+    assert sum(r["mycn_amp_status"] == "9" for r in samples) == 5
+    results = summarize(samples)
+    provenance = json.loads((audit_dir / "tmb-pugh2013-recomputed.json").read_text())
+    assert results == provenance["results"]
+    by_group = {(r["group"], r["measure"]): r for r in results}
+    assert round(by_group["all_high_risk", "total_exonic_mut_mb"]["median"], 2) == 0.60
+    assert round(by_group["all_high_risk", "nonsilent_mut_mb"]["median"], 2) == 0.48
+    amplified = by_group["MYCNamp", "nonsilent_mut_mb"]
+    assert amplified["n"] == 77
+    row = tmb.cancer_tmb_record("NBL_MYCNamp")
+    assert row["tmb_mut_mb"] == round(amplified["median"], 2) == 0.43
+    assert row["estimate_type"] == "sample_recomputed_median"
+    assert row["source_scope"] == "high_risk_mycn_amplified_cohort"
+    nonamp = tmb.cancer_tmb_record("NBL_MYCNnonamp")
+    assert nonamp["tmb_mut_mb"] == 0.66
+    assert nonamp["n_samples"] == 58
+    assert nonamp["pmid_doi"] == "PMID:33172452"
+    assert nonamp["estimate_type"] == "published_median"
 
 
 def test_chalmers_claims_match_extracted_published_rows_and_specimen_counts():
