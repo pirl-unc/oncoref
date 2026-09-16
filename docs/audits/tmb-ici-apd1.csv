@@ -1,10 +1,10 @@
 dataset,row_key,cancer_code,regimen,metric,value,reference,source_review_status,source_locator,findings
-cancer-tmb,ACC,ACC,,TMB,1.0,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,ACC,ACC,,TMB,2.7,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A88:C88; adrenal gland cortical carcinoma,
 cancer-tmb,BLCA,BLCA,,TMB,7.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,BRCA,BRCA,,TMB,1.2,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,CESC,CESC,,TMB,5.0,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,BTC,BTC,,TMB,1.23,PMID:33754015,source_checked,Abstract Results; Figure 1B; Methods,
-cancer-tmb,CHOL,CHOL,,TMB,2.0,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,CHOL,CHOL,,TMB,2.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A103:C103; liver cholangiocarcinoma,
 cancer-tmb,COAD,COAD,,TMB,3.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,DLBC,DLBC,,TMB,3.3,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,ESCA,ESCA,,TMB,4.0,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
@@ -13,39 +13,39 @@ cancer-tmb,HNSC,HNSC,,TMB,3.9,PMID:23770567,needs_source_review,Figure 1; supple
 cancer-tmb,RCC,RCC,,TMB,,,audited_gap,,
 cancer-tmb,KICH,KICH,,TMB,0.7,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,KIRC,KIRC,,TMB,1.9,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,KIRP,KIRP,,TMB,1.3,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,KIRP,KIRP,,TMB,2.7,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A83:C83; kidney renal papillary carcinoma,
 cancer-tmb,LAML,LAML,,TMB,0.4,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,LGG,LGG,,TMB,1.0,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,LIHC,LIHC,,TMB,4.0,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,LIHC,LIHC,,TMB,3.6,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A57:C57; liver hepatocellular carcinoma (hcc),
 cancer-tmb,NSCLC,NSCLC,,TMB,8.0,PMID:33889505,source_checked,"Results, TMB comparison across cohorts",
 cancer-tmb,LUAD,LUAD,,TMB,8.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,LUSC,LUSC,,TMB,9.9,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,MESO,MESO,,TMB,1.8,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MESO,MESO,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A136:C136; pleura mesothelioma,
 cancer-tmb,OV,OV,,TMB,1.7,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,PAAD,PAAD,,TMB,2.1,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,PAAD,PAAD,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A129:C129; pancreas ductal adenocarcinoma,
 cancer-tmb,PCPG,PCPG,,TMB,0.5,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,PRAD,PRAD,,TMB,0.7,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,READ,READ,,TMB,3.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SKCM,SKCM,,TMB,12.9,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,STAD,STAD,,TMB,5.0,PMID:28420421,source_checked,"Table 1, stomach intestinal-type adenocarcinoma",
+cancer-tmb,STAD,STAD,,TMB,5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A30:C30; stomach adenocarcinoma intestinal type,
 cancer-tmb,TGCT,TGCT,,TMB,0.5,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,THCA,THCA,,TMB,0.4,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,THCA,THCA,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A132:C132; thyroid papillary carcinoma,
 cancer-tmb,THYM_EPITHELIAL,THYM_EPITHELIAL,,TMB,,PMID:35749302,audited_gap,,
-cancer-tmb,THYM,THYM,,TMB,0.5,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,THYM,THYM,,TMB,1.3,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A160:C160; thymus thymoma (nos),
 cancer-tmb,UCEC,UCEC,,TMB,2.5,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,UCS,UCS,,TMB,2.5,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,UVM,UVM,,TMB,,DOI:10.21037/atm.2019.09.49,rejected_population_median,Cited article title/abstract,
+cancer-tmb,UCS,UCS,,TMB,3.6,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A48:C48; uterus carcinosarcoma,
+cancer-tmb,UVM,UVM,,TMB,0.34,PMID:31930041,source_checked,"Table 1, UVM; Methods, TMB and indel burden",
 cancer-tmb,SARC_LMS,SARC_LMS,,TMB,2.2,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_DDLPS,SARC_DDLPS,,TMB,1.5,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_UPS,SARC_UPS,,TMB,2.2,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_MYXFIB,SARC_MYXFIB,,TMB,2.2,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_SYN,SARC_SYN,,TMB,1.7,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,SARC_MPNST,SARC_MPNST,,TMB,2.5,PMID:28420421,source_checked,"Table 1, soft tissue MPNST",
+cancer-tmb,SARC_MPNST,SARC_MPNST,,TMB,2.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A109:C109; soft tissue malignant peripheral nerve sheath tumor (mpnst),
 cancer-tmb,SARC_OS,SARC_OS,,TMB,1.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_EWS,SARC_EWS,,TMB,0.6,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_RMS_ERMS,SARC_RMS_ERMS,,TMB,0.8,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
 cancer-tmb,SARC_RMS_ARMS,SARC_RMS_ARMS,,TMB,0.4,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
-cancer-tmb,SARC_CHON,SARC_CHON,,TMB,,PMID:40117529,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,SARC_CHON,SARC_CHON,,TMB,1.7,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A146:C146; bone chondrosarcoma,
 cancer-tmb,SARC_CHOR,SARC_CHOR,,TMB,0.53,PMID:38892063,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,NBL,NBL,,TMB,0.6,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,WILMS,WILMS,,TMB,0.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
@@ -56,14 +56,14 @@ cancer-tmb,RB,RB,,TMB,,PMID:33670346,rejected_population_median,Source identity/
 cancer-tmb,HEPB,HEPB,,TMB,0.02,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,MM,MM,,TMB,1.6,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,CLL,CLL,,TMB,0.6,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,MCL,MCL,,TMB,,PMID:23770587,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,MCL,MCL,,TMB,3.3,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A68:C68; lymph node lymphoma mantle cell,
 cancer-tmb,FL,FL,,TMB,5.05,DOI:10.3390/cancers18050737,source_checked,"Results 3.2, TMB and clinical characteristics",
 cancer-tmb,HL,HL,,TMB,,PMID:30108156,rejected_population_median,Source identity/abstract/full text; see review notes,
 cancer-tmb,BL,BL,,TMB,2.0,PMID:23143597,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
 cancer-tmb,B_ALL,B_ALL,,TMB,0.3,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,T_ALL,T_ALL,,TMB,0.5,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
-cancer-tmb,MDS,MDS,,TMB,0.8,PMID:28420421,source_checked,"Results, Tumor mutation burden across cancer types",sample_size_not_curated;tmb_statistic_or_derivation_requires_review
-cancer-tmb,MPN,MPN,,TMB,,,audited_gap,,
+cancer-tmb,MDS,MDS,,TMB,0.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A168:C168; bone marrow myelodysplastic syndrome (mds),
+cancer-tmb,MPN,MPN,,TMB,0.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A166:C166; bone marrow myeloproliferative neoplasm (mpn),
 cancer-tmb,CML,CML,,TMB,,,audited_gap,,
 cancer-tmb,CTCL,CTCL,,TMB,,PMID:33574607,rejected_population_median,Source identity/abstract/full text; see review notes,
 cancer-tmb,NET_PANCREAS,NET_PANCREAS,,TMB,1.35,PMID:34326338,source_checked,"Results, primary-localization comparison",sample_size_not_curated
@@ -73,10 +73,10 @@ cancer-tmb,NEC,NEC,,TMB,,PMID:34326338,audited_gap,"Results, mutational landscap
 cancer-tmb,NEC_LUNG,NEC_LUNG,,TMB,,PMID:26168399;PMID:29535388,audited_gap,,
 cancer-tmb,SCLC,SCLC,,TMB,8.6,PMID:26168399,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,NEC_MERKEL,NEC_MERKEL,,TMB,5.3,PMID:31399473,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,MTC,MTC,,TMB,,PMID:31605946,rejected_population_median,,
-cancer-tmb,ADCC,ADCC,,TMB,,PMID:23685749,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,MTC,MTC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A124:C124; thyroid medullary carcinoma,
+cancer-tmb,ADCC,ADCC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A128:C128; salivary gland adenoid cystic carcinoma,
 cancer-tmb,NPC,NPC,,TMB,0.95,PMID:36135044,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,NUTM,NUTM,,TMB,,PMID:31180909,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,NUTM,NUTM,,TMB,1.0,PMID:40704901,source_checked,Abstract Results; molecular characterization of the registry cohort,
 cancer-tmb,BRCA_Basal,BRCA_Basal,,TMB,1.8,PMID:23000897,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,BRCA_HER2,BRCA_HER2,,TMB,1.6,PMID:23000897,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,BRCA_LumB,BRCA_LumB,,TMB,1.2,PMID:23000897,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
@@ -88,20 +88,20 @@ cancer-tmb,SARC,SARC,,TMB,1.8,DOI:10.1016/j.cell.2017.10.014,needs_source_review
 cancer-tmb,SARC_LPS_UNSPEC,SARC_LPS_UNSPEC,,TMB,1.5,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_RMS_PRMS,SARC_RMS_PRMS,,TMB,1.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,SARC_RMS_SSRMS,SARC_RMS_SSRMS,,TMB,0.6,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,BCC,BCC,,TMB,47.3,PMID:28420421,source_checked,"Table 1, skin basal cell carcinoma",
-cancer-tmb,cSCC,cSCC,,TMB,45.2,PMID:28420421,source_checked,"Table 1, skin squamous cell carcinoma",
+cancer-tmb,BCC,BCC,,TMB,47.3,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A2:C2; skin basal cell carcinoma,
+cancer-tmb,cSCC,cSCC,,TMB,45.2,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A3:C3; skin squamous cell carcinoma (scc),
 cancer-tmb,EPN,EPN,,TMB,0.5,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,DIPG,DIPG,,TMB,1.0,PMID:28966033,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
-cancer-tmb,VSCC,VSCC,,TMB,,PMID:29328067,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,VSCC,VSCC,,TMB,5.2,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A29:C29; vulva squamous cell carcinoma (scc),
 cancer-tmb,VAGC,VAGC,,TMB,,,audited_gap,,
-cancer-tmb,PENSCC,PENSCC,,TMB,4.5,PMID:28420421,source_checked,"Table 1, penis squamous cell carcinoma",
-cancer-tmb,ANSC,ANSC,,TMB,,PMID:29133614,rejected_population_median,Source identity/abstract/full text; see review notes,
+cancer-tmb,PENSCC,PENSCC,,TMB,4.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A39:C39; penis squamous cell carcinoma (scc),
+cancer-tmb,ANSC,ANSC,,TMB,5.4,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A24:C24; anus squamous cell carcinoma (scc),
 cancer-tmb,GBC,GBC,,TMB,5.5,DOI:10.1038/s41698-022-00327-y,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,CRANIO,CRANIO,,TMB,0.9,PMID:24413733,needs_source_review,,assay_not_structured;tmb_source_not_revalidated
 cancer-tmb,PITNET,PITNET,,TMB,,,audited_gap,,
 cancer-tmb,SARC_DSRCT,SARC_DSRCT,,TMB,0.72,PMID:35379887,source_checked,"Results, DSRCT has low mutation burden; Figure 1A",
 cancer-tmb,SARC_GIST,SARC_GIST,,TMB,0.67,PMID:39489749,source_checked,"Results, Aggressive GISTs harbor more genomic aberrations; Figure 1A",
-cancer-tmb,NEC_LUNG_LARGECELL,NEC_LUNG_LARGECELL,,TMB,9.9,PMID:28420421,source_checked,"Table 1, lung large cell neuroendocrine carcinoma",
+cancer-tmb,NEC_LUNG_LARGECELL,NEC_LUNG_LARGECELL,,TMB,9.9,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A9:C9; lung large cell neuroendocrine carcinoma,
 cancer-tmb,SARC_SMARCA4,SARC_SMARCA4,,TMB,10.6,PMID:39802817,source_checked,"Table 1; Results, Tumor Pathologic Characteristics",
 cancer-tmb,NET_MIDGUT,NET_MIDGUT,,TMB,1.05,PMID:34326338,source_checked,"Results, primary-localization comparison",sample_size_not_curated
 cancer-tmb,NET_RECTAL,NET_RECTAL,,TMB,1.15,PMID:36645718,source_checked,"Abstract; Methods, Whole-exome sequencing",
@@ -115,11 +115,11 @@ cancer-tmb,MBL_G3,MBL_G3,,TMB,0.5,PMID:28726821,needs_source_review,,assay_not_s
 cancer-tmb,MBL_G4,MBL_G4,,TMB,0.5,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,LUAD_EGFR,LUAD_EGFR,,TMB,,PMID:33846346,rejected_population_median,Source identity/abstract/full text; see review notes,
 cancer-tmb,HCL,HCL,,TMB,,PMID:22072557,rejected_population_median,,
-cancer-tmb,ACINIC,ACINIC,,TMB,,PMID:28961851,rejected_population_median,,
+cancer-tmb,ACINIC,ACINIC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A122:C122; salivary gland acinic cell tumor,
 cancer-tmb,ALCL,ALCL,,TMB,,,audited_gap,,
 cancer-tmb,URETH,URETH,,TMB,,,audited_gap,,
-cancer-tmb,UCEC_POLE,UCEC_POLE,,TMB,,PMID:23636398,rejected_population_median,,
-cancer-tmb,UCEC_MSI,UCEC_MSI,,TMB,18,PMID:23636398,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,UCEC_POLE,UCEC_POLE,,TMB,150.8,PMID:39865420,source_checked,"Results, group A; Figure 1B; Methods, Molecular subtyping",
+cancer-tmb,UCEC_MSI,UCEC_MSI,,TMB,21.5,PMID:31829442,source_checked,"Table 2; Results, Association between POLE mutations and MSI; Methods, Analysis of mutation frequency",
 cancer-tmb,UCEC_CNL,UCEC_CNL,,TMB,,PMID:23636398,rejected_population_median,Source identity/abstract/full text; see review notes,
 cancer-tmb,UCEC_CNH,UCEC_CNH,,TMB,,PMID:23636398,rejected_population_median,Source identity/abstract/full text; see review notes,
 cancer-tmb,CRC_MSI,CRC_MSI,,TMB,46,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
@@ -127,7 +127,7 @@ cancer-tmb,CRC,CRC,,TMB,4.5,PMID:30151257,needs_source_review,,assay_not_structu
 cancer-tmb,MENINGIOMA,MENINGIOMA,,TMB,0.5,DOI:10.1038/s41598-018-31659-0,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,CHOROID_PLEXUS,CHOROID_PLEXUS,,TMB,0.5,PMID:33249490,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
 cancer-tmb,ATC,ATC,,TMB,3.8,DOI:10.1016/j.celrep.2024.113826,needs_source_review,,assay_not_structured;tmb_source_not_revalidated
-cancer-tmb,THYMCA,THYMCA,,TMB,0.7,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
+cancer-tmb,THYMCA,THYMCA,,TMB,2.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A100:C100; thymus carcinoma (nos),
 cancer-tmb,STAD_MSI,STAD_MSI,,TMB,,PMID:28420421;PMID:25079317,audited_gap,,
 cancer-ici-response,ACC/PD-1+CTLA-4,ACC,PD-1+CTLA-4,ORR,14.0,PMID:39067873,prior_locator_verified,"Abstract, Results",
 cancer-ici-response,SGC/PD-1,SGC,PD-1,ORR,4.6,PMID:35777186,prior_locator_verified,"Abstract, Results",

@@ -23,7 +23,7 @@ def test_rejected_response_anchor_blocks_numeric_fallback(code):
     assert ici.pooled_ici_response(code, include_alternates=True)["pooled_pct"] is None
 
 
-@pytest.mark.parametrize("code", ["UCEC_POLE", "ADCC", "RB", "HL", "VSCC", "LUAD_EGFR"])
+@pytest.mark.parametrize("code", ["BRCA_Normal", "UCEC_CNL", "RB", "HL", "CTCL", "LUAD_EGFR"])
 def test_rejected_tmb_median_stays_missing_even_with_numeric_ancestor(code):
     assert tmb.cancer_tmb(code) is None
     source = tmb.resolve_tmb_source(code)
@@ -45,6 +45,33 @@ def test_tmb_review_covers_exactly_the_curated_rows_and_gates_median_provenance(
     assert "published_median" not in set(unpublished["estimate_type"])
     assert frame.set_index("cancer_code").loc["FL", "median_tmb_mut_mb"] == 5.05
     assert frame.set_index("cancer_code").loc["BCC", "median_tmb_mut_mb"] == 47.3
+
+
+def test_recovered_source_medians_preserve_genomic_and_response_distinction():
+    rows = tmb.cancer_tmb_df().set_index("cancer_code")
+    assert rows.loc["UVM", "median_tmb_mut_mb"] == 0.34
+    assert rows.loc["UVM", "pmid_doi"] == "PMID:31930041"
+    assert rows.loc["UVM", "n_samples"] == 80
+    pole = tmb.resolve_tmb_source("UCEC_POLE")
+    assert pole["median_tmb_mut_mb"] == 150.8
+    assert pole["n_samples"] == 61
+    assert pole["estimate_type"] == "published_median"
+    assert pole["source_scope"] == "pathogenic_pole_including_multiple_classifiers"
+    assert ici.cancer_ici_response("UCEC_POLE") is None
+    assert apd1.cancer_apd1_response("UCEC_POLE") is None
+
+
+def test_chalmers_claims_match_extracted_published_rows_and_specimen_counts():
+    path = Path(__file__).resolve().parents[1] / "docs/audits/tmb-chalmers-source-rows.csv"
+    rows = tmb.cancer_tmb_df().set_index("cancer_code")
+    with path.open(newline="") as handle:
+        for source in csv.DictReader(handle):
+            row = rows.loc[source["cancer_code"]]
+            assert row["median_tmb_mut_mb"] == float(source["median_tmb_mut_mb"])
+            assert row["n_samples"] == int(source["n_specimens"])
+            assert row["source_review_status"] == "source_checked"
+            assert source["source_locator"] in row["source_locator"]
+            assert row["tmb_assay"] == "targeted_panel_coding_including_synonymous"
 
 
 def test_pool_defaults_to_one_primary_regimen_and_blocks_overlapping_trial_updates():

@@ -15,7 +15,8 @@ Issues were filed before their corresponding fixes:
 [#525](https://github.com/pirl-unc/oncoref/issues/525) (regimens/populations/pooling),
 [#526](https://github.com/pirl-unc/oncoref/issues/526) (TMB statistics/provenance),
 [#527](https://github.com/pirl-unc/oncoref/issues/527) (incorrect citations), and
-[#528](https://github.com/pirl-unc/oncoref/issues/528) (anchors/denominators).
+[#528](https://github.com/pirl-unc/oncoref/issues/528) (anchors/denominators), and
+[#530](https://github.com/pirl-unc/oncoref/issues/530) (PR review and source recovery).
 
 ## Scope and reproducible evidence
 
@@ -34,15 +35,17 @@ ordering, drug/regimen consistency, compact-anchor agreement, missing denominato
 and provenance. Its output is tested for reproducibility. These checks cannot prove
 that a source supports the biological population assigned to a row.
 
-The [citation inventory](audits/source-citations.csv) includes 179 distinct original
+The [citation inventory](audits/source-citations.csv) includes 183 distinct original
 and current references. PMID/DOI metadata identifies the actual article behind a
 citation; resolving an identifier is **not** numerical source validation. The
 [TMB review table](../oncoref/data/cancer-tmb-source-audit.csv) records a disposition
 for all 130 rows, including rejected legacy values, assay, locator, and review notes.
 
-After correction there are 16 source-checked numeric TMB rows, 81 numeric entries
-still requiring exact source verification, 20 withdrawn population-median claims,
-and 13 other explicit gaps. The endpoint inventory still flags 338 rows/anchors
+After source recovery there are 38 source-checked numeric TMB rows, 70 numeric entries
+still requiring exact source verification, 10 withdrawn population-median claims,
+and 12 other explicit gaps. Ten of the initial 20 withdrawals now have a verified
+replacement or repaired citation; an existing MPN gap was also filled. The endpoint
+inventory still flags 338 rows/anchors
 whose numeric source locator is not verified, 33 without response denominators,
 and 46 with denominators below 10. These counts overlap; they are review flags, not
 338 independently demonstrated errors. Earlier `source_verified` and locator
@@ -54,8 +57,11 @@ certification. #524 remains open for this source work.
 [Mehnert 2016](https://www.jci.org/articles/view/84940) describes one patient's
 partial response. The retained estimate now records a patient response count as
 context, with no population ORR or binomial CI. Both ICI and aPD1 lookups for
-`UCEC_POLE` return an explicit gap. The unsourced TMB value of 100 mut/Mb is also
-withdrawn; that does not imply low TMB or lack of treatment activity.
+`UCEC_POLE` return an explicit gap. Its unsourced TMB value of 100 mut/Mb is replaced
+by a separately supported genomic median of **150.8 mut/Mb in 61 patients** from
+[Nero 2025](https://pmc.ncbi.nlm.nih.gov/articles/PMC11771542/), Results and Figure 1B.
+That study uses a tumor-only TSO500 panel and the 11 pathogenic hotspot definition,
+including 16 multiple-classifier cases. It is not an ICI response trial.
 
 The supplied critique correctly rejects the 100% population claim, but several of
 its supporting statements also need qualification:
@@ -126,12 +132,76 @@ Primary sources for these corrections:
 [advanced NEN WGS](https://pmc.ncbi.nlm.nih.gov/articles/PMC8322054/), and
 [Chalmers Table 1 and Results](https://pmc.ncbi.nlm.nih.gov/articles/PMC5395719/).
 
-Other withdrawn TMB values include ADCC and RB (means, not medians), NUTM and
-chondrosarcoma (unsupported aggregate medians), and values with unrelated citations
-for VSCC, ANSC, MCL, LUAD_EGFR, CTCL and UVM. Exact reasons and old values are in the
-TMB review table. Other directly checked medians include rectal NET, GIST, DSRCT,
+The rejected ADCC and RB values were means, not medians. ADCC now has a replacement
+panel median; RB remains a gap. Other directly checked medians include rectal NET, GIST, DSRCT,
 BTC, NSCLC and thoracic SMARCA4-deficient tumors; their source populations, assay
 methods and specimen-versus-patient distinctions remain explicit.
+
+## PR review: original sources and recovered medians
+
+An unsupported citation is not evidence that no median exists. The
+[20-row recovery ledger](audits/tmb-source-recovery.csv) preserves the original
+value/citation, what the claimed source actually reports, replacement evidence,
+and the reason for retaining any gap. Review findings were filed in #530 before
+the follow-up correction.
+
+**P1: retained Chalmers claims disagreed with its actual supplementary table.**
+Additional file 3, Table S1 supports ACC 2.7 (n=204), CHOL 2.5 (liver cohort,
+n=1456), KIRP 2.7 (n=152), LIHC 3.6 (n=602), PAAD 1.8 (n=2483), THCA 1.8
+(n=350), THYM 1.3 (n=108), THYMCA 2.5 (n=168), and UCS 3.6 (n=245).
+The old numbers did not match. Those rows are corrected, and sample counts are
+filled for 25 checked Chalmers rows, including an MPN median of 0.8 (n=138).
+The [extracted source rows](audits/tmb-chalmers-source-rows.csv) record exact workbook
+cell ranges, the download URL and SHA-256. No published medians were averaged.
+
+**P2: withdrawal was unnecessarily final for recoverable claims.**
+
+| Code | Recovered median, mut/Mb | n | Source and limit |
+| --- | ---: | ---: | --- |
+| UVM | 0.34 | 80 | [Wu 2019 Table 1](https://pmc.ncbi.nlm.nih.gov/articles/PMC6944566/); old number was correct, DOI was wrong |
+| NUTM | 1.0 | 71 | [Kim 2025](https://pubmed.ncbi.nlm.nih.gov/40704901/); known-TMB subset of 116 registry patients; heterogeneous panels |
+| UCEC_POLE | 150.8 | 61 | Nero 2025; pathogenic hotspot cohort including multiple classifiers |
+| MCL | 3.3 | 75 | Chalmers Table S1, lymph-node mantle-cell cohort |
+| MTC | 1.8 | 96 | Chalmers Table S1, medullary thyroid |
+| ACINIC | 1.8 | 81 | Chalmers Table S1, salivary acinic-cell cohort |
+| ADCC | 1.8 | 184 | Chalmers Table S1, salivary adenoid cystic cohort |
+| VSCC | 5.2 | 72 | Chalmers Table S1, vulvar SCC |
+| ANSC | 5.4 | 232 | Chalmers Table S1, anal SCC |
+| SARC_CHON | 1.7 | 93 | Chalmers Table S1, bone cohort; not pooled with soft-tissue chondrosarcoma |
+
+All Chalmers replacements above come from the actual
+[published supplement](https://static-content.springer.com/esm/art%3A10.1186%2Fs13073-017-0424-2/MediaObjects/13073_2017_424_MOESM3_ESM.xlsx).
+Its coding-panel definition includes synonymous substitutions and indels, then
+filters drivers and germline variants. Wu uses nonsynonymous coding mutations
+divided by 38 Mb. These medians cannot be interpreted as assay-harmonized estimates.
+
+For UCEC_MSI, [Leon-Castillo 2020 Table 2](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065171/)
+provides a median of 21.5 in 127 MSI-H, POLE-wild-type tumors. This replaces 18,
+which the old TCGA citation did not establish as a median. The reanalysis includes
+synonymous coding variants and uses a 38 Mb denominator.
+
+Ten original gaps remain: RB, HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL,
+UCEC_CNH, NBL_MYCNamp and NBL_MYCNnonamp. These are specific unresolved claims,
+not declarations that the diseases have no TMB literature. For example:
+
+* The originally cited salivary paper reports alterations per tumor and fractions
+  above a TMB threshold, not the claimed ACINIC median of 2.6.
+* The [neuroblastoma paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6624164/) does
+  mention an overall approximately 0.6 exonic mut/Mb median in its introduction,
+  citing earlier work. It does not establish separate MYCN subgroup medians.
+* EGFR evidence is available: [Hastings 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6683857/)
+  reports 3.8 in 383 EGFR-mutant lung cancers, and
+  [Offin 2019](https://pubmed.ncbi.nlm.nih.gov/30045933/) reports 3.77 in 153
+  metastatic exon19del/L858R cases. These are recorded as candidates; assigning
+  them to the complete LUAD_EGFR entity requires resolving histology/allele scope.
+* The primary Lawrence 2013 text establishes the median statistic and reports AML
+  0.37/Mb, but the precise remaining per-type claims require its sample supplement.
+  Download attempts returned access challenges, not the data. These remain
+  explicitly unverified; reading the abstract does not validate the numbers.
+
+Runtime review found no additional failures in the current regimen-fallback,
+overlap-exclusion and gap-resolution cases. Passing software tests does not close
+the remaining scientific verification work in #524.
 
 Canonical response anchors now agree numerically with their selected endpoint
 rows. This includes 5.3% for pretreated TNBC, 14.6% for PD-L1-positive cervical
@@ -171,8 +241,8 @@ reviewed = tmb.cancer_tmb_df().query("source_review_status == 'source_checked'")
 # Keep tmb_assay, source_scope, source_review_notes and n_samples in comparisons.
 ```
 
-Open source work under #524 includes reproducing exact Lawrence/Chalmers
-supplementary medians, validating pediatric and molecular-subtype proxies,
+Open source work under #524 includes reproducing exact Lawrence supplementary
+medians, resolving unmatched Chalmers populations, validating pediatric and molecular-subtype proxies,
 resolving review-derived citations, and checking all remaining ICI endpoint
 populations and denominators against their original tables. No inference from TMB,
 mutation mechanism, binding predictions, or a response-rate ranking fills those gaps.

@@ -84,18 +84,12 @@ _TMB_EVIDENCE_OVERRIDES = {
         "source_scope": "subtype_sources_not_aggregated",
         "missing_reason": "no_supported_aggregate_median",
     },
-    "MPN": {
-        "estimate_type": "unknown",
-        "source_scope": "no_direct_source",
-        "missing_reason": "no_published_per_mb_median_curated",
-    },
+    "MPN": {"source_scope": "bone_marrow_mpn_cohort"},
     "CML": {
         "estimate_type": "unknown",
         "source_scope": "no_direct_source",
         "missing_reason": "no_published_per_mb_median_curated",
     },
-    "KIRP": {"estimate_type": "approximate_literature"},
-    "UCS": {"estimate_type": "approximate_literature"},
     "SARC_RMS_ERMS": {"estimate_type": "approximate_literature"},
     "SARC_RMS_ARMS": {"estimate_type": "approximate_literature"},
     "WILMS": {"estimate_type": "approximate_literature"},
@@ -109,32 +103,29 @@ _TMB_EVIDENCE_OVERRIDES = {
             "missing_reason": "no_supported_population_median_curated",
         }
         for code in (
-            "UCEC_POLE",
-            "ACINIC",
-            "MTC",
             "HCL",
-            "VSCC",
-            "ANSC",
-            "MCL",
             "LUAD_EGFR",
             "CTCL",
             "RB",
-            "ADCC",
-            "SARC_CHON",
-            "NUTM",
             "HL",
             "BRCA_Normal",
             "UCEC_CNL",
             "UCEC_CNH",
             "NBL_MYCNamp",
             "NBL_MYCNnonamp",
-            "UVM",
         )
     },
     # TCGA-SARC is a soft-tissue sarcoma cohort. It does not span the full oncoref
     # SARC member-union scope, which also includes bone sarcomas and RMS.
     "SARC": {"source_scope": "soft_tissue_sarcoma_subset"},
     "SARC_CIC": {"source_scope": "renal_cic_rearranged_sarcoma_proxy"},
+    "SARC_CHON": {"source_scope": "bone_chondrosarcoma_cohort"},
+    "STAD": {"source_scope": "intestinal_type_gastric_subset"},
+    "CHOL": {"source_scope": "liver_cholangiocarcinoma_cohort"},
+    "MESO": {"source_scope": "pleural_mesothelioma_cohort"},
+    "ADCC": {"source_scope": "salivary_adenoid_cystic_cohort"},
+    "UCEC_POLE": {"source_scope": "pathogenic_pole_including_multiple_classifiers"},
+    "UCEC_MSI": {"source_scope": "msi_high_pole_wild_type_cohort"},
 }
 
 
