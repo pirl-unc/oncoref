@@ -267,23 +267,38 @@ def _family_legend_handles(plt, fam_color):
     ]
 
 
-def _repel_labels(ax, texts):
+def _repel_labels(ax, texts, xs=None, ys=None):
     """Nudge point labels apart so they don't overlap, drawing thin leader lines back to
-    the points (uses ``adjustText`` when installed; a no-op fallback otherwise). Best-effort
-    and cosmetic: work is capped at one second, and any failure degrades to un-repelled
-    labels rather than breaking figure generation."""
+    the points (uses ``adjustText`` when installed; a no-op fallback otherwise).
+
+    Bounded by an **iteration** cap, never a wall-clock one. A ``time_lim`` makes the
+    label layout depend on how busy the machine is, so the same command renders a clean
+    figure on an idle box and a pile of overlapping labels on a loaded one — the figure
+    stops being reproducible. Iterations cost the same everywhere.
+
+    Repulsion stays mild with a stronger pull back to the anchor: a label that cannot
+    find room should sit slightly over its own point rather than fly across the panel
+    trailing a long leader line.
+    """
     if not texts:
         return
     try:
         from adjustText import adjust_text
 
-        adjust_text(
-            texts,
-            ax=ax,
-            expand=(1.05, 1.2),
-            time_lim=1.0,
-            arrowprops={"arrowstyle": "-", "color": "0.6", "lw": 0.4},
-        )
+        params = {
+            "ax": ax,
+            "expand": (1.08, 1.18),
+            "force_text": (0.12, 0.24),
+            "force_pull": (0.03, 0.03),
+            "max_move": 16,
+            "iter_lim": 150,
+            "min_arrow_len": 6,
+            "arrowprops": {"arrowstyle": "-", "color": "0.6", "lw": 0.4},
+        }
+        if xs is not None and ys is not None:
+            adjust_text(texts, x=list(xs), y=list(ys), **params)
+        else:
+            adjust_text(texts, **params)
     except Exception:  # cosmetic label placement — never fatal to figure generation
         return
 
@@ -307,25 +322,34 @@ def _family_scatter(
     codes = [p[0] for p in points]
     colors, fam_color = _family_colors(codes)
     fig, ax = plt.subplots(figsize=figsize)
-    texts = []
+    texts, xs, ys = [], [], []
     for code, x, y in points:
         ax.scatter(x, y, color=colors[code], s=70, edgecolor="white", linewidth=0.6, zorder=3)
         if annotate:
-            texts.append(ax.text(x, y, format_cancer_code_label(code), fontsize=6, zorder=4))
+            texts.append(ax.text(x, y, format_cancer_code_label(code), fontsize=7, zorder=4))
+            xs.append(x)
+            ys.append(y)
     if logx:
         ax.set_xscale("log")
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
-    ax.grid(True, which="both" if logx else "major", alpha=0.3)
+    ax.grid(True, which="both" if logx else "major", alpha=0.25, linewidth=0.5)
+    ax.set_axisbelow(True)
+    # Legend outside the axes: with this many points any in-plot corner sits on data,
+    # and "best" just picks the least-bad occlusion. A reserved column occludes nothing.
     ax.legend(
         handles=_family_legend_handles(plt, fam_color),
-        fontsize=6,
-        ncol=2,
-        loc=legend_loc,
-        framealpha=0.9,
+        fontsize=8,
+        loc="upper left",
+        bbox_to_anchor=(1.01, 1.0),
+        borderaxespad=0,
+        title="lineage",
+        title_fontsize=9,
     )
-    _repel_labels(ax, texts)  # keep labels from overlapping (no-op without adjustText)
+    # Repel after the axes are final, so label boxes are measured against the real
+    # transform rather than the pre-log one.
+    _repel_labels(ax, texts, xs, ys)
     fig.tight_layout()
     return _save(fig, save)
 
@@ -339,7 +363,7 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
     codes = [p[0] for p in pairs]
     values = [p[1] for p in pairs]
     colors, fam_color = _family_colors(codes)
-    height, density = figure_style.stack_size(len(codes), per_item=0.40, floor=5)
+    height, density = figure_style.stack_size(len(codes), per_item=0.28, floor=4)
     fig, ax = plt.subplots(figsize=(10, height))
     y = np.arange(len(codes))
     ax.barh(y, values, color=[colors[c] for c in codes])
@@ -387,11 +411,11 @@ def _cohort_gene_heatmap(grid, *, title, cbar_label, cmap, lognorm=False, floor=
     shaded = colormaps[cmap].with_extremes(bad="#d9d9d9") if isinstance(cmap, str) else cmap
     im = ax.imshow(data, aspect="auto", cmap=shaded, norm=norm)
     ax.set_xticks(range(len(cols)))
-    ax.set_xticklabels(cols, rotation=90, fontsize=figure_style.tick_fontsize(col_density, 7))
+    ax.set_xticklabels(cols, rotation=90, fontsize=figure_style.tick_fontsize(col_density, 8))
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels(
         [format_cancer_code_label(c) for c in rows],
-        fontsize=figure_style.tick_fontsize(row_density, 7),
+        fontsize=figure_style.tick_fontsize(row_density, 9),
     )
     ax.set_title(title)
     cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
@@ -460,7 +484,7 @@ def _stacked_barh(rows, *, xlabel, title, legend=None, annotate=True, save=None)
     ``legend`` is an optional ``{label: color}`` shown as a colour key. Segments wide
     enough are annotated with their ``seg_label``. The shared stacked-bar scaffold."""
     plt = _plt()
-    height, row_density = figure_style.stack_size(len(rows), per_item=0.5, floor=4)
+    height, row_density = figure_style.stack_size(len(rows), per_item=0.30, floor=4)
     fig, ax = plt.subplots(figsize=(12, height))
     total = max((sum(v for _, v, _ in segs) for _, segs in rows), default=1.0) or 1.0
     for i, (_, segs) in enumerate(rows):
@@ -483,7 +507,7 @@ def _stacked_barh(rows, *, xlabel, title, legend=None, annotate=True, save=None)
                 )
             left += value
     ax.set_yticks(range(len(rows)))
-    ax.set_yticklabels([r[0] for r in rows], fontsize=figure_style.tick_fontsize(row_density, 7))
+    ax.set_yticklabels([r[0] for r in rows], fontsize=figure_style.tick_fontsize(row_density, 9))
     ax.invert_yaxis()  # first row at the top
     ax.set_xlabel(xlabel)
     ax.set_title(title)
@@ -504,14 +528,14 @@ def _grouped_barh(categories, series, *, xlabel, title, save=None):
     plt = _plt()
     n_series = max(1, len(series))
     base = np.arange(len(categories))
-    height = 0.8 / n_series
-    height, density = figure_style.stack_size(len(categories), per_item=0.5, floor=4)
-    fig, ax = plt.subplots(figsize=(9, height))
+    bar_height = 0.8 / n_series
+    fig_height, density = figure_style.stack_size(len(categories), per_item=0.30, floor=4)
+    fig, ax = plt.subplots(figsize=(9, fig_height))
     for k, (name, values, color) in enumerate(series):
-        offset = (k - (n_series - 1) / 2) * height
-        ax.barh(base + offset, values, height=height, label=name, color=color)
+        offset = (k - (n_series - 1) / 2) * bar_height
+        ax.barh(base + offset, values, height=bar_height, label=name, color=color)
     ax.set_yticks(base)
-    ax.set_yticklabels(categories, fontsize=figure_style.tick_fontsize(density, 7))
+    ax.set_yticklabels(categories, fontsize=figure_style.tick_fontsize(density, 9))
     ax.invert_yaxis()
     ax.set_xlabel(xlabel)
     ax.set_title(title)
@@ -611,7 +635,7 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
     plt = _plt()
     palette = _stable_palette()
     reg_color = {r: palette[i] for i, r in enumerate(REGIMEN_FALLBACK)}
-    height, density = figure_style.stack_size(len(ordered), per_item=0.42, floor=6)
+    height, density = figure_style.stack_size(len(ordered), per_item=0.30, floor=5)
     fig, ax = plt.subplots(figsize=(11, height))
     for y, c in enumerate(ordered):
         present = [(r, by_regimen[r][c]) for r in REGIMEN_FALLBACK if c in by_regimen[r]]
@@ -687,7 +711,7 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
     rows.sort(key=lambda r: r[2])  # ascending; invert_yaxis puts the highest on top
     code_color, _ = _family_colors([r[0] for r in rows])
 
-    height, density = figure_style.stack_size(len(rows), per_item=0.42, floor=6)
+    height, density = figure_style.stack_size(len(rows), per_item=0.30, floor=5)
     fig, ax = plt.subplots(figsize=(11, height))
     for y in range(0, len(rows), 2):  # alternating row bands to trace label -> point
         ax.axhspan(y - 0.5, y + 0.5, color="#f4f4f4", zorder=0)

@@ -31,7 +31,10 @@ def test_apd1_vs_tmb_renders(tmp_path):
     assert fig is not None
 
 
-def test_scatter_label_adjustment_has_a_runtime_bound(monkeypatch):
+def test_scatter_label_adjustment_is_bounded_by_iterations_not_wall_clock(monkeypatch):
+    # A time_lim makes label layout depend on machine load: the same command renders
+    # a clean figure on an idle box and a pile of overlapping labels on a busy one.
+    # The bound must be deterministic, so iterations, never seconds.
     observed = {}
     fake_adjust_text = ModuleType("adjustText")
 
@@ -48,7 +51,26 @@ def test_scatter_label_adjustment_has_a_runtime_bound(monkeypatch):
 
     assert observed["texts"] == texts
     assert observed["ax"] is axis
-    assert observed["time_lim"] == 1.0
+    assert "time_lim" not in observed
+    assert observed["iter_lim"] > 0
+    # Leader lines back to the anchor point, so a moved label stays traceable.
+    assert observed["arrowprops"]["arrowstyle"] == "-"
+
+
+def test_scatter_label_adjustment_passes_anchor_points_when_given(monkeypatch):
+    observed = {}
+    fake_adjust_text = ModuleType("adjustText")
+
+    def adjust_text(texts, **kwargs):
+        observed.update(kwargs)
+
+    fake_adjust_text.adjust_text = adjust_text
+    monkeypatch.setitem(sys.modules, "adjustText", fake_adjust_text)
+
+    plots._repel_labels(object(), [object()], [1.0], [2.0])
+    # Anchors let adjustText spring a label back toward its own point rather than
+    # leaving it wherever repulsion pushed it.
+    assert observed["x"] == [1.0] and observed["y"] == [2.0]
 
 
 def test_apd1_vs_tmb_strict_pd1_filters_proxy_targets(tmp_path):
@@ -1192,3 +1214,28 @@ def test_every_cta_expression_heatmap_axis_is_capped(tmp_path):
     width, height = fig.get_size_inches()
     assert width <= figure_style.MAX_FIGURE_INCHES
     assert height <= figure_style.MAX_FIGURE_INCHES
+
+
+def test_grouped_barh_bars_are_row_sized_not_figure_sized():
+    # The figure-height and bar-height variables must stay distinct: shadowing one
+    # with the other drew every bar 18.5 DATA units tall, so the bars detached from
+    # their row labels entirely and merged into solid blocks.
+    fig = plots.burden_category_bars(region="us")
+    ax = fig.axes[0]
+    heights = {round(p.get_height(), 3) for p in ax.patches}
+    assert heights == {0.4}, heights
+    # Two series share a row, so a bar must be at most half a row.
+    assert max(heights) <= 0.5
+    # And the axis spans the categories, not some multiple of them.
+    lo, hi = sorted(ax.get_ylim())
+    assert hi - lo < len(ax.get_yticks()) + 4
+
+
+def test_bar_rows_stay_legible_relative_to_the_figure():
+    # "Tiny labels, fat bars" is an aspect-ratio failure: a 37-row chart at 0.5 in/row
+    # is an 18in ribbon. Keep rows dense enough that label and bar weight are comparable.
+    fig = plots.burden_category_bars(region="us")
+    width, height = fig.get_size_inches()
+    n_rows = len(fig.axes[0].get_yticks())
+    assert height / n_rows < 0.4, "rows too tall; labels will be dwarfed by bars"
+    assert height / width < 2.0, "figure too tall and narrow to read as one chart"
