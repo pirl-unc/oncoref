@@ -67,6 +67,10 @@ _RC = {
     "savefig.facecolor": "white",
     "savefig.edgecolor": "white",
     "savefig.transparent": False,
+    # An outside legend overflows a plain tight_layout, so always crop to the real
+    # ink bounds when saving rather than to the nominal figure rectangle.
+    "savefig.bbox": "tight",
+    "savefig.pad_inches": 0.08,
     "savefig.dpi": 300,
     "figure.dpi": 150,
     # Hairline frame; finalize() removes the top/right pair per figure.
@@ -126,7 +130,7 @@ def apply(force: bool = False) -> None:
 
     matplotlib.use("Agg", force=False)
     matplotlib.rcParams.update(_RC)
-    matplotlib.rcParams.update(PRESETS[_PRESET]["rc"])
+    matplotlib.rcParams.update(_preset_rc())
     _APPLIED = True
 
 
@@ -188,7 +192,7 @@ def stack_size(n, *, per_item, floor, cap=MAX_FIGURE_INCHES):
     params = PRESETS[_PRESET]
     if cap is MAX_FIGURE_INCHES:  # caller took the default: honour the preset's page
         cap = params["max_inches"]
-    per_item = float(per_item) * params["per_item_scale"]
+    per_item = row_height(float(per_item))
     want = max(float(floor), per_item * int(n))
     inches = min(want, float(cap))
     density = (inches / want) if want > 0 else 1.0
@@ -211,41 +215,58 @@ def tick_fontsize(density, base=8.0):
 # Presets never change what the data says. A slide figure shows the top slice and
 # says so on the axis; it does not re-rank, re-scale, or quietly drop outliers.
 
-#: Per-preset geometry. ``max_inches`` caps any figure dimension, ``per_item_scale``
-#: multiplies the per-row spacing, and ``max_items`` is the row/point budget a plot
-#: trims to (``None`` = no trimming).
+#: Per-preset knobs. ``font_scale`` multiplies every text size (and, through it, row
+#: spacing and marker area); ``max_inches`` caps any figure dimension; ``max_items``
+#: is the row/point budget a plot trims to (``None`` = no trimming).
 PRESETS = {
-    "print": {
-        "max_inches": 20.0,
-        "per_item_scale": 1.0,
-        "max_items": None,
-        "marker_size": 70,
-        "rc": {},
-    },
-    "slide": {
-        # 16:9 at a size that drops onto a standard slide without rescaling, which
-        # is what keeps the type at the size it was designed at.
-        "max_inches": 12.0,
-        "per_item_scale": 1.9,
-        "max_items": 12,
-        "marker_size": 190,
-        "rc": {
-            "font.size": 17,
-            "axes.labelsize": 19,
-            "axes.titlesize": 21,
-            "xtick.labelsize": 16,
-            "ytick.labelsize": 16,
-            "legend.fontsize": 16,
-            "axes.linewidth": 1.4,
-            "xtick.major.width": 1.4,
-            "ytick.major.width": 1.4,
-            "xtick.major.size": 5.0,
-            "ytick.major.size": 5.0,
-            "lines.linewidth": 3.0,
-            "legend.handlelength": 1.0,
-        },
-    },
+    "print": {"font_scale": 1.0, "max_inches": 20.0, "max_items": None},
+    # 1.7 is the scale pirlygenes settled on for projected figures.
+    "slide": {"font_scale": 1.7, "max_inches": 12.0, "max_items": 12},
 }
+
+
+def font_scale() -> float:
+    """The active text-size multiplier."""
+    return PRESETS[_PRESET]["font_scale"]
+
+
+def fs(pt) -> float:
+    """Scale one explicit point size for the active preset.
+
+    Pure multiplication, deliberately: the plot functions already encode a size
+    hierarchy (a 4pt label inside a dense grid, a 9pt row label on a bar chart)
+    and that hierarchy *is* information about how crowded each panel is. Lifting
+    everything to a common floor instead would flatten it and turn the dense
+    panels into a pile of overlapping text.
+    """
+    return round(font_scale() * float(pt), 1)
+
+
+def _preset_rc() -> dict:
+    """rcParams derived from the active preset's font scale."""
+    s = font_scale()
+    if s == 1.0:
+        return {}
+    return {
+        "font.size": fs(10),
+        "axes.titlesize": fs(12),
+        "axes.labelsize": fs(11),
+        "xtick.labelsize": fs(9),
+        "ytick.labelsize": fs(9),
+        "legend.fontsize": fs(9),
+        "legend.title_fontsize": fs(9),
+        "figure.titlesize": fs(13),
+        # Bigger type needs proportionally more room around the axes.
+        "axes.labelpad": 4.0 * s,
+        "axes.titlepad": 6.0 * s,
+        "axes.linewidth": 0.8 * min(s, 1.8),
+        "xtick.major.width": 0.8 * min(s, 1.8),
+        "ytick.major.width": 0.8 * min(s, 1.8),
+        "xtick.major.size": 3.0 * min(s, 1.8),
+        "ytick.major.size": 3.0 * min(s, 1.8),
+        "lines.linewidth": 1.5 * min(s, 2.0),
+    }
+
 
 #: Slide figures cap here rather than at MAX_FIGURE_INCHES.
 SLIDE_ASPECT = (12.0, 6.75)
@@ -293,14 +314,35 @@ def trim(items, budget=None):
 
 
 def marker_size() -> int:
-    """Scatter marker area for the active preset."""
-    return _params()["marker_size"]
+    """Scatter marker *area* for the active preset.
+
+    Area scales with the square of the text scale so a marker keeps the same
+    visual weight next to its label rather than shrinking beside it.
+    """
+    return int(70 * font_scale() ** 2)
 
 
-def figure_size(width, height):
-    """Clamp a ``(width, height)`` to the active preset's page."""
+def row_height(base: float = 0.30) -> float:
+    """Per-row inches for a horizontal bar chart.
+
+    Grows with the text scale, but sub-linearly: taller labels need more room,
+    while a strictly proportional growth would make a slide bar chart taller than
+    the slide. Mirrors pirlygenes' row_height.
+    """
+    return base * (1.0 + 0.72 * (font_scale() - 1.0))
+
+
+def figure_size(width, height, *, wide=False):
+    """Clamp a ``(width, height)`` to the active preset's page.
+
+    ``wide`` asks for the full 16:9 slide rather than a clamp, which is what a
+    scatter wants: rendering at the slide's own aspect means a point size here
+    lands as roughly that point size on a full-bleed slide.
+    """
     cap = _params()["max_inches"]
     if _PRESET == "slide":
+        if wide:
+            return SLIDE_ASPECT
         return (min(width, SLIDE_ASPECT[0]), min(height, SLIDE_ASPECT[1]))
     return (min(width, cap), min(height, cap))
 

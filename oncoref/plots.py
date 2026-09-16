@@ -268,9 +268,12 @@ def _family_legend_handles(plt, fam_color):
 
 
 def _label_fontsize():
-    """Point-label size: small enough to pack on a dense print figure, large enough
-    to read on a wall when only a dozen labels survive."""
-    return 13 if figure_style.preset() == "slide" else 7
+    """Point-label size, scaled with the preset.
+
+    7pt is right for a dense print scatter; the preset's scale carries it up for a
+    slide rather than a second hand-picked constant that can drift from the rest.
+    """
+    return figure_style.fs(7)
 
 
 def _repel_labels(ax, texts, xs=None, ys=None):
@@ -327,7 +330,7 @@ def _family_scatter(
     plt = _plt()
     codes = [p[0] for p in points]
     colors, fam_color = _family_colors(codes)
-    fig, ax = plt.subplots(figsize=figure_style.figure_size(*figsize))
+    fig, ax = plt.subplots(figsize=figure_style.figure_size(*figsize, wide=True))
     # Every point is drawn — trimming a scatter would misrepresent the distribution.
     # Only the LABELS are rationed, to the highest-y points, so a slide shows the
     # named leaders against the full cloud instead of an illegible mat of text.
@@ -347,7 +350,15 @@ def _family_scatter(
             xs.append(x)
             ys.append(y)
     if logx:
-        ax.set_xscale("log")
+        # A plain log axis silently deletes every non-positive point. Zeros are real
+        # data here (a 0 mut/Mb cohort belongs in the low-burden quadrant), so fall
+        # back to symlog — linear below the smallest positive value — and keep them.
+        non_positive = [x for _, x, _ in points if x is not None and x <= 0]
+        positive = [x for _, x, _ in points if x is not None and x > 0]
+        if non_positive and positive:
+            ax.set_xscale("symlog", linthresh=min(positive), linscale=0.45)
+        else:
+            ax.set_xscale("log")
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
@@ -390,7 +401,7 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
     ax.set_yticks(y)
     ax.set_yticklabels(
         [format_cancer_code_label(c) for c in codes],
-        fontsize=figure_style.tick_fontsize(density),
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
     )
     ax.invert_yaxis()  # first pair at the top
     ax.set_xlabel(xlabel)
@@ -431,11 +442,13 @@ def _cohort_gene_heatmap(grid, *, title, cbar_label, cmap, lognorm=False, floor=
     shaded = colormaps[cmap].with_extremes(bad="#d9d9d9") if isinstance(cmap, str) else cmap
     im = ax.imshow(data, aspect="auto", cmap=shaded, norm=norm)
     ax.set_xticks(range(len(cols)))
-    ax.set_xticklabels(cols, rotation=90, fontsize=figure_style.tick_fontsize(col_density, 8))
+    ax.set_xticklabels(
+        cols, rotation=90, fontsize=figure_style.tick_fontsize(col_density, figure_style.fs(8))
+    )
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels(
         [format_cancer_code_label(c) for c in rows],
-        fontsize=figure_style.tick_fontsize(row_density, 9),
+        fontsize=figure_style.tick_fontsize(row_density, figure_style.fs(9)),
     )
     ax.set_title(title)
     cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
@@ -530,7 +543,9 @@ def _stacked_barh(rows, *, xlabel, title, legend=None, annotate=True, save=None)
                 )
             left += value
     ax.set_yticks(range(len(rows)))
-    ax.set_yticklabels([r[0] for r in rows], fontsize=figure_style.tick_fontsize(row_density, 9))
+    ax.set_yticklabels(
+        [r[0] for r in rows], fontsize=figure_style.tick_fontsize(row_density, figure_style.fs(9))
+    )
     ax.invert_yaxis()  # first row at the top
     ax.set_xlabel(xlabel)
     ax.set_title(title)
@@ -566,7 +581,7 @@ def _grouped_barh(categories, series, *, xlabel, title, save=None):
     ax.set_yticks(base)
     ax.set_yticklabels(
         [figure_style.label(c) for c in categories],
-        fontsize=figure_style.tick_fontsize(density, 9),
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(9)),
     )
     ax.invert_yaxis()
     ax.set_xlabel(xlabel)
@@ -679,7 +694,7 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
     ax.set_yticks(range(len(ordered)))
     ax.set_yticklabels(
         [format_cancer_code_label(c) for c in ordered],
-        fontsize=figure_style.tick_fontsize(density),
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
     )
     ax.set_xlabel("Objective response rate (%)")
     ax.set_title(f"ICI response by regimen and cancer type ({len(ordered)} types)")
@@ -771,7 +786,7 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels(
         [f"{format_cancer_code_label(c)} [{reg}]" for c, reg, *_ in rows],
-        fontsize=figure_style.tick_fontsize(density),
+        fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
     )
     ax.set_ylim(-0.7, len(rows) - 0.3)
     ax.set_xlabel("Objective response rate (%)")

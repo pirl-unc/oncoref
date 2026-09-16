@@ -1301,3 +1301,49 @@ def test_unknown_preset_is_rejected(_print_preset):
 
     with pytest.raises(ValueError, match="unknown preset"):
         figure_style.use("poster")
+
+
+def test_font_scale_preserves_the_size_hierarchy(_print_preset):
+    from oncoref import figure_style
+
+    # Scaling must multiply, not lift to a floor: a 4pt label in a dense panel and a
+    # 9pt row label encode how crowded each panel is, and flattening them collides.
+    figure_style.use("print")
+    small, large = figure_style.fs(4), figure_style.fs(9)
+    figure_style.use("slide")
+    assert figure_style.fs(4) / small == pytest.approx(figure_style.fs(9) / large, rel=1e-3)
+    assert figure_style.fs(4) < figure_style.fs(9)
+
+
+def test_row_height_grows_sublinearly_with_the_text_scale(_print_preset):
+    from oncoref import figure_style
+
+    figure_style.use("print")
+    base = figure_style.row_height(0.30)
+    figure_style.use("slide")
+    slide = figure_style.row_height(0.30)
+    scale = figure_style.font_scale()
+    # Taller labels need more room...
+    assert slide > base
+    # ...but strictly proportional growth would make a slide chart taller than the slide.
+    assert slide < base * scale
+
+
+def test_log_axis_keeps_non_positive_points_via_symlog():
+    # A plain log axis deletes every non-positive point without warning. A cohort at
+    # 0 mut/Mb belongs in the low-burden quadrant; dropping it inverts the message.
+    points = [("A", 0.0, 10.0), ("B", 1.0, 20.0), ("C", 10.0, 30.0)]
+    fig = plots._family_scatter(
+        points, xlabel="x", ylabel="y", title="t", logx=True, annotate=False
+    )
+    ax = fig.axes[0]
+    assert ax.get_xscale() == "symlog"
+    assert sum(len(c.get_offsets()) for c in ax.collections) == 3
+
+
+def test_log_axis_stays_plain_log_when_every_value_is_positive():
+    points = [("A", 1.0, 10.0), ("B", 10.0, 20.0)]
+    fig = plots._family_scatter(
+        points, xlabel="x", ylabel="y", title="t", logx=True, annotate=False
+    )
+    assert fig.axes[0].get_xscale() == "log"

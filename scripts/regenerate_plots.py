@@ -392,7 +392,20 @@ def _update_latest(run_dir: Path) -> None:
         pass  # symlinks may be unavailable (e.g. some Windows setups)
 
 
+#: Never rasterize a contact-sheet page below this, or above it (a 5,900px-tall
+#: figure at 600 dpi is a page nothing can open).
+_PDF_MIN_DPI = 150
+_PDF_MAX_DPI = 400
+
+
 def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
+    """Contact sheet of every figure, one page each, captioned with its path.
+
+    Each page is sized and rasterized so the embedded PNG lands at **at least** its
+    native pixel resolution. Fitting a 3,000px figure into an 11in page at the
+    default 100 dpi resamples it down 3x and the contact sheet comes out blurry —
+    which makes it useless for the one thing it is for, checking the figures.
+    """
     pngs = [run_dir / rel for rel in generated if rel.endswith(".png")]
     if not pngs:
         return None
@@ -401,16 +414,24 @@ def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
     with PdfPages(pdf) as pages:
         for png in pngs:
             image = mpimg.imread(png)
-            height, width = image.shape[:2]
-            aspect = width / height if height else 1
-            fig_width = 11
-            fig_height = max(4, min(11, fig_width / aspect + 0.6))
+            src_h, src_w = image.shape[:2]
+            aspect = (src_w / src_h) if src_h else 1.0
+            # Page: long side 11in, short side follows the image's own aspect, so a
+            # tall figure gets a tall page instead of being squeezed into a square.
+            if aspect >= 1:
+                fig_width, fig_height = 11.0, 11.0 / aspect
+            else:
+                fig_width, fig_height = 11.0 * aspect, 11.0
+            fig_height += 0.4  # caption strip
+            # dpi that maps at least one output pixel per source pixel.
+            needed = max(src_w / fig_width, src_h / fig_height)
+            dpi = int(min(_PDF_MAX_DPI, max(_PDF_MIN_DPI, needed)))
             fig, ax = plt.subplots(figsize=(fig_width, fig_height))
-            ax.imshow(image)
+            ax.imshow(image, interpolation="none")
             ax.set_axis_off()
-            fig.suptitle(png.relative_to(run_dir).as_posix(), fontsize=10)
-            fig.tight_layout(rect=(0, 0, 1, 0.96))
-            pages.savefig(fig)
+            fig.suptitle(png.relative_to(run_dir).as_posix(), fontsize=9)
+            fig.tight_layout(rect=(0, 0, 1, 1 - 0.4 / fig_height))
+            pages.savefig(fig, dpi=dpi)
             plt.close(fig)
     return pdf
 
