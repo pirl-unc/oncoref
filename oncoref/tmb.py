@@ -32,23 +32,21 @@ _TMB_EVIDENCE_OVERRIDES = {
     # children such as COAD_MSI/READ_MSI resolve through this row rather than duplicating
     # the same source estimate.
     "CRC_MSI": {
-        "estimate_type": "published_median",
         "source_scope": "aggregate_source",
     },
-    # The cited GEP-NEN source is pooled across primary sites and WHO grades.
-    # Preserve the source audit as explicit missing site-specific estimates.
+    # The full-text WGS study explicitly separates pancreatic and midgut NET.
     "NET_MIDGUT": {
-        "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_site_specific_value",
-        "missing_reason": "no_supported_site_specific_median",
+        "source_scope": "advanced_site_specific_cohort",
+    },
+    "NET_PANCREAS": {
+        "source_scope": "advanced_site_specific_cohort",
     },
     # The curated stomach median is the pooled intestinal-type panel value (5.0 mut/Mb,
     # Chalmers 2017 Table 1). TCGA-STAD analysed its 215 tumours below 11.4 mut/Mb,
     # "none of which were MSI-positive", separately from 74 hypermutated tumours, so
     # that pooled median demonstrably does not cover MSI-H disease. Neither source
     # publishes an MSI-stratified gastric median, so this stays an explicit audited gap
-    # rather than an invented estimate (compare CRC_MSI / UCEC_MSI, which do have
-    # published subtype estimates).
+    # rather than an invented estimate.
     "STAD_MSI": {
         "estimate_type": "unknown",
         "source_scope": "source_rejected_for_subtype_value",
@@ -68,51 +66,81 @@ _TMB_EVIDENCE_OVERRIDES = {
     },
     "NEN": {
         "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_metric_mismatch",
-        "missing_reason": "source_reports_mean_not_median",
+        "source_scope": "source_rejected_for_aggregate_scope",
+        "missing_reason": "advanced_subcohorts_do_not_establish_full_aggregate_median",
     },
     "NET": {
         "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_metric_mismatch",
-        "missing_reason": "source_reports_mean_not_median",
+        "source_scope": "source_rejected_for_aggregate_scope",
+        "missing_reason": "advanced_subcohorts_do_not_establish_full_aggregate_median",
     },
     "NEC": {
         "estimate_type": "unknown",
-        "source_scope": "source_rejected_for_metric_mismatch",
-        "missing_reason": "source_reports_mean_not_median",
+        "source_scope": "source_rejected_for_aggregate_scope",
+        "missing_reason": "advanced_subcohorts_do_not_establish_full_aggregate_median",
     },
     "NEC_LUNG": {
         "estimate_type": "unknown",
         "source_scope": "subtype_sources_not_aggregated",
         "missing_reason": "no_supported_aggregate_median",
     },
-    "MPN": {
-        "estimate_type": "unknown",
-        "source_scope": "no_direct_source",
-        "missing_reason": "no_published_per_mb_median_curated",
-    },
+    "MPN": {"source_scope": "bone_marrow_mpn_cohort"},
     "CML": {
         "estimate_type": "unknown",
         "source_scope": "no_direct_source",
         "missing_reason": "no_published_per_mb_median_curated",
     },
-    "KIRP": {"estimate_type": "approximate_literature"},
-    "UCS": {"estimate_type": "approximate_literature"},
     "SARC_RMS_ERMS": {"estimate_type": "approximate_literature"},
     "SARC_RMS_ARMS": {"estimate_type": "approximate_literature"},
     "WILMS": {"estimate_type": "approximate_literature"},
-    "MCL": {"estimate_type": "approximate_literature"},
-    "HL": {"estimate_type": "approximate_literature"},
     "BL": {"estimate_type": "approximate_literature"},
     "T_ALL": {"estimate_type": "approximate_literature"},
-    "MTC": {"estimate_type": "panel_inferred"},
-    "CRANIO": {"estimate_type": "small_n"},
-    "HCL": {"estimate_type": "small_n"},
-    "UCEC_POLE": {"estimate_type": "order_of_magnitude"},
+    "CRANIO": {"source_scope": "adamantinomatous_and_papillary_discovery_cohort"},
+    "HCL": {
+        "estimate_type": "approximate_capture_normalized",
+        "source_scope": "classic_hcl_five_exome_cohort",
+    },
+    "LUAD_EGFR": {
+        "estimate_type": "broader_cohort_proxy",
+        "source_scope": "egfr_mutant_lung_proxy_for_luad",
+    },
+    "CTCL": {
+        "estimate_type": "subtype_proxy",
+        "source_scope": "mycosis_fungoides_proxy_for_ctcl",
+    },
+    "HL": {
+        "estimate_type": "reported_summary",
+        "source_scope": "newly_diagnosed_classical_hodgkin_sorted_hrs",
+    },
+    "BRCA_Normal": {
+        "estimate_type": "sample_recomputed",
+        "source_scope": "tcga_pancancer_normal_like_expression_subtype",
+    },
+    "UCEC_CNL": {
+        "estimate_type": "reported_summary",
+        "source_scope": "tcga_copy_number_low_molecular_class",
+    },
+    "UCEC_CNH": {
+        "estimate_type": "reported_summary",
+        "source_scope": "tcga_copy_number_high_molecular_class",
+    },
     # TCGA-SARC is a soft-tissue sarcoma cohort. It does not span the full oncoref
     # SARC member-union scope, which also includes bone sarcomas and RMS.
     "SARC": {"source_scope": "soft_tissue_sarcoma_subset"},
     "SARC_CIC": {"source_scope": "renal_cic_rearranged_sarcoma_proxy"},
+    "SARC_CHON": {"source_scope": "bone_chondrosarcoma_cohort"},
+    "STAD": {"source_scope": "intestinal_type_gastric_subset"},
+    "CHOL": {"source_scope": "liver_cholangiocarcinoma_cohort"},
+    "MESO": {"source_scope": "pleural_mesothelioma_cohort"},
+    "ADCC": {"source_scope": "salivary_adenoid_cystic_cohort"},
+    "UCEC_POLE": {"source_scope": "pathogenic_pole_including_multiple_classifiers"},
+    "UCEC_MSI": {"source_scope": "msi_high_pole_wild_type_cohort"},
+    "NBL": {"source_scope": "high_risk_neuroblastoma_cohort"},
+    "NBL_MYCNamp": {
+        "estimate_type": "sample_recomputed",
+        "source_scope": "high_risk_mycn_amplified_cohort",
+    },
+    "NBL_MYCNnonamp": {"source_scope": "east_asian_mycn_nonamplified_all_risk_cohort"},
 }
 
 
@@ -129,17 +157,30 @@ def _aggregate_tmb_source_codes() -> frozenset[str]:
 _register_derived_cache(_aggregate_tmb_source_codes.cache_clear)
 
 
-def cancer_tmb_df():
-    """Return the curated ``cancer-tmb.csv`` reference: median tumor mutational
-    burden (mut/Mb) per cancer-type code, with a per-row published source/PMID
-    and a confidence flag.
+@lru_cache(maxsize=1)
+def _checked_tmb_codes() -> frozenset[str]:
+    audit = get_data("cancer-tmb-source-audit")
+    return frozenset(audit.loc[audit["source_review_status"] == "source_checked", "cancer_code"])
 
-    Cohorts with no defensible published per-Mb median are present with a blank
-    ``median_tmb_mut_mb`` (and a ``confidence`` of ``none``) so the gap is
-    explicit rather than silently absent. Values mix WES-anchored medians
-    (Lawrence 2013) with panel-based medians (Chalmers 2017) and disease-specific
+
+_register_derived_cache(_checked_tmb_codes.cache_clear)
+
+
+def cancer_tmb_df():
+    """Return curated TMB estimates (mut/Mb) with source-review provenance.
+
+    ``tmb_mut_mb`` selects the median, then mean, then explicitly typed estimate;
+    ``tmb_statistic`` identifies that choice. The original statistic-specific
+    columns remain separate. ``unspecified`` means a reported summary whose
+    statistic was not established; ``approximate`` marks a derived approximation.
+    Cohorts with no estimate have blank values
+    (and a ``confidence`` of ``none``) so the gap is
+    explicit rather than silently absent. Retained estimates span WES
+    (Lawrence 2013), panels (Chalmers 2017), genome-wide WGS and disease-specific
     studies; see the ``source``/``notes`` columns — panel and WES TMB are not
-    strictly comparable in the low-TMB range."""
+    strictly comparable in the low-TMB range. ``source_review_status`` and
+    ``source_locator`` distinguish rechecked numbers from legacy estimates awaiting
+    source review. A citation alone does not imply a published statistic."""
     return _tmb_evidence_frame().copy()
 
 
@@ -147,13 +188,37 @@ def cancer_tmb_df():
 def _tmb_evidence_frame():
     """Cached annotated TMB frame. Internal callers treat it as read-only."""
     df = get_data("cancer-tmb").copy()
+    estimates = df["estimate_tmb_mut_mb"].notna()
+    if not df.loc[estimates, "estimate_statistic"].isin({"unspecified", "approximate"}).all():
+        raise ValueError("Explicit TMB estimates require an unspecified or approximate statistic")
+    df["tmb_mut_mb"] = (
+        df["median_tmb_mut_mb"]
+        .combine_first(df["mean_tmb_mut_mb"])
+        .combine_first(df["estimate_tmb_mut_mb"])
+    )
+    df["tmb_statistic"] = [
+        "median"
+        if pd.notna(row.median_tmb_mut_mb)
+        else "mean"
+        if pd.notna(row.mean_tmb_mut_mb)
+        else row.estimate_statistic
+        if pd.notna(row.estimate_tmb_mut_mb)
+        else None
+        for row in df.itertuples()
+    ]
     evidence = [
-        tmb_evidence_fields(row["cancer_code"], row["median_tmb_mut_mb"])
+        tmb_evidence_fields(
+            row["cancer_code"],
+            row["tmb_mut_mb"],
+            statistic=row["tmb_statistic"] if pd.notna(row["tmb_statistic"]) else "median",
+        )
         for _, row in df.iterrows()
     ]
     for col in ("estimate_type", "source_scope", "missing_reason"):
         df[col] = [record[col] for record in evidence]
-    return df
+    return df.merge(
+        get_data("cancer-tmb-source-audit"), on="cancer_code", how="left", validate="one_to_one"
+    )
 
 
 _register_derived_cache(_tmb_evidence_frame.cache_clear)
@@ -162,12 +227,16 @@ _register_derived_cache(_tmb_evidence_frame.cache_clear)
 def tmb_evidence_fields(
     cancer_type: str,
     median_tmb_mut_mb: float | None,
+    *,
+    statistic: str = "median",
 ) -> dict[str, object]:
     """Classify the provenance of one explicit TMB estimate.
 
     ``cancer_type`` accepts a canonical registry code, display name, or alias.
     ``median_tmb_mut_mb`` is the row's numeric estimate, or ``None``/``NaN``
-    when no defensible estimate is available. The returned mapping contains
+    when no defensible estimate is available. The parameter name is retained for
+    compatibility; ``statistic`` can be ``median``, ``mean``, ``unspecified``
+    (reported summary), or ``approximate`` (derived estimate). The mapping contains
     ``estimate_type``, ``source_scope``, and ``missing_reason``.
 
     This helper classifies the supplied row; it does not search parent or
@@ -176,6 +245,14 @@ def tmb_evidence_fields(
     mixed source-scope cohorts are reported as ``source_scope="aggregate_source"``.
     Reviewed per-code overrides take precedence over that registry default.
     """
+    statistic_types = {
+        "median": "published_median",
+        "mean": "published_mean",
+        "unspecified": "reported_summary",
+        "approximate": "approximate_derived",
+    }
+    if statistic not in statistic_types:
+        raise ValueError("statistic must be 'median', 'mean', 'unspecified', or 'approximate'")
     code = resolve_cancer_type(cancer_type)
     override = _TMB_EVIDENCE_OVERRIDES.get(code, {})
     if pd.isna(median_tmb_mut_mb):
@@ -187,8 +264,14 @@ def tmb_evidence_fields(
     default_scope = (
         "aggregate_source" if code in _aggregate_tmb_source_codes() else "cancer_code_direct"
     )
+    estimate_type = override.get(
+        "estimate_type",
+        statistic_types[statistic] if code in _checked_tmb_codes() else "curated_estimate",
+    )
+    if estimate_type == "sample_recomputed" and statistic in {"median", "mean"}:
+        estimate_type += f"_{statistic}"
     return {
-        "estimate_type": override.get("estimate_type", "published_median"),
+        "estimate_type": estimate_type,
         "source_scope": override.get("source_scope", default_scope),
         "missing_reason": override.get("missing_reason", float("nan")),
     }
@@ -197,8 +280,8 @@ def tmb_evidence_fields(
 @lru_cache(maxsize=1)
 def _tmb_value_map() -> dict[str, float]:
     """Cached direct numeric map. Callers must treat it as read-only."""
-    vals = _tmb_evidence_frame().dropna(subset=["median_tmb_mut_mb"])
-    return dict(zip(vals["cancer_code"].astype(str), vals["median_tmb_mut_mb"].astype(float)))
+    vals = _tmb_evidence_frame().dropna(subset=["tmb_mut_mb"])
+    return dict(zip(vals["cancer_code"].astype(str), vals["tmb_mut_mb"].astype(float)))
 
 
 _register_derived_cache(_tmb_value_map.cache_clear)
@@ -273,16 +356,18 @@ def resolve_tmb_source(cancer_type, *, inherit=True) -> dict:
 
 
 def cancer_tmb(cancer_type=None, *, inherit=True):
-    """Median TMB (mut/Mb) for one cancer type, or the whole
-    ``{code: median_tmb}`` map (codes with no published value omitted).
+    """TMB (mut/Mb), preferring median, then mean, then an explicitly typed estimate.
+
+    With no cancer type, return the whole ``{code: tmb}`` map, omitting gaps.
+    Use :func:`cancer_tmb_record` to inspect the statistic, assay and population.
 
     ``cancer_type`` is resolved through :func:`resolve_cancer_type`, so aliases
     and display names work. When ``inherit`` (default), a code with no curated
     value of its own inherits its nearest ancestor's TMB by walking the registry
-    ``parent_code`` chain — so molecular / histology subtypes (``LUAD_EGFR`` ->
-    ``LUAD``, ``SCLC_ASCL1`` -> ``SCLC``, rare ``SARC_*`` -> ``SARC``) resolve
-    without a curated row each. Returns ``None`` if neither the code nor any
-    ancestor has a value."""
+    ``parent_code`` chain — so molecular / histology subtypes (``SCLC_ASCL1`` ->
+    ``SCLC``, rare ``SARC_*`` -> ``SARC``) resolve
+    without a curated row each. Explicit audited gaps block inheritance. Returns
+    ``None`` if no eligible source has a value."""
     mapping = _tmb_value_map()
     if cancer_type is None:
         return dict(mapping)
@@ -295,7 +380,8 @@ def cancer_tmb_record(cancer_type=None, *, inherit=True):
     """Metadata-bearing TMB lookup.
 
     Mirrors :func:`cancer_tmb`, but returns the resolved source row as a dict instead
-    of only the numeric median. The record includes the derived evidence columns from
+    of only the numeric estimate. The record includes ``tmb_mut_mb``,
+    ``tmb_statistic``, and the derived evidence columns from
     :func:`cancer_tmb_df` plus lookup metadata:
 
     - ``requested_cancer_code``

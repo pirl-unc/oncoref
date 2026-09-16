@@ -1,0 +1,1112 @@
+dataset,row_key,cancer_code,regimen,metric,value,reference,source_review_status,source_locator,findings
+cancer-tmb,ACC,ACC,,TMB,2.7,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A88:C88; adrenal gland cortical carcinoma,
+cancer-tmb,BLCA,BLCA,,TMB,7.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,BRCA,BRCA,,TMB,1.2,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,CESC,CESC,,TMB,5.0,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,BTC,BTC,,TMB,1.23,PMID:33754015,source_checked,Abstract Results; Figure 1B; Methods,
+cancer-tmb,CHOL,CHOL,,TMB,2.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A103:C103; liver cholangiocarcinoma,
+cancer-tmb,COAD,COAD,,TMB,3.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,DLBC,DLBC,,TMB,3.3,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,ESCA,ESCA,,TMB,4.0,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,GBM,GBM,,TMB,2.2,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,HNSC,HNSC,,TMB,3.9,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,RCC,RCC,,TMB,,,audited_gap,,
+cancer-tmb,KICH,KICH,,TMB,0.7,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,KIRC,KIRC,,TMB,1.9,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,KIRP,KIRP,,TMB,2.7,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A83:C83; kidney renal papillary carcinoma,
+cancer-tmb,LAML,LAML,,TMB,0.4,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,LGG,LGG,,TMB,1.0,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,LIHC,LIHC,,TMB,3.6,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A57:C57; liver hepatocellular carcinoma (hcc),
+cancer-tmb,NSCLC,NSCLC,,TMB,8.0,PMID:33889505,source_checked,"Results, TMB comparison across cohorts",
+cancer-tmb,LUAD,LUAD,,TMB,8.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,LUSC,LUSC,,TMB,9.9,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MESO,MESO,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A136:C136; pleura mesothelioma,
+cancer-tmb,OV,OV,,TMB,1.7,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,PAAD,PAAD,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A129:C129; pancreas ductal adenocarcinoma,
+cancer-tmb,PCPG,PCPG,,TMB,0.5,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,PRAD,PRAD,,TMB,0.7,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,READ,READ,,TMB,3.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SKCM,SKCM,,TMB,12.9,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,STAD,STAD,,TMB,5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A30:C30; stomach adenocarcinoma intestinal type,
+cancer-tmb,TGCT,TGCT,,TMB,0.5,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,THCA,THCA,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A132:C132; thyroid papillary carcinoma,
+cancer-tmb,THYM_EPITHELIAL,THYM_EPITHELIAL,,TMB,,PMID:35749302,audited_gap,,
+cancer-tmb,THYM,THYM,,TMB,1.3,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A160:C160; thymus thymoma (nos),
+cancer-tmb,UCEC,UCEC,,TMB,2.5,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,UCS,UCS,,TMB,3.6,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A48:C48; uterus carcinosarcoma,
+cancer-tmb,UVM,UVM,,TMB,0.34,PMID:31930041,source_checked,"Table 1, UVM; Methods, TMB and indel burden",
+cancer-tmb,SARC_LMS,SARC_LMS,,TMB,2.2,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_DDLPS,SARC_DDLPS,,TMB,1.5,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_UPS,SARC_UPS,,TMB,2.2,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_MYXFIB,SARC_MYXFIB,,TMB,2.2,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_SYN,SARC_SYN,,TMB,1.7,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_MPNST,SARC_MPNST,,TMB,2.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A109:C109; soft tissue malignant peripheral nerve sheath tumor (mpnst),
+cancer-tmb,SARC_OS,SARC_OS,,TMB,1.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_EWS,SARC_EWS,,TMB,0.6,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_RMS_ERMS,SARC_RMS_ERMS,,TMB,0.8,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
+cancer-tmb,SARC_RMS_ARMS,SARC_RMS_ARMS,,TMB,0.4,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
+cancer-tmb,SARC_CHON,SARC_CHON,,TMB,1.7,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A146:C146; bone chondrosarcoma,
+cancer-tmb,SARC_CHOR,SARC_CHOR,,TMB,0.53,PMID:38892063,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,NBL,NBL,,TMB,0.6,PMID:23334666,source_checked,Abstract; Results; Supplementary Table 1,
+cancer-tmb,WILMS,WILMS,,TMB,0.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
+cancer-tmb,RT,RT,,TMB,0.1,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,ATRT,ATRT,,TMB,0.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MBL,MBL,,TMB,0.3,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,RB,RB,,TMB_MEAN,0.085,PMID:33670346,source_checked,Results 2.2 Somatic Mutational Burden and Mutational Signatures; Figure 1,
+cancer-tmb,HEPB,HEPB,,TMB,0.02,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MM,MM,,TMB,1.6,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,CLL,CLL,,TMB,0.6,PMID:23770567,needs_source_review,Figure 1; supplementary per-sample data needed for exact subgroup medians,sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MCL,MCL,,TMB,3.3,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A68:C68; lymph node lymphoma mantle cell,
+cancer-tmb,FL,FL,,TMB,5.05,DOI:10.3390/cancers18050737,source_checked,"Results 3.2, TMB and clinical characteristics",
+cancer-tmb,HL,HL,,TMB_UNSPECIFIED,7.66,PMID:31816062,source_checked,"Results, comparison with other cancers; Figure 7B; Methods, cHL cohort",summary_statistic_unspecified
+cancer-tmb,BL,BL,,TMB,2.0,PMID:23143597,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
+cancer-tmb,B_ALL,B_ALL,,TMB,0.3,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,T_ALL,T_ALL,,TMB,0.5,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
+cancer-tmb,MDS,MDS,,TMB,0.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A168:C168; bone marrow myelodysplastic syndrome (mds),
+cancer-tmb,MPN,MPN,,TMB,0.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A166:C166; bone marrow myeloproliferative neoplasm (mpn),
+cancer-tmb,CML,CML,,TMB,,,audited_gap,,
+cancer-tmb,CTCL,CTCL,,TMB,3.5,PMID:38513135,source_checked_proxy,"Results, somatic mutational landscape; Methods, patient samples and WES",population_proxy;tmb_statistic_or_derivation_requires_review
+cancer-tmb,NET_PANCREAS,NET_PANCREAS,,TMB,1.35,PMID:34326338,source_checked,"Results, primary-localization comparison",sample_size_not_curated
+cancer-tmb,NEN,NEN,,TMB,,PMID:34326338,audited_gap,"Results, mutational landscape",
+cancer-tmb,NET,NET,,TMB,,PMID:34326338,audited_gap,"Results, mutational landscape",
+cancer-tmb,NEC,NEC,,TMB,,PMID:34326338,audited_gap,"Results, mutational landscape",
+cancer-tmb,NEC_LUNG,NEC_LUNG,,TMB,,PMID:26168399;PMID:29535388,audited_gap,,
+cancer-tmb,SCLC,SCLC,,TMB,8.6,PMID:26168399,needs_source_review,Results: Recurrent somatic alterations in SCLC; Supplementary Tables 1-3; https://pmc.ncbi.nlm.nih.gov/articles/PMC4861069/,tmb_source_not_revalidated;tmb_statistic_or_derivation_requires_review
+cancer-tmb,NEC_MERKEL,NEC_MERKEL,,TMB,5.3,PMID:31399473,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MTC,MTC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A124:C124; thyroid medullary carcinoma,
+cancer-tmb,ADCC,ADCC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A128:C128; salivary gland adenoid cystic carcinoma,
+cancer-tmb,NPC,NPC,,TMB,0.95,PMID:36135044,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,NUTM,NUTM,,TMB,1.0,PMID:40704901,source_checked,Abstract Results; molecular characterization of the registry cohort,
+cancer-tmb,BRCA_Basal,BRCA_Basal,,TMB,1.8,PMID:23000897,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,BRCA_HER2,BRCA_HER2,,TMB,1.6,PMID:23000897,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,BRCA_LumB,BRCA_LumB,,TMB,1.2,PMID:23000897,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,BRCA_LumA,BRCA_LumA,,TMB,0.9,PMID:23000897,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,BRCA_Normal,BRCA_Normal,,TMB,1.28,PMID:29625048,source_checked,cBioPortal datahub revision 0cc9138746c08b304f8dac92c31983e0ef44af1d; brca_tcga_pan_can_atlas_2018; clinical sample TMB_NONSYNONYMOUS joined to patient SUBTYPE; cases_sequenced eligibility,
+cancer-tmb,HNSC_HPVneg,HNSC_HPVneg,,TMB,4.6,PMID:25631445,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,HNSC_HPVpos,HNSC_HPVpos,,TMB,2.8,PMID:25631445,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC,SARC,,TMB,1.8,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_LPS_UNSPEC,SARC_LPS_UNSPEC,,TMB,1.5,DOI:10.1016/j.cell.2017.10.014,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_RMS_PRMS,SARC_RMS_PRMS,,TMB,1.2,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,SARC_RMS_SSRMS,SARC_RMS_SSRMS,,TMB,0.6,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,BCC,BCC,,TMB,47.3,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A2:C2; skin basal cell carcinoma,
+cancer-tmb,cSCC,cSCC,,TMB,45.2,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A3:C3; skin squamous cell carcinoma (scc),
+cancer-tmb,EPN,EPN,,TMB,0.5,PMID:29489754,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,DIPG,DIPG,,TMB,1.0,PMID:28966033,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,VSCC,VSCC,,TMB,5.2,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A29:C29; vulva squamous cell carcinoma (scc),
+cancer-tmb,VAGC,VAGC,,TMB,,,audited_gap,,
+cancer-tmb,PENSCC,PENSCC,,TMB,4.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A39:C39; penis squamous cell carcinoma (scc),
+cancer-tmb,ANSC,ANSC,,TMB,5.4,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A24:C24; anus squamous cell carcinoma (scc),
+cancer-tmb,GBC,GBC,,TMB,5.5,DOI:10.1038/s41698-022-00327-y,source_checked,"Results: Molecular analysis, Figure 3A/C; Methods: Next generation sequencing; https://pmc.ncbi.nlm.nih.gov/articles/PMC9637208/",
+cancer-tmb,CRANIO,CRANIO,,TMB,0.9,PMID:24413733,needs_source_review,Main text preceding Figure 1; Figure 1 legend; Supplementary Tables 1-2; https://pmc.ncbi.nlm.nih.gov/articles/PMC3982316/,tmb_source_not_revalidated
+cancer-tmb,PITNET,PITNET,,TMB,,,audited_gap,,
+cancer-tmb,SARC_DSRCT,SARC_DSRCT,,TMB,0.72,PMID:35379887,source_checked,"Results, DSRCT has low mutation burden; Figure 1A",
+cancer-tmb,SARC_GIST,SARC_GIST,,TMB,0.67,PMID:39489749,source_checked,"Results, Aggressive GISTs harbor more genomic aberrations; Figure 1A",
+cancer-tmb,NEC_LUNG_LARGECELL,NEC_LUNG_LARGECELL,,TMB,9.9,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A9:C9; lung large cell neuroendocrine carcinoma,
+cancer-tmb,SARC_SMARCA4,SARC_SMARCA4,,TMB,10.6,PMID:39802817,source_checked,"Table 1; Results, Tumor Pathologic Characteristics",
+cancer-tmb,NET_MIDGUT,NET_MIDGUT,,TMB,1.05,PMID:34326338,source_checked,"Results, primary-localization comparison",sample_size_not_curated
+cancer-tmb,NET_RECTAL,NET_RECTAL,,TMB,1.15,PMID:36645718,source_checked,"Abstract; Methods, Whole-exome sequencing",
+cancer-tmb,NET_LUNG,NET_LUNG,,TMB_MEAN,0.4,PMID:24670920,source_checked,Results first paragraph; Figure 1c; https://pmc.ncbi.nlm.nih.gov/articles/PMC4132974/,
+cancer-tmb,SARC_CIC,SARC_CIC,,TMB,1.2,PMID:29901569,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,NBL_MYCNamp,NBL_MYCNamp,,TMB,0.43,PMID:23334666,source_checked,"Supplementary Table 1, Master_Table; MYCNamp column J and Nonsilent per Mb column BB; rows 3-242",
+cancer-tmb,NBL_MYCNnonamp,NBL_MYCNnonamp,,TMB,0.66,PMID:33172452,source_checked,"Results, TMB and mutational signature; Figure 3c; Methods, Sequence analysis",
+cancer-tmb,MBL_WNT,MBL_WNT,,TMB,0.6,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MBL_SHH,MBL_SHH,,TMB,0.8,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MBL_G3,MBL_G3,,TMB,0.5,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,MBL_G4,MBL_G4,,TMB,0.5,PMID:28726821,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,LUAD_EGFR,LUAD_EGFR,,TMB,3.8,PMID:31086949,source_checked_proxy,"Results, TMB across EGFR mutation subtypes; Table 2; Methods, study cohorts",population_proxy
+cancer-tmb,HCL,HCL,,TMB_APPROXIMATE,0.2,PMID:26871591,approximation_reviewed,"Table 2, Unflagged column; Table 3; Methods, Whole Exome Sequencing and Bioinformatics",approximate_tmb_estimate
+cancer-tmb,ACINIC,ACINIC,,TMB,1.8,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A122:C122; salivary gland acinic cell tumor,
+cancer-tmb,ALCL,ALCL,,TMB,,,audited_gap,,
+cancer-tmb,URETH,URETH,,TMB,,,audited_gap,,
+cancer-tmb,UCEC_POLE,UCEC_POLE,,TMB,150.8,PMID:39865420,source_checked,"Results, group A; Figure 1B; Methods, Molecular subtyping",
+cancer-tmb,UCEC_MSI,UCEC_MSI,,TMB,21.5,PMID:31829442,source_checked,"Table 2; Results, Association between POLE mutations and MSI; Methods, Analysis of mutation frequency",
+cancer-tmb,UCEC_CNL,UCEC_CNL,,TMB_UNSPECIFIED,2.9,PMID:23636398,source_checked,"Results, Somatic mutations; Figure 2a/b, copy-number-low n=90",summary_statistic_unspecified
+cancer-tmb,UCEC_CNH,UCEC_CNH,,TMB_UNSPECIFIED,2.3,PMID:23636398,source_checked,"Results, Somatic mutations; Figure 2a/b, copy-number-high n=60",summary_statistic_unspecified
+cancer-tmb,CRC_MSI,CRC_MSI,,TMB,46,PMID:28420421,needs_source_review,"Figure 2 / Additional file 3, Table S1; exact row not revalidated",sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,CRC,CRC,,TMB,4.5,PMID:30151257,needs_source_review,,assay_not_structured;tmb_source_not_revalidated
+cancer-tmb,MENINGIOMA,MENINGIOMA,,TMB,0.5,DOI:10.1038/s41598-018-31659-0,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,CHOROID_PLEXUS,CHOROID_PLEXUS,,TMB,0.5,PMID:33249490,needs_source_review,,assay_not_structured;sample_size_not_curated;tmb_source_not_revalidated
+cancer-tmb,ATC,ATC,,TMB,3.8,DOI:10.1016/j.celrep.2024.113826,needs_source_review,,assay_not_structured;tmb_source_not_revalidated
+cancer-tmb,THYMCA,THYMCA,,TMB,2.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A100:C100; thymus carcinoma (nos),
+cancer-tmb,STAD_MSI,STAD_MSI,,TMB,,PMID:28420421;PMID:25079317,audited_gap,,
+cancer-ici-response,ACC/PD-1+CTLA-4,ACC,PD-1+CTLA-4,ORR,14.0,PMID:39067873,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,SGC/PD-1,SGC,PD-1,ORR,4.6,PMID:35777186,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,ADCC/PD-1+CTLA-4,ADCC,PD-1+CTLA-4,ORR,6.0,DOI:10.1038/s41591-023-02518-x,prior_locator_verified,Results > Study treatment efficacy and toxicity,
+cancer-ici-response,ANSC/PD-1,ANSC,PD-1,ORR,24.0,PMID:28223062,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,ATC/PD-1+CTLA-4,ATC,PD-1+CTLA-4,ORR,30.0,DOI:10.1200/JCO.2020.38.15_suppl.6513,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response,BCC/PD-1,BCC,PD-1,ORR,31.0,PMID:34000246,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,BLCA/PD-1,BLCA,PD-1,ORR,28.6,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,BLCA/PD-L1,BLCA,PD-L1,ORR,23.0,PMID:27939400,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response,BRCA_Basal/PD-1,BRCA_Basal,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,BRCA_Basal/PD-L1,BRCA_Basal,PD-L1,ORR,10.0,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,CESC/PD-1,CESC,PD-1,ORR,14.6,PMID:30943124,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,CESC/PD-L1,CESC,PD-L1,ORR,15.6,PMID:38858106,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,BTC/PD-1,BTC,PD-1,ORR,5.8,PMID:32359091,prior_locator_verified,Abstract,
+cancer-ici-response,BTC/PD-L1,BTC,PD-L1,ORR,4.8,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab monotherapy,
+cancer-ici-response,CLL/PD-1,CLL,PD-1,ORR,0.0,DOI:10.1182/blood-2017-02-765685,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response,COAD,COAD,,ORR,,PMID:33264544,audited_gap,,
+cancer-ici-response,CRC_MSI/PD-1,CRC_MSI,PD-1,ORR,43.8,PMID:33264544,prior_locator_verified,Table 2,
+cancer-ici-response,CRC_MSI/PD-1+CTLA-4,CRC_MSI,PD-1+CTLA-4,ORR,55.0,PMID:29355075,prior_locator_verified,Abstract,
+cancer-ici-response,COAD_MSS/PD-1,COAD_MSS,PD-1,ORR,0.0,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,CTCL/PD-1,CTCL,PD-1,ORR,38.0,PMID:31532724,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,DIPG,DIPG,,ORR,,PMID:36808285,audited_gap,,
+cancer-ici-response,DLBC/PD-1,DLBC,PD-1,ORR,10.0,PMID:30620669,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,EPN/PD-1,EPN,PD-1,ORR,8.3,PMID:36808285,prior_locator_verified,"Table 1; Results, Biomarker Analyses",
+cancer-ici-response,ESCA/PD-1,ESCA,PD-1,ORR,19.3,PMID:31582355,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,ESCA/PD-1+CTLA-4,ESCA,PD-1+CTLA-4,ORR,28,PMID:35108470,prior_locator_verified,CheckMate 648 all-randomized ORR; FDA 2024 sponsor briefing Figure 2.3.2.2-6,
+cancer-ici-response,FL/PD-1,FL,PD-1,ORR,4.0,DOI:10.1182/blood.2019004753,prior_locator_verified,Abstract,
+cancer-ici-response,GBM/PD-1,GBM,PD-1,ORR,7.8,PMID:32437507,prior_locator_verified,"Results, response-evaluable population",
+cancer-ici-response,HL/PD-1,HL,PD-1,ORR,71.2,PMID:37530622,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,HNSC/PD-1,HNSC,PD-1,ORR,19.0,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response,HNSC/PD-L1,HNSC,PD-L1,ORR,16.2,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response,HNSC_HPVneg/PD-1,HNSC_HPVneg,PD-1,ORR,16,PMID:29955135,prior_locator_verified,Table 3,
+cancer-ici-response,HNSC_HPVpos/PD-1,HNSC_HPVpos,PD-1,ORR,24.0,PMID:29955135,prior_locator_verified,Table 3,
+cancer-ici-response,KICH/PD-1,KICH,PD-1,ORR,9.5,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,RCC_NCC/PD-1,RCC_NCC,PD-1,ORR,26.7,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,RCC_NCC_UNCLASSIFIED/PD-1,RCC_NCC_UNCLASSIFIED,PD-1,ORR,30.8,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,KIRC/PD-1,KIRC,PD-1,ORR,25.0,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,KIRC/PD-1+CTLA-4,KIRC,PD-1+CTLA-4,ORR,41.6,PMID:29562145,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response,KIRC/PD-L1,KIRC,PD-L1,ORR,25.0,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response,KIRP/PD-1,KIRP,PD-1,ORR,28.8,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,LIHC/PD-1,LIHC,PD-1,ORR,20.0,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response,LIHC/PD-1+CTLA-4,LIHC,PD-1+CTLA-4,ORR,32.0,PMID:33001135,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,LIHC/PD-L1,LIHC,PD-L1,ORR,17.0,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response,LUAD/PD-1,LUAD,PD-1,ORR,19.0,PMID:26412456,prior_locator_verified,Results > Efficacy,
+cancer-ici-response,LUAD/PD-1+CTLA-4,LUAD,PD-1+CTLA-4,ORR,35.9,PMID:31562796,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response,NSCLC/PD-L1,NSCLC,PD-L1,ORR,38.3,PMID:32997907,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response,LUAD_STK11,LUAD_STK11,,ORR,,PMID:29773717,audited_gap,,
+cancer-ici-response,LUSC/PD-1,LUSC,PD-1,ORR,20.0,PMID:26028407,prior_locator_verified,Table 2,
+cancer-ici-response,MBL,MBL,,ORR,,PMID:36808285,audited_gap,,
+cancer-ici-response,MDS/PD-1,MDS,PD-1,ORR,0.0,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response,MENINGIOMA/PD-1,MENINGIOMA,PD-1,ORR,0.0,PMID:35289329,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response,MESO/PD-1,MESO,PD-1,ORR,8.5,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,MESO/PD-1+CTLA-4,MESO,PD-1+CTLA-4,ORR,40.0,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,MESO/PD-L1,MESO,PD-L1,ORR,9.0,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,MM/PD-1,MM,PD-1,ORR,0.0,PMID:30937889,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response,NBL/PD-1,NBL,PD-1,ORR,0.0,PMID:31812554,prior_locator_verified,Table 1; Table 4 footnote; Results,
+cancer-ici-response,NEN_EXTRAPULMONARY_HG/PD-1,NEN_EXTRAPULMONARY_HG,PD-1,ORR,3.4,DOI:10.1038/s41416-020-0775-0,prior_locator_verified,Table 2,
+cancer-ici-response,NEC_LUNG_LARGECELL/PD-1,NEC_LUNG_LARGECELL,PD-1,ORR,29.4,PMID:34590004,prior_locator_located_unverified,Results > Efficacy of Nivolumab,numeric_source_location_not_verified
+cancer-ici-response,NEC_MERKEL/PD-1,NEC_MERKEL,PD-1,ORR,56.0,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,NEC_MERKEL/PD-L1,NEC_MERKEL,PD-L1,ORR,31.8,PMID:27592805,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,NET_NONPANCREATIC/PD-1+CTLA-4,NET_NONPANCREATIC,PD-1+CTLA-4,ORR,0.0,PMID:31969335,prior_locator_verified,"Abstract, Results:",
+cancer-ici-response,NET_PANCREAS/PD-1+CTLA-4,NET_PANCREAS,PD-1+CTLA-4,ORR,11.0,PMID:40588371,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,NPC/PD-1,NPC,PD-1,ORR,25.9,PMID:28837405,prior_locator_verified,Abstract,
+cancer-ici-response,OV/PD-1,OV,PD-1,ORR,8.0,PMID:31046082,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response,OV/PD-L1,OV,PD-L1,ORR,9.6,PMID:30676622,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response,PAAD/PD-1,PAAD,PD-1,ORR,0.0,PMID:30557521,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response,PCPG/PD-1,PCPG,PD-1,ORR,9.0,DOI:10.3390/cancers12082307,prior_locator_verified,Abstract,
+cancer-ici-response,PMBCL/PD-1,PMBCL,PD-1,ORR,41.5,PMID:37130017,prior_locator_verified,Results and discussion,
+cancer-ici-response,PRAD/PD-1,PRAD,PD-1,ORR,5,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,READ,READ,,ORR,,PMID:33264544,audited_gap,,
+cancer-ici-response,READ_MSS/PD-1,READ_MSS,PD-1,ORR,0.0,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response,SARC_ANGIO/PD-1+CTLA-4,SARC_ANGIO,PD-1+CTLA-4,ORR,25.0,PMID:34380663,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,SARC_ASPS/PD-L1,SARC_ASPS,PD-L1,ORR,37.0,PMID:37672694,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response,SARC_CHON/PD-1,SARC_CHON,PD-1,ORR,20,PMID:28988646,prior_locator_verified,RESULTS,small_denominator
+cancer-ici-response,SARC_CHOR/PD-1,SARC_CHOR,PD-1,ORR,12.0,PMID:37429302,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response,SARC_DDLPS/PD-1,SARC_DDLPS,PD-1,ORR,10,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response,SARC_DSRCT/PD-1,SARC_DSRCT,PD-1,ORR,12.5,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-ici-response,SARC_EPITH/PD-1,SARC_EPITH,PD-1,ORR,16.7,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-ici-response,SARC_EWS/PD-1,SARC_EWS,PD-1,ORR,0.0,PMID:28988646,prior_locator_verified,"Abstract, Findings:",
+cancer-ici-response,SARC_GIST/PD-1,SARC_GIST,PD-1,ORR,0.0,PMID:39343511,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response,SARC_KS/PD-1,SARC_KS,PD-1,ORR,62.1,PMID:39356983,prior_locator_verified,"Abstract, RESULTS:",
+cancer-ici-response,SARC_LMS/PD-1,SARC_LMS,PD-1,ORR,0.0,PMID:28988646,prior_locator_verified,"Abstract, Findings:",
+cancer-ici-response,SARC_MPNST/PD-1,SARC_MPNST,PD-1,ORR,12.5,PMID:41760889,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-ici-response,SARC_OS/PD-1,SARC_OS,PD-1,ORR,5.0,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response,SARC_SMARCA4/PD-1,SARC_SMARCA4,PD-1,ORR,25.0,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,SARC_SYN/PD-1,SARC_SYN,PD-1,ORR,10.0,PMID:28988646,prior_locator_source_section,"Abstract, Findings:",numeric_source_location_not_verified
+cancer-ici-response,SARC_UPS/PD-1,SARC_UPS,PD-1,ORR,23,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response,SCLC/PD-1,SCLC,PD-1,ORR,10.0,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,SCLC/PD-1+CTLA-4,SCLC,PD-1+CTLA-4,ORR,23.0,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,SCLC/PD-L1,SCLC,PD-L1,ORR,2.3,PMID:30664989,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response,SKCM/PD-1,SKCM,PD-1,ORR,43.7,PMID:28889792,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response,SKCM/PD-1+CTLA-4,SKCM,PD-1+CTLA-4,ORR,57.6,PMID:26027431,prior_locator_verified,Results > Efficacy,
+cancer-ici-response,STAD/PD-1,STAD,PD-1,ORR,11.6,PMID:29543932,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response,STAD/PD-L1,STAD,PD-L1,ORR,10.0,PMID:30515672,prior_locator_verified,Table 4,
+cancer-ici-response,TGCT/PD-1,TGCT,PD-1,ORR,0.0,PMID:29045540,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response,THCA/PD-1,THCA,PD-1,ORR,6.8,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response,THYM/PD-L1,THYM,PD-L1,ORR,29.0,PMID:31639039,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response,THYMCA/PD-1,THYMCA,PD-1,ORR,22.5,PMID:29395863,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,UCEC,UCEC,,ORR,,PMID:39847999,audited_gap,,
+cancer-ici-response,UCEC_CNH,UCEC_CNH,,ORR,,PMID:39847999,audited_gap,,
+cancer-ici-response,UCEC_CNL,UCEC_CNL,,ORR,,PMID:39847999,audited_gap,,
+cancer-ici-response,UCEC_MSI/PD-1,UCEC_MSI,PD-1,ORR,48,PMID:39847999,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response,UCEC_POLE,UCEC_POLE,,ORR,,PMID:27159395,audited_gap,,
+cancer-ici-response,UVM/PD-1,UVM,PD-1,ORR,11.7,PMID:31175402,prior_locator_verified,"Results, Figure 1; Patients and methods, Treatment and study design",
+cancer-ici-response,VSCC/PD-1,VSCC,PD-1,ORR,10.9,PMID:35361487,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,cSCC/PD-1,cSCC,PD-1,ORR,34.3,PMID:32673170,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response,CRC,CRC,,ORR,,,audited_gap,,
+cancer-ici-response,RCC,RCC,,ORR,,,audited_gap,,
+cancer-ici-response,BRCA,BRCA,,ORR,,,audited_gap,,
+cancer-ici-response,SARC,SARC,,ORR,,,audited_gap,,
+cancer-ici-response,STAD_MSI/PD-1,STAD_MSI,PD-1,ORR,57.1,PMID:29543932,prior_locator_verified,"Results, Microsatellite Instability",small_denominator
+cancer-apd1-response,SKCM/PD-1,SKCM,PD-1,ORR,43.7,PMID:28889792,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-apd1-response,LUAD/PD-1,LUAD,PD-1,ORR,19.0,PMID:26412456,prior_locator_verified,Results > Efficacy,
+cancer-apd1-response,LUSC/PD-1,LUSC,PD-1,ORR,20.0,PMID:26028407,prior_locator_verified,Table 2,
+cancer-apd1-response,LUAD_STK11,LUAD_STK11,,ORR,,PMID:29773717,audited_gap,,
+cancer-apd1-response,HNSC/PD-1,HNSC,PD-1,ORR,19.0,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;response_denominator_missing
+cancer-apd1-response,KIRC/PD-1,KIRC,PD-1,ORR,25.0,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,BLCA/PD-1,BLCA,PD-1,ORR,28.6,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,COAD,COAD,,ORR,,PMID:33264544,audited_gap,,
+cancer-apd1-response,READ,READ,,ORR,,PMID:33264544,audited_gap,,
+cancer-apd1-response,STAD/PD-1,STAD,PD-1,ORR,11.6,PMID:29543932,prior_locator_verified,"Abstract, Findings",
+cancer-apd1-response,LIHC/PD-1,LIHC,PD-1,ORR,20.0,PMID:28434648,prior_locator_verified,Results,
+cancer-apd1-response,ESCA/PD-1,ESCA,PD-1,ORR,19.3,PMID:31582355,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-apd1-response,CESC/PD-1,CESC,PD-1,ORR,14.6,PMID:30943124,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,HL/PD-1,HL,PD-1,ORR,71.2,PMID:37530622,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,NEC_MERKEL/PD-1,NEC_MERKEL,PD-1,ORR,56.0,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,BRCA_Basal/PD-1,BRCA_Basal,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,SCLC/PD-1,SCLC,PD-1,ORR,10.0,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-apd1-response,MESO/PD-1,MESO,PD-1,ORR,8.5,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-apd1-response,NPC/PD-1,NPC,PD-1,ORR,25.9,PMID:28837405,prior_locator_verified,Abstract,
+cancer-apd1-response,PRAD/PD-1,PRAD,PD-1,ORR,5,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,PAAD/PD-1,PAAD,PD-1,ORR,0.0,PMID:30557521,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-apd1-response,GBM/PD-1,GBM,PD-1,ORR,7.8,PMID:32437507,prior_locator_verified,"Results, response-evaluable population",
+cancer-apd1-response,CRC_MSI/PD-1,CRC_MSI,PD-1,ORR,43.8,PMID:33264544,prior_locator_verified,Table 2,
+cancer-apd1-response,COAD_MSS/PD-1,COAD_MSS,PD-1,ORR,0.0,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,READ_MSS/PD-1,READ_MSS,PD-1,ORR,0.0,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,UCEC_MSI/PD-1,UCEC_MSI,PD-1,ORR,48,PMID:39847999,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-apd1-response,UCEC_POLE,UCEC_POLE,,ORR,,PMID:27159395,audited_gap,,
+cancer-apd1-response,UCEC_CNL,UCEC_CNL,,ORR,,PMID:39847999,audited_gap,,
+cancer-apd1-response,UCEC_CNH,UCEC_CNH,,ORR,,PMID:39847999,audited_gap,,
+cancer-apd1-response,OV/PD-1,OV,PD-1,ORR,8.0,PMID:31046082,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-apd1-response,HNSC_HPVpos/PD-1,HNSC_HPVpos,PD-1,ORR,24.0,PMID:29955135,prior_locator_verified,Table 3,
+cancer-apd1-response,HNSC_HPVneg/PD-1,HNSC_HPVneg,PD-1,ORR,16,PMID:29955135,prior_locator_verified,Table 3,
+cancer-apd1-response,KIRP/PD-1,KIRP,PD-1,ORR,28.8,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,KICH/PD-1,KICH,PD-1,ORR,9.5,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,RCC_NCC/PD-1,RCC_NCC,PD-1,ORR,26.7,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,RCC_NCC_UNCLASSIFIED/PD-1,RCC_NCC_UNCLASSIFIED,PD-1,ORR,30.8,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,BTC/PD-1,BTC,PD-1,ORR,5.8,PMID:32359091,prior_locator_verified,Abstract,
+cancer-apd1-response,UVM/PD-1,UVM,PD-1,ORR,11.7,PMID:31175402,prior_locator_verified,"Results, Figure 1; Patients and methods, Treatment and study design",
+cancer-apd1-response,SARC_UPS/PD-1,SARC_UPS,PD-1,ORR,23,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-apd1-response,SARC_DDLPS/PD-1,SARC_DDLPS,PD-1,ORR,10,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-apd1-response,SARC_SYN/PD-1,SARC_SYN,PD-1,ORR,10.0,PMID:28988646,prior_locator_source_section,"Abstract, Findings:",numeric_source_location_not_verified
+cancer-apd1-response,SARC_LMS/PD-1,SARC_LMS,PD-1,ORR,0.0,PMID:28988646,prior_locator_verified,"Abstract, Findings:",
+cancer-apd1-response,SARC_OS/PD-1,SARC_OS,PD-1,ORR,5.0,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-apd1-response,SARC_MPNST/PD-1,SARC_MPNST,PD-1,ORR,12.5,PMID:41760889,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-apd1-response,SARC_EWS/PD-1,SARC_EWS,PD-1,ORR,0.0,PMID:28988646,prior_locator_verified,"Abstract, Findings:",
+cancer-apd1-response,SARC_CHON/PD-1,SARC_CHON,PD-1,ORR,20,PMID:28988646,prior_locator_verified,RESULTS,small_denominator
+cancer-apd1-response,SARC_ASPS/PD-L1,SARC_ASPS,PD-L1,ORR,37.0,PMID:37672694,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-apd1-response,cSCC/PD-1,cSCC,PD-1,ORR,34.3,PMID:32673170,prior_locator_verified,RESULTS > Efficacy,
+cancer-apd1-response,BCC/PD-1,BCC,PD-1,ORR,31.0,PMID:34000246,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-apd1-response,ANSC/PD-1,ANSC,PD-1,ORR,24.0,PMID:28223062,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-apd1-response,VSCC/PD-1,VSCC,PD-1,ORR,10.9,PMID:35361487,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,THYMCA/PD-1,THYMCA,PD-1,ORR,22.5,PMID:29395863,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-apd1-response,CTCL/PD-1,CTCL,PD-1,ORR,38.0,PMID:31532724,prior_locator_verified,"Abstract, RESULTS",
+cancer-apd1-response,PCPG/PD-1,PCPG,PD-1,ORR,9.0,DOI:10.3390/cancers12082307,prior_locator_verified,Abstract,
+cancer-apd1-response,THCA/PD-1,THCA,PD-1,ORR,6.8,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-apd1-response,NEC_LUNG_LARGECELL/PD-1,NEC_LUNG_LARGECELL,PD-1,ORR,29.4,PMID:34590004,prior_locator_located_unverified,Results > Efficacy of Nivolumab,numeric_source_location_not_verified
+cancer-apd1-response,SARC_KS/PD-1,SARC_KS,PD-1,ORR,62.1,PMID:39356983,prior_locator_verified,"Abstract, RESULTS:",
+cancer-apd1-response,SARC_CHOR/PD-1,SARC_CHOR,PD-1,ORR,12.0,PMID:37429302,prior_locator_verified,"Abstract, Findings",
+cancer-apd1-response,SARC_SMARCA4/PD-1,SARC_SMARCA4,PD-1,ORR,25.0,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-apd1-response,SARC_EPITH/PD-1,SARC_EPITH,PD-1,ORR,16.7,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-apd1-response,SARC_DSRCT/PD-1,SARC_DSRCT,PD-1,ORR,12.5,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-apd1-response,SARC_GIST/PD-1,SARC_GIST,PD-1,ORR,0.0,PMID:39343511,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-apd1-response,TGCT/PD-1,TGCT,PD-1,ORR,0.0,PMID:29045540,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-apd1-response,SGC/PD-1,SGC,PD-1,ORR,4.6,PMID:35777186,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,DLBC/PD-1,DLBC,PD-1,ORR,10.0,PMID:30620669,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,FL/PD-1,FL,PD-1,ORR,4.0,DOI:10.1182/blood.2019004753,prior_locator_verified,Abstract,
+cancer-apd1-response,MDS/PD-1,MDS,PD-1,ORR,0.0,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-apd1-response,MM/PD-1,MM,PD-1,ORR,0.0,PMID:30937889,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-apd1-response,NBL/PD-1,NBL,PD-1,ORR,0.0,PMID:31812554,prior_locator_verified,Table 1; Table 4 footnote; Results,
+cancer-apd1-response,NEN_EXTRAPULMONARY_HG/PD-1,NEN_EXTRAPULMONARY_HG,PD-1,ORR,3.4,DOI:10.1038/s41416-020-0775-0,prior_locator_verified,Table 2,
+cancer-apd1-response,CLL/PD-1,CLL,PD-1,ORR,0.0,DOI:10.1182/blood-2017-02-765685,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-apd1-response,MBL,MBL,,ORR,,PMID:36808285,audited_gap,,
+cancer-apd1-response,EPN/PD-1,EPN,PD-1,ORR,8.3,PMID:36808285,prior_locator_verified,"Table 1; Results, Biomarker Analyses",
+cancer-apd1-response,DIPG,DIPG,,ORR,,PMID:36808285,audited_gap,,
+cancer-apd1-response,MENINGIOMA/PD-1,MENINGIOMA,PD-1,ORR,0.0,PMID:35289329,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-apd1-response,ACC/PD-1+CTLA-4,ACC,PD-1+CTLA-4,ORR,14.0,PMID:39067873,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,NET_PANCREAS/PD-1+CTLA-4,NET_PANCREAS,PD-1+CTLA-4,ORR,11.0,PMID:40588371,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,SARC_ANGIO/PD-1+CTLA-4,SARC_ANGIO,PD-1+CTLA-4,ORR,25.0,PMID:34380663,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,ADCC/PD-1+CTLA-4,ADCC,PD-1+CTLA-4,ORR,6.0,DOI:10.1038/s41591-023-02518-x,prior_locator_verified,Results > Study treatment efficacy and toxicity,
+cancer-apd1-response,NET_NONPANCREATIC/PD-1+CTLA-4,NET_NONPANCREATIC,PD-1+CTLA-4,ORR,0.0,PMID:31969335,prior_locator_verified,"Abstract, Results:",
+cancer-apd1-response,PMBCL/PD-1,PMBCL,PD-1,ORR,41.5,PMID:37130017,prior_locator_verified,Results and discussion,
+cancer-apd1-response,ATC/PD-1+CTLA-4,ATC,PD-1+CTLA-4,ORR,30.0,DOI:10.1200/JCO.2020.38.15_suppl.6513,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-apd1-response,UCEC,UCEC,,ORR,,PMID:39847999,audited_gap,,
+cancer-apd1-response,STAD_MSI/PD-1,STAD_MSI,PD-1,ORR,57.1,PMID:29543932,prior_locator_verified,"Results, Microsatellite Instability",small_denominator
+cancer-ici-response-estimates,ICI-9593cb18be-01,ACC,PD-1+CTLA-4,ORR,14,PMID:39067873,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-3fbfdb14f2-01,ACC,PD-1+CTLA-4,IRORR,19,PMID:39067873,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-cf2834da47-01,ACC,PD-1+CTLA-4,CBR,24,PMID:39067873,prior_locator_verified,Results > Outcomes,
+cancer-ici-response-estimates,ICI-3cd8dbda4b-01,ACC,PD-1+CTLA-4,IRCBR,33,PMID:39067873,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-093ba1859e-01,ACC,PD-1+CTLA-4,PFS,1.8,PMID:39067873,prior_locator_verified,Figure 2,
+cancer-ici-response-estimates,ICI-0d56b8bd7a-01,ACC,PD-1+CTLA-4,OS,15.8,PMID:39067873,prior_locator_verified,Figure 2,
+cancer-ici-response-estimates,ICI-741bacb100-01,ACC,PD-1+CTLA-4,PFS_RATE,24,PMID:39067873,prior_locator_verified,Figure 2,
+cancer-ici-response-estimates,ICI-c9a6b61402-01,ACC,PD-1+CTLA-4,PFS_RATE,33,PMID:39067873,prior_locator_verified,Results > Outcomes,
+cancer-ici-response-estimates,ICI-90a426d967-01,ACC,PD-1+CTLA-4,OS_RATE,76,PMID:39067873,prior_locator_verified,Figure 2,
+cancer-ici-response-estimates,ICI-1b0fbb70fb-01,SGC,PD-1,ORR,4.6,PMID:35777186,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-9bfcbfbb51-01,SGC,PD-1,CRR,0.9,PMID:35777186,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-071eb5e3c9-01,SGC,PD-1,ORR,10.7,PMID:35777186,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-ace3bf531f-01,SGC,PD-1,ORR,2.6,PMID:35777186,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-7c006ed354-01,SGC,PD-1,DOR,,PMID:35777186,audited_gap,"Abstract, Results",small_denominator
+cancer-ici-response-estimates,ICI-94ff54ffd3-01,SGC,PD-1,PFS,4,PMID:35777186,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-be1bcca24f-01,SGC,PD-1,OS,21.1,PMID:35777186,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2d5cb04e92-01,ACINIC,PD-1+CTLA-4,ORR,16,DOI:10.1038/s41591-023-02518-x,prior_locator_verified,Results > Study treatment efficacy and toxicity,excluded_from_pooling
+cancer-ici-response-estimates,ICI-59bed8bbec-01,ACINIC,PD-1+CTLA-4,PFS,2.2,DOI:10.1038/s41591-023-02518-x,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-5c19d1d9a0-01,ADCC,PD-1+CTLA-4,ORR,6,DOI:10.1038/s41591-023-02518-x,prior_locator_verified,Results > Study treatment efficacy and toxicity,
+cancer-ici-response-estimates,ICI-9cbaa71858-01,ADCC,PD-1+CTLA-4,PFS,4.4,DOI:10.1038/s41591-023-02518-x,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-cf3b5df820-01,ADCC,PD-1+CTLA-4,ORR,5,PMID:40166913,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-b5cfd95674-01,ADCC,PD-1+CTLA-4,DCR,53,PMID:40166913,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ceb9c89967-01,ADCC,PD-1+CTLA-4,PFS,8.3,PMID:40166913,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6ec9bc0a01-01,ADCC,PD-1+CTLA-4,OS,30,PMID:40166913,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-c99b80b7ea-01,ADCC,PD-1,ORR,4.6,PMID:35777186,prior_locator_verified,"Abstract, Results",excluded_from_pooling
+cancer-ici-response-estimates,ICI-8624416b0e-01,ANSC,PD-1,ORR,24,PMID:28223062,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-8cd76d5098-01,ANSC,PD-1,CRR,5.4,PMID:28223062,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-943547eb15-01,ANSC,PD-1,PR,18.9,PMID:28223062,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-cfb30dbca5-01,ANSC,PD-1,ORR,11,PMID:35114169,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-024f42b18c-01,ANSC,PD-1,CRR,5,PMID:35114169,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-6cea9b0699-01,ANSC,PD-1,PR,5,PMID:35114169,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-3cfe88d14b-01,ANSC,PD-1,PFS,2,PMID:35114169,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-6222fb6317-01,ANSC,PD-1,OS,11.9,PMID:35114169,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-31b195fdd0-01,ANSC,PD-1,PFS_RATE,15,PMID:35114169,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-12f399f520-01,ANSC,PD-1,OS_RATE,49,PMID:35114169,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-f98669fce1-01,ANSC,PD-1,OS_RATE,26,PMID:35114169,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-f9b0039eaa-01,ANSC,PD-1,DOR,,PMID:35114169,audited_gap,Results,
+cancer-ici-response-estimates,ICI-ccc536e5e5-01,ANSC,PD-1,ORR,15,PMID:35114169,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-deeb11dc2d-01,ATC,PD-1+CTLA-4,ORR,30,DOI:10.1200/JCO.2020.38.15_suppl.6513,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-cb72c7e2fd-01,ATC,PD-1+CTLA-4,CBR,50,DOI:10.1200/JCO.2020.38.15_suppl.6513,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-966148cfb1-01,ATC,PD-1+CTLA-4,ORR,9.4,DOI:10.1200/JCO.2020.38.15_suppl.6513,prior_locator_citation_only,,excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-52dbc5d599-01,BCC,PD-1,ORR,31,PMID:34000246,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-8b2190adfe-01,BCC,PD-1,CRR,6,PMID:34000246,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-48975a9625-01,BCC,PD-1,PR,25,PMID:34000246,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-9394b751d8-01,BCC,PD-1,DCR,80,PMID:34000246,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-6eab5da93b-01,BCC,PD-1,DURABLE DISEASE CONTROL,60,PMID:34000246,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d465ee2e25-01,BCC,PD-1,PFS,19,PMID:34000246,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-895dd9d929-01,BCC,PD-1,DOR,,PMID:34000246,audited_gap,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-19956d182d-01,BCC,PD-1,ORR,22,DOI:10.1016/j.annonc.2023.10.123,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-4398a82d1e-01,BCC,PD-1,CRR,3.7,DOI:10.1016/j.annonc.2023.10.123,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-143d70f5e9-01,BCC,PD-1,PR,18.5,DOI:10.1016/j.annonc.2023.10.123,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-cb7e1bb636-01,BCC,PD-1,PFS,10,DOI:10.1016/j.annonc.2023.10.123,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ed94d6f902-01,BCC,PD-1,OS,50,DOI:10.1016/j.annonc.2023.10.123,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5b1e201a99-01,BLCA,PD-1,ORR,28.6,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-278a4de643-01,BLCA,PD-1,CRR,8.9,PMID:32552471,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ef83e86663-01,BLCA,PD-1,PR,19.7,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-5a7d2cb428-01,BLCA,PD-1,DOR,30.1,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-06eac5a1cb-01,BLCA,PD-1,OS,11.3,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-acb3b19314-01,BLCA,PD-1,OS_RATE,46.9,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2e11cec466-01,BLCA,PD-1,OS_RATE,31.2,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-def378bec0-01,BLCA,PD-1,ORR,47.3,PMID:32552471,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-9ef67e9b93-01,BLCA,PD-1,OS,18.5,PMID:32552471,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-22d7ca6935-01,BLCA,PD-1,ORR,19.6,PMID:28131785,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1c4c4cfa84-01,BLCA,PD-1,ORR,28.4,PMID:28131785,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-bde6ff938a-01,BLCA,PD-1,ORR,16.1,PMID:28131785,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c4d53723ca-01,BLCA,PD-1,PFS,2,PMID:28131785,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-79dcf4f7b4-01,BLCA,PD-1,OS,8.74,PMID:28131785,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-9177ece704-01,BLCA,PD-L1,ORR,23,PMID:27939400,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-ecf5c23723-01,BLCA,PD-L1,CRR,9,PMID:27939400,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-2fcd0d8682-01,BLCA,PD-L1,DOR,,PMID:27939400,audited_gap,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-3532954092-01,BLCA,PD-L1,PFS,2.7,PMID:27939400,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-e1c1959728-01,BLCA,PD-L1,OS,15.9,PMID:27939400,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-e52143e1a0-01,BLCA,PD-L1,ORR,15,PMID:26952546,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-2d8a335e01-01,BLCA,PD-L1,ORR,17.8,PMID:28817753,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-9e11d8b7bd-01,BLCA,PD-L1,ORR,17,PMID:29217288,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-02e900249c-01,BRCA_Basal,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-00a12fc413-01,BRCA_Basal,PD-1,ORR,5.7,PMID:30475950,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-56d7f8d4cf-01,BRCA_Basal,PD-1,DCR,7.6,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-b2835651b5-01,BRCA_Basal,PD-1,DOR,,PMID:30475950,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-0f0e089271-01,BRCA_Basal,PD-1,PFS,2,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-a5299960c5-01,BRCA_Basal,PD-1,PFS_RATE,14.9,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e229a8f185-01,BRCA_Basal,PD-1,OS,9,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d6cf87e9e5-01,BRCA_Basal,PD-1,ORR,21.4,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-9fc9ca17f2-01,BRCA_Basal,PD-1,CRR,4.8,PMID:30475947,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3a751ea034-01,BRCA_Basal,PD-1,DCR,23.8,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-b8438e7460-01,BRCA_Basal,PD-1,DOR,10.4,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ba47635e7b-01,BRCA_Basal,PD-1,PFS,2.1,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2a0f370265-01,BRCA_Basal,PD-1,OS,18,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-3792c43928-01,BRCA_Basal,PD-L1,ORR,10,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-54fd4a7840-01,BRCA_Basal,PD-L1,DOR,21,PMID:30242306,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-7353d7284b-01,BRCA_Basal,PD-L1,ORR,24,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1bc1f2c450-01,BRCA_Basal,PD-L1,OS,17.6,PMID:30242306,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6bbe217c59-01,BRCA_Basal,PD-L1,ORR,6,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-dd8d58275c-01,BRCA_Basal,PD-L1,ORR,12,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c5947bad6b-01,CESC,PD-1,ORR,14.6,PMID:30943124,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ac4b7c47c2-01,CESC,PD-1,ORR,12.2,PMID:30943124,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ddd8d6f347-01,CESC,PD-1,CRR,3.1,PMID:30943124,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2e11ae750c-01,CESC,PD-1,DCR,30.6,PMID:30943124,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c596c96a12-01,CESC,PD-1,DOR,,PMID:30943124,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e2686c8669-01,CESC,PD-L1,ORR,15.6,PMID:38858106,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e1b1f63c42-01,CESC,PD-L1,PFS,1.9,PMID:38858106,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-98dca50d7c-01,CESC,PD-L1,OS,10.6,PMID:38858106,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-13c6b42ce9-01,CESC,PD-L1+TIGIT,ORR,19,PMID:38858106,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-489d075019-01,CESC,PD-L1+TIGIT,PFS,2.8,PMID:38858106,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6ea87b002f-01,CESC,PD-L1+TIGIT,OS,11.1,PMID:38858106,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2814c8c5da-01,CESC,PD-L1,ORR,20.7,PMID:38858106,prior_locator_not_verified,,numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-06e6f755ae-01,BTC,PD-1,ORR,5.8,PMID:32359091,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-ffb31451ac-01,BTC,PD-1,DOR,,PMID:32359091,audited_gap,Abstract,
+cancer-ici-response-estimates,ICI-95f2890cf3-01,BTC,PD-1,PFS,2,PMID:32359091,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-6ea6de466b-01,BTC,PD-1,OS,7.4,PMID:32359091,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-1545ffe3c3-01,BTC,PD-1,ORR,6.6,PMID:32359091,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-78b32558b8-01,BTC,PD-1,ORR,2.9,PMID:32359091,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-d1d318d5fd-01,BTC,PD-1,ORR,13,PMID:32359091,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-bafeb33323-01,BTC,PD-1,DOR,,PMID:32359091,audited_gap,Abstract,
+cancer-ici-response-estimates,ICI-784ad2abd2-01,BTC,PD-1,PFS,1.8,PMID:32359091,prior_locator_located_unverified,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-45d73edf58-01,BTC,PD-1,OS,5.7,PMID:32359091,prior_locator_located_unverified,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a9bc719db3-01,BTC,PD-L1,ORR,4.8,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab monotherapy,
+cancer-ici-response-estimates,ICI-1a2bac306d-01,BTC,PD-L1,CRR,0,PMID:35611499,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-8892fb2c2f-01,BTC,PD-L1,DOR,9.7,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab monotherapy,
+cancer-ici-response-estimates,ICI-01b8ec043a-01,BTC,PD-L1,PFS,1.5,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab monotherapy,
+cancer-ici-response-estimates,ICI-29df11bed9-01,BTC,PD-L1,OS,8.1,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab monotherapy,
+cancer-ici-response-estimates,ICI-8c1c82b596-01,BTC,PD-L1+CTLA-4,ORR,10.8,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab plus tremelimumab,
+cancer-ici-response-estimates,ICI-37635ad717-01,BTC,PD-L1+CTLA-4,CRR,0,PMID:35611499,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d6adf64029-01,BTC,PD-L1+CTLA-4,DOR,8.4,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab plus tremelimumab,
+cancer-ici-response-estimates,ICI-7fa8a24816-01,BTC,PD-L1+CTLA-4,PFS,1.6,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab plus tremelimumab,
+cancer-ici-response-estimates,ICI-c340520250-01,BTC,PD-L1+CTLA-4,OS,10.1,PMID:35611499,prior_locator_verified,RESULTS > Efficacy > Durvalumab plus tremelimumab,
+cancer-ici-response-estimates,ICI-4f6402b639-01,CLL,PD-1,ORR,0,DOI:10.1182/blood-2017-02-765685,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c319898ee7-01,CLL,PD-1,ORR,44.4,DOI:10.1182/blood-2017-02-765685,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-7c9277b87c-01,CLL,PD-1,OS,10.7,DOI:10.1182/blood-2017-02-765685,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-dfd5824394-01,COAD,PD-1,ORR,5.0,,prior_locator_not_applicable,,excluded_from_pooling;no_direct_reference;numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-9099787bfc-01,CRC_MSI,PD-1,ORR,43.8,PMID:33264544,prior_locator_verified,Table 2,
+cancer-ici-response-estimates,ICI-fac1883214-01,CRC_MSI,PD-1,CRR,11.1,PMID:33264544,prior_locator_verified,Table 2,
+cancer-ici-response-estimates,ICI-013ea9c9ea-01,CRC_MSI,PD-1,PFS,16.5,PMID:33264544,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f0a7b7fce0-01,CRC_MSI,PD-1,DOR,,PMID:33264544,audited_gap,Table 2,
+cancer-ici-response-estimates,ICI-c51444aea4-01,CRC_MSI,PD-1,ORR,45.8,PMID:39631622,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a9c559498c-01,CRC_MSI,PD-1,DOR,75.4,PMID:39631622,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e5de24a94f-01,CRC_MSI,PD-1,OS,77.5,PMID:39631622,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-072ab82577-01,CRC_MSI,non-ICI,ORR,33.1,PMID:33264544,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-50aacfc02d-01,CRC_MSI,non-ICI,PFS,8.2,PMID:33264544,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2fc5165568-01,CRC_MSI,PD-1,ORR,40,PMID:26028255,prior_locator_verified,RESULTS > PRIMARY END POINT,
+cancer-ici-response-estimates,ICI-4ab1cc05e0-01,CRC_MSI,PD-1,PFS_RATE,78,PMID:26028255,prior_locator_verified,RESULTS > PRIMARY END POINT,small_denominator
+cancer-ici-response-estimates,ICI-cae877771b-01,CRC_MSI,PD-1,PFS,,PMID:26028255,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-b6d5eed7d9-01,CRC_MSI,PD-1,OS,,PMID:26028255,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-c0e3d71f07-01,CRC_MSI,PD-1,ORR,33,PMID:31725351,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-83fc7a73eb-01,CRC_MSI,PD-1,ORR,33,PMID:31725351,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-64ef2b753a-01,CRC_MSI,PD-1,PFS,2.3,PMID:31725351,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-2f6ad095ba-01,CRC_MSI,PD-1,PFS,4.1,PMID:31725351,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-95c9d7f68b-01,CRC_MSI,PD-1,OS,31.4,PMID:31725351,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-e038d0a7a4-01,CRC_MSI,PD-1,OS,,PMID:31725351,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-06e5425c5f-01,CRC_MSI,PD-1,DOR,,PMID:31725351,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-e97c6a0bbe-01,CRC_MSI,PD-1+CTLA-4,ORR,55,PMID:29355075,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-6666b2cffd-01,CRC_MSI,PD-1+CTLA-4,DCR,80,PMID:29355075,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-2cb41f5e7b-01,CRC_MSI,PD-1+CTLA-4,PFS_RATE,76,PMID:29355075,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-43925d1c0f-01,CRC_MSI,PD-1+CTLA-4,PFS_RATE,71,PMID:29355075,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-da9d41fc80-01,CRC_MSI,PD-1+CTLA-4,OS_RATE,87,PMID:29355075,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-4b5e624be8-01,CRC_MSI,PD-1+CTLA-4,OS_RATE,85,PMID:29355075,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-e25634c12d-01,CRC_MSI,PD-1+CTLA-4,DOR,,PMID:29355075,audited_gap,Abstract,
+cancer-ici-response-estimates,ICI-1086e5daaf-01,CRC_MSI,PD-1+CTLA-4,ORR,69,PMID:34637336,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e8b415c4d8-01,CRC_MSI,PD-1+CTLA-4,CRR,13,PMID:34637336,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d535bbe754-01,CRC_MSI,PD-1+CTLA-4,DCR,84,PMID:34637336,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f21f4fb8c6-01,CRC_MSI,PD-1+CTLA-4,PFS,,PMID:34637336,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-c391647a74-01,CRC_MSI,PD-1+CTLA-4,OS,,PMID:34637336,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-172bcbe950-01,CRC_MSI,PD-1+CTLA-4,PFS_RATE,74,PMID:34637336,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f71970a937-01,CRC_MSI,PD-1+CTLA-4,OS_RATE,79,PMID:34637336,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-126ce979c6-01,CRC_MSI,PD-1+CTLA-4,DOR,,PMID:34637336,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-fac074c76d-01,COAD_MSS,PD-1,ORR,0,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-065ff92796-01,COAD_MSS,PD-1,PFS_RATE,11,PMID:26028255,prior_locator_verified,RESULTS > PRIMARY END POINT,
+cancer-ici-response-estimates,ICI-bbff8c381a-01,COAD_MSS,PD-1,PFS,2.2,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-54d6c0c112-01,COAD_MSS,PD-1,OS,5,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-033c8882f9-01,CTCL,PD-1,ORR,38,PMID:31532724,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-8f71cb2eac-01,CTCL,PD-1,CRR,8.3,PMID:31532724,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c32679e1c3-01,CTCL,PD-1,PR_RATE,29.2,PMID:31532724,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-57d9af4608-01,CTCL,PD-1,DOR,,PMID:31532724,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-9459107c19-01,DIPG,PD-1,ORR,0,PMID:36808285,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5d159331b2-01,DIPG,PD-1,OS,11.7,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-d107db86df-01,DIPG,PD-1,PFS,6.2,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-353edd1447-01,DIPG,PD-1,OS_RATE,48,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-f4c11e3e55-01,DIPG,PD-1+CTLA-4,OS,10.8,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-e16f38e43f-01,DIPG,PD-1+CTLA-4,OS_RATE,42.9,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-cb4fc6cc85-01,DIPG,PD-1+CTLA-4,PFS,4.5,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-2f44f89310-01,DIPG,PD-1,OS,6.7,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-001726a0e3-01,DIPG,PD-1,PFS,1.7,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-e42db6628c-01,DIPG,PD-1,PFS_RATE,9.4,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-d7188974ab-01,DLBC,PD-1,ORR,10,PMID:30620669,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-fad62b3255-01,DLBC,PD-1,CRR,3,PMID:30620669,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-b8f9719958-01,DLBC,PD-1,DOR,11,PMID:30620669,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-4182f54785-01,DLBC,PD-1,PFS,1.9,PMID:30620669,prior_locator_located_unverified,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1978c8ccd2-01,DLBC,PD-1,OS,12.2,PMID:30620669,prior_locator_located_unverified,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5ccaa6b719-01,DLBC,PD-1,ORR,3,PMID:30620669,prior_locator_located_unverified,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c8e2ba8f45-01,DLBC,PD-1,CRR,0,PMID:30620669,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-aef2b3301d-01,DLBC,PD-1,DOR,8.3,PMID:30620669,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-732c723e34-01,DLBC,PD-1,PFS,1.4,PMID:30620669,prior_locator_located_unverified,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1452386811-01,DLBC,PD-1,OS,5.8,PMID:30620669,prior_locator_located_unverified,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-15c4121090-01,PMBCL,PD-1,ORR,45,PMID:31609651,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-c09b429cc5-01,PMBCL,PD-1,CRR,13,PMID:31609651,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-e045c0d841-01,EPN,PD-1,ORR,8.3,PMID:36808285,prior_locator_verified,"Table 1; Results, Biomarker Analyses",
+cancer-ici-response-estimates,ICI-b3d75c53c7-01,EPN,PD-1,PFS,1.4,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-f6db400548-01,EPN,PD-1,OS,5.7,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-d318c83a29-01,EPN,PD-1,PFS_RATE,27.3,PMID:36808285,prior_locator_located_unverified,Results > No Survival Benefit Was Observed Across Cohorts,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-508bc91a3e-01,EPN,PD-1,OS_RATE,41.7,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-0ec5911eda-01,EPN,PD-1+CTLA-4,ORR,0,PMID:36808285,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-551c15df42-01,EPN,PD-1+CTLA-4,PFS,4.6,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-93676babf6-01,EPN,PD-1+CTLA-4,OS,9.8,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-ab59b6106e-01,EPN,PD-1+CTLA-4,PFS_RATE,11.4,PMID:36808285,prior_locator_located_unverified,Results > No Survival Benefit Was Observed Across Cohorts,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-7014291b7c-01,EPN,PD-1+CTLA-4,OS_RATE,44.4,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-96b4d412b9-01,ESCA,PD-1,ORR,19.3,PMID:31582355,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f81f4324e3-01,ESCA,PD-1,DOR,6.9,PMID:31582355,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a0755a9960-01,ESCA,PD-1,OS,10.9,PMID:31582355,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-db97f9fefe-01,ESCA,non-ICI,ORR,21.5,PMID:31582355,prior_locator_source_section,"Abstract, Findings",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a89af1a5e9-01,ESCA,non-ICI,DOR,3.9,PMID:31582355,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2a529a2f70-01,ESCA,non-ICI,OS,8.4,PMID:31582355,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-a4abe5b031-01,ESCA,PD-1,ORR,16.7,PMID:33026938,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-ba043c8be9-01,ESCA,PD-1+CTLA-4,ORR,28,PMID:35108470,prior_locator_verified,CheckMate 648 all-randomized ORR; FDA 2024 sponsor briefing Figure 2.3.2.2-6,
+cancer-ici-response-estimates,ICI-b6aab72384-01,ESCA,PD-1+CTLA-4,DOR,11.1,PMID:35108470,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f8c46d915d-01,ESCA,PD-1+CTLA-4,OS,12.7,PMID:35108470,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-1a821e877e-01,ESCA,PD-1+CTLA-4,ORR,35,PMID:35108470,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-0d68475749-01,ESCA,PD-1+CTLA-4,OS,13.7,PMID:35108470,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-7adb9b1ccb-01,ESCA,PD-1+chemotherapy,ORR,47,PMID:35108470,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-30fdf982ae-01,ESCA,PD-1+chemotherapy,ORR,53,PMID:35108470,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-975d83e915-01,FL,PD-1,ORR,4,DOI:10.1182/blood.2019004753,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-7b62042b23-01,FL,PD-1,CRR,1,DOI:10.1182/blood.2019004753,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ad7e64190e-01,FL,PD-1,PRR,3,DOI:10.1182/blood.2019004753,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a65827d41e-01,FL,PD-1,DOR,10.9,DOI:10.1182/blood.2019004753,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-a85db4ba09-01,FL,PD-1,PFS,2.2,DOI:10.1182/blood.2019004753,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-d2872bd715-01,FL,PD-1,OS,,DOI:10.1182/blood.2019004753,audited_gap,Abstract,
+cancer-ici-response-estimates,ICI-abaced8733-01,FL,PD-1,OS_RATE,78,DOI:10.1182/blood.2019004753,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-b6231dd107-01,FL,PD-1,OS_RATE,88,DOI:10.1182/blood.2019004753,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-b18146c252-01,FL,PD-1,ORR,11,DOI:10.1182/blood.2019004753,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-e680dc5342-01,GBM,PD-1,ORR,7.8,PMID:32437507,prior_locator_verified,"Results, response-evaluable population",
+cancer-ici-response-estimates,ICI-36ae967c82-01,GBM,PD-1,OS,9.8,PMID:32437507,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2adc60ea45-01,GBM,PD-1,OS_RATE,42,PMID:32437507,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-1b70a4143f-01,GBM,non-ICI,ORR,23.1,PMID:32437507,prior_locator_verified,"Results, response-evaluable population",excluded_from_pooling
+cancer-ici-response-estimates,ICI-6fd5feb80c-01,GBM,non-ICI,OS,10,PMID:32437507,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f24b5cba72-01,GBM,non-ICI,OS_RATE,42,PMID:32437507,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-78740348d5-01,HL,PD-1,ORR,69,PMID:29584546,prior_locator_verified,"Abstract, Results",excluded_from_pooling
+cancer-ici-response-estimates,ICI-ccd67105ee-01,HL,PD-1,DOR,16.6,PMID:29584546,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-0401547eae-01,HL,PD-1,PFS,14.7,PMID:29584546,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2588285332-01,HL,PD-1,IRORR,71,PMID:29584546,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5376b48c43-01,HL,PD-1,ORR,71.2,PMID:37530622,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-92255bb6fc-01,HL,PD-1,ORR,69,PMID:28441111,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-1a1f13bbdd-01,HL,PD-1,CRR,22.4,PMID:28441111,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-7049d9192b-01,HL,PD-1,ORR,71.9,PMID:31409671,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-721ac01874-01,HL,PD-1,CRR,27.6,PMID:31409671,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-61867d5430-01,HNSC,PD-1,ORR,19,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-9ae9f65246-01,HNSC,PD-1,OS,12.3,PMID:31679945,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-3d65890d97-01,HNSC,PD-1,DOR,23.4,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3db57f96fc-01,HNSC,PD-1,ORR,17,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1b0d20ad25-01,HNSC,PD-1,OS,11.6,PMID:31679945,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-4c8dcac8de-01,HNSC,PD-1,DOR,22.6,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-743e9b1529-01,HNSC,PD-1,ORR,23,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-400ae9a1d4-01,HNSC,PD-1,OS,14.9,PMID:31679945,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-6d0e8d650e-01,HNSC,PD-1,DOR,22.6,PMID:31679945,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-115459b2ac-01,HNSC,PD-L1,ORR,16.2,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1c58e794bd-01,HNSC,PD-L1,PFS,2.1,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-0806626c27-01,HNSC,PD-L1,OS,7.1,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-68b73b8a7c-01,HNSC,PD-L1,OS_RATE,33.6,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-63197a5a9a-01,HNSC,PD-L1,PFS_RATE,14.6,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-33e04a560a-01,HNSC,PD-L1,ORR,29.4,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-399cb5d0cb-01,HNSC,PD-L1,ORR,10.9,DOI:10.1016/j.ejca.2018.11.015,prior_locator_citation_only,,numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-ae503046aa-01,HNSC,PD-L1,ORR,9.2,PMID:30383184,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-4614dbd717-01,HNSC,PD-L1+CTLA-4,ORR,7.8,PMID:30383184,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-c9a3ab079d-01,HNSC,CTLA-4,ORR,1.6,PMID:30383184,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-876f6088ed-01,HNSC_HPVneg,PD-1,ORR,16,PMID:29955135,prior_locator_verified,Table 3,
+cancer-ici-response-estimates,ICI-ab6de4e7c2-01,HNSC_HPVneg,PD-1,ORR,14,PMID:27646946,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-525a85c4f5-01,HNSC_HPVneg,PD-1,PFS_RATE,20,PMID:27646946,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-092506171c-01,HNSC_HPVneg,PD-1,OS_RATE,56,PMID:27646946,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-495787714d-01,HNSC_HPVpos,PD-1,ORR,24,PMID:29955135,prior_locator_verified,Table 3,
+cancer-ici-response-estimates,ICI-8c52580418-01,HNSC_HPVpos,PD-1,ORR,32,PMID:27646946,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-3023486645-01,HNSC_HPVpos,PD-1,PFS_RATE,37,PMID:27646946,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-3fb6937ac4-01,HNSC_HPVpos,PD-1,OS_RATE,70,PMID:27646946,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-7487baac53-01,KICH,PD-1,ORR,9.5,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-40be47aad0-01,RCC_NCC,PD-1,ORR,26.7,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-5b931e41ff-01,RCC_NCC,PD-1,CRR,6.7,PMID:33529058,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c6f8144c0b-01,RCC_NCC,PD-1,DOR,29,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-74ee393f60-01,RCC_NCC,PD-1,PFS,4.2,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-048150ac07-01,RCC_NCC,PD-1,OS,28.9,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-e1696a6eee-01,RCC_NCC,PD-1,ORR,24.8,DOI:10.1200/JCO.2019.37.15_suppl.4569,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ba2c15eea4-01,RCC_NCC,PD-1,CRR,4.8,DOI:10.1200/JCO.2019.37.15_suppl.4569,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-12222b7086-01,RCC_NCC_UNCLASSIFIED,PD-1,ORR,30.8,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-3c0861434d-01,RCC_NCC_UNCLASSIFIED,PD-1,ORR,34.6,DOI:10.1200/JCO.2019.37.15_suppl.4569,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d1d7ea7f64-01,KIRC,PD-1,ORR,25,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-cde7728448-01,KIRC,PD-1,OS,25,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-3f9c08e582-01,KIRC,PD-1,PFS,4.6,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-a76671931a-01,KIRC,non-ICI,ORR,5,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",excluded_from_pooling
+cancer-ici-response-estimates,ICI-ba11a5b1b1-01,KIRC,non-ICI,OS,19.6,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-fbc99ba6f6-01,KIRC,non-ICI,PFS,4.4,PMID:26406148,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-dd6e17da69-01,KIRC,PD-1+CTLA-4,ORR,41.6,PMID:29562145,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a400b2be5c-01,KIRC,PD-1+CTLA-4,CRR,9.4,PMID:29562145,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5993a4ad6a-01,KIRC,PD-1+CTLA-4,PFS,11.6,PMID:29562145,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-88ba2f2172-01,KIRC,PD-1+CTLA-4,OS,,PMID:29562145,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-6b2e5800e3-01,KIRC,PD-1+CTLA-4,OS_RATE,75,PMID:29562145,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-79299c47c8-01,KIRC,PD-1+CTLA-4,DOR,,PMID:29562145,audited_gap,Table 2,
+cancer-ici-response-estimates,ICI-558467b418-01,KIRC,non-ICI,ORR,26.5,PMID:29562145,prior_locator_source_section,"Abstract, RESULTS",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-4bd4533ca2-01,KIRC,non-ICI,CRR,1,PMID:29562145,prior_locator_verified,"Abstract, RESULTS",excluded_from_pooling
+cancer-ici-response-estimates,ICI-6faf5ed780-01,KIRC,non-ICI,PFS,8.4,PMID:29562145,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-fc755f7866-01,KIRC,non-ICI,OS,26,PMID:29562145,prior_locator_verified,RESULTS > EFFICACY > Exploratory Outcomes According to PD-L1 Expression Level,
+cancer-ici-response-estimates,ICI-d7ddba5ce8-01,KIRC,non-ICI,OS_RATE,60,PMID:29562145,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-e02a6a2af9-01,KIRC,PD-1+CTLA-4,ORR,39,PMID:29562145,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2ba1f4b363-01,KIRC,PD-1+CTLA-4,PFS,12.4,PMID:29562145,prior_locator_verified,RESULTS > EFFICACY > Secondary End Points in the Intention-to-Treat Population,
+cancer-ici-response-estimates,ICI-75c08bb4ec-01,KIRC,PD-1+CTLA-4,OS,,PMID:29562145,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-74f4bc9574-01,KIRC,PD-L1,ORR,25,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response-estimates,ICI-6f3c5a80c9-01,KIRC,PD-L1,CRR,11,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response-estimates,ICI-929e53c50f-01,KIRC,PD-L1,PFS,6.1,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response-estimates,ICI-e6fa7070be-01,KIRC,PD-L1,ORR,28,PMID:29867230,prior_locator_verified,Results > Efficacy.,response_denominator_missing
+cancer-ici-response-estimates,ICI-7be940d63d-01,KIRC,PD-L1,PFS_HR,1.03,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response-estimates,ICI-06c2905f2c-01,KIRC,PD-L1+VEGF,ORR,32,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response-estimates,ICI-c1bf57d928-01,KIRC,PD-L1+VEGF,PFS,11.7,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response-estimates,ICI-36e5ed46b2-01,KIRC,PD-L1+VEGF,ORR,46,PMID:29867230,prior_locator_verified,Results > Efficacy.,response_denominator_missing
+cancer-ici-response-estimates,ICI-b71d41ed18-01,KIRC,PD-L1+VEGF,PFS_HR,0.64,PMID:29867230,prior_locator_verified,Results > Efficacy.,
+cancer-ici-response-estimates,ICI-cc9a5e0825-01,KIRP,PD-1,ORR,28.8,PMID:33529058,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-f9208d1721-01,LIHC,PD-1,ORR,20,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-6b55e578ad-01,LIHC,PD-1,DCR,64,PMID:28434648,prior_locator_verified,Table 4:,
+cancer-ici-response-estimates,ICI-587c2a8f1e-01,LIHC,PD-1,DOR,9.9,PMID:28434648,prior_locator_verified,Table 4:,
+cancer-ici-response-estimates,ICI-64664fa73d-01,LIHC,PD-1,OS_RATE,83,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-cc67a3135f-01,LIHC,PD-1,OS_RATE,74,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-7f5eb696e1-01,LIHC,PD-1,ORR,15,PMID:28434648,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-ec4200c61e-01,LIHC,PD-1,DCR,58,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-78750f0529-01,LIHC,PD-1,DOR,17,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-337217ea27-01,LIHC,PD-1,OS,15,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-31c4f078ca-01,LIHC,PD-1,OS_RATE,66,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-bbaeb9fa63-01,LIHC,PD-1,OS_RATE,66,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-8a96e6cba9-01,LIHC,PD-1,ORR,23,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-6edcef92d1-01,LIHC,PD-1,ORR,19,PMID:28434648,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-0ad7a7d2d8-01,LIHC,PD-1+CTLA-4,ORR,32,PMID:33001135,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ee55df807c-01,LIHC,PD-1+CTLA-4,DCR,64,PMID:33001135,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d064e71065-01,LIHC,PD-1+CTLA-4,DOR,,PMID:33001135,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-af01af16b5-01,LIHC,PD-1+CTLA-4,OS,22.8,PMID:33001135,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-ddd7f98d43-01,LIHC,PD-1+CTLA-4,ORR,27,PMID:33001135,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6e978d0f58-01,LIHC,PD-1+CTLA-4,DOR,15.2,PMID:33001135,prior_locator_verified,Table.,
+cancer-ici-response-estimates,ICI-fee7335545-01,LIHC,PD-1+CTLA-4,ORR,29,PMID:33001135,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6f4689caf8-01,LIHC,PD-1+CTLA-4,DOR,21.7,PMID:33001135,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f198f5c4b6-01,LIHC,PD-1+CTLA-4,ORR,34,PMID:38844309,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2e8f590173-01,LIHC,PD-1+CTLA-4,DOR,51.2,PMID:38844309,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2ed96eedbc-01,LIHC,PD-1+CTLA-4,OS,22.2,PMID:38844309,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e29b6e85a5-01,LIHC,PD-L1,ORR,17,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3356419757-01,LIHC,PD-L1,CRR,1.5,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-212d27db9c-01,LIHC,PD-L1,OS,16.6,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-15e3b58699-01,LIHC,PD-L1,OS_RATE,24.7,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-83bfc48f29-01,LIHC,PD-L1+CTLA-4,ORR,20.1,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-608df4bed5-01,LIHC,PD-L1+CTLA-4,CRR,3.1,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ad825ad73b-01,LIHC,PD-L1+CTLA-4,PFS,3.78,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ef9705b258-01,LIHC,PD-L1+CTLA-4,OS,16.43,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-50158d5c35-01,LIHC,PD-L1+CTLA-4,OS_RATE,30.7,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-243fff63b6-01,LIHC,non-ICI,ORR,5.1,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f834cd0444-01,LIHC,non-ICI,CRR,0,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-17b105bce4-01,LIHC,non-ICI,PFS,4.07,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-35b9cfa565-01,LIHC,non-ICI,OS,13.77,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1a577b99d3-01,LIHC,non-ICI,OS_RATE,20.2,DOI:10.1056/EVIDoa2100070,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-bbe300d326-01,LUAD,PD-1,ORR,19,PMID:26412456,prior_locator_verified,Results > Efficacy,
+cancer-ici-response-estimates,ICI-4bb87fd546-01,LUAD,PD-1,OS,12.2,PMID:26412456,prior_locator_verified,Results > Efficacy,
+cancer-ici-response-estimates,ICI-a77be98e0c-01,LUAD,PD-1,PFS,2.3,PMID:26412456,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e49237a35b-01,LUAD,PD-1,OS_RATE,51,PMID:26412456,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-59b50426f3-01,LUAD,PD-1,OS_RATE,39,PMID:26412456,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-21dbb61b2b-01,LUAD,PD-1,ORR,31,PMID:26412456,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-0e85cfe55d-01,LUAD,PD-1,OS,17.7,PMID:26412456,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-9abbc81fd4-01,LUAD,PD-1,ORR,36,PMID:26412456,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-6a742a88f1-01,LUAD,PD-1,OS,19.4,PMID:26412456,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d7be178df9-01,LUAD,PD-1,ORR,9,PMID:26412456,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-701b430ad3-01,LUAD,PD-1,OS,10.5,PMID:26412456,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-0f54d83fe4-01,LUAD,PD-1,ORR,44.8,PMID:27718847,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1541540c6b-01,LUAD,PD-1,PFS,10.3,PMID:27718847,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-422127f512-01,LUAD,PD-1,OS_RATE,80.2,PMID:27718847,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-629c395ded-01,LUAD,PD-1+CTLA-4,ORR,35.9,PMID:31562796,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-baed09d614-01,LUAD,PD-1+CTLA-4,CRR,5.8,PMID:31562796,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-0ef4198abe-01,LUAD,PD-1+CTLA-4,DOR,23.2,PMID:31562796,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f7bf901d27-01,LUAD,PD-1+CTLA-4,PFS,5.1,PMID:31562796,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5cc9d59a69-01,LUAD,PD-1+CTLA-4,OS,17.1,PMID:31562796,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-52803ba4cf-01,LUAD,PD-1+CTLA-4,OS_RATE,24,PMID:36223558,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-e0081e5893-01,NSCLC,PD-L1,ORR,38.3,PMID:32997907,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-4439b03c5c-01,NSCLC,PD-L1,DOR,,PMID:32997907,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2c41aa9242-01,NSCLC,PD-L1,PFS,8.1,PMID:32997907,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-919fa6659e-01,NSCLC,PD-L1,OS,20.2,PMID:32997907,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-25b2af6aac-01,LUAD,PD-L1,ORR,,PMID:27979383,audited_gap,,
+cancer-ici-response-estimates,ICI-ab42735a77-01,LUAD,PD-L1,OS,13.8,PMID:27979383,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-b3d0d4438b-01,LUAD_STK11,PD-1,ORR,8,PMID:29773717,prior_locator_not_verified,,excluded_from_pooling;numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-40ee4f78ab-01,LUAD_STK11,PD-1,ORR,8,PMID:29773717,prior_locator_not_verified,,excluded_from_pooling;numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-40ee4f78ab-02,LUAD_STK11,PD-1,ORR,8,PMID:29773717,prior_locator_not_verified,,excluded_from_pooling;numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-2e06c5f7d3-01,LUAD_STK11,PD-1+/-CTLA-4,ORR,7.4,PMID:29773717,prior_locator_verified,"Figure 1A; Results, Patient characteristics",excluded_from_pooling
+cancer-ici-response-estimates,ICI-1c401c554d-01,LUAD_STK11,PD-1,ORR,0,PMID:29773717,prior_locator_verified,"Figure 1B; Results, Co-mutations in STK11/LKB1",excluded_from_pooling;small_denominator
+cancer-ici-response-estimates,ICI-be21515948-01,LUSC,PD-1,ORR,20,PMID:26028407,prior_locator_verified,Table 2,
+cancer-ici-response-estimates,ICI-5b813640a5-01,LUSC,PD-1,CRR,0.7407407407407407,PMID:26028407,prior_locator_verified,Table 2,
+cancer-ici-response-estimates,ICI-79f3d709fb-01,LUSC,PD-1,PFS,3.5,PMID:26028407,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-20c769fcb5-01,LUSC,PD-1,OS,9.2,PMID:26028407,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-20ef0a8cde-01,LUSC,PD-1,OS_RATE,42,PMID:26028407,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-c6a98e5172-01,LUSC,PD-1,DOR,,PMID:26028407,audited_gap,Table 2,
+cancer-ici-response-estimates,ICI-a55f83933e-01,LUSC,PD-1,DOR,19.9,DOI:10.1200/JCO.20.01605,prior_locator_verified,RESULTS > Tumor Response,
+cancer-ici-response-estimates,ICI-fef3211a5c-01,LUSC,PD-1,ORR,44.8,PMID:27718847,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-bc41e5a2f8-01,LUSC,PD-1,PFS,10.3,PMID:27718847,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-387932c49f-01,LUSC,PD-1,OS,,PMID:27718847,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d9f97a062f-01,MBL,PD-1,ORR,0,PMID:36808285,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-fd1d20b4a9-01,MBL,PD-1,PFS,1.4,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-c9425f6f6e-01,MBL,PD-1,OS,7.4,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-df9bc910a7-01,MBL,PD-1,PFS_RATE,0,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-9374924e16-01,MBL,PD-1+CTLA-4,ORR,0,PMID:36808285,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-22ba3b1e19-01,MBL,PD-1+CTLA-4,PFS,2.8,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-a36540dcf8-01,MBL,PD-1+CTLA-4,OS,22.2,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-ae96c8bb72-01,MBL,PD-1+CTLA-4,PFS_RATE,20,PMID:36808285,prior_locator_verified,Results > No Survival Benefit Was Observed Across Cohorts,
+cancer-ici-response-estimates,ICI-a5110c10af-01,MDS,PD-1,ORR,0,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response-estimates,ICI-00c2bac28b-01,MDS,PD-1,CRR,0,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response-estimates,ICI-5a37718a4b-01,MDS,PD-1,MARROW_CR,19,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response-estimates,ICI-74fb282c7c-01,MDS,PD-1,HEMATOLOGIC_IMPROVEMENT,19,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response-estimates,ICI-8822167caa-01,MDS,PD-1,CYTOGENETIC_RESPONSE,22,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response-estimates,ICI-9aec2e4744-01,MDS,PD-1,STABLE_DISEASE,44,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response-estimates,ICI-b7d9a56e32-01,MDS,PD-1,PROGRESSIVE_DISEASE,37,DOI:10.1080/10428194.2022.2034155,prior_locator_verified,"Table 3; Results, Efficacy",
+cancer-ici-response-estimates,ICI-13b1a410d0-01,MDS,PD-1,OS,6,DOI:10.1080/10428194.2022.2034155,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ba05b51ac5-01,MDS,PD-1,OS_RATE,17,DOI:10.1080/10428194.2022.2034155,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-7502d759c8-01,MENINGIOMA,PD-1,ORR,0,PMID:35289329,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-52e16b7ccb-01,MENINGIOMA,PD-1,PFS_RATE,48,PMID:35289329,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2843a019c0-01,MENINGIOMA,PD-1,PFS,7.6,PMID:35289329,prior_locator_verified,Results > Patients > Efficacy,
+cancer-ici-response-estimates,ICI-784f9b8f57-01,MENINGIOMA,PD-1,OS,20.2,PMID:35289329,prior_locator_verified,Supplementary Figure 2,
+cancer-ici-response-estimates,ICI-6391ac3bad-01,MENINGIOMA,PD-1,PFS_RATE,50,PMID:35289329,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2ddb5630e5-01,MENINGIOMA,PD-1,PFS,8.3,PMID:35289329,prior_locator_verified,Results > Patients > Efficacy,
+cancer-ici-response-estimates,ICI-96dcba4ace-01,MESO,PD-1,ORR,8.5,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-789050bded-01,MESO,PD-1,CRR,0,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-94c74816c2-01,MESO,PD-1,DOR,14.3,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-af48088927-01,MESO,PD-1,OS,10,PMID:33836153,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-d5599a7308-01,MESO,PD-1,PFS,2.1,PMID:33836153,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-17009f0210-01,MESO,PD-1,PFS_RATE,27,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2ba924d213-01,MESO,PD-1,PFS_RATE,11,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-b69c9f3b38-01,MESO,PD-1,OS_RATE,45,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-436bf42bcc-01,MESO,PD-1+CTLA-4,ORR,40,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-77a7f6d5bb-01,MESO,PD-1+CTLA-4,OS,18.1,PMID:33485464,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-b076397f08-01,MESO,PD-1+CTLA-4,PFS,6.8,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3eedef77bf-01,MESO,PD-1+CTLA-4,DOR,11,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-e83f5e10aa-01,MESO,PD-1+CTLA-4,OS_RATE,41,PMID:33485464,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-fc34e216db-01,MESO,non-ICI,ORR,43,PMID:33485464,prior_locator_source_section,"Abstract, Findings",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5ee55a04ad-01,MESO,non-ICI,OS,14.1,PMID:33485464,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-ec1c116e7f-01,MESO,non-ICI,PFS,7.2,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d8b4271412-01,MESO,non-ICI,DOR,6.7,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d60e8738c3-01,MESO,non-ICI,OS_RATE,27,PMID:33485464,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-a2b8ab3474-01,MESO,PD-1+CTLA-4,OS_RATE,23,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-334657565c-01,MESO,PD-1+CTLA-4,DOR,11.6,PMID:33485464,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-fcb6ecd25e-01,MESO,PD-L1,ORR,9,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-acf81d8aa7-01,MESO,PD-L1,DCR,58,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-bc313ba925-01,MESO,PD-L1,DOR,15.2,PMID:30605211,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a3fbd53406-01,MESO,PD-L1,PFS,4.1,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-5e9ecac834-01,MESO,PD-L1,OS,10.7,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ded3f3a8bb-01,MESO,PD-L1,PFS_RATE,17.4,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d6ede0840b-01,MESO,PD-L1,OS_RATE,43.8,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-7599e31ef1-01,MESO,PD-L1,ORR,19,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6046d61b34-01,MESO,PD-L1,ORR,7,PMID:30605211,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-94980ac18f-01,MM,PD-1,ORR,0,PMID:30937889,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a45ca3ed48-01,MM,PD-1,DCR,56.7,PMID:30937889,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-e9a3cf4215-01,NBL,PD-1,ORR,0,PMID:31812554,prior_locator_verified,Table 1; Table 4 footnote; Results,
+cancer-ici-response-estimates,ICI-0415d548a7-01,NEC_LUNG_LARGECELL,PD-1,ORR,29.4,PMID:34590004,prior_locator_located_unverified,Results > Efficacy of Nivolumab,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ccaabf1e7d-01,NEN_EXTRAPULMONARY_HG,PD-1,ORR,3.4,DOI:10.1038/s41416-020-0775-0,prior_locator_verified,Table 2,
+cancer-ici-response-estimates,ICI-460c94526d-01,NEN_EXTRAPULMONARY_HG,PD-1,CRR,0,DOI:10.1038/s41416-020-0775-0,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-dfafa7f774-01,NEN_EXTRAPULMONARY_HG,PD-1,DCR,24.1,DOI:10.1038/s41416-020-0775-0,prior_locator_verified,Results > Outcomes and adverse events,
+cancer-ici-response-estimates,ICI-c01eb65fd7-01,NEN_EXTRAPULMONARY_HG,PD-1,DOR,13,DOI:10.1038/s41416-020-0775-0,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-563a6f8b09-01,NEN_EXTRAPULMONARY_HG,PD-1,PFS,2.1,DOI:10.1038/s41416-020-0775-0,prior_locator_verified,Fig. 2,
+cancer-ici-response-estimates,ICI-bb868e2991-01,NEN_EXTRAPULMONARY_HG,PD-1,OS,4.7,DOI:10.1038/s41416-020-0775-0,prior_locator_verified,Results > Outcomes and adverse events,
+cancer-ici-response-estimates,ICI-88d294e374-01,NEC_LUNG_LARGECELL,PD-1+CTLA-4,ORR,25,DOI:10.1158/1078-0432.CCR-19-3356,prior_locator_verified,RESULTS > Outcomes,
+cancer-ici-response-estimates,ICI-60d4f8bbbc-01,NEC_LUNG_LARGECELL,PD-1+CTLA-4,CRR,3,DOI:10.1158/1078-0432.CCR-19-3356,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-31747d5688-01,NEC_LUNG_LARGECELL,PD-1+CTLA-4,ORR,44,DOI:10.1158/1078-0432.CCR-19-3356,prior_locator_verified,"Abstract, Results:",
+cancer-ici-response-estimates,ICI-b5215aa0e8-01,NEC_LUNG_LARGECELL,PD-1+CTLA-4,PFS,4,DOI:10.1158/1078-0432.CCR-19-3356,prior_locator_located_unverified,RESULTS > Outcomes,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-738e4fb409-01,NEC_LUNG_LARGECELL,PD-1+CTLA-4,OS,11,DOI:10.1158/1078-0432.CCR-19-3356,prior_locator_located_unverified,RESULTS > Outcomes,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-0bf25b2b25-01,NEC_LUNG_LARGECELL,PD-1+CTLA-4,PFS_RATE,31,DOI:10.1158/1078-0432.CCR-19-3356,prior_locator_located_unverified,RESULTS > Outcomes,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-e715592be4-01,NEC_LUNG_LARGECELL,PD-1+CTLA-4,ORR,26,PMID:33882143,prior_locator_verified,"Abstract; Results, Patient Characteristics",excluded_from_pooling;response_denominator_missing
+cancer-ici-response-estimates,ICI-7b3b08cecf-01,NEC_MERKEL,PD-1,ORR,56,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-f3eaf068a8-01,NEC_MERKEL,PD-1,CRR,24,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-06a156aa56-01,NEC_MERKEL,PD-1,PR_RATE,32,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-7854e29adf-01,NEC_MERKEL,PD-1,DOR,,PMID:30726175,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-a768796126-01,NEC_MERKEL,PD-1,PFS,16.8,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-a527ac98b1-01,NEC_MERKEL,PD-1,OS,,PMID:30726175,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-87addd4403-01,NEC_MERKEL,PD-1,PFS_RATE,48.3,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-a36ef6e5bd-01,NEC_MERKEL,PD-1,OS_RATE,68.7,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-1d5ca61403-01,NEC_MERKEL,PD-1,ORR,59,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-7cff0da616-01,NEC_MERKEL,PD-1,ORR,53,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-ccdfa8d759-01,NEC_MERKEL,PD-L1,ORR,31.8,PMID:27592805,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-99299f59bb-01,NEC_MERKEL,PD-L1,CRR,9.1,PMID:27592805,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-773d20dd9d-01,NEC_MERKEL,PD-L1,DOR_RATE,92,PMID:27592805,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-6e7e54bf2e-01,NEC_MERKEL,PD-L1,ORR,62.1,PMID:29566106,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-dde3cbb439-01,NEC_MERKEL,PD-L1,DOR_RATE,83,PMID:29566106,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-0a630591c2-01,NET_NONPANCREATIC,PD-1+CTLA-4,ORR,0,PMID:31969335,prior_locator_verified,"Abstract, Results:",
+cancer-ici-response-estimates,ICI-8b52db339e-01,NET_NONPANCREATIC,PD-1+CTLA-4,PFS_RATE,14,PMID:31969335,prior_locator_verified,RESULTS > Outcomes,
+cancer-ici-response-estimates,ICI-6a3f52e698-01,NET_NONPANCREATIC,PD-1+CTLA-4,ORR,25,PMID:31969335,prior_locator_verified,Table 3,excluded_from_pooling
+cancer-ici-response-estimates,ICI-c8a3a23b71-01,NET_NONPANCREATIC,PD-1+CTLA-4,CBR,31,PMID:31969335,prior_locator_verified,RESULTS > Outcomes,
+cancer-ici-response-estimates,ICI-a090cf83d4-01,NET_NONPANCREATIC,PD-1+CTLA-4,PFS,4,PMID:31969335,prior_locator_verified,RESULTS > Outcomes,
+cancer-ici-response-estimates,ICI-ea71995808-01,NET_NONPANCREATIC,PD-1+CTLA-4,PFS_RATE,31,PMID:31969335,prior_locator_verified,RESULTS > Outcomes,
+cancer-ici-response-estimates,ICI-75b2111485-01,NET_NONPANCREATIC,PD-1+CTLA-4,OS,11,PMID:31969335,prior_locator_verified,RESULTS > Outcomes,
+cancer-ici-response-estimates,ICI-13b5aaab8c-01,NET_NONPANCREATIC,PD-1+CTLA-4,ORR,44,PMID:31969335,prior_locator_verified,"Abstract, Results:",excluded_from_pooling
+cancer-ici-response-estimates,ICI-355f32ded8-01,NET_NONPANCREATIC,PD-1+CTLA-4,PFS_RATE,44,PMID:31969335,prior_locator_verified,RESULTS > Outcomes,
+cancer-ici-response-estimates,ICI-f7f5629e48-01,NET_PANCREAS,PD-1+CTLA-4,ORR,11,PMID:40588371,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-fe80bb5e52-01,NET_PANCREAS,PD-1+CTLA-4,CLINICAL_BENEFIT_RATE,26,PMID:40588371,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-b246e329ef-01,NET_PANCREAS,PD-1+CTLA-4,PFS,3,PMID:40588371,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-c89ab52570-01,NET_PANCREAS,PD-1+CTLA-4,OS,24,PMID:40588371,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-de9e5a30cc-01,NET_PANCREAS,PD-1+CTLA-4,DOR,,PMID:40588371,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-32cfae9d16-01,NPC,PD-1,ORR,25.9,PMID:28837405,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-e2e0c7bc2d-01,NPC,PD-1,CRR,0,PMID:28837405,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-49f4b7f6b3-01,NPC,PD-1,DCR,77.8,PMID:28837405,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-afbed127c7-01,NPC,PD-1,PFS,5.6,PMID:28837405,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d5996912bf-01,NPC,PD-1,PFS_RATE,49.7,PMID:28837405,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-83f29e3c08-01,NPC,PD-1,PFS_RATE,30.1,PMID:28837405,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f4791d45c7-01,NPC,PD-1,OS,,PMID:28837405,audited_gap,,
+cancer-ici-response-estimates,ICI-c9c49d3d02-01,NPC,PD-1,OS_RATE,66.7,PMID:28837405,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2c3303896a-01,NPC,PD-1,DOR,,PMID:28837405,audited_gap,,small_denominator
+cancer-ici-response-estimates,ICI-d9b891ea7b-01,OV,PD-1,ORR,8,PMID:31046082,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-055dc2375c-01,OV,PD-1,ORR,7.4,PMID:31046082,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-18809bdc03-01,OV,PD-1,DCR,37.2,PMID:31046082,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-087048cc5d-01,OV,PD-1,DOR,8.2,PMID:31046082,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-49c24efa4a-01,OV,PD-1,ORR,9.9,PMID:31046082,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f409f20189-01,OV,PD-1,DCR,37.4,PMID:31046082,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-c776b9c9ae-01,OV,PD-1,DOR,,PMID:31046082,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-c42fbc7316-01,OV,PD-1,ORR,4.1,PMID:31046082,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-24dc92c1d2-01,OV,PD-1,ORR,5.7,PMID:31046082,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-ff2a7114e3-01,OV,PD-1,ORR,10,PMID:31046082,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-4813ec6cff-01,OV,PD-L1,ORR,9.6,PMID:30676622,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-623c9361ee-01,OV,PD-L1,CRR,0.8,PMID:30676622,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-1fb161edd5-01,OV,PD-L1,PR_RATE,8.8,PMID:30676622,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-33fc6052f9-01,OV,PD-L1,OS,11.2,PMID:30676622,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-5a315e2755-01,OV,PD-L1,PFS_RATE,10.2,PMID:30676622,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f39b833d2e-01,PAAD,PD-1,ORR,0,PMID:30557521,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-7a6ef511cd-01,PAAD,PD-1,PFS,1.7,NCT02054806,prior_locator_verified,"Results, Outcome Measures: Progression Free Survival (PFS)",
+cancer-ici-response-estimates,ICI-73ebd85448-01,PAAD,PD-1,OS,3.9,NCT02054806,prior_locator_verified,"Results, Outcome Measures: Overall Survival (OS)",
+cancer-ici-response-estimates,ICI-75483f30c4-01,PAAD,PD-1,ORR,18.2,PMID:31682550,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f45b1f0a1b-01,PAAD,PD-1,PFS,2,PMID:31682550,prior_locator_located_unverified,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-9764b17ea3-01,PAAD,PD-1,OS,4,PMID:31682550,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-f36557e601-01,PAAD,PD-1,DOR,13.4,PMID:31682550,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-221c1cd978-01,PCPG,PD-1,ORR,9,DOI:10.3390/cancers12082307,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-a1a6f8e91c-01,PCPG,PD-1,NON_PROGRESSION_RATE,40,DOI:10.3390/cancers12082307,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-4d31fb10e5-01,PCPG,PD-1,CBR,72,DOI:10.3390/cancers12082307,prior_locator_verified,3. Results > 3.2. Efficacy,
+cancer-ici-response-estimates,ICI-aa8e0e890b-01,PCPG,PD-1,PFS,5.7,DOI:10.3390/cancers12082307,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-6281a487c7-01,PCPG,PD-1,OS,19,DOI:10.3390/cancers12082307,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-fd7e905841-01,PMBCL,PD-1,ORR,41.5,PMID:37130017,prior_locator_verified,Results and discussion,
+cancer-ici-response-estimates,ICI-1caa113469-01,PMBCL,PD-1,CRR,20.8,PMID:37130017,prior_locator_verified,Abstract,
+cancer-ici-response-estimates,ICI-de9631f7ee-01,PMBCL,PD-1,PR,20.8,PMID:37130017,prior_locator_verified,Results and discussion,
+cancer-ici-response-estimates,ICI-43337d59b5-01,PMBCL,PD-1,DOR,,PMID:37130017,audited_gap,Results and discussion,
+cancer-ici-response-estimates,ICI-b82af851d3-01,PMBCL,PD-1,PFS,4.3,PMID:37130017,prior_locator_verified,Results and discussion,
+cancer-ici-response-estimates,ICI-80526a3d45-01,PMBCL,PD-1,PFS_RATE,33,PMID:37130017,prior_locator_source_section,Abstract,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-823bcca221-01,PMBCL,PD-1,OS,22.3,PMID:37130017,prior_locator_verified,Results and discussion,
+cancer-ici-response-estimates,ICI-993251207f-01,PMBCL,PD-1,OS_RATE,45.3,PMID:37130017,prior_locator_verified,Results and discussion,
+cancer-ici-response-estimates,ICI-65b09fc32a-01,PRAD,PD-1,ORR,5,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-59d848ef55-01,PRAD,PD-1,DCR,10,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-d713c0dc99-01,PRAD,PD-1,DOR,,PMID:31774688,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-973c34629c-01,PRAD,PD-1,OS,9.5,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-7d7294a673-01,PRAD,PD-1,ORR,3,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-22ad261368-01,PRAD,PD-1,DCR,9,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-dd833f74d7-01,PRAD,PD-1,DOR,10.6,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-9bd6e089dc-01,PRAD,PD-1,OS,7.9,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-88d78f32ac-01,PRAD,PD-1,DCR,22,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-11b6a5fbea-01,PRAD,PD-1,OS,14.1,PMID:31774688,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-f37d406872-01,READ,PD-1,ORR,2.0,,prior_locator_not_applicable,,excluded_from_pooling;no_direct_reference;numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-d0e29b28b2-01,READ_MSS,PD-1,ORR,0,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-9e86265bd9-01,READ_MSS,PD-1,PFS_RATE,11,PMID:26028255,prior_locator_verified,RESULTS > PRIMARY END POINT,
+cancer-ici-response-estimates,ICI-670b86ac82-01,READ_MSS,PD-1,PFS,2.2,PMID:26028255,prior_locator_verified,Figure 2,
+cancer-ici-response-estimates,ICI-045f96bd06-01,READ_MSS,PD-1,OS,5,PMID:26028255,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-157d1b1849-01,SARC_ANGIO,PD-1+CTLA-4,ORR,25,PMID:34380663,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d4b9ddceed-01,SARC_ANGIO,PD-1+CTLA-4,CRR,6.25,PMID:34380663,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-9676c4df19-01,SARC_ANGIO,PD-1+CTLA-4,PFS_RATE,38,PMID:34380663,prior_locator_verified,Results > Outcomes,
+cancer-ici-response-estimates,ICI-a30213aaed-01,SARC_ANGIO,PD-1+CTLA-4,OS,,PMID:34380663,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ca26aa02c1-01,SARC_ANGIO,PD-1+CTLA-4,DOR,,PMID:34380663,audited_gap,"Abstract, Results",small_denominator
+cancer-ici-response-estimates,ICI-31cd333339-01,SARC_ANGIO,PD-1+CTLA-4,ORR,60,PMID:34380663,prior_locator_verified,Results > Outcomes,small_denominator
+cancer-ici-response-estimates,ICI-68f695eab6-01,SARC_ASPS,PD-L1,ORR,37,PMID:37672694,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ac6660f176-01,SARC_ASPS,PD-L1,CRR,1.9,PMID:37672694,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-99df990742-01,SARC_ASPS,PD-L1,PR_COUNT,18,PMID:37672694,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-14ea45d388-01,SARC_ASPS,PD-L1,DCR,90.4,PMID:37672694,prior_locator_verified,"Results, Clinical Activity",
+cancer-ici-response-estimates,ICI-28b78feb76-01,SARC_ASPS,PD-L1,DOR,24.7,PMID:37672694,prior_locator_verified,RESULTS > EFFICACY,
+cancer-ici-response-estimates,ICI-d4d51e026e-01,SARC_ASPS,PD-L1,PFS,20.8,PMID:37672694,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-eb0f232db6-01,SARC_ASPS,PD-L1,TIME_TO_RESPONSE,3.6,PMID:37672694,prior_locator_verified,RESULTS > EFFICACY,
+cancer-ici-response-estimates,ICI-0c6031d882-01,SARC_ASPS,PD-L1,TUMOR_SHRINKAGE,-66.2,PMID:37672694,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c813ebc19a-01,SARC_CHON,PD-1,ORR,20,PMID:28988646,prior_locator_verified,RESULTS,small_denominator
+cancer-ici-response-estimates,ICI-9e0fec3287-01,SARC_CHON,PD-1,CRR,0,PMID:28988646,prior_locator_source_section,"Abstract, Findings:",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-0a58ba9e67-01,SARC_CHOR,PD-1,ORR,12,PMID:37429302,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-9d9b2a4f31-01,SARC_CHOR,PD-1,CRR,0,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-0643a1207d-01,SARC_CHOR,PD-1,DCR,83,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-c22314cfc5-01,SARC_CHOR,PD-1,PFS,6.6,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a95ee422da-01,SARC_CHOR,PD-1,PFS_RATE,31.2,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ee5536cda9-01,SARC_CHOR,PD-1,OS,,PMID:37429302,audited_gap,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-20f6937be0-01,SARC_CHOR,PD-1,OS_RATE,76.6,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a44c21bbe4-01,SARC_CHOR,PD-1,ORR,6.2,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-07b7aa4086-01,SARC_CHOR,PD-1,PFS,2.8,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-55894ec561-01,SARC_CHOR,PD-1,OS,19.7,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-8a975a40d8-01,SARC_DDLPS,PD-1,ORR,10,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-9a6eed08d9-01,SARC_DDLPS,PD-1,CRR,0,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-8a35e54935-01,SARC_DDLPS,PD-1,PFS,2,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-57d61767e6-01,SARC_DDLPS,PD-1,PFS_RATE,44,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-6c88fa7795-01,SARC_DDLPS,PD-1,OS,13,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-731d06342d-01,SARC_DDLPS,PD-1,ORR,20,PMID:28988646,prior_locator_verified,RESULTS,excluded_from_pooling
+cancer-ici-response-estimates,ICI-b2a5638ad3-01,SARC_DDLPS,PD-1,PFS,25,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-3a3134b17b-01,SARC_DDLPS,PD-1,PFS_RATE,60,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-d80348660e-01,SARC_DDLPS,PD-1,ORR,18,PMID:28988646,prior_locator_verified,RESULTS,excluded_from_pooling
+cancer-ici-response-estimates,ICI-c2623b060c-01,SARC_DDLPS,PD-1,CRR,2.5,PMID:28988646,prior_locator_source_section,"Abstract, Findings:",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-39a714d8c2-01,SARC_DDLPS,PD-1,DOR,33,PMID:28988646,prior_locator_verified,RESULTS,small_denominator
+cancer-ici-response-estimates,ICI-e3e64cda80-01,SARC_DDLPS,PD-1,PFS,18,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-397e5355c4-01,SARC_DDLPS,PD-1,OS,49,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-26a43e9c90-01,SARC_DDLPS,PD-1,PFS_RATE,55,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-1f563cc0f2-01,SARC_DDLPS,PD-1,ORR,40,PMID:28988646,prior_locator_verified,RESULTS,excluded_from_pooling
+cancer-ici-response-estimates,ICI-eb8594ede7-01,SARC_DDLPS,PD-1,PFS,30,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-e12e2040c4-01,SARC_DDLPS,PD-1,PFS_RATE,70,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-c21f2242ff-01,SARC_DSRCT,PD-1,ORR,12.5,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-def38304ee-01,SARC_DSRCT,PD-1,CRR,0,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-a2e719caec-01,SARC_EPITH,PD-1,ORR,16.7,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-7c1d85c64f-01,SARC_EPITH,PD-1,ORR,,PMID:31812554,audited_gap,,
+cancer-ici-response-estimates,ICI-70976624e2-01,SARC_EWS,PD-1,ORR,0,PMID:28988646,prior_locator_verified,"Abstract, Findings:",
+cancer-ici-response-estimates,ICI-cc40aee04f-01,SARC_EWS,PD-1,ORR,5,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-ab0d19608c-01,SARC_EWS,PD-1,ORR,20,PMID:28988646,prior_locator_verified,RESULTS,small_denominator
+cancer-ici-response-estimates,ICI-c5a846763f-01,SARC_GIST,PD-1,ORR,0,PMID:39343511,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-3ce1bd36b9-01,SARC_GIST,PD-1+CTLA-4,ORR,0,PMID:39343511,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-c11835f458-01,SARC_KS,PD-1,ORR,62.1,PMID:39356983,prior_locator_verified,"Abstract, RESULTS:",
+cancer-ici-response-estimates,ICI-7d96281f66-01,SARC_KS,PD-1,PFS,28.2,PMID:39356983,prior_locator_verified,"Abstract, RESULTS:",
+cancer-ici-response-estimates,ICI-132bab9102-01,SARC_KS,PD-1,DOR,,PMID:39356983,audited_gap,"Abstract, RESULTS:",
+cancer-ici-response-estimates,ICI-0b50764941-01,SARC_KS,PD-1,DOR_RATE,92.3,PMID:39356983,prior_locator_verified,"Abstract, RESULTS:",
+cancer-ici-response-estimates,ICI-08a3707108-01,SARC_KS,PD-1,ORR,87.5,PMID:39356983,prior_locator_verified,"Abstract, RESULTS:",small_denominator
+cancer-ici-response-estimates,ICI-d94b6bb0c5-01,SARC_LMS,PD-1,ORR,0,PMID:28988646,prior_locator_verified,"Abstract, Findings:",
+cancer-ici-response-estimates,ICI-b2e389837c-01,SARC_LMS,PD-1,ORR,40,PMID:28988646,prior_locator_verified,"Abstract, Findings:",excluded_from_pooling
+cancer-ici-response-estimates,ICI-89ff10c6f4-01,SARC_LMS,PD-1,ORR,20,PMID:28988646,prior_locator_verified,RESULTS,excluded_from_pooling
+cancer-ici-response-estimates,ICI-5def647922-01,SARC_LMS,PD-1,ORR,10,PMID:28988646,prior_locator_source_section,"Abstract, Findings:",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3d5c73d0ec-01,SARC_MPNST,PD-1,ORR,12.5,PMID:41760889,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-3bdccb427b-01,SARC_MPNST,PD-1,CBR,12.5,PMID:41760889,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-702c35cb4f-01,SARC_MPNST,PD-1,DCR,62.5,PMID:41760889,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-02efacfe24-01,SARC_MPNST,PD-1,PFS,3.9,PMID:41760889,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-966f14ec2d-01,SARC_MPNST,PD-1,OS,7.3,PMID:41760889,prior_locator_source_section,Abstract,numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-1f683d7cae-01,SARC_OS,PD-1,ORR,5,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-678e86ab65-01,SARC_OS,PD-1,ORR,0,PMID:28988646,prior_locator_verified,"Abstract, Findings:",
+cancer-ici-response-estimates,ICI-7e796043d1-01,SARC_OS,PD-1,ORR,20,PMID:28988646,prior_locator_verified,RESULTS,small_denominator
+cancer-ici-response-estimates,ICI-ede3c1f501-01,SARC_SMARCA4,PD-1,ORR,25,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-e2003093ee-01,SARC_SMARCA4,PD-1,DCR,50,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-458b806694-01,SARC_SMARCA4,PD-1,DOR,13.3,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-2e46a4627a-01,SARC_SMARCA4,PD-1,PFS,2,PMID:37429302,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a166d88a43-01,SARC_SYN,PD-1,ORR,10,PMID:28988646,prior_locator_source_section,"Abstract, Findings:",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ba2003b708-01,SARC_SYN,PD-1,ORR,18,PMID:28988646,prior_locator_verified,RESULTS,excluded_from_pooling
+cancer-ici-response-estimates,ICI-b09be66c23-01,SARC_SYN,PD-1,PFS,18,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-1a9349bc90-01,SARC_SYN,PD-1,OS,49,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-3685d2df14-01,SARC_SYN,PD-1,PFS_RATE,55,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-27d906d8d8-01,SARC_UPS,PD-1,ORR,23,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-56ba2f840b-01,SARC_UPS,PD-1,CRR,5,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-5a30bd2006-01,SARC_UPS,PD-1,PFS,3,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-72b03ee23c-01,SARC_UPS,PD-1,PFS_RATE,50,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-6b8787485e-01,SARC_UPS,PD-1,OS,12,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-d55e60ec89-01,SARC_UPS,PD-1,ORR,40,PMID:28988646,prior_locator_verified,"Abstract, Findings:",excluded_from_pooling
+cancer-ici-response-estimates,ICI-6b3d5949b5-01,SARC_UPS,PD-1,PFS,30,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-82862f9fa1-01,SARC_UPS,PD-1,PFS_RATE,70,PMID:28988646,prior_locator_verified,RESULTS,
+cancer-ici-response-estimates,ICI-dcdc418d17-01,SARC_UPS,PD-1,ORR,10,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f646ad58df-01,SARC_UPS,PD-1,PFS,2,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1793125d04-01,SARC_UPS,PD-1,PFS_RATE,44,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-40e61d0514-01,SARC_UPS,PD-1,OS,13,DOI:10.1200/JCO.2019.37.15_suppl.11015,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-367f3b5460-01,SCLC,PD-1,ORR,10,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-82493d756c-01,SCLC,PD-1,PFS,1.4,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-41ab79b829-01,SCLC,PD-1,OS,4.4,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-e5955363a7-01,SCLC,PD-1+CTLA-4,ORR,23,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-49a3e7662d-01,SCLC,PD-1+CTLA-4,ORR,19,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f5a30654c5-01,SCLC,PD-1+CTLA-4,ORR,23,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-95006a6a56-01,SCLC,PD-1,ORR,10,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f88742e370-01,SCLC,PD-1+CTLA-4,ORR,19,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-23cadc3e71-01,SCLC,PD-1+CTLA-4,ORR,23,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-42926cc658-01,SCLC,PD-1+CTLA-4,DOR,11.7,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-29c468a953-01,SCLC,PD-1+CTLA-4,OS_RATE,43,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-90f14ccfd4-01,SCLC,PD-L1,ORR,2.3,PMID:30664989,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-af4d467962-01,SCLC,PD-L1,DCR,20.9,PMID:30664989,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-19aa29a628-01,SCLC,PD-L1,PFS,1.4,PMID:30664989,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-5c4b4bdda9-01,SCLC,PD-L1,OS,9.5,PMID:30664989,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-3b629d1cb9-01,SCLC,non-ICI,ORR,10,PMID:30664989,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c7d27e5de6-01,SCLC,non-ICI,DCR,65,PMID:30664989,prior_locator_verified,"Abstract, Results",excluded_from_pooling
+cancer-ici-response-estimates,ICI-60dd3b1cb7-01,SCLC,non-ICI,PFS,4.3,PMID:30664989,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-57d77b4845-01,SCLC,non-ICI,OS,8.7,PMID:30664989,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-c45f7ddf79-01,SKCM,PD-1,ORR,43.7,PMID:28889792,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-7e43e71bba-01,SKCM,PD-1,PFS,6.9,PMID:28889792,prior_locator_verified,RESULTS > EFFICACY,
+cancer-ici-response-estimates,ICI-27c515fc41-01,SKCM,PD-1,OS,36.9,PMID:28889792,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-20b555f216-01,SKCM,PD-1+CTLA-4,ORR,57.6,PMID:28889792,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-20908fed0d-01,SKCM,PD-1+CTLA-4,PFS,11.5,PMID:28889792,prior_locator_verified,RESULTS > EFFICACY,
+cancer-ici-response-estimates,ICI-8aa6f777dd-01,SKCM,PD-1+CTLA-4,OS,72.1,PMID:28889792,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-f5d6afe3dc-01,SKCM,PD-1,ORR,33.7,PMID:25891173,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-53f27342de-01,SKCM,PD-1,PFS_RATE,47.3,PMID:25891173,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-396667cde6-01,SKCM,PD-1,OS_RATE,74.1,PMID:25891173,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-61af6d64ce-01,SKCM,PD-1,ORR,32.9,PMID:25891173,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-13894b2b45-01,SKCM,PD-1,PFS_RATE,46.4,PMID:25891173,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-217504b01d-01,SKCM,PD-1,OS_RATE,68.4,PMID:25891173,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a3004563b1-01,SKCM,PD-1+CTLA-4,ORR,57.6,PMID:26027431,prior_locator_verified,Results > Efficacy,
+cancer-ici-response-estimates,ICI-407f1436e7-01,SKCM,PD-1+CTLA-4,PFS,11.5,PMID:26027431,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-be6e0822b2-01,SKCM,PD-1+CTLA-4,PFS,14,PMID:26027431,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6615510560-01,SKCM,PD-1+CTLA-4,PFS,11.2,PMID:26027431,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-a37f415429-01,SKCM,PD-1,ORR,43.7,PMID:26027431,prior_locator_verified,Results > Efficacy,
+cancer-ici-response-estimates,ICI-fd53c9008e-01,SKCM,PD-1,PFS,6.9,PMID:26027431,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-1937997384-01,SKCM,PD-1,PFS,5.3,PMID:26027431,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-8fd36e30fa-01,SKCM,CTLA-4,ORR,19,PMID:26027431,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-c2331e566c-01,SKCM,CTLA-4,PFS,2.9,PMID:26027431,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-a1bc8eafa7-01,SKCM,PD-1+CTLA-4,ORR,58,PMID:34818112,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ed05cf4cd2-01,STAD,PD-1,ORR,11.6,PMID:29543932,prior_locator_verified,"Abstract, Findings",
+cancer-ici-response-estimates,ICI-d0ddb2caf4-01,STAD,PD-1,CRR,2.3,PMID:29543932,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-57fb7038b4-01,STAD,PD-1,DOR,8.4,PMID:29543932,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a0389e6e5e-01,STAD,PD-1,PFS,2,PMID:29543932,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-cab740b982-01,STAD,PD-1,OS,5.6,PMID:29543932,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-09663178bb-01,STAD,PD-1,OS_RATE,46.5,PMID:29543932,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-ccaccda0f7-01,STAD,PD-1,OS_RATE,23.4,PMID:29543932,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-97f9f92acc-01,STAD,PD-1,ORR,15.5,PMID:29543932,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-33cc121b26-01,STAD,PD-1,DOR,16.3,PMID:29543932,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-0aa97fc15d-01,STAD,PD-1,ORR,6.4,PMID:29543932,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-cf87d987e7-01,STAD,PD-1,DOR,6.9,PMID:29543932,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-50e20a6ba2-01,STAD,PD-L1,ORR,10,PMID:30515672,prior_locator_verified,Table 4,
+cancer-ici-response-estimates,ICI-18e6f590bc-01,STAD,PD-L1,OS,9.1,PMID:30515672,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-3cddba579b-01,STAD,PD-L1,PFS,2.4,PMID:30515672,prior_locator_verified,Results > Antitumor activity,
+cancer-ici-response-estimates,ICI-5da4d6fdf7-01,STAD,PD-L1,DCR,52.5,PMID:30515672,prior_locator_verified,Results > Antitumor activity,
+cancer-ici-response-estimates,ICI-fa05476918-01,STAD,PD-L1,ORR,27.3,PMID:30515672,prior_locator_verified,Results > Antitumor activity,
+cancer-ici-response-estimates,ICI-cb39f9d8c5-01,STAD,PD-L1,ORR,3.7,PMID:30515672,prior_locator_verified,Results > Antitumor activity,
+cancer-ici-response-estimates,ICI-bb314fcb71-01,STAD,PD-L1,ORR,6.7,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-20a62140e7-01,STAD,PD-L1,DCR,56.7,PMID:30717797,prior_locator_verified,Results > Antitumor activity: 1 L-mn subgroup,
+cancer-ici-response-estimates,ICI-6cee5f3ef2-01,STAD,PD-L1,DOR,21.4,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ccd084e87f-01,STAD,PD-L1,PFS,2.8,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-90bfdb9944-01,STAD,PD-L1,OS,11.1,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-40de23bd19-01,STAD,PD-L1,ORR,6.7,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f9f8ec92c2-01,STAD,PD-L1,DCR,28.3,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e3ccda0d08-01,STAD,PD-L1,DOR,3.5,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-8ea7d669ef-01,STAD,PD-L1,PFS,1.4,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2674a4fd11-01,STAD,PD-L1,OS,6.6,PMID:30717797,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-564618bbc1-01,STAD,PD-L1,ORR,7.7,PMID:30717797,prior_locator_verified,Results > Antitumor activity: 1 L-mn subgroup,
+cancer-ici-response-estimates,ICI-56cbc1b355-01,STAD,PD-L1,ORR,3.9,PMID:30717797,prior_locator_verified,Results > Antitumor activity: 1 L-mn subgroup,
+cancer-ici-response-estimates,ICI-e37537fa7c-01,TGCT,PD-1,ORR,0,PMID:29045540,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-2fe21eab0e-01,TGCT,PD-1,CRR,0,PMID:29045540,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-49ee9f3ea2-01,TGCT,PD-1,DCR,16.7,PMID:29045540,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-b738c2d9c3-01,THCA,PD-1,ORR,6.8,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-b9da0f2f10-01,THCA,PD-1,DOR,18.4,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-c9e54f1c59-01,THCA,PD-1,PFS,4.2,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-6c8a074707-01,THCA,PD-1,OS,34.5,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3fda461db1-01,THCA,PD-1,ORR,8.7,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3c091423d1-01,THCA,PD-1,ORR,5.7,DOI:10.1002/cncr.34657,prior_locator_citation_only,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-290c164100-01,THYM,PD-L1,ORR,29,PMID:31639039,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-e531355aa2-01,THYM,PD-L1,CRR,0,PMID:31639039,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-244928197d-01,THYM,PD-L1,DCR,85.7,PMID:31639039,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-727d3fda5e-01,THYM,PD-L1,UNCONFIRMED_ORR,57,PMID:31639039,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-642dd49c90-01,THYM,PD-L1,ORR,0,PMID:31639039,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified;small_denominator
+cancer-ici-response-estimates,ICI-1db7f7a7ad-01,THYMCA,PD-1,ORR,22.5,PMID:29395863,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-a85194dd4a-01,THYMCA,PD-1,CRR,3,PMID:29395863,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-ead3cd1f13-01,THYMCA,PD-1,PR,20,PMID:29395863,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-d27552d68f-01,THYMCA,PD-1,SD,52.5,PMID:29395863,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1724a2983a-01,THYMCA,PD-1,DCR,75,PMID:29395863,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-6154a337a6-01,THYMCA,PD-1,DOR,22.4,PMID:29395863,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-fc91603344-01,THYMCA,PD-1,PFS,4.2,PMID:29395863,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-3d10989ced-01,THYMCA,PD-1,OS,24.9,PMID:29395863,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-300be8ecf3-01,THYMCA,PD-1,TTR,1.4,PMID:29395863,prior_locator_verified,Results,
+cancer-ici-response-estimates,ICI-74053911de-01,THYMCA,PD-1,ORR,19.2,PMID:29906252,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-506b32f2a7-01,UCEC,PD-1,ORR,15.0,,prior_locator_not_applicable,,excluded_from_pooling;no_direct_reference;numeric_source_location_not_verified;response_denominator_missing
+cancer-ici-response-estimates,ICI-64a41d348a-01,UCEC_POLE,PD-1,PR_COUNT,1,PMID:27159395,prior_locator_verified,"Results and Discussion, partial response at 8 weeks",small_denominator
+cancer-ici-response-estimates,ICI-e35f9168c5-01,UCEC_CNH,PD-1,ORR,7,PMID:39847999,prior_locator_verified,"Abstract, Results",excluded_from_pooling
+cancer-ici-response-estimates,ICI-81454d98c0-01,UCEC_CNH,PD-1,CRR,0,PMID:39847999,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-bcda9bc5e7-01,UCEC_CNH,PD-1,PR,7,PMID:39847999,prior_locator_verified,"Abstract, Results",excluded_from_pooling
+cancer-ici-response-estimates,ICI-d213eb7d1f-01,UCEC_CNH,PD-1,PFS,2.1,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-adda1ffda7-01,UCEC_CNH,PD-1,OS,11.1,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-f5d7ec3621-01,UCEC_CNH,PD-1,ORR,48,PMID:34990208,prior_locator_verified,"Abstract, RESULTS",excluded_from_pooling
+cancer-ici-response-estimates,ICI-297f54eb44-01,UCEC_CNL,PD-1,ORR,7,PMID:39847999,prior_locator_verified,"Abstract, Results",excluded_from_pooling
+cancer-ici-response-estimates,ICI-bd96872001-01,UCEC_CNL,PD-1,CRR,0,PMID:39847999,prior_locator_source_section,"Abstract, Results",excluded_from_pooling;numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-4c502a89d6-01,UCEC_CNL,PD-1,PFS,2.1,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-908902c15d-01,UCEC_CNL,PD-1,OS,11.1,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-71a3411cc4-01,UCEC_CNL,PD-1,MEDIAN_FOLLOW_UP,68.3,PMID:39847999,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-e3b25a0916-01,UCEC_MSI,PD-1,ORR,48.0,PMID:39847999,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-6b3c591537-01,UCEC_MSI,PD-1,CRR,16,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-eea0f2dbfa-01,UCEC_MSI,PD-1,PRR,34,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-3eb852a85a-01,UCEC_MSI,PD-1,DOR,63.2,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-54e2770e1b-01,UCEC_MSI,PD-1,DOR_RATE,66,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-8ececb93fb-01,UCEC_MSI,PD-1,PFS,13.1,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-fbe76122a3-01,UCEC_MSI,PD-1,OS,65.4,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d14ed900d0-01,UCEC_MSI,PD-1,OS_RATE,59,PMID:39847999,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-dc53353bd1-01,UCEC_MSI,PD-1,MEDIAN_FOLLOW_UP,54.5,PMID:39847999,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3ccf3aa3ac-01,UCEC_MSI,PD-1,ORR,48,PMID:34990208,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-666d42d93f-01,UCEC_MSI,PD-1,CRR,14,PMID:34990208,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-74214de11c-01,UCEC_MSI,PD-1,PRR,34,PMID:34990208,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-f51bcdaed3-01,UCEC_MSI,PD-1,DOR,,PMID:34990208,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-a0105517f0-01,UCEC_MSI,PD-1,PFS,13.1,PMID:34990208,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-b71340fe40-01,UCEC_MSI,PD-1,OS,,PMID:34990208,audited_gap,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-c08a7eeed5-01,UCEC_MSI,PD-1,MEDIAN_FOLLOW_UP,42.6,PMID:34990208,prior_locator_not_verified,,numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-9371a55ab6-01,UVM,PD-(L)1,ORR,3.6,PMID:27533448,prior_locator_verified,RESULTS > Efficacy analyses > Objective responses,excluded_from_pooling
+cancer-ici-response-estimates,ICI-8e49d3b5f6-01,UVM,PD-(L)1,DURABLE DISEASE CONTROL,9,PMID:27533448,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1b0a765789-01,UVM,PD-(L)1,PFS,2.6,PMID:27533448,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-47259e2217-01,UVM,PD-(L)1,OS,7.6,PMID:27533448,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-ed31cd419b-01,UVM,PD-1+CTLA-4,ORR,11.5,PMID:33417511,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3a4595afbc-01,UVM,PD-1+CTLA-4,ORR,18,PMID:33125309,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-3d7839d921-01,UVM,PD-1+CTLA-4,PFS,5.5,PMID:33125309,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-c0c8f2e533-01,UVM,PD-1+CTLA-4,OS,19.1,PMID:33125309,prior_locator_verified,"Abstract, RESULTS",
+cancer-ici-response-estimates,ICI-e2df67c751-01,VSCC,PD-1,ORR,10.9,PMID:35361487,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6feec02085-01,VSCC,PD-1,ORR,9.5,PMID:35361487,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-15d1787eb3-01,VSCC,PD-1,ORR,28.6,PMID:35361487,prior_locator_verified,"Abstract, Results",small_denominator
+cancer-ici-response-estimates,ICI-862a969452-01,VSCC,PD-1,DOR,20.4,PMID:35361487,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-4ae0a1ad8b-01,VSCC,PD-1,PFS,2.1,PMID:35361487,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ba14288ab8-01,VSCC,PD-1,OS,6.2,PMID:35361487,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-4196024f02-01,cSCC,PD-1,ORR,34.3,PMID:32673170,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-8d0d9e4e21-01,cSCC,PD-1,CRR,3.8,PMID:32673170,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3b85b565b0-01,cSCC,PD-1,PRR,30.5,PMID:32673170,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-22c34e822b-01,cSCC,PD-1,DCR,52.4,PMID:32673170,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-cfc16af897-01,cSCC,PD-1,DOR,,PMID:32673170,audited_gap,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-fc6ffbba81-01,cSCC,PD-1,PFS,6.9,PMID:32673170,prior_locator_verified,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-b1b8b062cd-01,cSCC,PD-1,OS,,PMID:32673170,audited_gap,RESULTS > Efficacy,
+cancer-ici-response-estimates,ICI-5c2c2237e1-01,cSCC,PD-1,ORR,35.2,PMID:34293460,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-9eb893ac25-01,cSCC,PD-1,ORR,50,PMID:34293460,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-897a51cb7a-01,cSCC,PD-1,ORR,47,PMID:29863979,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-8b126eef2c-01,LAML,PD-1+HMA,ORR,33,PMID:30409776,prior_locator_verified,"Abstract, Findings; Results, Clinical outcomes",
+cancer-ici-response-estimates,ICI-4b4990885c-01,MPN,PD-1,ORR,0,PMID:34581778,prior_locator_verified,"Abstract; Results, Safety and efficacy",excluded_from_pooling
+cancer-ici-response-estimates,ICI-2a7de231fa-01,STAD_MSI,PD-1,ORR,57.1,PMID:29543932,prior_locator_verified,"Results, Microsatellite Instability",small_denominator
+cancer-ici-response-estimates,ICI-e23fe5ef46-01,UVM,PD-1,ORR,11.7,PMID:31175402,prior_locator_verified,"Results, Figure 1; Patients and methods, Treatment and study design",

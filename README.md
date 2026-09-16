@@ -81,10 +81,10 @@ import oncoref as od
 
 od.resolve_cancer_type("prostate")        # -> "PRAD"
 od.cancer_type_info("SARC_RMS_ARMS")      # full registry record + burden + tmb
-od.cancer_tmb("LUAD_EGFR")                # 6.9  (inherited from LUAD)
+od.cancer_tmb("FL")                       # 5.05 (source-checked panel median)
 od.cancer_burden("pancreas", metric="us_mortality_pct")
 od.burden_category("SARC_OS")             # -> "bone_and_joint" (incidence/mortality bucket)
-od.cancer_ici_response("SKCM")            # 42% objective response rate
+od.cancer_ici_response("SKCM")            # 43.7% in the selected trial setting
 od.cancer_ici_response("SKCM", regimen="PD-1+CTLA-4")   # 57.6  (pin a regimen)
 od.therapy_benefit_toxicity_evidence(cancer_code="OV")  # sourced clinical facts
 od.rna_protein_calibrations(gene="TP53")     # matched CPTAC cohort-specific models
@@ -120,10 +120,13 @@ compatibility APIs.
 
 ## Command line
 
+See the [TMB/ICI/aPD1 curation audit](docs/curation-audit.md) for corrected values,
+evidence gaps, and the complete row-by-row review ledger.
+
 ```bash
 oncoref cancer-type prostate     # registry info as JSON
-oncoref tmb LUAD_EGFR            # 6.9
-oncoref ici SKCM                # 42  (--regimen to pin, --all-regimens to compare)
+oncoref tmb FL                  # 5.05
+oncoref ici SKCM                # 43.7 (--regimen to pin, --all-regimens to compare)
 oncoref burden pancreas --metric us_mortality_pct
 oncoref cta --count             # number of expressed CTAs
 oncoref plot apd1-vs-tmb --out apd1_vs_tmb.png

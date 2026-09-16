@@ -17,13 +17,19 @@ def test_tmb_has_n_samples_column():
     assert "n_samples" in cancer_tmb_df().columns
 
 
-def test_tmb_filled_gaps():
-    # MTC and CRANIO had no curated median in the initial copy; the audit added
-    # cited values. Assert the gaps are *filled* (a positive curated value), not
-    # the exact numbers — those can be re-curated.
-    for code in ("MTC", "CRANIO"):
-        value = cancer_tmb(code, inherit=False)
-        assert value is not None and value > 0
+def test_tmb_source_review_can_replace_an_unsupported_estimate():
+    # Chalmers supplies a per-Mb median in place of the old driver-count inference.
+    assert cancer_tmb("MTC", inherit=False) == 1.8
+    mtc = cancer_tmb_df().set_index("cancer_code").loc["MTC"]
+    assert mtc["source_review_status"] == "source_checked"
+    assert mtc["pmid_doi"] == "PMID:28420421"
+    assert mtc["n_samples"] == 96
+    # The source covers both histologies; its exact summary statistic is unresolved.
+    cranio = cancer_tmb_df().set_index("cancer_code").loc["CRANIO"]
+    assert cranio["n_samples"] == 15
+    assert cranio["source_scope"] == "adamantinomatous_and_papillary_discovery_cohort"
+    assert cranio["estimate_type"] == "curated_estimate"
+    assert cranio["source_review_status"] == "needs_source_review"
 
 
 def test_tmb_new_entities_present():

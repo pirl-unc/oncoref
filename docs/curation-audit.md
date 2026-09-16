@@ -1,0 +1,421 @@
+# TMB, ICI and aPD1 curation audit
+
+Reviewed 2026-09-16, against repository baseline `52f423e`.
+
+The former `UCEC_POLE` 100% response anchor was a selected exceptional-responder
+case, not a population response rate. It has been withdrawn. The broader audit
+found unrelated citations, means entered as medians, mismatched source populations,
+combined treatment arms, control arms labeled as ICI, and incorrect response
+denominators. This change corrects confirmed failures and makes unresolved source
+verification explicit; it does **not** certify every remaining number.
+
+Issues were filed before their corresponding fixes:
+[#523](https://github.com/pirl-unc/oncoref/issues/523) (POLE),
+[#524](https://github.com/pirl-unc/oncoref/issues/524) (complete audit tracker),
+[#525](https://github.com/pirl-unc/oncoref/issues/525) (regimens/populations/pooling),
+[#526](https://github.com/pirl-unc/oncoref/issues/526) (TMB statistics/provenance),
+[#527](https://github.com/pirl-unc/oncoref/issues/527) (incorrect citations), and
+[#528](https://github.com/pirl-unc/oncoref/issues/528) (anchors/denominators), and
+[#530](https://github.com/pirl-unc/oncoref/issues/530) (PR review and source recovery),
+[#532](https://github.com/pirl-unc/oncoref/issues/532) (means and all withdrawn claims),
+[#533](https://github.com/pirl-unc/oncoref/issues/533) (STK11 subgroup denominators), and
+[#534](https://github.com/pirl-unc/oncoref/issues/534) (neuroblastoma source recovery), and
+[#535](https://github.com/pirl-unc/oncoref/issues/535) (retained statistics/cohort review).
+
+## Scope and reproducible evidence
+
+Every row in the four numerical reference tables is inventoried, including blanks
+and contextual estimates: 130 TMB, 110 ICI anchors, 84 aPD1 anchors, and 787 endpoint
+estimates (1,111 total). No estimate IDs were deleted. The
+[row ledger](audits/tmb-ici-apd1.csv) records each value, citation, locator status and
+unresolved checks. Run:
+
+```bash
+python scripts/audit_tmb_ici_apd1.py --output docs/audits/tmb-ici-apd1.csv
+```
+
+The audit checks numeric validity, response/count arithmetic, confidence-interval
+ordering, drug/regimen consistency, compact-anchor agreement, missing denominators,
+and provenance. Its output is tested for reproducibility. These checks cannot prove
+that a source supports the biological population assigned to a row.
+
+The [citation inventory](audits/source-citations.csv) includes 191 distinct original
+and current references. PMID/DOI metadata identifies the actual article behind a
+citation; resolving an identifier is **not** numerical source validation. The
+[TMB review table](../oncoref/data/cancer-tmb-source-audit.csv) records a disposition
+for all 130 rows, including rejected legacy values, assay, locator, and review notes.
+
+After source recovery and the best-effort round, 48 numeric TMB rows have direct
+source checks (41 published medians, two published means, two sample-recomputed
+medians, and three reported summaries whose statistic is unspecified). Two more
+rows have checked numerical sources but use explicit population proxies; one is
+a reviewed capture-size approximation. Another 67 numeric entries still require
+exact source verification, and 12 explicit gaps remain. All 20 initial withdrawals
+now have replacement estimates, with these quality distinctions preserved; an
+existing MPN gap was also filled. The endpoint
+inventory still flags 338 rows/anchors
+whose numeric source locator is not verified, 33 without response denominators,
+and 47 with denominators below 10. These counts overlap; they are review flags, not
+338 independently demonstrated errors. Earlier `source_verified` and locator
+`verified` fields remain historical curation metadata, not a fresh scientific
+certification. #524 remains open for this source work.
+
+## POLE: strong biology does not establish a response-rate ranking
+
+[Mehnert 2016](https://www.jci.org/articles/view/84940) describes one patient's
+partial response. The retained estimate now records a patient response count as
+context, with no population ORR or binomial CI. Both ICI and aPD1 lookups for
+`UCEC_POLE` return an explicit gap. Its unsourced TMB value of 100 mut/Mb is replaced
+by a separately supported genomic median of **150.8 mut/Mb in 61 patients** from
+[Nero 2025](https://pmc.ncbi.nlm.nih.gov/articles/PMC11771542/), Results and Figure 1B.
+That study uses a tumor-only TSO500 panel and the 11 pathogenic hotspot definition,
+including 16 multiple-classifier cases. It is not an ICI response trial.
+
+The supplied critique correctly rejects the 100% population claim, but several of
+its supporting statements also need qualification:
+
+* Prospective POLE-selected evidence exists. [Rousseau 2022, AcSé nivolumab](https://pmc.ncbi.nlm.nih.gov/articles/PMC9167784/)
+  studied MMR-proficient advanced solid tumors, reporting responses in 5/11
+  assessable patients with proofreading-deficient POLE variants. This is a
+  pan-cancer result; it does not establish UCEC_POLE as the most responsive
+  indication, and progression occurred in endometrial cancer despite pathogenic
+  variants.
+* [GARNET](https://pmc.ncbi.nlm.nih.gov/articles/PMC10643997/), Table 2, reports 2/5
+  responses in its exploratory POLE-mutant category. Both responders were dMMR.
+  That small, overlapping biomarker category is not a clean pathogenic-EDM UCEC
+  population estimate.
+* The final [avelumab endometrial trial](https://pmc.ncbi.nlm.nih.gov/articles/PMC9798913/)
+  enrolled **no POLE-mutated tumors**. Its dMMR result cannot be treated as a
+  measured POLE result. The [toripalimab basket trial](https://pmc.ncbi.nlm.nih.gov/articles/PMC11366758/)
+  had only three assessable EDM cases; its two EDM responders had colon cancer.
+* The original [2022 rectal dostarlimab report](https://doi.org/10.1056/NEJMoa2201445)
+  reported 12 patients, not 42. The later [2025 expansion](https://doi.org/10.1056/NEJMoa2404512)
+  reported 49/49 rectal and 35/54 nonrectal clinical complete responses. Neoadjuvant
+  clinical CR and advanced-disease RECIST ORR are different endpoints and settings.
+  These results cannot establish a universal numerical response ceiling.
+* The [POLE pathogenicity study](https://pubmed.ncbi.nlm.nih.gov/31829442/)
+  supports variant-level interpretation. The quoted hotspot list is not a complete
+  or accurate whitelist: the recognized endometrial set includes L424I, M444K and
+  D368Y. Exonuclease-domain location alone does not establish pathogenicity, and a
+  non-EDM variant is not automatically proven biologically inert. Multiple-classifier
+  assignment and treatment-response evidence are separate questions.
+
+The cHL response anchor remains 71.2% (173/243), now citing the corresponding
+[CheckMate 205 five-year report](https://pubmed.ncbi.nlm.nih.gov/37530622/), rather
+than the older 69% report. We do not adopt the accompanying assertion that cHL is
+uniformly low-TMB: the cited [Hodgkin genomic cohort](https://pmc.ncbi.nlm.nih.gov/articles/PMC6369943/)
+uses clinical panels and does not support the former approximate WES median of 2.
+No substitution-spectrum or netMHCpan binding claim was used to assign clinical
+response rates.
+
+## Confirmed numerical and source corrections
+
+| Area | Previous claim | Corrected treatment |
+| --- | --- | --- |
+| POLE ICI/aPD1 | 100% ORR from a selected case | explicit evidence gap; case response retained as context |
+| COAD, READ, UCEC | prevalence-weighted modeled ORRs | models retained as context; canonical anchors blank |
+| UCEC_CNH/CNL | pMMR/MSS response assigned to molecular subtypes | gap: source does not isolate those subtypes |
+| LUAD_STK11 | KRAS/STK11 evidence assigned to STK11/KEAP1 union; genomic n=637 used as response n | gap; invalid denominator removed |
+| UVM ICI | mixed anti-PD-1/PD-L1 cohort labeled PD-1 | mixed-agent context retained; first-line PD-1 anchor 11.7% (2/17) from a separate prospective cohort |
+| Ependymoma | 1/22 across mono and combo arms | nivolumab 1/12 = 8.3%; combination n=10 kept separate |
+| DIPG, medulloblastoma | inferred zero ORRs with ordinary anchor confidence | formal-ORR gaps; outcome inferences remain context |
+| GBM | enrolled n=184 used for ORR | response-evaluable n=153; bevacizumab comparator n=156 |
+| MDS KEYNOTE-013 | enrolled n=28 used for response categories and calculated CIs | response-evaluable n=27; enrollment preserved separately |
+| ESCA CheckMate 648 | 89/325 paired with 28% | 90/325, reported rounded 28%; correct source CI |
+| ASPS disease control | 91% paired with 47/52 | descriptive count-derived 90.4%, explicitly distinguished from a reported DCR endpoint |
+| FL TMB | 1.35, described as WES/mean | panel median 5.05 mut/Mb, n=119 |
+| Pancreatic / midgut NET TMB | 1.9 / gap | advanced-site genome-wide WGS medians 1.35 / 1.05 |
+| BCC / cSCC TMB | 65 / 45 with unrelated citations | Chalmers panel medians 47.3 (n=92) / 45.2 (n=266) |
+| LCNEC TMB | George mean 8.6 entered as median | Chalmers panel median 9.9 (n=288), explicitly a different assay/cohort |
+| MDS TMB | inferred conversion to 0.3/Mb | explicitly reported Chalmers median 0.8/Mb |
+| Penile SCC TMB | 4.5 attributed to an erdafitinib trial | same value supported by Chalmers Table 1, n=60 |
+
+Primary sources for these corrections:
+[CheckMate 908](https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/),
+[CheckMate 143](https://pubmed.ncbi.nlm.nih.gov/32437507/),
+[KEYNOTE-013 Table 3](https://doi.org/10.1080/10428194.2022.2034155),
+[CheckMate 648 regulatory report, Figure 2.3.2.2-6](https://www.fda.gov/media/182144/download),
+[ASPS trial](https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/),
+[FL Results 3.2](https://pmc.ncbi.nlm.nih.gov/articles/PMC12985221/),
+[advanced NEN WGS](https://pmc.ncbi.nlm.nih.gov/articles/PMC8322054/), and
+[Chalmers Table 1 and Results](https://pmc.ncbi.nlm.nih.gov/articles/PMC5395719/).
+
+The rejected ADCC and RB values were means, not medians. ADCC now has a replacement
+panel median and its original mean is retained separately; RB is restored as a mean.
+The old FL value 1.35 cannot be rescued by relabeling it a mean: the cited paper
+reports a 409-gene panel median of 5.05, with the observed range starting at 1.69.
+Other directly checked medians include rectal NET, GIST, DSRCT,
+BTC, NSCLC and thoracic SMARCA4-deficient tumors; their source populations, assay
+methods and specimen-versus-patient distinctions remain explicit.
+
+## PR review: original sources and recovered medians
+
+An unsupported citation is not evidence that no median exists. The
+[20-row recovery ledger](audits/tmb-source-recovery.csv) preserves the original
+value/citation, what the claimed source actually reports, replacement evidence,
+and the reason for retaining any gap. Review findings were filed in #530 before
+the follow-up correction.
+
+**P1: retained Chalmers claims disagreed with its actual supplementary table.**
+Additional file 3, Table S1 supports ACC 2.7 (n=204), CHOL 2.5 (liver cohort,
+n=1456), KIRP 2.7 (n=152), LIHC 3.6 (n=602), PAAD 1.8 (n=2483), THCA 1.8
+(n=350), THYM 1.3 (n=108), THYMCA 2.5 (n=168), and UCS 3.6 (n=245).
+The old numbers did not match. Those rows are corrected, and sample counts are
+filled for 25 checked Chalmers rows, including an MPN median of 0.8 (n=138).
+The [extracted source rows](audits/tmb-chalmers-source-rows.csv) record exact workbook
+cell ranges, the download URL and SHA-256. No published medians were averaged.
+
+**P2: withdrawal was unnecessarily final for recoverable claims.**
+
+| Code | Recovered median, mut/Mb | n | Source and limit |
+| --- | ---: | ---: | --- |
+| UVM | 0.34 | 80 | [Wu 2019 Table 1](https://pmc.ncbi.nlm.nih.gov/articles/PMC6944566/); old number was correct, DOI was wrong |
+| NUTM | 1.0 | 71 | [Kim 2025](https://pubmed.ncbi.nlm.nih.gov/40704901/); known-TMB subset of 116 registry patients; heterogeneous panels |
+| UCEC_POLE | 150.8 | 61 | Nero 2025; pathogenic hotspot cohort including multiple classifiers |
+| MCL | 3.3 | 75 | Chalmers Table S1, lymph-node mantle-cell cohort |
+| MTC | 1.8 | 96 | Chalmers Table S1, medullary thyroid |
+| ACINIC | 1.8 | 81 | Chalmers Table S1, salivary acinic-cell cohort |
+| ADCC | 1.8 | 184 | Chalmers Table S1, salivary adenoid cystic cohort |
+| VSCC | 5.2 | 72 | Chalmers Table S1, vulvar SCC |
+| ANSC | 5.4 | 232 | Chalmers Table S1, anal SCC |
+| SARC_CHON | 1.7 | 93 | Chalmers Table S1, bone cohort; not pooled with soft-tissue chondrosarcoma |
+
+All Chalmers replacements above come from the actual
+[published supplement](https://static-content.springer.com/esm/art%3A10.1186%2Fs13073-017-0424-2/MediaObjects/13073_2017_424_MOESM3_ESM.xlsx).
+Its coding-panel definition includes synonymous substitutions and indels, then
+filters drivers and germline variants. Wu uses nonsynonymous coding mutations
+divided by 38 Mb. These medians cannot be interpreted as assay-harmonized estimates.
+
+For UCEC_MSI, [Leon-Castillo 2020 Table 2](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065171/)
+provides a median of 21.5 in 127 MSI-H, POLE-wild-type tumors. This replaces 18,
+which the old TCGA citation did not establish as a median. The reanalysis includes
+synonymous coding variants and uses a 38 Mb denominator.
+
+At that stage, seven original population-median claims remained unresolved:
+HL, CTCL, HCL, BRCA_Normal, LUAD_EGFR, UCEC_CNL and UCEC_CNH. The best-effort
+round below now supplies explicit estimates for each without reinstating the
+unsupported claims. The initial review established, for example:
+
+* The originally cited salivary paper reports alterations per tumor and fractions
+  above a TMB threshold, not the claimed ACINIC median of 2.6.
+* The [neuroblastoma paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6624164/) does
+  mention an overall approximately 0.6 exonic mut/Mb median in its introduction,
+  citing earlier work. It does not establish separate MYCN subgroup medians.
+* EGFR evidence is available: [Hastings 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6683857/)
+  reports 3.8 in 383 EGFR-mutant lung cancers, and
+  [Offin 2019](https://pubmed.ncbi.nlm.nih.gov/30045933/) reports 3.77 in 153
+  metastatic exon19del/L858R cases. Hastings is now selected as an explicitly labeled broader-cohort proxy; its
+  population fit is not presented as exact.
+* The primary Lawrence 2013 text establishes the median statistic and reports AML
+  0.37/Mb, but the precise remaining per-type claims require its sample supplement.
+  Download attempts returned access challenges, not the data. These remain
+  explicitly unverified; reading the abstract does not validate the numbers.
+
+Runtime review found no additional failures in the current regimen-fallback,
+overlap-exclusion and gap-resolution cases. Passing software tests does not close
+the remaining scientific verification work in #524.
+
+Canonical response anchors now agree numerically with their selected endpoint
+rows. This includes 5.3% for pretreated TNBC, 14.6% for PD-L1-positive cervical
+cancer, 19.3% for response-evaluable ESCC, 7.8% for GBM, 41.6% for intermediate/poor
+risk RCC on nivolumab/ipilimumab, 8.5% for mesothelioma, 25.9% for PD-L1-positive
+NPC, 5% for the selected PD-L1-positive prostate cohort, 43.7% for melanoma, and
+11.6% for gastric/GEJ cancer. These are **selected source settings**, not universal
+unselected rates for each ontology label. Prior anchors that rounded or blended
+these values are preserved in git history and described in row notes.
+
+## Interpretation and safeguards
+
+* Default pooling selects one regimen and primary evidence only. Opting into
+  alternates retains source rows, but shared citation/NCT/trial identities block
+  a numerical pool because overlap has not been excluded. Invalid count/rate
+  pairs also block pooling. Independent trials can still differ clinically;
+  this guard is not a meta-analysis or a proof of cohort independence.
+* Drug labels now separate monotherapy, PD-1/CTLA-4, PD-L1 combinations,
+  chemotherapy-containing arms, CTLA-4 alone, non-ICI controls, and mixed-agent
+  cohorts. Controls, inferred outcomes, modeled blends and out-of-population
+  context do not contribute to pools. The forest plot explicitly requests
+  alternate trial points while retaining a primary-only numerical summary.
+* DART high-grade pan-NEN evidence is not LCNEC-specific; differentiated thyroid
+  context is not ATC evidence; overall soft-tissue sarcoma is not synovial sarcoma.
+  These rows remain inspectable, but cannot supply those subtype pools.
+* The legacy `apd1` table includes explicitly tagged fallback regimens. Filter
+  `drug_target == 'PD-1'` for monotherapy analyses. Inspect endpoint population,
+  denominator, biomarker selection and evidence inheritance alongside every value.
+* TMB `published_median` provenance requires a checked source. Other reviewed
+  types distinguish means, recalculated statistics, unspecified summaries,
+  population proxies and approximations. Legacy `needs_source_review` values
+  still await verification, even if their old confidence label was high. For
+  the directly source-checked subset:
+
+```python
+from oncoref import tmb
+
+reviewed = tmb.cancer_tmb_df().query("source_review_status == 'source_checked'")
+# Keep tmb_assay, source_scope, source_review_notes and n_samples in comparisons.
+```
+
+Open source work under #524 includes reproducing exact Lawrence supplementary
+medians, resolving unmatched Chalmers populations, validating pediatric and molecular-subtype proxies,
+resolving review-derived citations, and checking all remaining ICI endpoint
+populations and denominators against their original tables. No inference from TMB,
+mutation mechanism, binding predictions, or a response-rate ranking fills those gaps.
+
+## Typed means and continued verification (#532)
+
+A supported mean is valid evidence when it is labeled as a mean. The TMB API now
+provides `tmb_mut_mb` and `tmb_statistic`; the scalar lookup prefers a median and
+falls back to a mean, then an explicitly typed estimate. `median_tmb_mut_mb` stays blank for mean-only evidence, and
+`mean_tmb_mut_mb` stays blank when a mean from that source has not been curated.
+Assays and populations still require inspection before comparing numbers.
+
+[Retinoblastoma WGS Results 2.2](https://pmc.ncbi.nlm.nih.gov/articles/PMC7918943/)
+supports **mean 0.085 genome-wide substitutions/Mb, n=21**. This restores the
+original value with `published_mean` provenance; it is not coding TMB or an
+SNV-plus-indel rate. [Ho 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3708595/)
+supports **mean approximately 0.31 nonsilent mutations/Mb, n=60** for ADCC.
+That independent estimate is retained in the [alternative-source ledger](audits/tmb-alternative-source-estimates.csv),
+without attributing it to the cohort supplying the selected panel median.
+
+## Second verification round: every withdrawn response anchor
+
+The [10-code response recovery ledger](audits/ici-withdrawn-anchor-verification.csv)
+accounts for every original canonical response withdrawal in both ICI and aPD1.
+It distinguishes observed outcomes, modeled prevalence blends, inferred zeros,
+regimen mismatches, and population mismatches. Means cannot remedy those issues.
+
+[Rossi 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6584707/) restores a UVM
+PD-1 anchor: **11.7%, 2/17**, with first-line setting, prospective observational
+design, RECIST 1.1 endpoint, and low confidence explicit. The old mixed-agent
+3.6% estimate remains separately available as context.
+
+Further review of [Skoulidis 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/)
+found subgroup denominator errors (#533). SU2C KL is **4/54**, with PD-1 alone
+or combined with CTLA-4, rather than 7.4% over all 174 patients. CheckMate-057 KL
+is **0/6**, not 0/24; its spurious computed CI is removed. Both remain contextual
+for the broader STK11/KEAP1 ontology code.
+
+The alternative TMB ledger now preserves verified EGFR-mutant lung mean/median,
+MF and Sezary estimates, and a newer Hodgkin panel mean/median with their actual
+cohort limits. The original Hodgkin table contains 37 numeric entries while its
+text reports 34; the [transcribed table column](audits/tmb-hodgkin-table-discrepancy.csv)
+preserves patient row numbers and the source-image hash. Its tabular median is
+8.8, but the mismatch prevents labeling that as the paper's n=34 cohort median.
+TCGA endometrial supplements were downloaded and inspected: their selected-gene
+SMG tables cannot be summed into whole-exome per-patient TMB. These source limits,
+and checks of classic HCL, normal-like breast, and the original high-risk
+neuroblastoma report, are recorded for all remaining TMB gaps.
+
+## Third round: recover MYCN subgroup data and recheck retained NBL
+
+[Lee 2020](https://pmc.ncbi.nlm.nih.gov/articles/PMC7653769/) reports a **0.66 mut/Mb
+median in 58 MYCN-nonamplified tumors**, after excluding synonymous variants.
+It spans 26 high-risk and 32 non-high-risk East Asian patients. This restores
+`NBL_MYCNnonamp` using a directly relevant cohort.
+
+[Pugh 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3682833/) supplies actual
+per-sample total-exonic and nonsilent rates in Supplementary Table 1. Reanalysis
+of its **77 MYCN-amplified high-risk cases** yields a nonsilent median of
+**0.4330966 mut/Mb**, curated as 0.43 and labeled `sample_recomputed_median`.
+The separate nonamplified high-risk group has n=158; five unknown-status cases
+are excluded only from subgroup calculations. The complete 240-case extraction
+reproduces the paper's rounded overall medians, 0.60 total exonic and 0.48 nonsilent.
+The retained parent NBL value 0.60 now cites this direct primary source with
+high-risk scope and synonymous inclusion explicit.
+
+[Extracted sample rates](audits/tmb-pugh2013-sample-rates.csv) and
+[recomputed means/medians with source hash](audits/tmb-pugh2013-recomputed.json)
+make the calculation reviewable. Reproduce the extraction from the original workbook:
+
+```bash
+python scripts/recompute_neuroblastoma_tmb.py --workbook Pugh-TableS1.xlsx --output-dir docs/audits
+```
+
+The alternative ledger preserves both statistics for both mutation definitions.
+The default amplified and nonamplified values come from different risk/ancestry
+cohorts and cannot establish an effect of MYCN amplification on TMB. Use the
+within-Pugh subgroup summaries for a like-assay comparison, with high-risk scope.
+
+
+## Fourth round: retained statistics and cohort denominators
+
+[Fernandez-Cuesta 2014](https://pmc.ncbi.nlm.nih.gov/articles/PMC4132974/) explicitly
+reports lung carcinoid **mean 0.4 nonsynonymous mutations/Mb**, from 44 independent
+pairs (29 WGS and 15 WES). `NET_LUNG` now uses the mean field, with no invented median.
+
+[de Bitter 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9637208/) supports GBC
+**median 5.5 in 96 TMB-evaluable samples**. TSO500 TMB includes synonymous variants;
+the separate 54-gene actionable panel is not the TMB assay. The cohort was selected
+for at least pT2a disease and 30% tumor content. Results define TMB-high as >=10,
+although the abstract uses >10; the detailed Results support the curated threshold.
+
+The [craniopharyngioma source](https://pmc.ncbi.nlm.nih.gov/articles/PMC3982316/)
+places 0.9/Mb in its mixed **15-case discovery cohort**, not three papillary cases.
+Its exact statistic remains unresolved. [George 2015](https://pmc.ncbi.nlm.nih.gov/articles/PMC4861069/)
+reports SCLC 8.62 nonsynonymous mutations/Mb in 110 WGS specimens without naming the
+summary statistic in the prose. Both original workbooks were inspected; sample
+metadata and variant calls alone do not establish callable denominators for a
+recalculated per-Mb median. These two values remain `needs_source_review`, with
+corrected cohort notes and [supplement URLs/hashes](audits/tmb-retained-source-supplements.json).
+
+
+## Fifth round: best-effort estimates for all seven remaining withdrawals (#536)
+
+Means are usable when identified correctly. A median describes the middle sample;
+a mean is sensitive to a high-TMB tail. Mixing them without labels can change a
+cross-cancer ranking. Neither summary determines an individual patient's TMB or
+ICI response. Both are retained when available from the same cohort.
+
+The [seven-row estimate ledger](audits/tmb-best-effort-estimates.csv) records the
+selected values and limitations; the original rejected claims remain in the
+[recovery ledger](audits/tmb-source-recovery.csv).
+
+| Code | Selected mut/Mb | Statistic and source population |
+| --- | ---: | --- |
+| HL | 7.66 | [Wienand 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6963251/), reported summary, n=23 newly diagnosed classical HL, flow-sorted HRS-cell WES; exact summary statistic not assigned |
+| CTCL | 3.5 | [Mycosis fungoides 2024](https://pmc.ncbi.nlm.nih.gov/articles/PMC11222946/), median in 67 specimens from 48 patients; MF proxy for broader CTCL |
+| BRCA_Normal | 1.28 | Recomputed median of 36 normal-like TCGA PanCancer Atlas cases; same-cohort mean 1.93 |
+| LUAD_EGFR | 3.8 | [Hastings 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6683857/), median in 383 EGFR-mutant lung cancers; same-cohort mean 5.6; broader lung-cohort proxy |
+| HCL | ~0.2 | Approximation from five classic HCL exomes in [Bibi 2016](https://pmc.ncbi.nlm.nih.gov/articles/PMC4752330/), Table 2 and capture methods |
+| UCEC_CNL | 2.9 | [TCGA 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3704730/), reported subgroup rate, n=90; summary statistic unspecified |
+| UCEC_CNH | 2.3 | Same source, n=60; summary statistic unspecified |
+
+For the two endometrial groups, Figure 2 confirms subgroup counts and the
+mutations-per-Mb scale. The prose inconsistently combines a per-base exponent
+with per-Mb wording; the curated values use the figure scale. These remain the
+original genomic classes, not automatic substitutions for IHC surrogate groups.
+A numeric TMB estimate does not fill either subtype's response-evidence gap.
+
+**Normal-like breast cancer is not TNBC.** Normal-like is a gene-expression
+classification, potentially influenced by nonneoplastic tissue. TNBC is defined
+by ER, PR and HER2 status. Most TNBC is basal-like, but the classifications overlap
+imperfectly ([Prat 2013](https://pmc.ncbi.nlm.nih.gov/articles/PMC3579595/)). The new
+normal-like estimate joins patient subtype labels to sample nonsynonymous TMB in
+[cBioPortal's pinned TCGA release](https://github.com/cBioPortal/datahub/tree/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018).
+All 36 eligible samples represent unique patients. The [extracted rates](audits/tmb-normal-like-sample-rates.csv)
+and [source hashes and full-precision calculation](audits/tmb-normal-like-recomputed.json)
+make it reproducible. These are portal-provided rates; callable bases were not
+independently reconstructed. The cited PanCancer publication identifies the study,
+not a published normal-like median. This release differs from the eight normal-like
+cases excluded in the 2012 breast paper. Confidence remains low because of subtype
+interpretation, cohort size and purity effects.
+
+```bash
+python scripts/recompute_normal_like_breast_tmb.py --sample data_clinical_sample.txt --patient data_clinical_patient.txt --sequenced cases_sequenced.txt --output-dir docs/audits
+```
+
+For HCL, unflagged nonsynonymous counts 10, 22, 7, 10 and 4 have median 10.
+Dividing by the two nominal capture sizes (44.1 and 50 Mb) gives 0.20–0.23,
+rounded to **~0.2**. The [count extraction](audits/tmb-hcl-source-counts.csv) and
+[calculation](audits/tmb-hcl-approximation.json) retain the restrictive filtering:
+using all candidate nonsynonymous counts gives 0.38–0.43 instead. These ranges
+show method sensitivity, not confidence intervals. Neither the sample-specific
+kit assignment nor the callable coding intersection is established. This is a
+low-confidence approximation; matching the old rounded number does not validate
+the old source or a population-median claim.
+
+The API preserves blank mean/median fields for HL, HCL and the two endometrial
+reported rates. Their values live in `estimate_tmb_mut_mb`, selected only after
+median and mean, with `tmb_statistic` set to `unspecified` or `approximate`.
+The audit retains explicit flags for unknown summary statistic, population proxy
+and approximation. Source checking is separate from fit to the ontology population.

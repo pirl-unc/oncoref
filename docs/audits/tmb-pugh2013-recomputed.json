@@ -1,0 +1,51 @@
+{
+  "reference": "PMID:23334666",
+  "source_url": "https://static-content.springer.com/esm/art%3A10.1038%2Fng.2529/MediaObjects/41588_2013_BFng2529_MOESM8_ESM.xlsx",
+  "sha256": "d4f9b2da7302d803764ef16f3c00112cce1d86f623abe39044b71cea951fc948",
+  "source_locator": "Supplementary Table 1; Master_Table!A3:BD242; MYCN J, rates BA/BB, coverage BD",
+  "method": "Unweighted sample medians/means of published rates; no rounded-count conversions. Exclude five MYCN=9 cases only from subgroup summaries.",
+  "results": [
+    {
+      "group": "all_high_risk",
+      "measure": "total_exonic_mut_mb",
+      "n": 240,
+      "median": 0.5952509,
+      "mean": 0.7357239735
+    },
+    {
+      "group": "all_high_risk",
+      "measure": "nonsilent_mut_mb",
+      "n": 240,
+      "median": 0.47560979999999997,
+      "mean": 0.5761167093333334
+    },
+    {
+      "group": "MYCNamp",
+      "measure": "total_exonic_mut_mb",
+      "n": 77,
+      "median": 0.52487261,
+      "mean": 0.6862664575324675
+    },
+    {
+      "group": "MYCNamp",
+      "measure": "nonsilent_mut_mb",
+      "n": 77,
+      "median": 0.4330966,
+      "mean": 0.5384543792207792
+    },
+    {
+      "group": "MYCNnonamp",
+      "measure": "total_exonic_mut_mb",
+      "n": 158,
+      "median": 0.65985125,
+      "mean": 0.7724955513924051
+    },
+    {
+      "group": "MYCNnonamp",
+      "measure": "nonsilent_mut_mb",
+      "n": 158,
+      "median": 0.52095635,
+      "mean": 0.6042574705063292
+    }
+  ]
+}

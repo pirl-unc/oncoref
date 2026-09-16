@@ -1,0 +1,28 @@
+{
+  "study": "brca_tcga_pan_can_atlas_2018",
+  "revision": "0cc9138746c08b304f8dac92c31983e0ef44af1d",
+  "sources": {
+    "sample": {
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018/data_clinical_sample.txt",
+      "sha256": "e96e6e4895a6ddcdb31d508a9e8f5676ca78ce396d2f82cd111a286a17e75ca6"
+    },
+    "patient": {
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018/data_clinical_patient.txt",
+      "sha256": "13c939025794ce21905ccb3409865fa08506b2283b432f8e3a3022f60a4c7682"
+    },
+    "sequenced": {
+      "url": "https://raw.githubusercontent.com/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018/case_lists/cases_sequenced.txt",
+      "sha256": "ae464df8154970f13b1cfe34e5538f9286abbe8bd13e1105474638ff2b45c19a"
+    }
+  },
+  "reference": "PMID:29625048",
+  "method": "Join sample PATIENT_ID to patient SUBTYPE=BRCA_Normal; require mutation-profile eligibility in cases_sequenced; summarize portal TMB_NONSYNONYMOUS. All 36 subtype samples pass eligibility and have finite rates; one sample per patient.",
+  "limitations": "Derived sample statistic, not a published subgroup summary. Uses portal-provided nonsynonymous TMB, without independent reconstruction of callable bases. Normal-like is an expression classification, susceptible to nonneoplastic admixture; it is not TNBC. This 36-case release differs from the eight normal-like cases excluded in TCGA 2012.",
+  "results": {
+    "n": 36,
+    "median": 1.2833333329999999,
+    "mean": 1.9259259259166666,
+    "minimum": 0.033333333,
+    "maximum": 10.6
+  }
+}

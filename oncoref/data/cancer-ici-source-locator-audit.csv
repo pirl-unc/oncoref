@@ -194,7 +194,7 @@ ICI-732c723e34-01,PMID:30620669,https://pmc.ncbi.nlm.nih.gov/articles/PMC6528729
 ICI-1452386811-01,PMID:30620669,https://pmc.ncbi.nlm.nih.gov/articles/PMC6528729/,pmc_abstract,"Abstract, Results",located_unverified,"endpoint,value,denominator,timepoint,population:1",18,2026-07-31
 ICI-15c4121090-01,PMID:31609651,https://pmc.ncbi.nlm.nih.gov/articles/PMC6881098/,pmc_full_text,"Abstract, RESULTS",verified,"endpoint,value,denominator",14,2026-07-31
 ICI-c09b429cc5-01,PMID:31609651,https://pmc.ncbi.nlm.nih.gov/articles/PMC6881098/,pmc_full_text,"Abstract, RESULTS",verified,"endpoint,value,denominator",14,2026-07-31
-ICI-e045c0d841-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
+ICI-e045c0d841-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,"Table 1; Results, Biomarker Analyses",verified,"manual source review of endpoint, population and denominator; see docs/curation-audit.md",,2026-09-15
 ICI-b3d75c53c7-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,Results > No Survival Benefit Was Observed Across Cohorts,verified,"endpoint,value,denominator,ci,timepoint,population:3",23,2026-07-31
 ICI-f6db400548-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,Results > No Survival Benefit Was Observed Across Cohorts,verified,"endpoint,value,denominator,timepoint,population:3",19,2026-07-31
 ICI-d318c83a29-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,Results > No Survival Benefit Was Observed Across Cohorts,located_unverified,"endpoint,value,denominator,ci,timepoint,population:3",23,2026-07-31
@@ -211,7 +211,7 @@ ICI-db97f9fefe-01,PMID:31582355,https://pubmed.ncbi.nlm.nih.gov/31582355/,pubmed
 ICI-a89af1a5e9-01,PMID:31582355,https://pubmed.ncbi.nlm.nih.gov/31582355/,pubmed_abstract,"Abstract, Findings",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-2a529a2f70-01,PMID:31582355,https://pubmed.ncbi.nlm.nih.gov/31582355/,pubmed_abstract,"Abstract, Findings",verified,"endpoint,denominator,timepoint,population:1",14,2026-07-31
 ICI-a4abe5b031-01,PMID:33026938,https://pubmed.ncbi.nlm.nih.gov/33026938/,pubmed_abstract,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
-ICI-ba043c8be9-01,PMID:35108470,https://pubmed.ncbi.nlm.nih.gov/35108470/,pubmed_abstract,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
+ICI-ba043c8be9-01,PMID:35108470,https://www.fda.gov/media/182144/download,regulatory_trial_report,CheckMate 648 all-randomized ORR; FDA 2024 sponsor briefing Figure 2.3.2.2-6,verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
 ICI-b6aab72384-01,PMID:35108470,https://pubmed.ncbi.nlm.nih.gov/35108470/,pubmed_abstract,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-f8c46d915d-01,PMID:35108470,https://pubmed.ncbi.nlm.nih.gov/35108470/,pubmed_abstract,"Abstract, Results",verified,"endpoint,value,timepoint",15,2026-07-31
 ICI-1a821e877e-01,PMID:35108470,https://pubmed.ncbi.nlm.nih.gov/35108470/,pubmed_abstract,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
@@ -227,17 +227,17 @@ ICI-d2872bd715-01,DOI:10.1182/blood.2019004753,https://pmc.ncbi.nlm.nih.gov/arti
 ICI-abaced8733-01,DOI:10.1182/blood.2019004753,https://pmc.ncbi.nlm.nih.gov/articles/PMC7869188/,pmc_abstract,Abstract,source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-b6231dd107-01,DOI:10.1182/blood.2019004753,https://pmc.ncbi.nlm.nih.gov/articles/PMC7869188/,pmc_abstract,Abstract,source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-b18146c252-01,DOI:10.1182/blood.2019004753,https://pmc.ncbi.nlm.nih.gov/articles/PMC7869188/,pmc_abstract,Abstract,source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
-ICI-e680dc5342-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,ci",18,2026-07-31
+ICI-e680dc5342-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Results, response-evaluable population",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
 ICI-36ae967c82-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,ci,timepoint",21,2026-07-31
 ICI-2adc60ea45-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,timepoint",17,2026-07-31
-ICI-1b70a4143f-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,ci",18,2026-07-31
+ICI-1b70a4143f-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Results, response-evaluable population",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
 ICI-6fd5feb80c-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Abstract, Results",verified,"endpoint,denominator,timepoint",13,2026-07-31
 ICI-f24b5cba72-01,PMID:32437507,https://pmc.ncbi.nlm.nih.gov/articles/PMC7243167/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,timepoint",17,2026-07-31
 ICI-78740348d5-01,PMID:29584546,https://pmc.ncbi.nlm.nih.gov/articles/PMC6075855/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,ci,population:1",19,2026-07-31
 ICI-ccd67105ee-01,PMID:29584546,https://pmc.ncbi.nlm.nih.gov/articles/PMC6075855/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,ci,timepoint,population:1",22,2026-07-31
 ICI-0401547eae-01,PMID:29584546,https://pmc.ncbi.nlm.nih.gov/articles/PMC6075855/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,denominator,ci,timepoint,population:1",22,2026-07-31
 ICI-2588285332-01,PMID:29584546,https://pmc.ncbi.nlm.nih.gov/articles/PMC6075855/,pmc_full_text,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
-ICI-5376b48c43-01,PMID:29584546,https://pmc.ncbi.nlm.nih.gov/articles/PMC6075855/,pmc_full_text,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
+ICI-5376b48c43-01,PMID:37530622,https://pubmed.ncbi.nlm.nih.gov/37530622/,pubmed_abstract,"Abstract, Results",verified,"manual source review of endpoint, population and denominator; see docs/curation-audit.md",,2026-09-15
 ICI-92255bb6fc-01,PMID:28441111,https://pmc.ncbi.nlm.nih.gov/articles/PMC5791843/,pmc_abstract,"Abstract, Results",verified,"endpoint,denominator,ci",14,2026-07-31
 ICI-1a1f13bbdd-01,PMID:28441111,https://pmc.ncbi.nlm.nih.gov/articles/PMC5791843/,pmc_abstract,"Abstract, Results",verified,"endpoint,value,denominator,ci",18,2026-07-31
 ICI-7049d9192b-01,PMID:31409671,https://pmc.ncbi.nlm.nih.gov/articles/PMC6776792/,pmc_abstract,Abstract,verified,"endpoint,value,denominator,ci,population:6",21,2026-07-31
@@ -376,8 +376,8 @@ ICI-ab42735a77-01,PMID:27979383,https://pmc.ncbi.nlm.nih.gov/articles/PMC6886121
 ICI-b3d0d4438b-01,PMID:29773717,https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/,pmc_full_text,,not_verified,no source block matched the endpoint and row-specific evidence,0,2026-07-31
 ICI-40ee4f78ab-01,PMID:29773717,https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/,pmc_full_text,,not_verified,no source block matched the endpoint and row-specific evidence,0,2026-07-31
 ICI-40ee4f78ab-02,PMID:29773717,https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/,pmc_full_text,,not_verified,no source block matched the endpoint and row-specific evidence,0,2026-07-31
-ICI-2e06c5f7d3-01,PMID:29773717,https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/,pmc_full_text,Abstract,verified,"endpoint,value,denominator,population:3",17,2026-07-31
-ICI-1c401c554d-01,PMID:29773717,https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/,pmc_full_text,Results > Co-mutations in STK11/LKB1 are associated with inferior clinical outcome with PD-1 blockade in multiple independent cohorts of KRAS-mutant LUAC,verified,"endpoint,value,denominator,population:3",16,2026-07-31
+ICI-2e06c5f7d3-01,PMID:29773717,https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/,pmc_full_text,"Figure 1A; Results, Patient characteristics",verified,manual_primary_full_text_subgroup_review,,2026-09-16
+ICI-1c401c554d-01,PMID:29773717,https://pmc.ncbi.nlm.nih.gov/articles/PMC6030433/,pmc_full_text,"Figure 1B; Results, Co-mutations in STK11/LKB1",verified,manual_primary_full_text_subgroup_review,,2026-09-16
 ICI-be21515948-01,PMID:26028407,https://pmc.ncbi.nlm.nih.gov/articles/PMC4681400/,pmc_full_text,Table 2,verified,curated estimate note names the exact source table or figure,0,2026-07-31
 ICI-5b813640a5-01,PMID:26028407,https://pmc.ncbi.nlm.nih.gov/articles/PMC4681400/,pmc_full_text,Table 2,verified,curated estimate note names the exact source table or figure,0,2026-07-31
 ICI-79f3d709fb-01,PMID:26028407,https://pmc.ncbi.nlm.nih.gov/articles/PMC4681400/,pmc_full_text,"Abstract, Results",verified,"endpoint,value,timepoint,population:2",17,2026-07-31
@@ -396,13 +396,13 @@ ICI-9374924e16-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC1039881
 ICI-22ba3b1e19-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,Results > No Survival Benefit Was Observed Across Cohorts,verified,"endpoint,value,denominator,ci,timepoint,population:3",23,2026-07-31
 ICI-a36540dcf8-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,Results > No Survival Benefit Was Observed Across Cohorts,verified,"endpoint,value,denominator,timepoint,population:3",19,2026-07-31
 ICI-ae96c8bb72-01,PMID:36808285,https://pmc.ncbi.nlm.nih.gov/articles/PMC10398811/,pmc_full_text,Results > No Survival Benefit Was Observed Across Cohorts,verified,"endpoint,denominator,timepoint,population:3",15,2026-07-31
-ICI-a5110c10af-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
-ICI-00c2bac28b-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
-ICI-5a37718a4b-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
-ICI-74fb282c7c-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
-ICI-8822167caa-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
-ICI-9aec2e4744-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
-ICI-b7d9a56e32-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
+ICI-a5110c10af-01,DOI:10.1080/10428194.2022.2034155,https://www.tandfonline.com/doi/abs/10.1080/10428194.2022.2034155,publisher_full_text,"Table 3; Results, Efficacy",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
+ICI-00c2bac28b-01,DOI:10.1080/10428194.2022.2034155,https://www.tandfonline.com/doi/abs/10.1080/10428194.2022.2034155,publisher_full_text,"Table 3; Results, Efficacy",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
+ICI-5a37718a4b-01,DOI:10.1080/10428194.2022.2034155,https://www.tandfonline.com/doi/abs/10.1080/10428194.2022.2034155,publisher_full_text,"Table 3; Results, Efficacy",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
+ICI-74fb282c7c-01,DOI:10.1080/10428194.2022.2034155,https://www.tandfonline.com/doi/abs/10.1080/10428194.2022.2034155,publisher_full_text,"Table 3; Results, Efficacy",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
+ICI-8822167caa-01,DOI:10.1080/10428194.2022.2034155,https://www.tandfonline.com/doi/abs/10.1080/10428194.2022.2034155,publisher_full_text,"Table 3; Results, Efficacy",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
+ICI-9aec2e4744-01,DOI:10.1080/10428194.2022.2034155,https://www.tandfonline.com/doi/abs/10.1080/10428194.2022.2034155,publisher_full_text,"Table 3; Results, Efficacy",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
+ICI-b7d9a56e32-01,DOI:10.1080/10428194.2022.2034155,https://www.tandfonline.com/doi/abs/10.1080/10428194.2022.2034155,publisher_full_text,"Table 3; Results, Efficacy",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
 ICI-13b1a410d0-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
 ICI-ba05b51ac5-01,DOI:10.1080/10428194.2022.2034155,https://doi.org/10.1080/10428194.2022.2034155,doi_record,,citation_only,source citation verified; no public text block was available,0,2026-07-31
 ICI-7502d759c8-01,PMID:35289329,https://pmc.ncbi.nlm.nih.gov/articles/PMC8921328/,pmc_full_text,Abstract,source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
@@ -442,7 +442,7 @@ ICI-7599e31ef1-01,PMID:30605211,https://pmc.ncbi.nlm.nih.gov/articles/PMC6439847
 ICI-6046d61b34-01,PMID:30605211,https://pmc.ncbi.nlm.nih.gov/articles/PMC6439847/,pmc_abstract,"Abstract, Results",verified,"endpoint,numerator/denominator,value,ci,population:2",26,2026-07-31
 ICI-94980ac18f-01,PMID:30937889,https://pubmed.ncbi.nlm.nih.gov/30937889/,pubmed_abstract,,citation_only,source citation verified; no public text block was available,0,2026-07-31
 ICI-a45ca3ed48-01,PMID:30937889,https://pubmed.ncbi.nlm.nih.gov/30937889/,pubmed_abstract,,citation_only,source citation verified; no public text block was available,0,2026-07-31
-ICI-e9a3cf4215-01,PMID:31812554,https://doi.org/10.1016/S1470-2045(19)30671-0,publisher_full_text,"Table 1; Table 4 footnote; Results",verified,"endpoint,numerator/denominator,population,response status",30,2026-08-31
+ICI-e9a3cf4215-01,PMID:31812554,https://doi.org/10.1016/S1470-2045(19)30671-0,publisher_full_text,Table 1; Table 4 footnote; Results,verified,"endpoint,numerator/denominator,population,response status",30,2026-08-31
 ICI-0415d548a7-01,PMID:34590004,https://pmc.ncbi.nlm.nih.gov/articles/PMC8474479/,pmc_full_text,Results > Efficacy of Nivolumab,located_unverified,"endpoint,value,denominator,ci,population:1",18,2026-07-31
 ICI-ccaabf1e7d-01,DOI:10.1038/s41416-020-0775-0,https://pmc.ncbi.nlm.nih.gov/articles/PMC7188798/,pmc_full_text,Table 2,verified,"endpoint,value",13,2026-07-31
 ICI-460c94526d-01,DOI:10.1038/s41416-020-0775-0,https://pmc.ncbi.nlm.nih.gov/articles/PMC7188798/,pmc_full_text,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
@@ -456,7 +456,7 @@ ICI-31747d5688-01,DOI:10.1158/1078-0432.CCR-19-3356,https://pmc.ncbi.nlm.nih.gov
 ICI-b5215aa0e8-01,DOI:10.1158/1078-0432.CCR-19-3356,https://pmc.ncbi.nlm.nih.gov/articles/PMC7231627/,pmc_full_text,RESULTS > Outcomes,located_unverified,"endpoint,value,denominator,ci,timepoint,population:3",23,2026-07-31
 ICI-738e4fb409-01,DOI:10.1158/1078-0432.CCR-19-3356,https://pmc.ncbi.nlm.nih.gov/articles/PMC7231627/,pmc_full_text,RESULTS > Outcomes,located_unverified,"endpoint,value,denominator,timepoint,population:3",19,2026-07-31
 ICI-0bf25b2b25-01,DOI:10.1158/1078-0432.CCR-19-3356,https://pmc.ncbi.nlm.nih.gov/articles/PMC7231627/,pmc_full_text,RESULTS > Outcomes,located_unverified,"endpoint,value,denominator,ci,timepoint,population:3",23,2026-07-31
-ICI-e715592be4-01,DOI:10.1158/1078-0432.CCR-20-4729,https://doi.org/10.1158/1078-0432.CCR-20-4729,doi_record,,not_verified,no source block matched the endpoint and row-specific evidence,0,2026-07-31
+ICI-e715592be4-01,PMID:33882143,https://pmc.ncbi.nlm.nih.gov/articles/PMC8606104/,pmc_full_text,"Abstract; Results, Patient Characteristics",verified,manual review: value supported only for pan-site cohort; not LCNEC-specific,,2026-09-15
 ICI-7b3b08cecf-01,PMID:30726175,https://pmc.ncbi.nlm.nih.gov/articles/PMC6424137/,pmc_abstract,"Abstract, RESULTS",verified,"endpoint,value,denominator,population:2",16,2026-07-31
 ICI-f3eaf068a8-01,PMID:30726175,https://pmc.ncbi.nlm.nih.gov/articles/PMC6424137/,pmc_abstract,"Abstract, RESULTS",verified,"endpoint,value,denominator,population:2",16,2026-07-31
 ICI-06a156aa56-01,PMID:30726175,https://pmc.ncbi.nlm.nih.gov/articles/PMC6424137/,pmc_abstract,"Abstract, RESULTS",verified,"endpoint,value,denominator,population:2",16,2026-07-31
@@ -554,7 +554,7 @@ ICI-31cd333339-01,PMID:34380663,https://pmc.ncbi.nlm.nih.gov/articles/PMC8330584
 ICI-68f695eab6-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,"Abstract, RESULTS",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-ac6660f176-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,"Abstract, RESULTS",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-99df990742-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,"Abstract, RESULTS",verified,"endpoint,value,denominator,population:1",15,2026-07-31
-ICI-14ea45d388-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,,not_verified,no source block matched the endpoint and row-specific evidence,0,2026-07-31
+ICI-14ea45d388-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,"Results, Clinical Activity",verified,manual population and denominator review; docs/curation-audit.md,,2026-09-15
 ICI-28b78feb76-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,RESULTS > EFFICACY,verified,"endpoint,value,denominator,timepoint,population:2",18,2026-07-31
 ICI-d4d51e026e-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,"Abstract, RESULTS",verified,"endpoint,value,denominator,timepoint,population:1",18,2026-07-31
 ICI-eb0f232db6-01,PMID:37672694,https://pmc.ncbi.nlm.nih.gov/articles/PMC10729808/,pmc_full_text,RESULTS > EFFICACY,verified,"endpoint,value,denominator,timepoint,population:2",18,2026-07-31
@@ -730,7 +730,7 @@ ICI-3d10989ced-01,PMID:29395863,https://pmc.ncbi.nlm.nih.gov/articles/PMC1068385
 ICI-300be8ecf3-01,PMID:29395863,https://pmc.ncbi.nlm.nih.gov/articles/PMC10683856/,pmc_full_text,Results,verified,"endpoint,denominator,timepoint,population:3",15,2026-07-31
 ICI-74053911de-01,PMID:29906252,https://pubmed.ncbi.nlm.nih.gov/29906252/,pubmed_abstract,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-506b32f2a7-01,,,missing_citation,,not_applicable,curator-derived value,0,2026-07-31
-ICI-64a41d348a-01,PMID:27159395,https://pmc.ncbi.nlm.nih.gov/articles/PMC4887167/,pmc_abstract,Abstract,source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
+ICI-64a41d348a-01,PMID:27159395,https://www.jci.org/articles/view/84940,publisher_full_text,"Results and Discussion, partial response at 8 weeks",verified,"manual source review of endpoint, population and denominator; see docs/curation-audit.md",,2026-09-15
 ICI-e35f9168c5-01,PMID:39847999,https://pubmed.ncbi.nlm.nih.gov/39847999/,pubmed_abstract,"Abstract, Results",verified,"endpoint,value,denominator,ci",18,2026-07-31
 ICI-81454d98c0-01,PMID:39847999,https://pubmed.ncbi.nlm.nih.gov/39847999/,pubmed_abstract,"Abstract, Results",source_section,source citation verified; only a coarse public source section was available,0,2026-07-31
 ICI-bcda9bc5e7-01,PMID:39847999,https://pubmed.ncbi.nlm.nih.gov/39847999/,pubmed_abstract,"Abstract, Results",verified,"endpoint,value,denominator",14,2026-07-31
@@ -785,3 +785,4 @@ ICI-897a51cb7a-01,PMID:29863979,https://pubmed.ncbi.nlm.nih.gov/29863979/,pubmed
 ICI-8b126eef2c-01,PMID:30409776,https://pmc.ncbi.nlm.nih.gov/articles/PMC6397669/,pmc_full_text,"Abstract, Findings; Results, Clinical outcomes",verified,"endpoint,numerator/denominator,value,population,response definition",26,2026-08-31
 ICI-4b4990885c-01,PMID:34581778,https://pmc.ncbi.nlm.nih.gov/articles/PMC9152999/,pmc_full_text,"Abstract; Results, Safety and efficacy",verified,"endpoint,numerator/denominator,population,response status",24,2026-08-31
 ICI-2a7de231fa-01,PMID:29543932,https://pmc.ncbi.nlm.nih.gov/articles/PMC5885175/,pmc_full_text,"Results, Microsatellite Instability",verified,"endpoint,numerator/denominator,value,denominator,ci,population",30,2026-09-03
+ICI-e23fe5ef46-01,PMID:31175402,https://pmc.ncbi.nlm.nih.gov/articles/PMC6584707/,pmc_full_text,"Results, Figure 1; Patients and methods, Treatment and study design",verified,manual_primary_full_text_endpoint_and_count_review,,2026-09-16
