@@ -65,7 +65,9 @@ keep their lineage hue so the landscape still reads as a landscape.
 Nothing is filtered, re-ranked or re-scaled — the highlighted figure and its plain
 twin show the same points in the same places. A highlighted point is labelled even
 when it falls outside the `slide` preset's label budget, because it is the point of
-the figure.
+the figure. Ranked slide charts retain the highlighted row alongside the highest
+ranked rows. An unknown code, or a code absent from that plot, is an error rather
+than producing an all-muted figure.
 
 Only plots whose marks are per-cancer-code can carry a highlight. A burden-category
 chart has no single row to light up, so those are excluded rather than approximated.
@@ -80,6 +82,12 @@ but is not the same population — roughly 80% of basal-like tumours are
 triple-negative, and not all TNBC is basal-like. Both the mark and the output
 directory are named for what is actually plotted, so a figure lifted into a deck
 does not silently become a claim about TNBC.
+
+Checkpoint-response evidence currently attached to `BRCA_Basal` comes from
+clinically defined TNBC cohorts, whereas its molecular measurements use PAM50
+basal-like cohorts. Highlighted response figures therefore carry a population note
+below the plotting axes. It remains attached to the saved artifact for provenance,
+but sits outside the core panel so the panel can be cropped cleanly when reused.
 
 ## Style
 

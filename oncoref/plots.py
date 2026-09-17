@@ -50,6 +50,22 @@ _PLT = None
 #: stat name -> the percentile breakpoint column in the shipped percentile vector.
 _STAT_PERCENTILE_COL = {"q1": "p25", "median": "p50", "q3": "p75"}
 
+# BRCA_Basal is a molecular PAM50 cohort, while the checkpoint-response anchors
+# currently attached to that registry code enrolled clinically defined TNBC. The
+# populations overlap heavily, but they are not interchangeable. Highlighted
+# response figures make that limitation unusually easy to miss, so keep the
+# disclosure with the rendered artifact, outside the plotting axes.
+_BASAL_TNBC_RESPONSE_NOTE = (
+    "Population note: BRCA_Basal molecular values use PAM50 basal-like cohorts; "
+    "checkpoint-response estimates use clinically defined TNBC cohorts. The "
+    "populations overlap but are not interchangeable."
+)
+_BASAL_TNBC_RESPONSE_ONLY_NOTE = (
+    "Population note: BRCA_Basal is a PAM50 basal-like registry code, but the "
+    "checkpoint-response estimates shown here come from clinically defined TNBC "
+    "cohorts. The populations overlap but are not interchangeable."
+)
+
 
 def _plt():
     """Lazy, one-time matplotlib import (headless-safe Agg default; honors a
@@ -110,6 +126,8 @@ def _family_colors(codes):
     """``({code -> color}, {lineage group -> color})`` by coarse lineage group. Colors
     are a stable, deterministic per-group assignment (see :func:`_family_color_map`); the
     returned group map carries only the groups present in ``codes`` (for legends)."""
+    codes = list(codes)
+    _require_highlight(codes)
     fam_by_code = _family_by_code()
     full = _family_color_map()
     present = sorted({fam_by_code.get(c, "other") for c in codes})
@@ -129,6 +147,54 @@ def _family_colors(codes):
         }
         fam_color = {f: figure_style.mute(col) for f, col in fam_color.items()}
     return by_code, fam_color
+
+
+def _require_highlight(codes) -> None:
+    """Fail rather than render an all-muted figure when the target is absent."""
+    target = figure_style.highlight()
+    if target is None:
+        return
+    present = {str(code) for code in codes}
+    if target not in present:
+        raise ValueError(f"highlight target {target!r} is not present in this plot")
+
+
+def _highlight_preserving_indices(codes, budget):
+    """Indices for a ranked slice, retaining the requested highlight if necessary."""
+    codes = [str(code) for code in codes]
+    _require_highlight(codes)
+    if budget is None or len(codes) <= budget:
+        return list(range(len(codes))), False
+    if budget <= 0:
+        raise ValueError("plot item budget must be positive")
+    indices = list(range(budget))
+    target = figure_style.highlight()
+    forced = target is not None and target not in {codes[i] for i in indices}
+    if forced:
+        indices[-1] = codes.index(target)
+    return indices, forced
+
+
+def _limit_ranked_items(items, budget):
+    """Limit ranked ``(code, ...)`` rows without discarding the highlighted row."""
+    items = list(items)
+    indices, _ = _highlight_preserving_indices([item[0] for item in items], budget)
+    return [items[i] for i in indices]
+
+
+def _response_population_note(*, mixed_population_axes=False):
+    """Population disclosure needed for highlighted BRCA_Basal response figures."""
+    if not figure_style.is_highlighted("BRCA_Basal"):
+        return None
+    return _BASAL_TNBC_RESPONSE_NOTE if mixed_population_axes else _BASAL_TNBC_RESPONSE_ONLY_NOTE
+
+
+def _add_figure_note(fig, note):
+    """Place a removable disclosure below the axes, outside the figure's core panel."""
+    if not note:
+        return
+    fig.subplots_adjust(bottom=max(fig.subplotpars.bottom, 0.16))
+    fig.text(0.01, 0.025, note, ha="left", va="bottom", fontsize=7, color="#555555")
 
 
 def _plot_evidence_code(code):
@@ -347,6 +413,7 @@ def _family_scatter(
     annotate=True,
     figsize=(12, 8),
     legend_loc="best",
+    note=None,
     save=None,
 ):
     """Scatter of ``(code, x, y)`` points coloured by lineage group, with optional point
@@ -424,18 +491,28 @@ def _family_scatter(
     # transform rather than the pre-log one.
     _repel_labels(ax, texts, xs, ys)
     fig.tight_layout()
+    _add_figure_note(fig, note)
     return _save(fig, save)
 
 
-def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
+def _ranked_family_barh(pairs, *, xlabel, title, legend=False, note=None, save=None):
     """Horizontal bars of ``(code, value)`` in the given top-to-bottom order,
     coloured by registry family. The shared ranked-bar scaffold."""
     import numpy as np
 
     plt = _plt()
-    pairs, dropped = figure_style.trim(pairs)
+    pairs = list(pairs)
+    total = len(pairs)
+    indices, forced = _highlight_preserving_indices(
+        [pair[0] for pair in pairs], figure_style.max_items()
+    )
+    pairs = [pairs[i] for i in indices]
+    dropped = total - len(pairs)
     if dropped:
-        xlabel = f"{xlabel} — top {len(pairs)} of {len(pairs) + dropped}"
+        if forced:
+            xlabel = f"{xlabel} — top {len(pairs) - 1} + highlighted, of {total}"
+        else:
+            xlabel = f"{xlabel} — top {len(pairs)} of {total}"
     codes = [p[0] for p in pairs]
     values = [p[1] for p in pairs]
     colors, fam_color = _family_colors(codes)
@@ -457,6 +534,7 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, save=None):
         handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in fam_color.values()]
         ax.legend(handles, list(fam_color), fontsize=6, title="family", loc="lower right")
     fig.tight_layout()
+    _add_figure_note(fig, note)
     return _save(fig, save)
 
 
@@ -603,19 +681,32 @@ def _stacked_barh(rows, *, xlabel, title, legend=None, annotate=True, save=None)
     return _save(fig, save)
 
 
-def _grouped_barh(categories, series, *, xlabel, title, save=None):
+def _grouped_barh(categories, series, *, xlabel, title, codes=None, note=None, save=None):
     """Grouped (paired) horizontal bars. ``categories`` are the row labels (top-to-
     bottom); ``series`` is ``[(name, [value per category], color), ...]`` — one bar
     per series within each category group. The shared grouped-bar scaffold."""
     import numpy as np
 
     plt = _plt()
-    budget = figure_style.max_items()
-    if budget is not None and len(categories) > budget:
-        keep = budget
-        xlabel = f"{xlabel} — top {keep} of {len(categories)}"
-        categories = list(categories)[:keep]
-        series = [(name, list(values)[:keep], color) for name, values, color in series]
+    categories = list(categories)
+    codes = list(codes) if codes is not None else None
+    if figure_style.highlight() is not None and codes is None:
+        raise ValueError("highlighting this grouped bar chart requires cancer codes")
+    total = len(categories)
+    if codes is None:
+        budget = figure_style.max_items()
+        indices, forced = list(range(min(total, budget or total))), False
+    else:
+        indices, forced = _highlight_preserving_indices(codes, figure_style.max_items())
+    if len(indices) < total:
+        if forced:
+            xlabel = f"{xlabel} — top {len(indices) - 1} + highlighted, of {total}"
+        else:
+            xlabel = f"{xlabel} — top {len(indices)} of {total}"
+    categories = [categories[i] for i in indices]
+    if codes is not None:
+        codes = [str(codes[i]) for i in indices]
+    series = [(name, [list(values)[i] for i in indices], color) for name, values, color in series]
     n_series = max(1, len(series))
     base = np.arange(len(categories))
     bar_height = 0.8 / n_series
@@ -623,18 +714,42 @@ def _grouped_barh(categories, series, *, xlabel, title, save=None):
     fig, ax = plt.subplots(figsize=(9, fig_height))
     for k, (name, values, color) in enumerate(series):
         offset = (k - (n_series - 1) / 2) * bar_height
-        ax.barh(base + offset, values, height=bar_height, label=name, color=color)
+        if codes is None or figure_style.highlight() is None:
+            facecolors = color
+            edgecolors = "none"
+            linewidths = 0
+        else:
+            facecolors = [
+                color if figure_style.is_highlighted(c) else figure_style.mute(color) for c in codes
+            ]
+            edgecolors = [
+                figure_style.HIGHLIGHT_COLOR if figure_style.is_highlighted(c) else "white"
+                for c in codes
+            ]
+            linewidths = [1.8 if figure_style.is_highlighted(c) else 0.4 for c in codes]
+        ax.barh(
+            base + offset,
+            values,
+            height=bar_height,
+            label=name,
+            color=facecolors,
+            edgecolor=edgecolors,
+            linewidth=linewidths,
+        )
     ax.set_yticks(base)
     ax.set_yticklabels(
         [figure_style.label(c) for c in categories],
         fontsize=figure_style.tick_fontsize(density, figure_style.fs(9)),
     )
+    if codes is not None:
+        _mark_highlighted_ticks(ax, codes)
     ax.invert_yaxis()
     ax.set_xlabel(xlabel)
     ax.set_title(title)
     ax.grid(True, axis="x", alpha=0.3)
     ax.legend(fontsize=7, loc="lower right")
     fig.tight_layout()
+    _add_figure_note(fig, note)
     return _save(fig, save)
 
 
@@ -656,6 +771,7 @@ def apd1_vs_tmb(*, save=None, annotate=True, strict_pd1=False):
         annotate=annotate,
         figsize=(11, 7),
         legend_loc="upper left",
+        note=_response_population_note(mixed_population_axes=True),
         save=save,
     )
 
@@ -669,6 +785,7 @@ def apd1_orr_bars(*, save=None, strict_pd1=False):
         [(c, orr[c]) for c in codes],
         xlabel=xlabel,
         title=f"{scope} response by cancer type ({len(codes)} types)",
+        note=_response_population_note(),
         save=save,
     )
 
@@ -704,6 +821,8 @@ def ici_response_by_regimen(*, save=None, only_multi=True):
         series,
         xlabel="Objective response rate (%)",
         title=f"ICI response by regimen ({len(ordered)} cancer types)",
+        codes=ordered,
+        note=_response_population_note(),
         save=save,
     )
 
@@ -724,6 +843,7 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
         raise ValueError("no cancer types to plot")
     best = {c: max(by_regimen[r][c] for r in REGIMEN_FALLBACK if c in by_regimen[r]) for c in codes}
     ordered = sorted(codes, key=lambda c: best[c])  # ascending; highest ends up on top
+    _require_highlight(ordered)
 
     plt = _plt()
     palette = _stable_palette()
@@ -731,17 +851,38 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
     height, density = figure_style.stack_size(len(ordered), per_item=0.30, floor=5)
     fig, ax = plt.subplots(figsize=(11, height))
     for y, c in enumerate(ordered):
+        hot = figure_style.is_highlighted(c)
         present = [(r, by_regimen[r][c]) for r in REGIMEN_FALLBACK if c in by_regimen[r]]
         xs = [v for _, v in present]
         if len(xs) > 1:  # connect the estimates for this cancer
-            ax.plot([min(xs), max(xs)], [y, y], color="#cccccc", lw=1.5, zorder=1)
+            ax.plot(
+                [min(xs), max(xs)],
+                [y, y],
+                color=figure_style.HIGHLIGHT_COLOR if hot else "#dddddd",
+                lw=2.4 if hot else 1.5,
+                zorder=3 if hot else 1,
+            )
         for r, v in present:
-            ax.scatter(v, y, color=reg_color[r], s=48, edgecolor="white", linewidth=0.5, zorder=2)
+            color = (
+                reg_color[r]
+                if hot or figure_style.highlight() is None
+                else figure_style.mute(reg_color[r])
+            )
+            ax.scatter(
+                v,
+                y,
+                color=color,
+                s=90 if hot else 48,
+                edgecolor=figure_style.HIGHLIGHT_COLOR if hot else "white",
+                linewidth=1.8 if hot else 0.5,
+                zorder=4 if hot else 2,
+            )
     ax.set_yticks(range(len(ordered)))
     ax.set_yticklabels(
         [format_cancer_code_label(c) for c in ordered],
         fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
     )
+    _mark_highlighted_ticks(ax, ordered)
     ax.set_xlabel("Objective response rate (%)")
     ax.set_title(f"ICI response by regimen and cancer type ({len(ordered)} types)")
     ax.grid(True, axis="x", alpha=0.3)
@@ -751,6 +892,7 @@ def ici_regimen_comparison(*, save=None, min_regimens=1):
     ]
     ax.legend(handles=handles, fontsize=7, loc="lower right", title="regimen")
     fig.tight_layout()
+    _add_figure_note(fig, _response_population_note())
     return _save(fig, save)
 
 
@@ -811,6 +953,7 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
     for y in range(0, len(rows), 2):  # alternating row bands to trace label -> point
         ax.axhspan(y - 0.5, y + 0.5, color="#f4f4f4", zorder=0)
     for y, (code, _reg, est, lo, hi, pts) in enumerate(rows):
+        hot = figure_style.is_highlighted(code)
         # individual trial estimates (grey), with CI whiskers + √n sizing
         for v, clo, chi, n in pts:
             if clo is not None and chi is not None:
@@ -829,13 +972,23 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
         col = code_color[code]
         if lo is not None and hi is not None:
             ax.plot([lo, hi], [y, y], color=col, lw=2.6, alpha=0.85, zorder=3)
-        ax.scatter(est, y, marker="D", s=46, color=col, edgecolor="black", linewidth=0.5, zorder=4)
+        ax.scatter(
+            est,
+            y,
+            marker="D",
+            s=82 if hot else 46,
+            color=col,
+            edgecolor="black",
+            linewidth=1.4 if hot else 0.5,
+            zorder=5 if hot else 4,
+        )
 
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels(
         [f"{format_cancer_code_label(c)} [{reg}]" for c, reg, *_ in rows],
         fontsize=figure_style.tick_fontsize(density, figure_style.fs(8)),
     )
+    _mark_highlighted_ticks(ax, [row[0] for row in rows])
     ax.set_ylim(-0.7, len(rows) - 0.3)
     ax.set_xlabel("Objective response rate (%)")
     ax.set_xlim(left=-2)
@@ -867,6 +1020,7 @@ def ici_orr_pooled_forest(*, regimen=None, save=None):
     ]
     ax.legend(handles=handles, fontsize=7, loc="lower right")
     fig.tight_layout()
+    _add_figure_note(fig, _response_population_note())
     return _save(fig, save)
 
 
@@ -1090,7 +1244,7 @@ def _cta_addressable_burden_from_prevalence(
         raise ValueError("no cohort mapped to both a burden category and CTA prevalence")
 
     rows.sort(key=lambda row: row[1], reverse=True)
-    rows = rows[:n]
+    rows = _limit_ranked_items(rows, n)
     return _ranked_family_barh(
         rows,
         xlabel=xlabel,
@@ -1561,6 +1715,11 @@ def cta_burden_vs_response(*, against="apd1", threshold_tpm=50.0, cohorts=None, 
         xlabel=f"mean CTAs expressed per patient (> {threshold_tpm:g} TPM)",
         ylabel=ylabel,
         title=f"CTA antigen load vs {against} — {len(points)} cancers",
+        note=(
+            _response_population_note(mixed_population_axes=True)
+            if against in {"apd1", "ici"}
+            else None
+        ),
         save=save,
     )
 
@@ -1592,6 +1751,7 @@ def apd1_response_signature_scatter(signature="t_cell_inflamed", *, cohorts=None
         xlabel=f"{signature} signature score (cohort-mean log clean TPM)",
         ylabel=ylabel,
         title=f"aPD1 response vs {signature} ({direction}-associated) — {len(points)} cancers",
+        note=_response_population_note(mixed_population_axes=True),
         save=save,
     )
 
@@ -1633,6 +1793,11 @@ def cta_specific_9mer_load(*, against="tmb", threshold_tpm=50.0, cohorts=None, s
         xlabel=f"mean CTA-specific 9-mers per patient (> {threshold_tpm:g} TPM)",
         ylabel=ylabel2,
         title=f"CTA-specific 9-mer load vs {against} — {len(points)} cancers",
+        note=(
+            _response_population_note(mixed_population_axes=True)
+            if against in {"apd1", "ici"}
+            else None
+        ),
         save=save,
     )
 

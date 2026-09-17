@@ -130,6 +130,24 @@ def test_cli_plot(tmp_path):
     assert out.exists()
 
 
+def test_cli_plot_rejects_unknown_highlight_before_writing(tmp_path, capsys):
+    out = tmp_path / "invalid.png"
+    rc = cli.main(["plot", "apd1-vs-tmb", "--highlight", "NOT_A_CODE", "--out", str(out)])
+    assert rc == 1
+    assert "Unknown cancer type" in capsys.readouterr().err
+    assert not out.exists()
+
+
+def test_cli_plot_rejects_highlight_for_non_cancer_mark_plot(tmp_path, capsys):
+    out = tmp_path / "invalid.png"
+    rc = cli.main(
+        ["plot", "cta-expression-heatmap", "--highlight", "BRCA_Basal", "--out", str(out)]
+    )
+    assert rc == 1
+    assert "does not have one mark per cancer code" in capsys.readouterr().err
+    assert not out.exists()
+
+
 def test_cli_plot_burden_category_bars(tmp_path):
     out = tmp_path / "cats.png"
     assert cli.main(["plot", "burden-category-bars", "--region", "world", "--out", str(out)]) == 0
@@ -1356,6 +1374,7 @@ def test_log_axis_stays_plain_log_when_every_value_is_positive():
 def _no_highlight():
     from oncoref import figure_style
 
+    figure_style.set_highlight(None)
     yield
     figure_style.set_highlight(None)
 
@@ -1372,7 +1391,9 @@ def test_highlight_mutes_context_without_changing_positions(_no_highlight):
 
     # A highlight is a display decision: same points, same places, nothing filtered.
     assert plain_xy.shape == hot_xy.shape
-    assert np.allclose(np.sort(plain_xy, axis=0), np.sort(hot_xy, axis=0))
+    plain_xy = plain_xy[np.lexsort((plain_xy[:, 1], plain_xy[:, 0]))]
+    hot_xy = hot_xy[np.lexsort((hot_xy[:, 1], hot_xy[:, 0]))]
+    assert np.allclose(plain_xy, hot_xy)
 
 
 def test_highlighted_mark_is_emphasised(_no_highlight):
@@ -1416,3 +1437,54 @@ def test_no_highlight_leaves_colours_untouched(_no_highlight):
     hot, _ = plots._family_colors(["LUAD", "BRCA_Basal"])
     assert plain["LUAD"] != hot["LUAD"]
     assert hot["BRCA_Basal"] == figure_style.HIGHLIGHT_COLOR
+
+
+def test_missing_highlight_target_fails_instead_of_muting_every_mark(_no_highlight):
+    from oncoref import figure_style
+
+    figure_style.set_highlight("NOT_A_CODE")
+    with pytest.raises(ValueError, match="not present in this plot"):
+        plots.apd1_vs_tmb(annotate=False)
+
+
+def test_slide_ranked_bar_keeps_highlight_outside_top_budget(_no_highlight):
+    from oncoref import figure_style
+
+    figure_style.use("slide")
+    figure_style.set_highlight("BRCA_Basal")
+    try:
+        ax = plots.apd1_orr_bars().axes[0]
+        labels = [tick.get_text() for tick in ax.get_yticklabels()]
+        assert "BRCA_Basal" in labels
+        assert "highlighted" in ax.get_xlabel()
+    finally:
+        figure_style.use("print")
+
+
+def test_explicit_top_n_keeps_highlight_outside_ranked_slice(_no_highlight):
+    from oncoref import figure_style
+
+    figure_style.set_highlight("BRCA_Basal")
+    rows = [("LUAD", 30.0), ("SKCM", 20.0), ("BRCA_Basal", 5.0)]
+    assert plots._limit_ranked_items(rows, 2) == [rows[0], rows[2]]
+
+
+@pytest.mark.parametrize("plot_name", ["ici_response_by_regimen", "ici_regimen_comparison"])
+def test_regimen_plots_visibly_mark_highlighted_row(_no_highlight, plot_name):
+    from oncoref import figure_style
+
+    figure_style.set_highlight("BRCA_Basal")
+    ax = getattr(plots, plot_name)().axes[0]
+    target = next(tick for tick in ax.get_yticklabels() if "BRCA_Basal" in tick.get_text())
+    assert target.get_fontweight() == "bold"
+    assert target.get_color() == figure_style.HIGHLIGHT_COLOR
+
+
+def test_basal_response_highlight_discloses_tnbc_population_outside_axes(_no_highlight):
+    from oncoref import figure_style
+
+    figure_style.set_highlight("BRCA_Basal")
+    fig = plots.apd1_vs_tmb(annotate=False)
+    notes = [text for text in fig.texts if "not interchangeable" in text.get_text()]
+    assert len(notes) == 1
+    assert notes[0].get_position()[1] < fig.axes[0].get_position().y0
