@@ -1461,12 +1461,14 @@ def test_slide_ranked_bar_keeps_highlight_outside_top_budget(_no_highlight):
         figure_style.use("print")
 
 
-def test_explicit_top_n_keeps_highlight_outside_ranked_slice(_no_highlight):
+def test_explicit_top_n_discloses_highlight_substitution(_no_highlight):
     from oncoref import figure_style
 
     figure_style.set_highlight("BRCA_Basal")
     rows = [("LUAD", 30.0), ("SKCM", 20.0), ("BRCA_Basal", 5.0)]
-    assert plots._limit_ranked_items(rows, 2) == [rows[0], rows[2]]
+    ax = plots._ranked_family_barh(rows, xlabel="burden", title="test", limit=2).axes[0]
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["LUAD", "BRCA_Basal"]
+    assert ax.get_xlabel() == "burden — top 1 + highlighted, of 3"
 
 
 @pytest.mark.parametrize("plot_name", ["ici_response_by_regimen", "ici_regimen_comparison"])

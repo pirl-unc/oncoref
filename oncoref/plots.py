@@ -175,13 +175,6 @@ def _highlight_preserving_indices(codes, budget):
     return indices, forced
 
 
-def _limit_ranked_items(items, budget):
-    """Limit ranked ``(code, ...)`` rows without discarding the highlighted row."""
-    items = list(items)
-    indices, _ = _highlight_preserving_indices([item[0] for item in items], budget)
-    return [items[i] for i in indices]
-
-
 def _response_population_note(*, mixed_population_axes=False):
     """Population disclosure needed for highlighted BRCA_Basal response figures."""
     if not figure_style.is_highlighted("BRCA_Basal"):
@@ -495,7 +488,7 @@ def _family_scatter(
     return _save(fig, save)
 
 
-def _ranked_family_barh(pairs, *, xlabel, title, legend=False, note=None, save=None):
+def _ranked_family_barh(pairs, *, xlabel, title, legend=False, note=None, limit=None, save=None):
     """Horizontal bars of ``(code, value)`` in the given top-to-bottom order,
     coloured by registry family. The shared ranked-bar scaffold."""
     import numpy as np
@@ -503,9 +496,10 @@ def _ranked_family_barh(pairs, *, xlabel, title, legend=False, note=None, save=N
     plt = _plt()
     pairs = list(pairs)
     total = len(pairs)
-    indices, forced = _highlight_preserving_indices(
-        [pair[0] for pair in pairs], figure_style.max_items()
-    )
+    budget = figure_style.max_items()
+    if limit is not None:
+        budget = limit if budget is None else min(limit, budget)
+    indices, forced = _highlight_preserving_indices([pair[0] for pair in pairs], budget)
     pairs = [pairs[i] for i in indices]
     dropped = total - len(pairs)
     if dropped:
@@ -1244,12 +1238,12 @@ def _cta_addressable_burden_from_prevalence(
         raise ValueError("no cohort mapped to both a burden category and CTA prevalence")
 
     rows.sort(key=lambda row: row[1], reverse=True)
-    rows = _limit_ranked_items(rows, n)
     return _ranked_family_barh(
         rows,
         xlabel=xlabel,
-        title=f"CTA-addressable {burden_label} — top {len(rows)} cancers",
+        title=f"CTA-addressable {burden_label}",
         legend=True,
+        limit=n,
         save=save,
     )
 
