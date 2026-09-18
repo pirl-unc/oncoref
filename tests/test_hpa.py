@@ -216,8 +216,10 @@ def test_safety_tissue_resolution_fails_closed_by_default():
 def test_safety_tissue_resolution_rejects_unknown_inputs():
     with pytest.raises(hpa.SafetyTissueResolutionError, match="unknown safety tissue group"):
         hpa.resolve_safety_tissue_group("kidney")
+    # Single-cell data is keyed by cell type, so it has no tissue mapping to
+    # resolve against. The IHC and RNA-consensus tables both do.
     with pytest.raises(hpa.SafetyTissueResolutionError, match="no safety-tissue mapping"):
-        hpa.resolve_safety_tissue_group("heart", source_name="hpa_rna_consensus")
+        hpa.resolve_safety_tissue_group("heart", source_name="hpa_single_cell")
     with pytest.raises(hpa.SafetyTissueResolutionError, match="has no version"):
         hpa.resolve_safety_tissue_group("heart", source_version="v999")
 

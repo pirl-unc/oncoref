@@ -99,6 +99,37 @@ def test_cardiomyocyte_ihc_accepts_either_source_label():
         assert row["cardiomyocyte_ihc_status"] == "not_detected", label
 
 
+def test_mixed_negative_and_unscored_ihc_is_incomplete():
+    # HPA leaves some cell types unscored. A partial negative is not a clean
+    # non-detection, so it is reported as a gap rather than as absence.
+    row = _synthesize(
+        ihc=[
+            ["G1", "A", "liver", "hepatocytes", "Not detected", "Enhanced"],
+            ["G1", "A", "liver", "bile duct cells", None, "Enhanced"],
+        ],
+    )
+    assert row["somatic_ihc_status"] == "incomplete"
+    assert "somatic_ihc" in row["atlas_evidence_gaps"]
+    assert row["somatic_ihc_not_detected_rows"] == 1
+    assert row["somatic_ihc_unavailable_rows"] == 1
+
+
+def test_long_form_evidence_keeps_assay_vocabularies_separate():
+    df = cta_review.cta_normal_tissue_evidence()
+    status = df.groupby("modality")["measurement_status"].agg(set)
+    # An RNA zero is an estimate; only IHC can report a non-detection.
+    assert "reported_zero" in status["bulk_rna"]
+    assert "not_detected" not in status["bulk_rna"]
+    assert "not_detected" in status["ihc"]
+    assert "reported_zero" not in status["ihc"]
+    # Every row names the pinned release it came from.
+    assert df["source_version"].eq("v23").all()
+    assert df["source_url"].str.startswith("http").all()
+    assert set(df["unit"]) == {"nTPM", "IHC category"}
+    # Single-cell types are aggregated across organs, so they carry no tissue.
+    assert df.loc[df["modality"].eq("single_cell_rna"), "tissue"].isna().all()
+
+
 def test_warning_tier_is_opt_in_and_disjoint_from_strict():
     strict = cta.cta_gene_names()
     warnings = cta.cta_warning_gene_names()
@@ -133,27 +164,78 @@ def test_unreviewed_modalities_are_marked_not_reviewed():
         assert (status.drop(index=list(expected)) == "not_reviewed").all()
 
 
-def test_partial_safety_mapping_caveats_a_non_detection():
+def test_partial_mapping_is_reported_for_every_candidate():
     summary = cta_review.cta_evidence_summary()
-    partial = summary["brain_ihc_mapping_coverage"].ne("complete")
-    negative = summary["brain_ihc_status"].ne("detected")
-    caveated = summary["atlas_evidence_gaps"].str.contains("brain_ihc_partial_mapping")
-    # HPA v23 stains 9 of 14 requested brain regions, so a non-detection there
-    # must not read as group-wide absence.
-    assert (partial & negative).any()
-    assert caveated.eq(partial & negative).all()
+    # HPA v23 stains 9 of the 14 requested brain regions and measures RNA in 10,
+    # so neither modality speaks for spinal cord or thalamus.
+    for modality in ("rna", "ihc"):
+        partial = summary[f"brain_{modality}_mapping_coverage"].ne("complete")
+        caveated = summary["atlas_evidence_gaps"].str.contains(f"brain_{modality}_partial_mapping")
+        assert partial.all(), modality
+        assert caveated.all(), modality
     # The regions behind the caveat are named, not merely counted.
-    unmapped = summary.loc[partial, "brain_ihc_unmapped_tissues"].iloc[0].split(";")
-    assert "spinal cord" in unmapped
+    assert "spinal cord" in summary["brain_ihc_unmapped_tissues"].iloc[0].split(";")
+    assert "thalamus" in summary["brain_rna_unmapped_tissues"].iloc[0].split(";")
+    # A completely mapped group stays silent, so the caveat means something.
+    assert summary["heart_ihc_mapping_coverage"].eq("complete").all()
+    assert not summary["atlas_evidence_gaps"].str.contains("heart_ihc_partial_mapping").any()
 
 
-def test_detection_does_not_need_the_coverage_caveat():
-    # Positive protein evidence stands on its own; an unstained region elsewhere
-    # cannot turn a detection into a gap.
+def test_coverage_caveat_survives_a_positive_detection():
+    # Coverage describes what was assayed, not what was concluded. Gating this
+    # on the verdict would let one positive region imply the group was covered.
     row = _synthesize(ihc=[["G1", "A", "cerebral cortex", "neurons", "High", "Enhanced"]])
     assert row["brain_ihc_status"] == "detected"
     assert row["brain_ihc_mapping_coverage"] == "partial"
-    assert "brain_ihc_partial_mapping" not in row["atlas_evidence_gaps"]
+    assert "brain_ihc_partial_mapping" in row["atlas_evidence_gaps"]
+
+
+def test_never_assayed_safety_group_is_named_as_a_gap():
+    # 150 candidates have no HPA antibody data at all. "Never assayed" must be
+    # distinguishable from "assayed, nothing found" for every group, not just
+    # the one that happens to be partially mapped.
+    row = _synthesize(bulk_rna=[["G1", "A", "lung", 1.0]])
+    gaps = row["atlas_evidence_gaps"].split(";")
+    for group in ("lung", "liver", "pancreas", "heart"):
+        assert row[f"{group}_ihc_status"] == "unavailable", group
+        assert f"{group}_ihc_unavailable" in gaps, group
+
+
+def test_gradient_ihc_staining_counts_as_protein_detected():
+    # HPA's Ascending/Descending levels are gradient staining, i.e. protein
+    # present. Treating them as unmeasured would drop a somatic protein
+    # detection in the permissive direction.
+    for level in ("Ascending", "Descending"):
+        row = _synthesize(ihc=[["G1", "A", "liver", "hepatocytes", level, "Supported"]])
+        assert row["somatic_ihc_status"] == "detected", level
+        assert "somatic_protein_detected" in row["atlas_warning_codes"], level
+    # An unusable annotation is neither a detection nor a non-detection.
+    row = _synthesize(ihc=[["G1", "A", "liver", "hepatocytes", "Not representative", "Uncertain"]])
+    assert row["somatic_ihc_status"] == "unavailable"
+
+
+def test_placeholder_rows_are_not_measurements():
+    # HPA marks "no antibody data" with an all-null tissue/cell-type/level row.
+    long_form = cta_review.cta_normal_tissue_evidence()
+    ihc = long_form.loc[long_form["modality"].eq("ihc")]
+    assert ihc["ihc_level"].notna().all()
+    assert ihc["tissue"].notna().all()
+
+
+def test_evidence_summary_states_warnings_and_gaps():
+    summary = cta_review.cta_evidence_summary()
+    row = summary.loc[summary["Symbol"].eq("CTAG2")].iloc[0]
+    text = row["evidence_summary"]
+    # The one-liner must not read as reassuring while sibling columns disagree.
+    assert "rna_ihc_discordance" in text
+    assert "brain_ihc_partial_mapping" in text
+    assert "do not establish" in text
+    flagged = summary["atlas_warning_codes"].ne("")
+    assert summary.loc[flagged, "evidence_summary"].str.contains("Warnings:").all()
+    # A zero RNA estimate is named as an estimate, never as a bare measurement.
+    zero = summary["heart_rna_max_ntpm"].eq(0)
+    assert zero.any()
+    assert summary.loc[zero, "evidence_summary"].str.contains("estimated 0 nTPM").all()
 
 
 def test_versioned_gene_ids_still_join(monkeypatch):
@@ -162,9 +244,25 @@ def test_versioned_gene_ids_still_join(monkeypatch):
     reviewed = cta_review.cta_reviewed_evidence()
     reviewed["Ensembl_Gene_ID"] = reviewed["Ensembl_Gene_ID"] + ".14"
     monkeypatch.setattr(cta_review, "cta_reviewed_evidence", lambda: reviewed)
-    summary = cta_review.cta_evidence_summary()
-    status = summary.set_index("Ensembl_Gene_ID")["isoform_review_status"]
-    assert status["ENSG00000126890"] == "reviewed"
+    # The summary is memoized, so a swapped input needs the cache dropped or
+    # this test would assert against the real table and pass for free.
+    cta_review._evidence_summary_frame.cache_clear()
+    try:
+        summary = cta_review.cta_evidence_summary()
+        status = summary.set_index("Ensembl_Gene_ID")["isoform_review_status"]
+        assert status["ENSG00000126890"] == "reviewed"
+    finally:
+        cta_review._evidence_summary_frame.cache_clear()
+
+
+def test_derived_frames_are_memoized_and_defensively_copied():
+    first = cta_review.cta_evidence_summary()
+    second = cta_review.cta_evidence_summary()
+    # Callers get independent frames, so in-place mutation cannot leak.
+    assert first is not second
+    first.loc[0, "evidence_summary"] = "mutated"
+    assert cta_review.cta_evidence_summary().loc[0, "evidence_summary"] != "mutated"
+    assert cta_review._evidence_summary_frame.cache_info().hits > 0
 
 
 def test_summary_carries_no_unversioned_measurement_columns():
