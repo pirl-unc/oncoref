@@ -723,12 +723,13 @@ normal-tissue evidence exists for a candidate, on one comparable basis, and
 where that evidence is missing.
 
 `cta_evidence_summary()` returns one comparable row per CTA, watchlist, or
-clinical-reference candidate — 403 rows — on the pinned HPA v23 baseline. Every
-row carries bulk RNA, all-tissue somatic IHC, the five safety-tissue groups
-(`brain`, `heart`, `lung`, `liver`, `pancreas`), and cardiomyocyte RNA and IHC,
-plus `discovery_tier` (`strict`, `warning`, `low_expression`, `candidate`, or
-`excluded`), `atlas_warning_codes`, `atlas_evidence_gaps`, a `*_review_status`
-per reviewed modality, and a human-readable `evidence_summary`. The
+clinical-reference candidate on the pinned HPA v23 baseline. Every row carries
+bulk RNA, all-tissue somatic IHC, the five safety-tissue groups (`brain`,
+`heart`, `lung`, `liver`, `pancreas`), and cardiomyocyte RNA and IHC, plus
+`discovery_tier` (`strict`, `warning`, `low_expression`, `candidate`, or
+`excluded`), `atlas_warning_codes`, `atlas_evidence_gaps`,
+`atlas_coverage_limits`, a `*_review_status` per reviewed modality, and a
+human-readable `evidence_summary`. The
 `cta-warning-reviews` fields are merged in under a `warning_` prefix, so a
 warning-tier row carries its curated rationale alongside its measurements.
 Candidates are summarized, not re-tiered: no negative assay result in the
@@ -749,9 +750,22 @@ scope, source version, finding, and limitations. That table is not
 comprehensive: absence of a row means the modality was not reviewed for that
 gene, not that nothing was found.
 
+The two kinds of incompleteness are reported separately, because one is about
+the gene and the other about the release. `atlas_evidence_gaps` carries what is
+missing for that gene: a scope with no measurement is `unavailable`, and one
+measured in only part of its mapped tissues is `incomplete` rather than
+summarized as though the whole scope had been surveyed. `atlas_coverage_limits`
+carries the release's own fixed limitation, which is identical for every gene —
+HPA v23 stains 9 of the 14 requested brain regions and measures RNA in 10, so a
+brain result of any kind speaks for neither spinal cord nor thalamus.
+`cta_atlas_coverage()` states that limitation once, one row per safety group and
+modality, with the mapped and unmapped tissues named. Keeping it out of the
+per-gene field is deliberate: repeated into every row it would leave
+`atlas_evidence_gaps` never empty and unable to distinguish a gene with missing
+data from one measured everywhere.
+
 Assay vocabularies stay separate throughout. A zero RNA estimate is not a
-negative IHC result, an absent measurement is never read as a zero — it is
-reported as unavailable and counted in `atlas_evidence_gaps` — and no atlas
+negative IHC result, an absent measurement is never read as a zero, and no atlas
 measurement establishes peptide presentation or clinical safety. The HPA version
 is pinned rather than defaulted so a later release cannot silently relabel an
 old measurement or move the baseline of a reviewed exception. The first call
@@ -766,7 +780,7 @@ summary["discovery_tier"].value_counts()
 # The curated warning fields travel with the measurements they qualify.
 ctag2 = summary.loc[summary["Symbol"] == "CTAG2"]
 ctag2[["discovery_tier", "heart_rna_max_ntpm", "cardiomyocyte_ihc_status"]]
-ctag2[["atlas_warning_codes", "atlas_evidence_gaps", "warning_warning_code"]]
+ctag2[["atlas_warning_codes", "atlas_evidence_gaps", "warning_code"]]
 ctag2["evidence_summary"].item()
 
 # not_reviewed is a stated absence of review, not a negative result.

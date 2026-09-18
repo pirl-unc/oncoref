@@ -95,17 +95,28 @@ def _bundled_dataset_names() -> set[str]:
     }
 
 
-def test_every_bundled_dataset_is_in_the_manifest():
-    # The other direction of test_wheel_tables_actually_ship: a dataset that ships
-    # in the wheel but is in no manifest bucket is invisible to catalog.inventory()
-    # and `oncoref data list`, so shipping one is a manifest bug.
-    registered = (
+def _registered_dataset_names() -> set[str]:
+    """Every name any manifest bucket accounts for.
+
+    Shared by both allowlist tests: computing "registered" two different ways
+    would let a dataset registered in one bucket satisfy the first test while
+    still looking unregistered to the second, leaving a stale allowlist entry
+    that nothing flags.
+    """
+    return (
         set(data_manifest.WHEEL)
         | set(data_manifest.CANCERDATA_ORIGINATED)
         | set(data_manifest.BUNDLE)
         | set(data_manifest.SUPERSEDED)
         | set(data_manifest.OUT_OF_SCOPE)
     )
+
+
+def test_every_bundled_dataset_is_in_the_manifest():
+    # The other direction of test_wheel_tables_actually_ship: a dataset that ships
+    # in the wheel but is in no manifest bucket is invisible to catalog.inventory()
+    # and `oncoref data list`, so shipping one is a manifest bug.
+    registered = _registered_dataset_names()
     shipped = _bundled_dataset_names()
     unregistered = shipped - registered - _UNREGISTERED_BUNDLED_DATASETS
     assert not unregistered, f"bundled datasets missing from the manifest: {sorted(unregistered)}"
@@ -115,7 +126,7 @@ def test_unregistered_bundled_dataset_allowlist_is_current():
     # Keep the recorded gap honest: every allowlisted name must still ship and
     # still be unregistered, so registering or deleting one forces its removal.
     shipped = _bundled_dataset_names()
-    registered = set(data_manifest.WHEEL) | set(data_manifest.CANCERDATA_ORIGINATED)
+    registered = _registered_dataset_names()
     gone = _UNREGISTERED_BUNDLED_DATASETS - shipped
     assert not gone, f"allowlisted datasets no longer shipped — drop them: {sorted(gone)}"
     now_registered = _UNREGISTERED_BUNDLED_DATASETS & registered

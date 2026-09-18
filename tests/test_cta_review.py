@@ -170,7 +170,9 @@ def test_partial_mapping_is_reported_for_every_candidate():
     # so neither modality speaks for spinal cord or thalamus.
     for modality in ("rna", "ihc"):
         partial = summary[f"brain_{modality}_mapping_coverage"].ne("complete")
-        caveated = summary["atlas_evidence_gaps"].str.contains(f"brain_{modality}_partial_mapping")
+        caveated = summary["atlas_coverage_limits"].str.contains(
+            f"brain_{modality}_partial_mapping"
+        )
         assert partial.all(), modality
         assert caveated.all(), modality
     # The regions behind the caveat are named, not merely counted.
@@ -178,7 +180,7 @@ def test_partial_mapping_is_reported_for_every_candidate():
     assert "thalamus" in summary["brain_rna_unmapped_tissues"].iloc[0].split(";")
     # A completely mapped group stays silent, so the caveat means something.
     assert summary["heart_ihc_mapping_coverage"].eq("complete").all()
-    assert not summary["atlas_evidence_gaps"].str.contains("heart_ihc_partial_mapping").any()
+    assert not summary["atlas_coverage_limits"].str.contains("heart_ihc_partial_mapping").any()
 
 
 def test_coverage_caveat_survives_a_positive_detection():
@@ -187,7 +189,7 @@ def test_coverage_caveat_survives_a_positive_detection():
     row = _synthesize(ihc=[["G1", "A", "cerebral cortex", "neurons", "High", "Enhanced"]])
     assert row["brain_ihc_status"] == "detected"
     assert row["brain_ihc_mapping_coverage"] == "partial"
-    assert "brain_ihc_partial_mapping" in row["atlas_evidence_gaps"]
+    assert "brain_ihc_partial_mapping" in row["atlas_coverage_limits"]
 
 
 def test_never_assayed_safety_group_is_named_as_a_gap():
@@ -310,3 +312,108 @@ def test_every_candidate_gets_a_comparable_summary():
         "candidate",
         "excluded",
     }
+
+
+def test_partial_observation_of_a_mapped_scope_is_incomplete():
+    # A gene measured in 3 of 10 mapped brain regions must not report a brain
+    # maximum as though the region had been surveyed. Mirrors the IHC side.
+    rows = [["G1", "A", tissue, 1.5] for tissue in ("cerebellum", "retina", "hypothalamus")]
+    row = _synthesize(bulk_rna=rows)
+    assert row["brain_rna_measured_rows"] == 3
+    assert row["brain_rna_expected_rows"] == 10
+    assert row["brain_rna_status"] == "incomplete"
+    assert "brain_rna_incomplete" in row["atlas_evidence_gaps"].split(";")
+
+
+def test_fully_observed_scope_is_measured_not_incomplete():
+    summary = cta_review.cta_evidence_summary()
+    full = summary["brain_rna_measured_rows"].eq(summary["brain_rna_expected_rows"])
+    assert full.any()
+    assert summary.loc[full, "brain_rna_status"].eq("measured").all()
+    # The incomplete state is reachable on real data, so the check is not inert.
+    partial = summary["brain_rna_status"].eq("incomplete")
+    assert partial.any()
+    assert (
+        summary.loc[partial, "brain_rna_measured_rows"]
+        < summary.loc[partial, "brain_rna_expected_rows"]
+    ).all()
+
+
+def test_evidence_gaps_are_per_gene_and_coverage_limits_are_per_release():
+    summary = cta_review.cta_evidence_summary()
+    # A fixed limitation of the release belongs in its own field; repeated into
+    # every row it would leave atlas_evidence_gaps never empty and unable to
+    # distinguish a gene with missing data from one measured everywhere.
+    assert summary["atlas_evidence_gaps"].eq("").any()
+    assert summary["atlas_evidence_gaps"].nunique() > 1
+    assert summary["atlas_coverage_limits"].nunique() == 1
+    assert summary["atlas_coverage_limits"].str.contains("brain_ihc_partial_mapping").all()
+    assert not summary["atlas_evidence_gaps"].str.contains("partial_mapping").any()
+
+
+def test_atlas_coverage_states_the_release_limitation_once():
+    coverage = cta_review.cta_atlas_coverage()
+    assert set(coverage["modality"]) == {"bulk_rna", "ihc"}
+    assert len(coverage) == 2 * len(cta_review.SAFETY_TISSUE_GROUPS)
+    brain_ihc = coverage.loc[
+        coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")
+    ].iloc[0]
+    assert brain_ihc["coverage_state"] == "partial"
+    assert brain_ihc["requested_tissues"] == 14
+    assert "spinal cord" in brain_ihc["unmapped_tissues"].split(";")
+    assert brain_ihc["source_url"].startswith("http")
+    complete = coverage.loc[coverage["safety_group"].eq("heart")]
+    assert complete["coverage_state"].eq("complete").all()
+    assert complete["unmapped_tissues"].eq("").all()
+
+
+def test_warning_column_prefix_is_not_doubled():
+    summary = cta_review.cta_evidence_summary()
+    assert "warning_code" in summary.columns
+    assert "warning_warning_code" not in summary.columns
+
+
+def test_warning_reviews_name_real_candidates_with_agreeing_identifiers():
+    """CI guard on curated data: this table alone widens the CTA gene set.
+
+    A typo'd symbol would silently become a reviewed warning-tier CTA, and a
+    Symbol/ID disagreement would make cta_warning_gene_names and
+    cta_warning_gene_ids describe different genes while the disjointness test's
+    equal-cardinality check still passed.
+    """
+    refs = cta.cta_warning_references()
+    universe = cta_review._universe()
+    ids = cta_review._strip_version(refs["Ensembl_Gene_ID"])
+    assert set(ids) <= set(universe["Ensembl_Gene_ID"])
+    assert set(refs["Symbol"]) <= set(universe["Symbol"])
+    expected = universe.set_index("Ensembl_Gene_ID")["Symbol"]
+    assert refs["Symbol"].tolist() == expected.loc[ids].tolist()
+
+
+def test_review_level_vocabulary_deliberately_differs_from_the_strict_filter():
+    """Pin the divergence so it stays a decision rather than drifting.
+
+    The shipped CTA table scores protein detection with Low/Medium/High only,
+    which gates gene inclusion. This module also counts HPA's gradient levels,
+    because for reporting a gradient is protein present. The safety-relevant
+    path is therefore the narrower one; widening the shared constant would
+    change the strict default and require regenerating the table.
+    """
+    from oncoref.cta_tissues import PROTEIN_DETECTED_LEVELS
+
+    assert set(PROTEIN_DETECTED_LEVELS) == {"Low", "Medium", "High"}
+    assert set(cta_review._IHC_DETECTED_LEVELS) == {
+        "Low",
+        "Medium",
+        "High",
+        "Ascending",
+        "Descending",
+    }
+    assert "Not representative" not in cta_review._IHC_DETECTED_LEVELS
+
+
+def test_ntpm_phrase_distinguishes_zero_from_unmeasured():
+    # The three cases must not collapse into one number in prose.
+    assert cta_review._ntpm_phrase(float("nan")) == "unavailable"
+    assert cta_review._ntpm_phrase(0) == "estimated 0 nTPM"
+    assert cta_review._ntpm_phrase(5.1) == "5.1 nTPM"

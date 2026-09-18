@@ -69,6 +69,9 @@ def _strip_version(ids: pd.Series) -> pd.Series:
 def _universe() -> pd.DataFrame:
     """Identity and provenance only, one row per candidate gene.
 
+    Memoized: the returned frame is a shared read-only view, so callers must
+    not mutate it in place. The two public frames copy before handing out.
+
     Deliberately carries no measurement columns. Concatenating the curation
     tables whole would seat their own HPA numbers, of unstated version and
     different derivation, beside this module's version-pinned columns -- a
@@ -102,11 +105,17 @@ def cta_reviewed_evidence() -> pd.DataFrame:
 
 @lru_cache(maxsize=1)
 def _atlas_tables() -> dict[str, pd.DataFrame]:
+    """The three pinned atlas tables, memoized as shared read-only views.
+
+    Neither the dict nor its frames may be mutated in place: they back every
+    later summary in the process, and a rebinding here would go unnoticed.
+    """
     # Explicit version: future changes to the default must not silently relabel
     # old measurements or change the baseline of a reviewed exception. The IHC
-    # table goes through hpa's version-aware accessor so this module shares its
-    # cache instead of holding a second copy; hpa_rna_consensus and
-    # hpa_single_cell take no version, so pinning those needs the raw read.
+    # table goes through hpa's version-aware public accessor rather than reaching
+    # past it; hpa_rna_consensus and hpa_single_cell take no version, so pinning
+    # those needs the raw read. The filter below copies the IHC frame, so this
+    # does not share hpa's memory -- it shares its version resolution.
     tables = {
         "ihc": hpa.hpa_normal_tissue(_VERSION),
         "bulk_rna": hpa._read_hpa(_SOURCES["bulk_rna"], _VERSION),
@@ -209,13 +218,27 @@ def _labels(values: pd.Series) -> str:
     return ";".join(sorted(set(values.dropna().astype(str)) - {""}))
 
 
-def _rna_stats(rows: pd.DataFrame) -> dict:
+def _rna_stats(rows: pd.DataFrame, expected_rows: int | None = None) -> dict:
+    """Summarize an RNA subset, counting what was measured against what exists.
+
+    ``expected_rows`` is how many measurements the source holds for this scope.
+    Without it a gene observed in 3 of 10 brain regions would report a brain
+    maximum as though the region had been surveyed, which is the same
+    absence-read-as-measurement the IHC side already refuses to do.
+    """
     values = pd.to_numeric(rows["nTPM"], errors="coerce")
     measured = values[values.ge(0)]
+    if not len(measured):
+        status = "unavailable"
+    elif expected_rows is not None and len(measured) < expected_rows:
+        status = "incomplete"
+    else:
+        status = "measured"
     return {
-        "status": "measured" if len(measured) else "unavailable",
+        "status": status,
         "max_ntpm": measured.max(),
         "measured_rows": len(measured),
+        "expected_rows": expected_rows,
     }
 
 
@@ -266,6 +289,33 @@ def _resolve(modality: str) -> dict[str, hpa.SafetyTissueResolution]:
     }
 
 
+def cta_atlas_coverage() -> pd.DataFrame:
+    """How completely this release covers each safety group, per modality.
+
+    A property of the release rather than of any gene: HPA v23 stains 9 of the
+    14 requested brain regions and measures RNA in 10, so a brain result of any
+    kind speaks for neither spinal cord nor thalamus. Stated once here instead
+    of repeated into all 403 rows, where it would crowd out per-gene facts.
+    """
+    records = []
+    for modality in ("bulk_rna", "ihc"):
+        for group, resolution in _resolve(modality).items():
+            records.append(
+                {
+                    "safety_group": group,
+                    "modality": modality,
+                    "source_name": _SOURCES[modality],
+                    "source_version": _VERSION,
+                    "source_url": resolution.source_url,
+                    "coverage_state": resolution.coverage_state,
+                    "requested_tissues": len(SAFETY_TISSUE_GROUPS[group]),
+                    "mapped_tissues": ";".join(resolution.source_tissues),
+                    "unmapped_tissues": ";".join(resolution.unavailable_tissues),
+                }
+            )
+    return pd.DataFrame(records)
+
+
 def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
     """Pure synthesis over supplied tables; no source fetches or tier promotion."""
     ids = set(universe["Ensembl_Gene_ID"])
@@ -280,6 +330,19 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     }
     resolutions = {"bulk_rna": _resolve("bulk_rna"), "ihc": _resolve("ihc")}
     source_urls = {f"{modality}_source_url": _source_url(modality) for modality in tables}
+    # How many measurements the source itself holds for each RNA scope, so a
+    # gene observed in only part of a scope is reported as incomplete rather
+    # than summarized as if the whole scope had been surveyed.
+    all_tissues = set(tables["bulk_rna"]["Tissue"].dropna().unique())
+    all_cell_types = set(tables["single_cell_rna"]["Cell type"].dropna().unique())
+    expected = {
+        "bulk_rna": len(all_tissues),
+        "somatic_rna": len(all_tissues - set(NON_SOMATIC_TISSUES)),
+        "single_cell_rna": len(all_cell_types),
+        "cardiomyocyte_rna": len(
+            {c for c in all_cell_types if c.casefold() in _CARDIOMYOCYTE_LABELS}
+        ),
+    }
     records = []
     for gene_id in universe["Ensembl_Gene_ID"]:
         gene = {key: groups[key].get(gene_id, tables[key].iloc[:0]) for key in tables}
@@ -288,12 +351,12 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
         out.update(source_urls)
         somatic_rna = rna.loc[~rna["Tissue"].isin(NON_SOMATIC_TISSUES)]
         somatic_ihc = ihc.loc[~ihc["Tissue"].isin(ALL_REPRODUCTIVE_TISSUES)]
-        _add_stats(out, "bulk_rna", _rna_stats(rna))
-        _add_stats(out, "somatic_rna", _rna_stats(somatic_rna))
+        _add_stats(out, "bulk_rna", _rna_stats(rna, expected["bulk_rna"]))
+        _add_stats(out, "somatic_rna", _rna_stats(somatic_rna, expected["somatic_rna"]))
         _add_stats(out, "somatic_ihc", _ihc_stats(somatic_ihc))
-        _add_stats(out, "single_cell_rna", _rna_stats(single))
+        _add_stats(out, "single_cell_rna", _rna_stats(single, expected["single_cell_rna"]))
         cardio = single.loc[single["Cell type"].str.casefold().isin(_CARDIOMYOCYTE_LABELS)]
-        _add_stats(out, "cardiomyocyte_rna", _rna_stats(cardio))
+        _add_stats(out, "cardiomyocyte_rna", _rna_stats(cardio, expected["cardiomyocyte_rna"]))
         # Heart tissue comes from the same resolution as the safety groups, so a
         # release that renames the label raises there instead of quietly
         # reporting this gene's cardiomyocytes as unassayed.
@@ -317,32 +380,41 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 resolution = resolutions["bulk_rna" if modality == "rna" else "ihc"][group]
                 rows = rna if modality == "rna" else ihc
                 prefix = f"{group}_{modality}"
+                subset = rows.loc[rows["Tissue"].isin(resolution.source_tissues)]
                 _add_stats(
-                    out, prefix, stats(rows.loc[rows["Tissue"].isin(resolution.source_tissues)])
+                    out,
+                    prefix,
+                    stats(subset, len(resolution.source_tissues))
+                    if modality == "rna"
+                    else stats(subset),
                 )
                 out[f"{prefix}_mapping_coverage"] = resolution.coverage_state
                 out[f"{prefix}_mapped_tissues"] = ";".join(resolution.source_tissues)
                 out[f"{prefix}_unmapped_tissues"] = ";".join(resolution.unavailable_tissues)
             if out[f"{group}_rna_max_ntpm"] >= SAFETY_NTPM_THRESHOLD:
                 warnings.append(f"{group}_rna_ge_{SAFETY_NTPM_THRESHOLD:g}_ntpm")
+        # Per-gene gaps only. The fixed mapping limitation of the release is the
+        # same for every gene, so listing it here would leave the field never
+        # empty and unable to distinguish a gene with missing data from one
+        # measured everywhere; it is reported per release in
+        # :func:`cta_atlas_coverage` and per row in ``atlas_coverage_limits``.
         gaps = []
         for key in ("bulk_rna", "somatic_ihc", "single_cell_rna", "cardiomyocyte_ihc"):
             if out[f"{key}_status"] in {"unavailable", "incomplete"}:
                 gaps.append(key)
-        # Coverage is reported for what was assayed, not for what was concluded.
-        # HPA v23 stains 9 of the 14 requested brain regions and measures RNA in
-        # 10, so neither a detection nor a non-detection there speaks for spinal
-        # cord or thalamus; gating the caveat on the verdict would let a positive
-        # finding in one region imply the whole group had been looked at.
+        limits = []
         for group in SAFETY_TISSUE_GROUPS:
             for modality in ("rna", "ihc"):
                 prefix = f"{group}_{modality}"
-                if out[f"{prefix}_mapping_coverage"] != "complete":
-                    gaps.append(f"{prefix}_partial_mapping")
                 if out[f"{prefix}_status"] in {"unavailable", "incomplete"}:
                     gaps.append(f"{prefix}_{out[f'{prefix}_status']}")
+                # Coverage describes what was assayed, not what was concluded,
+                # so it is stated whether or not this gene was detected there.
+                if out[f"{prefix}_mapping_coverage"] != "complete":
+                    limits.append(f"{prefix}_{out[f'{prefix}_mapping_coverage']}_mapping")
         out["atlas_warning_codes"] = ";".join(warnings)
         out["atlas_evidence_gaps"] = ";".join(gaps)
+        out["atlas_coverage_limits"] = ";".join(limits)
         records.append(out)
     return pd.DataFrame(records)
 
@@ -369,7 +441,11 @@ def _evidence_summary_frame() -> pd.DataFrame:
     out.loc[out["Ensembl_Gene_ID"].isin(warnings), "discovery_tier"] = "warning"
     out.loc[out["Ensembl_Gene_ID"].isin(strict), "discovery_tier"] = "strict"
     refs = refs.drop(columns="Symbol").rename(
-        columns=lambda column: column if column == "Ensembl_Gene_ID" else f"warning_{column}"
+        columns=lambda column: (
+            column
+            if column == "Ensembl_Gene_ID" or column.startswith("warning_")
+            else f"warning_{column}"
+        )
     )
     out = out.merge(refs, on="Ensembl_Gene_ID", how="left", validate="one_to_one")
     reviewed = cta_reviewed_evidence()
@@ -396,7 +472,11 @@ def _evidence_summary_frame() -> pd.DataFrame:
         if row["atlas_warning_codes"]:
             parts.append(f"Warnings: {row['atlas_warning_codes'].replace(';', ', ')}.")
         if row["atlas_evidence_gaps"]:
-            parts.append(f"Coverage gaps: {row['atlas_evidence_gaps'].replace(';', ', ')}.")
+            parts.append(f"Missing data: {row['atlas_evidence_gaps'].replace(';', ', ')}.")
+        if row["atlas_coverage_limits"]:
+            parts.append(
+                f"Atlas covers only part of: {row['atlas_coverage_limits'].replace(';', ', ')}."
+            )
         parts.append("Atlas measurements do not establish peptide presentation or clinical safety.")
         return " ".join(parts)
 
@@ -407,8 +487,14 @@ def _evidence_summary_frame() -> pd.DataFrame:
 def cta_normal_tissue_evidence() -> pd.DataFrame:
     """Long-form HPA v23 measurements for the complete CTA candidate universe.
 
-    See :func:`_normal_tissue_frame`. Returns a defensive copy, so a caller that
-    mutates its frame in place cannot corrupt the shared result.
+    One row per gene, modality and tissue or cell type, covering all available
+    tissues rather than only the five safety groups. ``reported_zero`` is an RNA
+    estimate and ``not_detected`` an IHC annotation; the two are never merged.
+    Rows HPA does not provide are absent here and counted in the summary's
+    ``atlas_evidence_gaps``. Single-cell types are aggregated across organs, so
+    they carry no tissue rather than being attributed to one. Memoized, and
+    returned as a copy so in-place mutation cannot corrupt the shared result.
+    Downloads the three pinned atlas sources on first use if not cached.
     """
     return _normal_tissue_frame().copy()
 
@@ -416,8 +502,17 @@ def cta_normal_tissue_evidence() -> pd.DataFrame:
 def cta_evidence_summary() -> pd.DataFrame:
     """One comparable evidence summary per CTA, watchlist, or clinical candidate.
 
-    See :func:`_evidence_summary_frame`. Returns a defensive copy, so a caller
-    that mutates its frame in place cannot corrupt the shared result.
+    Every candidate receives bulk RNA, all-tissue somatic IHC, the five
+    safety-tissue groups and cardiomyocyte RNA/IHC on the pinned v23 baseline,
+    plus ``discovery_tier``, ``atlas_warning_codes``, per-gene missing data in
+    ``atlas_evidence_gaps``, the release's fixed mapping limits in
+    ``atlas_coverage_limits`` (see :func:`cta_atlas_coverage`), a
+    ``*_review_status`` per reviewed modality and a prose ``evidence_summary``.
+    Detailed donor, proteomics, isoform, peptide-presentation and clinical
+    reviews stay in :func:`cta_reviewed_evidence`, where absence of a row means
+    not reviewed. No negative assay result promotes a gene into a broader set.
+    Memoized, and returned as a copy so in-place mutation cannot corrupt the
+    shared result.
     """
     return _evidence_summary_frame().copy()
 

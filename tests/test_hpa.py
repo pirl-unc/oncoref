@@ -276,3 +276,41 @@ def test_hpa_parquet_cache(monkeypatch, tmp_path):
     monkeypatch.setattr(reference_data, "ensure", lambda name, *a, **k: tsv)
     df2 = pd.read_parquet(parquet)
     assert df2.equals(df1)
+
+
+def test_every_mapped_source_tissue_is_a_real_label_in_its_source():
+    """A typo'd source_tissue silently shrinks a safety group.
+
+    The table's own validation covers structure and vocabulary, but never that
+    a declared label exists in the source it names. A misspelling would resolve
+    as covered, match no rows, and lower a group's maximum with nothing
+    reporting it -- quietly reintroducing the coverage gap the mapping exists
+    to make explicit.
+    """
+    mapping = hpa.safety_tissue_mapping_table()
+    available = {
+        "hpa_normal_tissue": set(hpa.hpa_normal_tissue_labels("v23")),
+        "hpa_rna_consensus": set(hpa._read_hpa("hpa_rna_consensus", "v23")["Tissue"].dropna()),
+    }
+    declared = mapping.loc[mapping["source_tissue"].astype(str).ne("")]
+    assert set(declared["source_name"]) <= set(available), "unknown source in the mapping table"
+    for source_name, rows in declared.groupby("source_name"):
+        unknown = set(rows["source_tissue"]) - available[source_name]
+        assert not unknown, f"{source_name} has no such tissue label: {sorted(unknown)}"
+
+
+def test_rna_consensus_safety_groups_are_mapped_for_the_pinned_version():
+    # cta_review resolves RNA safety groups against this source, so the mapping
+    # has to exist for it and not only for the IHC table.
+    for group in ("brain", "heart", "lung", "liver", "pancreas"):
+        resolution = hpa.resolve_safety_tissue_group(
+            group, source_name="hpa_rna_consensus", source_version="v23", require_complete=False
+        )
+        assert resolution.source_name == "hpa_rna_consensus"
+        assert resolution.source_tissues
+    brain = hpa.resolve_safety_tissue_group(
+        "brain", source_name="hpa_rna_consensus", source_version="v23", require_complete=False
+    )
+    # The consensus table measures 10 of the 14 requested regions.
+    assert brain.coverage_state == "partial"
+    assert brain.unavailable_tissues == ("medulla oblongata", "pons", "thalamus", "white matter")
