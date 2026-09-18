@@ -218,13 +218,15 @@ def _labels(values: pd.Series) -> str:
     return ";".join(sorted(set(values.dropna().astype(str)) - {""}))
 
 
-def _rna_stats(rows: pd.DataFrame, expected_rows: int | None = None) -> dict:
+def _rna_stats(rows: pd.DataFrame, expected_rows: int | None) -> dict:
     """Summarize an RNA subset, counting what was measured against what exists.
 
-    ``expected_rows`` is how many measurements the source holds for this scope.
-    Without it a gene observed in 3 of 10 brain regions would report a brain
-    maximum as though the region had been surveyed, which is the same
-    absence-read-as-measurement the IHC side already refuses to do.
+    ``expected_rows`` is how many measurements the source holds for this scope,
+    and is required: a gene observed in 3 of 10 brain regions must not report a
+    brain maximum as though the region had been surveyed. Pass ``None`` only
+    where no count defines the scope, so that choice is visible in review. The
+    counts come from the source, so a release that drops a tissue lowers the
+    denominator with it; there is no curated all-tissues list to check against.
     """
     values = pd.to_numeric(rows["nTPM"], errors="coerce")
     measured = values[values.ge(0)]
@@ -242,13 +244,23 @@ def _rna_stats(rows: pd.DataFrame, expected_rows: int | None = None) -> dict:
     }
 
 
-def _ihc_stats(rows: pd.DataFrame) -> dict:
+def _ihc_stats(rows: pd.DataFrame, expected_tissues: int | None) -> dict:
+    """Summarize an IHC subset, counting stained tissues against the scope.
+
+    ``expected_tissues`` is how many tissues the scope intends. A gene scored
+    in 4 of 9 mapped brain labels has not been surveyed for brain, so its
+    non-detection is ``incomplete`` rather than a clean negative -- the same
+    distinction the RNA side draws. Pass ``None`` only where no tissue count
+    defines the scope.
+    """
     detected = rows["Level"].isin(_IHC_DETECTED_LEVELS)
     negative = rows["Level"].eq(_IHC_NEGATIVE_LEVEL)
     measured = detected | negative
+    measured_tissues = rows.loc[measured, "Tissue"].nunique() if measured.any() else 0
+    surveyed = expected_tissues is None or measured_tissues >= expected_tissues
     if detected.any():
         status = "detected"
-    elif len(rows) and negative.all():
+    elif len(rows) and negative.all() and surveyed:
         status = "not_detected"
     elif measured.any():
         status = "incomplete"
@@ -256,6 +268,8 @@ def _ihc_stats(rows: pd.DataFrame) -> dict:
         status = "unavailable"
     return {
         "status": status,
+        "measured_tissues": measured_tissues,
+        "expected_tissues": expected_tissues,
         "measured_rows": int(measured.sum()),
         "unavailable_rows": int((~measured).sum()),
         "detected_rows": int(detected.sum()),
@@ -290,29 +304,37 @@ def _resolve(modality: str) -> dict[str, hpa.SafetyTissueResolution]:
 
 
 def cta_atlas_coverage() -> pd.DataFrame:
-    """How completely this release covers each safety group, per modality.
+    """How completely this release covers each safety group, tissue by tissue.
 
-    A property of the release rather than of any gene: HPA v23 stains 9 of the
-    14 requested brain regions and measures RNA in 10, so a brain result of any
-    kind speaks for neither spinal cord nor thalamus. Stated once here instead
-    of repeated into all 403 rows, where it would crowd out per-gene facts.
+    A property of the release rather than of any gene: HPA v23 covers 8 of the
+    14 requested brain regions by IHC -- 6 in full, basal ganglia by caudate
+    alone and midbrain by two nuclei -- and 10 by RNA, so a brain result of any
+    kind speaks for neither spinal cord nor thalamus. Stated once here rather
+    than repeated into every candidate row, where it would crowd out per-gene
+    facts.
+
+    One row per requested tissue, not per group, so the counts reconcile and a
+    region represented by a single substructure is not tallied as covered.
+    ``modality`` matches the summary's column prefixes (``rna``, ``ihc``).
     """
     records = []
-    for modality in ("bulk_rna", "ihc"):
+    for modality, prefix in (("bulk_rna", "rna"), ("ihc", "ihc")):
         for group, resolution in _resolve(modality).items():
-            records.append(
-                {
-                    "safety_group": group,
-                    "modality": modality,
-                    "source_name": _SOURCES[modality],
-                    "source_version": _VERSION,
-                    "source_url": resolution.source_url,
-                    "coverage_state": resolution.coverage_state,
-                    "requested_tissues": len(SAFETY_TISSUE_GROUPS[group]),
-                    "mapped_tissues": ";".join(resolution.source_tissues),
-                    "unmapped_tissues": ";".join(resolution.unavailable_tissues),
-                }
-            )
+            for mapping in resolution.mappings:
+                records.append(
+                    {
+                        "safety_group": group,
+                        "modality": prefix,
+                        "requested_tissue": mapping.requested_tissue,
+                        "coverage_level": mapping.coverage_level,
+                        "mapping_kind": mapping.mapping_kind,
+                        "source_tissues": ";".join(mapping.source_tissues),
+                        "group_coverage_state": resolution.coverage_state,
+                        "source_name": _SOURCES[modality],
+                        "source_version": _VERSION,
+                        "source_url": resolution.source_url,
+                    }
+                )
     return pd.DataFrame(records)
 
 
@@ -335,6 +357,7 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     # than summarized as if the whole scope had been surveyed.
     all_tissues = set(tables["bulk_rna"]["Tissue"].dropna().unique())
     all_cell_types = set(tables["single_cell_rna"]["Cell type"].dropna().unique())
+    ihc_tissues = set(tables["ihc"]["Tissue"].dropna().unique())
     expected = {
         "bulk_rna": len(all_tissues),
         "somatic_rna": len(all_tissues - set(NON_SOMATIC_TISSUES)),
@@ -342,6 +365,10 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
         "cardiomyocyte_rna": len(
             {c for c in all_cell_types if c.casefold() in _CARDIOMYOCYTE_LABELS}
         ),
+        # No gene is stained in every somatic tissue, so none has a clean
+        # somatic non-detection. Reporting "not detected" from 37 of 48 tissues
+        # would be the overstatement this module exists to prevent.
+        "somatic_ihc": len(ihc_tissues - set(ALL_REPRODUCTIVE_TISSUES)),
     }
     records = []
     for gene_id in universe["Ensembl_Gene_ID"]:
@@ -353,7 +380,7 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
         somatic_ihc = ihc.loc[~ihc["Tissue"].isin(ALL_REPRODUCTIVE_TISSUES)]
         _add_stats(out, "bulk_rna", _rna_stats(rna, expected["bulk_rna"]))
         _add_stats(out, "somatic_rna", _rna_stats(somatic_rna, expected["somatic_rna"]))
-        _add_stats(out, "somatic_ihc", _ihc_stats(somatic_ihc))
+        _add_stats(out, "somatic_ihc", _ihc_stats(somatic_ihc, expected["somatic_ihc"]))
         _add_stats(out, "single_cell_rna", _rna_stats(single, expected["single_cell_rna"]))
         cardio = single.loc[single["Cell type"].str.casefold().isin(_CARDIOMYOCYTE_LABELS)]
         _add_stats(out, "cardiomyocyte_rna", _rna_stats(cardio, expected["cardiomyocyte_rna"]))
@@ -364,13 +391,16 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
             ihc["Tissue"].isin(resolutions["ihc"]["heart"].source_tissues)
             & ihc["Cell type"].str.casefold().isin(_CARDIOMYOCYTE_LABELS)
         ]
-        _add_stats(out, "cardiomyocyte_ihc", _ihc_stats(heart_ihc))
+        _add_stats(out, "cardiomyocyte_ihc", _ihc_stats(heart_ihc, None))
         warnings = []
         if out["somatic_ihc_detected_rows"]:
             warnings.append("somatic_protein_detected")
         if out["somatic_rna_max_ntpm"] > 0:
             warnings.append("somatic_rna_estimate")
-            if out["somatic_ihc_status"] == "not_detected":
+            # Keyed on the absence of detection rather than on a clean negative:
+            # somatic IHC is never surveyed across every tissue, so requiring
+            # the literal "not_detected" would silence every discordance.
+            if out["somatic_ihc_detected_rows"] == 0 and out["somatic_ihc_status"] != "unavailable":
                 warnings.append("rna_ihc_discordance")
         for group in SAFETY_TISSUE_GROUPS:
             for modality, stats in (("rna", _rna_stats), ("ihc", _ihc_stats)):
@@ -381,13 +411,7 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 rows = rna if modality == "rna" else ihc
                 prefix = f"{group}_{modality}"
                 subset = rows.loc[rows["Tissue"].isin(resolution.source_tissues)]
-                _add_stats(
-                    out,
-                    prefix,
-                    stats(subset, len(resolution.source_tissues))
-                    if modality == "rna"
-                    else stats(subset),
-                )
+                _add_stats(out, prefix, stats(subset, len(resolution.source_tissues)))
                 out[f"{prefix}_mapping_coverage"] = resolution.coverage_state
                 out[f"{prefix}_mapped_tissues"] = ";".join(resolution.source_tissues)
                 out[f"{prefix}_unmapped_tissues"] = ";".join(resolution.unavailable_tissues)
@@ -398,16 +422,19 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
         # empty and unable to distinguish a gene with missing data from one
         # measured everywhere; it is reported per release in
         # :func:`cta_atlas_coverage` and per row in ``atlas_coverage_limits``.
-        gaps = []
-        for key in ("bulk_rna", "somatic_ihc", "single_cell_rna", "cardiomyocyte_ihc"):
-            if out[f"{key}_status"] in {"unavailable", "incomplete"}:
-                gaps.append(key)
+        # Derived from every status the record holds rather than a hand-kept
+        # list, which has already fallen behind twice as scopes were added.
+        # Named with the status, so "never assayed" stays distinguishable from
+        # "assayed in part" without cross-reading a second column.
+        gaps = [
+            f"{key[: -len('_status')]}_{value}"
+            for key, value in out.items()
+            if key.endswith("_status") and value in {"unavailable", "incomplete"}
+        ]
         limits = []
         for group in SAFETY_TISSUE_GROUPS:
             for modality in ("rna", "ihc"):
                 prefix = f"{group}_{modality}"
-                if out[f"{prefix}_status"] in {"unavailable", "incomplete"}:
-                    gaps.append(f"{prefix}_{out[f'{prefix}_status']}")
                 # Coverage describes what was assayed, not what was concluded,
                 # so it is stated whether or not this gene was detected there.
                 if out[f"{prefix}_mapping_coverage"] != "complete":

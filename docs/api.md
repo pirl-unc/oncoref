@@ -755,14 +755,18 @@ the gene and the other about the release. `atlas_evidence_gaps` carries what is
 missing for that gene: a scope with no measurement is `unavailable`, and one
 measured in only part of its mapped tissues is `incomplete` rather than
 summarized as though the whole scope had been surveyed. `atlas_coverage_limits`
-carries the release's own fixed limitation, which is identical for every gene —
-HPA v23 stains 9 of the 14 requested brain regions and measures RNA in 10, so a
-brain result of any kind speaks for neither spinal cord nor thalamus.
-`cta_atlas_coverage()` states that limitation once, one row per safety group and
-modality, with the mapped and unmapped tissues named. Keeping it out of the
-per-gene field is deliberate: repeated into every row it would leave
-`atlas_evidence_gaps` never empty and unable to distinguish a gene with missing
-data from one measured everywhere.
+carries the release's own fixed limitation, which is identical for every gene.
+HPA v23 covers 8 of the 14 requested brain regions by immunohistochemistry (6 in
+full, with basal ganglia represented by caudate alone and midbrain by two
+nuclei) and 10 by RNA, so a brain result of any kind speaks for neither spinal
+cord nor thalamus.
+
+`cta_atlas_coverage()` states that limitation once, with a row per requested
+tissue per modality rather than per group, so the coverage levels add up to the
+regions asked for and a region represented by a single substructure is not
+tallied as covered. Keeping it out of the per-gene field is deliberate: repeated
+into every row it would leave `atlas_evidence_gaps` never empty and unable to
+distinguish a gene with missing data from one measured everywhere.
 
 Assay vocabularies stay separate throughout. A zero RNA estimate is not a
 negative IHC result, an absent measurement is never read as a zero, and no atlas

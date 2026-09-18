@@ -166,7 +166,7 @@ def test_unreviewed_modalities_are_marked_not_reviewed():
 
 def test_partial_mapping_is_reported_for_every_candidate():
     summary = cta_review.cta_evidence_summary()
-    # HPA v23 stains 9 of the 14 requested brain regions and measures RNA in 10,
+    # HPA v23 covers 8 of the 14 requested brain regions by IHC and 10 by RNA,
     # so neither modality speaks for spinal cord or thalamus.
     for modality in ("rna", "ihc"):
         partial = summary[f"brain_{modality}_mapping_coverage"].ne("complete")
@@ -293,7 +293,12 @@ def test_review_module_is_a_public_facade():
 
     assert oncoref.cta_review is cta_review
     assert "cta_review" in oncoref.__all__
-    for name in ("cta_evidence_summary", "cta_normal_tissue_evidence", "cta_reviewed_evidence"):
+    for name in (
+        "cta_atlas_coverage",
+        "cta_evidence_summary",
+        "cta_normal_tissue_evidence",
+        "cta_reviewed_evidence",
+    ):
         assert callable(getattr(oncoref.cta_review, name))
     # Newer names stay in the semantic module rather than the flat namespace.
     assert not hasattr(oncoref, "cta_evidence_summary")
@@ -351,22 +356,6 @@ def test_evidence_gaps_are_per_gene_and_coverage_limits_are_per_release():
     assert not summary["atlas_evidence_gaps"].str.contains("partial_mapping").any()
 
 
-def test_atlas_coverage_states_the_release_limitation_once():
-    coverage = cta_review.cta_atlas_coverage()
-    assert set(coverage["modality"]) == {"bulk_rna", "ihc"}
-    assert len(coverage) == 2 * len(cta_review.SAFETY_TISSUE_GROUPS)
-    brain_ihc = coverage.loc[
-        coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")
-    ].iloc[0]
-    assert brain_ihc["coverage_state"] == "partial"
-    assert brain_ihc["requested_tissues"] == 14
-    assert "spinal cord" in brain_ihc["unmapped_tissues"].split(";")
-    assert brain_ihc["source_url"].startswith("http")
-    complete = coverage.loc[coverage["safety_group"].eq("heart")]
-    assert complete["coverage_state"].eq("complete").all()
-    assert complete["unmapped_tissues"].eq("").all()
-
-
 def test_warning_column_prefix_is_not_doubled():
     summary = cta_review.cta_evidence_summary()
     assert "warning_code" in summary.columns
@@ -417,3 +406,96 @@ def test_ntpm_phrase_distinguishes_zero_from_unmeasured():
     assert cta_review._ntpm_phrase(float("nan")) == "unavailable"
     assert cta_review._ntpm_phrase(0) == "estimated 0 nTPM"
     assert cta_review._ntpm_phrase(5.1) == "5.1 nTPM"
+
+
+def test_data_derived_denominators_are_not_self_fulfilling():
+    """Pin the four scopes whose denominator comes from the supplied tables.
+
+    Those counts are derived from the same fixture that supplies the numerator,
+    so a single-gene fixture reports "measured" by construction. Giving a second
+    gene a tissue the first lacks makes the denominator independent of the gene
+    under test, which is what the real atlas does.
+    """
+    row = _synthesize(
+        bulk_rna=[
+            ["G1", "A", "lung", 1.0],
+            ["G2", "B", "lung", 1.0],
+            ["G2", "B", "liver", 2.0],
+        ],
+        single_cell_rna=[
+            ["G1", "A", "hepatocytes", 1.0],
+            ["G2", "B", "hepatocytes", 1.0],
+            ["G2", "B", "cardiomyocytes", 3.0],
+        ],
+    )
+    # G1 is measured in 1 of the 2 tissues and cell types the source knows.
+    assert row["bulk_rna_measured_rows"] == 1
+    assert row["bulk_rna_expected_rows"] == 2
+    assert row["bulk_rna_status"] == "incomplete"
+    assert row["somatic_rna_status"] == "incomplete"
+    assert row["single_cell_rna_status"] == "incomplete"
+    gaps = row["atlas_evidence_gaps"].split(";")
+    assert "bulk_rna_incomplete" in gaps
+    assert "somatic_rna_incomplete" in gaps
+    assert "single_cell_rna_incomplete" in gaps
+
+
+def test_gap_list_covers_every_status_the_record_reports():
+    # The list used to be hand-maintained and fell behind twice as scopes were
+    # added, so a status could go incomplete with the gap field silent.
+    summary = cta_review.cta_evidence_summary()
+    statuses = [c for c in summary.columns if c.endswith("_status")]
+    assert len(statuses) > 10
+    for column in statuses:
+        prefix = column[: -len("_status")]
+        if prefix.endswith("_review"):
+            continue
+        flagged = summary[column].isin(["unavailable", "incomplete"])
+        if not flagged.any():
+            continue
+        for status in ("unavailable", "incomplete"):
+            expected = summary[column].eq(status)
+            if not expected.any():
+                continue
+            token = f"{prefix}_{status}"
+            named = (
+                summary["atlas_evidence_gaps"]
+                .str.split(";")
+                .apply(lambda gaps, name=token: name in gaps)
+            )
+            assert named.eq(expected).all(), token
+
+
+def test_somatic_ihc_never_claims_a_clean_non_detection():
+    summary = cta_review.cta_evidence_summary()
+    # No gene is stained in all 48 somatic tissues, so "not detected" across
+    # somatic tissue is never earned; the discordance warning must not depend
+    # on that literal status.
+    assert not summary["somatic_ihc_status"].eq("not_detected").any()
+    assert (summary["somatic_ihc_measured_tissues"] < summary["somatic_ihc_expected_tissues"]).any()
+    discordant = summary["atlas_warning_codes"].str.contains("rna_ihc_discordance")
+    assert discordant.any()
+    assert summary.loc[discordant, "somatic_ihc_detected_rows"].eq(0).all()
+    assert summary.loc[discordant, "somatic_rna_max_ntpm"].gt(0).all()
+
+
+def test_atlas_coverage_rows_reconcile_with_the_requested_groups():
+    coverage = cta_review.cta_atlas_coverage()
+    # One row per requested tissue, so the levels add up and a region covered
+    # by a single substructure is not tallied as fully covered.
+    assert set(coverage["modality"]) == {"rna", "ihc"}
+    for (group, modality), rows in coverage.groupby(["safety_group", "modality"]):
+        assert len(rows) == len(cta_review.SAFETY_TISSUE_GROUPS[group]), (group, modality)
+        assert set(rows["coverage_level"]) <= {"complete", "partial", "unavailable"}
+    brain_ihc = coverage.loc[
+        coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")
+    ].set_index("requested_tissue")
+    assert brain_ihc.loc["basal ganglia", "coverage_level"] == "partial"
+    assert brain_ihc.loc["basal ganglia", "source_tissues"] == "caudate"
+    assert brain_ihc.loc["midbrain", "source_tissues"] == "dorsal raphe;substantia nigra"
+    assert brain_ihc.loc["spinal cord", "coverage_level"] == "unavailable"
+    assert brain_ihc.loc["spinal cord", "source_tissues"] == ""
+    # The vocabulary matches the summary's column prefixes, so a join works.
+    summary = cta_review.cta_evidence_summary()
+    assert "brain_rna_mapping_coverage" in summary.columns
+    assert coverage["modality"].isin(["rna", "ihc"]).all()

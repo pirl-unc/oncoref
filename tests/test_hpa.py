@@ -6,7 +6,7 @@
 
 import pytest
 
-from oncoref import hpa
+from oncoref import hpa, load_dataset
 
 
 def _seed(cache_root, name, version, filename, text):
@@ -116,11 +116,14 @@ def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch, request)
     # Clear through a finalizer rather than at the end of the body, so a failure
     # mid-test cannot leave the fake table cached. Restoring _read_hpa is not
     # enough: these caches would hand it to the next test that reads the IHC
-    # atlas, which now includes cta_review.
+    # atlas. _clear_cache drives every clearer registered against the dataset
+    # cache, so it also covers consumers that memoize a frame derived from this
+    # one -- cta_review's five caches among them -- which clearing only hpa's
+    # two would leave holding the fake.
     for fn in caches:
         fn.cache_clear()
     monkeypatch.setattr(hpa, "_read_hpa", fake_read_hpa)
-    request.addfinalizer(lambda: [fn.cache_clear() for fn in caches])
+    request.addfinalizer(load_dataset._clear_cache)
 
     frames = (
         hpa.hpa_normal_tissue(),
