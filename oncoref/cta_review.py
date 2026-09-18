@@ -356,15 +356,32 @@ def _surveyed_level(mapping, surveyed: tuple[str, ...]) -> str:
     return mapping.coverage_level
 
 
+def _aggregate_level(levels) -> str:
+    """Collapse per-tissue coverage into one group verdict, as hpa does.
+
+    Kept beside the per-tissue levels so the group column cannot keep
+    reporting the mapping figure after the rows below it gained a stricter
+    one: for brain IHC that is the difference between 8 of 14 requested
+    regions mapped and 4 of 14 actually surveyed.
+    """
+    distinct = set(levels)
+    if distinct == {"complete"}:
+        return "complete"
+    if distinct == {"unavailable"}:
+        return "unavailable"
+    return "partial"
+
+
 def cta_atlas_coverage() -> pd.DataFrame:
     """How completely this release covers each safety group, tissue by tissue.
 
-    A property of the release rather than of any gene: HPA v23 covers 8 of the
-    14 requested brain regions by IHC -- 6 in full, basal ganglia by caudate
-    alone and midbrain by two nuclei -- and 10 by RNA, so a brain result of any
-    kind speaks for neither spinal cord nor thalamus. Stated once here rather
-    than repeated into every candidate row, where it would crowd out per-gene
-    facts.
+    A property of the release rather than of any gene: HPA v23 maps 8 of the 14
+    requested brain regions for IHC and routinely surveys only 4 of those, so a
+    brain result of any kind speaks for neither spinal cord nor thalamus.
+    ``group_mapped_regions`` and ``group_surveyed_regions`` carry both counts,
+    since the aggregate verdict is ``partial`` either way and would hide the
+    gap. Stated once here rather than repeated into every candidate row, where
+    it would crowd out per-gene facts.
 
     One row per requested tissue, not per group, so the counts reconcile and a
     region represented by a single substructure is not tallied as covered.
@@ -382,9 +399,22 @@ def cta_atlas_coverage() -> pd.DataFrame:
     for modality, prefix in (("bulk_rna", "rna"), ("ihc", "ihc")):
         routine = _routine_labels(modality)
         for group, resolution in _resolve(modality).items():
+            levels = {
+                mapping.requested_tissue: _surveyed_level(
+                    mapping, tuple(t for t in mapping.source_tissues if t in routine)
+                )
+                for mapping in resolution.mappings
+            }
+            group_surveyed = _aggregate_level(levels.values())
+            # The aggregate verdict collapses to "partial" either way for
+            # brain, so carry the counts too: 8 of 14 requested regions are
+            # mapped but only 4 are routinely surveyed, and that gap is the
+            # whole reason the denominators differ from the mapping.
+            mapped_regions = sum(m.coverage_level != "unavailable" for m in resolution.mappings)
+            surveyed_regions = sum(level != "unavailable" for level in levels.values())
             for mapping in resolution.mappings:
                 surveyed = tuple(t for t in mapping.source_tissues if t in routine)
-                surveyed_level = _surveyed_level(mapping, surveyed)
+                surveyed_level = levels[mapping.requested_tissue]
                 records.append(
                     {
                         "safety_group": group,
@@ -397,6 +427,10 @@ def cta_atlas_coverage() -> pd.DataFrame:
                         "surveyed_source_tissues": ";".join(surveyed),
                         "surveyed_coverage_level": surveyed_level,
                         "group_coverage_state": resolution.coverage_state,
+                        "group_surveyed_coverage_state": group_surveyed,
+                        "group_requested_regions": len(resolution.mappings),
+                        "group_mapped_regions": mapped_regions,
+                        "group_surveyed_regions": surveyed_regions,
                         "source_name": _SOURCES[modality],
                         "source_version": _VERSION,
                         "source_url": resolution.source_url,
@@ -490,6 +524,7 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 # negative half of it rests on a partial survey.
                 if out["somatic_ihc_status"] == "incomplete":
                     warnings.append("rna_ihc_discordance_partial_survey")
+        unsurveyed: dict[str, set[str]] = {}
         for group in SAFETY_TISSUE_GROUPS:
             for modality, stats in (("rna", _rna_stats), ("ihc", _ihc_stats)):
                 # Both modalities go through their own resolution. Matching the
@@ -508,10 +543,7 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 out[f"{prefix}_mapping_coverage"] = resolution.coverage_state
                 out[f"{prefix}_mapped_tissues"] = ";".join(resolution.source_tissues)
                 out[f"{prefix}_unmapped_tissues"] = ";".join(resolution.unavailable_tissues)
-                # Mapped but outside the panel the source runs for most genes,
-                # so excluded from the denominator above. Named here because
-                # nothing else in the row would say which labels those are.
-                out[f"{prefix}_unsurveyed_tissues"] = ";".join(sorted(mapped - surveyed))
+                unsurveyed[prefix] = mapped - surveyed
             if out[f"{group}_rna_max_ntpm"] >= SAFETY_NTPM_THRESHOLD:
                 warnings.append(f"{group}_rna_ge_{SAFETY_NTPM_THRESHOLD:g}_ntpm")
         # Per-gene gaps only. The fixed mapping limitation of the release is the
@@ -536,6 +568,12 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 # so it is stated whether or not this gene was detected there.
                 if out[f"{prefix}_mapping_coverage"] != "complete":
                     limits.append(f"{prefix}_{out[f'{prefix}_mapping_coverage']}_mapping")
+                # Mapped but outside the panel the source runs for most genes,
+                # so excluded from the denominator. A release-level fact, hence
+                # a token here rather than ten near-empty per-gene columns;
+                # cta_atlas_coverage names the labels per tissue.
+                if unsurveyed[prefix]:
+                    limits.append(f"{prefix}_unsurveyed_labels")
         out["atlas_warning_codes"] = ";".join(warnings)
         out["atlas_evidence_gaps"] = ";".join(gaps)
         out["atlas_coverage_limits"] = ";".join(limits)

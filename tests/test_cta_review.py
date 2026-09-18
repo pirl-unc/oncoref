@@ -166,8 +166,9 @@ def test_unreviewed_modalities_are_marked_not_reviewed():
 
 def test_partial_mapping_is_reported_for_every_candidate():
     summary = cta_review.cta_evidence_summary()
-    # HPA v23 covers 8 of the 14 requested brain regions by IHC and 10 by RNA,
-    # so neither modality speaks for spinal cord or thalamus.
+    # HPA v23 maps 8 of the 14 requested brain regions for IHC and 10 for RNA
+    # (and routinely surveys only 4 of the 8), so neither modality speaks for
+    # spinal cord or thalamus.
     for modality in ("rna", "ihc"):
         partial = summary[f"brain_{modality}_mapping_coverage"].ne("complete")
         caveated = summary["atlas_coverage_limits"].str.contains(
@@ -446,22 +447,20 @@ def test_data_derived_denominators_are_not_self_fulfilling():
 def test_gap_list_covers_every_status_the_record_reports():
     """Every status the synthesis records must reach the gap field.
 
-    Scanned against the synthesis output rather than the merged summary, so
-    the test and the gaps loop share one scope. Scanning the merged frame
-    would sweep in the ``*_review_status`` columns added afterwards and need a
-    hand-maintained exclusion -- the fragility the loop was rewritten to drop.
+    Statuses are discovered rather than enumerated, so adding a scope to the
+    synthesis brings it under this invariant automatically. The only names
+    subtracted are the review columns the merge adds afterwards, and those come
+    from the module's own constant, not a list kept by hand here.
     """
     summary = cta_review.cta_evidence_summary()
-    # Restricted to the prefixes the synthesis itself produces, so the test and
-    # the gaps loop share one scope without recomputing it, and without the
-    # hand-maintained exclusion the merged frame's review columns would need.
-    prefixes = {"bulk_rna", "somatic_rna", "somatic_ihc", "single_cell_rna"}
-    prefixes |= {f"cardiomyocyte_{m}" for m in ("rna", "ihc")}
-    prefixes |= {
-        f"{group}_{m}" for group in cta_review.SAFETY_TISSUE_GROUPS for m in ("rna", "ihc")
-    }
-    statuses = [f"{prefix}_status" for prefix in sorted(prefixes)]
-    assert set(statuses) <= set(summary.columns)
+    # Discovered from the frame, minus the review columns the merge adds after
+    # synthesis -- derived from the module's own constant rather than listed by
+    # hand, so a new scope is covered automatically. Enumerating the scopes
+    # here would be the same hand-kept list that fell behind twice.
+    added_by_merge = {f"{modality}_review_status" for modality in cta_review.REVIEWED_MODALITIES}
+    statuses = [c for c in summary.columns if c.endswith("_status") and c not in added_by_merge]
+    assert len(statuses) > 10
+    assert not any(c.endswith("_review_status") for c in statuses)
     assert len(statuses) > 10
     for column in statuses:
         prefix = column[: -len("_status")]
@@ -607,25 +606,46 @@ def test_coverage_accessor_and_denominator_agree_on_what_was_surveyed():
     assert brain_ihc.loc["cerebellum", "surveyed_coverage_level"] == "complete"
 
 
-def test_unsurveyed_mapped_labels_are_named_on_the_summary():
-    # Excluded from the denominator, absent from unmapped_tissues, and
-    # otherwise nameless: a consumer could derive the count but not the labels.
+def test_unsurveyed_labels_are_reported_once_per_release():
+    """A fact identical in every row belongs to the release, not the gene.
+
+    Naming these per group and modality meant ten columns of which nine were
+    permanently empty and one held a constant string in all 403 rows -- the
+    criterion this module already applied when it split the mapping limits out
+    of the per-gene gap field.
+    """
     summary = cta_review.cta_evidence_summary()
-    unsurveyed = summary["brain_ihc_unsurveyed_tissues"].iloc[0].split(";")
-    assert set(unsurveyed) == {
-        "choroid plexus",
-        "dorsal raphe",
-        "hypothalamus",
-        "retina",
-        "substantia nigra",
-    }
-    mapped = set(summary["brain_ihc_mapped_tissues"].iloc[0].split(";"))
-    assert set(unsurveyed) < mapped
-    # The unmapped axis stays distinct: those are requested regions with no
-    # source label at all, not labels that exist but are rarely run.
-    assert not set(unsurveyed) & set(summary["brain_ihc_unmapped_tissues"].iloc[0].split(";"))
-    # A fully routine group has nothing unsurveyed.
-    assert summary["heart_ihc_unsurveyed_tissues"].eq("").all()
+    assert not [c for c in summary.columns if c.endswith("_unsurveyed_tissues")]
+    limits = summary["atlas_coverage_limits"]
+    assert limits.str.contains("brain_ihc_unsurveyed_labels").all()
+    # Only the scope that has unsurveyed labels says so.
+    assert not limits.str.contains("brain_rna_unsurveyed_labels").any()
+    assert not limits.str.contains("heart_ihc_unsurveyed_labels").any()
+    # The labels themselves live on the accessor, one row per tissue.
+    coverage = cta_review.cta_atlas_coverage()
+    brain_ihc = coverage.loc[coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")]
+    unsurveyed = set(brain_ihc.loc[~brain_ihc["routinely_surveyed"], "requested_tissue"])
+    assert {"choroid plexus", "hypothalamus", "retina"} <= unsurveyed
+
+
+def test_coverage_accessor_states_both_region_counts():
+    # The aggregate verdict is "partial" on either basis for brain, so the
+    # counts are what distinguish 8 mapped regions from 4 surveyed ones.
+    coverage = cta_review.cta_atlas_coverage()
+    brain_ihc = coverage.loc[
+        coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")
+    ].iloc[0]
+    assert brain_ihc["group_requested_regions"] == 14
+    assert brain_ihc["group_mapped_regions"] == 8
+    assert brain_ihc["group_surveyed_regions"] == 4
+    assert brain_ihc["group_surveyed_coverage_state"] == "partial"
+    heart = coverage.loc[coverage["safety_group"].eq("heart")]
+    assert heart["group_mapped_regions"].eq(1).all()
+    assert heart["group_surveyed_regions"].eq(1).all()
+    assert heart["group_surveyed_coverage_state"].eq("complete").all()
+    # Surveyed can never exceed mapped, which can never exceed requested.
+    assert (coverage["group_surveyed_regions"] <= coverage["group_mapped_regions"]).all()
+    assert (coverage["group_mapped_regions"] <= coverage["group_requested_regions"]).all()
 
 
 def test_cardiomyocyte_denominator_uses_the_same_routine_intersection():
@@ -657,3 +677,17 @@ def test_surveyed_level_downgrades_a_partly_routine_mapping():
     assert cta_review._surveyed_level(exact, ("cerebellum", "dorsal raphe")) == "complete"
     substructure = _Mapping("partial", ("caudate",))
     assert cta_review._surveyed_level(substructure, ("caudate",)) == "partial"
+
+
+def test_aggregate_level_collapses_per_tissue_coverage():
+    """One verdict per group, mirroring how hpa aggregates mapped levels.
+
+    The all-unavailable case is not reachable from v23 -- every safety group
+    has at least one routinely surveyed label -- but a release that dropped a
+    group's whole panel must report it as unavailable rather than partial.
+    """
+    assert cta_review._aggregate_level(["complete", "complete"]) == "complete"
+    assert cta_review._aggregate_level(["unavailable", "unavailable"]) == "unavailable"
+    assert cta_review._aggregate_level(["complete", "unavailable"]) == "partial"
+    assert cta_review._aggregate_level(["partial"]) == "partial"
+    assert cta_review._aggregate_level(["complete", "partial"]) == "partial"
