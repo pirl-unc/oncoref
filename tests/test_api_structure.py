@@ -12,6 +12,7 @@ def test_semantic_modules_are_top_level_facades():
         "cohorts",
         "cta_coverage",
         "cta_peptides",
+        "cta_review",
         "expression_builders",
         "expression_engine",
         "ici_response",
