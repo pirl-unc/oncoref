@@ -342,6 +342,20 @@ def _resolve(modality: str) -> dict[str, hpa.SafetyTissueResolution]:
     }
 
 
+def _survey_state(mapping, surveyed: tuple[str, ...]) -> str:
+    """Whether a requested tissue is unmapped, mapped-but-rarely-run, or run.
+
+    A single boolean would put the first two together, which is the
+    distinction this column exists to draw: thalamus has no HPA IHC label at
+    all, while retina has an exact one that HPA stains for under 1% of genes.
+    """
+    if not mapping.source_tissues:
+        return "not_mapped"
+    if not surveyed:
+        return "mapped_not_surveyed"
+    return "surveyed"
+
+
 def _surveyed_level(mapping, surveyed: tuple[str, ...]) -> str:
     """Restate a mapping's coverage counting only routinely surveyed labels.
 
@@ -390,10 +404,13 @@ def cta_atlas_coverage() -> pd.DataFrame:
     A label can be mapped and still not be part of the panel the source runs
     for most genes: HPA maps choroid plexus, dorsal raphe, hypothalamus, retina
     and substantia nigra for brain IHC but stains each for under 1% of genes.
-    ``routinely_surveyed`` marks that, and ``surveyed_coverage_level`` restates
-    the level counting only routine labels -- the basis the summary's
-    ``expected_tissues`` uses, so the two surfaces cannot disagree about
-    whether a tissue was really covered.
+    ``survey_state`` separates the three cases a single flag would blur --
+    ``not_mapped``, ``mapped_not_surveyed``, ``surveyed`` -- so the population
+    this column exists for is one filter rather than a conjunction, and
+    ``source_tissues`` still names the labels behind a ``mapped_not_surveyed``
+    region. ``surveyed_coverage_level`` restates the level counting only routine
+    labels, which is the basis the summary's ``expected_tissues`` uses, so the
+    two surfaces cannot disagree about whether a tissue was really covered.
     """
     records = []
     for modality, prefix in (("bulk_rna", "rna"), ("ihc", "ihc")):
@@ -423,7 +440,7 @@ def cta_atlas_coverage() -> pd.DataFrame:
                         "coverage_level": mapping.coverage_level,
                         "mapping_kind": mapping.mapping_kind,
                         "source_tissues": ";".join(mapping.source_tissues),
-                        "routinely_surveyed": bool(surveyed),
+                        "survey_state": _survey_state(mapping, surveyed),
                         "surveyed_source_tissues": ";".join(surveyed),
                         "surveyed_coverage_level": surveyed_level,
                         "group_coverage_state": resolution.coverage_state,

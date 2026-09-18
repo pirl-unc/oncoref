@@ -461,7 +461,6 @@ def test_gap_list_covers_every_status_the_record_reports():
     statuses = [c for c in summary.columns if c.endswith("_status") and c not in added_by_merge]
     assert len(statuses) > 10
     assert not any(c.endswith("_review_status") for c in statuses)
-    assert len(statuses) > 10
     for column in statuses:
         prefix = column[: -len("_status")]
         flagged = summary[column].isin(["unavailable", "incomplete"])
@@ -600,10 +599,13 @@ def test_coverage_accessor_and_denominator_agree_on_what_was_surveyed():
         coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")
     ].set_index("requested_tissue")
     assert brain_ihc.loc["retina", "coverage_level"] == "complete"
-    assert not brain_ihc.loc["retina", "routinely_surveyed"]
+    assert brain_ihc.loc["retina", "survey_state"] == "mapped_not_surveyed"
     assert brain_ihc.loc["retina", "surveyed_coverage_level"] == "unavailable"
-    assert brain_ihc.loc["cerebellum", "routinely_surveyed"]
+    assert brain_ihc.loc["cerebellum", "survey_state"] == "surveyed"
     assert brain_ihc.loc["cerebellum", "surveyed_coverage_level"] == "complete"
+    # A region with no source label at all is a different case, not the same
+    # one: a single boolean would have put thalamus and retina together.
+    assert brain_ihc.loc["thalamus", "survey_state"] == "not_mapped"
 
 
 def test_unsurveyed_labels_are_reported_once_per_release():
@@ -624,8 +626,25 @@ def test_unsurveyed_labels_are_reported_once_per_release():
     # The labels themselves live on the accessor, one row per tissue.
     coverage = cta_review.cta_atlas_coverage()
     brain_ihc = coverage.loc[coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")]
-    unsurveyed = set(brain_ihc.loc[~brain_ihc["routinely_surveyed"], "requested_tissue"])
-    assert {"choroid plexus", "hypothalamus", "retina"} <= unsurveyed
+    # One filter, and exact: the conflated form returned 10 regions here, six
+    # of which HPA never maps, so a subset assertion would have passed on it.
+    mapped_not_surveyed = brain_ihc.loc[brain_ihc["survey_state"].eq("mapped_not_surveyed")]
+    assert set(mapped_not_surveyed["requested_tissue"]) == {
+        "choroid plexus",
+        "hypothalamus",
+        "midbrain",
+        "retina",
+    }
+    # The labels behind them are recoverable, including midbrain's two nuclei,
+    # which carry no surveyed label of their own.
+    labels = {t for joined in mapped_not_surveyed["source_tissues"] for t in joined.split(";")}
+    assert labels == {
+        "choroid plexus",
+        "dorsal raphe",
+        "hypothalamus",
+        "retina",
+        "substantia nigra",
+    }
 
 
 def test_coverage_accessor_states_both_region_counts():
