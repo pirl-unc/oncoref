@@ -156,6 +156,38 @@ def test_detection_does_not_need_the_coverage_caveat():
     assert "brain_ihc_partial_mapping" not in row["atlas_evidence_gaps"]
 
 
+def test_versioned_gene_ids_still_join(monkeypatch):
+    # A curated row written as ENSG...14 must not merge onto nothing and then
+    # read as "not reviewed"; that would hide a review rather than error.
+    reviewed = cta_review.cta_reviewed_evidence()
+    reviewed["Ensembl_Gene_ID"] = reviewed["Ensembl_Gene_ID"] + ".14"
+    monkeypatch.setattr(cta_review, "cta_reviewed_evidence", lambda: reviewed)
+    summary = cta_review.cta_evidence_summary()
+    status = summary.set_index("Ensembl_Gene_ID")["isoform_review_status"]
+    assert status["ENSG00000126890"] == "reviewed"
+
+
+def test_summary_carries_no_unversioned_measurement_columns():
+    summary = cta_review.cta_evidence_summary()
+    # Curation tables bring their own HPA numbers of unstated version. Seating
+    # those beside the pinned atlas columns produced near-anagram pairs such as
+    # rna_heart_max_ntpm vs heart_rna_max_ntpm that silently disagreed on the
+    # watchlist candidates.
+    for leaked in (
+        "rna_heart_max_ntpm",
+        "rna_brain_max_ntpm",
+        "rna_max_somatic_ntpm",
+        "hpa_testis_ntpm",
+        "hpa_max_somatic_ntpm",
+    ):
+        assert leaked not in summary.columns, leaked
+    assert set(cta_review._universe().columns) == {
+        "Symbol",
+        "Ensembl_Gene_ID",
+        "candidate_origin",
+    }
+
+
 def test_review_module_is_a_public_facade():
     import oncoref
 

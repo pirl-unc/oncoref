@@ -44,15 +44,38 @@ _SOURCES = {
 }
 
 
+def _strip_version(ids: pd.Series) -> pd.Series:
+    """Ensembl IDs join without their version suffix, from every table.
+
+    Applied to each curated table too, not only the universe: a reviewed row
+    written as ``ENSG00000126890.14`` would otherwise merge onto nothing and
+    read as *not reviewed* rather than as an error.
+    """
+    return ids.astype(str).str.split(".").str[0]
+
+
 def _universe() -> pd.DataFrame:
-    base = cta.cta_evidence()
-    base["candidate_origin"] = "cta_table"
-    candidates = cta.cta_candidate_references()
-    candidates["candidate_origin"] = "watchlist"
-    clinical = cta.cta_clinical_target_references()[["Symbol", "Ensembl_Gene_ID"]]
-    clinical["candidate_origin"] = "clinical_references"
-    out = pd.concat([base, candidates, clinical], ignore_index=True, sort=False)
-    out["Ensembl_Gene_ID"] = out["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+    """Identity and provenance only, one row per candidate gene.
+
+    Deliberately carries no measurement columns. Concatenating the curation
+    tables whole would seat their own HPA numbers, of unstated version and
+    different derivation, beside this module's version-pinned columns -- a
+    ``rna_heart_max_ntpm`` next to our ``heart_rna_max_ntpm`` -- which is the
+    confusion the summary exists to remove. Join :func:`cta.cta_evidence` on
+    the gene ID for curation detail.
+    """
+    origins = {
+        "cta_table": cta.cta_evidence(),
+        "watchlist": cta.cta_candidate_references(),
+        "clinical_references": cta.cta_clinical_target_references(),
+    }
+    frames = []
+    for origin, frame in origins.items():
+        rows = frame[["Symbol", "Ensembl_Gene_ID"]].copy()
+        rows["candidate_origin"] = origin
+        frames.append(rows)
+    out = pd.concat(frames, ignore_index=True)
+    out["Ensembl_Gene_ID"] = _strip_version(out["Ensembl_Gene_ID"])
     return out.drop_duplicates("Ensembl_Gene_ID").sort_values("Symbol").reset_index(drop=True)
 
 
@@ -274,6 +297,7 @@ def cta_evidence_summary() -> pd.DataFrame:
     strict = cta.cta_gene_ids()
     filtered = cta.cta_filtered_gene_ids()
     refs = cta.cta_warning_references()
+    refs["Ensembl_Gene_ID"] = _strip_version(refs["Ensembl_Gene_ID"])
     warnings = set(refs["Ensembl_Gene_ID"])
     out["discovery_tier"] = "excluded"
     out.loc[out["candidate_origin"].ne("cta_table"), "discovery_tier"] = "candidate"
@@ -281,14 +305,11 @@ def cta_evidence_summary() -> pd.DataFrame:
     out.loc[out["Ensembl_Gene_ID"].isin(warnings), "discovery_tier"] = "warning"
     out.loc[out["Ensembl_Gene_ID"].isin(strict), "discovery_tier"] = "strict"
     refs = refs.drop(columns="Symbol").rename(
-        columns={
-            column: f"warning_{column}"
-            for column in refs.columns
-            if column not in {"Symbol", "Ensembl_Gene_ID"}
-        }
+        columns=lambda column: column if column == "Ensembl_Gene_ID" else f"warning_{column}"
     )
     out = out.merge(refs, on="Ensembl_Gene_ID", how="left", validate="one_to_one")
     reviewed = cta_reviewed_evidence()
+    reviewed["Ensembl_Gene_ID"] = _strip_version(reviewed["Ensembl_Gene_ID"])
     for modality in REVIEWED_MODALITIES:
         subset = reviewed.loc[reviewed["modality"].eq(modality)]
         notes = subset.groupby("Ensembl_Gene_ID")["finding"].agg(" | ".join)
