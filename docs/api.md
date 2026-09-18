@@ -753,8 +753,13 @@ gene, not that nothing was found.
 The two kinds of incompleteness are reported separately, because one is about
 the gene and the other about the release. `atlas_evidence_gaps` carries what is
 missing for that gene: a scope with no measurement is `unavailable`, and one
-measured in only part of its mapped tissues is `incomplete` rather than
-summarized as though the whole scope had been surveyed. `atlas_coverage_limits`
+measured in fewer tissues than the source routinely surveys for it is
+`incomplete` rather than summarized as though the whole scope had been covered.
+The denominator counts only labels the release runs for most genes — HPA mixes
+its standard panel with special-study labels measured for a handful of genes,
+and counting those would put the threshold out of reach, so no gene could earn
+a clean non-detection and a detection would become the only way out of
+`incomplete`. `atlas_coverage_limits`
 carries the release's own fixed limitation, which is identical for every gene.
 HPA v23 covers 8 of the 14 requested brain regions by immunohistochemistry (6 in
 full, with basal ganglia represented by caudate alone and midbrain by two

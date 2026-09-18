@@ -320,12 +320,15 @@ def test_every_candidate_gets_a_comparable_summary():
 
 
 def test_partial_observation_of_a_mapped_scope_is_incomplete():
-    # A gene measured in 3 of 10 mapped brain regions must not report a brain
-    # maximum as though the region had been surveyed. Mirrors the IHC side.
-    rows = [["G1", "A", tissue, 1.5] for tissue in ("cerebellum", "retina", "hypothalamus")]
+    # A gene measured in 3 of the 5 brain regions the source surveys must not
+    # report a brain maximum as though the group had been surveyed. The second
+    # gene sets the denominator, so it does not come from the gene under test.
+    shared = ("cerebellum", "retina", "hypothalamus")
+    rows = [["G1", "A", tissue, 1.5] for tissue in shared]
+    rows += [["G2", "B", tissue, 2.0] for tissue in (*shared, "cerebral cortex", "amygdala")]
     row = _synthesize(bulk_rna=rows)
     assert row["brain_rna_measured_rows"] == 3
-    assert row["brain_rna_expected_rows"] == 10
+    assert row["brain_rna_expected_rows"] == 5
     assert row["brain_rna_status"] == "incomplete"
     assert "brain_rna_incomplete" in row["atlas_evidence_gaps"].split(";")
 
@@ -441,15 +444,19 @@ def test_data_derived_denominators_are_not_self_fulfilling():
 
 
 def test_gap_list_covers_every_status_the_record_reports():
-    # The list used to be hand-maintained and fell behind twice as scopes were
-    # added, so a status could go incomplete with the gap field silent.
-    summary = cta_review.cta_evidence_summary()
+    """Every status the synthesis records must reach the gap field.
+
+    Scanned against the synthesis output rather than the merged summary, so
+    the test and the gaps loop share one scope. Scanning the merged frame
+    would sweep in the ``*_review_status`` columns added afterwards and need a
+    hand-maintained exclusion -- the fragility the loop was rewritten to drop.
+    """
+    universe = cta_review._universe()
+    summary = cta_review._synthesize_atlas(universe, cta_review._atlas_tables())
     statuses = [c for c in summary.columns if c.endswith("_status")]
     assert len(statuses) > 10
     for column in statuses:
         prefix = column[: -len("_status")]
-        if prefix.endswith("_review"):
-            continue
         flagged = summary[column].isin(["unavailable", "incomplete"])
         if not flagged.any():
             continue
@@ -466,17 +473,65 @@ def test_gap_list_covers_every_status_the_record_reports():
             assert named.eq(expected).all(), token
 
 
-def test_somatic_ihc_never_claims_a_clean_non_detection():
+def test_non_detection_requires_a_full_survey_not_an_unreachable_one():
+    """The rule is conditional: a partial survey cannot claim a non-detection.
+
+    Pinning "no gene is ever fully surveyed" instead would enshrine an
+    arithmetic artifact -- that is what counting HPA's rare special-study
+    labels into the denominator produced, and it made a detection the only
+    escape from ``incomplete``.
+    """
     summary = cta_review.cta_evidence_summary()
-    # No gene is stained in all 48 somatic tissues, so "not detected" across
-    # somatic tissue is never earned; the discordance warning must not depend
-    # on that literal status.
-    assert not summary["somatic_ihc_status"].eq("not_detected").any()
-    assert (summary["somatic_ihc_measured_tissues"] < summary["somatic_ihc_expected_tissues"]).any()
-    discordant = summary["atlas_warning_codes"].str.contains("rna_ihc_discordance")
-    assert discordant.any()
-    assert summary.loc[discordant, "somatic_ihc_detected_rows"].eq(0).all()
-    assert summary.loc[discordant, "somatic_rna_max_ntpm"].gt(0).all()
+    for scope in ("somatic_ihc", "brain_ihc", "heart_ihc"):
+        measured = summary[f"{scope}_measured_tissues"]
+        expected = summary[f"{scope}_expected_tissues"]
+        status = summary[f"{scope}_status"]
+        # Reachable in both directions, so neither branch is vacuous.
+        assert status.eq("not_detected").any(), scope
+        # A clean negative is only ever claimed from a complete survey.
+        clean = status.eq("not_detected")
+        assert measured.loc[clean].ge(expected.loc[clean]).all(), scope
+        # And a short survey is never reported as one.
+        short = measured.lt(expected) & summary[f"{scope}_detected_rows"].eq(0) & measured.gt(0)
+        assert status.loc[short].eq("incomplete").all(), scope
+
+
+def test_denominators_count_only_routinely_surveyed_labels():
+    """A scope expects what the source runs, not every label it ever used.
+
+    HPA v23 mixes its standard panel with special-study labels measured for a
+    handful of genes. Counting those would put every threshold out of reach.
+    """
+    ihc = cta_review._atlas_tables()["ihc"]
+    routine = cta_review._routine_labels(ihc, "Tissue")
+    genes = ihc["Gene"].nunique()
+    per_label = ihc.groupby("Tissue")["Gene"].nunique()
+    rare = set(per_label.index) - routine
+    assert rare, "expected HPA to carry special-study labels"
+    # The two populations are far apart, so the cut is not delicate.
+    assert per_label[sorted(rare)].max() < 0.05 * genes
+    assert per_label[sorted(routine)].min() > 0.9 * genes
+    summary = cta_review.cta_evidence_summary()
+    # Every denominator is reachable; an unreachable one makes a detection the
+    # only way out of "incomplete" and inverts the gap field.
+    for scope in ("somatic_ihc", "brain_ihc", "heart_ihc", "lung_ihc"):
+        measured = summary[f"{scope}_measured_tissues"]
+        expected = summary[f"{scope}_expected_tissues"]
+        assert measured.max() >= expected.iloc[0], scope
+
+
+def test_empty_gaps_does_not_select_the_most_concerning_genes():
+    # Regression: when a denominator was unreachable, the only escape from an
+    # _incomplete IHC status was a detection there, so an empty gap field
+    # became a perfect marker for "protein detected in brain".
+    summary = cta_review.cta_evidence_summary()
+    gap_free = summary.loc[summary["atlas_evidence_gaps"].eq("")]
+    assert len(gap_free) > 50
+    detected = set(summary.loc[summary["brain_ihc_status"].eq("detected"), "Symbol"])
+    assert set(gap_free["Symbol"]) != detected
+    # Most gap-free rows carry no protein-detection warning at all.
+    flagged = gap_free["atlas_warning_codes"].str.contains("somatic_protein_detected")
+    assert flagged.mean() < 0.5
 
 
 def test_atlas_coverage_rows_reconcile_with_the_requested_groups():

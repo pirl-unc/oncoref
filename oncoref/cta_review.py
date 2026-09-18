@@ -131,6 +131,26 @@ def _atlas_tables() -> dict[str, pd.DataFrame]:
     return tables
 
 
+#: A label counts as routinely surveyed when at least this share of the
+#: source's genes carry a measurement for it. The two populations are two
+#: orders of magnitude apart in HPA v23 -- every routine label covers >=95% of
+#: genes, every special-study label <1% -- so the cut is not delicate.
+_ROUTINE_LABEL_SHARE = 0.5
+
+
+def _routine_labels(table: pd.DataFrame, column: str) -> frozenset[str]:
+    """Labels the source runs for most genes, not every label it ever used.
+
+    HPA's IHC table mixes its standard tissue panel with special-study labels
+    measured for a handful of genes (substantia nigra and sole of foot for one
+    gene each, retina for 113 of 13,468). Treating those as part of a scope
+    would mean no gene is ever fully surveyed in it.
+    """
+    genes = table["Gene"].nunique()
+    per_label = table.groupby(column)["Gene"].nunique()
+    return frozenset(per_label[per_label >= _ROUTINE_LABEL_SHARE * genes].index)
+
+
 def _source_url(modality: str) -> str:
     """The URL the cached artifact actually came from, not the configured one.
 
@@ -247,16 +267,20 @@ def _rna_stats(rows: pd.DataFrame, expected_rows: int | None) -> dict:
 def _ihc_stats(rows: pd.DataFrame, expected_tissues: int | None) -> dict:
     """Summarize an IHC subset, counting stained tissues against the scope.
 
-    ``expected_tissues`` is how many tissues the scope intends. A gene scored
-    in 4 of 9 mapped brain labels has not been surveyed for brain, so its
-    non-detection is ``incomplete`` rather than a clean negative -- the same
-    distinction the RNA side draws. Pass ``None`` only where no tissue count
-    defines the scope.
+    ``expected_tissues`` is how many tissues this scope is routinely surveyed
+    in, so a gene stained in fewer of them reports ``incomplete`` rather than a
+    clean negative. It must count what the source actually runs, not every
+    label that appears somewhere in it: counting rarely-run special-study
+    labels would put the threshold out of reach, making ``not_detected``
+    arithmetically impossible and leaving a detection as the only way out of
+    ``incomplete``. The shortfall between the tissues a group asks for and the
+    ones the source maps at all is a separate axis, carried by
+    ``mapping_coverage`` and :func:`cta_atlas_coverage`.
     """
     detected = rows["Level"].isin(_IHC_DETECTED_LEVELS)
     negative = rows["Level"].eq(_IHC_NEGATIVE_LEVEL)
     measured = detected | negative
-    measured_tissues = rows.loc[measured, "Tissue"].nunique() if measured.any() else 0
+    measured_tissues = rows.loc[measured, "Tissue"].nunique()
     surveyed = expected_tissues is None or measured_tissues >= expected_tissues
     if detected.any():
         status = "detected"
@@ -355,9 +379,15 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     # How many measurements the source itself holds for each RNA scope, so a
     # gene observed in only part of a scope is reported as incomplete rather
     # than summarized as if the whole scope had been surveyed.
-    all_tissues = set(tables["bulk_rna"]["Tissue"].dropna().unique())
-    all_cell_types = set(tables["single_cell_rna"]["Cell type"].dropna().unique())
-    ihc_tissues = set(tables["ihc"]["Tissue"].dropna().unique())
+    # Denominators come from what each source routinely surveys. Using every
+    # label that appears anywhere would put them out of reach: no gene is
+    # stained in HPA's rare special-study labels, so "not detected" would become
+    # arithmetically impossible and -- because a detection short-circuits the
+    # survey check -- detection would be the only escape from "incomplete",
+    # inverting the gap field into a marker for the most concerning genes.
+    all_tissues = _routine_labels(tables["bulk_rna"], "Tissue")
+    all_cell_types = _routine_labels(tables["single_cell_rna"], "Cell type")
+    ihc_tissues = _routine_labels(tables["ihc"], "Tissue")
     expected = {
         "bulk_rna": len(all_tissues),
         "somatic_rna": len(all_tissues - set(NON_SOMATIC_TISSUES)),
@@ -365,9 +395,6 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
         "cardiomyocyte_rna": len(
             {c for c in all_cell_types if c.casefold() in _CARDIOMYOCYTE_LABELS}
         ),
-        # No gene is stained in every somatic tissue, so none has a clean
-        # somatic non-detection. Reporting "not detected" from 37 of 48 tissues
-        # would be the overstatement this module exists to prevent.
         "somatic_ihc": len(ihc_tissues - set(ALL_REPRODUCTIVE_TISSUES)),
     }
     records = []
@@ -391,7 +418,11 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
             ihc["Tissue"].isin(resolutions["ihc"]["heart"].source_tissues)
             & ihc["Cell type"].str.casefold().isin(_CARDIOMYOCYTE_LABELS)
         ]
-        _add_stats(out, "cardiomyocyte_ihc", _ihc_stats(heart_ihc, None))
+        _add_stats(
+            out,
+            "cardiomyocyte_ihc",
+            _ihc_stats(heart_ihc, len(resolutions["ihc"]["heart"].source_tissues)),
+        )
         warnings = []
         if out["somatic_ihc_detected_rows"]:
             warnings.append("somatic_protein_detected")
@@ -402,6 +433,10 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
             # the literal "not_detected" would silence every discordance.
             if out["somatic_ihc_detected_rows"] == 0 and out["somatic_ihc_status"] != "unavailable":
                 warnings.append("rna_ihc_discordance")
+                # The token alone is not a completeness claim, so say when the
+                # negative half of it rests on a partial survey.
+                if out["somatic_ihc_status"] == "incomplete":
+                    warnings.append("rna_ihc_discordance_partial_survey")
         for group in SAFETY_TISSUE_GROUPS:
             for modality, stats in (("rna", _rna_stats), ("ihc", _ihc_stats)):
                 # Both modalities go through their own resolution. Matching the
@@ -411,7 +446,13 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 rows = rna if modality == "rna" else ihc
                 prefix = f"{group}_{modality}"
                 subset = rows.loc[rows["Tissue"].isin(resolution.source_tissues)]
-                _add_stats(out, prefix, stats(subset, len(resolution.source_tissues)))
+                # Only the mapped labels the source routinely runs can be
+                # expected of a gene; the rest are a mapping gap, not a
+                # measurement this gene is missing.
+                routine = all_tissues if modality == "rna" else ihc_tissues
+                _add_stats(
+                    out, prefix, stats(subset, len(set(resolution.source_tissues) & routine))
+                )
                 out[f"{prefix}_mapping_coverage"] = resolution.coverage_state
                 out[f"{prefix}_mapped_tissues"] = ";".join(resolution.source_tissues)
                 out[f"{prefix}_unmapped_tissues"] = ";".join(resolution.unavailable_tissues)
