@@ -102,7 +102,7 @@ def test_gene_protein_tissues_detected_only(hpa_cache):
     assert hpa.gene_protein_tissues("ENSG00000001") == {"testis"}
 
 
-def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch):
+def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch, request):
     import pandas as pd
 
     calls = []
@@ -112,9 +112,15 @@ def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch):
         calls.append((name, version))
         return table
 
-    hpa._hpa_normal_tissue_for_version.cache_clear()
-    hpa._hpa_normal_tissue_labels_for_version.cache_clear()
+    caches = (hpa._hpa_normal_tissue_for_version, hpa._hpa_normal_tissue_labels_for_version)
+    # Clear through a finalizer rather than at the end of the body, so a failure
+    # mid-test cannot leave the fake table cached. Restoring _read_hpa is not
+    # enough: these caches would hand it to the next test that reads the IHC
+    # atlas, which now includes cta_review.
+    for fn in caches:
+        fn.cache_clear()
     monkeypatch.setattr(hpa, "_read_hpa", fake_read_hpa)
+    request.addfinalizer(lambda: [fn.cache_clear() for fn in caches])
 
     frames = (
         hpa.hpa_normal_tissue(),
@@ -134,9 +140,6 @@ def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch):
     assert calls == [("hpa_normal_tissue", "v23")]
     assert hpa._hpa_normal_tissue_for_version.cache_info().currsize == 1
     assert hpa._hpa_normal_tissue_labels_for_version.cache_info().currsize == 1
-
-    hpa._hpa_normal_tissue_for_version.cache_clear()
-    hpa._hpa_normal_tissue_labels_for_version.cache_clear()
 
 
 def test_normal_tissue_label_resolution_distinguishes_empty_observation(hpa_cache):
