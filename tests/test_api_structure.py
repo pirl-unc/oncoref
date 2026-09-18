@@ -22,6 +22,14 @@ def test_semantic_modules_are_top_level_facades():
         assert name in oncoref.__all__
 
 
+def test_cta_warning_tier_accessors_are_flat_namespace_exports():
+    # cta_gene_names(include_warnings=True) points callers at these, so they must
+    # be reachable the same way as every other cta_* accessor.
+    for name in ("cta_warning_references", "cta_warning_gene_names", "cta_warning_gene_ids"):
+        assert callable(getattr(oncoref, name)), name
+        assert name in oncoref.__all__, name
+
+
 def test_expression_engine_builder_audit_surface_is_public():
     assert callable(oncoref.expression_engine.detect_source_row_id_type)
     assert callable(oncoref.expression_engine.map_source_gene_rows)

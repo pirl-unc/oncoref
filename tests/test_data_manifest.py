@@ -8,7 +8,7 @@
 
 from pathlib import Path
 
-from oncoref import data_bundle, data_manifest, reference_data
+from oncoref import data_bundle, data_manifest, load_dataset, reference_data
 
 _DATA_DIR = Path(__file__).resolve().parents[1] / "oncoref" / "data"
 
@@ -54,6 +54,74 @@ def _wheel_file_exists(name: str) -> bool:
 def test_wheel_tables_actually_ship():
     missing = [n for n in data_manifest.WHEEL if not _wheel_file_exists(n)]
     assert not missing, f"WHEEL tables not present in the wheel: {missing}"
+
+
+#: Bundled datasets that ``get_data`` resolves but that no manifest bucket names
+#: yet — pre-existing inventory gaps, recorded here instead of hidden. Each one
+#: is a real dataset a typed accessor reads, so each still needs a deliberate
+#: (name, category, description) entry written for it; they are NOT classified
+#: blindly here. A newly added bundled dataset must be registered in the
+#: manifest, never appended to this list.
+_UNREGISTERED_BUNDLED_DATASETS = frozenset(
+    {
+        # per-fusion citation audit behind cancer-fusions (oncoref.fusions)
+        "cancer-fusion-citation-audit",
+        # curated ICI response long table + its wider evidence base and source
+        # locator audit (oncoref.ici)
+        "cancer-ici-response",
+        "cancer-ici-response-estimates",
+        "cancer-ici-source-locator-audit",
+        # per-gene citation audit behind cancer-key-genes (oncoref.cancer_genes)
+        "cancer-key-gene-citation-audit",
+        # cancer type -> normal tissue of origin map (oncoref.cancer_types)
+        "cancer-normal-tissue-map",
+        # per-type TMB source audit behind cancer-tmb (oncoref.tmb)
+        "cancer-tmb-source-audit",
+        # the canonical Ensembl gene universe (oncoref.gene_ids)
+        "canonical-gene-space",
+        # per-sample diagnosis mapping for one expression source, referenced by
+        # expression_sources.yaml rather than by a typed accessor
+        "gse294016-sample-diagnoses",
+    }
+)
+
+
+def _bundled_dataset_names() -> set[str]:
+    """Names ``get_data`` resolves to a file shipped inside ``oncoref/data``."""
+    return {
+        name
+        for name, path in load_dataset._dataset_paths().items()
+        if path.resolve().parent == _DATA_DIR
+    }
+
+
+def test_every_bundled_dataset_is_in_the_manifest():
+    # The other direction of test_wheel_tables_actually_ship: a dataset that ships
+    # in the wheel but is in no manifest bucket is invisible to catalog.inventory()
+    # and `oncoref data list`, so shipping one is a manifest bug.
+    registered = (
+        set(data_manifest.WHEEL)
+        | set(data_manifest.CANCERDATA_ORIGINATED)
+        | set(data_manifest.BUNDLE)
+        | set(data_manifest.SUPERSEDED)
+        | set(data_manifest.OUT_OF_SCOPE)
+    )
+    shipped = _bundled_dataset_names()
+    unregistered = shipped - registered - _UNREGISTERED_BUNDLED_DATASETS
+    assert not unregistered, f"bundled datasets missing from the manifest: {sorted(unregistered)}"
+
+
+def test_unregistered_bundled_dataset_allowlist_is_current():
+    # Keep the recorded gap honest: every allowlisted name must still ship and
+    # still be unregistered, so registering or deleting one forces its removal.
+    shipped = _bundled_dataset_names()
+    registered = set(data_manifest.WHEEL) | set(data_manifest.CANCERDATA_ORIGINATED)
+    gone = _UNREGISTERED_BUNDLED_DATASETS - shipped
+    assert not gone, f"allowlisted datasets no longer shipped — drop them: {sorted(gone)}"
+    now_registered = _UNREGISTERED_BUNDLED_DATASETS & registered
+    assert not now_registered, (
+        f"allowlisted datasets are now in the manifest — drop them: {sorted(now_registered)}"
+    )
 
 
 def test_planned_tables_not_yet_present():

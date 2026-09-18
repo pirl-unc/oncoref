@@ -637,14 +637,19 @@ protein call.
 - `oncoref.cta` — CTA definition, HPA restriction tiers, axes, aliases, and gene
   ID/name sets. Strict helpers such as `cta_gene_names()` and
   `cta_filtered_gene_names()` preserve the HPA reproductive-restriction default;
-  `cta_clinical_target_evidence()` exposes a separate clinical/canonical tier for
-  source-anchored CTA targets that may be strict-pass, HPA-excluded, or
-  candidate-only. `cta_specificity_audit()` exposes machine-readable specificity
-  demotion and candidate-only decisions for genes whose normal-tissue evidence
-  makes strict-default inclusion unsafe or unresolved.
+  `cta_gene_names(include_warnings=True)` widens that default to the opt-in
+  warning tier described below. `cta_clinical_target_evidence()` exposes a
+  separate clinical/canonical tier for source-anchored CTA targets that may be
+  strict-pass, HPA-excluded, or candidate-only. `cta_specificity_audit()`
+  exposes machine-readable specificity demotion and candidate-only decisions for
+  genes whose normal-tissue evidence makes strict-default inclusion unsafe or
+  unresolved.
 - `oncoref.cta_coverage` — CTA patient coverage over per-sample expression
   matrices.
 - `oncoref.cta_peptides` — CTA-specific 9-mer counts and load.
+- `oncoref.cta_review` — comparable HPA normal-tissue evidence for every CTA,
+  watchlist, and clinical-reference candidate, and the curated supplemental
+  observations recorded against it.
 
 `cta_specific_9mer_count_map()` returns a map from a join key to
 `n_specific_9mers`; those counts are used as weights when computing
@@ -676,6 +681,101 @@ per-sample matrices and do not download data. Use
 `locally_available_within_sample_cohorts()` to plan local work across both
 package/artifact data and a partial bundle cache. Set `include_recomputable=False`
 when only already-built shards should count.
+
+### Warning tier
+
+The strict default is unchanged. `cta_gene_names()` and `cta_gene_ids()` still
+return only the canonical expressed default set. The keyword-only
+`include_warnings=True` widens that call to an opt-in warning tier that is
+disjoint from the strict default, so nothing already in the default set moves
+and the tier can be examined on its own with `cta_warning_gene_names()` or
+`cta_warning_gene_ids()`. `cta_warning_references()` returns the curated
+`cta-warning-reviews` table, one row per warning-tier gene with its
+`warning_code`, `source_version`, `source_anchor`, `rationale`, and
+`unresolved_evidence`.
+
+Membership in the tier is an explicit, source-anchored curation decision. It is
+not an automatic rescue from an RNA cutoff or from a negative
+immunohistochemistry (IHC) result, and it is not a safety clearance. The
+recorded evidence is unresolved, which is why the gene sits in a warning tier
+rather than in the default set.
+
+CTAG2 is the motivating case. It is a clinically pursued NY-ESO-family target
+that the strict default excludes over a low-level HPA v23 heart RNA signal of
+5.1 nTPM. Dropping it silently hides a real candidate, while rescuing it
+automatically would let a negative cardiomyocyte IHC result stand in for absence
+of peptide presentation. The warning tier keeps the candidate discoverable to
+callers that ask for it and keeps its unresolved evidence attached to it.
+
+```python
+from oncoref import cta
+
+cta.cta_gene_names()                        # strict default, unchanged
+cta.cta_gene_names(include_warnings=True)   # default plus the warning tier
+cta.cta_warning_gene_names()                # the tier alone
+cta.cta_warning_references()[["Symbol", "warning_code", "unresolved_evidence"]]
+```
+
+### Normal-tissue evidence review
+
+`oncoref.cta_review` asks a different question from CTA identity: what
+normal-tissue evidence exists for a candidate, on one comparable basis, and
+where that evidence is missing.
+
+`cta_evidence_summary()` returns one comparable row per CTA, watchlist, or
+clinical-reference candidate — 403 rows — on the pinned HPA v23 baseline. Every
+row carries bulk RNA, all-tissue somatic IHC, the five safety-tissue groups
+(`brain`, `heart`, `lung`, `liver`, `pancreas`), and cardiomyocyte RNA and IHC,
+plus `discovery_tier` (`strict`, `warning`, `low_expression`, `candidate`, or
+`excluded`), `atlas_warning_codes`, `atlas_evidence_gaps`, a `*_review_status`
+per reviewed modality, and a human-readable `evidence_summary`. The
+`cta-warning-reviews` fields are merged in under a `warning_` prefix, so a
+warning-tier row carries its curated rationale alongside its measurements.
+Candidates are summarized, not re-tiered: no negative assay result in the
+summary promotes a gene into a broader set.
+
+`cta_normal_tissue_evidence()` returns the long-form per-tissue and
+per-cell-type measurements behind that summary, including tissues outside the
+five safety groups. Its `measurement_status` keeps the two assay vocabularies
+apart — `reported_zero` and `positive_estimate` are RNA estimates, while
+`not_detected` and `detected` are IHC annotations — and `unit` states `nTPM` or
+`IHC category` per row. Single-cell cell types are aggregated across organs, so
+their `tissue` is left blank rather than assigning, for example, every
+fibroblast measurement to the heart.
+
+`cta_reviewed_evidence()` returns the curated `cta-reviewed-evidence` table of
+source-anchored supplemental per-modality observations, each with its assay,
+scope, source version, finding, and limitations. That table is not
+comprehensive: absence of a row means the modality was not reviewed for that
+gene, not that nothing was found.
+
+Assay vocabularies stay separate throughout. A zero RNA estimate is not a
+negative IHC result, an absent measurement is never read as a zero — it is
+reported as unavailable and counted in `atlas_evidence_gaps` — and no atlas
+measurement establishes peptide presentation or clinical safety. The HPA version
+is pinned rather than defaulted so a later release cannot silently relabel an
+old measurement or move the baseline of a reviewed exception. The first call
+downloads the three pinned HPA sources if they are not already cached.
+
+```python
+from oncoref import cta_review
+
+summary = cta_review.cta_evidence_summary()
+summary["discovery_tier"].value_counts()
+
+# The curated warning fields travel with the measurements they qualify.
+ctag2 = summary.loc[summary["Symbol"] == "CTAG2"]
+ctag2[["discovery_tier", "heart_rna_max_ntpm", "cardiomyocyte_ihc_status"]]
+ctag2[["atlas_warning_codes", "atlas_evidence_gaps", "warning_warning_code"]]
+ctag2["evidence_summary"].item()
+
+# not_reviewed is a stated absence of review, not a negative result.
+summary["peptide_presentation_review_status"].value_counts()
+
+cta_review.cta_normal_tissue_evidence().query("modality == 'ihc'")
+reviewed = cta_review.cta_reviewed_evidence()
+reviewed[["Symbol", "modality", "assay", "finding", "limitations"]]
+```
 
 ## Generic Antigen Panels
 

@@ -167,6 +167,9 @@ from .cta import (
     cta_testis_restricted_gene_names,
     cta_unfiltered_gene_ids,
     cta_unfiltered_gene_names,
+    cta_warning_gene_ids,
+    cta_warning_gene_names,
+    cta_warning_references,
 )
 from .drivers import (
     DRIVER_EVIDENCE_SCOPE_KINDS,
@@ -659,6 +662,9 @@ __all__ = [
     "cta_testis_restricted_gene_names",
     "cta_unfiltered_gene_ids",
     "cta_unfiltered_gene_names",
+    "cta_warning_gene_ids",
+    "cta_warning_gene_names",
+    "cta_warning_references",
     "display_gene_name",
     "driver_gene_evidence",
     "driver_gene_evidence_df",
