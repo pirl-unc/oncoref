@@ -9,6 +9,7 @@ The report records its explicit analytical definitions in methodology.md.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import csv
 import gzip
 import hashlib
@@ -723,11 +724,20 @@ def main():
     summary = selection_outputs(metrics, universe, out)
     validate(metrics, summary, out)
     plots(metrics, universe, cohorts, summary, out)
+    # Provenance is best-effort: the report must still run from a source
+    # tarball or an installed copy, where there is no git checkout to ask.
+    git_commit = None
+    with contextlib.suppress(OSError, subprocess.CalledProcessError):
+        git_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+            cwd=ROOT,
+        ).stdout.strip()
     manifest = {
         "oncoref_version": __version__,
-        "git_commit": subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-        ).strip(),
+        "git_commit": git_commit,
         "script_sha256": sha256(Path(__file__)),
         "percentiles": PERCENTILES,
         "prevalence_gt_pct": PREVALENCES,

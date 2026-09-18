@@ -138,17 +138,32 @@ def _atlas_tables() -> dict[str, pd.DataFrame]:
 _ROUTINE_LABEL_SHARE = 0.5
 
 
-def _routine_labels(table: pd.DataFrame, column: str) -> frozenset[str]:
+_LABEL_COLUMNS = {"bulk_rna": "Tissue", "ihc": "Tissue", "single_cell_rna": "Cell type"}
+
+
+def _routine_labels_in(table: pd.DataFrame, column: str) -> frozenset[str]:
     """Labels the source runs for most genes, not every label it ever used.
 
     HPA's IHC table mixes its standard tissue panel with special-study labels
     measured for a handful of genes (substantia nigra and sole of foot for one
     gene each, retina for 113 of 13,468). Treating those as part of a scope
     would mean no gene is ever fully surveyed in it.
+
+    Takes the table rather than a modality so :func:`_synthesize_atlas` stays a
+    pure function of the tables it is handed; reading the cached atlas here
+    would make synthesis ignore its own arguments.
     """
     genes = table["Gene"].nunique()
     per_label = table.groupby(column)["Gene"].nunique()
     return frozenset(per_label[per_label >= _ROUTINE_LABEL_SHARE * genes].index)
+
+
+@cache
+def _routine_labels(modality: str) -> frozenset[str]:
+    """Memoized routine labels of one pinned source, for callers outside
+    synthesis. Scanning the full tables costs ~0.36s, and
+    :func:`cta_atlas_coverage` needs the same answer the denominators use."""
+    return _routine_labels_in(_atlas_tables()[modality], _LABEL_COLUMNS[modality])
 
 
 def _source_url(modality: str) -> str:
@@ -327,6 +342,20 @@ def _resolve(modality: str) -> dict[str, hpa.SafetyTissueResolution]:
     }
 
 
+def _surveyed_level(mapping, surveyed: tuple[str, ...]) -> str:
+    """Restate a mapping's coverage counting only routinely surveyed labels.
+
+    A region whose every label is a rare special-study one is not covered at
+    all, however exactly it maps; one that keeps some of its labels is at best
+    partial. Only a region whose labels are all routine keeps its mapped level.
+    """
+    if not surveyed:
+        return "unavailable"
+    if len(surveyed) < len(mapping.source_tissues):
+        return "partial"
+    return mapping.coverage_level
+
+
 def cta_atlas_coverage() -> pd.DataFrame:
     """How completely this release covers each safety group, tissue by tissue.
 
@@ -340,11 +369,22 @@ def cta_atlas_coverage() -> pd.DataFrame:
     One row per requested tissue, not per group, so the counts reconcile and a
     region represented by a single substructure is not tallied as covered.
     ``modality`` matches the summary's column prefixes (``rna``, ``ihc``).
+
+    A label can be mapped and still not be part of the panel the source runs
+    for most genes: HPA maps choroid plexus, dorsal raphe, hypothalamus, retina
+    and substantia nigra for brain IHC but stains each for under 1% of genes.
+    ``routinely_surveyed`` marks that, and ``surveyed_coverage_level`` restates
+    the level counting only routine labels -- the basis the summary's
+    ``expected_tissues`` uses, so the two surfaces cannot disagree about
+    whether a tissue was really covered.
     """
     records = []
     for modality, prefix in (("bulk_rna", "rna"), ("ihc", "ihc")):
+        routine = _routine_labels(modality)
         for group, resolution in _resolve(modality).items():
             for mapping in resolution.mappings:
+                surveyed = tuple(t for t in mapping.source_tissues if t in routine)
+                surveyed_level = _surveyed_level(mapping, surveyed)
                 records.append(
                     {
                         "safety_group": group,
@@ -353,6 +393,9 @@ def cta_atlas_coverage() -> pd.DataFrame:
                         "coverage_level": mapping.coverage_level,
                         "mapping_kind": mapping.mapping_kind,
                         "source_tissues": ";".join(mapping.source_tissues),
+                        "routinely_surveyed": bool(surveyed),
+                        "surveyed_source_tissues": ";".join(surveyed),
+                        "surveyed_coverage_level": surveyed_level,
                         "group_coverage_state": resolution.coverage_state,
                         "source_name": _SOURCES[modality],
                         "source_version": _VERSION,
@@ -385,9 +428,13 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     # arithmetically impossible and -- because a detection short-circuits the
     # survey check -- detection would be the only escape from "incomplete",
     # inverting the gap field into a marker for the most concerning genes.
-    all_tissues = _routine_labels(tables["bulk_rna"], "Tissue")
-    all_cell_types = _routine_labels(tables["single_cell_rna"], "Cell type")
-    ihc_tissues = _routine_labels(tables["ihc"], "Tissue")
+    routine = {
+        modality: _routine_labels_in(frame, _LABEL_COLUMNS[modality])
+        for modality, frame in tables.items()
+    }
+    all_tissues = routine["bulk_rna"]
+    all_cell_types = routine["single_cell_rna"]
+    ihc_tissues = routine["ihc"]
     expected = {
         "bulk_rna": len(all_tissues),
         "somatic_rna": len(all_tissues - set(NON_SOMATIC_TISSUES)),
@@ -421,7 +468,13 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
         _add_stats(
             out,
             "cardiomyocyte_ihc",
-            _ihc_stats(heart_ihc, len(resolutions["ihc"]["heart"].source_tissues)),
+            # Same intersection as the group loop: a release that moved heart
+            # muscle out of the routine panel must not leave this one scope
+            # with a denominator no gene can reach.
+            _ihc_stats(
+                heart_ihc,
+                len(set(resolutions["ihc"]["heart"].source_tissues) & routine["ihc"]),
+            ),
         )
         warnings = []
         if out["somatic_ihc_detected_rows"]:
@@ -449,13 +502,16 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 # Only the mapped labels the source routinely runs can be
                 # expected of a gene; the rest are a mapping gap, not a
                 # measurement this gene is missing.
-                routine = all_tissues if modality == "rna" else ihc_tissues
-                _add_stats(
-                    out, prefix, stats(subset, len(set(resolution.source_tissues) & routine))
-                )
+                surveyed = routine["bulk_rna" if modality == "rna" else "ihc"]
+                mapped = set(resolution.source_tissues)
+                _add_stats(out, prefix, stats(subset, len(mapped & surveyed)))
                 out[f"{prefix}_mapping_coverage"] = resolution.coverage_state
                 out[f"{prefix}_mapped_tissues"] = ";".join(resolution.source_tissues)
                 out[f"{prefix}_unmapped_tissues"] = ";".join(resolution.unavailable_tissues)
+                # Mapped but outside the panel the source runs for most genes,
+                # so excluded from the denominator above. Named here because
+                # nothing else in the row would say which labels those are.
+                out[f"{prefix}_unsurveyed_tissues"] = ";".join(sorted(mapped - surveyed))
             if out[f"{group}_rna_max_ntpm"] >= SAFETY_NTPM_THRESHOLD:
                 warnings.append(f"{group}_rna_ge_{SAFETY_NTPM_THRESHOLD:g}_ntpm")
         # Per-gene gaps only. The fixed mapping limitation of the release is the
@@ -591,6 +647,7 @@ def cta_evidence_summary() -> pd.DataFrame:
 for _clear in (
     _universe.cache_clear,
     _atlas_tables.cache_clear,
+    _routine_labels.cache_clear,
     _resolve.cache_clear,
     _normal_tissue_frame.cache_clear,
     _evidence_summary_frame.cache_clear,

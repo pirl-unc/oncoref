@@ -451,9 +451,17 @@ def test_gap_list_covers_every_status_the_record_reports():
     would sweep in the ``*_review_status`` columns added afterwards and need a
     hand-maintained exclusion -- the fragility the loop was rewritten to drop.
     """
-    universe = cta_review._universe()
-    summary = cta_review._synthesize_atlas(universe, cta_review._atlas_tables())
-    statuses = [c for c in summary.columns if c.endswith("_status")]
+    summary = cta_review.cta_evidence_summary()
+    # Restricted to the prefixes the synthesis itself produces, so the test and
+    # the gaps loop share one scope without recomputing it, and without the
+    # hand-maintained exclusion the merged frame's review columns would need.
+    prefixes = {"bulk_rna", "somatic_rna", "somatic_ihc", "single_cell_rna"}
+    prefixes |= {f"cardiomyocyte_{m}" for m in ("rna", "ihc")}
+    prefixes |= {
+        f"{group}_{m}" for group in cta_review.SAFETY_TISSUE_GROUPS for m in ("rna", "ihc")
+    }
+    statuses = [f"{prefix}_status" for prefix in sorted(prefixes)]
+    assert set(statuses) <= set(summary.columns)
     assert len(statuses) > 10
     for column in statuses:
         prefix = column[: -len("_status")]
@@ -503,7 +511,7 @@ def test_denominators_count_only_routinely_surveyed_labels():
     handful of genes. Counting those would put every threshold out of reach.
     """
     ihc = cta_review._atlas_tables()["ihc"]
-    routine = cta_review._routine_labels(ihc, "Tissue")
+    routine = cta_review._routine_labels("ihc")
     genes = ihc["Gene"].nunique()
     per_label = ihc.groupby("Tissue")["Gene"].nunique()
     rare = set(per_label.index) - routine
@@ -520,18 +528,27 @@ def test_denominators_count_only_routinely_surveyed_labels():
         assert measured.max() >= expected.iloc[0], scope
 
 
-def test_empty_gaps_does_not_select_the_most_concerning_genes():
-    # Regression: when a denominator was unreachable, the only escape from an
-    # _incomplete IHC status was a detection there, so an empty gap field
-    # became a perfect marker for "protein detected in brain".
+def test_gap_freedom_is_not_predicted_by_protein_detection():
+    """Regression: an empty gap field must not mark the worst candidates.
+
+    When a denominator was unreachable, the only escape from an _incomplete IHC
+    status was a detection there, so gap-freedom became a precise marker for
+    "protein detected in brain". Set inequality would be too weak a check --
+    it passes on a one-gene difference -- so compare the detection rate among
+    gap-free rows against the base rate instead.
+    """
     summary = cta_review.cta_evidence_summary()
-    gap_free = summary.loc[summary["atlas_evidence_gaps"].eq("")]
-    assert len(gap_free) > 50
-    detected = set(summary.loc[summary["brain_ihc_status"].eq("detected"), "Symbol"])
-    assert set(gap_free["Symbol"]) != detected
-    # Most gap-free rows carry no protein-detection warning at all.
-    flagged = gap_free["atlas_warning_codes"].str.contains("somatic_protein_detected")
-    assert flagged.mean() < 0.5
+    gap_free = summary["atlas_evidence_gaps"].eq("")
+    assert gap_free.sum() > 50
+    detected = summary["atlas_warning_codes"].str.contains("somatic_protein_detected")
+    base_rate = detected.mean()
+    among_gap_free = detected.loc[gap_free].mean()
+    # Gap-freedom must not concentrate protein detections; under the inversion
+    # this ratio was 1/base_rate, every gap-free row being a detection.
+    assert among_gap_free < 3 * base_rate
+    assert among_gap_free < 0.5
+    # And most gap-free rows are ordinary clean candidates.
+    assert (~detected.loc[gap_free]).mean() > 0.5
 
 
 def test_atlas_coverage_rows_reconcile_with_the_requested_groups():
@@ -554,3 +571,89 @@ def test_atlas_coverage_rows_reconcile_with_the_requested_groups():
     summary = cta_review.cta_evidence_summary()
     assert "brain_rna_mapping_coverage" in summary.columns
     assert coverage["modality"].isin(["rna", "ihc"]).all()
+
+
+def test_coverage_accessor_and_denominator_agree_on_what_was_surveyed():
+    """The two public surfaces must not give opposite answers about a tissue.
+
+    A label can be mapped and still sit outside the panel the source runs for
+    most genes. Reporting it as covered here while excluding it from the
+    summary's denominator had the accessor advertising 8 of 14 brain regions
+    while the status it qualifies rested on 4 labels.
+    """
+    coverage = cta_review.cta_atlas_coverage()
+    summary = cta_review.cta_evidence_summary()
+    # RNA scopes count measurements (_expected_rows), IHC counts tissues.
+    for modality, suffix in (("rna", "expected_rows"), ("ihc", "expected_tissues")):
+        rows = coverage.loc[coverage["modality"].eq(modality)]
+        for group in cta_review.SAFETY_TISSUE_GROUPS:
+            group_rows = rows.loc[rows["safety_group"].eq(group)]
+            surveyed = {
+                label
+                for joined in group_rows["surveyed_source_tissues"]
+                for label in joined.split(";")
+                if label
+            }
+            expected = summary[f"{group}_{modality}_{suffix}"].iloc[0]
+            assert len(surveyed) == expected, (group, modality)
+    # A mapped-but-not-routine label is reported as such, not as covered.
+    brain_ihc = coverage.loc[
+        coverage["safety_group"].eq("brain") & coverage["modality"].eq("ihc")
+    ].set_index("requested_tissue")
+    assert brain_ihc.loc["retina", "coverage_level"] == "complete"
+    assert not brain_ihc.loc["retina", "routinely_surveyed"]
+    assert brain_ihc.loc["retina", "surveyed_coverage_level"] == "unavailable"
+    assert brain_ihc.loc["cerebellum", "routinely_surveyed"]
+    assert brain_ihc.loc["cerebellum", "surveyed_coverage_level"] == "complete"
+
+
+def test_unsurveyed_mapped_labels_are_named_on_the_summary():
+    # Excluded from the denominator, absent from unmapped_tissues, and
+    # otherwise nameless: a consumer could derive the count but not the labels.
+    summary = cta_review.cta_evidence_summary()
+    unsurveyed = summary["brain_ihc_unsurveyed_tissues"].iloc[0].split(";")
+    assert set(unsurveyed) == {
+        "choroid plexus",
+        "dorsal raphe",
+        "hypothalamus",
+        "retina",
+        "substantia nigra",
+    }
+    mapped = set(summary["brain_ihc_mapped_tissues"].iloc[0].split(";"))
+    assert set(unsurveyed) < mapped
+    # The unmapped axis stays distinct: those are requested regions with no
+    # source label at all, not labels that exist but are rarely run.
+    assert not set(unsurveyed) & set(summary["brain_ihc_unmapped_tissues"].iloc[0].split(";"))
+    # A fully routine group has nothing unsurveyed.
+    assert summary["heart_ihc_unsurveyed_tissues"].eq("").all()
+
+
+def test_cardiomyocyte_denominator_uses_the_same_routine_intersection():
+    # The one scope that was left out of the correction: if heart muscle ever
+    # left the routine panel this would silently become unreachable.
+    summary = cta_review.cta_evidence_summary()
+    routine = cta_review._routine_labels("ihc")
+    heart = set(cta_review._resolve("ihc")["heart"].source_tissues)
+    assert summary["cardiomyocyte_ihc_expected_tissues"].eq(len(heart & routine)).all()
+    assert summary["cardiomyocyte_ihc_status"].eq("not_detected").any()
+
+
+def test_surveyed_level_downgrades_a_partly_routine_mapping():
+    """A region keeps its mapped level only if all its labels are routine.
+
+    Not reachable from v23 -- no mapping there mixes routine and special-study
+    labels -- but the rule is what keeps the accessor from overstating a region
+    that HPA covers by one routine label and one it rarely runs.
+    """
+
+    class _Mapping:
+        def __init__(self, level, tissues):
+            self.coverage_level = level
+            self.source_tissues = tissues
+
+    exact = _Mapping("complete", ("cerebellum", "dorsal raphe"))
+    assert cta_review._surveyed_level(exact, ("cerebellum",)) == "partial"
+    assert cta_review._surveyed_level(exact, ()) == "unavailable"
+    assert cta_review._surveyed_level(exact, ("cerebellum", "dorsal raphe")) == "complete"
+    substructure = _Mapping("partial", ("caudate",))
+    assert cta_review._surveyed_level(substructure, ("caudate",)) == "partial"
