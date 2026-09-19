@@ -643,16 +643,45 @@ def _all_by_column(column: str) -> set[str]:
     return result
 
 
-def cta_gene_names() -> set[str]:
+def cta_warning_references() -> pd.DataFrame:
+    """Reviewed CTA discovery exceptions with unresolved normal-tissue evidence.
+
+    Inclusion is an explicit, source-anchored curation decision, not an automatic
+    rescue based on negative IHC or an RNA cutoff. This is not a safety clearance.
+    """
+    return get_data("cta-warning-reviews").copy()
+
+
+def cta_warning_gene_names() -> set[str]:
+    """Opt-in warning-tier symbols, disjoint from the strict expressed default."""
+    refs = cta_warning_references()
+    return set(refs["Symbol"]) - _cta_by_column(
+        "Symbol", filtered_only=True, exclude_never_expressed=True
+    )
+
+
+def cta_warning_gene_ids() -> set[str]:
+    """Ensembl IDs of explicitly reviewed warning-tier CTA candidates."""
+    refs = cta_warning_references()
+    return set(refs["Ensembl_Gene_ID"].str.split(".").str[0]) - _cta_by_column(
+        "Ensembl_Gene_ID", filtered_only=True, exclude_never_expressed=True
+    )
+
+
+def cta_gene_names(*, include_warnings: bool = False) -> set[str]:
     """Canonical default CTA gene symbols: genes with explicit specificity action
     ``include_default`` after HPA filtering, never-expressed rescue, and audited
-    specificity demotions."""
-    return _cta_by_column("Symbol", filtered_only=True, exclude_never_expressed=True)
+    specificity demotions. ``include_warnings=True`` also retains explicitly
+    reviewed candidates with unresolved normal-tissue evidence; consult
+    :func:`cta_warning_references` for their warnings."""
+    genes = _cta_by_column("Symbol", filtered_only=True, exclude_never_expressed=True)
+    return genes | cta_warning_gene_names() if include_warnings else genes
 
 
-def cta_gene_ids() -> set[str]:
-    """Canonical default CTA Ensembl gene IDs."""
-    return _cta_by_column("Ensembl_Gene_ID", filtered_only=True, exclude_never_expressed=True)
+def cta_gene_ids(*, include_warnings: bool = False) -> set[str]:
+    """Canonical default CTA Ensembl IDs, optionally including reviewed warnings."""
+    genes = _cta_by_column("Ensembl_Gene_ID", filtered_only=True, exclude_never_expressed=True)
+    return genes | cta_warning_gene_ids() if include_warnings else genes
 
 
 def cta_filtered_gene_names() -> set[str]:
