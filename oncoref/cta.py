@@ -653,17 +653,27 @@ def cta_warning_references() -> pd.DataFrame:
 
 
 def cta_warning_gene_names() -> set[str]:
-    """Opt-in warning-tier symbols, disjoint from the strict expressed default."""
+    """Opt-in warning-tier symbols, disjoint from the strict expressed default.
+
+    A blank symbol is dropped rather than carried through as a ``nan`` that
+    callers would feed to a gene-set intersection.
+    """
     refs = cta_warning_references()
-    return set(refs["Symbol"]) - _cta_by_column(
+    return set(refs["Symbol"].dropna()) - _cta_by_column(
         "Symbol", filtered_only=True, exclude_never_expressed=True
     )
 
 
 def cta_warning_gene_ids() -> set[str]:
-    """Ensembl IDs of explicitly reviewed warning-tier CTA candidates."""
+    """Ensembl IDs of explicitly reviewed warning-tier CTA candidates.
+
+    ``astype(str)`` first: a column pandas infers as non-string makes the
+    ``.str`` accessor raise, and a blank cell would otherwise drop the ID while
+    leaving its symbol in the tier, so the two accessors would disagree.
+    """
     refs = cta_warning_references()
-    return set(refs["Ensembl_Gene_ID"].str.split(".").str[0]) - _cta_by_column(
+    ids = refs["Ensembl_Gene_ID"].dropna().astype(str).str.split(".").str[0]
+    return set(ids) - _cta_by_column(
         "Ensembl_Gene_ID", filtered_only=True, exclude_never_expressed=True
     )
 

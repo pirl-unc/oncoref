@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from functools import cache, lru_cache
 
+import numpy as np
 import pandas as pd
 
 from . import cta, hpa, reference_data
@@ -253,53 +254,60 @@ def _labels(values: pd.Series) -> str:
     return ";".join(sorted(set(values.dropna().astype(str)) - {""}))
 
 
-def _rna_stats(rows: pd.DataFrame, expected_rows: int | None) -> dict:
+def _rna_stats(rows: pd.DataFrame, surveyed: frozenset[str], label_column: str) -> dict:
     """Summarize an RNA subset, counting what was measured against what exists.
 
-    ``expected_rows`` is how many measurements the source holds for this scope,
-    and is required: a gene observed in 3 of 10 brain regions must not report a
-    brain maximum as though the region had been surveyed. Pass ``None`` only
-    where no count defines the scope, so that choice is visible in review. The
-    counts come from the source, so a release that drops a tissue lowers the
-    denominator with it; there is no curated all-tissues list to check against.
+    ``surveyed`` is the set of labels the source runs for most genes in this
+    scope. Both sides of the comparison are counted over it: a gene observed in
+    3 of 10 brain regions must not report a brain maximum as though the region
+    had been surveyed, and measurements in labels outside the set must not make
+    up the shortfall. The counts come from the source, so a release that drops
+    a label lowers the denominator with it; there is no curated list to check
+    against. ``max_ntpm`` deliberately spans every measurement, in scope or
+    not, since the highest value anywhere is the safety-relevant one.
     """
     values = pd.to_numeric(rows["nTPM"], errors="coerce")
     measured = values[values.ge(0)]
+    in_scope = measured[rows.loc[measured.index, label_column].isin(surveyed)]
     if not len(measured):
         status = "unavailable"
-    elif expected_rows is not None and len(measured) < expected_rows:
+    elif len(in_scope) < len(surveyed):
         status = "incomplete"
     else:
         status = "measured"
     return {
         "status": status,
         "max_ntpm": measured.max(),
-        "measured_rows": len(measured),
-        "expected_rows": expected_rows,
+        "measured_rows": len(in_scope),
+        "expected_rows": len(surveyed),
     }
 
 
-def _ihc_stats(rows: pd.DataFrame, expected_tissues: int | None) -> dict:
+def _ihc_stats(rows: pd.DataFrame, surveyed: frozenset[str]) -> dict:
     """Summarize an IHC subset, counting stained tissues against the scope.
 
-    ``expected_tissues`` is how many tissues this scope is routinely surveyed
-    in, so a gene stained in fewer of them reports ``incomplete`` rather than a
-    clean negative. It must count what the source actually runs, not every
-    label that appears somewhere in it: counting rarely-run special-study
-    labels would put the threshold out of reach, making ``not_detected``
-    arithmetically impossible and leaving a detection as the only way out of
-    ``incomplete``. The shortfall between the tissues a group asks for and the
-    ones the source maps at all is a separate axis, carried by
-    ``mapping_coverage`` and :func:`cta_atlas_coverage`.
+    ``surveyed`` is the set of tissues this scope is routinely stained in, so a
+    gene scored in fewer of them reports ``incomplete`` rather than a clean
+    negative. Both sides are counted over that set. It must hold what the
+    source actually runs, not every label appearing somewhere in it: a
+    denominator inflated with rarely-run special-study labels puts the
+    threshold out of reach, making ``not_detected`` arithmetically impossible
+    and leaving a detection as the only way out of ``incomplete``; a numerator
+    that counts them lets a gene scored only in special-study labels claim a
+    clean negative having surveyed none of the routine ones. The shortfall
+    between the tissues a group asks for and the ones the source maps at all is
+    a separate axis, carried by ``mapping_coverage`` and
+    :func:`cta_atlas_coverage`.
     """
     detected = rows["Level"].isin(_IHC_DETECTED_LEVELS)
     negative = rows["Level"].eq(_IHC_NEGATIVE_LEVEL)
     measured = detected | negative
-    measured_tissues = rows.loc[measured, "Tissue"].nunique()
-    surveyed = expected_tissues is None or measured_tissues >= expected_tissues
+    in_scope = measured & rows["Tissue"].isin(surveyed)
+    measured_tissues = rows.loc[in_scope, "Tissue"].nunique()
+    fully_surveyed = measured_tissues >= len(surveyed)
     if detected.any():
         status = "detected"
-    elif len(rows) and negative.all() and surveyed:
+    elif len(rows) and negative.all() and fully_surveyed:
         status = "not_detected"
     elif measured.any():
         status = "incomplete"
@@ -308,7 +316,7 @@ def _ihc_stats(rows: pd.DataFrame, expected_tissues: int | None) -> dict:
     return {
         "status": status,
         "measured_tissues": measured_tissues,
-        "expected_tissues": expected_tissues,
+        "expected_tissues": len(surveyed),
         "measured_rows": int(measured.sum()),
         "unavailable_rows": int((~measured).sum()),
         "detected_rows": int(detected.sum()),
@@ -391,7 +399,9 @@ def cta_atlas_coverage() -> pd.DataFrame:
 
     A property of the release rather than of any gene: HPA v23 maps 8 of the 14
     requested brain regions for IHC and routinely surveys only 4 of those, so a
-    brain result of any kind speaks for neither spinal cord nor thalamus.
+    brain IHC result speaks for none of the other ten -- spinal cord and
+    thalamus among them. RNA maps 10 and surveys all 10, missing thalamus,
+    medulla oblongata, pons and white matter but covering spinal cord.
     ``group_mapped_regions`` and ``group_surveyed_regions`` carry both counts,
     since the aggregate verdict is ``partial`` either way and would hide the
     gap. Stated once here rather than repeated into every candidate row, where
@@ -470,15 +480,13 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     }
     resolutions = {"bulk_rna": _resolve("bulk_rna"), "ihc": _resolve("ihc")}
     source_urls = {f"{modality}_source_url": _source_url(modality) for modality in tables}
-    # How many measurements the source itself holds for each RNA scope, so a
-    # gene observed in only part of a scope is reported as incomplete rather
-    # than summarized as if the whole scope had been surveyed.
-    # Denominators come from what each source routinely surveys. Using every
-    # label that appears anywhere would put them out of reach: no gene is
-    # stained in HPA's rare special-study labels, so "not detected" would become
-    # arithmetically impossible and -- because a detection short-circuits the
-    # survey check -- detection would be the only escape from "incomplete",
-    # inverting the gap field into a marker for the most concerning genes.
+    # Each scope's surveyed labels: what this source runs for most genes,
+    # narrowed to the scope. Both sides of every completeness check are counted
+    # over these. Using every label that appears anywhere would put the
+    # denominators out of reach, making "not detected" arithmetically
+    # impossible and leaving a detection as the only escape from "incomplete";
+    # counting out-of-scope labels in the numerator would let a gene scored
+    # only in special-study labels claim a clean negative instead.
     routine = {
         modality: _routine_labels_in(frame, _LABEL_COLUMNS[modality])
         for modality, frame in tables.items()
@@ -486,14 +494,15 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     all_tissues = routine["bulk_rna"]
     all_cell_types = routine["single_cell_rna"]
     ihc_tissues = routine["ihc"]
-    expected = {
-        "bulk_rna": len(all_tissues),
-        "somatic_rna": len(all_tissues - set(NON_SOMATIC_TISSUES)),
-        "single_cell_rna": len(all_cell_types),
-        "cardiomyocyte_rna": len(
-            {c for c in all_cell_types if c.casefold() in _CARDIOMYOCYTE_LABELS}
+    scope = {
+        "bulk_rna": all_tissues,
+        "somatic_rna": all_tissues - set(NON_SOMATIC_TISSUES),
+        "single_cell_rna": all_cell_types,
+        "cardiomyocyte_rna": frozenset(
+            c for c in all_cell_types if c.casefold() in _CARDIOMYOCYTE_LABELS
         ),
-        "somatic_ihc": len(ihc_tissues - set(ALL_REPRODUCTIVE_TISSUES)),
+        "somatic_ihc": ihc_tissues - set(ALL_REPRODUCTIVE_TISSUES),
+        "cardiomyocyte_ihc": frozenset(resolutions["ihc"]["heart"].source_tissues) & ihc_tissues,
     }
     records = []
     for gene_id in universe["Ensembl_Gene_ID"]:
@@ -503,12 +512,16 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
         out.update(source_urls)
         somatic_rna = rna.loc[~rna["Tissue"].isin(NON_SOMATIC_TISSUES)]
         somatic_ihc = ihc.loc[~ihc["Tissue"].isin(ALL_REPRODUCTIVE_TISSUES)]
-        _add_stats(out, "bulk_rna", _rna_stats(rna, expected["bulk_rna"]))
-        _add_stats(out, "somatic_rna", _rna_stats(somatic_rna, expected["somatic_rna"]))
-        _add_stats(out, "somatic_ihc", _ihc_stats(somatic_ihc, expected["somatic_ihc"]))
-        _add_stats(out, "single_cell_rna", _rna_stats(single, expected["single_cell_rna"]))
+        _add_stats(out, "bulk_rna", _rna_stats(rna, scope["bulk_rna"], "Tissue"))
+        _add_stats(out, "somatic_rna", _rna_stats(somatic_rna, scope["somatic_rna"], "Tissue"))
+        _add_stats(out, "somatic_ihc", _ihc_stats(somatic_ihc, scope["somatic_ihc"]))
+        _add_stats(
+            out, "single_cell_rna", _rna_stats(single, scope["single_cell_rna"], "Cell type")
+        )
         cardio = single.loc[single["Cell type"].str.casefold().isin(_CARDIOMYOCYTE_LABELS)]
-        _add_stats(out, "cardiomyocyte_rna", _rna_stats(cardio, expected["cardiomyocyte_rna"]))
+        _add_stats(
+            out, "cardiomyocyte_rna", _rna_stats(cardio, scope["cardiomyocyte_rna"], "Cell type")
+        )
         # Heart tissue comes from the same resolution as the safety groups, so a
         # release that renames the label raises there instead of quietly
         # reporting this gene's cardiomyocytes as unassayed.
@@ -516,17 +529,9 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
             ihc["Tissue"].isin(resolutions["ihc"]["heart"].source_tissues)
             & ihc["Cell type"].str.casefold().isin(_CARDIOMYOCYTE_LABELS)
         ]
-        _add_stats(
-            out,
-            "cardiomyocyte_ihc",
-            # Same intersection as the group loop: a release that moved heart
-            # muscle out of the routine panel must not leave this one scope
-            # with a denominator no gene can reach.
-            _ihc_stats(
-                heart_ihc,
-                len(set(resolutions["ihc"]["heart"].source_tissues) & routine["ihc"]),
-            ),
-        )
+        # Same intersection as the group loop: a release that moved heart muscle
+        # out of the routine panel must not leave this one scope unreachable.
+        _add_stats(out, "cardiomyocyte_ihc", _ihc_stats(heart_ihc, scope["cardiomyocyte_ihc"]))
         warnings = []
         if out["somatic_ihc_detected_rows"]:
             warnings.append("somatic_protein_detected")
@@ -556,7 +561,14 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
                 # measurement this gene is missing.
                 surveyed = routine["bulk_rna" if modality == "rna" else "ihc"]
                 mapped = set(resolution.source_tissues)
-                _add_stats(out, prefix, stats(subset, len(mapped & surveyed)))
+                in_scope = frozenset(mapped & surveyed)
+                _add_stats(
+                    out,
+                    prefix,
+                    stats(subset, in_scope, "Tissue")
+                    if modality == "rna"
+                    else stats(subset, in_scope),
+                )
                 out[f"{prefix}_mapping_coverage"] = resolution.coverage_state
                 out[f"{prefix}_mapped_tissues"] = ";".join(resolution.source_tissues)
                 out[f"{prefix}_unmapped_tissues"] = ";".join(resolution.unavailable_tissues)
@@ -598,6 +610,20 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     return pd.DataFrame(records)
 
 
+def _review_notes(reviewed: pd.DataFrame, modality: str) -> pd.Series:
+    """Per-gene reviewed findings for one modality, joined in curation order.
+
+    A blank ``finding`` is rejected by name rather than joined: ``astype(str)``
+    would turn it into the string "nan", and joining it raw raises deep inside
+    the aggregation and takes down every gene rather than the one row at fault.
+    """
+    subset = reviewed.loc[reviewed["modality"].eq(modality)]
+    if subset["finding"].isna().any():
+        blank = sorted(subset.loc[subset["finding"].isna(), "Ensembl_Gene_ID"])
+        raise ValueError(f"cta-reviewed-evidence rows with no finding: {blank}")
+    return subset.groupby("Ensembl_Gene_ID")["finding"].agg(" | ".join)
+
+
 @lru_cache(maxsize=1)
 def _evidence_summary_frame() -> pd.DataFrame:
     """One comparable evidence summary per CTA, watchlist, or clinical candidate.
@@ -608,7 +634,15 @@ def _evidence_summary_frame() -> pd.DataFrame:
     No negative assay result automatically promotes a gene into a broader set.
     """
     universe = _universe()
-    out = universe.merge(_synthesize_atlas(universe, _atlas_tables()), on="Ensembl_Gene_ID")
+    # Guarded like the warning merge below: a synthesis that dropped or
+    # duplicated a candidate would otherwise shorten the frame in silence,
+    # against a contract of one row per candidate.
+    out = universe.merge(
+        _synthesize_atlas(universe, _atlas_tables()),
+        on="Ensembl_Gene_ID",
+        how="left",
+        validate="one_to_one",
+    )
     strict = cta.cta_gene_ids()
     filtered = cta.cta_filtered_gene_ids()
     refs = cta.cta_warning_references()
@@ -630,12 +664,9 @@ def _evidence_summary_frame() -> pd.DataFrame:
     reviewed = cta_reviewed_evidence()
     reviewed["Ensembl_Gene_ID"] = _strip_version(reviewed["Ensembl_Gene_ID"])
     for modality in REVIEWED_MODALITIES:
-        subset = reviewed.loc[reviewed["modality"].eq(modality)]
-        notes = subset.groupby("Ensembl_Gene_ID")["finding"].agg(" | ".join)
-        out[f"{modality}_review_status"] = (
-            out["Ensembl_Gene_ID"]
-            .map(dict.fromkeys(notes.index, "reviewed"))
-            .fillna("not_reviewed")
+        notes = _review_notes(reviewed, modality)
+        out[f"{modality}_review_status"] = np.where(
+            out["Ensembl_Gene_ID"].isin(notes.index), "reviewed", "not_reviewed"
         )
         out[f"{modality}_review"] = out["Ensembl_Gene_ID"].map(notes)
 
@@ -660,7 +691,7 @@ def _evidence_summary_frame() -> pd.DataFrame:
         return " ".join(parts)
 
     out["evidence_summary"] = out.apply(summary, axis=1)
-    return out.copy()
+    return out
 
 
 def cta_normal_tissue_evidence() -> pd.DataFrame:
@@ -708,3 +739,4 @@ for _clear in (
     _evidence_summary_frame.cache_clear,
 ):
     _register_derived_cache(_clear)
+del _clear

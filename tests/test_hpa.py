@@ -113,17 +113,24 @@ def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch, request)
         return table
 
     caches = (hpa._hpa_normal_tissue_for_version, hpa._hpa_normal_tissue_labels_for_version)
-    # Clear through a finalizer rather than at the end of the body, so a failure
-    # mid-test cannot leave the fake table cached. Restoring _read_hpa is not
-    # enough: these caches would hand it to the next test that reads the IHC
-    # atlas. _clear_cache drives every clearer registered against the dataset
-    # cache, so it also covers consumers that memoize a frame derived from this
-    # one -- cta_review's five caches among them -- which clearing only hpa's
-    # two would leave holding the fake.
+
+    def restore():
+        # Both halves are required. These two caches are NOT registered with
+        # _register_derived_cache -- hpa registers only its safety-tissue
+        # mapping -- so _clear_cache alone leaves the one-row fake cached under
+        # "v23" for the rest of the session. _clear_cache alone is also worse
+        # than nothing here: it drops cta_review's caches, so the next summary
+        # rebuilds against the still-poisoned hpa table.
+        for fn in caches:
+            fn.cache_clear()
+        load_dataset._clear_cache()
+
+    # Through a finalizer rather than at the end of the body, so a failure
+    # mid-test cannot leave the fake cached for whatever reads the IHC atlas next.
     for fn in caches:
         fn.cache_clear()
     monkeypatch.setattr(hpa, "_read_hpa", fake_read_hpa)
-    request.addfinalizer(load_dataset._clear_cache)
+    request.addfinalizer(restore)
 
     frames = (
         hpa.hpa_normal_tissue(),

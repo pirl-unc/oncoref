@@ -762,12 +762,14 @@ a clean non-detection and a detection would become the only way out of
 `incomplete`. `atlas_coverage_limits`
 carries the release's own fixed limitation, which is identical for every gene.
 HPA v23 maps 8 of the 14 requested brain regions for immunohistochemistry and
-10 for RNA, so a brain result of any kind speaks for neither spinal cord nor
-thalamus. Mapping is the more favourable of two figures and not the one a
-status rests on: of those 8 regions only 4 are routinely surveyed, because
-midbrain's two nuclei, choroid plexus, hypothalamus and retina are all mapped
-but stained for under 1% of genes. A `brain_ihc_status` of `not_detected`
-therefore rests on caudate, cerebellum, cerebral cortex and hippocampus.
+10 for RNA, and the two modalities miss different regions: neither surveys
+thalamus, medulla oblongata, pons or white matter, while immunohistochemistry
+additionally lacks amygdala and spinal cord. Mapping is the more favourable of
+two figures and not the one a status rests on: of the 8 mapped regions only 4
+are routinely surveyed, because midbrain's two nuclei, choroid plexus,
+hypothalamus and retina are all mapped but stained for under 1% of genes. A
+`brain_ihc_status` of `not_detected` therefore rests on caudate, cerebellum,
+cerebral cortex and hippocampus.
 `cta_atlas_coverage()` reports both counts per group, as
 `group_mapped_regions` and `group_surveyed_regions`, so neither can be read
 without the other.

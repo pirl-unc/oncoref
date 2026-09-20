@@ -8,6 +8,7 @@
 measurement is not a zero, and no negative assay result promotes a gene."""
 
 import pandas as pd
+import pytest
 
 from oncoref import cta, cta_review
 
@@ -166,9 +167,9 @@ def test_unreviewed_modalities_are_marked_not_reviewed():
 
 def test_partial_mapping_is_reported_for_every_candidate():
     summary = cta_review.cta_evidence_summary()
-    # HPA v23 maps 8 of the 14 requested brain regions for IHC and 10 for RNA
-    # (and routinely surveys only 4 of the 8), so neither modality speaks for
-    # spinal cord or thalamus.
+    # HPA v23 maps 8 of the 14 requested brain regions for IHC and 10 for RNA,
+    # and routinely surveys 4 and 10 of those. Neither covers thalamus; IHC
+    # additionally lacks spinal cord, which RNA does survey.
     for modality in ("rna", "ihc"):
         partial = summary[f"brain_{modality}_mapping_coverage"].ne("complete")
         caveated = summary["atlas_coverage_limits"].str.contains(
@@ -710,3 +711,63 @@ def test_aggregate_level_collapses_per_tissue_coverage():
     assert cta_review._aggregate_level(["complete", "unavailable"]) == "partial"
     assert cta_review._aggregate_level(["partial"]) == "partial"
     assert cta_review._aggregate_level(["complete", "partial"]) == "partial"
+
+
+def test_out_of_scope_labels_cannot_complete_a_survey():
+    """A negative must be earned in the labels the scope is counted over.
+
+    Counting a measurement in a rarely-run special-study label toward a
+    routine-only denominator let a gene scored in none of the four routine
+    brain regions report a clean brain non-detection.
+    """
+    resolution = cta_review._resolve("ihc")["brain"]
+    routine = cta_review._routine_labels("ihc")
+    outside = sorted(set(resolution.source_tissues) - routine)
+    assert len(outside) >= 2, "expected v23 to map brain labels it rarely stains"
+    tables = dict(cta_review._atlas_tables())
+    scored_outside = pd.DataFrame(
+        [["GX", "X", tissue, "cells", "Not detected", "Enhanced"] for tissue in outside],
+        columns=["Gene", "Gene name", "Tissue", "Cell type", "Level", "Reliability"],
+    )
+    tables["ihc"] = pd.concat([tables["ihc"], scored_outside], ignore_index=True)
+    row = cta_review._synthesize_atlas(pd.DataFrame({"Ensembl_Gene_ID": ["GX"]}), tables).iloc[0]
+    assert row["brain_ihc_measured_tissues"] == 0
+    assert row["brain_ihc_expected_tissues"] == len(set(resolution.source_tissues) & routine)
+    assert row["brain_ihc_status"] == "incomplete"
+    assert "brain_ihc_incomplete" in row["atlas_evidence_gaps"].split(";")
+
+
+def test_brain_coverage_differs_by_modality():
+    """The two modalities miss different regions; neither stands for the other.
+
+    Pins the claim the docs and the accessor docstring make, which previously
+    said a brain result of any kind spoke for neither spinal cord nor thalamus
+    — false for RNA, which maps and routinely surveys spinal cord.
+    """
+    coverage = cta_review.cta_atlas_coverage()
+    brain = coverage.loc[coverage["safety_group"].eq("brain")]
+    missed = {
+        modality: set(rows.loc[rows["survey_state"].ne("surveyed"), "requested_tissue"])
+        for modality, rows in brain.groupby("modality")
+    }
+    shared = missed["rna"] & missed["ihc"]
+    assert shared == {"thalamus", "medulla oblongata", "pons", "white matter"}
+    assert "spinal cord" in missed["ihc"]
+    assert "spinal cord" not in missed["rna"]
+    assert missed["rna"] < missed["ihc"]
+
+
+def test_a_blank_finding_names_its_row_instead_of_crashing_every_gene():
+    # Joining a NaN raises TypeError deep in a groupby agg, taking down the
+    # whole summary rather than pointing at the row that needs fixing.
+    reviewed = cta_review.cta_reviewed_evidence()
+    reviewed.loc[reviewed.index[0], "finding"] = None
+    with pytest.raises(ValueError, match="no finding"):
+        cta_review._review_notes(reviewed, "isoform")
+
+
+def test_reviewed_evidence_findings_are_present():
+    # The one column whose emptiness is fatal was the one left unchecked.
+    reviewed = cta_review.cta_reviewed_evidence()
+    assert reviewed["finding"].notna().all()
+    assert reviewed["finding"].str.strip().ne("").all()
