@@ -47,7 +47,7 @@ def csv(frame, path):
     write_csv(frame, path)
 
 
-def universe_tables(base, out):
+def universe_tables(base, out, *, fasta=None):
     # Importing here lets focused numerical tests load this module by file path.
     from cta_report_protein_lengths import build_annotations
 
@@ -63,7 +63,7 @@ def universe_tables(base, out):
             ),
         ]
     ).drop_duplicates(ID)
-    fasta = (
+    fasta = fasta or (
         Path.home() / "Library/Caches/pyensembl/GRCh38/ensembl112/Homo_sapiens.GRCh38.pep.all.fa.gz"
     )
     proteins, isoforms = build_annotations(expanded, fasta)
@@ -174,6 +174,7 @@ def universe_tables(base, out):
                 "ensembl_release": 112,
                 "assembly": "GRCh38",
                 "protein_fasta_sha256": sha(fasta),
+                "protein_fasta_path": str(fasta.resolve()),
                 "protein_source": "https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz",
                 "genome_registry_sha256": sha(ROOT / "oncoref/data/proteoform-groups-genome.csv"),
                 "normal_tissue_annotation_sha256": sha(
@@ -720,13 +721,18 @@ def main():
         "--source-cache", type=Path, default=ROOT / "tmp/cta_threshold_report/source-matrices"
     )
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument(
+        "--fasta",
+        type=Path,
+        help="Checksum-pinned Ensembl 112 protein FASTA; defaults to the pyensembl macOS cache",
+    )
     args = parser.parse_args()
     os.environ[CACHE_DIR_ENV_VAR] = str(args.source_cache.resolve())
     out = args.out.resolve()
     (out / "checkpoints").mkdir(parents=True, exist_ok=True)
     script_hash = sha(__file__)
     verify_analysis(args.base)
-    universe = universe_tables(args.base, out)
+    universe = universe_tables(args.base, out, fasta=args.fasta)
     background_ids = pd.read_csv(args.base / "common_background.csv")[ID].tolist()
     policy = fingerprint(
         {
@@ -821,6 +827,7 @@ def main():
             args.base / "analysis_receipt.json",
             args.base / "common_background.csv",
             ROOT / "scripts/cta_report_protein_lengths.py",
+            Path(json.loads((out / "annotation_manifest.json").read_text())["protein_fasta_path"]),
             *json.loads((args.base / "analysis_receipt.json").read_text())["inputs"],
             *json.loads((args.base / "analysis_receipt.json").read_text())["outputs"],
         ],

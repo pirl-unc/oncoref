@@ -49,7 +49,8 @@ python scripts/cta_decision_guide.py --out "$PROTEINS"
 ```
 
 The protein FASTA must match the pinned Ensembl 112 checksum; the default path
-is the Ensembl 112 pyensembl cache. A different release is rejected before any
+is the Ensembl 112 pyensembl macOS cache; use `--fasta` to supply its location
+on another machine. A different release is rejected before any
 annotation is written. The two analysis scripts accept `--resume` and verify
 source, implementation, policy and checkpoint-output hashes before reuse.
 
