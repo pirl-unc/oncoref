@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Sum distinct oncoref burden categories represented by each primary CTA's p90 hits."""
 
+import argparse
 import json
 from pathlib import Path
 
 import pandas as pd
+from cta_mortality_coverage_report import report_burden_category
+from cta_report_common import seal_stage, verify_analysis, verify_stage
 
 import oncoref as od
 
@@ -13,14 +16,19 @@ OUT = ROOT / "outputs/cta_proteoform_report_20260917"
 
 
 def main():
-    dest = OUT / "primary_panel"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", type=Path, default=OUT)
+    out = parser.parse_args().out.resolve()
+    verify_analysis(out)
+    verify_stage(out, "primary")
+    dest = out / "primary_panel"
     primary = pd.read_csv(dest / "primary_proteoforms.csv")
     reference = od.cancer_burden_df().set_index("burden_category")
     reference.to_csv(dest / "burden_reference.csv")
-    groups = pd.read_csv(OUT / "cohort_overlap_groups.csv").set_index("cancer_code")
-    cohorts = pd.read_csv(OUT / "cohort_audit.csv").set_index("cancer_code")
-    mapping = {code: od.burden_category(code) for code in cohorts.index}
-    metrics = pd.read_csv(OUT / "all_proteoform_cohort_metrics.csv.gz")
+    groups = pd.read_csv(out / "cohort_overlap_groups.csv").set_index("cancer_code")
+    cohorts = pd.read_csv(out / "cohort_audit.csv").set_index("cancer_code")
+    mapping = {code: report_burden_category(code) for code in cohorts.index}
+    metrics = pd.read_csv(out / "all_proteoform_cohort_metrics.csv.gz")
     summary, detail = [], []
     for r in primary.itertuples():
         good = metrics[
@@ -31,7 +39,7 @@ def main():
             & (100 * metrics.n_expressing > 10 * metrics.n_patients)
         ]
         codes = set(good.cancer_code)
-        assert codes == set(r.p90_cohort_views_gt10.split(";"))
+        assert codes == set(str(r.p90_cohort_views_gt10).split(";")) - {"nan", ""}
         assert (
             groups.loc[list(codes)].cancer_type_group.nunique() == r.p90_n_cancer_type_groups_gt10
         )
@@ -119,6 +127,20 @@ def main():
             indent=2,
         )
         + "\n"
+    )
+    seal_stage(
+        out,
+        "burden",
+        [Path(__file__), out / "analysis_receipt.json", dest / "primary_proteoforms.csv"],
+        [
+            dest / n
+            for n in [
+                "primary_burden_coverage.csv",
+                "primary_burden_coverage_details.csv",
+                "coverage_denominator_audit.csv",
+                "burden_coverage_method.json",
+            ]
+        ],
     )
     print(
         pd.DataFrame(summary)[

@@ -1,23 +1,27 @@
 #!/usr/bin/env python3
-"""Normal-tissue RNA and IHC figures for the 13 compact-list protein identities."""
+"""Normal-tissue RNA and IHC figures for the current compact-list protein identities."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 import matplotlib
 import numpy as np
 import pandas as pd
+from cta_report_common import seal_stage, verify_analysis
 
 from oncoref import reference_data
 from oncoref.cta_tissues import PERMISSIVE_REPRODUCTIVE_TISSUES
-from oncoref.hpa import hpa_normal_tissue, hpa_rna_consensus
+from oncoref.hpa import _read_hpa, hpa_normal_tissue
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import BoundaryNorm, ListedColormap
+
+os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
 
 ROOT = Path(__file__).resolve().parents[1]
 KEY = "proteoform_key"
@@ -67,6 +71,28 @@ def sum_member_rna(matrix):
     return matrix.sum(axis=0, min_count=len(matrix))
 
 
+def routine_ihc_tissues(observations):
+    scored = observations[observations.Level.isin(LEVELS)]
+    genes = scored.Gene.nunique()
+    per_tissue = scored.groupby("Tissue").Gene.nunique()
+    return set(per_tissue[per_tissue >= 0.5 * genes].index)
+
+
+def tissue_maximum(values, n_members):
+    """Keep rounded-zero status, its bound, and all ties separate from absence."""
+    maximum = values.max()
+    return {
+        "value": maximum,
+        "tissues": ";".join(sorted(values.index[values.eq(maximum)])),
+        "status": "unavailable"
+        if pd.isna(maximum)
+        else "reported_zero"
+        if maximum == 0
+        else "positive_estimate",
+        "zero_upper_bound": 0.05 * n_members if maximum == 0 else np.nan,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=ROOT / "outputs/cta_proteoform_report_20260917")
@@ -82,7 +108,9 @@ def main():
     members = pd.read_csv(out / "gene_to_proteoform_mapping.csv")
     members = members[members[KEY].isin(selected[KEY])].copy()
     assert members[ID].is_unique
-    rna_all, ihc_all = hpa_rna_consensus(), hpa_normal_tissue()
+    verify_analysis(out)
+    rna_all, ihc_all = _read_hpa("hpa_rna_consensus", "v23"), hpa_normal_tissue("v23")
+    routine = routine_ihc_tissues(ihc_all)
     rna = rna_all[rna_all.Gene.isin(members[ID])].copy()
     ihc = ihc_all[ihc_all.Gene.isin(members[ID])].copy()
     assert not rna.duplicated(["Gene", "Tissue"]).any()
@@ -118,19 +146,31 @@ def main():
         protein_rna.append(summed.rename(key))
         protein_ihc.append(strongest.rename(key))
         sub = ihc[ihc.Gene.isin(ids) & ihc.Level.isin(LEVELS)]
+        other_max = tissue_maximum(summed[other], len(ids))
         summary_rows.append(
             {
                 KEY: key,
                 "Symbol": r.Symbol,
                 "protein_length_aa": r.protein_length_aa,
-                "in_3_protein_list": key in set(strict[KEY]),
+                "in_stricter_list": key in set(strict[KEY]),
                 "member_symbols": r.member_symbols,
                 "n_rna_tissues_complete": int(summed.notna().sum()),
                 "max_reproductive_summed_ntpm": summed[rep].max(),
-                "max_reproductive_tissue": summed[rep].idxmax(),
-                "max_other_summed_ntpm": summed[other].max(),
-                "max_other_tissue": summed[other].idxmax(),
+                "max_reproductive_tissue": ";".join(
+                    sorted(summed[rep].index[summed[rep].eq(summed[rep].max())])
+                ),
+                "max_other_summed_ntpm": other_max["value"],
+                "max_other_tissue": other_max["tissues"],
+                "max_other_status": other_max["status"],
+                "max_other_zero_upper_bound_ntpm": other_max["zero_upper_bound"],
                 "n_ihc_tissues_with_scored_data": int(strongest.notna().sum()),
+                "n_ihc_routine_tissues_expected": len(routine),
+                "n_ihc_routine_tissues_scored": int(
+                    strongest.reindex(sorted(routine)).notna().sum()
+                ),
+                "n_ihc_special_study_tissues_scored": int(
+                    strongest.drop(index=sorted(routine)).notna().sum()
+                ),
                 "n_ihc_tissues_any_detected": int(strongest.gt(0).sum()),
                 "ihc_reliability": ";".join(sorted(sub.Reliability.dropna().unique())),
             }
@@ -147,13 +187,14 @@ def main():
             "group": ["Reproductive (including breast)"] * len(rep) + ["Other"] * len(other),
         }
     ).to_csv(dest / "rna_tissue_display_groups.csv", index=False)
-    assert pr.shape == (13, 50)
-    assert len(members) == 16
-    assert pr.notna().all().all()
+    assert pr.shape == (len(selected), len(tissues))
+    # Unmeasured members remain unavailable in sums; never fill them with zero.
 
+    np.random.seed(20260920)
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
+            "svg.hashsalt": "oncoref-cta-report",
             "font.size": 10,
             "axes.spines.top": False,
             "axes.spines.right": False,
@@ -168,7 +209,7 @@ def main():
         plot_rows.append({"name": name, "title": title, "category": "hpa"})
 
     names = [
-        f"{r.Symbol}{'*' if r.in_3_protein_list else ''} ({r.protein_length_aa} aa)"
+        f"{r.Symbol}{'*' if r.in_stricter_list else ''} ({r.protein_length_aa} aa)"
         for r in summary.itertuples()
     ]
     fig, ax = plt.subplots(figsize=(23, 9), layout="constrained")
@@ -179,7 +220,7 @@ def main():
     ax.axvline(len(rep) - 0.5, color=MEMBER_COLORS[1], lw=3)
     for i in range(len(pr)):
         for j, v in enumerate(pr.iloc[i]):
-            txt = f"{v:.0f}" if v >= 10 else (f"{v:.1f}" if v > 0 else "0")
+            txt = "NA" if pd.isna(v) else f"{v:.0f}" if v >= 10 else (f"{v:.1f}" if v > 0 else "0*")
             ax.text(
                 j,
                 i,
@@ -203,7 +244,7 @@ def main():
     colorbar.set_label("Summed member RNA (nTPM; logarithmic color)")
     fig.supxlabel(
         "Source: HPA v23 RNA consensus via oncoref. Values are sums of member-gene tissue reference nTPM, not measured protein abundance.\n"
-        "Left group includes breast; thymus remains among other tissues. * = member of the 3-protein shortlist. All 50 tissues and recorded zeros are shown.",
+        "Left group includes breast; thymus remains among other tissues. * = member of the stricter shortlist. All tissues and rounded estimates are shown.",
         fontsize=10,
     )
     save(
@@ -230,8 +271,8 @@ def main():
     colorbar.ax.set_yticklabels(["Not detected", "Low", "Medium", "High"])
     fig.supxlabel(
         "HPA v23 IHC via oncoref. Maximum ordinal level across measured member genes and cell types; levels are not added.\n"
-        "Gray = no scored observation; white = measured 'Not detected'. Observations here have Enhanced reliability. Left of the divider: reproductive tissues, including breast.\n"
-        "RNA and IHC have different source tissue vocabularies. * = member of the 3-protein shortlist.",
+        "Gray = no scored observation; white = measured 'Not detected'. Reliability is retained in the observation table. Left of the divider: reproductive tissues, including breast.\n"
+        "RNA and IHC have different source tissue vocabularies. * = member of the stricter shortlist.",
         fontsize=10,
     )
     save(fig, "hpa_ihc_tissue_overview", "HPA protein staining: reproductive versus other tissues")
@@ -250,12 +291,12 @@ def main():
         ]:
             bottom = np.zeros(len(group))
             for i, (gene, sym) in enumerate(zip(ids, syms)):
-                values = rna_wide.loc[gene, group].to_numpy()
+                values = rna_wide.reindex([gene])[group].iloc[0].to_numpy()
                 ax.bar(
                     range(len(group)),
                     values,
                     bottom=bottom,
-                    color=MEMBER_COLORS[i],
+                    color=MEMBER_COLORS[i % len(MEMBER_COLORS)],
                     label=sym,
                     width=0.8,
                 )
@@ -303,9 +344,16 @@ def main():
             fontsize=18,
             weight="bold",
         )
+        maximum = (
+            f"< {row.max_other_zero_upper_bound_ntpm:g}"
+            if row.max_other_status == "reported_zero"
+            else f"{row.max_other_summed_ntpm:g}"
+        )
+        max_tissues = row.max_other_tissue.split(";") if row.max_other_tissue else []
+        where = max_tissues[0] if len(max_tissues) == 1 else f"{len(max_tissues)} tied tissues"
         fig.supxlabel(
-            f"Source: HPA v23, accessed through oncoref. RNA: 50 tissues; identical-protein member genes are stacked. Same RNA axis on both sides.\n"
-            f"Largest other-tissue RNA sum: {row.max_other_summed_ntpm:g} nTPM in {row.max_other_tissue}. IHC gray = unavailable, white = measured not detected; IHC values are not summed.",
+            f"Source: HPA v23, accessed through oncoref. RNA: {len(tissues)} tissues; identical-protein member genes are stacked. Same RNA axis on both sides.\n"
+            f"Largest other-tissue RNA sum: {maximum} nTPM in {where}; zeros are rounded estimates. IHC gray = unavailable, white = measured not detected; IHC values are not summed.",
             fontsize=9,
         )
         save(
@@ -319,7 +367,7 @@ def main():
         out / "plot_index.csv", index=False
     )
     provenance = [
-        reference_data.provenance(name, verify_content=True)
+        reference_data.provenance(name, "v23", verify_content=True)
         for name in ["hpa_rna_consensus", "hpa_normal_tissue"]
     ]
     assert all(p["checksum_matches"] for p in provenance)
@@ -340,11 +388,12 @@ def main():
     lines = [
         "# HPA normal-tissue expression for the compact CTA protein lists",
         "",
-        "13 protein identities, including the strictest 3; 16 member genes; 50 RNA tissues.",
+        f"{len(selected)} protein identities; {len(members)} member genes; {len(tissues)} RNA tissues.",
+        "Reported zero is a rounded estimate below 0.05 nTPM per member, not biological absence. Equal maxima retain all tied tissues.",
         "Figures are redrawn from oncoref's cached HPA v23 source tables, rather than screenshots of the HPA website.",
         "RNA bars stack the member-gene nTPM measurements; their total is a tissue-reference RNA sum, not protein abundance or patient-specific coexpression. The overview uses logarithmic color; individual bars use a symlog axis with a linear region from 0 to 1 nTPM.",
         "Reproductive tissues appear first and include breast. Thymus is shown among other tissues; none of the 50 RNA tissues is hidden. This display grouping differs from the older restriction annotation, which excludes thymus from its somatic maximum.",
-        "IHC protein staining is shown separately and retains source tissue labels. For an overview cell, take the strongest scored observation across member genes/cell types. Individual pages retain the gene rows. Levels are not added. Missing observations are gray; measured Not detected is white. Five protein entries have scored IHC observations, all Enhanced reliability; absence of a score is not evidence of absence.",
+        "IHC protein staining is shown separately and retains source tissue labels. For an overview cell, take the strongest scored observation across member genes/cell types. Individual pages retain the gene rows. Levels are not added. Missing observations are gray; measured Not detected is white. The summary records scored IHC counts and reliability; absence of a score is not evidence of absence.",
         "The earlier shortlist normal-tissue annotation is a maximum single-member somatic nTPM; this new RNA view sums members and also displays thymus and breast explicitly. They answer different summary questions.",
         "",
         "## HPA source pages",
@@ -361,7 +410,7 @@ def main():
         "## Data",
         "",
         "- protein_tissue_summary.csv: lengths, maxima and IHC availability.",
-        "- protein_summed_rna_ntpm.csv: the 13 by 50 RNA matrix.",
+        "- protein_summed_rna_ntpm.csv: the protein-by-tissue RNA matrix.",
         "- member_rna_ntpm.csv: all original member-gene tissue values.",
         "- member_ihc_observations.csv: tissue/cell type, level and reliability.",
         "- protein_max_ihc_score.csv: 0 Not detected, 1 Low, 2 Medium, 3 High; missing blank.",
@@ -369,6 +418,12 @@ def main():
         "- manifest.json: source URLs, version and verified checksums.",
     ]
     (dest / "report.md").write_text("\n".join(lines) + "\n")
+    seal_stage(
+        out,
+        "hpa",
+        [Path(__file__), out / "analysis_receipt.json"],
+        [*sorted(dest.glob("*.csv")), dest / "manifest.json"],
+    )
     print(summary.to_string(index=False))
     print(f"Created {len(plot_rows)} HPA figures")
 

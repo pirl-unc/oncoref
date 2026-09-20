@@ -18,9 +18,19 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from cta_report_common import (
+    fingerprint,
+    implementation_hash,
+    seal_stage,
+    sha256,
+    verify_analysis,
+    write_csv,
+)
 
 from oncoref.expression import per_sample_expression
 from oncoref.source_matrices import CACHE_DIR_ENV_VAR, source_sample_namespace
+
+os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
 
 ROOT = Path(__file__).resolve().parents[1]
 ID = "Ensembl_Gene_ID"
@@ -31,10 +41,10 @@ SIZE_CUTS = (1, 5, 10, 20, 25, 50, 100, 250, 500)
 
 def csvout(frame, path):
     path.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_csv(path, index=False, float_format="%.12g")
+    write_csv(frame, path, float_format="%.12g")
 
 
-def passes(frame, prevalence, minimum=1, linear_only=False):
+def passes(frame, prevalence, minimum=10, linear_only=False):
     mask = frame.complete_measurement & (100 * frame.n_expressing > prevalence * frame.n_patients)
     mask &= frame.n_patients >= minimum
     if linear_only:
@@ -182,8 +192,19 @@ def summarize_genes(selected, groups, min_size=10, large_min_size=20):
 
 def extract_patient_values(out, metrics, audit, cutoffs, reuse=False):
     dest = out / "six_genes_patient_values.parquet"
-    if reuse and dest.exists():
-        return pd.read_parquet(dest)
+    receipt = dest.with_suffix(".json")
+    expected = fingerprint(
+        {
+            "implementation": implementation_hash(),
+            "metrics": metrics.to_json(),
+            "audit": audit.to_json(),
+            "cutoffs": cutoffs.to_json(),
+        }
+    )
+    if reuse and dest.exists() and receipt.exists():
+        stored = json.loads(receipt.read_text())
+        if stored.get("inputs") == expected and stored.get("output") == sha256(dest):
+            return pd.read_parquet(dest)
     strict = metrics[(metrics.transcriptome_percentile == 90) & passes(metrics, 75)]
     genes = strict[[ID, "Symbol"]].drop_duplicates().sort_values("Symbol")
     pieces = []
@@ -211,7 +232,9 @@ def extract_patient_values(out, metrics, audit, cutoffs, reuse=False):
                 validate="many_to_one",
             )
             part["positive_p90"] = (
-                part.expression.gt(part.p90_expression_cutoff) & part.expression.notna()
+                part.expression.gt(part.p90_expression_cutoff)
+                .astype("boolean")
+                .where(part.expression.notna())
             )
             part["expression_to_p90_ratio"] = np.divide(
                 part.expression,
@@ -222,6 +245,7 @@ def extract_patient_values(out, metrics, audit, cutoffs, reuse=False):
             pieces.append(part)
     values = pd.concat(pieces, ignore_index=True)
     values.to_parquet(dest, index=False)
+    receipt.write_text(json.dumps({"inputs": expected, "output": sha256(dest)}) + "\n")
     csvout(values, out / "six_genes_patient_values.csv.gz")
     return values
 
@@ -236,7 +260,7 @@ def verify_patient_values(values, metrics):
         ].iloc[0]
         assert len(sub) == truth.n_patients
         if truth.complete_measurement:
-            positives = sub[sub.positive_p90]
+            positives = sub[sub.positive_p90.fillna(False).astype(bool)]
             assert len(positives) == truth.n_expressing
             if len(positives):
                 assert np.isclose(
@@ -292,7 +316,7 @@ def build_tables(out, metrics, cohorts, audit, min_size, large_min_size):
         data = metrics[metrics.transcriptome_percentile == p]
         for f in PREVALENCES:
             key = f"prevalence_gt{f}_transcriptome_p{p}"
-            passing = data[passes(data, f)].copy()
+            passing = data[passes(data, f, minimum=1)].copy()
             passing["passes_min_cohort_size"] = passing.n_patients >= min_size
             passing["passes_large_linear_filter"] = (
                 passing.n_patients >= large_min_size
@@ -434,9 +458,11 @@ def make_plots(
     import matplotlib.pyplot as plt
     from matplotlib.ticker import MaxNLocator
 
+    np.random.seed(20260920)
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
+            "svg.hashsalt": "oncoref-cta-report",
             "font.size": 10,
             "axes.spines.top": False,
             "axes.spines.right": False,
@@ -488,7 +514,7 @@ def make_plots(
     axes[1].axvline(large_min_size, color=orange, ls=":")
     axes[1].legend(frameon=False)
     fig.suptitle(
-        f"142 cohorts | n={int(cohorts.n_patients.min())}-{int(cohorts.n_patients.max()):,} | median n={cohorts.n_patients.median():g}",
+        f"{len(cohorts)} cohorts | n={int(cohorts.n_patients.min())}-{int(cohorts.n_patients.max()):,} | median n={cohorts.n_patients.median():g}",
         fontsize=18,
         fontweight="bold",
     )
@@ -517,7 +543,7 @@ def make_plots(
             yticklabels=[f"{r.cancer_code}: {r.cancer_name}" for _, r in sub.iterrows()],
             xlabel="Patient groups (log scale)",
             xlim=(0.8, 1600),
-            title=f"All cohort sizes ({page}/3) | orange = proxy scale",
+            title=f"All cohort sizes ({page}/{(len(cohorts) + 47) // 48}) | orange = proxy scale",
         )
         ax.tick_params(axis="y", labelsize=7.5)
         ax.legend(loc="lower right", frameon=False, fontsize=8)
@@ -611,7 +637,7 @@ def make_plots(
         yticks=range(len(connected)),
         yticklabels=connected.overlap_group,
         xlabel="Cohort views counted for breadth",
-        title="142 cohort views form 108 groups after known-overlap adjustment",
+        title=f"{len(cohorts)} cohort views form {groups.overlap_group.nunique()} known-overlap groups",
     )
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.legend(frameon=False, loc="lower right")
@@ -650,7 +676,7 @@ def make_plots(
         f"Teal: supported in a linear-TPM cohort with n >= {large_min_size}. Orange: only smaller or proxy-scale support.",
         fontsize=9,
     )
-    save(fig, "strictest_largest_cohorts", "main", "Largest passing cohort for the six genes")
+    save(fig, "strictest_largest_cohorts", "main", "Largest passing cohort for the selected genes")
 
     gene_order = sorted(six.Symbol)
     codes = (
@@ -686,7 +712,7 @@ def make_plots(
         )
         labels.append(f"{r.cancer_name} ({code}){flags}")
     ax.set(
-        xticks=range(6),
+        xticks=range(len(gene_order)),
         xticklabels=gene_order,
         yticks=range(len(codes)),
         yticklabels=labels,
@@ -702,7 +728,7 @@ def make_plots(
         fig,
         "strictest_passing_cancer_types",
         "main",
-        "Which cancer types pass for each of the six genes",
+        "Which cancer types pass for each selected gene",
     )
 
     # One dashboard per expression/prevalence pair; every selected gene remains in CSV.
@@ -830,11 +856,11 @@ def make_plots(
                         color="white" if v > 0.65 else "#203746",
                     )
         ax.set(
-            xticks=range(6),
+            xticks=range(len(gene_order)),
             xticklabels=gene_order,
             yticks=range(len(subcodes)),
             yticklabels=[f"{c} (n={int(cohort_lookup.loc[c, 'n_patients'])})" for c in subcodes],
-            title=f"Six genes across all cohorts: fraction above p90 ({page}/3)",
+            title=f"Selected genes across all cohorts: fraction above p90 ({page}/{(len(cohorts) + 47) // 48})",
         )
         ax.tick_params(axis="y", labelsize=8)
         fig.colorbar(im, ax=ax, shrink=0.6, label="Fraction expressing")
@@ -846,7 +872,7 @@ def make_plots(
             fig,
             f"six_genes_all_cohorts_{page}",
             "main",
-            f"Six-gene prevalence across all cohorts {page}",
+            f"Selected-gene prevalence across all cohorts {page}",
         )
 
     # Patient-level plots preserve every group. X=expression / that patient's p90
@@ -860,7 +886,7 @@ def make_plots(
             sub = values[values.Symbol.eq(gene) & values.cancer_code.eq(code)]
             y = i + rng.uniform(-0.18, 0.18, len(sub))
             for positive, color in [(False, gray), (True, teal)]:
-                m = sub.positive_p90.eq(positive).to_numpy()
+                m = sub.positive_p90.eq(positive).fillna(False).to_numpy(dtype=bool)
                 axes[0].scatter(
                     sub.loc[m, "expression_to_p90_ratio"],
                     y[m],
@@ -879,7 +905,7 @@ def make_plots(
                     edgecolors="none",
                     rasterized=True,
                 )
-            pos = sub[sub.positive_p90]
+            pos = sub[sub.positive_p90.fillna(False).astype(bool)]
             if len(pos):
                 axes[1].scatter([pos.expression.mean()], [i], marker="D", c="black", s=23, zorder=5)
         labels = []
@@ -933,7 +959,7 @@ def make_plots(
                 subcodes,
                 f"patients_{gene}_all_{page}",
                 "appendix",
-                f"{gene}: every cohort, including nonpassing cohorts ({page}/4)",
+                f"{gene}: every cohort, including nonpassing cohorts ({page}/{(len(cohorts) + 39) // 40})",
             )
     csvout(pd.DataFrame(chart_index), out / "plot_index.csv")
 
@@ -955,6 +981,7 @@ def main():
     os.environ[CACHE_DIR_ENV_VAR] = str(args.source_cache.resolve())
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
+    verify_analysis(args.base)
     metrics = pd.read_csv(args.base / "all_gene_cohort_metrics.csv.gz")
     cohorts = pd.read_csv(args.base / "cohort_audit.csv")
     audit = pd.read_csv(args.base / "sample_patient_audit.csv.gz")
@@ -986,11 +1013,14 @@ def main():
     (out / "run_manifest.json").write_text(
         json.dumps(
             {
-                "analysis_date": "2026-09-17",
+                "common_background_genes": json.loads(
+                    (args.base / "run_manifest.json").read_text()
+                )["common_background_genes"],
                 "base_report": str(args.base.resolve()),
                 "min_cohort_size": args.min_cohort_size,
                 "large_min_cohort_size": args.large_min_cohort_size,
                 "large_cohort_linear_only": True,
+                "all_policy_interpretation": "exploratory only; minimum-size policies define ranked results",
                 "n_overlap_groups": groups.overlap_group.nunique(),
                 "overlap_policy": "Connected components of known shared patient keys across all retained cohort views; one vote per component. Conservative, not independent-study count.",
                 "unknown_overlap_policy": "Different physical sources are not assumed disjoint when donor mappings are unavailable; only observed shared identities can be removed.",
@@ -1002,6 +1032,25 @@ def main():
             indent=2,
         )
         + "\n"
+    )
+    seal_stage(
+        out,
+        "analysis",
+        [
+            Path(__file__),
+            args.base / "analysis_receipt.json",
+            args.base / "all_gene_cohort_metrics.csv.gz",
+            args.base / "sample_patient_audit.csv.gz",
+            args.base / "patient_transcriptome_cutoffs.csv.gz",
+            *json.loads((args.base / "analysis_receipt.json").read_text())["inputs"],
+            *json.loads((args.base / "analysis_receipt.json").read_text())["outputs"],
+        ],
+        [
+            out / "validation.json",
+            out / "run_manifest.json",
+            out / "plot_index.csv",
+            *sorted((out / "selections").rglob("*.csv")),
+        ],
     )
     print(summary.to_string(index=False), flush=True)
 

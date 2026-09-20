@@ -14,6 +14,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 ID = "Ensembl_Gene_ID"
 SOURCE_URL = "https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz"
+SOURCE_SHA256 = "2868236131342d14afbfa8dbd8a5e3fb56ba85210fdca196b65db3e17c7ece83"
 LENGTH_METHOD = (
     "Protein length is the amino-acid count of the longest annotated Ensembl 112 "
     "GRCh38 protein sequence for each gene, matching the repository's proteoform "
@@ -26,6 +27,9 @@ LENGTH_METHOD = (
 
 
 def build_annotations(universe, fasta):
+    observed = hashlib.sha256(Path(fasta).read_bytes()).hexdigest()
+    if observed != SOURCE_SHA256:
+        raise ValueError(f"Expected pinned Ensembl 112 FASTA {SOURCE_SHA256}, got {observed}")
     genes = set(universe[ID])
     records = []
     header, sequence = None, []

@@ -21,6 +21,17 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from cta_report_common import (
+    background_values,
+    checkpoint_payload,
+    checkpoint_valid,
+    common_background,
+    fingerprint,
+    implementation_hash,
+    seal_stage,
+    write_checkpoint,
+)
+from cta_report_common import write_csv as reproducible_csv
 
 from oncoref import __version__, source_matrices
 from oncoref.cta import cta_gene_id_to_name
@@ -43,7 +54,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def write_csv(df, path):
     path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(path, index=False, float_format="%.12g")
+    reproducible_csv(df, path, float_format="%.12g")
 
 
 def sha256(path):
@@ -69,7 +80,7 @@ def cta_universe():
     return pd.DataFrame(rows).drop_duplicates(ID).sort_values("Symbol").reset_index(drop=True)
 
 
-def donor_maps():
+def donor_maps(mtc_path=None):
     """Use physical-source manifests; never match unrelated cohorts by sample ID."""
     result = {}
     m = sample_manifest()
@@ -81,8 +92,10 @@ def donor_maps():
             if pd.notna(r[col]):
                 result[(str(r.source_cohort), str(r[col]))] = (str(r.donor_id), "donor_manifest")
     # The cached MTC source titles identify repeat hybridizations of the same case.
-    mtc = Path.home() / ".cache/pirlygenes/expression/gse32662-mtc/GSE32662_series_matrix.txt.gz"
-    if mtc.exists():
+    mtc = Path(mtc_path) if mtc_path else None
+    if mtc is not None:
+        if not mtc.is_file():
+            raise FileNotFoundError(mtc)
         fields = {}
         with gzip.open(mtc, "rt") as f:
             for line in f:
@@ -121,13 +134,30 @@ def group_patients(values, samples, source, mappings):
             for s in samples
         ]
     )
-    frame = pd.DataFrame(values, columns=audit.patient_id.tolist())
-    # Per-specimen clean TPM, averaged in linear space with equal specimen weights.
+    # Keep one TCGA specimen class per donor, preferring the primary tumor.
+    # Metastatic and primary specimens are distinct biological states.
+    audit["sample_type"] = audit.sample_id.map(
+        lambda sample: (
+            sample.split("-")[3][:2]
+            if sample.startswith("TCGA-") and len(sample.split("-")) > 3
+            else "unknown"
+        )
+    )
+    audit["included_in_patient_group"] = True
+    for _, group in audit.groupby("patient_id"):
+        known = sorted(set(group.sample_type) - {"unknown"})
+        if len(known) > 1:
+            selected_type = "01" if "01" in known else known[0]
+            audit.loc[group.index, "included_in_patient_group"] = group.sample_type.eq(
+                selected_type
+            )
+    mask = audit.included_in_patient_group.to_numpy()
+    frame = pd.DataFrame(values[:, mask], columns=audit.loc[mask, "patient_id"].tolist())
     grouped = frame.T.groupby(level=0, sort=True).mean().T
     return grouped.to_numpy(dtype=float), grouped.columns.tolist(), audit
 
 
-def threshold_metrics(values, gene_rows, percentiles=PERCENTILES):
+def threshold_metrics(values, gene_rows, percentiles=PERCENTILES, background=None):
     """All measured biological genes x patient groups; CTA row indices separately.
 
     The percentile threshold is an interpolated expression quantile, not a
@@ -138,7 +168,8 @@ def threshold_metrics(values, gene_rows, percentiles=PERCENTILES):
         raise ValueError("No evaluable patient groups")
     if np.any(values[np.isfinite(values)] < 0) or np.isinf(values).any():
         raise ValueError("Expression must be finite nonnegative values or missing")
-    cutoffs = np.nanquantile(values, np.asarray(percentiles) / 100, axis=0, method="linear")
+    background = values if background is None else background
+    cutoffs = np.nanquantile(background, np.asarray(percentiles) / 100, axis=0, method="linear")
     panel = values[gene_rows]
     # Average-rank percentiles are descriptive only. Selection uses value > quantile.
     ranks = pd.DataFrame(values).rank(axis=0, pct=True, method="average").to_numpy()[gene_rows]
@@ -170,7 +201,7 @@ def threshold_metrics(values, gene_rows, percentiles=PERCENTILES):
     return stats, cutoffs
 
 
-def analyze_cohort(code, universe, mappings, out):
+def analyze_cohort(code, universe, mappings, out, background_ids=None):
     info = source_matrices.cohort_info(code)
     meta = cancer_reference_expression_source_metadata(code)
     path = source_matrices.local_path(code)
@@ -178,6 +209,8 @@ def analyze_cohort(code, universe, mappings, out):
         raise FileNotFoundError(path)
     raw = per_sample_expression(code, normalize="tpm_raw", auto_fetch=False)
     samples = sample_columns(raw)
+    if code == "MTC" and any((info["source_cohort"], sample) not in mappings for sample in samples):
+        raise ValueError("MTC requires a donor title mapping for every source sample")
     qc = sample_expression_qc_from_matrix(raw, cancer_type=code)
     invalid = ((raw[samples] < 0) | np.isinf(raw[samples])).any(axis=0)
     invalid_samples = set(invalid.index[invalid])
@@ -217,9 +250,14 @@ def analyze_cohort(code, universe, mappings, out):
     values, patients, audit = group_patients(
         clean.loc[biological].to_numpy(), kept, info["source_cohort"], mappings
     )
+    selected_samples = set(audit.loc[audit.included_in_patient_group, "sample_id"])
+    qc["included_in_report"] &= qc.sample_id.isin(selected_samples)
+    qc["specimen_policy_excluded"] = qc.sample_id.isin(set(kept) - selected_samples)
+    write_csv(qc, out / "checkpoints" / f"{code}_samples.csv")
     base.update(
+        n_specimen_type_excluded=len(kept) - len(selected_samples),
         n_patients=len(patients),
-        n_repeat_samples_merged=len(kept) - len(patients),
+        n_repeat_samples_merged=len(selected_samples) - len(patients),
         n_biological_genes=len(ids),
         all_patient_ids_verified=not audit.patient_id_basis.eq(
             "source_sample_unverified_patient"
@@ -231,7 +269,15 @@ def analyze_cohort(code, universe, mappings, out):
     )
     index = pd.Index(ids).get_indexer(universe[ID])
     found = index >= 0
-    metrics, cutoffs = threshold_metrics(values, index[found])
+    background = None
+    if background_ids is not None:
+        background = background_values(
+            pd.DataFrame(values, index=ids, columns=patients).rename_axis(ID).reset_index(),
+            background_ids,
+            patients,
+        )
+        base["n_common_background_genes"] = len(background_ids)
+    metrics, cutoffs = threshold_metrics(values, index[found], background=background)
     frames = []
     for p, stats in zip(PERCENTILES, metrics):
         observed = pd.concat(
@@ -269,9 +315,13 @@ def analyze_cohort(code, universe, mappings, out):
     return pd.concat(frames, ignore_index=True), base, thresholds
 
 
-def qualifies(frame, prevalence):
+def qualifies(frame, prevalence, minimum_patients=10):
     # Integer arithmetic avoids rounding a boundary case into the selected set.
-    return frame.complete_measurement & (100 * frame.n_expressing > prevalence * frame.n_patients)
+    return (
+        frame.complete_measurement
+        & frame.n_patients.ge(minimum_patients)
+        & (100 * frame.n_expressing > prevalence * frame.n_patients)
+    )
 
 
 def selection_outputs(metrics, universe, out):
@@ -294,7 +344,8 @@ def selection_outputs(metrics, universe, out):
                     {
                         ID: gid,
                         "Symbol": best.Symbol,
-                        "n_qualifying_cohorts": len(group),
+                        "n_qualifying_cohorts": group.overlap_group.nunique(),
+                        "n_qualifying_cohort_views": len(group),
                         "qualifying_cohorts": ";".join(group.cancer_code),
                         "supported_in_n10_linear_cohort": not robust.empty,
                         "supported_in_verified_patient_cohort": bool(
@@ -315,6 +366,7 @@ def selection_outputs(metrics, universe, out):
                     ID,
                     "Symbol",
                     "n_qualifying_cohorts",
+                    "n_qualifying_cohort_views",
                     "qualifying_cohorts",
                     "supported_in_n10_linear_cohort",
                     "supported_in_verified_patient_cohort",
@@ -345,7 +397,11 @@ def selection_outputs(metrics, universe, out):
                     "prevalence_gt_pct": f,
                     "transcriptome_percentile": p,
                     "n_genes": len(genes),
-                    "n_qualifying_cohorts": selected.cancer_code.nunique(),
+                    "n_qualifying_cohorts": selected.overlap_group.nunique(),
+                    "n_qualifying_cohort_views": selected.cancer_code.nunique(),
+                    "interpretation": "exploratory low-expression screen; cutoff may be zero"
+                    if p < 70
+                    else "ranked selection",
                     "n_qualifying_gene_cohort_pairs": len(selected),
                     "n_genes_n10_linear": robust[ID].nunique(),
                     "n_genes_verified_patients": verified[ID].nunique(),
@@ -676,6 +732,12 @@ def main():
     parser.add_argument("--out", type=Path, default=ROOT / "outputs/cta_threshold_report_20260916")
     parser.add_argument("--source-cache", type=Path)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument(
+        "--mtc-donor-matrix",
+        type=Path,
+        help="GSE32662 series matrix containing MTC donor titles; required when MTC is included",
+    )
+    parser.add_argument("--no-plots", action="store_true")
     args = parser.parse_args()
     if args.source_cache:
         os.environ[source_matrices.CACHE_DIR_ENV_VAR] = str(args.source_cache.resolve())
@@ -683,12 +745,32 @@ def main():
     (out / "checkpoints").mkdir(parents=True, exist_ok=True)
     universe = cta_universe()
     write_csv(universe, out / "cta_input_universe.csv")
-    mappings = donor_maps()
+    codes = source_matrices.available_cohorts()
+    if "MTC" in codes and args.mtc_donor_matrix is None:
+        parser.error(
+            "--mtc-donor-matrix is required: MTC repeat hybridizations need verified donor mapping"
+        )
+    script_hash = sha256(Path(__file__))
+    common_hash = sha256(ROOT / "scripts/cta_report_common.py")
+    mappings = donor_maps(args.mtc_donor_matrix)
+    background_ids, source_hashes = common_background(codes)
+    write_csv(pd.DataFrame({ID: background_ids}), out / "common_background.csv")
+    policy = fingerprint(
+        {
+            "implementation": implementation_hash(),
+            "background": background_ids,
+            "universe": universe.to_dict("records"),
+            "donors": sorted((list(k), v) for k, v in mappings.items()),
+        }
+    )
     all_metrics, cohort_rows, all_cutoffs = [], [], []
     for i, code in enumerate(source_matrices.available_cohorts(), 1):
         cp = out / "checkpoints" / code
-        if args.resume and cp.with_suffix(".json").exists():
-            cohort = json.loads(cp.with_suffix(".json").read_text())
+        expected = fingerprint([policy, code, source_hashes[code]])
+        if args.resume and checkpoint_valid(
+            cp, expected, [".parquet", "_cutoffs.csv", "_samples.csv"]
+        ):
+            cohort = checkpoint_payload(cp)
             data = pd.read_parquet(cp.with_suffix(".parquet"))
             cutoffs = (
                 pd.read_csv(cp.with_name(code + "_cutoffs.csv"))
@@ -697,11 +779,11 @@ def main():
             )
         else:
             print(f"[{i}/142] {code}: computing", flush=True)
-            data, cohort, cutoffs = analyze_cohort(code, universe, mappings, out)
+            data, cohort, cutoffs = analyze_cohort(code, universe, mappings, out, background_ids)
             data.to_parquet(cp.with_suffix(".parquet"), index=False)
             cp.with_suffix(".json").write_text(json.dumps(cohort, indent=2, default=str) + "\n")
-            if not cutoffs.empty:
-                write_csv(cutoffs, cp.with_name(code + "_cutoffs.csv"))
+            write_csv(cutoffs, cp.with_name(code + "_cutoffs.csv"))
+            write_checkpoint(cp, cohort, expected, [".parquet", "_cutoffs.csv", "_samples.csv"])
         all_metrics.append(data)
         cohort_rows.append(cohort)
         all_cutoffs.append(cutoffs)
@@ -721,9 +803,20 @@ def main():
         pd.concat([pd.read_csv(p) for p in sorted((out / "checkpoints").glob("*_samples.csv"))]),
         out / "sample_patient_audit.csv.gz",
     )
+    from cta_threshold_report_details import overlap_groups
+
+    patient_audit = pd.read_csv(out / "sample_patient_audit.csv.gz")
+    groups, edges = overlap_groups(patient_audit, cohorts)
+    write_csv(groups, out / "cohort_overlap_groups.csv")
+    write_csv(edges, out / "cohort_overlap_edges.csv")
+    metrics["overlap_group"] = metrics.cancer_code.map(
+        groups.set_index("cancer_code").overlap_group
+    )
+    write_csv(metrics, out / "all_gene_cohort_metrics.csv.gz")
     summary = selection_outputs(metrics, universe, out)
     validate(metrics, summary, out)
-    plots(metrics, universe, cohorts, summary, out)
+    if not args.no_plots:
+        plots(metrics, universe, cohorts, summary, out)
     # Provenance is best-effort: the report must still run from a source
     # tarball or an installed copy, where there is no git checkout to ask.
     git_commit = None
@@ -735,19 +828,32 @@ def main():
             text=True,
             cwd=ROOT,
         ).stdout.strip()
+    if (
+        sha256(Path(__file__)) != script_hash
+        or sha256(ROOT / "scripts/cta_report_common.py") != common_hash
+    ):
+        raise RuntimeError("Analysis code changed during this run; rebuild before publishing")
     manifest = {
         "oncoref_version": __version__,
         "git_commit": git_commit,
-        "script_sha256": sha256(Path(__file__)),
+        "script_sha256": script_hash,
+        "common_script_sha256": common_hash,
         "percentiles": PERCENTILES,
+        "minimum_patients_for_selection": 10,
+        "exploratory_percentiles": [30, 50],
+        "common_background_genes": len(background_ids),
+        "common_background_sha256": sha256(out / "common_background.csv"),
+        "donor_mapping_inputs": {str(args.mtc_donor_matrix): sha256(args.mtc_donor_matrix)}
+        if args.mtc_donor_matrix
+        else {},
         "prevalence_gt_pct": PREVALENCES,
         "cta_genes": len(universe),
         "cohorts_registered": len(cohorts),
         "cohorts_analyzed": int(cohorts.status.eq("analyzed").sum()),
         "qc_policy": "pass_or_warn; proxy-scale warning retained and labeled",
         "invalid_expression_policy": "Exclude samples with negative or infinite raw expression",
-        "definition": "expression > linear-interpolated quantile of measured biological genes, within patient group",
-        "repeat_sample_policy": "arithmetic mean of per-specimen clean TPM before transcriptome quantiles",
+        "definition": "expression > linear-interpolated quantile of a fixed common biological gene background, within patient group; p30/p50 are exploratory and can have zero cutoffs",
+        "repeat_sample_policy": "one TCGA specimen class per donor, preferring primary tumor; arithmetic mean within retained class",
         "mean_definition": "arithmetic linear-scale mean among positive patient groups only",
         "prevalence_denominator": "all QC-eligible patient groups within each cohort; unknown patient IDs use source samples",
         "missing_policy": "missing gene/cohort measurements never imputed zero; only complete CTA measurements qualify",
@@ -762,6 +868,35 @@ def main():
         },
     }
     (out / "run_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    (out / "methodology.md").write_text(
+        "# CTA gene report methodology\n\n" + json.dumps(manifest, indent=2) + "\n"
+    )
+    seal_stage(
+        out,
+        "analysis",
+        [
+            Path(__file__),
+            ROOT / "scripts/cta_report_common.py",
+            *[source_matrices.local_path(code) for code in codes],
+            *([args.mtc_donor_matrix] if args.mtc_donor_matrix else []),
+        ],
+        [
+            out / n
+            for n in [
+                "validation.json",
+                "run_manifest.json",
+                "common_background.csv",
+                "all_gene_cohort_metrics.csv.gz",
+                "cohort_audit.csv",
+                "sample_patient_audit.csv.gz",
+                "scenario_summary.csv",
+                "patient_transcriptome_cutoffs.csv.gz",
+                "cta_input_universe.csv",
+                "cohort_overlap_groups.csv",
+            ]
+        ]
+        + sorted((out / "gene_sets").rglob("*.csv")),
+    )
     print(summary.to_string(index=False), flush=True)
 
 

@@ -41,10 +41,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+reports = ["reportlab>=4", "pypdf>=5", "Pillow"]
 genome = [
     "pyensembl",
 ]
 dev = [
+    "reportlab>=4",
+    "pypdf>=5",
+    "Pillow",
     "pytest",
     "pytest-cov",
     "pytest-xdist",
@@ -142,6 +146,7 @@ known-first-party = ["oncoref"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["scripts"]
 python_files = "test_*.py"
 python_functions = "test_*"
 addopts = "-v --tb=short"

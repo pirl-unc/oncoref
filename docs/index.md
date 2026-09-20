@@ -91,3 +91,5 @@ ici_response.best_available_ici_response("COAD_MSI")
 | Other references | [`oncoref.tmb`](api.md#burden-tmb-fusions-and-signatures), [`oncoref.incidence`](api.md#burden-tmb-fusions-and-signatures), [`oncoref.fusions`](api.md#burden-tmb-fusions-and-signatures) | TMB, incidence/mortality burden, defining fusions |
 | Legacy compatibility | [`oncoref.response_signatures`](api.md#burden-tmb-fusions-and-signatures) | Transitional historical response-signature surface; new or extended therapy-signature panels belong in pirlygenes |
 | Data management | [`oncoref.catalog`](api.md#data-management), [`oncoref.data_bundle`](api.md#data-management), [`oncoref.reference_data`](api.md#data-management), [`oncoref.hpa`](api.md#data-management) | Dataset inventory, download/cache status, HPA reference data |
+
+The [CTA report pipeline](cta-report-pipeline.md) documents the common gene background, cohort-size policies, provenance checks and rebuild commands for the analysis scripts.

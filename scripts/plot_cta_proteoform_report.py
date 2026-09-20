@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 import matplotlib
@@ -17,6 +18,8 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 
 KEY = "proteoform_key"
+os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
+
 ROOT = Path(__file__).resolve().parents[1]
 FOCUSED = [(50, 70), (70, 70), (50, 90), (70, 90)]
 TEAL, ORANGE, GRAY, PURPLE = "#127C80", "#C8772B", "#BAC6CF", "#725C9E"
@@ -135,9 +138,11 @@ def main():
     changes = pd.read_csv(out / "gene_vs_proteoform_selection.csv")
     cases = pd.read_csv(out / "case_study_proteoforms.csv")
     patients = pd.read_csv(out / "case_study_patient_expression.csv.gz", dtype={"patient_id": str})
+    np.random.seed(20260920)
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
+            "svg.hashsalt": "oncoref-cta-report",
             "font.size": 10,
             "axes.spines.top": False,
             "axes.spines.right": False,
@@ -179,7 +184,14 @@ def main():
         xlabel="Patient transcriptome cutoff",
         ylabel="Required cohort prevalence",
     )
-    vals = [293, 300, len(universe), len(cohorts), groups.loc[codes].cancer_type_group.nunique()]
+    mapping = pd.read_csv(out / "gene_to_proteoform_mapping.csv")
+    vals = [
+        int(mapping.in_original_cta_set.sum()),
+        len(mapping),
+        len(universe),
+        len(cohorts),
+        groups.loc[codes].cancer_type_group.nunique(),
+    ]
     labels = [
         "Original CTA genes",
         "Identical-protein member loci",
@@ -199,7 +211,7 @@ def main():
     for ax, p in zip(axes, [70, 90]):
         sub = (
             coverage[coverage.transcriptome_percentile.eq(p)]
-            .nlargest(25, "n_cancer_type_groups_gt10")
+            .nlargest(25, "n_cancer_type_groups_gt10", keep="all")
             .iloc[::-1]
         )
         yy = np.arange(len(sub))
@@ -358,7 +370,7 @@ def main():
             title="C. TPM means only from linear-TPM sources",
         )
         axes[1, 1].scatter(
-            selected.normal_rna_max_member_somatic_ntpm,
+            selected.normal_rna_max_summed_somatic_ntpm,
             selected[f"p{p}_fraction_cancer_type_groups_gt10"] * 100,
             c=TEAL,
             s=40,
@@ -366,11 +378,11 @@ def main():
         axes[1, 1].set_xscale("symlog", linthresh=0.1)
         axes[1, 1].set_xlim(left=0)
         axes[1, 1].set(
-            xlabel="Maximum single-member normal somatic RNA (nTPM)",
+            xlabel="Maximum summed-member normal somatic RNA (nTPM)",
             ylabel="Cancer-type groups with >10% positives (%)",
             title="D. Normal-tissue evidence for review",
         )
-        normal_column = "normal_rna_max_member_somatic_ntpm"
+        normal_column = "normal_rna_max_summed_somatic_ntpm"
         label_coverage_points(
             axes[1, 1],
             selected,
@@ -385,7 +397,7 @@ def main():
             fontweight="bold",
         )
         fig.supxlabel(
-            "Panel D is a member-level HPA annotation, not a summed protein-level safety score. All cohorts have n >=20.",
+            "Panel D sums member RNA within each HPA tissue; rounded zero is below 0.05 nTPM per locus, not absence. All cohorts have n >=20.",
             fontsize=9,
         )
         save(fig, f"selection_{scenario}", f"Selection process: >{f}% above p{p}", "selection")
@@ -547,7 +559,7 @@ def main():
                 sub = vals[vals.cancer_code.eq(code)]
                 yy = i + rng.uniform(-0.18, 0.18, len(sub))
                 for hit, color in [(False, GRAY), (True, TEAL)]:
-                    mask = sub.positive_p90.eq(hit)
+                    mask = sub.positive_p90.eq(hit).fillna(False)
                     axes[0].scatter(
                         sub.loc[mask, "expression_to_p90_ratio"],
                         yy[mask],
@@ -567,7 +579,7 @@ def main():
                             edgecolors="none",
                             rasterized=True,
                         )
-                positive = sub[sub.positive_p90]
+                positive = sub[sub.positive_p90.fillna(False).astype(bool)]
                 if len(positive) and cohort_index.loc[code, "linear_tpm_comparable"]:
                     axes[1].scatter([positive.expression.mean()], [i], marker="D", c="black", s=22)
                 if not cohort_index.loc[code, "linear_tpm_comparable"]:

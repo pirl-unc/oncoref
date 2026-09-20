@@ -28,9 +28,9 @@ def test_exact_prevalence_boundaries_are_excluded():
     frame = pd.DataFrame(
         {"complete_measurement": [True] * 4, "n_expressing": [1, 2, 3, 4], "n_patients": [4] * 4}
     )
-    assert report.qualifies(frame, 25).tolist() == [False, True, True, True]
-    assert report.qualifies(frame, 50).tolist() == [False, False, True, True]
-    assert report.qualifies(frame, 75).tolist() == [False, False, False, True]
+    assert report.qualifies(frame, 25, minimum_patients=1).tolist() == [False, True, True, True]
+    assert report.qualifies(frame, 50, minimum_patients=1).tolist() == [False, False, True, True]
+    assert report.qualifies(frame, 75, minimum_patients=1).tolist() == [False, False, False, True]
 
 
 def test_missing_is_not_zero_and_incomplete_measurement_cannot_select():

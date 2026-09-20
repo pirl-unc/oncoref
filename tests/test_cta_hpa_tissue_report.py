@@ -40,3 +40,10 @@ def test_display_group_keeps_thymus_in_other_and_breast_explicit():
     reproductive, other = report.ordered_tissues(["thymus", "testis", "breast", "liver"])
     assert reproductive == ["testis", "breast"]
     assert other == ["liver", "thymus"]
+
+
+def test_rare_study_tissue_does_not_count_as_routine_panel():
+    rows = [(f"G{i}", "lung", "Not detected") for i in range(10)]
+    rows += [("G0", "retina", "Not detected")]
+    observations = pd.DataFrame(rows, columns=["Gene", "Tissue", "Level"])
+    assert report.routine_ihc_tissues(observations) == {"lung"}

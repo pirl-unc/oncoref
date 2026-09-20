@@ -12,6 +12,17 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from cta_report_common import (
+    background_values,
+    checkpoint_payload,
+    checkpoint_valid,
+    fingerprint,
+    implementation_hash,
+    seal_stage,
+    verify_analysis,
+    write_checkpoint,
+    write_csv,
+)
 
 from oncoref import __version__
 from oncoref.expression import per_sample_expression
@@ -33,7 +44,7 @@ def sha(path):
 
 def csv(frame, path):
     path.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_csv(path, index=False)
+    write_csv(frame, path)
 
 
 def universe_tables(base, out):
@@ -72,6 +83,12 @@ def universe_tables(base, out):
     ]
     member_evidence = expanded.merge(proteins.drop(columns="Symbol"), on=ID, validate="one_to_one")
     member_evidence = member_evidence.merge(hpa[hpa_cols], on=ID, how="left", validate="one_to_one")
+    from oncoref import hpa
+    from oncoref.cta_tissues import NON_SOMATIC_TISSUES
+
+    normal_atlas = hpa._read_hpa("hpa_rna_consensus", "v23")
+    normal_atlas = normal_atlas[~normal_atlas.Tissue.isin(NON_SOMATIC_TISSUES)]
+    normal_wide = normal_atlas.pivot(index="Gene", columns="Tissue", values="nTPM")
     rows = []
     for key, members in expanded.groupby(KEY, sort=True):
         pp = proteins[proteins[ID].isin(members[ID])]
@@ -94,9 +111,24 @@ def universe_tables(base, out):
         evidence = member_evidence[member_evidence[ID].isin(members[ID])]
         normal = pd.to_numeric(evidence.rna_max_somatic_ntpm, errors="coerce")
         top_normal = evidence.loc[normal.idxmax()] if normal.notna().any() else None
+        normal_sum = normal_wide.reindex(members[ID]).sum(axis=0, min_count=len(members))
+        normal_max = normal_sum.max()
         rows.append(
             {
                 KEY: key,
+                "normal_rna_max_summed_somatic_ntpm": normal_max,
+                "normal_rna_max_summed_status": "unavailable"
+                if pd.isna(normal_max)
+                else "reported_zero"
+                if normal_max == 0
+                else "positive_estimate",
+                "normal_rna_zero_upper_bound_ntpm": len(members) * 0.05
+                if normal_max == 0
+                else np.nan,
+                "normal_rna_summed_max_tissues": ";".join(
+                    sorted(normal_sum.index[normal_sum.eq(normal_max)])
+                ),
+                "normal_rna_summed_tissues_measured": int(normal_sum.notna().sum()),
                 "Symbol": display,
                 "member_symbols": ";".join(sorted(members.Symbol)),
                 "member_gene_ids": ";".join(sorted(members[ID])),
@@ -154,7 +186,7 @@ def universe_tables(base, out):
                 "n_multigene_proteoforms": int(universe.n_member_genes.gt(1).sum()),
                 "sequence_identity_validated": True,
                 "identity_definition": "Identical longest Ensembl 112 protein sequence; not an isoform-resolved or post-translational proteomics measurement.",
-                "normal_tissue_definition": "Largest single-member HPA somatic-tissue RNA value; not a sum across loci or a proteoform-level safety score.",
+                "normal_tissue_definition": "Primary RNA axis is maximum within-tissue sum across identical-protein loci in pinned HPA v23, requiring all members measured. NON_SOMATIC_TISSUES excluded. Member maximum retained as diagnostic. Reported zero is rounded; upper bound 0.05 nTPM per member. Neither axis is a safety score.",
             },
             indent=2,
         )
@@ -165,7 +197,8 @@ def universe_tables(base, out):
 
 def panel_metrics(background, panel, full_members, percentiles=PERCENTILES):
     """Recompute per-patient quantiles after collapse; incomplete sums cannot qualify."""
-    assert np.all(background[np.isfinite(background)] >= 0)
+    if np.isinf(background).any() or np.any(background[np.isfinite(background)] < 0):
+        raise ValueError("Invalid expression background")
     cuts = np.nanquantile(background, np.asarray(percentiles) / 100, axis=0, method="linear")
     available = np.isfinite(panel).all(axis=1)
     frames = []
@@ -207,7 +240,7 @@ def panel_metrics(background, panel, full_members, percentiles=PERCENTILES):
     return frames, cuts
 
 
-def analyze_cohort(code, universe, audit, cohort, out):
+def analyze_cohort(code, universe, audit, cohort, out, background_ids=None):
     path = local_path(code)
     assert sha(path) == cohort.source_matrix_sha256, f"Changed source matrix: {code}"
     keep = audit[audit.included_in_report].copy()
@@ -238,7 +271,14 @@ def analyze_cohort(code, universe, audit, cohort, out):
         missing.append(";".join(g for g in ids if g not in measured))
         full.append(len(found) == len(ids) and np.isfinite(gene_values.loc[found].to_numpy()).all())
     full = np.asarray(full)
-    frames, cuts = panel_metrics(collapsed[patients].to_numpy(), panel, full)
+    background = collapsed[patients].to_numpy()
+    if background_ids is not None:
+        # Collapse the same loci in every cohort; do not bring extra paralogs
+        # from larger source matrices into the percentile background.
+        background_genes = genes.set_index(ID).loc[background_ids].reset_index()
+        fixed = collapse_to_proteoforms(background_genes, scope="genome", sample_cols=patients)
+        background = background_values(fixed, sorted(fixed[KEY]), patients, KEY)
+    frames, cuts = panel_metrics(background, panel, full)
     result = []
     for stats in frames:
         frame = pd.concat([universe[[KEY, "Symbol"]], stats], axis=1)
@@ -262,7 +302,10 @@ def analyze_cohort(code, universe, audit, cohort, out):
         "cancer_code": code,
         "n_patients": len(patients),
         "n_gene_background_rows": len(genes),
-        "n_proteoform_background_rows": len(collapsed),
+        "n_proteoform_background_rows": len(background),
+        "n_common_background_genes": len(background_ids)
+        if background_ids is not None
+        else len(genes),
         "n_complete_cta_proteoforms": int(full.sum()),
         "n_partial_cta_proteoforms": int(((np.asarray(member_counts) > 0) & ~full).sum()),
         "mass_conservation_verified": True,
@@ -425,6 +468,12 @@ def summarize(selected, universe, group_map):
     )
 
 
+def patient_positive_status(expression, cutoff, complete_members):
+    """A missing or partial member sum has no binary positivity verdict."""
+    measured = np.isfinite(expression) & np.isfinite(cutoff) & complete_members
+    return (expression > cutoff).astype("boolean").where(measured)
+
+
 def build_exports(out, universe, metrics, cohorts, groups, base):
     if (out / "selections").exists():
         shutil.rmtree(out / "selections")
@@ -548,7 +597,15 @@ def build_exports(out, universe, metrics, cohorts, groups, base):
         cutoffs = pd.read_csv(cp.with_name(code + "_cutoffs.csv"), dtype={"patient_id": str})
         cutoffs = cutoffs[["cancer_code", "patient_id", "p70_cutoff", "p90_cutoff"]]
         long = long.merge(cutoffs, on="patient_id", validate="many_to_one")
-        long["positive_p90"] = long.expression > long.p90_cutoff
+        long["expression_measured"] = np.isfinite(long.expression)
+        long["complete_member_coverage"] = long[KEY].map(
+            metrics[metrics.cancer_code.eq(code) & metrics.transcriptome_percentile.eq(90)]
+            .set_index(KEY)
+            .complete_member_coverage
+        )
+        long["positive_p90"] = patient_positive_status(
+            long.expression, long.p90_cutoff, long.complete_member_coverage
+        )
         long["expression_to_p90_ratio"] = long.expression / long.p90_cutoff
         assert (long.p90_cutoff > 0).all()
         patient_frames.append(long)
@@ -586,7 +643,7 @@ def build_exports(out, universe, metrics, cohorts, groups, base):
 
 
 def validate(out, universe, metrics, summary, groups):
-    assert len(metrics) == len(universe) * 142 * len(PERCENTILES)
+    assert len(metrics) == len(universe) * metrics.cancer_code.nunique() * len(PERCENTILES)
     assert not metrics.duplicated([KEY, "cancer_code", "transcriptome_percentile"]).any()
     assert (metrics.n_expressing <= metrics.n_patients).all()
     assert np.allclose(metrics.fraction_expressing, metrics.n_expressing / metrics.n_patients)
@@ -623,8 +680,12 @@ def validate(out, universe, metrics, summary, groups):
     n_patient_checks = 0
     for (key, code), sub in patient_values.groupby([KEY, "cancer_code"]):
         truth = indexed.loc[(key, code)]
-        positive = sub[sub.positive_p90]
-        assert len(sub) == truth.n_patients and len(positive) == truth.n_expressing
+        positive = sub[sub.positive_p90.fillna(False).astype(bool)]
+        assert len(sub) == truth.n_patients
+        if not truth.complete_measurement:
+            assert sub.positive_p90.isna().all()
+            continue
+        assert len(positive) == truth.n_expressing
         if len(positive):
             assert np.isclose(
                 positive.expression.mean(), truth.mean_expression_expressing, rtol=1e-12
@@ -663,7 +724,18 @@ def main():
     os.environ[CACHE_DIR_ENV_VAR] = str(args.source_cache.resolve())
     out = args.out.resolve()
     (out / "checkpoints").mkdir(parents=True, exist_ok=True)
+    script_hash = sha(__file__)
+    verify_analysis(args.base)
     universe = universe_tables(args.base, out)
+    background_ids = pd.read_csv(args.base / "common_background.csv")[ID].tolist()
+    policy = fingerprint(
+        {
+            "implementation": implementation_hash(),
+            "background": background_ids,
+            "universe": universe.to_dict("records"),
+            "sample_audit": sha(args.base / "sample_patient_audit.csv.gz"),
+        }
+    )
     audit = pd.read_csv(args.base / "sample_patient_audit.csv.gz")
     cohorts = pd.read_csv(args.base / "cohort_audit.csv")
     registry = pd.read_csv(ROOT / "oncoref/data/cancer-type-registry.csv")
@@ -678,13 +750,16 @@ def main():
     for i, (_, cohort) in enumerate(cohorts.iterrows(), 1):
         code = cohort.cancer_code
         cp = out / "checkpoints" / code
-        if args.resume and cp.with_suffix(".json").exists():
+        expected = fingerprint([policy, code, sha(local_path(code))])
+        suffixes = [".parquet", "_patients.parquet", "_cutoffs.csv"]
+        if args.resume and checkpoint_valid(cp, expected, suffixes):
             data = pd.read_parquet(cp.with_suffix(".parquet"))
-            meta = json.loads(cp.with_suffix(".json").read_text())
+            meta = checkpoint_payload(cp)
         else:
             data, meta = analyze_cohort(
-                code, universe, audit[audit.cancer_code.eq(code)], cohort, out
+                code, universe, audit[audit.cancer_code.eq(code)], cohort, out, background_ids
             )
+        write_checkpoint(cp, meta, expected, suffixes)
         frames.append(data)
         metas.append(meta)
         print(
@@ -694,7 +769,9 @@ def main():
     metrics = pd.concat(frames, ignore_index=True)
     metrics = metrics[metrics.transcriptome_percentile.isin(PERCENTILES)].reset_index(drop=True)
     cohorts = cohorts.merge(
-        pd.DataFrame(metas).drop(columns=["n_patients", "source_matrix_sha256"]),
+        pd.DataFrame(metas).drop(
+            columns=["n_patients", "source_matrix_sha256", "n_common_background_genes"]
+        ),
         on="cancer_code",
         validate="one_to_one",
     )
@@ -710,10 +787,13 @@ def main():
     summary, _ = build_exports(out, universe, metrics, cohorts, groups, args.base)
     validate(out, universe, metrics, summary, groups)
     shutil.copy2(args.base / "sample_patient_audit.csv.gz", out / "sample_patient_audit.csv.gz")
+    if sha(__file__) != script_hash:
+        raise RuntimeError("Analysis code changed during this run; rebuild before publishing")
     (out / "run_manifest.json").write_text(
         json.dumps(
             {
-                "analysis_date": "2026-09-17",
+                "common_background_genes": len(background_ids),
+                "common_background_sha256": sha(args.base / "common_background.csv"),
                 "oncoref_version": __version__,
                 "base_gene_report": str(args.base.resolve()),
                 "expression_level": "proteoform",
@@ -725,12 +805,53 @@ def main():
                 "cohort_policies": POLICIES,
                 "partial_member_policy": "Primary selection requires every registered member locus measured; available-member sums are exported as a sensitivity analysis.",
                 "coverage_denominator": "All eligible cohort views or known-overlap components, including unavailable entries; also report evaluable-only view fraction.",
-                "script_sha256": sha(__file__),
+                "script_sha256": script_hash,
                 "base_sample_audit_sha256": sha(args.base / "sample_patient_audit.csv.gz"),
             },
             indent=2,
         )
         + "\n"
+    )
+    seal_stage(
+        out,
+        "analysis",
+        [
+            Path(__file__),
+            ROOT / "scripts/cta_report_common.py",
+            args.base / "analysis_receipt.json",
+            args.base / "common_background.csv",
+            ROOT / "scripts/cta_report_protein_lengths.py",
+            *json.loads((args.base / "analysis_receipt.json").read_text())["inputs"],
+            *json.loads((args.base / "analysis_receipt.json").read_text())["outputs"],
+        ],
+        [
+            out / n
+            for n in [
+                "validation.json",
+                "run_manifest.json",
+                "annotation_manifest.json",
+                "proteoform_universe.csv",
+                "all_proteoform_cohort_metrics.csv.gz",
+                "cohort_audit.csv",
+                "cohort_overlap_groups.csv",
+                "selection_summary.csv",
+                "proteoform_member_annotations.csv",
+                "member_protein_isoforms.csv",
+                "gene_to_proteoform_mapping.csv",
+                "genome_identical_protein_registry.csv",
+                "cta_identical_protein_registry.csv",
+                "proteoform_coverage_gt10.csv",
+                "case_study_proteoforms.csv",
+                "case_study_patient_expression.csv.gz",
+                "gene_vs_proteoform_selection.csv",
+                "sample_patient_audit.csv.gz",
+                "patient_transcriptome_cutoffs.csv.gz",
+                "cohort_overlap_edges.csv",
+            ]
+        ]
+        + sorted((out / "selections").rglob("*.csv"))
+        + sorted((out / "checkpoints").glob("*_patients.parquet"))
+        + sorted((out / "checkpoints").glob("*_cutoffs.csv")),
     )
     print(
         summary[

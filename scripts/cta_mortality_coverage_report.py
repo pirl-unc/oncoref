@@ -6,17 +6,21 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import matplotlib
 import numpy as np
 import pandas as pd
+from cta_report_common import seal_stage, verify_analysis
 
 import oncoref as od
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+
+os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
 
 ROOT = Path(__file__).resolve().parents[1]
 KEY = "proteoform_key"
@@ -93,8 +97,35 @@ def top_mortality_categories(reference):
     return rows
 
 
+BROAD_COHORTS = {
+    "lung": {"LUAD", "LUSC"},
+    "colorectal": {"COAD", "READ"},
+    "liver": {"LIHC"},
+    "breast": {"BRCA"},
+    "stomach": {"STAD"},
+    "pancreas": {"PAAD"},
+    "esophagus": {"ESCA"},
+    "head_and_neck": {"HNSC"},
+    "prostate": {"PRAD"},
+    "cervix": {"CESC"},
+}
+
+
+def report_burden_category(code):
+    # Thymoma has no dedicated category in the current burden reference.
+    return "other_and_unknown_primary" if code == "THYM" else od.burden_category(code)
+
+
+def broad_cohort_mask(frame):
+    return pd.Series(
+        [r.cancer_code in BROAD_COHORTS.get(r.burden_category, set()) for r in frame.itertuples()],
+        index=frame.index,
+        dtype=bool,
+    )
+
+
 def best_observed(frame, value):
-    candidates = frame[frame[value].notna()]
+    candidates = frame[frame[value].notna() & broad_cohort_mask(frame)]
     if candidates.empty:
         return None
     return candidates.sort_values(
@@ -106,6 +137,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=ROOT / "outputs/cta_proteoform_report_20260917")
     out = parser.parse_args().out.resolve()
+    verify_analysis(out)
     dest = out / "mortality"
     dest.mkdir(exist_ok=True)
     reference = od.cancer_burden_df()
@@ -113,13 +145,17 @@ def main():
     top = top_mortality_categories(reference)
     top.to_csv(dest / "top10_world_mortality.csv", index=False)
     cohorts = pd.read_csv(out / "cohort_audit.csv")
-    cohorts["burden_category"] = cohorts.cancer_code.map(od.burden_category)
+    cohorts["burden_category"] = cohorts.cancer_code.map(report_burden_category)
     assert cohorts.burden_category.notna().all()
     mapping = cohorts[["cancer_code", "cancer_name", "n_patients", "burden_category"]].copy()
     mapping["eligible_n20"] = mapping.n_patients.ge(20)
     mapping["in_top10"] = mapping.burden_category.isin(top.burden_category)
     mapping.to_csv(dest / "cohort_burden_mapping.csv", index=False)
-    chosen_cohorts = mapping[mapping.eligible_n20 & mapping.in_top10].copy()
+    mapping["broad_histology_match"] = broad_cohort_mask(mapping)
+    mapping.to_csv(dest / "cohort_burden_mapping.csv", index=False)
+    chosen_cohorts = mapping[
+        mapping.eligible_n20 & mapping.in_top10 & mapping.broad_histology_match
+    ].copy()
     chosen_cohorts["mortality_rank"] = chosen_cohorts.burden_category.map(
         top.set_index("burden_category").mortality_rank
     )
@@ -200,6 +236,7 @@ def main():
                     "n_proteins_gt10_in_any_cohort": int(counts.gt(0.1).sum()),
                     "n_proteins_gt50_in_any_cohort": int(counts.gt(0.5).sum()),
                     "n_proteins_gt70_in_any_cohort": int(counts.gt(0.7).sum()),
+                    "coverage_scope": "Best observed broad histology cohort; not category-wide or worldwide patient prevalence",
                     "best_panel_fraction": best.fraction_expressing_any
                     if best is not None
                     else np.nan,
@@ -256,9 +293,11 @@ def main():
         )
     pd.DataFrame(comparison).to_csv(dest / "mortality_reference_comparison.csv", index=False)
 
+    np.random.seed(20260920)
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
+            "svg.hashsalt": "oncoref-cta-report",
             "font.size": 10,
             "axes.spines.top": False,
             "axes.spines.right": False,
@@ -308,8 +347,8 @@ def main():
     axes[1].legend(loc="lower right", fontsize=9)
     fig.supxlabel(
         "Mortality: oncoref, GLOBOCAN 2022 shares. Residual other/unknown excluded.\n"
-        "Coverage is the maximum observed among matched cohorts, including subtypes; it is not worldwide patient prevalence. '+' = lower bound from an incomplete panel.\n"
-        "Head/neck includes salivary cohorts under the current API mapping; its strongest result is ADCC. Mortality site composition is under review.",
+        "Coverage is the maximum observed among matching broad histology cohorts; it is not worldwide patient prevalence. '+' = lower bound from an incomplete panel.\n"
+        "Head/neck uses HNSC and pancreas uses PAAD; narrow subtype results do not stand in for the broad mortality category.",
         fontsize=9,
     )
     save(
@@ -378,8 +417,8 @@ def main():
         fig.supxlabel(
             "Each cell names its supporting cohort. All frequencies are shown, including zero; NA means no fully measured entry.\n"
             "ANY is a patient-level OR within one cohort, then the best cohort is selected. '+' marks an incomplete-panel lower bound.\n"
-            "Orange border: that protein passes the list's prevalence cutoff in the named cohort. Maxima can reflect narrow subtypes; cohorts are never added or pooled.\n"
-            "Head/neck includes salivary cohorts such as ADCC under the current API mapping; mortality site composition is under review.",
+            "Orange border: that protein passes the list's prevalence cutoff in the named cohort. Maxima use broad histology cohorts; cohorts are never added or pooled.\n"
+            "Head/neck uses HNSC; pancreas uses PAAD. Thymoma and neuroendocrine pancreas are excluded from these site estimates.",
             fontsize=9,
         )
         save(
@@ -456,10 +495,10 @@ def main():
         "Cohorts are mapped with oncoref.burden_category(). The residual other/unknown bucket is excluded from named-cancer ranking.",
         "No absolute death counts are inferred: oncoref's count/total fields are blank.",
         "",
-        "Coverage uses p90 within each patient's collapsed transcriptome and n >=20 patient groups. Each site summary is the maximum observed over matched cohorts, including subtypes; the supporting cohort is named. Overlapping views are never added or pooled. This is not population-weighted or worldwide patient coverage.",
+        "Coverage uses p90 within each patient's collapsed transcriptome and n >=20 patient groups. Each site summary is the maximum observed over matched cohorts, restricted to broad histologies in BROAD_COHORTS; the supporting cohort is named. Overlapping views are never added or pooled. This is not population-weighted or worldwide patient coverage.",
         "The ANY result counts each patient once if at least one fully measured shortlisted protein passes p90. Missing panel members yield a lower bound (+), not assumed negatives. Per-protein NA is distinct from zero.",
         "",
-        "| Rank | Cancer category | Global mortality share | 13-protein ANY coverage, best cohort | 3-protein ANY coverage, best cohort |",
+        f"| Rank | Cancer category | Global mortality share | {len(lists[50])}-protein ANY coverage, broad cohort | {len(lists[70])}-protein ANY coverage, broad cohort |",
         "|---:|---|---:|---|---|",
     ]
     for r in top.itertuples():
@@ -482,7 +521,7 @@ def main():
         "Oncoref combines oral cavity, pharynx, larynx and nasopharynx as head/neck, whereas the external table separates these. Oncoref splits AML and other leukemia; the external table combines leukemia. Therefore the top-ten lists are not directly interchangeable.",
         "For comparability, the external head/neck audit sums lip/oral cavity, oropharynx, hypopharynx, nasopharynx and larynx. Differences between years are documented, not treated as proven reference errors.",
         "Oncoref's liver burden includes intrahepatic bile duct, but its CHOL cohort currently maps to gallbladder_biliary. The report follows that mapping and flags the scope mismatch; no reference mappings were silently changed.",
-        "The head/neck coverage category follows the API and includes salivary cohorts such as ADCC. Its strongest coverage is therefore a salivary-cancer result, not an estimate for broad HNSC. Exact salivary inclusion in the mortality aggregate is not documented by the current reference. The five-site external comparison excludes salivary gland; including it would add 20,707 deaths (0.21 percentage points).",
+        "Head/neck coverage uses HNSC. Thymoma and salivary cohorts are not used as proxies for that burden category. Pancreas coverage uses PAAD, excluding pancreatic neuroendocrine tumors. Each site estimate remains an observed cohort result, not global prevalence.",
         "Reference follow-ups: https://github.com/pirl-unc/oncoref/issues/542 (mortality refresh and counts) and https://github.com/pirl-unc/oncoref/issues/543 (CHOL/salivary category scope).",
         f"External audit source: [Sung et al., Table 1, DOI 10.3322/caac.70090]({EXTERNAL_URL}).",
         "",
@@ -520,6 +559,12 @@ def main():
     )
     assert (pivot[70] <= pivot[50] + 1e-12).all()
     assert union.n_expressing_any.le(union.n_patients).all()
+    seal_stage(
+        out,
+        "mortality",
+        [Path(__file__), out / "analysis_receipt.json"],
+        sorted(dest.glob("*.csv")),
+    )
     print(
         summary[
             ["cancer_label", "prevalence_gt_pct", "best_panel_fraction", "best_panel_cohort"]
