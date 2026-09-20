@@ -9,6 +9,7 @@ from pathlib import Path
 import matplotlib
 import numpy as np
 import pandas as pd
+from cta_report_common import seal_stage, verify_analysis
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -120,7 +121,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=ROOT / "outputs/cta_proteoform_report_20260917")
     args = parser.parse_args()
-    out = args.out
+    out = args.out.resolve()
+    verify_analysis(out)
     (out / "plots").mkdir(exist_ok=True)
     universe = pd.read_csv(out / "proteoform_universe.csv").set_index(KEY, drop=False)
     cohorts = pd.read_csv(out / "cohort_audit.csv")
@@ -628,6 +630,12 @@ def main():
     )
     pd.concat([pd.DataFrame(index), retained], ignore_index=True).to_csv(
         out / "plot_index.csv", index=False
+    )
+    seal_stage(
+        out,
+        "plots",
+        [Path(__file__), out / "analysis_receipt.json"],
+        [out / "plots" / f"{row['name']}.{ext}" for row in index for ext in ("png", "svg")],
     )
     print(f"Created {len(index)} figures", flush=True)
 

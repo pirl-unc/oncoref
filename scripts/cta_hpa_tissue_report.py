@@ -421,7 +421,15 @@ def main():
         out,
         "hpa",
         [Path(__file__), out / "analysis_receipt.json"],
-        [*sorted(dest.glob("*.csv")), dest / "manifest.json"],
+        [
+            *sorted(dest.glob("*.csv")),
+            dest / "manifest.json",
+            *[
+                out / "plots" / f"{row['name']}.{ext}"
+                for row in plot_rows
+                for ext in ("png", "svg")
+            ],
+        ],
     )
     print(summary.to_string(index=False))
     print(f"Created {len(plot_rows)} HPA figures")

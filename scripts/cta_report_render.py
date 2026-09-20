@@ -7,7 +7,7 @@ from html import escape
 from pathlib import Path
 
 import pandas as pd
-from cta_report_common import seal_stage, verify_analysis
+from cta_report_common import seal_stage, verify_analysis, verify_stage
 from PIL import Image
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A3, landscape
@@ -136,6 +136,12 @@ def render_report(out):
     verify_analysis(out)
     manifest = json.loads((out / "run_manifest.json").read_text())
     plots = figure_rows(out)
+    stages = []
+    if (out / "proteoform_universe.csv").exists():
+        stages.append("plots")
+    stages += [stage for stage in ("hpa", "mortality") if stage in set(plots.category)]
+    for stage in stages:
+        verify_stage(out, stage)
     report = Report(out / "cta-analysis-all-figures.pdf")
     report.start("CTA expression analysis")
     report.paragraph(
@@ -216,6 +222,8 @@ def render_report(out):
         [
             Path(__file__),
             out / "analysis_receipt.json",
+            *[out / f"{stage}_receipt.json" for stage in stages],
+            *([out / "plot_index.csv"] if (out / "plot_index.csv").exists() else []),
             *[out / "plots" / f"{name}.png" for name in plots.name],
         ],
         [out / "cta-analysis-all-figures.pdf", out / "pdf_page_index.csv"],

@@ -166,7 +166,15 @@ def build_guide(out):
             Path(__file__),
             *[out / f"{stage}_receipt.json" for stage in ("primary", "burden", "render", "hpa")],
         ],
-        [guide_path, out / "cta-analysis-primary-panel.pdf", dest / "primary_gene_handoff.csv"],
+        [
+            guide_path,
+            out / "cta-analysis-primary-panel.pdf",
+            dest / "primary_gene_handoff.csv",
+            dest / "primary_gene_symbols.txt",
+            dest / "primary_ensembl_gene_ids.txt",
+            dest / "supporting_page_map.csv",
+            readme,
+        ],
     )
     deterministic_zip(out, out / "cta-analysis-bundle.zip")
     print(

@@ -258,6 +258,7 @@ def prepare(out):
         "primary",
         [
             Path(__file__),
+            Path(__file__).with_name("plot_cta_proteoform_report.py"),
             out / "analysis_receipt.json",
             *[
                 out / f"selections/min20/prevalence_gt{f}_transcriptome_p{p}/proteoforms_ranked.csv"

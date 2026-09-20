@@ -562,7 +562,15 @@ def main():
         out,
         "mortality",
         [Path(__file__), out / "analysis_receipt.json"],
-        sorted(dest.glob("*.csv")),
+        [
+            *sorted(dest.glob("*.csv")),
+            dest / "manifest.json",
+            *[
+                out / "plots" / f"{row['name']}.{ext}"
+                for row in plot_rows
+                for ext in ("png", "svg")
+            ],
+        ],
     )
     print(
         summary[

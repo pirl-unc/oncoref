@@ -174,6 +174,48 @@ def test_pdf_rendering_is_byte_reproducible(tmp_path):
     assert (tmp_path / "a.pdf").read_bytes() == (tmp_path / "b.pdf").read_bytes()
 
 
+def test_render_rejects_stale_figures_and_tracks_index_changes(tmp_path):
+    from PIL import Image
+
+    (tmp_path / "validation.json").write_text(json.dumps({"status": "passed"}))
+    (tmp_path / "run_manifest.json").write_text("{}")
+    (tmp_path / "proteoform_universe.csv").write_text("proteoform_key\nG\n")
+    common.seal_stage(tmp_path, "analysis", [], [tmp_path / "validation.json"])
+    (tmp_path / "plots").mkdir()
+    figure = tmp_path / "plots/evidence.png"
+    Image.new("RGB", (20, 20), "white").save(figure)
+    index = tmp_path / "plot_index.csv"
+    original_index = "name,title,category\nevidence,Current evidence,overview\n"
+    index.write_text(original_index)
+    with pytest.raises(ValueError, match="Missing plots provenance"):
+        render.render_report(tmp_path)
+    common.seal_stage(tmp_path, "plots", [tmp_path / "analysis_receipt.json"], [figure])
+    render.render_report(tmp_path)
+    index.write_text(original_index.replace("Current evidence", "Changed interpretation"))
+    with pytest.raises(ValueError, match="Stale render"):
+        common.verify_stage(tmp_path, "render")
+    index.write_text(original_index)
+    original_figure = figure.read_bytes()
+    Image.new("RGB", (20, 20), "red").save(figure)
+    with pytest.raises(ValueError, match="Stale plots"):
+        render.render_report(tmp_path)
+    figure.write_bytes(original_figure)
+    common.seal_stage(
+        tmp_path, "analysis", [], [tmp_path / "validation.json", tmp_path / "run_manifest.json"]
+    )
+    with pytest.raises(ValueError, match="Stale plots"):
+        render.render_report(tmp_path)
+
+
+def test_plotting_rejects_failed_analysis_before_reading_tables(tmp_path, monkeypatch):
+    import plot_cta_proteoform_report as plot
+
+    (tmp_path / "validation.json").write_text(json.dumps({"status": "failed"}))
+    monkeypatch.setattr("sys.argv", ["plot", "--out", str(tmp_path)])
+    with pytest.raises(ValueError, match="did not pass"):
+        plot.main()
+
+
 def test_rounded_zero_maximum_names_all_ties_and_its_bound():
     from cta_hpa_tissue_report import tissue_maximum
 

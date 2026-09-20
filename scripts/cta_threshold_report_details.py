@@ -1047,6 +1047,8 @@ def main():
             out / "validation.json",
             out / "run_manifest.json",
             out / "plot_index.csv",
+            *sorted((out / "plots").glob("*.png")),
+            *sorted((out / "plots").glob("*.svg")),
             *sorted((out / "selections").rglob("*.csv")),
         ],
     )
