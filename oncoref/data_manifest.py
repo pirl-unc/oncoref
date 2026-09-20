@@ -289,6 +289,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "machine-readable CTA specificity demotion and candidate-only audit decisions",
     ),
+    "cta-candidate-references": (
+        "cta",
+        "referenced top-of-funnel CTA candidate watchlist not yet promoted into the curated table",
+    ),
+    "cta-warning-reviews": (
+        "cta",
+        "reviewed CTA discovery exceptions with unresolved normal-tissue evidence",
+    ),
+    "cta-reviewed-evidence": (
+        "cta",
+        "source-anchored supplemental per-modality observations for CTA candidates",
+    ),
     "proteoform-groups": ("gene-id", "byte-identical CTA proteoform groups"),
     "proteoform-groups-genome": ("gene-id", "byte-identical proteoform groups (genome-wide)"),
     "source-matrices": (

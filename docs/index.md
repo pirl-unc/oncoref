@@ -59,8 +59,9 @@ packages can join domains without maintaining private name mappings.
   [Expression And Normalization](api.md#expression-and-normalization).
 - Need anti-PD-1 or broader checkpoint-inhibitor response estimates? Start with
   [ICI Response](api.md#ici-response).
-- Need cancer-testis antigen definitions, patient coverage, or CTA-specific
-  peptide load? Start with [CTA Antigens](api.md#cta-antigens).
+- Need cancer-testis antigen definitions, patient coverage, CTA-specific peptide
+  load, or the comparable normal-tissue evidence behind a candidate? Start with
+  [CTA Antigens](api.md#cta-antigens).
 
 ```python
 from oncoref import cancer_ontology, ici_response
@@ -82,7 +83,7 @@ ici_response.best_available_ici_response("COAD_MSI")
 | --- | --- | --- |
 | Cancer vocabulary | [`oncoref.cancer_ontology`](api.md#cancer-vocabulary), [`oncoref.cohorts`](api.md#cancer-vocabulary) | Registry records, aliases, hierarchy, subtype axes, reference-source backing, MMR/MSI classifier status, cohort IDs, matched normal tissues |
 | ICI response | [`oncoref.ici_response`](api.md#ici-response) | Anti-PD-1 and broader ICI references, regimen-aware lookups, extracted endpoint estimates |
-| CTA references | [`oncoref.cta`](api.md#cta-antigens), [`oncoref.cta_coverage`](api.md#cta-antigens), [`oncoref.cta_peptides`](api.md#cta-antigens) | HPA-derived CTA facts, patient coverage, CTA-specific 9-mer counts and load |
+| CTA references | [`oncoref.cta`](api.md#cta-antigens), [`oncoref.cta_coverage`](api.md#cta-antigens), [`oncoref.cta_peptides`](api.md#cta-antigens), [`oncoref.cta_review`](api.md#cta-antigens) | HPA-derived CTA facts, the opt-in reviewed warning tier, patient coverage, CTA-specific 9-mer counts and load, comparable normal-tissue evidence per candidate |
 | Antigen panels | [`oncoref.antigen_coverage`](api.md#generic-antigen-panels) | Coverage calculations for caller-supplied non-CTA gene lists |
 | Expression | [`oncoref.expression`](api.md#expression-and-normalization), [`oncoref.expression_builders`](api.md#expression-and-normalization) | Source-matrix ingestion, per-sample accessors, percentiles, representatives, within-sample summaries, and reference-expression accessors |
 | Normalization | [`oncoref.normalization`](api.md#expression-and-normalization), [`oncoref.gene_families`](api.md#expression-and-normalization) | Clean TPM, housekeeping normalization, technical-RNA filtering, normalization/QC reference families |
