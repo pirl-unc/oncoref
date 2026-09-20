@@ -30,8 +30,6 @@ from cta_report_common import (
 from oncoref.expression import per_sample_expression
 from oncoref.source_matrices import CACHE_DIR_ENV_VAR, source_sample_namespace
 
-os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
-
 ROOT = Path(__file__).resolve().parents[1]
 ID = "Ensembl_Gene_ID"
 PERCENTILES = (70, 90)
@@ -476,8 +474,8 @@ def make_plots(
     chart_index = []
 
     def save(fig, name, category, title):
-        fig.savefig(dest / f"{name}.png", dpi=170, bbox_inches="tight")
-        fig.savefig(dest / f"{name}.svg", bbox_inches="tight")
+        fig.savefig(dest / f"{name}.png", dpi=170, bbox_inches="tight", metadata={"Date": None})
+        fig.savefig(dest / f"{name}.svg", bbox_inches="tight", metadata={"Date": None})
         plt.close(fig)
         chart_index.append({"name": name, "category": category, "title": title})
 

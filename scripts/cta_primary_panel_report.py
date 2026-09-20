@@ -5,14 +5,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from cta_report_common import seal_stage, verify_analysis
-
-os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "outputs/cta_proteoform_report_20260917"
@@ -148,8 +145,8 @@ def prepare(out):
     cmap.set_bad("#D4D4D4")
 
     def save(fig, name):
-        fig.savefig(dest / f"{name}.png", dpi=165, bbox_inches="tight")
-        fig.savefig(dest / f"{name}.svg", bbox_inches="tight")
+        fig.savefig(dest / f"{name}.png", dpi=165, bbox_inches="tight", metadata={"Date": None})
+        fig.savefig(dest / f"{name}.svg", bbox_inches="tight", metadata={"Date": None})
         plt.close(fig)
 
     labels = [f"{name}\n{code} (n={cohort_sizes[code]})" for name, code in zip(NAMES, COHORTS)]

@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
 
 import matplotlib
@@ -19,8 +18,6 @@ import oncoref as od
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-
-os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
 
 ROOT = Path(__file__).resolve().parents[1]
 KEY = "proteoform_key"
@@ -306,8 +303,10 @@ def main():
     plot_rows = []
 
     def save(fig, name, title):
-        fig.savefig(out / "plots" / f"{name}.png", dpi=165, bbox_inches="tight")
-        fig.savefig(out / "plots" / f"{name}.svg", bbox_inches="tight")
+        fig.savefig(
+            out / "plots" / f"{name}.png", dpi=165, bbox_inches="tight", metadata={"Date": None}
+        )
+        fig.savefig(out / "plots" / f"{name}.svg", bbox_inches="tight", metadata={"Date": None})
         plt.close(fig)
         plot_rows.append({"name": name, "title": title, "category": "mortality"})
 

@@ -2,6 +2,7 @@
 
 import gzip
 import json
+from pathlib import Path
 
 import cta_decision_guide as guide
 import cta_mortality_coverage_report as mortality
@@ -195,3 +196,23 @@ def test_resume_keeps_cache_metadata_out_of_scientific_exports(tmp_path):
     common.write_checkpoint(prefix, original, "input fingerprint", [".parquet"])
     assert common.checkpoint_payload(prefix) == original
     assert common.checkpoint_valid(prefix, "input fingerprint", [".parquet"])
+
+
+def test_importing_report_scripts_does_not_change_reproducible_build_epoch(tmp_path):
+    import os
+    import subprocess
+    import sys
+
+    environment = dict(os.environ)
+    environment.pop("SOURCE_DATE_EPOCH", None)
+    environment["PYTHONPATH"] = str(Path(__file__).parents[1] / "scripts")
+    subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import os; import cta_threshold_report_details, cta_hpa_tissue_report, cta_mortality_coverage_report, cta_primary_panel_report, plot_cta_proteoform_report; assert 'SOURCE_DATE_EPOCH' not in os.environ",
+        ],
+        cwd=tmp_path,
+        env=environment,
+        check=True,
+    )

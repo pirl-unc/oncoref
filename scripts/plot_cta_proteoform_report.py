@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import os
 from pathlib import Path
 
 import matplotlib
@@ -18,8 +17,6 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 
 KEY = "proteoform_key"
-os.environ.setdefault("SOURCE_DATE_EPOCH", "0")
-
 ROOT = Path(__file__).resolve().parents[1]
 FOCUSED = [(50, 70), (70, 70), (50, 90), (70, 90)]
 TEAL, ORANGE, GRAY, PURPLE = "#127C80", "#C8772B", "#BAC6CF", "#725C9E"
@@ -153,8 +150,10 @@ def main():
     index = []
 
     def save(fig, name, title, category="overview"):
-        fig.savefig(out / "plots" / f"{name}.png", dpi=165, bbox_inches="tight")
-        fig.savefig(out / "plots" / f"{name}.svg", bbox_inches="tight")
+        fig.savefig(
+            out / "plots" / f"{name}.png", dpi=165, bbox_inches="tight", metadata={"Date": None}
+        )
+        fig.savefig(out / "plots" / f"{name}.svg", bbox_inches="tight", metadata={"Date": None})
         plt.close(fig)
         index.append({"name": name, "title": title, "category": category})
 
