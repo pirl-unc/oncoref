@@ -222,7 +222,7 @@ def test_placeholder_rows_are_not_measurements():
     # HPA marks "no antibody data" with an all-null tissue/cell-type/level row.
     long_form = cta_review.cta_normal_tissue_evidence()
     ihc = long_form.loc[long_form["modality"].eq("ihc")]
-    assert ihc["ihc_level"].notna().all()
+    assert not ihc[["tissue", "cell_type", "ihc_level"]].isna().all(axis=1).any()
     assert ihc["tissue"].notna().all()
 
 
@@ -469,6 +469,11 @@ def test_gap_list_covers_every_status_the_record_reports():
             continue
         for status in ("unavailable", "incomplete"):
             expected = summary[column].eq(status)
+            if column.endswith("_ihc_status") and status == "incomplete":
+                expected |= summary[column].eq("detected") & (
+                    summary[f"{prefix}_measured_tissues"].lt(summary[f"{prefix}_expected_tissues"])
+                    | summary[f"{prefix}_unavailable_rows"].gt(0)
+                )
             if not expected.any():
                 continue
             token = f"{prefix}_{status}"
@@ -771,3 +776,61 @@ def test_reviewed_evidence_findings_are_present():
     reviewed = cta_review.cta_reviewed_evidence()
     assert reviewed["finding"].notna().all()
     assert reviewed["finding"].str.strip().ne("").all()
+
+
+def test_repeated_rna_label_cannot_replace_a_missing_tissue():
+    rows = _tables(
+        bulk_rna=[
+            ["G1", "A", "lung", 0.0],
+            ["G1", "A", "lung", 0.0],
+            ["G1", "A", "liver", float("inf")],
+        ]
+    )["bulk_rna"]
+    stats = cta_review._rna_stats(rows, frozenset({"lung", "liver"}), "Tissue")
+    assert stats["status"] == "incomplete"
+    assert stats["measured_rows"] == 1
+    assert stats["max_ntpm"] == 0
+
+
+def test_positive_ihc_does_not_hide_missing_tissues():
+    row = _synthesize(
+        ihc=[
+            ["G1", "A", "lung", "cells", "High", "Enhanced"],
+            ["G2", "B", "lung", "cells", "Not detected", "Enhanced"],
+            ["G2", "B", "liver", "cells", "Not detected", "Enhanced"],
+        ]
+    )
+    assert row["somatic_ihc_status"] == "detected"
+    assert "somatic_ihc_incomplete" in row["atlas_evidence_gaps"].split(";")
+
+
+def test_atlas_loader_preserves_unscored_tissue_rows(monkeypatch):
+    tables = _tables(
+        ihc=[
+            ["G1", "A", "liver", "hepatocytes", "Not detected", "Enhanced"],
+            ["G1", "A", "liver", "bile duct cells", None, "Enhanced"],
+            ["G2", "B", None, None, None, "Uncertain"],
+        ]
+    )
+    monkeypatch.setattr(cta_review.hpa, "hpa_normal_tissue", lambda version: tables["ihc"])
+    monkeypatch.setattr(cta_review.hpa, "_read_hpa", lambda *args: tables["bulk_rna"])
+    ihc = cta_review._atlas_tables.__wrapped__()["ihc"]
+    assert len(ihc) == 2
+    assert cta_review._ihc_stats(ihc, frozenset({"liver"}))["status"] == "incomplete"
+
+
+@pytest.mark.parametrize("finding", [None, "", "   "])
+def test_review_notes_reject_all_blank_findings(finding):
+    reviewed = pd.DataFrame(
+        {"Ensembl_Gene_ID": ["G1"], "modality": ["isoform"], "finding": [finding]}
+    )
+    with pytest.raises(ValueError, match="G1"):
+        cta_review._review_notes(reviewed, "isoform")
+
+
+def test_summary_rejects_missing_atlas_candidates(monkeypatch):
+    monkeypatch.setattr(
+        cta_review, "_synthesize_atlas", lambda *args: pd.DataFrame({"Ensembl_Gene_ID": []})
+    )
+    with pytest.raises(ValueError, match="Atlas candidate mismatch: missing="):
+        cta_review._evidence_summary_frame.__wrapped__()

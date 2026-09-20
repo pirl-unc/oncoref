@@ -755,6 +755,8 @@ the gene and the other about the release. `atlas_evidence_gaps` carries what is
 missing for that gene: a scope with no measurement is `unavailable`, and one
 measured in fewer tissues than the source routinely surveys for it is
 `incomplete` rather than summarized as though the whole scope had been covered.
+An IHC detection remains `detected` even when other tissues are missing; the
+same scope also carries an `incomplete` token in `atlas_evidence_gaps`.
 The denominator counts only labels the release runs for most genes — HPA mixes
 its standard panel with special-study labels measured for a handful of genes,
 and counting those would put the threshold out of reach, so no gene could earn

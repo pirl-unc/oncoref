@@ -128,7 +128,7 @@ def _atlas_tables() -> dict[str, pd.DataFrame]:
     # long-form output and let a formatting artifact turn a clean non-detection
     # into an incomplete one.
     ihc = tables["ihc"]
-    tables["ihc"] = ihc.loc[ihc["Level"].notna()]
+    tables["ihc"] = ihc.loc[~ihc[["Tissue", "Cell type", "Level"]].isna().all(axis=1)]
     return tables
 
 
@@ -267,18 +267,20 @@ def _rna_stats(rows: pd.DataFrame, surveyed: frozenset[str], label_column: str) 
     not, since the highest value anywhere is the safety-relevant one.
     """
     values = pd.to_numeric(rows["nTPM"], errors="coerce")
-    measured = values[values.ge(0)]
-    in_scope = measured[rows.loc[measured.index, label_column].isin(surveyed)]
+    measured_mask = values.ge(0) & np.isfinite(values)
+    measured = values[measured_mask]
+    observed_labels = rows.loc[measured_mask & rows[label_column].isin(surveyed), label_column]
+    measured_labels = observed_labels.nunique()
     if not len(measured):
         status = "unavailable"
-    elif len(in_scope) < len(surveyed):
+    elif measured_labels < len(surveyed):
         status = "incomplete"
     else:
         status = "measured"
     return {
         "status": status,
         "max_ntpm": measured.max(),
-        "measured_rows": len(in_scope),
+        "measured_rows": measured_labels,
         "expected_rows": len(surveyed),
     }
 
@@ -589,6 +591,16 @@ def _synthesize_atlas(universe: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
             for key, value in out.items()
             if key.endswith("_status") and value in {"unavailable", "incomplete"}
         ]
+        # Detection and survey completeness are independent: a positive in one
+        # tissue must not conceal missing measurements elsewhere in the scope.
+        for key, value in out.items():
+            if key.endswith("_ihc_status") and value == "detected":
+                prefix = key[: -len("_status")]
+                if (
+                    out[f"{prefix}_measured_tissues"] < out[f"{prefix}_expected_tissues"]
+                    or out[f"{prefix}_unavailable_rows"]
+                ):
+                    gaps.append(f"{prefix}_incomplete")
         limits = []
         for group in SAFETY_TISSUE_GROUPS:
             for modality in ("rna", "ihc"):
@@ -618,8 +630,9 @@ def _review_notes(reviewed: pd.DataFrame, modality: str) -> pd.Series:
     the aggregation and takes down every gene rather than the one row at fault.
     """
     subset = reviewed.loc[reviewed["modality"].eq(modality)]
-    if subset["finding"].isna().any():
-        blank = sorted(subset.loc[subset["finding"].isna(), "Ensembl_Gene_ID"])
+    missing = subset["finding"].isna() | subset["finding"].astype(str).str.strip().eq("")
+    if missing.any():
+        blank = sorted(subset.loc[missing, "Ensembl_Gene_ID"].astype(str))
         raise ValueError(f"cta-reviewed-evidence rows with no finding: {blank}")
     return subset.groupby("Ensembl_Gene_ID")["finding"].agg(" | ".join)
 
@@ -634,11 +647,19 @@ def _evidence_summary_frame() -> pd.DataFrame:
     No negative assay result automatically promotes a gene into a broader set.
     """
     universe = _universe()
+    atlas = _synthesize_atlas(universe, _atlas_tables())
+    expected_ids = set(universe["Ensembl_Gene_ID"])
+    actual_ids = set(atlas["Ensembl_Gene_ID"])
+    if actual_ids != expected_ids:
+        raise ValueError(
+            f"Atlas candidate mismatch: missing={sorted(expected_ids - actual_ids)}, "
+            f"unexpected={sorted(actual_ids - expected_ids)}"
+        )
     # Guarded like the warning merge below: a synthesis that dropped or
     # duplicated a candidate would otherwise shorten the frame in silence,
     # against a contract of one row per candidate.
     out = universe.merge(
-        _synthesize_atlas(universe, _atlas_tables()),
+        atlas,
         on="Ensembl_Gene_ID",
         how="left",
         validate="one_to_one",
