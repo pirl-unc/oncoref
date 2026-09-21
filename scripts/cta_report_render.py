@@ -7,7 +7,7 @@ from html import escape
 from pathlib import Path
 
 import pandas as pd
-from cta_report_common import seal_stage, verify_analysis, verify_stage
+from cta_report_common import MIN_RANKED_PATIENTS, seal_stage, verify_analysis, verify_stage
 from PIL import Image
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A3, landscape
@@ -179,6 +179,13 @@ def render_report(out):
         "Run settings",
         "methods",
     )
+    exploratory = out / "exploratory_cohort_audit.csv"
+    if exploratory.exists():
+        report.table(
+            pd.read_csv(exploratory),
+            f"Exploratory only: cohorts with fewer than {MIN_RANKED_PATIENTS} patients",
+            "exploratory",
+        )
     paths = sorted((out / "selections").glob("*/*/*ranked.csv"))
     if not paths:
         paths = sorted((out / "gene_sets").glob("*/genes.csv"))

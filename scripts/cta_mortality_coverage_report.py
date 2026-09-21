@@ -11,7 +11,7 @@ from pathlib import Path
 import matplotlib
 import numpy as np
 import pandas as pd
-from cta_report_common import seal_stage, verify_analysis
+from cta_report_common import MIN_RANKED_PATIENTS, ranked_selection_dir, seal_stage, verify_analysis
 
 import oncoref as od
 
@@ -145,13 +145,13 @@ def main():
     cohorts["burden_category"] = cohorts.cancer_code.map(report_burden_category)
     assert cohorts.burden_category.notna().all()
     mapping = cohorts[["cancer_code", "cancer_name", "n_patients", "burden_category"]].copy()
-    mapping["eligible_n20"] = mapping.n_patients.ge(20)
+    mapping["eligible_for_ranking"] = mapping.n_patients.ge(MIN_RANKED_PATIENTS)
     mapping["in_top10"] = mapping.burden_category.isin(top.burden_category)
     mapping.to_csv(dest / "cohort_burden_mapping.csv", index=False)
     mapping["broad_histology_match"] = broad_cohort_mask(mapping)
     mapping.to_csv(dest / "cohort_burden_mapping.csv", index=False)
     chosen_cohorts = mapping[
-        mapping.eligible_n20 & mapping.in_top10 & mapping.broad_histology_match
+        mapping.eligible_for_ranking & mapping.in_top10 & mapping.broad_histology_match
     ].copy()
     chosen_cohorts["mortality_rank"] = chosen_cohorts.burden_category.map(
         top.set_index("burden_category").mortality_rank
@@ -161,10 +161,7 @@ def main():
     metrics = metrics[metrics.transcriptome_percentile.eq(90)]
     by_pair = metrics.set_index([KEY, "cancer_code"])
     lists = {
-        f: pd.read_csv(
-            out / f"selections/min20/prevalence_gt{f}_transcriptome_p90/proteoforms_ranked.csv"
-        )
-        for f in COMPACT
+        f: pd.read_csv(ranked_selection_dir(out, f, 90) / "proteoforms_ranked.csv") for f in COMPACT
     }
     union_rows, protein_rows = [], []
     for f, selected in lists.items():
@@ -472,7 +469,7 @@ def main():
             ax.tick_params(axis="x", rotation=90)
             fig.colorbar(im, ax=ax, fraction=0.02, pad=0.015, label="Fraction above patient p90")
             fig.supxlabel(
-                "Each column is a separate cohort view with n >=20 patient groups; overlapping parent/subtype views are not pooled.\n"
+                f"Each column is a separate cohort view with n >={MIN_RANKED_PATIENTS} patient groups; overlapping parent/subtype views are not pooled.\n"
                 "NA = incomplete member-gene data. '+' = ANY coverage is a lower bound using the fully measured listed proteins. All low and zero frequencies remain visible.",
                 fontsize=9,
             )
@@ -494,7 +491,7 @@ def main():
         "Cohorts are mapped with oncoref.burden_category(). The residual other/unknown bucket is excluded from named-cancer ranking.",
         "No absolute death counts are inferred: oncoref's count/total fields are blank.",
         "",
-        "Coverage uses p90 within each patient's collapsed transcriptome and n >=20 patient groups. Each site summary is the maximum observed over matched cohorts, restricted to broad histologies in BROAD_COHORTS; the supporting cohort is named. Overlapping views are never added or pooled. This is not population-weighted or worldwide patient coverage.",
+        f"Coverage uses p90 within each patient's collapsed transcriptome and n >={MIN_RANKED_PATIENTS} patient groups. Each site summary is the maximum observed over matched cohorts, restricted to broad histologies in BROAD_COHORTS; the supporting cohort is named. Overlapping views are never added or pooled. This is not population-weighted or worldwide patient coverage.",
         "The ANY result counts each patient once if at least one fully measured shortlisted protein passes p90. Missing panel members yield a lower bound (+), not assumed negatives. Per-protein NA is distinct from zero.",
         "",
         f"| Rank | Cancer category | Global mortality share | {len(lists[50])}-protein ANY coverage, broad cohort | {len(lists[70])}-protein ANY coverage, broad cohort |",

@@ -13,11 +13,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from cta_report_common import (
+    MIN_RANKED_PATIENTS,
+    RANKED_COHORT_POLICY,
     background_values,
     checkpoint_payload,
     checkpoint_valid,
     fingerprint,
     implementation_hash,
+    ranked_selection_dir,
     seal_stage,
     verify_analysis,
     write_checkpoint,
@@ -35,7 +38,7 @@ ID = "Ensembl_Gene_ID"
 KEY = "proteoform_key"
 PERCENTILES = (70, 90)
 FOCUSED = [(50, 70), (70, 70), (50, 90), (70, 90)]
-POLICIES = {"min20": (20, False)}
+POLICIES = {RANKED_COHORT_POLICY: (MIN_RANKED_PATIENTS, False)}
 
 
 def sha(path):
@@ -328,7 +331,11 @@ def passing(frame, prevalence, allow_partial=False):
     measured = (
         frame.available_sum_complete_measurement if allow_partial else frame.complete_measurement
     )
-    return measured & (100 * frame.n_expressing > prevalence * frame.n_patients)
+    return (
+        measured
+        & frame.n_patients.ge(MIN_RANKED_PATIENTS)
+        & (100 * frame.n_expressing > prevalence * frame.n_patients)
+    )
 
 
 def cancer_type_groups(groups, registry, cohorts):
@@ -483,6 +490,9 @@ def build_exports(out, universe, metrics, cohorts, groups, base):
     mapping = groups.set_index("cancer_code").overlap_group
     names = cohorts.set_index("cancer_code").cancer_name
     metrics["cancer_name"] = metrics.cancer_code.map(names)
+    metrics["analysis_role"] = metrics.cancer_code.map(
+        cohorts.set_index("cancer_code").analysis_role
+    )
     metrics["overlap_group"] = metrics.cancer_code.map(mapping)
     metrics["cancer_type_group"] = metrics.cancer_code.map(
         groups.set_index("cancer_code").cancer_type_group
@@ -581,13 +591,11 @@ def build_exports(out, universe, metrics, cohorts, groups, base):
     original_keys = universe.loc[
         universe.member_symbols.map(lambda x: bool(set(x.split(";")) & set(original_six))), KEY
     ]
-    stringent = pd.read_csv(
-        out / "selections/min20/prevalence_gt70_transcriptome_p90/proteoforms_ranked.csv"
-    )
+    stringent = pd.read_csv(ranked_selection_dir(out, 70, 90) / "proteoforms_ranked.csv")
     cases = set(original_keys) | set(stringent[KEY])
     csv(universe[universe[KEY].isin(cases)], out / "case_study_proteoforms.csv")
     patient_frames = []
-    for code in eligible(cohorts, "min20").cancer_code:
+    for code in eligible(cohorts, RANKED_COHORT_POLICY).cancer_code:
         cp = out / "checkpoints" / code
         values = pd.read_parquet(cp.with_name(code + "_patients.parquet")).loc[sorted(cases)]
         long = (
@@ -657,6 +665,7 @@ def validate(out, universe, metrics, summary, groups):
         assert len(ranked) == s.n_proteoforms
         assert set(ranked[KEY]) == set(passed[KEY])
         assert passed.complete_measurement.all()
+        assert passed.n_patients.ge(MIN_RANKED_PATIENTS).all()
         assert passing(passed, s.prevalence_gt_pct).all()
         minimum, linear = POLICIES[s.cohort_policy]
         assert passed.n_patients.ge(minimum).all()
@@ -781,7 +790,17 @@ def main():
         on="cancer_code",
         validate="one_to_one",
     )
+    cohorts["analysis_role"] = np.where(
+        cohorts.n_patients.ge(MIN_RANKED_PATIENTS), "ranked", "exploratory_only"
+    )
     csv(cohorts, out / "cohort_audit.csv")
+    csv(
+        cohorts.loc[
+            cohorts.analysis_role.eq("exploratory_only"),
+            ["cancer_code", "cancer_name", "n_patients", "analysis_role"],
+        ],
+        out / "exploratory_cohort_audit.csv",
+    )
     cutoffs = pd.concat(
         [pd.read_csv(out / "checkpoints" / f"{code}_cutoffs.csv") for code in cohorts.cancer_code],
         ignore_index=True,
@@ -809,6 +828,8 @@ def main():
                 "focused_combinations": FOCUSED,
                 "coverage_prevalence_gt_percent": 10,
                 "cohort_policies": POLICIES,
+                "minimum_patients_for_selection": MIN_RANKED_PATIENTS,
+                "small_cohort_policy": f"Fewer than {MIN_RANKED_PATIENTS} patients: exploratory only, excluded from rankings and coverage denominators; retained in all-cohort metrics and the exploratory audit.",
                 "partial_member_policy": "Primary selection requires every registered member locus measured; available-member sums are exported as a sensitivity analysis.",
                 "coverage_denominator": "All eligible cohort views or known-overlap components, including unavailable entries; also report evaluable-only view fraction.",
                 "script_sha256": script_hash,
@@ -840,6 +861,7 @@ def main():
                 "proteoform_universe.csv",
                 "all_proteoform_cohort_metrics.csv.gz",
                 "cohort_audit.csv",
+                "exploratory_cohort_audit.csv",
                 "cohort_overlap_groups.csv",
                 "selection_summary.csv",
                 "proteoform_member_annotations.csv",

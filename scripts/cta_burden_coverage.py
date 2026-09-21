@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 from cta_mortality_coverage_report import report_burden_category
-from cta_report_common import seal_stage, verify_analysis, verify_stage
+from cta_report_common import MIN_RANKED_PATIENTS, seal_stage, verify_analysis, verify_stage
 
 import oncoref as od
 
@@ -35,7 +35,7 @@ def main():
             (metrics.proteoform_key == r.proteoform_key)
             & (metrics.transcriptome_percentile == 90)
             & metrics.complete_measurement
-            & metrics.n_patients.ge(20)
+            & metrics.n_patients.ge(MIN_RANKED_PATIENTS)
             & (100 * metrics.n_expressing > 10 * metrics.n_patients)
         ]
         codes = set(good.cancer_code)
@@ -92,14 +92,14 @@ def main():
     audit = cohorts.reset_index().merge(
         groups.reset_index(), on="cancer_code", suffixes=("", "_group")
     )
-    audit["eligible_n20"] = audit.n_patients.ge(20)
+    audit["eligible_for_ranking"] = audit.n_patients.ge(MIN_RANKED_PATIENTS)
     audit["burden_category"] = audit.cancer_code.map(mapping)
     audit[
         [
             "cancer_code",
             "cancer_name",
             "n_patients",
-            "eligible_n20",
+            "eligible_for_ranking",
             "overlap_group",
             "cancer_type_group",
             "burden_category",
@@ -118,9 +118,10 @@ def main():
                 .sum()
                 .to_dict(),
                 "n_cohort_views": len(cohorts),
-                "n_eligible_cohort_views": int(audit.eligible_n20.sum()),
+                "minimum_patients_for_selection": MIN_RANKED_PATIENTS,
+                "n_eligible_cohort_views": int(audit.eligible_for_ranking.sum()),
                 "n_eligible_cancer_type_groups": int(
-                    audit.loc[audit.eligible_n20].cancer_type_group.nunique()
+                    audit.loc[audit.eligible_for_ranking].cancer_type_group.nunique()
                 ),
                 "limitations": "Any subtype hit represents the full parent burden category. Pediatric and rare subtypes do not have separate global weights. Rounded internal shares sum approximately to 100%; category-scope audit #543 remains relevant.",
             },

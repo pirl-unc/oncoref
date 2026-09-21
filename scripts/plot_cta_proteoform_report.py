@@ -9,7 +9,7 @@ from pathlib import Path
 import matplotlib
 import numpy as np
 import pandas as pd
-from cta_report_common import seal_stage, verify_analysis
+from cta_report_common import MIN_RANKED_PATIENTS, ranked_selection_dir, seal_stage, verify_analysis
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -45,9 +45,11 @@ def label_coverage_points(
     ax, data, column, *, top_n=10, extra_keys=(), x_column="protein_length_aa"
 ):
     keys = set(data.nlargest(top_n, column)[KEY]) | set(extra_keys)
+    # Exact ties share a marker; stack their names in one label so none is hidden.
+    selected = data[data[KEY].isin(keys)]
     texts = [
-        ax.text(row[x_column], row[column] * 100, row.Symbol, fontsize=8)
-        for _, row in data[data[KEY].isin(keys)].iterrows()
+        ax.text(x, y * 100, "\n".join(sorted(rows.Symbol)), fontsize=8)
+        for (x, y), rows in selected.groupby([x_column, column], sort=True)
     ]
     adjust_text(
         texts,
@@ -101,7 +103,7 @@ def plot_proteoform_collapse(universe, changes):
     axes[1].legend(fontsize=8, loc="upper right")
     fig.supxlabel(
         "For each patient, sum expression across genes encoding the same protein (e.g. CTAG1A + CTAG1B).\n"
-        "Both methods use the same eligible cohorts (>=20 patient groups); transcriptome cutoffs use the corresponding gene or combined entries.",
+        f"Both methods use the same eligible cohorts (>={MIN_RANKED_PATIENTS} patient groups); transcriptome cutoffs use the corresponding gene or combined entries.",
         fontsize=9,
     )
     return fig
@@ -126,7 +128,7 @@ def main():
     (out / "plots").mkdir(exist_ok=True)
     universe = pd.read_csv(out / "proteoform_universe.csv").set_index(KEY, drop=False)
     cohorts = pd.read_csv(out / "cohort_audit.csv")
-    cohorts = cohorts[cohorts.n_patients.ge(20)].copy()
+    cohorts = cohorts[cohorts.n_patients.ge(MIN_RANKED_PATIENTS)].copy()
     codes = cohorts.cancer_code.tolist()
     cohort_index = cohorts.set_index("cancer_code")
     groups = pd.read_csv(out / "cohort_overlap_groups.csv").set_index("cancer_code")
@@ -197,7 +199,7 @@ def main():
         "Original CTA genes",
         "Identical-protein member loci",
         "Unique CTA proteoforms",
-        "Eligible cohort views (n >=20)",
+        f"Eligible cohort views (n >={MIN_RANKED_PATIENTS})",
         "Cancer-type groups",
     ]
     axes[1].barh(labels[::-1], vals[::-1], color=[PURPLE, TEAL, TEAL, GRAY, GRAY])
@@ -269,7 +271,10 @@ def main():
     fig, axes = plt.subplots(1, 2, figsize=(12, 5), layout="constrained")
     ordered = cohorts.sort_values("n_patients", ascending=False)
     axes[0].hist(
-        cohorts.n_patients, bins=[20, 50, 100, 250, 500, 1200], color=TEAL, edgecolor="white"
+        cohorts.n_patients,
+        bins=[MIN_RANKED_PATIENTS, 20, 50, 100, 250, 500, 1200],
+        color=TEAL,
+        edgecolor="white",
     )
     axes[0].set(
         xlabel="Patient groups per eligible cohort",
@@ -293,7 +298,8 @@ def main():
         fontsize=9,
     )
     save(fig, "cohort_sizes_completeness", "Cohort sizes and CTA data availability")
-    for page, start in enumerate(range(0, len(ordered), 35), 1):
+    cohort_pages = range(0, len(ordered), 35)
+    for page, start in enumerate(cohort_pages, 1):
         sub = ordered.iloc[start : start + 35].iloc[::-1]
         fig, ax = plt.subplots(figsize=(12, 11), layout="constrained")
         ax.barh(
@@ -308,8 +314,8 @@ def main():
             yticks=np.arange(len(sub)),
             yticklabels=[f"{r.cancer_code}: {r.cancer_name}" for _, r in sub.iterrows()],
             xlabel="Patient groups (log scale)",
-            xlim=(17, 1600),
-            title=f"Eligible cohorts ({page}/3): orange = non-TPM scale",
+            xlim=(MIN_RANKED_PATIENTS * 0.8, 1600),
+            title=f"Eligible cohorts ({page}/{len(cohort_pages)}): orange = non-TPM scale",
         )
         ax.tick_params(axis="y", labelsize=8)
         save(fig, f"cohort_sizes_{page}", f"All eligible cohort sizes {page}", "appendix")
@@ -317,7 +323,7 @@ def main():
     all_heatmap_cells = []
     for f, p in FOCUSED:
         scenario = f"prevalence_gt{f}_transcriptome_p{p}"
-        selected = pd.read_csv(out / "selections/min20" / scenario / "proteoforms_ranked.csv")
+        selected = pd.read_csv(ranked_selection_dir(out, f, p) / "proteoforms_ranked.csv")
         data = metrics[metrics.transcriptome_percentile.eq(p)]
         chosen = data[
             data[KEY].isin(selected[KEY])
@@ -398,7 +404,7 @@ def main():
             fontweight="bold",
         )
         fig.supxlabel(
-            "Panel D sums member RNA within each HPA tissue; rounded zero is below 0.05 nTPM per locus, not absence. All cohorts have n >=20.",
+            f"Panel D sums member RNA within each HPA tissue; rounded zero is below 0.05 nTPM per locus, not absence. All cohorts have n >={MIN_RANKED_PATIENTS}.",
             fontsize=9,
         )
         save(fig, f"selection_{scenario}", f"Selection process: >{f}% above p{p}", "selection")

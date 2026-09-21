@@ -22,6 +22,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from cta_report_common import (
+    MIN_RANKED_PATIENTS,
     background_values,
     checkpoint_payload,
     checkpoint_valid,
@@ -315,7 +316,7 @@ def analyze_cohort(code, universe, mappings, out, background_ids=None):
     return pd.concat(frames, ignore_index=True), base, thresholds
 
 
-def qualifies(frame, prevalence, minimum_patients=10):
+def qualifies(frame, prevalence, minimum_patients=MIN_RANKED_PATIENTS):
     # Integer arithmetic avoids rounding a boundary case into the selected set.
     return (
         frame.complete_measurement
@@ -839,7 +840,7 @@ def main():
         "script_sha256": script_hash,
         "common_script_sha256": common_hash,
         "percentiles": PERCENTILES,
-        "minimum_patients_for_selection": 10,
+        "minimum_patients_for_selection": MIN_RANKED_PATIENTS,
         "exploratory_percentiles": [30, 50],
         "common_background_genes": len(background_ids),
         "common_background_sha256": sha256(out / "common_background.csv"),
