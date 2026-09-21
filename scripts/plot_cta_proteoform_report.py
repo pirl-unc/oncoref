@@ -45,9 +45,11 @@ def label_coverage_points(
     ax, data, column, *, top_n=10, extra_keys=(), x_column="protein_length_aa"
 ):
     keys = set(data.nlargest(top_n, column)[KEY]) | set(extra_keys)
+    # Exact ties share a marker; stack their names in one label so none is hidden.
+    selected = data[data[KEY].isin(keys)]
     texts = [
-        ax.text(row[x_column], row[column] * 100, row.Symbol, fontsize=8)
-        for _, row in data[data[KEY].isin(keys)].iterrows()
+        ax.text(x, y * 100, "\n".join(sorted(rows.Symbol)), fontsize=8)
+        for (x, y), rows in selected.groupby([x_column, column], sort=True)
     ]
     adjust_text(
         texts,
