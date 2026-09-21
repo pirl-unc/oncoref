@@ -296,7 +296,8 @@ def main():
         fontsize=9,
     )
     save(fig, "cohort_sizes_completeness", "Cohort sizes and CTA data availability")
-    for page, start in enumerate(range(0, len(ordered), 35), 1):
+    cohort_pages = range(0, len(ordered), 35)
+    for page, start in enumerate(cohort_pages, 1):
         sub = ordered.iloc[start : start + 35].iloc[::-1]
         fig, ax = plt.subplots(figsize=(12, 11), layout="constrained")
         ax.barh(
@@ -312,7 +313,7 @@ def main():
             yticklabels=[f"{r.cancer_code}: {r.cancer_name}" for _, r in sub.iterrows()],
             xlabel="Patient groups (log scale)",
             xlim=(MIN_RANKED_PATIENTS * 0.8, 1600),
-            title=f"Eligible cohorts ({page}/3): orange = non-TPM scale",
+            title=f"Eligible cohorts ({page}/{len(cohort_pages)}): orange = non-TPM scale",
         )
         ax.tick_params(axis="y", labelsize=8)
         save(fig, f"cohort_sizes_{page}", f"All eligible cohort sizes {page}", "appendix")
