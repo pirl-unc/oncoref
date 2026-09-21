@@ -12,11 +12,19 @@ across all registered cohorts as its fixed percentile background. It writes the
 IDs to `common_background.csv`. The proteoform analysis collapses exactly those
 loci for its background, while candidate sums retain all registered member loci.
 Missing background measurements stop analysis; missing candidate measurements
-cannot qualify. The gene screen requires at least 10 patients; the proteoform
-shortlists require at least 20. The gene p30/p50 screens and the details script's
+cannot qualify. Both gene and proteoform rankings require at least 10 patients
+per cohort. Smaller cohorts are exploratory only: they remain in the complete
+metrics and cohort audits but do not contribute to ranked selections or coverage
+denominators. The protein PDF includes their explicitly labeled audit. The gene
+p30/p50 screens and the details script's
 `all` cohort stratum are exploratory, including degenerate zero cutoffs. Gene
 exports count loci, which can encode identical proteins; use the proteoform
 shortlists to count distinct protein identities.
+
+The gene details report also shows a stricter, supplementary >=20-patient,
+linear-TPM sensitivity analysis; the default ranked policy remains >=10.
+The `outputs/cta_review_20260920` protein report used the superseded >=20 policy.
+Rebuild in a fresh directory to apply the shared >=10 policy.
 
 TCGA donor groups retain one specimen class, preferring the primary tumor when
 both primary and metastatic specimens are present. Within a class, repeat

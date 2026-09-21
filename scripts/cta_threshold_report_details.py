@@ -19,6 +19,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from cta_report_common import (
+    MIN_RANKED_PATIENTS,
     fingerprint,
     implementation_hash,
     seal_stage,
@@ -118,7 +119,7 @@ def overlap_groups(audit, cohorts):
     )
 
 
-def summarize_genes(selected, groups, min_size=10, large_min_size=20):
+def summarize_genes(selected, groups, min_size=MIN_RANKED_PATIENTS, large_min_size=20):
     columns = [
         ID,
         "Symbol",
@@ -969,7 +970,7 @@ def main():
     parser.add_argument(
         "--source-cache", type=Path, default=ROOT / "tmp/cta_threshold_report/source-matrices"
     )
-    parser.add_argument("--min-cohort-size", type=int, default=10)
+    parser.add_argument("--min-cohort-size", type=int, default=MIN_RANKED_PATIENTS)
     parser.add_argument("--large-min-cohort-size", type=int, default=20)
     parser.add_argument("--reuse-patient-values", action="store_true")
     parser.add_argument("--tables-only", action="store_true")

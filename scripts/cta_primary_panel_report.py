@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from cta_report_common import seal_stage, verify_analysis
+from cta_report_common import ranked_selection_dir, seal_stage, verify_analysis
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "outputs/cta_proteoform_report_20260917"
@@ -57,9 +57,7 @@ def prepare(out):
     dest = out / "primary_panel"
     dest.mkdir(exist_ok=True)
     lists = {
-        (f, p): pd.read_csv(
-            out / f"selections/min20/prevalence_gt{f}_transcriptome_p{p}/proteoforms_ranked.csv"
-        )
+        (f, p): pd.read_csv(ranked_selection_dir(out, f, p) / "proteoforms_ranked.csv")
         for f, p in SETTINGS
     }
     primary = lists[50, 90]
@@ -260,10 +258,7 @@ def prepare(out):
             Path(__file__),
             Path(__file__).with_name("plot_cta_proteoform_report.py"),
             out / "analysis_receipt.json",
-            *[
-                out / f"selections/min20/prevalence_gt{f}_transcriptome_p{p}/proteoforms_ranked.csv"
-                for f, p in SETTINGS
-            ],
+            *[ranked_selection_dir(out, f, p) / "proteoforms_ranked.csv" for f, p in SETTINGS],
         ],
         [
             *[

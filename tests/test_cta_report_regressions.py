@@ -40,6 +40,26 @@ def test_tiny_cohort_cannot_enter_primary_gene_selection():
     assert genes.qualifies(frame, 75).tolist() == [False, False, True]
 
 
+def test_gene_and_protein_rankings_share_the_ten_patient_boundary():
+    frame = pd.DataFrame(
+        {
+            "cancer_code": ["N9", "N10", "N19", "N20"],
+            "n_patients": [9, 10, 19, 20],
+            "n_expressing": [9, 10, 19, 20],
+            "complete_measurement": [True] * 4,
+            "linear_tpm_comparable": [True] * 4,
+        }
+    )
+    expected = [False, True, True, True]
+    assert genes.qualifies(frame, 75).tolist() == expected
+    assert proteins.passing(frame, 75).tolist() == expected
+    eligible = proteins.eligible(frame, common.RANKED_COHORT_POLICY)
+    assert eligible.cancer_code.tolist() == ["N10", "N19", "N20"]
+    assert common.ranked_selection_dir("report", 50, 90) == Path(
+        "report/selections/min10/prevalence_gt50_transcriptome_p90"
+    )
+
+
 def test_primary_and_metastatic_tumors_are_not_averaged():
     samples = ["TCGA-AA-0001-01A", "TCGA-AA-0001-06A", "TCGA-AA-0002-06A"]
     values, patients, audit = genes.group_patients(
@@ -190,7 +210,17 @@ def test_render_rejects_stale_figures_and_tracks_index_changes(tmp_path):
     with pytest.raises(ValueError, match="Missing plots provenance"):
         render.render_report(tmp_path)
     common.seal_stage(tmp_path, "plots", [tmp_path / "analysis_receipt.json"], [figure])
+    pd.DataFrame(
+        {"cancer_code": ["SMALL"], "n_patients": [9], "analysis_role": ["exploratory_only"]}
+    ).to_csv(tmp_path / "exploratory_cohort_audit.csv", index=False)
     render.render_report(tmp_path)
+    pages = pd.read_csv(tmp_path / "pdf_page_index.csv")
+    assert (
+        pages.loc[pages.category.eq("exploratory"), "title"]
+        .str.contains("fewer than 10 patients")
+        .all()
+    )
+    assert pages.category.eq("exploratory").sum() == 1
     index.write_text(original_index.replace("Current evidence", "Changed interpretation"))
     with pytest.raises(ValueError, match="Stale render"):
         common.verify_stage(tmp_path, "render")

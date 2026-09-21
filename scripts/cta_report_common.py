@@ -13,6 +13,17 @@ import pandas as pd
 
 ID = "Ensembl_Gene_ID"
 ROOT = Path(__file__).resolve().parents[1]
+MIN_RANKED_PATIENTS = 10
+RANKED_COHORT_POLICY = f"min{MIN_RANKED_PATIENTS}"
+
+
+def ranked_selection_dir(out, prevalence, percentile):
+    return (
+        Path(out)
+        / "selections"
+        / RANKED_COHORT_POLICY
+        / f"prevalence_gt{prevalence}_transcriptome_p{percentile}"
+    )
 
 
 def sha256(path):

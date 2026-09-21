@@ -10,7 +10,7 @@ from pathlib import Path
 import matplotlib
 import numpy as np
 import pandas as pd
-from cta_report_common import seal_stage, verify_analysis
+from cta_report_common import ranked_selection_dir, seal_stage, verify_analysis
 
 from oncoref import reference_data
 from oncoref.cta_tissues import PERMISSIVE_REPRODUCTIVE_TISSUES
@@ -96,12 +96,8 @@ def main():
     out = parser.parse_args().out.resolve()
     dest = out / "hpa_tissues"
     dest.mkdir(exist_ok=True)
-    selected = pd.read_csv(
-        out / "selections/min20/prevalence_gt50_transcriptome_p90/proteoforms_ranked.csv"
-    )
-    strict = pd.read_csv(
-        out / "selections/min20/prevalence_gt70_transcriptome_p90/proteoforms_ranked.csv"
-    )
+    selected = pd.read_csv(ranked_selection_dir(out, 50, 90) / "proteoforms_ranked.csv")
+    strict = pd.read_csv(ranked_selection_dir(out, 70, 90) / "proteoforms_ranked.csv")
     members = pd.read_csv(out / "gene_to_proteoform_mapping.csv")
     members = members[members[KEY].isin(selected[KEY])].copy()
     assert members[ID].is_unique

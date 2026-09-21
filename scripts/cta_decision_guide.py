@@ -9,7 +9,13 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from cta_report_common import deterministic_zip, seal_stage, verify_analysis, verify_stage
+from cta_report_common import (
+    MIN_RANKED_PATIENTS,
+    deterministic_zip,
+    seal_stage,
+    verify_analysis,
+    verify_stage,
+)
 from cta_report_render import Report
 from pypdf import PdfReader, PdfWriter
 
@@ -82,7 +88,7 @@ def build_guide(out):
     guide = Report(guide_path)
     guide.start(f"Current working list: {len(primary)} protein groups")
     guide.paragraph(
-        f"The >50% prevalence / p90 selection contains {len(primary)} protein identities and {len(frame)} member genes. Each identity qualifies in at least one cohort with at least 20 patient groups. This is a threshold-selected candidate pool; unique patient coverage has not been optimized."
+        f"The >50% prevalence / p90 selection contains {len(primary)} protein identities and {len(frame)} member genes. Each identity qualifies in at least one cohort with at least {MIN_RANKED_PATIENTS} patient groups. Smaller cohorts are exploratory only. This is a threshold-selected candidate pool; unique patient coverage has not been optimized."
     )
     guide.paragraph(
         "Broadest observed p90 breadth: "
@@ -97,7 +103,7 @@ def build_guide(out):
     )
     method = json.loads((dest / "burden_coverage_method.json").read_text())
     guide.paragraph(
-        f"Breadth audit: {method['n_cohort_views']} cohort views; {method['n_eligible_cohort_views']} with at least 20 patients; {method['n_eligible_cancer_type_groups']} cancer-type groups. Burden shares sum each represented category once. A subtype hit represents its parent category, so these are not percentages of worldwide patients expressing a protein."
+        f"Breadth audit: {method['n_cohort_views']} cohort views; {method['n_eligible_cohort_views']} with at least {MIN_RANKED_PATIENTS} patients; {method['n_eligible_cancer_type_groups']} cancer-type groups. Burden shares sum each represented category once. A subtype hit represents its parent category, so these are not percentages of worldwide patients expressing a protein."
     )
     guide.finish("Current selection and interpretation", "guide")
     display = primary[
