@@ -136,11 +136,44 @@ def _compartment_masks(
     return ribosomal, technical
 
 
+def _scale_clean_compartment(
+    values: pd.DataFrame, fraction: float, compartment: str, *, stacklevel: int = 3
+) -> pd.DataFrame:
+    """Scale in float64 with the same reduction layout for every column.
+
+    Convert before summation (float32 input otherwise loses precision), and keep
+    each column contiguous so adding/reordering companion columns cannot change
+    its reduction. NumPy arithmetic also avoids pandas' optional expression engines.
+    """
+    array = np.array(values.to_numpy(dtype=float, na_value=np.nan), order="F", copy=True)
+    totals = np.nansum(array, axis=0)
+    positive = totals > 0
+    if not positive.all():
+        missing = values.columns[~positive].tolist()
+        warnings.warn(
+            f"clean_tpm cannot fill the {compartment} compartment "
+            f"({fraction:.0%} of 1e6) in {len(missing)} column(s): {missing[:5]!r}. "
+            "No positive measured mass/reference weight is available; the unfilled "
+            "budget is not redistributed. Normalize the complete gene matrix before subsetting.",
+            RuntimeWarning,
+            stacklevel=stacklevel,
+        )
+    scale = np.zeros_like(totals)
+    np.divide(fraction * 1_000_000.0, totals, out=scale, where=positive)
+    array *= scale
+    if not np.allclose(
+        np.nansum(array, axis=0)[positive], fraction * 1_000_000.0, rtol=1e-10, atol=1e-6
+    ):
+        raise ValueError(f"clean_tpm failed to preserve the {compartment} compartment budget")
+    return pd.DataFrame(array, index=values.index, columns=values.columns)
+
+
 def _poly_a_reference_compartment(
     values: pd.DataFrame,
     gene_ids: pd.Series,
     mask: np.ndarray,
     fraction: float,
+    compartment: str,
 ) -> pd.DataFrame:
     """Fixed PolyA composition for one censored compartment.
 
@@ -155,11 +188,7 @@ def _poly_a_reference_compartment(
         index=selected.index,
         columns=selected.columns,
     ).where(selected.notna())
-    totals = weights.sum(axis=0, skipna=True)
-    scale = pd.Series(0.0, index=selected.columns, dtype=float)
-    positive = totals > 0
-    scale.loc[positive] = fraction * 1_000_000.0 / totals.loc[positive]
-    return weights.mul(scale, axis=1).where(selected.notna())
+    return _scale_clean_compartment(weights, fraction, compartment, stacklevel=4)
 
 
 def clean_tpm(
@@ -200,6 +229,12 @@ def clean_tpm(
     has a positive reference weight.
     Missing source values remain ``NaN``: an unmeasured gene is not evidence of
     measured zero expression.
+    A compartment without positive measured biological mass or censored reference
+    weight emits ``RuntimeWarning`` and leaves its budget unfilled; the other
+    compartments do not absorb it. A partial gene matrix is normalized over its
+    supplied rows, not an inferred whole transcriptome. It sums to 1e6 only when
+    all three compartments can be filled. To retain whole-matrix values for a
+    gene panel, normalize before selecting the panel.
     The public clean-TPM contract is deliberately singular: 16% ribosomal proteins,
     9% other technical RNA, and 75% biological genes. Use separately named helpers
     such as :func:`drop_technical_rna` / :func:`filter_technical_rna` for biology-only
@@ -243,22 +278,18 @@ def clean_tpm(
 
     clean = values.astype(float).copy()
     gene_ids = _unversioned(gene_table["Ensembl_Gene_ID"])
-    for mask, fraction in (
-        (rm, ribosomal_protein_fraction),
-        (tm, other_technical_fraction),
+    for mask, fraction, compartment in (
+        (rm, ribosomal_protein_fraction, "ribosomal"),
+        (tm, other_technical_fraction, "technical"),
     ):
-        if mask.any():
-            clean.loc[mask] = _poly_a_reference_compartment(
-                values,
-                gene_ids,
-                mask,
-                fraction,
-            )
-    if bm.any():
-        comp_sum = values.loc[bm].sum(axis=0)
-        scale = pd.Series(0.0, index=values.columns, dtype=float)
-        scale.loc[comp_sum > 0] = bio_fraction * 1_000_000.0 / comp_sum.loc[comp_sum > 0]
-        clean.loc[bm] = values.loc[bm].mul(scale, axis=1)
+        clean.loc[mask] = _poly_a_reference_compartment(
+            values,
+            gene_ids,
+            mask,
+            fraction,
+            compartment,
+        )
+    clean.loc[bm] = _scale_clean_compartment(values.loc[bm], bio_fraction, "biological")
     return clean
 
 

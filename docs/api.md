@@ -707,6 +707,12 @@ automatically would let a negative cardiomyocyte IHC result stand in for absence
 of peptide presentation. The warning tier keeps the candidate discoverable to
 callers that ask for it and keeps its unresolved evidence attached to it.
 
+The [CTAG2 heart evidence review](audits/ctag2-heart-evidence.md) separates
+negative cardiomyocyte IHC from unresolved peptide presentation and documents
+cardiac adverse events in the lete-cel program. Its primary-source findings are
+available in `cta_reviewed_evidence()` and the summary's `clinical_review`
+fields. Afami-cel/TECELRA targets MAGE-A4 and is not CTAG2 safety evidence.
+
 ```python
 from oncoref import cta
 
@@ -1186,6 +1192,13 @@ independent classification target.
 Existing directly sourced columns, including `SARC` and `OV`, keep their current
 source-table behavior.
 
+Clean TPM is normalized independently per column over all available reference
+rows before `genes=` filtering. A filtered result retains those values and need
+not sum to 1e6. The reference gene universe is incomplete relative to a whole
+transcriptome; the 16/9/75 budgets describe its supplied, measured rows and do
+not impute omitted genes. Columns with all compartments available sum to 1e6;
+an unavailable compartment emits `RuntimeWarning` and leaves its share unfilled.
+
 ### Cohort reference expression
 
 `expression.cancer_reference_expression()` returns cohort-level tumor reference
@@ -1442,6 +1455,14 @@ The transform replaces measured censored-gene composition with this Treehouse
   (`snRNA`, `snoRNA`, `scaRNA`, `misc_RNA`, `ribozyme`, `sRNA`, `vault_RNA`). It
   deliberately does not classify all small ncRNAs or miRNAs as technical.
 - genes absent from the censored table — 75% biological compartment.
+
+Scaling uses float64 before reduction and preserves missing measurements as
+`NaN`. Each column has the same values when normalized alone or with companion
+columns. If a compartment has no positive measured reference weight (censored
+genes) or no positive biological mass, `clean_tpm` warns with the compartment
+and affected columns. It does not redistribute that budget. For a gene panel,
+normalize the complete matrix first and select genes afterwards; directly
+normalizing a subset redistributes each available budget over that subset.
 
 The fixed compartment budgets and within-compartment PolyA weights make the
 biological 75% comparable across library preparations; they do not make the assays

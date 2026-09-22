@@ -108,6 +108,87 @@ def test_clean_tpm_three_compartments():
     assert clean.loc[[2, 3], "s1"].sum() == pytest.approx(norm.BIOLOGICAL_FRACTION * 1e6)  # 750k
 
 
+def _complete_matrix(n_biology=3, n_samples=2):
+    reference = gf.clean_tpm_censored_reference_tpm()
+    ribosomal = next(g for g in sorted(gf.clean_tpm_ribosomal_gene_ids()) if reference[g] > 0)
+    technical = next(g for g in sorted(gf.clean_tpm_other_technical_gene_ids()) if reference[g] > 0)
+    genes = pd.DataFrame(
+        {"Ensembl_Gene_ID": [ribosomal, technical, *[f"BIO{i}" for i in range(n_biology)]]}
+    )
+    values = pd.DataFrame(
+        np.random.default_rng(541).lognormal(1, 2, (len(genes), n_samples)),
+        columns=[f"sample{i}" for i in range(n_samples)],
+    )
+    return genes, values
+
+
+@pytest.mark.parametrize("dtype", ["float32", "float64"])
+def test_clean_tpm_wide_matrix_is_column_independent(dtype):
+    # Large enough to exercise pandas' optional expression engine in the old
+    # implementation. Mixed dtypes also change its block/reduction layout.
+    genes, values = _complete_matrix(n_biology=12000, n_samples=121)
+    for column in values.columns[::3]:
+        values[column] = values[column].astype(dtype)
+    values.iloc[10:30, 3:9] = np.nan
+    original = values.copy(deep=True)
+
+    clean = norm.clean_tpm(values, genes)
+    for column in values:
+        bio = values[column].iloc[2:].to_numpy(dtype=float)
+        expected = bio * (norm.BIOLOGICAL_FRACTION * 1e6 / np.nansum(bio))
+        np.testing.assert_allclose(clean[column].iloc[2:], expected, rtol=1e-12)
+    np.testing.assert_allclose(clean.sum(), 1e6, rtol=1e-12)
+    np.testing.assert_allclose(clean.iloc[2:].sum(), 750000, rtol=1e-12)
+    np.testing.assert_allclose(clean.iloc[0], 160000, rtol=1e-12)
+    np.testing.assert_allclose(clean.iloc[1], 90000, rtol=1e-12)
+    for columns in [[values.columns[0]], list(values.columns[::-7])]:
+        pd.testing.assert_frame_equal(norm.clean_tpm(values[columns], genes), clean[columns])
+    pd.testing.assert_frame_equal(values, original)
+    assert clean.isna().equals(values.isna())
+
+
+@pytest.mark.parametrize(
+    ("missing", "rows", "total"),
+    [
+        ("ribosomal", [1, 2, 3, 4], 840000),
+        ("technical", [0, 2, 3, 4], 910000),
+        ("biological", [0, 1], 250000),
+    ],
+)
+def test_clean_tpm_warns_when_subset_cannot_fill_compartment(missing, rows, total):
+    genes, values = _complete_matrix()
+    with pytest.warns(RuntimeWarning, match=f"cannot fill the {missing} compartment"):
+        clean = norm.clean_tpm(values.loc[rows], genes.loc[rows])
+    np.testing.assert_allclose(clean.sum(), total)
+
+
+def test_clean_tpm_warns_per_sample_for_unmeasured_or_zero_mass():
+    genes, values = _complete_matrix(n_samples=3)
+    values.iloc[0, 0] = np.nan
+    values.iloc[1, 1] = np.nan
+    values.iloc[2:, 2] = 0
+    with pytest.warns(RuntimeWarning) as caught:
+        clean = norm.clean_tpm(values, genes)
+    assert len(caught) == 3
+    for warning, compartment, column in zip(
+        caught, ["ribosomal", "technical", "biological"], values.columns
+    ):
+        assert f"{compartment} compartment" in str(warning.message)
+        assert repr(column) in str(warning.message)
+    np.testing.assert_allclose(clean.sum(), [840000, 910000, 250000])
+    assert clean.isna().equals(values.isna())
+
+
+def test_clean_tpm_per_column_input_scale_does_not_change_output():
+    genes, values = _complete_matrix()
+    pd.testing.assert_frame_equal(
+        norm.clean_tpm(values.mul([0.5, 1.636], axis=1), genes),
+        norm.clean_tpm(values, genes),
+        rtol=1e-12,
+        atol=1e-8,
+    )
+
+
 def test_clean_tpm_preserves_missing_source_values():
     rpl = sorted(gf.clean_tpm_ribosomal_gene_ids())[0]
     mito = sorted(gf.clean_tpm_other_technical_gene_ids())[0]

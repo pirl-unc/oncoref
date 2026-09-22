@@ -242,6 +242,21 @@ def test_evidence_summary_states_warnings_and_gaps():
     assert summary.loc[zero, "evidence_summary"].str.contains("estimated 0 nTPM").all()
 
 
+def test_ctag2_clinical_review_reaches_summary_without_promoting_target():
+    row = cta_review.cta_evidence_summary().set_index("Symbol").loc["CTAG2"]
+    assert row["clinical_review_status"] == "reviewed"
+    assert "cardiac arrest" in row["clinical_review"]
+    assert "MAGE-A4" in row["clinical_review"]
+    assert "titin" in row["clinical_review"]
+    assert row["cardiomyocyte_ihc_status"] == "not_detected"
+    assert row["heart_rna_max_ntpm"] == 5.1
+    assert row["discovery_tier"] == "warning"
+    assert "CTAG2" not in cta.cta_gene_names()
+    assert "CTAG2" in cta.cta_clinical_target_gene_names()
+    warning = cta.cta_warning_references().set_index("Symbol").loc["CTAG2"]
+    assert "cardiac arrests" in warning["unresolved_evidence"]
+
+
 def test_versioned_gene_ids_still_join(monkeypatch):
     # A curated row written as ENSG...14 must not merge onto nothing and then
     # read as "not reviewed"; that would hide a review rather than error.

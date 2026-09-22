@@ -6233,9 +6233,12 @@ def pan_cancer_expression(
     ``normalize="tpm"``.
 
     ``genes`` filters to the given Ensembl gene ids (version-insensitive) or
-    symbols; ``None`` returns the full matrix. The FPKM→TPM conversion runs over
-    **all** genes before any filtering, so a filtered slice still carries the
-    cohort-wide TPM scaling."""
+    symbols; ``None`` returns the full reference matrix. FPKM→TPM conversion and
+    clean TPM normalization run over **all reference rows** before filtering,
+    so a filtered slice retains that scaling and need not sum to 1e6. The source
+    reference is not a whole transcriptome: clean compartment budgets are
+    distributed over its measured rows, independently for each column. An
+    unavailable compartment warns and leaves its budget unfilled."""
     if to_tpm is not None:
         if normalize == "tpm_clean":
             normalize = "tpm" if to_tpm else None
