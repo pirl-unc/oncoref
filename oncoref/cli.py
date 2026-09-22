@@ -318,18 +318,49 @@ def _cmd_proteoforms(args: argparse.Namespace) -> int:
 #: Plot families that write several figures into a directory rather than one PNG.
 _DIRECTORY_PLOTS = frozenset({"patient-coverage", "cta-curation", "expression-provenance"})
 
+# Plot commands whose marks correspond one-to-one with registry cancer codes.
+# Other commands use burden categories, genes, or multi-figure renderers and cannot
+# truthfully promise that ``--highlight`` identifies a mark.
+_HIGHLIGHTABLE_PLOTS = frozenset(
+    {
+        "apd1-vs-tmb",
+        "apd1-orr-bars",
+        "cta-addressable-burden",
+        "cta-burden-vs-response",
+        "cta-specific-9mer-load",
+        "apd1-response-signature",
+    }
+)
+
 
 def _cmd_plot(args: argparse.Namespace) -> int:
     from . import figure_output, figure_style, plots
 
+    if args.highlight:
+        if args.which not in _HIGHLIGHTABLE_PLOTS:
+            print(
+                f"Error: --highlight is not supported for {args.which}; this plot "
+                "does not have one mark per cancer code",
+                file=sys.stderr,
+            )
+            return 1
+        try:
+            args.highlight = cancer_types.resolve_cancer_type(args.highlight)
+        except ValueError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
+
     # Before any figure exists: the preset governs rcParams, page geometry and how
     # many rows survive, so it has to be chosen ahead of the first subplot.
     figure_style.use(args.preset)
+    figure_style.set_highlight(args.highlight)
 
     # An explicit --out is used verbatim; omitting it opens a fresh timestamped run
     # directory under figures/, so a figure can always be traced to the run that
     # made it and no run overwrites another.
     name = args.which if args.preset == "print" else f"{args.which}-{args.preset}"
+    if args.highlight:
+        name = f"{name}-{args.highlight}"
     args.out = str(
         figure_output.resolve(
             args.out,
@@ -596,6 +627,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "Output PNG path, or output directory for the multi-figure families "
             "(patient-coverage, cta-curation, expression-provenance). Omit to write "
             "into a fresh figures/run_<YYYYMMDD-HHMMSS>/ directory."
+        ),
+    )
+    p_plot.add_argument(
+        "--highlight",
+        default=None,
+        help=(
+            "Pick one cancer code out of the landscape (e.g. BRCA_Basal). Nothing is "
+            "filtered or re-ranked: the same points stay in the same places, the rest "
+            "fade to context."
         ),
     )
     p_plot.add_argument(

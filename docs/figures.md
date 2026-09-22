@@ -52,6 +52,43 @@ the distribution.
 Slide runs land in their own `run_<stamp>-slide/` directory, so the two presets
 never overwrite each other.
 
+## Highlighting one cancer type
+
+```bash
+oncoref plot apd1-vs-tmb --highlight BRCA_Basal
+```
+
+Picks one cancer type out of a landscape figure: it gets the highlight colour, a
+larger mark, a dark ring and a bold label, while the rest fade toward the page but
+keep their lineage hue so the landscape still reads as a landscape.
+
+Nothing is filtered, re-ranked or re-scaled — the highlighted figure and its plain
+twin show the same points in the same places. A highlighted point is labelled even
+when it falls outside the `slide` preset's label budget, because it is the point of
+the figure. Ranked slide charts retain the highlighted row alongside the highest
+ranked rows. An unknown code, or a code absent from that plot, is an error rather
+than producing an all-muted figure.
+
+Only plots whose marks are per-cancer-code can carry a highlight. A burden-category
+chart has no single row to light up, so those are excluded rather than approximated.
+
+`scripts/regenerate_plots.py` also writes a `basal/` subdirectory of highlighted
+landscape variants into every run, and those pages appear in the combined PDF
+alongside the plain figures.
+
+**On basal-like vs TNBC:** the highlighted type is `BRCA_Basal`, the registry's
+PAM50 basal-like breast subtype. It overlaps triple-negative breast cancer heavily
+but is not the same population — roughly 80% of basal-like tumours are
+triple-negative, and not all TNBC is basal-like. Both the mark and the output
+directory are named for what is actually plotted, so a figure lifted into a deck
+does not silently become a claim about TNBC.
+
+Checkpoint-response evidence currently attached to `BRCA_Basal` comes from
+clinically defined TNBC cohorts, whereas its molecular measurements use PAM50
+basal-like cohorts. Highlighted response figures therefore carry a population note
+below the plotting axes. It remains attached to the saved artifact for provenance,
+but sits outside the core panel so the panel can be cropped cleanly when reused.
+
 ## Style
 
 All figures render publication-ready by default: opaque white ground (figure,
@@ -129,6 +166,6 @@ python scripts/regenerate_plots.py
 
 Writes every figure into one `figures/run_<timestamp>/` snapshot, organised by
 family, plus an `index.md` listing what was produced and what was skipped, and a
-combined `all-figures.pdf` contact sheet. Figures that cannot be drawn (missing
+combined `oncoref-all-figures.pdf` contact sheet. Figures that cannot be drawn (missing
 per-sample matrix, empty data) are reported and skipped rather than aborting the
 batch.
