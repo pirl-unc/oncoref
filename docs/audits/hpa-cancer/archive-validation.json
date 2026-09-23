@@ -1,0 +1,107 @@
+{
+  "release": "https://github.com/pirl-unc/oncoref/releases/tag/hpa-cancer-v25.1-1",
+  "assets": [
+    {
+      "asset": "rna_cancer_sample.tsv.gz",
+      "bytes": 1359726111,
+      "sha256": "f308ecd82be827a0e5a5853e1bf28d4bbaff6157ea1affa426b28619d941cfed",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer-data.html",
+      "bytes": 128610,
+      "sha256": "97c1c54b10f067fa9d17481bbd2fea437242bf7318eb8c54922051949bc84e22",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "release-history.html.acquisition.json",
+      "bytes": 311,
+      "sha256": "eb19a8f3a52e483309eaa6f1db45edaaf919fde539afd29bf52f6e8739e08ed6",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_data.tsv.zip.acquisition.json",
+      "bytes": 396,
+      "sha256": "16ac7af72129e1c05ae92e3c0a3119877a5b1630e2598bfb72680f77e60edc8e",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_cancers.tsv.zip",
+      "bytes": 463,
+      "sha256": "d9c0bed9a29fee1c9bb9acef700456dbda63e6bb562fa4bdee65d1ffdc3ed9f6",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_cancers.tsv.zip.acquisition.json",
+      "bytes": 395,
+      "sha256": "e99de5bbe0827c3fb0919b2d761a38ef7ebf4c6e77cb7144b2baea4dc6739af7",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "rna_cancer_sample.tsv.gz.acquisition.json",
+      "bytes": 411,
+      "sha256": "5adb0517a1cc70d0afae7c62a0a349afadb7c5be90acfa5e9fa55298c8adf04d",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_rna_validation_cancers.tsv.zip",
+      "bytes": 576,
+      "sha256": "68ac6ca367b9dbdfe543312f8426571de4f9db6fd93385b8ef88519f2d96bf0d",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_rna_tcga_cancers.tsv.zip.acquisition.json",
+      "bytes": 413,
+      "sha256": "cb865da4ef0e6a561341158967a96719fa993b8ca5dd740f2cd9c6699f5cb50b",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "release-history.html",
+      "bytes": 1578005,
+      "sha256": "20e22a4476f5b10998604adc8c818a64c0dd4f101a1f69a49ae9e24eca6cbf67",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer-data.html.acquisition.json",
+      "bytes": 332,
+      "sha256": "5649544f0a17ef99dc1c924bf6ecffba9fad3417044ba30ee79e28434cf55ee1",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_data.tsv.zip",
+      "bytes": 1724018,
+      "sha256": "6e771693dc1019a3536d8834175ee97dcfde4f835d5cb3bed7c5a48803668135",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_rna_tcga_cancers.tsv.zip",
+      "bytes": 824,
+      "sha256": "7be883320f86753779f75cb52a1cd536f85a1499be9892a2e2014f85882dad99",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "cancer_rna_validation_cancers.tsv.zip.acquisition.json",
+      "bytes": 425,
+      "sha256": "0964b3d93a637749d7e5abbefcc35bf658917f9b3957205c8b9d2c8749540f6d",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "hpa_cancer_rna_summary.tsv.zip",
+      "bytes": 25102122,
+      "sha256": "4371ed4eefa9cdded1504138d1a592cc2d86cd51bf4cf7535c030fcf2e79ef94",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "build-audit.json",
+      "bytes": 858,
+      "sha256": "3c64cd6dccfd709cdedcc5f08ffda91f2e1ef5fcd911dbf7b20cf2d8fd974062",
+      "github_digest_matches": true
+    },
+    {
+      "asset": "hpa-cancer-sources.json",
+      "bytes": 7157,
+      "sha256": "9ccad58cb01be938583df11742860561e4efdb6db2c8ffc9396524949aaa5f7c",
+      "github_digest_matches": true
+    }
+  ]
+}

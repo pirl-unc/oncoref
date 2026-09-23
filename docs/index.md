@@ -4,7 +4,7 @@
 cancer-type ontology, cohorts, expression, clean transcripts-per-million (TPM)
 normalization, tumor mutational burden (TMB), incidence/mortality,
 immune-checkpoint inhibitor (ICI) response, Human Protein Atlas (HPA)
-normal-tissue expression, and HPA-derived cancer-testis antigen references.
+normal-tissue and cancer expression, and HPA-derived cancer-testis antigen references.
 
 Downstream packages such as [pirlygenes](https://github.com/pirl-unc/pirlygenes)
 and [trufflepig](https://github.com/pirl-unc/trufflepig) should delegate

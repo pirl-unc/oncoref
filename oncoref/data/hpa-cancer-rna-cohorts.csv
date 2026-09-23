@@ -1,0 +1,32 @@
+cancer_type,cancer_code,cancer,organ,nominal_samples,cohort
+Bladder Urothelial Carcinoma,BLCA,urothelial cancer,Kidney & Urinary bladder,169,TCGA
+Breast Invasive Carcinoma,BRCA,breast cancer,Breast & female reproductive system,1022,TCGA
+Cervical Squamous Cell Carcinoma and Endocervical Adenocarcinoma,CESC,cervical cancer,Breast & female reproductive system,283,TCGA
+Colon Adenocarcinoma,COAD,colorectal cancer,Gastrointestinal tract,254,TCGA
+Glioblastoma Multiforme,GBM,glioma,Brain,141,TCGA
+Head and Neck Squamous Cell Carcinoma,HNSC,head and neck cancer,Gastrointestinal tract,492,TCGA
+Kidney Chromophobe,KICH,renal cancer,Kidney & Urinary bladder,64,TCGA
+Kidney Renal Clear Cell Carcinoma,KIRC,renal cancer,Kidney & Urinary bladder,521,TCGA
+Kidney Renal Papillary Cell Carcinoma,KIRP,renal cancer,Kidney & Urinary bladder,282,TCGA
+Liver Hepatocellular Carcinoma,LIHC,liver cancer,Liver & Gallbladder,362,TCGA
+Lung Adenocarcinoma,LUAD,lung cancer,Respiratory system,497,TCGA
+Lung Squamous Cell Carcinoma,LUSC,lung cancer,Respiratory system,489,TCGA
+Ovary Serous Cystadenocarcinoma,OV,ovarian cancer,Breast & female reproductive system,349,TCGA
+Pancreatic Adenocarcinoma,PAAD,pancreatic cancer,Pancreas,176,TCGA
+Prostate Adenocarcinoma,PRAD,prostate cancer,Male reproductive system,480,TCGA
+Rectum Adenocarcinoma,READ,colorectal cancer,Gastrointestinal tract,88,TCGA
+Skin Cuteneous Melanoma,SKCM,melanoma,Skin,99,TCGA
+Stomach Adenocarcinoma,STAD,stomach cancer,Gastrointestinal tract,346,TCGA
+Testicular Germ Cell Tumor,TGCT,testis cancer,Male reproductive system,133,TCGA
+Thyroid Carcinoma,THCA,thyroid cancer,Endocrine tissues,495,TCGA
+Uterine Corpus Endometrial Carcinoma,UCEC,endometrial cancer,Breast & female reproductive system,176,TCGA
+Breast Invasive Carcinoma,BRCA,breast cancer,Breast & female reproductive system,50,validation
+Colon Adenocarcinoma,COAD,colorectal cancer,Gastrointestinal tract,486,validation
+Glioblastoma Multiforme,GBM,glioma,Brain,58,validation
+Kidney Renal Clear Cell Carcinoma,KIRC,renal cancer,Kidney & Urinary bladder,100,validation
+Liver Hepatocellular Carcinoma,LIHC,liver cancer,Liver & Gallbladder,231,validation
+Lung Adenocarcinoma,LUAD,lung cancer,Respiratory system,105,validation
+Lung Squamous Cell Carcinoma,LUSC,lung cancer,Respiratory system,68,validation
+Ovary Serous Cystadenocarcinoma,OV,ovarian cancer,Breast & female reproductive system,81,validation
+Pancreatic Adenocarcinoma,PAAD,pancreatic cancer,Pancreas,80,validation
+Rectum Adenocarcinoma,READ,colorectal cancer,Gastrointestinal tract,207,validation

@@ -12,13 +12,15 @@
 
 """Versioned reference-data sources fetched on demand (Human Protein Atlas).
 
-These are per-file downloads (each a ``.zip`` that extracts to one ``.tsv``),
+These are per-file downloads (usually a ``.zip`` extracting to one ``.tsv``),
 distinct from the heavy per-cohort expression bundle (:mod:`oncoref.data_bundle`,
 a single tarball). They back the CTA tissue-restriction definition and the
 protein-level / single-cell normal-tissue comparisons.
 
-Pinned to HPA ``v23`` — the most recent release whose mirror serves RNA consensus
+Normal-tissue sources are pinned to HPA ``v23`` — whose mirror serves RNA consensus
 AND IHC ``normal_tissue`` as a matched pair (newer mirrors drop ``normal_tissue``).
+Cancer sources have their own release, archived URLs, and mandatory raw/content
+hashes in ``hpa-cancer-sources.json``. The large sample RNA source stays gzipped.
 
 Cache layout (one subdir per source+version):
 
@@ -73,6 +75,18 @@ REFERENCE_SOURCES: dict[str, dict] = {
     },
 }
 
+_cancer_manifest = json.loads(
+    (Path(__file__).parent / "data" / "hpa-cancer-sources.json").read_text()
+)
+for _name, _artifact in _cancer_manifest["artifacts"].items():
+    _version = _cancer_manifest["reference_version"]
+    REFERENCE_SOURCES[_name] = {
+        **_artifact,
+        "default_version": _version,
+        "urls": {_version: _artifact["url"]},
+        "pins": {_version: _artifact},
+    }
+
 #: Env var overriding the reference-data cache root.
 CACHE_DIR_ENV_KEY = "CANCERDATA_DATA_DIR"
 
@@ -102,7 +116,7 @@ def resolve_version(name: str, version: str | None = None) -> str:
     """Concrete version for *name* (defaults to the pinned HPA release)."""
     spec = _source(name)
     if version is None:
-        version = DEFAULT_HPA_VERSION
+        version = spec.get("default_version", DEFAULT_HPA_VERSION)
     if version not in spec["urls"]:
         avail = ", ".join(sorted(spec["urls"]))
         raise ReferenceDataError(f"{name!r} has no version {version!r}; available: {avail}")
@@ -161,18 +175,40 @@ def _write_manifest(manifest: dict) -> None:
 
 
 def _cached_file_ok(name: str, version: str, dest: Path) -> bool:
-    """Cheap reuse check: trust an existing cached file only if its size matches
+    """Pinned sources require a package-content hash match on every reuse.
+
+    Legacy sources use a cheap check: trust a cached file only if its size matches
     the size recorded in the manifest for this ``(name, version)`` (when one
     exists). Catches a TSV left truncated by a process killed mid-extract — a
     partial write that the old ``exists()``-only reuse would have served forever
     (issue #21). A file with no manifest record is trusted (can't disprove;
     preserves back-compat). The full content hash is checked only on explicit
-    :func:`verify` to avoid re-hashing a large TSV on every access."""
+    :func:`verify` for those legacy sources."""
+    pin = _source(name).get("pins", {}).get(version)
+    if pin:
+        # New, immutable references are checked against the package's pin, not
+        # merely a mutable cache manifest (or an unrecorded legacy cache).
+        return _matches_pin(dest, pin)
     expected = _manifest_record(name, version).get("bytes")
     if expected is None:
         return True
     try:
         return dest.stat().st_size == int(expected)
+    except OSError:
+        return False
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(4 * 1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _matches_pin(path: Path, pin: dict) -> bool:
+    try:
+        return path.stat().st_size == pin["bytes"] and _sha256(path) == pin["sha256"]
     except OSError:
         return False
 
@@ -186,6 +222,7 @@ def download(name: str, version: str | None = None, *, force: bool = False) -> P
     spec = _source(name)
     dest = local_path(name, version)
     url = spec["urls"][version]
+    pin = spec.get("pins", {}).get(version)
 
     if dest.exists() and not force and _cached_file_ok(name, version, dest):
         return dest
@@ -198,10 +235,17 @@ def download(name: str, version: str | None = None, *, force: bool = False) -> P
         sys.stderr.flush()
         with urllib.request.urlopen(url) as resp, tmp_zip.open("wb") as h:
             shutil.copyfileobj(resp, h, length=1024 * 1024)
-        with zipfile.ZipFile(tmp_zip) as zf:
-            member = _zip_member(zf, spec["filename"])
-            with zf.open(member) as src, tmp_tsv.open("wb") as out:
-                shutil.copyfileobj(src, out, length=1024 * 1024)
+        if pin and _sha256(tmp_zip) != pin["archive_sha256"]:
+            raise ReferenceDataError("archive checksum does not match the pinned source")
+        if spec.get("archive_format") == "file":
+            os.replace(tmp_zip, tmp_tsv)
+        else:
+            with zipfile.ZipFile(tmp_zip) as zf:
+                member = _zip_member(zf, spec["filename"])
+                with zf.open(member) as src, tmp_tsv.open("wb") as out:
+                    shutil.copyfileobj(src, out, length=1024 * 1024)
+        if pin and not _matches_pin(tmp_tsv, pin):
+            raise ReferenceDataError("content checksum/size does not match the pinned source")
         # Atomic promote: a process killed mid-extract leaves tmp_tsv, never a
         # partial dest. A prior good copy survives a failed re-download untouched.
         os.replace(tmp_tsv, dest)
@@ -218,7 +262,7 @@ def download(name: str, version: str | None = None, *, force: bool = False) -> P
         "url": url,
         "path": str(dest),
         "bytes": dest.stat().st_size,
-        "sha256": hashlib.sha256(dest.read_bytes()).hexdigest(),
+        "sha256": _sha256(dest),
         "downloaded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
     _write_manifest(manifest)
@@ -226,13 +270,13 @@ def download(name: str, version: str | None = None, *, force: bool = False) -> P
 
 
 def verify(name: str, version: str | None = None) -> bool:
-    """Full-content integrity check of a cached source against the manifest sha256.
+    """Full-content check against the package pin (or legacy cache manifest).
 
-    Returns ``True`` when the cached file's sha256 matches what the manifest
-    recorded at download time, ``False`` on mismatch or when the file is missing.
-    Raises if there is no manifest record to check against (nothing to verify).
-    Unlike the cheap size check on reuse, this re-hashes the file — call it
-    deliberately (a cache audit), not on every access."""
+    Returns ``True`` on a matching sha256, ``False`` on mismatch or a missing
+    file. Raises if neither a package pin nor a manifest checksum is available.
+    Cancer references always use the package pin, never a mutable cache record.
+    This re-hashes the file; legacy sources only check size on ordinary reuse.
+    """
     record = provenance(name, version, verify_content=True)
     if not record["sha256"]:
         raise ReferenceDataError(
@@ -273,9 +317,10 @@ def provenance(
     except (TypeError, ValueError):
         recorded_bytes = None
 
-    expected = record.get("sha256") or None
+    pin = spec.get("pins", {}).get(version)
+    expected = pin["sha256"] if pin else record.get("sha256") or None
     checksum_matches = None
-    if not record:
+    if not record and not pin:
         verification_state = "no_manifest"
     elif not expected:
         verification_state = "missing_checksum"
@@ -283,7 +328,7 @@ def provenance(
         verification_state = "missing_file"
         checksum_matches = False
     elif verify_content:
-        checksum_matches = hashlib.sha256(dest.read_bytes()).hexdigest() == expected
+        checksum_matches = _sha256(dest) == expected
         verification_state = "verified" if checksum_matches else "checksum_mismatch"
     else:
         verification_state = "not_checked"
@@ -291,7 +336,7 @@ def provenance(
     return {
         "name": name,
         "version": version,
-        "url": record.get("url") or spec["urls"][version],
+        "url": spec["urls"][version] if pin else record.get("url") or spec["urls"][version],
         "path": str(dest),
         "bytes": local_bytes,
         "recorded_bytes": recorded_bytes,
@@ -339,7 +384,7 @@ def status(*, verify_content: bool = False) -> list[dict]:
                 **source_provenance,
                 "cached": source_provenance["exists"],
                 "bytes": source_provenance["bytes"] or 0,
-                "default_version": DEFAULT_HPA_VERSION,
+                "default_version": resolve_version(name),
                 "available_versions": sorted(spec["urls"]),
                 "cached_version": (
                     source_provenance["version"] if source_provenance["manifest_recorded"] else None

@@ -5,7 +5,7 @@
 
 Curated cancer reference data — cancer-type ontology, tumor mutational burden
 (TMB), incidence/mortality, checkpoint-inhibitor (ICI) response, per-cohort
-RNA-seq expression, Human Protein Atlas (HPA) normal-tissue expression, and
+RNA-seq expression, Human Protein Atlas (HPA) normal-tissue and cancer expression, and
 HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
@@ -89,6 +89,8 @@ od.cancer_ici_response("SKCM", regimen="PD-1+CTLA-4")   # 57.6  (pin a regimen)
 od.therapy_benefit_toxicity_evidence(cancer_code="OV")  # sourced clinical facts
 od.rna_protein_calibrations(gene="TP53")     # matched CPTAC cohort-specific models
 od.rna_protein_hpa_priors(gene="TP53")       # HPA normal-tissue RNA/IHC weak prior
+od.hpa_cancer_ihc_prevalence()               # scored-patient IHC counts, HPA 25.1
+od.hpa_cancer_rna_prevalence(cohort="TCGA")   # genome-wide native-pTPM RNA summaries
 
 # Cancer-testis antigens (HPA-derived tissue-restriction):
 od.cta_gene_names()                       # expressed CTA symbols (MAGEA4, CT83, …)
