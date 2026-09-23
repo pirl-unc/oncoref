@@ -250,22 +250,56 @@ def _compare(ihc, rna, crosswalk, *, cohort, threshold):
     return result
 
 
-def hpa_cancer_rna_ihc_comparison(gene_ids=None, *, cohort="TCGA", threshold=1.0) -> pd.DataFrame:
+def _include_rna_only_ihc_rows(ihc, rna, crosswalk):
+    """Complete the observed gene union across IHC groups without zero filling."""
+    genes = pd.Index(pd.concat([ihc.gene_id, rna.gene_id]).dropna().unique(), name="gene_id")
+    universe = pd.MultiIndex.from_product(
+        [genes, crosswalk.cancer], names=["gene_id", "cancer"]
+    ).to_frame(index=False)
+    result = universe.merge(
+        ihc, on=["gene_id", "cancer"], how="left", validate="one_to_one", indicator=True
+    )
+    absent = result.pop("_merge").eq("left_only")
+    result.loc[absent, "measurement_status"] = "missing_ihc"
+    return result
+
+
+def hpa_cancer_rna_ihc_comparison(
+    gene_ids=None, *, cohort="TCGA", threshold=1.0, include_missing_ihc=False
+) -> pd.DataFrame:
     """Descriptive unpaired comparisons, retaining unmapped and incomplete rows.
 
     Colorectal, lung and renal RNA use sample-weighted pooling only when every
     required cancer type has measured RNA for that gene. Glioma/GBM is a scope
     mismatch. All fractions concern patients/samples, never stained cells.
+
+    With ``include_missing_ihc=True``, genes observed in either selected assay
+    are retained across all IHC groups, including RNA-only genes such as INSL4.
+    Unobserved IHC counts/fractions stay missing. ``measurement_status`` records
+    missing IHC independently of RNA/crosswalk status; valid RNA values survive.
+    ``comparison_status=missing_ihc`` identifies an otherwise RNA-comparable row
+    without IHC, while mapping/RNA failures keep their more specific status.
+    Unknown IDs absent from both assays are not invented. Default output remains
+    IHC-indexed for compatibility.
     """
     if cohort not in ("TCGA", "validation"):
         raise ValueError("select one cohort: 'TCGA' or 'validation'")
     _threshold_suffix(threshold)
     if gene_ids is not None and not isinstance(gene_ids, str):
         gene_ids = list(gene_ids)
-    return _compare(
-        hpa_cancer_ihc_prevalence(gene_ids),
-        hpa_cancer_rna_prevalence(gene_ids, cohort=cohort),
-        hpa_cancer_crosswalk(),
+    ihc = hpa_cancer_ihc_prevalence(gene_ids)
+    rna = hpa_cancer_rna_prevalence(gene_ids, cohort=cohort)
+    crosswalk = hpa_cancer_crosswalk()
+    if include_missing_ihc:
+        ihc = _include_rna_only_ihc_rows(ihc, rna, crosswalk)
+    result = _compare(
+        ihc,
+        rna,
+        crosswalk,
         cohort=cohort,
         threshold=threshold,
     )
+    missing_ihc = result.measurement_status.eq("missing_ihc")
+    otherwise_comparable = result.comparison_status.eq("missing_ihc_categories")
+    result.loc[missing_ihc & otherwise_comparable, "comparison_status"] = "missing_ihc"
+    return result

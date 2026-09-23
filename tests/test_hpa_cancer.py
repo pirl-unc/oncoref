@@ -303,3 +303,47 @@ def test_public_apis_select_ids_and_do_not_merge_cohorts(monkeypatch, tmp_path):
         hpa_cancer.hpa_cancer_rna_ihc_comparison(threshold=3)
     with pytest.raises(ValueError, match="cohort"):
         hpa_cancer.hpa_cancer_rna_ihc_comparison(cohort="all")
+
+
+def test_opt_in_keeps_rna_only_genes_and_missing_is_not_zero(monkeypatch, tmp_path):
+    ihc = tmp_path / "ihc.tsv"
+    pd.DataFrame([ihc_row(High=0, Medium=0, Low=0)]).to_csv(ihc, sep="\t", index=False)
+    rna = tmp_path / "rna.tsv"
+    data = pd.concat([comparison_rna(), comparison_rna().assign(gene_id="RNA_ONLY")])
+    data.to_csv(rna, sep="\t", index=False)
+    monkeypatch.setattr(
+        reference_data, "ensure", lambda name: ihc if name == "hpa_cancer_ihc" else rna
+    )
+    assert set(hpa_cancer.hpa_cancer_rna_ihc_comparison().gene_id) == {"ENSG1"}
+    frame = hpa_cancer.hpa_cancer_rna_ihc_comparison(include_missing_ihc=True)
+    assert len(frame) == 40
+    assert not frame.duplicated(["gene_id", "cancer"]).any()
+    r = frame.set_index(["gene_id", "cancer"])
+    measured = r.loc[("ENSG1", "lung cancer")]
+    absent = r.loc[("RNA_ONLY", "lung cancer")]
+    assert measured.comparison_status == "comparable"
+    assert measured.prevalence_detected == 0
+    assert absent.measurement_status == absent.comparison_status == "missing_ihc"
+    assert absent.rna_samples == 110 and absent.rna_prevalence == pytest.approx(49 / 110)
+    assert (
+        absent[
+            ["total", "detected", "prevalence_detected", "high", "medium", "low", "not_detected"]
+        ]
+        .isna()
+        .all()
+    )
+    assert r.loc[("RNA_ONLY", "glioma"), "comparison_status"] == "scope_mismatch"
+    assert r.loc[("RNA_ONLY", "glioma"), "measurement_status"] == "missing_ihc"
+    assert pd.isna(r.loc[("RNA_ONLY", "glioma"), "rna_prevalence"])
+    assert r.loc[("RNA_ONLY", "skin cancer"), "comparison_status"] == "unmatched"
+    validation = hpa_cancer.hpa_cancer_rna_ihc_comparison(
+        "RNA_ONLY", cohort="validation", include_missing_ihc=True
+    ).set_index("cancer")
+    assert validation.loc["lung cancer", "comparison_status"] == "incomplete_rna_types"
+    assert pd.isna(validation.loc["lung cancer", "rna_prevalence"])
+    for selection in ([], ["ABSENT"]):
+        assert hpa_cancer.hpa_cancer_rna_ihc_comparison(selection, include_missing_ihc=True).empty
+    selected = hpa_cancer.hpa_cancer_rna_ihc_comparison(
+        iter(["RNA_ONLY"]), include_missing_ihc=True
+    )
+    assert len(selected) == 20 and set(selected.gene_id) == {"RNA_ONLY"}

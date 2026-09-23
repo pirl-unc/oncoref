@@ -161,3 +161,22 @@ new fields expose denominators and source cohorts. Use the comparison API in
 place of an ad hoc crosswalk. Keep legacy cache hashes as historical provenance.
 Downstream cache ownership moves in the follow-up migration after the oncoref
 release is available.
+
+## Retaining RNA-only genes in focused profiles
+
+`hpa_cancer_rna_ihc_comparison(..., include_missing_ihc=True)` retains genes
+observed in either selected assay across all 20 IHC groups. This opt-in mode
+preserves the default IHC-indexed output for existing callers. IDs absent from
+both assays are not invented.
+
+For example, **INSL4 (ENSG00000120211)** has RNA in all 21 TCGA and 10 validation
+cohorts in HPA 25.1, but has **no aggregate cancer IHC row**. The opt-in output
+keeps its valid pooled RNA summaries and marks IHC counts/fractions missing;
+`measurement_status=missing_ihc` records that absence. If RNA and the crosswalk
+otherwise allow a comparison, `comparison_status=missing_ihc`; scope mismatches,
+unmatched groups and incomplete RNA pools retain their more specific statuses.
+These two status columns are independent, so a missing IHC assay is still
+visible on a glioma scope-mismatch row. Unknown protein staining is never zero.
+
+This records a source coverage gap, not a negative protein result. INSL4 protein
+validation must be separately sourced; no inference from RNA supplies it.
