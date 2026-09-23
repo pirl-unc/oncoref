@@ -42,6 +42,7 @@ from pathlib import Path
 import numpy as np
 
 from . import figure_style
+from .cta_tissues import HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS
 from .figure_style import ACCENT, DROP, KEPT, THRESHOLD, WEAK
 from .load_dataset import get_data
 
@@ -61,11 +62,8 @@ PRIMARY_SOURCES = {
 
 # Deflated-RNA-fraction threshold each protein-reliability tier must clear.
 RELIABILITY_THRESHOLD = {
-    "Enhanced": 0.80,
-    "Supported": 0.90,
-    "Approved": 0.95,
-    "Uncertain": 0.98,
-    "no data": 0.98,
+    **{k: v for k, v in HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS.items() if k != "Missing"},
+    "no data": HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS["Missing"],
 }
 RELIABILITY_ORDER = ["no data", "Uncertain", "Approved", "Supported", "Enhanced"]
 
@@ -250,7 +248,7 @@ def _fig_deflated_dist(df, path, plt):
         color=[KEPT, DROP],
         label=["kept", "excluded"],
     )
-    for thr in (0.80, 0.90, 0.95, 0.98):
+    for thr in sorted(set(RELIABILITY_THRESHOLD.values())):
         ax.axvline(thr, color=THRESHOLD, ls="--", lw=0.7, alpha=0.7)
     ax.set_xlabel("deflated reproductive fraction")
     ax.set_ylabel("genes")

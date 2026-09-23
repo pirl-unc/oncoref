@@ -1,0 +1,759 @@
+Gene,Gene name,Tissue,Cell type,Level,Reliability
+ENSG00000035499,DEPDC1B,adipose tissue,adipocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,adrenal gland,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,appendix,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,appendix,lymphoid tissue,Low,Approved
+ENSG00000035499,DEPDC1B,bone marrow,hematopoietic cells,Low,Approved
+ENSG00000035499,DEPDC1B,breast,adipocytes,Low,Approved
+ENSG00000035499,DEPDC1B,breast,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,breast,myoepithelial cells,Low,Approved
+ENSG00000035499,DEPDC1B,bronchus,respiratory epithelial cells,Low,Approved
+ENSG00000035499,DEPDC1B,caudate,glial cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,caudate,neuronal cells,Low,Approved
+ENSG00000035499,DEPDC1B,cerebellum,cells in granular layer,Not detected,Approved
+ENSG00000035499,DEPDC1B,cerebellum,cells in molecular layer,Not detected,Approved
+ENSG00000035499,DEPDC1B,cerebellum,Purkinje cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,cerebral cortex,endothelial cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,cerebral cortex,glial cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,cerebral cortex,neuronal cells,Low,Approved
+ENSG00000035499,DEPDC1B,cerebral cortex,neuropil,Not detected,Approved
+ENSG00000035499,DEPDC1B,cervix,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,cervix,squamous epithelial cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,colon,endothelial cells,Low,Approved
+ENSG00000035499,DEPDC1B,colon,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,colon,peripheral nerve/ganglion,Not detected,Approved
+ENSG00000035499,DEPDC1B,duodenum,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,endometrium 1,cells in endometrial stroma,Not detected,Approved
+ENSG00000035499,DEPDC1B,endometrium 1,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,endometrium 2,cells in endometrial stroma,Not detected,Approved
+ENSG00000035499,DEPDC1B,endometrium 2,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,epididymis,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,esophagus,squamous epithelial cells,Low,Approved
+ENSG00000035499,DEPDC1B,fallopian tube,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,gallbladder,glandular cells,High,Approved
+ENSG00000035499,DEPDC1B,heart muscle,cardiomyocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,hippocampus,glial cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,hippocampus,neuronal cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,kidney,cells in glomeruli,Not detected,Approved
+ENSG00000035499,DEPDC1B,kidney,cells in tubules,Low,Approved
+ENSG00000035499,DEPDC1B,liver,cholangiocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,liver,hepatocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,lung,alveolar cells,Low,Approved
+ENSG00000035499,DEPDC1B,lung,macrophages,Low,Approved
+ENSG00000035499,DEPDC1B,lymph node,germinal center cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,lymph node,non-germinal center cells,Medium,Approved
+ENSG00000035499,DEPDC1B,nasopharynx,respiratory epithelial cells,Low,Approved
+ENSG00000035499,DEPDC1B,oral mucosa,squamous epithelial cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,ovary,follicle cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,ovary,ovarian stroma cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,pancreas,exocrine glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,pancreas,pancreatic endocrine cells,Low,Approved
+ENSG00000035499,DEPDC1B,parathyroid gland,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,placenta,decidual cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,placenta,trophoblastic cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,prostate,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,rectum,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,salivary gland,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,seminal vesicle,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,skeletal muscle,myocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,skin 1,fibroblasts,Not detected,Approved
+ENSG00000035499,DEPDC1B,skin 1,keratinocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,skin 1,Langerhans,Not detected,Approved
+ENSG00000035499,DEPDC1B,skin 1,melanocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,skin 2,epidermal cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,small intestine,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,smooth muscle,smooth muscle cells,Low,Approved
+ENSG00000035499,DEPDC1B,soft tissue 1,fibroblasts,Not detected,Approved
+ENSG00000035499,DEPDC1B,soft tissue 2,fibroblasts,Not detected,Approved
+ENSG00000035499,DEPDC1B,soft tissue 2,peripheral nerve,Not detected,Approved
+ENSG00000035499,DEPDC1B,spleen,cells in red pulp,Low,Approved
+ENSG00000035499,DEPDC1B,spleen,cells in white pulp,Not detected,Approved
+ENSG00000035499,DEPDC1B,stomach 1,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,stomach 2,glandular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,testis,elongated or late spermatids,High,Approved
+ENSG00000035499,DEPDC1B,testis,Leydig cells,Low,Approved
+ENSG00000035499,DEPDC1B,testis,pachytene spermatocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,testis,peritubular cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,testis,preleptotene spermatocytes,Not detected,Approved
+ENSG00000035499,DEPDC1B,testis,round or early spermatids,High,Approved
+ENSG00000035499,DEPDC1B,testis,sertoli cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,testis,spermatogonia cells,Not detected,Approved
+ENSG00000035499,DEPDC1B,thyroid gland,glandular cells,Low,Approved
+ENSG00000035499,DEPDC1B,tonsil,germinal center cells,Medium,Approved
+ENSG00000035499,DEPDC1B,tonsil,non-germinal center cells,Low,Approved
+ENSG00000035499,DEPDC1B,tonsil,squamous epithelial cells,Low,Approved
+ENSG00000035499,DEPDC1B,urinary bladder,urothelial cells,Low,Approved
+ENSG00000035499,DEPDC1B,vagina,squamous epithelial cells,Not detected,Approved
+ENSG00000099953,MMP11,adipose tissue,adipocytes,Low,Approved
+ENSG00000099953,MMP11,adrenal gland,glandular cells,Low,Approved
+ENSG00000099953,MMP11,appendix,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,appendix,lymphoid tissue,Not detected,Approved
+ENSG00000099953,MMP11,bone marrow,hematopoietic cells,Not detected,Approved
+ENSG00000099953,MMP11,breast,adipocytes,Not detected,Approved
+ENSG00000099953,MMP11,breast,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,breast,myoepithelial cells,Not detected,Approved
+ENSG00000099953,MMP11,bronchus,respiratory epithelial cells,Low,Approved
+ENSG00000099953,MMP11,caudate,glial cells,Not detected,Approved
+ENSG00000099953,MMP11,caudate,neuronal cells,Not detected,Approved
+ENSG00000099953,MMP11,cerebellum,cells in granular layer,Not detected,Approved
+ENSG00000099953,MMP11,cerebellum,cells in molecular layer,Not detected,Approved
+ENSG00000099953,MMP11,cerebellum,Purkinje cells,Not detected,Approved
+ENSG00000099953,MMP11,cerebral cortex,endothelial cells,Not detected,Approved
+ENSG00000099953,MMP11,cerebral cortex,glial cells,Not detected,Approved
+ENSG00000099953,MMP11,cerebral cortex,neuronal cells,Not detected,Approved
+ENSG00000099953,MMP11,cerebral cortex,neuropil,Not detected,Approved
+ENSG00000099953,MMP11,cervix,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,cervix,squamous epithelial cells,Low,Approved
+ENSG00000099953,MMP11,colon,endothelial cells,Not detected,Approved
+ENSG00000099953,MMP11,colon,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,colon,peripheral nerve/ganglion,Not detected,Approved
+ENSG00000099953,MMP11,duodenum,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,endometrium 1,cells in endometrial stroma,Not detected,Approved
+ENSG00000099953,MMP11,endometrium 1,glandular cells,Low,Approved
+ENSG00000099953,MMP11,endometrium 2,cells in endometrial stroma,Not detected,Approved
+ENSG00000099953,MMP11,endometrium 2,glandular cells,Low,Approved
+ENSG00000099953,MMP11,epididymis,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,esophagus,squamous epithelial cells,Not detected,Approved
+ENSG00000099953,MMP11,fallopian tube,glandular cells,Low,Approved
+ENSG00000099953,MMP11,gallbladder,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,heart muscle,cardiomyocytes,Low,Approved
+ENSG00000099953,MMP11,hippocampus,glial cells,Not detected,Approved
+ENSG00000099953,MMP11,hippocampus,neuronal cells,Not detected,Approved
+ENSG00000099953,MMP11,kidney,cells in glomeruli,Not detected,Approved
+ENSG00000099953,MMP11,kidney,cells in tubules,Low,Approved
+ENSG00000099953,MMP11,liver,cholangiocytes,Not detected,Approved
+ENSG00000099953,MMP11,liver,hepatocytes,Not detected,Approved
+ENSG00000099953,MMP11,lung,alveolar cells,Not detected,Approved
+ENSG00000099953,MMP11,lung,macrophages,Not detected,Approved
+ENSG00000099953,MMP11,lymph node,germinal center cells,Not detected,Approved
+ENSG00000099953,MMP11,lymph node,non-germinal center cells,Not detected,Approved
+ENSG00000099953,MMP11,nasopharynx,respiratory epithelial cells,Low,Approved
+ENSG00000099953,MMP11,oral mucosa,squamous epithelial cells,Not detected,Approved
+ENSG00000099953,MMP11,ovary,follicle cells,Not detected,Approved
+ENSG00000099953,MMP11,ovary,ovarian stroma cells,Not detected,Approved
+ENSG00000099953,MMP11,pancreas,exocrine glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,pancreas,pancreatic endocrine cells,Not detected,Approved
+ENSG00000099953,MMP11,parathyroid gland,glandular cells,Low,Approved
+ENSG00000099953,MMP11,placenta,decidual cells,Medium,Approved
+ENSG00000099953,MMP11,placenta,trophoblastic cells,High,Approved
+ENSG00000099953,MMP11,prostate,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,rectum,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,salivary gland,glandular cells,Low,Approved
+ENSG00000099953,MMP11,seminal vesicle,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,skeletal muscle,myocytes,Not detected,Approved
+ENSG00000099953,MMP11,skin 1,fibroblasts,Not detected,Approved
+ENSG00000099953,MMP11,skin 1,keratinocytes,Not detected,Approved
+ENSG00000099953,MMP11,skin 1,Langerhans,Not detected,Approved
+ENSG00000099953,MMP11,skin 1,melanocytes,Not detected,Approved
+ENSG00000099953,MMP11,skin 2,epidermal cells,Not detected,Approved
+ENSG00000099953,MMP11,small intestine,glandular cells,Low,Approved
+ENSG00000099953,MMP11,smooth muscle,smooth muscle cells,Not detected,Approved
+ENSG00000099953,MMP11,soft tissue 1,chondrocytes,Not detected,Approved
+ENSG00000099953,MMP11,soft tissue 1,fibroblasts,Not detected,Approved
+ENSG00000099953,MMP11,soft tissue 1,peripheral nerve,Not detected,Approved
+ENSG00000099953,MMP11,soft tissue 2,fibroblasts,Not detected,Approved
+ENSG00000099953,MMP11,soft tissue 2,peripheral nerve,Not detected,Approved
+ENSG00000099953,MMP11,spleen,cells in red pulp,Not detected,Approved
+ENSG00000099953,MMP11,spleen,cells in white pulp,Not detected,Approved
+ENSG00000099953,MMP11,stomach 1,glandular cells,Low,Approved
+ENSG00000099953,MMP11,stomach 2,glandular cells,Low,Approved
+ENSG00000099953,MMP11,testis,cells in seminiferous ducts,Not detected,Approved
+ENSG00000099953,MMP11,testis,Leydig cells,Not detected,Approved
+ENSG00000099953,MMP11,thyroid gland,glandular cells,Not detected,Approved
+ENSG00000099953,MMP11,tonsil,germinal center cells,Not detected,Approved
+ENSG00000099953,MMP11,tonsil,non-germinal center cells,Not detected,Approved
+ENSG00000099953,MMP11,tonsil,squamous epithelial cells,Not detected,Approved
+ENSG00000099953,MMP11,urinary bladder,urothelial cells,Not detected,Approved
+ENSG00000099953,MMP11,vagina,squamous epithelial cells,Not detected,Approved
+ENSG00000102243,VGLL1,adipose tissue,adipocytes,Not detected,Supported
+ENSG00000102243,VGLL1,adrenal gland,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,appendix,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,appendix,lymphoid tissue,Not detected,Supported
+ENSG00000102243,VGLL1,bone marrow,hematopoietic cells,Not detected,Supported
+ENSG00000102243,VGLL1,breast,adipocytes,Not detected,Supported
+ENSG00000102243,VGLL1,breast,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,breast,myoepithelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,bronchus,respiratory epithelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,caudate,glial cells,Not detected,Supported
+ENSG00000102243,VGLL1,caudate,neuronal cells,Not detected,Supported
+ENSG00000102243,VGLL1,cerebellum,cells in granular layer,Not detected,Supported
+ENSG00000102243,VGLL1,cerebellum,cells in molecular layer,Not detected,Supported
+ENSG00000102243,VGLL1,cerebellum,Purkinje cells,Not detected,Supported
+ENSG00000102243,VGLL1,cerebral cortex,endothelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,cerebral cortex,glial cells,Not detected,Supported
+ENSG00000102243,VGLL1,cerebral cortex,neuronal cells,Not detected,Supported
+ENSG00000102243,VGLL1,cerebral cortex,neuropil,Not detected,Supported
+ENSG00000102243,VGLL1,cervix,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,cervix,squamous epithelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,colon,endothelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,colon,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,colon,peripheral nerve/ganglion,Not detected,Supported
+ENSG00000102243,VGLL1,duodenum,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,endometrium 1,cells in endometrial stroma,Not detected,Supported
+ENSG00000102243,VGLL1,endometrium 1,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,endometrium 2,cells in endometrial stroma,Not detected,Supported
+ENSG00000102243,VGLL1,endometrium 2,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,epididymis,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,esophagus,squamous epithelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,fallopian tube,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,gallbladder,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,heart muscle,cardiomyocytes,Not detected,Supported
+ENSG00000102243,VGLL1,hippocampus,glial cells,Not detected,Supported
+ENSG00000102243,VGLL1,hippocampus,neuronal cells,Not detected,Supported
+ENSG00000102243,VGLL1,kidney,cells in glomeruli,Not detected,Supported
+ENSG00000102243,VGLL1,kidney,cells in tubules,Not detected,Supported
+ENSG00000102243,VGLL1,liver,cholangiocytes,Not detected,Supported
+ENSG00000102243,VGLL1,liver,hepatocytes,Not detected,Supported
+ENSG00000102243,VGLL1,lung,alveolar cells,Not detected,Supported
+ENSG00000102243,VGLL1,lung,macrophages,Not detected,Supported
+ENSG00000102243,VGLL1,lymph node,germinal center cells,Not detected,Supported
+ENSG00000102243,VGLL1,lymph node,non-germinal center cells,Not detected,Supported
+ENSG00000102243,VGLL1,nasopharynx,respiratory epithelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,oral mucosa,squamous epithelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,ovary,follicle cells,Not detected,Supported
+ENSG00000102243,VGLL1,ovary,ovarian stroma cells,Not detected,Supported
+ENSG00000102243,VGLL1,pancreas,exocrine glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,pancreas,pancreatic endocrine cells,Not detected,Supported
+ENSG00000102243,VGLL1,parathyroid gland,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,placenta,cytotrophoblasts,Medium,Supported
+ENSG00000102243,VGLL1,placenta,decidual cells,Not detected,Supported
+ENSG00000102243,VGLL1,placenta,endothelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,placenta,hofbauer cells,Not detected,Supported
+ENSG00000102243,VGLL1,placenta,syncytiotrophoblasts - cell body,Not detected,Supported
+ENSG00000102243,VGLL1,placenta,syncytiotrophoblasts - microvilli,Not detected,Supported
+ENSG00000102243,VGLL1,prostate,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,rectum,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,salivary gland,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,seminal vesicle,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,skeletal muscle,myocytes,Not detected,Supported
+ENSG00000102243,VGLL1,skin 1,fibroblasts,Not detected,Supported
+ENSG00000102243,VGLL1,skin 1,keratinocytes,Not detected,Supported
+ENSG00000102243,VGLL1,skin 1,Langerhans,Not detected,Supported
+ENSG00000102243,VGLL1,skin 1,melanocytes,Not detected,Supported
+ENSG00000102243,VGLL1,skin 2,epidermal cells,Not detected,Supported
+ENSG00000102243,VGLL1,small intestine,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,smooth muscle,smooth muscle cells,Not detected,Supported
+ENSG00000102243,VGLL1,soft tissue 1,chondrocytes,Not detected,Supported
+ENSG00000102243,VGLL1,soft tissue 1,fibroblasts,Not detected,Supported
+ENSG00000102243,VGLL1,soft tissue 2,fibroblasts,Not detected,Supported
+ENSG00000102243,VGLL1,soft tissue 2,peripheral nerve,Not detected,Supported
+ENSG00000102243,VGLL1,spleen,cells in red pulp,Not detected,Supported
+ENSG00000102243,VGLL1,spleen,cells in white pulp,Not detected,Supported
+ENSG00000102243,VGLL1,stomach 1,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,stomach 2,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,testis,cells in seminiferous ducts,Not detected,Supported
+ENSG00000102243,VGLL1,testis,Leydig cells,Not detected,Supported
+ENSG00000102243,VGLL1,thyroid gland,glandular cells,Not detected,Supported
+ENSG00000102243,VGLL1,tonsil,germinal center cells,Not detected,Supported
+ENSG00000102243,VGLL1,tonsil,non-germinal center cells,Not detected,Supported
+ENSG00000102243,VGLL1,tonsil,squamous epithelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,urinary bladder,urothelial cells,Not detected,Supported
+ENSG00000102243,VGLL1,vagina,squamous epithelial cells,Not detected,Supported
+ENSG00000104827,CGB3,adipose tissue,adipocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,adrenal gland,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,appendix,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,appendix,lymphoid tissue,Not detected,Enhanced
+ENSG00000104827,CGB3,bone marrow,hematopoietic cells,Not detected,Enhanced
+ENSG00000104827,CGB3,breast,adipocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,breast,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,breast,myoepithelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,bronchus,respiratory epithelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,caudate,glial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,caudate,neuronal cells,Not detected,Enhanced
+ENSG00000104827,CGB3,cerebellum,cells in granular layer,Not detected,Enhanced
+ENSG00000104827,CGB3,cerebellum,cells in molecular layer,Not detected,Enhanced
+ENSG00000104827,CGB3,cerebellum,Purkinje cells,Not detected,Enhanced
+ENSG00000104827,CGB3,cerebral cortex,endothelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,cerebral cortex,glial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,cerebral cortex,neuronal cells,Not detected,Enhanced
+ENSG00000104827,CGB3,cerebral cortex,neuropil,Not detected,Enhanced
+ENSG00000104827,CGB3,cervix,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,cervix,squamous epithelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,colon,endothelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,colon,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,colon,peripheral nerve/ganglion,Not detected,Enhanced
+ENSG00000104827,CGB3,duodenum,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,endometrium 1,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000104827,CGB3,endometrium 1,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,endometrium 2,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000104827,CGB3,endometrium 2,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,epididymis,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,esophagus,squamous epithelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,fallopian tube,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,gallbladder,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,heart muscle,cardiomyocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,hippocampus,glial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,hippocampus,neuronal cells,Not detected,Enhanced
+ENSG00000104827,CGB3,kidney,cells in glomeruli,Not detected,Enhanced
+ENSG00000104827,CGB3,kidney,cells in tubules,Not detected,Enhanced
+ENSG00000104827,CGB3,liver,cholangiocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,liver,hepatocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,lung,alveolar cells,Not detected,Enhanced
+ENSG00000104827,CGB3,lung,macrophages,Not detected,Enhanced
+ENSG00000104827,CGB3,lymph node,germinal center cells,Not detected,Enhanced
+ENSG00000104827,CGB3,lymph node,non-germinal center cells,Not detected,Enhanced
+ENSG00000104827,CGB3,nasopharynx,respiratory epithelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,oral mucosa,squamous epithelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,ovary,follicle cells,Not detected,Enhanced
+ENSG00000104827,CGB3,ovary,ovarian stroma cells,Not detected,Enhanced
+ENSG00000104827,CGB3,pancreas,exocrine glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,pancreas,pancreatic endocrine cells,Not detected,Enhanced
+ENSG00000104827,CGB3,parathyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,placenta,cytotrophoblasts,Not detected,Enhanced
+ENSG00000104827,CGB3,placenta,decidual cells,Not detected,Enhanced
+ENSG00000104827,CGB3,placenta,endothelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,placenta,hofbauer cells,Not detected,Enhanced
+ENSG00000104827,CGB3,placenta,syncytiotrophoblasts - cell body,High,Enhanced
+ENSG00000104827,CGB3,placenta,syncytiotrophoblasts - microvilli,High,Enhanced
+ENSG00000104827,CGB3,prostate,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,rectum,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,salivary gland,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,seminal vesicle,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,skeletal muscle,myocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,skin 1,fibroblasts,Not detected,Enhanced
+ENSG00000104827,CGB3,skin 1,keratinocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,skin 1,Langerhans,Not detected,Enhanced
+ENSG00000104827,CGB3,skin 1,melanocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,skin 2,epidermal cells,Not detected,Enhanced
+ENSG00000104827,CGB3,small intestine,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,smooth muscle,smooth muscle cells,Not detected,Enhanced
+ENSG00000104827,CGB3,soft tissue 1,chondrocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,soft tissue 1,fibroblasts,Not detected,Enhanced
+ENSG00000104827,CGB3,soft tissue 1,peripheral nerve,Not detected,Enhanced
+ENSG00000104827,CGB3,soft tissue 2,chondrocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,soft tissue 2,fibroblasts,Not detected,Enhanced
+ENSG00000104827,CGB3,soft tissue 2,peripheral nerve,Not detected,Enhanced
+ENSG00000104827,CGB3,spleen,cells in red pulp,Not detected,Enhanced
+ENSG00000104827,CGB3,spleen,cells in white pulp,Not detected,Enhanced
+ENSG00000104827,CGB3,stomach 1,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,stomach 2,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,testis,elongated or late spermatids,Not detected,Enhanced
+ENSG00000104827,CGB3,testis,Leydig cells,Medium,Enhanced
+ENSG00000104827,CGB3,testis,pachytene spermatocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,testis,peritubular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,testis,preleptotene spermatocytes,Not detected,Enhanced
+ENSG00000104827,CGB3,testis,round or early spermatids,Not detected,Enhanced
+ENSG00000104827,CGB3,testis,sertoli cells,Not detected,Enhanced
+ENSG00000104827,CGB3,testis,spermatogonia cells,Medium,Enhanced
+ENSG00000104827,CGB3,thyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000104827,CGB3,tonsil,germinal center cells,Not detected,Enhanced
+ENSG00000104827,CGB3,tonsil,non-germinal center cells,Not detected,Enhanced
+ENSG00000104827,CGB3,tonsil,squamous epithelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,urinary bladder,urothelial cells,Not detected,Enhanced
+ENSG00000104827,CGB3,vagina,squamous epithelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,adipose tissue,adipocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,adrenal gland,glandular cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,appendix,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,appendix,lymphoid tissue,Low,Enhanced
+ENSG00000136231,IGF2BP3,bone marrow,hematopoietic cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,breast,adipocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,breast,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,breast,myoepithelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,bronchus,respiratory epithelial cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,caudate,glial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,caudate,neuronal cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cerebellum,cells in granular layer,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cerebellum,cells in molecular layer,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cerebellum,Purkinje cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,cerebral cortex,endothelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cerebral cortex,glial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cerebral cortex,neuronal cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cerebral cortex,neuropil,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cervix,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,cervix,squamous epithelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,colon,endothelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,colon,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,colon,peripheral nerve/ganglion,Low,Enhanced
+ENSG00000136231,IGF2BP3,duodenum,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,endometrium 1,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,endometrium 1,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,endometrium 2,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,endometrium 2,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,epididymis,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,esophagus,squamous epithelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,fallopian tube,glandular cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,gallbladder,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,heart muscle,cardiomyocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,hippocampus,glial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,hippocampus,neuronal cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,kidney,cells in glomeruli,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,kidney,cells in tubules,Low,Enhanced
+ENSG00000136231,IGF2BP3,liver,cholangiocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,liver,hepatocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,lung,alveolar cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,lung,macrophages,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,lymph node,germinal center cells,Medium,Enhanced
+ENSG00000136231,IGF2BP3,lymph node,non-germinal center cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,nasopharynx,respiratory epithelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,oral mucosa,squamous epithelial cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,ovary,ovarian stroma cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,pancreas,exocrine glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,pancreas,pancreatic endocrine cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,parathyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,placenta,cytotrophoblasts,High,Enhanced
+ENSG00000136231,IGF2BP3,placenta,decidual cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,placenta,endothelial cells,Medium,Enhanced
+ENSG00000136231,IGF2BP3,placenta,hofbauer cells,High,Enhanced
+ENSG00000136231,IGF2BP3,placenta,syncytiotrophoblasts - cell body,High,Enhanced
+ENSG00000136231,IGF2BP3,placenta,syncytiotrophoblasts - microvilli,High,Enhanced
+ENSG00000136231,IGF2BP3,prostate,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,rectum,glandular cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,salivary gland,glandular cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,seminal vesicle,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,skeletal muscle,myocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,skin 1,fibroblasts,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,skin 1,keratinocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,skin 1,Langerhans,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,skin 1,melanocytes,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,skin 2,epidermal cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,small intestine,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,smooth muscle,smooth muscle cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,soft tissue 1,fibroblasts,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,soft tissue 2,fibroblasts,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,spleen,cells in red pulp,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,spleen,cells in white pulp,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,stomach 1,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,stomach 2,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,testis,cells in seminiferous ducts,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,testis,Leydig cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,thyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000136231,IGF2BP3,tonsil,germinal center cells,Medium,Enhanced
+ENSG00000136231,IGF2BP3,tonsil,non-germinal center cells,Medium,Enhanced
+ENSG00000136231,IGF2BP3,tonsil,squamous epithelial cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,urinary bladder,urothelial cells,Low,Enhanced
+ENSG00000136231,IGF2BP3,vagina,squamous epithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,adipose tissue,adipocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,adrenal gland,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,appendix,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,appendix,lymphoid tissue,Not detected,Enhanced
+ENSG00000148848,ADAM12,bone marrow,hematopoietic cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,breast,adipocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,breast,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,breast,myoepithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,bronchus,respiratory epithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,caudate,glial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,caudate,neuronal cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,cerebellum,cells in granular layer,Not detected,Enhanced
+ENSG00000148848,ADAM12,cerebellum,cells in molecular layer,Not detected,Enhanced
+ENSG00000148848,ADAM12,cerebellum,Purkinje cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,cerebral cortex,endothelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,cerebral cortex,glial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,cerebral cortex,neuronal cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,cerebral cortex,neuropil,Not detected,Enhanced
+ENSG00000148848,ADAM12,cervix,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,cervix,squamous epithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,colon,endothelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,colon,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,colon,peripheral nerve/ganglion,Not detected,Enhanced
+ENSG00000148848,ADAM12,duodenum,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,endometrium 1,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000148848,ADAM12,endometrium 1,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,endometrium 2,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000148848,ADAM12,endometrium 2,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,epididymis,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,esophagus,squamous epithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,fallopian tube,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,gallbladder,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,heart muscle,cardiomyocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,hippocampus,glial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,hippocampus,neuronal cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,kidney,cells in glomeruli,Not detected,Enhanced
+ENSG00000148848,ADAM12,kidney,cells in tubules,Not detected,Enhanced
+ENSG00000148848,ADAM12,liver,cholangiocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,liver,hepatocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,lung,alveolar cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,lung,macrophages,Not detected,Enhanced
+ENSG00000148848,ADAM12,lymph node,germinal center cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,lymph node,non-germinal center cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,nasopharynx,respiratory epithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,oral mucosa,squamous epithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,ovary,follicle cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,ovary,ovarian stroma cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,pancreas,exocrine glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,pancreas,pancreatic endocrine cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,parathyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,placenta,cytotrophoblasts,Not detected,Enhanced
+ENSG00000148848,ADAM12,placenta,decidual cells,Medium,Enhanced
+ENSG00000148848,ADAM12,placenta,endothelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,placenta,hofbauer cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,placenta,syncytiotrophoblasts - cell body,High,Enhanced
+ENSG00000148848,ADAM12,placenta,syncytiotrophoblasts - microvilli,Not detected,Enhanced
+ENSG00000148848,ADAM12,prostate,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,rectum,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,salivary gland,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,seminal vesicle,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,skeletal muscle,myocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,skin 1,fibroblasts,Not detected,Enhanced
+ENSG00000148848,ADAM12,skin 1,keratinocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,skin 1,Langerhans,Not detected,Enhanced
+ENSG00000148848,ADAM12,skin 1,melanocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,skin 2,epidermal cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,small intestine,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,smooth muscle,smooth muscle cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,soft tissue 1,chondrocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,soft tissue 1,fibroblasts,Not detected,Enhanced
+ENSG00000148848,ADAM12,soft tissue 2,fibroblasts,Not detected,Enhanced
+ENSG00000148848,ADAM12,soft tissue 2,peripheral nerve,Not detected,Enhanced
+ENSG00000148848,ADAM12,spleen,cells in red pulp,Not detected,Enhanced
+ENSG00000148848,ADAM12,spleen,cells in white pulp,Not detected,Enhanced
+ENSG00000148848,ADAM12,stomach 1,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,stomach 2,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,testis,elongated or late spermatids,High,Enhanced
+ENSG00000148848,ADAM12,testis,Leydig cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,testis,pachytene spermatocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,testis,peritubular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,testis,preleptotene spermatocytes,Not detected,Enhanced
+ENSG00000148848,ADAM12,testis,round or early spermatids,Not detected,Enhanced
+ENSG00000148848,ADAM12,testis,sertoli cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,testis,spermatogonia cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,thyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,tonsil,germinal center cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,tonsil,non-germinal center cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,tonsil,squamous epithelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,urinary bladder,urothelial cells,Not detected,Enhanced
+ENSG00000148848,ADAM12,vagina,squamous epithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,adipose tissue,adipocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,adrenal gland,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,appendix,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,appendix,lymphoid tissue,Not detected,Enhanced
+ENSG00000170965,PLAC1,bone marrow,hematopoietic cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,breast,adipocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,breast,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,breast,myoepithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,bronchus,respiratory epithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,caudate,glial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,caudate,neuronal cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,cerebellum,cells in granular layer,Not detected,Enhanced
+ENSG00000170965,PLAC1,cerebellum,cells in molecular layer,Not detected,Enhanced
+ENSG00000170965,PLAC1,cerebellum,Purkinje cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,cerebral cortex,endothelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,cerebral cortex,glial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,cerebral cortex,neuronal cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,cerebral cortex,neuropil,Not detected,Enhanced
+ENSG00000170965,PLAC1,cervix,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,cervix,squamous epithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,colon,endothelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,colon,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,colon,peripheral nerve/ganglion,Not detected,Enhanced
+ENSG00000170965,PLAC1,duodenum,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,endometrium 1,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000170965,PLAC1,endometrium 1,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,endometrium 2,cells in endometrial stroma,Not detected,Enhanced
+ENSG00000170965,PLAC1,endometrium 2,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,epididymis,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,esophagus,squamous epithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,fallopian tube,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,gallbladder,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,heart muscle,cardiomyocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,hippocampus,glial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,hippocampus,neuronal cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,kidney,cells in glomeruli,Not detected,Enhanced
+ENSG00000170965,PLAC1,kidney,cells in tubules,Not detected,Enhanced
+ENSG00000170965,PLAC1,liver,cholangiocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,liver,hepatocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,lung,alveolar cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,lung,macrophages,Not detected,Enhanced
+ENSG00000170965,PLAC1,lymph node,germinal center cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,lymph node,non-germinal center cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,nasopharynx,respiratory epithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,oral mucosa,squamous epithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,ovary,follicle cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,ovary,ovarian stroma cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,pancreas,exocrine glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,pancreas,pancreatic endocrine cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,parathyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,placenta,cytotrophoblasts,High,Enhanced
+ENSG00000170965,PLAC1,placenta,decidual cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,placenta,endothelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,placenta,hofbauer cells,High,Enhanced
+ENSG00000170965,PLAC1,placenta,syncytiotrophoblasts - cell body,Medium,Enhanced
+ENSG00000170965,PLAC1,placenta,syncytiotrophoblasts - microvilli,Not detected,Enhanced
+ENSG00000170965,PLAC1,prostate,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,rectum,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,salivary gland,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,seminal vesicle,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,skeletal muscle,myocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,skin 1,fibroblasts,Not detected,Enhanced
+ENSG00000170965,PLAC1,skin 1,keratinocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,skin 1,Langerhans,Not detected,Enhanced
+ENSG00000170965,PLAC1,skin 1,melanocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,skin 2,epidermal cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,small intestine,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,smooth muscle,smooth muscle cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,soft tissue 1,chondrocytes,Not detected,Enhanced
+ENSG00000170965,PLAC1,soft tissue 1,fibroblasts,Not detected,Enhanced
+ENSG00000170965,PLAC1,soft tissue 2,fibroblasts,Not detected,Enhanced
+ENSG00000170965,PLAC1,soft tissue 2,peripheral nerve,Not detected,Enhanced
+ENSG00000170965,PLAC1,spleen,cells in red pulp,Not detected,Enhanced
+ENSG00000170965,PLAC1,spleen,cells in white pulp,Not detected,Enhanced
+ENSG00000170965,PLAC1,stomach 1,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,stomach 2,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,testis,cells in seminiferous ducts,Not detected,Enhanced
+ENSG00000170965,PLAC1,testis,Leydig cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,thyroid gland,glandular cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,tonsil,germinal center cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,tonsil,non-germinal center cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,tonsil,squamous epithelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,urinary bladder,urothelial cells,Not detected,Enhanced
+ENSG00000170965,PLAC1,vagina,squamous epithelial cells,Not detected,Enhanced
+ENSG00000177058,SLC38A9,adipose tissue,adipocytes,Not detected,Uncertain
+ENSG00000177058,SLC38A9,adrenal gland,glandular cells,Medium,Uncertain
+ENSG00000177058,SLC38A9,appendix,glandular cells,Low,Uncertain
+ENSG00000177058,SLC38A9,appendix,lymphoid tissue,Not detected,Uncertain
+ENSG00000177058,SLC38A9,bone marrow,hematopoietic cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,breast,adipocytes,Not detected,Uncertain
+ENSG00000177058,SLC38A9,breast,glandular cells,Low,Uncertain
+ENSG00000177058,SLC38A9,breast,myoepithelial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,bronchus,respiratory epithelial cells,Medium,Uncertain
+ENSG00000177058,SLC38A9,caudate,glial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,caudate,neuronal cells,Low,Uncertain
+ENSG00000177058,SLC38A9,cerebral cortex,endothelial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,cerebral cortex,glial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,cerebral cortex,neuronal cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,cerebral cortex,neuropil,Not detected,Uncertain
+ENSG00000177058,SLC38A9,cervix,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,cervix,squamous epithelial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,colon,endothelial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,colon,glandular cells,Low,Uncertain
+ENSG00000177058,SLC38A9,colon,peripheral nerve/ganglion,Not detected,Uncertain
+ENSG00000177058,SLC38A9,duodenum,glandular cells,High,Uncertain
+ENSG00000177058,SLC38A9,endometrium 1,cells in endometrial stroma,Not detected,Uncertain
+ENSG00000177058,SLC38A9,endometrium 1,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,endometrium 2,cells in endometrial stroma,Not detected,Uncertain
+ENSG00000177058,SLC38A9,endometrium 2,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,epididymis,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,esophagus,squamous epithelial cells,Medium,Uncertain
+ENSG00000177058,SLC38A9,fallopian tube,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,gallbladder,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,heart muscle,cardiomyocytes,Not detected,Uncertain
+ENSG00000177058,SLC38A9,hippocampus,glial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,hippocampus,neuronal cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,kidney,cells in glomeruli,Not detected,Uncertain
+ENSG00000177058,SLC38A9,kidney,cells in tubules,Not detected,Uncertain
+ENSG00000177058,SLC38A9,liver,cholangiocytes,Not detected,Uncertain
+ENSG00000177058,SLC38A9,liver,hepatocytes,High,Uncertain
+ENSG00000177058,SLC38A9,lung,alveolar cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,lung,macrophages,Not detected,Uncertain
+ENSG00000177058,SLC38A9,lymph node,non-germinal center cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,nasopharynx,respiratory epithelial cells,Medium,Uncertain
+ENSG00000177058,SLC38A9,ovary,follicle cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,ovary,ovarian stroma cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,pancreas,exocrine glandular cells,Low,Uncertain
+ENSG00000177058,SLC38A9,pancreas,pancreatic endocrine cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,parathyroid gland,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,placenta,decidual cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,placenta,trophoblastic cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,prostate,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,rectum,glandular cells,Low,Uncertain
+ENSG00000177058,SLC38A9,salivary gland,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,seminal vesicle,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,skeletal muscle,myocytes,Not detected,Uncertain
+ENSG00000177058,SLC38A9,skin 1,fibroblasts,Not detected,Uncertain
+ENSG00000177058,SLC38A9,skin 1,keratinocytes,Not detected,Uncertain
+ENSG00000177058,SLC38A9,skin 1,Langerhans,Not detected,Uncertain
+ENSG00000177058,SLC38A9,skin 1,melanocytes,Low,Uncertain
+ENSG00000177058,SLC38A9,skin 2,epidermal cells,Low,Uncertain
+ENSG00000177058,SLC38A9,small intestine,glandular cells,High,Uncertain
+ENSG00000177058,SLC38A9,smooth muscle,smooth muscle cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,soft tissue 1,chondrocytes,Not detected,Uncertain
+ENSG00000177058,SLC38A9,soft tissue 1,fibroblasts,Not detected,Uncertain
+ENSG00000177058,SLC38A9,soft tissue 2,fibroblasts,Not detected,Uncertain
+ENSG00000177058,SLC38A9,spleen,cells in red pulp,Not detected,Uncertain
+ENSG00000177058,SLC38A9,spleen,cells in white pulp,Not detected,Uncertain
+ENSG00000177058,SLC38A9,stomach 1,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,stomach 2,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,testis,cells in seminiferous ducts,Not detected,Uncertain
+ENSG00000177058,SLC38A9,testis,Leydig cells,Low,Uncertain
+ENSG00000177058,SLC38A9,thyroid gland,glandular cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,tonsil,germinal center cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,tonsil,non-germinal center cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,tonsil,squamous epithelial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,urinary bladder,urothelial cells,Not detected,Uncertain
+ENSG00000177058,SLC38A9,vagina,squamous epithelial cells,Not detected,Uncertain
+ENSG00000189052,CGB5,adipose tissue,adipocytes,Not detected,Supported
+ENSG00000189052,CGB5,adrenal gland,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,appendix,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,appendix,lymphoid tissue,Not detected,Supported
+ENSG00000189052,CGB5,bone marrow,hematopoietic cells,Not detected,Supported
+ENSG00000189052,CGB5,breast,adipocytes,Not detected,Supported
+ENSG00000189052,CGB5,breast,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,breast,myoepithelial cells,Not detected,Supported
+ENSG00000189052,CGB5,bronchus,respiratory epithelial cells,Not detected,Supported
+ENSG00000189052,CGB5,caudate,glial cells,Not detected,Supported
+ENSG00000189052,CGB5,caudate,neuronal cells,Not detected,Supported
+ENSG00000189052,CGB5,cerebellum,cells in granular layer,Not detected,Supported
+ENSG00000189052,CGB5,cerebellum,cells in molecular layer,Not detected,Supported
+ENSG00000189052,CGB5,cerebellum,Purkinje cells,Not detected,Supported
+ENSG00000189052,CGB5,cerebral cortex,endothelial cells,Not detected,Supported
+ENSG00000189052,CGB5,cerebral cortex,glial cells,Not detected,Supported
+ENSG00000189052,CGB5,cerebral cortex,neuronal cells,Not detected,Supported
+ENSG00000189052,CGB5,cerebral cortex,neuropil,Not detected,Supported
+ENSG00000189052,CGB5,cervix,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,cervix,squamous epithelial cells,Not detected,Supported
+ENSG00000189052,CGB5,colon,endothelial cells,Not detected,Supported
+ENSG00000189052,CGB5,colon,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,colon,peripheral nerve/ganglion,Not detected,Supported
+ENSG00000189052,CGB5,duodenum,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,endometrium 1,cells in endometrial stroma,Not detected,Supported
+ENSG00000189052,CGB5,endometrium 1,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,endometrium 2,cells in endometrial stroma,Not detected,Supported
+ENSG00000189052,CGB5,endometrium 2,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,epididymis,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,esophagus,squamous epithelial cells,Not detected,Supported
+ENSG00000189052,CGB5,fallopian tube,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,gallbladder,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,heart muscle,cardiomyocytes,Not detected,Supported
+ENSG00000189052,CGB5,hippocampus,glial cells,Not detected,Supported
+ENSG00000189052,CGB5,hippocampus,neuronal cells,Not detected,Supported
+ENSG00000189052,CGB5,kidney,cells in glomeruli,Not detected,Supported
+ENSG00000189052,CGB5,kidney,cells in tubules,Not detected,Supported
+ENSG00000189052,CGB5,liver,cholangiocytes,Not detected,Supported
+ENSG00000189052,CGB5,liver,hepatocytes,Not detected,Supported
+ENSG00000189052,CGB5,lung,alveolar cells,Not detected,Supported
+ENSG00000189052,CGB5,lung,macrophages,Not detected,Supported
+ENSG00000189052,CGB5,lymph node,germinal center cells,Not detected,Supported
+ENSG00000189052,CGB5,lymph node,non-germinal center cells,Not detected,Supported
+ENSG00000189052,CGB5,nasopharynx,respiratory epithelial cells,Not detected,Supported
+ENSG00000189052,CGB5,oral mucosa,squamous epithelial cells,Not detected,Supported
+ENSG00000189052,CGB5,ovary,follicle cells,Not detected,Supported
+ENSG00000189052,CGB5,ovary,ovarian stroma cells,Not detected,Supported
+ENSG00000189052,CGB5,pancreas,exocrine glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,pancreas,pancreatic endocrine cells,Not detected,Supported
+ENSG00000189052,CGB5,parathyroid gland,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,placenta,decidual cells,Not detected,Supported
+ENSG00000189052,CGB5,placenta,trophoblastic cells,Medium,Supported
+ENSG00000189052,CGB5,prostate,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,rectum,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,salivary gland,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,seminal vesicle,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,skeletal muscle,myocytes,Not detected,Supported
+ENSG00000189052,CGB5,skin 1,fibroblasts,Not detected,Supported
+ENSG00000189052,CGB5,skin 1,keratinocytes,Not detected,Supported
+ENSG00000189052,CGB5,skin 1,Langerhans,Not detected,Supported
+ENSG00000189052,CGB5,skin 1,melanocytes,Not detected,Supported
+ENSG00000189052,CGB5,skin 2,epidermal cells,Not detected,Supported
+ENSG00000189052,CGB5,small intestine,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,smooth muscle,smooth muscle cells,Not detected,Supported
+ENSG00000189052,CGB5,soft tissue 1,chondrocytes,Not detected,Supported
+ENSG00000189052,CGB5,soft tissue 1,fibroblasts,Not detected,Supported
+ENSG00000189052,CGB5,soft tissue 1,peripheral nerve,Not detected,Supported
+ENSG00000189052,CGB5,soft tissue 2,fibroblasts,Not detected,Supported
+ENSG00000189052,CGB5,soft tissue 2,peripheral nerve,Not detected,Supported
+ENSG00000189052,CGB5,spleen,cells in red pulp,Not detected,Supported
+ENSG00000189052,CGB5,spleen,cells in white pulp,Not detected,Supported
+ENSG00000189052,CGB5,stomach 1,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,stomach 2,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,testis,elongated or late spermatids,Not detected,Supported
+ENSG00000189052,CGB5,testis,Leydig cells,Medium,Supported
+ENSG00000189052,CGB5,testis,pachytene spermatocytes,Not detected,Supported
+ENSG00000189052,CGB5,testis,peritubular cells,Not detected,Supported
+ENSG00000189052,CGB5,testis,preleptotene spermatocytes,Not detected,Supported
+ENSG00000189052,CGB5,testis,round or early spermatids,Not detected,Supported
+ENSG00000189052,CGB5,testis,sertoli cells,Not detected,Supported
+ENSG00000189052,CGB5,testis,spermatogonia cells,Medium,Supported
+ENSG00000189052,CGB5,thyroid gland,glandular cells,Not detected,Supported
+ENSG00000189052,CGB5,tonsil,germinal center cells,Not detected,Supported
+ENSG00000189052,CGB5,tonsil,non-germinal center cells,Not detected,Supported
+ENSG00000189052,CGB5,tonsil,squamous epithelial cells,Not detected,Supported
+ENSG00000189052,CGB5,urinary bladder,urothelial cells,Not detected,Supported
+ENSG00000189052,CGB5,vagina,squamous epithelial cells,Not detected,Supported
