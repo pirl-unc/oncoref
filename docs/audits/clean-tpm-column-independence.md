@@ -46,4 +46,19 @@ missing measurements, reordered/subselected columns, input immutability,
 scale invariance, and unavailable compartments. `tests/test_expression.py`
 checks the public pan-cancer budgets and verifies that gene filtering preserves
 the full-reference values. The original failing environment remains useful for
-confirming the historical reproduction and downstream guards.
+confirming the historical reproduction.
+
+## Downstream confirmation
+
+On 2026-09-23, both pirlygenes guards named in #541 passed against this checkout
+with `pytest --runxfail`, so expected-failure markers could not hide a failure:
+
+- `test_pan_cancer_expression_normalize_tpm_clean_fixed_fraction`
+- `test_pan_cancer_expression_normalize_tpm_clean_pins_cols_to_million`
+
+The run used pirlygenes' Python 3.12.6 virtualenv, pandas 3.0.5, and NumPy 2.5.2.
+Its checkout was `cefb19ce20ede3aa3d6e3d563eef9c31136930ba`; local changes to the
+test file added the issue commentary and non-strict xfail decorators, leaving
+the two test bodies unchanged. This confirms the current downstream contract,
+not the root cause of the historical multi-percent drift. The test file and
+its local changes were left intact.
