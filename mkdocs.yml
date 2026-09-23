@@ -9,5 +9,7 @@ nav:
   - Figures: figures.md
   - Curation Audit: curation-audit.md
   - SRA Expression Sources: sra-expression-integration.md
+  - Placental CTA Sources: cta-publication-sources.md
+  - Bradley CTA Audit: cta-bradley-audit.md
   - HPA Cancer Reference: hpa-cancer-reference.md
   - API Guide: api.md
