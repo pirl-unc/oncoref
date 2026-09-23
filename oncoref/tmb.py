@@ -116,6 +116,10 @@ _TMB_EVIDENCE_OVERRIDES = {
         "estimate_type": "sample_recomputed",
         "source_scope": "tcga_pancancer_normal_like_expression_subtype",
     },
+    "BRCA_TNBC": {
+        "estimate_type": "sample_recomputed",
+        "source_scope": "tcga_primary_receptor_defined_tnbc_rna_samples",
+    },
     "UCEC_CNL": {
         "estimate_type": "reported_summary",
         "source_scope": "tcga_copy_number_low_molecular_class",

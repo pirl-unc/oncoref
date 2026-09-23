@@ -1,0 +1,56 @@
+{
+  "source_cohort": "TREEHOUSE_POLYA_25_01_TCGA_BRCA_TNBC",
+  "revision": "0cc9138746c08b304f8dac92c31983e0ef44af1d",
+  "parent": {
+    "url": "https://github.com/pirl-unc/oncoref/releases/download/source-v5.22.10/BRCA_per_sample_tpm.parquet",
+    "sha256": "e07f737c4f8d068f5aaa4096129ab3be5253b112cdced3969f2514c8afc48fec"
+  },
+  "sources": {
+    "receptors": {
+      "filename": "brca_tcga_patient.tsv",
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga/data_clinical_patient.txt",
+      "sha256": "973b6e03436330e0563a15989d04fb3566a2c7cdc66db9aaa3badbb32c58badc"
+    },
+    "pam50": {
+      "filename": "brca_tcga_pan_can_atlas_2018_patient.tsv",
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018/data_clinical_patient.txt",
+      "sha256": "13c939025794ce21905ccb3409865fa08506b2283b432f8e3a3022f60a4c7682"
+    },
+    "tmb": {
+      "filename": "brca_tcga_pan_can_atlas_2018_sample.tsv",
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018/data_clinical_sample.txt",
+      "sha256": "e96e6e4895a6ddcdb31d508a9e8f5676ca78ce396d2f82cd111a286a17e75ca6"
+    },
+    "sequenced": {
+      "filename": "brca_tcga_pan_can_atlas_2018_cases_sequenced.txt",
+      "url": "https://raw.githubusercontent.com/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/brca_tcga_pan_can_atlas_2018/case_lists/cases_sequenced.txt",
+      "sha256": "ae464df8154970f13b1cfe34e5538f9286abbe8bd13e1105474638ff2b45c19a"
+    }
+  },
+  "matrix_sha256": "c7400bcba8de2c6acc9a91595995d7e2bed69205d56665762dd74315b67510a2",
+  "n_genes": 34571,
+  "n_samples": 157,
+  "n_parent_samples": 1099,
+  "n_primary_samples": 1092,
+  "primary_receptor_states": {
+    "non_TNBC": 858,
+    "TNBC": 157,
+    "indeterminate": 77
+  },
+  "tnbc_pam50": {
+    "BRCA_Basal": 115,
+    "unavailable": 16,
+    "BRCA_Her2": 12,
+    "BRCA_Normal": 9,
+    "BRCA_LumA": 4,
+    "BRCA_LumB": 1
+  },
+  "tmb": {
+    "n": 156,
+    "median": 2.1166666665,
+    "mean": 3.2854700855320518,
+    "minimum": 0.0,
+    "maximum": 41.83333333
+  },
+  "limitations": "Historical categorical receptor calls, not modern threshold re-adjudication. Primary TCGA tissue is not the metastatic trial population. TMB is a portal-rate reanalysis of the same receptor-defined RNA samples with mutation profiles, not a published subgroup statistic or a reconstruction of callable bases. PAM50 is independent."
+}

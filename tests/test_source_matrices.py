@@ -220,15 +220,18 @@ def test_cohort_source_versions_avoid_republishing_unchanged_matrices(monkeypatc
     assert sm.source_matrix_version("CRANIO") == "5.22.11"
     assert sm.source_matrix_version("DIPG") == "5.22.11"
     assert sm.source_matrix_version("VSCC") == "5.22.12"
-    assert sm.source_matrix_version("MENINGIOMA") == sm.SOURCE_MATRIX_VERSION
+    assert sm.source_matrix_version("MENINGIOMA") == "5.22.13"
+    assert sm.source_matrix_version("BRCA_TNBC") == sm.SOURCE_MATRIX_VERSION
     assert "/source-v5.22.10/" in sm.release_url("LUAD")
     assert "/source-v5.22.11/" in sm.release_url("DIPG")
     assert "/source-v5.22.12/" in sm.release_url("VSCC")
-    assert f"/source-v{sm.SOURCE_MATRIX_VERSION}/" in sm.release_url("MENINGIOMA")
+    assert "/source-v5.22.13/" in sm.release_url("MENINGIOMA")
+    assert f"/source-v{sm.SOURCE_MATRIX_VERSION}/" in sm.release_url("BRCA_TNBC")
     assert sm.local_path("LUAD").parent.name == "v5.22.10"
     assert sm.local_path("DIPG").parent.name == "v5.22.11"
     assert sm.local_path("VSCC").parent.name == "v5.22.12"
-    assert sm.local_path("MENINGIOMA").parent.name == f"v{sm.SOURCE_MATRIX_VERSION}"
+    assert sm.local_path("MENINGIOMA").parent.name == "v5.22.13"
+    assert sm.local_path("BRCA_TNBC").parent.name == f"v{sm.SOURCE_MATRIX_VERSION}"
 
 
 def test_cache_and_fetch(monkeypatch, tmp_path):

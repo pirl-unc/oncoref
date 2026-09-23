@@ -645,6 +645,36 @@ sources:
       GDC STAR-counts build can coexist without clobbering Treehouse-derived
       artifacts.
 
+  - id: treehouse-polya-25-01-tcga-brca-tnbc
+    category: expression
+    cancer_codes: [BRCA_TNBC]
+    source_type: source-matrix-subset
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_BRCA_TNBC
+    source_project: Treehouse (TCGA-BRCA) x cBioPortal receptor status
+    source_version: Treehouse 25.01 PolyA; BRCA source-v5.22.10; cBioPortal datahub 0cc9138746c08b304f8dac92c31983e0ef44af1d
+    url: https://github.com/pirl-unc/oncoref/releases/download/source-v5.22.10/BRCA_per_sample_tpm.parquet
+    builder: scripts/build_brca_tnbc.py
+    unit: TPM
+    library_prep: polyA
+    citation: TCGA breast cancer receptor metadata (PMID 23000897); Treehouse Tumor Compendium 25.01 PolyA; cBioPortal datahub pinned revision.
+    source_pmid: PMID:23000897
+    source_scale_class: linear_rnaseq_tpm
+    linear_tpm_comparable: true
+    tpm_proxy: false
+    pipeline_stem: treehouse_polya_25_01_tcga_brca_tnbc
+    tumor_origin: primary
+    routed_samples_may_overlap: true
+    special_handling: >
+      Exact column subset of the checksum-pinned released BRCA raw TPM matrix.
+      Select primary tumor barcodes only and require reported ER-negative and
+      PR-negative IHC plus negative HER2 resolved from IHC/FISH categories.
+      Definite FISH resolves missing/equivocal/indeterminate IHC; conflicting
+      definite IHC/FISH calls remain indeterminate. Never impute from PAM50 or
+      expression. Preserve all parent samples and exclusion reasons in the
+      membership audit. 157 primary TNBC tumors; 77 primary cases indeterminate.
+      Overlaps the BRCA umbrella and PAM50 cohorts; never sum their counts.
+      See docs/audits/brca-tnbc.md for pinned inputs and reproduction commands.
+
   - id: treehouse-polya-25-01-tcga-brca-pam50
     category: expression
     cancer_codes: [BRCA_Basal, BRCA_HER2, BRCA_LumA, BRCA_LumB, BRCA_Normal]
