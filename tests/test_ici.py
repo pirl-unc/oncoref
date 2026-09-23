@@ -813,7 +813,7 @@ def test_subtype_stratified_aggregates_do_not_report_a_pooled_orr():
     # The stratified children each keep their own curated anchor.
     assert ici.cancer_ici_response("CRC_MSI") == 43.8
     assert ici.cancer_ici_response("KIRC") == 25.0
-    assert ici.cancer_ici_response("BRCA_Basal") is not None
+    assert ici.cancer_ici_response("BRCA_TNBC") is not None
     assert ici.cancer_ici_response("SARC_UPS") == 23.0
 
     # Gap rows stay out of the bulk value map and out of the regimen maps.
@@ -1027,8 +1027,8 @@ def test_gap_note_quoted_values_match_the_curated_anchors():
     renal = [orr("KIRC"), orr("KIRC", "PD-1+CTLA-4"), orr("KIRP"), orr("KICH")]
     assert (min(renal), max(renal)) == (9.5, 41.6)
     # BRCA note: "pembrolizumab 5.0% ... atezolizumab 10.0%"
-    assert orr("BRCA_Basal") == 5.3
-    assert orr("BRCA_Basal", "PD-L1") == 10.0
+    assert orr("BRCA_TNBC") == 5.3
+    assert orr("BRCA_TNBC", "PD-L1") == 10.0
     # SARC note: "0% in SARC_LMS and SARC_EWS ... 23% in SARC_UPS ... 25% in
     # SARC_SMARCA4 ... 0% in SARC_GIST"
     assert orr("SARC_LMS") == 0.0 and orr("SARC_EWS") == 0.0

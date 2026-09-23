@@ -430,7 +430,8 @@ Current gaps, with the reason recorded on each row:
 | --- | --- | --- |
 | `CRC` | mismatch-repair stratified: MSI-H/dMMR responds, MSS essentially does not | `CRC_MSI` |
 | `RCC` | member histologies anchored on separate trials spanning 9.5% to 41.6% | `KIRC`, `KIRP`, `KICH`, `RCC_NCC` |
-| `BRCA` | curated anchors are receptor-subtype (TNBC) anchors only | `BRCA_Basal` |
+| `BRCA` | curated anchors are receptor-subtype (TNBC) anchors only | `BRCA_TNBC` |
+| `BRCA_Basal` | TNBC trials do not estimate response in PAM50-selected basal-like disease | `BRCA_TNBC` for receptor-defined TNBC only |
 | `SARC` | histology-determined, from 0% (LMS, EWS, GIST) to 62% (KS) across curated histologies | per-histology `SARC_*` |
 | `UCEC_POLE` | selected case reports and small subgroups do not establish a representative subtype ORR | source-specific evidence in the audit |
 | `COAD`, `READ`, `UCEC` | legacy prevalence models are not measured ORRs | molecularly specified cohorts |

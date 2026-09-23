@@ -1,0 +1,7 @@
+pam50,TNBC,non_TNBC,indeterminate
+BRCA_Basal,115,33,23
+BRCA_Her2,12,56,9
+BRCA_LumA,4,472,22
+BRCA_LumB,1,183,13
+BRCA_Normal,9,22,4
+unavailable,16,92,6

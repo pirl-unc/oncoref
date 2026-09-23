@@ -44,6 +44,7 @@ def test_remaining_tmb_gap_stays_missing_even_with_numeric_ancestor(code):
         ("CTCL", 3.5, "median", "subtype_proxy", "source_checked_proxy"),
         ("LUAD_EGFR", 3.8, "median", "broader_cohort_proxy", "source_checked_proxy"),
         ("BRCA_Normal", 1.28, "median", "sample_recomputed_median", "source_checked"),
+        ("BRCA_TNBC", 2.12, "median", "sample_recomputed_median", "source_checked"),
         ("HCL", 0.2, "approximate", "approximate_capture_normalized", "approximation_reviewed"),
     ],
 )

@@ -14,8 +14,10 @@
 
 The focused rebuild must come from ``rebuild_expression_artifacts.py``. Rows and
 shards for its cancer codes replace any existing versions in the bundle; all
-other cohorts remain unchanged. Bundle-level sample totals are recomputed from
-the merged per-cohort metadata.
+other cohorts' expression values remain unchanged. Representative partitions
+are recomputed across the merged bundle so overlapping cohorts cannot assign
+one physical sample to both training and validation. Bundle-level sample totals
+are recomputed from the merged per-cohort metadata.
 """
 
 from __future__ import annotations
@@ -36,6 +38,11 @@ from oncoref.expression import (
     EXPRESSION_ARTIFACT_BUILD_METADATA_PATH,
     EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
     SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH,
+)
+from oncoref.representative_partitions import (
+    assign_representative_partitions,
+    representative_partition_build_metadata,
+    representative_partition_cohort_metadata,
 )
 
 _REPRESENTATIVE_PROVENANCE = "cancer-reference-expression-representatives/_provenance.csv"
@@ -64,14 +71,18 @@ def _merge_representative_provenance(
     rebuild_dir: Path,
     *,
     cancer_codes: set[str],
-) -> None:
+) -> pd.DataFrame:
     bundle_path = bundle_dir / _REPRESENTATIVE_PROVENANCE
     rebuild_path = rebuild_dir / _REPRESENTATIVE_PROVENANCE
     existing = pd.read_csv(bundle_path)
     rebuilt = pd.read_csv(rebuild_path)
     existing_codes = existing["representative_id"].astype(str).str.split("__").str[0]
     kept = existing[~existing_codes.isin(cancer_codes)]
-    pd.concat([kept, rebuilt], ignore_index=True, sort=False).to_csv(bundle_path, index=False)
+    merged = assign_representative_partitions(
+        pd.concat([kept, rebuilt], ignore_index=True, sort=False)
+    )
+    merged.to_csv(bundle_path, index=False)
+    return merged
 
 
 def _copy_rebuilt_shards(
@@ -207,7 +218,7 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
 
     _copy_rebuilt_shards(bundle_dir, rebuild_dir, cancer_codes=cancer_codes)
     _merge_reference_summaries(bundle_dir, rebuild_dir, cancer_codes=cancer_codes)
-    _merge_representative_provenance(
+    provenance = _merge_representative_provenance(
         bundle_dir,
         rebuild_dir,
         cancer_codes=cancer_codes,
@@ -221,6 +232,11 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
         bundle_dir / EXPRESSION_ARTIFACT_BUILD_METADATA_PATH,
         rebuilt_metadata_path,
         cancer_codes=cancer_codes,
+    )
+    partition_metadata = representative_partition_cohort_metadata(provenance)
+    partition_columns = partition_metadata.columns.drop("cancer_code")
+    metadata = metadata.drop(columns=partition_columns, errors="ignore").merge(
+        partition_metadata, on="cancer_code", how="left", validate="one_to_one"
     )
     if "build_source_cohort" not in metadata:
         metadata["build_source_cohort"] = metadata["source_cohort"]
@@ -247,6 +263,7 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
             "n_negative_values_clipped": _metadata_sum(metadata, "n_negative_values_clipped"),
             "sample_qc_fallbacks": int(fallback.fillna("").astype(str).str.strip().ne("").sum()),
             "derived_artifacts": derived_artifacts,
+            "representative_partition": representative_partition_build_metadata(provenance),
         }
     )
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
