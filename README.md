@@ -5,7 +5,7 @@
 
 Curated cancer reference data — cancer-type ontology, tumor mutational burden
 (TMB), incidence/mortality, checkpoint-inhibitor (ICI) response, per-cohort
-RNA-seq expression, Human Protein Atlas (HPA) normal-tissue expression, and
+RNA-seq expression, Human Protein Atlas (HPA) normal-tissue and cancer expression, and
 HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.

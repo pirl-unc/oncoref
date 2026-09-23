@@ -130,6 +130,12 @@ negative/nonfinite nonmissing measurements. ZIP metadata is fixed. Derived
 hashes are recorded in the package source manifest and
 [build audit](audits/hpa-cancer/build-audit.json).
 
+The [validation audit](audits/hpa-cancer/validation.json) checks genome-wide
+denominators, identities and comparison outcomes. The
+[archive audit](audits/hpa-cancer/archive-validation.json) verifies all 17
+uploaded assets against their server-side SHA-256 digests. Both runtime
+references were also downloaded into an empty cache and used from a built wheel.
+
 The plots preserve the checked-in legacy 253-gene plotting scope while the
 reference remains genome-wide. They contain 4,048 comparable gene/group rows,
 253 glioma scope mismatches and 759 unmatched rows. The

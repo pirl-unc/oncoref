@@ -10,5 +10,28 @@
   "absent_gene_comparison_empty": true,
   "rna_missing_source_gene_names": 4709,
   "pandas_version": "3.0.5",
-  "numpy_version": "2.5.2"
+  "numpy_version": "2.5.2",
+  "genome_wide_TCGA_comparison_statuses": {
+    "comparable": 244224,
+    "unmatched": 45933,
+    "scope_mismatch": 15312,
+    "missing_rna": 768
+  },
+  "genome_wide_validation_comparison_statuses": {
+    "missing_rna": 142766,
+    "comparable": 86962,
+    "unmatched": 45933,
+    "scope_mismatch": 15312,
+    "incomplete_rna_types": 15264
+  },
+  "installed_wheel_version": "1.8.201",
+  "installed_wheel_fresh_public_downloads": [
+    "hpa_cancer_ihc",
+    "hpa_cancer_rna"
+  ],
+  "installed_wheel_source_hashes_verified": true,
+  "installed_wheel_comparison_smoke_passed": true,
+  "local_full_suite_passed": 1450,
+  "focused_regressions_after_review_passed": 39,
+  "strict_documentation_build_passed": true
 }
