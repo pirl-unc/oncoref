@@ -22,6 +22,7 @@ RNA/IHC meets the reproductive-restriction and specificity rules.
 
 All nine exclusions fail the RNA gate. Four additionally fail IHC restriction.
 CAPN6 has no IHC evidence, so the stricter missing-protein RNA threshold applies.
+The matrix marks that cell as grey “no IHC”, separately from a measured IHC pass.
 No Bradley candidate is removed only by the later default specificity step.
 No thresholds or candidate membership were changed by this audit.
 
