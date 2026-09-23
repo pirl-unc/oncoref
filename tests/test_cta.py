@@ -211,6 +211,23 @@ def test_cta_symbol_for_alias_resolves_common_names():
     assert cta.cta_symbol_for_alias("not-a-gene") is None
 
 
+def test_spag4_retained_as_candidate_with_human_pancreas_caveat():
+    row = cta.cta_candidate_references().set_index("Symbol").loc["SPAG4"]
+    assert row["Ensembl_Gene_ID"] == "ENSG00000061656"
+    assert row["ct_designation"] == "CT127"
+    assert set(row["pmids"].split(";")) == {"14614621", "23602831"}
+    assert row["hpa_max_somatic_tissue"] == "pancreas"
+    assert row["hpa_max_somatic_ntpm"] == 87.3
+    assert row["hpa_testis_ntpm"] == 31.1
+    assert row["hpa_testis_restricted"] in (False, "False")
+    assert "SUN4" in row["rationale"] and "mouse" in row["rationale"]
+    audit = cta.cta_specificity_audit().set_index("Symbol").loc["SPAG4"]
+    assert audit["specificity_action"] == "candidate_only"
+    assert audit["in_candidate_watchlist"] and not audit["in_cta_table"]
+    assert "SPAG4" not in cta.cta_gene_names(include_warnings=True)
+    assert "SPAG4" not in cta.cta_clinical_target_gene_names()
+
+
 def test_cta_candidate_references_registry():
     # Top-of-funnel referenced candidate watchlist: every row carries an Ensembl
     # ID, a citation, and an HPA-restriction flag; none overlaps the curated set.

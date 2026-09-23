@@ -4347,6 +4347,37 @@ def test_pan_cancer_expression_preserves_unmeasured_source_values(monkeypatch):
     assert out.loc[1, "LUAD_TPM_clean"] == pytest.approx(normalization.BIOLOGICAL_FRACTION * 1e6)
 
 
+def test_pan_cancer_clean_budgets_and_filtering_use_full_reference(monkeypatch):
+    from oncoref import gene_families
+
+    reference = gene_families.clean_tpm_censored_reference_tpm()
+    ribosomal = next(
+        g for g in sorted(gene_families.clean_tpm_ribosomal_gene_ids()) if reference[g] > 0
+    )
+    technical = next(
+        g for g in sorted(gene_families.clean_tpm_other_technical_gene_ids()) if reference[g] > 0
+    )
+    fixture = pd.DataFrame(
+        {
+            "Ensembl_Gene_ID": [ribosomal, technical, "BIO1", "BIO2"],
+            "Symbol": ["RIBO", "TECH", "BIO1", "BIO2"],
+            **{f"nTPM_tissue{i}": [i + 1, 0.0, i + 2, i + 7] for i in range(121)},
+        }
+    )
+    _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, fixture)
+    full = expression.pan_cancer_expression().set_index("Ensembl_Gene_ID")
+    clean_columns = [c for c in full if c.endswith("_clean")]
+    np.testing.assert_allclose(full[clean_columns].sum(), 1e6, rtol=1e-12)
+    np.testing.assert_allclose(full.loc[ribosomal, clean_columns].astype(float), 160000)
+    np.testing.assert_allclose(full.loc[technical, clean_columns].astype(float), 90000)
+    for i in range(121):
+        assert full.loc["BIO1", f"tissue{i}_nTPM_clean"] == pytest.approx(
+            750000 * (i + 2) / (2 * i + 9)
+        )
+    selected = expression.pan_cancer_expression(genes="BIO1").set_index("Ensembl_Gene_ID")
+    pd.testing.assert_frame_equal(selected, full.loc[["BIO1"]])
+
+
 def test_pan_cancer_expression_raw_only(monkeypatch):
     _mock_pan_cancer_data_without_computed_aggregates(monkeypatch, _pan_cancer_fixture())
     out = expression.pan_cancer_expression(normalize=None)
