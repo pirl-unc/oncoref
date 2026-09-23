@@ -83,6 +83,7 @@ oncoref = [
     "data/*.csv",
     "data/*.csv.gz",
     "data/*.yaml",
+    "data/hpa-cancer-sources.json",
 ]
 
 [tool.setuptools.exclude-package-data]

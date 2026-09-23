@@ -317,6 +317,15 @@ from .hpa import (
     resolve_safety_tissue_group,
     safety_tissue_mapping_table,
 )
+from .hpa_cancer import (
+    hpa_cancer_assay_limitations,
+    hpa_cancer_crosswalk,
+    hpa_cancer_ihc_prevalence,
+    hpa_cancer_rna_cohorts,
+    hpa_cancer_rna_ihc_comparison,
+    hpa_cancer_rna_prevalence,
+    hpa_cancer_sources,
+)
 from .ici import (
     PROPORTION_METRICS,
     REGIMEN_FALLBACK,
@@ -722,6 +731,13 @@ __all__ = [
     "housekeeping_cancer_expression_coverage_summary",
     "housekeeping_reference_profile",
     # HPA normal-tissue reference data
+    "hpa_cancer_assay_limitations",
+    "hpa_cancer_crosswalk",
+    "hpa_cancer_ihc_prevalence",
+    "hpa_cancer_rna_cohorts",
+    "hpa_cancer_rna_ihc_comparison",
+    "hpa_cancer_rna_prevalence",
+    "hpa_cancer_sources",
     "hpa_cell_type_expression",
     "hpa_housekeeping_candidates",
     "hpa_normal_tissue",

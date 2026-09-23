@@ -62,10 +62,16 @@ def test_status_shape(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_DATA_DIR", str(tmp_path))
     rows = reference_data.status()
     names = {r["name"] for r in rows}
-    assert names == {"hpa_rna_consensus", "hpa_normal_tissue", "hpa_single_cell"}
+    assert names == set(reference_data.REFERENCE_SOURCES)
     assert all(r["cached"] is False for r in rows)  # nothing downloaded
-    assert all(r["verification_state"] == "no_manifest" for r in rows)
-    assert all(r["sha256"] is None for r in rows)
+    for row in rows:
+        if row["name"].startswith("hpa_cancer_"):
+            assert row["verification_state"] == "missing_file"
+            assert row["default_version"] == "v25.1-1"
+            assert len(row["sha256"]) == 64
+        else:
+            assert row["verification_state"] == "no_manifest"
+            assert row["sha256"] is None
 
 
 def test_single_cell_registered():

@@ -600,6 +600,18 @@ does not establish tumor protein presence, antigen presentation, or safety.
 Use the CPTAC table for matched tumor calibration and keep downstream ranking or
 threshold policy in the consumer.
 
+## HPA cancer IHC and RNA
+
+`hpa_cancer_ihc_prevalence()` returns genome-wide scored-patient IHC counts and
+fractions. `hpa_cancer_rna_prevalence(cohort="TCGA")` returns native-pTPM RNA
+summaries with measured denominators and threshold-positive counts.
+`hpa_cancer_rna_ihc_comparison()` joins unpaired cohort summaries using an
+explicit crosswalk, retaining missing, incomplete and mismatched groups.
+
+See the [HPA cancer reference guide](hpa-cancer-reference.md) for source release
+and hashes, missingness rules, weighted pooling, antibody limitations, six
+comparison plots and the downstream migration contract.
+
 ## CTA Antigens
 
 A cancer-testis antigen (CTA) is encoded by a gene that is normally restricted

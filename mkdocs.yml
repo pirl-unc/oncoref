@@ -9,4 +9,5 @@ nav:
   - Figures: figures.md
   - Curation Audit: curation-audit.md
   - SRA Expression Sources: sra-expression-integration.md
+  - HPA Cancer Reference: hpa-cancer-reference.md
   - API Guide: api.md

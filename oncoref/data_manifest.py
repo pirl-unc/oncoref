@@ -212,6 +212,9 @@ HPA: dict[str, tuple[str, str]] = {
     "hpa_rna_consensus": ("hpa", "HPA RNA consensus per-tissue nTPM"),
     "hpa_normal_tissue": ("hpa", "HPA IHC protein detection per tissue"),
     "hpa_single_cell": ("hpa", "HPA single-cell-type RNA nTPM"),
+    "hpa_cancer_ihc": ("hpa", "HPA cancer IHC scored-patient counts"),
+    "hpa_cancer_rna": ("hpa", "HPA cancer RNA pTPM counts and prevalence by cohort"),
+    "hpa_cancer_rna_samples": ("hpa", "HPA cancer sample pTPM source (gzip; 1.36 GB)"),
 }
 
 #: The raw per-sample TPM matrices — every derived artifact is built from these.
@@ -232,6 +235,8 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "hpa-cancer-crosswalk": ("hpa", "IHC/RNA cancer correspondence and scope limitations"),
+    "hpa-cancer-rna-cohorts": ("hpa", "HPA TCGA/validation RNA labels and sample counts"),
     "legacy-dataset-dispositions": (
         "governance",
         "reviewed owner/replacement and freeze policy for every legacy-compat dataset",

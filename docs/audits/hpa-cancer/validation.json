@@ -1,0 +1,14 @@
+{
+  "rna_unique_gene_type_cohort": true,
+  "ihc_unique_gene_group": true,
+  "ihc_count_conservation": true,
+  "all_observed_ihc_denominators_positive": true,
+  "rna_count_conservation": true,
+  "rna_threshold_counts_monotonic": true,
+  "rna_prevalence_and_means_match_counts_and_sums": true,
+  "source_cohort_metadata_matches_archives": true,
+  "absent_gene_comparison_empty": true,
+  "rna_missing_source_gene_names": 4709,
+  "pandas_version": "3.0.5",
+  "numpy_version": "2.5.2"
+}

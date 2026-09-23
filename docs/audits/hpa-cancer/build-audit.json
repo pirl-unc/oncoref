@@ -1,0 +1,26 @@
+{
+  "scope": "genome-wide",
+  "hpa_release": "25.1",
+  "rna_sample_rows": 166373192,
+  "rna_genes": 19973,
+  "rna_summary_rows": 610303,
+  "rna_rows_by_cohort": {
+    "TCGA": 419433,
+    "validation": 190870
+  },
+  "explicit_missing_rna_measurements": 0,
+  "ihc_rows": 306237,
+  "ihc_genes": 15312,
+  "ihc_groups": 20,
+  "ihc_status_counts": {
+    "measured": 306237
+  },
+  "artifact": {
+    "description": "HPA 25.1 cancer RNA native-pTPM prevalence (genome-wide; TCGA/validation separate)",
+    "filename": "hpa_cancer_rna_summary.tsv",
+    "url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/hpa_cancer_rna_summary.tsv.zip",
+    "archive_sha256": "4371ed4eefa9cdded1504138d1a592cc2d86cd51bf4cf7535c030fcf2e79ef94",
+    "sha256": "6f24cb197f30be928e3daaaaea7ee44e0d93605f0937f113ad8e2c5679d73692",
+    "bytes": 130080465
+  }
+}
