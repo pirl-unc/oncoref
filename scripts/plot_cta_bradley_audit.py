@@ -92,13 +92,27 @@ def plot(out):
     fig.tight_layout()
     save(fig, out / "bradley-rna-gates")
     columns = ["coding_gate_pass", "protein_gate_pass", "rna_gate_pass", "default_panel"]
-    values = audit[columns].astype(int).to_numpy()
+    values = audit[columns].astype(float).to_numpy()
+    values[~audit.has_protein_evidence.to_numpy(), 1] = np.nan
     fig, ax = plt.subplots(figsize=(8.5, 6))
     from matplotlib.colors import ListedColormap
 
-    ax.imshow(values, cmap=ListedColormap(["#eee5df", "#83b79a"]), vmin=0, vmax=1, aspect="auto")
+    ax.imshow(
+        values,
+        cmap=ListedColormap(["#eee5df", "#83b79a"]).with_extremes(bad="#e6e6e6"),
+        vmin=0,
+        vmax=1,
+        aspect="auto",
+    )
     for (i, j), val in np.ndenumerate(values):
-        ax.text(j, i, "pass" if val else "fail", ha="center", va="center", fontsize=10)
+        ax.text(
+            j,
+            i,
+            "no IHC" if np.isnan(val) else ("pass" if val else "fail"),
+            ha="center",
+            va="center",
+            fontsize=10,
+        )
     ax.set_xticks(
         range(4), ["Protein-coding", "IHC restriction*", "RNA threshold", "Default panel"]
     )
