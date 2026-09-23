@@ -27,6 +27,17 @@ def test_complete_published_lists_and_citations():
     assert publication_sources().input_sha256.str.fullmatch("[a-f0-9]{64}").all()
 
 
+def test_import_rejects_an_edited_workbook_before_parsing(tmp_path):
+    import pytest
+
+    from oncoref.cta_sources import extract_publications
+
+    path = tmp_path / "edited.xlsx"
+    path.write_bytes(b"not the published workbook")
+    with pytest.raises(ValueError, match="checksum"):
+        extract_publications(path)
+
+
 def test_historical_annotation_is_preserved_without_promoting_noncoding():
     refs = publication_membership()
     erv = refs[refs.source_symbol.eq("ERVH48-1")].iloc[0]

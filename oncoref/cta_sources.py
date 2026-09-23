@@ -7,6 +7,8 @@ the HPA candidate table; source membership never overrides specificity filters.
 
 from __future__ import annotations
 
+import hashlib
+
 import pandas as pd
 
 from .gene_ids import canonical_gene_id, canonical_gene_space
@@ -93,6 +95,16 @@ def extract_publications(gong_workbook) -> pd.DataFrame:
     Source IDs/labels/biotypes remain unchanged. Resolve Gong by its source
     Ensembl ID, never by a potentially ambiguous historical symbol fallback.
     """
+    # The row-count checks alone cannot detect a different or edited workbook.
+    # Pin the original published input before interpreting any of its cells.
+    from pathlib import Path
+
+    sources = publication_sources()
+    expected = set(sources.loc[sources.source_tag.isin([GONG_PC, GONG_NC]), "input_sha256"])
+    actual = hashlib.sha256(Path(gong_workbook).read_bytes()).hexdigest()
+    if len(expected) != 1 or actual not in expected:
+        raise ValueError("Gong workbook checksum differs from the curated publication source")
+
     import openpyxl
 
     workbook = openpyxl.load_workbook(gong_workbook, read_only=True, data_only=True)
