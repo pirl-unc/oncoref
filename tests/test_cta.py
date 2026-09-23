@@ -268,7 +268,10 @@ def test_clinical_cta_target_tier_keeps_strict_default_conservative():
     assert leaky <= cta.cta_excluded_clinical_target_gene_names()
     assert leaky <= cta.cta_excluded_gene_names()
     assert not (leaky & cta.cta_filtered_gene_names())
-    assert not ({"MAGEC3", "PAGE4", "CSAG1"} & cta.cta_unfiltered_gene_names())
+    assert not ({"MAGEC3", "CSAG1"} & cta.cta_unfiltered_gene_names())
+    assert "PAGE4" in cta.cta_unfiltered_gene_names()
+    assert "PAGE4" not in cta.cta_gene_names()
+    assert "PAGE4" in cta.cta_excluded_clinical_target_gene_names()
 
     evidence = cta.cta_clinical_target_evidence().set_index("Symbol")
     assert set(evidence.loc[sorted(leaky), "evidence_tier"]) == {"excluded"}
@@ -278,7 +281,14 @@ def test_clinical_cta_target_tier_keeps_strict_default_conservative():
     assert float(evidence.loc["CTAG2", "exclusion_driver_ntpm"]) == 5.1
 
     assert evidence.loc["MAGEC3", "evidence_tier"] == "candidate"
-    assert evidence.loc["PAGE4", "evidence_tier"] == "candidate"
+    assert evidence.loc["PAGE4", "evidence_tier"] == "excluded"
+    assert evidence.loc["PAGE4", "candidate_source"] == "literature_cta"
+    assert "21357425" in evidence.loc["PAGE4", "candidate_pmids"]
+    # The CTA somatic-max scope excludes accessory reproductive tissues;
+    # the preserved historical watchlist also reports prostate expression.
+    assert evidence.loc["PAGE4", "exclusion_driver_tissue"] == "smooth muscle"
+    assert float(evidence.loc["PAGE4", "exclusion_driver_ntpm"]) == 23.3
+    assert evidence.loc["PAGE4", "hpa_max_somatic_tissue"] == "prostate"
     assert evidence.loc["CSAG1", "evidence_tier"] == "candidate"
     assert evidence.loc["CSAG1", "candidate_source"] == "literature_cta"
     assert "PMID:12039054" in evidence.loc["CSAG1", "pmids"]
@@ -308,7 +318,10 @@ def test_cta_specificity_audit_surfaces_demotions_and_candidate_only_rows():
 
     assert audit.loc["PAGE4", "specificity_status"] == "candidate_weak_specificity"
     assert audit.loc["PAGE4", "candidate_source"] == "literature_cta"
-    assert not audit.loc["PAGE4", "in_cta_table"]
+    assert audit.loc["PAGE4", "in_cta_table"]
+    assert not audit.loc["PAGE4", "in_candidate_watchlist"]
+    assert "PAGE4" not in set(cta.cta_candidate_references().Symbol)
+    assert "PAGE4" in set(cta.cta_candidate_references(include_in_table=True).Symbol)
     assert audit.loc["CSAG1", "specificity_status"] == "candidate_pending_hpa_audit"
     assert "PMID:12039054" in audit.loc["CSAG1", "pmids"]
 

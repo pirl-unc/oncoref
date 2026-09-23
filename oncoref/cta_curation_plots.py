@@ -51,6 +51,8 @@ from .load_dataset import get_data
 # subset, is a primary source. Both tags coexist in the packaged table, so the
 # predicate has to test for the protein suffix specifically.
 PRIMARY_SOURCES = {
+    "Gong 2021": lambda tags: bool(tags & {"Gong2021_placenta_PC", "Gong2021_placenta_ncRNA"}),
+    "Bradley 2020": lambda tags: "Bradley2020_CPA" in tags,
     "CTpedia": lambda tags: "CTpedia" in tags,
     "CTexploreR": lambda tags: "CTexploreR_CT" in tags or "CTexploreR_CTP" in tags,
     "daSilva2017_protein": lambda tags: "daSilva2017_protein" in tags,

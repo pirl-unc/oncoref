@@ -16,7 +16,7 @@ A CTA is a gene whose normal expression is restricted to reproductive tissues
 (testis / ovary / placenta) and which reactivates in tumors — a tissue-restriction
 call over HPA normal-tissue expression, i.e. cancer **reference data**. oncoref
 owns the definition: the bundled ``cancer-testis-antigens.csv`` carries the
-candidate list (from 5 source databases) plus the HPA-derived per-tissue
+candidate list (published resources and supplementary nominations) plus the HPA-derived per-tissue
 restriction columns and filter flags.
 
 The MS-evidence restriction tiers and peptide/MHC presentation that build on top
@@ -309,7 +309,7 @@ def cta_symbol_for_alias(name: str) -> str | None:
     return _alias_to_symbol().get(_normalize_alias(name))
 
 
-def cta_candidate_references() -> pd.DataFrame:
+def cta_candidate_references(*, include_in_table: bool = False) -> pd.DataFrame:
     """Top-of-funnel CTA *candidates* with literature references — overlooked
     cancer-testis / cancer-germline antigens (paralog-family members, meiosis/
     germline genes, recently described CTAs) that are **not yet promoted** into the
@@ -322,8 +322,15 @@ def cta_candidate_references() -> pd.DataFrame:
     ``hpa_max_somatic_ntpm``, ``hpa_max_somatic_tissue``, ``hpa_testis_restricted``)
     so a curator can see at a glance which are clean testis-restricted promotions
     vs. which carry somatic signal that needs a cross-reactivity/leakiness call
-    before entering the curated table. Returns a defensive copy."""
-    return get_data("cta-candidate-references").copy()
+    before entering the curated table. Historical references remain available
+    with ``include_in_table=True`` after a publication brings a gene into the
+    candidate table; the default watchlist omits those already-assessed rows.
+    Returns a defensive copy."""
+    refs = get_data("cta-candidate-references").copy()
+    if not include_in_table:
+        table_ids = set(get_data("cancer-testis-antigens")["Ensembl_Gene_ID"])
+        refs = refs.loc[~refs["Ensembl_Gene_ID"].isin(table_ids)]
+    return refs.reset_index(drop=True).copy()
 
 
 def cta_specificity_audit_references() -> pd.DataFrame:
@@ -374,7 +381,7 @@ def cta_specificity_audit() -> pd.DataFrame:
         how="left",
     )
 
-    candidates = cta_candidate_references().copy()
+    candidates = cta_candidate_references(include_in_table=True)
     candidates["Ensembl_Gene_ID"] = candidates["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
     candidate_cols = [
         "Ensembl_Gene_ID",
@@ -388,7 +395,9 @@ def cta_specificity_audit() -> pd.DataFrame:
     ]
     out = out.merge(candidates[candidate_cols], on="Ensembl_Gene_ID", how="left")
     out["in_cta_table"] = out["cta_passes_filters"].notna()
-    out["in_candidate_watchlist"] = out["candidate_source"].notna()
+    out["in_candidate_watchlist"] = out["Ensembl_Gene_ID"].isin(
+        cta_candidate_references()["Ensembl_Gene_ID"]
+    )
     return out.copy()
 
 
@@ -474,7 +483,7 @@ def cta_clinical_target_evidence() -> pd.DataFrame:
         how="left",
     )
 
-    candidates = cta_candidate_references().copy()
+    candidates = cta_candidate_references(include_in_table=True)
     candidates["Ensembl_Gene_ID"] = candidates["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
     candidate_cols = [
         "Ensembl_Gene_ID",

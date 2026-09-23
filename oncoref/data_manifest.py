@@ -286,6 +286,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "one-row-per-source reference-expression availability manifest",
     ),
     "cancer-testis-antigens": ("cta", "CTA definition (HPA tissue-restriction over candidates)"),
+    "cta-gene-publication-evidence": (
+        "cta",
+        "targeted primary CGB evidence with assay resolution and antigen-validation limits",
+    ),
+    "cta-publication-membership": (
+        "cta",
+        "complete Gong 2021 and Bradley 2020 source memberships with canonical mapping",
+    ),
+    "cta-publication-sources": (
+        "cta",
+        "publication citations, exact source tables, checksums and evidence scope",
+    ),
     "cta-clinical-targets": (
         "cta",
         "explicit clinical/canonical CTA target tier joined to HPA evidence",
@@ -296,7 +308,7 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "cta-candidate-references": (
         "cta",
-        "referenced top-of-funnel CTA candidate watchlist not yet promoted into the curated table",
+        "referenced CTA candidate watchlist with historical citations for subsequently assessed rows",
     ),
     "cta-warning-reviews": (
         "cta",
