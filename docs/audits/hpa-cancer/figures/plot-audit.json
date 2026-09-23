@@ -1,0 +1,34 @@
+{
+  "hpa_release": "25.1",
+  "plot_scope": "gene IDs with IHC in the legacy tsarina cache (frozen plot-genes.csv)",
+  "requested_genes": 253,
+  "comparable_genes": 253,
+  "comparable_groups": 16,
+  "comparable_gene_group_rows": 4048,
+  "status_counts": {
+    "comparable": 4048,
+    "unmatched": 759,
+    "scope_mismatch": 253
+  },
+  "genes_by_group": {
+    "breast cancer": 253,
+    "cervical cancer": 253,
+    "colorectal cancer": 253,
+    "endometrial cancer": 253,
+    "head and neck cancer": 253,
+    "liver cancer": 253,
+    "lung cancer": 253,
+    "melanoma": 253,
+    "ovarian cancer": 253,
+    "pancreatic cancer": 253,
+    "prostate cancer": 253,
+    "renal cancer": 253,
+    "stomach cancer": 253,
+    "testis cancer": 253,
+    "thyroid cancer": 253,
+    "urothelial cancer": 253
+  },
+  "cohort": "TCGA",
+  "threshold_ptpm": 1,
+  "cohorts_paired": false
+}
