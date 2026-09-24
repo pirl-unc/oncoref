@@ -362,6 +362,47 @@ def test_default_cta_sets_honor_specificity_audit_actions():
     assert audited_demotions <= cta.cta_excluded_clinical_target_gene_names()
 
 
+def test_trim64_hpa_pass_does_not_override_reviewed_candidate_only_decision():
+    """An inherited nomination stays excluded even though its HPA gate passes (#560)."""
+    from oncoref.cta_sources import add_publication_candidates, publication_membership
+    from oncoref.load_dataset import get_data
+
+    gene_id = "ENSG00000204450"
+    raw = get_data("cancer-testis-antigens")
+    row = raw.set_index("Symbol").loc["TRIM64"]
+    assert cta.passes_filters_mask(raw.loc[raw.Symbol.eq("TRIM64")]).all()
+    assert row["rna_placenta_ntpm"] == 1.2
+    assert row["protein_restriction"] == "PLACENTAL"
+    assert row["protein_reliability"] == "Approved"
+
+    for names, ids in (
+        (cta.cta_gene_names, cta.cta_gene_ids),
+        (cta.cta_filtered_gene_names, cta.cta_filtered_gene_ids),
+        (cta.cta_placental_restricted_gene_names, cta.cta_placental_restricted_gene_ids),
+        (cta.cta_clinical_target_gene_names, cta.cta_clinical_target_gene_ids),
+    ):
+        assert "TRIM64" not in names()
+        assert gene_id not in ids()
+    assert "TRIM64" not in cta.cta_gene_names(include_warnings=True)
+    assert gene_id not in cta.cta_gene_ids(include_warnings=True)
+    assert gene_id not in cta.cta_gene_id_to_name()
+    assert gene_id in cta.cta_unfiltered_gene_ids()
+    assert "TRIM64" in cta.cta_excluded_gene_names()
+    assert cta.cta_symbol_for_alias("C11orf28") == "TRIM64"
+
+    audit = cta.cta_specificity_audit().set_index("Symbol").loc["TRIM64"]
+    assert audit["specificity_action"] == "candidate_only"
+    assert audit["specificity_status"] == "candidate_unverified_nomination"
+    assert "PMID:36229750" in audit["pmids"]
+    assert "unverified CTpedia" in audit["rationale"]
+
+    # Importing publication candidates does not bypass the separate audit layer.
+    imported = add_publication_candidates(raw, publication_membership())
+    reviewed = cta._with_specificity_columns(imported)
+    selected = cta._canonical_default_mask(reviewed)
+    assert gene_id not in set(reviewed.loc[selected, "Ensembl_Gene_ID"])
+
+
 def test_clinical_cta_helpers_are_top_level_exports():
     for name in (
         "cta_clinical_target_references",

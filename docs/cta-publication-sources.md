@@ -16,6 +16,12 @@ The expanded candidate set has 439 rows; the public default has 298 genes,
 including five new ones: INSL4, GCM1, CYP19A1, HTRA4 and KISS1. This is the
 September 23, 2026 source-addition snapshot, for oncoref 1.8.202.
 
+In oncoref 1.8.205, TRIM64 was moved to candidate-only status after its nomination
+and specificity evidence were reviewed. The current public default has 297 genes;
+the raw candidate table and the publication-source overlap counts above are
+unchanged. See the [TRIM64 nomination audit](audits/trim64-nomination.md) and
+[issue #560](https://github.com/pirl-unc/oncoref/issues/560).
+
 ## Evidence scope
 
 Gong, *The RNA landscape of the human placenta in health and disease*, supplies
