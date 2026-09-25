@@ -25,6 +25,18 @@ INPUTS = {
     "PMC6601584-supp/CAM4-8-3511-s002.xlsx": "19c1cb9825eda2c42ca727b08ea4b1d928d11dde01893087cfadf8e438548941",
     "PMC10749072-supp/jitc-2023-007935supp001.pdf": "87b3c5d3bb8ef245b436aae186235081d42b220309fa170fce5373f6b0b8ca33",
     "PMC10851610.xml": "ea59a269180b6bd9c40cd74951c042850f95560331ae9ee638cffa4de2e511eb",
+    "PMC5696236-supp/oncotarget-08-92966-s004.xlsx": "8f70d3ab237c7df0f1b1885705998e6a6c97d4d0c9261814750e5fef3bedc31f",
+    "gong.xlsx": "b91d126e9e0a270309cb3f6ad5253f1153db3a21f0a8c19d8ef55080410a2007",
+    "loriot-s1.xlsx": "5d5eb8777d16d48eee3c50b556c805f3efd75d2a6de7c8884e40bf374e51ef65",
+    "loriot-s2.xlsx": "03188e479ca52419b30162004344105f1241c44cebf37f2f11d6bdd74dbd5a77",
+    "PMC5120866-bioc.xml": "e3217c6848f79582427787ca4c64fd1852d97a4c67ee6310ee9a6e8973d544a9",
+}
+
+INPUT_URLS = {
+    "gong.xlsx": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx",
+    "loriot-s1.xlsx": "https://doi.org/10.1371/journal.pgen.1011734.s004",
+    "loriot-s2.xlsx": "https://doi.org/10.1371/journal.pgen.1011734.s005",
+    "PMC5120866-bioc.xml": "https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_xml/PMC5120866/unicode",
 }
 
 # A paper can contribute both its broad nomination and a stricter nested set.
@@ -84,6 +96,47 @@ PAPERS = {
         17,
     ),
 }
+
+PAPERS.update(
+    {
+        "Loriot2025_S1": (
+            "Loriot 2025 · strict",
+            "10.1371/journal.pgen.1011734",
+            "A survey of human cancer-germline genes: Linking X chromosome localization, DNA methylation and sex-biased expression in early embryos",
+            146,
+        ),
+        "Loriot2025_S2": (
+            "Loriot 2025 · preferential",
+            "10.1371/journal.pgen.1011734",
+            "A survey of human cancer-germline genes: Linking X chromosome localization, DNA methylation and sex-biased expression in early embryos",
+            134,
+        ),
+        "Gong2021_reproductive_PC": (
+            "Gong 2021 · reproductive coding",
+            "10.1038/s41467-021-22695-y",
+            "The RNA landscape of the human placenta in health and disease",
+            744,
+        ),
+        "Gong2021_reproductive_ncRNA": (
+            "Gong 2021 · reproductive noncoding",
+            "10.1038/s41467-021-22695-y",
+            "The RNA landscape of the human placenta in health and disease",
+            1067,
+        ),
+        "daSilva2017_tumor_proteomics": (
+            "da Silva 2017 · tumor proteomics",
+            "10.18632/oncotarget.21715",
+            "Genome-wide identification of cancer/testis genes and their association with prognosis in a pan-cancer analysis",
+            136,
+        ),
+        "Bai2016_EGFL6": (
+            "Bai 2016",
+            "10.1158/0008-5472.CAN-16-0225",
+            "EGFL6 regulates the asymmetric division, maintenance and metastasis of ALDH+ ovarian cancer cells",
+            1,
+        ),
+    }
+)
 
 
 def _text(value):
@@ -400,6 +453,67 @@ def extract_landscapes(input_dir):
             subset="profiled_panel",
         )
 
+    for number, sheet in [(1, "List of 146 CG genes"), (2, "List of 134 CG-Preferential gen")]:
+        file = f"loriot-s{number}.xlsx"
+        for n, r in _xlsx(root / file, sheet):
+            if n > 2:
+                add(
+                    f"Loriot2025_S{number}",
+                    file,
+                    sheet,
+                    n,
+                    r[2],
+                    r[1],
+                    "ensembl",
+                    subset="strict_CG" if number == 1 else "preferential_CG",
+                    scope="Cancer-germline RNA nomination; strict and preferential classes remain distinct",
+                )
+
+    file = "gong.xlsx"
+    for sheet, kind in [
+        ("Data 5 - tissue-enriched PC", "PC"),
+        ("Data 6 tissue-enriched lncR", "ncRNA"),
+    ]:
+        for n, r in _xlsx(root / file, sheet):
+            if r[0] in {"Testis", "Placenta", "Ovary"}:
+                add(
+                    f"Gong2021_reproductive_{kind}",
+                    file,
+                    sheet,
+                    n,
+                    r[2],
+                    r[1],
+                    "ensembl",
+                    subset=r[0],
+                    biotype="protein_coding" if kind == "PC" else "lncRNA",
+                    scope="Normal reproductive-tissue enrichment; no tumor validation",
+                )
+
+    file = "PMC5696236-supp/oncotarget-08-92966-s004.xlsx"
+    for n, r in _xlsx(root / file, "Supplementary_Table3"):
+        if n > 2 and r[0]:
+            add(
+                "daSilva2017_tumor_proteomics",
+                file,
+                "Supplementary_Table3",
+                n,
+                r[0],
+                subset="tumor_proteomics",
+                scope="Gene-labelled tumor proteomics; unique-locus peptide assignment is not established",
+                assay="Gene-labelled mass spectrometry; not HLA immunopeptidomics",
+            )
+
+    add(
+        "Bai2016_EGFL6",
+        "PMC5120866-bioc.xml",
+        "Abstract",
+        1,
+        "EGFL6",
+        subset="targeted_cancer_expression",
+        scope="Ovarian-tumor and vascular expression/function; no normal-tissue exclusivity claim",
+        assay="Targeted EGFL6 RNA/protein/functional experiments; no HLA or T-cell validation",
+    )
+
     # A microarray gene can have many selected probes. Preserve every original
     # location/annotation but count its source identity only once in intersections.
     raw = pd.DataFrame(rows)
@@ -434,8 +548,11 @@ def extract_landscapes(input_dir):
                 "citation": label,
                 "title": title,
                 "doi": doi,
-                "source_url": f"https://www.ebi.ac.uk/europepmc/webservices/rest/{pmc}/"
-                + ("fullTextXML" if input_name.endswith(".xml") else "supplementaryFiles"),
+                "source_url": INPUT_URLS.get(
+                    input_name,
+                    f"https://www.ebi.ac.uk/europepmc/webservices/rest/{pmc}/"
+                    + ("fullTextXML" if input_name.endswith(".xml") else "supplementaryFiles"),
+                ),
                 "source_table": "; ".join(sub.source_sheet.unique()),
                 "published_rows": len(sub),
                 "paper_reported_genes": reported,

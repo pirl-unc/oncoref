@@ -44,6 +44,7 @@ def main():
             "oncoref/cta_curation_plots.py",
             "oncoref/cta_landscape.py",
             "oncoref/cta_sources.py",
+            "oncoref/cta_provenance.py",
             "oncoref/cta_regen.py",
             "oncoref/cta_tissues.py",
             "scripts/render_cta_curation.py",

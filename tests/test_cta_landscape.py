@@ -22,6 +22,12 @@ def test_full_paper_sets_are_imported_not_just_the_twelve_audit_genes():
         "Chang2019_TGCT": 1036,
         "Carter2023_CT": 103,
         "Seager2024_CTA": 17,
+        "Loriot2025_S1": 146,
+        "Loriot2025_S2": 134,
+        "Gong2021_reproductive_PC": 744,
+        "Gong2021_reproductive_ncRNA": 1067,
+        "daSilva2017_tumor_proteomics": 136,
+        "Bai2016_EGFL6": 1,
     }
     assert counts.loc[list(expected)].to_dict() == expected
     source_counts = publication_sources().set_index("source_tag").published_rows
@@ -109,7 +115,7 @@ def test_testis_only_nominations_cannot_become_default_by_hpa_alone():
 def test_missing_hpa_and_existing_review_decisions_remain_excluded():
     raw = get_data("cancer-testis-antigens")
     missing = raw[raw.rna_max_ntpm.isna()]
-    assert len(missing) == 4
+    assert len(missing) == 6
     assert not cta.passes_filters_mask(missing).any()
     assert set(missing.Ensembl_Gene_ID).isdisjoint(cta.cta_gene_ids())
     assert {"TRIM64", "CTAG2", "CSAG1", "SPAG4"}.isdisjoint(cta.cta_gene_names())
@@ -121,7 +127,7 @@ def test_funnel_and_overlap_count_distinct_loci_and_reconcile():
     membership = cta_curation_plots.stage_membership()
     assert membership.identity.is_unique
     assert len(membership) > len(raw)
-    assert membership.protein_coding.sum() == len(raw)
+    assert membership.protein_coding.sum() == len(cta_curation_plots._evidence())
     assert set(membership.loc[membership.default_panel, "Ensembl_Gene_ID"]) == cta.cta_gene_ids()
     assert not membership.loc[~membership.mapped, "protein_coding"].any()
     overlaps = cta_curation_plots.source_overlap_counts()

@@ -52,8 +52,9 @@ def gene_publication_evidence() -> pd.DataFrame:
     """Targeted primary evidence, with assay resolution and validation limits.
 
     These are curated evidence rows for specific genes, not complete nomination
-    lists from the papers. In particular, a combined CGB1/CGB2 result is never
-    counted as a separately measured positive for each gene.
+    lists from the papers; use publication_membership() for complete lists and
+    cta_provenance.candidate_provenance() for panel-wide citation coverage.
+    A combined CGB1/CGB2 result is never counted as separately measured positives.
     """
     return get_data("cta-gene-publication-evidence").copy()
 

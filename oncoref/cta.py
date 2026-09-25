@@ -223,18 +223,28 @@ def _specificity_defaults(df: pd.DataFrame) -> pd.DataFrame:
         "Derived from HPA reproductive-restriction filters and never-expressed rescue policy."
     )
     if "source_databases" in df:
-        # The complete intake now includes the paper's normal-testis nomination
-        # stage. Those genes remain candidates until a cancer-associated source
+        # Complete intake now includes normal-reproductive nomination stages.
+        # New nominations remain candidates until a cancer-associated source
         # also nominates them. Existing resource/paralog nominations retain their
         # prior behavior; explicit reviewed decisions are joined afterward.
         normal_only = df.source_databases.fillna("").map(
-            lambda value: set(str(value).split(";")) - {""} == {"daSilva2017_testis_biased"}
+            lambda value: (
+                bool(value)
+                and set(str(value).split(";")) - {""}
+                <= {
+                    "daSilva2017_testis_biased",
+                    "Gong2021_reproductive_PC",
+                    "Gong2021_reproductive_ncRNA",
+                }
+            )
         )
-        out.loc[normal_only, "specificity_status"] = "candidate_testis_only_nomination"
+        out.loc[normal_only, "specificity_status"] = "candidate_normal_reproductive_only_nomination"
         out.loc[normal_only, "specificity_action"] = "candidate_only"
-        out.loc[normal_only, "specificity_source_anchor"] = "da Silva 2017 Supplementary Table 1"
+        out.loc[normal_only, "specificity_source_anchor"] = (
+            "da Silva 2017 S1 / Gong 2021 reproductive-tissue enrichment"
+        )
         out.loc[normal_only, "specificity_rationale"] = (
-            "Normal-testis-biased nomination only; no cancer-associated nomination "
+            "Normal reproductive-expression nomination only; no cancer-associated nomination "
             "in the imported source sets. HPA restriction alone does not establish a CTA."
         )
     return out

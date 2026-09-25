@@ -20,8 +20,8 @@ unique mapped protein-coding loci before HPA filtering.
 Two frames are in play and they are not interchangeable:
 
 ``_evidence()``
-    The raw packaged table — every candidate ever considered, including rows that
-    fail curation. This is the denominator the source and filter figures describe.
+    The full coding union of the minimum-cover papers, including rows that fail
+    curation. Historical-only nominations remain in a separate audit export.
 
 ``_curated()``
     The same table after :mod:`oncoref.cta` drops explicitly non-CTA genes and
@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from importlib.resources import files
 from pathlib import Path
 
 import numpy as np
@@ -47,6 +48,7 @@ from . import figure_style
 from .cta_tissues import HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS
 from .figure_style import ACCENT, DROP, KEPT, THRESHOLD, WEAK
 from .load_dataset import get_data
+from .version import DATA_VERSION, __version__
 
 # Every complete imported list contributes upstream of the HPA/default gates.
 # da Silva's broad nominations and final tumor-positive subset remain distinct.
@@ -61,14 +63,18 @@ LANDSCAPE_SOURCES = {
     "Seager 2024 · panel": lambda tags: "Seager2024_CTA" in tags,
 }
 PRIMARY_SOURCES = {
-    **LANDSCAPE_SOURCES,
-    "Gong 2021": lambda tags: bool(tags & {"Gong2021_placenta_PC", "Gong2021_placenta_ncRNA"}),
-    "Bradley 2020": lambda tags: "Bradley2020_CPA" in tags,
-    "CTpedia": lambda tags: "CTpedia" in tags,
-    "CTexploreR": lambda tags: "CTexploreR_CT" in tags or "CTexploreR_CTP" in tags,
-    "daSilva2017_protein": lambda tags: "daSilva2017_protein" in tags,
-    "placental_antigen": lambda tags: "placental_antigen" in tags,
+    "Wang 2016": "10.1038/ncomms10499",
+    "Bruggeman 2018": "10.1038/s41388-018-0357-2",
+    "da Silva 2017": "10.18632/oncotarget.21715",
+    "Jamin 2021": "10.1002/1878-0261.12900",
+    "Chang 2019": "10.1002/cam4.2223",
+    "Carter 2023": "10.1136/jitc-2023-007935",
+    "Seager 2024": "10.1186/s12967-024-04918-0",
+    "Gong 2021": "10.1038/s41467-021-22695-y",
+    "Loriot 2025": "10.1371/journal.pgen.1011734",
+    "Bai 2016": "10.1158/0008-5472.CAN-16-0225",
 }
+
 
 # Deflated-RNA-fraction threshold each protein-reliability tier must clear.
 RELIABILITY_THRESHOLD = {
@@ -94,8 +100,14 @@ FILENAMES = {
 
 
 def _evidence():
-    """Raw packaged CTA evidence table, including rows that fail curation filters."""
-    return get_data("cancer-testis-antigens").copy()
+    """Complete coding union of the minimum-cover papers, before filtering."""
+    from .cta import cta_evidence
+    from .cta_provenance import candidate_evidence
+
+    raw = candidate_evidence()
+    reviewed = cta_evidence()
+    columns = ["Ensembl_Gene_ID", *[c for c in reviewed if c.startswith("specificity_")]]
+    return raw.merge(reviewed[columns], on="Ensembl_Gene_ID", how="left", validate="one_to_one")
 
 
 def _curated():
@@ -110,14 +122,30 @@ def _bool_series(series):
 
 
 def _tag_sets(df):
-    """Return ``{source_label: set(Ensembl_Gene_ID)}`` for primary sources."""
-    out = {name: set() for name in PRIMARY_SOURCES}
-    for ensg, raw in zip(df["Ensembl_Gene_ID"], df["source_databases"].fillna("")):
-        tags = {t.strip() for t in str(raw).split(";") if t.strip()}
-        for name, pred in PRIMARY_SOURCES.items():
-            if pred(tags):
-                out[name].add(str(ensg))
-    return out
+    """Exact paper-level membership, restricted to the supplied gene frame."""
+    from .cta_provenance import selected_membership
+
+    refs = selected_membership()
+    unknown = set(refs.doi) - set(PRIMARY_SOURCES.values())
+    if unknown:
+        raise ValueError(f"Selected papers need plot labels: {sorted(unknown)}")
+    ids = set(df.Ensembl_Gene_ID)
+    return {
+        name: set(refs.loc[refs.doi.eq(doi), "Ensembl_Gene_ID"]) & ids
+        for name, doi in PRIMARY_SOURCES.items()
+        if doi in set(refs.doi)
+    }
+
+
+def _historical_sets(df):
+    tags = df.source_databases.fillna("").str.split(";").map(set)
+    predicates = {
+        "CTpedia": lambda x: "CTpedia" in x,
+        "CTexploreR": lambda x: bool(x & {"CTexploreR_CT", "CTexploreR_CTP"}),
+        "daSilva2017_protein": lambda x: "daSilva2017_protein" in x,
+        "placental_antigen": lambda x: "placental_antigen" in x,
+    }
+    return {k: set(df.loc[tags.map(pred), "Ensembl_Gene_ID"]) for k, pred in predicates.items()}
 
 
 def _per_source_counts(df):
@@ -132,6 +160,7 @@ def _per_source_counts(df):
             continue
         sub = df[df["Ensembl_Gene_ID"].astype(str).isin(members)]
         passes = sub.Ensembl_Gene_ID.isin(default)
+        hpa = cta.passes_filters_mask(sub) & sub.Ensembl_Gene_ID.isin(cta.cta_unfiltered_gene_ids())
         weak = _bool_series(sub["never_expressed"])
         rows.append(
             {
@@ -140,6 +169,9 @@ def _per_source_counts(df):
                 "kept_confident": int((passes & ~weak).sum()),
                 "kept_weak": int((passes & weak).sum()),
                 "excluded": int((~passes).sum()),
+                "default_panel": int(passes.sum()),
+                "hpa_pass_outside_default": int((hpa & ~passes).sum()),
+                "family_or_hpa_excluded": int((~hpa).sum()),
             }
         )
     return sorted(rows, key=lambda r: r["total"], reverse=True)
@@ -162,12 +194,12 @@ def stage_membership(df=None):
     first-stage audit; they never become measured zeros or pass downstream filters.
     """
     from . import cta
-    from .cta_sources import publication_membership
+    from .cta_provenance import selected_membership
 
     raw = _evidence() if df is None else df.copy()
     if raw.Ensembl_Gene_ID.duplicated().any():
         raise ValueError("Duplicate candidate gene IDs")
-    refs = publication_membership().fillna("")
+    refs = selected_membership().fillna("")
     rows = []
     for r in refs.to_dict("records"):
         gid = r["Ensembl_Gene_ID"]
@@ -239,6 +271,10 @@ def stage_counts():
 
 
 def _save(fig, path, plt):
+    from matplotlib.text import Text
+
+    for text in fig.findobj(Text):
+        text.set_fontsize(text.get_fontsize() * _FONT_SCALE)
     figure_style.save(fig, path, keep_titles=True)
     figure_style.save(fig, Path(path).with_suffix(".pdf"), keep_titles=True)
     plt.close(fig)
@@ -249,7 +285,7 @@ def _fig_source_venn(df, path, plt):
 
     sets = _tag_sets(df)
     fig, ax = plt.subplots(figsize=(6.5, 5.5))
-    keys = ("Wang 2016", "Bruggeman 2018", "da Silva 2017 · CT")
+    keys = ("Wang 2016", "Bruggeman 2018", "da Silva 2017")
     v = venn3(
         [sets[k] for k in keys],
         set_labels=keys,
@@ -283,7 +319,7 @@ def _fig_stage_funnel(df, path, plt):
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
     ax.set_xlabel("Distinct source identities / canonical genes")
-    ax.set_title("Complete publication intake plus prior nominations")
+    ax.set_title("Full union of the ten minimum-cover papers")
     ax.set_xlim(0, max(remaining) * 1.1)
     _save(fig, path, plt)
 
@@ -317,14 +353,23 @@ def _fig_filter_funnel(df, path, plt):
 def _fig_filter_outcome(df, path, plt):
     rows = _per_source_counts(df)
     labels = [r["source"] for r in rows]
-    conf = np.array([r["kept_confident"] for r in rows])
-    weak = np.array([r["kept_weak"] for r in rows])
-    excl = np.array([r["excluded"] for r in rows])
+    conf = np.array([r["default_panel"] for r in rows])
+    weak = np.array([r["hpa_pass_outside_default"] for r in rows])
+    excl = np.array([r["family_or_hpa_excluded"] for r in rows])
     y = np.arange(len(labels))
     fig, ax = plt.subplots(figsize=(7, 0.62 * len(labels) + 1.4))
     ax.barh(y, conf, color=KEPT, label="default panel", height=0.62)
-    ax.barh(y, weak, left=conf, color=WEAK, label="default, low-expression rescue", height=0.62)
-    ax.barh(y, excl, left=conf + weak, color=DROP, label="not retained", height=0.62)
+    ax.barh(y, weak, left=conf, color=WEAK, label="HPA pass, outside default", height=0.62)
+    ax.barh(y, excl, left=conf + weak, color=DROP, label="family / HPA exclusion", height=0.62)
+    for i, row in enumerate(rows):
+        ax.text(
+            row["total"] + max(r["total"] for r in rows) * 0.012,
+            i,
+            f"{row['default_panel']}/{row['total']}",
+            va="center",
+            fontsize=9,
+        )
+    ax.set_xlim(0, max(r["total"] for r in rows) * 1.18)
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
     ax.set_xlabel("genes")
@@ -436,38 +481,43 @@ def _venn(ax, sets, title):
     for label in list(diagram.set_labels or []) + list(diagram.subset_labels or []):
         if label is not None:
             label.set_fontsize(9)
+    if diagram.set_labels and diagram.set_labels[2] is not None:
+        label = diagram.set_labels[2]
+        x, y = label.get_position()
+        label.set_position((x, y - 0.04))
     ax.set_title(title, fontsize=11, pad=20)
 
 
 def _fig_legacy_source_venn(df, path, plt):
-    sets = _tag_sets(df)
+    sets = _historical_sets(get_data("cancer-testis-antigens"))
     keys = ("CTpedia", "CTexploreR", "daSilva2017_protein")
     fig, ax = plt.subplots(figsize=(7, 6))
     _venn(
         ax,
         {k: sets[k] for k in keys},
-        "Historical resource memberships\nMapped coding candidates before HPA filtering",
+        "Historical tags (audit only)\nNot the paper-union intake or independent validation",
     )
     _save(fig, path, plt)
 
 
 def _fig_landscape_source_venn(df, path, plt):
     sets = _tag_sets(df)
-    keys = ("Jamin 2021", "Chang 2019 · TGCT", "Carter 2023")
     fig, axes = plt.subplots(1, 2, figsize=(13, 6.5))
-    _venn(axes[0], {k: sets[k] for k in keys}, "Additional complete CT candidate sets")
-    combined = {
-        "Seven landscape\npapers": set().union(*(sets[k] for k in LANDSCAPE_SOURCES)),
-        "Historical\nresources": set().union(
-            *(sets[k] for k in ("CTpedia", "CTexploreR", "daSilva2017_protein"))
-        ),
-        "Published placental\nnominations": sets["Gong 2021"] | sets["Bradley 2020"],
-    }
-    _venn(axes[1], combined, "Expanded starting pool by source group")
+    _venn(
+        axes[0],
+        {k: sets[k] for k in ("Jamin 2021", "Chang 2019", "Carter 2023")},
+        "Additional complete candidate lists",
+    )
+    _venn(
+        axes[1],
+        {k: sets[k] for k in ("Gong 2021", "Loriot 2025", "Seager 2024")},
+        "Reproductive enrichment and cancer-germline lists",
+    )
     fig.text(
         0.5,
         0.015,
-        "Unique mapped protein-coding genes before HPA filtering. Landscape union includes da Silva's broad testis-biased nominations.\nShared-probe members are nominations; source overlap does not establish independent validation.",
+        "Unique mapped coding genes before HPA filtering. Bai's single EGFL6 nomination is shown in the all-paper matrix.\n"
+        "Normal-only reproductive nominations remain candidates; shared probes do not establish locus-specific validation.",
         ha="center",
         fontsize=9,
     )
@@ -480,13 +530,13 @@ def placental_source_sets(df=None):
 
     refs = publication_membership()
     coding = refs[refs.biotype.eq("protein_coding")]
-    raw = _evidence() if df is None else df
+    raw = get_data("cancer-testis-antigens")
     return {
         "Gong 2021\nS5 + S6": set(
             coding.loc[coding.source_tag.isin([GONG_PC, GONG_NC]), "Ensembl_Gene_ID"]
         ),
         "Bradley 2020\nFigure 3": set(coding.loc[coding.source_tag.eq(BRADLEY), "Ensembl_Gene_ID"]),
-        "Prior placental\nnominations": _tag_sets(raw)["placental_antigen"],
+        "Prior placental\nnominations": _historical_sets(raw)["placental_antigen"],
     }
 
 
@@ -495,14 +545,14 @@ def _fig_placental_source_overlap(df, path, plt):
     _venn(
         ax,
         placental_source_sets(df),
-        "Complete placental nomination lists\nMapped coding candidates before HPA filtering",
+        "Placental source audit (includes unselected Bradley)\nMapped coding candidates before HPA filtering",
     )
     _save(fig, path, plt)
 
 
 def _fig_source_overlap(df, path, plt):
     counts = source_overlap_counts(df)
-    keys = list(PRIMARY_SOURCES)
+    keys = list(_tag_sets(df))
     fig, axes = plt.subplots(1, 2, figsize=(19, 10.5))
     for ax, field, title in zip(
         axes,
@@ -550,9 +600,9 @@ def _fig_source_overlap(df, path, plt):
 
 
 def _fig_publication_funnel(df, path, plt):
-    from .cta_sources import SOURCE_LABELS, intake_counts
+    from .cta_provenance import paper_intake_counts
 
-    counts = intake_counts()
+    counts = paper_intake_counts()
     tags = list(counts.source_tag.unique())
     stages = [
         "published",
@@ -588,11 +638,14 @@ def _fig_publication_funnel(df, path, plt):
             fontsize=11,
             color="white" if fractions[i, j] > 0.6 else "#182c3e",
         )
-    ax.set_yticks(range(len(tags)), [SOURCE_LABELS.get(tag, tag) for tag in tags])
+    ax.set_yticks(
+        range(len(tags)),
+        [{doi: label for label, doi in PRIMARY_SOURCES.items()}[tag] for tag in tags],
+    )
     ax.set_xticks(
         range(6),
         [
-            "Source\nentries",
+            "Unique source\nidentities",
             "Unique IDs\nmapped",
             "Protein\ncoding",
             "Family\nfilter",
@@ -600,7 +653,7 @@ def _fig_publication_funnel(df, path, plt):
             "Default\nrules",
         ],
     )
-    ax.set_title("Complete published lists through the curation funnel", pad=18)
+    ax.set_title("Ten selected papers: full lists through curation", pad=18)
     ax.set_xlabel(
         "Counts after each stage; shading is the fraction retained within that source", labelpad=12
     )
@@ -608,7 +661,7 @@ def _fig_publication_funnel(df, path, plt):
     fig.text(
         0.5,
         0.015,
-        "Source entries preserve historical identities and unresolved probes; mapped stages collapse aliases.\nPaper lists overlap. Jamin's probe annotations and core table have different counts from the article's headline gene totals.",
+        "Source identities collapse mapped aliases and repeated entries across tables within each paper; unresolved probes remain upstream.\nPaper lists overlap and must not be summed. RNA/protein nomination does not establish HLA presentation.",
         ha="center",
         fontsize=9,
     )
@@ -631,11 +684,18 @@ _BUILDERS = {
 }
 
 
+_FONT_SCALE = 1.0
+
+
 def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
     """Write the CTA-curation figures into ``out_dir``.
 
     Returns ``{"n_genes": int, "stages": [...], "paths": {key: Path}}``.
     """
+    global _FONT_SCALE
+    if not np.isfinite(font_scale) or font_scale <= 0:
+        raise ValueError("font_scale must be positive and finite")
+    _FONT_SCALE = font_scale
     figure_style.apply()
     import matplotlib.pyplot as plt
 
@@ -653,11 +713,32 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
         publication_sources,
     )
 
-    with matplotlib.rc_context({"font.size": 10 * font_scale}):
+    with matplotlib.rc_context({"font.size": 10}):
         for key in kinds if kinds is not None else _BUILDERS:
             path = out / FILENAMES[key]
             _BUILDERS[key](df, path, plt)
             paths[key] = path
+    from .cta_provenance import (
+        candidate_provenance,
+        gene_citation_evidence_report,
+        historical_tag_audit,
+        legacy_only_candidates,
+        paper_intake_counts,
+        selected_membership,
+        source_cover,
+    )
+
+    (out / "cta-minimum-source-cover.json").write_text(json.dumps(source_cover(), indent=2) + "\n")
+    candidate_provenance().to_csv(out / "cta-candidate-provenance.csv", index=False)
+    gene_citation_evidence_report().to_csv(out / "cta-gene-citation-evidence.csv", index=False)
+    pd.DataFrame(_per_source_counts(df)).to_csv(out / "cta-source-outcome-counts.csv", index=False)
+    historical_tag_audit().to_csv(out / "cta-historical-tag-audit.csv", index=False)
+    paper_intake_counts().to_csv(out / "cta-selected-paper-intake-counts.csv", index=False)
+    from .cta_sources import gene_publication_evidence
+
+    gene_publication_evidence().to_csv(out / "cta-gene-publication-evidence.csv", index=False)
+    selected_membership().to_csv(out / "cta-selected-paper-membership.csv", index=False)
+    legacy_only_candidates().to_csv(out / "cta-legacy-only-candidates.csv", index=False)
     stages = stage_counts()
     pd.DataFrame(stages, columns=["stage", "remaining", "dropped"]).to_csv(
         out / "cta-stage-counts.csv", index=False
@@ -697,21 +778,44 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
         ]
     }
     manifest = {
+        "oncoref_version": __version__,
+        "oncoref_data_version": DATA_VERSION,
+        "input_sha256": {
+            name: hashlib.sha256(
+                files("oncoref").joinpath("data").joinpath(name).read_bytes()
+            ).hexdigest()
+            for name in (
+                "cancer-testis-antigens.csv",
+                "cta-specificity-audit.csv",
+                "cta-publication-sources.csv",
+                "cta-publication-membership.csv",
+                "cta-gene-publication-evidence.csv",
+            )
+        },
+        "default_gene_ids": sorted(default),
+        "default_panel_sha256": hashlib.sha256(
+            ("\n".join(sorted(default)) + "\n").encode()
+        ).hexdigest(),
+        "figure_kinds": list(paths),
+        "font_scale": font_scale,
         "inputs": inputs,
         "candidate_genes": len(df),
         "default_genes": len(default),
         "stages": stages,
+        "minimum_source_cover": source_cover(),
         "outputs": {
             p.name: hashlib.sha256(p.read_bytes()).hexdigest()
             for p in sorted(out.iterdir())
-            if p.is_file() and p.suffix in {".png", ".pdf", ".csv"}
+            if p.is_file()
+            and p.suffix in {".png", ".pdf", ".csv", ".json"}
+            and p.name != "run-manifest.json"
         },
     }
     (out / "run-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     lines = [
         "# CTA source intake and curation",
         "",
-        f"{len(df):,} coding candidates; {len(default):,} pass the default rules, including the testis-only nomination holdback.",
+        f"{len(df):,} coding candidates; {len(default):,} pass the default rules, including the normal-reproductive-only nomination holdback.",
         "",
         "Sources are upstream nominations, not antigen-validation claims. Complete memberships and exact intersections accompany every figure.",
         "",

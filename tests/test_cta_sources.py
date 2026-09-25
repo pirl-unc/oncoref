@@ -109,7 +109,7 @@ def test_cgb_assay_resolution_does_not_imply_protein_validation():
     from oncoref.cta_sources import add_gene_evidence_tags, gene_publication_evidence
 
     rows = gene_publication_evidence()
-    assert len(rows) == 10
+    assert len(rows[rows.Symbol.isin(["CGB1", "CGB2", "CGB7"])]) == 10
     direct = rows[(rows.Symbol == "CGB2") & (rows.source_tag == "Rull2005_CGB_placenta")].iloc[0]
     assert direct.assay_resolution == "gene_resolved_restriction_digest"
     assert direct.assay_gene_scope == "CGB2"
@@ -126,4 +126,8 @@ def test_cgb_assay_resolution_does_not_imply_protein_validation():
         "preprint"
     }
     table = get_data("cancer-testis-antigens")
-    pd.testing.assert_frame_equal(add_gene_evidence_tags(table), table)
+    annotated = add_gene_evidence_tags(table)
+    pd.testing.assert_frame_equal(
+        annotated.drop(columns="source_databases"), table.drop(columns="source_databases")
+    )
+    assert "Song2022_targeted" in annotated.set_index("Symbol").loc["SUN5", "source_databases"]

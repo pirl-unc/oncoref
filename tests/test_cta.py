@@ -71,7 +71,14 @@ def test_never_expressed_rescue_is_a_uniform_rule():
     # nominations still need cancer evidence before this expression rule applies.
     df = cta.cta_df()
     rescued = df[cta._never_expressed_rescue_mask(df)]
-    normal_only = rescued.source_databases.eq("daSilva2017_testis_biased")
+    normal_sources = {
+        "daSilva2017_testis_biased",
+        "Gong2021_reproductive_PC",
+        "Gong2021_reproductive_ncRNA",
+    }
+    normal_only = rescued.source_databases.str.split(";").map(
+        lambda tags: set(tags) <= normal_sources
+    )
     assert set(rescued.loc[normal_only, "Ensembl_Gene_ID"]).isdisjoint(expressed)
     rescued = rescued[~normal_only]
     never = rescued["never_expressed"].astype(str).str.lower() == "true"
