@@ -177,7 +177,7 @@ def paper_intake_counts():
     for doi, group in refs.groupby("doi", sort=True):
         identities = {
             r.Ensembl_Gene_ID
-            or f"unmapped:{r.source_id_type}:{r.source_gene_id or r.source_symbol}"
+            or f"unmapped:{r.source_id_type or ('ensembl' if str(r.source_gene_id).startswith('ENSG') else 'symbol')}:{r.source_gene_id or r.source_symbol}"
             for r in group.itertuples(index=False)
         }
         mapped = set(group.Ensembl_Gene_ID) - {""}

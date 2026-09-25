@@ -116,3 +116,19 @@ def test_per_gene_evidence_modalities_do_not_transfer_antigen_validation():
     assert "10.3390/cancers14215368" in report.loc["SUN5", "protein_evidence_sources"]
     assert report.loc["CT47A8", "legacy_retention_evidence_caveat"]
     assert report.loc["CT47A8", "nomination_scope"] == "normal_reproductive_expression_only"
+
+
+def test_paper_identity_counts_reconcile_with_the_pooled_membership():
+    from oncoref.cta_curation_plots import stage_membership
+    from oncoref.cta_provenance import paper_intake_counts
+
+    pooled = stage_membership()
+    counts = paper_intake_counts()
+    tags = pooled.source_databases.str.split(";").map(set)
+    for doi, group in selected_membership().groupby("doi"):
+        source_tags = set(group.source_tag)
+        expected = tags.map(
+            lambda values, source_tags=source_tags: bool(values & source_tags)
+        ).sum()
+        actual = counts[counts.source_tag.eq(doi) & counts.stage.eq("published")].remaining.item()
+        assert actual == expected, doi
