@@ -147,7 +147,7 @@ python scripts/import_cta_landscapes.py --input-dir /path/to/original-supplement
 python scripts/render_cta_curation.py --out outputs/cta-landscape-current
 ```
 
-The renderer writes all 11 figures as 300-dpi PNGs and vector PDFs, a combined
+The renderer writes all 12 figures as 300-dpi PNGs and vector PDFs, a combined
 bookmarked PDF, exact source intersections, per-source and per-gene funnel
 membership, candidate/default tables, minimum-cover certificate, gene-level citations, historical-tag reconciliation,
 legacy-only archive, and content hashes. The four Venn figure

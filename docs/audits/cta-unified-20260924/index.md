@@ -71,3 +71,9 @@ Sources are upstream nominations, not antigen-validation claims. Complete member
 [Vector PDF](cta-publication-funnel.pdf)
 
 ![publication_funnel](cta-publication-funnel.png)
+
+## Placental Evidence Coverage
+
+[Vector PDF](cta-placental-evidence-coverage.pdf)
+
+![placental_evidence_coverage](cta-placental-evidence-coverage.png)

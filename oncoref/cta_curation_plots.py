@@ -12,7 +12,7 @@
 
 """CTA curation documentation figures over oncoref's packaged CTA table.
 
-Eleven figures describe complete published candidate sets, source intersections,
+Twelve figures describe complete published candidate sets, source intersections,
 the full intake funnel, per-source attrition, and the protein/RNA evidence axes.
 Source memberships include unmapped and noncoding entries; Venn diagrams use
 unique mapped protein-coding loci before HPA filtering.
@@ -96,6 +96,7 @@ FILENAMES = {
     "source_overlap": "cta-source-overlap.png",
     "placental_source_overlap": "cta-placental-source-overlap.png",
     "publication_funnel": "cta-publication-funnel.png",
+    "placental_evidence_coverage": "cta-placental-evidence-coverage.png",
 }
 
 
@@ -669,6 +670,58 @@ def _fig_publication_funnel(df, path, plt):
     _save(fig, path, plt)
 
 
+def _fig_placental_evidence_coverage(df, path, plt):
+    from matplotlib.colors import ListedColormap
+
+    from .cta_sources import placental_source_coverage
+
+    data = placental_source_coverage().sort_values("Symbol")
+    papers = {
+        "Gong 2021": {"Gong2021_placenta_PC", "Gong2021_placenta_ncRNA"},
+        "Bradley 2020": {"Bradley2020_CPA"},
+        "Rull 2005": {"Rull2005_CGB_placenta"},
+        "Rull 2008*": {"Rull2008_CGB_RNA"},
+        "Kubiczak 2013*": {"Kubiczak2013_CGB_ovarian"},
+        "Białas 2020": {"Bialas2020_CGB_cancer"},
+        "McKellar 2025†": {"McKellar2025_CGB7_cancer"},
+    }
+    tags = data.publication_sources.str.split(";").map(set)
+    values = np.array([[bool(t & p) for p in papers.values()] for t in tags], dtype=int)
+    fig, ax = plt.subplots(figsize=(10.5, 8.5))
+    ax.pcolormesh(
+        np.arange(len(papers) + 1) - 0.5,
+        np.arange(len(data) + 1) - 0.5,
+        values,
+        cmap=ListedColormap(["#f0f0f0", "#398c70"]),
+        vmin=0,
+        vmax=1,
+    )
+    ax.invert_yaxis()
+    for (i, j), present in np.ndenumerate(values):
+        if present:
+            ax.text(j, i, "●", color="white", ha="center", va="center", fontsize=11)
+    ax.set_xticks(range(len(papers)), papers, rotation=35, ha="left")
+    ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False, length=0)
+    ax.set_yticks(
+        range(len(data)), [r.Symbol + ("  ✓" if r.default_panel else "") for r in data.itertuples()]
+    )
+    ax.spines[:].set_visible(False)
+    ax.set_title(
+        "All 19 earlier placental nominations now have publication provenance", pad=88, fontsize=12
+    )
+    fig.text(
+        0.5,
+        0.025,
+        "✓ Retained in default CTA panel (9/19). Blank cells mean no record in these curated source rows.\n"
+        "* Combined CGB1/CGB2 assays, not separate positives. † Preprint.\n"
+        "Expression / nomination evidence is distinct from gene-specific antigen validation.",
+        ha="center",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=(0, 0.095, 1, 1))
+    _save(fig, path, plt)
+
+
 _BUILDERS = {
     "source_venn": _fig_source_venn,
     "stage_funnel": _fig_stage_funnel,
@@ -681,6 +734,7 @@ _BUILDERS = {
     "source_overlap": _fig_source_overlap,
     "placental_source_overlap": _fig_placental_source_overlap,
     "publication_funnel": _fig_publication_funnel,
+    "placental_evidence_coverage": _fig_placental_evidence_coverage,
 }
 
 
@@ -737,6 +791,9 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
     from .cta_sources import gene_publication_evidence
 
     gene_publication_evidence().to_csv(out / "cta-gene-publication-evidence.csv", index=False)
+    from .cta_sources import placental_source_coverage
+
+    placental_source_coverage().to_csv(out / "placental-nomination-provenance.csv", index=False)
     selected_membership().to_csv(out / "cta-selected-paper-membership.csv", index=False)
     legacy_only_candidates().to_csv(out / "cta-legacy-only-candidates.csv", index=False)
     stages = stage_counts()
