@@ -20,7 +20,12 @@ from oncoref.load_dataset import get_data
 
 def test_complete_published_lists_and_citations():
     refs = publication_membership()
-    assert refs.groupby("source_tag").size().to_dict() == {GONG_PC: 71, GONG_NC: 74, BRADLEY: 10}
+    counts = refs.groupby("source_tag").size().to_dict()
+    assert {tag: counts[tag] for tag in (GONG_PC, GONG_NC, BRADLEY)} == {
+        GONG_PC: 71,
+        GONG_NC: 74,
+        BRADLEY: 10,
+    }
     assert not refs.duplicated(["source_tag", "source_symbol"]).any()
     assert set(refs.loc[refs.source_tag.eq(BRADLEY), "source_symbol"]) == set(BRADLEY_GENES)
     assert set(publication_sources().source_tag) == set(refs.source_tag)
@@ -46,7 +51,7 @@ def test_historical_annotation_is_preserved_without_promoting_noncoding():
     dscr = refs[refs.source_symbol.eq("DSCR4")].iloc[0]
     assert dscr.source_tag == GONG_PC and dscr.source_biotype == "protein_coding"
     assert dscr.biotype == "lncRNA" and not dscr.protein_candidate_eligible
-    unmapped = refs[refs.mapping_status.eq("unmapped")]
+    unmapped = refs[refs.source_tag.isin([GONG_PC, GONG_NC]) & refs.mapping_status.eq("unmapped")]
     assert len(unmapped) == 10
     assert unmapped.Ensembl_Gene_ID.isna().all()
     assert not unmapped.protein_candidate_eligible.any()

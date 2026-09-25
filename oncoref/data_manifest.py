@@ -292,7 +292,7 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "cta-publication-membership": (
         "cta",
-        "complete Gong 2021 and Bradley 2020 source memberships with canonical mapping",
+        "complete CTA landscape and placental nominations with source locations and canonical mapping",
     ),
     "cta-publication-sources": (
         "cta",

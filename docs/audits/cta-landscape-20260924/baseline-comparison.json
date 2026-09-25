@@ -1,0 +1,10 @@
+{
+  "base_commit": "4c7eb6300f3493e1a5e82863355fa651240e5494",
+  "old_candidates": 439,
+  "new_candidates": 2499,
+  "prior_default": 297,
+  "new_default": 624,
+  "lost": [],
+  "added": 327,
+  "unchanged_prior_evidence_rows": 439
+}

@@ -11,6 +11,7 @@ import hashlib
 
 import pandas as pd
 
+from .cta_landscape import PAPERS
 from .gene_ids import canonical_gene_id, canonical_gene_space
 from .load_dataset import get_data
 
@@ -21,6 +22,7 @@ SOURCE_LABELS = {
     GONG_PC: "Gong 2021 · S5 coding",
     GONG_NC: "Gong 2021 · S6 noncoding",
     BRADLEY: "Bradley 2020 · CPA",
+    **{tag: paper[0] for tag, paper in PAPERS.items()},
 }
 BRADLEY_GENES = (
     "VGLL1",
@@ -181,6 +183,7 @@ def add_publication_candidates(table: pd.DataFrame, membership: pd.DataFrame) ->
     from .cta_regen import regenerate_cta_columns
 
     result = table.copy()
+    result["Symbol"] = result["Symbol"].fillna(result["Ensembl_Gene_ID"])
     if result.Ensembl_Gene_ID.duplicated().any():
         raise ValueError("Duplicate candidate Ensembl IDs")
     existing = set(result.Ensembl_Gene_ID)
@@ -256,7 +259,11 @@ def intake_counts(membership=None) -> pd.DataFrame:
             "hpa_restriction",
             "default_panel",
         ):
-            remaining = len(group) if stage == "published" else int(group[stage].sum())
+            remaining = (
+                len(group)
+                if stage == "published"
+                else group.loc[group[stage], "Ensembl_Gene_ID"].nunique()
+            )
             rows.append(
                 {
                     "source_tag": tag,

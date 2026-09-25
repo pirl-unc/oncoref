@@ -67,9 +67,13 @@ def test_never_expressed_rescue_is_a_uniform_rule():
     expressed = cta.cta_gene_ids()
     assert "ENSG00000171405" in expressed  # XAGE5
     assert "MAGEA2B" in cta.cta_gene_names()  # a same-signature peer, also kept
-    # The rescue is exactly the rule, applied to every row.
+    # The rescue applies uniformly to cancer-nominated rows. Normal-testis-only
+    # nominations still need cancer evidence before this expression rule applies.
     df = cta.cta_df()
     rescued = df[cta._never_expressed_rescue_mask(df)]
+    normal_only = rescued.source_databases.eq("daSilva2017_testis_biased")
+    assert set(rescued.loc[normal_only, "Ensembl_Gene_ID"]).isdisjoint(expressed)
+    rescued = rescued[~normal_only]
     never = rescued["never_expressed"].astype(str).str.lower() == "true"
     kept = set(rescued.loc[never, "Ensembl_Gene_ID"].astype(str).str.split(".").str[0])
     assert kept and kept <= cta.cta_gene_ids()
@@ -232,7 +236,9 @@ def test_cta_candidate_references_registry():
     # Top-of-funnel referenced candidate watchlist: every row carries an Ensembl
     # ID, a citation, and an HPA-restriction flag; none overlaps the curated set.
     cand = cta.cta_candidate_references()
-    assert len(cand) >= 10
+    all_refs = cta.cta_candidate_references(include_in_table=True)
+    assert len(all_refs) >= 10
+    assert set(cand.Ensembl_Gene_ID) <= set(all_refs.Ensembl_Gene_ID)
     required = {
         "Symbol",
         "Ensembl_Gene_ID",
@@ -268,7 +274,9 @@ def test_clinical_cta_target_tier_keeps_strict_default_conservative():
     assert leaky <= cta.cta_excluded_clinical_target_gene_names()
     assert leaky <= cta.cta_excluded_gene_names()
     assert not (leaky & cta.cta_filtered_gene_names())
-    assert not ({"MAGEC3", "CSAG1"} & cta.cta_unfiltered_gene_names())
+    assert "MAGEC3" not in cta.cta_unfiltered_gene_names()
+    assert "CSAG1" in cta.cta_unfiltered_gene_names()
+    assert "CSAG1" not in cta.cta_gene_names()
     assert "PAGE4" in cta.cta_unfiltered_gene_names()
     assert "PAGE4" not in cta.cta_gene_names()
     assert "PAGE4" in cta.cta_excluded_clinical_target_gene_names()
@@ -289,11 +297,12 @@ def test_clinical_cta_target_tier_keeps_strict_default_conservative():
     assert evidence.loc["PAGE4", "exclusion_driver_tissue"] == "smooth muscle"
     assert float(evidence.loc["PAGE4", "exclusion_driver_ntpm"]) == 23.3
     assert evidence.loc["PAGE4", "hpa_max_somatic_tissue"] == "prostate"
-    assert evidence.loc["CSAG1", "evidence_tier"] == "candidate"
+    assert evidence.loc["CSAG1", "evidence_tier"] == "excluded"
+    assert evidence.loc["CSAG1", "exclusion_driver_tissue"] == "basal ganglia"
     assert evidence.loc["CSAG1", "candidate_source"] == "literature_cta"
     assert "PMID:12039054" in evidence.loc["CSAG1", "pmids"]
     assert "ENSG00000198930" in cta.cta_clinical_target_gene_ids()
-    assert "ENSG00000198930" not in cta.cta_excluded_clinical_target_gene_ids()
+    assert "ENSG00000198930" in cta.cta_excluded_clinical_target_gene_ids()
 
 
 def test_cta_specificity_audit_surfaces_demotions_and_candidate_only_rows():
