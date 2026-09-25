@@ -703,7 +703,8 @@ def _fig_placental_evidence_coverage(df, path, plt):
     ax.set_xticks(range(len(papers)), papers, rotation=35, ha="left")
     ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False, length=0)
     ax.set_yticks(
-        range(len(data)), [r.Symbol + ("  ✓" if r.default_panel else "") for r in data.itertuples()]
+        range(len(data)),
+        [r.Symbol + (" [D]" if r.default_panel else "") for r in data.itertuples()],
     )
     ax.spines[:].set_visible(False)
     ax.set_title(
@@ -712,7 +713,7 @@ def _fig_placental_evidence_coverage(df, path, plt):
     fig.text(
         0.5,
         0.025,
-        "✓ Retained in default CTA panel (9/19). Blank cells mean no record in these curated source rows.\n"
+        "[D] Retained in default CTA panel (9/19). Blank cells mean no record in these curated source rows.\n"
         "* Combined CGB1/CGB2 assays, not separate positives. † Preprint.\n"
         "Expression / nomination evidence is distinct from gene-specific antigen validation.",
         ha="center",
