@@ -20,7 +20,12 @@ from oncoref.load_dataset import get_data
 
 def test_complete_published_lists_and_citations():
     refs = publication_membership()
-    assert refs.groupby("source_tag").size().to_dict() == {GONG_PC: 71, GONG_NC: 74, BRADLEY: 10}
+    counts = refs.groupby("source_tag").size().to_dict()
+    assert {tag: counts[tag] for tag in (GONG_PC, GONG_NC, BRADLEY)} == {
+        GONG_PC: 71,
+        GONG_NC: 74,
+        BRADLEY: 10,
+    }
     assert not refs.duplicated(["source_tag", "source_symbol"]).any()
     assert set(refs.loc[refs.source_tag.eq(BRADLEY), "source_symbol"]) == set(BRADLEY_GENES)
     assert set(publication_sources().source_tag) == set(refs.source_tag)
@@ -46,7 +51,7 @@ def test_historical_annotation_is_preserved_without_promoting_noncoding():
     dscr = refs[refs.source_symbol.eq("DSCR4")].iloc[0]
     assert dscr.source_tag == GONG_PC and dscr.source_biotype == "protein_coding"
     assert dscr.biotype == "lncRNA" and not dscr.protein_candidate_eligible
-    unmapped = refs[refs.mapping_status.eq("unmapped")]
+    unmapped = refs[refs.source_tag.isin([GONG_PC, GONG_NC]) & refs.mapping_status.eq("unmapped")]
     assert len(unmapped) == 10
     assert unmapped.Ensembl_Gene_ID.isna().all()
     assert not unmapped.protein_candidate_eligible.any()
@@ -104,7 +109,7 @@ def test_cgb_assay_resolution_does_not_imply_protein_validation():
     from oncoref.cta_sources import add_gene_evidence_tags, gene_publication_evidence
 
     rows = gene_publication_evidence()
-    assert len(rows) == 10
+    assert len(rows[rows.Symbol.isin(["CGB1", "CGB2", "CGB7"])]) == 10
     direct = rows[(rows.Symbol == "CGB2") & (rows.source_tag == "Rull2005_CGB_placenta")].iloc[0]
     assert direct.assay_resolution == "gene_resolved_restriction_digest"
     assert direct.assay_gene_scope == "CGB2"
@@ -121,4 +126,8 @@ def test_cgb_assay_resolution_does_not_imply_protein_validation():
         "preprint"
     }
     table = get_data("cancer-testis-antigens")
-    pd.testing.assert_frame_equal(add_gene_evidence_tags(table), table)
+    annotated = add_gene_evidence_tags(table)
+    pd.testing.assert_frame_equal(
+        annotated.drop(columns="source_databases"), table.drop(columns="source_databases")
+    )
+    assert "Song2022_targeted" in annotated.set_index("Symbol").loc["SUN5", "source_databases"]

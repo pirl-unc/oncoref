@@ -109,10 +109,14 @@ def _fraction(ntpm: dict[str, float], allowed: frozenset[str], deflate: bool) ->
     default); without deflation an all-zero gene returns 0.0.
     """
     vals = {t: (max(0.0, v - 1.0) if deflate else v) for t, v in ntpm.items()}
-    total = sum(vals.values())
+    # Python 3.12 changed float sum(); stable summation keeps rounded reference
+    # artifacts identical across supported Python versions and tissue ordering.
+    from math import fsum
+
+    total = fsum(vals.values())
     if total <= 0:
         return 1.0 if deflate else 0.0
-    return sum(v for t, v in vals.items() if t in allowed) / total
+    return fsum(v for t, v in vals.items() if t in allowed) / total
 
 
 # ── RNA per-tissue enrichment ──────────────────────────────────────────────

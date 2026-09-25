@@ -224,19 +224,14 @@ def test_cta_curation_tag_sets_cover_primary_sources():
     df = ccp._evidence()
     sets = ccp._tag_sets(df)
     assert set(sets) == set(ccp.PRIMARY_SOURCES)
-    assert sets["CTpedia"]
-    assert sets["CTexploreR"]
-    assert sets["daSilva2017_protein"]
+    assert len(sets) == 10 and all(sets.values())
+    from oncoref.cta_provenance import selected_membership
 
-    # The da Silva primary source is the mass-spec-validated subset only. The broad
-    # ``daSilva2017`` cross-reference tag (the full 1,103-gene 0.9-threshold set)
-    # shares a prefix with it and must not leak into the source figures.
-    tagged = {
-        str(ensg)
-        for ensg, raw in zip(df["Ensembl_Gene_ID"], df["source_databases"].fillna(""))
-        if "daSilva2017_protein" in {t.strip() for t in str(raw).split(";")}
-    }
-    assert sets["daSilva2017_protein"] == tagged
+    refs = selected_membership()
+    # Full paper membership includes every selected nomination list, including
+    # broad RNA candidates; historical protein tags are not the intake basis.
+    published = set(refs.loc[refs.doi.eq("10.18632/oncotarget.21715"), "Ensembl_Gene_ID"])
+    assert sets["da Silva 2017"] == published & set(df.Ensembl_Gene_ID)
 
 
 def test_cta_curation_stage_counts_are_monotonic():

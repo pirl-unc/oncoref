@@ -1,5 +1,10 @@
 # Published placental and cancer-placenta nominations
 
+For the expanded seven-paper CTA landscape intake and regenerated source plots,
+see [Complete CTA landscape sources](cta-landscape-sources.md). The counts below
+describe the earlier placental-source addition; the source-specific counts remain
+valid, while the combined candidate and default totals have since expanded.
+
 Oncoref retains the complete published memberships separately from the HPA CTA
 candidate table and final default panel. Source membership never overrides the
 normal-tissue restriction, expression or specificity gates.
@@ -17,7 +22,7 @@ including five new ones: INSL4, GCM1, CYP19A1, HTRA4 and KISS1. This is the
 September 23, 2026 source-addition snapshot, for oncoref 1.8.202.
 
 In oncoref 1.8.205, TRIM64 was moved to candidate-only status after its nomination
-and specificity evidence were reviewed. The current public default has 297 genes;
+and specificity evidence were reviewed. That release's public default had 297 genes;
 the raw candidate table and the publication-source overlap counts above are
 unchanged. See the [TRIM64 nomination audit](audits/trim64-nomination.md) and
 [issue #560](https://github.com/pirl-unc/oncoref/issues/560).
@@ -46,7 +51,7 @@ restriction gate and remains available as a sourced candidate.
 
 - `get_data("cta-publication-sources")`: exact publications, tables/figures,
   URLs, evidence scope, input hashes and canonical reference hash/release.
-- `get_data("cta-publication-membership")`: all 155 source rows, including
+- `get_data("cta-publication-membership")`: all source rows (including the original 155 placental rows), including
   unmapped/noncoding entries, source identities and current canonical identities.
 - `oncoref.cta_sources.intake_membership()` / `intake_counts()`: auditable
   mapping, coding, family, HPA and public-default stages.

@@ -41,6 +41,20 @@ def test_fraction_deflation_semantics():
     assert 0.0 < val < 1.0
 
 
+def test_fraction_is_stable_across_tissue_order_and_python_sum_versions():
+    # These values expose the difference between ordinary iterative summation
+    # and compensated summation (Python 3.12 changed built-in sum()).
+    from math import fsum
+
+    values = {"testis": 1.0, **{f"t{i}": 0.1 for i in range(50)}}
+    expected = 1.0 / fsum(values.values())
+    assert cta_regen._fraction(values, frozenset({"testis"}), False) == expected
+    assert (
+        cta_regen._fraction(dict(reversed(list(values.items()))), frozenset({"testis"}), False)
+        == expected
+    )
+
+
 def test_regeneration_reproduces_shipped_table():
     _require_hpa_v23()
 

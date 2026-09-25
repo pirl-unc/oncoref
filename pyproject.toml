@@ -41,7 +41,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-reports = ["reportlab>=4", "pypdf>=5", "Pillow"]
+reports = ["reportlab>=4", "pypdf>=5", "Pillow", "xlrd>=2"]
 genome = [
     "pyensembl",
 ]

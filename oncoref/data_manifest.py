@@ -288,11 +288,11 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     "cancer-testis-antigens": ("cta", "CTA definition (HPA tissue-restriction over candidates)"),
     "cta-gene-publication-evidence": (
         "cta",
-        "targeted primary CGB evidence with assay resolution and antigen-validation limits",
+        "targeted primary gene evidence with exact locations, assay resolution and validation limits",
     ),
     "cta-publication-membership": (
         "cta",
-        "complete Gong 2021 and Bradley 2020 source memberships with canonical mapping",
+        "complete CTA landscape and placental nominations with source locations and canonical mapping",
     ),
     "cta-publication-sources": (
         "cta",

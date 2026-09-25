@@ -100,7 +100,9 @@ def test_clean_tpm_censoring_is_cta_safe():
     assert rpl10l not in gf.clean_tpm_ribosomal_gene_ids()
     assert rpl10l not in gf.clean_tpm_other_technical_gene_ids()
     assert rpl10l not in censored
-    assert cta_universe.isdisjoint(censored)
+    # Complete landscape intake can nominate housekeeping genes (e.g. RPL39L).
+    # Those rejected upstream candidates must not change normalization policy.
+    assert cta.cta_gene_ids().isdisjoint(censored)
 
 
 def test_housekeeping_panel():
