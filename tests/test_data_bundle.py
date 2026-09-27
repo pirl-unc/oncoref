@@ -5,7 +5,6 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 
 import hashlib
-import io
 import tarfile
 import urllib.error
 from concurrent.futures import ThreadPoolExecutor
@@ -230,24 +229,17 @@ def _overlay_release_manifest(tar_path, *, paths, base_sha="b" * 64):
     return manifest
 
 
-def test_fetch_release_manifest_accepts_sha256_sidecar(monkeypatch):
+def test_fetch_release_manifest_accepts_sha256_sidecar(http_downloads):
     sha = "a" * 64
-
-    class Response(io.BytesIO):
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *args):
-            self.close()
 
     def fake_urlopen(url):
         if url == data_bundle.RELEASE_MANIFEST_URL:
             raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
         if url == data_bundle.RELEASE_CHECKSUM_URL:
-            return Response(f"{sha}  {data_bundle.TARBALL_FILENAME}\n".encode())
+            return f"{sha}  {data_bundle.TARBALL_FILENAME}\n".encode()
         raise AssertionError(url)
 
-    monkeypatch.setattr(data_bundle.urllib.request, "urlopen", fake_urlopen)
+    http_downloads(fake_urlopen)
 
     manifest = data_bundle._fetch_release_manifest(data_bundle.RELEASE_SOURCES[0])
     assert manifest["tarball"]["sha256"] == sha
@@ -444,14 +436,14 @@ def test_is_local_requires_nonempty_dirs(monkeypatch, tmp_path):
         data_bundle.verify_local()
 
 
-def test_download_and_extract_writes_completion_marker(monkeypatch, tmp_path):
+def test_download_and_extract_writes_completion_marker(monkeypatch, tmp_path, http_downloads):
     root = tmp_path / f"v{DATA_VERSION}"
     root.mkdir()
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
     src = tmp_path / "src"
     _write_bundle_fixture(src)
     tar_path = _bundle_tarball(tmp_path, src)
-    monkeypatch.setattr(data_bundle.urllib.request, "urlopen", lambda url: tar_path.open("rb"))
+    http_downloads(lambda url: tar_path.read_bytes())
 
     data_bundle._download_and_extract(
         "https://example.test/bundle.tar.gz",
@@ -471,7 +463,7 @@ def test_download_and_extract_writes_completion_marker(monkeypatch, tmp_path):
     assert all(item["file_count"] >= 1 for item in snap["items"].values())
 
 
-def test_download_and_extract_rejects_checksum_mismatch(monkeypatch, tmp_path):
+def test_download_and_extract_rejects_checksum_mismatch(monkeypatch, tmp_path, http_downloads):
     root = tmp_path / f"v{DATA_VERSION}"
     root.mkdir()
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
@@ -480,7 +472,7 @@ def test_download_and_extract_rejects_checksum_mismatch(monkeypatch, tmp_path):
     tar_path = _bundle_tarball(tmp_path, src)
     manifest = _release_manifest(tar_path)
     manifest["tarball"]["sha256"] = "0" * 64
-    monkeypatch.setattr(data_bundle.urllib.request, "urlopen", lambda url: tar_path.open("rb"))
+    http_downloads(lambda url: tar_path.read_bytes())
 
     with pytest.raises(data_bundle.BundleIntegrityError, match="sha256 mismatch"):
         data_bundle._download_and_extract(
@@ -493,7 +485,7 @@ def test_download_and_extract_rejects_checksum_mismatch(monkeypatch, tmp_path):
     assert data_bundle.status()["completion_marker"]["present"] is False
 
 
-def test_download_and_extract_rejects_incomplete_tarball(monkeypatch, tmp_path):
+def test_download_and_extract_rejects_incomplete_tarball(monkeypatch, tmp_path, http_downloads):
     root = tmp_path / f"v{DATA_VERSION}"
     root.mkdir()
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
@@ -501,7 +493,7 @@ def test_download_and_extract_rejects_incomplete_tarball(monkeypatch, tmp_path):
     _write_bundle_fixture(src)
     missing = "hpa-cell-type-expression.csv"
     tar_path = _bundle_tarball(tmp_path, src, missing={missing})
-    monkeypatch.setattr(data_bundle.urllib.request, "urlopen", lambda url: tar_path.open("rb"))
+    http_downloads(lambda url: tar_path.read_bytes())
 
     with pytest.raises(tarfile.TarError, match=missing):
         data_bundle._download_and_extract(
@@ -515,7 +507,9 @@ def test_download_and_extract_rejects_incomplete_tarball(monkeypatch, tmp_path):
     assert data_bundle.status()["completion_marker"]["present"] is False
 
 
-def test_download_and_apply_overlay_composes_complete_verified_cache(monkeypatch, tmp_path):
+def test_download_and_apply_overlay_composes_complete_verified_cache(
+    monkeypatch, tmp_path, http_downloads
+):
     base = tmp_path / "v5.23.18"
     root = tmp_path / f"v{DATA_VERSION}"
     _write_bundle_fixture(base)
@@ -534,11 +528,7 @@ def test_download_and_apply_overlay_composes_complete_verified_cache(monkeypatch
         manifest_url=data_bundle.RELEASE_MANIFEST_URL,
     )
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(root))
-    monkeypatch.setattr(
-        data_bundle.urllib.request,
-        "urlopen",
-        lambda url: overlay_tar.open("rb"),
-    )
+    http_downloads(lambda url: overlay_tar.read_bytes())
 
     data_bundle._download_and_apply_overlay(
         "https://example.test/overlay.tar.gz",
@@ -672,7 +662,9 @@ def test_overlay_base_rejects_dependency_cycle(tmp_path):
         )
 
 
-def test_overlay_base_composes_chain_with_unversioned_nested_base(monkeypatch, tmp_path):
+def test_overlay_base_composes_chain_with_unversioned_nested_base(
+    monkeypatch, tmp_path, http_downloads
+):
     root = tmp_path / f"v{DATA_VERSION}"
     full_version = "5.23.18"
     overlay_version = "5.23.19"
@@ -737,13 +729,13 @@ def test_overlay_base_composes_chain_with_unversioned_nested_base(monkeypatch, t
 
     def fake_urlopen(url):
         if f"/v{full_version}/" in url:
-            return full_tar.open("rb")
+            return full_tar.read_bytes()
         if f"/v{overlay_version}/" in url:
-            return overlay_tar.open("rb")
+            return overlay_tar.read_bytes()
         raise AssertionError(url)
 
     monkeypatch.setattr(data_bundle, "_read_url_text", fake_read_url_text)
-    monkeypatch.setattr(data_bundle.urllib.request, "urlopen", fake_urlopen)
+    http_downloads(fake_urlopen)
     monkeypatch.setattr(data_bundle, "_DEFAULT_CACHE_PARENT", tmp_path / "other-default")
     monkeypatch.setattr(data_bundle, "_LEGACY_CACHE_PARENT", tmp_path / "other-legacy")
 

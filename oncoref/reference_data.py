@@ -38,11 +38,11 @@ import hashlib
 import json
 import os
 import shutil
-import sys
-import urllib.request
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
+
+from . import _downloads
 
 #: Default HPA release (matched RNA + IHC pair).
 DEFAULT_HPA_VERSION = "v23"
@@ -213,7 +213,9 @@ def _matches_pin(path: Path, pin: dict) -> bool:
         return False
 
 
-def download(name: str, version: str | None = None, *, force: bool = False) -> Path:
+def download(
+    name: str, version: str | None = None, *, force: bool = False, verbose: bool = True
+) -> Path:
     """Download *name*/*version* into the cache (extracting the ``.zip``) and
     record it in the manifest. A cached copy is reused unless ``force=True`` —
     or it fails the manifest size check (a truncated/partial cache), in which
@@ -225,21 +227,29 @@ def download(name: str, version: str | None = None, *, force: bool = False) -> P
     pin = spec.get("pins", {}).get(version)
 
     if dest.exists() and not force and _cached_file_ok(name, version, dest):
+        _downloads.report_cached(f"{name} ({version})", dest, verbose=verbose)
         return dest
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp_zip = dest.parent / (spec["filename"] + ".zip.part")
     tmp_tsv = dest.parent / (spec["filename"] + ".part")
     try:
-        sys.stderr.write(f"oncoref: downloading {name} ({url})\n")
-        sys.stderr.flush()
-        with urllib.request.urlopen(url) as resp, tmp_zip.open("wb") as h:
-            shutil.copyfileobj(resp, h, length=1024 * 1024)
+        _downloads.fetch_file(
+            url,
+            tmp_zip,
+            label=f"{name} ({version})",
+            force=True,
+            verbose=verbose,
+            display_path=dest,
+        )
+        if pin:
+            _downloads.report(f"verifying {name} ({version}) archive", verbose=verbose)
         if pin and _sha256(tmp_zip) != pin["archive_sha256"]:
             raise ReferenceDataError("archive checksum does not match the pinned source")
         if spec.get("archive_format") == "file":
             os.replace(tmp_zip, tmp_tsv)
         else:
+            _downloads.report(f"extracting {name} ({version})", verbose=verbose)
             with zipfile.ZipFile(tmp_zip) as zf:
                 member = _zip_member(zf, spec["filename"])
                 with zf.open(member) as src, tmp_tsv.open("wb") as out:
@@ -249,6 +259,7 @@ def download(name: str, version: str | None = None, *, force: bool = False) -> P
         # Atomic promote: a process killed mid-extract leaves tmp_tsv, never a
         # partial dest. A prior good copy survives a failed re-download untouched.
         os.replace(tmp_tsv, dest)
+        _downloads.report(f"{name} ({version}) ready at {dest}", verbose=verbose)
     except Exception as e:  # network / zip / IO — surface uniformly
         raise ReferenceDataError(f"failed to download {name} ({url}): {e}") from e
     finally:

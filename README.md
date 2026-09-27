@@ -149,6 +149,34 @@ oncoref data prune --yes        # delete stale bundle version caches
 oncoref version
 ```
 
+Downloads use `datacache[progress]>=1.11.1` for streaming and bounded HTTP
+retries. HPA files, expression bundles (including overlays and release metadata),
+per-cohort matrices, and ordinary expression build-source files share this
+transport. Existing cache paths, source versions, archive/content checksums,
+and bundle validation remain in place.
+
+Explicit fetches report the dataset/version, source URL, destination, cache
+reuse, and completion size and average transfer rate. Terminals and notebooks
+also show byte progress and transfer rates; a percentage/ETA appears only when
+the server supplies a usable total. Redirected output gets status lines without
+animated bars. Status and terminal bars go to stderr, keeping stdout usable for
+paths and command results.
+
+```bash
+oncoref data fetch hpa --progress always  # force download bars
+oncoref data fetch bundle --progress never  # status lines only
+oncoref data fetch per-sample:LUAD --quiet  # results/errors, no status or bars
+ONCOREF_DOWNLOAD_PROGRESS=never python analysis.py  # applies to Python calls too
+```
+
+`--progress auto|always|never` overrides `ONCOREF_DOWNLOAD_PROGRESS` (default
+`auto`). Existing `verbose=False` options, plus `reference_data.download(...,
+verbose=False)`, suppress status and bars. Retry warnings retain datacache's
+standard Python logging: transient HTTP failures get at most three attempts,
+with attempt counts and delays reported. Failed transfers preserve previous
+cache files. These controls do not change the specialized resumable SRA/FASTQ
+builder or GDC/API query implementations.
+
 ## Development
 
 ```bash
