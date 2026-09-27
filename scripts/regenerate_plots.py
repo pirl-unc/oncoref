@@ -71,6 +71,56 @@ _PERCENTILE_COVERAGE_PLOTS = frozenset(
 )
 
 
+#: ``(cancer_code, output_subdir)`` rendered as highlighted landscape variants.
+#: The directory is named for what is actually plotted. BRCA_Basal is the registry's
+#: PAM50 basal-like subtype; it overlaps TNBC heavily but is not the same population
+#: (~80% of basal-like tumours are triple-negative, and not all TNBC is basal-like),
+#: so calling the output "tnbc" would claim more than the data supports.
+HIGHLIGHT_TARGETS = (("BRCA_Basal", "basal"),)
+
+
+def _highlight_jobs(availability=None) -> list[tuple[str, str, str, dict]]:
+    """Landscape figures whose marks are per-cancer-code, so a highlight lands.
+
+    Deliberately a subset of :func:`_jobs`: heatmaps, curation figures and
+    burden-category charts have no single cancer-code mark to pick out.
+    """
+    availability = availability or _plot_data_availability()
+    cached = list(availability["per_sample"])
+    jobs = [
+        ("basal", "apd1_vs_tmb_ici", "apd1_vs_tmb", {"strict_pd1": False}),
+        ("basal", "apd1_vs_tmb_strict_pd1", "apd1_vs_tmb", {"strict_pd1": True}),
+        ("basal", "apd1_orr_bars_ici", "apd1_orr_bars", {"strict_pd1": False}),
+        ("basal", "ici_orr_pooled_forest", "ici_orr_pooled_forest", {}),
+        ("basal", "ici_regimen_comparison", "ici_regimen_comparison", {}),
+        ("basal", "ici_response_by_regimen", "ici_response_by_regimen", {}),
+    ]
+    jobs.extend(
+        (
+            "basal",
+            f"apd1_response_signature_{sig}",
+            "apd1_response_signature_scatter",
+            {"signature": sig},
+        )
+        for sig in ("t_cell_inflamed", "tgfb_exclusion")
+    )
+    if cached:
+        jobs.extend(
+            [
+                ("basal", "cta_burden_vs_apd1", "cta_burden_vs_response", {"against": "apd1"}),
+                ("basal", "cta_burden_vs_tmb", "cta_burden_vs_response", {"against": "tmb"}),
+                (
+                    "basal",
+                    "cta_specific_9mer_load_vs_tmb",
+                    "cta_specific_9mer_load",
+                    {"against": "tmb"},
+                ),
+                ("basal", "cta_addressable_burden_us_incidence", "cta_addressable_burden", {}),
+            ]
+        )
+    return jobs
+
+
 def _plot_data_availability() -> dict[str, tuple[str, ...]]:
     """Side-effect-free local inputs available to the plot batch."""
     per_sample = tuple(sorted(_cached_per_sample_cohorts()))
@@ -410,7 +460,7 @@ def _write_all_figures_pdf(run_dir: Path, generated: list[str]) -> Path | None:
     if not pngs:
         return None
 
-    pdf = run_dir / "all-figures.pdf"
+    pdf = run_dir / "oncoref-all-figures.pdf"
     with PdfPages(pdf) as pages:
         for png in pngs:
             image = mpimg.imread(png)
@@ -489,6 +539,32 @@ def main() -> int:
         skipped.append(("cta_curation", f"{type(e).__name__}: {e}"))
         print(f"  SKIP  cta_curation  ({type(e).__name__}: {e})", file=sys.stderr)
         traceback.print_exc(file=sys.stderr)
+
+    # ---- highlighted landscape variants -------------------------------------
+    #
+    # The same landscape figures with one cancer type picked out. Only plots whose
+    # marks are per-cancer-code can carry a highlight, so this is a named subset
+    # rather than "every figure": a burden-category chart has no TNBC row to light up.
+    for code, label in HIGHLIGHT_TARGETS:
+        hl_dir = run_dir / label
+        figure_style.set_highlight(code)
+        try:
+            for family, name, fn_attr, kwargs in _highlight_jobs(availability):
+                out = hl_dir / f"{name}.png"
+                out.parent.mkdir(parents=True, exist_ok=True)
+                figure = None
+                try:
+                    figure = getattr(plots, fn_attr)(save=out, **kwargs)
+                    done.append(f"{label}/{out.name}")
+                    print(f"  ok    {label}/{out.name}")
+                except Exception as e:
+                    skipped.append((f"{label}/{name}", f"{type(e).__name__}: {e}"))
+                    print(f"  SKIP  {label}/{name}  ({type(e).__name__}: {e})", file=sys.stderr)
+                finally:
+                    if figure is not None:
+                        plt.close(figure)
+        finally:
+            figure_style.set_highlight(None)
 
     provenance_dir = run_dir / "expression_provenance"
     try:
