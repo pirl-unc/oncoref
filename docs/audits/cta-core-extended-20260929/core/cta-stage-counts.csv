@@ -1,0 +1,7 @@
+stage,remaining,dropped
+source union,3895,0
+canonical ID mapped,3654,241
+protein-coding candidates,2537,1117
+non-CTA removed,2523,14
+HPA restriction,880,1643
+specificity + expression,624,256

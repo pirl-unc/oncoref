@@ -1,0 +1,20 @@
+Symbol,Ensembl_Gene_ID,publication_sources,covered_by_publication,default_panel,coverage_meaning
+CGB1,ENSG00000267631,Bialas2020_CGB_cancer;Kubiczak2013_CGB_ovarian;Rull2005_CGB_placenta;Rull2008_CGB_RNA;daSilva2017_CT;daSilva2017_testis_biased,True,False,Nomination/expression provenance; not antigen validation
+CGB2,ENSG00000104818,Bialas2020_CGB_cancer;Kubiczak2013_CGB_ovarian;Rull2005_CGB_placenta;Rull2008_CGB_RNA;Wang2016_CT,True,True,Nomination/expression provenance; not antigen validation
+CGB3,ENSG00000104827,Bradley2020_CPA;Gong2021_placenta_PC;Gong2021_reproductive_PC,True,False,Nomination/expression provenance; not antigen validation
+CGB5,ENSG00000189052,Bradley2020_CPA;Gong2021_placenta_PC;Gong2021_reproductive_PC;daSilva2017_CT;daSilva2017_testis_biased,True,False,Nomination/expression provenance; not antigen validation
+CGB7,ENSG00000196337,McKellar2025_CGB7_cancer;Rull2005_CGB_placenta,True,False,Nomination/expression provenance; not antigen validation
+PSG2,ENSG00000242221,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,True,Nomination/expression provenance; not antigen validation
+PSG4,ENSG00000243137,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,False,Nomination/expression provenance; not antigen validation
+PSG6,ENSG00000170848,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,True,Nomination/expression provenance; not antigen validation
+PSG7,ENSG00000221878,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,True,Nomination/expression provenance; not antigen validation
+ERVW-1,ENSG00000242950,Gong2021_placenta_PC;Gong2021_reproductive_PC;Jamin2021_CT;Loriot2025_S2,True,False,Nomination/expression provenance; not antigen validation
+ERVFRD-1,ENSG00000244476,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,False,Nomination/expression provenance; not antigen validation
+ERVH48-1,ENSG00000233056,Gong2021_placenta_ncRNA;Gong2021_reproductive_ncRNA,True,True,Nomination/expression provenance; not antigen validation
+ERVV-1,ENSG00000269526,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,False,Nomination/expression provenance; not antigen validation
+ERVV-2,ENSG00000268964,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,True,Nomination/expression provenance; not antigen validation
+LGALS13,ENSG00000105198,Gong2021_placenta_PC;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_testis_biased,True,True,Nomination/expression provenance; not antigen validation
+LGALS14,ENSG00000006659,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,True,Nomination/expression provenance; not antigen validation
+CSH1,ENSG00000136488,Gong2021_placenta_PC;Gong2021_reproductive_PC;daSilva2017_testis_biased,True,False,Nomination/expression provenance; not antigen validation
+GH2,ENSG00000136487,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,False,Nomination/expression provenance; not antigen validation
+LGALS16,ENSG00000249861,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,True,Nomination/expression provenance; not antigen validation

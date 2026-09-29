@@ -33,9 +33,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--high-expression-threshold", type=float, default=1.0)
     args = parser.parse_args(argv)
 
-    cache = args.cache_dir or (
-        Path.home() / ".cache" / "oncoref" / "expression" / args.source_id
-    )
+    cache = args.cache_dir or (Path.home() / ".cache" / "oncoref" / "expression" / args.source_id)
     result = BUILDERS[args.source_id](
         cache_dir=cache,
         output_dir=args.output_dir,
@@ -52,9 +50,7 @@ def main(argv: list[str] | None = None) -> int:
                 "sample_counts": {
                     code: len(sample_columns(matrix)) for code, matrix in result.matrices.items()
                 },
-                "sidecar_paths": {
-                    name: str(path) for name, path in result.sidecar_paths.items()
-                },
+                "sidecar_paths": {name: str(path) for name, path in result.sidecar_paths.items()},
             },
             indent=2,
             sort_keys=True,

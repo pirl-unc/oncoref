@@ -15,6 +15,7 @@ ownership boundary and the table's basic integrity.
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from oncoref.cta import cta_unfiltered_gene_names
 
@@ -73,6 +74,7 @@ CTA_COLUMNS = [
     "restriction",
     "restriction_confidence",
     "safety_flags",
+    "rna_reproductive_tissue_scope",
 ]
 
 # tsarina's mass-spec evidence columns must NOT ship in oncoref's HPA-only table
@@ -83,12 +85,21 @@ _MASS_SPEC_COLUMNS = {"ms_restriction", "ms_pmids", "ms_healthy_somatic_tissues"
 _CURATED_GENES = {"SSX4B", "MAGEA2B", "GAGE10", "CT45A5", "CGB1", "PSG2", "CSH1"}
 
 
-def test_schema_matches_contract():
-    assert list(pd.read_csv(_CSV, nrows=0).columns) == CTA_COLUMNS
+@pytest.fixture(params=["core", "extended"])
+def snapshot(request):
+    scope = request.param
+    path = _CSV if scope == "core" else _CSV.with_name("cancer-testis-antigens-extended.csv")
+    return scope, pd.read_csv(path)
 
 
-def test_no_mass_spec_columns():
-    cols = set(pd.read_csv(_CSV, nrows=0).columns)
+def test_schema_matches_contract(snapshot):
+    scope, table = snapshot
+    assert list(table.columns) == CTA_COLUMNS
+    assert set(table.rna_reproductive_tissue_scope) == {scope}
+
+
+def test_no_mass_spec_columns(snapshot):
+    cols = set(snapshot[1].columns)
     assert cols.isdisjoint(_MASS_SPEC_COLUMNS), "MS columns belong in tsarina, not oncoref"
 
 
@@ -97,8 +108,8 @@ def test_curated_genes_present():
     assert not missing, f"CTA table missing curated genes: {sorted(missing)}"
 
 
-def test_no_duplicate_gene_ids():
-    df = pd.read_csv(_CSV)
+def test_no_duplicate_gene_ids(snapshot):
+    df = snapshot[1]
     dups = df["Ensembl_Gene_ID"].dropna()
     dups = dups[dups.duplicated()]
     assert dups.empty, f"duplicate Ensembl IDs in CTA table: {sorted(set(dups))}"

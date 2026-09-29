@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Regenerate the HPA-derived columns of the bundled ``cancer-testis-antigens.csv``.
+"""Regenerate both core and extended CTA evidence snapshots from pinned HPA.
 
 Re-derives every RNA / protein / restriction / filter column for every existing
 row from the current pinned HPA release (v23: ``rna_tissue_consensus`` for RNA,
@@ -20,7 +20,8 @@ The HPA tables are downloaded + cached on first use via the oncoref accessors.
 
 The gene list and identity/annotation columns (Symbol, Ensembl_Gene_ID, Aliases,
 Full_Name, Function, source_databases, Canonical_Transcript_ID, biotype) are
-preserved verbatim -- this is HPA-only (no MS, no pyensembl).
+preserved verbatim -- this is HPA-only (no MS, no pyensembl). The extended table
+is always regenerated from the same candidate universe as the core table.
 
 Safe by default: writes a side-by-side ``*.regen.csv`` sidecar and prints a
 per-column delta report against the shipped table, but does NOT overwrite the
@@ -47,6 +48,7 @@ from oncoref.cta_regen import (  # noqa: E402
     PRESERVED_COLUMNS,
     RECOMPUTED_COLUMNS,
     regenerate_cta_columns,
+    reproductive_tier_audit,
 )
 
 CSV_PATH = _REPO_ROOT / "oncoref" / "data" / "cancer-testis-antigens.csv"
@@ -82,8 +84,8 @@ def _report(old: pd.DataFrame, new: pd.DataFrame, columns: list[str]) -> None:
     for col in columns:
         if col == "Symbol" or col not in n_idx.columns or col not in o_idx.columns:
             continue
-        oc = o_idx.loc[common, col].astype(str)
-        nc = n_idx.loc[common, col].astype(str)
+        oc = o_idx.loc[common, col].fillna("").astype(str)
+        nc = n_idx.loc[common, col].fillna("").astype(str)
         diff = int((oc != nc).sum())
         if diff:
             any_change = True
@@ -96,29 +98,42 @@ def _report(old: pd.DataFrame, new: pd.DataFrame, columns: list[str]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true", help="Overwrite the bundled CSV in place.")
+    parser.add_argument(
+        "--tissue-audit",
+        type=Path,
+        help="Also write a core/extended/permissive RNA gate audit CSV.",
+    )
     args = parser.parse_args()
 
     old = pd.read_csv(CSV_PATH)
-    columns = list(old.columns)
-
     print(
         f"Recomputing {len(RECOMPUTED_COLUMNS)} HPA columns; preserving {len(PRESERVED_COLUMNS)}."
     )
     new = regenerate_cta_columns(old)
-    new = new[columns]
+    extended = regenerate_cta_columns(old, tissue_scope="extended")
 
     # Write first, then diff against the round-tripped CSV so the report reflects
     # what actually lands on disk (avoids spurious in-memory dtype "changes",
     # e.g. bool True vs str "True", NaN vs "").
-    dest = CSV_PATH if args.apply else CSV_PATH.with_suffix(".regen.csv")
-    new.to_csv(dest, index=False)
-    _report(old, pd.read_csv(dest), columns)
+    extended_path = CSV_PATH.with_name("cancer-testis-antigens-extended.csv")
+    for path, frame in ((CSV_PATH, new), (extended_path, extended)):
+        previous = pd.read_csv(path) if path.exists() else None
+        dest = path if args.apply else path.with_suffix(".regen.csv")
+        frame.to_csv(dest, index=False)
+        print(f"\n{path.stem}:")
+        if previous is not None:
+            _report(previous, pd.read_csv(dest), list(frame.columns))
+        print(f"{'wrote' if args.apply else '(dry run) wrote'} {len(frame)} rows to {dest}")
+    if args.tissue_audit:
+        audit = reproductive_tier_audit(new)
+        args.tissue_audit.parent.mkdir(parents=True, exist_ok=True)
+        audit.to_csv(args.tissue_audit, index=False)
+        gained = audit.loc[audit.extended_gain, "Symbol"]
+        print(f"\nExtended-tissue HPA gate gains ({len(gained)}): {', '.join(gained)}")
+        print(f"Tissue-scope audit: {args.tissue_audit} (default policy unchanged)")
 
-    if args.apply:
-        print(f"\n--apply: wrote {len(new)} rows to {CSV_PATH}")
-    else:
-        print(f"\n(dry run) wrote regenerated table to {dest}; shipped CSV untouched.")
-        print("Re-run with --apply to overwrite the bundled table.")
+    if not args.apply:
+        print("\nShipped CSVs untouched. Re-run with --apply to overwrite both panels.")
 
 
 if __name__ == "__main__":

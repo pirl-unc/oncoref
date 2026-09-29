@@ -8,18 +8,23 @@ import hashlib
 import importlib.metadata
 import json
 import platform
+import sys
 from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
 
-from oncoref import cta_curation_plots
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(_REPO_ROOT))
+
+from oncoref import cta_curation_plots  # noqa: E402
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--tissue-scope", choices=["core", "extended", "both"], default="core")
     args = parser.parse_args()
-    result = cta_curation_plots.render(args.out)
+    result = cta_curation_plots.render(args.out, tissue_scope=args.tissue_scope)
     combined = args.out / "oncoref-cta-landscape-figures.pdf"
     writer = PdfWriter()
     for key, path in result["paths"].items():
@@ -54,8 +59,8 @@ def main():
     index_path = args.out / "index.md"
     index_path.write_text(
         index_path.read_text().replace(
-            "# CTA source intake and curation\n",
-            f"# CTA source intake and curation\n\n[All figures, vector PDF]({combined.name})\n",
+            "\n",
+            f"\n\n[All figures, vector PDF]({combined.name})\n",
             1,
         )
     )

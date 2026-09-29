@@ -1,0 +1,6 @@
+protein_reliability,rna_threshold
+Enhanced,0.8
+Supported,0.9
+Approved,0.95
+Uncertain,0.97
+no data,0.97

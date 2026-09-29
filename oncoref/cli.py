@@ -386,13 +386,16 @@ def _cmd_plot(args: argparse.Namespace) -> int:
         if args.which == "cta-curation":
             from . import cta_curation_plots
 
-            result = cta_curation_plots.render(out_dir=args.out)
+            kwargs = {"tissue_scope": args.tissue_scope} if args.tissue_scope != "core" else {}
+            result = cta_curation_plots.render(out_dir=args.out, **kwargs)
             print(f"CTA curation figures ({result['n_genes']} evidence rows):")
             for label, remaining, dropped in result.get("stages", ()):
                 suffix = f"  (-{dropped})" if dropped else ""
                 print(f"  stage {label:<18} {remaining:>5}{suffix}")
             for kind, path in result["paths"].items():
                 print(f"  {kind}: {path}")
+            for kind, path in result.get("data_paths", {}).items():
+                print(f"  audit {kind}: {path}")
             return 0
         if args.which == "expression-provenance":
             from . import expression_provenance_plots
@@ -627,6 +630,12 @@ def _build_parser() -> argparse.ArgumentParser:
             "Statistic for cta-expression-heatmap and cta-covering-set. Omit to use "
             "each plot's own default (median for the heatmap, q3 for the covering set)."
         ),
+    )
+    p_plot.add_argument(
+        "--tissue-scope",
+        choices=["core", "extended", "both"],
+        default="core",
+        help="CTA curation panel(s) to render; core remains the default",
     )
     p_plot.add_argument(
         "--source",

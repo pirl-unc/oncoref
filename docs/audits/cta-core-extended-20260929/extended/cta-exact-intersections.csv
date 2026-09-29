@@ -1,0 +1,107 @@
+sources,genes
+Bruggeman 2018,519
+Jamin 2021,320
+da Silva 2017,304
+Wang 2016;Chang 2019,244
+Wang 2016;da Silva 2017;Chang 2019;Gong 2021,226
+Gong 2021,94
+da Silva 2017;Chang 2019;Gong 2021,72
+Wang 2016;da Silva 2017,62
+da Silva 2017;Gong 2021,62
+Wang 2016;da Silva 2017;Chang 2019;Gong 2021;Loriot 2025,56
+Wang 2016;da Silva 2017;Chang 2019,47
+Wang 2016;Bruggeman 2018;Chang 2019,46
+Wang 2016;Chang 2019;Gong 2021,31
+Bruggeman 2018;Jamin 2021,30
+Wang 2016,28
+Wang 2016;da Silva 2017;Chang 2019;Carter 2023;Gong 2021,28
+Wang 2016;Jamin 2021;Chang 2019,27
+Chang 2019,22
+Wang 2016;da Silva 2017;Gong 2021,21
+Wang 2016;Bruggeman 2018;Jamin 2021;Chang 2019,19
+Wang 2016;da Silva 2017;Chang 2019;Carter 2023;Gong 2021;Loriot 2025,18
+da Silva 2017;Loriot 2025,14
+da Silva 2017;Jamin 2021,12
+Wang 2016;Chang 2019;Gong 2021;Loriot 2025,10
+Loriot 2025,9
+da Silva 2017;Jamin 2021;Loriot 2025,9
+Bruggeman 2018;da Silva 2017,8
+Chang 2019;Gong 2021,8
+Wang 2016;Bruggeman 2018;da Silva 2017;Chang 2019,8
+Wang 2016;Bruggeman 2018;da Silva 2017;Chang 2019;Gong 2021,8
+Wang 2016;Bruggeman 2018;da Silva 2017;Jamin 2021;Chang 2019;Gong 2021;Loriot 2025,8
+Wang 2016;Bruggeman 2018;Chang 2019;Gong 2021,7
+Wang 2016;Chang 2019;Carter 2023,7
+Wang 2016;Chang 2019;Loriot 2025,7
+Wang 2016;da Silva 2017;Loriot 2025,7
+Wang 2016;Bruggeman 2018;da Silva 2017;Chang 2019;Gong 2021;Loriot 2025,5
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019,5
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Gong 2021,5
+da Silva 2017;Chang 2019,5
+Wang 2016;Bruggeman 2018;da Silva 2017;Chang 2019;Carter 2023;Gong 2021;Loriot 2025,4
+Wang 2016;Bruggeman 2018;da Silva 2017;Jamin 2021;Chang 2019,4
+Wang 2016;Gong 2021,4
+Wang 2016;da Silva 2017;Chang 2019;Loriot 2025,4
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Gong 2021;Loriot 2025,4
+da Silva 2017;Chang 2019;Carter 2023;Gong 2021,4
+da Silva 2017;Gong 2021;Loriot 2025,4
+da Silva 2017;Jamin 2021;Gong 2021;Loriot 2025,4
+Bruggeman 2018;Gong 2021,3
+Carter 2023,3
+Carter 2023;Gong 2021;Loriot 2025,3
+Wang 2016;da Silva 2017;Jamin 2021,3
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Gong 2021;Loriot 2025,3
+da Silva 2017;Chang 2019;Gong 2021;Loriot 2025,3
+da Silva 2017;Seager 2024;Loriot 2025,3
+Bruggeman 2018;Gong 2021;Loriot 2025,2
+Bruggeman 2018;da Silva 2017;Carter 2023;Gong 2021,2
+Chang 2019;Loriot 2025,2
+Gong 2021;Loriot 2025,2
+Seager 2024,2
+Wang 2016;Bruggeman 2018;da Silva 2017;Chang 2019;Loriot 2025,2
+Wang 2016;Bruggeman 2018;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Gong 2021;Loriot 2025,2
+Wang 2016;Bruggeman 2018;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Seager 2024;Gong 2021;Loriot 2025,2
+Wang 2016;Jamin 2021;Chang 2019;Loriot 2025,2
+Wang 2016;da Silva 2017;Chang 2019;Carter 2023,2
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Gong 2021,2
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Seager 2024;Gong 2021;Loriot 2025,2
+da Silva 2017;Carter 2023;Gong 2021,2
+da Silva 2017;Chang 2019;Carter 2023;Gong 2021;Loriot 2025,2
+Bai 2016,1
+Bruggeman 2018;Chang 2019,1
+Bruggeman 2018;Jamin 2021;Carter 2023;Gong 2021,1
+Bruggeman 2018;Loriot 2025,1
+Bruggeman 2018;da Silva 2017;Gong 2021,1
+Bruggeman 2018;da Silva 2017;Gong 2021;Loriot 2025,1
+Bruggeman 2018;da Silva 2017;Jamin 2021;Gong 2021,1
+Carter 2023;Gong 2021,1
+Chang 2019;Carter 2023,1
+Jamin 2021;Gong 2021;Loriot 2025,1
+Jamin 2021;Loriot 2025,1
+Wang 2016;Bruggeman 2018,1
+Wang 2016;Bruggeman 2018;Chang 2019;Carter 2023;Gong 2021,1
+Wang 2016;Bruggeman 2018;Chang 2019;Carter 2023;Gong 2021;Loriot 2025,1
+Wang 2016;Bruggeman 2018;Chang 2019;Gong 2021;Loriot 2025,1
+Wang 2016;Bruggeman 2018;Chang 2019;Loriot 2025,1
+Wang 2016;Bruggeman 2018;da Silva 2017;Chang 2019;Carter 2023;Gong 2021,1
+Wang 2016;Bruggeman 2018;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Gong 2021,1
+Wang 2016;Carter 2023,1
+Wang 2016;Chang 2019;Carter 2023;Gong 2021,1
+Wang 2016;Chang 2019;Carter 2023;Gong 2021;Loriot 2025,1
+Wang 2016;Jamin 2021;Chang 2019;Carter 2023;Seager 2024;Gong 2021;Loriot 2025,1
+Wang 2016;Jamin 2021;Chang 2019;Gong 2021,1
+Wang 2016;Jamin 2021;Chang 2019;Gong 2021;Loriot 2025,1
+Wang 2016;Jamin 2021;Loriot 2025,1
+Wang 2016;da Silva 2017;Chang 2019;Carter 2023;Loriot 2025,1
+Wang 2016;da Silva 2017;Chang 2019;Carter 2023;Seager 2024;Gong 2021;Loriot 2025,1
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023,1
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Loriot 2025,1
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Seager 2024;Gong 2021;Loriot 2025,1
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Carter 2023;Seager 2024;Loriot 2025,1
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Loriot 2025,1
+Wang 2016;da Silva 2017;Jamin 2021;Chang 2019;Seager 2024;Loriot 2025,1
+Wang 2016;da Silva 2017;Jamin 2021;Gong 2021;Loriot 2025,1
+Wang 2016;da Silva 2017;Jamin 2021;Seager 2024;Loriot 2025,1
+da Silva 2017;Carter 2023;Loriot 2025,1
+da Silva 2017;Chang 2019;Carter 2023,1
+da Silva 2017;Jamin 2021;Chang 2019;Gong 2021;Loriot 2025,1
