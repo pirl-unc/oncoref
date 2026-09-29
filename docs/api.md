@@ -721,6 +721,9 @@ review excludes it from both. PATE1/PATE4/LIPI remain candidates pending
 complete-paper provenance; TRIM64 remains candidate-only. The extended panel is a broader anatomical
 restriction definition, not an assertion of equivalent immune privilege or safety.
 
+`cta_specificity_audit(tissue_scope="extended")` joins extended reviews to
+extended RNA evidence; its default remains core.
+
 `cta_clinical_target_evidence()` continues to describe core evidence. Its
 `exclusion_reasons`, `rna_deflated_reproductive_frac` and
 `rna_restriction_threshold` identify the failed gate. The legacy

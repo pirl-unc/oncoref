@@ -285,9 +285,20 @@ def stage_counts(tissue_scope="core"):
     return rows
 
 
-def _save(fig, path, plt):
+def _save(fig, path, plt, tissue_scope=None):
     from matplotlib.text import Text
 
+    if tissue_scope is not None:
+        reproductive_tissues(tissue_scope)
+        label = "Core CTAs" if tissue_scope == "core" else "Extended reproductive CTAs"
+        fig.text(
+            0,
+            1.02,
+            f"{label} · HPA v23 · RNA tissue scope: {tissue_scope}",
+            ha="left",
+            va="bottom",
+            fontsize=10,
+        )
     for text in fig.findobj(Text):
         text.set_fontsize(text.get_fontsize() * _FONT_SCALE)
     figure_style.save(fig, path, keep_titles=True)
@@ -314,7 +325,7 @@ def _fig_source_venn(df, path, plt):
     ax.set_title(
         "Published CT / germ-cell cancer sets\nMapped protein-coding nominations, before HPA filtering"
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_stage_funnel(df, path, plt):
@@ -336,7 +347,7 @@ def _fig_stage_funnel(df, path, plt):
     ax.set_xlabel("Distinct source identities / canonical genes")
     ax.set_title("Full union of the ten minimum-cover papers")
     ax.set_xlim(0, max(remaining) * 1.1)
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_filter_funnel(df, path, plt):
@@ -362,7 +373,7 @@ def _fig_filter_funnel(df, path, plt):
     ax.set_title("Default-panel retention by source")
     ax.set_xlim(0, max(kept + dropped) * 1.14)
     ax.legend(loc="lower right")
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_filter_outcome(df, path, plt):
@@ -390,7 +401,7 @@ def _fig_filter_outcome(df, path, plt):
     ax.set_xlabel("genes")
     ax.set_title("Default-panel outcomes by source")
     ax.legend(loc="lower right")
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_deflated_dist(df, path, plt):
@@ -418,7 +429,7 @@ def _fig_deflated_dist(df, path, plt):
         ha="center",
         fontsize=8,
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_protein_vs_rna(df, path, plt):
@@ -460,7 +471,7 @@ def _fig_protein_vs_rna(df, path, plt):
         ha="center",
         fontsize=8,
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def source_overlap_counts(df=None):
@@ -513,7 +524,7 @@ def _fig_legacy_source_venn(df, path, plt):
         {k: sets[k] for k in keys},
         "Historical tags (audit only)\nNot the paper-union intake or independent validation",
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_landscape_source_venn(df, path, plt):
@@ -538,7 +549,7 @@ def _fig_landscape_source_venn(df, path, plt):
         fontsize=9,
     )
     fig.tight_layout(rect=(0, 0.09, 1, 1), w_pad=2)
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def placental_source_sets(df=None):
@@ -563,7 +574,7 @@ def _fig_placental_source_overlap(df, path, plt):
         placental_source_sets(df),
         "Placental source audit (includes unselected Bradley)\nMapped coding candidates before HPA filtering",
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_source_overlap(df, path, plt):
@@ -612,7 +623,7 @@ def _fig_source_overlap(df, path, plt):
         fontsize=10,
     )
     fig.tight_layout(rect=(0, 0.05, 1, 1), w_pad=3)
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_publication_funnel(df, path, plt):
@@ -682,7 +693,7 @@ def _fig_publication_funnel(df, path, plt):
         fontsize=9,
     )
     fig.tight_layout(rect=(0, 0.08, 1, 1))
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_placental_evidence_coverage(df, path, plt):
@@ -735,7 +746,7 @@ def _fig_placental_evidence_coverage(df, path, plt):
         fontsize=9,
     )
     fig.tight_layout(rect=(0, 0.095, 1, 1))
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 _BUILDERS = {

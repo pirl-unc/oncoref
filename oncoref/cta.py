@@ -281,14 +281,7 @@ def _with_specificity_columns(df: pd.DataFrame, *, tissue_scope: str = "core") -
     for col in defaults.columns:
         out[col] = defaults[col].to_numpy()
 
-    audit = cta_specificity_audit_references()
-    if "tissue_scope" in audit:
-        invalid = ~audit.tissue_scope.fillna("all").isin(["all", "core", "extended"])
-        if invalid.any():
-            raise ValueError(
-                f"Unknown specificity review tissue scope: {audit.loc[invalid, 'tissue_scope'].tolist()}"
-            )
-        audit = audit[audit.tissue_scope.fillna("all").isin(["all", tissue_scope])]
+    audit = _specificity_reviews_for_scope(tissue_scope)
     if audit.empty:
         return out
     audit = audit.copy()
@@ -320,6 +313,20 @@ def _with_specificity_columns(df: pd.DataFrame, *, tissue_scope: str = "core") -
         audit_col = f"{col}_audit"
         out[col] = joined[audit_col].where(joined[audit_col].notna(), out[col]).to_numpy()
     return out
+
+
+def _specificity_reviews_for_scope(tissue_scope: str) -> pd.DataFrame:
+    """Select shared and panel-specific decisions before joining RNA evidence."""
+    reproductive_tissues(tissue_scope)
+    audit = cta_specificity_audit_references()
+    if "tissue_scope" in audit:
+        invalid = ~audit.tissue_scope.fillna("all").isin(["all", "core", "extended"])
+        if invalid.any():
+            raise ValueError(
+                f"Unknown specificity review tissue scope: {audit.loc[invalid, 'tissue_scope'].tolist()}"
+            )
+        audit = audit[audit.tissue_scope.fillna("all").isin(["all", tissue_scope])]
+    return audit
 
 
 @lru_cache(maxsize=1)
@@ -401,14 +408,15 @@ def cta_specificity_audit_references() -> pd.DataFrame:
     return get_data("cta-specificity-audit").copy()
 
 
-def cta_specificity_audit() -> pd.DataFrame:
+def cta_specificity_audit(*, tissue_scope: str = "core") -> pd.DataFrame:
     """Specificity audit rows joined to HPA/candidate evidence.
 
     The raw audit table records the decision, action, source anchor, and rationale.
     This helper adds the normal-tissue columns needed to review or reproduce the
-    decision without searching the broader CTA and candidate tables.
+    decision without searching the broader CTA and candidate tables. Selects
+    shared and matching scoped reviews, joined to that panel's RNA evidence.
     """
-    audit = cta_specificity_audit_references()
+    audit = _specificity_reviews_for_scope(tissue_scope).copy()
     audit["Ensembl_Gene_ID"] = audit["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
 
     table_cols = [
@@ -416,6 +424,8 @@ def cta_specificity_audit() -> pd.DataFrame:
         "Ensembl_Gene_ID",
         "passes_filters",
         "never_expressed",
+        "rna_reproductive_tissue_scope",
+        "rna_deflated_reproductive_frac",
         "rna_testis_ntpm",
         "rna_ovary_ntpm",
         "rna_placenta_ntpm",
@@ -431,7 +441,7 @@ def cta_specificity_audit() -> pd.DataFrame:
         "restriction_confidence",
         "safety_flags",
     ]
-    table = _cta_frame()[table_cols].copy()
+    table = _cta_frame(tissue_scope)[table_cols].copy()
     table["Ensembl_Gene_ID"] = table["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
     out = audit.merge(
         table.drop(columns=["Symbol"]).rename(columns={"passes_filters": "cta_passes_filters"}),
@@ -458,7 +468,7 @@ def cta_specificity_audit() -> pd.DataFrame:
     # ``cta_passes_filters`` would report it as in neither tier -- invisible on
     # both axes. Both sides are version-stripped, like every other join here.
     raw_table_ids = set(
-        get_data("cancer-testis-antigens", copy=False)["Ensembl_Gene_ID"]
+        get_data(cta_dataset_name(tissue_scope), copy=False)["Ensembl_Gene_ID"]
         .astype(str)
         .str.split(".")
         .str[0]

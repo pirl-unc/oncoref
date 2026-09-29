@@ -487,3 +487,18 @@ def test_specificity_audit_reports_raw_table_membership_for_excluded_families(mo
     row = cta.cta_specificity_audit().iloc[0]
     assert row.in_cta_table
     assert not row.in_candidate_watchlist
+
+
+def test_specificity_audit_joins_the_requested_scope():
+    core = cta.cta_specificity_audit().set_index("Symbol")
+    extended = cta.cta_specificity_audit(tissue_scope="extended").set_index("Symbol")
+    assert core.loc["PAGE4", "rna_deflated_reproductive_frac"] == 0.4539
+    assert not core.loc["PAGE4", "cta_passes_filters"]
+    assert "PAGE4" not in extended.index
+    assert not {"PATE1", "PATE4", "LIPI"} & set(core.index)
+    legacy = extended.loc[["PATE1", "PATE4", "LIPI"]]
+    assert legacy.cta_passes_filters.all()
+    assert legacy.rna_reproductive_tissue_scope.eq("extended").all()
+    assert legacy.specificity_action.eq("candidate_only").all()
+    assert legacy.rna_deflated_reproductive_frac.ge(0.99).all()
+    assert extended.loc["TRIM64", "specificity_action"] == "candidate_only"
