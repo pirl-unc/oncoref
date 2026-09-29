@@ -14,7 +14,7 @@
 
 This ports the HPA-only producer logic from tsarina (``tsarina.tiers``,
 ``scripts/add_cta_gene.py``, ``scripts/regenerate_table.py``) into oncoref so
-the bundled table's ~47 RNA/protein/restriction/filter columns can be re-derived
+the bundled table's RNA/protein/restriction/filter columns can be re-derived
 from the Human Protein Atlas alone -- no mass-spec evidence and no pyensembl.
 
 The gene list (Symbol, Ensembl_Gene_ID, Aliases, Full_Name, Function,
@@ -45,12 +45,16 @@ from . import cta as _cta
 from .cta_tissues import (
     ALL_REPRODUCTIVE_TISSUES,
     CORE_REPRODUCTIVE_TISSUES,
+    EXTENDED_REPRODUCTIVE_TISSUES,
     HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS,
     HPA_EXPRESSION_FLOOR_NTPM,
     NON_SOMATIC_TISSUES,
+    PERMISSIVE_REPRODUCTIVE_TISSUES,
     PROTEIN_DETECTED_LEVELS,
     SAFETY_NTPM_THRESHOLD,
     SAFETY_TISSUE_GROUPS,
+    adaptive_rna_threshold,
+    reproductive_tissues,
 )
 from .load_dataset import _register_derived_cache, get_data
 
@@ -145,7 +149,7 @@ def _enrich_rna_per_tissue(seed: pd.DataFrame, ntpm_by_gene: dict[str, dict[str,
     placenta_vals: list[float] = []
     max_somatic_tissues: list[str] = []
     max_somatic_ntpms: list[float] = []
-    somatic_detected_counts: list[int] = []
+    somatic_detected_counts: list[float] = []
     safety_maxes: dict[str, list[float]] = {grp: [] for grp in SAFETY_TISSUE_GROUPS}
 
     for _, row in seed.iterrows():
@@ -153,14 +157,14 @@ def _enrich_rna_per_tissue(seed: pd.DataFrame, ntpm_by_gene: dict[str, dict[str,
         tissue_ntpm = ntpm_by_gene.get(gid)
 
         if not tissue_ntpm:
-            testis_vals.append(0.0)
-            ovary_vals.append(0.0)
-            placenta_vals.append(0.0)
+            testis_vals.append(float("nan"))
+            ovary_vals.append(float("nan"))
+            placenta_vals.append(float("nan"))
             max_somatic_tissues.append("")
-            max_somatic_ntpms.append(0.0)
-            somatic_detected_counts.append(0)
+            max_somatic_ntpms.append(float("nan"))
+            somatic_detected_counts.append(float("nan"))
             for grp in SAFETY_TISSUE_GROUPS:
-                safety_maxes[grp].append(0.0)
+                safety_maxes[grp].append(float("nan"))
             continue
 
         testis_vals.append(tissue_ntpm.get("testis", 0.0))
@@ -289,6 +293,8 @@ def _assign_rna_restriction(row: pd.Series) -> str:
     detected, else TESTIS / PLACENTAL / REPRODUCTIVE / NO_DATA from which
     reproductive tissues are detected.
     """
+    if pd.isna(row.get("rna_somatic_detected_count")):
+        return "NO_DATA"
     testis = float(row.get("rna_testis_ntpm", 0) or 0)
     ovary = float(row.get("rna_ovary_ntpm", 0) or 0)
     placenta = float(row.get("rna_placenta_ntpm", 0) or 0)
@@ -321,7 +327,7 @@ def _assign_rna_restriction_level(row: pd.Series) -> str:
     except (ValueError, TypeError):
         frac = -1.0
 
-    if frac < 0:
+    if pd.isna(frac) or frac < 0:
         return "NO_DATA"
 
     somatic_count = int(row.get("rna_somatic_detected_count", 0) or 0)
@@ -369,18 +375,86 @@ def _passes_filters_rule(row: pd.Series, missing_threshold: float) -> bool:
     threshold for the protein tier (no protein -> "Missing"), with Uncertain and
     Missing tiers pinned to *missing_threshold*.
     """
+    return not restriction_failure_reasons(row, missing_threshold=missing_threshold)
+
+
+def restriction_failure_reasons(
+    row: pd.Series, *, missing_threshold: float = HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS["Missing"]
+) -> str:
+    """Semicolon-separated failures of the HPA gate, before specificity review.
+
+    The RNA fraction uses the row's named tissue scope (core for legacy rows).
+    A somatic RNA maximum alone cannot explain the gate: accessory reproductive
+    tissues also dilute the core fraction.
+    """
+    reasons = []
     if str(row["biotype"]) != "protein_coding":
-        return False
+        reasons.append("noncoding")
     reliability = str(row["protein_reliability"]).strip()
     has_protein = _has_protein(reliability)
     if has_protein and str(row["protein_reproductive"]).strip().lower() != "true":
-        return False
+        reasons.append("protein_outside_reproductive_tissues")
     tier = reliability if has_protein else "Missing"
-    threshold = HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS.get(tier, missing_threshold)
+    threshold = adaptive_rna_threshold(tier)
     if tier in ("Uncertain", "Missing"):
         threshold = missing_threshold
-    frac = row["rna_deflated_reproductive_frac"]
-    return False if pd.isna(frac) else bool(float(frac) >= threshold)
+    frac = pd.to_numeric(row["rna_deflated_reproductive_frac"], errors="coerce")
+    if pd.isna(frac):
+        reasons.append("missing_rna")
+    elif float(frac) < threshold:
+        scope = row.get("rna_reproductive_tissue_scope", "core")
+        reproductive_tissues(scope)
+        reasons.append(f"{scope}_rna_fraction_below_threshold")
+    return ";".join(reasons)
+
+
+def reproductive_tier_audit(table: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Compare core, extended and permissive RNA gates without changing defaults.
+
+    Recomputes fractions from pinned HPA v23 RNA. Protein evidence and adaptive
+    thresholds are held fixed from the supplied (normally regenerated) table.
+    Pass columns describe the HPA gate only, before family/expression/specificity
+    decisions. Missing RNA stays missing and fails every gate.
+    """
+    from . import hpa
+
+    table = get_data("cancer-testis-antigens") if table is None else table
+    ntpm_by_gene = _build_ntpm_by_gene(hpa.hpa_rna_consensus())
+    records = []
+    for _, row in table.iterrows():
+        gid = str(row.Ensembl_Gene_ID).split(".")[0]
+        ntpm = ntpm_by_gene.get(gid, {})
+        outside_core = {t: v for t, v in ntpm.items() if t not in CORE_REPRODUCTIVE_TISSUES}
+        max_tissue = max(outside_core, key=outside_core.get) if outside_core else ""
+        somatic = {t: v for t, v in ntpm.items() if t not in _NON_SOMATIC_LOWER}
+        max_somatic = max(somatic, key=somatic.get) if somatic else ""
+        record = {
+            "Symbol": row.Symbol,
+            "Ensembl_Gene_ID": gid,
+            "source_version": "HPA v23",
+            "rna_observed": bool(ntpm),
+            "protein_reliability": row.protein_reliability,
+            "rna_threshold": adaptive_rna_threshold(row.protein_reliability),
+            "max_outside_core_tissue": max_tissue,
+            "max_outside_core_ntpm": outside_core.get(max_tissue, float("nan")),
+            "max_somatic_tissue": max_somatic,
+            "max_somatic_ntpm": somatic.get(max_somatic, 0.0 if ntpm else float("nan")),
+        }
+        for tier, allowed in (
+            ("core", CORE_REPRODUCTIVE_TISSUES),
+            ("extended", EXTENDED_REPRODUCTIVE_TISSUES),
+            ("permissive", PERMISSIVE_REPRODUCTIVE_TISSUES),
+        ):
+            frac = round(_fraction(ntpm, allowed, deflate=True), 4) if ntpm else float("nan")
+            record[f"{tier}_deflated_frac"] = frac
+            candidate = row.copy()
+            candidate["rna_deflated_reproductive_frac"] = frac
+            record[f"{tier}_hpa_pass"] = _passes_filters_rule(
+                candidate, HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS["Missing"]
+            )
+        record["extended_gain"] = record["extended_hpa_pass"] and not record["core_hpa_pass"]
+        records.append(record)
+    return pd.DataFrame(records)
 
 
 def _never_expressed_rule(row: pd.Series, floor: float) -> bool:
@@ -395,6 +469,7 @@ def _never_expressed_rule(row: pd.Series, floor: float) -> bool:
 
 #: Columns recomputed from HPA RNA (consensus) by :func:`regenerate_cta_columns`.
 _RNA_COLUMNS: list[str] = [
+    "rna_reproductive_tissue_scope",
     "rna_reproductive_frac",
     "rna_reproductive_and_thymus_frac",
     "rna_deflated_reproductive_frac",
@@ -461,12 +536,27 @@ RECOMPUTED_COLUMNS: list[str] = _RNA_COLUMNS + _PROTEIN_COLUMNS + _SYNTHESIS_COL
 
 
 def _recompute_rna_columns(
-    seed: pd.DataFrame, ntpm_by_gene: dict[str, dict[str, float]]
+    seed: pd.DataFrame, ntpm_by_gene: dict[str, dict[str, float]], *, tissue_scope: str = "core"
 ) -> list[str]:
     """Recompute all RNA-derived columns in place; return symbols missing from HPA."""
-    core = CORE_REPRODUCTIVE_TISSUES
+    core = reproductive_tissues(tissue_scope)
+    seed["rna_reproductive_tissue_scope"] = tissue_scope
     core_thymus = frozenset(core | {"thymus"})
     missing: list[str] = []
+
+    # Never carry evidence from the input snapshot into a new regeneration.
+    # In particular, a scope label must not describe another scope's fractions.
+    for col in (
+        "rna_reproductive_frac",
+        "rna_reproductive_and_thymus_frac",
+        "rna_deflated_reproductive_frac",
+        "rna_deflated_reproductive_and_thymus_frac",
+        "rna_max_ntpm",
+    ):
+        seed[col] = float("nan")
+    for pct, _ in _PCT_FILTERS:
+        seed[f"rna_{pct}_pct_filter"] = False
+    seed["rna_thymus"] = pd.Series(pd.NA, index=seed.index, dtype="boolean")
 
     for idx, row in seed.iterrows():
         gid = str(row["Ensembl_Gene_ID"]).split(".")[0]
@@ -490,19 +580,37 @@ def _recompute_rna_columns(
 
     # Per-tissue detail + safety max columns, then the RNA axes.
     _enrich_rna_per_tissue(seed, ntpm_by_gene)
-    seed["rna_reproductive"] = seed["rna_somatic_detected_count"].fillna(0).astype(int).eq(0)
+    seed["rna_reproductive"] = seed["rna_somatic_detected_count"].eq(0).fillna(False)
     seed["rna_restriction"] = seed.apply(_assign_rna_restriction, axis=1)
+    if tissue_scope == "extended":
+        # An extended-only signal must not be mislabeled NO_DATA or as a
+        # single core organ. Somatic detections still take precedence.
+        accessory = core - CORE_REPRODUCTIVE_TISSUES
+        for idx, row in seed.iterrows():
+            ntpm = ntpm_by_gene.get(str(row.Ensembl_Gene_ID).split(".")[0], {})
+            if (
+                pd.notna(row.rna_somatic_detected_count)
+                and row.rna_somatic_detected_count == 0
+                and any(ntpm.get(t, 0) >= 1 for t in accessory)
+            ):
+                seed.at[idx, "rna_restriction"] = "REPRODUCTIVE"
     seed["rna_restriction_level"] = seed.apply(_assign_rna_restriction_level, axis=1)
     return missing
 
 
-def regenerate_cta_columns(table: pd.DataFrame) -> pd.DataFrame:
+def regenerate_cta_columns(table: pd.DataFrame, *, tissue_scope: str = "core") -> pd.DataFrame:
     """Recompute the HPA-derived CTA columns from HPA, preserving the gene list.
 
     Takes the shipped ``cancer-testis-antigens.csv`` as a DataFrame (for the
     frozen candidate universe + the preserved identity/annotation columns) and
-    returns a new DataFrame with the ~47 HPA columns recomputed from the current
-    HPA release. Column order and the preserved columns are kept unchanged.
+    returns a new DataFrame with the HPA columns recomputed from the pinned
+    HPA release. Existing column order and identity columns are preserved;
+    ``rna_reproductive_tissue_scope`` is appended if absent.
+
+    Genes absent from HPA RNA have their RNA measurements cleared, RNA axes
+    set to ``NO_DATA`` and RNA/filter qualification flags set to false. This
+    applies to both scope conversions and regeneration within the same scope;
+    input RNA values are never a fallback for missing observations.
 
     Downloads HPA v23 (``rna_tissue_consensus`` + ``normal_tissue``) via the
     oncoref accessors on first use.
@@ -511,15 +619,19 @@ def regenerate_cta_columns(table: pd.DataFrame) -> pd.DataFrame:
     ----------
     table
         The shipped CTA table. Must carry ``Ensembl_Gene_ID`` and ``biotype``.
+    tissue_scope
+        ``core`` (default) or ``extended`` reproductive RNA numerator. Protein
+        evidence, somatic-max exclusions and adaptive thresholds are shared.
 
     Returns
     -------
     pd.DataFrame
-        Same rows/columns as *table*, with the HPA columns recomputed.
+        Same rows as *table*, with HPA columns recomputed and scope identified.
     """
     from . import hpa  # lazy: triggers HPA download only when regenerating
 
-    columns = list(table.columns)
+    reproductive_tissues(tissue_scope)
+    columns = list(dict.fromkeys([*table.columns, "rna_reproductive_tissue_scope"]))
     seed = table.copy()
 
     consensus = hpa.hpa_rna_consensus()
@@ -528,13 +640,13 @@ def regenerate_cta_columns(table: pd.DataFrame) -> pd.DataFrame:
 
     # Protein/IHC first -- the RNA restriction axes and the filters read it.
     _recompute_protein_columns(seed, normal_tissue)
-    missing = _recompute_rna_columns(seed, ntpm_by_gene)
+    missing = _recompute_rna_columns(seed, ntpm_by_gene, tissue_scope=tissue_scope)
     if missing:
         import warnings
 
         warnings.warn(
-            f"{len(missing)} gene(s) absent from HPA rna_consensus keep their input RNA "
-            f"values (not recomputed): {', '.join(missing[:10])}"
+            f"{len(missing)} gene(s) absent from HPA rna_consensus; RNA evidence cleared "
+            f"and restriction gate failed: {', '.join(missing[:10])}"
             + (" …" if len(missing) > 10 else ""),
             stacklevel=2,
         )

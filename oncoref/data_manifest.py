@@ -286,6 +286,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "one-row-per-source reference-expression availability manifest",
     ),
     "cancer-testis-antigens": ("cta", "CTA definition (HPA tissue-restriction over candidates)"),
+    "cancer-testis-antigens-extended": (
+        "cta",
+        "extended reproductive CTA definition over the same candidate universe",
+    ),
     "cta-gene-publication-evidence": (
         "cta",
         "targeted primary gene evidence with exact locations, assay resolution and validation limits",

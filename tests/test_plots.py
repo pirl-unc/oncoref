@@ -1345,3 +1345,49 @@ def test_log_axis_stays_plain_log_when_every_value_is_positive():
         points, xlabel="x", ylabel="y", title="t", logx=True, annotate=False
     )
     assert fig.axes[0].get_xscale() == "log"
+
+
+def test_cta_figures_use_the_filter_thresholds(monkeypatch, tmp_path):
+    import matplotlib.pyplot as plt
+
+    from oncoref import cta_curation_plots as ccp
+    from oncoref.cta_tissues import adaptive_rna_threshold
+
+    captured = []
+    monkeypatch.setattr(ccp, "_save", lambda fig, *args: captured.append(fig))
+    for builder in (ccp._fig_deflated_dist, ccp._fig_protein_vs_rna):
+        builder(ccp._evidence(), tmp_path / "unused.png", plt)
+    expected = {adaptive_rna_threshold(tier) for tier in ccp.RELIABILITY_ORDER}
+    try:
+        assert {float(line.get_xdata()[0]) for line in captured[0].axes[0].lines} == expected
+        assert {float(line.get_ydata()[0]) for line in captured[1].axes[0].lines} == expected
+    finally:
+        for fig in captured:
+            plt.close(fig)
+
+
+def test_cta_both_panels_render_and_reconcile_to_public_sets(tmp_path):
+    import pandas as pd
+
+    from oncoref import cta
+    from oncoref import cta_curation_plots as ccp
+
+    result = ccp.render(tmp_path, tissue_scope="both")
+    for scope, expected in [
+        ("core", cta.cta_gene_ids()),
+        ("extended", cta.cta_extended_gene_ids()),
+    ]:
+        panel = result["panels"][scope]
+        assert panel["stages"][-1][1] == len(expected)
+        counts = pd.read_csv(panel["data_paths"]["publication_intake_counts"])
+        assert (counts.remaining >= 0).all()
+        assert set(panel["paths"]) == set(ccp.FILENAMES)
+        assert all(p.parent.name == scope for p in panel["paths"].values())
+    assert len(result["paths"]) == 2 * len(ccp.FILENAMES) + 1
+    delta = pd.read_csv(result["data_paths"]["comparison"])
+    assert (
+        set(delta.loc[delta.extended_addition, "Ensembl_Gene_ID"])
+        == cta.cta_extended_gene_ids() - cta.cta_gene_ids()
+    )
+    assert "PAGE4" in set(delta.loc[delta.extended_addition, "Symbol"])
+    assert "MAGEA11" not in set(delta.loc[delta.extended_addition, "Symbol"])

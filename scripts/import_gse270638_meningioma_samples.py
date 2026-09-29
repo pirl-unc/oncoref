@@ -98,8 +98,7 @@ def build_manifest(
                 "raw_unit": "raw counts",
                 "processing_pipeline": PIPELINE,
                 "source_url": (
-                    "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc="
-                    + row["geo_accession"]
+                    "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=" + row["geo_accession"]
                 ),
                 "lineage_evidence_source": (
                     f"{row['geo_accession']} GEO source/tissue metadata: meningioma"

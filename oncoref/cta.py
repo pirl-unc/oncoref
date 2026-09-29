@@ -34,7 +34,7 @@ from functools import lru_cache
 
 import pandas as pd
 
-from .cta_tissues import HPA_EXPRESSION_FLOOR_NTPM
+from .cta_tissues import HPA_EXPRESSION_FLOOR_NTPM, cta_dataset_name, reproductive_tissues
 from .load_dataset import _register_derived_cache, get_data
 
 
@@ -180,11 +180,11 @@ def synthesize_restriction(row) -> tuple[str, str]:
     return tissue, confidence
 
 
-@lru_cache(maxsize=1)
-def _cta_frame() -> pd.DataFrame:
+@lru_cache(maxsize=2)
+def _cta_frame(tissue_scope: str = "core") -> pd.DataFrame:
     """Cached CTA table with the non-CTA excluded genes dropped. Internal,
     read-only — do not mutate; public callers get a copy via cta_df()."""
-    df = get_data("cancer-testis-antigens", copy=False)
+    df = get_data(cta_dataset_name(tissue_scope), copy=False)
     excluded = _non_cta_excluded_gene_ids()
     if "Ensembl_Gene_ID" in df.columns and excluded:
         unversioned = df["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
@@ -205,6 +205,28 @@ def cta_df() -> pd.DataFrame:
 def cta_evidence() -> pd.DataFrame:
     """The CTA evidence DataFrame (alias of :func:`cta_df`)."""
     return cta_df()
+
+
+def cta_extended_df() -> pd.DataFrame:
+    """Extended reproductive CTA candidates and reviewed decisions.
+
+    Uses core + accessory reproductive tissues in the RNA numerator. Breast and
+    thymus are not added. Protein, family and expression rules are shared with
+    the core panel; only explicitly core-scoped reviews are omitted.
+    """
+    return _with_specificity_columns(_cta_frame("extended"), tissue_scope="extended")
+
+
+def cta_extended_gene_names() -> set[str]:
+    """Expressed extended reproductive CTAs; an explicit alternative to core."""
+    df = cta_extended_df()
+    return set(df.loc[_canonical_default_mask(df), "Symbol"])
+
+
+def cta_extended_gene_ids() -> set[str]:
+    """Ensembl IDs for :func:`cta_extended_gene_names`."""
+    df = cta_extended_df()
+    return set(df.loc[_canonical_default_mask(df), "Ensembl_Gene_ID"])
 
 
 def _specificity_defaults(df: pd.DataFrame) -> pd.DataFrame:
@@ -250,7 +272,8 @@ def _specificity_defaults(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def _with_specificity_columns(df: pd.DataFrame) -> pd.DataFrame:
+def _with_specificity_columns(df: pd.DataFrame, *, tissue_scope: str = "core") -> pd.DataFrame:
+    reproductive_tissues(tissue_scope)
     out = df.copy()
     if "Ensembl_Gene_ID" not in out.columns:
         return out
@@ -259,6 +282,13 @@ def _with_specificity_columns(df: pd.DataFrame) -> pd.DataFrame:
         out[col] = defaults[col].to_numpy()
 
     audit = cta_specificity_audit_references()
+    if "tissue_scope" in audit:
+        invalid = ~audit.tissue_scope.fillna("all").isin(["all", "core", "extended"])
+        if invalid.any():
+            raise ValueError(
+                f"Unknown specificity review tissue scope: {audit.loc[invalid, 'tissue_scope'].tolist()}"
+            )
+        audit = audit[audit.tissue_scope.fillna("all").isin(["all", tissue_scope])]
     if audit.empty:
         return out
     audit = audit.copy()
@@ -353,8 +383,11 @@ def cta_candidate_references(*, include_in_table: bool = False) -> pd.DataFrame:
     Returns a defensive copy."""
     refs = get_data("cta-candidate-references").copy()
     if not include_in_table:
-        table_ids = set(get_data("cancer-testis-antigens")["Ensembl_Gene_ID"])
-        refs = refs.loc[~refs["Ensembl_Gene_ID"].isin(table_ids)]
+        table_ids = set(
+            get_data("cancer-testis-antigens")["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+        )
+        ids = refs["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+        refs = refs.loc[~ids.isin(table_ids)]
     return refs.reset_index(drop=True).copy()
 
 
@@ -419,9 +452,20 @@ def cta_specificity_audit() -> pd.DataFrame:
         "hpa_testis_restricted",
     ]
     out = out.merge(candidates[candidate_cols], on="Ensembl_Gene_ID", how="left")
-    out["in_cta_table"] = out["cta_passes_filters"].notna()
+    # Membership is asked of the shipped table, not ``_cta_frame()``: a gene
+    # dropped by the non-CTA family exclusion (histones, alpha-tubulins) still
+    # has a row a curator can see, and deriving this from the joined
+    # ``cta_passes_filters`` would report it as in neither tier -- invisible on
+    # both axes. Both sides are version-stripped, like every other join here.
+    raw_table_ids = set(
+        get_data("cancer-testis-antigens", copy=False)["Ensembl_Gene_ID"]
+        .astype(str)
+        .str.split(".")
+        .str[0]
+    )
+    out["in_cta_table"] = out["Ensembl_Gene_ID"].isin(raw_table_ids)
     out["in_candidate_watchlist"] = out["Ensembl_Gene_ID"].isin(
-        cta_candidate_references()["Ensembl_Gene_ID"]
+        cta_candidate_references()["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
     )
     return out.copy()
 
@@ -464,8 +508,9 @@ def cta_clinical_target_evidence() -> pd.DataFrame:
     - ``filtered_expressed`` / ``filtered_never_expressed``: already in the strict
       oncoref CTA table;
     - ``excluded``: in the CTA table but failed the HPA filter, with
-      ``exclusion_driver_tissue`` / ``exclusion_driver_ntpm`` exposing the somatic
-      RNA signal that drove exclusion;
+      ``exclusion_reasons`` identifying failed gates. The legacy
+      ``exclusion_driver_tissue`` / ``exclusion_driver_ntpm`` columns report the
+      somatic RNA maximum, which is context, not necessarily the failed gate;
     - ``candidate``: in the referenced candidate watchlist but not the curated CTA
       table;
     - ``clinical_only``: source-anchored target row without bundled HPA evidence.
@@ -482,6 +527,10 @@ def cta_clinical_target_evidence() -> pd.DataFrame:
         "source_databases",
         "passes_filters",
         "never_expressed",
+        "biotype",
+        "protein_reliability",
+        "protein_reproductive",
+        "rna_deflated_reproductive_frac",
         "rna_testis_ntpm",
         "rna_ovary_ntpm",
         "rna_placenta_ntpm",
@@ -527,6 +576,15 @@ def cta_clinical_target_evidence() -> pd.DataFrame:
         how="left",
     )
     out["evidence_tier"] = out.apply(_clinical_evidence_tier, axis=1)
+    from .cta_regen import restriction_failure_reasons
+    from .cta_tissues import adaptive_rna_threshold
+
+    out["rna_restriction_threshold"] = out["protein_reliability"].map(adaptive_rna_threshold)
+    out.loc[out["passes_filters"].isna(), "rna_restriction_threshold"] = float("nan")
+    out["exclusion_reasons"] = out.apply(
+        lambda row: restriction_failure_reasons(row) if row.evidence_tier == "excluded" else "",
+        axis=1,
+    )
     excluded = out["evidence_tier"] == "excluded"
     out["exclusion_driver_tissue"] = out["rna_max_somatic_tissue"].where(excluded)
     out["exclusion_driver_ntpm"] = pd.to_numeric(
@@ -544,6 +602,9 @@ def cta_clinical_target_evidence() -> pd.DataFrame:
         "rationale",
         "passes_filters",
         "never_expressed",
+        "rna_deflated_reproductive_frac",
+        "rna_restriction_threshold",
+        "exclusion_reasons",
         "exclusion_driver_tissue",
         "exclusion_driver_ntpm",
         "rna_testis_ntpm",

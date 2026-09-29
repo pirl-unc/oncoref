@@ -952,9 +952,7 @@ def complete_value_and_ci_provenance(estimates: pd.DataFrame) -> pd.DataFrame:
             or str(row["ci_high_status"]) in {"NR", "NE"}
         )
         if has_structured_ci:
-            output.at[index, "ci_basis"] = (
-                ci_basis if ci_basis in COMPUTED_CI_BASES else "reported"
-            )
+            output.at[index, "ci_basis"] = ci_basis if ci_basis in COMPUTED_CI_BASES else "reported"
 
         missing_status = (
             "not_applicable"

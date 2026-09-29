@@ -695,6 +695,44 @@ per-sample matrices and do not download data. Use
 package/artifact data and a partial bundle cache. Set `include_recomputable=False`
 when only already-built shards should count.
 
+### Extended reproductive CTAs
+
+The existing `cta_gene_names()`, `cta_gene_ids()` and `cta_df()` use the core
+RNA numerator: testis, ovary and placenta. A separately named panel uses those
+tissues plus cervix, endometrium, epididymis, fallopian tube, prostate, seminal
+vesicle and vagina:
+
+```python
+from oncoref import cta
+
+core = cta.cta_gene_names()              # 624, unchanged core default
+extended = cta.cta_extended_gene_names() # 688; includes the core default
+cta.cta_extended_gene_ids()
+cta.cta_extended_df()                   # complete candidate evidence + decisions
+```
+
+Both panels use the same candidate identities, family exclusions, protein rules,
+adaptive RNA thresholds, expression policy and shared specificity reviews.
+The bundled `cancer-testis-antigens-extended` snapshot makes the extended panel
+available offline. `rna_reproductive_tissue_scope` identifies each snapshot's
+numerator. `cta-specificity-audit.tissue_scope` is `all`, `core` or `extended`;
+PAGE4's core-fraction exclusion applies only to core, while MAGEA11's independent
+review excludes it from both. PATE1/PATE4/LIPI remain candidates pending
+complete-paper provenance; TRIM64 remains candidate-only. The extended panel is a broader anatomical
+restriction definition, not an assertion of equivalent immune privilege or safety.
+
+`cta_clinical_target_evidence()` continues to describe core evidence. Its
+`exclusion_reasons`, `rna_deflated_reproductive_frac` and
+`rna_restriction_threshold` identify the failed gate. The legacy
+`exclusion_driver_*` columns contain the somatic maximum as context; it need not
+be the signal causing exclusion. `cta_candidate_references()` omits already
+assessed genes; `include_in_table=True` retains historical watchlist citations.
+
+See [published nominations](cta-publication-sources.md) and the
+[core/extended curation audit](audits/cta-panel-curation.md). The
+[RNA expression units guide](cta-expression-units.md) explains HPA nTPM,
+restriction fractions and missing-data behavior.
+
 ### Warning tier
 
 The strict default is unchanged. `cta_gene_names()` and `cta_gene_ids()` still

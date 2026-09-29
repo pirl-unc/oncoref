@@ -332,7 +332,7 @@ def test_cta_specificity_audit_surfaces_demotions_and_candidate_only_rows():
     assert float(audit.loc["CTAG2", "rna_max_somatic_ntpm"]) == 5.1
     assert audit.loc["CTAG2", "in_cta_table"]
 
-    assert audit.loc["PAGE4", "specificity_status"] == "candidate_weak_specificity"
+    assert audit.loc["PAGE4", "specificity_status"] == "excluded_core_rna_fraction"
     assert audit.loc["PAGE4", "candidate_source"] == "literature_cta"
     assert audit.loc["PAGE4", "in_cta_table"]
     assert not audit.loc["PAGE4", "in_candidate_watchlist"]
@@ -431,3 +431,59 @@ def test_clinical_cta_helpers_are_top_level_exports():
         "cta_specificity_audit",
     ):
         assert getattr(oncoref, name) is getattr(cta, name)
+
+
+def test_candidate_watchlist_uses_unversioned_table_membership(monkeypatch):
+    original = cta.get_data
+    refs = original("cta-candidate-references").copy()
+    refs["Ensembl_Gene_ID"] += ".1"
+    monkeypatch.setattr(
+        cta,
+        "get_data",
+        lambda name, **kw: (
+            refs.copy() if name == "cta-candidate-references" else original(name, **kw)
+        ),
+    )
+    assert "PAGE4" not in set(cta.cta_candidate_references().Symbol)
+    assert "PAGE4" in set(cta.cta_candidate_references(include_in_table=True).Symbol)
+
+
+def test_extended_ctas_are_explicit_and_respect_shared_reviews():
+    from oncoref import cta_extended_gene_ids, cta_extended_gene_names
+
+    core, extended = cta.cta_gene_names(), cta_extended_gene_names()
+    assert core < extended
+    assert len(core) == 624 and len(extended) == 688
+    assert "PAGE4" in extended - core
+    assert "MAGEA11" not in extended
+    assert (
+        not {"TRIM64", "PATE1", "PATE4", "LIPI"} & extended
+    )  # Shared trace-signal review survives the relaxed fraction.
+    frame = cta.cta_extended_df()
+    selected = frame.loc[frame.specificity_action.eq("include_default")]
+    assert set(selected.Symbol) == extended
+    assert set(selected.Ensembl_Gene_ID) == cta_extended_gene_ids()
+    assert set(frame.rna_reproductive_tissue_scope) == {"extended"}
+    assert set(cta.cta_df().rna_reproductive_tissue_scope) == {"core"}
+    page4 = frame.set_index("Symbol").loc["PAGE4"]
+    assert page4.rna_deflated_reproductive_frac == 0.9851
+    assert page4.specificity_action == "include_default"
+    frame.iloc[0, frame.columns.get_loc("Symbol")] = "mutated"
+    assert "mutated" not in set(cta.cta_extended_df().Symbol)
+
+
+def test_specificity_audit_reports_raw_table_membership_for_excluded_families(monkeypatch):
+    original = cta.get_data
+    table = original("cancer-testis-antigens")
+    excluded = table[table.Ensembl_Gene_ID.isin(cta._non_cta_excluded_gene_ids())].iloc[0]
+    refs = original("cta-specificity-audit").iloc[[0]].copy()
+    refs["Ensembl_Gene_ID"] = excluded.Ensembl_Gene_ID + ".1"
+    refs["Symbol"] = excluded.Symbol
+    monkeypatch.setattr(
+        cta,
+        "get_data",
+        lambda name, **kw: refs.copy() if name == "cta-specificity-audit" else original(name, **kw),
+    )
+    row = cta.cta_specificity_audit().iloc[0]
+    assert row.in_cta_table
+    assert not row.in_candidate_watchlist
