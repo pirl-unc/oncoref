@@ -11,6 +11,7 @@ from oncoref.cta_sources import (
     BRADLEY_GENES,
     GONG_NC,
     GONG_PC,
+    add_gene_evidence_tags,
     add_publication_candidates,
     extract_publications,
     intake_counts,
@@ -20,6 +21,14 @@ from oncoref.cta_sources import (
     resolve_membership,
 )
 from oncoref.load_dataset import get_data
+
+
+def test_shipped_candidate_import_is_idempotent():
+    original = get_data("cancer-testis-antigens")
+    imported = add_gene_evidence_tags(
+        add_publication_candidates(original, publication_membership())
+    )
+    pd.testing.assert_frame_equal(original, imported)
 
 
 def test_complete_published_lists_and_citations():

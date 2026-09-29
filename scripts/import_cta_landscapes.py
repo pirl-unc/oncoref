@@ -21,6 +21,7 @@ sys.path.insert(0, str(_REPO_ROOT))
 from oncoref.cta_landscape import INPUTS, PAPERS, extract_landscapes  # noqa: E402
 from oncoref.cta_regen import regenerate_cta_columns  # noqa: E402
 from oncoref.cta_sources import (  # noqa: E402
+    add_gene_evidence_tags,
     add_publication_candidates,
     publication_membership,
     publication_sources,
@@ -55,7 +56,7 @@ def main():
     args.out_dir.mkdir(parents=True, exist_ok=True)
     if not args.memberships_only:
         original = get_data("cancer-testis-antigens")
-        candidates = add_publication_candidates(original, refs)
+        candidates = add_gene_evidence_tags(add_publication_candidates(original, refs))
         extended = regenerate_cta_columns(candidates, tissue_scope="extended")
         candidates.to_csv(args.out_dir / "cancer-testis-antigens.csv", index=False)
         extended.to_csv(args.out_dir / "cancer-testis-antigens-extended.csv", index=False)

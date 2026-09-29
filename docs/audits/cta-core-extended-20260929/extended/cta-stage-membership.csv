@@ -1168,7 +1168,7 @@ ENSG00000166930,ENSG00000166930,MS4A5,protein_coding,Chang2019_TGCT;Gong2021_rep
 ENSG00000166984,ENSG00000166984,TCP10L2,transcribed_unprocessed_pseudogene,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,False,False,False,False
 ENSG00000167014,ENSG00000167014,TERB2,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,False,False
 ENSG00000167094,ENSG00000167094,TTC16,protein_coding,Chang2019_TGCT;Loriot2025_S2;Wang2016_CT,True,True,True,True,True,True
-ENSG00000167098,ENSG00000167098,SUN5,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;celltype_germline_candidate;daSilva2017_testis_biased,True,True,True,True,True,True
+ENSG00000167098,ENSG00000167098,SUN5,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Song2022_targeted;celltype_germline_candidate;daSilva2017_testis_biased,True,True,True,True,True,True
 ENSG00000167139,ENSG00000167139,TBC1D21,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;daSilva2017_testis_biased,True,True,True,True,True,True
 ENSG00000167194,ENSG00000167194,C16orf92,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT,True,True,True,True,False,False
 ENSG00000167195,ENSG00000167195,GOLGA6C,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_protein;daSilva2017_testis_biased;daSilva2017_tumor_proteomics,True,True,True,True,False,False
@@ -1504,7 +1504,7 @@ ENSG00000178997,ENSG00000178997,EXD1,protein_coding,Chang2019_TGCT;Gong2021_repr
 ENSG00000179008,ENSG00000179008,C14orf39,protein_coding,Jamin2021_CT;Jamin2021_core,True,True,True,True,False,False
 ENSG00000179046,ENSG00000179046,TRIML2,protein_coding,Bruggeman2018_GC;CTexploreR_CT;Chang2019_TGCT;Loriot2025_S1;Wang2016_CT;daSilva2017;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
 ENSG00000179055,ENSG00000179055,OR13D1,protein_coding,daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,False
-ENSG00000179059,ENSG00000179059,ZFP42,protein_coding,Bruggeman2018_GC;Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;celltype_germline_candidate,True,True,True,True,True,True
+ENSG00000179059,ENSG00000179059,ZFP42,protein_coding,Bruggeman2018_GC;Chang2019_TGCT;Gong2021_reproductive_PC;Kristensen2008_targeted;Wang2016_CT;celltype_germline_candidate,True,True,True,True,True,True
 ENSG00000179071,ENSG00000179071,CCDC89,protein_coding,Bruggeman2018_GC;Chang2019_TGCT;Wang2016_CT,True,True,True,True,False,False
 ENSG00000179083,ENSG00000179083,FAM133A,protein_coding,Chang2019_TGCT;Wang2016_CT,True,True,True,True,False,False
 ENSG00000179088,ENSG00000179088,C12orf42,protein_coding,CTexploreR_CTP;Chang2019_TGCT;Gong2021_reproductive_PC;Loriot2025_S2;Wang2016_CT,True,True,True,True,True,True
@@ -1640,7 +1640,7 @@ ENSG00000183246,ENSG00000183246,RIMBP3C,protein_coding,Gong2021_reproductive_PC;
 ENSG00000183269,ENSG00000183269,OR52E8,protein_coding,Gong2021_placenta_PC;Gong2021_reproductive_PC,True,True,True,True,True,False
 ENSG00000183292,ENSG00000183292,PRSS40A,transcribed_unitary_pseudogene,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT,True,True,False,False,False,False
 ENSG00000183304,ENSG00000183304,FAM9A,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
-ENSG00000183305,ENSG00000183305,MAGEA2B,protein_coding,Jamin2021_CT;Jamin2021_core;Wang2016_CT;daSilva2017_testis_biased;paralog:MAGEA2,True,True,True,True,True,True
+ENSG00000183305,ENSG00000183305,MAGEA2B,protein_coding,Jamin2021_CT;Jamin2021_core;Shukla2018_targeted;Wang2016_CT;daSilva2017_testis_biased;paralog:MAGEA2,True,True,True,True,True,True
 ENSG00000183313,ENSG00000183313,OR52L1,protein_coding,daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,False
 ENSG00000183318,ENSG00000183318,SPDYE4,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
 ENSG00000183324,ENSG00000183324,REC114,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,False,False
@@ -1735,7 +1735,7 @@ ENSG00000185689,ENSG00000185689,TEX56P,transcribed_unitary_pseudogene,Chang2019_
 ENSG00000185697,ENSG00000185697,MYBL1,protein_coding,Jamin2021_CT,True,True,True,True,False,False
 ENSG00000185730,ENSG00000185730,ZNF696,protein_coding,Bruggeman2018_GC,True,True,True,True,False,False
 ENSG00000185775,ENSG00000185775,SPATA31A6,protein_coding,CTpedia;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
-ENSG00000185792,ENSG00000185792,NLRP9,protein_coding,Bruggeman2018_GC;celltype_germline_candidate,True,True,True,True,True,True
+ENSG00000185792,ENSG00000185792,NLRP9,protein_coding,Amoushahi2020_targeted;Bruggeman2018_GC;celltype_germline_candidate,True,True,True,True,True,True
 ENSG00000185798,ENSG00000185798,WDR53,protein_coding,Jamin2021_CT,True,True,True,True,False,False
 ENSG00000185823,ENSG00000185823,NPAP1,protein_coding,Chang2019_TGCT;Wang2016_CT,True,True,True,True,True,True
 ENSG00000185829,ENSG00000185829,ARL17A,protein_coding,Bruggeman2018_GC,True,True,True,True,False,False
@@ -1826,7 +1826,7 @@ ENSG00000187726,ENSG00000187726,DNAJB13,protein_coding,Bruggeman2018_GC,True,Tru
 ENSG00000187736,ENSG00000187736,NHEJ1,protein_coding,Bruggeman2018_GC,True,True,True,True,False,False
 ENSG00000187741,ENSG00000187741,FANCA,protein_coding,Bruggeman2018_GC;daSilva2017_CT;daSilva2017_protein;daSilva2017_testis_biased;daSilva2017_tumor_proteomics,True,True,True,True,False,False
 ENSG00000187753,ENSG00000187753,C9orf153,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,False,False
-ENSG00000187754,ENSG00000187754,SSX7,protein_coding,Wang2016_CT;paralog_cta_candidate,True,True,True,True,True,True
+ENSG00000187754,ENSG00000187754,SSX7,protein_coding,Gure2002_targeted;Traynor2022_targeted;Wang2016_CT;paralog_cta_candidate,True,True,True,True,True,True
 ENSG00000187772,ENSG00000187772,LIN28B,protein_coding,Bruggeman2018_GC;CTpedia;Carter2023_CT;Chang2019_TGCT;Gong2021_placenta_PC;Gong2021_reproductive_PC;Jamin2021_CT;Jamin2021_core;Wang2016_CT;daSilva2017;daSilva2017_CT;daSilva2017_protein;daSilva2017_testis_biased;daSilva2017_tumor_proteomics,True,True,True,True,True,True
 ENSG00000187775,ENSG00000187775,DNAH17,protein_coding,daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,False,False
 ENSG00000187790,ENSG00000187790,FANCM,protein_coding,Bruggeman2018_GC;Jamin2021_CT,True,True,True,True,False,False
@@ -2252,7 +2252,7 @@ ENSG00000215186,ENSG00000215186,GOLGA6B,protein_coding,Chang2019_TGCT;Wang2016_C
 ENSG00000215203,ENSG00000215203,GRXCR1,protein_coding,daSilva2017_testis_biased,True,True,True,True,True,False
 ENSG00000215262,ENSG00000215262,KCNU1,protein_coding,Chang2019_TGCT;Gong2021_reproductive_PC;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
 ENSG00000215269,ENSG00000215269,GAGE12G,protein_coding,Jamin2021_CT;Jamin2021_core;daSilva2017_protein;daSilva2017_testis_biased;daSilva2017_tumor_proteomics,True,True,True,True,True,True
-ENSG00000215274,ENSG00000215274,GAGE10,protein_coding,Seager2024_CTA;paralog:GAGE2A,True,True,True,True,True,True
+ENSG00000215274,ENSG00000215274,GAGE10,protein_coding,Park2010_targeted;Seager2024_CTA;Wollenzien2023_targeted;paralog:GAGE2A,True,True,True,True,True,True
 ENSG00000215277,ENSG00000215277,RNF212B,protein_coding,Chang2019_TGCT;daSilva2017_testis_biased,True,True,True,True,False,False
 ENSG00000215343,ENSG00000215343,ZNF705D,protein_coding,Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
 ENSG00000215356,ENSG00000215356,ZNF705B,protein_coding,daSilva2017_testis_biased,True,True,True,True,True,False
@@ -2430,7 +2430,7 @@ ENSG00000227234,ENSG00000227234,SPANXB1,protein_coding,CTexploreR_CT;CTpedia;Gon
 ENSG00000227290,ENSG00000227290,LINC01364,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000227313,ENSG00000227313,LINC02630,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000227375,ENSG00000227375,DLG1-AS1,lncRNA,Loriot2025_S2,True,True,False,False,False,False
-ENSG00000227488,ENSG00000227488,GAGE12D,protein_coding,Jamin2021_CT;Jamin2021_core;Wang2016_CT;daSilva2017_CT;daSilva2017_testis_biased;paralog:GAGE12C,True,True,True,True,True,True
+ENSG00000227488,ENSG00000227488,GAGE12D,protein_coding,Jamin2021_CT;Jamin2021_core;Wang2016_CT;Wollenzien2023_targeted;daSilva2017_CT;daSilva2017_testis_biased;paralog:GAGE12C,True,True,True,True,True,True
 ENSG00000227510,ENSG00000227510,LINC01442,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000227517,ENSG00000227517,LINC01483,lncRNA,Gong2021_placenta_ncRNA;Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000227549,ENSG00000227549,ENSG00000227549,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
@@ -3465,7 +3465,7 @@ ENSG00000267857,ENSG00000267857,ENSG00000267857,lncRNA,Gong2021_reproductive_ncR
 ENSG00000267872,ENSG00000267872,ENSG00000267872,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000267943,ENSG00000267943,CTD-2620I22.3,lncRNA,Gong2021_placenta_ncRNA;Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000267978,ENSG00000267978,MAGEA9B,protein_coding,CTexploreR_CT;CTpedia;Gong2021_reproductive_PC;Jamin2021_CT;Loriot2025_S1;daSilva2017;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
-ENSG00000268009,ENSG00000268009,SSX4,protein_coding,CTpedia;Jamin2021_CT;Jamin2021_core;daSilva2017;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
+ENSG00000268009,ENSG00000268009,SSX4,protein_coding,CTpedia;Jamin2021_CT;Jamin2021_core;Traynor2022_targeted;daSilva2017;daSilva2017_CT;daSilva2017_testis_biased,True,True,True,True,True,True
 ENSG00000268078,ENSG00000268078,ENSG00000268078,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000268223,ENSG00000268223,ARL14EPL,protein_coding,daSilva2017_testis_biased,True,True,True,True,True,False
 ENSG00000268296,ENSG00000268296,ENSG00000268296,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
@@ -3494,7 +3494,7 @@ ENSG00000269502,ENSG00000269502,DMRTC1,protein_coding,Jamin2021_CT,True,True,Tru
 ENSG00000269504,ENSG00000269504,ENSG00000269504,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000269526,ENSG00000269526,ERVV-1,protein_coding,Gong2021_placenta_PC;Gong2021_reproductive_PC;placental_antigen,True,True,True,True,False,False
 ENSG00000269586,ENSG00000269586,CT45A10,protein_coding,CTexploreR_CT;Loriot2025_S1;daSilva2017;daSilva2017_testis_biased,True,True,True,True,True,True
-ENSG00000269791,ENSG00000269791,SSX4B,protein_coding,Jamin2021_CT;Jamin2021_core;daSilva2017_testis_biased;paralog:SSX4,True,True,True,True,True,True
+ENSG00000269791,ENSG00000269791,SSX4B,protein_coding,Caballero2014_targeted;Jamin2021_CT;Jamin2021_core;daSilva2017_testis_biased;paralog:SSX4,True,True,True,True,True,True
 ENSG00000269821,ENSG00000269821,KCNQ1OT1,lncRNA,Bruggeman2018_GC,True,True,False,False,False,False
 ENSG00000269826,ENSG00000269826,ENSG00000269826,lncRNA,Gong2021_reproductive_ncRNA,True,True,False,False,False,False
 ENSG00000269842,ENSG00000269842,CTC-339O9.1,lncRNA,Gong2021_placenta_ncRNA;Gong2021_reproductive_ncRNA,True,True,False,False,False,False
