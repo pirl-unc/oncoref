@@ -35,16 +35,14 @@ new release. Cache layout:
 from __future__ import annotations
 
 import os
-import shutil
-import sys
 import urllib.error
-import urllib.request
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
 
+from . import _downloads
 from .cancer_types import resolve_cancer_type
 from .load_dataset import get_data
 from .version import SOURCE_MATRIX_VERSION
@@ -369,23 +367,19 @@ def release_url(code: str) -> str:
 def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
     """Download one cohort's per-sample matrix into the cache. Returns the path."""
     dest = local_path(code)
-    if dest.exists() and not force:
-        return dest
     url = release_url(code)
-    tmp = dest.with_suffix(".parquet.part")
-    if verbose:
-        sys.stderr.write(f"oncoref: downloading per-sample matrix {dest.stem} ({url})\n")
-        sys.stderr.flush()
     try:
-        with urllib.request.urlopen(url) as resp, tmp.open("wb") as h:
-            shutil.copyfileobj(resp, h, length=1024 * 1024)
-        tmp.replace(dest)
+        return _downloads.fetch_file(
+            url,
+            dest,
+            label=f"per-sample matrix {dest.stem} (v{source_matrix_version(code)})",
+            force=force,
+            verbose=verbose,
+        )
     except (urllib.error.URLError, OSError) as e:
-        tmp.unlink(missing_ok=True)
         raise SourceMatrixError(
             f"failed to download per-sample matrix for {code!r} ({url}): {e}"
         ) from e
-    return dest
 
 
 def ensure(code: str) -> Path:

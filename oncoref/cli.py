@@ -66,6 +66,13 @@ def _print_bundle_prune(args: argparse.Namespace) -> int:
 
 
 def _cmd_data(args: argparse.Namespace) -> int:
+    from ._downloads import download_options
+
+    with download_options(progress=args.progress, verbose=not args.quiet):
+        return _cmd_data_impl(args)
+
+
+def _cmd_data_impl(args: argparse.Namespace) -> int:
     """Unified data management over the catalog (expression bundle + HPA sources)."""
     from . import catalog, source_matrices
 
@@ -723,6 +730,18 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Dataset name; or a fetch target: all / hpa / bundle / source / "
         "per-sample:<CODE> (omit = all)",
+    )
+    p_data.add_argument(
+        "--progress",
+        choices=("auto", "always", "never"),
+        default=None,
+        help="Download bars: auto (terminal/notebook), always, or never; "
+        "defaults to ONCOREF_DOWNLOAD_PROGRESS or auto",
+    )
+    p_data.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Suppress download status and bars; retain results, errors, and retry warnings",
     )
     p_data.add_argument("--force", action="store_true", help="Re-download even if cached")
     p_data.add_argument(

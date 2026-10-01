@@ -60,6 +60,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from . import _downloads
 from .expression_engine import (
     canonicalize_source_gene_matrix,
     coerce_source_expression_values,
@@ -2604,14 +2605,13 @@ def _treehouse_cohort_source(
 
 
 def _download(url: str, dest: Path, *, force: bool = False) -> Path:
-    if dest.exists() and dest.stat().st_size > 0 and not force:
-        return dest
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    tmp = dest.with_suffix(dest.suffix + ".part")
-    with urllib.request.urlopen(url) as resp, tmp.open("wb") as handle:
-        shutil.copyfileobj(resp, handle, length=1024 * 1024)
-    tmp.replace(dest)
-    return dest
+    """Download a raw source file, preserving compressed bytes for its reader."""
+    return _downloads.fetch_file(
+        url,
+        dest,
+        label=dest.name,
+        force=force or (dest.is_file() and dest.stat().st_size == 0),
+    )
 
 
 def gdc_star_count_filters(project_ids: Iterable[str]) -> dict:

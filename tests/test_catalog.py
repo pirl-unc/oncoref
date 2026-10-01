@@ -116,6 +116,7 @@ def test_fetch_reports_only_actual_downloads(monkeypatch):
 
     monkeypatch.setattr(reference_data, "local_path", lambda n, *a, **k: _P())
     monkeypatch.setattr(reference_data, "download", lambda n, *a, **k: None)
+    monkeypatch.setattr(reference_data, "_cached_file_ok", lambda *a: True)
     assert catalog.fetch("all") == []
 
 
