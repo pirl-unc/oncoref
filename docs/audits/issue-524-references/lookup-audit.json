@@ -90,5 +90,7 @@
     "bibliographic-metadata.json": "5bdd129e2168d3a860aa4fde44e101e5cc936170adb59d9078fabe8698d6727c",
     "source-traces.csv": "c728d83366db31f29cf14ec440a563fb6293e4d78cb1f99765cc09b2a3b3a287",
     "additional-primary-reference.csv": "c196e7358a4e001c5c5fc6aa2b9401a803c2e07e3b3bc2855439b0298b20ebe4"
-  }
+  },
+  "references_with_pmc_document_links": 62,
+  "pmc_count_basis": "references_with_pmc counts PMCIDs in the frozen bibliographic snapshot; references_with_pmc_document_links also includes existing source-locator URLs."
 }

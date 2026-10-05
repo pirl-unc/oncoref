@@ -53,6 +53,33 @@ def json_text(value):
     return json.dumps(value, indent=2) + "\n"
 
 
+def bibliography_links(reference):
+    candidates = [(reference["source_url"], "Citation")]
+    if reference["doi"]:
+        candidates.append(("https://doi.org/" + reference["doi"], "Publisher / DOI"))
+    if reference["pmcid"]:
+        candidates.append(
+            (
+                "https://pmc.ncbi.nlm.nih.gov/articles/" + reference["pmcid"] + "/",
+                "PMC full text",
+            )
+        )
+    candidates.extend(
+        (url, "Existing source document")
+        for url in reference["full_text_or_existing_document_urls"].split(" | ")
+    )
+    candidates.extend(
+        (url, "Traced source") for url in reference["followup_source_urls"].split(" | ")
+    )
+    links = {}
+    for url, label in candidates:
+        if url:
+            # DOI identifiers are case-insensitive; retain the first link's provenance.
+            key = url.lower() if url.startswith("https://doi.org/") else url
+            links.setdefault(key, (url, label))
+    return list(links.values())
+
+
 def bibliography_html(references, records, traces, summary):
     escape = html.escape
     grouped = defaultdict(list)
@@ -67,23 +94,14 @@ def bibliography_html(references, records, traces, summary):
         groups = " ".join(
             group for group in ("tmb", "response") if reference[f"{group}_record_count"]
         )
-        links = [(reference["source_url"], "Citation")]
-        if reference["doi"]:
-            links.append(("https://doi.org/" + reference["doi"], "Publisher / DOI"))
-        if reference["pmcid"]:
-            links.append(
-                (
-                    "https://pmc.ncbi.nlm.nih.gov/articles/" + reference["pmcid"] + "/",
-                    "PMC full text",
-                )
-            )
-        linked_urls = {url for url, _ in links}
-        for url in reference["followup_source_urls"].split(" | "):
-            if url and url not in linked_urls:
-                links.append((url, "Traced source"))
-                linked_urls.add(url)
         link_html = " · ".join(
-            f'<a href="{escape(url, quote=True)}">{escape(label)}</a>' for url, label in links
+            f'<a href="{escape(url, quote=True)}">{escape(label)}</a>'
+            for url, label in bibliography_links(reference)
+        )
+        identifier_html = " · ".join(
+            escape(f"{field.upper()}:{reference[field]}")
+            for field in ("pmid", "doi", "pmcid")
+            if reference[field]
         )
         fields = (
             "dataset",
@@ -104,7 +122,9 @@ def bibliography_html(references, records, traces, summary):
             f'<article data-group="{groups}" id="{reference["reference_id"]}">'
             f"<h2>{escape(reference['reference_id'])} · {escape(reference['title'])}</h2>"
             f"<p>{escape(reference['reference'])} · {escape(reference['journal'])} · "
-            f"{escape(reference['year'])} · {len(rows)} flagged records</p><p>{link_html}</p>"
+            f"{escape(reference['year'])} · {len(rows)} flagged records</p>"
+            f"<p><b>Identifiers (bibliographic snapshot):</b> {identifier_html}</p>"
+            f"<p>{link_html}</p>"
             f"<p><b>Cancer codes:</b> {escape(reference['cancer_codes'])}</p>"
             f"<p><b>Flags:</b> {escape(reference['review_flags'])}</p>{trace_html}"
             f"<details><summary>Show {len(rows)} mapped records and existing locators</summary>"
@@ -145,10 +165,14 @@ summary{{cursor:pointer}} #shown{{font-weight:600}}
 <p>{summary["flagged_records"]} flagged records · {len(references)} cited reference identifiers ·
 {summary["tmb_references"]} TMB references · {summary["response_references"]} response references ·
 {summary["uncited_records"]} records without a direct citation.</p>
+<p>{summary["references_with_pmc"]} references with snapshot PMCIDs ·
+{summary["references_with_pmc_document_links"]} references with PMC document links.</p>
 <p>Bibliographic snapshot acquired {escape(summary["retrieved_on"])}.
 PubMed and the DOI registry establish citation identity and available document links.
 Existing numeric locators retain their prior status; exact values, populations and denominators
 still require scientific review.</p>
+<p>Identifiers come from the frozen bibliographic snapshot. Links labeled
+“Existing source document” come from prior source-locator records and retain their review status.</p>
 <p><a href="references.csv">Reference CSV</a> ·
 <a href="flagged-records.csv">All mapped records</a> ·
 <a href="uncited-records.csv">Uncited records</a> ·
@@ -319,6 +343,17 @@ def build_inventory(root=ROOT, directory=DEFAULT_DIRECTORY):
         ),
         metadata_statuses=dict(Counter(row["metadata_status"] for row in references)),
         references_with_pmc=sum(bool(row["pmcid"]) for row in references),
+        references_with_pmc_document_links=sum(
+            any(
+                url.startswith("https://pmc.ncbi.nlm.nih.gov/articles/")
+                for url in row["full_text_or_existing_document_urls"].split(" | ")
+            )
+            for row in references
+        ),
+        pmc_count_basis=(
+            "references_with_pmc counts PMCIDs in the frozen bibliographic snapshot; "
+            "references_with_pmc_document_links also includes existing source-locator URLs."
+        ),
         source_files={
             name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in SOURCE_FILES
         },

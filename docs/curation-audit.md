@@ -64,7 +64,10 @@ The [issue #524 reference inventory](audits/issue-524-references/bibliography.ht
 maps the union of those flags to 435 records and 106 cited references: 19 TMB
 references and 87 response references. Its 2026-10-05 bibliographic snapshot
 resolves every cited identifier through PubMed or the DOI registry and includes
-61 PMC full-text links. Download the
+61 snapshot PMCIDs. An additional PMC document URL comes from existing source-locator
+records, so the bibliography links to PMC documents for 62 references. Known PMID,
+DOI and PMCID values are displayed and searchable; existing document links retain
+their source-locator provenance and review status. Download the
 [reference list](audits/issue-524-references/references.csv),
 [record mapping](audits/issue-524-references/flagged-records.csv), and
 [source-chain notes](audits/issue-524-references/source-traces.csv).
