@@ -1798,3 +1798,13 @@ facades above:
   prefer `oncoref.cta_coverage` or `oncoref.antigen_coverage`.
 - `oncoref.peptides` — original CTA-specific 9-mer module; prefer
   `oncoref.cta_peptides`.
+
+## Annotation-scoped CTA identities
+
+Use `oncoref.resolve_gene_identity(gene_id, genome=genome)` when admitting an
+annotated CTA source, and `oncoref.cta_annotation_gene_ids(genome,
+unfiltered=True)` for the complete verified source-ID exclusion universe.
+`oncoref.cta_annotation_gene_identities(genome)` supplies auditable decisions,
+including rejected mappings. See the [versioned identity contract and example](cta-gene-identities.md).
+These APIs preserve source IDs and do not infer aliases from matching symbols or
+proteins. Legacy canonical CTA sets remain canonical reference-space IDs.

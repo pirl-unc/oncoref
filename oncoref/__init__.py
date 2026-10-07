@@ -271,6 +271,13 @@ from .gene_families import (
     hpa_housekeeping_candidates,
     recommended_hpa_housekeeping_panel,
 )
+from .gene_identity import (
+    GENE_IDENTITY_CONTRACT_VERSION,
+    GeneIdentity,
+    cta_annotation_gene_identities,
+    cta_annotation_gene_ids,
+    resolve_gene_identity,
+)
 from .gene_ids import (
     canonical_gene_id,
     canonical_gene_ids,
@@ -472,6 +479,7 @@ __all__ = [
     "DRIVER_MIGRATION_STATUSES",
     "EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION",
     "FUSION_PARTNER_KINDS",
+    "GENE_IDENTITY_CONTRACT_VERSION",
     "HOUSEKEEPING_NORMALIZATION_METHOD",
     "HOUSEKEEPING_REFERENCE_PROFILE_SOURCE",
     "HOUSEKEEPING_REFERENCE_PROFILE_VERSION",
@@ -524,6 +532,7 @@ __all__ = [
     "CTA_unfiltered_gene_ids",
     "CTA_unfiltered_gene_names",
     "ExpressionSource",
+    "GeneIdentity",
     "GeneQcClass",
     "SafetyTissueMapping",
     "SafetyTissueResolution",
@@ -636,6 +645,8 @@ __all__ = [
     "collapse_to_proteoforms",
     "computed_union_codes",
     "coverage_for_cancer_type",
+    "cta_annotation_gene_identities",
+    "cta_annotation_gene_ids",
     "cta_by_axes",
     "cta_candidate_references",
     "cta_clinical_target_evidence",
@@ -816,6 +827,7 @@ __all__ = [
     "resolve_cohort_id",
     "resolve_ensembl_id",
     "resolve_entrez_id",
+    "resolve_gene_identity",
     "resolve_hpa_normal_tissue_label",
     "resolve_ici_response_source",
     "resolve_safety_tissue_group",
