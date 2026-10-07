@@ -173,3 +173,12 @@ alias oncoref=/absolute/path/to/oncoref/.venv/bin/oncoref
 ## License
 
 Apache 2.0.
+
+### Annotation-scoped CTA identities
+
+When using a particular Ensembl annotation, resolve CTA source IDs with
+`oncoref.resolve_gene_identity(gene_id, genome=genome)` and obtain verified
+negative-reference exclusion IDs with
+`oncoref.cta_annotation_gene_ids(genome, unfiltered=True)`. Both use the same
+versioned identity contract, retaining original source IDs and unresolved
+mapping evidence. See [CTA gene identities](docs/cta-gene-identities.md).
