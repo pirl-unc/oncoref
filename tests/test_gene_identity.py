@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -157,7 +158,15 @@ def test_prame_real_annotation_sources(release):
     genome = EnsemblRelease(release, species="human")
     if not genome.required_local_files_exist():
         pytest.skip(f"Ensembl {release} not installed")
+    primary = gene_identity.resolve_gene_identity(PRAME, genome=genome)
+    assert primary.verified and primary.canonical_gene_id == PRAME
     record = gene_identity.resolve_gene_identity(ALTERNATE, genome=genome)
+    if ALTERNATE not in genome.gene_ids():
+        # The legacy CI mirror contains primary-assembly genes only. An absent
+        # locus must not be invented from the shipped alias table.
+        assert record.status == "absent" and not record.verified
+        assert ALTERNATE not in gene_identity.cta_annotation_gene_ids(genome, unfiltered=True)
+        return
     assert record.verified and record.canonical_gene_id == PRAME
     assert ALTERNATE in gene_identity.cta_annotation_gene_ids(genome, unfiltered=True)
     transcripts = {t.transcript_id: t.protein_id for t in genome.gene_by_id(ALTERNATE).transcripts}
@@ -188,3 +197,42 @@ def test_cta_curation_and_bundle_versions_unchanged():
     assert len(oncoref.cta_unfiltered_gene_ids()) == 2532
     assert DATA_VERSION == "5.23.25"
     assert SOURCE_MATRIX_VERSION == "5.22.14"
+
+
+@pytest.mark.parametrize("release", [93, 112])
+def test_pinned_real_alternate_annotation_and_genuine_non_cta_source(release):
+    path = Path(__file__).parent / "fixtures" / "gene-identity" / f"prame-ensembl-{release}.json"
+    snapshot = json.loads(path.read_text())
+    genome = Annotation([SimpleNamespace(**row) for row in snapshot["genes"]])
+    genome.release = snapshot["annotation_release"]
+    genome.reference_name = snapshot["annotation_assembly"]
+    genome.species = SimpleNamespace(latin_name=snapshot["annotation_species"])
+    record = gene_identity.resolve_gene_identity(ALTERNATE, genome=genome)
+    assert record.verified and record.canonical_gene_id == PRAME
+    assert record.source_contig == ("CHR_HSCHR22_1_CTG3" if release == 93 else "HSCHR22_1_CTG3")
+    assert len(snapshot["original_file_identities"]) == 2
+    assert all(len(row["sha256"]) == 64 for row in snapshot["original_file_identities"])
+    assert gene_identity.cta_annotation_gene_ids(genome, unfiltered=True) == {PRAME, ALTERNATE}
+    transcripts = {
+        t["transcript_id"]: t["protein_id"] for t in genome.gene_by_id(ALTERNATE).transcripts
+    }
+    assert transcripts["ENST00000539862"] == "ENSP00000445097"
+    assert transcripts["ENST00000617728"] == "ENSP00000484066"
+    sequences = {
+        row.gene_id: max((t["protein_sequence"] for t in row.transcripts), key=len)
+        for row in genome.genes.values()
+    }
+
+    def kmers(sequence):
+        return {sequence[i : i + 9] for i in range(len(sequence) - 8)}
+
+    primary_kmers = kmers(sequences[PRAME])
+    assert len(primary_kmers) == 501
+    assert kmers(sequences[ALTERNATE]) == primary_kmers
+    # PRAMEF10 is a distinct non-CTA gene whose seven shared peptides stay in
+    # the background even though the alternate PRAME assembly copy is excluded.
+    assert (
+        gene_identity.resolve_gene_identity("ENSG00000187545", genome=genome).canonical_gene_id
+        != PRAME
+    )
+    assert len(primary_kmers & kmers(sequences["ENSG00000187545"])) == 7
