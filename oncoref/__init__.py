@@ -438,6 +438,7 @@ from .samples import (
     samples_for_cancer_code,
     samples_for_cohort,
 )
+from .sequence_groups import protein_sequence_groups
 from .therapy_evidence import therapy_benefit_toxicity_evidence
 from .tmb import (
     cancer_tmb,
@@ -801,6 +802,7 @@ __all__ = [
     "pooled_cohort_stats",
     "pooled_ici_response",
     "protein_family",
+    "protein_sequence_groups",
     "proteoform_aliases",
     "proteoform_cohort_mean_expression",
     "proteoform_cohort_percentiles",
