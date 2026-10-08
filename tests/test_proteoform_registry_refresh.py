@@ -182,3 +182,66 @@ def test_registry_fingerprint_is_order_independent_and_tracks_membership(monkeyp
     assert _proteoform_registry_metadata("cta") == original
     del reordered["RBMY1F/RBMY1J"]
     assert _proteoform_registry_metadata("cta") != original
+
+
+@pytest.mark.parametrize("drift", [False, True])
+def test_release_refresh_checks_gene_basis_before_replacing_summaries(
+    tmp_path, monkeypatch, rbmy_expression, drift
+):
+    import json
+
+    from scripts import refresh_proteoform_artifacts as refresh
+
+    base, out = tmp_path / "base", tmp_path / "out"
+    base.mkdir()
+    source = tmp_path / "source.parquet"
+    rbmy_expression.to_parquet(source, index=False)
+    monkeypatch.setattr(refresh.source_matrices, "local_path", lambda code: source)
+    monkeypatch.setattr(refresh, "read_raw", pd.read_parquet)
+    monkeypatch.setattr(refresh, "build_clean", lambda raw: raw)
+    pd.DataFrame(
+        [
+            {
+                "cancer_code": "PRAD",
+                "sample_qc": "pass",
+                "sample_qc_effective": "pass",
+                "sample_qc_fallback_reason": "",
+                "n_source_samples": 2,
+                "n_cohort_samples": 2,
+            }
+        ]
+    ).to_csv(base / "expression-artifact-build-metadata.csv", index=False)
+    pd.DataFrame(
+        {
+            "cancer_code": ["PRAD", "PRAD"],
+            "sample_id": ["s1", "s2"],
+            "sample_qc_status": ["pass", "pass"],
+        }
+    ).to_csv(base / "source-matrix-sample-qc.csv", index=False)
+    (base / "expression-artifact-build-metadata.json").write_text('{"n_cohorts": 1}')
+    for name, build in [
+        ("percentiles", cohort_percentile_vectors),
+        ("within_sample", within_sample_top_fractions),
+    ]:
+        for grouped in (False, True):
+            directory = base / expression.SHARD_DATASETS[name].subdir(proteoform=grouped)
+            directory.mkdir()
+            values = build(rbmy_expression)
+            if drift and not grouped and name == "percentiles":
+                values.loc[0, "p95"] = 999
+            values.to_parquet(directory / "PRAD.parquet", index=False)
+    if drift:
+        with pytest.raises(AssertionError):
+            refresh.refresh(base, out)
+        assert not (out / "expression-artifact-build-metadata.json").exists()
+    else:
+        refresh.refresh(base, out)
+        meta = json.loads((out / "expression-artifact-build-metadata.json").read_text())
+        assert meta["proteoform_registry"] == _proteoform_registry_metadata("cta")
+        assert meta["n_cohorts"] == 1
+        for name in ("percentiles", "within_sample"):
+            result = pd.read_parquet(
+                out / expression.SHARD_DATASETS[name].subdir(proteoform=True) / "PRAD.parquet"
+            )
+            assert result.attrs == _proteoform_registry_metadata("cta")
+            assert "RBMY1F/J" in set(result.proteoform_key)
