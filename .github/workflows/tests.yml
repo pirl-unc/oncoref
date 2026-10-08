@@ -208,6 +208,9 @@ jobs:
           genome = next(genome for genome in releases if genome.release == 93)
           assert genome.installed(), genome.inspect_data()
           assert genome.gene_by_id("ENSG00000141510").gene_name == "TP53"
+          # This PRAME locus is absent from the legacy primary-assembly GTF.
+          alternate = genome.gene_by_id("ENSG00000275013")
+          assert (alternate.gene_name, alternate.contig) == ("PRAME", "CHR_HSCHR22_1_CTG3")
           PY
 
       - name: Run unit tests
