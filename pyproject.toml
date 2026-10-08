@@ -43,7 +43,7 @@ dependencies = [
 [project.optional-dependencies]
 reports = ["reportlab>=4", "pypdf>=5", "Pillow", "xlrd>=2"]
 genome = [
-    "pyensembl",
+    "pyensembl>=2.27.0",
 ]
 dev = [
     "reportlab>=4",
@@ -53,7 +53,7 @@ dev = [
     "pytest-cov",
     "pytest-xdist",
     "ruff",
-    "pyensembl",
+    "pyensembl>=2.27.0",
 ]
 
 [project.scripts]

@@ -68,6 +68,11 @@ Ensembl release:
 pip install 'oncoref[genome]'  # pyensembl-backed transcript and gene lookup
 ```
 
+The genome extra requires PyEnsembl 2.27.0 or newer. When upgrading from PyEnsembl
+older than 2.10.17, rerun `pyensembl install --release N --species human` for each
+installed GRCh38 release from 82 onward to build the complete patch/haplotype
+annotation index. Existing FASTA files are reused.
+
 ## Quick start
 
 The flat `oncoref` namespace remains available for compatibility and quick

@@ -21,6 +21,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .
+          python -m pip check
 
       - name: Verify minimal base-layer contract
         run: |
@@ -62,6 +63,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          python -m pip check
 
       - name: Lint with ruff
         run: ruff check oncoref tests scripts/*cta*.py
@@ -103,9 +105,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # The release-93 mirror and cache use the legacy GTF basename.
-          # Newer pyensembl requests chr_patch_hapl_scaff, absent from that mirror.
-          pip install -e ".[dev]" "pyensembl==2.10.4"
+          pip install -e ".[dev]"
+          python -m pip check
 
       - name: Cache required source matrices
         uses: actions/cache@v5
@@ -188,7 +189,8 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .ci-cache/pyensembl
-          key: pyensembl-v2-human93
+          # Rebuild the legacy cache with the complete chr_patch_hapl_scaff GTF.
+          key: pyensembl-v3-human93
 
       - name: Install Ensembl release
         run: |
@@ -203,7 +205,9 @@ jobs:
           import oncoref
 
           releases = oncoref.genomes()
-          assert any(genome.release == 93 for genome in releases), releases
+          genome = next(genome for genome in releases if genome.release == 93)
+          assert genome.installed(), genome.inspect_data()
+          assert genome.gene_by_id("ENSG00000141510").gene_name == "TP53"
           PY
 
       - name: Run unit tests
