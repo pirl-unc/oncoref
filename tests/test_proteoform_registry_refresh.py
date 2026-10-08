@@ -153,6 +153,103 @@ def test_recomputed_percentiles_do_not_claim_stale_artifact_qc(old_registry_shar
     assert out.attrs["artifact_sample_qc_verified"] is False
 
 
+@pytest.fixture
+def stale_summary_source(tmp_path, monkeypatch, rbmy_expression):
+    """Exercise real source loading/normalization/QC, not a pre-cleaned matrix stub."""
+    raw = rbmy_expression.assign(s3=[1.0, 1.0, 50.0, 0.0, 0.0])
+    source = tmp_path / "source.parquet"
+    raw.to_parquet(source, index=False)
+    monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
+    monkeypatch.setattr(expression.source_matrices, "local_path", lambda code: source)
+    qc = pd.DataFrame(
+        {"sample_id": ["s1", "s2", "s3"], "sample_qc_status": ["pass", "warn", "fail"]}
+    )
+    monkeypatch.setattr(expression, "sample_expression_qc", lambda *a, **kw: qc.copy())
+    for name, build in [
+        ("percentiles", cohort_percentile_vectors),
+        ("within_sample", within_sample_top_fractions),
+    ]:
+        directory = tmp_path / expression.SHARD_DATASETS[name].subdir(proteoform=True)
+        directory.mkdir()
+        build(rbmy_expression).to_parquet(directory / "PRAD.parquet", index=False)
+    return tmp_path, source, raw, qc
+
+
+def test_stale_percentiles_clip_raw_negatives_before_normalization(stale_summary_source):
+    from scripts.rebuild_expression_artifacts import _drop_technical, build_clean
+
+    _, source, raw, _ = stale_summary_source
+    raw.loc[0, "s1"] = -6.0
+    raw.to_parquet(source, index=False)
+    clipped = raw.copy()
+    clipped.loc[0, "s1"] = 0.0
+    expected = cohort_percentile_vectors(
+        collapse_to_proteoforms(_drop_technical(build_clean(clipped))), ["s1"]
+    )
+
+    out = expression.proteoform_cohort_percentiles("PRAD", as_tpm=False, auto_fetch=False)
+
+    pd.testing.assert_frame_equal(out, expected, check_dtype=False, check_exact=True)
+    assert (out[expression.sample_columns(out)] >= 0).all().all()
+    # Raw source reads retain their original values; only normalized reads clip.
+    unchanged = expression.per_sample_expression("PRAD", normalize="tpm_raw", auto_fetch=False)
+    assert unchanged.set_index("Symbol").loc["RBMY1F", "s1"] == -6.0
+
+
+@pytest.mark.parametrize("dataset_name", ["percentiles", "within_sample"])
+@pytest.mark.parametrize("effective", ["pass_or_warn", "all"])
+def test_stale_summaries_use_recorded_effective_qc(stale_summary_source, dataset_name, effective):
+    from scripts.rebuild_expression_artifacts import _drop_technical, build_clean
+
+    root, _, raw, qc = stale_summary_source
+    # Proxy cohorts may have no pass samples at all. The effective policy, not
+    # the release's requested 'pass', records which samples made the artifact.
+    qc.loc[0, "sample_qc_status"] = "warn"
+    pd.DataFrame(
+        [{"cancer_code": "PRAD", "sample_qc": "pass", "sample_qc_effective": effective}]
+    ).to_csv(root / "expression-artifact-build-metadata.csv", index=False)
+    samples = ["s1", "s2"] if effective == "pass_or_warn" else ["s1", "s2", "s3"]
+    grouped = collapse_to_proteoforms(_drop_technical(build_clean(raw)))
+    if dataset_name == "percentiles":
+        out = expression.cohort_gene_percentiles(
+            "PRAD", proteoform=True, as_tpm=False, sample_qc="artifact", auto_fetch=False
+        )
+        expected = cohort_percentile_vectors(grouped, samples)
+    else:
+        out = expression.proteoform_within_sample_top_fraction("PRAD", auto_fetch=False)
+        expected = within_sample_top_fractions(grouped, samples)[out.columns]
+        assert set(out.n_samples) == {len(samples)}
+    pd.testing.assert_frame_equal(out, expected, check_dtype=False, check_exact=True)
+    assert out.attrs["sample_qc_effective"] == effective
+    assert out.attrs["source"] == "recomputed"
+
+
+def test_stale_percentiles_preserve_explicit_pass_qc(stale_summary_source):
+    from scripts.rebuild_expression_artifacts import _drop_technical, build_clean
+
+    root, _, raw, _ = stale_summary_source
+    pd.DataFrame([{"cancer_code": "PRAD", "sample_qc_effective": "all"}]).to_csv(
+        root / "expression-artifact-build-metadata.csv", index=False
+    )
+    out = expression.cohort_gene_percentiles(
+        "PRAD", proteoform=True, as_tpm=False, sample_qc="pass", auto_fetch=False
+    )
+    expected = cohort_percentile_vectors(
+        collapse_to_proteoforms(_drop_technical(build_clean(raw))), ["s1"]
+    )
+    pd.testing.assert_frame_equal(out, expected, check_dtype=False, check_exact=True)
+
+
+@pytest.mark.parametrize("policies", [["unknown"], ["pass", "all"]])
+def test_stale_summaries_reject_invalid_recorded_qc(stale_summary_source, policies):
+    root, _, _, _ = stale_summary_source
+    pd.DataFrame(
+        [{"cancer_code": "PRAD", "sample_qc_effective": policy} for policy in policies]
+    ).to_csv(root / "expression-artifact-build-metadata.csv", index=False)
+    with pytest.raises(ValueError, match=r"artifact_sample_qc_(invalid|conflict)"):
+        expression.proteoform_within_sample_top_fraction("PRAD", auto_fetch=False)
+
+
 @pytest.mark.parametrize("dataset_name", ["percentiles", "within_sample"])
 def test_local_availability_excludes_stale_shards_without_sources(
     old_registry_shards, monkeypatch, dataset_name

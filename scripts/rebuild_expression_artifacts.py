@@ -77,6 +77,7 @@ from oncoref.expression import (
     SAMPLE_EXPRESSION_QC_POLICY_VERSION,
     SHARD_DATASETS,
     _canonicalize_gene_rows,
+    _clip_negative_expression,
     _validate_sample_qc,
     sample_columns,
     sample_expression_qc_from_matrix,
@@ -402,20 +403,6 @@ def read_raw(path: Path) -> pd.DataFrame:
     space and match the on-the-fly recompute path (oncoref#135 item 6)."""
     raw = pd.read_parquet(path)
     return _canonicalize_gene_rows(raw, sample_cols=sample_columns(raw)).reset_index(drop=True)
-
-
-def _clip_negative_expression(df: pd.DataFrame, sample_cols: list[str]) -> tuple[pd.DataFrame, int]:
-    """TPM-like source matrices should be nonnegative; clip invalid negatives to zero."""
-    if not sample_cols:
-        return df, 0
-    values = df[sample_cols]
-    negative = values < 0
-    n_negative = int(negative.to_numpy().sum())
-    if not n_negative:
-        return df, 0
-    out = df.copy()
-    out.loc[:, sample_cols] = values.clip(lower=0)
-    return out, n_negative
 
 
 def build_clean(raw: pd.DataFrame) -> pd.DataFrame:

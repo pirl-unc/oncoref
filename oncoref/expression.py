@@ -3010,6 +3010,9 @@ def per_sample_expression(
         robust to library-depth drift);
       - ``"tpm_raw"`` — the matrix as shipped (raw TPM), no normalization.
 
+    Normalized reads clip invalid negative source values to zero before computing
+    clean TPM, matching the release builders. Raw reads preserve those values.
+
     With ``proteoform=True``, identical-protein paralogs are **summed per sample** to
     proteoform level (:func:`oncoref.proteoforms.collapse_to_proteoforms`, ``scope``
     = ``"cta"``/``"genome"``) — a **proteoform-level** frame carrying ``proteoform_key``
@@ -3059,6 +3062,20 @@ def per_sample_expression(
     return _apply_sample_qc_filter(out, str(code), sample_qc=sample_qc, auto_fetch=auto_fetch)
 
 
+def _clip_negative_expression(df: pd.DataFrame, sample_cols: list[str]) -> tuple[pd.DataFrame, int]:
+    """TPM-like source matrices should be nonnegative; clip invalid negatives to zero."""
+    if not sample_cols:
+        return df, 0
+    values = df[sample_cols]
+    negative = values < 0
+    n_negative = int(negative.to_numpy().sum())
+    if not n_negative:
+        return df, 0
+    out = df.copy()
+    out.loc[:, sample_cols] = values.clip(lower=0)
+    return out, n_negative
+
+
 @lru_cache(maxsize=_PER_SAMPLE_CACHE_SIZE)
 def _load_per_sample_matrix(path: str, mtime: float, normalize: str) -> pd.DataFrame:
     """Read + normalize one cohort's per-sample matrix (the cached canonical frame).
@@ -3077,6 +3094,7 @@ def _load_per_sample_matrix(path: str, mtime: float, normalize: str) -> pd.DataF
     samples = sample_columns(raw)
     if normalize == "tpm_raw":
         return raw
+    raw, _ = _clip_negative_expression(raw, samples)
     clean = clean_tpm(raw[samples], gene_table=raw[base])
     out = pd.concat([raw[base].reset_index(drop=True), clean.reset_index(drop=True)], axis=1)
     if normalize == "tpm_clean_log1p":
@@ -5688,13 +5706,25 @@ def _read_shard_or_recompute(
         if not stale_registry:
             df.attrs["source"] = "shard"
             return df
+    effective_sample_qc = sample_qc
+    if sample_qc == "artifact":
+        meta = expression_artifact_build_metadata([code], auto_fetch=False, on_missing="empty")
+        if meta.empty and meta.attrs.get("missing_reason"):
+            # Legacy bundles without build metadata retain the strict fallback.
+            effective_sample_qc = "pass"
+        else:
+            effective_sample_qc, reason = _artifact_effective_sample_qc(
+                code, _artifact_build_metadata_qc_policies(meta)
+            )
+            if reason:
+                raise ValueError(f"cannot recompute {dataset.noun} for {code!r}: {reason}")
     try:
         bio = _biological_per_sample(
             code,
             proteoform=proteoform,
             auto_fetch=auto_fetch,
             scope=scope,
-            sample_qc=sample_qc,
+            sample_qc=effective_sample_qc,
         )
     except FileNotFoundError as e:
         variant = "proteoform-summed " if proteoform else ""
@@ -5713,6 +5743,7 @@ def _read_shard_or_recompute(
     build_core = getattr(import_module("oncoref.expression_builders"), dataset.build_attr)
     out = build_core(bio, sample_columns(bio))
     out.attrs["source"] = "recomputed"
+    out.attrs["sample_qc_effective"] = effective_sample_qc
     return out
 
 
@@ -5759,7 +5790,8 @@ def cohort_gene_percentiles(
     ``sample_qc="pass"`` requires any shipped build metadata to show the
     percentile shard was built from QC-passing samples. Pass
     ``sample_qc="artifact"`` only for explicit legacy/audit reads of whatever
-    policy the bundle used.
+    policy the bundle used. Recomputed artifact reads apply the recorded effective
+    policy; bundles without build metadata fall back to ``"pass"``.
 
     With ``proteoform=True``, the vector is one row per proteoform key
     (``proteoform_key``/``Symbol`` carry the collapsed identity), identical-protein
@@ -5791,7 +5823,6 @@ def cohort_gene_percentiles(
         schema_version=EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
         missing_reason="no usable percentile artifact shard; recomputing from source matrix",
     )
-    recompute_sample_qc = "pass" if sample_qc == "artifact" else sample_qc
     try:
         df = _read_shard_or_recompute(
             _PERCENTILES,
@@ -5799,7 +5830,7 @@ def cohort_gene_percentiles(
             proteoform=proteoform,
             auto_fetch=auto_fetch,
             scope=scope,
-            sample_qc=recompute_sample_qc,
+            sample_qc=sample_qc,
             shard=shard,
         )
         source = df.attrs["source"]
@@ -5935,7 +5966,8 @@ def within_sample_top_fraction(
 
     Reads the shipped shard when present and, for proteoforms, verified against the
     current registry. Otherwise **recomputes on the fly** from the per-sample matrix
-    via the same build core. Recompute needs the cohort's per-sample
+    via the same build core and the bundle's recorded effective sample-QC policy
+    (``"pass"`` when build metadata is unavailable). Recompute needs the cohort's per-sample
     matrix cached (pass ``auto_fetch=True`` to download it), else a clear error.
     """
     col = _WITHIN_SAMPLE_THRESHOLD_COLS.get(threshold)
@@ -5943,7 +5975,12 @@ def within_sample_top_fraction(
         raise ValueError(f"threshold must be one of {sorted(_WITHIN_SAMPLE_THRESHOLD_COLS)}")
     code = resolve_cancer_type(cancer_type)
     df = _read_shard_or_recompute(
-        _WITHIN_SAMPLE, code, proteoform=proteoform, auto_fetch=auto_fetch, scope=scope
+        _WITHIN_SAMPLE,
+        code,
+        proteoform=proteoform,
+        auto_fetch=auto_fetch,
+        scope=scope,
+        sample_qc="artifact",
     )
     keep = [*id_columns(df), col]
     if "n_samples" in df.columns:
