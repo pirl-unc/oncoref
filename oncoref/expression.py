@@ -1101,6 +1101,18 @@ def _locally_available_summary_cohorts(
 ) -> list[str]:
     """Local shard union, optionally extended by cached source matrices."""
     available = set(_available_local_cohorts(dataset, proteoform=proteoform, scope=scope))
+    if proteoform:
+        from .proteoforms import _proteoform_registry_metadata
+
+        expected = _proteoform_registry_metadata(scope)
+        current = set()
+        for code in available:
+            attrs = pd.read_parquet(
+                _shard_path(dataset, code, proteoform=True, scope=scope), columns=[]
+            ).attrs
+            if all(attrs.get(key) == value for key, value in expected.items()):
+                current.add(code)
+        available = current
     if include_recomputable:
         available.update(
             code for code in source_matrices.available_cohorts() if source_matrices.is_cached(code)
@@ -5653,18 +5665,29 @@ def _read_shard_or_recompute(
     shard: Path | None = None,
 ) -> pd.DataFrame:
     """Read ``code``'s shard for ``dataset`` (the ``scope``-specific one at proteoform
-    level); if no shard is present, recompute it on the fly from the per-sample matrix
+    level); if no current shard is present, recompute it from the per-sample matrix
     via the dataset's ``expression_builders`` core (the same core that produced the shipped shards —
     so the on-the-fly and shipped values agree).
 
     The single home of the shard-or-recompute fallback shared by the percentile and
-    within-sample readers. Raises a clear :class:`ValueError` — not a bare
-    ``FileNotFoundError`` — when neither the shard nor the per-sample matrix is available
-    (the proteoform variant has no shipped shard yet, so it always takes this path)."""
+    within-sample readers. Proteoform shards must identify the current registry;
+    legacy/unverified or stale shards cannot be repaired by adding their summary
+    values. Raises a clear :class:`ValueError` when neither a usable shard nor its
+    per-sample matrix is available. The returned attrs identify the actual source.
+    """
     if shard is None:
         shard = _shard_path(dataset, code, proteoform=proteoform, scope=scope)
+    stale_registry = False
     if shard.exists():
-        return pd.read_parquet(shard)
+        df = pd.read_parquet(shard)
+        if proteoform:
+            from .proteoforms import _proteoform_registry_metadata
+
+            metadata = _proteoform_registry_metadata(scope)
+            stale_registry = any(df.attrs.get(key) != value for key, value in metadata.items())
+        if not stale_registry:
+            df.attrs["source"] = "shard"
+            return df
     try:
         bio = _biological_per_sample(
             code,
@@ -5675,14 +5698,22 @@ def _read_shard_or_recompute(
         )
     except FileNotFoundError as e:
         variant = "proteoform-summed " if proteoform else ""
+        reason = (
+            " The cached shard uses a stale or unverified proteoform registry and must "
+            "be rebuilt from per-sample expression."
+            if stale_registry
+            else ""
+        )
         raise ValueError(
             f"no {variant}{dataset.noun} for {code!r} and its per-sample matrix isn't "
-            f"cached — fetch it (source_matrices.fetch / auto_fetch=True)."
+            f"cached — fetch it (source_matrices.fetch / auto_fetch=True).{reason}"
         ) from e
     from importlib import import_module
 
     build_core = getattr(import_module("oncoref.expression_builders"), dataset.build_attr)
-    return build_core(bio, sample_columns(bio))
+    out = build_core(bio, sample_columns(bio))
+    out.attrs["source"] = "recomputed"
+    return out
 
 
 def cohort_gene_percentiles(
@@ -5736,10 +5767,10 @@ def cohort_gene_percentiles(
     ignored when ``proteoform`` is False).
 
     The shipped percentile **shard** can't be converted across proteoform scopes (you
-    can't sum already-computed percentiles), so when no matching shard is present the
-    vector is **recomputed on the fly** from the per-sample matrix via the same build
-    core. That needs the cohort's per-sample matrix cached (pass ``auto_fetch=True`` to
-    download it); otherwise a clear error.
+    can't sum already-computed percentiles). When no matching shard verified against
+    the current registry is present, the vector is **recomputed on the fly** from
+    the per-sample matrix via the same build core. That needs the cohort's per-sample
+    matrix cached (pass ``auto_fetch=True`` to download it); otherwise a clear error.
     """
     if on_missing not in ("raise", "empty"):
         raise ValueError("on_missing must be 'raise' or 'empty'")
@@ -5755,14 +5786,11 @@ def cohort_gene_percentiles(
 
     code = resolve_cancer_type(cancer_type)
     shard = _shard_path(_PERCENTILES, code, proteoform=proteoform, scope=scope)
-    if shard.exists():
-        artifact_qc_meta = _require_expression_artifact_sample_qc([code], sample_qc=sample_qc)
-    else:
-        artifact_qc_meta = _empty_metadata_frame(
-            _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS,
-            schema_version=EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
-            missing_reason="no precomputed percentile artifact shard; recomputing from source matrix",
-        )
+    artifact_qc_meta = _empty_metadata_frame(
+        _EXPRESSION_ARTIFACT_BUILD_METADATA_COLUMNS,
+        schema_version=EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION,
+        missing_reason="no usable percentile artifact shard; recomputing from source matrix",
+    )
     recompute_sample_qc = "pass" if sample_qc == "artifact" else sample_qc
     try:
         df = _read_shard_or_recompute(
@@ -5774,7 +5802,9 @@ def cohort_gene_percentiles(
             sample_qc=recompute_sample_qc,
             shard=shard,
         )
-        source = "shard" if shard.exists() else "recomputed"
+        source = df.attrs["source"]
+        if source == "shard":
+            artifact_qc_meta = _require_expression_artifact_sample_qc([code], sample_qc=sample_qc)
     except ValueError as e:
         if on_missing != "empty" or "per-sample matrix isn't cached" not in str(e):
             raise
@@ -5903,8 +5933,9 @@ def within_sample_top_fraction(
     collapsing members shrinks the gene axis the within-sample rank is computed over,
     so an ungrouped gene's fraction can shift slightly vs the gene variant.
 
-    Reads the shipped shard when present, else **recomputes on the fly** from the
-    per-sample matrix via the same build core. Recompute needs the cohort's per-sample
+    Reads the shipped shard when present and, for proteoforms, verified against the
+    current registry. Otherwise **recomputes on the fly** from the per-sample matrix
+    via the same build core. Recompute needs the cohort's per-sample
     matrix cached (pass ``auto_fetch=True`` to download it), else a clear error.
     """
     col = _WITHIN_SAMPLE_THRESHOLD_COLS.get(threshold)

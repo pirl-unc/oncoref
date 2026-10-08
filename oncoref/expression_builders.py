@@ -5564,6 +5564,9 @@ def within_sample_top_fractions(
         pct = round((1.0 - t) * 100)
         out[f"frac_samples_top{pct}pct"] = (ranks >= t).mean(axis=1).to_numpy()
     out["n_samples"] = len(cols)
+    for key in ("proteoform_scope", "proteoform_registry_sha256"):
+        if key in df.attrs:
+            out.attrs[key] = df.attrs[key]
     return out
 
 
@@ -5618,6 +5621,9 @@ def cohort_percentile_vectors(
             out[_idcol] = df[_idcol].astype(str).to_numpy()
     for i, bp in enumerate(bps):
         out[f"p{bp}"] = q[i].astype("float16")
+    for key in ("proteoform_scope", "proteoform_registry_sha256"):
+        if key in df.attrs:
+            out.attrs[key] = df.attrs[key]
     return out
 
 
