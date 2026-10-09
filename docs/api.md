@@ -1625,9 +1625,63 @@ order.
   gene/transcript lookup against installed Ensembl releases.
 - `oncoref.proteoforms` — identical-protein paralog grouping and expression
   collapse helpers.
+- `oncoref.reference_identity` — versioned species/assembly/annotation/content
+  identities shared across OpenVax consumers.
+- `oncoref.sequence_groups` — exact protein identities, reference-scoped occurrence
+  groups and explicit schema migration adapters.
 - `oncoref.gene_qc` / `oncoref.gene_families` — technical-RNA and gene-family
   classification used by normalization. These are normalization/QC reference
   families, not the general home for pirlygenes marker panels.
+
+### Shared reference and exact protein identities
+
+`ReferenceIdentity`, `protein_sequence_id()` and `protein_sequence_groups()` provide
+versioned identity primitives for any explicitly supplied species and reference.
+They use only the Python standard library and define no consumer-specific target
+selection or abundance policy. See the [reference identity contract](reference-identity.md)
+for the normative schema, digest encoding, migration rules and interchange fixtures.
+
+```python
+from oncoref import ReferenceIdentity, protein_sequence_groups
+
+reference = ReferenceIdentity(
+    taxon_id=9606,
+    assembly_accession="GCF_000001405.40",
+    annotation_source="NCBI RefSeq",
+    annotation_release="110",
+    source_version="2022-04",
+    identifier_namespaces={"gene": "NCBI Gene", "transcript": "RefSeq", "protein": "RefSeq"},
+    content_provenance=verified_reference_asset_hashes,
+)
+# Each occurrence must already carry reference.reference_id.
+groups = protein_sequence_groups(translated_occurrences, reference=reference)
+```
+
+`normalize_protein_sequence()` validates the original ASCII alphabet before case
+conversion. ASCII lowercase, ASCII whitespace and one terminal stop are allowed;
+Unicode lookalikes and expanding case mappings are rejected. v1 accepts the 20
+standard amino acids, keeps I/L distinct, and rejects ambiguity codes, U/O and
+internal stops. `protein_sequence_id()` identifies normalized residues across
+references. `group_id` identifies that sequence within one complete reference.
+
+Every occurrence requires `reference_id`, string `occurrence_id`, `gene_id`,
+`transcript_id`, `protein_id`, `source`, `sequence`, and `complete=True`.
+Grouping preserves original sequences and all finite JSON-native source fields in
+defensive copies. Exact duplicates are deduplicated; contradictory IDs, mixed
+references and invalid translations fail with the occurrence ID and reason.
+Output is deterministic and JSON serializable. Reference metadata is read with
+`ReferenceIdentity.from_dict()`, which rejects unknown versions and digest mismatch.
+
+`adapt_reference_occurrences()` explicitly migrates older record schemas using a
+field map, declarations of missing metadata and checksum-pinned review evidence.
+It retains each original record and links it to an audit envelope. No implicit
+conversion of legacy reference IDs occurs; persist the envelope with the groups.
+
+Identity does not establish reproductive restriction, panel admission, RNA/protein
+abundance, locus-specific translation or PTM-defined proteoforms. Independently
+allocated RNA contributions may be combined downstream; an ambiguous observation
+must not be multiplied by its source-occurrence count. Existing human
+`proteoform_*` APIs and CTA membership policies retain their existing identities.
 
 ## Burden, TMB, Fusions, and Signatures
 

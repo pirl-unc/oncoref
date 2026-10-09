@@ -13,4 +13,5 @@ nav:
   - Bradley CTA Audit: cta-bradley-audit.md
   - HPA Cancer Reference: hpa-cancer-reference.md
   - CTA Gene Identities: cta-gene-identities.md
+  - Shared Reference Identities: reference-identity.md
   - API Guide: api.md

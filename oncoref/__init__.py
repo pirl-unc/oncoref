@@ -402,6 +402,7 @@ from .proteoforms import (
     proteoform_symbol,
     proteoform_symbol_map,
 )
+from .reference_identity import ReferenceIdentity
 from .representative_partitions import REPRESENTATIVE_PARTITION_POLICY_VERSION
 from .response_signatures import (
     response_signature_direction,
@@ -437,6 +438,12 @@ from .samples import (
     sample_molecular_provenance,
     samples_for_cancer_code,
     samples_for_cohort,
+)
+from .sequence_groups import (
+    adapt_reference_occurrences,
+    normalize_protein_sequence,
+    protein_sequence_groups,
+    protein_sequence_id,
 )
 from .therapy_evidence import therapy_benefit_toxicity_evidence
 from .tmb import (
@@ -534,6 +541,7 @@ __all__ = [
     "ExpressionSource",
     "GeneIdentity",
     "GeneQcClass",
+    "ReferenceIdentity",
     "SafetyTissueMapping",
     "SafetyTissueResolution",
     "SafetyTissueResolutionError",
@@ -541,6 +549,7 @@ __all__ = [
     "TumorReferenceDataError",
     "__version__",
     # expression (read accessors over the downloadable bundle)
+    "adapt_reference_occurrences",
     "addressable_fraction",
     "addressable_fraction_by_cohort",
     "aggregate_gene_expression",
@@ -790,6 +799,7 @@ __all__ = [
     "molecular_provenance_for_sample",
     "molecular_sample_counts",
     "normalize_expression",
+    "normalize_protein_sequence",
     "normalize_technical_rna_columns",
     "normalize_technical_rna_long_table",
     "normalize_to_housekeeping",
@@ -801,6 +811,8 @@ __all__ = [
     "pooled_cohort_stats",
     "pooled_ici_response",
     "protein_family",
+    "protein_sequence_groups",
+    "protein_sequence_id",
     "proteoform_aliases",
     "proteoform_cohort_mean_expression",
     "proteoform_cohort_percentiles",
