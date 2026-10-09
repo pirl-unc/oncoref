@@ -132,7 +132,9 @@ def protein_sequence_groups(
         if not sequence or invalid:
             reject(f"empty or unresolved amino-acid sequence; invalid residues={invalid!r}")
         if oid in seen:
-            if seen[oid] != row:
+            # Python equality conflates True, 1 and 1.0; provenance must retain
+            # JSON types and must not depend on which duplicate arrived first.
+            if json.dumps(seen[oid], sort_keys=True) != json.dumps(row, sort_keys=True):
                 reject("contradictory reuse of occurrence identity")
             continue
         row = deepcopy(row)

@@ -92,6 +92,14 @@ def test_contradictory_occurrence_ids_are_rejected(scope, occurrence, field, val
         protein_sequence_groups([occurrence, dict(occurrence, **{field: value})], **scope)
 
 
+@pytest.mark.parametrize("left,right", [(True, 1), (1, 1.0), (0.0, -0.0)])
+def test_duplicate_provenance_cannot_lose_json_types(scope, occurrence, left, right):
+    rows = [dict(occurrence, evidence={"value": value}) for value in (left, right)]
+    for ordered in (rows, list(reversed(rows))):
+        with pytest.raises(ValueError, match="Occurrence 'a': contradictory reuse"):
+            protein_sequence_groups(ordered, **scope)
+
+
 @pytest.mark.parametrize(
     "change",
     [
