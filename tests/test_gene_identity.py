@@ -190,12 +190,14 @@ def test_annotation_species_is_required():
         gene_identity.resolve_gene_identity(PRAME, genome=genome)
 
 
-def test_cta_curation_and_bundle_versions_unchanged():
+def test_cta_curation_and_pinned_bundle_versions():
     from oncoref.version import DATA_VERSION, SOURCE_MATRIX_VERSION
 
     assert len(oncoref.cta_gene_ids()) == 624
     assert len(oncoref.cta_unfiltered_gene_ids()) == 2532
-    assert DATA_VERSION == "5.23.25"
+    # The protein-summary refresh changes the derived bundle, not CTA admission
+    # or the source matrices used for annotation-independent gene identity.
+    assert DATA_VERSION == "5.23.26"
     assert SOURCE_MATRIX_VERSION == "5.22.14"
 
 
