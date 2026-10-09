@@ -1,101 +1,91 @@
 # Licensed under the Apache License, Version 2.0.
-"""Exact complete protein sequences within an explicit species and reference.
-
-These are annotation facts, independent of the human CTA registries. Grouping
-infers neither RNA/protein abundance, locus-specific translation, PTM-defined
-proteoforms, nor canine target-panel membership.
-"""
+"""Exact protein identity and occurrence groups for any explicitly declared reference."""
 
 from __future__ import annotations
 
 import hashlib
-import json
+import string
 from collections import defaultdict
 from collections.abc import Mapping
 from copy import deepcopy
+from dataclasses import fields
 
+from .reference_identity import (
+    ReferenceIdentity,
+    _canonical_json,
+    _identity,
+    _json_value,
+    _label,
+    _string_map,
+    _text,
+)
+
+PROTEIN_SEQUENCE_IDENTITY_VERSION = 1
+PROTEIN_GROUP_SCHEMA_VERSION = 1
 _AMINO_ACIDS = frozenset("ACDEFGHIKLMNPQRSTVWY")
+_SEQUENCE_INPUT = _AMINO_ACIDS | frozenset("acdefghiklmnpqrstvwy*" + string.whitespace)
 
 
-def _text(value):
-    return isinstance(value, str) and bool(value.strip())
+def normalize_protein_sequence(sequence: str) -> str:
+    """v1: validate ASCII AA20 input, remove ASCII whitespace/one final *, uppercase.
 
-
-def _json_value(value):
-    """Require JSON-native provenance so serialization loses no fields or types."""
-    if value is None or type(value) in (str, int, bool):
-        return True
-    if type(value) is float:
-        return value == value and abs(value) != float("inf")
-    if type(value) is list:
-        return all(_json_value(item) for item in value)
-    if type(value) is dict:
-        return all(type(key) is str and _json_value(item) for key, item in value.items())
-    return False
-
-
-def protein_sequence_groups(
-    occurrences, *, taxon_id, assembly_accession, annotation_release, content_provenance
-):
-    """Group normalized, exact proteins and retain every distinct source occurrence.
-
-    ``taxon_id`` must be a positive integer. Assembly accession/version and
-    annotation release must be explicit nonempty strings. ``content_provenance``
-    maps source asset names to their SHA-256 digests, binding reference identity to
-    actual content; filenames alone are insufficient. Inputs assert a common
-    reference, and each row must carry matching taxon/assembly/annotation fields.
-    A row's optional ``content_provenance`` must match the supplied asset map.
-
-    Each occurrence requires nonempty string ``occurrence_id``, ``gene_id``,
-    ``transcript_id``, ``protein_id``, ``source``, and ``sequence`` fields, plus
-    ``complete=True``. IDs retain their versions. All source fields (including
-    coordinates, hashes, and nested provenance) must be JSON-native and are copied.
-    Whitespace and case are normalized and one terminal stop is removed; the
-    original source sequence is retained in the occurrence. Only the 20 standard
-    amino acids are accepted: I/L remain distinct, while ambiguity codes, U/O,
-    internal stops and incomplete translations are rejected explicitly.
-
-    Returns a deterministically ordered list of dictionaries with sequence digest
-    ``protein_sequence_id``, reference digest ``reference_id``, scoped ``group_id``,
-    normalized ``sequence``, reference fields and all source ``occurrences``.
-    Equal sequences across references share a sequence digest, but not a group ID.
-    JSON round trips preserve the result; use ``sort_keys=True`` for canonical bytes.
-
-    Identical duplicate source records are harmless. Reusing an occurrence ID with
-    contradictory source fields raises ``ValueError``, as does any invalid row,
-    with its occurrence ID and reason. No partial grouping is returned. Callers
-    can record these errors in their own quarantine workflow. Independently
-    allocated RNA contributions may be summed downstream; one ambiguous RNA
-    observation must never be multiplied by the occurrence count.
+    I/L remain distinct. Reject ambiguity codes, U/O, internal stops, empty input,
+    non-ASCII whitespace and Unicode lookalikes BEFORE any case conversion. This
+    identifies sequence only; callers establish translation completeness separately.
     """
-    if type(taxon_id) is not int or taxon_id <= 0:
-        raise ValueError("Positive integer taxonomy identifier required")
-    if not _text(assembly_accession) or not _text(annotation_release):
-        raise ValueError("Explicit assembly accession/version and annotation release required")
-    if not isinstance(content_provenance, Mapping) or not content_provenance:
-        raise ValueError("Content provenance must map source assets to SHA-256 digests")
-    provenance = {}
-    for asset, digest in content_provenance.items():
-        if (
-            not _text(asset)
-            or not isinstance(digest, str)
-            or len(digest) != 64
-            or set(digest.lower()) - set("0123456789abcdef")
-        ):
-            raise ValueError("Content provenance requires asset names and 64-digit SHA-256 digests")
-        provenance[asset] = digest.lower()
-    scope = {
-        "taxon_id": taxon_id,
-        "assembly_accession": assembly_accession,
-        "annotation_release": annotation_release,
-        "content_provenance": dict(sorted(provenance.items())),
-    }
-    reference_id = hashlib.sha256(
-        json.dumps(scope, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("ascii")
-    ).hexdigest()
-    groups = defaultdict(list)
-    sequences = {}
-    seen = {}
+    if not _text(sequence):
+        raise ValueError("missing or non-string protein sequence")
+    invalid = sorted(set(sequence) - _SEQUENCE_INPUT)
+    if invalid:
+        raise ValueError(f"invalid protein sequence characters={invalid!r}")
+    normalized = (
+        sequence.translate(str.maketrans("", "", string.whitespace)).removesuffix("*").upper()
+    )
+    if not normalized or set(normalized) - _AMINO_ACIDS:
+        raise ValueError("empty protein sequence or internal/repeated stop")
+    return normalized
+
+
+def protein_sequence_id(sequence: str) -> str:
+    """Typed v1 SHA-256 of normalized ASCII residues, independent of any reference."""
+    digest = hashlib.sha256(normalize_protein_sequence(sequence).encode("ascii")).hexdigest()
+    return f"openvax:protein-sequence:v{PROTEIN_SEQUENCE_IDENTITY_VERSION}:sha256:{digest}"
+
+
+def _check_scope_fields(row, scope):
+    for name in (field.name for field in fields(ReferenceIdentity)):
+        if name not in row:
+            continue
+        value = row[name]
+        if name == "content_provenance":
+            value = _string_map(value, name, digests=True)
+        if _canonical_json(value) != _canonical_json(scope[name]):
+            raise ValueError(f"conflicting reference field {name}")
+
+
+def protein_sequence_groups(occurrences, *, reference: ReferenceIdentity):
+    """Group complete exact proteins; retain all source records in defensive copies.
+
+    Every row must declare this full ``reference_id`` and nonempty string
+    occurrence_id/gene_id/transcript_id/protein_id/source/sequence, plus complete=True.
+    Gene/transcript/protein namespaces must be explicit in the reference. Optional
+    redundant scope fields must agree. Original sequence and all JSON-native source
+    fields are retained. Invalid rows raise ValueError naming the occurrence/reason;
+    no partial grouping is returned. Exact duplicate records are deduplicated;
+    contradictory reuse of an occurrence ID fails, including JSON type differences.
+
+    Sequence IDs describe residues across references. Group IDs bind those IDs to
+    a reference under a separate versioned schema. Output ordering is deterministic.
+    Grouping establishes no RNA allocation, locus-specific translation, PTM-defined
+    proteoform, reproductive restriction or target-panel membership.
+    """
+    if not isinstance(reference, ReferenceIdentity):
+        raise ValueError("Explicit ReferenceIdentity required")
+    if not {"gene", "transcript", "protein"} <= reference.identifier_namespaces.keys():
+        raise ValueError("Gene, transcript and protein identifier namespaces required")
+    scope = reference.as_dict()
+    rid = reference.reference_id
+    groups, sequences, seen = defaultdict(list), {}, {}
     for occurrence in occurrences:
         if not isinstance(occurrence, Mapping):
             raise ValueError("Occurrence must be a mapping")
@@ -106,50 +96,144 @@ def protein_sequence_groups(
             raise ValueError(f"Occurrence {oid!r}: {reason}")
 
         if not _json_value(row):
-            reject("source fields must contain finite JSON-native values")
+            reject("source fields must contain finite JSON-native acyclic values")
         required = ("occurrence_id", "gene_id", "transcript_id", "protein_id", "source")
         if any(not _text(row.get(key)) for key in required):
             reject("incomplete occurrence identity or source provenance")
-        if type(row.get("taxon_id")) is not int or any(
-            row.get(key) != scope[key]
-            for key in ("taxon_id", "assembly_accession", "annotation_release")
-        ):
-            reject("conflicting species/reference namespace")
-        if "content_provenance" in row:
-            row_content = row["content_provenance"]
-            if (
-                not isinstance(row_content, dict)
-                or any(not isinstance(digest, str) for digest in row_content.values())
-                or {asset: digest.lower() for asset, digest in row_content.items()} != provenance
-            ):
-                reject("conflicting reference content provenance")
+        if row.get("reference_id") != rid:
+            reject("conflicting or missing reference_id")
+        try:
+            _check_scope_fields(row, scope)
+        except ValueError as error:
+            reject(str(error))
         if row.get("complete") is not True:
             reject("incomplete translation (complete=True required)")
-        if not _text(row.get("sequence")):
-            reject("missing or non-string protein sequence")
-        sequence = "".join(row["sequence"].split()).upper().removesuffix("*")
-        invalid = sorted(set(sequence) - _AMINO_ACIDS)
-        if not sequence or invalid:
-            reject(f"empty or unresolved amino-acid sequence; invalid residues={invalid!r}")
+        try:
+            sequence = normalize_protein_sequence(row.get("sequence"))
+        except ValueError as error:
+            reject(str(error))
         if oid in seen:
-            # Python equality conflates True, 1 and 1.0; provenance must retain
-            # JSON types and must not depend on which duplicate arrived first.
-            if json.dumps(seen[oid], sort_keys=True) != json.dumps(row, sort_keys=True):
+            if _canonical_json(seen[oid]) != _canonical_json(row):
                 reject("contradictory reuse of occurrence identity")
             continue
         row = deepcopy(row)
         seen[oid] = row
-        sid = hashlib.sha256(sequence.encode("ascii")).hexdigest()
+        sid = protein_sequence_id(sequence)
         sequences[sid] = sequence
         groups[sid].append(row)
-    return [
-        {
-            "group_id": f"{reference_id}:{sid}",
-            "reference_id": reference_id,
+    result = []
+    for sid, rows in sorted(groups.items()):
+        identity = {
+            "schema": "openvax.protein-group",
+            "schema_version": PROTEIN_GROUP_SCHEMA_VERSION,
+            "reference_id": rid,
             "protein_sequence_id": sid,
-            "sequence": sequences[sid],
-            **deepcopy(scope),
-            "occurrences": sorted(rows, key=lambda row: row["occurrence_id"]),
         }
-        for sid, rows in sorted(groups.items())
-    ]
+        result.append(
+            {
+                **identity,
+                "group_id": _identity("protein-group", PROTEIN_GROUP_SCHEMA_VERSION, identity),
+                "reference": reference.as_dict(),
+                "sequence": sequences[sid],
+                "occurrences": sorted(rows, key=lambda row: row["occurrence_id"]),
+            }
+        )
+    return result
+
+
+def adapt_reference_occurrences(
+    occurrences,
+    *,
+    reference: ReferenceIdentity,
+    source_reference,
+    source_reference_id,
+    reference_id_field,
+    field_map,
+    added_fields,
+    evidence,
+):
+    """Explicit schema migration, preserving original records and mapping evidence.
+
+    ``field_map`` maps target ReferenceIdentity fields to source-reference fields;
+    ``added_fields`` explicitly supplies missing declarations. All target fields
+    must be accounted for exactly once and must reproduce ``reference``. Taxon,
+    assembly, annotation release and content hashes must come from source fields.
+    ``evidence`` pins reviewed migration inputs by logical role -> SHA-256.
+
+    Source IDs are opaque legacy IDs: callers verify their legacy derivation; this
+    adapter checks each occurrence carries the declared source ID. It performs no
+    taxon conversion, liftover, identifier crosswalk or reference-equivalence inference.
+    Original records (including old IDs) remain in source_record; a migration ID
+    links each output row to the returned audit envelope. Persist that envelope.
+    """
+    if not isinstance(reference, ReferenceIdentity):
+        raise ValueError("Explicit ReferenceIdentity required")
+    _label(source_reference_id, "source_reference_id")
+    _label(reference_id_field, "reference_id_field")
+    if not isinstance(source_reference, Mapping) or not _json_value(dict(source_reference)):
+        raise ValueError("Source reference must be a finite JSON-native record")
+    names = {field.name for field in fields(reference)}
+    if not isinstance(field_map, Mapping) or not isinstance(added_fields, Mapping):
+        raise ValueError("Explicit field_map and added_fields mappings required")
+    required_mapped = {"taxon_id", "assembly_accession", "annotation_release", "content_provenance"}
+    if (
+        set(field_map) & set(added_fields)
+        or set(field_map) | set(added_fields) != names
+        or not required_mapped <= field_map.keys()
+    ):
+        raise ValueError("Map source scope/content and declare every reference field exactly once")
+    if any(not _text(key) or key not in source_reference for key in field_map.values()):
+        raise ValueError("Reference field map names an absent source field")
+    mapped = {key: source_reference[value] for key, value in field_map.items()}
+    mapped.update(added_fields)
+    if ReferenceIdentity(**mapped) != reference:
+        raise ValueError("Mapped source reference does not match the target reference")
+    proof = _string_map(evidence, "migration evidence", digests=True)
+    audit = {
+        "schema": "openvax.reference-migration",
+        "schema_version": 1,
+        "source_reference_id": source_reference_id,
+        "source_reference": deepcopy(dict(source_reference)),
+        "reference_id_field": reference_id_field,
+        "field_map": dict(field_map),
+        "added_fields": deepcopy(dict(added_fields)),
+        "reference": reference.as_dict(),
+        "evidence": proof,
+    }
+    if not _json_value(audit):
+        raise ValueError("Migration declarations must be finite JSON-native values")
+    migration_id = _identity("reference-migration", 1, audit)
+    output = []
+    target_scope = reference.as_dict()
+    target_id = reference.reference_id
+    for occurrence in occurrences:
+        if not isinstance(occurrence, Mapping) or not _json_value(dict(occurrence)):
+            raise ValueError("Source occurrence must be a finite JSON-native record")
+        row = deepcopy(dict(occurrence))
+        if row.get(reference_id_field) != source_reference_id:
+            raise ValueError(
+                f"Occurrence {row.get('occurrence_id')!r}: conflicting source reference ID"
+            )
+        if {"source_record", "reference_migration_id"} & row.keys():
+            raise ValueError("Occurrence already contains reserved migration fields")
+        if reference_id_field != "reference_id" and "reference_id" in row:
+            raise ValueError("Occurrence already declares a target reference_id")
+        try:
+            _check_scope_fields(row, target_scope)
+            # Reject conflicting per-row source declarations as well as canonical
+            # fields: a schema migration must never relabel another reference.
+            _check_scope_fields(
+                {name: row[source] for name, source in field_map.items() if source in row},
+                target_scope,
+            )
+        except ValueError as error:
+            raise ValueError(f"Occurrence {row.get('occurrence_id')!r}: {error}") from error
+        output.append(
+            {
+                **row,
+                "source_record": deepcopy(row),
+                "reference_id": target_id,
+                "reference_migration_id": migration_id,
+            }
+        )
+    return {**audit, "migration_id": migration_id, "occurrences": output}

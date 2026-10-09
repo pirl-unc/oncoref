@@ -1,0 +1,74 @@
+[
+  {
+    "reference": {
+      "schema": "openvax.reference",
+      "schema_version": 1,
+      "taxon_id": 9606,
+      "assembly_accession": "GCF_human_fixture.1",
+      "annotation_source": "example.org",
+      "annotation_release": "release-1",
+      "source_version": "snapshot-1",
+      "identifier_namespaces": {
+        "gene": "example:gene",
+        "transcript": "example:transcript",
+        "protein": "example:protein"
+      },
+      "content_provenance": {
+        "annotation": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "protein": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "reference_id": "openvax:reference:v1:sha256:87e9bd48ddf5cb0f4347da1399d2994060f22f518cee4ddd8bb2a9a05ff7891f"
+    },
+    "sequence": "MALI",
+    "protein_sequence_id": "openvax:protein-sequence:v1:sha256:25a331e2ac413d0da26077a329c788455762906bab12363c7188e4740cd5b1a9",
+    "group_id": "openvax:protein-group:v1:sha256:4ef520c95579baa2ed9f0754cead1814e0108bac980c71c5d4bad79f60bf12ed"
+  },
+  {
+    "reference": {
+      "schema": "openvax.reference",
+      "schema_version": 1,
+      "taxon_id": 9615,
+      "assembly_accession": "GCF_dog_fixture.1",
+      "annotation_source": "example.org",
+      "annotation_release": "release-1",
+      "source_version": "snapshot-1",
+      "identifier_namespaces": {
+        "gene": "example:gene",
+        "transcript": "example:transcript",
+        "protein": "example:protein"
+      },
+      "content_provenance": {
+        "annotation": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "protein": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "reference_id": "openvax:reference:v1:sha256:4f2fc7c2c25c6adf5f85fdfecaff99efbd7e3d174b79704ac5a6958f98dd91f8"
+    },
+    "sequence": "MALI",
+    "protein_sequence_id": "openvax:protein-sequence:v1:sha256:25a331e2ac413d0da26077a329c788455762906bab12363c7188e4740cd5b1a9",
+    "group_id": "openvax:protein-group:v1:sha256:d27ae296f4af5e54b9f5bb329c05d0d5b4a921942d02b27c11a82a557a7e7525"
+  },
+  {
+    "reference": {
+      "schema": "openvax.reference",
+      "schema_version": 1,
+      "taxon_id": 10090,
+      "assembly_accession": "GCF_mouse_fixture.1",
+      "annotation_source": "example.org",
+      "annotation_release": "release-1",
+      "source_version": "snapshot-1",
+      "identifier_namespaces": {
+        "gene": "example:gene",
+        "transcript": "example:transcript",
+        "protein": "example:protein"
+      },
+      "content_provenance": {
+        "annotation": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "protein": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "reference_id": "openvax:reference:v1:sha256:7378499d018919798c5a9bca6fbbb0302b889d23f428f50107dbbc9ad620ebe4"
+    },
+    "sequence": "MALI",
+    "protein_sequence_id": "openvax:protein-sequence:v1:sha256:25a331e2ac413d0da26077a329c788455762906bab12363c7188e4740cd5b1a9",
+    "group_id": "openvax:protein-group:v1:sha256:76aba0be6defcec9c4e0236102f6805b33ae58b8b73de3a8b5d1250d8625eb5f"
+  }
+]

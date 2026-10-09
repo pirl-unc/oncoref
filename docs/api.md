@@ -1625,56 +1625,63 @@ order.
   gene/transcript lookup against installed Ensembl releases.
 - `oncoref.proteoforms` — identical-protein paralog grouping and expression
   collapse helpers.
-- `oncoref.sequence_groups` — species- and reference-scoped exact complete protein
-  sequences, retaining every source occurrence; independent of the human CTA registry.
+- `oncoref.reference_identity` — versioned species/assembly/annotation/content
+  identities shared across OpenVax consumers.
+- `oncoref.sequence_groups` — exact protein identities, reference-scoped occurrence
+  groups and explicit schema migration adapters.
 - `oncoref.gene_qc` / `oncoref.gene_families` — technical-RNA and gene-family
   classification used by normalization. These are normalization/QC reference
   families, not the general home for pirlygenes marker panels.
 
-### Exact sequence groups for canine and other references
+### Shared reference and exact protein identities
 
-`oncoref.protein_sequence_groups()` accepts caller-supplied translated occurrence
-records. It has no default species or reference and does not download annotations.
-The caller must supply a positive `taxon_id`, an assembly accession/version,
-annotation release, and `content_provenance`: source asset names mapped to their
-64-digit SHA-256 hashes. Every record must carry the same taxon, assembly and
-annotation, and an optional per-record content map must match the supplied map.
+`ReferenceIdentity`, `protein_sequence_id()` and `protein_sequence_groups()` provide
+versioned identity primitives for any explicitly supplied species and reference.
+They use only the Python standard library and define no consumer-specific target
+selection or abundance policy. See the [reference identity contract](reference-identity.md)
+for the normative schema, digest encoding, migration rules and interchange fixtures.
 
 ```python
-from oncoref import protein_sequence_groups
+from oncoref import ReferenceIdentity, protein_sequence_groups
 
-groups = protein_sequence_groups(
-    translated_occurrences,
-    taxon_id=9615,
-    assembly_accession="GCF_011100685.1",
-    annotation_release="NCBI annotation release 106",
+reference = ReferenceIdentity(
+    taxon_id=9606,
+    assembly_accession="GCF_000001405.40",
+    annotation_source="NCBI RefSeq",
+    annotation_release="110",
+    source_version="2022-04",
+    identifier_namespaces={"gene": "NCBI Gene", "transcript": "RefSeq", "protein": "RefSeq"},
     content_provenance=verified_reference_asset_hashes,
 )
+# Each occurrence must already carry reference.reference_id.
+groups = protein_sequence_groups(translated_occurrences, reference=reference)
 ```
 
-Each record needs string `occurrence_id`, `gene_id`, `transcript_id`, `protein_id`,
-`source`, and `sequence` fields, plus `complete=True`. Use JSON-native provenance
-values; coordinates, versions, hashes and nested source fields are retained in
-defensive copies. The original sequence stays in the occurrence. Group sequences
-are uppercased, whitespace is removed and one terminal stop is stripped. The
-explicit alphabet is the 20 standard amino acids: I/L remain distinct; ambiguity
-codes, U/O, internal stops and incomplete translations raise `ValueError` with
-the occurrence ID and reason. Errors return no partial grouping, so callers can
-record and quarantine invalid inputs before retrying.
+`normalize_protein_sequence()` validates the original ASCII alphabet before case
+conversion. ASCII lowercase, ASCII whitespace and one terminal stop are allowed;
+Unicode lookalikes and expanding case mappings are rejected. v1 accepts the 20
+standard amino acids, keeps I/L distinct, and rejects ambiguity codes, U/O and
+internal stops. `protein_sequence_id()` identifies normalized residues across
+references. `group_id` identifies that sequence within one complete reference.
 
-The output is sorted by sequence digest, with occurrences sorted by occurrence ID.
-Exact duplicate source records are deduplicated; conflicting reuse of an ID fails.
-`protein_sequence_id` identifies normalized sequence, `reference_id` includes the
-species, reference and content hashes, and `group_id` combines both. Use `group_id`
-when storing several references together. `json.dumps(groups, sort_keys=True)`
-provides deterministic serialization with a lossless JSON round trip.
+Every occurrence requires `reference_id`, string `occurrence_id`, `gene_id`,
+`transcript_id`, `protein_id`, `source`, `sequence`, and `complete=True`.
+Grouping preserves original sequences and all finite JSON-native source fields in
+defensive copies. Exact duplicates are deduplicated; contradictory IDs, mixed
+references and invalid translations fail with the occurrence ID and reason.
+Output is deterministic and JSON serializable. Reference metadata is read with
+`ReferenceIdentity.from_dict()`, which rejects unknown versions and digest mismatch.
 
-These are annotation identity facts. They do not establish canine reproductive
-restriction, panel admission, locus-specific translation, protein abundance or
-PTM-defined proteoforms. RNA allocation remains downstream: only independently
-allocated contributions may be combined; do not multiply one ambiguous observation
-by its number of possible source occurrences. Existing human `proteoform_*` APIs
-and CTA membership policies remain separate.
+`adapt_reference_occurrences()` explicitly migrates older record schemas using a
+field map, declarations of missing metadata and checksum-pinned review evidence.
+It retains each original record and links it to an audit envelope. No implicit
+conversion of legacy reference IDs occurs; persist the envelope with the groups.
+
+Identity does not establish reproductive restriction, panel admission, RNA/protein
+abundance, locus-specific translation or PTM-defined proteoforms. Independently
+allocated RNA contributions may be combined downstream; an ambiguous observation
+must not be multiplied by its source-occurrence count. Existing human
+`proteoform_*` APIs and CTA membership policies retain their existing identities.
 
 ## Burden, TMB, Fusions, and Signatures
 
