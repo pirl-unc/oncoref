@@ -103,5 +103,11 @@ python scripts/generate_within_sample_top5.py --input <clean-matrix-dir> --prote
 The summary inputs must use the intended sample-QC policy; drop technical genes
 before building or supply the generators' `--drop-genes` file. The full
 `rebuild_expression_artifacts.py` workflow also preserves the registry fingerprint.
-Publishing regenerated bundles requires the usual separate data-bundle release;
-runtime invalidation does not change the pinned bundle version.
+OncoRef 1.8.210 pins data bundle 5.23.26, which refreshes both protein summaries
+for all 143 cohorts. The rebuild preserves the base bundle's sample selection and
+reproduces its gene-level percentiles and prevalence exactly before regrouping.
+For a registry-only refresh, `scripts/refresh_proteoform_artifacts.py --base
+<published-bundle> --out <refresh-dir>` enforces these checks and records an audit.
+Runtime recomputation clips negative source values before normalization and uses
+the recorded effective sample-QC policy for artifact reads. Explicit
+`sample_qc="pass"` percentile reads remain strict.

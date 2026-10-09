@@ -57,7 +57,9 @@ __version__ = "1.8.210"
 # 5.23.24 adds the 384-tumor direct meningioma reference from the
 # checksum-pinned GSE270638 HTSeq raw-count matrix.
 # 5.23.25 adds a receptor-defined primary BRCA_TNBC cohort, distinct from PAM50.
-DATA_VERSION = "5.23.25"
+# 5.23.26 refreshes all 143 cohorts' CTA protein summaries against the current
+# identical-protein registry, including RBMY1F/RBMY1J, with registry fingerprints.
+DATA_VERSION = "5.23.26"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION
