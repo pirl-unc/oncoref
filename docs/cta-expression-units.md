@@ -63,3 +63,51 @@ default panel. When a gene has **no RNA observations**, regeneration instead
 clears its RNA measurements, assigns `NO_DATA` RNA axes and fails the RNA gate.
 Missing values are not observed zeros, and old measurements are never reused
 under a new scope label.
+
+## Identical-protein expression and registry updates
+
+The human CTA protein registry groups the longest Ensembl r112 protein sequences
+from the current CTA source table and its explicitly seeded partners. This is
+an identity reference, not a change to canonical CTA panel admission. The refresh
+for [#567](https://github.com/pirl-unc/oncoref/issues/567) contains 37 groups and
+93 member genes, including the identical 496-aa RBMY1F/RBMY1J pair. Both genes
+now have the CTA-scope key `RBMY1F/J`.
+
+Expression collapse sums independently allocated per-gene TPM contributions
+within each sample **before** calculating percentiles or within-sample ranks.
+Do not add previously computed prevalence fractions or percentiles, or duplicate
+one ambiguous RNA observation across its possible source loci.
+
+`scope="cta"` and `scope="genome"` select different collapse registries. Ranking
+uses all remaining biological rows after the selected collapse; CTA scope does
+not restrict the ranking denominator to CTA genes alone. Genome scope can merge
+additional groups and therefore change ranks even for an unchanged CTA protein.
+
+Generated proteoform summary parquets retain `proteoform_scope` and
+`proteoform_registry_sha256` in their pandas attrs. Readers use a precomputed
+summary only when both match the current registry. Legacy summaries without the
+fingerprint, and summaries with an outdated fingerprint, are recomputed from the
+cohort's per-sample matrix. If that matrix is unavailable, the accessor raises
+an error explaining the rebuild requirement; the proteoform wrappers default to
+`auto_fetch=True`. Local availability helpers exclude stale summaries unless
+their source matrix is cached.
+
+To regenerate the reference and summaries from biological clean-TPM matrices:
+
+```bash
+python scripts/generate_proteoform_groups.py --ensembl-release 112
+python scripts/generate_cohort_percentiles.py --input <clean-matrix-dir> --proteoform --scope cta
+python scripts/generate_within_sample_top5.py --input <clean-matrix-dir> --proteoform --scope cta
+```
+
+The summary inputs must use the intended sample-QC policy; drop technical genes
+before building or supply the generators' `--drop-genes` file. The full
+`rebuild_expression_artifacts.py` workflow also preserves the registry fingerprint.
+OncoRef 1.8.210 pins data bundle 5.23.26, which refreshes both protein summaries
+for all 143 cohorts. The rebuild preserves the base bundle's sample selection and
+reproduces its gene-level percentiles and prevalence exactly before regrouping.
+For a registry-only refresh, `scripts/refresh_proteoform_artifacts.py --base
+<published-bundle> --out <refresh-dir>` enforces these checks and records an audit.
+Runtime recomputation clips negative source values before normalization and uses
+the recorded effective sample-QC policy for artifact reads. Explicit
+`sample_qc="pass"` percentile reads remain strict.
