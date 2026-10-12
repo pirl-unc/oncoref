@@ -49,7 +49,7 @@ def test_species_boundary(value):
     assert {g.name for g in dog.groups} >= {"references", "expression", "cancer", "antigens"}
     assert dog.cancer.datasets() == ()
     assert dog.antigens.coverage()["coverage"] == "unavailable"
-    assert dog.expression.sources() == ()
+    assert all(s.taxon_id == 9615 for s in dog.expression.sources())
     assert all(r["taxon_id"] == 9615 for r in catalog.inventory(species=value))
 
 

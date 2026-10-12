@@ -1,0 +1,118 @@
+sources:
+- id: bgee-srp009687
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: bgee
+  accession: SRP009687
+  source_version: Bgee 15.2
+  unit: TPM
+  source_scale_class: linear
+  tpm_proxy: false
+  linear_tpm_comparable: true
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: bgee-srp009687
+    source_version: Bgee 15.2
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: Ensembl gene
+    measurement:
+      feature_level: gene
+      unit: TPM
+      scale: linear
+      is_proxy: false
+      transformations: []
+    content_provenance:
+      matrix: 7d6cad96de106ae7f07d509db0a0ed93234eaa5d84e4d35bf217d669890bedd1
+      samples: 542c38d7417f96ccbc5216c7765feb9b0d1a9895e6416f97a752ca7647cb382f
+    provenance_notes: Native source feature space. Exact quantification assembly/annotation
+      remains unresolved; available canine GTFs and symbol/orthology matches do not
+      establish equivalence. Original sample metadata and corrections are preserved.
+      No isoform allocation or target admission.
+    contract_id: openvax:expression-contract:v1:sha256:ed3d43699f44f0ae460b48dc2ad5ddd1d92421e9f7061697bcea3e3a6b18e41e
+  matrix_asset: bgee-srp009687-matrix
+  sample_metadata: bgee-srp009687-samples.json
+  adapter: bgee
+- id: bgee-srp181218
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: bgee
+  accession: SRP181218
+  source_version: Bgee 15.2
+  unit: TPM
+  source_scale_class: linear
+  tpm_proxy: false
+  linear_tpm_comparable: true
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: bgee-srp181218
+    source_version: Bgee 15.2
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: Ensembl gene
+    measurement:
+      feature_level: gene
+      unit: TPM
+      scale: linear
+      is_proxy: false
+      transformations: []
+    content_provenance:
+      matrix: 935d6954d039b13727cfa54a16e5f0fa8acd35c8f616ac5413dd11f27a79085e
+      samples: 43575dd133d2b6e46d560eaf8173bdc5ee85e1aaa6220c1fd38f6cc421ac03c3
+    provenance_notes: Native source feature space. Exact quantification assembly/annotation
+      remains unresolved; available canine GTFs and symbol/orthology matches do not
+      establish equivalence. Original sample metadata and corrections are preserved.
+      No isoform allocation or target admission.
+    contract_id: openvax:expression-contract:v1:sha256:6f11f9c2aa35ef50c1096d00d51ab4d70061e673d96ee685c7bcca0be4cf6d5c
+  matrix_asset: bgee-srp181218-matrix
+  sample_metadata: bgee-srp181218-samples.json
+  adapter: bgee
+- id: barkbase
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: barkbase
+  accession: PRJNA396033
+  source_version: retrieved-2026-10-08
+  unit: TMM-CPM
+  source_scale_class: linear
+  tpm_proxy: false
+  linear_tpm_comparable: false
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: barkbase
+    source_version: retrieved-2026-10-08
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: BarkBase StringTie gene
+    measurement:
+      feature_level: gene
+      unit: TMM-CPM
+      scale: linear
+      is_proxy: false
+      transformations: []
+    content_provenance:
+      matrix: 689769c7a049a5d4d7fdfca1e6e3b4f35759ab2b912d71c28c9b7660c74f8eff
+      samples: e36e81e4403830b7fa0c64aa5b91f9f3ceef01003b95911ac26b19702b3c074c
+    provenance_notes: Native source feature space. Exact quantification assembly/annotation
+      remains unresolved; available canine GTFs and symbol/orthology matches do not
+      establish equivalence. Original sample metadata and corrections are preserved.
+      No isoform allocation or target admission.
+    contract_id: openvax:expression-contract:v1:sha256:54678a72ba9a992099e14c2920387867a28523b9359fae234955a95073473db1
+  matrix_asset: barkbase-matrix
+  sample_metadata: barkbase-samples.json
+  adapter: barkbase

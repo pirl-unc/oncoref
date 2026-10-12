@@ -1,0 +1,719 @@
+{
+  "samples": [
+    {
+      "age": null,
+      "biosample_id": "SAMN00013638",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "a46f6874664596b8bfbc0d172905d368ccdcfe1772fe872188233efc188aedca",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013638"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111061",
+      "original_tissue": "kidney",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388734",
+        "SRR388735",
+        "SRR388747"
+      ],
+      "sample_id": "SRX111061",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-05-22",
+        "ENA-LAST-UPDATE": "2014-01-23",
+        "INSDC secondary accession": "SRS072786",
+        "NCBI submission package": "Generic.1.0",
+        "Sample name": "Cf_ZyR_kidney",
+        "geographic location (country and/or sea,region)": "missing",
+        "isolation source": "kidney",
+        "organism": "Canis lupus familiaris",
+        "strain": "missing"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002113",
+        "Anatomical entity name": "kidney",
+        "Library ID": "SRX111061",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "kidney",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "kidney",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013515",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "724253939e8eb560a065c941a7d747cd5b0bcde9e548c17f06d9f3d6acc82562",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013515"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111062",
+      "original_tissue": "liver",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388736",
+        "SRR388741",
+        "SRR388752"
+      ],
+      "sample_id": "SRX111062",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-06-23",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072647",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "liver",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_liver"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002107",
+        "Anatomical entity name": "liver",
+        "Library ID": "SRX111062",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "liver",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013514",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "2b98cd7fd55a63411c860080bfd4c6a835f9b8e1331301e3efb866e2be9e640e",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013514"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111063",
+      "original_tissue": "brain",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388737",
+        "SRR388740",
+        "SRR388766"
+      ],
+      "sample_id": "SRX111063",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-06-23",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072646",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "brain",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_brain"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX111063",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "brain",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013513",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "01e824b215dd80c03627f93d91d61f2cb8f0578da4366172b32cf0e25b691d63",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013513"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111064",
+      "original_tissue": "zone of skin",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388738",
+        "SRR388751",
+        "SRR388760"
+      ],
+      "sample_id": "SRX111064",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-06-23",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072645",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "skin",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_skin"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX111064",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "skin",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013597",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "f37d3210af8b518e172ca99d029e636dcdaf68de706d9a4d31e8b433a6fed55f",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013597"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111066",
+      "original_tissue": "ovary",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388742",
+        "SRR388756",
+        "SRR388764"
+      ],
+      "sample_id": "SRX111066",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-05-22",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072745",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "ovary",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_ovary"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000992",
+        "Anatomical entity name": "ovary",
+        "Library ID": "SRX111066",
+        "Sex": "female",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "ovary",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "ovary",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013596",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "b689f3c94ee4be8b8474bfe82d12d5000235070a043f63798ec918e7b8578eb2",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013596"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111067",
+      "original_tissue": "heart",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388743",
+        "SRR388744",
+        "SRR388761"
+      ],
+      "sample_id": "SRX111067",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-07-13",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072744",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "heart",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_heart"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000948",
+        "Anatomical entity name": "heart",
+        "Library ID": "SRX111067",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "heart",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "heart",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013600",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "6b12f714018f72538d577cebbe3991b719808fc798bd2995ed9aea2349d3ab8b",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013600"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111068",
+      "original_tissue": "smooth muscle tissue",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388745",
+        "SRR388750",
+        "SRR388762"
+      ],
+      "sample_id": "SRX111068",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-05-22",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072748",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "Smooth Muscle",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_sk_m"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001135",
+        "Anatomical entity name": "smooth muscle tissue",
+        "Library ID": "SRX111068",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "Smooth Muscle",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "smooth muscle tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013599",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "0389050c52927dd9dfa1d9bde910dff89ff022fad9a9e8c23b9859663a1f059c",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013599"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111069",
+      "original_tissue": "testis",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388746",
+        "SRR388755",
+        "SRR388758"
+      ],
+      "sample_id": "SRX111069",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-05-22",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072747",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "testis",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_testis"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX111069",
+        "Sex": "male",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "testis",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013601",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "14c0a2a273fe7440951c0ef4cd1fdb22c0187bd7e0b0ffa55b69ae25f9134146",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013601"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111070",
+      "original_tissue": "blood",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388749",
+        "SRR388753",
+        "SRR388757"
+      ],
+      "sample_id": "SRX111070",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-05-23",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072749",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "blood",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_blood"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000178",
+        "Anatomical entity name": "blood",
+        "Library ID": "SRX111070",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "blood",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "blood",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00013598",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "9019ce8537aae952e1006df62aa3ee75ca7ca6befb5e29b3f4df58fc22bf41fe",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00013598"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX111071",
+      "original_tissue": "lung",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR388754",
+        "SRR388763",
+        "SRR388765"
+      ],
+      "sample_id": "SRX111071",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2010-05-22",
+        "ENA-LAST-UPDATE": "2026-06-21",
+        "INSDC secondary accession": "SRS072746",
+        "NCBI submission package": "Generic.1.0",
+        "isolation source": "lung",
+        "organism": "Canis lupus familiaris",
+        "sample name": "Cf_ZyR_lung"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002048",
+        "Anatomical entity name": "lung",
+        "Library ID": "SRX111071",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "lung",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "lung",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00991609",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "722b2f1ffa086c6816a8997ab9a0d1c543716e10b24e30e9f592a9ce297512d8",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00991609"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX146606",
+      "original_tissue": "brain",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR536881",
+        "SRR536883",
+        "SRR543733"
+      ],
+      "sample_id": "SRX146606",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2012-05-08",
+        "ENA-LAST-UPDATE": "2018-12-11",
+        "INSDC secondary accession": "SRS332229",
+        "NCBI submission package": "Generic.1.0",
+        "Sample name": "Zyagen2_Brain",
+        "geographic location (country and/or sea,region)": "missing",
+        "isolation source": "brain",
+        "organism": "Canis lupus familiaris",
+        "strain": "missing",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX146606",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "brain",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00991610",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "2c9bf9265d3d4d42dfc0e1b7b39535a13fbb75517d1b59a4e673da341c19940d",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00991610"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX146607",
+      "original_tissue": "zone of skin",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR536884",
+        "SRR543732",
+        "SRR543734"
+      ],
+      "sample_id": "SRX146607",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2012-05-08",
+        "ENA-LAST-UPDATE": "2014-11-08",
+        "INSDC secondary accession": "SRS332230",
+        "NCBI submission package": "Generic.1.0",
+        "Sample name": "Zyagen2_Skin",
+        "geographic location (country and/or sea,region)": "missing",
+        "isolation source": "Skin",
+        "organism": "Canis lupus familiaris",
+        "strain": "missing"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX146607",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "Skin",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": "SAMN00991611",
+      "donor_id": null,
+      "donor_scope": "SRP009687",
+      "evidence": [
+        {
+          "sha256": "4e273584c76fa514ffe487784bfc0b3ddc72ad2a5f9c1f52861376790f65ad7c",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN00991611"
+        },
+        {
+          "sha256": "27ddd6c6c21f7419b8e0cbd28dc6f1576b6ef567c4dd7e3a8ad357e2684c88b2",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP009687&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX146608",
+      "original_tissue": "kidney",
+      "pooling": "unknown",
+      "run_ids": [
+        "SRR536882",
+        "SRR536885",
+        "SRR543735"
+      ],
+      "sample_id": "SRX146608",
+      "sex": "NA",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2012-05-08",
+        "ENA-LAST-UPDATE": "2014-11-08",
+        "INSDC secondary accession": "SRS332231",
+        "NCBI submission package": "Generic.1.0",
+        "Sample name": "Zyagen2_Kidney",
+        "geographic location (country and/or sea,region)": "missing",
+        "isolation source": "Kidney",
+        "organism": "Canis lupus familiaris",
+        "strain": "missing"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002113",
+        "Anatomical entity name": "kidney",
+        "Library ID": "SRX146608",
+        "Sex": "NA",
+        "Stage ID": "UBERON:0000104",
+        "Stage name": "life cycle",
+        "Strain": "NA"
+      },
+      "source_donor_label": null,
+      "source_tissue": "Kidney",
+      "stage": "life cycle",
+      "study": "SRP009687",
+      "taxon_id": 9615,
+      "tissue": "kidney",
+      "tissue_correction": null,
+      "treatment": null
+    }
+  ],
+  "schema": "oncoref.expression-samples",
+  "schema_version": 1,
+  "source_id": "bgee-srp009687",
+  "taxon_id": 9615
+}

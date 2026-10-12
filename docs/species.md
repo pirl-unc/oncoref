@@ -114,3 +114,53 @@ fetches use datacache's atomic publication and bounded HTTP resume, with a defau
 the total missing bytes before starting. An invalid override fails even online;
 managed-cache corruption can be repaired online but fails offline. The wheel
 contains small manifests only, with upstream URLs, byte pins and source terms.
+
+## Native canine expression (1.9.2)
+
+```python
+dataset = dog.expression.read(
+    "bgee-srp181218", offline=True,
+    local_overrides={"9615:bgee-srp181218-matrix": "/existing/bgee-srp181218.tsv.gz"},
+)
+dataset.values       # source features × libraries; missing remains NaN
+dataset.features     # original IDs/aliases; no human canonicalization
+dataset.samples      # tissues, donor scope, pooling, runs, original facts/evidence
+dataset.contract     # gene TPM; quantification reference explicitly unresolved
+dataset.tissue_summary()  # native values + measured-library/known-donor coverage
+path = dataset.save("new-artifact-directory")
+from oncoref.species_expression import ExpressionDataset
+replayed = ExpressionDataset.load(path)  # offline file/digest/contract verification
+```
+
+| Source ID | Native feature space | Unit | Source libraries |
+| --- | --- | --- | --- |
+| `bgee-srp009687` | Ensembl source gene IDs | TPM | 13 |
+| `bgee-srp181218` | Ensembl source gene IDs | TPM | 75 |
+| `barkbase` | All 37,149 StringTie gene rows, retaining Ensembl/symbol annotations | TMM-CPM | 150 |
+
+Bgee's sparse gene/library rows remain missing where absent. BarkBase retains all
+source features, including unannotated StringTie IDs and ambiguous annotation
+strings; no length proxy or feature filter is applied. Exact quantification
+references remain unresolved for these sources, so cross-reference joins and
+cross-source abundance combination remain blocked by their contracts.
+
+Sample metadata preserves source fields, BioSample/run provenance and unknown
+age/sex/health/treatment/pooling facts. Five Bgee SRP181218 colon labels are corrected
+to heart using BioSample `source_name`, with both labels, a correction reason and
+source hashes retained. Donors are scoped to their study. BarkBase adult donor
+labels follow the source columns and the publication's five-adult design;
+embryonic donor identities and matrix-column-to-run mappings remain unresolved.
+Pooled observations never contribute multiple independent donors. A zero count
+of **known** donors means unresolved coverage, not proof that no animals exist.
+
+`dog.expression.lineage_overlaps()` exposes the 46 shared runs between the global
+Bgee inventory and BarkBase's RNA-seq inventory. This is inventory-level lineage;
+it does not assert overlap of the two imported Bgee matrices or resolve BarkBase
+column-to-run mappings. `combine_expression()` rejects known reused runs,
+unresolved run lineage, unresolved reference identities and incompatible units.
+
+Saved artifacts include all feature/sample facts, the expression contract and
+checksummed Parquet/JSON files. New destinations are published atomically; existing
+results are not overwritten. The artifact identity changes with its metadata or
+file contents. `scripts/build_canine_source_manifests.py` replays the intake from
+an acquired source snapshot; no downstream package is imported at runtime.
