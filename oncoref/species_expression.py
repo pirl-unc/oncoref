@@ -13,6 +13,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from ._table_io import read_csv
 from .expression_contract import ExpressionContract, validate_expression_join
 from .expression_registry import (
     expression_source,
@@ -238,7 +239,7 @@ def protein_sample_id(record):
 
 
 def _read_pfizer_protein(path):
-    frame = pd.read_csv(path, sep="\t", dtype=str, keep_default_na=False)
+    frame = read_csv(path, sep="\t", dtype=str, keep_default_na=False)
     required = {*PROTEIN_SAMPLE_COLUMNS, "ProteinGroup", "Protein", "IBAQ"}
     if not required <= set(frame) or set(frame["sample.type"]) != {"sample"}:
         raise ValueError("Unexpected Pfizer protein table columns or sample roles")
@@ -330,7 +331,7 @@ def read_species_expression(
         max_bytes=max_bytes,
     )
     if adapter == "bgee":
-        chunks = pd.read_csv(
+        chunks = read_csv(
             path,
             sep="\t",
             usecols=["Experiment ID", "Library ID", "Gene ID", "TPM"],
@@ -349,7 +350,7 @@ def read_species_expression(
     elif adapter == "pfizer-protein":
         values, features = _read_pfizer_protein(path)
     else:
-        frame = pd.read_csv(path, sep="\t", dtype=str, keep_default_na=False)
+        frame = read_csv(path, sep="\t", dtype=str, keep_default_na=False)
         required = {"StringTieID", "EnsemblGeneID", "GeneSymbol"}
         if not required <= set(frame):
             raise ValueError("BarkBase native feature columns are missing")

@@ -33,6 +33,7 @@ from pathlib import Path
 import pandas as pd
 
 from . import data_bundle
+from ._table_io import read_csv
 
 _BUNDLED_DATA_DIR = Path(__file__).parent / "data"
 _DATASET_PATHS = None
@@ -177,7 +178,7 @@ def _optimize_cached_dataframe(dataset_name: str, df: pd.DataFrame) -> pd.DataFr
 def _read_csv_for_cache(path: Path, dataset_name: str) -> pd.DataFrame:
     """Read one CSV with the owning dataset's lossless parsing contract."""
     options = _CSV_READ_OPTIONS_BY_DATASET.get(dataset_name, {})
-    return pd.read_csv(str(path), low_memory=False, **options)
+    return read_csv(path, low_memory=False, **options)
 
 
 def _dataset_key(name: str) -> str:
