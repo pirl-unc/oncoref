@@ -141,6 +141,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+# Gene labels intentionally use character prefixes, rather than path components.
+"oncoref/expression.py" = ["RUF071"]
+"oncoref/proteoforms.py" = ["RUF071"]
 "tests/*" = ["B011", "RUF012"]
 "__init__.py" = ["F401"]
 
