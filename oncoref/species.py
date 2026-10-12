@@ -100,6 +100,33 @@ class SpeciesDataGroup:
 
         return expression_sources(species=self.species, context=context)
 
+    def assets(self):
+        from .species_assets import species_assets
+
+        return species_assets(self.species, group=self.name)
+
+    def registered_references(self):
+        if self.name != "references":
+            raise ValueError("registered_references() requires the references group")
+        from .species_assets import registered_references
+
+        return registered_references(self.species)
+
+    def ensure_reference(self, reference_id, **options):
+        if self.name != "references":
+            raise ValueError("ensure_reference() requires the references group")
+        from .species_assets import ensure_reference
+
+        return ensure_reference(reference_id, species=self.species, **options)
+
+    def ensure(self, asset_id, **options):
+        from .species_assets import ensure_asset, species_asset
+
+        asset = species_asset(asset_id, species=self.species)
+        if asset.group != self.name:
+            raise ValueError(f"{asset_id} belongs to {asset.group}, not {self.name}")
+        return ensure_asset(asset, **options)
+
     def coverage(self) -> dict:
         """Inventory availability is not a claim of complete biological coverage."""
         rows = self.datasets()

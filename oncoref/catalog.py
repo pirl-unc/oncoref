@@ -256,7 +256,9 @@ def inventory(*, species="human", group=None) -> list[dict]:
     if group is not None and group not in DATA_GROUPS:
         raise ValueError(f"Unknown data group {group!r}")
     if selected.taxon_id != 9606:
-        return []
+        from .species_assets import asset_inventory
+
+        return asset_inventory(selected, group=group)
     bundle_member = {p.removesuffix(".csv"): p for p in data_bundle.DOWNLOADABLE_PATHS}
     rows: list[dict] = []
     legacy_rows = {

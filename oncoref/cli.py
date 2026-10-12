@@ -79,6 +79,60 @@ def _cmd_species(args):
     return 0
 
 
+def _cmd_species_data(args):
+    from pathlib import Path
+
+    from . import species_assets as assets
+
+    overrides = json.loads(Path(args.asset_overrides).read_text()) if args.asset_overrides else None
+    options = {"cache_root": args.cache_root, "local_overrides": overrides}
+    target = args.name or "all"
+    if args.action == "dir":
+        print(assets.asset_cache_dir(cache_root=args.cache_root))
+        return 0
+    selected = assets.species_assets(args.species)
+    if target != "all":
+        selected = tuple(a for a in selected if a.id == target or a.group == target)
+    if not selected:
+        print(
+            f"Error: unavailable {args.species} asset/group {target!r}; no human fallback",
+            file=sys.stderr,
+        )
+        return 1
+    if args.action == "status":
+        print(json.dumps([assets.inspect_asset(a, **options) for a in selected], indent=2))
+    elif args.action == "metadata":
+        print(json.dumps([a.as_dict() for a in selected], indent=2))
+    elif args.action == "path":
+        if len(selected) != 1:
+            raise ValueError("Specify one asset for data path")
+        state = assets.inspect_asset(selected[0], **options)
+        if state["status"] != "available":
+            raise ValueError(f"{selected[0].id}: {state['status']}")
+        print(state["path"])
+    elif args.action == "fetch":
+        if args.force:
+            raise ValueError(
+                "Pinned species assets are verified and reused; force refresh is unsupported"
+            )
+        missing = sum(
+            a.size_bytes
+            for a in selected
+            if assets.inspect_asset(a, **options)["status"] != "available"
+        )
+        if not args.offline and missing > args.max_bytes:
+            raise ValueError(f"Transfer requires {missing} bytes; budget is {args.max_bytes}")
+        for asset in selected:
+            print(
+                assets.ensure_asset(
+                    asset, offline=args.offline, max_bytes=args.max_bytes, **options
+                )
+            )
+    else:
+        raise ValueError(f"data {args.action} is unavailable for {args.species}; no human fallback")
+    return 0
+
+
 def _cmd_data(args: argparse.Namespace) -> int:
     """Unified data management over the catalog (expression bundle + HPA sources)."""
     from . import catalog, source_matrices
@@ -86,11 +140,11 @@ def _cmd_data(args: argparse.Namespace) -> int:
 
     selected = resolve_species(args.species)
     if args.action != "list" and selected.taxon_id != 9606:
-        print(
-            f"Error: data {args.action} is unavailable for {selected.name}; no human fallback",
-            file=sys.stderr,
+        return _cmd_species_data(args)
+    if selected.taxon_id == 9606 and (args.offline or args.asset_overrides or args.cache_root):
+        raise ValueError(
+            "Species asset options require a registered species asset; legacy human data uses its existing cache API"
         )
-        return 1
     if args.action == "list":
         # The full inventory: every oncoref-domain dataset and how it's held.
         # `Cohorts` is the per-cohort file count held *inside* a directory dataset.
@@ -759,6 +813,19 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_data.add_argument("--species", default="human", help="Species name or NCBI taxonomy ID")
     p_data.add_argument("--group", default=None, help="Conceptual data group for list")
+    p_data.add_argument(
+        "--offline", action="store_true", help="Verify species assets without network"
+    )
+    p_data.add_argument(
+        "--asset-overrides", help="JSON mapping taxon:asset IDs to existing local files"
+    )
+    p_data.add_argument("--cache-root", help="Datacache root for species assets")
+    p_data.add_argument(
+        "--max-bytes",
+        type=int,
+        default=100 * 1024 * 1024,
+        help="Maximum total species-asset transfer bytes",
+    )
     p_data.set_defaults(func=_cmd_data)
 
     p_species = sub.add_parser("species", help="List species or inspect a species' data groups")
