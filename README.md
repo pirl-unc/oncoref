@@ -187,3 +187,12 @@ negative-reference exclusion IDs with
 `oncoref.cta_annotation_gene_ids(genome, unfiltered=True)`. Both use the same
 versioned identity contract, retaining original source IDs and unresolved
 mapping evidence. See [CTA gene identities](docs/cta-gene-identities.md).
+
+## Upstream ORF reference evidence
+
+`oncoref.load_uorf_catalog()` reads the shared, offline human uORF reference,
+including spliced models, Ribo-seq, shotgun/HLA MS, peptide intervals and source
+uncertainty. See [the catalogue guide](docs/uorf-evidence.md). Isovar and Varcode
+consume this base-layer data; patient RNA reconstruction and variant effects
+remain in those libraries. The initial migration preserves Isovar 1.47.0's
+catalogue bytes and schema, including all licenses and source hashes.

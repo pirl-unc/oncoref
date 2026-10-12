@@ -115,7 +115,7 @@ def _contract_members(members_label: str) -> str:
     parts = list(dict.fromkeys(members_label.split("/")))  # de-dup, order-preserving
     if len(parts) < 2:
         return parts[0] if parts else members_label
-    prefix = os.path.commonprefix(parts)
+    prefix = os.path.commonprefix(parts)  # noqa: RUF071 -- shared gene-name text, not paths
     suffixes = [p[len(prefix) :] for p in parts[1:]]
     return parts[0] + "".join("/" + s for s in suffixes if s)
 

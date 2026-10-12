@@ -4176,7 +4176,7 @@ def _pirlygenes_identity_label(symbols: Iterable[object], *, fallback: str) -> s
         return fallback
     if len(parts) == 1:
         return parts[0]
-    prefix = os.path.commonprefix(parts)
+    prefix = os.path.commonprefix(parts)  # noqa: RUF071 -- shared gene-name text, not paths
     if (
         prefix
         and prefix[-1].isdigit()

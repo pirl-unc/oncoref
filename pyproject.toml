@@ -58,6 +58,7 @@ dev = [
 
 [project.scripts]
 oncoref = "oncoref.cli:main"
+oncoref-uorf-evidence = "oncoref.uorf_cli:run"
 
 [project.urls]
 Homepage = "https://github.com/pirl-unc/oncoref"
@@ -84,6 +85,7 @@ oncoref = [
     "data/*.csv.gz",
     "data/*.yaml",
     "data/hpa-cancer-sources.json",
+    "data/uorf-evidence/*",
 ]
 
 [tool.setuptools.exclude-package-data]
