@@ -1,21 +1,62 @@
 # Species and data groups
 
-Species is the first data boundary. Select it explicitly, then inspect conceptual
-collections within it. All species expose the same groups: `references`,
+Species is the first data boundary. Start with the explicit `oncoref.human` and
+`oncoref.canine` modules, then use a named dataset or a conceptual collection.
+Both species expose the same groups: `references`,
 `expression`, `cancer`, `antigens`, `normalization`, `governance`, and `legacy`.
 A known species does not imply that every group has data or complete coverage.
 
 ```python
 import oncoref
 
-dog = oncoref.for_species("dog")  # also 9615, "canine", or scientific name
-oncoref.available_species()
+dog = oncoref.canine
 dog.references.datasets()
 dog.expression.sources(context="normal")
 dog.antigens.coverage()  # unavailable until canine antigen facts are registered
-human = oncoref.for_species("human")
+human = oncoref.human
 human.expression.sources()  # existing human registry
+
+from oncoref import barkbase, human_protein_atlas
+
+human_protein_atlas.rna_consensus()
+barkbase.source()  # metadata and native measurement contract, without a download
+# With verified assets in the cache or configured overrides:
+matrix = dog.barkbase.read(offline=True)
+assert dog.barkbase is barkbase
 ```
+
+## Explicit species and dataset modules (1.9.4)
+
+Species and datasets are ordinary, explicitly declared Python modules. They work
+with direct imports and editor completion; no species/source string is needed to
+read a named dataset. The species modules reference the same dataset modules that
+are available at the package root, sharing readers, caches and provenance.
+
+| Dataset module under `oncoref` | Species module | Main operations |
+| --- | --- | --- |
+| `human_protein_atlas` | `human` | `rna_consensus()`, `normal_tissue()`, `single_cell()`, `cancer_rna_prevalence()`, `cancer_ihc_prevalence()` |
+| `bgee_srp009687` | `canine` | `source()`, `read()` — gene TPM |
+| `bgee_srp181218` | `canine` | `source()`, `read()` — gene TPM |
+| `barkbase` | `canine` | `source()`, `read()` — gene TMM-CPM |
+| `pfizer_canine_protein` | `canine` | `source()`, `read()` — pooled protein-group iBAQ |
+| `doga`, `pfizer_canine_rna`, `gse304066` | `canine` | `source()` describes the gap; `read()` fails with its recorded reason |
+
+For example, `from oncoref.canine import barkbase` and
+`from oncoref import barkbase` return the same module. All canine `read()` functions
+accept `offline`, `cache_root`, `local_overrides` and `max_bytes` as keyword
+arguments. Their species and source are fixed; callers cannot override them.
+HPA's existing native table/query signatures remain available under the full
+dataset name, including tissue resolution and assay limitations.
+
+`human.datasets` and `canine.datasets` list the named dataset modules;
+`inventory()` describes the full species catalog, including sources that do not
+yet have a dedicated module. `groups` contains the conceptual inventory/coverage
+views. Imports do not load matrices or fetch assets.
+
+The existing `for_species(...)` helper and registry IDs remain available for
+dynamic callers, CLI input and serialized provenance. Historical flat human APIs,
+`oncoref.hpa` and `oncoref.hpa_cancer` continue to work. The mouse registry entry
+still describes unavailable coverage; it does not imply a populated mouse module.
 
 ```bash
 oncoref species
@@ -118,8 +159,8 @@ contains small manifests only, with upstream URLs, byte pins and source terms.
 ## Native canine expression (1.9.2)
 
 ```python
-dataset = dog.expression.read(
-    "bgee-srp181218", offline=True,
+dataset = dog.bgee_srp181218.read(
+    offline=True,
     local_overrides={"9615:bgee-srp181218-matrix": "/existing/bgee-srp181218.tsv.gz"},
 )
 dataset.values       # source features × libraries; missing remains NaN
@@ -167,7 +208,7 @@ an acquired source snapshot; no downstream package is imported at runtime.
 
 ## Canine protein abundance and explicit gaps (1.9.3)
 
-`dog.expression.read("pfizer-dog-protein", ...)` imports the deposited **IBAQ**
+`dog.pfizer_canine_protein.read(...)` imports the deposited **IBAQ**
 column from MassIVE MSV000099744. It retains ProteinGroup and representative
 Protein identifiers, source run/channel/sample fields, and missing measurements.
 The real table contains 9,929 reported groups across 38 tissue pools. This is bulk

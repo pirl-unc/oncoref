@@ -41,20 +41,28 @@ stay downstream.
 
 ## Species
 
-Select species before exploring its data groups:
+Use explicit species and dataset modules:
 
 ```python
 import oncoref
 
-dog = oncoref.for_species("dog")
-dog.references.datasets()
-dog.expression.sources(context="normal")
-dog.antigens.coverage()
+oncoref.human.human_protein_atlas.rna_consensus()
+oncoref.canine.barkbase.source()  # native TMM-CPM and provenance
+oncoref.canine.references.registered_references()
+oncoref.canine.antigens.coverage()
+
+# Datasets also have direct top-level imports, with the same implementation.
+from oncoref import barkbase, human_protein_atlas
+
+dataset = barkbase.read(offline=True)  # verified cache or configured local overrides
 ```
 
-The same references, expression, cancer, antigens and normalization groups exist
-under each species. Missing coverage is explicit; canine requests never fall back
-to human datasets. Existing flat APIs retain their human defaults. See the
+`oncoref.human` and `oncoref.canine` are ordinary Python modules with named datasets
+and references, expression, cancer, antigens and normalization groups. Dataset
+modules expose source-specific operations; groups expose inventories and coverage.
+Missing coverage is explicit; canine requests never fall back to human datasets.
+Existing flat APIs retain their human defaults, and `for_species(...)` remains
+available for dynamic selection. See the
 [species and expression contract guide](docs/species.md).
 
 ## Core model

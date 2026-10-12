@@ -141,14 +141,14 @@ def source_fixture(tmp_path, monkeypatch):
     monkeypatch.setattr(sa, "_MANIFEST_ROOT", tmp_path / "species")
     registry.load_registry.cache_clear()
 
-    def make(adapter, text):
+    def make(adapter, text, source_id="fixture"):
         path = tmp_path / "matrix.tsv"
         path.write_text(text)
         metadata = {
             "schema": "oncoref.expression-samples",
             "schema_version": 1,
             "taxon_id": 9615,
-            "source_id": "fixture",
+            "source_id": source_id,
             "samples": [
                 {
                     "sample_id": s,
@@ -168,7 +168,7 @@ def source_fixture(tmp_path, monkeypatch):
         unit = "TPM" if adapter == "bgee" else "TMM-CPM"
         contract = ExpressionContract(
             9615,
-            "fixture",
+            source_id,
             "v1",
             "normal",
             None,
@@ -179,7 +179,7 @@ def source_fixture(tmp_path, monkeypatch):
             "Synthetic unresolved reference",
         )
         source = {
-            "id": "fixture",
+            "id": source_id,
             "taxon_id": 9615,
             "category": "expression",
             "context": "normal",
@@ -226,14 +226,23 @@ def source_fixture(tmp_path, monkeypatch):
     registry.load_registry.cache_clear()
 
 
-def test_bgee_native_reader_preserves_absence(source_fixture):
+@pytest.mark.parametrize("module", [None, oncoref.bgee_srp009687, oncoref.bgee_srp181218])
+def test_bgee_native_reader_preserves_absence(source_fixture, module):
+    source_id = module.__name__.rsplit(".", 1)[1].replace("_", "-") if module else "fixture"
     overrides = source_fixture(
         "bgee",
         "Experiment ID\tLibrary ID\tGene ID\tTPM\nSTUDY\ts1\tg1\t0\nSTUDY\ts2\tg1\t2\nSTUDY\ts1\tg2\t\n",
+        source_id=source_id,
     )
-    data = read_species_expression(
-        "fixture", species="dog", offline=True, local_overrides=overrides
+    data = (
+        module.read(offline=True, local_overrides=overrides)
+        if module
+        else read_species_expression(
+            source_id, species="dog", offline=True, local_overrides=overrides
+        )
     )
+    assert data.contract.source_id == source_id
+    assert data.contract.taxon_id == 9615
     assert data.values.loc["g1", "s1"] == 0
     assert np.isnan(data.values.loc["g2", "s2"])
     assert data.contract.reference_status == "unresolved"
@@ -250,14 +259,22 @@ def test_bgee_rejects_duplicate_measurements(source_fixture):
         read_species_expression("fixture", species="dog", offline=True, local_overrides=overrides)
 
 
-def test_barkbase_keeps_unmapped_features_and_aliases(source_fixture):
+@pytest.mark.parametrize("named_module", [False, True])
+def test_barkbase_keeps_unmapped_features_and_aliases(source_fixture, named_module):
+    source_id = "barkbase" if named_module else "fixture"
     overrides = source_fixture(
         "barkbase",
         "StringTieID\tEnsemblGeneID\tGeneSymbol\ts1\ts2\nMSTRG.1\t\t\t0\t\nMSTRG.2\tg1;g2\talias\t1\t2\n",
+        source_id=source_id,
     )
-    data = read_species_expression(
-        "fixture", species="dog", offline=True, local_overrides=overrides
+    data = (
+        oncoref.canine.barkbase.read(offline=True, local_overrides=overrides)
+        if named_module
+        else read_species_expression(
+            source_id, species="dog", offline=True, local_overrides=overrides
+        )
     )
+    assert data.contract.source_id == source_id
     assert len(data.values) == 2
     assert data.features.loc["MSTRG.2", "EnsemblGeneID"] == "g1;g2"
     assert data.contract.measurement.unit == "TMM-CPM"
