@@ -131,6 +131,66 @@
       "source_version": "retrieved-2026-10-08",
       "taxon_id": 9615,
       "url": "https://data.broadinstitute.org/barkbase/RNA-seq/counts/TMM_normalized/CPM_cutoff_0.16/TMM_norm_gene_counts_cpm_0.16.txt"
+    },
+    {
+      "description": "Canine Pfizer atlas: dog-protein-abundance.tsv",
+      "filename": "dog-protein-abundance.tsv",
+      "group": "expression",
+      "id": "pfizer-dog-protein-matrix",
+      "license": "See MassIVE MSV000099744 and source publication terms",
+      "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+      "size_bytes": 48196601,
+      "source_version": "MSV000099744-update-2026-03-23",
+      "taxon_id": 9615,
+      "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+    },
+    {
+      "description": "Canine Pfizer atlas: dog-protein-search.fasta",
+      "filename": "dog-protein-search.fasta",
+      "group": "references",
+      "id": "pfizer-dog-search-fasta",
+      "license": "See MassIVE MSV000099744 and source publication terms",
+      "sha256": "d8488bf283de653efcff2e5de6d413b116e1ba4a2eb89298bd31205e72fef682",
+      "size_bytes": 14659832,
+      "source_version": "MSV000099744-update-2026-03-23",
+      "taxon_id": 9615,
+      "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/sequence/Dog_UP000002254_9615_noisoform.fasta"
+    },
+    {
+      "description": "doga: metadata/supplement evidence only; quantitative reader unavailable",
+      "filename": "doga-data.zip",
+      "group": "expression",
+      "id": "doga-metadata",
+      "license": "See original source terms",
+      "sha256": "e170bfed61fa60f352ef4aeb63baec10ad9733ba07be38521621b2d836cd4299",
+      "size_bytes": 6719493,
+      "source_version": "retrieved-2026-10-08",
+      "taxon_id": 9615,
+      "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-024-52798-1/MediaObjects/41467_2024_52798_MOESM4_ESM.zip"
+    },
+    {
+      "description": "pfizer-dog-rna: metadata/supplement evidence only; quantitative reader unavailable",
+      "filename": "GSE325523.txt",
+      "group": "expression",
+      "id": "pfizer-dog-rna-metadata",
+      "license": "See original source terms",
+      "sha256": "86f76e18a74ee1ce783352f23e65dcbb69896ede85f1c48d4fde07c4d532f419",
+      "size_bytes": 29811,
+      "source_version": "retrieved-2026-10-08",
+      "taxon_id": 9615,
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE325523&targ=self&form=text&view=full"
+    },
+    {
+      "description": "gse304066-osteosarcoma: metadata/supplement evidence only; quantitative reader unavailable",
+      "filename": "GSE304066.txt",
+      "group": "expression",
+      "id": "gse304066-osteosarcoma-metadata",
+      "license": "See original source terms",
+      "sha256": "ad7af468860935bedaf98d06c3c83586aae6c0f97a0681b40eb4e6a835486d4c",
+      "size_bytes": 5636,
+      "source_version": "retrieved-2026-10-08",
+      "taxon_id": 9615,
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE304066&targ=self&form=text&view=full"
     }
   ],
   "references": [

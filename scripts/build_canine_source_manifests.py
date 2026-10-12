@@ -20,6 +20,7 @@ import pandas as pd
 import yaml
 
 from oncoref.expression_contract import ExpressionContract, ExpressionMeasurement
+from oncoref.species_expression import PROTEIN_SAMPLE_COLUMNS, protein_sample_id
 
 
 def digest(path):
@@ -37,7 +38,11 @@ def write_json(path, value):
 def build(root, output):
     output.mkdir(parents=True, exist_ok=True)
     manifest = json.loads((output / "assets.json").read_text())
-    manifest["assets"] = [a for a in manifest["assets"] if a["group"] != "expression"]
+    manifest["assets"] = [
+        a
+        for a in manifest["assets"]
+        if a["group"] != "expression" and a["id"] != "pfizer-dog-search-fasta"
+    ]
     sources = []
     overrides = {}
     quantitative = json.loads((root / "docs/bgee-quantitative-assets.json").read_text())["assets"]
@@ -280,11 +285,221 @@ def build(root, output):
             },
         },
     )
+    add_protein_and_gaps(root, output, manifest, sources, overrides, audit)
     write_json(output / "assets.json", manifest)
     (output / "expression_sources.yaml").write_text(
         yaml.safe_dump({"sources": sources}, sort_keys=False, allow_unicode=True)
     )
     return {"audit": audit, "local_overrides": overrides}
+
+
+def add_protein_and_gaps(root, output, manifest, sources, overrides, audit):
+    receipts = json.loads((root / "docs/report-protein-data-receipts.json").read_text())
+    selected = {}
+    for name, asset_id, group in [
+        ("dog-protein-abundance.tsv", "pfizer-dog-protein-matrix", "expression"),
+        ("dog-protein-search.fasta", "pfizer-dog-search-fasta", "references"),
+    ]:
+        receipt = next(r for r in receipts if r["asset_id"] == name)
+        path = root / receipt["path"]
+        if digest(path) != receipt["sha256"] or path.stat().st_size != receipt["size_bytes"]:
+            raise ValueError(f"Source receipt mismatch: {path}")
+        selected[asset_id] = (path, receipt)
+        manifest["assets"].append(
+            {
+                "id": asset_id,
+                "taxon_id": 9615,
+                "group": group,
+                "filename": name,
+                "url": receipt["url"],
+                "sha256": receipt["sha256"],
+                "size_bytes": receipt["size_bytes"],
+                "source_version": "MSV000099744-update-2026-03-23",
+                "description": f"Canine Pfizer atlas: {name}",
+                "license": "See MassIVE MSV000099744 and source publication terms",
+            }
+        )
+        overrides["9615:" + asset_id] = str(path.resolve())
+    matrix, receipt = selected["pfizer-dog-protein-matrix"]
+    frame = pd.read_csv(
+        matrix, sep="\t", dtype=str, keep_default_na=False, usecols=list(PROTEIN_SAMPLE_COLUMNS)
+    )
+    sample_rows = []
+    for row in frame.drop_duplicates().to_dict("records"):
+        sample_id = protein_sample_id(row)
+        sample_rows.append(
+            {
+                "sample_id": sample_id,
+                "taxon_id": 9615,
+                "study": "MSV000099744",
+                "library_id": sample_id,
+                "run_ids": [],
+                "biosample_id": None,
+                "donor_id": None,
+                "donor_scope": "MSV000099744",
+                "source_donor_label": None,
+                "pooling": "pooled",
+                "tissue": row["Condition"],
+                "original_tissue": row["Condition"],
+                "source_tissue": row["Condition"],
+                "tissue_correction": None,
+                "age": None,
+                "sex": None,
+                "stage": None,
+                "health": None,
+                "treatment": None,
+                "source_attributes": row,
+                "source_condition": {
+                    "assay": "bulk tissue proteomics",
+                    "independent_donors": "unresolved; pooled by tissue",
+                    "presentation_evidence": False,
+                },
+                "evidence": [
+                    {"url": receipt["url"], "sha256": receipt["sha256"]},
+                    {
+                        "url": "https://doi.org/10.1038/s41597-026-07512-9",
+                        "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+                    },
+                ],
+            }
+        )
+    sample_rows.sort(key=lambda row: row["sample_id"])
+    file = output / "pfizer-dog-protein-samples.json"
+    write_json(
+        file,
+        {
+            "schema": "oncoref.expression-samples",
+            "schema_version": 1,
+            "taxon_id": 9615,
+            "source_id": "pfizer-dog-protein",
+            "samples": sample_rows,
+        },
+    )
+    contract = ExpressionContract(
+        9615,
+        "pfizer-dog-protein",
+        "MSV000099744-update-2026-03-23",
+        "normal",
+        None,
+        "unresolved",
+        "Deposited ProteinGroup identifiers",
+        ExpressionMeasurement("protein_group", "iBAQ", "linear", False),
+        {
+            "matrix": receipt["sha256"],
+            "samples": digest(file),
+            "searched_fasta": selected["pfizer-dog-search-fasta"][1]["sha256"],
+        },
+        "Deposited IBAQ column, weighted across TMT channels by the source. Bulk tissue pools; no individual-donor or MHC-presentation inference. Representative/group IDs remain distinct from resolved complete protein sequences. Exact searched FASTA is pinned; assembly/annotation reconciliation remains unresolved.",
+    )
+    sources.append(
+        {
+            "id": "pfizer-dog-protein",
+            "taxon_id": 9615,
+            "category": "expression",
+            "context": "normal",
+            "cancer_codes": [],
+            "source_type": "pfizer-protein",
+            "accession": "MSV000099744",
+            "source_version": contract.source_version,
+            "unit": "iBAQ",
+            "source_scale_class": "linear",
+            "tpm_proxy": False,
+            "linear_tpm_comparable": False,
+            "contract": contract.as_dict(),
+            "matrix_asset": "pfizer-dog-protein-matrix",
+            "sample_metadata": file.name,
+            "adapter": "pfizer-protein",
+            "acquisition_status": "native_matrix_available",
+            "citation": "https://doi.org/10.1038/s41597-026-07512-9",
+        }
+    )
+    audit.append(
+        {
+            "source": "pfizer-dog-protein",
+            "pooled_samples": len(sample_rows),
+            "independent_donors": None,
+        }
+    )
+    real = json.loads((root / "docs/real-receipts.json").read_text())
+    gaps = [
+        (
+            "doga",
+            "normal",
+            "doga-data.zip",
+            "10.1038/s41467-024-52798-1",
+            "metadata_only",
+            "Complete quantitative gene/promoter matrix is not integrated. STRT2/5-prime ERCC-normalized measurements are not transcript TPM.",
+        ),
+        (
+            "pfizer-dog-rna",
+            "normal",
+            "GSE325523.txt",
+            "PRJNA1376953;GSE325522;GSE325523;GSE325525",
+            "metadata_only",
+            "Full canine RNA matrices and sample/feature reconciliation are not integrated. The publication specifies Ensembl v110/Salmon; exact quantification asset bytes remain unverified.",
+        ),
+        (
+            "gse304066-osteosarcoma",
+            "tumor",
+            "GSE304066.txt",
+            "GSE304066",
+            "blocked_provenance",
+            "Raw-count filename conflicts with FPKM metadata; exact source GTF is unresolved. Existing pseudo-TPM scenarios are sensitivity analyses and are not an admitted normalized cohort.",
+        ),
+    ]
+    for source_id, context, name, accession, status, notes in gaps:
+        r = next(row for row in real if row["asset_id"] == name)
+        path = root / "data/real" / name
+        if digest(path) != r["sha256"] or path.stat().st_size != r["size_bytes"]:
+            raise ValueError(f"Metadata receipt mismatch: {path}")
+        asset_id = source_id + "-metadata"
+        manifest["assets"].append(
+            {
+                "id": asset_id,
+                "taxon_id": 9615,
+                "group": "expression",
+                "filename": name,
+                "url": r["url"],
+                "sha256": r["sha256"],
+                "size_bytes": r["size_bytes"],
+                "source_version": "retrieved-2026-10-08",
+                "description": f"{source_id}: metadata/supplement evidence only; quantitative reader unavailable",
+                "license": "See original source terms",
+            }
+        )
+        overrides["9615:" + asset_id] = str(path.resolve())
+        contract = ExpressionContract(
+            9615,
+            source_id,
+            "retrieved-2026-10-08",
+            context,
+            None,
+            "unresolved",
+            None,
+            ExpressionMeasurement("unknown", None),
+            {"metadata": r["sha256"]},
+            notes,
+        )
+        sources.append(
+            {
+                "id": source_id,
+                "taxon_id": 9615,
+                "category": "expression",
+                "context": context,
+                "cancer_codes": [],
+                "source_type": "pending-native-source",
+                "accession": accession,
+                "source_version": contract.source_version,
+                "unit": None,
+                "source_scale_class": None,
+                "tpm_proxy": None,
+                "linear_tpm_comparable": False,
+                "contract": contract.as_dict(),
+                "acquisition_status": status,
+                "notes": notes,
+                "metadata_asset": asset_id,
+            }
+        )
 
 
 if __name__ == "__main__":
