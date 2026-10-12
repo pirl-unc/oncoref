@@ -236,6 +236,13 @@ from .expression import (
     source_matrix_sample_qc_manifest,
     within_sample_top_fraction,
 )
+from .expression_contract import (
+    ExpressionContract,
+    ExpressionMeasurement,
+    MeasurementTransform,
+    ReferenceCrosswalk,
+    validate_expression_join,
+)
 from .expression_engine import aggregate_transcripts_to_genes, id_columns, sample_columns
 from .expression_registry import (
     ExpressionSource,
@@ -445,6 +452,7 @@ from .sequence_groups import (
     protein_sequence_groups,
     protein_sequence_id,
 )
+from .species import Species, SpeciesData, available_species, for_species, resolve_species
 from .therapy_evidence import therapy_benefit_toxicity_evidence
 from .tmb import (
     cancer_tmb,
@@ -538,14 +546,20 @@ __all__ = [
     "CTA_testis_restricted_gene_names",
     "CTA_unfiltered_gene_ids",
     "CTA_unfiltered_gene_names",
+    "ExpressionContract",
+    "ExpressionMeasurement",
     "ExpressionSource",
     "GeneIdentity",
     "GeneQcClass",
+    "MeasurementTransform",
+    "ReferenceCrosswalk",
     "ReferenceIdentity",
     "SafetyTissueMapping",
     "SafetyTissueResolution",
     "SafetyTissueResolutionError",
     "ShardDataset",
+    "Species",
+    "SpeciesData",
     "TumorReferenceDataError",
     "__version__",
     # expression (read accessors over the downloadable bundle)
@@ -558,6 +572,7 @@ __all__ = [
     "antigen_coverage",
     "available_percentile_cohorts",
     "available_representative_cohorts",
+    "available_species",
     "available_within_sample_cohorts",
     "burden_category",
     # anti-PD-1 response
@@ -731,6 +746,7 @@ __all__ = [
     "find_gene_id_by_name",
     "find_gene_name_from_ensembl_gene_id",
     "find_gene_name_from_ensembl_transcript_id",
+    "for_species",
     "format_cancer_code_label",
     "fpkm_to_tpm",
     "fusion_partners",
@@ -843,6 +859,7 @@ __all__ = [
     "resolve_hpa_normal_tissue_label",
     "resolve_ici_response_source",
     "resolve_safety_tissue_group",
+    "resolve_species",
     "resolve_symbol",
     "resolve_tmb_source",
     "response_signature_direction",
@@ -879,6 +896,7 @@ __all__ = [
     "tpm_to_housekeeping_normalized",
     "tumor_reference_expression_provenance",
     "unversioned",
+    "validate_expression_join",
     "viral_status",
     "within_sample_percentile_addressable_fraction_by_cohort",
     "within_sample_percentile_coverage_sweep",

@@ -83,6 +83,8 @@ oncoref = [
     "data/*.csv",
     "data/*.csv.gz",
     "data/*.yaml",
+    "data/species/*/*.yaml",
+    "data/species/*/*.json",
     "data/hpa-cancer-sources.json",
 ]
 
