@@ -65,8 +65,8 @@ jobs:
           pip install -e . pytest
           python -m pip check
 
-      - name: Verify species asset acquisition on Windows
-        run: python -m pytest tests/test_species_assets.py -v
+      - name: Verify asset acquisition and concurrent matrix downloads on Windows
+        run: python -m pytest tests/test_species_assets.py tests/test_source_matrix_downloads.py -v
 
   lint:
     runs-on: ubuntu-latest
