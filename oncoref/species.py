@@ -100,6 +100,20 @@ class SpeciesDataGroup:
 
         return expression_sources(species=self.species, context=context)
 
+    def read(self, source_id, **options):
+        if self.name != "expression":
+            raise ValueError("read() requires the expression group")
+        from .species_expression import read_species_expression
+
+        return read_species_expression(source_id, species=self.species, **options)
+
+    def lineage_overlaps(self):
+        if self.name != "expression":
+            raise ValueError("lineage_overlaps() requires the expression group")
+        from .species_expression import expression_lineage_overlaps
+
+        return expression_lineage_overlaps(self.species)
+
     def assets(self):
         from .species_assets import species_assets
 

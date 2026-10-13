@@ -1,0 +1,4283 @@
+{
+  "samples": [
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789734",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "a29be6ae4299e99e4d16a1d96fa504063b2a0082659107253e99511e17285589",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789734"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279828",
+      "original_tissue": "adipose tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474228"
+      ],
+      "sample_id": "SRX5279828",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279663",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adipose",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001013",
+        "Anatomical entity name": "adipose tissue",
+        "Library ID": "SRX5279828",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Adipose",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adipose tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789733",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "73742af41291c0c6674cbc3646984649dc19353b5ed78b3a905622a72c4b59ae",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789733"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279829",
+      "original_tissue": "adrenal gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474229"
+      ],
+      "sample_id": "SRX5279829",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279664",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adrenal",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002369",
+        "Anatomical entity name": "adrenal gland",
+        "Library ID": "SRX5279829",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Adrenal",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adrenal gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789732",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "06c04548cf69b02924e5a2cc5a338353cb8abc16d8dafb71f1ca4e0a821e0490",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789732"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279830",
+      "original_tissue": "brain",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474230"
+      ],
+      "sample_id": "SRX5279830",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279665",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Brain",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX5279830",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Brain",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789731",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "dc2259807b6d3b7ab41f34d1dd39870ae89d3bb4d769df4c47fffccd1fc2d673",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789731"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279831",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474231"
+      ],
+      "sample_id": "SRX5279831",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279666",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Colon",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279831",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Colon",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "colon",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789680",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "3cf4cddd4b6ee5a67e3dca15c0391a37190443b96436511f9b5c51efe95f69c2",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789680"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279832",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474232"
+      ],
+      "sample_id": "SRX5279832",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279667",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Heart",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279832",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Heart",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "heart",
+      "tissue_correction": "BioSample source_name identifies Heart; Bgee labels colon",
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789679",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "25d04eb5a5b8418519bee3eac47b76118bf5d18426b1113805cb51a684e6037c",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789679"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279833",
+      "original_tissue": "liver",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474233"
+      ],
+      "sample_id": "SRX5279833",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279668",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "3",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Liver",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002107",
+        "Anatomical entity name": "liver",
+        "Library ID": "SRX5279833",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Liver",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789678",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "2712a7d8eedeb7afb37369bc48d5fca300aa1b039f3d67376587eb004afe3171",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789678"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279834",
+      "original_tissue": "muscle tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474234"
+      ],
+      "sample_id": "SRX5279834",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279669",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Muscle",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002385",
+        "Anatomical entity name": "muscle tissue",
+        "Library ID": "SRX5279834",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Muscle",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "muscle tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789677",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0effb872dbe705e97d4e103ea0e44b433cb150edebb0f0619c364f7a3b6b0dea",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789677"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279835",
+      "original_tissue": "pituitary gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474235"
+      ],
+      "sample_id": "SRX5279835",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279670",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Pituitary",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000007",
+        "Anatomical entity name": "pituitary gland",
+        "Library ID": "SRX5279835",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Pituitary",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "pituitary gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789676",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "7f3af9642f7a33a74489fba90cc21c6bbf6147e8d807b6912cddf062e65b550b",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789676"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279836",
+      "original_tissue": "zone of skin",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474236"
+      ],
+      "sample_id": "SRX5279836",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279671",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "3",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Skin",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX5279836",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Skin",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789675",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0a685f099e552818492f378d1dd59b211f9fae7dcbdc060ba9a04a570e1f613a",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789675"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279837",
+      "original_tissue": "spleen",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474237"
+      ],
+      "sample_id": "SRX5279837",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279672",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "6",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Spleen",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002106",
+        "Anatomical entity name": "spleen",
+        "Library ID": "SRX5279837",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Spleen",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "spleen",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789674",
+      "donor_id": "SRP181218:individual:1",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0a5c90fdcd48472dcaa1f9cd61f9089f7c6e65abd56d6e93e267dcc2e4b5a9c9",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789674"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279838",
+      "original_tissue": "thyroid gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474238"
+      ],
+      "sample_id": "SRX5279838",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279673",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "1",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Thyroid",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002046",
+        "Anatomical entity name": "thyroid gland",
+        "Library ID": "SRX5279838",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "1",
+      "source_tissue": "Thyroid",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "thyroid gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789673",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "c6e6eabf4c3874b998cbcbc1c591063286e80d2912e66551ee406f00c8b28405",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789673"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279839",
+      "original_tissue": "adipose tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474239"
+      ],
+      "sample_id": "SRX5279839",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279674",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "2",
+        "library prep batch": "6",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adipose",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001013",
+        "Anatomical entity name": "adipose tissue",
+        "Library ID": "SRX5279839",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Adipose",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adipose tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789672",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "95aa4080957ce5585aa03a156b7fe29a0ea5295cd2ed91da21c2681b5d3eda8f",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789672"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279840",
+      "original_tissue": "adrenal gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474240"
+      ],
+      "sample_id": "SRX5279840",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279675",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adrenal",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002369",
+        "Anatomical entity name": "adrenal gland",
+        "Library ID": "SRX5279840",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Adrenal",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adrenal gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789671",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "33e4a4702df9d15d9adf3a98432aa409e73e9533a5f9fb93edfb55c6515e305e",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789671"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279841",
+      "original_tissue": "brain",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474241"
+      ],
+      "sample_id": "SRX5279841",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279676",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Brain",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX5279841",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Brain",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789670",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "9227f30362b7e9b6289700427c7cfa10b38c280e34de13b9a465f20b3851072b",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789670"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279842",
+      "original_tissue": "liver",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474242"
+      ],
+      "sample_id": "SRX5279842",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279678",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "6",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Liver",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002107",
+        "Anatomical entity name": "liver",
+        "Library ID": "SRX5279842",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Liver",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789669",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "515393ec9c505c36674b461178a69b5eaa192e7f889a2f2c1898e1b4c7f2c45a",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789669"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279843",
+      "original_tissue": "lung",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474243"
+      ],
+      "sample_id": "SRX5279843",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279677",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "3",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Lung",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002048",
+        "Anatomical entity name": "lung",
+        "Library ID": "SRX5279843",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Lung",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "lung",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789668",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "827165d4873af0ca0853b75c012d50a80e673d59d047f550b105f17552b957e4",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789668"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279844",
+      "original_tissue": "muscle tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474244"
+      ],
+      "sample_id": "SRX5279844",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279679",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "3",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Muscle",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002385",
+        "Anatomical entity name": "muscle tissue",
+        "Library ID": "SRX5279844",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Muscle",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "muscle tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789667",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "aa03766ecce997bce7a8a1381aa1c2c9c32eef322ea9f9449c4f692c3522f298",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789667"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279845",
+      "original_tissue": "pituitary gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474245"
+      ],
+      "sample_id": "SRX5279845",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279680",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Pituitary",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000007",
+        "Anatomical entity name": "pituitary gland",
+        "Library ID": "SRX5279845",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Pituitary",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "pituitary gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789666",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "b495db593f259b431c4bf894a1bcc139a24e5ec3ac11a3857c24edf26dd7eb9a",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789666"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279846",
+      "original_tissue": "zone of skin",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474246"
+      ],
+      "sample_id": "SRX5279846",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279681",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Skin",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX5279846",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Skin",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789665",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "eeab37780e69cd5ccad95431b46f76d6b82e1a2e1b3c458dcf57bf4045b5fa8e",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789665"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279847",
+      "original_tissue": "spleen",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474247"
+      ],
+      "sample_id": "SRX5279847",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279682",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "3",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Spleen",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002106",
+        "Anatomical entity name": "spleen",
+        "Library ID": "SRX5279847",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Spleen",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "spleen",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789664",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "f65d0575d17499df8b7aa3533c16c5c8b8b1c0cf6f0a10ccf27ef783ee55dcad",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789664"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279848",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474248"
+      ],
+      "sample_id": "SRX5279848",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279683",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279848",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789663",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "cf3e22d92b5cd1b867dbb35cd16349d9a405842816782c4e50242c240f281f7d",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789663"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279849",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474249"
+      ],
+      "sample_id": "SRX5279849",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279684",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279849",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789662",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "aaa0a5112bf3f3e49ca74b7f72e1e2f7edabb85c048dfc76e56243e29a37d0fe",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789662"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279850",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474250"
+      ],
+      "sample_id": "SRX5279850",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279685",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "3",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279850",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789661",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "fd373926e79ddc78294df6f10c24950ed21b9e795fbdf88a03f89d0553fe5fd1",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789661"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279851",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474251"
+      ],
+      "sample_id": "SRX5279851",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279686",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279851",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789660",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "e2bfb6aba240d8ebee0ef7751aa555ab798b28e1e211f973e5821ca3e06465eb",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789660"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279852",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474252"
+      ],
+      "sample_id": "SRX5279852",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279687",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279852",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789659",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "db992ecdb0535de702a01621dbdd2f79fac9c86a3f9edc29376aa8c41c0611b4",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789659"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279853",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474253"
+      ],
+      "sample_id": "SRX5279853",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279688",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "6",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279853",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789658",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "8f1f36859b08f55e44be2ec50a679472fcec617526c3ddd5072404ea9bfe22c5",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789658"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279854",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474254"
+      ],
+      "sample_id": "SRX5279854",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279689",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279854",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789657",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "cc77813aed0edeb485a1e67098dc7467dbffb43366239c90e83aaecc4bb744d6",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789657"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279855",
+      "original_tissue": "testis",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474255"
+      ],
+      "sample_id": "SRX5279855",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279690",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "8",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Testis",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000473",
+        "Anatomical entity name": "testis",
+        "Library ID": "SRX5279855",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Testis",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789711",
+      "donor_id": "SRP181218:individual:2",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "ae94206abd898945bde046a1180f5d2f490363050b44cf8ed463b1fe269d3dc4",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789711"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279856",
+      "original_tissue": "thyroid gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474256"
+      ],
+      "sample_id": "SRX5279856",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279691",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "2",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Thyroid",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002046",
+        "Anatomical entity name": "thyroid gland",
+        "Library ID": "SRX5279856",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "2",
+      "source_tissue": "Thyroid",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "thyroid gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789710",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0691f6aec4c4bd2ce5d246a5ee8067acb70a15bf55b9358a2369ff35dd6217b0",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789710"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279857",
+      "original_tissue": "adipose tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474257"
+      ],
+      "sample_id": "SRX5279857",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279692",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "3",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adipose",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001013",
+        "Anatomical entity name": "adipose tissue",
+        "Library ID": "SRX5279857",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Adipose",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adipose tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789709",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "6f5e79ebaf4a8eac248b72bb3e5412ce1337cff13384bd8dcc50082020c93df7",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789709"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279858",
+      "original_tissue": "adrenal gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474258"
+      ],
+      "sample_id": "SRX5279858",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279693",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adrenal",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002369",
+        "Anatomical entity name": "adrenal gland",
+        "Library ID": "SRX5279858",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Adrenal",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adrenal gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789708",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "8d61dc2f45c2fce5bdba799e5836edb2a1ea1cb7752da1b26d3fc79b71db87f5",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789708"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279859",
+      "original_tissue": "brain",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474259"
+      ],
+      "sample_id": "SRX5279859",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279694",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "3",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Brain",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX5279859",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Brain",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789707",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "e003de29ad58696cb934f3ff7d0aadd699dde1d31cf19c30d05e50428ce4e58a",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789707"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279860",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474260"
+      ],
+      "sample_id": "SRX5279860",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279695",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Colon",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279860",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Colon",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "colon",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789706",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "c5addb9e13081fd04bebcf9a6c8275f095f5408d10bd3833db0e01ba34130d39",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789706"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279861",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474261"
+      ],
+      "sample_id": "SRX5279861",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279696",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Heart",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279861",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Heart",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "heart",
+      "tissue_correction": "BioSample source_name identifies Heart; Bgee labels colon",
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789656",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "513fd8030617de234e3b4d955ba6e3bc85fec7fbbae8efc4f45c52457454376f",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789656"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279862",
+      "original_tissue": "liver",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474262"
+      ],
+      "sample_id": "SRX5279862",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279697",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "8",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Liver",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002107",
+        "Anatomical entity name": "liver",
+        "Library ID": "SRX5279862",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Liver",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789655",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "1fc11c2e32507a87340ed371dc24890a0f6c3dec4997c3c56ef50936d6aafa13",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789655"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279863",
+      "original_tissue": "lung",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474263"
+      ],
+      "sample_id": "SRX5279863",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279698",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Lung",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002048",
+        "Anatomical entity name": "lung",
+        "Library ID": "SRX5279863",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Lung",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "lung",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789654",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "c7ed852d2e9e338603aed1726e5b65167dc99070df6e10fb7fd7dfe51c3e4e54",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789654"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279864",
+      "original_tissue": "muscle tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474264"
+      ],
+      "sample_id": "SRX5279864",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279699",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Muscle",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002385",
+        "Anatomical entity name": "muscle tissue",
+        "Library ID": "SRX5279864",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Muscle",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "muscle tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789653",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "54d2a905ae8888b525f7b7b4f5f815c170d4480bcb6388724c7b33258b982d0e",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789653"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279865",
+      "original_tissue": "pituitary gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474265"
+      ],
+      "sample_id": "SRX5279865",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279700",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Pituitary",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000007",
+        "Anatomical entity name": "pituitary gland",
+        "Library ID": "SRX5279865",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Pituitary",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "pituitary gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789652",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "34309a729de60d79b3d18e8ace6aaca182d1e26de8bd032fc7bd652041ca4c27",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789652"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279866",
+      "original_tissue": "zone of skin",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474266"
+      ],
+      "sample_id": "SRX5279866",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279701",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Skin",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX5279866",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Skin",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789651",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "2d820fbea4bfd855af7b68147e9d35ff814a034cc10ed09b669a1d0fe4fbf844",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789651"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279867",
+      "original_tissue": "spleen",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474267"
+      ],
+      "sample_id": "SRX5279867",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279702",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "6",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Spleen",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002106",
+        "Anatomical entity name": "spleen",
+        "Library ID": "SRX5279867",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Spleen",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "spleen",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "47 months",
+      "biosample_id": "SAMN10789650",
+      "donor_id": "SRP181218:individual:3",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "45e0cd1762adecbfa1fb9d709d9ec5d0527dd0bbc6cdeeb3e5f9b6a88cb617ff",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789650"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279868",
+      "original_tissue": "thyroid gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474268"
+      ],
+      "sample_id": "SRX5279868",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279703",
+        "NCBI submission package": "Generic.1.0",
+        "age": "47 months",
+        "individual": "3",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Thyroid",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002046",
+        "Anatomical entity name": "thyroid gland",
+        "Library ID": "SRX5279868",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "3",
+      "source_tissue": "Thyroid",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "thyroid gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789649",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "b2ef4b019e42a78bbea6e4205f1e154f7b2279bf03eda71b6f56d5fe59ba1a6a",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789649"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279869",
+      "original_tissue": "adipose tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474269"
+      ],
+      "sample_id": "SRX5279869",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279704",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adipose",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001013",
+        "Anatomical entity name": "adipose tissue",
+        "Library ID": "SRX5279869",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Adipose",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adipose tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789648",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "08707b5136c9087c366dc271df378d629e81f886973a234819db5e12dceb69cb",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789648"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279870",
+      "original_tissue": "brain",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474270"
+      ],
+      "sample_id": "SRX5279870",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279705",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Brain",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX5279870",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Brain",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789647",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "ff47d036c546e7b4fd24431326382da37dd40acd9dfbf41e497abea3428367ba",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789647"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279871",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474271"
+      ],
+      "sample_id": "SRX5279871",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279706",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "6",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Colon",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279871",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Colon",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "colon",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789646",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "ccd878a6bdb32a3e295edde80ffcd7ee7761ec4deb79da61750e77bcbc161e10",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789646"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279872",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474272"
+      ],
+      "sample_id": "SRX5279872",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279707",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Heart",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279872",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Heart",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "heart",
+      "tissue_correction": "BioSample source_name identifies Heart; Bgee labels colon",
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789645",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "945b75594d68c8b05316f66fc4d958c49a05e2699c524ae0e3a46d5e4bc68723",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789645"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279873",
+      "original_tissue": "liver",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474273"
+      ],
+      "sample_id": "SRX5279873",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279708",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Liver",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002107",
+        "Anatomical entity name": "liver",
+        "Library ID": "SRX5279873",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Liver",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789644",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "39d9858b4c527ac08d7a3a2170f73d22ed34dd48f3a642fc698ed1d53784fd63",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789644"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279874",
+      "original_tissue": "lung",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474274"
+      ],
+      "sample_id": "SRX5279874",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279710",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "6",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Lung",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002048",
+        "Anatomical entity name": "lung",
+        "Library ID": "SRX5279874",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Lung",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "lung",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789643",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "706e8c94afcfcbeaa40c05ced611f4e8216da70ac2d51e49a2fc36398912a30e",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789643"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279875",
+      "original_tissue": "muscle tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474275"
+      ],
+      "sample_id": "SRX5279875",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279709",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Muscle",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002385",
+        "Anatomical entity name": "muscle tissue",
+        "Library ID": "SRX5279875",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Muscle",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "muscle tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789642",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "37cad3f8155fa72a3e5e8cf511cc4678526a5c0b709f9596197546c4655fc53b",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789642"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279876",
+      "original_tissue": "pituitary gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474276"
+      ],
+      "sample_id": "SRX5279876",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279711",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Pituitary",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000007",
+        "Anatomical entity name": "pituitary gland",
+        "Library ID": "SRX5279876",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Pituitary",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "pituitary gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789641",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0db88a01a6923b525e9b3019de85a9c9454b714505b583b0ae469bf6aa452664",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789641"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279877",
+      "original_tissue": "zone of skin",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474277"
+      ],
+      "sample_id": "SRX5279877",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279712",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Skin",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX5279877",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Skin",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789640",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "4428f7d1c1cc716db2854cc4f41edaf3c3343d4db59904c85cf73597e658b8aa",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789640"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279878",
+      "original_tissue": "spleen",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474278"
+      ],
+      "sample_id": "SRX5279878",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279713",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Spleen",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002106",
+        "Anatomical entity name": "spleen",
+        "Library ID": "SRX5279878",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Spleen",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "spleen",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789639",
+      "donor_id": "SRP181218:individual:5",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0a2aa4b1ea7ba755d4d673fc395d73c176d824fe532791318d882f1d4f0abac1",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789639"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279879",
+      "original_tissue": "brain",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474279"
+      ],
+      "sample_id": "SRX5279879",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279714",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "5",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Brain",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX5279879",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "5",
+      "source_tissue": "Brain",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789638",
+      "donor_id": "SRP181218:individual:5",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "afbb9be1c1a74278d6d4d70ae50dbd4163e6fd237f7a1ca7df58c65afd116d2b",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789638"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279880",
+      "original_tissue": "pituitary gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474280"
+      ],
+      "sample_id": "SRX5279880",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279715",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "5",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Pituitary",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000007",
+        "Anatomical entity name": "pituitary gland",
+        "Library ID": "SRX5279880",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "5",
+      "source_tissue": "Pituitary",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "pituitary gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789637",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "f65db7dfc4f2f38b73a71cb4bad17ddb1b5e038df35d0dd8c808e42a96a276c3",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789637"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279881",
+      "original_tissue": "adrenal gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474281"
+      ],
+      "sample_id": "SRX5279881",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279716",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adrenal",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002369",
+        "Anatomical entity name": "adrenal gland",
+        "Library ID": "SRX5279881",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Adrenal",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adrenal gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789636",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "5e24c8ce6d5abc4a2fe3387b705fa513f83f8e4969d3d1c3fecb8db3f9a1bb9b",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789636"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279882",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474282"
+      ],
+      "sample_id": "SRX5279882",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279717",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Colon",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279882",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Colon",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "colon",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789635",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "e74892fb9266b066c427a868c7f1ccc84a31bee7ba3121c7929828187e65e76c",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789635"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279883",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474283"
+      ],
+      "sample_id": "SRX5279883",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279718",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "8",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Heart",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279883",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Heart",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "heart",
+      "tissue_correction": "BioSample source_name identifies Heart; Bgee labels colon",
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789634",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "9bf2ef6af9784b7c237b38e39ad72cc4e1f0c6ab05362e5a5add627d0d88f885",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789634"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279884",
+      "original_tissue": "liver",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474284"
+      ],
+      "sample_id": "SRX5279884",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279719",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Liver",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002107",
+        "Anatomical entity name": "liver",
+        "Library ID": "SRX5279884",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Liver",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789631",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0b643dcd25f6fb890d46f3dbebdaef0331e9e29579b3ad06da9a4011b818ea4c",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789631"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279885",
+      "original_tissue": "lung",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474285"
+      ],
+      "sample_id": "SRX5279885",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279720",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Lung",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002048",
+        "Anatomical entity name": "lung",
+        "Library ID": "SRX5279885",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Lung",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "lung",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789630",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "cd0b4fc0bc48305563e0ec31a0abe9ebf6768b46544d03b94fe73bd212de4c05",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789630"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279886",
+      "original_tissue": "muscle tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474286"
+      ],
+      "sample_id": "SRX5279886",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279721",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Muscle",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002385",
+        "Anatomical entity name": "muscle tissue",
+        "Library ID": "SRX5279886",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Muscle",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "muscle tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789682",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "75dca756e8cce485f8e765256a8871fac9a130969e79be97d95e8714233562c5",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789682"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279887",
+      "original_tissue": "zone of skin",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474287"
+      ],
+      "sample_id": "SRX5279887",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279722",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Skin",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX5279887",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Skin",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789681",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "10d0acd03aa1a720c8aa342a957853870c2ffb0d6a12f0d2ef9bb461238517fd",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789681"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279888",
+      "original_tissue": "spleen",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474288"
+      ],
+      "sample_id": "SRX5279888",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279723",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "8",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Spleen",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002106",
+        "Anatomical entity name": "spleen",
+        "Library ID": "SRX5279888",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Spleen",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "spleen",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789726",
+      "donor_id": "SRP181218:individual:6",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "00cada67709447d1717e058d37bf34ec951203306f954cf108a3620eb1923ddf",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789726"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279889",
+      "original_tissue": "thyroid gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474289"
+      ],
+      "sample_id": "SRX5279889",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279724",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "6",
+        "library prep batch": "8",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Thyroid",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002046",
+        "Anatomical entity name": "thyroid gland",
+        "Library ID": "SRX5279889",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "6",
+      "source_tissue": "Thyroid",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "thyroid gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789725",
+      "donor_id": "SRP181218:individual:4",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "247d8c37ee7dd02eb6b36777ab354b546c9ceba64638102af569e0315ea5b96d",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789725"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279890",
+      "original_tissue": "adrenal gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474290"
+      ],
+      "sample_id": "SRX5279890",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279725",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "4",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adrenal",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002369",
+        "Anatomical entity name": "adrenal gland",
+        "Library ID": "SRX5279890",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "4",
+      "source_tissue": "Adrenal",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adrenal gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789722",
+      "donor_id": "SRP181218:individual:7",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "d2fe39f05d0d61a8a2a44501576fb1d79938deb714d44d77173eb60fe4634626",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789722"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279891",
+      "original_tissue": "brain",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474291"
+      ],
+      "sample_id": "SRX5279891",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279726",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "7",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Brain",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000955",
+        "Anatomical entity name": "brain",
+        "Library ID": "SRX5279891",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "7",
+      "source_tissue": "Brain",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "brain",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "21 months",
+      "biosample_id": "SAMN10789730",
+      "donor_id": "SRP181218:individual:7",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "e53b57d0b3b698b57f7b554da5d3972119e818ec46db40089d929a5f3ecf5eae",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789730"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279892",
+      "original_tissue": "pituitary gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474292"
+      ],
+      "sample_id": "SRX5279892",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279727",
+        "NCBI submission package": "Generic.1.0",
+        "age": "21 months",
+        "individual": "7",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Pituitary",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000007",
+        "Anatomical entity name": "pituitary gland",
+        "Library ID": "SRX5279892",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "7",
+      "source_tissue": "Pituitary",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "pituitary gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789729",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "a993d3628b996f6e6f866e0242f68399f92be7ca8fc44355af6b835e1bb715d8",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789729"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279893",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474293"
+      ],
+      "sample_id": "SRX5279893",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279728",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Colon",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279893",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Colon",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "colon",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789728",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "44c72753aed8b7f0b795cae01c69689bed1906fddef6ec0da00211956a18c02a",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789728"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279894",
+      "original_tissue": "colon",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474294"
+      ],
+      "sample_id": "SRX5279894",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279729",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Heart",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001155",
+        "Anatomical entity name": "colon",
+        "Library ID": "SRX5279894",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Heart",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "heart",
+      "tissue_correction": "BioSample source_name identifies Heart; Bgee labels colon",
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789908",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "a8be07d1c3f33b3434da5ea1421ae455bcedb926d2f6b3a087ccb54886ca1768",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789908"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279895",
+      "original_tissue": "liver",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474295"
+      ],
+      "sample_id": "SRX5279895",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279730",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "4",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Liver",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002107",
+        "Anatomical entity name": "liver",
+        "Library ID": "SRX5279895",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Liver",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789907",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "cfa4f4b5a821242d2c483c02e6992c0ca5d8155e048cea14ad8ab5d88bd3feaf",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789907"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279896",
+      "original_tissue": "lung",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474296"
+      ],
+      "sample_id": "SRX5279896",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279731",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Lung",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002048",
+        "Anatomical entity name": "lung",
+        "Library ID": "SRX5279896",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Lung",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "lung",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789906",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "16aa4c6afadeb82fd9aa2f1cbafe25472f9dee9b3b86c1ab536cb67ae0de56ed",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789906"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279897",
+      "original_tissue": "muscle tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474297"
+      ],
+      "sample_id": "SRX5279897",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279732",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "1",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Muscle",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002385",
+        "Anatomical entity name": "muscle tissue",
+        "Library ID": "SRX5279897",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Muscle",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "muscle tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789905",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "7f772bd6ef109b619e1d74ff293f3c23a834008fdaa98810592ecfef693cda40",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789905"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279898",
+      "original_tissue": "zone of skin",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474298"
+      ],
+      "sample_id": "SRX5279898",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279733",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Skin",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0000014",
+        "Anatomical entity name": "zone of skin",
+        "Library ID": "SRX5279898",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Skin",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "zone of skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789904",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "47f2706ce2e65f97adf8222ed042c85696fa8c020b43c3f9a38dc7606a13bab0",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789904"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279899",
+      "original_tissue": "spleen",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474299"
+      ],
+      "sample_id": "SRX5279899",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279734",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "2",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Spleen",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002106",
+        "Anatomical entity name": "spleen",
+        "Library ID": "SRX5279899",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Spleen",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "spleen",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "20 months",
+      "biosample_id": "SAMN10789903",
+      "donor_id": "SRP181218:individual:8",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "0870d56a8e48fa88d6319792d2a3224372e29c1f279d5abe625bd4a3846b0255",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789903"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279900",
+      "original_tissue": "thyroid gland",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474300"
+      ],
+      "sample_id": "SRX5279900",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279735",
+        "NCBI submission package": "Generic.1.0",
+        "age": "20 months",
+        "individual": "8",
+        "library prep batch": "7",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Thyroid",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0002046",
+        "Anatomical entity name": "thyroid gland",
+        "Library ID": "SRX5279900",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "8",
+      "source_tissue": "Thyroid",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "thyroid gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "22 months",
+      "biosample_id": "SAMN10789951",
+      "donor_id": "SRP181218:individual:9",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "f56554382edbc4fc4986fc8482b178f959221b156b6abb8e13f943f7c3b03d45",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789951"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279901",
+      "original_tissue": "adipose tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474301"
+      ],
+      "sample_id": "SRX5279901",
+      "sex": "male",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279736",
+        "NCBI submission package": "Generic.1.0",
+        "age": "22 months",
+        "individual": "9",
+        "library prep batch": "8",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adipose",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001013",
+        "Anatomical entity name": "adipose tissue",
+        "Library ID": "SRX5279901",
+        "Sex": "male",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "9",
+      "source_tissue": "Adipose",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adipose tissue",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": "22 months",
+      "biosample_id": "SAMN10789950",
+      "donor_id": "SRP181218:individual:10",
+      "donor_scope": "SRP181218",
+      "evidence": [
+        {
+          "sha256": "f941a173463d6804241b1632fd3d4a74f2a3abae4fa88f6697a8808a294cbccb",
+          "url": "https://www.ebi.ac.uk/ena/browser/api/xml/SAMN10789950"
+        },
+        {
+          "sha256": "b9530fb2e9df896e502ca593afb9055c15bedbeecfb98f08ac1050c637b23861",
+          "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRP181218&result=read_run&fields=run_accession,experiment_accession,sample_accession,secondary_sample_accession,sample_alias,sample_title,library_name,library_layout,read_count,base_count&format=tsv"
+        }
+      ],
+      "health": null,
+      "library_id": "SRX5279902",
+      "original_tissue": "adipose tissue",
+      "pooling": "single",
+      "run_ids": [
+        "SRR8474302"
+      ],
+      "sample_id": "SRX5279902",
+      "sex": "female",
+      "source_attributes": {
+        "BioSampleModel": "Generic",
+        "ENA-FIRST-PUBLIC": "2019-07-16",
+        "ENA-LAST-UPDATE": "2019-07-16",
+        "INSDC secondary accession": "SRS4279737",
+        "NCBI submission package": "Generic.1.0",
+        "age": "22 months",
+        "individual": "10",
+        "library prep batch": "5",
+        "organism": "Canis lupus familiaris",
+        "organism common name": "Dog",
+        "source_name": "Adipose",
+        "strain": "Beagle (Ridglan farms)",
+        "sub_species": "familiaris"
+      },
+      "source_condition": {
+        "Anatomical entity ID": "UBERON:0001013",
+        "Anatomical entity name": "adipose tissue",
+        "Library ID": "SRX5279902",
+        "Sex": "female",
+        "Stage ID": "UBERON:0018241",
+        "Stage name": "prime adult stage",
+        "Strain": "Beagle (Ridglan farms)"
+      },
+      "source_donor_label": "10",
+      "source_tissue": "Adipose",
+      "stage": "prime adult stage",
+      "study": "SRP181218",
+      "taxon_id": 9615,
+      "tissue": "adipose tissue",
+      "tissue_correction": null,
+      "treatment": null
+    }
+  ],
+  "schema": "oncoref.expression-samples",
+  "schema_version": 1,
+  "source_id": "bgee-srp181218",
+  "taxon_id": 9615
+}
