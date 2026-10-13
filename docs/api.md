@@ -23,6 +23,7 @@ Read the guide from concepts to operations:
 
 | Layer | Start here |
 | --- | --- |
+| Species and named datasets | [Species and Datasets](#species-and-datasets) |
 | Canonical cancer and gene identities | [Cancer Vocabulary](#cancer-vocabulary), [Gene Identity](#gene-identity) |
 | Expression reads, artifacts, and normalization | [Expression And Normalization](#expression-and-normalization) |
 | RNA-to-protein calibration | [RNA-to-Protein Calibration](#rna-to-protein-calibration) |
@@ -33,6 +34,30 @@ Read the guide from concepts to operations:
 
 Within each section, the intended use and primary modules come first. Detailed
 schema, provenance, fallback, and migration contracts follow.
+
+## Species and Datasets
+
+Use `oncoref.human` and `oncoref.canine` for explicit species entry points.
+Each exposes named dataset modules and conceptual groups such as `references`,
+`expression`, `cancer`, `antigens` and `normalization`.
+
+```python
+from oncoref import canine, human_protein_atlas
+
+human_protein_atlas.rna_consensus()
+canine.barkbase.source()  # provenance, units and acquisition status
+canine.barkbase.read(offline=True)  # verified cache or configured overrides
+canine.antigens.coverage()
+```
+
+Datasets also have top-level modules: `oncoref.human_protein_atlas`,
+`oncoref.barkbase`, `oncoref.bgee_srp009687`, `oncoref.bgee_srp181218`,
+`oncoref.pfizer_canine_protein`, `oncoref.pfizer_canine_rna`, `oncoref.doga` and
+`oncoref.gse304066`. Species modules reference those exact modules. Pending source
+integration remains explicit in `source()` metadata and `read()` errors.
+
+See [Species and data groups](species.md) for source coverage, native-unit
+contracts, offline asset configuration and the dynamic compatibility API.
 
 ## Cancer Vocabulary
 
