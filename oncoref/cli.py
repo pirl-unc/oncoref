@@ -65,10 +65,32 @@ def _print_bundle_prune(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_species(args):
+    from .species import available_species, for_species
+
+    if args.name is None:
+        rows = [
+            {"species": s.name, "scientific_name": s.scientific_name, "taxon_id": s.taxon_id}
+            for s in available_species()
+        ]
+    else:
+        rows = [group.coverage() for group in for_species(args.name).groups]
+    print(json.dumps(rows, indent=2))
+    return 0
+
+
 def _cmd_data(args: argparse.Namespace) -> int:
     """Unified data management over the catalog (expression bundle + HPA sources)."""
     from . import catalog, source_matrices
+    from .species import resolve_species
 
+    selected = resolve_species(args.species)
+    if args.action != "list" and selected.taxon_id != 9606:
+        print(
+            f"Error: data {args.action} is unavailable for {selected.name}; no human fallback",
+            file=sys.stderr,
+        )
+        return 1
     if args.action == "list":
         # The full inventory: every oncoref-domain dataset and how it's held.
         # `Cohorts` is the per-cohort file count held *inside* a directory dataset.
@@ -76,7 +98,7 @@ def _cmd_data(args: argparse.Namespace) -> int:
             f"{'Dataset':<46} {'Held':<8} {'Avail':<6} {'Cohorts':>8} {'Category':<14} Description"
         )
         print("-" * 120)
-        rows = catalog.inventory()
+        rows = catalog.inventory(species=args.species, group=args.group)
         if args.name and args.name != "all":
             rows = [
                 r
@@ -451,7 +473,7 @@ def _cmd_plot(args: argparse.Namespace) -> int:
 
 
 def _cmd_expression_sources(args: argparse.Namespace) -> int:
-    srcs = expression_registry.expression_sources()
+    srcs = expression_registry.expression_sources(species=args.species, context=args.context)
     if args.code:
         srcs = [s for s in srcs if args.code in s.cancer_codes]
     if args.type:
@@ -735,7 +757,13 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="For 'data prune', also delete the current bundle cache",
     )
+    p_data.add_argument("--species", default="human", help="Species name or NCBI taxonomy ID")
+    p_data.add_argument("--group", default=None, help="Conceptual data group for list")
     p_data.set_defaults(func=_cmd_data)
+
+    p_species = sub.add_parser("species", help="List species or inspect a species' data groups")
+    p_species.add_argument("name", nargs="?", default=None)
+    p_species.set_defaults(func=_cmd_species)
 
     p_exprsrc = sub.add_parser(
         "expression-sources",
@@ -743,6 +771,8 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_exprsrc.add_argument("--code", default=None, help="Only sources feeding this cancer code")
     p_exprsrc.add_argument("--type", default=None, help="Only this source_type (e.g. gdc, geo)")
+    p_exprsrc.add_argument("--species", default="human")
+    p_exprsrc.add_argument("--context", choices=sorted(expression_registry.EXPRESSION_CONTEXTS))
     p_exprsrc.set_defaults(func=_cmd_expression_sources)
 
     p_samples = sub.add_parser(
@@ -762,7 +792,11 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv=None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

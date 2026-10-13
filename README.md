@@ -39,6 +39,24 @@ retaining their own curated artifacts and compatibility APIs. Shared facts and
 identifiers should be fixed here; purpose-specific panels and per-sample rules
 stay downstream.
 
+## Species
+
+Select species before exploring its data groups:
+
+```python
+import oncoref
+
+dog = oncoref.for_species("dog")
+dog.references.datasets()
+dog.expression.sources(context="normal")
+dog.antigens.coverage()
+```
+
+The same references, expression, cancer, antigens and normalization groups exist
+under each species. Missing coverage is explicit; canine requests never fall back
+to human datasets. Existing flat APIs retain their human defaults. See the
+[species and expression contract guide](docs/species.md).
+
 ## Core model
 
 - **Canonical identities first.** Cancer facts key on the cancer-type registry;

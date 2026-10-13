@@ -24,10 +24,13 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 import pandas as pd
+
+from .expression_contract import EXPRESSION_CONTEXTS, ExpressionContract, ExpressionMeasurement
+from .species import resolve_species
 
 _DATA_DIR = Path(__file__).parent / "data"
 _REGISTRY_PATH = _DATA_DIR / "expression_sources.yaml"
@@ -70,6 +73,51 @@ class ExpressionSource:
     source_scale_class: str | None = None
     linear_tpm_comparable: bool | None = None
     tpm_proxy: bool | None = None
+    taxon_id: int = 9606
+    context: str = "tumor"
+    contract: ExpressionContract | None = None
+
+    def __post_init__(self):
+        if type(self.taxon_id) is not int or self.taxon_id < 1:
+            raise ValueError("Positive integer taxonomy identifier required")
+        if self.context not in EXPRESSION_CONTEXTS:
+            raise ValueError("Unknown expression context")
+        if self.contract is None:
+            if self.taxon_id != 9606:
+                raise ValueError("Nonhuman expression requires an explicit contract")
+        elif not isinstance(self.contract, ExpressionContract) or (
+            self.contract.taxon_id != self.taxon_id
+            or self.contract.source_id != self.id
+            or self.contract.context != self.context
+            or self.contract.source_version != self.source_version
+            or self.contract.measurement.unit != self.unit
+            or self.contract.measurement.is_proxy != self.tpm_proxy
+            or self.contract.measurement.scale != self.source_scale_class
+        ):
+            raise ValueError("Expression source and contract disagree")
+
+    @property
+    def expression_contract(self) -> ExpressionContract:
+        """Explicit metadata for new sources; honest unknowns for historical human data."""
+        if self.contract is not None:
+            return self.contract
+        return ExpressionContract(
+            taxon_id=9606,
+            source_id=self.id,
+            source_version=self.source_version,
+            context=self.context,
+            reference=None,
+            reference_status="legacy_human",
+            feature_namespace=None,
+            measurement=ExpressionMeasurement(
+                "unknown",
+                self.unit,
+                self.source_scale_class,
+                self.tpm_proxy,
+            ),
+            content_provenance={},
+            provenance_notes="Legacy human registry; exact quantification reference and feature level were not declared by this schema.",
+        )
 
 
 def _coerce_tuple(value) -> tuple[str, ...]:
@@ -112,23 +160,29 @@ def _clean(value):
     return text or None
 
 
-def expression_source_registry_path() -> Path:
+def expression_source_registry_path(*, species="human") -> Path:
     """Filesystem path to the bundled ``expression_sources.yaml`` registry.
 
     This is the stable public path helper for downstream build tooling that
     needs to pass oncoref's source registry to a subprocess or watcher. Prefer
     :func:`expression_source_registry_entries` for ordinary Python access.
     """
-    return _REGISTRY_PATH
+    selected = resolve_species(species)
+    if selected.taxon_id == 9606:
+        return _REGISTRY_PATH
+    return _DATA_DIR / "species" / selected.name / "expression_sources.yaml"
 
 
-def expression_source_registry_text() -> str:
+def expression_source_registry_text(*, species="human") -> str:
     """Raw text of the bundled ``expression_sources.yaml`` registry."""
-    return _REGISTRY_PATH.read_text()
+    path = expression_source_registry_path(species=species)
+    return path.read_text() if path.exists() else "sources: []\n"
 
 
 def expression_source_registry_entries(
     source_type: str | Iterable[str] | None = None,
+    *,
+    species="human",
 ) -> tuple[dict, ...]:
     """Raw source-registry entries from ``expression_sources.yaml``.
 
@@ -140,7 +194,7 @@ def expression_source_registry_entries(
     """
     import yaml
 
-    doc = yaml.safe_load(expression_source_registry_text()) or {}
+    doc = yaml.safe_load(expression_source_registry_text(species=species)) or {}
     entries = tuple(dict(entry) for entry in doc.get("sources", []))
     if source_type is None:
         return entries
@@ -148,13 +202,22 @@ def expression_source_registry_entries(
     return tuple(entry for entry in entries if entry.get("source_type") in wanted)
 
 
-@lru_cache(maxsize=1)
-def load_registry() -> tuple[ExpressionSource, ...]:
+@cache
+def load_registry(species="human") -> tuple[ExpressionSource, ...]:
     """Parse the bundled ``expression_sources.yaml`` into ``ExpressionSource``s."""
     out = []
-    for entry in expression_source_registry_entries():
+    selected = resolve_species(species)
+    for entry in expression_source_registry_entries(species=selected):
+        taxon_id = entry.get("taxon_id", 9606)
+        if taxon_id != selected.taxon_id:
+            raise ValueError(f"Source {entry['id']} is in the wrong species registry")
         out.append(
             ExpressionSource(
+                taxon_id=taxon_id,
+                context=entry.get("context", "tumor"),
+                contract=ExpressionContract.from_dict(entry["contract"])
+                if entry.get("contract") is not None
+                else None,
                 id=str(entry["id"]),
                 category=str(entry.get("category", "expression")),
                 cancer_codes=_coerce_tuple(entry.get("cancer_codes")),
@@ -199,32 +262,44 @@ def load_registry() -> tuple[ExpressionSource, ...]:
                 molecular_annotation_status=_clean(entry.get("molecular_annotation_status")),
             )
         )
+    if len({s.id for s in out}) != len(out):
+        raise ValueError("Duplicate expression source ID within species")
     return tuple(out)
 
 
-def expression_sources() -> tuple[ExpressionSource, ...]:
+def expression_sources(*, species="human", context=None) -> tuple[ExpressionSource, ...]:
     """Every registered expression source."""
-    return load_registry()
+    if context is not None and context not in EXPRESSION_CONTEXTS:
+        raise ValueError(f"Unknown expression context {context!r}")
+    return tuple(
+        s
+        for s in load_registry(resolve_species(species))
+        if context is None or s.context == context
+    )
 
 
-def expression_source(source_id: str) -> ExpressionSource | None:
+def expression_source(source_id: str, *, species="human") -> ExpressionSource | None:
     """Look up one source by id."""
-    for s in load_registry():
+    for s in load_registry(resolve_species(species)):
         if s.id == source_id:
             return s
     return None
 
 
-def sources_for_cancer_code(code: str) -> list[ExpressionSource]:
+def sources_for_cancer_code(code: str, *, species="human") -> list[ExpressionSource]:
     """Every source that feeds a given cancer code."""
-    return [s for s in load_registry() if code in s.cancer_codes]
+    return [s for s in expression_sources(species=species) if code in s.cancer_codes]
 
 
-def expression_sources_df() -> pd.DataFrame:
+def expression_sources_df(*, species="human") -> pd.DataFrame:
     """The registry as a tabular view (one row per source) for inspection."""
     return pd.DataFrame(
         {
             "id": s.id,
+            "taxon_id": s.taxon_id,
+            "context": s.context,
+            "reference_status": s.expression_contract.reference_status,
+            "contract_id": s.expression_contract.contract_id,
             "source_type": s.source_type,
             "cancer_codes": ";".join(s.cancer_codes),
             "n_codes": len(s.cancer_codes),
@@ -253,7 +328,7 @@ def expression_sources_df() -> pd.DataFrame:
             "external_build_exemption": s.external_build_exemption,
             "routed_samples_may_overlap": s.routed_samples_may_overlap,
         }
-        for s in load_registry()
+        for s in expression_sources(species=species)
     )
 
 

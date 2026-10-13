@@ -5,6 +5,7 @@ repo_name: pirl-unc/oncoref
 theme:
   name: mkdocs
 nav:
+  - Species and data groups: species.md
   - Home: index.md
   - Figures: figures.md
   - Curation Audit: curation-audit.md
