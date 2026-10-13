@@ -38,6 +38,7 @@ dependencies = [
     "adjustText",
     "matplotlib_venn>=1.0",
     "filelock>=3.12",
+    "datacache[progress]>=1.11.1,<2",
 ]
 
 [project.optional-dependencies]
