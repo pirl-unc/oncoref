@@ -1,0 +1,167 @@
+{
+  "schema": "oncoref.species-assets",
+  "schema_version": 1,
+  "taxon_id": 9615,
+  "assets": [
+    {
+      "id": "refseq106-genome",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "GCF_011100685.1_UU_Cfam_GSD_1.0_genomic.fna.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/100/685/GCF_011100685.1_UU_Cfam_GSD_1.0/GCF_011100685.1_UU_Cfam_GSD_1.0_genomic.fna.gz",
+      "sha256": "55d9bdd260ccf8a427dc4735bfdb61102af573411cf9a9432e5e71a29f4065c8",
+      "size_bytes": 778170188,
+      "source_version": "NCBI-AR106-2021-01-11",
+      "description": "NCBI RefSeq canine annotation 106: genome",
+      "license": "NCBI government data; see NCBI policy and original sequence contributors"
+    },
+    {
+      "id": "refseq106-gtf",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "GCF_011100685.1_UU_Cfam_GSD_1.0_genomic.gtf.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/100/685/GCF_011100685.1_UU_Cfam_GSD_1.0/GCF_011100685.1_UU_Cfam_GSD_1.0_genomic.gtf.gz",
+      "sha256": "5d3ce6df08c469b4317f3375829185f852ee4026080cb2d87f35851d28a08e78",
+      "size_bytes": 21902905,
+      "source_version": "NCBI-AR106-2021-01-11",
+      "description": "NCBI RefSeq canine annotation 106: gtf",
+      "license": "NCBI government data; see NCBI policy and original sequence contributors"
+    },
+    {
+      "id": "refseq106-protein",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "GCF_011100685.1_UU_Cfam_GSD_1.0_protein.faa.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/100/685/GCF_011100685.1_UU_Cfam_GSD_1.0/GCF_011100685.1_UU_Cfam_GSD_1.0_protein.faa.gz",
+      "sha256": "478ff85988e53be0f8c36fcf290a4d512792bbdb8148a0c5132e1022e15eeb49",
+      "size_bytes": 9178505,
+      "source_version": "NCBI-AR106-2021-01-11",
+      "description": "NCBI RefSeq canine annotation 106: protein",
+      "license": "NCBI government data; see NCBI policy and original sequence contributors"
+    },
+    {
+      "id": "refseq106-rna",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "GCF_011100685.1_UU_Cfam_GSD_1.0_rna.fna.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/100/685/GCF_011100685.1_UU_Cfam_GSD_1.0/GCF_011100685.1_UU_Cfam_GSD_1.0_rna.fna.gz",
+      "sha256": "0a291886292dae885a14337e674db66019c18962700c79c01723c550fc1070b7",
+      "size_bytes": 43432359,
+      "source_version": "NCBI-AR106-2021-01-11",
+      "description": "NCBI RefSeq canine annotation 106: rna",
+      "license": "NCBI government data; see NCBI policy and original sequence contributors"
+    },
+    {
+      "id": "refseq106-cds",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "GCF_011100685.1_UU_Cfam_GSD_1.0_cds_from_genomic.fna.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/100/685/GCF_011100685.1_UU_Cfam_GSD_1.0/GCF_011100685.1_UU_Cfam_GSD_1.0_cds_from_genomic.fna.gz",
+      "sha256": "a06f0ec4fa19181ecc9e44c26f0366baba85a9957f1adbcd4b31b5e089041e1e",
+      "size_bytes": 18769780,
+      "source_version": "NCBI-AR106-2021-01-11",
+      "description": "NCBI RefSeq canine annotation 106: cds",
+      "license": "NCBI government data; see NCBI policy and original sequence contributors"
+    },
+    {
+      "id": "refseq106-feature_table",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "GCF_011100685.1_UU_Cfam_GSD_1.0_feature_table.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/100/685/GCF_011100685.1_UU_Cfam_GSD_1.0/GCF_011100685.1_UU_Cfam_GSD_1.0_feature_table.txt.gz",
+      "sha256": "2748ac54c6e031b3b6b20f06d8383e19e3caa6667494381d570e2b06c3d25c19",
+      "size_bytes": 4533704,
+      "source_version": "NCBI-AR106-2021-01-11",
+      "description": "NCBI RefSeq canine annotation 106: feature_table",
+      "license": "NCBI government data; see NCBI policy and original sequence contributors"
+    },
+    {
+      "id": "ensembl98-gtf",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "Canis_familiaris.CanFam3.1.98.gtf.gz",
+      "url": "https://ftp.ensembl.org/pub/release-98/gtf/canis_familiaris/Canis_familiaris.CanFam3.1.98.gtf.gz",
+      "sha256": "5d567adae8bcefef2e21b7d8d47bbb3beb6f0a9d4ae302c074867c3bebfdab2d",
+      "size_bytes": 17959356,
+      "source_version": "Ensembl-98",
+      "description": "Ensembl CanFam3.1 release 98: gtf",
+      "license": "See Ensembl data use policy and original contributors"
+    },
+    {
+      "id": "ensembl98-protein",
+      "taxon_id": 9615,
+      "group": "references",
+      "filename": "Canis_familiaris.CanFam3.1.pep.all.fa.gz",
+      "url": "https://ftp.ensembl.org/pub/release-98/fasta/canis_familiaris/pep/Canis_familiaris.CanFam3.1.pep.all.fa.gz",
+      "sha256": "60ce869e46ff855cee1543b5272b002c8598005c6a0d0ef9774e9a0f9db41515",
+      "size_bytes": 10599344,
+      "source_version": "Ensembl-98",
+      "description": "Ensembl CanFam3.1 release 98: protein",
+      "license": "See Ensembl data use policy and original contributors"
+    }
+  ],
+  "references": [
+    {
+      "id": "refseq106",
+      "identity": {
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "taxon_id": 9615,
+        "assembly_accession": "GCF_011100685.1",
+        "annotation_source": "NCBI RefSeq",
+        "annotation_release": "106",
+        "source_version": "NCBI-AR106-2021-01-11",
+        "identifier_namespaces": {
+          "gene": "NCBI Gene",
+          "protein": "NCBI RefSeq protein",
+          "transcript": "NCBI RefSeq RNA"
+        },
+        "content_provenance": {
+          "cds": "a06f0ec4fa19181ecc9e44c26f0366baba85a9957f1adbcd4b31b5e089041e1e",
+          "feature_table": "2748ac54c6e031b3b6b20f06d8383e19e3caa6667494381d570e2b06c3d25c19",
+          "genome": "55d9bdd260ccf8a427dc4735bfdb61102af573411cf9a9432e5e71a29f4065c8",
+          "gtf": "5d3ce6df08c469b4317f3375829185f852ee4026080cb2d87f35851d28a08e78",
+          "protein": "478ff85988e53be0f8c36fcf290a4d512792bbdb8148a0c5132e1022e15eeb49",
+          "rna": "0a291886292dae885a14337e674db66019c18962700c79c01723c550fc1070b7"
+        },
+        "reference_id": "openvax:reference:v1:sha256:cd23d1e4d15d03a43e3f3e30fe14e9f12150be37362a74b1497660d554e1d4c3"
+      },
+      "assets": {
+        "genome": "refseq106-genome",
+        "gtf": "refseq106-gtf",
+        "protein": "refseq106-protein",
+        "rna": "refseq106-rna",
+        "cds": "refseq106-cds",
+        "feature_table": "refseq106-feature_table"
+      },
+      "notes": "Reference assets only. Exact expression quantification-reference equivalence requires separate evidence. RefSeq GTF gene_id labels are symbols; NCBI Gene identifiers are in GeneID db_xref fields."
+    },
+    {
+      "id": "ensembl98",
+      "identity": {
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "taxon_id": 9615,
+        "assembly_accession": "GCA_000002285.2",
+        "annotation_source": "Ensembl",
+        "annotation_release": "98",
+        "source_version": "Ensembl-98",
+        "identifier_namespaces": {
+          "gene": "Ensembl gene",
+          "protein": "Ensembl protein",
+          "transcript": "Ensembl transcript"
+        },
+        "content_provenance": {
+          "gtf": "5d567adae8bcefef2e21b7d8d47bbb3beb6f0a9d4ae302c074867c3bebfdab2d",
+          "protein": "60ce869e46ff855cee1543b5272b002c8598005c6a0d0ef9774e9a0f9db41515"
+        },
+        "reference_id": "openvax:reference:v1:sha256:48a39792c2bcb345fd9bf5f479c06c9c7e8b25b6258c6544a76505dd2df738c4"
+      },
+      "assets": {
+        "gtf": "ensembl98-gtf",
+        "protein": "ensembl98-protein"
+      },
+      "notes": "Assembly accession is declared in the pinned GTF header. This is distinct from RefSeq annotation 106; no crosswalk is inferred."
+    }
+  ]
+}

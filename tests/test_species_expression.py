@@ -50,7 +50,7 @@ def test_species_boundary(value):
     assert dog.cancer.datasets() == ()
     assert dog.antigens.coverage()["coverage"] == "unavailable"
     assert dog.expression.sources() == ()
-    assert catalog.inventory(species=value) == []
+    assert all(r["taxon_id"] == 9615 for r in catalog.inventory(species=value))
 
 
 @pytest.mark.parametrize("value", [None, True, 9615.0, "wolf", "", "all"])
