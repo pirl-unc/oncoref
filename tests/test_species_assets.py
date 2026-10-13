@@ -1,7 +1,11 @@
 # Licensed under the Apache License, Version 2.0.
 import hashlib
+import io
 import json
+import os
 from dataclasses import replace
+from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -25,6 +29,119 @@ def asset():
         "Synthetic fixture",
         "Synthetic test data",
     )
+
+
+@pytest.fixture(params=["native", "without_resume"])
+def acquisition_mode(request, monkeypatch):
+    if request.param == "without_resume":
+        from datacache import resume
+
+        # Simulate the platform decision without changing os.name globally:
+        # pathlib and the real datacache file I/O must still use the host OS.
+        monkeypatch.setattr(sa, "os", SimpleNamespace(name="nt", environ=os.environ))
+
+        def unsupported_resume(*args, **kwargs):
+            raise NotImplementedError("Resumable downloads require a POSIX local filesystem")
+
+        monkeypatch.setattr(resume, "validate_resume", unsupported_resume)
+
+
+@pytest.fixture
+def download_response(monkeypatch):
+    import requests
+
+    state = SimpleNamespace(body=b"fixture", calls=[])
+
+    def get(url, **kwargs):
+        state.calls.append((url, kwargs))
+        response = requests.Response()
+        response.status_code = 200
+        response.url = url
+        response.headers["Content-Length"] = str(len(state.body))
+        response.raw = io.BytesIO(state.body)
+        return response
+
+    # Replace only HTTP transport; datacache still stages, checks, publishes,
+    # and records provenance using its production implementation.
+    monkeypatch.setattr(requests, "get", get)
+    return state
+
+
+@pytest.mark.parametrize("cached_bytes", [None, b"corrupt", b"short", b"fixture"])
+def test_online_acquisition_verifies_and_repairs_managed_files(
+    asset, tmp_path, acquisition_mode, download_response, cached_bytes
+):
+    path = sa.asset_path(asset, cache_root=tmp_path)
+    if cached_bytes is not None:
+        path.parent.mkdir(parents=True)
+        path.write_bytes(cached_bytes)
+    if cached_bytes != b"fixture":
+        with pytest.raises(ValueError, match="transfer budget"):
+            sa.ensure_asset(asset, cache_root=tmp_path, max_bytes=asset.size_bytes - 1)
+        assert not download_response.calls
+        assert path.read_bytes() == cached_bytes if cached_bytes is not None else not path.exists()
+
+    assert sa.ensure_asset(asset, cache_root=tmp_path, max_bytes=asset.size_bytes) == path
+    assert path.read_bytes() == b"fixture"
+    assert sa.inspect_asset(asset, cache_root=tmp_path)["status"] == "available"
+    assert len(download_response.calls) == (0 if cached_bytes == b"fixture" else 1)
+    if download_response.calls:
+        from datacache import provenance
+
+        record = json.loads(Path(provenance.sidecar_path(path)).read_text())
+        assert record["sha256"] == asset.sha256
+    count = len(download_response.calls)
+    assert sa.ensure_asset(asset, cache_root=tmp_path, offline=True, max_bytes=0) == path
+    assert sa.ensure_asset(asset, cache_root=tmp_path, max_bytes=0) == path
+    assert len(download_response.calls) == count
+
+
+@pytest.mark.parametrize("cached_bytes", [None, b"corrupt"])
+@pytest.mark.parametrize("response_bytes", [b"changed", b"too many bytes"])
+def test_failed_acquisition_preserves_destination(
+    asset, tmp_path, acquisition_mode, download_response, cached_bytes, response_bytes
+):
+    from datacache import FileValidationError
+
+    path = sa.asset_path(asset, cache_root=tmp_path)
+    if cached_bytes is not None:
+        path.parent.mkdir(parents=True)
+        path.write_bytes(cached_bytes)
+    download_response.body = response_bytes
+    with pytest.raises(FileValidationError):
+        sa.ensure_asset(asset, cache_root=tmp_path)
+    assert download_response.calls
+    assert path.read_bytes() == cached_bytes if cached_bytes is not None else not path.exists()
+
+
+def test_cli_fetch_repairs_managed_corruption_without_force(
+    asset, tmp_path, monkeypatch, capsys, acquisition_mode, download_response
+):
+    monkeypatch.setattr(sa, "species_assets", lambda species: (asset,))
+    path = sa.asset_path(asset, cache_root=tmp_path)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(b"corrupt")
+    assert (
+        cli.main(
+            [
+                "data",
+                "fetch",
+                "fixture",
+                "--species",
+                "dog",
+                "--cache-root",
+                str(tmp_path),
+                "--max-bytes",
+                str(asset.size_bytes),
+            ]
+        )
+        == 0
+    )
+    output = capsys.readouterr()
+    assert output.out.strip() == str(path)
+    assert not output.err
+    assert path.read_bytes() == b"fixture"
+    assert len(download_response.calls) == 1
 
 
 def test_real_reference_manifests_are_distinct_and_complete():
@@ -59,6 +176,10 @@ def test_override_reuse_is_read_only_and_rejects_corruption(asset, tmp_path, mon
         with pytest.raises(ValueError, match="fixture"):
             sa.ensure_asset(asset, offline=offline, **options)
     assert original.read_bytes() == b"corrupt"
+    original.unlink()
+    for offline in (True, False):
+        with pytest.raises(ValueError, match="missing"):
+            sa.ensure_asset(asset, offline=offline, **options)
 
 
 def test_cached_offline_replay_verifies_bytes(asset, tmp_path):
@@ -81,7 +202,8 @@ def test_transfer_budget_and_datacache_ownership(asset, tmp_path, monkeypatch):
 
     def fetch(url, **options):
         calls.append((url, options))
-        assert options["raw"] and options["resume"]
+        assert options["raw"]
+        assert options["resume"] == (os.name == "posix")
         assert options["expected_sha256"] == asset.sha256
         assert options["expected_size"] == asset.size_bytes
         return options["destination"]

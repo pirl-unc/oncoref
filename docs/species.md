@@ -173,10 +173,13 @@ oncoref data fetch ensembl98-gtf --species dog --offline --asset-overrides /path
 
 `status`, `path`, and offline replay verify the pinned size and SHA-256. Inventory
 listing only checks local presence and reports `integrity: not_checked`. Online
-fetches use datacache's atomic publication and bounded HTTP resume, with a default
-100 MiB total transfer budget (`--max-bytes` to change it). Reference fetches check
+fetches use datacache's atomic publication and bounded HTTP resume on POSIX;
+other platforms, including Windows, use verified non-resumable downloads. The
+default total transfer budget is 100 MiB (`--max-bytes` to change it). Reference fetches check
 the total missing bytes before starting. An invalid override fails even online;
-managed-cache corruption can be repaired online but fails offline. The wheel
+managed-cache corruption is automatically repaired by online fetches (no
+`--force` needed) but fails offline. Failed transfers never replace the cached
+file with unverified bytes. The wheel
 contains small manifests only, with upstream URLs, byte pins and source terms.
 
 ## Native canine expression (1.9.2)

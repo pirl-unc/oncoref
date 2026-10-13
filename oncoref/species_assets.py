@@ -175,8 +175,9 @@ def ensure_asset(
 
     An explicit override is authoritative: corrupt/missing override files fail,
     including online, and are never overwritten. Cached corruption also fails
-    offline; online datacache can repair the managed cache atomically. HTTP resume
-    bounds retained partial bytes by the manifest's exact expected size.
+    offline; online datacache can repair the managed cache atomically. On POSIX,
+    HTTP resume bounds retained partial bytes by the manifest's exact expected
+    size. Other platforms use a verified, non-resumable download.
     """
     from datacache import fetch_file
 
@@ -198,8 +199,9 @@ def ensure_asset(
         fetch_file(
             asset.url,
             destination=state["path"],
+            force=state["status"] == "corrupt",
             raw=True,
-            resume=True,
+            resume=os.name == "posix",
             expected_sha256=asset.sha256,
             expected_size=asset.size_bytes,
             timeout=60,
