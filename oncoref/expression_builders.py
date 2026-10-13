@@ -60,6 +60,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from ._table_io import read_csv
 from .expression_engine import (
     canonicalize_source_gene_matrix,
     coerce_source_expression_values,
@@ -1754,7 +1755,7 @@ def read_source_expression_matrix(
     attrs for downstream builder helpers.
     """
     read_kwargs = {"sep": sep, "engine": _csv_engine(sep), "dtype": str}
-    df = pd.read_csv(Path(path), **read_kwargs)
+    df = read_csv(path, **read_kwargs)
     if df.empty:
         raise ValueError(f"source expression matrix is empty: {path}")
 

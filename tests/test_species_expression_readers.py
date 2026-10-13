@@ -1,4 +1,5 @@
 # Licensed under the Apache License, Version 2.0.
+import gzip
 import hashlib
 import json
 from dataclasses import replace
@@ -141,9 +142,10 @@ def source_fixture(tmp_path, monkeypatch):
     monkeypatch.setattr(sa, "_MANIFEST_ROOT", tmp_path / "species")
     registry.load_registry.cache_clear()
 
-    def make(adapter, text, source_id="fixture"):
-        path = tmp_path / "matrix.tsv"
-        path.write_text(text)
+    def make(adapter, text, source_id="fixture", compressed=False, override_name=None):
+        path = tmp_path / ("matrix.tsv.gz" if compressed else "matrix.tsv")
+        raw = text.encode("utf-8")
+        path.write_bytes(gzip.compress(raw) if compressed else raw)
         metadata = {
             "schema": "oncoref.expression-samples",
             "schema_version": 1,
@@ -200,8 +202,8 @@ def source_fixture(tmp_path, monkeypatch):
             "fixture",
             9615,
             "expression",
-            "matrix.tsv",
-            "https://example.org/matrix.tsv",
+            path.name,
+            f"https://example.org/{path.name}",
             sha(path),
             path.stat().st_size,
             "v1",
@@ -220,6 +222,10 @@ def source_fixture(tmp_path, monkeypatch):
             )
         )
         registry.load_registry.cache_clear()
+        if override_name:
+            link = tmp_path / override_name
+            link.symlink_to(path)
+            path = link
         return {"9615:fixture": path}
 
     yield make
@@ -227,12 +233,18 @@ def source_fixture(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize("module", [None, oncoref.bgee_srp009687, oncoref.bgee_srp181218])
-def test_bgee_native_reader_preserves_absence(source_fixture, module):
+@pytest.mark.parametrize(
+    "compressed,override_name",
+    [(False, None), (True, "override"), (True, "override.tsv"), (False, "override.tsv.gz")],
+)
+def test_bgee_native_reader_preserves_absence(source_fixture, module, compressed, override_name):
     source_id = module.__name__.rsplit(".", 1)[1].replace("_", "-") if module else "fixture"
     overrides = source_fixture(
         "bgee",
         "Experiment ID\tLibrary ID\tGene ID\tTPM\nSTUDY\ts1\tg1\t0\nSTUDY\ts2\tg1\t2\nSTUDY\ts1\tg2\t\n",
         source_id=source_id,
+        compressed=compressed,
+        override_name=override_name,
     )
     data = (
         module.read(offline=True, local_overrides=overrides)
@@ -259,13 +271,44 @@ def test_bgee_rejects_duplicate_measurements(source_fixture):
         read_species_expression("fixture", species="dog", offline=True, local_overrides=overrides)
 
 
+def test_renamed_compressed_override_is_verified_before_parsing(source_fixture, monkeypatch):
+    import oncoref.species_expression as module
+
+    overrides = source_fixture(
+        "bgee",
+        "Experiment ID\tLibrary ID\tGene ID\tTPM\nSTUDY\ts1\tg1\t0\nSTUDY\ts2\tg1\t2\n",
+        compressed=True,
+        override_name="override",
+    )
+    path = overrides["9615:fixture"]
+    damaged = bytearray(path.read_bytes())
+    damaged[-1] ^= 1
+    path.write_bytes(damaged)
+    monkeypatch.setattr(
+        module, "read_csv", lambda *a, **kw: pytest.fail("unverified override reached parser")
+    )
+    with pytest.raises(ValueError, match="fixture: corrupt"):
+        module.read_species_expression(
+            "fixture", species="dog", offline=True, local_overrides=overrides
+        )
+    assert path.read_bytes() == damaged
+
+
 @pytest.mark.parametrize("named_module", [False, True])
-def test_barkbase_keeps_unmapped_features_and_aliases(source_fixture, named_module):
+@pytest.mark.parametrize(
+    "compressed,override_name",
+    [(False, None), (True, "override"), (True, "override.tsv"), (False, "override.tsv.gz")],
+)
+def test_barkbase_keeps_unmapped_features_and_aliases(
+    source_fixture, named_module, compressed, override_name
+):
     source_id = "barkbase" if named_module else "fixture"
     overrides = source_fixture(
         "barkbase",
         "StringTieID\tEnsemblGeneID\tGeneSymbol\ts1\ts2\nMSTRG.1\t\t\t0\t\nMSTRG.2\tg1;g2\talias\t1\t2\n",
         source_id=source_id,
+        compressed=compressed,
+        override_name=override_name,
     )
     data = (
         oncoref.canine.barkbase.read(offline=True, local_overrides=overrides)
@@ -305,22 +348,28 @@ def test_registered_corrections_and_lineage_evidence():
     assert overlap["independent_donors"] is None
 
 
-def test_protein_groups_and_missing_ibaq_survive_without_allocation(tmp_path):
+@pytest.mark.parametrize(
+    "compressed,filename", [(False, "protein.tsv"), (True, "override"), (False, "override.gz")]
+)
+def test_protein_groups_and_missing_ibaq_survive_without_allocation(tmp_path, compressed, filename):
     from oncoref.species_expression import _read_pfizer_protein
 
-    file = tmp_path / "protein.tsv"
-    file.write_text(
+    file = tmp_path / filename
+    text = (
         "Run\tProtein\tChannel\tBioReplicate\tCondition\tTechRepMixture\tMixture\tsample.type\tProteinGroup\tIBAQ\n"
         "Pool1_1\tP1\t126\tpool-a\theart\t1\tPool1\tsample\tP1;P2\t0\n"
         "Pool1_1\tP1\t127\tpool-b\tliver\t1\tPool1\tsample\tP1;P2\tNA\n"
     )
+    raw = text.encode("utf-8")
+    file.write_bytes(gzip.compress(raw) if compressed else raw)
     values, features = _read_pfizer_protein(file)
     assert values.shape == (1, 2)
     assert values.isna().sum().sum() == 1
     assert values.iloc[0].dropna().tolist() == [0]
     assert features.index.tolist() == ["P1;P2"]
     assert features.Protein.tolist() == ["P1"]
-    file.write_text(file.read_text() + file.read_text().splitlines()[1] + "\n")
+    raw = (text + text.splitlines()[1] + "\n").encode("utf-8")
+    file.write_bytes(gzip.compress(raw) if compressed else raw)
     with pytest.raises(ValueError, match="silently aggregated"):
         _read_pfizer_protein(file)
 

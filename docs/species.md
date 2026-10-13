@@ -161,6 +161,10 @@ mapping of those keys to paths. `ONCOREF_ASSET_CACHE` selects the datacache root
 the default uses datacache's `oncoref` application directory, partitioned by taxon,
 group and content digest. Existing human cache locations are unchanged.
 
+Native expression readers detect compression from file contents, so renamed files
+and extensionless symlinks work without changing the pinned bytes. This also
+applies to generic source-matrix imports and bundled CSV reads (since 1.9.6).
+
 ```bash
 oncoref data metadata refseq106-gtf --species dog
 oncoref data status references --species dog --asset-overrides /path/to/overrides.json
