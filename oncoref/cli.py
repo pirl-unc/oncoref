@@ -543,7 +543,9 @@ def _cmd_expression_sources(args: argparse.Namespace) -> int:
         print(
             f"{s.id:<26} {s.source_type:<20} {(s.unit or ''):<7} {len(s.cancer_codes):<6} {codes}"
         )
-    print(f"\n{len(srcs)} sources. Registry: oncoref/data/expression_sources.yaml")
+    print(
+        f"\n{len(srcs)} sources. Registry: {expression_registry.expression_source_registry_path(species=args.species)}"
+    )
     return 0
 
 

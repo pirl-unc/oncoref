@@ -268,8 +268,8 @@ def test_barkbase_keeps_unmapped_features_and_aliases(source_fixture):
 
 def test_registered_corrections_and_lineage_evidence():
     dog = oncoref.for_species("dog")
-    assert len(dog.expression.sources(context="normal")) == 3
-    assert dog.expression.sources(context="tumor") == ()
+    assert len(dog.expression.sources(context="normal")) == 6
+    assert [s.id for s in dog.expression.sources(context="tumor")] == ["gse304066-osteosarcoma"]
     source = registry.expression_source("bgee-srp181218", species="dog")
     file = (
         registry.expression_source_registry_path(species="dog").parent
@@ -286,3 +286,66 @@ def test_registered_corrections_and_lineage_evidence():
     overlap = dog.expression.lineage_overlaps()
     assert len(overlap["shared_run_ids"]) == 46
     assert overlap["independent_donors"] is None
+
+
+def test_protein_groups_and_missing_ibaq_survive_without_allocation(tmp_path):
+    from oncoref.species_expression import _read_pfizer_protein
+
+    file = tmp_path / "protein.tsv"
+    file.write_text(
+        "Run\tProtein\tChannel\tBioReplicate\tCondition\tTechRepMixture\tMixture\tsample.type\tProteinGroup\tIBAQ\n"
+        "Pool1_1\tP1\t126\tpool-a\theart\t1\tPool1\tsample\tP1;P2\t0\n"
+        "Pool1_1\tP1\t127\tpool-b\tliver\t1\tPool1\tsample\tP1;P2\tNA\n"
+    )
+    values, features = _read_pfizer_protein(file)
+    assert values.shape == (1, 2)
+    assert values.isna().sum().sum() == 1
+    assert values.iloc[0].dropna().tolist() == [0]
+    assert features.index.tolist() == ["P1;P2"]
+    assert features.Protein.tolist() == ["P1"]
+    file.write_text(file.read_text() + file.read_text().splitlines()[1] + "\n")
+    with pytest.raises(ValueError, match="silently aggregated"):
+        _read_pfizer_protein(file)
+
+
+def test_registered_protein_scope_and_pooled_samples():
+    source = registry.expression_source("pfizer-dog-protein", species="dog")
+    assert source.expression_contract.measurement.feature_level == "protein_group"
+    assert source.unit == "iBAQ"
+    assert not source.linear_tpm_comparable
+    assert source.expression_contract.reference is None
+    assert (
+        source.expression_contract.content_provenance["searched_fasta"]
+        == sa.species_asset("pfizer-dog-search-fasta", species="dog").sha256
+    )
+    file = (
+        registry.expression_source_registry_path(species="dog").parent
+        / "pfizer-dog-protein-samples.json"
+    )
+    samples = json.loads(file.read_text())["samples"]
+    assert len(samples) == 38
+    assert all(row["pooling"] == "pooled" and row["donor_id"] is None for row in samples)
+    assert all(row["source_condition"]["presentation_evidence"] is False for row in samples)
+
+
+@pytest.mark.parametrize("name", ["doga", "pfizer-dog-rna", "gse304066-osteosarcoma"])
+def test_pending_sources_are_inspectable_but_cannot_be_read(name, monkeypatch):
+    import oncoref.species_expression as module
+
+    monkeypatch.setattr(
+        module,
+        "ensure_asset",
+        lambda *a, **kw: pytest.fail("unavailable source attempted download"),
+    )
+    source = registry.expression_source(name, species="dog")
+    assert source.acquisition_status in {"metadata_only", "blocked_provenance"}
+    assert source.expression_contract.measurement.unit is None
+    with pytest.raises(ValueError, match="unavailable"):
+        read_species_expression(name, species="dog")
+
+
+def test_reused_run_inside_one_dataset_cannot_inflate_coverage(dataset):
+    samples = dataset.samples
+    samples.at["s2", "run_ids"] = ["r1"]
+    with pytest.raises(ValueError, match="Run reused"):
+        ExpressionDataset(dataset.values, dataset.features, samples, dataset.contract)

@@ -164,3 +164,37 @@ checksummed Parquet/JSON files. New destinations are published atomically; exist
 results are not overwritten. The artifact identity changes with its metadata or
 file contents. `scripts/build_canine_source_manifests.py` replays the intake from
 an acquired source snapshot; no downstream package is imported at runtime.
+
+## Canine protein abundance and explicit gaps (1.9.3)
+
+`dog.expression.read("pfizer-dog-protein", ...)` imports the deposited **IBAQ**
+column from MassIVE MSV000099744. It retains ProteinGroup and representative
+Protein identifiers, source run/channel/sample fields, and missing measurements.
+The real table contains 9,929 reported groups across 38 tissue pools. This is bulk
+protein-group evidence; resolving those groups to complete sequences or genes
+requires additional evidence. It does not establish MHC presentation.
+
+The [source methods](https://doi.org/10.1038/s41597-026-07512-9) describe tissue
+pooling and weighted iBAQ allocation across TMT channels. Every imported canine
+sample is marked `pooled`, with unresolved individual donors; summaries therefore
+cannot report independent donor detection. The exact deposited searched FASTA is
+available as `dog.references.ensure("pfizer-dog-search-fasta", ...)` and its SHA-256
+is also carried in the protein source contract. It is not assigned a guessed
+assembly/annotation identity. Protein data and searched sequence bytes stay outside
+the wheel and can be reused from local overrides.
+
+The expression source catalog also exposes these explicit gaps:
+
+| Source | Scope/status | Missing requirement |
+| --- | --- | --- |
+| `doga` | normal, metadata only | Complete quantitative gene/promoter matrix and its feature semantics |
+| `pfizer-dog-rna` | normal, metadata only | Canine RNA matrices and sample/feature/reference reconciliation |
+| `gse304066-osteosarcoma` | tumor, blocked provenance | Resolve raw-count versus FPKM descriptions and exact annotation |
+
+Their pinned metadata/supplement files remain inspectable/fetchable, while native
+matrix reads fail with the recorded reason before attempting any download. Native
+units remain unknown for these registrations; no TPM normalization is fabricated.
+The Pfizer publication specifies Ensembl v110/Salmon, but its exact quantification
+assets still need verification. DoGA's ERCC-normalized gene/promoter signals must
+remain distinct from transcript TPM. The osteosarcoma pseudo-TPM scenarios remain
+sensitivity analyses, outside admitted normalized expression cohorts.

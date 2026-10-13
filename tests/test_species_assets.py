@@ -33,7 +33,7 @@ def test_real_reference_manifests_are_distinct_and_complete():
     a, b = [ReferenceIdentity.from_dict(r["identity"]) for r in rows]
     assert a.reference_id != b.reference_id
     assert {a.assembly_accession, b.assembly_accession} == {"GCF_011100685.1", "GCA_000002285.2"}
-    assert len(sa.species_assets("dog", group="references")) == 8
+    assert len(sa.species_assets("dog", group="references")) == 9
     assert sa.species_assets("mouse") == ()
     for row in rows:
         identity = ReferenceIdentity.from_dict(row["identity"])

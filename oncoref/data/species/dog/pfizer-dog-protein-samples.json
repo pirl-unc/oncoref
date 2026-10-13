@@ -1,0 +1,1718 @@
+{
+  "samples": [
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:042357dbd48da65f98474732bdc70a66111b4112ff9b295da88f386d3c9d542f",
+      "original_tissue": "GI_Colon",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:042357dbd48da65f98474732bdc70a66111b4112ff9b295da88f386d3c9d542f",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137288",
+        "Channel": "128_C",
+        "Condition": "GI_Colon",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "GI_Colon",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "GI_Colon",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:0a791868684e847cc4c9fdfc3b1867d4b9f58e0633a1f1468386e5c7a625cc6e",
+      "original_tissue": "Cerebral_Cortex",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:0a791868684e847cc4c9fdfc3b1867d4b9f58e0633a1f1468386e5c7a625cc6e",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137282",
+        "Channel": "129_C",
+        "Condition": "Cerebral_Cortex",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Cerebral_Cortex",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Cerebral_Cortex",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:1f4d43355ddf82c88db61fdc3dd313786e2c247e5526191285f39f1825f9750b",
+      "original_tissue": "Parathyroid",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:1f4d43355ddf82c88db61fdc3dd313786e2c247e5526191285f39f1825f9750b",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137300",
+        "Channel": "127_N",
+        "Condition": "Parathyroid",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Parathyroid",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Parathyroid",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:2a87c940e4c5d88984be68ff88f4c58ea5f9816283d0578c4b8c73687e4696c9",
+      "original_tissue": "Tonsil",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:2a87c940e4c5d88984be68ff88f4c58ea5f9816283d0578c4b8c73687e4696c9",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137408",
+        "Channel": "129_N",
+        "Condition": "Tonsil",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Tonsil",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Tonsil",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:2e96abce4ff87061dacd8318cc066a27b49e1f2fae5ad23be52c5b3d8e53e282",
+      "original_tissue": "Heart",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:2e96abce4ff87061dacd8318cc066a27b49e1f2fae5ad23be52c5b3d8e53e282",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137293",
+        "Channel": "130_C",
+        "Condition": "Heart",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Heart",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Heart",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:30136844d43c0136d9fe02faca911b7e47cbad05d7a81726589e52402310d2ab",
+      "original_tissue": "Liver",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:30136844d43c0136d9fe02faca911b7e47cbad05d7a81726589e52402310d2ab",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137295",
+        "Channel": "130_C",
+        "Condition": "Liver",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Liver",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Liver",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:31e0b5800db46c320018d3254b690a5b2b23d44e70db5f0839d216cfdb7c15de",
+      "original_tissue": "Kidney",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:31e0b5800db46c320018d3254b690a5b2b23d44e70db5f0839d216cfdb7c15de",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137294",
+        "Channel": "128_N",
+        "Condition": "Kidney",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Kidney",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Kidney",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:38fe9bebb8b3afadc8998be2a5812c0425e049c10f879805913f182eaa3bf533",
+      "original_tissue": "Skeletal_Muscle",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:38fe9bebb8b3afadc8998be2a5812c0425e049c10f879805913f182eaa3bf533",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137401",
+        "Channel": "130_C",
+        "Condition": "Skeletal_Muscle",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Skeletal_Muscle",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Skeletal_Muscle",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:3eb0f68ea19eb76e6d4de1ca6f155dd2ae660487b11e0dd12e3d22af18f3fcb5",
+      "original_tissue": "Breast/Mammary",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:3eb0f68ea19eb76e6d4de1ca6f155dd2ae660487b11e0dd12e3d22af18f3fcb5",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137276",
+        "Channel": "129_C",
+        "Condition": "Breast/Mammary",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Breast/Mammary",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Breast/Mammary",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:46b8ca810709983b8aa5e817459191115752c41e664e469f55b6e6153f93ae2b",
+      "original_tissue": "Pituitary",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:46b8ca810709983b8aa5e817459191115752c41e664e469f55b6e6153f93ae2b",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137303",
+        "Channel": "127_N",
+        "Condition": "Pituitary",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Pituitary",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Pituitary",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:49252c1a2f1b8ca8355f72b789c9ccaa9d70abe48bbbc1011b333c0f8b9e12ab",
+      "original_tissue": "Uterus_Cervix",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:49252c1a2f1b8ca8355f72b789c9ccaa9d70abe48bbbc1011b333c0f8b9e12ab",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137410",
+        "Channel": "131_N",
+        "Condition": "Uterus_Cervix",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Uterus_Cervix",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Uterus_Cervix",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:586cbf7fd1c96f3b44a7e6c3870df01893e7fe39cd55f3838b5899372b381022",
+      "original_tissue": "Lung",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:586cbf7fd1c96f3b44a7e6c3870df01893e7fe39cd55f3838b5899372b381022",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137296",
+        "Channel": "126",
+        "Condition": "Lung",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Lung",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Lung",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:5f98049c07215103797cb14b3b7035683c42f0347593a0c4768627dbb331fbc0",
+      "original_tissue": "Prostate",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:5f98049c07215103797cb14b3b7035683c42f0347593a0c4768627dbb331fbc0",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137400",
+        "Channel": "127_C",
+        "Condition": "Prostate",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Prostate",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Prostate",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:629654c50e724c3d6a3b93585bbfc5c06c1bc1655944242674c091a05c865bd7",
+      "original_tissue": "Peripheral_Nerve",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:629654c50e724c3d6a3b93585bbfc5c06c1bc1655944242674c091a05c865bd7",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137302",
+        "Channel": "130_N",
+        "Condition": "Peripheral_Nerve",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Peripheral_Nerve",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Peripheral_Nerve",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:68c8a8300b429832e5510dbe62fd7fd1b21f37a63546f4f22261c087fae0bc4e",
+      "original_tissue": "Thymus",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:68c8a8300b429832e5510dbe62fd7fd1b21f37a63546f4f22261c087fae0bc4e",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137406",
+        "Channel": "129_C",
+        "Condition": "Thymus",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Thymus",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Thymus",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:71685b61a7ea6f36c8839096e5b7c433f36eaace35009ebef3e57c3244a172bd",
+      "original_tissue": "Ureter",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:71685b61a7ea6f36c8839096e5b7c433f36eaace35009ebef3e57c3244a172bd",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137409",
+        "Channel": "127_C",
+        "Condition": "Ureter",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Ureter",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Ureter",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:7f30b66b1370a5582b8eb36789e66947b2ced3df7e13227bcba61574a8bb3b9e",
+      "original_tissue": "GI_Stomach",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:7f30b66b1370a5582b8eb36789e66947b2ced3df7e13227bcba61574a8bb3b9e",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137292",
+        "Channel": "128_N",
+        "Condition": "GI_Stomach",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "GI_Stomach",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "GI_Stomach",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:884a26fba321dc86dcb67c446fb686dfa6c1bef1883c0ca8fcebbbe234516524",
+      "original_tissue": "Ovary",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:884a26fba321dc86dcb67c446fb686dfa6c1bef1883c0ca8fcebbbe234516524",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137298",
+        "Channel": "127_N",
+        "Condition": "Ovary",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Ovary",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Ovary",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:897927297bb4a7234bbbe5f4b06bd5b7db6b47439ffe19ebd199d2132f4a48c0",
+      "original_tissue": "Lymph_Node",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:897927297bb4a7234bbbe5f4b06bd5b7db6b47439ffe19ebd199d2132f4a48c0",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137297",
+        "Channel": "129_N",
+        "Condition": "Lymph_Node",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Lymph_Node",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Lymph_Node",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:8dca05306489ad995e1d18cd8d778b9b3bee71a91f1200363638aa241ae7c861",
+      "original_tissue": "Spinal_Cord",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:8dca05306489ad995e1d18cd8d778b9b3bee71a91f1200363638aa241ae7c861",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137403",
+        "Channel": "129_C",
+        "Condition": "Spinal_Cord",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Spinal_Cord",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Spinal_Cord",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:99e924efaf669a9071c9c143c0f624966531f70cf68699cabc212708d9d57156",
+      "original_tissue": "GI_Jejunum",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:99e924efaf669a9071c9c143c0f624966531f70cf68699cabc212708d9d57156",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137291",
+        "Channel": "128_C",
+        "Condition": "GI_Jejunum",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "GI_Jejunum",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "GI_Jejunum",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:a3de993b90d2164c618c7e7c3746fe18ccbebfd084b83afca6933d443d493400",
+      "original_tissue": "GI_Duodenum",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:a3de993b90d2164c618c7e7c3746fe18ccbebfd084b83afca6933d443d493400",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137289",
+        "Channel": "128_C",
+        "Condition": "GI_Duodenum",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "GI_Duodenum",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "GI_Duodenum",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:ac8fbc30ae4e9b588eb22207318bce4c1314f5195c023d311c0c0593f58d6d03",
+      "original_tissue": "Cerebellum",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:ac8fbc30ae4e9b588eb22207318bce4c1314f5195c023d311c0c0593f58d6d03",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137281",
+        "Channel": "130_N",
+        "Condition": "Cerebellum",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Cerebellum",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Cerebellum",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:ae0ba156fef0aa421109bb00d64d70ac3bb9d50c4430d7285909fb7ecf28ac7c",
+      "original_tissue": "Fallopian_Tube",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:ae0ba156fef0aa421109bb00d64d70ac3bb9d50c4430d7285909fb7ecf28ac7c",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137287",
+        "Channel": "126",
+        "Condition": "Fallopian_Tube",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Fallopian_Tube",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Fallopian_Tube",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:b9c04f383755ffe4f13b0c2a55b5cffd4457755415d269042f0fa0501628c5a6",
+      "original_tissue": "Spleen",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:b9c04f383755ffe4f13b0c2a55b5cffd4457755415d269042f0fa0501628c5a6",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137404",
+        "Channel": "129_N",
+        "Condition": "Spleen",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Spleen",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Spleen",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:c79d583125531fcf20faa755682e8277859283954542f022e7aa67e9b2e88417",
+      "original_tissue": "Thyroid",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:c79d583125531fcf20faa755682e8277859283954542f022e7aa67e9b2e88417",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137407",
+        "Channel": "127_C",
+        "Condition": "Thyroid",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Thyroid",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Thyroid",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:cb1a054b617ef88c0f8967dc073d6f4d033bfbbd6bf93ca68487b04aa627288a",
+      "original_tissue": "Testis",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:cb1a054b617ef88c0f8967dc073d6f4d033bfbbd6bf93ca68487b04aa627288a",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137405",
+        "Channel": "130_N",
+        "Condition": "Testis",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Testis",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Testis",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:cb6989226b2b04220070f62ee9c1a619de4014da181299d9dc6b06c542e8a166",
+      "original_tissue": "Bladder",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:cb6989226b2b04220070f62ee9c1a619de4014da181299d9dc6b06c542e8a166",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137274",
+        "Channel": "126",
+        "Condition": "Bladder",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Bladder",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Bladder",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:cd8c5f779462a8eca39b9f594731053f6a0bb58b9c47f0a676c3bf96eb3beddd",
+      "original_tissue": "GI_Ileum",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:cd8c5f779462a8eca39b9f594731053f6a0bb58b9c47f0a676c3bf96eb3beddd",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137290",
+        "Channel": "128_N",
+        "Condition": "GI_Ileum",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "GI_Ileum",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "GI_Ileum",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:ced98440cb078bb5b674121d28c1aa801ca311b345d4c467887d36b89079e2fe",
+      "original_tissue": "Adrenal",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:ced98440cb078bb5b674121d28c1aa801ca311b345d4c467887d36b89079e2fe",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137273",
+        "Channel": "126",
+        "Condition": "Adrenal",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Adrenal",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Adrenal",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:cf423d27a694e6aa009af02fb639de22e36d25d0cbef66ad956f988de5bef70c",
+      "original_tissue": "Skin",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:cf423d27a694e6aa009af02fb639de22e36d25d0cbef66ad956f988de5bef70c",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137402",
+        "Channel": "128_N",
+        "Condition": "Skin",
+        "Mixture": "Pool4",
+        "Run": "Pool4_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Skin",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Skin",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:d2664951c475e087cce6fa71ae31a44dc4dfa975339ad137e63b5fb4c2b248a8",
+      "original_tissue": "Bone_Marrow",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:d2664951c475e087cce6fa71ae31a44dc4dfa975339ad137e63b5fb4c2b248a8",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137275",
+        "Channel": "128_C",
+        "Condition": "Bone_Marrow",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Bone_Marrow",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Bone_Marrow",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:d662e82faa0abb93f92ab376cb7d77f5f05f654ba4be6dc5190e06fae2d044e9",
+      "original_tissue": "Uterus_Endometrium",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:d662e82faa0abb93f92ab376cb7d77f5f05f654ba4be6dc5190e06fae2d044e9",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137411",
+        "Channel": "127_C",
+        "Condition": "Uterus_Endometrium",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Uterus_Endometrium",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Uterus_Endometrium",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:d98ef19c1793296d824fa1d604167fe3fa0aa115085d60312dcbea9f2debe002",
+      "original_tissue": "Endothelium",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:d98ef19c1793296d824fa1d604167fe3fa0aa115085d60312dcbea9f2debe002",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137285",
+        "Channel": "131_N",
+        "Condition": "Endothelium",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Endothelium",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Endothelium",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:d9c01b9a8f4b8abf214844596069f4b096172de1d58acd997461e943f7847b02",
+      "original_tissue": "Parotid_Gland",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:d9c01b9a8f4b8abf214844596069f4b096172de1d58acd997461e943f7847b02",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137301",
+        "Channel": "130_C",
+        "Condition": "Parotid_Gland",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Parotid_Gland",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Parotid_Gland",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:d9dbecf47ee358a976d0fcd15bb744d20478c2ce6704ea0f5ad8a164c0fb77ba",
+      "original_tissue": "Eye",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:d9dbecf47ee358a976d0fcd15bb744d20478c2ce6704ea0f5ad8a164c0fb77ba",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137286",
+        "Channel": "130_N",
+        "Condition": "Eye",
+        "Mixture": "Pool3",
+        "Run": "Pool3_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Eye",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Eye",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:ed06fd79c472066b9ac1a77aa1e61187c0cea4c364f89c0feced6adb13a66dc2",
+      "original_tissue": "Pancreas",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:ed06fd79c472066b9ac1a77aa1e61187c0cea4c364f89c0feced6adb13a66dc2",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137299",
+        "Channel": "127_N",
+        "Condition": "Pancreas",
+        "Mixture": "Pool2",
+        "Run": "Pool2_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "Pancreas",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "Pancreas",
+      "tissue_correction": null,
+      "treatment": null
+    },
+    {
+      "age": null,
+      "biosample_id": null,
+      "donor_id": null,
+      "donor_scope": "MSV000099744",
+      "evidence": [
+        {
+          "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+          "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt"
+        },
+        {
+          "section": "Methods: Animal handling and sample collection; Protein precipitation and digestion",
+          "url": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      ],
+      "health": null,
+      "library_id": "openvax:protein-sample:v1:sha256:f15814b3ffe5af527acb4f04dab836295d5651f38289aac41c05e83e3f858582",
+      "original_tissue": "White_Blood_Cells",
+      "pooling": "pooled",
+      "run_ids": [],
+      "sample_id": "openvax:protein-sample:v1:sha256:f15814b3ffe5af527acb4f04dab836295d5651f38289aac41c05e83e3f858582",
+      "sex": null,
+      "source_attributes": {
+        "BioReplicate": "RBI-0000137412",
+        "Channel": "129_N",
+        "Condition": "White_Blood_Cells",
+        "Mixture": "Pool1",
+        "Run": "Pool1_1",
+        "TechRepMixture": "1",
+        "sample.type": "sample"
+      },
+      "source_condition": {
+        "assay": "bulk tissue proteomics",
+        "independent_donors": "unresolved; pooled by tissue",
+        "presentation_evidence": false
+      },
+      "source_donor_label": null,
+      "source_tissue": "White_Blood_Cells",
+      "stage": null,
+      "study": "MSV000099744",
+      "taxon_id": 9615,
+      "tissue": "White_Blood_Cells",
+      "tissue_correction": null,
+      "treatment": null
+    }
+  ],
+  "schema": "oncoref.expression-samples",
+  "schema_version": 1,
+  "source_id": "pfizer-dog-protein",
+  "taxon_id": 9615
+}

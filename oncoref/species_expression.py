@@ -81,11 +81,17 @@ class ExpressionDataset:
             raise ValueError("Matrix sample taxon mismatch")
         if not samples.pooling.isin(["single", "pooled", "unknown"]).all():
             raise ValueError("Explicit single/pooled/unknown sample pooling required")
+        seen_runs = set()
         for runs in samples.run_ids:
             if not isinstance(runs, list) or any(
                 not isinstance(run, str) or not run for run in runs
             ):
                 raise ValueError("run_ids must be explicit lists (empty means unresolved)")
+            if len(set(runs)) != len(runs) or seen_runs.intersection(runs):
+                raise ValueError(
+                    "Run reused across source libraries; reconcile lineage before summarizing"
+                )
+            seen_runs.update(runs)
 
     @property
     def contract(self):
@@ -216,6 +222,50 @@ class ExpressionDataset:
         )
 
 
+PROTEIN_SAMPLE_COLUMNS = (
+    "Run",
+    "Channel",
+    "BioReplicate",
+    "Condition",
+    "TechRepMixture",
+    "Mixture",
+    "sample.type",
+)
+
+
+def protein_sample_id(record):
+    return _identity("protein-sample", 1, {key: record[key] for key in PROTEIN_SAMPLE_COLUMNS})
+
+
+def _read_pfizer_protein(path):
+    frame = pd.read_csv(path, sep="\t", dtype=str, keep_default_na=False)
+    required = {*PROTEIN_SAMPLE_COLUMNS, "ProteinGroup", "Protein", "IBAQ"}
+    if not required <= set(frame) or set(frame["sample.type"]) != {"sample"}:
+        raise ValueError("Unexpected Pfizer protein table columns or sample roles")
+    sample_rows = frame[list(PROTEIN_SAMPLE_COLUMNS)].drop_duplicates()
+    sample_keys = {
+        tuple(row[key] for key in PROTEIN_SAMPLE_COLUMNS): protein_sample_id(row)
+        for row in sample_rows.to_dict("records")
+    }
+    frame["sample_id"] = [
+        sample_keys[tuple(row)]
+        for row in frame[list(PROTEIN_SAMPLE_COLUMNS)].itertuples(index=False, name=None)
+    ]
+    if frame.duplicated(["ProteinGroup", "sample_id"]).any():
+        raise ValueError(
+            "Duplicate protein-group/sample measurements cannot be silently aggregated"
+        )
+    features = frame[["ProteinGroup", "Protein"]].drop_duplicates().set_index("ProteinGroup")
+    if not features.index.is_unique:
+        raise ValueError(
+            "Conflicting protein-group representative metadata; raw evidence requires reconciliation"
+        )
+    features.insert(0, "source_feature_id", features.index)
+    frame["IBAQ"] = _numbers(frame[["IBAQ"]])["IBAQ"]
+    values = frame.pivot(index="ProteinGroup", columns="sample_id", values="IBAQ")
+    return values, features.loc[values.index]
+
+
 def read_species_expression(
     source_id,
     *,
@@ -236,9 +286,22 @@ def read_species_expression(
         if row["id"] == source_id
     )
     adapter = entry.get("adapter")
-    if adapter not in {"bgee", "barkbase"}:
-        raise ValueError(f"No native reader registered for {selected.name}/{source_id}")
+    if adapter not in {"bgee", "barkbase", "pfizer-protein"}:
+        raise ValueError(
+            f"{selected.name}/{source_id} is unavailable ({source.acquisition_status or 'reader_not_registered'}): {source.notes or 'no native reader registered'}"
+        )
     contract = source.expression_contract
+    expected = {
+        "bgee": ("gene", "TPM"),
+        "barkbase": ("gene", "TMM-CPM"),
+        "pfizer-protein": ("protein_group", "iBAQ"),
+    }[adapter]
+    if (
+        (contract.measurement.feature_level, contract.measurement.unit) != expected
+        or contract.measurement.scale != "linear"
+        or contract.measurement.is_proxy is not False
+    ):
+        raise ValueError("Native reader and declared measurement semantics disagree")
     asset = species_asset(entry["matrix_asset"], species=selected)
     if asset.sha256 != contract.content_provenance["matrix"]:
         raise ValueError("Matrix asset and expression contract disagree")
@@ -283,6 +346,8 @@ def read_species_expression(
         frame["TPM"] = _numbers(frame[["TPM"]])["TPM"]
         values = frame.pivot(index="Gene ID", columns="Library ID", values="TPM")
         features = pd.DataFrame({"source_feature_id": values.index}, index=values.index)
+    elif adapter == "pfizer-protein":
+        values, features = _read_pfizer_protein(path)
     else:
         frame = pd.read_csv(path, sep="\t", dtype=str, keep_default_na=False)
         required = {"StringTieID", "EnsemblGeneID", "GeneSymbol"}
