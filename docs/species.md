@@ -65,6 +65,25 @@ oncoref data list --species dog --group expression
 oncoref expression-sources --species dog --context normal
 ```
 
+Both listings default to human when `--species` is omitted; `canine` and `dog`
+select the same species. The table output identifies the species, groups related
+datasets/sources and wraps to the terminal width. Narrow terminals use labeled
+records where a table would not fit. Source cancer-code lists are never truncated.
+Pending expression imports show their acquisition status and read limitation;
+an empty selection returns a successful, explicit empty result.
+
+```bash
+oncoref data list --species canine --json
+oncoref expression-sources --species canine --json
+```
+
+`--json` returns full inventory/source records, including measurement contracts for
+expression sources. Listing checks local presence only, without downloading or
+verifying bytes. Use `data status --species canine` for hash verification.
+Canine listings honor `--cache-root` and `--asset-overrides` as well as their
+environment-variable equivalents. Human per-sample matrix availability is shown
+as a local/registered cohort count.
+
 The existing flat APIs, cache paths and data bundle retain their historical human
 behavior. Their default is not a claim of species independence. The new species
 collections never substitute HPA, human cancer facts or human CTA membership for

@@ -249,7 +249,7 @@ def ensure_reference(
     return ReferenceIdentity.from_dict(row["identity"]), paths
 
 
-def asset_inventory(species, *, group=None):
+def asset_inventory(species, *, group=None, cache_root=None, local_overrides=None):
     selected = resolve_species(species)
     return [
         {
@@ -257,7 +257,9 @@ def asset_inventory(species, *, group=None):
             "held": "asset",
             "category": asset.group,
             "group": asset.group,
-            "available": asset_path(asset).is_file(),
+            "available": asset_path(
+                asset, cache_root=cache_root, local_overrides=local_overrides
+            ).is_file(),
             "integrity": "not_checked",
             "cohorts": None,
             "description": asset.description,

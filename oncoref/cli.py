@@ -20,7 +20,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
+import textwrap
 
 from . import (
     apd1,
@@ -45,6 +47,118 @@ def _fmt_bytes(n: int) -> str:
             return f"{size:.0f} {unit}" if unit == "B" else f"{size:.1f} {unit}"
         size /= 1024
     return f"{size:.1f} TB"
+
+
+def _listing_width():
+    return max(20, min(120, shutil.get_terminal_size(fallback=(100, 24)).columns))
+
+
+def _listing_text(value, *, indent=""):
+    print(
+        textwrap.fill(
+            str(value), width=_listing_width(), initial_indent=indent, subsequent_indent=indent
+        )
+    )
+
+
+def _listing_table(headers, records):
+    """Wrap details; use labeled records when the table would exceed the terminal."""
+    widths = [
+        max(len(header), *(len(cells[i]) for cells, _ in records))
+        for i, header in enumerate(headers)
+    ]
+    table_fits = sum(widths) + 2 * (len(headers) - 1) <= _listing_width()
+    if table_fits:
+        print("  ".join(header.ljust(width) for header, width in zip(headers, widths)).rstrip())
+        print("  ".join("-" * width for width in widths))
+    for cells, details in records:
+        if table_fits:
+            print("  ".join(cell.ljust(width) for cell, width in zip(cells, widths)).rstrip())
+        else:
+            _listing_text(cells[0])
+            _listing_text(
+                " | ".join(f"{header}: {cell}" for header, cell in zip(headers[1:], cells[1:])),
+                indent="  ",
+            )
+        for detail in details:
+            _listing_text(detail, indent="  ")
+
+
+def _listing_title(species, title):
+    name = "Canine" if species.taxon_id == 9615 else species.name.title()
+    _listing_text(f"{name} {title}")
+    _listing_text(f"{species.scientific_name} | NCBI taxon {species.taxon_id}")
+
+
+def _species_asset_options(args):
+    from pathlib import Path
+
+    overrides = json.loads(Path(args.asset_overrides).read_text()) if args.asset_overrides else None
+    if overrides is not None and not isinstance(overrides, dict):
+        raise ValueError("Asset overrides must be a JSON object mapping taxon:asset IDs to paths")
+    return {"cache_root": args.cache_root, "local_overrides": overrides}
+
+
+def _cmd_data_list(args, selected):
+    from . import catalog, source_matrices
+    from .species import DATA_GROUPS
+
+    if args.group is not None and args.group not in DATA_GROUPS:
+        raise ValueError(f"Unknown data group {args.group!r}")
+    if selected.taxon_id != 9606 and (args.cache_root or args.asset_overrides):
+        from . import species_assets as assets
+
+        rows = assets.asset_inventory(selected, group=args.group, **_species_asset_options(args))
+    else:
+        rows = catalog.inventory(species=selected, group=args.group)
+    if args.name and args.name != "all":
+        rows = [r for r in rows if args.name in (r["held"], r["category"], r["name"])]
+        if not rows:
+            print(f"Error: unknown data list filter {args.name!r}", file=sys.stderr)
+            return 1
+    if args.json:
+        print(json.dumps(rows, indent=2))
+        return 0
+    _listing_title(selected, "data")
+    _listing_text(
+        f"{len(rows)} datasets | {sum(r['held'] == 'wheel' for r in rows)} included in the package"
+    )
+    if not rows:
+        _listing_text("No datasets registered for this selection.")
+        return 0
+    for group in DATA_GROUPS:
+        entries = sorted((r for r in rows if r["group"] == group), key=lambda r: r["name"])
+        if not entries:
+            continue
+        print()
+        _listing_text(f"{group.title()} ({len(entries)})")
+        records = []
+        for row in entries:
+            local = (
+                "bundled"
+                if row["held"] == "wheel"
+                else "present"
+                if row["available"]
+                else "missing"
+            )
+            details = [row["description"]]
+            if row["held"] == "source":
+                cohorts = source_matrices.available_cohorts()
+                count = sum(source_matrices.is_cached(code) for code in cohorts)
+                local = f"{count}/{len(cohorts)}"
+                details.append(f"{count} of {len(cohorts)} cohort matrices present locally.")
+            elif row["cohorts"] is not None:
+                details.append(f"{row['cohorts']} cohort files present locally.")
+            if row.get("size_bytes") is not None:
+                details.append(f"Asset size: {_fmt_bytes(row['size_bytes'])}")
+            records.append(((row["name"], row["held"], local), details))
+        _listing_table(("Dataset", "Storage", "Local"), records)
+    print()
+    _listing_text(
+        "Local reports file presence, not checksum verification or complete biological coverage."
+    )
+    _listing_text("Use --json for the full inventory records.")
+    return 0
 
 
 def _cmd_version(args: argparse.Namespace) -> int:
@@ -80,12 +194,9 @@ def _cmd_species(args):
 
 
 def _cmd_species_data(args):
-    from pathlib import Path
-
     from . import species_assets as assets
 
-    overrides = json.loads(Path(args.asset_overrides).read_text()) if args.asset_overrides else None
-    options = {"cache_root": args.cache_root, "local_overrides": overrides}
+    options = _species_asset_options(args)
     target = args.name or "all"
     if args.action == "dir":
         print(assets.asset_cache_dir(cache_root=args.cache_root))
@@ -139,6 +250,8 @@ def _cmd_data(args: argparse.Namespace) -> int:
     from .species import resolve_species
 
     selected = resolve_species(args.species)
+    if args.json and args.action != "list":
+        raise ValueError("--json is supported for data list")
     if args.action != "list" and selected.taxon_id != 9606:
         return _cmd_species_data(args)
     if selected.taxon_id == 9606 and (args.offline or args.asset_overrides or args.cache_root):
@@ -146,30 +259,7 @@ def _cmd_data(args: argparse.Namespace) -> int:
             "Species asset options require a registered species asset; legacy human data uses its existing cache API"
         )
     if args.action == "list":
-        # The full inventory: every oncoref-domain dataset and how it's held.
-        # `Cohorts` is the per-cohort file count held *inside* a directory dataset.
-        print(
-            f"{'Dataset':<46} {'Held':<8} {'Avail':<6} {'Cohorts':>8} {'Category':<14} Description"
-        )
-        print("-" * 120)
-        rows = catalog.inventory(species=args.species, group=args.group)
-        if args.name and args.name != "all":
-            rows = [
-                r
-                for r in rows
-                if r["held"] == args.name or r["category"] == args.name or r["name"] == args.name
-            ]
-            if not rows:
-                print(f"Error: unknown data list filter {args.name!r}", file=sys.stderr)
-                return 1
-        for r in rows:
-            avail = "yes" if r["available"] else "-"
-            cohorts = str(r["cohorts"]) if r["cohorts"] is not None else "-"
-            print(
-                f"{r['name']:<46} {r['held']:<8} {avail:<6} {cohorts:>8} "
-                f"{r['category']:<14} {r['description']}"
-            )
-        return 0
+        return _cmd_data_list(args, selected)
 
     if args.action == "status":
         try:
@@ -527,25 +617,50 @@ def _cmd_plot(args: argparse.Namespace) -> int:
 
 
 def _cmd_expression_sources(args: argparse.Namespace) -> int:
-    srcs = expression_registry.expression_sources(species=args.species, context=args.context)
+    from .species import resolve_species
+
+    selected = resolve_species(args.species)
+    srcs = expression_registry.expression_sources(species=selected, context=args.context)
     if args.code:
         srcs = [s for s in srcs if args.code in s.cancer_codes]
     if args.type:
         srcs = [s for s in srcs if s.source_type == args.type]
-    if not srcs:
-        print("No matching expression sources.", file=sys.stderr)
-        return 1
-    print(f"{'Source':<26} {'Type':<20} {'Unit':<7} {'Codes':<6} Cancer codes")
-    print("-" * 100)
-    for s in sorted(srcs, key=lambda x: (x.source_type, x.id)):
-        codes = ";".join(s.cancer_codes)
-        codes = codes if len(codes) <= 40 else codes[:37] + "..."
+    srcs = sorted(srcs, key=lambda s: (s.context, s.source_type, s.id))
+    if args.json:
         print(
-            f"{s.id:<26} {s.source_type:<20} {(s.unit or ''):<7} {len(s.cancer_codes):<6} {codes}"
+            json.dumps(
+                [{**vars(s), "contract": s.expression_contract.as_dict()} for s in srcs], indent=2
+            )
         )
-    print(
-        f"\n{len(srcs)} sources. Registry: {expression_registry.expression_source_registry_path(species=args.species)}"
-    )
+        return 0
+    _listing_title(selected, "expression sources")
+    _listing_text(f"{len(srcs)} sources")
+    if not srcs:
+        _listing_text("No matching expression sources.")
+        return 0
+    for context, kind in sorted({(s.context, s.source_type) for s in srcs}):
+        entries = [s for s in srcs if (s.context, s.source_type) == (context, kind)]
+        print()
+        _listing_text(f"{context.replace('_', ' ').title()} / {kind} ({len(entries)})")
+        records = []
+        for source in entries:
+            details = []
+            if source.cancer_codes:
+                details.append(
+                    f"Cancer codes ({len(source.cancer_codes)}): {', '.join(source.cancer_codes)}"
+                )
+            if source.acquisition_status:
+                details.append(f"Status: {source.acquisition_status.replace('_', ' ')}")
+            if (
+                source.acquisition_status in {"metadata_only", "blocked_provenance"}
+                and source.notes
+            ):
+                details.append(f"Read unavailable: {source.notes}")
+            records.append(((source.id, source.unit or "unknown"), details))
+        _listing_table(("Source", "Native unit"), records)
+    print()
+    _listing_text("Units are source-native; unknown units remain unresolved.")
+    _listing_text("Use --json for complete source metadata and measurement contracts.")
     return 0
 
 
@@ -813,7 +928,14 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="For 'data prune', also delete the current bundle cache",
     )
-    p_data.add_argument("--species", default="human", help="Species name or NCBI taxonomy ID")
+    p_data.add_argument(
+        "--species",
+        default="human",
+        help="Species name or NCBI taxonomy ID (default: human; dog/canine are aliases)",
+    )
+    p_data.add_argument(
+        "--json", action="store_true", help="Print full inventory records as JSON (data list only)"
+    )
     p_data.add_argument("--group", default=None, help="Conceptual data group for list")
     p_data.add_argument(
         "--offline", action="store_true", help="Verify species assets without network"
@@ -840,7 +962,14 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_exprsrc.add_argument("--code", default=None, help="Only sources feeding this cancer code")
     p_exprsrc.add_argument("--type", default=None, help="Only this source_type (e.g. gdc, geo)")
-    p_exprsrc.add_argument("--species", default="human")
+    p_exprsrc.add_argument(
+        "--species",
+        default="human",
+        help="Species name or NCBI taxonomy ID (default: human; dog/canine are aliases)",
+    )
+    p_exprsrc.add_argument(
+        "--json", action="store_true", help="Print complete source records and contracts as JSON"
+    )
     p_exprsrc.add_argument("--context", choices=sorted(expression_registry.EXPRESSION_CONTEXTS))
     p_exprsrc.set_defaults(func=_cmd_expression_sources)
 
