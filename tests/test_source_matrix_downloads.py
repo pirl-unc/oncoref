@@ -4,7 +4,7 @@
 import io
 import multiprocessing
 from concurrent.futures import ThreadPoolExecutor
-from http.client import IncompleteRead
+from http.client import HTTPResponse, IncompleteRead
 from pathlib import Path
 from threading import Barrier, local
 from unittest.mock import patch
@@ -18,6 +18,59 @@ from oncoref import source_matrices as sm
 @pytest.fixture
 def matrix_bytes():
     return pd.DataFrame({"sample": [1.0, 2.0]}, index=["gene1", "gene2"]).to_parquet()
+
+
+def _http_response(headers, payload):
+    class Socket:
+        def makefile(self, *args):
+            return io.BytesIO(b"HTTP/1.1 200 OK\r\n" + headers + b"\r\n\r\n" + payload)
+
+    response = HTTPResponse(Socket())
+    response.begin()
+    return response
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_premature_http_eof_never_publishes_partial_matrix(monkeypatch, destination, existing):
+    if existing:
+        destination.write_bytes(b"previous matrix")
+    response = _http_response(b"Content-Length: 100", b"PAR1truncated")
+    monkeypatch.setattr(sm.urllib.request, "urlopen", lambda url: response)
+    # HTTPResponse.read(size) silently returns early at EOF, unlike read().
+    with pytest.raises(sm.SourceMatrixError, match=r"expected 100 bytes.*received 13"):
+        sm.fetch("TEST", force=existing)
+    assert not list(destination.parent.glob("*.part"))
+    if existing:
+        assert destination.read_bytes() == b"previous matrix"
+    else:
+        assert not destination.exists()
+
+
+@pytest.mark.parametrize("framing", ["content_length", "chunked", "until_eof"])
+def test_complete_http_response_can_publish(monkeypatch, destination, matrix_bytes, framing):
+    payload = matrix_bytes
+    if framing == "content_length":
+        headers = f"Content-Length: {len(payload)}".encode()
+    elif framing == "chunked":
+        headers = b"Transfer-Encoding: chunked"
+        payload = f"{len(payload):x}\r\n".encode() + payload + b"\r\n0\r\n\r\n"
+    else:
+        headers = b"Connection: close"
+    response = _http_response(headers, payload)
+    monkeypatch.setattr(sm.urllib.request, "urlopen", lambda url: response)
+    assert sm.fetch("TEST") == destination
+    assert destination.read_bytes() == matrix_bytes
+
+
+@pytest.mark.parametrize("length", [b"invalid", b"-1"])
+def test_invalid_http_length_preserves_cache(monkeypatch, destination, length):
+    destination.write_bytes(b"previous matrix")
+    response = _http_response(b"Content-Length: " + length, b"PAR1truncated")
+    monkeypatch.setattr(sm.urllib.request, "urlopen", lambda url: response)
+    with pytest.raises(sm.SourceMatrixError, match="invalid Content-Length"):
+        sm.fetch("TEST", force=True)
+    assert destination.read_bytes() == b"previous matrix"
+    assert not list(destination.parent.glob("*.part"))
 
 
 def _synchronized_first_check(destination, barrier):

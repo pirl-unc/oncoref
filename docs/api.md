@@ -1197,7 +1197,8 @@ unsuitable for absolute comparison with bulk RNA-seq TPM.
   single download across threads and processes; different destinations can
   download independently. Transfers use unique temporary files and atomic
   replacement. `fetch(force=True)` always refreshes, preserving the previous
-  matrix if the transfer fails. Warm reads perform no network I/O.
+  matrix if the transfer fails, including an early EOF before the advertised
+  HTTP content length. Warm reads perform no network I/O.
   `source_matrix_regeneration_audit()` matches each selected matrix by the exact
   `(cancer_code, source_cohort)` physical-source pair. A pair must have exactly
   one registry owner declaring either an existing repository-relative builder

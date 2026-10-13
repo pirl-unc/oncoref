@@ -395,7 +395,22 @@ def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
                 ) as handle:
                     tmp = Path(handle.name)
                     with urllib.request.urlopen(url) as response:
+                        expected_size = getattr(response, "headers", {}).get("Content-Length")
+                        if expected_size is not None and not getattr(response, "chunked", False):
+                            try:
+                                expected_size = int(expected_size)
+                                if expected_size < 0:
+                                    raise ValueError("negative length")
+                            except ValueError as error:
+                                raise HTTPException("invalid Content-Length") from error
+                        else:
+                            expected_size = None
                         shutil.copyfileobj(response, handle, length=1024 * 1024)
+                        # HTTPResponse.read(size) can silently return a short body.
+                        if expected_size is not None and handle.tell() != expected_size:
+                            raise HTTPException(
+                                f"expected {expected_size} bytes, received {handle.tell()}"
+                            )
                 # Close the staging file before atomic publication, including on Windows.
                 tmp.replace(dest)
             finally:
