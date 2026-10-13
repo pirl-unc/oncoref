@@ -14,6 +14,7 @@ import hashlib
 import json
 import re
 import xml.etree.ElementTree as ET
+from importlib.resources import files
 from pathlib import Path
 
 import pandas as pd
@@ -36,8 +37,11 @@ def write_json(path, value):
 
 
 def build(root, output):
+    # Reference pins belong to the package; the destination is never an input.
+    manifest = json.loads(
+        files("oncoref").joinpath("data/species/dog/assets.json").read_text(encoding="utf-8")
+    )
     output.mkdir(parents=True, exist_ok=True)
-    manifest = json.loads((output / "assets.json").read_text())
     manifest["assets"] = [
         a
         for a in manifest["assets"]
@@ -505,6 +509,11 @@ def add_protein_and_gaps(root, output, manifest, sources, overrides, audit):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=Path("oncoref/data/species/dog"))
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("oncoref/data/species/dog"),
+        help="Destination for generated manifests; created if missing. Reference pins come from the package.",
+    )
     args = parser.parse_args()
     print(json.dumps(build(args.source_root, args.output), indent=2))

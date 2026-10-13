@@ -37,13 +37,16 @@ from __future__ import annotations
 import os
 import shutil
 import sys
+import tempfile
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from functools import lru_cache
+from http.client import HTTPException
 from pathlib import Path
 
 import pandas as pd
+from filelock import FileLock
 
 from .cancer_types import resolve_cancer_type
 from .load_dataset import get_data
@@ -367,21 +370,54 @@ def release_url(code: str) -> str:
 
 
 def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
-    """Download one cohort's per-sample matrix into the cache. Returns the path."""
+    """Download one cohort's per-sample matrix into the cache. Returns the path.
+
+    Concurrent cold callers share one download, locked per cohort/version path.
+    Each explicit ``force=True`` call refreshes the file, even after waiting for
+    another writer. A failed refresh leaves the previous matrix intact.
+    """
     dest = local_path(code)
     if dest.exists() and not force:
         return dest
     url = release_url(code)
-    tmp = dest.with_suffix(".parquet.part")
-    if verbose:
-        sys.stderr.write(f"oncoref: downloading per-sample matrix {dest.stem} ({url})\n")
-        sys.stderr.flush()
     try:
-        with urllib.request.urlopen(url) as resp, tmp.open("wb") as h:
-            shutil.copyfileobj(resp, h, length=1024 * 1024)
-        tmp.replace(dest)
-    except (urllib.error.URLError, OSError) as e:
-        tmp.unlink(missing_ok=True)
+        with FileLock(str(dest.with_name(f".{dest.name}.oncoref.lock"))):
+            # Another process may have populated the cache while we waited.
+            if dest.exists() and not force:
+                return dest
+            if verbose:
+                sys.stderr.write(f"oncoref: downloading per-sample matrix {dest.stem} ({url})\n")
+                sys.stderr.flush()
+            tmp = None
+            try:
+                with tempfile.NamedTemporaryFile(
+                    dir=dest.parent, prefix=f".{dest.name}.", suffix=".part", delete=False
+                ) as handle:
+                    tmp = Path(handle.name)
+                    with urllib.request.urlopen(url) as response:
+                        expected_size = getattr(response, "headers", {}).get("Content-Length")
+                        if expected_size is not None and not getattr(response, "chunked", False):
+                            try:
+                                expected_size = int(expected_size)
+                                if expected_size < 0:
+                                    raise ValueError("negative length")
+                            except ValueError as error:
+                                raise HTTPException("invalid Content-Length") from error
+                        else:
+                            expected_size = None
+                        shutil.copyfileobj(response, handle, length=1024 * 1024)
+                        # HTTPResponse.read(size) can silently return a short body.
+                        if expected_size is not None and handle.tell() != expected_size:
+                            raise HTTPException(
+                                f"expected {expected_size} bytes, received {handle.tell()}"
+                            )
+                # Close the staging file before atomic publication, including on Windows.
+                tmp.replace(dest)
+            finally:
+                # Also clean up on cancellation; never remove another writer's partial.
+                if tmp is not None:
+                    tmp.unlink(missing_ok=True)
+    except (urllib.error.URLError, OSError, HTTPException) as e:
         raise SourceMatrixError(
             f"failed to download per-sample matrix for {code!r} ({url}): {e}"
         ) from e

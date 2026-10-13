@@ -1193,6 +1193,12 @@ unsuitable for absolute comparison with bulk RNA-seq TPM.
   `release_url(code)` and `local_path(code)` use the same per-cohort pin. This
   lets a corrected or newly added matrix move to a new release without copying
   every unchanged source asset or invalidating its existing cache.
+  Concurrent `fetch()`/`ensure()` calls for one missing cohort/version share a
+  single download across threads and processes; different destinations can
+  download independently. Transfers use unique temporary files and atomic
+  replacement. `fetch(force=True)` always refreshes, preserving the previous
+  matrix if the transfer fails, including an early EOF before the advertised
+  HTTP content length. Warm reads perform no network I/O.
   `source_matrix_regeneration_audit()` matches each selected matrix by the exact
   `(cancer_code, source_cohort)` physical-source pair. A pair must have exactly
   one registry owner declaring either an existing repository-relative builder

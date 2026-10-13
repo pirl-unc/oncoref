@@ -231,6 +231,16 @@ checksummed Parquet/JSON files. New destinations are published atomically; exist
 results are not overwritten. The artifact identity changes with its metadata or
 file contents. `scripts/build_canine_source_manifests.py` replays the intake from
 an acquired source snapshot; no downstream package is imported at runtime.
+The builder loads pinned reference registrations from the installed OncoRef
+package and creates the output directory as needed. For a separate replay:
+
+```bash
+python scripts/build_canine_source_manifests.py \
+  --source-root /path/to/acquisition-snapshot \
+  --output /tmp/canine-manifests
+```
+
+No seed files need copying into the destination.
 
 ## Canine protein abundance and explicit gaps (1.9.3)
 
