@@ -114,6 +114,26 @@ class SpeciesDataGroup:
 
         return expression_lineage_overlaps(self.species)
 
+    def cta_snapshot(self, *, path=None, expected_snapshot_id=None):
+        """Frozen species CTA evidence; no downloads or implicit human fallback."""
+        if self.name != "antigens":
+            raise ValueError("cta_snapshot() requires the antigens group")
+        from .species_antigens import cta_snapshot
+
+        return cta_snapshot(self.species, path=path, expected_snapshot_id=expected_snapshot_id)
+
+    def cta_candidates(self, *, reference=None):
+        """All CTA nominations, including counterevidence and unresolved mappings."""
+        return self.cta_snapshot().candidates(reference=reference)
+
+    def cta_evidence(self, *, reference=None, candidate_id=None):
+        """Native study observations, optionally for one returned candidate ID."""
+        return self.cta_snapshot().evidence(reference=reference, candidate_id=candidate_id)
+
+    def cta_gene_ids(self, *, reference):
+        """Unambiguously mapped candidate IDs for an explicit annotation; not admission."""
+        return self.cta_snapshot().gene_ids(reference=reference)
+
     def assets(self):
         from .species_assets import species_assets
 

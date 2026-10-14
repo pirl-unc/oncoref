@@ -28,6 +28,11 @@ legacy = _data.group("legacy")
 groups = (references, expression, cancer, antigens, normalization, governance, legacy)
 inventory = _data.inventory
 
+cta_candidates = antigens.cta_candidates
+cta_evidence = antigens.cta_evidence
+cta_gene_ids = antigens.cta_gene_ids
+cta_snapshot = antigens.cta_snapshot
+
 datasets = (
     bgee_srp009687,
     bgee_srp181218,
@@ -44,6 +49,10 @@ __all__ = [
     "bgee_srp009687",
     "bgee_srp181218",
     "cancer",
+    "cta_candidates",
+    "cta_evidence",
+    "cta_gene_ids",
+    "cta_snapshot",
     "datasets",
     "doga",
     "expression",

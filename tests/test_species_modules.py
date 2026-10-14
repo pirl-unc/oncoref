@@ -10,7 +10,7 @@ from oncoref import hpa, hpa_cancer, species_expression
 from oncoref.species import DATA_GROUPS
 
 
-@pytest.mark.parametrize("name,taxon", [("human", 9606), ("canine", 9615)])
+@pytest.mark.parametrize("name,taxon", [("human", 9606), ("canine", 9615), ("mouse", 10090)])
 def test_species_modules_are_importable_and_groups_stay_scoped(name, taxon):
     module = importlib.import_module(f"oncoref.{name}")
     assert isinstance(module, ModuleType)
@@ -34,7 +34,7 @@ def test_species_modules_are_importable_and_groups_stay_scoped(name, taxon):
 def test_species_modules_do_not_expose_other_species_datasets():
     assert not hasattr(oncoref.canine, "human_protein_atlas")
     assert not hasattr(oncoref.human, "barkbase")
-    assert oncoref.canine.antigens.coverage()["coverage"] == "unavailable"
+    assert oncoref.canine.antigens.coverage()["coverage"] == "partial"
     assert {m.source().id for m in oncoref.canine.datasets} == {
         s.id for s in oncoref.canine.expression.sources()
     }

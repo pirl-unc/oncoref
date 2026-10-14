@@ -2,7 +2,7 @@
 
 Species is the first data boundary. Start with the explicit `oncoref.human` and
 `oncoref.canine` modules, then use a named dataset or a conceptual collection.
-Both species expose the same groups: `references`,
+Human, canine and mouse expose the same groups: `references`,
 `expression`, `cancer`, `antigens`, `normalization`, `governance`, and `legacy`.
 A known species does not imply that every group has data or complete coverage.
 
@@ -12,7 +12,8 @@ import oncoref
 dog = oncoref.canine
 dog.references.datasets()
 dog.expression.sources(context="normal")
-dog.antigens.coverage()  # unavailable until canine antigen facts are registered
+dog.antigens.coverage()  # partial: curated canine CTA candidate evidence
+dog.cta_candidates()    # same API on oncoref.human and oncoref.mouse
 human = oncoref.human
 human.expression.sources()  # existing human registry
 
@@ -56,7 +57,12 @@ views. Imports do not load matrices or fetch assets.
 The existing `for_species(...)` helper and registry IDs remain available for
 dynamic callers, CLI input and serialized provenance. Historical flat human APIs,
 `oncoref.hpa` and `oncoref.hpa_cancer` continue to work. The mouse registry entry
-still describes unavailable coverage; it does not imply a populated mouse module.
+has an explicit `oncoref.mouse` module with unavailable coverage and no human fallback.
+
+The direct species methods `cta_candidates()`, `cta_evidence()`,
+`cta_gene_ids(reference=...)`, and `cta_snapshot()` expose a common evidence
+contract. See [species CTA evidence](species-cta-evidence.md) for native units,
+reference mappings, coverage limits and offline replay.
 
 ```bash
 oncoref species

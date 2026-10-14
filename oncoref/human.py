@@ -23,9 +23,18 @@ inventory = _data.inventory
 # Named dataset modules exposed here; inventory() describes the complete catalog.
 datasets = (human_protein_atlas,)
 
+cta_candidates = antigens.cta_candidates
+cta_evidence = antigens.cta_evidence
+cta_gene_ids = antigens.cta_gene_ids
+cta_snapshot = antigens.cta_snapshot
+
 __all__ = [
     "antigens",
     "cancer",
+    "cta_candidates",
+    "cta_evidence",
+    "cta_gene_ids",
+    "cta_snapshot",
     "datasets",
     "expression",
     "governance",
