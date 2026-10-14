@@ -107,8 +107,11 @@ def _cmd_data_list(args, selected):
         raise ValueError(f"Unknown data group {args.group!r}")
     if selected.taxon_id != 9606 and (args.cache_root or args.asset_overrides):
         from . import species_assets as assets
+        from .species_antigens import antigen_inventory
 
         rows = assets.asset_inventory(selected, group=args.group, **_species_asset_options(args))
+        if args.group in (None, "antigens"):
+            rows += antigen_inventory(selected)
     else:
         rows = catalog.inventory(species=selected, group=args.group)
     if args.name and args.name != "all":
