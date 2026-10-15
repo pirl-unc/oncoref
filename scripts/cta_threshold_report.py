@@ -17,6 +17,7 @@ import json
 import os
 import re
 import subprocess
+from itertools import pairwise
 from pathlib import Path
 
 import numpy as np
@@ -702,10 +703,10 @@ def validate(metrics, summary, out):
         selected_sets[s.prevalence_gt_pct, s.transcriptome_percentile] = set(frame[ID])
         assert len(frame) == s.n_genes
     for f in PREVALENCES:
-        for low, high in zip(PERCENTILES, PERCENTILES[1:]):
+        for low, high in pairwise(PERCENTILES):
             assert selected_sets[f, high] <= selected_sets[f, low]
     for p in PERCENTILES:
-        for low, high in zip(PREVALENCES, PREVALENCES[1:]):
+        for low, high in pairwise(PREVALENCES):
             assert selected_sets[high, p] <= selected_sets[low, p]
     (out / "validation.json").write_text(
         json.dumps(

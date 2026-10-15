@@ -82,6 +82,8 @@ available for dynamic selection. See the
 
 ## Install
 
+Supported Python versions: 3.10–3.14.
+
 ```bash
 pip install oncoref
 ```

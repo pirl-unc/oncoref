@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import shutil
+from itertools import pairwise
 from pathlib import Path
 
 import numpy as np
@@ -683,7 +684,7 @@ def validate(out, universe, metrics, summary, groups):
             for lo, hi in [(50, 70)]:
                 assert sets[policy, hi, p] <= sets[policy, lo, p]
         for f in (50, 70):
-            for lo, hi in zip(PERCENTILES, PERCENTILES[1:]):
+            for lo, hi in pairwise(PERCENTILES):
                 assert sets[policy, f, hi] <= sets[policy, f, lo]
     patient_values = pd.read_csv(out / "case_study_patient_expression.csv.gz")
     indexed = metrics[metrics.transcriptome_percentile.eq(90)].set_index([KEY, "cancer_code"])

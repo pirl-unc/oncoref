@@ -14,6 +14,7 @@ import itertools
 import json
 import os
 import shutil
+from itertools import pairwise
 from pathlib import Path
 
 import numpy as np
@@ -429,10 +430,10 @@ def validate_outputs(out, summary, sweep, groups, min_size, large_min_size):
             for _, s in summary.iterrows()
         }
         for p in PERCENTILES:
-            for low, high in zip(PREVALENCES, PREVALENCES[1:]):
+            for low, high in pairwise(PREVALENCES):
                 assert sets[high, p] <= sets[low, p]
         for f in PREVALENCES:
-            for low, high in zip(PERCENTILES, PERCENTILES[1:]):
+            for low, high in pairwise(PERCENTILES):
                 assert sets[f, high] <= sets[f, low]
     assert groups.cancer_code.is_unique
     return {
