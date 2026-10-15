@@ -3990,11 +3990,13 @@ def _gdc_raw_tpm_matrix(
         )
         sample_id = str(row["sample_id"])
         tpm = read_gdc_star_counts_tpm(path)
-        tpm = (
-            tpm.groupby("source_gene_id", as_index=False)
-            .agg(Symbol=("Symbol", "first"), TPM=("TPM", lambda x: x.sum(min_count=1)))
-            .rename(columns={"TPM": sample_id})
-        )
+        grouped = tpm.groupby("source_gene_id")
+        # Keep the reductions vectorized across genes; an all-missing group
+        # remains missing while measured zeros and partial observations survive.
+        tpm = pd.concat(
+            [grouped["Symbol"].first(), grouped["TPM"].sum(min_count=1).rename(sample_id)],
+            axis=1,
+        ).reset_index()
         merged = (
             tpm
             if merged is None

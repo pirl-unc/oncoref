@@ -137,14 +137,28 @@ def test_gdc_reader_does_not_hide_invalid_tpm(tmp_path, value):
 def test_gdc_assembly_keeps_unmeasured_genes_distinct_from_zero(tmp_path):
     paths = {}
     for sample, genes, values in [
-        ("s1", ["ENSG1", "ENSG2", "ENSG3"], [10.0, np.nan, 0.0]),
+        (
+            "s1",
+            [
+                "ENSG5.1",
+                "ENSG1",
+                "ENSG2.1",
+                "ENSG2.2",
+                "ENSG3.1",
+                "ENSG3.2",
+                "ENSG4.1",
+                "ENSG4.2",
+                "ENSG5.2",
+            ],
+            [2.0, 10.0, np.nan, np.nan, 0.0, np.nan, np.nan, 5.0, 3.0],
+        ),
         ("s2", ["ENSG1"], [20.0]),
     ]:
         path = tmp_path / f"{sample}.tsv"
         pd.DataFrame(
             {
                 "gene_id": genes,
-                "gene_name": genes,
+                "gene_name": [gene.split(".")[0] for gene in genes],
                 "gene_type": "protein_coding",
                 "tpm_unstranded": values,
             }
@@ -159,6 +173,10 @@ def test_gdc_assembly_keeps_unmeasured_genes_distinct_from_zero(tmp_path):
     assert pd.isna(out.loc["ENSG2", "s2"])
     assert out.loc["ENSG3", "s1"] == 0.0
     assert pd.isna(out.loc["ENSG3", "s2"])
+    assert out.loc["ENSG4", "s1"] == 5.0
+    assert out.loc["ENSG5", "s1"] == 5.0
+    assert out.index.is_unique
+    assert out["Symbol"].to_dict() == {f"ENSG{i}": f"ENSG{i}" for i in range(1, 6)}
 
 
 def test_staging_validates_all_inputs_before_copying_any(tmp_path, monkeypatch):

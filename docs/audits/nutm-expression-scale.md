@@ -64,6 +64,19 @@ case or validate the expression scale.
   when reusing a previous cache. It now validates all selections before
   copying any matrix into the cache or release directory.
 
+Readers, builders and the proteoform-refresh workflow share the public
+`oncoref.expression_engine.validate_nonnegative_expression(values, context=...)`
+validator. It raises `ValueError` for negative, infinite or nonnumeric measurements
+without modifying the input; missing values remain missing. Successful refresh
+audits retain `n_negative_values_clipped=0` for compatibility with historical audit
+files. No values are repaired by clipping. Raw and normalized reads both reject
+the invalid NUTM source, including attempts to recompute stale protein summaries.
+
+GDC duplicate-gene aggregation uses native `groupby.sum(min_count=1)` for TPM and
+a separate first-symbol reduction. Entirely unmeasured groups remain missing,
+partial observations sum the measured values, and measured zero remains zero.
+This avoids a Python callback for every gene in every sample.
+
 Minimum-value statistics from all 89 locally cached human source matrices
 identified NUTM as the only negative-valued matrix. Every numerical column
 had parquet minimum statistics. This does not validate uncached sources or
