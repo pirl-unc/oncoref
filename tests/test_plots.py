@@ -3,8 +3,8 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-
 import sys
+from itertools import pairwise
 from pathlib import Path
 from types import ModuleType
 
@@ -242,7 +242,7 @@ def test_cta_curation_stage_counts_are_monotonic():
     remaining = [n for _, n, _ in stages]
     assert remaining == sorted(remaining, reverse=True)
     # Each stage's drop is exactly the step down from the previous stage.
-    for (_, prev, _), (_, cur, dropped) in zip(stages, stages[1:]):
+    for (_, prev, _), (_, cur, dropped) in pairwise(stages):
         assert prev - cur == dropped
 
 
