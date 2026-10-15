@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oncoref import expression, expression_builders
+from oncoref import expression, expression_builders, normalization
 from oncoref.expression_engine import (
     canonicalize_source_gene_matrix,
     validate_nonnegative_expression,
@@ -102,6 +102,11 @@ def test_source_validator_accepts_missing_and_zero_without_mutation():
     pd.testing.assert_frame_equal(values, before)
 
 
+def test_clean_tpm_does_not_normalize_a_transformed_negative_field():
+    with pytest.raises(ValueError, match="negative or infinite"):
+        normalization.clean_tpm(pd.DataFrame({"s1": [-1.0, 10.0]}))
+
+
 def test_builder_canonicalization_cannot_hide_negative_duplicate_rows():
     frame = pd.DataFrame(
         {
@@ -127,6 +132,33 @@ def test_gdc_reader_does_not_hide_invalid_tpm(tmp_path, value):
     ).to_csv(path, sep="\t", index=False)
     with pytest.raises(ValueError, match=r"negative or infinite|must be numeric"):
         expression_builders.read_gdc_star_counts_tpm(path)
+
+
+def test_gdc_assembly_keeps_unmeasured_genes_distinct_from_zero(tmp_path):
+    paths = {}
+    for sample, genes, values in [
+        ("s1", ["ENSG1", "ENSG2", "ENSG3"], [10.0, np.nan, 0.0]),
+        ("s2", ["ENSG1"], [20.0]),
+    ]:
+        path = tmp_path / f"{sample}.tsv"
+        pd.DataFrame(
+            {
+                "gene_id": genes,
+                "gene_name": genes,
+                "gene_type": "protein_coding",
+                "tpm_unstranded": values,
+            }
+        ).to_csv(path, sep="\t", index=False)
+        paths[sample] = path
+    out = expression_builders._gdc_raw_tpm_matrix(
+        pd.DataFrame({"sample_id": ["s1", "s2"], "source_file_id": ["s1", "s2"]}),
+        cache_dir=tmp_path,
+        file_paths=paths,
+    ).set_index("source_gene_id")
+    assert pd.isna(out.loc["ENSG2", "s1"])
+    assert pd.isna(out.loc["ENSG2", "s2"])
+    assert out.loc["ENSG3", "s1"] == 0.0
+    assert pd.isna(out.loc["ENSG3", "s2"])
 
 
 def test_staging_validates_all_inputs_before_copying_any(tmp_path, monkeypatch):

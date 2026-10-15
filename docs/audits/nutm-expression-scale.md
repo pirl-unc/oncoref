@@ -31,6 +31,22 @@ single-gene rank, but sample provenance, the measured gene universe, and
 corrected versus uncorrected expression still require consideration. Missing
 genes must not be padded with zeros to obtain a desired percentile.
 
+The ranking populations are materially different across the plotted sources:
+
+| Source matrix | Gene rows | Rows annotated protein-coding in current canonical gene space |
+| --- | ---: | ---: |
+| NUTM | 20,061 | 18,912 |
+| BRCA_TNBC / GBM (Treehouse) | 34,571 | 19,101 |
+| SARC_CHOR | 62,520 | 20,026 |
+
+Consequently, a p90 label does not describe the same gene population across
+these cohorts. This is a separate comparison limitation: declare and audit a
+common ranking universe before interpreting cross-source percentile coverage.
+The source records have three distinct RNA samples/analyses and no duplicated
+sample/gene input rows. That rules out those mechanical duplication errors,
+but does not establish complete independent diagnostic provenance for every
+case or validate the expression scale.
+
 ## Related defects found during the audit
 
 - Normalized source reads and release rebuilds silently clipped negative
@@ -40,7 +56,8 @@ genes must not be padded with zeros to obtain a desired percentile.
   zero before unit conversion. It now rejects incompatible values and
   preserves missing measurements, including completely unmeasured columns.
   The GDC STAR TPM reader also silently clipped negative and malformed values;
-  it now rejects them before aggregation.
+  it now rejects them before aggregation. Missing gene/sample values remain
+  missing through GDC source assembly instead of becoming measured zeros.
 - Count-to-TPM conversion silently assigned zero expression to rows lacking
   a valid gene length. It now requires finite positive lengths for every row.
 - Source staging checked sample counts but not numerical validity, including

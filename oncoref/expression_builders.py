@@ -3992,7 +3992,7 @@ def _gdc_raw_tpm_matrix(
         tpm = read_gdc_star_counts_tpm(path)
         tpm = (
             tpm.groupby("source_gene_id", as_index=False)
-            .agg(Symbol=("Symbol", "first"), TPM=("TPM", "sum"))
+            .agg(Symbol=("Symbol", "first"), TPM=("TPM", lambda x: x.sum(min_count=1)))
             .rename(columns={"TPM": sample_id})
         )
         merged = (
@@ -4003,7 +4003,7 @@ def _gdc_raw_tpm_matrix(
     if merged is None or merged.empty:
         raise ValueError("no GDC STAR-count TPM files were read")
     sample_ids = included["sample_id"].astype(str).tolist()
-    merged[sample_ids] = merged[sample_ids].fillna(0.0)
+    # An absent gene or missing TPM is unmeasured, not a measured zero.
     merged.attrs["row_id_col"] = "source_gene_id"
     merged.attrs["symbol_col"] = "Symbol"
     return merged[["source_gene_id", "Symbol", *sample_ids]]
