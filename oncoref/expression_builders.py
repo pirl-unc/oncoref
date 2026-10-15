@@ -50,11 +50,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import defaultdict
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
-from typing import Callable, Literal, Protocol
+from typing import Literal, Protocol
 
 import numpy as np
 import pandas as pd

@@ -21,7 +21,8 @@ The gene list (Symbol, Ensembl_Gene_ID, Aliases, Full_Name, Function,
 source_databases, Canonical_Transcript_ID, biotype) is the FROZEN candidate
 universe + identity/annotation columns: it is preserved verbatim from the input
 table and never recomputed. ``biotype`` and ``Canonical_Transcript_ID`` in
-particular come from pyensembl in tsarina and are deliberately preserved here.
+particular originated from pyensembl in tsarina; subsequent source-backed
+annotation corrections (including RBMY1F/J in #576) are also preserved here.
 
 Everything else -- the per-tissue nTPM columns, reproductive fractions, the pct
 filters, protein IHC columns, the per-modality and synthesized restriction axes,

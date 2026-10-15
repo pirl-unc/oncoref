@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from itertools import pairwise
 from types import MappingProxyType
 
 from .reference_identity import ReferenceIdentity, _identity, _label, _string_map
@@ -88,7 +89,7 @@ class ExpressionMeasurement:
         ):
             raise ValueError("transformations must contain MeasurementTransform records")
         transforms = tuple(self.transformations)
-        for left, right in zip(transforms, transforms[1:]):
+        for left, right in pairwise(transforms):
             if left.output_unit != right.input_unit:
                 raise ValueError("Transformation units do not form a consistent chain")
         if transforms and transforms[-1].output_unit != self.unit:
