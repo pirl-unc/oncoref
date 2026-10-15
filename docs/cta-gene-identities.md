@@ -88,6 +88,59 @@ establish which supplied sources can use a mapping. The legacy
 release-agnostic table-harmonization helpers; they do not implement this
 annotation-verification contract.
 
+## CTA transcript labels
+
+`Canonical_Transcript_ID` in `cta_df()`, `cta_evidence()` and `cta_extended_df()`
+is a representative annotation label. It does not establish which isoform was
+measured, allocate gene-level TPM to that isoform, or enumerate every translation.
+The legacy column was imported from the earlier tsarina/pyensembl workflow without
+a per-row annotation-release receipt. Treat unaudited entries as legacy labels,
+not as a guarantee of the canonical transcript in every Ensembl release. HPA
+regeneration preserves this annotation column; it does not infer transcripts from
+tissue expression. Consumers must resolve the declared transcript in their own
+explicit reference before using its sequence.
+
+Version 1.9.10 corrects the two entries reported in
+[#576](https://github.com/pirl-unc/oncoref/issues/576), in both core and extended
+tables:
+
+| Gene | Previous label | Corrected transcript | Protein | Length |
+| --- | --- | --- | --- | --- |
+| RBMY1F / ENSG00000169800 | ENST00000454978 (459 aa) | ENST00000303766.12 | ENSP00000307155.7 | 496 aa |
+| RBMY1J / ENSG00000226941 | missing | ENST00000250831.6 | ENSP00000250831.5 | 496 aa |
+
+The API retains unversioned transcript IDs for compatibility; the versions above
+come from the pinned source files. **Both corrected transcripts carry
+`Ensembl_canonical` and `MANE_Select` tags in Ensembl 112 and 115.** The previous
+RBMY1F transcript is a real alternative translation, but carries neither tag in
+these releases. Selection follows the annotation tags, rather than protein length
+or the desire to place two genes in one protein group.
+
+The [annotation audit](audits/rbmy-canonical-transcripts.json) preserves every
+transcript feature for these two genes, their translated peptide records, source
+URLs, whole-file SHA-256 hashes and peptide hashes. The two canonical peptide
+sequences are identical, agreeing with the existing `RBMY1F/J` protein group.
+RBMY1F and RBMY1J remain distinct genes with distinct transcripts. Independent
+gene measurements retain their own source identities and values; sequence
+identity does not justify copying or reallocating an ambiguous RNA measurement.
+Choosing a representative sequence from gene-level expression remains an explicit
+consumer policy, not a measured isoform claim.
+
+The same corrected labels propagate through
+`oncoref.human.cta_candidates()` and `oncoref.human.cta_evidence()`. Existing saved
+snapshots retain their original contents; regenerate them to adopt the correction.
+This targeted review does not certify other legacy transcript labels or change CTA
+membership, HPA measurements, protein-group membership or expression artifacts.
+
+Reproduce the audit offline from the downloaded Ensembl source directories:
+
+```bash
+python scripts/audit_rbmy_transcripts.py \
+  --reference-root /path/to/pyensembl/GRCh38 \
+  --output /tmp/rbmy-canonical-transcripts.json
+diff docs/audits/rbmy-canonical-transcripts.json /tmp/rbmy-canonical-transcripts.json
+```
+
 ## Peptide counts and reference versions
 
 `cta_specific_9mer_counts()` now uses the same verified identities to exclude

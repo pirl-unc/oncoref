@@ -197,7 +197,14 @@ _register_derived_cache(_cta_frame.cache_clear)
 
 def cta_df() -> pd.DataFrame:
     """Full CTA evidence table (one row per candidate), with the non-CTA
-    excluded genes (histones, etc.) dropped. Returns a defensive copy."""
+    excluded genes (histones, etc.) dropped. Returns a defensive copy.
+
+    ``Canonical_Transcript_ID`` is a representative annotation label, not an
+    observed isoform or an allocation of gene expression. Most entries retain
+    legacy annotation provenance; the RBMY1F/J entries are source-checked
+    Ensembl 112/115 canonical transcripts. Consumers must verify transcripts
+    against their chosen annotation. See ``docs/cta-gene-identities.md``.
+    """
     return _with_specificity_columns(_cta_frame())
 
 

@@ -317,3 +317,26 @@ def test_human_adapter_preserves_existing_facts_and_offline_replay(tmp_path):
     assert oncoref.human.cta_snapshot(path=path).as_dict() == snapshot.as_dict()
     # Historical default is a curated subset, not redefined by candidate enumeration.
     assert oncoref.cta_gene_ids() < oncoref.human.cta_gene_ids(reference="ensembl115")
+
+
+def test_rbmy_corrected_transcripts_propagate_without_merging_genes():
+    expected = {
+        "ENSG00000169800": "ENST00000303766",
+        "ENSG00000226941": "ENST00000250831",
+    }
+    candidates = {row["id"]: row for row in oncoref.human.cta_candidates(reference="ensembl115")}
+    evidence = {
+        row["source_fields"]["Ensembl_Gene_ID"]: row["source_fields"]
+        for row in oncoref.human.cta_evidence()
+    }
+    assert set(expected) <= oncoref.cta_gene_ids()
+    for gid, tid in expected.items():
+        assert candidates[gid]["gene_ids"] == [gid]
+        assert candidates[gid]["mapping"]["targets"] == [
+            {
+                "id": gid,
+                "symbol": evidence[gid]["Symbol"],
+                "sequences": [{"transcript_id": tid, "protein_id": None}],
+            }
+        ]
+        assert evidence[gid]["Canonical_Transcript_ID"] == tid
