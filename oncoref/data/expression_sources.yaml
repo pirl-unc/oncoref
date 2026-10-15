@@ -2175,18 +2175,22 @@ sources:
     source_project: UNC NUTM1 case series
     source_cohort: UNC_NUTM1
     source_version: UNC NUTM1 case series; Ensembl 112
-    unit: TPM
+    unit: unverified transformed expression
+    source_scale_class: invalid_legacy_tpm
+    linear_tpm_comparable: false
     tumor_origin: primary
-    processing_pipeline: Whole-transcriptome RNA-seq gene-level TPM renormalized to 1e6; Ensembl 112
+    processing_pipeline: INVALID legacy rescaling of gene_tpm_cognizant_corrector to 1e6; original transform requires verification
     external_build_exemption: >
       The three-case matrix was generated from controlled UNC case-series
       RNA-seq files that are not publicly downloadable. The released matrix
       remains auditable by its sample manifest and checksums, but a public
       registry-backed downloader cannot reproduce it.
     special_handling: >
-      Three primary NUT carcinoma cases. This is the only per-sample NUTM
-      expression cohort; public NUT data are otherwise cell-line or
-      controlled-access datasets.
+      Invalid expression scale in source-v5.22.10: the importer treated the
+      transformed gene_tpm_cognizant_corrector field as linear TPM, producing
+      2163 negative measurements. Do not use existing NUTM expression artifacts
+      for quantitative analysis. Rebuild the controlled three-case source and
+      all derived artifacts after verifying the original field's scale.
 
   - id: gse30929-lps
     category: expression

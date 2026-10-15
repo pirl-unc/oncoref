@@ -31,6 +31,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from functools import lru_cache
 
+import numpy as np
 import pandas as pd
 
 #: Canonical identity columns of a oncoref expression frame. Everything else is a
@@ -58,6 +59,27 @@ def sample_columns(df: pd.DataFrame) -> list[str]:
     the one place the value/identity boundary is decided. (For the distinct *named*-TPM
     rule on curated long tables, see :func:`is_expression_value_col`.)"""
     return [c for c in df.columns if c not in ID_COLUMNS]
+
+
+def validate_nonnegative_expression(values: pd.DataFrame, *, context: str) -> None:
+    """Validate a declared nonnegative expression scale without repairing it.
+
+    NaN denotes an unmeasured value. Negative values, infinities and nonnumeric
+    cells require source-specific investigation, not clipping or guessed unit
+    conversion. Run before canonicalization so row sums cannot hide negatives.
+    """
+    try:
+        array = values.to_numpy(dtype=float, na_value=np.nan)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{context}: expression measurements must be numeric") from exc
+    invalid = (array < 0) | np.isinf(array)
+    if invalid.any():
+        raise ValueError(
+            f"{context}: {int(invalid.sum())} negative or infinite expression "
+            "measurements are incompatible with the declared nonnegative scale. "
+            "Verify the original input unit and rebuild the source; do not clip "
+            "values or renormalize a transformed field as linear TPM."
+        )
 
 
 _DEFAULT_TX_COLUMN_CANDIDATES = (
@@ -577,6 +599,9 @@ def canonicalize_source_gene_matrix(
     row_id_col, symbol_col = _source_row_columns(df, row_id_col, symbol_col, require_row_id=True)
     cols = _source_value_columns(df, row_id_col, symbol_col, value_cols)
     coerced, parse_diagnostics = coerce_source_expression_values(df, cols)
+    validate_nonnegative_expression(
+        coerced[cols], context="source canonicalization: linear expression"
+    )
     audit = map_source_gene_rows(
         coerced,
         row_id_col=row_id_col,

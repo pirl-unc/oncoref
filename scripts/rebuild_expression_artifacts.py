@@ -77,7 +77,6 @@ from oncoref.expression import (
     SAMPLE_EXPRESSION_QC_POLICY_VERSION,
     SHARD_DATASETS,
     _canonicalize_gene_rows,
-    _clip_negative_expression,
     _validate_sample_qc,
     sample_columns,
     sample_expression_qc_from_matrix,
@@ -88,6 +87,7 @@ from oncoref.expression_builders import (
     summarize_source_matrix,
     within_sample_top_fractions,
 )
+from oncoref.expression_engine import validate_nonnegative_expression
 from oncoref.expression_registry import expression_source_registry_entries
 from oncoref.gene_families import clean_tpm_censored_gene_ids
 from oncoref.load_dataset import get_data
@@ -402,12 +402,14 @@ def read_raw(path: Path) -> pd.DataFrame:
     shipped percentile/representative shards are natively dense in the canonical gene-ID
     space and match the on-the-fly recompute path (oncoref#135 item 6)."""
     raw = pd.read_parquet(path)
+    validate_nonnegative_expression(raw[sample_columns(raw)], context=f"{path}: linear TPM")
     return _canonicalize_gene_rows(raw, sample_cols=sample_columns(raw)).reset_index(drop=True)
 
 
 def build_clean(raw: pd.DataFrame) -> pd.DataFrame:
     """Clean-TPM matrix for one source's per-sample matrix (genes x samples + ids)."""
     samples = [c for c in raw.columns if c not in _BASE]
+    validate_nonnegative_expression(raw[samples], context="reference rebuild: linear TPM")
     gene_table = raw[_BASE]
     clean = clean_tpm(raw[samples], gene_table=gene_table)
     return pd.concat([gene_table.reset_index(drop=True), clean.reset_index(drop=True)], axis=1)
@@ -421,7 +423,7 @@ def build_source_summary(
 ) -> tuple[pd.DataFrame, int]:
     """Canonical source summary using the same clean-TPM contract as selected shards."""
     samples = sample_columns(raw)
-    raw, n_negative_values_clipped = _clip_negative_expression(raw, samples)
+    validate_nonnegative_expression(raw[samples], context=f"{cancer_code}: linear TPM")
     source = _summary_source_metadata(cancer_code, source_cohort)
     return (
         summarize_source_matrix(
@@ -430,7 +432,7 @@ def build_source_summary(
             source=source,
             clean_matrix=build_clean(raw),
         ),
-        n_negative_values_clipped,
+        0,  # Retain the build-metadata schema; invalid inputs now raise.
     )
 
 
@@ -593,7 +595,7 @@ def rebuild(
         source_path = _select_source(code, by_code[code], code_to_source, code_to_n_samples)
         raw_df = read_raw(source_path)
         source_samples = [c for c in raw_df.columns if c not in _BASE]
-        raw_df, n_negative_values_clipped = _clip_negative_expression(raw_df, source_samples)
+        n_negative_values_clipped = 0  # read_raw rejects invalid inputs before folding.
         qc = sample_expression_qc_from_matrix(raw_df, cancer_type=code)
         if not qc.empty:
             qc = qc.assign(source_matrix_path=str(source_path))
