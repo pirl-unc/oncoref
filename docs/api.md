@@ -1008,9 +1008,19 @@ diagnosis-only Treehouse sample.
   alias candidates on the first load of each table. A known symbol pointing to
   a different ID remains an error, even if an alias matches. Shared symbols
   retain all candidate IDs; a row's recorded ID disambiguates it with a warning.
-  Filtering by an ambiguous symbol raises and asks for an explicit Ensembl ID.
+  Queries match exact-case symbols and aliases first, then use case-insensitive
+  matching when it is unambiguous. For example, `emb` is an alias for `XPO1`,
+  while `EMB` names a different gene; `Emb` is ambiguous and raises. Recorded
+  source aliases are also queryable within their evidence table. Ensembl IDs
+  (including versions and mapped historical IDs) and Entrez IDs are accepted.
+  Filtering by an ambiguous symbol raises and asks for an explicit Ensembl ID;
+  unresolved names return an empty frame without consulting installed genomes.
   `driver_gene_evidence("CBWD3")`, `driver_gene_evidence("ZNG1C")`, and the
-  recorded ID return the same source-preserving evidence.
+  recorded ID return the same source-preserving evidence. These scoped source
+  mappings do not extend the global synonym dictionary: NCBI associates
+  `CBWD3` with both `ZNG1C` and `ZNG1E`, so the driver row's recorded ID matters.
+  The [identifier audit](audits/driver-identifier-mappings.md) covers every
+  bundled mapping associated with both driver tables.
 - `oncoref.drivers.driver_legacy_migration_audit_df()` gives one
   `migrated` / `rejected` / `awaiting_source` disposition per frozen driver row;
   `driver_legacy_migration_summary()` exposes the counts per legacy table.

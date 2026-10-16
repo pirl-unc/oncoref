@@ -19,7 +19,7 @@ from functools import lru_cache
 import pandas as pd
 
 from .cancer_types import resolve_cancer_type
-from .gene_ids import canonical_gene_id, canonical_gene_space, resolve_symbol
+from .gene_ids import canonical_gene_id, canonical_gene_space
 from .load_dataset import _register_derived_cache, get_data
 
 DRIVER_EVIDENCE_SCOPE_KINDS = frozenset({"pan_cancer", "source_cancer_code"})
@@ -31,19 +31,33 @@ class DriverGeneIdentityWarning(UserWarning):
 
 
 @lru_cache(maxsize=1)
-def _driver_symbol_index() -> dict[str, frozenset[str]]:
-    """All bundled identities for each symbol, independent of installed genomes."""
+def _driver_symbol_index() -> tuple[dict[str, frozenset[str]], dict[str, frozenset[str]]]:
+    """Exact and case-folded bundled symbol/alias candidates, without choosing a hit."""
     candidates: dict[str, set[str]] = {}
     for row in canonical_gene_space().itertuples(index=False):
         if pd.notna(row.symbol) and str(row.symbol).strip():
-            candidates.setdefault(str(row.symbol).strip().upper(), set()).add(row.ensembl_gene_id)
-    return {symbol: frozenset(ids) for symbol, ids in candidates.items()}
+            candidates.setdefault(str(row.symbol).strip(), set()).add(row.ensembl_gene_id)
+    # Resolve synonym targets against canonical symbols only: alias order must
+    # not create chains or let a synonym overwrite an unrelated current symbol.
+    canonical = {symbol: frozenset(ids) for symbol, ids in candidates.items()}
+    for row in get_data("ncbi-symbol-synonyms", copy=False).itertuples(index=False):
+        if pd.notna(row.alias) and pd.notna(row.official_symbol):
+            alias = str(row.alias).strip()
+            if alias:
+                candidates.setdefault(alias, set()).update(canonical.get(row.official_symbol, ()))
+    folded: dict[str, set[str]] = {}
+    for symbol, ids in candidates.items():
+        folded.setdefault(symbol.upper(), set()).update(ids)
+    return (
+        {symbol: frozenset(ids) for symbol, ids in candidates.items() if ids},
+        {symbol: frozenset(ids) for symbol, ids in folded.items() if ids},
+    )
 
 
 def _symbol_gene_ids(symbol: str) -> frozenset[str]:
     symbol = str(symbol).strip()
-    index = _driver_symbol_index()
-    return index.get(symbol.upper()) or index.get(resolve_symbol(symbol).upper(), frozenset())
+    exact, folded = _driver_symbol_index()
+    return exact.get(symbol) or folded.get(symbol.upper(), frozenset())
 
 
 def _validate_gene_identities(frame: pd.DataFrame, dataset: str) -> None:
@@ -166,7 +180,32 @@ def _driver_variant_evidence_frame() -> pd.DataFrame:
     return frame
 
 
+@lru_cache(maxsize=2)
+def _driver_source_symbol_index(
+    dataset: str,
+) -> tuple[dict[str, frozenset[str]], dict[str, frozenset[str]]]:
+    frame = (
+        _driver_gene_evidence_frame()
+        if dataset == "driver-gene-evidence"
+        else _driver_variant_evidence_frame()
+    )
+    exact: dict[str, set[str]] = {}
+    folded: dict[str, set[str]] = {}
+    for row in frame.itertuples(index=False):
+        aliases = [] if pd.isna(row.aliases) else str(row.aliases).split(";")
+        for symbol in [row.gene_symbol, *aliases]:
+            symbol = str(symbol).strip()
+            if symbol:
+                exact.setdefault(symbol, set()).add(row.ensembl_gene_id)
+                folded.setdefault(symbol.upper(), set()).add(row.ensembl_gene_id)
+    return (
+        {symbol: frozenset(ids) for symbol, ids in exact.items()},
+        {symbol: frozenset(ids) for symbol, ids in folded.items()},
+    )
+
+
 _register_derived_cache(_driver_symbol_index.cache_clear)
+_register_derived_cache(_driver_source_symbol_index.cache_clear)
 _register_derived_cache(_driver_gene_evidence_frame.cache_clear)
 _register_derived_cache(_driver_variant_evidence_frame.cache_clear)
 
@@ -198,23 +237,30 @@ def driver_variant_evidence_df() -> pd.DataFrame:
     return _driver_variant_evidence_frame().copy()
 
 
-def _filter_gene(frame: pd.DataFrame, gene: str | None) -> pd.DataFrame:
+def _filter_gene(frame: pd.DataFrame, gene: str | None, *, dataset: str) -> pd.DataFrame:
     if gene is None:
         return frame
     query = str(gene).strip()
-    # A validated source label can be retired from the bundled reference (CBWD3).
-    # Keep it queryable without installing a historical Ensembl annotation.
-    candidates = set(
-        frame.loc[frame["gene_symbol"].str.upper().eq(query.upper()), "ensembl_gene_id"]
+    if query.upper().startswith("ENSG") or query.isdigit():
+        ensembl_id = canonical_gene_id(query)
+        return frame.loc[frame["ensembl_gene_id"].eq(ensembl_id)]
+
+    # Source labels/aliases are scoped to these validated records. Do not add
+    # them to the global synonym map: CBWD3, for example, is shared in NCBI.
+    exact, folded = _driver_symbol_index()
+    source_exact, source_folded = _driver_source_symbol_index(dataset)
+    exact_hits = exact.get(query, frozenset()) | source_exact.get(query, frozenset())
+    folded_hits = folded.get(query.upper(), frozenset()) | source_folded.get(
+        query.upper(), frozenset()
     )
-    candidates.update(_symbol_gene_ids(query))
+    candidates = exact_hits or folded_hits
     if len(candidates) > 1:
         raise ValueError(
             f"Ambiguous driver gene symbol {gene!r}: {sorted(candidates)}; use an Ensembl gene ID"
         )
-    ensembl_id = next(iter(candidates)) if candidates else canonical_gene_id(query)
-    if ensembl_id is None:
+    if not candidates:
         return frame.iloc[0:0]
+    ensembl_id = next(iter(candidates))
     return frame.loc[frame["ensembl_gene_id"].eq(ensembl_id)]
 
 
@@ -222,7 +268,7 @@ def driver_gene_evidence(
     gene: str | None = None, *, source_scope: str | None = None
 ) -> pd.DataFrame:
     """Driver-gene evidence filtered by gene and/or source-native cancer scope."""
-    frame = _filter_gene(_driver_gene_evidence_frame(), gene)
+    frame = _filter_gene(_driver_gene_evidence_frame(), gene, dataset="driver-gene-evidence")
     if source_scope is not None:
         frame = frame.loc[
             frame["source_scope"].astype(str).str.upper().eq(str(source_scope).strip().upper())
@@ -234,7 +280,7 @@ def driver_variant_evidence(
     gene: str | None = None, *, protein_change: str | None = None
 ) -> pd.DataFrame:
     """Pan-cancer recurrent-driver evidence filtered by gene/protein change."""
-    frame = _filter_gene(_driver_variant_evidence_frame(), gene)
+    frame = _filter_gene(_driver_variant_evidence_frame(), gene, dataset="driver-variant-evidence")
     if protein_change is not None:
         frame = frame.loc[frame["protein_change"].eq(str(protein_change).strip())]
     return frame.reset_index(drop=True).copy()

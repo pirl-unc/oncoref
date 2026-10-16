@@ -9,6 +9,7 @@ import pandas as pd
 import pytest
 
 from oncoref import drivers, genome
+from oncoref.gene_ids import canonical_gene_space, ensembl_id_aliases, entrez_gene_mappings
 from oncoref.load_dataset import get_data
 
 TP53 = "ENSG00000141510"
@@ -20,6 +21,7 @@ ZNG1C = "ENSG00000196873"
 def clear_driver_caches():
     for cache in (
         drivers._driver_symbol_index,
+        drivers._driver_source_symbol_index,
         drivers._driver_gene_evidence_frame,
         drivers._driver_variant_evidence_frame,
     ):
@@ -27,6 +29,7 @@ def clear_driver_caches():
     yield
     for cache in (
         drivers._driver_symbol_index,
+        drivers._driver_source_symbol_index,
         drivers._driver_gene_evidence_frame,
         drivers._driver_variant_evidence_frame,
     ):
@@ -67,7 +70,11 @@ def source_table(request, monkeypatch):
     frame["gene_symbol"] = "RETIRED_TEST_SYMBOL"
     frame["ensembl_gene_id"] = TP53
     frame["aliases"] = "TP53"
-    monkeypatch.setattr(drivers, "get_data", lambda name, **kwargs: frame)
+    monkeypatch.setattr(
+        drivers,
+        "get_data",
+        lambda name, **kwargs: frame if name == dataset else get_data(name, **kwargs),
+    )
     return frame, getattr(drivers, f"driver_{request.param}_evidence_df")
 
 
@@ -165,3 +172,111 @@ def test_alias_column_is_required_for_auditable_fallback(source_table):
     frame.drop(columns="aliases", inplace=True)
     with pytest.raises(ValueError, match=r"missing required columns.*aliases"):
         accessor()
+
+
+@pytest.mark.parametrize("kind", ["gene", "variant"])
+def test_every_shipped_driver_identifier_roundtrips_without_genome(kind, monkeypatch):
+    def unexpected_genome_lookup(*args, **kwargs):
+        raise AssertionError("driver queries must use bundled mappings")
+
+    monkeypatch.setattr(genome, "canonical_gene_id_and_name", unexpected_genome_lookup)
+    frame = get_data(f"driver-{kind}-evidence")
+    query = getattr(drivers, f"driver_{kind}_evidence")
+    symbols = canonical_gene_space().set_index("ensembl_gene_id")["symbol"].to_dict()
+    expected = frame.groupby("ensembl_gene_id")["record_id"].agg(set).to_dict()
+    probes = []
+    for row in (
+        frame[["gene_symbol", "aliases", "ensembl_gene_id"]]
+        .drop_duplicates()
+        .itertuples(index=False)
+    ):
+        tokens = [row.gene_symbol, symbols[row.ensembl_gene_id], row.ensembl_gene_id]
+        if pd.notna(row.aliases):
+            tokens.extend(alias.strip() for alias in row.aliases.split(";") if alias.strip())
+        for token in tokens:
+            probes.extend((form, row.ensembl_gene_id) for form in (token, f" {token} "))
+        probes.append((row.ensembl_gene_id.lower(), row.ensembl_gene_id))
+        probes.append((row.ensembl_gene_id + ".7", row.ensembl_gene_id))
+    probes.extend(
+        (alias, primary) for alias, primary in ensembl_id_aliases().items() if primary in expected
+    )
+    probes.extend(
+        (str(row.entrez_id), row.canonical_ensembl_gene_id)
+        for row in entrez_gene_mappings().itertuples(index=False)
+        if row.canonical_ensembl_gene_id in expected
+    )
+    for token, gid in set(probes):
+        assert set(query(token).record_id) == expected[gid], (kind, token, gid)
+
+
+@pytest.mark.parametrize("kind", ["gene", "variant"])
+def test_every_bundled_ncbi_alias_for_driver_genes_roundtrips(kind, monkeypatch):
+    def unexpected_genome_lookup(*args, **kwargs):
+        raise AssertionError("driver aliases must not fall back to installed annotations")
+
+    monkeypatch.setattr(genome, "canonical_gene_id_and_name", unexpected_genome_lookup)
+    frame = get_data(f"driver-{kind}-evidence")
+    expected = frame.groupby("ensembl_gene_id")["record_id"].agg(set).to_dict()
+    ids_by_symbol = canonical_gene_space().groupby("symbol")["ensembl_gene_id"].agg(set).to_dict()
+    query = getattr(drivers, f"driver_{kind}_evidence")
+    for row in get_data("ncbi-symbol-synonyms").itertuples(index=False):
+        gene_ids = ids_by_symbol.get(row.official_symbol, set())
+        matches = gene_ids.intersection(expected)
+        if matches:
+            assert len(gene_ids) == 1, (row.alias, row.official_symbol, gene_ids)
+            gid = next(iter(matches))
+            assert set(query(row.alias).record_id) == expected[gid], (kind, row.alias, gid)
+
+
+@pytest.mark.parametrize("query", [drivers.driver_gene_evidence, drivers.driver_variant_evidence])
+def test_exact_alias_case_wins_and_unanchored_case_fold_is_ambiguous(query):
+    pd.testing.assert_frame_equal(query("emb"), query("XPO1"))
+    assert query("EMB").empty  # EMB is a separate gene, not a driver in these sources.
+    with pytest.raises(ValueError, match=r"Ambiguous driver gene symbol.*use an Ensembl gene ID"):
+        query("Emb")
+    for token, gid in (("alb", "ENSG00000163631"), ("met", "ENSG00000105976")):
+        # These folds also collide with aliases of other genes in the snapshot.
+        with pytest.raises(ValueError, match="Ambiguous driver gene symbol"):
+            query(token)
+        pd.testing.assert_frame_equal(query(token.upper()), query(gid))
+
+
+@pytest.mark.parametrize(
+    "old,current,gid",
+    [
+        ("CBWD3", "ZNG1C", "ENSG00000196873"),
+        ("FAM46D", "TENT5D", "ENSG00000174016"),
+        ("H3F3A", "H3-3A", "ENSG00000163041"),
+        ("H3F3C", "H3-5", "ENSG00000188375"),
+        ("HIST1H1C", "H1-2", "ENSG00000187837"),
+        ("HIST1H1E", "H1-4", "ENSG00000168298"),
+        ("RQCD1", "CNOT9", "ENSG00000144580"),
+        ("TCEB1", "ELOC", "ENSG00000154582"),
+        ("WHSC1", "NSD2", "ENSG00000109685"),
+    ],
+)
+def test_all_nine_source_symbol_renames(old, current, gid):
+    expected = drivers.driver_gene_evidence(gid)
+    assert not expected.empty
+    assert set(expected.gene_symbol) == {old}
+    for token in (old, old.lower(), current, current.lower()):
+        pd.testing.assert_frame_equal(drivers.driver_gene_evidence(token), expected)
+
+
+@pytest.mark.parametrize("alias", ["OLD_SOURCE_NAME", "KRAS"])
+def test_recorded_aliases_are_queryable_without_becoming_global_synonyms(source_table, alias):
+    frame, accessor = source_table
+    frame["gene_symbol"] = "TP53"
+    frame["aliases"] = alias
+    query = (
+        drivers.driver_gene_evidence
+        if accessor is drivers.driver_gene_evidence_df
+        else drivers.driver_variant_evidence
+    )
+    if alias == "KRAS":
+        # A source alias that collides with a bundled gene cannot silently select it.
+        with pytest.raises(ValueError, match="Ambiguous driver gene symbol"):
+            query(alias)
+    else:
+        pd.testing.assert_frame_equal(query(alias), frame.reset_index(drop=True))
+        pd.testing.assert_frame_equal(query(f" {alias.lower()} "), frame.reset_index(drop=True))

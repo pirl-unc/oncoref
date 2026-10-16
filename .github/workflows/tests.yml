@@ -55,6 +55,15 @@ jobs:
               evidence = oncoref.driver_gene_evidence(gene)
               assert len(evidence) == 1
               assert evidence.iloc[0].ensembl_gene_id == "ENSG00000196873"
+          genes = oncoref.driver_gene_evidence_df()
+          renamed = genes.loc[genes.aliases.notna(), ["gene_symbol", "aliases", "ensembl_gene_id"]].drop_duplicates()
+          assert len(renamed) == 9
+          for row in renamed.itertuples(index=False):
+              expected = set(genes.loc[genes.ensembl_gene_id.eq(row.ensembl_gene_id), "record_id"])
+              for name in (row.gene_symbol, row.aliases, row.ensembl_gene_id):
+                  assert set(oncoref.driver_gene_evidence(name).record_id) == expected
+          assert set(oncoref.driver_gene_evidence("emb").ensembl_gene_id) == {"ENSG00000082898"}
+          assert oncoref.driver_gene_evidence("EMB").empty
 
           try:
               oncoref.genomes()
