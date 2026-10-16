@@ -23,7 +23,7 @@ def snapshot():
 
 def reseal(record):
     payload = {k: v for k, v in record.items() if k != "snapshot_id"}
-    return {**payload, "snapshot_id": _identity("cta-evidence", 1, payload)}
+    return {**payload, "snapshot_id": _identity("cta-evidence", record["schema_version"], payload)}
 
 
 def test_species_collection_and_reference_boundary(snapshot):
@@ -196,7 +196,7 @@ def test_offline_export_replay_and_immutable_results(snapshot, tmp_path, monkeyp
 @pytest.mark.parametrize(
     "mutation",
     [
-        lambda d: d.update(schema_version=2),
+        lambda d: d.update(schema_version=3),
         lambda d: d.update(taxon_id=9606),
         lambda d: d.update(extra="unknown"),
         lambda d: d["candidates"][0]["mappings"][0].update(gene_namespace="Ensembl gene"),

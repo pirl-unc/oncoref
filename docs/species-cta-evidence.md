@@ -45,6 +45,71 @@ panel and options. The new `human.cta_gene_ids(reference=...)` enumerates the
 broader candidate set; it does not apply the historical default-panel decision.
 The original `oncoref.cta_evidence()` DataFrame is unchanged.
 
+## One evidence flow, different sources
+
+Each species uses the same flow: source records become common facts, facts remain
+linked to their original observations, and candidates report their evidence and
+reference coverage. Source adapters handle the historical human HPA summary and
+native study observations. Validation, queries, coverage reporting and archive
+replay share one implementation. A new species with native observations uses the
+same implementation without a new consumer policy.
+
+```python
+for species in (human, canine, mouse):
+    for record in species.cta_evidence():
+        for fact in record["facts"]:
+            print(record["candidate_ids"], fact["tissue_role"], fact["tissue"])
+            print(fact["measurement"], fact["observation"])
+
+candidate = canine.cta_candidates()[0]
+candidate["evidence_coverage"]["missing"]
+```
+
+`facts` have the same fields for every source. Each fact identifies its parent
+evidence record and, for a summary, its original `source_field`. The parent
+retains source/version/checksum, study lineage, native assay, all candidate IDs,
+sample/donor counts and technical replicates. A family or multi-gene observation
+remains one observation linked to all of its candidates.
+
+`statistic` distinguishes `native_observation`, `tissue_summary`,
+`tissue_maximum`, `somatic_maximum` and `tissue_detection_summary`. Human RNA
+values retain nTPM; canine PCR retains percent of testis-normalized expression;
+IHC remains categorical or a count of positive/examined samples. The common
+representation does **not** make these values numerically interchangeable.
+Human organ maxima can overlap the overall somatic maximum. The brain group
+includes retina and spinal cord; it is not a measurement of one brain tissue.
+
+Human IHC tissue lists supply qualitative detection summaries with protein-group
+scope. Missing IHC and false derived protein flags never become measured negative
+observations. Historical RNA summary zeros are retained as summary values: the
+historical builder could fill absent tissues with zero, so these values do not
+establish measured absence. Native censored bounds and no-amplification results
+remain distinguishable from both zero and unreported measurements.
+
+`curation` holds explicitly named, versioned historical policy records separately
+from observations. The human `oncoref-human-cta-core` policy preserves its original
+decision, decision field, rule and source rationale. Its included genes reproduce
+the existing flat `oncoref.cta_gene_ids()` exactly. Shared consumers can inspect
+the same fact types for any species while owning their own thresholds and
+overrides; historical membership does not override normal-tissue counterevidence.
+
+`evidence_coverage` groups fact IDs by tissue role and reports specific missing
+capabilities: observations, a complete tissue panel, independent sample/donor
+totals, quantification-reference identity, sequence reference assets, or
+transcript/protein pairs. No missing tissue list or independent total is inferred
+from summary columns, assay counts or technical replicates. `unreported_tissues`
+is `null` because no complete tissue-panel denominator is declared. Per-observation
+counts remain available on the evidence record.
+
+A unique gene mapping is still separate from measured tissue restriction and
+complete sequence coverage. Human mappings currently lack a full sequence-asset
+identity and exhaustive transcript/protein mappings; those gaps are explicit.
+Canine mappings retain their pinned reference assets and sequence pairs. A
+measurement verified against another reference reports
+`matching_quantification_reference` as missing. Matching assembly labels or
+symbols never establish reference equivalence. The human sequence identity bridge
+and initial mouse curation remain follow-up work in #599 and #600.
+
 ## Reading a record
 
 - `nomination_kind` records provenance: `published_nomination`, `assay_followup`,
@@ -98,8 +163,26 @@ snapshot is immutable and content-addressed; exported metadata, evidence and
 mapping changes invalidate its SHA-256 identity. A caller-saved expected identity
 pins the selected version. An internal checksum detects changes, not authorship.
 No source PDFs, expression matrices, GTFs or network access are needed to replay.
-The schema is `oncoref.cta-evidence`, version 1; unknown fields and inconsistent
-species, references, contracts, links or counts are rejected.
+New default snapshots use `oncoref.cta-evidence`, version 2, with frozen `facts`
+and `curation` sections. Unknown fields and inconsistent species, references,
+contracts, links, source values or counts are rejected. Replay uses the archived
+facts, without running adapters or reading current data.
+
+Version 1 archives remain readable with their original identity and contents.
+Their query results report missing normalized observations rather than silently
+reinterpreting the archive. To explicitly derive a new v2 archive using only an
+old archive's records:
+
+```python
+from oncoref.cta_evidence_adapters import normalize_cta_snapshot
+
+upgraded = normalize_cta_snapshot(replay)
+upgraded.write("cta-v2.json")
+```
+
+The canine builder below continues to reproduce the pinned v1 source snapshot.
+Default package queries adapt it to v2; explicit file replay preserves whichever
+version was saved.
 
 ## Initial canine curation
 
