@@ -90,7 +90,7 @@ from .expression_builders import (
 from .expression_builders import (
     WITHIN_SAMPLE_THRESHOLDS as _WITHIN_SAMPLE_THRESHOLD_COLS,
 )
-from .expression_engine import id_columns, sample_columns
+from .expression_engine import id_columns, sample_columns, validate_nonnegative_expression
 from .gene_ids import (
     canonical_gene_symbol,
     cdna_identical_groups,
@@ -3010,8 +3010,9 @@ def per_sample_expression(
         robust to library-depth drift);
       - ``"tpm_raw"`` — the matrix as shipped (raw TPM), no normalization.
 
-    Normalized reads clip invalid negative source values to zero before computing
-    clean TPM, matching the release builders. Raw reads preserve those values.
+    Every source read requires nonnegative linear TPM (NaN remains unmeasured).
+    Invalid values raise before canonicalization or normalization; clipping a
+    transformed source field would hide a unit error rather than repair it.
 
     With ``proteoform=True``, identical-protein paralogs are **summed per sample** to
     proteoform level (:func:`oncoref.proteoforms.collapse_to_proteoforms`, ``scope``
@@ -3062,26 +3063,13 @@ def per_sample_expression(
     return _apply_sample_qc_filter(out, str(code), sample_qc=sample_qc, auto_fetch=auto_fetch)
 
 
-def _clip_negative_expression(df: pd.DataFrame, sample_cols: list[str]) -> tuple[pd.DataFrame, int]:
-    """TPM-like source matrices should be nonnegative; clip invalid negatives to zero."""
-    if not sample_cols:
-        return df, 0
-    values = df[sample_cols]
-    negative = values < 0
-    n_negative = int(negative.to_numpy().sum())
-    if not n_negative:
-        return df, 0
-    out = df.copy()
-    out.loc[:, sample_cols] = values.clip(lower=0)
-    return out, n_negative
-
-
 @lru_cache(maxsize=_PER_SAMPLE_CACHE_SIZE)
 def _load_per_sample_matrix(path: str, mtime: float, normalize: str) -> pd.DataFrame:
     """Read + normalize one cohort's per-sample matrix (the cached canonical frame).
     ``path``/``mtime`` identify the on-disk parquet (mtime keys cache invalidation);
     the matrix must already be present."""
     raw = pd.read_parquet(path)
+    validate_nonnegative_expression(raw[sample_columns(raw)], context=f"{path}: linear TPM")
     # Make the matrix dense in the CANONICAL gene-id space before anything else: sum
     # alt-haplotype/patch copies into their primary gene (in LINEAR raw TPM) and relabel
     # retired ids to their successor (resolve_ensembl_id). Doing it pre-clean_tpm means
@@ -3094,7 +3082,6 @@ def _load_per_sample_matrix(path: str, mtime: float, normalize: str) -> pd.DataF
     samples = sample_columns(raw)
     if normalize == "tpm_raw":
         return raw
-    raw, _ = _clip_negative_expression(raw, samples)
     clean = clean_tpm(raw[samples], gene_table=raw[base])
     out = pd.concat([raw[base].reset_index(drop=True), clean.reset_index(drop=True)], axis=1)
     if normalize == "tpm_clean_log1p":

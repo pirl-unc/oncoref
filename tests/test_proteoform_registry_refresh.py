@@ -175,25 +175,22 @@ def stale_summary_source(tmp_path, monkeypatch, rbmy_expression):
     return tmp_path, source, raw, qc
 
 
-def test_stale_percentiles_clip_raw_negatives_before_normalization(stale_summary_source):
-    from scripts.rebuild_expression_artifacts import _drop_technical, build_clean
-
+@pytest.mark.parametrize("read_mode", ["tpm_raw", "tpm_clean", "percentiles", "within_sample"])
+def test_stale_summaries_and_source_reads_reject_negative_expression(
+    stale_summary_source, read_mode
+):
     _, source, raw, _ = stale_summary_source
     raw.loc[0, "s1"] = -6.0
     raw.to_parquet(source, index=False)
-    clipped = raw.copy()
-    clipped.loc[0, "s1"] = 0.0
-    expected = cohort_percentile_vectors(
-        collapse_to_proteoforms(_drop_technical(build_clean(clipped))), ["s1"]
-    )
-
-    out = expression.proteoform_cohort_percentiles("PRAD", as_tpm=False, auto_fetch=False)
-
-    pd.testing.assert_frame_equal(out, expected, check_dtype=False, check_exact=True)
-    assert (out[expression.sample_columns(out)] >= 0).all().all()
-    # Raw source reads retain their original values; only normalized reads clip.
-    unchanged = expression.per_sample_expression("PRAD", normalize="tpm_raw", auto_fetch=False)
-    assert unchanged.set_index("Symbol").loc["RBMY1F", "s1"] == -6.0
+    with pytest.raises(ValueError, match=r"linear TPM.*negative or infinite"):
+        if read_mode == "percentiles":
+            expression.proteoform_cohort_percentiles("PRAD", as_tpm=False, auto_fetch=False)
+        elif read_mode == "within_sample":
+            expression.proteoform_within_sample_top_fraction("PRAD", auto_fetch=False)
+        else:
+            expression.per_sample_expression("PRAD", normalize=read_mode, auto_fetch=False)
+    # Rejection leaves the source intact for investigation rather than repairing it.
+    pd.testing.assert_frame_equal(pd.read_parquet(source), raw)
 
 
 @pytest.mark.parametrize("dataset_name", ["percentiles", "within_sample"])
@@ -281,7 +278,7 @@ def test_registry_fingerprint_is_order_independent_and_tracks_membership(monkeyp
     assert _proteoform_registry_metadata("cta") != original
 
 
-@pytest.mark.parametrize("drift", [False, True])
+@pytest.mark.parametrize("drift", ["none", "gene_summary", "negative_source"])
 def test_release_refresh_checks_gene_basis_before_replacing_summaries(
     tmp_path, monkeypatch, rbmy_expression, drift
 ):
@@ -324,10 +321,20 @@ def test_release_refresh_checks_gene_basis_before_replacing_summaries(
             directory = base / expression.SHARD_DATASETS[name].subdir(proteoform=grouped)
             directory.mkdir()
             values = build(rbmy_expression)
-            if drift and not grouped and name == "percentiles":
+            if drift == "gene_summary" and not grouped and name == "percentiles":
                 values.loc[0, "p95"] = 999
             values.to_parquet(directory / "PRAD.parquet", index=False)
-    if drift:
+    if drift == "negative_source":
+        invalid = rbmy_expression.copy()
+        invalid.loc[0, "s1"] = -1.0
+        invalid.to_parquet(source, index=False)
+        with pytest.raises(ValueError, match=r"PRAD: linear TPM refresh.*negative or infinite"):
+            refresh.refresh(base, out)
+        assert not list(out.rglob("*.parquet"))
+        assert not (out / "expression-artifact-build-metadata.json").exists()
+        assert not (out / "proteoform-refresh-audit.json").exists()
+        pd.testing.assert_frame_equal(pd.read_parquet(source), invalid)
+    elif drift == "gene_summary":
         with pytest.raises(AssertionError):
             refresh.refresh(base, out)
         assert not (out / "expression-artifact-build-metadata.json").exists()
@@ -336,6 +343,8 @@ def test_release_refresh_checks_gene_basis_before_replacing_summaries(
         meta = json.loads((out / "expression-artifact-build-metadata.json").read_text())
         assert meta["proteoform_registry"] == _proteoform_registry_metadata("cta")
         assert meta["n_cohorts"] == 1
+        audit = json.loads((out / "proteoform-refresh-audit.json").read_text())
+        assert audit[0]["n_negative_values_clipped"] == 0
         for name in ("percentiles", "within_sample"):
             result = pd.read_parquet(
                 out / expression.SHARD_DATASETS[name].subdir(proteoform=True) / "PRAD.parquet"

@@ -5628,14 +5628,17 @@ def test_rebuild_expression_artifacts_keeps_concentration_only_source_when_pass_
     assert prov["source_group_id"].str.startswith("TEST_SOURCE:").all()
 
 
-def test_rebuild_expression_artifacts_clips_negative_source_values():
+def test_rebuild_expression_artifacts_rejects_negative_source_values(tmp_path):
     gen = _load_script("rebuild_expression_artifacts")
     df = _matrix(["G1", "G2"], ["s1", "s2"], np.array([[-2.0, 3.0], [4.0, -0.5]]))
-
-    out, n_negative = gen._clip_negative_expression(df, ["s1", "s2"])
-
-    assert n_negative == 2
-    assert out[["s1", "s2"]].to_numpy().min() == 0.0
+    path = tmp_path / "invalid.parquet"
+    df.to_parquet(path, index=False)
+    with pytest.raises(ValueError, match="negative or infinite"):
+        gen.read_raw(path)
+    with pytest.raises(ValueError, match="negative or infinite"):
+        gen.build_clean(df)
+    with pytest.raises(ValueError, match="negative or infinite"):
+        gen.build_source_summary(df, cancer_code="NUTM", source_cohort="UNC_NUTM1")
     assert df[["s1", "s2"]].to_numpy().min() < 0.0
 
 

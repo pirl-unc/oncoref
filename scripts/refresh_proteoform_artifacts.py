@@ -21,7 +21,6 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.rebuild_expression_artifacts import (
-    _clip_negative_expression,
     _drop_technical,
     _sample_selection_for_qc,
     build_clean,
@@ -35,6 +34,7 @@ from oncoref.expression_builders import (
     sample_columns,
     within_sample_top_fractions,
 )
+from oncoref.expression_engine import validate_nonnegative_expression
 from oncoref.proteoforms import _proteoform_registry_metadata, collapse_to_proteoforms
 
 
@@ -67,7 +67,7 @@ def refresh(base: Path, out: Path) -> None:
             raise FileNotFoundError(f"{code}: cache the published source matrix at {source}")
         raw = read_raw(source)
         raw_samples = sample_columns(raw)
-        raw, n_clipped = _clip_negative_expression(raw, raw_samples)
+        validate_nonnegative_expression(raw[raw_samples], context=f"{code}: linear TPM refresh")
         cohort_qc = qc.loc[qc["cancer_code"].astype(str) == code]
         samples, effective, fallback = _sample_selection_for_qc(
             raw_samples, cohort_qc, row.sample_qc
@@ -100,7 +100,8 @@ def refresh(base: Path, out: Path) -> None:
                 "n_samples": len(samples),
                 "n_genes": len(bio),
                 "n_proteoforms": len(grouped),
-                "n_negative_values_clipped": n_clipped,
+                # Historical audit field: invalid inputs now raise, never clip.
+                "n_negative_values_clipped": 0,
             }
         )
         print(
