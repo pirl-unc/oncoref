@@ -27,6 +27,7 @@ jobs:
         run: |
           python - <<'PY'
           import importlib.util
+          import warnings
 
           assert importlib.util.find_spec("pyensembl") is None
           for dependency in ("matplotlib", "adjustText", "matplotlib_venn"):
@@ -38,6 +39,22 @@ jobs:
           assert oncoref.canonical_gene_id("NOT_A_REAL_GENE") is None
           assert not oncoref.cancer_tmb_df().empty
           assert not oncoref.cancer_type_registry().empty
+
+          from oncoref.drivers import DriverGeneIdentityWarning
+
+          with warnings.catch_warnings(record=True) as caught:
+              warnings.simplefilter("always", DriverGeneIdentityWarning)
+              assert len(oncoref.driver_gene_evidence_df()) == 739
+          identity_warnings = [w for w in caught if issubclass(w.category, DriverGeneIdentityWarning)]
+          assert len(identity_warnings) == 1
+          assert "CBWD3" in str(identity_warnings[0].message)
+          assert "ZNG1C" in str(identity_warnings[0].message)
+          assert len(oncoref.driver_variant_evidence_df()) == 579
+          assert len(oncoref.driver_legacy_migration_audit_df()) == 1318
+          for gene in ("CBWD3", "ZNG1C", "ENSG00000196873"):
+              evidence = oncoref.driver_gene_evidence(gene)
+              assert len(evidence) == 1
+              assert evidence.iloc[0].ensembl_gene_id == "ENSG00000196873"
 
           try:
               oncoref.genomes()

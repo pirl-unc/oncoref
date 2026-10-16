@@ -13,16 +13,85 @@ individual sample. Sample-level evidence lives in :mod:`oncoref.samples`.
 
 from __future__ import annotations
 
+import warnings
 from functools import lru_cache
 
 import pandas as pd
 
 from .cancer_types import resolve_cancer_type
-from .gene_ids import canonical_gene_id
+from .gene_ids import canonical_gene_id, canonical_gene_space, resolve_symbol
 from .load_dataset import _register_derived_cache, get_data
 
 DRIVER_EVIDENCE_SCOPE_KINDS = frozenset({"pan_cancer", "source_cancer_code"})
 DRIVER_MIGRATION_STATUSES = frozenset({"migrated", "rejected", "awaiting_source"})
+
+
+class DriverGeneIdentityWarning(UserWarning):
+    """A source driver symbol needs its recorded Ensembl ID to resolve safely."""
+
+
+@lru_cache(maxsize=1)
+def _driver_symbol_index() -> dict[str, frozenset[str]]:
+    """All bundled identities for each symbol, independent of installed genomes."""
+    candidates: dict[str, set[str]] = {}
+    for row in canonical_gene_space().itertuples(index=False):
+        if pd.notna(row.symbol) and str(row.symbol).strip():
+            candidates.setdefault(str(row.symbol).strip().upper(), set()).add(row.ensembl_gene_id)
+    return {symbol: frozenset(ids) for symbol, ids in candidates.items()}
+
+
+def _symbol_gene_ids(symbol: str) -> frozenset[str]:
+    symbol = str(symbol).strip()
+    index = _driver_symbol_index()
+    return index.get(symbol.upper()) or index.get(resolve_symbol(symbol).upper(), frozenset())
+
+
+def _validate_gene_identities(frame: pd.DataFrame, dataset: str) -> None:
+    """Validate source labels against their recorded IDs without changing rows."""
+    for row in frame.itertuples(index=False):
+        if pd.isna(row.gene_symbol) or not str(row.gene_symbol).strip():
+            raise ValueError(f"{dataset} record {row.record_id} is missing its source gene symbol")
+        candidates = _symbol_gene_ids(row.gene_symbol)
+        identity = f"{dataset} record {row.record_id}: {row.gene_symbol}/{row.ensembl_gene_id}"
+        if candidates:
+            if row.ensembl_gene_id not in candidates:
+                raise ValueError(
+                    f"{identity} has a symbol/Ensembl mismatch; "
+                    f"symbol resolves to {sorted(candidates)}"
+                )
+            if len(candidates) > 1:
+                warnings.warn(
+                    f"{identity} has an ambiguous source symbol ({sorted(candidates)}); "
+                    "the recorded Ensembl ID disambiguates this row",
+                    DriverGeneIdentityWarning,
+                    stacklevel=3,
+                )
+            continue
+
+        aliases = [] if pd.isna(row.aliases) else str(row.aliases).split(";")
+        resolved_aliases = {
+            alias.strip(): _symbol_gene_ids(alias) for alias in aliases if alias.strip()
+        }
+        matching = [alias for alias, ids in resolved_aliases.items() if row.ensembl_gene_id in ids]
+        detail = (
+            "; ".join(
+                f"{alias} -> {', '.join(sorted(ids)) or 'unresolved'}"
+                for alias, ids in resolved_aliases.items()
+            )
+            or "no aliases"
+        )
+        if not matching:
+            raise ValueError(
+                f"{identity} has a symbol/Ensembl mismatch; source symbol is unresolved "
+                f"and no recorded alias supports this Ensembl ID ({detail})"
+            )
+        warnings.warn(
+            f"{identity} has an unresolved source symbol; validated using recorded "
+            f"alias(es) {', '.join(matching)} and the recorded Ensembl ID. "
+            f"All alias candidates: {detail}. Source identifiers are preserved",
+            DriverGeneIdentityWarning,
+            stacklevel=3,
+        )
 
 
 def _require_columns(frame: pd.DataFrame, dataset: str, required: set[str]) -> None:
@@ -41,6 +110,7 @@ def _driver_gene_evidence_frame() -> pd.DataFrame:
         {
             "record_id",
             "gene_symbol",
+            "aliases",
             "ensembl_gene_id",
             "scope_kind",
             "source_scope",
@@ -57,12 +127,7 @@ def _driver_gene_evidence_frame() -> pd.DataFrame:
     invalid_scopes = sorted(set(frame["scope_kind"].astype(str)) - DRIVER_EVIDENCE_SCOPE_KINDS)
     if invalid_scopes:
         raise ValueError(f"{dataset} contains invalid scope_kind values: {invalid_scopes}")
-    for row in frame.itertuples(index=False):
-        if canonical_gene_id(row.gene_symbol) != row.ensembl_gene_id:
-            raise ValueError(
-                f"{dataset} record {row.record_id} has a symbol/Ensembl mismatch: "
-                f"{row.gene_symbol}/{row.ensembl_gene_id}"
-            )
+    _validate_gene_identities(frame, dataset)
     return frame
 
 
@@ -76,6 +141,7 @@ def _driver_variant_evidence_frame() -> pd.DataFrame:
         {
             "record_id",
             "gene_symbol",
+            "aliases",
             "ensembl_gene_id",
             "ensembl_transcript_id",
             "protein_change",
@@ -96,15 +162,11 @@ def _driver_variant_evidence_frame() -> pd.DataFrame:
         raise ValueError(f"{dataset} contains a malformed Ensembl transcript ID")
     if not frame["protein_change"].astype(str).str.fullmatch(r"p\.[A-Z*][A-Za-z0-9_*?=]+").all():
         raise ValueError(f"{dataset} contains non-normalized protein-change notation")
-    for row in frame.itertuples(index=False):
-        if canonical_gene_id(row.gene_symbol) != row.ensembl_gene_id:
-            raise ValueError(
-                f"{dataset} record {row.record_id} has a symbol/Ensembl mismatch: "
-                f"{row.gene_symbol}/{row.ensembl_gene_id}"
-            )
+    _validate_gene_identities(frame, dataset)
     return frame
 
 
+_register_derived_cache(_driver_symbol_index.cache_clear)
 _register_derived_cache(_driver_gene_evidence_frame.cache_clear)
 _register_derived_cache(_driver_variant_evidence_frame.cache_clear)
 
@@ -116,6 +178,11 @@ def driver_gene_evidence_df() -> pd.DataFrame:
     92 gene identity, driver role, decision, and frequencies. ``scope_kind``
     distinguishes the source's pan-cancer rows from its cancer-code-scoped rows;
     it does not invent an oncoref cancer entity.
+
+    Validation uses the bundled gene reference, without the genome extra. A
+    retired source symbol is accepted only when a recorded alias supports its
+    recorded Ensembl ID, with :class:`DriverGeneIdentityWarning` on first load.
+    All source identifiers and aliases remain unchanged.
     """
     return _driver_gene_evidence_frame().copy()
 
@@ -126,6 +193,7 @@ def driver_variant_evidence_df() -> pd.DataFrame:
     These are Bailey et al. Table S4's pan-cancer records. Each row preserves
     the Ensembl release 92 gene/transcript identifiers and normalized HGVS
     protein notation, without assigning a context-free variant to a cancer type.
+    Symbol validation and warnings follow :func:`driver_gene_evidence_df`.
     """
     return _driver_variant_evidence_frame().copy()
 
@@ -133,7 +201,18 @@ def driver_variant_evidence_df() -> pd.DataFrame:
 def _filter_gene(frame: pd.DataFrame, gene: str | None) -> pd.DataFrame:
     if gene is None:
         return frame
-    ensembl_id = canonical_gene_id(gene)
+    query = str(gene).strip()
+    # A validated source label can be retired from the bundled reference (CBWD3).
+    # Keep it queryable without installing a historical Ensembl annotation.
+    candidates = set(
+        frame.loc[frame["gene_symbol"].str.upper().eq(query.upper()), "ensembl_gene_id"]
+    )
+    candidates.update(_symbol_gene_ids(query))
+    if len(candidates) > 1:
+        raise ValueError(
+            f"Ambiguous driver gene symbol {gene!r}: {sorted(candidates)}; use an Ensembl gene ID"
+        )
+    ensembl_id = next(iter(candidates)) if candidates else canonical_gene_id(query)
     if ensembl_id is None:
         return frame.iloc[0:0]
     return frame.loc[frame["ensembl_gene_id"].eq(ensembl_id)]

@@ -1000,6 +1000,17 @@ diagnosis-only Treehouse sample.
   Table S4 pan-cancer recurrent variants with canonical Ensembl gene/transcript
   IDs and normalized HGVS protein notation. These rows are explicitly
   pan-cancer and are not assigned to an invented cancer entity.
+- Both driver-evidence tables validate against the bundled gene reference and
+  work without `oncoref[genome]`. Retired source symbols such as `CBWD3` retain
+  their original spelling: every recorded alias is checked, and at least one
+  must support the row's recorded Ensembl ID (`ZNG1C` / `ENSG00000196873` here).
+  `oncoref.drivers.DriverGeneIdentityWarning` reports this fallback and all
+  alias candidates on the first load of each table. A known symbol pointing to
+  a different ID remains an error, even if an alias matches. Shared symbols
+  retain all candidate IDs; a row's recorded ID disambiguates it with a warning.
+  Filtering by an ambiguous symbol raises and asks for an explicit Ensembl ID.
+  `driver_gene_evidence("CBWD3")`, `driver_gene_evidence("ZNG1C")`, and the
+  recorded ID return the same source-preserving evidence.
 - `oncoref.drivers.driver_legacy_migration_audit_df()` gives one
   `migrated` / `rejected` / `awaiting_source` disposition per frozen driver row;
   `driver_legacy_migration_summary()` exposes the counts per legacy table.
