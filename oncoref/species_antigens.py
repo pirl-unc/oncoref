@@ -12,6 +12,11 @@ from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
 
+from .cta_evidence_model import (
+    candidate_evidence_coverage,
+    index_evidence_records,
+    validate_cta_facts,
+)
 from .expression_contract import ExpressionContract, _fields
 from .reference_identity import ReferenceIdentity, _canonical_json, _identity, _json_value, _label
 from .species import resolve_species
@@ -41,8 +46,10 @@ def _count(value, name):
 
 
 def _validate(record):
-    if not _json_value(record):
+    if not isinstance(record, dict) or not _json_value(record):
         raise ValueError("Snapshot requires finite JSON-native records")
+    version = record.get("schema_version")
+    additions = {"facts", "curation"} if version == 2 else set()
     _fields(
         record,
         {
@@ -57,13 +64,14 @@ def _validate(record):
             "contracts",
             "candidates",
             "evidence",
-        },
+        }
+        | additions,
         "CTA snapshot",
     )
     if (
         record["schema"] != _SCHEMA
         or type(record["schema_version"]) is not int
-        or record["schema_version"] != 1
+        or record["schema_version"] not in (1, 2)
     ):
         raise ValueError("Unsupported CTA snapshot schema/version")
     taxon = resolve_species(record["taxon_id"]).taxon_id
@@ -315,8 +323,10 @@ def _validate(record):
             row["sample_count"] is None or observation["positive_count"] > row["sample_count"]
         ):
             raise ValueError("Positive count exceeds or lacks sampled coverage")
+    if version == 2:
+        validate_cta_facts(record)
     payload = {k: v for k, v in record.items() if k != "snapshot_id"}
-    if record["snapshot_id"] != _identity("cta-evidence", 1, payload):
+    if record["snapshot_id"] != _identity("cta-evidence", version, payload):
         raise ValueError("CTA snapshot digest does not match its contents")
 
 
@@ -337,6 +347,18 @@ class CTAEvidenceSnapshot:
         if not _json_value(record):
             raise ValueError("Snapshot requires finite JSON-native records")
         return cls(_canonical_json(record))
+
+    @classmethod
+    def create(cls, payload):
+        """Validate and seal a newly built snapshot payload (without snapshot_id)."""
+        if not isinstance(payload, dict) or "snapshot_id" in payload:
+            raise ValueError("A new CTA snapshot payload must omit snapshot_id")
+        return cls.from_dict(
+            {
+                **payload,
+                "snapshot_id": _identity("cta-evidence", payload.get("schema_version"), payload),
+            }
+        )
 
     def as_dict(self):
         return json.loads(self._serialized)
@@ -364,8 +386,8 @@ class CTAEvidenceSnapshot:
             raise ValueError("Unexpected CTA snapshot identity")
         return result
 
-    def _reference(self, reference):
-        refs = self.as_dict()["references"]
+    def _reference(self, reference, data):
+        refs = data["references"]
         if reference is None:
             if not refs:
                 return None
@@ -373,7 +395,7 @@ class CTAEvidenceSnapshot:
                 return ReferenceIdentity.from_dict(refs[0]["identity"])
             raise ValueError("Select an explicit reference from this snapshot")
         if isinstance(reference, ReferenceIdentity):
-            if reference.taxon_id != self.taxon_id:
+            if reference.taxon_id != data["taxon_id"]:
                 raise ValueError("CTA query/reference taxon mismatch")
             match = next(
                 (r for r in refs if r["identity"]["reference_id"] == reference.reference_id), None
@@ -388,10 +410,18 @@ class CTAEvidenceSnapshot:
 
     def candidates(self, *, reference=None):
         """All nominations, including ambiguous/unresolved and counterevidence rows."""
-        ref = self._reference(reference)
         data = self.as_dict()
+        ref = self._reference(reference, data)
+        return self._candidates(data, ref)
+
+    def _candidates(self, data, ref, candidate_ids=None):
+        facts = index_evidence_records(data.get("facts", []))
+        evidence = {r["id"]: r for r in data["evidence"]}
+        contracts = {r["contract_id"]: r for r in data["contracts"]}
         result = []
         for row in data["candidates"]:
+            if candidate_ids is not None and row["id"] not in candidate_ids:
+                continue
             mapping = next(m for m in row.pop("mappings") if m["reference_id"] == ref.reference_id)
             result.append(
                 {
@@ -401,6 +431,14 @@ class CTAEvidenceSnapshot:
                     "reference": ref.as_dict(),
                     "mapping": mapping,
                     "gene_ids": [t["id"] for t in mapping["targets"]],
+                    "evidence_coverage": candidate_evidence_coverage(
+                        row,
+                        [fact for eid in row["evidence_ids"] for fact in facts[eid]],
+                        evidence,
+                        contracts,
+                        ref.as_dict(),
+                        mapping,
+                    ),
                 }
             )
         return tuple(result)
@@ -417,13 +455,22 @@ class CTAEvidenceSnapshot:
         )
 
     def evidence(self, *, reference=None, candidate_id=None):
-        """Return native observations with full source, contract and mapping records."""
-        candidates = {r["id"]: r for r in self.candidates(reference=reference)}
-        if candidate_id is not None and candidate_id not in candidates:
-            raise ValueError(f"Unknown CTA candidate {candidate_id!r}")
+        """Native observations, common facts and separately named historical curation."""
         data = self.as_dict()
+        ref = self._reference(reference, data)
+        if candidate_id is not None and candidate_id not in {r["id"] for r in data["candidates"]}:
+            raise ValueError(f"Unknown CTA candidate {candidate_id!r}")
+        rows = [
+            r
+            for r in data["evidence"]
+            if candidate_id is None or candidate_id in r["candidate_ids"]
+        ]
+        ids = {cid for row in rows for cid in row["candidate_ids"]}
+        candidates = {r["id"]: r for r in self._candidates(data, ref, ids)}
         sources = {s["id"]: s for s in data["sources"]}
         contracts = {c["contract_id"]: c for c in data["contracts"]}
+        facts = index_evidence_records(data.get("facts", []))
+        curation = index_evidence_records(data.get("curation", []))
         return tuple(
             {
                 **row,
@@ -432,9 +479,10 @@ class CTAEvidenceSnapshot:
                 "source": sources[row["source_id"]],
                 "contract": contracts[row["contract_id"]],
                 "candidates": [candidates[cid] for cid in row["candidate_ids"]],
+                "facts": facts[row["id"]],
+                "curation": curation[row["id"]],
             }
-            for row in data["evidence"]
-            if candidate_id is None or candidate_id in row["candidate_ids"]
+            for row in rows
         )
 
 
@@ -478,6 +526,10 @@ def cta_snapshot(species, *, path=None, expected_snapshot_id=None):
         )
     if snapshot.taxon_id != selected.taxon_id:
         raise ValueError("CTA snapshot/collection taxon mismatch")
+    if path is None:
+        from .cta_evidence_adapters import normalize_cta_snapshot
+
+        snapshot = normalize_cta_snapshot(snapshot)
     if expected_snapshot_id is not None and snapshot.snapshot_id != expected_snapshot_id:
         raise ValueError("Unexpected CTA snapshot identity")
     return snapshot
