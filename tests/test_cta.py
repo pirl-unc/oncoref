@@ -67,9 +67,20 @@ def test_never_expressed_rescue_is_a_uniform_rule():
     expressed = cta.cta_gene_ids()
     assert "ENSG00000171405" in expressed  # XAGE5
     assert "MAGEA2B" in cta.cta_gene_names()  # a same-signature peer, also kept
-    # The rescue is exactly the rule, applied to every row.
+    # The rescue applies uniformly to cancer-nominated rows. Normal-testis-only
+    # nominations still need cancer evidence before this expression rule applies.
     df = cta.cta_df()
     rescued = df[cta._never_expressed_rescue_mask(df)]
+    normal_sources = {
+        "daSilva2017_testis_biased",
+        "Gong2021_reproductive_PC",
+        "Gong2021_reproductive_ncRNA",
+    }
+    normal_only = rescued.source_databases.str.split(";").map(
+        lambda tags: set(tags) <= normal_sources
+    )
+    assert set(rescued.loc[normal_only, "Ensembl_Gene_ID"]).isdisjoint(expressed)
+    rescued = rescued[~normal_only]
     never = rescued["never_expressed"].astype(str).str.lower() == "true"
     kept = set(rescued.loc[never, "Ensembl_Gene_ID"].astype(str).str.split(".").str[0])
     assert kept and kept <= cta.cta_gene_ids()
@@ -211,11 +222,30 @@ def test_cta_symbol_for_alias_resolves_common_names():
     assert cta.cta_symbol_for_alias("not-a-gene") is None
 
 
+def test_spag4_retained_as_candidate_with_human_pancreas_caveat():
+    row = cta.cta_candidate_references().set_index("Symbol").loc["SPAG4"]
+    assert row["Ensembl_Gene_ID"] == "ENSG00000061656"
+    assert row["ct_designation"] == "CT127"
+    assert set(row["pmids"].split(";")) == {"14614621", "23602831"}
+    assert row["hpa_max_somatic_tissue"] == "pancreas"
+    assert row["hpa_max_somatic_ntpm"] == 87.3
+    assert row["hpa_testis_ntpm"] == 31.1
+    assert row["hpa_testis_restricted"] in (False, "False")
+    assert "SUN4" in row["rationale"] and "mouse" in row["rationale"]
+    audit = cta.cta_specificity_audit().set_index("Symbol").loc["SPAG4"]
+    assert audit["specificity_action"] == "candidate_only"
+    assert audit["in_candidate_watchlist"] and not audit["in_cta_table"]
+    assert "SPAG4" not in cta.cta_gene_names(include_warnings=True)
+    assert "SPAG4" not in cta.cta_clinical_target_gene_names()
+
+
 def test_cta_candidate_references_registry():
     # Top-of-funnel referenced candidate watchlist: every row carries an Ensembl
     # ID, a citation, and an HPA-restriction flag; none overlaps the curated set.
     cand = cta.cta_candidate_references()
-    assert len(cand) >= 10
+    all_refs = cta.cta_candidate_references(include_in_table=True)
+    assert len(all_refs) >= 10
+    assert set(cand.Ensembl_Gene_ID) <= set(all_refs.Ensembl_Gene_ID)
     required = {
         "Symbol",
         "Ensembl_Gene_ID",
@@ -251,7 +281,12 @@ def test_clinical_cta_target_tier_keeps_strict_default_conservative():
     assert leaky <= cta.cta_excluded_clinical_target_gene_names()
     assert leaky <= cta.cta_excluded_gene_names()
     assert not (leaky & cta.cta_filtered_gene_names())
-    assert not ({"MAGEC3", "PAGE4", "CSAG1"} & cta.cta_unfiltered_gene_names())
+    assert "MAGEC3" not in cta.cta_unfiltered_gene_names()
+    assert "CSAG1" in cta.cta_unfiltered_gene_names()
+    assert "CSAG1" not in cta.cta_gene_names()
+    assert "PAGE4" in cta.cta_unfiltered_gene_names()
+    assert "PAGE4" not in cta.cta_gene_names()
+    assert "PAGE4" in cta.cta_excluded_clinical_target_gene_names()
 
     evidence = cta.cta_clinical_target_evidence().set_index("Symbol")
     assert set(evidence.loc[sorted(leaky), "evidence_tier"]) == {"excluded"}
@@ -261,12 +296,20 @@ def test_clinical_cta_target_tier_keeps_strict_default_conservative():
     assert float(evidence.loc["CTAG2", "exclusion_driver_ntpm"]) == 5.1
 
     assert evidence.loc["MAGEC3", "evidence_tier"] == "candidate"
-    assert evidence.loc["PAGE4", "evidence_tier"] == "candidate"
-    assert evidence.loc["CSAG1", "evidence_tier"] == "candidate"
+    assert evidence.loc["PAGE4", "evidence_tier"] == "excluded"
+    assert evidence.loc["PAGE4", "candidate_source"] == "literature_cta"
+    assert "21357425" in evidence.loc["PAGE4", "candidate_pmids"]
+    # The CTA somatic-max scope excludes accessory reproductive tissues;
+    # the preserved historical watchlist also reports prostate expression.
+    assert evidence.loc["PAGE4", "exclusion_driver_tissue"] == "smooth muscle"
+    assert float(evidence.loc["PAGE4", "exclusion_driver_ntpm"]) == 23.3
+    assert evidence.loc["PAGE4", "hpa_max_somatic_tissue"] == "prostate"
+    assert evidence.loc["CSAG1", "evidence_tier"] == "excluded"
+    assert evidence.loc["CSAG1", "exclusion_driver_tissue"] == "basal ganglia"
     assert evidence.loc["CSAG1", "candidate_source"] == "literature_cta"
     assert "PMID:12039054" in evidence.loc["CSAG1", "pmids"]
     assert "ENSG00000198930" in cta.cta_clinical_target_gene_ids()
-    assert "ENSG00000198930" not in cta.cta_excluded_clinical_target_gene_ids()
+    assert "ENSG00000198930" in cta.cta_excluded_clinical_target_gene_ids()
 
 
 def test_cta_specificity_audit_surfaces_demotions_and_candidate_only_rows():
@@ -289,9 +332,12 @@ def test_cta_specificity_audit_surfaces_demotions_and_candidate_only_rows():
     assert float(audit.loc["CTAG2", "rna_max_somatic_ntpm"]) == 5.1
     assert audit.loc["CTAG2", "in_cta_table"]
 
-    assert audit.loc["PAGE4", "specificity_status"] == "candidate_weak_specificity"
+    assert audit.loc["PAGE4", "specificity_status"] == "excluded_core_rna_fraction"
     assert audit.loc["PAGE4", "candidate_source"] == "literature_cta"
-    assert not audit.loc["PAGE4", "in_cta_table"]
+    assert audit.loc["PAGE4", "in_cta_table"]
+    assert not audit.loc["PAGE4", "in_candidate_watchlist"]
+    assert "PAGE4" not in set(cta.cta_candidate_references().Symbol)
+    assert "PAGE4" in set(cta.cta_candidate_references(include_in_table=True).Symbol)
     assert audit.loc["CSAG1", "specificity_status"] == "candidate_pending_hpa_audit"
     assert "PMID:12039054" in audit.loc["CSAG1", "pmids"]
 
@@ -332,6 +378,47 @@ def test_default_cta_sets_honor_specificity_audit_actions():
     assert audited_demotions <= cta.cta_excluded_clinical_target_gene_names()
 
 
+def test_trim64_hpa_pass_does_not_override_reviewed_candidate_only_decision():
+    """An inherited nomination stays excluded even though its HPA gate passes (#560)."""
+    from oncoref.cta_sources import add_publication_candidates, publication_membership
+    from oncoref.load_dataset import get_data
+
+    gene_id = "ENSG00000204450"
+    raw = get_data("cancer-testis-antigens")
+    row = raw.set_index("Symbol").loc["TRIM64"]
+    assert cta.passes_filters_mask(raw.loc[raw.Symbol.eq("TRIM64")]).all()
+    assert row["rna_placenta_ntpm"] == 1.2
+    assert row["protein_restriction"] == "PLACENTAL"
+    assert row["protein_reliability"] == "Approved"
+
+    for names, ids in (
+        (cta.cta_gene_names, cta.cta_gene_ids),
+        (cta.cta_filtered_gene_names, cta.cta_filtered_gene_ids),
+        (cta.cta_placental_restricted_gene_names, cta.cta_placental_restricted_gene_ids),
+        (cta.cta_clinical_target_gene_names, cta.cta_clinical_target_gene_ids),
+    ):
+        assert "TRIM64" not in names()
+        assert gene_id not in ids()
+    assert "TRIM64" not in cta.cta_gene_names(include_warnings=True)
+    assert gene_id not in cta.cta_gene_ids(include_warnings=True)
+    assert gene_id not in cta.cta_gene_id_to_name()
+    assert gene_id in cta.cta_unfiltered_gene_ids()
+    assert "TRIM64" in cta.cta_excluded_gene_names()
+    assert cta.cta_symbol_for_alias("C11orf28") == "TRIM64"
+
+    audit = cta.cta_specificity_audit().set_index("Symbol").loc["TRIM64"]
+    assert audit["specificity_action"] == "candidate_only"
+    assert audit["specificity_status"] == "candidate_unverified_nomination"
+    assert "PMID:36229750" in audit["pmids"]
+    assert "unverified CTpedia" in audit["rationale"]
+
+    # Importing publication candidates does not bypass the separate audit layer.
+    imported = add_publication_candidates(raw, publication_membership())
+    reviewed = cta._with_specificity_columns(imported)
+    selected = cta._canonical_default_mask(reviewed)
+    assert gene_id not in set(reviewed.loc[selected, "Ensembl_Gene_ID"])
+
+
 def test_clinical_cta_helpers_are_top_level_exports():
     for name in (
         "cta_clinical_target_references",
@@ -344,3 +431,74 @@ def test_clinical_cta_helpers_are_top_level_exports():
         "cta_specificity_audit",
     ):
         assert getattr(oncoref, name) is getattr(cta, name)
+
+
+def test_candidate_watchlist_uses_unversioned_table_membership(monkeypatch):
+    original = cta.get_data
+    refs = original("cta-candidate-references").copy()
+    refs["Ensembl_Gene_ID"] += ".1"
+    monkeypatch.setattr(
+        cta,
+        "get_data",
+        lambda name, **kw: (
+            refs.copy() if name == "cta-candidate-references" else original(name, **kw)
+        ),
+    )
+    assert "PAGE4" not in set(cta.cta_candidate_references().Symbol)
+    assert "PAGE4" in set(cta.cta_candidate_references(include_in_table=True).Symbol)
+
+
+def test_extended_ctas_are_explicit_and_respect_shared_reviews():
+    from oncoref import cta_extended_gene_ids, cta_extended_gene_names
+
+    core, extended = cta.cta_gene_names(), cta_extended_gene_names()
+    assert core < extended
+    assert len(core) == 624 and len(extended) == 688
+    assert "PAGE4" in extended - core
+    assert "MAGEA11" not in extended
+    assert (
+        not {"TRIM64", "PATE1", "PATE4", "LIPI"} & extended
+    )  # Shared trace-signal review survives the relaxed fraction.
+    frame = cta.cta_extended_df()
+    selected = frame.loc[frame.specificity_action.eq("include_default")]
+    assert set(selected.Symbol) == extended
+    assert set(selected.Ensembl_Gene_ID) == cta_extended_gene_ids()
+    assert set(frame.rna_reproductive_tissue_scope) == {"extended"}
+    assert set(cta.cta_df().rna_reproductive_tissue_scope) == {"core"}
+    page4 = frame.set_index("Symbol").loc["PAGE4"]
+    assert page4.rna_deflated_reproductive_frac == 0.9851
+    assert page4.specificity_action == "include_default"
+    frame.iloc[0, frame.columns.get_loc("Symbol")] = "mutated"
+    assert "mutated" not in set(cta.cta_extended_df().Symbol)
+
+
+def test_specificity_audit_reports_raw_table_membership_for_excluded_families(monkeypatch):
+    original = cta.get_data
+    table = original("cancer-testis-antigens")
+    excluded = table[table.Ensembl_Gene_ID.isin(cta._non_cta_excluded_gene_ids())].iloc[0]
+    refs = original("cta-specificity-audit").iloc[[0]].copy()
+    refs["Ensembl_Gene_ID"] = excluded.Ensembl_Gene_ID + ".1"
+    refs["Symbol"] = excluded.Symbol
+    monkeypatch.setattr(
+        cta,
+        "get_data",
+        lambda name, **kw: refs.copy() if name == "cta-specificity-audit" else original(name, **kw),
+    )
+    row = cta.cta_specificity_audit().iloc[0]
+    assert row.in_cta_table
+    assert not row.in_candidate_watchlist
+
+
+def test_specificity_audit_joins_the_requested_scope():
+    core = cta.cta_specificity_audit().set_index("Symbol")
+    extended = cta.cta_specificity_audit(tissue_scope="extended").set_index("Symbol")
+    assert core.loc["PAGE4", "rna_deflated_reproductive_frac"] == 0.4539
+    assert not core.loc["PAGE4", "cta_passes_filters"]
+    assert "PAGE4" not in extended.index
+    assert not {"PATE1", "PATE4", "LIPI"} & set(core.index)
+    legacy = extended.loc[["PATE1", "PATE4", "LIPI"]]
+    assert legacy.cta_passes_filters.all()
+    assert legacy.rna_reproductive_tissue_scope.eq("extended").all()
+    assert legacy.specificity_action.eq("candidate_only").all()
+    assert legacy.rna_deflated_reproductive_frac.ge(0.99).all()
+    assert extended.loc["TRIM64", "specificity_action"] == "candidate_only"

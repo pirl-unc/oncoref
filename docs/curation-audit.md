@@ -60,6 +60,36 @@ and 47 with denominators below 10. These counts overlap; they are review flags, 
 `verified` fields remain historical curation metadata, not a fresh scientific
 certification. #524 remains open for this source work.
 
+The [issue #524 reference inventory](audits/issue-524-references/bibliography.html)
+maps the union of those flags to 435 records and 106 cited references: 19 TMB
+references and 87 response references. Its 2026-10-05 bibliographic snapshot
+resolves every cited identifier through PubMed or the DOI registry and includes
+61 snapshot PMCIDs. An additional PMC document URL comes from existing source-locator
+records, so the bibliography links to PMC documents for 62 references. Known PMID,
+DOI and PMCID values are displayed and searchable; existing document links retain
+their source-locator provenance and review status. Download the
+[reference list](audits/issue-524-references/references.csv),
+[record mapping](audits/issue-524-references/flagged-records.csv), and
+[source-chain notes](audits/issue-524-references/source-traces.csv).
+Citation identity does not validate the values or populations. The three records
+without direct citations are modeled blends; their component papers are mapped,
+but their prevalence weights still lack explicit citations. The recovered
+original chordoma study reports the selected median in 80 skull-base tumors;
+its assay definition and fit to the broader registry remain to be reviewed.
+The exact NPC estimate is still unresolved.
+
+The bibliographic metadata and manually traced source chains are frozen inputs.
+Rebuild the exports offline, or verify that they match the current audit tables:
+
+```bash
+python scripts/build_issue_524_reference_inventory.py
+python scripts/build_issue_524_reference_inventory.py --check
+```
+
+The [lookup audit](audits/issue-524-references/lookup-audit.json) records the
+acquisition time and input hashes. This export does not change numeric reference
+tables, their source-review dispositions, or the open status of #524.
+
 ## POLE: strong biology does not establish a response-rate ranking
 
 [Mehnert 2016](https://www.jci.org/articles/view/84940) describes one patient's

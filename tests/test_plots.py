@@ -3,8 +3,8 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-
 import sys
+from itertools import pairwise
 from pathlib import Path
 from types import ModuleType
 
@@ -140,9 +140,7 @@ def test_cli_plot_rejects_unknown_highlight_before_writing(tmp_path, capsys):
 
 def test_cli_plot_rejects_highlight_for_non_cancer_mark_plot(tmp_path, capsys):
     out = tmp_path / "invalid.png"
-    rc = cli.main(
-        ["plot", "cta-expression-heatmap", "--highlight", "BRCA_Basal", "--out", str(out)]
-    )
+    rc = cli.main(["plot", "cta-expression-heatmap", "--highlight", "BRCA_TNBC", "--out", str(out)])
     assert rc == 1
     assert "does not have one mark per cancer code" in capsys.readouterr().err
     assert not out.exists()
@@ -242,19 +240,14 @@ def test_cta_curation_tag_sets_cover_primary_sources():
     df = ccp._evidence()
     sets = ccp._tag_sets(df)
     assert set(sets) == set(ccp.PRIMARY_SOURCES)
-    assert sets["CTpedia"]
-    assert sets["CTexploreR"]
-    assert sets["daSilva2017_protein"]
+    assert len(sets) == 10 and all(sets.values())
+    from oncoref.cta_provenance import selected_membership
 
-    # The da Silva primary source is the mass-spec-validated subset only. The broad
-    # ``daSilva2017`` cross-reference tag (the full 1,103-gene 0.9-threshold set)
-    # shares a prefix with it and must not leak into the source figures.
-    tagged = {
-        str(ensg)
-        for ensg, raw in zip(df["Ensembl_Gene_ID"], df["source_databases"].fillna(""))
-        if "daSilva2017_protein" in {t.strip() for t in str(raw).split(";")}
-    }
-    assert sets["daSilva2017_protein"] == tagged
+    refs = selected_membership()
+    # Full paper membership includes every selected nomination list, including
+    # broad RNA candidates; historical protein tags are not the intake basis.
+    published = set(refs.loc[refs.doi.eq("10.18632/oncotarget.21715"), "Ensembl_Gene_ID"])
+    assert sets["da Silva 2017"] == published & set(df.Ensembl_Gene_ID)
 
 
 def test_cta_curation_stage_counts_are_monotonic():
@@ -265,7 +258,7 @@ def test_cta_curation_stage_counts_are_monotonic():
     remaining = [n for _, n, _ in stages]
     assert remaining == sorted(remaining, reverse=True)
     # Each stage's drop is exactly the step down from the previous stage.
-    for (_, prev, _), (_, cur, dropped) in zip(stages, stages[1:]):
+    for (_, prev, _), (_, cur, dropped) in pairwise(stages):
         assert prev - cur == dropped
 
 
@@ -1385,7 +1378,7 @@ def test_highlight_mutes_context_without_changing_positions(_no_highlight):
     plain = plots.apd1_vs_tmb(annotate=False)
     plain_xy = np.vstack([c.get_offsets() for c in plain.axes[0].collections])
 
-    figure_style.set_highlight("BRCA_Basal")
+    figure_style.set_highlight("BRCA_TNBC")
     hot = plots.apd1_vs_tmb(annotate=False)
     hot_xy = np.vstack([c.get_offsets() for c in hot.axes[0].collections])
 
@@ -1399,7 +1392,7 @@ def test_highlight_mutes_context_without_changing_positions(_no_highlight):
 def test_highlighted_mark_is_emphasised(_no_highlight):
     from oncoref import figure_style
 
-    figure_style.set_highlight("BRCA_Basal")
+    figure_style.set_highlight("BRCA_TNBC")
     ax = plots.apd1_vs_tmb(annotate=False).axes[0]
     sizes = sorted({float(s) for c in ax.collections for s in np.atleast_1d(c.get_sizes())})
     # Exactly one mark is enlarged, and it is bigger than the rest.
@@ -1410,12 +1403,12 @@ def test_highlighted_point_is_labelled_even_past_the_slide_budget(_no_highlight)
     from oncoref import figure_style
 
     figure_style.use("slide")
-    figure_style.set_highlight("BRCA_Basal")
+    figure_style.set_highlight("BRCA_TNBC")
     try:
         ax = plots.apd1_vs_tmb().axes[0]
         labels = [t.get_text() for t in ax.texts if t.get_text()]
-        # BRCA_Basal has a low ORR so it is nowhere near the top-12 by y.
-        assert "BRCA_Basal" in labels
+        # BRCA_TNBC has a low ORR so it is outside the top-12 by y.
+        assert "BRCA_TNBC" in labels
     finally:
         figure_style.use("print")
 
@@ -1432,11 +1425,11 @@ def test_no_highlight_leaves_colours_untouched(_no_highlight):
     from oncoref import figure_style
 
     figure_style.set_highlight(None)
-    plain, _ = plots._family_colors(["LUAD", "BRCA_Basal"])
-    figure_style.set_highlight("BRCA_Basal")
-    hot, _ = plots._family_colors(["LUAD", "BRCA_Basal"])
+    plain, _ = plots._family_colors(["LUAD", "BRCA_TNBC"])
+    figure_style.set_highlight("BRCA_TNBC")
+    hot, _ = plots._family_colors(["LUAD", "BRCA_TNBC"])
     assert plain["LUAD"] != hot["LUAD"]
-    assert hot["BRCA_Basal"] == figure_style.HIGHLIGHT_COLOR
+    assert hot["BRCA_TNBC"] == figure_style.HIGHLIGHT_COLOR
 
 
 def test_missing_highlight_target_fails_instead_of_muting_every_mark(_no_highlight):
@@ -1451,11 +1444,11 @@ def test_slide_ranked_bar_keeps_highlight_outside_top_budget(_no_highlight):
     from oncoref import figure_style
 
     figure_style.use("slide")
-    figure_style.set_highlight("BRCA_Basal")
+    figure_style.set_highlight("BRCA_TNBC")
     try:
         ax = plots.apd1_orr_bars().axes[0]
         labels = [tick.get_text() for tick in ax.get_yticklabels()]
-        assert "BRCA_Basal" in labels
+        assert "BRCA_TNBC" in labels
         assert "highlighted" in ax.get_xlabel()
     finally:
         figure_style.use("print")
@@ -1464,10 +1457,10 @@ def test_slide_ranked_bar_keeps_highlight_outside_top_budget(_no_highlight):
 def test_explicit_top_n_discloses_highlight_substitution(_no_highlight):
     from oncoref import figure_style
 
-    figure_style.set_highlight("BRCA_Basal")
-    rows = [("LUAD", 30.0), ("SKCM", 20.0), ("BRCA_Basal", 5.0)]
+    figure_style.set_highlight("BRCA_TNBC")
+    rows = [("LUAD", 30.0), ("SKCM", 20.0), ("BRCA_TNBC", 5.0)]
     ax = plots._ranked_family_barh(rows, xlabel="burden", title="test", limit=2).axes[0]
-    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["LUAD", "BRCA_Basal"]
+    assert [tick.get_text() for tick in ax.get_yticklabels()] == ["LUAD", "BRCA_TNBC"]
     assert ax.get_xlabel() == "burden — top 1 + highlighted, of 3"
 
 
@@ -1475,18 +1468,64 @@ def test_explicit_top_n_discloses_highlight_substitution(_no_highlight):
 def test_regimen_plots_visibly_mark_highlighted_row(_no_highlight, plot_name):
     from oncoref import figure_style
 
-    figure_style.set_highlight("BRCA_Basal")
+    figure_style.set_highlight("BRCA_TNBC")
     ax = getattr(plots, plot_name)().axes[0]
-    target = next(tick for tick in ax.get_yticklabels() if "BRCA_Basal" in tick.get_text())
+    target = next(tick for tick in ax.get_yticklabels() if "BRCA_TNBC" in tick.get_text())
     assert target.get_fontweight() == "bold"
     assert target.get_color() == figure_style.HIGHLIGHT_COLOR
 
 
-def test_basal_response_highlight_discloses_tnbc_population_outside_axes(_no_highlight):
+def test_tnbc_response_highlight_discloses_trial_population_outside_axes(_no_highlight):
     from oncoref import figure_style
 
-    figure_style.set_highlight("BRCA_Basal")
+    figure_style.set_highlight("BRCA_TNBC")
     fig = plots.apd1_vs_tmb(annotate=False)
-    notes = [text for text in fig.texts if "not interchangeable" in text.get_text()]
+    notes = [text for text in fig.texts if "different patient populations" in text.get_text()]
     assert len(notes) == 1
     assert notes[0].get_position()[1] < fig.axes[0].get_position().y0
+
+
+def test_cta_figures_use_the_filter_thresholds(monkeypatch, tmp_path):
+    import matplotlib.pyplot as plt
+
+    from oncoref import cta_curation_plots as ccp
+    from oncoref.cta_tissues import adaptive_rna_threshold
+
+    captured = []
+    monkeypatch.setattr(ccp, "_save", lambda fig, *args: captured.append(fig))
+    for builder in (ccp._fig_deflated_dist, ccp._fig_protein_vs_rna):
+        builder(ccp._evidence(), tmp_path / "unused.png", plt)
+    expected = {adaptive_rna_threshold(tier) for tier in ccp.RELIABILITY_ORDER}
+    try:
+        assert {float(line.get_xdata()[0]) for line in captured[0].axes[0].lines} == expected
+        assert {float(line.get_ydata()[0]) for line in captured[1].axes[0].lines} == expected
+    finally:
+        for fig in captured:
+            plt.close(fig)
+
+
+def test_cta_both_panels_render_and_reconcile_to_public_sets(tmp_path):
+    import pandas as pd
+
+    from oncoref import cta
+    from oncoref import cta_curation_plots as ccp
+
+    result = ccp.render(tmp_path, tissue_scope="both")
+    for scope, expected in [
+        ("core", cta.cta_gene_ids()),
+        ("extended", cta.cta_extended_gene_ids()),
+    ]:
+        panel = result["panels"][scope]
+        assert panel["stages"][-1][1] == len(expected)
+        counts = pd.read_csv(panel["data_paths"]["publication_intake_counts"])
+        assert (counts.remaining >= 0).all()
+        assert set(panel["paths"]) == set(ccp.FILENAMES)
+        assert all(p.parent.name == scope for p in panel["paths"].values())
+    assert len(result["paths"]) == 2 * len(ccp.FILENAMES) + 1
+    delta = pd.read_csv(result["data_paths"]["comparison"])
+    assert (
+        set(delta.loc[delta.extended_addition, "Ensembl_Gene_ID"])
+        == cta.cta_extended_gene_ids() - cta.cta_gene_ids()
+    )
+    assert "PAGE4" in set(delta.loc[delta.extended_addition, "Symbol"])
+    assert "MAGEA11" not in set(delta.loc[delta.extended_addition, "Symbol"])

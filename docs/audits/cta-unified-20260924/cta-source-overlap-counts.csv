@@ -1,0 +1,101 @@
+source_a,source_b,candidate_overlap,default_overlap
+Wang 2016,Wang 2016,994,408
+Wang 2016,Bruggeman 2018,122,29
+Wang 2016,da Silva 2017,550,349
+Wang 2016,Jamin 2021,101,36
+Wang 2016,Chang 2019,864,367
+Wang 2016,Carter 2023,82,67
+Wang 2016,Seager 2024,10,10
+Wang 2016,Gong 2021,459,321
+Wang 2016,Loriot 2025,152,97
+Wang 2016,Bai 2016,0,0
+Bruggeman 2018,Wang 2016,122,29
+Bruggeman 2018,Bruggeman 2018,692,40
+Bruggeman 2018,da Silva 2017,58,27
+Bruggeman 2018,Jamin 2021,68,12
+Bruggeman 2018,Chang 2019,122,29
+Bruggeman 2018,Carter 2023,15,12
+Bruggeman 2018,Seager 2024,2,2
+Bruggeman 2018,Gong 2021,52,30
+Bruggeman 2018,Loriot 2025,30,15
+Bruggeman 2018,Bai 2016,0,0
+da Silva 2017,Wang 2016,550,349
+da Silva 2017,Bruggeman 2018,58,27
+da Silva 2017,da Silva 2017,1066,515
+da Silva 2017,Jamin 2021,76,47
+da Silva 2017,Chang 2019,543,385
+da Silva 2017,Carter 2023,81,70
+da Silva 2017,Seager 2024,12,11
+da Silva 2017,Gong 2021,558,417
+da Silva 2017,Loriot 2025,168,125
+da Silva 2017,Bai 2016,0,0
+Jamin 2021,Wang 2016,101,36
+Jamin 2021,Bruggeman 2018,68,12
+Jamin 2021,da Silva 2017,76,47
+Jamin 2021,Jamin 2021,481,55
+Jamin 2021,Chang 2019,96,32
+Jamin 2021,Carter 2023,16,14
+Jamin 2021,Seager 2024,9,9
+Jamin 2021,Gong 2021,42,30
+Jamin 2021,Loriot 2025,49,32
+Jamin 2021,Bai 2016,0,0
+Chang 2019,Wang 2016,864,367
+Chang 2019,Bruggeman 2018,122,29
+Chang 2019,da Silva 2017,543,385
+Chang 2019,Jamin 2021,96,32
+Chang 2019,Chang 2019,986,449
+Chang 2019,Carter 2023,89,75
+Chang 2019,Seager 2024,9,9
+Chang 2019,Gong 2021,523,384
+Chang 2019,Loriot 2025,150,92
+Chang 2019,Bai 2016,0,0
+Carter 2023,Wang 2016,82,67
+Carter 2023,Bruggeman 2018,15,12
+Carter 2023,da Silva 2017,81,70
+Carter 2023,Jamin 2021,16,14
+Carter 2023,Chang 2019,89,75
+Carter 2023,Carter 2023,103,86
+Carter 2023,Seager 2024,6,6
+Carter 2023,Gong 2021,83,74
+Carter 2023,Loriot 2025,43,36
+Carter 2023,Bai 2016,0,0
+Seager 2024,Wang 2016,10,10
+Seager 2024,Bruggeman 2018,2,2
+Seager 2024,da Silva 2017,12,11
+Seager 2024,Jamin 2021,9,9
+Seager 2024,Chang 2019,9,9
+Seager 2024,Carter 2023,6,6
+Seager 2024,Seager 2024,15,13
+Seager 2024,Gong 2021,7,7
+Seager 2024,Loriot 2025,13,12
+Seager 2024,Bai 2016,0,0
+Gong 2021,Wang 2016,459,321
+Gong 2021,Bruggeman 2018,52,30
+Gong 2021,da Silva 2017,558,417
+Gong 2021,Jamin 2021,42,30
+Gong 2021,Chang 2019,523,384
+Gong 2021,Carter 2023,83,74
+Gong 2021,Seager 2024,7,7
+Gong 2021,Gong 2021,733,466
+Gong 2021,Loriot 2025,145,98
+Gong 2021,Bai 2016,0,0
+Loriot 2025,Wang 2016,152,97
+Loriot 2025,Bruggeman 2018,30,15
+Loriot 2025,da Silva 2017,168,125
+Loriot 2025,Jamin 2021,49,32
+Loriot 2025,Chang 2019,150,92
+Loriot 2025,Carter 2023,43,36
+Loriot 2025,Seager 2024,13,12
+Loriot 2025,Gong 2021,145,98
+Loriot 2025,Loriot 2025,215,138
+Loriot 2025,Bai 2016,0,0
+Bai 2016,Wang 2016,0,0
+Bai 2016,Bruggeman 2018,0,0
+Bai 2016,da Silva 2017,0,0
+Bai 2016,Jamin 2021,0,0
+Bai 2016,Chang 2019,0,0
+Bai 2016,Carter 2023,0,0
+Bai 2016,Seager 2024,0,0
+Bai 2016,Gong 2021,0,0
+Bai 2016,Loriot 2025,0,0
+Bai 2016,Bai 2016,1,1

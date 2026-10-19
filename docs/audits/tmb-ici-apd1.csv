@@ -129,6 +129,7 @@ cancer-tmb,CHOROID_PLEXUS,CHOROID_PLEXUS,,TMB,0.5,PMID:33249490,needs_source_rev
 cancer-tmb,ATC,ATC,,TMB,3.8,DOI:10.1016/j.celrep.2024.113826,needs_source_review,,assay_not_structured;tmb_source_not_revalidated
 cancer-tmb,THYMCA,THYMCA,,TMB,2.5,PMID:28420421,source_checked,Additional file 3 Table S1; Sheet1!A100:C100; thymus carcinoma (nos),
 cancer-tmb,STAD_MSI,STAD_MSI,,TMB,,PMID:28420421;PMID:25079317,audited_gap,,
+cancer-tmb,BRCA_TNBC,BRCA_TNBC,,TMB,2.12,PMID:29625048;PMID:23000897,source_checked,cBioPortal datahub 0cc9138746c08b304f8dac92c31983e0ef44af1d; brca_tcga receptor metadata; brca_tcga_pan_can_atlas_2018 TMB_NONSYNONYMOUS and cases_sequenced; exact primary RNA sample intersection,
 cancer-ici-response,ACC/PD-1+CTLA-4,ACC,PD-1+CTLA-4,ORR,14.0,PMID:39067873,prior_locator_verified,"Abstract, Results",
 cancer-ici-response,SGC/PD-1,SGC,PD-1,ORR,4.6,PMID:35777186,prior_locator_verified,"Abstract, Results",
 cancer-ici-response,ADCC/PD-1+CTLA-4,ADCC,PD-1+CTLA-4,ORR,6.0,DOI:10.1038/s41591-023-02518-x,prior_locator_verified,Results > Study treatment efficacy and toxicity,
@@ -137,8 +138,8 @@ cancer-ici-response,ATC/PD-1+CTLA-4,ATC,PD-1+CTLA-4,ORR,30.0,DOI:10.1200/JCO.202
 cancer-ici-response,BCC/PD-1,BCC,PD-1,ORR,31.0,PMID:34000246,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
 cancer-ici-response,BLCA/PD-1,BLCA,PD-1,ORR,28.6,PMID:32552471,prior_locator_verified,"Abstract, Results",
 cancer-ici-response,BLCA/PD-L1,BLCA,PD-L1,ORR,23.0,PMID:27939400,prior_locator_verified,"Abstract, Findings",
-cancer-ici-response,BRCA_Basal/PD-1,BRCA_Basal,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
-cancer-ici-response,BRCA_Basal/PD-L1,BRCA_Basal,PD-L1,ORR,10.0,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response,BRCA_TNBC/PD-1,BRCA_TNBC,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response,BRCA_TNBC/PD-L1,BRCA_TNBC,PD-L1,ORR,10.0,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
 cancer-ici-response,CESC/PD-1,CESC,PD-1,ORR,14.6,PMID:30943124,prior_locator_verified,"Abstract, Results",
 cancer-ici-response,CESC/PD-L1,CESC,PD-L1,ORR,15.6,PMID:38858106,prior_locator_verified,"Abstract, Results",
 cancer-ici-response,BTC/PD-1,BTC,PD-1,ORR,5.8,PMID:32359091,prior_locator_verified,Abstract,
@@ -239,6 +240,7 @@ cancer-ici-response,RCC,RCC,,ORR,,,audited_gap,,
 cancer-ici-response,BRCA,BRCA,,ORR,,,audited_gap,,
 cancer-ici-response,SARC,SARC,,ORR,,,audited_gap,,
 cancer-ici-response,STAD_MSI/PD-1,STAD_MSI,PD-1,ORR,57.1,PMID:29543932,prior_locator_verified,"Results, Microsatellite Instability",small_denominator
+cancer-ici-response,BRCA_Basal,BRCA_Basal,,ORR,,,audited_gap,,
 cancer-apd1-response,SKCM/PD-1,SKCM,PD-1,ORR,43.7,PMID:28889792,prior_locator_source_section,"Abstract, RESULTS",numeric_source_location_not_verified
 cancer-apd1-response,LUAD/PD-1,LUAD,PD-1,ORR,19.0,PMID:26412456,prior_locator_verified,Results > Efficacy,
 cancer-apd1-response,LUSC/PD-1,LUSC,PD-1,ORR,20.0,PMID:26028407,prior_locator_verified,Table 2,
@@ -254,7 +256,7 @@ cancer-apd1-response,ESCA/PD-1,ESCA,PD-1,ORR,19.3,PMID:31582355,prior_locator_so
 cancer-apd1-response,CESC/PD-1,CESC,PD-1,ORR,14.6,PMID:30943124,prior_locator_verified,"Abstract, Results",
 cancer-apd1-response,HL/PD-1,HL,PD-1,ORR,71.2,PMID:37530622,prior_locator_verified,"Abstract, Results",
 cancer-apd1-response,NEC_MERKEL/PD-1,NEC_MERKEL,PD-1,ORR,56.0,PMID:30726175,prior_locator_verified,"Abstract, RESULTS",
-cancer-apd1-response,BRCA_Basal/PD-1,BRCA_Basal,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-apd1-response,BRCA_TNBC/PD-1,BRCA_TNBC,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
 cancer-apd1-response,SCLC/PD-1,SCLC,PD-1,ORR,10.0,PMID:27269741,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
 cancer-apd1-response,MESO/PD-1,MESO,PD-1,ORR,8.5,PMID:33836153,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
 cancer-apd1-response,NPC/PD-1,NPC,PD-1,ORR,25.9,PMID:28837405,prior_locator_verified,Abstract,
@@ -323,6 +325,7 @@ cancer-apd1-response,PMBCL/PD-1,PMBCL,PD-1,ORR,41.5,PMID:37130017,prior_locator_
 cancer-apd1-response,ATC/PD-1+CTLA-4,ATC,PD-1+CTLA-4,ORR,30.0,DOI:10.1200/JCO.2020.38.15_suppl.6513,prior_locator_citation_only,,numeric_source_location_not_verified
 cancer-apd1-response,UCEC,UCEC,,ORR,,PMID:39847999,audited_gap,,
 cancer-apd1-response,STAD_MSI/PD-1,STAD_MSI,PD-1,ORR,57.1,PMID:29543932,prior_locator_verified,"Results, Microsatellite Instability",small_denominator
+cancer-apd1-response,BRCA_Basal,BRCA_Basal,,ORR,,,audited_gap,,
 cancer-ici-response-estimates,ICI-9593cb18be-01,ACC,PD-1+CTLA-4,ORR,14,PMID:39067873,prior_locator_verified,"Abstract, Results",
 cancer-ici-response-estimates,ICI-3fbfdb14f2-01,ACC,PD-1+CTLA-4,IRORR,19,PMID:39067873,prior_locator_verified,"Abstract, Results",
 cancer-ici-response-estimates,ICI-cf2834da47-01,ACC,PD-1+CTLA-4,CBR,24,PMID:39067873,prior_locator_verified,Results > Outcomes,
@@ -398,25 +401,25 @@ cancer-ici-response-estimates,ICI-e1c1959728-01,BLCA,PD-L1,OS,15.9,PMID:27939400
 cancer-ici-response-estimates,ICI-e52143e1a0-01,BLCA,PD-L1,ORR,15,PMID:26952546,prior_locator_verified,Results,
 cancer-ici-response-estimates,ICI-2d8a335e01-01,BLCA,PD-L1,ORR,17.8,PMID:28817753,prior_locator_verified,"Abstract, Results",
 cancer-ici-response-estimates,ICI-9e11d8b7bd-01,BLCA,PD-L1,ORR,17,PMID:29217288,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
-cancer-ici-response-estimates,ICI-02e900249c-01,BRCA_Basal,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-00a12fc413-01,BRCA_Basal,PD-1,ORR,5.7,PMID:30475950,prior_locator_verified,"Abstract, Results",response_denominator_missing
-cancer-ici-response-estimates,ICI-56d7f8d4cf-01,BRCA_Basal,PD-1,DCR,7.6,PMID:30475950,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-b2835651b5-01,BRCA_Basal,PD-1,DOR,,PMID:30475950,audited_gap,"Abstract, Results",
-cancer-ici-response-estimates,ICI-0f0e089271-01,BRCA_Basal,PD-1,PFS,2,PMID:30475950,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-a5299960c5-01,BRCA_Basal,PD-1,PFS_RATE,14.9,PMID:30475950,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-e229a8f185-01,BRCA_Basal,PD-1,OS,9,PMID:30475950,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-d6cf87e9e5-01,BRCA_Basal,PD-1,ORR,21.4,PMID:30475947,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-9fc9ca17f2-01,BRCA_Basal,PD-1,CRR,4.8,PMID:30475947,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
-cancer-ici-response-estimates,ICI-3a751ea034-01,BRCA_Basal,PD-1,DCR,23.8,PMID:30475947,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-b8438e7460-01,BRCA_Basal,PD-1,DOR,10.4,PMID:30475947,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-ba47635e7b-01,BRCA_Basal,PD-1,PFS,2.1,PMID:30475947,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-2a0f370265-01,BRCA_Basal,PD-1,OS,18,PMID:30475947,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-3792c43928-01,BRCA_Basal,PD-L1,ORR,10,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
-cancer-ici-response-estimates,ICI-54fd4a7840-01,BRCA_Basal,PD-L1,DOR,21,PMID:30242306,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-7353d7284b-01,BRCA_Basal,PD-L1,ORR,24,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
-cancer-ici-response-estimates,ICI-1bc1f2c450-01,BRCA_Basal,PD-L1,OS,17.6,PMID:30242306,prior_locator_verified,"Abstract, Results",
-cancer-ici-response-estimates,ICI-6bbe217c59-01,BRCA_Basal,PD-L1,ORR,6,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
-cancer-ici-response-estimates,ICI-dd8d58275c-01,BRCA_Basal,PD-L1,ORR,12,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-02e900249c-01,BRCA_TNBC,PD-1,ORR,5.3,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-00a12fc413-01,BRCA_TNBC,PD-1,ORR,5.7,PMID:30475950,prior_locator_verified,"Abstract, Results",response_denominator_missing
+cancer-ici-response-estimates,ICI-56d7f8d4cf-01,BRCA_TNBC,PD-1,DCR,7.6,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-b2835651b5-01,BRCA_TNBC,PD-1,DOR,,PMID:30475950,audited_gap,"Abstract, Results",
+cancer-ici-response-estimates,ICI-0f0e089271-01,BRCA_TNBC,PD-1,PFS,2,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-a5299960c5-01,BRCA_TNBC,PD-1,PFS_RATE,14.9,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-e229a8f185-01,BRCA_TNBC,PD-1,OS,9,PMID:30475950,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-d6cf87e9e5-01,BRCA_TNBC,PD-1,ORR,21.4,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-9fc9ca17f2-01,BRCA_TNBC,PD-1,CRR,4.8,PMID:30475947,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-3a751ea034-01,BRCA_TNBC,PD-1,DCR,23.8,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-b8438e7460-01,BRCA_TNBC,PD-1,DOR,10.4,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-ba47635e7b-01,BRCA_TNBC,PD-1,PFS,2.1,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-2a0f370265-01,BRCA_TNBC,PD-1,OS,18,PMID:30475947,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-3792c43928-01,BRCA_TNBC,PD-L1,ORR,10,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-54fd4a7840-01,BRCA_TNBC,PD-L1,DOR,21,PMID:30242306,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-7353d7284b-01,BRCA_TNBC,PD-L1,ORR,24,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-1bc1f2c450-01,BRCA_TNBC,PD-L1,OS,17.6,PMID:30242306,prior_locator_verified,"Abstract, Results",
+cancer-ici-response-estimates,ICI-6bbe217c59-01,BRCA_TNBC,PD-L1,ORR,6,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
+cancer-ici-response-estimates,ICI-dd8d58275c-01,BRCA_TNBC,PD-L1,ORR,12,PMID:30242306,prior_locator_source_section,"Abstract, Findings",numeric_source_location_not_verified
 cancer-ici-response-estimates,ICI-c5947bad6b-01,CESC,PD-1,ORR,14.6,PMID:30943124,prior_locator_verified,"Abstract, Results",
 cancer-ici-response-estimates,ICI-ac4b7c47c2-01,CESC,PD-1,ORR,12.2,PMID:30943124,prior_locator_verified,"Abstract, Results",
 cancer-ici-response-estimates,ICI-ddd8d6f347-01,CESC,PD-1,CRR,3.1,PMID:30943124,prior_locator_source_section,"Abstract, Results",numeric_source_location_not_verified

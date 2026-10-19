@@ -1,0 +1,167 @@
+{
+  "reviewed_date": "2026-09-24",
+  "audit_input_sha256": "735186b89936df80e6c6182954a50bcec7fd1bd9d96b900531f02998f861ff40",
+  "hash_scope": "Prior reviewed gene-to-paper audit JSON; not original paper bytes",
+  "sources": {
+    "Park2010": {
+      "citation": "Park et al., Journal of Surgical Oncology 2010",
+      "doi": "10.1002/jso.21585",
+      "url": "https://doi.org/10.1002/jso.21585",
+      "scope": "Gene-labelled microarray RNA associated with copy-number change in gastric tumor AND normal tissue. Probe cross-reactivity unresolved; does not validate restriction.",
+      "kind": "primary"
+    },
+    "Wollenzien2023": {
+      "citation": "Wollenzien et al., Molecular Cancer Research 2023",
+      "doi": "10.1158/1541-7786.MCR-22-0881",
+      "url": "https://doi.org/10.1158/1541-7786.MCR-22-0881",
+      "scope": "Low RNA signal in human SCLC models. Publisher-indexed table inspected; original XLSX retrieval unavailable. Functional GAGE2A/PAGE5 validation is not transferred to these genes.",
+      "kind": "primary"
+    },
+    "Geng2012": {
+      "citation": "Geng et al., Developmental Cell 2012",
+      "doi": "10.1016/j.devcel.2011.11.013",
+      "url": "https://doi.org/10.1016/j.devcel.2011.11.013",
+      "scope": "DUX4-induced germline program in human myoblasts. Not cancer-expression validation; the cited preimplantation background concerns mouse biology, not direct human TRIM64 reproductive restriction.",
+      "kind": "primary"
+    },
+    "Traynor2022": {
+      "citation": "Traynor et al., Frontiers in Oncology 2022",
+      "doi": "10.3389/fonc.2022.998000",
+      "url": "https://doi.org/10.3389/fonc.2022.998000",
+      "scope": "Melanoma gene-labelled RNA; SSX7 very low. SSX4 evidence is not transferred to SSX4B in this gene-level audit.",
+      "kind": "primary"
+    },
+    "Gure2002": {
+      "citation": "Gure et al., International Journal of Cancer 2002",
+      "doi": "10.1002/ijc.10634",
+      "url": "https://doi.org/10.1002/ijc.10634",
+      "scope": "Historical small tissue panel; SSX7 in one of nine melanoma lines.",
+      "kind": "primary"
+    },
+    "Song2022": {
+      "citation": "Song et al., Cancers 2022",
+      "doi": "10.3390/cancers14215368",
+      "url": "https://doi.org/10.3390/cancers14215368",
+      "scope": "Tumor and adjacent colorectal protein signal. Adjacent-tissue signal is a restriction concern.",
+      "kind": "primary"
+    },
+    "Amoushahi2020": {
+      "citation": "Amoushahi et al., Journal of Assisted Reproduction and Genetics 2020",
+      "doi": "10.1007/s10815-020-01767-w",
+      "url": "https://doi.org/10.1007/s10815-020-01767-w",
+      "scope": "Human ovarian follicles, oocytes and granulosa cells; reproductive expression, not tumor validation.",
+      "kind": "primary"
+    },
+    "Shukla2018": {
+      "citation": "Shukla et al., Cell 2018",
+      "doi": "10.1016/j.cell.2018.03.026",
+      "url": "https://doi.org/10.1016/j.cell.2018.03.026",
+      "scope": "MAGEA2B among eight melanoma CRMA expression-cluster genes. Gene-labelled RNA, with duplicated-locus attribution limitations.",
+      "kind": "primary"
+    },
+    "Caballero2014": {
+      "citation": "Caballero et al., Oncoscience 2014",
+      "doi": "10.18632/oncoscience.4",
+      "url": "https://doi.org/10.18632/oncoscience.4",
+      "scope": "SSX4B-labelled microarray signal in DCIS versus normal mammary samples; probe specificity versus SSX4 is unresolved. Online December 2013, collection 2014.",
+      "kind": "primary"
+    },
+    "Kristensen2008": {
+      "citation": "Kristensen et al., Human Reproduction 2008",
+      "doi": "10.1093/humrep/den010",
+      "url": "https://doi.org/10.1093/humrep/den010",
+      "scope": "REX1/ZFP42 reproductive and germ-cell-neoplasm expression; does not cancel reported skin expression.",
+      "kind": "primary"
+    }
+  },
+  "edges": [
+    {
+      "source": "Amoushahi2020",
+      "gene_id": "ENSG00000185792",
+      "source_id": "NLRP9",
+      "source_symbol": "NLRP9",
+      "anchor": "Table 1 and ovarian IHC",
+      "evidence": "reproductive_or_tumor_RNA"
+    },
+    {
+      "source": "Caballero2014",
+      "gene_id": "ENSG00000269791",
+      "source_id": "SSX4B",
+      "source_symbol": "SSX4B",
+      "anchor": "First Results / Supplementary Figure 1",
+      "evidence": "cancer_expression"
+    },
+    {
+      "source": "Gure2002",
+      "gene_id": "ENSG00000187754",
+      "source_id": "SSX7",
+      "source_symbol": "SSX7",
+      "anchor": "Abstract / SSX7 normal-tissue and melanoma-cell-line expression",
+      "evidence": "CT_RNA"
+    },
+    {
+      "source": "Kristensen2008",
+      "gene_id": "ENSG00000179059",
+      "source_id": "ZFP42",
+      "source_symbol": "ZFP42",
+      "anchor": "Abstract / REX1 in gonadal development and germ-cell neoplasms",
+      "evidence": "GC_tumor_RNA"
+    },
+    {
+      "source": "Park2010",
+      "gene_id": "ENSG00000215274",
+      "source_id": "GAGE10",
+      "source_symbol": "GAGE10",
+      "anchor": "Abstract Results / clone AI968311",
+      "evidence": "cancer_expression"
+    },
+    {
+      "source": "Shukla2018",
+      "gene_id": "ENSG00000183305",
+      "source_id": "MAGEA2B",
+      "source_symbol": "MAGEA2B",
+      "anchor": "First Results / Figure 1 / Tables S1-S2",
+      "evidence": "cancer_expression"
+    },
+    {
+      "source": "Song2022",
+      "gene_id": "ENSG00000167098",
+      "source_id": "SUN5",
+      "source_symbol": "SUN5",
+      "anchor": "Figure 1C-E",
+      "evidence": "cancer_expression"
+    },
+    {
+      "source": "Traynor2022",
+      "gene_id": "ENSG00000187754",
+      "source_id": "SSX7",
+      "source_symbol": "SSX7",
+      "anchor": "Figure 1A-C and first Results",
+      "evidence": "cancer_expression"
+    },
+    {
+      "source": "Traynor2022",
+      "gene_id": "ENSG00000268009",
+      "source_id": "SSX4",
+      "source_symbol": "SSX4",
+      "anchor": "Figure 1A-C and first Results",
+      "evidence": "cancer_expression"
+    },
+    {
+      "source": "Wollenzien2023",
+      "gene_id": "ENSG00000215274",
+      "source_id": "GAGE10",
+      "source_symbol": "GAGE10",
+      "anchor": "Supplementary Table S7 / gene-labelled rows / publisher indexed table preview",
+      "evidence": "cancer_expression"
+    },
+    {
+      "source": "Wollenzien2023",
+      "gene_id": "ENSG00000227488",
+      "source_id": "GAGE12D",
+      "source_symbol": "GAGE12D",
+      "anchor": "Supplementary Table S7 / gene-labelled rows / publisher indexed table preview",
+      "evidence": "cancer_expression"
+    }
+  ]
+}

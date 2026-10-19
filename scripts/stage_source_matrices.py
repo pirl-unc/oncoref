@@ -41,9 +41,12 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import pandas as pd
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from oncoref import source_matrices as sm
+from oncoref.expression_engine import sample_columns, validate_nonnegative_expression
 
 
 def _source_key(name: str) -> str:
@@ -165,6 +168,14 @@ def stage(
                     f"{code}: selected matrix has {actual_samples} samples; "
                     f"registry expects {expected_samples}: {chosen}"
                 )
+        # Validate every source before publishing any file. A previous cache is
+        # not proof of a valid unit (the historical NUTM cache held transformed
+        # values renormalized as TPM).
+        matrix = pd.read_parquet(chosen)
+        validate_nonnegative_expression(
+            matrix[sample_columns(matrix)], context=f"{code}: linear TPM"
+        )
+        del matrix
         selections.append((code, chosen))
 
     if missing:

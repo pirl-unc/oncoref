@@ -1,0 +1,275 @@
+sources:
+- id: bgee-srp009687
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: bgee
+  accession: SRP009687
+  source_version: Bgee 15.2
+  unit: TPM
+  source_scale_class: linear
+  tpm_proxy: false
+  linear_tpm_comparable: true
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: bgee-srp009687
+    source_version: Bgee 15.2
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: Ensembl gene
+    measurement:
+      feature_level: gene
+      unit: TPM
+      scale: linear
+      is_proxy: false
+      transformations: []
+    content_provenance:
+      matrix: 7d6cad96de106ae7f07d509db0a0ed93234eaa5d84e4d35bf217d669890bedd1
+      samples: 542c38d7417f96ccbc5216c7765feb9b0d1a9895e6416f97a752ca7647cb382f
+    provenance_notes: Native source feature space. Exact quantification assembly/annotation
+      remains unresolved; available canine GTFs and symbol/orthology matches do not
+      establish equivalence. Original sample metadata and corrections are preserved.
+      No isoform allocation or target admission.
+    contract_id: openvax:expression-contract:v1:sha256:ed3d43699f44f0ae460b48dc2ad5ddd1d92421e9f7061697bcea3e3a6b18e41e
+  matrix_asset: bgee-srp009687-matrix
+  sample_metadata: bgee-srp009687-samples.json
+  adapter: bgee
+- id: bgee-srp181218
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: bgee
+  accession: SRP181218
+  source_version: Bgee 15.2
+  unit: TPM
+  source_scale_class: linear
+  tpm_proxy: false
+  linear_tpm_comparable: true
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: bgee-srp181218
+    source_version: Bgee 15.2
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: Ensembl gene
+    measurement:
+      feature_level: gene
+      unit: TPM
+      scale: linear
+      is_proxy: false
+      transformations: []
+    content_provenance:
+      matrix: 935d6954d039b13727cfa54a16e5f0fa8acd35c8f616ac5413dd11f27a79085e
+      samples: 43575dd133d2b6e46d560eaf8173bdc5ee85e1aaa6220c1fd38f6cc421ac03c3
+    provenance_notes: Native source feature space. Exact quantification assembly/annotation
+      remains unresolved; available canine GTFs and symbol/orthology matches do not
+      establish equivalence. Original sample metadata and corrections are preserved.
+      No isoform allocation or target admission.
+    contract_id: openvax:expression-contract:v1:sha256:6f11f9c2aa35ef50c1096d00d51ab4d70061e673d96ee685c7bcca0be4cf6d5c
+  matrix_asset: bgee-srp181218-matrix
+  sample_metadata: bgee-srp181218-samples.json
+  adapter: bgee
+- id: barkbase
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: barkbase
+  accession: PRJNA396033
+  source_version: retrieved-2026-10-08
+  unit: TMM-CPM
+  source_scale_class: linear
+  tpm_proxy: false
+  linear_tpm_comparable: false
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: barkbase
+    source_version: retrieved-2026-10-08
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: BarkBase StringTie gene
+    measurement:
+      feature_level: gene
+      unit: TMM-CPM
+      scale: linear
+      is_proxy: false
+      transformations: []
+    content_provenance:
+      matrix: 689769c7a049a5d4d7fdfca1e6e3b4f35759ab2b912d71c28c9b7660c74f8eff
+      samples: e36e81e4403830b7fa0c64aa5b91f9f3ceef01003b95911ac26b19702b3c074c
+    provenance_notes: Native source feature space. Exact quantification assembly/annotation
+      remains unresolved; available canine GTFs and symbol/orthology matches do not
+      establish equivalence. Original sample metadata and corrections are preserved.
+      No isoform allocation or target admission.
+    contract_id: openvax:expression-contract:v1:sha256:54678a72ba9a992099e14c2920387867a28523b9359fae234955a95073473db1
+  matrix_asset: barkbase-matrix
+  sample_metadata: barkbase-samples.json
+  adapter: barkbase
+- id: pfizer-dog-protein
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: pfizer-protein
+  accession: MSV000099744
+  source_version: MSV000099744-update-2026-03-23
+  unit: iBAQ
+  source_scale_class: linear
+  tpm_proxy: false
+  linear_tpm_comparable: false
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: pfizer-dog-protein
+    source_version: MSV000099744-update-2026-03-23
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: Deposited ProteinGroup identifiers
+    measurement:
+      feature_level: protein_group
+      unit: iBAQ
+      scale: linear
+      is_proxy: false
+      transformations: []
+    content_provenance:
+      matrix: ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2
+      samples: c009998a3525758c31295b881b900d78461b99ddeda1af649d9161155218b5b2
+      searched_fasta: d8488bf283de653efcff2e5de6d413b116e1ba4a2eb89298bd31205e72fef682
+    provenance_notes: Deposited IBAQ column, weighted across TMT channels by the source.
+      Bulk tissue pools; no individual-donor or MHC-presentation inference. Representative/group
+      IDs remain distinct from resolved complete protein sequences. Exact searched
+      FASTA is pinned; assembly/annotation reconciliation remains unresolved.
+    contract_id: openvax:expression-contract:v1:sha256:c14e0c074ff47838538ec592b5804d899d0724e7d5ae80e6fd5f37cf68b24424
+  matrix_asset: pfizer-dog-protein-matrix
+  sample_metadata: pfizer-dog-protein-samples.json
+  adapter: pfizer-protein
+  acquisition_status: native_matrix_available
+  citation: https://doi.org/10.1038/s41597-026-07512-9
+- id: doga
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: pending-native-source
+  accession: 10.1038/s41467-024-52798-1
+  source_version: retrieved-2026-10-08
+  unit: null
+  source_scale_class: null
+  tpm_proxy: null
+  linear_tpm_comparable: false
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: doga
+    source_version: retrieved-2026-10-08
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: null
+    measurement:
+      feature_level: unknown
+      unit: null
+      scale: null
+      is_proxy: null
+      transformations: []
+    content_provenance:
+      metadata: e170bfed61fa60f352ef4aeb63baec10ad9733ba07be38521621b2d836cd4299
+    provenance_notes: Complete quantitative gene/promoter matrix is not integrated.
+      STRT2/5-prime ERCC-normalized measurements are not transcript TPM.
+    contract_id: openvax:expression-contract:v1:sha256:e2116d42a9b630dffbc290837fef069c144e98829c86269f711e409cb1256b5e
+  acquisition_status: metadata_only
+  notes: Complete quantitative gene/promoter matrix is not integrated. STRT2/5-prime
+    ERCC-normalized measurements are not transcript TPM.
+  metadata_asset: doga-metadata
+- id: pfizer-dog-rna
+  taxon_id: 9615
+  category: expression
+  context: normal
+  cancer_codes: []
+  source_type: pending-native-source
+  accession: PRJNA1376953;GSE325522;GSE325523;GSE325525
+  source_version: retrieved-2026-10-08
+  unit: null
+  source_scale_class: null
+  tpm_proxy: null
+  linear_tpm_comparable: false
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: pfizer-dog-rna
+    source_version: retrieved-2026-10-08
+    context: normal
+    reference: null
+    reference_status: unresolved
+    feature_namespace: null
+    measurement:
+      feature_level: unknown
+      unit: null
+      scale: null
+      is_proxy: null
+      transformations: []
+    content_provenance:
+      metadata: 86f76e18a74ee1ce783352f23e65dcbb69896ede85f1c48d4fde07c4d532f419
+    provenance_notes: Full canine RNA matrices and sample/feature reconciliation are
+      not integrated. The publication specifies Ensembl v110/Salmon; exact quantification
+      asset bytes remain unverified.
+    contract_id: openvax:expression-contract:v1:sha256:701a397c6af27ca99b03fba576fb07a237f8e695c19ab1a363b00a6adcd2b893
+  acquisition_status: metadata_only
+  notes: Full canine RNA matrices and sample/feature reconciliation are not integrated.
+    The publication specifies Ensembl v110/Salmon; exact quantification asset bytes
+    remain unverified.
+  metadata_asset: pfizer-dog-rna-metadata
+- id: gse304066-osteosarcoma
+  taxon_id: 9615
+  category: expression
+  context: tumor
+  cancer_codes: []
+  source_type: pending-native-source
+  accession: GSE304066
+  source_version: retrieved-2026-10-08
+  unit: null
+  source_scale_class: null
+  tpm_proxy: null
+  linear_tpm_comparable: false
+  contract:
+    schema: oncoref.expression-contract
+    schema_version: 1
+    taxon_id: 9615
+    source_id: gse304066-osteosarcoma
+    source_version: retrieved-2026-10-08
+    context: tumor
+    reference: null
+    reference_status: unresolved
+    feature_namespace: null
+    measurement:
+      feature_level: unknown
+      unit: null
+      scale: null
+      is_proxy: null
+      transformations: []
+    content_provenance:
+      metadata: ad7af468860935bedaf98d06c3c83586aae6c0f97a0681b40eb4e6a835486d4c
+    provenance_notes: Raw-count filename conflicts with FPKM metadata; exact source
+      GTF is unresolved. Existing pseudo-TPM scenarios are sensitivity analyses and
+      are not an admitted normalized cohort.
+    contract_id: openvax:expression-contract:v1:sha256:e1f9fd2c80cb03bd3014522bf2e94cfd081730b487ad8e046e5aaa185218cc35
+  acquisition_status: blocked_provenance
+  notes: Raw-count filename conflicts with FPKM metadata; exact source GTF is unresolved.
+    Existing pseudo-TPM scenarios are sensitivity analyses and are not an admitted
+    normalized cohort.
+  metadata_asset: gse304066-osteosarcoma-metadata

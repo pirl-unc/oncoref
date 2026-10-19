@@ -41,9 +41,7 @@ def main(argv: list[str] | None = None) -> int:
                 "sample_counts": {
                     code: len(sample_columns(matrix)) for code, matrix in result.matrices.items()
                 },
-                "sidecar_paths": {
-                    name: str(path) for name, path in result.sidecar_paths.items()
-                },
+                "sidecar_paths": {name: str(path) for name, path in result.sidecar_paths.items()},
             },
             indent=2,
             sort_keys=True,

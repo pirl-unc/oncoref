@@ -5,7 +5,7 @@
 
 Curated cancer reference data — cancer-type ontology, tumor mutational burden
 (TMB), incidence/mortality, checkpoint-inhibitor (ICI) response, per-cohort
-RNA-seq expression, Human Protein Atlas (HPA) normal-tissue expression, and
+RNA-seq expression, Human Protein Atlas (HPA) normal-tissue and cancer expression, and
 HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
@@ -39,6 +39,32 @@ retaining their own curated artifacts and compatibility APIs. Shared facts and
 identifiers should be fixed here; purpose-specific panels and per-sample rules
 stay downstream.
 
+## Species
+
+Use explicit species and dataset modules:
+
+```python
+import oncoref
+
+oncoref.human.human_protein_atlas.rna_consensus()
+oncoref.canine.barkbase.source()  # native TMM-CPM and provenance
+oncoref.canine.references.registered_references()
+oncoref.canine.antigens.coverage()
+
+# Datasets also have direct top-level imports, with the same implementation.
+from oncoref import barkbase, human_protein_atlas
+
+dataset = barkbase.read(offline=True)  # verified cache or configured local overrides
+```
+
+`oncoref.human` and `oncoref.canine` are ordinary Python modules with named datasets
+and references, expression, cancer, antigens and normalization groups. Dataset
+modules expose source-specific operations; groups expose inventories and coverage.
+Missing coverage is explicit; canine requests never fall back to human datasets.
+Existing flat APIs retain their human defaults, and `for_species(...)` remains
+available for dynamic selection. See the
+[species and expression contract guide](docs/species.md).
+
 ## Core model
 
 - **Canonical identities first.** Cancer facts key on the cancer-type registry;
@@ -56,6 +82,8 @@ stay downstream.
 
 ## Install
 
+Supported Python versions: 3.10–3.14.
+
 ```bash
 pip install oncoref
 ```
@@ -67,6 +95,11 @@ Ensembl release:
 ```bash
 pip install 'oncoref[genome]'  # pyensembl-backed transcript and gene lookup
 ```
+
+The genome extra requires PyEnsembl 2.27.0 or newer. When upgrading from PyEnsembl
+older than 2.10.17, rerun `pyensembl install --release N --species human` for each
+installed GRCh38 release from 82 onward to build the complete patch/haplotype
+annotation index. Existing FASTA files are reused.
 
 ## Quick start
 
@@ -89,6 +122,8 @@ od.cancer_ici_response("SKCM", regimen="PD-1+CTLA-4")   # 57.6  (pin a regimen)
 od.therapy_benefit_toxicity_evidence(cancer_code="OV")  # sourced clinical facts
 od.rna_protein_calibrations(gene="TP53")     # matched CPTAC cohort-specific models
 od.rna_protein_hpa_priors(gene="TP53")       # HPA normal-tissue RNA/IHC weak prior
+od.hpa_cancer_ihc_prevalence()               # scored-patient IHC counts, HPA 25.1
+od.hpa_cancer_rna_prevalence(cohort="TCGA")   # genome-wide native-pTPM RNA summaries
 
 # Cancer-testis antigens (HPA-derived tissue-restriction):
 od.cta_gene_names()                       # expressed CTA symbols (MAGEA4, CT83, …)
@@ -171,3 +206,12 @@ alias oncoref=/absolute/path/to/oncoref/.venv/bin/oncoref
 ## License
 
 Apache 2.0.
+
+### Annotation-scoped CTA identities
+
+When using a particular Ensembl annotation, resolve CTA source IDs with
+`oncoref.resolve_gene_identity(gene_id, genome=genome)` and obtain verified
+negative-reference exclusion IDs with
+`oncoref.cta_annotation_gene_ids(genome, unfiltered=True)`. Both use the same
+versioned identity contract, retaining original source IDs and unresolved
+mapping evidence. See [CTA gene identities](docs/cta-gene-identities.md).

@@ -10,7 +10,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Proteoform groups: sets of CGA genes that encode an identical protein.
+"""Human proteoform groups: sets of CGA genes that encode an identical protein.
+
+Both bundled scopes use human Ensembl gene identities. ``scope="genome"`` expands
+the human gene universe; it is not a species selector.
 
 Some cancer-germline antigens are duplicated to distinct genomic loci that encode
 a *byte-identical* protein (CTAG1A/CTAG1B = NY-ESO-1, XAGE1A/XAGE1B, SSX4/SSX4B,
@@ -68,6 +71,8 @@ The registry's ``proteoform_id`` column is the sorted slash-joined member symbol
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 from functools import lru_cache
 
@@ -171,7 +176,7 @@ def proteoform_groups(*, scope: str = "cta") -> pd.DataFrame:
     protein-coding family, not just CGAs). The default ``"cta"`` registry is a
     *refinement* of it: every CTA group's member genes fall within a single genome
     group, but the genome group may merge in additional non-CTA paralogs and so
-    carry a larger label (e.g. CTA ``CT45A5/CT45A7`` ⊆ genome ``CT45A5/CT45A6/CT45A7``).
+    carry a larger label.
     Do not assume a gene keeps the same label across scopes.
     """
     return _proteoform_frame(scope).copy()
@@ -186,6 +191,24 @@ def proteoform_group_map(*, scope: str = "cta") -> dict[str, tuple[str, ...]]:
     for label, sub in df.groupby(_LABEL_COLUMN):
         out[str(label)] = tuple(sub[_GENE_ID_COLUMN].astype(str))
     return out
+
+
+def _proteoform_registry_metadata(scope: str) -> dict[str, str]:
+    """Content identity of the grouping and display keys used by an artifact.
+
+    Persist this in parquet DataFrame attrs: a scope name alone cannot distinguish
+    summaries made before and after a registry refresh. Include every group,
+    because changing even another gene's group can change within-sample ranks.
+    """
+    groups = [
+        (label, proteoform_symbol(label), sorted(members))
+        for label, members in sorted(proteoform_group_map(scope=scope).items())
+    ]
+    payload = json.dumps(groups, separators=(",", ":"), ensure_ascii=True)
+    return {
+        "proteoform_scope": scope,
+        "proteoform_registry_sha256": hashlib.sha256(payload.encode("ascii")).hexdigest(),
+    }
 
 
 @lru_cache(maxsize=len(_DATASET_BY_SCOPE))
@@ -319,4 +342,6 @@ def collapse_to_proteoforms(
 
     gmap = proteoform_group_map(scope=scope)
     group_symbols = {label: proteoform_symbol(label) for label in gmap}
-    return sum_proteoform_tpm(df, gmap, sample_cols, group_symbols=group_symbols)
+    out = sum_proteoform_tpm(df, gmap, sample_cols, group_symbols=group_symbols)
+    out.attrs.update(_proteoform_registry_metadata(scope))
+    return out

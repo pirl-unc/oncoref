@@ -1,0 +1,151 @@
+{
+  "artifacts": {
+    "hpa_cancer_ihc": {
+      "archive_sha256": "6e771693dc1019a3536d8834175ee97dcfde4f835d5cb3bed7c5a48803668135",
+      "bytes": 13776545,
+      "description": "HPA 25.1 cancer IHC scored-patient counts (genome-wide)",
+      "filename": "cancer_data.tsv",
+      "sha256": "901869ea1cd57012137018a83be6067a574b45999ef2e3df3f8f8887b7f80d6c",
+      "url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/cancer_data.tsv.zip"
+    },
+    "hpa_cancer_rna": {
+      "archive_sha256": "4371ed4eefa9cdded1504138d1a592cc2d86cd51bf4cf7535c030fcf2e79ef94",
+      "bytes": 130080465,
+      "description": "HPA 25.1 cancer RNA native-pTPM prevalence (genome-wide; TCGA/validation separate)",
+      "filename": "hpa_cancer_rna_summary.tsv",
+      "sha256": "6f24cb197f30be928e3daaaaea7ee44e0d93605f0937f113ad8e2c5679d73692",
+      "url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/hpa_cancer_rna_summary.tsv.zip"
+    },
+    "hpa_cancer_rna_samples": {
+      "archive_format": "file",
+      "archive_sha256": "f308ecd82be827a0e5a5853e1bf28d4bbaff6157ea1affa426b28619d941cfed",
+      "bytes": 1359726111,
+      "description": "HPA 25.1 cancer RNA sample pTPM (genome-wide; 1.36 GB gzip)",
+      "filename": "rna_cancer_sample.tsv.gz",
+      "sha256": "f308ecd82be827a0e5a5853e1bf28d4bbaff6157ea1affa426b28619d941cfed",
+      "url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/rna_cancer_sample.tsv.gz"
+    }
+  },
+  "build_audit": {
+    "explicit_missing_rna_measurements": 0,
+    "hpa_release": "25.1",
+    "ihc_genes": 15312,
+    "ihc_groups": 20,
+    "ihc_rows": 306237,
+    "ihc_status_counts": {
+      "measured": 306237
+    },
+    "rna_genes": 19973,
+    "rna_rows_by_cohort": {
+      "TCGA": 419433,
+      "validation": 190870
+    },
+    "rna_sample_rows": 166373192,
+    "rna_summary_rows": 610303,
+    "scope": "genome-wide"
+  },
+  "ensembl_release": 109,
+  "hpa_release": "25.1",
+  "legacy_tsarina": {
+    "hpa-cancer-ihc-prevalence.csv": {
+      "generator_commit": "cd9f9a325ecf05ea6fa8781f90112719438559de",
+      "genes": 253,
+      "hpa_release": null,
+      "release_status": "unrecorded",
+      "rows": 5060,
+      "sha256": "dff3540d82b2ef2fdcb5665ef0454335e1bc23b65fef8a6681c2a6566a026c57"
+    },
+    "hpa-cancer-rna-prevalence.csv": {
+      "generator_commit": "cd9f9a325ecf05ea6fa8781f90112719438559de",
+      "genes": 351,
+      "hpa_release": null,
+      "release_status": "unrecorded",
+      "rows": 10661,
+      "sha256": "1d18050b15b7c1eb1a933a4b5953a4a34a4067d55c7750b0be14ed8881aa6a31"
+    }
+  },
+  "raw_sources": {
+    "cancer-data.html": {
+      "acquired_at": "2026-09-23T18:42:17+00:00",
+      "archive_url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/cancer-data.html",
+      "bytes": 128610,
+      "etag": null,
+      "last_modified": null,
+      "resolved_url": "https://www.proteinatlas.org/humanproteome/cancer/data",
+      "sha256": "97c1c54b10f067fa9d17481bbd2fea437242bf7318eb8c54922051949bc84e22",
+      "url": "https://www.proteinatlas.org/humanproteome/cancer/data"
+    },
+    "cancer_cancers.tsv.zip": {
+      "acquired_at": "2026-09-23T18:42:16+00:00",
+      "archive_url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/cancer_cancers.tsv.zip",
+      "bytes": 463,
+      "etag": "\"1cf-642e432c4d100\"",
+      "last_modified": "Thu, 06 Nov 2025 02:55:32 GMT",
+      "resolved_url": "https://www.proteinatlas.org/download/tsv/cancer_cancers.tsv.zip",
+      "sha256": "d9c0bed9a29fee1c9bb9acef700456dbda63e6bb562fa4bdee65d1ffdc3ed9f6",
+      "url": "https://www.proteinatlas.org/download/tsv/cancer_cancers.tsv.zip"
+    },
+    "cancer_data.tsv.zip": {
+      "acquired_at": "2026-09-23T18:42:17+00:00",
+      "archive_url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/cancer_data.tsv.zip",
+      "bytes": 1724018,
+      "etag": "\"1a4e72-642e432c4d100\"",
+      "last_modified": "Thu, 06 Nov 2025 02:55:32 GMT",
+      "resolved_url": "https://www.proteinatlas.org/download/tsv/cancer_data.tsv.zip",
+      "sha256": "6e771693dc1019a3536d8834175ee97dcfde4f835d5cb3bed7c5a48803668135",
+      "url": "https://www.proteinatlas.org/download/tsv/cancer_data.tsv.zip"
+    },
+    "cancer_rna_tcga_cancers.tsv.zip": {
+      "acquired_at": "2026-09-23T18:42:16+00:00",
+      "archive_url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/cancer_rna_tcga_cancers.tsv.zip",
+      "bytes": 824,
+      "etag": "\"338-642e433205e80\"",
+      "last_modified": "Thu, 06 Nov 2025 02:55:38 GMT",
+      "resolved_url": "https://www.proteinatlas.org/download/tsv/cancer_rna_tcga_cancers.tsv.zip",
+      "sha256": "7be883320f86753779f75cb52a1cd536f85a1499be9892a2e2014f85882dad99",
+      "url": "https://www.proteinatlas.org/download/tsv/cancer_rna_tcga_cancers.tsv.zip"
+    },
+    "cancer_rna_validation_cancers.tsv.zip": {
+      "acquired_at": "2026-09-23T18:42:16+00:00",
+      "archive_url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/cancer_rna_validation_cancers.tsv.zip",
+      "bytes": 576,
+      "etag": "\"240-642e433205e80\"",
+      "last_modified": "Thu, 06 Nov 2025 02:55:38 GMT",
+      "resolved_url": "https://www.proteinatlas.org/download/tsv/cancer_rna_validation_cancers.tsv.zip",
+      "sha256": "68ac6ca367b9dbdfe543312f8426571de4f9db6fd93385b8ef88519f2d96bf0d",
+      "url": "https://www.proteinatlas.org/download/tsv/cancer_rna_validation_cancers.tsv.zip"
+    },
+    "release-history.html": {
+      "acquired_at": "2026-09-23T18:42:22+00:00",
+      "archive_url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/release-history.html",
+      "bytes": 1578005,
+      "etag": null,
+      "last_modified": null,
+      "resolved_url": "https://www.proteinatlas.org/about/releases",
+      "sha256": "20e22a4476f5b10998604adc8c818a64c0dd4f101a1f69a49ae9e24eca6cbf67",
+      "url": "https://www.proteinatlas.org/about/releases"
+    },
+    "rna_cancer_sample.tsv.gz": {
+      "acquired_at": "2026-09-23T18:45:45+00:00",
+      "archive_url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/rna_cancer_sample.tsv.gz",
+      "bytes": 1359726111,
+      "etag": "\"510bc61f-631c7735d2100\"",
+      "last_modified": "Wed, 02 Apr 2025 08:29:24 GMT",
+      "resolved_url": "https://www.proteinatlas.org/download/tsv/rna_cancer_sample.tsv.gz",
+      "sha256": "f308ecd82be827a0e5a5853e1bf28d4bbaff6157ea1affa426b28619d941cfed",
+      "url": "https://www.proteinatlas.org/download/tsv/rna_cancer_sample.tsv.gz"
+    }
+  },
+  "reference_version": "v25.1-1",
+  "release_evidence": "cancer-data.html and release-history.html acquired with the raw files explicitly identify HPA 25.1. File modification dates are not release labels.",
+  "rna_units": "pTPM; no clean-TPM transformation",
+  "schema_version": 1,
+  "scope": "genome-wide source tables; no CTA prefilter",
+  "source_gene_identity": "Native HPA Ensembl gene IDs (release 109), without remapping to the oncoref canonical gene space.",
+  "thresholds_ptpm": [
+    0.1,
+    1,
+    2,
+    5
+  ]
+}

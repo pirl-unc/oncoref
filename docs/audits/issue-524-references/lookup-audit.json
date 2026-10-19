@@ -1,0 +1,96 @@
+{
+  "retrieved_on": "2026-10-05T17:09:06.479070+00:00",
+  "issue": "https://github.com/pirl-unc/oncoref/issues/524",
+  "selection": "Union of tmb_source_not_revalidated, numeric_source_location_not_verified, response_denominator_missing and small_denominator",
+  "flagged_records": 435,
+  "cited_reference_identifiers": 106,
+  "distinct_canonical_references": 106,
+  "tmb_references": 19,
+  "response_references": 87,
+  "uncited_records": 3,
+  "flags": {
+    "tmb_source_not_revalidated": 67,
+    "numeric_source_location_not_verified": 338,
+    "response_denominator_missing": 33,
+    "small_denominator": 47
+  },
+  "metadata_statuses": {
+    "retrieved_live": 106
+  },
+  "references_with_pmc": 61,
+  "lookup_errors": [],
+  "source_files": {
+    "docs/audits/tmb-ici-apd1.csv": "c19f00ded513af6d0c2df43dc4af393837634a7fee368ea4cf90124d9b8f1864",
+    "docs/audits/source-citations.csv": "8b6b0252d3f6d167f15e66f69be2969bdb61fba5ce5c1192b3309a56f558ae02",
+    "oncoref/data/cancer-tmb.csv": "22ebd943c8845ce170d3d59cc52c0118e2697bf99809a739499b07ec07d00131",
+    "oncoref/data/cancer-tmb-source-audit.csv": "669391e352e0596d45f7df516337bca5db0dca4db06e28f3870e57a4ae723677",
+    "oncoref/data/cancer-ici-response-estimates.csv": "1c83b463bb4da952f0d54131ec715d493d61b3c4caff399f2c7732cfb1355589",
+    "oncoref/data/cancer-ici-source-locator-audit.csv": "cbe4912822df52ffa89700ee20f48a2fcbc3b33261430dee2bbd0b42a1ae8977"
+  },
+  "verification_scope": "Live bibliographic identity and available document links; numerical values, source populations and denominators remain pending scientific review.",
+  "additional_primary_references": 1,
+  "source_trace_records": 6,
+  "modeled_blends_without_direct_citation": 3,
+  "additional_source_file_hashes": {
+    "primary-source-traces.xml": "50d5acd8cc407974e2cda7d0c671abd721ade2ab61766e6c77127a1aea3734ea",
+    "chordoma-primary.xml": "d87f21177ee00ce7c26c3304d2b69c87adc56f93f7cc1adbb9d20fd405f70801",
+    "chordoma-primary-pubmed.xml": "d6852163d4e1a664630fdef2cd52207a0e9a5ed811b3d805f3a83aa37e88a67f"
+  },
+  "acquisition_documents": [
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23000897%2C23143597%2C23770567%2C24413733%2C25631445%2C25891173%2C26027431%2C26028255%2C26168399%2C26412456%2C27159395%2C27269741%2C27533448%2C27592805%2C27718847%2C28131785%2C28223062%2C28420421%2C28726821%2C28837405%2C28889792%2C28966033%2C28988646%2C29045540%2C29217288%2C29395863%2C29489754%2C29543932%2C29562145%2C29584546%2C29773717%2C29863979%2C29867230%2C29901569%2C29906252%2C30151257%2C30242306%2C30383184%2C30475947%2C30475950&retmode=xml",
+      "raw_response_sha256": "ffd19fe86ff55dd8f87b628e953b50a28d24b4e603807adf77e522a9ad515bb6",
+      "bytes": 1541070
+    },
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30557521%2C30605211%2C30620669%2C30664989%2C30937889%2C30943124%2C31046082%2C31399473%2C31532724%2C31562796%2C31582355%2C31639039%2C31679945%2C31682550%2C32359091%2C32552471%2C32673170%2C32997907%2C33001135%2C33026938%2C33249490%2C33264544%2C33417511%2C33485464%2C33529058%2C33836153%2C33882143%2C34000246%2C34380663%2C34590004%2C34818112%2C34990208%2C35108470%2C35114169%2C35289329%2C35361487%2C35611499%2C35777186%2C36135044%2C36808285&retmode=xml",
+      "raw_response_sha256": "8a3eb7428caac4105b9609be56564ae3bd4770c7106b6dff334aab07a4e7a931",
+      "bytes": 1116595
+    },
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=37130017%2C37429302%2C37672694%2C38858106%2C38892063%2C39343511%2C39356983%2C39631622%2C39847999%2C41760889&retmode=xml",
+      "raw_response_sha256": "b23b674d44d82c5a33da45c8e6be63d47d1371e3975aa0cf83a8df060f1da45f",
+      "bytes": 318176
+    },
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%2210.1002%2Fcncr.34657%22%5BDOI%5D+OR+%2210.1016%2Fj.annonc.2023.10.123%22%5BDOI%5D+OR+%2210.1016%2Fj.cell.2017.10.014%22%5BDOI%5D+OR+%2210.1016%2Fj.celrep.2024.113826%22%5BDOI%5D+OR+%2210.1016%2Fj.ejca.2018.11.015%22%5BDOI%5D+OR+%2210.1038%2Fs41416-020-0775-0%22%5BDOI%5D+OR+%2210.1038%2Fs41598-018-31659-0%22%5BDOI%5D+OR+%2210.1056%2FEVIDoa2100070%22%5BDOI%5D+OR+%2210.1080%2F10428194.2022.2034155%22%5BDOI%5D+OR+%2210.1158%2F1078-0432.CCR-19-3356%22%5BDOI%5D+OR+%2210.1182%2Fblood-2017-02-765685%22%5BDOI%5D+OR+%2210.1182%2Fblood.2019004753%22%5BDOI%5D+OR+%2210.1200%2FJCO.2019.37.15_suppl.11015%22%5BDOI%5D+OR+%2210.1200%2FJCO.2019.37.15_suppl.4569%22%5BDOI%5D+OR+%2210.1200%2FJCO.2020.38.15_suppl.6513%22%5BDOI%5D+OR+%2210.3390%2Fcancers12082307%22%5BDOI%5D&retmode=json&retmax=100",
+      "raw_response_sha256": "6c23bb1b3eb3cb7b508c1d8ade04a8ea913a5f1684b62f094b6e3987e079a4ee",
+      "bytes": 1133
+    },
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=38412093%2C38072158%2C36748723%2C38319892%2C35244520%2C32870269%2C32824391%2C32152503%2C31969335%2C30576970%2C30202034%2C29100075%2C28424162&retmode=xml",
+      "raw_response_sha256": "c6a836a05dbe7e518930e62334d6cd612db73f97ac76f649b57b922d7b8c2214",
+      "bytes": 436826
+    },
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=11172617,9498130,3919509&retmode=xml",
+      "raw_response_sha256": "50d5acd8cc407974e2cda7d0c671abd721ade2ab61766e6c77127a1aea3734ea",
+      "bytes": 506181
+    },
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=7859411&retmode=xml",
+      "raw_response_sha256": "d87f21177ee00ce7c26c3304d2b69c87adc56f93f7cc1adbb9d20fd405f70801",
+      "bytes": 144744
+    },
+    {
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33536423&retmode=xml",
+      "raw_response_sha256": "d6852163d4e1a664630fdef2cd52207a0e9a5ed811b3d805f3a83aa37e88a67f",
+      "bytes": 43499
+    }
+  ],
+  "crossref_lookup_urls": [
+    "https://api.crossref.org/works/10.1056%2FEVIDoa2100070",
+    "https://api.crossref.org/works/10.1158%2F1078-0432.CCR-19-3356",
+    "https://api.crossref.org/works/10.1200%2FJCO.2019.37.15_suppl.11015",
+    "https://api.crossref.org/works/10.1200%2FJCO.2019.37.15_suppl.4569",
+    "https://api.crossref.org/works/10.1200%2FJCO.2020.38.15_suppl.6513"
+  ],
+  "raw_document_retention": "Raw response hashes identify the acquisition. Raw articles are not bundled; the normalized bibliographic snapshot and source-chain notes are checked in.",
+  "snapshot_inputs": {
+    "bibliographic-metadata.json": "5bdd129e2168d3a860aa4fde44e101e5cc936170adb59d9078fabe8698d6727c",
+    "source-traces.csv": "c728d83366db31f29cf14ec440a563fb6293e4d78cb1f99765cc09b2a3b3a287",
+    "additional-primary-reference.csv": "c196e7358a4e001c5c5fc6aa2b9401a803c2e07e3b3bc2855439b0298b20ebe4"
+  },
+  "references_with_pmc_document_links": 62,
+  "pmc_count_basis": "references_with_pmc counts PMCIDs in the frozen bibliographic snapshot; references_with_pmc_document_links also includes existing source-locator URLs."
+}

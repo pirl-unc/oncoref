@@ -6,7 +6,7 @@
 
 import pytest
 
-from oncoref import hpa
+from oncoref import hpa, load_dataset
 
 
 def _seed(cache_root, name, version, filename, text):
@@ -102,7 +102,7 @@ def test_gene_protein_tissues_detected_only(hpa_cache):
     assert hpa.gene_protein_tissues("ENSG00000001") == {"testis"}
 
 
-def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch):
+def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch, request):
     import pandas as pd
 
     calls = []
@@ -112,9 +112,25 @@ def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch):
         calls.append((name, version))
         return table
 
-    hpa._hpa_normal_tissue_for_version.cache_clear()
-    hpa._hpa_normal_tissue_labels_for_version.cache_clear()
+    caches = (hpa._hpa_normal_tissue_for_version, hpa._hpa_normal_tissue_labels_for_version)
+
+    def restore():
+        # Both halves are required. These two caches are NOT registered with
+        # _register_derived_cache -- hpa registers only its safety-tissue
+        # mapping -- so _clear_cache alone leaves the one-row fake cached under
+        # "v23" for the rest of the session. _clear_cache alone is also worse
+        # than nothing here: it drops cta_review's caches, so the next summary
+        # rebuilds against the still-poisoned hpa table.
+        for fn in caches:
+            fn.cache_clear()
+        load_dataset._clear_cache()
+
+    # Through a finalizer rather than at the end of the body, so a failure
+    # mid-test cannot leave the fake cached for whatever reads the IHC atlas next.
+    for fn in caches:
+        fn.cache_clear()
     monkeypatch.setattr(hpa, "_read_hpa", fake_read_hpa)
+    request.addfinalizer(restore)
 
     frames = (
         hpa.hpa_normal_tissue(),
@@ -134,9 +150,6 @@ def test_normal_tissue_cache_uses_one_concrete_version_key(monkeypatch):
     assert calls == [("hpa_normal_tissue", "v23")]
     assert hpa._hpa_normal_tissue_for_version.cache_info().currsize == 1
     assert hpa._hpa_normal_tissue_labels_for_version.cache_info().currsize == 1
-
-    hpa._hpa_normal_tissue_for_version.cache_clear()
-    hpa._hpa_normal_tissue_labels_for_version.cache_clear()
 
 
 def test_normal_tissue_label_resolution_distinguishes_empty_observation(hpa_cache):
@@ -216,8 +229,10 @@ def test_safety_tissue_resolution_fails_closed_by_default():
 def test_safety_tissue_resolution_rejects_unknown_inputs():
     with pytest.raises(hpa.SafetyTissueResolutionError, match="unknown safety tissue group"):
         hpa.resolve_safety_tissue_group("kidney")
+    # Single-cell data is keyed by cell type, so it has no tissue mapping to
+    # resolve against. The IHC and RNA-consensus tables both do.
     with pytest.raises(hpa.SafetyTissueResolutionError, match="no safety-tissue mapping"):
-        hpa.resolve_safety_tissue_group("heart", source_name="hpa_rna_consensus")
+        hpa.resolve_safety_tissue_group("heart", source_name="hpa_single_cell")
     with pytest.raises(hpa.SafetyTissueResolutionError, match="has no version"):
         hpa.resolve_safety_tissue_group("heart", source_version="v999")
 
@@ -271,3 +286,41 @@ def test_hpa_parquet_cache(monkeypatch, tmp_path):
     monkeypatch.setattr(reference_data, "ensure", lambda name, *a, **k: tsv)
     df2 = pd.read_parquet(parquet)
     assert df2.equals(df1)
+
+
+def test_every_mapped_source_tissue_is_a_real_label_in_its_source():
+    """A typo'd source_tissue silently shrinks a safety group.
+
+    The table's own validation covers structure and vocabulary, but never that
+    a declared label exists in the source it names. A misspelling would resolve
+    as covered, match no rows, and lower a group's maximum with nothing
+    reporting it -- quietly reintroducing the coverage gap the mapping exists
+    to make explicit.
+    """
+    mapping = hpa.safety_tissue_mapping_table()
+    available = {
+        "hpa_normal_tissue": set(hpa.hpa_normal_tissue_labels("v23")),
+        "hpa_rna_consensus": set(hpa._read_hpa("hpa_rna_consensus", "v23")["Tissue"].dropna()),
+    }
+    declared = mapping.loc[mapping["source_tissue"].astype(str).ne("")]
+    assert set(declared["source_name"]) <= set(available), "unknown source in the mapping table"
+    for source_name, rows in declared.groupby("source_name"):
+        unknown = set(rows["source_tissue"]) - available[source_name]
+        assert not unknown, f"{source_name} has no such tissue label: {sorted(unknown)}"
+
+
+def test_rna_consensus_safety_groups_are_mapped_for_the_pinned_version():
+    # cta_review resolves RNA safety groups against this source, so the mapping
+    # has to exist for it and not only for the IHC table.
+    for group in ("brain", "heart", "lung", "liver", "pancreas"):
+        resolution = hpa.resolve_safety_tissue_group(
+            group, source_name="hpa_rna_consensus", source_version="v23", require_complete=False
+        )
+        assert resolution.source_name == "hpa_rna_consensus"
+        assert resolution.source_tissues
+    brain = hpa.resolve_safety_tissue_group(
+        "brain", source_name="hpa_rna_consensus", source_version="v23", require_complete=False
+    )
+    # The consensus table measures 10 of the 14 requested regions.
+    assert brain.coverage_state == "partial"
+    assert brain.unavailable_tissues == ("medulla oblongata", "pons", "thalamus", "white matter")

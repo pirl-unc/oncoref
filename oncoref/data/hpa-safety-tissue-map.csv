@@ -18,3 +18,21 @@ hpa_normal_tissue,v23,heart,heart muscle,heart muscle,exact,complete,https://v23
 hpa_normal_tissue,v23,liver,liver,liver,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/liver,Exact HPA v23 IHC tissue label.
 hpa_normal_tissue,v23,lung,lung,lung,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/lung,Exact HPA v23 IHC tissue label.
 hpa_normal_tissue,v23,pancreas,pancreas,pancreas,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/pancreas,Exact HPA v23 IHC tissue label.
+hpa_rna_consensus,v23,brain,amygdala,amygdala,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/amygdala,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,basal ganglia,basal ganglia,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/basal+ganglia,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,cerebellum,cerebellum,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/cerebellum,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,cerebral cortex,cerebral cortex,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/cerebral+cortex,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,choroid plexus,choroid plexus,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/choroid+plexus,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,hippocampal formation,hippocampal formation,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/hippocampal+formation,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,hypothalamus,hypothalamus,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/hypothalamus,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,medulla oblongata,,unavailable,unavailable,https://v23.proteinatlas.org/humanproteome/brain/medulla+oblongata,HPA v23 consensus RNA has no source-native medulla oblongata label.
+hpa_rna_consensus,v23,brain,midbrain,midbrain,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/midbrain,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,pons,,unavailable,unavailable,https://v23.proteinatlas.org/humanproteome/brain/pons,HPA v23 consensus RNA has no source-native pons label.
+hpa_rna_consensus,v23,brain,retina,retina,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/retina,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,spinal cord,spinal cord,exact,complete,https://v23.proteinatlas.org/humanproteome/brain/spinal+cord,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,brain,thalamus,,unavailable,unavailable,https://v23.proteinatlas.org/humanproteome/brain/thalamus,HPA v23 consensus RNA has no source-native thalamus label.
+hpa_rna_consensus,v23,brain,white matter,,unavailable,unavailable,https://v23.proteinatlas.org/humanproteome/brain/white+matter,HPA v23 consensus RNA has no source-native white matter label.
+hpa_rna_consensus,v23,heart,heart muscle,heart muscle,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/heart+muscle,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,lung,lung,lung,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/lung,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,liver,liver,liver,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/liver,Exact HPA v23 consensus RNA tissue label.
+hpa_rna_consensus,v23,pancreas,pancreas,pancreas,exact,complete,https://v23.proteinatlas.org/humanproteome/tissue/pancreas,Exact HPA v23 consensus RNA tissue label.

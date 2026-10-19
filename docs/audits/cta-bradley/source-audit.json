@@ -1,0 +1,16 @@
+{
+  "inputs": {
+    "hpa_rna_consensus": {
+      "release": "v23",
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb"
+    },
+    "hpa_normal_tissue": {
+      "release": "v23",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"
+    }
+  },
+  "paper_doi": "10.1038/s41467-020-19141-w",
+  "n_candidates": 10,
+  "default_retained": 1,
+  "cohort_context": "Normal-tissue audit; not cancer IHC or patient eligibility"
+}

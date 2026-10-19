@@ -55,7 +55,7 @@ never overwrite each other.
 ## Highlighting one cancer type
 
 ```bash
-oncoref plot apd1-vs-tmb --highlight BRCA_Basal
+oncoref plot apd1-vs-tmb --highlight BRCA_TNBC
 ```
 
 Picks one cancer type out of a landscape figure: it gets the highlight colour, a
@@ -72,22 +72,16 @@ than producing an all-muted figure.
 Only plots whose marks are per-cancer-code can carry a highlight. A burden-category
 chart has no single row to light up, so those are excluded rather than approximated.
 
-`scripts/regenerate_plots.py` also writes a `basal/` subdirectory of highlighted
+`scripts/regenerate_plots.py` also writes a `tnbc/` subdirectory of highlighted
 landscape variants into every run, and those pages appear in the combined PDF
 alongside the plain figures.
 
-**On basal-like vs TNBC:** the highlighted type is `BRCA_Basal`, the registry's
-PAM50 basal-like breast subtype. It overlaps triple-negative breast cancer heavily
-but is not the same population — roughly 80% of basal-like tumours are
-triple-negative, and not all TNBC is basal-like. Both the mark and the output
-directory are named for what is actually plotted, so a figure lifted into a deck
-does not silently become a claim about TNBC.
-
-Checkpoint-response evidence currently attached to `BRCA_Basal` comes from
-clinically defined TNBC cohorts, whereas its molecular measurements use PAM50
-basal-like cohorts. Highlighted response figures therefore carry a population note
-below the plotting axes. It remains attached to the saved artifact for provenance,
-but sits outside the core panel so the panel can be cropped cleanly when reused.
+The highlighted type is `BRCA_TNBC`, the registry's receptor-defined TNBC cohort.
+Its molecular measurements use primary TCGA tumors, while checkpoint-response
+estimates come from metastatic TNBC trials. Highlighted response figures carry
+that population note below the plotting axes. It remains attached to the saved
+artifact for provenance and sits outside the core panel so the panel can be
+cropped cleanly when reused.
 
 ## Style
 
@@ -109,16 +103,36 @@ only — no downloads, no cached matrices.
 
 ```bash
 oncoref plot cta-curation
+oncoref plot cta-curation --tissue-scope both --out outputs/cta-curation-both
 ```
+
+From a source checkout, use `python -m oncoref.cli plot ...` at the repository
+root to ensure the command uses the checkout rather than an older installation.
 
 | Figure | Shows |
 |---|---|
-| `cta-source-venn.png` | Overlap of the three primary source databases |
+| `cta-source-venn.png` | Complete Wang, Bruggeman and da Silva coding nominations before HPA filtering |
 | `cta-stage-funnel.png` | Sequential attrition, source union → shipped set |
-| `cta-filter-funnel.png` | Kept vs excluded, per source |
-| `cta-filter-outcome.png` | Kept / kept-but-weak / excluded, per source |
+| `cta-filter-funnel.png` | Final default panel vs outside default, per source |
+| `cta-filter-outcome.png` | Default / HPA pass outside default / HPA fail, per source |
 | `cta-deflated-frac-dist.png` | Where genes sit against the RNA thresholds |
 | `cta-protein-vs-rna.png` | The tiered protein-reliability × RNA-fraction rule |
+| `cta-publication-funnel.png` | All ten selected papers: source identities → mapped → coding → family → HPA → default |
+| `cta-legacy-source-venn.png` | Historical CTpedia/CTexploreR/proteomics tags, labelled as an audit |
+| `cta-landscape-source-venn.png` | Additional complete imported paper lists |
+| `cta-source-overlap.png` | All-paper candidate and final-panel intersections |
+| `cta-placental-source-overlap.png` | Gong, Bradley and historical placental nominations |
+| `cta-placental-evidence-coverage.png` | Publication coverage of all 19 historical placental nominations |
+
+`--tissue-scope both` writes all twelve figures under each of `core/` and `extended/`,
+plus `cta-panel-comparison.png` and a gene-level `cta-panel-comparison.csv`.
+Use `--tissue-scope extended` for that panel alone; core remains the default.
+Every PNG has a vector PDF companion. CSVs record the plotted evidence, source
+memberships/counts, publication intake, stages and thresholds. Source lists
+overlap and cannot be summed. The source Venn and source bars cover coding
+candidates; the publication intake also retains noncoding and unmapped rows.
+Dashed/solid RNA thresholds come directly from the filter (0.80/0.90/0.95/0.97).
+The [panel audit](audits/cta-panel-curation.md) explains the two definitions.
 
 ### Expression provenance
 

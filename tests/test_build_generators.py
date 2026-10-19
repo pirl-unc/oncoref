@@ -2714,12 +2714,20 @@ def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path)
         {
             "representative_id": ["KEEP__rep1", "REPLACE__rep1"],
             "source_cohort": ["KEEP_OLD", "REPLACE_OLD"],
+            "cancer_code": ["KEEP", "REPLACE"],
+            "source_group_id": ["SHARED:a", "REPLACE_OLD:b"],
+            "benchmark_eligible": [True, True],
+            "partition_role": ["train", "train"],
         }
     ).to_csv(bundle / script._REPRESENTATIVE_PROVENANCE, index=False)
     pd.DataFrame(
         {
             "representative_id": ["REPLACE__rep1"],
             "source_cohort": ["REPLACE_NEW"],
+            "cancer_code": ["REPLACE"],
+            "source_group_id": ["SHARED:a"],
+            "benchmark_eligible": [True],
+            "partition_role": ["validation"],
         }
     ).to_csv(rebuild / script._REPRESENTATIVE_PROVENANCE, index=False)
 
@@ -2785,6 +2793,14 @@ def test_merge_expression_artifact_rebuild_replaces_only_focused_codes(tmp_path)
     assert summary["n_negative_values_clipped"] == 2
     assert summary["sample_qc_fallbacks"] == 0
     assert script._REFERENCE_SUMMARY_DIR in summary["derived_artifacts"]
+    # The focused rebuild's local split conflicts with KEEP's assignment of the
+    # same physical source. Repartition globally, and refresh both metadata levels.
+    provenance = pd.read_csv(bundle / script._REPRESENTATIVE_PROVENANCE)
+    assert provenance.groupby("source_group_id")["partition_role"].nunique().max() == 1
+    assert set(provenance["partition_role"]) == {"train"}
+    assert set(merged_metadata["n_partition_train"]) == {1}
+    assert set(merged_metadata["n_partition_validation"]) == {0}
+    assert summary["representative_partition"]["role_counts"] == {"train": 1}
 
 
 def test_merge_expression_artifact_rebuild_requires_every_shard_family(tmp_path):
@@ -5612,14 +5628,17 @@ def test_rebuild_expression_artifacts_keeps_concentration_only_source_when_pass_
     assert prov["source_group_id"].str.startswith("TEST_SOURCE:").all()
 
 
-def test_rebuild_expression_artifacts_clips_negative_source_values():
+def test_rebuild_expression_artifacts_rejects_negative_source_values(tmp_path):
     gen = _load_script("rebuild_expression_artifacts")
     df = _matrix(["G1", "G2"], ["s1", "s2"], np.array([[-2.0, 3.0], [4.0, -0.5]]))
-
-    out, n_negative = gen._clip_negative_expression(df, ["s1", "s2"])
-
-    assert n_negative == 2
-    assert out[["s1", "s2"]].to_numpy().min() == 0.0
+    path = tmp_path / "invalid.parquet"
+    df.to_parquet(path, index=False)
+    with pytest.raises(ValueError, match="negative or infinite"):
+        gen.read_raw(path)
+    with pytest.raises(ValueError, match="negative or infinite"):
+        gen.build_clean(df)
+    with pytest.raises(ValueError, match="negative or infinite"):
+        gen.build_source_summary(df, cancer_code="NUTM", source_cohort="UNC_NUTM1")
     assert df[["s1", "s2"]].to_numpy().min() < 0.0
 
 

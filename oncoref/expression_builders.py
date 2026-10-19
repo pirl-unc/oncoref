@@ -50,21 +50,23 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import defaultdict
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
-from typing import Callable, Literal, Protocol
+from typing import Literal, Protocol
 
 import numpy as np
 import pandas as pd
 import yaml
 
+from ._table_io import read_csv
 from .expression_engine import (
     canonicalize_source_gene_matrix,
     coerce_source_expression_values,
     id_columns,
     sample_columns,
+    validate_nonnegative_expression,
 )
 from .gene_families import CLEAN_TPM_CENSORED_REFERENCE_PROFILE_VERSION
 from .gene_ids import entrez_gene_mappings, unversioned
@@ -1754,7 +1756,7 @@ def read_source_expression_matrix(
     attrs for downstream builder helpers.
     """
     read_kwargs = {"sep": sep, "engine": _csv_engine(sep), "dtype": str}
-    df = pd.read_csv(Path(path), **read_kwargs)
+    df = read_csv(path, **read_kwargs)
     if df.empty:
         raise ValueError(f"source expression matrix is empty: {path}")
 
@@ -1823,14 +1825,19 @@ def read_source_expression_matrix(
 
 
 def _per_sample_to_tpm(values: pd.DataFrame) -> pd.DataFrame:
-    sums = values.sum(axis=0)
-    return values.div(sums.where(sums > 0), axis=1).fillna(0.0) * 1_000_000.0
+    validate_nonnegative_expression(values, context="linear TPM conversion")
+    sums = values.sum(axis=0, min_count=1)
+    # Keep measured zero columns at zero, and unmeasured cells at NaN.
+    return values.div(sums.mask(sums.eq(0), 1.0), axis=1) * 1_000_000.0
 
 
 def _inverse_log2_tpm(values: pd.DataFrame) -> pd.DataFrame:
-    arr = np.power(2.0, values.to_numpy(dtype=float)) - 1.0
-    arr[arr < 0] = 0.0
-    return pd.DataFrame(arr, index=values.index, columns=values.columns)
+    validate_nonnegative_expression(values, context="log2(TPM+1) conversion")
+    with np.errstate(over="ignore"):
+        arr = np.exp2(values.to_numpy(dtype=float)) - 1.0
+    out = pd.DataFrame(arr, index=values.index, columns=values.columns)
+    validate_nonnegative_expression(out, context="inverse log2(TPM+1) result")
+    return out
 
 
 def normalize_source_matrix_to_tpm(
@@ -1856,7 +1863,8 @@ def normalize_source_matrix_to_tpm(
     cols = source_expression_value_columns(
         df, row_id_col=row_id_col, symbol_col=symbol_col, value_cols=value_cols
     )
-    numeric = df[cols].apply(pd.to_numeric, errors="coerce").fillna(0.0).clip(lower=0.0)
+    validate_nonnegative_expression(df[cols], context=f"source unit {unit!r}")
+    numeric = df[cols].apply(pd.to_numeric, errors="raise")
 
     if unit in {"TPM", "FPKM", "RPKM"}:
         values = _per_sample_to_tpm(numeric)
@@ -1870,7 +1878,11 @@ def normalize_source_matrix_to_tpm(
         aligned = row_ids.map(lengths).replace(0, np.nan)
         if aligned.notna().sum() == 0:
             raise ValueError("gene_lengths_kb does not match any source row IDs")
-        rpk = numeric.div(aligned.to_numpy(), axis=0).fillna(0.0)
+        if aligned.isna().any() or (aligned <= 0).any() or not np.isfinite(aligned).all():
+            raise ValueError(
+                "gene_lengths_kb must give a finite positive length for every source row"
+            )
+        rpk = numeric.div(aligned.to_numpy(), axis=0)
         values = _per_sample_to_tpm(rpk)
     else:  # pragma: no cover - typing should prevent this; keep runtime guard.
         raise ValueError(f"unsupported source expression unit: {unit!r}")
@@ -3942,7 +3954,8 @@ def read_gdc_star_counts_tpm(
     df = df[df["gene_id"].astype(str).str.startswith("ENSG")].copy()
     df["source_gene_id"] = df["gene_id"].map(unversioned)
     df["Symbol"] = df["gene_name"].fillna("").astype(str)
-    df["TPM"] = pd.to_numeric(df[tpm_col], errors="coerce").fillna(0.0).clip(lower=0.0)
+    validate_nonnegative_expression(df[[tpm_col]], context=f"{path}: GDC STAR TPM")
+    df["TPM"] = pd.to_numeric(df[tpm_col], errors="raise")
     return df[["source_gene_id", "Symbol", "TPM"]]
 
 
@@ -3977,11 +3990,13 @@ def _gdc_raw_tpm_matrix(
         )
         sample_id = str(row["sample_id"])
         tpm = read_gdc_star_counts_tpm(path)
-        tpm = (
-            tpm.groupby("source_gene_id", as_index=False)
-            .agg(Symbol=("Symbol", "first"), TPM=("TPM", "sum"))
-            .rename(columns={"TPM": sample_id})
-        )
+        grouped = tpm.groupby("source_gene_id")
+        # Keep the reductions vectorized across genes; an all-missing group
+        # remains missing while measured zeros and partial observations survive.
+        tpm = pd.concat(
+            [grouped["Symbol"].first(), grouped["TPM"].sum(min_count=1).rename(sample_id)],
+            axis=1,
+        ).reset_index()
         merged = (
             tpm
             if merged is None
@@ -3990,7 +4005,7 @@ def _gdc_raw_tpm_matrix(
     if merged is None or merged.empty:
         raise ValueError("no GDC STAR-count TPM files were read")
     sample_ids = included["sample_id"].astype(str).tolist()
-    merged[sample_ids] = merged[sample_ids].fillna(0.0)
+    # An absent gene or missing TPM is unmeasured, not a measured zero.
     merged.attrs["row_id_col"] = "source_gene_id"
     merged.attrs["symbol_col"] = "Symbol"
     return merged[["source_gene_id", "Symbol", *sample_ids]]
@@ -4429,6 +4444,9 @@ def build_canonical_source_matrices(
     declared by ``source.cancer_code`` and every listed sample must be a matrix
     column.
     """
+    validate_nonnegative_expression(
+        matrix[sample_columns(matrix)], context="canonical source: linear TPM"
+    )
     out_dir = Path(output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     identifiers = id_columns(matrix)
@@ -5564,6 +5582,9 @@ def within_sample_top_fractions(
         pct = round((1.0 - t) * 100)
         out[f"frac_samples_top{pct}pct"] = (ranks >= t).mean(axis=1).to_numpy()
     out["n_samples"] = len(cols)
+    for key in ("proteoform_scope", "proteoform_registry_sha256"):
+        if key in df.attrs:
+            out.attrs[key] = df.attrs[key]
     return out
 
 
@@ -5618,6 +5639,9 @@ def cohort_percentile_vectors(
             out[_idcol] = df[_idcol].astype(str).to_numpy()
     for i, bp in enumerate(bps):
         out[f"p{bp}"] = q[i].astype("float16")
+    for key in ("proteoform_scope", "proteoform_registry_sha256"):
+        if key in df.attrs:
+            out.attrs[key] = df.attrs[key]
     return out
 
 

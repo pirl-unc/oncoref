@@ -23,6 +23,7 @@ Read the guide from concepts to operations:
 
 | Layer | Start here |
 | --- | --- |
+| Species and named datasets | [Species and Datasets](#species-and-datasets) |
 | Canonical cancer and gene identities | [Cancer Vocabulary](#cancer-vocabulary), [Gene Identity](#gene-identity) |
 | Expression reads, artifacts, and normalization | [Expression And Normalization](#expression-and-normalization) |
 | RNA-to-protein calibration | [RNA-to-Protein Calibration](#rna-to-protein-calibration) |
@@ -33,6 +34,30 @@ Read the guide from concepts to operations:
 
 Within each section, the intended use and primary modules come first. Detailed
 schema, provenance, fallback, and migration contracts follow.
+
+## Species and Datasets
+
+Use `oncoref.human` and `oncoref.canine` for explicit species entry points.
+Each exposes named dataset modules and conceptual groups such as `references`,
+`expression`, `cancer`, `antigens` and `normalization`.
+
+```python
+from oncoref import canine, human_protein_atlas
+
+human_protein_atlas.rna_consensus()
+canine.barkbase.source()  # provenance, units and acquisition status
+canine.barkbase.read(offline=True)  # verified cache or configured overrides
+canine.antigens.coverage()
+```
+
+Datasets also have top-level modules: `oncoref.human_protein_atlas`,
+`oncoref.barkbase`, `oncoref.bgee_srp009687`, `oncoref.bgee_srp181218`,
+`oncoref.pfizer_canine_protein`, `oncoref.pfizer_canine_rna`, `oncoref.doga` and
+`oncoref.gse304066`. Species modules reference those exact modules. Pending source
+integration remains explicit in `source()` metadata and `read()` errors.
+
+See [Species and data groups](species.md) for source coverage, native-unit
+contracts, offline asset configuration and the dynamic compatibility API.
 
 ## Cancer Vocabulary
 
@@ -430,7 +455,8 @@ Current gaps, with the reason recorded on each row:
 | --- | --- | --- |
 | `CRC` | mismatch-repair stratified: MSI-H/dMMR responds, MSS essentially does not | `CRC_MSI` |
 | `RCC` | member histologies anchored on separate trials spanning 9.5% to 41.6% | `KIRC`, `KIRP`, `KICH`, `RCC_NCC` |
-| `BRCA` | curated anchors are receptor-subtype (TNBC) anchors only | `BRCA_Basal` |
+| `BRCA` | curated anchors are receptor-subtype (TNBC) anchors only | `BRCA_TNBC` |
+| `BRCA_Basal` | TNBC trials do not estimate response in PAM50-selected basal-like disease | `BRCA_TNBC` for receptor-defined TNBC only |
 | `SARC` | histology-determined, from 0% (LMS, EWS, GIST) to 62% (KS) across curated histologies | per-histology `SARC_*` |
 | `UCEC_POLE` | selected case reports and small subgroups do not establish a representative subtype ORR | source-specific evidence in the audit |
 | `COAD`, `READ`, `UCEC` | legacy prevalence models are not measured ORRs | molecularly specified cohorts |
@@ -599,6 +625,18 @@ does not establish tumor protein presence, antigen presentation, or safety.
 Use the CPTAC table for matched tumor calibration and keep downstream ranking or
 threshold policy in the consumer.
 
+## HPA cancer IHC and RNA
+
+`hpa_cancer_ihc_prevalence()` returns genome-wide scored-patient IHC counts and
+fractions. `hpa_cancer_rna_prevalence(cohort="TCGA")` returns native-pTPM RNA
+summaries with measured denominators and threshold-positive counts.
+`hpa_cancer_rna_ihc_comparison()` joins unpaired cohort summaries using an
+explicit crosswalk, retaining missing, incomplete and mismatched groups.
+
+See the [HPA cancer reference guide](hpa-cancer-reference.md) for source release
+and hashes, missingness rules, weighted pooling, antibody limitations, six
+comparison plots and the downstream migration contract.
+
 ## CTA Antigens
 
 A cancer-testis antigen (CTA) is encoded by a gene that is normally restricted
@@ -637,14 +675,19 @@ protein call.
 - `oncoref.cta` — CTA definition, HPA restriction tiers, axes, aliases, and gene
   ID/name sets. Strict helpers such as `cta_gene_names()` and
   `cta_filtered_gene_names()` preserve the HPA reproductive-restriction default;
-  `cta_clinical_target_evidence()` exposes a separate clinical/canonical tier for
-  source-anchored CTA targets that may be strict-pass, HPA-excluded, or
-  candidate-only. `cta_specificity_audit()` exposes machine-readable specificity
-  demotion and candidate-only decisions for genes whose normal-tissue evidence
-  makes strict-default inclusion unsafe or unresolved.
+  `cta_gene_names(include_warnings=True)` widens that default to the opt-in
+  warning tier described below. `cta_clinical_target_evidence()` exposes a
+  separate clinical/canonical tier for source-anchored CTA targets that may be
+  strict-pass, HPA-excluded, or candidate-only. `cta_specificity_audit()`
+  exposes machine-readable specificity demotion and candidate-only decisions for
+  genes whose normal-tissue evidence makes strict-default inclusion unsafe or
+  unresolved.
 - `oncoref.cta_coverage` — CTA patient coverage over per-sample expression
   matrices.
 - `oncoref.cta_peptides` — CTA-specific 9-mer counts and load.
+- `oncoref.cta_review` — comparable HPA normal-tissue evidence for every CTA,
+  watchlist, and clinical-reference candidate, and the curated supplemental
+  observations recorded against it.
 
 `cta_specific_9mer_count_map()` returns a map from a join key to
 `n_specific_9mers`; those counts are used as weights when computing
@@ -676,6 +719,181 @@ per-sample matrices and do not download data. Use
 `locally_available_within_sample_cohorts()` to plan local work across both
 package/artifact data and a partial bundle cache. Set `include_recomputable=False`
 when only already-built shards should count.
+
+### Extended reproductive CTAs
+
+The existing `cta_gene_names()`, `cta_gene_ids()` and `cta_df()` use the core
+RNA numerator: testis, ovary and placenta. A separately named panel uses those
+tissues plus cervix, endometrium, epididymis, fallopian tube, prostate, seminal
+vesicle and vagina:
+
+```python
+from oncoref import cta
+
+core = cta.cta_gene_names()              # 624, unchanged core default
+extended = cta.cta_extended_gene_names() # 688; includes the core default
+cta.cta_extended_gene_ids()
+cta.cta_extended_df()                   # complete candidate evidence + decisions
+```
+
+Both panels use the same candidate identities, family exclusions, protein rules,
+adaptive RNA thresholds, expression policy and shared specificity reviews.
+The bundled `cancer-testis-antigens-extended` snapshot makes the extended panel
+available offline. `rna_reproductive_tissue_scope` identifies each snapshot's
+numerator. `cta-specificity-audit.tissue_scope` is `all`, `core` or `extended`;
+PAGE4's core-fraction exclusion applies only to core, while MAGEA11's independent
+review excludes it from both. PATE1/PATE4/LIPI remain candidates pending
+complete-paper provenance; TRIM64 remains candidate-only. The extended panel is a broader anatomical
+restriction definition, not an assertion of equivalent immune privilege or safety.
+
+`cta_specificity_audit(tissue_scope="extended")` joins extended reviews to
+extended RNA evidence; its default remains core.
+
+`cta_clinical_target_evidence()` continues to describe core evidence. Its
+`exclusion_reasons`, `rna_deflated_reproductive_frac` and
+`rna_restriction_threshold` identify the failed gate. The legacy
+`exclusion_driver_*` columns contain the somatic maximum as context; it need not
+be the signal causing exclusion. `cta_candidate_references()` omits already
+assessed genes; `include_in_table=True` retains historical watchlist citations.
+
+See [published nominations](cta-publication-sources.md) and the
+[core/extended curation audit](audits/cta-panel-curation.md). The
+[RNA expression units guide](cta-expression-units.md) explains HPA nTPM,
+restriction fractions and missing-data behavior.
+
+### Warning tier
+
+The strict default is unchanged. `cta_gene_names()` and `cta_gene_ids()` still
+return only the canonical expressed default set. The keyword-only
+`include_warnings=True` widens that call to an opt-in warning tier that is
+disjoint from the strict default, so nothing already in the default set moves
+and the tier can be examined on its own with `cta_warning_gene_names()` or
+`cta_warning_gene_ids()`. `cta_warning_references()` returns the curated
+`cta-warning-reviews` table, one row per warning-tier gene with its
+`warning_code`, `source_version`, `source_anchor`, `rationale`, and
+`unresolved_evidence`.
+
+Membership in the tier is an explicit, source-anchored curation decision. It is
+not an automatic rescue from an RNA cutoff or from a negative
+immunohistochemistry (IHC) result, and it is not a safety clearance. The
+recorded evidence is unresolved, which is why the gene sits in a warning tier
+rather than in the default set.
+
+CTAG2 is the motivating case. It is a clinically pursued NY-ESO-family target
+that the strict default excludes over a low-level HPA v23 heart RNA signal of
+5.1 nTPM. Dropping it silently hides a real candidate, while rescuing it
+automatically would let a negative cardiomyocyte IHC result stand in for absence
+of peptide presentation. The warning tier keeps the candidate discoverable to
+callers that ask for it and keeps its unresolved evidence attached to it.
+
+The [CTAG2 heart evidence review](audits/ctag2-heart-evidence.md) separates
+negative cardiomyocyte IHC from unresolved peptide presentation and documents
+cardiac adverse events in the lete-cel program. Its primary-source findings are
+available in `cta_reviewed_evidence()` and the summary's `clinical_review`
+fields. Afami-cel/TECELRA targets MAGE-A4 and is not CTAG2 safety evidence.
+
+```python
+from oncoref import cta
+
+cta.cta_gene_names()                        # strict default, unchanged
+cta.cta_gene_names(include_warnings=True)   # default plus the warning tier
+cta.cta_warning_gene_names()                # the tier alone
+cta.cta_warning_references()[["Symbol", "warning_code", "unresolved_evidence"]]
+```
+
+### Normal-tissue evidence review
+
+`oncoref.cta_review` asks a different question from CTA identity: what
+normal-tissue evidence exists for a candidate, on one comparable basis, and
+where that evidence is missing.
+
+`cta_evidence_summary()` returns one comparable row per CTA, watchlist, or
+clinical-reference candidate on the pinned HPA v23 baseline. Every row carries
+bulk RNA, all-tissue somatic IHC, the five safety-tissue groups (`brain`,
+`heart`, `lung`, `liver`, `pancreas`), and cardiomyocyte RNA and IHC, plus
+`discovery_tier` (`strict`, `warning`, `low_expression`, `candidate`, or
+`excluded`), `atlas_warning_codes`, `atlas_evidence_gaps`,
+`atlas_coverage_limits`, a `*_review_status` per reviewed modality, and a
+human-readable `evidence_summary`. The
+`cta-warning-reviews` fields are merged in under a `warning_` prefix, so a
+warning-tier row carries its curated rationale alongside its measurements.
+Candidates are summarized, not re-tiered: no negative assay result in the
+summary promotes a gene into a broader set.
+
+`cta_normal_tissue_evidence()` returns the long-form per-tissue and
+per-cell-type measurements behind that summary, including tissues outside the
+five safety groups. Its `measurement_status` keeps the two assay vocabularies
+apart — `reported_zero` and `positive_estimate` are RNA estimates, while
+`not_detected` and `detected` are IHC annotations — and `unit` states `nTPM` or
+`IHC category` per row. Single-cell cell types are aggregated across organs, so
+their `tissue` is left blank rather than assigning, for example, every
+fibroblast measurement to the heart.
+
+`cta_reviewed_evidence()` returns the curated `cta-reviewed-evidence` table of
+source-anchored supplemental per-modality observations, each with its assay,
+scope, source version, finding, and limitations. That table is not
+comprehensive: absence of a row means the modality was not reviewed for that
+gene, not that nothing was found.
+
+The two kinds of incompleteness are reported separately, because one is about
+the gene and the other about the release. `atlas_evidence_gaps` carries what is
+missing for that gene: a scope with no measurement is `unavailable`, and one
+measured in fewer tissues than the source routinely surveys for it is
+`incomplete` rather than summarized as though the whole scope had been covered.
+An IHC detection remains `detected` even when other tissues are missing; the
+same scope also carries an `incomplete` token in `atlas_evidence_gaps`.
+The denominator counts only labels the release runs for most genes — HPA mixes
+its standard panel with special-study labels measured for a handful of genes,
+and counting those would put the threshold out of reach, so no gene could earn
+a clean non-detection and a detection would become the only way out of
+`incomplete`. `atlas_coverage_limits`
+carries the release's own fixed limitation, which is identical for every gene.
+HPA v23 maps 8 of the 14 requested brain regions for immunohistochemistry and
+10 for RNA, and the two modalities miss different regions: neither surveys
+thalamus, medulla oblongata, pons or white matter, while immunohistochemistry
+additionally lacks amygdala and spinal cord. Mapping is the more favourable of
+two figures and not the one a status rests on: of the 8 mapped regions only 4
+are routinely surveyed, because midbrain's two nuclei, choroid plexus,
+hypothalamus and retina are all mapped but stained for under 1% of genes. A
+`brain_ihc_status` of `not_detected` therefore rests on caudate, cerebellum,
+cerebral cortex and hippocampus.
+`cta_atlas_coverage()` reports both counts per group, as
+`group_mapped_regions` and `group_surveyed_regions`, so neither can be read
+without the other.
+
+`cta_atlas_coverage()` states that limitation once, with a row per requested
+tissue per modality rather than per group, so the coverage levels add up to the
+regions asked for and a region represented by a single substructure is not
+tallied as covered. Keeping it out of the per-gene field is deliberate: repeated
+into every row it would leave `atlas_evidence_gaps` never empty and unable to
+distinguish a gene with missing data from one measured everywhere.
+
+Assay vocabularies stay separate throughout. A zero RNA estimate is not a
+negative IHC result, an absent measurement is never read as a zero, and no atlas
+measurement establishes peptide presentation or clinical safety. The HPA version
+is pinned rather than defaulted so a later release cannot silently relabel an
+old measurement or move the baseline of a reviewed exception. The first call
+downloads the three pinned HPA sources if they are not already cached.
+
+```python
+from oncoref import cta_review
+
+summary = cta_review.cta_evidence_summary()
+summary["discovery_tier"].value_counts()
+
+# The curated warning fields travel with the measurements they qualify.
+ctag2 = summary.loc[summary["Symbol"] == "CTAG2"]
+ctag2[["discovery_tier", "heart_rna_max_ntpm", "cardiomyocyte_ihc_status"]]
+ctag2[["atlas_warning_codes", "atlas_evidence_gaps", "warning_code"]]
+ctag2["evidence_summary"].item()
+
+# not_reviewed is a stated absence of review, not a negative result.
+summary["peptide_presentation_review_status"].value_counts()
+
+cta_review.cta_normal_tissue_evidence().query("modality == 'ihc'")
+reviewed = cta_review.cta_reviewed_evidence()
+reviewed[["Symbol", "modality", "assay", "finding", "limitations"]]
+```
 
 ## Generic Antigen Panels
 
@@ -782,6 +1000,27 @@ diagnosis-only Treehouse sample.
   Table S4 pan-cancer recurrent variants with canonical Ensembl gene/transcript
   IDs and normalized HGVS protein notation. These rows are explicitly
   pan-cancer and are not assigned to an invented cancer entity.
+- Both driver-evidence tables validate against the bundled gene reference and
+  work without `oncoref[genome]`. Retired source symbols such as `CBWD3` retain
+  their original spelling: every recorded alias is checked, and at least one
+  must support the row's recorded Ensembl ID (`ZNG1C` / `ENSG00000196873` here).
+  `oncoref.drivers.DriverGeneIdentityWarning` reports this fallback and all
+  alias candidates on the first load of each table. A known symbol pointing to
+  a different ID remains an error, even if an alias matches. Shared symbols
+  retain all candidate IDs; a row's recorded ID disambiguates it with a warning.
+  Queries match exact-case symbols and aliases first, then use case-insensitive
+  matching when it is unambiguous. For example, `emb` is an alias for `XPO1`,
+  while `EMB` names a different gene; `Emb` is ambiguous and raises. Recorded
+  source aliases are also queryable within their evidence table. Ensembl IDs
+  (including versions and mapped historical IDs) and Entrez IDs are accepted.
+  Filtering by an ambiguous symbol raises and asks for an explicit Ensembl ID;
+  unresolved names return an empty frame without consulting installed genomes.
+  `driver_gene_evidence("CBWD3")`, `driver_gene_evidence("ZNG1C")`, and the
+  recorded ID return the same source-preserving evidence. These scoped source
+  mappings do not extend the global synonym dictionary: NCBI associates
+  `CBWD3` with both `ZNG1C` and `ZNG1E`, so the driver row's recorded ID matters.
+  The [identifier audit](audits/driver-identifier-mappings.md) covers every
+  bundled mapping associated with both driver tables.
 - `oncoref.drivers.driver_legacy_migration_audit_df()` gives one
   `migrated` / `rejected` / `awaiting_source` disposition per frozen driver row;
   `driver_legacy_migration_summary()` exposes the counts per legacy table.
@@ -975,6 +1214,12 @@ unsuitable for absolute comparison with bulk RNA-seq TPM.
   `release_url(code)` and `local_path(code)` use the same per-cohort pin. This
   lets a corrected or newly added matrix move to a new release without copying
   every unchanged source asset or invalidating its existing cache.
+  Concurrent `fetch()`/`ensure()` calls for one missing cohort/version share a
+  single download across threads and processes; different destinations can
+  download independently. Transfers use unique temporary files and atomic
+  replacement. `fetch(force=True)` always refreshes, preserving the previous
+  matrix if the transfer fails, including an early EOF before the advertised
+  HTTP content length. Warm reads perform no network I/O.
   `source_matrix_regeneration_audit()` matches each selected matrix by the exact
   `(cancer_code, source_cohort)` physical-source pair. A pair must have exactly
   one registry owner declaring either an existing repository-relative builder
@@ -1052,6 +1297,13 @@ are both reference-backed; this does not make the small direct GBC cohort an
 independent classification target.
 Existing directly sourced columns, including `SARC` and `OV`, keep their current
 source-table behavior.
+
+Clean TPM is normalized independently per column over all available reference
+rows before `genes=` filtering. A filtered result retains those values and need
+not sum to 1e6. The reference gene universe is incomplete relative to a whole
+transcriptome; the 16/9/75 budgets describe its supplied, measured rows and do
+not impute omitted genes. Columns with all compartments available sum to 1e6;
+an unavailable compartment emits `RuntimeWarning` and leaves its share unfilled.
 
 ### Cohort reference expression
 
@@ -1310,6 +1562,14 @@ The transform replaces measured censored-gene composition with this Treehouse
   deliberately does not classify all small ncRNAs or miRNAs as technical.
 - genes absent from the censored table — 75% biological compartment.
 
+Scaling uses float64 before reduction and preserves missing measurements as
+`NaN`. Each column has the same values when normalized alone or with companion
+columns. If a compartment has no positive measured reference weight (censored
+genes) or no positive biological mass, `clean_tpm` warns with the compartment
+and affected columns. It does not redistribute that budget. For a gene panel,
+normalize the complete matrix first and select genes afterwards; directly
+normalizing a subset redistributes each available budget over that subset.
+
 The fixed compartment budgets and within-compartment PolyA weights make the
 biological 75% comparable across library preparations; they do not make the assays
 physically equivalent. `clean_tpm`, `filter_technical_rna`, gene-QC classification,
@@ -1417,9 +1677,63 @@ order.
   gene/transcript lookup against installed Ensembl releases.
 - `oncoref.proteoforms` — identical-protein paralog grouping and expression
   collapse helpers.
+- `oncoref.reference_identity` — versioned species/assembly/annotation/content
+  identities shared across OpenVax consumers.
+- `oncoref.sequence_groups` — exact protein identities, reference-scoped occurrence
+  groups and explicit schema migration adapters.
 - `oncoref.gene_qc` / `oncoref.gene_families` — technical-RNA and gene-family
   classification used by normalization. These are normalization/QC reference
   families, not the general home for pirlygenes marker panels.
+
+### Shared reference and exact protein identities
+
+`ReferenceIdentity`, `protein_sequence_id()` and `protein_sequence_groups()` provide
+versioned identity primitives for any explicitly supplied species and reference.
+They use only the Python standard library and define no consumer-specific target
+selection or abundance policy. See the [reference identity contract](reference-identity.md)
+for the normative schema, digest encoding, migration rules and interchange fixtures.
+
+```python
+from oncoref import ReferenceIdentity, protein_sequence_groups
+
+reference = ReferenceIdentity(
+    taxon_id=9606,
+    assembly_accession="GCF_000001405.40",
+    annotation_source="NCBI RefSeq",
+    annotation_release="110",
+    source_version="2022-04",
+    identifier_namespaces={"gene": "NCBI Gene", "transcript": "RefSeq", "protein": "RefSeq"},
+    content_provenance=verified_reference_asset_hashes,
+)
+# Each occurrence must already carry reference.reference_id.
+groups = protein_sequence_groups(translated_occurrences, reference=reference)
+```
+
+`normalize_protein_sequence()` validates the original ASCII alphabet before case
+conversion. ASCII lowercase, ASCII whitespace and one terminal stop are allowed;
+Unicode lookalikes and expanding case mappings are rejected. v1 accepts the 20
+standard amino acids, keeps I/L distinct, and rejects ambiguity codes, U/O and
+internal stops. `protein_sequence_id()` identifies normalized residues across
+references. `group_id` identifies that sequence within one complete reference.
+
+Every occurrence requires `reference_id`, string `occurrence_id`, `gene_id`,
+`transcript_id`, `protein_id`, `source`, `sequence`, and `complete=True`.
+Grouping preserves original sequences and all finite JSON-native source fields in
+defensive copies. Exact duplicates are deduplicated; contradictory IDs, mixed
+references and invalid translations fail with the occurrence ID and reason.
+Output is deterministic and JSON serializable. Reference metadata is read with
+`ReferenceIdentity.from_dict()`, which rejects unknown versions and digest mismatch.
+
+`adapt_reference_occurrences()` explicitly migrates older record schemas using a
+field map, declarations of missing metadata and checksum-pinned review evidence.
+It retains each original record and links it to an audit envelope. No implicit
+conversion of legacy reference IDs occurs; persist the envelope with the groups.
+
+Identity does not establish reproductive restriction, panel admission, RNA/protein
+abundance, locus-specific translation or PTM-defined proteoforms. Independently
+allocated RNA contributions may be combined downstream; an ambiguous observation
+must not be multiplied by its source-occurrence count. Existing human
+`proteoform_*` APIs and CTA membership policies retain their existing identities.
 
 ## Burden, TMB, Fusions, and Signatures
 
@@ -1590,3 +1904,13 @@ facades above:
   prefer `oncoref.cta_coverage` or `oncoref.antigen_coverage`.
 - `oncoref.peptides` — original CTA-specific 9-mer module; prefer
   `oncoref.cta_peptides`.
+
+## Annotation-scoped CTA identities
+
+Use `oncoref.resolve_gene_identity(gene_id, genome=genome)` when admitting an
+annotated CTA source, and `oncoref.cta_annotation_gene_ids(genome,
+unfiltered=True)` for the complete verified source-ID exclusion universe.
+`oncoref.cta_annotation_gene_identities(genome)` supplies auditable decisions,
+including rejected mappings. See the [versioned identity contract and example](cta-gene-identities.md).
+These APIs preserve source IDs and do not infer aliases from matching symbols or
+proteins. Legacy canonical CTA sets remain canonical reference-space IDs.

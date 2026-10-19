@@ -21,11 +21,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .
+          python -m pip check
 
       - name: Verify minimal base-layer contract
         run: |
           python - <<'PY'
           import importlib.util
+          import warnings
 
           assert importlib.util.find_spec("pyensembl") is None
           for dependency in ("matplotlib", "adjustText", "matplotlib_venn"):
@@ -38,6 +40,31 @@ jobs:
           assert not oncoref.cancer_tmb_df().empty
           assert not oncoref.cancer_type_registry().empty
 
+          from oncoref.drivers import DriverGeneIdentityWarning
+
+          with warnings.catch_warnings(record=True) as caught:
+              warnings.simplefilter("always", DriverGeneIdentityWarning)
+              assert len(oncoref.driver_gene_evidence_df()) == 739
+          identity_warnings = [w for w in caught if issubclass(w.category, DriverGeneIdentityWarning)]
+          assert len(identity_warnings) == 1
+          assert "CBWD3" in str(identity_warnings[0].message)
+          assert "ZNG1C" in str(identity_warnings[0].message)
+          assert len(oncoref.driver_variant_evidence_df()) == 579
+          assert len(oncoref.driver_legacy_migration_audit_df()) == 1318
+          for gene in ("CBWD3", "ZNG1C", "ENSG00000196873"):
+              evidence = oncoref.driver_gene_evidence(gene)
+              assert len(evidence) == 1
+              assert evidence.iloc[0].ensembl_gene_id == "ENSG00000196873"
+          genes = oncoref.driver_gene_evidence_df()
+          renamed = genes.loc[genes.aliases.notna(), ["gene_symbol", "aliases", "ensembl_gene_id"]].drop_duplicates()
+          assert len(renamed) == 9
+          for row in renamed.itertuples(index=False):
+              expected = set(genes.loc[genes.ensembl_gene_id.eq(row.ensembl_gene_id), "record_id"])
+              for name in (row.gene_symbol, row.aliases, row.ensembl_gene_id):
+                  assert set(oncoref.driver_gene_evidence(name).record_id) == expected
+          assert set(oncoref.driver_gene_evidence("emb").ensembl_gene_id) == {"ENSG00000082898"}
+          assert oncoref.driver_gene_evidence("EMB").empty
+
           try:
               oncoref.genomes()
           except ImportError as exc:
@@ -45,6 +72,27 @@ jobs:
           else:
               raise AssertionError("genome API should require the optional extra")
           PY
+
+  windows-assets:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install core and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pytest
+          python -m pip check
+
+      - name: Verify asset acquisition and concurrent matrix downloads on Windows
+        run: python -m pytest tests/test_species_assets.py tests/test_source_matrix_downloads.py -v
 
   lint:
     runs-on: ubuntu-latest
@@ -62,12 +110,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          python -m pip check
 
       - name: Lint with ruff
-        run: ruff check oncoref tests
+        run: ruff check oncoref tests scripts/*cta*.py
 
       - name: Check formatting with ruff
-        run: ruff format --check oncoref tests
+        run: ruff format --check oncoref tests scripts/*cta*.py
 
   test:
     runs-on: ubuntu-latest
@@ -88,7 +137,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - name: Checkout repository
@@ -104,6 +153,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          python -m pip check
 
       - name: Cache required source matrices
         uses: actions/cache@v5
@@ -186,7 +236,8 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .ci-cache/pyensembl
-          key: pyensembl-v2-human93
+          # Rebuild the legacy cache with the complete chr_patch_hapl_scaff GTF.
+          key: pyensembl-v3-human93
 
       - name: Install Ensembl release
         run: |
@@ -201,7 +252,12 @@ jobs:
           import oncoref
 
           releases = oncoref.genomes()
-          assert any(genome.release == 93 for genome in releases), releases
+          genome = next(genome for genome in releases if genome.release == 93)
+          assert genome.installed(), genome.inspect_data()
+          assert genome.gene_by_id("ENSG00000141510").gene_name == "TP53"
+          # This PRAME locus is absent from the legacy primary-assembly GTF.
+          alternate = genome.gene_by_id("ENSG00000275013")
+          assert (alternate.gene_name, alternate.contig) == ("PRAME", "CHR_HSCHR22_1_CTG3")
           PY
 
       - name: Run unit tests

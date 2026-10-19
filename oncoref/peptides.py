@@ -21,8 +21,9 @@ off-target reactivity). This mirrors pirlygenes' definition exactly:
     **longest** protein-coding transcript per gene (stop codon stripped);
   - 9-mers are the distinct sliding-window (stride 1) substrings of a protein;
   - the **background** is the union of 9-mers over every non-CTA protein (the full
-    CTA *universe* — :func:`oncoref.cta.cta_unfiltered_gene_ids` — is excluded so
-    borderline CTAs don't poison the background);
+    CTA *universe* — :func:`oncoref.cta.cta_unfiltered_gene_ids` — and its
+    verified annotation-scoped aliases are excluded so alternate assembly copies
+    don't mask specificity; unresolved mappings remain in the background);
   - a CTA's ``n_specific_9mers`` is how many of its 9-mers miss that background.
 
 Building the background scans the whole proteome (~20k genes, a minute or two), so
@@ -34,11 +35,13 @@ protein sequences (``pyensembl install --release N --species homo_sapiens``).
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import pandas as pd
 
 from .cta import cta_gene_id_to_name, cta_gene_ids, cta_unfiltered_gene_ids
+from .gene_identity import GENE_IDENTITY_CONTRACT_VERSION, cta_annotation_gene_identities
 from .genome import find_gene_id_by_name, genomes, strip_version
 
 #: 9 = the canonical MHC-I epitope length.
@@ -103,17 +106,22 @@ def _longest_protein_per_gene(genome, k: int) -> dict[str, str]:
     return longest
 
 
-def _cta_set_fingerprint() -> str:
+def _cta_set_fingerprint(identities=()) -> str:
     """Short hash of the filtered + unfiltered CTA id sets — the inputs that define
     the output rows and the background. Embedded in the cache key so a curation edit
     (a CTA added/removed) invalidates a stale cache *within* the same Ensembl release,
-    not only across releases."""
+    not only across releases. Includes annotation-scoped identity decisions and
+    their reference hashes so changing aliases cannot reuse old counts."""
     payload = "F:" + ",".join(sorted(strip_version(g) for g in cta_gene_ids()))
     payload += "|U:" + ",".join(sorted(strip_version(g) for g in cta_unfiltered_gene_ids()))
-    return hashlib.sha1(payload.encode()).hexdigest()[:10]
+    payload += "|I:" + json.dumps(
+        [record.as_dict() for record in identities], sort_keys=True, separators=(",", ":")
+    )
+    payload += f"|contract:{GENE_IDENTITY_CONTRACT_VERSION}"
+    return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
 
-def _build_counts(genome, k: int) -> pd.DataFrame:
+def _build_counts(genome, k: int, *, identities=None) -> pd.DataFrame:
     """Compute the per-CTA specific-9-mer table from one genome (no caching)."""
     longest = _longest_protein_per_gene(genome, k)
     if len(longest) < _MIN_PROTEOME_GENES:
@@ -126,16 +134,33 @@ def _build_counts(genome, k: int) -> pd.DataFrame:
     cta_filtered = {strip_version(g) for g in cta_gene_ids()}
     cta_universe = {strip_version(g) for g in cta_unfiltered_gene_ids()}
 
+    if identities is None:
+        identities = cta_annotation_gene_identities(genome)
+    verified = {
+        record.source_gene_id: record.canonical_gene_id
+        for record in identities
+        if record.verified and record.canonical_gene_id in cta_universe
+    }
     background: set[str] = set()
     for gid, seq in longest.items():
-        if gid in cta_universe:
+        if gid in verified:
             continue  # exclude the whole CTA universe so borderline CTAs don't mask specificity
         background |= _kmers(seq, k)
 
+    # Prefer the verified primary source's longest transcript. If absent, use
+    # the longest verified annotated copy, retaining canonical output row IDs.
+    cta_sequences = {}
+    for source, canonical in sorted(verified.items()):
+        seq = longest.get(source)
+        if seq and (canonical not in cta_sequences or len(seq) > len(cta_sequences[canonical])):
+            cta_sequences[canonical] = seq
+    for source, canonical in verified.items():
+        if source == canonical and source in longest:
+            cta_sequences[canonical] = longest[source]
     id2name = cta_gene_id_to_name()
     rows = []
     for gid in sorted(cta_filtered):
-        seq = longest.get(gid)
+        seq = cta_sequences.get(gid)
         km = _kmers(seq, k) if seq else set()
         rows.append(
             {
@@ -153,8 +178,10 @@ def cta_specific_9mer_counts(*, k: int = DEFAULT_K, refresh: bool = False) -> pd
 
     Columns: ``Ensembl_Gene_ID`` (unversioned), ``Symbol``, ``n_9mers`` (distinct
     9-mers in its longest protein), ``n_specific_9mers`` (those absent from every
-    non-CTA protein). Cached to a CSV keyed by Ensembl release **and** a fingerprint
-    of the CTA gene set, then memoized in-process; each call returns a fresh copy.
+    non-CTA protein). A verified primary source supplies the target sequence;
+    if absent, its longest verified annotated copy is used. Unresolved mappings
+    stay in the background. Cached to a CSV keyed by Ensembl release **and** a
+    fingerprint of the CTA gene set and annotation-scoped identity decisions, then memoized in-process; each call returns a fresh copy.
     Pass ``refresh=True`` to drop both caches and rebuild. Raises if no usable Ensembl
     release is installed or its proteome looks incomplete."""
     genome = _usable_genome()
@@ -163,7 +190,8 @@ def cta_specific_9mer_counts(*, k: int = DEFAULT_K, refresh: bool = False) -> pd
             "no usable human Ensembl release with protein sequences installed — run "
             "`pyensembl install --release 111 --species homo_sapiens`"
         )
-    fp = _cta_set_fingerprint()
+    identities = cta_annotation_gene_identities(genome)
+    fp = _cta_set_fingerprint(identities)
     key = (k, genome.release, fp)
     cache = _derived_cache_dir() / f"cta_specific_{k}mers_r{genome.release}_{fp}.csv"
     if refresh:
@@ -173,7 +201,7 @@ def cta_specific_9mer_counts(*, k: int = DEFAULT_K, refresh: bool = False) -> pd
         if cache.exists():
             _COUNTS_CACHE[key] = pd.read_csv(cache)
         else:
-            df = _build_counts(genome, k)
+            df = _build_counts(genome, k, identities=identities)
             df.to_csv(cache, index=False)
             _COUNTS_CACHE[key] = df
     return _COUNTS_CACHE[key].copy()

@@ -84,3 +84,28 @@ def test_every_cta_group_maps_into_one_genome_group():
         assert None not in glabels, f"{label}: CTA member absent from genome registry"
         assert len(glabels) == 1, f"{label}: CTA group split across genome groups {glabels}"
         assert ids <= genome_members[glabels.pop()], f"{label}: genome group missing members"
+
+
+def test_all_identical_canonical_ctas_share_a_cta_key():
+    # Checking only existing CTA groups misses omitted pairs (#567).
+    from oncoref import cta_gene_ids, proteoform_key
+
+    canonical_ctas = cta_gene_ids()
+    for label, members in proteoform_group_map(scope="genome").items():
+        cta_members = canonical_ctas.intersection(members)
+        if len(cta_members) > 1:
+            keys = {proteoform_key(gene_id, scope="cta") for gene_id in cta_members}
+            assert len(keys) == 1, f"{label}: identical canonical CTAs split into {keys}"
+
+
+def test_cta_registry_covers_current_generator_universe():
+    from generate_proteoform_groups import _DEFAULT_CTA_CSV, _candidate_gene_ids
+
+    from oncoref import proteoform_key
+
+    candidates = set(_candidate_gene_ids(_DEFAULT_CTA_CSV))
+    for label, members in proteoform_group_map(scope="genome").items():
+        expected = candidates.intersection(members)
+        if len(expected) > 1:
+            keys = {proteoform_key(gene_id, scope="cta") for gene_id in expected}
+            assert len(keys) == 1, f"{label}: current CTA source members split into {keys}"

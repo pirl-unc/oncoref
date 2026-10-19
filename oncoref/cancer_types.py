@@ -47,6 +47,8 @@ _DEPRECATED_COHORT_ALIASES = {
 CANCER_TYPE_ALIASES = {
     "prostate": "PRAD",
     "breast": "BRCA",
+    "tnbc": "BRCA_TNBC",
+    "triple_negative_breast_cancer": "BRCA_TNBC",
     "acicc": "ACINIC",
     "nsclc": "NSCLC",
     "non_small_cell_lung_cancer": "NSCLC",

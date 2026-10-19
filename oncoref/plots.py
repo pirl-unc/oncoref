@@ -50,20 +50,17 @@ _PLT = None
 #: stat name -> the percentile breakpoint column in the shipped percentile vector.
 _STAT_PERCENTILE_COL = {"q1": "p25", "median": "p50", "q3": "p75"}
 
-# BRCA_Basal is a molecular PAM50 cohort, while the checkpoint-response anchors
-# currently attached to that registry code enrolled clinically defined TNBC. The
-# populations overlap heavily, but they are not interchangeable. Highlighted
-# response figures make that limitation unusually easy to miss, so keep the
-# disclosure with the rendered artifact, outside the plotting axes.
-_BASAL_TNBC_RESPONSE_NOTE = (
-    "Population note: BRCA_Basal molecular values use PAM50 basal-like cohorts; "
-    "checkpoint-response estimates use clinically defined TNBC cohorts. The "
-    "populations overlap but are not interchangeable."
+# BRCA_TNBC molecular measurements use primary TCGA tumors, while its checkpoint
+# response anchors come from metastatic clinical trials. Keep this distinction on
+# highlighted response figures, outside the plotting axes.
+_TNBC_RESPONSE_NOTE = (
+    "Population note: BRCA_TNBC molecular values use primary TCGA tumors; "
+    "checkpoint-response estimates use metastatic TNBC trial cohorts. "
+    "These are different patient populations."
 )
-_BASAL_TNBC_RESPONSE_ONLY_NOTE = (
-    "Population note: BRCA_Basal is a PAM50 basal-like registry code, but the "
-    "checkpoint-response estimates shown here come from clinically defined TNBC "
-    "cohorts. The populations overlap but are not interchangeable."
+_TNBC_RESPONSE_ONLY_NOTE = (
+    "Population note: BRCA_TNBC response estimates use metastatic TNBC trial "
+    "cohorts; the registry molecular reference uses primary TCGA tumors."
 )
 
 
@@ -176,10 +173,10 @@ def _highlight_preserving_indices(codes, budget):
 
 
 def _response_population_note(*, mixed_population_axes=False):
-    """Population disclosure needed for highlighted BRCA_Basal response figures."""
-    if not figure_style.is_highlighted("BRCA_Basal"):
+    """Population disclosure needed for highlighted BRCA_TNBC response figures."""
+    if not figure_style.is_highlighted("BRCA_TNBC"):
         return None
-    return _BASAL_TNBC_RESPONSE_NOTE if mixed_population_axes else _BASAL_TNBC_RESPONSE_ONLY_NOTE
+    return _TNBC_RESPONSE_NOTE if mixed_population_axes else _TNBC_RESPONSE_ONLY_NOTE
 
 
 def _add_figure_note(fig, note):

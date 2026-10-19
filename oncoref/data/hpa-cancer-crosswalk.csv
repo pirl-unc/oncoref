@@ -1,0 +1,21 @@
+cancer,rna_codes,mapping_status,note
+breast cancer,BRCA,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+carcinoid,,unmatched,No corresponding HPA cancer RNA cohort; missing is not negative.
+cervical cancer,CESC,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+colorectal cancer,COAD|READ,pooled,Require all listed RNA types; pool counts and pTPM sums by measured samples. Histology composition may differ from IHC.
+endometrial cancer,UCEC,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+glioma,GBM,scope_mismatch,IHC glioma is broader than GBM-only RNA; do not compute a matched-group comparison.
+head and neck cancer,HNSC,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+liver cancer,LIHC,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+lung cancer,LUAD|LUSC,pooled,Require all listed RNA types; pool counts and pTPM sums by measured samples. Histology composition may differ from IHC.
+lymphoma,,unmatched,No corresponding HPA cancer RNA cohort; missing is not negative.
+melanoma,SKCM,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+ovarian cancer,OV,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+pancreatic cancer,PAAD,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+prostate cancer,PRAD,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+renal cancer,KICH|KIRC|KIRP,pooled,Require all listed RNA types; pool counts and pTPM sums by measured samples. Histology composition may differ from IHC.
+skin cancer,,unmatched,No corresponding HPA cancer RNA cohort; missing is not negative.
+stomach cancer,STAD,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+testis cancer,TGCT,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+thyroid cancer,THCA,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.
+urothelial cancer,BLCA,single,Anatomical correspondence; histology and patient composition may differ between unpaired cohorts.

@@ -181,13 +181,17 @@ _ICI_EVIDENCE_OVERRIDES = {
         "missing_reason": "no_supported_aggregate_orr",
     },
     # Breast checkpoint evidence is receptor-subtype evidence: the curated anchors sit
-    # on BRCA_Basal / TNBC (KEYNOTE-086, PCD4989g). Nothing is curated for the
+    # on BRCA_TNBC (KEYNOTE-086, PCD4989g). Nothing is curated for the
     # hormone-receptor-positive or HER2-enriched subtypes that make up most of the
     # aggregate, so an all-comer breast ORR would extrapolate TNBC evidence to
     # populations those trials did not enrol.
     "BRCA": {
         "source_scope": "subtype_sources_not_aggregated",
         "missing_reason": "response_is_receptor_subtype_stratified",
+    },
+    "BRCA_Basal": {
+        "source_scope": "source_rejected_for_subtype_value",
+        "missing_reason": "tnbc_trials_do_not_estimate_pam50_basal_response",
     },
     # Response is histology-determined: SARC028 reports 0% in LMS and EWS against 23%
     # in UPS (the latter from its expansion cohorts), AcSe Pembrolizumab 25% in
