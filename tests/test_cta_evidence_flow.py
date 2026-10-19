@@ -1,6 +1,7 @@
 """One evidence flow across source formats, taxa and frozen archive versions."""
 
 import copy
+import hashlib
 import json
 from dataclasses import replace
 from importlib.resources import files
@@ -28,6 +29,153 @@ def reseal(record):
     record = copy.deepcopy(record)
     record.pop("snapshot_id", None)
     return CTAEvidenceSnapshot.create(record)
+
+
+def assert_rejected_when_resealed(record, match):
+    """Exercise both construction and replay with a valid, recomputed digest."""
+    payload = copy.deepcopy(record)
+    payload.pop("snapshot_id")
+    with pytest.raises(ValueError, match=match):
+        CTAEvidenceSnapshot.create(payload)
+    digest = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
+            "ascii"
+        )
+    ).hexdigest()
+    forged = {**payload, "snapshot_id": f"openvax:cta-evidence:v2:sha256:{digest}"}
+    with pytest.raises(ValueError, match=match):
+        CTAEvidenceSnapshot.from_dict(forged)
+
+
+@pytest.fixture(scope="module")
+def human_summary(human):
+    """Keep CTAG2 and its complete source record for adversarial replay tests."""
+    record = human.as_dict()
+    record["candidates"] = [c for c in record["candidates"] if c["id"] == "ENSG00000126890"]
+    ids = set(record["candidates"][0]["evidence_ids"])
+    record["evidence"] = [e for e in record["evidence"] if e["id"] in ids]
+    for key in ("facts", "curation"):
+        record[key] = [r for r in record[key] if r["evidence_id"] in ids]
+    return reseal(record)
+
+
+@pytest.mark.parametrize(
+    "path,value",
+    [
+        (("tissue",), "testis"),
+        (("tissue",), None),
+        (("tissue_role",), "reproductive"),
+        (("statistic",), "tissue_summary"),
+        (("measurement", "unit"), "TPM"),
+        (("measurement", "feature_level"), "protein"),
+        (("measurement", "scale"), "log2"),
+        (("measurement", "is_proxy"), True),
+        (("measurement", "is_proxy"), None),
+        (("observation", "reported"), "not detected"),
+        (("source_field",), "rna_lung_max_ntpm"),
+    ],
+)
+def test_summary_source_semantics_cannot_be_rewritten(human_summary, path, value):
+    record = human_summary.as_dict()
+    fact = next(f for f in record["facts"] if f["source_field"] == "rna_heart_max_ntpm")
+    target = fact
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = value
+    assert_rejected_when_resealed(record, "source schema")
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "rna_testis_ntpm",
+        "rna_ovary_ntpm",
+        "rna_placenta_ntpm",
+        "rna_max_somatic_ntpm",
+        "rna_brain_max_ntpm",
+        "rna_heart_max_ntpm",
+        "rna_lung_max_ntpm",
+        "rna_liver_max_ntpm",
+        "rna_pancreas_max_ntpm",
+    ],
+)
+def test_every_rna_summary_field_is_bound_to_its_native_unit(human_summary, field):
+    record = human_summary.as_dict()
+    fact = next(f for f in record["facts"] if f["source_field"] == field)
+    fact["measurement"]["unit"] = "TPM"
+    assert_rejected_when_resealed(record, "source schema")
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda f: f.update(tissue=None),
+        lambda f: f.update(tissue_role="unknown"),
+        lambda f: f.update(statistic="tissue_summary"),
+        lambda f: f["measurement"].update(feature_level="gene"),
+        lambda f: f["measurement"].update(unit="nTPM"),
+        lambda f: f["measurement"].update(scale="source_native"),
+        lambda f: f["observation"].update(status="not_reported"),
+    ],
+)
+def test_ihc_summary_semantics_cannot_be_rewritten(human_summary, mutation):
+    record = human_summary.as_dict()
+    fact = next(f for f in record["facts"] if f["source_field"] == "protein_strict_expression")
+    assert fact["tissue"] is not None
+    mutation(fact)
+    assert_rejected_when_resealed(record, "source schema")
+
+
+@pytest.mark.parametrize("operation", ["omit", "duplicate", "invent", "drop_source_field"])
+def test_summary_facts_must_cover_exactly_the_archived_source(human_summary, operation):
+    record = human_summary.as_dict()
+    fact = next(f for f in record["facts"] if f["source_field"] == "rna_heart_max_ntpm")
+    if operation == "omit":
+        record["facts"].remove(fact)
+    elif operation == "drop_source_field":
+        del record["evidence"][0]["source_fields"][fact["source_field"]]
+    else:
+        added = {**fact, "id": "invented"}
+        if operation == "invent":
+            added.update(source_field="nonexistent_source_field")
+            added["observation"] = {
+                "status": "not_reported",
+                "value": None,
+                "reported": "not reported",
+                "positive_count": None,
+            }
+        record["facts"].append(added)
+    assert_rejected_when_resealed(record, "source schema|lacks source field")
+
+
+@pytest.mark.parametrize("value", [-1.0, True, "5.1", float("nan"), float("inf")])
+def test_invalid_summary_values_cannot_be_laundered_through_source_fields(human_summary, value):
+    record = human_summary.as_dict()
+    field = "rna_heart_max_ntpm"
+    record["evidence"][0]["source_fields"][field] = value
+    fact = next(f for f in record["facts"] if f["source_field"] == field)
+    fact["observation"].update(value=value, reported=str(value))
+    assert_rejected_when_resealed(record, "invalid nTPM|numeric values|JSON compliant|finite JSON")
+
+
+@pytest.mark.parametrize(
+    "operation", ["omit", "duplicate", "version", "rule", "redefine_inclusion"]
+)
+def test_historical_policy_is_bound_to_its_source_version_and_rule(human_summary, operation):
+    record = human_summary.as_dict()
+    policy = record["curation"][0]
+    if operation == "omit":
+        record["curation"].clear()
+    elif operation == "duplicate":
+        record["curation"].append({**policy, "id": "duplicate-policy"})
+    elif operation == "version":
+        policy["policy_version"] = "invented-version"
+    elif operation == "rule":
+        policy["rule"] = "Ignore somatic counterevidence"
+    else:
+        policy["included_values"] = [policy["source_fields"]["specificity_action"]]
+        policy["decision"] = "included"
+    assert_rejected_when_resealed(record, "source policy schema")
 
 
 @pytest.mark.parametrize("record", [[], None, 1, True, "not a snapshot"])
@@ -193,6 +341,12 @@ def test_facts_cannot_contradict_parent_even_with_recomputed_digest(dog, mutatio
     mutation(record)
     with pytest.raises(ValueError):
         reseal(record)
+
+
+def test_native_fact_id_is_bound_to_its_source_observation(dog):
+    record = dog.as_dict()
+    record["facts"][0]["id"] = "invented-native-fact"
+    assert_rejected_when_resealed(record, "source schema")
 
 
 def test_historical_decision_cannot_be_changed_independently_of_source(human):

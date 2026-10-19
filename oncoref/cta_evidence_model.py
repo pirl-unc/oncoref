@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 
+from .cta_evidence_adapters import native_observation_facts
+from .cta_evidence_schema import summary_records_v2
 from .expression_contract import ExpressionMeasurement
 
 FACT_FIELDS = {
@@ -65,6 +67,7 @@ def validate_cta_facts(record):
     """Validate frozen v2 facts against their parent evidence and source fields."""
     evidence = {r["id"]: r for r in record["evidence"]}
     contracts = {r["contract_id"]: r for r in record["contracts"]}
+    sources = {r["id"]: r for r in record["sources"]}
     for fact in _records(record["facts"], FACT_FIELDS, "CTA fact"):
         if fact["evidence_id"] not in evidence:
             raise ValueError("CTA fact has unknown evidence")
@@ -103,6 +106,7 @@ def validate_cta_facts(record):
         if count is not None and (
             type(count) is not int
             or count < 0
+            or observation["status"] != "reported"
             or parent["sample_count"] is None
             or count > parent["sample_count"]
         ):
@@ -120,30 +124,6 @@ def validate_cta_facts(record):
                 raise ValueError("Native CTA fact disagrees with its source observation")
         else:
             _text(field, "source field")
-            source_value = parent["source_fields"].get(field)
-            if fact["statistic"] == "tissue_detection_summary":
-                if (
-                    value is not None
-                    or count is not None
-                    or observation["status"] not in {"qualitative", "not_reported"}
-                    or observation["reported"] != (source_value or "not reported")
-                    or (
-                        fact["tissue"] is not None
-                        and (
-                            not isinstance(source_value, str)
-                            or fact["tissue"] not in [t.strip() for t in source_value.split(";")]
-                        )
-                    )
-                ):
-                    raise ValueError("Tissue detection fact disagrees with its source summary")
-                continue
-            if (
-                fact["statistic"] == "native_observation"
-                or value != source_value
-                or observation["positive_count"] is not None
-                or observation["status"] != ("not_reported" if source_value is None else "reported")
-            ):
-                raise ValueError("Summary CTA fact disagrees with its source field")
     for curation in _records(record["curation"], CURATION_FIELDS, "CTA curation"):
         if curation["evidence_id"] not in evidence:
             raise ValueError("CTA curation has unknown evidence")
@@ -156,7 +136,10 @@ def validate_cta_facts(record):
         if (
             not isinstance(fields, dict)
             or not fields
-            or any(value != parent["source_fields"].get(key) for key, value in fields.items())
+            or any(
+                key not in parent["source_fields"] or value != parent["source_fields"][key]
+                for key, value in fields.items()
+            )
         ):
             raise ValueError("CTA curation must preserve its source fields")
         field = curation["decision_field"]
@@ -174,6 +157,25 @@ def validate_cta_facts(record):
         )
         if curation["decision"] != expected:
             raise ValueError("Historical curation decision disagrees with its source field")
+
+    facts_by_parent = index_evidence_records(record["facts"])
+    curation_by_parent = index_evidence_records(record["curation"])
+    for parent in evidence.values():
+        facts = facts_by_parent[parent["id"]]
+        expected = summary_records_v2(
+            parent, contracts[parent["contract_id"]], sources[parent["source_id"]]
+        )
+        if expected is None:
+            expected = native_observation_facts(
+                parent, contracts[parent["contract_id"]], sources[parent["source_id"]]
+            )
+        expected_facts, expected_curation = expected
+        if {f["id"]: f for f in facts} != {f["id"]: f for f in expected_facts}:
+            raise ValueError("CTA facts disagree with their complete source schema")
+        if {c["id"]: c for c in curation_by_parent[parent["id"]]} != {
+            c["id"]: c for c in expected_curation
+        }:
+            raise ValueError("CTA curation disagrees with its source policy schema")
 
 
 def index_evidence_records(records):
@@ -206,7 +208,14 @@ def candidate_evidence_coverage(candidate, facts, evidence, contracts, reference
         missing.append("normalized_observations")
     if not any(
         f["statistic"] == "native_observation"
-        and f["observation"]["status"] in {"no_amplification", "below_limit"}
+        and (
+            f["observation"]["status"] in {"no_amplification", "below_limit"}
+            or (
+                f["observation"]["status"] == "reported"
+                and f["observation"]["positive_count"] == 0
+                and (evidence[f["evidence_id"]]["sample_count"] or 0) > 0
+            )
+        )
         for f in facts
     ):
         missing.append("measured_negative_or_censored_observations")
@@ -218,8 +227,9 @@ def candidate_evidence_coverage(candidate, facts, evidence, contracts, reference
         contracts[p["contract_id"]]["reference_status"] != "verified" for p in parents
     ):
         missing.append("quantification_reference")
-    elif any(
-        contracts[p["contract_id"]]["reference"]["reference_id"] != reference["reference_id"]
+    if any(
+        contracts[p["contract_id"]]["reference_status"] == "verified"
+        and contracts[p["contract_id"]]["reference"]["reference_id"] != reference["reference_id"]
         for p in parents
     ):
         missing.append("matching_quantification_reference")
