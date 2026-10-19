@@ -12,9 +12,12 @@ target-selection layer stays OUT (it lives in tsarina). These guards pin that
 ownership boundary and the table's basic integrity.
 """
 
+import hashlib
+import json
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from oncoref.cta import cta_unfiltered_gene_names
 
@@ -73,6 +76,7 @@ CTA_COLUMNS = [
     "restriction",
     "restriction_confidence",
     "safety_flags",
+    "rna_reproductive_tissue_scope",
 ]
 
 # tsarina's mass-spec evidence columns must NOT ship in oncoref's HPA-only table
@@ -83,12 +87,21 @@ _MASS_SPEC_COLUMNS = {"ms_restriction", "ms_pmids", "ms_healthy_somatic_tissues"
 _CURATED_GENES = {"SSX4B", "MAGEA2B", "GAGE10", "CT45A5", "CGB1", "PSG2", "CSH1"}
 
 
-def test_schema_matches_contract():
-    assert list(pd.read_csv(_CSV, nrows=0).columns) == CTA_COLUMNS
+@pytest.fixture(params=["core", "extended"])
+def snapshot(request):
+    scope = request.param
+    path = _CSV if scope == "core" else _CSV.with_name("cancer-testis-antigens-extended.csv")
+    return scope, pd.read_csv(path)
 
 
-def test_no_mass_spec_columns():
-    cols = set(pd.read_csv(_CSV, nrows=0).columns)
+def test_schema_matches_contract(snapshot):
+    scope, table = snapshot
+    assert list(table.columns) == CTA_COLUMNS
+    assert set(table.rna_reproductive_tissue_scope) == {scope}
+
+
+def test_no_mass_spec_columns(snapshot):
+    cols = set(snapshot[1].columns)
     assert cols.isdisjoint(_MASS_SPEC_COLUMNS), "MS columns belong in tsarina, not oncoref"
 
 
@@ -97,8 +110,45 @@ def test_curated_genes_present():
     assert not missing, f"CTA table missing curated genes: {sorted(missing)}"
 
 
-def test_no_duplicate_gene_ids():
-    df = pd.read_csv(_CSV)
+def test_no_duplicate_gene_ids(snapshot):
+    df = snapshot[1]
     dups = df["Ensembl_Gene_ID"].dropna()
     dups = dups[dups.duplicated()]
     assert dups.empty, f"duplicate Ensembl IDs in CTA table: {sorted(set(dups))}"
+
+
+@pytest.mark.parametrize("release", [112, 115])
+def test_rbmy_transcripts_match_pinned_annotation(snapshot, release):
+    """The declared isoform must belong to its gene and carry the canonical tag."""
+    audit = json.loads(
+        (_CSV.parents[2] / "docs/audits/rbmy-canonical-transcripts.json").read_text()
+    )
+    reference = next(r for r in audit["references"] if r["ensembl_release"] == release)
+    rows = reference["transcripts"]
+    table = snapshot[1].set_index("Ensembl_Gene_ID")
+    selected = []
+    for gid in audit["previous_cta_transcript_ids"]:
+        gene_rows = [r for r in rows if r["gene_id"] == gid]
+        canonical = [r for r in gene_rows if "Ensembl_canonical" in r["tags"]]
+        assert len(canonical) == 1
+        row = canonical[0]
+        assert 'tag "Ensembl_canonical";' in row["gtf_line"]
+        assert 'tag "MANE_Select";' in row["gtf_line"]
+        assert f'gene_id "{gid}";' in row["gtf_line"]
+        assert f'transcript_id "{row["transcript_id"]}";' in row["gtf_line"]
+        assert table.loc[gid, "Canonical_Transcript_ID"] == row["transcript_id"]
+        assert table.loc[gid, "Symbol"] == row["symbol"]
+        peptide = row["peptide"]
+        assert f"gene:{gid}." in peptide["fasta_header"]
+        assert (
+            f"transcript:{row['transcript_id']}.{row['transcript_version']} "
+            in peptide["fasta_header"]
+        )
+        assert len(peptide["sequence"]) == peptide["length"] == 496
+        assert hashlib.sha256(peptide["sequence"].encode("ascii")).hexdigest() == peptide["sha256"]
+        selected.append(row)
+    assert selected[0]["transcript_id"] != selected[1]["transcript_id"]
+    assert selected[0]["peptide"]["sequence"] == selected[1]["peptide"]["sequence"]
+    alternative = next(r for r in rows if r["transcript_id"] == "ENST00000454978")
+    assert alternative["peptide"]["length"] == 459
+    assert "Ensembl_canonical" not in alternative["tags"]

@@ -655,7 +655,11 @@ def proteoform_percentile_cache(monkeypatch, tmp_path):
     }
     for bp in _BREAKPOINTS:
         cols[f"p{bp}"] = np.log1p([float(bp), float(bp) * 2]).astype("float16")
-    pd.DataFrame(cols).to_parquet(shard_dir / "PRAD.parquet", index=False)
+    from oncoref.proteoforms import _proteoform_registry_metadata
+
+    frame = pd.DataFrame(cols)
+    frame.attrs.update(_proteoform_registry_metadata("cta"))
+    frame.to_parquet(shard_dir / "PRAD.parquet", index=False)
     return tmp_path
 
 

@@ -103,19 +103,22 @@ def test_generator_proteoform_rescues_diluted_members(tmp_path):
 @pytest.fixture
 def proteoform_within_sample_cache(monkeypatch, tmp_path):
     from oncoref import data_bundle
+    from oncoref.proteoforms import _proteoform_registry_metadata
 
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path))
     monkeypatch.setattr(data_bundle, "ensure_local", lambda *a, **k: tmp_path)
     shard_dir = tmp_path / "cancer-reference-expression-within-sample-top5-proteoform-cta"
     shard_dir.mkdir(parents=True)
-    pd.DataFrame(
+    frame = pd.DataFrame(
         {
             "Ensembl_Gene_ID": ["SSX4/SSX4B", "ENSG00000185686"],
             "Symbol": ["SSX4/SSX4B", "PRAME"],
             "frac_samples_top5pct": [0.42, 0.10],
             "n_samples": [200, 200],
         }
-    ).to_parquet(shard_dir / "PRAD.parquet", index=False)
+    )
+    frame.attrs.update(_proteoform_registry_metadata("cta"))
+    frame.to_parquet(shard_dir / "PRAD.parquet", index=False)
     return tmp_path
 
 

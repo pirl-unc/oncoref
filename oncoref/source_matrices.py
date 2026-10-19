@@ -35,12 +35,18 @@ new release. Cache layout:
 from __future__ import annotations
 
 import os
+import shutil
+import tempfile
+import time
 import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from functools import lru_cache
+from http.client import HTTPException
 from pathlib import Path
 
 import pandas as pd
+from filelock import FileLock
 
 from . import _downloads
 from .cancer_types import resolve_cancer_type
@@ -365,21 +371,72 @@ def release_url(code: str) -> str:
 
 
 def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
-    """Download one cohort's per-sample matrix into the cache. Returns the path."""
+    """Download one cohort's per-sample matrix into the cache. Returns the path.
+
+    Concurrent cold callers share one download, locked per cohort/version path.
+    Each explicit ``force=True`` call refreshes the file, even after waiting for
+    another writer. A failed refresh leaves the previous matrix intact.
+    """
     dest = local_path(code)
+    label = f"per-sample matrix {dest.stem}"
+    if dest.parent.name.startswith("v"):
+        label += f" ({dest.parent.name})"
+    if dest.exists() and not force:
+        _downloads.report_cached(label, dest, verbose=verbose)
+        return dest
     url = release_url(code)
     try:
-        return _downloads.fetch_file(
-            url,
-            dest,
-            label=f"per-sample matrix {dest.stem} (v{source_matrix_version(code)})",
-            force=force,
-            verbose=verbose,
-        )
-    except (urllib.error.URLError, OSError) as e:
+        with FileLock(str(dest.with_name(f".{dest.name}.oncoref.lock"))):
+            # Another process may have populated the cache while we waited.
+            if dest.exists() and not force:
+                _downloads.report_cached(label, dest, verbose=verbose)
+                return dest
+            _downloads.report(
+                f"downloading {label}\n  from {url}\n  to   {dest}",
+                verbose=verbose,
+            )
+            started = time.monotonic()
+            tmp = None
+            try:
+                with tempfile.NamedTemporaryFile(
+                    dir=dest.parent, prefix=f".{dest.name}.", suffix=".part", delete=False
+                ) as handle:
+                    tmp = Path(handle.name)
+                    with urllib.request.urlopen(url) as response:
+                        expected_size = getattr(response, "headers", {}).get("Content-Length")
+                        if expected_size is not None and not getattr(response, "chunked", False):
+                            try:
+                                expected_size = int(expected_size)
+                                if expected_size < 0:
+                                    raise ValueError("negative length")
+                            except ValueError as error:
+                                raise HTTPException("invalid Content-Length") from error
+                        else:
+                            expected_size = None
+                        shutil.copyfileobj(response, handle, length=1024 * 1024)
+                        # HTTPResponse.read(size) can silently return a short body.
+                        if expected_size is not None and handle.tell() != expected_size:
+                            raise HTTPException(
+                                f"expected {expected_size} bytes, received {handle.tell()}"
+                            )
+                # Close the staging file before atomic publication, including on Windows.
+                tmp.replace(dest)
+                elapsed = max(time.monotonic() - started, 0.001)
+                size = dest.stat().st_size / (1024 * 1024)
+                _downloads.report(
+                    f"downloaded {label}: {size:.2f} MiB in "
+                    f"{elapsed:.1f}s ({size / elapsed:.2f} MiB/s)",
+                    verbose=verbose,
+                )
+            finally:
+                # Also clean up on cancellation; never remove another writer's partial.
+                if tmp is not None:
+                    tmp.unlink(missing_ok=True)
+    except (urllib.error.URLError, OSError, HTTPException) as e:
         raise SourceMatrixError(
             f"failed to download per-sample matrix for {code!r} ({url}): {e}"
         ) from e
+    return dest
 
 
 def ensure(code: str) -> Path:

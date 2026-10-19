@@ -82,7 +82,7 @@ _OUTPUT_COLUMNS = (
 #: out, leaving the registry on a basis that no longer matches the expression
 #: data — so fail the build loudly instead.
 _ANCHOR_GROUPS: frozenset[str] = frozenset(
-    {"CTAG1A/CTAG1B", "XAGE1A/XAGE1B", "SSX4/SSX4B", "MAGEA2/MAGEA2B"}
+    {"CTAG1A/CTAG1B", "XAGE1A/XAGE1B", "SSX4/SSX4B", "MAGEA2/MAGEA2B", "RBMY1F/RBMY1J"}
 )
 
 

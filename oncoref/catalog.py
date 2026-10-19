@@ -245,7 +245,7 @@ def _cohort_count(p: Path | None) -> int | None:
     return sum(1 for f in p.iterdir() if f.is_file() and not f.name.startswith("_"))
 
 
-def inventory() -> list[dict]:
+def inventory(*, species="human", group=None) -> list[dict]:
     """The complete oncoref-domain data inventory — the full picture behind the
     fetchable :func:`datasets`. One row per dataset with ``name``, ``held``
     (``wheel`` / ``bundle`` / ``hpa`` / ``source`` / ``planned``), ``category``,
@@ -257,6 +257,19 @@ def inventory() -> list[dict]:
     The separately versioned pirlygenes migration snapshot is historical audit
     evidence and does not expand when downstream adds a new dataset.
     """
+    from .species import DATA_GROUPS, _human_data_group, resolve_species
+
+    selected = resolve_species(species)
+    if group is not None and group not in DATA_GROUPS:
+        raise ValueError(f"Unknown data group {group!r}")
+    if selected.taxon_id != 9606:
+        from .species_antigens import antigen_inventory
+        from .species_assets import asset_inventory
+
+        rows = asset_inventory(selected, group=group)
+        if group in (None, "antigens"):
+            rows += antigen_inventory(selected)
+        return rows
     bundle_member = {p.removesuffix(".csv"): p for p in data_bundle.DOWNLOADABLE_PATHS}
     rows: list[dict] = []
     legacy_rows = {
@@ -296,7 +309,9 @@ def inventory() -> list[dict]:
         _add(name, "source", cat, desc, available, len(cohorts))  # per-cohort fetchable
     for name, (cat, desc) in sorted(data_manifest.PLANNED.items()):
         _add(name, "planned", cat, desc, False)  # oncoref-domain, still to port
-    return rows
+    for row in rows:
+        row.update(taxon_id=selected.taxon_id, species=selected.name, group=_human_data_group(row))
+    return [row for row in rows if group is None or row["group"] == group]
 
 
 def status(name: str | None = None) -> list[dict]:

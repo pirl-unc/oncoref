@@ -62,7 +62,7 @@ import numpy as np
 import pandas as pd
 
 from . import gene_families
-from .expression_engine import sample_columns
+from .expression_engine import sample_columns, validate_nonnegative_expression
 
 
 def _value_cols(df: pd.DataFrame, value_cols=None) -> list[str]:
@@ -239,6 +239,7 @@ def clean_tpm(
     9% other technical RNA, and 75% biological genes. Use separately named helpers
     such as :func:`drop_technical_rna` / :func:`filter_technical_rna` for biology-only
     or technical-drop views, not alternate clean-TPM definitions."""
+    validate_nonnegative_expression(values, context="clean_tpm: linear TPM")
     if not exclude_ribosomal_proteins:
         raise ValueError(
             "clean_tpm has one canonical 16/9/75 contract and always censors "

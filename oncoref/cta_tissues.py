@@ -26,9 +26,10 @@ expression must be confined to qualify as a cancer-testis antigen:
   epididymis, fallopian tube, prostate, seminal vesicle, vagina).
 - **Permissive**: extended + breast (including lactating breast).
 
-Thymus is excluded from all restriction checks because AIRE-mediated expression
-in medullary thymic epithelial cells (mTECs) is expected for CTAs and does not
-indicate somatic tissue leakage.
+Thymus is excluded from the somatic RNA maximum and the IHC reproductive flag.
+It remains in the default RNA fraction denominator; the separate
+``*_and_thymus_frac`` columns include it in the numerator. These tissue-scope
+conventions do not establish equivalent immune privilege or target safety.
 """
 
 from __future__ import annotations
@@ -52,6 +53,22 @@ EXTENDED_REPRODUCTIVE_TISSUES: frozenset[str] = CORE_REPRODUCTIVE_TISSUES | froz
 PERMISSIVE_REPRODUCTIVE_TISSUES: frozenset[str] = EXTENDED_REPRODUCTIVE_TISSUES | frozenset(
     {"breast", "lactating breast"}
 )
+
+
+def reproductive_tissues(scope: str = "core") -> frozenset[str]:
+    """Tissues counted in the named CTA panel's RNA numerator."""
+    if scope == "core":
+        return CORE_REPRODUCTIVE_TISSUES
+    if scope == "extended":
+        return EXTENDED_REPRODUCTIVE_TISSUES
+    raise ValueError(f"Unknown CTA tissue scope {scope!r}; expected 'core' or 'extended'")
+
+
+def cta_dataset_name(scope: str = "core") -> str:
+    """Bundled evidence snapshot for a named tissue scope."""
+    reproductive_tissues(scope)  # Validate before choosing a dataset.
+    return "cancer-testis-antigens" + ("-extended" if scope == "extended" else "")
+
 
 #: Tissues excluded from "somatic" calculations: all reproductive tissues plus
 #: thymus (AIRE-driven CTA expression is expected, not somatic leakage).

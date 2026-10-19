@@ -1,0 +1,116 @@
+{
+  "scope": "Every source/current symbol, recorded alias, Ensembl ID and shipped Ensembl/Entrez/NCBI synonym mapping for the driver evidence tables. Source rows remain unchanged.",
+  "inputs_sha256": {
+    "canonical-gene-space.csv.gz": "1eb19e37e0dc1a24a57096bbefd65c0cf69a1599a5633ff5168daba76af176ff",
+    "ncbi-symbol-synonyms.csv.gz": "2296b976ed79e1ec87d341558ff7ec6e0270c83108ea96127b2d36f5cc803f8d",
+    "ensembl-id-aliases.csv": "fb21004d72408a3bb283334a62fc9de2ed3345edd917eb16ed07d3596d353df4",
+    "ncbi-entrez-gene-mappings.csv.gz": "c3dcf1be128042ed758ec48736aef4df3e9423a335c3cd30eb126423c6deb514",
+    "driver-gene-evidence.csv": "8cb42190576045247f955d13fe1ace842b65936c14e66db3dcaa338f0b83116b",
+    "driver-variant-evidence.csv": "f5efdb547c037e97cc2d1d3e16e8d8d91c3691ca830065776604e744391eb5ad"
+  },
+  "tables": {
+    "driver-gene-evidence": {
+      "records": 739,
+      "genes": 299,
+      "verified_queries": {
+        "source_symbol": 299,
+        "current_symbol": 299,
+        "recorded_alias": 9,
+        "ensembl_id": 299,
+        "versioned_ensembl_id": 299,
+        "migrated_ensembl_id": 35,
+        "entrez_id": 562,
+        "ncbi_synonym": 1409
+      },
+      "renamed_symbols": [
+        {
+          "source_symbol": "CBWD3",
+          "current_symbol": "ZNG1C",
+          "ensembl_gene_id": "ENSG00000196873",
+          "aliases": [
+            "ZNG1C"
+          ]
+        },
+        {
+          "source_symbol": "FAM46D",
+          "current_symbol": "TENT5D",
+          "ensembl_gene_id": "ENSG00000174016",
+          "aliases": [
+            "TENT5D"
+          ]
+        },
+        {
+          "source_symbol": "H3F3A",
+          "current_symbol": "H3-3A",
+          "ensembl_gene_id": "ENSG00000163041",
+          "aliases": [
+            "H3-3A"
+          ]
+        },
+        {
+          "source_symbol": "H3F3C",
+          "current_symbol": "H3-5",
+          "ensembl_gene_id": "ENSG00000188375",
+          "aliases": [
+            "H3-5"
+          ]
+        },
+        {
+          "source_symbol": "HIST1H1C",
+          "current_symbol": "H1-2",
+          "ensembl_gene_id": "ENSG00000187837",
+          "aliases": [
+            "H1-2"
+          ]
+        },
+        {
+          "source_symbol": "HIST1H1E",
+          "current_symbol": "H1-4",
+          "ensembl_gene_id": "ENSG00000168298",
+          "aliases": [
+            "H1-4"
+          ]
+        },
+        {
+          "source_symbol": "RQCD1",
+          "current_symbol": "CNOT9",
+          "ensembl_gene_id": "ENSG00000144580",
+          "aliases": [
+            "CNOT9"
+          ]
+        },
+        {
+          "source_symbol": "TCEB1",
+          "current_symbol": "ELOC",
+          "ensembl_gene_id": "ENSG00000154582",
+          "aliases": [
+            "ELOC"
+          ]
+        },
+        {
+          "source_symbol": "WHSC1",
+          "current_symbol": "NSD2",
+          "ensembl_gene_id": "ENSG00000109685",
+          "aliases": [
+            "NSD2"
+          ]
+        }
+      ]
+    },
+    "driver-variant-evidence": {
+      "records": 579,
+      "genes": 53,
+      "verified_queries": {
+        "source_symbol": 53,
+        "current_symbol": 53,
+        "recorded_alias": 0,
+        "ensembl_id": 53,
+        "versioned_ensembl_id": 53,
+        "migrated_ensembl_id": 2,
+        "entrez_id": 98,
+        "ncbi_synonym": 337
+      },
+      "renamed_symbols": []
+    }
+  }
+}

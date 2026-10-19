@@ -23,6 +23,7 @@ Read the guide from concepts to operations:
 
 | Layer | Start here |
 | --- | --- |
+| Species and named datasets | [Species and Datasets](#species-and-datasets) |
 | Canonical cancer and gene identities | [Cancer Vocabulary](#cancer-vocabulary), [Gene Identity](#gene-identity) |
 | Expression reads, artifacts, and normalization | [Expression And Normalization](#expression-and-normalization) |
 | RNA-to-protein calibration | [RNA-to-Protein Calibration](#rna-to-protein-calibration) |
@@ -33,6 +34,30 @@ Read the guide from concepts to operations:
 
 Within each section, the intended use and primary modules come first. Detailed
 schema, provenance, fallback, and migration contracts follow.
+
+## Species and Datasets
+
+Use `oncoref.human` and `oncoref.canine` for explicit species entry points.
+Each exposes named dataset modules and conceptual groups such as `references`,
+`expression`, `cancer`, `antigens` and `normalization`.
+
+```python
+from oncoref import canine, human_protein_atlas
+
+human_protein_atlas.rna_consensus()
+canine.barkbase.source()  # provenance, units and acquisition status
+canine.barkbase.read(offline=True)  # verified cache or configured overrides
+canine.antigens.coverage()
+```
+
+Datasets also have top-level modules: `oncoref.human_protein_atlas`,
+`oncoref.barkbase`, `oncoref.bgee_srp009687`, `oncoref.bgee_srp181218`,
+`oncoref.pfizer_canine_protein`, `oncoref.pfizer_canine_rna`, `oncoref.doga` and
+`oncoref.gse304066`. Species modules reference those exact modules. Pending source
+integration remains explicit in `source()` metadata and `read()` errors.
+
+See [Species and data groups](species.md) for source coverage, native-unit
+contracts, offline asset configuration and the dynamic compatibility API.
 
 ## Cancer Vocabulary
 
@@ -695,6 +720,47 @@ per-sample matrices and do not download data. Use
 package/artifact data and a partial bundle cache. Set `include_recomputable=False`
 when only already-built shards should count.
 
+### Extended reproductive CTAs
+
+The existing `cta_gene_names()`, `cta_gene_ids()` and `cta_df()` use the core
+RNA numerator: testis, ovary and placenta. A separately named panel uses those
+tissues plus cervix, endometrium, epididymis, fallopian tube, prostate, seminal
+vesicle and vagina:
+
+```python
+from oncoref import cta
+
+core = cta.cta_gene_names()              # 624, unchanged core default
+extended = cta.cta_extended_gene_names() # 688; includes the core default
+cta.cta_extended_gene_ids()
+cta.cta_extended_df()                   # complete candidate evidence + decisions
+```
+
+Both panels use the same candidate identities, family exclusions, protein rules,
+adaptive RNA thresholds, expression policy and shared specificity reviews.
+The bundled `cancer-testis-antigens-extended` snapshot makes the extended panel
+available offline. `rna_reproductive_tissue_scope` identifies each snapshot's
+numerator. `cta-specificity-audit.tissue_scope` is `all`, `core` or `extended`;
+PAGE4's core-fraction exclusion applies only to core, while MAGEA11's independent
+review excludes it from both. PATE1/PATE4/LIPI remain candidates pending
+complete-paper provenance; TRIM64 remains candidate-only. The extended panel is a broader anatomical
+restriction definition, not an assertion of equivalent immune privilege or safety.
+
+`cta_specificity_audit(tissue_scope="extended")` joins extended reviews to
+extended RNA evidence; its default remains core.
+
+`cta_clinical_target_evidence()` continues to describe core evidence. Its
+`exclusion_reasons`, `rna_deflated_reproductive_frac` and
+`rna_restriction_threshold` identify the failed gate. The legacy
+`exclusion_driver_*` columns contain the somatic maximum as context; it need not
+be the signal causing exclusion. `cta_candidate_references()` omits already
+assessed genes; `include_in_table=True` retains historical watchlist citations.
+
+See [published nominations](cta-publication-sources.md) and the
+[core/extended curation audit](audits/cta-panel-curation.md). The
+[RNA expression units guide](cta-expression-units.md) explains HPA nTPM,
+restriction fractions and missing-data behavior.
+
 ### Warning tier
 
 The strict default is unchanged. `cta_gene_names()` and `cta_gene_ids()` still
@@ -934,6 +1000,27 @@ diagnosis-only Treehouse sample.
   Table S4 pan-cancer recurrent variants with canonical Ensembl gene/transcript
   IDs and normalized HGVS protein notation. These rows are explicitly
   pan-cancer and are not assigned to an invented cancer entity.
+- Both driver-evidence tables validate against the bundled gene reference and
+  work without `oncoref[genome]`. Retired source symbols such as `CBWD3` retain
+  their original spelling: every recorded alias is checked, and at least one
+  must support the row's recorded Ensembl ID (`ZNG1C` / `ENSG00000196873` here).
+  `oncoref.drivers.DriverGeneIdentityWarning` reports this fallback and all
+  alias candidates on the first load of each table. A known symbol pointing to
+  a different ID remains an error, even if an alias matches. Shared symbols
+  retain all candidate IDs; a row's recorded ID disambiguates it with a warning.
+  Queries match exact-case symbols and aliases first, then use case-insensitive
+  matching when it is unambiguous. For example, `emb` is an alias for `XPO1`,
+  while `EMB` names a different gene; `Emb` is ambiguous and raises. Recorded
+  source aliases are also queryable within their evidence table. Ensembl IDs
+  (including versions and mapped historical IDs) and Entrez IDs are accepted.
+  Filtering by an ambiguous symbol raises and asks for an explicit Ensembl ID;
+  unresolved names return an empty frame without consulting installed genomes.
+  `driver_gene_evidence("CBWD3")`, `driver_gene_evidence("ZNG1C")`, and the
+  recorded ID return the same source-preserving evidence. These scoped source
+  mappings do not extend the global synonym dictionary: NCBI associates
+  `CBWD3` with both `ZNG1C` and `ZNG1E`, so the driver row's recorded ID matters.
+  The [identifier audit](audits/driver-identifier-mappings.md) covers every
+  bundled mapping associated with both driver tables.
 - `oncoref.drivers.driver_legacy_migration_audit_df()` gives one
   `migrated` / `rejected` / `awaiting_source` disposition per frozen driver row;
   `driver_legacy_migration_summary()` exposes the counts per legacy table.
@@ -1127,6 +1214,12 @@ unsuitable for absolute comparison with bulk RNA-seq TPM.
   `release_url(code)` and `local_path(code)` use the same per-cohort pin. This
   lets a corrected or newly added matrix move to a new release without copying
   every unchanged source asset or invalidating its existing cache.
+  Concurrent `fetch()`/`ensure()` calls for one missing cohort/version share a
+  single download across threads and processes; different destinations can
+  download independently. Transfers use unique temporary files and atomic
+  replacement. `fetch(force=True)` always refreshes, preserving the previous
+  matrix if the transfer fails, including an early EOF before the advertised
+  HTTP content length. Warm reads perform no network I/O.
   `source_matrix_regeneration_audit()` matches each selected matrix by the exact
   `(cancer_code, source_cohort)` physical-source pair. A pair must have exactly
   one registry owner declaring either an existing repository-relative builder
@@ -1584,9 +1677,63 @@ order.
   gene/transcript lookup against installed Ensembl releases.
 - `oncoref.proteoforms` — identical-protein paralog grouping and expression
   collapse helpers.
+- `oncoref.reference_identity` — versioned species/assembly/annotation/content
+  identities shared across OpenVax consumers.
+- `oncoref.sequence_groups` — exact protein identities, reference-scoped occurrence
+  groups and explicit schema migration adapters.
 - `oncoref.gene_qc` / `oncoref.gene_families` — technical-RNA and gene-family
   classification used by normalization. These are normalization/QC reference
   families, not the general home for pirlygenes marker panels.
+
+### Shared reference and exact protein identities
+
+`ReferenceIdentity`, `protein_sequence_id()` and `protein_sequence_groups()` provide
+versioned identity primitives for any explicitly supplied species and reference.
+They use only the Python standard library and define no consumer-specific target
+selection or abundance policy. See the [reference identity contract](reference-identity.md)
+for the normative schema, digest encoding, migration rules and interchange fixtures.
+
+```python
+from oncoref import ReferenceIdentity, protein_sequence_groups
+
+reference = ReferenceIdentity(
+    taxon_id=9606,
+    assembly_accession="GCF_000001405.40",
+    annotation_source="NCBI RefSeq",
+    annotation_release="110",
+    source_version="2022-04",
+    identifier_namespaces={"gene": "NCBI Gene", "transcript": "RefSeq", "protein": "RefSeq"},
+    content_provenance=verified_reference_asset_hashes,
+)
+# Each occurrence must already carry reference.reference_id.
+groups = protein_sequence_groups(translated_occurrences, reference=reference)
+```
+
+`normalize_protein_sequence()` validates the original ASCII alphabet before case
+conversion. ASCII lowercase, ASCII whitespace and one terminal stop are allowed;
+Unicode lookalikes and expanding case mappings are rejected. v1 accepts the 20
+standard amino acids, keeps I/L distinct, and rejects ambiguity codes, U/O and
+internal stops. `protein_sequence_id()` identifies normalized residues across
+references. `group_id` identifies that sequence within one complete reference.
+
+Every occurrence requires `reference_id`, string `occurrence_id`, `gene_id`,
+`transcript_id`, `protein_id`, `source`, `sequence`, and `complete=True`.
+Grouping preserves original sequences and all finite JSON-native source fields in
+defensive copies. Exact duplicates are deduplicated; contradictory IDs, mixed
+references and invalid translations fail with the occurrence ID and reason.
+Output is deterministic and JSON serializable. Reference metadata is read with
+`ReferenceIdentity.from_dict()`, which rejects unknown versions and digest mismatch.
+
+`adapt_reference_occurrences()` explicitly migrates older record schemas using a
+field map, declarations of missing metadata and checksum-pinned review evidence.
+It retains each original record and links it to an audit envelope. No implicit
+conversion of legacy reference IDs occurs; persist the envelope with the groups.
+
+Identity does not establish reproductive restriction, panel admission, RNA/protein
+abundance, locus-specific translation or PTM-defined proteoforms. Independently
+allocated RNA contributions may be combined downstream; an ambiguous observation
+must not be multiplied by its source-occurrence count. Existing human
+`proteoform_*` APIs and CTA membership policies retain their existing identities.
 
 ## Burden, TMB, Fusions, and Signatures
 
@@ -1757,3 +1904,13 @@ facades above:
   prefer `oncoref.cta_coverage` or `oncoref.antigen_coverage`.
 - `oncoref.peptides` — original CTA-specific 9-mer module; prefer
   `oncoref.cta_peptides`.
+
+## Annotation-scoped CTA identities
+
+Use `oncoref.resolve_gene_identity(gene_id, genome=genome)` when admitting an
+annotated CTA source, and `oncoref.cta_annotation_gene_ids(genome,
+unfiltered=True)` for the complete verified source-ID exclusion universe.
+`oncoref.cta_annotation_gene_identities(genome)` supplies auditable decisions,
+including rejected mappings. See the [versioned identity contract and example](cta-gene-identities.md).
+These APIs preserve source IDs and do not infer aliases from matching symbols or
+proteins. Legacy canonical CTA sets remain canonical reference-space IDs.

@@ -19,7 +19,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -27,7 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "pandas",
     "numpy",
@@ -38,13 +37,14 @@ dependencies = [
     "adjustText",
     "matplotlib_venn>=1.0",
     "filelock>=3.12",
-    "datacache[progress]>=1.11.1,<2",
+    "datacache>=1.19.0,<2",
+    "requests>=2.25"
 ]
 
 [project.optional-dependencies]
 reports = ["reportlab>=4", "pypdf>=5", "Pillow", "xlrd>=2"]
 genome = [
-    "pyensembl",
+    "pyensembl>=2.27.0",
 ]
 dev = [
     "reportlab>=4",
@@ -54,7 +54,7 @@ dev = [
     "pytest-cov",
     "pytest-xdist",
     "ruff",
-    "pyensembl",
+    "pyensembl>=2.27.0",
 ]
 
 [project.scripts]
@@ -84,6 +84,8 @@ oncoref = [
     "data/*.csv",
     "data/*.csv.gz",
     "data/*.yaml",
+    "data/species/*/*.yaml",
+    "data/species/*/*.json",
     "data/hpa-cancer-sources.json",
 ]
 
@@ -103,7 +105,7 @@ oncoref = [
 ]
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py310"
 line-length = 100
 src = ["oncoref", "tests"]
 exclude = [
@@ -133,13 +135,16 @@ ignore = [
     "B008",   # do not perform function calls in argument defaults
     "B905",   # zip() without explicit strict
     "SIM108", # use ternary operator instead of if-else
-    "UP007",  # use X | Y for type unions (need Python 3.10+)
+    "UP007",  # retain existing union annotations
     "RUF001", # ambiguous unicode in code (× / ⁺ / ⁻ are intentional sci notation)
     "RUF002", # ambiguous unicode in docstrings (same)
     "RUF003", # ambiguous unicode in comments (same)
 ]
 
 [tool.ruff.lint.per-file-ignores]
+# Gene labels intentionally use character prefixes, rather than path components.
+"oncoref/expression.py" = ["RUF071"]
+"oncoref/proteoforms.py" = ["RUF071"]
 "tests/*" = ["B011", "RUF012"]
 "__init__.py" = ["F401"]
 

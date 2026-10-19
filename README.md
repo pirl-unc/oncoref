@@ -39,6 +39,32 @@ retaining their own curated artifacts and compatibility APIs. Shared facts and
 identifiers should be fixed here; purpose-specific panels and per-sample rules
 stay downstream.
 
+## Species
+
+Use explicit species and dataset modules:
+
+```python
+import oncoref
+
+oncoref.human.human_protein_atlas.rna_consensus()
+oncoref.canine.barkbase.source()  # native TMM-CPM and provenance
+oncoref.canine.references.registered_references()
+oncoref.canine.antigens.coverage()
+
+# Datasets also have direct top-level imports, with the same implementation.
+from oncoref import barkbase, human_protein_atlas
+
+dataset = barkbase.read(offline=True)  # verified cache or configured local overrides
+```
+
+`oncoref.human` and `oncoref.canine` are ordinary Python modules with named datasets
+and references, expression, cancer, antigens and normalization groups. Dataset
+modules expose source-specific operations; groups expose inventories and coverage.
+Missing coverage is explicit; canine requests never fall back to human datasets.
+Existing flat APIs retain their human defaults, and `for_species(...)` remains
+available for dynamic selection. See the
+[species and expression contract guide](docs/species.md).
+
 ## Core model
 
 - **Canonical identities first.** Cancer facts key on the cancer-type registry;
@@ -56,6 +82,8 @@ stay downstream.
 
 ## Install
 
+Supported Python versions: 3.10–3.14.
+
 ```bash
 pip install oncoref
 ```
@@ -67,6 +95,11 @@ Ensembl release:
 ```bash
 pip install 'oncoref[genome]'  # pyensembl-backed transcript and gene lookup
 ```
+
+The genome extra requires PyEnsembl 2.27.0 or newer. When upgrading from PyEnsembl
+older than 2.10.17, rerun `pyensembl install --release N --species human` for each
+installed GRCh38 release from 82 onward to build the complete patch/haplotype
+annotation index. Existing FASTA files are reused.
 
 ## Quick start
 
@@ -149,23 +182,24 @@ oncoref data prune --yes        # delete stale bundle version caches
 oncoref version
 ```
 
-Downloads use `datacache[progress]>=1.11.1` for streaming and bounded HTTP
-retries. HPA files, expression bundles (including overlays and release metadata),
-per-cohort matrices, and ordinary expression build-source files share this
-transport. Existing cache paths, source versions, archive/content checksums,
-and bundle validation remain in place.
+HPA files, expression bundles (including overlays and release metadata), and
+ordinary expression build-source files use `datacache>=1.19.0` for streaming
+and bounded HTTP retries. Per-cohort matrices retain their locked transfer and
+strict HTTP length check. Existing cache paths, source versions,
+archive/content checksums, and bundle validation remain in place.
 
 Explicit fetches report the dataset/version, source URL, destination, cache
-reuse, and completion size and average transfer rate. Terminals and notebooks
-also show byte progress and transfer rates; a percentage/ETA appears only when
-the server supplies a usable total. Redirected output gets status lines without
-animated bars. Status and terminal bars go to stderr, keeping stdout usable for
-paths and command results.
+reuse, and completion size and average transfer rate. Datacache transfers in
+terminals and notebooks also show byte progress and transfer rates; a
+percentage/ETA appears only when the server supplies a usable total. Redirected
+output gets status lines without animated bars. Per-cohort matrices report
+status without a bar. Status and terminal bars go to stderr, keeping stdout
+usable for paths and command results.
 
 ```bash
 oncoref data fetch hpa --progress always  # force download bars
 oncoref data fetch bundle --progress never  # status lines only
-oncoref data fetch per-sample:LUAD --quiet  # results/errors, no status or bars
+oncoref data fetch per-sample:LUAD --quiet  # results/errors, no status
 ONCOREF_DOWNLOAD_PROGRESS=never python analysis.py  # applies to Python calls too
 ```
 
@@ -201,3 +235,12 @@ alias oncoref=/absolute/path/to/oncoref/.venv/bin/oncoref
 ## License
 
 Apache 2.0.
+
+### Annotation-scoped CTA identities
+
+When using a particular Ensembl annotation, resolve CTA source IDs with
+`oncoref.resolve_gene_identity(gene_id, genome=genome)` and obtain verified
+negative-reference exclusion IDs with
+`oncoref.cta_annotation_gene_ids(genome, unfiltered=True)`. Both use the same
+versioned identity contract, retaining original source IDs and unresolved
+mapping evidence. See [CTA gene identities](docs/cta-gene-identities.md).

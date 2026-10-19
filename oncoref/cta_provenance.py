@@ -10,6 +10,7 @@ from itertools import combinations
 import pandas as pd
 
 from .cta_sources import publication_membership, publication_sources
+from .cta_tissues import cta_dataset_name
 from .load_dataset import get_data
 
 
@@ -55,19 +56,20 @@ def paper_membership():
     return refs
 
 
-def source_cover():
+def source_cover(*, tissue_scope="core"):
     """Minimum cover of the current default among fully imported candidate lists.
 
     Targeted citations whose complete candidate lists were not retrieved are
     available as evidence but cannot masquerade as complete source universes.
     Ties choose lexicographically by DOI and all alternatives remain recorded.
     """
-    from .cta import cta_gene_ids
+    from . import cta
 
     refs = paper_membership()
     coding = refs[refs.protein_candidate_eligible]
     sets = {doi: set(group.Ensembl_Gene_ID) for doi, group in coding.groupby("doi")}
-    target = set(cta_gene_ids())
+    cta_dataset_name(tissue_scope)
+    target = cta.cta_gene_ids() if tissue_scope == "core" else cta.cta_extended_gene_ids()
     covers = minimum_covers(target, sets)
     chosen = covers[0]
     union = set().union(*(sets[doi] for doi in chosen))
@@ -80,7 +82,8 @@ def source_cover():
     }
     return {
         "scope": "Exact minimum among the registered complete candidate-source papers; not all literature",
-        "target_definition": "oncoref.cta.cta_gene_ids() default after screening full imported intake",
+        "target_definition": f"{tissue_scope} CTA default after screening full imported intake",
+        "tissue_scope": tissue_scope,
         "papers_considered": sorted(sets),
         "minimum_papers": len(chosen),
         "selected_dois": list(chosen),
@@ -92,40 +95,42 @@ def source_cover():
     }
 
 
-def selected_membership():
+def selected_membership(*, tissue_scope="core"):
     """Full lists of the selected papers, including noncoding/unmapped entries."""
     refs = paper_membership()
-    return refs[refs.doi.isin(source_cover()["selected_dois"])].copy()
+    return refs[refs.doi.isin(source_cover(tissue_scope=tissue_scope)["selected_dois"])].copy()
 
 
-def candidate_evidence():
+def candidate_evidence(*, tissue_scope="core"):
     """Active, paper-backed coding candidate pool, before any HPA filtering."""
-    ids = set(source_cover()["candidate_gene_ids"])
-    raw = get_data("cancer-testis-antigens")
+    ids = set(source_cover(tissue_scope=tissue_scope)["candidate_gene_ids"])
+    raw = get_data(cta_dataset_name(tissue_scope))
     if not ids <= set(raw.Ensembl_Gene_ID):
         raise ValueError("Unassessed genes in the complete paper union")
     return raw[raw.Ensembl_Gene_ID.isin(ids)].copy()
 
 
-def legacy_only_candidates():
+def legacy_only_candidates(*, tissue_scope="core"):
     """Historical rows outside the selected paper union, retained for audit only."""
-    raw = get_data("cancer-testis-antigens")
-    result = raw[~raw.Ensembl_Gene_ID.isin(source_cover()["candidate_gene_ids"])].copy()
+    raw = get_data(cta_dataset_name(tissue_scope))
+    result = raw[
+        ~raw.Ensembl_Gene_ID.isin(source_cover(tissue_scope=tissue_scope)["candidate_gene_ids"])
+    ].copy()
     result["provenance_status"] = "outside_selected_complete_paper_union"
     return result
 
 
-def candidate_provenance():
+def candidate_provenance(*, tissue_scope="core"):
     """One row per active coding candidate with DOI and exact row-level links.
 
-    The accompanying selected_membership() table preserves assay resolution,
+    The accompanying selected_membership(tissue_scope=tissue_scope) table preserves assay resolution,
     original identity, mapping method, source rows and validation limitations.
     """
-    from .cta import cta_gene_ids
+    from . import cta
 
-    refs = selected_membership()
+    refs = selected_membership(tissue_scope=tissue_scope)
     refs = refs[refs.protein_candidate_eligible].fillna("")
-    default = cta_gene_ids()
+    default = cta.cta_gene_ids() if tissue_scope == "core" else cta.cta_extended_gene_ids()
     rows = []
     normal_sources = {
         "daSilva2017_testis_biased",
@@ -164,15 +169,15 @@ def candidate_provenance():
     return pd.DataFrame(rows)
 
 
-def paper_intake_counts():
+def paper_intake_counts(*, tissue_scope="core"):
     """Unique-identity funnel per selected paper, never summing nested tables."""
     from . import cta
 
-    refs = selected_membership().fillna("")
-    raw = candidate_evidence()
+    refs = selected_membership(tissue_scope=tissue_scope).fillna("")
+    raw = candidate_evidence(tissue_scope=tissue_scope)
     family = cta.cta_unfiltered_gene_ids()
     hpa = set(raw.loc[cta.passes_filters_mask(raw), "Ensembl_Gene_ID"]) & family
-    default = cta.cta_gene_ids()
+    default = cta.cta_gene_ids() if tissue_scope == "core" else cta.cta_extended_gene_ids()
     rows = []
     for doi, group in refs.groupby("doi", sort=True):
         identities = {
@@ -228,7 +233,7 @@ def historical_tag_audit():
     return pd.DataFrame(rows)
 
 
-def gene_citation_evidence_report():
+def gene_citation_evidence_report(*, tissue_scope="core"):
     """Separate nomination and assay modalities for every active candidate.
 
     Empty evidence columns mean no imported link in that category, not a
@@ -238,7 +243,7 @@ def gene_citation_evidence_report():
     """
     from .cta_sources import gene_publication_evidence
 
-    report = candidate_provenance()
+    report = candidate_provenance(tissue_scope=tissue_scope)
     refs = paper_membership().fillna("")
     targeted = gene_publication_evidence().fillna("")
     normal = {

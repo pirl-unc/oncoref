@@ -72,16 +72,36 @@ only — no downloads, no cached matrices.
 
 ```bash
 oncoref plot cta-curation
+oncoref plot cta-curation --tissue-scope both --out outputs/cta-curation-both
 ```
+
+From a source checkout, use `python -m oncoref.cli plot ...` at the repository
+root to ensure the command uses the checkout rather than an older installation.
 
 | Figure | Shows |
 |---|---|
-| `cta-source-venn.png` | Overlap of the three primary source databases |
+| `cta-source-venn.png` | Complete Wang, Bruggeman and da Silva coding nominations before HPA filtering |
 | `cta-stage-funnel.png` | Sequential attrition, source union → shipped set |
-| `cta-filter-funnel.png` | Kept vs excluded, per source |
-| `cta-filter-outcome.png` | Kept / kept-but-weak / excluded, per source |
+| `cta-filter-funnel.png` | Final default panel vs outside default, per source |
+| `cta-filter-outcome.png` | Default / HPA pass outside default / HPA fail, per source |
 | `cta-deflated-frac-dist.png` | Where genes sit against the RNA thresholds |
 | `cta-protein-vs-rna.png` | The tiered protein-reliability × RNA-fraction rule |
+| `cta-publication-funnel.png` | All ten selected papers: source identities → mapped → coding → family → HPA → default |
+| `cta-legacy-source-venn.png` | Historical CTpedia/CTexploreR/proteomics tags, labelled as an audit |
+| `cta-landscape-source-venn.png` | Additional complete imported paper lists |
+| `cta-source-overlap.png` | All-paper candidate and final-panel intersections |
+| `cta-placental-source-overlap.png` | Gong, Bradley and historical placental nominations |
+| `cta-placental-evidence-coverage.png` | Publication coverage of all 19 historical placental nominations |
+
+`--tissue-scope both` writes all twelve figures under each of `core/` and `extended/`,
+plus `cta-panel-comparison.png` and a gene-level `cta-panel-comparison.csv`.
+Use `--tissue-scope extended` for that panel alone; core remains the default.
+Every PNG has a vector PDF companion. CSVs record the plotted evidence, source
+memberships/counts, publication intake, stages and thresholds. Source lists
+overlap and cannot be summed. The source Venn and source bars cover coding
+candidates; the publication intake also retains noncoding and unmapped rows.
+Dashed/solid RNA thresholds come directly from the filter (0.80/0.90/0.95/0.97).
+The [panel audit](audits/cta-panel-curation.md) explains the two definitions.
 
 ### Expression provenance
 

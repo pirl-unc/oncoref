@@ -1,0 +1,45 @@
+{
+  "checked_on": "2026-10-16",
+  "ncbi": {
+    "url": "https://github.com/pirl-unc/pirlygenes/releases/download/ncbi-gene-data-20260601/Homo_sapiens.gene_info.gz",
+    "sha256": "f1c2386139fd499c81340010e2635cb84f8f081f5e74266a7f3562119645e92f",
+    "selection": "Rows whose pipe-delimited Synonyms include CBWD3",
+    "rows": [
+      {
+        "GeneID": "220869",
+        "Symbol": "ZNG1E",
+        "Synonyms": "CBWD3|CBWD5|DC36",
+        "dbXrefs": "HGNC:HGNC:24584|Ensembl:ENSG00000147996|AllianceGenome:HGNC:24584",
+        "Symbol_from_nomenclature_authority": "ZNG1E",
+        "Modification_date": "20260519"
+      },
+      {
+        "GeneID": "445571",
+        "Symbol": "ZNG1C",
+        "Synonyms": "CBWD3|bA561O23.1",
+        "dbXrefs": "MIM:611080|HGNC:HGNC:18519|Ensembl:ENSG00000196873|AllianceGenome:HGNC:18519",
+        "Symbol_from_nomenclature_authority": "ZNG1C",
+        "Modification_date": "20260519"
+      }
+    ]
+  },
+  "hgnc": {
+    "url": "https://rest.genenames.org/fetch/symbol/ZNG1C",
+    "response_sha256": "e31ace652525b2aeec4976d24be7ba8ee2c79b88dd50cd42efea0c8c74ab7cb1",
+    "record": {
+      "hgnc_id": "HGNC:18519",
+      "symbol": "ZNG1C",
+      "status": "Approved",
+      "alias_symbol": [
+        "bA561O23.1"
+      ],
+      "prev_symbol": [
+        "CBWD3"
+      ],
+      "entrez_id": "445571",
+      "ensembl_gene_id": "ENSG00000196873",
+      "date_modified": "2023-01-20T00:00:00Z"
+    }
+  },
+  "interpretation": "The source driver row is anchored to ZNG1C by ENSG00000196873 and its recorded ZNG1C alias. CBWD3 is not a safe one-to-one synonym across NCBI genes."
+}

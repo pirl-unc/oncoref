@@ -45,12 +45,9 @@ def main(argv: list[str] | None = None) -> int:
             {
                 "source_id": args.source_id,
                 "source_cohort": source.source_cohort,
-                "matrix_paths": {
-                    code: str(path) for code, path in result.matrix_paths.items()
-                },
+                "matrix_paths": {code: str(path) for code, path in result.matrix_paths.items()},
                 "sample_counts": {
-                    code: len(sample_columns(matrix))
-                    for code, matrix in result.matrices.items()
+                    code: len(sample_columns(matrix)) for code, matrix in result.matrices.items()
                 },
             },
             indent=2,

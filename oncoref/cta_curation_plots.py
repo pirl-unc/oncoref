@@ -45,7 +45,7 @@ import numpy as np
 import pandas as pd
 
 from . import figure_style
-from .cta_tissues import HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS
+from .cta_tissues import HPA_ADAPTIVE_PROTEIN_RNA_THRESHOLDS, cta_dataset_name, reproductive_tissues
 from .figure_style import ACCENT, DROP, KEPT, THRESHOLD, WEAK
 from .load_dataset import get_data
 from .version import DATA_VERSION, __version__
@@ -100,22 +100,34 @@ FILENAMES = {
 }
 
 
-def _evidence():
+def _evidence(tissue_scope="core"):
     """Complete coding union of the minimum-cover papers, before filtering."""
     from .cta import cta_evidence
     from .cta_provenance import candidate_evidence
 
-    raw = candidate_evidence()
-    reviewed = cta_evidence()
+    raw = candidate_evidence(tissue_scope=tissue_scope)
+    reviewed = cta_evidence() if tissue_scope == "core" else _curated(tissue_scope)
     columns = ["Ensembl_Gene_ID", *[c for c in reviewed if c.startswith("specificity_")]]
     return raw.merge(reviewed[columns], on="Ensembl_Gene_ID", how="left", validate="one_to_one")
 
 
-def _curated():
+def _curated(tissue_scope="core"):
     """CTA table with non-CTA exclusions dropped and specificity decisions joined."""
     from . import cta
 
-    return cta._cta_with_specificity_frame().copy()
+    return cta._with_specificity_columns(cta._cta_frame(tissue_scope), tissue_scope=tissue_scope)
+
+
+def _tissue_scope(df):
+    values = (
+        df["rna_reproductive_tissue_scope"].unique()
+        if "rna_reproductive_tissue_scope" in df
+        else ["core"]
+    )
+    if len(values) != 1:
+        raise ValueError("Curation figures require exactly one RNA tissue scope")
+    reproductive_tissues(values[0])
+    return values[0]
 
 
 def _bool_series(series):
@@ -126,7 +138,7 @@ def _tag_sets(df):
     """Exact paper-level membership, restricted to the supplied gene frame."""
     from .cta_provenance import selected_membership
 
-    refs = selected_membership()
+    refs = selected_membership(tissue_scope=_tissue_scope(df))
     unknown = set(refs.doi) - set(PRIMARY_SOURCES.values())
     if unknown:
         raise ValueError(f"Selected papers need plot labels: {sorted(unknown)}")
@@ -154,7 +166,7 @@ def _per_source_counts(df):
 
     sets = _tag_sets(df)
     sets["Other prior nominations"] = set(df.Ensembl_Gene_ID) - set().union(*sets.values())
-    default = cta.cta_gene_ids()
+    default = cta.cta_gene_ids() if _tissue_scope(df) == "core" else cta.cta_extended_gene_ids()
     rows = []
     for name, members in sets.items():
         if not members:
@@ -188,7 +200,7 @@ STAGES = {
 }
 
 
-def stage_membership(df=None):
+def stage_membership(df=None, *, tissue_scope="core"):
     """Distinct source identities, including unmapped/noncoding nominations.
 
     Mapped aliases collapse to one canonical locus. Unknown identities stay in the
@@ -197,10 +209,12 @@ def stage_membership(df=None):
     from . import cta
     from .cta_provenance import selected_membership
 
-    raw = _evidence() if df is None else df.copy()
+    raw = _evidence(tissue_scope) if df is None else df.copy()
+    tissue_scope = _tissue_scope(raw)
+    default = cta.cta_gene_ids() if tissue_scope == "core" else cta.cta_extended_gene_ids()
     if raw.Ensembl_Gene_ID.duplicated().any():
         raise ValueError("Duplicate candidate gene IDs")
-    refs = selected_membership().fillna("")
+    refs = selected_membership(tissue_scope=tissue_scope).fillna("")
     rows = []
     for r in refs.to_dict("records"):
         gid = r["Ensembl_Gene_ID"]
@@ -254,15 +268,15 @@ def stage_membership(df=None):
     result["hpa_restriction"] = result.family_eligible & ids.isin(
         raw.loc[cta.passes_filters_mask(raw), "Ensembl_Gene_ID"]
     )
-    result["default_panel"] = ids.isin(cta.cta_gene_ids())
-    if not cta.cta_gene_ids() <= set(ids) or (result.default_panel & ~result.hpa_restriction).any():
+    result["default_panel"] = ids.isin(default)
+    if not default <= set(ids) or (result.default_panel & ~result.hpa_restriction).any():
         raise ValueError("Default panel cannot be represented by a nested intake funnel")
     return result
 
 
-def stage_counts():
+def stage_counts(tissue_scope="core"):
     """Unique-identity funnel from complete source intake to the public default."""
-    membership = stage_membership()
+    membership = stage_membership(tissue_scope=tissue_scope)
     rows, previous = [], len(membership)
     for key, label in STAGES.items():
         n = int(membership[key].sum())
@@ -271,9 +285,20 @@ def stage_counts():
     return rows
 
 
-def _save(fig, path, plt):
+def _save(fig, path, plt, tissue_scope=None):
     from matplotlib.text import Text
 
+    if tissue_scope is not None:
+        reproductive_tissues(tissue_scope)
+        label = "Core CTAs" if tissue_scope == "core" else "Extended reproductive CTAs"
+        fig.text(
+            0,
+            1.02,
+            f"{label} · HPA v23 · RNA tissue scope: {tissue_scope}",
+            ha="left",
+            va="bottom",
+            fontsize=10,
+        )
     for text in fig.findobj(Text):
         text.set_fontsize(text.get_fontsize() * _FONT_SCALE)
     figure_style.save(fig, path, keep_titles=True)
@@ -300,12 +325,12 @@ def _fig_source_venn(df, path, plt):
     ax.set_title(
         "Published CT / germ-cell cancer sets\nMapped protein-coding nominations, before HPA filtering"
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_stage_funnel(df, path, plt):
     """Sequential attrition from source intake through the curation stages."""
-    stages = stage_counts()
+    stages = stage_counts(_tissue_scope(df))
     labels = [s[0] for s in stages]
     remaining = np.array([s[1] for s in stages])
     dropped = np.array([s[2] for s in stages])
@@ -322,7 +347,7 @@ def _fig_stage_funnel(df, path, plt):
     ax.set_xlabel("Distinct source identities / canonical genes")
     ax.set_title("Full union of the ten minimum-cover papers")
     ax.set_xlim(0, max(remaining) * 1.1)
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_filter_funnel(df, path, plt):
@@ -348,7 +373,7 @@ def _fig_filter_funnel(df, path, plt):
     ax.set_title("Default-panel retention by source")
     ax.set_xlim(0, max(kept + dropped) * 1.14)
     ax.legend(loc="lower right")
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_filter_outcome(df, path, plt):
@@ -376,7 +401,7 @@ def _fig_filter_outcome(df, path, plt):
     ax.set_xlabel("genes")
     ax.set_title("Default-panel outcomes by source")
     ax.legend(loc="lower right")
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_deflated_dist(df, path, plt):
@@ -404,7 +429,7 @@ def _fig_deflated_dist(df, path, plt):
         ha="center",
         fontsize=8,
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_protein_vs_rna(df, path, plt):
@@ -446,15 +471,16 @@ def _fig_protein_vs_rna(df, path, plt):
         ha="center",
         fontsize=8,
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def source_overlap_counts(df=None):
     """Pairwise intersections count unique canonical loci, never memberships."""
     from . import cta
 
-    sets = _tag_sets(_evidence() if df is None else df)
-    default = cta.cta_gene_ids()
+    df = _evidence() if df is None else df
+    sets = _tag_sets(df)
+    default = cta.cta_gene_ids() if _tissue_scope(df) == "core" else cta.cta_extended_gene_ids()
     return pd.DataFrame(
         [
             {
@@ -498,7 +524,7 @@ def _fig_legacy_source_venn(df, path, plt):
         {k: sets[k] for k in keys},
         "Historical tags (audit only)\nNot the paper-union intake or independent validation",
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_landscape_source_venn(df, path, plt):
@@ -523,7 +549,7 @@ def _fig_landscape_source_venn(df, path, plt):
         fontsize=9,
     )
     fig.tight_layout(rect=(0, 0.09, 1, 1), w_pad=2)
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def placental_source_sets(df=None):
@@ -548,7 +574,7 @@ def _fig_placental_source_overlap(df, path, plt):
         placental_source_sets(df),
         "Placental source audit (includes unselected Bradley)\nMapped coding candidates before HPA filtering",
     )
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_source_overlap(df, path, plt):
@@ -597,13 +623,13 @@ def _fig_source_overlap(df, path, plt):
         fontsize=10,
     )
     fig.tight_layout(rect=(0, 0.05, 1, 1), w_pad=3)
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_publication_funnel(df, path, plt):
     from .cta_provenance import paper_intake_counts
 
-    counts = paper_intake_counts()
+    counts = paper_intake_counts(tissue_scope=_tissue_scope(df))
     tags = list(counts.source_tag.unique())
     stages = [
         "published",
@@ -667,7 +693,7 @@ def _fig_publication_funnel(df, path, plt):
         fontsize=9,
     )
     fig.tight_layout(rect=(0, 0.08, 1, 1))
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 def _fig_placental_evidence_coverage(df, path, plt):
@@ -675,7 +701,7 @@ def _fig_placental_evidence_coverage(df, path, plt):
 
     from .cta_sources import placental_source_coverage
 
-    data = placental_source_coverage().sort_values("Symbol")
+    data = placental_source_coverage(tissue_scope=_tissue_scope(df)).sort_values("Symbol")
     papers = {
         "Gong 2021": {"Gong2021_placenta_PC", "Gong2021_placenta_ncRNA"},
         "Bradley 2020": {"Bradley2020_CPA"},
@@ -713,14 +739,14 @@ def _fig_placental_evidence_coverage(df, path, plt):
     fig.text(
         0.5,
         0.025,
-        "[D] Retained in default CTA panel (9/19). Blank cells mean no record in these curated source rows.\n"
+        f"[D] Retained in {_tissue_scope(df)} CTA panel ({int(data.default_panel.sum())}/{len(data)}). Blank cells mean no record in these curated source rows.\n"
         "* Combined CGB1/CGB2 assays, not separate positives. † Preprint.\n"
         "Expression / nomination evidence is distinct from gene-specific antigen validation.",
         ha="center",
         fontsize=9,
     )
     fig.tight_layout(rect=(0, 0.095, 1, 1))
-    _save(fig, path, plt)
+    _save(fig, path, plt, _tissue_scope(df))
 
 
 _BUILDERS = {
@@ -742,7 +768,7 @@ _BUILDERS = {
 _FONT_SCALE = 1.0
 
 
-def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
+def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0, tissue_scope="core") -> dict:
     """Write the CTA-curation figures into ``out_dir``.
 
     Returns ``{"n_genes": int, "stages": [...], "paths": {key: Path}}``.
@@ -756,7 +782,10 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
 
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    df = _evidence()
+    if tissue_scope == "both":
+        return _render_both(out, plt, kinds=kinds, font_scale=font_scale)
+    reproductive_tissues(tissue_scope)
+    df = _evidence(tissue_scope)
     paths = {}
     import matplotlib
 
@@ -783,31 +812,49 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
         source_cover,
     )
 
-    (out / "cta-minimum-source-cover.json").write_text(json.dumps(source_cover(), indent=2) + "\n")
-    candidate_provenance().to_csv(out / "cta-candidate-provenance.csv", index=False)
-    gene_citation_evidence_report().to_csv(out / "cta-gene-citation-evidence.csv", index=False)
+    (out / "cta-minimum-source-cover.json").write_text(
+        json.dumps(source_cover(tissue_scope=tissue_scope), indent=2) + "\n"
+    )
+    candidate_provenance(tissue_scope=tissue_scope).to_csv(
+        out / "cta-candidate-provenance.csv", index=False
+    )
+    gene_citation_evidence_report(tissue_scope=tissue_scope).to_csv(
+        out / "cta-gene-citation-evidence.csv", index=False
+    )
     pd.DataFrame(_per_source_counts(df)).to_csv(out / "cta-source-outcome-counts.csv", index=False)
     historical_tag_audit().to_csv(out / "cta-historical-tag-audit.csv", index=False)
-    paper_intake_counts().to_csv(out / "cta-selected-paper-intake-counts.csv", index=False)
+    paper_intake_counts(tissue_scope=tissue_scope).to_csv(
+        out / "cta-selected-paper-intake-counts.csv", index=False
+    )
     from .cta_sources import gene_publication_evidence
 
     gene_publication_evidence().to_csv(out / "cta-gene-publication-evidence.csv", index=False)
     from .cta_sources import placental_source_coverage
 
-    placental_source_coverage().to_csv(out / "placental-nomination-provenance.csv", index=False)
-    selected_membership().to_csv(out / "cta-selected-paper-membership.csv", index=False)
-    legacy_only_candidates().to_csv(out / "cta-legacy-only-candidates.csv", index=False)
-    stages = stage_counts()
+    placental_source_coverage(tissue_scope=tissue_scope).to_csv(
+        out / "placental-nomination-provenance.csv", index=False
+    )
+    selected_membership(tissue_scope=tissue_scope).to_csv(
+        out / "cta-selected-paper-membership.csv", index=False
+    )
+    legacy_only_candidates(tissue_scope=tissue_scope).to_csv(
+        out / "cta-legacy-only-candidates.csv", index=False
+    )
+    stages = stage_counts(_tissue_scope(df))
     pd.DataFrame(stages, columns=["stage", "remaining", "dropped"]).to_csv(
         out / "cta-stage-counts.csv", index=False
     )
     stage_membership(df).to_csv(out / "cta-stage-membership.csv", index=False)
-    intake_counts().to_csv(out / "cta-publication-intake-counts.csv", index=False)
-    intake_membership().to_csv(out / "cta-publication-intake-membership.csv", index=False)
+    intake_counts(tissue_scope=tissue_scope).to_csv(
+        out / "cta-publication-intake-counts.csv", index=False
+    )
+    intake_membership(tissue_scope=tissue_scope).to_csv(
+        out / "cta-publication-intake-membership.csv", index=False
+    )
     publication_sources().to_csv(out / "cta-publication-sources.csv", index=False)
     source_overlap_counts(df).to_csv(out / "cta-source-overlap-counts.csv", index=False)
     df.to_csv(out / "cta-candidate-evidence.csv", index=False)
-    default = cta.cta_gene_ids()
+    default = cta.cta_gene_ids() if _tissue_scope(df) == "core" else cta.cta_extended_gene_ids()
     df[df.Ensembl_Gene_ID.isin(default)].to_csv(out / "cta-default-panel.csv", index=False)
     sets = _tag_sets(df)
     pd.DataFrame(
@@ -835,15 +882,19 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
             ("publication_sources", publication_sources()),
         ]
     }
+    pd.DataFrame(
+        RELIABILITY_THRESHOLD.items(), columns=["protein_reliability", "rna_threshold"]
+    ).to_csv(out / "cta-thresholds.csv", index=False)
     manifest = {
         "oncoref_version": __version__,
+        "tissue_scope": tissue_scope,
         "oncoref_data_version": DATA_VERSION,
         "input_sha256": {
             name: hashlib.sha256(
                 files("oncoref").joinpath("data").joinpath(name).read_bytes()
             ).hexdigest()
             for name in (
-                "cancer-testis-antigens.csv",
+                f"{cta_dataset_name(tissue_scope)}.csv",
                 "cta-specificity-audit.csv",
                 "cta-publication-sources.csv",
                 "cta-publication-membership.csv",
@@ -860,7 +911,7 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
         "candidate_genes": len(df),
         "default_genes": len(default),
         "stages": stages,
-        "minimum_source_cover": source_cover(),
+        "minimum_source_cover": source_cover(tissue_scope=tissue_scope),
         "outputs": {
             p.name: hashlib.sha256(p.read_bytes()).hexdigest()
             for p in sorted(out.iterdir())
@@ -871,7 +922,7 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
     }
     (out / "run-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     lines = [
-        "# CTA source intake and curation",
+        f"# {tissue_scope.title()} CTA source intake and curation",
         "",
         f"{len(df):,} coding candidates; {len(default):,} pass the default rules, including the normal-reproductive-only nomination holdback.",
         "",
@@ -890,4 +941,90 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0) -> dict:
             ]
         )
     (out / "index.md").write_text("\n".join(lines))
-    return {"n_genes": len(df), "stages": stages, "paths": paths}
+    return {
+        "n_genes": len(df),
+        "tissue_scope": tissue_scope,
+        "stages": stages,
+        "paths": paths,
+        "pdf_paths": {key: path.with_suffix(".pdf") for key, path in paths.items()},
+        "data_paths": {
+            path.stem.removeprefix("cta-").replace("-", "_"): path
+            for path in sorted(out.glob("*.csv"))
+        },
+    }
+
+
+def _render_both(out, plt, *, kinds=None, font_scale=1.0):
+    """Two complete figure/audit sets plus a directly comparable stage funnel."""
+    from . import cta
+
+    panels = {
+        scope: render(out / scope, tissue_scope=scope, kinds=kinds, font_scale=font_scale)
+        for scope in ("core", "extended")
+    }
+    fig, ax = plt.subplots(figsize=(9, 5.5))
+    for offset, (scope, color) in zip((-0.18, 0.18), (("core", KEPT), ("extended", ACCENT))):
+        stages = panels[scope]["stages"]
+        values = [s[1] for s in stages]
+        y = np.arange(len(stages)) + offset
+        ax.barh(y, values, height=0.34, color=color, label=f"{scope} CTAs")
+        for pos, n in zip(y, values):
+            ax.text(n + 4, pos, str(n), va="center", fontsize=9)
+    ax.set_yticks(np.arange(len(stages)), [s[0] for s in stages])
+    ax.invert_yaxis()
+    ax.set_xlim(0, max(values) * 1.14)
+    ax.set_xlabel("source identities / candidate genes")
+    ax.legend(loc="lower left", bbox_to_anchor=(0, 1), ncol=2)
+    path = out / "cta-panel-comparison.png"
+    _save(fig, path, plt)
+
+    core, extended = cta.cta_df(), cta.cta_extended_df()
+    cols = [
+        "Ensembl_Gene_ID",
+        "rna_deflated_reproductive_frac",
+        "passes_filters",
+        "specificity_action",
+    ]
+    comparison = core[["Symbol", *cols]].merge(
+        extended[cols], on="Ensembl_Gene_ID", suffixes=("_core", "_extended")
+    )
+    comparison["core_default"] = comparison.Ensembl_Gene_ID.isin(cta.cta_gene_ids())
+    comparison["extended_default"] = comparison.Ensembl_Gene_ID.isin(cta.cta_extended_gene_ids())
+    comparison["extended_addition"] = comparison.extended_default & ~comparison.core_default
+    comparison_path = out / "cta-panel-comparison.csv"
+    comparison.to_csv(comparison_path, index=False)
+    result = {"n_genes": panels["core"]["n_genes"], "tissue_scope": "both", "panels": panels}
+    result["stages"] = [
+        (f"{scope}: {label}", n, d)
+        for scope, panel in panels.items()
+        for label, n, d in panel["stages"]
+    ]
+    for group in ("paths", "pdf_paths", "data_paths"):
+        result[group] = {
+            f"{scope}_{key}": p
+            for scope, panel in panels.items()
+            for key, p in panel[group].items()
+        }
+    result["paths"]["comparison"] = path
+    result["pdf_paths"]["comparison"] = path.with_suffix(".pdf")
+    result["data_paths"]["comparison"] = comparison_path
+    manifest = {
+        "tissue_scope": "both",
+        "panels": {scope: f"{scope}/run-manifest.json" for scope in panels},
+        "outputs": {
+            str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(out.rglob("*"))
+            if p.is_file()
+            and p.suffix in {".png", ".pdf", ".csv", ".json"}
+            and p != out / "run-manifest.json"
+        },
+    }
+    (out / "run-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    (out / "index.md").write_text(
+        "# Core and extended reproductive CTA curation\n\n"
+        f"Core: {len(cta.cta_gene_ids())} genes. Extended: {len(cta.cta_extended_gene_ids())} genes.\n\n"
+        "[Core figures and audits](core/index.md) · [Extended figures and audits](extended/index.md)\n\n"
+        "[Gene-level comparison](cta-panel-comparison.csv) · [Vector comparison](cta-panel-comparison.pdf)\n\n"
+        "![Panel comparison](cta-panel-comparison.png)\n"
+    )
+    return result

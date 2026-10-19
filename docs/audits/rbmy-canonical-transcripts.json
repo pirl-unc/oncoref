@@ -1,0 +1,208 @@
+{
+  "issue": "https://github.com/pirl-unc/oncoref/issues/576",
+  "taxon_id": 9606,
+  "assembly": "GRCh38",
+  "selection_rule": "Ensembl_canonical transcript tag; MANE_Select is corroborating evidence. No longest-protein selection or expression allocation.",
+  "previous_cta_transcript_ids": {
+    "ENSG00000169800": "ENST00000454978",
+    "ENSG00000226941": null
+  },
+  "references": [
+    {
+      "ensembl_release": 112,
+      "sources": {
+        "gtf": {
+          "filename": "Homo_sapiens.GRCh38.112.chr_patch_hapl_scaff.gtf.gz",
+          "url": "https://ftp.ensembl.org/pub/release-112/gtf/homo_sapiens/Homo_sapiens.GRCh38.112.chr_patch_hapl_scaff.gtf.gz",
+          "bytes": 60149702,
+          "sha256": "9068bd52a9def32ac22b248393461b9f52931f29404a94b397ecc7ddbc2fce38"
+        },
+        "peptide_fasta": {
+          "filename": "Homo_sapiens.GRCh38.pep.all.fa.gz",
+          "url": "https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz",
+          "bytes": 14904881,
+          "sha256": "2868236131342d14afbfa8dbd8a5e3fb56ba85210fdca196b65db3e17c7ece83"
+        }
+      },
+      "transcripts": [
+        {
+          "gene_id": "ENSG00000226941",
+          "symbol": "RBMY1J",
+          "transcript_id": "ENST00000250831",
+          "transcript_version": "6",
+          "tags": [
+            "CCDS",
+            "basic",
+            "Ensembl_canonical",
+            "GENCODE Primary",
+            "MANE_Select"
+          ],
+          "gtf_line": "Y\tensembl_havana\ttranscript\t22403410\t22417881\t.\t+\t.\tgene_id \"ENSG00000226941\"; gene_version \"9\"; transcript_id \"ENST00000250831\"; transcript_version \"6\"; gene_name \"RBMY1J\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1J-201\"; transcript_source \"ensembl_havana\"; transcript_biotype \"protein_coding\"; tag \"CCDS\"; ccds_id \"CCDS35484\"; tag \"basic\"; tag \"Ensembl_canonical\"; tag \"GENCODE Primary\"; tag \"MANE_Select\"; transcript_support_level \"1 (assigned to previous version 5)\";",
+          "peptide": {
+            "protein_id": "ENSP00000250831.5",
+            "fasta_header": ">ENSP00000250831.5 pep chromosome:GRCh38:Y:22403410:22417881:1 gene:ENSG00000226941.9 transcript:ENST00000250831.6 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:RBMY1J description:RNA binding motif protein Y-linked family 1 member J [Source:HGNC Symbol;Acc:HGNC:23917]",
+            "length": 496,
+            "sequence": "MVEADHPGKLFIGGLNRETNEKMLKAVFGKHGPISEVLLIKDRTSKSRGFAFITFENPADAKNAAKDMNGTSLHGKAIKVEQAKKPSFQSGGRRRPPASSRNRSPSGSLRSARGSSGGTRGWLPSHEGHLDDGGYTPDLKMSYSRGLIPVKRGPSSRSGGPPPKKSAPSAVARSNSWMGSQGPMSQRRENYGVPPRRATISSWRNDRMSTRHDGYATNDGNHPSCQETRDYAPPSRGYAYRDNGHSNRDEHSSRGYRNHRSSRETRDYAPPSRGHAYRDYGHSRRDESYSRGYRNHRSSRETREYAPPSRGHGYRDYGHSRRHESYSRGYRNHPSSRETRDYAPPHRDYAYRDYGHSSWDEHSSRGYSYHDGYGEALGRDHSEHLSGSSYRDALQRYGTSHGAPPARGPRMSYGGSTCHAYSNTRDRYGRSWESYSSCGDFHYCDREHVCRKDQRNPPSLGRVLPDPREAYGSSSYVASIVDGGESRSEKGDSSRY",
+            "sha256": "497999a239e90d9400a8f0dff564c9da0df8d4f46c4f9c8d5a3fb36a72bf7dd4"
+          }
+        },
+        {
+          "gene_id": "ENSG00000169800",
+          "symbol": "RBMY1F",
+          "transcript_id": "ENST00000303766",
+          "transcript_version": "12",
+          "tags": [
+            "CCDS",
+            "basic",
+            "Ensembl_canonical",
+            "GENCODE Primary",
+            "MANE_Select"
+          ],
+          "gtf_line": "Y\tensembl_havana\ttranscript\t22168542\t22182923\t.\t-\t.\tgene_id \"ENSG00000169800\"; gene_version \"14\"; transcript_id \"ENST00000303766\"; transcript_version \"12\"; gene_name \"RBMY1F\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1F-201\"; transcript_source \"ensembl_havana\"; transcript_biotype \"protein_coding\"; tag \"CCDS\"; ccds_id \"CCDS35483\"; tag \"basic\"; tag \"Ensembl_canonical\"; tag \"GENCODE Primary\"; tag \"MANE_Select\"; transcript_support_level \"1 (assigned to previous version 11)\";",
+          "peptide": {
+            "protein_id": "ENSP00000307155.7",
+            "fasta_header": ">ENSP00000307155.7 pep chromosome:GRCh38:Y:22168542:22182923:-1 gene:ENSG00000169800.14 transcript:ENST00000303766.12 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:RBMY1F description:RNA binding motif protein Y-linked family 1 member F [Source:HGNC Symbol;Acc:HGNC:23974]",
+            "length": 496,
+            "sequence": "MVEADHPGKLFIGGLNRETNEKMLKAVFGKHGPISEVLLIKDRTSKSRGFAFITFENPADAKNAAKDMNGTSLHGKAIKVEQAKKPSFQSGGRRRPPASSRNRSPSGSLRSARGSSGGTRGWLPSHEGHLDDGGYTPDLKMSYSRGLIPVKRGPSSRSGGPPPKKSAPSAVARSNSWMGSQGPMSQRRENYGVPPRRATISSWRNDRMSTRHDGYATNDGNHPSCQETRDYAPPSRGYAYRDNGHSNRDEHSSRGYRNHRSSRETRDYAPPSRGHAYRDYGHSRRDESYSRGYRNHRSSRETREYAPPSRGHGYRDYGHSRRHESYSRGYRNHPSSRETRDYAPPHRDYAYRDYGHSSWDEHSSRGYSYHDGYGEALGRDHSEHLSGSSYRDALQRYGTSHGAPPARGPRMSYGGSTCHAYSNTRDRYGRSWESYSSCGDFHYCDREHVCRKDQRNPPSLGRVLPDPREAYGSSSYVASIVDGGESRSEKGDSSRY",
+            "sha256": "497999a239e90d9400a8f0dff564c9da0df8d4f46c4f9c8d5a3fb36a72bf7dd4"
+          }
+        },
+        {
+          "gene_id": "ENSG00000169800",
+          "symbol": "RBMY1F",
+          "transcript_id": "ENST00000454978",
+          "transcript_version": "2",
+          "tags": [
+            "CCDS",
+            "basic",
+            "GENCODE Primary"
+          ],
+          "gtf_line": "Y\tensembl\ttranscript\t22168542\t22182982\t.\t-\t.\tgene_id \"ENSG00000169800\"; gene_version \"14\"; transcript_id \"ENST00000454978\"; transcript_version \"2\"; gene_name \"RBMY1F\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1F-202\"; transcript_source \"ensembl\"; transcript_biotype \"protein_coding\"; tag \"CCDS\"; ccds_id \"CCDS94717\"; tag \"basic\"; tag \"GENCODE Primary\"; transcript_support_level \"5\";",
+          "peptide": {
+            "protein_id": "ENSP00000406005.2",
+            "fasta_header": ">ENSP00000406005.2 pep chromosome:GRCh38:Y:22168542:22182982:-1 gene:ENSG00000169800.14 transcript:ENST00000454978.2 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:RBMY1F description:RNA binding motif protein Y-linked family 1 member F [Source:HGNC Symbol;Acc:HGNC:23974]",
+            "length": 459,
+            "sequence": "MVEADHPGKLFIGGLNRETNEKMLKAVFGKHGPISEVLLIKDRTSKSRGFAFITFENPADAKNAAKDMNGTSLHGKAIKVEQAKKPSFQSGGRRRPPASSRNRSPSGSLRSARGSSGGTRGWLPSHEGHLDDGGYTPDLKMSYSRGLIPVKRGPSSRSGGPPPKKSAPSAVARSNSWMGSQGPMSQRRENYGVPPRRATISSWRNDRMSTRHDGYATNDGNHPSCQETRDYAPPSRGYAYRDNGHSNRDEHSSRGYRNHRSSRETRDYAPPSRGHAYRDYGHSRRDESYSRGYRNHRSSRETREYAPPSRGHGYRDYGHSRRHESYSRGYSYHDGYGEALGRDHSEHLSGSSYRDALQRYGTSHGAPPARGPRMSYGGSTCHAYSNTRDRYGRSWESYSSCGDFHYCDREHVCRKDQRNPPSLGRVLPDPREAYGSSSYVASIVDGGESRSEKGDSSRY",
+            "sha256": "a2ac2b5f37ff95b8512c9a177b74cb0524ea14edf64a429828c049077bd17e56"
+          }
+        },
+        {
+          "gene_id": "ENSG00000226941",
+          "symbol": "RBMY1J",
+          "transcript_id": "ENST00000470460",
+          "transcript_version": "1",
+          "tags": [],
+          "gtf_line": "Y\thavana\ttranscript\t22403461\t22417881\t.\t+\t.\tgene_id \"ENSG00000226941\"; gene_version \"9\"; transcript_id \"ENST00000470460\"; transcript_version \"1\"; gene_name \"RBMY1J\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1J-202\"; transcript_source \"havana\"; transcript_biotype \"protein_coding_CDS_not_defined\"; transcript_support_level \"5\";",
+          "peptide": null
+        },
+        {
+          "gene_id": "ENSG00000169800",
+          "symbol": "RBMY1F",
+          "transcript_id": "ENST00000481858",
+          "transcript_version": "1",
+          "tags": [],
+          "gtf_line": "Y\thavana\ttranscript\t22168542\t22182957\t.\t-\t.\tgene_id \"ENSG00000169800\"; gene_version \"14\"; transcript_id \"ENST00000481858\"; transcript_version \"1\"; gene_name \"RBMY1F\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1F-203\"; transcript_source \"havana\"; transcript_biotype \"protein_coding_CDS_not_defined\"; transcript_support_level \"1\";",
+          "peptide": null
+        }
+      ]
+    },
+    {
+      "ensembl_release": 115,
+      "sources": {
+        "gtf": {
+          "filename": "Homo_sapiens.GRCh38.115.chr_patch_hapl_scaff.gtf.gz",
+          "url": "https://ftp.ensembl.org/pub/release-115/gtf/homo_sapiens/Homo_sapiens.GRCh38.115.chr_patch_hapl_scaff.gtf.gz",
+          "bytes": 109051006,
+          "sha256": "02df5a2a8c7a41e513209e0780c56cf197941b6b35ef8bab3e9a6317eecd17ef"
+        },
+        "peptide_fasta": {
+          "filename": "Homo_sapiens.GRCh38.pep.all.fa.gz",
+          "url": "https://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz",
+          "bytes": 19621018,
+          "sha256": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96"
+        }
+      },
+      "transcripts": [
+        {
+          "gene_id": "ENSG00000226941",
+          "symbol": "RBMY1J",
+          "transcript_id": "ENST00000250831",
+          "transcript_version": "6",
+          "tags": [
+            "CCDS",
+            "gencode_basic",
+            "gencode_primary",
+            "MANE_Select",
+            "Ensembl_canonical"
+          ],
+          "gtf_line": "Y\tensembl_havana\ttranscript\t22403410\t22417881\t.\t+\t.\tgene_id \"ENSG00000226941\"; gene_version \"9\"; transcript_id \"ENST00000250831\"; transcript_version \"6\"; gene_name \"RBMY1J\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1J-201\"; transcript_source \"ensembl_havana\"; transcript_biotype \"protein_coding\"; tag \"CCDS\"; ccds_id \"CCDS35484\"; tag \"gencode_basic\"; tag \"gencode_primary\"; tag \"MANE_Select\"; tag \"Ensembl_canonical\"; transcript_support_level \"1 (assigned to previous version 5)\";",
+          "peptide": {
+            "protein_id": "ENSP00000250831.5",
+            "fasta_header": ">ENSP00000250831.5 pep chromosome:GRCh38:Y:22403410:22417881:1 gene:ENSG00000226941.9 transcript:ENST00000250831.6 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:RBMY1J description:RNA binding motif protein Y-linked family 1 member J [Source:HGNC Symbol;Acc:HGNC:23917]",
+            "length": 496,
+            "sequence": "MVEADHPGKLFIGGLNRETNEKMLKAVFGKHGPISEVLLIKDRTSKSRGFAFITFENPADAKNAAKDMNGTSLHGKAIKVEQAKKPSFQSGGRRRPPASSRNRSPSGSLRSARGSSGGTRGWLPSHEGHLDDGGYTPDLKMSYSRGLIPVKRGPSSRSGGPPPKKSAPSAVARSNSWMGSQGPMSQRRENYGVPPRRATISSWRNDRMSTRHDGYATNDGNHPSCQETRDYAPPSRGYAYRDNGHSNRDEHSSRGYRNHRSSRETRDYAPPSRGHAYRDYGHSRRDESYSRGYRNHRSSRETREYAPPSRGHGYRDYGHSRRHESYSRGYRNHPSSRETRDYAPPHRDYAYRDYGHSSWDEHSSRGYSYHDGYGEALGRDHSEHLSGSSYRDALQRYGTSHGAPPARGPRMSYGGSTCHAYSNTRDRYGRSWESYSSCGDFHYCDREHVCRKDQRNPPSLGRVLPDPREAYGSSSYVASIVDGGESRSEKGDSSRY",
+            "sha256": "497999a239e90d9400a8f0dff564c9da0df8d4f46c4f9c8d5a3fb36a72bf7dd4"
+          }
+        },
+        {
+          "gene_id": "ENSG00000169800",
+          "symbol": "RBMY1F",
+          "transcript_id": "ENST00000303766",
+          "transcript_version": "12",
+          "tags": [
+            "CCDS",
+            "gencode_basic",
+            "gencode_primary",
+            "MANE_Select",
+            "Ensembl_canonical"
+          ],
+          "gtf_line": "Y\tensembl_havana\ttranscript\t22168542\t22182923\t.\t-\t.\tgene_id \"ENSG00000169800\"; gene_version \"14\"; transcript_id \"ENST00000303766\"; transcript_version \"12\"; gene_name \"RBMY1F\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1F-201\"; transcript_source \"ensembl_havana\"; transcript_biotype \"protein_coding\"; tag \"CCDS\"; ccds_id \"CCDS35483\"; tag \"gencode_basic\"; tag \"gencode_primary\"; tag \"MANE_Select\"; tag \"Ensembl_canonical\"; transcript_support_level \"1 (assigned to previous version 11)\";",
+          "peptide": {
+            "protein_id": "ENSP00000307155.7",
+            "fasta_header": ">ENSP00000307155.7 pep chromosome:GRCh38:Y:22168542:22182923:-1 gene:ENSG00000169800.14 transcript:ENST00000303766.12 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:RBMY1F description:RNA binding motif protein Y-linked family 1 member F [Source:HGNC Symbol;Acc:HGNC:23974]",
+            "length": 496,
+            "sequence": "MVEADHPGKLFIGGLNRETNEKMLKAVFGKHGPISEVLLIKDRTSKSRGFAFITFENPADAKNAAKDMNGTSLHGKAIKVEQAKKPSFQSGGRRRPPASSRNRSPSGSLRSARGSSGGTRGWLPSHEGHLDDGGYTPDLKMSYSRGLIPVKRGPSSRSGGPPPKKSAPSAVARSNSWMGSQGPMSQRRENYGVPPRRATISSWRNDRMSTRHDGYATNDGNHPSCQETRDYAPPSRGYAYRDNGHSNRDEHSSRGYRNHRSSRETRDYAPPSRGHAYRDYGHSRRDESYSRGYRNHRSSRETREYAPPSRGHGYRDYGHSRRHESYSRGYRNHPSSRETRDYAPPHRDYAYRDYGHSSWDEHSSRGYSYHDGYGEALGRDHSEHLSGSSYRDALQRYGTSHGAPPARGPRMSYGGSTCHAYSNTRDRYGRSWESYSSCGDFHYCDREHVCRKDQRNPPSLGRVLPDPREAYGSSSYVASIVDGGESRSEKGDSSRY",
+            "sha256": "497999a239e90d9400a8f0dff564c9da0df8d4f46c4f9c8d5a3fb36a72bf7dd4"
+          }
+        },
+        {
+          "gene_id": "ENSG00000169800",
+          "symbol": "RBMY1F",
+          "transcript_id": "ENST00000454978",
+          "transcript_version": "2",
+          "tags": [
+            "CCDS",
+            "gencode_basic",
+            "gencode_primary"
+          ],
+          "gtf_line": "Y\tensembl\ttranscript\t22168542\t22182982\t.\t-\t.\tgene_id \"ENSG00000169800\"; gene_version \"14\"; transcript_id \"ENST00000454978\"; transcript_version \"2\"; gene_name \"RBMY1F\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1F-202\"; transcript_source \"ensembl\"; transcript_biotype \"protein_coding\"; tag \"CCDS\"; ccds_id \"CCDS94717\"; tag \"gencode_basic\"; tag \"gencode_primary\"; transcript_support_level \"5\";",
+          "peptide": {
+            "protein_id": "ENSP00000406005.2",
+            "fasta_header": ">ENSP00000406005.2 pep chromosome:GRCh38:Y:22168542:22182982:-1 gene:ENSG00000169800.14 transcript:ENST00000454978.2 gene_biotype:protein_coding transcript_biotype:protein_coding gene_symbol:RBMY1F description:RNA binding motif protein Y-linked family 1 member F [Source:HGNC Symbol;Acc:HGNC:23974]",
+            "length": 459,
+            "sequence": "MVEADHPGKLFIGGLNRETNEKMLKAVFGKHGPISEVLLIKDRTSKSRGFAFITFENPADAKNAAKDMNGTSLHGKAIKVEQAKKPSFQSGGRRRPPASSRNRSPSGSLRSARGSSGGTRGWLPSHEGHLDDGGYTPDLKMSYSRGLIPVKRGPSSRSGGPPPKKSAPSAVARSNSWMGSQGPMSQRRENYGVPPRRATISSWRNDRMSTRHDGYATNDGNHPSCQETRDYAPPSRGYAYRDNGHSNRDEHSSRGYRNHRSSRETRDYAPPSRGHAYRDYGHSRRDESYSRGYRNHRSSRETREYAPPSRGHGYRDYGHSRRHESYSRGYSYHDGYGEALGRDHSEHLSGSSYRDALQRYGTSHGAPPARGPRMSYGGSTCHAYSNTRDRYGRSWESYSSCGDFHYCDREHVCRKDQRNPPSLGRVLPDPREAYGSSSYVASIVDGGESRSEKGDSSRY",
+            "sha256": "a2ac2b5f37ff95b8512c9a177b74cb0524ea14edf64a429828c049077bd17e56"
+          }
+        },
+        {
+          "gene_id": "ENSG00000226941",
+          "symbol": "RBMY1J",
+          "transcript_id": "ENST00000470460",
+          "transcript_version": "1",
+          "tags": [],
+          "gtf_line": "Y\thavana\ttranscript\t22403461\t22417881\t.\t+\t.\tgene_id \"ENSG00000226941\"; gene_version \"9\"; transcript_id \"ENST00000470460\"; transcript_version \"1\"; gene_name \"RBMY1J\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1J-202\"; transcript_source \"havana\"; transcript_biotype \"protein_coding_CDS_not_defined\"; transcript_support_level \"5\";",
+          "peptide": null
+        },
+        {
+          "gene_id": "ENSG00000169800",
+          "symbol": "RBMY1F",
+          "transcript_id": "ENST00000481858",
+          "transcript_version": "1",
+          "tags": [],
+          "gtf_line": "Y\thavana\ttranscript\t22168542\t22182957\t.\t-\t.\tgene_id \"ENSG00000169800\"; gene_version \"14\"; transcript_id \"ENST00000481858\"; transcript_version \"1\"; gene_name \"RBMY1F\"; gene_source \"ensembl_havana\"; gene_biotype \"protein_coding\"; transcript_name \"RBMY1F-203\"; transcript_source \"havana\"; transcript_biotype \"protein_coding_CDS_not_defined\"; transcript_support_level \"1\";",
+          "peptide": null
+        }
+      ]
+    }
+  ]
+}

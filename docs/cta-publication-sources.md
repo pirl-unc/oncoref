@@ -1,7 +1,10 @@
 # Published placental and cancer-placenta nominations
 
 For the expanded seven-paper CTA landscape intake and regenerated source plots,
-see [Complete CTA landscape sources](cta-landscape-sources.md). The counts below
+see [Complete CTA landscape sources](cta-landscape-sources.md). Core remains
+624 genes; the explicit extended reproductive panel contains 688 genes. See the
+[core/extended audit](audits/cta-panel-curation.md) for current denominators,
+reviewed holdbacks and paired figures. The counts below
 describe the earlier placental-source addition; the source-specific counts remain
 valid, while the combined candidate and default totals have since expanded.
 
@@ -69,24 +72,31 @@ Download the original Gong supplementary workbook using `GONG_URL` in
 openpyxl and the HPA v23 normal RNA/IHC inputs available:
 
 ```sh
-python scripts/import_cta_publications.py --gong-xlsx /path/to/supplement.xlsx
+# Sidecars by default. Use the actual source retrieval/verification date.
+python scripts/import_cta_publications.py --gong-xlsx /path/to/supplement.xlsx --retrieved-date 2026-09-23
+# Add --apply to overwrite both snapshots and the publication tables.
 ```
 
 The importer retains every source row, resolves against oncoref's canonical gene
 space, and adds only mapped, currently protein-coding genes to the HPA table.
-Existing evidence/filter decisions are unchanged; only new candidates have HPA
-columns regenerated. Missing RNA stays missing and fails the gate. Unknown
+Existing core evidence/filter decisions are preserved; new candidates receive
+HPA annotation, and the paired extended snapshot is regenerated. Reimporting
+these three source tags preserves all other landscape memberships and metadata.
+The retrieval date is required; the example reproduces the recorded source date. Missing RNA stays missing and fails the gate. Unknown
 canonical transcript IDs, full gene names and functional descriptions for new
 candidates remain unassigned rather than being inferred. Re-running the import
 is idempotent.
 
-Pirlygenes renders the source intersections and intake/default funnels from
-these owner tables, with CSV audits, 300 dpi PNGs and vector PDFs. The local
-source-specific run records an explicit checkout import; it does not change
-pirlygenes' released dependency pin or silently rewrite its earlier complete
-figure batch.
+Oncoref renders all source figures for either scope or both:
 
-PAGE4 now has a row in the HPA candidate table and is excluded from the default.
+```sh
+python -m oncoref.cli plot cta-curation --tissue-scope both --out outputs/cta-curation-both
+```
+
+PAGE4 has a row in the HPA candidate table, is excluded from core, and enters
+the explicit extended panel. Its core fraction is 0.4539 and its extended
+fraction is 0.9851 against the 0.80 Enhanced-IHC threshold. Epididymis at
+850.2 nTPM is the largest outside-core signal.
 `cta_candidate_references()` therefore omits it from the pending watchlist;
 `cta_candidate_references(include_in_table=True)` retains its historical
 literature references and annotations for provenance and clinical/audit joins.
@@ -123,3 +133,40 @@ CGB2 stays in the default; CGB1/CGB7 stay excluded. No CGB-specific protein,
 HLA-peptide or T-cell validation is asserted from this evidence. In particular,
 combined assays and beta-hCG family protein measurements cannot establish a
 unique CGB2 protein or epitope.
+
+### Importing a legacy snapshot
+
+`add_publication_candidates()` accepts older core tables that lack
+`rna_reproductive_tissue_scope`. It labels **every** returned row `core` before
+adding candidates, including when no genes are added. Existing evidence and the
+input DataFrame are preserved. The result can be saved, reloaded, imported again,
+and passed directly to the intake audits:
+
+```python
+import pandas as pd
+from oncoref.cta_sources import (
+    add_publication_candidates, intake_counts, publication_membership,
+)
+from oncoref.cta_regen import regenerate_cta_columns
+
+legacy = pd.read_csv("legacy-cancer-testis-antigens.csv")
+core = add_publication_candidates(legacy, publication_membership())
+core.to_csv("core-candidates.csv", index=False)
+core_counts = intake_counts(table=core)
+
+extended = regenerate_cta_columns(core, tissue_scope="extended")
+extended_counts = intake_counts(table=extended, tissue_scope="extended")
+```
+
+Scope-free legacy evidence is core only. `tissue_scope="extended"` on an audit
+selects the extended review policy; it does not recalculate core RNA fractions.
+Use the regenerator to produce extended evidence. An existing scope column with
+missing, mixed or unknown labels is rejected with an actionable error rather
+than guessed. Recompute that table with the regenerator to repair it; do not
+change or remove scope labels to bypass validation.
+
+Regeneration never reuses old RNA fractions for a gene absent from the selected
+HPA input. It warns, clears RNA measurements and fails the RNA gate, even if the
+old row passed or the requested scope is unchanged. The result still carries
+the requested scope and can be saved and audited; missing measurements mean
+unknown, not zero expression. See [RNA expression units](cta-expression-units.md).

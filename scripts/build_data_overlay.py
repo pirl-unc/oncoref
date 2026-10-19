@@ -77,7 +77,7 @@ def validate_base_manifest(payload: dict) -> tuple[str, str, dict]:
         part.isdigit() for part in base_version.split(".")
     ):
         raise SystemExit(f"error: base manifest has invalid data_version {base_version!r}")
-    if base_version == DATA_VERSION:
+    if base_version == os.environ.get("ONCOREF_DATA_RELEASE_VERSION", DATA_VERSION):
         raise SystemExit("error: overlay base version must differ from the release version")
     base_source_matrix_version = str(payload.get("source_matrix_version") or "")
     if len(base_source_matrix_version.split(".")) != 3 or not all(

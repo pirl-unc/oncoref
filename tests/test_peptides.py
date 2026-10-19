@@ -4,27 +4,43 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 
+from types import SimpleNamespace
+
 import pandas as pd
 import pytest
 
 from oncoref import peptides
+from oncoref.gene_identity import resolve_gene_identity as peptides_gene_identity
 
 
 class _FakeTr:
-    def __init__(self, gene_id, biotype, protein_sequence):
+    def __init__(self, gene_id, biotype, protein_sequence, contig="22", name="PRAME"):
         self.gene_id = gene_id
+        self.contig = contig
+        self.gene_name = name
         self.biotype = biotype
         self.protein_sequence = protein_sequence
 
 
 class _FakeGenome:
     release = 999
+    reference_name = "GRCh38"
+    species = SimpleNamespace(latin_name="homo_sapiens")
 
     def __init__(self, transcripts):
         self._trs = transcripts
 
     def transcripts(self):
         return self._trs
+
+    def gene_ids(self):
+        return sorted({t.gene_id for t in self._trs})
+
+    def gene_by_id(self, gid):
+        for t in self._trs:
+            if t.gene_id == gid:
+                return t
+        raise ValueError(gid)
 
 
 def test_kmers():
@@ -53,18 +69,23 @@ def fake_proteome(monkeypatch, tmp_path):
     # CTA protein "AAACCC" (3-mers: AAA,AAC,ACC,CCC); background "CCCDDD" shares CCC.
     genome = _FakeGenome(
         [
-            _FakeTr("ENSG_CTA", "protein_coding", "AAACCC"),
-            _FakeTr("ENSG_BG", "protein_coding", "CCCDDD"),
+            _FakeTr("ENSG00000185686", "protein_coding", "AAACCC"),
+            _FakeTr("ENSG00000141510", "protein_coding", "CCCDDD", "17", "TP53"),
             _FakeTr("ENSG_NC", "lncRNA", "EEEEEE"),
         ]
     )
     monkeypatch.setattr(peptides, "_usable_genome", lambda: genome)
     monkeypatch.setattr(peptides, "_derived_cache_dir", lambda: tmp_path)
-    monkeypatch.setattr(peptides, "cta_gene_ids", lambda: ["ENSG_CTA"])
-    monkeypatch.setattr(peptides, "cta_unfiltered_gene_ids", lambda: ["ENSG_CTA"])
-    monkeypatch.setattr(peptides, "cta_gene_id_to_name", lambda: {"ENSG_CTA": "CTAX"})
+    monkeypatch.setattr(peptides, "cta_gene_ids", lambda: ["ENSG00000185686"])
+    monkeypatch.setattr(peptides, "cta_unfiltered_gene_ids", lambda: ["ENSG00000185686"])
+    monkeypatch.setattr(peptides, "cta_gene_id_to_name", lambda: {"ENSG00000185686": "CTAX"})
     monkeypatch.setattr(peptides, "_MIN_PROTEOME_GENES", 1)  # tiny fake proteome
     peptides._COUNTS_CACHE.clear()
+    monkeypatch.setattr(
+        peptides,
+        "cta_annotation_gene_identities",
+        lambda g: (peptides_gene_identity("ENSG00000185686", genome=g),),
+    )
     yield
     peptides._COUNTS_CACHE.clear()
 
@@ -101,9 +122,9 @@ def test_specific_9mer_counts_refresh_rebuilds(fake_proteome, tmp_path):
 
 
 def test_specific_9mer_weights_keyed_by_proteoform_key_by_default(fake_proteome):
-    # Default key is the proteoform_key; for the singleton ENSG_CTA that is its ENSG.
-    assert peptides.cta_specific_9mer_weights(k=3) == {"ENSG_CTA": 3}
-    assert peptides.cta_specific_9mer_weights(k=3, by="ensembl_gene_id") == {"ENSG_CTA": 3}
+    # Default key is the proteoform_key; for the singleton ENSG00000185686 that is its ENSG.
+    assert peptides.cta_specific_9mer_weights(k=3) == {"ENSG00000185686": 3}
+    assert peptides.cta_specific_9mer_weights(k=3, by="ensembl_gene_id") == {"ENSG00000185686": 3}
     assert peptides.cta_specific_9mer_weights(k=3, by="symbol") == {"CTAX": 3}
     with pytest.raises(ValueError, match="by must be"):
         peptides.cta_specific_9mer_weights(k=3, by="nonsense")
@@ -138,8 +159,8 @@ def test_specific_9mer_load_joins_on_proteoform_key(fake_proteome, monkeypatch):
     def fake_fractions(code, *, threshold_tpm):
         return pd.DataFrame(
             {
-                "proteoform_key": ["ENSG_CTA"],  # the weight key (singleton -> ENSG)
-                "Ensembl_Gene_ID": ["ENSG_CTA"],
+                "proteoform_key": ["ENSG00000185686"],  # the weight key (singleton -> ENSG)
+                "Ensembl_Gene_ID": ["ENSG00000185686"],
                 "Symbol": ["SOMETHING_ELSE"],  # deliberately not the join key
                 "fraction_expressing": [0.5],
             }
@@ -155,3 +176,52 @@ def test_specific_9mer_load_empty_cohort(fake_proteome, monkeypatch):
 
     monkeypatch.setattr(coverage, "cta_patient_fractions", lambda code, **k: pd.DataFrame())
     assert peptides.cta_specific_9mer_load("X", k=3) == 0.0
+
+
+def test_verified_alt_copy_does_not_mask_specificity_but_real_background_does(monkeypatch):
+    primary, alternate, background = "ENSG00000185686", "ENSG00000275013", "ENSG00000141510"
+    genome = _FakeGenome(
+        [
+            _FakeTr(primary, "protein_coding", "AAACCC"),
+            _FakeTr(alternate, "protein_coding", "AAACCC", "ALT"),
+            _FakeTr(background, "protein_coding", "CCCDDD", "17", "TP53"),
+        ]
+    )
+    monkeypatch.setattr(peptides, "cta_gene_ids", lambda: {primary})
+    monkeypatch.setattr(peptides, "cta_unfiltered_gene_ids", lambda: {primary})
+    monkeypatch.setattr(peptides, "_MIN_PROTEOME_GENES", 1)
+    counts = peptides._build_counts(genome, 3).set_index("Ensembl_Gene_ID")
+    assert counts.loc[primary, "n_specific_9mers"] == 3
+    genome._trs[-1].protein_sequence = "AAACCC"
+    assert peptides._build_counts(genome, 3).iloc[0].n_specific_9mers == 0
+    genome._trs = genome._trs[1:2]  # verified alternate is the only annotated copy
+    counts = peptides._build_counts(genome, 3)
+    assert counts.iloc[0].n_9mers == counts.iloc[0].n_specific_9mers == 4
+
+
+def test_conflicting_alias_stays_in_background(monkeypatch):
+    primary, alternate = "ENSG00000185686", "ENSG00000275013"
+    genome = _FakeGenome(
+        [
+            _FakeTr(primary, "protein_coding", "AAACCC"),
+            _FakeTr(alternate, "protein_coding", "AAACCC", "ALT", "OTHER"),
+        ]
+    )
+    monkeypatch.setattr(peptides, "cta_gene_ids", lambda: {primary})
+    monkeypatch.setattr(peptides, "cta_unfiltered_gene_ids", lambda: {primary})
+    monkeypatch.setattr(peptides, "_MIN_PROTEOME_GENES", 1)
+    assert peptides._build_counts(genome, 3).iloc[0].n_specific_9mers == 0
+
+
+def test_identity_change_invalidates_existing_count_cache(fake_proteome, monkeypatch, tmp_path):
+    from dataclasses import replace
+
+    peptides.cta_specific_9mer_counts(k=3)
+    original = peptides.cta_annotation_gene_identities
+    monkeypatch.setattr(
+        peptides,
+        "cta_annotation_gene_identities",
+        lambda g: tuple(replace(record, aliases_sha256="f" * 64) for record in original(g)),
+    )
+    peptides.cta_specific_9mer_counts(k=3)
+    assert len(list(tmp_path.glob("cta_specific_3mers_r999_*.csv"))) == 2

@@ -234,14 +234,18 @@ def test_cohort_source_versions_avoid_republishing_unchanged_matrices(monkeypatc
     assert sm.local_path("BRCA_TNBC").parent.name == f"v{sm.SOURCE_MATRIX_VERSION}"
 
 
-def test_cache_and_fetch(monkeypatch, tmp_path, http_downloads, capsys):
+def test_cache_and_fetch(monkeypatch, tmp_path, capsys):
     monkeypatch.setenv("CANCERDATA_SOURCE_MATRICES", str(tmp_path))
     assert not sm.is_cached("LUAD")
-    http_downloads(lambda url: b"PAR1-fake")
+    import io
+
+    monkeypatch.setattr(urllib.request, "urlopen", lambda url: io.BytesIO(b"PAR1-fake"))
     p = sm.ensure("LUAD")
     assert p.exists() and p.read_bytes() == b"PAR1-fake"
     assert sm.is_cached("LUAD")
-    http_downloads(lambda url: pytest.fail("cache hit must be offline"))
+    monkeypatch.setattr(
+        urllib.request, "urlopen", lambda url: pytest.fail("cache hit must be offline")
+    )
     assert sm.ensure("LUAD") == p
     assert sm.fetch("LUAD") == p
     output = capsys.readouterr()
@@ -249,13 +253,13 @@ def test_cache_and_fetch(monkeypatch, tmp_path, http_downloads, capsys):
     assert "using cached per-sample matrix LUAD (v5.22.10)" in output.err
 
 
-def test_fetch_download_failure_raises(monkeypatch, tmp_path, http_downloads):
+def test_fetch_download_failure_raises(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_SOURCE_MATRICES", str(tmp_path))
 
     def boom(url):
         raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
 
-    http_downloads(boom)
+    monkeypatch.setattr(urllib.request, "urlopen", boom)
     with pytest.raises(sm.SourceMatrixError, match="failed to download"):
         sm.fetch("BRCA")
     assert not sm.is_cached("BRCA")
