@@ -36,8 +36,8 @@ from __future__ import annotations
 
 import os
 import shutil
-import sys
 import tempfile
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -48,6 +48,7 @@ from pathlib import Path
 import pandas as pd
 from filelock import FileLock
 
+from . import _downloads
 from .cancer_types import resolve_cancer_type
 from .load_dataset import get_data
 from .version import SOURCE_MATRIX_VERSION
@@ -377,17 +378,24 @@ def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
     another writer. A failed refresh leaves the previous matrix intact.
     """
     dest = local_path(code)
+    label = f"per-sample matrix {dest.stem}"
+    if dest.parent.name.startswith("v"):
+        label += f" ({dest.parent.name})"
     if dest.exists() and not force:
+        _downloads.report_cached(label, dest, verbose=verbose)
         return dest
     url = release_url(code)
     try:
         with FileLock(str(dest.with_name(f".{dest.name}.oncoref.lock"))):
             # Another process may have populated the cache while we waited.
             if dest.exists() and not force:
+                _downloads.report_cached(label, dest, verbose=verbose)
                 return dest
-            if verbose:
-                sys.stderr.write(f"oncoref: downloading per-sample matrix {dest.stem} ({url})\n")
-                sys.stderr.flush()
+            _downloads.report(
+                f"downloading {label}\n  from {url}\n  to   {dest}",
+                verbose=verbose,
+            )
+            started = time.monotonic()
             tmp = None
             try:
                 with tempfile.NamedTemporaryFile(
@@ -413,6 +421,13 @@ def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
                             )
                 # Close the staging file before atomic publication, including on Windows.
                 tmp.replace(dest)
+                elapsed = max(time.monotonic() - started, 0.001)
+                size = dest.stat().st_size / (1024 * 1024)
+                _downloads.report(
+                    f"downloaded {label}: {size:.2f} MiB in "
+                    f"{elapsed:.1f}s ({size / elapsed:.2f} MiB/s)",
+                    verbose=verbose,
+                )
             finally:
                 # Also clean up on cancellation; never remove another writer's partial.
                 if tmp is not None:

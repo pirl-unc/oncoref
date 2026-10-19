@@ -230,7 +230,7 @@ def test_source_identity_and_legacy_release_unknown():
 
 @pytest.mark.parametrize("archive_format", ["zip", "file"])
 def test_pinned_download_rejects_wrong_bytes_and_preserves_old_file(
-    monkeypatch, tmp_path, archive_format
+    monkeypatch, tmp_path, archive_format, http_downloads
 ):
     monkeypatch.setenv("CANCERDATA_DATA_DIR", str(tmp_path))
     content = b"Gene\tCancer\nA\tB\n"
@@ -258,7 +258,7 @@ def test_pinned_download_rejects_wrong_bytes_and_preserves_old_file(
             "archive_format": archive_format,
         },
     )
-    monkeypatch.setattr(reference_data.urllib.request, "urlopen", lambda url: io.BytesIO(archive))
+    http_downloads(lambda url: archive)
     path = reference_data.download("pinned")
     assert path.read_bytes() == content
     assert reference_data.verify("pinned")
@@ -270,13 +270,13 @@ def test_pinned_download_rejects_wrong_bytes_and_preserves_old_file(
     assert not reference_data._cached_file_ok("pinned", "v1", path)
     assert not reference_data.verify("pinned")
     assert reference_data.ensure("pinned").read_bytes() == content
-    monkeypatch.setattr(reference_data.urllib.request, "urlopen", lambda url: io.BytesIO(b"wrong"))
+    http_downloads(lambda url: b"wrong")
     with pytest.raises(reference_data.ReferenceDataError, match="archive checksum"):
         reference_data.download("pinned", force=True)
     assert path.read_bytes() == content
     assert not list(path.parent.glob("*.part"))
     # Content pin also matters, independently of the transport/archive hash.
-    monkeypatch.setattr(reference_data.urllib.request, "urlopen", lambda url: io.BytesIO(archive))
+    http_downloads(lambda url: archive)
     pin["sha256"] = "0" * 64
     with pytest.raises(reference_data.ReferenceDataError, match="content checksum"):
         reference_data.download("pinned", force=True)

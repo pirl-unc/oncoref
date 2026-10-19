@@ -36,7 +36,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import data_bundle, data_manifest, reference_data, source_matrices
+from . import _downloads, data_bundle, data_manifest, reference_data, source_matrices
 from .legacy import LEGACY_TYPED_ACCESSORS, legacy_dataset_dispositions
 
 _BUNDLE = "bundle"
@@ -193,8 +193,9 @@ def fetch(target: str = "all", *, force: bool = False) -> list[str]:
     if target == "source":
         out = []
         for code in source_matrices.available_cohorts():
-            if force or not source_matrices.is_cached(code):
-                source_matrices.fetch(code, force=force)
+            already = source_matrices.is_cached(code)
+            source_matrices.fetch(code, force=force)
+            if force or not already:
                 out.append(f"{_PER_SAMPLE}{code}")
         return out
 
@@ -211,9 +212,15 @@ def fetch(target: str = "all", *, force: bool = False) -> list[str]:
     if bundle_targets and (force or not data_bundle.is_local()):
         data_bundle.fetch()
         downloaded += bundle_targets
+    elif bundle_targets:
+        _downloads.report_cached(
+            f"expression bundle v{data_bundle.DATA_VERSION}", data_bundle.cache_dir()
+        )
     for n in targets:
         if dataset(n).kind == _HPA:
-            already = reference_data.local_path(n).exists()
+            path = reference_data.local_path(n)
+            version = reference_data.resolve_version(n)
+            already = path.exists() and reference_data._cached_file_ok(n, version, path)
             reference_data.download(n, force=force)
             if force or not already:
                 downloaded.append(n)
