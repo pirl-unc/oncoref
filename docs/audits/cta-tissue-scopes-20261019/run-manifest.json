@@ -569,8 +569,8 @@
     "pypdf": "6.19.0"
   },
   "implementation_sha256": {
-    "scripts/cta_scope_report.py": "09c344f17d06fb426861131f796ade8607a775bb34138d1ab22636c06afc213f",
-    "scripts/cta_scope_report_render.py": "24209bc0dd1d3b66a2199e8aa7c23f188856b4e8135a9f79d563330e9673184b",
+    "scripts/cta_scope_report.py": "d50c284d968467e4a8da92fa6ab63a6a9b49a13405676e04e1b31a2ab7e39866",
+    "scripts/cta_scope_report_render.py": "989c9b9e235856d5690c3395d9d090fcaa6e014179cacef22440bf7bd21ac615",
     "oncoref/cta.py": "aefd16716e7a6dbe97991c398432ce85c978049066aa89ce47e501fc49a00c56",
     "oncoref/cta_regen.py": "6c8dec187ee9c99862f48060b9a35d6e9da1437d1afac5a05fa8d714453341cb",
     "oncoref/normal_tissues.py": "219875c6d9790e2207946955abc3442a0963bd5fe22a36a2ba47a794fd6f6cb4"
@@ -585,24 +585,24 @@
     "normal-tissue-mappings.csv": "9e852c13dfea2638e804f855fef8d7a19c7fe5902ae55c9aee1b094e43eca4f5"
   },
   "outputs": {
-    "candidate-decisions.csv": "f65ba46c294ff3a06a830c4024f9eec39862e15dbc0dafee7b5ebeaa1945e0a4",
-    "cta-tissue-scope-report.pdf": "d2a798db429a548d5713c41e2d9677ca18a7436fd4a361f120bc91178fa19ca6",
-    "disposable-gains.csv": "297777c597b3bb44274ada25a4174dd7bbd5d934a492aad53608be1c19b1bad4",
-    "evidence-coverage.pdf": "28c2c028c9c046f0ec6365c78c85cf744f781d2cd80ef045282b1665dc8515e6",
+    "candidate-decisions.csv": "33a20f18d17559c7034c8c4eccddb35169c0f4fc1e7e8971b2de64fc28efa9ce",
+    "cta-tissue-scope-report.pdf": "95b266928b6c4cf92f7694d03ac06ebe7d6816682be074a6f6feab4b7f8471dc",
+    "disposable-gains.csv": "8960c5f01319d0cb28fd57bb0c17ea8b07c508c171ba596f30519249ae0144f3",
+    "evidence-coverage.pdf": "341d92e3d7d8e715e896d35fcb06011295ff42d7b0262510b0ab1ec6a61f07dc",
     "evidence-coverage.png": "a8ca71ba531616b31fa9b6238eb5f917de3e1da7f0baf194d7a1844623b0caec",
     "evidence-status-counts.csv": "cab771d1e1edf83359ffab4be525e5f4bb340357a6692d77b494ff5f1f032696",
-    "filtering-stages.pdf": "3bdebf640b2b9acb3c8f627e9c160a622518552446aabbd4d9f8283c47cec78d",
+    "filtering-stages.pdf": "15c499f5cbe4da8ea2d2a380a3dfe73ab5995d1cafdf8cd6d69d9eed774ddd8a",
     "filtering-stages.png": "adc12f4a999800791aae3cc71bf36f4343e35d6d9d597bee9201e67124bc6ec2",
     "historical-only-candidates.csv": "07293bcff12ee5867bc8c67f7495ac8e2e1d93813f7836887c25bb5a53aa2e91",
-    "index.md": "88bfd4732e5ae7127fff9134517de21ead0195ea4cf9aa2de35d3527d57bf187",
+    "index.md": "4977bdb47a3e1fc107b7ac41e7c8ffb0aadbb51b548db2f57a7f5f6cb8efb91a",
     "normal-observations.csv.gz": "f1fbcb17b583d6f5fa27630271a29bfde13792ee6158dcf71f65961ed07a67e9",
     "publication-sources.csv": "9b344e1167e31ff4d39953c4b712fa25c1abfc7fda37de3607e50ef1e4e2b4cb",
     "scope-summary.csv": "77f89043f59ec1d25458045bcc81f782efb74462deb508c84f48289d531dddd1",
     "source-counts.csv": "1c58d94159bd04339716fec1810c87782d847d920229e133e8ee132879a8c861",
-    "source-intake.pdf": "e35ba26ce42b4e48b89f9a1af036176ac36c40ca06a7eab315f38dae647cebb6",
+    "source-intake.pdf": "f255eefd932d502b41092df8ebca2a6db45537b2ed756b3833db0bc36cc540e3",
     "source-intake.png": "b07d3854109dfac1ab22120eae691777354e540d5f6218e31a75a7e1cd8bc89f",
     "source-membership.csv.gz": "a506dee098bf48cb73375c6c5f85cae63dbf8cf3900c82b08f3dcb7461b82c28",
-    "source-retention.pdf": "c41a7c223ee141348817e7f118580a2890d7bcdeb2dab1c8250d951604d92087",
+    "source-retention.pdf": "5932d81368f7cbf5bbfadb4f869deac4277db2d46533d3af95a2c0bd1e9fd1c8",
     "source-retention.png": "289a327f428df10992d3245d14b7a2a82384ecfee27065cf898a507b84f303a8",
     "tissue-taxonomy.json": "731aa32338c65cb9cc2e93b13fe8bf3253f7ac9d5fee8a3fa7b46cf7400ef88c"
   }

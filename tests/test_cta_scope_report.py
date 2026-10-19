@@ -87,6 +87,15 @@ def test_trace_outside_rna_separates_adaptive_and_strict_policies():
     assert result.outside_rna_max_ntpm.eq(0.1).all()
 
 
+def test_ihc_driven_zero_denominator_admission_is_explicit():
+    result = audit([("testis", 0), ("skin", 0.7)], [("skin 1", "hair follicles", "High")])
+    assert result.rna_deflated_denominator_zero.all()
+    assert result.rna_deflated_total_ntpm.eq(0).all()
+    assert result.rna_max_ntpm.eq(0.7).all()
+    assert result.loc["reproductive_or_disposable", "adaptive_retained"]
+    assert not result.strict_retained.any()
+
+
 def test_missing_rna_is_not_negative_coverage():
     result = audit([("testis", 100)], missing_rna=["heart muscle"])
     assert result.strict_status.eq("unresolved").all()
@@ -136,6 +145,13 @@ def test_reviewed_unreliable_ihc_is_not_silently_absent_in_strict_screen():
         [("testis", 100)], [("testis", "cells in seminiferous ducts", "High")], unreliable=True
     )
     assert result.adaptive_retained.all()
+    assert result.strict_status.eq("unresolved").all()
+    assert not result.strict_retained.any()
+
+
+def test_unusable_ihc_does_not_become_missing_or_negative_evidence():
+    result = audit([("testis", 100)], [("skin 1", "melanocytes", "Not representative")])
+    assert result.ihc_status.eq("unresolved").all()
     assert result.strict_status.eq("unresolved").all()
     assert not result.strict_retained.any()
 

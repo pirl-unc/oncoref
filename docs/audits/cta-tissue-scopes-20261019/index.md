@@ -6,7 +6,7 @@
 
 This human analysis starts with 11 registered published nomination sources: 3,895 distinct source identities and 2,537 mapped protein-coding candidates. It evaluates reproductive tissues and their union with cutaneous melanocytes and hair-follicle compartments using the same candidate universe.
 
-The adaptive reproductive baseline reproduces all 695 genes in the published extended panel. Adding disposable compartments retains 697 genes (2 additional). The strict sensitivity screen retains 216 and 216, respectively (0 additional). The adaptive additions are C1orf167, TCHHL1.
+The adaptive reproductive baseline reproduces all 695 genes in the published extended panel. Adding disposable compartments retains 697 genes (2 additional). The strict sensitivity screen retains 216 and 216, respectively (0 additional). The adaptive additions are C1orf167, TCHHL1. TCHHL1 has maximum RNA 0.7 nTPM and a zero deflated RNA denominator; its adaptive admission relies on the existing zero-denominator convention and Enhanced in-scope IHC.
 
 | Filtering method | Reproductive | Reproductive + disposable | Added by disposable |
 |---|---:|---:|---:|
@@ -59,7 +59,7 @@ Counts cover all protein-coding nominations before family or review exclusions. 
 
 ### Adaptive filtering
 
-The adaptive analysis reproduces the existing extended CTA policy. RNA uses the sum of max(nTPM - 1, 0) inside scope divided by that sum across all measured tissues, rounded to four decimals. Thresholds are 0.80 (Enhanced IHC), 0.90 (Supported), 0.95 (Approved), and 0.97 (Uncertain or missing). Low/Medium/High IHC detections must all map inside scope. Existing cross-reactive-antibody exclusions, expression/rescue rules, family exclusions, normal-only nomination holdbacks and extended-scope manual reviews remain in force. The disposable comparison changes only the tissue allowance; it does not replace the public CTA panel.
+The adaptive analysis reproduces the existing extended CTA policy. RNA uses the sum of max(nTPM - 1, 0) inside scope divided by that sum across all measured tissues, rounded to four decimals. A zero denominator receives fraction 1 by the existing policy; this is not positive RNA support, and the expression/IHC rules still apply. Thresholds are 0.80 (Enhanced IHC), 0.90 (Supported), 0.95 (Approved), and 0.97 (Uncertain or missing). Low/Medium/High IHC detections must all map inside scope. Existing cross-reactive-antibody exclusions, expression/rescue rules, family exclusions, normal-only nomination holdbacks and extended-scope manual reviews remain in force. The disposable comparison changes only the tissue allowance; it does not replace the public CTA panel.
 
 ### Strict sensitivity
 

@@ -9,6 +9,7 @@ import importlib.metadata
 import json
 import platform
 import sys
+from math import fsum
 from pathlib import Path
 
 import numpy as np
@@ -128,8 +129,10 @@ def annotate_measurements(raw, modality, candidate_ids):
 
 def evidence_status(rows, scope):
     """Compatibility of positive observations, with missingness kept distinct."""
-    if rows.empty or not rows.valid_measurement.any():
+    if rows.empty:
         return "unavailable"
+    if not rows.valid_measurement.any():
+        return "unresolved"
     positive = rows.loc[rows.strict_positive]
     if (positive.mapping_status.eq("mapped") & ~positive[scope]).any():
         return "outside_scope"
@@ -198,6 +201,11 @@ def compare_candidates(table, observations, *, unreliable_ids, expected_contexts
             fraction = (
                 round(cta_regen._fraction(ntpm, allowed, deflate=True), 4) if ntpm else np.nan
             )
+            deflated_total = (
+                fsum(rna.rna_ntpm.dropna().sub(1).clip(lower=0))
+                if rna.valid_measurement.any()
+                else np.nan
+            )
             adaptive.at[i, "rna_deflated_reproductive_frac"] = fraction
             adaptive.at[i, "protein_reproductive"] = (
                 str(protein_ok) if protein_present else "no data"
@@ -257,6 +265,9 @@ def compare_candidates(table, observations, *, unreliable_ids, expected_contexts
                     "scope": scope,
                     "family_eligible": gid not in cta.NON_CTA_EXCLUDED_GENE_IDS,
                     "rna_deflated_scope_fraction": fraction,
+                    "rna_max_ntpm": rna.rna_ntpm.max(),
+                    "rna_deflated_total_ntpm": deflated_total,
+                    "rna_deflated_denominator_zero": bool(deflated_total == 0),
                     "adaptive_rna_threshold": adaptive_rna_threshold(row.protein_reliability),
                     "adaptive_protein_pass": protein_ok,
                     "adaptive_gate_failures": ";".join(gate_failures),
