@@ -10,6 +10,11 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
+[Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
+and the [CTA source/filtering report](https://pirl-unc.github.io/oncoref/audits/cta-tissue-scopes-20261019/)
+document the nested sets, cited dataset mappings, human filtering comparisons,
+and dog/mouse evidence coverage.
+
 ## Role in the stack
 
 The openvax/PIRL tools are split by ownership boundary, not by file format.

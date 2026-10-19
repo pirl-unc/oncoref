@@ -6,6 +6,9 @@ reproductive tissue and treats thymus as somatic. The current panels contain
 624 core and 695 extended genes; the counts and scope descriptions below record
 the earlier policy used to produce these archived figures.
 
+For the current comparison of reproductive and reproductive + disposable
+filtering, see the [2026-10-19 source report](cta-tissue-scopes-20261019/index.md).
+
 [Both panels: figures and audits](cta-core-extended-20260929/index.md) ·
 [All 25 figures, vector PDF](cta-core-extended-20260929/oncoref-cta-landscape-figures.pdf)
 

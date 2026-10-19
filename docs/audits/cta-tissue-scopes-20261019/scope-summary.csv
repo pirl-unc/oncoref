@@ -1,0 +1,3 @@
+scope,source_identities,mapped,protein_coding,family_eligible,adaptive_hpa_pass,adaptive_after_family,adaptive_retained,strict_after_family,strict_retained,strict_retained_without_ihc,strict_retained_partial_ihc
+reproductive,3895,3654,2537,2523,980,977,695,278,216,134,81
+reproductive_or_disposable,3895,3654,2537,2523,982,979,697,278,216,134,81
