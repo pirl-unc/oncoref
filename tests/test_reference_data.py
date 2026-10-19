@@ -5,9 +5,14 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 
 import hashlib
+import io
 import json
+import time
+import zipfile
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
+import requests
 
 from oncoref import reference_data
 
@@ -79,6 +84,35 @@ def test_single_cell_registered():
     spec = reference_data.REFERENCE_SOURCES["hpa_single_cell"]
     assert spec["filename"] == "rna_single_cell_type.tsv"
     assert "v23" in spec["urls"]
+
+
+def test_concurrent_downloads_share_one_hpa_archive(monkeypatch, tmp_path):
+    monkeypatch.setenv("CANCERDATA_DATA_DIR", str(tmp_path))
+    content = b"Gene\tTissue\tnTPM\nA\tB\t1\n"
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, "w") as zipped:
+        zipped.writestr("rna_tissue_consensus.tsv", content)
+    calls = []
+
+    def get(url, **kwargs):
+        calls.append(url)
+        time.sleep(0.05)
+        response = requests.Response()
+        response.status_code = 200
+        response.url = url
+        response.raw = io.BytesIO(archive.getvalue())
+        response.headers["Content-Length"] = str(len(archive.getvalue()))
+        return response
+
+    monkeypatch.setattr(requests, "get", get)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        paths = list(pool.map(reference_data.download, ["hpa_rna_consensus"] * 2))
+
+    assert paths == [reference_data.local_path("hpa_rna_consensus")] * 2
+    assert paths[0].read_bytes() == content
+    assert len(calls) == 1
+    assert reference_data._manifest_record("hpa_rna_consensus", "v23")["bytes"] == len(content)
+    assert not list(paths[0].parent.glob(".hpa-*"))
 
 
 def test_cached_file_ok_detects_truncation(monkeypatch, tmp_path):

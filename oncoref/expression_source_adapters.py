@@ -34,6 +34,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from . import _downloads
 from .expression_builders import (
     GeoMatrixSource,
     SourceMatrixBuildResult,
@@ -273,15 +274,13 @@ def _registry_entry(source_id: str) -> dict:
 
 
 def _download(url: str, path: Path, *, force: bool = False) -> Path:
-    """Download one cacheable public source file atomically."""
-    if path.exists() and path.stat().st_size > 0 and not force:
-        return path
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    with urllib.request.urlopen(url, timeout=180) as response, temporary.open("wb") as handle:
-        shutil.copyfileobj(response, handle)
-    temporary.replace(path)
-    return path
+    """Download a raw source file, preserving compressed bytes for its reader."""
+    return _downloads.fetch_file(
+        url,
+        path,
+        label=path.name,
+        force=force or (path.is_file() and path.stat().st_size == 0),
+    )
 
 
 def _extract_single_file(archive: Path, output_dir: Path) -> Path:

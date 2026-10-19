@@ -60,12 +60,12 @@ import sys
 import tarfile
 import tempfile
 import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any
 
 from filelock import FileLock
 
+from . import _downloads
 from .version import DATA_VERSION, SOURCE_MATRIX_VERSION, __version__
 
 
@@ -245,8 +245,12 @@ def _sha256_file(path: Path) -> str:
 
 
 def _read_url_text(url: str) -> str:
-    with urllib.request.urlopen(url) as resp:
-        return resp.read().decode("utf-8")
+    # Release metadata is small: use the same bounded retry policy without bars.
+    with tempfile.TemporaryDirectory(prefix="oncoref-metadata-") as directory:
+        path = _downloads.fetch_file(
+            url, Path(directory) / "metadata", label="release metadata", verbose=False
+        )
+        return path.read_text(encoding="utf-8")
 
 
 def _parse_checksum_text(
@@ -796,12 +800,20 @@ def _download_and_extract(
     (unreachable, e.g. 404) or ``tarfile.TarError`` (corrupt/non-tar body) — the
     caller falls back to the next source on either.
     """
+    verbose = _downloads.is_verbose(verbose)
     with tempfile.NamedTemporaryFile(suffix=".tar.gz", delete=False) as tmp:
         tmp_path = Path(tmp.name)
     staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=root))
     try:
-        with urllib.request.urlopen(url) as resp, tmp_path.open("wb") as h:
-            shutil.copyfileobj(resp, h, length=1024 * 1024)
+        _downloads.fetch_file(
+            url,
+            tmp_path,
+            label=f"expression bundle v{data_version}",
+            force=True,
+            verbose=verbose,
+            display_path=root,
+        )
+        _downloads.report(f"verifying expression bundle v{data_version}", verbose=verbose)
         if release_manifest:
             tarball = release_manifest["tarball"]
             expected_bytes = tarball.get("bytes")
@@ -883,13 +895,21 @@ def _download_and_apply_overlay(
     data_version: str = DATA_VERSION,
 ) -> None:
     """Compose a complete cache from a verified base and a small overlay archive."""
+    verbose = _downloads.is_verbose(verbose)
     with tempfile.NamedTemporaryFile(suffix=".tar.gz", delete=False) as tmp:
         tmp_path = Path(tmp.name)
     overlay_staging = Path(tempfile.mkdtemp(prefix=".overlay-", dir=root.parent))
     composition = Path(tempfile.mkdtemp(prefix=".composition-", dir=root.parent))
     try:
-        with urllib.request.urlopen(url) as resp, tmp_path.open("wb") as handle:
-            shutil.copyfileobj(resp, handle, length=1024 * 1024)
+        _downloads.fetch_file(
+            url,
+            tmp_path,
+            label=f"expression overlay v{data_version}",
+            force=True,
+            verbose=verbose,
+            display_path=root,
+        )
+        _downloads.report(f"verifying expression overlay v{data_version}", verbose=verbose)
         tarball = release_manifest["tarball"]
         expected_bytes = tarball.get("bytes")
         if expected_bytes is not None and tmp_path.stat().st_size != int(expected_bytes):
@@ -988,6 +1008,7 @@ def _ensure_overlay_base(
     verbose: bool,
     _seen_versions: frozenset[str] = frozenset(),
 ) -> Path:
+    verbose = _downloads.is_verbose(verbose)
     base_version = base_bundle["data_version"]
     seen_versions = _seen_versions or frozenset({DATA_VERSION})
     if base_version in seen_versions:
@@ -1088,6 +1109,7 @@ def _fetch_into_cache(root: Path, *, verbose: bool) -> Path:
     fallback.
     """
     root.mkdir(parents=True, exist_ok=True)
+    verbose = _downloads.is_verbose(verbose)
     errors: list[str] = []
     for source in RELEASE_SOURCES:
         url = source["url"]
