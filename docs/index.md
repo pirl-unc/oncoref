@@ -62,6 +62,9 @@ packages can join domains without maintaining private name mappings.
 - Need cancer-testis antigen definitions, patient coverage, CTA-specific peptide
   load, or the comparable normal-tissue evidence behind a candidate? Start with
   [CTA Antigens](api.md#cta-antigens).
+- Need reproductive/disposable tissue definitions or their effect on CTA
+  filtering? See [Normal tissue scopes](normal-tissue-scopes.md) and the
+  [source and filtering report](audits/cta-tissue-scopes-20261019/index.md).
 
 ```python
 from oncoref import cancer_ontology, ici_response

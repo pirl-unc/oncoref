@@ -749,6 +749,9 @@ restriction definition, not an assertion of equivalent immune privilege or safet
 The [normal tissue scopes](normal-tissue-scopes.md) document the shared human,
 dog and mouse taxonomy, glandular versus whole-mammary evidence, developmental
 contexts, conditional disposable normal compartments, source mappings and citations.
+The [source and filtering report](audits/cta-tissue-scopes-20261019/index.md)
+compares reproductive with reproductive + disposable under the adaptive policy
+and a separate strict sensitivity screen, with gene-level decisions and coverage.
 
 `cta_specificity_audit(tissue_scope="extended")` joins extended reviews to
 extended RNA evidence; its default remains core.

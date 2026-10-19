@@ -7,6 +7,25 @@ source matrices and write to an explicit output directory. Historical local
 their thresholds, selections and narrative must not be used as current results.
 `outputs/` is ignored by Git; generated reports are not shipped in the wheel.
 
+## Source intake and reproductive/disposable filtering
+
+The [current source report](audits/cta-tissue-scopes-20261019/index.md) covers
+published nominations and normal-tissue filtering before tumor-expression and
+proteoform ranking. Rebuild it independently of the cohort analysis below:
+
+```sh
+python scripts/cta_scope_report.py --out outputs/cta-tissue-scopes-current
+```
+
+It uses the pinned HPA v23 bulk RNA and normal-tissue IHC files. Four figures,
+a complete PDF, source membership, gene decisions and source/code/output hashes
+compare reproductive with reproductive + disposable under the current adaptive
+policy and a separate strict sensitivity screen. Missing IHC and incomplete
+coverage remain explicit. The reproductive adaptive baseline must reproduce the
+published extended panel; the broader comparison does not replace that panel.
+
+## Tumor-expression and proteoform reports
+
 The corrected analysis uses the intersection of canonical biological gene IDs
 across all registered cohorts as its fixed percentile background. It writes the
 IDs to `common_background.csv`. The proteoform analysis collapses exactly those

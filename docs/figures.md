@@ -1,8 +1,9 @@
 # Figures
 
-Every figure oncoref ships is generated from packaged data by `oncoref plot`.
-Nothing is hand-drawn, and nothing is committed to the repo — regenerate instead
-of copying, so a figure always matches the data version that produced it.
+The plot CLI generates reference figures from packaged data. Analysis scripts
+also generate reports from pinned cached source data. Dated documentation audits
+include their figures, tables and provenance manifests; ordinary `figures/` and
+`outputs/` runs remain local. Rebuild with the recorded inputs to update a figure.
 
 ## Where figures go
 
@@ -95,6 +96,23 @@ interactive work where a figure travels without a caption, call
 `oncoref.figure_style.set_minimal(False)` to keep titles.
 
 ## Commands
+
+### Reproductive and disposable CTA filtering
+
+The [current report](audits/cta-tissue-scopes-20261019/index.md) follows all
+registered published nominations through mapping, coding/family eligibility,
+and reproductive or reproductive + disposable filtering. It shows the existing
+adaptive thresholds and a separate strict positive-evidence sensitivity screen.
+
+```bash
+python scripts/cta_scope_report.py --out outputs/cta-tissue-scopes-current
+```
+
+Four PNG/vector-PDF figures cover source intake, filtering stages, retained
+candidates by paper, and observed RNA/IHC compatibility and coverage. The combined
+PDF includes methods and citations. CSVs identify gains, outside-tissue signals,
+missing evidence and review holdbacks for every candidate. This report requires
+the pinned HPA v23 bulk RNA and normal-tissue IHC files in addition to packaged data.
 
 ### CTA definition
 

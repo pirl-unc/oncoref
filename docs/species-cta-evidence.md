@@ -52,6 +52,10 @@ mapping, and `species.cta_tissue_annotations()` for a derived annotation of save
 facts. These annotations have a separate taxonomy identity; the archive's original
 facts, tissue roles and historical curation remain frozen. Anatomical applicability
 to a species does not establish expression coverage or clinical tolerability.
+The [current tissue-scope report](audits/cta-tissue-scopes-20261019/index.md)
+applies the human HPA evidence to both reproductive and reproductive + disposable
+scopes. Its numerical results apply to humans; canine and mouse coverage is
+described separately.
 
 ## One evidence flow, different sources
 

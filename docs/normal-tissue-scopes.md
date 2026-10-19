@@ -12,6 +12,31 @@ Policy version `2026-10-19.1` and a SHA-256 identity over both files accompany
 each annotation. Source-artifact receipts record the bytes used to review labels.
 All access is offline once expression data are loaded.
 
+## Read the hierarchy
+
+Each row below shows inclusion into successively larger tissue sets. Sibling
+branches are combined at their shared parent.
+
+| Starting context | Successive unions |
+|---|---|
+| Testis | `testis` → `male_reproductive` → `reproductive` → `reproductive_or_disposable` |
+| Oocyte | `oocyte` → `ovary` → `female_reproductive` → `reproductive` → `reproductive_or_disposable` |
+| Mammary glandular cells | `mammary_glandular` → `mammary` → `female_reproductive` → `reproductive` → `reproductive_or_disposable` |
+| Placenta | `placental` → `extraembryonic` → `reproductive` → `reproductive_or_disposable` |
+| Explicit embryo/fetus context | `embryonic` or `fetal` → `reproductive` → `reproductive_or_disposable` |
+| Cutaneous melanocytes or hair follicles | `disposable_normal` → `reproductive_or_disposable` |
+
+For a gene detected in both testis and oocyte, **the entire observed pattern**
+fits `reproductive_core` and `reproductive`, while neither sex-specific scope
+contains both detections. The tissue union is evaluated before selecting genes.
+The aliases `male_strict` and `female_strict` name anatomical scopes; a claim of
+strict gene restriction additionally needs adequate negative tissue coverage.
+
+The [current CTA source and filtering report](audits/cta-tissue-scopes-20261019/index.md)
+compares reproductive with reproductive + disposable using both the existing
+adaptive CTA policy and a strict positive-evidence sensitivity screen. It includes
+figures, exact gene decisions, source citations and coverage limitations.
+
 ## Reproductive scopes
 
 The following are source contexts, not assertions of immune privilege. Anatomical
