@@ -724,14 +724,14 @@ when only already-built shards should count.
 
 The existing `cta_gene_names()`, `cta_gene_ids()` and `cta_df()` use the core
 RNA numerator: testis, ovary and placenta. A separately named panel uses those
-tissues plus cervix, endometrium, epididymis, fallopian tube, prostate, seminal
-vesicle and vagina:
+tissues plus breast, cervix, endometrium, epididymis, fallopian tube, prostate,
+seminal vesicle and vagina:
 
 ```python
 from oncoref import cta
 
 core = cta.cta_gene_names()              # 624, unchanged core default
-extended = cta.cta_extended_gene_names() # 688; includes the core default
+extended = cta.cta_extended_gene_names() # 695; includes the core default
 cta.cta_extended_gene_ids()
 cta.cta_extended_df()                   # complete candidate evidence + decisions
 ```
@@ -745,6 +745,10 @@ PAGE4's core-fraction exclusion applies only to core, while MAGEA11's independen
 review excludes it from both. PATE1/PATE4/LIPI remain candidates pending
 complete-paper provenance; TRIM64 remains candidate-only. The extended panel is a broader anatomical
 restriction definition, not an assertion of equivalent immune privilege or safety.
+
+The [normal tissue scopes](normal-tissue-scopes.md) document the shared human,
+dog and mouse taxonomy, glandular versus whole-mammary evidence, developmental
+contexts, conditional disposable normal compartments, source mappings and citations.
 
 `cta_specificity_audit(tissue_scope="extended")` joins extended reviews to
 extended RNA evidence; its default remains core.

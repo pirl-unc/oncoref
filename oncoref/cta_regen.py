@@ -81,10 +81,10 @@ def cross_reactive_ihc() -> frozenset[str]:
 _register_derived_cache(cross_reactive_ihc.cache_clear)
 
 
-#: Reproductive (+thymus) tissues, lowercased, for the protein restriction call.
+#: Source-native reproductive tissues for the protein restriction call.
 _PROTEIN_REPRODUCTIVE: frozenset[str] = frozenset(t.lower() for t in ALL_REPRODUCTIVE_TISSUES)
 
-#: Lowercased non-somatic tissue set used to exclude reproductive/thymus tissues
+#: Lowercased non-somatic tissue set used to exclude reproductive tissues
 #: from the somatic RNA detail columns.
 _NON_SOMATIC_LOWER: frozenset[str] = frozenset(t.lower() for t in NON_SOMATIC_TISSUES)
 
@@ -214,7 +214,7 @@ def _recompute_protein_columns(seed: pd.DataFrame, normal_tissue: pd.DataFrame) 
     * otherwise ``protein_strict_expression`` is the sorted detected tissues
       joined by "; ", ``protein_reliability`` the gene's HPA reliability tier,
       ``protein_reproductive`` whether the detected tissues are all reproductive
-      (+thymus), and ``protein_thymus`` whether thymus is detected.
+      tissues, and ``protein_thymus`` whether thymus is detected.
     """
     nt = normal_tissue.copy()
     nt["gid"] = nt["Gene"].astype(str).str.split(".").str[0]
@@ -251,28 +251,25 @@ def _assign_protein_restriction(row: pd.Series) -> str:
     """Assign tissue restriction from IHC protein data.
 
     Returns TESTIS / PLACENTAL / REPRODUCTIVE / SOMATIC / NO_DATA. Each single-
-    tissue value means *only* that core tissue detected; REPRODUCTIVE means
+    tissue value means *only* that tissue detected; REPRODUCTIVE means
     multiple/extended reproductive tissues; SOMATIC means a non-reproductive
-    tissue is present; NO_DATA means no protein expression (after dropping
-    thymus).
+    tissue is present; NO_DATA means no protein expression.
     """
     tissues = _parse_protein_tissues(str(row.get("protein_strict_expression", "")))
-    if not tissues:
-        return "NO_DATA"
-    tissues = tissues - {"thymus"}
+    return _restriction_from_tissues(tissues)
+
+
+def _restriction_from_tissues(tissues: set[str]) -> str:
+    """Project the complete source-native detection set to the legacy axis."""
     if not tissues:
         return "NO_DATA"
     non_repro = tissues - _PROTEIN_REPRODUCTIVE
     if non_repro:
         return "SOMATIC"
-    core = tissues & {"testis", "ovary", "placenta"}
-    if core == {"testis"}:
+    if tissues == {"testis"}:
         return "TESTIS"
-    if core == {"placenta"}:
+    if tissues == {"placenta"}:
         return "PLACENTAL"
-    if core:
-        return "REPRODUCTIVE"
-    # Only extended reproductive tissues (epididymis, etc.), no core
     return "REPRODUCTIVE"
 
 
@@ -287,7 +284,7 @@ def _protein_tissue_flag(protein_strict_expression: str, tissue: str) -> str:
 # ── RNA restriction axes ───────────────────────────────────────────────────
 
 
-def _assign_rna_restriction(row: pd.Series) -> str:
+def _assign_rna_restriction(row: pd.Series, detected_tissues: set[str]) -> str:
     """Assign tissue restriction from RNA per-tissue nTPM data.
 
     Detection threshold is nTPM >= 1.0. Returns SOMATIC if any somatic tissue is
@@ -296,25 +293,7 @@ def _assign_rna_restriction(row: pd.Series) -> str:
     """
     if pd.isna(row.get("rna_somatic_detected_count")):
         return "NO_DATA"
-    testis = float(row.get("rna_testis_ntpm", 0) or 0)
-    ovary = float(row.get("rna_ovary_ntpm", 0) or 0)
-    placenta = float(row.get("rna_placenta_ntpm", 0) or 0)
-    somatic_count = int(row.get("rna_somatic_detected_count", 0) or 0)
-
-    has_testis = testis >= 1.0
-    has_ovary = ovary >= 1.0
-    has_placenta = placenta >= 1.0
-    has_somatic = somatic_count > 0
-
-    if has_somatic:
-        return "SOMATIC"
-    if not (has_testis or has_ovary or has_placenta) and not has_somatic:
-        return "NO_DATA"
-    if has_testis and not has_ovary and not has_placenta:
-        return "TESTIS"
-    if has_placenta and not has_ovary and not has_testis:
-        return "PLACENTAL"
-    return "REPRODUCTIVE"
+    return _restriction_from_tissues(detected_tissues)
 
 
 def _assign_rna_restriction_level(row: pd.Series) -> str:
@@ -582,19 +561,21 @@ def _recompute_rna_columns(
     # Per-tissue detail + safety max columns, then the RNA axes.
     _enrich_rna_per_tissue(seed, ntpm_by_gene)
     seed["rna_reproductive"] = seed["rna_somatic_detected_count"].eq(0).fillna(False)
-    seed["rna_restriction"] = seed.apply(_assign_rna_restriction, axis=1)
-    if tissue_scope == "extended":
-        # An extended-only signal must not be mislabeled NO_DATA or as a
-        # single core organ. Somatic detections still take precedence.
-        accessory = core - CORE_REPRODUCTIVE_TISSUES
-        for idx, row in seed.iterrows():
-            ntpm = ntpm_by_gene.get(str(row.Ensembl_Gene_ID).split(".")[0], {})
-            if (
-                pd.notna(row.rna_somatic_detected_count)
-                and row.rna_somatic_detected_count == 0
-                and any(ntpm.get(t, 0) >= 1 for t in accessory)
-            ):
-                seed.at[idx, "rna_restriction"] = "REPRODUCTIVE"
+    # Restriction uses every detection, irrespective of the RNA fraction's
+    # numerator. Testis + prostate can never become testis-only in a core panel.
+    seed["rna_restriction"] = seed.apply(
+        lambda row: _assign_rna_restriction(
+            row,
+            {
+                tissue
+                for tissue, value in ntpm_by_gene.get(
+                    str(row.Ensembl_Gene_ID).split(".")[0], {}
+                ).items()
+                if value >= 1.0
+            },
+        ),
+        axis=1,
+    )
     seed["rna_restriction_level"] = seed.apply(_assign_rna_restriction_level, axis=1)
     return missing
 
@@ -659,7 +640,7 @@ def regenerate_cta_columns(table: pd.DataFrame, *, tissue_scope: str = "core") -
     seed["protein_ovary"] = pse.map(lambda v: _protein_tissue_flag(v, "ovary"))
     seed["protein_placenta"] = pse.map(lambda v: _protein_tissue_flag(v, "placenta"))
 
-    # HPA-only synthesis (protein > RNA; no MS) from oncoref.cta.
+    # HPA-only synthesis over both modalities' observed scopes (no MS).
     synth = seed.apply(_cta.synthesize_restriction, axis=1, result_type="expand")
     seed["restriction"] = synth[0]
     seed["restriction_confidence"] = synth[1]

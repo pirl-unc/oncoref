@@ -116,6 +116,22 @@ def test_nested_metadata_is_defensive(dataset):
     assert other.samples.iloc[0]["run_ids"] == ["r1", "bad"]
 
 
+def test_tissue_summary_keeps_developmental_stages_separate(dataset):
+    samples = dataset.samples
+    samples["stage"] = ["embryonic", "adult", "adult"]
+    contract = replace(
+        dataset.contract, source_id="barkbase", source_version="retrieved-2026-10-08"
+    )
+    staged = ExpressionDataset(dataset.values, dataset.features, samples, contract)
+    summary = staged.tissue_summary().set_index(["feature_id", "stage"])
+    assert summary.loc[("g1", "embryonic"), "native_max"] == 0
+    assert summary.loc[("g1", "adult"), "native_max"] == 2
+    annotations = staged.tissue_annotations()
+    assert "reproductive" in annotations.loc["s1", "scopes"]
+    assert "reproductive" not in annotations.loc["s2", "scopes"]
+    pd.testing.assert_frame_equal(staged.samples, samples)
+
+
 def test_combining_rejects_reused_libraries_and_unverified_references(dataset):
     with pytest.raises(ValueError, match="Shared runs"):
         combine_expression([dataset, dataset])

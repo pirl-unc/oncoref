@@ -27,6 +27,9 @@ cta_candidates = antigens.cta_candidates
 cta_evidence = antigens.cta_evidence
 cta_gene_ids = antigens.cta_gene_ids
 cta_snapshot = antigens.cta_snapshot
+cta_tissue_annotations = antigens.cta_tissue_annotations
+normal_tissue_scopes = antigens.normal_tissue_scopes
+resolve_normal_tissue = antigens.resolve_normal_tissue
 
 __all__ = [
     "antigens",
@@ -35,6 +38,7 @@ __all__ = [
     "cta_evidence",
     "cta_gene_ids",
     "cta_snapshot",
+    "cta_tissue_annotations",
     "datasets",
     "expression",
     "governance",
@@ -42,7 +46,9 @@ __all__ = [
     "human_protein_atlas",
     "inventory",
     "legacy",
+    "normal_tissue_scopes",
     "normalization",
     "references",
+    "resolve_normal_tissue",
     "species",
 ]

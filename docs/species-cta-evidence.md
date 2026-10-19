@@ -45,6 +45,14 @@ panel and options. The new `human.cta_gene_ids(reference=...)` enumerates the
 broader candidate set; it does not apply the historical default-panel decision.
 The original `oncoref.cta_evidence()` DataFrame is unchanged.
 
+The current [normal-tissue taxonomy](normal-tissue-scopes.md) is shared by human,
+dog and mouse. Use `species.normal_tissue_scopes()` to inspect anatomical unions,
+`species.resolve_normal_tissue(...)` for source/version-aware tissue and cell-type
+mapping, and `species.cta_tissue_annotations()` for a derived annotation of saved
+facts. These annotations have a separate taxonomy identity; the archive's original
+facts, tissue roles and historical curation remain frozen. Anatomical applicability
+to a species does not establish expression coverage or clinical tolerability.
+
 ## One evidence flow, different sources
 
 Each species uses the same flow: source records become common facts, facts remain

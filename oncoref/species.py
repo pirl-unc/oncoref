@@ -130,6 +130,22 @@ class SpeciesDataGroup:
         """Native study observations, optionally for one returned candidate ID."""
         return self.cta_snapshot().evidence(reference=reference, candidate_id=candidate_id)
 
+    def cta_tissue_annotations(self, *, candidate_id=None):
+        """Current cited tissue scopes alongside the frozen CTA evidence."""
+        return self.cta_snapshot().tissue_annotations(candidate_id=candidate_id)
+
+    def normal_tissue_scopes(self):
+        """Anatomical scope unions applicable to this species, independent of data coverage."""
+        from .normal_tissues import normal_tissue_scopes
+
+        return normal_tissue_scopes(species=self.species)
+
+    def resolve_normal_tissue(self, tissue=None, **options):
+        """Map a normal source context under this explicit species."""
+        from .normal_tissues import resolve_normal_tissue
+
+        return resolve_normal_tissue(tissue, species=self.species, **options)
+
     def cta_gene_ids(self, *, reference):
         """Unambiguously mapped candidate IDs for an explicit annotation; not admission."""
         return self.cta_snapshot().gene_ids(reference=reference)

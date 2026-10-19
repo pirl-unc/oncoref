@@ -7,6 +7,7 @@ theme:
 nav:
   - Species and data groups: species.md
   - Species CTA evidence: species-cta-evidence.md
+  - Normal tissue scopes: normal-tissue-scopes.md
   - Home: index.md
   - Figures: figures.md
   - Curation Audit: curation-audit.md
