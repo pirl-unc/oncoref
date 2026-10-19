@@ -18,41 +18,39 @@ alone. The MS-related constants and the CTA-universe membership rules (the
 gene-family exclusion and the never-expressed rescue) are intentionally NOT
 here — they live in :mod:`oncoref.cta`.
 
-Three tiers of reproductive tissue sets determine how strictly a gene's
-expression must be confined to qualify as a cancer-testis antigen:
+These HPA label sets are projections of the shared, cited normal-tissue taxonomy
+in :mod:`oncoref.normal_tissues`. Its species-aware scopes also cover developmental
+contexts and conditionally disposable normal compartments.
 
 - **Core**: testis, ovary, placenta -- the classic CT restriction definition.
-- **Extended**: core + other reproductive-tract tissues (cervix, endometrium,
-  epididymis, fallopian tube, prostate, seminal vesicle, vagina).
-- **Permissive**: extended + breast (including lactating breast).
+- **Extended**: all reproductive tissues represented in HPA, including mammary
+  tissue. Bulk breast does not establish glandular-cell specificity.
+- **Permissive**: compatibility alias of extended.
 
-Thymus is excluded from the somatic RNA maximum and the IHC reproductive flag.
-It remains in the default RNA fraction denominator; the separate
-``*_and_thymus_frac`` columns include it in the numerator. These tissue-scope
-conventions do not establish equivalent immune privilege or target safety.
+Thymus is somatic. The explicitly named ``*_and_thymus_frac`` columns remain
+available as separate historical summaries. Tissue scopes do not establish
+immune privilege or target safety.
 """
 
 from __future__ import annotations
 
+from .normal_tissues import normal_tissue_mappings, normal_tissue_scope
+
 # ── Tissue sets ─────────────────────────────────────────────────────────────
 
-CORE_REPRODUCTIVE_TISSUES: frozenset[str] = frozenset({"ovary", "placenta", "testis"})
 
-EXTENDED_REPRODUCTIVE_TISSUES: frozenset[str] = CORE_REPRODUCTIVE_TISSUES | frozenset(
-    {
-        "cervix",
-        "endometrium",
-        "epididymis",
-        "fallopian tube",
-        "prostate",
-        "seminal vesicle",
-        "vagina",
-    }
-)
+def _hpa_tissues(scope: str, source: str) -> frozenset[str]:
+    members = normal_tissue_scope(scope, species="human")
+    return frozenset(
+        row["source_tissue"]
+        for row in normal_tissue_mappings(species="human", source_id=source, source_version="v23")
+        if not row["source_cell_type"] and row["concept_id"] in members
+    )
 
-PERMISSIVE_REPRODUCTIVE_TISSUES: frozenset[str] = EXTENDED_REPRODUCTIVE_TISSUES | frozenset(
-    {"breast", "lactating breast"}
-)
+
+CORE_REPRODUCTIVE_TISSUES = _hpa_tissues("reproductive_core", "hpa_rna_consensus")
+EXTENDED_REPRODUCTIVE_TISSUES = _hpa_tissues("reproductive", "hpa_rna_consensus")
+PERMISSIVE_REPRODUCTIVE_TISSUES = EXTENDED_REPRODUCTIVE_TISSUES
 
 
 def reproductive_tissues(scope: str = "core") -> frozenset[str]:
@@ -70,16 +68,13 @@ def cta_dataset_name(scope: str = "core") -> str:
     return "cancer-testis-antigens" + ("-extended" if scope == "extended" else "")
 
 
-#: Tissues excluded from "somatic" calculations: all reproductive tissues plus
-#: thymus (AIRE-driven CTA expression is expected, not somatic leakage).
-NON_SOMATIC_TISSUES: frozenset[str] = PERMISSIVE_REPRODUCTIVE_TISSUES | frozenset({"thymus"})
+#: Reproductive RNA tissues; thymus and disposable compartments remain somatic.
+NON_SOMATIC_TISSUES: frozenset[str] = EXTENDED_REPRODUCTIVE_TISSUES
 
 #: All tissues considered reproductive for the protein (IHC) restriction call.
 #: HPA uses "endometrium 1"/"endometrium 2" in the normal_tissue table, so those
 #: split labels are included alongside the consensus "endometrium".
-ALL_REPRODUCTIVE_TISSUES: frozenset[str] = NON_SOMATIC_TISSUES | frozenset(
-    {"endometrium 1", "endometrium 2"}
-)
+ALL_REPRODUCTIVE_TISSUES = _hpa_tissues("reproductive", "hpa_normal_tissue")
 
 
 # ── Adaptive HPA protein → RNA thresholds ──────────────────────────────────

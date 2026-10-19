@@ -265,6 +265,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "hpa",
         "source/version-aware conceptual-to-native safety-tissue mappings",
     ),
+    "normal-tissue-taxonomy": (
+        "cta",
+        "cited species-aware reproductive and conditional disposable normal tissue scopes",
+    ),
+    "normal-tissue-mappings": (
+        "cta",
+        "versioned source tissue/cell-type mappings to the shared anatomical scopes",
+    ),
     "cancer-entity-driver-spectrum": (
         "genomics",
         "structured observed driver distributions for heterogeneous cancer entities",

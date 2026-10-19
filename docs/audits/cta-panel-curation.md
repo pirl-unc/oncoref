@@ -1,5 +1,11 @@
 # Core and extended CTA curation audit
 
+This is the **2026-09-29 historical audit** and its figures. The current
+[normal-tissue policy](../normal-tissue-scopes.md) includes breast in extended
+reproductive tissue and treats thymus as somatic. The current panels contain
+624 core and 695 extended genes; the counts and scope descriptions below record
+the earlier policy used to produce these archived figures.
+
 [Both panels: figures and audits](cta-core-extended-20260929/index.md) ·
 [All 25 figures, vector PDF](cta-core-extended-20260929/oncoref-cta-landscape-figures.pdf)
 

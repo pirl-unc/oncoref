@@ -454,6 +454,53 @@ class CTAEvidenceSnapshot:
             for gid in row["gene_ids"]
         )
 
+    def tissue_annotations(self, *, candidate_id=None):
+        """Explicitly apply the current taxonomy to archived fact source labels.
+
+        This derived view has its own taxonomy identity. It never rewrites frozen
+        facts/roles or turns a historical summary zero into evidence of absence.
+        """
+        from .normal_tissues import resolve_normal_tissue
+
+        data = self.as_dict()
+        if candidate_id is not None and candidate_id not in {c["id"] for c in data["candidates"]}:
+            raise ValueError(f"Unknown CTA candidate {candidate_id!r}")
+        evidence = {e["id"]: e for e in data["evidence"]}
+        sources = {s["id"]: s for s in data["sources"]}
+        result = []
+        for fact in data.get("facts", []):
+            parent = evidence[fact["evidence_id"]]
+            if candidate_id is not None and candidate_id not in parent["candidate_ids"]:
+                continue
+            source = sources[parent["source_id"]]
+            source_id, version = source["id"], source["version"]
+            if source_id == "oncoref-human-cta" and "HPA:v23" in source["lineage"]:
+                source_id = (
+                    "hpa_normal_tissue"
+                    if fact["statistic"] == "tissue_detection_summary"
+                    else "hpa_rna_consensus"
+                )
+                version = "v23"
+            annotation = resolve_normal_tissue(
+                fact["tissue"],
+                species=data["taxon_id"],
+                source_id=source_id,
+                source_version=version,
+                context="normal"
+                if fact["tissue_role"] in {"somatic", "reproductive"}
+                else fact["tissue_role"],
+            )
+            result.append(
+                {
+                    "fact_id": fact["id"],
+                    "evidence_id": parent["id"],
+                    "candidate_ids": parent["candidate_ids"],
+                    "snapshot_id": data["snapshot_id"],
+                    "annotation": annotation.as_dict(),
+                }
+            )
+        return tuple(result)
+
     def evidence(self, *, reference=None, candidate_id=None):
         """Native observations, common facts and separately named historical curation."""
         data = self.as_dict()

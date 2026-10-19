@@ -114,15 +114,48 @@ class ExpressionDataset:
             copy.deepcopy(self._samples.to_dict("list")), index=self._samples.index.copy()
         )
 
+    def tissue_annotations(self):
+        """Cited current tissue-scope annotations; retain the frozen sample metadata.
+
+        No matrix download, feature remapping or cross-species expression inference.
+        Unknown source versions return unresolved mappings.
+        """
+        from .normal_tissues import resolve_normal_tissue
+
+        def optional(value):
+            return None if value is None or pd.isna(value) else str(value)
+
+        records = [
+            resolve_normal_tissue(
+                optional(row["tissue"]),
+                species=self.contract.taxon_id,
+                cell_type=optional(row.get("cell_type")),
+                stage=optional(row.get("stage")),
+                source_id=self.contract.source_id,
+                source_version=self.contract.source_version,
+                context=self.contract.context,
+            ).as_dict()
+            for row in self._samples.to_dict("records")
+        ]
+        return pd.DataFrame(records, index=self._samples.index.copy())
+
     def tissue_summary(self):
         """Within-source native values; measured libraries and donor coverage remain separate.
 
         This does not allocate gene totals to isoforms or pool incompatible sources.
-        Unknown tissues are retained. Pooled/unknown-pooling samples cannot supply
+        Unknown tissues are retained. Developmental stages are grouped separately
+        when supplied; embryonic and adult samples never share an organ summary.
+        Pooled/unknown-pooling samples cannot supply
         independent-donor counts. Missing values never become zero observations.
         """
         rows = []
-        for tissue, metadata in self._samples.groupby("tissue", dropna=False, sort=False):
+        group_columns = ["tissue", "stage"] if "stage" in self._samples else ["tissue"]
+        for keys, metadata in self._samples.groupby(group_columns, dropna=False, sort=False):
+            if not isinstance(keys, tuple):
+                keys = (keys,)
+            context = {
+                col: None if pd.isna(value) else value for col, value in zip(group_columns, keys)
+            }
             values = self._values.loc[:, metadata.index]
             measured = values.notna()
             individual = metadata[metadata.pooling.eq("single") & metadata.donor_id.notna()]
@@ -133,7 +166,7 @@ class ExpressionDataset:
             summary = pd.DataFrame(
                 {
                     "feature_id": values.index,
-                    "tissue": None if pd.isna(tissue) else tissue,
+                    **context,
                     "native_mean": values.mean(axis=1).to_numpy(),
                     "native_max": values.max(axis=1).to_numpy(),
                     "measured_libraries": measured.sum(axis=1).to_numpy(),

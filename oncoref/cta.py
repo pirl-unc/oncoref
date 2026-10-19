@@ -53,7 +53,21 @@ def _never_expressed_rescue_mask(df: pd.DataFrame) -> pd.Series:
         return pd.Series(False, index=df.index)
     moderate = df["restriction_confidence"].astype(str).str.upper() == "MODERATE"
     strict = df["rna_restriction_level"].astype(str).str.upper() == "STRICT"
-    return moderate & strict
+    # Deflation can yield 1.0 when every tissue is <= 1 nTPM. Rescue still
+    # requires a positive observation in the selected scope: an accessory-only
+    # trace must not enter the core panel just because its denominator vanished.
+    core_columns = ["rna_testis_ntpm", "rna_ovary_ntpm", "rna_placenta_ntpm"]
+    core_observed = (
+        df[core_columns].apply(pd.to_numeric, errors="coerce").ge(1.0).any(axis=1)
+        if set(core_columns) <= set(df)
+        else pd.Series(False, index=df.index)
+    )
+    scopes = df.get("rna_reproductive_tissue_scope", pd.Series("core", index=df.index))
+    extended_observed = df.get("rna_restriction", pd.Series("", index=df.index)).isin(
+        _REPRODUCTIVE_RESTRICTION_LABELS
+    )
+    observed = core_observed.where(scopes.ne("extended"), extended_observed)
+    return moderate & strict & observed
 
 
 def _alpha_tubulin_symbol(symbol: str) -> bool:
@@ -112,21 +126,16 @@ def _normalize_alias(name: object) -> str:
 def _rna_restriction_agrees(selected_restriction: str, rna_restriction: str) -> bool:
     """Whether an RNA call supports the selected HPA restriction.
 
-    Exact calls agree. The broader RNA label ``REPRODUCTIVE`` also supports a
-    more specific reproductive protein call, but never a ``SOMATIC`` call.
+    Only exact calls agree. A broader RNA call cannot support a narrower
+    protein-only restriction claim.
     """
-    if rna_restriction == selected_restriction:
-        return True
-    return (
-        rna_restriction == "REPRODUCTIVE"
-        and selected_restriction in _REPRODUCTIVE_RESTRICTION_LABELS
-    )
+    return rna_restriction == selected_restriction
 
 
 def synthesize_restriction(row) -> tuple[str, str]:
     """HPA-only tissue restriction + confidence for a CTA row.
 
-    Best tissue modality (protein > RNA); ``restriction_confidence`` is HIGH /
+    Union of observed modality scopes; ``restriction_confidence`` is HIGH /
     MODERATE / LOW / NO_DATA from per-modality agreement and HPA reliability.
     This is the **HPA-only** synthesis — the MS-evidence contribution that the
     target-selection layer adds is intentionally excluded, so the value's
@@ -145,6 +154,10 @@ def synthesize_restriction(row) -> tuple[str, str]:
         tissue = rna_r
     else:
         tissue = "NO_DATA"
+    if protein_has_data and rna_has_data and protein_r != rna_r:
+        tissue = (
+            "REPRODUCTIVE" if {protein_r, rna_r} <= _REPRODUCTIVE_RESTRICTION_LABELS else "SOMATIC"
+        )
 
     score = 0.0
     sources = 0
@@ -155,7 +168,7 @@ def synthesize_restriction(row) -> tuple[str, str]:
             score += 0.5
     if rna_has_data:
         sources += 1
-        if _rna_restriction_agrees(tissue, rna_r):
+        if _rna_restriction_agrees(protein_r if protein_has_data else tissue, rna_r):
             score += 1.0
             if rna_level == "STRICT":
                 score += 0.5
@@ -217,8 +230,8 @@ def cta_evidence() -> pd.DataFrame:
 def cta_extended_df() -> pd.DataFrame:
     """Extended reproductive CTA candidates and reviewed decisions.
 
-    Uses core + accessory reproductive tissues in the RNA numerator. Breast and
-    thymus are not added. Protein, family and expression rules are shared with
+    Uses core + accessory reproductive tissues, including mammary tissue, in the
+    RNA numerator. Protein, family and expression rules are shared with
     the core panel; only explicitly core-scoped reviews are omitted.
     """
     return _with_specificity_columns(_cta_frame("extended"), tissue_scope="extended")

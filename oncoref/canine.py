@@ -32,6 +32,9 @@ cta_candidates = antigens.cta_candidates
 cta_evidence = antigens.cta_evidence
 cta_gene_ids = antigens.cta_gene_ids
 cta_snapshot = antigens.cta_snapshot
+cta_tissue_annotations = antigens.cta_tissue_annotations
+normal_tissue_scopes = antigens.normal_tissue_scopes
+resolve_normal_tissue = antigens.resolve_normal_tissue
 
 datasets = (
     bgee_srp009687,
@@ -53,6 +56,7 @@ __all__ = [
     "cta_evidence",
     "cta_gene_ids",
     "cta_snapshot",
+    "cta_tissue_annotations",
     "datasets",
     "doga",
     "expression",
@@ -61,9 +65,11 @@ __all__ = [
     "gse304066",
     "inventory",
     "legacy",
+    "normal_tissue_scopes",
     "normalization",
     "pfizer_canine_protein",
     "pfizer_canine_rna",
     "references",
+    "resolve_normal_tissue",
     "species",
 ]

@@ -162,7 +162,7 @@ def test_reproductive_rna_does_not_agree_with_somatic_protein():
     assert cta.synthesize_restriction(row) == ("SOMATIC", "LOW")
 
 
-def test_reproductive_rna_agrees_with_reproductive_protein():
+def test_reproductive_rna_broadens_narrower_protein_restriction():
     for protein_restriction in ("TESTIS", "PLACENTAL", "REPRODUCTIVE"):
         row = {
             "protein_restriction": protein_restriction,
@@ -170,7 +170,18 @@ def test_reproductive_rna_agrees_with_reproductive_protein():
             "rna_restriction": "REPRODUCTIVE",
             "rna_restriction_level": "STRICT",
         }
-        assert cta.synthesize_restriction(row) == (protein_restriction, "HIGH")
+        expected_confidence = "HIGH" if protein_restriction == "REPRODUCTIVE" else "LOW"
+        assert cta.synthesize_restriction(row) == ("REPRODUCTIVE", expected_confidence)
+
+
+def test_somatic_rna_counterevidence_cannot_retain_testis_only_label():
+    row = {
+        "protein_restriction": "TESTIS",
+        "protein_reliability": "Enhanced",
+        "rna_restriction": "SOMATIC",
+        "rna_restriction_level": "MODERATE",
+    }
+    assert cta.synthesize_restriction(row) == ("SOMATIC", "LOW")
 
 
 def test_gene_id_to_name():
@@ -453,7 +464,10 @@ def test_extended_ctas_are_explicit_and_respect_shared_reviews():
 
     core, extended = cta.cta_gene_names(), cta_extended_gene_names()
     assert core < extended
-    assert len(core) == 624 and len(extended) == 688
+    assert len(core) == 624 and len(extended) == 695
+    assert {"ABCC11", "CSN2", "CSN3", "CST9", "LALBA", "ROPN1", "ROPN1B"} <= extended
+    # Accessory-only RNA at exactly the deflation floor remains outside core.
+    assert "UMODL1" not in core and "UMODL1" in extended
     assert "PAGE4" in extended - core
     assert "MAGEA11" not in extended
     assert (

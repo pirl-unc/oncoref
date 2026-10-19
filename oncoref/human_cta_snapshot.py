@@ -66,7 +66,7 @@ def human_cta_snapshot():
         "sha256": source_hash,
         "scope": "SHA-256 of canonical JSON logical records returned by the historical cta_evidence() accessor. All original fields are retained in evidence.source_fields. This is a derived summary receipt, not an upstream publication checksum.",
         "study_id": "oncoref-human-cta-summary",
-        "lineage": ["oncoref-human-cta-summary", "HPA-normal-tissue-summary"],
+        "lineage": ["oncoref-human-cta-summary", "HPA-normal-tissue-summary", "HPA:v23"],
     }
     payload = {
         "schema": "oncoref.cta-evidence",
