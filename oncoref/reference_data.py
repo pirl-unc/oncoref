@@ -38,9 +38,12 @@ import hashlib
 import json
 import os
 import shutil
+import tempfile
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
+
+from filelock import FileLock
 
 from . import _downloads
 
@@ -171,7 +174,23 @@ def _read_manifest() -> dict:
 def _write_manifest(manifest: dict) -> None:
     # provenance manifest is best-effort
     with contextlib.suppress(OSError):
-        _manifest_path().write_text(json.dumps(manifest, indent=2, sort_keys=True))
+        path = _manifest_path()
+        staged = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                dir=path.parent,
+                prefix=".manifest-",
+                suffix=".json",
+                delete=False,
+            ) as handle:
+                staged = Path(handle.name)
+                json.dump(manifest, handle, indent=2, sort_keys=True)
+            staged.replace(path)
+        finally:
+            if staged is not None:
+                staged.unlink(missing_ok=True)
 
 
 def _cached_file_ok(name: str, version: str, dest: Path) -> bool:
@@ -226,57 +245,61 @@ def download(
     url = spec["urls"][version]
     pin = spec.get("pins", {}).get(version)
 
-    if dest.exists() and not force and _cached_file_ok(name, version, dest):
-        _downloads.report_cached(f"{name} ({version})", dest, verbose=verbose)
-        return dest
-
     dest.parent.mkdir(parents=True, exist_ok=True)
-    tmp_zip = dest.parent / (spec["filename"] + ".zip.part")
-    tmp_tsv = dest.parent / (spec["filename"] + ".part")
-    try:
-        _downloads.fetch_file(
-            url,
-            tmp_zip,
-            label=f"{name} ({version})",
-            force=True,
-            verbose=verbose,
-            display_path=dest,
-        )
-        if pin:
-            _downloads.report(f"verifying {name} ({version}) archive", verbose=verbose)
-        if pin and _sha256(tmp_zip) != pin["archive_sha256"]:
-            raise ReferenceDataError("archive checksum does not match the pinned source")
-        if spec.get("archive_format") == "file":
-            os.replace(tmp_zip, tmp_tsv)
-        else:
-            _downloads.report(f"extracting {name} ({version})", verbose=verbose)
-            with zipfile.ZipFile(tmp_zip) as zf:
-                member = _zip_member(zf, spec["filename"])
-                with zf.open(member) as src, tmp_tsv.open("wb") as out:
-                    shutil.copyfileobj(src, out, length=1024 * 1024)
-        if pin and not _matches_pin(tmp_tsv, pin):
-            raise ReferenceDataError("content checksum/size does not match the pinned source")
-        # Atomic promote: a process killed mid-extract leaves tmp_tsv, never a
-        # partial dest. A prior good copy survives a failed re-download untouched.
-        os.replace(tmp_tsv, dest)
-        _downloads.report(f"{name} ({version}) ready at {dest}", verbose=verbose)
-    except Exception as e:  # network / zip / IO — surface uniformly
-        raise ReferenceDataError(f"failed to download {name} ({url}): {e}") from e
-    finally:
-        tmp_zip.unlink(missing_ok=True)
-        tmp_tsv.unlink(missing_ok=True)
+    with FileLock(str(dest.with_name(f".{dest.name}.oncoref.lock"))):
+        # Recheck after waiting: another caller may have populated this cache.
+        if dest.exists() and not force and _cached_file_ok(name, version, dest):
+            _downloads.report_cached(f"{name} ({version})", dest, verbose=verbose)
+            return dest
 
-    manifest = _read_manifest()
-    manifest[_manifest_key(name, version)] = {
-        "name": name,
-        "version": version,
-        "url": url,
-        "path": str(dest),
-        "bytes": dest.stat().st_size,
-        "sha256": _sha256(dest),
-        "downloaded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-    }
-    _write_manifest(manifest)
+        try:
+            with tempfile.TemporaryDirectory(prefix=".hpa-", dir=dest.parent) as staging:
+                tmp_zip = Path(staging) / (spec["filename"] + ".zip.part")
+                tmp_tsv = Path(staging) / (spec["filename"] + ".part")
+                _downloads.fetch_file(
+                    url,
+                    tmp_zip,
+                    label=f"{name} ({version})",
+                    force=True,
+                    verbose=verbose,
+                    display_path=dest,
+                )
+                if pin:
+                    _downloads.report(f"verifying {name} ({version}) archive", verbose=verbose)
+                if pin and _sha256(tmp_zip) != pin["archive_sha256"]:
+                    raise ReferenceDataError("archive checksum does not match the pinned source")
+                if spec.get("archive_format") == "file":
+                    os.replace(tmp_zip, tmp_tsv)
+                else:
+                    _downloads.report(f"extracting {name} ({version})", verbose=verbose)
+                    with zipfile.ZipFile(tmp_zip) as zf:
+                        member = _zip_member(zf, spec["filename"])
+                        with zf.open(member) as src, tmp_tsv.open("wb") as out:
+                            shutil.copyfileobj(src, out, length=1024 * 1024)
+                if pin and not _matches_pin(tmp_tsv, pin):
+                    raise ReferenceDataError(
+                        "content checksum/size does not match the pinned source"
+                    )
+                # A prior good copy survives a failed download or extraction.
+                os.replace(tmp_tsv, dest)
+                _downloads.report(f"{name} ({version}) ready at {dest}", verbose=verbose)
+        except Exception as e:  # network / zip / IO — surface uniformly
+            raise ReferenceDataError(f"failed to download {name} ({url}): {e}") from e
+
+        record = {
+            "name": name,
+            "version": version,
+            "url": url,
+            "path": str(dest),
+            "bytes": dest.stat().st_size,
+            "sha256": _sha256(dest),
+            "downloaded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        }
+        manifest_path = _manifest_path()
+        with FileLock(str(manifest_path.with_name(".manifest.oncoref.lock"))):
+            manifest = _read_manifest()
+            manifest[_manifest_key(name, version)] = record
+            _write_manifest(manifest)
     return dest
 
 
