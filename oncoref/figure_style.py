@@ -356,3 +356,51 @@ def label(text) -> str:
     """
     text = str(text)
     return text.replace("_", " ") if _PRESET == "slide" else text
+
+
+# -------------------------------------------------------------- highlight ----
+#
+# A landscape figure answers "where does everything sit". A highlighted landscape
+# figure answers "where does THIS sit among everything" — the same plot, with one
+# cancer type picked out and the rest pushed back into context. That is a display
+# decision, not a data one: nothing is filtered, re-ranked or re-scaled, so the
+# highlighted figure and its plain twin show the same points in the same places.
+
+_HIGHLIGHT = None
+
+#: Colour for the highlighted mark. Deliberately outside the lineage palette so it
+#: cannot be confused with a lineage, and dark enough to read against the muted rest.
+HIGHLIGHT_COLOR = "#d81b60"
+
+#: How far non-highlighted marks fade toward the page. High enough that the cloud is
+#: still readable as context, low enough that the highlight wins immediately.
+CONTEXT_ALPHA = 0.28
+
+
+def highlight():
+    """The cancer code currently highlighted, or ``None``."""
+    return _HIGHLIGHT
+
+
+def set_highlight(code) -> None:
+    """Pick one cancer code out of every landscape figure (``None`` clears)."""
+    global _HIGHLIGHT
+    _HIGHLIGHT = str(code) if code else None
+
+
+def mute(color, alpha=None):
+    """Fade ``color`` toward white by ``CONTEXT_ALPHA``.
+
+    Blending toward the page rather than lowering alpha keeps overlapping marks from
+    compounding into darker blobs, which is what makes a faded scatter unreadable.
+    """
+    from matplotlib.colors import to_rgb
+
+    a = CONTEXT_ALPHA if alpha is None else alpha
+    r, g, b = to_rgb(color)
+    return (r * a + (1 - a), g * a + (1 - a), b * a + (1 - a))
+
+
+def is_highlighted(code) -> bool:
+    """Whether ``code`` is the highlighted cancer type."""
+    return _HIGHLIGHT is not None and str(code) == _HIGHLIGHT
