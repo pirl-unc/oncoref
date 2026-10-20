@@ -1,6 +1,6 @@
 schema: oncoref.normal-tissue-taxonomy
 schema_version: 1
-policy_version: 2026-10-20.1
+policy_version: 2026-10-20.2
 taxon_ids:
 - 9606
 - 9615
@@ -91,7 +91,8 @@ references:
     scope: Reproductive includes reproductive organs, mammary tissue, placenta, extraembryonic,
       embryonic and fetal contexts. Disposable normal is a conditional research scope,
       not a clinical safety claim. The expanded permitted scope adds whole skin,
-      salivary gland and thymus by project request. Tiered RNA ceilings are project
+      salivary gland, thymus, tonsil and spleen by project request. Acceptable
+      lymphoid organs carry explicit review conditions. Tiered RNA ceilings are project
       screening parameters; IHC detections outside the permitted scope remain exclusions.
   nci_organ_inflammation:
     title: Immunotherapy and Organ-Related Inflammation
@@ -115,6 +116,30 @@ references:
     url: https://nerd.wwnorton.com/ebooks/epub/janeway10/EPUB/content/12.1-chapter12.xhtml
     kind: comparative_anatomy
     scope: Mouse nasal-associated lymphoid tissue is not anatomically a tonsil.
+  nhs_tonsillectomy:
+    title: Making a decision about recurrent tonsillitis in children and adults
+    url: https://www.england.nhs.uk/wp-content/uploads/2023/10/decision-support-tool-making-a-decision-about-recurrent-tonsillitis-in-children-and-adults.pdf
+    kind: clinical_information
+    scope: Tonsillectomy is an established intervention; other tissues also provide
+      immune functions. Surgical tolerability does not validate systemic immune ablation.
+  cdc_asplenia:
+    title: Risk Factors for Meningococcal Disease
+    url: https://www.cdc.gov/meningococcal/risk-factors/index.html
+    kind: clinical_information
+    scope: Anatomic or functional asplenia increases serious infection risk.
+      Spleen allowance requires an infection-risk and mitigation assessment.
+  nci_lymph_nodes:
+    title: Sentinel Lymph Node Biopsy
+    url: https://www.cancer.gov/about-cancer/diagnosis-staging/staging/sentinel-node-biopsy-fact-sheet
+    kind: clinical_information
+    scope: Lymph nodes contain mobile immune cells. More extensive removal increases
+      lymphedema and infection risks; regional surgery does not validate systemic injury.
+  nei_retina:
+    title: National Plan for Eye and Vision Research
+    url: https://www.nei.nih.gov/sites/default/files/nei-pdfs/nationalplan1.pdf
+    kind: clinical_information
+    scope: Retinal injury can cause severe irreversible visual disability. Supports
+      critical-function protection independently of immediate mortality.
 concepts:
   testis:
     label: testis
@@ -693,18 +718,22 @@ concepts:
     aliases: []
     references:
     - hpa_tissues
+    - nei_retina
   eye:
     label: eye
     parents: []
     aliases: []
     references:
     - hpa_tissues
+    - nei_retina
+    - johnson2009
   inner_ear:
     label: inner ear
     parents: []
     aliases: []
     references:
     - hpa_tissues
+    - johnson2009
   heart:
     label: heart
     parents: []
@@ -786,12 +815,19 @@ concepts:
     - lymphnode
     references:
     - hpa_tissues
+    - nci_lymph_nodes
+    notes: Distributed lymphatic and immune organ. Limited regional excision does
+      not justify allowing expression across the entire lymph-node system.
   spleen:
     label: spleen
     parents: []
     aliases: []
     references:
     - hpa_tissues
+    - cdc_asplenia
+    - nci_lymph_nodes
+    notes: Conditional project allowance. Organ loss requires infection-risk
+      management; expression in shared immune cells needs separate distribution review.
   thymus:
     label: thymus
     parents: []
@@ -805,9 +841,14 @@ concepts:
     references:
     - hpa_tissues
     - mouse_lymphoid
+    - nhs_tonsillectomy
+    - nci_lymph_nodes
     taxon_ids:
     - 9606
     - 9615
+    notes: Native tonsil samples, with palatine tonsillectomy as the human rationale.
+      Does not include adenoids, all mucosal lymphoid tissue or mouse NALT.
+      Bulk source labels do not establish cell-type confinement.
   appendix:
     label: appendix
     parents: []
@@ -1241,24 +1282,35 @@ scopes:
     - skin
     - salivary_gland
     - thymus
+    - tonsil
+    - spleen
     union:
     - disposable_normal
-    aliases: []
-    description: Project-requested normal-tissue allowance comprising whole skin
-      and mapped skin compartments, salivary glands and thymus, plus the narrower
-      disposable scope. Anatomical permission is not evidence of tolerable injury.
+    aliases:
+    - acceptable_normal
+    description: Conditionally acceptable normal contexts comprising whole skin,
+      salivary glands, thymus, tonsil and spleen, plus the narrower disposable
+      scope. Lymphoid organ allowances require review of immune-cell distribution,
+      age and immune reserve; spleen additionally requires infection-risk management.
+      Permission applies only to the sampled organ, not the same cell type elsewhere.
   reproductive_or_permitted_normal:
     roots: []
     union:
     - reproductive
     - permitted_normal
-    aliases: []
+    aliases:
+    - reproductive_or_acceptable_normal
     description: Expanded project union of reproductive contexts and permitted
       normal tissues. Heart, lung, CNS, liver, pancreas, retina and muscle are outside.
 screening_policies:
   tiered_cta: &tiered_cta
-    policy_id: oncoref.cta-permitted-screen.2026-10-19.1
+    policy_id: oncoref.cta-permitted-screen.2026-10-20.2
     permitted_scope: reproductive_or_permitted_normal
+    tier_labels:
+      permitted: Acceptable (conditional)
+      vital: Vital / critical function
+      protected: Protected
+      unresolved: Unresolved
     rna_source: hpa_rna_consensus
     rna_source_version: v23
     rna_species: human
@@ -1290,20 +1342,20 @@ screening_policies:
       - smooth_muscle
       - peripheral_nerve
       - endothelium
-      description: Conservative project tier for critical organs and broadly sampled
-        systems whose extensive injury can threaten life. Includes all mapped descendants.
+      - retina
+      - eye
+      - inner_ear
+      description: Strictest project tier for organs whose extensive injury can
+        threaten life or cause major irreversible neurological or sensory loss.
+        Includes all mapped descendants. Vital is the stable machine identifier;
+        the full meaning is vital or critical function.
     protected:
       maximum_rna: 5.0
       roots:
       - adipose_tissue
-      - retina
-      - eye
-      - inner_ear
       - thyroid_gland
       - parathyroid_gland
       - lymph_node
-      - spleen
-      - tonsil
       - appendix
       - esophagus
       - stomach
@@ -1318,7 +1370,30 @@ screening_policies:
       - tongue
       description: Protected normal tissues outside the permitted scope, with a
         higher RNA ceiling but the same exclusion for any positive IHC. This tier
-        does not assert that loss is harmless or that severe injury cannot be fatal.
+        includes distributed lymph nodes and functionally important organs without
+        a project allowance. It does not assert that extensive injury cannot be fatal.
+    context_reviews:
+      lymphoid_organ_allowance:
+        roots: [tonsil, spleen, thymus]
+        flags: [immune_cell_distribution_review, age_and_immune_reserve_review]
+        references: [nhs_tonsillectomy, cdc_asplenia, nci_lymph_nodes, project_policy]
+        rationale: Conditional organ allowance only. Identify the expressing cell
+          population and its distribution in blood, marrow and other organs.
+          Assess age and immune reserve. Surgery is not a model of systemic
+          antigen-directed injury. Bulk tissue cannot establish organ confinement.
+      spleen_infection_risk:
+        roots: [spleen]
+        flags: [asplenia_infection_risk_review]
+        references: [cdc_asplenia]
+        rationale: Assess consequences of functional asplenia and an appropriate
+          infection-prevention and management strategy before therapeutic acceptance.
+      distributed_lymph_nodes:
+        roots: [lymph_node]
+        flags: [lymphatic_and_immune_function_review]
+        references: [nci_lymph_nodes]
+        rationale: Remains protected. Regional removal does not justify whole-system
+          depletion or injury to lymphatic stroma. Lineage-specific exceptions
+          require a separately defined policy and evidence.
     unresolved_roots:
     - head
     - foot
@@ -1328,6 +1403,14 @@ screening_policies:
     - hpa_tissues
     - nci_organ_inflammation
     - niddk_adrenal
+    - nhs_tonsillectomy
+    - cdc_asplenia
+    - nci_lymph_nodes
+    - nei_retina
+    - johnson2009
+    review_semantics: Review annotations do not add numerical tiers or establish
+      clinical acceptability. Positive observations in flagged contexts remain
+      visible even when a candidate passes the research expression screen.
     coverage: Complete routine bulk RNA is required. Missing or partial IHC is
       reported explicitly and cannot establish protein absence. Unresolved positive
       anatomy, unusable measurements and reviewed unreliable IHC block retention.
@@ -1336,7 +1419,7 @@ screening_policies:
       numerical thresholds and clinical tolerability do not transfer to other species.
   ihc_adaptive_cta:
     <<: *tiered_cta
-    policy_id: oncoref.cta-ihc-adaptive-screen.2026-10-20.1
+    policy_id: oncoref.cta-ihc-adaptive-screen.2026-10-20.2
     ihc_source: hpa_normal_tissue
     ihc_source_version: v23
     negative_ihc_rna_limits:
