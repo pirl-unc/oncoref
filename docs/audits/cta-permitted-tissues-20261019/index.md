@@ -23,9 +23,9 @@ Permitted: all reproductive organs, mammary, placenta/extraembryonic and explici
 
 | Scenario | Retained | No usable IHC | Partial routine IHC | Complete routine IHC |
 |---|---:|---:|---:|---:|
-| Prior scope | all outside RNA <=1 | 547 | 321 | 222 | 4 |
-| Expanded scope | all outside RNA <=1 | 582 | 341 | 236 | 5 |
-| Expanded scope | vital <=1, protected <=5 | 629 | 368 | 255 | 6 |
+| Prior scope &#124; all outside RNA <=1 | 547 | 321 | 222 | 4 |
+| Expanded scope &#124; all outside RNA <=1 | 582 | 341 | 236 | 5 |
+| Expanded scope &#124; vital <=1, protected <=5 | 629 | 368 | 255 | 6 |
 
 The selected policy retains **629** candidates. **368** have no valid IHC observations in forbidden contexts; these are not IHC-negative findings. Requiring all routine IHC contexts would retain **6**. Adequate evidence of absence remains unestablished.
 

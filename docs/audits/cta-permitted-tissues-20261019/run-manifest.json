@@ -638,7 +638,7 @@
   ],
   "implementation_sha256": {
     "scripts/cta_permitted_report.py": "d6ae40b145b8a10be52f10aed9a86c210b929120a796fdc4a3ed55fa6cf2ff08",
-    "scripts/cta_permitted_report_render.py": "a28ec76ea353dd8dfa9b61a5dd707625342e188d64bb202cc30d0b5f70658098",
+    "scripts/cta_permitted_report_render.py": "5241ebc3957f78dd1b44f40e86de56ae5063c0a689492616db0f7e5564430772",
     "scripts/cta_scope_report.py": "f68f0cda6bee98a31429ef56f758116034dc962b361c4c7b61426511f4a72cd7",
     "oncoref/normal_tissues.py": "cffb88e0555fa7eb4a86796f174312bf6b56d9d296a12aca120762ed7c5cef99",
     "oncoref/data/normal-tissue-taxonomy.yaml": "f8ffd164ff4e42c26349419ea0306a731057c397080ab1fbee02236ab020b8ca",
@@ -646,18 +646,18 @@
   },
   "outputs": {
     "candidate-decisions.csv": "d9a20ba45f2dd72b234ae467c270de7596ae113f1571da73d9406007611473de",
-    "cta-permitted-tissue-report.pdf": "76e1c85fd574c3c4a89eb39c5ef6629a8a30c669d29ac55074a4109514a4049f",
-    "index.md": "04dc356c9ecf25f54a8ef8bdc0b10a34ae36397af59911e6b048aa71e3f0a042",
+    "cta-permitted-tissue-report.pdf": "c138128213738772f129b5bc1e463b254e7d4cd461cdd337c0d169c1cb875c98",
+    "index.md": "1158c63656d712b2a0e74daa40d4234567fa10fc77c8ae0f3fdf04a5170ae0b1",
     "normal-observations.csv.gz": "3a11937bd41d01f1dc2d80e6a5804b2dd15d01b568b49b1c411276cd3afd75ea",
     "notable-targets.csv": "7d5f714fe9ef29accd44510e0d46df435f0cd1d18d1982df44bdd03696be3fcf",
     "policy-comparison.png": "e14b4d96916a3fbf39a07f8d4528e6d2da540382d459e15d1be09d45cfe76fa6",
-    "policy-comparison.svg": "ba1957d5322a6e802e97c43ac542478c8303464d6db1865e98a03004a47fc45b",
+    "policy-comparison.svg": "e216ba53ca05d25a7cbd8080df0d641a26ae20a27833b08fa7a14b943f7d0cab",
     "published-targets.png": "da0f1ba16bcc8df5231348d5a5f923c790a4a81999b1f084296c49e801a59257",
-    "published-targets.svg": "8ddeaac57c5a724feddf0b72d6914b9c031baa49d1ff98cf3ec69ef9727aee4d",
+    "published-targets.svg": "013f405ed1a35c7049e1f79e9bc3c8545aa78f2136a16c72660cb46ebd020751",
     "scope-summary.csv": "17d4942403c2c4efcb7e13ac4039d317415f1cd2aaf52df31a401cf920f2e137",
     "source-counts.csv": "eeec46e3315ced5d95e902153939f8bd13b66de47a97f3b8958af16bd773890b",
     "source-retention.png": "66e6fe3e2686fa536d100166b46e9064550dd5e06d274fb81b67b5ffd2178dcf",
-    "source-retention.svg": "0fc31ff31c1bf5506a42d9a3750ce32e4cdca70006f7c816ee64d19e53df4094",
+    "source-retention.svg": "6d1cc09b6ded24a36a660f7f4ecd2ea9b23ac589734c49b652394f5cf3af7cdb",
     "tissue-contexts.csv": "903a45f2ebfff495f5782c750c785eed3268b18b63abc95e8e99c4a68384cc38",
     "tissue-policy.json": "a27cdce11d4d37a5fdda590e76d3eb977a03c482c4ab567d574e2374d8dee3b0"
   }

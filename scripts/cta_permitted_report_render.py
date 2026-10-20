@@ -161,8 +161,9 @@ def render(out, candidates, sources, summary, targets):
     final = counts.loc["tiered"]
     targets = targets.copy()
     targets["short_reason"] = targets.apply(short_reason, axis=1)
+    markdown_names = {key: name.replace("|", "&#124;") for key, name in NAMES.items()}
     table = "\n".join(
-        f"| {NAMES[r.scenario]} | {r.retained} | {r.without_ihc} | {r.partial_ihc} | {r.complete_routine_ihc} |"
+        f"| {markdown_names[r.scenario]} | {r.retained} | {r.without_ihc} | {r.partial_ihc} | {r.complete_routine_ihc} |"
         for r in summary.itertuples(index=False)
     )
     target_table = "\n".join(
