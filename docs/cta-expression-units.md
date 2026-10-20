@@ -38,6 +38,29 @@ nTPM. There is no universal scalar conversion for an isolated gene value:
 the included genes, normalization factors and aggregation matter. Neither
 measure reports protein abundance or HLA peptide presentation.
 
+### CTAG2 heart: HPA 5.0 versus GTEx 0.4/0.9
+
+The [current CTAG2 heart page](https://www.proteinatlas.org/ENSG00000126890-CTAG2/tissue/heart%2Bmuscle)
+(checked 2026-10-20) reports HPA's own cohort at **5.0 nTPM**, and separately
+displays HPA-normalized GTEx means of **0.4 nTPM** for atrial appendage and
+**0.9 nTPM** for left ventricle. They are different datasets. The consensus uses
+the higher tissue estimate; it does not imply cross-dataset agreement.
+Our pinned **v23 consensus is 5.1 nTPM**, so later portal values cannot silently
+replace it. Bulk tissue RNA also does not identify the expressing cell type.
+See the [donor-level review](audits/ctag2-heart-evidence.md).
+
+## Absolute RNA ceilings
+
+Here “absolute cutoff” means a cutoff on the reported **nTPM value**, rather
+than a restriction fraction; nTPM itself remains a relative abundance measure.
+The [IHC-adaptive screen](audits/cta-ihc-adaptive-20261020/index.md) uses
+inclusive vital/protected ceilings of 1/5 nTPM with missing or uncertain IHC,
+2/5 with Approved negative IHC, 3/7.5 with Supported negative IHC, and 5/10
+with Enhanced negative IHC. Every routine IHC context for that same anatomical
+tissue must be valid and negative; the weakest local reliability determines
+the allowance. Positive IHC outside the permitted set still excludes.
+These are project screening parameters, not validated clinical limits.
+
 ## What the CTA fractions mean
 
 `rna_*_ntpm` columns are expression measurements. The

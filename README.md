@@ -18,6 +18,9 @@ The [expanded permitted-tissue screen](https://pirl-unc.github.io/oncoref/audits
 adds thymus, salivary gland and whole skin, with separate vital/protected RNA
 ceilings and an independent IHC gate. Published-target inclusion and exclusion
 reasons are provided for every candidate.
+The [IHC-adaptive comparison](https://pirl-unc.github.io/oncoref/audits/cta-ihc-adaptive-20261020/)
+adjusts absolute RNA ceilings using complete local negative IHC, with per-tissue
+evidence, fixed-versus-adaptive results, and the HPA/GTEx source distinction.
 
 ## Role in the stack
 

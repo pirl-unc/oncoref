@@ -761,6 +761,28 @@ the anatomical tier. Numerical application is limited to human HPA v23.
 This separately named screen reports all candidate decisions; the existing
 `cta_gene_ids()` / `cta_extended_gene_ids()` APIs select their documented panels.
 
+The [IHC-adaptive absolute screen](audits/cta-ihc-adaptive-20261020/index.md)
+uses `normal_tissues.normal_tissue_screening_policy("ihc_adaptive_cta")`.
+Its vital/protected ceilings are 1/5 nTPM with missing or uncertain evidence,
+2/5 with Approved negative IHC, 3/7.5 with Supported negative IHC, and 5/10
+with Enhanced negative IHC. All routine IHC contexts for that same anatomical
+tissue must be valid and negative; the weakest local reliability wins.
+Positive IHC outside the permitted set remains an independent exclusion.
+
+`cta_normal_screen.adaptive_normal_rna_limits(observations, *,
+routine_ihc_contexts, reviewed_unreliable=False, species="human")` returns an
+audit row for each input RNA row, retaining its index. Supply a single gene's
+HPA v23 observation table with `Ensembl_Gene_ID`, `modality`, `source_name`,
+`source_version`, `tissue`, `cell_type`, `rna_ntpm`, `ihc_level`,
+`ihc_reliability`, and boolean `valid_measurement`. The independently defined
+routine inventory contains `(source tissue, source cell type)` pairs.
+The result includes `rna_ceiling_ntpm`, `baseline_ceiling_ntpm`,
+`ihc_evidence_status`, `ihc_reliability_used`, missing-context details and
+supporting observations. Permitted/unresolved anatomy has no numerical ceiling.
+The helper computes ceilings only; the report separately applies positive-IHC,
+coverage, unresolved-anatomy and curation gates. These project parameters
+apply only to human HPA v23 and do not establish clinical safety.
+
 `cta_specificity_audit(tissue_scope="extended")` joins extended reviews to
 extended RNA evidence; its default remains core.
 

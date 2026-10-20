@@ -121,7 +121,9 @@ def annotate_archive(observations):
     return result.merge(pd.DataFrame(contexts), validate="many_to_one")
 
 
-def evaluate_gene(rows, *, scope, vital_limit, protected_limit, expected, unreliable=False):
+def evaluate_gene(
+    rows, *, scope, vital_limit, protected_limit, expected, unreliable=False, rna_limits=None
+):
     """Separate RNA ceilings and a strict outside-IHC gate, with explicit missingness."""
     config = normal_tissue_screening_policy()
     rna = rows.loc[rows.modality.eq("bulk_rna")]
@@ -133,14 +135,18 @@ def evaluate_gene(rows, *, scope, vital_limit, protected_limit, expected, unreli
     # ceiling; scenarios with the narrower scope use the same 1 nTPM ceiling in both tiers.
     tiers.loc[tiers.eq("permitted") & ~allowed] = "protected"
     tiers.loc[allowed] = "permitted"
+    limits = tiers.map({"vital": vital_limit, "protected": protected_limit}).astype(float)
+    if rna_limits is not None:
+        if not rna_limits.index.equals(rna.index):
+            raise ValueError("RNA ceilings must match every RNA row in order")
+        if not rna.empty:
+            limits.loc[rna.index] = rna_limits
     forbidden_ihc = rows.loc[rows.modality.eq("ihc") & rows.strict_positive & mapped & ~allowed]
     above = rows.loc[
         rows.modality.eq("bulk_rna")
         & mapped
-        & (
-            (tiers.eq("vital") & rows.rna_ntpm.gt(vital_limit))
-            | (tiers.eq("protected") & rows.rna_ntpm.gt(protected_limit))
-        )
+        & tiers.isin(["vital", "protected"])
+        & rows.rna_ntpm.gt(limits)
     ]
     positive_inside = bool(
         (
@@ -199,7 +205,7 @@ def evaluate_gene(rows, *, scope, vital_limit, protected_limit, expected, unreli
             rows.modality.eq("bulk_rna") & tiers.eq("protected"), "rna_ntpm"
         ].max(),
         "rna_exclusions": "; ".join(
-            f"{r.tissue}: {r.rna_ntpm:g} nTPM ({tiers.loc[i]}, limit {vital_limit if tiers.loc[i] == 'vital' else protected_limit:g})"
+            f"{r.tissue}: {r.rna_ntpm:g} nTPM ({tiers.loc[i]}, limit {limits.loc[i]:g})"
             for i, r in above.sort_values("rna_ntpm", ascending=False).iterrows()
         ),
         "ihc_exclusions": "; ".join(

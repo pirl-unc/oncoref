@@ -7,6 +7,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from oncoref.cta_normal_screen import adaptive_normal_rna_limits
+
 SCRIPTS = Path(__file__).parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 spec = importlib.util.spec_from_file_location(
@@ -26,6 +28,7 @@ def evaluate(
     scope=report.EXPANDED,
     missing=(),
     unreliable=False,
+    adaptive=False,
 ):
     rows = []
     for tissue, value in rna:
@@ -66,6 +69,15 @@ def evaluate(
         protected_limit=protected_limit,
         expected=expected,
         unreliable=unreliable,
+        rna_limits=(
+            adaptive_normal_rna_limits(
+                observations,
+                routine_ihc_contexts=expected["ihc"],
+                reviewed_unreliable=unreliable,
+            ).rna_ceiling_ntpm
+            if adaptive
+            else None
+        ),
     )
 
 
@@ -73,6 +85,17 @@ def test_raw_rna_tier_boundaries_are_inclusive_and_per_tissue():
     assert evaluate([("testis", 100), ("heart muscle", 1), ("retina", 5)])["evidence_pass"]
     assert not evaluate([("testis", 100000), ("heart muscle", 1.1)])["evidence_pass"]
     assert not evaluate([("testis", 100000), ("retina", 5.1)])["evidence_pass"]
+
+
+def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
+    result = evaluate(
+        [],
+        [("heart muscle", "cardiomyocytes", "Not detected")],
+        missing=["heart muscle", "testis"],
+        adaptive=True,
+    )
+    assert not result["evidence_pass"]
+    assert "incomplete_routine_rna" in result["failure_reasons"]
 
 
 @pytest.mark.parametrize(
@@ -143,3 +166,30 @@ def test_positive_evidence_inside_permitted_scope_is_required():
     assert evaluate(
         [("testis", 0.5), ("retina", 3)], [("testis", "cells in seminiferous ducts", "Low")]
     )["evidence_pass"]
+
+
+def test_adaptive_absolute_boundary_and_positive_veto_remain_independent():
+    negative = [("heart muscle", "cardiomyocytes", "Not detected")]
+    assert evaluate([("testis", 100), ("heart muscle", 5)], negative, adaptive=True)[
+        "evidence_pass"
+    ]
+    assert not evaluate([("testis", 100), ("heart muscle", 5.1)], negative, adaptive=True)[
+        "evidence_pass"
+    ]
+    result = evaluate(
+        [("testis", 100), ("heart muscle", 5), ("liver", 0)],
+        [*negative, ("liver", "hepatocytes", "Low")],
+        adaptive=True,
+    )
+    assert not result["evidence_pass"]
+    assert "positive_ihc_outside_permitted" in result["failure_reasons"]
+
+
+def test_adaptive_protected_ceiling_is_inclusive():
+    negative = [("thyroid gland", "glandular cells", "Not detected")]
+    assert evaluate([("testis", 100), ("thyroid gland", 10)], negative, adaptive=True)[
+        "evidence_pass"
+    ]
+    assert not evaluate([("testis", 100), ("thyroid gland", 10.1)], negative, adaptive=True)[
+        "evidence_pass"
+    ]

@@ -1,0 +1,105 @@
+{
+  "policy_id": "oncoref.cta-ihc-adaptive-screen.2026-10-20.1",
+  "permitted_scope": "reproductive_or_permitted_normal",
+  "rna_source": "hpa_rna_consensus",
+  "rna_source_version": "v23",
+  "rna_species": "human",
+  "rna_unit": "nTPM",
+  "minimum_permitted_rna": 1.0,
+  "positive_ihc_levels": [
+    "Low",
+    "Medium",
+    "High",
+    "Ascending",
+    "Descending"
+  ],
+  "vital": {
+    "maximum_rna": 1.0,
+    "roots": [
+      "heart",
+      "lung",
+      "bronchus",
+      "brain",
+      "spinal_cord",
+      "liver",
+      "kidney",
+      "bone_marrow",
+      "blood",
+      "adrenal_gland",
+      "pituitary_gland",
+      "pancreas",
+      "small_intestine",
+      "skeletal_muscle",
+      "smooth_muscle",
+      "peripheral_nerve",
+      "endothelium"
+    ],
+    "description": "Conservative project tier for critical organs and broadly sampled systems whose extensive injury can threaten life. Includes all mapped descendants."
+  },
+  "protected": {
+    "maximum_rna": 5.0,
+    "roots": [
+      "adipose_tissue",
+      "retina",
+      "eye",
+      "inner_ear",
+      "thyroid_gland",
+      "parathyroid_gland",
+      "lymph_node",
+      "spleen",
+      "tonsil",
+      "appendix",
+      "esophagus",
+      "stomach",
+      "colon",
+      "rectum",
+      "gallbladder",
+      "urinary_bladder",
+      "ureter",
+      "cartilage",
+      "oral_mucosa",
+      "nasopharynx",
+      "tongue"
+    ],
+    "description": "Protected normal tissues outside the permitted scope, with a higher RNA ceiling but the same exclusion for any positive IHC. This tier does not assert that loss is harmless or that severe injury cannot be fatal."
+  },
+  "unresolved_roots": [
+    "head",
+    "foot",
+    "soft_tissue"
+  ],
+  "references": [
+    "project_policy",
+    "hpa_tissues",
+    "nci_organ_inflammation",
+    "niddk_adrenal"
+  ],
+  "coverage": "Complete routine bulk RNA is required. Missing or partial IHC is reported explicitly and cannot establish protein absence. Unresolved positive anatomy, unusable measurements and reviewed unreliable IHC block retention.",
+  "species_note": "Anatomical tiers apply to human, dog and mouse. The numerical policy is calibrated only as a project screen for human HPA v23 nTPM; numerical thresholds and clinical tolerability do not transfer to other species.",
+  "ihc_source": "hpa_normal_tissue",
+  "ihc_source_version": "v23",
+  "negative_ihc_rna_limits": {
+    "Missing": {
+      "vital": 1.0,
+      "protected": 5.0
+    },
+    "Uncertain": {
+      "vital": 1.0,
+      "protected": 5.0
+    },
+    "Approved": {
+      "vital": 2.0,
+      "protected": 5.0
+    },
+    "Supported": {
+      "vital": 3.0,
+      "protected": 7.5
+    },
+    "Enhanced": {
+      "vital": 5.0,
+      "protected": 10.0
+    }
+  },
+  "negative_ihc_rule": "Relax only with valid Not detected observations in every routine IHC tissue/cell context mapping to the same anatomical tissue as the RNA measurement. Use the weakest reliability among all observations in that tissue. Missing contexts, unknown reliability, invalid observations, positive staining or reviewed-unreliable IHC cannot earn relaxation. A narrower region cannot clear a broader organ; other organs cannot supply negative evidence. Enhanced describes source validation, not a guaranteed limit of detection for a negative stain or for peptide-HLA presentation.",
+  "threshold_provenance": "User-approved starting project parameters on 2026-10-20; not clinically validated or estimated from outcome data. Existing absolute ceilings remain the Missing/Uncertain baseline."
+}
