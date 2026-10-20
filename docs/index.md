@@ -65,6 +65,8 @@ packages can join domains without maintaining private name mappings.
 - Need reproductive/disposable tissue definitions or their effect on CTA
   filtering? See [Normal tissue scopes](normal-tissue-scopes.md) and the
   [source and filtering report](audits/cta-tissue-scopes-20261019/index.md).
+  The [expanded permitted-tissue screen](audits/cta-permitted-tissues-20261019/index.md)
+  adds the 1/5 nTPM vital/protected policy and published-target decisions.
 
 ```python
 from oncoref import cancer_ontology, ici_response

@@ -1,6 +1,6 @@
 schema: oncoref.normal-tissue-taxonomy
 schema_version: 1
-policy_version: 2026-10-19.1
+policy_version: 2026-10-19.2
 taxon_ids:
 - 9606
 - 9615
@@ -90,7 +90,21 @@ references:
     kind: project_definition
     scope: Reproductive includes reproductive organs, mammary tissue, placenta, extraembryonic,
       embryonic and fetal contexts. Disposable normal is a conditional research scope,
-      not a clinical safety claim.
+      not a clinical safety claim. The expanded permitted scope adds whole skin,
+      salivary gland and thymus by project request. Tiered RNA ceilings are project
+      screening parameters; IHC detections outside the permitted scope remain exclusions.
+  nci_organ_inflammation:
+    title: Immunotherapy and Organ-Related Inflammation
+    url: https://www.cancer.gov/about-cancer/treatment/side-effects/organ-inflammation
+    kind: clinical_information
+    scope: Organ-specific immune injury supports conservative review of normal
+      expression. Does not validate this project's tissue tiers or numerical cutoffs.
+  niddk_adrenal:
+    title: Definition and Facts of Adrenal Insufficiency and Addison's Disease
+    url: https://www.niddk.nih.gov/health-information/endocrine-diseases/adrenal-insufficiency-addisons-disease/definition-facts
+    kind: clinical_information
+    scope: Adrenal crisis can be life-threatening. Supports including adrenal and
+      pituitary contexts in the conservative vital tier; not an RNA threshold validation.
   mouse_coagulating:
     title: 'MGI Adult Mouse Anatomy: coagulating gland (MA:0000402)'
     url: https://www.informatics.jax.org/vocab/gxd/ma_ontology/MA%3A0000402
@@ -599,19 +613,22 @@ concepts:
     - hpa_tissues
   amygdala:
     label: amygdala
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
   basal_ganglia:
     label: basal ganglia
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
   cerebellum:
     label: cerebellum
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
@@ -624,7 +641,8 @@ concepts:
     - hpa_tissues
   choroid_plexus:
     label: choroid plexus
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
@@ -637,25 +655,29 @@ concepts:
     - hpa_tissues
   hypothalamus:
     label: hypothalamus
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
   midbrain:
     label: midbrain
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
   dorsal_raphe:
     label: dorsal raphe
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
   substantia_nigra:
     label: substantia nigra
-    parents: []
+    parents:
+    - brain
     aliases: []
     references:
     - hpa_tissues
@@ -917,7 +939,8 @@ concepts:
     - hpa_tissues
   nail_bed:
     label: nail bed
-    parents: []
+    parents:
+    - skin
     aliases: []
     references:
     - hpa_tissues
@@ -1213,6 +1236,104 @@ scopes:
     aliases: []
     description: Union of reproductive and conditionally disposable normal tissue
       contexts.
+  permitted_normal:
+    roots:
+    - skin
+    - salivary_gland
+    - thymus
+    union:
+    - disposable_normal
+    aliases: []
+    description: Project-requested normal-tissue allowance comprising whole skin
+      and mapped skin compartments, salivary glands and thymus, plus the narrower
+      disposable scope. Anatomical permission is not evidence of tolerable injury.
+  reproductive_or_permitted_normal:
+    roots: []
+    union:
+    - reproductive
+    - permitted_normal
+    aliases: []
+    description: Expanded project union of reproductive contexts and permitted
+      normal tissues. Heart, lung, CNS, liver, pancreas, retina and muscle are outside.
+screening_policies:
+  tiered_cta:
+    policy_id: oncoref.cta-permitted-screen.2026-10-19.1
+    permitted_scope: reproductive_or_permitted_normal
+    rna_source: hpa_rna_consensus
+    rna_source_version: v23
+    rna_species: human
+    rna_unit: nTPM
+    minimum_permitted_rna: 1.0
+    positive_ihc_levels:
+    - Low
+    - Medium
+    - High
+    - Ascending
+    - Descending
+    vital:
+      maximum_rna: 1.0
+      roots:
+      - heart
+      - lung
+      - bronchus
+      - brain
+      - spinal_cord
+      - liver
+      - kidney
+      - bone_marrow
+      - blood
+      - adrenal_gland
+      - pituitary_gland
+      - pancreas
+      - small_intestine
+      - skeletal_muscle
+      - smooth_muscle
+      - peripheral_nerve
+      - endothelium
+      description: Conservative project tier for critical organs and broadly sampled
+        systems whose extensive injury can threaten life. Includes all mapped descendants.
+    protected:
+      maximum_rna: 5.0
+      roots:
+      - adipose_tissue
+      - retina
+      - eye
+      - inner_ear
+      - thyroid_gland
+      - parathyroid_gland
+      - lymph_node
+      - spleen
+      - tonsil
+      - appendix
+      - esophagus
+      - stomach
+      - colon
+      - rectum
+      - gallbladder
+      - urinary_bladder
+      - ureter
+      - cartilage
+      - oral_mucosa
+      - nasopharynx
+      - tongue
+      description: Protected normal tissues outside the permitted scope, with a
+        higher RNA ceiling but the same exclusion for any positive IHC. This tier
+        does not assert that loss is harmless or that severe injury cannot be fatal.
+    unresolved_roots:
+    - head
+    - foot
+    - soft_tissue
+    references:
+    - project_policy
+    - hpa_tissues
+    - nci_organ_inflammation
+    - niddk_adrenal
+    coverage: Complete routine bulk RNA is required. Missing or partial IHC is
+      reported explicitly and cannot establish protein absence. Unresolved positive
+      anatomy, unusable measurements and reviewed unreliable IHC block retention.
+    species_note: Anatomical tiers apply to human, dog and mouse. The numerical
+      policy is calibrated only as a project screen for human HPA v23 nTPM;
+      numerical thresholds and clinical tolerability do not transfer to other species.
 source_artifacts:
 - taxon_id: 9606
   source_id: hpa_rna_consensus

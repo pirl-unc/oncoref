@@ -8,7 +8,7 @@ observations alone do not establish absence outside a scope.
 
 Definitions and citations ship in `oncoref/data/normal-tissue-taxonomy.yaml`;
 exact dataset mappings ship in `oncoref/data/normal-tissue-mappings.csv`.
-Policy version `2026-10-19.1` and a SHA-256 identity over both files accompany
+Policy version `2026-10-19.2` and a SHA-256 identity over both files accompany
 each annotation. Source-artifact receipts record the bytes used to review labels.
 All access is offline once expression data are loaded.
 
@@ -25,6 +25,11 @@ branches are combined at their shared parent.
 | Placenta | `placental` → `extraembryonic` → `reproductive` → `reproductive_or_disposable` |
 | Explicit embryo/fetus context | `embryonic` or `fetal` → `reproductive` → `reproductive_or_disposable` |
 | Cutaneous melanocytes or hair follicles | `disposable_normal` → `reproductive_or_disposable` |
+| Whole skin, salivary glands or thymus | `permitted_normal` → `reproductive_or_permitted_normal` |
+
+`reproductive_or_disposable` is a subset of the expanded
+`reproductive_or_permitted_normal` union. `disposable_normal` is a subset of
+`permitted_normal`; the wider name records a project screening allowance.
 
 For a gene detected in both testis and oocyte, **the entire observed pattern**
 fits `reproductive_core` and `reproductive`, while neither sex-specific scope
@@ -32,10 +37,13 @@ contains both detections. The tissue union is evaluated before selecting genes.
 The aliases `male_strict` and `female_strict` name anatomical scopes; a claim of
 strict gene restriction additionally needs adequate negative tissue coverage.
 
-The [current CTA source and filtering report](audits/cta-tissue-scopes-20261019/index.md)
+The [original CTA source and filtering report](audits/cta-tissue-scopes-20261019/index.md)
 compares reproductive with reproductive + disposable using both the existing
 adaptive CTA policy and a strict positive-evidence sensitivity screen. It includes
 figures, exact gene decisions, source citations and coverage limitations.
+The [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
+adds the requested organs, vital/protected RNA ceilings, and an independent IHC
+exclusion gate, with included/excluded decisions for published targets.
 
 ## Reproductive scopes
 
@@ -88,6 +96,84 @@ Whole skin, epidermis, generic keratinocytes, sebaceous/sweat glands, fibroblast
 retina, marrow, thyroid, lymphoid organs and unsited immune-cell labels do not
 automatically qualify. Thymus is a somatic tissue, including when expression
 reflects immune tolerance. No unlisted normal tissue is admitted by default.
+
+## Expanded permitted scope and tiered expression screen
+
+The project-requested `permitted_normal` scope is `disposable_normal` ∪ whole
+skin ∪ salivary glands ∪ thymus. `reproductive_or_permitted_normal` unions this
+with `reproductive`. Skin permission includes explicitly skin-sited keratinocytes,
+glands, fibroblasts, immune cells and other mapped skin compartments. It does not
+extend the exception to those cell types elsewhere, unsited cells, eye, retina or
+inner ear. Parotid inherits salivary gland. Thymic cortex/medulla inherit thymus.
+Anatomical mappings and organ labels remain available at their original resolution.
+
+The **tiered CTA screen** uses the following exact research policy:
+
+| Tier | Normal RNA rule | Normal IHC rule |
+|---|---|---|
+| Permitted | No upper ceiling | Positive staining allowed |
+| Vital | Every measurement ≤1 nTPM | Any positive staining excludes, including Low |
+| Protected normal | Every measurement ≤5 nTPM | Any positive staining excludes, including Low |
+| Unresolved | Positive evidence prevents retention | Positive evidence prevents retention |
+
+**Vital roots:** heart; lung and bronchus; brain (all mapped regions) and spinal
+cord; liver; kidney; bone marrow and blood; adrenal and pituitary glands; pancreas;
+small intestine (including duodenum, jejunum and ileum); skeletal and smooth muscle;
+peripheral nerve; vascular endothelium. Organ descendants inherit the tier.
+
+**Protected normal roots:** adipose tissue; retina and retinal pigment epithelium;
+eye; inner ear; thyroid and parathyroid glands; lymph node; spleen; tonsil; human
+appendix; esophagus; stomach; colon; rectum; gallbladder; urinary bladder; ureter;
+cartilage; oral mucosa; nasopharynx; tongue. These tissues remain outside the
+permitted set. "Protected" names the higher RNA allowance with the same strict
+IHC exclusion, rather than asserting that severe injury cannot threaten life.
+
+**Head, foot and generic soft tissue remain unresolved** because they can span
+tiers. A new or unknown tissue never silently receives the 5 nTPM allowance.
+Explicit embryonic/fetal source context retains the requested reproductive
+permission; adult organs retain their adult tier.
+
+The numerical rules use **raw human HPA v23 nTPM**, with inclusive comparisons
+and no deflation or averaging across tissues. IHC Low, Medium, High, Ascending
+and Descending are positive. A gene additionally needs ≥1 nTPM or positive IHC
+inside the permitted set and complete coverage of all 50 routine bulk RNA
+contexts. Unresolved positive anatomy, unusable measurements or reviewed
+unreliable IHC prevents retention. Existing family exclusions and
+nomination/manual-review decisions remain separate, visible gates.
+
+Missing IHC remains **unassessed**, not negative. The report separates RNA-only,
+partial-IHC and complete-routine-IHC results; 80 routine tissue/cell pairs define
+the last category. Negative measurements and coverage are distinct. The gate
+does not establish adequate evidence of absence or clinical safety.
+
+This tier list and the 1/5 nTPM values are **project screening definitions**.
+[NCI organ-inflammation guidance](https://www.cancer.gov/about-cancer/treatment/side-effects/organ-inflammation)
+supports organ-specific review of immune injury, and
+[NIDDK adrenal guidance](https://www.niddk.nih.gov/health-information/endocrine-diseases/adrenal-insufficiency-addisons-disease/definition-facts)
+supports treating the adrenal/pituitary axis conservatively. Neither source
+validates the numerical ceilings or a claim that permitted-organ injury is
+tolerable. The skin allowance is whole-organ by request; the
+[HPA skin anatomy](https://www.proteinatlas.org/learn/dictionary/normal/skin)
+documents its multiple compartments and functions.
+
+Anatomical tiers apply to human, dog and mouse with species filtering. Applying
+the human HPA thresholds to canine or mouse assays requires a separate policy;
+cross-species anatomical mapping does not transfer assay units or tolerability.
+
+```python
+from oncoref.normal_tissues import (
+    normal_tissue_screening_policy,
+    normal_tissue_screening_tier,
+    resolve_normal_tissue,
+)
+
+policy = normal_tissue_screening_policy()
+assert policy["vital"]["maximum_rna"] == 1
+assert policy["protected"]["maximum_rna"] == 5
+assert normal_tissue_screening_tier(resolve_normal_tissue("pancreas", species="human")) == "vital"
+assert normal_tissue_screening_tier(resolve_normal_tissue("retina", species="human")) == "protected"
+assert normal_tissue_screening_tier(resolve_normal_tissue("skin", species="dog")) == "permitted"
+```
 
 ## Dataset mappings and coverage
 
@@ -151,7 +237,7 @@ canine.cta_tissue_annotations(candidate_id="CTCFL")
 minimal compatible scopes (more than one is possible for overlapping anatomy and
 stage). Testis + oocyte qualifies for the reproductive core and broader reproductive
 unions, but neither male-only nor female-only. Testis + skin melanocytes qualifies
-only for the combined reproductive-or-disposable union. Testis + adult heart
+with the combined reproductive-or-disposable union as its narrowest scope. Testis + adult heart
 qualifies for none of these scopes. Empty detections never qualify vacuously;
 unmapped detections block a supported pattern classification.
 

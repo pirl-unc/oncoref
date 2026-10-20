@@ -9,7 +9,20 @@ their thresholds, selections and narrative must not be used as current results.
 
 ## Source intake and reproductive/disposable filtering
 
-The [current source report](audits/cta-tissue-scopes-20261019/index.md) covers
+The [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
+uses the committed original source audit, adds whole skin/salivary gland/thymus,
+and applies vital RNA ≤1 nTPM, protected RNA ≤5 nTPM, and any-positive outside IHC
+exclusion. It includes all candidate decisions and an included/excluded summary
+of published clinical and research targets. Rebuild without live downloads:
+
+```sh
+python scripts/cta_permitted_report.py --out outputs/cta-permitted-current
+```
+
+Three PNG/SVG figures and one PDF separate tissue-scope expansion, protected RNA
+relaxation, source retention and named-target decisions. Missing IHC stays explicit.
+
+The [original source report](audits/cta-tissue-scopes-20261019/index.md) covers
 published nominations and normal-tissue filtering before tumor-expression and
 proteoform ranking. Rebuild it independently of the cohort analysis below:
 

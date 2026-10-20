@@ -99,7 +99,16 @@ interactive work where a figure travels without a caption, call
 
 ### Reproductive and disposable CTA filtering
 
-The [current report](audits/cta-tissue-scopes-20261019/index.md) follows all
+The [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
+adds vital/protected RNA ceilings and an independent IHC gate. Three PNG/SVG
+figures compare the scope and threshold changes, source retention, and selected
+published targets. A combined PDF gives methods, citations and exclusion reasons.
+
+```bash
+python scripts/cta_permitted_report.py --out outputs/cta-permitted-current
+```
+
+The [original report](audits/cta-tissue-scopes-20261019/index.md) follows all
 registered published nominations through mapping, coding/family eligibility,
 and reproductive or reproductive + disposable filtering. It shows the existing
 adaptive thresholds and a separate strict positive-evidence sensitivity screen.

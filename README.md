@@ -14,6 +14,10 @@ set of reference plots.
 and the [CTA source/filtering report](https://pirl-unc.github.io/oncoref/audits/cta-tissue-scopes-20261019/)
 document the nested sets, cited dataset mappings, human filtering comparisons,
 and dog/mouse evidence coverage.
+The [expanded permitted-tissue screen](https://pirl-unc.github.io/oncoref/audits/cta-permitted-tissues-20261019/)
+adds thymus, salivary gland and whole skin, with separate vital/protected RNA
+ceilings and an independent IHC gate. Published-target inclusion and exclusion
+reasons are provided for every candidate.
 
 ## Role in the stack
 

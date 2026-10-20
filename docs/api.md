@@ -752,6 +752,14 @@ contexts, conditional disposable normal compartments, source mappings and citati
 The [source and filtering report](audits/cta-tissue-scopes-20261019/index.md)
 compares reproductive with reproductive + disposable under the adaptive policy
 and a separate strict sensitivity screen, with gene-level decisions and coverage.
+The [expanded permitted-tissue screen](audits/cta-permitted-tissues-20261019/index.md)
+uses the larger `reproductive_or_permitted_normal` union, vital RNA ≤1 nTPM,
+protected RNA ≤5 nTPM, and exclusion for any positive IHC outside that union.
+`normal_tissues.normal_tissue_screening_policy()` returns the exact versioned
+parameters; `normal_tissues.normal_tissue_screening_tier(annotation)` assigns
+the anatomical tier. Numerical application is limited to human HPA v23.
+This separately named screen reports all candidate decisions; the existing
+`cta_gene_ids()` / `cta_extended_gene_ids()` APIs select their documented panels.
 
 `cta_specificity_audit(tissue_scope="extended")` joins extended reviews to
 extended RNA evidence; its default remains core.

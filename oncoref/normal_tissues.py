@@ -55,6 +55,17 @@ def _registry():
             if alias in scope_aliases:
                 raise ValueError(f"Duplicate scope alias: {alias}")
             scope_aliases[alias] = name
+    for name, policy in doc.get("screening_policies", {}).items():
+        if policy["permitted_scope"] not in scopes:
+            raise ValueError(f"Unknown screening policy scope: {name}")
+        roots = set(policy["unresolved_roots"])
+        for tier in ("vital", "protected"):
+            roots.update(policy[tier]["roots"])
+        if (
+            not roots <= concepts.keys()
+            or not set(policy["references"]) <= doc["references"].keys()
+        ):
+            raise ValueError(f"Unknown screening policy anatomy or citation: {name}")
     index = {}
     for row in rows:
         row["taxon_id"] = int(row["taxon_id"])
@@ -92,6 +103,14 @@ def _registry():
 def normal_tissue_taxonomy() -> dict:
     """Detached definitions, scope unions, species applicability and bibliography."""
     return deepcopy(_registry()[0])
+
+
+def normal_tissue_screening_policy(policy="tiered_cta") -> dict:
+    """Detached screening parameters; RNA units and species are explicit."""
+    try:
+        return deepcopy(_registry()[0]["screening_policies"][policy])
+    except KeyError:
+        raise ValueError(f"Unknown normal-tissue screening policy {policy!r}") from None
 
 
 def normal_tissue_mappings(*, species, source_id=None, source_version=None) -> tuple[dict, ...]:
@@ -283,6 +302,8 @@ def resolve_normal_tissue(
             doc["references"][r]["url"]
             for r in ("blagosklonny2003", "johnson2009", "nci_alopecia", "purba2019")
         )
+    if "permitted_normal" in memberships:
+        references.add(doc["references"]["project_policy"]["url"])
     return NormalTissueAnnotation(
         selected.taxon_id,
         doc["taxonomy_id"],
@@ -303,6 +324,30 @@ def resolve_normal_tissue(
         if selected.taxon_id == 9606
         else "anatomical_transfer_only_not_validated_tolerability",
     )
+
+
+def normal_tissue_screening_tier(annotation, policy="tiered_cta") -> str:
+    """Return permitted, vital, protected, or unresolved for current anatomy.
+
+    This assigns anatomy only. Human HPA nTPM cutoffs must not be transferred to
+    another species or assay. Explicit developmental permission takes precedence.
+    """
+    if not isinstance(annotation, NormalTissueAnnotation):
+        raise TypeError("Expected a NormalTissueAnnotation")
+    if annotation.taxonomy_id != _registry()[0]["taxonomy_id"]:
+        raise ValueError("Resolve anatomy against the current taxonomy before assigning tiers")
+    config = normal_tissue_screening_policy(policy)
+    if annotation.mapping_status not in {"mapped", "stage_only"}:
+        return "unresolved"
+    if config["permitted_scope"] in annotation.scopes:
+        return "permitted"
+    if not annotation.concept_id:
+        return "unresolved"
+    ancestors = _ancestors(annotation.concept_id)
+    tiers = [tier for tier in ("vital", "protected") if ancestors & set(config[tier]["roots"])]
+    if len(tiers) > 1:
+        raise ValueError("Overlapping vital and protected anatomy definitions")
+    return tiers[0] if tiers else "unresolved"
 
 
 def classify_normal_tissue_pattern(detections) -> dict:

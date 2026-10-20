@@ -44,7 +44,7 @@ def source_identity(row):
     return f"unmapped:{namespace}:{native}"
 
 
-def annotate_measurements(raw, modality, candidate_ids):
+def annotate_measurements(raw, modality, candidate_ids, *, scopes=SCOPES):
     """Preserve assay observations and resolve distinct source contexts once."""
     rows = raw.loc[raw.Gene.isin(candidate_ids)].copy()
     if modality == "ihc":
@@ -98,7 +98,7 @@ def annotate_measurements(raw, modality, candidate_ids):
                 "mapping_status": annotation.mapping_status,
                 "mapping_kind": annotation.mapping_kind,
                 "mapping_references": ";".join(annotation.references),
-                **{scope: scope in annotation.scopes for scope in SCOPES},
+                **{scope: scope in annotation.scopes for scope in scopes},
             }
         )
     mapped = pd.DataFrame(
@@ -110,13 +110,13 @@ def annotate_measurements(raw, modality, candidate_ids):
             "mapping_status",
             "mapping_kind",
             "mapping_references",
-            *SCOPES,
+            *scopes,
         ],
     )
     rows = rows.merge(mapped, on=["tissue", "cell_type"], how="left", validate="many_to_one")
     # An empty assay table must retain Boolean masks when concatenated with RNA.
     # Object-dtype Python bools invert to integers (-1/-2), not logical negatives.
-    for column in (*SCOPES, "valid_measurement", "strict_positive", "adaptive_positive"):
+    for column in (*scopes, "valid_measurement", "strict_positive", "adaptive_positive"):
         rows[column] = rows[column].astype(bool)
     rows["modality"] = modality
     rows["source_name"] = SOURCE_NAMES[modality]

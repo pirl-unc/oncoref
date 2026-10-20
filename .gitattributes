@@ -1,2 +1,4 @@
 # PDF cross-reference records contain intentional padding and binary streams.
 *.pdf binary
+# Matplotlib SVG path attributes contain valid trailing coordinate separators.
+docs/audits/**/*.svg whitespace=-blank-at-eol
