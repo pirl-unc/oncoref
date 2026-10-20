@@ -16,8 +16,8 @@ sys.path.insert(0, str(ROOT))
 from cta_scope_report import annotate_measurements, sha256, write_csv  # noqa: E402
 
 from oncoref.normal_tissues import (  # noqa: E402
+    normal_tissue_screening_details,
     normal_tissue_screening_policy,
-    normal_tissue_screening_tier,
     normal_tissue_taxonomy,
     resolve_normal_tissue,
 )
@@ -112,10 +112,16 @@ def annotate_archive(observations):
             source_id=row.source_name,
             source_version=row.source_version,
         )
+        details = normal_tissue_screening_details(annotation)
         contexts.append(
             {
                 **row._asdict(),
-                "screening_tier": normal_tissue_screening_tier(annotation),
+                "screening_tier": details["screening_tier"],
+                "screening_tier_label": details["screening_tier_label"],
+                "tissue_review_flags": ";".join(details["review_flags"]),
+                "tissue_review_notes": " ".join(
+                    review["rationale"] for review in details["context_reviews"].values()
+                ),
             }
         )
     return result.merge(pd.DataFrame(contexts), validate="many_to_one")
@@ -190,6 +196,7 @@ def evaluate_gene(
         if missing["ihc"]
         else "routine_complete"
     )
+    review_rows = rows.loc[rows.strict_positive & rows.tissue_review_flags.ne("")]
     return {
         "evidence_pass": not failures and not unknown,
         "evidence_status": "excluded" if failures else "unresolved" if unknown else "compatible",
@@ -227,6 +234,11 @@ def evaluate_gene(
             )
         ),
         "absence_evidence": "not_established",
+        "tissue_review_status": "required" if len(review_rows) else "not_triggered",
+        "tissue_review_flags": ";".join(
+            sorted({flag for value in review_rows.tissue_review_flags for flag in value.split(";")})
+        ),
+        "tissue_review_contexts": "; ".join(sorted(set(review_rows.context_label))),
     }
 
 

@@ -8,7 +8,7 @@ observations alone do not establish absence outside a scope.
 
 Definitions and citations ship in `oncoref/data/normal-tissue-taxonomy.yaml`;
 exact dataset mappings ship in `oncoref/data/normal-tissue-mappings.csv`.
-Policy version `2026-10-20.1` and a SHA-256 identity over both files accompany
+Policy version `2026-10-20.2` and a SHA-256 identity over both files accompany
 each annotation. Source-artifact receipts record the bytes used to review labels.
 All access is offline once expression data are loaded.
 
@@ -25,11 +25,13 @@ branches are combined at their shared parent.
 | Placenta | `placental` → `extraembryonic` → `reproductive` → `reproductive_or_disposable` |
 | Explicit embryo/fetus context | `embryonic` or `fetal` → `reproductive` → `reproductive_or_disposable` |
 | Cutaneous melanocytes or hair follicles | `disposable_normal` → `reproductive_or_disposable` |
-| Whole skin, salivary glands or thymus | `permitted_normal` → `reproductive_or_permitted_normal` |
+| Whole skin, salivary glands, thymus, tonsil or spleen | `permitted_normal` → `reproductive_or_permitted_normal` |
 
 `reproductive_or_disposable` is a subset of the expanded
 `reproductive_or_permitted_normal` union. `disposable_normal` is a subset of
 `permitted_normal`; the wider name records a project screening allowance.
+`acceptable_normal` and `reproductive_or_acceptable_normal` are readable aliases
+for those existing scope identifiers. They resolve to the same sets.
 
 For a gene detected in both testis and oocyte, **the entire observed pattern**
 fits `reproductive_core` and `reproductive`, while neither sex-specific scope
@@ -46,6 +48,9 @@ adds the requested organs, vital/protected RNA ceilings, and an independent IHC
 exclusion gate, with included/excluded decisions for published targets.
 The [IHC-adaptive absolute RNA report](audits/cta-ihc-adaptive-20261020/index.md)
 compares those fixed ceilings with the approved tissue-specific negative-IHC ladder.
+These dated reports preserve their original policies and results. The
+[tissue-tier update](audits/cta-tissue-tiers-20261020/index.md) compares the current
+anatomy policy with the preceding adaptive screen, holding RNA thresholds fixed.
 
 ## Reproductive scopes
 
@@ -99,36 +104,78 @@ retina, marrow, thyroid, lymphoid organs and unsited immune-cell labels do not
 automatically qualify. Thymus is a somatic tissue, including when expression
 reflects immune tolerance. No unlisted normal tissue is admitted by default.
 
-## Expanded permitted scope and tiered expression screen
+## Vital, protected and acceptable tissues
 
-The project-requested `permitted_normal` scope is `disposable_normal` ∪ whole
-skin ∪ salivary glands ∪ thymus. `reproductive_or_permitted_normal` unions this
-with `reproductive`. Skin permission includes explicitly skin-sited keratinocytes,
+There are three resolved screening tiers. **Acceptable means conditionally
+allowed in this research screen**, with consequences and evidence limitations
+recorded separately. **Vital / critical function** covers both potentially fatal
+injury and major irreversible neurological or sensory disability. **Protected**
+covers other functionally important tissues without a project allowance.
+Unknown or mixed anatomy is **unresolved**, not an acceptable fourth tissue class.
+
+The `permitted_normal` scope is `disposable_normal` ∪ whole skin ∪ salivary glands
+∪ thymus ∪ tonsil ∪ spleen. `reproductive_or_permitted_normal` unions this with
+`reproductive`. Skin permission includes explicitly skin-sited keratinocytes,
 glands, fibroblasts, immune cells and other mapped skin compartments. It does not
 extend the exception to those cell types elsewhere, unsited cells, eye, retina or
 inner ear. Parotid inherits salivary gland. Thymic cortex/medulla inherit thymus.
 Anatomical mappings and organ labels remain available at their original resolution.
 
-The **tiered CTA screen** uses the following exact research policy:
+### Full assignment
+
+| Tier | Complete root list (mapped descendants inherit) |
+|---|---|
+| **Acceptable (conditional)** | All reproductive contexts defined above, including mammary, placental, embryonic and fetal contexts; cutaneous melanocytes; hair follicles; whole skin; salivary glands; thymus; tonsil; spleen. |
+| **Vital / critical function** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
+| **Protected** | Adipose tissue; thyroid gland; parathyroid gland; lymph node; human appendix; esophagus; stomach; colon; rectum; gallbladder; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
+| **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
+
+Retinal pigment epithelium inherits retina. The eye label is conservative because
+a bulk eye sample can include critical structures. The full vital label replaces
+an interpretation based only on mortality; protected tissue injury can also be
+serious. These are project assignments, not a clinical ranking of every possible
+pattern of organ injury.
+
+### Lymphoid organs and conditional acceptance
+
+| Source context | Assignment and explicit review conditions |
+|---|---|
+| **Tonsil** | Acceptable with immune-cell distribution and age/immune-reserve review. Palatine tonsillectomy is the human rationale; an unspecified dataset `tonsil` label retains that resolution. This does not map adenoids, all mucosal lymphoid tissue or mouse NALT into tonsil. |
+| **Spleen** | Acceptable with immune-cell distribution, age/immune-reserve and asplenia infection-risk review. Surviving organ removal does not imply low-consequence systemic injury. |
+| **Thymus** | Retains the requested acceptable assignment, with immune-cell distribution and age/immune-reserve review. |
+| **Lymph node** | Protected, with lymphatic/immune-function review. Regional removal does not justify allowing injury across all nodes or lymphatic stroma. |
+| **Blood / bone marrow** | Vital. No general immune-lineage exception is introduced. Unsited B-cell and T-cell source labels remain unresolved. |
+
+The [NHS tonsillectomy decision aid](https://www.england.nhs.uk/wp-content/uploads/2023/10/decision-support-tool-making-a-decision-about-recurrent-tonsillitis-in-children-and-adults.pdf)
+documents clinical removal and overlapping immune functions.
+[CDC asplenia guidance](https://www.cdc.gov/meningococcal/risk-factors/index.html)
+documents increased infection risk.
+[NCI lymph-node guidance](https://www.cancer.gov/about-cancer/diagnosis-staging/staging/sentinel-node-biopsy-fact-sheet)
+documents immune-cell traffic and increasing lymphedema risk with more extensive
+removal. Our inference is that these support **conditional organ allowances and
+cell-distribution review**, not equivalence between surgery and antigen-directed
+systemic injury.
+[NEI retinal guidance](https://www.nei.nih.gov/sites/default/files/nei-pdfs/nationalplan1.pdf)
+and the [melanocyte-directed TCR study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2929689/)
+support distinguishing ocular/inner-ear injury from skin or lymphoid-organ loss.
+None establishes the numerical thresholds.
+
+Review conditions are machine-readable in `context_reviews` and returned by
+`normal_tissue_screening_details()`. Candidate reports flag measured positive
+RNA (>0 nTPM) or positive IHC in these contexts. A flag remains visible when the
+candidate passes; it is not a new numerical tier or a completed clinical review.
+Measurements in every other organ retain that organ's independent RNA/IHC gates.
+
+### Expression rules
+
+The **fixed tiered CTA screen** uses the following exact research policy:
 
 | Tier | Normal RNA rule | Normal IHC rule |
 |---|---|---|
-| Permitted | No upper ceiling | Positive staining allowed |
-| Vital | Every measurement ≤1 nTPM | Any positive staining excludes, including Low |
+| Acceptable (machine ID `permitted`) | No upper ceiling | Positive staining allowed; conditional review annotations retained |
+| Vital / critical function (machine ID `vital`) | Every measurement ≤1 nTPM | Any positive staining excludes, including Low |
 | Protected normal | Every measurement ≤5 nTPM | Any positive staining excludes, including Low |
 | Unresolved | Positive evidence prevents retention | Positive evidence prevents retention |
-
-**Vital roots:** heart; lung and bronchus; brain (all mapped regions) and spinal
-cord; liver; kidney; bone marrow and blood; adrenal and pituitary glands; pancreas;
-small intestine (including duodenum, jejunum and ileum); skeletal and smooth muscle;
-peripheral nerve; vascular endothelium. Organ descendants inherit the tier.
-
-**Protected normal roots:** adipose tissue; retina and retinal pigment epithelium;
-eye; inner ear; thyroid and parathyroid glands; lymph node; spleen; tonsil; human
-appendix; esophagus; stomach; colon; rectum; gallbladder; urinary bladder; ureter;
-cartilage; oral mucosa; nasopharynx; tongue. These tissues remain outside the
-permitted set. "Protected" names the higher RNA allowance with the same strict
-IHC exclusion, rather than asserting that severe injury cannot threaten life.
 
 **Head, foot and generic soft tissue remain unresolved** because they can span
 tiers. A new or unknown tissue never silently receives the 5 nTPM allowance.
@@ -165,6 +212,7 @@ cross-species anatomical mapping does not transfer assay units or tolerability.
 ```python
 from oncoref.normal_tissues import (
     normal_tissue_screening_policy,
+    normal_tissue_screening_details,
     normal_tissue_screening_tier,
     resolve_normal_tissue,
 )
@@ -173,8 +221,12 @@ policy = normal_tissue_screening_policy()
 assert policy["vital"]["maximum_rna"] == 1
 assert policy["protected"]["maximum_rna"] == 5
 assert normal_tissue_screening_tier(resolve_normal_tissue("pancreas", species="human")) == "vital"
-assert normal_tissue_screening_tier(resolve_normal_tissue("retina", species="human")) == "protected"
+assert normal_tissue_screening_tier(resolve_normal_tissue("retina", species="human")) == "vital"
+assert normal_tissue_screening_tier(resolve_normal_tissue("lymph node", species="human")) == "protected"
 assert normal_tissue_screening_tier(resolve_normal_tissue("skin", species="dog")) == "permitted"
+details = normal_tissue_screening_details(resolve_normal_tissue("spleen", species="human"))
+assert details["screening_tier_label"] == "Acceptable (conditional)"
+assert "asplenia_infection_risk_review" in details["review_flags"]
 ```
 
 ## IHC-adaptive absolute RNA ceilings
@@ -182,7 +234,7 @@ assert normal_tissue_screening_tier(resolve_normal_tissue("skin", species="dog")
 The `ihc_adaptive_cta` policy uses the same permitted union and anatomical tiers,
 with these **inclusive maximum human HPA v23 nTPM values**:
 
-| IHC evidence in the RNA tissue | Vital | Protected normal |
+| IHC evidence in the RNA tissue | Vital / critical function | Protected |
 |---|---:|---:|
 | Missing, incomplete, uncertain or unusable | 1 | 5 |
 | Approved, all routine contexts Not detected | 2 | 5 |

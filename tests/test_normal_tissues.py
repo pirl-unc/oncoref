@@ -12,6 +12,7 @@ from oncoref.normal_tissues import (
     normal_tissue_mappings,
     normal_tissue_scope,
     normal_tissue_scopes,
+    normal_tissue_screening_details,
     normal_tissue_screening_policy,
     normal_tissue_screening_tier,
     normal_tissue_taxonomy,
@@ -95,6 +96,7 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
         "thymus",
         "salivary gland",
         "parotid gland",
+        "spleen",
     ):
         assert tier(tissue) == "permitted"
     for tissue in (
@@ -115,18 +117,19 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
         "bone marrow",
         "duodenum",
         "skeletal muscle",
-    ):
-        assert tier(tissue) == "vital"
-    for tissue in (
         "retina",
         "retinal pigment epithelium",
         "eye",
         "inner ear",
-        "spleen",
+    ):
+        assert tier(tissue) == "vital"
+    for tissue in (
+        "lymph node",
         "stomach",
         "thyroid gland",
     ):
         assert tier(tissue) == "protected"
+    assert tier("tonsil") == ("unresolved" if species == "mouse" else "permitted")
     for tissue in ("head", "foot", "soft tissue", "melanocytes", "unknown"):
         assert tier(tissue) == "unresolved"
     assert tier("liver", stage="fetal") == "permitted"
@@ -135,6 +138,57 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
         [resolve_normal_tissue(tissue, species=species) for tissue in ("testis", "thymus", "skin")]
     )
     assert mixed["narrowest_scopes"] == ("reproductive_or_permitted_normal",)
+
+
+@pytest.mark.parametrize("species", ["human", "dog", "mouse"])
+def test_every_anatomical_concept_has_one_disjoint_screening_assignment(species):
+    taxonomy = normal_tissue_taxonomy()
+    policy = normal_tissue_screening_policy()
+    taxon = {"human": 9606, "dog": 9615, "mouse": 10090}[species]
+
+    def ancestors(cid):
+        return {cid}.union(*(ancestors(p) for p in taxonomy["concepts"][cid]["parents"]))
+
+    permitted = normal_tissue_scope(policy["permitted_scope"], species=species)
+    for cid, concept in taxonomy["concepts"].items():
+        if taxon not in concept.get("taxon_ids", taxonomy["taxon_ids"]):
+            continue
+        matches = [
+            name for name in ("vital", "protected") if ancestors(cid) & set(policy[name]["roots"])
+        ]
+        matches += ["permitted"] if cid in permitted else []
+        matches += ["unresolved"] if cid in policy["unresolved_roots"] else []
+        assert len(matches) == 1, (cid, matches)
+        assert (
+            normal_tissue_screening_tier(resolve_normal_tissue(cid, species=species)) == matches[0]
+        )
+
+
+def test_acceptable_aliases_and_lymphoid_review_do_not_allow_all_immune_cells():
+    assert normal_tissue_scope("acceptable_normal", species="human") == normal_tissue_scope(
+        "permitted_normal", species="human"
+    )
+    spleen = normal_tissue_screening_details(human.resolve_normal_tissue("spleen"))
+    assert spleen["screening_tier_label"] == "Acceptable (conditional)"
+    assert "asplenia_infection_risk_review" in spleen["review_flags"]
+    assert "immune_cell_distribution_review" in spleen["review_flags"]
+    assert any("cdc.gov" in url for url in spleen["references"])
+    spleen["context_reviews"].clear()
+    assert normal_tissue_screening_details(human.resolve_normal_tissue("spleen"))["context_reviews"]
+    fetal = normal_tissue_screening_details(human.resolve_normal_tissue("spleen", stage="fetal"))
+    assert fetal["screening_tier"] == "permitted" and not fetal["review_flags"]
+    animal = normal_tissue_screening_details(canine.resolve_normal_tissue("spleen"))
+    assert "not_validated" in animal["tolerability_evidence"]
+    for tissue in ("blood", "bone marrow"):
+        assert normal_tissue_screening_tier(human.resolve_normal_tissue(tissue)) == "vital"
+    for cell in ("B-cells", "T-cells"):
+        annotation = human.resolve_normal_tissue(
+            cell_type=cell, source_id="hpa_single_cell", source_version="v23"
+        )
+        assert normal_tissue_screening_tier(annotation) == "unresolved"
+    assert not normal_tissue_screening_details(mouse.resolve_normal_tissue("tonsil"))[
+        "review_flags"
+    ]
 
 
 def test_policy_is_detached_and_stale_annotations_are_rejected():

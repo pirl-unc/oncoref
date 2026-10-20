@@ -1,0 +1,2083 @@
+{
+  "schema": "oncoref.normal-tissue-taxonomy",
+  "schema_version": 1,
+  "policy_version": "2026-10-20.2",
+  "taxon_ids": [
+    9606,
+    9615,
+    10090
+  ],
+  "references": {
+    "blagosklonny2003": {
+      "title": "Tissue-selective therapy of cancer",
+      "url": "https://doi.org/10.1038/sj.bjc.6601256",
+      "kind": "conceptual_minireview",
+      "scope": "Proposed examples: melanocytes, prostate, testis, breast, ovary; not an exhaustive or clinically validated whitelist."
+    },
+    "openstax_female": {
+      "title": "Anatomy and Physiology: Female Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/27-2-anatomy-and-physiology-of-the-female-reproductive-system",
+      "kind": "anatomy",
+      "scope": "Reproductive organs, ovarian compartments, and mammary glands as accessory reproductive organs."
+    },
+    "openstax_male": {
+      "title": "Anatomy and Physiology: Male Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/27-1-anatomy-and-physiology-of-the-male-reproductive-system",
+      "kind": "anatomy",
+      "scope": "Testis, excurrent ducts, accessory glands and external genitalia."
+    },
+    "mouse_anatomy": {
+      "title": "The Anatomy of the Laboratory Mouse, Margaret J. Cook",
+      "url": "https://www.informatics.jax.org/cookbook/chapters/contents2.shtml",
+      "kind": "comparative_anatomy",
+      "scope": "Mouse reproductive anatomy; anatomical applicability does not establish therapeutic tolerability."
+    },
+    "dog_anatomy": {
+      "title": "Male reproductive pelvic and external genitalia, ICAR-IVRI",
+      "url": "https://veterinaryanatomy.com/atlas/hindlimb-pelvis/splanchnology/male-reproductive-pelvic-and-external-genitalia/",
+      "kind": "comparative_anatomy",
+      "scope": "Dog lacks seminal vesicles and bulbourethral glands; prostate is its principal accessory sex gland."
+    },
+    "hpa_tissues": {
+      "title": "Human Protein Atlas tissue and cell-type definitions",
+      "url": "https://www.proteinatlas.org/humanproteome/tissue/data",
+      "kind": "source_documentation",
+      "scope": "Source tissue and cell-type labels; version-specific mapping rows refer to the v23 files."
+    },
+    "hpa_skin": {
+      "title": "Human Protein Atlas: skin histology",
+      "url": "https://www.proteinatlas.org/learn/dictionary/normal/skin",
+      "kind": "source_documentation",
+      "scope": "Skin melanocytes and hair follicles are separate compartments from other skin cells."
+    },
+    "hpa_pigment": {
+      "title": "Human Protein Atlas: pigment cells",
+      "url": "https://www.proteinatlas.org/humanproteome/single%2Bcell/single%2Bcell%2Btype/pigment%2Bcells",
+      "kind": "source_documentation",
+      "scope": "Skin melanocytes distinct from retinal pigment epithelial cells."
+    },
+    "johnson2009": {
+      "title": "Gene therapy with human and mouse T-cell receptors mediates cancer regression and targets normal tissues expressing cognate antigen",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2929689/",
+      "kind": "clinical_study",
+      "scope": "Melanocyte-antigen targeting can affect skin, eye and ear; a cutaneous exception must not include ocular or inner-ear compartments."
+    },
+    "purba2019": {
+      "title": "CDK4/6 inhibition mitigates stem cell damage in a novel model for taxane-induced alopecia",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31512803/",
+      "kind": "human_ex_vivo_study",
+      "scope": "Follicular matrix and stem-cell injury differ; follicular toxicity can cause persistent alopecia. Supports compartment distinction, not safety of immune ablation."
+    },
+    "nci_alopecia": {
+      "title": "Hair Loss (Alopecia) and Cancer Treatment",
+      "url": "https://www.cancer.gov/about-cancer/treatment/side-effects/hair-loss",
+      "kind": "clinical_information",
+      "scope": "Alopecia is a recognized cancer-treatment toxicity; regrowth and permanence depend on treatment."
+    },
+    "barkbase2019": {
+      "title": "BarkBase: Epigenomic Annotation of Canine Genomes",
+      "url": "https://doi.org/10.3390/genes10060433",
+      "kind": "primary_atlas",
+      "scope": "Canine adult and embryonic tissues; retain source developmental-stage terminology."
+    },
+    "fetal_atlas2020": {
+      "title": "A human cell atlas of fetal gene expression",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33184181/",
+      "kind": "primary_atlas",
+      "scope": "Fetal organ and cell identities are stage-specific and must not stand for adult-organ evidence."
+    },
+    "project_policy": {
+      "title": "oncoref normal-tissue scope policy, version 1",
+      "url": "https://github.com/pirl-unc/oncoref/blob/main/docs/normal-tissue-scopes.md",
+      "kind": "project_definition",
+      "scope": "Reproductive includes reproductive organs, mammary tissue, placenta, extraembryonic, embryonic and fetal contexts. Disposable normal is a conditional research scope, not a clinical safety claim. The expanded permitted scope adds whole skin, salivary gland, thymus, tonsil and spleen by project request. Acceptable lymphoid organs carry explicit review conditions. Tiered RNA ceilings are project screening parameters; IHC detections outside the permitted scope remain exclusions."
+    },
+    "nci_organ_inflammation": {
+      "title": "Immunotherapy and Organ-Related Inflammation",
+      "url": "https://www.cancer.gov/about-cancer/treatment/side-effects/organ-inflammation",
+      "kind": "clinical_information",
+      "scope": "Organ-specific immune injury supports conservative review of normal expression. Does not validate this project's tissue tiers or numerical cutoffs."
+    },
+    "niddk_adrenal": {
+      "title": "Definition and Facts of Adrenal Insufficiency and Addison's Disease",
+      "url": "https://www.niddk.nih.gov/health-information/endocrine-diseases/adrenal-insufficiency-addisons-disease/definition-facts",
+      "kind": "clinical_information",
+      "scope": "Adrenal crisis can be life-threatening. Supports including adrenal and pituitary contexts in the conservative vital tier; not an RNA threshold validation."
+    },
+    "mouse_coagulating": {
+      "title": "MGI Adult Mouse Anatomy: coagulating gland (MA:0000402)",
+      "url": "https://www.informatics.jax.org/vocab/gxd/ma_ontology/MA%3A0000402",
+      "kind": "anatomy_ontology",
+      "scope": "Mouse male reproductive gland, synonym prostate gland anterior lobe."
+    },
+    "mouse_lymphoid": {
+      "title": "Janeway Immunobiology: Organization of the mucosal immune system",
+      "url": "https://nerd.wwnorton.com/ebooks/epub/janeway10/EPUB/content/12.1-chapter12.xhtml",
+      "kind": "comparative_anatomy",
+      "scope": "Mouse nasal-associated lymphoid tissue is not anatomically a tonsil."
+    },
+    "nhs_tonsillectomy": {
+      "title": "Making a decision about recurrent tonsillitis in children and adults",
+      "url": "https://www.england.nhs.uk/wp-content/uploads/2023/10/decision-support-tool-making-a-decision-about-recurrent-tonsillitis-in-children-and-adults.pdf",
+      "kind": "clinical_information",
+      "scope": "Tonsillectomy is an established intervention; other tissues also provide immune functions. Surgical tolerability does not validate systemic immune ablation."
+    },
+    "cdc_asplenia": {
+      "title": "Risk Factors for Meningococcal Disease",
+      "url": "https://www.cdc.gov/meningococcal/risk-factors/index.html",
+      "kind": "clinical_information",
+      "scope": "Anatomic or functional asplenia increases serious infection risk. Spleen allowance requires an infection-risk and mitigation assessment."
+    },
+    "nci_lymph_nodes": {
+      "title": "Sentinel Lymph Node Biopsy",
+      "url": "https://www.cancer.gov/about-cancer/diagnosis-staging/staging/sentinel-node-biopsy-fact-sheet",
+      "kind": "clinical_information",
+      "scope": "Lymph nodes contain mobile immune cells. More extensive removal increases lymphedema and infection risks; regional surgery does not validate systemic injury."
+    },
+    "nei_retina": {
+      "title": "National Plan for Eye and Vision Research",
+      "url": "https://www.nei.nih.gov/sites/default/files/nei-pdfs/nationalplan1.pdf",
+      "kind": "clinical_information",
+      "scope": "Retinal injury can cause severe irreversible visual disability. Supports critical-function protection independently of immediate mortality."
+    }
+  },
+  "concepts": {
+    "testis": {
+      "label": "testis",
+      "parents": [],
+      "aliases": [
+        "testes"
+      ],
+      "references": [
+        "openstax_male",
+        "mouse_anatomy",
+        "dog_anatomy"
+      ]
+    },
+    "spermatogonium": {
+      "label": "spermatogonium",
+      "parents": [
+        "testis"
+      ],
+      "aliases": [
+        "spermatogonia",
+        "spermatogonia cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "spermatocyte": {
+      "label": "spermatocyte",
+      "parents": [
+        "testis"
+      ],
+      "aliases": [
+        "spermatocytes",
+        "pachytene spermatocytes",
+        "preleptotene spermatocytes"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "spermatid": {
+      "label": "spermatid",
+      "parents": [
+        "testis"
+      ],
+      "aliases": [
+        "spermatids",
+        "early spermatids",
+        "late spermatids",
+        "round or early spermatids",
+        "elongated or late spermatids"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "spermatozoon": {
+      "label": "spermatozoon",
+      "parents": [],
+      "aliases": [
+        "spermatozoa",
+        "sperm"
+      ],
+      "references": [
+        "hpa_tissues"
+      ],
+      "notes": "Male germ cells without an inferred anatomical site; a sperm observation alone does not establish testis restriction."
+    },
+    "sertoli_cell": {
+      "label": "sertoli cell",
+      "parents": [
+        "testis"
+      ],
+      "aliases": [
+        "sertoli cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "leydig_cell": {
+      "label": "leydig cell",
+      "parents": [
+        "testis"
+      ],
+      "aliases": [
+        "leydig cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "testicular_peritubular_cell": {
+      "label": "testicular peritubular cell",
+      "parents": [
+        "testis"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "seminiferous_tubule": {
+      "label": "seminiferous tubule",
+      "parents": [
+        "testis"
+      ],
+      "aliases": [
+        "seminiferous tubules",
+        "cells in seminiferous ducts"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "ovary": {
+      "label": "ovary",
+      "parents": [],
+      "aliases": [
+        "ovaries"
+      ],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "oocyte": {
+      "label": "oocyte",
+      "parents": [
+        "ovary"
+      ],
+      "aliases": [
+        "oocytes",
+        "ovum",
+        "ova"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "ovarian_follicle": {
+      "label": "ovarian follicle",
+      "parents": [
+        "ovary"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "granulosa_cell": {
+      "label": "granulosa cell",
+      "parents": [
+        "ovarian_follicle"
+      ],
+      "aliases": [
+        "granulosa cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "ovarian_stromal_cell": {
+      "label": "ovarian stromal cell",
+      "parents": [
+        "ovary"
+      ],
+      "aliases": [
+        "ovarian stromal cells",
+        "ovarian stroma cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "theca_cell": {
+      "label": "theca cell",
+      "parents": [
+        "ovary"
+      ],
+      "aliases": [
+        "theca cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "corpus_luteum": {
+      "label": "corpus luteum",
+      "parents": [
+        "ovary"
+      ],
+      "aliases": [
+        "corpora lutea"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "epididymis": {
+      "label": "epididymis",
+      "parents": [],
+      "aliases": [
+        "epididymides"
+      ],
+      "references": [
+        "openstax_male",
+        "mouse_anatomy",
+        "dog_anatomy"
+      ]
+    },
+    "vas_deferens": {
+      "label": "vas deferens",
+      "parents": [],
+      "aliases": [
+        "ductus deferens",
+        "deferent duct"
+      ],
+      "references": [
+        "openstax_male",
+        "mouse_anatomy",
+        "dog_anatomy"
+      ]
+    },
+    "prostate": {
+      "label": "prostate",
+      "parents": [],
+      "aliases": [
+        "prostate gland"
+      ],
+      "references": [
+        "openstax_male",
+        "mouse_anatomy",
+        "dog_anatomy"
+      ]
+    },
+    "penis": {
+      "label": "penis",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "openstax_male",
+        "mouse_anatomy",
+        "dog_anatomy"
+      ]
+    },
+    "seminal_vesicle": {
+      "label": "seminal vesicle",
+      "parents": [],
+      "aliases": [
+        "seminal vesicles",
+        "vesicular gland"
+      ],
+      "references": [
+        "openstax_male",
+        "mouse_anatomy",
+        "dog_anatomy"
+      ],
+      "taxon_ids": [
+        9606,
+        10090
+      ]
+    },
+    "bulbourethral_gland": {
+      "label": "bulbourethral gland",
+      "parents": [],
+      "aliases": [
+        "bulbourethral glands",
+        "cowper gland"
+      ],
+      "references": [
+        "openstax_male",
+        "mouse_anatomy",
+        "dog_anatomy"
+      ],
+      "taxon_ids": [
+        9606,
+        10090
+      ]
+    },
+    "coagulating_gland": {
+      "label": "coagulating gland",
+      "parents": [
+        "prostate"
+      ],
+      "aliases": [],
+      "references": [
+        "mouse_anatomy",
+        "mouse_coagulating"
+      ],
+      "taxon_ids": [
+        10090
+      ],
+      "notes": "Mouse anterior prostate/coagulating gland; no dog counterpart is assigned."
+    },
+    "fallopian_tube": {
+      "label": "fallopian tube",
+      "parents": [],
+      "aliases": [
+        "fallopian tubes",
+        "oviduct",
+        "oviducts",
+        "uterine tube"
+      ],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "uterus": {
+      "label": "uterus",
+      "parents": [],
+      "aliases": [
+        "uterine corpus"
+      ],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "vagina": {
+      "label": "vagina",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "vulva": {
+      "label": "vulva",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "clitoris": {
+      "label": "clitoris",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "endometrium": {
+      "label": "endometrium",
+      "parents": [
+        "uterus"
+      ],
+      "aliases": [
+        "endometrium 1",
+        "endometrium 2",
+        "uterine endometrium"
+      ],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "myometrium": {
+      "label": "myometrium",
+      "parents": [
+        "uterus"
+      ],
+      "aliases": [],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "cervix": {
+      "label": "cervix",
+      "parents": [
+        "uterus"
+      ],
+      "aliases": [
+        "cervix uteri",
+        "uterine cervix"
+      ],
+      "references": [
+        "openstax_female",
+        "mouse_anatomy"
+      ]
+    },
+    "uterine_horn": {
+      "label": "uterine horn",
+      "parents": [
+        "uterus"
+      ],
+      "aliases": [
+        "uterine horns"
+      ],
+      "references": [
+        "mouse_anatomy",
+        "barkbase2019"
+      ],
+      "taxon_ids": [
+        9615,
+        10090
+      ]
+    },
+    "mammary_tissue": {
+      "label": "Mammary tissue (whole breast or mammary gland)",
+      "parents": [],
+      "aliases": [
+        "breast",
+        "mammary gland",
+        "mammary glands",
+        "mammary tissue",
+        "lactating breast"
+      ],
+      "references": [
+        "openstax_female",
+        "blagosklonny2003",
+        "mouse_anatomy"
+      ],
+      "notes": "Whole-organ observation includes stroma; it does not establish glandular-cell restriction. Source sex and lactation state remain separate metadata."
+    },
+    "mammary_glandular": {
+      "label": "Mammary glandular epithelium",
+      "parents": [
+        "mammary_tissue"
+      ],
+      "aliases": [
+        "mammary glandular tissue",
+        "breast glandular cells",
+        "breast myoepithelial cells"
+      ],
+      "references": [
+        "openstax_female",
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "placenta": {
+      "label": "placenta",
+      "parents": [],
+      "aliases": [
+        "placental tissue"
+      ],
+      "references": [
+        "hpa_tissues",
+        "project_policy"
+      ],
+      "notes": "Placenta-specific evidence qualifies directly; maternal/fetal compartment resolution is not required."
+    },
+    "trophoblast": {
+      "label": "trophoblast",
+      "parents": [
+        "placenta"
+      ],
+      "aliases": [
+        "trophoblasts",
+        "trophoblastic cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "cytotrophoblast": {
+      "label": "cytotrophoblast",
+      "parents": [
+        "placenta"
+      ],
+      "aliases": [
+        "cytotrophoblasts"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "syncytiotrophoblast": {
+      "label": "syncytiotrophoblast",
+      "parents": [
+        "placenta"
+      ],
+      "aliases": [
+        "syncytiotrophoblasts"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "extravillous_trophoblast": {
+      "label": "extravillous trophoblast",
+      "parents": [
+        "placenta"
+      ],
+      "aliases": [
+        "extravillous trophoblasts"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "placental_decidua": {
+      "label": "placental decidua",
+      "parents": [
+        "placenta"
+      ],
+      "aliases": [
+        "placental decidual cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "hofbauer_cell": {
+      "label": "hofbauer cell",
+      "parents": [
+        "placenta"
+      ],
+      "aliases": [
+        "hofbauer cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "amnion": {
+      "label": "amnion",
+      "parents": [],
+      "aliases": [
+        "amniotic membrane"
+      ],
+      "references": [
+        "project_policy",
+        "fetal_atlas2020"
+      ]
+    },
+    "chorion": {
+      "label": "chorion",
+      "parents": [],
+      "aliases": [
+        "chorionic membrane"
+      ],
+      "references": [
+        "project_policy",
+        "fetal_atlas2020"
+      ]
+    },
+    "yolk_sac": {
+      "label": "yolk sac",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "project_policy",
+        "fetal_atlas2020"
+      ]
+    },
+    "allantois": {
+      "label": "allantois",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "project_policy",
+        "fetal_atlas2020"
+      ]
+    },
+    "umbilical_cord": {
+      "label": "umbilical cord",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "project_policy",
+        "fetal_atlas2020"
+      ]
+    },
+    "embryo": {
+      "label": "embryo",
+      "parents": [],
+      "aliases": [
+        "whole embryo",
+        "embryonic tissue"
+      ],
+      "references": [
+        "barkbase2019",
+        "project_policy"
+      ]
+    },
+    "fetus": {
+      "label": "fetus",
+      "parents": [],
+      "aliases": [
+        "foetus",
+        "whole fetus",
+        "fetal tissue",
+        "foetal tissue"
+      ],
+      "references": [
+        "fetal_atlas2020",
+        "project_policy"
+      ]
+    },
+    "skin": {
+      "label": "skin",
+      "parents": [],
+      "aliases": [
+        "skin 1",
+        "skin 2",
+        "zone of skin"
+      ],
+      "references": [
+        "hpa_skin"
+      ]
+    },
+    "cutaneous_melanocyte": {
+      "label": "Cutaneous melanocytes",
+      "parents": [
+        "skin"
+      ],
+      "aliases": [
+        "skin melanocytes",
+        "cutaneous melanocytes",
+        "epidermal melanocytes"
+      ],
+      "references": [
+        "blagosklonny2003",
+        "johnson2009",
+        "hpa_skin"
+      ],
+      "notes": "Only cutaneous melanocytes; an unsited melanocyte label, eye, retina and inner ear do not qualify."
+    },
+    "hair_follicle": {
+      "label": "Hair follicle compartment",
+      "parents": [
+        "skin"
+      ],
+      "aliases": [
+        "hair follicles",
+        "hair follicle epithelium",
+        "follicular keratinocytes"
+      ],
+      "references": [
+        "nci_alopecia",
+        "purba2019",
+        "hpa_skin"
+      ],
+      "notes": "Conditional acceptance of alopecia; includes follicular epithelial compartments. A bulk follicle does not resolve matrix versus bulge/stem-cell involvement or reversibility."
+    },
+    "adipose_tissue": {
+      "label": "adipose tissue",
+      "parents": [],
+      "aliases": [
+        "adipose"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "adrenal_gland": {
+      "label": "adrenal gland",
+      "parents": [],
+      "aliases": [
+        "adrenal"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "brain": {
+      "label": "brain",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "amygdala": {
+      "label": "amygdala",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "basal_ganglia": {
+      "label": "basal ganglia",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "cerebellum": {
+      "label": "cerebellum",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "cerebral_cortex": {
+      "label": "cerebral cortex",
+      "parents": [
+        "cerebrum"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "choroid_plexus": {
+      "label": "choroid plexus",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "hippocampus": {
+      "label": "hippocampus",
+      "parents": [
+        "hippocampal_formation"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "hypothalamus": {
+      "label": "hypothalamus",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "midbrain": {
+      "label": "midbrain",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "dorsal_raphe": {
+      "label": "dorsal raphe",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "substantia_nigra": {
+      "label": "substantia nigra",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "spinal_cord": {
+      "label": "spinal cord",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "retina": {
+      "label": "retina",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues",
+        "nei_retina"
+      ]
+    },
+    "eye": {
+      "label": "eye",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues",
+        "nei_retina",
+        "johnson2009"
+      ]
+    },
+    "inner_ear": {
+      "label": "inner ear",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues",
+        "johnson2009"
+      ]
+    },
+    "heart": {
+      "label": "heart",
+      "parents": [],
+      "aliases": [
+        "heart muscle"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "kidney": {
+      "label": "kidney",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "liver": {
+      "label": "liver",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "lung": {
+      "label": "lung",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "pancreas": {
+      "label": "pancreas",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "thyroid_gland": {
+      "label": "thyroid gland",
+      "parents": [],
+      "aliases": [
+        "thyroid"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "parathyroid_gland": {
+      "label": "parathyroid gland",
+      "parents": [],
+      "aliases": [
+        "parathyroid"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "pituitary_gland": {
+      "label": "pituitary gland",
+      "parents": [],
+      "aliases": [
+        "pituitary"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "salivary_gland": {
+      "label": "salivary gland",
+      "parents": [],
+      "aliases": [
+        "salivary"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "bone_marrow": {
+      "label": "bone marrow",
+      "parents": [],
+      "aliases": [
+        "bonemarrow"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "blood": {
+      "label": "blood",
+      "parents": [],
+      "aliases": [
+        "white blood cells",
+        "peripheral blood mononuclear cells"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "lymph_node": {
+      "label": "lymph node",
+      "parents": [],
+      "aliases": [
+        "lymphnode"
+      ],
+      "references": [
+        "hpa_tissues",
+        "nci_lymph_nodes"
+      ],
+      "notes": "Distributed lymphatic and immune organ. Limited regional excision does not justify allowing expression across the entire lymph-node system."
+    },
+    "spleen": {
+      "label": "spleen",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues",
+        "cdc_asplenia",
+        "nci_lymph_nodes"
+      ],
+      "notes": "Conditional project allowance. Organ loss requires infection-risk management; expression in shared immune cells needs separate distribution review."
+    },
+    "thymus": {
+      "label": "thymus",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "tonsil": {
+      "label": "tonsil",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues",
+        "mouse_lymphoid",
+        "nhs_tonsillectomy",
+        "nci_lymph_nodes"
+      ],
+      "taxon_ids": [
+        9606,
+        9615
+      ],
+      "notes": "Native tonsil samples, with palatine tonsillectomy as the human rationale. Does not include adenoids, all mucosal lymphoid tissue or mouse NALT. Bulk source labels do not establish cell-type confinement."
+    },
+    "appendix": {
+      "label": "appendix",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ],
+      "taxon_ids": [
+        9606
+      ],
+      "notes": "Human appendix label only; animal caecal lymphoid tissue is not mapped to vermiform appendix."
+    },
+    "esophagus": {
+      "label": "esophagus",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "stomach": {
+      "label": "stomach",
+      "parents": [],
+      "aliases": [
+        "stomach 1",
+        "stomach 2"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "colon": {
+      "label": "colon",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "rectum": {
+      "label": "rectum",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "small_intestine": {
+      "label": "small intestine",
+      "parents": [],
+      "aliases": [
+        "smallintestine"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "gallbladder": {
+      "label": "gallbladder",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "urinary_bladder": {
+      "label": "urinary bladder",
+      "parents": [],
+      "aliases": [
+        "bladder"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "ureter": {
+      "label": "ureter",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "skeletal_muscle": {
+      "label": "skeletal muscle",
+      "parents": [],
+      "aliases": [
+        "skeletalmuscle",
+        "muscle tissue"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "smooth_muscle": {
+      "label": "smooth muscle",
+      "parents": [],
+      "aliases": [
+        "smooth muscle tissue"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "cartilage": {
+      "label": "cartilage",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "soft_tissue": {
+      "label": "soft tissue",
+      "parents": [],
+      "aliases": [
+        "soft tissue 1",
+        "soft tissue 2"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "peripheral_nerve": {
+      "label": "peripheral nerve",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "endothelium": {
+      "label": "endothelium",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "oral_mucosa": {
+      "label": "oral mucosa",
+      "parents": [],
+      "aliases": [
+        "buccal oral mucosa"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "nasopharynx": {
+      "label": "nasopharynx",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "tongue": {
+      "label": "tongue",
+      "parents": [],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "head": {
+      "label": "head",
+      "parents": [],
+      "aliases": [
+        "heads"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "nail_bed": {
+      "label": "nail bed",
+      "parents": [
+        "skin"
+      ],
+      "aliases": [],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "foot": {
+      "label": "foot",
+      "parents": [],
+      "aliases": [
+        "sole of foot"
+      ],
+      "references": [
+        "hpa_tissues"
+      ]
+    },
+    "cerebrum": {
+      "label": "cerebrum",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [
+        "cerebrum"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "caudate": {
+      "label": "caudate",
+      "parents": [
+        "basal_ganglia"
+      ],
+      "aliases": [
+        "caudate"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "hippocampal_formation": {
+      "label": "hippocampal formation",
+      "parents": [
+        "brain"
+      ],
+      "aliases": [
+        "hippocampal formation"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "frontal_cortex": {
+      "label": "frontal cortex",
+      "parents": [
+        "cerebral_cortex"
+      ],
+      "aliases": [
+        "frontalcortex"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "occipital_cortex": {
+      "label": "occipital cortex",
+      "parents": [
+        "cerebral_cortex"
+      ],
+      "aliases": [
+        "occipitalcortex"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "renal_cortex": {
+      "label": "renal cortex",
+      "parents": [
+        "kidney"
+      ],
+      "aliases": [
+        "kidneycortex"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "renal_medulla": {
+      "label": "renal medulla",
+      "parents": [
+        "kidney"
+      ],
+      "aliases": [
+        "kidneymedulla"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "left_atrium": {
+      "label": "left atrium",
+      "parents": [
+        "heart"
+      ],
+      "aliases": [
+        "leftatrium"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "right_atrium": {
+      "label": "right atrium",
+      "parents": [
+        "heart"
+      ],
+      "aliases": [
+        "rightatrium"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "left_ventricle": {
+      "label": "left ventricle",
+      "parents": [
+        "heart"
+      ],
+      "aliases": [
+        "leftventricle"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "right_ventricle": {
+      "label": "right ventricle",
+      "parents": [
+        "heart"
+      ],
+      "aliases": [
+        "rightventricle"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "duodenum": {
+      "label": "duodenum",
+      "parents": [
+        "small_intestine"
+      ],
+      "aliases": [
+        "duodenum"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "ileum": {
+      "label": "ileum",
+      "parents": [
+        "small_intestine"
+      ],
+      "aliases": [
+        "ileum"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "jejunum": {
+      "label": "jejunum",
+      "parents": [
+        "small_intestine"
+      ],
+      "aliases": [
+        "jejunum"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "bronchus": {
+      "label": "bronchus",
+      "parents": [],
+      "aliases": [
+        "bronchus"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "parotid_gland": {
+      "label": "parotid gland",
+      "parents": [
+        "salivary_gland"
+      ],
+      "aliases": [
+        "parotid gland"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    },
+    "retinal_pigment_epithelium": {
+      "label": "retinal pigment epithelium",
+      "parents": [
+        "retina"
+      ],
+      "aliases": [
+        "retinal pigment epithelium"
+      ],
+      "references": [
+        "hpa_tissues",
+        "mouse_anatomy"
+      ]
+    }
+  },
+  "scopes": {
+    "testis": {
+      "roots": [
+        "testis"
+      ],
+      "union": [],
+      "aliases": [
+        "male_strict"
+      ],
+      "description": "Testis and its explicitly mapped subcompartments."
+    },
+    "oocyte": {
+      "roots": [
+        "oocyte"
+      ],
+      "union": [],
+      "aliases": [
+        "female_strict"
+      ],
+      "description": "Oocytes only; bulk ovary and follicle cells do not imply oocyte expression."
+    },
+    "ovary": {
+      "roots": [
+        "ovary"
+      ],
+      "union": [],
+      "aliases": [],
+      "description": "Whole ovary and ovarian subcompartments, including oocytes."
+    },
+    "mammary_glandular": {
+      "roots": [
+        "mammary_glandular"
+      ],
+      "union": [],
+      "aliases": [],
+      "description": "Explicit mammary glandular epithelium; bulk breast/mammary samples are broader."
+    },
+    "mammary": {
+      "roots": [
+        "mammary_tissue"
+      ],
+      "union": [],
+      "aliases": [],
+      "description": "Mammary organ and its mapped subcompartments; lactation and sex retained separately."
+    },
+    "male_reproductive": {
+      "roots": [
+        "epididymis",
+        "vas_deferens",
+        "prostate",
+        "seminal_vesicle",
+        "bulbourethral_gland",
+        "penis",
+        "spermatozoon"
+      ],
+      "union": [
+        "testis"
+      ],
+      "aliases": [
+        "male_extended"
+      ],
+      "description": "Testis, spermatozoa, and species-applicable male reproductive ducts, accessory glands and penis."
+    },
+    "female_reproductive": {
+      "roots": [
+        "fallopian_tube",
+        "uterus",
+        "vagina",
+        "vulva",
+        "clitoris"
+      ],
+      "union": [
+        "ovary",
+        "mammary"
+      ],
+      "aliases": [
+        "female_extended"
+      ],
+      "description": "Ovary, reproductive tract and mammary tissue; this anatomical grouping does not infer sample sex."
+    },
+    "placental": {
+      "roots": [
+        "placenta"
+      ],
+      "union": [],
+      "aliases": [],
+      "description": "Placenta, with or without further compartment annotation."
+    },
+    "extraembryonic": {
+      "roots": [
+        "amnion",
+        "chorion",
+        "yolk_sac",
+        "allantois",
+        "umbilical_cord"
+      ],
+      "union": [
+        "placental"
+      ],
+      "aliases": [],
+      "description": "Placenta and other extraembryonic tissues."
+    },
+    "embryonic": {
+      "roots": [
+        "embryo"
+      ],
+      "union": [],
+      "aliases": [],
+      "description": "Whole embryo or tissue explicitly sampled at an embryonic stage; source organ is retained."
+    },
+    "fetal": {
+      "roots": [
+        "fetus"
+      ],
+      "union": [],
+      "aliases": [],
+      "description": "Whole fetus or tissue explicitly sampled at a fetal stage; source organ is retained."
+    },
+    "reproductive_core": {
+      "roots": [],
+      "union": [
+        "testis",
+        "ovary",
+        "placental"
+      ],
+      "aliases": [
+        "core"
+      ],
+      "description": "Historical core anatomical union: testis, ovary and placenta."
+    },
+    "reproductive": {
+      "roots": [],
+      "union": [
+        "male_reproductive",
+        "female_reproductive",
+        "extraembryonic",
+        "embryonic",
+        "fetal"
+      ],
+      "aliases": [
+        "extended",
+        "permissive"
+      ],
+      "description": "Project union across all reproductive-organ and developmental contexts."
+    },
+    "disposable_normal": {
+      "roots": [
+        "cutaneous_melanocyte",
+        "hair_follicle"
+      ],
+      "union": [],
+      "aliases": [],
+      "description": "Conditional research exception for cutaneous melanocytes and hair follicles. Not all skin, pigment cells or normal tissues. Human rationale; animal tolerability is unvalidated."
+    },
+    "reproductive_or_disposable": {
+      "roots": [],
+      "union": [
+        "reproductive",
+        "disposable_normal"
+      ],
+      "aliases": [],
+      "description": "Union of reproductive and conditionally disposable normal tissue contexts."
+    },
+    "permitted_normal": {
+      "roots": [
+        "skin",
+        "salivary_gland",
+        "thymus",
+        "tonsil",
+        "spleen"
+      ],
+      "union": [
+        "disposable_normal"
+      ],
+      "aliases": [
+        "acceptable_normal"
+      ],
+      "description": "Conditionally acceptable normal contexts comprising whole skin, salivary glands, thymus, tonsil and spleen, plus the narrower disposable scope. Lymphoid organ allowances require review of immune-cell distribution, age and immune reserve; spleen additionally requires infection-risk management. Permission applies only to the sampled organ, not the same cell type elsewhere."
+    },
+    "reproductive_or_permitted_normal": {
+      "roots": [],
+      "union": [
+        "reproductive",
+        "permitted_normal"
+      ],
+      "aliases": [
+        "reproductive_or_acceptable_normal"
+      ],
+      "description": "Expanded project union of reproductive contexts and permitted normal tissues. Heart, lung, CNS, liver, pancreas, retina and muscle are outside."
+    }
+  },
+  "screening_policies": {
+    "tiered_cta": {
+      "policy_id": "oncoref.cta-permitted-screen.2026-10-20.2",
+      "permitted_scope": "reproductive_or_permitted_normal",
+      "tier_labels": {
+        "permitted": "Acceptable (conditional)",
+        "vital": "Vital / critical function",
+        "protected": "Protected",
+        "unresolved": "Unresolved"
+      },
+      "rna_source": "hpa_rna_consensus",
+      "rna_source_version": "v23",
+      "rna_species": "human",
+      "rna_unit": "nTPM",
+      "minimum_permitted_rna": 1.0,
+      "positive_ihc_levels": [
+        "Low",
+        "Medium",
+        "High",
+        "Ascending",
+        "Descending"
+      ],
+      "vital": {
+        "maximum_rna": 1.0,
+        "roots": [
+          "heart",
+          "lung",
+          "bronchus",
+          "brain",
+          "spinal_cord",
+          "liver",
+          "kidney",
+          "bone_marrow",
+          "blood",
+          "adrenal_gland",
+          "pituitary_gland",
+          "pancreas",
+          "small_intestine",
+          "skeletal_muscle",
+          "smooth_muscle",
+          "peripheral_nerve",
+          "endothelium",
+          "retina",
+          "eye",
+          "inner_ear"
+        ],
+        "description": "Strictest project tier for organs whose extensive injury can threaten life or cause major irreversible neurological or sensory loss. Includes all mapped descendants. Vital is the stable machine identifier; the full meaning is vital or critical function."
+      },
+      "protected": {
+        "maximum_rna": 5.0,
+        "roots": [
+          "adipose_tissue",
+          "thyroid_gland",
+          "parathyroid_gland",
+          "lymph_node",
+          "appendix",
+          "esophagus",
+          "stomach",
+          "colon",
+          "rectum",
+          "gallbladder",
+          "urinary_bladder",
+          "ureter",
+          "cartilage",
+          "oral_mucosa",
+          "nasopharynx",
+          "tongue"
+        ],
+        "description": "Protected normal tissues outside the permitted scope, with a higher RNA ceiling but the same exclusion for any positive IHC. This tier includes distributed lymph nodes and functionally important organs without a project allowance. It does not assert that extensive injury cannot be fatal."
+      },
+      "context_reviews": {
+        "lymphoid_organ_allowance": {
+          "roots": [
+            "tonsil",
+            "spleen",
+            "thymus"
+          ],
+          "flags": [
+            "immune_cell_distribution_review",
+            "age_and_immune_reserve_review"
+          ],
+          "references": [
+            "nhs_tonsillectomy",
+            "cdc_asplenia",
+            "nci_lymph_nodes",
+            "project_policy"
+          ],
+          "rationale": "Conditional organ allowance only. Identify the expressing cell population and its distribution in blood, marrow and other organs. Assess age and immune reserve. Surgery is not a model of systemic antigen-directed injury. Bulk tissue cannot establish organ confinement."
+        },
+        "spleen_infection_risk": {
+          "roots": [
+            "spleen"
+          ],
+          "flags": [
+            "asplenia_infection_risk_review"
+          ],
+          "references": [
+            "cdc_asplenia"
+          ],
+          "rationale": "Assess consequences of functional asplenia and an appropriate infection-prevention and management strategy before therapeutic acceptance."
+        },
+        "distributed_lymph_nodes": {
+          "roots": [
+            "lymph_node"
+          ],
+          "flags": [
+            "lymphatic_and_immune_function_review"
+          ],
+          "references": [
+            "nci_lymph_nodes"
+          ],
+          "rationale": "Remains protected. Regional removal does not justify whole-system depletion or injury to lymphatic stroma. Lineage-specific exceptions require a separately defined policy and evidence."
+        }
+      },
+      "unresolved_roots": [
+        "head",
+        "foot",
+        "soft_tissue"
+      ],
+      "references": [
+        "project_policy",
+        "hpa_tissues",
+        "nci_organ_inflammation",
+        "niddk_adrenal",
+        "nhs_tonsillectomy",
+        "cdc_asplenia",
+        "nci_lymph_nodes",
+        "nei_retina",
+        "johnson2009"
+      ],
+      "review_semantics": "Review annotations do not add numerical tiers or establish clinical acceptability. Positive observations in flagged contexts remain visible even when a candidate passes the research expression screen.",
+      "coverage": "Complete routine bulk RNA is required. Missing or partial IHC is reported explicitly and cannot establish protein absence. Unresolved positive anatomy, unusable measurements and reviewed unreliable IHC block retention.",
+      "species_note": "Anatomical tiers apply to human, dog and mouse. The numerical policy is calibrated only as a project screen for human HPA v23 nTPM; numerical thresholds and clinical tolerability do not transfer to other species."
+    },
+    "ihc_adaptive_cta": {
+      "policy_id": "oncoref.cta-ihc-adaptive-screen.2026-10-20.2",
+      "permitted_scope": "reproductive_or_permitted_normal",
+      "tier_labels": {
+        "permitted": "Acceptable (conditional)",
+        "vital": "Vital / critical function",
+        "protected": "Protected",
+        "unresolved": "Unresolved"
+      },
+      "rna_source": "hpa_rna_consensus",
+      "rna_source_version": "v23",
+      "rna_species": "human",
+      "rna_unit": "nTPM",
+      "minimum_permitted_rna": 1.0,
+      "positive_ihc_levels": [
+        "Low",
+        "Medium",
+        "High",
+        "Ascending",
+        "Descending"
+      ],
+      "vital": {
+        "maximum_rna": 1.0,
+        "roots": [
+          "heart",
+          "lung",
+          "bronchus",
+          "brain",
+          "spinal_cord",
+          "liver",
+          "kidney",
+          "bone_marrow",
+          "blood",
+          "adrenal_gland",
+          "pituitary_gland",
+          "pancreas",
+          "small_intestine",
+          "skeletal_muscle",
+          "smooth_muscle",
+          "peripheral_nerve",
+          "endothelium",
+          "retina",
+          "eye",
+          "inner_ear"
+        ],
+        "description": "Strictest project tier for organs whose extensive injury can threaten life or cause major irreversible neurological or sensory loss. Includes all mapped descendants. Vital is the stable machine identifier; the full meaning is vital or critical function."
+      },
+      "protected": {
+        "maximum_rna": 5.0,
+        "roots": [
+          "adipose_tissue",
+          "thyroid_gland",
+          "parathyroid_gland",
+          "lymph_node",
+          "appendix",
+          "esophagus",
+          "stomach",
+          "colon",
+          "rectum",
+          "gallbladder",
+          "urinary_bladder",
+          "ureter",
+          "cartilage",
+          "oral_mucosa",
+          "nasopharynx",
+          "tongue"
+        ],
+        "description": "Protected normal tissues outside the permitted scope, with a higher RNA ceiling but the same exclusion for any positive IHC. This tier includes distributed lymph nodes and functionally important organs without a project allowance. It does not assert that extensive injury cannot be fatal."
+      },
+      "context_reviews": {
+        "lymphoid_organ_allowance": {
+          "roots": [
+            "tonsil",
+            "spleen",
+            "thymus"
+          ],
+          "flags": [
+            "immune_cell_distribution_review",
+            "age_and_immune_reserve_review"
+          ],
+          "references": [
+            "nhs_tonsillectomy",
+            "cdc_asplenia",
+            "nci_lymph_nodes",
+            "project_policy"
+          ],
+          "rationale": "Conditional organ allowance only. Identify the expressing cell population and its distribution in blood, marrow and other organs. Assess age and immune reserve. Surgery is not a model of systemic antigen-directed injury. Bulk tissue cannot establish organ confinement."
+        },
+        "spleen_infection_risk": {
+          "roots": [
+            "spleen"
+          ],
+          "flags": [
+            "asplenia_infection_risk_review"
+          ],
+          "references": [
+            "cdc_asplenia"
+          ],
+          "rationale": "Assess consequences of functional asplenia and an appropriate infection-prevention and management strategy before therapeutic acceptance."
+        },
+        "distributed_lymph_nodes": {
+          "roots": [
+            "lymph_node"
+          ],
+          "flags": [
+            "lymphatic_and_immune_function_review"
+          ],
+          "references": [
+            "nci_lymph_nodes"
+          ],
+          "rationale": "Remains protected. Regional removal does not justify whole-system depletion or injury to lymphatic stroma. Lineage-specific exceptions require a separately defined policy and evidence."
+        }
+      },
+      "unresolved_roots": [
+        "head",
+        "foot",
+        "soft_tissue"
+      ],
+      "references": [
+        "project_policy",
+        "hpa_tissues",
+        "nci_organ_inflammation",
+        "niddk_adrenal",
+        "nhs_tonsillectomy",
+        "cdc_asplenia",
+        "nci_lymph_nodes",
+        "nei_retina",
+        "johnson2009"
+      ],
+      "review_semantics": "Review annotations do not add numerical tiers or establish clinical acceptability. Positive observations in flagged contexts remain visible even when a candidate passes the research expression screen.",
+      "coverage": "Complete routine bulk RNA is required. Missing or partial IHC is reported explicitly and cannot establish protein absence. Unresolved positive anatomy, unusable measurements and reviewed unreliable IHC block retention.",
+      "species_note": "Anatomical tiers apply to human, dog and mouse. The numerical policy is calibrated only as a project screen for human HPA v23 nTPM; numerical thresholds and clinical tolerability do not transfer to other species.",
+      "ihc_source": "hpa_normal_tissue",
+      "ihc_source_version": "v23",
+      "negative_ihc_rna_limits": {
+        "Missing": {
+          "vital": 1.0,
+          "protected": 5.0
+        },
+        "Uncertain": {
+          "vital": 1.0,
+          "protected": 5.0
+        },
+        "Approved": {
+          "vital": 2.0,
+          "protected": 5.0
+        },
+        "Supported": {
+          "vital": 3.0,
+          "protected": 7.5
+        },
+        "Enhanced": {
+          "vital": 5.0,
+          "protected": 10.0
+        }
+      },
+      "negative_ihc_rule": "Relax only with valid Not detected observations in every routine IHC tissue/cell context mapping to the same anatomical tissue as the RNA measurement. Use the weakest reliability among all observations in that tissue. Missing contexts, unknown reliability, invalid observations, positive staining or reviewed-unreliable IHC cannot earn relaxation. A narrower region cannot clear a broader organ; other organs cannot supply negative evidence. Enhanced describes source validation, not a guaranteed limit of detection for a negative stain or for peptide-HLA presentation.",
+      "threshold_provenance": "User-approved starting project parameters on 2026-10-20; not clinically validated or estimated from outcome data. Existing absolute ceilings remain the Missing/Uncertain baseline."
+    }
+  },
+  "source_artifacts": [
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_rna_consensus",
+      "source_version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
+      "hashed_content": "uncompressed source TSV",
+      "size_bytes": 37949495
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_normal_tissue",
+      "source_version": "v23",
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
+      "hashed_content": "uncompressed source TSV",
+      "size_bytes": 82941549
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_single_cell",
+      "source_version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_type.tsv.zip",
+      "sha256": "9a0cd2466a9764c9d3c7d8e73d58785742f5d325bf2f28cdb5d526605ed8332e",
+      "hashed_content": "uncompressed source TSV",
+      "size_bytes": 74101573
+    },
+    {
+      "taxon_id": 9615,
+      "source_id": "bgee-srp009687",
+      "source_version": "Bgee 15.2",
+      "path": "species/dog/bgee-srp009687-samples.json",
+      "sha256": "542c38d7417f96ccbc5216c7765feb9b0d1a9895e6416f97a752ca7647cb382f",
+      "hashed_content": "bundled curated sample metadata; retains original source evidence",
+      "size_bytes": 25045
+    },
+    {
+      "taxon_id": 9615,
+      "source_id": "bgee-srp181218",
+      "source_version": "Bgee 15.2",
+      "path": "species/dog/bgee-srp181218-samples.json",
+      "sha256": "43575dd133d2b6e46d560eaf8173bdc5ee85e1aaa6220c1fd38f6cc421ac03c3",
+      "hashed_content": "bundled curated sample metadata; retains original source evidence",
+      "size_bytes": 156442
+    },
+    {
+      "taxon_id": 9615,
+      "source_id": "barkbase",
+      "source_version": "retrieved-2026-10-08",
+      "path": "species/dog/barkbase-samples.json",
+      "sha256": "e36e81e4403830b7fa0c64aa5b91f9f3ceef01003b95911ac26b19702b3c074c",
+      "hashed_content": "bundled curated sample metadata; retains original source evidence",
+      "size_bytes": 187772
+    },
+    {
+      "taxon_id": 9615,
+      "source_id": "pfizer-dog-protein",
+      "source_version": "MSV000099744-update-2026-03-23",
+      "path": "species/dog/pfizer-dog-protein-samples.json",
+      "sha256": "c009998a3525758c31295b881b900d78461b99ddeda1af649d9161155218b5b2",
+      "hashed_content": "bundled curated sample metadata; retains original source evidence",
+      "size_bytes": 63416
+    },
+    {
+      "taxon_id": 9615,
+      "source_id": "hindriks2025",
+      "source_version": "2025-05-06-publisher-version",
+      "url": "https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf",
+      "sha256": "825450315ad1433b7c98d49a2e8c715f3e3760ca2889c5bb1a1041c2bfcdc391",
+      "hashed_content": "source document in the CTA evidence receipt"
+    },
+    {
+      "taxon_id": 9615,
+      "source_id": "nemec2019",
+      "source_version": "2019-article-abstract-europepmc-2026-10-13",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json",
+      "sha256": "6f27557f46c3607dde7bb32c158e7cc0a26adc6a75a230dbdf9dfc748bd11b73",
+      "hashed_content": "source document in the CTA evidence receipt"
+    }
+  ],
+  "taxonomy_id": "oncoref:normal-tissues:v1:sha256:1cdaa2f6f1b3c7cd524e9f5d2484c8ad065022f6b4c66e676ec8f62657f47700"
+}

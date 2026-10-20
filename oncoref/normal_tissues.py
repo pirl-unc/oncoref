@@ -66,6 +66,14 @@ def _registry():
             or not set(policy["references"]) <= doc["references"].keys()
         ):
             raise ValueError(f"Unknown screening policy anatomy or citation: {name}")
+        for review in policy.get("context_reviews", {}).values():
+            if (
+                not set(review["roots"]) <= concepts.keys()
+                or not set(review["references"]) <= doc["references"].keys()
+                or not review["flags"]
+                or not review["rationale"]
+            ):
+                raise ValueError(f"Invalid screening context review: {name}")
     index = {}
     for row in rows:
         row["taxon_id"] = int(row["taxon_id"])
@@ -348,6 +356,44 @@ def normal_tissue_screening_tier(annotation, policy="tiered_cta") -> str:
     if len(tiers) > 1:
         raise ValueError("Overlapping vital and protected anatomy definitions")
     return tiers[0] if tiers else "unresolved"
+
+
+def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
+    """Tier, readable label and context-specific review conditions.
+
+    ``permitted`` is the stable identifier for conditionally acceptable contexts;
+    ``vital`` includes critical sensory function. Review flags are annotations,
+    not additional numerical tiers or evidence that a therapy is acceptable.
+    Developmental permission does not inherit adult organ-loss review conditions.
+    """
+    tier = normal_tissue_screening_tier(annotation, policy)
+    config = normal_tissue_screening_policy(policy)
+    ancestors = (
+        _ancestors(annotation.concept_id)
+        if annotation.mapping_status == "mapped" and annotation.stage not in {"embryonic", "fetal"}
+        else set()
+    )
+    reviews = {
+        name: review
+        for name, review in config.get("context_reviews", {}).items()
+        if ancestors & set(review["roots"])
+    }
+    doc = _registry()[0]
+    return {
+        "screening_tier": tier,
+        "screening_tier_label": config["tier_labels"][tier],
+        "review_flags": sorted({flag for review in reviews.values() for flag in review["flags"]}),
+        "context_reviews": deepcopy(reviews),
+        "references": sorted(
+            set(annotation.references)
+            | {
+                doc["references"][reference]["url"]
+                for review in reviews.values()
+                for reference in review["references"]
+            }
+        ),
+        "tolerability_evidence": annotation.tolerability_evidence,
+    }
 
 
 def classify_normal_tissue_pattern(detections) -> dict:

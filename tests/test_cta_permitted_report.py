@@ -82,9 +82,11 @@ def evaluate(
 
 
 def test_raw_rna_tier_boundaries_are_inclusive_and_per_tissue():
-    assert evaluate([("testis", 100), ("heart muscle", 1), ("retina", 5)])["evidence_pass"]
+    assert evaluate([("testis", 100), ("heart muscle", 1), ("thyroid gland", 5)])["evidence_pass"]
     assert not evaluate([("testis", 100000), ("heart muscle", 1.1)])["evidence_pass"]
-    assert not evaluate([("testis", 100000), ("retina", 5.1)])["evidence_pass"]
+    assert not evaluate([("testis", 100000), ("thyroid gland", 5.1)])["evidence_pass"]
+    assert evaluate([("testis", 100), ("retina", 1)])["evidence_pass"]
+    assert not evaluate([("testis", 100), ("retina", 1.1)])["evidence_pass"]
 
 
 def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
@@ -108,6 +110,8 @@ def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
         ("heart muscle", "cardiomyocytes"),
         ("lung", "alveolar cells"),
         ("cerebral cortex", "neuronal cells"),
+        ("lymph node", "germinal center cells"),
+        ("thyroid gland", "glandular cells"),
     ],
 )
 def test_low_ihc_is_independent_of_rna_in_both_protected_tiers(tissue, cell):
@@ -130,6 +134,8 @@ def test_all_positive_ihc_levels_remain_exclusions(level):
         ("skin 1", "keratinocytes"),
         ("salivary gland", "glandular cells"),
         ("thymus", "cortical cells"),
+        ("tonsil", "germinal center cells"),
+        ("spleen", "cells in white pulp"),
     ],
 )
 def test_requested_whole_organs_are_permitted(tissue, cell):
@@ -139,6 +145,26 @@ def test_requested_whole_organs_are_permitted(tissue, cell):
     assert not evaluate(
         [("testis", 100), (rna_tissue, 50)], [(tissue, cell, "High")], scope=report.COMBINED
     )["evidence_pass"]
+
+
+def test_acceptable_lymphoid_expression_remains_flagged_and_other_sites_still_exclude():
+    ihc = [("spleen", "cells in white pulp", "High")]
+    result = evaluate([("testis", 100), ("spleen", 50)], ihc, adaptive=True)
+    assert result["evidence_pass"]
+    assert result["tissue_review_status"] == "required"
+    assert "asplenia_infection_risk_review" in result["tissue_review_flags"]
+    for tissue, cell in (
+        ("lymph node", "germinal center cells"),
+        ("bone marrow", "hematopoietic cells"),
+    ):
+        result = evaluate(
+            [("testis", 100), ("spleen", 50), (tissue, 0)],
+            [*ihc, (tissue, cell, "Low")],
+            adaptive=True,
+        )
+        assert not result["evidence_pass"]
+        assert "positive_ihc_outside_permitted" in result["failure_reasons"]
+    assert not evaluate([("testis", 100), ("spleen", 50), ("lymph node", 5.1)])["evidence_pass"]
 
 
 def test_missing_ihc_is_explicit_and_not_negative_staining():
@@ -162,9 +188,9 @@ def test_incomplete_and_unreliable_evidence_cannot_pass():
 
 def test_positive_evidence_inside_permitted_scope_is_required():
     assert not evaluate([("testis", 0), ("liver", 0)])["evidence_pass"]
-    assert not evaluate([("testis", 0.5), ("retina", 3)])["evidence_pass"]
+    assert not evaluate([("testis", 0.5), ("thyroid gland", 3)])["evidence_pass"]
     assert evaluate(
-        [("testis", 0.5), ("retina", 3)], [("testis", "cells in seminiferous ducts", "Low")]
+        [("testis", 0.5), ("thyroid gland", 3)], [("testis", "cells in seminiferous ducts", "Low")]
     )["evidence_pass"]
 
 
