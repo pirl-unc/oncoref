@@ -47,6 +47,20 @@ def _registry():
             if key in aliases and aliases[key] != cid:
                 raise ValueError(f"Ambiguous anatomy alias: {name}")
             aliases[key] = cid
+
+    def applicable_taxa(cid, path=()):
+        if cid in path:
+            raise ValueError(f"Cyclic normal-tissue anatomy: {cid}")
+        taxa = set(concepts[cid].get("taxon_ids", doc["taxon_ids"]))
+        if not taxa or not taxa <= set(doc["taxon_ids"]):
+            raise ValueError(f"Invalid anatomy species: {cid}")
+        for parent in concepts[cid]["parents"]:
+            if not taxa <= applicable_taxa(parent, (*path, cid)):
+                raise ValueError(f"Anatomy species exceed parent applicability: {cid}")
+        return taxa
+
+    for cid in concepts:
+        applicable_taxa(cid)
     scope_aliases = {}
     for name, scope in scopes.items():
         if not set(scope["roots"]) <= concepts.keys() or not set(scope["union"]) <= scopes.keys():
@@ -202,6 +216,8 @@ class NormalTissueAnnotation:
     scopes: tuple[str, ...]
     references: tuple[str, ...]
     tolerability_evidence: str
+    source_sex: str | None = None
+    sex: str = "unspecified"
 
     def as_dict(self):
         return asdict(self)
@@ -216,6 +232,8 @@ def resolve_normal_tissue(
     source_id="anatomy",
     source_version=None,
     context="normal",
+    sex=None,
+    physiological_state=None,
 ) -> NormalTissueAnnotation:
     """Resolve an exact native label without guessing a narrower source compartment.
 
@@ -229,6 +247,16 @@ def resolve_normal_tissue(
     status, kind, cid, state = "unmapped", "unresolved", None, None
     references = {doc["references"]["project_policy"]["url"]}
     native_stage = _key(stage)
+    sex_name = {
+        "": "unspecified",
+        "unknown": "unspecified",
+        "unspecified": "unspecified",
+        "male": "male",
+        "m": "male",
+        "female": "female",
+        "f": "female",
+        "mixed": "mixed",
+    }.get(_key(sex), "unresolved")
     stage_name = {
         "": "unspecified",
         "unknown": "unspecified",
@@ -292,6 +320,16 @@ def resolve_normal_tissue(
             stage_name = inferred_stage
         else:
             status = "conflicting_stage"
+    if stage_name == "unresolved":
+        status = "unresolved_stage"
+    if sex_name == "unresolved":
+        status = "unresolved_sex"
+    if physiological_state is not None:
+        supplied_state = _key(physiological_state)
+        if state and supplied_state != state:
+            status = "conflicting_physiological_state"
+        else:
+            state = supplied_state or None
     memberships = []
     if context != "normal":
         status = "not_normal_context"
@@ -331,6 +369,8 @@ def resolve_normal_tissue(
         "human_context_dependent_rationale"
         if selected.taxon_id == 9606
         else "anatomical_transfer_only_not_validated_tolerability",
+        sex,
+        sex_name,
     )
 
 
@@ -380,6 +420,7 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
     }
     doc = _registry()[0]
     return {
+        "tissue_category": normal_tissue_category(annotation, policy),
         "screening_tier": tier,
         "screening_tier_label": config["tier_labels"][tier],
         "review_flags": sorted({flag for review in reviews.values() for flag in review["flags"]}),
@@ -394,6 +435,76 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
         ),
         "tolerability_evidence": annotation.tolerability_evidence,
     }
+
+
+def normal_tissue_category(annotation, policy="tiered_cta") -> str:
+    """Reproductive, Disposable, Protected or Vital; unresolved is a QC status.
+
+    Disposable names the expanded, conditional project allowance. It does not
+    assert complete organ loss is harmless or inflammation is steroid-responsive.
+    The older, narrower ``disposable_normal`` anatomical scope remains distinct.
+    """
+    tier = normal_tissue_screening_tier(annotation, policy)
+    if tier == "permitted":
+        return "reproductive" if "reproductive" in annotation.scopes else "disposable"
+    return tier
+
+
+def normal_tissue_inventory(*, species, policy="tiered_cta") -> tuple[dict, ...]:
+    """Every canonical concept, including explicitly inapplicable species anatomy.
+
+    This is an anatomy inventory, not an expression-coverage assertion. Dataset
+    mapping availability is reported separately by normal_tissue_mapping_inventory.
+    """
+    doc = _registry()[0]
+    result = []
+    for cid, concept in doc["concepts"].items():
+        annotation = resolve_normal_tissue(cid, species=species)
+        result.append(
+            {
+                "concept_id": cid,
+                "label": concept["label"],
+                "parents": tuple(concept["parents"]),
+                "applicable_taxon_ids": tuple(concept.get("taxon_ids", doc["taxon_ids"])),
+                "applicability_notes": concept.get("notes", ""),
+                "taxon_id": annotation.taxon_id,
+                "mapping_status": annotation.mapping_status,
+                "tissue_category": normal_tissue_category(annotation, policy),
+                "scopes": annotation.scopes,
+                "references": annotation.references,
+                "expression_coverage": "not_assessed",
+            }
+        )
+    return tuple(result)
+
+
+def normal_tissue_mapping_inventory(*, species, source_id=None, source_version=None):
+    """Native source/version labels with canonical anatomy and four-way category.
+
+    An empty result means no mapping inventory is bundled, never no expression.
+    Exact rows retain compartment versus organ-context mapping resolution.
+    """
+    result = []
+    for row in normal_tissue_mappings(
+        species=species, source_id=source_id, source_version=source_version
+    ):
+        annotation = resolve_normal_tissue(
+            row["source_tissue"] or None,
+            species=species,
+            cell_type=row["source_cell_type"] or None,
+            source_id=row["source_id"],
+            source_version=row["source_version"],
+        )
+        result.append(
+            {
+                **row,
+                "mapping_status": annotation.mapping_status,
+                "tissue_category": normal_tissue_category(annotation),
+                "taxonomy_id": annotation.taxonomy_id,
+                "expression_coverage": "not_assessed",
+            }
+        )
+    return tuple(result)
 
 
 def classify_normal_tissue_pattern(detections) -> dict:

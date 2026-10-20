@@ -29,7 +29,7 @@ from oncoref.normal_tissues import (  # noqa: E402
     normal_tissue_taxonomy,
 )
 
-PREVIOUS = ROOT / "docs/audits/cta-ihc-adaptive-20261020"
+PREVIOUS = ROOT / "docs/audits/cta-tissue-tiers-20261020"
 OBSERVATIONS = ROOT / "docs/audits/cta-permitted-tissues-20261019"
 TRACKED = set(TARGETS) | {
     "TEX15",
@@ -70,7 +70,7 @@ def build(out):
     if policy["negative_ihc_rna_limits"] != prior["policy"]["negative_ihc_rna_limits"]:
         raise ValueError("This comparison isolates anatomy changes; RNA ladders must match")
     old = pd.read_csv(previous_path, keep_default_na=False)
-    old = old.loc[old.scenario.eq("adaptive")].set_index("Ensembl_Gene_ID")
+    old = old.loc[old.scenario.eq("current_adaptive")].set_index("Ensembl_Gene_ID")
     observations = annotate_archive(
         pd.read_csv(observation_path, keep_default_na=False, low_memory=False)
     )
@@ -178,6 +178,7 @@ def build(out):
         "mapping_kind",
         "mapping_references",
         "screening_tier",
+        "tissue_category",
         "screening_tier_label",
         "tissue_review_flags",
         "tissue_review_notes",
@@ -291,14 +292,16 @@ def render(out, summary, changes, adaptive, policy):
         ]
     )
     (out / "index.md").write_text(
-        "# CTA tissue-tier update — 20 October 2026\n\n"
+        "# CTA tissue contexts and removable organs — 20 October 2026\n\n"
         f"Policy `{policy['policy_id']}`. All 2,537 published candidates are reevaluated "
         "from the same pinned human HPA v23 observations.\n\n"
         "## Tissue changes\n\n"
-        "- Tonsil and spleen become **acceptable (conditional)**, with explicit review flags.\n"
-        "- Lymph nodes stay **protected**; blood and marrow stay **vital**.\n"
-        "- Retina, eye and inner ear move to **vital / critical function**.\n"
-        "- Reproductive unions and other organ assignments are preserved.\n\n"
+        "- Appendix and gallbladder join the conditional **Disposable** category.\n"
+        "- Native observations expose **Reproductive, Disposable, Protected, Vital** separately.\n"
+        "- Skin and salivary allowances gain explicit extent/control review annotations.\n"
+        "- Earlier organ allowances remain project choices, pending the manageability-policy review.\n"
+        "- [Patient-context gene filters](../../normal-tissue-gene-filters.md) require separate "
+        "sex/stage-aware negative coverage; this adult HPA report cannot certify those filters.\n\n"
         "The adaptive vital/protected ceilings remain **1/5, 2/5, 3/7.5 and 5/10 nTPM** "
         "for missing/uncertain, Approved, Supported and Enhanced negative IHC. "
         "The proposed 1/2/3/6 and 2/4/6/12 ladder is not adopted in this comparison.\n\n"
@@ -307,7 +310,7 @@ def render(out, summary, changes, adaptive, policy):
         f"**Gained:** {gained}.\n\n**Lost:** {lost}.\n\n"
         f"**{flagged} retained candidates have positive observations requiring tissue review.** "
         "This is a research-screen result, not completed therapeutic acceptance. Review flags "
-        "record RNA >0 nTPM or positive IHC in tonsil, spleen, thymus or lymph-node contexts; "
+        "record RNA >0 nTPM or positive IHC in contexts with review conditions; "
         "they do not independently change expression-pass or final-retention decisions.\n\n"
         "## Evidence and interpretation\n\n"
         "The full [tissue definitions and citations](../../normal-tissue-scopes.md) explain "
@@ -334,7 +337,7 @@ def render(out, summary, changes, adaptive, policy):
         "- [Run manifest and checksums](run-manifest.json)\n\n"
         "Run `python scripts/cta_tissue_tier_report.py --out <new-empty-directory>` "
         "at this report's implementation revision. The preceding "
-        "[adaptive report](../cta-ihc-adaptive-20261020/index.md) remains an immutable baseline.\n"
+        "[tissue-tier report](../cta-tissue-tiers-20261020/index.md) remains an immutable baseline.\n"
     )
 
 

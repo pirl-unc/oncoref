@@ -9,6 +9,9 @@ import pytest
 from oncoref import canine, cta_regen, human, mouse, reference_data
 from oncoref.normal_tissues import (
     classify_normal_tissue_pattern,
+    normal_tissue_category,
+    normal_tissue_inventory,
+    normal_tissue_mapping_inventory,
     normal_tissue_mappings,
     normal_tissue_scope,
     normal_tissue_scopes,
@@ -97,6 +100,7 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
         "salivary gland",
         "parotid gland",
         "spleen",
+        "gallbladder",
     ):
         assert tier(tissue) == "permitted"
     for tissue in (
@@ -130,6 +134,7 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
     ):
         assert tier(tissue) == "protected"
     assert tier("tonsil") == ("unresolved" if species == "mouse" else "permitted")
+    assert tier("appendix") == ("permitted" if species == "human" else "unresolved")
     for tissue in ("head", "foot", "soft tissue", "melanocytes", "unknown"):
         assert tier(tissue) == "unresolved"
     assert tier("liver", stage="fetal") == "permitted"
@@ -202,6 +207,54 @@ def test_policy_is_detached_and_stale_annotations_are_rejected():
         normal_tissue_screening_tier(
             replace(human.resolve_normal_tissue("heart"), taxonomy_id="old")
         )
+
+
+@pytest.mark.parametrize("species", ["human", "dog", "mouse"])
+def test_four_categories_and_native_mapping_inventory_remain_distinct_from_coverage(species):
+    inventory = normal_tissue_inventory(species=species)
+    by_concept = {r["concept_id"]: r for r in inventory}
+    assert by_concept["testis"]["tissue_category"] == "reproductive"
+    assert by_concept["gallbladder"]["tissue_category"] == "disposable"
+    assert by_concept["lymph_node"]["tissue_category"] == "protected"
+    assert by_concept["retina"]["tissue_category"] == "vital"
+    for cid in ("head", "foot", "soft_tissue"):
+        assert by_concept[cid]["tissue_category"] == "unresolved"
+    for cid in (
+        "uterine_horn",
+        "coagulating_gland",
+        "tonsil",
+        "appendix",
+        "seminal_vesicle",
+        "bulbourethral_gland",
+    ):
+        row = by_concept[cid]
+        assert (row["mapping_status"] == "mapped") == (
+            row["taxon_id"] in row["applicable_taxon_ids"]
+        )
+    mappings = normal_tissue_mapping_inventory(species=species)
+    for row in mappings:
+        assert row["expression_coverage"] == "not_assessed"
+        assert row["source_version"] and row["source_reference"]
+    if species == "mouse":
+        assert mappings == ()
+    assert (
+        normal_tissue_category(resolve_normal_tissue("liver", species=species, stage="fetal"))
+        == "reproductive"
+    )
+    assert (
+        normal_tissue_category(resolve_normal_tissue("liver", species=species, stage="adult"))
+        == "vital"
+    )
+
+
+def test_unknown_stage_and_pregnant_maternal_context_are_not_reclassified():
+    unknown = human.resolve_normal_tissue("testis", stage="unreviewed age label")
+    assert unknown.mapping_status == "unresolved_stage" and not unknown.scopes
+    maternal = human.resolve_normal_tissue(
+        "liver", stage="adult", sex="female", physiological_state="pregnant"
+    )
+    assert maternal.sex == "female" and maternal.physiological_state == "pregnant"
+    assert normal_tissue_category(maternal) == "vital"
 
 
 def test_placenta_does_not_require_maternal_fetal_compartment_resolution():
