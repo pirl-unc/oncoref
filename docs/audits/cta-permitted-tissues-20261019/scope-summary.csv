@@ -1,0 +1,4 @@
+scenario,protein_coding_candidates,evidence_pass,retained,without_ihc,partial_ihc,complete_routine_ihc,no_forbidden_ihc_contexts_observed,retained_from_adaptive_combined
+previous_1,2537,627,547,321,222,4,321,544
+expanded_1,2537,675,582,341,236,5,341,557
+tiered,2537,727,629,368,255,6,368,577

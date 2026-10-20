@@ -1,0 +1,434 @@
+#!/usr/bin/env python3
+"""Reproduce the published-candidate screen with vital/protected RNA ceilings."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from cta_scope_report import annotate_measurements, sha256, write_csv  # noqa: E402
+
+from oncoref.normal_tissues import (  # noqa: E402
+    normal_tissue_screening_policy,
+    normal_tissue_screening_tier,
+    normal_tissue_taxonomy,
+    resolve_normal_tissue,
+)
+
+ARCHIVE = ROOT / "docs/audits/cta-tissue-scopes-20261019"
+EXPANDED = "reproductive_or_permitted_normal"
+COMBINED = "reproductive_or_disposable"
+SCOPES = ("reproductive", COMBINED, EXPANDED)
+SCENARIOS = {
+    "previous_1": (COMBINED, 1.0, 1.0),
+    "expanded_1": (EXPANDED, 1.0, 1.0),
+    "tiered": (EXPANDED, 1.0, 5.0),
+}
+TARGETS = {
+    "PRAME": "PRAME",
+    "CT83": "KK-LC-1",
+    "CTAG1B": "NY-ESO-1",
+    "CTAG2": "LAGE-1",
+    "MAGEA1": "MAGE-A1",
+    "MAGEA3": "MAGE-A3",
+    "MAGEA4": "MAGE-A4",
+    "MAGEA10": "MAGE-A10",
+    "MAGEA11": "MAGE-A11",
+    "MAGEC1": "MAGE-C1 / CT7",
+    "MAGEC2": "MAGE-C2",
+    "XAGE1B": "XAGE1B",
+    "XAGE1A": "XAGE1A",
+    "SSX1": "SSX1",
+    "SSX2": "SSX2",
+    "ROPN1": "ROPN1",
+    "ROPN1B": "ROPN1B",
+    "LDHC": "LDHC",
+    "HORMAD1": "HORMAD1",
+    "HORMAD2": "HORMAD2",
+    "PAGE4": "PAGE4",
+    "PAGE2B": "PAGE2B",
+    "FATE1": "FATE1",
+    "LIN28B": "LIN28B",
+    "PIWIL1": "PIWIL1",
+    "TDRD1": "TDRD1",
+    "BRDT": "BRDT",
+    "CABYR": "CABYR",
+    "EGFL6": "EGFL6",
+    "GAGE12F": "GAGE12F",
+    "GAGE12G": "GAGE12G",
+    "GAGE12J": "GAGE12J",
+    "GAGE13": "GAGE13",
+    "MAGEB6": "MAGEB6",
+    "CT45A8": "CT45A8",
+    "CT45A10": "CT45A10",
+    "DDX43": "HAGE",
+    "CTCFL": "BORIS",
+    "AKAP4": "AKAP4",
+    "PLAC1": "PLAC1",
+    "PASD1": "PASD1",
+    "LY6K": "LY6K",
+}
+
+
+def annotate_archive(observations):
+    """Re-resolve original human HPA labels using the current cited taxonomy."""
+    frames = []
+    ids = set(observations.Ensembl_Gene_ID)
+    for modality, group in observations.groupby("modality", sort=False):
+        raw = group.rename(
+            columns={
+                "Ensembl_Gene_ID": "Gene",
+                "Symbol": "Gene name",
+                "tissue": "Tissue",
+                "cell_type": "Cell type",
+                "rna_ntpm": "nTPM",
+                "ihc_level": "Level",
+                "ihc_reliability": "Reliability",
+            }
+        )
+        columns = ["Gene", "Gene name", "Tissue"]
+        columns += ["nTPM"] if modality == "bulk_rna" else ["Cell type", "Level", "Reliability"]
+        if modality == "bulk_rna":
+            raw["nTPM"] = pd.to_numeric(raw.nTPM, errors="coerce")
+        frames.append(annotate_measurements(raw[columns], modality, ids, scopes=SCOPES))
+    result = pd.concat(frames, ignore_index=True)
+    contexts = []
+    for row in (
+        result[["source_name", "source_version", "tissue", "cell_type"]]
+        .drop_duplicates()
+        .itertuples(index=False)
+    ):
+        annotation = resolve_normal_tissue(
+            row.tissue or None,
+            species="human",
+            cell_type=row.cell_type or None,
+            source_id=row.source_name,
+            source_version=row.source_version,
+        )
+        contexts.append(
+            {
+                **row._asdict(),
+                "screening_tier": normal_tissue_screening_tier(annotation),
+            }
+        )
+    return result.merge(pd.DataFrame(contexts), validate="many_to_one")
+
+
+def evaluate_gene(rows, *, scope, vital_limit, protected_limit, expected, unreliable=False):
+    """Separate RNA ceilings and a strict outside-IHC gate, with explicit missingness."""
+    config = normal_tissue_screening_policy()
+    rna = rows.loc[rows.modality.eq("bulk_rna")]
+    ihc = rows.loc[rows.modality.eq("ihc")]
+    mapped = rows.mapping_status.eq("mapped")
+    allowed = mapped & rows[scope]
+    tiers = rows.screening_tier.copy()
+    # Scope-only comparison: held-out requested exceptions receive the protected
+    # ceiling; scenarios with the narrower scope use the same 1 nTPM ceiling in both tiers.
+    tiers.loc[tiers.eq("permitted") & ~allowed] = "protected"
+    tiers.loc[allowed] = "permitted"
+    forbidden_ihc = rows.loc[rows.modality.eq("ihc") & rows.strict_positive & mapped & ~allowed]
+    above = rows.loc[
+        rows.modality.eq("bulk_rna")
+        & mapped
+        & (
+            (tiers.eq("vital") & rows.rna_ntpm.gt(vital_limit))
+            | (tiers.eq("protected") & rows.rna_ntpm.gt(protected_limit))
+        )
+    ]
+    positive_inside = bool(
+        (
+            allowed
+            & rows.modality.eq("bulk_rna")
+            & rows.rna_ntpm.ge(config["minimum_permitted_rna"])
+        ).any()
+        or (allowed & rows.modality.eq("ihc") & rows.strict_positive).any()
+    )
+    seen = {
+        name: set(
+            zip(
+                frame.loc[frame.valid_measurement, "tissue"],
+                frame.loc[frame.valid_measurement, "cell_type"],
+            )
+        )
+        for name, frame in (("bulk_rna", rna), ("ihc", ihc))
+    }
+    missing = {name: set(expected[name]) - seen[name] for name in expected}
+    failures, unknown = [], []
+    if len(above):
+        failures.append("rna_above_tissue_ceiling")
+    if len(forbidden_ihc):
+        failures.append("positive_ihc_outside_permitted")
+    if not positive_inside:
+        failures.append("insufficient_positive_evidence_inside")
+    if not expected["bulk_rna"] or missing["bulk_rna"]:
+        unknown.append("incomplete_routine_rna")
+    if (~rows.valid_measurement).any():
+        unknown.append("unusable_measurement")
+    if (rows.strict_positive & (~mapped | tiers.eq("unresolved"))).any():
+        unknown.append("unresolved_positive_anatomy")
+    if unreliable:
+        unknown.append("reviewed_unreliable_ihc")
+    ihc_coverage = (
+        "unreliable"
+        if unreliable
+        else "unavailable"
+        if not seen["ihc"]
+        else "partial"
+        if missing["ihc"]
+        else "routine_complete"
+    )
+    return {
+        "evidence_pass": not failures and not unknown,
+        "evidence_status": "excluded" if failures else "unresolved" if unknown else "compatible",
+        "failure_reasons": ";".join(failures + unknown),
+        "positive_evidence_inside": positive_inside,
+        "rna_routine_missing": len(missing["bulk_rna"]),
+        "ihc_routine_missing": len(missing["ihc"]),
+        "ihc_coverage": ihc_coverage,
+        "vital_rna_max_ntpm": rows.loc[
+            rows.modality.eq("bulk_rna") & tiers.eq("vital"), "rna_ntpm"
+        ].max(),
+        "protected_rna_max_ntpm": rows.loc[
+            rows.modality.eq("bulk_rna") & tiers.eq("protected"), "rna_ntpm"
+        ].max(),
+        "rna_exclusions": "; ".join(
+            f"{r.tissue}: {r.rna_ntpm:g} nTPM ({tiers.loc[i]}, limit {vital_limit if tiers.loc[i] == 'vital' else protected_limit:g})"
+            for i, r in above.sort_values("rna_ntpm", ascending=False).iterrows()
+        ),
+        "ihc_exclusions": "; ".join(
+            f"{r.context_label}: {r.ihc_level} ({r.ihc_reliability or 'reliability unavailable'})"
+            for r in forbidden_ihc.itertuples(index=False)
+        ),
+        "ihc_forbidden_contexts_observed": len(
+            set(
+                zip(
+                    rows.loc[
+                        rows.modality.eq("ihc") & rows.valid_measurement & mapped & ~allowed,
+                        "tissue",
+                    ],
+                    rows.loc[
+                        rows.modality.eq("ihc") & rows.valid_measurement & mapped & ~allowed,
+                        "cell_type",
+                    ],
+                )
+            )
+        ),
+        "absence_evidence": "not_established",
+    }
+
+
+def build(out):
+    out.mkdir(parents=True, exist_ok=True)
+    archive_manifest = json.loads((ARCHIVE / "run-manifest.json").read_text())
+    inputs = (
+        "candidate-decisions.csv",
+        "normal-observations.csv.gz",
+        "source-membership.csv.gz",
+        "source-counts.csv",
+    )
+    for name in inputs:
+        if sha256(ARCHIVE / name) != archive_manifest["outputs"][name]:
+            raise ValueError(f"Archived input checksum mismatch: {name}")
+    base = pd.read_csv(ARCHIVE / inputs[0], keep_default_na=False)
+    base = base.loc[base.scope.eq(COMBINED)].set_index("Ensembl_Gene_ID")
+    observations = annotate_archive(
+        pd.read_csv(ARCHIVE / inputs[1], keep_default_na=False, low_memory=False)
+    )
+    expected = {
+        key: {tuple(context) for context in contexts}
+        for key, contexts in archive_manifest["routine_contexts"].items()
+    }
+    groups = dict(iter(observations.groupby("Ensembl_Gene_ID")))
+    records = []
+    for gid, row in base.iterrows():
+        for scenario, (scope, vital, protected) in SCENARIOS.items():
+            record = evaluate_gene(
+                groups.get(gid, observations.iloc[:0]),
+                scope=scope,
+                vital_limit=vital,
+                protected_limit=protected,
+                expected=expected,
+                unreliable=row.reviewed_unreliable_ihc,
+            )
+            record.update(
+                {
+                    "Ensembl_Gene_ID": gid,
+                    "Symbol": row.Symbol,
+                    "scenario": scenario,
+                    "scope": scope,
+                    "vital_rna_ceiling_ntpm": vital,
+                    "protected_rna_ceiling_ntpm": protected,
+                    "family_eligible": row.family_eligible,
+                    "nomination_review_eligible": row.nomination_review_eligible,
+                    "nomination_review_reason": row.nomination_review_reason,
+                    "adaptive_combined_retained": row.adaptive_retained,
+                    "retained": bool(
+                        record["evidence_pass"]
+                        and row.family_eligible
+                        and row.nomination_review_eligible
+                    ),
+                }
+            )
+            if not row.family_eligible:
+                record["failure_reasons"] += ";family_exclusion"
+            if not row.nomination_review_eligible:
+                record["failure_reasons"] += ";existing_nomination_or_manual_review"
+            record["failure_reasons"] = record["failure_reasons"].strip(";")
+            records.append(record)
+    candidates = pd.DataFrame(records)
+    sets = {
+        scenario: set(group.loc[group.retained, "Ensembl_Gene_ID"])
+        for scenario, group in candidates.groupby("scenario")
+    }
+    if not sets["previous_1"] <= sets["expanded_1"] <= sets["tiered"]:
+        raise ValueError("Expansion or ceiling relaxation lost candidates")
+    # The previous sensitivity is an independently computed, documented anchor.
+    if len(sets["previous_1"]) != 547:
+        raise ValueError("Previous 1 nTPM combined-scope sensitivity no longer reproduces 547")
+    summary = []
+    for scenario in SCENARIOS:
+        group = candidates.loc[candidates.scenario.eq(scenario)]
+        retained = group.loc[group.retained]
+        summary.append(
+            {
+                "scenario": scenario,
+                "protein_coding_candidates": len(group),
+                "evidence_pass": int(group.evidence_pass.sum()),
+                "retained": len(retained),
+                "without_ihc": int(retained.ihc_coverage.eq("unavailable").sum()),
+                "partial_ihc": int(retained.ihc_coverage.eq("partial").sum()),
+                "complete_routine_ihc": int(retained.ihc_coverage.eq("routine_complete").sum()),
+                "no_forbidden_ihc_contexts_observed": int(
+                    retained.ihc_forbidden_contexts_observed.eq(0).sum()
+                ),
+                "retained_from_adaptive_combined": int(retained.adaptive_combined_retained.sum()),
+            }
+        )
+    summary = pd.DataFrame(summary)
+    membership = pd.read_csv(ARCHIVE / "source-membership.csv.gz", keep_default_na=False)
+    sources = pd.read_csv(ARCHIVE / "source-counts.csv")
+    sources = sources.loc[sources.scope.eq(COMBINED)].copy()
+    doi_labels = sources.set_index("doi").source.to_dict()
+    citation_groups = (
+        membership.loc[membership.Ensembl_Gene_ID.ne("")]
+        .groupby("Ensembl_Gene_ID")
+        .doi.agg(lambda values: sorted(set(values)))
+    )
+    candidates["source_dois"] = candidates.Ensembl_Gene_ID.map(citation_groups).map(
+        lambda values: ";".join(values)
+    )
+    candidates["source_publications"] = candidates.Ensembl_Gene_ID.map(citation_groups).map(
+        lambda values: ";".join(doi_labels.get(doi, doi) for doi in values)
+    )
+    for scenario, ids in sets.items():
+        counts = (
+            membership.loc[membership.Ensembl_Gene_ID.isin(ids)]
+            .groupby("doi")
+            .Ensembl_Gene_ID.nunique()
+        )
+        sources[scenario] = sources.doi.map(counts).fillna(0).astype(int)
+    targets = candidates.loc[
+        candidates.scenario.eq("tiered") & candidates.Symbol.isin(TARGETS)
+    ].copy()
+    targets["name"] = targets.Symbol.map(TARGETS)
+    for scenario, ids in sets.items():
+        targets[f"retained_{scenario}"] = targets.Ensembl_Gene_ID.isin(ids)
+    targets["reason"] = targets.apply(
+        lambda r: (
+            "Included; IHC coverage: " + r.ihc_coverage
+            if r.retained
+            else "; ".join(
+                filter(
+                    None,
+                    [
+                        r.rna_exclusions,
+                        r.ihc_exclusions,
+                        r.failure_reasons,
+                        r.nomination_review_reason if not r.nomination_review_eligible else "",
+                    ],
+                )
+            )
+        ),
+        axis=1,
+    )
+    targets = targets.set_index("Symbol").reindex(TARGETS).reset_index()
+    if targets.Ensembl_Gene_ID.isna().any():
+        raise ValueError("A named published target is absent from the source universe")
+    exports = {
+        "candidate-decisions.csv": candidates,
+        "scope-summary.csv": summary,
+        "source-counts.csv": sources,
+        "notable-targets.csv": targets,
+        "normal-observations.csv.gz": observations,
+        "tissue-contexts.csv": observations[
+            [
+                "source_name",
+                "source_version",
+                "tissue",
+                "cell_type",
+                "concept_id",
+                "mapping_status",
+                "mapping_references",
+                "screening_tier",
+                *SCOPES,
+            ]
+        ].drop_duplicates(),
+    }
+    for name, frame in exports.items():
+        write_csv(frame, out / name)
+    (out / "tissue-policy.json").write_text(json.dumps(normal_tissue_taxonomy(), indent=2) + "\n")
+    from cta_permitted_report_render import render
+
+    render(out, candidates, sources, summary, targets)
+    (out / "run-manifest.json").write_text(
+        json.dumps(
+            {
+                "report_schema": "oncoref.cta-permitted-report.v1",
+                "taxonomy_id": normal_tissue_taxonomy()["taxonomy_id"],
+                "policy": normal_tissue_screening_policy(),
+                "input_report": str(ARCHIVE.relative_to(ROOT)),
+                "input_manifest_sha256": sha256(ARCHIVE / "run-manifest.json"),
+                "inputs": {name: sha256(ARCHIVE / name) for name in inputs},
+                "scenarios": SCENARIOS,
+                "routine_contexts": archive_manifest["routine_contexts"],
+                "manual_reviews": "Existing family and nomination/manual-review decisions preserved and exposed separately from the new expression gates.",
+                "checks": [
+                    "547-candidate previous-sensitivity parity",
+                    "nested scope expansion and ceiling relaxation",
+                ],
+                "implementation_sha256": {
+                    name: sha256(ROOT / name)
+                    for name in (
+                        "scripts/cta_permitted_report.py",
+                        "scripts/cta_permitted_report_render.py",
+                        "scripts/cta_scope_report.py",
+                        "oncoref/normal_tissues.py",
+                        "oncoref/data/normal-tissue-taxonomy.yaml",
+                        "oncoref/data/normal-tissue-mappings.csv",
+                    )
+                },
+                "outputs": {
+                    path.name: sha256(path)
+                    for path in sorted(out.iterdir())
+                    if path.is_file() and path.name != "run-manifest.json"
+                },
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+    print(summary.to_string(index=False))
+    print(targets[["Symbol", "retained", "reason"]].to_string(index=False))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", type=Path, required=True)
+    build(parser.parse_args().out)

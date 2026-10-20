@@ -12,6 +12,8 @@ from oncoref.normal_tissues import (
     normal_tissue_mappings,
     normal_tissue_scope,
     normal_tissue_scopes,
+    normal_tissue_screening_policy,
+    normal_tissue_screening_tier,
     normal_tissue_taxonomy,
     resolve_normal_tissue,
 )
@@ -69,8 +71,83 @@ def test_scopes_are_exact_unions_and_citations_are_present(species):
         for concept in scope:
             assert taxonomy["concepts"][concept]["references"]
     assert "thymus" not in scopes["reproductive_or_disposable"]
+    assert scopes["reproductive_or_disposable"] < scopes["reproductive_or_permitted_normal"]
+    assert (
+        scopes["reproductive_or_permitted_normal"]
+        == scopes["reproductive"] | scopes["permitted_normal"]
+    )
     taxonomy["concepts"]["testis"]["parents"].append("bad")
     assert "bad" not in normal_tissue_taxonomy()["concepts"]["testis"]["parents"]
+
+
+@pytest.mark.parametrize("species", ["human", "dog", "mouse"])
+def test_expanded_permission_and_screening_tiers_are_species_aware(species):
+    def tier(tissue, **kwargs):
+        return normal_tissue_screening_tier(
+            resolve_normal_tissue(tissue, species=species, **kwargs)
+        )
+
+    for tissue in (
+        "testis",
+        "placenta",
+        "skin",
+        "nail bed",
+        "thymus",
+        "salivary gland",
+        "parotid gland",
+    ):
+        assert tier(tissue) == "permitted"
+    for tissue in (
+        "heart",
+        "left ventricle",
+        "lung",
+        "bronchus",
+        "amygdala",
+        "caudate",
+        "cerebellum",
+        "hypothalamus",
+        "spinal cord",
+        "liver",
+        "renal cortex",
+        "pancreas",
+        "adrenal gland",
+        "pituitary gland",
+        "bone marrow",
+        "duodenum",
+        "skeletal muscle",
+    ):
+        assert tier(tissue) == "vital"
+    for tissue in (
+        "retina",
+        "retinal pigment epithelium",
+        "eye",
+        "inner ear",
+        "spleen",
+        "stomach",
+        "thyroid gland",
+    ):
+        assert tier(tissue) == "protected"
+    for tissue in ("head", "foot", "soft tissue", "melanocytes", "unknown"):
+        assert tier(tissue) == "unresolved"
+    assert tier("liver", stage="fetal") == "permitted"
+    assert tier("liver", context="tumor") == "unresolved"
+    mixed = classify_normal_tissue_pattern(
+        [resolve_normal_tissue(tissue, species=species) for tissue in ("testis", "thymus", "skin")]
+    )
+    assert mixed["narrowest_scopes"] == ("reproductive_or_permitted_normal",)
+
+
+def test_policy_is_detached_and_stale_annotations_are_rejected():
+    policy = normal_tissue_screening_policy()
+    assert policy["rna_unit"] == "nTPM" and policy["rna_species"] == "human"
+    policy["vital"]["maximum_rna"] = 999
+    assert normal_tissue_screening_policy()["vital"]["maximum_rna"] == 1
+    with pytest.raises(ValueError, match="Unknown normal-tissue screening policy"):
+        normal_tissue_screening_policy("unknown")
+    with pytest.raises(ValueError, match="current taxonomy"):
+        normal_tissue_screening_tier(
+            replace(human.resolve_normal_tissue("heart"), taxonomy_id="old")
+        )
 
 
 def test_placenta_does_not_require_maternal_fetal_compartment_resolution():
