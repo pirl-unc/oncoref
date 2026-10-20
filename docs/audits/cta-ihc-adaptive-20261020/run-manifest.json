@@ -1,0 +1,674 @@
+{
+  "report_schema": "oncoref.cta-ihc-adaptive-report.v1",
+  "policy": {
+    "policy_id": "oncoref.cta-ihc-adaptive-screen.2026-10-20.1",
+    "permitted_scope": "reproductive_or_permitted_normal",
+    "rna_source": "hpa_rna_consensus",
+    "rna_source_version": "v23",
+    "rna_species": "human",
+    "rna_unit": "nTPM",
+    "minimum_permitted_rna": 1.0,
+    "positive_ihc_levels": [
+      "Low",
+      "Medium",
+      "High",
+      "Ascending",
+      "Descending"
+    ],
+    "vital": {
+      "maximum_rna": 1.0,
+      "roots": [
+        "heart",
+        "lung",
+        "bronchus",
+        "brain",
+        "spinal_cord",
+        "liver",
+        "kidney",
+        "bone_marrow",
+        "blood",
+        "adrenal_gland",
+        "pituitary_gland",
+        "pancreas",
+        "small_intestine",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "peripheral_nerve",
+        "endothelium"
+      ],
+      "description": "Conservative project tier for critical organs and broadly sampled systems whose extensive injury can threaten life. Includes all mapped descendants."
+    },
+    "protected": {
+      "maximum_rna": 5.0,
+      "roots": [
+        "adipose_tissue",
+        "retina",
+        "eye",
+        "inner_ear",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "lymph_node",
+        "spleen",
+        "tonsil",
+        "appendix",
+        "esophagus",
+        "stomach",
+        "colon",
+        "rectum",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "cartilage",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue"
+      ],
+      "description": "Protected normal tissues outside the permitted scope, with a higher RNA ceiling but the same exclusion for any positive IHC. This tier does not assert that loss is harmless or that severe injury cannot be fatal."
+    },
+    "unresolved_roots": [
+      "head",
+      "foot",
+      "soft_tissue"
+    ],
+    "references": [
+      "project_policy",
+      "hpa_tissues",
+      "nci_organ_inflammation",
+      "niddk_adrenal"
+    ],
+    "coverage": "Complete routine bulk RNA is required. Missing or partial IHC is reported explicitly and cannot establish protein absence. Unresolved positive anatomy, unusable measurements and reviewed unreliable IHC block retention.",
+    "species_note": "Anatomical tiers apply to human, dog and mouse. The numerical policy is calibrated only as a project screen for human HPA v23 nTPM; numerical thresholds and clinical tolerability do not transfer to other species.",
+    "ihc_source": "hpa_normal_tissue",
+    "ihc_source_version": "v23",
+    "negative_ihc_rna_limits": {
+      "Missing": {
+        "vital": 1.0,
+        "protected": 5.0
+      },
+      "Uncertain": {
+        "vital": 1.0,
+        "protected": 5.0
+      },
+      "Approved": {
+        "vital": 2.0,
+        "protected": 5.0
+      },
+      "Supported": {
+        "vital": 3.0,
+        "protected": 7.5
+      },
+      "Enhanced": {
+        "vital": 5.0,
+        "protected": 10.0
+      }
+    },
+    "negative_ihc_rule": "Relax only with valid Not detected observations in every routine IHC tissue/cell context mapping to the same anatomical tissue as the RNA measurement. Use the weakest reliability among all observations in that tissue. Missing contexts, unknown reliability, invalid observations, positive staining or reviewed-unreliable IHC cannot earn relaxation. A narrower region cannot clear a broader organ; other organs cannot supply negative evidence. Enhanced describes source validation, not a guaranteed limit of detection for a negative stain or for peptide-HLA presentation.",
+    "threshold_provenance": "User-approved starting project parameters on 2026-10-20; not clinically validated or estimated from outcome data. Existing absolute ceilings remain the Missing/Uncertain baseline."
+  },
+  "input_report": "docs/audits/cta-permitted-tissues-20261019",
+  "input_manifest_sha256": "29f86aec70b29059ac3af8802c4924c4e076035b6f39a7771aac8dd156a95633",
+  "inputs": {
+    "candidate-decisions.csv": "d9a20ba45f2dd72b234ae467c270de7596ae113f1571da73d9406007611473de",
+    "normal-observations.csv.gz": "3a11937bd41d01f1dc2d80e6a5804b2dd15d01b568b49b1c411276cd3afd75ea",
+    "source-counts.csv": "eeec46e3315ced5d95e902153939f8bd13b66de47a97f3b8958af16bd773890b"
+  },
+  "publication_membership_sha256": "a506dee098bf48cb73375c6c5f85cae63dbf8cf3900c82b08f3dcb7461b82c28",
+  "routine_contexts": {
+    "bulk_rna": [
+      [
+        "adipose tissue",
+        ""
+      ],
+      [
+        "adrenal gland",
+        ""
+      ],
+      [
+        "amygdala",
+        ""
+      ],
+      [
+        "appendix",
+        ""
+      ],
+      [
+        "basal ganglia",
+        ""
+      ],
+      [
+        "bone marrow",
+        ""
+      ],
+      [
+        "breast",
+        ""
+      ],
+      [
+        "cerebellum",
+        ""
+      ],
+      [
+        "cerebral cortex",
+        ""
+      ],
+      [
+        "cervix",
+        ""
+      ],
+      [
+        "choroid plexus",
+        ""
+      ],
+      [
+        "colon",
+        ""
+      ],
+      [
+        "duodenum",
+        ""
+      ],
+      [
+        "endometrium",
+        ""
+      ],
+      [
+        "epididymis",
+        ""
+      ],
+      [
+        "esophagus",
+        ""
+      ],
+      [
+        "fallopian tube",
+        ""
+      ],
+      [
+        "gallbladder",
+        ""
+      ],
+      [
+        "heart muscle",
+        ""
+      ],
+      [
+        "hippocampal formation",
+        ""
+      ],
+      [
+        "hypothalamus",
+        ""
+      ],
+      [
+        "kidney",
+        ""
+      ],
+      [
+        "liver",
+        ""
+      ],
+      [
+        "lung",
+        ""
+      ],
+      [
+        "lymph node",
+        ""
+      ],
+      [
+        "midbrain",
+        ""
+      ],
+      [
+        "ovary",
+        ""
+      ],
+      [
+        "pancreas",
+        ""
+      ],
+      [
+        "parathyroid gland",
+        ""
+      ],
+      [
+        "pituitary gland",
+        ""
+      ],
+      [
+        "placenta",
+        ""
+      ],
+      [
+        "prostate",
+        ""
+      ],
+      [
+        "rectum",
+        ""
+      ],
+      [
+        "retina",
+        ""
+      ],
+      [
+        "salivary gland",
+        ""
+      ],
+      [
+        "seminal vesicle",
+        ""
+      ],
+      [
+        "skeletal muscle",
+        ""
+      ],
+      [
+        "skin",
+        ""
+      ],
+      [
+        "small intestine",
+        ""
+      ],
+      [
+        "smooth muscle",
+        ""
+      ],
+      [
+        "spinal cord",
+        ""
+      ],
+      [
+        "spleen",
+        ""
+      ],
+      [
+        "stomach",
+        ""
+      ],
+      [
+        "testis",
+        ""
+      ],
+      [
+        "thymus",
+        ""
+      ],
+      [
+        "thyroid gland",
+        ""
+      ],
+      [
+        "tongue",
+        ""
+      ],
+      [
+        "tonsil",
+        ""
+      ],
+      [
+        "urinary bladder",
+        ""
+      ],
+      [
+        "vagina",
+        ""
+      ]
+    ],
+    "ihc": [
+      [
+        "adipose tissue",
+        "adipocytes"
+      ],
+      [
+        "adrenal gland",
+        "glandular cells"
+      ],
+      [
+        "appendix",
+        "glandular cells"
+      ],
+      [
+        "appendix",
+        "lymphoid tissue"
+      ],
+      [
+        "bone marrow",
+        "hematopoietic cells"
+      ],
+      [
+        "breast",
+        "adipocytes"
+      ],
+      [
+        "breast",
+        "glandular cells"
+      ],
+      [
+        "breast",
+        "myoepithelial cells"
+      ],
+      [
+        "bronchus",
+        "respiratory epithelial cells"
+      ],
+      [
+        "caudate",
+        "glial cells"
+      ],
+      [
+        "caudate",
+        "neuronal cells"
+      ],
+      [
+        "cerebellum",
+        "Purkinje cells"
+      ],
+      [
+        "cerebellum",
+        "cells in granular layer"
+      ],
+      [
+        "cerebellum",
+        "cells in molecular layer"
+      ],
+      [
+        "cerebral cortex",
+        "endothelial cells"
+      ],
+      [
+        "cerebral cortex",
+        "glial cells"
+      ],
+      [
+        "cerebral cortex",
+        "neuronal cells"
+      ],
+      [
+        "cerebral cortex",
+        "neuropil"
+      ],
+      [
+        "cervix",
+        "glandular cells"
+      ],
+      [
+        "cervix",
+        "squamous epithelial cells"
+      ],
+      [
+        "colon",
+        "endothelial cells"
+      ],
+      [
+        "colon",
+        "glandular cells"
+      ],
+      [
+        "colon",
+        "peripheral nerve/ganglion"
+      ],
+      [
+        "duodenum",
+        "glandular cells"
+      ],
+      [
+        "endometrium 1",
+        "cells in endometrial stroma"
+      ],
+      [
+        "endometrium 1",
+        "glandular cells"
+      ],
+      [
+        "endometrium 2",
+        "cells in endometrial stroma"
+      ],
+      [
+        "endometrium 2",
+        "glandular cells"
+      ],
+      [
+        "epididymis",
+        "glandular cells"
+      ],
+      [
+        "esophagus",
+        "squamous epithelial cells"
+      ],
+      [
+        "fallopian tube",
+        "glandular cells"
+      ],
+      [
+        "gallbladder",
+        "glandular cells"
+      ],
+      [
+        "heart muscle",
+        "cardiomyocytes"
+      ],
+      [
+        "hippocampus",
+        "glial cells"
+      ],
+      [
+        "hippocampus",
+        "neuronal cells"
+      ],
+      [
+        "kidney",
+        "cells in glomeruli"
+      ],
+      [
+        "kidney",
+        "cells in tubules"
+      ],
+      [
+        "liver",
+        "cholangiocytes"
+      ],
+      [
+        "liver",
+        "hepatocytes"
+      ],
+      [
+        "lung",
+        "alveolar cells"
+      ],
+      [
+        "lung",
+        "macrophages"
+      ],
+      [
+        "lymph node",
+        "germinal center cells"
+      ],
+      [
+        "lymph node",
+        "non-germinal center cells"
+      ],
+      [
+        "nasopharynx",
+        "respiratory epithelial cells"
+      ],
+      [
+        "oral mucosa",
+        "squamous epithelial cells"
+      ],
+      [
+        "ovary",
+        "follicle cells"
+      ],
+      [
+        "ovary",
+        "ovarian stroma cells"
+      ],
+      [
+        "pancreas",
+        "exocrine glandular cells"
+      ],
+      [
+        "pancreas",
+        "pancreatic endocrine cells"
+      ],
+      [
+        "parathyroid gland",
+        "glandular cells"
+      ],
+      [
+        "placenta",
+        "decidual cells"
+      ],
+      [
+        "placenta",
+        "trophoblastic cells"
+      ],
+      [
+        "prostate",
+        "glandular cells"
+      ],
+      [
+        "rectum",
+        "glandular cells"
+      ],
+      [
+        "salivary gland",
+        "glandular cells"
+      ],
+      [
+        "seminal vesicle",
+        "glandular cells"
+      ],
+      [
+        "skeletal muscle",
+        "myocytes"
+      ],
+      [
+        "skin 1",
+        "Langerhans"
+      ],
+      [
+        "skin 1",
+        "fibroblasts"
+      ],
+      [
+        "skin 1",
+        "keratinocytes"
+      ],
+      [
+        "skin 1",
+        "melanocytes"
+      ],
+      [
+        "skin 2",
+        "epidermal cells"
+      ],
+      [
+        "small intestine",
+        "glandular cells"
+      ],
+      [
+        "smooth muscle",
+        "smooth muscle cells"
+      ],
+      [
+        "soft tissue 1",
+        "fibroblasts"
+      ],
+      [
+        "soft tissue 1",
+        "peripheral nerve"
+      ],
+      [
+        "soft tissue 2",
+        "fibroblasts"
+      ],
+      [
+        "soft tissue 2",
+        "peripheral nerve"
+      ],
+      [
+        "spleen",
+        "cells in red pulp"
+      ],
+      [
+        "spleen",
+        "cells in white pulp"
+      ],
+      [
+        "stomach 1",
+        "glandular cells"
+      ],
+      [
+        "stomach 2",
+        "glandular cells"
+      ],
+      [
+        "testis",
+        "Leydig cells"
+      ],
+      [
+        "testis",
+        "cells in seminiferous ducts"
+      ],
+      [
+        "thyroid gland",
+        "glandular cells"
+      ],
+      [
+        "tonsil",
+        "germinal center cells"
+      ],
+      [
+        "tonsil",
+        "non-germinal center cells"
+      ],
+      [
+        "tonsil",
+        "squamous epithelial cells"
+      ],
+      [
+        "urinary bladder",
+        "urothelial cells"
+      ],
+      [
+        "vagina",
+        "squamous epithelial cells"
+      ]
+    ]
+  },
+  "checks": [
+    "All fixed expression and final decisions match",
+    "629 fixed candidates",
+    "Fixed retained set is a subset of adaptive"
+  ],
+  "implementation_sha256": {
+    "scripts/cta_adaptive_report.py": "8bb26deced26bb025d1271dcfcecb8f16ce9283318a2e81de92e5cd5d435d411",
+    "scripts/cta_adaptive_report_render.py": "45b69668d87cebc6875d501d38e3987853a4362247d0265bf5ad3e9bab08fbc8",
+    "scripts/cta_permitted_report.py": "255988e8abebc32e8fe9019860faecae005a13918dee443968bb52f384e86b5d",
+    "scripts/cta_scope_report.py": "f68f0cda6bee98a31429ef56f758116034dc962b361c4c7b61426511f4a72cd7",
+    "oncoref/cta_normal_screen.py": "90923fdc379a0b9fd5474f4ebb4b494cd1ccd59ca1c75814c27b1644d2d38249",
+    "oncoref/normal_tissues.py": "cffb88e0555fa7eb4a86796f174312bf6b56d9d296a12aca120762ed7c5cef99",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "df48ccb6454adc36cbc0f0539b07641ae6e7929495ffdbd210b00c5f5079011c",
+    "oncoref/data/normal-tissue-mappings.csv": "9e852c13dfea2638e804f855fef8d7a19c7fe5902ae55c9aee1b094e43eca4f5"
+  },
+  "outputs": {
+    "candidate-decisions.csv": "ddd427ce257c1ddc30a2a3f96b5abfecfb5a5af52988b0827e40d6d2874963d0",
+    "cta-ihc-adaptive-report.pdf": "12650738270ec603ad579702e512eeeb3886d2bc833cb4393172606896204cd7",
+    "index.md": "5d2a079e1368ebe0a8c8999279fc7cf305f76965d92c2b5c1f5f009d1c65fc47",
+    "notable-targets.csv": "53f7971af22b532e0eb1830f9d3a779f70ab3fa25bf55c0dc96f3fb6c215a90f",
+    "policy-comparison.png": "3449bc1d71bbeb41627315b36d361148db24fba8dfbefed6dd90c733b333bc96",
+    "policy-comparison.svg": "364c1eef6a531dcd52186cb67e0e61930f04bca78548787447488caa9001f0ff",
+    "published-targets.png": "95ed79cd0b7d25c78eb59eff2a9640230a6948810f3f1c97f0f1f846be18886b",
+    "published-targets.svg": "7030f52bed0367f76378a622a1b32b873a9ad5768d87af6ec0ccd646ce68da8c",
+    "recovered-candidates.csv": "4930315c07cf07444107498980f17f7416af6405e8373f36ed04b636bd87a562",
+    "rna-threshold-audit.csv.gz": "8001a999cf3c74c4b206c71f3ffe437029904430f88fb162ec1322eee331741d",
+    "scope-summary.csv": "0b5ec0143d63d5c810be064d62f13befba76f1044f5aad8fedd915c3cff1431c",
+    "screening-policy.json": "491297dc23b26555e6cb786bc493522bb197679ccd2dcae32d02dccbd52b7b6d",
+    "source-counts.csv": "a0d9a14df58b9fa83ea3fe3470f30ad8cada264381204be161a8459ee68256a5",
+    "source-retention.png": "f0602610850c42fdf83684ed755a94382c373acda62ef9f9c8ae044597976375",
+    "source-retention.svg": "8f23b05ab25a11609785f86fde42775527e75833952381749df4b5f57a92a871"
+  }
+}

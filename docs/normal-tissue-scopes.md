@@ -8,7 +8,7 @@ observations alone do not establish absence outside a scope.
 
 Definitions and citations ship in `oncoref/data/normal-tissue-taxonomy.yaml`;
 exact dataset mappings ship in `oncoref/data/normal-tissue-mappings.csv`.
-Policy version `2026-10-19.2` and a SHA-256 identity over both files accompany
+Policy version `2026-10-20.1` and a SHA-256 identity over both files accompany
 each annotation. Source-artifact receipts record the bytes used to review labels.
 All access is offline once expression data are loaded.
 
@@ -44,6 +44,8 @@ figures, exact gene decisions, source citations and coverage limitations.
 The [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
 adds the requested organs, vital/protected RNA ceilings, and an independent IHC
 exclusion gate, with included/excluded decisions for published targets.
+The [IHC-adaptive absolute RNA report](audits/cta-ihc-adaptive-20261020/index.md)
+compares those fixed ceilings with the approved tissue-specific negative-IHC ladder.
 
 ## Reproductive scopes
 
@@ -174,6 +176,59 @@ assert normal_tissue_screening_tier(resolve_normal_tissue("pancreas", species="h
 assert normal_tissue_screening_tier(resolve_normal_tissue("retina", species="human")) == "protected"
 assert normal_tissue_screening_tier(resolve_normal_tissue("skin", species="dog")) == "permitted"
 ```
+
+## IHC-adaptive absolute RNA ceilings
+
+The `ihc_adaptive_cta` policy uses the same permitted union and anatomical tiers,
+with these **inclusive maximum human HPA v23 nTPM values**:
+
+| IHC evidence in the RNA tissue | Vital | Protected normal |
+|---|---:|---:|
+| Missing, incomplete, uncertain or unusable | 1 | 5 |
+| Approved, all routine contexts Not detected | 2 | 5 |
+| Supported, all routine contexts Not detected | 3 | 7.5 |
+| Enhanced, all routine contexts Not detected | 5 | 10 |
+
+The routine tissue/cell inventory is independent of the candidate being assessed:
+the report freezes contexts measured for at least half of the source's measured
+genes (80 IHC tissue/cell pairs). This inventory is not exhaustive biological coverage.
+Every expected context for that anatomical tissue must be measured and negative;
+the weakest reliability among all its IHC observations determines the ceiling.
+Additional positive or invalid observations also prevent relaxation. Kidney RNA
+requires both routine glomerular and tubular IHC contexts. Stomach RNA requires
+both source labels, `stomach 1` and `stomach 2`. Caudate-only IHC cannot relax
+broader basal-ganglia RNA. Negative staining in another organ supplies no support.
+
+Positive IHC anywhere outside the permitted set still excludes, including Low.
+Complete routine RNA, positive evidence inside the permitted set, source resolution,
+and the existing family/manual-review gates still apply. Missing IHC remains a
+coverage limitation. The ladder is an approved **project screening policy**:
+HPA's Enhanced label does not establish a quantitative detection limit or absence
+of peptide-HLA presentation, and these numbers are not validated clinical limits.
+
+```python
+from oncoref.cta_normal_screen import adaptive_normal_rna_limits
+from oncoref.normal_tissues import normal_tissue_screening_policy
+
+policy = normal_tissue_screening_policy("ihc_adaptive_cta")
+assert policy["negative_ihc_rna_limits"]["Enhanced"] == {"vital": 5, "protected": 10}
+
+# One gene's annotated HPA v23 observation table; an independently specified
+# inventory of expected source tissue/cell pairs is required.
+audit = adaptive_normal_rna_limits(
+    observations,
+    routine_ihc_contexts=routine_ihc_contexts,
+)
+```
+
+The [comparative report](audits/cta-ihc-adaptive-20261020/index.md) preserves each
+RNA value, ceiling, supporting IHC and exclusion. It also explains CTAG2's
+**pinned consensus heart value of 5.1 nTPM**: HPA's own cohort and the separately
+displayed GTEx estimates are different datasets. Current portal values do not
+replace the pinned release. This absolute screen is separate from the older
+IHC-conditioned **RNA fraction** policy used by the core/extended CTA panels.
+Numerical adaptation is currently implemented only for human HPA v23;
+cross-species anatomical definitions do not transfer these assay thresholds.
 
 ## Dataset mappings and coverage
 

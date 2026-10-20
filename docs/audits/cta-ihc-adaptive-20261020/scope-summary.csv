@@ -1,0 +1,3 @@
+scenario,candidates,evidence_pass,retained,without_ihc,partial_ihc,complete_routine_ihc,recovered
+fixed,2537,727,629,368,255,6,0
+adaptive,2537,771,673,368,298,7,44

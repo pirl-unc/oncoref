@@ -99,6 +99,16 @@ interactive work where a figure travels without a caption, call
 
 ### Reproductive and disposable CTA filtering
 
+The [IHC-adaptive report](audits/cta-ihc-adaptive-20261020/index.md) compares
+fixed 1/5 nTPM ceilings against the approved local negative-IHC ladder.
+Three PNG/SVG figures show retained candidates with IHC coverage, retention
+across 11 publication sources, and decisions for 42 selected targets. The PDF
+includes the threshold table, source distinctions and exclusion reasons.
+
+```bash
+python scripts/cta_adaptive_report.py --out outputs/cta-adaptive-current
+```
+
 The [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
 adds vital/protected RNA ceilings and an independent IHC gate. Three PNG/SVG
 figures compare the scope and threshold changes, source retention, and selected

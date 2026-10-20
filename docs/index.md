@@ -67,6 +67,8 @@ packages can join domains without maintaining private name mappings.
   [source and filtering report](audits/cta-tissue-scopes-20261019/index.md).
   The [expanded permitted-tissue screen](audits/cta-permitted-tissues-20261019/index.md)
   adds the 1/5 nTPM vital/protected policy and published-target decisions.
+  The [IHC-adaptive comparison](audits/cta-ihc-adaptive-20261020/index.md)
+  shows how complete local negative IHC changes those absolute ceilings.
 
 ```python
 from oncoref import cancer_ontology, ici_response

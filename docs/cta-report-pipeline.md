@@ -9,6 +9,20 @@ their thresholds, selections and narrative must not be used as current results.
 
 ## Source intake and reproductive/disposable filtering
 
+The [IHC-adaptive report](audits/cta-ihc-adaptive-20261020/index.md) reads the
+committed permitted-tissue archive and compares fixed versus IHC-conditioned
+absolute RNA ceilings. It verifies input hashes, reproduces every fixed decision
+(629 retained), and checks that the fixed set is nested within the adaptive set.
+The audit exports every RNA measurement, applied ceiling, missing local contexts,
+and supporting IHC. Rebuild without live downloads:
+
+```sh
+python scripts/cta_adaptive_report.py --out outputs/cta-adaptive-current
+```
+
+The numerical ladder is specific to human HPA v23; its independent positive-IHC
+and coverage gates are documented in [tissue scopes](normal-tissue-scopes.md).
+
 The [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
 uses the committed original source audit, adds whole skin/salivary gland/thymus,
 and applies vital RNA ≤1 nTPM, protected RNA ≤5 nTPM, and any-positive outside IHC

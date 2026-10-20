@@ -1,0 +1,12 @@
+doi,source,scope,source_identities,mapped,protein_coding,family_eligible,adaptive_hpa_pass,adaptive_after_family,adaptive_retained,strict_after_family,strict_retained,expanded_1,previous_1,tiered,fixed,adaptive
+10.1002/1878-0261.12900,Jamin 2021,reproductive_or_disposable,605,498,481,481,59,59,57,13,13,44,42,50,50,56
+10.1002/cam4.2223,Chang 2019,reproductive_or_disposable,1036,1031,986,979,493,491,485,119,119,390,374,425,425,458
+10.1038/ncomms10499,Wang 2016,reproductive_or_disposable,1019,1018,994,987,503,501,458,116,116,368,347,401,401,438
+10.1038/s41388-018-0357-2,Bruggeman 2018,reproductive_or_disposable,756,734,692,692,52,52,51,3,3,40,33,46,46,54
+10.1038/s41467-020-19141-w,Bradley 2020,reproductive_or_disposable,10,10,10,10,2,2,2,0,0,1,1,1,1,1
+10.1038/s41467-021-22695-y,Gong 2021,reproductive_or_disposable,1809,1704,733,727,564,563,495,167,146,404,392,430,430,458
+10.1136/jitc-2023-007935,Carter 2023,reproductive_or_disposable,103,103,103,102,90,90,88,16,16,79,79,87,87,89
+10.1158/0008-5472.CAN-16-0225,Bai 2016,reproductive_or_disposable,1,1,1,1,1,1,1,0,0,0,0,0,0,0
+10.1186/s12967-024-04918-0,Seager 2024,reproductive_or_disposable,17,15,15,15,13,13,13,2,2,10,10,12,12,12
+10.1371/journal.pgen.1011734,Loriot 2025,reproductive_or_disposable,280,280,215,213,149,148,146,37,37,113,107,125,125,133
+10.18632/oncotarget.21715,da Silva 2017,reproductive_or_disposable,1104,1100,1066,1055,798,795,561,253,208,489,466,520,520,545

@@ -1,6 +1,6 @@
 schema: oncoref.normal-tissue-taxonomy
 schema_version: 1
-policy_version: 2026-10-19.2
+policy_version: 2026-10-20.1
 taxon_ids:
 - 9606
 - 9615
@@ -1256,7 +1256,7 @@ scopes:
     description: Expanded project union of reproductive contexts and permitted
       normal tissues. Heart, lung, CNS, liver, pancreas, retina and muscle are outside.
 screening_policies:
-  tiered_cta:
+  tiered_cta: &tiered_cta
     policy_id: oncoref.cta-permitted-screen.2026-10-19.1
     permitted_scope: reproductive_or_permitted_normal
     rna_source: hpa_rna_consensus
@@ -1334,6 +1334,38 @@ screening_policies:
     species_note: Anatomical tiers apply to human, dog and mouse. The numerical
       policy is calibrated only as a project screen for human HPA v23 nTPM;
       numerical thresholds and clinical tolerability do not transfer to other species.
+  ihc_adaptive_cta:
+    <<: *tiered_cta
+    policy_id: oncoref.cta-ihc-adaptive-screen.2026-10-20.1
+    ihc_source: hpa_normal_tissue
+    ihc_source_version: v23
+    negative_ihc_rna_limits:
+      Missing:
+        vital: 1.0
+        protected: 5.0
+      Uncertain:
+        vital: 1.0
+        protected: 5.0
+      Approved:
+        vital: 2.0
+        protected: 5.0
+      Supported:
+        vital: 3.0
+        protected: 7.5
+      Enhanced:
+        vital: 5.0
+        protected: 10.0
+    negative_ihc_rule: Relax only with valid Not detected observations in every
+      routine IHC tissue/cell context mapping to the same anatomical tissue as
+      the RNA measurement. Use the weakest reliability among all observations
+      in that tissue. Missing contexts, unknown reliability, invalid observations,
+      positive staining or reviewed-unreliable IHC cannot earn relaxation.
+      A narrower region cannot clear a broader organ; other organs cannot supply
+      negative evidence. Enhanced describes source validation, not a guaranteed
+      limit of detection for a negative stain or for peptide-HLA presentation.
+    threshold_provenance: User-approved starting project parameters on 2026-10-20;
+      not clinically validated or estimated from outcome data. Existing absolute
+      ceilings remain the Missing/Uncertain baseline.
 source_artifacts:
 - taxon_id: 9606
   source_id: hpa_rna_consensus
