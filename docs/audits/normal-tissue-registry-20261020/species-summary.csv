@@ -1,0 +1,4 @@
+species,reproductive,disposable,protected,vital,unresolved,inapplicable,native_mapping_rows,native_sources,mapping_availability
+human,46,11,14,45,3,2,459,3,bundled
+dog,45,10,14,45,3,4,126,6,bundled
+mouse,48,9,14,45,3,2,0,0,not_bundled

@@ -131,6 +131,8 @@ class ExpressionDataset:
                 species=self.contract.taxon_id,
                 cell_type=optional(row.get("cell_type")),
                 stage=optional(row.get("stage")),
+                sex=optional(row.get("sex")),
+                physiological_state=optional(row.get("physiological_state")),
                 source_id=self.contract.source_id,
                 source_version=self.contract.source_version,
                 context=self.contract.context,

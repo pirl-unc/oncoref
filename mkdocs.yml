@@ -8,10 +8,14 @@ nav:
   - Species and data groups: species.md
   - Species CTA evidence: species-cta-evidence.md
   - Normal tissue scopes: normal-tissue-scopes.md
+  - Tissue injury and manageability: normal-tissue-manageability.md
+  - Patient-context gene filters: normal-tissue-gene-filters.md
+  - Normal tissue registry audit: audits/normal-tissue-registry-20261020/index.md
   - CTA tissue-scope report: audits/cta-tissue-scopes-20261019/index.md
   - CTA permitted-tissue screen: audits/cta-permitted-tissues-20261019/index.md
   - CTA IHC-adaptive screen: audits/cta-ihc-adaptive-20261020/index.md
   - CTA tissue-tier update: audits/cta-tissue-tiers-20261020/index.md
+  - CTA tissue contexts update: audits/cta-tissue-contexts-20261020/index.md
   - Home: index.md
   - Figures: figures.md
   - Curation Audit: curation-audit.md

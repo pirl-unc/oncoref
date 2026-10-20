@@ -8,7 +8,7 @@ observations alone do not establish absence outside a scope.
 
 Definitions and citations ship in `oncoref/data/normal-tissue-taxonomy.yaml`;
 exact dataset mappings ship in `oncoref/data/normal-tissue-mappings.csv`.
-Policy version `2026-10-20.2` and a SHA-256 identity over both files accompany
+Policy version `2026-10-20.3` and a SHA-256 identity over both files accompany
 each annotation. Source-artifact receipts record the bytes used to review labels.
 All access is offline once expression data are loaded.
 
@@ -25,7 +25,7 @@ branches are combined at their shared parent.
 | Placenta | `placental` → `extraembryonic` → `reproductive` → `reproductive_or_disposable` |
 | Explicit embryo/fetus context | `embryonic` or `fetal` → `reproductive` → `reproductive_or_disposable` |
 | Cutaneous melanocytes or hair follicles | `disposable_normal` → `reproductive_or_disposable` |
-| Whole skin, salivary glands, thymus, tonsil or spleen | `permitted_normal` → `reproductive_or_permitted_normal` |
+| Whole skin, salivary glands, thymus, tonsil, spleen, appendix or gallbladder | `permitted_normal` → `reproductive_or_permitted_normal` |
 
 `reproductive_or_disposable` is a subset of the expanded
 `reproductive_or_permitted_normal` union. `disposable_normal` is a subset of
@@ -51,6 +51,8 @@ compares those fixed ceilings with the approved tissue-specific negative-IHC lad
 These dated reports preserve their original policies and results. The
 [tissue-tier update](audits/cta-tissue-tiers-20261020/index.md) compares the current
 anatomy policy with the preceding adaptive screen, holding RNA thresholds fixed.
+The [context and removable-organ update](audits/cta-tissue-contexts-20261020/index.md)
+adds appendix/gallbladder and records four tissue categories and manageability reviews.
 
 ## Reproductive scopes
 
@@ -106,15 +108,23 @@ reflects immune tolerance. No unlisted normal tissue is admitted by default.
 
 ## Vital, protected and acceptable tissues
 
-There are three resolved screening tiers. **Acceptable means conditionally
+The four user-facing categories are **Reproductive, Disposable, Protected and
+Vital**. `normal_tissue_category()` returns their lowercase IDs.
+Reproductive and Disposable share the existing numeric screening tier `permitted`.
+Here **Disposable means the expanded conditional non-reproductive allowance**:
+its canonical scope remains `permitted_normal`. The earlier `disposable_normal`
+scope keeps its narrow cutaneous-melanocyte/hair-follicle meaning for compatibility
+and historical comparisons. Do not confuse that scope ID with the four-way category.
+
+There are three resolved numerical screening tiers. **Acceptable means conditionally
 allowed in this research screen**, with consequences and evidence limitations
 recorded separately. **Vital / critical function** covers both potentially fatal
 injury and major irreversible neurological or sensory disability. **Protected**
 covers other functionally important tissues without a project allowance.
-Unknown or mixed anatomy is **unresolved**, not an acceptable fourth tissue class.
+Unknown or mixed anatomy is **unresolved**, a QC status outside the four resolved categories.
 
 The `permitted_normal` scope is `disposable_normal` ∪ whole skin ∪ salivary glands
-∪ thymus ∪ tonsil ∪ spleen. `reproductive_or_permitted_normal` unions this with
+∪ thymus ∪ tonsil ∪ spleen ∪ appendix ∪ gallbladder. `reproductive_or_permitted_normal` unions this with
 `reproductive`. Skin permission includes explicitly skin-sited keratinocytes,
 glands, fibroblasts, immune cells and other mapped skin compartments. It does not
 extend the exception to those cell types elsewhere, unsited cells, eye, retina or
@@ -125,9 +135,10 @@ Anatomical mappings and organ labels remain available at their original resoluti
 
 | Tier | Complete root list (mapped descendants inherit) |
 |---|---|
-| **Acceptable (conditional)** | All reproductive contexts defined above, including mammary, placental, embryonic and fetal contexts; cutaneous melanocytes; hair follicles; whole skin; salivary glands; thymus; tonsil; spleen. |
+| **Reproductive** | All reproductive contexts defined above, including mammary, placental, embryonic and fetal contexts. |
+| **Disposable (conditional)** | Cutaneous melanocytes; hair follicles; whole skin; salivary glands; thymus; tonsil; spleen; human appendix; gallbladder. Mapped descendants include nail bed and parotid. |
 | **Vital / critical function** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
-| **Protected** | Adipose tissue; thyroid gland; parathyroid gland; lymph node; human appendix; esophagus; stomach; colon; rectum; gallbladder; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
+| **Protected** | Adipose tissue; thyroid gland; parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
 Retinal pigment epithelium inherits retina. The eye label is conservative because
@@ -135,6 +146,18 @@ a bulk eye sample can include critical structures. The full vital label replaces
 an interpretation based only on mortality; protected tissue injury can also be
 serious. These are project assignments, not a clinical ranking of every possible
 pattern of organ injury.
+
+Appendix and gallbladder move out of Protected because their removal is compatible
+with normal life ([NHS](https://www.nhs.uk/conditions/appendicitis/),
+[NIDDK](https://www.niddk.nih.gov/health-information/digestive-diseases/gallstones/treatment)).
+In-situ immune injury still needs review; adjacent intestine, bile ducts and liver
+do not inherit the allowance.
+
+The [manageability evidence review](normal-tissue-manageability.md) anchors the
+ongoing policy discussion in published tissue classifications and clinical
+immune-toxicity observations. Existing skin, salivary and lymphoid allowances
+remain explicit project choices. Local-steroid control is recorded independently;
+it does not automatically relax RNA or IHC gates.
 
 ### Lymphoid organs and conditional acceptance
 
@@ -312,6 +335,24 @@ consistent with [comparative veterinary anatomy](https://veterinaryanatomy.com/a
 Mouse reproductive anatomy follows the [Jackson Laboratory anatomy resource](https://www.informatics.jax.org/cookbook/chapters/contents2.shtml).
 Anatomical transfer does not transfer evidence of expression or clinical
 tolerability: animal annotations explicitly report that tolerability is unvalidated.
+
+The [complete registry audit](audits/normal-tissue-registry-20261020/index.md)
+exports every canonical concept for each species and every bundled native mapping.
+`normal_tissue_inventory(species=...)` includes **inapplicable anatomy** explicitly;
+`normal_tissue_mapping_inventory(species=..., source_id=..., source_version=...)`
+reports native labels, mapping precision, citations and four-way categories.
+No mapping inventory for a source means **not bundled**, never expression absent.
+Species applicability is validated through every anatomical parent.
+
+Source sex and physiological state can be supplied separately from anatomy.
+Unknown sex stays unknown; the grouping of mammary tissue with female reproductive
+anatomy never proves the donor is female. Unknown stage labels now remain unresolved
+instead of inheriting an adult allowance. No gestational cutoffs or ortholog
+expression calls are copied between species.
+
+The [patient-context gene filters](normal-tissue-gene-filters.md) evaluate actual
+sex/stage/source-specific detections and declared negative coverage. Their names
+describe expression restrictions, not pregnancy or fertility safety.
 
 ## Use
 

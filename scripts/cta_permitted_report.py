@@ -116,6 +116,7 @@ def annotate_archive(observations):
         contexts.append(
             {
                 **row._asdict(),
+                "tissue_category": details["tissue_category"],
                 "screening_tier": details["screening_tier"],
                 "screening_tier_label": details["screening_tier_label"],
                 "tissue_review_flags": ";".join(details["review_flags"]),

@@ -146,6 +146,20 @@ class SpeciesDataGroup:
 
         return resolve_normal_tissue(tissue, species=self.species, **options)
 
+    def normal_tissue_inventory(self):
+        """All canonical concepts, with species applicability and four-way categories."""
+        from .normal_tissues import normal_tissue_inventory
+
+        return normal_tissue_inventory(species=self.species)
+
+    def normal_tissue_mapping_inventory(self, *, source_id=None, source_version=None):
+        """Bundled native mappings; an empty result never implies absent expression."""
+        from .normal_tissues import normal_tissue_mapping_inventory
+
+        return normal_tissue_mapping_inventory(
+            species=self.species, source_id=source_id, source_version=source_version
+        )
+
     def cta_gene_ids(self, *, reference):
         """Unambiguously mapped candidate IDs for an explicit annotation; not admission."""
         return self.cta_snapshot().gene_ids(reference=reference)
