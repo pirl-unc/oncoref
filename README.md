@@ -11,7 +11,7 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 [Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-curation-20261021/)
+and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-curation-20261021-r2/)
 document the nested sets, cited dataset mappings, complete publication intake,
 and dog/mouse evidence coverage. The human research screen requires reproductive
 RNA >0 or positive reproductive IHC, with category-specific absolute RNA ceilings,
@@ -21,10 +21,14 @@ Vital tissues. The report compares fixed and adaptive results and preserves
 every candidate's exclusion reasons and unassessed mappings. Numerical limits
 are research parameters, not validated clinical safety limits.
 
-The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021/)
+The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)
 classify Reproductive, Normal and Other independently of CTA nomination.
 Other contains Disposable and Silent; incomplete evidence remains Unassessed.
-Observed normal expression is preserved separately for future subsequence comparisons.
+Observed normal expression is preserved separately for subsequence comparisons.
+[Disjoint gene and exact-protein sets](https://pirl-unc.github.io/oncoref/audits/normal-sequence-sets-20261021/)
+include all complete Ensembl 115 isoforms, source records and FASTA downloads.
+Shared sequences use Normal → Unassessed → Reproductive → Other precedence;
+k-mers still require explicit sequence subtraction.
 
 ## Role in the stack
 

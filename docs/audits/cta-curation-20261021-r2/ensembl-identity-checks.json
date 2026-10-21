@@ -1,0 +1,311 @@
+{
+  "BAGE-current": {
+    "url": "https://rest.ensembl.org/lookup/symbol/homo_sapiens/BAGE?content-type=application%2Fjson",
+    "status": 400,
+    "body": {
+      "error": "No valid lookup found for symbol BAGE"
+    },
+    "retrieved_date": "2026-10-21"
+  },
+  "BAGE-xrefs": {
+    "url": "https://rest.ensembl.org/xrefs/symbol/homo_sapiens/BAGE?content-type=application%2Fjson",
+    "status": 200,
+    "body": [],
+    "retrieved_date": "2026-10-21"
+  },
+  "GAGE2B-current": {
+    "url": "https://rest.ensembl.org/lookup/symbol/homo_sapiens/GAGE2B?content-type=application%2Fjson",
+    "status": 400,
+    "body": {
+      "error": "No valid lookup found for symbol GAGE2B"
+    },
+    "retrieved_date": "2026-10-21"
+  },
+  "GAGE2B-history": {
+    "url": "https://rest.ensembl.org/archive/id/ENSG00000231850?content-type=application%2Fjson",
+    "status": 200,
+    "body": {
+      "latest": "ENSG00000231850.3",
+      "version": 3,
+      "type": "Gene",
+      "peptide": null,
+      "release": "75",
+      "id": "ENSG00000231850",
+      "is_current": "",
+      "assembly": "GRCh37",
+      "possible_replacement": []
+    },
+    "retrieved_date": "2026-10-21"
+  },
+  "GAGE2B-id": {
+    "url": "https://rest.ensembl.org/lookup/id/ENSG00000231850?content-type=application%2Fjson",
+    "status": 400,
+    "body": {
+      "error": "ID 'ENSG00000231850' not found"
+    },
+    "retrieved_date": "2026-10-21"
+  },
+  "GAGE2B-xref-evidence": {
+    "url": "https://rest.ensembl.org/xrefs/id/ENSG00000189064?content-type=application%2Fjson",
+    "status": 200,
+    "body": [
+      {
+        "dbname": "ArrayExpress",
+        "synonyms": [],
+        "display_id": "ENSG00000189064",
+        "primary_id": "ENSG00000189064",
+        "info_text": "",
+        "version": "0",
+        "info_type": "DIRECT",
+        "db_display_name": "Expression Atlas",
+        "description": null
+      },
+      {
+        "display_id": "GAGE2C",
+        "synonyms": [],
+        "dbname": "EntrezGene",
+        "description": "G antigen 2C",
+        "db_display_name": "NCBI gene (formerly Entrezgene)",
+        "info_type": "DEPENDENT",
+        "version": "0",
+        "info_text": "",
+        "primary_id": "2574"
+      },
+      {
+        "display_id": "GAGE2E",
+        "synonyms": [],
+        "dbname": "EntrezGene",
+        "description": "G antigen 2E",
+        "db_display_name": "NCBI gene (formerly Entrezgene)",
+        "info_type": "DEPENDENT",
+        "primary_id": "26749",
+        "info_text": "",
+        "version": "0"
+      },
+      {
+        "info_type": "DEPENDENT",
+        "primary_id": "645037",
+        "version": "0",
+        "info_text": "",
+        "description": "G antigen 2B",
+        "db_display_name": "NCBI gene (formerly Entrezgene)",
+        "dbname": "EntrezGene",
+        "display_id": "GAGE2B",
+        "synonyms": []
+      },
+      {
+        "db_display_name": "NCBI gene (formerly Entrezgene)",
+        "description": "G antigen 2D",
+        "version": "0",
+        "info_text": "",
+        "primary_id": "729408",
+        "info_type": "DEPENDENT",
+        "synonyms": [],
+        "display_id": "GAGE2D",
+        "dbname": "EntrezGene"
+      },
+      {
+        "dbname": "EntrezGene",
+        "synonyms": [],
+        "display_id": "GAGE2A",
+        "primary_id": "729447",
+        "info_text": "",
+        "version": "0",
+        "info_type": "DEPENDENT",
+        "db_display_name": "NCBI gene (formerly Entrezgene)",
+        "description": "G antigen 2A"
+      },
+      {
+        "info_type": "DEPENDENT",
+        "info_text": "",
+        "version": "0",
+        "primary_id": "4099",
+        "description": "G antigen 2A",
+        "db_display_name": "GeneCards",
+        "dbname": "GeneCards",
+        "display_id": "GAGE2A",
+        "synonyms": []
+      },
+      {
+        "synonyms": [
+          "CT4.2",
+          "GAGE2"
+        ],
+        "display_id": "GAGE2A",
+        "dbname": "HGNC",
+        "db_display_name": "HGNC Symbol",
+        "description": "G antigen 2A",
+        "primary_id": "HGNC:4099",
+        "version": "0",
+        "info_text": "Generated via ensembl_manual",
+        "info_type": "DIRECT"
+      },
+      {
+        "synonyms": [],
+        "display_id": "G ANTIGEN 2C; GAGE2C [*300595]",
+        "dbname": "MIM_GENE",
+        "db_display_name": "MIM gene",
+        "description": "G ANTIGEN 2C; GAGE2C;;GAGE2",
+        "info_text": "",
+        "version": "0",
+        "primary_id": "300595",
+        "info_type": "DEPENDENT"
+      },
+      {
+        "info_text": "",
+        "version": "0",
+        "primary_id": "300720",
+        "info_type": "DEPENDENT",
+        "db_display_name": "MIM gene",
+        "description": "G ANTIGEN 2A; GAGE2A",
+        "dbname": "MIM_GENE",
+        "synonyms": [],
+        "display_id": "G ANTIGEN 2A; GAGE2A [*300720]"
+      },
+      {
+        "dbname": "MIM_GENE",
+        "synonyms": [],
+        "display_id": "G ANTIGEN 2B; GAGE2B [*300726]",
+        "info_text": "",
+        "version": "0",
+        "primary_id": "300726",
+        "info_type": "DEPENDENT",
+        "db_display_name": "MIM gene",
+        "description": "G ANTIGEN 2B; GAGE2B"
+      },
+      {
+        "dbname": "MIM_GENE",
+        "display_id": "G ANTIGEN 2D; GAGE2D [*300735]",
+        "synonyms": [],
+        "info_type": "DEPENDENT",
+        "version": "0",
+        "info_text": "",
+        "primary_id": "300735",
+        "description": "G ANTIGEN 2D; GAGE2D",
+        "db_display_name": "MIM gene"
+      },
+      {
+        "synonyms": [],
+        "display_id": "G ANTIGEN 2E; GAGE2E [*300736]",
+        "dbname": "MIM_GENE",
+        "db_display_name": "MIM gene",
+        "description": "G ANTIGEN 2E; GAGE2E",
+        "version": "0",
+        "info_text": "",
+        "primary_id": "300736",
+        "info_type": "DEPENDENT"
+      },
+      {
+        "primary_id": "Q6NT46",
+        "version": "0",
+        "info_text": "",
+        "info_type": "DEPENDENT",
+        "db_display_name": "UniProtKB Gene Name",
+        "description": "G antigen 2A",
+        "dbname": "Uniprot_gn",
+        "synonyms": [],
+        "display_id": "GAGE2A"
+      },
+      {
+        "db_display_name": "WikiGene",
+        "description": "G antigen 2C",
+        "version": "0",
+        "info_text": "",
+        "primary_id": "2574",
+        "info_type": "DEPENDENT",
+        "synonyms": [],
+        "display_id": "GAGE2C",
+        "dbname": "WikiGene"
+      },
+      {
+        "db_display_name": "WikiGene",
+        "description": "G antigen 2E",
+        "primary_id": "26749",
+        "version": "0",
+        "info_text": "",
+        "info_type": "DEPENDENT",
+        "synonyms": [],
+        "display_id": "GAGE2E",
+        "dbname": "WikiGene"
+      },
+      {
+        "description": "G antigen 2B",
+        "db_display_name": "WikiGene",
+        "info_type": "DEPENDENT",
+        "primary_id": "645037",
+        "info_text": "",
+        "version": "0",
+        "display_id": "GAGE2B",
+        "synonyms": [],
+        "dbname": "WikiGene"
+      },
+      {
+        "dbname": "WikiGene",
+        "synonyms": [],
+        "display_id": "GAGE2D",
+        "primary_id": "729408",
+        "info_text": "",
+        "version": "0",
+        "info_type": "DEPENDENT",
+        "db_display_name": "WikiGene",
+        "description": "G antigen 2D"
+      },
+      {
+        "version": "0",
+        "info_text": "",
+        "primary_id": "729447",
+        "info_type": "DEPENDENT",
+        "db_display_name": "WikiGene",
+        "description": "G antigen 2A",
+        "dbname": "WikiGene",
+        "synonyms": [],
+        "display_id": "GAGE2A"
+      }
+    ],
+    "retrieved_date": "2026-10-21"
+  },
+  "GAGE2B-xref-gene": {
+    "url": "https://rest.ensembl.org/lookup/id/ENSG00000189064?content-type=application%2Fjson",
+    "status": 200,
+    "body": {
+      "start": 49589476,
+      "assembly_name": "GRCh38",
+      "object_type": "Gene",
+      "description": "G antigen 2A [Source:HGNC Symbol;Acc:HGNC:4099]",
+      "source": "havana",
+      "db_type": "core",
+      "seq_region_name": "X",
+      "biotype": "protein_coding",
+      "logic_name": "havana_homo_sapiens",
+      "canonical_transcript": "ENST00000362097.2",
+      "strand": 1,
+      "end": 49596834,
+      "species": "homo_sapiens",
+      "id": "ENSG00000189064",
+      "version": 11,
+      "display_name": "GAGE2A"
+    },
+    "retrieved_date": "2026-10-21"
+  },
+  "GAGE2B-xrefs": {
+    "url": "https://rest.ensembl.org/xrefs/symbol/homo_sapiens/GAGE2B?content-type=application%2Fjson",
+    "status": 200,
+    "body": [
+      {
+        "id": "ENSG00000189064",
+        "type": "gene"
+      }
+    ],
+    "retrieved_date": "2026-10-21"
+  },
+  "ensembl-data": {
+    "url": "https://rest.ensembl.org/info/data?content-type=application%2Fjson",
+    "status": 200,
+    "body": {
+      "releases": [
+        116
+      ]
+    },
+    "retrieved_date": "2026-10-21"
+  }
+}

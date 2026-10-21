@@ -1,0 +1,20 @@
+{
+  "policy": "oncoref.normal-sequence-sets.v1",
+  "reference_id": "openvax:reference:v1:sha256:0fefb51755788901693be9987fadc31e61f945cd53c08a170e0e1d4ad4a09b61",
+  "target": [
+    "reproductive.fasta.gz"
+  ],
+  "exclude": [
+    "normal.fasta.gz",
+    "unassessed.fasta.gz",
+    "additional-background.fasta.gz"
+  ],
+  "optional_stricter_background": [
+    "observed-normal.fasta.gz"
+  ],
+  "other": [
+    "other.fasta.gz"
+  ],
+  "rule": "Enumerate contiguous AA20 k-mers within each record; never cross stops, ambiguous residues or record boundaries. Subtract the exclusion union from target k-mers.",
+  "caveat": "Disjoint full proteins can share k-mers. Gene RNA does not establish isoform-specific expression. Missing translations leave a coverage gap."
+}

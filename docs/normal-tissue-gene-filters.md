@@ -1,7 +1,7 @@
 # Patient-context gene restriction filters
 
 For the broader **Reproductive / Normal / Other** screening groups, see the
-[genome-wide expression report](audits/normal-expression-categories-20261021/index.md).
+[genome-wide expression report](audits/normal-expression-categories-20261021-r2/index.md).
 Other contains Disposable and Silent under the approved category/IHC absolute
 ceilings; missing routine RNA stays Unassessed. These groups include non-CTA genes.
 The report preserves observed normal expression separately for future exact

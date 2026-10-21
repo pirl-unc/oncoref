@@ -1951,3 +1951,40 @@ unfiltered=True)` for the complete verified source-ID exclusion universe.
 including rejected mappings. See the [versioned identity contract and example](cta-gene-identities.md).
 These APIs preserve source IDs and do not infer aliases from matching symbols or
 proteins. Legacy canonical CTA sets remain canonical reference-space IDs.
+
+
+## Disjoint gene and exact-protein sets
+
+The [current downloads](audits/normal-sequence-sets-20261021/index.md) contain disjoint
+Reproductive, Normal, Other and Unassessed gene lists and complete-protein FASTA files.
+They use human Ensembl 115 / GRCh38.p14 and the HPA v23 expression categories.
+
+```python
+from oncoref.normal_sequence_sets import partition_genes, partition_proteins
+
+genes = partition_genes(category_table, normal_evidence_genes=reviewed_normal_gene_ids)
+proteins = partition_proteins(
+    complete_occurrences,
+    genes,
+    reference=reference_identity,
+    expression_reference_id=reference_identity.reference_id,
+)
+```
+
+`category_table` uses the genome-wide expression report columns. Each complete
+occurrence carries its reference, gene, transcript and protein IDs, full amino-acid
+sequence and source. The caller must supply a matching reference and retain partial
+or ambiguous translations separately for review.
+
+Every complete annotated isoform is considered. Identical proteins encoded by
+different genes are assigned once, with Normal taking precedence over Unassessed,
+then Reproductive, then Other. Every source occurrence remains attached. The
+existing longest-proteoform summaries serve a different purpose and do not replace
+these all-isoform sequence sets.
+
+The default k-mer background combines Normal and Unassessed complete proteins with
+known sequence segments from incomplete/ambiguous translations in those gene groups.
+Incompleteness alone does not reclassify a Reproductive gene. Enumerate only contiguous
+standard-amino-acid windows within a record, then subtract background k-mers from
+Reproductive k-mers. Disjoint full proteins can still share k-mers. Gene-level evidence
+does not establish isoform-specific expression or sequence absence.

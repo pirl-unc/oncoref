@@ -207,7 +207,7 @@ def test_policy_is_detached_and_stale_annotations_are_rejected():
     policy = normal_tissue_screening_policy()
     assert policy["rna_unit"] == "nTPM" and policy["rna_species"] == "human"
     policy["vital"]["maximum_rna"] = 999
-    assert normal_tissue_screening_policy()["vital"]["maximum_rna"] == 1
+    assert normal_tissue_screening_policy()["vital"]["maximum_rna"] == 2
     with pytest.raises(ValueError, match="Unknown normal-tissue screening policy"):
         normal_tissue_screening_policy("unknown")
     with pytest.raises(ValueError, match="current taxonomy"):

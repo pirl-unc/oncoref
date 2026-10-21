@@ -8,7 +8,7 @@ observations alone do not establish absence outside a scope.
 
 Definitions and citations ship in `oncoref/data/normal-tissue-taxonomy.yaml`;
 exact dataset mappings ship in `oncoref/data/normal-tissue-mappings.csv`.
-Policy version `2026-10-21.1` and a SHA-256 identity over both files accompany
+Policy version `2026-10-21.2` and a SHA-256 identity over both files accompany
 each annotation. Source-artifact receipts record the bytes used to review labels.
 All access is offline once expression data are loaded.
 
@@ -153,7 +153,7 @@ measurement never establishes the narrower compartment's restriction.
 | **Vital** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
-The [complete human/dog/mouse inventories](audits/normal-tissue-recalibration-20261021/index.md)
+The [complete human/dog/mouse inventories](audits/normal-tissue-registry-20261021-r2/index.md)
 list every concept and native source mapping, its category, species applicability,
 policy references and review flags. A concept's anatomy citation and the project's
 category-policy citations are kept in separate export fields. Mapping rows and
@@ -227,9 +227,9 @@ Reproductive grouping; maternal organs are not reclassified by pregnancy.
 | Category | Maximum RNA (human HPA v23 nTPM) | IHC rule |
 |---|---:|---|
 | Reproductive / Disposable | No upper ceiling | Positive staining allowed within selected scope; review flags retained |
-| Manageable | 5 | Any positive staining excludes, including Low |
-| Protected | 3 | Any positive staining excludes, including Low |
-| Vital | 1 | Any positive staining excludes, including Low |
+| Manageable | 10 | Any positive staining excludes, including Low |
+| Protected | 6 | Any positive staining excludes, including Low |
+| Vital | 2 | Any positive staining excludes, including Low |
 | Unresolved | No imputed allowance | Positive evidence blocks retention |
 
 RNA comparisons are inclusive, per observation, with no deflation or averaging.
@@ -263,10 +263,10 @@ with these **inclusive maximum human HPA v23 nTPM values**:
 
 | IHC evidence in the RNA tissue | Vital | Protected | Manageable |
 |---|---:|---:|---:|
-| Missing, incomplete, uncertain or unusable | 1 | 3 | 5 |
-| Approved, all routine contexts Not detected | 2 | 4 | 10 |
-| Supported, all routine contexts Not detected | 3 | 6 | 15 |
-| Enhanced, all routine contexts Not detected | 6 | 12 | 30 |
+| Missing, incomplete, uncertain or unusable | 2 | 6 | 10 |
+| Approved, all routine contexts Not detected | 4 | 8 | 20 |
+| Supported, all routine contexts Not detected | 6 | 12 | 30 |
+| Enhanced, all routine contexts Not detected | 12 | 24 | 60 |
 
 ### Tissue-by-tissue selectivity
 
@@ -287,10 +287,10 @@ selectivity unresolved, even if reproductive IHC supplies positive admission evi
 
 | IHC evidence | Vital: max nTPM / min selectivity | Protected: max nTPM / min selectivity | Manageable: max nTPM / min selectivity |
 |---|---:|---:|---:|
-| Missing, uncertain, incomplete or unusable | 1 / 75% | 3 / 70% | 5 / 65% |
-| Approved, complete negative | 2 / 70% | 4 / 65% | 10 / 60% |
-| Supported, complete negative | 3 / 65% | 6 / 60% | 15 / 55% |
-| Enhanced, complete negative | 6 / 60% | 12 / 55% | 30 / 50% |
+| Missing, uncertain, incomplete or unusable | 2 / 75% | 6 / 70% | 10 / 65% |
+| Approved, complete negative | 4 / 70% | 8 / 65% | 20 / 60% |
+| Supported, complete negative | 6 / 65% | 12 / 60% | 30 / 55% |
+| Enhanced, complete negative | 12 / 60% | 24 / 55% | 60 / 50% |
 
 These percentages are **pairwise expression selectivity**, not percent of all RNA,
 protein or the body. For example, 75% requires `Rmax` to be at least three times that
@@ -305,13 +305,13 @@ provide a precedent for enrichment comparisons against other tissues. The
 reproductive reference and both numerical grids are project definitions approved
 for this screen. The percentages were recalibrated for the pairwise metric after
 the previous 99% baseline excluded trace outside expression even below its absolute
-ceiling. Protected's missing/uncertain ceiling also rises from 2 to 3 nTPM for all
-candidates. These are **target-informed research settings**, not validated safety
+ceiling. The later update doubles every absolute ceiling, making 2 nTPM
+the lowest outside-tissue limit; reproductive admission and percentage limits stay unchanged. These are **target-informed research settings**, not validated safety
 limits; recovery of named targets is a calibration check, not independent validation.
 Category summaries use the worst margin against each tissue's own threshold;
 negative IHC in another tissue cannot relax a failing observation.
 
-The [current report](audits/cta-recalibration-20261021/index.md) separates the effects
+The [earlier comparison](audits/cta-recalibration-20261021/index.md) separates the effects
 of >0 reproductive admission, revised selectivity, the Protected ceiling and explicit
 holdback reviews, and shows
 fixed-baseline and IHC-adaptive results. `adaptive_normal_rna_limits()` returns the
@@ -395,7 +395,7 @@ Mouse reproductive anatomy follows the [Jackson Laboratory anatomy resource](htt
 Anatomical transfer does not transfer evidence of expression or clinical
 tolerability: animal annotations explicitly report that tolerability is unvalidated.
 
-The [complete registry audit](audits/normal-tissue-recalibration-20261021/index.md)
+The [complete registry audit](audits/normal-tissue-registry-20261021-r2/index.md)
 exports every canonical concept for each species and every bundled native mapping.
 `normal_tissue_inventory(species=...)` includes **inapplicable anatomy** explicitly;
 `normal_tissue_mapping_inventory(species=..., source_id=..., source_version=...)`
@@ -483,3 +483,5 @@ and “High consequence” correspond to **Manageable** and **Protected**. The n
 change leaves category membership, RNA ceilings and IHC gates unchanged. The new
 positive-evidence rule additionally requires Reproductive expression; Disposable
 expression alone no longer meets the admission requirement.
+
+The [current curation report](audits/cta-curation-20261021-r2/index.md) includes the doubled RNA ceilings, readable gene results and a searchable explorer. [Disjoint gene and protein sets](audits/normal-sequence-sets-20261021/index.md) provide the versioned basis for subsequent k-mer subtraction.

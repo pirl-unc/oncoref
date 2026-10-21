@@ -104,10 +104,10 @@ The taxonomy's `context_reviews` records:
 - `local_steroid_control`: the supported manifestation or absence of established control.
 - `references`, `rationale` and `flags`: evidence, consequences and unresolved questions.
 
-The RNA ceilings are explicit **project starting parameters**: Vital 1/2/3/6,
-Protected 3/4/6/12, Manageable 5/10/15/30 nTPM for missing/uncertain, Approved,
-Supported and Enhanced negative IHC. The user approved all three ladders, including
-the revised Protected baseline of 3 nTPM. The Manageable name
+The RNA ceilings are explicit **project starting parameters**: Vital 2/4/6/12,
+Protected 6/8/12/24, Manageable 10/20/30/60 nTPM for missing/uncertain, Approved,
+Supported and Enhanced negative IHC. The user requested that every absolute RNA
+ceiling be doubled, giving a minimum ceiling of 2 nTPM. The Manageable name
 refers to potentially manageable or compensated injury, subject to context review. No GTEx-to-HPA conversion or
 clinical outcome calibration is claimed. HPA reliability labels do not express a
 probability that a negative stain rules out antigen or peptide-HLA presentation.

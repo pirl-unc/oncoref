@@ -10,9 +10,10 @@ nav:
   - Normal tissue scopes: normal-tissue-scopes.md
   - Tissue injury and manageability: normal-tissue-manageability.md
   - Patient-context gene filters: normal-tissue-gene-filters.md
-  - Reproductive, Normal and Other: audits/normal-expression-categories-20261021/index.md
-  - Current CTA curation and clinical coverage: audits/cta-curation-20261021/index.md
-  - Normal tissue registry audit: audits/normal-tissue-recalibration-20261021/index.md
+  - Reproductive, Normal and Other: audits/normal-expression-categories-20261021-r2/index.md
+  - Current CTA curation and clinical coverage: audits/cta-curation-20261021-r2/index.md
+  - Disjoint gene and protein sets: audits/normal-sequence-sets-20261021/index.md
+  - Normal tissue registry audit: audits/normal-tissue-registry-20261021-r2/index.md
   - Previous selectivity registry: audits/normal-tissue-selectivity-20261020/index.md
   - Previous tissue registry: audits/normal-tissue-priorities-20261020/index.md
   - Previous normal tissue registry: audits/normal-tissue-registry-20261020/index.md
