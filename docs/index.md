@@ -64,11 +64,10 @@ packages can join domains without maintaining private name mappings.
   [CTA Antigens](api.md#cta-antigens).
 - Need reproductive/disposable tissue definitions or their effect on CTA
   filtering? See [Normal tissue scopes](normal-tissue-scopes.md) and the
-  [source and filtering report](audits/cta-tissue-scopes-20261019/index.md).
-  The [expanded permitted-tissue screen](audits/cta-permitted-tissues-20261019/index.md)
-  adds the 1/5 nTPM vital/protected policy and published-target decisions.
-  The [IHC-adaptive comparison](audits/cta-ihc-adaptive-20261020/index.md)
-  shows how complete local negative IHC changes those absolute ceilings.
+  [current source and filtering report](audits/cta-recalibration-20261021/index.md).
+  It requires reproductive RNA >0 or positive IHC and combines absolute ceilings,
+  pairwise reproductive selectivity and an independent positive-IHC veto.
+  Fixed and adaptive results retain every candidate's evidence and review status.
 
 ```python
 from oncoref import cancer_ontology, ici_response

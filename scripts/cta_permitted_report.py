@@ -178,7 +178,7 @@ def evaluate_gene(
         (
             reproductive
             & rows.modality.eq("bulk_rna")
-            & rows.rna_ntpm.ge(config["minimum_reproductive_rna"])
+            & rows.rna_ntpm.gt(config["minimum_reproductive_rna"])
         ).any()
         or (reproductive & rows.modality.eq("ihc") & rows.strict_positive).any()
     )

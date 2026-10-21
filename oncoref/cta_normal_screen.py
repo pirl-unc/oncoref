@@ -14,6 +14,7 @@ from functools import lru_cache
 
 import pandas as pd
 
+from .load_dataset import get_data
 from .normal_tissues import (
     SCREENED_NORMAL_TISSUE_TIERS,
     normal_tissue_screening_policy,
@@ -22,6 +23,49 @@ from .normal_tissues import (
 )
 
 _RELIABILITY = {"Uncertain": 0, "Approved": 1, "Supported": 2, "Enhanced": 3}
+
+
+def screening_nomination_review(gene_id, eligible, reason):
+    """Apply explicitly reviewed holdback transitions for the current screen only.
+
+    The result is nomination eligibility, never an expression pass. Frozen public
+    core/extended panels use their existing specificity reviews independently.
+    """
+    result = {
+        "historical_nomination_review_eligible": bool(eligible),
+        "historical_nomination_review_reason": reason,
+        "nomination_review_eligible": bool(eligible),
+        "nomination_review_reason": reason,
+        "screen_review_superseded_holdback": False,
+        "screen_review_warning": "",
+        "screen_review_reference": "",
+    }
+    policy_id = normal_tissue_screening_policy("ihc_adaptive_cta")["policy_id"]
+    reviews = get_data("cta-screening-review-overrides")
+    rows = reviews.loc[
+        reviews.Ensembl_Gene_ID.eq(gene_id) & reviews.screening_policy_id.eq(policy_id)
+    ]
+    if rows.empty:
+        return result
+    if len(rows) != 1:
+        raise ValueError("Ambiguous screening nomination review")
+    row = rows.iloc[0]
+    prior = get_data("cta-specificity-audit")
+    prior = prior.loc[prior.Ensembl_Gene_ID.eq(gene_id)]
+    if eligible or not prior.specificity_action.eq(row.previous_action).any():
+        raise ValueError("Screening review no longer matches the historical holdback")
+    if row.screen_action != "evaluate_current_expression_gates":
+        raise ValueError("Unknown screening nomination action")
+    result.update(
+        nomination_review_eligible=True,
+        nomination_review_reason=row.rationale,
+        screen_review_superseded_holdback=True,
+        screen_review_warning=row.warning,
+        screen_review_reference=row.evidence_url,
+    )
+    return result
+
+
 _AUDIT_COLUMNS = [
     "observation_index",
     "Ensembl_Gene_ID",

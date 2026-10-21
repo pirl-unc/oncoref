@@ -88,7 +88,7 @@ def build(out):
         ]
     )
     (out / "index.md").write_text(
-        "# Complete normal-tissue registry — 20 October 2026\n\n"
+        "# Complete normal-tissue registry\n\n"
         f"Policy `{taxonomy['policy_version']}`. Every canonical concept is listed for "
         "human, dog and mouse, including explicitly inapplicable concepts. Every "
         "bundled native source/version/tissue/cell mapping is exported separately.\n\n"

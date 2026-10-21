@@ -8,7 +8,7 @@ observations alone do not establish absence outside a scope.
 
 Definitions and citations ship in `oncoref/data/normal-tissue-taxonomy.yaml`;
 exact dataset mappings ship in `oncoref/data/normal-tissue-mappings.csv`.
-Policy version `2026-10-20.4` and a SHA-256 identity over both files accompany
+Policy version `2026-10-21.1` and a SHA-256 identity over both files accompany
 each annotation. Source-artifact receipts record the bytes used to review labels.
 All access is offline once expression data are loaded.
 
@@ -153,7 +153,7 @@ measurement never establishes the narrower compartment's restriction.
 | **Vital** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
-The [complete human/dog/mouse inventories](audits/normal-tissue-selectivity-20261020/index.md)
+The [complete human/dog/mouse inventories](audits/normal-tissue-recalibration-20261021/index.md)
 list every concept and native source mapping, its category, species applicability,
 policy references and review flags. A concept's anatomy citation and the project's
 category-policy citations are kept in separate export fields. Mapping rows and
@@ -228,13 +228,13 @@ Reproductive grouping; maternal organs are not reclassified by pregnancy.
 |---|---:|---|
 | Reproductive / Disposable | No upper ceiling | Positive staining allowed within selected scope; review flags retained |
 | Manageable | 5 | Any positive staining excludes, including Low |
-| Protected | 2 | Any positive staining excludes, including Low |
+| Protected | 3 | Any positive staining excludes, including Low |
 | Vital | 1 | Any positive staining excludes, including Low |
 | Unresolved | No imputed allowance | Positive evidence blocks retention |
 
 RNA comparisons are inclusive, per observation, with no deflation or averaging.
 The complete screen combines these absolute limits with the selectivity limits below.
-A candidate needs at least 1 nTPM or positive IHC in **Reproductive** tissue and
+A candidate needs valid RNA **strictly >0 nTPM** or positive IHC in **Reproductive** tissue and
 complete coverage of the 50 routine bulk RNA contexts. Missing/partial IHC remains
 explicit; 80 routine tissue/cell pairs define routine-complete IHC, not exhaustive
 biological coverage. Unknown anatomy, unusable measurements and reviewed-unreliable
@@ -263,7 +263,7 @@ with these **inclusive maximum human HPA v23 nTPM values**:
 
 | IHC evidence in the RNA tissue | Vital | Protected | Manageable |
 |---|---:|---:|---:|
-| Missing, incomplete, uncertain or unusable | 1 | 2 | 5 |
+| Missing, incomplete, uncertain or unusable | 1 | 3 | 5 |
 | Approved, all routine contexts Not detected | 2 | 4 | 10 |
 | Supported, all routine contexts Not detected | 3 | 6 | 15 |
 | Enhanced, all routine contexts Not detected | 6 | 12 | 30 |
@@ -287,13 +287,13 @@ selectivity unresolved, even if reproductive IHC supplies positive admission evi
 
 | IHC evidence | Vital: max nTPM / min selectivity | Protected: max nTPM / min selectivity | Manageable: max nTPM / min selectivity |
 |---|---:|---:|---:|
-| Missing, uncertain, incomplete or unusable | 1 / 99% | 2 / 97% | 5 / 95% |
-| Approved, complete negative | 2 / 98% | 4 / 95% | 10 / 90% |
-| Supported, complete negative | 3 / 97% | 6 / 90% | 15 / 80% |
-| Enhanced, complete negative | 6 / 95% | 12 / 80% | 30 / 60% |
+| Missing, uncertain, incomplete or unusable | 1 / 75% | 3 / 70% | 5 / 65% |
+| Approved, complete negative | 2 / 70% | 4 / 65% | 10 / 60% |
+| Supported, complete negative | 3 / 65% | 6 / 60% | 15 / 55% |
+| Enhanced, complete negative | 6 / 60% | 12 / 55% | 30 / 50% |
 
 These percentages are **pairwise expression selectivity**, not percent of all RNA,
-protein or the body. For example, 80% requires `Rmax` to be at least four times that
+protein or the body. For example, 75% requires `Rmax` to be at least three times that
 tissue's RNA. High reproductive expression cannot override the absolute ceiling
 or the positive-IHC veto. Adding additional sampled tissues cannot change an
 existing tissue's score; newly measured tissues still receive their own gates.
@@ -303,13 +303,17 @@ reference panel and its coverage remain part of the audit.
 [HPA v23 specificity definitions](https://v23.proteinatlas.org/humanproteome/tissue/tissue%2Bspecific)
 provide a precedent for enrichment comparisons against other tissues. The
 reproductive reference and both numerical grids are project definitions approved
-for this screen. The Protected percentage ladder reuses the older score's numbers,
-but the new metric has different semantics and is not calibrated to the old pass rate.
+for this screen. The percentages were recalibrated for the pairwise metric after
+the previous 99% baseline excluded trace outside expression even below its absolute
+ceiling. Protected's missing/uncertain ceiling also rises from 2 to 3 nTPM for all
+candidates. These are **target-informed research settings**, not validated safety
+limits; recovery of named targets is a calibration check, not independent validation.
 Category summaries use the worst margin against each tissue's own threshold;
 negative IHC in another tissue cannot relax a failing observation.
 
-The [current report](audits/cta-selectivity-20261020/index.md) separates the effect
-of requiring reproductive evidence from the added selectivity gate, and shows
+The [current report](audits/cta-recalibration-20261021/index.md) separates the effects
+of >0 reproductive admission, revised selectivity, the Protected ceiling and explicit
+holdback reviews, and shows
 fixed-baseline and IHC-adaptive results. `adaptive_normal_rna_limits()` returns the
 observed selectivity, its minimum, margin, and reference alongside the absolute
 ceiling. Its output is an audit, not an overall pass: callers must apply both gates,
@@ -391,7 +395,7 @@ Mouse reproductive anatomy follows the [Jackson Laboratory anatomy resource](htt
 Anatomical transfer does not transfer evidence of expression or clinical
 tolerability: animal annotations explicitly report that tolerability is unvalidated.
 
-The [complete registry audit](audits/normal-tissue-selectivity-20261020/index.md)
+The [complete registry audit](audits/normal-tissue-recalibration-20261021/index.md)
 exports every canonical concept for each species and every bundled native mapping.
 `normal_tissue_inventory(species=...)` includes **inapplicable anatomy** explicitly;
 `normal_tissue_mapping_inventory(species=..., source_id=..., source_version=...)`

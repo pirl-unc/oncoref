@@ -105,9 +105,9 @@ The taxonomy's `context_reviews` records:
 - `references`, `rationale` and `flags`: evidence, consequences and unresolved questions.
 
 The RNA ceilings are explicit **project starting parameters**: Vital 1/2/3/6,
-Protected 2/4/6/12, Manageable 5/10/15/30 nTPM for missing/uncertain, Approved,
-Supported and Enhanced negative IHC. Vital/Protected follow the earlier proposed
-sensitivity grid; the user approved all three ladders. The Manageable name
+Protected 3/4/6/12, Manageable 5/10/15/30 nTPM for missing/uncertain, Approved,
+Supported and Enhanced negative IHC. The user approved all three ladders, including
+the revised Protected baseline of 3 nTPM. The Manageable name
 refers to potentially manageable or compensated injury, subject to context review. No GTEx-to-HPA conversion or
 clinical outcome calibration is claimed. HPA reliability labels do not express a
 probability that a negative stain rules out antigen or peptide-HLA presentation.
@@ -119,7 +119,7 @@ Disposable excludes. Whole skin/salivary/thymus/spleen allowances from policy
 
 Human clinical rationale is not transferred to dogs or mice. The shared vocabulary
 maps anatomy; tolerability evidence, numerical policies, age and patient context
-remain separate. The updated [CTA report](audits/cta-tissue-priorities-20261020/index.md)
+remain separate. The historical [CTA report](audits/cta-tissue-priorities-20261020/index.md)
 separates the effects of reclassification from the new RNA grid.
 
 ## Combined absolute and selectivity gates
@@ -130,9 +130,10 @@ screened tissue's RNA. Disposable is excluded from this comparison and cannot
 supply the required reproductive-positive evidence. Missing or zero reproductive
 RNA cannot establish a selectivity score.
 
-The approved percentage ladders are Vital 99/98/97/95%, Protected 97/95/90/80%,
-and Manageable 95/90/80/60%, in order of missing/uncertain, Approved, Supported,
-and Enhanced negative IHC. These are project parameters with a different meaning
-from the historical global deflated fraction. They do not estimate clinical risk.
+The approved percentage ladders are Vital 75/70/65/60%, Protected 70/65/60/55%,
+and Manageable 65/60/55/50%, in order of missing/uncertain, Approved, Supported,
+and Enhanced negative IHC. Admission requires valid reproductive RNA >0 or positive
+reproductive IHC. These are target-informed project parameters with a different
+meaning from the historical global deflated fraction. They do not estimate clinical risk.
 See the [complete matrix and formula](normal-tissue-scopes.md#tissue-by-tissue-selectivity)
-and the [candidate comparison](audits/cta-selectivity-20261020/index.md).
+and the [candidate comparison](audits/cta-recalibration-20261021/index.md).

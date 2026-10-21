@@ -50,6 +50,34 @@ def publication_sources() -> pd.DataFrame:
     return get_data("cta-publication-sources")
 
 
+def reviewed_publication_membership() -> pd.DataFrame:
+    """Full intake with stable reviewed identities outside the canonical Ensembl space.
+
+    An official NCBI identity does not create an Ensembl mapping, protein-coding
+    eligibility, or expression evidence. Shared-probe caveats remain attached.
+    """
+    rows = publication_membership().fillna("")
+    reviews = get_data("cta-intake-identity-reviews").fillna("")
+    if reviews.source_symbol.duplicated().any():
+        raise ValueError("Intake identity reviews require unique source symbols")
+    rows = rows.merge(reviews, on="source_symbol", how="left", validate="many_to_one").fillna("")
+    rows["intake_identity"] = [
+        r.Ensembl_Gene_ID
+        or r.authority_id
+        or f"unmapped:{r.source_id_type}:{r.source_gene_id or r.source_symbol}"
+        for r in rows.itertuples(index=False)
+    ]
+    rows["identity_status"] = [
+        "canonical_mapped"
+        if r.Ensembl_Gene_ID
+        else "reviewed_ncbi_without_canonical_mapping"
+        if r.authority_id
+        else "unmapped"
+        for r in rows.itertuples(index=False)
+    ]
+    return rows
+
+
 def gene_publication_evidence() -> pd.DataFrame:
     """Targeted primary evidence, with assay resolution and validation limits.
 

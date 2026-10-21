@@ -10,14 +10,16 @@ nav:
   - Normal tissue scopes: normal-tissue-scopes.md
   - Tissue injury and manageability: normal-tissue-manageability.md
   - Patient-context gene filters: normal-tissue-gene-filters.md
-  - Normal tissue registry audit: audits/normal-tissue-selectivity-20261020/index.md
+  - Normal tissue registry audit: audits/normal-tissue-recalibration-20261021/index.md
+  - Previous selectivity registry: audits/normal-tissue-selectivity-20261020/index.md
   - Previous tissue registry: audits/normal-tissue-priorities-20261020/index.md
   - Previous normal tissue registry: audits/normal-tissue-registry-20261020/index.md
   - CTA tissue-scope report: audits/cta-tissue-scopes-20261019/index.md
   - CTA permitted-tissue screen: audits/cta-permitted-tissues-20261019/index.md
   - CTA IHC-adaptive screen: audits/cta-ihc-adaptive-20261020/index.md
   - CTA tissue-tier update: audits/cta-tissue-tiers-20261020/index.md
-  - CTA reproductive selectivity: audits/cta-selectivity-20261020/index.md
+  - CTA recalibration and complete intake: audits/cta-recalibration-20261021/index.md
+  - Previous CTA reproductive selectivity: audits/cta-selectivity-20261020/index.md
   - Previous tissue priority and IHC grid: audits/cta-tissue-priorities-20261020/index.md
   - Previous CTA tissue contexts: audits/cta-tissue-contexts-20261020/index.md
   - Home: index.md

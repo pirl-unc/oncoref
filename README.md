@@ -11,16 +11,15 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 [Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [CTA source/filtering report](https://pirl-unc.github.io/oncoref/audits/cta-tissue-scopes-20261019/)
-document the nested sets, cited dataset mappings, human filtering comparisons,
-and dog/mouse evidence coverage.
-The [expanded permitted-tissue screen](https://pirl-unc.github.io/oncoref/audits/cta-permitted-tissues-20261019/)
-adds thymus, salivary gland and whole skin, with separate vital/protected RNA
-ceilings and an independent IHC gate. Published-target inclusion and exclusion
-reasons are provided for every candidate.
-The [IHC-adaptive comparison](https://pirl-unc.github.io/oncoref/audits/cta-ihc-adaptive-20261020/)
-adjusts absolute RNA ceilings using complete local negative IHC, with per-tissue
-evidence, fixed-versus-adaptive results, and the HPA/GTEx source distinction.
+and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-recalibration-20261021/)
+document the nested sets, cited dataset mappings, complete publication intake,
+and dog/mouse evidence coverage. The human research screen requires reproductive
+RNA >0 or positive reproductive IHC, with category-specific absolute RNA ceilings,
+pairwise reproductive selectivity, and an independent positive-IHC veto.
+Complete local negative IHC sets the thresholds for Manageable, Protected and
+Vital tissues. The report compares fixed and adaptive results and preserves
+every candidate's exclusion reasons and unassessed mappings. Numerical limits
+are research parameters, not validated clinical safety limits.
 
 ## Role in the stack
 

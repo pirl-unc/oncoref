@@ -46,7 +46,8 @@ def test_complete_lists_are_not_truncated_to_retained_genes():
     assert coverage.paper_dois.ne("").all() and coverage.source_locations.ne("").all()
     assert set(coverage.loc[coverage.default_panel, "Ensembl_Gene_ID"]) == cta.cta_gene_ids()
     legacy = legacy_only_candidates()
-    assert len(legacy) == 9 and "TRIM64" in set(legacy.Symbol)
+    # SPAG9 is a primary-source addition outside the minimum cover of the frozen panel.
+    assert len(legacy) == 10 and {"TRIM64", "SPAG9"} <= set(legacy.Symbol)
     assert set(legacy.Ensembl_Gene_ID).isdisjoint(cta.cta_gene_ids())
 
 

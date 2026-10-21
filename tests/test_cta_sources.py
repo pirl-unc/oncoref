@@ -1,6 +1,9 @@
 """Published nominations retain source identity and do not bypass CTA gates."""
 
+import hashlib
 import io
+import json
+from importlib.resources import files
 
 import pandas as pd
 import pytest
@@ -19,6 +22,7 @@ from oncoref.cta_sources import (
     publication_membership,
     publication_sources,
     resolve_membership,
+    reviewed_publication_membership,
 )
 from oncoref.load_dataset import get_data
 
@@ -140,9 +144,52 @@ def test_legacy_core_evidence_cannot_be_audited_as_extended():
 
 def test_only_vgll1_is_claimed_as_newly_validated_by_bradley():
     refs = publication_membership()
-    validated = refs[refs.validation_scope.str.contains("HLA peptide", na=False)]
+    validated = refs[
+        refs.source_tag.eq(BRADLEY) & refs.validation_scope.str.contains("HLA peptide", na=False)
+    ]
     assert validated.source_symbol.tolist() == ["VGLL1"]
     assert validated.source_tag.tolist() == [BRADLEY]
+
+
+def test_reviewed_ncbi_targets_remain_in_intake_without_fabricated_ensembl_mapping():
+    rows = reviewed_publication_membership()
+    for symbol, identity in [("BAGE", "NCBIGene:574"), ("GAGE2B", "NCBIGene:645037")]:
+        target = rows.loc[rows.source_symbol.eq(symbol)]
+        assert not target.empty
+        assert set(target.intake_identity) == {identity}
+        assert target.Ensembl_Gene_ID.eq("").all()
+        assert not target.protein_candidate_eligible.any()
+        assert target.identity_status.eq("reviewed_ncbi_without_canonical_mapping").all()
+        assert target.authority_url.str.startswith("https://www.ncbi.nlm.nih.gov/gene/").all()
+    gage = rows.loc[rows.source_symbol.eq("GAGE2B")].iloc[0]
+    assert "shared" in gage.assay_resolution and "shared" in gage.assay_caveat
+
+
+def test_intake_identity_reviews_match_bundled_authority_and_canonical_snapshot():
+    from oncoref.gene_ids import canonical_gene_space
+
+    raw = files("oncoref").joinpath("data/cta-intake-identity-snapshot.json").read_bytes()
+    genes = json.loads(raw)["result"]
+    reviews = get_data("cta-intake-identity-reviews")
+    assert set(reviews.source_sha256) == {hashlib.sha256(raw).hexdigest()}
+    canonical = canonical_gene_space().to_csv(index=False).encode()
+    assert set(reviews.canonical_reference_sha256) == {hashlib.sha256(canonical).hexdigest()}
+    for row in reviews.itertuples():
+        gene = genes[row.authority_id.split(":")[1]]
+        assert gene["nomenclaturesymbol"] == row.source_symbol
+        assert gene["organism"]["taxid"] == 9606
+
+
+def test_spag9_primary_nomination_is_screened_and_does_not_bypass_normal_expression():
+    rows = reviewed_publication_membership()
+    target = rows.loc[rows.source_tag.eq("Garg2007_SPAG9")].iloc[0]
+    assert target.Ensembl_Gene_ID == "ENSG00000008294"
+    assert target.protein_candidate_eligible
+    assert target.intake_identity == target.Ensembl_Gene_ID
+    assert "serology" in target.assay_resolution
+    for name in ["cancer-testis-antigens", "cancer-testis-antigens-extended"]:
+        candidate = get_data(name).loc[lambda f: f.Symbol.eq("SPAG9")].iloc[0]
+        assert not candidate.passes_filters
 
 
 @pytest.mark.parametrize("tissue_scope", ["core", "extended"])
