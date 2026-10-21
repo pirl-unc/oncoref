@@ -74,12 +74,20 @@ def _registry():
     for name, policy in doc.get("screening_policies", {}).items():
         if policy["permitted_scope"] not in scopes:
             raise ValueError(f"Unknown screening policy scope: {name}")
+        if policy["required_positive_scope"] not in scopes:
+            raise ValueError(f"Unknown required positive scope: {name}")
+        floor = policy["minimum_reproductive_rna"]
+        if not isinstance(floor, (int, float)) or not math.isfinite(floor) or floor <= 0:
+            raise ValueError(f"Invalid reproductive expression floor: {name}")
         roots = set(policy["unresolved_roots"])
         for tier in SCREENED_NORMAL_TISSUE_TIERS:
             roots.update(policy[tier]["roots"])
             limit = policy[tier]["maximum_rna"]
             if not isinstance(limit, (int, float)) or not math.isfinite(limit) or limit <= 0:
                 raise ValueError(f"Invalid baseline RNA ceiling: {name}/{tier}")
+            selectivity = policy[tier]["minimum_reproductive_selectivity"]
+            if not math.isfinite(selectivity) or not 0 < selectivity < 1:
+                raise ValueError(f"Invalid baseline selectivity: {name}/{tier}")
         ladder = policy.get("negative_ihc_rna_limits")
         if ladder is not None:
             evidence = ("Missing", "Uncertain", "Approved", "Supported", "Enhanced")
@@ -97,6 +105,28 @@ def _registry():
                     raise ValueError(f"Non-monotonic adaptive RNA grid: {name}/{reliability}")
                 if reliability in {"Missing", "Uncertain"} and values != previous:
                     raise ValueError(f"Missing/uncertain IHC must use baseline: {name}")
+                previous = values
+        fractions = policy.get("negative_ihc_minimum_reproductive_selectivity")
+        if fractions is not None:
+            if set(fractions) != set(ladder):
+                raise ValueError(f"Incomplete selectivity evidence ladder: {name}")
+            previous = [
+                policy[tier]["minimum_reproductive_selectivity"]
+                for tier in SCREENED_NORMAL_TISSUE_TIERS
+            ]
+            for reliability in ("Missing", "Uncertain", "Approved", "Supported", "Enhanced"):
+                row = fractions[reliability]
+                if set(row) != set(SCREENED_NORMAL_TISSUE_TIERS):
+                    raise ValueError(f"Incomplete selectivity category grid: {name}/{reliability}")
+                values = [row[tier] for tier in SCREENED_NORMAL_TISSUE_TIERS]
+                if any(not math.isfinite(v) or not 0 < v < 1 for v in values):
+                    raise ValueError(f"Invalid selectivity threshold: {name}/{reliability}")
+                if values != sorted(values, reverse=True) or any(
+                    v > p for v, p in zip(values, previous)
+                ):
+                    raise ValueError(f"Non-monotonic selectivity grid: {name}/{reliability}")
+                if reliability in {"Missing", "Uncertain"} and values != previous:
+                    raise ValueError(f"Missing/uncertain IHC must use baseline selectivity: {name}")
                 previous = values
         if (
             not roots <= concepts.keys()
@@ -449,7 +479,7 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
         "tissue_category": category,
         "tissue_category_label": {
             "reproductive": "Reproductive",
-            "disposable": "Disposable (conditional)",
+            "disposable": "Disposable",
         }.get(category, config["tier_labels"][tier]),
         "screening_policy_id": config["policy_id"],
         "screening_tier": tier,
@@ -472,8 +502,8 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
 def normal_tissue_category(annotation, policy="tiered_cta") -> str:
     """Category ID; unresolved is a QC status outside the five tissue categories.
 
-    ``manageable`` labels Manageable risk; the existing ``protected`` ID labels
-    High consequence. Readable names are returned by normal_tissue_screening_details.
+    Readable names are returned by normal_tissue_screening_details; each name
+    is the capitalized category ID.
     Disposable names the conditional project allowance. It does not
     assert complete organ loss is harmless or inflammation is steroid-responsive.
     The older, narrower ``disposable_normal`` anatomical scope remains distinct.

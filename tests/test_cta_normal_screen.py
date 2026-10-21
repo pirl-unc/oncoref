@@ -197,7 +197,7 @@ def test_bulk_skin_cannot_borrow_negativity_from_selected_compartments():
     complete = adaptive_normal_rna_limits(rows, routine_ihc_contexts=required)
     assert complete.iloc[0].screening_tier == "manageable"
     assert complete.iloc[0].rna_ceiling_ntpm == 30
-    assert complete.iloc[0].screening_policy_id.endswith("2026-10-20.4")
+    assert complete.iloc[0].screening_policy_id.endswith("2026-10-20.5")
     missing = adaptive_normal_rna_limits(rows.iloc[:-1], routine_ihc_contexts=required)
     assert missing.iloc[0].rna_ceiling_ntpm == 5
     # Allowed melanocyte staining cannot establish a negative bulk-skin context.
@@ -216,3 +216,66 @@ def test_missing_rna_preserves_audit_schema_without_inventing_measurements():
         assert empty.empty
         assert empty.columns.equals(full.columns)
         assert empty.relaxed.sum() == 0
+
+
+@pytest.mark.parametrize(
+    "reliability,expected",
+    [
+        ("Missing", (0.99, 0.97, 0.95)),
+        ("Uncertain", (0.99, 0.97, 0.95)),
+        ("Approved", (0.98, 0.95, 0.90)),
+        ("Supported", (0.97, 0.90, 0.80)),
+        ("Enhanced", (0.95, 0.80, 0.60)),
+    ],
+)
+def test_selectivity_thresholds_follow_the_same_local_ihc_evidence(reliability, expected):
+    for (tissue, cell), minimum in zip(
+        [
+            ("heart muscle", "cardiomyocytes"),
+            ("salivary gland", "glandular cells"),
+            ("thyroid gland", "glandular cells"),
+        ],
+        expected,
+    ):
+        ihc = [] if reliability == "Missing" else [(tissue, cell, "Not detected", reliability)]
+        rows = pd.concat(
+            [observations(tissue, value=1, ihc=ihc), observations("testis", value=99)],
+            ignore_index=True,
+        )
+        result = adaptive_normal_rna_limits(rows, routine_ihc_contexts=[(tissue, cell)])
+        assert result.iloc[0].reproductive_selectivity == 0.99
+        assert result.iloc[0].minimum_reproductive_selectivity == minimum
+
+
+def test_selectivity_reference_is_maximum_reproductive_rna_and_ignores_disposable():
+    rows = pd.concat(
+        [
+            observations("testis", value=50),
+            observations("ovary", value=99),
+            observations("heart muscle", value=1),
+            observations("tonsil", value=100000),
+        ],
+        ignore_index=True,
+    )
+    result = adaptive_normal_rna_limits(rows, routine_ihc_contexts=[])
+    heart = result.loc[result.tissue.eq("heart muscle")].iloc[0]
+    assert heart.reproductive_rna_max_ntpm == 99
+    assert heart.reproductive_reference_tissues == '["ovary"]'
+    assert heart.reproductive_selectivity == 0.99
+    assert pd.isna(result.loc[result.tissue.eq("tonsil"), "minimum_reproductive_selectivity"]).all()
+    # Adding another measured tissue cannot dilute or inflate the heart's ratio.
+    extra = pd.concat([rows, observations("liver", value=1)], ignore_index=True)
+    result = adaptive_normal_rna_limits(extra, routine_ihc_contexts=[])
+    assert result.loc[result.tissue.eq("heart muscle"), "reproductive_selectivity"].iloc[0] == 0.99
+
+
+@pytest.mark.parametrize("reference", [0, float("nan"), -1])
+def test_nonpositive_or_invalid_reproductive_rna_never_invents_selectivity(reference):
+    rows = pd.concat(
+        [observations("testis", value=reference), observations(value=0)], ignore_index=True
+    )
+    rows.loc[0, "valid_measurement"] = reference == 0
+    result = adaptive_normal_rna_limits(rows, routine_ihc_contexts=[])
+    heart = result.iloc[1]
+    assert pd.isna(heart.reproductive_selectivity)
+    assert heart.selectivity_status == "no_positive_reproductive_rna"

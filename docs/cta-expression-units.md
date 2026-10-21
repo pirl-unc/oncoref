@@ -134,3 +134,17 @@ For a registry-only refresh, `scripts/refresh_proteoform_artifacts.py --base
 Runtime recomputation clips negative source values before normalization and uses
 the recorded effective sample-QC policy for artifact reads. Explicit
 `sample_qc="pass"` percentile reads remain strict.
+
+## New tissue-by-tissue selectivity screen
+
+The [reproductive selectivity screen](normal-tissue-scopes.md#tissue-by-tissue-selectivity)
+uses `Rmax / (Rmax + tissue RNA)`, where `Rmax` is the highest valid raw nTPM in
+Reproductive for the same gene and source/version. This is a separate pairwise
+selectivity score, not the historical summed or deflated fraction above.
+Disposable does not enter its reference or the screened tissue set. Each
+Manageable, Protected and Vital observation must pass both its IHC-conditioned
+absolute ceiling and selectivity minimum; positive IHC independently vetoes.
+Zero or missing reproductive RNA produces an unresolved score, never 100%.
+The [new report](audits/cta-selectivity-20261020/index.md) preserves every reference,
+observation, threshold and decision. The frozen core/extended public panels retain
+their historical fraction semantics.

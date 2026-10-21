@@ -1,5 +1,5 @@
 # Licensed under the Apache License, Version 2.0.
-"""Absolute normal-RNA ceilings conditioned on tissue-specific negative HPA IHC.
+"""Absolute RNA ceilings and reproductive selectivity conditioned on local HPA IHC.
 
 This is a human HPA v23 research screen. The ceilings are project parameters,
 not clinical safety limits. Positive IHC and other admission gates are applied
@@ -9,6 +9,7 @@ separately; this module never certifies antigen or peptide-HLA absence.
 from __future__ import annotations
 
 import json
+import math
 from functools import lru_cache
 
 import pandas as pd
@@ -35,6 +36,12 @@ _AUDIT_COLUMNS = [
     "rna_ntpm",
     "baseline_ceiling_ntpm",
     "rna_ceiling_ntpm",
+    "reproductive_rna_max_ntpm",
+    "reproductive_reference_tissues",
+    "reproductive_selectivity",
+    "minimum_reproductive_selectivity",
+    "selectivity_margin",
+    "selectivity_status",
     "ihc_evidence_status",
     "ihc_reliability_used",
     "required_ihc_context_count",
@@ -76,6 +83,13 @@ def adaptive_normal_rna_limits(
     evidence retains the baseline. Callers must separately reject positive IHC,
     incomplete RNA, unresolved positive anatomy and reviewed-unreliable IHC.
 
+    Each screened tissue also receives a minimum reproductive selectivity and
+    an observed score Rmax / (Rmax + tissue RNA). Rmax is the maximum valid raw
+    RNA in Reproductive, excluding Disposable. No positive reproductive RNA
+    makes selectivity unresolved, including the all-zero case. This is a
+    tissue-by-tissue ratio, not a share of summed expression or total-body RNA.
+    Callers must gate both the absolute ceiling and the selectivity minimum.
+
     The returned index matches the input RNA rows. ``rna_ceiling_ntpm`` is NaN
     for permitted or unresolved anatomy. An unknown tissue never receives a
     permissive numerical cutoff. Human nTPM rules do not transfer to other species.
@@ -112,8 +126,22 @@ def adaptive_normal_rna_limits(
         for row in ihc.itertuples(index=False)
     ]
     grouped = dict(iter(ihc.groupby("tissue_concept")))
+    rna = observations.loc[observations.modality.eq("bulk_rna")]
+    reference = []
+    for row in rna.itertuples(index=False):
+        annotation = _tissue(row.tissue, row.source_name, row.source_version)
+        if (
+            annotation.mapping_status == "mapped"
+            and config["required_positive_scope"] in annotation.scopes
+            and row.valid_measurement
+            and math.isfinite(row.rna_ntpm)
+            and row.rna_ntpm >= 0
+        ):
+            reference.append((row.tissue, float(row.rna_ntpm)))
+    rmax = max((value for _, value in reference), default=float("nan"))
+    reference_tissues = sorted({tissue for tissue, value in reference if value == rmax})
     records = []
-    for index, row in observations.loc[observations.modality.eq("bulk_rna")].iterrows():
+    for index, row in rna.iterrows():
         annotation = _tissue(row.tissue, row.source_name, row.source_version)
         tier = normal_tissue_screening_tier(annotation, policy="ihc_adaptive_cta")
         required = routine.get(annotation.concept_id, set())
@@ -146,6 +174,22 @@ def adaptive_normal_rna_limits(
             reliability = min(local.ihc_reliability, key=_RELIABILITY.get)
             ceiling = config["negative_ihc_rna_limits"][reliability][tier]
             status = "negative_" + reliability.lower()
+        score = minimum = float("nan")
+        selectivity_status = tier
+        if tier in SCREENED_NORMAL_TISSUE_TIERS:
+            minimum = config["negative_ihc_minimum_reproductive_selectivity"][reliability][tier]
+            if not math.isfinite(rmax) or rmax <= 0:
+                selectivity_status = "no_positive_reproductive_rna"
+            elif not row.valid_measurement or not math.isfinite(row.rna_ntpm) or row.rna_ntpm < 0:
+                selectivity_status = "invalid_rna_observation"
+            else:
+                total = rmax + row.rna_ntpm
+                if math.isfinite(total):
+                    score = rmax / total
+                else:
+                    scale = max(rmax, row.rna_ntpm)
+                    score = (rmax / scale) / (rmax / scale + row.rna_ntpm / scale)
+                selectivity_status = "measured"
         records.append(
             {
                 "observation_index": index,
@@ -161,6 +205,12 @@ def adaptive_normal_rna_limits(
                 "rna_ntpm": row.rna_ntpm,
                 "baseline_ceiling_ntpm": baseline,
                 "rna_ceiling_ntpm": ceiling,
+                "reproductive_rna_max_ntpm": rmax,
+                "reproductive_reference_tissues": json.dumps(reference_tissues),
+                "reproductive_selectivity": score,
+                "minimum_reproductive_selectivity": minimum,
+                "selectivity_margin": score - minimum,
+                "selectivity_status": selectivity_status,
                 "ihc_evidence_status": status,
                 "ihc_reliability_used": reliability,
                 "required_ihc_context_count": len(required),

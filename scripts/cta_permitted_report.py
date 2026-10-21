@@ -139,6 +139,7 @@ def evaluate_gene(
     unreliable=False,
     rna_limits=None,
     manageable_limit=None,
+    selectivity_audit=None,
 ):
     """Separate RNA ceilings and a strict outside-IHC gate, with explicit missingness."""
     config = normal_tissue_screening_policy()
@@ -146,6 +147,7 @@ def evaluate_gene(
     ihc = rows.loc[rows.modality.eq("ihc")]
     mapped = rows.mapping_status.eq("mapped")
     allowed = mapped & rows[scope]
+    reproductive = allowed & rows[config["required_positive_scope"]] & rows.valid_measurement
     tiers = rows.screening_tier.copy()
     # Scope-only comparison: held-out requested exceptions receive the protected
     # ceiling; scenarios with the narrower scope use the same 1 nTPM ceiling in both tiers.
@@ -174,11 +176,11 @@ def evaluate_gene(
     ]
     positive_inside = bool(
         (
-            allowed
+            reproductive
             & rows.modality.eq("bulk_rna")
-            & rows.rna_ntpm.ge(config["minimum_permitted_rna"])
+            & rows.rna_ntpm.ge(config["minimum_reproductive_rna"])
         ).any()
-        or (allowed & rows.modality.eq("ihc") & rows.strict_positive).any()
+        or (reproductive & rows.modality.eq("ihc") & rows.strict_positive).any()
     )
     seen = {
         name: set(
@@ -191,12 +193,44 @@ def evaluate_gene(
     }
     missing = {name: set(expected[name]) - seen[name] for name in expected}
     failures, unknown = [], []
+    selectivity_failures = []
+    selectivity_minima = {}
+    if selectivity_audit is not None:
+        if not selectivity_audit.index.equals(rna.index):
+            raise ValueError("Selectivity audit must match every RNA row in order")
+        if not selectivity_audit.Ensembl_Gene_ID.eq(rna.Ensembl_Gene_ID).fillna(
+            False
+        ).all() or not (selectivity_audit.tissue.eq(rna.tissue).fillna(False).all()):
+            raise ValueError("Selectivity audit must match the gene and tissue observations")
+        selected = selectivity_audit.loc[
+            tiers.loc[rna.index].isin(["vital", "protected", "manageable"])
+        ]
+        if selected.empty or selected.reproductive_selectivity.isna().any():
+            unknown.append("unresolved_reproductive_selectivity")
+        if selected.minimum_reproductive_selectivity.isna().any():
+            raise ValueError("Screened tissues require selectivity thresholds")
+        below = selected.loc[
+            selected.reproductive_selectivity.lt(selected.minimum_reproductive_selectivity)
+        ]
+        if len(below):
+            failures.append("reproductive_selectivity_below_threshold")
+        selectivity_failures = [
+            f"{r.tissue}: {r.reproductive_selectivity:.4%} (minimum "
+            f"{r.minimum_reproductive_selectivity:.0%}, {r.ihc_reliability_used})"
+            for r in below.itertuples(index=False)
+        ]
+        selectivity_minima = {
+            f"{tier}_worst_selectivity_margin": group.reproductive_selectivity.sub(
+                group.minimum_reproductive_selectivity
+            ).min()
+            for tier, group in selected.groupby("screening_tier")
+        }
     if len(above):
         failures.append("rna_above_tissue_ceiling")
     if len(forbidden_ihc):
         failures.append("positive_ihc_outside_permitted")
     if not positive_inside:
-        failures.append("insufficient_positive_evidence_inside")
+        failures.append("insufficient_positive_reproductive_evidence")
     if not expected["bulk_rna"] or missing["bulk_rna"]:
         unknown.append("incomplete_routine_rna")
     if (~rows.valid_measurement).any():
@@ -220,6 +254,10 @@ def evaluate_gene(
         "evidence_status": "excluded" if failures else "unresolved" if unknown else "compatible",
         "failure_reasons": ";".join(failures + unknown),
         "positive_evidence_inside": positive_inside,
+        "positive_evidence_reproductive": positive_inside,
+        "selectivity_gate_applied": selectivity_audit is not None,
+        "selectivity_exclusions": "; ".join(selectivity_failures),
+        **selectivity_minima,
         "rna_routine_missing": len(missing["bulk_rna"]),
         "ihc_routine_missing": len(missing["ihc"]),
         "ihc_coverage": ihc_coverage,
