@@ -1,0 +1,5 @@
+scenario,candidates,evidence_pass,retained,without_ihc,partial_ihc,complete_routine_ihc
+previous_adaptive,2537,752,654,359,288,7
+reclassified_previous_limits,2537,716,629,349,274,6
+current_fixed,2537,669,582,343,235,4
+current_adaptive,2537,712,624,343,276,5

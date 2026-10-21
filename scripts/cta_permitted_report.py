@@ -117,6 +117,7 @@ def annotate_archive(observations):
             {
                 **row._asdict(),
                 "tissue_category": details["tissue_category"],
+                "tissue_category_label": details["tissue_category_label"],
                 "screening_tier": details["screening_tier"],
                 "screening_tier_label": details["screening_tier_label"],
                 "tissue_review_flags": ";".join(details["review_flags"]),
@@ -129,7 +130,15 @@ def annotate_archive(observations):
 
 
 def evaluate_gene(
-    rows, *, scope, vital_limit, protected_limit, expected, unreliable=False, rna_limits=None
+    rows,
+    *,
+    scope,
+    vital_limit,
+    protected_limit,
+    expected,
+    unreliable=False,
+    rna_limits=None,
+    manageable_limit=None,
 ):
     """Separate RNA ceilings and a strict outside-IHC gate, with explicit missingness."""
     config = normal_tissue_screening_policy()
@@ -142,7 +151,15 @@ def evaluate_gene(
     # ceiling; scenarios with the narrower scope use the same 1 nTPM ceiling in both tiers.
     tiers.loc[tiers.eq("permitted") & ~allowed] = "protected"
     tiers.loc[allowed] = "permitted"
-    limits = tiers.map({"vital": vital_limit, "protected": protected_limit}).astype(float)
+    limits = tiers.map(
+        {
+            "vital": vital_limit,
+            "protected": protected_limit,
+            "manageable": config["manageable"]["maximum_rna"]
+            if manageable_limit is None
+            else manageable_limit,
+        }
+    ).astype(float)
     if rna_limits is not None:
         if not rna_limits.index.equals(rna.index):
             raise ValueError("RNA ceilings must match every RNA row in order")
@@ -152,7 +169,7 @@ def evaluate_gene(
     above = rows.loc[
         rows.modality.eq("bulk_rna")
         & mapped
-        & tiers.isin(["vital", "protected"])
+        & tiers.isin(["vital", "protected", "manageable"])
         & rows.rna_ntpm.gt(limits)
     ]
     positive_inside = bool(
@@ -211,6 +228,9 @@ def evaluate_gene(
         ].max(),
         "protected_rna_max_ntpm": rows.loc[
             rows.modality.eq("bulk_rna") & tiers.eq("protected"), "rna_ntpm"
+        ].max(),
+        "manageable_rna_max_ntpm": rows.loc[
+            rows.modality.eq("bulk_rna") & tiers.eq("manageable"), "rna_ntpm"
         ].max(),
         "rna_exclusions": "; ".join(
             f"{r.tissue}: {r.rna_ntpm:g} nTPM ({tiers.loc[i]}, limit {limits.loc[i]:g})"

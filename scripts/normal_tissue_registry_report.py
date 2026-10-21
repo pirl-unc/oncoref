@@ -24,7 +24,7 @@ from oncoref.normal_tissues import (  # noqa: E402
 
 def write_csv(path, rows):
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(
@@ -56,6 +56,7 @@ def build(out):
                     for name in (
                         "reproductive",
                         "disposable",
+                        "manageable",
                         "protected",
                         "vital",
                         "unresolved",
@@ -81,7 +82,10 @@ def build(out):
     table = "\n".join(
         "| " + " | ".join(map(str, row)) + " |"
         for row in [
-            counts[0].keys(),
+            [
+                {"manageable": "Manageable risk", "protected": "High consequence"}.get(k, k)
+                for k in counts[0]
+            ],
             ["---"] * len(counts[0]),
             *[row.values() for row in counts],
         ]
@@ -103,8 +107,8 @@ def build(out):
         "- [Patient-context gene-filter definitions](gene-filter-profiles.json)\n"
         "- [Checksums and implementation provenance](run-manifest.json)\n\n"
         "## Interpretation\n\n"
-        "Reproductive, Disposable, Protected and Vital are the four resolved categories. "
-        "Unresolved is a QC state. Disposable denotes the expanded conditional project "
+        "Reproductive, Disposable, Manageable risk, High consequence and Vital are the five resolved categories. "
+        "Unresolved is a QC state. Disposable denotes the narrowed conditional project "
         "allowance, whose compatibility scope ID is `permitted_normal`.\n\n"
         "Uterine horns are applicable to dog/mouse; coagulating gland is a mouse prostate "
         "descendant. Dog seminal vesicles/bulbourethral glands, mouse tonsil, and dog/mouse "

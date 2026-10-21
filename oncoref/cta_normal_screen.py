@@ -14,6 +14,7 @@ from functools import lru_cache
 import pandas as pd
 
 from .normal_tissues import (
+    SCREENED_NORMAL_TISSUE_TIERS,
     normal_tissue_screening_policy,
     normal_tissue_screening_tier,
     resolve_normal_tissue,
@@ -25,9 +26,12 @@ _AUDIT_COLUMNS = [
     "Ensembl_Gene_ID",
     "source_name",
     "source_version",
+    "screening_policy_id",
+    "taxonomy_id",
     "tissue",
     "tissue_concept",
     "screening_tier",
+    "screening_tier_label",
     "rna_ntpm",
     "baseline_ceiling_ntpm",
     "rna_ceiling_ntpm",
@@ -116,7 +120,9 @@ def adaptive_normal_rna_limits(
         local = grouped.get(annotation.concept_id, ihc.iloc[:0])
         seen = set(zip(local.tissue, local.cell_type))
         missing = required - seen
-        baseline = config[tier]["maximum_rna"] if tier in {"vital", "protected"} else float("nan")
+        baseline = (
+            config[tier]["maximum_rna"] if tier in SCREENED_NORMAL_TISSUE_TIERS else float("nan")
+        )
         ceiling, reliability, status = baseline, "Missing", "unavailable"
         if tier in {"permitted", "unresolved"}:
             status = tier
@@ -146,9 +152,12 @@ def adaptive_normal_rna_limits(
                 "Ensembl_Gene_ID": row.Ensembl_Gene_ID,
                 "source_name": row.source_name,
                 "source_version": row.source_version,
+                "screening_policy_id": config["policy_id"],
+                "taxonomy_id": annotation.taxonomy_id,
                 "tissue": row.tissue,
                 "tissue_concept": annotation.concept_id,
                 "screening_tier": tier,
+                "screening_tier_label": config["tier_labels"][tier],
                 "rna_ntpm": row.rna_ntpm,
                 "baseline_ceiling_ntpm": baseline,
                 "rna_ceiling_ntpm": ceiling,

@@ -1,0 +1,32 @@
+{
+  "male_reproductive_maternal_fetal_excluded": {
+    "policy_id": "oncoref.normal-tissue-gene-filters.2026-10-20.1",
+    "label": "Postnatal male reproductive only; maternal and developmental exclusion",
+    "intent": "Pregnancy-oriented candidate restriction, not pregnancy safety",
+    "allowed": "Postnatal male reproductive anatomy in male samples only",
+    "excluded": "Every other normal context, including fetal male reproductive tissues",
+    "required_negative_domains": [
+      "female_somatic",
+      "female_reproductive",
+      "pregnant_maternal",
+      "embryonic",
+      "fetal",
+      "fetal_male_gonad",
+      "fetal_female_gonad",
+      "placental",
+      "other_extraembryonic"
+    ]
+  },
+  "female_developmental_male_reproductive_excluded": {
+    "policy_id": "oncoref.normal-tissue-gene-filters.2026-10-20.1",
+    "label": "Female/developmental only; male reproductive exclusion",
+    "intent": "Male reproductive preservation candidate restriction, not proven fertility preservation",
+    "allowed": "Female reproductive samples plus embryonic, fetal and extraembryonic contexts",
+    "excluded": "Male reproductive anatomy at every stage; other postnatal contexts",
+    "required_negative_domains": [
+      "male_reproductive",
+      "male_somatic",
+      "male_mammary"
+    ]
+  }
+}
