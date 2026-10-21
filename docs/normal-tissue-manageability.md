@@ -2,7 +2,7 @@
 
 This review concerns **significant immune injury**, its consequences, persistence
 and control. Complete organ removal is one evidence source; it is not a model for
-every pattern of immune injury. Reproductive, Disposable, Caution, Protected and Vital are
+every pattern of immune injury. Reproductive, Disposable, Manageable risk, High consequence and Vital are
 project categories. A separate field records evidence for local treatment.
 
 ## Published classifications
@@ -57,17 +57,17 @@ Disposable. Suppressing inflammation and restoring cells already lost are
 different outcomes. No paper above establishes that immune injury can always be
 stopped locally while preserving antitumor activity.
 
-## Current categories and the intermediate Caution tier
+## Current categories and the intermediate Manageable risk tier
 
-The current policy separates **Caution (lower protection priority)** from
-**Protected (higher protection priority)**. Bradley's Caution/Hazard distinction
+The current policy separates **Manageable risk (lower protection priority)** from
+**High consequence (higher protection priority)**. Bradley's Caution/Hazard distinction
 is a published anchor. Our exact assignments remain project inferences:
 
 | Category | Assignment relevant to this review | Evidence and interpretation |
 |---|---|---|
 | Disposable — conditional | Cutaneous melanocytes, hair follicles, tonsil, appendix, gallbladder | Selected compartment-loss or organ-removal rationale; acute immune injury still needs review |
-| Caution | Whole skin, spleen, thymus, thyroid, adipose | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
-| Protected | Salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
+| Manageable risk | Whole skin, spleen, thymus, thyroid, adipose | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
+| High consequence | Salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
 | Vital / critical function | Existing vital and critical sensory/neurological organs | Highest protection priority; local access does not remove irreversible-loss concerns |
 
 Reproductive remains the separate anatomical/developmental union. See the
@@ -105,9 +105,10 @@ The taxonomy's `context_reviews` records:
 - `references`, `rationale` and `flags`: evidence, consequences and unresolved questions.
 
 The RNA ceilings are explicit **project starting parameters**: Vital 1/2/3/6,
-Protected 2/4/6/12, Caution 5/10/15/30 nTPM for missing/uncertain, Approved,
-Supported and Enhanced negative IHC. Vital/Protected follow the earlier proposed
-sensitivity grid; Caution is a project extension. No GTEx-to-HPA conversion or
+High consequence 2/4/6/12, Manageable risk 5/10/15/30 nTPM for missing/uncertain, Approved,
+Supported and Enhanced negative IHC. Vital/High consequence follow the earlier proposed
+sensitivity grid; the user approved all three ladders. The Manageable risk name
+refers to potentially manageable or compensated injury, subject to context review. No GTEx-to-HPA conversion or
 clinical outcome calibration is claimed. HPA reliability labels do not express a
 probability that a negative stain rules out antigen or peptide-HLA presentation.
 

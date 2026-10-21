@@ -117,6 +117,7 @@ def annotate_archive(observations):
             {
                 **row._asdict(),
                 "tissue_category": details["tissue_category"],
+                "tissue_category_label": details["tissue_category_label"],
                 "screening_tier": details["screening_tier"],
                 "screening_tier_label": details["screening_tier_label"],
                 "tissue_review_flags": ";".join(details["review_flags"]),
@@ -137,7 +138,7 @@ def evaluate_gene(
     expected,
     unreliable=False,
     rna_limits=None,
-    caution_limit=None,
+    manageable_limit=None,
 ):
     """Separate RNA ceilings and a strict outside-IHC gate, with explicit missingness."""
     config = normal_tissue_screening_policy()
@@ -154,7 +155,9 @@ def evaluate_gene(
         {
             "vital": vital_limit,
             "protected": protected_limit,
-            "caution": config["caution"]["maximum_rna"] if caution_limit is None else caution_limit,
+            "manageable": config["manageable"]["maximum_rna"]
+            if manageable_limit is None
+            else manageable_limit,
         }
     ).astype(float)
     if rna_limits is not None:
@@ -166,7 +169,7 @@ def evaluate_gene(
     above = rows.loc[
         rows.modality.eq("bulk_rna")
         & mapped
-        & tiers.isin(["vital", "protected", "caution"])
+        & tiers.isin(["vital", "protected", "manageable"])
         & rows.rna_ntpm.gt(limits)
     ]
     positive_inside = bool(
@@ -226,8 +229,8 @@ def evaluate_gene(
         "protected_rna_max_ntpm": rows.loc[
             rows.modality.eq("bulk_rna") & tiers.eq("protected"), "rna_ntpm"
         ].max(),
-        "caution_rna_max_ntpm": rows.loc[
-            rows.modality.eq("bulk_rna") & tiers.eq("caution"), "rna_ntpm"
+        "manageable_rna_max_ntpm": rows.loc[
+            rows.modality.eq("bulk_rna") & tiers.eq("manageable"), "rna_ntpm"
         ].max(),
         "rna_exclusions": "; ".join(
             f"{r.tissue}: {r.rna_ntpm:g} nTPM ({tiers.loc[i]}, limit {limits.loc[i]:g})"

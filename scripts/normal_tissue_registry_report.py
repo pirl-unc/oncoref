@@ -56,7 +56,7 @@ def build(out):
                     for name in (
                         "reproductive",
                         "disposable",
-                        "caution",
+                        "manageable",
                         "protected",
                         "vital",
                         "unresolved",
@@ -82,7 +82,10 @@ def build(out):
     table = "\n".join(
         "| " + " | ".join(map(str, row)) + " |"
         for row in [
-            counts[0].keys(),
+            [
+                {"manageable": "Manageable risk", "protected": "High consequence"}.get(k, k)
+                for k in counts[0]
+            ],
             ["---"] * len(counts[0]),
             *[row.values() for row in counts],
         ]
@@ -104,7 +107,7 @@ def build(out):
         "- [Patient-context gene-filter definitions](gene-filter-profiles.json)\n"
         "- [Checksums and implementation provenance](run-manifest.json)\n\n"
         "## Interpretation\n\n"
-        "Reproductive, Disposable, Caution, Protected and Vital are the five resolved categories. "
+        "Reproductive, Disposable, Manageable risk, High consequence and Vital are the five resolved categories. "
         "Unresolved is a QC state. Disposable denotes the narrowed conditional project "
         "allowance, whose compatibility scope ID is `permitted_normal`.\n\n"
         "Uterine horns are applicable to dog/mouse; coagulating gland is a mouse prostate "

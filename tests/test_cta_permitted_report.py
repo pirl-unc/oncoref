@@ -147,7 +147,7 @@ def test_former_whole_organ_allowances_are_now_screened(tissue, cell):
     assert "rna_above_tissue_ceiling" in result["failure_reasons"]
 
 
-def test_caution_lymphoid_expression_is_screened_and_remains_flagged():
+def test_manageable_lymphoid_expression_is_screened_and_remains_flagged():
     ihc = [("spleen", "cells in white pulp", "High")]
     result = evaluate([("testis", 100), ("spleen", 50)], ihc, adaptive=True)
     assert not result["evidence_pass"]
@@ -212,7 +212,7 @@ def test_adaptive_absolute_boundary_and_positive_veto_remain_independent():
 
 
 @pytest.mark.parametrize("tissue,ceiling", [("salivary gland", 12), ("thyroid gland", 30)])
-def test_adaptive_protected_and_caution_ceilings_are_inclusive(tissue, ceiling):
+def test_adaptive_protected_and_manageable_ceilings_are_inclusive(tissue, ceiling):
     negative = [(tissue, "glandular cells", "Not detected")]
     assert evaluate([("testis", 100), (tissue, ceiling)], negative, adaptive=True)["evidence_pass"]
     assert not evaluate([("testis", 100), (tissue, ceiling + 0.1)], negative, adaptive=True)[

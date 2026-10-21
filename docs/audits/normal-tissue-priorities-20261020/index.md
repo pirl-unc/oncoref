@@ -2,7 +2,7 @@
 
 Policy `2026-10-20.4`. Every canonical concept is listed for human, dog and mouse, including explicitly inapplicable concepts. Every bundled native source/version/tissue/cell mapping is exported separately.
 
-| species | reproductive | disposable | caution | protected | vital | unresolved | inapplicable | native_mapping_rows | native_sources | mapping_availability |
+| species | reproductive | disposable | Manageable risk | High consequence | vital | unresolved | inapplicable | native_mapping_rows | native_sources | mapping_availability |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | human | 46 | 5 | 6 | 14 | 45 | 3 | 2 | 459 | 3 | bundled |
 | dog | 45 | 4 | 6 | 14 | 45 | 3 | 4 | 126 | 6 | bundled |
@@ -20,7 +20,7 @@ Counts are concepts and mapping rows, **not samples or measured negative coverag
 
 ## Interpretation
 
-Reproductive, Disposable, Caution, Protected and Vital are the five resolved categories. Unresolved is a QC state. Disposable denotes the narrowed conditional project allowance, whose compatibility scope ID is `permitted_normal`.
+Reproductive, Disposable, Manageable risk, High consequence and Vital are the five resolved categories. Unresolved is a QC state. Disposable denotes the narrowed conditional project allowance, whose compatibility scope ID is `permitted_normal`.
 
 Uterine horns are applicable to dog/mouse; coagulating gland is a mouse prostate descendant. Dog seminal vesicles/bulbourethral glands, mouse tonsil, and dog/mouse vermiform appendix are explicitly inapplicable. Applicability is checked through anatomical parents. Broad head, foot and soft-tissue labels stay unresolved.
 

@@ -22,7 +22,7 @@ import yaml
 from .species import resolve_species
 
 _DATA = Path(__file__).parent / "data"
-SCREENED_NORMAL_TISSUE_TIERS = ("vital", "protected", "caution")
+SCREENED_NORMAL_TISSUE_TIERS = ("vital", "protected", "manageable")
 
 
 def _key(value):
@@ -398,7 +398,7 @@ def resolve_normal_tissue(
 
 
 def normal_tissue_screening_tier(annotation, policy="tiered_cta") -> str:
-    """Return permitted, vital, protected, caution, or unresolved for current anatomy.
+    """Return permitted, vital, protected, manageable, or unresolved for current anatomy.
 
     This assigns anatomy only. Human HPA nTPM cutoffs must not be transferred to
     another species or assay. Explicit developmental permission takes precedence.
@@ -444,8 +444,13 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
         if ancestors & set(review["roots"])
     }
     doc = _registry()[0]
+    category = normal_tissue_category(annotation, policy)
     return {
-        "tissue_category": normal_tissue_category(annotation, policy),
+        "tissue_category": category,
+        "tissue_category_label": {
+            "reproductive": "Reproductive",
+            "disposable": "Disposable (conditional)",
+        }.get(category, config["tier_labels"][tier]),
         "screening_policy_id": config["policy_id"],
         "screening_tier": tier,
         "screening_tier_label": config["tier_labels"][tier],
@@ -465,8 +470,10 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
 
 
 def normal_tissue_category(annotation, policy="tiered_cta") -> str:
-    """Reproductive, Disposable, Caution, Protected or Vital; unresolved is a QC status.
+    """Category ID; unresolved is a QC status outside the five tissue categories.
 
+    ``manageable`` labels Manageable risk; the existing ``protected`` ID labels
+    High consequence. Readable names are returned by normal_tissue_screening_details.
     Disposable names the conditional project allowance. It does not
     assert complete organ loss is harmless or inflammation is steroid-responsive.
     The older, narrower ``disposable_normal`` anatomical scope remains distinct.
@@ -498,6 +505,7 @@ def normal_tissue_inventory(*, species, policy="tiered_cta") -> tuple[dict, ...]
                 "taxon_id": annotation.taxon_id,
                 "mapping_status": annotation.mapping_status,
                 "tissue_category": details["tissue_category"],
+                "tissue_category_label": details["tissue_category_label"],
                 "category_policy_id": details["screening_policy_id"],
                 "category_policy_references": details["policy_references"],
                 "review_flags": details["review_flags"],
@@ -532,6 +540,7 @@ def normal_tissue_mapping_inventory(*, species, source_id=None, source_version=N
                 **row,
                 "mapping_status": annotation.mapping_status,
                 "tissue_category": details["tissue_category"],
+                "tissue_category_label": details["tissue_category_label"],
                 "category_policy_id": details["screening_policy_id"],
                 "category_policy_references": details["policy_references"],
                 "review_flags": details["review_flags"],

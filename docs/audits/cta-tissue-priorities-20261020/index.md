@@ -6,15 +6,15 @@ Policy `oncoref.cta-ihc-adaptive-screen.2026-10-20.4`. All 2,537 published candi
 
 - **Reproductive:** existing reproductive/developmental unions.
 - **Disposable:** cutaneous melanocytes, follicles, tonsil, appendix and gallbladder.
-- **Caution:** whole skin, spleen, thymus, thyroid and adipose.
-- **Protected:** includes salivary glands, cartilage, esophagus, other protected gastrointestinal tissues and lymph nodes.
+- **Manageable risk:** whole skin, spleen, thymus, thyroid and adipose.
+- **High consequence:** includes salivary glands, cartilage, esophagus, other protected gastrointestinal tissues and lymph nodes.
 - **Vital / critical function:** existing highest-protection organs.
 
-Caution is screened: it is not a permitted normal-expression exception. Specific permitted skin compartments take precedence over the whole-skin category. A bulk skin measurement cannot establish compartment restriction.
+Manageable risk is screened: it is not a permitted normal-expression exception. Specific permitted skin compartments take precedence over the whole-skin category. A bulk skin measurement cannot establish compartment restriction.
 
 ## Maximum RNA by tissue category and IHC evidence (nTPM)
 
-| IHC evidence | Vital | Protected | Caution |
+| IHC evidence | Vital | High consequence | Manageable risk |
 | --- | ---: | ---: | ---: |
 | Missing | 1.0 | 2.0 | 5.0 |
 | Uncertain | 1.0 | 2.0 | 5.0 |
@@ -22,7 +22,7 @@ Caution is screened: it is not a permitted normal-expression exception. Specific
 | Supported | 3.0 | 6.0 | 15.0 |
 | Enhanced | 6.0 | 12.0 | 30.0 |
 
-Approved/Supported/Enhanced relaxation requires valid **Not detected** staining in every routine IHC context of the same organ; the weakest reliability wins. Missing, incomplete, uncertain or unusable IHC earns no relaxation. Any positive IHC, including Low, in Caution, Protected or Vital excludes. Reliability labels are not calibrated probabilities of true protein absence. These are project parameters, not clinical safety limits or GTEx-to-HPA conversions.
+Approved/Supported/Enhanced relaxation requires valid **Not detected** staining in every routine IHC context of the same organ; the weakest reliability wins. Missing, incomplete, uncertain or unusable IHC earns no relaxation. Any positive IHC, including Low, in Manageable risk, High consequence or Vital excludes. Reliability labels are not calibrated probabilities of true protein absence. These are project parameters, not clinical safety limits or GTEx-to-HPA conversions.
 
 ## Results and attribution
 
@@ -33,7 +33,7 @@ Approved/Supported/Enhanced relaxation requires valid **Not detected** staining 
 | current_fixed | 2537 | 669 | 582 | 343 | 235 | 4 |
 | current_adaptive | 2537 | 712 | 624 | 343 | 276 | 5 |
 
-The **reclassified_previous_limits** scenario changes tissue assignments while retaining the archived RNA grid (new Caution receives the previous Protected grid). Comparing it with **current_adaptive** isolates the RNA-grid change. The fixed screen uses baseline ceilings without IHC-based relaxation.
+The **reclassified_previous_limits** scenario changes tissue assignments while retaining the archived RNA grid (new Manageable risk receives the previous Protected grid). Comparing it with **current_adaptive** isolates the RNA-grid change. The fixed screen uses baseline ceilings without IHC-based relaxation.
 
 ![Retained candidates and IHC coverage](policy-comparison.png)
 

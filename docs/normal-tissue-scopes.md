@@ -111,30 +111,43 @@ reflects immune tolerance. No unlisted normal tissue is admitted by default.
 
 ## Five categories and protection priorities
 
-The five user-facing categories are **Reproductive, Disposable, Caution, Protected
-and Vital**. `normal_tissue_category()` returns their lowercase IDs. Unresolved
+The five user-facing categories are **Reproductive, Disposable, Manageable risk, High consequence
+and Vital**. `normal_tissue_category()` returns the IDs listed below. Unresolved
 anatomy is a QC status outside those five categories. Reproductive and Disposable
-share the numerical tier `permitted`; Caution, Protected and Vital are screened.
+share the numerical tier `permitted`; Manageable risk, High consequence and Vital are screened.
+
+| Display name | Machine ID |
+|---|---|
+| Reproductive | `reproductive` |
+| Disposable | `disposable` |
+| Manageable risk (conditional) | `manageable` |
+| High consequence | `protected` (retained for API compatibility) |
+| Vital / critical function | `vital` |
+
+Exports include readable category labels alongside these stable IDs.
 
 Reproductive is an anatomical/developmental grouping, not an assertion of immune
-privilege or tolerability in every patient. Caution is the lower-protection branch
-of the previous broad Protected concept; Protected is the higher-protection branch.
+privilege or tolerability in every patient. Manageable risk denotes the lower
+protection priority, where selected injuries may be manageable or functionally
+compensated. High consequence denotes greater concern about persistent functional
+or structural damage. These labels split the previous broad Protected category;
+manageability remains conditional on the compartment, injury extent and treatment.
 Vital includes major irreversible neurological or sensory disability as well as
-life-threatening injury. Injury in Caution or Protected can also be serious.
+life-threatening injury. Injury in Manageable risk or High consequence can also be serious.
 
 ### Complete root assignment
 
 Mapped descendants inherit their root assignment, with **explicit permitted
 compartments taking precedence**. Thus cutaneous melanocytes and follicles are
-Disposable, while bulk skin and other skin compartments are Caution. A broad
+Disposable, while bulk skin and other skin compartments are Manageable risk. A broad
 measurement never establishes the narrower compartment's restriction.
 
 | Category | Complete root list |
 |---|---|
 | **Reproductive** | Testis and male reproductive organs; ovary/oocytes and female reproductive tract; mammary; placenta; other extraembryonic; explicitly embryonic/fetal contexts, as defined above. |
 | **Disposable — conditional** | Cutaneous melanocytes; hair follicles; tonsil; human appendix; gallbladder. |
-| **Caution — lower protection priority** | Skin; spleen; thymus; thyroid gland; adipose tissue. Nail bed inherits skin; a thymus-sited sample retains the thymus category without inferring a narrower compartment. |
-| **Protected — higher protection priority** | Salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
+| **Manageable risk — lower protection priority** | Skin; spleen; thymus; thyroid gland; adipose tissue. Nail bed inherits skin; a thymus-sited sample retains the thymus category without inferring a narrower compartment. |
+| **High consequence — higher protection priority** | Salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
 | **Vital / critical function** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
@@ -153,19 +166,19 @@ Hazard, and skin/adipose Non-essential in that study. Our categories are an expl
 adaptation: the study does not classify thymus or cartilage for us, and its GTEx TPM
 values do not validate HPA nTPM thresholds.
 
-- **Skin:** Caution acknowledges potentially manageable inflammation, while preserving
+- **Skin:** Manageable risk acknowledges potentially manageable inflammation, while preserving
   RNA and positive-IHC exclusion gates. Only explicit cutaneous melanocyte/follicle
   compartments remain permitted. Local treatment evidence concerns selected
   manifestations, not guaranteed control of all skin-directed T-cell injury.
-- **Spleen:** Caution reflects survivable organ loss with persistent infection and
+- **Spleen:** Manageable risk reflects survivable organ loss with persistent infection and
   thrombotic concerns. [Long-term splenectomy cohort](https://haematologica.org/article/view/6942)
-- **Thymus:** Caution is a project inference, with an age/immune-reserve flag. Adult
+- **Thymus:** Manageable risk is a project inference, with an age/immune-reserve flag. Adult
   thymectomy was associated with mortality and cancer in an observational study;
   it is not evidence that thymic immune injury is locally controllable.
   [Kooshesh et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC10557034/)
-- **Salivary glands:** Protected because secretion can remain very low after immune
+- **Salivary glands:** High consequence because secretion can remain very low after immune
   injury despite symptom improvement. [Warner et al.](https://pubmed.ncbi.nlm.nih.gov/30996010/)
-- **Cartilage:** Protected for persistent structural injury concerns. Mature articular
+- **Cartilage:** High consequence for persistent structural injury concerns. Mature articular
   collagen turnover and chronic inflammatory arthritis provide indirect support,
   not direct validation of antigen-specific chondrocyte targeting. Generic cartilage
   does not identify a joint or rule out airway cartilage; its site needs review.
@@ -190,8 +203,8 @@ previous memberships. Cached annotations must be resolved against the new taxono
 |---|---|
 | Tonsil | Conditional allowance, with palatine tonsillectomy as the human rationale. Native `tonsil` labels retain their source resolution; adenoids, all mucosal lymphoid tissue and mouse NALT are not inferred. Review age, immune reserve and expressing-cell distribution. |
 | Appendix / gallbladder | Conditional allowance based on removal tolerance. In-situ inflammation, leakage or obstruction still requires review. Adjacent bowel, liver and bile ducts are not included. |
-| Spleen / thymus | Caution, with positive-IHC veto and RNA ceilings. Review immune-cell distribution, age and immune reserve; spleen also carries infection-risk review. |
-| Lymph nodes | Protected. Regional removal does not justify systemic depletion or injury to lymphatic stroma. |
+| Spleen / thymus | Manageable risk, with positive-IHC veto and RNA ceilings. Review immune-cell distribution, age and immune reserve; spleen also carries infection-risk review. |
+| Lymph nodes | High consequence. Regional removal does not justify systemic depletion or injury to lymphatic stroma. |
 | Blood / marrow | Vital. No general immune-lineage exception; unsited B/T-cell labels remain unresolved. |
 
 Sources: [tonsillectomy decision aid](https://www.england.nhs.uk/wp-content/uploads/2023/10/decision-support-tool-making-a-decision-about-recurrent-tonsillitis-in-children-and-adults.pdf),
@@ -212,8 +225,8 @@ Reproductive grouping; maternal organs are not reclassified by pregnancy.
 | Category | Maximum RNA (human HPA v23 nTPM) | IHC rule |
 |---|---:|---|
 | Reproductive / Disposable | No upper ceiling | Positive staining allowed within selected scope; review flags retained |
-| Caution | 5 | Any positive staining excludes, including Low |
-| Protected | 2 | Any positive staining excludes, including Low |
+| Manageable risk | 5 | Any positive staining excludes, including Low |
+| High consequence | 2 | Any positive staining excludes, including Low |
 | Vital | 1 | Any positive staining excludes, including Low |
 | Unresolved | No imputed allowance | Positive evidence blocks retention |
 
@@ -231,7 +244,7 @@ from oncoref.normal_tissues import (
 )
 
 skin = normal_tissue_screening_details(resolve_normal_tissue("skin", species="human"))
-assert skin["tissue_category"] == "caution"
+assert skin["tissue_category"] == "manageable"
 cartilage = normal_tissue_screening_details(resolve_normal_tissue("cartilage", species="human"))
 assert cartilage["tissue_category"] == "protected"
 melanocyte = normal_tissue_screening_details(
@@ -245,7 +258,7 @@ assert melanocyte["tissue_category"] == "disposable"
 The `ihc_adaptive_cta` policy uses the same permitted union and anatomical tiers,
 with these **inclusive maximum human HPA v23 nTPM values**:
 
-| IHC evidence in the RNA tissue | Vital / critical function | Protected | Caution |
+| IHC evidence in the RNA tissue | Vital / critical function | High consequence | Manageable risk |
 |---|---:|---:|---:|
 | Missing, incomplete, uncertain or unusable | 1 | 2 | 5 |
 | Approved, all routine contexts Not detected | 2 | 4 | 10 |
@@ -275,7 +288,7 @@ from oncoref.normal_tissues import normal_tissue_screening_policy
 
 policy = normal_tissue_screening_policy("ihc_adaptive_cta")
 assert policy["negative_ihc_rna_limits"]["Enhanced"] == {
-    "vital": 6, "protected": 12, "caution": 30,
+    "vital": 6, "protected": 12, "manageable": 30,
 }
 
 # One gene's annotated HPA v23 observation table; an independently specified

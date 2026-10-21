@@ -39,7 +39,7 @@ def observations(tissue="heart muscle", value=5, ihc=()):
 
 
 @pytest.mark.parametrize(
-    "reliability,vital,protected,caution",
+    "reliability,vital,protected,manageable",
     [
         ("Enhanced", 6, 12, 30),
         ("Supported", 3, 6, 15),
@@ -47,11 +47,11 @@ def observations(tissue="heart muscle", value=5, ihc=()):
         ("Uncertain", 1, 2, 5),
     ],
 )
-def test_approved_ladder_uses_local_negative_reliability(reliability, vital, protected, caution):
+def test_approved_ladder_uses_local_negative_reliability(reliability, vital, protected, manageable):
     for tissue, cell, expected in (
         ("heart muscle", "cardiomyocytes", vital),
         ("salivary gland", "glandular cells", protected),
-        ("thyroid gland", "glandular cells", caution),
+        ("thyroid gland", "glandular cells", manageable),
     ):
         rows = observations(tissue, ihc=[(tissue, cell, "Not detected", reliability)])
         result = adaptive_normal_rna_limits(rows, routine_ihc_contexts=[(tissue, cell)])
@@ -175,7 +175,7 @@ def test_policy_inherits_anatomy_without_changing_fixed_limits():
     adaptive = normal_tissue_screening_policy("ihc_adaptive_cta")
     assert fixed["vital"] == adaptive["vital"]
     assert fixed["protected"] == adaptive["protected"]
-    assert fixed["caution"] == adaptive["caution"]
+    assert fixed["manageable"] == adaptive["manageable"]
     assert "negative_ihc_rna_limits" not in fixed
     adaptive["negative_ihc_rna_limits"]["Enhanced"]["vital"] = 999
     assert (
@@ -195,7 +195,7 @@ def test_bulk_skin_cannot_borrow_negativity_from_selected_compartments():
     negatives = [(tissue, cell, "Not detected", "Enhanced") for tissue, cell in required]
     rows = observations("skin", ihc=negatives)
     complete = adaptive_normal_rna_limits(rows, routine_ihc_contexts=required)
-    assert complete.iloc[0].screening_tier == "caution"
+    assert complete.iloc[0].screening_tier == "manageable"
     assert complete.iloc[0].rna_ceiling_ntpm == 30
     assert complete.iloc[0].screening_policy_id.endswith("2026-10-20.4")
     missing = adaptive_normal_rna_limits(rows.iloc[:-1], routine_ihc_contexts=required)
