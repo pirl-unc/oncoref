@@ -1,0 +1,72 @@
+{
+  "schema": "oncoref.normal-sequence-sets.v1",
+  "asset_base_url": "https://github.com/pirl-unc/oncoref/releases/download/v1.13.0/",
+  "reference": {
+    "schema": "openvax.reference",
+    "schema_version": 1,
+    "taxon_id": 9606,
+    "assembly_accession": "GCA_000001405.29",
+    "annotation_source": "Ensembl",
+    "annotation_release": "115",
+    "source_version": "115",
+    "identifier_namespaces": {
+      "gene": "Ensembl",
+      "protein": "Ensembl",
+      "transcript": "Ensembl"
+    },
+    "content_provenance": {
+      "annotation_gtf": "02df5a2a8c7a41e513209e0780c56cf197941b6b35ef8bab3e9a6317eecd17ef",
+      "protein_fasta": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96"
+    },
+    "reference_id": "openvax:reference:v1:sha256:0fefb51755788901693be9987fadc31e61f945cd53c08a170e0e1d4ad4a09b61"
+  },
+  "sources": {
+    "gtf": {
+      "url": "https://ftp.ensembl.org/pub/release-115/gtf/homo_sapiens/Homo_sapiens.GRCh38.115.chr_patch_hapl_scaff.gtf.gz",
+      "sha256": "02df5a2a8c7a41e513209e0780c56cf197941b6b35ef8bab3e9a6317eecd17ef"
+    },
+    "proteins": {
+      "url": "https://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz",
+      "sha256": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96"
+    }
+  },
+  "inputs": {
+    "docs/audits/normal-expression-categories-20261021-r2/gene-categories.csv.gz": "8811784f7e6d45e5fcf43203e1d3c3a1bf7c26f04c61d61822cc2adf3d65e2e8",
+    "docs/audits/normal-expression-categories-20261021-r2/run-manifest.json": "2df787a5e6e35a5f6667555f022c3f00f1c31668d58c48386ec910fd0621e368",
+    "oncoref/data/cta-external-safety-reviews.csv": "a4ff8aa9da603cb790127aaf00f193432f768dce58689f8f53a1adf6569e64c8"
+  },
+  "implementation_sha256": {
+    "scripts/normal_sequence_sets_report.py": "53004bdcddbf510e4ff40752fef221c27923c19f65150a5c045ccfd9d2d00e0d",
+    "oncoref/normal_sequence_sets.py": "76f39fdd9af29ae16db9fd03e28808c1e6988634a332c61b27d98aafc1cc01e5",
+    "oncoref/sequence_groups.py": "350ce4087ff9c50270e898b0bee3f54fdcafd15c8fedfe26e9defb93ff9fdd34",
+    "oncoref/gene_identity.py": "fefbcb180165b1a024ce49c9fdf2f34505e4060a6af66613c9aa6fb365540b46",
+    "oncoref/reference_identity.py": "ac306c9080716381a57aebfdef5cb13022d0249b55739f817e14ffddc90f765f"
+  },
+  "outputs": {
+    "additional-background.fasta.gz": "30270b9af597be5b7d18f6611b81cb72a9c197921040e3952b6239d3e8edd56a",
+    "counts.csv": "551cce640b0595bd9d5c2b1c9bea1bfc55735e565be4514d8f2918f8550c8a5c",
+    "exclusion-basis.json": "c7c03ce6f45fd00588646a389da849e96e67e624773f627ae3aefd329e3669fb",
+    "gene-mappings.csv.gz": "fb3fbee7acd4299ad5ae648bcb88f2a7aa4869281bad292acb2b5e8b54f03b18",
+    "genes-without-complete-proteins.csv.gz": "2ed64ab2ac3ebc6f89320eb873a43c38160dffd944b7190d7c18c9575b4465de",
+    "genes.csv.gz": "1b4d0be8be1d453fc8f17b0b1006c3ecd96141a1cf94bec964d604588f57f152",
+    "index.md": "4ecfa4853071fb1837b414b72a207c769deb3c0a4ab4656e8053ab5ff6caf77c",
+    "normal-genes.csv.gz": "8ce050a3172ecb9ee4bd24fe84fd0636f87a0c4003935561ff67af75737767c5",
+    "normal-proteins.csv.gz": "82c8ac2cd62bcd3f29bef4e17ee1ad8c9bf61f3eb1a5ffb46a4d80e21c381ac1",
+    "normal.fasta.gz": "56918d1ae72b0aaf9e350e4d7664799fe56883175e71d3700af36c44020683a3",
+    "observed-normal.fasta.gz": "c40cef0ed2e8ea1b7a66cb949fdfa90d90d30ed507520304c4566f6c72d932f6",
+    "other-genes.csv.gz": "ac865fc5c9e1be833fbc049b52a5d6a91d657c87f5c2f7d39b63f2ec92c290f2",
+    "other-proteins.csv.gz": "783e9ed4c4b79401e69fa46f1214092d97d89d0367fa2d187597039a58dce72c",
+    "other.fasta.gz": "370c8036441a957f43734dc562a288df3970454f291a75a8299ef2a101df2ced",
+    "protein-occurrences.csv.gz": "d943de1771ecf192fe74b75ee4f159dbeafa7bb902f9a2b7a13fdda0f9d58b5d",
+    "proteins.csv.gz": "75bea2bdaa6f3f66d1904c5c3f37fce8703b7adb7e4b781c1e592032013dbbaf",
+    "reference.json": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
+    "reproductive-genes.csv.gz": "3dcdb149ee6c04b1a0e61cd47a706e73585311a95bf51e0f898f9b80547ad9f9",
+    "reproductive-proteins.csv.gz": "9aa0094a047ba2fb3f3e6e7b9d3594c101b049badfaec69151bf6fe9434bdde1",
+    "reproductive.fasta.gz": "80c7a44dbf9b9507e01b6320fd4b1d089e417fc769984dc1ded516229c6e4080",
+    "translations-for-review.csv.gz": "1865837f34aec18292606167515bfcc95a1fbcc3b1d3fa95f81ed1ddb27613d2",
+    "translations-for-review.fasta.gz": "5970c121504d7ce3c2939e5a13c905ffb5ea3901692de2b23c0cd86ce3c2512c",
+    "unassessed-genes.csv.gz": "371a678a458a822bdb700a1f1b2c582549d01bc787974de8ed71fe28d5522aa4",
+    "unassessed-proteins.csv.gz": "77d4cdea5a0c42ce85b4e5fb1db6f75d9eec72697d5e868592f61007c64d4ce5",
+    "unassessed.fasta.gz": "1ecfeef3a7c2e489ba8f62f50225ab889bd5c42afdb1dd6749b5105546d45e49"
+  }
+}

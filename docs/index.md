@@ -64,9 +64,9 @@ packages can join domains without maintaining private name mappings.
   [CTA Antigens](api.md#cta-antigens).
 - Need reproductive/disposable tissue definitions or their effect on CTA
   filtering? See [Normal tissue scopes](normal-tissue-scopes.md) and the
-  [current source and filtering report](audits/cta-curation-20261021/index.md).
+  [current source and filtering report](audits/cta-curation-20261021-r2/index.md).
 - Need genome-wide Reproductive, Normal and Other groups, including non-CTAs?
-  Use the [expression categories and downloads](audits/normal-expression-categories-20261021/index.md).
+  Use the [expression categories and downloads](audits/normal-expression-categories-20261021-r2/index.md).
   Other contains Disposable and Silent subgroups; missing evidence remains Unassessed.
   It requires reproductive RNA >0 or positive IHC and combines absolute ceilings,
   pairwise reproductive selectivity and an independent positive-IHC veto.

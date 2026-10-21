@@ -90,7 +90,7 @@ def build(out, workers):
         curated.loc[curated.retained, "Ensembl_Gene_ID"]
     )
     linked = frame.set_index("Ensembl_Gene_ID").loc[curated.Ensembl_Gene_ID]
-    assert (linked.category.eq("Reproductive").to_numpy() == curated.evidence_pass.to_numpy()).all()
+    assert linked.loc[curated.evidence_pass.to_numpy(), "category"].eq("Reproductive").all()
     assert frame.loc[frame.retained_recalibration_cta, "category"].eq("Reproductive").all()
     write_csv(frame, out / "gene-categories.csv.gz")
     for name, selected in {
@@ -141,7 +141,7 @@ The three main categories are disjoint research screening groups. Sequence membe
 - [Conservative normal sequence-reference candidates](conservative-normal-reference.csv.gz)
 - [Counts](summary.csv) · [Input and implementation checksums](run-manifest.json)
 
-The [CTA recalibration report](../cta-recalibration-20261021/index.md) applies publication, family and nomination reviews in addition to the Reproductive expression screen. Its expression decisions reconcile exactly with this genome-wide classification. `retained_recalibration_cta` records that pre-external-review stage; use the [current clinical curation decisions](../cta-curation-20261021/index.md) for the final retained set and external safety holds.
+The [CTA recalibration report](../cta-recalibration-20261021/index.md) applies publication, family and nomination reviews in addition to the Reproductive expression screen. The current doubled absolute ceilings preserve every previously passing Reproductive expression decision. `retained_recalibration_cta` records that pre-external-review stage; use the [current clinical curation decisions](../cta-curation-20261021-r2/index.md) for the final retained set and external safety holds.
 
 Reproduce with `python scripts/normal_expression_categories_report.py --out <empty-directory> --workers 4`.
 """)

@@ -11,7 +11,7 @@ import pandas as pd
 
 from .cta_normal_screen import adaptive_normal_rna_limits
 
-POLICY_ID = "oncoref.normal-expression-categories.2026-10-21.1"
+POLICY_ID = "oncoref.normal-expression-categories.2026-10-21.2"
 
 
 def classify_normal_expression(

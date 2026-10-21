@@ -1,0 +1,877 @@
+{
+  "schema": "oncoref.normal-expression-categories-report.v1",
+  "policy_id": "oncoref.normal-expression-categories.2026-10-21.2",
+  "screening_policy": {
+    "policy_id": "oncoref.cta-ihc-adaptive-screen.2026-10-21.2",
+    "permitted_scope": "reproductive_or_permitted_normal",
+    "required_positive_scope": "reproductive",
+    "minimum_reproductive_rna": 0.0,
+    "reproductive_rna_comparison": "greater_than",
+    "tier_labels": {
+      "permitted": "Permitted",
+      "vital": "Vital",
+      "protected": "Protected",
+      "manageable": "Manageable",
+      "unresolved": "Unresolved"
+    },
+    "rna_source": "hpa_rna_consensus",
+    "rna_source_version": "v23",
+    "rna_species": "human",
+    "rna_unit": "nTPM",
+    "minimum_permitted_rna": 1.0,
+    "positive_ihc_levels": [
+      "Low",
+      "Medium",
+      "High",
+      "Ascending",
+      "Descending"
+    ],
+    "vital": {
+      "maximum_rna": 2.0,
+      "minimum_reproductive_selectivity": 0.75,
+      "roots": [
+        "heart",
+        "lung",
+        "bronchus",
+        "brain",
+        "spinal_cord",
+        "liver",
+        "kidney",
+        "bone_marrow",
+        "blood",
+        "adrenal_gland",
+        "pituitary_gland",
+        "pancreas",
+        "small_intestine",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "peripheral_nerve",
+        "endothelium",
+        "retina",
+        "eye",
+        "inner_ear"
+      ],
+      "description": "Strictest project tier for organs whose extensive injury can threaten life or cause major irreversible neurological or sensory loss. Includes all mapped descendants. Vital is the stable machine identifier; the full meaning is vital or critical function."
+    },
+    "protected": {
+      "maximum_rna": 6.0,
+      "minimum_reproductive_selectivity": 0.7,
+      "roots": [
+        "salivary_gland",
+        "parathyroid_gland",
+        "lymph_node",
+        "esophagus",
+        "stomach",
+        "colon",
+        "rectum",
+        "urinary_bladder",
+        "ureter",
+        "cartilage",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue"
+      ],
+      "description": "Higher protection priority for persistent functional or structural injury and important mucosal or distributed-organ function. Any positive IHC excludes. Injury can be severe or fatal; this is a relative research priority."
+    },
+    "manageable": {
+      "maximum_rna": 10.0,
+      "minimum_reproductive_selectivity": 0.65,
+      "roots": [
+        "skin",
+        "spleen",
+        "thymus",
+        "thyroid_gland",
+        "adipose_tissue"
+      ],
+      "description": "Conditional manageability is a relative project priority, informed by published caution/non-essential groups and organ-specific evidence. These tissues remain screened and any positive IHC excludes. The name describes potential management or compensation for selected injuries, not established control of every injury. It does not imply reversibility, local-steroid control or dispensability. Explicit permitted cutaneous compartments take precedence over skin."
+    },
+    "context_reviews": {
+      "removable_digestive_organs": {
+        "roots": [
+          "appendix",
+          "gallbladder"
+        ],
+        "flags": [
+          "in_situ_inflammation_review"
+        ],
+        "references": [
+          "nhs_appendix",
+          "niddk_gallbladder"
+        ],
+        "rationale": "Organ removal can be tolerated, but in-situ immune injury may cause inflammation, leakage or obstruction. The allowance does not extend to adjacent intestine, liver, bile ducts or shared immune populations.",
+        "allowance_basis": "organ_removal",
+        "local_steroid_control": "not_established"
+      },
+      "skin_injury_extent": {
+        "roots": [
+          "skin"
+        ],
+        "flags": [
+          "skin_compartment_and_extent_review",
+          "local_control_not_guaranteed"
+        ],
+        "references": [
+          "sitc2021",
+          "johnson2009",
+          "bradley2020"
+        ],
+        "rationale": "Whole skin is Manageable and remains subject to RNA and IHC gates. Distinguish permitted cutaneous pigment or follicular loss from extensive epithelial, blistering or mucosal injury. Local corticosteroid use for selected toxicities is not guaranteed rescue from persistent antigen-directed T cells.",
+        "allowance_basis": "no_whole_skin_allowance",
+        "local_steroid_control": "supported_for_selected_manifestations_not_general_ablation"
+      },
+      "salivary_function": {
+        "roots": [
+          "salivary_gland"
+        ],
+        "flags": [
+          "persistent_salivary_dysfunction_review",
+          "local_control_not_established"
+        ],
+        "references": [
+          "warner2019",
+          "bradley2020"
+        ],
+        "rationale": "Salivary glands are Protected. Published immune-mediated injury can cause persistent low salivary secretion despite symptom improvement. Minor-gland expression does not establish restriction to one removable gland.",
+        "allowance_basis": "no_default_allowance",
+        "local_steroid_control": "not_established_with_persistent_dysfunction_reported"
+      },
+      "lymphoid_organ_review": {
+        "roots": [
+          "tonsil",
+          "spleen",
+          "thymus"
+        ],
+        "flags": [
+          "immune_cell_distribution_review",
+          "age_and_immune_reserve_review"
+        ],
+        "references": [
+          "nhs_tonsillectomy",
+          "cdc_asplenia",
+          "nci_lymph_nodes",
+          "project_policy"
+        ],
+        "rationale": "Only tonsil retains a conditional allowance; spleen and thymus are Manageable and must pass RNA and IHC gates. Identify the expressing cell population and its distribution in blood, marrow and other organs. Assess age and immune reserve. Surgery is not a model of systemic antigen-directed injury. Bulk tissue cannot establish organ confinement.",
+        "allowance_basis": "tonsil_only_conditional_allowance",
+        "local_steroid_control": "not_established"
+      },
+      "spleen_infection_risk": {
+        "roots": [
+          "spleen"
+        ],
+        "flags": [
+          "asplenia_infection_risk_review"
+        ],
+        "references": [
+          "cdc_asplenia",
+          "kristinsson2014"
+        ],
+        "rationale": "Assess consequences of functional asplenia and an appropriate infection-prevention and management strategy before therapeutic acceptance.",
+        "local_steroid_control": "not_established"
+      },
+      "thymus_long_term_function": {
+        "roots": [
+          "thymus"
+        ],
+        "flags": [
+          "thymic_function_review",
+          "age_and_immune_reserve_review"
+        ],
+        "references": [
+          "kooshesh2023"
+        ],
+        "rationale": "Adult thymectomy has observational associations with mortality and cancer. Thymus is Manageable, not disposable; pediatric consequences need separate review. Surgery does not quantify antigen-directed injury.",
+        "local_steroid_control": "not_established"
+      },
+      "cartilage_structural_function": {
+        "roots": [
+          "cartilage"
+        ],
+        "flags": [
+          "persistent_structural_injury_review",
+          "cartilage_site_review"
+        ],
+        "references": [
+          "heinemeier2016",
+          "braaten2020"
+        ],
+        "rationale": "Cartilage is Protected because structural injury may persist. Articular-collagen turnover and inflammatory-arthritis studies provide indirect support, not direct chondrocyte-targeting safety evidence. A generic cartilage label does not locate a joint or exclude airway cartilage.",
+        "local_steroid_control": "symptom_control_does_not_establish_structural_repair"
+      },
+      "distributed_lymph_nodes": {
+        "roots": [
+          "lymph_node"
+        ],
+        "flags": [
+          "lymphatic_and_immune_function_review"
+        ],
+        "references": [
+          "nci_lymph_nodes"
+        ],
+        "rationale": "Remains Protected. Regional removal does not justify whole-system depletion or injury to lymphatic stroma. Lineage-specific exceptions require a separately defined policy and evidence."
+      }
+    },
+    "unresolved_roots": [
+      "head",
+      "foot",
+      "soft_tissue"
+    ],
+    "references": [
+      "project_policy",
+      "hpa_tissue_specificity",
+      "hpa_tissues",
+      "nci_organ_inflammation",
+      "niddk_adrenal",
+      "nhs_tonsillectomy",
+      "cdc_asplenia",
+      "nci_lymph_nodes",
+      "nei_retina",
+      "johnson2009",
+      "bradley2020",
+      "kaufmann2019",
+      "kooshesh2023",
+      "kristinsson2014",
+      "heinemeier2016",
+      "braaten2020",
+      "warner2019",
+      "sitc2021"
+    ],
+    "review_semantics": "Review annotations do not add numerical tiers or establish clinical acceptability. Positive observations in flagged contexts remain visible even when a candidate passes the research expression screen.",
+    "coverage": "Complete routine bulk RNA is required. Missing or partial IHC is reported explicitly and cannot establish protein absence. Unresolved positive anatomy, unusable measurements and reviewed unreliable IHC block retention.",
+    "species_note": "Anatomical tiers apply to human, dog and mouse. The numerical policy is calibrated only as a project screen for human HPA v23 nTPM; numerical thresholds and clinical tolerability do not transfer to other species.",
+    "ihc_source": "hpa_normal_tissue",
+    "ihc_source_version": "v23",
+    "negative_ihc_rna_limits": {
+      "Missing": {
+        "vital": 2.0,
+        "protected": 6.0,
+        "manageable": 10.0
+      },
+      "Uncertain": {
+        "vital": 2.0,
+        "protected": 6.0,
+        "manageable": 10.0
+      },
+      "Approved": {
+        "vital": 4.0,
+        "protected": 8.0,
+        "manageable": 20.0
+      },
+      "Supported": {
+        "vital": 6.0,
+        "protected": 12.0,
+        "manageable": 30.0
+      },
+      "Enhanced": {
+        "vital": 12.0,
+        "protected": 24.0,
+        "manageable": 60.0
+      }
+    },
+    "negative_ihc_rule": "Relax only with valid Not detected observations in every routine IHC tissue/cell context mapping to the same anatomical tissue as the RNA measurement. Use the weakest reliability among all observations in that tissue. Missing contexts, unknown reliability, invalid observations, positive staining or reviewed-unreliable IHC cannot earn relaxation. A narrower region cannot clear a broader organ; other organs cannot supply negative evidence. Enhanced describes source validation, not a guaranteed limit of detection for a negative stain or for peptide-HLA presentation.",
+    "negative_ihc_minimum_reproductive_selectivity": {
+      "Missing": {
+        "vital": 0.75,
+        "protected": 0.7,
+        "manageable": 0.65
+      },
+      "Uncertain": {
+        "vital": 0.75,
+        "protected": 0.7,
+        "manageable": 0.65
+      },
+      "Approved": {
+        "vital": 0.7,
+        "protected": 0.65,
+        "manageable": 0.6
+      },
+      "Supported": {
+        "vital": 0.65,
+        "protected": 0.6,
+        "manageable": 0.55
+      },
+      "Enhanced": {
+        "vital": 0.6,
+        "protected": 0.55,
+        "manageable": 0.5
+      }
+    },
+    "reproductive_selectivity": {
+      "formula": "Rmax / (Rmax + tissue_rna_ntpm)",
+      "reference": "Maximum valid raw RNA across mapped Reproductive tissues for the same gene, species, source and version. Disposable does not enter the reference.",
+      "minimum_reference": "Strictly positive; a zero or missing reference is unresolved.",
+      "comparison": "Inclusive minimum per screened RNA observation. The same local negative-IHC evidence chooses both the RNA ceiling and selectivity threshold.",
+      "aggregation": "Every screened tissue must pass both gates. Category summaries report the worst margin against its own threshold, not a pooled category score.",
+      "meaning": "Pairwise expression selectivity, not percent of total-body RNA or protein. Uses raw nTPM without deflation, averaging, tissue sums or rounding before gating.",
+      "provenance": "User-approved target-informed project recalibration on 2026-10-21. The previous percentage ladder was too stringent when transferred from a global deflated fraction to a raw pairwise score. The new grid preserves higher protection for Vital and relaxes with local negative-IHC confidence. Named CTA recovery is a calibration check, not independent validation."
+    },
+    "threshold_provenance": "User-directed update on 2026-10-21 doubles all absolute RNA ceilings, making 2 nTPM the lowest outside-tissue limit. Vital uses 2/4/6/12, Protected 6/8/12/24, and Manageable 10/20/30/60 nTPM for Missing-or-Uncertain/Approved/Supported/Enhanced negative IHC. Reproductive admission remains RNA >0 or positive IHC. Selectivity minima and the positive-IHC veto are unchanged. These are research screening parameters, not clinically validated safety limits. Trial inclusion does not override measured protein expression or external safety evidence."
+  },
+  "routine_contexts": {
+    "bulk_rna": [
+      [
+        "adipose tissue",
+        ""
+      ],
+      [
+        "adrenal gland",
+        ""
+      ],
+      [
+        "amygdala",
+        ""
+      ],
+      [
+        "appendix",
+        ""
+      ],
+      [
+        "basal ganglia",
+        ""
+      ],
+      [
+        "bone marrow",
+        ""
+      ],
+      [
+        "breast",
+        ""
+      ],
+      [
+        "cerebellum",
+        ""
+      ],
+      [
+        "cerebral cortex",
+        ""
+      ],
+      [
+        "cervix",
+        ""
+      ],
+      [
+        "choroid plexus",
+        ""
+      ],
+      [
+        "colon",
+        ""
+      ],
+      [
+        "duodenum",
+        ""
+      ],
+      [
+        "endometrium",
+        ""
+      ],
+      [
+        "epididymis",
+        ""
+      ],
+      [
+        "esophagus",
+        ""
+      ],
+      [
+        "fallopian tube",
+        ""
+      ],
+      [
+        "gallbladder",
+        ""
+      ],
+      [
+        "heart muscle",
+        ""
+      ],
+      [
+        "hippocampal formation",
+        ""
+      ],
+      [
+        "hypothalamus",
+        ""
+      ],
+      [
+        "kidney",
+        ""
+      ],
+      [
+        "liver",
+        ""
+      ],
+      [
+        "lung",
+        ""
+      ],
+      [
+        "lymph node",
+        ""
+      ],
+      [
+        "midbrain",
+        ""
+      ],
+      [
+        "ovary",
+        ""
+      ],
+      [
+        "pancreas",
+        ""
+      ],
+      [
+        "parathyroid gland",
+        ""
+      ],
+      [
+        "pituitary gland",
+        ""
+      ],
+      [
+        "placenta",
+        ""
+      ],
+      [
+        "prostate",
+        ""
+      ],
+      [
+        "rectum",
+        ""
+      ],
+      [
+        "retina",
+        ""
+      ],
+      [
+        "salivary gland",
+        ""
+      ],
+      [
+        "seminal vesicle",
+        ""
+      ],
+      [
+        "skeletal muscle",
+        ""
+      ],
+      [
+        "skin",
+        ""
+      ],
+      [
+        "small intestine",
+        ""
+      ],
+      [
+        "smooth muscle",
+        ""
+      ],
+      [
+        "spinal cord",
+        ""
+      ],
+      [
+        "spleen",
+        ""
+      ],
+      [
+        "stomach",
+        ""
+      ],
+      [
+        "testis",
+        ""
+      ],
+      [
+        "thymus",
+        ""
+      ],
+      [
+        "thyroid gland",
+        ""
+      ],
+      [
+        "tongue",
+        ""
+      ],
+      [
+        "tonsil",
+        ""
+      ],
+      [
+        "urinary bladder",
+        ""
+      ],
+      [
+        "vagina",
+        ""
+      ]
+    ],
+    "ihc": [
+      [
+        "adipose tissue",
+        "adipocytes"
+      ],
+      [
+        "adrenal gland",
+        "glandular cells"
+      ],
+      [
+        "appendix",
+        "glandular cells"
+      ],
+      [
+        "appendix",
+        "lymphoid tissue"
+      ],
+      [
+        "bone marrow",
+        "hematopoietic cells"
+      ],
+      [
+        "breast",
+        "adipocytes"
+      ],
+      [
+        "breast",
+        "glandular cells"
+      ],
+      [
+        "breast",
+        "myoepithelial cells"
+      ],
+      [
+        "bronchus",
+        "respiratory epithelial cells"
+      ],
+      [
+        "caudate",
+        "glial cells"
+      ],
+      [
+        "caudate",
+        "neuronal cells"
+      ],
+      [
+        "cerebellum",
+        "Purkinje cells"
+      ],
+      [
+        "cerebellum",
+        "cells in granular layer"
+      ],
+      [
+        "cerebellum",
+        "cells in molecular layer"
+      ],
+      [
+        "cerebral cortex",
+        "endothelial cells"
+      ],
+      [
+        "cerebral cortex",
+        "glial cells"
+      ],
+      [
+        "cerebral cortex",
+        "neuronal cells"
+      ],
+      [
+        "cerebral cortex",
+        "neuropil"
+      ],
+      [
+        "cervix",
+        "glandular cells"
+      ],
+      [
+        "cervix",
+        "squamous epithelial cells"
+      ],
+      [
+        "colon",
+        "endothelial cells"
+      ],
+      [
+        "colon",
+        "glandular cells"
+      ],
+      [
+        "colon",
+        "peripheral nerve/ganglion"
+      ],
+      [
+        "duodenum",
+        "glandular cells"
+      ],
+      [
+        "endometrium 1",
+        "cells in endometrial stroma"
+      ],
+      [
+        "endometrium 1",
+        "glandular cells"
+      ],
+      [
+        "endometrium 2",
+        "cells in endometrial stroma"
+      ],
+      [
+        "endometrium 2",
+        "glandular cells"
+      ],
+      [
+        "epididymis",
+        "glandular cells"
+      ],
+      [
+        "esophagus",
+        "squamous epithelial cells"
+      ],
+      [
+        "fallopian tube",
+        "glandular cells"
+      ],
+      [
+        "gallbladder",
+        "glandular cells"
+      ],
+      [
+        "heart muscle",
+        "cardiomyocytes"
+      ],
+      [
+        "hippocampus",
+        "glial cells"
+      ],
+      [
+        "hippocampus",
+        "neuronal cells"
+      ],
+      [
+        "kidney",
+        "cells in glomeruli"
+      ],
+      [
+        "kidney",
+        "cells in tubules"
+      ],
+      [
+        "liver",
+        "cholangiocytes"
+      ],
+      [
+        "liver",
+        "hepatocytes"
+      ],
+      [
+        "lung",
+        "alveolar cells"
+      ],
+      [
+        "lung",
+        "macrophages"
+      ],
+      [
+        "lymph node",
+        "germinal center cells"
+      ],
+      [
+        "lymph node",
+        "non-germinal center cells"
+      ],
+      [
+        "nasopharynx",
+        "respiratory epithelial cells"
+      ],
+      [
+        "oral mucosa",
+        "squamous epithelial cells"
+      ],
+      [
+        "ovary",
+        "follicle cells"
+      ],
+      [
+        "ovary",
+        "ovarian stroma cells"
+      ],
+      [
+        "pancreas",
+        "exocrine glandular cells"
+      ],
+      [
+        "pancreas",
+        "pancreatic endocrine cells"
+      ],
+      [
+        "parathyroid gland",
+        "glandular cells"
+      ],
+      [
+        "placenta",
+        "decidual cells"
+      ],
+      [
+        "placenta",
+        "trophoblastic cells"
+      ],
+      [
+        "prostate",
+        "glandular cells"
+      ],
+      [
+        "rectum",
+        "glandular cells"
+      ],
+      [
+        "salivary gland",
+        "glandular cells"
+      ],
+      [
+        "seminal vesicle",
+        "glandular cells"
+      ],
+      [
+        "skeletal muscle",
+        "myocytes"
+      ],
+      [
+        "skin 1",
+        "Langerhans"
+      ],
+      [
+        "skin 1",
+        "fibroblasts"
+      ],
+      [
+        "skin 1",
+        "keratinocytes"
+      ],
+      [
+        "skin 1",
+        "melanocytes"
+      ],
+      [
+        "skin 2",
+        "epidermal cells"
+      ],
+      [
+        "small intestine",
+        "glandular cells"
+      ],
+      [
+        "smooth muscle",
+        "smooth muscle cells"
+      ],
+      [
+        "soft tissue 1",
+        "fibroblasts"
+      ],
+      [
+        "soft tissue 1",
+        "peripheral nerve"
+      ],
+      [
+        "soft tissue 2",
+        "fibroblasts"
+      ],
+      [
+        "soft tissue 2",
+        "peripheral nerve"
+      ],
+      [
+        "spleen",
+        "cells in red pulp"
+      ],
+      [
+        "spleen",
+        "cells in white pulp"
+      ],
+      [
+        "stomach 1",
+        "glandular cells"
+      ],
+      [
+        "stomach 2",
+        "glandular cells"
+      ],
+      [
+        "testis",
+        "Leydig cells"
+      ],
+      [
+        "testis",
+        "cells in seminiferous ducts"
+      ],
+      [
+        "thyroid gland",
+        "glandular cells"
+      ],
+      [
+        "tonsil",
+        "germinal center cells"
+      ],
+      [
+        "tonsil",
+        "non-germinal center cells"
+      ],
+      [
+        "tonsil",
+        "squamous epithelial cells"
+      ],
+      [
+        "urinary bladder",
+        "urothelial cells"
+      ],
+      [
+        "vagina",
+        "squamous epithelial cells"
+      ]
+    ]
+  },
+  "sources": {
+    "hpa_rna_consensus": {
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
+      "bytes": 37949495,
+      "version": "v23"
+    },
+    "hpa_normal_tissue": {
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
+      "bytes": 82941549,
+      "version": "v23"
+    }
+  },
+  "canonical_sha256": "32430d5b297acd17ebc6bf1a9eae98adfde1b10fb7c9cfcffd61a58df89a3f75",
+  "inputs": {
+    "docs/audits/cta-recalibration-20261021/candidate-comparison.csv": "b25febe12c093bd0188d6789c520bf257603fc96dc5fb22b3bcd6b71ce0b66af"
+  },
+  "implementation_sha256": {
+    "scripts/normal_expression_categories_report.py": "6ec010498ec132aad0bb32c2242e0de5d28fd5f4c8448d39abb387a01a2c35f8",
+    "oncoref/normal_expression_categories.py": "814bcd617323da8544c13e92405cb98bcd0ac95063571f4b0430f9b24d093ba2",
+    "oncoref/cta_normal_screen.py": "1626131f01db16e27bfc714af0ccd3cf3cbc865a59fbf340983ffae5f280918c",
+    "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
+    "scripts/cta_permitted_report.py": "f864eb76c9eefbc9d11682d5dd466fb816b19646b882fd3fda81ce2e0d98046a",
+    "scripts/cta_scope_report.py": "f68f0cda6bee98a31429ef56f758116034dc962b361c4c7b61426511f4a72cd7",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "4f8a0232e0d547c189de77eb88a42f30e563ebab7c6fe6d0af82ba0a54bbdbae",
+    "oncoref/data/normal-tissue-mappings.csv": "9e852c13dfea2638e804f855fef8d7a19c7fe5902ae55c9aee1b094e43eca4f5",
+    "oncoref/data/cta-ihc-unreliable.csv": "57ec0ec264c68eed9b7d3c22090e9df252a53fed5850fe79caf5bc1607a0ecb2"
+  },
+  "outputs": {
+    "conservative-normal-reference.csv.gz": "81984767cf8389d8ee411f9e4a7c472bdb7fa2b872a133093ddbf82f88ee2f9a",
+    "disposable.csv.gz": "e8b10cc1563c6230d46ff7e120bb76b50b49678d9f23a307a9391527ca06d708",
+    "gene-categories.csv.gz": "8811784f7e6d45e5fcf43203e1d3c3a1bf7c26f04c61d61822cc2adf3d65e2e8",
+    "index.md": "b087c67d3cac25405824478861c3f876458c7955d86b921edb0620b3294ac601",
+    "normal.csv.gz": "0a83649f0098b1e26a7cc7275ae18e234e24a3aa85fc6752453d5509bd61baa2",
+    "other.csv.gz": "d920f387b4da2a395e18529570556554aa4269ae252e4b3a4ac088f581fc803b",
+    "reproductive.csv.gz": "be8b8de950ea7c3051dd718473432d17737b8262909177b781b5b9db88cd22e0",
+    "silent.csv.gz": "a5626e33fc9f630d41a9a036119586246a6131b48f08ee9a884141c548f87b9e",
+    "summary.csv": "3500a93c3ac783412a8bdf3a22a71c390ff6a26cbe87be450aa54e04ea08daf4",
+    "unassessed.csv.gz": "65e4d42ac9c458f1379efd014d28296a944dafbca6a53af4ea890ebb4ed24b08"
+  }
+}

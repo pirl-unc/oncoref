@@ -23,8 +23,8 @@ def evaluate(
     rna,
     ihc=(),
     *,
-    vital_limit=1,
-    protected_limit=3,
+    vital_limit=2,
+    protected_limit=6,
     scope=report.EXPANDED,
     missing=(),
     unreliable=False,
@@ -83,13 +83,13 @@ def evaluate(
 
 
 def test_raw_rna_tier_boundaries_are_inclusive_and_per_tissue():
-    assert evaluate([("testis", 100), ("heart muscle", 1), ("thyroid gland", 5)])["evidence_pass"]
-    assert not evaluate([("testis", 100000), ("heart muscle", 1.1)])["evidence_pass"]
-    assert not evaluate([("testis", 100000), ("thyroid gland", 5.1)])["evidence_pass"]
-    assert evaluate([("testis", 100), ("retina", 1)])["evidence_pass"]
-    assert not evaluate([("testis", 100), ("retina", 1.1)])["evidence_pass"]
-    assert evaluate([("testis", 100), ("salivary gland", 3)])["evidence_pass"]
-    assert not evaluate([("testis", 100), ("salivary gland", 3.1)])["evidence_pass"]
+    assert evaluate([("testis", 100), ("heart muscle", 2), ("thyroid gland", 10)])["evidence_pass"]
+    assert not evaluate([("testis", 100000), ("heart muscle", 2.1)])["evidence_pass"]
+    assert not evaluate([("testis", 100000), ("thyroid gland", 10.1)])["evidence_pass"]
+    assert evaluate([("testis", 100), ("retina", 2)])["evidence_pass"]
+    assert not evaluate([("testis", 100), ("retina", 2.1)])["evidence_pass"]
+    assert evaluate([("testis", 100), ("salivary gland", 6)])["evidence_pass"]
+    assert not evaluate([("testis", 100), ("salivary gland", 6.1)])["evidence_pass"]
 
 
 def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
@@ -235,10 +235,10 @@ def test_disposable_ihc_cannot_supply_reproductive_evidence():
 
 def test_adaptive_absolute_boundary_and_positive_veto_remain_independent():
     negative = [("heart muscle", "cardiomyocytes", "Not detected")]
-    assert evaluate([("testis", 100), ("heart muscle", 6)], negative, adaptive=True)[
+    assert evaluate([("testis", 100), ("heart muscle", 12)], negative, adaptive=True)[
         "evidence_pass"
     ]
-    assert not evaluate([("testis", 100), ("heart muscle", 6.1)], negative, adaptive=True)[
+    assert not evaluate([("testis", 100), ("heart muscle", 12.1)], negative, adaptive=True)[
         "evidence_pass"
     ]
     result = evaluate(
@@ -250,7 +250,7 @@ def test_adaptive_absolute_boundary_and_positive_veto_remain_independent():
     assert "positive_ihc_outside_permitted" in result["failure_reasons"]
 
 
-@pytest.mark.parametrize("tissue,ceiling", [("salivary gland", 12), ("thyroid gland", 30)])
+@pytest.mark.parametrize("tissue,ceiling", [("salivary gland", 24), ("thyroid gland", 60)])
 def test_adaptive_protected_and_manageable_ceilings_are_inclusive(tissue, ceiling):
     negative = [(tissue, "glandular cells", "Not detected")]
     assert evaluate([("testis", 100), (tissue, ceiling)], negative, adaptive=True)["evidence_pass"]
@@ -310,7 +310,7 @@ def test_large_reproductive_or_disposable_signal_cannot_override_other_gates():
     assert evaluate([("testis", 99), ("heart muscle", 1), ("tonsil", 1e6)], selectivity=True)[
         "evidence_pass"
     ]
-    result = evaluate([("testis", 1e6), ("heart muscle", 1.01)], selectivity=True)
+    result = evaluate([("testis", 1e6), ("heart muscle", 2.01)], selectivity=True)
     assert "rna_above_tissue_ceiling" in result["failure_reasons"]
     assert not result["selectivity_exclusions"]
     result = evaluate(

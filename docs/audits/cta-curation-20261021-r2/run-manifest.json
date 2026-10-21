@@ -1,0 +1,58 @@
+{
+  "schema": "oncoref.cta-curation-report.v2",
+  "policy_id": "oncoref.cta-ihc-adaptive-screen.2026-10-21.2",
+  "sources": {
+    "hpa_rna_consensus": {
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
+      "bytes": 37949495,
+      "version": "v23"
+    },
+    "hpa_normal_tissue": {
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
+      "bytes": 82941549,
+      "version": "v23"
+    }
+  },
+  "inputs": {
+    "docs/audits/cta-curation-20261021/candidate-decisions.csv.gz": "92eaa29a1bf13b15e02c44ea40b76e9d0a2af8c39b45ccc34f388b92bbecbeb2",
+    "docs/audits/cta-curation-20261021/intake-decisions.csv.gz": "2fef97b4ad2ccd05916c62cb3b0736375a3cc06484befb12a2876fa68f5d95dd",
+    "docs/audits/normal-expression-categories-20261021-r2/gene-categories.csv.gz": "8811784f7e6d45e5fcf43203e1d3c3a1bf7c26f04c61d61822cc2adf3d65e2e8",
+    "docs/audits/normal-expression-categories-20261021-r2/run-manifest.json": "2df787a5e6e35a5f6667555f022c3f00f1c31668d58c48386ec910fd0621e368",
+    "oncoref/data/cta-trial-evidence.csv": "a1e946c91962618d43c45820b11e9c64c28fce092d6bf528ce31faeef589e3c8",
+    "oncoref/data/cta-external-safety-reviews.csv": "a4ff8aa9da603cb790127aaf00f193432f768dce58689f8f53a1adf6569e64c8",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "4f8a0232e0d547c189de77eb88a42f30e563ebab7c6fe6d0af82ba0a54bbdbae",
+    "oncoref/data/cta-publication-membership.csv": "be2c3d9b3d202b0664e7e025926ba9743b1516cf100182cf6c14fb1b42af8b09",
+    "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c",
+    "oncoref/data/cta-intake-identity-reviews.csv": "f6c89291ca994cdb3bf8101b14bca1cf4a018df982f8ee0b8ffc82d296280c0d"
+  },
+  "implementation_sha256": {
+    "scripts/cta_curation_report.py": "bd3123f34320c14a16f070442df6a71768154c7161f6f82eca85a4e8c417b78e",
+    "scripts/cta_report_pages.py": "efde8865d370e2602277f8b79f51ce722cdc6006e6f80c25a8e1382233f32a14",
+    "scripts/cta_scope_report.py": "f68f0cda6bee98a31429ef56f758116034dc962b361c4c7b61426511f4a72cd7",
+    "scripts/cta_permitted_report.py": "f864eb76c9eefbc9d11682d5dd466fb816b19646b882fd3fda81ce2e0d98046a",
+    "scripts/cta_clinical_curation_report.py": "a0657429024f073051522cb398d62b4eb36be6f7b6c2a27a971445c32b7cbada",
+    "oncoref/cta_normal_screen.py": "1626131f01db16e27bfc714af0ccd3cf3cbc865a59fbf340983ffae5f280918c",
+    "oncoref/cta_sources.py": "75cae6c6bb7fc7b663f0bb12f22fe01e951d09003570f628513aff43864e6155"
+  },
+  "outputs": {
+    "candidate-decisions.csv.gz": "acd562ddbf73f9d90d5be6092209c11913661a70cf135b45525d4617b66feb95",
+    "changes.csv": "0416cb079ce5881eedbe304667c7762c81380ff9fb1c46017721a4c87dbe7c90",
+    "clinical-results.csv": "4f061752ac8df6f18939707d1053d308bdaf6d553f0858431697fa0642170c44",
+    "clinical-target-audit.csv": "b040450e5f5ce47ce30f14fe42f98f15a9c6333f40f6b8cdec13098ba46dcc64",
+    "ensembl-identity-checks.json": "3bcdd4e4de450e4b19ad542b5005c5956687fde1ee63bce070594b7c01f583c2",
+    "explore.html": "01cb625d993d99f4bedfc64be23a984559450cdaf73692a8f164a621c6572d0d",
+    "filtering-funnel.png": "7c74e9e5ddc0c69c9d044b3b316af74b687e90eef2ebd0184d321628a7d5536c",
+    "filtering-funnel.svg": "933a89cd489267a5327cf6173f294462211888aed8b7a0a9efbadba5e9c8a921",
+    "funnel.csv": "99b15a2feb08b6163a0b5d01df10d63a408e110c421f1524bc02204f597dfcdb",
+    "gene-results.csv.gz": "1cc414b747e2085328c99a08bea4651c964cd9af432d9f7ac613df2c5d3c85f5",
+    "index.md": "cc24e4e2efad0925fc183b59fec57fec084862263f09227dddf9ee7a679704e3",
+    "intake-decisions.csv.gz": "e5eb8fb1e47e87cff055386a1b2e1c9aad1aa09f93c4a1277d6c5a5337c27a3c",
+    "publication-results.csv": "95dbfe9a10cec0e7cd19bdf61558319c7672c603d16b0f49f13e33e58e57f9a8",
+    "screening-policy.json": "a923adc1cd34977b5a331e28a51b828b270977be89f0ce41aca234d3fad68cf0",
+    "threshold-comparison-summary.csv": "bf342cf30a323d6299b3331f066c0dc0bf95c858a499fe417c66f56b28780797",
+    "threshold-comparison.csv": "dcc6013c45c800ed578e5a608266548921da809d2dcfc82fffd7c09afd01142b",
+    "tissue-evidence.csv.gz": "4ae2a1f01c10b09fd7b0daa315e3485f3cb44ba1111140f2a003e2346c43fa51"
+  }
+}
