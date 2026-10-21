@@ -1,0 +1,6 @@
+{
+  "query": "\"cancer testis\" OR \"cancer-testis\" OR \"NY-ESO-1\" OR \"MAGE-A\" OR \"MAGE-C\" OR \"PRAME\" OR \"KK-LC-1\" OR \"SPAG9\" OR \"SP17\" OR \"AKAP4\" OR \"SSX2\" OR \"XAGE1\" OR \"LY6K\" OR \"OY-TES-1\"",
+  "date": "2026-10-21",
+  "endpoint": "https://clinicaltrials.gov/api/v2/studies",
+  "n_studies": 607
+}

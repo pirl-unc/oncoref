@@ -11,7 +11,7 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 [Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-recalibration-20261021/)
+and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-curation-20261021/)
 document the nested sets, cited dataset mappings, complete publication intake,
 and dog/mouse evidence coverage. The human research screen requires reproductive
 RNA >0 or positive reproductive IHC, with category-specific absolute RNA ceilings,
@@ -20,6 +20,11 @@ Complete local negative IHC sets the thresholds for Manageable, Protected and
 Vital tissues. The report compares fixed and adaptive results and preserves
 every candidate's exclusion reasons and unassessed mappings. Numerical limits
 are research parameters, not validated clinical safety limits.
+
+The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021/)
+classify Reproductive, Normal and Other independently of CTA nomination.
+Other contains Disposable and Silent; incomplete evidence remains Unassessed.
+Observed normal expression is preserved separately for future subsequence comparisons.
 
 ## Role in the stack
 

@@ -310,6 +310,22 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "publication citations, exact source tables, checksums and evidence scope",
     ),
+    "cta-intake-identity-reviews": (
+        "cta-evidence",
+        "authority-backed identities without canonical Ensembl mappings",
+    ),
+    "cta-trial-evidence": (
+        "cta-evidence",
+        "primary clinical-trial and approved-therapy target evidence with alias scope",
+    ),
+    "cta-external-safety-reviews": (
+        "cta-evidence",
+        "external normal-tissue injury and receptor cross-reactivity evidence reviews",
+    ),
+    "cta-screening-review-overrides": (
+        "cta-evidence",
+        "policy-scoped reviews of historical CTA holdbacks",
+    ),
     "cta-clinical-targets": (
         "cta",
         "explicit clinical/canonical CTA target tier joined to HPA evidence",

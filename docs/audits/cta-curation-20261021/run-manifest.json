@@ -1,0 +1,31 @@
+{
+  "schema": "oncoref.cta-clinical-curation.v1",
+  "reviewed_date": "2026-10-21",
+  "inputs": {
+    "oncoref/data/cta-trial-evidence.csv": "a1e946c91962618d43c45820b11e9c64c28fce092d6bf528ce31faeef589e3c8",
+    "oncoref/data/cta-external-safety-reviews.csv": "a4ff8aa9da603cb790127aaf00f193432f768dce58689f8f53a1adf6569e64c8",
+    "docs/audits/cta-recalibration-20261021/candidate-comparison.csv": "b25febe12c093bd0188d6789c520bf257603fc96dc5fb22b3bcd6b71ce0b66af",
+    "docs/audits/cta-recalibration-20261021/intake-decisions.csv": "00ff30f6d2915436f7abdb60955c3beb5471ac1ad01a22d7013fb2df1806aee7",
+    "docs/audits/normal-expression-categories-20261021/gene-categories.csv.gz": "fdc85a516dd2e497601ad76a82cd4241e96b722b6357e0f8e98915e3b480db7a",
+    "docs/audits/normal-expression-categories-20261021/run-manifest.json": "c9f30deb1a5f02a233bc9e6ad8adbdad1462a262717cbfacb24e14ff49afbb9c"
+  },
+  "implementation_sha256": {
+    "scripts/cta_clinical_curation_report.py": "a0657429024f073051522cb398d62b4eb36be6f7b6c2a27a971445c32b7cbada"
+  },
+  "outputs": {
+    "BAGE-hgnc.json": "00e07f4f53a604c30a857bcb672b05ba21f73babb83e2fd2abe31a311ebc20ab",
+    "GAGE2B-hgnc.json": "3cacfeeb368c8ac14716e3911e8d49bdfb76c2a455af64a272a731380137a7ce",
+    "candidate-decisions.csv.gz": "92eaa29a1bf13b15e02c44ea40b76e9d0a2af8c39b45ccc34f388b92bbecbeb2",
+    "clinical-target-audit.csv": "29276bbbc60b66fcebbd8c79488ca61d744783ce51cea0695e51040fa1fc1059",
+    "clinical-target-evidence.csv": "a1e946c91962618d43c45820b11e9c64c28fce092d6bf528ce31faeef589e3c8",
+    "curation-funnel.png": "74919c3142601f753ba5bb6370a168f7ca5dba7bfaf995e23340320b31fd2bfa",
+    "curation-funnel.svg": "62c78c8da6888088f342d6223d31da17a64bd526a343b4c83daad59b7b139ff4",
+    "external-safety-reviews.csv": "a4ff8aa9da603cb790127aaf00f193432f768dce58689f8f53a1adf6569e64c8",
+    "funnel.csv": "d5cd1fcc30a40bb0909d1c24446efc98daf111ddc94f9990e65bcc5c8c100621",
+    "index.md": "7d8b0c47fb1248d9f390dbb3c5b6cec0feccd62454e33d15667122f08effa990",
+    "intake-decisions.csv.gz": "2fef97b4ad2ccd05916c62cb3b0736375a3cc06484befb12a2876fa68f5d95dd",
+    "query.json": "b008305e984f92c2f0419e8fbb6017291c70d25a000cbf3297cf697fd7986310",
+    "registry-search-results.csv": "98a678f4f2076a71c1749d07fdf5f1bd3e8f7b2283b1fb5753f071d6a3004ce6",
+    "trial-registry-snapshot.json.gz": "40e98dc771c87e945c7f253d4a455e5b185a2833daa616c60ef09ce9c843f706"
+  }
+}

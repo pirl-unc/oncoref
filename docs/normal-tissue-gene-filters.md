@@ -1,5 +1,13 @@
 # Patient-context gene restriction filters
 
+For the broader **Reproductive / Normal / Other** screening groups, see the
+[genome-wide expression report](audits/normal-expression-categories-20261021/index.md).
+Other contains Disposable and Silent under the approved category/IHC absolute
+ceilings; missing routine RNA stays Unassessed. These groups include non-CTA genes.
+The report preserves observed normal expression separately for future exact
+subsequence comparisons: passing a research cutoff does not establish absence
+of a sequence from normal tissue.
+
 These are named **gene filtering policies**, separate from anatomical tissue
 sets and from the general adaptive CTA screen. No disposable-tissue exception
 is included. Both require positive evidence in their selected reproductive subset.
