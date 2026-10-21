@@ -2,7 +2,7 @@
 
 This review concerns **significant immune injury**, its consequences, persistence
 and control. Complete organ removal is one evidence source; it is not a model for
-every pattern of immune injury. Reproductive, Disposable, Manageable risk, High consequence and Vital are
+every pattern of immune injury. Reproductive, Disposable, Manageable, Protected and Vital are
 project categories. A separate field records evidence for local treatment.
 
 ## Published classifications
@@ -57,18 +57,18 @@ Disposable. Suppressing inflammation and restoring cells already lost are
 different outcomes. No paper above establishes that immune injury can always be
 stopped locally while preserving antitumor activity.
 
-## Current categories and the intermediate Manageable risk tier
+## Current categories and the intermediate Manageable tier
 
-The current policy separates **Manageable risk (lower protection priority)** from
-**High consequence (higher protection priority)**. Bradley's Caution/Hazard distinction
+The current policy separates **Manageable (lower protection priority)** from
+**Protected (higher protection priority)**. Bradley's Caution/Hazard distinction
 is a published anchor. Our exact assignments remain project inferences:
 
 | Category | Assignment relevant to this review | Evidence and interpretation |
 |---|---|---|
-| Disposable — conditional | Cutaneous melanocytes, hair follicles, tonsil, appendix, gallbladder | Selected compartment-loss or organ-removal rationale; acute immune injury still needs review |
-| Manageable risk | Whole skin, spleen, thymus, thyroid, adipose | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
-| High consequence | Salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
-| Vital / critical function | Existing vital and critical sensory/neurological organs | Highest protection priority; local access does not remove irreversible-loss concerns |
+| Disposable | Cutaneous melanocytes, hair follicles, tonsil, appendix, gallbladder | Selected compartment-loss or organ-removal rationale; acute immune injury still needs review |
+| Manageable | Whole skin, spleen, thymus, thyroid, adipose | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
+| Protected | Salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
+| Vital | Existing vital and critical sensory/neurological organs | Highest protection priority; local access does not remove irreversible-loss concerns |
 
 Reproductive remains the separate anatomical/developmental union. See the
 [complete root lists and IHC-dependent RNA grid](normal-tissue-scopes.md).
@@ -105,9 +105,9 @@ The taxonomy's `context_reviews` records:
 - `references`, `rationale` and `flags`: evidence, consequences and unresolved questions.
 
 The RNA ceilings are explicit **project starting parameters**: Vital 1/2/3/6,
-High consequence 2/4/6/12, Manageable risk 5/10/15/30 nTPM for missing/uncertain, Approved,
-Supported and Enhanced negative IHC. Vital/High consequence follow the earlier proposed
-sensitivity grid; the user approved all three ladders. The Manageable risk name
+Protected 2/4/6/12, Manageable 5/10/15/30 nTPM for missing/uncertain, Approved,
+Supported and Enhanced negative IHC. Vital/Protected follow the earlier proposed
+sensitivity grid; the user approved all three ladders. The Manageable name
 refers to potentially manageable or compensated injury, subject to context review. No GTEx-to-HPA conversion or
 clinical outcome calibration is claimed. HPA reliability labels do not express a
 probability that a negative stain rules out antigen or peptide-HLA presentation.
@@ -121,3 +121,18 @@ Human clinical rationale is not transferred to dogs or mice. The shared vocabula
 maps anatomy; tolerability evidence, numerical policies, age and patient context
 remain separate. The updated [CTA report](audits/cta-tissue-priorities-20261020/index.md)
 separates the effects of reclassification from the new RNA grid.
+
+## Combined absolute and selectivity gates
+
+The same local IHC evidence now sets both an absolute RNA ceiling and minimum
+pairwise selectivity: highest Reproductive RNA divided by that reference plus the
+screened tissue's RNA. Disposable is excluded from this comparison and cannot
+supply the required reproductive-positive evidence. Missing or zero reproductive
+RNA cannot establish a selectivity score.
+
+The approved percentage ladders are Vital 99/98/97/95%, Protected 97/95/90/80%,
+and Manageable 95/90/80/60%, in order of missing/uncertain, Approved, Supported,
+and Enhanced negative IHC. These are project parameters with a different meaning
+from the historical global deflated fraction. They do not estimate clinical risk.
+See the [complete matrix and formula](normal-tissue-scopes.md#tissue-by-tissue-selectivity)
+and the [candidate comparison](audits/cta-selectivity-20261020/index.md).

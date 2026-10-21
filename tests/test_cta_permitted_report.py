@@ -29,6 +29,7 @@ def evaluate(
     missing=(),
     unreliable=False,
     adaptive=False,
+    selectivity=False,
 ):
     rows = []
     for tissue, value in rna:
@@ -62,6 +63,13 @@ def evaluate(
         "bulk_rna": {(tissue, "") for tissue, _ in rna} | {(tissue, "") for tissue in missing},
         "ihc": {(tissue, cell) for tissue, cell, _ in ihc},
     }
+    audit = (
+        adaptive_normal_rna_limits(
+            observations, routine_ihc_contexts=expected["ihc"], reviewed_unreliable=unreliable
+        )
+        if adaptive or selectivity
+        else None
+    )
     return report.evaluate_gene(
         observations,
         scope=scope,
@@ -69,15 +77,8 @@ def evaluate(
         protected_limit=protected_limit,
         expected=expected,
         unreliable=unreliable,
-        rna_limits=(
-            adaptive_normal_rna_limits(
-                observations,
-                routine_ihc_contexts=expected["ihc"],
-                reviewed_unreliable=unreliable,
-            ).rna_ceiling_ntpm
-            if adaptive
-            else None
-        ),
+        rna_limits=(audit.rna_ceiling_ntpm if adaptive else None),
+        selectivity_audit=(audit if selectivity else None),
     )
 
 
@@ -100,6 +101,19 @@ def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
     )
     assert not result["evidence_pass"]
     assert "incomplete_routine_rna" in result["failure_reasons"]
+
+
+def test_combined_screen_with_no_rna_is_unresolved_not_an_alignment_error():
+    result = evaluate(
+        [],
+        [("testis", "cells in seminiferous ducts", "Low")],
+        missing=["testis", "heart muscle"],
+        adaptive=True,
+        selectivity=True,
+    )
+    assert not result["evidence_pass"]
+    assert "incomplete_routine_rna" in result["failure_reasons"]
+    assert "unresolved_reproductive_selectivity" in result["failure_reasons"]
 
 
 @pytest.mark.parametrize(
@@ -186,12 +200,30 @@ def test_incomplete_and_unreliable_evidence_cannot_pass():
     ]
 
 
-def test_positive_evidence_inside_permitted_scope_is_required():
+def test_positive_reproductive_evidence_is_required():
     assert not evaluate([("testis", 0), ("liver", 0)])["evidence_pass"]
     assert not evaluate([("testis", 0.5), ("thyroid gland", 3)])["evidence_pass"]
     assert evaluate(
         [("testis", 0.5), ("thyroid gland", 3)], [("testis", "cells in seminiferous ducts", "Low")]
     )["evidence_pass"]
+
+
+@pytest.mark.parametrize("tissue", ["tonsil", "appendix", "gallbladder"])
+def test_disposable_expression_is_exempt_but_cannot_supply_reproductive_evidence(tissue):
+    only_disposable = evaluate([("testis", 0), (tissue, 10000)])
+    assert not only_disposable["evidence_pass"]
+    assert not only_disposable["positive_evidence_reproductive"]
+    assert "insufficient_positive_reproductive_evidence" in only_disposable["failure_reasons"]
+    with_reproductive = evaluate([("testis", 1), (tissue, 10000)])
+    assert with_reproductive["evidence_pass"]
+    assert with_reproductive["positive_evidence_reproductive"]
+
+
+def test_disposable_ihc_cannot_supply_reproductive_evidence():
+    result = evaluate([("testis", 0), ("skin", 0)], [("skin 1", "melanocytes", "High")])
+    assert not result["evidence_pass"]
+    assert not result["positive_evidence_reproductive"]
+    assert not result["ihc_exclusions"]
 
 
 def test_adaptive_absolute_boundary_and_positive_veto_remain_independent():
@@ -244,3 +276,62 @@ def test_cutaneous_melanocyte_allowance_does_not_clear_other_skin_cells():
         [("testis", 100), ("skin", 5)],
         [("skin 1", "melanocytes", "High"), ("skin 1", "keratinocytes", "Low")],
     )["evidence_pass"]
+
+
+@pytest.mark.parametrize(
+    "tissue,cell,reference,value",
+    [
+        ("heart muscle", "cardiomyocytes", 19, 1),
+        ("salivary gland", "glandular cells", 4, 1),
+        ("thyroid gland", "glandular cells", 3, 2),
+    ],
+)
+def test_combined_screen_selectivity_boundaries_are_inclusive(tissue, cell, reference, value):
+    negative = [(tissue, cell, "Not detected")]
+    assert evaluate(
+        [("testis", reference), (tissue, value)], negative, adaptive=True, selectivity=True
+    )["evidence_pass"]
+    result = evaluate(
+        [("testis", reference - 0.001), (tissue, value)], negative, adaptive=True, selectivity=True
+    )
+    assert not result["evidence_pass"]
+    assert "reproductive_selectivity_below_threshold" in result["failure_reasons"]
+    assert not result["rna_exclusions"]
+
+
+def test_large_reproductive_or_disposable_signal_cannot_override_other_gates():
+    assert evaluate([("testis", 99), ("heart muscle", 1), ("tonsil", 1e6)], selectivity=True)[
+        "evidence_pass"
+    ]
+    result = evaluate([("testis", 1e6), ("heart muscle", 1.01)], selectivity=True)
+    assert "rna_above_tissue_ceiling" in result["failure_reasons"]
+    assert not result["selectivity_exclusions"]
+    result = evaluate(
+        [("testis", 1e6), ("heart muscle", 0)],
+        [("heart muscle", "cardiomyocytes", "Low")],
+        selectivity=True,
+    )
+    assert "positive_ihc_outside_permitted" in result["failure_reasons"]
+
+
+def test_zero_reproductive_rna_with_positive_ihc_leaves_selectivity_unresolved():
+    result = evaluate(
+        [("testis", 0), ("heart muscle", 0)],
+        [("testis", "cells in seminiferous ducts", "Low")],
+        selectivity=True,
+    )
+    assert result["positive_evidence_reproductive"]
+    assert not result["evidence_pass"]
+    assert "unresolved_reproductive_selectivity" in result["failure_reasons"]
+
+
+def test_other_organ_negative_ihc_cannot_relax_heart_selectivity():
+    result = evaluate(
+        [("testis", 19), ("heart muscle", 1), ("kidney", 0)],
+        [("kidney", "cells in glomeruli", "Not detected")],
+        adaptive=True,
+        selectivity=True,
+    )
+    assert not result["evidence_pass"]
+    assert "heart muscle" in result["selectivity_exclusions"]
+    assert "99%" in result["selectivity_exclusions"]

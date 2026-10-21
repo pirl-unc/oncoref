@@ -1,0 +1,19 @@
+{
+  "schema": "oncoref.normal-tissue-registry-report.v1",
+  "taxonomy_id": "oncoref:normal-tissues:v1:sha256:f3ee901704bf949934bceb31b4864c0fb89f84139932d06546e01c99d95bc0d3",
+  "implementation_sha256": {
+    "scripts/normal_tissue_registry_report.py": "3abf43e10ca7608c1aa5384f966cebcb1de1cabf5caee18c8bd6f3a624259e87",
+    "oncoref/normal_tissues.py": "b09f85b4f240707ed58ece40f4da9c3b9d3abc7edf68a01026156d56f7a2583a",
+    "oncoref/normal_tissue_gene_filters.py": "90d6fe00722a11c303310914a5673e839a487d4347b2fa78d236ca277c4f71fc",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "0e903599a855b2bf29450992dddaef8d68f9d6ea631a5dda3bd50f4bfe43b88e",
+    "oncoref/data/normal-tissue-mappings.csv": "9e852c13dfea2638e804f855fef8d7a19c7fe5902ae55c9aee1b094e43eca4f5"
+  },
+  "outputs": {
+    "canonical-anatomy.csv": "c10ea4ce17add44fe09b4ca10c2720994160e85617b3da68e87b3cc75e793d61",
+    "gene-filter-profiles.json": "a463f7f0375eb404b9915aa8235aeae1656001ca5e8842372c788c8caa8e2f16",
+    "index.md": "31c2c07a5ec7bbfcd8e580770e3b20dbdfbd98c6e88d3d1a9954ab59109973ea",
+    "source-mappings.csv": "1324569eee120138559bf71e68201d502bdbffb1b177a80739ed20c7c2e5e797",
+    "species-summary.csv": "9e830ec3e22b47bfaa8a729f8631b5c8582c9fc1faf8d515ea9e812f25db9695",
+    "taxonomy.json": "2756e4e032bb3bba5acea1ca4871df38520e908f7f03a2fcac04c06c0a7d1e07"
+  }
+}

@@ -1,0 +1,5 @@
+scenario,candidates,evidence_pass,retained,without_ihc,partial_ihc,complete_routine_ihc
+previous_adaptive,2537,712,624,343,276,5
+reproductive_required,2537,706,619,340,274,5
+current_fixed,2537,392,341,176,162,3
+current_adaptive,2537,430,377,176,197,4

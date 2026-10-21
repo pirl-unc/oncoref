@@ -84,7 +84,7 @@ def build(out):
             local, routine_ihc_contexts=expected["ihc"], reviewed_unreliable=unreliable
         )
         audit["Symbol"] = row.Symbol
-        # Apply the archived ladder to the newly classified anatomy. Manageable risk
+        # Apply the archived ladder to the newly classified anatomy. Manageable
         # receives the former Protected ladder in this anatomy-only comparator.
         audit["previous_grid_ceiling_ntpm"] = [
             prior["policy"]["negative_ihc_rna_limits"][r.ihc_reliability_used][
@@ -253,7 +253,7 @@ def write_manifest(out, policy, taxonomy, prior, previous_path, observation_path
                 },
                 "checks": [
                     "Archived input hashes verified",
-                    "Anatomy-only comparator uses archived Vital/Protected ladders; Manageable risk uses archived Protected",
+                    "Anatomy-only comparator uses archived Vital/Protected ladders; Manageable uses archived Protected",
                     "Every candidate reevaluated from original measurements",
                     "Current fixed retained set is a subset of current adaptive",
                 ],
@@ -315,7 +315,7 @@ def render(out, summary, changes, adaptive, policy):
     grid = "\n".join(
         "| " + " | ".join(map(str, row)) + " |"
         for row in [
-            ["IHC evidence", "Vital", "High consequence", "Manageable risk"],
+            ["IHC evidence", "Vital", "Protected", "Manageable"],
             ["---", "---:", "---:", "---:"],
             *[
                 [
@@ -336,23 +336,23 @@ def render(out, summary, changes, adaptive, policy):
         "## Tissue categories\n\n"
         "- **Reproductive:** existing reproductive/developmental unions.\n"
         "- **Disposable:** cutaneous melanocytes, follicles, tonsil, appendix and gallbladder.\n"
-        "- **Manageable risk:** whole skin, spleen, thymus, thyroid and adipose.\n"
-        "- **High consequence:** includes salivary glands, cartilage, esophagus, other protected "
+        "- **Manageable:** whole skin, spleen, thymus, thyroid and adipose.\n"
+        "- **Protected:** includes salivary glands, cartilage, esophagus, other protected "
         "gastrointestinal tissues and lymph nodes.\n"
-        "- **Vital / critical function:** existing highest-protection organs.\n\n"
-        "Manageable risk is screened: it is not a permitted normal-expression exception. "
+        "- **Vital:** existing highest-protection organs.\n\n"
+        "Manageable is screened: it is not a permitted normal-expression exception. "
         "Specific permitted skin compartments take precedence over the whole-skin category. "
         "A bulk skin measurement cannot establish compartment restriction.\n\n"
         "## Maximum RNA by tissue category and IHC evidence (nTPM)\n\n" + grid + "\n\n"
         "Approved/Supported/Enhanced relaxation requires valid **Not detected** staining "
         "in every routine IHC context of the same organ; the weakest reliability wins. "
         "Missing, incomplete, uncertain or unusable IHC earns no relaxation. "
-        "Any positive IHC, including Low, in Manageable risk, High consequence or Vital excludes. "
+        "Any positive IHC, including Low, in Manageable, Protected or Vital excludes. "
         "Reliability labels are not calibrated probabilities of true protein absence. "
         "These are project parameters, not clinical safety limits or GTEx-to-HPA conversions.\n\n"
         "## Results and attribution\n\n" + summary_table + "\n\n"
         "The **reclassified_previous_limits** scenario changes tissue assignments while "
-        "retaining the archived RNA grid (new Manageable risk receives the previous Protected grid). "
+        "retaining the archived RNA grid (new Manageable receives the previous Protected grid). "
         "Comparing it with **current_adaptive** isolates the RNA-grid change. "
         "The fixed screen uses baseline ceilings without IHC-based relaxation.\n\n"
         "![Retained candidates and IHC coverage](policy-comparison.png)\n\n"

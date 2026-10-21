@@ -111,47 +111,49 @@ reflects immune tolerance. No unlisted normal tissue is admitted by default.
 
 ## Five categories and protection priorities
 
-The five user-facing categories are **Reproductive, Disposable, Manageable risk, High consequence
+The five user-facing categories are **Reproductive, Disposable, Manageable, Protected
 and Vital**. `normal_tissue_category()` returns the IDs listed below. Unresolved
 anatomy is a QC status outside those five categories. Reproductive and Disposable
-share the numerical tier `permitted`; Manageable risk, High consequence and Vital are screened.
+share the numerical tier `permitted`; Manageable, Protected and Vital are screened.
+A candidate must have positive **Reproductive** evidence. Disposable expression
+is exempt from the RNA and IHC exclusion gates, but cannot supply that positive evidence.
 
 | Display name | Machine ID |
 |---|---|
 | Reproductive | `reproductive` |
 | Disposable | `disposable` |
-| Manageable risk (conditional) | `manageable` |
-| High consequence | `protected` (retained for API compatibility) |
-| Vital / critical function | `vital` |
+| Manageable | `manageable` |
+| Protected | `protected` |
+| Vital | `vital` |
 
 Exports include readable category labels alongside these stable IDs.
 
 Reproductive is an anatomical/developmental grouping, not an assertion of immune
-privilege or tolerability in every patient. Manageable risk denotes the lower
+privilege or tolerability in every patient. Manageable denotes the lower
 protection priority, where selected injuries may be manageable or functionally
-compensated. High consequence denotes greater concern about persistent functional
-or structural damage. These labels split the previous broad Protected category;
+compensated. Protected denotes greater concern about persistent functional
+or structural damage. These priorities split the previous broad Protected category;
 manageability remains conditional on the compartment, injury extent and treatment.
 Vital includes major irreversible neurological or sensory disability as well as
-life-threatening injury. Injury in Manageable risk or High consequence can also be serious.
+life-threatening injury. Injury in Manageable or Protected can also be serious.
 
 ### Complete root assignment
 
 Mapped descendants inherit their root assignment, with **explicit permitted
 compartments taking precedence**. Thus cutaneous melanocytes and follicles are
-Disposable, while bulk skin and other skin compartments are Manageable risk. A broad
+Disposable, while bulk skin and other skin compartments are Manageable. A broad
 measurement never establishes the narrower compartment's restriction.
 
 | Category | Complete root list |
 |---|---|
 | **Reproductive** | Testis and male reproductive organs; ovary/oocytes and female reproductive tract; mammary; placenta; other extraembryonic; explicitly embryonic/fetal contexts, as defined above. |
-| **Disposable — conditional** | Cutaneous melanocytes; hair follicles; tonsil; human appendix; gallbladder. |
-| **Manageable risk — lower protection priority** | Skin; spleen; thymus; thyroid gland; adipose tissue. Nail bed inherits skin; a thymus-sited sample retains the thymus category without inferring a narrower compartment. |
-| **High consequence — higher protection priority** | Salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
-| **Vital / critical function** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
+| **Disposable** | Cutaneous melanocytes; hair follicles; tonsil; human appendix; gallbladder. |
+| **Manageable** | Skin; spleen; thymus; thyroid gland; adipose tissue. Nail bed inherits skin; a thymus-sited sample retains the thymus category without inferring a narrower compartment. |
+| **Protected** | Salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
+| **Vital** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
-The [complete human/dog/mouse inventories](audits/normal-tissue-priorities-20261020/index.md)
+The [complete human/dog/mouse inventories](audits/normal-tissue-selectivity-20261020/index.md)
 list every concept and native source mapping, its category, species applicability,
 policy references and review flags. A concept's anatomy citation and the project's
 category-policy citations are kept in separate export fields. Mapping rows and
@@ -166,19 +168,19 @@ Hazard, and skin/adipose Non-essential in that study. Our categories are an expl
 adaptation: the study does not classify thymus or cartilage for us, and its GTEx TPM
 values do not validate HPA nTPM thresholds.
 
-- **Skin:** Manageable risk acknowledges potentially manageable inflammation, while preserving
+- **Skin:** Manageable acknowledges potentially manageable inflammation, while preserving
   RNA and positive-IHC exclusion gates. Only explicit cutaneous melanocyte/follicle
   compartments remain permitted. Local treatment evidence concerns selected
   manifestations, not guaranteed control of all skin-directed T-cell injury.
-- **Spleen:** Manageable risk reflects survivable organ loss with persistent infection and
+- **Spleen:** Manageable reflects survivable organ loss with persistent infection and
   thrombotic concerns. [Long-term splenectomy cohort](https://haematologica.org/article/view/6942)
-- **Thymus:** Manageable risk is a project inference, with an age/immune-reserve flag. Adult
+- **Thymus:** Manageable is a project inference, with an age/immune-reserve flag. Adult
   thymectomy was associated with mortality and cancer in an observational study;
   it is not evidence that thymic immune injury is locally controllable.
   [Kooshesh et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC10557034/)
-- **Salivary glands:** High consequence because secretion can remain very low after immune
+- **Salivary glands:** Protected because secretion can remain very low after immune
   injury despite symptom improvement. [Warner et al.](https://pubmed.ncbi.nlm.nih.gov/30996010/)
-- **Cartilage:** High consequence for persistent structural injury concerns. Mature articular
+- **Cartilage:** Protected for persistent structural injury concerns. Mature articular
   collagen turnover and chronic inflammatory arthritis provide indirect support,
   not direct validation of antigen-specific chondrocyte targeting. Generic cartilage
   does not identify a joint or rule out airway cartilage; its site needs review.
@@ -203,8 +205,8 @@ previous memberships. Cached annotations must be resolved against the new taxono
 |---|---|
 | Tonsil | Conditional allowance, with palatine tonsillectomy as the human rationale. Native `tonsil` labels retain their source resolution; adenoids, all mucosal lymphoid tissue and mouse NALT are not inferred. Review age, immune reserve and expressing-cell distribution. |
 | Appendix / gallbladder | Conditional allowance based on removal tolerance. In-situ inflammation, leakage or obstruction still requires review. Adjacent bowel, liver and bile ducts are not included. |
-| Spleen / thymus | Manageable risk, with positive-IHC veto and RNA ceilings. Review immune-cell distribution, age and immune reserve; spleen also carries infection-risk review. |
-| Lymph nodes | High consequence. Regional removal does not justify systemic depletion or injury to lymphatic stroma. |
+| Spleen / thymus | Manageable, with positive-IHC veto and RNA ceilings. Review immune-cell distribution, age and immune reserve; spleen also carries infection-risk review. |
+| Lymph nodes | Protected. Regional removal does not justify systemic depletion or injury to lymphatic stroma. |
 | Blood / marrow | Vital. No general immune-lineage exception; unsited B/T-cell labels remain unresolved. |
 
 Sources: [tonsillectomy decision aid](https://www.england.nhs.uk/wp-content/uploads/2023/10/decision-support-tool-making-a-decision-about-recurrent-tonsillitis-in-children-and-adults.pdf),
@@ -225,13 +227,14 @@ Reproductive grouping; maternal organs are not reclassified by pregnancy.
 | Category | Maximum RNA (human HPA v23 nTPM) | IHC rule |
 |---|---:|---|
 | Reproductive / Disposable | No upper ceiling | Positive staining allowed within selected scope; review flags retained |
-| Manageable risk | 5 | Any positive staining excludes, including Low |
-| High consequence | 2 | Any positive staining excludes, including Low |
+| Manageable | 5 | Any positive staining excludes, including Low |
+| Protected | 2 | Any positive staining excludes, including Low |
 | Vital | 1 | Any positive staining excludes, including Low |
 | Unresolved | No imputed allowance | Positive evidence blocks retention |
 
 RNA comparisons are inclusive, per observation, with no deflation or averaging.
-A candidate needs at least 1 nTPM or positive IHC inside the permitted set and
+The complete screen combines these absolute limits with the selectivity limits below.
+A candidate needs at least 1 nTPM or positive IHC in **Reproductive** tissue and
 complete coverage of the 50 routine bulk RNA contexts. Missing/partial IHC remains
 explicit; 80 routine tissue/cell pairs define routine-complete IHC, not exhaustive
 biological coverage. Unknown anatomy, unusable measurements and reviewed-unreliable
@@ -258,12 +261,59 @@ assert melanocyte["tissue_category"] == "disposable"
 The `ihc_adaptive_cta` policy uses the same permitted union and anatomical tiers,
 with these **inclusive maximum human HPA v23 nTPM values**:
 
-| IHC evidence in the RNA tissue | Vital / critical function | High consequence | Manageable risk |
+| IHC evidence in the RNA tissue | Vital | Protected | Manageable |
 |---|---:|---:|---:|
 | Missing, incomplete, uncertain or unusable | 1 | 2 | 5 |
 | Approved, all routine contexts Not detected | 2 | 4 | 10 |
 | Supported, all routine contexts Not detected | 3 | 6 | 15 |
 | Enhanced, all routine contexts Not detected | 6 | 12 | 30 |
+
+### Tissue-by-tissue selectivity
+
+The same tissue's IHC evidence also selects a **minimum selectivity**. Both
+conditions must pass for every Manageable, Protected and Vital RNA observation:
+
+```text
+Rmax = highest valid raw nTPM in a mapped Reproductive tissue for this gene
+selectivity[tissue] = Rmax / (Rmax + raw nTPM[tissue])
+pass[tissue] = RNA[tissue] <= ceiling AND selectivity[tissue] >= minimum
+```
+
+Disposable contributes neither to `Rmax` nor to the screened tissue set. The
+reference is identified in every audit row. Values remain within one species,
+source and version; there is no pooling of atlases or species. No tissue sums,
+deflation or rounding precede comparison. Missing or zero reproductive RNA makes
+selectivity unresolved, even if reproductive IHC supplies positive admission evidence.
+
+| IHC evidence | Vital: max nTPM / min selectivity | Protected: max nTPM / min selectivity | Manageable: max nTPM / min selectivity |
+|---|---:|---:|---:|
+| Missing, uncertain, incomplete or unusable | 1 / 99% | 2 / 97% | 5 / 95% |
+| Approved, complete negative | 2 / 98% | 4 / 95% | 10 / 90% |
+| Supported, complete negative | 3 / 97% | 6 / 90% | 15 / 80% |
+| Enhanced, complete negative | 6 / 95% | 12 / 80% | 30 / 60% |
+
+These percentages are **pairwise expression selectivity**, not percent of all RNA,
+protein or the body. For example, 80% requires `Rmax` to be at least four times that
+tissue's RNA. High reproductive expression cannot override the absolute ceiling
+or the positive-IHC veto. Adding additional sampled tissues cannot change an
+existing tissue's score; newly measured tissues still receive their own gates.
+Adding a higher reproductive observation can change `Rmax`, so the complete
+reference panel and its coverage remain part of the audit.
+
+[HPA v23 specificity definitions](https://v23.proteinatlas.org/humanproteome/tissue/tissue%2Bspecific)
+provide a precedent for enrichment comparisons against other tissues. The
+reproductive reference and both numerical grids are project definitions approved
+for this screen. The Protected percentage ladder reuses the older score's numbers,
+but the new metric has different semantics and is not calibrated to the old pass rate.
+Category summaries use the worst margin against each tissue's own threshold;
+negative IHC in another tissue cannot relax a failing observation.
+
+The [current report](audits/cta-selectivity-20261020/index.md) separates the effect
+of requiring reproductive evidence from the added selectivity gate, and shows
+fixed-baseline and IHC-adaptive results. `adaptive_normal_rna_limits()` returns the
+observed selectivity, its minimum, margin, and reference alongside the absolute
+ceiling. Its output is an audit, not an overall pass: callers must apply both gates,
+the positive-IHC veto, reproductive admission, coverage and curation rules.
 
 The routine tissue/cell inventory is independent of the candidate being assessed:
 the report freezes contexts measured for at least half of the source's measured
@@ -276,7 +326,7 @@ both source labels, `stomach 1` and `stomach 2`. Caudate-only IHC cannot relax
 broader basal-ganglia RNA. Negative staining in another organ supplies no support.
 
 Positive IHC anywhere outside the permitted set still excludes, including Low.
-Complete routine RNA, positive evidence inside the permitted set, source resolution,
+Complete routine RNA, positive Reproductive evidence, source resolution,
 and the existing family/manual-review gates still apply. Missing IHC remains a
 coverage limitation. The ladder is a **project screening policy**:
 HPA's Enhanced label does not establish a quantitative detection limit or absence
@@ -299,14 +349,14 @@ audit = adaptive_normal_rna_limits(
 )
 ```
 
-The [current comparison](audits/cta-tissue-priorities-20261020/index.md) preserves each
+The [archived comparison](audits/cta-tissue-priorities-20261020/index.md) preserves each
 RNA value, ceiling, supporting IHC and exclusion under the five-category policy.
 The [historical adaptive report](audits/cta-ihc-adaptive-20261020/index.md) preserves each
 RNA value, ceiling, supporting IHC and exclusion. It also explains CTAG2's
 **pinned consensus heart value of 5.1 nTPM**: HPA's own cohort and the separately
 displayed GTEx estimates are different datasets. Current portal values do not
-replace the pinned release. This absolute screen is separate from the older
-IHC-conditioned **RNA fraction** policy used by the core/extended CTA panels.
+replace the pinned release. The combined absolute/selectivity screen is separate from the older
+IHC-conditioned **global deflated RNA fraction** used by the frozen core/extended CTA panels.
 Numerical adaptation is currently implemented only for human HPA v23;
 cross-species anatomical definitions do not transfer these assay thresholds.
 
@@ -341,7 +391,7 @@ Mouse reproductive anatomy follows the [Jackson Laboratory anatomy resource](htt
 Anatomical transfer does not transfer evidence of expression or clinical
 tolerability: animal annotations explicitly report that tolerability is unvalidated.
 
-The [complete registry audit](audits/normal-tissue-priorities-20261020/index.md)
+The [complete registry audit](audits/normal-tissue-selectivity-20261020/index.md)
 exports every canonical concept for each species and every bundled native mapping.
 `normal_tissue_inventory(species=...)` includes **inapplicable anatomy** explicitly;
 `normal_tissue_mapping_inventory(species=..., source_id=..., source_version=...)`
@@ -423,3 +473,9 @@ The core panel remains 624 genes. The extended panel is now 695 genes, gaining
 ABCC11, CSN2, CSN3, CST9, LALBA, ROPN1 and ROPN1B. The low-expression rescue
 requires positive evidence inside the selected scope, so an accessory-only trace
 cannot enter the core panel through an all-zero deflated denominator.
+
+The v1.10.0 reports retain their original labels and checksums: “Manageable risk”
+and “High consequence” correspond to **Manageable** and **Protected**. The naming
+change leaves category membership, RNA ceilings and IHC gates unchanged. The new
+positive-evidence rule additionally requires Reproductive expression; Disposable
+expression alone no longer meets the admission requirement.

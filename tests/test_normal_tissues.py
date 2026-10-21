@@ -224,8 +224,8 @@ def test_five_categories_and_native_mapping_inventory_remain_distinct_from_cover
     assert by_concept["gallbladder"]["tissue_category"] == "disposable"
     assert by_concept["lymph_node"]["tissue_category"] == "protected"
     assert by_concept["skin"]["tissue_category"] == "manageable"
-    assert by_concept["skin"]["tissue_category_label"] == "Manageable risk (conditional)"
-    assert by_concept["lymph_node"]["tissue_category_label"] == "High consequence"
+    assert by_concept["skin"]["tissue_category_label"] == "Manageable"
+    assert by_concept["lymph_node"]["tissue_category_label"] == "Protected"
     assert by_concept["cutaneous_melanocyte"]["tissue_category"] == "disposable"
     assert by_concept["skin"]["category_policy_references"]
     assert by_concept["retina"]["tissue_category"] == "vital"

@@ -1,6 +1,6 @@
 schema: oncoref.normal-tissue-taxonomy
 schema_version: 1
-policy_version: 2026-10-20.4
+policy_version: 2026-10-20.5
 taxon_ids:
 - 9606
 - 9615
@@ -84,6 +84,13 @@ references:
     kind: primary_atlas
     scope: Fetal organ and cell identities are stage-specific and must not stand for
       adult-organ evidence.
+  hpa_tissue_specificity:
+    title: Human Protein Atlas v23 tissue specificity definitions
+    url: https://v23.proteinatlas.org/humanproteome/tissue/tissue%2Bspecific
+    kind: primary_atlas
+    scope: HPA tissue enrichment compares expression against other tissues. This
+      is a conceptual specificity precedent, not validation of the project maximum
+      reproductive reference, selectivity grid, or therapeutic safety limits.
   project_policy:
     title: oncoref normal-tissue scope policy, version 1
     url: https://github.com/pirl-unc/oncoref/blob/main/docs/normal-tissue-scopes.md
@@ -91,8 +98,8 @@ references:
     scope: Reproductive includes reproductive organs, mammary tissue, placenta, extraembryonic,
       embryonic and fetal contexts. Disposable normal is a conditional research scope,
       not a clinical safety claim. The permitted scope includes cutaneous melanocytes,
-      follicles, tonsil, appendix and gallbladder. Manageable risk separates skin, spleen,
-      thymus, thyroid and adipose from High consequence tissues. Tiered RNA ceilings are project
+      follicles, tonsil, appendix and gallbladder. Manageable separates skin, spleen,
+      thymus, thyroid and adipose from Protected tissues. Tiered RNA ceilings are project
       screening parameters; IHC detections outside the permitted scope remain exclusions.
   nci_organ_inflammation:
     title: Immunotherapy and Organ-Related Inflammation
@@ -1370,18 +1377,21 @@ scopes:
       normal tissues. Heart, lung, CNS, liver, pancreas, retina and muscle are outside.
 screening_policies:
   tiered_cta: &tiered_cta
-    policy_id: oncoref.cta-permitted-screen.2026-10-20.4
+    policy_id: oncoref.cta-permitted-screen.2026-10-20.5
     permitted_scope: reproductive_or_permitted_normal
+    required_positive_scope: reproductive
+    minimum_reproductive_rna: 1.0
     tier_labels:
-      permitted: Acceptable (conditional)
-      vital: Vital / critical function
-      protected: High consequence
-      manageable: Manageable risk (conditional)
+      permitted: Permitted
+      vital: Vital
+      protected: Protected
+      manageable: Manageable
       unresolved: Unresolved
     rna_source: hpa_rna_consensus
     rna_source_version: v23
     rna_species: human
     rna_unit: nTPM
+    # Compatibility key; positive evidence is required in required_positive_scope.
     minimum_permitted_rna: 1.0
     positive_ihc_levels:
     - Low
@@ -1391,6 +1401,7 @@ screening_policies:
     - Descending
     vital:
       maximum_rna: 1.0
+      minimum_reproductive_selectivity: 0.99
       roots:
       - heart
       - lung
@@ -1418,6 +1429,7 @@ screening_policies:
         the full meaning is vital or critical function.
     protected:
       maximum_rna: 2.0
+      minimum_reproductive_selectivity: 0.97
       roots:
       - salivary_gland
       - parathyroid_gland
@@ -1437,6 +1449,7 @@ screening_policies:
         IHC excludes. Injury can be severe or fatal; this is a relative research priority.
     manageable:
       maximum_rna: 5.0
+      minimum_reproductive_selectivity: 0.95
       roots:
       - skin
       - spleen
@@ -1462,7 +1475,7 @@ screening_policies:
         roots: [skin]
         flags: [skin_compartment_and_extent_review, local_control_not_guaranteed]
         references: [sitc2021, johnson2009, bradley2020]
-        rationale: Whole skin is Manageable risk and remains subject to RNA and IHC gates.
+        rationale: Whole skin is Manageable and remains subject to RNA and IHC gates.
           Distinguish permitted cutaneous pigment
           or follicular loss from extensive epithelial, blistering or mucosal injury.
           Local corticosteroid use for selected toxicities is not guaranteed rescue
@@ -1473,7 +1486,7 @@ screening_policies:
         roots: [salivary_gland]
         flags: [persistent_salivary_dysfunction_review, local_control_not_established]
         references: [warner2019, bradley2020]
-        rationale: Salivary glands are High consequence. Published immune-mediated injury can cause persistent low
+        rationale: Salivary glands are Protected. Published immune-mediated injury can cause persistent low
           salivary secretion despite symptom improvement. Minor-gland expression
           does not establish restriction to one removable gland.
         allowance_basis: no_default_allowance
@@ -1483,7 +1496,7 @@ screening_policies:
         flags: [immune_cell_distribution_review, age_and_immune_reserve_review]
         references: [nhs_tonsillectomy, cdc_asplenia, nci_lymph_nodes, project_policy]
         rationale: Only tonsil retains a conditional allowance; spleen and thymus
-          are Manageable risk and must pass RNA and IHC gates. Identify the expressing cell
+          are Manageable and must pass RNA and IHC gates. Identify the expressing cell
           population and its distribution in blood, marrow and other organs.
           Assess age and immune reserve. Surgery is not a model of systemic
           antigen-directed injury. Bulk tissue cannot establish organ confinement.
@@ -1501,14 +1514,14 @@ screening_policies:
         flags: [thymic_function_review, age_and_immune_reserve_review]
         references: [kooshesh2023]
         rationale: Adult thymectomy has observational associations with mortality
-          and cancer. Thymus is Manageable risk, not disposable; pediatric consequences need
+          and cancer. Thymus is Manageable, not disposable; pediatric consequences need
           separate review. Surgery does not quantify antigen-directed injury.
         local_steroid_control: not_established
       cartilage_structural_function:
         roots: [cartilage]
         flags: [persistent_structural_injury_review, cartilage_site_review]
         references: [heinemeier2016, braaten2020]
-        rationale: Cartilage is High consequence because structural injury may persist.
+        rationale: Cartilage is Protected because structural injury may persist.
           Articular-collagen turnover and inflammatory-arthritis studies provide
           indirect support, not direct chondrocyte-targeting safety evidence. A generic
           cartilage label does not locate a joint or exclude airway cartilage.
@@ -1517,7 +1530,7 @@ screening_policies:
         roots: [lymph_node]
         flags: [lymphatic_and_immune_function_review]
         references: [nci_lymph_nodes]
-        rationale: Remains High consequence. Regional removal does not justify whole-system
+        rationale: Remains Protected. Regional removal does not justify whole-system
           depletion or injury to lymphatic stroma. Lineage-specific exceptions
           require a separately defined policy and evidence.
     unresolved_roots:
@@ -1526,6 +1539,7 @@ screening_policies:
     - soft_tissue
     references:
     - project_policy
+    - hpa_tissue_specificity
     - hpa_tissues
     - nci_organ_inflammation
     - niddk_adrenal
@@ -1553,7 +1567,7 @@ screening_policies:
       numerical thresholds and clinical tolerability do not transfer to other species.
   ihc_adaptive_cta:
     <<: *tiered_cta
-    policy_id: oncoref.cta-ihc-adaptive-screen.2026-10-20.4
+    policy_id: oncoref.cta-ihc-adaptive-screen.2026-10-20.5
     ihc_source: hpa_normal_tissue
     ihc_source_version: v23
     negative_ihc_rna_limits:
@@ -1585,9 +1599,29 @@ screening_policies:
       A narrower region cannot clear a broader organ; other organs cannot supply
       negative evidence. Enhanced describes source validation, not a guaranteed
       limit of detection for a negative stain or for peptide-HLA presentation.
+    negative_ihc_minimum_reproductive_selectivity:
+      Missing: {vital: 0.99, protected: 0.97, manageable: 0.95}
+      Uncertain: {vital: 0.99, protected: 0.97, manageable: 0.95}
+      Approved: {vital: 0.98, protected: 0.95, manageable: 0.90}
+      Supported: {vital: 0.97, protected: 0.90, manageable: 0.80}
+      Enhanced: {vital: 0.95, protected: 0.80, manageable: 0.60}
+    reproductive_selectivity:
+      formula: Rmax / (Rmax + tissue_rna_ntpm)
+      reference: Maximum valid raw RNA across mapped Reproductive tissues for the
+        same gene, species, source and version. Disposable does not enter the reference.
+      minimum_reference: Strictly positive; a zero or missing reference is unresolved.
+      comparison: Inclusive minimum per screened RNA observation. The same local
+        negative-IHC evidence chooses both the RNA ceiling and selectivity threshold.
+      aggregation: Every screened tissue must pass both gates. Category summaries
+        report the worst margin against its own threshold, not a pooled category score.
+      meaning: Pairwise expression selectivity, not percent of total-body RNA or protein.
+        Uses raw nTPM without deflation, averaging, tissue sums or rounding before gating.
+      provenance: User-approved project grid. Protected reuses the numerical ladder
+        of the legacy global deflated score, but this new metric has different semantics
+        and is not calibrated to the same pass rate. Neither grid is clinically validated.
     threshold_provenance: Project starting grid specified for the requested category
-      by IHC-evidence screen on 2026-10-20. Vital 1/2/3/6 and High consequence 2/4/6/12
-      follow the user's earlier proposed sensitivity values; Manageable risk 5/10/15/30
+      by IHC-evidence screen on 2026-10-20. Vital 1/2/3/6 and Protected 2/4/6/12
+      follow the user's earlier proposed sensitivity values; Manageable 5/10/15/30
       extends that grid. The user approved all three ladders. Literature supports graded priorities,
       not these HPA nTPM values or a conversion from GTEx TPM. These are not
       clinically validated or estimated from outcomes. Missing/Uncertain equals
