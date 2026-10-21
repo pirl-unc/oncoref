@@ -39,13 +39,19 @@ def observations(tissue="heart muscle", value=5, ihc=()):
 
 
 @pytest.mark.parametrize(
-    "reliability,vital,protected",
-    [("Enhanced", 5, 10), ("Supported", 3, 7.5), ("Approved", 2, 5), ("Uncertain", 1, 5)],
+    "reliability,vital,protected,caution",
+    [
+        ("Enhanced", 6, 12, 30),
+        ("Supported", 3, 6, 15),
+        ("Approved", 2, 4, 10),
+        ("Uncertain", 1, 2, 5),
+    ],
 )
-def test_approved_ladder_uses_local_negative_reliability(reliability, vital, protected):
+def test_approved_ladder_uses_local_negative_reliability(reliability, vital, protected, caution):
     for tissue, cell, expected in (
         ("heart muscle", "cardiomyocytes", vital),
-        ("thyroid gland", "glandular cells", protected),
+        ("salivary gland", "glandular cells", protected),
+        ("thyroid gland", "glandular cells", caution),
     ):
         rows = observations(tissue, ihc=[(tissue, cell, "Not detected", reliability)])
         result = adaptive_normal_rna_limits(rows, routine_ihc_contexts=[(tissue, cell)])
@@ -134,13 +140,13 @@ def test_equivalent_tissue_labels_require_all_named_source_contexts():
         ],
     )
     result = adaptive_normal_rna_limits(rows, routine_ihc_contexts=expected)
-    assert result.iloc[0].rna_ceiling_ntpm == 10
+    assert result.iloc[0].rna_ceiling_ntpm == 12
     assert result.iloc[0].required_ihc_context_count == 2
     assert (
         adaptive_normal_rna_limits(rows.iloc[:2], routine_ihc_contexts=expected)
         .iloc[0]
         .rna_ceiling_ntpm
-        == 5
+        == 2
     )
 
 
@@ -169,14 +175,36 @@ def test_policy_inherits_anatomy_without_changing_fixed_limits():
     adaptive = normal_tissue_screening_policy("ihc_adaptive_cta")
     assert fixed["vital"] == adaptive["vital"]
     assert fixed["protected"] == adaptive["protected"]
+    assert fixed["caution"] == adaptive["caution"]
     assert "negative_ihc_rna_limits" not in fixed
     adaptive["negative_ihc_rna_limits"]["Enhanced"]["vital"] = 999
     assert (
         normal_tissue_screening_policy("ihc_adaptive_cta")["negative_ihc_rna_limits"]["Enhanced"][
             "vital"
         ]
-        == 5
+        == 6
     )
+
+
+def test_bulk_skin_cannot_borrow_negativity_from_selected_compartments():
+    required = [
+        ("skin 1", "keratinocytes"),
+        ("skin 1", "melanocytes"),
+        ("skin 2", "epidermal cells"),
+    ]
+    negatives = [(tissue, cell, "Not detected", "Enhanced") for tissue, cell in required]
+    rows = observations("skin", ihc=negatives)
+    complete = adaptive_normal_rna_limits(rows, routine_ihc_contexts=required)
+    assert complete.iloc[0].screening_tier == "caution"
+    assert complete.iloc[0].rna_ceiling_ntpm == 30
+    assert complete.iloc[0].screening_policy_id.endswith("2026-10-20.4")
+    missing = adaptive_normal_rna_limits(rows.iloc[:-1], routine_ihc_contexts=required)
+    assert missing.iloc[0].rna_ceiling_ntpm == 5
+    # Allowed melanocyte staining cannot establish a negative bulk-skin context.
+    rows.loc[2, "ihc_level"] = "Low"
+    positive = adaptive_normal_rna_limits(rows, routine_ihc_contexts=required)
+    assert positive.iloc[0].rna_ceiling_ntpm == 5
+    assert positive.iloc[0].ihc_evidence_status == "positive_ihc"
 
 
 def test_missing_rna_preserves_audit_schema_without_inventing_measurements():

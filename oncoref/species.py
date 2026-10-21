@@ -147,7 +147,7 @@ class SpeciesDataGroup:
         return resolve_normal_tissue(tissue, species=self.species, **options)
 
     def normal_tissue_inventory(self):
-        """All canonical concepts, with species applicability and four-way categories."""
+        """All canonical concepts, with species applicability and five-way categories."""
         from .normal_tissues import normal_tissue_inventory
 
         return normal_tissue_inventory(species=self.species)

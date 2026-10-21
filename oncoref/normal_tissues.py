@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import math
 from copy import deepcopy
 from dataclasses import asdict, dataclass
 from functools import cache
@@ -21,6 +22,7 @@ import yaml
 from .species import resolve_species
 
 _DATA = Path(__file__).parent / "data"
+SCREENED_NORMAL_TISSUE_TIERS = ("vital", "protected", "caution")
 
 
 def _key(value):
@@ -73,8 +75,29 @@ def _registry():
         if policy["permitted_scope"] not in scopes:
             raise ValueError(f"Unknown screening policy scope: {name}")
         roots = set(policy["unresolved_roots"])
-        for tier in ("vital", "protected"):
+        for tier in SCREENED_NORMAL_TISSUE_TIERS:
             roots.update(policy[tier]["roots"])
+            limit = policy[tier]["maximum_rna"]
+            if not isinstance(limit, (int, float)) or not math.isfinite(limit) or limit <= 0:
+                raise ValueError(f"Invalid baseline RNA ceiling: {name}/{tier}")
+        ladder = policy.get("negative_ihc_rna_limits")
+        if ladder is not None:
+            evidence = ("Missing", "Uncertain", "Approved", "Supported", "Enhanced")
+            if set(ladder) != set(evidence):
+                raise ValueError(f"Incomplete IHC evidence ladder: {name}")
+            previous = [policy[tier]["maximum_rna"] for tier in SCREENED_NORMAL_TISSUE_TIERS]
+            for reliability in evidence:
+                row = ladder[reliability]
+                if set(row) != set(SCREENED_NORMAL_TISSUE_TIERS):
+                    raise ValueError(f"Incomplete tissue-category grid: {name}/{reliability}")
+                values = [row[tier] for tier in SCREENED_NORMAL_TISSUE_TIERS]
+                if any(not math.isfinite(v) or v <= 0 for v in values):
+                    raise ValueError(f"Invalid adaptive RNA ceiling: {name}/{reliability}")
+                if values != sorted(values) or any(v < p for v, p in zip(values, previous)):
+                    raise ValueError(f"Non-monotonic adaptive RNA grid: {name}/{reliability}")
+                if reliability in {"Missing", "Uncertain"} and values != previous:
+                    raise ValueError(f"Missing/uncertain IHC must use baseline: {name}")
+                previous = values
         if (
             not roots <= concepts.keys()
             or not set(policy["references"]) <= doc["references"].keys()
@@ -375,7 +398,7 @@ def resolve_normal_tissue(
 
 
 def normal_tissue_screening_tier(annotation, policy="tiered_cta") -> str:
-    """Return permitted, vital, protected, or unresolved for current anatomy.
+    """Return permitted, vital, protected, caution, or unresolved for current anatomy.
 
     This assigns anatomy only. Human HPA nTPM cutoffs must not be transferred to
     another species or assay. Explicit developmental permission takes precedence.
@@ -392,9 +415,11 @@ def normal_tissue_screening_tier(annotation, policy="tiered_cta") -> str:
     if not annotation.concept_id:
         return "unresolved"
     ancestors = _ancestors(annotation.concept_id)
-    tiers = [tier for tier in ("vital", "protected") if ancestors & set(config[tier]["roots"])]
+    tiers = [
+        tier for tier in SCREENED_NORMAL_TISSUE_TIERS if ancestors & set(config[tier]["roots"])
+    ]
     if len(tiers) > 1:
-        raise ValueError("Overlapping vital and protected anatomy definitions")
+        raise ValueError("Overlapping screened tissue-category definitions")
     return tiers[0] if tiers else "unresolved"
 
 
@@ -421,6 +446,7 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
     doc = _registry()[0]
     return {
         "tissue_category": normal_tissue_category(annotation, policy),
+        "screening_policy_id": config["policy_id"],
         "screening_tier": tier,
         "screening_tier_label": config["tier_labels"][tier],
         "review_flags": sorted({flag for review in reviews.values() for flag in review["flags"]}),
@@ -434,13 +460,14 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
             }
         ),
         "tolerability_evidence": annotation.tolerability_evidence,
+        "policy_references": [doc["references"][key]["url"] for key in config["references"]],
     }
 
 
 def normal_tissue_category(annotation, policy="tiered_cta") -> str:
-    """Reproductive, Disposable, Protected or Vital; unresolved is a QC status.
+    """Reproductive, Disposable, Caution, Protected or Vital; unresolved is a QC status.
 
-    Disposable names the expanded, conditional project allowance. It does not
+    Disposable names the conditional project allowance. It does not
     assert complete organ loss is harmless or inflammation is steroid-responsive.
     The older, narrower ``disposable_normal`` anatomical scope remains distinct.
     """
@@ -460,6 +487,7 @@ def normal_tissue_inventory(*, species, policy="tiered_cta") -> tuple[dict, ...]
     result = []
     for cid, concept in doc["concepts"].items():
         annotation = resolve_normal_tissue(cid, species=species)
+        details = normal_tissue_screening_details(annotation, policy)
         result.append(
             {
                 "concept_id": cid,
@@ -469,7 +497,10 @@ def normal_tissue_inventory(*, species, policy="tiered_cta") -> tuple[dict, ...]
                 "applicability_notes": concept.get("notes", ""),
                 "taxon_id": annotation.taxon_id,
                 "mapping_status": annotation.mapping_status,
-                "tissue_category": normal_tissue_category(annotation, policy),
+                "tissue_category": details["tissue_category"],
+                "category_policy_id": details["screening_policy_id"],
+                "category_policy_references": details["policy_references"],
+                "review_flags": details["review_flags"],
                 "scopes": annotation.scopes,
                 "references": annotation.references,
                 "expression_coverage": "not_assessed",
@@ -479,7 +510,7 @@ def normal_tissue_inventory(*, species, policy="tiered_cta") -> tuple[dict, ...]
 
 
 def normal_tissue_mapping_inventory(*, species, source_id=None, source_version=None):
-    """Native source/version labels with canonical anatomy and four-way category.
+    """Native source/version labels with canonical anatomy and five-way category.
 
     An empty result means no mapping inventory is bundled, never no expression.
     Exact rows retain compartment versus organ-context mapping resolution.
@@ -495,11 +526,15 @@ def normal_tissue_mapping_inventory(*, species, source_id=None, source_version=N
             source_id=row["source_id"],
             source_version=row["source_version"],
         )
+        details = normal_tissue_screening_details(annotation)
         result.append(
             {
                 **row,
                 "mapping_status": annotation.mapping_status,
-                "tissue_category": normal_tissue_category(annotation),
+                "tissue_category": details["tissue_category"],
+                "category_policy_id": details["screening_policy_id"],
+                "category_policy_references": details["policy_references"],
+                "review_flags": details["review_flags"],
                 "taxonomy_id": annotation.taxonomy_id,
                 "expression_coverage": "not_assessed",
             }

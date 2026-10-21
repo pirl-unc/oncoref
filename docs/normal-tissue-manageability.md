@@ -2,7 +2,7 @@
 
 This review concerns **significant immune injury**, its consequences, persistence
 and control. Complete organ removal is one evidence source; it is not a model for
-every pattern of immune injury. Reproductive, Disposable, Protected and Vital are
+every pattern of immune injury. Reproductive, Disposable, Caution, Protected and Vital are
 project categories. A separate field records evidence for local treatment.
 
 ## Published classifications
@@ -57,25 +57,66 @@ Disposable. Suppressing inflammation and restoring cells already lost are
 different outcomes. No paper above establishes that immune injury can always be
 stopped locally while preserving antitumor activity.
 
-## Representation and current decisions
+## Current categories and the intermediate Caution tier
+
+The current policy separates **Caution (lower protection priority)** from
+**Protected (higher protection priority)**. Bradley's Caution/Hazard distinction
+is a published anchor. Our exact assignments remain project inferences:
+
+| Category | Assignment relevant to this review | Evidence and interpretation |
+|---|---|---|
+| Disposable — conditional | Cutaneous melanocytes, hair follicles, tonsil, appendix, gallbladder | Selected compartment-loss or organ-removal rationale; acute immune injury still needs review |
+| Caution | Whole skin, spleen, thymus, thyroid, adipose | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
+| Protected | Salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
+| Vital / critical function | Existing vital and critical sensory/neurological organs | Highest protection priority; local access does not remove irreversible-loss concerns |
+
+Reproductive remains the separate anatomical/developmental union. See the
+[complete root lists and IHC-dependent RNA grid](normal-tissue-scopes.md).
+
+Two additional primary clinical studies argue against a default spleen/thymus
+allowance. [Kristinsson et al. (2014)](https://haematologica.org/article/view/6942)
+followed 8,149 splenectomized veterans and reported elevated infection and
+thromboembolic risks. [Kooshesh et al. (2023)](https://pmc.ncbi.nlm.nih.gov/articles/PMC10557034/)
+found associations between adult thymectomy and increased mortality/cancer.
+These are observational surgical cohorts, not causal estimates of antigen-directed
+immune injury. They support retaining protection and reviewing age/immune reserve;
+they do not prove equivalence between thymus, spleen and skin.
+
+For cartilage, [Heinemeier et al. (2016)](https://pubmed.ncbi.nlm.nih.gov/27384346/)
+found minimal replacement of mature articular collagen. [Braaten et al. (2020)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7031780/)
+reported persistent inflammatory arthritis after checkpoint treatment cessation.
+These support concern about lasting joint injury, but are indirect evidence for a
+cartilage category: matrix turnover is not identical to repair capacity, arthritis
+is not selective chondrocyte injury, and a generic cartilage sample does not locate
+the joint or exclude an airway site.
+
+The category grid is a research prioritization tool. It does not establish that
+every esophageal injury is worse than every skin injury. Tissue compartment, extent,
+therapy modality, persistence and treatment response remain separate considerations.
+Checkpoint-toxicity experience cannot establish the controllability of a persistent
+engineered T-cell response.
+
+## Machine-readable representation
 
 The taxonomy's `context_reviews` records:
 
-- `allowance_basis`: removal tolerance, conditional partial injury or explicit
-  project exception.
-- `local_steroid_control`: the supported scope, or that control is not established.
-- `references`, `rationale` and `flags`: evidence and unresolved questions.
+- `allowance_basis`: removal tolerance, an explicit narrow exception, or no default allowance.
+- `local_steroid_control`: the supported manifestation or absence of established control.
+- `references`, `rationale` and `flags`: evidence, consequences and unresolved questions.
 
-These are annotations, not extra RNA thresholds. Appendix/gallbladder join the
-conditional Disposable category with an in-situ inflammation review. Cutaneous
-melanocytes, follicles and tonsil retain their existing allowances. Whole skin,
-salivary glands, thymus and spleen retain the earlier requested research allowances
-while this broader manageability policy is assessed. The salivary evidence
-particularly argues against treating its allowance as established low-risk injury.
-Retina/eye/inner ear remain Vital; local steroid case experience does not reverse
-that assignment.
+The RNA ceilings are explicit **project starting parameters**: Vital 1/2/3/6,
+Protected 2/4/6/12, Caution 5/10/15/30 nTPM for missing/uncertain, Approved,
+Supported and Enhanced negative IHC. Vital/Protected follow the earlier proposed
+sensitivity grid; Caution is a project extension. No GTEx-to-HPA conversion or
+clinical outcome calibration is claimed. HPA reliability labels do not express a
+probability that a negative stain rules out antigen or peptide-HLA presentation.
 
-For a revised default, assess expected functional loss, reversible versus permanent
-injury, feasibility and reliability of local control, need for systemic rescue,
-immune reserve, age, pregnancy and treatment modality. Missing evidence remains
-unknown. The human clinical rationale is not transferred to dogs or mice.
+Review annotations do not themselves change thresholds. Complete routine negative
+IHC is required to earn relaxation, and any positive IHC outside Reproductive or
+Disposable excludes. Whole skin/salivary/thymus/spleen allowances from policy
+2026-10-20.3 are retained only in immutable historical reports.
+
+Human clinical rationale is not transferred to dogs or mice. The shared vocabulary
+maps anatomy; tolerability evidence, numerical policies, age and patient context
+remain separate. The updated [CTA report](audits/cta-tissue-priorities-20261020/index.md)
+separates the effects of reclassification from the new RNA grid.

@@ -94,12 +94,8 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
     for tissue in (
         "testis",
         "placenta",
-        "skin",
-        "nail bed",
-        "thymus",
-        "salivary gland",
-        "parotid gland",
-        "spleen",
+        "cutaneous melanocytes",
+        "hair follicle",
         "gallbladder",
     ):
         assert tier(tissue) == "permitted"
@@ -130,9 +126,14 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
     for tissue in (
         "lymph node",
         "stomach",
-        "thyroid gland",
+        "cartilage",
+        "esophagus",
+        "salivary gland",
+        "parotid gland",
     ):
         assert tier(tissue) == "protected"
+    for tissue in ("skin", "nail bed", "thymus", "spleen", "thyroid gland", "adipose tissue"):
+        assert tier(tissue) == "caution"
     assert tier("tonsil") == ("unresolved" if species == "mouse" else "permitted")
     assert tier("appendix") == ("permitted" if species == "human" else "unresolved")
     for tissue in ("head", "foot", "soft tissue", "melanocytes", "unknown"):
@@ -142,7 +143,7 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
     mixed = classify_normal_tissue_pattern(
         [resolve_normal_tissue(tissue, species=species) for tissue in ("testis", "thymus", "skin")]
     )
-    assert mixed["narrowest_scopes"] == ("reproductive_or_permitted_normal",)
+    assert mixed["matching_scopes"] == ()
 
 
 @pytest.mark.parametrize("species", ["human", "dog", "mouse"])
@@ -158,10 +159,16 @@ def test_every_anatomical_concept_has_one_disjoint_screening_assignment(species)
     for cid, concept in taxonomy["concepts"].items():
         if taxon not in concept.get("taxon_ids", taxonomy["taxon_ids"]):
             continue
-        matches = [
-            name for name in ("vital", "protected") if ancestors(cid) & set(policy[name]["roots"])
-        ]
-        matches += ["permitted"] if cid in permitted else []
+        # Explicit narrow permitted compartments override the broader skin tier.
+        matches = (
+            ["permitted"]
+            if cid in permitted
+            else [
+                name
+                for name in ("vital", "protected", "caution")
+                if ancestors(cid) & set(policy[name]["roots"])
+            ]
+        )
         matches += ["unresolved"] if cid in policy["unresolved_roots"] else []
         assert len(matches) == 1, (cid, matches)
         assert (
@@ -174,7 +181,7 @@ def test_acceptable_aliases_and_lymphoid_review_do_not_allow_all_immune_cells():
         "permitted_normal", species="human"
     )
     spleen = normal_tissue_screening_details(human.resolve_normal_tissue("spleen"))
-    assert spleen["screening_tier_label"] == "Acceptable (conditional)"
+    assert spleen["screening_tier"] == "caution"
     assert "asplenia_infection_risk_review" in spleen["review_flags"]
     assert "immune_cell_distribution_review" in spleen["review_flags"]
     assert any("cdc.gov" in url for url in spleen["references"])
@@ -216,6 +223,9 @@ def test_four_categories_and_native_mapping_inventory_remain_distinct_from_cover
     assert by_concept["testis"]["tissue_category"] == "reproductive"
     assert by_concept["gallbladder"]["tissue_category"] == "disposable"
     assert by_concept["lymph_node"]["tissue_category"] == "protected"
+    assert by_concept["skin"]["tissue_category"] == "caution"
+    assert by_concept["cutaneous_melanocyte"]["tissue_category"] == "disposable"
+    assert by_concept["skin"]["category_policy_references"]
     assert by_concept["retina"]["tissue_category"] == "vital"
     for cid in ("head", "foot", "soft_tissue"):
         assert by_concept[cid]["tissue_category"] == "unresolved"

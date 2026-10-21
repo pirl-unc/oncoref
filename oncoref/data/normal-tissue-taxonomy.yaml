@@ -1,6 +1,6 @@
 schema: oncoref.normal-tissue-taxonomy
 schema_version: 1
-policy_version: 2026-10-20.3
+policy_version: 2026-10-20.4
 taxon_ids:
 - 9606
 - 9615
@@ -90,9 +90,9 @@ references:
     kind: project_definition
     scope: Reproductive includes reproductive organs, mammary tissue, placenta, extraembryonic,
       embryonic and fetal contexts. Disposable normal is a conditional research scope,
-      not a clinical safety claim. The expanded permitted scope adds whole skin,
-      salivary gland, thymus, tonsil and spleen by project request. Acceptable
-      lymphoid organs carry explicit review conditions. Tiered RNA ceilings are project
+      not a clinical safety claim. The permitted scope includes cutaneous melanocytes,
+      follicles, tonsil, appendix and gallbladder. Caution separates skin, spleen,
+      thymus, thyroid and adipose from higher-priority Protected tissues. Tiered RNA ceilings are project
       screening parameters; IHC detections outside the permitted scope remain exclusions.
   nci_organ_inflammation:
     title: Immunotherapy and Organ-Related Inflammation
@@ -147,6 +147,36 @@ references:
     scope: Supplementary Table 2 specifies danger, hazard, caution and non-essential
       tissue groups with GTEx TPM screening thresholds. These are study parameters,
       not validated organ-injury limits or transferable HPA nTPM thresholds.
+  kaufmann2019:
+    title: Large-scale in-silico identification of a tumor-specific antigen pool for targeted immunotherapy in triple-negative breast cancer
+    url: https://www.oncotarget.com/article/26808/text/
+    kind: primary_target_selection_study
+    scope: Essential brain/heart/lung and graded predicted adverse events in other
+      tissues support relative protection priorities, not these numerical ceilings.
+  kooshesh2023:
+    title: Health Consequences of Thymus Removal in Adults
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC10557034/
+    kind: observational_clinical_study
+    scope: Adult thymectomy was associated with higher mortality and cancer
+      incidence. Observational association does not establish causality or immune-injury risk.
+  kristinsson2014:
+    title: Long-term risks after splenectomy among 8149 cancer-free American veterans
+    url: https://haematologica.org/article/view/6942
+    kind: observational_clinical_study
+    scope: Increased long-term infection and thromboembolic risks support screening
+      spleen expression rather than treating spleen as a default disposable organ.
+  heinemeier2016:
+    title: Radiocarbon dating reveals minimal collagen turnover in both healthy and osteoarthritic human cartilage
+    url: https://pubmed.ncbi.nlm.nih.gov/27384346/
+    kind: primary_human_tissue_study
+    scope: Minimal replacement of mature articular cartilage collagen supports
+      concern about lasting structural damage; not direct evidence of immune toxicity.
+  braaten2020:
+    title: Immune checkpoint inhibitor-induced inflammatory arthritis persists after immunotherapy cessation
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC7031780/
+    kind: prospective_observational_clinical_study
+    scope: Persistent inflammatory arthritis supports concern about chronic joint
+      injury; arthritis is not equivalent to selective chondrocyte targeting.
   warner2019:
     title: Sicca Syndrome Associated with Immune Checkpoint Inhibitor Therapy
     url: https://pubmed.ncbi.nlm.nih.gov/30996010/
@@ -1317,21 +1347,17 @@ scopes:
       contexts.
   permitted_normal:
     roots:
-    - skin
-    - salivary_gland
-    - thymus
     - tonsil
-    - spleen
     - appendix
     - gallbladder
     union:
     - disposable_normal
     aliases:
     - acceptable_normal
-    description: Conditionally acceptable normal contexts comprising whole skin,
-      salivary glands, thymus, tonsil, spleen, appendix and gallbladder, plus the narrower disposable
-      scope. Lymphoid organ allowances require review of immune-cell distribution,
-      age and immune reserve; spleen additionally requires infection-risk management.
+    description: Conditionally acceptable normal contexts comprising tonsil, appendix
+      and gallbladder, plus cutaneous melanocytes and follicles. Tonsil requires
+      review of immune-cell distribution, age and immune reserve. Whole skin,
+      salivary glands, thymus and spleen no longer receive a default allowance.
       Permission applies only to the sampled organ, not the same cell type elsewhere.
   reproductive_or_permitted_normal:
     roots: []
@@ -1344,12 +1370,13 @@ scopes:
       normal tissues. Heart, lung, CNS, liver, pancreas, retina and muscle are outside.
 screening_policies:
   tiered_cta: &tiered_cta
-    policy_id: oncoref.cta-permitted-screen.2026-10-20.3
+    policy_id: oncoref.cta-permitted-screen.2026-10-20.4
     permitted_scope: reproductive_or_permitted_normal
     tier_labels:
       permitted: Acceptable (conditional)
       vital: Vital / critical function
       protected: Protected
+      caution: Caution / lower protection priority
       unresolved: Unresolved
     rna_source: hpa_rna_consensus
     rna_source_version: v23
@@ -1390,10 +1417,9 @@ screening_policies:
         Includes all mapped descendants. Vital is the stable machine identifier;
         the full meaning is vital or critical function.
     protected:
-      maximum_rna: 5.0
+      maximum_rna: 2.0
       roots:
-      - adipose_tissue
-      - thyroid_gland
+      - salivary_gland
       - parathyroid_gland
       - lymph_node
       - esophagus
@@ -1406,10 +1432,21 @@ screening_policies:
       - oral_mucosa
       - nasopharynx
       - tongue
-      description: Protected normal tissues outside the permitted scope, with a
-        higher RNA ceiling but the same exclusion for any positive IHC. This tier
-        includes distributed lymph nodes and functionally important organs without
-        a project allowance. It does not assert that extensive injury cannot be fatal.
+      description: Higher protection priority for persistent functional or structural
+        injury and important mucosal or distributed-organ function. Any positive
+        IHC excludes. Injury can be severe or fatal; this is a relative research priority.
+    caution:
+      maximum_rna: 5.0
+      roots:
+      - skin
+      - spleen
+      - thymus
+      - thyroid_gland
+      - adipose_tissue
+      description: Lower protection priority, informed by published caution/non-essential
+        groups and organ-specific evidence. These tissues remain screened and any positive
+        IHC excludes. Caution does not imply reversibility, local-steroid control or
+        dispensability. Explicit permitted cutaneous compartments take precedence over skin.
     context_reviews:
       removable_digestive_organs:
         roots: [appendix, gallbladder]
@@ -1424,39 +1461,57 @@ screening_policies:
         roots: [skin]
         flags: [skin_compartment_and_extent_review, local_control_not_guaranteed]
         references: [sitc2021, johnson2009, bradley2020]
-        rationale: Existing whole-skin research allowance concerns potentially
-          manageable injury, not complete barrier destruction. Distinguish pigment
+        rationale: Whole skin is Caution and remains subject to RNA and IHC gates.
+          Distinguish permitted cutaneous pigment
           or follicular loss from extensive epithelial, blistering or mucosal injury.
           Local corticosteroid use for selected toxicities is not guaranteed rescue
           from persistent antigen-directed T cells.
-        allowance_basis: conditional_partial_injury
+        allowance_basis: no_whole_skin_allowance
         local_steroid_control: supported_for_selected_manifestations_not_general_ablation
       salivary_function:
         roots: [salivary_gland]
         flags: [persistent_salivary_dysfunction_review, local_control_not_established]
         references: [warner2019, bradley2020]
-        rationale: Retains the earlier requested research allowance pending policy
-          revision. Published immune-mediated injury can cause persistent low
+        rationale: Salivary glands are Protected. Published immune-mediated injury can cause persistent low
           salivary secretion despite symptom improvement. Minor-gland expression
           does not establish restriction to one removable gland.
-        allowance_basis: explicit_project_exception
+        allowance_basis: no_default_allowance
         local_steroid_control: not_established_with_persistent_dysfunction_reported
-      lymphoid_organ_allowance:
+      lymphoid_organ_review:
         roots: [tonsil, spleen, thymus]
         flags: [immune_cell_distribution_review, age_and_immune_reserve_review]
         references: [nhs_tonsillectomy, cdc_asplenia, nci_lymph_nodes, project_policy]
-        rationale: Conditional organ allowance only. Identify the expressing cell
+        rationale: Only tonsil retains a conditional allowance; spleen and thymus
+          are Caution and must pass RNA and IHC gates. Identify the expressing cell
           population and its distribution in blood, marrow and other organs.
           Assess age and immune reserve. Surgery is not a model of systemic
           antigen-directed injury. Bulk tissue cannot establish organ confinement.
-        allowance_basis: explicit_project_exception
+        allowance_basis: tonsil_only_conditional_allowance
         local_steroid_control: not_established
       spleen_infection_risk:
         roots: [spleen]
         flags: [asplenia_infection_risk_review]
-        references: [cdc_asplenia]
+        references: [cdc_asplenia, kristinsson2014]
         rationale: Assess consequences of functional asplenia and an appropriate
           infection-prevention and management strategy before therapeutic acceptance.
+        local_steroid_control: not_established
+      thymus_long_term_function:
+        roots: [thymus]
+        flags: [thymic_function_review, age_and_immune_reserve_review]
+        references: [kooshesh2023]
+        rationale: Adult thymectomy has observational associations with mortality
+          and cancer. Thymus is Caution, not disposable; pediatric consequences need
+          separate review. Surgery does not quantify antigen-directed injury.
+        local_steroid_control: not_established
+      cartilage_structural_function:
+        roots: [cartilage]
+        flags: [persistent_structural_injury_review, cartilage_site_review]
+        references: [heinemeier2016, braaten2020]
+        rationale: Cartilage is Protected because structural injury may persist.
+          Articular-collagen turnover and inflammatory-arthritis studies provide
+          indirect support, not direct chondrocyte-targeting safety evidence. A generic
+          cartilage label does not locate a joint or exclude airway cartilage.
+        local_steroid_control: symptom_control_does_not_establish_structural_repair
       distributed_lymph_nodes:
         roots: [lymph_node]
         flags: [lymphatic_and_immune_function_review]
@@ -1478,6 +1533,14 @@ screening_policies:
     - nci_lymph_nodes
     - nei_retina
     - johnson2009
+    - bradley2020
+    - kaufmann2019
+    - kooshesh2023
+    - kristinsson2014
+    - heinemeier2016
+    - braaten2020
+    - warner2019
+    - sitc2021
     review_semantics: Review annotations do not add numerical tiers or establish
       clinical acceptability. Positive observations in flagged contexts remain
       visible even when a candidate passes the research expression screen.
@@ -1489,25 +1552,30 @@ screening_policies:
       numerical thresholds and clinical tolerability do not transfer to other species.
   ihc_adaptive_cta:
     <<: *tiered_cta
-    policy_id: oncoref.cta-ihc-adaptive-screen.2026-10-20.3
+    policy_id: oncoref.cta-ihc-adaptive-screen.2026-10-20.4
     ihc_source: hpa_normal_tissue
     ihc_source_version: v23
     negative_ihc_rna_limits:
       Missing:
         vital: 1.0
-        protected: 5.0
+        protected: 2.0
+        caution: 5.0
       Uncertain:
         vital: 1.0
-        protected: 5.0
+        protected: 2.0
+        caution: 5.0
       Approved:
         vital: 2.0
-        protected: 5.0
+        protected: 4.0
+        caution: 10.0
       Supported:
         vital: 3.0
-        protected: 7.5
+        protected: 6.0
+        caution: 15.0
       Enhanced:
-        vital: 5.0
-        protected: 10.0
+        vital: 6.0
+        protected: 12.0
+        caution: 30.0
     negative_ihc_rule: Relax only with valid Not detected observations in every
       routine IHC tissue/cell context mapping to the same anatomical tissue as
       the RNA measurement. Use the weakest reliability among all observations
@@ -1516,9 +1584,14 @@ screening_policies:
       A narrower region cannot clear a broader organ; other organs cannot supply
       negative evidence. Enhanced describes source validation, not a guaranteed
       limit of detection for a negative stain or for peptide-HLA presentation.
-    threshold_provenance: User-approved starting project parameters on 2026-10-20;
-      not clinically validated or estimated from outcome data. Existing absolute
-      ceilings remain the Missing/Uncertain baseline.
+    threshold_provenance: Project starting grid specified for the requested category
+      by IHC-evidence screen on 2026-10-20. Vital 1/2/3/6 and Protected 2/4/6/12
+      follow the user's earlier proposed sensitivity values; Caution 5/10/15/30
+      is an explicit project extension. Literature supports graded priorities,
+      not these HPA nTPM values or a conversion from GTEx TPM. These are not
+      clinically validated or estimated from outcomes. Missing/Uncertain equals
+      the fixed baseline. HPA reliability labels are evidence strata, not
+      calibrated probabilities of a negative stain or peptide-HLA absence.
 source_artifacts:
 - taxon_id: 9606
   source_id: hpa_rna_consensus

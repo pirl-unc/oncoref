@@ -24,7 +24,7 @@ def evaluate(
     ihc=(),
     *,
     vital_limit=1,
-    protected_limit=5,
+    protected_limit=2,
     scope=report.EXPANDED,
     missing=(),
     unreliable=False,
@@ -87,6 +87,8 @@ def test_raw_rna_tier_boundaries_are_inclusive_and_per_tissue():
     assert not evaluate([("testis", 100000), ("thyroid gland", 5.1)])["evidence_pass"]
     assert evaluate([("testis", 100), ("retina", 1)])["evidence_pass"]
     assert not evaluate([("testis", 100), ("retina", 1.1)])["evidence_pass"]
+    assert evaluate([("testis", 100), ("salivary gland", 2)])["evidence_pass"]
+    assert not evaluate([("testis", 100), ("salivary gland", 2.1)])["evidence_pass"]
 
 
 def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
@@ -114,7 +116,7 @@ def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
         ("thyroid gland", "glandular cells"),
     ],
 )
-def test_low_ihc_is_independent_of_rna_in_both_protected_tiers(tissue, cell):
+def test_low_ihc_is_independent_of_rna_in_all_screened_tiers(tissue, cell):
     result = evaluate([("testis", 100), (tissue, 0)], [(tissue, cell, "Low")])
     assert not result["evidence_pass"]
     assert "positive_ihc_outside_permitted" in result["failure_reasons"]
@@ -134,23 +136,21 @@ def test_all_positive_ihc_levels_remain_exclusions(level):
         ("skin 1", "keratinocytes"),
         ("salivary gland", "glandular cells"),
         ("thymus", "cortical cells"),
-        ("tonsil", "germinal center cells"),
         ("spleen", "cells in white pulp"),
     ],
 )
-def test_requested_whole_organs_are_permitted(tissue, cell):
+def test_former_whole_organ_allowances_are_now_screened(tissue, cell):
     rna_tissue = "skin" if tissue == "skin 1" else tissue
     result = evaluate([("testis", 100), (rna_tissue, 50)], [(tissue, cell, "High")])
-    assert result["evidence_pass"]
-    assert not evaluate(
-        [("testis", 100), (rna_tissue, 50)], [(tissue, cell, "High")], scope=report.COMBINED
-    )["evidence_pass"]
+    assert not result["evidence_pass"]
+    assert "positive_ihc_outside_permitted" in result["failure_reasons"]
+    assert "rna_above_tissue_ceiling" in result["failure_reasons"]
 
 
-def test_acceptable_lymphoid_expression_remains_flagged_and_other_sites_still_exclude():
+def test_caution_lymphoid_expression_is_screened_and_remains_flagged():
     ihc = [("spleen", "cells in white pulp", "High")]
     result = evaluate([("testis", 100), ("spleen", 50)], ihc, adaptive=True)
-    assert result["evidence_pass"]
+    assert not result["evidence_pass"]
     assert result["tissue_review_status"] == "required"
     assert "asplenia_infection_risk_review" in result["tissue_review_flags"]
     for tissue, cell in (
@@ -196,10 +196,10 @@ def test_positive_evidence_inside_permitted_scope_is_required():
 
 def test_adaptive_absolute_boundary_and_positive_veto_remain_independent():
     negative = [("heart muscle", "cardiomyocytes", "Not detected")]
-    assert evaluate([("testis", 100), ("heart muscle", 5)], negative, adaptive=True)[
+    assert evaluate([("testis", 100), ("heart muscle", 6)], negative, adaptive=True)[
         "evidence_pass"
     ]
-    assert not evaluate([("testis", 100), ("heart muscle", 5.1)], negative, adaptive=True)[
+    assert not evaluate([("testis", 100), ("heart muscle", 6.1)], negative, adaptive=True)[
         "evidence_pass"
     ]
     result = evaluate(
@@ -211,11 +211,36 @@ def test_adaptive_absolute_boundary_and_positive_veto_remain_independent():
     assert "positive_ihc_outside_permitted" in result["failure_reasons"]
 
 
-def test_adaptive_protected_ceiling_is_inclusive():
-    negative = [("thyroid gland", "glandular cells", "Not detected")]
-    assert evaluate([("testis", 100), ("thyroid gland", 10)], negative, adaptive=True)[
+@pytest.mark.parametrize("tissue,ceiling", [("salivary gland", 12), ("thyroid gland", 30)])
+def test_adaptive_protected_and_caution_ceilings_are_inclusive(tissue, ceiling):
+    negative = [(tissue, "glandular cells", "Not detected")]
+    assert evaluate([("testis", 100), (tissue, ceiling)], negative, adaptive=True)["evidence_pass"]
+    assert not evaluate([("testis", 100), (tissue, ceiling + 0.1)], negative, adaptive=True)[
         "evidence_pass"
     ]
-    assert not evaluate([("testis", 100), ("thyroid gland", 10.1)], negative, adaptive=True)[
+
+
+@pytest.mark.parametrize(
+    "tissue,cell",
+    [
+        ("tonsil", "germinal center cells"),
+        ("appendix", "glandular cells"),
+        ("gallbladder", "glandular cells"),
+    ],
+)
+def test_removable_organ_allowances_do_not_extend_to_other_immune_or_glandular_sites(tissue, cell):
+    assert evaluate([("testis", 100), (tissue, 50)], [(tissue, cell, "High")])["evidence_pass"]
+    assert not evaluate(
+        [("testis", 100), (tissue, 50), ("salivary gland", 0)],
+        [(tissue, cell, "High"), ("salivary gland", "glandular cells", "Low")],
+    )["evidence_pass"]
+
+
+def test_cutaneous_melanocyte_allowance_does_not_clear_other_skin_cells():
+    assert evaluate([("testis", 100), ("skin", 5)], [("skin 1", "melanocytes", "High")])[
         "evidence_pass"
     ]
+    assert not evaluate(
+        [("testis", 100), ("skin", 5)],
+        [("skin 1", "melanocytes", "High"), ("skin 1", "keratinocytes", "Low")],
+    )["evidence_pass"]
