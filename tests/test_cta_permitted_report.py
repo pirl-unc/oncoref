@@ -24,7 +24,7 @@ def evaluate(
     ihc=(),
     *,
     vital_limit=1,
-    protected_limit=2,
+    protected_limit=3,
     scope=report.EXPANDED,
     missing=(),
     unreliable=False,
@@ -88,8 +88,8 @@ def test_raw_rna_tier_boundaries_are_inclusive_and_per_tissue():
     assert not evaluate([("testis", 100000), ("thyroid gland", 5.1)])["evidence_pass"]
     assert evaluate([("testis", 100), ("retina", 1)])["evidence_pass"]
     assert not evaluate([("testis", 100), ("retina", 1.1)])["evidence_pass"]
-    assert evaluate([("testis", 100), ("salivary gland", 2)])["evidence_pass"]
-    assert not evaluate([("testis", 100), ("salivary gland", 2.1)])["evidence_pass"]
+    assert evaluate([("testis", 100), ("salivary gland", 3)])["evidence_pass"]
+    assert not evaluate([("testis", 100), ("salivary gland", 3.1)])["evidence_pass"]
 
 
 def test_adaptive_missing_rna_is_unresolved_even_with_negative_ihc():
@@ -202,10 +202,17 @@ def test_incomplete_and_unreliable_evidence_cannot_pass():
 
 def test_positive_reproductive_evidence_is_required():
     assert not evaluate([("testis", 0), ("liver", 0)])["evidence_pass"]
-    assert not evaluate([("testis", 0.5), ("thyroid gland", 3)])["evidence_pass"]
+    assert evaluate([("testis", 0.5), ("thyroid gland", 3)])["evidence_pass"]
     assert evaluate(
-        [("testis", 0.5), ("thyroid gland", 3)], [("testis", "cells in seminiferous ducts", "Low")]
+        [("testis", 0), ("thyroid gland", 3)], [("testis", "cells in seminiferous ducts", "Low")]
     )["evidence_pass"]
+
+
+@pytest.mark.parametrize("value", [1e-12, 0.1, 0.8, 1.0])
+def test_any_valid_positive_reproductive_rna_supplies_admission(value):
+    result = evaluate([("testis", value), ("heart muscle", 0)], selectivity=True)
+    assert result["positive_evidence_reproductive"]
+    assert result["evidence_pass"]
 
 
 @pytest.mark.parametrize("tissue", ["tonsil", "appendix", "gallbladder"])
@@ -281,9 +288,9 @@ def test_cutaneous_melanocyte_allowance_does_not_clear_other_skin_cells():
 @pytest.mark.parametrize(
     "tissue,cell,reference,value",
     [
-        ("heart muscle", "cardiomyocytes", 19, 1),
-        ("salivary gland", "glandular cells", 4, 1),
-        ("thyroid gland", "glandular cells", 3, 2),
+        ("heart muscle", "cardiomyocytes", 3, 2),
+        ("salivary gland", "glandular cells", 11, 9),
+        ("thyroid gland", "glandular cells", 1, 1),
     ],
 )
 def test_combined_screen_selectivity_boundaries_are_inclusive(tissue, cell, reference, value):
@@ -327,11 +334,11 @@ def test_zero_reproductive_rna_with_positive_ihc_leaves_selectivity_unresolved()
 
 def test_other_organ_negative_ihc_cannot_relax_heart_selectivity():
     result = evaluate(
-        [("testis", 19), ("heart muscle", 1), ("kidney", 0)],
+        [("testis", 2), ("heart muscle", 1), ("kidney", 0)],
         [("kidney", "cells in glomeruli", "Not detected")],
         adaptive=True,
         selectivity=True,
     )
     assert not result["evidence_pass"]
     assert "heart muscle" in result["selectivity_exclusions"]
-    assert "99%" in result["selectivity_exclusions"]
+    assert "75%" in result["selectivity_exclusions"]

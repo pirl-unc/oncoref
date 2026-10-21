@@ -1,5 +1,21 @@
 # Complete CTA landscape intake
 
+## Current intake and screening update
+
+The [21 October recalibration report](audits/cta-recalibration-20261021/index.md)
+uses all 13 imported publication sources and 2,538 mapped coding candidates. It
+adds primary BAGE and SPAG9 nominations and retains BAGE/GAGE2B as reviewed NCBI
+identities where the pinned Ensembl space lacks a usable mapping. Unmapped intake
+is unassessed, with no substitute paralog or imputed normal expression.
+
+`reviewed_publication_membership()` exposes these identities and assay caveats.
+The new report includes every source identity upstream of expression screening,
+then applies the current >0 reproductive-admission, IHC, absolute RNA and pairwise
+selectivity gates. This research screen is separate from the frozen 624/695
+core/extended panels and their historical minimum-source-cover calculation below.
+
+## Historical September rebuild
+
 [Regenerated figures and counts](audits/cta-unified-20260924/index.md) ·
 [Combined vector PDF](audits/cta-unified-20260924/oncoref-cta-landscape-figures.pdf)
 

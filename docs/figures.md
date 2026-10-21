@@ -109,7 +109,25 @@ includes the threshold table, source distinctions and exclusion reasons.
 python scripts/cta_adaptive_report.py --out outputs/cta-adaptive-current
 ```
 
-The [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
+The [current curation report](audits/cta-curation-20261021/index.md) adds
+clinical-target intake, primary clinical evidence, explicit external safety
+reviews and an updated PNG/SVG funnel. Its downloadable decisions distinguish
+normal protein counterevidence from RNA thresholds and reference-coverage gaps.
+The [genome-wide categories](audits/normal-expression-categories-20261021/index.md)
+cover Reproductive, Normal and Other, with Disposable/Silent subgroups and a
+separate Unassessed status.
+
+The [recalibration comparison](audits/cta-recalibration-20261021/index.md)
+provides PNG/SVG figures for the complete publication-intake funnel and the
+separate effects of reproductive admission, selectivity, absolute ceilings and
+holdback reviews. Candidate decisions, source identities, per-tissue thresholds,
+fixed/adaptive comparisons and checksums are downloadable beside the figures.
+
+```bash
+python scripts/cta_recalibration_report.py --out outputs/cta-recalibration-current
+```
+
+The historical [expanded permitted-tissue report](audits/cta-permitted-tissues-20261019/index.md)
 adds vital/protected RNA ceilings and an independent IHC gate. Three PNG/SVG
 figures compare the scope and threshold changes, source retention, and selected
 published targets. A combined PDF gives methods, citations and exclusion reasons.

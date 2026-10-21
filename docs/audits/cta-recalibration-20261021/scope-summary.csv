@@ -1,0 +1,7 @@
+scenario,candidates,evidence_pass,retained,without_ihc,partial_ihc,complete_routine_ihc
+previous_released,2537,430,377,176,197,4
+admission_only,2538,490,409,208,197,4
+selectivity_revised,2538,757,642,369,269,4
+grid_revised,2538,762,647,374,269,4
+current_adaptive,2538,762,649,375,270,4
+current_fixed,2538,719,606,375,228,3

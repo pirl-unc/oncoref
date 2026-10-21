@@ -77,8 +77,10 @@ def _registry():
         if policy["required_positive_scope"] not in scopes:
             raise ValueError(f"Unknown required positive scope: {name}")
         floor = policy["minimum_reproductive_rna"]
-        if not isinstance(floor, (int, float)) or not math.isfinite(floor) or floor <= 0:
+        if not isinstance(floor, (int, float)) or not math.isfinite(floor) or floor < 0:
             raise ValueError(f"Invalid reproductive expression floor: {name}")
+        if policy["reproductive_rna_comparison"] != "greater_than":
+            raise ValueError(f"Unknown reproductive RNA comparison: {name}")
         roots = set(policy["unresolved_roots"])
         for tier in SCREENED_NORMAL_TISSUE_TIERS:
             roots.update(policy[tier]["roots"])

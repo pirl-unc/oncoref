@@ -44,7 +44,7 @@ def observations(tissue="heart muscle", value=5, ihc=()):
         ("Enhanced", 6, 12, 30),
         ("Supported", 3, 6, 15),
         ("Approved", 2, 4, 10),
-        ("Uncertain", 1, 2, 5),
+        ("Uncertain", 1, 3, 5),
     ],
 )
 def test_approved_ladder_uses_local_negative_reliability(reliability, vital, protected, manageable):
@@ -146,7 +146,7 @@ def test_equivalent_tissue_labels_require_all_named_source_contexts():
         adaptive_normal_rna_limits(rows.iloc[:2], routine_ihc_contexts=expected)
         .iloc[0]
         .rna_ceiling_ntpm
-        == 2
+        == 3
     )
 
 
@@ -197,7 +197,7 @@ def test_bulk_skin_cannot_borrow_negativity_from_selected_compartments():
     complete = adaptive_normal_rna_limits(rows, routine_ihc_contexts=required)
     assert complete.iloc[0].screening_tier == "manageable"
     assert complete.iloc[0].rna_ceiling_ntpm == 30
-    assert complete.iloc[0].screening_policy_id.endswith("2026-10-20.5")
+    assert complete.iloc[0].screening_policy_id.endswith("2026-10-21.1")
     missing = adaptive_normal_rna_limits(rows.iloc[:-1], routine_ihc_contexts=required)
     assert missing.iloc[0].rna_ceiling_ntpm == 5
     # Allowed melanocyte staining cannot establish a negative bulk-skin context.
@@ -221,11 +221,11 @@ def test_missing_rna_preserves_audit_schema_without_inventing_measurements():
 @pytest.mark.parametrize(
     "reliability,expected",
     [
-        ("Missing", (0.99, 0.97, 0.95)),
-        ("Uncertain", (0.99, 0.97, 0.95)),
-        ("Approved", (0.98, 0.95, 0.90)),
-        ("Supported", (0.97, 0.90, 0.80)),
-        ("Enhanced", (0.95, 0.80, 0.60)),
+        ("Missing", (0.75, 0.70, 0.65)),
+        ("Uncertain", (0.75, 0.70, 0.65)),
+        ("Approved", (0.70, 0.65, 0.60)),
+        ("Supported", (0.65, 0.60, 0.55)),
+        ("Enhanced", (0.60, 0.55, 0.50)),
     ],
 )
 def test_selectivity_thresholds_follow_the_same_local_ihc_evidence(reliability, expected):
@@ -279,3 +279,20 @@ def test_nonpositive_or_invalid_reproductive_rna_never_invents_selectivity(refer
     heart = result.iloc[1]
     assert pd.isna(heart.reproductive_selectivity)
     assert heart.selectivity_status == "no_positive_reproductive_rna"
+
+
+def test_screening_holdback_review_is_explicit_and_preserves_historical_panels():
+    from oncoref import cta
+    from oncoref.cta_normal_screen import screening_nomination_review
+
+    row = screening_nomination_review("ENSG00000126890", False, "Historical heart RNA holdback")
+    assert row["nomination_review_eligible"]
+    assert not row["historical_nomination_review_eligible"]
+    assert row["screen_review_superseded_holdback"]
+    assert "5.1" in row["screen_review_warning"]
+    assert "CTAG2" not in cta.cta_gene_names()
+    untouched = screening_nomination_review("ENSG00000204450", False, "Unverified nomination")
+    assert not untouched["nomination_review_eligible"]
+    assert not untouched["screen_review_superseded_holdback"]
+    with pytest.raises(ValueError, match="historical holdback"):
+        screening_nomination_review("ENSG00000126890", True, "Already eligible")
