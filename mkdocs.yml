@@ -5,33 +5,40 @@ repo_name: pirl-unc/oncoref
 theme:
   name: mkdocs
 nav:
-  - Species and data groups: species.md
-  - Species CTA evidence: species-cta-evidence.md
-  - Normal tissue scopes: normal-tissue-scopes.md
-  - Tissue injury and manageability: normal-tissue-manageability.md
-  - Patient-context gene filters: normal-tissue-gene-filters.md
-  - Reproductive, Normal and Other: audits/normal-expression-categories-20261021-r2/index.md
-  - Current CTA curation and clinical coverage: audits/cta-curation-20261021-r2/index.md
-  - Disjoint gene and protein sets: audits/normal-sequence-sets-20261021/index.md
-  - Normal tissue registry audit: audits/normal-tissue-registry-20261021-r2/index.md
-  - Previous selectivity registry: audits/normal-tissue-selectivity-20261020/index.md
-  - Previous tissue registry: audits/normal-tissue-priorities-20261020/index.md
-  - Previous normal tissue registry: audits/normal-tissue-registry-20261020/index.md
-  - CTA tissue-scope report: audits/cta-tissue-scopes-20261019/index.md
-  - CTA permitted-tissue screen: audits/cta-permitted-tissues-20261019/index.md
-  - CTA IHC-adaptive screen: audits/cta-ihc-adaptive-20261020/index.md
-  - CTA tissue-tier update: audits/cta-tissue-tiers-20261020/index.md
-  - CTA recalibration and complete intake: audits/cta-recalibration-20261021/index.md
-  - Previous CTA reproductive selectivity: audits/cta-selectivity-20261020/index.md
-  - Previous tissue priority and IHC grid: audits/cta-tissue-priorities-20261020/index.md
-  - Previous CTA tissue contexts: audits/cta-tissue-contexts-20261020/index.md
   - Home: index.md
+  - CTA reports:
+      - Continuous screen and uncertainty: audits/cta-continuous-20261022/index.md
+      - Published curation baseline: audits/cta-curation-20261021-r2/index.md
+      - Reproductive, Normal and Other: audits/normal-expression-categories-20261021-r2/index.md
+      - Disjoint gene and protein sets: audits/normal-sequence-sets-20261021/index.md
+      - Continuous screening API: cta-continuous-screen.md
+      - Placental CTA sources: cta-publication-sources.md
+      - Bradley CTA audit: cta-bradley-audit.md
+  - Tissues:
+      - Normal tissue scopes: normal-tissue-scopes.md
+      - Tissue injury and manageability: normal-tissue-manageability.md
+      - Patient-context gene filters: normal-tissue-gene-filters.md
+      - Normal tissue registry: audits/normal-tissue-registry-20261021-r2/index.md
+  - Species:
+      - Species and data groups: species.md
+      - Species CTA evidence: species-cta-evidence.md
+  - Data:
+      - SRA expression sources: sra-expression-integration.md
+      - HPA cancer reference: hpa-cancer-reference.md
+      - CTA gene identities: cta-gene-identities.md
+      - Shared reference identities: reference-identity.md
+  - Earlier audits:
+      - Curation audit: curation-audit.md
+      - Previous selectivity registry: audits/normal-tissue-selectivity-20261020/index.md
+      - Previous tissue registry: audits/normal-tissue-priorities-20261020/index.md
+      - Previous normal tissue registry: audits/normal-tissue-registry-20261020/index.md
+      - CTA tissue scopes: audits/cta-tissue-scopes-20261019/index.md
+      - CTA permitted tissues: audits/cta-permitted-tissues-20261019/index.md
+      - CTA IHC-adaptive screen: audits/cta-ihc-adaptive-20261020/index.md
+      - CTA tissue tiers: audits/cta-tissue-tiers-20261020/index.md
+      - CTA recalibration and complete intake: audits/cta-recalibration-20261021/index.md
+      - Previous reproductive selectivity: audits/cta-selectivity-20261020/index.md
+      - Previous tissue priority and IHC grid: audits/cta-tissue-priorities-20261020/index.md
+      - Previous tissue contexts: audits/cta-tissue-contexts-20261020/index.md
   - Figures: figures.md
-  - Curation Audit: curation-audit.md
-  - SRA Expression Sources: sra-expression-integration.md
-  - Placental CTA Sources: cta-publication-sources.md
-  - Bradley CTA Audit: cta-bradley-audit.md
-  - HPA Cancer Reference: hpa-cancer-reference.md
-  - CTA Gene Identities: cta-gene-identities.md
-  - Shared Reference Identities: reference-identity.md
-  - API Guide: api.md
+  - API guide: api.md

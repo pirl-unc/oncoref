@@ -53,13 +53,20 @@ See the [donor-level review](audits/ctag2-heart-evidence.md).
 
 Here “absolute cutoff” means a cutoff on the reported **nTPM value**, rather
 than a restriction fraction; nTPM itself remains a relative abundance measure.
-The [IHC-adaptive screen](audits/cta-ihc-adaptive-20261020/index.md) uses
-inclusive vital/protected ceilings of 1/5 nTPM with missing or uncertain IHC,
-2/5 with Approved negative IHC, 3/7.5 with Supported negative IHC, and 5/10
-with Enhanced negative IHC. Every routine IHC context for that same anatomical
+The [published 21 October screen](audits/cta-curation-20261021-r2/index.md) uses
+inclusive Vital ceilings of **2/4/6/12**, Protected **6/8/12/24**, and Manageable
+**10/20/30/60 nTPM**, ordered from missing/uncertain to Approved, Supported and
+Enhanced negative IHC. Every routine IHC context for that same anatomical
 tissue must be valid and negative; the weakest local reliability determines
 the allowance. Positive IHC outside the permitted set still excludes.
 These are project screening parameters, not validated clinical limits.
+
+The [continuous pilot](audits/cta-continuous-20261022/index.md) keeps these
+absolute ceilings and adds a small fixed allowance to the selectivity comparison,
+with reproductive RNA still strictly higher. That allowance is not an uncertainty
+estimate. The uncertainty assessment requires separately modeled donor evidence.
+The [20 October screen](audits/cta-ihc-adaptive-20261020/index.md) is a historical
+policy with different ceilings.
 
 ## What the CTA fractions mean
 

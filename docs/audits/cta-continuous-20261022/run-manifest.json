@@ -1,0 +1,55 @@
+{
+  "schema": "oncoref.cta-continuous-report.v1",
+  "policy_id": "oncoref.cta-continuous-screen.2026-10-22.1",
+  "base_policy_id": "oncoref.cta-ihc-adaptive-screen.2026-10-21.2",
+  "allowance_ntpm": 0.1,
+  "probability_cutoff": 0.95,
+  "minimum_draws": 1000,
+  "donor_quantile": 0.95,
+  "rule": "N <= C AND N <= ((1-s)/s)*R + allowance_ntpm AND R > N",
+  "units": "HPA v23 consensus nTPM",
+  "status": "provisional research policy; not clinically validated",
+  "sources": {
+    "hpa_rna_consensus": {
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
+      "bytes": 37949495,
+      "version": "v23"
+    },
+    "hpa_normal_tissue": {
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
+      "bytes": 82941549,
+      "version": "v23"
+    }
+  },
+  "donor_model_fitted": false,
+  "inputs": {
+    "docs/audits/cta-curation-20261021-r2/run-manifest.json": "885870e8efa6023b4d5fb8a2849c08c3e4bdefc08c97cb068b8ce3f1c160b886",
+    "docs/audits/cta-curation-20261021-r2/candidate-decisions.csv.gz": "acd562ddbf73f9d90d5be6092209c11913661a70cf135b45525d4617b66feb95",
+    "docs/audits/cta-curation-20261021-r2/tissue-evidence.csv.gz": "4ae2a1f01c10b09fd7b0daa315e3485f3cb44ba1111140f2a003e2346c43fa51",
+    "docs/audits/cta-curation-20261021-r2/clinical-target-audit.csv": "b040450e5f5ce47ce30f14fe42f98f15a9c6333f40f6b8cdec13098ba46dcc64",
+    "docs/audits/cta-curation-20261021-r2/screening-policy.json": "a923adc1cd34977b5a331e28a51b828b270977be89f0ce41aca234d3fad68cf0",
+    "docs/audits/normal-expression-categories-20261021-r2/run-manifest.json": "2df787a5e6e35a5f6667555f022c3f00f1c31668d58c48386ec910fd0621e368",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "4f8a0232e0d547c189de77eb88a42f30e563ebab7c6fe6d0af82ba0a54bbdbae"
+  },
+  "implementation_sha256": {
+    "scripts/cta_continuous_report.py": "96dbf578d7ed7e327eb5894f3f568c2018f40de5d93cabfbab716281830b92ea",
+    "oncoref/cta_continuous_screen.py": "f22069db0c820dd5995096231b264e887a072349e5474d457297ba8da3ecf731"
+  },
+  "outputs": {
+    "allowance-sensitivity.png": "69aa147e6156e9f4ea5d9f10de5b2e53b61be8bd3ebf431fca8fbc0e69ec3e0c",
+    "allowance-sensitivity.svg": "f2632ea61e5241519f4215b97a1cfdc9026a70b973292021296f3e337a109c8d",
+    "changes.csv": "af4cfd5ab6c327aef484aca3df474249952df0044a96f3b001169251d540b7ab",
+    "clinical-results.csv": "24c3266b986d6c317121dd549680665e19bf3e2deed65e4ffd309de67950c8cf",
+    "continuous-boundary.png": "3380edc8d184fc963a4ba3264573b8ada74a01125d83bca441d67e97792ec7a9",
+    "continuous-boundary.svg": "6525bab1af648840ebb758622ce5ed26a016f0a5e3c17754608788643709a740",
+    "explore.html": "d14c0bc5856ccff2163037a29968243685a60322083d8c7c47bb321bd097d392",
+    "gene-results.csv": "031df4ba5e47253de4d11580a75cceef79b37548d20cdfd97b1b7d5d65e92c42",
+    "index.md": "0dd844252bd8cf2d25ac369b2084cf12bfffc195a14b7b1b2208038d5330b99c",
+    "screening-policy.json": "84e04daa8f9e55e9287a2fe381565c87d3f852555bc785547e0e090e4530c1a6",
+    "sensitivity.csv": "6f84a923adc7e3dd0fbd811cfc55ebf5590732fc6a58040fcc1628defe10b1e1",
+    "tissue-evidence.csv.gz": "fcf4d6670479b6ce0ca394392202621cb99c9435a325ecfde79a0a29ea614149",
+    "uncertainty-summary.csv": "c1b49b82e04f154f163a35615ebbf1428af41b52870fdeaa4bab4bc684d160fa"
+  }
+}
