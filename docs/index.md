@@ -64,7 +64,10 @@ packages can join domains without maintaining private name mappings.
   [CTA Antigens](api.md#cta-antigens).
 - Need reproductive/disposable tissue definitions or their effect on CTA
   filtering? See [Normal tissue scopes](normal-tissue-scopes.md) and the
-  [current source and filtering report](audits/cta-curation-20261021-r2/index.md).
+  [published source and filtering report](audits/cta-curation-20261021-r2/index.md).
+- Need the continuous low-expression rule and uncertainty assessment? See the
+  [22 October pilot](audits/cta-continuous-20261022/index.md). It separates point-screen
+  passes from uncertainty-qualified inclusion; donor-model inputs are not yet available.
 - Need genome-wide Reproductive, Normal and Other groups, including non-CTAs?
   Use the [expression categories and downloads](audits/normal-expression-categories-20261021-r2/index.md).
   Other contains Disposable and Silent subgroups; missing evidence remains Unassessed.

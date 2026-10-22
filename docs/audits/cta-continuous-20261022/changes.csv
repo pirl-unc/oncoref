@@ -1,0 +1,13 @@
+Gene,Gene ID,Previous point screen,Continuous point screen,Point findings,Uncertainty result,Uncertainty reasons,Joint mean-rule probability,Joint probability including donor tail,Posterior draws,Highest reproductive RNA (nTPM),Clinical evidence,Change
+CDKL4,ENSG00000205111,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,2,,Gained
+CGB2,ENSG00000104818,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,1.5,,Gained
+FNDC7,ENSG00000143107,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,1.1,,Gained
+NLRP8,ENSG00000179709,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,0.2,,Gained
+OR1E1,ENSG00000180016,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,0.2,,Gained
+OR2A4,ENSG00000180658,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,0.3,,Gained
+SYT10,ENSG00000110975,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,2.1,,Gained
+TGM7,ENSG00000159495,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,0.8,,Gained
+USP50,ENSG00000170236,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,1.5,,Gained
+ZFP42,ENSG00000179059,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,2,,Gained
+ZIM3,ENSG00000141946,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,0.3,,Gained
+ZNF730,ENSG00000183850,Does not pass,Pass,All point-estimate screening gates pass,Review,donor uncertainty unavailable,,,0,4.9,,Gained

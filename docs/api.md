@@ -645,6 +645,12 @@ candidate is called a CTA by an explicit Human Protein Atlas (HPA) normal-tissue
 expression rule; the call is not evidence that its antigen is presented by the
 major histocompatibility complex (MHC) or that it is a validated therapy target.
 
+The opt-in `oncoref.cta_continuous_screen` module adds continuous expression
+margins and a separate Included/Excluded/Review assessment of caller-supplied
+joint posterior evidence. See the [API and modeling contract](cta-continuous-screen.md)
+and [pilot audit](audits/cta-continuous-20261022/index.md). The pilot has no fitted
+donor model and does not change the frozen CTA or sequence panels.
+
 CTA identity and tumor coverage answer different questions. The HPA-derived CTA
 definition determines which genes are in the reference set. Tumor expression
 then asks how often those CTAs are active in a cohort. An absolute threshold such
