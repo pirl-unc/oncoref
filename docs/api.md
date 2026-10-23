@@ -645,7 +645,14 @@ candidate is called a CTA by an explicit Human Protein Atlas (HPA) normal-tissue
 expression rule; the call is not evidence that its antigen is presented by the
 major histocompatibility complex (MHC) or that it is a validated therapy target.
 
-The current ordered research screen is available through `oncoref.cta_screen`:
+Use `oncoref.target_sets` for the current disjoint **CTA**, **Unsafe** and
+**Neither** groups. `gene_ids("CTA")`, `gene_ids("Unsafe")` and
+`gene_ids("Neither")` return separate sets; only Unsafe is the forbidden
+background. `results()` includes the 5 nTPM admission rule, IHC coverage and
+Neither subgroups, including Low and Variable. See the [report and protein
+exports](audits/target-sets-20261023/index.md) and [API](target-sets.md).
+
+The earlier v1.15 ordered research screen remains available through `oncoref.cta_screen`:
 `results()`, `retained_gene_ids()` and `variable_gene_ids()` (plus corresponding
 `*_gene_names()` accessors for known symbols). **Variable is
 excluded from selection**, with reviewed zero/failing vital-tissue RNA donors

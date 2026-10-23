@@ -1,0 +1,22 @@
+{
+  "policy": "oncoref.target-sets.2026-10-23.1",
+  "reference_id": "openvax:reference:v1:sha256:0fefb51755788901693be9987fadc31e61f945cd53c08a170e0e1d4ad4a09b61",
+  "target": [
+    "cta.fasta.gz"
+  ],
+  "forbidden": [
+    "unsafe.fasta.gz",
+    "additional-forbidden.fasta.gz"
+  ],
+  "neither": [
+    "neither.fasta.gz"
+  ],
+  "neither_forbidden": false,
+  "sequence_precedence": [
+    "Unsafe",
+    "Neither",
+    "CTA"
+  ],
+  "rule": "Enumerate contiguous standard-amino-acid k-mers within records; subtract the forbidden union from CTA k-mers. Never join across ambiguous residues, stops or record boundaries.",
+  "limits": "Neither is neither a target nor proven absent. Shared k-mers can cross otherwise disjoint proteins; gene-level RNA does not establish isoform expression. Translation gaps remain explicit."
+}

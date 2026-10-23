@@ -1,5 +1,9 @@
 # CTA screening rules
 
+For the current selection and protein backgrounds, use the
+[CTA, Unsafe and Neither sets](target-sets.md). The v1.15 policy below remains
+the dated 740-candidate input to that new classification.
+
 The [current report](audits/cta-screen-20261023/index.md) applies a simple ordered
 screen to the pinned human HPA v23 candidate universe. Its categories are
 **Retained**, **Variable**, **Excluded** and **Unassessed**. Variable is excluded
