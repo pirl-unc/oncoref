@@ -1,0 +1,19 @@
+Gene,Gene ID,Category,Selected,Reason,Reproductive IHC,Donor review,Donor findings,RNA/IHC pairing,Reconsideration,Clinical evidence,Policy,Previous screen,Change
+C11orf91,ENSG00000205177,Excluded,False,adipose tissue: 4.6 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+C1orf146,ENSG00000203910,Excluded,False,retina: 2 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+CDKL4,ENSG00000205111,Excluded,False,choroid plexus: 0.7 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+CGB2,ENSG00000104818,Excluded,False,basal ganglia: 0.6 nTPM; continuous selectivity,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+CLDN34,ENSG00000234469,Excluded,False,retina: 0.5 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+CTAG2,ENSG00000126890,Variable,False,individual vital-tissue RNA donors fail the same inclusion limits,testis: Leydig cells (Low); testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Medium); testis: spermatogonia cells (High),Reviewed,149: 13.5 nTPM (fails); 150: 0 nTPM (passes); 151: 0 nTPM (passes); 152: 7.1 nTPM (fails),Different donors,"Determine why donor RNA differs; obtain paired RNA/protein in RNA-positive and RNA-zero vital specimens, establish cell/isoform identity, and validate any proposed subgroup before an explicit new review. RNA zero alone does not establish eligibility.",Shared target in a clinical study,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+DCDC2C,ENSG00000214866,Excluded,False,choroid plexus: 1.2 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+FNDC7,ENSG00000143107,Excluded,False,retina: 0.4 nTPM; continuous selectivity,testis: Leydig cells (Low); testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+NPAP1,ENSG00000185823,Excluded,False,kidney: 0.8 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+RGPD4,ENSG00000196862,Excluded,False,retina: 1 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+SPATA31H1,ENSG00000221843,Excluded,False,retina: 1.5 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+SYT10,ENSG00000110975,Excluded,False,kidney: 0.8 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+TGM7,ENSG00000159495,Excluded,False,esophagus: 0.4 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+USP50,ENSG00000170236,Excluded,False,kidney: 0.6 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+ZFP42,ENSG00000179059,Excluded,False,skeletal muscle: 0.7 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+ZIM3,ENSG00000141946,Excluded,False,skeletal muscle: 0.2 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+ZNF560,ENSG00000198028,Excluded,False,retina: 2 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed
+ZNF730,ENSG00000183850,Excluded,False,bone marrow: 1.6 nTPM; continuous selectivity; cerebral cortex: 1.7 nTPM; continuous selectivity; lymph node: 1.8 nTPM; continuous selectivity; thymus: 2.5 nTPM; continuous selectivity,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Removed

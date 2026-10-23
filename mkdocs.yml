@@ -7,6 +7,8 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
+      - Current screening and Variable candidates: audits/cta-screen-20261023/index.md
+      - Screening rules and API: cta-screen.md
       - Continuous screen and uncertainty: audits/cta-continuous-20261022/index.md
       - Published curation baseline: audits/cta-curation-20261021-r2/index.md
       - Reproductive, Normal and Other: audits/normal-expression-categories-20261021-r2/index.md

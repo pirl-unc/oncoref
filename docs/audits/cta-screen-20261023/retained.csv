@@ -1,0 +1,741 @@
+Gene,Gene ID,Category,Selected,Reason,Reproductive IHC,Donor review,Donor findings,RNA/IHC pairing,Reconsideration,Clinical evidence,Policy,Previous screen,Change
+,ENSG00000259060,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+,ENSG00000283599,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ABCC11,ENSG00000121270,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACP4,ENSG00000142513,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACR,ENSG00000100312,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACRBP,ENSG00000111644,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACSBG2,ENSG00000130377,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACTL7A,ENSG00000187003,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACTL7B,ENSG00000148156,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Medium); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACTL8,ENSG00000117148,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACTL9,ENSG00000181786,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ACTRT1,ENSG00000123165,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAD1,ENSG00000164113,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM12,ENSG00000148848,Retained,True,All available point-screen rules pass,placenta: decidual cells (Medium); placenta: syncytiotrophoblasts - cell body (High); testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM18,ENSG00000168619,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM2,ENSG00000104755,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM20,ENSG00000134007,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM29,ENSG00000168594,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM30,ENSG00000134249,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM32,ENSG00000197140,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAM7,ENSG00000069206,Retained,True,All available point-screen rules pass,epididymis: glandular cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADAMTS6,ENSG00000049192,Retained,True,All available point-screen rules pass,ovary: follicle cells (Medium); placenta: syncytiotrophoblasts - cell body (High); placenta: syncytiotrophoblasts - microvilli (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ADIG,ENSG00000182035,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+AKAP4,ENSG00000147081,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Low),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+AKNAD1,ENSG00000162641,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ALLC,ENSG00000151360,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ANHX,ENSG00000227059,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ANKAR,ENSG00000151687,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ANKRD60,ENSG00000124227,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ANKRD62,ENSG00000181626,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ANKRD7,ENSG00000106013,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+APOBEC4,ENSG00000173627,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ARL13A,ENSG00000174225,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ARMH2,ENSG00000260286,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ARRDC5,ENSG00000205784,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ASB17,ENSG00000154007,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ASZ1,ENSG00000154438,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ATXN3L,ENSG00000123594,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BEND2,ENSG00000177324,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BEND4,ENSG00000188848,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BOD1L2,ENSG00000228075,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BOLL,ENSG00000152430,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BPIFA3,ENSG00000131059,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BPY2,ENSG00000183753,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BRDT,ENSG00000137948,Retained,True,All available point-screen rules pass,testis: cells in seminiferous ducts (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+BTBD18,ENSG00000233436,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C10orf120,ENSG00000183559,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C10orf53,ENSG00000178645,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C10orf62,ENSG00000203942,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C11orf42,ENSG00000180878,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C12orf42,ENSG00000179088,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C12orf50,ENSG00000165805,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C12orf54,ENSG00000177627,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C16orf78,ENSG00000166152,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C16orf82,ENSG00000234186,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C16orf90,ENSG00000215131,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C16orf96,ENSG00000205832,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C17orf50,ENSG00000270806,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C18orf63,ENSG00000206043,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C19orf67,ENSG00000188032,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C1QL4,ENSG00000186897,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C1orf167,ENSG00000215910,Retained,True,All available point-screen rules pass,testis: Leydig cells (High); testis: cells in seminiferous ducts (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C1orf185,ENSG00000204006,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C1orf94,ENSG00000142698,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C20orf141,ENSG00000258713,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C20orf144,ENSG00000149609,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C20orf173,ENSG00000125975,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C2CD6,ENSG00000155754,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C2orf78,ENSG00000187833,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C3orf20,ENSG00000131379,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C3orf22,ENSG00000180697,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C4orf17,ENSG00000138813,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C4orf51,ENSG00000237136,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C5orf47,ENSG00000185056,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C5orf52,ENSG00000187658,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C8orf74,ENSG00000171060,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C9orf43,ENSG00000157653,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+C9orf57,ENSG00000204669,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CABS1,ENSG00000145309,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CAGE1,ENSG00000164304,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CALR3,ENSG00000269058,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: sertoli cells (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CAPN11,ENSG00000137225,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CAPZA3,ENSG00000177938,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Medium); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CATSPER1,ENSG00000175294,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CATSPER4,ENSG00000188782,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CATSPERD,ENSG00000174898,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CATSPERE,ENSG00000179397,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CBLL2,ENSG00000175809,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CBY2,ENSG00000174015,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC116,ENSG00000161180,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC158,ENSG00000163749,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC166,ENSG00000255181,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC168,ENSG00000175820,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC179,ENSG00000255359,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC182,ENSG00000166329,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC183,ENSG00000213213,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC185,ENSG00000178395,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC196,ENSG00000196553,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC27,ENSG00000162592,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC42,ENSG00000161973,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC54,ENSG00000138483,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC62,ENSG00000130783,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC70,ENSG00000123171,Retained,True,All available point-screen rules pass,fallopian tube: glandular cells (Low); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC73,ENSG00000186714,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC83,ENSG00000150676,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCDC87,ENSG00000182791,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCER1,ENSG00000197651,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCIN,ENSG00000185972,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CCT8L2,ENSG00000198445,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CD200R1L,ENSG00000206531,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CDRT15,ENSG00000223510,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CDY2B,ENSG00000129873,Retained,True,All available point-screen rules pass,testis: cells in seminiferous ducts (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CEP295NL,ENSG00000178404,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CETN1,ENSG00000177143,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CFAP141,ENSG00000163263,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CFAP97D1,ENSG00000231256,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CGB3,ENSG00000104827,Retained,True,All available point-screen rules pass,placenta: syncytiotrophoblasts - cell body (High); placenta: syncytiotrophoblasts - microvilli (High); testis: Leydig cells (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CHCT1,ENSG00000141371,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CIB4,ENSG00000157884,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CILP2,ENSG00000160161,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CIMAP1A,ENSG00000177947,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CIMIP2A,ENSG00000188163,Retained,True,All available point-screen rules pass,epididymis: glandular cells (Low); testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CIMIP4,ENSG00000185264,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: peritubular cells (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CIMIP7,ENSG00000236980,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CMTM2,ENSG00000140932,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CNBD1,ENSG00000176571,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CNGA2,ENSG00000183862,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CNTD1,ENSG00000176563,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+COX7B2,ENSG00000170516,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CPA5,ENSG00000158525,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CPXCR1,ENSG00000147183,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CRISP1,ENSG00000124812,Retained,True,All available point-screen rules pass,epididymis: glandular cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CSN2,ENSG00000135222,Retained,True,All available point-screen rules pass,breast: glandular cells (Low); lactating breast: ductal cells (High); lactating breast: lactating glandular cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CSNK1A1L,ENSG00000180138,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CST8,ENSG00000125815,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CST9,ENSG00000173335,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CST9L,ENSG00000101435,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CSTL1,ENSG00000125823,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT45A10,ENSG00000269586,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT45A2,ENSG00000271449,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT45A7,ENSG00000273696,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A1,ENSG00000236371,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A10,ENSG00000224089,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A11,ENSG00000226929,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A12,ENSG00000226685,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A2,ENSG00000242362,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A3,ENSG00000236126,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A4,ENSG00000230594,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A5,ENSG00000237957,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A6,ENSG00000226023,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A7,ENSG00000228517,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A8,ENSG00000230347,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47A9,ENSG00000226600,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT47B1,ENSG00000236446,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT55,ENSG00000169551,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CT83,ENSG00000204019,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CTAG1A,ENSG00000268651,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CTAG1B,ENSG00000184033,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Medium); testis: spermatogonia cells (High),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CTAGE1,ENSG00000212710,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CTAGE6,ENSG00000271321,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CTAGE9,ENSG00000236761,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CTCFL,ENSG00000124092,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CXorf49,ENSG00000215115,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CXorf49B,ENSG00000215113,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CXorf51B,ENSG00000235699,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CXorf58,ENSG00000165182,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CXorf65,ENSG00000204165,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CXorf66,ENSG00000203933,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CYLC1,ENSG00000183035,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CYLC2,ENSG00000155833,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+CYP19A1,ENSG00000137869,Retained,True,All available point-screen rules pass,placenta: syncytiotrophoblasts - cell body (High); placenta: syncytiotrophoblasts - microvilli (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DAZ1,ENSG00000188120,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DAZ3,ENSG00000187191,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DAZL,ENSG00000092345,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DBF4,ENSG00000006634,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DBX1,ENSG00000109851,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DCAF4L1,ENSG00000182308,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (Low); testis: peritubular cells (Low); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Low); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DCAF4L2,ENSG00000176566,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DCAF8L2,ENSG00000189186,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DDI1,ENSG00000170967,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DDX4,ENSG00000152670,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DDX53,ENSG00000184735,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DEFB123,ENSG00000180424,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DEFB125,ENSG00000178591,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DEFB126,ENSG00000125788,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DEFB134,ENSG00000205882,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DEUP1,ENSG00000165325,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DHH,ENSG00000139549,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DKKL1,ENSG00000104901,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DMRT1,ENSG00000137090,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DMRTB1,ENSG00000143006,Retained,True,All available point-screen rules pass,testis: Leydig cells (High); testis: preleptotene spermatocytes (High); testis: sertoli cells (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DMRTC2,ENSG00000142025,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DNAH8,ENSG00000124721,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DNAJB8,ENSG00000179407,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DNAJC5G,ENSG00000163793,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DPEP3,ENSG00000141096,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DPPA2,ENSG00000163530,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DPPA3,ENSG00000187569,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DPPA5,ENSG00000203909,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DUSP21,ENSG00000189037,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DYDC1,ENSG00000170788,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+DYNLT2,ENSG00000184786,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EBLN1,ENSG00000223601,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EDDM3A,ENSG00000181562,Retained,True,All available point-screen rules pass,epididymis: glandular cells (High); testis: Leydig cells (Medium); testis: elongated or late spermatids (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EDDM3B,ENSG00000181552,Retained,True,All available point-screen rules pass,epididymis: glandular cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EFCAB3,ENSG00000172421,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EFCAB5,ENSG00000176927,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EFCAB8,ENSG00000215529,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EFCAB9,ENSG00000214360,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ENTHD1,ENSG00000176177,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EPPIN,ENSG00000101448,Retained,True,All available point-screen rules pass,testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EQTN,ENSG00000120160,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ERICH6,ENSG00000163645,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ERICH6B,ENSG00000165837,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ERVV-1,ENSG00000269526,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ERVV-2,ENSG00000268964,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ESX1,ENSG00000123576,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Low); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EVX2,ENSG00000174279,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EXD1,ENSG00000178997,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+EZHIP,ENSG00000187690,Retained,True,All available point-screen rules pass,ovary: follicle cells (High); placenta: cytotrophoblasts (High); placenta: syncytiotrophoblasts - cell body (High); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM170A,ENSG00000164334,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM170B,ENSG00000172538,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM186A,ENSG00000185958,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM186B,ENSG00000135436,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM187B,ENSG00000177558,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM209B,ENSG00000213714,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM217A,ENSG00000145975,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM228A,ENSG00000186453,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM24A,ENSG00000203795,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM47A,ENSG00000185448,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM47B,ENSG00000189132,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM47C,ENSG00000198173,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FAM9A,ENSG00000183304,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FANCD2OS,ENSG00000163705,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FATE1,ENSG00000147378,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FBXO24,ENSG00000106336,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FBXO39,ENSG00000177294,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FBXO43,ENSG00000156509,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FBXO47,ENSG00000204952,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FBXW10,ENSG00000171931,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FGF4,ENSG00000075388,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FKBP6,ENSG00000077800,Retained,True,All available point-screen rules pass,ovary: follicle cells (Medium); testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Low); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FMR1NB,ENSG00000176988,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FNDC11,ENSG00000125531,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FNDC8,ENSG00000073598,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Medium); testis: sertoli cells (Low); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FOXN4,ENSG00000139445,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FOXR1,ENSG00000176302,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FOXR2,ENSG00000189299,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FREY1,ENSG00000234776,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FSCB,ENSG00000189139,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FSCN3,ENSG00000106328,Retained,True,All available point-screen rules pass,ovary: follicle cells (Medium); testis: elongated or late spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FSHR,ENSG00000170820,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FTHL17,ENSG00000132446,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+FTMT,ENSG00000181867,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAB4,ENSG00000215568,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE1,ENSG00000205777,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE12C,ENSG00000237671,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE12D,ENSG00000227488,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE12E,ENSG00000216649,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE12F,ENSG00000236362,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE12G,ENSG00000215269,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE12H,ENSG00000224902,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE13,ENSG00000274274,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GAGE2A,ENSG00000189064,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GARIN1B,ENSG00000135248,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GARIN2,ENSG00000172717,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GARIN3,ENSG00000170613,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GARIN4,ENSG00000162771,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GARIN5B,ENSG00000180043,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GARIN6,ENSG00000180219,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GCM1,ENSG00000137270,Retained,True,All available point-screen rules pass,placenta: syncytiotrophoblasts - cell body (High); placenta: syncytiotrophoblasts - microvilli (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GDF9,ENSG00000164404,Retained,True,All available point-screen rules pass,ovary: follicle cells (Low); ovary: ovarian stroma cells (Low); testis: peritubular cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GK2,ENSG00000196475,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GK3,ENSG00000229894,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GLIPR1L1,ENSG00000173401,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GLT6D1,ENSG00000204007,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA6A,ENSG00000159289,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA6C,ENSG00000167195,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA6D,ENSG00000140478,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA6L1,ENSG00000273976,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA6L2,ENSG00000174450,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA6L6,ENSG00000277322,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA6L7,ENSG00000261649,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOLGA8G,ENSG00000183629,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GOT1L1,ENSG00000169154,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GPX5,ENSG00000224586,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GPX6,ENSG00000198704,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+GTSF1L,ENSG00000124196,Retained,True,All available point-screen rules pass,epididymis: glandular cells (Low); testis: elongated or late spermatids (High); testis: peritubular cells (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+H2AB1,ENSG00000274183,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+H2AP,ENSG00000187516,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+H2BW1,ENSG00000123569,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HDGFL1,ENSG00000112273,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HEATR9,ENSG00000270379,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HHIPL2,ENSG00000143512,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HIGD2B,ENSG00000175202,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HMGB4,ENSG00000176256,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HNRNPCL1,ENSG00000179172,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HORMAD1,ENSG00000143452,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HORMAD2,ENSG00000176635,Retained,True,All available point-screen rules pass,testis: Leydig cells (High); testis: pachytene spermatocytes (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HSF5,ENSG00000176160,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HSFX2,ENSG00000268738,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HSFY2,ENSG00000169953,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+HTRA4,ENSG00000169495,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IHO1,ENSG00000173421,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IL13,ENSG00000169194,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IL31,ENSG00000204671,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IL5,ENSG00000113525,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+INSL3,ENSG00000248099,Retained,True,All available point-screen rules pass,testis: Leydig cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+INSL4,ENSG00000120211,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IQCF1,ENSG00000173389,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IQCF2,ENSG00000184345,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IQCF3,ENSG00000229972,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IQCF5,ENSG00000214681,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IQCF6,ENSG00000214686,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IRGC,ENSG00000124449,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Medium); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IZUMO1,ENSG00000182264,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IZUMO2,ENSG00000161652,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+IZUMO3,ENSG00000205442,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+KCNA10,ENSG00000143105,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+KCNU1,ENSG00000215262,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+KIAA1210,ENSG00000250423,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+KIF4B,ENSG00000226650,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+KLF17,ENSG00000171872,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+KLHL10,ENSG00000161594,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LALBA,ENSG00000167531,Retained,True,All available point-screen rules pass,lactating breast: ductal cells (High); lactating breast: lactating glandular cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LDHAL6A,ENSG00000166800,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LDHAL6B,ENSG00000171989,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LDHC,ENSG00000166796,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LELP1,ENSG00000203784,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LGALS13,ENSG00000105198,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LGALS14,ENSG00000006659,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LGALS16,ENSG00000249861,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LIN28B,ENSG00000187772,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LIPJ,ENSG00000204022,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LLCFC1,ENSG00000165131,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LRRC36,ENSG00000159708,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LRRC72,ENSG00000205858,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LRRC74A,ENSG00000100565,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LRRD1,ENSG00000240720,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LRRIQ4,ENSG00000188306,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LUZP4,ENSG00000102021,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LYPD4,ENSG00000273111,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LYZL1,ENSG00000120563,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LYZL2,ENSG00000151033,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LYZL4,ENSG00000157093,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+LYZL6,ENSG00000275722,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: peritubular cells (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA1,ENSG00000198681,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Low); testis: spermatogonia cells (High),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA10,ENSG00000124260,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (High); testis: Leydig cells (Low); testis: sertoli cells (Medium); testis: spermatogonia cells (Low),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA11,ENSG00000185247,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA2,ENSG00000268606,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA2B,ENSG00000183305,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA3,ENSG00000221867,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA4,ENSG00000147381,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Low); testis: spermatogonia cells (High),Not assessed,,,,Approved therapy,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA6,ENSG00000197172,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA8,ENSG00000156009,Retained,True,All available point-screen rules pass,placenta: cytotrophoblasts (Medium); placenta: decidual cells (Medium); placenta: endothelial cells (Low); placenta: hofbauer cells (Medium); placenta: syncytiotrophoblasts - cell body (Medium); placenta: syncytiotrophoblasts - microvilli (Medium); testis: Leydig cells (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA9,ENSG00000123584,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEA9B,ENSG00000267978,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB1,ENSG00000214107,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB10,ENSG00000177689,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB16,ENSG00000189023,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB18,ENSG00000176774,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB2,ENSG00000099399,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB3,ENSG00000198798,Retained,True,All available point-screen rules pass,epididymis: glandular cells (Low); testis: Leydig cells (Low); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB5,ENSG00000188408,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEB6B,ENSG00000232030,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEC1,ENSG00000155495,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAGEC2,ENSG00000046774,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MAJIN,ENSG00000168070,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MEIG1,ENSG00000197889,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MEIOB,ENSG00000162039,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MEIOC,ENSG00000180336,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MEIOSIN,ENSG00000237452,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MEX3B,ENSG00000183496,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MGAT4D,ENSG00000205301,Retained,True,All available point-screen rules pass,testis: Leydig cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MMP20,ENSG00000137674,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MORC1,ENSG00000114487,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MOS,ENSG00000172680,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MOV10L1,ENSG00000073146,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MROH2B,ENSG00000171495,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Low); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MS4A13,ENSG00000204979,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MS4A5,ENSG00000166930,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MS4A6E,ENSG00000166926,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MSH4,ENSG00000057468,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+MYO1H,ENSG00000174527,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NAA11,ENSG00000156269,Retained,True,All available point-screen rules pass,placenta: decidual cells (Low); placenta: trophoblastic cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NACA2,ENSG00000253506,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NANOS2,ENSG00000188425,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NBPF4,ENSG00000196427,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NLRP4,ENSG00000160505,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NLRP7,ENSG00000167634,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NLRP8,ENSG00000179709,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NOBOX,ENSG00000106410,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NT5C1B,ENSG00000185013,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NT5C1B-RDH14,ENSG00000250741,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NUP210L,ENSG00000143552,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NUTM1,ENSG00000184507,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (Low); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+NUTM2F,ENSG00000130950,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OBP2B,ENSG00000171102,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ODF1,ENSG00000155087,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ODF4,ENSG00000184650,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OOEP,ENSG00000203907,Retained,True,All available point-screen rules pass,ovary: follicle cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR10A4,ENSG00000170782,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR13G1,ENSG00000197437,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR1C1,ENSG00000221888,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR1E1,ENSG00000180016,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR1G1,ENSG00000183024,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR1J2,ENSG00000197233,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR1J4,ENSG00000239590,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR1K1,ENSG00000165204,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR2A4,ENSG00000180658,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR2H1,ENSG00000204688,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR3A1,ENSG00000180090,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR4M1,ENSG00000176299,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR4M2,ENSG00000274102,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR4N2,ENSG00000176294,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR4N4,ENSG00000183706,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR51A7,ENSG00000176895,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR51Q1,ENSG00000167360,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR52D1,ENSG00000181609,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR52E2,ENSG00000176787,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR52L1,ENSG00000183313,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR56A3,ENSG00000184478,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR5B21,ENSG00000198283,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR6A2,ENSG00000184933,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR6C2,ENSG00000179695,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR6F1,ENSG00000169214,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR7E24,ENSG00000237521,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OR8D1,ENSG00000196341,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OTUD6A,ENSG00000189401,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (High); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+OVOL3,ENSG00000105261,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PAGE1,ENSG00000068985,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PAGE2,ENSG00000234068,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PAGE2B,ENSG00000238269,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PAGE3,ENSG00000204279,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PAGE5,ENSG00000158639,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PAPOLB,ENSG00000218823,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PAPPA,ENSG00000182752,Retained,True,All available point-screen rules pass,placenta: cytotrophoblasts (Medium); placenta: syncytiotrophoblasts - cell body (High); placenta: syncytiotrophoblasts - microvilli (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PASD1,ENSG00000166049,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Low); testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PATE2,ENSG00000196844,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PATE3,ENSG00000236027,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PDCL2,ENSG00000163440,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PDHA2,ENSG00000163114,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PDZD9,ENSG00000155714,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PFN3,ENSG00000196570,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PGK2,ENSG00000170950,Retained,True,All available point-screen rules pass,ovary: follicle cells (Medium); testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PIWIL1,ENSG00000125207,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PIWIL3,ENSG00000184571,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PKDREJ,ENSG00000130943,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PLAC1,ENSG00000170965,Retained,True,All available point-screen rules pass,placenta: cytotrophoblasts (High); placenta: hofbauer cells (High); placenta: syncytiotrophoblasts - cell body (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PLCZ1,ENSG00000139151,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PLSCR2,ENSG00000163746,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POM121L12,ENSG00000221900,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POM121L2,ENSG00000158553,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POTEC,ENSG00000183206,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POTED,ENSG00000166351,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POTEF,ENSG00000196604,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POTEG,ENSG00000187537,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POTEH,ENSG00000198062,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POTEI,ENSG00000196834,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+POTEM,ENSG00000222036,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PP2D1,ENSG00000183977,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PPP1R2B,ENSG00000231989,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PPP1R42,ENSG00000178125,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PPP3R2,ENSG00000188386,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PPP4R3C,ENSG00000224960,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRAME,ENSG00000185686,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Medium); testis: spermatogonia cells (High),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRAMEF11,ENSG00000239810,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRAMEF2,ENSG00000120952,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRAMEF20,ENSG00000204478,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRDM14,ENSG00000147596,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRDM7,ENSG00000126856,Retained,True,All available point-screen rules pass,testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRDM9,ENSG00000164256,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRKACG,ENSG00000165059,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: round or early spermatids (High); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRM1,ENSG00000175646,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRM2,ENSG00000122304,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRPS1L1,ENSG00000229937,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRR23A,ENSG00000206260,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRR23B,ENSG00000184814,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRR23C,ENSG00000233701,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRR30,ENSG00000186143,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRSS37,ENSG00000165076,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRSS38,ENSG00000185888,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRSS41,ENSG00000215148,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRSS54,ENSG00000103023,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRSS55,ENSG00000184647,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PRSS58,ENSG00000258223,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG1,ENSG00000231924,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG11,ENSG00000243130,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG2,ENSG00000242221,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG3,ENSG00000221826,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG5,ENSG00000204941,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG6,ENSG00000170848,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG7,ENSG00000221878,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG8,ENSG00000124467,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSG9,ENSG00000183668,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (Medium); testis: Leydig cells (Medium); testis: sertoli cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSMA8,ENSG00000154611,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PSORS1C1,ENSG00000204540,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+PXT1,ENSG00000179165,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RAD21L1,ENSG00000244588,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RAD51AP2,ENSG00000214842,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBM44,ENSG00000177483,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBM46,ENSG00000151962,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMXL2,ENSG00000170748,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMXL3,ENSG00000175718,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMY1A1,ENSG00000234414,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMY1B,ENSG00000242875,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMY1D,ENSG00000244395,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMY1E,ENSG00000242389,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMY1F,ENSG00000169800,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RBMY1J,ENSG00000226941,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+REDIC1,ENSG00000180116,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RFPL4B,ENSG00000251258,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RGPD3,ENSG00000153165,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RGSL1,ENSG00000121446,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RHOXF2,ENSG00000131721,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RHOXF2B,ENSG00000203989,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RIMBP3,ENSG00000275793,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RIMBP3C,ENSG00000183246,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RNASE11,ENSG00000173464,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RNASE12,ENSG00000258436,Retained,True,All available point-screen rules pass,epididymis: glandular cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RNASE13,ENSG00000206150,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RNF113B,ENSG00000139797,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RNF133,ENSG00000188050,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RNF148,ENSG00000235631,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RNF151,ENSG00000179580,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ROPN1,ENSG00000065371,Retained,True,All available point-screen rules pass,epididymis: glandular cells (Low); testis: elongated or late spermatids (Medium),Not assessed,,,,Antigen family named in a trial,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RPL10L,ENSG00000165496,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RSPH6A,ENSG00000104941,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+RTL9,ENSG00000243978,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SAGE1,ENSG00000181433,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SAXO5,ENSG00000198723,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SCAND3,ENSG00000232040,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SCGB1D1,ENSG00000168515,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SCP2D1,ENSG00000132631,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SEL1L2,ENSG00000101251,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Medium); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SEPTIN14,ENSG00000154997,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SIGLECL1,ENSG00000179213,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Low); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC22A14,ENSG00000144671,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC25A2,ENSG00000120329,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC25A52,ENSG00000141437,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC26A8,ENSG00000112053,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC35G6,ENSG00000259224,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC36A3,ENSG00000186334,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC9B1,ENSG00000164037,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLC9C1,ENSG00000172139,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLCO6A1,ENSG00000205359,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (Medium); testis: round or early spermatids (High); testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SLFNL1,ENSG00000171790,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SMC1B,ENSG00000077935,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SMCP,ENSG00000163206,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: peritubular cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SMIM21,ENSG00000206026,Retained,True,All available point-screen rules pass,testis: Leydig cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SMIM23,ENSG00000185662,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SOHLH2,ENSG00000120669,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SOX30,ENSG00000039600,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPACA1,ENSG00000118434,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPACA4,ENSG00000177202,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPACA5,ENSG00000171489,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPACA7,ENSG00000153498,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPAG11A,ENSG00000178287,Retained,True,All available point-screen rules pass,epididymis: glandular cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPAG11B,ENSG00000164871,Retained,True,All available point-screen rules pass,epididymis: glandular cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPAM1,ENSG00000106304,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (High); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXA1,ENSG00000198021,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXA2,ENSG00000203926,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXB1,ENSG00000227234,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXC,ENSG00000198573,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXD,ENSG00000196406,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXN1,ENSG00000203923,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXN2,ENSG00000268988,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXN3,ENSG00000189252,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXN4,ENSG00000189326,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPANXN5,ENSG00000204363,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA12,ENSG00000186451,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA16,ENSG00000144962,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA19,ENSG00000166118,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Medium); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA21,ENSG00000187144,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA22,ENSG00000141255,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA3,ENSG00000173699,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31A1,ENSG00000204849,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31A3,ENSG00000275969,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31A5,ENSG00000276581,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31A6,ENSG00000185775,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31A7,ENSG00000276040,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31D1,ENSG00000214929,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31D3,ENSG00000186788,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31D4,ENSG00000189357,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31E1,ENSG00000177992,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA31F1,ENSG00000205108,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATA32,ENSG00000184361,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPATS1,ENSG00000249481,Retained,True,All available point-screen rules pass,epididymis: glandular cells (Low); fallopian tube: glandular cells (Medium); testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPDYA,ENSG00000163806,Retained,True,All available point-screen rules pass,ovary: follicle cells (Low); testis: Leydig cells (Medium); testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Medium); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPDYE1,ENSG00000136206,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPDYE3,ENSG00000214300,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPDYE4,ENSG00000183318,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPEM1,ENSG00000181323,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPEM2,ENSG00000184560,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMAP1,ENSG00000275489,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMAP2,ENSG00000105549,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMAP2L,ENSG00000249693,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMIP10,ENSG00000196900,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMIP11,ENSG00000257987,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMIP2,ENSG00000164123,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMIP3,ENSG00000173728,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMIP5,ENSG00000165863,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMIP7,ENSG00000164500,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPMIP9,ENSG00000172073,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (High); testis: round or early spermatids (Low); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPO11,ENSG00000054796,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPPL2C,ENSG00000185294,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SPZ1,ENSG00000164299,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSMEM1,ENSG00000165120,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSX1,ENSG00000126752,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSX2,ENSG00000241476,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSX2B,ENSG00000268447,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSX3,ENSG00000165584,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSX4,ENSG00000268009,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSX4B,ENSG00000269791,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SSX5,ENSG00000165583,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+STARD6,ENSG00000174448,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+STKLD1,ENSG00000198870,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+STPG4,ENSG00000239605,Retained,True,All available point-screen rules pass,testis: sertoli cells (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SUN5,ENSG00000167098,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SYCE2,ENSG00000161860,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SYCP1,ENSG00000198765,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (Low); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+SYCP3,ENSG00000139351,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: pachytene spermatocytes (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TAS2R1,ENSG00000169777,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TBC1D21,ENSG00000167139,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: sertoli cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TBC1D28,ENSG00000189375,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TCP11,ENSG00000124678,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TDRD1,ENSG00000095627,Retained,True,All available point-screen rules pass,ovary: follicle cells (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Medium); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TDRD12,ENSG00000173809,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TDRD15,ENSG00000218819,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEKT5,ENSG00000153060,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TENT5D,ENSG00000174016,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TERB1,ENSG00000249961,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TERB2,ENSG00000167014,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX101,ENSG00000131126,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX13A,ENSG00000268629,Retained,True,All available point-screen rules pass,placenta: decidual cells (Low); placenta: syncytiotrophoblasts - microvilli (High); testis: elongated or late spermatids (Medium); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX13B,ENSG00000170925,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX13C,ENSG00000282815,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX14,ENSG00000121101,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Low); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX15,ENSG00000133863,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Medium); testis: round or early spermatids (Medium); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX19,ENSG00000182459,Retained,True,All available point-screen rules pass,testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX35,ENSG00000240021,Retained,True,All available point-screen rules pass,testis: Leydig cells (High); testis: elongated or late spermatids (Low); testis: sertoli cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX36,ENSG00000175018,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX38,ENSG00000186118,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX44,ENSG00000177673,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX46,ENSG00000227868,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX47,ENSG00000164645,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX48,ENSG00000230601,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TEX51,ENSG00000237524,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TFDP3,ENSG00000183434,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TGIF2LX,ENSG00000153779,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TGIF2LY,ENSG00000176679,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TKTL2,ENSG00000151005,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMCO2,ENSG00000188800,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMCO5A,ENSG00000166069,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMEM202,ENSG00000187806,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMEM210,ENSG00000185863,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMEM225,ENSG00000204300,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMEM270,ENSG00000175877,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMEM89,ENSG00000183396,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMEM95,ENSG00000182896,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMPRSS12,ENSG00000186452,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TMPRSS7,ENSG00000176040,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TNP1,ENSG00000118245,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TNP2,ENSG00000178279,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TOPAZ1,ENSG00000173769,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TP53TG3B,ENSG00000261509,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TPD52L3,ENSG00000170777,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TPTE,ENSG00000274391,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TPTE2,ENSG00000132958,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIM42,ENSG00000155890,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIM49,ENSG00000168930,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIM51,ENSG00000124900,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIM60,ENSG00000176979,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIM71,ENSG00000206557,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIML1,ENSG00000184108,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIML2,ENSG00000179046,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRIP13,ENSG00000071539,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Medium); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Medium); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TRPC5OS,ENSG00000204025,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSBP1,ENSG00000204296,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium); testis: cells in seminiferous ducts (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSGA10IP,ENSG00000175513,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSGA13,ENSG00000213265,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSKS,ENSG00000126467,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSPY1,ENSG00000258992,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSPY10,ENSG00000236424,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSPY2,ENSG00000168757,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSPY3,ENSG00000228927,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSPY4,ENSG00000233803,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSPY8,ENSG00000229549,Retained,True,All available point-screen rules pass,testis: preleptotene spermatocytes (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSPYL6,ENSG00000178021,Retained,True,All available point-screen rules pass,testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSSK1B,ENSG00000212122,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TSSK6,ENSG00000178093,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TTC16,ENSG00000167094,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TTC21A,ENSG00000168026,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Medium); testis: round or early spermatids (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TTC23L,ENSG00000205838,Retained,True,All available point-screen rules pass,epididymis: glandular cells (Low); testis: Leydig cells (Low); testis: elongated or late spermatids (Low); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (Medium); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TTLL13,ENSG00000213471,Retained,True,All available point-screen rules pass,testis: Leydig cells (Medium),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TTLL2,ENSG00000120440,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TTLL8,ENSG00000138892,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TULP2,ENSG00000104804,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+TXNDC8,ENSG00000204193,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+UBE2U,ENSG00000177414,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+UBQLN3,ENSG00000175520,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (Low); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+UBQLNL,ENSG00000175518,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+UMODL1,ENSG00000177398,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+USP26,ENSG00000134588,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+USP29,ENSG00000131864,Retained,True,All available point-screen rules pass,testis: sertoli cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+UTF1,ENSG00000171794,Retained,True,All available point-screen rules pass,testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+VCX,ENSG00000182583,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+VCX3A,ENSG00000169059,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+VCX3B,ENSG00000205642,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+VCY,ENSG00000129864,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+VCY1B,ENSG00000129862,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (High); testis: round or early spermatids (High); testis: spermatogonia cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+VRTN,ENSG00000133980,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+WBP2NL,ENSG00000183066,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+WDR64,ENSG00000162843,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+WDR87,ENSG00000171804,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+WDR88,ENSG00000166359,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+WFDC10A,ENSG00000180305,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+WFDC6,ENSG00000243543,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+XAGE1A,ENSG00000204379,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+XAGE1B,ENSG00000204382,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,Trial registration,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+XAGE3,ENSG00000171402,Retained,True,All available point-screen rules pass,placenta: trophoblastic cells (High),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+XAGE5,ENSG00000171405,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+XKR3,ENSG00000172967,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+YBX2,ENSG00000006047,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZAN,ENSG00000146839,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZAR1L,ENSG00000189167,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZC2HC1B,ENSG00000118491,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZC3H11B,ENSG00000215817,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZCCHC13,ENSG00000187969,Retained,True,All available point-screen rules pass,testis: Leydig cells (Low); testis: elongated or late spermatids (High); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZDHHC19,ENSG00000163958,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNF479,ENSG00000185177,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNF541,ENSG00000118156,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (Medium); testis: pachytene spermatocytes (Low); testis: round or early spermatids (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNF679,ENSG00000197123,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNF705D,ENSG00000215343,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNF716,ENSG00000182111,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNF722,ENSG00000241149,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNF729,ENSG00000196350,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZNRF4,ENSG00000105428,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZPBP2,ENSG00000186075,Retained,True,All available point-screen rules pass,testis: elongated or late spermatids (High); testis: pachytene spermatocytes (High); testis: preleptotene spermatocytes (Low); testis: round or early spermatids (High); testis: spermatogonia cells (Low),Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged
+ZSWIM2,ENSG00000163012,Retained,True,All available point-screen rules pass,Not demonstrated,Not assessed,,,,,oncoref.cta-screen.2026-10-23.1,Pass,Unchanged

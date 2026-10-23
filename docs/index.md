@@ -68,6 +68,10 @@ packages can join domains without maintaining private name mappings.
 - Need the continuous low-expression rule and uncertainty assessment? See the
   [22 October pilot](audits/cta-continuous-20261022/index.md). It separates point-screen
   passes from uncertainty-qualified inclusion; donor-model inputs are not yet available.
+- Need the latest selection and donor-variable exclusions? See the
+  [23 October screening report](audits/cta-screen-20261023/index.md) and
+  [ordered rules](cta-screen.md). Variable is excluded from selection;
+  individual donor RNA is currently reviewed for CTAG2 only.
 - Need genome-wide Reproductive, Normal and Other groups, including non-CTAs?
   Use the [expression categories and downloads](audits/normal-expression-categories-20261021-r2/index.md).
   Other contains Disposable and Silent subgroups; missing evidence remains Unassessed.

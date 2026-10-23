@@ -1,0 +1,2 @@
+Gene ID,Tissue,Cohort,Donors,Reported zero,Failing donors,Highest RNA (nTPM),Absolute ceiling (nTPM),Selectivity ceiling (nTPM),Reproductive maximum (nTPM),Negative local IHC,Variable pattern,Donor findings,RNA/IHC pairing,Source
+ENSG00000126890,heart muscle,HPA normal heart,4,2,2,13.5,12,5.53846,10.1,True,True,149: 13.5 nTPM (fails); 150: 0 nTPM (passes); 151: 0 nTPM (passes); 152: 7.1 nTPM (fails),Different donors,https://v23.proteinatlas.org/ENSG00000126890-CTAG2/tissue/heart+muscle

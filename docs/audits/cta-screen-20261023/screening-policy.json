@@ -1,0 +1,60 @@
+{
+  "policy_id": "oncoref.cta-screen.2026-10-23.1",
+  "basis": "HPA v23 human research screen",
+  "negative_ihc_relaxation": "requires reliable reproductive positive in curated gene profile",
+  "positive_control_scope": "curated gene profile; antibody/run/specimen matching not established",
+  "selectivity_increment": 0.05,
+  "allowance_ntpm": 0.1,
+  "absolute_ceilings": {
+    "Vital": [
+      2,
+      4,
+      6,
+      12
+    ],
+    "Protected": [
+      6,
+      8,
+      12,
+      24
+    ],
+    "Manageable": [
+      10,
+      20,
+      30,
+      60
+    ]
+  },
+  "selectivity_minima": {
+    "Vital": [
+      0.8,
+      0.75,
+      0.7,
+      0.65
+    ],
+    "Protected": [
+      0.75,
+      0.7,
+      0.65,
+      0.6
+    ],
+    "Manageable": [
+      0.7,
+      0.65,
+      0.6,
+      0.55
+    ]
+  },
+  "confidence_order": [
+    "Missing/uncertain or no reproductive control",
+    "Approved",
+    "Supported",
+    "Enhanced"
+  ],
+  "donor_rule": "apply the same absolute, selectivity and R>N rules to each reviewed vital donor",
+  "variable": "reported zero and failing donor in same cohort/tissue; complete local negative IHC; no competing hard exclusion/quality flag",
+  "variable_selected": false,
+  "unreviewed_donors": "Not assessed",
+  "donor_model_fitted": false,
+  "clinical_safety_probability": null
+}
