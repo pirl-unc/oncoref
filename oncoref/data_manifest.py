@@ -358,6 +358,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "ordered CTA research decisions; Variable genes are excluded pending reconsideration",
     ),
+    "target-gene-sets": (
+        "cta",
+        "disjoint CTA, Unsafe and Neither gene sets; only Unsafe is the forbidden background",
+    ),
     "proteoform-groups": ("gene-id", "byte-identical CTA proteoform groups"),
     "proteoform-groups-genome": ("gene-id", "byte-identical proteoform groups (genome-wide)"),
     "source-matrices": (

@@ -11,10 +11,10 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 [Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-screen-20261023/)
+and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/target-sets-20261023/)
 document the nested sets, cited dataset mappings, complete publication intake,
 and dog/mouse evidence coverage. The human research screen requires reproductive
-RNA >0 or positive reproductive IHC, with category-specific absolute RNA ceilings,
+expression, with category-specific absolute RNA ceilings,
 pairwise reproductive selectivity, and an independent positive-IHC veto.
 Complete local negative IHC earns relaxation only with positive reproductive
 IHC in the curated gene profile. Reviewed individual Vital-tissue RNA donors
@@ -24,6 +24,12 @@ now and retained for reconsideration. Donor evidence is currently imported for
 CTAG2 only; other genes are explicitly unassessed for donor variation.
 The report preserves every candidate's exclusion reasons. Numerical limits
 are research parameters, not validated clinical safety limits.
+
+The current `oncoref.target_sets` API partitions genes and exact proteins into
+**CTA**, **Unsafe** and **Neither**. Only Unsafe supplies the forbidden protein
+background. Candidates without positive IHC need reproductive RNA ≥5 nTPM;
+low-expression and Variable candidates belong to Neither. The report includes
+the regenerated disjoint protein FASTAs and an explicit k-mer exclusion recipe.
 
 The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)
 classify Reproductive, Normal and Other independently of CTA nomination.

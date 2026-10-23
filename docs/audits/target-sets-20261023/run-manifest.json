@@ -1,0 +1,86 @@
+{
+  "policy": "oncoref.target-sets.2026-10-23.1",
+  "admission_floor_ntpm": 5,
+  "no_positive_ihc_floor": true,
+  "forbidden_categories": [
+    "Unsafe"
+  ],
+  "variable_category": "Neither",
+  "sources": {
+    "hpa_rna_consensus": {
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
+      "bytes": 37949495,
+      "version": "v23"
+    },
+    "hpa_normal_tissue": {
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
+      "bytes": 82941549,
+      "version": "v23"
+    }
+  },
+  "sequence_asset_base": "https://github.com/pirl-unc/oncoref/releases/download/v1.13.0/",
+  "sequence_inputs": {
+    "proteins.csv.gz": "75bea2bdaa6f3f66d1904c5c3f37fce8703b7adb7e4b781c1e592032013dbbaf",
+    "protein-occurrences.csv.gz": "d943de1771ecf192fe74b75ee4f159dbeafa7bb902f9a2b7a13fdda0f9d58b5d",
+    "translations-for-review.csv.gz": "1865837f34aec18292606167515bfcc95a1fbcc3b1d3fa95f81ed1ddb27613d2",
+    "translations-for-review.fasta.gz": "5970c121504d7ce3c2939e5a13c905ffb5ea3901692de2b23c0cd86ce3c2512c",
+    "normal.fasta.gz": "56918d1ae72b0aaf9e350e4d7664799fe56883175e71d3700af36c44020683a3",
+    "unassessed.fasta.gz": "1ecfeef3a7c2e489ba8f62f50225ab889bd5c42afdb1dd6749b5105546d45e49",
+    "reproductive.fasta.gz": "80c7a44dbf9b9507e01b6320fd4b1d089e417fc769984dc1ded516229c6e4080",
+    "other.fasta.gz": "370c8036441a957f43734dc562a288df3970454f291a75a8299ef2a101df2ced"
+  },
+  "inputs": {
+    "docs/audits/normal-expression-categories-20261021-r2/run-manifest.json": "2df787a5e6e35a5f6667555f022c3f00f1c31668d58c48386ec910fd0621e368",
+    "docs/audits/normal-expression-categories-20261021-r2/gene-categories.csv.gz": "8811784f7e6d45e5fcf43203e1d3c3a1bf7c26f04c61d61822cc2adf3d65e2e8",
+    "docs/audits/cta-screen-20261023/run-manifest.json": "33539507b77b26a242192681f4f94b8e0e0be0ecd6197f0c54d327bfd76e4fd5",
+    "docs/audits/cta-screen-20261023/gene-results.csv": "dbcfee8477f63df9221f3d094ea6c25bdf391fa627b6fa4f9c42748bb4e9ebb1",
+    "docs/audits/cta-screen-20261023/tissue-evidence.csv.gz": "58348bc946198184a412109ecf82d0d0e04c2087c1f0a8fe3b0f73dbe41d4f3f",
+    "docs/audits/cta-screen-20261023/donor-results.csv": "46443801735b4cb0032114dbe72117a0a171690c8e7a24fe8de61249f10a8bbb",
+    "docs/audits/normal-sequence-sets-20261021/run-manifest.json": "64a29486f85ee2766ee87403172a639ecd3c6c3a9d6b75f374362ffb5e245b45",
+    "oncoref/data/cta-external-safety-reviews.csv": "a4ff8aa9da603cb790127aaf00f193432f768dce58689f8f53a1adf6569e64c8",
+    "oncoref/data/cta-ihc-unreliable.csv": "57ec0ec264c68eed9b7d3c22090e9df252a53fed5850fe79caf5bc1607a0ecb2"
+  },
+  "implementation_sha256": {
+    "scripts/target_sets_report.py": "6ecc115b72b3460093148989031f8cf5c49226f52e45a778fa67012f28bbd60b",
+    "oncoref/target_sets.py": "8ee4337957b894e4ebb00521eac3cf29db45ae2572fd776d073c37e5df73579c",
+    "oncoref/cta_screen.py": "a8a01906e5d5213ab9d50883350899fd0d23f88e1fc840da103ab677b7e8d5c5",
+    "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
+    "scripts/cta_scope_report.py": "f68f0cda6bee98a31429ef56f758116034dc962b361c4c7b61426511f4a72cd7",
+    "scripts/cta_permitted_report.py": "f864eb76c9eefbc9d11682d5dd466fb816b19646b882fd3fda81ce2e0d98046a"
+  },
+  "outputs": {
+    "admission-sensitivity.csv": "1131d506c0a2b81b77fd3a7c7f972b59f3ed9b9e0a01951cb70e0c25332ba056",
+    "counts.csv": "bb5d626ff12b1c8e9f06a12402f9c1111b5b90896377e8905272349db398d7e9",
+    "cta-candidate-results.csv.gz": "94e50f6d7e4c1aa38dec8e90958ec9095c9a1c92899d98d19bfd0b0b28aa1d23",
+    "cta-genes.csv.gz": "dd3a152869ad2f3420e75229a4e4a0e553d09cd313bbcd61f93f1d5f6b14b0d3",
+    "exclusion-basis.json": "43f27e0299d60b79327505b1caf90003181ff4dd39fbdf5f1a0f5e08310aa5c9",
+    "explore.html": "1f0fc9d7e7589aaa5a8642572e13216faa18f58e874c2776173465b45e8da5c0",
+    "gene-results.csv.gz": "4d73b7d4103198846f13326be013b8a4176ec6c036d0755dfeff0d7ae247f4e9",
+    "index.md": "75a6ead759629301c025d32e6920af5ed1d1c99bc448eee14a47510f948ae843",
+    "neither-genes.csv.gz": "68f6875939f5c07e47cca6ca1ffbcd1b8e13e2bcd77325923732f90285074c81",
+    "removed-cta-candidates.csv": "1489e9a7e731dc4527ddb28a8512491687bdc7f2a39c25c24d71a4eeef248db5",
+    "subgroups.csv": "cdc79c6c6b81ffdb5d2d5176792af397a2df77392cf5d5bdd7839b2c9f7ae8d7",
+    "unsafe-genes.csv.gz": "85443b698847432888461019507928c09158f5aada5424b69b1345e7bac5064e",
+    "variable.csv": "a33116c6130df0874ace5e3acd7ceb41fe4216db2312709e5e2947365ca75152"
+  },
+  "release_assets": {
+    "additional-forbidden.fasta.gz": "2ddfd59f1cadca662b0c82a1a5ea20c90e95fd2129dc0ec5c0e89fce9660d6aa",
+    "cta-proteins.csv.gz": "341afba519a180080b22b01fbb920c9ea57d07263860c42617a9b2b70768fe2c",
+    "cta.fasta.gz": "7e92aecf1114eeb29ec8d7698bf77550a6becc888fa2613d6534de926b5a7140",
+    "exclusion-basis.json": "43f27e0299d60b79327505b1caf90003181ff4dd39fbdf5f1a0f5e08310aa5c9",
+    "genes-without-complete-proteins.csv.gz": "a8642a74a27cbf2eeeb598516b9720e110fc1a6cda23c83fefdcf3da4d99b5e7",
+    "neither-proteins.csv.gz": "476a659674b7cf183652d1956caba1f208fb4eecffde4e18488c4db392971baf",
+    "neither.fasta.gz": "fd4d8adc6e08c7985fb23f6d0a4d535bc673c9ac4b120d06f352f0c271b2f965",
+    "reference.json": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
+    "target-protein-occurrences.csv.gz": "31f3ff86c9e20c022334c1493662ffbadc76bf182d36efe690c7bec4032f47bc",
+    "target-proteins.csv.gz": "a6ee3a285e5fbb1d8ae0494b1a83e29b9e66d74bceaeeeb234254f5efa1d733b",
+    "translations-for-review.csv.gz": "011c6cce1e1fcc9edba96b23bec137c0c9495ecf7379854556d03529b1028d2c",
+    "translations-for-review.fasta.gz": "5970c121504d7ce3c2939e5a13c905ffb5ea3901692de2b23c0cd86ce3c2512c",
+    "unclassified-sequence-genes.csv.gz": "d4261b21ef2ff4b03987e279e1aab99b505b57490b3331d18e5eb563dc212e4c",
+    "unsafe-proteins.csv.gz": "acc86e147bef42244d2584f752b6365baf2ff472f36ca86ab5cba618a65e6e09",
+    "unsafe.fasta.gz": "8bf2d420e53e01362bd9dd6155ca2cedf1ead5b306f4482905b947c470e7f2c8"
+  },
+  "published_dataset_sha256": "4d73b7d4103198846f13326be013b8a4176ec6c036d0755dfeff0d7ae247f4e9"
+}
