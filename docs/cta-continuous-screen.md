@@ -1,5 +1,10 @@
 # Continuous CTA screening
 
+The [23 October ordered-rule screen](audits/cta-screen-20261023/index.md) adds
+reproductive positive controls, tighter selectivity and donor-based exclusions.
+Its **Variable** category excludes CTAG2 while recording the evidence needed for
+reconsideration. The 22 October report below remains a historical pilot.
+
 The [22 October pilot report](audits/cta-continuous-20261022/index.md) applies a
 continuous low-expression allowance to the published HPA v23 screen. It keeps
 two outputs separate:

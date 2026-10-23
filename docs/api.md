@@ -645,6 +645,15 @@ candidate is called a CTA by an explicit Human Protein Atlas (HPA) normal-tissue
 expression rule; the call is not evidence that its antigen is presented by the
 major histocompatibility complex (MHC) or that it is a validated therapy target.
 
+The current ordered research screen is available through `oncoref.cta_screen`:
+`results()`, `retained_gene_ids()` and `variable_gene_ids()` (plus corresponding
+`*_gene_names()` accessors for known symbols). **Variable is
+excluded from selection**, with reviewed zero/failing vital-tissue RNA donors
+and negative local IHC recorded for reconsideration. Donors use the same
+IHC-dependent RNA limits as the main screen. See the [rules and API](cta-screen.md)
+and [current report](audits/cta-screen-20261023/index.md). Only CTAG2 currently
+has imported individual-donor RNA; other genes' donor variation is unassessed.
+
 The opt-in `oncoref.cta_continuous_screen` module adds continuous expression
 margins and a separate Included/Excluded/Review assessment of caller-supplied
 joint posterior evidence. See the [API and modeling contract](cta-continuous-screen.md)

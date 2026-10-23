@@ -11,14 +11,18 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 [Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-curation-20261021-r2/)
+and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-screen-20261023/)
 document the nested sets, cited dataset mappings, complete publication intake,
 and dog/mouse evidence coverage. The human research screen requires reproductive
 RNA >0 or positive reproductive IHC, with category-specific absolute RNA ceilings,
 pairwise reproductive selectivity, and an independent positive-IHC veto.
-Complete local negative IHC sets the thresholds for Manageable, Protected and
-Vital tissues. The report compares fixed and adaptive results and preserves
-every candidate's exclusion reasons and unassessed mappings. Numerical limits
+Complete local negative IHC earns relaxation only with positive reproductive
+IHC in the curated gene profile. Reviewed individual Vital-tissue RNA donors
+must meet the same RNA limits as the main screen. **Variable** candidates have
+both reported-zero and failing donors with negative local IHC; they are excluded
+now and retained for reconsideration. Donor evidence is currently imported for
+CTAG2 only; other genes are explicitly unassessed for donor variation.
+The report preserves every candidate's exclusion reasons. Numerical limits
 are research parameters, not validated clinical safety limits.
 
 The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)

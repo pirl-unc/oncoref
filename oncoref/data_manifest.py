@@ -346,6 +346,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "source-anchored supplemental per-modality observations for CTA candidates",
     ),
+    "cta-donor-rna": (
+        "cta-evidence",
+        "reviewed individual HPA v23 vital-tissue RNA donors; currently CTAG2 heart only",
+    ),
+    "cta-donor-ihc": (
+        "cta-evidence",
+        "supplementary CTAG2 heart IHC donor metadata recording RNA/specimen mismatch",
+    ),
+    "cta-screen-results": (
+        "cta",
+        "ordered CTA research decisions; Variable genes are excluded pending reconsideration",
+    ),
     "proteoform-groups": ("gene-id", "byte-identical CTA proteoform groups"),
     "proteoform-groups-genome": ("gene-id", "byte-identical proteoform groups (genome-wide)"),
     "source-matrices": (

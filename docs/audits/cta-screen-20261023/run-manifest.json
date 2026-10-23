@@ -1,0 +1,43 @@
+{
+  "policy_id": "oncoref.cta-screen.2026-10-23.1",
+  "donor_model_fitted": false,
+  "donor_reviewed_genes": [
+    "CTAG2"
+  ],
+  "inputs": {
+    "docs/audits/cta-curation-20261021-r2/run-manifest.json": "885870e8efa6023b4d5fb8a2849c08c3e4bdefc08c97cb068b8ce3f1c160b886",
+    "docs/audits/cta-curation-20261021-r2/candidate-decisions.csv.gz": "acd562ddbf73f9d90d5be6092209c11913661a70cf135b45525d4617b66feb95",
+    "docs/audits/cta-curation-20261021-r2/tissue-evidence.csv.gz": "4ae2a1f01c10b09fd7b0daa315e3485f3cb44ba1111140f2a003e2346c43fa51",
+    "docs/audits/cta-curation-20261021-r2/clinical-target-audit.csv": "b040450e5f5ce47ce30f14fe42f98f15a9c6333f40f6b8cdec13098ba46dcc64",
+    "docs/audits/cta-continuous-20261022/run-manifest.json": "a362a5273c9cb9345752699cf1e8d7e6d82ce972f901b02ad7bb4510eb86ee97",
+    "docs/audits/cta-continuous-20261022/gene-results.csv": "031df4ba5e47253de4d11580a75cceef79b37548d20cdfd97b1b7d5d65e92c42",
+    "docs/audits/normal-expression-categories-20261021-r2/run-manifest.json": "2df787a5e6e35a5f6667555f022c3f00f1c31668d58c48386ec910fd0621e368",
+    "oncoref/data/cta-donor-rna.csv": "4df91d972bab43c3d4419d1d90bc18f311dc131b8e028295da4eb71bdb0f31b5",
+    "oncoref/data/cta-donor-ihc.csv": "96638f3ddfcfa3c69a7212733933544b3789df33a3c32740ae4075feeb9e9c2e",
+    "oncoref/data/cta-reviewed-evidence.csv": "3713da4e1fff05b3d04dc07e161d34bc75a6beb13616f6f130690bdba65054a3",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "4f8a0232e0d547c189de77eb88a42f30e563ebab7c6fe6d0af82ba0a54bbdbae",
+    "oncoref/data/normal-tissue-mappings.csv": "9e852c13dfea2638e804f855fef8d7a19c7fe5902ae55c9aee1b094e43eca4f5"
+  },
+  "implementation_sha256": {
+    "scripts/cta_screen_report.py": "72a65f96c1e62241c30ecd87df12387b60229d8b49645a095a3547a66f4dbdb0",
+    "oncoref/cta_screen.py": "a8a01906e5d5213ab9d50883350899fd0d23f88e1fc840da103ab677b7e8d5c5",
+    "oncoref/cta_continuous_screen.py": "f22069db0c820dd5995096231b264e887a072349e5474d457297ba8da3ecf731",
+    "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e"
+  },
+  "outputs": {
+    "changes.csv": "06ae0455387fc494b7486a3bf47ecf3a9038cf882c7c93029cda3b8857f6d21d",
+    "clinical-results.csv": "c35819b82618e6eba8886cfa6ecc35bc80bc05c211ed6bd3db60479acbb7c99e",
+    "counts.csv": "4f2ba746dce8b5078dbe066bccb29e1c7da6aaae3059589587393988910e8a41",
+    "donor-ihc.csv": "96638f3ddfcfa3c69a7212733933544b3789df33a3c32740ae4075feeb9e9c2e",
+    "donor-results.csv": "46443801735b4cb0032114dbe72117a0a171690c8e7a24fe8de61249f10a8bbb",
+    "donor-rna.csv": "4df91d972bab43c3d4419d1d90bc18f311dc131b8e028295da4eb71bdb0f31b5",
+    "explore.html": "f74b41477b64607e29d1431d5e13f1b14164a2101ca7dd5f040226ca532f0846",
+    "gene-results.csv": "dbcfee8477f63df9221f3d094ea6c25bdf391fa627b6fa4f9c42748bb4e9ebb1",
+    "index.md": "8dd9393497aad1efb905ba021d42ac893af95b0c85a651983f9dd5bce840b5dc",
+    "retained.csv": "a7ebe387a6f446e231df0a2b7fc127017a0c503dc347e2927b1143afc9c82736",
+    "screening-policy.json": "b29e68ea17ec428e1ae3c4a76c8b54905feeb0eba485a364005e3843691e0ea3",
+    "tissue-evidence.csv.gz": "58348bc946198184a412109ecf82d0d0e04c2087c1f0a8fe3b0f73dbe41d4f3f",
+    "variable.csv": "4555efa8f7e122cb07a4f3c2c05c894b6171eeea79a6625388727660b1de4339"
+  },
+  "published_dataset_sha256": "dbcfee8477f63df9221f3d094ea6c25bdf391fa627b6fa4f9c42748bb4e9ebb1"
+}
