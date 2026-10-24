@@ -69,7 +69,7 @@ packages can join domains without maintaining private name mappings.
   [22 October pilot](audits/cta-continuous-20261022/index.md). It separates point-screen
   passes from uncertainty-qualified inclusion; donor-model inputs are not yet available.
 - Need the latest target and forbidden-protein sets? See the
-  [CTA, Unsafe and Neither report](audits/cta-normal-cells-20261023/index.md) and
+  [CTA, Unsafe and Neither report](audits/cta-neither-review-20261024/index.md) and
   [API](target-sets.md). Low-expression and Variable genes belong to Neither;
   only Unsafe supplies the default forbidden background.
 - Need genome-wide Reproductive, Normal and Other groups, including non-CTAs?

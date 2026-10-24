@@ -366,6 +366,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "cited human reproductive/tumor support and normal-cell protein counterevidence",
     ),
+    "cta-followup-notes": (
+        "cta-evidence",
+        "review questions and reconsideration requirements for watched CTA candidates; no decision overrides",
+    ),
+    "cta-followup-reviews": (
+        "cta-evidence",
+        "current decisions, native-unit RNA maxima and evidence for watched CTA candidates",
+    ),
+    "sequence-gene-rna-reviews": (
+        "cta-evidence",
+        "RNA exclusions and coverage for exact reference sequence loci outside the canonical gene table",
+    ),
     "proteoform-groups": ("gene-id", "byte-identical CTA proteoform groups"),
     "proteoform-groups-genome": ("gene-id", "byte-identical proteoform groups (genome-wide)"),
     "source-matrices": (

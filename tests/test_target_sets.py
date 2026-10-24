@@ -247,7 +247,7 @@ def test_published_gene_groups_and_important_targets():
     groups = [target_sets.gene_ids(group) for group in target_sets.GROUPS]
     assert len(set.union(*groups)) == len(genes)
     assert not any(groups[i] & groups[j] for i in range(3) for j in range(i + 1, 3))
-    assert len(groups[0]) == 436
+    assert len(groups[0]) == 399
     indexed = genes.set_index("Gene")
     for name, detail in [("CTAG2", "Variable"), ("ZNF730", "Cellular"), ("FOXR2", "Antibody")]:
         assert indexed.loc[name, "Category"] == "Neither"
@@ -257,8 +257,11 @@ def test_published_gene_groups_and_important_targets():
     for name in ["IL5", "IL13", "ABCB5", "PAPPA"]:
         assert indexed.loc[name, "Category"] == "Unsafe"
     assert indexed.loc["CT55", "Category"] == "CTA"
-    for name in ["ACRBP", "HORMAD1", "TDRD1", "TEX101", "BRDT"]:
+    for name in ["HORMAD1", "TDRD1", "BRDT", "DAZL"]:
         assert indexed.loc[name, "Category"] == "Neither"
+    for name in ["ACRBP", "TEX101", "GAGE12F", "PAGE2B", "TRIP13", "MAGEA3", "ROPN1"]:
+        assert indexed.loc[name, "Category"] == "Unsafe"
+        assert indexed.loc[name, "Detail"] == "High RNA"
     benchmark = {
         "AKAP4",
         "CT83",
@@ -268,12 +271,10 @@ def test_published_gene_groups_and_important_targets():
         "GAGE1",
         "MAGEA1",
         "MAGEA10",
-        "MAGEA3",
         "MAGEA4",
         "MAGEC1",
         "MAGEC2",
         "PRAME",
-        "ROPN1",
         "SAGE1",
         "SPANXB1",
         "SSX2",
@@ -304,8 +305,17 @@ def test_current_report_and_dataset_checksums():
     assert recipe["neither_forbidden"] is False
 
 
-def test_current_normal_cell_report_and_dataset_checksums():
+def test_historical_normal_cell_report_checksums():
     report = ROOT / "docs/audits/cta-normal-cells-20261023"
+    manifest = json.loads((report / "run-manifest.json").read_text())
+    assert manifest["forbidden_categories"] == ["Unsafe"]
+    for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
+        for name, expected in manifest[section].items():
+            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+
+
+def test_current_neither_review_and_dataset_checksums():
+    report = ROOT / "docs/audits/cta-neither-review-20261024"
     manifest = json.loads((report / "run-manifest.json").read_text())
     assert manifest["forbidden_categories"] == ["Unsafe"]
     for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
@@ -314,3 +324,48 @@ def test_current_normal_cell_report_and_dataset_checksums():
     assert (ROOT / "oncoref/data/target-gene-sets.csv.gz").read_bytes() == (
         report / "gene-results.csv.gz"
     ).read_bytes()
+    assert (ROOT / "oncoref/data/cta-followup-reviews.csv").read_bytes() == (
+        report / "follow-up.csv"
+    ).read_bytes()
+    assert (ROOT / "oncoref/data/sequence-gene-rna-reviews.csv.gz").read_bytes() == (
+        report / "sequence-gene-reviews.csv.gz"
+    ).read_bytes()
+
+
+def test_no_remaining_neither_or_cta_has_high_nonpermitted_measured_rna():
+    report = ROOT / "docs/audits/cta-neither-review-20261024"
+    genes = target_sets.results()
+    maxima = pd.read_csv(report / "rna-context-maxima.csv.gz", low_memory=False)
+    high = maxima.loc[~maxima.permitted & maxima.maximum.gt(30)]
+    from oncoref.normal_rna_review import forbidden_gene_ids, sequence_gene_reviews
+
+    extra = sequence_gene_reviews()
+    all_genes = pd.concat([genes, extra], ignore_index=True)
+    remaining = all_genes.loc[all_genes.Category.isin(["CTA", "Neither"])]
+    assert remaining["Normal RNA assessed"].all()
+    assert not set(high.gene_id) & set(remaining["Gene ID"])
+    observations = pd.read_csv(report / "high-normal-rna.csv.gz", low_memory=False)
+    assert set(high.gene_id) == set(observations.gene_id)
+    assert not observations.finding_id.duplicated().any()
+    assert observations.unit.isin(["TPM", "nTPM"]).all()
+    assert observations.value.gt(30).all()
+    assert not observations.permitted.any()
+    assert maxima.loc[maxima.category.eq("reproductive"), "maximum"].max() > 1000
+    assert len(extra) == 1721 and not extra.Target.any()
+    assert set(extra.loc[extra.Category.eq("Unsafe"), "Gene ID"]) <= forbidden_gene_ids()
+    assert not set(extra.loc[extra.Category.eq("Neither"), "Gene ID"]) & forbidden_gene_ids()
+
+
+def test_followup_records_preserve_questions_without_gene_exceptions():
+    from oncoref.normal_rna_review import followup_reviews
+
+    records = followup_reviews()
+    assert len(records) == 15 and not records.Gene.duplicated().any()
+    for col in ["Review question", "Reconsideration evidence", "Limitations", "Evidence report"]:
+        assert records[col].notna().all() and records[col].ne("").all()
+    indexed = records.set_index("Gene")
+    assert indexed.loc["CTAG2", "Detail"] == "Variable"
+    assert indexed.loc["FOXR2", "Detail"] == "Antibody"
+    assert indexed.loc["ACRBP", "Forbidden"]
+    assert indexed.loc["MAGEA3", "Forbidden"]
+    assert indexed.loc["ROPN1", "Forbidden"]

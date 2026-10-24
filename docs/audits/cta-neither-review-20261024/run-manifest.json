@@ -1,0 +1,91 @@
+{
+  "policy": "oncoref.target-sets.2026-10-24.1",
+  "baseline_policy": "oncoref.target-sets.2026-10-23.2",
+  "implementation_and_inputs": {
+    "oncoref/normal_rna_review.py": "828050c978bdeeada29937e8773b3a6e6d2012187bd065dd16eb0b310feb1437",
+    "scripts/review_neither_ctas.py": "904b68e03f8e35d23e6674856de794f4600c4ca7a1440cccdb358f1879ad93ae",
+    "scripts/render_neither_cta_review.py": "2cda2edd5f2010393c114fe03c7e0cfc7a50b5b6a7ca0ee7ccd0782c81dca69a",
+    "scripts/templates/neither-review-explorer.html": "d895c1a736c72d466e4af7041d4ec79269fcfaa97473295b964de04c6f65d12d",
+    "oncoref/data/cta-followup-notes.csv": "2770f58a551fe0f9bcbce7903586b4d4ac57a67106bc2eca0842f314fc466d97",
+    "oncoref/data/cta-donor-rna.csv": "4df91d972bab43c3d4419d1d90bc18f311dc131b8e028295da4eb71bdb0f31b5",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
+    "oncoref/data/normal-tissue-mappings.csv": "ed83eaca220f27514c27bf0328440fab1ec85d7f11c44ff1d5dda4bb7adc0538",
+    "oncoref/normal_cell_data.py": "e8f93223eae4d6eea774209f30aaea335e135654b5e106a0cfd5cdb342f5c56a",
+    "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
+    "oncoref/data/normal-cell-sources.json": "6efb085a57872fa98743281238e260d0a03594142f554563800739e257347080",
+    "docs/audits/cta-normal-cells-20261023/gene-results.csv.gz": "37a123dd260d6a009e49901ff781d44c5c8a10fa855d090fba117a8bdb09f5db",
+    "docs/audits/cta-normal-cells-20261023/run-manifest.json": "d855a4002521a106ac7f4c52b77b03e82d469fbb11b8183112ceeb997924f213",
+    "docs/audits/cta-normal-cells-20261023/unclassified-sequence-genes.csv.gz": "d4261b21ef2ff4b03987e279e1aab99b505b57490b3331d18e5eb563dc212e4c"
+  },
+  "outputs": {
+    "changed-genes.csv": "79883692e595417c3efe40e322165807909a2b41cf6841525d26e7108bf0cbee",
+    "cta-genes.csv.gz": "10ce135d7b179a9bdc1cf647d451734cf982b5104cf97a17b1e60ea112e22469",
+    "exclusion-basis.json": "cc20da580910279328df9e9eb2dd289b4f576b4dd420d5adee6ee05c96d0ca0f",
+    "explore.html": "153d780c13c882b6dddefa3e3054f8d90305a19554c1311bedd4586dd512e76f",
+    "follow-up.csv": "07d8b7f84d087f63577f88de009c03a735214a9c19eb981bb7a36d8dbfeb3393",
+    "follow-up.md": "b0dc56d30617b94c62b5c68ea014b5eafac41de69c0e7e73bb2519ccbb999b1e",
+    "gene-results.csv.gz": "dbc5fe2d36da55d4fab92ae80dee29c6071f44c8aa071562258b800dfb98b654",
+    "genes-without-complete-proteins.csv.gz": "7ebb4bfa6c24ae39f530164e9536dc2dd2dbc26ad1e3d9d7b606c879ecdad567",
+    "high-normal-rna.csv.gz": "bff11a9de9b0170e2daad696e63232ff5a49197b2c41a8ca1451be1edac3d36f",
+    "high-rna-by-source.csv": "608cdd3e9c9794639afc9ca1362c74d6b07e2c769c80b6b6f24f6ff9c58f0c96",
+    "important-ctas.csv": "656b2f47b408542e3c9f905142be306e98f3c9b60e02b686e13e2f05cf3c8c4a",
+    "important-proteins.csv": "09ab7614b87eb61e77a45164d3306b0c604fcd7186ee0d1b2322917869aaa624",
+    "index.md": "ad023a16c06db7352c607c250179517073f3b3b871992341f2c12527c71f4e4e",
+    "neither-genes.csv.gz": "574b91fa8f100ad0510ddfdc455bd29cb0a8c44d47950604b63a8ecb7ee8bb33",
+    "normal-rna-summary.csv.gz": "15edfec9708b9562c6928163f66934ab74545e09ef2468c8c68bce41aa568c78",
+    "protein-assets.json": "429a4bf096b5f68a45220dbc2e4d9881dacfbe27907f22c698730be0cd4ca365",
+    "reference.json": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
+    "review.md": "fe36de794a996f0a07819b32e295d614790f40aa245ff994e8b8fa75494da2d4",
+    "rna-context-maxima.csv.gz": "365645d0ec324aaa7c015dfc739c25577680e71eb99818452e3ecd81feb5f3f2",
+    "sequence-gene-reviews.csv.gz": "0c186ff46873943150b71b964187336d180536786165184c28fb00fc8591ea5d",
+    "source-provenance.json": "170bd61e866244e738b9a1b765c6e8dc68e68235090ede21fc5752df995c8eff",
+    "summary.json": "460f657f079b1465ee2766e43302318ca90639d956a006a66e9b841f9e6f7cc8",
+    "unclassified-sequence-genes.csv.gz": "4eb5bdb1a51361adb4ba9cfbd4be6ddb57e49a601a401fc2635bff035574e50a",
+    "unsafe-genes.csv.gz": "77e00d651aa89db73429267b3222091b810a1b92e8ca0e2e3b6db005343cf5b9"
+  },
+  "forbidden_categories": [
+    "Unsafe"
+  ],
+  "summary": {
+    "policy": "oncoref.target-sets.2026-10-24.1",
+    "genome": {
+      "Unsafe": 17699,
+      "Neither": 1999,
+      "CTA": 399
+    },
+    "nominated": {
+      "Unsafe": 1580,
+      "Neither": 561,
+      "CTA": 399
+    },
+    "previous_cta": 436,
+    "previous_neither": 2252,
+    "cta_to_unsafe": 37,
+    "neither_to_unsafe": 253,
+    "remaining_neither_above_30": 0,
+    "neither_maxima": {
+      "TPM": 29.9398384344,
+      "nTPM": 30.0
+    },
+    "assessed_genes": 4426,
+    "assessed_canonical_genes": 2705,
+    "sequence_loci": 1721,
+    "sequence_loci_measured": 440,
+    "sequence_loci_excluded": 391,
+    "rna_measurements": 6449210,
+    "high_observations": 163260,
+    "previous_benchmark_retained": 19,
+    "previous_benchmark_total": 21,
+    "benchmark_losses": [
+      "ROPN1",
+      "MAGEA3"
+    ],
+    "watchlist_genes": 15,
+    "new_exclusions_only_unsited": 1,
+    "proteins": {
+      "Unsafe": 126384,
+      "Neither": 2878,
+      "CTA": 723
+    }
+  }
+}

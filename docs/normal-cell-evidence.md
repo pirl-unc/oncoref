@@ -1,8 +1,10 @@
 # Normal-cell data and CTA rules
 
-The [current report](audits/cta-normal-cells-20261023/index.md) combines HPA's bulk
+The [normal-cell report](audits/cta-normal-cells-20261023/index.md) combines HPA's bulk
 and curated IHC screen with cell-resolved RNA, primary antibody records and cited
-human protein evidence. It retains 436 CTA candidates and records every change.
+human protein evidence. The [current review](audits/cta-neither-review-20261024/index.md)
+adds an absolute >30 TPM/nTPM ceiling outside explicitly permitted contexts,
+retains 399 CTA genes, and records each change and candidate's follow-up needs.
 
 ## One download and cache contract
 
@@ -125,8 +127,21 @@ The pure functions in `normal_cell_screen` accept normalized observations and
 return evidence flags or classifications. `classify()` requires the frozen
 v1.16 baseline, a unique gene-level evidence summary and cited publication
 facts. Its output records previous decisions, individual findings, current
-policy and change. `target_sets.results()` exposes the published current table;
+policy and change. The [24 October review](audits/cta-neither-review-20261024/index.md)
+additionally checks every previous CTA/Neither gene against the hard >30 ceiling,
+including individual immune specimens and unsited cell-type summaries. High values
+now enter Unsafe even with reproductive-positive IHC or a Variable designation.
+Reproductive/Disposable contexts remain permitted; CP10K remains a separate rule.
+The 23 October findings above remain available as the frozen baseline.
+`target_sets.results()` exposes the published current table;
 only Unsafe supplies forbidden proteins.
+
+```python
+from oncoref import normal_rna_review
+normal_rna_review.followup_reviews()  # questions, evidence, maxima and current decisions
+normal_rna_review.sequence_gene_reviews()  # reference loci outside the canonical table
+normal_rna_review.forbidden_gene_ids()     # complete gene-ID union used by protein exports
+```
 
 ## Reproduce
 

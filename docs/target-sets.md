@@ -1,6 +1,6 @@
 # CTA, Unsafe and Neither
 
-The [current report](audits/cta-normal-cells-20261023/index.md) supplies three disjoint
+The [current report](audits/cta-neither-review-20261024/index.md) supplies three disjoint
 sets across 20,097 canonical human protein-coding genes and the pinned Ensembl
 115 protein inventory.
 
@@ -15,10 +15,12 @@ evidence: reproductive RNA **≥5 nTPM**, reliable positive reproductive protein
 or cited reproductive plus tumor/recognition evidence. Reliable reproductive IHC
 can satisfy admission below 5 nTPM. None of these bypass normal-expression gates.
 
-The added normal-cell screen leaves **436 CTA genes**. It retains all 21 previously
-retained clinical/requested benchmark genes and adds CT55. Of the previous 589,
-152 move to Neither for cell-RNA or antibody review, while IL13 and PAPPA move to
-Unsafe because published nonmalignant cells produce their proteins.
+The current screen leaves **399 CTA genes**. A hard ceiling of **>30 TPM or nTPM**
+outside explicitly mapped Reproductive/Disposable contexts moves 253 prior Neither
+genes and 37 prior CTAs into Unsafe. It applies regardless of IHC confidence or
+reproductive enrichment. MAGEA3 and ROPN1 are benchmark losses; 19 of the prior 21
+benchmark genes remain. CT55 also remains retained. The dated 23 October report
+preserves the previous 436-gene decisions.
 
 Unsafe requires positive normal IHC, above-ceiling normal RNA, a reviewed safety
 hold, or cited normal protein production outside permitted compartments. ABCB5
@@ -27,7 +29,11 @@ does not make a gene Unsafe. Original bulk category/IHC ceilings are unchanged.
 
 Neither preserves Low, Variable, Cellular, Antibody, Unassessed and other
 unresolved subgroups. CTAG2 remains Variable. FOXR2 has an Antibody hold;
-ACRBP/OY-TES-1 and several other established CTAs have Cellular review holds.
+HORMAD1, TDRD1, BRDT and DAZL have Cellular review holds. ACRBP/OY-TES-1 and
+TEX101 now enter Unsafe / High RNA. No remaining Neither gene has an audited
+non-permitted/unsited TPM or nTPM observation above 30. Corneal CP10K remains a
+separate rule. [Candidate follow-up](audits/cta-neither-review-20261024/follow-up.md)
+records questions and evidence needed for reconsideration.
 The [normal-cell guide](normal-cell-evidence.md) documents the separate native-unit
 RNA review triggers. Missing data never become zero.
 
@@ -39,18 +45,27 @@ only CTAG2 has the previously reviewed vital-organ individual-donor RNA evidence
 ## Python
 
 ```python
-from oncoref import target_sets
+from oncoref import target_sets, normal_rna_review
 
 evidence = target_sets.results()
 cta = target_sets.gene_ids("CTA")
 forbidden = target_sets.gene_ids("Unsafe")
 neither = target_sets.gene_ids("Neither")
 names = target_sets.gene_names("CTA")  # known symbols; IDs include unnamed loci
+reviews = normal_rna_review.followup_reviews()
+sequence_loci = normal_rna_review.sequence_gene_reviews()
+all_forbidden_genes = normal_rna_review.forbidden_gene_ids()
 ```
 
 All three ID sets are disjoint. Earlier `cta`, `cta_screen` and normal-expression
 exports retain their dated definitions. Use `target_sets` and the current report
 for this policy.
+
+`target_sets` retains its canonical 20,097-gene scope. The sequence inventory
+also contains 1,721 exact reference loci outside that table, including
+immune-receptor segments. Their RNA audit is exposed through
+`sequence_gene_reviews()`. `forbidden_gene_ids()` includes Unsafe decisions from
+both scopes and matches the gene decisions used for the protein exports.
 
 ## Exact proteins and k-mers
 
@@ -70,7 +85,7 @@ Never enumerate across stops, ambiguous residues or record boundaries. Missing
 complete translations remain coverage gaps. The report gives downloads,
 checksums, reference identity and the machine-readable exclusion recipe.
 
-For example, MAGEA3 passes at gene level, but its identical complete protein also
-occurs at unresolved alternate-contig gene ENSG00000292186. That protein remains
-Neither pending identity review; its gene name is not used to invent a mapping.
+For example, MAGEA3 now fails at gene level because of high colonic cell RNA.
+Its shared complete protein consequently enters Unsafe even though another
+encoding locus is unresolved: Unsafe takes precedence over Neither.
 XAGE1A/B and CTAG1A/B retain their shared CTA protein sequences.
