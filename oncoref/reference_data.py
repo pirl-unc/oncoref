@@ -90,6 +90,21 @@ for _name, _artifact in _cancer_manifest["artifacts"].items():
         "pins": {_version: _artifact},
     }
 
+# Cell-resolved normal evidence uses the same transfer, locking, checksum and
+# provenance contract as the original HPA tables. External studies retain their
+# own accession/version instead of being mislabeled as an HPA release.
+_normal_manifest = json.loads(
+    (Path(__file__).parent / "data" / "normal-cell-sources.json").read_text()
+)
+for _name, _artifact in _normal_manifest["artifacts"].items():
+    _version = _artifact["version"]
+    REFERENCE_SOURCES[_name] = {
+        **_artifact,
+        "default_version": _version,
+        "urls": {_version: _artifact["url"]},
+        **({"pins": {_version: _artifact}} if "sha256" in _artifact else {}),
+    }
+
 #: Env var overriding the reference-data cache root.
 CACHE_DIR_ENV_KEY = "CANCERDATA_DATA_DIR"
 
@@ -266,7 +281,8 @@ def download(
                 )
                 if pin:
                     _downloads.report(f"verifying {name} ({version}) archive", verbose=verbose)
-                if pin and _sha256(tmp_zip) != pin["archive_sha256"]:
+                archive_sha256 = _sha256(tmp_zip)
+                if pin and archive_sha256 != pin["archive_sha256"]:
                     raise ReferenceDataError("archive checksum does not match the pinned source")
                 if spec.get("archive_format") == "file":
                     os.replace(tmp_zip, tmp_tsv)
@@ -293,6 +309,7 @@ def download(
             "path": str(dest),
             "bytes": dest.stat().st_size,
             "sha256": _sha256(dest),
+            "archive_sha256": archive_sha256,
             "downloaded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
         manifest_path = _manifest_path()

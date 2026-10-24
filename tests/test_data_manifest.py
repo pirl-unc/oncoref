@@ -153,7 +153,9 @@ def test_bundle_matches_downloadable_paths():
 
 
 def test_hpa_matches_reference_sources():
-    assert set(data_manifest.HPA) == set(reference_data.REFERENCE_SOURCES)
+    assert set(data_manifest.HPA) | set(reference_data._normal_manifest["artifacts"]) == set(
+        reference_data.REFERENCE_SOURCES
+    )
 
 
 def test_oncoref_originated_tables_ship():

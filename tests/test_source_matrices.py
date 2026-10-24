@@ -347,8 +347,17 @@ def test_catalog_fetch_groups(monkeypatch):
         data_bundle, "fetch", lambda *a, **k: pytest.fail("bundle must not fetch for hpa group")
     )
     out = catalog.fetch("hpa")
-    assert set(out) == set(reference_data.REFERENCE_SOURCES)
-    assert set(hpa_calls) == set(reference_data.REFERENCE_SOURCES)
+    hpa = {
+        n
+        for n, spec in reference_data.REFERENCE_SOURCES.items()
+        if spec.get("kind", "hpa") == "hpa"
+    }
+    assert set(out) == hpa
+    assert set(hpa_calls) == hpa
+    hpa_calls.clear()
+    external = set(reference_data.REFERENCE_SOURCES) - hpa
+    assert set(catalog.fetch("reference")) == external
+    assert set(hpa_calls) == external
 
 
 def test_catalog_fetch_source_group(monkeypatch):

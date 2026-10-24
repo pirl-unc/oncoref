@@ -320,6 +320,7 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         dirs = {
             "bundle": data_bundle.cache_dir(),
             "hpa": reference_data.cache_dir(),
+            "reference": reference_data.cache_dir(),
             "source": source_matrices.cache_dir(),
         }
         if target == "all":
@@ -327,7 +328,10 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
                 print(f"{name}\t{path}")
             return 0
         if target not in dirs:
-            print("Error: data dir target must be all, bundle, hpa, or source", file=sys.stderr)
+            print(
+                "Error: data dir target must be all, bundle, hpa, reference, or source",
+                file=sys.stderr,
+            )
             return 1
         print(dirs[target])
         return 0
@@ -964,7 +968,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "name",
         nargs="?",
         default=None,
-        help="Dataset name; or a fetch target: all / hpa / bundle / source / "
+        help="Dataset name; or a fetch target: all / hpa / reference / bundle / source / "
         "per-sample:<CODE> (omit = all)",
     )
     p_data.add_argument(

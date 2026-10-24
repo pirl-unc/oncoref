@@ -57,6 +57,31 @@ from .hpa_cancer import (
 from .hpa_cancer import (
     hpa_cancer_sources as cancer_sources,
 )
+from .normal_cell_data import observations, table
+
+
+def primary_ihc(*, genes=None, version=None):
+    """Primary antibody observations, including uncertain profiles omitted by curated IHC."""
+    return table("hpa_antibody_xml", genes=genes, version=version)
+
+
+def immune_cells(study="hpa", *, genes=None, version=None):
+    """Native HPA, Monaco or DICE/Schmiedel immune RNA; units remain source-specific."""
+    names = {
+        "hpa": "hpa_immune_cell",
+        "monaco": "hpa_immune_monaco",
+        "dice": "hpa_immune_schmiedel",
+        "schmiedel": "hpa_immune_schmiedel",
+    }
+    if study not in names:
+        raise ValueError(f"Unknown immune study: {study}")
+    return table(names[study], genes=genes, version=version)
+
+
+def single_cell_tissues(*, genes=None, version=None):
+    """Native single-cell RNA with tissue/cluster identity and read counts."""
+    return table("hpa_single_cell_tissue", genes=genes, version=version)
+
 
 __all__ = [
     "SAFETY_TISSUE_COVERAGE_LEVELS",
@@ -76,11 +101,16 @@ __all__ = [
     "gene_cell_type_ntpm",
     "gene_protein_tissues",
     "gene_tissue_ntpm",
+    "immune_cells",
     "normal_tissue",
     "normal_tissue_labels",
+    "observations",
+    "primary_ihc",
     "resolve_normal_tissue_label",
     "resolve_safety_tissue_group",
     "rna_consensus",
     "safety_tissue_mapping_table",
     "single_cell",
+    "single_cell_tissues",
+    "table",
 ]

@@ -247,13 +247,18 @@ def test_published_gene_groups_and_important_targets():
     groups = [target_sets.gene_ids(group) for group in target_sets.GROUPS]
     assert len(set.union(*groups)) == len(genes)
     assert not any(groups[i] & groups[j] for i in range(3) for j in range(i + 1, 3))
-    assert len(groups[0]) == 589
+    assert len(groups[0]) == 436
     indexed = genes.set_index("Gene")
-    for name, detail in [("CTAG2", "Variable"), ("ZNF730", "Low"), ("IL5", "Low")]:
+    for name, detail in [("CTAG2", "Variable"), ("ZNF730", "Cellular"), ("FOXR2", "Antibody")]:
         assert indexed.loc[name, "Category"] == "Neither"
         assert indexed.loc[name, "Detail"] == detail
         assert not indexed.loc[name, "Forbidden"]
     assert indexed.loc["MAGEA12", "Category"] == "Unsafe"
+    for name in ["IL5", "IL13", "ABCB5", "PAPPA"]:
+        assert indexed.loc[name, "Category"] == "Unsafe"
+    assert indexed.loc["CT55", "Category"] == "CTA"
+    for name in ["ACRBP", "HORMAD1", "TDRD1", "TEX101", "BRDT"]:
+        assert indexed.loc[name, "Category"] == "Neither"
     benchmark = {
         "AKAP4",
         "CT83",
@@ -290,9 +295,22 @@ def test_current_report_and_dataset_checksums():
     for section, root in [("inputs", ROOT), ("implementation_sha256", ROOT), ("outputs", REPORT)]:
         for name, expected in manifest[section].items():
             assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
-    dataset = ROOT / "oncoref/data/target-gene-sets.csv.gz"
-    assert hashlib.sha256(dataset.read_bytes()).hexdigest() == manifest["published_dataset_sha256"]
-    assert dataset.read_bytes() == (REPORT / "gene-results.csv.gz").read_bytes()
+    historical = REPORT / "gene-results.csv.gz"
+    assert (
+        hashlib.sha256(historical.read_bytes()).hexdigest() == manifest["published_dataset_sha256"]
+    )
     recipe = json.loads((REPORT / "exclusion-basis.json").read_text())
     assert recipe["forbidden"] == ["unsafe.fasta.gz", "additional-forbidden.fasta.gz"]
     assert recipe["neither_forbidden"] is False
+
+
+def test_current_normal_cell_report_and_dataset_checksums():
+    report = ROOT / "docs/audits/cta-normal-cells-20261023"
+    manifest = json.loads((report / "run-manifest.json").read_text())
+    assert manifest["forbidden_categories"] == ["Unsafe"]
+    for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
+        for name, expected in manifest[section].items():
+            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+    assert (ROOT / "oncoref/data/target-gene-sets.csv.gz").read_bytes() == (
+        report / "gene-results.csv.gz"
+    ).read_bytes()

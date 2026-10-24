@@ -6,6 +6,11 @@ taxon_ids:
 - 9615
 - 10090
 references:
+  collin2021:
+    title: A single cell atlas of human cornea that defines its development, limbal progenitor cells and their interactions with the immune cells
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/
+    kind: primary_research
+    scope: Human corneal, limbal and conjunctival compartments; adult and developmental samples remain distinct.
   blagosklonny2003:
     title: Tissue-selective therapy of cancer
     url: https://doi.org/10.1038/sj.bjc.6601256
@@ -802,6 +807,26 @@ concepts:
     - hpa_tissues
     - nei_retina
     - johnson2009
+  cornea:
+    label: cornea
+    parents: [eye]
+    aliases: []
+    references: [collin2021]
+  corneal_limbus:
+    label: corneal limbus
+    parents: [cornea]
+    aliases: [limbus]
+    references: [collin2021]
+  conjunctiva:
+    label: conjunctiva
+    parents: [eye]
+    aliases: []
+    references: [collin2021]
+  blood_vessel:
+    label: blood vessel
+    parents: []
+    aliases: [vascular tissue, vascular]
+    references: [hpa_tissues]
   inner_ear:
     label: inner ear
     parents: []
@@ -1421,6 +1446,7 @@ screening_policies:
       - smooth_muscle
       - peripheral_nerve
       - endothelium
+      - blood_vessel
       - retina
       - eye
       - inner_ear

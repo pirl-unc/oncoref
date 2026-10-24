@@ -1,0 +1,32 @@
+{
+  "policy": "oncoref.target-sets.2026-10-23.2",
+  "genome": {
+    "Unsafe": 17409,
+    "Neither": 2252,
+    "CTA": 436
+  },
+  "nominated": {
+    "Unsafe": 1455,
+    "Neither": 649,
+    "CTA": 436
+  },
+  "previous_cta": 589,
+  "still_retained": 435,
+  "new_cta": 1,
+  "moved_to_neither": 152,
+  "moved_from_cta_to_unsafe": 2,
+  "new_unsafe_total": 4,
+  "added_review_coverage_genes": 2705,
+  "overlapping_loss_findings": {
+    "Cell RNA review": 12,
+    "Immune RNA review": 89,
+    "Corneal RNA review": 0,
+    "Antibody review": 70,
+    "Published normal protein": 2
+  },
+  "proteins": {
+    "Unsafe": 125585,
+    "Neither": 3593,
+    "CTA": 807
+  }
+}
