@@ -1,0 +1,38 @@
+{
+  "policy": "oncoref.target-sets.2026-10-24.1",
+  "genome": {
+    "Unsafe": 17699,
+    "Neither": 1999,
+    "CTA": 399
+  },
+  "nominated": {
+    "Unsafe": 1580,
+    "Neither": 561,
+    "CTA": 399
+  },
+  "previous_cta": 436,
+  "previous_neither": 2252,
+  "cta_to_unsafe": 37,
+  "neither_to_unsafe": 253,
+  "remaining_neither_above_30": 0,
+  "neither_maxima": {
+    "TPM": 29.9398384344,
+    "nTPM": 30.0
+  },
+  "assessed_genes": 2705,
+  "rna_measurements": 5448388,
+  "high_observations": 15235,
+  "previous_benchmark_retained": 19,
+  "previous_benchmark_total": 21,
+  "benchmark_losses": [
+    "ROPN1",
+    "MAGEA3"
+  ],
+  "watchlist_genes": 15,
+  "new_exclusions_only_unsited": 1,
+  "proteins": {
+    "Unsafe": 126368,
+    "Neither": 2894,
+    "CTA": 723
+  }
+}

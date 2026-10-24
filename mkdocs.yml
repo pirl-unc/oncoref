@@ -7,7 +7,9 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Current CTA and normal-cell evidence: audits/cta-normal-cells-20261023/index.md
+      - Current CTA and Neither review: audits/cta-neither-review-20261024/index.md
+      - Candidate follow-up: audits/cta-neither-review-20261024/follow-up.md
+      - Normal-cell evidence (23 October): audits/cta-normal-cells-20261023/index.md
       - Normal-cell data API and rules: normal-cell-evidence.md
       - Previous 589-gene target sets: audits/target-sets-20261023/index.md
       - Target sets and exclusion API: target-sets.md
