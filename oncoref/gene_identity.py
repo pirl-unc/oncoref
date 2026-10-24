@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import asdict, dataclass
 from functools import lru_cache
 
@@ -90,7 +91,7 @@ class GeneIdentity:
     source_strand: str
     annotation_species: str
     annotation_assembly: str
-    annotation_release: int
+    annotation_release: int | str
     alias_rows: tuple[tuple[str, str, str], ...]
     aliases_sha256: str
     canonical_gene_space_sha256: str
@@ -108,12 +109,27 @@ class GeneIdentity:
 
 def _annotation(genome):
     species = getattr(getattr(genome, "species", None), "latin_name", None)
-    assembly = getattr(genome, "reference_name", None)
+    # Older annotation providers expose only reference_name. If a provider has
+    # resolved assembly metadata, even an unknown value takes precedence over
+    # its independent display/cache label.
+    assembly = getattr(genome, "assembly", getattr(genome, "reference_name", None))
     release = getattr(genome, "release", None)
-    if species != "homo_sapiens" or assembly not in {"GRCh37", "GRCh38"}:
+    if (
+        species != "homo_sapiens"
+        or not isinstance(assembly, str)
+        or assembly not in {"GRCh37", "GRCh38"}
+    ):
         raise ValueError("gene identity requires an explicit human GRCh37/GRCh38 annotation")
-    if not isinstance(release, int) or release < 1:
-        raise ValueError("gene identity requires an explicit positive Ensembl release")
+    numbered = type(release) is int and release >= 1
+    dated = (
+        type(release) is str
+        and re.fullmatch(r"[0-9]{4}_(0[1-9]|1[0-2])", release) is not None
+        and release[:4] != "0000"
+    )
+    if not (numbered or dated):
+        raise ValueError(
+            "gene identity requires an explicit positive Ensembl release or YYYY_MM annotation date"
+        )
     return species, assembly, release
 
 

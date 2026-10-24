@@ -54,7 +54,8 @@ dev = [
     "pytest-cov",
     "pytest-xdist",
     "ruff",
-    "pyensembl>=2.27.0",
+    "pyensembl>=2.27.0; python_version < '3.11'",
+    "pyensembl>=2.29.0; python_version >= '3.11'",
 ]
 
 [project.scripts]
