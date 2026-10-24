@@ -49,6 +49,23 @@ can also come from a genuine non-CTA source, which stays in the self-reference.
 
 ## Contract version 1
 
+Select either a positive numbered Ensembl release or a pinned annotation date,
+such as `EnsemblRelease("2026_04", species="human")`. Both require installed
+annotation data. `annotation_release` retains the exact integer or `YYYY_MM`
+string in JSON; existing numbered records keep their fields and types. Invalid
+dates, booleans and unpinned labels such as `"latest"` are rejected at this
+boundary. PyEnsembl may resolve an explicit `"latest"` selection beforehand;
+OncoRef records its resulting concrete release.
+
+For PyEnsembl 2.29 or later, `annotation_assembly` uses the resolved `assembly`
+(`GRCh37` or `GRCh38`), independently of an accession or custom `reference_name`
+used for display and caching. Full names such as `GRCh37.p13` and accessions
+remain upstream assembly metadata, not alternative values of this field. Older
+annotation providers without `assembly` retain the `reference_name` fallback;
+an explicitly unknown assembly is rejected. Nonhuman annotations remain outside
+this identity API's scope. This change does not rewrite existing cache files or
+change reference-table hashes.
+
 `GeneIdentity` is immutable. `input_gene_id` preserves the caller's original ID;
 `source_gene_id` is the unversioned annotation lookup ID. Records include the
 annotation species, assembly and release; source symbol, contig, coordinates and

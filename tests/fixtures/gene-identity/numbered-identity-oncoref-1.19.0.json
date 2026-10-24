@@ -1,0 +1,24 @@
+{
+  "input_gene_id": "ENSG00000185686",
+  "source_gene_id": "ENSG00000185686",
+  "canonical_gene_id": "ENSG00000185686",
+  "candidate_gene_ids": [],
+  "status": "canonical",
+  "mapping_method": "stable_id",
+  "source_gene_name": "PRAME",
+  "source_contig": "22",
+  "source_start": 1,
+  "source_end": 100,
+  "source_strand": "+",
+  "annotation_species": "homo_sapiens",
+  "annotation_assembly": "GRCh38",
+  "annotation_release": 93,
+  "alias_rows": [],
+  "aliases_sha256": "da23d42812e2b43893706fa0bb2440078bc7fc162f387b7803431b895bcbb26a",
+  "canonical_gene_space_sha256": "6d64ee082fec9274fefbbe50bbe20aabddb77b0334e73d4d431d1fb9c43bfc39",
+  "canonical_reference_releases": [
+    "115"
+  ],
+  "oncoref_version": "1.19.0",
+  "identity_contract_version": 1
+}
