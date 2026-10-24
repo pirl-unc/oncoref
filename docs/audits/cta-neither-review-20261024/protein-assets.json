@@ -4,8 +4,8 @@
   "policy": "oncoref.target-sets.2026-10-24.1",
   "files": {
     "additional-forbidden.fasta.gz": {
-      "sha256": "f241ff7fb0745717d7d3ceead0e6cb08ef5342cee6474cf0eb9066badba59196",
-      "bytes": 2767510
+      "sha256": "1ebe6d22f6855612eea6c30d01fa5973f9f38f359648859149d88ddf66973ca6",
+      "bytes": 2787020
     },
     "cta-proteins.csv.gz": {
       "sha256": "f759d2d7a106be4cfe567d20ec22c74002ff53c7c983abf278cf2329373cf483",
@@ -20,48 +20,48 @@
       "bytes": 820
     },
     "genes-without-complete-proteins.csv.gz": {
-      "sha256": "2e0789f766935097dc6c929483aaa6f70c4cf112b5f0fce2d4120785eb2a2bda",
-      "bytes": 30784
+      "sha256": "7ebb4bfa6c24ae39f530164e9536dc2dd2dbc26ad1e3d9d7b606c879ecdad567",
+      "bytes": 134536
     },
     "neither-proteins.csv.gz": {
-      "sha256": "2873212ad96abfe62289cb2151f74f31d735de03a070ed3ab27b2544ae99beaa",
-      "bytes": 141302
+      "sha256": "9d43d79387667c690fa76d93ed47c8c7852a340ba3dc2abc2bec58e12fb11c68",
+      "bytes": 140538
     },
     "neither.fasta.gz": {
-      "sha256": "41eb804dd8fe0e685d30ff71de0e98e36ade564da618bb7b7431b209cb2d7b65",
-      "bytes": 848093
+      "sha256": "fc0652b5fb7947fb31018de5cbb812bd4eadfa709f3ef4524de0ccd9462862ce",
+      "bytes": 844591
     },
     "reference.json": {
       "sha256": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
       "bytes": 649
     },
     "target-protein-occurrences.csv.gz": {
-      "sha256": "3e123a545a02260dcdd52bc116a4dd1199966ce4487fe7981b89a97e34faff44",
-      "bytes": 19129028
+      "sha256": "1556799150427f1fd55bd882ab842584f8eb7d608b4fcd1e0d63d571b4fcc86b",
+      "bytes": 19129014
     },
     "target-proteins.csv.gz": {
-      "sha256": "508fe14a2079ce96fb64ab229bc2c9498a35dd7cc6fd9656b62b5125268a9f2b",
-      "bytes": 6116359
+      "sha256": "d963b57f22f6c6991f16e3628a62f0a11720bada2de0841f133da8ffa6c6a8e4",
+      "bytes": 6116434
     },
     "translations-for-review.csv.gz": {
-      "sha256": "883352c1abc7095e966174af405824f43f78127af91be1d07b5f69a293dfe5ce",
-      "bytes": 1810000
+      "sha256": "8b8fa3597e1e02ece97445c83502c9177f4b2cf627f6572ecd09fa5c4baaa971",
+      "bytes": 1810065
     },
     "translations-for-review.fasta.gz": {
       "sha256": "5970c121504d7ce3c2939e5a13c905ffb5ea3901692de2b23c0cd86ce3c2512c",
       "bytes": 2983202
     },
     "unclassified-sequence-genes.csv.gz": {
-      "sha256": "d4261b21ef2ff4b03987e279e1aab99b505b57490b3331d18e5eb563dc212e4c",
-      "bytes": 5195
+      "sha256": "4eb5bdb1a51361adb4ba9cfbd4be6ddb57e49a601a401fc2635bff035574e50a",
+      "bytes": 110209
     },
     "unsafe-proteins.csv.gz": {
-      "sha256": "fb69a1d3f466940f1d989d67e6ca4c0df1b99cbd7b3c3db8abdb61424b859d1d",
-      "bytes": 5906759
+      "sha256": "468c4570135fefa7f716fef085c892a102ce5ebbd34a5d50716aaf104cd0d814",
+      "bytes": 5907908
     },
     "unsafe.fasta.gz": {
-      "sha256": "a3b9ac19a625cdc41eac5f616a0d79bd7afa8791c90ee1a86fd1ad17162ff49f",
-      "bytes": 49052004
+      "sha256": "0a1ac30a33ff5a126e3092558fad35ecac989d25ba079020260be2002be51b75",
+      "bytes": 49055582
     }
   }
 }

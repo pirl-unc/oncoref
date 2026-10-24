@@ -19,9 +19,13 @@
     "TPM": 29.9398384344,
     "nTPM": 30.0
   },
-  "assessed_genes": 2705,
-  "rna_measurements": 5448388,
-  "high_observations": 15235,
+  "assessed_genes": 4426,
+  "assessed_canonical_genes": 2705,
+  "sequence_loci": 1721,
+  "sequence_loci_measured": 440,
+  "sequence_loci_excluded": 391,
+  "rna_measurements": 6449210,
+  "high_observations": 163260,
   "previous_benchmark_retained": 19,
   "previous_benchmark_total": 21,
   "benchmark_losses": [
@@ -31,8 +35,8 @@
   "watchlist_genes": 15,
   "new_exclusions_only_unsited": 1,
   "proteins": {
-    "Unsafe": 126368,
-    "Neither": 2894,
+    "Unsafe": 126384,
+    "Neither": 2878,
     "CTA": 723
   }
 }

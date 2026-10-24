@@ -139,6 +139,8 @@ only Unsafe supplies forbidden proteins.
 ```python
 from oncoref import normal_rna_review
 normal_rna_review.followup_reviews()  # questions, evidence, maxima and current decisions
+normal_rna_review.sequence_gene_reviews()  # reference loci outside the canonical table
+normal_rna_review.forbidden_gene_ids()     # complete gene-ID union used by protein exports
 ```
 
 ## Reproduce

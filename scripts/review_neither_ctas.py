@@ -45,6 +45,15 @@ def collect(out):
     base = load_base()
     important = pd.read_csv(BASE / "important-ctas.csv", keep_default_na=False)
     ids = set(base.loc[base.Category.ne("Unsafe"), "Gene ID"]) | set(important["Gene ID"])
+    # Complete and incomplete reference translations include loci outside the
+    # canonical protein-coding table (e.g. immune-receptor segments). They must
+    # not evade the same ceiling by defaulting to an unassessed Neither protein.
+    sequence_path = BASE / "unclassified-sequence-genes.csv.gz"
+    manifest = json.loads((BASE / "run-manifest.json").read_text())
+    if digest(sequence_path) != manifest["outputs"][sequence_path.name]:
+        raise ValueError("Frozen sequence-locus inventory changed")
+    sequence_ids = set(pd.read_csv(sequence_path)["Gene ID"])
+    ids |= sequence_ids
     flags, maxima, provenance = [], [], []
     seen = set()
 
@@ -149,6 +158,19 @@ def classify(out):
         write(result.loc[result.Category.eq(category)], out / f"{category.lower()}-genes.csv.gz")
     important = pd.read_csv(BASE / "important-ctas.csv", keep_default_na=False)
     write(result.loc[result["Gene ID"].isin(important["Gene ID"])], out / "important-ctas.csv")
+    extra = summary.loc[~summary["Gene ID"].isin(base["Gene ID"])].copy()
+    extra["Category"] = extra["High normal RNA"].map({True: "Unsafe", False: "Neither"})
+    extra["Detail"] = extra["High normal RNA"].map({True: "High RNA", False: "Unassessed"})
+    extra["Gene"] = ""
+    extra["Target"], extra["Forbidden"] = False, extra["High normal RNA"]
+    extra["Policy"] = review.POLICY_ID
+    extra["Reason"] = extra["High normal RNA"].map(
+        {
+            True: "Exact reference gene ID has RNA >30 TPM/nTPM outside permitted contexts; excluded despite absence from the canonical gene table",
+            False: "Reference sequence locus lacks a canonical gene classification; no promotion or inferred absence",
+        }
+    )
+    write(extra, out / "sequence-gene-reviews.csv.gz")
     notes = pd.read_csv(ROOT / "oncoref/data/cta-followup-notes.csv", keep_default_na=False)
     if notes.Gene.duplicated().any() or not set(notes.Gene) <= set(result.Gene):
         raise ValueError("Follow-up notes require unique, present genes")
@@ -165,7 +187,10 @@ def classify(out):
     write(queue, out / "follow-up.csv")
     # Auditable invariant across all measured non-permitted TPM/nTPM contexts.
     high = pd.read_csv(out / "high-normal-rna.csv.gz", keep_default_na=False)
-    remaining = set(result.loc[result.Category.ne("Unsafe"), "Gene ID"]) & set(high.gene_id)
+    remaining = (
+        set(result.loc[result.Category.ne("Unsafe"), "Gene ID"])
+        | set(extra.loc[extra.Category.ne("Unsafe"), "Gene ID"])
+    ) & set(high.gene_id)
     if remaining:
         raise AssertionError(f"High normal RNA remains outside forbidden: {remaining}")
     print(result.groupby(["Category", "Detail"]).size().to_string(), flush=True)
@@ -183,7 +208,12 @@ def protein_assets(out, assets, previous):
 
     assets.mkdir(parents=True, exist_ok=True)
     genes = pd.read_csv(out / "gene-results.csv.gz", keep_default_na=False, low_memory=False)
+    extra = pd.read_csv(out / "sequence-gene-reviews.csv.gz", keep_default_na=False)
+    genes = pd.concat([genes, extra], ignore_index=True)
     proteins(assets, previous, genes)
+    # Keep the noncanonical identity coverage visible even after assigning RNA
+    # exclusions; a decision does not resolve a locus into a canonical gene.
+    write(extra, assets / "unclassified-sequence-genes.csv.gz")
     path = assets / "exclusion-basis.json"
     recipe = json.loads(path.read_text())
     recipe["policy"] = review.POLICY_ID

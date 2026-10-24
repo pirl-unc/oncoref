@@ -327,6 +327,9 @@ def test_current_neither_review_and_dataset_checksums():
     assert (ROOT / "oncoref/data/cta-followup-reviews.csv").read_bytes() == (
         report / "follow-up.csv"
     ).read_bytes()
+    assert (ROOT / "oncoref/data/sequence-gene-rna-reviews.csv.gz").read_bytes() == (
+        report / "sequence-gene-reviews.csv.gz"
+    ).read_bytes()
 
 
 def test_no_remaining_neither_or_cta_has_high_nonpermitted_measured_rna():
@@ -334,7 +337,11 @@ def test_no_remaining_neither_or_cta_has_high_nonpermitted_measured_rna():
     genes = target_sets.results()
     maxima = pd.read_csv(report / "rna-context-maxima.csv.gz", low_memory=False)
     high = maxima.loc[~maxima.permitted & maxima.maximum.gt(30)]
-    remaining = genes.loc[genes.Category.isin(["CTA", "Neither"])]
+    from oncoref.normal_rna_review import forbidden_gene_ids, sequence_gene_reviews
+
+    extra = sequence_gene_reviews()
+    all_genes = pd.concat([genes, extra], ignore_index=True)
+    remaining = all_genes.loc[all_genes.Category.isin(["CTA", "Neither"])]
     assert remaining["Normal RNA assessed"].all()
     assert not set(high.gene_id) & set(remaining["Gene ID"])
     observations = pd.read_csv(report / "high-normal-rna.csv.gz", low_memory=False)
@@ -344,6 +351,9 @@ def test_no_remaining_neither_or_cta_has_high_nonpermitted_measured_rna():
     assert observations.value.gt(30).all()
     assert not observations.permitted.any()
     assert maxima.loc[maxima.category.eq("reproductive"), "maximum"].max() > 1000
+    assert len(extra) == 1721 and not extra.Target.any()
+    assert set(extra.loc[extra.Category.eq("Unsafe"), "Gene ID"]) <= forbidden_gene_ids()
+    assert not set(extra.loc[extra.Category.eq("Neither"), "Gene ID"]) & forbidden_gene_ids()
 
 
 def test_followup_records_preserve_questions_without_gene_exceptions():

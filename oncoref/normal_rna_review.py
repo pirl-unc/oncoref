@@ -27,6 +27,21 @@ def followup_reviews():
     return get_data("cta-followup-reviews").copy()
 
 
+def sequence_gene_reviews():
+    """Exact reference loci outside the canonical gene table, with RNA decisions."""
+    from .load_dataset import get_data
+
+    return get_data("sequence-gene-rna-reviews").copy()
+
+
+def forbidden_gene_ids():
+    """Unsafe canonical genes plus high-RNA reference loci used by protein exports."""
+    from .target_sets import gene_ids
+
+    extra = sequence_gene_reviews()
+    return gene_ids("Unsafe") | set(extra.loc[extra.Category.eq("Unsafe"), "Gene ID"])
+
+
 def findings(observations):
     """Annotate mapped adult-human RNA observations without averaging away peaks.
 

@@ -53,11 +53,19 @@ forbidden = target_sets.gene_ids("Unsafe")
 neither = target_sets.gene_ids("Neither")
 names = target_sets.gene_names("CTA")  # known symbols; IDs include unnamed loci
 reviews = normal_rna_review.followup_reviews()
+sequence_loci = normal_rna_review.sequence_gene_reviews()
+all_forbidden_genes = normal_rna_review.forbidden_gene_ids()
 ```
 
 All three ID sets are disjoint. Earlier `cta`, `cta_screen` and normal-expression
 exports retain their dated definitions. Use `target_sets` and the current report
 for this policy.
+
+`target_sets` retains its canonical 20,097-gene scope. The sequence inventory
+also contains 1,721 exact reference loci outside that table, including
+immune-receptor segments. Their RNA audit is exposed through
+`sequence_gene_reviews()`. `forbidden_gene_ids()` includes Unsafe decisions from
+both scopes and matches the gene decisions used for the protein exports.
 
 ## Exact proteins and k-mers
 

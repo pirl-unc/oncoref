@@ -1,6 +1,6 @@
 # CTA and Neither review: high normal RNA
 
-**399 CTA genes remain. 253 previous Neither genes and 37 previous CTAs now enter the forbidden background. No remaining Neither gene has a measured non-permitted/unsited value above 30 TPM or nTPM in the audited sources.**
+**399 CTA genes remain. 253 previous Neither genes and 37 previous CTAs now enter the forbidden background. A further 391 noncanonical reference loci gain explicit RNA exclusions. No remaining Neither gene or reference locus has a measured non-permitted/unsited value above 30 TPM or nTPM in the audited sources.**
 
 [Search genes](explore.html) · [Review findings and fixes](review.md) · [Candidate follow-up](follow-up.md) · [All changes](changed-genes.csv) · [Previous report](../cta-normal-cells-20261023/index.md)
 
@@ -47,7 +47,9 @@ The [follow-up record](follow-up.md) contains measurements, uncertainties and ev
 
 ## Coverage and units
 
-The audit checks **5,448,388 RNA observations across 2,705 genes**: all previous CTA and Neither genes plus the established important-target audit. Other Unsafe assignments remain inherited; they are not newly cleared. Sources are HPA bulk consensus, cell-type and tissue-cluster RNA, sorted immune summaries, individual HPA immune specimens, original DICE distributions, and the four reviewed CTAG2 heart RNA specimens. Both original TPM and nTPM columns from the HPA immune-sample table are checked separately.
+The audit checks **6,449,210 RNA observations across 4,426 genes**: all previous CTA and Neither genes plus the established important-target audit. Other Unsafe assignments remain inherited; they are not newly cleared. Sources are HPA bulk consensus, cell-type and tissue-cluster RNA, sorted immune summaries, individual HPA immune specimens, original DICE distributions, and the four reviewed CTAG2 heart RNA specimens. Both original TPM and nTPM columns from the HPA immune-sample table are checked separately.
+
+The sequence inventory includes loci outside the canonical protein-coding table, including immune-receptor segments. Of 1,721 such exact reference IDs, 440 have matching RNA observations and 391 cross the exclusion ceiling. Their complete proteins and incomplete translations now enter the forbidden background. The rest remain unassessed Neither; no absent measurement becomes zero and no paralog is substituted. [Sequence-locus decisions](sequence-gene-reviews.csv.gz).
 
 - No averaging across donors, cells, tissues, studies or units can hide a value >30. A single reported high value suffices under this conservative policy.
 - The older HPA cell-type table preserves its unsited contexts; it is not assigned an organ by guessing. Immune cells sampled in reproductive/disposable organs retain their existing hematopoietic mapping.
@@ -60,28 +62,29 @@ The following source counts overlap and must not be added as independent genes o
 
 | Source with newly excluding observations | Native unit | Changed genes | Observations >30 |
 |---|---|---:|---:|
-| dice_b_cell_naive | TPM | 16 | 695 |
-| dice_cd4_naive | TPM | 12 | 561 |
-| dice_cd4_stim | TPM | 18 | 719 |
-| dice_cd8_naive | TPM | 15 | 668 |
-| dice_cd8_stim | TPM | 11 | 571 |
-| dice_m2 | TPM | 9 | 147 |
-| dice_monocytes | TPM | 7 | 202 |
-| dice_nk | TPM | 24 | 1,115 |
-| dice_tfh | TPM | 17 | 780 |
-| dice_th1 | TPM | 17 | 690 |
-| dice_th17 | TPM | 18 | 765 |
-| dice_th2 | TPM | 16 | 767 |
-| dice_thstar | TPM | 14 | 740 |
-| dice_treg_mem | TPM | 17 | 762 |
-| dice_treg_naive | TPM | 17 | 659 |
-| hpa_immune_cell | nTPM | 17 | 39 |
-| hpa_immune_cell_samples | TPM | 26 | 184 |
-| hpa_immune_cell_samples | nTPM | 29 | 212 |
-| hpa_immune_monaco | TPM | 20 | 72 |
-| hpa_immune_schmiedel | TPM | 21 | 93 |
-| hpa_single_cell | nTPM | 113 | 289 |
-| hpa_single_cell_tissue | nTPM | 236 | 2,325 |
+| dice_b_cell_naive | TPM | 161 | 9,461 |
+| dice_cd4_naive | TPM | 175 | 10,580 |
+| dice_cd4_stim | TPM | 178 | 11,629 |
+| dice_cd8_naive | TPM | 176 | 9,719 |
+| dice_cd8_stim | TPM | 179 | 11,899 |
+| dice_m2 | TPM | 18 | 252 |
+| dice_monocytes | TPM | 11 | 276 |
+| dice_nk | TPM | 82 | 4,138 |
+| dice_tfh | TPM | 190 | 11,501 |
+| dice_th1 | TPM | 190 | 9,727 |
+| dice_th17 | TPM | 177 | 11,206 |
+| dice_th2 | TPM | 177 | 10,823 |
+| dice_thstar | TPM | 174 | 10,220 |
+| dice_treg_mem | TPM | 183 | 12,330 |
+| dice_treg_naive | TPM | 183 | 11,731 |
+| hpa_immune_cell | nTPM | 286 | 1,203 |
+| hpa_immune_cell_samples | TPM | 324 | 6,023 |
+| hpa_immune_cell_samples | nTPM | 339 | 6,591 |
+| hpa_immune_monaco | TPM | 339 | 2,682 |
+| hpa_immune_schmiedel | TPM | 281 | 1,593 |
+| hpa_rna_consensus | nTPM | 207 | 1,444 |
+| hpa_single_cell | nTPM | 247 | 610 |
+| hpa_single_cell_tissue | nTPM | 460 | 5,442 |
 
 ## Files and API
 
@@ -91,9 +94,11 @@ The following source counts overlap and must not be added as independent genes o
 from oncoref import target_sets, normal_rna_review
 target_sets.results()                 # current decisions and native-unit maxima
 normal_rna_review.followup_reviews()   # watched genes, questions and evidence
+normal_rna_review.sequence_gene_reviews()  # additional reference loci
+normal_rna_review.forbidden_gene_ids()     # Unsafe canonical genes + reference loci
 ```
 
-Complete protein sets are **723 CTA, 126,368 Unsafe and 2,894 Neither**. Shared exact sequences use Unsafe > Neither > CTA. The high-RNA exclusions also update incomplete translations in the additional forbidden background. [Protein assets and checksums](protein-assets.json) · [Exclusion recipe](exclusion-basis.json). Expression is gene-level and does not establish isoform-specific expression.
+Complete protein sets are **723 CTA, 126,384 Unsafe and 2,878 Neither**. Shared exact sequences use Unsafe > Neither > CTA. The high-RNA exclusions also update incomplete translations in the additional forbidden background. [Protein assets and checksums](protein-assets.json) · [Exclusion recipe](exclusion-basis.json). Expression is gene-level and does not establish isoform-specific expression.
 
 Reproduce from the same shared cache:
 

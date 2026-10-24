@@ -30,6 +30,7 @@ def render(out, assets, publish=False):
     important = pd.read_csv(out / "important-ctas.csv", keep_default_na=False)
     high = pd.read_csv(out / "high-normal-rna.csv.gz", keep_default_na=False, low_memory=False)
     maxima = pd.read_csv(out / "rna-context-maxima.csv.gz", keep_default_na=False)
+    sequence_genes = pd.read_csv(out / "sequence-gene-reviews.csv.gz", keep_default_na=False)
     counts = genes.Category.value_counts().to_dict()
     changes = genes.loc[genes.Change.ne("Unchanged")]
     prior_cta = genes["Previous category"].eq("CTA")
@@ -45,9 +46,10 @@ def render(out, assets, publish=False):
     retained_important = important.loc[important["Gene ID"].isin(benchmark_ids)]
     lost_important = retained_important.loc[retained_important.Category.ne("CTA")]
     nominated = genes.loc[genes["Previous CTA screen"].ne("Not nominated")]
-    neither_maxima = maxima.loc[
-        maxima.gene_id.isin(genes.loc[genes.Category.eq("Neither"), "Gene ID"]) & ~maxima.permitted
-    ]
+    neither_ids = set(genes.loc[genes.Category.eq("Neither"), "Gene ID"]) | set(
+        sequence_genes.loc[sequence_genes.Category.eq("Neither"), "Gene ID"]
+    )
+    neither_maxima = maxima.loc[maxima.gene_id.isin(neither_ids) & ~maxima.permitted]
     assert not neither_maxima.maximum.gt(30).any()
     stats = {
         "policy": review.POLICY_ID,
@@ -59,7 +61,11 @@ def render(out, assets, publish=False):
         "neither_to_unsafe": int((prior_neither & genes.Category.eq("Unsafe")).sum()),
         "remaining_neither_above_30": 0,
         "neither_maxima": neither_maxima.groupby("unit").maximum.max().to_dict(),
-        "assessed_genes": int(genes["Normal RNA assessed"].sum()),
+        "assessed_genes": int(genes["Normal RNA assessed"].sum()) + len(sequence_genes),
+        "assessed_canonical_genes": int(genes["Normal RNA assessed"].sum()),
+        "sequence_loci": len(sequence_genes),
+        "sequence_loci_measured": int(sequence_genes["Normal RNA measured"].sum()),
+        "sequence_loci_excluded": int(sequence_genes.Category.eq("Unsafe").sum()),
         "rna_measurements": int(maxima.measurements.sum()),
         "high_observations": len(high),
         "previous_benchmark_retained": int(retained_important.Category.eq("CTA").sum()),
@@ -68,7 +74,10 @@ def render(out, assets, publish=False):
         "watchlist_genes": len(queue),
     }
     # Raw RNA observations from overlapping HPA summaries are not independent replication.
-    changed_high = high.loc[high.gene_id.isin(changes["Gene ID"])]
+    newly_excluded_ids = set(changes["Gene ID"]) | set(
+        sequence_genes.loc[sequence_genes.Category.eq("Unsafe"), "Gene ID"]
+    )
+    changed_high = high.loc[high.gene_id.isin(newly_excluded_ids)]
     per_source = changed_high.groupby(["source", "unit"], as_index=False).agg(
         genes=("gene_id", "nunique"),
         observations=("gene_id", "size"),
@@ -177,7 +186,7 @@ def render(out, assets, publish=False):
     )
     (out / "index.md").write_text(f"""# CTA and Neither review: high normal RNA
 
-**{counts["CTA"]:,} CTA genes remain. {stats["neither_to_unsafe"]} previous Neither genes and {stats["cta_to_unsafe"]} previous CTAs now enter the forbidden background. No remaining Neither gene has a measured non-permitted/unsited value above 30 TPM or nTPM in the audited sources.**
+**{counts["CTA"]:,} CTA genes remain. {stats["neither_to_unsafe"]} previous Neither genes and {stats["cta_to_unsafe"]} previous CTAs now enter the forbidden background. A further {stats["sequence_loci_excluded"]} noncanonical reference loci gain explicit RNA exclusions. No remaining Neither gene or reference locus has a measured non-permitted/unsited value above 30 TPM or nTPM in the audited sources.**
 
 [Search genes](explore.html) · [Review findings and fixes](review.md) · [Candidate follow-up](follow-up.md) · [All changes](changed-genes.csv) · [Previous report](../cta-normal-cells-20261023/index.md)
 
@@ -212,6 +221,8 @@ The [follow-up record](follow-up.md) contains measurements, uncertainties and ev
 
 The audit checks **{stats["rna_measurements"]:,} RNA observations across {stats["assessed_genes"]:,} genes**: all previous CTA and Neither genes plus the established important-target audit. Other Unsafe assignments remain inherited; they are not newly cleared. Sources are HPA bulk consensus, cell-type and tissue-cluster RNA, sorted immune summaries, individual HPA immune specimens, original DICE distributions, and the four reviewed CTAG2 heart RNA specimens. Both original TPM and nTPM columns from the HPA immune-sample table are checked separately.
 
+The sequence inventory includes loci outside the canonical protein-coding table, including immune-receptor segments. Of {stats["sequence_loci"]:,} such exact reference IDs, {stats["sequence_loci_measured"]} have matching RNA observations and {stats["sequence_loci_excluded"]} cross the exclusion ceiling. Their complete proteins and incomplete translations now enter the forbidden background. The rest remain unassessed Neither; no absent measurement becomes zero and no paralog is substituted. [Sequence-locus decisions](sequence-gene-reviews.csv.gz).
+
 - No averaging across donors, cells, tissues, studies or units can hide a value >30. A single reported high value suffices under this conservative policy.
 - The older HPA cell-type table preserves its unsited contexts; it is not assigned an organ by guessing. Immune cells sampled in reproductive/disposable organs retain their existing hematopoietic mapping.
 - HPA summaries and their original data overlap. They are not counted as independent biological replication.
@@ -233,6 +244,8 @@ The following source counts overlap and must not be added as independent genes o
 from oncoref import target_sets, normal_rna_review
 target_sets.results()                 # current decisions and native-unit maxima
 normal_rna_review.followup_reviews()   # watched genes, questions and evidence
+normal_rna_review.sequence_gene_reviews()  # additional reference loci
+normal_rna_review.forbidden_gene_ids()     # Unsafe canonical genes + reference loci
 ```
 
 Complete protein sets are **{pc["CTA"]:,} CTA, {pc["Unsafe"]:,} Unsafe and {pc["Neither"]:,} Neither**. Shared exact sequences use Unsafe > Neither > CTA. The high-RNA exclusions also update incomplete translations in the additional forbidden background. [Protein assets and checksums](protein-assets.json) · [Exclusion recipe](exclusion-basis.json). Expression is gene-level and does not establish isoform-specific expression.
@@ -278,6 +291,10 @@ Policy: `{review.POLICY_ID}`. Baseline: `{review.BASE_POLICY_ID}`. The prior pub
     if publish:
         shutil.copyfile(out / "gene-results.csv.gz", ROOT / "oncoref/data/target-gene-sets.csv.gz")
         shutil.copyfile(out / "follow-up.csv", ROOT / "oncoref/data/cta-followup-reviews.csv")
+        shutil.copyfile(
+            out / "sequence-gene-reviews.csv.gz",
+            ROOT / "oncoref/data/sequence-gene-rna-reviews.csv.gz",
+        )
     (out / "summary.json").write_text(json.dumps(stats, indent=2) + "\n")
     inputs = [
         "oncoref/normal_rna_review.py",
@@ -293,6 +310,7 @@ Policy: `{review.POLICY_ID}`. Baseline: `{review.BASE_POLICY_ID}`. The prior pub
         "oncoref/data/normal-cell-sources.json",
         "docs/audits/cta-normal-cells-20261023/gene-results.csv.gz",
         "docs/audits/cta-normal-cells-20261023/run-manifest.json",
+        "docs/audits/cta-normal-cells-20261023/unclassified-sequence-genes.csv.gz",
     ]
     (out / "run-manifest.json").write_text(
         json.dumps(
