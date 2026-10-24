@@ -1,0 +1,508 @@
+{
+  "policy": "oncoref.target-sets.2026-10-23.2",
+  "baseline_policy": "oncoref.target-sets.2026-10-23.1",
+  "sources": [
+    {
+      "source": "hpa_rna_consensus",
+      "version": "v23",
+      "description": "HPA RNA consensus tissue nTPM (per-tissue normal expression)",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
+      "publication_url": ""
+    },
+    {
+      "source": "hpa_normal_tissue",
+      "version": "v23",
+      "description": "HPA IHC protein expression (normal_tissue, per tissue/cell type)",
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
+      "publication_url": ""
+    },
+    {
+      "source": "hpa_single_cell",
+      "version": "v23",
+      "description": "HPA single-cell type RNA nTPM (per cell-type normal expression)",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_type.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "9a0cd2466a9764c9d3c7d8e73d58785742f5d325bf2f28cdb5d526605ed8332e",
+      "publication_url": ""
+    },
+    {
+      "source": "hpa_gene_summary",
+      "version": "v23",
+      "description": "HPA v23 Gene summaries, antibody IDs and IHC reliability",
+      "url": "https://v23.proteinatlas.org/download/proteinatlas.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "be44eed420e7c1d8c425d7a82d42c661d7ba45dc2b5c9c86544f81362567b05e",
+      "publication_url": "https://v23.proteinatlas.org/about/download"
+    },
+    {
+      "source": "hpa_antibody_xml",
+      "version": "v23",
+      "description": "HPA v23 Full primary antibody/tissue evidence and validation (gzip XML)",
+      "url": "https://v23.proteinatlas.org/download/proteinatlas.xml.gz",
+      "taxonomy_id": 9606,
+      "sha256": "4034b41b7efad27022fa65959086e7bfac8095545766ad3fd9d836e350aab0d4",
+      "publication_url": "https://v23.proteinatlas.org/about/download"
+    },
+    {
+      "source": "hpa_single_cell_tissue",
+      "version": "v23",
+      "description": "HPA v23 RNA with source tissue and cell-cluster provenance",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_type_tissue.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7",
+      "publication_url": "https://v23.proteinatlas.org/about/download"
+    },
+    {
+      "source": "hpa_single_cell_clusters",
+      "version": "v23",
+      "description": "HPA v23 Single-cell cluster and study metadata",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_cluster_description.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "3de8b77b002339a3ce8bd81c95090ea2647755b90b27a7ec5656a049e24b3897",
+      "publication_url": "https://v23.proteinatlas.org/about/download"
+    },
+    {
+      "source": "hpa_immune_cell",
+      "version": "v23",
+      "description": "HPA v23 Sorted immune-cell RNA, HPA measurements",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "206f4d2be7bb58731dfead00185081532b9b022164ce28e7878171e34372ccba",
+      "publication_url": "https://v23.proteinatlas.org/about/download"
+    },
+    {
+      "source": "hpa_immune_cell_samples",
+      "version": "v23",
+      "description": "HPA v23 Sorted immune-cell RNA with donor identities",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell_sample.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "52737741367b3c1abd1a5a370b15be3c1e60be8d22768bede9a55dadf2a900d3",
+      "publication_url": "https://v23.proteinatlas.org/about/download"
+    },
+    {
+      "source": "hpa_immune_monaco",
+      "version": "v23",
+      "description": "HPA v23 Monaco sorted immune-cell TPM",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell_monaco.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "a8013c229261b87f19598827e0dc5334529d6f1c82f002825a77ba6c04f1dabd",
+      "publication_url": "https://v23.proteinatlas.org/about/download"
+    },
+    {
+      "source": "hpa_immune_schmiedel",
+      "version": "v23",
+      "description": "HPA v23 DICE/Schmiedel immune RNA, including activated T cells",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell_schmiedel.tsv.zip",
+      "taxonomy_id": 9606,
+      "sha256": "fde755334657d7ec1a584520a8df6b163760b4d9653f18d72fba7197b18d6163",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "cornea_collin_adult_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin human corneal atlas: adult counts",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_adult_cornea.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "030cfd2f7c2b5c001698c29bd1cb5d6304890e405b06b6080299224aea59f66e",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_additional1",
+      "version": "GSE155683-20200804",
+      "description": "Collin human corneal atlas: additional1",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_additional1.csv.gz",
+      "taxonomy_id": 9606,
+      "sha256": "5525ab8c01eb2786185c5d4943a82d52cadc7af9961d74afc5911abc44117a30",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_additional2",
+      "version": "GSE155683-20200804",
+      "description": "Collin human corneal atlas: additional2",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_additional2.csv.gz",
+      "taxonomy_id": 9606,
+      "sha256": "4b368f002df28625e0def4c601158efa6b36aed2e1f79fc734488f08df7c3581",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_additional3",
+      "version": "GSE155683-20200804",
+      "description": "Collin human corneal atlas: additional3",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_additional3.csv.gz",
+      "taxonomy_id": 9606,
+      "sha256": "504d374368de2ab66042507213cf1fef570751c0049367794dd507475e9dcae9",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_limbal_dysplasia_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: Limbal_dysplasia.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/eb7cce4119a9569bfcc16a9d9a434250af3d417a724980556f915aa153f6c0a6.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "eb7cce4119a9569bfcc16a9d9a434250af3d417a724980556f915aa153f6c0a6",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_lscs_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: LSCs.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/5b6a3511958d4794f653f8fa9197bcfe743fce2ca3b7d3e2706080ea9753d5a1.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "5b6a3511958d4794f653f8fa9197bcfe743fce2ca3b7d3e2706080ea9753d5a1",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_adultcornea_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: AdultCornea.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/f001e7ffd9cce1dc584cf35241a4562bdcfcf6640159904609242f67eb028c78.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "f001e7ffd9cce1dc584cf35241a4562bdcfcf6640159904609242f67eb028c78",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_keratoconus_samples_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: Keratoconus_samples.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/a7107fc8643ff0183ff14302b80e6661a472ec56f5ed7bdad88a154675709899.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "a7107fc8643ff0183ff14302b80e6661a472ec56f5ed7bdad88a154675709899",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_meta_13pcw_14pcw_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: meta_13PCW_14PCW.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/b8609249a64b6a3adb66a2e205c348bb11f15330dedd87481dc1c5b1a74f0ea6.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "b8609249a64b6a3adb66a2e205c348bb11f15330dedd87481dc1c5b1a74f0ea6",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_meta_20pcw_21pcw_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: meta_20PCW_21PCW.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/bb45dabd494507b16d9ef01ce35d1a6eef561d4d1ea058fd06280316ebf60f97.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "bb45dabd494507b16d9ef01ce35d1a6eef561d4d1ea058fd06280316ebf60f97",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_meta_12pcw_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: meta_12PCW.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/2eb82aecde80296ca02e5db1994e71d9d6a4debf53900d069ea826ea87249038.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "2eb82aecde80296ca02e5db1994e71d9d6a4debf53900d069ea826ea87249038",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_meta_17pcw_18pcw_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: meta_17PCW_18PCW.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/b9d4cd201d2a71e607b89948db6d3cb927a5e7f54a7ea82d341a3aaf52833e24.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "b9d4cd201d2a71e607b89948db6d3cb927a5e7f54a7ea82d341a3aaf52833e24",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_meta_10pcw_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: meta_10PCW.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/79ab18808df09f80c7030678d92a2adc0347fcbfd7fe4f4e6459dbfab7767c6c.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "79ab18808df09f80c7030678d92a2adc0347fcbfd7fe4f4e6459dbfab7767c6c",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_meta_16pcw_cells",
+      "version": "HCA-20220228",
+      "description": "Collin corneal atlas cell annotations: meta_16PCW.tsv",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/17a81c9f6951c9dc5ee0d11b0bf93411c39145e2b41bbcbbe551a06b1c89fd1c.sha256",
+      "taxonomy_id": 9606,
+      "sha256": "17a81c9f6951c9dc5ee0d11b0bf93411c39145e2b41bbcbbe551a06b1c89fd1c",
+      "publication_url": "https://explore.data.humancellatlas.org/projects/6ac8e777-f9a0-4288-b5b0-446e8eba3078"
+    },
+    {
+      "source": "cornea_collin_10pcw_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin developing corneal atlas: 10PCW",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_10PCW.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "4a16631d9f196671a4dda742f638980c08bafb45beea0e2c6826d61939a8064c",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_12pcw_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin developing corneal atlas: 12PCW",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_12PCW.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "5390a6db0151e5300473b3dbd074ea3ff98124b00e7231c2926eadd998a656a5",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_13pcw_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin developing corneal atlas: 13PCW",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_13PCW.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "c44b6dfa15e887581d074a18bf9f77bacbffd1e8a0ce6539d02722f00fbf8a5e",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_14pcw_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin developing corneal atlas: 14PCW",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_14PCW.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "8d309be423e6e041e3ad61310de889bb97091569fa54870c6e1eec7bed42feec",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_16pcw_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin developing corneal atlas: 16PCW",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_16PCW.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "85808b0c7a2a73911e16bd5f94875e87ee3690ea2e3675079c3a4f29d1621aec",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_17_18pcw_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin developing corneal atlas: 17_18PCW",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_17_18PCW.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "5284f3219f2e643e222d3877fa31efaf623ce37abb9b2ed22cad0e42b761e9d2",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "cornea_collin_20_21pcw_counts",
+      "version": "GSE155683-20200804",
+      "description": "Collin developing corneal atlas: 20_21PCW",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_20_21PCW.txt.gz",
+      "taxonomy_id": 9606,
+      "sha256": "6aecdd35e9bb64f3ffcca564660ee4c6d93d85950c5503b69268fcad7c62682a",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/"
+    },
+    {
+      "source": "dice_b_cell_naive",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: B_CELL_NAIVE",
+      "url": "https://dice-database.org/download/B_CELL_NAIVE_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "9d71a15fb22fb55f3f3f606179d3f267dcccb70868a028dbf2d45a29f2b2eed1",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_monocytes",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: MONOCYTES",
+      "url": "https://dice-database.org/download/MONOCYTES_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "fb1d82f9fbc61397d46520581877e74424f77c4db0ee468a0f3efa0aed4110dc",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_m2",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: M2",
+      "url": "https://dice-database.org/download/M2_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "00960e38779fae323b059395613f3a5248d680a884d753f5bee6608b84c38e94",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_nk",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: NK",
+      "url": "https://dice-database.org/download/NK_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "1d489470a78d5c96df60f15d4e2f626044409af3a8354de669315186f9a88765",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_treg_mem",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: TREG_MEM",
+      "url": "https://dice-database.org/download/TREG_MEM_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "6b1710199210fe1178e48570425562cbb6af068c3c013bd1bc76da9bccec9419",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_cd4_naive",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: CD4_NAIVE",
+      "url": "https://dice-database.org/download/CD4_NAIVE_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "94692f4d6ca8ea92bb4a37dd1d52607b174c1654316001c6d4e732789bec8820",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_cd4_stim",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: CD4_STIM",
+      "url": "https://dice-database.org/download/CD4_STIM_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "beaa9ab1497d176b1eb27580549ce1354a039f9c33abc0620f544764763d9f75",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_treg_naive",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: TREG_NAIVE",
+      "url": "https://dice-database.org/download/TREG_NAIVE_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "a320a4238010691b4af484e4697058e4b79cde4bc44d6890436b982508b3ff4b",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_tfh",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: TFH",
+      "url": "https://dice-database.org/download/TFH_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "029ff1f86d7f14c9cebc97f7fe0c3125c3b9bc04ea5bbc1c0eabadc5f953de30",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_th1",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: TH1",
+      "url": "https://dice-database.org/download/TH1_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "a73c666724a8efbc2e36efdd889b19d284b9aa35890f20d973d31a88e4c89e80",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_thstar",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: THSTAR",
+      "url": "https://dice-database.org/download/THSTAR_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "f9607b8a6637aca5f7acdacd74929911098c05d8ec72fc226515be59a1c3d2d0",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_th17",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: TH17",
+      "url": "https://dice-database.org/download/TH17_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "d7d76987004bc565b4a1d14d89a52c6450e467d04dce3e576e8e4d30c6750137",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_th2",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: TH2",
+      "url": "https://dice-database.org/download/TH2_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "2eb57e51b6a77016dd97c9f338527bb1b96bd43146a626b059cb6f7367ea195a",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_cd8_naive",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: CD8_NAIVE",
+      "url": "https://dice-database.org/download/CD8_NAIVE_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "e9a4828d5cb0227cd45e8ba6df635a1db30268dbb1deef039d88d5128e2dd86c",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    },
+    {
+      "source": "dice_cd8_stim",
+      "version": "DICE-DB1-20220223",
+      "description": "DICE donor TPM: CD8_STIM",
+      "url": "https://dice-database.org/download/CD8_STIM_TPM.csv",
+      "taxonomy_id": 9606,
+      "sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/"
+    }
+  ],
+  "implementation_and_inputs": {
+    "oncoref/normal_cell_data.py": "2e08ca2b7b58af826f4d0e685581e42cfbabe8e390d8d0cca56685991920bc81",
+    "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
+    "scripts/normal_cell_cta_report.py": "4a1909ce0c59a3379bb2b7d6b5667351a6298bdaf83138e9f378dee0bfbce6b9",
+    "scripts/render_normal_cell_report.py": "f01672fae2497aaa82daf32f298f5123c9f9ae4d4865aa79ce7b541c00b94a7f",
+    "scripts/build_normal_cell_mappings.py": "b1537349d305b3acb34365e05d753d23bb9ff88fe15d464c12810b63f6456666",
+    "scripts/templates/normal-cell-explorer.html": "531dbf4262b316bbef99b06618c5a7c30acb4a7671ecb8b29b43d3e98ca9d247",
+    "oncoref/data/normal-cell-sources.json": "89656ff4914666033cec5511a1e90c092ffebb590304db1c5f3838e1b03b5b11",
+    "oncoref/data/normal-cell-publication-evidence.csv": "739b2128420964d8a73a46b8bf369df4f098cbf19425842f63b8732de700c124",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
+    "oncoref/data/normal-tissue-mappings.csv": "ed83eaca220f27514c27bf0328440fab1ec85d7f11c44ff1d5dda4bb7adc0538"
+  },
+  "baseline_sha256": "4d73b7d4103198846f13326be013b8a4176ec6c036d0755dfeff0d7ae247f4e9",
+  "outputs": {
+    "added-evidence.csv.gz": "74309a7cf4fc8189e84326818057433c0b374daa2b4e42dc9e33dcb10c987163",
+    "cell-rna.csv.gz": "84bacb9803edb44e392fa70711eba786579e89fa8264041654d2e7a0a4fb2371",
+    "changed-genes.csv": "fd0a06677420e271c5b1bfa69cd2bd404066e0081b60bc14aeba695cd5fd649f",
+    "corneal-findings.csv.gz": "20d0f515c2ee1b8cd6e44223d7616ca4389a477affc24c4afbe9835f1672441a",
+    "corneal-gene-mapping.csv.gz": "43fae8a4956e3163a38f6fe994ccc1c86cc1dad6daa5924e4886b03a9c5cfa5a",
+    "corneal-rna.csv.gz": "aed79c5b5903e49f2785e6b938e942c915aa77a561e55e19af174e7974c7dd86",
+    "cta-candidates.csv.gz": "9dd5f5efae576d8d6fc77af434266eca6af7ff7a2cac5b2ebc19b94360a78c95",
+    "cta-genes.csv.gz": "efa73158c165c77cbff4842adb32351ca109072894b584bec065ab3bae07a4b0",
+    "dice-distributions.csv.gz": "0a032694b597cbb32be68a770f278f66ac4420936121f7cf803ba51b3c496f99",
+    "exclusion-basis.json": "f4e14eb2920068ac8b6b4fd169cd3609df851df7c9cee0a26f5f2ade1cbfe6c6",
+    "explore.html": "99d09cc6b249985bfefee4f0244e9d2a04faebdfe04cc4c72688094c43a5d529",
+    "funnel.png": "08f12201e67cab1f2a885ec6b344d8df5409ffc0c916c9ff7b2c051323175506",
+    "funnel.svg": "157325d77984cf70fce67b75784697804972f289051969db658d0b861d4ebab5",
+    "gene-results.csv.gz": "37a123dd260d6a009e49901ff781d44c5c8a10fa855d090fba117a8bdb09f5db",
+    "genes-without-complete-proteins.csv.gz": "068a811116105314eb856471cf414948933e1d6fa8a9dddfa1f400fc3a14c5ed",
+    "immune-rna.csv.gz": "a90d4e88dff0654bc4282cbf5fca05cca501efae8e6849906ca55ff171d420db",
+    "important-ctas.csv": "32fbe2f2c53e9664f2a93a5a573bf121b01de6f1876373a8bae5a6b9bbf5ecc1",
+    "important-proteins.csv": "504ad588777f00c59aaf848de9ceb03398bdd8ad190c4610efe6341ab18f3331",
+    "index.md": "4b42f6a5c2c7e14eccf33a7da8b9c1be09e109124a2f3cc40af683a93ef21e2a",
+    "neither-genes.csv.gz": "bc4481af8cc7008c59436e29d84efc846263f06d7800d85c90e673a9f0085c73",
+    "primary-antibodies.csv.gz": "f5a37339a5d12e844f97ff18ff6ba28f98fa3cacd021ac89a3780cef5467f413",
+    "protein-assets.json": "db1470c699292c2264dc7053e4d5abada9600fba9d18e957b870d1a0c2525836",
+    "publication-evidence.csv": "739b2128420964d8a73a46b8bf369df4f098cbf19425842f63b8732de700c124",
+    "reference.json": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
+    "removed-ctas.csv": "4dfe24b2ab1e00dd4b5c44ba1d85aa06a26f49a16ce5d31a13bdd381e8a9b1f6",
+    "sources.csv": "b736c1c95b5b78552a11f857f1df0d2009fa56ee175d6940fa42cc42d0ce8fb1",
+    "summary.json": "1d7d81ebdab6fd17f26ea0f5122bdf04c3827ec00e92791f0b5b98b5e25f5158",
+    "unclassified-sequence-genes.csv.gz": "d4261b21ef2ff4b03987e279e1aab99b505b57490b3331d18e5eb563dc212e4c",
+    "unsafe-genes.csv.gz": "2e2d010ac421c60c5528f91e64ea5aa38bb67c8d5da13f53d7a2c87d45f3e0bd"
+  },
+  "forbidden_categories": [
+    "Unsafe"
+  ],
+  "summary": {
+    "policy": "oncoref.target-sets.2026-10-23.2",
+    "genome": {
+      "Unsafe": 17409,
+      "Neither": 2252,
+      "CTA": 436
+    },
+    "nominated": {
+      "Unsafe": 1455,
+      "Neither": 649,
+      "CTA": 436
+    },
+    "previous_cta": 589,
+    "still_retained": 435,
+    "new_cta": 1,
+    "moved_to_neither": 152,
+    "moved_from_cta_to_unsafe": 2,
+    "new_unsafe_total": 4,
+    "added_review_coverage_genes": 2705,
+    "overlapping_loss_findings": {
+      "Cell RNA review": 12,
+      "Immune RNA review": 89,
+      "Corneal RNA review": 0,
+      "Antibody review": 70,
+      "Published normal protein": 2
+    },
+    "proteins": {
+      "Unsafe": 125585,
+      "Neither": 3593,
+      "CTA": 807
+    }
+  }
+}

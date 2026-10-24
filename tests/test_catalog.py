@@ -16,7 +16,7 @@ from oncoref import catalog, cli, data_bundle, reference_data
 def test_datasets_span_both_backends():
     ds = catalog.datasets()
     kinds = {d.kind for d in ds}
-    assert kinds == {"bundle", "hpa"}
+    assert kinds == {"bundle", "hpa", "reference"}
     names = {d.name for d in ds}
     assert set(data_bundle.DOWNLOADABLE_PATHS) <= names
     assert set(reference_data.REFERENCE_SOURCES) <= names
@@ -273,7 +273,7 @@ def test_inventory_covers_all_held_buckets():
     # wheel/bundle/hpa/source (planned only appears while tables remain to port).
     held = {r["held"] for r in rows}
     assert {"wheel", "bundle", "hpa", "source"} <= held
-    assert held <= {"wheel", "bundle", "hpa", "source", "planned"}
+    assert held <= {"wheel", "bundle", "hpa", "reference", "source", "planned"}
 
 
 def test_inventory_wheel_always_available():

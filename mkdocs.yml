@@ -7,7 +7,9 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Current CTA, Unsafe and Neither sets: audits/target-sets-20261023/index.md
+      - Current CTA and normal-cell evidence: audits/cta-normal-cells-20261023/index.md
+      - Normal-cell data API and rules: normal-cell-evidence.md
+      - Previous 589-gene target sets: audits/target-sets-20261023/index.md
       - Target sets and exclusion API: target-sets.md
       - Prior 740-gene screen and Variable evidence: audits/cta-screen-20261023/index.md
       - Screening rules and API: cta-screen.md

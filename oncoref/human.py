@@ -5,7 +5,7 @@ Dataset modules are shared with their top-level imports, for example
 ``human.human_protein_atlas`` is ``oncoref.human_protein_atlas``.
 """
 
-from . import human_protein_atlas
+from . import human_protein_atlas, normal_cell_data
 from .species import for_species as _for_species
 
 _data = _for_species(9606)
@@ -21,7 +21,7 @@ groups = (references, expression, cancer, antigens, normalization, governance, l
 inventory = _data.inventory
 
 # Named dataset modules exposed here; inventory() describes the complete catalog.
-datasets = (human_protein_atlas,)
+datasets = (human_protein_atlas, normal_cell_data)
 
 cta_candidates = antigens.cta_candidates
 cta_evidence = antigens.cta_evidence
@@ -46,6 +46,7 @@ __all__ = [
     "human_protein_atlas",
     "inventory",
     "legacy",
+    "normal_cell_data",
     "normal_tissue_scopes",
     "normalization",
     "references",

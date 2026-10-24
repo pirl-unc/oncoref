@@ -70,9 +70,10 @@ def test_status_shape(monkeypatch, tmp_path):
     assert names == set(reference_data.REFERENCE_SOURCES)
     assert all(r["cached"] is False for r in rows)  # nothing downloaded
     for row in rows:
-        if row["name"].startswith("hpa_cancer_"):
+        if reference_data.REFERENCE_SOURCES[row["name"]].get("pins"):
             assert row["verification_state"] == "missing_file"
-            assert row["default_version"] == "v25.1-1"
+            if row["name"].startswith("hpa_cancer_"):
+                assert row["default_version"] == "v25.1-1"
             assert len(row["sha256"]) == 64
         else:
             assert row["verification_state"] == "no_manifest"

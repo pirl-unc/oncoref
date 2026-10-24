@@ -1,6 +1,6 @@
 # CTA, Unsafe and Neither
 
-The [current report](audits/target-sets-20261023/index.md) supplies three disjoint
+The [current report](audits/cta-normal-cells-20261023/index.md) supplies three disjoint
 sets across 20,097 canonical human protein-coding genes and the pinned Ensembl
 115 protein inventory.
 
@@ -10,26 +10,31 @@ sets across 20,097 canonical human protein-coding genes and the pinned Ensembl
 | Unsafe | No | Yes |
 | Neither | No | No |
 
-CTA requires the previous curated candidate screen plus reproductive RNA
-**≥5 nTPM when there is no positive IHC anywhere measured**. Reliable positive
-reproductive IHC can support a lower-RNA candidate under the existing rules.
-No IHC and measured-but-negative IHC are separate evidence states; neither is
-positive evidence. This removes 150 candidates with no IHC and IL5 with
-all-negative measured IHC, leaving **589 CTA genes**.
+CTA requires the previous curated candidate screen plus affirmative reproductive
+evidence: reproductive RNA **≥5 nTPM**, reliable positive reproductive protein,
+or cited reproductive plus tumor/recognition evidence. Reliable reproductive IHC
+can satisfy admission below 5 nTPM. None of these bypass normal-expression gates.
 
-Unsafe requires positive normal IHC, RNA above an applicable normal-tissue
-ceiling, or an independent reviewed safety hold. A selectivity failure alone
-does not make a gene Unsafe. The existing category/IHC ceilings are unchanged;
-5 nTPM is not a universal normal-tissue allowance.
+The added normal-cell screen leaves **436 CTA genes**. It retains all 21 previously
+retained clinical/requested benchmark genes and adds CT55. Of the previous 589,
+152 move to Neither for cell-RNA or antibody review, while IL13 and PAPPA move to
+Unsafe because published nonmalignant cells produce their proteins.
 
-Neither preserves Low, Variable, Unassessed and other unresolved/nonselected
-subgroups. CTAG2 is Neither/Variable. ZNF730 and IL5 are Neither/Low. Missing
-measurements never become zero. Variable remains excluded from targets while
-its donor evidence and reconsideration requirements stay visible.
+Unsafe requires positive normal IHC, above-ceiling normal RNA, a reviewed safety
+hold, or cited normal protein production outside permitted compartments. ABCB5
+and IL5 also now have the latter classification. A selectivity failure alone
+does not make a gene Unsafe. Original bulk category/IHC ceilings are unchanged.
+
+Neither preserves Low, Variable, Cellular, Antibody, Unassessed and other
+unresolved subgroups. CTAG2 remains Variable. FOXR2 has an Antibody hold;
+ACRBP/OY-TES-1 and several other established CTAs have Cellular review holds.
+The [normal-cell guide](normal-cell-evidence.md) documents the separate native-unit
+RNA review triggers. Missing data never become zero.
 
 These are research classifications: CTA is not proven clinical safety, Unsafe
 is a screening exclusion rather than proven toxicity, and Neither is not proof
-of normal-protein absence. Only CTAG2 has imported individual-donor RNA so far.
+of normal-protein absence. Original DICE columns cannot be paired across genes;
+only CTAG2 has the previously reviewed vital-organ individual-donor RNA evidence.
 
 ## Python
 

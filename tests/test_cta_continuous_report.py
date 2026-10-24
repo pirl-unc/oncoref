@@ -57,4 +57,14 @@ def test_boundary_correction_and_full_report_provenance():
     assert manifest["allowance_ntpm"] == 0.1
     for section, root in [("inputs", ROOT), ("implementation_sha256", ROOT), ("outputs", REPORT)]:
         for name, expected in manifest[section].items():
-            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+            path = root / name
+            if name in {
+                "oncoref/data/normal-tissue-taxonomy.yaml",
+                "oncoref/data/normal-tissue-mappings.csv",
+            }:
+                path = (
+                    ROOT
+                    / "docs/audits/normal-tissue-registry-20261021-r2/frozen-inputs"
+                    / Path(name).name
+                )
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name

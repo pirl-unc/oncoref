@@ -11,7 +11,7 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 [Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/target-sets-20261023/)
+and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-normal-cells-20261023/)
 document the nested sets, cited dataset mappings, complete publication intake,
 and dog/mouse evidence coverage. The human research screen requires reproductive
 expression, with category-specific absolute RNA ceilings,

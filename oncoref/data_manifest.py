@@ -362,6 +362,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "disjoint CTA, Unsafe and Neither gene sets; only Unsafe is the forbidden background",
     ),
+    "normal-cell-publication-evidence": (
+        "cta-evidence",
+        "cited human reproductive/tumor support and normal-cell protein counterevidence",
+    ),
     "proteoform-groups": ("gene-id", "byte-identical CTA proteoform groups"),
     "proteoform-groups-genome": ("gene-id", "byte-identical proteoform groups (genome-wide)"),
     "source-matrices": (

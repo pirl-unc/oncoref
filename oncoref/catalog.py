@@ -14,8 +14,8 @@
 
 oncoref holds two kinds of heavy/external data behind separate machinery: the
 version-pinned per-cohort **expression bundle** (:mod:`oncoref.data_bundle`, a
-single GitHub-release tarball) and the **HPA** protein/RNA reference tables
-(:mod:`oncoref.reference_data`, per-source downloads from proteinatlas.org).
+single GitHub-release tarball) and versioned **reference** tables
+(:mod:`oncoref.reference_data`: HPA, DICE and the human corneal atlas).
 This module is the unified facade over both — one ``Dataset`` model and one
 fetch/cache/status API — so a caller (or the CLI) manages everything uniformly
 without knowing which backend a dataset lives in.
@@ -41,6 +41,7 @@ from .legacy import LEGACY_TYPED_ACCESSORS, legacy_dataset_dispositions
 
 _BUNDLE = "bundle"
 _HPA = "hpa"
+_REFERENCE = "reference"
 
 #: prefix for addressing one cohort's raw per-sample matrix (``per-sample:LUAD``).
 _PER_SAMPLE = "per-sample:"
@@ -95,7 +96,11 @@ def datasets() -> list[Dataset]:
         for name in bundle_names
     ]
     out += [
-        Dataset(name, _HPA, reference_data.REFERENCE_SOURCES[name]["description"])
+        Dataset(
+            name,
+            reference_data.REFERENCE_SOURCES[name].get("kind", _HPA),
+            reference_data.REFERENCE_SOURCES[name]["description"],
+        )
         for name in hpa_names
     ]
     return out
@@ -122,7 +127,7 @@ def path(name: str) -> Path | None:
         code = name[len(_PER_SAMPLE) :]
         return source_matrices.local_path(code) if source_matrices.is_cached(code) else None
     d = dataset(name)
-    if d.kind == _HPA:
+    if d.kind in (_HPA, _REFERENCE):
         p = reference_data.local_path(name)
         return p if p.exists() else None
     return data_bundle.find(name)
@@ -160,7 +165,7 @@ def ensure(name: str) -> Path:
     if name.startswith(_PER_SAMPLE):
         return source_matrices.ensure(name[len(_PER_SAMPLE) :])
     d = dataset(name)
-    if d.kind == _HPA:
+    if d.kind in (_HPA, _REFERENCE):
         return reference_data.ensure(name)
     data_bundle.ensure_local()
     resolved = data_bundle.find(name)
@@ -174,7 +179,7 @@ def ensure(name: str) -> Path:
 def fetch(target: str = "all", *, force: bool = False) -> list[str]:
     """Materialize data, downloading what's missing. ``target`` selects what:
 
-    - ``"all"`` — the reference data (expression bundle + every HPA source);
+    - ``"all"`` — the expression bundle and every managed reference source;
     - ``"bundle"`` / ``"hpa"`` — just that kind (e.g. ``fetch("hpa")`` for HPA only);
     - ``"source"`` — every cohort's raw per-sample matrix (~21 GB; opt-in, not in ``"all"``);
     - ``"per-sample:<code>"`` — one cohort's raw matrix;
@@ -201,7 +206,7 @@ def fetch(target: str = "all", *, force: bool = False) -> list[str]:
 
     if target == "all":
         targets = [d.name for d in datasets()]
-    elif target in (_BUNDLE, _HPA):
+    elif target in (_BUNDLE, _HPA, _REFERENCE):
         targets = [d.name for d in datasets() if d.kind == target]
     else:
         targets = [dataset(target).name]
@@ -217,7 +222,7 @@ def fetch(target: str = "all", *, force: bool = False) -> list[str]:
             f"expression bundle v{data_bundle.DATA_VERSION}", data_bundle.cache_dir()
         )
     for n in targets:
-        if dataset(n).kind == _HPA:
+        if dataset(n).kind in (_HPA, _REFERENCE):
             path = reference_data.local_path(n)
             version = reference_data.resolve_version(n)
             already = path.exists() and reference_data._cached_file_ok(n, version, path)
@@ -303,6 +308,14 @@ def inventory(*, species="human", group=None) -> list[dict]:
         _add(name, "bundle", cat, desc, member is not None, _cohort_count(member))
     for name, (cat, desc) in sorted(data_manifest.HPA.items()):
         _add(name, "hpa", cat, desc, reference_data.local_path(name).exists())
+    for name, spec in sorted(reference_data._normal_manifest["artifacts"].items()):
+        _add(
+            name,
+            spec["kind"],
+            "expression",
+            spec["description"],
+            reference_data.local_path(name).exists(),
+        )
     for name, (cat, desc) in sorted(data_manifest.SOURCE.items()):
         cohorts = source_matrices.available_cohorts()
         available = any(source_matrices.is_cached(c) for c in cohorts)
@@ -327,7 +340,7 @@ def status(name: str | None = None) -> list[dict]:
             _per_sample_status_row(f"{_PER_SAMPLE}{code}")
             for code in source_matrices.available_cohorts()
         ]
-    if name in (_BUNDLE, _HPA):
+    if name in (_BUNDLE, _HPA, _REFERENCE):
         names = [d.name for d in datasets() if d.kind == name]
     else:
         names = [dataset(name).name] if name is not None else [d.name for d in datasets()]

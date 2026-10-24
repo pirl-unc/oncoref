@@ -1,0 +1,8 @@
+{
+  "git_commit": "f7eecee81c9e8d7445ae18ef596fc013dd8bdcc8",
+  "reason": "Original taxonomy and source mappings used by the October 22/23 historical screens, before additive normal-cell anatomy mappings.",
+  "files": {
+    "normal-tissue-taxonomy.yaml": "4f8a0232e0d547c189de77eb88a42f30e563ebab7c6fe6d0af82ba0a54bbdbae",
+    "normal-tissue-mappings.csv": "9e852c13dfea2638e804f855fef8d7a19c7fe5902ae55c9aee1b094e43eca4f5"
+  }
+}
