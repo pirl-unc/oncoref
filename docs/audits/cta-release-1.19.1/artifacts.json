@@ -1,0 +1,42 @@
+{
+  "activated-only-review.csv": {
+    "bytes": 1943,
+    "sha256": "81bc7dcd80cf4ee318b83616eb5094c235ab172784ade0a97f1e802c80eb31de"
+  },
+  "cta-release-review.pdf": {
+    "bytes": 94113,
+    "sha256": "eab877d04079a04babf2d765e69d1e655c91327bdd16288868b1e6907f073084"
+  },
+  "cta-release-tables.zip": {
+    "bytes": 143873,
+    "sha256": "5c9645476ddd006040bb800b5b29d9d71487409746826284e70f8fbe681ce1b3"
+  },
+  "immune-summary.csv": {
+    "bytes": 371262,
+    "sha256": "89502b2d0f862d4fd198ca4cd8e0e434b1db3ad03175a4cd997efb2700e9b61f"
+  },
+  "immune-trigger-details.csv": {
+    "bytes": 162583,
+    "sha256": "9a3d9fbb3818f7ae0e03463752ddbd4e026e9a36b1e5c1001cb9985523e074f6"
+  },
+  "index.md": {
+    "bytes": 34522,
+    "sha256": "08a64ffb70d4f4f4851d79e1ee43b66de9a13c46b6525d00dfc50782e7467ba2"
+  },
+  "provenance.json": {
+    "bytes": 4332,
+    "sha256": "549e3034a1e8c40c2a91a082b6a5946285498ea926ea98ce16e3a62bf6a42d53"
+  },
+  "retained-review.csv": {
+    "bytes": 756232,
+    "sha256": "046107081dd5cc34a95dd83bc9316a74c7b6be0f7c5171ec6fdd777babe3efc0"
+  },
+  "review.md": {
+    "bytes": 1585,
+    "sha256": "c902c534140ce4f9c569dafde53764598832d2c58072aea8a231728a6c8190da"
+  },
+  "summary.json": {
+    "bytes": 2114,
+    "sha256": "29689e068df16de672260af1ac228f2c22c3463e91f92ff1c6693b8a9c839d56"
+  }
+}
