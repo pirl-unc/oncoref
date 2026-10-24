@@ -389,7 +389,7 @@
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "B_CELL_NAIVE_TPM.csv",
-      "description": "DICE donor TPM: B_CELL_NAIVE",
+      "description": "DICE original expression distribution: B cell, naive",
       "archive_format": "file",
       "url": "https://dice-database.org/download/B_CELL_NAIVE_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -399,13 +399,14 @@
       "unit": "TPM",
       "sha256": "9d71a15fb22fb55f3f3f606179d3f267dcccb70868a028dbf2d45a29f2b2eed1",
       "bytes": 51636514,
-      "archive_sha256": "9d71a15fb22fb55f3f3f606179d3f267dcccb70868a028dbf2d45a29f2b2eed1"
+      "archive_sha256": "9d71a15fb22fb55f3f3f606179d3f267dcccb70868a028dbf2d45a29f2b2eed1",
+      "cell_label": "B cell, naive"
     },
     "dice_monocytes": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "MONOCYTES_TPM.csv",
-      "description": "DICE donor TPM: MONOCYTES",
+      "description": "DICE original expression distribution: Monocyte, classical",
       "archive_format": "file",
       "url": "https://dice-database.org/download/MONOCYTES_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -415,13 +416,14 @@
       "unit": "TPM",
       "sha256": "fb1d82f9fbc61397d46520581877e74424f77c4db0ee468a0f3efa0aed4110dc",
       "bytes": 51212406,
-      "archive_sha256": "fb1d82f9fbc61397d46520581877e74424f77c4db0ee468a0f3efa0aed4110dc"
+      "archive_sha256": "fb1d82f9fbc61397d46520581877e74424f77c4db0ee468a0f3efa0aed4110dc",
+      "cell_label": "Monocyte, classical"
     },
     "dice_m2": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "M2_TPM.csv",
-      "description": "DICE donor TPM: M2",
+      "description": "DICE original expression distribution: Monocyte, non-classical",
       "archive_format": "file",
       "url": "https://dice-database.org/download/M2_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -431,13 +433,14 @@
       "unit": "TPM",
       "sha256": "00960e38779fae323b059395613f3a5248d680a884d753f5bee6608b84c38e94",
       "bytes": 49706472,
-      "archive_sha256": "00960e38779fae323b059395613f3a5248d680a884d753f5bee6608b84c38e94"
+      "archive_sha256": "00960e38779fae323b059395613f3a5248d680a884d753f5bee6608b84c38e94",
+      "cell_label": "Monocyte, non-classical"
     },
     "dice_nk": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "NK_TPM.csv",
-      "description": "DICE donor TPM: NK",
+      "description": "DICE original expression distribution: NK cell, CD56dim CD16+",
       "archive_format": "file",
       "url": "https://dice-database.org/download/NK_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -447,13 +450,14 @@
       "unit": "TPM",
       "sha256": "1d489470a78d5c96df60f15d4e2f626044409af3a8354de669315186f9a88765",
       "bytes": 50979792,
-      "archive_sha256": "1d489470a78d5c96df60f15d4e2f626044409af3a8354de669315186f9a88765"
+      "archive_sha256": "1d489470a78d5c96df60f15d4e2f626044409af3a8354de669315186f9a88765",
+      "cell_label": "NK cell, CD56dim CD16+"
     },
     "dice_treg_mem": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "TREG_MEM_TPM.csv",
-      "description": "DICE donor TPM: TREG_MEM",
+      "description": "DICE original expression distribution: T cell, CD4, memory TREG",
       "archive_format": "file",
       "url": "https://dice-database.org/download/TREG_MEM_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -463,13 +467,14 @@
       "unit": "TPM",
       "sha256": "6b1710199210fe1178e48570425562cbb6af068c3c013bd1bc76da9bccec9419",
       "bytes": 50962324,
-      "archive_sha256": "6b1710199210fe1178e48570425562cbb6af068c3c013bd1bc76da9bccec9419"
+      "archive_sha256": "6b1710199210fe1178e48570425562cbb6af068c3c013bd1bc76da9bccec9419",
+      "cell_label": "T cell, CD4, memory TREG"
     },
     "dice_cd4_naive": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "CD4_NAIVE_TPM.csv",
-      "description": "DICE donor TPM: CD4_NAIVE",
+      "description": "DICE original expression distribution: T cell, CD4, naive",
       "archive_format": "file",
       "url": "https://dice-database.org/download/CD4_NAIVE_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -479,13 +484,14 @@
       "unit": "TPM",
       "sha256": "94692f4d6ca8ea92bb4a37dd1d52607b174c1654316001c6d4e732789bec8820",
       "bytes": 50474173,
-      "archive_sha256": "94692f4d6ca8ea92bb4a37dd1d52607b174c1654316001c6d4e732789bec8820"
+      "archive_sha256": "94692f4d6ca8ea92bb4a37dd1d52607b174c1654316001c6d4e732789bec8820",
+      "cell_label": "T cell, CD4, naive"
     },
     "dice_cd4_stim": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "CD4_STIM_TPM.csv",
-      "description": "DICE donor TPM: CD4_STIM",
+      "description": "DICE original expression distribution: T cell, CD4, naive [activated]",
       "archive_format": "file",
       "url": "https://dice-database.org/download/CD4_STIM_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -495,13 +501,14 @@
       "unit": "TPM",
       "sha256": "beaa9ab1497d176b1eb27580549ce1354a039f9c33abc0620f544764763d9f75",
       "bytes": 49759016,
-      "archive_sha256": "beaa9ab1497d176b1eb27580549ce1354a039f9c33abc0620f544764763d9f75"
+      "archive_sha256": "beaa9ab1497d176b1eb27580549ce1354a039f9c33abc0620f544764763d9f75",
+      "cell_label": "T cell, CD4, naive [activated]"
     },
     "dice_treg_naive": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "TREG_NAIVE_TPM.csv",
-      "description": "DICE donor TPM: TREG_NAIVE",
+      "description": "DICE original expression distribution: T cell, CD4, naive TREG",
       "archive_format": "file",
       "url": "https://dice-database.org/download/TREG_NAIVE_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -511,13 +518,14 @@
       "unit": "TPM",
       "sha256": "a320a4238010691b4af484e4697058e4b79cde4bc44d6890436b982508b3ff4b",
       "bytes": 50538630,
-      "archive_sha256": "a320a4238010691b4af484e4697058e4b79cde4bc44d6890436b982508b3ff4b"
+      "archive_sha256": "a320a4238010691b4af484e4697058e4b79cde4bc44d6890436b982508b3ff4b",
+      "cell_label": "T cell, CD4, naive TREG"
     },
     "dice_tfh": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "TFH_TPM.csv",
-      "description": "DICE donor TPM: TFH",
+      "description": "DICE original expression distribution: T cell, CD4, TFH",
       "archive_format": "file",
       "url": "https://dice-database.org/download/TFH_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -527,13 +535,14 @@
       "unit": "TPM",
       "sha256": "029ff1f86d7f14c9cebc97f7fe0c3125c3b9bc04ea5bbc1c0eabadc5f953de30",
       "bytes": 50876191,
-      "archive_sha256": "029ff1f86d7f14c9cebc97f7fe0c3125c3b9bc04ea5bbc1c0eabadc5f953de30"
+      "archive_sha256": "029ff1f86d7f14c9cebc97f7fe0c3125c3b9bc04ea5bbc1c0eabadc5f953de30",
+      "cell_label": "T cell, CD4, TFH"
     },
     "dice_th1": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "TH1_TPM.csv",
-      "description": "DICE donor TPM: TH1",
+      "description": "DICE original expression distribution: T cell, CD4, TH1",
       "archive_format": "file",
       "url": "https://dice-database.org/download/TH1_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -543,13 +552,14 @@
       "unit": "TPM",
       "sha256": "a73c666724a8efbc2e36efdd889b19d284b9aa35890f20d973d31a88e4c89e80",
       "bytes": 46768322,
-      "archive_sha256": "a73c666724a8efbc2e36efdd889b19d284b9aa35890f20d973d31a88e4c89e80"
+      "archive_sha256": "a73c666724a8efbc2e36efdd889b19d284b9aa35890f20d973d31a88e4c89e80",
+      "cell_label": "T cell, CD4, TH1"
     },
     "dice_thstar": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "THSTAR_TPM.csv",
-      "description": "DICE donor TPM: THSTAR",
+      "description": "DICE original expression distribution: T cell, CD4, TH1/17",
       "archive_format": "file",
       "url": "https://dice-database.org/download/THSTAR_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -559,13 +569,14 @@
       "unit": "TPM",
       "sha256": "f9607b8a6637aca5f7acdacd74929911098c05d8ec72fc226515be59a1c3d2d0",
       "bytes": 50353927,
-      "archive_sha256": "f9607b8a6637aca5f7acdacd74929911098c05d8ec72fc226515be59a1c3d2d0"
+      "archive_sha256": "f9607b8a6637aca5f7acdacd74929911098c05d8ec72fc226515be59a1c3d2d0",
+      "cell_label": "T cell, CD4, TH1/17"
     },
     "dice_th17": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "TH17_TPM.csv",
-      "description": "DICE donor TPM: TH17",
+      "description": "DICE original expression distribution: T cell, CD4, TH17",
       "archive_format": "file",
       "url": "https://dice-database.org/download/TH17_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -575,13 +586,14 @@
       "unit": "TPM",
       "sha256": "d7d76987004bc565b4a1d14d89a52c6450e467d04dce3e576e8e4d30c6750137",
       "bytes": 51282588,
-      "archive_sha256": "d7d76987004bc565b4a1d14d89a52c6450e467d04dce3e576e8e4d30c6750137"
+      "archive_sha256": "d7d76987004bc565b4a1d14d89a52c6450e467d04dce3e576e8e4d30c6750137",
+      "cell_label": "T cell, CD4, TH17"
     },
     "dice_th2": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "TH2_TPM.csv",
-      "description": "DICE donor TPM: TH2",
+      "description": "DICE original expression distribution: T cell, CD4, TH2",
       "archive_format": "file",
       "url": "https://dice-database.org/download/TH2_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -591,13 +603,14 @@
       "unit": "TPM",
       "sha256": "2eb57e51b6a77016dd97c9f338527bb1b96bd43146a626b059cb6f7367ea195a",
       "bytes": 51018709,
-      "archive_sha256": "2eb57e51b6a77016dd97c9f338527bb1b96bd43146a626b059cb6f7367ea195a"
+      "archive_sha256": "2eb57e51b6a77016dd97c9f338527bb1b96bd43146a626b059cb6f7367ea195a",
+      "cell_label": "T cell, CD4, TH2"
     },
     "dice_cd8_naive": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "CD8_NAIVE_TPM.csv",
-      "description": "DICE donor TPM: CD8_NAIVE",
+      "description": "DICE original expression distribution: T cell, CD8, naive",
       "archive_format": "file",
       "url": "https://dice-database.org/download/CD8_NAIVE_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -607,13 +620,14 @@
       "unit": "TPM",
       "sha256": "e9a4828d5cb0227cd45e8ba6df635a1db30268dbb1deef039d88d5128e2dd86c",
       "bytes": 51697808,
-      "archive_sha256": "e9a4828d5cb0227cd45e8ba6df635a1db30268dbb1deef039d88d5128e2dd86c"
+      "archive_sha256": "e9a4828d5cb0227cd45e8ba6df635a1db30268dbb1deef039d88d5128e2dd86c",
+      "cell_label": "T cell, CD8, naive"
     },
     "dice_cd8_stim": {
       "version": "DICE-DB1-20220223",
       "kind": "reference",
       "filename": "CD8_STIM_TPM.csv",
-      "description": "DICE donor TPM: CD8_STIM",
+      "description": "DICE original expression distribution: T cell, CD8, naive [activated]",
       "archive_format": "file",
       "url": "https://dice-database.org/download/CD8_STIM_TPM.csv",
       "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6289654/",
@@ -623,7 +637,8 @@
       "unit": "TPM",
       "sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198",
       "bytes": 49254523,
-      "archive_sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198"
+      "archive_sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198",
+      "cell_label": "T cell, CD8, naive [activated]"
     }
   }
 }

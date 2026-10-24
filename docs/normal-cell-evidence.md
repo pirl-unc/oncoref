@@ -84,12 +84,16 @@ version suffixes removed in observations; source tables retain the suffixes.
   Developmental, diseased and cultured samples remain separate native matrices;
   they do not enter the adult-normal gate.
 - **DICE:** numeric columns describe each gene's expression distribution. They
-  are not stable donor IDs across genes/cell types. HPA's Schmiedel/DICE summary
+  are not stable donor IDs across genes/cell types. `cell_type` retains the study
+  code and `cell_label` its author-provided name (for example, M2 means
+  non-classical monocytes, not polarized M2 macrophages). HPA's Schmiedel/DICE summary
   is the same study, not another independent replication.
 - **Antibodies:** primary staining, antibody validation, curated profile
   reliability, patient IDs, image links and notes are retained. Patient IDs do
   not turn an aggregate tissue/cell staining row into paired patient-level data.
   HPA primary observations can exist when curated `normal_tissue.tsv` has no row.
+  Inherited result columns `IHC measurements` and `IHC coverage` describe curated
+  IHC only; `Primary IHC measured` and the primary-antibody export are separate.
 - **Anatomy:** immune cells sampled in testis/fallopian tube do not inherit the
   organ's reproductive permission. Cornea, limbus and conjunctiva are explicit
   eye compartments. All new measured mappings are human; the rules reject

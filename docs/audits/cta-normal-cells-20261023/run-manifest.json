@@ -293,7 +293,7 @@
     {
       "source": "dice_b_cell_naive",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: B_CELL_NAIVE",
+      "description": "DICE original expression distribution: B cell, naive",
       "url": "https://dice-database.org/download/B_CELL_NAIVE_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "9d71a15fb22fb55f3f3f606179d3f267dcccb70868a028dbf2d45a29f2b2eed1",
@@ -302,7 +302,7 @@
     {
       "source": "dice_monocytes",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: MONOCYTES",
+      "description": "DICE original expression distribution: Monocyte, classical",
       "url": "https://dice-database.org/download/MONOCYTES_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "fb1d82f9fbc61397d46520581877e74424f77c4db0ee468a0f3efa0aed4110dc",
@@ -311,7 +311,7 @@
     {
       "source": "dice_m2",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: M2",
+      "description": "DICE original expression distribution: Monocyte, non-classical",
       "url": "https://dice-database.org/download/M2_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "00960e38779fae323b059395613f3a5248d680a884d753f5bee6608b84c38e94",
@@ -320,7 +320,7 @@
     {
       "source": "dice_nk",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: NK",
+      "description": "DICE original expression distribution: NK cell, CD56dim CD16+",
       "url": "https://dice-database.org/download/NK_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "1d489470a78d5c96df60f15d4e2f626044409af3a8354de669315186f9a88765",
@@ -329,7 +329,7 @@
     {
       "source": "dice_treg_mem",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: TREG_MEM",
+      "description": "DICE original expression distribution: T cell, CD4, memory TREG",
       "url": "https://dice-database.org/download/TREG_MEM_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "6b1710199210fe1178e48570425562cbb6af068c3c013bd1bc76da9bccec9419",
@@ -338,7 +338,7 @@
     {
       "source": "dice_cd4_naive",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: CD4_NAIVE",
+      "description": "DICE original expression distribution: T cell, CD4, naive",
       "url": "https://dice-database.org/download/CD4_NAIVE_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "94692f4d6ca8ea92bb4a37dd1d52607b174c1654316001c6d4e732789bec8820",
@@ -347,7 +347,7 @@
     {
       "source": "dice_cd4_stim",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: CD4_STIM",
+      "description": "DICE original expression distribution: T cell, CD4, naive [activated]",
       "url": "https://dice-database.org/download/CD4_STIM_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "beaa9ab1497d176b1eb27580549ce1354a039f9c33abc0620f544764763d9f75",
@@ -356,7 +356,7 @@
     {
       "source": "dice_treg_naive",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: TREG_NAIVE",
+      "description": "DICE original expression distribution: T cell, CD4, naive TREG",
       "url": "https://dice-database.org/download/TREG_NAIVE_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "a320a4238010691b4af484e4697058e4b79cde4bc44d6890436b982508b3ff4b",
@@ -365,7 +365,7 @@
     {
       "source": "dice_tfh",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: TFH",
+      "description": "DICE original expression distribution: T cell, CD4, TFH",
       "url": "https://dice-database.org/download/TFH_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "029ff1f86d7f14c9cebc97f7fe0c3125c3b9bc04ea5bbc1c0eabadc5f953de30",
@@ -374,7 +374,7 @@
     {
       "source": "dice_th1",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: TH1",
+      "description": "DICE original expression distribution: T cell, CD4, TH1",
       "url": "https://dice-database.org/download/TH1_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "a73c666724a8efbc2e36efdd889b19d284b9aa35890f20d973d31a88e4c89e80",
@@ -383,7 +383,7 @@
     {
       "source": "dice_thstar",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: THSTAR",
+      "description": "DICE original expression distribution: T cell, CD4, TH1/17",
       "url": "https://dice-database.org/download/THSTAR_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "f9607b8a6637aca5f7acdacd74929911098c05d8ec72fc226515be59a1c3d2d0",
@@ -392,7 +392,7 @@
     {
       "source": "dice_th17",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: TH17",
+      "description": "DICE original expression distribution: T cell, CD4, TH17",
       "url": "https://dice-database.org/download/TH17_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "d7d76987004bc565b4a1d14d89a52c6450e467d04dce3e576e8e4d30c6750137",
@@ -401,7 +401,7 @@
     {
       "source": "dice_th2",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: TH2",
+      "description": "DICE original expression distribution: T cell, CD4, TH2",
       "url": "https://dice-database.org/download/TH2_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "2eb57e51b6a77016dd97c9f338527bb1b96bd43146a626b059cb6f7367ea195a",
@@ -410,7 +410,7 @@
     {
       "source": "dice_cd8_naive",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: CD8_NAIVE",
+      "description": "DICE original expression distribution: T cell, CD8, naive",
       "url": "https://dice-database.org/download/CD8_NAIVE_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "e9a4828d5cb0227cd45e8ba6df635a1db30268dbb1deef039d88d5128e2dd86c",
@@ -419,7 +419,7 @@
     {
       "source": "dice_cd8_stim",
       "version": "DICE-DB1-20220223",
-      "description": "DICE donor TPM: CD8_STIM",
+      "description": "DICE original expression distribution: T cell, CD8, naive [activated]",
       "url": "https://dice-database.org/download/CD8_STIM_TPM.csv",
       "taxonomy_id": 9606,
       "sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198",
@@ -427,13 +427,13 @@
     }
   ],
   "implementation_and_inputs": {
-    "oncoref/normal_cell_data.py": "2e08ca2b7b58af826f4d0e685581e42cfbabe8e390d8d0cca56685991920bc81",
+    "oncoref/normal_cell_data.py": "e8f93223eae4d6eea774209f30aaea335e135654b5e106a0cfd5cdb342f5c56a",
     "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
     "scripts/normal_cell_cta_report.py": "4a1909ce0c59a3379bb2b7d6b5667351a6298bdaf83138e9f378dee0bfbce6b9",
     "scripts/render_normal_cell_report.py": "f01672fae2497aaa82daf32f298f5123c9f9ae4d4865aa79ce7b541c00b94a7f",
     "scripts/build_normal_cell_mappings.py": "b1537349d305b3acb34365e05d753d23bb9ff88fe15d464c12810b63f6456666",
     "scripts/templates/normal-cell-explorer.html": "531dbf4262b316bbef99b06618c5a7c30acb4a7671ecb8b29b43d3e98ca9d247",
-    "oncoref/data/normal-cell-sources.json": "89656ff4914666033cec5511a1e90c092ffebb590304db1c5f3838e1b03b5b11",
+    "oncoref/data/normal-cell-sources.json": "6efb085a57872fa98743281238e260d0a03594142f554563800739e257347080",
     "oncoref/data/normal-cell-publication-evidence.csv": "739b2128420964d8a73a46b8bf369df4f098cbf19425842f63b8732de700c124",
     "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
     "oncoref/data/normal-tissue-mappings.csv": "ed83eaca220f27514c27bf0328440fab1ec85d7f11c44ff1d5dda4bb7adc0538"
@@ -452,7 +452,7 @@
     "exclusion-basis.json": "f4e14eb2920068ac8b6b4fd169cd3609df851df7c9cee0a26f5f2ade1cbfe6c6",
     "explore.html": "99d09cc6b249985bfefee4f0244e9d2a04faebdfe04cc4c72688094c43a5d529",
     "funnel.png": "08f12201e67cab1f2a885ec6b344d8df5409ffc0c916c9ff7b2c051323175506",
-    "funnel.svg": "157325d77984cf70fce67b75784697804972f289051969db658d0b861d4ebab5",
+    "funnel.svg": "e86eccaed657d50c82d6456e05e0687580da13b2bf4eee968184bf2d2c9cc1a5",
     "gene-results.csv.gz": "37a123dd260d6a009e49901ff781d44c5c8a10fa855d090fba117a8bdb09f5db",
     "genes-without-complete-proteins.csv.gz": "068a811116105314eb856471cf414948933e1d6fa8a9dddfa1f400fc3a14c5ed",
     "immune-rna.csv.gz": "a90d4e88dff0654bc4282cbf5fca05cca501efae8e6849906ca55ff171d420db",
@@ -465,7 +465,7 @@
     "publication-evidence.csv": "739b2128420964d8a73a46b8bf369df4f098cbf19425842f63b8732de700c124",
     "reference.json": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
     "removed-ctas.csv": "4dfe24b2ab1e00dd4b5c44ba1d85aa06a26f49a16ce5d31a13bdd381e8a9b1f6",
-    "sources.csv": "b736c1c95b5b78552a11f857f1df0d2009fa56ee175d6940fa42cc42d0ce8fb1",
+    "sources.csv": "e31e67c57d2ab86b6445bbdaf6a2ba7e0a12eabb955b7f5fcd2c76499fdf55a4",
     "summary.json": "1d7d81ebdab6fd17f26ea0f5122bdf04c3827ec00e92791f0b5b98b5e25f5158",
     "unclassified-sequence-genes.csv.gz": "d4261b21ef2ff4b03987e279e1aab99b505b57490b3331d18e5eb563dc212e4c",
     "unsafe-genes.csv.gz": "2e2d010ac421c60c5528f91e64ea5aa38bb67c8d5da13f53d7a2c87d45f3e0bd"

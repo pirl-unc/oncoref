@@ -56,6 +56,7 @@ def test_dice_values_are_not_matched_donor_records(monkeypatch):
     monkeypatch.setattr(data, "table", lambda *a, **k: native.copy())
     result = data.observations("dice_cd4_stim")
     assert result.unit.eq("TPM").all() and result.state.eq("activated").all()
+    assert result.cell_label.str.contains("T cell").all()
     assert result.donor.eq("").all() and result["sample"].eq("").all()
     assert set(result.gene_id) == {"ENSG1", "ENSG2"}
     assert sorted(result.value) == [0, 3, 8, 20]

@@ -359,6 +359,7 @@ def dice_observations(source, *, genes=None, version=None):
         "taxonomy_id": 9606,
         "tissue": "blood",
         "cell_type": spec["cell_type"],
+        "cell_label": spec["cell_label"],
         "state": spec["state"],
         "stage": "adult",
         "unit": "TPM",
