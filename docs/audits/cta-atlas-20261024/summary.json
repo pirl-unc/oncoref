@@ -1,0 +1,94 @@
+{
+  "policy": "oncoref.target-sets.2026-10-24.1",
+  "date": "2026-10-24",
+  "counts": {
+    "Unsafe": 1580,
+    "Neither": 561,
+    "CTA": 399
+  },
+  "details": [
+    {
+      "Category": "CTA",
+      "Detail": "Pass",
+      "Genes": 398
+    },
+    {
+      "Category": "CTA",
+      "Detail": "Supported",
+      "Genes": 1
+    },
+    {
+      "Category": "Neither",
+      "Detail": "Antibody",
+      "Genes": 199
+    },
+    {
+      "Category": "Neither",
+      "Detail": "Cellular",
+      "Genes": 70
+    },
+    {
+      "Category": "Neither",
+      "Detail": "Low",
+      "Genes": 191
+    },
+    {
+      "Category": "Neither",
+      "Detail": "Screening",
+      "Genes": 59
+    },
+    {
+      "Category": "Neither",
+      "Detail": "Selectivity",
+      "Genes": 10
+    },
+    {
+      "Category": "Neither",
+      "Detail": "Unassessed",
+      "Genes": 31
+    },
+    {
+      "Category": "Neither",
+      "Detail": "Variable",
+      "Genes": 1
+    },
+    {
+      "Category": "Unsafe",
+      "Detail": "High RNA",
+      "Genes": 125
+    },
+    {
+      "Category": "Unsafe",
+      "Detail": "Normal",
+      "Genes": 3
+    },
+    {
+      "Category": "Unsafe",
+      "Detail": "Protein",
+      "Genes": 845
+    },
+    {
+      "Category": "Unsafe",
+      "Detail": "RNA",
+      "Genes": 606
+    },
+    {
+      "Category": "Unsafe",
+      "Detail": "Safety",
+      "Genes": 1
+    }
+  ],
+  "coverage": {
+    "UniProt exact-ID genes": 2505,
+    "UniProt function genes": 1873,
+    "Cancer RNA genes": 2529,
+    "Cancer IHC genes": 1671,
+    "Targeted literature review genes": 19,
+    "Trial-linked genes": 30,
+    "Boundary-flagged genes": 55,
+    "Retained genes with literature conflicts": 37
+  },
+  "cancer_rna_rows": 77145,
+  "cancer_ihc_rows": 33419,
+  "scope": "All 2540 mapped nominations. BAGE/GAGE2B unmapped intake shown separately; not assigned false-negative measurements."
+}

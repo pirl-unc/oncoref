@@ -1,0 +1,142 @@
+# Targeted primary-source review. This is not a systematic review of every gene.
+# Source-specific observations must not be generalized to other receptor products.
+reviewed: '2026-10-24'
+records:
+  - id: ybx2-normal-2006
+    genes: [YBX2]
+    evidence: Normal protein conflict
+    source: https://pmc.ncbi.nlm.nih.gov/articles/PMC2361212/
+    title: dbpC/contrin (YBX2) normal-tissue and tumor staining, 2006
+    finding: 'Normal-tissue staining included vascular smooth muscle and adrenal cortical cells. Specimens included non-tumor surgical regions and autopsies. Reconcile antibody specificity and tissue context before accepting reproductive restriction; the report did not test therapeutic toxicity.'
+  - id: abcc11-neural-2006
+    genes: [ABCC11]
+    evidence: Normal protein conflict
+    source: https://pubmed.ncbi.nlm.nih.gov/16359813/
+    title: ABCC11 axonal localization, Neuroscience 2006
+    finding: 'Human brain immunoblotting and axonal immunofluorescence support neural ABCC11 protein. This is a priority conflict with its current retained classification, requiring normal-protein adjudication before target use; clinical injury was not tested.'
+  - id: magec2-neural-2003
+    genes: [MAGEC2]
+    evidence: Normal protein conflict
+    source: https://pubmed.ncbi.nlm.nih.gov/12920247/
+    title: HCA587/MAGEC2 normal and cancer protein staining, 2003
+    finding: 'The TC-1 polyclonal reagent stained normal cerebellar Purkinje cells. This priority conflict requires antibody/paralog specificity review; neither the current retained label nor historical staining alone establishes clinical safety or injury.'
+  - id: tecelra-2026
+    genes: [MAGEA4]
+    evidence: Approved product
+    source: https://www.fda.gov/media/180565/download
+    title: FDA TECELRA label, revised June 2026
+    finding: 'Selected synovial sarcoma patients aged 12+: 60/137 responses (43.8%), median response duration 5.3 months. CRS 72% (2% grade >=3), ICANS 4%, grade >=3 infections 12%. Product-specific evidence; not blanket MAGEA4 safety.'
+  - id: ima203-2025
+    genes: [PRAME]
+    evidence: Clinical outcomes
+    source: https://www.nature.com/articles/s41591-025-03650-6
+    title: IMA203 phase 1, Nature Medicine 2025
+    finding: 'Confirmed responses: 11/38 (28.9%); unconfirmed-plus-confirmed: 21/40 (52.5%). Severe CRS: 2/41. No severe neurotoxicity or treatment-related deaths reported. This does not establish safety of other PRAME-directed products or rule out rare adrenal injury.'
+  - id: nyeso-2015
+    genes: [CTAG1A, CTAG1B]
+    evidence: Clinical outcomes
+    source: https://pubmed.ncbi.nlm.nih.gov/25538264/
+    title: Robbins et al., NY-ESO-1 TCR follow-up, 2015
+    finding: 'Objective responses in 11/18 synovial sarcomas and 11/20 melanomas. HLA- and antigen-selected, uncontrolled cohort; shared NY-ESO-1 protein attribution does not distinguish CTAG1A from CTAG1B.'
+  - id: lete-nsclc-2025
+    genes: [CTAG1A, CTAG1B, CTAG2]
+    evidence: Clinical outcomes
+    source: https://pubmed.ncbi.nlm.nih.gov/39576208/
+    title: Lete-cel NSCLC pilot studies, 2025
+    finding: 'One durable response among 18 treated patients; cytopenias and CRS were common, without fatal treatment-related serious adverse events. Recognition includes a shared NY-ESO-1/LAGE-1A epitope; this is not proof of all-isoform CTAG2 safety.'
+  - id: lete-mrcls-2025
+    genes: [CTAG1A, CTAG1B, CTAG2]
+    evidence: Clinical outcomes
+    source: https://pmc.ncbi.nlm.nih.gov/articles/PMC12084024/
+    title: Lete-cel myxoid/round-cell liposarcoma pilot, 2025
+    finding: 'Responses: 2/10 and 4/10 across two cohorts. A potentially related fatal cardiac arrest occurred on day 161 amid substantial competing illness/treatment. It does not establish CTAG2-mediated myocardial injury; the independent donor-expression hold remains.'
+  - id: magea3-titin-2013
+    genes: [MAGEA3]
+    evidence: Clinical safety signal
+    source: https://pubmed.ncbi.nlm.nih.gov/23770775/
+    title: Linette et al., cardiovascular toxicity and titin cross-reactivity, 2013
+    finding: 'Two fatal cardiac events followed affinity-enhanced MAGE-A3 TCR treatment. Cross-recognition of unrelated cardiac titin explains the hazard; it does not demonstrate native MAGEA3 expression in heart.'
+  - id: magea3-neuro-2013
+    genes: [MAGEA3, MAGEA12]
+    evidence: Clinical safety signal
+    source: https://pubmed.ncbi.nlm.nih.gov/23377668/
+    title: Morgan et al., anti-MAGE-A3 neurological toxicity, 2013
+    finding: 'Five of nine patients had tumor regression; three developed neurological toxicity and two died. The receptor cross-recognized MAGE-A12, with brain RNA evidence; pan-MAGE neuronal staining did not uniquely establish the causal paralog.'
+  - id: magrit-2016
+    genes: [MAGEA3]
+    evidence: Negative randomized trial
+    source: https://pubmed.ncbi.nlm.nih.gov/27132212/
+    title: MAGRIT randomized phase 3 trial, 2016
+    finding: 'MAGE-A3 vaccination did not improve disease-free survival after NSCLC resection (hazard ratio 1.02; 95% CI 0.89-1.18). Trial nomination is therefore not evidence of benefit.'
+  - id: magea10-nsclc-2022
+    genes: [MAGEA10]
+    evidence: Clinical outcomes
+    source: https://pubmed.ncbi.nlm.nih.gov/35086946/
+    title: ADP-A2M10 NSCLC phase 1, 2022
+    finding: 'Eleven treated; one partial response after repeat infusion, followed by aplastic anemia and death. CRS occurred in three patients. Investigators found no evidence of off-target binding or alloreactivity; conditioning and cell-therapy risks remain.'
+  - id: magea10-other-2022
+    genes: [MAGEA10]
+    evidence: Clinical outcomes
+    source: https://pubmed.ncbi.nlm.nih.gov/35372008/
+    title: ADP-A2M10 head/neck, melanoma and urothelial phase 1, 2022
+    finding: 'Ten treated; no objective responses, four stable diseases. Two CRS events resolved. Small cohorts cannot establish absence of rare target-mediated toxicity.'
+  - id: cldn6-2023
+    genes: [CLDN6]
+    evidence: Clinical outcomes
+    source: https://www.nature.com/articles/s41591-023-02612-0
+    title: BNT211-01 initial phase 1 report, 2023
+    finding: 'Initial report: 7/21 unconfirmed responses (33%); CRS 10/22, including one grade 3 event; one grade 1 ICANS. Oncofetal surface-target experience does not validate unrestricted targeting of all developmental tissues.'
+  - id: ct83-2017
+    genes: [CT83]
+    evidence: Human tumor recognition
+    source: https://pmc.ncbi.nlm.nih.gov/articles/PMC6295311/
+    title: Landscape of immunogenic antigens in successful cervical-cancer TIL therapy, 2017
+    finding: 'KK-LC-1 recognition was found in therapeutic TIL associated with complete cervical-cancer regression. Mixed antigen-specific TIL cannot isolate CT83-specific efficacy or safety.'
+  - id: ct55-2017
+    genes: [CT55]
+    evidence: Human tumor recognition
+    source: https://pubmed.ncbi.nlm.nih.gov/28862699/
+    title: CXorf48 as a CML stem-cell immune target, 2017
+    finding: 'Human antigen-specific CTLs recognized patient-derived CML stem/progenitor cells. Endogenous immune associations after imatinib cessation support interest, but are not an interventional efficacy or safety trial.'
+  - id: foxr2-2022
+    genes: [FOXR2]
+    evidence: Cancer mechanism
+    source: https://pubmed.ncbi.nlm.nih.gov/35802025/
+    title: FOXR2 is an epigenetically regulated pan-cancer oncogene, 2022
+    finding: 'Activation occurred in 8% of individual tumors across 70% of cancer types; experimental work supports ETS-circuit-driven growth. Testis restriction supports reconsideration, but the antibody conflict still needs resolution. No therapeutic outcome is established here.'
+  - id: abcb5-2014
+    genes: [ABCB5]
+    evidence: Normal function
+    source: https://pmc.ncbi.nlm.nih.gov/articles/PMC4246512/
+    title: ABCB5 identifies limbal stem cells and supports corneal maintenance, 2014
+    finding: 'Normal limbal stem-cell expression and corneal-regeneration function contradict reproductive restriction. Tumor association does not erase the normal eye compartment.'
+  - id: il5-2012
+    genes: [IL5]
+    evidence: Normal function
+    source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3445433/
+    title: Human IL-5-producing T-helper-cell biology, 2012
+    finding: 'IL-5 is produced by normal activated immune cells. Baseline tissue silence cannot establish reproductive restriction; neutralizing a secreted cytokine is different from destroying every cell that produces it.'
+  - id: il13-1996
+    genes: [IL13]
+    evidence: Normal function
+    source: https://pubmed.ncbi.nlm.nih.gov/8605923/
+    title: Normal human T-cell IL-13 expression, 1996
+    finding: 'Activated nonmalignant T cells produce IL-13. State-dependent cytokine expression defeats a reproductive-restricted label even if resting bulk-tissue RNA is low.'
+  - id: pappa-2007
+    genes: [PAPPA]
+    evidence: Normal function
+    source: https://pubmed.ncbi.nlm.nih.gov/17936662/
+    title: Regulation of PAPP-A in human coronary vascular cells, 2007
+    finding: 'Activated human coronary vascular cells can produce PAPP-A. Placental association does not imply exclusive reproductive expression.'
+  - id: spag9-2007
+    genes: [SPAG9]
+    evidence: Tumor expression and immunity
+    source: https://pubmed.ncbi.nlm.nih.gov/17332284/
+    title: SPAG9 in epithelial ovarian cancer, 2007
+    finding: 'Ovarian-cancer expression and patient antibody responses establish interest, not reproductive exclusivity. Current normal RNA and protein counterevidence supports exclusion.'
+  - id: bage-1995
+    genes: [BAGE]
+    evidence: Human tumor recognition
+    source: https://pubmed.ncbi.nlm.nih.gov/7895173/
+    title: BAGE antigen recognized by human melanoma-reactive CTLs, 1995
+    finding: 'Original human CTL recognition supports historical antigen status. Contemporary locus identity and missing matched expression measurements remain unresolved; a related BAGE paralog cannot be substituted.'

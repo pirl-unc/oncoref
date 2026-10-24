@@ -1,0 +1,18 @@
+{
+  "artifacts": {
+    "uniprot_reviewed_human": {
+      "description": "UniProtKB/Swiss-Prot reviewed human annotations, explicit Ensembl cross-references and cited biological facts",
+      "filename": "uniprot-reviewed-human-2026_03.json.gz",
+      "version": "2026_03-20261024",
+      "url": "https://github.com/pirl-unc/oncoref/releases/download/cta-literature-20261024/uniprot-reviewed-human-2026_03.json.gz",
+      "archive_format": "file",
+      "sha256": "c6eb7030778e74b146daa0b019f40ceee4c7e9d87edc70769407eba1eddc29e3",
+      "archive_sha256": "c6eb7030778e74b146daa0b019f40ceee4c7e9d87edc70769407eba1eddc29e3",
+      "bytes": 56556656,
+      "license": "CC BY 4.0",
+      "citation": "UniProt Consortium; UniProtKB release 2026_03",
+      "source_query": "https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A9606%29+AND+%28reviewed%3Atrue%29&format=json&fields=accession%2Cid%2Cgene_names%2Cxref_ensembl%2Cprotein_name%2Ccc_function%2Ccc_disease%2Ccc_pathway%2Ccc_subcellular_location%2Ccc_tissue_specificity%2Ccc_caution%2Clit_pubmed_id%2Cprotein_existence",
+      "retrieved": "2026-10-24"
+    }
+  }
+}

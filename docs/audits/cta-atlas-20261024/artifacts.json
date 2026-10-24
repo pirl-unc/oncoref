@@ -1,0 +1,132 @@
+{
+  "policy": "oncoref.target-sets.2026-10-24.1",
+  "date": "2026-10-24",
+  "pdf_pages": {
+    "cta-neither-catalog.pdf": 189,
+    "cta-overview.pdf": 21,
+    "cta-excluded-catalog.pdf": 588,
+    "cta-retained-catalog.pdf": 138
+  },
+  "files": {
+    "all-genes.csv": {
+      "sha256": "dff2c194404281cedfd6ddaf86505b0b02faeacd645506e5cf8fde774a74d09d",
+      "bytes": 8868853
+    },
+    "all-genes.csv.gz": {
+      "sha256": "ddb6c7cd0347b98331ac39b56a38f84b45cd6a0e15199910c03d6bae4fdb3e8d",
+      "bytes": 1298676
+    },
+    "biology.csv.gz": {
+      "sha256": "01a74dc2880a89ff25b2380ff136c09ec394a1a6fb52228232eace4bf5ca51a5",
+      "bytes": 504282
+    },
+    "boundaries.csv": {
+      "sha256": "12a703e6f400ed5a6671b39ca6ee97195d679bab6458dc301caf70eda2bb6035",
+      "bytes": 133078
+    },
+    "bulk-tissue-rules.csv.gz": {
+      "sha256": "978d099952a7a3357a19f84ed16d12a3a2d6bcfae17262b6230cd2c509736d81",
+      "bytes": 4606431
+    },
+    "cancer-ihc.csv.gz": {
+      "sha256": "e39e57d9afd26c3264df7e3ad939da673e965589e00cd3615ded361b17dddfce",
+      "bytes": 244810
+    },
+    "cancer-rna-heatmap.png": {
+      "sha256": "19dcc340d4694903a003fa828bb613a1f73c9dab71daed8fe19cb478aedf11d2",
+      "bytes": 114738
+    },
+    "cancer-rna.csv.gz": {
+      "sha256": "1279e6453b4dd3b69f05f81f32117075cbc34abfff2299c3bdbe4f55d6a31527",
+      "bytes": 3043964
+    },
+    "clinical-targets.csv": {
+      "sha256": "f287493b5060474955bdf674640d547d11aaea6f40e662b14c99f648c95fdd86",
+      "bytes": 157391
+    },
+    "cta-evidence-tables.zip": {
+      "sha256": "73e5cf95948094329434bdf7914cd90410c59c2fac8f435c3b779f3a2c91e6c4",
+      "bytes": 14520717
+    },
+    "excluded.csv": {
+      "sha256": "7454d65c6c454e3c8ea37a5496e00520cf7702cecb35b980ff18753ab5e91422",
+      "bytes": 6457795
+    },
+    "explore.html": {
+      "sha256": "216a29360c1167891b93bce3e52ae03146fabf264336222211119378fb2c5f53",
+      "bytes": 14464877
+    },
+    "index.md": {
+      "sha256": "ba34e829470e2e5df78664a11afe057d05355a021fb6f50f7532c621e0760b49",
+      "bytes": 9267
+    },
+    "literature-reviews.csv": {
+      "sha256": "471bb432334d7c2425798162d553d3de611d33d4827962c63d446810c128c876",
+      "bytes": 10343
+    },
+    "literature.yml": {
+      "sha256": "060221e79e89ca7128b234f870cfd4af3bfb7fb18e4a6f1f0609f001275c7d5c",
+      "bytes": 9929
+    },
+    "neither.csv": {
+      "sha256": "7cc86ee4497b4d09f1d61e2ed5cbab3da5a6266379e8a608b1cca67939f94203",
+      "bytes": 1593087
+    },
+    "normal-contexts.csv.gz": {
+      "sha256": "9c4ffa117ee82ac3db6383ee7bf68c118f61c177bbb8008f6ed03412e99c2e32",
+      "bytes": 2413360
+    },
+    "pdf/cta-excluded-catalog.pdf": {
+      "sha256": "aaf26e165960b8b8371f87b0ddd998892c7aed482c8e1bd5fa28b1fe08acd07c",
+      "bytes": 2551492
+    },
+    "pdf/cta-neither-catalog.pdf": {
+      "sha256": "a9b17741c09b529741bcea60191334bfe378ca131a3b30f4d7b20193b0a114f6",
+      "bytes": 832495
+    },
+    "pdf/cta-overview.pdf": {
+      "sha256": "b70f741a6c8e1ace7d9855256a5171aa00138ad1310e8febc77a1d4ed1bce775",
+      "bytes": 293677
+    },
+    "pdf/cta-retained-catalog.pdf": {
+      "sha256": "24691ee8458d04a4d563a12413a97748312c9cb9b9520e519110f1bb5dc61010",
+      "bytes": 626917
+    },
+    "pdf-gene-index.csv": {
+      "sha256": "3a95730b0e34b05a8b6492c0ddf6572ded811203664211396ba4e8c70588f40a",
+      "bytes": 112851
+    },
+    "provenance.json": {
+      "sha256": "bc144573754ffe981306b7b3774869f9ca17f1ad4fb7eb2c59c0a88145e759dc",
+      "bytes": 4533
+    },
+    "quick-table.csv": {
+      "sha256": "004d41f273f9c100180ed9a18fee872a4114e3eee5704b367be1b854b43816e2",
+      "bytes": 809491
+    },
+    "reconsideration.csv": {
+      "sha256": "075a2ccafbaf4c498cd44474c2e197c11e9a622e92c8d9f7d0ebb99b11d57bfe",
+      "bytes": 60331
+    },
+    "retained-literature-conflicts.csv": {
+      "sha256": "7f82b64243cc060b2465775bae3bc4b0a46cc17910c0c40c53a31c63dea88a12",
+      "bytes": 85876
+    },
+    "retained-literature-conflicts.yml": {
+      "sha256": "661c0e4f1db4b093efe680a7ddbbb3bbb8c4b519f7376df68c80ead090434227",
+      "bytes": 8933
+    },
+    "retained.csv": {
+      "sha256": "8306cb956345c9326c1ffcf66839cfdf7ba64115073c247ad591ba4dd3876420",
+      "bytes": 749164
+    },
+    "review.md": {
+      "sha256": "18c67d7eb78047cda0031de4928f1e46d8ffbccd9b068082a2827c8f36b68df0",
+      "bytes": 2046
+    },
+    "summary.json": {
+      "sha256": "935145364f3764edbcc3ffc0145f8a83ce3f21e9b71644ae7ff210aa7020587f",
+      "bytes": 1876
+    }
+  }
+}

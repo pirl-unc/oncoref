@@ -316,6 +316,14 @@ def inventory(*, species="human", group=None) -> list[dict]:
             spec["description"],
             reference_data.local_path(name).exists(),
         )
+    for name, spec in sorted(reference_data._annotation_manifest["artifacts"].items()):
+        _add(
+            name,
+            "reference",
+            "protein-annotation",
+            spec["description"],
+            reference_data.local_path(name).exists(),
+        )
     for name, (cat, desc) in sorted(data_manifest.SOURCE.items()):
         cohorts = source_matrices.available_cohorts()
         available = any(source_matrices.is_cached(c) for c in cohorts)

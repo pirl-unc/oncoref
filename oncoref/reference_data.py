@@ -105,6 +105,19 @@ for _name, _artifact in _normal_manifest["artifacts"].items():
         **({"pins": {_version: _artifact}} if "sha256" in _artifact else {}),
     }
 
+_annotation_manifest = json.loads(
+    (Path(__file__).parent / "data" / "protein-annotation-sources.json").read_text()
+)
+for _name, _artifact in _annotation_manifest["artifacts"].items():
+    _version = _artifact["version"]
+    REFERENCE_SOURCES[_name] = {
+        **_artifact,
+        "kind": "reference",
+        "default_version": _version,
+        "urls": {_version: _artifact["url"]},
+        "pins": {_version: _artifact},
+    }
+
 #: Env var overriding the reference-data cache root.
 CACHE_DIR_ENV_KEY = "CANCERDATA_DATA_DIR"
 
