@@ -1,0 +1,73 @@
+{
+  "policy": "oncoref.target-sets.2026-10-24.1",
+  "created": "2026-10-24",
+  "inputs": {
+    "docs/audits/cta-neither-review-20261024/gene-results.csv.gz": "dbc5fe2d36da55d4fab92ae80dee29c6071f44c8aa071562258b800dfb98b654",
+    "docs/audits/cta-neither-review-20261024/rna-context-maxima.csv.gz": "365645d0ec324aaa7c015dfc739c25577680e71eb99818452e3ecd81feb5f3f2",
+    "docs/audits/cta-neither-review-20261024/follow-up.csv": "07d8b7f84d087f63577f88de009c03a735214a9c19eb981bb7a36d8dbfeb3393",
+    "docs/audits/cta-atlas-20261024/literature.yml": "060221e79e89ca7128b234f870cfd4af3bfb7fb18e4a6f1f0609f001275c7d5c",
+    "docs/audits/cta-atlas-20261024/retained-literature-conflicts.yml": "661c0e4f1db4b093efe680a7ddbbb3bbb8c4b519f7376df68c80ead090434227",
+    "oncoref/data/cta-trial-evidence.csv": "a1e946c91962618d43c45820b11e9c64c28fce092d6bf528ce31faeef589e3c8",
+    "oncoref/data/cta-publication-membership.csv": "be2c3d9b3d202b0664e7e025926ba9743b1516cf100182cf6c14fb1b42af8b09",
+    "docs/audits/cta-screen-20261023/tissue-evidence.csv.gz": "58348bc946198184a412109ecf82d0d0e04c2087c1f0a8fe3b0f73dbe41d4f3f",
+    "oncoref/protein_annotations.py": "7f66d102ca86c33cebd6dc54de357b65445317e75027cd4efc4f71d94e5301d3",
+    "oncoref/hpa_cancer.py": "a45957c7b0763981053838050ca33d8faba7920d21358d5459f519e600e9d108",
+    "oncoref/data/protein-annotation-sources.json": "713973c1d27280e5deff217c723abb475960f0c571e88a7659bb4dafe099bdc1",
+    "scripts/build_cta_atlas.py": "f7173077c5003374d170595aba22a18fbb82353ca34ce8fe1c3c62171339e48a",
+    "scripts/render_cta_atlas.py": "41ba1264b363e4952e2f8485dfe50c0674d08712eba9577a91ff47e389b8f4f3",
+    "scripts/publish_cta_atlas_files.py": "91857fcf93bac267cd00c9c3c4b834f6f552de51cd90e0781a5eac4e6473ef3b",
+    "scripts/templates/cta-atlas-explorer.html": "bfbf6b1521b21ff90cfbdc0ecee6bb276688e748a1d12816eca33e1bc6cf2656"
+  },
+  "references": [
+    {
+      "name": "hpa_cancer_rna",
+      "version": "v25.1-1",
+      "url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/hpa_cancer_rna_summary.tsv.zip",
+      "path": "/Users/iskander/.cache/oncoref/sources/hpa_cancer_rna/v25.1-1/hpa_cancer_rna_summary.tsv",
+      "bytes": 130080465,
+      "recorded_bytes": 130080465,
+      "sha256": "6f24cb197f30be928e3daaaaea7ee44e0d93605f0937f113ad8e2c5679d73692",
+      "downloaded_at": "2026-10-24T13:46:20+00:00",
+      "exists": true,
+      "manifest_recorded": true,
+      "checksum_matches": true,
+      "verification_state": "verified"
+    },
+    {
+      "name": "hpa_cancer_ihc",
+      "version": "v25.1-1",
+      "url": "https://github.com/pirl-unc/oncoref/releases/download/hpa-cancer-v25.1-1/cancer_data.tsv.zip",
+      "path": "/Users/iskander/.cache/oncoref/sources/hpa_cancer_ihc/v25.1-1/cancer_data.tsv",
+      "bytes": 13776545,
+      "recorded_bytes": 13776545,
+      "sha256": "901869ea1cd57012137018a83be6067a574b45999ef2e3df3f8f8887b7f80d6c",
+      "downloaded_at": "2026-10-24T13:46:19+00:00",
+      "exists": true,
+      "manifest_recorded": true,
+      "checksum_matches": true,
+      "verification_state": "verified"
+    },
+    {
+      "name": "uniprot_reviewed_human",
+      "version": "2026_03-20261024",
+      "url": "https://github.com/pirl-unc/oncoref/releases/download/cta-literature-20261024/uniprot-reviewed-human-2026_03.json.gz",
+      "path": "/Users/iskander/.cache/oncoref/sources/uniprot_reviewed_human/2026_03-20261024/uniprot-reviewed-human-2026_03.json.gz",
+      "bytes": 56556656,
+      "recorded_bytes": 56556656,
+      "sha256": "c6eb7030778e74b146daa0b019f40ceee4c7e9d87edc70769407eba1eddc29e3",
+      "downloaded_at": "2026-10-24T13:59:19+00:00",
+      "exists": true,
+      "manifest_recorded": true,
+      "checksum_matches": true,
+      "verification_state": "verified"
+    }
+  ],
+  "limitations": [
+    "Not a systematic literature review of every gene; reviewed clinical outcomes and UniProt annotations are labelled separately.",
+    "HPA cancer pTPM is not normal-tissue nTPM; cohorts and modalities are not paired.",
+    "Gene-level cancer occurrence does not establish isoform expression, peptide presentation, malignant-cell localization or therapeutic eligibility.",
+    "Native Ensembl IDs are joined exactly across releases; absent IDs and unreviewed genes remain coverage gaps.",
+    "Earlier Unsafe assignments were not all re-audited against every new normal source; missing maxima are not zero.",
+    "Gene counts are not unique protein counts; shared exact sequences use Unsafe > Neither > CTA."
+  ]
+}

@@ -1,5 +1,10 @@
 # CTA, Unsafe and Neither
 
+The [full CTA atlas](audits/cta-atlas-20261024/index.md) adds cancer occurrence,
+source-linked biology, clinical outcomes, reconsideration tables and four PDF
+reports. It flags 37 retained-gene literature conflicts, including urgent neural
+protein review for ABCC11 and MAGEC2, without silently changing the frozen sets.
+
 The [current report](audits/cta-neither-review-20261024/index.md) supplies three disjoint
 sets across 20,097 canonical human protein-coding genes and the pinned Ensembl
 115 protein inventory.

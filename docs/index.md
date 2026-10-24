@@ -1,5 +1,9 @@
 # oncoref
 
+**New: [full CTA evidence atlas and PDF reports](audits/cta-atlas-20261024/index.md)**
+cover all 2,540 mapped candidates, cancer occurrence, retained-gene normal-tissue
+conflicts, therapeutic evidence and reconsideration questions.
+
 `oncoref` is the base-layer package for shared cancer reference data:
 cancer-type ontology, cohorts, expression, clean transcripts-per-million (TPM)
 normalization, tumor mutational burden (TMB), incidence/mortality,

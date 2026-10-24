@@ -1,0 +1,128 @@
+# Manually screened tissue annotations, not a keyword-generated exclusion list.
+# These flags do not mutate the frozen gene or protein categories.
+records:
+  - genes: [YBX2]
+    priority: Normal protein review
+    finding: Published staining includes vascular smooth muscle in pulmonary artery, myocardium and skeletal muscle, plus adrenal cortical cells.
+    action: Review the original staining and antibody specificity; distinguish vascular cells from cardiomyocytes and reconcile with the current negative profile.
+    source: https://pmc.ncbi.nlm.nih.gov/articles/PMC2361212/
+  - genes: [SLC22A14]
+    priority: Normal RNA review
+    finding: UniProt describes ubiquitous expression based on historical human tissue work, despite strong reproductive enrichment in current bulk data.
+    action: Reconcile the original Northern-blot identity and quantitative normal expression; mouse testis restriction does not establish human restriction.
+    source: https://www.uniprot.org/uniprotkb/Q9Y267/entry
+  - genes: [SUN5]
+    priority: Conflicting tissue studies
+    finding: UniProt explicitly records conflicting reports of widespread versus testis-specific expression.
+    action: Adjudicate original probes, transcript identities and tissue panels rather than selecting the preferred annotation.
+    source: https://www.uniprot.org/uniprotkb/Q8TC36/entry
+  - genes: [WFDC6]
+    priority: Normal RNA review
+    finding: UniProt describes ubiquitous expression with high levels in trachea as well as epididymis and testis.
+    action: Review primary respiratory-compartment evidence and assay identity before relying on reproductive restriction.
+    source: https://www.uniprot.org/uniprotkb/Q9BQY6/entry
+  - genes: [ABCC11]
+    priority: Urgent protein review
+    finding: Published human brain immunoblotting and axonal immunofluorescence conflict with a reproductive-restricted target label.
+    action: Reassess neural protein specificity before treating this screen pass as a usable target; review should enter the existing normal-protein adjudication process.
+    source: https://pubmed.ncbi.nlm.nih.gov/16359813/
+  - genes: [MAGEC2]
+    priority: Urgent protein review
+    finding: A 2003 study reported cerebellar Purkinje-cell staining with the TC-1 polyclonal anti-HCA587 reagent.
+    action: Resolve antibody/paralog specificity and modern neural protein evidence before relying on the retained label; the report is not a demonstrated clinical injury.
+    source: https://pubmed.ncbi.nlm.nih.gov/12920247/
+  - genes: [PATE2]
+    priority: Isoform review
+    finding: UniProt assigns normal male/female brain expression to isoform 2, while reproductive expression includes both forms.
+    action: Resolve transcript and protein identities; a gene-wide CTA decision cannot establish an isoform-safe target.
+    source: https://www.uniprot.org/uniprotkb/Q6UY27/entry
+  - genes: [TPTE2]
+    priority: Isoform review
+    finding: Primary work describes TPIP splice variants in brain and stomach as well as testis.
+    action: Resolve historical TPIP nomenclature and the normal-tissue isoforms against the exact protein inventory.
+    source: https://pubmed.ncbi.nlm.nih.gov/11716755/
+  - genes: [EQTN]
+    priority: Isoform review
+    finding: UniProt reports low skin and blood expression for isoform 2, distinct from the highly testicular isoform 1.
+    action: Check isoform-resolved normal evidence before sequence-level targeting.
+    source: https://www.uniprot.org/uniprotkb/Q9NQ60/entry
+  - genes: [ACTL8]
+    priority: Normal RNA review
+    finding: Curated tissue annotation describes strong testis and pancreas expression.
+    action: Reconcile the historical tissue assay and current pancreatic compartments; annotation alone does not quantify present nTPM or prove protein.
+    source: https://www.uniprot.org/uniprotkb/Q9H568/entry
+  - genes: [FAM170A]
+    priority: Normal RNA review
+    finding: UniProt reports strong testis and brain expression and weaker expression in several other organs.
+    action: Review the historical ZNFD identity and RT-PCR tissue evidence against current mappings.
+    source: https://www.uniprot.org/uniprotkb/A1A519/entry
+  - genes: [FKBP6]
+    priority: Normal RNA review
+    finding: UniProt describes detection across all tissues examined, including heart, muscle, liver and kidney.
+    action: Retrieve and adjudicate the primary tissue evidence; do not interpret a low current bulk value as organ absence.
+    source: https://www.uniprot.org/uniprotkb/O75344/entry
+  - genes: [GOLGA6A]
+    priority: Normal RNA review
+    finding: Curated tissue annotation reports intermediate pancreas and lymph-node expression and lower expression in other organs.
+    action: Resolve paralog specificity and compartment evidence before revising the screen.
+    source: https://www.uniprot.org/uniprotkb/Q9NYA3/entry
+  - genes: [HORMAD2]
+    priority: Low normal expression review
+    finding: Curated annotation reports lower expression in liver, brain and kidney.
+    action: Determine assay level and whether these observations exceed current tissue-specific limits.
+    source: https://www.uniprot.org/uniprotkb/Q8N7B1/entry
+  - genes: [PRAME]
+    priority: Low normal expression review
+    finding: UniProt records detection in kidney, brain and skin samples; current source-native normal RNA remains below the new 30 ceiling.
+    action: Keep tissue/assay specificity visible alongside product-specific IMA203 outcomes; neither annotation nor trial experience resolves every normal compartment.
+    source: https://www.uniprot.org/uniprotkb/P78395/entry
+  - genes: [MAGEA11]
+    priority: Normal RNA review
+    finding: Curated tissue annotation includes adrenal tissue alongside reproductive organs.
+    action: Review adrenal compartment and assay evidence; do not silently reclassify adrenal as permitted.
+    source: https://www.uniprot.org/uniprotkb/P43364/entry
+  - genes: [CT47A1, CT47A2, CT47A3, CT47A4, CT47A5, CT47A6, CT47A7, CT47A8, CT47A9, CT47A10, CT47A11, CT47A12]
+    priority: Shared-locus review
+    finding: One shared UniProt entry describes very low brain expression for this family.
+    action: Establish locus/sequence attribution before transferring the family observation to individual proteins.
+    source: https://www.uniprot.org/uniprotkb/Q5JQC4/entry
+  - genes: [ACTRT1]
+    priority: Normal compartment review
+    finding: Curated tissue annotation includes normal epidermal layers, sweat glands and follicles.
+    action: Separate permitted follicles from other skin compartments and check normal protein evidence.
+    source: https://www.uniprot.org/uniprotkb/Q8TDG2/entry
+  - genes: [CCDC158]
+    priority: Normal RNA review
+    finding: Curated tissue annotation includes kidney as well as testis.
+    action: Review the underlying assay and renal compartment before deciding whether current thresholds miss relevant expression.
+    source: https://www.uniprot.org/uniprotkb/Q5M9N0/entry
+  - genes: [LGALS13]
+    priority: Normal compartment review
+    finding: Curated annotation includes adult urinary bladder and spleen, in addition to placental and fetal tissues.
+    action: Separate fetal-permitted from adult-normal expression and resolve assay identity.
+    source: https://www.uniprot.org/uniprotkb/Q9UHV8/entry
+  - genes: [PASD1]
+    priority: Context review
+    finding: An older study reported histologically normal tissues from patients with lung and small-intestinal cancers.
+    action: Check tumor-adjacent context and assay specificity; do not equate histologically normal with healthy volunteer tissue.
+    source: https://www.uniprot.org/uniprotkb/Q8IV76/entry
+  - genes: [RNF148]
+    priority: Low normal expression review
+    finding: Curated annotation reports slight pancreatic expression.
+    action: Check assay level and quantitative relevance to current pancreatic gates.
+    source: https://www.uniprot.org/uniprotkb/Q8N7C7/entry
+  - genes: [SLCO6A1]
+    priority: Low normal expression review
+    finding: Curated annotation reports weak adult brain and spleen expression, separately from fetal brain.
+    action: Separate developmental permission from adult tissue and confirm assay identity.
+    source: https://www.uniprot.org/uniprotkb/Q86UG4/entry
+  - genes: [SSX2, SSX2B]
+    priority: Low normal expression review
+    finding: Curated tissue annotation reports low thyroid expression; SSX2 and SSX2B share the UniProt entry.
+    action: Resolve thyroid abundance and locus specificity; a low RNA annotation is not by itself a positive-IHC veto.
+    source: https://www.uniprot.org/uniprotkb/Q16385/entry
+  - genes: [SSX1]
+    priority: Low normal expression review
+    finding: Curated tissue annotation reports low thyroid expression.
+    action: Check thyroid abundance and assay identity; a low RNA annotation is not by itself a positive-IHC veto.
+    source: https://www.uniprot.org/uniprotkb/Q16384/entry
