@@ -1,0 +1,112 @@
+{
+  "release": "1.19.1",
+  "policy": "oncoref.target-sets.2026-10-24.1",
+  "classification_changes": 0,
+  "inputs": {
+    "docs/audits/cta-atlas-20261024/all-genes.csv.gz": "ddb6c7cd0347b98331ac39b56a38f84b45cd6a0e15199910c03d6bae4fdb3e8d",
+    "docs/audits/cta-atlas-20261024/summary.json": "935145364f3764edbcc3ffc0145f8a83ce3f21e9b71644ae7ff210aa7020587f",
+    "docs/audits/cta-atlas-20261024/literature-reviews.csv": "471bb432334d7c2425798162d553d3de611d33d4827962c63d446810c128c876",
+    "docs/audits/cta-normal-cells-20261023/dice-distributions.csv.gz": "0a032694b597cbb32be68a770f278f66ac4420936121f7cf803ba51b3c496f99",
+    "docs/audits/cta-normal-cells-20261023/immune-rna.csv.gz": "a90d4e88dff0654bc4282cbf5fca05cca501efae8e6849906ca55ff171d420db",
+    "scripts/cta_release_report.py": "214d9dfb751bab27cc83e02bbb18cce254a9b1ffd00b6d890ed2f3468a7782d6",
+    "scripts/render_cta_atlas.py": "41ba1264b363e4952e2f8485dfe50c0674d08712eba9577a91ff47e389b8f4f3"
+  },
+  "references": {
+    "atlas": [
+      "Complete CTA evidence atlas and gene catalogs",
+      "https://pirl-unc.github.io/oncoref/audits/cta-atlas-20261024/"
+    ],
+    "rules": [
+      "Current high-normal-RNA policy and candidate follow-up",
+      "https://pirl-unc.github.io/oncoref/audits/cta-neither-review-20261024/"
+    ],
+    "cells": [
+      "Normal-cell screen: source-specific rules and measurements",
+      "https://pirl-unc.github.io/oncoref/audits/cta-normal-cells-20261023/"
+    ],
+    "dice": [
+      "Schmiedel et al., DICE, Cell 2018",
+      "https://pubmed.ncbi.nlm.nih.gov/30449622/"
+    ],
+    "eosinophils": [
+      "Korn et al., benralizumab treatment for up to five years, 2021",
+      "https://pubmed.ncbi.nlm.nih.gov/34487870/"
+    ],
+    "basophils": [
+      "Benralizumab randomized allergic-asthma study, 2024",
+      "https://publications.ersnet.org/content/erj/64/3/2400512"
+    ],
+    "b_cells": [
+      "CD19 CAR T therapy, hypogammaglobulinemia and infection, clinical cohort",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC11805655/"
+    ],
+    "treg": [
+      "Kim et al., regulatory T-cell depletion and autoimmunity in mice, 2007",
+      "https://www.nature.com/articles/ni1428"
+    ],
+    "il5": [
+      "Normal human IL-5-producing T-helper-cell biology",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC3445433/"
+    ],
+    "conflict_ABCC11": [
+      "ABCC11 normal-tissue evidence",
+      "https://pubmed.ncbi.nlm.nih.gov/16359813/"
+    ],
+    "conflict_MAGEC2": [
+      "MAGEC2 normal-tissue evidence",
+      "https://pubmed.ncbi.nlm.nih.gov/12920247/"
+    ],
+    "conflict_YBX2": [
+      "YBX2 normal-tissue evidence",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC2361212/"
+    ],
+    "conflict_PATE2": [
+      "PATE2 normal-tissue evidence",
+      "https://www.uniprot.org/uniprotkb/Q6UY27/entry"
+    ],
+    "conflict_TPTE2": [
+      "TPTE2 normal-tissue evidence",
+      "https://pubmed.ncbi.nlm.nih.gov/11716755/"
+    ],
+    "conflict_SUN5": [
+      "SUN5 normal-tissue evidence",
+      "https://www.uniprot.org/uniprotkb/Q8TC36/entry"
+    ],
+    "tecelra-2026": [
+      "FDA TECELRA label, revised June 2026",
+      "https://www.fda.gov/media/180565/download"
+    ],
+    "ima203-2025": [
+      "IMA203 phase 1, Nature Medicine 2025",
+      "https://www.nature.com/articles/s41591-025-03650-6"
+    ],
+    "nyeso-2015": [
+      "Robbins et al., NY-ESO-1 TCR follow-up, 2015",
+      "https://pubmed.ncbi.nlm.nih.gov/25538264/"
+    ],
+    "lete-mrcls-2025": [
+      "Lete-cel myxoid/round-cell liposarcoma pilot, 2025",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC12084024/"
+    ],
+    "magea3-titin-2013": [
+      "Linette et al., cardiovascular toxicity and titin cross-reactivity, 2013",
+      "https://pubmed.ncbi.nlm.nih.gov/23770775/"
+    ],
+    "magea3-neuro-2013": [
+      "Morgan et al., anti-MAGE-A3 neurological toxicity, 2013",
+      "https://pubmed.ncbi.nlm.nih.gov/23377668/"
+    ],
+    "magrit-2016": [
+      "MAGRIT randomized phase 3 trial, 2016",
+      "https://pubmed.ncbi.nlm.nih.gov/27132212/"
+    ],
+    "ct55-2017": [
+      "CXorf48 as a CML stem-cell immune target, 2017",
+      "https://pubmed.ncbi.nlm.nih.gov/28862699/"
+    ],
+    "foxr2-2022": [
+      "FOXR2 is an epigenetically regulated pan-cancer oncogene, 2022",
+      "https://pubmed.ncbi.nlm.nih.gov/35802025/"
+    ]
+  }
+}

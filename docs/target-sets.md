@@ -1,5 +1,10 @@
 # CTA, Unsafe and Neither
 
+The [1.19.1 release review](audits/cta-release-1.19.1/index.md) explains the effective
+thresholds, all exclusion reasons, retained-gene caveats and immune activation
+audit. It preserves the current classifications; lineage-specific immune
+allowances are discussed as future work, not implemented exemptions.
+
 The [full CTA atlas](audits/cta-atlas-20261024/index.md) adds cancer occurrence,
 source-linked biology, clinical outcomes, reconsideration tables and four PDF
 reports. It flags 37 retained-gene literature conflicts, including urgent neural

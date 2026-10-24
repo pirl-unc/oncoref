@@ -1,6 +1,8 @@
 # oncoref
 
-**New: [full CTA evidence atlas and PDF reports](audits/cta-atlas-20261024/index.md)**
+**New: [CTA release review: current list, rules and caveats](audits/cta-release-1.19.1/index.md)**
+
+[Full CTA evidence atlas and gene PDF catalogs](audits/cta-atlas-20261024/index.md)
 cover all 2,540 mapped candidates, cancer occurrence, retained-gene normal-tissue
 conflicts, therapeutic evidence and reconsideration questions.
 
