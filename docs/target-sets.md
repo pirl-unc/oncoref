@@ -71,6 +71,10 @@ All three ID sets are disjoint. Earlier `cta`, `cta_screen` and normal-expressio
 exports retain their dated definitions. Use `target_sets` and the current report
 for this policy.
 
+The [XAGE5 follow-up](cta-xage5-review.md) traces the historical low-expression
+rescue from PRs #59/#60 and its current Neither / Antibody decision. Historical
+CTA membership does not override a current review hold.
+
 `target_sets` retains its canonical 20,097-gene scope. The sequence inventory
 also contains 1,721 exact reference loci outside that table, including
 immune-receptor segments. Their RNA audit is exposed through
