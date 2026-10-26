@@ -639,18 +639,33 @@ comparison plots and the downstream migration contract.
 
 ## CTA Antigens
 
-A cancer-testis antigen (CTA) is encoded by a gene that is normally restricted
-to reproductive tissues but can be reactivated in tumors. In oncoref, a
-candidate is called a CTA by an explicit Human Protein Atlas (HPA) normal-tissue
-expression rule; the call is not evidence that its antigen is presented by the
-major histocompatibility complex (MHC) or that it is a validated therapy target.
+A cancer-testis antigen (CTA) is associated with reproductive tissues and can
+be reactivated in tumors. OncoRef exposes a measured expression-restriction
+policy and an evidence-weighted research selection. Neither gene-level call
+establishes presentation by the major histocompatibility complex (MHC) or
+validates every peptide or therapy product.
 
-Use `oncoref.target_sets` for the current disjoint **CTA**, **Unsafe** and
+Use `oncoref.cta_research_policy.gene_ids()` for the new **215-gene research
+selection**, including PRAME, MAGE-A4 and NY-ESO-1 (CTAG1A/B).
+`results()` retains `Expression category`, `Expression forbidden`, selection
+basis, clinical sources and qualification limits. The common clinical route
+reconsiders limited or unresolved protein findings while preserving measured
+RNA gates and product-specific caveats. See the
+[selection report and complete list](audits/cta-research-20261026/index.md).
+
+`oncoref.normal_expression_breadth.burden(profiles, panel)` provides source-specific
+normal-expression burdens and explicit missing-coverage bounds;
+`anatomical_panel()` supplies the fixed bulk-organ weights. It is descriptive
+and does not change eligibility. See [profiles, donor summaries and weighting
+sensitivity](audits/normal-breadth-20261026/index.md).
+
+Use `oncoref.target_sets` for the released disjoint **CTA**, **Unsafe** and
 **Neither** groups. `gene_ids("CTA")`, `gene_ids("Unsafe")` and
 `gene_ids("Neither")` return separate sets; only Unsafe is the forbidden
 background. `results()` includes the 5 nTPM admission rule, IHC coverage and
 Neither subgroups, including Low and Variable. See the [report and protein
-exports](audits/target-sets-20261023/index.md) and [API](target-sets.md).
+exports](audits/cta-policy-20261025/index.md) and [API](target-sets.md).
+The research selection does not remove genes from this forbidden background.
 
 The earlier v1.15 ordered research screen remains available through `oncoref.cta_screen`:
 `results()`, `retained_gene_ids()` and `variable_gene_ids()` (plus corresponding

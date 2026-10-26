@@ -25,7 +25,15 @@ CTAG2 only; other genes are explicitly unassessed for donor variation.
 The report preserves every candidate's exclusion reasons. Numerical limits
 are research parameters, not validated clinical safety limits.
 
-The current `oncoref.target_sets` API partitions genes and exact proteins into
+The new [CTA research selection](docs/audits/cta-research-20261026/index.md)
+contains **215 genes**, including PRAME, MAGE-A4 and NY-ESO-1 (CTAG1A/B).
+`oncoref.cta_research_policy.gene_ids()` applies the recalibrated evidence rules;
+its decision table retains normal-expression findings and clinical qualifications.
+[Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md) is
+descriptive, and [developmental-target sources](docs/developmental-targets.md)
+document the brachyury follow-up. Comprehensive literature review remains open.
+
+The released `oncoref.target_sets` API partitions genes and exact proteins into
 **CTA**, **Unsafe** and **Neither**. Only Unsafe supplies the forbidden protein
 background. Admission requires reproductive RNA ≥5 nTPM, reliable reproductive
 protein, or reviewed reproductive plus tumor/recognition evidence. Accepted

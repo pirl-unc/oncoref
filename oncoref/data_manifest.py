@@ -366,6 +366,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "reference-bound reviewed CTA findings, acceptance status, citations and limitations",
     ),
+    "cta-research-gene-sets": (
+        "cta",
+        "evidence-weighted CTA research selection with retained expression categories; not a forbidden-protein reference",
+    ),
+    "cta-research-clinical-evidence": (
+        "cta-evidence",
+        "reviewed clinical qualification and comparator evidence bound to normal-finding hashes",
+    ),
     "cta-antibody-adjudications": (
         "cta-evidence",
         "completed primary-antibody adjudications with unresolved conflicts and reconsideration requirements",

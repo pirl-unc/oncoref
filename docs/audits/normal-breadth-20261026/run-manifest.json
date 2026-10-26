@@ -1,0 +1,29 @@
+{
+  "policy": "oncoref.normal-expression-breadth.2026-10-26.1",
+  "eligibility_changes": 0,
+  "source": {
+    "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
+    "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
+    "bytes": 37949495,
+    "version": "v23"
+  },
+  "inputs": {
+    "docs/audits/cta-screen-20261023/tissue-evidence.csv.gz": "58348bc946198184a412109ecf82d0d0e04c2087c1f0a8fe3b0f73dbe41d4f3f",
+    "docs/audits/cta-policy-20261025/candidate-results.csv.gz": "3dcc698b1bb6ee43ba1949bc83e7a075b0f2d92ead2a02d19f73ead68bd833e0",
+    "oncoref/data/cta-policy.json": "6844f3ae196d2bc91e996dfb8024db24da4c4f0ffb81439c87c652e7207fcfc6",
+    "oncoref/data/cta-donor-rna.csv": "4df91d972bab43c3d4419d1d90bc18f311dc131b8e028295da4eb71bdb0f31b5",
+    "scripts/build_normal_expression_breadth.py": "c56aa7ba43899231d35534e51092c835a30cefed2f1ffb6be18d7be0458ae69d",
+    "oncoref/normal_expression_breadth.py": "49b8958446a60b9481f5ebe5a56f156e29d1807e3dc2d24ceef81f625a0f8f23"
+  },
+  "outputs": {
+    "anatomical-panel.csv": "7abb9ba65fa92d477e91c3e993b05a17f9ec811f944805ec9df4e88d31af2016",
+    "applicable_ihc-profiles.csv.gz": "46ad03170853228e1920c57c2a1e89635f336f835caff30a212d6bb922ec8f0e",
+    "benchmarks.csv": "b5ca070405dabfcb458d1c4ec365c52c1c1f368e4e8291fe8893fedd7c809a71",
+    "breadth.csv.gz": "602286f5bdd6560b5151aceb7d76f065c4c587ca070b3f254d190fae5fd6dd56",
+    "donor-breadth.csv": "6817215678ad24726af058f47c4a3656115aef95cc350fc79ab46d88cd90c2f1",
+    "donor-profiles.csv.gz": "806c4deb9272109884edc929d7c43ae113ab7c3b429f74b51b4d7721009126e6",
+    "donor-summaries.csv": "ae7b1b4869df2186ca4288189d1af2e037bbc313a85d56c0db2b35d2d49906d9",
+    "fixed_baseline-profiles.csv.gz": "d1069aba29500533de2a68cd54d280026f11b656e229d2ba934840bea4082b21",
+    "index.md": "7d52d54a1be4853a977c4808c6b7b69e05eb96b07b5846a37661ac882201b711"
+  }
+}

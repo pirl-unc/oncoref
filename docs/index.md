@@ -1,6 +1,13 @@
 # oncoref
 
-**Current: [CTA rules, 213-gene list and release funnel](audits/cta-policy-20261025/index.md)**
+**New: [215-gene CTA research selection](audits/cta-research-20261026/index.md)**,
+including PRAME, MAGE-A4 and NY-ESO-1, with explicit clinical qualifications.
+The [released 213-gene expression policy and protein references](audits/cta-policy-20261025/index.md)
+retain their normal-expression findings and sequence-background semantics.
+
+[Continuous normal-expression breadth](audits/normal-breadth-20261026/index.md)
+supports review priority without changing memberships.
+[Developmental-target sources](developmental-targets.md) documents the brachyury follow-up.
 
 [Completed antibody adjudications](audits/cta-adjudication-20261025/index.md) cover all 178 remaining discrepancy cases. Older reports below retain their dated policies.
 

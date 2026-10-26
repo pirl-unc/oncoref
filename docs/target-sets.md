@@ -1,4 +1,11 @@
-# CTA definitions: a single decision hierarchy
+# Released CTA expression-restriction policy
+
+For the recalibrated **215-gene research selection**, including PRAME and
+MAGE-A4 with clinical qualifications, use
+[`cta_research_policy`](audits/cta-research-20261026/index.md). This page documents
+the released expression policy and its protein-background semantics. The new
+selection preserves these findings as explicit annotations; it does not imply
+that every peptide of a selected gene is absent from normal tissues.
 
 **CTA means a reproductive-associated target candidate that passes this research screen.**
 It does not mean clinically proven safe. The current policy is

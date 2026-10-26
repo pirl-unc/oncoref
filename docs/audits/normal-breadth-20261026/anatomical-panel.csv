@@ -1,0 +1,44 @@
+compartment,organ,category,weight
+amygdala,brain,vital,0.007352941176470588
+basal ganglia,brain,vital,0.007352941176470588
+cerebellum,brain,vital,0.007352941176470588
+cerebral cortex,brain,vital,0.007352941176470588
+choroid plexus,brain,vital,0.007352941176470588
+hippocampal formation,brain,vital,0.007352941176470588
+hypothalamus,brain,vital,0.007352941176470588
+midbrain,brain,vital,0.007352941176470588
+retina,eye,vital,0.029411764705882353
+non-retinal eye,eye,vital,0.029411764705882353
+heart muscle,heart muscle,vital,0.058823529411764705
+lung,lung,vital,0.058823529411764705
+spinal cord,spinal cord,vital,0.058823529411764705
+liver,liver,vital,0.058823529411764705
+kidney,kidney,vital,0.058823529411764705
+bone marrow,bone marrow,vital,0.058823529411764705
+blood,blood,vital,0.058823529411764705
+adrenal gland,adrenal gland,vital,0.058823529411764705
+pituitary gland,pituitary gland,vital,0.058823529411764705
+pancreas,pancreas,vital,0.058823529411764705
+small intestine,small intestine,vital,0.058823529411764705
+skeletal muscle,skeletal muscle,vital,0.058823529411764705
+smooth muscle,smooth muscle,vital,0.058823529411764705
+peripheral nerve,peripheral nerve,vital,0.058823529411764705
+inner ear,inner ear,vital,0.058823529411764705
+salivary gland,salivary gland,protected,0.07692307692307693
+parathyroid gland,parathyroid gland,protected,0.07692307692307693
+lymph node,lymph node,protected,0.07692307692307693
+esophagus,esophagus,protected,0.07692307692307693
+stomach,stomach,protected,0.07692307692307693
+colon,colon,protected,0.07692307692307693
+rectum,rectum,protected,0.07692307692307693
+urinary bladder,urinary bladder,protected,0.07692307692307693
+ureter,ureter,protected,0.07692307692307693
+cartilage,cartilage,protected,0.07692307692307693
+oral mucosa,oral mucosa,protected,0.07692307692307693
+nasopharynx,nasopharynx,protected,0.07692307692307693
+tongue,tongue,protected,0.07692307692307693
+skin,skin,manageable,0.2
+spleen,spleen,manageable,0.2
+thymus,thymus,manageable,0.2
+thyroid gland,thyroid gland,manageable,0.2
+adipose tissue,adipose tissue,manageable,0.2

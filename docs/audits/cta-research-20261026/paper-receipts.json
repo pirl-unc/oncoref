@@ -1,0 +1,78 @@
+[
+  {
+    "PMID": "25538264",
+    "title": "A pilot trial using lymphocytes genetically engineered with an NY-ESO-1-reactive T-cell receptor: long-term follow-up and correlates with response.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A25538264+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:25:27.106330+00:00",
+    "metadata_sha256": "4da9e463b11bc01db7f5acbf7e01cd8dabdc7ce578a384d5f04cba8668b63587",
+    "doi": "10.1158/1078-0432.ccr-14-2708"
+  },
+  {
+    "PMID": "28473691",
+    "title": "Notochordal and nucleus pulposus marker expression is maintained by sub-populations of adult human nucleus pulposus cells through aging and degeneration.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A28473691+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:25:28.716115+00:00",
+    "metadata_sha256": "06f2e4aed29a1b8fb9d41cdaa0ce40812f6ea169c554740c4b2f2b99dd5e3b2b",
+    "doi": "10.1038/s41598-017-01567-w",
+    "fulltext_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5431421/fullTextXML",
+    "fulltext_sha256": "66270c1ae77e5c4b0c686f544765e4aa20ee4caf757daf09291481b3faf5d46c"
+  },
+  {
+    "PMID": "35086946",
+    "title": "Phase I clinical trial evaluating the safety and efficacy of ADP-A2M10 SPEAR T cells in patients with MAGE-A10<sup>+</sup> advanced non-small cell lung cancer.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A35086946+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:28:20.253243+00:00",
+    "metadata_sha256": "cfb4757bfb0085e2a42234c2a7deb7d5aec51d5e11441b430f2bfca1c30f12b8",
+    "doi": "10.1136/jitc-2021-003581",
+    "fulltext_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8796260/fullTextXML",
+    "fulltext_sha256": "2533a5a940c566bd3354f0f7c996d54e543d66c6e49e065def9246687ff8a41f"
+  },
+  {
+    "PMID": "35372008",
+    "title": "Phase 1 Clinical Trial Evaluating the Safety and Anti-Tumor Activity of ADP-A2M10 SPEAR T-Cells in Patients With MAGE-A10+ Head and Neck, Melanoma, or Urothelial Tumors.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A35372008+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:28:30.186137+00:00",
+    "metadata_sha256": "2e99182effabd2d9741a1e1fae64da7ecdbf539026426d33a26dd3206d3b5196",
+    "doi": "10.3389/fonc.2022.818679",
+    "fulltext_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8972123/fullTextXML",
+    "fulltext_sha256": "98482b4f7c671736add33475a5bc7f3b68b333c7206def0471fe6422eeec9460"
+  },
+  {
+    "PMID": "38554725",
+    "title": "Afamitresgene autoleucel for advanced synovial sarcoma and myxoid round cell liposarcoma (SPEARHEAD-1): an international, open-label, phase 2 trial.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A38554725+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:28:32.103488+00:00",
+    "metadata_sha256": "97ca601f5eb0af76f734ec0e0d52a90f5b7db734554a751da21226e1fc6bbe9d",
+    "doi": "10.1016/s0140-6736(24)00319-2"
+  },
+  {
+    "PMID": "38872830",
+    "title": "Identifying MAGE-A4-positive tumors for TCR T\u00a0cell therapies in HLA-A\u221702-eligible patients.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A38872830+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:25:17.922497+00:00",
+    "metadata_sha256": "65f218bc2bd2c36904e5387d3484af99464c064e1578a5f4e6bff6f5c25da514",
+    "doi": "10.1016/j.omtm.2024.101265",
+    "fulltext_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11170170/fullTextXML",
+    "fulltext_sha256": "4663869e6ce4053b654c1b6ff789eaa8ebbff5617681536704fd74825148d002"
+  },
+  {
+    "PMID": "39038917",
+    "title": "First-in-human dose escalation trial to evaluate the clinical safety and efficacy of an anti-MAGEA1 autologous TCR-transgenic T cell therapy in relapsed and refractory solid tumors.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A39038917+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:25:15.852345+00:00",
+    "metadata_sha256": "b8cd69854a7b152824334c6b0439626de02231ca9b1768138aad182047c72d3c",
+    "doi": "10.1136/jitc-2023-008668",
+    "fulltext_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11268062/fullTextXML",
+    "fulltext_sha256": "96edd4bcc4770adb537a5c1f013d4dd0175913bbf7536f3c7713ae09c2e820e1"
+  },
+  {
+    "PMID": "40205198",
+    "title": "Autologous T cell therapy for PRAME&lt;sup&gt;+&lt;/sup&gt; advanced solid tumors in HLA-A*02&lt;sup&gt;+&lt;/sup&gt; patients: a phase 1 trial.",
+    "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID%3A40205198+AND+SRC%3AMED&resultType=core&format=json",
+    "retrieved_utc": "2026-10-26T16:25:19.897462+00:00",
+    "metadata_sha256": "9838d538f87d41d8c0eee0c3ff32955c852c454dd22fd7154ab73b41fd3d8c02",
+    "doi": "10.1038/s41591-025-03650-6",
+    "fulltext_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12283372/fullTextXML",
+    "fulltext_sha256": "6d799be68557abfba8ffa0d0be4b5c754155a27d388709baa51f65af1018f72e"
+  }
+]
