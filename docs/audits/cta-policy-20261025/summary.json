@@ -1,0 +1,44 @@
+{
+  "policy": "oncoref.target-sets.2026-10-25.2",
+  "genome": {
+    "Unsafe": 17705,
+    "Neither": 2179,
+    "CTA": 213
+  },
+  "nominated": {
+    "Unsafe": 1586,
+    "Neither": 741,
+    "CTA": 213
+  },
+  "proteins": {
+    "Unsafe": 126396,
+    "Neither": 3230,
+    "CTA": 359
+  },
+  "changes": [
+    {
+      "from": "CTA",
+      "to": "Neither",
+      "genes": 180
+    },
+    {
+      "from": "CTA",
+      "to": "Unsafe",
+      "genes": 6
+    }
+  ],
+  "baseline_replayed_exactly": true,
+  "antibody_reviews_completed": 178,
+  "antibody_review_outcomes": {
+    "Neither": 177,
+    "Unsafe": 1
+  },
+  "changes_from_local_draft": 178,
+  "followup_genes": 201,
+  "neither_or_cta_above_30": 0,
+  "extra_sequence_loci": 1721,
+  "incomplete_translations": 34361,
+  "genes_without_complete_proteins": 942,
+  "literature_review_limit": "32 genes newly read in the initial primary-paper review; 46 have specific notes including earlier work. Search hits are not adjudications.",
+  "remaining_primary_ihc_queue": 0
+}

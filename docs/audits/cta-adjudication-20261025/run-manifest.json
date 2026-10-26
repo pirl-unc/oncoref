@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "oncoref/data/cta-antibody-adjudications.csv": "45c8651b6f93aa280a521af532c0d1708435f17ee335d00c175caab8a4599efa",
+    "oncoref/data/cta-policy-findings.csv": "7975aca62e551db217b635777db4ff7581a9cb7a597cb782c44f03d9d38cdbe7",
+    "oncoref/data/target-gene-sets.csv.gz": "4710adbd27657d00e643b8d82882724e023e9dee15dd5a2c02c67e75045ffdc3",
+    "scripts/build_cta_adjudication_report.py": "049d038827829ee2898f7b9991b17a8114c47f2aa80f1f3c9d7ec41d36a07efc"
+  },
+  "outputs": {
+    "adjudications.csv": "45c8651b6f93aa280a521af532c0d1708435f17ee335d00c175caab8a4599efa",
+    "baseline-gene-results.csv.gz": "799edae0084ad6bae2300e95b807ddbda00e433975510716352d1faa4c79bb1a",
+    "baseline-reviewed-findings.csv": "3603ba735250be9e5252404676366d803962efbb8d855307b1fc36624c57b9bf",
+    "index.md": "26467c54e8ff5719f1e7f0b1538d94d0f76079dedf9d41079cba77d7e4fab21a",
+    "primary-observations.csv.gz": "fa766e1be56b536d7a6f38bca318f7a3d13dbd7a6aa26a2711e840857cb28a03"
+  }
+}

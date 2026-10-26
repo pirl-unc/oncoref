@@ -247,7 +247,7 @@ def test_published_gene_groups_and_important_targets():
     groups = [target_sets.gene_ids(group) for group in target_sets.GROUPS]
     assert len(set.union(*groups)) == len(genes)
     assert not any(groups[i] & groups[j] for i in range(3) for j in range(i + 1, 3))
-    assert len(groups[0]) == 399
+    assert len(groups[0]) == 213
     indexed = genes.set_index("Gene")
     for name, detail in [("CTAG2", "Variable"), ("ZNF730", "Cellular"), ("FOXR2", "Antibody")]:
         assert indexed.loc[name, "Category"] == "Neither"
@@ -273,7 +273,6 @@ def test_published_gene_groups_and_important_targets():
         "MAGEA10",
         "MAGEA4",
         "MAGEC1",
-        "MAGEC2",
         "PRAME",
         "SAGE1",
         "SPANXB1",
@@ -283,7 +282,20 @@ def test_published_gene_groups_and_important_targets():
         "XAGE1A",
         "XAGE1B",
     }
-    assert benchmark <= target_sets.gene_names("CTA")
+    from oncoref import cta_policy
+
+    adjudicated = set(cta_policy.adjudications().Gene)
+    assert benchmark - adjudicated <= target_sets.gene_names("CTA")
+    assert indexed.loc["PRAME", "Category"] == "Unsafe"
+    assert indexed.loc["MAGEA4", "Category"] == "Neither"
+    assert indexed.loc["MAGEA4", "Detail"] == "Conflict"
+    assert benchmark & adjudicated <= target_sets.gene_names("Neither") | {"PRAME"}
+    for name in ["FTMT", "ABCC11", "YBX2", "CCDC158", "ACTRT1"]:
+        assert indexed.loc[name, "Category"] == "Unsafe"
+        assert indexed.loc[name, "Detail"] == "Normal"
+    for name in ["MAGEC2", "LGALS13", "PLCZ1"]:
+        assert indexed.loc[name, "Category"] == "Neither"
+        assert indexed.loc[name, "Detail"] == "Conflict"
     removed = pd.read_csv(REPORT / "removed-cta-candidates.csv")
     assert len(removed) == 151 and removed.Category.eq("Neither").all()
     assert removed["Positive IHC measurements"].eq(0).all()
@@ -314,22 +326,13 @@ def test_historical_normal_cell_report_checksums():
             assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
 
 
-def test_current_neither_review_and_dataset_checksums():
+def test_historical_neither_review_checksums():
     report = ROOT / "docs/audits/cta-neither-review-20261024"
     manifest = json.loads((report / "run-manifest.json").read_text())
     assert manifest["forbidden_categories"] == ["Unsafe"]
     for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
         for name, expected in manifest[section].items():
             assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
-    assert (ROOT / "oncoref/data/target-gene-sets.csv.gz").read_bytes() == (
-        report / "gene-results.csv.gz"
-    ).read_bytes()
-    assert (ROOT / "oncoref/data/cta-followup-reviews.csv").read_bytes() == (
-        report / "follow-up.csv"
-    ).read_bytes()
-    assert (ROOT / "oncoref/data/sequence-gene-rna-reviews.csv.gz").read_bytes() == (
-        report / "sequence-gene-reviews.csv.gz"
-    ).read_bytes()
 
 
 def test_no_remaining_neither_or_cta_has_high_nonpermitted_measured_rna():
@@ -360,7 +363,7 @@ def test_followup_records_preserve_questions_without_gene_exceptions():
     from oncoref.normal_rna_review import followup_reviews
 
     records = followup_reviews()
-    assert len(records) == 15 and not records.Gene.duplicated().any()
+    assert len(records) == 201 and not records.Gene.duplicated().any()
     for col in ["Review question", "Reconsideration evidence", "Limitations", "Evidence report"]:
         assert records[col].notna().all() and records[col].ne("").all()
     indexed = records.set_index("Gene")

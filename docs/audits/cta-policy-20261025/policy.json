@@ -1,0 +1,199 @@
+{
+  "schema": "oncoref.cta-policy.v1",
+  "policy": "oncoref.target-sets.2026-10-25.2",
+  "baseline_policy": "oncoref.target-sets.2026-10-24.1",
+  "reference": "openvax:reference:v1:sha256:0fefb51755788901693be9987fadc31e61f945cd53c08a170e0e1d4ad4a09b61",
+  "taxonomy_id": 9606,
+  "scope": {
+    "canonical_genes": 20097,
+    "source_nominations": 2540,
+    "additional_sequence_loci": 1721,
+    "legacy_cta_api": "Unchanged historical 624-gene selection; not this current policy",
+    "other_species": "Anatomy mappings available; numerical policy is human-only",
+    "clinical_products": "Product-specific evidence does not confer gene-wide clearance",
+    "protein_precedence": [
+      "Unsafe",
+      "Neither",
+      "CTA"
+    ],
+    "missing_evidence": "Unknown; never zero or proof of absence"
+  },
+  "measurement_policy": "oncoref.cta-screen.2026-10-23.1",
+  "evidence_order": [
+    "accepted normal exclusion",
+    "unresolved or insufficient",
+    "qualified CTA"
+  ],
+  "rna_admission_ntpm": 5,
+  "hard_normal_rna_ceiling": {
+    "value": 30,
+    "comparison": ">",
+    "units_separately": [
+      "TPM",
+      "nTPM"
+    ]
+  },
+  "ihc_columns": [
+    "missing_or_uncertain",
+    "Approved_negative",
+    "Supported_negative",
+    "Enhanced_negative"
+  ],
+  "rna_ceiling_ntpm": {
+    "vital": [
+      2,
+      4,
+      6,
+      12
+    ],
+    "protected": [
+      6,
+      8,
+      12,
+      24
+    ],
+    "manageable": [
+      10,
+      20,
+      30,
+      60
+    ]
+  },
+  "selectivity_setting": {
+    "vital": [
+      0.8,
+      0.75,
+      0.7,
+      0.65
+    ],
+    "protected": [
+      0.75,
+      0.7,
+      0.65,
+      0.6
+    ],
+    "manageable": [
+      0.7,
+      0.65,
+      0.6,
+      0.55
+    ]
+  },
+  "bulk_rule": "N <= C AND N <= R*(1-s)/s + 0.1 AND N < R; independent >30 rule also applies",
+  "ihc_relaxation": "Complete local routine negative IHC at the weakest confidence, plus reliable reproductive-positive curated profile; not paired specimens or sensitivity calibration",
+  "normal_cell_rules": "Pinned native-unit triggers in normal_cell_screen.py; no unit pooling or antibody relaxation of unpaired cell RNA",
+  "normal_cell_triggers": {
+    "hpa_single_cell": {
+      "minimum_ntpm": 5,
+      "minimum_reads": 20,
+      "comparison": ">=",
+      "relative_rule": "At least the reproductive-cell maximum, or missing reproductive coverage/unresolved anatomy"
+    },
+    "dice_distributions": {
+      "minimum_tpm": 5,
+      "minimum_reported_values": 3,
+      "comparison": ">=",
+      "identity_limit": "Distribution values are not stable cross-gene donor identities"
+    },
+    "hpa_monaco_immune": {
+      "minimum": 5,
+      "units_separately": [
+        "TPM",
+        "nTPM"
+      ],
+      "comparison": ">="
+    },
+    "cornea": {
+      "minimum_mean_cp10k": 1,
+      "minimum_positive_cells": 5,
+      "minimum_counts": 20,
+      "minimum_sample_groups": 2,
+      "comparison": ">="
+    },
+    "outcome": "Neither unless a stronger exclusion applies; no unpaired IHC relaxation"
+  },
+  "counts": {
+    "policy": "oncoref.target-sets.2026-10-25.2",
+    "genome": {
+      "Unsafe": 17705,
+      "Neither": 2179,
+      "CTA": 213
+    },
+    "nominated": {
+      "Unsafe": 1586,
+      "Neither": 741,
+      "CTA": 213
+    },
+    "proteins": {
+      "Unsafe": 126396,
+      "Neither": 3230,
+      "CTA": 359
+    },
+    "changes": [
+      {
+        "from": "CTA",
+        "to": "Neither",
+        "genes": 180
+      },
+      {
+        "from": "CTA",
+        "to": "Unsafe",
+        "genes": 6
+      }
+    ],
+    "baseline_replayed_exactly": true,
+    "antibody_reviews_completed": 178,
+    "antibody_review_outcomes": {
+      "Neither": 177,
+      "Unsafe": 1
+    },
+    "changes_from_local_draft": 178,
+    "followup_genes": 201,
+    "neither_or_cta_above_30": 0,
+    "extra_sequence_loci": 1721,
+    "incomplete_translations": 34361,
+    "genes_without_complete_proteins": 942,
+    "literature_review_limit": "32 genes newly read in the initial primary-paper review; 46 have specific notes including earlier work. Search hits are not adjudications.",
+    "remaining_primary_ihc_queue": 0
+  },
+  "forbidden_categories": [
+    "Unsafe"
+  ],
+  "report": "docs/audits/cta-policy-20261025/index.md",
+  "report_url": "https://pirl-unc.github.io/oncoref/audits/cta-policy-20261025/",
+  "reports_at_release": "https://github.com/pirl-unc/oncoref/tree/v1.20.0/docs/audits/cta-policy-20261025",
+  "decision_artifact_sha256": {
+    "decision-facts.csv.gz": "d46df11eed07b1d09a575c41f579b2735c4e3412fda93f58cefb8a3689859305",
+    "reviewed-findings.csv": "7975aca62e551db217b635777db4ff7581a9cb7a597cb782c44f03d9d38cdbe7",
+    "candidate-results.csv.gz": "3dcc698b1bb6ee43ba1949bc83e7a075b0f2d92ead2a02d19f73ead68bd833e0",
+    "changes.csv": "329e229f3c1eb04b27d6e28bed3d9bfd0e1114a8d7fa470f29041bb56b71b945"
+  },
+  "sequence_artifacts": {
+    "release": "https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0",
+    "download_base": "https://github.com/pirl-unc/oncoref/releases/download/v1.20.0/",
+    "sha256": {
+      "additional-forbidden.fasta.gz": "78afcc20aa70ece5f29cee021d2ba91d30552e3e1144a348c6ac56fc7254e560",
+      "cta-proteins.csv.gz": "e8f1e1cc37b91a8ee431c32533a8c2c0282eb8c5c41bd2964cb67184f884a763",
+      "cta.fasta.gz": "fc209c396ab705d0db0eb9a3b02e92eaebf154c1fd78c90fa05e73440c1fc9bc",
+      "exclusion-basis.json": "7cb9fcc59d377943bff2322914e66cc0d63494442301a12123adf3fd8fdacdfc",
+      "genes-without-complete-proteins.csv.gz": "3a69eaed2467e9535c75b5eae584ea54bb6ded000ae96bc9bc73d8c034359951",
+      "neither-proteins.csv.gz": "dfab08b40584ba896aeb0b56082594e7f71bdac894f9c7c2673b15614473db1f",
+      "neither.fasta.gz": "575cc62b9d77fe873879ad85a45ce77cf86d212a7ce2e73465b87a0c2542e336",
+      "reference.json": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
+      "target-protein-occurrences.csv.gz": "26c12a52a6f703a33d6cba79a994da87fe860f25a4dacb46635353b74965f914",
+      "target-proteins.csv.gz": "eb1134d10ae08bc1fba0b0b730caf3fdf7d9d6ad98e13d1ae754549a7e8d9cc6",
+      "translations-for-review.csv.gz": "1bf3f07dbc50078568fa8cdff0a68da03e3f832795e5f1b369fa91f498b6dcc8",
+      "translations-for-review.fasta.gz": "5970c121504d7ce3c2939e5a13c905ffb5ea3901692de2b23c0cd86ce3c2512c",
+      "unclassified-sequence-genes.csv.gz": "e1d4263cc49b70e8e5020166232b8a1e19111407abbb196112e50d87e1c7a975",
+      "unsafe-proteins.csv.gz": "beb315ca4c348d348df222bb7910fc236f78aebac688819bcafbce98e9aac304",
+      "unsafe.fasta.gz": "d93c7c202c0b70d61d53fdc785f2daf4584b062528d2a7a07858fa660a13106f"
+    }
+  },
+  "data_sha256": {
+    "target-gene-sets.csv.gz": "4710adbd27657d00e643b8d82882724e023e9dee15dd5a2c02c67e75045ffdc3",
+    "cta-policy-findings.csv": "7975aca62e551db217b635777db4ff7581a9cb7a597cb782c44f03d9d38cdbe7",
+    "cta-antibody-adjudications.csv": "45c8651b6f93aa280a521af532c0d1708435f17ee335d00c175caab8a4599efa",
+    "sequence-gene-rna-reviews.csv.gz": "3593bb3b81ce0145bdff488294ba620ebcabb1547953f37f76ca41ce0fcc0de7",
+    "cta-followup-reviews.csv": "2fd1589592d572244c1dd144ea524e0809ae8446819eefef1faab4891c078536"
+  }
+}

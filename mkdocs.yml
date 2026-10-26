@@ -7,15 +7,19 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
+      - Current CTA definitions and rules: target-sets.md
+      - Release review and adoption (1.20.0): cta-release-1.20.0.md
+      - Current evidence decisions (25 October): audits/cta-policy-20261025/index.md
+      - Completed antibody adjudications: audits/cta-adjudication-20261025/index.md
+      - Literature review and open questions: audits/cta-literature-20261025/index.md
       - CTA release review and caveats: audits/cta-release-1.19.1/index.md
       - Full CTA evidence atlas and PDFs: audits/cta-atlas-20261024/index.md
-      - Current CTA and Neither review: audits/cta-neither-review-20261024/index.md
+      - Previous CTA and Neither review (24 October): audits/cta-neither-review-20261024/index.md
       - Candidate follow-up: audits/cta-neither-review-20261024/follow-up.md
       - XAGE5 rescue and antibody review: cta-xage5-review.md
       - Normal-cell evidence (23 October): audits/cta-normal-cells-20261023/index.md
       - Normal-cell data API and rules: normal-cell-evidence.md
       - Previous 589-gene target sets: audits/target-sets-20261023/index.md
-      - Target sets and exclusion API: target-sets.md
       - Prior 740-gene screen and Variable evidence: audits/cta-screen-20261023/index.md
       - Screening rules and API: cta-screen.md
       - Continuous screen and uncertainty: audits/cta-continuous-20261022/index.md

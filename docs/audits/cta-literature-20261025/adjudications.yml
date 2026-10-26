@@ -1,0 +1,309 @@
+# Research recommendations only. This file does not alter target_sets.
+# Full text = relevant methods/results were read, not an independent replication.
+# Abstract = the primary abstract was inspected; unreported controls remain unknown.
+date: '2026-10-25'
+records:
+  - genes: [PRAME]
+    assessment: Provisional retention with product-specific support
+    proposed: Unchanged
+    depth: Primary full text
+    pmids: [40205198]
+    finding: IMA203 has clinical response evidence and its selected PRAME peptide was not quantifiable across the tested normal-tissue panel. Severe cytokine-release syndrome occurred in two of 41 treated patients; severe neurotoxicity was not reported.
+    implication: Supports continued candidate status and a defined peptide/receptor product, not proof that all PRAME protein or peptides are absent from every normal cell. Normal RNA and antibody discrepancies remain visible.
+    next: Preserve peptide/HLA-specific presentation and product-specific safety separately from gene-level expression.
+  - genes: [MAGEA4]
+    assessment: Provisional retention with product-specific support
+    proposed: Unchanged
+    depth: Primary abstract
+    pmids: [38554725]
+    finding: SPEARHEAD-1 demonstrated responses in selected MAGE-A4-positive sarcoma patients, with cytokine-release syndrome and cytopenias among the treatment risks.
+    implication: Clinical evidence supports the defined HLA/receptor use, not every MAGE paralog, peptide or disputed raw antibody signal.
+    next: Retain the candidate and adjudicate any specific normal signal at reagent and peptide level.
+  - genes: [CTAG1A, CTAG1B]
+    assessment: Provisional retention with product-specific support
+    proposed: Unchanged
+    depth: Primary abstract
+    pmids: [25538264]
+    finding: NY-ESO-1-directed TCR treatment produced objective responses in selected synovial sarcoma and melanoma patients.
+    implication: Shared protein/epitope evidence does not distinguish CTAG1A from CTAG1B locus expression or guarantee safety of every engineered receptor.
+    next: Retain both mapped genes while preserving shared protein attribution and product-specific qualification.
+  - genes: [XAGE1A, XAGE1B]
+    assessment: Provisional retention with protein-identity support
+    proposed: Unchanged
+    depth: Primary abstracts
+    pmids: [12479262, 17335148]
+    finding: Historical XAGE-1a and XAGE-1b transcripts can encode the XAGE-1b antigen protein. The USO9-13 study found tumor staining without staining in the adjacent normal tissues examined.
+    implication: Supports preserving the shared antigen rather than dropping XAGE1B on nomenclature alone. Historical transcript labels must not be confused with independent modern gene-locus measurements.
+    next: Carry exact protein identity forward; keep locus-specific expression, normal-panel coverage and XAGE5 separate.
+  - genes: [FTMT]
+    assessment: Propose exclusion
+    proposed: Unsafe
+    depth: Primary full text
+    pmids: [28386150, 38988693]
+    finding: Human substantia nigra neurons contain FTMT protein. The 2017 study used two postmortem donors without neurological disorders, a monoclonal reagent, absorption controls and an H-ferritin cross-reactivity check. The later study includes control as well as hemorrhage cases.
+    implication: Normal neuronal protein conflicts with unrestricted reproductive targeting, even when bulk brain RNA is low. This is not evidence of an observed FTMT-directed treatment injury.
+    next: Add an adjudicated normal-protein exclusion; preserve exact tissue, species and reagent provenance.
+  - genes: [ABCC11]
+    assessment: Propose exclusion
+    proposed: Unsafe
+    depth: Primary abstract
+    pmids: [16359813]
+    finding: Human brain RT-PCR, immunoblotting and immunofluorescence locate ABCC11 in white-matter and peripheral axons.
+    implication: This supports exclusion from unrestricted gene-level reproductive targeting. The MRP8 search alias also names S100A8 in other papers; those hits are not ABCC11 evidence.
+    next: Enter the published neural-protein finding into the normal-protein review; obtain full reagent validation for subsequent sequence-specific assessment.
+  - genes: [YBX2]
+    assessment: Propose exclusion
+    proposed: Unsafe
+    depth: Primary full text
+    pmids: [16479255]
+    finding: The 2006 dbpC/contrin study reports normal vascular smooth-muscle and adrenal-cortical staining. Its specimens include non-tumor surgical regions and autopsies; peptide-raised polyclonal antibodies were checked by immunoblot and peptide competition, with controls described but not shown.
+    implication: The published non-reproductive protein conflicts with unrestricted inclusion. Vascular cells in myocardium must not be relabelled cardiomyocytes. Modern primary HPA records also contain discordant renal, neural and endocrine staining.
+    next: Propose a normal-protein exclusion while retaining the reagent and specimen limitations in the record.
+  - genes: [CCDC158]
+    assessment: Propose exclusion
+    proposed: Unsafe
+    depth: Primary abstract
+    pmids: [39319391]
+    finding: The renal-endocytosis study reports CCDC158 protein in kidney tubules and functional evidence in patient-derived proximal tubular cells.
+    implication: A reproductive gene-level label misses a renal protein role. An isoform-specific target would require its own normal-expression and sequence assessment.
+    next: Add a normal-protein exclusion at gene level; retain renal versus testicular isoform attribution as an explicit follow-up.
+  - genes: [ACTRT1]
+    assessment: Propose exclusion
+    proposed: Unsafe
+    depth: Primary full text and abstract
+    pmids: [33972689, 28869610]
+    finding: The 2021 study shows endogenous RNA and protein in differentiating normal human epidermal keratinocytes, with two antibody preparations and protein-band mass-spectrometry checks. Retinal epithelial cell-line experiments are additional context, not proof of normal retina in vivo.
+    implication: Expression is not confined to permitted follicles or reproductive tissues; ordinary epidermal keratinocytes remain non-permitted. Genetic loss of function and killing expressing cells are different interventions.
+    next: Propose normal-protein exclusion and keep cell-culture state distinct from intact-tissue evidence.
+  - genes: [MAGEC2]
+    assessment: Propose review hold
+    proposed: Neither
+    depth: Primary abstract
+    pmids: [12920247]
+    finding: The original HCA587 study reports cerebellar Purkinje-cell staining with the TC-1 polyclonal reagent, conflicting with the current curated negative normal profile.
+    implication: A neural protein conflict warrants a hold, but the historical antibody result does not establish target-mediated clinical injury or resolve MAGE-family cross-reactivity.
+    next: Resolve reagent specificity and test orthogonal, gene-specific normal cerebellar evidence before unrestricted use.
+  - genes: [LGALS13]
+    assessment: Propose review hold
+    proposed: Neither
+    depth: Primary abstracts
+    pmids: [10527825, 19497882]
+    finding: Early PP13 protein work reported extra-placental reactivity, whereas Northern analysis and later placental-galectin work support placental restriction. Adult bladder/spleen observations must be separated from permitted fetal tissues and possible galectin cross-reactivity.
+    implication: Conflicting assay identity is unresolved; neither a proven unsafe classification nor unconditional inclusion is justified by these abstracts alone.
+    next: Adjudicate the original bands and antibody specificity against related galectins.
+  - genes: [PLCZ1]
+    assessment: Propose review hold
+    proposed: Neither
+    depth: Primary abstract
+    pmids: [14697805]
+    finding: The NYD-SP27 study reports endogenous expression in human pancreatic-duct cells and upregulation in cystic fibrosis, using RNA assays, immunohistochemistry and functional suppression.
+    implication: This is an additional non-reproductive compartment missing from the previous 37-gene conflict list. The abstract does not resolve all historical isoform and protein-control details.
+    next: Retrieve the complete paper and reconcile NYD-SP27 with current PLCZ1 transcripts before unrestricted gene-level targeting.
+  - genes: [PATE2]
+    assessment: Resolve isoforms
+    proposed: Unchanged
+    depth: Primary abstract plus pinned annotation
+    pmids: [18387948]
+    finding: PATE-family work includes neuron-rich tissue expression; the pinned gene annotation assigns brain expression to PATE2 isoform 2.
+    implication: A family-level abstract cannot independently prove every current locus or isoform. Retention is not an endorsement of all PATE2 proteoforms.
+    next: Inspect the original gene-specific assays and brain isoform sequences.
+  - genes: [TPTE2]
+    assessment: Resolve isoforms
+    proposed: Unchanged
+    depth: Primary abstract
+    pmids: [11716755]
+    finding: The TPIP study describes splice variants in brain and stomach as well as testis.
+    implication: Historical normal RNA undermines strict gene-wide restriction but is not an absolute abundance measurement or protein veto.
+    next: Map historical variants onto current proteins; require isoform-resolved normal measurements for a rescue.
+  - genes: [EQTN]
+    assessment: Resolve isoforms
+    proposed: Unchanged
+    depth: Primary abstract plus pinned annotation
+    pmids: [11118625]
+    finding: The C9orf11 tissue annotation distinguishes highly testicular isoform 1 from low skin/blood expression of isoform 2.
+    implication: Non-quantitative transcript evidence should not silently become either protein absence or demonstrated toxicity.
+    next: Review the original variant-specific panel and normal protein evidence.
+  - genes: [ACTL7A]
+    assessment: Review normal RNA
+    proposed: Unchanged
+    depth: Primary abstract
+    pmids: [10373328]
+    finding: The original ACTL7A/ACTL7B paper describes broad adult ACTL7A transcription, distinct from the more restricted ACTL7B pattern.
+    implication: This additional historical RNA conflict is not a measured protein veto. ACTL7B findings cannot substitute for ACTL7A.
+    next: Compare quantitative, identity-resolved normal RNA and protein data.
+  - genes: [SPAM1]
+    assessment: Review normal RNA
+    proposed: Unchanged
+    depth: Primary full text
+    pmids: [15804358]
+    finding: Non-quantitative human RT-PCR detects coding-region transcripts in heart, small intestine and muscle as well as reproductive tissues; the promoter-specific transcripts are more restricted. The described alternative untranslated regions are predicted to encode identical proteins.
+    implication: Reproductive promoter specificity alone cannot establish a reproductive-specific protein sequence. Mouse kidney expression must not be presented as human kidney evidence.
+    next: Quantify the human normal transcripts and establish endogenous protein before proposing exclusion or a sequence rescue.
+  - genes: [FAM170A]
+    assessment: Review normal RNA
+    proposed: Unchanged
+    depth: Primary abstract plus pinned annotation
+    pmids: [20162441]
+    finding: The original ZNFD report used a multi-tissue human RT-PCR panel; the curated annotation includes strong brain expression.
+    implication: The historical assay needs reconciliation with modern low bulk RNA and discordant primary antibodies; it does not provide a current nTPM value.
+    next: Verify gene/probe identity, quantitative brain expression and normal protein.
+  - genes: [SLC22A14]
+    assessment: Review normal RNA
+    proposed: Unchanged
+    depth: Primary abstract
+    pmids: [10072596]
+    finding: The ORCTL3/ORCTL4 cloning paper describes ubiquitous human transcripts with tissue-specific variants.
+    implication: Mouse sperm biology does not resolve the historical human normal-tissue signal. Current retained data also include neuronal cell RNA.
+    next: Reconcile human transcript identity and cell-specific normal protein before targeting.
+  - genes: [SUN5]
+    assessment: Conflicting tissue studies
+    proposed: Unchanged
+    depth: Primary abstracts
+    pmids: [12621555, 21711156, 27640305]
+    finding: The original human TSARG4 report describes widespread adult transcription and a testis-specific mouse ortholog. Later work establishes testicular protein and infertility biology.
+    implication: Human and mouse evidence, and RNA versus protein, should not be collapsed into one testis-restriction claim.
+    next: Resolve the historical human probe/transcript against modern normal-tissue measurements.
+  - genes: [HORMAD2]
+    assessment: Review normal RNA
+    proposed: Unchanged
+    depth: Primary abstract
+    pmids: [22893617]
+    finding: Human HORMAD2 is predominantly testicular, with weak liver expression in the primary lung-cancer study.
+    implication: Low normal RNA is compatible with a quantitative screen pass; this is not evidence of clinical toxicity. HORMAD1 studies are not interchangeable.
+    next: Keep the weak liver observation visible and check the tissue-resolved protein results if targeting proceeds.
+  - genes: [PASD1]
+    assessment: Review specimen context
+    proposed: Unchanged
+    depth: Primary full text
+    pmids: [15162151]
+    finding: Histologically normal lung and small-intestinal specimens from cancer patients had PASD1 RNA. The authors explicitly state that protein characterization remained future work.
+    implication: Tumor-adjacent nonmalignant tissue is relevant but not healthy-volunteer protein evidence; it cannot be counted as a positive-IHC veto.
+    next: Distinguish field effects, cell composition and protein expression in normal tissue.
+  - genes: [MAGEA11]
+    assessment: Review adrenal evidence
+    proposed: Unchanged
+    depth: Primary abstract plus pinned annotation
+    pmids: [15684378]
+    finding: The androgen-receptor study establishes MAGE-11 biology in androgen-dependent contexts; pinned tissue annotation includes adrenal as well as reproductive organs.
+    implication: The abstract alone does not resolve adrenal cell abundance or protein localization; adrenal remains non-permitted.
+    next: Inspect the original tissue assays and obtain adrenal compartment evidence.
+  - genes: [RNF148]
+    assessment: Review normal RNA
+    proposed: Unchanged
+    depth: Primary abstract plus pinned annotation
+    pmids: [24089095]
+    finding: Primary testicular-interstitial gene work underlies a slight pancreatic-expression annotation.
+    implication: A qualitative low RNA observation does not demonstrate a threshold breach or therapeutic injury.
+    next: Preserve the pancreas lead and check quantitative RNA/protein if prioritized.
+  - genes: [SLCO6A1]
+    assessment: Review normal RNA
+    proposed: Unchanged
+    depth: Primary abstracts plus pinned annotation
+    pmids: [12677006, 15546177]
+    finding: Gonad-specific transporter studies support reproductive/cancer interest, with weak adult brain and spleen expression in the tissue annotation.
+    implication: Adult brain is not made permissible by fetal-brain expression; quantitative and species attribution remain necessary.
+    next: Reconcile the original human normal panel and modern protein data.
+  - genes: [SSX1, SSX2, SSX2B]
+    assessment: Review family and normal RNA
+    proposed: Unchanged
+    depth: Primary abstract plus pinned annotation
+    pmids: [7539744]
+    finding: Historical SSX work includes low thyroid transcription; SSX2 and SSX2B share a protein annotation.
+    implication: Family-associated RNA is not proof of protein at every current locus, nor a reason to waive thyroid assessment.
+    next: Resolve locus attribution and quantitative normal thyroid evidence.
+  - genes: [DDX4]
+    assessment: Provisional retention
+    proposed: Unchanged
+    depth: Primary abstract
+    pmids: [10920202]
+    finding: The human VASA study reports gonadal RNA and protein restriction across fetal/adult tissues. Current primary-antibody records nevertheless contain discordant somatic staining.
+    implication: The primary human paper supports the biological nomination; discordant antibody rows still require identity review before target use.
+    next: Reconcile specific somatic reagents with curated negative normal IHC.
+  - genes: [CTCFL]
+    assessment: Provisional retention
+    proposed: Unchanged
+    depth: Primary full text
+    pmids: [21079786]
+    finding: BORIS has numerous transcript and protein isoforms, with strong testis/cancer expression. RNase-protection experiments detected the tested forms in testis and K562 but not kidney.
+    implication: Supports the nomination, not universal normal absence across all isoforms. CTCF is a different paralog.
+    next: Carry exact isoform and peptide specificity into downstream sequence work.
+  - genes: [CT55]
+    assessment: Agree with supported admission
+    proposed: Unchanged
+    depth: Prior targeted review carried forward
+    pmids: [28862699]
+    finding: Human CTLs recognized patient-derived leukemia stem/progenitor cells; this supports admission despite low bulk reproductive RNA.
+    implication: Antigen recognition is stronger than an RNA-only nomination but is not an interventional efficacy/safety trial.
+    next: Retain the affirmative-evidence exception while keeping all normal-tissue gates.
+  - genes: [FOXR2]
+    assessment: Agree with provisional hold
+    proposed: Unchanged
+    depth: Prior targeted review carried forward
+    pmids: [35802025]
+    finding: Broad cancer activation and testis-restricted biology support reconsideration, but uncurated normal antibody staining remains unresolved.
+    implication: The 5 nTPM floor should not be the sole reason for exclusion when valid reproductive protein exists; that does not resolve the current reagent conflict.
+    next: Resolve antibody specificity and endogenous normal protein before moving from Neither.
+  - genes: [CTAG2]
+    assessment: Agree with provisional hold
+    proposed: Unchanged
+    depth: Prior donor and targeted literature review carried forward
+    pmids: [39576208]
+    finding: Reviewed vital-tissue donor RNA varies despite negative local IHC; LAGE-1A/NY-ESO-1 epitope-directed clinical experience is not a gene-wide normal-expression guarantee.
+    implication: Variable remains a useful holding category. A late cardiac event with competing illness does not establish CTAG2-mediated myocardial injury.
+    next: Resolve donor, transcript and presented-peptide context before any rescue.
+  - genes: [XAGE5]
+    assessment: Agree with provisional hold
+    proposed: Unchanged
+    depth: Existing source evidence reviewed
+    pmids: []
+    finding: Primary normal neural staining and low reproductive RNA remain unresolved. The family-exclusion follow-up did not establish a gene-specific protein rescue.
+    implication: Shared-family expression or XAGE1 clinical interest cannot substitute for XAGE5 evidence.
+    next: Require a specific reproductive protein control and orthogonal normal-neural evidence.
+  - genes: [HORMAD1, TDRD1, BRDT, DAZL]
+    assessment: Agree with provisional hold
+    proposed: Unchanged
+    depth: Existing source evidence reviewed
+    pmids: []
+    finding: Normal immune-cell RNA crosses the current review trigger. HORMAD1 and DAZL have repeated DICE observations; TDRD1 and BRDT have smaller or near-threshold signals.
+    implication: Cellular is appropriate pending RNA/mapping/protein adjudication; these observations do not demonstrate clinical toxicity and should not be called proven unsafe.
+    next: Review per-donor distributions, lineage identity, multimapping and orthogonal protein/peptide evidence before rescue.
+  - genes: [ACRBP, TEX101]
+    assessment: Agree with policy exclusion
+    proposed: Unchanged
+    depth: Existing source evidence reviewed
+    pmids: []
+    finding: Immune-cell RNA exceeds 30 in multiple source-native observations; the report preserves TPM and nTPM separately.
+    implication: Exclusion follows the approved hard cutoff, not a demonstration of target-mediated clinical injury.
+    next: Require source/lineage and mapping adjudication rather than a small threshold adjustment.
+  - genes: [ROPN1]
+    assessment: Boundary reconsideration
+    proposed: Unchanged
+    depth: Existing source evidence reviewed
+    pmids: []
+    finding: The new hard exclusion is driven by 32.9 nTPM in HPA salivary serous cells, close to the 30 cutoff.
+    implication: The rule is applied consistently but this is a priority for read-level, ambient-RNA and orthogonal-protein review, not proof of treatment toxicity.
+    next: Review the specific normal-cell observation before changing a general cutoff or rescuing the gene.
+  - genes: [MAGEA3]
+    assessment: Agree with policy exclusion
+    proposed: Unchanged
+    depth: Prior targeted review and current source evidence carried forward
+    pmids: [23770775, 23377668, 27132212]
+    finding: Current exclusion includes 53.1 nTPM in colon undifferentiated cells. Historical receptor-associated deaths involved titin cross-recognition or MAGE-family neural recognition; vaccine efficacy was not established in the large lung-cancer trial.
+    implication: Product-specific cross-reactivity must not be misreported as native MAGEA3 protein in myocardium. RNA mapping remains independently reviewable.
+    next: Preserve the exclusion and separate product safety, paralog specificity and the new cell-RNA evidence.
+  - genes: [MAGEA12]
+    assessment: Agree with safety hold
+    proposed: Unchanged
+    depth: Prior targeted review carried forward
+    pmids: [23377668]
+    finding: A MAGE-directed receptor cross-recognized MAGE-A12; severe neurological toxicity and brain-expression evidence support the independent hold.
+    implication: Pan-MAGE staining does not uniquely identify a causal paralog, but there is sufficient concern to retain the safety hold.
+    next: Do not rescue by relaxing RNA thresholds alone.
+  - genes: [SPAG9]
+    assessment: Agree with policy exclusion
+    proposed: Unchanged
+    depth: Prior targeted review and current source evidence carried forward
+    pmids: [17332284]
+    finding: Cancer expression and patient antibody responses support antigen interest, while broad normal protein and high immune RNA contradict reproductive restriction.
+    implication: A published CTA label is a nomination, not an override of measured normal expression.
+    next: Keep excluded from the reproductive set; any tumor-specific isoform would need independent evidence.

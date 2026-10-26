@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-25",
+  "genes": 2540,
+  "current_categories": {
+    "Unsafe": 1580,
+    "Neither": 561,
+    "CTA": 399
+  },
+  "genes_with_both_searches": 2540,
+  "searches": 6013,
+  "failed_searches": 0,
+  "gene_paper_leads": 41980,
+  "unique_paper_leads": 36964,
+  "truncated_searches": 1688,
+  "genes_with_no_hits_in_either_topic_query": 160,
+  "genes_with_specific_assessment_notes": 46,
+  "genes_with_new_primary_review": 32,
+  "genes_without_new_individual_primary_review": 2508,
+  "proposed_changes": 8,
+  "proposed_categories_if_accepted": {
+    "Unsafe": 1585,
+    "Neither": 564,
+    "CTA": 391
+  },
+  "retained_primary_normal_signal_genes": 180,
+  "retained_primary_normal_signal_rows": 1707,
+  "retained_vital_medium_high_signal_genes": 103,
+  "retained_signal_genes_with_off_target_profile_notes": 78,
+  "status": "Search retrieval and source-flag audit complete; individual primary-paper adjudication remains incomplete",
+  "production_categories_changed": false,
+  "inputs": {
+    "docs/audits/cta-atlas-20261024/all-genes.csv": "dff2c194404281cedfd6ddaf86505b0b02faeacd645506e5cf8fde774a74d09d",
+    "docs/audits/cta-normal-cells-20261023/primary-antibodies.csv.gz": "f5a37339a5d12e844f97ff18ff6ba28f98fa3cacd021ac89a3780cef5467f413",
+    "docs/audits/cta-literature-20261025/adjudications.yml": "5aa9cf54245fb633b1cc063d3b793ab65c424de1a217216f466274cbb953a22d",
+    "docs/audits/cta-literature-20261025/searches.csv": "7f92d54bebac779c1d7113d0e1b53fd764372651c6f898851009765cf2da454c"
+  }
+}

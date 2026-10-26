@@ -1,0 +1,74 @@
+[
+  {
+    "key": "system",
+    "number": 627,
+    "url": "https://github.com/pirl-unc/oncoref/issues/627",
+    "title": "Assign CTA / Neither / Unsafe from reviewed evidence with general, auditable rules"
+  },
+  {
+    "key": "FTMT",
+    "number": 628,
+    "url": "https://github.com/pirl-unc/oncoref/issues/628",
+    "title": "Adjudicate human neuronal FTMT protein and remove unrestricted CTA eligibility"
+  },
+  {
+    "key": "ABCC11",
+    "number": 629,
+    "url": "https://github.com/pirl-unc/oncoref/issues/629",
+    "title": "Adjudicate normal neural ABCC11 protein before unrestricted CTA use"
+  },
+  {
+    "key": "YBX2",
+    "number": 630,
+    "url": "https://github.com/pirl-unc/oncoref/issues/630",
+    "title": "Resolve normal vascular and adrenal YBX2 protein against retained CTA status"
+  },
+  {
+    "key": "CCDC158",
+    "number": 631,
+    "url": "https://github.com/pirl-unc/oncoref/issues/631",
+    "title": "Adjudicate renal CCDC158 protein and separate gene-level from isoform targeting"
+  },
+  {
+    "key": "ACTRT1",
+    "number": 632,
+    "url": "https://github.com/pirl-unc/oncoref/issues/632",
+    "title": "Curate normal keratinocyte ACTRT1 protein as non-reproductive evidence"
+  },
+  {
+    "key": "MAGEC2",
+    "number": 633,
+    "url": "https://github.com/pirl-unc/oncoref/issues/633",
+    "title": "Hold unrestricted MAGEC2 targeting while Purkinje-cell staining is unresolved"
+  },
+  {
+    "key": "LGALS13",
+    "number": 634,
+    "url": "https://github.com/pirl-unc/oncoref/issues/634",
+    "title": "Resolve extra-placental PP13/LGALS13 protein and galectin specificity"
+  },
+  {
+    "key": "PLCZ1",
+    "number": 635,
+    "url": "https://github.com/pirl-unc/oncoref/issues/635",
+    "title": "Resolve pancreatic NYD-SP27/PLCZ1 evidence before unrestricted CTA use"
+  },
+  {
+    "key": "antibodies",
+    "number": 636,
+    "url": "https://github.com/pirl-unc/oncoref/issues/636",
+    "title": "Reconcile primary normal-antibody signals for 180 retained CTA assignments"
+  },
+  {
+    "key": "breadth",
+    "number": 637,
+    "url": "https://github.com/pirl-unc/oncoref/issues/637",
+    "title": "Measure continuous normal-expression breadth without rescue by a reproductive maximum"
+  },
+  {
+    "key": "literature",
+    "number": 638,
+    "url": "https://github.com/pirl-unc/oncoref/issues/638",
+    "title": "Complete individual CTA literature adjudication beyond the 32-gene initial review"
+  }
+]
