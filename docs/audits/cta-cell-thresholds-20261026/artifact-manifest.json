@@ -1,0 +1,18 @@
+{
+  "artifact_sha256": {
+    "cta-selection.pptx": "bd041522de2e9056c9fa4faeda5af7c3ff5e65ffd203253690076ae2ab33741e",
+    "figures/bulk-rna-scatter.png": "bbb38e0ae78476a95fa520ac5a0aad637e86a81f3c5a0bc9e17bfdde6e3a8cbd",
+    "figures/bulk-rna-scatter.svg": "597e94e26cf1b88df628fcab3888cb3dc60b971e19340f51835ed99b753a00ab",
+    "figures/cell-cutoff-distribution.png": "00088fb65117c5ab503fa65ee83e93f062cc9ba621c45fe1835af3894c633c48",
+    "figures/cell-cutoff-distribution.svg": "51f1227800c565f19da61484a48b2df9cc6d7b8839ba64956fd8513ea6b05914",
+    "figures/independent-threshold-sensitivity.png": "e0f5aa3f3abe62e397bf2d74d3e2c360152867a51d233aa8bf3dee1d576518ee",
+    "figures/independent-threshold-sensitivity.svg": "05586de89a873ac8eadbfc788071d8bbbeb5f81d4a499fdd5fa7d26c940681fa",
+    "figures/source-overlaps.png": "8423df5634be3d8c9c60066fca4ae811e1a2e0f791aced7961b71f514725f26d",
+    "figures/source-overlaps.svg": "9c50b6de0abfd86277c53b309528c0fc19594dcfe4696af1340e17b9c2175c1b"
+  },
+  "builder_sha256": {
+    "scripts/build_cta_selection_slides.mjs": "4ea0a3bb7f190da4831440747473739e73d109ee502ce748fc4c7ce0df9c0af9",
+    "scripts/cta_selection_figures.py": "3c08c96b51349af2016d7632db874b4d257522bb0f93b0c1a7b7bc8624e3165e"
+  },
+  "data_manifest_sha256": "67e2d9f2872d15235e79db5cb87ef938ed3def46aecefa4110b3d9803c0a0d13"
+}

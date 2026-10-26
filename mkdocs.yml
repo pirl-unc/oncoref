@@ -9,6 +9,7 @@ nav:
   - CTA reports:
       - Recalibrated CTA research selection: audits/cta-research-20261026/index.md
       - Continuous normal-expression breadth: audits/normal-breadth-20261026/index.md
+      - Cell-RNA thresholds and selection slides: audits/cta-cell-thresholds-20261026/index.md
       - Fetal and embryonic target sources: developmental-targets.md
       - Expression policy and protein references: target-sets.md
       - Release review and adoption (1.20.0): cta-release-1.20.0.md

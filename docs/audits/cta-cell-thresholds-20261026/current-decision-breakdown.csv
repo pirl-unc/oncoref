@@ -1,0 +1,16 @@
+Category,Detail,genes
+CTA,Clinically qualified,2
+CTA,Pass,204
+CTA,Supported,9
+Neither,Antibody,199
+Neither,Cellular,70
+Neither,Conflict,179
+Neither,Low,196
+Neither,Selectivity,64
+Neither,Unassessed,31
+Neither,Variable,1
+Unsafe,High RNA,128
+Unsafe,Normal,8
+Unsafe,Protein,845
+Unsafe,RNA,603
+Unsafe,Safety,1
