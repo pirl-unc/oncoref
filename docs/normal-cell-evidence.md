@@ -2,9 +2,10 @@
 
 The [normal-cell report](audits/cta-normal-cells-20261023/index.md) combines HPA's bulk
 and curated IHC screen with cell-resolved RNA, primary antibody records and cited
-human protein evidence. The [current review](audits/cta-neither-review-20261024/index.md)
-adds an absolute >30 TPM/nTPM ceiling outside explicitly permitted contexts,
-retains 399 CTA genes, and records each change and candidate's follow-up needs.
+human protein evidence. The [24 October review](audits/cta-neither-review-20261024/index.md)
+added an absolute >30 TPM/nTPM ceiling outside explicitly permitted contexts.
+The [current definitions](target-sets.md) apply the reviewed literature hierarchy
+and retain 213 CTA genes. The source-specific RNA triggers below are unchanged.
 
 ## One download and cache contract
 
@@ -54,6 +55,10 @@ cells.publication_evidence()
 for frame in cells.iter_tables("cornea_collin_10pcw_counts", genes=["ABCB5"]):
     print(frame)
 ```
+
+`publication_evidence()` preserves the original eight findings. For current
+accepted, unresolved and rejected literature findings, use
+`from oncoref import cta_policy; cta_policy.findings()`.
 
 `table()` returns the source's native column names and units. `iter_tables()`
 streams large native matrices. `observations()` has shared columns for source,

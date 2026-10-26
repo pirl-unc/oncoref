@@ -1,0 +1,21 @@
+{
+  "release": "https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0",
+  "download_base": "https://github.com/pirl-unc/oncoref/releases/download/v1.20.0/",
+  "sha256": {
+    "additional-forbidden.fasta.gz": "78afcc20aa70ece5f29cee021d2ba91d30552e3e1144a348c6ac56fc7254e560",
+    "cta-proteins.csv.gz": "e8f1e1cc37b91a8ee431c32533a8c2c0282eb8c5c41bd2964cb67184f884a763",
+    "cta.fasta.gz": "fc209c396ab705d0db0eb9a3b02e92eaebf154c1fd78c90fa05e73440c1fc9bc",
+    "exclusion-basis.json": "7cb9fcc59d377943bff2322914e66cc0d63494442301a12123adf3fd8fdacdfc",
+    "genes-without-complete-proteins.csv.gz": "3a69eaed2467e9535c75b5eae584ea54bb6ded000ae96bc9bc73d8c034359951",
+    "neither-proteins.csv.gz": "dfab08b40584ba896aeb0b56082594e7f71bdac894f9c7c2673b15614473db1f",
+    "neither.fasta.gz": "575cc62b9d77fe873879ad85a45ce77cf86d212a7ce2e73465b87a0c2542e336",
+    "reference.json": "2704cc979a2bac44d92557fe574388a9a977b8be604e1f554120411f3f7bb3fa",
+    "target-protein-occurrences.csv.gz": "26c12a52a6f703a33d6cba79a994da87fe860f25a4dacb46635353b74965f914",
+    "target-proteins.csv.gz": "eb1134d10ae08bc1fba0b0b730caf3fdf7d9d6ad98e13d1ae754549a7e8d9cc6",
+    "translations-for-review.csv.gz": "1bf3f07dbc50078568fa8cdff0a68da03e3f832795e5f1b369fa91f498b6dcc8",
+    "translations-for-review.fasta.gz": "5970c121504d7ce3c2939e5a13c905ffb5ea3901692de2b23c0cd86ce3c2512c",
+    "unclassified-sequence-genes.csv.gz": "e1d4263cc49b70e8e5020166232b8a1e19111407abbb196112e50d87e1c7a975",
+    "unsafe-proteins.csv.gz": "beb315ca4c348d348df222bb7910fc236f78aebac688819bcafbce98e9aac304",
+    "unsafe.fasta.gz": "d93c7c202c0b70d61d53fdc785f2daf4584b062528d2a7a07858fa660a13106f"
+  }
+}

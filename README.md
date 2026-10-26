@@ -11,7 +11,7 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 [Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-neither-review-20261024/)
+and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-policy-20261025/)
 document the nested sets, cited dataset mappings, complete publication intake,
 and dog/mouse evidence coverage. The human research screen requires reproductive
 expression, with category-specific absolute RNA ceilings,
@@ -27,9 +27,14 @@ are research parameters, not validated clinical safety limits.
 
 The current `oncoref.target_sets` API partitions genes and exact proteins into
 **CTA**, **Unsafe** and **Neither**. Only Unsafe supplies the forbidden protein
-background. Candidates without positive IHC need reproductive RNA ≥5 nTPM;
-low-expression and Variable candidates belong to Neither. The report includes
-the regenerated disjoint protein FASTAs and an explicit k-mer exclusion recipe.
+background. Admission requires reproductive RNA ≥5 nTPM, reliable reproductive
+protein, or reviewed reproductive plus tumor/recognition evidence. Accepted
+normal-protein findings exclude; material unresolved conflicts hold. The
+[plain-language definitions](https://pirl-unc.github.io/oncoref/target-sets/)
+give the full hierarchy and unchanged numerical thresholds. The current build
+contains **213 CTA genes** and **359 distinct complete CTA protein sequences**.
+Use the matching [v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
+and their k-mer exclusion recipe. `oncoref.cta_policy.manifest()` identifies the active policy.
 
 The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)
 classify Reproductive, Normal and Other independently of CTA nomination.
