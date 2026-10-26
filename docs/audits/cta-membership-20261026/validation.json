@@ -1,0 +1,15 @@
+{
+  "python": "3.12.6",
+  "full_suite": {
+    "passed": 2593,
+    "skipped": 0
+  },
+  "focused_membership_and_research_tests": 55,
+  "ruff": "Passed configured lint and format checks",
+  "mkdocs": "Strict build passed",
+  "dependencies": "83 repository-local packages checked; compatible; shared environment untouched",
+  "reproducibility": "15 data artifacts and manifest reproduced byte-for-byte outside checkout",
+  "wheel": "Outside-checkout import and dataset/receipt checks passed",
+  "figures": "All three PNGs inspected; highlighted labels corrected",
+  "ci": "New commit CI not yet run"
+}

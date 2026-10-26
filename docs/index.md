@@ -1,6 +1,9 @@
 # oncoref
 
-**New: [215-gene CTA research selection](audits/cta-research-20261026/index.md)**,
+**Current: [1,416-gene biological CTA/oncofetal set](audits/cta-membership-20261026/index.md)**,
+with source-backed positive controls, evidence tiers and separate normal-expression flags.
+
+**Earlier: [215-gene CTA research selection](audits/cta-research-20261026/index.md)**,
 including PRAME, MAGE-A4 and NY-ESO-1, with explicit clinical qualifications.
 The [released 213-gene expression policy and protein references](audits/cta-policy-20261025/index.md)
 retain their normal-expression findings and sequence-background semantics.

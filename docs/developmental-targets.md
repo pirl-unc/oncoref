@@ -1,7 +1,10 @@
 # Fetal and embryonic targets: source requirements
 
 Assessment date: 26 October 2026. This is a source and evidence-gap assessment,
-not an ingestion-complete developmental target list.
+not an ingestion-complete developmental atlas. The
+[biological membership set](audits/cta-membership-20261026/index.md) now includes
+TBXT, AFP, GPC3, CLDN6 and SALL4 through reviewed gene-specific primary evidence,
+with adult-expression concerns preserved.
 
 **Brachyury is TBXT (historical symbol T), ENSG00000164458.** The current
 reference-bound expression screen places it in Neither / Antibody. It should
@@ -80,6 +83,6 @@ Register and checksum the gastrulation, organogenesis and DESCARTES inputs;
 retain their original donor/stage annotations. Build a reference-bound TBXT
 case report joining embryonic lineage, adult disc, patient chordoma and clinical
 records. Audit gene-specific reagent/isoform identity and measured adult normal
-contexts before proposing any membership change. Then apply the same source
+contexts to refine risk and developmental coverage for the biological members. Apply the same source
 contract to other developmental nominees. No new developmental classification
 cutoff or automatic fetal-expression admission is established by this assessment.

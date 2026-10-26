@@ -7,7 +7,8 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Recalibrated CTA research selection: audits/cta-research-20261026/index.md
+      - Holistic CTA and oncofetal membership: audits/cta-membership-20261026/index.md
+      - Earlier CTA research selection: audits/cta-research-20261026/index.md
       - Continuous normal-expression breadth: audits/normal-breadth-20261026/index.md
       - Cell-RNA thresholds and selection slides: audits/cta-cell-thresholds-20261026/index.md
       - Fetal and embryonic target sources: developmental-targets.md

@@ -645,7 +645,9 @@ policy and an evidence-weighted research selection. Neither gene-level call
 establishes presentation by the major histocompatibility complex (MHC) or
 validates every peptide or therapy product.
 
-Use `oncoref.cta_research_policy.gene_ids()` for the new **215-gene research
+Use `oncoref.cta_membership.gene_ids()` for the current **1,416-gene biological
+CTA/oncofetal set**; see [membership rules](audits/cta-membership-20261026/index.md).
+`oncoref.cta_research_policy.gene_ids()` preserves the earlier **215-gene research
 selection**, including PRAME, MAGE-A4 and NY-ESO-1 (CTAG1A/B).
 `results()` retains `Expression category`, `Expression forbidden`, selection
 basis, clinical sources and qualification limits. The common clinical route
@@ -2025,3 +2027,27 @@ Incompleteness alone does not reclassify a Reproductive gene. Enumerate only con
 standard-amino-acid windows within a record, then subtract background k-mers from
 Reproductive k-mers. Disjoint full proteins can still share k-mers. Gene-level evidence
 does not establish isoform-specific expression or sequence absence.
+
+
+## Biological CTA/oncofetal membership
+
+```python
+from oncoref import cta_membership
+
+candidates = cta_membership.gene_ids()  # 1,416 biological research candidates
+all_decisions = cta_membership.results()  # all 20,097 canonical genes
+reviewed_controls = cta_membership.gene_ids(established_only=True)  # 21 reviewed controls
+oncofetal = cta_membership.gene_ids(category="Oncofetal")
+primary_evidence = cta_membership.evidence()
+```
+
+This is the current holistic biological set. `Member`, `Classes` and `Evidence tier`
+are independent of retained normal-expression flags and the existing forbidden-protein
+reference. Classes can overlap: `Cancer-germline`, `Cancer-placental`,
+`Cancer-reproductive`, and `Oncofetal`. The established tier currently covers the
+specifically reviewed controls; it is not an exhaustive catalogue of all established
+CTAs. Publication consensus is not proof of independent experimental replication.
+
+The earlier `cta_research_policy` 215-gene selection and `target_sets` 213-gene
+expression classification retain their historical semantics. See the
+[complete rules, counts, controls and sensitivity analysis](audits/cta-membership-20261026/index.md).

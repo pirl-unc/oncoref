@@ -1,0 +1,162 @@
+[
+  {
+    "pmid": "10397256",
+    "title": "Generation of human T-cell responses to an HLA-A2.1-restricted peptide epitope derived from alpha-fetoprotein.",
+    "doi": "",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/10397256/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "3f309c4a230221836471b6a40d1d5920bdabb503a4bced89e0a5bf811eabd881"
+  },
+  {
+    "pmid": "10699956",
+    "title": "CT10: a new cancer-testis (CT) antigen homologous to CT7 and the MAGE family, identified by representational-difference analysis.",
+    "doi": "10.1002/(sici)1097-0215(20000301)85:5<726::aid-ijc21>3.0.co;2-f",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/10699956/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "fc94daef5275d10d65c4293956d3f79ca7a337c993f6d8c50cd5db901e26fa4c"
+  },
+  {
+    "pmid": "15920546",
+    "title": "The glypican 3 oncofetal protein is a promising diagnostic marker for hepatocellular carcinoma.",
+    "doi": "10.1038/modpathol.3800436",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/15920546/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "b73c10562c0d080766105de375e6818a8331ae8b3cfcd37c1f151db37c416b76"
+  },
+  {
+    "pmid": "17438107",
+    "title": "The human T-box mesodermal transcription factor Brachyury is a candidate target for T-cell-mediated cancer immunotherapy.",
+    "doi": "10.1158/1078-0432.ccr-06-2353",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/17438107/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "3d68a5aa12e7cbcbeb2c5f73ef09ab6bbcf4ecc155e410147fc9cebd988fb233"
+  },
+  {
+    "pmid": "17909063",
+    "title": "A placenta-specific gene ectopically activated in many human cancers is essentially involved in malignant cell processes.",
+    "doi": "10.1158/0008-5472.can-07-1350",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/17909063/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "161447a47778a2333e4f3712f2a96e7588af87f1e947811c138819014bba4517"
+  },
+  {
+    "pmid": "1840703",
+    "title": "A gene encoding an antigen recognized by cytolytic T lymphocytes on a human melanoma.",
+    "doi": "10.1126/science.1840703",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/1840703/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "cc33209ef9200beebeb0e4336ba4ea606520e39df122ffb63b3fc5792b621be7"
+  },
+  {
+    "pmid": "23377668",
+    "title": "Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy.",
+    "doi": "10.1097/cji.0b013e3182829903",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/23377668/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "30d9f648d0ff072241fd2960afa19ce30b68bd1413f9ff33f5cde02df4300192"
+  },
+  {
+    "pmid": "23758232",
+    "title": "Oncofetal gene SALL4 in aggressive hepatocellular carcinoma.",
+    "doi": "10.1056/nejmoa1300297",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/23758232/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "3808c107be457612e90eafdfcd1e8f392393f9c51298851943b71ed0e7e01087"
+  },
+  {
+    "pmid": "24681846",
+    "title": "Development of a T cell receptor targeting an HLA-A*0201 restricted epitope from the cancer-testis antigen SSX2 for adoptive immunotherapy of cancer.",
+    "doi": "10.1371/journal.pone.0093321",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/24681846/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "d679dd486548f953fc66fd11f4e954400f9458131d17bedc45265ce4cce6efd7"
+  },
+  {
+    "pmid": "25538264",
+    "title": "A pilot trial using lymphocytes genetically engineered with an NY-ESO-1-reactive T-cell receptor: long-term follow-up and correlates with response.",
+    "doi": "10.1158/1078-0432.ccr-14-2708",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/25538264/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "a3f5e59438bb686745f08987e468c10a85787649bb6577ab8e7f8a999e2c0dd4"
+  },
+  {
+    "pmid": "28473691",
+    "title": "Notochordal and nucleus pulposus marker expression is maintained by sub-populations of adult human nucleus pulposus cells through aging and degeneration.",
+    "doi": "10.1038/s41598-017-01567-w",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/28473691/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "372b691d246894bc0f63de9fd7d65499fad406ed1c20dbb6bc12e51d1888dc0a"
+  },
+  {
+    "pmid": "31455429",
+    "title": "Cancer targeting by TCR gene-engineered T cells directed against Kita-Kyushu Lung Cancer Antigen-1.",
+    "doi": "10.1186/s40425-019-0678-x",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/31455429/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "b8e998f1557ae4b174dc2a76cea8e537ff266a79680f8f4b8ef659cc5a1d0bd9"
+  },
+  {
+    "pmid": "33087697",
+    "title": "Vestigial-like 1 is a shared targetable cancer-placenta antigen expressed by pancreatic and basal-like breast cancers.",
+    "doi": "10.1038/s41467-020-19141-w",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/33087697/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "dc310ed4163a3e939233131996dd8e38f7dbd756c24e5cb5b4f760f3fd858ad8"
+  },
+  {
+    "pmid": "38554725",
+    "title": "Afamitresgene autoleucel for advanced synovial sarcoma and myxoid round cell liposarcoma (SPEARHEAD-1): an international, open-label, phase 2 trial.",
+    "doi": "10.1016/s0140-6736(24)00319-2",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/38554725/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "5ab8264aff62ae97ed97199f9c90c82d8f35924ecb088fd0fc734e0758dabc57"
+  },
+  {
+    "pmid": "40205198",
+    "title": "Autologous T cell therapy for PRAME&lt;sup&gt;+&lt;/sup&gt; advanced solid tumors in HLA-A*02&lt;sup&gt;+&lt;/sup&gt; patients: a phase 1 trial.",
+    "doi": "10.1038/s41591-025-03650-6",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/40205198/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "aec956cec454ff72d0fc3a99b01938260626862b46aa2f01b0e20d9b8963bbcc"
+  },
+  {
+    "pmid": "41073135",
+    "title": "Claudin 6 is a suitable target for CAR T-cell therapy in atypical teratoid/rhabdoid brain tumors and other pediatric solid tumors.",
+    "doi": "10.1136/jitc-2025-011709",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/41073135/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "e6ea481332f17704154e1aa7b7e47a0d5eb12403e8d30178b16fdca785b31675"
+  },
+  {
+    "pmid": "6182184",
+    "title": "Occurrence of alpha-fetoprotein-containing hepatocytes in human embryos and fetuses: an immunohistochemical study using the light and ultrastructural immunoperoxidase methods.",
+    "doi": "10.1177/30.10.6182184",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/6182184/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "ef088535be182b84a66e0f8afb72f0e7e505895541af6be2f78987d9bfaf07dd"
+  },
+  {
+    "pmid": "9560255",
+    "title": "Identification of a meiosis-specific protein as a member of the class of cancer/testis antigens.",
+    "doi": "10.1073/pnas.95.9.5211",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/9560255/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "6276228cff3bebf5362906ee3afe0425dd88302474c5d5ea6ac6583f247a0bab"
+  },
+  {
+    "pmid": "9618514",
+    "title": "Identification of multiple cancer/testis antigens by allogeneic antibody screening of a melanoma cell line library.",
+    "doi": "10.1073/pnas.95.12.6919",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/9618514/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "71a4052ad68fe05d0b9f277afbc2b896743c349fa1a7f89a1cb6db0d60da162f"
+  },
+  {
+    "pmid": "9626360",
+    "title": "LAGE-1, a new gene with tumor specificity.",
+    "doi": "10.1002/(sici)1097-0215(19980610)76:6<903::aid-ijc22>3.0.co;2-1",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/9626360/",
+    "reviewed_portion": "abstract",
+    "abstract_sha256": "312db19d865f2e6d112bec4c3098aa3106c1799c7f57b4d53d9331db249ccebe"
+  }
+]

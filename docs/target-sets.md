@@ -1,6 +1,8 @@
 # Released CTA expression-restriction policy
 
-For the recalibrated **215-gene research selection**, including PRAME and
+For the current **1,416-gene biological CTA/oncofetal set**, use
+[`oncoref.cta_membership`](audits/cta-membership-20261026/index.md).
+For the earlier **215-gene research selection**, including PRAME and
 MAGE-A4 with clinical qualifications, use
 [`cta_research_policy`](audits/cta-research-20261026/index.md). This page documents
 the released expression policy and its protein-background semantics. The new

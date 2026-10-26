@@ -1,0 +1,15 @@
+{
+  "data_manifest": "run-manifest.json",
+  "figure_builder": "scripts/plot_cta_membership.py",
+  "figure_builder_sha256": "20a0438bd80b575813f6f60fd5503d086668a3bb66fbcf1c4b761a3a8d0b041d",
+  "outputs": {
+    "index.md": "ec300686d62a091135367c9a8005b1a2b9b2fde351d79758c5f2cbe1a552edce",
+    "figures/expression-distribution.png": "a2800604b45567f022b82dbe0897f3e11f8272f8382201feb95fd1aea2d654fd",
+    "figures/expression-distribution.svg": "36f66f9074acaedd43b64cc1a480cb3a4bb8984175b4c18d8771132ae632ca39",
+    "figures/membership-and-changes.png": "53070c436b18fe9dd357fc479970354067e2211730530614a443b352d62085e5",
+    "figures/membership-and-changes.svg": "dd5c7f182e4c18aefd0d9c48a0881c08ac1b79c83212a5a7a9d68a2687875008",
+    "figures/source-coverage.png": "d5aa9375ba64f1656c3837de51e2e82fe85360a5102d8cddbf66a3534696ff5c",
+    "figures/source-coverage.svg": "cb2a4502770a68d3b6124b6209c4c1f7bfef6499cb974c1b0cfac54402e133f7"
+  },
+  "visual_review": "All three PNG figures inspected; highlighted labels separated and source denominators verified."
+}

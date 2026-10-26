@@ -10,28 +10,34 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-[Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-policy-20261025/)
-document the nested sets, cited dataset mappings, complete publication intake,
-and dog/mouse evidence coverage. The human research screen requires reproductive
-expression, with category-specific absolute RNA ceilings,
-pairwise reproductive selectivity, and an independent positive-IHC veto.
-Complete local negative IHC earns relaxation only with positive reproductive
-IHC in the curated gene profile. Reviewed individual Vital-tissue RNA donors
-must meet the same RNA limits as the main screen. **Variable** candidates have
-both reported-zero and failing donors with negative local IHC; they are excluded
-now and retained for reconsideration. Donor evidence is currently imported for
-CTAG2 only; other genes are explicitly unassessed for donor variation.
-The report preserves every candidate's exclusion reasons. Numerical limits
-are research parameters, not validated clinical safety limits.
+The [holistic CTA/oncofetal membership set](docs/audits/cta-membership-20261026/index.md)
+contains **1,416 candidate genes** after reprocessing all **20,097 canonical genes**.
+Use `oncoref.cta_membership.gene_ids()` for this biological set, or
+`oncoref.cta_membership.results()` for its evidence tiers and retained normal-expression
+findings. PRAME, MAGE-A4 and both NY-ESO-1 loci (CTAG1A/B) are included, together
+with additional established CTA, cancer-placental and oncofetal controls.
+Membership describes biological association; it does not establish target safety,
+HLA presentation, locus-specific protein evidence or clinical efficacy.
 
-The new [CTA research selection](docs/audits/cta-research-20261026/index.md)
-contains **215 genes**, including PRAME, MAGE-A4 and NY-ESO-1 (CTAG1A/B).
-`oncoref.cta_research_policy.gene_ids()` applies the recalibrated evidence rules;
-its decision table retains normal-expression findings and clinical qualifications.
-[Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md) is
-descriptive, and [developmental-target sources](docs/developmental-targets.md)
-document the brachyury follow-up. Comprehensive literature review remains open.
+The set contains 21 specifically reviewed established controls, 1,047 candidates
+supported by distinct cancer/reproductive publications, and 348 expression-supported
+candidates. Classes overlap and are labelled separately. Oncofetal controls include
+TBXT/brachyury, AFP, GPC3, CLDN6 and SALL4; developmental atlas measurements have
+not yet been imported. Normal RNA, IHC, cell-specific expression, clinical concerns
+and missing evidence remain visible, including 726 members with the earlier
+expression-forbidden flag. That sequence reference has not been changed.
+
+The earlier [215-gene expression/clinical shortlist](docs/audits/cta-research-20261026/index.md)
+remains available through `oncoref.cta_research_policy`, and the
+[213-gene expression policy](docs/audits/cta-policy-20261025/index.md) remains the
+released `target_sets` classification. These are different views with different
+purposes. [Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md)
+remains descriptive; the membership report adds its fixed anatomical score for
+all canonical genes, including missing-coverage bounds. Donor variation is
+individually assessed only where imported evidence exists, currently CTAG2.
+[Reproductive tissue definitions](docs/normal-tissue-scopes.md) and
+[developmental sources](docs/developmental-targets.md) document scope and gaps.
+Comprehensive individual literature review remains incomplete.
 
 The released `oncoref.target_sets` API partitions genes and exact proteins into
 **CTA**, **Unsafe** and **Neither**. Only Unsafe supplies the forbidden protein

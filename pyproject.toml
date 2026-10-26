@@ -92,6 +92,7 @@ oncoref = [
     "data/cta-policy.json",
     "data/protein-annotation-sources.json",
     "data/cta-intake-identity-snapshot.json",
+    "data/cta-membership-paper-receipts.json",
 ]
 
 [tool.setuptools.exclude-package-data]

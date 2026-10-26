@@ -1,0 +1,18 @@
+Scenario,reproductive_ntpm,reproductive_fold,tumor_prevalence,tumor_samples,tumor_ihc_cases,papers,tumor_rna_floor_ptpm,Selected,Positive controls selected,Negative controls selected
+baseline,1.0,4.0,0.05,3,2,2,1.0,1416,21,0
+reproductive_ntpm=0.1,0.1,4.0,0.05,3,2,2,1.0,1475,21,0
+reproductive_ntpm=2.0,2.0,4.0,0.05,3,2,2,1.0,1391,21,0
+reproductive_ntpm=5.0,5.0,4.0,0.05,3,2,2,1.0,1357,21,0
+reproductive_fold=2.0,1.0,2.0,0.05,3,2,2,1.0,1737,21,0
+reproductive_fold=8.0,1.0,8.0,0.05,3,2,2,1.0,1316,21,0
+tumor_prevalence=0.01,1.0,4.0,0.01,3,2,2,1.0,1440,21,0
+tumor_prevalence=0.1,1.0,4.0,0.1,3,2,2,1.0,1408,21,0
+tumor_samples=1,1.0,4.0,0.05,1,2,2,1.0,1416,21,0
+tumor_samples=5,1.0,4.0,0.05,5,2,2,1.0,1416,21,0
+tumor_ihc_cases=1,1.0,4.0,0.05,3,1,2,1.0,1418,21,0
+tumor_ihc_cases=3,1.0,4.0,0.05,3,3,2,1.0,1415,21,0
+papers=1,1.0,4.0,0.05,3,2,1,1.0,2439,21,0
+papers=3,1.0,4.0,0.05,3,2,3,1.0,1160,21,0
+tumor_rna_floor=0.1,1.0,4.0,0.05,3,2,2,0.1,1452,21,0
+tumor_rna_floor=2,1.0,4.0,0.05,3,2,2,2.0,1403,21,0
+tumor_rna_floor=5,1.0,4.0,0.05,3,2,2,5.0,1380,21,0

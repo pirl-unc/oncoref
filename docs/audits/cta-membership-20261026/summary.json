@@ -1,0 +1,43 @@
+{
+  "policy": "oncoref.cta-membership.2026-10-26.1",
+  "canonical_genes_processed": 20097,
+  "prior_nominated_genes": 2540,
+  "prior_selection": 215,
+  "selected_genes": 1416,
+  "selected_evidence_tiers": {
+    "Publication consensus": 1047,
+    "Expression-supported": 348,
+    "Established": 21
+  },
+  "selected_classes_nonexclusive": {
+    "Cancer-germline": 1324,
+    "Cancer-placental": 71,
+    "Cancer-reproductive": 74,
+    "Oncofetal": 5
+  },
+  "changes": {
+    "Unchanged": 18892,
+    "Added": 1203,
+    "Removed": 2
+  },
+  "selected_outside_prior_nomination": 105,
+  "selected_with_expression_forbidden_flag": 726,
+  "selected_with_only_tgct_rna_support": 55,
+  "positive_controls": 21,
+  "negative_controls": 7,
+  "all_controls_pass": true,
+  "thresholds": {
+    "reproductive_ntpm": 1.0,
+    "reproductive_fold": 4.0,
+    "tumor_prevalence": 0.05,
+    "tumor_samples": 3,
+    "tumor_ihc_cases": 2,
+    "papers": 2,
+    "tumor_rna_floor_ptpm": 1
+  },
+  "calibration": "User-requested biological benchmarks; no independent validation or safety calibration",
+  "normal_risk_threshold_changes": 0,
+  "forbidden_sequence_reference_changes": 0,
+  "developmental_atlas_measurements_imported": false,
+  "comprehensive_individual_literature_review_complete": false
+}

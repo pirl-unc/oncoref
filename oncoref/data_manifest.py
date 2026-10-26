@@ -368,7 +368,23 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "cta-research-gene-sets": (
         "cta",
-        "evidence-weighted CTA research selection with retained expression categories; not a forbidden-protein reference",
+        "historical 215-gene expression/clinical research shortlist; see cta-membership-gene-sets for biological membership",
+    ),
+    "cta-membership-gene-sets": (
+        "cta",
+        "holistic biological CTA/oncofetal membership, evidence tiers and separate normal-expression risk flags",
+    ),
+    "cta-membership-evidence": (
+        "cta-evidence",
+        "reference-bound reviewed reproductive/developmental and tumor evidence with primary citations",
+    ),
+    "cta-membership-controls": (
+        "cta-evidence",
+        "positive biological controls and negative comparators; evaluation labels only",
+    ),
+    "cta-membership-source-roles": (
+        "cta-evidence",
+        "publication evidence roles distinguishing cancer/reproductive nominations from normal-only enrichment",
     ),
     "cta-research-clinical-evidence": (
         "cta-evidence",
