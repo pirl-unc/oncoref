@@ -7,6 +7,7 @@ It does not mean clinically proven safe. The current policy is
 213 / 2,179 / 17,705, respectively.
 
 [Current report and changes](audits/cta-policy-20261025/index.md) ·
+[Four-page PDF brief](https://github.com/pirl-unc/oncoref/releases/download/v1.20.0/cta-policy-1.20.0.pdf) ·
 [All candidate decisions](audits/cta-policy-20261025/candidate-results.csv.gz) ·
 [Reviewed findings and citations](audits/cta-policy-20261025/reviewed-findings.csv) ·
 [Follow-up questions](audits/cta-policy-20261025/follow-up.csv)
@@ -249,3 +250,7 @@ selection, not an alias for this policy. Downstream software must explicitly
 adopt `target_sets.results()` or `target_sets.gene_ids("CTA")`, record
 `cta_policy.manifest()`, and rebuild its peptide exclusion basis from matching
 release assets. A version upgrade alone does not switch the legacy selection.
+
+The current PDF brief is reproducible with `python scripts/build_cta_release_pdf.py`
+using the `reports` extras. The separately saved `scripts/slides/` workflow
+reproduces the historical 24 October slide deck; it does not relabel it as current.
