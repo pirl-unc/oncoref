@@ -109,3 +109,12 @@ representative locus's old maxima or selection flags into group measurement
 columns. `Expression category`, `Expression detail` and `Expression forbidden`
 in the locus and concordance exports are explicitly historical annotations;
 `category` and the named `hold:` / `unsafe:` columns describe the current proposal.
+
+The current policy uses unusable or disputed antibodies to disable negative-IHC
+threshold boosts, without an additional gene-wide antibody veto after the strict
+RNA fallback. `Antibody concern` and `external_review_flag` remain evidence flags
+even for selected groups. Reliable positive evidence still contributes exclusions.
+Clinical target-context evidence is recorded separately; an expression-policy
+`Unsafe` label does not establish treatment toxicity. The
+[PRAME, CTAG2 and TBXT assessment](audits/cta-target-evidence-20261027/index.md)
+exports the relevant measurements, thresholds and clinical-source denominators.

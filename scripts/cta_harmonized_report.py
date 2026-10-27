@@ -42,7 +42,7 @@ NAMED = [
     "SMC1B",
     "PAGE1",
 ]
-POLICY_ID = "oncoref.harmonized-cta.2026-10-27.1"
+POLICY_ID = "oncoref.harmonized-cta.2026-10-27.2"
 
 
 def rebuild_groups(facts: pd.DataFrame, baseline: Path, output: Path) -> pd.DataFrame:
@@ -231,7 +231,6 @@ def decision_layers(facts: pd.DataFrame) -> list[EvidenceLayer]:
             facts.external_eligible_positive,
             facts.external_eligible_positive,
         ),
-        EvidenceLayer("Unresolved antibody review", facts["Antibody concern"], empty),
     ]
 
 
@@ -525,6 +524,7 @@ def build(output: Path, baseline: Path) -> None:
         "required_coverage",
         "optional_DICE_complete",
         "optional_cornea_complete",
+        "Antibody concern",
         "external_review_flag",
         "external_eligible_positive",
         *[c for c in gene_result if c.startswith(("hold:", "unsafe:"))],
@@ -633,7 +633,7 @@ def build(output: Path, baseline: Path) -> None:
         .fillna("")
         .replace("", "All required gates pass")
     )
-    (output / "index.md").write_text(f"""# Harmonized CTA and oncofetal research selection
+    (output / "index.md").write_text(f"""# Current CTA and oncofetal selection funnel
 
 The complete protein-group funnel selects **{counts.get("CTA", 0):,} CTA**, with
 **{counts.get("Unsafe", 0):,} Unsafe** and **{counts.get("Neither", 0):,} Neither** among
@@ -654,8 +654,10 @@ The two denominators are intentionally reported separately.
    for coverage; observed expression still contributes.
 4. Apply the linked 2×2 normal-RNA/IHC grid. Above the candidate ceiling is a hold;
    ≥2× the ceiling supplies Unsafe evidence. Preserve exact anatomy and assay units.
-5. Retain credible normal-protein and clinical-safety exclusions, uncertain antibody
-   holds, and externally reviewed findings. The current external collection supplies
+5. Retain credible normal-protein and clinical-safety exclusions and externally
+   reviewed findings. An antibody concern disables negative-IHC threshold boosts;
+   it does not impose an additional gene-wide veto after the stricter RNA screen.
+   Context-specific positive findings remain active. The current external collection supplies
    {int(ext.eligible.sum())} fully context-validated observations and no automatic negative overrides.
 
 CTA means the research selection rules pass, Unsafe means a research-policy
@@ -679,13 +681,10 @@ Neither. Released annotations and forbidden sequence references are not overwrit
 
 {markdown_table(simple)}
 
-The {len(historical)} historically labeled CTAs now map to
-**{summary["historical_CTA_categories"].get("CTA", 0)} CTA /
-{summary["historical_CTA_categories"].get("Unsafe", 0)} Unsafe /
-{summary["historical_CTA_categories"].get("Neither", 0)} Neither**.
-The [historical CTA table](historical-cta-decisions.csv) and
-[all imported CTA/list memberships](known-cta-decisions.csv.gz) retain every gene's
-source lists, original label, locus decision, group decision and all exclusion reasons.
+[Current decisions for mapped CTA/source-list genes](known-cta-decisions.csv.gz)
+retain each gene's source lists, locus decision, group decision and all exclusion reasons.
+The current funnel evaluates the complete reference universe; previous CTA labels
+are comparison annotations and do not define its candidate set or admission rules.
 Imported lists include broad nomination lists; membership is not a claim that every
 entry is an established CTA. Other MAGEs receive ordinary evaluation, not control status.
 
@@ -718,6 +717,12 @@ Adult normal-reference coverage does not establish absence in pediatric tissues.
   specimen state, reagent lineage, missing donor counts and exact-context limitations.
   CT83's positive tumor-adjacent gastric evidence is flagged; adult disc findings
   remain attached to TBXT. Neither is silently recoded as healthy normal absence.
+- TBXT now passes the strict RNA fallback, with the disputed HPA reagent and adult
+  disc evidence retained as review flags. This does not claim an experimentally
+  validated negative in every adult compartment or clinical safety.
+- PRAME has substantial clinical target-specific evidence from IMA203. Its
+  expression-screen exclusion must not be read as demonstrated clinical unsafety.
+  See the [PRAME, CTAG2 and TBXT evidence assessment](../cta-target-evidence-20261027/index.md).
 
 ## Downloads and reproduction
 

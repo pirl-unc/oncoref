@@ -4,8 +4,9 @@
 consistently reproduce the three HPA003322-positive normal compartments.
 Low RNA expression in some B-cell populations and independent adult-tissue
 reports prevent interpreting this disagreement as proof of universal absence.
-This review adds evidence; it does not grant a per-gene admission waiver or
-change the quantitative funnel's classification.
+The [current funnel](../cta-harmonized-20261027/index.md) selects TBXT under the
+strict RNA fallback after removing the gene-wide antibody veto for every gene.
+This review supplies context and flags, not a per-gene admission waiver.
 
 ## What generates the existing flag
 
@@ -33,7 +34,7 @@ every cell state within an organ.
 | Lymph-node non-germinal-centre cells | HMV321 supplier panel is node-negative; a trial protocol also summarizes negative normal-node IHC. | Bulk 0.2 nTPM; all seven sampled node clusters 0 reads / 0.0 nTPM. Separate blood B-cell populations have low measurable RNA. | Partial support for low-level lymphoid transcription, not confirmation of medium protein staining in this precise compartment. |
 
 The direct 54-1 comparison is in
-[Roselli et al., 2015](https://www.oncotarget.com/article/3086/text/).
+[Hamilton et al., 2015](https://www.oncotarget.com/article/3086/text/).
 The whole-organ supplier results are in the
 [HMV321 normal-tissue panel](https://ms-validatedantibodies.com/product/brachyury-hmv321/).
 The independent marrow qPCR observation is described in
@@ -88,9 +89,10 @@ These are evidence descriptions, not newly assigned HPA Approved/Supported/Enhan
 The supported interpretation is **disputed HPA immune-compartment staining,
 with separate adult-expression evidence still requiring reconciliation**.
 Neither the uncertain HPA signal nor a cleaner alternative antibody alone
-establishes clinical toxicity or safety. Under the current unchanged policy TBXT
-remains Neither pending evidence adjudication; this is not a conclusion that it
-cannot be targeted.
+establishes clinical toxicity or safety. TBXT is selected in the current funnel,
+with these evidence limitations preserved. The older Neither assignment resulted
+from the additional gene-wide antibody veto, which has been removed uniformly;
+no negative-IHC threshold boost has been assigned to these alternative reagents.
 
 ## Reproduction
 

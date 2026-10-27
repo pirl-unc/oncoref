@@ -1,0 +1,16 @@
+{
+  "script_sha256": "621e824b43861ced77421645f43d1565a7cec66ec9135632f53806326c65934d",
+  "audit_manifest_sha256": "235821383d50337e478238e81186a6ce6840f6add7d42e36607a00dec5bc40fa",
+  "outputs": {
+    "filter-cascade.png": "4b8bcbb9cb24734ac887cb89c637df559076ecc455936a95da65790144476fd0",
+    "filter-cascade.svg": "5c897aad7d09449fce3fea906190c10d73e05f7dd32ee8088b58c49875998d47",
+    "filter-overlap.png": "fe62c28825e786003630fb6eb606daf4d429dbd5a184e10caf987c03ba9c91fa",
+    "filter-overlap.svg": "1ad84ebd5f411615ccb466582761f0419c63956f9a2a4f162c45fd1cdc393330",
+    "named-gene-margins.png": "c3b96f3a3d7bfb823ac72ef4ab1576b2c48aabaf03cef80a3f96d73b4f271874",
+    "named-gene-margins.svg": "a89b0b604744a4fc5bce3cab1f05014300e1dd405673f1b61e93c643f9392d38",
+    "policy-choices.png": "1a2c329ae8eeee173e9c799565b8844aa9c881a64cc955109b2253c53b529e54",
+    "policy-choices.svg": "1e4b98086e655f66c1975cf32c6b4c9625c170f8fb26f3c184797c903ac1f5a5",
+    "threshold-grid.png": "1d6b2df7927c2bf18726e6780ff8bb3f8f7f9238af1c854cf1213f3f79d74bcd",
+    "threshold-grid.svg": "06bdef92b3cd04ed31f9201b0b90204e1a98423b9218df514c555e54a9d87c7b"
+  }
+}

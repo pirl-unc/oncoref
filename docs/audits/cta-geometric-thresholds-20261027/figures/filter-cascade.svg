@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1116pt" height="532.8pt" viewBox="0 0 1116 532.8" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 532.8 
+L 1116 532.8 
+L 1116 0 
+L 0 0 
+z
+" style="fill: #f7f9f8"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 245.52 452.88 
+L 519.339629 452.88 
+L 519.339629 127.872 
+L 245.52 127.872 
+z
+" style="fill: #f7f9f8"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 245.52 142.645091 
+L 456.150484 142.645091 
+L 456.150484 178.929876 
+L 245.52 178.929876 
+z
+" clip-path="url(#pf27c92f262)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 245.52 207.439349 
+L 373.468298 207.439349 
+L 373.468298 243.724134 
+L 245.52 243.724134 
+z
+" clip-path="url(#pf27c92f262)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 245.52 272.233608 
+L 372.29446 272.233608 
+L 372.29446 308.518392 
+L 245.52 308.518392 
+z
+" clip-path="url(#pf27c92f262)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 245.52 337.027866 
+L 277.695727 337.027866 
+L 277.695727 373.312651 
+L 245.52 373.312651 
+z
+" clip-path="url(#pf27c92f262)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 245.52 401.822124 
+L 276.417082 401.822124 
+L 276.417082 438.106909 
+L 245.52 438.106909 
+z
+" clip-path="url(#pf27c92f262)" style="fill: #dce7ea"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="236.52" y="164.776663" transform="rotate(-0 236.52 164.776663)">All reference genes</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="236.52" y="229.570921" transform="rotate(-0 236.52 229.570921)">Reproductive / embryonic</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_3"/>
+     <g id="text_3">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="236.52" y="294.36518" transform="rotate(-0 236.52 294.36518)">Tumor sample ≥10 pTPM</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_4"/>
+     <g id="text_4">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="236.52" y="359.159438" transform="rotate(-0 236.52 359.159438)">Normal IHC gate</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_5"/>
+     <g id="text_5">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="236.52" y="423.953286" transform="rotate(-0 236.52 423.953286)">RNA coverage</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="461.416246" y="163.644905" transform="rotate(-0 461.416246 163.644905)">20,097</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="378.73406" y="228.439164" transform="rotate(-0 378.73406 228.439164)">12,208</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="517.233324" y="228.179398" transform="rotate(-0 517.233324 228.179398)">−7,889</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="377.560222" y="293.233422" transform="rotate(-0 377.560222 293.233422)">12,096</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="517.233324" y="292.973656" transform="rotate(-0 517.233324 292.973656)">−112</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="282.961489" y="358.02768" transform="rotate(-0 282.961489 358.02768)">3,070</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="517.233324" y="357.767915" transform="rotate(-0 517.233324 357.767915)">−9,026</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="281.682845" y="422.821939" transform="rotate(-0 281.682845 422.821939)">2,948</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="517.233324" y="422.562173" transform="rotate(-0 517.233324 422.562173)">−122</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="245.52" y="103.872" transform="rotate(-0 245.52 103.872)">01  Association, tumor, protein &amp; coverage</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_8">
+    <path d="M 775.634801 452.88 
+L 1071.36 452.88 
+L 1071.36 127.872 
+L 775.634801 127.872 
+z
+" style="fill: #f7f9f8"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 775.634801 142.645091 
+L 1003.115723 142.645091 
+L 1003.115723 167.867441 
+L 775.634801 167.867441 
+z
+" clip-path="url(#p81b05133c8)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 775.634801 187.685002 
+L 821.31618 187.685002 
+L 821.31618 212.907353 
+L 775.634801 212.907353 
+z
+" clip-path="url(#p81b05133c8)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 775.634801 232.724914 
+L 803.336854 232.724914 
+L 803.336854 257.947264 
+L 775.634801 257.947264 
+z
+" clip-path="url(#p81b05133c8)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 775.634801 277.764825 
+L 802.951031 277.764825 
+L 802.951031 302.987175 
+L 775.634801 302.987175 
+z
+" clip-path="url(#p81b05133c8)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 775.634801 322.804736 
+L 802.256551 322.804736 
+L 802.256551 348.027086 
+L 775.634801 348.027086 
+z
+" clip-path="url(#p81b05133c8)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 775.634801 367.844647 
+L 800.558932 367.844647 
+L 800.558932 393.066998 
+L 775.634801 393.066998 
+z
+" clip-path="url(#p81b05133c8)" style="fill: #dce7ea"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 775.634801 412.884559 
+L 800.250274 412.884559 
+L 800.250274 438.106909 
+L 775.634801 438.106909 
+z
+" clip-path="url(#p81b05133c8)" style="fill: #087e83"/>
+   </g>
+   <g id="matplotlib.axis_3"/>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_6">
+     <g id="line2d_6"/>
+     <g id="text_16">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="766.634801" y="159.245036" transform="rotate(-0 766.634801 159.245036)">RNA coverage</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_7"/>
+     <g id="text_17">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="766.634801" y="204.285357" transform="rotate(-0 766.634801 204.285357)">Normal bulk</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_8"/>
+     <g id="text_18">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="766.634801" y="249.325268" transform="rotate(-0 766.634801 249.325268)">HPA tissue clusters</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_9"/>
+     <g id="text_19">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="766.634801" y="294.36518" transform="rotate(-0 766.634801 294.36518)">HPA immune</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_10"/>
+     <g id="text_20">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="766.634801" y="339.405091" transform="rotate(-0 766.634801 339.405091)">Monaco immune</text>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_11"/>
+     <g id="text_21">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="766.634801" y="384.445002" transform="rotate(-0 766.634801 384.445002)">DICE immune</text>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_12"/>
+     <g id="text_22">
+      <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="766.634801" y="429.484914" transform="rotate(-0 766.634801 429.484914)">Adult cornea</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="1008.802746" y="158.113688" transform="rotate(-0 1008.802746 158.113688)">2,948</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="827.003203" y="203.153599" transform="rotate(-0 827.003203 203.153599)">592</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="1069.085191" y="202.893834" transform="rotate(-0 1069.085191 202.893834)">−2,356</text>
+   </g>
+   <g id="text_26">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="809.023877" y="248.193511" transform="rotate(-0 809.023877 248.193511)">359</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="1069.085191" y="247.933745" transform="rotate(-0 1069.085191 247.933745)">−233</text>
+   </g>
+   <g id="text_28">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="808.638054" y="293.233422" transform="rotate(-0 808.638054 293.233422)">354</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="1069.085191" y="292.973656" transform="rotate(-0 1069.085191 292.973656)">−5</text>
+   </g>
+   <g id="text_30">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="807.943574" y="338.273333" transform="rotate(-0 807.943574 338.273333)">345</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="1069.085191" y="338.013568" transform="rotate(-0 1069.085191 338.013568)">−9</text>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="806.245955" y="383.313244" transform="rotate(-0 806.245955 383.313244)">323</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="1069.085191" y="383.053479" transform="rotate(-0 1069.085191 383.053479)">−22</text>
+   </g>
+   <g id="text_34">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="805.937297" y="428.353156" transform="rotate(-0 805.937297 428.353156)">319</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #bf583c" x="1069.085191" y="428.09339" transform="rotate(-0 1069.085191 428.09339)">−4</text>
+   </g>
+   <g id="text_36">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="775.634801" y="103.872" transform="rotate(-0 775.634801 103.872)">02  Tissue and immune RNA</text>
+   </g>
+  </g>
+  <g id="text_37">
+   <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="50.22" y="39.932719" transform="rotate(-0 50.22 39.932719)">20,097 genes → 319 candidates</text>
+  </g>
+  <g id="text_38">
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="50.22" y="61.638281" transform="rotate(-0 50.22 61.638281)">Every bar shows genes remaining. Red annotations show genes removed at that step only.</text>
+  </g>
+  <g id="text_39">
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(50.22 505.614551)">Tumor admission: ≥10 pTPM in one HPA TCGA/validation sample. Sequential counts depend on order; each gene is removed once.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(50.22 516.417012)">The 2,948-gene RNA entry pool differs from the 2,960-gene evidence union, which also covers the alternative tumor recurrence rule.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pf27c92f262">
+   <rect x="245.52" y="127.872" width="273.819629" height="325.008"/>
+  </clipPath>
+  <clipPath id="p81b05133c8">
+   <rect x="775.634801" y="127.872" width="295.725199" height="325.008"/>
+  </clipPath>
+ </defs>
+</svg>

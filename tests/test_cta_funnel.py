@@ -28,3 +28,20 @@ def test_no_missing_or_misaligned_decisions():
         classify_layers(genes, [("RNA", pd.Series([None]), pd.Series([False]))])
     with pytest.raises(ValueError, match="boolean"):
         classify_layers(genes, [("RNA", pd.Series([False], index=[2]), pd.Series([False]))])
+
+
+def test_replay_does_not_retain_removed_decision_layers():
+    facts = pd.DataFrame(
+        {
+            "gene_id": ["a"],
+            "category": ["Unsafe"],
+            "hold:retired": [True],
+            "unsafe:retired": [True],
+        }
+    )
+    result = classify_layers(
+        facts, [("current", pd.Series([False]), pd.Series([False]))]
+    ).classifications
+    assert result.category.tolist() == ["CTA"]
+    assert "hold:retired" not in result and "unsafe:retired" not in result
+    assert facts["hold:retired"].all()

@@ -1,11 +1,11 @@
-# Harmonized CTA and oncofetal research selection
+# Current CTA and oncofetal selection funnel
 
-The complete protein-group funnel selects **291 CTA**, with
-**17,824 Unsafe** and **1,748 Neither** among
+The complete protein-group funnel selects **343 CTA**, with
+**17,824 Unsafe** and **1,696 Neither** among
 19,863 protein equivalence groups. These represent 20,097
-reference gene loci; 306 reference loci belong to selected groups.
-Before grouping, the same evidence policy assigns **305 CTA /
-17,906 Unsafe / 1,886 Neither** at the gene-locus level.
+reference gene loci; 358 reference loci belong to selected groups.
+Before grouping, the same evidence policy assigns **359 CTA /
+17,906 Unsafe / 1,832 Neither** at the gene-locus level.
 The two denominators are intentionally reported separately.
 
 ## Uniform rules
@@ -19,8 +19,10 @@ The two denominators are intentionally reported separately.
    for coverage; observed expression still contributes.
 4. Apply the linked 2×2 normal-RNA/IHC grid. Above the candidate ceiling is a hold;
    ≥2× the ceiling supplies Unsafe evidence. Preserve exact anatomy and assay units.
-5. Retain credible normal-protein and clinical-safety exclusions, uncertain antibody
-   holds, and externally reviewed findings. The current external collection supplies
+5. Retain credible normal-protein and clinical-safety exclusions and externally
+   reviewed findings. An antibody concern disables negative-IHC threshold boosts;
+   it does not impose an additional gene-wide veto after the stricter RNA screen.
+   Context-specific positive findings remain active. The current external collection supplies
    0 fully context-validated observations and no automatic negative overrides.
 
 CTA means the research selection rules pass, Unsafe means a research-policy
@@ -47,7 +49,6 @@ Neither. Released annotations and forbidden sequence references are not overwrit
 | Accepted normal-protein evidence | 1 | 3 | 343 | 17823 | 1697 |
 | Clinical safety exclusion | 0 | 1 | 343 | 17824 | 1696 |
 | External validated normal protein | 0 | 0 | 343 | 17824 | 1696 |
-| Unresolved antibody review | 52 | 0 | 291 | 17824 | 1748 |
 
 ![Three-way funnel](figures/classification-funnel.png)
 ![Candidates removed by each choice](figures/filter-removals.png)
@@ -63,20 +64,17 @@ Neither. Released annotations and forbidden sequence references are not overwrit
 | SMC1B | CTA | All required gates pass |
 | CTAG2 | Unsafe | Normal bulk; HPA tissue clusters |
 | MAGEA4 | CTA | All required gates pass |
-| TBXT | Neither | Unresolved antibody review |
+| TBXT | CTA | All required gates pass |
 | PRAME | Unsafe | Normal bulk; HPA tissue clusters; Accepted normal-protein evidence |
 | CT83 | CTA | All required gates pass |
 | NY-ESO-1 | CTA | All required gates pass |
 | SSX2/B | CTA | All required gates pass |
 | XAGE1A/B | CTA | All required gates pass |
 
-The 213 historically labeled CTAs now map to
-**150 CTA /
-31 Unsafe /
-32 Neither**.
-The [historical CTA table](historical-cta-decisions.csv) and
-[all imported CTA/list memberships](known-cta-decisions.csv.gz) retain every gene's
-source lists, original label, locus decision, group decision and all exclusion reasons.
+[Current decisions for mapped CTA/source-list genes](known-cta-decisions.csv.gz)
+retain each gene's source lists, locus decision, group decision and all exclusion reasons.
+The current funnel evaluates the complete reference universe; previous CTA labels
+are comparison annotations and do not define its candidate set or admission rules.
 Imported lists include broad nomination lists; membership is not a claim that every
 entry is an established CTA. Other MAGEs receive ordinary evaluation, not control status.
 
@@ -109,6 +107,12 @@ Adult normal-reference coverage does not establish absence in pediatric tissues.
   specimen state, reagent lineage, missing donor counts and exact-context limitations.
   CT83's positive tumor-adjacent gastric evidence is flagged; adult disc findings
   remain attached to TBXT. Neither is silently recoded as healthy normal absence.
+- TBXT now passes the strict RNA fallback, with the disputed HPA reagent and adult
+  disc evidence retained as review flags. This does not claim an experimentally
+  validated negative in every adult compartment or clinical safety.
+- PRAME has substantial clinical target-specific evidence from IMA203. Its
+  expression-screen exclusion must not be read as demonstrated clinical unsafety.
+  See the [PRAME, CTAG2 and TBXT evidence assessment](../cta-target-evidence-20261027/index.md).
 
 ## Downloads and reproduction
 

@@ -96,7 +96,9 @@ def classify_layers(
                 "Unsafe_reclassified_if_layer_removed": int((all_unsafe & ~other_unsafe).sum()),
             }
         )
-    result = facts.copy()
+    # Replays may receive previous decision columns. Only the supplied layers
+    # define this invocation's holds and exclusions.
+    result = facts.drop(columns=[c for c in facts if c.startswith(("hold:", "unsafe:"))]).copy()
     result["category"] = np.select([all_unsafe, all_holds], ["Unsafe", "Neither"], default="CTA")
     result["exclusion_reasons"] = hold_table.apply(lambda row: " | ".join(row.index[row]), axis=1)
     result["Unsafe_reasons"] = unsafe_table.apply(lambda row: " | ".join(row.index[row]), axis=1)

@@ -1,49 +1,36 @@
 {
   "status": "passed",
-  "checked_at_utc": "2026-10-27T20:45:06.791860+00:00",
-  "report_manifest_sha256": "706363fd2e51b74f3f34e28d09904e53601a6b3ff8291559cd9f2dc9191d4ecb",
-  "distinct_relevant_tests_passed": 301,
+  "checked_at_utc": "2026-10-27T21:29:17.405168+00:00",
+  "report_manifest_sha256": "a76d1a3bbcd3e91f4a987c70282587b433d667adea080cb41a1506f3141e8de7",
+  "distinct_relevant_tests_passed": 77,
   "skipped": 0,
   "test_scope": {
-    "focused_policy_identity_evidence_and_regeneration_suite": 276,
-    "shared_report_regressions": 21,
-    "new_streamed_winner_regression": 1,
+    "policy_identity_fusion_and_affected_consumer_regressions": 74,
     "active_artifact_and_portable_receipt_checks": 3,
     "entire_repository_suite_repeated": false
   },
   "ruff_lint_and_format": {
     "status": "passed",
-    "python_files": 315
+    "changed_python_files": 8
   },
   "strict_mkdocs": "passed",
   "git_diff_check": "passed",
-  "historical_offline_replays_identical_tables": {
-    "membership": 18,
-    "cell_policy": 19
-  },
-  "other_frozen_refactors": "Runtime AST equality after removing function annotations and docstrings; proof receipts retained in the historical manifests",
   "active_stage_manifest_hashes": "All input and output hashes verified",
   "visual_review": [
-    "threshold-grid",
     "classification-funnel",
-    "filter-removals",
-    "named-antigen-distribution",
-    "published-list-overlaps"
+    "named-antigen-distribution"
   ],
   "classification_order_independent": true,
   "protein_group_categories": {
     "Unsafe": 17824,
-    "Neither": 1748,
-    "CTA": 291
-  },
-  "historical_CTA_categories": {
-    "CTA": 150,
-    "Neither": 32,
-    "Unsafe": 31
+    "Neither": 1696,
+    "CTA": 343
   },
   "counting_units": {
-    "selected_protein_groups": 291,
-    "selected_member_gene_loci": 306
+    "selected_protein_groups": 343,
+    "selected_member_gene_loci": 358
   },
+  "previous_validation": "Prior commit b94deb7 reported 301 relevant tests; this receipt records the checks repeated for policy .2.",
+  "previous_ci": "b94deb7 failed because ambiguous P2RY8 names did not use recorded locus IDs and ignored figure files were absent from the checkout. Both causes are fixed and covered by the checks above; remote rerun pending.",
   "note": "This post-build validation receipt pins the report manifest; it is not included in that manifest, avoiding a circular hash."
 }
