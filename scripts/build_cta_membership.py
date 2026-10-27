@@ -194,6 +194,56 @@ def breadth(normal, gene_ids):
     return scores
 
 
+def nonselection_reasons(decisions, thresholds):
+    """Explain failure of positive membership evidence, separately from risk."""
+    d = decisions.loc[~decisions.Member].copy()
+    publication = d[["Cancer-germline papers", "Cancer-placental papers"]].max(axis=1).ge(1)
+    tumor = d["Tumor RNA positive"] | d["Tumor IHC positive"] | publication
+    core_coverage = d["Core tissues measured"].eq(3) & d["Core comparator tissues measured"].eq(47)
+    other_coverage = (
+        d["Other reproductive tissues measured"].eq(8)
+        & d["Nonreproductive tissues measured"].eq(39)
+        & publication
+    )
+    core_floor = d["Core RNA (nTPM)"].ge(thresholds.reproductive_ntpm)
+    other_floor = d["Other reproductive RNA (nTPM)"].ge(thresholds.reproductive_ntpm)
+    d["Nonselection reason"] = np.select(
+        [
+            ~tumor,
+            ~(core_coverage | other_coverage),
+            ~((core_coverage & core_floor) | (other_coverage & other_floor)),
+        ],
+        [
+            "No qualifying published or measured tumor support",
+            "Incomplete required reproductive/comparator RNA coverage",
+            "Reproductive RNA below admission floor in eligible measured scope",
+        ],
+        default="Reproductive enrichment below required fold in eligible measured scope",
+    )
+    columns = [
+        "Gene ID",
+        "Gene",
+        "Nominated",
+        "Nonselection reason",
+        "Expression category",
+        "Expression detail",
+        "Cancer-germline papers",
+        "Cancer-placental papers",
+        "Core RNA (nTPM)",
+        "Core comparator maximum (nTPM)",
+        "Core tissues measured",
+        "Core comparator tissues measured",
+        "Other reproductive RNA (nTPM)",
+        "Nonreproductive maximum (nTPM)",
+        "Other reproductive tissues measured",
+        "Nonreproductive tissues measured",
+        "Tumor RNA positive",
+        "Tumor IHC positive",
+        "Reviewed admission role",
+    ]
+    return d[columns]
+
+
 def build(out, *, publish=False):
     if out.exists() and any(out.iterdir()):
         raise ValueError("Use an empty output directory")
@@ -279,6 +329,60 @@ def build(out, *, publish=False):
             decisions[f"Normal breadth {category} {value}"] = decisions["Gene ID"].map(
                 subset[value]
             )
+    exclusions = nonselection_reasons(decisions, thresholds)
+    write(exclusions, out / "nonselection-reasons.csv.gz")
+    reason_counts = []
+    for scope, rows in [
+        ("All canonical nonmembers", exclusions),
+        ("Previously nominated nonmembers", exclusions.loc[exclusions.Nominated]),
+    ]:
+        reason_counts.extend(
+            {"Scope": scope, "Reason": reason, "Genes": int(count)}
+            for reason, count in rows["Nonselection reason"].value_counts().items()
+        )
+    write(pd.DataFrame(reason_counts), out / "nonselection-counts.csv")
+    risk_counts = []
+    for scope, rows in [
+        ("All canonical genes", decisions),
+        ("Prior nominated genes", decisions.loc[decisions.Nominated]),
+        ("Selected biological members", decisions.loc[decisions.Member]),
+        ("Unselected canonical genes", decisions.loc[~decisions.Member]),
+        ("Selected prior nominees", decisions.loc[decisions.Nominated & decisions.Member]),
+        ("Unselected prior nominees", decisions.loc[decisions.Nominated & ~decisions.Member]),
+    ]:
+        risk_counts.append(
+            {
+                "Scope": scope,
+                "Genes": len(rows),
+                **{
+                    category: int(rows["Expression category"].eq(category).sum())
+                    for category in ["CTA", "Unsafe", "Neither"]
+                },
+            }
+        )
+    write(pd.DataFrame(risk_counts), out / "expression-status-counts.csv")
+    named = [
+        "PRAME",
+        "MAGEA4",
+        "CTAG1A",
+        "CTAG1B",
+        "XAGE1A",
+        "XAGE1B",
+        "CTAG2",
+        "SSX2",
+        "CT83",
+        "TBXT",
+        "MAGEA1",
+        "MAGEA3",
+        "MAGEA6",
+        "MAGEA10",
+        "MAGEC1",
+        "MAGEC2",
+    ]
+    write(
+        decisions.loc[decisions.Gene.isin(named)].sort_values("Gene"),
+        out / "named-gene-results.csv",
+    )
     write(facts, out / "decision-facts.csv.gz")
     write(decisions, out / "gene-results.csv.gz")
     write(decisions.loc[decisions.Member], out / "cta-genes.csv")
@@ -392,6 +496,11 @@ def build(out, *, publish=False):
         "positive_controls": int(benchmark["Expected member"].sum()),
         "negative_controls": int((~benchmark["Expected member"]).sum()),
         "all_controls_pass": bool(benchmark["Benchmark passed"].all()),
+        "context_only_reviewed_genes": sorted(
+            reviewed.loc[reviewed["Admission role"].eq("Context only"), "Gene"].unique()
+        ),
+        "expression_status_counts": risk_counts,
+        "nonselection_counts": reason_counts,
         "thresholds": {**asdict(thresholds), "tumor_rna_floor_ptpm": 1},
         "calibration": "User-requested biological benchmarks; no independent validation or safety calibration",
         "normal_risk_threshold_changes": 0,

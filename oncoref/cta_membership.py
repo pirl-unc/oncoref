@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.cta-membership.2026-10-26.1"
+POLICY_ID = "oncoref.cta-membership.2026-10-26.2"
 DATA = Path(__file__).parent / "data"
 CLASSES = {"Cancer-germline", "Cancer-placental", "Cancer-reproductive", "Oncofetal"}
 
@@ -110,6 +110,8 @@ def classify(facts, reviewed, *, thresholds=None):
         "Review depth",
         "Limitations",
         "Review date",
+        "Admission role",
+        "Admission rationale",
     }
     if not required_evidence <= set(reviewed):
         raise ValueError("Incomplete reviewed membership evidence")
@@ -119,6 +121,8 @@ def classify(facts, reviewed, *, thresholds=None):
         raise ValueError("Reviewed identities must exist in the canonical universe")
     if not reviewed.Class.isin(CLASSES).all():
         raise ValueError("Unknown biological class")
+    if not reviewed["Admission role"].isin(["Membership support", "Context only"]).all():
+        raise ValueError("Explicit reviewed-evidence admission role required")
     if not reviewed["Identity scope"].isin(["Locus", "Shared antigen; locus unresolved"]).all():
         raise ValueError("Unresolved families cannot be assigned to arbitrary loci")
     if (
@@ -189,9 +193,19 @@ def classify(facts, reviewed, *, thresholds=None):
         )
     )
     enriched = core_enriched | other_enriched
+    admitted = reviewed.loc[reviewed["Admission role"].eq("Membership support")]
+    admission_groups = admitted.groupby("Gene ID", sort=True)
     grouped = reviewed.groupby("Gene ID", sort=True)
     d["Reviewed classes"] = (
-        d["Gene ID"].map(grouped.Class.agg(lambda x: "|".join(sorted(set(x))))).fillna("")
+        d["Gene ID"].map(admission_groups.Class.agg(lambda x: "|".join(sorted(set(x))))).fillna("")
+    )
+    d["Reviewed admission role"] = (
+        d["Gene ID"]
+        .map(grouped["Admission role"].agg(lambda x: "|".join(sorted(set(x)))))
+        .fillna("No gene-specific review")
+    )
+    d["Reviewed admission rationale"] = (
+        d["Gene ID"].map(grouped["Admission rationale"].agg(lambda x: " | ".join(x))).fillna("")
     )
     d["Membership sources"] = (
         d["Gene ID"].map(grouped.Sources.agg(lambda x: "|".join(sorted(set(x))))).fillna("")

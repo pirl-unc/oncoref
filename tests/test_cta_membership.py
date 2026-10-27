@@ -51,7 +51,8 @@ def facts(**changes):
 
 
 def review():
-    d = policy.evidence().iloc[[0]].copy()
+    records = policy.evidence()
+    d = records.loc[records["Admission role"].eq("Membership support")].iloc[[0]].copy()
     d["Gene ID"], d["Gene"], d["Reference"] = "g1", "UNFAMILIAR", "reference"
     return d
 
@@ -84,6 +85,33 @@ def test_established_identity_survives_all_normal_flags_and_no_bulk_expression()
 def test_familiar_gene_symbol_is_not_evidence_and_control_labels_are_not_inputs():
     assert not classify(facts(Gene="PRAME", **{"Tumor RNA positive": False})).Member
     assert classify(reviewed=True).Member
+
+
+def test_context_only_primary_evidence_never_forces_admission():
+    context = review()
+    context["Admission role"] = "Context only"
+    f = facts(**{"Tumor RNA positive": False})
+    result = policy.classify(f, context).iloc[0]
+    assert not result.Member and not result["Established route"]
+    assert result["Membership sources"] == context.Sources.iloc[0]
+    f["Cancer-germline papers"] = 2
+    result = policy.classify(f, context).iloc[0]
+    assert result.Member and result["Evidence tier"] == "Publication consensus"
+
+
+def test_magea4_is_the_only_mage_control_and_other_mages_qualify_organically():
+    controls = policy.controls()
+    assert set(controls.loc[controls.Gene.str.startswith("MAGE"), "Gene"]) == {"MAGEA4"}
+    assert {"CT83", "SSX2", "TBXT"} <= set(
+        controls.loc[controls["Control role"].eq("User-required"), "Gene"]
+    )
+    reviews = policy.evidence()
+    other = reviews.loc[reviews.Gene.str.startswith("MAGE") & reviews.Gene.ne("MAGEA4")]
+    assert len(other) == 6 and other["Admission role"].eq("Context only").all()
+    results = policy.results().set_index("Gene")
+    assert not results.loc[other.Gene, "Established route"].any()
+    assert results.loc[other.Gene, "Consensus route"].all()
+    assert results.loc["MAGEA3", "Expression category"] == "Unsafe"
 
 
 def test_source_consensus_can_survive_a_modern_atlas_non_detection():
@@ -253,11 +281,11 @@ def test_published_reprocessing_and_benchmark_contract():
         "TBXT",
         "CLDN6",
     }
-    assert len(policy.gene_ids(established_only=True)) == 21
+    assert len(policy.gene_ids(established_only=True)) == 15
     assert policy.gene_ids(category="Oncofetal") <= policy.gene_ids()
     sensitivity = pd.read_csv(AUDIT / "threshold-sensitivity.csv")
     assert len(sensitivity) == 17
-    assert sensitivity["Positive controls selected"].eq(21).all()
+    assert sensitivity["Positive controls selected"].eq(15).all()
     assert sensitivity["Negative controls selected"].eq(0).all()
     facts_table = pd.read_csv(AUDIT / "decision-facts.csv.gz", low_memory=False)
     rebuilt = policy.classify(facts_table, policy.evidence())
@@ -283,3 +311,26 @@ def test_ctag_duplicates_and_developmental_gaps_remain_explicit():
     assert d["Developmental atlas coverage"].str.startswith("Not imported").all()
     assert d["Normal breadth vital upper"].ge(d["Normal breadth vital lower"]).all()
     assert d["Normal breadth vital missing_weight"].gt(0).all()
+
+
+def test_nonselection_and_expression_risk_counts_reconcile_without_collapsing_axes():
+    d = policy.results()
+    counts = pd.read_csv(AUDIT / "expression-status-counts.csv").set_index("Scope")
+    assert counts[["CTA", "Unsafe", "Neither"]].sum(axis=1).equals(counts.Genes)
+    assert counts.loc["Selected biological members", ["CTA", "Unsafe", "Neither"]].tolist() == [
+        211,
+        726,
+        479,
+    ]
+    exclusions = pd.read_csv(AUDIT / "nonselection-reasons.csv.gz")
+    assert exclusions["Gene ID"].is_unique
+    assert set(exclusions["Gene ID"]) == set(d.loc[~d.Member, "Gene ID"])
+    reasons = pd.read_csv(AUDIT / "nonselection-counts.csv")
+    nominees = exclusions.loc[exclusions.Nominated]
+    assert len(nominees) == 1229
+    assert (
+        nominees["Nonselection reason"].value_counts().to_dict()
+        == reasons.loc[reasons.Scope.eq("Previously nominated nonmembers")]
+        .set_index("Reason")
+        .Genes.to_dict()
+    )

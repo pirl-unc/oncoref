@@ -1,5 +1,11 @@
 # Fetal and embryonic targets: source requirements
 
+Update (2026-10-26): the [uniform quantitative proposal](audits/cta-quantitative-20261026/index.md)
+now imports all genes from E-MTAB-9388 as developmental TPM evidence. Brachyury
+qualifies quantitatively; the source is one early embryo, so later-fetal and
+independent-embryo coverage described below remains outstanding.
+
+
 Assessment date: 26 October 2026. This is a source and evidence-gap assessment,
 not an ingestion-complete developmental atlas. The
 [biological membership set](audits/cta-membership-20261026/index.md) now includes

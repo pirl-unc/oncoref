@@ -1,13 +1,23 @@
-# Holistic CTA and oncofetal membership
+# Historical literature-inclusive CTA and oncofetal catalogue
+
+The [447-gene quantitative proposal](../cta-quantitative-20261026/index.md) supersedes
+this catalogue for the requested uniform shortlist. This historical view retains
+its literature admission routes for comparison.
 
 **1,416 biological candidate genes**, after reprocessing all **20,097 canonical
 human genes**. PRAME, MAGE-A4 and NY-ESO-1 (CTAG1A/B) pass the established-evidence
 route, independently of normal-expression concerns. Policy:
-`oncoref.cta-membership.2026-10-26.1`.
+`oncoref.cta-membership.2026-10-26.2`.
 
 [Complete selected list](cta-genes.csv) · [Every gene](gene-results.csv.gz) ·
 [Changes from 215](changes.csv) · [Control results](control-results.csv) ·
 [Reviewed primary evidence](reviewed-membership-evidence.csv).
+
+Revision 2 removes non-MAGEA4 MAGE genes from positive controls and automatic
+reviewed admission. CT83, SSX2 and TBXT are explicitly user-required controls.
+[Named genes and admission routes](named-gene-results.csv) ·
+[Unsafe/Neither counts](expression-status-counts.csv) ·
+[Every nonselection reason](nonselection-reasons.csv.gz).
 
 This set answers whether a gene has a reproductive/developmental association
 and cancer evidence worth retaining. It is a broader biological catalogue than
@@ -21,8 +31,8 @@ normal-expression risk and evidence gaps alongside membership.**
 
 | Admission route | Common rule | Selected tier |
 |---|---|---:|
-| Established biological evidence | Reviewed primary evidence links the resolved gene/shared antigen to reproductive or developmental biology **and** cancer. Clinical response is supportive, not mandatory. Normal expression does not revoke biological identity. | 21 |
-| Publication consensus | At least **2 distinct publications** nominate the gene as cancer-germline or cancer-placental. Multiple tables of one DOI count once. Normal-only enrichment papers and mixed antigen panels do not count. | 1,047 |
+| Established biological evidence | Reviewed primary evidence links the resolved gene/shared antigen to reproductive or developmental biology **and** cancer. Clinical response is supportive, not mandatory. Normal expression does not revoke biological identity. | 15 |
+| Publication consensus | At least **2 distinct publications** nominate the gene as cancer-germline or cancer-placental. Multiple tables of one DOI count once. Normal-only enrichment papers and mixed antigen panels do not count. | 1,053 |
 | Expression-supported candidate | Reproductive RNA **≥1 nTPM** and **≥4×** the maximum comparator-tissue RNA, plus published or measured tumor expression. Core scope is testis/ovary/placenta; other reproductive organs additionally require a cancer/reproductive publication. | 348 |
 
 Tiers use this precedence and sum to 1,416; qualifying routes can overlap.
@@ -64,16 +74,25 @@ does not automatically make every member a validated immunologic antigen.
 
 | Group | Controls retained |
 |---|---|
-| User-required | PRAME, MAGEA4, CTAG1A, CTAG1B |
-| Additional established CTA controls | MAGEA1, MAGEA3, MAGEA6, MAGEA10, MAGEC1, MAGEC2, CTAG2/LAGE-1, SSX2, CT83/KK-LC-1, SYCP1 |
+| User-required | PRAME, MAGEA4, CTAG1A, CTAG1B, SSX2, CT83/KK-LC-1, TBXT/brachyury |
+| Additional established CTA controls | CTAG2/LAGE-1, SYCP1 |
 | Cancer-placental controls | VGLL1, PLAC1 |
-| Oncofetal/developmental controls | AFP, GPC3, SALL4, CLDN6, TBXT/brachyury |
+| Additional oncofetal/developmental controls | AFP, GPC3, SALL4, CLDN6 |
+
+
+**MAGE-A4 is the only MAGE positive control.** MAGEA1, MAGEA3, MAGEA6,
+MAGEA10, MAGEC1 and MAGEC2 now have context-only review records and no automatic
+reviewed admission. Each remains selected organically through 5–7 distinct
+cancer-germline publications. They are not negative controls either. Their
+primary citations, toxicity caveats and normal-expression flags remain present.
+This correction changes tiers (15 reviewed, 1,053 consensus, 348 expression)
+but leaves the 1,416-member union unchanged.
 
 The controls have reference-bound primary citations and explicit review depth.
 They pass through the same evidence route available to any gene; their symbols
 are not exceptions in the classifier. Regression tests keep their membership
 stable when normal-expression flags change. Their evidence can still be corrected
-if a source or gene mapping is wrong. The 21 reviewed controls are not an
+if a source or gene mapping is wrong. The 15 reviewed controls are not an
 exhaustive list of every established CTA.
 
 The seven comparison genes **ACTB, GAPDH, PPIA, ALB, PTPRC, EGFR and ERBB2** are
@@ -88,6 +107,35 @@ in the [review records](reviewed-membership-evidence.csv), alongside PRAME adren
 findings and the earlier antibody/donor/cell-RNA concerns.
 
 ## Risk is a separate axis
+
+The existing expression-screen labels and biological membership are separate
+axes. **Unsafe** means that the expression policy has enough exclusion evidence;
+it is not a claim of demonstrated clinical toxicity for every gene. **Neither**
+includes unresolved findings, insufficient evidence or coverage, low reproductive
+support and remaining selectivity/cell-RNA concerns. Neither does not mean safe.
+
+| Scope | Genes | Strict expression CTA | Unsafe | Neither |
+|---|---:|---:|---:|---:|
+| All canonical genes | 20,097 | 213 | 17,705 | 2,179 |
+| Original mapped nominees | 2,540 | 213 | 1,586 | 741 |
+| Selected biological members | 1,416 | 211 | 726 | 479 |
+
+The last three columns partition each row; the rows overlap. In particular,
+1,416, 726 and 479 must not be added as three disjoint new categories.
+
+| Named example | Admission | Retained expression status |
+|---|---|---|
+| PRAME | Reviewed biological evidence; also 6 qualifying publications | Unsafe / accepted normal finding |
+| MAGEA4 | Reviewed biological evidence; also 7 publications | Neither / conflict |
+| CTAG1A/B (NY-ESO-1) | Reviewed shared-antigen evidence; also 3/4 publications | Strict CTA |
+| XAGE1A/B | Expression route: 45.7/53.1 nTPM versus comparator maxima 0.1/1.5; tumor RNA support | Strict CTA |
+| CTAG2 (LAGE-1) | Reviewed evidence and 2 publications; its approximately 2× enrichment does not pass the 4× expression rule | Neither / donor variability |
+| SSX2, CT83 | Reviewed evidence; also 5 publications each | Strict CTA |
+| TBXT (brachyury) | Reviewed developmental/tumor evidence; 0.2 nTPM reproductive RNA does not pass the numeric expression route | Neither / antibody concern; adult disc counterevidence retained |
+
+The table preserves measured and reviewed distinctions. It does not imply
+approval for every listed target or resolve XAGE paralog-specific protein
+identity. Fetal/embryonic measurements do not enter the reproductive nTPM column.
 
 **726 selected genes retain the earlier expression-forbidden flag.** Neither that
 reference nor any FASTA or near-self subtraction asset was regenerated. Membership
@@ -119,6 +167,26 @@ entries remain in the original publication registry. BAGE and GAGE2B remain
 the Boel BAGE source has no mapped canonical gene and is absent from the plotted
 source counts. Distinct papers can reuse GTEx/TCGA or other samples;
 two publications do not imply two independent biological replications.
+
+Of the original 2,540 nominees, **1,311 are selected and 1,229 are not**. The
+additional 105 selected genes come from the rest of the canonical universe.
+Nonmembers have no admitting reviewed or publication-consensus route; the
+[disjoint primary reasons](nonselection-counts.csv) for failure of the expression
+route among the 1,229 original nominees are:
+
+| Primary reason | Genes |
+|---|---:|
+| Reproductive enrichment below 4× in an eligible measured scope | 891 |
+| Reproductive RNA below 1 nTPM in an eligible measured scope | 201 |
+| No qualifying imported tumor support | 114 |
+| Incomplete required RNA coverage | 23 |
+
+For example, SPAG9 and BIRC5 each have only one qualifying paper and fail the
+enrichment route. WT1, EGFR, ERBB2 and ordinary normal-lineage comparators also
+fail enrichment with the current inputs. TERT is below the reproductive RNA
+floor and lacks an admitting curated/consensus record here. These are current
+evidence-policy outcomes, not assertions that a gene cannot be a tumor antigen
+or that additional developmental evidence cannot change its membership.
 
 ![Nomination source coverage](figures/source-coverage.png)
 

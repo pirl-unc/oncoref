@@ -90,7 +90,12 @@ def build(audit):
     for gene, offset in highlights.items():
         row = selected.loc[selected.Gene.eq(gene)].iloc[0]
         point = (row["Normal breadth vital lower"], np.log10(row["Core RNA (nTPM)"] + 1))
-        ax.scatter(*point, s=45, color="#A6412E", zorder=4, edgecolors="white", linewidths=0.5)
+        color = {
+            "Established": "#C66B51",
+            "Publication consensus": "#317D80",
+            "Expression-supported": "#8CB8B3",
+        }[row["Evidence tier"]]
+        ax.scatter(*point, s=45, color=color, zorder=4, edgecolors="black", linewidths=0.5)
         ax.annotate(
             gene,
             point,
@@ -98,7 +103,7 @@ def build(audit):
             textcoords="data",
             fontsize=10,
             bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.85, "pad": 1},
-            arrowprops={"arrowstyle": "-", "color": "#A6412E", "lw": 0.6},
+            arrowprops={"arrowstyle": "-", "color": color, "lw": 0.6},
         )
     ax.set_xlabel("Vital-tissue expression breadth: observed lower bound (0–1)")
     ax.set_ylabel("log₁₀(1 + core reproductive RNA in nTPM)")

@@ -10,34 +10,29 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [holistic CTA/oncofetal membership set](docs/audits/cta-membership-20261026/index.md)
-contains **1,416 candidate genes** after reprocessing all **20,097 canonical genes**.
-Use `oncoref.cta_membership.gene_ids()` for this biological set, or
-`oncoref.cta_membership.results()` for its evidence tiers and retained normal-expression
-findings. PRAME, MAGE-A4 and both NY-ESO-1 loci (CTAG1A/B) are included, together
-with additional established CTA, cancer-placental and oncofetal controls.
-Membership describes biological association; it does not establish target safety,
-HLA presentation, locus-specific protein evidence or clinical efficacy.
+The [uniform quantitative CTA/developmental proposal](docs/audits/cta-quantitative-20261026/index.md)
+selects **447 research candidates** from the fixed **20,097-gene reference universe**.
+Use `oncoref.cta_quantitative.gene_ids()` or `oncoref.cta_quantitative.results()`.
+It uses measured reproductive/developmental and tumor expression, common adult
+RNA/protein limits, and explicit RNA-panel coverage. PRAME, MAGEA4, CTAG1A/B,
+XAGE1A/B, CTAG2, SSX2, CT83 and TBXT pass without literature or gene-specific
+admission overrides. Quantitative developmental evidence now includes all genes
+in the E-MTAB-9388 single-embryo atlas; this is not comprehensive fetal coverage.
 
-The set contains 21 specifically reviewed established controls, 1,047 candidates
-supported by distinct cancer/reproductive publications, and 348 expression-supported
-candidates. Classes overlap and are labelled separately. Oncofetal controls include
-TBXT/brachyury, AFP, GPC3, CLDN6 and SALL4; developmental atlas measurements have
-not yet been imported. Normal RNA, IHC, cell-specific expression, clinical concerns
-and missing evidence remain visible, including 726 members with the earlier
-expression-forbidden flag. That sequence reference has not been changed.
+The 447 include 371 reproductive-only, 54 developmental-only and 22 overlapping
+candidates. Existing expression labels remain attached: **127 CTA, 110 Unsafe,
+210 Neither**. **271 lack measured adult IHC.** These exploratory thresholds
+select research candidates, not clinically safe targets. Native assay units,
+anatomical breadth, coverage gaps and donor uncertainty remain separate.
 
-The earlier [215-gene expression/clinical shortlist](docs/audits/cta-research-20261026/index.md)
-remains available through `oncoref.cta_research_policy`, and the
-[213-gene expression policy](docs/audits/cta-policy-20261025/index.md) remains the
-released `target_sets` classification. These are different views with different
-purposes. [Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md)
-remains descriptive; the membership report adds its fixed anatomical score for
-all canonical genes, including missing-coverage bounds. Donor variation is
-individually assessed only where imported evidence exists, currently CTAG2.
-[Reproductive tissue definitions](docs/normal-tissue-scopes.md) and
-[developmental sources](docs/developmental-targets.md) document scope and gaps.
-Comprehensive individual literature review remains incomplete.
+The earlier [1,416-gene literature-inclusive catalogue](docs/audits/cta-membership-20261026/index.md)
+remains available as `oncoref.cta_membership`; its reviewed/publication admission
+routes do not enter the quantitative proposal. The earlier
+[215-gene shortlist](docs/audits/cta-research-20261026/index.md) remains available
+as `oncoref.cta_research_policy`. The released expression and sequence policies
+are unchanged. [Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md)
+remains descriptive, with missing-coverage bounds; comprehensive individual
+literature review and donor assessment remain incomplete.
 
 The released `oncoref.target_sets` API partitions genes and exact proteins into
 **CTA**, **Unsafe** and **Neither**. Only Unsafe supplies the forbidden protein

@@ -372,7 +372,11 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "cta-membership-gene-sets": (
         "cta",
-        "holistic biological CTA/oncofetal membership, evidence tiers and separate normal-expression risk flags",
+        "historical literature-inclusive biological CTA/oncofetal catalogue and separate expression-risk flags",
+    ),
+    "cta-quantitative-gene-sets": (
+        "cta",
+        "experimental uniform quantitative CTA/developmental candidates, measured gates, coverage and retained expression-risk flags",
     ),
     "cta-membership-evidence": (
         "cta-evidence",

@@ -639,6 +639,23 @@ comparison plots and the downstream migration contract.
 
 ## CTA Antigens
 
+The experimental [uniform quantitative proposal](audits/cta-quantitative-20261026/index.md)
+selects 447 genes without publication or gene-specific admission routes:
+
+```python
+from oncoref import cta_quantitative
+
+cta_quantitative.gene_ids()
+cta_quantitative.results(selected_only=True)
+```
+
+`classify(facts, thresholds=Thresholds(...))` accepts explicit quantitative facts;
+control labels, literature and prior expression categories do not govern admission.
+The frozen table keeps those risk categories and uncertainty as annotations.
+The historical 1,416-gene `cta_membership` catalogue below is a separate view;
+its reviewed/publication routes do not enter this quantitative proposal.
+
+
 A cancer-testis antigen (CTA) is associated with reproductive tissues and can
 be reactivated in tumors. OncoRef exposes a measured expression-restriction
 policy and an evidence-weighted research selection. Neither gene-level call
@@ -2036,7 +2053,7 @@ from oncoref import cta_membership
 
 candidates = cta_membership.gene_ids()  # 1,416 biological research candidates
 all_decisions = cta_membership.results()  # all 20,097 canonical genes
-reviewed_controls = cta_membership.gene_ids(established_only=True)  # 21 reviewed controls
+reviewed_controls = cta_membership.gene_ids(established_only=True)  # 15 reviewed controls
 oncofetal = cta_membership.gene_ids(category="Oncofetal")
 primary_evidence = cta_membership.evidence()
 ```

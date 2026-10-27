@@ -1,13 +1,13 @@
 {
-  "policy": "oncoref.cta-membership.2026-10-26.1",
+  "policy": "oncoref.cta-membership.2026-10-26.2",
   "canonical_genes_processed": 20097,
   "prior_nominated_genes": 2540,
   "prior_selection": 215,
   "selected_genes": 1416,
   "selected_evidence_tiers": {
-    "Publication consensus": 1047,
+    "Publication consensus": 1053,
     "Expression-supported": 348,
-    "Established": 21
+    "Established": 15
   },
   "selected_classes_nonexclusive": {
     "Cancer-germline": 1324,
@@ -23,9 +23,103 @@
   "selected_outside_prior_nomination": 105,
   "selected_with_expression_forbidden_flag": 726,
   "selected_with_only_tgct_rna_support": 55,
-  "positive_controls": 21,
+  "positive_controls": 15,
   "negative_controls": 7,
   "all_controls_pass": true,
+  "context_only_reviewed_genes": [
+    "MAGEA1",
+    "MAGEA10",
+    "MAGEA3",
+    "MAGEA6",
+    "MAGEC1",
+    "MAGEC2"
+  ],
+  "expression_status_counts": [
+    {
+      "Scope": "All canonical genes",
+      "Genes": 20097,
+      "CTA": 213,
+      "Unsafe": 17705,
+      "Neither": 2179
+    },
+    {
+      "Scope": "Prior nominated genes",
+      "Genes": 2540,
+      "CTA": 213,
+      "Unsafe": 1586,
+      "Neither": 741
+    },
+    {
+      "Scope": "Selected biological members",
+      "Genes": 1416,
+      "CTA": 211,
+      "Unsafe": 726,
+      "Neither": 479
+    },
+    {
+      "Scope": "Unselected canonical genes",
+      "Genes": 18681,
+      "CTA": 2,
+      "Unsafe": 16979,
+      "Neither": 1700
+    },
+    {
+      "Scope": "Selected prior nominees",
+      "Genes": 1311,
+      "CTA": 211,
+      "Unsafe": 654,
+      "Neither": 446
+    },
+    {
+      "Scope": "Unselected prior nominees",
+      "Genes": 1229,
+      "CTA": 2,
+      "Unsafe": 932,
+      "Neither": 295
+    }
+  ],
+  "nonselection_counts": [
+    {
+      "Scope": "All canonical nonmembers",
+      "Reason": "Reproductive enrichment below required fold in eligible measured scope",
+      "Genes": 14924
+    },
+    {
+      "Scope": "All canonical nonmembers",
+      "Reason": "Reproductive RNA below admission floor in eligible measured scope",
+      "Genes": 2500
+    },
+    {
+      "Scope": "All canonical nonmembers",
+      "Reason": "No qualifying published or measured tumor support",
+      "Genes": 1026
+    },
+    {
+      "Scope": "All canonical nonmembers",
+      "Reason": "Incomplete required reproductive/comparator RNA coverage",
+      "Genes": 231
+    },
+    {
+      "Scope": "Previously nominated nonmembers",
+      "Reason": "Reproductive enrichment below required fold in eligible measured scope",
+      "Genes": 891
+    },
+    {
+      "Scope": "Previously nominated nonmembers",
+      "Reason": "Reproductive RNA below admission floor in eligible measured scope",
+      "Genes": 201
+    },
+    {
+      "Scope": "Previously nominated nonmembers",
+      "Reason": "No qualifying published or measured tumor support",
+      "Genes": 114
+    },
+    {
+      "Scope": "Previously nominated nonmembers",
+      "Reason": "Incomplete required reproductive/comparator RNA coverage",
+      "Genes": 23
+    }
+  ],
   "thresholds": {
     "reproductive_ntpm": 1.0,
     "reproductive_fold": 4.0,
