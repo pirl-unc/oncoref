@@ -7,7 +7,9 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Harmonized CTA and protein-group funnel: audits/cta-harmonized-20261027/index.md
+      - Current compartment-aware candidate proposal: audits/cta-compartment-policy-20261027/index.md
+      - Prior 343-group harmonized funnel: audits/cta-harmonized-20261027/index.md
+      - PRAME, CTAG2 and TBXT source evidence: audits/cta-target-evidence-20261027/index.md
       - External staining evidence: audits/external-ihc-20261027/index.md
       - Brachyury antibody assessment: audits/brachyury-antibody-20261027/index.md
       - Expanded cohorts and three-way CTA funnel: audits/cta-expanded-funnel-20261027/index.md

@@ -1,6 +1,8 @@
 # CTA analysis APIs and identity conventions
 
-The active research report is the [harmonized CTA funnel](audits/cta-harmonized-20261027/index.md).
+The active research proposal is the [compartment-aware CTA funnel](audits/cta-compartment-policy-20261027/index.md).
+The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md) is its
+versioned comparison baseline.
 Earlier membership and threshold reports remain versioned comparisons; their
 `results()` accessors return frozen datasets, not the latest research selection.
 
@@ -28,6 +30,10 @@ gene-specific regulation. Reports always label whether counts represent loci or 
 `gene_matching` handles identity, `protein_equivalence` handles additive measurements,
 `cell_rna_policy` handles context-specific RNA thresholds, and `cta_funnel` handles
 independent decision layers. Report scripts assemble these APIs and render artifacts.
+`compartment_rna_policy.assess_contexts()` applies the provisional cell-compartment
+tiers while retaining original anatomy, values and IHC grades. Its protein review
+API distinguishes explicitly Low staining from ungraded accepted positives;
+source access alone cannot clear a known positive.
 
 ```python
 from oncoref.gene_matching import match_reference_genes, harmonize_reference_expression
@@ -97,12 +103,18 @@ python scripts/cta_expanded_funnel.py docs/audits/cta-expanded-funnel-20261027
 python scripts/cta_protein_group_normal.py docs/audits/cta-harmonized-20261027/group-normal
 python scripts/curate_external_ihc.py
 python scripts/cta_harmonized_report.py docs/audits/cta-harmonized-20261027
+python scripts/cta_compartment_report.py
 ```
 
 The external curation command uses the checked-in categorical source extraction;
 `scripts/collect_external_ihc.py` refreshes that extraction when an intentional
 source update is required. Raw normal-expression downloads use the source
 registry and local caches. Different upstream releases require a new audit.
+The compartment report can reuse its streamed cluster replay with
+`--reuse-clusters` only after verifying implementation, source and output hashes.
+Its locus export reports current group decisions and explicitly labels the older
+locus-level decisions `baseline_gene_category`; it does not present those as a
+fresh locus-only analysis.
 
 Group decision exports contain only group-level quantities. They do not copy a
 representative locus's old maxima or selection flags into group measurement

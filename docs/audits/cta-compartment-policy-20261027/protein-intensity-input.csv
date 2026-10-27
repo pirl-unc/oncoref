@@ -1,0 +1,11 @@
+Review ID,intensity_source,protein_level,intensity_locator,intensity_review_date
+legacy-05,https://pmc.ncbi.nlm.nih.gov/articles/PMC4246512/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+legacy-06,https://pmc.ncbi.nlm.nih.gov/articles/PMC3445433/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+legacy-07,https://pubmed.ncbi.nlm.nih.gov/8605923/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+legacy-08,https://pubmed.ncbi.nlm.nih.gov/17936662/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+review-20261025-FTMT,https://pubmed.ncbi.nlm.nih.gov/28386150/ | https://pubmed.ncbi.nlm.nih.gov/38988693/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+review-20261025-ABCC11,https://pubmed.ncbi.nlm.nih.gov/16359813/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+review-20261025-YBX2,https://pubmed.ncbi.nlm.nih.gov/16479255/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+review-20261025-CCDC158,https://pubmed.ncbi.nlm.nih.gov/39319391/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+review-20261025-ACTRT1,https://pubmed.ncbi.nlm.nih.gov/33972689/ | https://pubmed.ncbi.nlm.nih.gov/28869610/,Detected_unquantified,Existing accepted protein review; no categorical staining intensity extracted,2026-10-27
+review-20261025-PRAME-adrenal,https://pubmed.ncbi.nlm.nih.gov/33890816/,Low,Abstract: normal-tissue protein-expression results describe low adrenal-cortical protein,2026-10-27
