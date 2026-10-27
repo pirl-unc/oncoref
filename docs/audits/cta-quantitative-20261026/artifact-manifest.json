@@ -1,7 +1,7 @@
 {
   "data_manifest": "run-manifest.json",
   "figure_builder": "scripts/plot_cta_quantitative.py",
-  "figure_builder_sha256": "6c27c59e9879b519b69064aa65a2e944f753b03ac83cce742ab803976354499f",
+  "figure_builder_sha256": "89000e160bb70d6ee23e6090449e68e9adee80879f34385dc3cf6a077fce259f",
   "outputs": {
     "index.md": "b0474c4cb83207d2a5ebf64eb259aa821b5c3ff76c2ea6a479649af08a74ba7e",
     "figures/expression-distribution.png": "9647b5742d72aac79ab8cd35dbf73d46f8c6c5bbbb4ec1ca2e3d48eebc3970e3",
@@ -16,5 +16,15 @@
     "cell-source-receipts.json": "23e357992be91054597f6116f387529d7ea6f61ec477e675efcd6fc2ec2683fc",
     "slides/quantitative-cta.pptx": "d2ccd6548f7f749ec5685a226cbe157ca1bc008612c4baf42eb9837ee4220b99"
   },
-  "visual_review": "Generated PNGs inspected; labels, native units and counts checked."
+  "visual_review": "Generated PNGs inspected; labels, native units and counts checked.",
+  "refactor_verification": {
+    "method": "Figure builders have identical runtime AST after removing function annotations and docstrings; every stored artifact hash verified",
+    "implementation_updates": {
+      "scripts/plot_cta_quantitative.py": {
+        "before": "6c27c59e9879b519b69064aa65a2e944f753b03ac83cce742ab803976354499f",
+        "after": "89000e160bb70d6ee23e6090449e68e9adee80879f34385dc3cf6a077fce259f"
+      }
+    },
+    "scientific_outputs_changed": false
+  }
 }

@@ -6,8 +6,8 @@
     "docs/audits/cta-normal-cells-20261023/immune-rna.csv.gz": "a90d4e88dff0654bc4282cbf5fca05cca501efae8e6849906ca55ff171d420db",
     "docs/audits/cta-normal-cells-20261023/corneal-rna.csv.gz": "aed79c5b5903e49f2785e6b938e942c915aa77a561e55e19af174e7974c7dd86",
     "docs/audits/cta-screen-20261023/tissue-evidence.csv.gz": "58348bc946198184a412109ecf82d0d0e04c2087c1f0a8fe3b0f73dbe41d4f3f",
-    "scripts/cta_cell_policy_report.py": "496cfa967cb67a5da5ecc7c68bc76cd7df3af9f8eaf11eda472f37fdbd987932",
-    "oncoref/cell_rna_policy.py": "f15b1a558d54adb01eab9658d8675b813247b4e555fa1f5d94dc2d96965ff5e1",
+    "scripts/cta_cell_policy_report.py": "c5463acbc19e748a5b8f41a056c4810d0b86c1f06933eed7f812f156a8a15982",
+    "oncoref/cell_rna_policy.py": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
     "oncoref/data/cta-publication-membership.csv": "be2c3d9b3d202b0664e7e025926ba9743b1516cf100182cf6c14fb1b42af8b09",
     "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c"
   },
@@ -130,5 +130,39 @@
     "threshold-sensitivity.csv": "35984cb2a8be66888e947945f12cf135f28bcf45858005f0781239f3caab3bd7",
     "uncertain-reference-review.csv": "f71ea08437c80379aa76175e725d5391c04a9752456ddf2900a0043d178b994c",
     "without-ihc-relaxation.csv": "ec0d60a5e44199ff5ab7abb53f513f0c88aed539b66cd2e3e1a5b7847266d20e"
+  },
+  "refactor_verification": {
+    "method": "Full offline builder rerun; every regenerated shared CSV compared with pandas.assert_frame_equal",
+    "identical_tables": [
+      "additional-trial-nominations.csv",
+      "context-assessments.csv.gz",
+      "current-decision-breakdown.csv",
+      "exclusion-findings.csv.gz",
+      "filter-source-coverage.csv",
+      "filtering-funnel.csv",
+      "gene-assessments.csv",
+      "highlight-contexts.csv.gz",
+      "illustrative-thresholds.csv",
+      "nomination-membership.csv.gz",
+      "nomination-sources.csv",
+      "plot-data.csv",
+      "proposed-cta-exclusions.csv",
+      "proposed-reference-review.csv",
+      "selected-gene-changes.csv",
+      "source-overlaps.csv",
+      "threshold-sensitivity.csv",
+      "uncertain-reference-review.csv",
+      "without-ihc-relaxation.csv"
+    ],
+    "implementation_updates": {
+      "scripts/cta_cell_policy_report.py": {
+        "before": "496cfa967cb67a5da5ecc7c68bc76cd7df3af9f8eaf11eda472f37fdbd987932",
+        "after": "c5463acbc19e748a5b8f41a056c4810d0b86c1f06933eed7f812f156a8a15982"
+      },
+      "oncoref/cell_rna_policy.py": {
+        "before": "f15b1a558d54adb01eab9658d8675b813247b4e555fa1f5d94dc2d96965ff5e1",
+        "after": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532"
+      }
+    }
   }
 }

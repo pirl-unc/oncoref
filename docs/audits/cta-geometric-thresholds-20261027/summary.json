@@ -1,0 +1,95 @@
+{
+  "policy": "oncoref.geometric-normal-rna.2026-10-27.1",
+  "candidate_formula": "2 * 2**tissue_rank * 2**ihc_rank",
+  "reference_review_multiplier": 2.0,
+  "universe": 20097,
+  "evaluated_evidence_pool": 2960,
+  "selected": 319,
+  "gained": 0,
+  "lost": 18,
+  "retained": 319,
+  "historical_labels": {
+    "Neither": 174,
+    "CTA": 136,
+    "Unsafe": 9
+  },
+  "named_selected": [
+    "PAGE1",
+    "SMC1B",
+    "MAGEA4",
+    "TBXT",
+    "CTAG1B",
+    "CT83",
+    "XAGE1A",
+    "XAGE1B",
+    "SSX2",
+    "CTAG1A"
+  ],
+  "scenarios": [
+    {
+      "mode": "legacy",
+      "tumor": "recurrence",
+      "selected": 244
+    },
+    {
+      "mode": "legacy",
+      "tumor": "maximum10",
+      "selected": 337
+    },
+    {
+      "mode": "legacy",
+      "tumor": "maximum30",
+      "selected": 197
+    },
+    {
+      "mode": "ihc_doubling",
+      "tumor": "recurrence",
+      "selected": 244
+    },
+    {
+      "mode": "ihc_doubling",
+      "tumor": "maximum10",
+      "selected": 337
+    },
+    {
+      "mode": "ihc_doubling",
+      "tumor": "maximum30",
+      "selected": 197
+    },
+    {
+      "mode": "two_axis_doubling",
+      "tumor": "recurrence",
+      "selected": 226
+    },
+    {
+      "mode": "two_axis_doubling",
+      "tumor": "maximum10",
+      "selected": 319
+    },
+    {
+      "mode": "two_axis_doubling",
+      "tumor": "maximum30",
+      "selected": 182
+    }
+  ],
+  "ihc_choices": [
+    {
+      "maximum_ihc_allowance": "Missing",
+      "selected": 314
+    },
+    {
+      "maximum_ihc_allowance": "Approved",
+      "selected": 319
+    },
+    {
+      "maximum_ihc_allowance": "Supported",
+      "selected": 319
+    },
+    {
+      "maximum_ihc_allowance": "Enhanced",
+      "selected": 319
+    }
+  ],
+  "scope": "All candidate associations and source measurements are unchanged; the entire prior eligible union is reassessed, not just previously selected genes.",
+  "cascade_order": "Association, tumor, IHC detection, RNA coverage, bulk, HPA tissue clusters, HPA immune, Monaco, DICE, adult cornea. Sequential removals depend on order; independent failures overlap."
+}

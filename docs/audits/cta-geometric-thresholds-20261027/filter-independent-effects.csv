@@ -1,0 +1,7 @@
+filter,eligible_before_normal_rna,independent_failures,uniquely_excluded
+Normal bulk,2948,2356,50
+HPA tissue clusters,2948,2515,118
+HPA immune,2948,1286,3
+Monaco immune,2948,1657,7
+DICE immune,2948,1790,22
+Adult cornea,2948,1730,4

@@ -30,7 +30,7 @@ from oncoref import (  # noqa: E402
 )
 
 
-def prepare_development(source_dir, out):
+def prepare_development(source_dir: Path, out: Path) -> None:
     receipt = json.loads(
         (ROOT / "docs/audits/cta-quantitative-20261026/developmental-source.json").read_text()
     )
@@ -117,7 +117,7 @@ def prepare_development(source_dir, out):
     ihc.to_csv(out / "normal-ihc.csv.gz", index=False, compression={"method": "gzip", "mtime": 0})
 
 
-def prepare_cells(out):
+def prepare_cells(out: Path) -> None:
     b = cta_membership.results()[["Gene ID", "Gene"]]
     ids = set(b["Gene ID"])
     result = b[["Gene ID", "Gene"]].set_index("Gene ID")
@@ -230,7 +230,8 @@ def prepare_cells(out):
     (out / "cell-source-receipts.json").write_text(json.dumps(receipts, indent=2) + "\n")
 
 
-def main():
+def main() -> None:
+    """Run the command-line audit with explicit input and output paths."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)

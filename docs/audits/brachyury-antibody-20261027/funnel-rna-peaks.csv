@@ -1,0 +1,7 @@
+gene_id,tissue,cell_type,unit,value,candidate_ceiling,ratio,negative_ihc_grade,local_exclusion,reference_review,assay
+ENSG00000164458,pituitary gland,bulk,nTPM,1.3,2.0,0.65,Missing,False,False,Normal bulk
+ENSG00000164458,blood,b_cell_naive,TPM,0.832306320388,4.0,0.208076580097,Missing/uncertain,False,False,DICE immune
+ENSG00000164458,blood,naive b-cell,nTPM,0.8,4.0,0.2,Missing/uncertain,False,False,HPA immune
+ENSG00000164458,blood,exhausted memory b-cell,TPM,0.8,4.0,0.2,Missing/uncertain,False,False,Monaco immune
+ENSG00000164458,adipose tissue,fibroblasts,nTPM,1.2,8.0,0.15,Missing/uncertain,False,False,HPA tissue clusters
+ENSG00000164458,cornea/conjunctiva,blood vessels,CP10K,,0.02,,Missing/uncertain,False,False,Adult cornea

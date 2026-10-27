@@ -29,7 +29,8 @@ LABELS = {
 HIGHLIGHTS = {"PRAME": "#B94430", "MAGEA4": "#B17312", "CTAG1A": "#5058AC", "CTAG1B": "#2783AA"}
 
 
-def build(audit, out):
+def build(audit: Path, out: Path) -> None:
+    """Build the versioned audit tables, report and source provenance."""
     out.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update(
         {

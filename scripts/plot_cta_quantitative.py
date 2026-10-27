@@ -22,7 +22,7 @@ plt.rcParams.update(
 )
 
 
-def save(fig, directory, name):
+def save(fig, directory, name: str) -> None:
     for ext in ["png", "svg"]:
         fig.savefig(
             directory / f"{name}.{ext}",
@@ -33,7 +33,7 @@ def save(fig, directory, name):
     plt.close(fig)
 
 
-def plot(audit):
+def plot(audit: Path):
     d = pd.read_csv(audit / "gene-results.csv.gz", low_memory=False)
     figures = audit / "figures"
     figures.mkdir(exist_ok=True)

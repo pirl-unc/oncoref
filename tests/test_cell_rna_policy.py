@@ -52,6 +52,55 @@ FACTORS = {"Missing/uncertain": 1, "Approved": 1.25, "Supported": 1.5, "Enhanced
 
 
 @pytest.mark.parametrize(
+    "tissue", ["testis", "placenta", "ovary", "prostate", "breast", "endometrium", "fallopian tube"]
+)
+def test_reproductive_immune_neutrality_is_local_and_preserves_measurement(tissue):
+    d = context(tissue=tissue, cell_type="macrophages", concept_id="blood", value=99)
+    neutral = policy.reproductive_immune_contexts(d)
+    assert neutral.neutral_reproductive_immune.iloc[0]
+    assert neutral.prior_context_category.iloc[0] == "vital"
+    assert neutral.value.iloc[0] == 99
+    assessed = policy.assess(neutral, thresholds(), ihc_factors=FACTORS)
+    assert not assessed.cta_excluded.iloc[0] and not assessed.reference_review.iloc[0]
+    assert assessed.assessment.iloc[0].startswith("Neutral")
+    assert d.category.iloc[0] == "vital"
+    with pytest.raises(ValueError, match="already"):
+        policy.reproductive_immune_contexts(neutral)
+
+
+@pytest.mark.parametrize(
+    "tissue,stage",
+    [
+        ("blood", "adult"),
+        ("heart muscle", "adult"),
+        ("lung", "juvenile"),
+        ("unknown", "unspecified"),
+    ],
+)
+def test_immune_lineage_elsewhere_does_not_inherit_reproductive_permission(tissue, stage):
+    d = context(tissue=tissue, stage=stage, cell_type="macrophages", concept_id="blood", value=99)
+    result = policy.reproductive_immune_contexts(d)
+    assert not result.neutral_reproductive_immune.iloc[0]
+    assert result.category.iloc[0] == "vital"
+
+
+@pytest.mark.parametrize("stage", ["embryonic", "fetal"])
+def test_explicit_developmental_immune_context_is_neutral_without_relabeling_age(stage):
+    d = context(tissue="liver", stage=stage, cell_type="t-cells", concept_id="blood")
+    result = policy.reproductive_immune_contexts(d)
+    assert result.neutral_reproductive_immune.iloc[0]
+    assert result.neutral_basis.iloc[0] == "explicit_developmental_stage"
+    assert result.stage.iloc[0] == stage
+
+
+def test_reproductive_site_alone_does_not_invent_immune_identity():
+    d = context(tissue="testis", cell_type="unknown", concept_id="")
+    assert not policy.reproductive_immune_contexts(d).neutral_reproductive_immune.iloc[0]
+    d["source_cell_group"] = "Blood & immune cells"
+    assert policy.reproductive_immune_contexts(d).neutral_reproductive_immune.iloc[0]
+
+
+@pytest.mark.parametrize(
     "value,assessment,cta,reference",
     [
         (1.99, "Below CTA cutoff", False, False),
@@ -171,6 +220,113 @@ def test_require_complete_valid_explicit_configuration():
             policy.assess(context(), t, ihc_factors=FACTORS)
     with pytest.raises(ValueError):
         policy.assess(context(), thresholds(), ihc_factors=FACTORS | {"Enhanced": 0.5})
+
+
+@pytest.mark.parametrize(
+    "value,excluded,review", [(6, False, False), (6.01, True, False), (12, True, True)]
+)
+def test_linked_immune_boundary_is_shared_and_inclusive(value, excluded, review):
+    d = context(source="dice_cd4_stim", unit="TPM", cell_type="CD4", value=value)
+    d = policy.protected_immune_contexts(d)
+    r = policy.assess(
+        d,
+        policy.linked_thresholds(),
+        ihc_factors=dict.fromkeys(FACTORS, 1),
+        inclusive_ceiling=True,
+    ).iloc[0]
+    assert r.category == "protected" and r.cta_cutoff == 6 and r.reference_cutoff == 12
+    assert r.cta_excluded == excluded and r.reference_review == review
+
+
+def test_linked_tissue_grade_values_share_registry_without_assay_specific_caps():
+    from oncoref.normal_tissues import normal_tissue_screening_policy
+
+    grid = policy.linked_thresholds()
+    ladder = normal_tissue_screening_policy("ihc_adaptive_cta")["negative_ihc_rna_limits"]
+    for r in grid.itertuples():
+        grade = "Missing" if r.negative_ihc_grade == "Missing/uncertain" else r.negative_ihc_grade
+        expected = ladder[grade][r.category]
+        assert r.nominal_per_million_ceiling == expected
+        assert r.cta_cutoff == expected * r.native_units_per_nominal_unit
+        assert r.reference_cutoff == 2 * r.cta_cutoff
+    with pytest.raises(ValueError, match="cannot also"):
+        policy.assess(context(), grid, ihc_factors=FACTORS)
+
+
+def test_linked_immune_tier_preserves_neutrality_nonimmune_anatomy_and_missing_mapping():
+    d = pd.concat(
+        [
+            context(cell_type="fibroblasts", concept_id="heart"),
+            context(cell_type="macrophages", concept_id="blood"),
+            context(tissue="testis", cell_type="macrophages", concept_id="blood"),
+            context(mapping_status="unmapped", concept_id="", category="unresolved"),
+        ],
+        ignore_index=True,
+    )
+    r = policy.protected_immune_contexts(policy.reproductive_immune_contexts(d))
+    assert r.category.tolist() == [
+        "vital",
+        "protected",
+        policy.NEUTRAL_REPRODUCTIVE_IMMUNE,
+        "unresolved",
+    ]
+    with pytest.raises(ValueError, match="already"):
+        policy.protected_immune_contexts(r)
+
+
+def test_linked_cornea_rescales_counts_without_relabeling_tpm():
+    d = context(source="cornea_collin_adult_counts", unit="CP10K", value=0.02)
+    r = policy.assess(
+        d,
+        policy.linked_thresholds(),
+        ihc_factors=dict.fromkeys(FACTORS, 1),
+        inclusive_ceiling=True,
+    ).iloc[0]
+    assert r.unit == "CP10K" and r.cta_cutoff == 0.02 and not r.cta_excluded
+    assert r.nominal_per_million_ceiling == 2
+
+
+def test_two_axis_grid_doubles_both_axes_and_shares_bulk_cell_boundaries():
+    ladder = policy.threshold_ladder("two_axis_doubling")
+    grades = ["Missing", *policy.GRADES]
+    tiers = ["vital", "protected", "manageable"]
+    matrix = np.array([[ladder[g][t] for g in grades] for t in tiers])
+    assert matrix.tolist() == [[2, 4, 8, 16], [4, 8, 16, 32], [8, 16, 32, 64]]
+    assert np.array_equal(matrix[:, 1:], 2 * matrix[:, :-1])
+    assert np.array_equal(matrix[1:, :], 2 * matrix[:-1, :])
+    for grade in grades:
+        bulk = pd.DataFrame(
+            {
+                "screening_tier": tiers,
+                "ihc_reliability_used": grade,
+                "profile_positive_control": True,
+                "rna_ntpm": [ladder[grade][t] for t in tiers],
+            }
+        )
+        assessed = policy.apply_bulk_ladder(bulk, mode="two_axis_doubling")
+        assert not assessed.local_exclusion.any()
+        cell_grid = policy.linked_thresholds(mode="two_axis_doubling")
+        g = "Missing/uncertain" if grade == "Missing" else grade
+        c = cell_grid[
+            cell_grid.assay.eq("hpa_single_cell_tissue") & cell_grid.negative_ihc_grade.eq(g)
+        ].set_index("category")
+        assert assessed.effective_ceiling_ntpm.tolist() == c.loc[tiers, "cta_cutoff"].tolist()
+    with pytest.raises(ValueError, match="Unknown"):
+        policy.threshold_ladder("unreviewed")
+
+
+def test_bulk_geometric_grade_requires_positive_profile_and_honors_cap():
+    d = pd.DataFrame(
+        {
+            "screening_tier": ["protected", "protected", "unresolved"],
+            "ihc_reliability_used": "Enhanced",
+            "profile_positive_control": [True, False, True],
+            "rna_ntpm": [9, 9, 0],
+        }
+    )
+    r = policy.apply_bulk_ladder(d, mode="two_axis_doubling", max_ihc_grade="Approved")
+    assert r.effective_ceiling_ntpm.iloc[:2].tolist() == [8, 4]
+    assert r.local_exclusion.all()
 
 
 def test_recurrence_counts_distinct_groups_and_missing_is_not_zero():

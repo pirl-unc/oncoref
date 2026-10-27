@@ -1,0 +1,19 @@
+{
+  "discovered_products": 201,
+  "downloaded_products": 201,
+  "failed_products": 0,
+  "parsed_normal_panels": 199,
+  "unmapped_anatomy_observations": 331,
+  "result_counts": {
+    "not_detected": 3365,
+    "detected": 2649,
+    "mixed": 297,
+    "not_assessed": 72,
+    "reported_cross_reactivity": 49
+  },
+  "unique_matched_genes": 188,
+  "normal_observations": 6432,
+  "antibody_only_priority_genes": 54,
+  "priority_genes_with_panel": 1,
+  "automatic_overrides": 0
+}

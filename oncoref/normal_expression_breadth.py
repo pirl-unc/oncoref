@@ -15,7 +15,7 @@ GROUP = ["gene_id", "source", "version", "taxonomy_id", "unit", "cohort", "summa
 TIERS = {"vital", "protected", "manageable"}
 
 
-def anatomical_panel(*, brain_weight=1.0):
+def anatomical_panel(*, brain_weight: float = 1.0) -> pd.DataFrame:
     """Fixed bulk-organ panel; brain regions share one organ's total weight.
 
     Retina and unmeasured non-retinal eye are disjoint components of one eye
@@ -99,7 +99,7 @@ def anatomical_panel(*, brain_weight=1.0):
     return pd.DataFrame(rows)
 
 
-def burden(profiles, panel):
+def burden(profiles: pd.DataFrame, panel: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Return compartment contributions and category coverage bounds.
 
     Input columns: GROUP plus compartment, value and ceiling. Exactly duplicated
@@ -172,7 +172,7 @@ def burden(profiles, panel):
     return full, result
 
 
-def donor_summaries(donors):
+def donor_summaries(donors: pd.DataFrame) -> pd.DataFrame:
     """Median and q90 for independent donor IDs; do not invent matched donors.
 
     This helper requires one resolved value per gene/cohort/compartment/donor.

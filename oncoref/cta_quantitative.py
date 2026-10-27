@@ -18,6 +18,8 @@ POLICY_ID = "oncoref.cta-quantitative.2026-10-26.1"
 
 @dataclass(frozen=True)
 class Thresholds:
+    """Native-unit thresholds for the frozen 2026-10-26 comparison policy."""
+
     reproductive_ntpm: float = 5
     developmental_tpm: float = 5
     adult_bulk_ntpm: float = 10
@@ -30,7 +32,7 @@ class Thresholds:
             raise ValueError("Thresholds must be positive and finite")
 
 
-def classify(facts, *, thresholds=None):
+def classify(facts: pd.DataFrame, *, thresholds: Thresholds | None = None) -> pd.DataFrame:
     """Require quantitative association, tumor expression, coverage and adult gates.
 
     Bulk reproductive dominance compares nTPM within the same HPA assay only.
@@ -143,11 +145,12 @@ def classify(facts, *, thresholds=None):
     return d
 
 
-def results(*, selected_only=False):
+def results(*, selected_only: bool = False) -> pd.DataFrame:
     """Frozen quantitative proposal, with earlier risk labels kept as annotations."""
     d = pd.read_csv(Path(__file__).parent / "data/cta-quantitative-gene-sets.csv.gz")
     return d.loc[d.selected].copy() if selected_only else d
 
 
-def gene_ids():
+def gene_ids() -> frozenset[str]:
+    """Canonical gene loci selected by the frozen quantitative comparison."""
     return frozenset(results(selected_only=True).gene_id)

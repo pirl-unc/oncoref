@@ -40,17 +40,19 @@ class Thresholds:
                 raise ValueError(f"Integer threshold required: {key}")
 
 
-def evidence():
+def evidence() -> pd.DataFrame:
     """Reviewed identity, biological context, primary evidence and limitations."""
     return pd.read_csv(DATA / "cta-membership-evidence.csv", keep_default_na=False)
 
 
-def controls():
+def controls() -> pd.DataFrame:
     """Benchmarks are evaluation labels, never classifier inputs."""
     return pd.read_csv(DATA / "cta-membership-controls.csv", keep_default_na=False)
 
 
-def classify(facts, reviewed, *, thresholds=None):
+def classify(
+    facts: pd.DataFrame, reviewed: pd.DataFrame, *, thresholds: Thresholds | None = None
+) -> pd.DataFrame:
     """Apply three common evidence routes to every canonical human gene.
 
     1. Reviewed primary evidence establishes reproductive/developmental and
@@ -266,7 +268,7 @@ def classify(facts, reviewed, *, thresholds=None):
     return d
 
 
-def results():
+def results() -> pd.DataFrame:
     """Genome-wide biological membership and retained normal-expression flags."""
     d = pd.read_csv(DATA / "cta-membership-gene-sets.csv.gz", keep_default_na=False)
     for col in [
@@ -287,7 +289,7 @@ def results():
     return d
 
 
-def gene_ids(*, established_only=False, category=None):
+def gene_ids(*, established_only: bool = False, category: str | None = None) -> set[str]:
     """Holistic union by default; optionally restrict evidence tier or class."""
     if category is not None and category not in CLASSES:
         raise ValueError(f"Unknown biological class: {category}")

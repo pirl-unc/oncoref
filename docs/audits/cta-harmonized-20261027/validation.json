@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "checked_at_utc": "2026-10-27T20:45:06.791860+00:00",
+  "report_manifest_sha256": "706363fd2e51b74f3f34e28d09904e53601a6b3ff8291559cd9f2dc9191d4ecb",
+  "distinct_relevant_tests_passed": 301,
+  "skipped": 0,
+  "test_scope": {
+    "focused_policy_identity_evidence_and_regeneration_suite": 276,
+    "shared_report_regressions": 21,
+    "new_streamed_winner_regression": 1,
+    "active_artifact_and_portable_receipt_checks": 3,
+    "entire_repository_suite_repeated": false
+  },
+  "ruff_lint_and_format": {
+    "status": "passed",
+    "python_files": 315
+  },
+  "strict_mkdocs": "passed",
+  "git_diff_check": "passed",
+  "historical_offline_replays_identical_tables": {
+    "membership": 18,
+    "cell_policy": 19
+  },
+  "other_frozen_refactors": "Runtime AST equality after removing function annotations and docstrings; proof receipts retained in the historical manifests",
+  "active_stage_manifest_hashes": "All input and output hashes verified",
+  "visual_review": [
+    "threshold-grid",
+    "classification-funnel",
+    "filter-removals",
+    "named-antigen-distribution",
+    "published-list-overlaps"
+  ],
+  "classification_order_independent": true,
+  "protein_group_categories": {
+    "Unsafe": 17824,
+    "Neither": 1748,
+    "CTA": 291
+  },
+  "historical_CTA_categories": {
+    "CTA": 150,
+    "Neither": 32,
+    "Unsafe": 31
+  },
+  "counting_units": {
+    "selected_protein_groups": 291,
+    "selected_member_gene_loci": 306
+  },
+  "note": "This post-build validation receipt pins the report manifest; it is not included in that manifest, avoiding a circular hash."
+}

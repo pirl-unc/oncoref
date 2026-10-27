@@ -12,8 +12,8 @@
     "docs/audits/cta-policy-20261025/candidate-results.csv.gz": "3dcc698b1bb6ee43ba1949bc83e7a075b0f2d92ead2a02d19f73ead68bd833e0",
     "oncoref/data/cta-policy.json": "6844f3ae196d2bc91e996dfb8024db24da4c4f0ffb81439c87c652e7207fcfc6",
     "oncoref/data/cta-donor-rna.csv": "4df91d972bab43c3d4419d1d90bc18f311dc131b8e028295da4eb71bdb0f31b5",
-    "scripts/build_normal_expression_breadth.py": "c56aa7ba43899231d35534e51092c835a30cefed2f1ffb6be18d7be0458ae69d",
-    "oncoref/normal_expression_breadth.py": "49b8958446a60b9481f5ebe5a56f156e29d1807e3dc2d24ceef81f625a0f8f23"
+    "scripts/build_normal_expression_breadth.py": "5a9d3591274a93bd85e7ec4b308a532e4101ac96c1adaef08b1b63aa32b4c3eb",
+    "oncoref/normal_expression_breadth.py": "e8031e9b3faae1b6192e01daf7e3d609a35c35e3ad833d9710b8aa8ab2a514fe"
   },
   "outputs": {
     "anatomical-panel.csv": "7abb9ba65fa92d477e91c3e993b05a17f9ec811f944805ec9df4e88d31af2016",
@@ -25,5 +25,19 @@
     "donor-summaries.csv": "ae7b1b4869df2186ca4288189d1af2e037bbc313a85d56c0db2b35d2d49906d9",
     "fixed_baseline-profiles.csv.gz": "d1069aba29500533de2a68cd54d280026f11b656e229d2ba934840bea4082b21",
     "index.md": "7d52d54a1be4853a977c4808c6b7b69e05eb96b07b5846a37661ac882201b711"
+  },
+  "refactor_verification": {
+    "method": "Runtime AST identical to pinned HEAD after removing function annotations and docstrings",
+    "implementation_updates": {
+      "scripts/build_normal_expression_breadth.py": {
+        "before": "c56aa7ba43899231d35534e51092c835a30cefed2f1ffb6be18d7be0458ae69d",
+        "after": "5a9d3591274a93bd85e7ec4b308a532e4101ac96c1adaef08b1b63aa32b4c3eb"
+      },
+      "oncoref/normal_expression_breadth.py": {
+        "before": "49b8958446a60b9481f5ebe5a56f156e29d1807e3dc2d24ceef81f625a0f8f23",
+        "after": "e8031e9b3faae1b6192e01daf7e3d609a35c35e3ad833d9710b8aa8ab2a514fe"
+      }
+    },
+    "scientific_outputs_changed": false
   }
 }

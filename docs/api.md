@@ -2068,3 +2068,9 @@ CTAs. Publication consensus is not proof of independent experimental replication
 The earlier `cta_research_policy` 215-gene selection and `target_sets` 213-gene
 expression classification retain their historical semantics. See the
 [complete rules, counts, controls and sensitivity analysis](audits/cta-membership-20261026/index.md).
+
+The newer [harmonized analysis APIs](cta-analysis-api.md) separate reference gene
+matching, same-context protein-equivalence sums, external IHC adjudication and
+three-way decision layers. The [current research funnel](audits/cta-harmonized-20261027/index.md)
+reports both locus and group counts and follows every historical CTA through the
+new rules; the historical accessors above remain frozen comparisons.

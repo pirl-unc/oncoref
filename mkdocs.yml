@@ -7,6 +7,12 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
+      - Harmonized CTA and protein-group funnel: audits/cta-harmonized-20261027/index.md
+      - External staining evidence: audits/external-ihc-20261027/index.md
+      - Brachyury antibody assessment: audits/brachyury-antibody-20261027/index.md
+      - Expanded cohorts and three-way CTA funnel: audits/cta-expanded-funnel-20261027/index.md
+      - Two-axis thresholds and filtering figures: audits/cta-geometric-thresholds-20261027/index.md
+      - Linked tissue and immune RNA thresholds: audits/cta-linked-thresholds-20261027/index.md
       - Uniform quantitative CTA/developmental candidates: audits/cta-quantitative-20261026/index.md
       - Historical literature-inclusive CTA catalogue: audits/cta-membership-20261026/index.md
       - Earlier CTA research selection: audits/cta-research-20261026/index.md

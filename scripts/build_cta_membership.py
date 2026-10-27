@@ -35,10 +35,12 @@ CORE = {"testis", "ovary", "placenta"}
 
 
 def digest(path):
+    """Return the content SHA-256 used to pin an audit input or output."""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def write(frame, path):
+def write(frame: pd.DataFrame, path):
+    """Write a data table with deterministic compression when requested."""
     frame.to_csv(
         path,
         index=False,
@@ -119,7 +121,15 @@ def expression_facts(base, normal, membership):
     return d
 
 
-def tumor_facts(facts, rna, ihc, thresholds, *, rna_floor=1):
+def tumor_facts(
+    facts: pd.DataFrame,
+    rna: pd.DataFrame,
+    ihc: pd.DataFrame,
+    thresholds: policy.Thresholds,
+    *,
+    rna_floor: float = 1,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Annotate native tumor RNA and IHC support under the frozen membership policy."""
     d = facts.copy()
     suffix = str(rna_floor).replace(".", "_")
     count = "expressed_samples_ptpm_ge_" + suffix
@@ -194,7 +204,7 @@ def breadth(normal, gene_ids):
     return scores
 
 
-def nonselection_reasons(decisions, thresholds):
+def nonselection_reasons(decisions: pd.DataFrame, thresholds: policy.Thresholds) -> pd.DataFrame:
     """Explain failure of positive membership evidence, separately from risk."""
     d = decisions.loc[~decisions.Member].copy()
     publication = d[["Cancer-germline papers", "Cancer-placental papers"]].max(axis=1).ge(1)
@@ -244,7 +254,8 @@ def nonselection_reasons(decisions, thresholds):
     return d[columns]
 
 
-def build(out, *, publish=False):
+def build(out: Path, *, publish=False) -> None:
+    """Build the versioned audit tables, report and source provenance."""
     if out.exists() and any(out.iterdir()):
         raise ValueError("Use an empty output directory")
     out.mkdir(parents=True, exist_ok=True)

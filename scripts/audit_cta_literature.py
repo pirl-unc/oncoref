@@ -119,7 +119,7 @@ def gene_queries(row, cutoff):
     }
 
 
-def prepare_aliases(genes):
+def prepare_aliases(genes: pd.DataFrame):
     from oncoref import protein_annotations
 
     wanted = set(genes["UniProt entries"].str.split("|").explode()) - {""}
@@ -139,7 +139,8 @@ def prepare_aliases(genes):
     return aliases
 
 
-def main():
+def main() -> None:
+    """Run the command-line audit with explicit input and output paths."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--atlas", type=Path, default=ROOT / "docs/audits/cta-atlas-20261024/all-genes.csv"

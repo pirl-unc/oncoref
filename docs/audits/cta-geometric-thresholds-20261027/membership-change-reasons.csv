@@ -1,0 +1,33 @@
+gene_id,tissue,value,screening_tier,negative_ihc_grade,kind,previous_ceiling,new_ceiling,previous_excluded,new_excluded,cell_type,assay,unit,category,symbol,membership_change
+ENSG00000120669,tongue,5.1,protected,Missing,bulk,6.0,4.0,False,True,,,,,SOHLH2,Lost
+ENSG00000184650,tongue,5.2,,Missing/uncertain,cell,6.0,4.0,False,True,suprabasal keratinocytes,hpa_single_cell_tissue,nTPM,protected,ODF4,Lost
+ENSG00000187658,rectum,5.1,,Missing/uncertain,cell,6.0,4.0,False,True,paneth cells,hpa_single_cell_tissue,nTPM,protected,C5orf52,Lost
+ENSG00000218819,salivary gland,5.2,,Missing/uncertain,cell,6.0,4.0,False,True,b-cells,hpa_single_cell_tissue,nTPM,protected,TDRD15,Lost
+ENSG00000278023,colon,4.7,,Missing/uncertain,cell,6.0,4.0,False,True,undifferentiated cells,hpa_single_cell_tissue,nTPM,protected,RDM1,Lost
+ENSG00000278023,rectum,6.0,,Missing/uncertain,cell,6.0,4.0,False,True,undifferentiated cells,hpa_single_cell_tissue,nTPM,protected,RDM1,Lost
+ENSG00000163705,blood,5.3,,Missing/uncertain,cell,6.0,4.0,False,True,neutrophil,hpa_immune_cell,nTPM,protected,FANCD2OS,Lost
+ENSG00000135436,blood,4.4,,Missing/uncertain,cell,6.0,4.0,False,True,naive cd8 t-cell,hpa_immune_monaco,TPM,protected,FAM186B,Lost
+ENSG00000154997,blood,4.8,,Missing/uncertain,cell,6.0,4.0,False,True,neutrophil,hpa_immune_monaco,TPM,protected,SEPTIN14,Lost
+ENSG00000183318,blood,4.5,,Missing/uncertain,cell,6.0,4.0,False,True,progenitor cell,hpa_immune_monaco,TPM,protected,SPDYE4,Lost
+ENSG00000183318,blood,4.6,,Missing/uncertain,cell,6.0,4.0,False,True,basophil,hpa_immune_monaco,TPM,protected,SPDYE4,Lost
+ENSG00000187144,blood,4.4,,Missing/uncertain,cell,6.0,4.0,False,True,central memory cd8 t-cell,hpa_immune_monaco,TPM,protected,SPATA21,Lost
+ENSG00000187144,blood,4.2,,Missing/uncertain,cell,6.0,4.0,False,True,memory cd4 t-cell th17,hpa_immune_monaco,TPM,protected,SPATA21,Lost
+ENSG00000187144,blood,4.2,,Missing/uncertain,cell,6.0,4.0,False,True,naive b-cell,hpa_immune_monaco,TPM,protected,SPATA21,Lost
+ENSG00000187144,blood,4.9,,Missing/uncertain,cell,6.0,4.0,False,True,naive cd4 t-cell,hpa_immune_monaco,TPM,protected,SPATA21,Lost
+ENSG00000154611,blood,4.971904359190001,,Missing/uncertain,cell,6.0,4.0,False,True,b_cell_naive,dice,TPM,protected,PSMA8,Lost
+ENSG00000160505,blood,4.74827427848,,Missing/uncertain,cell,6.0,4.0,False,True,b_cell_naive,dice,TPM,protected,NLRP4,Lost
+ENSG00000171989,blood,4.77983966573,,Missing/uncertain,cell,6.0,4.0,False,True,b_cell_naive,dice,TPM,protected,LDHAL6B,Lost
+ENSG00000154611,blood,4.283036700119999,,Missing/uncertain,cell,6.0,4.0,False,True,nk,dice,TPM,protected,PSMA8,Lost
+ENSG00000278023,blood,5.123129147219999,,Missing/uncertain,cell,6.0,4.0,False,True,nk,dice,TPM,protected,RDM1,Lost
+ENSG00000188163,blood,4.196163052819999,,Missing/uncertain,cell,6.0,4.0,False,True,treg_mem,dice,TPM,protected,CIMIP2A,Lost
+ENSG00000154611,blood,4.5621523996599995,,Missing/uncertain,cell,6.0,4.0,False,True,cd4_naive,dice,TPM,protected,PSMA8,Lost
+ENSG00000164404,blood,4.48298538536,,Missing/uncertain,cell,6.0,4.0,False,True,cd4_naive,dice,TPM,protected,GDF9,Lost
+ENSG00000073598,blood,4.46502565824,,Missing/uncertain,cell,6.0,4.0,False,True,cd4_stim,dice,TPM,protected,FNDC8,Lost
+ENSG00000176177,blood,5.748306975369999,,Missing/uncertain,cell,6.0,4.0,False,True,cd4_stim,dice,TPM,protected,ENTHD1,Lost
+ENSG00000154611,blood,4.53110612568,,Missing/uncertain,cell,6.0,4.0,False,True,treg_naive,dice,TPM,protected,PSMA8,Lost
+ENSG00000187690,blood,4.87841733909,,Missing/uncertain,cell,6.0,4.0,False,True,treg_naive,dice,TPM,protected,EZHIP,Lost
+ENSG00000188163,blood,4.11506142836,,Missing/uncertain,cell,6.0,4.0,False,True,th1,dice,TPM,protected,CIMIP2A,Lost
+ENSG00000154611,blood,5.5603071674599995,,Missing/uncertain,cell,6.0,4.0,False,True,cd8_naive,dice,TPM,protected,PSMA8,Lost
+ENSG00000164404,blood,4.8579974436199995,,Missing/uncertain,cell,6.0,4.0,False,True,cd8_naive,dice,TPM,protected,GDF9,Lost
+ENSG00000073598,blood,4.51044402076,,Missing/uncertain,cell,6.0,4.0,False,True,cd8_stim,dice,TPM,protected,FNDC8,Lost
+ENSG00000154611,blood,4.1108095341,,Missing/uncertain,cell,6.0,4.0,False,True,cd8_stim,dice,TPM,protected,PSMA8,Lost

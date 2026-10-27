@@ -1,0 +1,34 @@
+{
+  "inputs": {
+    "docs/audits/cta-geometric-thresholds-20261027/gene-comparison.csv.gz": "d891c37f5623ba01f5ad6c64da22cc03a37674837f3f2a91f771bf498ee7e8b6",
+    "scripts/cta_geometric_sources_report.py": "0af9fdbddeec2c829d3f245246a3963ed122bb72854218dfa6d334257820a9a3",
+    "scripts/plot_cta_geometric.py": "621e824b43861ced77421645f43d1565a7cec66ec9135632f53806326c65934d",
+    "scripts/cta_selection_figures.py": "3c08c96b51349af2016d7632db874b4d257522bb0f93b0c1a7b7bc8624e3165e",
+    "oncoref/cta_provenance.py": "30968214f4d5e08dbfc5d7584054b760e32e6fa1f359928c49c990616c0e25e0",
+    "oncoref/cta_sources.py": "75cae6c6bb7fc7b663f0bb12f22fe01e951d09003570f628513aff43864e6155",
+    "oncoref/data/cta-publication-membership.csv": "be2c3d9b3d202b0664e7e025926ba9743b1516cf100182cf6c14fb1b42af8b09",
+    "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c"
+  },
+  "outputs": {
+    "tumor-and-coverage-gaps.svg": "fa7cde0975cc4e8d891064b7278f8479dbf00130aaafa6a692f2df6b64fa32f7",
+    "quantitative-source-overlaps.csv": "dfabdef0a4aee17ad03e0686bd6a6748b5b69b62c1ba150ba8a9c483a1c2298d",
+    "tumor-measured-below-10.csv": "4bbcdd0ff073a4bef3895007c435bce4ca523b9a5d54220f333846a9f78cbe9a",
+    "source-route-membership.csv.gz": "db1d414a06659bca75fc838f1c3d2e2ef59b797a3d271d125a548a9796937ccb",
+    "tumor-admission-failures.csv": "c927b72a44b2fec9ecbb74fde353c2a3a806b86db17493fa7074b53c54acd287",
+    "coverage-failure-combinations.csv": "d39e338ffe43947e981a3d4ab27bc61c65cfae3e7977aa993b84aecc4b620db6",
+    "publication-source-counts.csv": "fb3a2d6f68f9462a7e3a926f17b8118402405146a3bf3e5feb248cf61e8d8e18",
+    "normal-rna-coverage-failures.csv": "04512a6b0cbcf33c2dde96d92aa54afc5b763a353dc9c2af41a52dcf06c85e29",
+    "tumor-and-coverage-gaps.png": "31002938908ba06030f8778c7f77a649636b155faadb4e8b174cd72e9df1653e",
+    "index.md": "1f22e446c7432f736d67e70c34bbbc6d0402715f55847848b3ca07ee378bbbcb",
+    "quantitative-source-overlap.png": "e17ba650525a9b60bf2c84338e68f1874448e8912cd7652090879fdc24812cb5",
+    "selected-historical-unsafe.csv": "d962a1ac78a2bd53b845130de61f4de2d623d6d2476f28d0c7a8063b9507bf7b",
+    "publication-source-overlap.png": "3efa096bf2ba4bef3cefa25efa07d70a643af75007325bcf82124b6883fa4161",
+    "publication-source-overlap.svg": "bea0d6c789a8df2f42218151ca71f32985301416f861564d46ac67d3e0e5e4ec",
+    "selected-without-mapped-publication.csv": "e851f9c155d5da6188d7953af3a0a002634769138963e1d9d1ec601cad31218b",
+    "publication-source-overlaps.csv": "ac26a4a60dd91c6272e5eca69c45acb5c4bd595017a960c3674438fa2d1ba608",
+    "tumor-unmeasured.csv": "36aa75d8e2e23c25b8272dcbee3702db0267f590a245122b2c180f34119789af",
+    "quantitative-source-overlap.svg": "3b884f159b9428fe2feb965936027d6b8bd66f0173ea337a5df9bbc31d8d1d73",
+    "selected-publication-membership.csv.gz": "a48640c7a775fabd97dd630a7c2fd2fec55f7318baae4972ce2ba8bf712ddc09",
+    "selected-historical-labels.csv": "5b6d8fb333f373b5d88ff4a714d22bbc92fc2597dad11489755f983af8904dba"
+  }
+}

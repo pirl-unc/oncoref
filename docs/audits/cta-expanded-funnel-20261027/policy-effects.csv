@@ -1,0 +1,6 @@
+scenario,genes
+HPA ≥10; all panels required,319
+HPA ≥2; all panels required,342
+HPA + OncoRef ≥2; all panels required,346
+HPA + OncoRef ≥2; DICE/cornea optional,360
+Final CTA after evidence reconciliation,305

@@ -40,10 +40,12 @@ KEYS = [
 
 
 def digest(path):
+    """Return the content SHA-256 used to pin an audit input or output."""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def write(frame, path):
+def write(frame: pd.DataFrame, path):
+    """Write a data table with deterministic compression when requested."""
     frame.to_csv(
         path,
         index=False,
@@ -51,7 +53,7 @@ def write(frame, path):
     )
 
 
-def summarize(frame, *, support, rank=1, unique=None):
+def summarize(frame: pd.DataFrame, *, support, rank=1, unique=None) -> pd.DataFrame:
     """Nth supported value preserves recurrence cutoffs without donor invention."""
     if unique and frame.duplicated([*KEYS, unique]).any():
         raise ValueError("Repeated sample identities would inflate recurrence")
@@ -92,7 +94,8 @@ def scenario_thresholds():
     return pd.DataFrame(rows)
 
 
-def build(out):
+def build(out: Path) -> None:
+    """Build the versioned audit tables, report and source provenance."""
     if out.exists() and any(out.iterdir()):
         raise ValueError("Use an empty output directory")
     out.mkdir(parents=True, exist_ok=True)

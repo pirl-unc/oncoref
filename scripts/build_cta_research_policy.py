@@ -20,10 +20,12 @@ from oncoref import cta_research_policy as policy  # noqa: E402
 
 
 def digest(path):
+    """Return the content SHA-256 used to pin an audit input or output."""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def write(frame, path):
+def write(frame: pd.DataFrame, path):
+    """Write a data table with deterministic compression when requested."""
     frame.to_csv(
         path,
         index=False,
@@ -31,7 +33,8 @@ def write(frame, path):
     )
 
 
-def build(out, *, expansion, paper_receipts, publish=False):
+def build(out: Path, *, expansion, paper_receipts, publish=False) -> None:
+    """Build the versioned audit tables, report and source provenance."""
     if out.exists() and any(out.iterdir()):
         raise ValueError("Use an empty output directory")
     out.mkdir(parents=True, exist_ok=True)

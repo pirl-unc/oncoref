@@ -43,14 +43,14 @@ TEXT_FIELDS = [
 ]
 
 
-def clinical_evidence():
+def clinical_evidence() -> pd.DataFrame:
     """Reviewed positive and negative comparators; registration alone is insufficient."""
     return pd.read_csv(
         Path(__file__).parent / "data/cta-research-clinical-evidence.csv", keep_default_na=False
     )
 
 
-def finding_digest(findings, gene_id):
+def finding_digest(findings: pd.DataFrame, gene_id: str) -> str:
     """Bind reconsideration to complete active finding contents, not just IDs."""
     selected = findings.loc[
         findings["Gene ID"].eq(gene_id)
@@ -61,7 +61,7 @@ def finding_digest(findings, gene_id):
     return hashlib.sha256(selected.to_json(orient="records").encode()).hexdigest()
 
 
-def classify(facts, findings, clinical):
+def classify(facts: pd.DataFrame, findings: pd.DataFrame, clinical: pd.DataFrame) -> pd.DataFrame:
     """Apply the same evidence gates to all identities, without gene-name branches.
 
     The existing measured RNA/protein gates remain mandatory. A new route can
@@ -192,7 +192,7 @@ def classify(facts, findings, clinical):
     return d
 
 
-def results():
+def results() -> pd.DataFrame:
     """All canonical decisions for the research selection, including caveats."""
     return pd.read_csv(
         Path(__file__).parent / "data/cta-research-gene-sets.csv.gz",
@@ -201,7 +201,7 @@ def results():
     )
 
 
-def gene_ids():
+def gene_ids() -> set[str]:
     """CTA research candidates; consult selection basis before product development."""
     d = results()
     return set(d.loc[d.Target, "Gene ID"])

@@ -175,9 +175,9 @@
   },
   "reference": "openvax:reference:v1:sha256:0fefb51755788901693be9987fadc31e61f945cd53c08a170e0e1d4ad4a09b61",
   "annotation_source_sha256": "deafb38a3dc89bbdcf43002f80a5fe54c325a2bf7e72ff84d0cc09b424a95d09",
-  "builder_sha256": "d8aabb7c5599112194c7402e479280e4a568e4faa64c546f2e18985fc33404ff",
-  "preparer_sha256": "21cfdd22fe2d6043ec6af87509ea1aa8bf1826485893158540457ca94eff5755",
-  "classifier_sha256": "4c5b8c6e1e7a10e9261114b89f2211cb804594ea23e870960401d03a50c38196",
+  "builder_sha256": "49272c886e0e76d4a7adf91ba328e4afc6815a43f963b4970fccae821e819e0c",
+  "preparer_sha256": "a83e920e0a6887b90f7732f6293380dee80dae101da39e25d537f276ac192502",
+  "classifier_sha256": "461dab9ef297c5e3f4b4b5fc056f884620e2396fddef0848b776c1aad9bdab73",
   "outputs": {
     "expression-status-counts.csv": "d7c91df0d7acc1f11863a26aa2f59b9bb16532f3a7ca99a0b6f5f22c6294a9db",
     "gene-results.csv.gz": "79c24371d25b9a4481b50ecd9f3a9a3699819da7c334fe5bb90733e1cdeb8707",
@@ -187,5 +187,23 @@
     "selection-counts.csv": "4636916948d8038f3cc5bd26144bbb54147a8d610384dd8a3813b08c4006a11e",
     "summary.json": "8574380a798273ec8b4d8e9d6c91b96600c0ae1869dc66a4ea9eaa399a993a8b",
     "threshold-sensitivity.csv": "b396b773edeb82f970a9740da3646090e2608b564d8404f592e85bbfefd5088d"
+  },
+  "refactor_verification": {
+    "method": "Identical runtime AST after removing function annotations and docstrings",
+    "implementation_updates": {
+      "scripts/build_cta_quantitative.py": {
+        "before": "d8aabb7c5599112194c7402e479280e4a568e4faa64c546f2e18985fc33404ff",
+        "after": "49272c886e0e76d4a7adf91ba328e4afc6815a43f963b4970fccae821e819e0c"
+      },
+      "scripts/prepare_cta_quantitative.py": {
+        "before": "21cfdd22fe2d6043ec6af87509ea1aa8bf1826485893158540457ca94eff5755",
+        "after": "a83e920e0a6887b90f7732f6293380dee80dae101da39e25d537f276ac192502"
+      },
+      "oncoref/cta_quantitative.py": {
+        "before": "4c5b8c6e1e7a10e9261114b89f2211cb804594ea23e870960401d03a50c38196",
+        "after": "461dab9ef297c5e3f4b4b5fc056f884620e2396fddef0848b776c1aad9bdab73"
+      }
+    },
+    "scientific_outputs_changed": false
   }
 }

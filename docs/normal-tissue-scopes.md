@@ -342,7 +342,7 @@ from oncoref.normal_tissues import normal_tissue_screening_policy
 
 policy = normal_tissue_screening_policy("ihc_adaptive_cta")
 assert policy["negative_ihc_rna_limits"]["Enhanced"] == {
-    "vital": 6, "protected": 12, "manageable": 30,
+    "vital": 12, "protected": 24, "manageable": 60,
 }
 
 # One gene's annotated HPA v23 observation table; an independently specified

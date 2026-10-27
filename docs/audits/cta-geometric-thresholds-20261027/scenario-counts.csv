@@ -1,0 +1,10 @@
+mode,tumor,selected
+legacy,recurrence,244
+legacy,maximum10,337
+legacy,maximum30,197
+ihc_doubling,recurrence,244
+ihc_doubling,maximum10,337
+ihc_doubling,maximum30,197
+two_axis_doubling,recurrence,226
+two_axis_doubling,maximum10,319
+two_axis_doubling,maximum30,182

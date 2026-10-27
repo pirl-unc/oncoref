@@ -1,0 +1,12 @@
+{
+  "policy": "oncoref.expanded-three-way.2026-10-27.1",
+  "categories": {
+    "Unsafe": 17906,
+    "Neither": 1886,
+    "CTA": 305
+  },
+  "quantitative_candidates": 360,
+  "tumor_failures_after_association": 9,
+  "optional_gaps_in_CTA": 10,
+  "historical_classes_changed": false
+}

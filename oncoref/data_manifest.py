@@ -235,6 +235,10 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "external-ihc-evidence": (
+        "protein",
+        "categorical external staining observations, source evidence, reagent identity and explicit validation gaps",
+    ),
     "hpa-cancer-crosswalk": ("hpa", "IHC/RNA cancer correspondence and scope limitations"),
     "hpa-cancer-rna-cohorts": ("hpa", "HPA TCGA/validation RNA labels and sample counts"),
     "legacy-dataset-dispositions": (

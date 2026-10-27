@@ -1,0 +1,35 @@
+{
+  "policy": "oncoref.harmonized-cta.2026-10-27.1",
+  "protein_group_categories": {
+    "Unsafe": 17824,
+    "Neither": 1748,
+    "CTA": 291
+  },
+  "gene_categories_before_grouping": {
+    "Unsafe": 17906,
+    "Neither": 1886,
+    "CTA": 305
+  },
+  "reference_gene_loci": 20097,
+  "protein_equivalence_groups": 19863,
+  "selected_member_loci": 306,
+  "historical_CTA_categories": {
+    "CTA": 150,
+    "Neither": 32,
+    "Unsafe": 31
+  },
+  "named_control_categories": {
+    "PAGE1": "CTA",
+    "SMC1B": "CTA",
+    "CTAG2": "Unsafe",
+    "MAGEA4": "CTA",
+    "TBXT": "Neither",
+    "PRAME": "Unsafe",
+    "CT83": "CTA",
+    "NY-ESO-1": "CTA",
+    "SSX2/B": "CTA",
+    "XAGE1A/B": "CTA"
+  },
+  "eligible_external_observations": 0,
+  "order_independent": true
+}

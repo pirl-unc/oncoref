@@ -63,7 +63,8 @@ def retrieve(client, query, *, page_size=1000, max_pages=100):
     return list(papers.values()), pages, total, False
 
 
-def main():
+def main() -> None:
+    """Run the command-line audit with explicit input and output paths."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--ledger", type=Path, default=ROOT / "docs/audits/cta-literature-20261025/searches.csv"

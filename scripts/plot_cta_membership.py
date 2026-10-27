@@ -12,7 +12,8 @@ import numpy as np
 import pandas as pd
 
 
-def build(audit):
+def build(audit: Path) -> None:
+    """Build the versioned audit tables, report and source provenance."""
     out = audit / "figures"
     out.mkdir(exist_ok=True)
     d = pd.read_csv(audit / "gene-results.csv.gz", low_memory=False)

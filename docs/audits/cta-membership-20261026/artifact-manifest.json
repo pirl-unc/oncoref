@@ -1,7 +1,7 @@
 {
   "data_manifest": "run-manifest.json",
   "figure_builder": "scripts/plot_cta_membership.py",
-  "figure_builder_sha256": "22b7537869a71ab07ef52c084559197e504fb63a61902201bc59e440fca513b5",
+  "figure_builder_sha256": "5c142960365215932639394245c1c0c8a70efae6b6897cb5454c298de2fc3bdf",
   "outputs": {
     "index.md": "8afdf2621772626791625c0b2281fb8abf2e81bee43befba6631802870ac31f9",
     "figures/expression-distribution.png": "e4a21dca7977b867a1db9f7c86b1522dbfce474f7ae976567b06ad5c77f67d9c",
@@ -11,5 +11,15 @@
     "figures/source-coverage.png": "d5aa9375ba64f1656c3837de51e2e82fe85360a5102d8cddbf66a3534696ff5c",
     "figures/source-coverage.svg": "cb2a4502770a68d3b6124b6209c4c1f7bfef6499cb974c1b0cfac54402e133f7"
   },
-  "visual_review": "Generated PNGs inspected; labels, native units and counts checked."
+  "visual_review": "Generated PNGs inspected; labels, native units and counts checked.",
+  "refactor_verification": {
+    "method": "Figure builders have identical runtime AST after removing function annotations and docstrings; every stored artifact hash verified",
+    "implementation_updates": {
+      "scripts/plot_cta_membership.py": {
+        "before": "22b7537869a71ab07ef52c084559197e504fb63a61902201bc59e440fca513b5",
+        "after": "5c142960365215932639394245c1c0c8a70efae6b6897cb5454c298de2fc3bdf"
+      }
+    },
+    "scientific_outputs_changed": false
+  }
 }

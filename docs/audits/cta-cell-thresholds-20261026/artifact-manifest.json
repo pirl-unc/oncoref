@@ -12,7 +12,22 @@
   },
   "builder_sha256": {
     "scripts/build_cta_selection_slides.mjs": "4ea0a3bb7f190da4831440747473739e73d109ee502ce748fc4c7ce0df9c0af9",
-    "scripts/cta_selection_figures.py": "3c08c96b51349af2016d7632db874b4d257522bb0f93b0c1a7b7bc8624e3165e"
+    "scripts/cta_selection_figures.py": "b1eeeeed1efe51806d64934b01815d49e14c9e33eb30a84f4987e9d6769cab40"
   },
-  "data_manifest_sha256": "67e2d9f2872d15235e79db5cb87ef938ed3def46aecefa4110b3d9803c0a0d13"
+  "data_manifest_sha256": "313a628f891c1e4deda285b7ff25d29ae13363b6b386b49738b9fa76a4eb50d1",
+  "refactor_verification": {
+    "method": "Figure builders have identical runtime AST after removing function annotations and docstrings; every stored artifact hash verified",
+    "implementation_updates": {
+      "scripts/cta_selection_figures.py": {
+        "before": "3c08c96b51349af2016d7632db874b4d257522bb0f93b0c1a7b7bc8624e3165e",
+        "after": "b1eeeeed1efe51806d64934b01815d49e14c9e33eb30a84f4987e9d6769cab40"
+      },
+      "docs/audits/cta-cell-thresholds-20261026/run-manifest.json": {
+        "before": "67e2d9f2872d15235e79db5cb87ef938ed3def46aecefa4110b3d9803c0a0d13",
+        "after": "313a628f891c1e4deda285b7ff25d29ae13363b6b386b49738b9fa76a4eb50d1",
+        "proof": "Only source receipt hashes changed after identical-table offline replay"
+      }
+    },
+    "scientific_outputs_changed": false
+  }
 }
