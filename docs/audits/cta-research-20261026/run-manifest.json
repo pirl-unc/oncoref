@@ -1,0 +1,47 @@
+{
+  "inputs": {
+    "docs/audits/cta-policy-20261025/decision-facts.csv.gz": "d46df11eed07b1d09a575c41f579b2735c4e3412fda93f58cefb8a3689859305",
+    "docs/audits/cta-policy-20261025/candidate-results.csv.gz": "3dcc698b1bb6ee43ba1949bc83e7a075b0f2d92ead2a02d19f73ead68bd833e0",
+    "oncoref/data/cta-policy-findings.csv": "7975aca62e551db217b635777db4ff7581a9cb7a597cb782c44f03d9d38cdbe7",
+    "oncoref/data/cta-research-clinical-evidence.csv": "7fc89a63fa2d722c248318c8236c2ee7b82ec30aa81cf25b0b0d772a9abf128b",
+    "oncoref/data/cta-intake-identity-reviews.csv": "f6c89291ca994cdb3bf8101b14bca1cf4a018df982f8ee0b8ffc82d296280c0d",
+    "docs/audits/cta-literature-20261025/all-genes.csv": "222027505a80da47f0d2e2b9025323730b7786ea6dafb2e536c8e1d34341e967",
+    "scripts/build_cta_research_policy.py": "c832402794910a6cb684185b50814e6482c0156d644a35866ee4e67b14aaa635",
+    "oncoref/cta_research_policy.py": "a1010b02e32f8188c442089d8c2980ae3ae8b65acbc3be7ac9b06d8fb49be2c9"
+  },
+  "retrieval_inputs": {
+    "expanded-papers.csv": "93c9bc563239ae34f32e6036bdcba836eb4b38d39ac74bbc6f93ae01fe3ed9d2",
+    "expanded-searches.csv": "011c573c14c4de2c8f1f945ed8ec7e0ec81130286d34d02e5ecea90819b19d54",
+    "expanded-summary.json": "301c039ac5730ee2eceaea05daa8383f6ce23ea4ceded9336b3d6b0b49aae587",
+    "paper-receipts.json": "2d34f22e8f6c3d88d10a4d8a6c0b2ecac0de64e2129d3b341428c60502780fb3"
+  },
+  "outputs": {
+    "candidate-results.csv.gz": "fda7a139733f3eac862f18ceaa3a0426e4e09163b798f89f0442124946b8922f",
+    "changes.csv": "67e4875022c4286d8d724d21b6a48b615c43946f45f22927b4c7b32612501dfa",
+    "clinical-evidence.csv": "7fc89a63fa2d722c248318c8236c2ee7b82ec30aa81cf25b0b0d772a9abf128b",
+    "cta-genes.csv": "3e1cb7d461a334466551d84b08831d0f3de270fb9b975cc6b01fe65ca3ed8406",
+    "expanded-papers.csv": "93c9bc563239ae34f32e6036bdcba836eb4b38d39ac74bbc6f93ae01fe3ed9d2",
+    "expanded-searches.csv": "011c573c14c4de2c8f1f945ed8ec7e0ec81130286d34d02e5ecea90819b19d54",
+    "expanded-summary.json": "301c039ac5730ee2eceaea05daa8383f6ce23ea4ceded9336b3d6b0b49aae587",
+    "gene-results.csv.gz": "9de6efe834b66bfd4abcd40ea64376b5aeeeab5f1b378883d18fc2a0b9958782",
+    "index.md": "45db8067501222618df52cbfb30d43605478fc7e6080a08177b22e72186dcc75",
+    "literature-review-status.csv": "851ab0d6dc28eb0f1bee6204555616dff6180c9eec56ae9bd1a93ef5dc5b3f6e",
+    "paper-receipts.json": "2d34f22e8f6c3d88d10a4d8a6c0b2ecac0de64e2129d3b341428c60502780fb3",
+    "summary.json": "60aba194495520506106f04fe312604d64e7deacb576fecd3f17a60dafba5db6",
+    "unmapped-identity-reviews.csv": "f6c89291ca994cdb3bf8101b14bca1cf4a018df982f8ee0b8ffc82d296280c0d"
+  },
+  "refactor_verification": {
+    "method": "Runtime AST identical to pinned HEAD after removing function annotations and docstrings",
+    "implementation_updates": {
+      "scripts/build_cta_research_policy.py": {
+        "before": "0df6b2d194e4c843196f28d8b52f86ab6a179952a6dc5fff59041d45cfa6226a",
+        "after": "c832402794910a6cb684185b50814e6482c0156d644a35866ee4e67b14aaa635"
+      },
+      "oncoref/cta_research_policy.py": {
+        "before": "18dec61e71fc474b56f6174e1878fec13f9dff390e3c4b83400906e607bc9973",
+        "after": "a1010b02e32f8188c442089d8c2980ae3ae8b65acbc3be7ac9b06d8fb49be2c9"
+      }
+    },
+    "scientific_outputs_changed": false
+  }
+}

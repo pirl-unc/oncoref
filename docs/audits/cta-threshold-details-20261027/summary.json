@@ -1,0 +1,54 @@
+{
+  "policy": "oncoref.cta-quantitative-ihc-comparison.2026-10-27.1",
+  "scenarios": [
+    {
+      "scenario": "selected",
+      "genes": 447,
+      "controls": 10,
+      "Neither": 210,
+      "CTA": 127,
+      "Unsafe": 110
+    },
+    {
+      "scenario": "maximum_tumor_selected",
+      "genes": 352,
+      "controls": 10,
+      "Neither": 163,
+      "CTA": 101,
+      "Unsafe": 88
+    },
+    {
+      "scenario": "ihc_conditioned_selected",
+      "genes": 187,
+      "controls": 8,
+      "Neither": 106,
+      "CTA": 80,
+      "Unsafe": 1
+    },
+    {
+      "scenario": "maximum_tumor_ihc_conditioned_selected",
+      "genes": 150,
+      "controls": 8,
+      "Neither": 83,
+      "CTA": 67
+    }
+  ],
+  "ihc_evaluated_genes": 478,
+  "maximum_tumor_lost": 126,
+  "maximum_tumor_gained": 31,
+  "exact_cell_ihc_matches": 1499,
+  "cell_ihc_relaxations": 1451,
+  "assessed_cell_contexts": 128104,
+  "ihc_factors": {
+    "Missing/uncertain": 1,
+    "Approved": 1.25,
+    "Supported": 1.5,
+    "Enhanced": 2
+  },
+  "scope": "Exclusion-only IHC comparison for the union of genes eligible under either tumor rule; other genes retain their unchanged failing gates.",
+  "tumor_source": "HPA 25.1 native pTPM; 21 TCGA and 10 validation cohorts; other OncoRef cohorts not queried.",
+  "bulk_rule": "Existing local HPA negative-IHC absolute ladder, capped at 10 nTPM; no legacy selectivity gate.",
+  "cell_rule": "Existing illustrative native-unit dual-cutoff matrix and exact-cell negative-IHC multipliers; original 30 nTPM adult-cell cap also remains.",
+  "protein_rule": "Original detected-normal-IHC exclusion retained, including uncertain staining; uncertain signal is a hold, not verified protein.",
+  "age_scope": "Normal panels used by the adult research screen; no pediatric normal panel or age-stratified validation."
+}

@@ -1,0 +1,40 @@
+{
+  "policy": "oncoref.cta-research-selection.2026-10-26.1",
+  "expression_policy": "oncoref.target-sets.2026-10-25.2",
+  "scope": "Evidence-weighted CTA target-development research selection",
+  "nominated": {
+    "Unsafe": 1585,
+    "Neither": 740,
+    "CTA": 215
+  },
+  "selected_genes": 215,
+  "changes": [
+    {
+      "Gene": "MAGEA4",
+      "Gene ID": "ENSG00000147381",
+      "Expression category": "Neither",
+      "Category": "CTA"
+    },
+    {
+      "Gene": "PRAME",
+      "Gene ID": "ENSG00000185686",
+      "Expression category": "Unsafe",
+      "Category": "CTA"
+    }
+  ],
+  "numerical_rna_threshold_changes": 0,
+  "new_breadth_admission_cutoff": null,
+  "clinical_comparison_records": 6,
+  "review_status_counts": {
+    "Unassessed primary papers": 2492,
+    "Prior specific assessment; see recorded depth": 42,
+    "Clinical comparison reviewed 2026-10-26": 6
+  },
+  "issue_638_complete": false,
+  "issue_638_reason": "Comprehensive individual primary-paper review, search expansion and full-text coverage remain incomplete.",
+  "normal_protein_background_changed": false,
+  "calibration": "User-requested PRAME/MAGE-A4 benchmarks; not independent validation",
+  "expanded_queries": 27,
+  "expanded_queries_paginated_completely": 27,
+  "expanded_genes": 10
+}

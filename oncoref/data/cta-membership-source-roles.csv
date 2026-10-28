@@ -1,0 +1,21 @@
+source_tag,Class,Counts toward consensus,Rationale
+Bai2016_EGFL6,,False,Targeted ovarian tumor/vascular evidence does not alone establish reproductive association
+Boel1995_BAGE,Cancer-germline,True,Primary cancer-testis discovery; unresolved input locus remains unmapped
+Bradley2020_CPA,Cancer-placental,True,Placenta/cancer expression candidates; functional validation is gene-specific
+Bruggeman2018_GC,Cancer-germline,True,Germ-cell cancer expression nomination; includes TGCT-dependent entries
+Carter2023_CT,Cancer-germline,True,Cancer-testis expression nomination; not functional validation for every row
+Chang2019_TGCT,Cancer-germline,True,Testis/cancer nomination limited to TGCT
+Garg2007_SPAG9,Cancer-germline,True,Testis-associated antigen and human tumor evidence
+Gong2021_placenta_PC,Cancer-placental,False,Normal placental enrichment without tumor requirement
+Gong2021_placenta_ncRNA,Cancer-placental,False,Normal placental enrichment without tumor requirement; only mapped coding genes eligible
+Gong2021_reproductive_PC,Cancer-reproductive,False,Normal reproductive enrichment without tumor requirement
+Gong2021_reproductive_ncRNA,Cancer-reproductive,False,Normal reproductive enrichment without tumor requirement; only mapped coding genes eligible
+Jamin2021_CT,Cancer-germline,True,Cancer/testis microarray pattern; probe specificity remains limited
+Jamin2021_core,Cancer-germline,True,Same DOI as Jamin CT; never counted as another paper
+Loriot2025_S1,Cancer-germline,True,Strict cancer-germline RNA nomination
+Loriot2025_S2,Cancer-germline,True,Preferential cancer-germline RNA nomination; same DOI as S1
+Seager2024_CTA,,False,Mixed profiled panel contains differentiation antigen MLANA; not uniformly CTA evidence
+daSilva2017_CT,Cancer-germline,True,Testis-biased genes with tumor RNA support
+daSilva2017_testis_biased,Cancer-germline,False,Testis bias alone does not establish tumor association
+daSilva2017_tumor_proteomics,Cancer-germline,True,Testis-biased genes with tumor proteomic support; same DOI as CT
+Wang2016_CT,Cancer-germline,True,Cancer-testis RNA nomination

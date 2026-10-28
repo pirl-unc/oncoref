@@ -1,0 +1,54 @@
+gene_id,filter,ratio,tissue,cell_type,value,ceiling,unit,symbol
+ENSG00000185686,Normal bulk,1.8,adrenal gland,,3.6,2.0,nTPM,PRAME
+ENSG00000126890,Normal bulk,1.7,kidney,,3.4,2.0,nTPM,CTAG2
+ENSG00000204382,Normal bulk,0.75,liver,,1.5,2.0,nTPM,XAGE1B
+ENSG00000204019,Normal bulk,0.65,salivary gland,,2.6,4.0,nTPM,CT83
+ENSG00000164458,Normal bulk,0.65,pituitary gland,,1.3,2.0,nTPM,TBXT
+ENSG00000184033,Normal bulk,0.1,cerebellum,,0.2,2.0,nTPM,CTAG1B
+ENSG00000077935,Normal bulk,0.05,lymph node,,0.2,4.0,nTPM,SMC1B
+ENSG00000204379,Normal bulk,0.05,lung,,0.1,2.0,nTPM,XAGE1A
+ENSG00000147381,Normal bulk,0.05,small intestine,,0.1,2.0,nTPM,MAGEA4
+ENSG00000268651,Normal bulk,0.0125,skin,,0.1,8.0,nTPM,CTAG1A
+ENSG00000241476,Normal bulk,0.003125,thyroid gland,,0.2,64.0,nTPM,SSX2
+ENSG00000068985,Normal bulk,0.0,spinal cord,,0.0,2.0,nTPM,PAGE1
+ENSG00000126890,HPA tissue clusters,12.45,bronchus,basal respiratory cells,24.9,2.0,nTPM,CTAG2
+ENSG00000185686,HPA tissue clusters,6.0,heart muscle,fibroblasts,12.0,2.0,nTPM,PRAME
+ENSG00000077935,HPA tissue clusters,0.95,brain,excitatory neurons,1.9,2.0,nTPM,SMC1B
+ENSG00000204019,HPA tissue clusters,0.15,salivary gland,mucus glandular cells,0.6,4.0,nTPM,CT83
+ENSG00000164458,HPA tissue clusters,0.15,adipose tissue,fibroblasts,1.2,8.0,nTPM,TBXT
+ENSG00000204382,HPA immune,0.4,blood,plasmacytoid dc,1.6,4.0,nTPM,XAGE1B
+ENSG00000164458,HPA immune,0.2,blood,naive b-cell,0.8,4.0,nTPM,TBXT
+ENSG00000184033,HPA immune,0.0,blood,memory cd4 t-cell,0.0,4.0,nTPM,CTAG1B
+ENSG00000185686,HPA immune,0.0,blood,total pbmc,0.0,4.0,nTPM,PRAME
+ENSG00000068985,HPA immune,0.0,blood,plasmacytoid dc,0.0,4.0,nTPM,PAGE1
+ENSG00000241476,HPA immune,0.0,blood,plasmacytoid dc,0.0,4.0,nTPM,SSX2
+ENSG00000268651,HPA immune,0.0,blood,intermediate monocyte,0.0,4.0,nTPM,CTAG1A
+ENSG00000204379,HPA immune,0.0,blood,nk-cell,0.0,4.0,nTPM,XAGE1A
+ENSG00000204019,HPA immune,0.0,blood,intermediate monocyte,0.0,4.0,nTPM,CT83
+ENSG00000147381,HPA immune,0.0,blood,total pbmc,0.0,4.0,nTPM,MAGEA4
+ENSG00000126890,HPA immune,0.0,blood,intermediate monocyte,0.0,4.0,nTPM,CTAG2
+ENSG00000077935,HPA immune,0.0,blood,naive cd8 t-cell,0.0,4.0,nTPM,SMC1B
+ENSG00000204382,Monaco immune,0.225,blood,intermediate monocyte,0.9,4.0,TPM,XAGE1B
+ENSG00000164458,Monaco immune,0.2,blood,exhausted memory b-cell,0.8,4.0,TPM,TBXT
+ENSG00000077935,Monaco immune,0.175,blood,naive cd4 t-cell,0.7,4.0,TPM,SMC1B
+ENSG00000185686,Monaco immune,0.05,blood,progenitor cell,0.2,4.0,TPM,PRAME
+ENSG00000241476,Monaco immune,0.025,blood,vd2 gdtcr,0.1,4.0,TPM,SSX2
+ENSG00000204379,Monaco immune,0.0,blood,exhausted memory b-cell,0.0,4.0,TPM,XAGE1A
+ENSG00000204019,Monaco immune,0.0,blood,terminal effector memory cd8 t-cell,0.0,4.0,TPM,CT83
+ENSG00000268651,Monaco immune,0.0,blood,naive b-cell,0.0,4.0,TPM,CTAG1A
+ENSG00000147381,Monaco immune,0.0,blood,memory cd4 t-cell th1/th17,0.0,4.0,TPM,MAGEA4
+ENSG00000126890,Monaco immune,0.0,blood,central memory cd8 t-cell,0.0,4.0,TPM,CTAG2
+ENSG00000068985,Monaco immune,0.0,blood,classical monocyte,0.0,4.0,TPM,PAGE1
+ENSG00000184033,Monaco immune,0.0,blood,progenitor cell,0.0,4.0,TPM,CTAG1B
+ENSG00000077935,DICE immune,0.87493343338,blood,cd4_stim,3.49973373352,4.0,TPM,SMC1B
+ENSG00000126890,DICE immune,0.41154345617,blood,treg_naive,1.64617382468,4.0,TPM,CTAG2
+ENSG00000164458,DICE immune,0.208076580097,blood,b_cell_naive,0.832306320388,4.0,TPM,TBXT
+ENSG00000185686,DICE immune,0.05507914338175,blood,cd8_naive,0.220316573527,4.0,TPM,PRAME
+ENSG00000184033,DICE immune,0.024974534896175,blood,th2,0.0998981395847,4.0,TPM,CTAG1B
+ENSG00000147381,DICE immune,0.0,blood,cd8_stim,0.0,4.0,TPM,MAGEA4
+ENSG00000204382,DICE immune,0.0,blood,cd8_naive,0.0,4.0,TPM,XAGE1B
+ENSG00000204019,DICE immune,0.0,blood,cd8_naive,0.0,4.0,TPM,CT83
+ENSG00000204379,DICE immune,0.0,blood,cd8_naive,0.0,4.0,TPM,XAGE1A
+ENSG00000268651,DICE immune,0.0,blood,cd8_stim,0.0,4.0,TPM,CTAG1A
+ENSG00000068985,DICE immune,0.0,blood,cd8_stim,0.0,4.0,TPM,PAGE1
+ENSG00000241476,DICE immune,0.0,blood,cd8_stim,0.0,4.0,TPM,SSX2

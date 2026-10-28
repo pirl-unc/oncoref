@@ -39,6 +39,9 @@ jobs:
           assert oncoref.canonical_gene_id("NOT_A_REAL_GENE") is None
           assert not oncoref.cancer_tmb_df().empty
           assert not oncoref.cancer_type_registry().empty
+          assert len(oncoref.cta_selection.results(category="CTA")) == 463
+          assert oncoref.canine.cta_selection().assessment_status.eq("unassessed").all()
+          assert oncoref.mouse.cta_selection().empty
 
           from oncoref.drivers import DriverGeneIdentityWarning
 
@@ -270,6 +273,7 @@ jobs:
         run: >-
           pytest tests/test_cta_evidence_flow.py tests/test_species_antigens.py
           tests/test_species_modules.py tests/test_reference_identity.py
+          tests/test_cta_selection.py tests/test_cta_selection_artifacts.py
           -q -W error::DeprecationWarning
 
       - name: Verify identity tests from the source archive

@@ -1,0 +1,86 @@
+{
+  "policy": "oncoref.linked-normal-rna.2026-10-27.1",
+  "scenarios": [
+    {
+      "scenario": "linked_recurrence_selected",
+      "genes": 244,
+      "controls": 8,
+      "Neither": 142,
+      "CTA": 96,
+      "Unsafe": 6
+    },
+    {
+      "scenario": "linked_maximum_tumor_selected",
+      "genes": 337,
+      "controls": 8,
+      "Neither": 187,
+      "CTA": 141,
+      "Unsafe": 9
+    },
+    {
+      "scenario": "linked_tumor30_selected",
+      "genes": 197,
+      "controls": 8,
+      "Neither": 108,
+      "CTA": 82,
+      "Unsafe": 7
+    },
+    {
+      "scenario": "linked_recurrence_legacy_cornea_selected",
+      "genes": 248,
+      "controls": 8,
+      "Neither": 144,
+      "CTA": 98,
+      "Unsafe": 6
+    },
+    {
+      "scenario": "linked_maximum_tumor_legacy_cornea_selected",
+      "genes": 341,
+      "controls": 8,
+      "Neither": 189,
+      "CTA": 143,
+      "Unsafe": 9
+    },
+    {
+      "scenario": "linked_tumor30_legacy_cornea_selected",
+      "genes": 201,
+      "controls": 8,
+      "Neither": 110,
+      "CTA": 84,
+      "Unsafe": 7
+    }
+  ],
+  "ihc_evaluated_genes": 2960,
+  "maximum_tumor_lost": 6,
+  "maximum_tumor_gained": 99,
+  "exact_cell_ihc_matches": 3618,
+  "cell_ihc_relaxations": 2960,
+  "assessed_cell_contexts": 793280,
+  "ihc_factors": {
+    "Missing/uncertain": 1,
+    "Approved": 1,
+    "Supported": 1,
+    "Enhanced": 1
+  },
+  "maximum_tumor_floor_ptpm": 10.0,
+  "scope": "Shared normal-RNA ladder applied to every gene passing association, protein and coverage gates under either tumor rule; old uniform RNA caps do not restrict the pool.",
+  "tumor_source": "HPA 25.1 native pTPM; 21 TCGA and 10 validation cohorts; other OncoRef cohorts not queried.",
+  "bulk_rule": "Uncapped existing tissue/IHC absolute ladder; inclusive ceilings; no legacy selectivity gate.",
+  "cell_rule": "Same tissue/IHC ladder and inclusive boundary as bulk; identified immune cells default to Protected, with no Manageable subset exceptions.",
+  "protein_rule": "Original detected-normal-IHC exclusion retained, including uncertain staining; uncertain signal is a hold, not verified protein.",
+  "age_scope": "Normal panels used by the adult research screen; no pediatric normal panel or age-stratified validation.",
+  "context_rule": "Immune cells sampled in an explicit reproductive or developmental context are neutral for normal exclusion; blood and other tissues remain screened. Neutral observations cannot provide positive reproductive admission.",
+  "historical_uniform_genes": 447,
+  "context_neutral_uniform_gained": 10,
+  "screened_cluster_panel": [
+    399
+  ],
+  "neutral_cluster_panel": [
+    27
+  ],
+  "cornea_rule": "Native CP10K ceiling is the shared per-million ceiling divided by 100. This is nominal policy linkage, not calibrated equivalence to TPM. Original 1 CP10K is reported only as a sensitivity.",
+  "reference_rule": "Review begins at 2x the shared candidate ceiling. This provisional multiplier is not a validated toxicity boundary or an automatic sequence-reference change.",
+  "assay_deviations": [],
+  "historical_uniform_maximum_tumor_lost": 9,
+  "historical_uniform_maximum_tumor_gained": 112
+}

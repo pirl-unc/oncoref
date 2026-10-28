@@ -1,0 +1,14 @@
+doi,paper,mapped_genes,selected_genes,source_tags,evidence_scope
+10.1038/s41467-021-22695-y,Gong 2021,733,265,Gong2021_placenta_PC;Gong2021_placenta_ncRNA;Gong2021_reproductive_PC;Gong2021_reproductive_ncRNA,Placental RNA enrichment; no tumor-antigen validation | Normal reproductive-tissue enrichment; no tumor validation
+10.1038/s41467-020-19141-w,Bradley 2020,10,0,Bradley2020_CPA,CPA expression nominations; HLA peptide and antigen-specific T-cell validation for VGLL1
+10.1038/ncomms10499,Wang 2016,994,183,Wang2016_CT,Cancer-associated RNA nomination; no antigen validation asserted
+10.1038/s41388-018-0357-2,Bruggeman 2018,692,15,Bruggeman2018_GC,GC RNA nomination across cancer types; no antigen validation asserted; GC RNA nomination; inclusion depends on TGCT under this study's thresholds
+10.18632/oncotarget.21715,da Silva 2017,1066,281,daSilva2017_CT;daSilva2017_testis_biased;daSilva2017_tumor_proteomics,At least 90% normal-tissue RNA attributable to testis; tumor positivity not required | RSEM >1 in at least 10% of samples in a tumor type; RNA nomination | Gene-labelled tumor proteomics; unique-locus peptide assignment is not established
+10.1002/1878-0261.12900,Jamin 2021,481,25,Jamin2021_CT;Jamin2021_core,CT-pattern microarray nomination; tumor upregulation with no corresponding normal-tissue detection | Core CT annotation; underlying microarray probes may recognize several loci
+10.1002/cam4.2223,Chang 2019,986,222,Chang2019_TGCT,Testis-specific coding gene expressed in at least 1% of TGCT; no broad somatic-cancer claim
+10.1136/jitc-2023-007935,Carter 2023,103,46,Carter2023_CT,Final CT-expression set without detectable thymic expression; functional vaccination evidence is not assigned to every gene
+10.1186/s12967-024-04918-0,Seager 2024,15,7,Seager2024_CTA,Member of the published 17-target CTA profiling panel; includes differentiation antigen MLANA
+10.1371/journal.pgen.1011734,Loriot 2025,215,63,Loriot2025_S1;Loriot2025_S2,Cancer-germline RNA nomination; strict and preferential classes remain distinct
+10.1158/0008-5472.CAN-16-0225,Bai 2016,1,0,Bai2016_EGFL6,Ovarian-tumor and vascular expression/function; no normal-tissue exclusivity claim
+10.1016/s1074-7613(95)80053-0,Boel 1995,0,0,Boel1995_BAGE,Original BAGE tumor-antigen nomination and autologous CTL recognition; contemporary paralog resolution is not inferred
+10.1158/1078-0432.CCR-06-2340,Garg 2007,1,0,Garg2007_SPAG9,Ovarian-cancer RNA/protein expression and patient antibody responses; no HLA presentation or T-cell validation claimed

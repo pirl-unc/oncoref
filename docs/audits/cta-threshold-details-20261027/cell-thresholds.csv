@@ -1,0 +1,8 @@
+assay,unit,category,cta_cutoff,reference_cutoff
+hpa_single_cell_tissue,nTPM,vital,2,5
+hpa_single_cell_tissue,nTPM,protected,5,10
+hpa_single_cell_tissue,nTPM,manageable,10,20
+hpa_immune_cell,nTPM,vital,2,5
+hpa_immune_monaco,TPM,vital,2,5
+dice,TPM,vital,2,5
+cornea_collin_adult_counts,CP10K,vital,1,2

@@ -1,0 +1,1232 @@
+[
+  {
+    "url": "https://ms-validatedantibodies.com/products/",
+    "sha256": "b07a47daf40bbedcad45a3c1af34303a896a46828ab0dd2dd139036edc4d308f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/4312a20350fea2975bb7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/products/",
+    "sha256": "b07a47daf40bbedcad45a3c1af34303a896a46828ab0dd2dd139036edc4d308f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/4312a20350fea2975bb7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/products/page/2/",
+    "sha256": "722916440422e66adec020f39969ea733127e680e03a97b35eb4e83f21830d65",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/408b03143ab01579e144.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/products/page/3/",
+    "sha256": "e25bba79135e88d08c24bbaa78a8e545d60ca9c9ec3d9d598ab2cd2b54aca0e8",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/4c2e66cb3467ed00b471.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/53bp1-hmv324/",
+    "sha256": "cd4f4e31e7c53a9d319e21a61d9dfb91b711c187b1a7ab1a222ffac317026117",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/94e8d4bd38ca5224d0d6.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/ace2-msva-919r/",
+    "sha256": "85797326042e93ab3ef6d53790756983d091e8e6fa1ed8ec9c1610260e5d9071",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d7f79430ae7dce037d52.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/aif-1-msva-955m/",
+    "sha256": "c5493116b8f66b13615fdb8d2e1dd8b6dc2a204acd35f4d0b0a6294409a18def",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/90432672aff7aa880c73.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/androgen-receptor-msva-367r/",
+    "sha256": "238e666eed0917fad75d95957099451b488df7fd64d2f2e3bcfee6bc89915176",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/740ac05f816930be50be.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/anterior-gradient-2-agr2-hmv325/",
+    "sha256": "c7c8b0d5488925c8587823296596499d972ec908ca5ebf9e05aaf80e7174eb15",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5e46bcac19a47aa7113a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/anti-muc5ac-mouse-monoclonal-msva-109m/",
+    "sha256": "26c7bcae5b75fe76af64d9e7d26b6d45ac57ba2f99d1a4f5b9305e92982b8ff8",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/7a24e27aee0ce585dd5f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/arginase-1-msva-511r/",
+    "sha256": "49f88393232f5c287345f775ef449f4d0bfd1edc4605bc719d98dfb12393083f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/060c0ef85a10020bf773.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/atp5j-hmv3971/",
+    "sha256": "c57ca2a82ab62070a5902910c752959deb56f6cf40d9755924572a3c33af295b",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/3c7f133145692c90a9d0.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/bcl-2-msva-402m/",
+    "sha256": "2198ae62e869609e07ef4c52695561b3461f26e8b4b8d4215e9f8a34033cfdd6",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/6cd8538f422da4a33cfa.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/beta-catenin-msva-578r/",
+    "sha256": "d3265e9ffdf9f7bfee342b8b6678074f1fe94b46e7c5ab6f484c48cd07a5f35b",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d0c6f05407015649507a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/brachyury-hmv321/",
+    "sha256": "c57edfa54d086540500003b1c96155a21c5cfeefeea996a000585e65b839d9bf",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/facb3e73bd7d629318c8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/brd4-hmv4275/",
+    "sha256": "82438d3fc85f36900a89a9565fe4ea26c1d9a35859bc88b3e022cdedba3a1974",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d139b1baa0301eb47c17.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/bsep-hmv4715/",
+    "sha256": "f559e89a818048df17f4f914abcf100ae59b02d3a3aa81e13875b77dc421ad2f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2c4062e0bf604460440b.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/c-peptide-hmv-363/",
+    "sha256": "05d2c48fbff0f882a71fb49eae23e3f3ca8e5a3f4af305aaba734516839f1c75",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/da90c6e1e18da1e69517.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cadherin-16-cdh16-msva-516r/",
+    "sha256": "62f342e78172d2af39744011bf688e29dcfedf57ac963cff850d5bf8f8695dd3",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/92a46086572abc291053.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cadherin-17-cdh17-msva-517m/",
+    "sha256": "72b202fbdbdad37df3e2777a0fc357bdd8480c1126d9a6a54ca5144aacc228ed",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/658f742f12e2ce61909a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/calbindin-1-msva-471m/",
+    "sha256": "af353984d3bd28facaf8fc9454911077a552c6c37c16fe6a30c3dc3d2eaaf358",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/bd681a7d5e7ced13b302.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/caldesmon-msva-538r/",
+    "sha256": "f720bec9fafc83c2548daad9d134441edae67ac723b1a13133fd50d410b9e63a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c4c1cae8c8571c270b08.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/calponin-1-msva-455r/",
+    "sha256": "422e0dc5ae8edd493c56735bd0ac5401287c09de1f991d583e2b4212a5c6980f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/373cecd608deb14cb3cc.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/carbohydrate-antigen-19-9-ca-19-9-hmv333/",
+    "sha256": "570d7cd0a1592f465f396fc090ca655f9896ad3a786bbb9797826c37997b079d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/a94699f690906120485b.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/caspase-3-hmv307/",
+    "sha256": "a5a40df4874a34c2bdfb91e7494e36e989dfe44b7ef420c4e2f8a56f861e53d9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/432ed8f6f75543f4858a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cbp-hmv319/",
+    "sha256": "57ff8fc33838c97e89843cfdb82e34e13e6e3e5025a5fc5a868dd226600a1a47",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ec63953c9274e49bcc48.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd141-msva-141m/",
+    "sha256": "d68fb9b3094dff6b8635e8641a60f8b98308cdef0a0d688f348c5a04a504caa5",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5277bbb3941b286df6e4.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd163-msva-163m/",
+    "sha256": "ba47c0dc2ea2da30e94b1b70298e4814f45907162b7055a180a56995e0f951a1",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/028a6acd92051c603a2b.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd171-msva-171r/",
+    "sha256": "d1d9b360603a18f38894a7f888420a990c424ace7b9abadee2cefb7bb0883515",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b0d7f1787a2a302165b7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd1a-msva-001m/",
+    "sha256": "e1b99586065874438ee80be4ebb1a5911f6db06d2dcd13075d4a240b7990d337",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/8675002bf4351ad6528f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd20-msva-020r/",
+    "sha256": "1ba6ea0d76d0e2fac2ace6bfb67db2f12b2864703a3a25b86f33901b6eb52ac6",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/094a18bd03aed7ca09d2.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd22-msva-022r/",
+    "sha256": "1244b86e1ea60d4ed351ac08eb018fcef2306b58d1bac14d57f657361e357d12",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/de86447bc64aaa3aed16.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd23-msva-023m/",
+    "sha256": "4cdf8b7df8c58347b58cbe5e6c86bcf20cc8cd6c069fd265b20bbd9a2cbd1c17",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/e9e43ffa26044ecafc35.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd27-msva-027/",
+    "sha256": "d8917704240bc08eea3ccb9f1e8c3cf2e2ddb7a4b50e953cea1fe17afc75a08b",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b473e9f3925ff560c5a4.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd3-msva-003r/",
+    "sha256": "c92804f3b6bc94d63142d5004c934e8e1c5b34301469ec0a31d27298936b47b1",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/0977bd07f7b821d355b8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd31-msva-031m/",
+    "sha256": "dc84f8eee91de41d22ef6af0d766597a64b21094d209e09a9bca4d75953e5556",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c409c81ff631be07e71e.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd32b-hmv315/",
+    "sha256": "eeeb03a3d8b568fe415bc56a4a927374f1a44b55526f169ca553e7759da2ab2d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/47d71d0d45ce1a49fd4f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd34-msva-034r/",
+    "sha256": "d010fc0f0e625895d2dd520c5e53e32778716449a6f1ef0df8bed0a659e695b5",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d9f45757db98a2f46750.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd35-msva-035m/",
+    "sha256": "7c45bbdf7507daa795146eb216a91543970a5c1bfa74a5b64ce15767bb5e71d9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/55e81d9ca4e8974ddad0.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd38-msva-038r/",
+    "sha256": "d70b1e43bdc17e5c423e80c69936f0cd6fdc9b93a2a8b6c341babe9e8dc795e7",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/60920e9c9b4b345f10f3.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd4-msva-004r/",
+    "sha256": "c7d3a361b0028ee18283803878a46cfedebdba8f3e19b2c097374fd30d160e95",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f51734e608edba584c7e.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd45-msva-045r/",
+    "sha256": "4cf9b00d66b6a8a119435ffba23a3a780d306b9076e0492713e3fa4c9f91e864",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/246cdf17596a021fc8fd.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd45ra-msva-472m/",
+    "sha256": "a0add61c64e857a26faf434e0f40e4c5589fcad8083e195941b61ed48db9a6f0",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/49fc1a06cfdbae820311.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd5-msva-005r/",
+    "sha256": "f192a0c55cb964b01fb4254739b6143976f7055b46ad21ee106a0c4c00825983",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/22b59122e1b92e3d2c62.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd56-msva-056r/",
+    "sha256": "b179a328ab8fc46f857d218485c1fa09b12056a3758084a5929c2dfed09fe8b2",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/0f06df0f9f6d16be2e18.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd7-msva-007r/",
+    "sha256": "78f1a974431b237b211ecde06b20fdf21b7d6a7b4ac464c05800c9dddbc46399",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2d8798a72086d4aef5f3.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd70-msva-070r/",
+    "sha256": "a19fec23aa300c21056132670d3d9bf385fe47859eb42422f376b4825aabf3f0",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/7824c522d5527c5a2bb0.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cd8-msva-008r/",
+    "sha256": "06f7768ab6648d1f175c6c9510a3429235959e1107baa9e51fb48074ac3f9d23",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ec4e6a5eca1bf89f52c8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cea-msva-465r/",
+    "sha256": "df67ed3395b86517acf57243e6ba39461d4dc235393f090e1aa2d12a9d5f2407",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/a8ae04feee5ac2cbf823.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/ceacam6-msva-066r/",
+    "sha256": "72334d5a84765b1f573acfb4e1bb14e8a955b307889421a5217be19b06711063",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/32bf483417388666b299.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cela3b-msva-410m/",
+    "sha256": "ddd6ab7f90ac8b6a5de9493c26b6be38e805bc31eb51ae2ad5bc2d7b3ac75cde",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/37f7050fcd3a58ea9e85.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/chromogranin-a-msva-380r/",
+    "sha256": "d92c9a236f8767f9bda9d1507a6bb338ec496ae1f6d77a62c59b90eaa573351a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ad743b596b235f6172a1.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/claudin-18-2-hmv4729/",
+    "sha256": "26eac10f999b10f1576e158d516128fb39ec322a137726f87b2e467ce5168070",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/67cd04e6bd24ffeb081d.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/claudin-3-hmv309/",
+    "sha256": "cf08dee15b1ff677635c925227ca812cb493da8e4c37330666cfabb5f3e929ab",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/28c03402eb6ae34ce7a0.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/claudin-6-msva-916r/",
+    "sha256": "e25752a55ddb9eb5a0556e29109125fa9ad7b24f12a4766fa0fa5b6bb12ab1a7",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/14fd1cfc8f608a31f7e5.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/collagen-iv-msva-704r/",
+    "sha256": "02d0eecc125665d8623a9aba2d3239053cb3e7b3326c54b688b532203be61f12",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/aba22471464010ca6304.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cpa1-msva-601m/",
+    "sha256": "4056d1b7342983e0754c2e0cd91a0d2e6e2b7007e7ac49d910688ace2bf8b509",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/60c28ef92d6b1169c71f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/ctla-4-cd152-msva-152r/",
+    "sha256": "893ac1f490251c497e4c6e7a1814a7df79f2d2465857af096016b3b74a4e4b69",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ec4f49a5323f3c1cf786.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cyclin-e1-msva-898r/",
+    "sha256": "166a1ca5149138eeeeb08023582038911a38f737dc1a90dcd192bb59b2d562ce",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/7b18f9e4e9cfcb5aaf55.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cystatin-a-msva-461m/",
+    "sha256": "48e2da1a8260670ba6d19c60c2efb6f292548414f48c55324bab25335958e4e8",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f8d268a67c0c47b8a7cf.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-10-msva-610m/",
+    "sha256": "c368b5d73486718030130d8f33dd14089333019f64c71c5c2bd67b3ebccf1037",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1965efd175c63ada03fe.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-13-msva-613m/",
+    "sha256": "729823b4d7f7abe22c4128bdf64343aac833f5d9ba67299c54fa290c38f30b99",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/82ea921773c1de8f0b88.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-14-msva-614r/",
+    "sha256": "cc6ac0f08f7c2ee4960e3db760a44534288103f9f5e7c7b809cf7b82b892fd41",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/93c65c34aa4f2fb204da.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-15-msva-615m/",
+    "sha256": "9de90b1d4147fe7cb94916b0a66bfc80ecbaa7d6eab46b39fab4c6d5d8cb75a4",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5ab1b205b5390a3a844c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-17-msva-117r/",
+    "sha256": "1c2355c8e1a5ad23c67f29b3889c67ce74f8d1d25492fcf66710e2a7807b3c42",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1300286df4c5c084a4cf.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-18-msva-118/",
+    "sha256": "b4859f1ae2906e5143e06da5aa6f92552576ceb5eb285a631c6f023106dfdf06",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2441e97b8f2d61a81af1.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-19-msva-119/",
+    "sha256": "1a63f3d107b8b123c720c82eb3117d345e4782abc18c1a2a38b654cef13eba97",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/a31ca35f004c6ecac921.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-20-msva-620r/",
+    "sha256": "327a6255fafbf3a72885673cf4d83bce7b0c86773f80aded47140a5bd51e1e63",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/e4c9dc35de39ab9c1b71.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-5-msva-105m/",
+    "sha256": "7a4a36ae30a4e1831bbe6127dbf74380c6fcb86d348a1584d38e596ca17a3cce",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f71504c81d7542ae5f41.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-6-msva-606rr/",
+    "sha256": "b9a98fd700ba2fafcba2578c3f5de9428c60752f02cfa17a4423ed40085d643b",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ea5bc321780a9fd8d1eb.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-7-msva-607r/",
+    "sha256": "c1ad28498e7f9326c2fc10c4fbadf268d531908fa27a974522e99072310225d9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1f955ef1a079fcc5e8cd.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/cytokeratin-pan-msva-000r/",
+    "sha256": "f9b03897c38f0e1fd6c23ca1bc1fc6f9898a33f212fe79aa95fe74d2cc6c37b4",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b71c4f045aab441dd962.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/decorin-msva-537r/",
+    "sha256": "bb58b415c8688de3de56cd31d5e5184f0b129bdd40b283115809c52df271b64c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/89a2c318861e84dc5451.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/desmin-msva-651m/",
+    "sha256": "47285a1d66b25e2f3930d623ef892e9011d5a0354bca6a6b9d020daf235bda74",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/3012309a8b7372becb26.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/desmoglein-1-msva-544m/",
+    "sha256": "f646d73ff38abb7240923d48b83bde52478b2c7f48571318b933235f32713c85",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f24eb86026152bf7715c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/desmoglein-3-msva-543m/",
+    "sha256": "3efa82fa9bc5037435ed90acff65931417bdfd73d79ffba0c044d680267c40ff",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/90471dcc3d390c1ed952.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/dog1-msva-201m/",
+    "sha256": "e0fe80ea094e8ad6d686afd335c0aa0d547a47247d95493c78fcdb653c072ff0",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b1374d092b5e692a76ff.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/e-cadherin-msva-035r/",
+    "sha256": "1601872570b7ebdaff9385fa2fa13b2903ade1d9fcb4ad80f53973c785f9389a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/826a367dc56c042179ab.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/egfrviii-hmv3805/",
+    "sha256": "23df7ba116c1088ec7d6fad852bbecf09205cbe01acf17ce5ab90dc7ac4a7dcb",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/66c823c8a022752d3ac8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/elastin-msva-648r/",
+    "sha256": "307ac1e2a3eba587a3ac40d4ecb2bc78c2fd85eb36d574c9ac135df29ed4fce2",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/91991d12d9c293b7b607.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/epcam-msva-326r/",
+    "sha256": "119d5f9291d95c1afb60fbe812feaf0869b13f74332188a6098ba666905f7b35",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/54bd3ad19275100cd97e.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/estrogen-receptor-msva-564r/",
+    "sha256": "72a7af5ab8b7f10cfc7830a9d2ba7aebcd1f69bcdb64d961cad0aa9d92d03839",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2d946d60269806b9c772.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/fabp1-msva-501m/",
+    "sha256": "b38fdc513662fc5827cc8f7ada00c1fc029e8f33f9295f72eadfec4d365e75ee",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/baefd687a26cd5154c11.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/factor-xiii-alpha-msva-813r/",
+    "sha256": "84ed42c56ec56b868bbb7703b02a94140984fa4f080724763acc69659699d888",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2d9a9bb2b40a3bea61d3.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/foxa1-hmv4726/",
+    "sha256": "d366cf754ee0bdae5abc8b56d7971599dbd47b2d0a29fe226ec042641cb2f3af",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/e8823f4e3cbff2ecd446.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gad2-msva-602m/",
+    "sha256": "f0baae536b3242f486eebe8a10cb17e6abac7984eaef8a61bf48770fbcaf3392",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ecdb79c5b4b63423624a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gata3-msva-450m/",
+    "sha256": "a201fa4656fe57f214a2a6ce10dd60880ada7446e44cb6bf47c0fa65a8a6ac5c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c302275037e69e0ed767.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gata3-msva-550r/",
+    "sha256": "af857f215cba05a46e97336b06de355ed0271092a1dd735f67c1519d4141709e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/3481dd7a1ae720fbed2f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/glucocorticoid-receptor-hmv-304/",
+    "sha256": "2536825f3ed4a34a0a42a86d010be191a4e7c00d9ebb25657b2c479fb968ca2a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5002a7ef92f8a631dd7d.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/glut1-msva-401r/",
+    "sha256": "f67fae75379ba58e77b71ab04bdf5ba48d4e13dd9c9e1c9d0a6a6dc08f79db41",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2caeb223dbc0e73517c5.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/glutamine-synthetase-msva-750m/",
+    "sha256": "c166975f10da9f3a584e5712fa3fc2366b73d9182ee0efcf968f82936a3b4b3a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b102de841b19984b36b0.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gp2-msva-475m/",
+    "sha256": "e84e4b107bb192117409a4564d69aab1d70a2ae6dcd4c06158eb574292129fcc",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d81bdab3ad0a5e1dd0d7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gpm6a-hmv3973/",
+    "sha256": "ac0d6e866ed8a6a90d2cd72f3d2293264c0c57bf5893fc6b55afdee91c419b61",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/def2a0fd81566e5c829c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gprc5a-hmv4717/",
+    "sha256": "fbe7bc98685a6cc292186d15ef5747e83699dc5df358c7693ceca05681edd582",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ddce6169a95d4470f97c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gpx2-hmv-301/",
+    "sha256": "80714ac1c37b8e805b2e87bc596ccd250f05a1f9abf3fca0410a8df2d64b2ad0",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/da480879136bff33e33c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/growth-hormone-msva-405m/",
+    "sha256": "11896556ec5ed8961e45398958d1471b07a3cf3a71fde640440f0af5db938945",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f43225cac787f448f221.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/gstp1-msva-685r/",
+    "sha256": "6d2ea6ec419ce05bbfd347f557832c1343e315a70836ae20b2bf6a43a3c883bf",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/da53af51f0fc4117b434.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/helicobacter-pylori-msva-466m/",
+    "sha256": "964cb14a953e7db422ffc3e1313d59779871e76865c4e0cf4e5d1bdf2397b6d6",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f971bb4780a333e811b9.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/hepatocyte-specific-msva-oce5/",
+    "sha256": "5aa8aaaf77c77a0e964d686873a1af0ae310962bb5494cc7401f592a6d99eda9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1b995eed8d8cd19fed12.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/her2-cd340-msva-340r/",
+    "sha256": "7f2f162aff17d8f0a10bddb3e10f1efa45df9ef74cd3bcdb611d060b7a6c8512",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/112a72d9ac390d0f3ce7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/histone-h3-h3-3a-msva-903m/",
+    "sha256": "7f932ad8c09db25d63579b7341551722c8eed6f120560b1ac50e864dad67890e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/94b34f492821f37ae04e.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/hla-dr-msva-470r/",
+    "sha256": "297ef549df47839eaa211e79ea94ef617a109acea7ce6674203fc008255b06c5",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/88d8b9acbdec38f26fa8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/hla-drb1-msva-478r/",
+    "sha256": "fd9c08e2aab042dd013c6b5e862ea6cc91619c2b5e0f9bdb988b2a85335ec383",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/dcddf2dfd861bfb2c8a7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/hmga2-hmv-314/",
+    "sha256": "97006c4fa3bcb401ed285b46ad8b17b41ee8e6f80a1820dd66bdaae09c55a4f5",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/e068e2fec759c64112fc.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/hmgb1-hmv317/",
+    "sha256": "47a5f5e87c57bac5060b8e1b6febf5ed29cbd8068a07eb77bf45ae8939fae6ed",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/0bb3182ff8bdff3a3186.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/iga-immunglobulin-alpha-heavy-chain-msva-700r/",
+    "sha256": "bb6380820c9536376adaea182888dd10a998c4e3bf3f0e556ae7bb9ec7049bf3",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/134e09a390ea9f5c61cc.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/igd-msva-701r/",
+    "sha256": "ceb526127d8ad3b196107fef05ce308cbb04d0f0cc5853796cd43b0f256bf3b9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/8f4cf8ee8bc7ea8b7059.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/inhibin-alpha-msva-561r/",
+    "sha256": "d99cf7ce1ff3caf9ab3fcefc384928d587df647d5e6c6f39c913613c942f6586",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/3762fd65e26b6f92aa51.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/insm1-msva-456r/",
+    "sha256": "838489a39b28b5892c2d463b28bb8c07c56fc4e69bc1e55661ce17c1dbc98b4d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/0974f15a2ca7d7b2b190.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/insulin-hmv-308/",
+    "sha256": "169a967dccad5722e883a2adcc513eb872b1a4ae7c6a455b8a72bcc6aa38ca9e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c7343e2763ba6b97c4fa.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/kap1-trim28-hmv335/",
+    "sha256": "079ffb50c17f1b51bde84c53326d776b0db90f40131406ceb251cc8cef064fab",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ff63e57d3a489cf8c97d.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/kdm6a-hmv-311/",
+    "sha256": "145341e9fd3f1be38ad405990260f6af94ebfc91762848ea7f86538499b3701e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/9453bfd9423eaddee9a6.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/ki-67-mouse-monoclonal-msva-267m/",
+    "sha256": "74dafd1a3b45622005d3ee511b3fc1afb807470d51b05e72d27d182aa49333f8",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5997b30c903bdda1b650.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/kiss1-hmv3972/",
+    "sha256": "a9a43e836665d844aaad57cc5a5b3533d21c9571c315067d792fb3d72d4bd39a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b31cfd2b919ab513f1d6.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/klk7-msva-707m/",
+    "sha256": "562b6b112c5dba9f74e6723e1a5236fe0382b1849170629e68d705715e6d59d5",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/103125310d1422e26a25.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mammaglobin-msva-457rr/",
+    "sha256": "0414c6c6ae5912770f4b05afa2bb6e3d35332c72ac6f2ba4970e5fcd664b50a9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/7ad938368a5c678418f7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mcm2-msva-502r/",
+    "sha256": "8bdad90dcde26609cff749bd1245b8508e7eb922437615b9a81899321a15894c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c79bd9863638a8f6805f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mcm3-msva-503m/",
+    "sha256": "859be13e0b3e31c9894a6398c0c9bedd9e86ed86bbb51b1dea2e949aecb97c3b",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b11f004020cb5b176933.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mcm5-mini-chromosome-maintenance-protein-5-msva-505r/",
+    "sha256": "55782aa7b50224684f622d02706ba8242f58dbb5eace55a502d3669bd10ac9a0",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/4bb07a26dd998ad8c1ff.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mcm7-msva-507r/",
+    "sha256": "d02dcdafa121b301f9c2d585a45d619d34ba13f600c58250b66970d1edb25f3c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b4c2f0b96d18480100bd.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/melan-a-msva-900m-2/",
+    "sha256": "1536a3e04083632948d7dce5e1e037f5129b752f53a8971807e4d5079146e0fd",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5bd661074d64a97de041.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/melan-a-msva-900m/",
+    "sha256": "4b08333f17a5d031dd9952ac0d921267493cbf1d423dd402aebcab6db9b7675f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/bf0158d60d5600ace6b3.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mesothelin-msva-235/",
+    "sha256": "46cca0694b5f58819c3ba41b90305679bb02af2f61c90febc31425c0be7eff97",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/4e1ccf4d894b1adb6700.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mre11-hmv328/",
+    "sha256": "e12661e562372c99fea829caeb88421198facfa8a67d54a4d5e53af5620e90d7",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/66a8e2903f109e748949.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/msh2-msva-902m/",
+    "sha256": "d0c57e03614cf87418068c63a0829f1588a55f2a9808691d5229cbcc7b4a832a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/087d1040f39b559383cf.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/msh6-msva-906r/",
+    "sha256": "97095dec94019c69066e2e198eff86e526d4daa8e031ecd32f081139dea2d57e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1cb234d7bb92153dfb12.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mtap-msva-741r/",
+    "sha256": "76c41cc8022174b5eccf6df9b982f641a2dba2cfd654ef9e9f03b092b6ee9cc9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2cf8ef79b49390b4952b.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/muc1-msva-672r/",
+    "sha256": "f55ce36375516fab954bb69daefc485cf6b13b06562ae2ad9bc0a38d06a33def",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1df88558d01902c6cbfd.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/muc2-hmv-310/",
+    "sha256": "4c090cded409b577a56163c1879a904e48f18166fdd50b612390a565fe9ee7aa",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/81e4c73bd7576b01be85.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/muc6-msva-806r/",
+    "sha256": "0f2f82caaf4b5d63cf1b0f4ef525b92fd69d26420c2b348af8cd0d7166952f9f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/dba7b1cae3b28e038af7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/mx1-myxovirus-resistance-protein-1-hmv316/",
+    "sha256": "49acc135ddb07adf2d5eee02725d0dc4399cae3aa1ca4300bc97d3f654698208",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b1f1b5cbd233ec1515d1.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/myelin-basic-protein-mbp-msva-390r/",
+    "sha256": "78184eff06734e036a7a0f40503991516d9c703a69a7f984cf3d2c7111a80ae6",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/a3681169cc39541de3da.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/myeloperoxidase-mpo-msva-692m/",
+    "sha256": "1be49fc5bf36e640daf2c677990bb076afe85025ae381b8bace444d9bf40c04f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d73826a090aa9b5e9d1e.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/myh7-myosin-heavy-chain-7-msva-464m/",
+    "sha256": "780a86408ebec1a8c8d194abc07e2f047d7a47723407a9b9a584f6fd192b79fb",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/09c959d86fc387500eec.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/myod1-msva-801r/",
+    "sha256": "709c29446b07523421d6b1a4e3440e639ce19aa06e291976632a871f22445e56",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/ead032f0d8c4a772812a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/myosin-heavy-chain-11-msva-375rr/",
+    "sha256": "cc623e97c0a4ff1e01cb61c3df290f7733584e2b9052ce7b031f37979be590e8",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/21e2b0da8eef25911fa7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/napsin-a-msva-112r/",
+    "sha256": "ff0b3c2d56d4374cde04c92ee3d62f6cd1417d593308d103ec8e019d7e62ce25",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/7b498f50eba38eb0ef38.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/nectin-4-msva-304m/",
+    "sha256": "fc7629e84543fc6f7026fe6a2a57858ed1245b02a924bd28f37faeb4a8bac9c5",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/147243693975f5952a7b.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/nfix-hmv329/",
+    "sha256": "992b2ea26082dae26e5cb49abf29561835e9c6bc602f19ba66926bfc2d9a3bf3",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/8e4e6fdaa22258cd975b.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/nse-gamma-msva-451m/",
+    "sha256": "4b83f5d0d6d37633256236d48ecfc6cd57d0f179d104c6574e9068b3d6a540e6",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/83ed683abf01b0724123.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/nucleolin-msva-623r/",
+    "sha256": "e9bae9fc180b2579b4633c8458129fc96883d221abc39fb14160ae4253207e3d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/acce351f329c948252d9.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/occludin-msva-415m/",
+    "sha256": "133f42cabfe35960b9d05e39c417339ef037e92692094fc47f06be5813d48d07",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/102c6519c08288a05ed0.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/p16-msva-016r/",
+    "sha256": "b09d0a73b43323b00eac7a5fa4f0911fb4219bf7e5d99e1ce70bad4befba23be",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5e2640d98696e4b3c21c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/p27-kip1-hmv3970/",
+    "sha256": "3f26ea0f1c4627aec67b0b18a382792645ef67226f574d2d18456fd2b132da84",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1fc895bb77b1f49f3a11.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/p53-msva-053r/",
+    "sha256": "d0f8836c1c3b0eaf8bf355211954db8460029325f0354e0fc3617e127d911560",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/9b0b9c6a84fe010951c1.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/p63-msva-063r/",
+    "sha256": "d1cb4a80f86f9e55ef7aba27ac90bcc82048610f5c09d156f8709c323a139532",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/855ccb144c71f07205b9.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pai2-hmv330/",
+    "sha256": "5965350b44b419808f25b6a6759c7ea6a3acdf2db7461f5807185948a2fd302e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/cc5beed42fb8c23fabac.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/papp-a-msva-780m/",
+    "sha256": "79cbbab0c2b9dea7d15e88b6c1eb5460c5a9229f5dfd0c3e5ce57351654b0401",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/e297e174778c08a4ca3b.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/parp1-hmv334/",
+    "sha256": "4198b86e786cb4ef479f892202fdfb9e26a9bfd0525dbb37b9bd73fb3af4a13c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c5a9ce93f30b6ae2b647.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pax6-msva-706m/",
+    "sha256": "ad93f402d2e6148284471698e72c342816464d35730d2bac21917ded4fc003e4",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/a2538534d80dabc9fea4.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pax8-msva-708r/",
+    "sha256": "6c9fe4d1dc83563ed877ecdcf6157955731193bf56378ce2b48556146adea4e9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/16ec8444620b90e51f74.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pd-l1-msva-711r/",
+    "sha256": "1c5f9646c814a43b9a2965f58b2d60cedc734a98843b763de2f6536b4748d1dc",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/bb759ce57c3e10f5e1c6.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pepsinogen-i-hmv318/",
+    "sha256": "ac08ee548b9e3c2b79e8e17061eb799c5cb565eb17df01e24531bb4f0b142661",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/e0d2f217553568ecbd66.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/periostin-msva-649m/",
+    "sha256": "b3cd69a4882597d1a2eb21c0fb0ab0d461c7d1b11b574522c4f6aa25166c9306",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/00c5b16e2f8233299d42.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pgp9-5-msva-905r/",
+    "sha256": "0b639724b1a697e92f636074078005ab9e377f6a0ae8297ea0950770286e2b9c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/808d4f2beee6a0fe773a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/plap-msva-350r/",
+    "sha256": "6006792c3a9ed14c39ca78cfc554393c63c05d96b7f2acb49c363ade7adf2e4d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/4adcc932ca5de5733362.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pmel-gp100-melanosome-msva-617r/",
+    "sha256": "b1996d4346b40a305da02992786b8ff51d7dca6d34462e83ec101515e6f05377",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/da1a5d6be4b7bb753c92.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/podocalyxin-podxl-msva-645m/",
+    "sha256": "9500519b8678ba766fbd0a6dc66b79705e18c84582f2baf461e7b94c4cd3ddbf",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/71b272fe2e42ff6e9c2f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/progesterone-receptor-msva-570r/",
+    "sha256": "99da788be4377514491380b173add209b1bfdda41399ae43dbe674fb478997ab",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b7da6f7ecc69c7eacdb6.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/prostein-msva-460r/",
+    "sha256": "3a24411ebffd84dcf39bbf07349a77ddc8063bea56649c60d1ea6d6316f3e816",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2949eb9cf3f560322388.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/psa-msva-603r/",
+    "sha256": "248707de521a40f68a76331e2b71e5c9054af4e921ea30bcb4d04b0b64f048fc",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c477fd08a01458c238b8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/psap-msva-452m/",
+    "sha256": "b77872d729dd1c0fd397f2beff95c3a6231e7606de96ee464e58b4fbc3cfa9d0",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/11a23d7007d098560c9c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/psat1-hmv331/",
+    "sha256": "11a18d7b13f786533c86e94dc826f942b6af7666f9a1a097d8cda1218b8dc92e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/9f2a41e359696fc92cf7.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/psma-arx-752/",
+    "sha256": "00c88be4f3cc04ff67cb4abcf5c15479f19c74bb11258e28fce034e8555c3eda",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/bb5ea1ab427dc15cd862.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/pth-msva-525r/",
+    "sha256": "b7bcf714fc344f2914f944c8b0212b3dfc998395655923cdb34d1a9ab50f865d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/17ca2f7c062aa86ca06d.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/puf60-hmv4728/",
+    "sha256": "9a1319dd9d82d416a536b85fa6f294697f30cd46cf95cc11b5ceea751df482e1",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/3188fe3c7d7653d1b89a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/s100a12-msva-812m/",
+    "sha256": "8f1ca3c8f162667c3e9124829fb3423e42aaa3604ce447f4f657fd73a94702cf",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/7bc234aef79f0598d756.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/s100b-msva-490r/",
+    "sha256": "ce2f622a93424f11a8903b3a6d307058edd64eb285a38091319fd5f0a9f7b1a2",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/600a1c0d55aa20a4b291.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/s100p-msva-480r/",
+    "sha256": "933225c6f3d7e619dfc9cf59bf037040f86a120053ec85caf35bf5753259d8bd",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/8efd032e19f525cf74fc.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/satb2-msva-702r/",
+    "sha256": "cfb497dab59d9cf8941054a9d268921ca96790673d68466b3547c05a0274c8dd",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/780519203931ff997206.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/sdha-hmv336/",
+    "sha256": "623737ded253feb4ceb25df141a1e2594a89dcd75bd7dd88e50b9124d20e1d13",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/6d0102d6dac5dd3f4209.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/sdhb-hmv320/",
+    "sha256": "4b64d1b1310e901d09bd23d6c7638f4f7fa973fbefe8b226acecc4bc85fe423c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/15717bcb584f10d104e8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/slc6a1-gat1-hmv4721/",
+    "sha256": "cba45da4b9fa629adcaed07bfdb2882a8a5bfbe24e8e53b495d4edab27fe4557",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5cc53a19e0af84203301.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/smarca2-hmv337/",
+    "sha256": "b55a9d31380fb4b546e3f3fb9b6c5a8bf625d13e86d4446fa7fc6e83abd01f4d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/9039e68520b1bfc3367e.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/smarca4-brg1-msva-397r/",
+    "sha256": "45efac5766ec70176abefb620f2f1f19b276172d8d3185732912fe410e3234f8",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f934f920efc4ffff47b5.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/somatostatin-msva-638r/",
+    "sha256": "bb1c12312935e1310c2c145dfda25dcd480fb6044dd56fce0c7a28f028a5d747",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d0fec48ade260aa70158.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/sox10-msva-710r/",
+    "sha256": "f079ceeb18195c2531283f6e37c1cd8b8f691cd1f4444106941bc96f84ff8c60",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/35a36d9d11100e3f05a6.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/sox9-msva-709r/",
+    "sha256": "3ebb7db562bd6e1aac23b1efd96b6ef18b8646c0c4ba6d249c0563fd1fad2a2e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c3caf2bfbc188a952a07.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/star-msva-740r/",
+    "sha256": "449f2c503eb9a936dbdc7bbe77d8e78a483bdcede87db36cec95dd3fd7dea408",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/f237b8df0033190aede8.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/sting-msva-515m/",
+    "sha256": "b3cda630eac8257359ddd6efac0a6d455057d0c024edd443328ffd6fda86cde0",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/8b4370d569e78ad908ea.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/synaptophysin-msva-462r/",
+    "sha256": "e52a9aad6c9fe43595af14b0e64a0a4c7fd3dbf0d13f5d9038f7ffa02cb26f04",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/8f22c424e6dc5d93af2a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tacstd2-trop-2-msva-733r/",
+    "sha256": "ab2df02b9458a7d0407c5ea10311d301597003a008e9f9a8b5a486c8ac5a5da9",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d727efc739b3eb0fe905.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tdt-msva-453r/",
+    "sha256": "29f11c38ac1dbac5fcdbdaadada70b96ca00e560d59f5bd4f61f3ae03b4aa7cc",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/db026980b421c4077ecd.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tff1-ps2-msva-482m/",
+    "sha256": "a40e3fe730167ab0263548c9bb75d854cafe57ed1f1231b38a2728011fa29708",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/02c62a22f58533c204e3.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/thyroglobulin-msva-189r/",
+    "sha256": "e39f98858f2d58456c4da41b7a4655eba9c7fed6fb09a7d894ba19f9557cc38a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/03464383e25221ad2363.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tigit-hmv322/",
+    "sha256": "770aa73393b61b45530f7f8a82183e8f74e2f753278061a08ea7ffacd702b774",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2338f323d41373a6dfad.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tigit-hmv323/",
+    "sha256": "2c09a780972591323ed9953407642f42adc6f2fe4a6b771d39c05f550e4877b5",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/33e7f436b7b32ffad9bb.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tim3-msva-366r/",
+    "sha256": "4d045e307bdfd4d474bb5d324920fceee3422c86ac2d890502a041c64b92097d",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1e96bdcd27428bde346d.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tle1-msva-856r/",
+    "sha256": "8d4a67e2208d0e65c180e82643d3bceefb3980a2a40394c6683573edc90fbc7e",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/df9b508bb2d50e1c8d5c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/topoisomerase-2-alpha-top2a-msva-802r/",
+    "sha256": "612b5d62ae97915baaf38aba331c834d4191d5ccbcee1fd56642dc4198ccb47c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/d61b63dda17f3dbdb11a.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/transcription-factor-e3-tfe3-msva-403r/",
+    "sha256": "c0429176253cd6f77c558cb978fc658cebe7bbe5d04b4cd15790bded5a3eac88",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/37c5d49bceb6dadde8a9.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/trim29-msva-629m/",
+    "sha256": "fe7520ceb39bfc0098e5623cb6e780a638de584806e4b10d996dd00e7907d726",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c37c7cae4cf3f4686d92.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/trim72-hmv313/",
+    "sha256": "39387d51d7bb19316a14567deac3a00bc36962822a047c17f2d37ff92441c3bf",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/260c3da4b82e20e47cea.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/trps1-msva-512r/",
+    "sha256": "83507968f69f6bb2cd4bdc80cf92c736f76caf6d6e1e9f09cdd6e81f59346307",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/c645226add944407f9f1.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/ttf-1-thyroid-transcription-factor-1-nkx2-1-msva-312r/",
+    "sha256": "691f169161ccdc027d85d66eacede0efaef506161254ee7720dc12e66d0a268a",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/97d4e4a163747f47d1c6.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tyms-hmv-305/",
+    "sha256": "64d157b6a8ec3dc27d28054963fb9edb1b898f17d6fd3595a9253ea512b5c37c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/2eb4a956311976a90fda.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/tyrosine-hydroxylase-th-hmv-312/",
+    "sha256": "a96ac2c97b68acc9cdad0425813d603fb6df4198dd324caf3194917767e7b60c",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/5b809aec6854a9ec99a5.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/uroplakin-1a-msva-735m/",
+    "sha256": "c9f66369b498240c6b302623003143eda680306eadc7100d2c4905c0658a9c47",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/139f8134d6ae8389bdf2.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/uroplakin-1b-msva-734m/",
+    "sha256": "99e4fce75783bfec5831bcf63aef4b4072047e7e5ef38509ae0dc991e1244855",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/1200162d3e039200ed0c.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/uroplakin-3b-msva-736m/",
+    "sha256": "b0dbf5fed204c80db1162779a3424d5476b4213f0b3f417ee1fa4ce0c365b32f",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/6ef90346e277b0d1713f.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/villin-msva-459r/",
+    "sha256": "7bb43a64fdc20cdb8481630bca4754eb78bd6098019365d59e7f4660a44d89eb",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/91e410718ad2cf327202.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/vimentin-msva-458r/",
+    "sha256": "6e9e6b657d7a88373a50aac623fa717857319e492231f82504f54b2926bc3681",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/0de6d8e216d7f0f02614.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/von-willebrand-factor-vwf-msva-521r/",
+    "sha256": "d7b793b8d840a57e40534569ea8d9250808e8fb875732c4344c5646e224282d8",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/065e64ab7db0ea33dcd0.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/xrcc5-ku-80-msva-880m/",
+    "sha256": "de19ac0bc66a870c309375f21755d2f79d18c7914e6514e907faeb1c79fe9841",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/b9afb60acb226f578955.html",
+    "retrieved": "2026-10-27"
+  },
+  {
+    "url": "https://ms-validatedantibodies.com/product/zap-70-msva-870r/",
+    "sha256": "4cf05b137c0bdd248b33ac5ebe70039b49a66e7c69082c17a4db1bc64924e087",
+    "cache_path": "/tmp/oncoref-external-ihc-msva/e42ff53e959ca0f29877.html",
+    "retrieved": "2026-10-27"
+  }
+]

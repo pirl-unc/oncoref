@@ -1,0 +1,35 @@
+{
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "docs/audits/cta-compartment-policy-20261027/source-code/oncoref/compartment_rna_policy.py": "3c4391628b32eaf40520b61fa36273193e87e66a7274e1f24e1c443076b7fa6a",
+    "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
+    "oncoref/cell_rna_policy.py": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
+    "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
+    "oncoref/data/normal-tissue-mappings.csv": "ed83eaca220f27514c27bf0328440fab1ec85d7f11c44ff1d5dda4bb7adc0538",
+    "scripts/cta_quantitative_threshold_report.py": "ad4a1c7e7ac45f37c7f1e0b22d28000afc711ee954dc54f6b63ae75e140b7389",
+    "docs/audits/cta-expanded-funnel-20261027/gene-classifications.csv.gz": "7bee1077e0489f56dcef4cbdfb42477aafe4db1618d28f8cfbaf9a8c42db5088",
+    "docs/audits/cta-harmonized-20261027/protein-group-classifications.csv.gz": "745042f7d1a392e0087ec99fedc28e4c10a50bcdde78cc04e5160bd45ad1d2b6",
+    "docs/audits/cta-harmonized-20261027/group-normal/cluster-contexts.csv.gz": "9643fc20efb6d3ced6ef9c0d7ee47621bfed752e1b6a0e8a86bedb7371e2425b"
+  },
+  "sources": [
+    {
+      "name": "hpa_single_cell_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_type_tissue.tsv.zip",
+      "sha256": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7"
+    },
+    {
+      "name": "hpa_normal_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"
+    }
+  ],
+  "function_sha256": "86862cff499bd209961470a9f11752f04dcfd71fb63f988e01f11911322c2bd8",
+  "outputs": {
+    "cluster-assessments.csv.gz": "a5aa6f21842c0e1e97ac72188e8190b1062771fee80ba21fec616104cb3c0bd6",
+    "changed-compartment-contexts.csv.gz": "c56149739d95772bff83162b4be728e5e0a7f98ac0f5f44a18b61b892e8d736b"
+  },
+  "source_commit": "d79f4d4626fbbed85e3e2876fb3d886636cf10cc"
+}

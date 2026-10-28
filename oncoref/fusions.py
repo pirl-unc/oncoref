@@ -27,7 +27,7 @@ from functools import lru_cache
 import pandas as pd
 
 from .cancer_types import cancer_type_descendants, resolve_cancer_type
-from .gene_ids import canonical_gene_id
+from .gene_matching import match_reference_genes
 from .legacy import warn_legacy_dataset_access
 from .load_dataset import _register_derived_cache, get_data
 
@@ -61,6 +61,24 @@ def _validate_fusion_frame(frame: pd.DataFrame) -> pd.DataFrame:
         keys = frame.loc[duplicate_rows, duplicate_key].fillna("").to_dict("records")
         raise ValueError(f"cancer-fusions contains duplicate logical keys: {keys}")
 
+    # A shared symbol may name distinct loci (for example the X/Y P2RY8
+    # copies). Validate the recorded stable ID instead of guessing from a name.
+    identities = {}
+    for side in ("5prime", "3prime"):
+        pairs = frame.loc[
+            frame[f"gene_{side}_kind"].eq("gene"),
+            [f"gene_{side}", f"gene_{side}_ensembl_id"],
+        ].drop_duplicates()
+        matches = match_reference_genes(
+            pairs,
+            id_column=f"gene_{side}_ensembl_id",
+            symbol_column=f"gene_{side}",
+            source="cancer-fusions",
+            source_version="bundled",
+        )
+        for match in matches.itertuples():
+            identities[(match.source_gene_name.upper(), match.source_gene_id)] = match
+
     for index, row in frame.iterrows():
         for side in ("5prime", "3prime"):
             symbol = _clean(row[f"gene_{side}"]).upper()
@@ -86,15 +104,19 @@ def _validate_fusion_frame(frame: pd.DataFrame) -> pd.DataFrame:
                 if symbol not in TCR_FUSION_LOCI or ensembl_id:
                     raise ValueError(f"cancer-fusions row {index} has an invalid TCR locus")
                 continue
-            expected = canonical_gene_id(symbol)
-            if expected is None:
+            match = identities[(symbol, ensembl_id)]
+            if match.identity_status in {"unmapped", "ambiguous_name"}:
                 raise ValueError(
                     f"cancer-fusions row {index} has unresolved gene partner {symbol!r}"
                 )
-            if ensembl_id != expected or canonical_gene_id(ensembl_id) != expected:
+            if (
+                match.identity_status != "matched"
+                or match.source_name_unrecognized
+                or ensembl_id != match.canonical_gene_id
+            ):
                 raise ValueError(
                     f"cancer-fusions row {index} has a symbol/Ensembl mismatch for "
-                    f"{symbol}: expected {expected}, observed {ensembl_id or '<missing>'}"
+                    f"{symbol}: {match.identity_status}, observed {ensembl_id or '<missing>'}"
                 )
     return frame
 

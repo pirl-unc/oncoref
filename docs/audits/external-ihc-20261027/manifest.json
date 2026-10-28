@@ -1,0 +1,21 @@
+{
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "scripts/curate_external_ihc.py": "ce2d21b7475d2fc45873a084be8c9726c37dcb848a2d49b591b81db1d6624bde",
+    "oncoref/external_ihc.py": "47687d2dcbf57e0f026825dd6aa8d529745525fe3d13999bf449b9a3a3132ddc",
+    "oncoref/ihc_observations.py": "6cc8515f094c6804b9220a0e23ac7adaf660e7973de3ff0ccb105da981826f6c",
+    "docs/audits/external-ihc-20261027/source-receipts.json": "06ce834e99bd3cfd7cc9899cad425bf3e518976f04b96212e62850eef3c2dccf"
+  },
+  "outputs": {
+    "collection-failures.csv": "efaf66abc47823b18c41cf56087cd92248dcf0442db146a401ca56eed109affd",
+    "collection-summary.json": "1fd8f75faac4af68a2eac26460a1b0cbc19b26667baabcdf61d24f52b653f20d",
+    "antibody-only-review-queue.csv": "5c79f6d68614c84a6ae54a38b316cee3a50b41c6440a67fa14830254f047fe30",
+    "reviewed-publication-and-image-evidence.csv": "2853a8b381c3a3d7fc766a53733870652ec6f4bf4a2799cb6f27a64e965232b0",
+    "index.md": "6dc71f739e18ecc8a47fc6177446b36e78c8faeb092b5798bcacdaec150e2407",
+    "evidence-summary.json": "a3a82a161bf8639badfe91378720867599a5c96c68eee148ffb19ac7406bbb82",
+    "source-receipts.json": "06ce834e99bd3cfd7cc9899cad425bf3e518976f04b96212e62850eef3c2dccf",
+    "external-panel-inventory.csv": "86375d245882e74125f93ed8babfce07d531b398be0e1629654ec24828f27a8c",
+    "external-panel-observations.csv.gz": "02a898cc54c0be8975bfd70b285f2ed11e55dfcecb1118fbf3066e5e1501ad9b",
+    "assessed-evidence.csv.gz": "f0b8ee1b2d9243930205b1d372449b6499d99456bd18446634aa7497b8936b10"
+  }
+}

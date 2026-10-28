@@ -1,0 +1,23 @@
+{
+  "observations": 6236,
+  "genes": 193,
+  "reviewed_observations": 10,
+  "result_counts": {
+    "not_detected": 3241,
+    "detected": 2581,
+    "mixed": 292,
+    "not_assessed": 72,
+    "reported_cross_reactivity": 50
+  },
+  "context_validated_observations": 0,
+  "catalog_genes_with_missing_or_uncertain_ihc": [
+    "CD70",
+    "CLDN6",
+    "CTLA4",
+    "DNTT",
+    "INSM1",
+    "MYOD1",
+    "TBXT",
+    "TIGIT"
+  ]
+}

@@ -1,0 +1,3 @@
+gene_id,source,version,taxonomy_id,unit,cohort,compartment,summary,donors,minimum_donors,value,status,bootstrap_lower,bootstrap_upper,bootstrap_resamples,sampling_note
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,heart muscle,median,4,2,3.55,Measured,0.0,13.5,2000,Marginal percentile bootstrap; small selected cohorts have unstable population coverage; no joint tissue interval
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,heart muscle,q90,4,10,,Insufficient independent donors,,,0,Marginal percentile bootstrap; small selected cohorts have unstable population coverage; no joint tissue interval

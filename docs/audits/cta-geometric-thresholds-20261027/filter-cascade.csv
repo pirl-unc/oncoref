@@ -1,0 +1,34 @@
+mode,step,filter,before,removed,remaining
+legacy,0,Reference genes,20097,0,20097
+legacy,1,Reproductive or embryonic association,20097,7889,12208
+legacy,2,Tumor sample ≥10 pTPM,12208,112,12096
+legacy,3,No detected nonpermitted IHC,12096,9026,3070
+legacy,4,Complete required RNA panels,3070,122,2948
+legacy,5,Normal bulk,2948,2353,595
+legacy,6,HPA tissue clusters,595,231,364
+legacy,7,HPA immune,364,4,360
+legacy,8,Monaco immune,360,5,355
+legacy,9,DICE immune,355,14,341
+legacy,10,Adult cornea,341,4,337
+ihc_doubling,0,Reference genes,20097,0,20097
+ihc_doubling,1,Reproductive or embryonic association,20097,7889,12208
+ihc_doubling,2,Tumor sample ≥10 pTPM,12208,112,12096
+ihc_doubling,3,No detected nonpermitted IHC,12096,9026,3070
+ihc_doubling,4,Complete required RNA panels,3070,122,2948
+ihc_doubling,5,Normal bulk,2948,2353,595
+ihc_doubling,6,HPA tissue clusters,595,231,364
+ihc_doubling,7,HPA immune,364,4,360
+ihc_doubling,8,Monaco immune,360,5,355
+ihc_doubling,9,DICE immune,355,14,341
+ihc_doubling,10,Adult cornea,341,4,337
+two_axis_doubling,0,Reference genes,20097,0,20097
+two_axis_doubling,1,Reproductive or embryonic association,20097,7889,12208
+two_axis_doubling,2,Tumor sample ≥10 pTPM,12208,112,12096
+two_axis_doubling,3,No detected nonpermitted IHC,12096,9026,3070
+two_axis_doubling,4,Complete required RNA panels,3070,122,2948
+two_axis_doubling,5,Normal bulk,2948,2356,592
+two_axis_doubling,6,HPA tissue clusters,592,233,359
+two_axis_doubling,7,HPA immune,359,5,354
+two_axis_doubling,8,Monaco immune,354,9,345
+two_axis_doubling,9,DICE immune,345,22,323
+two_axis_doubling,10,Adult cornea,323,4,319

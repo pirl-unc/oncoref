@@ -90,8 +90,10 @@ oncoref = [
     "data/hpa-cancer-sources.json",
     "data/normal-cell-sources.json",
     "data/cta-policy.json",
+    "data/cta-selection.json",
     "data/protein-annotation-sources.json",
     "data/cta-intake-identity-snapshot.json",
+    "data/cta-membership-paper-receipts.json",
 ]
 
 [tool.setuptools.exclude-package-data]

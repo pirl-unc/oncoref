@@ -10,31 +10,37 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-[Reproductive and disposable tissue definitions](https://pirl-unc.github.io/oncoref/normal-tissue-scopes/)
-and the [current CTA report](https://pirl-unc.github.io/oncoref/audits/cta-policy-20261025/)
-document the nested sets, cited dataset mappings, complete publication intake,
-and dog/mouse evidence coverage. The human research screen requires reproductive
-expression, with category-specific absolute RNA ceilings,
-pairwise reproductive selectivity, and an independent positive-IHC veto.
-Complete local negative IHC earns relaxation only with positive reproductive
-IHC in the curated gene profile. Reviewed individual Vital-tissue RNA donors
-must meet the same RNA limits as the main screen. **Variable** candidates have
-both reported-zero and failing donors with negative local IHC; they are excluded
-now and retained for reconsideration. Donor evidence is currently imported for
-CTAG2 only; other genes are explicitly unassessed for donor variation.
-The report preserves every candidate's exclusion reasons. Numerical limits
-are research parameters, not validated clinical safety limits.
+The [current CTA/oncofetal selection](docs/audits/cta-release-1.21.0/index.md)
+contains **463 protein-equivalence groups representing 481 gene loci**. The full
+19,863-group reference receives **463 CTA / 17,388 Unsafe / 2,012 Neither**
+assignments. The common rules use measured reproductive or embryonic association,
+tumor expression, compartment-specific normal RNA, protein evidence and coverage.
+PRAME, MAGEA4, CTAG1A/B, XAGE1A/B, SSX2/B, CT83 and TBXT pass. CTAG2 remains
+excluded by bronchial basal-cell RNA. PRAME informed calibration; these are
+research prioritization decisions, not validated clinical safety limits.
 
-The current `oncoref.target_sets` API partitions genes and exact proteins into
-**CTA**, **Unsafe** and **Neither**. Only Unsafe supplies the forbidden protein
-background. Admission requires reproductive RNA ≥5 nTPM, reliable reproductive
-protein, or reviewed reproductive plus tumor/recognition evidence. Accepted
-normal-protein findings exclude; material unresolved conflicts hold. The
-[plain-language definitions](https://pirl-unc.github.io/oncoref/target-sets/)
-give the full hierarchy and unchanged numerical thresholds. The current build
-contains **213 CTA genes** and **359 distinct complete CTA protein sequences**.
-Use the matching [v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
-and their k-mer exclusion recipe. `oncoref.cta_policy.manifest()` identifies the active policy.
+```python
+from oncoref import human, canine, mouse
+
+selected = human.cta_selection(category="CTA")
+all_decisions = human.cta_selection()
+canine.cta_selection()           # 14 native nominations, Neither/unassessed
+mouse.cta_selection_coverage()   # Explicitly unavailable selection
+human.cta_sources()              # Biological role, native unit, integration status
+```
+
+The same API retains native species identities, source provenance and missing
+coverage. Dog PCR percentages, TMM-CPM and protein iBAQ never become human TPM.
+Mouse atlas entries identify resources for integration; no mouse classification
+is inferred from human orthology. See the [API and species guide](docs/cta-selection.md).
+
+Earlier 215-, 447- and 1,416-gene accessors are frozen comparisons. The exact
+protein background remains separately pinned to the
+[v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
+and their explicit exclusion recipe. Candidate protein-equivalence groups
+represent identical chosen reference proteins, not every splice isoform.
+[Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md)
+remains a descriptive measure with missing-coverage bounds.
 
 The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)
 classify Reproductive, Normal and Other independently of CTA nomination.

@@ -20,12 +20,12 @@ from oncoref import (
     cancer_fusions_df,
     cancer_type_registry,
     cancer_types_with_fusion,
-    canonical_gene_id,
     fusion_partners,
     fusion_status,
     fusions,
     protein_family,
 )
+from oncoref.gene_matching import match_reference_genes
 
 _ROOT = Path(__file__).resolve().parents[1]
 
@@ -40,10 +40,16 @@ def test_fusion_partner_identity_columns_are_complete_and_lossless():
         genes = frame[kind == "gene"]
         assert genes[f"gene_{side}"].notna().all()
         assert genes[f"gene_{side}_ensembl_id"].notna().all()
-        for row in genes.itertuples(index=False):
-            assert canonical_gene_id(getattr(row, f"gene_{side}")) == getattr(
-                row, f"gene_{side}_ensembl_id"
-            )
+        matches = match_reference_genes(
+            genes,
+            id_column=f"gene_{side}_ensembl_id",
+            symbol_column=f"gene_{side}",
+            source="cancer-fusions",
+            source_version="bundled",
+        )
+        assert matches.identity_status.eq("matched").all()
+        assert not matches.source_name_unrecognized.any()
+        assert matches.canonical_gene_id.equals(matches.source_gene_id)
 
         absent = kind == "none"
         assert symbol[absent].isna().all()
@@ -96,6 +102,22 @@ def test_fusion_partner_identity_annotations_are_reproducible():
         text=True,
     )
     assert result.returncode == 0, result.stderr
+
+
+def test_ambiguous_fusion_names_require_a_matching_recorded_locus():
+    from oncoref.gene_ids import canonical_gene_id
+
+    assert canonical_gene_id("P2RY8") is None
+    row = cancer_fusions_df().query("gene_5prime == 'P2RY8'").iloc[[0]].copy()
+    for gene_id in ("ENSG00000182162", "ENSG00000292333"):
+        row["gene_5prime_ensembl_id"] = gene_id
+        assert fusions._validate_fusion_frame(row).gene_5prime_ensembl_id.iloc[0] == gene_id
+    row["gene_5prime_ensembl_id"] = ""
+    with pytest.raises(ValueError, match="unresolved gene partner"):
+        fusions._validate_fusion_frame(row)
+    row["gene_5prime_ensembl_id"] = "ENSG00000141510"
+    with pytest.raises(ValueError, match="symbol/Ensembl mismatch"):
+        fusions._validate_fusion_frame(row)
 
 
 def test_ifs_driver_model_is_heterogeneous_and_diagnosis_independent():

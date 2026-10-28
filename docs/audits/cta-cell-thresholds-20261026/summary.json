@@ -1,0 +1,22 @@
+{
+  "status": "Illustrative calibration only; not an activated classification policy",
+  "current_selected": 215,
+  "retained_after_overlay": 154,
+  "cta_excluded": 1402,
+  "reference_review": 1116,
+  "middle_zone": 286,
+  "no_source_records": 3,
+  "negative_ihc_factors": {
+    "Missing/uncertain": 1,
+    "Approved": 1.25,
+    "Supported": 1.5,
+    "Enhanced": 2
+  },
+  "paper_union": 2538,
+  "papers": 13,
+  "additional_trial_nominations": 2,
+  "native_units": "Kept separate by assay; thresholds are not unit conversions",
+  "ihc_limit": "Exact labels plus positive profile control; no matched donors or cell-specific sensitivity calibration",
+  "overlay_limit": "Adds exclusions only. Does not rescue prior holds or treat incomplete coverage as absence.",
+  "reference_limit": "RNA evidence lists only. No FASTA/reference membership is regenerated."
+}

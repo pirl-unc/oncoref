@@ -8,13 +8,17 @@ import csv
 import io
 from pathlib import Path
 
+import pandas as pd
+
 from oncoref.gene_ids import canonical_gene_id
+from oncoref.gene_matching import match_reference_genes
 
 IMMUNOGLOBULIN_LOCI = frozenset({"IGH", "IGK", "IGL"})
 TCR_LOCI = frozenset({"TRA", "TRB", "TRD", "TRG"})
 
 
-def _partner_identity(value: str) -> tuple[str, str]:
+def _partner_identity(value: str, recorded_gene_id: str = "") -> tuple[str, str]:
+    """Resolve a name, preserving a verified stable ID for ambiguous names."""
     symbol = value.strip().upper()
     if not symbol:
         return "", "none"
@@ -23,6 +27,16 @@ def _partner_identity(value: str) -> tuple[str, str]:
     if symbol in TCR_LOCI:
         return "", "tcr_locus"
     ensembl_id = canonical_gene_id(symbol)
+    if ensembl_id is None and recorded_gene_id:
+        match = match_reference_genes(
+            pd.DataFrame({"gene_id": [recorded_gene_id], "symbol": [symbol]}),
+            id_column="gene_id",
+            symbol_column="symbol",
+            source="cancer-fusions",
+            source_version="bundled",
+        ).iloc[0]
+        if match.identity_status == "matched" and not match.source_name_unrecognized:
+            ensembl_id = match.canonical_gene_id
     if ensembl_id is None:
         raise ValueError(f"unresolved fusion partner gene: {symbol}")
     return ensembl_id, "gene"
@@ -55,7 +69,9 @@ def build(path: Path) -> str:
     seen = set()
     for index, row in enumerate(rows, start=2):
         for side in ("5prime", "3prime"):
-            ensembl_id, kind = _partner_identity(row.get(f"gene_{side}", ""))
+            ensembl_id, kind = _partner_identity(
+                row.get(f"gene_{side}", ""), row.get(f"gene_{side}_ensembl_id", "")
+            )
             row[f"gene_{side}_ensembl_id"] = ensembl_id
             row[f"gene_{side}_kind"] = kind
         key = (row["cancer_code"], row["gene_5prime"], row["gene_3prime"])

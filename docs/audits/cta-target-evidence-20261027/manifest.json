@@ -1,0 +1,39 @@
+{
+  "review_date": "2026-10-27",
+  "clinical_evidence_scope": "targeted review; unassessed targets are not negative evidence",
+  "classification_override": false,
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "scripts/audit_cta_target_evidence.py": "2451e776513e9ca7f9031a91a8e44bed63f0cb7d23c689ee1fc907c8bcf6c970",
+    "oncoref/cell_rna_policy.py": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
+    "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
+    "scripts/cta_quantitative_threshold_report.py": "ad4a1c7e7ac45f37c7f1e0b22d28000afc711ee954dc54f6b63ae75e140b7389",
+    "docs/audits/cta-expanded-funnel-20261027/normal/manifest.json": "57f2d9d615cbb77e1afa692c7542623a4f9883aeb6004197875521935a96beea",
+    "docs/audits/cta-expanded-funnel-20261027/gene-classifications.csv.gz": "7bee1077e0489f56dcef4cbdfb42477aafe4db1618d28f8cfbaf9a8c42db5088",
+    "docs/audits/cta-harmonized-20261027/manifest.json": "a76d1a3bbcd3e91f4a987c70282587b433d667adea080cb41a1506f3141e8de7"
+  },
+  "sources": [
+    {
+      "name": "hpa_single_cell_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_type_tissue.tsv.zip",
+      "sha256": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7"
+    },
+    {
+      "name": "hpa_normal_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"
+    }
+  ],
+  "outputs": {
+    "all-assay-peaks.csv": "2bc48135b4fd6554aae07e843a75ced80d6fb36be4149ba606c5857f62cd29bc",
+    "assessed-bulk-contexts.csv": "57bd5ea0487fa9e29496a69d72e721462a06a0b2fd5e89a9b05fbb8bd4673bca",
+    "assessed-cluster-contexts.csv": "f7245900f17afb51a37a5b34fa9f7538f873883419d7a4aa34aba66583021408",
+    "clinical-context-evidence.csv": "9dd23c3bb14ce7d9f67e409cb7190b7ac18e0bad05df180d3d6f886385de1ac1",
+    "current-decisions.csv": "7df78d41ae4dcca5cef1d138fdded4b2be49e36f7d6f25f90b786c18ebbca599",
+    "hpa-cluster-observations.csv": "141a67d6f9a35843b9abd9e26abf4a9331e7cc91933839388ddd6c912ed73b61",
+    "hpa-ihc-observations.csv": "0b01c444918a87e2e911fba729ea67fa12eb44f5675cbac5e90ffda6c26764a6",
+    "index.md": "b5f702df052d2133c1843fd515433c615f9ae129ad9219dd4e498e899ee0722f"
+  }
+}

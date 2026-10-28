@@ -1,0 +1,52 @@
+{
+  "policy": "oncoref.cta-quantitative.2026-10-26.1",
+  "thresholds": {
+    "reproductive_ntpm": 5,
+    "developmental_tpm": 5,
+    "adult_bulk_ntpm": 10,
+    "adult_cell_ntpm": 30,
+    "immune_native": 5,
+    "cornea_cp10k": 1
+  },
+  "genes": 20097,
+  "selected": 447,
+  "reproductive_only": 371,
+  "developmental_only": 54,
+  "both": 22,
+  "selected_missing_ihc": 271,
+  "selected_expression_categories": {
+    "Neither": 210,
+    "CTA": 127,
+    "Unsafe": 110
+  },
+  "developmental_genes_measured": 17623,
+  "developmental_embryos": 1,
+  "reproductive_tissues": [
+    "ovary",
+    "placenta",
+    "testis"
+  ],
+  "adult_bulk_exempt_reproductive_tissues": [
+    "breast",
+    "cervix",
+    "endometrium",
+    "epididymis",
+    "fallopian tube",
+    "ovary",
+    "placenta",
+    "prostate",
+    "seminal vesicle",
+    "testis",
+    "vagina"
+  ],
+  "first_failure_counts": {
+    "Adult bulk RNA above limit": 10284,
+    "Detected adult protein; uncertain staining also held": 614,
+    "Immune RNA at or above limit": 235,
+    "Incomplete required RNA panels": 27,
+    "No qualifying measured tumor expression": 232,
+    "No qualifying reproductive/developmental expression": 7889,
+    "Selected": 447,
+    "Supported adult-cell RNA at or above limit": 369
+  }
+}

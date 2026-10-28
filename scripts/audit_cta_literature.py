@@ -50,8 +50,15 @@ class SearchClient:
         self.key_locks = {}
         self.last = 0.0
 
-    def fetch(self, query, page_size):
-        params = {"query": query, "format": "json", "resultType": "core", "pageSize": page_size}
+    def fetch(self, query, page_size, *, cursor=None, result_type="core"):
+        params = {
+            "query": query,
+            "format": "json",
+            "resultType": result_type,
+            "pageSize": page_size,
+        }
+        if cursor is not None:
+            params["cursorMark"] = cursor
         key = hashlib.sha256(json.dumps(params, sort_keys=True).encode()).hexdigest()
         with self.lock:
             key_lock = self.key_locks.setdefault(key, threading.Lock())
@@ -112,7 +119,7 @@ def gene_queries(row, cutoff):
     }
 
 
-def prepare_aliases(genes):
+def prepare_aliases(genes: pd.DataFrame):
     from oncoref import protein_annotations
 
     wanted = set(genes["UniProt entries"].str.split("|").explode()) - {""}
@@ -132,7 +139,8 @@ def prepare_aliases(genes):
     return aliases
 
 
-def main():
+def main() -> None:
+    """Run the command-line audit with explicit input and output paths."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--atlas", type=Path, default=ROOT / "docs/audits/cta-atlas-20261024/all-genes.csv"

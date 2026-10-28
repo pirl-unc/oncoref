@@ -4,6 +4,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+    from .cta_selection import Category
 
 
 @dataclass(frozen=True)
@@ -125,6 +131,30 @@ class SpeciesDataGroup:
     def cta_candidates(self, *, reference=None):
         """All CTA nominations, including counterevidence and unresolved mappings."""
         return self.cta_snapshot().candidates(reference=reference)
+
+    def cta_selection(self, *, category: Category | None = None) -> pd.DataFrame:
+        """Current research decisions and explicit unassessed native nominations."""
+        if self.name != "antigens":
+            raise ValueError("cta_selection() requires the antigens group")
+        from .cta_selection import results
+
+        return results(species=self.species, category=category)
+
+    def cta_selection_coverage(self) -> dict:
+        """Selection scope, counts and missing capabilities for this species."""
+        if self.name != "antigens":
+            raise ValueError("cta_selection_coverage() requires the antigens group")
+        from .cta_selection import coverage
+
+        return coverage(species=self.species)
+
+    def cta_sources(self, *, category: str | None = None) -> pd.DataFrame:
+        """Evidence sources grouped by biological role and integration status."""
+        if self.name != "antigens":
+            raise ValueError("cta_sources() requires the antigens group")
+        from .cta_selection import sources
+
+        return sources(species=self.species, category=category)
 
     def cta_evidence(self, *, reference=None, candidate_id=None):
         """Native study observations, optionally for one returned candidate ID."""

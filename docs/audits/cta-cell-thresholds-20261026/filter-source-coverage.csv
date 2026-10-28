@@ -1,0 +1,21 @@
+source,genes,rows
+HPA tissue clusters,1095,609915
+hpa_immune_cell,1095,20805
+hpa_immune_monaco,1095,32850
+hpa_immune_schmiedel,1090,16350
+Adult corneal atlas,1071,89964
+dice_b_cell_naive,2537,230867
+dice_monocytes,2537,230867
+dice_m2,2537,228330
+dice_nk,2537,228330
+dice_treg_mem,2537,225793
+dice_cd4_naive,2537,223256
+dice_cd4_stim,2537,223256
+dice_treg_naive,2537,225793
+dice_tfh,2537,225793
+dice_th1,2537,205497
+dice_thstar,2537,223256
+dice_th17,2537,225793
+dice_th2,2537,225793
+dice_cd8_naive,2537,225793
+dice_cd8_stim,2537,223256

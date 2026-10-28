@@ -91,13 +91,11 @@ def canonical_gene_id(identifier: str, *, source_version: str | None = None) -> 
         hit = resolve_entrez_id(s)
         return hit[0] if hit is not None else None
     symbol_index = _canonical_symbol_index()
-    direct = symbol_index.get(s.upper())
-    if direct is not None:
-        return direct
+    if s.upper() in symbol_index:
+        return symbol_index[s.upper()]
     official = resolve_symbol(s)
-    resolved = symbol_index.get(official.upper())
-    if resolved is not None:
-        return resolved
+    if official.upper() in symbol_index:
+        return symbol_index[official.upper()]
     from .genome import GenomeDependencyError, canonical_gene_id_and_name
 
     try:
@@ -245,14 +243,15 @@ def _canonical_gene_index() -> dict[str, tuple[str, str]]:
 
 
 @lru_cache(maxsize=1)
-def _canonical_symbol_index() -> dict[str, str]:
-    """``{official_symbol.upper(): canonical_ensembl_gene_id}`` over canonical genes."""
+def _canonical_symbol_index() -> dict[str, str | None]:
+    """Official names map to a unique locus, or None for ambiguous names."""
     df = get_data("canonical-gene-space", copy=False)
-    out: dict[str, str] = {}
+    out: dict[str, str | None] = {}
     for gid, symbol in zip(df["ensembl_gene_id"], df["symbol"]):
         sym = str(symbol).strip()
         if sym:
-            out.setdefault(sym.upper(), _unversioned(str(gid)))
+            key, value = sym.upper(), _unversioned(str(gid))
+            out[key] = value if key not in out or out[key] == value else None
     return out
 
 

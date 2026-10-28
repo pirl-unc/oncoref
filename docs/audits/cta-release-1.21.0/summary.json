@@ -1,0 +1,29 @@
+{
+  "policy": "oncoref.cta-selection.1.21.0",
+  "categories": {
+    "Unsafe": 17388,
+    "Neither": 2012,
+    "CTA": 463
+  },
+  "selected_member_loci": 481,
+  "new_selected_groups": 120,
+  "lost_selected_groups": 0,
+  "named_categories": {
+    "PAGE1": "CTA",
+    "SMC1B": "CTA",
+    "CTAG2": "Unsafe",
+    "MAGEA4": "CTA",
+    "TBXT": "CTA",
+    "PRAME": "CTA",
+    "CT83": "CTA",
+    "NY-ESO-1": "CTA",
+    "SSX2/B": "CTA",
+    "XAGE1A/B": "CTA"
+  },
+  "order_independent": true,
+  "review": {
+    "changed_final_categories": 0,
+    "changed_layer_decisions": 11,
+    "corrected_group_ihc_levels": 2902
+  }
+}

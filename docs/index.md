@@ -1,6 +1,20 @@
 # oncoref
 
-**Current: [CTA rules, 213-gene list and release funnel](audits/cta-policy-20261025/index.md)**
+**Current released research selection: [463-group CTA/oncofetal candidate funnel](audits/cta-release-1.21.0/index.md)**
+(481 gene loci), with uniform compartment-specific rules, retained normal-expression
+flags and explicit CTA / Unsafe / Neither assignments across the full reference.
+PRAME informed this calibration; the cutoffs are not clinically validated safety limits.
+
+The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
+[1,416-gene biological membership comparison](audits/cta-membership-20261026/index.md)
+and [215-gene research selection](audits/cta-research-20261026/index.md)
+retain their dated rules for comparison.
+The [released 213-gene expression policy and protein references](audits/cta-policy-20261025/index.md)
+retain their normal-expression findings and sequence-background semantics.
+
+[Continuous normal-expression breadth](audits/normal-breadth-20261026/index.md)
+supports review priority without changing memberships.
+[Developmental-target sources](developmental-targets.md) documents the brachyury follow-up.
 
 [Completed antibody adjudications](audits/cta-adjudication-20261025/index.md) cover all 178 remaining discrepancy cases. Older reports below retain their dated policies.
 
@@ -76,7 +90,10 @@ packages can join domains without maintaining private name mappings.
 - Need the continuous low-expression rule and uncertainty assessment? See the
   [22 October pilot](audits/cta-continuous-20261022/index.md). It separates point-screen
   passes from uncertainty-qualified inclusion; donor-model inputs are not yet available.
-- Need the latest target and forbidden-protein sets? See the
+- Need the latest candidate research set? See the
+  [compartment-aware funnel](audits/cta-release-1.21.0/index.md)
+  and [identity and analysis APIs](cta-analysis-api.md).
+- Need the released target and forbidden-protein sets? See the
   [CTA, Unsafe and Neither report](audits/cta-policy-20261025/index.md) and
   [API](target-sets.md). Low-expression and Variable genes belong to Neither;
   only Unsafe supplies the default forbidden background.

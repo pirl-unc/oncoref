@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="972pt" height="489.6pt" viewBox="0 0 972 489.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 489.6 
+L 972 489.6 
+L 972 0 
+L 0 0 
+z
+" style="fill: #f7f9f8"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 157.001037 316.686957 
+C 146.758895 298.477144 141.377619 277.932553 141.377619 257.04 
+C 141.377619 236.147447 146.758895 215.602856 157.001037 197.393043 
+C 148.552192 196.351343 139.97764 197.116571 131.846775 199.63791 
+C 123.71591 202.15925 116.212783 206.379628 109.83564 212.018791 
+C 103.458496 217.657954 98.35169 224.588252 94.854338 232.34948 
+C 91.356987 240.110707 89.548256 248.527179 89.548256 257.04 
+C 89.548256 265.552821 91.356987 273.969293 94.854338 281.73052 
+C 98.35169 289.491748 103.458496 296.422046 109.83564 302.061209 
+C 116.212783 307.700372 123.71591 311.92075 131.846775 314.44209 
+C 139.97764 316.963429 148.552192 317.728657 157.001037 316.686957 
+" clip-path="url(#p0c46d140f0)" style="fill: #087e83; opacity: 0.65"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 157.001037 197.393043 
+C 171.552344 199.187146 184.95584 206.24552 194.668078 217.228771 
+C 204.380316 228.212021 209.745482 242.378508 209.745482 257.04 
+C 209.745482 271.701492 204.380316 285.867979 194.668078 296.851229 
+C 184.95584 307.83448 171.552344 314.892854 157.001037 316.686957 
+C 163.550129 328.330786 171.972431 338.81691 181.929281 347.723677 
+C 191.88613 356.630445 203.242258 363.836855 215.54103 369.053133 
+C 227.839802 374.269412 240.914135 377.424694 254.238304 378.392106 
+C 267.562473 379.359517 280.955463 378.125914 293.878739 374.740901 
+C 306.802014 371.355888 319.080006 365.865452 330.219011 358.490364 
+C 341.358017 351.115277 351.206708 341.955733 359.369066 331.380039 
+C 367.531423 320.804346 373.896557 308.95618 378.208523 296.31196 
+C 382.52049 283.667739 384.720709 270.399243 384.720709 257.04 
+C 384.720709 243.680757 382.52049 230.412261 378.208523 217.76804 
+C 373.896557 205.12382 367.531423 193.275654 359.369066 182.699961 
+C 351.206708 172.124267 341.358017 162.964723 330.219011 155.589636 
+C 319.080006 148.214548 306.802014 142.724112 293.878739 139.339099 
+C 280.955463 135.954086 267.562473 134.720483 254.238304 135.687894 
+C 240.914135 136.655306 227.839802 139.810588 215.54103 145.026867 
+C 203.242258 150.243145 191.88613 157.449555 181.929281 166.356323 
+C 171.972431 175.26309 163.550129 185.749214 157.001037 197.393043 
+" clip-path="url(#p0c46d140f0)" style="fill: #8374ae; opacity: 0.65"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 157.001037 316.686957 
+C 171.552344 314.892854 184.95584 307.83448 194.668078 296.851229 
+C 204.380316 285.867979 209.745482 271.701492 209.745482 257.04 
+C 209.745482 242.378508 204.380316 228.212021 194.668078 217.228771 
+C 184.95584 206.24552 171.552344 199.187146 157.001037 197.393043 
+C 146.758895 215.602856 141.377619 236.147447 141.377619 257.04 
+C 141.377619 277.932553 146.758895 298.477144 157.001037 316.686957 
+" clip-path="url(#p0c46d140f0)" style="fill: #61a9d5; opacity: 0.65"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="115.462938" y="261.19625" transform="rotate(-0 115.462938 261.19625)">1,248</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="297.233095" y="261.19625" transform="rotate(-0 297.233095 261.19625)">9,534</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="175.561551" y="261.19625" transform="rotate(-0 175.561551 261.19625)">1,426</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="149.646869" y="334.585402" transform="rotate(-0 149.646869 334.585402)">HPA reproductive</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="263.049164" y="396.158334" transform="rotate(-0 263.049164 396.158334)">Tyser embryonic</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans'; fill: #172b3a" transform="translate(120.646358 85.004445)">Before tumor and normal filters</text>
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans'; fill: #172b3a" transform="translate(141.461592 100.608)">12,208 genes in the union</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_5">
+    <path d="M 831.77126 277.952959 
+C 828.942554 275.253749 826.690681 272.008469 825.152228 268.413963 
+C 823.613776 264.819456 822.820491 260.949899 822.820491 257.04 
+C 822.820491 253.130101 823.613776 249.260544 825.152228 245.666037 
+C 826.690681 242.071531 828.942554 238.826251 831.77126 236.127041 
+C 829.176169 221.18218 823.821842 206.850083 815.982385 193.864464 
+C 808.142929 180.878845 797.954442 169.465145 785.938512 160.207672 
+C 773.922582 150.950199 760.287814 144.009672 745.732223 139.7414 
+C 731.176632 135.473129 715.952914 133.951214 700.840427 135.253568 
+C 685.727941 136.555923 670.989051 140.659937 657.378295 147.35551 
+C 643.767539 154.051084 631.521211 163.221976 621.266246 174.398696 
+C 611.011281 185.575416 602.925713 198.563927 597.423473 212.699298 
+C 591.921232 226.83467 589.097842 241.8715 589.097842 257.04 
+C 589.097842 272.2085 591.921232 287.24533 597.423473 301.380702 
+C 602.925713 315.516073 611.011281 328.504584 621.266246 339.681304 
+C 631.521211 350.858024 643.767539 360.028916 657.378295 366.72449 
+C 670.989051 373.420063 685.727941 377.524077 700.840427 378.826432 
+C 715.952914 380.128786 731.176632 378.606871 745.732223 374.3386 
+C 760.287814 370.070328 773.922582 363.129801 785.938512 353.872328 
+C 797.954442 344.614855 808.142929 333.201155 815.982385 320.215536 
+C 823.821842 307.229917 829.176169 292.89782 831.77126 277.952959 
+" clip-path="url(#p58c547299d)" style="fill: #087e83; opacity: 0.65"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 831.77126 236.127041 
+C 832.970519 243.033452 833.573484 250.03024 833.573484 257.04 
+C 833.573484 264.04976 832.970519 271.046548 831.77126 277.952959 
+C 835.865275 281.859553 841.017713 284.47928 846.586352 285.485606 
+C 852.154992 286.491931 857.898439 285.841232 863.100805 283.614614 
+C 868.303171 281.387995 872.738939 277.68198 875.855216 272.958501 
+C 878.971494 268.235022 880.633193 262.698837 880.633193 257.04 
+C 880.633193 251.381163 878.971494 245.844978 875.855216 241.121499 
+C 872.738939 236.39802 868.303171 232.692005 863.100805 230.465386 
+C 857.898439 228.238768 852.154992 227.588069 846.586352 228.594394 
+C 841.017713 229.60072 835.865275 232.220447 831.77126 236.127041 
+" clip-path="url(#p58c547299d)" style="fill: #8374ae; opacity: 0.65"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 831.77126 277.952959 
+C 832.970519 271.046548 833.573484 264.04976 833.573484 257.04 
+C 833.573484 250.03024 832.970519 243.033452 831.77126 236.127041 
+C 828.942554 238.826251 826.690681 242.071531 825.152228 245.666037 
+C 823.613776 249.260544 822.820491 253.130101 822.820491 257.04 
+C 822.820491 260.949899 823.613776 264.819456 825.152228 268.413963 
+C 826.690681 272.008469 828.942554 275.253749 831.77126 277.952959 
+" clip-path="url(#p58c547299d)" style="fill: #61a9d5; opacity: 0.65"/>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="705.959166" y="261.19625" transform="rotate(-0 705.959166 261.19625)">302</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="857.103338" y="261.19625" transform="rotate(-0 857.103338 261.19625)">15</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="828.196987" y="261.19625" transform="rotate(-0 828.196987 261.19625)">2</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="711.335663" y="395.193311" transform="rotate(-0 711.335663 395.193311)">HPA reproductive</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="851.726842" y="301.861841" transform="rotate(-0 851.726842 301.861841)">Tyser embryonic</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans'; fill: #172b3a" transform="translate(640.111767 85.004445)">After the complete funnel</text>
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans'; fill: #172b3a" transform="translate(650.706767 100.608)">319 genes in the union</text>
+   </g>
+  </g>
+  <g id="text_13">
+   <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="43.74" y="37.988719" transform="rotate(-0 43.74 37.988719)">Two quantitative nomination routes</text>
+  </g>
+  <g id="text_14">
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="43.74" y="57.318281" transform="rotate(-0 43.74 57.318281)">HPA reproductive RNA and Tyser embryonic RNA are alternative entry routes; every later filter still applies.</text>
+  </g>
+  <g id="text_15">
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(43.74 463.494551)">HPA v23: testis/ovary/placenta ≥5 nTPM and greater than nonreproductive bulk. Tyser E-MTAB-9388: supported lineage mean ≥5 TPM.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(43.74 474.297012)">Tyser is one early embryo, not a curated oncofetal-antigen list. Circle areas are comparable only within each panel.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0c46d140f0">
+   <rect x="66.787801" y="112.608" width="340.693363" height="288.864"/>
+  </clipPath>
+  <clipPath id="p58c547299d">
+   <rect x="566.903663" y="112.608" width="335.923709" height="288.864"/>
+  </clipPath>
+ </defs>
+</svg>

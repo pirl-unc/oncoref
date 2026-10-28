@@ -1,0 +1,27 @@
+{
+  "accession": "E-MTAB-9388",
+  "doi": "10.1038/s41586-021-04158-y",
+  "taxonomy_id": 9606,
+  "embryos": 1,
+  "cells": 1195,
+  "stage": "Carnegie stage 7; approximately 16\u201319 days after fertilization",
+  "quantification": "EBI Single Cell Expression Atlas gene TPM; Ensembl 106; Kallisto 0.46.2; filtered gene matrix, not renormalized",
+  "fetched": "2026-10-26",
+  "files": {
+    "atlas_tpm": {
+      "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-9388/download/zip?fileType=quantification-filtered",
+      "bytes": 75849726,
+      "sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03"
+    },
+    "atlas_design": {
+      "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-9388/download?fileType=experiment-design",
+      "bytes": 665846,
+      "sha256": "5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3"
+    },
+    "atlas_downloads": {
+      "url": "https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-9388/downloads",
+      "bytes": 22216,
+      "sha256": "952642dcc8e8b1a1aba1862cbd2f8d34c8ceeee06d0193e81e62dd7cd944ebf2"
+    }
+  }
+}

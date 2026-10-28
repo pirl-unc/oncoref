@@ -29,6 +29,9 @@ site/
 # generated figure runs
 outputs/
 figures/
+# Published audit figures are report artifacts and must survive a fresh checkout.
+!docs/audits/**/figures/
+!docs/audits/**/figures/**
 
 # scratch downloads / working files
 tmp/

@@ -1,0 +1,11 @@
+{
+  "original_ledger_sha256": "7f92d54bebac779c1d7113d0e1b53fd764372651c6f898851009765cf2da454c",
+  "queries": 27,
+  "pagination_complete": 27,
+  "primary_paper_assessments": 0,
+  "scope": "Selected queries; historical cutoff retained; disambiguated variants do not establish exhaustive literature coverage",
+  "outputs": {
+    "papers.csv": "93c9bc563239ae34f32e6036bdcba836eb4b38d39ac74bbc6f93ae01fe3ed9d2",
+    "searches.csv": "011c573c14c4de2c8f1f945ed8ec7e0ec81130286d34d02e5ecea90819b19d54"
+  }
+}

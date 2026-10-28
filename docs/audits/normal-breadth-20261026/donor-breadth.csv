@@ -1,0 +1,7 @@
+gene_id,source,version,taxonomy_id,unit,cohort,summary,category,lower,observed_weight,observed_compartments,total_compartments,missing_weight,upper,sampling_uncertainty
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,median,manageable,0.0,0.0,0,5,1.0,1.0,See separate marginal donor intervals; no joint profile interval estimated
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,median,protected,0.0,0.0,0,13,1.0,1.0,See separate marginal donor intervals; no joint profile interval estimated
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,median,vital,0.03762586115527292,0.058823529411764705,1,25,0.9411764705882353,0.9788023317435082,See separate marginal donor intervals; no joint profile interval estimated
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,q90,manageable,0.0,0.0,0,5,1.0,1.0,See separate marginal donor intervals; no joint profile interval estimated
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,q90,protected,0.0,0.0,0,13,1.0,1.0,See separate marginal donor intervals; no joint profile interval estimated
+ENSG00000126890,hpa_tissue_donors,v23,9606,nTPM,HPA normal heart,q90,vital,0.0,0.0,0,25,1.0,1.0,See separate marginal donor intervals; no joint profile interval estimated

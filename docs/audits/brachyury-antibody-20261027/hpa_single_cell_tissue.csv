@@ -1,0 +1,558 @@
+Gene,Gene name,Tissue,Cluster,Cell type,Read count,nTPM
+ENSG00000164458,TBXT,testis,c-0,leydig cells,0,0.0
+ENSG00000164458,TBXT,testis,c-1,spermatocytes,0,0.0
+ENSG00000164458,TBXT,testis,c-2,late spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-3,early spermatids,1,0.2
+ENSG00000164458,TBXT,testis,c-4,spermatogonia,0,0.0
+ENSG00000164458,TBXT,testis,c-5,late spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-6,late spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-7,endothelial cells,0,0.0
+ENSG00000164458,TBXT,testis,c-8,early spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-9,late spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-10,macrophages,0,0.0
+ENSG00000164458,TBXT,testis,c-11,late spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-12,peritubular cells,0,0.0
+ENSG00000164458,TBXT,testis,c-13,late spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-14,spermatogonia,7,1.0
+ENSG00000164458,TBXT,testis,c-15,late spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-16,spermatocytes,0,0.0
+ENSG00000164458,TBXT,testis,c-17,spermatocytes,0,0.0
+ENSG00000164458,TBXT,testis,c-18,early spermatids,0,0.0
+ENSG00000164458,TBXT,testis,c-19,sertoli cells,0,0.0
+ENSG00000164458,TBXT,colon,c-0,distal enterocytes,0,0.0
+ENSG00000164458,TBXT,colon,c-1,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,colon,c-2,distal enterocytes,0,0.0
+ENSG00000164458,TBXT,colon,c-3,distal enterocytes,0,0.0
+ENSG00000164458,TBXT,colon,c-4,intestinal goblet cells,0,0.0
+ENSG00000164458,TBXT,colon,c-5,enteroendocrine cells,0,0.0
+ENSG00000164458,TBXT,colon,c-6,t-cells,0,0.0
+ENSG00000164458,TBXT,colon,c-7,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,colon,c-8,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,colon,c-9,distal enterocytes,0,0.0
+ENSG00000164458,TBXT,colon,c-10,paneth cells,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-0,cardiomyocytes,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-1,cardiomyocytes,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-2,cardiomyocytes,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-3,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-4,endothelial cells,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-5,cardiomyocytes,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-6,endothelial cells,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-7,fibroblasts,0,0.0
+ENSG00000164458,TBXT,heart muscle,c-8,cardiomyocytes,0,0.0
+ENSG00000164458,TBXT,small intestine,c-0,proximal enterocytes,0,0.0
+ENSG00000164458,TBXT,small intestine,c-1,proximal enterocytes,0,0.0
+ENSG00000164458,TBXT,small intestine,c-2,intestinal goblet cells,0,0.0
+ENSG00000164458,TBXT,small intestine,c-3,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,small intestine,c-4,proximal enterocytes,0,0.0
+ENSG00000164458,TBXT,small intestine,c-5,proximal enterocytes,0,0.0
+ENSG00000164458,TBXT,small intestine,c-6,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,small intestine,c-7,proximal enterocytes,0,0.0
+ENSG00000164458,TBXT,small intestine,c-8,intestinal goblet cells,0,0.0
+ENSG00000164458,TBXT,small intestine,c-9,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,small intestine,c-10,paneth cells,0,0.0
+ENSG00000164458,TBXT,small intestine,c-11,enteroendocrine cells,0,0.0
+ENSG00000164458,TBXT,small intestine,c-12,mixed immune cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-0,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-1,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-2,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-3,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-4,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-5,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-6,t-cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-7,macrophages,0,0.0
+ENSG00000164458,TBXT,kidney,c-8,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-9,proximal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-10,distal tubular cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-11,b-cells,0,0.0
+ENSG00000164458,TBXT,kidney,c-12,collecting duct cells,0,0.0
+ENSG00000164458,TBXT,liver,c-0,hepatocytes,0,0.0
+ENSG00000164458,TBXT,liver,c-1,t-cells,0,0.0
+ENSG00000164458,TBXT,liver,c-2,kupffer cells,0,0.0
+ENSG00000164458,TBXT,liver,c-3,plasma cells,0,0.0
+ENSG00000164458,TBXT,liver,c-4,hepatocytes,0,0.0
+ENSG00000164458,TBXT,liver,c-5,endothelial cells,0,0.0
+ENSG00000164458,TBXT,liver,c-6,kupffer cells,0,0.0
+ENSG00000164458,TBXT,liver,c-7,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,liver,c-8,t-cells,0,0.0
+ENSG00000164458,TBXT,liver,c-9,hepatocytes,0,0.0
+ENSG00000164458,TBXT,liver,c-10,kupffer cells,0,0.0
+ENSG00000164458,TBXT,liver,c-11,fibroblasts,0,0.0
+ENSG00000164458,TBXT,liver,c-12,hepatocytes,0,0.0
+ENSG00000164458,TBXT,liver,c-13,t-cells,0,0.0
+ENSG00000164458,TBXT,liver,c-14,t-cells,0,0.0
+ENSG00000164458,TBXT,liver,c-15,kupffer cells,0,0.0
+ENSG00000164458,TBXT,liver,c-16,b-cells,0,0.0
+ENSG00000164458,TBXT,liver,c-17,cholangiocytes,0,0.0
+ENSG00000164458,TBXT,liver,c-18,hepatocytes,0,0.0
+ENSG00000164458,TBXT,liver,c-19,erythroid cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-0,cytotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-1,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-2,extravillous trophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-3,cytotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-4,hofbauer cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-5,cytotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-6,syncytiotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-7,hofbauer cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-8,extravillous trophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-9,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-10,cytotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-11,cytotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-12,cytotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-13,cytotrophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-14,hofbauer cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-15,fibroblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-16,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-17,t-cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-18,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-19,endothelial cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-20,fibroblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-21,mixed immune cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-22,fibroblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-23,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-24,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,placenta,c-25,extravillous trophoblasts,0,0.0
+ENSG00000164458,TBXT,placenta,c-26,mixed immune cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-0,glandular and luminal cells,2,0.1
+ENSG00000164458,TBXT,endometrium,c-1,endometrial stromal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-2,t-cells,1,0.1
+ENSG00000164458,TBXT,endometrium,c-3,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-4,endometrial stromal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-5,endometrial stromal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-6,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-7,endometrial stromal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-8,ciliated cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-9,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-10,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-11,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-12,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-13,endometrial stromal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-14,endometrial stromal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-15,endothelial cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-16,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-17,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-18,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-19,endometrial stromal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-20,endometrial stromal cells,1,0.1
+ENSG00000164458,TBXT,endometrium,c-21,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-22,macrophages,0,0.0
+ENSG00000164458,TBXT,endometrium,c-23,endothelial cells,0,0.0
+ENSG00000164458,TBXT,endometrium,c-24,glandular and luminal cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-0,intestinal goblet cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-1,intestinal goblet cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-2,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-3,paneth cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-4,intestinal goblet cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-5,undifferentiated cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-6,intestinal goblet cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-7,distal enterocytes,0,0.0
+ENSG00000164458,TBXT,rectum,c-8,mixed immune cells,0,0.0
+ENSG00000164458,TBXT,rectum,c-9,enteroendocrine cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-0,macrophages,0,0.0
+ENSG00000164458,TBXT,pbmc,c-1,t-cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-3,t-cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-4,nk-cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-5,t-cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-6,monocytes,0,0.0
+ENSG00000164458,TBXT,pbmc,c-7,t-cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-8,b-cells,0,0.0
+ENSG00000164458,TBXT,pbmc,c-9,platelets,0,0.0
+ENSG00000164458,TBXT,pbmc,c-10,dendritic cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-0,ductal cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-1,exocrine glandular cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-2,ductal cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-3,mixed cell types,0,0.0
+ENSG00000164458,TBXT,pancreas,c-4,mixed cell types,0,0.0
+ENSG00000164458,TBXT,pancreas,c-5,exocrine glandular cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-6,ductal cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-7,pancreatic endocrine cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-8,fibroblasts,0,0.0
+ENSG00000164458,TBXT,pancreas,c-9,exocrine glandular cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-10,exocrine glandular cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-11,exocrine glandular cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-12,ductal cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-13,ductal cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-14,mixed immune cells,0,0.0
+ENSG00000164458,TBXT,pancreas,c-15,mixed cell types,0,0.0
+ENSG00000164458,TBXT,pancreas,c-16,macrophages,1,2.1
+ENSG00000164458,TBXT,pancreas,c-17,endothelial cells,0,0.0
+ENSG00000164458,TBXT,skin,c-0,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skin,c-1,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skin,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,skin,c-3,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skin,c-4,endothelial cells,0,0.0
+ENSG00000164458,TBXT,skin,c-5,langerhans cells,0,0.0
+ENSG00000164458,TBXT,skin,c-6,suprabasal keratinocytes,0,0.0
+ENSG00000164458,TBXT,skin,c-7,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,skin,c-8,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,skin,c-9,macrophages,0,0.0
+ENSG00000164458,TBXT,skin,c-10,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skin,c-11,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,skin,c-12,endothelial cells,0,0.0
+ENSG00000164458,TBXT,skin,c-13,langerhans cells,0,0.0
+ENSG00000164458,TBXT,skin,c-14,melanocytes,0,0.0
+ENSG00000164458,TBXT,skin,c-15,b-cells,0,0.0
+ENSG00000164458,TBXT,skin,c-16,granulocytes,0,0.0
+ENSG00000164458,TBXT,skin,c-17,endothelial cells,0,0.0
+ENSG00000164458,TBXT,skin,c-18,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,brain,c-0,excitatory neurons,4,0.0
+ENSG00000164458,TBXT,brain,c-1,excitatory neurons,5,0.0
+ENSG00000164458,TBXT,brain,c-2,excitatory neurons,2,0.0
+ENSG00000164458,TBXT,brain,c-3,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-4,excitatory neurons,4,0.0
+ENSG00000164458,TBXT,brain,c-5,inhibitory neurons,2,0.0
+ENSG00000164458,TBXT,brain,c-6,inhibitory neurons,4,0.1
+ENSG00000164458,TBXT,brain,c-7,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-8,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-9,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-10,excitatory neurons,2,0.0
+ENSG00000164458,TBXT,brain,c-11,excitatory neurons,2,0.0
+ENSG00000164458,TBXT,brain,c-12,oligodendrocytes,0,0.0
+ENSG00000164458,TBXT,brain,c-13,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-14,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-15,inhibitory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-16,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-17,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-18,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-19,excitatory neurons,2,0.0
+ENSG00000164458,TBXT,brain,c-20,excitatory neurons,4,0.1
+ENSG00000164458,TBXT,brain,c-21,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-22,excitatory neurons,2,0.0
+ENSG00000164458,TBXT,brain,c-23,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-24,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-25,inhibitory neurons,1,0.1
+ENSG00000164458,TBXT,brain,c-26,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-27,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-28,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-29,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-30,inhibitory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-31,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-32,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-33,excitatory neurons,1,0.0
+ENSG00000164458,TBXT,brain,c-34,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-35,astrocytes,0,0.0
+ENSG00000164458,TBXT,brain,c-36,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-37,oligodendrocytes,0,0.0
+ENSG00000164458,TBXT,brain,c-38,inhibitory neurons,1,0.1
+ENSG00000164458,TBXT,brain,c-39,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-40,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,brain,c-41,inhibitory neurons,1,0.2
+ENSG00000164458,TBXT,brain,c-42,oligodendrocyte precursor cells,0,0.0
+ENSG00000164458,TBXT,brain,c-43,microglial cells,0,0.0
+ENSG00000164458,TBXT,brain,c-44,excitatory neurons,0,0.0
+ENSG00000164458,TBXT,bronchus,c-0,basal respiratory cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-1,club cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-2,ionocytes,0,0.0
+ENSG00000164458,TBXT,bronchus,c-3,basal respiratory cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-4,club cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-5,basal respiratory cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-6,club cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-7,ciliated cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-8,club cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-9,basal respiratory cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-10,ciliated cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-11,club cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-12,ciliated cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-13,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,bronchus,c-14,basal respiratory cells,0,0.0
+ENSG00000164458,TBXT,eye,c-0,rod photoreceptor cells,0,0.0
+ENSG00000164458,TBXT,eye,c-1,bipolar cells,0,0.0
+ENSG00000164458,TBXT,eye,c-2,muller glia cells,0,0.0
+ENSG00000164458,TBXT,eye,c-3,bipolar cells,0,0.0
+ENSG00000164458,TBXT,eye,c-4,rod photoreceptor cells,0,0.0
+ENSG00000164458,TBXT,eye,c-5,horizontal cells,0,0.0
+ENSG00000164458,TBXT,eye,c-6,muller glia cells,0,0.0
+ENSG00000164458,TBXT,eye,c-7,muller glia cells,0,0.0
+ENSG00000164458,TBXT,eye,c-8,rod photoreceptor cells,0,0.0
+ENSG00000164458,TBXT,eye,c-9,muller glia cells,0,0.0
+ENSG00000164458,TBXT,eye,c-10,cone photoreceptor cells,0,0.0
+ENSG00000164458,TBXT,eye,c-11,bipolar cells,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-0,endothelial cells,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-1,fibroblasts,1,0.1
+ENSG00000164458,TBXT,skeletal muscle,c-2,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-3,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-4,mixed cell types,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-5,t-cells,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-6,fibroblasts,1,0.3
+ENSG00000164458,TBXT,skeletal muscle,c-7,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-8,mixed cell types,1,0.2
+ENSG00000164458,TBXT,skeletal muscle,c-9,fibroblasts,18,2.2
+ENSG00000164458,TBXT,skeletal muscle,c-10,endothelial cells,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-11,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-12,endothelial cells,1,0.2
+ENSG00000164458,TBXT,skeletal muscle,c-13,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-14,macrophages,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-15,macrophages,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-16,skeletal myocytes,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-17,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-18,fibroblasts,0,0.0
+ENSG00000164458,TBXT,skeletal muscle,c-19,fibroblasts,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-0,fibroblasts,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-1,t-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-3,t-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-4,nk-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-5,fibroblasts,35,1.2
+ENSG00000164458,TBXT,adipose tissue,c-6,fibroblasts,1,0.0
+ENSG00000164458,TBXT,adipose tissue,c-7,t-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-8,fibroblasts,1,0.1
+ENSG00000164458,TBXT,adipose tissue,c-9,macrophages,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-10,macrophages,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-11,t-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-12,adipocytes,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-13,macrophages,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-14,nk-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-15,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-16,t-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-17,monocytes,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-18,b-cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-19,schwann cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-20,dendritic cells,0,0.0
+ENSG00000164458,TBXT,adipose tissue,c-21,t-cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-0,fibroblasts,1,0.3
+ENSG00000164458,TBXT,esophagus,c-1,squamous epithelial cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-2,basal squamous epithelial cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-3,endothelial cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-4,fibroblasts,0,0.0
+ENSG00000164458,TBXT,esophagus,c-5,squamous epithelial cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-6,fibroblasts,0,0.0
+ENSG00000164458,TBXT,esophagus,c-7,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-8,t-cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-9,macrophages,0,0.0
+ENSG00000164458,TBXT,esophagus,c-10,squamous epithelial cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-11,b-cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-12,plasma cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-13,endothelial cells,0,0.0
+ENSG00000164458,TBXT,esophagus,c-14,schwann cells,0,0.0
+ENSG00000164458,TBXT,lymph node,c-0,b-cells,0,0.0
+ENSG00000164458,TBXT,lymph node,c-1,b-cells,0,0.0
+ENSG00000164458,TBXT,lymph node,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,lymph node,c-3,t-cells,0,0.0
+ENSG00000164458,TBXT,lymph node,c-4,b-cells,0,0.0
+ENSG00000164458,TBXT,lymph node,c-5,t-cells,0,0.0
+ENSG00000164458,TBXT,lymph node,c-6,mixed cell types,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-0,t-cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-1,t-cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-3,b-cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-4,t-cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-5,macrophages,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-6,t-cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-7,erythroid cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-8,plasma cells,0,0.0
+ENSG00000164458,TBXT,bone marrow,c-9,b-cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-0,b-cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-1,t-cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-3,macrophages,0,0.0
+ENSG00000164458,TBXT,spleen,c-4,plasma cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-5,t-cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-6,t-cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-7,t-cells,0,0.0
+ENSG00000164458,TBXT,spleen,c-8,b-cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-0,b-cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-1,t-cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-3,t-cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-4,t-cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-5,plasma cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-6,gastric mucus-secreting cells,0,0.0
+ENSG00000164458,TBXT,stomach,c-7,fibroblasts,1,1.4
+ENSG00000164458,TBXT,stomach,c-8,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-0,alveolar cells type 2,0,0.0
+ENSG00000164458,TBXT,lung,c-1,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-2,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-3,alveolar cells type 1,0,0.0
+ENSG00000164458,TBXT,lung,c-4,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-5,endothelial cells,0,0.0
+ENSG00000164458,TBXT,lung,c-6,alveolar cells type 1,0,0.0
+ENSG00000164458,TBXT,lung,c-7,endothelial cells,0,0.0
+ENSG00000164458,TBXT,lung,c-8,alveolar cells type 2,0,0.0
+ENSG00000164458,TBXT,lung,c-9,fibroblasts,0,0.0
+ENSG00000164458,TBXT,lung,c-10,t-cells,0,0.0
+ENSG00000164458,TBXT,lung,c-11,alveolar cells type 2,0,0.0
+ENSG00000164458,TBXT,lung,c-12,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-13,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-14,granulocytes,0,0.0
+ENSG00000164458,TBXT,lung,c-15,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-16,t-cells,0,0.0
+ENSG00000164458,TBXT,lung,c-17,alveolar cells type 2,0,0.0
+ENSG00000164458,TBXT,lung,c-18,endothelial cells,0,0.0
+ENSG00000164458,TBXT,lung,c-19,club cells,0,0.0
+ENSG00000164458,TBXT,lung,c-20,b-cells,0,0.0
+ENSG00000164458,TBXT,lung,c-21,endothelial cells,0,0.0
+ENSG00000164458,TBXT,lung,c-22,macrophages,0,0.0
+ENSG00000164458,TBXT,lung,c-23,ciliated cells,0,0.0
+ENSG00000164458,TBXT,lung,c-24,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,lung,c-25,endothelial cells,0,0.0
+ENSG00000164458,TBXT,lung,c-26,ciliated cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-0,mixed cell types,0,0.0
+ENSG00000164458,TBXT,prostate,c-1,mixed cell types,0,0.0
+ENSG00000164458,TBXT,prostate,c-2,basal prostatic cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-3,basal prostatic cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-4,t-cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-5,mixed cell types,0,0.0
+ENSG00000164458,TBXT,prostate,c-6,macrophages,0,0.0
+ENSG00000164458,TBXT,prostate,c-7,endothelial cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-8,prostatic glandular cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-9,club cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-10,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-11,endothelial cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-12,fibroblasts,0,0.0
+ENSG00000164458,TBXT,prostate,c-13,t-cells,0,0.0
+ENSG00000164458,TBXT,prostate,c-14,prostatic glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-0,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-1,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-2,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-3,b-cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-4,mucus glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-5,mucus glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-6,b-cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-7,t-cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-8,macrophages,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-9,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-10,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-11,macrophages,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-12,salivary duct cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-13,fibroblasts,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-14,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-15,endothelial cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-16,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-17,fibroblasts,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-18,plasma cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-19,fibroblasts,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-20,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-21,mixed immune cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-22,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,salivary gland,c-23,t-cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-0,t-cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-1,t-cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-2,b-cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-3,fibroblasts,3,0.1
+ENSG00000164458,TBXT,thymus,c-4,t-cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-5,endothelial cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-6,b-cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-7,fibroblasts,0,0.0
+ENSG00000164458,TBXT,thymus,c-8,endothelial cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-9,plasma cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-10,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-11,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-12,smooth muscle cells,1,0.2
+ENSG00000164458,TBXT,thymus,c-13,macrophages,0,0.0
+ENSG00000164458,TBXT,thymus,c-14,fibroblasts,0,0.0
+ENSG00000164458,TBXT,thymus,c-15,plasma cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-16,endothelial cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-17,mesothelial cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-18,t-cells,0,0.0
+ENSG00000164458,TBXT,thymus,c-19,plasma cells,0,0.0
+ENSG00000164458,TBXT,tongue,c-0,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-1,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-2,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-3,suprabasal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-4,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-5,suprabasal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-6,t-cells,0,0.0
+ENSG00000164458,TBXT,tongue,c-7,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-8,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-9,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-10,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-11,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-12,macrophages,0,0.0
+ENSG00000164458,TBXT,tongue,c-13,endothelial cells,0,0.0
+ENSG00000164458,TBXT,tongue,c-14,t-cells,0,0.0
+ENSG00000164458,TBXT,tongue,c-15,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,tongue,c-16,serous glandular cells,0,0.0
+ENSG00000164458,TBXT,tongue,c-17,suprabasal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-18,endothelial cells,0,0.0
+ENSG00000164458,TBXT,tongue,c-19,basal keratinocytes,0,0.0
+ENSG00000164458,TBXT,tongue,c-20,granulocytes,0,0.0
+ENSG00000164458,TBXT,vascular,c-0,fibroblasts,0,0.0
+ENSG00000164458,TBXT,vascular,c-1,macrophages,0,0.0
+ENSG00000164458,TBXT,vascular,c-2,endothelial cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-3,fibroblasts,0,0.0
+ENSG00000164458,TBXT,vascular,c-4,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-5,fibroblasts,0,0.0
+ENSG00000164458,TBXT,vascular,c-6,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-7,fibroblasts,0,0.0
+ENSG00000164458,TBXT,vascular,c-8,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-9,fibroblasts,0,0.0
+ENSG00000164458,TBXT,vascular,c-10,t-cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-11,fibroblasts,0,0.0
+ENSG00000164458,TBXT,vascular,c-12,macrophages,0,0.0
+ENSG00000164458,TBXT,vascular,c-13,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-14,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-15,endothelial cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-16,endothelial cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-17,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-18,schwann cells,0,0.0
+ENSG00000164458,TBXT,vascular,c-19,endothelial cells,0,0.0
+ENSG00000164458,TBXT,breast,c-0,t-cells,0,0.0
+ENSG00000164458,TBXT,breast,c-1,breast glandular cells,0,0.0
+ENSG00000164458,TBXT,breast,c-2,t-cells,0,0.0
+ENSG00000164458,TBXT,breast,c-3,macrophages,0,0.0
+ENSG00000164458,TBXT,breast,c-4,breast glandular cells,2,0.1
+ENSG00000164458,TBXT,breast,c-5,fibroblasts,0,0.0
+ENSG00000164458,TBXT,breast,c-6,adipocytes,0,0.0
+ENSG00000164458,TBXT,breast,c-7,adipocytes,0,0.0
+ENSG00000164458,TBXT,breast,c-8,adipocytes,0,0.0
+ENSG00000164458,TBXT,breast,c-9,breast glandular cells,0,0.0
+ENSG00000164458,TBXT,breast,c-10,t-cells,0,0.0
+ENSG00000164458,TBXT,breast,c-11,breast glandular cells,0,0.0
+ENSG00000164458,TBXT,breast,c-12,fibroblasts,0,0.0
+ENSG00000164458,TBXT,breast,c-13,fibroblasts,0,0.0
+ENSG00000164458,TBXT,breast,c-14,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,breast,c-15,t-cells,0,0.0
+ENSG00000164458,TBXT,breast,c-16,breast glandular cells,0,0.0
+ENSG00000164458,TBXT,breast,c-17,breast glandular cells,0,0.0
+ENSG00000164458,TBXT,breast,c-18,macrophages,0,0.0
+ENSG00000164458,TBXT,breast,c-19,macrophages,0,0.0
+ENSG00000164458,TBXT,breast,c-20,breast myoepithelial cells,0,0.0
+ENSG00000164458,TBXT,breast,c-21,breast glandular cells,0,0.0
+ENSG00000164458,TBXT,breast,c-22,endothelial cells,0,0.0
+ENSG00000164458,TBXT,breast,c-23,adipocytes,0,0.0
+ENSG00000164458,TBXT,breast,c-24,t-cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-0,secretory cells,1,0.0
+ENSG00000164458,TBXT,fallopian tube,c-1,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-2,secretory cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-3,fibroblasts,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-4,endothelial cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-5,fibroblasts,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-6,fibroblasts,3,0.1
+ENSG00000164458,TBXT,fallopian tube,c-7,fibroblasts,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-8,t-cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-9,t-cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-10,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-11,secretory cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-12,ciliated cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-13,lymphatic endothelial cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-14,macrophages,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-15,secretory cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-16,macrophages,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-17,fibroblasts,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-18,granulocytes,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-19,ciliated cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-20,t-cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-21,neutrophils,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-22,t-cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-23,plasma cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-24,ciliated cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-25,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-26,lymphatic endothelial cells,0,0.0
+ENSG00000164458,TBXT,fallopian tube,c-27,fibroblasts,0,0.0
+ENSG00000164458,TBXT,ovary,c-0,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-1,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-2,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-3,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-4,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-5,smooth muscle cells,1,0.1
+ENSG00000164458,TBXT,ovary,c-6,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-7,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-8,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-9,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-10,endothelial cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-11,smooth muscle cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-12,ovarian stromal cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-13,granulosa cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-14,mixed immune cells,0,0.0
+ENSG00000164458,TBXT,ovary,c-15,oocytes,3,2.2
+ENSG00000164458,TBXT,ovary,c-16,lymphatic endothelial cells,0,0.0

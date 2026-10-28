@@ -1,0 +1,151 @@
+Ensembl_Gene_ID,Gene name,tissue,rna_ntpm,tissue_concept,screening_tier,ihc_reliability_used,profile_positive_control,negative_ihc_grade,effective_ceiling_ntpm,local_exclusion,reference_review_ceiling_ntpm,reference_review,threshold_ladder
+ENSG00000126890,CTAG2,adipose tissue,0.3,adipose_tissue,manageable,Enhanced,True,Enhanced,64.0,False,128.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,adrenal gland,0.8,adrenal_gland,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,amygdala,0.2,amygdala,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,appendix,0.0,appendix,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,basal ganglia,0.2,basal_ganglia,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,bone marrow,0.1,bone_marrow,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,breast,0.4,mammary_tissue,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,cerebellum,0.2,cerebellum,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,cerebral cortex,0.4,cerebral_cortex,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,cervix,0.1,cervix,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,choroid plexus,0.0,choroid_plexus,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,colon,0.3,colon,protected,Missing,True,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,duodenum,0.0,duodenum,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,endometrium,0.1,endometrium,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,epididymis,0.0,epididymis,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,esophagus,0.8,esophagus,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,fallopian tube,1.5,fallopian_tube,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,gallbladder,0.0,gallbladder,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,heart muscle,5.1,heart,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,hippocampal formation,0.3,hippocampal_formation,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,hypothalamus,0.3,hypothalamus,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,kidney,3.4,kidney,vital,Missing,True,Missing,2.0,True,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,liver,0.6,liver,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,lung,0.2,lung,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,lymph node,0.0,lymph_node,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,midbrain,0.6,midbrain,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,ovary,0.4,ovary,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,pancreas,1.9,pancreas,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,parathyroid gland,0.0,parathyroid_gland,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,pituitary gland,0.3,pituitary_gland,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,placenta,2.5,placenta,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,prostate,0.3,prostate,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,rectum,0.0,rectum,protected,Missing,True,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,retina,0.0,retina,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,salivary gland,0.1,salivary_gland,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,seminal vesicle,0.0,seminal_vesicle,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,skeletal muscle,3.1,skeletal_muscle,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,skin,0.4,skin,manageable,Missing,True,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,small intestine,0.2,small_intestine,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,smooth muscle,0.0,smooth_muscle,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,spinal cord,0.3,spinal_cord,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,spleen,0.4,spleen,manageable,Enhanced,True,Enhanced,64.0,False,128.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,stomach,0.5,stomach,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,testis,10.1,testis,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,thymus,2.9,thymus,manageable,Missing,True,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,thyroid gland,0.1,thyroid_gland,manageable,Enhanced,True,Enhanced,64.0,False,128.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,tongue,0.0,tongue,protected,Missing,True,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,tonsil,0.0,tonsil,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000126890,CTAG2,urinary bladder,0.0,urinary_bladder,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000126890,CTAG2,vagina,0.8,vagina,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,adipose tissue,0.1,adipose_tissue,manageable,Missing,False,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000164458,TBXT,adrenal gland,0.0,adrenal_gland,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,amygdala,0.0,amygdala,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,appendix,0.1,appendix,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,basal ganglia,0.0,basal_ganglia,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,bone marrow,0.0,bone_marrow,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,breast,0.0,mammary_tissue,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,cerebellum,0.0,cerebellum,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,cerebral cortex,0.0,cerebral_cortex,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,cervix,0.0,cervix,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,choroid plexus,0.0,choroid_plexus,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,colon,0.0,colon,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,duodenum,0.0,duodenum,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,endometrium,0.0,endometrium,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,epididymis,0.0,epididymis,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,esophagus,0.0,esophagus,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,fallopian tube,0.0,fallopian_tube,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,gallbladder,0.0,gallbladder,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,heart muscle,0.0,heart,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,hippocampal formation,0.0,hippocampal_formation,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,hypothalamus,0.0,hypothalamus,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,kidney,0.0,kidney,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,liver,0.0,liver,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,lung,0.0,lung,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,lymph node,0.2,lymph_node,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,midbrain,0.0,midbrain,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,ovary,0.0,ovary,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,pancreas,0.0,pancreas,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,parathyroid gland,2.5,parathyroid_gland,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,pituitary gland,1.3,pituitary_gland,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,placenta,0.0,placenta,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,prostate,0.0,prostate,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,rectum,0.0,rectum,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,retina,0.0,retina,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,salivary gland,0.0,salivary_gland,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,seminal vesicle,0.0,seminal_vesicle,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,skeletal muscle,0.0,skeletal_muscle,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,skin,0.0,skin,manageable,Missing,False,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000164458,TBXT,small intestine,0.0,small_intestine,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,smooth muscle,0.0,smooth_muscle,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,spinal cord,0.0,spinal_cord,vital,Missing,False,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000164458,TBXT,spleen,0.1,spleen,manageable,Missing,False,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000164458,TBXT,stomach,0.0,stomach,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,testis,0.2,testis,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,thymus,0.0,thymus,manageable,Missing,False,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000164458,TBXT,thyroid gland,0.3,thyroid_gland,manageable,Missing,False,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000164458,TBXT,tongue,0.0,tongue,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,tonsil,0.2,tonsil,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000164458,TBXT,urinary bladder,0.0,urinary_bladder,protected,Missing,False,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000164458,TBXT,vagina,0.0,vagina,permitted,Missing,False,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,adipose tissue,0.2,adipose_tissue,manageable,Enhanced,True,Enhanced,64.0,False,128.0,False,two_axis_doubling
+ENSG00000185686,PRAME,adrenal gland,3.6,adrenal_gland,vital,Missing,True,Missing,2.0,True,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,amygdala,0.1,amygdala,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,appendix,0.2,appendix,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,basal ganglia,0.1,basal_ganglia,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,bone marrow,0.0,bone_marrow,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000185686,PRAME,breast,0.1,mammary_tissue,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,cerebellum,0.2,cerebellum,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,cerebral cortex,0.1,cerebral_cortex,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,cervix,1.4,cervix,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,choroid plexus,0.3,choroid_plexus,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,colon,0.2,colon,protected,Missing,True,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000185686,PRAME,duodenum,0.0,duodenum,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,endometrium,3.3,endometrium,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,epididymis,9.5,epididymis,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,esophagus,0.0,esophagus,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000185686,PRAME,fallopian tube,0.5,fallopian_tube,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,gallbladder,0.0,gallbladder,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,heart muscle,0.3,heart,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000185686,PRAME,hippocampal formation,0.1,hippocampal_formation,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,hypothalamus,0.2,hypothalamus,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,kidney,1.8,kidney,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,liver,0.1,liver,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000185686,PRAME,lung,0.2,lung,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,lymph node,0.1,lymph_node,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000185686,PRAME,midbrain,0.3,midbrain,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,ovary,4.6,ovary,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,pancreas,0.1,pancreas,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000185686,PRAME,parathyroid gland,0.0,parathyroid_gland,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000185686,PRAME,pituitary gland,0.3,pituitary_gland,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,placenta,0.0,placenta,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,prostate,0.1,prostate,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,rectum,0.0,rectum,protected,Missing,True,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000185686,PRAME,retina,0.2,retina,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,salivary gland,0.1,salivary_gland,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000185686,PRAME,seminal vesicle,0.0,seminal_vesicle,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,skeletal muscle,0.2,skeletal_muscle,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000185686,PRAME,skin,0.2,skin,manageable,Missing,True,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000185686,PRAME,small intestine,0.2,small_intestine,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,smooth muscle,0.2,smooth_muscle,vital,Enhanced,True,Enhanced,16.0,False,32.0,False,two_axis_doubling
+ENSG00000185686,PRAME,spinal cord,0.7,spinal_cord,vital,Missing,True,Missing,2.0,False,4.0,False,two_axis_doubling
+ENSG00000185686,PRAME,spleen,0.1,spleen,manageable,Enhanced,True,Enhanced,64.0,False,128.0,False,two_axis_doubling
+ENSG00000185686,PRAME,stomach,0.0,stomach,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000185686,PRAME,testis,102.2,testis,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,thymus,0.2,thymus,manageable,Missing,True,Missing,8.0,False,16.0,False,two_axis_doubling
+ENSG00000185686,PRAME,thyroid gland,0.1,thyroid_gland,manageable,Enhanced,True,Enhanced,64.0,False,128.0,False,two_axis_doubling
+ENSG00000185686,PRAME,tongue,0.0,tongue,protected,Missing,True,Missing,4.0,False,8.0,False,two_axis_doubling
+ENSG00000185686,PRAME,tonsil,0.1,tonsil,permitted,Missing,True,Missing,,False,,False,two_axis_doubling
+ENSG00000185686,PRAME,urinary bladder,0.0,urinary_bladder,protected,Enhanced,True,Enhanced,32.0,False,64.0,False,two_axis_doubling
+ENSG00000185686,PRAME,vagina,0.2,vagina,permitted,Missing,True,Missing,,False,,False,two_axis_doubling

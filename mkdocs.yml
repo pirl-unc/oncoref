@@ -7,9 +7,25 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Current CTA definitions and rules: target-sets.md
+      - Current selection and release report: audits/cta-release-1.21.0/index.md
+      - Selection API across species: cta-selection.md
+      - Reviewed 463-group proposal: audits/cta-compartment-policy-20261027/index.md
+      - Prior 343-group harmonized funnel: audits/cta-harmonized-20261027/index.md
+      - PRAME, CTAG2 and TBXT source evidence: audits/cta-target-evidence-20261027/index.md
+      - External staining evidence: audits/external-ihc-20261027/index.md
+      - Brachyury antibody assessment: audits/brachyury-antibody-20261027/index.md
+      - Expanded cohorts and three-way CTA funnel: audits/cta-expanded-funnel-20261027/index.md
+      - Two-axis thresholds and filtering figures: audits/cta-geometric-thresholds-20261027/index.md
+      - Linked tissue and immune RNA thresholds: audits/cta-linked-thresholds-20261027/index.md
+      - Uniform quantitative CTA/developmental candidates: audits/cta-quantitative-20261026/index.md
+      - Historical literature-inclusive CTA catalogue: audits/cta-membership-20261026/index.md
+      - Earlier CTA research selection: audits/cta-research-20261026/index.md
+      - Continuous normal-expression breadth: audits/normal-breadth-20261026/index.md
+      - Cell-RNA thresholds and selection slides: audits/cta-cell-thresholds-20261026/index.md
+      - Fetal and embryonic target sources: developmental-targets.md
+      - Expression policy and protein references: target-sets.md
       - Release review and adoption (1.20.0): cta-release-1.20.0.md
-      - Current evidence decisions (25 October): audits/cta-policy-20261025/index.md
+      - Versioned sequence-background decisions (25 October): audits/cta-policy-20261025/index.md
       - Completed antibody adjudications: audits/cta-adjudication-20261025/index.md
       - Literature review and open questions: audits/cta-literature-20261025/index.md
       - CTA release review and caveats: audits/cta-release-1.19.1/index.md

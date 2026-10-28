@@ -1,0 +1,26 @@
+{
+  "python": "3.12.6",
+  "full_suite_initial": {
+    "passed": 2621,
+    "failed": 1,
+    "skipped": 0,
+    "failure": "New quantitative dataset missing from catalog manifest"
+  },
+  "fix": "Registered cta-quantitative-gene-sets in CANCERDATA_ORIGINATED",
+  "post_fix_targeted_suite": {
+    "passed": 125,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "data manifest, catalog, CLI listings, quantitative policy and historical membership"
+  },
+  "all_observed_test_failures_resolved": true,
+  "full_suite_rerun_after_manifest_only_fix": false,
+  "ruff": "Configured CI scope passed; 288 files formatted",
+  "mkdocs": "Strict build passed",
+  "dependencies": "83 repository-local packages compatible; shared environment unchanged",
+  "reproducibility": "19 historical membership data outputs reproduced byte-for-byte outside checkout",
+  "wheel": "Final wheel imported outside checkout; 20,097 rows, 447 candidates, classifier replay and catalog registration passed",
+  "figures": "Both exported figures visually inspected",
+  "slides": "Five slides; editable tables and charts; package/layout/font/native-chart checks passed. Native PowerPoint application not tested.",
+  "focused_membership_tests": 30
+}

@@ -4,11 +4,21 @@ The CTA normal-tissue evidence uses **HPA v23 consensus nTPM**. Keep that unit
 when interpreting the tables, plots and thresholds; a tumor dataset reporting
 TPM is not automatically on the same scale.
 
+The [expanded three-way research funnel](audits/cta-expanded-funnel-20261027/index.md)
+uses tumor ≥2 in at least one observed sample: native linear TPM from all 132
+compatible published OncoRef matrices, or native HPA pTPM. These are alternative
+source-specific gates, not pooled or averaged measurements. Microarray/CPM
+proxies, single-cell pseudobulk scales and invalid legacy scales are excluded
+from this absolute tumor floor. DICE and corneal coverage are optional, while
+their supported measurements still contribute to normal-expression decisions.
+
 | Measure | What is normalized | Interpretation |
 |---|---|---|
-| Counts | No abundance normalization | Assigned reads/fragments; affected by sequencing depth and transcript length. |
+| Counts | No abundance normalization | Reads/fragments or deduplicated UMIs, depending on the assay. Fragment counts depend on transcript length; 3′ UMI counts should not receive the same length correction. |
 | CPM | Counts divided by library size, multiplied by one million | Adjusts sequencing depth; does not adjust transcript length. |
+| CP10K | Counts divided by library size, multiplied by 10,000 | Multiply by 100 to obtain CPM on the same feature universe and with the same aggregation. |
 | TPM | Length-adjusted abundance rescaled to sum to one million per sample | Relative RNA abundance over the included transcripts. |
+| HPA pTPM | Protein-coding transcript abundance rescaled to one million after removing noncoding transcripts | The “p” denotes protein-coding; this is an RNA measurement. |
 | RPKM / FPKM | Reads / fragments divided by feature length and library size | Adjusts length and depth; unlike TPM, the column total is not fixed. |
 | HPA nTPM | Protein-coding TPM followed by TMM normalization | HPA's normalized RNA expression scale, with a defined reference set and processing pipeline. |
 
@@ -37,6 +47,34 @@ Consequently, do not substitute 10 TPM from an unrelated pipeline for 10 HPA
 nTPM. There is no universal scalar conversion for an isolated gene value:
 the included genes, normalization factors and aggregation matter. Neither
 measure reports protein abundance or HLA peptide presentation.
+
+## Linked research thresholds and the corneal count scale
+
+The [27 October linked comparison](audits/cta-linked-thresholds-20261027/index.md)
+uses the same tissue/IHC ceiling definition for bulk, HPA clusters and sorted
+immune assays. This is a deliberate provisional numerical linkage, not an
+assertion that TPM and nTPM from different pipelines are calibrated equivalents.
+There is no independent single-cell purity multiplier. Future assay-specific
+deviations need ground-truth calibration and a versioned justification.
+
+The Collin adult corneal source uses 10x 3′ single-cell RNA sequencing. Our
+statistic is the mean of each cell's counts divided by its whole-cell library
+and multiplied by 10,000, including zero cells. **1 CP10K = 100 CPM** exactly
+for this same statistic. Calling it impossible to express per million would be
+incorrect. Calling the result identical to HPA nTPM would also be incorrect:
+the gene universe, protein-coding restriction, TMM and cluster pooling differ.
+For UMI data, applying a bulk-fragment transcript-length correction is not the
+appropriate way to resolve that difference.
+[Collin et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/),
+[HPA v23 processing](https://v23.proteinatlas.org/about/assays%2Bannotation).
+
+The linked comparison therefore expresses its corneal cutoff in the native
+unit as the shared nominal per-million ceiling divided by 100. For example,
+the Vital baseline of 2 corresponds numerically to **0.02 CP10K**. This is a
+policy assumption, not a validated conversion to HPA-equivalent abundance.
+The old independent **1 CP10K** cutoff is retained as an explicitly labeled
+sensitivity, so the effect of this assumption is visible. Cell-count and
+replicate-group support requirements remain unchanged.
 
 ### CTAG2 heart: HPA 5.0 versus GTEx 0.4/0.9
 

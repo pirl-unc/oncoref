@@ -639,18 +639,69 @@ comparison plots and the downstream migration contract.
 
 ## CTA Antigens
 
-A cancer-testis antigen (CTA) is encoded by a gene that is normally restricted
-to reproductive tissues but can be reactivated in tumors. In oncoref, a
-candidate is called a CTA by an explicit Human Protein Atlas (HPA) normal-tissue
-expression rule; the call is not evidence that its antigen is presented by the
-major histocompatibility complex (MHC) or that it is a validated therapy target.
+The current research set is available through the same species-scoped API:
 
-Use `oncoref.target_sets` for the current disjoint **CTA**, **Unsafe** and
+```python
+from oncoref import human, canine, mouse
+human.cta_selection(category="CTA")
+canine.cta_selection()
+mouse.cta_selection_coverage()
+human.cta_sources(category="normal_protein")
+```
+
+The human release selects **463 groups / 481 loci**. Dog nominations remain
+Neither/unassessed and mouse selection is unavailable. The
+[selection guide](cta-selection.md) documents common fields, native units,
+source categories, identity gaps and the independent sequence-background policy.
+The APIs below preserve their explicitly dated historical snapshots.
+
+
+The historical [uniform quantitative proposal](audits/cta-quantitative-20261026/index.md)
+selects 447 genes without publication or gene-specific admission routes:
+
+```python
+from oncoref import cta_quantitative
+
+cta_quantitative.gene_ids()
+cta_quantitative.results(selected_only=True)
+```
+
+`classify(facts, thresholds=Thresholds(...))` accepts explicit quantitative facts;
+control labels, literature and prior expression categories do not govern admission.
+The frozen table keeps those risk categories and uncertainty as annotations.
+The historical 1,416-gene `cta_membership` catalogue below is a separate view;
+its reviewed/publication routes do not enter this quantitative proposal.
+
+
+A cancer-testis antigen (CTA) is associated with reproductive tissues and can
+be reactivated in tumors. OncoRef exposes a measured expression-restriction
+policy and an evidence-weighted research selection. Neither gene-level call
+establishes presentation by the major histocompatibility complex (MHC) or
+validates every peptide or therapy product.
+
+Use `oncoref.cta_membership.gene_ids()` for the historical **1,416-gene biological
+CTA/oncofetal set**; see [membership rules](audits/cta-membership-20261026/index.md).
+`oncoref.cta_research_policy.gene_ids()` preserves the earlier **215-gene research
+selection**, including PRAME, MAGE-A4 and NY-ESO-1 (CTAG1A/B).
+`results()` retains `Expression category`, `Expression forbidden`, selection
+basis, clinical sources and qualification limits. The common clinical route
+reconsiders limited or unresolved protein findings while preserving measured
+RNA gates and product-specific caveats. See the
+[selection report and complete list](audits/cta-research-20261026/index.md).
+
+`oncoref.normal_expression_breadth.burden(profiles, panel)` provides source-specific
+normal-expression burdens and explicit missing-coverage bounds;
+`anatomical_panel()` supplies the fixed bulk-organ weights. It is descriptive
+and does not change eligibility. See [profiles, donor summaries and weighting
+sensitivity](audits/normal-breadth-20261026/index.md).
+
+Use `oncoref.target_sets` for the released disjoint **CTA**, **Unsafe** and
 **Neither** groups. `gene_ids("CTA")`, `gene_ids("Unsafe")` and
 `gene_ids("Neither")` return separate sets; only Unsafe is the forbidden
 background. `results()` includes the 5 nTPM admission rule, IHC coverage and
 Neither subgroups, including Low and Variable. See the [report and protein
-exports](audits/target-sets-20261023/index.md) and [API](target-sets.md).
+exports](audits/cta-policy-20261025/index.md) and [API](target-sets.md).
+The research selection does not remove genes from this forbidden background.
 
 The earlier v1.15 ordered research screen remains available through `oncoref.cta_screen`:
 `results()`, `retained_gene_ids()` and `variable_gene_ids()` (plus corresponding
@@ -2010,3 +2061,33 @@ Incompleteness alone does not reclassify a Reproductive gene. Enumerate only con
 standard-amino-acid windows within a record, then subtract background k-mers from
 Reproductive k-mers. Disjoint full proteins can still share k-mers. Gene-level evidence
 does not establish isoform-specific expression or sequence absence.
+
+
+## Biological CTA/oncofetal membership
+
+```python
+from oncoref import cta_membership
+
+candidates = cta_membership.gene_ids()  # 1,416 biological research candidates
+all_decisions = cta_membership.results()  # all 20,097 canonical genes
+reviewed_controls = cta_membership.gene_ids(established_only=True)  # 15 reviewed controls
+oncofetal = cta_membership.gene_ids(category="Oncofetal")
+primary_evidence = cta_membership.evidence()
+```
+
+This is the historical literature-inclusive biological set. `Member`, `Classes` and `Evidence tier`
+are independent of retained normal-expression flags and the existing forbidden-protein
+reference. Classes can overlap: `Cancer-germline`, `Cancer-placental`,
+`Cancer-reproductive`, and `Oncofetal`. The established tier currently covers the
+specifically reviewed controls; it is not an exhaustive catalogue of all established
+CTAs. Publication consensus is not proof of independent experimental replication.
+
+The earlier `cta_research_policy` 215-gene selection and `target_sets` 213-gene
+expression classification retain their historical semantics. See the
+[complete rules, counts, controls and sensitivity analysis](audits/cta-membership-20261026/index.md).
+
+The newer [harmonized analysis APIs](cta-analysis-api.md) separate reference gene
+matching, same-context protein-equivalence sums, external IHC adjudication and
+three-way decision layers. The [current research funnel](audits/cta-release-1.21.0/index.md)
+reports both locus and group counts and follows every historical CTA through the
+new rules; the historical accessors above remain frozen comparisons.

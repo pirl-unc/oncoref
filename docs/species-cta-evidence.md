@@ -1,5 +1,10 @@
 # Species CTA candidates and evidence
 
+For current selection decisions, use the [shared selection API](cta-selection.md):
+`human.cta_selection()`, `canine.cta_selection()` and `mouse.cta_selection()`.
+The nomination and snapshot APIs below retain native observations and historical
+curation; they are not aliases for the current quantitative human funnel.
+
 Use the same methods on `oncoref.human`, `oncoref.canine`, and `oncoref.mouse`:
 
 ```python

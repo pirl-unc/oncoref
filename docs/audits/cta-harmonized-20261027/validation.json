@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "checked_at_utc": "2026-10-27T21:29:17.405168+00:00",
+  "report_manifest_sha256": "a76d1a3bbcd3e91f4a987c70282587b433d667adea080cb41a1506f3141e8de7",
+  "distinct_relevant_tests_passed": 77,
+  "skipped": 0,
+  "test_scope": {
+    "policy_identity_fusion_and_affected_consumer_regressions": 74,
+    "active_artifact_and_portable_receipt_checks": 3,
+    "entire_repository_suite_repeated": false
+  },
+  "ruff_lint_and_format": {
+    "status": "passed",
+    "changed_python_files": 8
+  },
+  "strict_mkdocs": "passed",
+  "git_diff_check": "passed",
+  "active_stage_manifest_hashes": "All input and output hashes verified",
+  "visual_review": [
+    "classification-funnel",
+    "named-antigen-distribution"
+  ],
+  "classification_order_independent": true,
+  "protein_group_categories": {
+    "Unsafe": 17824,
+    "Neither": 1696,
+    "CTA": 343
+  },
+  "counting_units": {
+    "selected_protein_groups": 343,
+    "selected_member_gene_loci": 358
+  },
+  "previous_validation": "Prior commit b94deb7 reported 301 relevant tests; this receipt records the checks repeated for policy .2.",
+  "previous_ci": "b94deb7 failed because ambiguous P2RY8 names did not use recorded locus IDs and ignored figure files were absent from the checkout. Both causes are fixed and covered by the checks above; remote rerun pending.",
+  "note": "This post-build validation receipt pins the report manifest; it is not included in that manifest, avoiding a circular hash."
+}

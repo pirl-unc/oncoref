@@ -235,6 +235,10 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "external-ihc-evidence": (
+        "protein",
+        "categorical external staining observations, source evidence, reagent identity and explicit validation gaps",
+    ),
     "hpa-cancer-crosswalk": ("hpa", "IHC/RNA cancer correspondence and scope limitations"),
     "hpa-cancer-rna-cohorts": ("hpa", "HPA TCGA/validation RNA labels and sample counts"),
     "legacy-dataset-dispositions": (
@@ -365,6 +369,42 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     "cta-policy-findings": (
         "cta-evidence",
         "reference-bound reviewed CTA findings, acceptance status, citations and limitations",
+    ),
+    "cta-research-gene-sets": (
+        "cta",
+        "historical 215-gene expression/clinical research shortlist; see cta-membership-gene-sets for biological membership",
+    ),
+    "cta-membership-gene-sets": (
+        "cta",
+        "historical literature-inclusive biological CTA/oncofetal catalogue and separate expression-risk flags",
+    ),
+    "cta-quantitative-gene-sets": (
+        "cta",
+        "experimental uniform quantitative CTA/developmental candidates, measured gates, coverage and retained expression-risk flags",
+    ),
+    "cta-selection-human": (
+        "cta",
+        "current research selection across the full human protein-group reference, with decisions, member identities and retained flags",
+    ),
+    "cta-selection-sources": (
+        "cta-evidence",
+        "species-scoped evidence roles, native units, source integration status and coverage gaps",
+    ),
+    "cta-membership-evidence": (
+        "cta-evidence",
+        "reference-bound reviewed reproductive/developmental and tumor evidence with primary citations",
+    ),
+    "cta-membership-controls": (
+        "cta-evidence",
+        "positive biological controls and negative comparators; evaluation labels only",
+    ),
+    "cta-membership-source-roles": (
+        "cta-evidence",
+        "publication evidence roles distinguishing cancer/reproductive nominations from normal-only enrichment",
+    ),
+    "cta-research-clinical-evidence": (
+        "cta-evidence",
+        "reviewed clinical qualification and comparator evidence bound to normal-finding hashes",
     ),
     "cta-antibody-adjudications": (
         "cta-evidence",

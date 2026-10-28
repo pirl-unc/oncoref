@@ -6,7 +6,9 @@ import gzip
 import hashlib
 import json
 import zipfile
+from collections.abc import Iterable
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -26,12 +28,28 @@ def ranked_selection_dir(out, prevalence, percentile):
     )
 
 
-def sha256(path):
+def sha256(path: str | Path) -> str:
+    """Hash file contents without loading a complete source matrix into memory."""
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:
         for block in iter(lambda: handle.read(8 * 1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def input_hashes(paths: Iterable[str | Path]) -> dict[str, str]:
+    """Pin inputs and this helper, using portable paths for repository files.
+
+    External inputs retain absolute paths so a custom run never misidentifies
+    its sources. Published in-repository audits contain repository-relative
+    input paths, resolved against the checkout root when verifying receipts.
+    """
+    result = {}
+    for value in [Path(__file__), *paths]:
+        path = Path(value).resolve()
+        name = str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+        result[name] = sha256(path)
+    return result
 
 
 def fingerprint(value):
@@ -114,7 +132,8 @@ def write_checkpoint(prefix, metadata, expected, suffixes):
     prefix.with_suffix(".json").write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
 
 
-def write_csv(frame, path, **kwargs):
+def write_csv(frame: pd.DataFrame, path: str | Path, **kwargs: Any) -> None:
+    """Write a table with deterministic gzip headers and no implicit row index."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("wb") as handle:

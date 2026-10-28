@@ -30,6 +30,7 @@ from . import (
     cta_normal_screen,
     cta_peptides,
     cta_review,
+    cta_selection,
     doga,
     expression_builders,
     expression_engine,
@@ -319,6 +320,12 @@ from .gene_ids import (
     short_gene_name,
     unversioned,
 )
+from .gene_matching import (
+    attach_gene_identities,
+    gene_identity_catalog,
+    harmonize_reference_expression,
+    match_reference_genes,
+)
 from .gene_qc import TECHNICAL_RNA_GROUPS, GeneQcClass, classify_gene_qc, is_rescue_feature
 from .genome import (
     aggregate_gene_expression,
@@ -407,6 +414,7 @@ from .peptides import (
     cta_specific_9mer_load,
     cta_specific_9mer_weights,
 )
+from .protein_equivalence import collapse_reference_expression, equivalence_groups
 from .proteoforms import (
     canonical_proteoform_id,
     canonical_proteoform_ids,
@@ -584,6 +592,7 @@ __all__ = [
     "aggregate_transcripts_to_genes",
     # organized API modules
     "antigen_coverage",
+    "attach_gene_identities",
     "available_percentile_cohorts",
     "available_representative_cohorts",
     "available_species",
@@ -684,6 +693,7 @@ __all__ = [
     "cohort_source_version",
     "cohort_stats",
     "cohorts",
+    "collapse_reference_expression",
     "collapse_to_proteoforms",
     "computed_union_codes",
     "coverage_for_cancer_type",
@@ -721,6 +731,7 @@ __all__ = [
     "cta_relaxed_reproductive_gene_ids",
     "cta_relaxed_reproductive_gene_names",
     "cta_review",
+    "cta_selection",
     "cta_specific_9mer_counts",
     "cta_specific_9mer_load",
     "cta_specific_9mer_weights",
@@ -745,6 +756,7 @@ __all__ = [
     "drop_technical_rna",
     "ensembl_id_aliases",
     "entrez_gene_mappings",
+    "equivalence_groups",
     "expression_artifact_build_metadata",
     "expression_artifact_build_summary",
     "expression_artifact_gene_universe_delta_report",
@@ -778,6 +790,7 @@ __all__ = [
     "gene_cohort_stats",
     "gene_identifier_mapping_coverage",
     "gene_identifier_mapping_summary",
+    "gene_identity_catalog",
     "gene_per_sample_expression",
     "gene_pooled_cohort_stats",
     "gene_protein_tissues",
@@ -789,6 +802,7 @@ __all__ = [
     "genomes",
     "greedy_coverage",
     "gse304066",
+    "harmonize_reference_expression",
     "housekeeping_cancer_expression_coverage",
     "housekeeping_cancer_expression_coverage_from_matrix",
     "housekeeping_cancer_expression_coverage_summary",
@@ -825,6 +839,7 @@ __all__ = [
     "locally_available_within_sample_cohorts",
     "log1p_transform",
     "log2_transform",
+    "match_reference_genes",
     "matched_normal_tissue",
     "matched_normal_tissue_expression",
     "matched_normal_tissues",
