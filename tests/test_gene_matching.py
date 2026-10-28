@@ -58,6 +58,17 @@ def test_unknown_source_label_does_not_erase_verified_id():
     assert result.source_gene_name.iloc[0] == "old-unregistered-label"
 
 
+def test_missing_name_sentinels_cannot_become_scn11a_synonyms():
+    result = match(
+        pd.DataFrame(
+            {"id": ["ENSG00000181222", "", "ENSG00000168356"], "name": ["NaN", "NaN", "NaN"]}
+        )
+    )
+    assert result.identity_status.tolist() == ["matched", "unmapped", "matched"]
+    assert result.canonical_gene_id.tolist() == ["ENSG00000181222", "", "ENSG00000168356"]
+    assert result.source_gene_name.tolist() == ["NaN"] * 3
+
+
 def test_symbol_only_and_empty_inputs():
     result = match(pd.DataFrame({"id": [None, ""], "name": ["GNB2L1", "TP53"]}))
     assert result.canonical_gene_id.tolist() == ["ENSG00000204628", "ENSG00000141510"]

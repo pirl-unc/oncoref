@@ -117,6 +117,7 @@ note(s,'PRAME and CTAG2 pass this policy. Parent-compartment sensitivity and PRA
 for(const [name,title] of [['selected-reproductive-embryonic','Selected CTA: reproductive versus embryonic RNA'],['selected-reproductive-embryonic-immune','Selected CTA: normal immune RNA'],['selected-reproductive-embryonic-cornea','Selected CTA: normal corneal RNA']]){
 const s=slide(title,'Expression distributions','Color uses the highest supported non-disposable healthy expression within the stated native unit. There is no mixed-unit maximum. Labels include widely studied antigens with mapped values and all genes ≥5 on both axes. Missing embryonic measurements appear in a separate categorical band; every selected group is represented without zero filling.');
 figure(s,name+'-slide',48,160,1184,475);
+text(s,'Gray: healthy measurement unavailable. The lower band has no embryonic-expression value.',64,639,1152,25,16,C.muted);
 }
 {
 const s=slide('Why familiar CTAs lack an atlas TPM row','Embryonic measurement coverage','Author raw counts: https://github.com/ScialdoneLab/human-gastrula-shiny/tree/3e6ab8546e57decc5ec09770720709b5fa6428ef . All values below are raw-count observations, not TPM. The 25,330-row atlas download is gene-filtered; the author table has 57,490 columns and the same number of cells. Different quantification pipelines remain separate.');
@@ -129,8 +130,13 @@ figure(s,'widely-studied-antigens-'+name+'-slide',48,160,1184,475);
 }
 {
 const s=slide('Assessment status is separate from category','Reading the results','A category can be assigned despite gaps in optional or irrelevant sources. Screened does not mean clinically safe or fully measured. MAGE-A3 has a colon hold plus missing embryonic measurements; the missing measurement is not the cause of the colon hold.');
-table(s,[['API status','Meaning','Human groups'],['screened','CTA, Unsafe or Neither assigned',n(counts.CTA+counts.Unsafe+counts.Neither)],['incomplete_evidence','Unassigned with missing coverage or unresolved evidence','1,329'],['outside_category_definitions','Tracked coverage checks pass; no definition fits','333'],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:24,h:335});
+table(s,[['API status','Meaning','Human groups'],['screened','CTA, Unsafe or Neither assigned',n(counts.CTA+counts.Unsafe+counts.Neither)],['incomplete_evidence','Unassigned with missing coverage or unresolved evidence',n(data.assessment_statuses.incomplete_evidence)],['outside_category_definitions','Tracked coverage checks pass; no definition fits',n(data.assessment_statuses.outside_category_definitions)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:24,h:335});
 note(s,'Neither requires a measured biological profile. Unassigned does not mean Unsafe or low expression.',585,26);
+}
+{
+const s=slide('Which sources have incomplete evidence','Coverage audit','Source versions, complete missing tissue/cell contexts, member ENSG IDs, historical IDs, synonyms and tumor cohort coverage: '+URL+'coverage/ . Counts overlap and do not sum to a total.');
+table(s,[['Source or unresolved evidence','Groups'],...data.normal_gap_counts.map(r=>[r.source,r.groups]),['Tyser E-MTAB-9388 filtered TPM',data.evidence_gap_counts.embryonic_measurement_missing],['No tumor measurement: OncoRef + HPA',data.evidence_gap_counts.tumor_measurement_missing],['Measured tumor, incomplete group profile',data.evidence_gap_counts.tumor_group_profile_incomplete],['HPA v23 Uncertain normal-tissue IHC',data.evidence_gap_counts.unresolved_evidence]],{widths:[970,182],size:22,h:395,y:170});
+note(s,`Overlapping gaps within ${n(data.assessment_statuses.incomplete_evidence)} unassigned groups. DICE and corneal coverage are optional.`,600,24);
 }
 {
 const s=slide('Dog evidence and integration gaps','Species-specific evidence','Nemec et al. (2019) https://doi.org/10.1111/vco.12475 ; Hindriks et al. (2025) https://doi.org/10.1016/j.vetimm.2025.110946 . Issues https://github.com/pirl-unc/oncoref/issues/574 and https://github.com/pirl-unc/oncoref/issues/585 .');

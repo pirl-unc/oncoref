@@ -228,7 +228,7 @@ def neither_profiles(facts: pd.DataFrame) -> pd.DataFrame:
     complete = d.required_coverage & ~d.unresolved_evidence
     d["neither_low_expression"] = (
         complete
-        & d.tumor_measured
+        & d.tumor_profile_complete
         & d.developmental_measured
         & d.normal_maximum_floor_ratio.lt(1)
         & d.reproductive_ntpm.lt(APPRECIABLE_RNA)
@@ -278,7 +278,7 @@ def classify(
             result.category.notna(),
             facts.unresolved_evidence
             | ~facts.required_coverage
-            | ~facts.tumor_measured
+            | ~facts.tumor_profile_complete
             | ~facts.developmental_measured,
         ],
         ["screened", "incomplete_evidence"],

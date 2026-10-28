@@ -11,6 +11,7 @@ import argparse
 import json
 from pathlib import Path
 
+import audit_cta_source_coverage
 import build_cta_selection_audit
 import build_cta_selection_release
 import render_cta_source_walkthrough
@@ -22,6 +23,8 @@ def receipts() -> None:
     """Record the measurement replay and current exports without self-hashing."""
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/gene_matching.py",
+        OUTPUT / "tumor-identity-repair/manifest.json",
         ROOT / "oncoref/data/cta-ihc-compartments.csv",
         ROOT / "scripts/replay_cta_selection.py",
         ROOT / "docs/audits/cta-release-1.21.0/manifest.json",
@@ -59,6 +62,7 @@ def walkthrough_receipt() -> None:
         ROOT / "scripts/render_cta_source_walkthrough.py",
         ROOT / "scripts/build_cta_source_slides.mjs",
         ROOT / "scripts/audit_cta_embryonic_coverage.py",
+        ROOT / "scripts/audit_cta_source_coverage.py",
         ROOT / "oncoref/data/cta-publication-context.csv",
         Path(__file__),
     ]
@@ -92,6 +96,7 @@ def main() -> None:
     )
     receipts()
     build_cta_selection_release.build(OUTPUT)
+    audit_cta_source_coverage.build()
     build_cta_selection_audit.build()
     render_cta_source_walkthrough.build()
     walkthrough_receipt()

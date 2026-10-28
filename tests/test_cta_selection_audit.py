@@ -174,3 +174,33 @@ def test_current_replay_and_walkthrough_receipts_match_artifacts():
     )
     assert presentation["summary"] == summary
     assert human.cta_selection_coverage()["counts"] == summary["categories"]
+
+
+def test_missing_tumor_measurements_are_not_incomplete_measured_groups():
+    facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
+    measured = (
+        facts[["oncoref_maximum_tpm", "hpa_tumor_group_lower_bound_ptpm"]].notna().any(axis=1)
+    )
+    pd.testing.assert_series_equal(facts.tumor_measured, measured, check_names=False)
+    assert not facts.loc[facts.member_count.gt(1), "tumor_profile_complete"].any()
+    gaps = pd.read_csv(
+        ROOT / "docs/audits/cta-source-walkthrough-20261028/unassigned-evidence-gaps.csv"
+    )
+    assert not (gaps.tumor_measurement_missing & gaps.tumor_group_profile_incomplete).any()
+
+
+def test_developmental_alias_recovery_retains_conflicting_vectors():
+    recovery = pd.read_csv(RELEASE / "developmental-identity-recoveries.csv")
+    lineages = pd.read_csv(RELEASE / "developmental-lineages.csv.gz")
+    measured = set(lineages["Gene ID"])
+    recovered = set(recovery.loc[recovery.status.eq("registered_alias_recovered"), "gene_id"])
+    conflicting = set(recovery.loc[recovery.status.eq("conflicting_alias_vectors"), "gene_id"])
+    assert recovered <= measured
+    assert not conflicting & measured
+    assert {
+        "ENSG00000164871",
+        "ENSG00000179172",
+        "ENSG00000204694",
+        "ENSG00000212725",
+        "ENSG00000293560",
+    } <= recovered

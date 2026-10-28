@@ -142,7 +142,12 @@ def match_reference_genes(
     for row in pairs.drop_duplicates().itertuples(index=False):
         raw, name = row
         gid = unversioned(raw).upper() if raw else ""
-        name_candidates = official.get(name.upper(), synonyms.get(name.upper(), set()))
+        # NaN is also a historical SCN11A synonym. In tabular reference input,
+        # missing-value sentinels cannot supply or contradict gene identity.
+        missing_name = name.casefold() in {"", "nan", "na", "n/a", "none", "null", "-"}
+        name_candidates = (
+            set() if missing_name else official.get(name.upper(), synonyms.get(name.upper(), set()))
+        )
         candidates, status, method, chosen = set(), "unmapped", "", ""
         if raw:
             candidates = aliases.get(gid, {gid} if gid in ids else set())

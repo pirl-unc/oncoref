@@ -1,8 +1,8 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/replay_cta_selection.py": "11ecc9db3c4ea6bed619d7f974078e87bd1fb31d14376b815128ffd2e09b4452",
-    "oncoref/cta_selection_policy.py": "ee745c05f84132b753eb89b77486463c0205be29276e687f2322be53fe7f2779",
+    "scripts/replay_cta_selection.py": "dd5d87cb4d4efcba3ad6314b73b98e438844fe56bf7d3ebc3c5179c87027da36",
+    "oncoref/cta_selection_policy.py": "d39dc2ce828c701c47a46178327cb7a4ad3858219d4820670d55420b6c81064f",
     "oncoref/data/cta-ihc-compartments.csv": "8233e0a50394680b429d8333a3995611f161e5e881160481f1b81c8c3b062182",
     "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
     "docs/audits/cta-release-1.21.0/bulk-contexts.csv.gz": "568b29e3c27ec3403d634d3b83c748d46b5bf2f0335bc670605d79e9ff7efdd7",

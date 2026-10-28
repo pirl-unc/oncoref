@@ -13,7 +13,7 @@
     },
     "order_independent": true
   },
-  "report_sha256": "e2f607d067f8cfe3ddd511ba32a8fd9bc60ab162bdae5c5656e0c593d6c50436",
+  "report_sha256": "56725e3c3b28dd2793a2da63d6f2222da1088d96af0a60ce30bc4966e3c636c3",
   "papers": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -201,34 +201,34 @@
   "funnel": [
     {
       "layer": "Reproductive / embryonic association",
-      "new_candidate_removals": 7724,
+      "new_candidate_removals": 7722,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 12139,
+      "CTA_eligible_so_far": 12141,
       "Unsafe": 0,
       "Neither": 0,
-      "Unassigned": 7724
+      "Unassigned": 7722
     },
     {
       "layer": "Tumor sample \u22652 TPM/pTPM",
-      "new_candidate_removals": 7,
+      "new_candidate_removals": 6,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 12132,
+      "CTA_eligible_so_far": 12135,
       "Unsafe": 0,
       "Neither": 0,
-      "Unassigned": 7731
+      "Unassigned": 7728
     },
     {
       "layer": "HPA normal protein",
-      "new_candidate_removals": 8850,
+      "new_candidate_removals": 8851,
       "new_Unsafe": 10094,
-      "CTA_eligible_so_far": 3282,
+      "CTA_eligible_so_far": 3284,
       "Unsafe": 10094,
       "Neither": 0,
-      "Unassigned": 6487
+      "Unassigned": 6485
     },
     {
       "layer": "Required RNA coverage",
-      "new_candidate_removals": 90,
+      "new_candidate_removals": 92,
       "new_Unsafe": 0,
       "CTA_eligible_so_far": 3192,
       "Unsafe": 10094,
@@ -448,17 +448,17 @@
   "routes": [
     {
       "route": "Reproductive only",
-      "entrants": 1231,
+      "entrants": 1230,
       "CTA": 428
     },
     {
       "route": "Developmental only",
-      "entrants": 9481,
+      "entrants": 9483,
       "CTA": 29
     },
     {
       "route": "Both",
-      "entrants": 1427,
+      "entrants": 1428,
       "CTA": 9
     }
   ],
@@ -466,5 +466,42 @@
   "unannotated": 45,
   "neither_profiles": {
     "diffuse_manageable": 17
+  },
+  "assessment_statuses": {
+    "incomplete_evidence": 1325,
+    "outside_category_definitions": 337
+  },
+  "normal_gap_counts": [
+    {
+      "source_id": "hpa_rna_consensus",
+      "source": "HPA v23 consensus bulk",
+      "groups": 574,
+      "example_genes": "RTEL1-TNFRSF6B; GSTT2; HMGB1P1; OR11H1; ZNF670-ZNF695"
+    },
+    {
+      "source_id": "hpa_single_cell_tissue",
+      "source": "HPA v23 tissue-cell clusters",
+      "groups": 352,
+      "example_genes": "RTEL1-TNFRSF6B; ZNF670-ZNF695; LINC03040; ZNF840P; MEIS3P2"
+    },
+    {
+      "source_id": "hpa_immune_cell",
+      "source": "HPA v23 immune cells",
+      "groups": 312,
+      "example_genes": "RTEL1-TNFRSF6B; ZNF670-ZNF695; LINC03040; ZNF840P; MEIS3P2"
+    },
+    {
+      "source_id": "hpa_immune_monaco",
+      "source": "Monaco immune cells via HPA v23",
+      "groups": 312,
+      "example_genes": "RTEL1-TNFRSF6B; ZNF670-ZNF695; LINC03040; ZNF840P; MEIS3P2"
+    }
+  ],
+  "evidence_gap_counts": {
+    "normal_panel_missing": 574,
+    "tumor_measurement_missing": 37,
+    "tumor_group_profile_incomplete": 30,
+    "embryonic_measurement_missing": 1006,
+    "unresolved_evidence": 33
   }
 }

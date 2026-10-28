@@ -22,29 +22,30 @@ The shared appreciable-expression floor is **2** in native TPM/nTPM, matching th
 | Low expression | All measured normal, reproductive, embryonic and tumor RNA below 2; required normal panels and mapped tumor/developmental measurements present; no detected protein | 0 |
 | Diffuse Manageable | Fails both reproductive/developmental association routes; RNA ≥2 in at least two distinct Manageable tissue concepts; required normal coverage; no above-cutoff or accepted non-Low Vital/Protected protein evidence | 17 |
 
-Colon and rectum count as one tissue for breadth. A high reproductive measurement cannot conceal broad normal expression. Missing optional measurements are disclosed, not set to zero. No group currently meets the complete low-expression profile; this does not establish that such genes do not exist. Unassigned statuses: {'incomplete_evidence': 1329, 'outside_category_definitions': 333}.
+Colon and rectum count as one tissue for breadth. A high reproductive measurement cannot conceal broad normal expression. Missing optional measurements are disclosed, not set to zero. No group currently meets the complete low-expression profile; this does not establish that such genes do not exist. Unassigned statuses: {'incomplete_evidence': 1325, 'outside_category_definitions': 337}.
 
 ## What the assessment statuses mean
 
 | API status | Meaning | Human groups |
 |---|---|---:|
 | `screened` | A CTA, Unsafe or Neither category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | 18,201 |
-| `incomplete_evidence` | No category was assigned, and required normal coverage, mapped tumor/developmental measurements or evidence resolution is missing. | 1,329 |
-| `outside_category_definitions` | No category was assigned; the tracked coverage/resolution checks pass but the observed profile meets none of the three definitions. | 333 |
+| `incomplete_evidence` | No category was assigned, and required normal coverage, mapped tumor/developmental measurements or evidence resolution is missing. | 1,325 |
+| `outside_category_definitions` | No category was assigned; the tracked coverage/resolution checks pass but the observed profile meets none of the three definitions. | 337 |
 | `unassessed` | No species-specific quantitative policy has been applied; used for native dog nominations. | 0 |
 
 An available exclusion can establish Unsafe despite another missing assay. A reproductive-route CTA need not have embryonic measurements. The low-expression Neither profile needs both tumor and embryonic coverage; the diffuse-Manageable profile has different requirements.
 
-Among the 1,329 incomplete assessments, gaps overlap:
+Among the 1,325 incomplete assessments, gaps overlap:
 
 | Evidence gap | Groups |
 | --- | --- |
 | normal panel missing | 574 |
-| tumor measurement missing | 71 |
-| embryonic measurement missing | 1011 |
+| tumor measurement missing | 37 |
+| tumor group profile incomplete | 30 |
+| embryonic measurement missing | 1006 |
 | unresolved evidence | 33 |
 
-[Per-group gaps, including all member gene IDs](unassigned-evidence-gaps.csv). MAGE-A1 fails the reproductive association gate (4.4 nTPM) and lacks embryonic data. MAGE-A3 has colon undifferentiated-cell RNA of 53.1 nTPM above its Manageable ceiling of 16, and also lacks embryonic data. That missing measurement is not the cause of its colon hold; it limits further profile assessment.
+[Exact data sources, missing tissue/cell contexts, member identities and cohort coverage](coverage.md) · [Per-group gap flags](unassigned-evidence-gaps.csv). The previous 71 tumor gaps combined 41 missing measurements and 30 measured groups with incomplete low-expression-profile coverage. The table above reflects the subsequent identity repair. MAGE-A1 fails the reproductive association gate (4.4 nTPM) and lacks embryonic data. MAGE-A3 has colon undifferentiated-cell RNA of 53.1 nTPM above its Manageable ceiling of 16, and also lacks embryonic data. That missing measurement is not the cause of its colon hold; it limits further profile assessment.
 
 ## Sources of candidate annotations
 
@@ -78,7 +79,9 @@ The original targeted intake recorded only each paper's principal target. The cu
 
 Bai studies EGFL6 as an ovarian-cancer therapeutic target, without establishing a CTA-restricted set. Its larger analysis contains **538 EGFL6-correlated genes**, not 538 proposed CTAs; signaling partners such as SHP2/ERK are not added as CT antigens. Garg explicitly compares SPAG9 with SPA17, SYCP1, NY-ESO-1 and SSX4. Boël recognizes MAGE-1/MAGE-3 as prior testis-restricted tumor antigens alongside its BAGE discovery. Family mentions without resolved members are not expanded into all paralogs. [Bai et al.](https://pubmed.ncbi.nlm.nih.gov/27803106/), [Garg et al.](https://pubmed.ncbi.nlm.nih.gov/17332284/), [Boël et al.](https://pubmed.ncbi.nlm.nih.gov/7895173/).
 
-EGFL6 and SPAG9 occur in no other currently registered paper membership, though EGFL6 also has a separate CTpedia annotation. BAGE occurs in Seager et al. (2024) as an unresolved target label: that textual overlap does not enter the mapped-gene overlap matrix. These are coverage statements about our curation, not claims that no other literature studies them. Bradley et al. (2020) is different: its ten curated genes collapse to nine protein groups, of which **PLAC1 is the one selected CTA**; the other eight are Unsafe.
+EGFL6 and SPAG9 occur in no other currently registered paper membership. EGFL6's historical CTpedia tag lacks independently verified primary-source membership. Beyond the imported registry, **[Sasaroli et al. (2011)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3230481/)** explicitly includes EGFL6 among 13 tumor-vascular targets selected from 50 candidates, while **[Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155)** includes it in a placenta-enriched, fast-evolving gene subset. These are tumor-vascular and placental lists, respectively; neither is a conventional CTA catalog, and neither is silently counted in the current CTA-paper overlap matrix. EGFL6/MAEG/W80 and ENSG00000198759 identify the same gene in the current registry.
+
+BAGE occurs in Seager et al. (2024) as an unresolved target label: that textual overlap does not enter the mapped-gene overlap matrix. These are coverage statements about our curation, not claims that no other literature studies them. Bradley et al. (2020) is different: its ten curated genes collapse to nine protein groups, of which **PLAC1 is the one selected CTA**; the other eight are Unsafe.
 
 | Paper | Target | Category | Other registered papers |
 | --- | --- | --- | --- |
@@ -108,9 +111,9 @@ The starting association set comes from whole-reference **RNA measurements**, no
 
 | route | entrants | CTA |
 | --- | --- | --- |
-| Reproductive only | 1231 | 428 |
-| Developmental only | 9481 | 29 |
-| Both | 1427 | 9 |
+| Reproductive only | 1230 | 428 |
+| Developmental only | 9483 | 29 |
+| Both | 1428 | 9 |
 
 [Tyser et al. (2021)](https://doi.org/10.1038/s41586-021-04158-y), [HPA v23 downloads](https://v23.proteinatlas.org/about/download).
 
@@ -178,10 +181,10 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 | layer | new_candidate_removals | new_Unsafe | CTA_eligible_so_far | Unsafe | Neither | Unassigned |
 | --- | --- | --- | --- | --- | --- | --- |
-| Reproductive / embryonic association | 7724 | 0 | 12139 | 0 | 0 | 7724 |
-| Tumor sample ≥2 TPM/pTPM | 7 | 0 | 12132 | 0 | 0 | 7731 |
-| HPA normal protein | 8850 | 10094 | 3282 | 10094 | 0 | 6487 |
-| Required RNA coverage | 90 | 0 | 3192 | 10094 | 0 | 6577 |
+| Reproductive / embryonic association | 7722 | 0 | 12141 | 0 | 0 | 7722 |
+| Tumor sample ≥2 TPM/pTPM | 6 | 0 | 12135 | 0 | 0 | 7728 |
+| HPA normal protein | 8851 | 10094 | 3284 | 10094 | 0 | 6485 |
+| Required RNA coverage | 92 | 0 | 3192 | 10094 | 0 | 6577 |
 | Normal bulk | 2288 | 6441 | 904 | 16535 | 0 | 2424 |
 | HPA tissue clusters | 393 | 988 | 511 | 17523 | 0 | 1829 |
 | HPA immune | 8 | 48 | 503 | 17571 | 0 | 1789 |
@@ -199,7 +202,7 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 ## Selected CTA expression
 
-These plots compare reproductive nTPM against the highest measured embryonic lineage mean TPM. **204 of 466 selected groups (44%) have both coordinates; 262 (56%) lack an embryonic coordinate.** The plotted source is the EBI filtered gene matrix from one Carnegie-stage-7 embryo, approximately 16–19 days after fertilization—not a broad fetal atlas. PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B have no gene rows in that downloaded matrix. Missing rows alone cannot establish zero or absent developmental expression.
+These plots compare reproductive nTPM against the highest measured embryonic lineage mean TPM. **207 of 466 selected groups (44%) have both coordinates; 259 (56%) lack an embryonic coordinate.** The plotted source is the EBI filtered gene matrix from one Carnegie-stage-7 embryo, approximately 16–19 days after fertilization—not a broad fetal atlas. PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B have no gene rows in that downloaded matrix. Missing rows alone cannot establish zero or absent developmental expression.
 
 The follow-up checked the study authors' **57,490-column raw-count matrix**, separately from the atlas's 25,330-row filtered matrix. The atlas download labelled “Raw counts” is also filtered and retains the same gene rows. Direct author observations are:
 
@@ -216,7 +219,7 @@ The follow-up checked the study authors' **57,490-column raw-count matrix**, sep
 
 PRAME, CT83, CTAG1A/B and XAGE1B have zero reported reads across these 1,195 cells; MAGE-A4 has 14 reads in one cell. TBXT has 31,149 reported reads in 226 cells. XAGE1A has no separate column, so complete XAGE1A/B group coverage is not established. These are observed nondetections or sparse signals in one early embryo, **not absence throughout fetal development**. The exact per-gene reason for exclusion from the atlas remains unavailable; the authors' counts support low detection but come from a separate quantification. They are not converted to TPM or inserted into the selection funnel. [Author data](https://github.com/ScialdoneLab/human-gastrula-shiny), [count evidence and gene IDs](embryonic-comparator-coverage.csv), [source hashes](embryonic-coverage-receipt.json).
 
-Each figure now shows the 204 measured groups above and the 262 missing-embryonic groups in a separate categorical band below. All selected groups are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Labels highlight the widely studied antigens, including their gene-group names, and every measured group ≥5 on both axes. The latter is a descriptive expression criterion; developmental admission also requires cell support.
+Each figure now shows the 207 measured groups above and the 259 missing-embryonic groups in a separate categorical band below. All selected groups are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Labels highlight the widely studied antigens, including their gene-group names, and every measured group ≥5 on both axes. The latter is a descriptive expression criterion; developmental admission also requires cell support.
 
 ![Selected CTA reproductive versus embryonic expression](figures/selected-reproductive-embryonic.png)
 ![Selected CTA colored by normal immune TPM](figures/selected-reproductive-embryonic-immune.png)

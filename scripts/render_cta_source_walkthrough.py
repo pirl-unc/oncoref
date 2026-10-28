@@ -458,6 +458,9 @@ def build() -> None:
     audit, dog = cta_selection.audit(), cta_selection.audit(species="dog")
     figures(facts, audit)
     counts = summary["categories"]
+    selected = facts[facts.category.eq("CTA")]
+    embryo_measured_count = int(selected.developmental_all_lineage_max_tpm.notna().sum())
+    embryo_missing_count = len(selected) - embryo_measured_count
     comparators = facts[facts.protein_group_label.isin(COMPARATORS)][
         [
             "protein_group_label",
@@ -489,6 +492,8 @@ def build() -> None:
     gap_columns = {
         "normal_panel_missing": ~unassigned.required_coverage,
         "tumor_measurement_missing": ~unassigned.tumor_measured,
+        "tumor_group_profile_incomplete": unassigned.tumor_measured
+        & ~unassigned.tumor_profile_complete,
         "embryonic_measurement_missing": ~unassigned.developmental_measured,
         "unresolved_evidence": unassigned.unresolved_evidence,
     }
@@ -508,6 +513,68 @@ def build() -> None:
             for name in gap_columns
         ]
     )
+    normal_gaps = pd.read_csv(OUTPUT / "normal-panel-gap-counts.csv")
+    coverage = pd.read_csv(OUTPUT / "tumor-cohort-coverage.csv.gz")
+    incomplete_ids = set(incomplete.protein_equivalence_group_id)
+    coverage = coverage[coverage.entity_id.isin(incomplete_ids)]
+    tumor_source_counts = []
+    for provider, rows in coverage.groupby("provider"):
+        present = rows.groupby("entity_id").measured_members.max().gt(0)
+        tumor_source_counts.append(
+            {
+                "Source": provider,
+                "Cohort views": rows[["cohort", "source_cohort"]].drop_duplicates().shape[0],
+                "Groups without any mapped measurement": int((~present).sum()),
+            }
+        )
+    recovery = pd.read_csv(RELEASE / "developmental-identity-recoveries.csv")
+    recovery["gene"] = recovery.gene_id.map(
+        facts.set_index("representative_gene_id").protein_group_label
+    ).fillna(recovery.gene_id)
+    recovery.to_csv(OUTPUT / "developmental-identity-recoveries.csv", index=False)
+    coverage_text = f"""# Which sources have missing evidence?
+
+These counts describe the **{len(incomplete):,} unassigned groups with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+
+{markdown(gap_counts)}
+
+The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **{int(incomplete.tumor_measurement_missing.sum())}** groups lack a mapped measurement, while **{int(incomplete.tumor_group_profile_incomplete.sum())}** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
+
+The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted as a historical SCN11A synonym instead of a missing name, contradicting valid ENSG IDs. Seven affected cohort views were reprocessed from their pinned sample matrices and original passing-sample QC: ACINIC, ADCC, CRANIO, DIPG, MENINGIOMA, SARC_MMNST and VSCC. Their corrected measurements replace the older cohort summaries; source samples and units are unchanged. [Repaired cohort evidence and hashes](../cta-selection-20261028/tumor-identity-repair/manifest.json).
+
+## Required normal panels
+
+{markdown(normal_gaps.rename(columns={"source": "Source", "groups": "Groups", "example_genes": "Examples"})[["Source", "Groups", "Examples"]])}
+
+Completeness requires all 50 HPA consensus bulk tissues, 426 HPA tissue/cell contexts, 19 HPA immune populations and 30 Monaco immune populations for every protein-equivalence-group member. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. DICE and adult cornea remain optional and do not contribute to this mandatory-panel gap.
+
+[Every missing group/source/context](normal-panel-coverage-gaps.csv.gz) · [Every member, current/historical IDs, synonyms and observed/missing contexts](normal-panel-member-coverage.csv.gz) · [Source-row identity matches and unresolved alternatives](coverage-identity-matches.csv.gz).
+
+## Cancer and embryonic sources
+
+{markdown(pd.DataFrame(tumor_source_counts))}
+
+[Per-group, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
+
+The embryonic input is specifically **Tyser et al. (2021), E-MTAB-9388**, EBI Single Cell Expression Atlas's filtered gene-TPM matrix using Ensembl 106. The **{int(incomplete.embryonic_measurement_missing.sum()):,}** gaps mean at least one group member has no usable mapped row in this input. No later fetal atlas contributes to this coverage flag. [Missing embryonic member IDs](embryonic-coverage-gaps.csv.gz). The broader author raw-count table is a separate diagnostic and is not a TPM substitute.
+
+The new identity pass recovers {int(recovery.status.ne("conflicting_alias_vectors").sum())} gene rows omitted by the earlier exact-ID filter. It keeps {int(recovery.status.eq("conflicting_alias_vectors").sum())} conflicting alternate-row cases unresolved. [Every attempted recovery and source ID](developmental-identity-recoveries.csv). Canonical rows take precedence; multiple alternative rows are accepted only when their entire cell-expression vectors agree. Different values are neither added nor arbitrarily selected.
+
+## Unresolved evidence
+
+All **33** current unresolved groups have contributing **HPA v23 normal-tissue IHC rated Uncertain**, with Medium or High staining. These are measured but unresolved observations. [Exact gene, tissue, cell type, staining and reliability](unresolved-protein-contexts.csv.gz).
+
+## Identity matching
+
+The shared matcher checks canonical ENSG IDs, registered historical and alternate IDs, and unique official/synonym names. It preserves the source identifier and matching method. A conflicting explicit ENSG ID is not overwritten with a symbol guess, and ambiguous aliases do not get assigned to the first matching paralog. An empty history list means no replacement is registered in this snapshot, not that a gene has never had another identifier.
+
+For example, **POLR2A / ENSG00000181222** and **CIMIP3 / ENSG00000287363** each have 41 of 50 HPA bulk tissue rows. CIMIP3 already matches the source name **GUCA1ANB** through its stable ID. Both lack amygdala, basal ganglia, cerebellum, hippocampal formation, hypothalamus, midbrain, pituitary gland, spinal cord and vagina rows. Renaming the gene cannot restore those omitted measurements. Conversely, a tumor row named NOX5 but carrying the SPESP1-NOX5 readthrough ID remains an explicit ID/name conflict; it is not assigned to either locus by name alone.
+
+This audit distinguishes absent accepted rows, partial tissue coverage and unresolved identity alternatives. It cannot recover a measurement that the downloaded source omitted. The registry also contains an explicit unresolved protein-group member, ENSG00000275869 in the TP53TG3E/F group; its absence from the canonical catalog remains visible rather than being silently deleted from the group.
+
+[Source hashes and audit code receipt](coverage-audit-receipt.json).
+"""
+    (OUTPUT / "coverage.md").write_text(coverage_text)
     intake = pd.read_csv(ROOT / "oncoref/data/cta-publication-membership.csv").fillna("")
     registry = pd.read_csv(ROOT / "oncoref/data/cta-publication-sources.csv")
     context = pd.read_csv(ROOT / "oncoref/data/cta-publication-context.csv")
@@ -628,11 +695,11 @@ Colon and rectum count as one tissue for breadth. A high reproductive measuremen
 
 An available exclusion can establish Unsafe despite another missing assay. A reproductive-route CTA need not have embryonic measurements. The low-expression Neither profile needs both tumor and embryonic coverage; the diffuse-Manageable profile has different requirements.
 
-Among the 1,329 incomplete assessments, gaps overlap:
+Among the {len(incomplete):,} incomplete assessments, gaps overlap:
 
 {markdown(gap_counts)}
 
-[Per-group gaps, including all member gene IDs](unassigned-evidence-gaps.csv). MAGE-A1 fails the reproductive association gate (4.4 nTPM) and lacks embryonic data. MAGE-A3 has colon undifferentiated-cell RNA of 53.1 nTPM above its Manageable ceiling of 16, and also lacks embryonic data. That missing measurement is not the cause of its colon hold; it limits further profile assessment.
+[Exact data sources, missing tissue/cell contexts, member identities and cohort coverage](coverage.md) · [Per-group gap flags](unassigned-evidence-gaps.csv). The previous 71 tumor gaps combined 41 missing measurements and 30 measured groups with incomplete low-expression-profile coverage. The table above reflects the subsequent identity repair. MAGE-A1 fails the reproductive association gate (4.4 nTPM) and lacks embryonic data. MAGE-A3 has colon undifferentiated-cell RNA of 53.1 nTPM above its Manageable ceiling of 16, and also lacks embryonic data. That missing measurement is not the cause of its colon hold; it limits further profile assessment.
 
 ## Sources of candidate annotations
 
@@ -648,7 +715,9 @@ The original targeted intake recorded only each paper's principal target. The cu
 
 Bai studies EGFL6 as an ovarian-cancer therapeutic target, without establishing a CTA-restricted set. Its larger analysis contains **538 EGFL6-correlated genes**, not 538 proposed CTAs; signaling partners such as SHP2/ERK are not added as CT antigens. Garg explicitly compares SPAG9 with SPA17, SYCP1, NY-ESO-1 and SSX4. Boël recognizes MAGE-1/MAGE-3 as prior testis-restricted tumor antigens alongside its BAGE discovery. Family mentions without resolved members are not expanded into all paralogs. [Bai et al.](https://pubmed.ncbi.nlm.nih.gov/27803106/), [Garg et al.](https://pubmed.ncbi.nlm.nih.gov/17332284/), [Boël et al.](https://pubmed.ncbi.nlm.nih.gov/7895173/).
 
-EGFL6 and SPAG9 occur in no other currently registered paper membership, though EGFL6 also has a separate CTpedia annotation. BAGE occurs in Seager et al. (2024) as an unresolved target label: that textual overlap does not enter the mapped-gene overlap matrix. These are coverage statements about our curation, not claims that no other literature studies them. Bradley et al. (2020) is different: its ten curated genes collapse to nine protein groups, of which **PLAC1 is the one selected CTA**; the other eight are Unsafe.
+EGFL6 and SPAG9 occur in no other currently registered paper membership. EGFL6's historical CTpedia tag lacks independently verified primary-source membership. Beyond the imported registry, **[Sasaroli et al. (2011)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3230481/)** explicitly includes EGFL6 among 13 tumor-vascular targets selected from 50 candidates, while **[Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155)** includes it in a placenta-enriched, fast-evolving gene subset. These are tumor-vascular and placental lists, respectively; neither is a conventional CTA catalog, and neither is silently counted in the current CTA-paper overlap matrix. EGFL6/MAEG/W80 and ENSG00000198759 identify the same gene in the current registry.
+
+BAGE occurs in Seager et al. (2024) as an unresolved target label: that textual overlap does not enter the mapped-gene overlap matrix. These are coverage statements about our curation, not claims that no other literature studies them. Bradley et al. (2020) is different: its ten curated genes collapse to nine protein groups, of which **PLAC1 is the one selected CTA**; the other eight are Unsafe.
 
 {markdown(expanded_members[["Paper", "Target", "Category", "Other registered papers"]])}
 
@@ -691,7 +760,7 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 ## Selected CTA expression
 
-These plots compare reproductive nTPM against the highest measured embryonic lineage mean TPM. **204 of 466 selected groups (44%) have both coordinates; 262 (56%) lack an embryonic coordinate.** The plotted source is the EBI filtered gene matrix from one Carnegie-stage-7 embryo, approximately 16–19 days after fertilization—not a broad fetal atlas. PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B have no gene rows in that downloaded matrix. Missing rows alone cannot establish zero or absent developmental expression.
+These plots compare reproductive nTPM against the highest measured embryonic lineage mean TPM. **{embryo_measured_count} of {len(selected)} selected groups ({embryo_measured_count / len(selected):.0%}) have both coordinates; {embryo_missing_count} ({embryo_missing_count / len(selected):.0%}) lack an embryonic coordinate.** The plotted source is the EBI filtered gene matrix from one Carnegie-stage-7 embryo, approximately 16–19 days after fertilization—not a broad fetal atlas. PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B have no gene rows in that downloaded matrix. Missing rows alone cannot establish zero or absent developmental expression.
 
 The follow-up checked the study authors' **57,490-column raw-count matrix**, separately from the atlas's 25,330-row filtered matrix. The atlas download labelled “Raw counts” is also filtered and retains the same gene rows. Direct author observations are:
 
@@ -699,7 +768,7 @@ The follow-up checked the study authors' **57,490-column raw-count matrix**, sep
 
 PRAME, CT83, CTAG1A/B and XAGE1B have zero reported reads across these 1,195 cells; MAGE-A4 has 14 reads in one cell. TBXT has 31,149 reported reads in 226 cells. XAGE1A has no separate column, so complete XAGE1A/B group coverage is not established. These are observed nondetections or sparse signals in one early embryo, **not absence throughout fetal development**. The exact per-gene reason for exclusion from the atlas remains unavailable; the authors' counts support low detection but come from a separate quantification. They are not converted to TPM or inserted into the selection funnel. [Author data](https://github.com/ScialdoneLab/human-gastrula-shiny), [count evidence and gene IDs](embryonic-comparator-coverage.csv), [source hashes](embryonic-coverage-receipt.json).
 
-Each figure now shows the 204 measured groups above and the 262 missing-embryonic groups in a separate categorical band below. All selected groups are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Labels highlight the widely studied antigens, including their gene-group names, and every measured group ≥5 on both axes. The latter is a descriptive expression criterion; developmental admission also requires cell support.
+Each figure now shows the {embryo_measured_count} measured groups above and the {embryo_missing_count} missing-embryonic groups in a separate categorical band below. All selected groups are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Labels highlight the widely studied antigens, including their gene-group names, and every measured group ≥5 on both axes. The latter is a descriptive expression criterion; developmental admission also requires cell support.
 
 ![Selected CTA reproductive versus embryonic expression](figures/selected-reproductive-embryonic.png)
 ![Selected CTA colored by normal immune TPM](figures/selected-reproductive-embryonic-immune.png)
@@ -807,6 +876,9 @@ All results are packaged and checksum-verified. Frozen release audits remain sep
         "annotated": annotated,
         "unannotated": counts.get("CTA", 0) - annotated,
         "neither_profiles": summary["neither_profiles"],
+        "assessment_statuses": missing,
+        "normal_gap_counts": records(normal_gaps),
+        "evidence_gap_counts": {name: int(incomplete[name].sum()) for name in gap_columns},
     }
     (OUTPUT / "presentation-data.json").write_text(json.dumps(presentation, indent=2) + "\n")
     print(f"Rendered current report and figures: {counts}")

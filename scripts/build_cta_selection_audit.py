@@ -316,6 +316,8 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
     )
     proteins = pd.read_csv(RELEASE / "hpa-protein-evidence.csv.gz", low_memory=False)
     imported = pd.read_csv(RELEASE / "imported-protein-review-decisions.csv")
+    coverage = pd.read_csv(OUTPUT / "normal-panel-coverage-gaps.csv.gz")
+    coverage_by_entity = dict(iter(coverage.groupby("entity_id")))
     rows = []
     peak_index, protein_index = {}, {}
     for unsafe, column in [(False, "candidate_exclusion"), (True, "unsafe_evidence")]:
@@ -421,9 +423,20 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     f"OncoRef tumor maximum {display(r['oncoref_maximum_tpm'])} TPM; HPA lower bound {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No measured qualifying sample."
                 )
             elif layer == "Required RNA coverage":
+                details = []
+                for gap in coverage_by_entity.get(base["entity_id"], pd.DataFrame()).itertuples():
+                    contexts = json.loads(gap.missing_contexts)
+                    preview = ", ".join(contexts[:6])
+                    if len(contexts) > 6:
+                        preview += f", plus {len(contexts) - 6} more"
+                    details.append(
+                        f"{gap.source}: least-covered member has {gap.minimum_observed_contexts}/{gap.expected_contexts_per_member} contexts; incomplete members {gap.incomplete_member_gene_ids}; missing {preview}"
+                    )
                 row["reason"] = (
-                    "Incomplete required bulk/tissue-cluster/HPA-immune/Monaco coverage; missing is not zero. See mandatory-coverage-gaps.csv.gz in the expanded audit."
+                    " | ".join(details)
+                    or "Group-member coverage remains unresolved; inspect the source coverage audit."
                 )
+                row["source_url"] = BASE_URL + "coverage/"
             if not row["reason"]:
                 row["reason"] = HUMAN_RULES.get(row["layer"], (layer, []))[0]
             rows.append(row)
@@ -631,6 +644,7 @@ def build() -> None:
                 Path(__file__),
                 DATA / "cta-publication-sources.csv",
                 DATA / "cta-publication-context.csv",
+                OUTPUT / "coverage-audit-receipt.json",
             ]
         },
     }

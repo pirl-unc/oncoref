@@ -65,14 +65,15 @@
     ]
   },
   "files": {
-    "cta-selection-audit-human.json.gz": "3a04d69ff65f0d54775cb8b91b21a781adbd6ea11338882d24cb9feffd1f045c",
+    "cta-selection-audit-human.json.gz": "c077de031482364747bf024eaff5dbc0a631a0f0ac1319b53ac7cecbf1e5fb38",
     "cta-selection-audit-dog.json.gz": "db4b5c35e56ea582e8a39a0f0fe74afd74fed1eecf8e484485e20b8bbbdbc349",
     "cta-selection-audit-mouse.json.gz": "1da743dcae8f1a2b3b4c97d4c68a924bb6e5ce872e7c9070947f27c0e4265492"
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/manifest.json": "de42da35d4ad8d0cd985cec841620dc5f1fd8b12c6b5de500e836160ffc008ed",
-    "scripts/build_cta_selection_audit.py": "fbe4337690a72585c77edc3bc3b5faea8b7d021d2309a3d2862fedb95657195f",
+    "docs/audits/cta-selection-20261028/manifest.json": "0db8a6b9df6bee344158f87c32a136330dbb731268ba8844c7a632001155f8ae",
+    "scripts/build_cta_selection_audit.py": "539550d7535e2aaae99874a8ac495a3dc4e33d5a9a733b8a032b9a76822d4d77",
     "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c",
-    "oncoref/data/cta-publication-context.csv": "c6081d93bab5e5775546245fd61f529a5d7f63a24a13b4a792a7e4b7f722113a"
+    "oncoref/data/cta-publication-context.csv": "c6081d93bab5e5775546245fd61f529a5d7f63a24a13b4a792a7e4b7f722113a",
+    "docs/audits/cta-source-walkthrough-20261028/coverage-audit-receipt.json": "a4c2702b1698403e9de6c939e5bb24c8b743069610e1c261a54918200c64760d"
   }
 }

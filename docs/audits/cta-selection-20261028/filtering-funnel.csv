@@ -1,8 +1,8 @@
 layer,new_candidate_removals,new_Unsafe,CTA_eligible_so_far,Unsafe,Neither,Unassigned
-Reproductive / embryonic association,7724,0,12139,0,0,7724
-Tumor sample ≥2 TPM/pTPM,7,0,12132,0,0,7731
-HPA normal protein,8850,10094,3282,10094,0,6487
-Required RNA coverage,90,0,3192,10094,0,6577
+Reproductive / embryonic association,7722,0,12141,0,0,7722
+Tumor sample ≥2 TPM/pTPM,6,0,12135,0,0,7728
+HPA normal protein,8851,10094,3284,10094,0,6485
+Required RNA coverage,92,0,3192,10094,0,6577
 Normal bulk,2288,6441,904,16535,0,2424
 HPA tissue clusters,393,988,511,17523,0,1829
 HPA immune,8,48,503,17571,0,1789

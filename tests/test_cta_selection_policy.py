@@ -94,6 +94,7 @@ def profiles():
                 "required_coverage": True,
                 "unresolved_evidence": False,
                 "tumor_measured": True,
+                "tumor_profile_complete": True,
                 "developmental_measured": True,
                 "normal_maximum_floor_ratio": 0.5,
                 "reproductive_ntpm": 0.5,
@@ -150,3 +151,11 @@ def test_unsafe_wins_regardless_of_order_and_cannot_be_rescued_by_neither():
     second = policy.classify(facts, list(reversed(layers)), entity_column="entity").classifications
     assert first.category.eq("Unsafe").all()
     pd.testing.assert_series_equal(first.category, second.category)
+
+
+def test_tumor_measurement_is_distinct_from_complete_low_expression_profile():
+    facts = profiles().iloc[:1].copy()
+    facts["tumor_profile_complete"] = False
+    result = policy.neither_profiles(facts)
+    assert result.tumor_measured.all()
+    assert not result.neither_low_expression.any()

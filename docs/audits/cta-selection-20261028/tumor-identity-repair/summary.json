@@ -1,0 +1,9 @@
+{
+  "registered_cohorts": 7,
+  "compatible_cohorts": 7,
+  "used_cohorts": 7,
+  "sample_occurrences": 511,
+  "namespace_deduplicated_samples": 511,
+  "source_namespaces": 6,
+  "note": "Namespaces deduplicate shared source views, not patients across independent studies or HPA."
+}

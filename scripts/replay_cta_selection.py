@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import zipfile
 from pathlib import Path
 
 import numpy as np
@@ -21,6 +22,7 @@ from cta_report_common import input_hashes, sha256, write_csv  # noqa: E402
 from oncoref import cell_rna_policy, hpa, normal_cell_screen, reference_data  # noqa: E402
 from oncoref import cta_selection_policy as policy  # noqa: E402
 from oncoref.cta_funnel import EvidenceLayer  # noqa: E402
+from oncoref.gene_matching import match_reference_genes  # noqa: E402
 
 FROZEN = ROOT / "docs/audits/cta-release-1.21.0"
 BASE = ROOT / "docs/audits/cta-harmonized-20261027"
@@ -340,19 +342,110 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
     return layers
 
 
-def developmental_coverage(facts: pd.DataFrame) -> None:
-    """Use every measured lineage for low-expression evidence, not just positives."""
+def developmental_coverage(facts: pd.DataFrame, output: Path) -> None:
+    """Recover verified missing IDs and retain conflicting alternate-contig rows.
+
+    Canonical measurements take precedence. A missing canonical gene can use a
+    unique registered alias, or identical alias vectors; distinct alias vectors
+    remain unresolved. Protein-identical loci are still separate before sums.
+    """
+    from scipy.io import mmread
+
     d = read(ROOT / "docs/audits/cta-quantitative-20261026/developmental-lineages.csv.gz")
-    maximum = d.groupby("Gene ID")["Mean TPM"].max()
-    groups = read(BASE / "group-normal/developmental-lineage-bounds.csv.gz")
-    multi = facts.member_count.gt(1)
-    facts["developmental_all_lineage_max_tpm"] = facts.representative_gene_id.map(maximum)
-    group_max = groups.groupby("gene_id").mean_tpm.max()
-    facts.loc[multi, "developmental_all_lineage_max_tpm"] = facts.loc[
-        multi, "representative_gene_id"
-    ].map(group_max)
+    directory = ROOT / "tmp/cta-quantitative"
+    receipt = json.loads(
+        (ROOT / "docs/audits/cta-quantitative-20261026/developmental-source.json").read_text()
+    )
+    for filename in ["atlas_tpm", "atlas_design"]:
+        if sha256(directory / filename) != receipt["files"][filename]["sha256"]:
+            raise ValueError(f"Developmental source checksum mismatch: {filename}")
+    (output / "developmental-source.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    with zipfile.ZipFile(directory / "atlas_tpm") as archive:
+        name = next(n for n in archive.namelist() if n.endswith(".mtx"))
+        gene_rows = pd.read_csv(
+            archive.open(name + "_rows"), sep="\t", header=None, names=["gene_id", "label"]
+        )
+        cells = pd.read_csv(archive.open(name + "_cols"), sep="\t", header=None)[0]
+        identities = match_reference_genes(
+            gene_rows,
+            id_column="gene_id",
+            source="tyser_E-MTAB-9388",
+            source_version="Ensembl106_filtered_TPM",
+        )
+        member_ids = {g for ids in facts.member_gene_ids.map(json.loads) for g in ids}
+        candidates = identities[
+            identities.identity_status.eq("matched")
+            & identities.canonical_gene_id.isin(member_ids - set(d["Gene ID"]))
+        ]
+        matrix = mmread(archive.open(name)).tocsr()
+    meta = pd.read_csv(directory / "atlas_design", sep="\t").set_index("Assay").loc[cells]
+    lineages = meta.groupby("Sample Characteristic[inferred cell type - authors labels]").indices
+    additions, decisions = [], []
+    for gid, candidates_for_gene in candidates.groupby("canonical_gene_id"):
+        chosen = candidates_for_gene.index[0]
+        canonical = candidates_for_gene[candidates_for_gene.source_gene_id.eq(gid)]
+        if not canonical.empty:
+            chosen = canonical.index[0]
+            status = "canonical_row_recovered"
+        elif all((matrix[chosen] != matrix[i]).nnz == 0 for i in candidates_for_gene.index):
+            status = "registered_alias_recovered"
+        else:
+            status = "conflicting_alias_vectors"
+        decisions.append(
+            {
+                "gene_id": gid,
+                "source_gene_ids": json.dumps(candidates_for_gene.source_gene_id.tolist()),
+                "status": status,
+            }
+        )
+        if status == "conflicting_alias_vectors":
+            continue
+        for lineage, indices in lineages.items():
+            values = matrix[chosen, indices]
+            count = int((values >= 1).sum())
+            additions.append(
+                {
+                    "Gene ID": gid,
+                    "Lineage": lineage,
+                    "Cells": len(indices),
+                    "Positive cells TPM>=1": count,
+                    "Fraction TPM>=1": count / len(indices),
+                    "Mean TPM": float(values.mean()),
+                    "Embryos": 1,
+                }
+            )
+    write_csv(pd.DataFrame(decisions), output / "developmental-identity-recoveries.csv")
+    d = pd.concat([d, pd.DataFrame(additions)], ignore_index=True)
+    write_csv(d, output / "developmental-lineages.csv.gz")
+    member_to_rep = {
+        g: r.representative_gene_id
+        for r in facts.itertuples()
+        for g in json.loads(r.member_gene_ids)
+    }
+    d["representative"] = d["Gene ID"].map(member_to_rep)
+    groups = (
+        d.groupby(["representative", "Lineage"])
+        .agg(
+            mean_tpm=("Mean TPM", "sum"),
+            cells=("Cells", "min"),
+            positive_cells_lower=("Positive cells TPM>=1", "max"),
+        )
+        .reset_index()
+    )
+    groups["supported"] = (
+        groups.cells.ge(20)
+        & groups.positive_cells_lower.ge(5)
+        & (groups.positive_cells_lower / groups.cells).ge(0.1)
+    )
+    best = groups[groups.supported].groupby("representative").mean_tpm.max()
+    facts["developmental_mean_tpm"] = facts.representative_gene_id.map(best)
+    facts["developmental_route"] = facts.developmental_mean_tpm.ge(5)
+    facts["positive_context"] = facts.reproductive_route | facts.developmental_route
+    facts["developmental_all_lineage_max_tpm"] = facts.representative_gene_id.map(
+        groups.groupby("representative").mean_tpm.max()
+    )
     members = facts.member_gene_ids.map(json.loads)
-    measured_ids = set(maximum.index)
+    measured_ids = set(d["Gene ID"])
     facts["developmental_measured"] = members.map(lambda ids: set(ids) <= measured_ids)
 
 
@@ -361,6 +454,33 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     output.mkdir(parents=True, exist_ok=True)
     facts = read(FROZEN / "protein-group-classifications.csv.gz")
     facts["previous_category"] = facts.category
+    repaired = output / "tumor-identity-repair"
+    receipt = json.loads((repaired / "manifest.json").read_text())
+    for name, expected in receipt["outputs"].items():
+        if sha256(repaired / name) != expected:
+            raise ValueError(f"Changed repaired tumor evidence: {name}")
+    for multi, filename, key in [
+        (False, "tumor-maxima.csv.gz", "gene_id"),
+        (True, "protein-group-tumor-maxima.csv.gz", "protein_equivalence_group_id"),
+    ]:
+        revised = read(repaired / filename).set_index(key)
+        identifiers = facts.protein_equivalence_group_id if multi else facts.representative_gene_id
+        maximum = identifiers.map(revised.maximum_tpm)
+        better = (
+            facts.member_count.gt(1).eq(multi)
+            & maximum.notna()
+            & (facts.oncoref_maximum_tpm.isna() | maximum.gt(facts.oncoref_maximum_tpm))
+        )
+        for target, source in [
+            ("oncoref_maximum_tpm", "maximum_tpm"),
+            ("oncoref_maximum_sample", "maximum_sample"),
+            ("oncoref_cancer_code", "cancer_code"),
+        ]:
+            facts.loc[better, target] = identifiers.map(revised[source])[better]
+    facts["tumor_union_ge2"] = facts.oncoref_maximum_tpm.ge(
+        2
+    ) | facts.hpa_tumor_group_lower_bound_ptpm.ge(2)
+    developmental_coverage(facts, output)
     inputs = [
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
@@ -460,12 +580,11 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     facts["vital_protected_exclusion"] = pd.DataFrame(
         {name: unsafe for name, _, unsafe in layers}
     ).any(axis=1)
-    developmental_coverage(facts)
     tumor = facts[["oncoref_maximum_tpm", "hpa_tumor_group_lower_bound_ptpm"]]
     facts["tumor_measured"] = tumor.notna().any(axis=1)
     # A measured group lower bound is enough for admission but cannot prove low
     # expression of an incompletely measured group. Low profiles require singletons.
-    facts.loc[facts.member_count.gt(1), "tumor_measured"] = False
+    facts["tumor_profile_complete"] = facts.tumor_measured & facts.member_count.eq(1)
     facts["tumor_maximum_floor_ratio"] = tumor.max(axis=1) / policy.APPRECIABLE_RNA
     facts = policy.neither_profiles(facts)
     result, funnel, independent = policy.classify(
