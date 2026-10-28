@@ -1,0 +1,5 @@
+protein_equivalence_group_id,protein_group_label,category,comparison_category
+PEG:887b0698af1f49972943,HOXA13,Neither,Unsafe
+PEG:92c0ae3f131964f8a71d,PRAME,CTA,Neither
+PEG:bba089545d269f52f034,FAM72B,Neither,Unsafe
+PEG:8fe6e7c0c5898d381def,MAGEA3,Neither,Unsafe

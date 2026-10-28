@@ -91,6 +91,8 @@ oncoref = [
     "data/normal-cell-sources.json",
     "data/cta-policy.json",
     "data/cta-selection.json",
+    "data/cta-selection-audit.json",
+    "data/cta-selection-audit-*.json.gz",
     "data/protein-annotation-sources.json",
     "data/cta-intake-identity-snapshot.json",
     "data/cta-membership-paper-receipts.json",

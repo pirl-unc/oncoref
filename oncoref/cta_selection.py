@@ -1,7 +1,8 @@
 """Current CTA/oncofetal candidate decisions with explicit species coverage.
 
 ``results``, ``coverage`` and ``sources`` use the same contract for human, dog
-and mouse. Human rows describe screened protein-equivalence groups. Native
+and mouse. ``audit`` adds source-list accounting and measured decision contexts.
+Human rows describe screened protein-equivalence groups. Native
 nonhuman nominations remain Neither/unassessed until their reference identities,
 measurement scales and required panels support a species-specific policy.
 Human expression, antibody grades and clinical outcomes never transfer through
@@ -17,6 +18,7 @@ from typing import Literal
 
 import pandas as pd
 
+from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
 Category = Literal["CTA", "Unsafe", "Neither"]
