@@ -78,7 +78,12 @@ def test_specific_contexts_and_same_tissue_negative_ihc(audit):
         32,
         64,
     )
+    protein = audit.explain("TAAR1").query("layer == 'HPA tissue clusters'").iloc[0]
+    assert protein.unit == "HPA staining category"
+    assert "Positive IHC" in protein.reason
     assert audit.explain("TBXT").iloc[0].category == "CTA"
+    for name in ("TBXT", "CT83"):
+        assert "external_review_flag" in set(audit.explain(name).query("decision == 'flag'").value)
     assert audit.explain("ENSG00000185686").entity_id.nunique() == 1
     with pytest.raises(KeyError):
         audit.explain("not-a-gene")

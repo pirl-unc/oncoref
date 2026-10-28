@@ -95,11 +95,11 @@ HUMAN_RULES = {
         ["hpa_rna_consensus", "hpa_single_cell_tissue", "hpa_immune_cell", "hpa_immune_monaco"],
     ),
     "Normal bulk": (
-        "Native nTPM at or below tissue/IHC ceiling passes; >ceiling holds; ≥2× supplies Unsafe evidence.",
+        "RNA at or below tissue/IHC ceiling passes; >ceiling holds; ≥2× supplies Unsafe evidence. Matched positive IHC can independently exclude.",
         ["hpa_rna_consensus"],
     ),
     "HPA tissue clusters": (
-        "Require ≥20 reads; apply exact cell/tissue/IHC ceiling. Same-tissue negative IHC alone does not establish cell-type coverage.",
+        "RNA requires ≥20 reads; apply the cell/tissue/IHC ceiling. Matched positive IHC can independently exclude. Same-tissue negative IHC alone does not establish cell-type coverage.",
         ["hpa_single_cell_tissue"],
     ),
     "HPA immune": (
@@ -276,6 +276,9 @@ def rna_peaks() -> pd.DataFrame:
         "assay",
         "category",
         "selection_tier",
+        "ihc_positive",
+        "Level",
+        "Reliability",
     }
     for filename, assay in [
         ("bulk-contexts.csv.gz", "Normal bulk"),
@@ -407,6 +410,8 @@ def human_explanations(facts: pd.DataFrame, peaks: pd.DataFrame) -> pd.DataFrame
                         else "No usable matched negative IHC"
                     )
                 detail = f"{obs.tissue} / {cell}: {display(value)} {unit}; candidate ceiling {display(ceiling)}; Unsafe threshold {display(threshold)}. {ihc}."
+                if pd.notna(obs.get("ihc_positive")) and bool(obs.get("ihc_positive")):
+                    detail += f" Matched HPA IHC: {display(obs.get('Level'))}, {display(obs.get('Reliability'))}; non-Low positive staining independently triggers exclusion."
                 if pd.isna(value):
                     detail += " No supported quantitative summary; absence of a triggered exclusion is not measured zero."
                 if excluded and not obs.candidate_exclusion:
@@ -429,14 +434,25 @@ def human_explanations(facts: pd.DataFrame, peaks: pd.DataFrame) -> pd.DataFrame
                     ihc_coverage=ihc,
                     source_url=BASE_URL + obs.context_file,
                 )
-            elif layer == "HPA normal protein":
+            elif layer == "HPA normal protein" or (layer == "HPA tissue clusters" and unsafe):
                 options = protein[protein.index.isin(base["gene_ids"])]
+                if options.empty:
+                    options = raw[
+                        raw.gene_id.isin(base["gene_ids"])
+                        & raw.Level.isin(["Medium", "High", "Ascending", "Descending"])
+                    ].set_index("gene_id")
                 if not options.empty:
                     obs = options.iloc[0]
+                    basis = (
+                        " Positive IHC can trigger the cell-context layer independently; no supported RNA peak is available in this export."
+                        if layer == "HPA tissue clusters"
+                        else ""
+                    )
                     add(
                         layer,
                         decision,
-                        f"{obs.tissue} / {obs.cell_type}: {obs.Level} HPA staining, {obs.Reliability} reliability.",
+                        f"{obs.tissue} / {obs.cell_type}: {obs.Level} HPA staining, {obs.Reliability} reliability."
+                        + basis,
                         tissue=obs.tissue,
                         cell_type=obs.cell_type,
                         value=obs.Level,
@@ -508,7 +524,7 @@ def human_explanations(facts: pd.DataFrame, peaks: pd.DataFrame) -> pd.DataFrame
                 add(
                     layer,
                     decision,
-                    "Unresolved source/anatomical or protein evidence; no quantitative value is imputed.",
+                    f"{layer}: no supported representative measurement in the released context export. The retained hold reflects missing coverage or unresolved source/anatomical evidence; no quantitative value is imputed.",
                     source_url=BASE_URL + "protein-group-classifications.csv.gz",
                 )
         if fact["low_normal_protein_flag"]:
@@ -545,6 +561,22 @@ def human_explanations(facts: pd.DataFrame, peaks: pd.DataFrame) -> pd.DataFrame
                     unsafe_threshold=obs.strong_boundary,
                     ihc_coverage=ihc,
                     source_url=BASE_URL + "changed-compartment-contexts.csv.gz",
+                )
+        for field, description in {
+            "Antibody concern": "Source antibody concern retained after evidence reconciliation",
+            "external_review_flag": "External staining review flag retained; inspect reagent and tissue scope",
+            "limited_protein_review_flag": "Protein evidence has limited scope; unmeasured tissues remain unknown",
+            "low_normal_protein_flag": "Low normal-protein observation retained without negative-IHC credit",
+            "stem_progenitor_expression_flag": "Supported stem/progenitor RNA observation retained",
+        }.items():
+            if fact[field]:
+                add(
+                    "Retained evidence flag",
+                    "flag",
+                    description,
+                    value=field,
+                    unit="categorical evidence flag",
+                    source_url=BASE_URL + "protein-group-classifications.csv.gz",
                 )
     return pd.DataFrame(rows, columns=TABLE_COLUMNS["explanations"])
 

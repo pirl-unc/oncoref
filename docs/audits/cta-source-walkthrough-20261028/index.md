@@ -70,8 +70,8 @@ The OncoRef tumor union uses **132 compatible cohort views of 143 registered**, 
 | Tumor sample ≥2 TPM/pTPM | At least one measured compatible tumor sample ≥2 in native TPM or HPA pTPM; do not add maxima from different samples. |
 | HPA normal protein | Medium/High or other non-Low positives exclude; accepted reliability supplies Unsafe evidence; uncertain positives retain a hold. Low remains flagged. |
 | Required RNA coverage | Required bulk and tissue-cell/immune panels; missing members are not zeros. DICE and cornea are optional coverage. |
-| Normal bulk | Native nTPM at or below tissue/IHC ceiling passes; >ceiling holds; ≥2× supplies Unsafe evidence. |
-| HPA tissue clusters | Require ≥20 reads; apply exact cell/tissue/IHC ceiling. Same-tissue negative IHC alone does not establish cell-type coverage. |
+| Normal bulk | RNA at or below tissue/IHC ceiling passes; >ceiling holds; ≥2× supplies Unsafe evidence. Matched positive IHC can independently exclude. |
+| HPA tissue clusters | RNA requires ≥20 reads; apply the cell/tissue/IHC ceiling. Matched positive IHC can independently exclude. Same-tissue negative IHC alone does not establish cell-type coverage. |
 | HPA immune | Protected-tier native nTPM limits without matched negative-IHC credit; reproductive/placental location remains neutral. |
 | Monaco immune | Protected-tier native TPM limits without matched negative-IHC credit. |
 | DICE immune | Third-highest reported TPM value; native protected-tier limits. Unpaired group distributions retain bounds. Missing coverage alone does not exclude. |
@@ -112,12 +112,12 @@ MAGE-A1, MAGE-A3 and MAGE-A12 are comparison genes, not forced positive controls
 | SMC1B | CTA | Passes the released rules; retained observations remain in the detailed evidence |
 | CTAG2 | Unsafe | bronchus / basal respiratory cells: 24.9 nTPM; candidate ceiling 4; Unsafe threshold 8. Same-tissue negative IHC; cell-type coverage unresolved: respiratory epithelial cells (Enhanced). 58 reads. |
 | MAGEA4 | CTA | Passes the released rules; retained observations remain in the detailed evidence |
-| TBXT | CTA | Passes the released rules; retained observations remain in the detailed evidence |
-| PRAME | CTA | Passes the released rules; retained observations remain in the detailed evidence |
+| TBXT | CTA | Source antibody concern retained after evidence reconciliation  /  External staining review flag retained; inspect reagent and tissue scope |
+| PRAME | CTA | Normal human adrenal cortex: Low (author_description); retained positive finding, no negative-IHC credit.  /  Protein evidence has limited scope; unmeasured tissues remain unknown  /  Low normal-protein observation retained without negative-IHC credit  /  Supported stem/progenitor RNA observation retained |
 | MAGEA1 | Neither | Reproductive maximum 4.4 nTPM; requires ≥5 and > adult bulk maximum 0 nTPM. Supported embryonic lineage: no qualifying supported measurement; requires mean ≥5 TPM with cell-support guards. |
-| CT83 | CTA | Passes the released rules; retained observations remain in the detailed evidence |
+| CT83 | CTA | External staining review flag retained; inspect reagent and tissue scope |
 | MAGEA12 | Unsafe | Reproductive maximum 2.7 nTPM; requires ≥5 and > adult bulk maximum 0.5 nTPM. Supported embryonic lineage: no qualifying supported measurement; requires mean ≥5 TPM with cell-support guards.  /  Gene-resolved MAGE-A12 RNA was detected in normal brain. A cross-reactive anti-MAGE-A3/A9/A12 TCR was associated with severe neurological toxicity including deaths. Hold clinical prioritization despite HPA screening compatibility. Neuronal IHC used a pan-MAGE antibody and the TCR recognized multiple antigens; unique causal attribution to MAGE-A12 is not proven. This is a precautionary evidence-based hold. |
-| MAGEA3 | Neither | colon / undifferentiated cells: 53.1 nTPM; candidate ceiling 32; Unsafe threshold 64. No usable matched negative IHC. 251 reads. |
+| MAGEA3 | Neither | colon / undifferentiated cells: 53.1 nTPM; candidate ceiling 32; Unsafe threshold 64. No usable matched negative IHC. 251 reads.  /  Supported stem/progenitor RNA observation retained |
 | NY-ESO-1 | CTA | Passes the released rules; retained observations remain in the detailed evidence |
 | SSX2/B | CTA | Passes the released rules; retained observations remain in the detailed evidence |
 | XAGE1A/B | CTA | Passes the released rules; retained observations remain in the detailed evidence |

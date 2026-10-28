@@ -7,18 +7,18 @@
     "targeted_tests_passed": 64,
     "strict_docs_build": "passed",
     "wheel_audit_smoke_test": "passed",
-    "data_rebuild": "all three packaged payload hashes reproduced",
+    "data_rebuild": "Source accounting and all three species payloads rebuilt from pinned inputs",
     "slides_rendered_and_visually_reviewed": 17
   },
   "inputs": {
-    "oncoref/data/cta-selection-audit.json": "5a33df4a4a7dafd9f8bee5b66e580b2918afaa8bb29be71d080e6a03b91bf4d3",
-    "scripts/build_cta_selection_audit.py": "f240f711701fba5e41bd35b35151688d85f4991ee48163bba2cab298b493884b",
-    "scripts/render_cta_source_walkthrough.py": "468307de59dd379d39983525a314ddd56d051b3288c63f88469d51752dd7a2cb",
+    "oncoref/data/cta-selection-audit.json": "5fc08b36bec053187522a1306d16ae1393d464d1ed9445e2a40cf61caa1acef3",
+    "scripts/build_cta_selection_audit.py": "010e1eb8a0a1206cbe0d860dcba4a79162bb9a8f0b6cfc7a9eaddfda1cf1157a",
+    "scripts/render_cta_source_walkthrough.py": "10f813b3de16244c76df2bea3cb45d40a110ad3fdfe31e40ba69a1cb67b8d2ef",
     "scripts/build_cta_source_slides.mjs": "ba2b8ff22582ce96803df59efd36869d07b96e1e146487c4d5ca5c967633139e",
     "oncoref/cta_selection_audit.py": "1b857bdca247c964b9671e66655f80820f19027127cb9586d14a9d79cf355225"
   },
   "outputs": {
-    "api.md": "b2bc1ef92803efdc9774d92067c29bf163da924e988a59ecfd961bf3094fc71e",
+    "api.md": "d51dd5fee98284acfb358f9a5529d7980593cfbe1b49c0e65205346a6b360d5c",
     "bowel-manageable16-comparison.csv": "8e1b602cb34ab4a269c8829268f7a96f9f71c06f67ba093f1f153fcbc1a8350e",
     "dog-criteria.csv.gz": "df3d8ba4d37557be6dcd4a82792239f2856ed9a5a114efffdaf92e1ebbe49964",
     "dog-explanations.csv.gz": "b7f6a1415dc6de54792de9ffe7eae815143129e0f6f8f57caaecc9bbab969556",
@@ -39,23 +39,23 @@
     "figures/published-list-overlaps.svg": "9007910b332b57b34e14de8672f34e7c3e5b5722f0006515a6a799f0478a531e",
     "figures/widely-studied-antigens.png": "845bc39461f57052b70ab7469d51855fb38b57e7bdcc57adb230dc9f56e2fb70",
     "figures/widely-studied-antigens.svg": "f522162cfe3c55d26f931108c6299f42d9f2ab28237b446ce5f2dd63ff956317",
-    "human-criteria.csv.gz": "15cf4a082e30e5989334ff097cd09113bb5ab240214931e92ec10b7982c579ce",
-    "human-explanations.csv.gz": "5746024ea8974f74bc4faad71610d9a3e9f04fcd2cd3024ebba8935131b1e48a",
+    "human-criteria.csv.gz": "ae52f2d4a3d6f98170d12ee2eae2a03a0097ef57435af6a70b939aca0c26277b",
+    "human-explanations.csv.gz": "f7cf9ac64f15dd1a0c793e9d8c1e7e2ce38335d66964dbc6f83da80a74b2ba99",
     "human-funnel.csv.gz": "4f868aa9bea3aa9cc67ab826dcf8ef4e59b91d38cdeffe4bf14ff74799f7bf4d",
     "human-memberships.csv.gz": "0518a48e7c4bb4fa750e0bf5178bd9ec707592a6f6bae182b0f70ac7f6baf7b7",
     "human-overlaps.csv.gz": "0acfff690a8767496c4bbe61e10d47dafbf5d3af7240aca013343800cd024db0",
     "human-sources.csv.gz": "220dd136408b72eff6f1e6e2b161527a93a0e06cc1e0b6300bf35c3db3a2da4f",
-    "index.md": "2391c614f55ca03a29fe1a7c1e09cc699b0333d6cba7726efbf9559905557ce3",
+    "index.md": "96ba630ba05d387a5fe5f32064e7bfa1f2c4ac9cf71def480a8dcc435afd41cb",
     "mouse-criteria.csv.gz": "98a34bf89a2575f1d9e880635f82d7108c449a47a866429466a763d760813535",
     "mouse-explanations.csv.gz": "3691f252a2d59517bc773711b6223ff1ef5ffaef54310af972c4b03fb019656d",
     "mouse-funnel.csv.gz": "073d68445daf0386b79fdcfc80ae08e8101a1bcc70309ada078aa33f512a5aad",
     "mouse-memberships.csv.gz": "2f450480f5a6927d4bfa012add26dec78883cba0a42a33f22bf4ff4c731f6acb",
     "mouse-overlaps.csv.gz": "bc07f455cd3fe45c0cf5979ea72fd7e4ce4d22a2182307576dc4929bfcefbae0",
     "mouse-sources.csv.gz": "803193a5c22f76a547dd94df3bb77e064f26319bff88e190897adb853b3a4d08",
-    "normal-rna-evidence.csv.gz": "94f883bc02a3099ca1aebb83a4a5f0a8b0dc340ec65d2b292c5357270a6f31ef",
+    "normal-rna-evidence.csv.gz": "2c3c10d4b707261a5ced27e490fe388a60d4aa3e408182bf3385e72da1dd475b",
     "policy-review.md": "eec02d14428da73585d97c7efad64841881f9ef86779cc3561ca2574c0841936",
-    "presentation-data.json": "50e10b9be0c2e9922239fd55d8f79f4588465db7f8921dd760eb33fd1399a975",
+    "presentation-data.json": "93397093641e65bb9f4821266466c4636f2c95b856333b39675caace8f45cb24",
     "slides/cta-evidence-walkthrough.pptx": "78fc50b026a635ce86e44140c3e599ab4fbddf0537f66d9e77f1a8e850ed4d76",
-    "widely-studied-antigens.csv": "60245f467a90e4a2587a91b2d09433c8510ee223d7752368fc8fbcaf80371551"
+    "widely-studied-antigens.csv": "88baf1aa69348d2d11705fd727ace39652f6c98cfa2ded90b5fd319707c1dc08"
   }
 }

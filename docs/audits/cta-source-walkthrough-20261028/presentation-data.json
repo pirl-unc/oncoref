@@ -719,7 +719,7 @@
       "hold:External validated normal protein": false,
       "unsafe:External validated normal protein": false,
       "stem_progenitor_expression_flag": false,
-      "detailed_reason": "Passes the released rules; retained observations remain in the detailed evidence"
+      "detailed_reason": "Source antibody concern retained after evidence reconciliation | External staining review flag retained; inspect reagent and tissue scope"
     },
     {
       "protein_equivalence_group_id": "PEG:92c0ae3f131964f8a71d",
@@ -792,7 +792,7 @@
       "hold:External validated normal protein": false,
       "unsafe:External validated normal protein": false,
       "stem_progenitor_expression_flag": true,
-      "detailed_reason": "Passes the released rules; retained observations remain in the detailed evidence"
+      "detailed_reason": "Normal human adrenal cortex: Low (author_description); retained positive finding, no negative-IHC credit. | Protein evidence has limited scope; unmeasured tissues remain unknown | Low normal-protein observation retained without negative-IHC credit | Supported stem/progenitor RNA observation retained"
     },
     {
       "protein_equivalence_group_id": "PEG:d8f87170210d6b4f6fc0",
@@ -938,7 +938,7 @@
       "hold:External validated normal protein": false,
       "unsafe:External validated normal protein": false,
       "stem_progenitor_expression_flag": false,
-      "detailed_reason": "Passes the released rules; retained observations remain in the detailed evidence"
+      "detailed_reason": "External staining review flag retained; inspect reagent and tissue scope"
     },
     {
       "protein_equivalence_group_id": "PEG:4182d88ed01f30868284",
@@ -1084,7 +1084,7 @@
       "hold:External validated normal protein": false,
       "unsafe:External validated normal protein": false,
       "stem_progenitor_expression_flag": true,
-      "detailed_reason": "colon / undifferentiated cells: 53.1 nTPM; candidate ceiling 32; Unsafe threshold 64. No usable matched negative IHC. 251 reads."
+      "detailed_reason": "colon / undifferentiated cells: 53.1 nTPM; candidate ceiling 32; Unsafe threshold 64. No usable matched negative IHC. 251 reads. | Supported stem/progenitor RNA observation retained"
     },
     {
       "protein_equivalence_group_id": "PEG:dde00652f75f5114eae1",

@@ -63,7 +63,7 @@
     ]
   },
   "files": {
-    "cta-selection-audit-human.json.gz": "7e4ab698263ff6579a60349c5bc3aa8c48e8a8019f9aadec68585a899b48b0d1",
+    "cta-selection-audit-human.json.gz": "debc32f507eeb7b2774a0c586fe33a0a2d6bfc425bca573e5cdd25ce68fd20a5",
     "cta-selection-audit-dog.json.gz": "75f4044feb0dd2576cb265665e1803a53a9ca44f30d22e06dd41adb931c43444",
     "cta-selection-audit-mouse.json.gz": "435c03c4bfc16ef77204fed8b7fe6d8550af5a383f2f3f690da9f9611b471a0f"
   },
@@ -89,6 +89,6 @@
     "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
     "oncoref/species_antigens.py": "7dee761d1d667b696b5cd986a4318822bb822a428f86ec8469731353486bdfb3",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
-    "scripts/build_cta_selection_audit.py": "f240f711701fba5e41bd35b35151688d85f4991ee48163bba2cab298b493884b"
+    "scripts/build_cta_selection_audit.py": "010e1eb8a0a1206cbe0d860dcba4a79162bb9a8f0b6cfc7a9eaddfda1cf1157a"
   }
 }

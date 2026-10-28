@@ -307,7 +307,7 @@ def build() -> None:
     figures(facts, audit)
     known = facts[facts.protein_group_label.isin(COMPARATORS)].copy()
     known["detailed_reason"] = known.protein_equivalence_group_id.map(
-        audit.explanations[audit.explanations.decision.isin(["hold", "unsafe"])]
+        audit.explanations[audit.explanations.decision.isin(["hold", "unsafe", "flag"])]
         .groupby("entity_id")
         .reason.agg(" | ".join)
     ).fillna("Passes the released rules; retained observations remain in the detailed evidence")
