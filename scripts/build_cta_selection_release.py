@@ -296,9 +296,9 @@ def source_inventory() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def build() -> None:
+def build(audit: Path = AUDIT) -> None:
     """Export a small wheel-backed table, preserving every group and member identity."""
-    source = AUDIT / "protein-group-classifications.csv.gz"
+    source = audit / "protein-group-classifications.csv.gz"
     decisions = pd.read_csv(source, low_memory=False)
     source_identity = "sha256:" + sha256(source)
     reference = human.cta_snapshot().as_dict()["references"][0]["identity"]
@@ -346,7 +346,7 @@ def build() -> None:
                 else "partial",
                 "reference_id": reference["reference_id"],
                 "category": row["category"],
-                "assessment_status": "screened",
+                "assessment_status": row.get("assessment_status", "screened"),
                 "policy_id": row["policy"],
                 "reasons": json.dumps(
                     row["exclusion_reasons"].split(" | ")
@@ -360,11 +360,11 @@ def build() -> None:
     write_csv(pd.DataFrame(rows, columns=RESULT_COLUMNS), DATA / "cta-selection-human.csv.gz")
     inventory = source_inventory()
     write_csv(inventory, DATA / "cta-selection-sources.csv")
-    write_csv(inventory, AUDIT / "species-source-inventory.csv")
+    write_csv(inventory, audit / "species-source-inventory.csv")
     metadata = {
         "schema": "oncoref.cta-selection",
         "schema_version": 1,
-        "release": "1.21.0",
+        "release": "1.21.0" if audit == AUDIT else None,
         "data_sha256": {
             name: sha256(DATA / name)
             for name in ["cta-selection-human.csv.gz", "cta-selection-sources.csv"]
@@ -394,7 +394,7 @@ def build() -> None:
                     "No validated species-specific quantitative selection policy",
                     "Native normal matrices need reference reconciliation and source-specific scale handling",
                     "Tumor cohort integration is blocked by unit/reference provenance",
-                    "Unassessed nominations are Neither; human expression and safety evidence never transfer by orthology",
+                    "Unassessed nominations have null categories; human expression and safety evidence never transfer by orthology",
                 ],
             },
             "mouse": {
@@ -412,7 +412,7 @@ def build() -> None:
         },
         "inputs": {
             str(source.relative_to(ROOT)): sha256(source),
-            "report_manifest": sha256(AUDIT / "manifest.json"),
+            "report_manifest": sha256(audit / "manifest.json"),
         },
     }
     (DATA / "cta-selection.json").write_text(json.dumps(metadata, indent=2) + "\n")

@@ -118,96 +118,96 @@ z
    </g>
    <g id="patch_13">
     <path d="M 234 406.145455 
-L 234.529377 406.145455 
-L 234.529377 428.4 
+L 236.646885 406.145455 
+L 236.646885 428.4 
 L 234 428.4 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #dce7ea"/>
    </g>
    <g id="patch_14">
     <path d="M 234 433.963636 
-L 234.529377 433.963636 
-L 234.529377 456.218182 
+L 235.058754 433.963636 
+L 235.058754 456.218182 
 L 234 456.218182 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #dce7ea"/>
    </g>
    <g id="patch_15">
     <path d="M 234 461.781818 
-L 234 461.781818 
-L 234 484.036364 
+L 234.529377 461.781818 
+L 234.529377 484.036364 
 L 234 484.036364 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #dce7ea"/>
    </g>
    <g id="patch_16">
     <path d="M 234 127.963636 
-L 422.45823 127.963636 
-L 422.45823 150.218182 
+L 423.516984 127.963636 
+L 423.516984 150.218182 
 L 234 150.218182 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_17">
     <path d="M 234 155.781818 
-L 373.755541 155.781818 
-L 373.755541 178.036364 
+L 374.814295 155.781818 
+L 374.814295 178.036364 
 L 234 178.036364 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_18">
     <path d="M 234 183.6 
-L 398.636262 183.6 
-L 398.636262 205.854545 
+L 399.695016 183.6 
+L 399.695016 205.854545 
 L 234 205.854545 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_19">
     <path d="M 234 211.418182 
-L 424.575738 211.418182 
-L 424.575738 233.672727 
+L 425.105115 211.418182 
+L 425.105115 233.672727 
 L 234 233.672727 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_20">
     <path d="M 234 239.236364 
-L 247.234426 239.236364 
-L 247.234426 261.490909 
+L 248.29318 239.236364 
+L 248.29318 261.490909 
 L 234 261.490909 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_21">
     <path d="M 234 267.054545 
-L 250.940066 267.054545 
-L 250.940066 289.309091 
+L 251.469443 267.054545 
+L 251.469443 289.309091 
 L 234 289.309091 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_22">
     <path d="M 234 294.872727 
-L 275.820787 294.872727 
-L 275.820787 317.127273 
+L 277.408918 294.872727 
+L 277.408918 317.127273 
 L 234 317.127273 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_23">
     <path d="M 234 322.690909 
-L 264.703869 322.690909 
-L 264.703869 344.945455 
+L 265.233246 322.690909 
+L 265.233246 344.945455 
 L 234 344.945455 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_24">
     <path d="M 234 350.509091 
-L 238.235016 350.509091 
-L 238.235016 372.763636 
+L 238.764393 350.509091 
+L 238.764393 372.763636 
 L 234 372.763636 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
@@ -222,8 +222,8 @@ z
    </g>
    <g id="patch_26">
     <path d="M 234 406.145455 
-L 234 406.145455 
-L 234 428.4 
+L 235.058754 406.145455 
+L 235.058754 428.4 
 L 234 428.4 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
@@ -437,7 +437,7 @@ L -3.5 0
       </g>
      </g>
      <g id="text_19">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="227" y="421.451868" transform="rotate(-0 227 421.451868)">Bai et al. (2016)</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="227" y="421.451868" transform="rotate(-0 227 421.451868)">Garg et al. (2007)</text>
      </g>
     </g>
     <g id="ytick_12">
@@ -447,7 +447,7 @@ L -3.5 0
       </g>
      </g>
      <g id="text_20">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="227" y="449.27005" transform="rotate(-0 227 449.27005)">Garg et al. (2007)</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="227" y="449.27005" transform="rotate(-0 227 449.27005)">Boël et al. (1995)</text>
      </g>
     </g>
     <g id="ytick_13">
@@ -457,48 +457,48 @@ L -3.5 0
       </g>
      </g>
      <g id="text_21">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="227" y="477.088232" transform="rotate(-0 227 477.088232)">Boël et al. (1995)</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #172b3a" x="227" y="477.088232" transform="rotate(-0 227 477.088232)">Bai et al. (2016)</text>
      </g>
     </g>
    </g>
    <g id="text_22">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="780.317115" y="141.4288" transform="rotate(-0 780.317115 141.4288)">356 / 1,017</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="780.317115" y="141.4288" transform="rotate(-0 780.317115 141.4288)">358 / 1,017</text>
    </g>
    <g id="text_23">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="764.96518" y="169.246982" transform="rotate(-0 764.96518 169.246982)">264 / 988</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="764.96518" y="169.246982" transform="rotate(-0 764.96518 169.246982)">266 / 988</text>
    </g>
    <g id="text_24">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="763.377049" y="197.065163" transform="rotate(-0 763.377049 197.065163)">311 / 985</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="763.377049" y="197.065163" transform="rotate(-0 763.377049 197.065163)">313 / 985</text>
    </g>
    <g id="text_25">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="627.856525" y="224.883345" transform="rotate(-0 627.856525 224.883345)">360 / 729</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="627.856525" y="224.883345" transform="rotate(-0 627.856525 224.883345)">361 / 729</text>
    </g>
    <g id="text_26">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="608.269574" y="252.701527" transform="rotate(-0 608.269574 252.701527)">25 / 692</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="608.269574" y="252.701527" transform="rotate(-0 608.269574 252.701527)">27 / 692</text>
    </g>
    <g id="text_27">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="490.218492" y="280.519709" transform="rotate(-0 490.218492 280.519709)">32 / 469</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="490.218492" y="280.519709" transform="rotate(-0 490.218492 280.519709)">33 / 469</text>
    </g>
    <g id="text_28">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="348.87482" y="308.337891" transform="rotate(-0 348.87482 308.337891)">79 / 202</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="348.87482" y="308.337891" transform="rotate(-0 348.87482 308.337891)">82 / 202</text>
    </g>
    <g id="text_29">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="296.466492" y="336.156072" transform="rotate(-0 296.466492 336.156072)">58 / 103</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="296.466492" y="336.156072" transform="rotate(-0 296.466492 336.156072)">59 / 103</text>
    </g>
    <g id="text_30">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="249.881311" y="363.974254" transform="rotate(-0 249.881311 363.974254)">8 / 15</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="249.881311" y="363.974254" transform="rotate(-0 249.881311 363.974254)">9 / 15</text>
    </g>
    <g id="text_31">
     <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="246.705049" y="391.792436" transform="rotate(-0 246.705049 391.792436)">1 / 9</text>
    </g>
    <g id="text_32">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="242.470033" y="419.610618" transform="rotate(-0 242.470033 419.610618)">0 / 1</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="244.587541" y="419.610618" transform="rotate(-0 244.587541 419.610618)">2 / 5</text>
    </g>
    <g id="text_33">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="242.470033" y="447.4288" transform="rotate(-0 242.470033 447.4288)">0 / 1</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="242.99941" y="447.4288" transform="rotate(-0 242.99941 447.4288)">0 / 2</text>
    </g>
    <g id="text_34">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="241.940656" y="475.246982" transform="rotate(-0 241.940656 475.246982)">0 / 0</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="242.470033" y="475.246982" transform="rotate(-0 242.470033 475.246982)">0 / 1</text>
    </g>
    <g id="legend_1">
     <g id="patch_29">
@@ -532,7 +532,7 @@ z
    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="42.12" y="69.558281" transform="rotate(-0 42.12 69.558281)">Tables from the same paper are unioned before counting</text>
   </g>
   <g id="text_39">
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 582.834551)">Union: 2,482 mapped groups / 2,538 mapped loci; 418 selected groups have a registered list annotation.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 582.834551)">Union: 2,482 mapped groups / 2,538 mapped loci; 421 selected groups have a registered list annotation.</text>
    <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 593.637012)">45 selected groups have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.</text>
   </g>
  </g>

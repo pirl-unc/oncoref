@@ -390,6 +390,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "species-scoped evidence roles, native units, source integration status and coverage gaps",
     ),
+    "cta-ihc-compartments": (
+        "cta-evidence",
+        "source-specific RNA/IHC compartment correspondences with citations and coverage limits",
+    ),
+    "cta-publication-context": (
+        "cta-evidence",
+        "author-recognized prior CT antigens with protein-group identities and source locations",
+    ),
     "cta-membership-evidence": (
         "cta-evidence",
         "reference-bound reviewed reproductive/developmental and tumor evidence with primary citations",

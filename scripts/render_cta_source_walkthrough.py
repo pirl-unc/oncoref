@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import plot_cta_geometric as style  # noqa: E402
-from build_cta_selection_audit import COMPARATORS, OUTPUT, RELEASE, records  # noqa: E402
+from build_cta_selection_audit import COMPARATORS, OUTPUT, RELEASE, citation, records  # noqa: E402
 
 from oncoref import cta_selection  # noqa: E402
 
@@ -27,8 +27,8 @@ def markdown(frame: pd.DataFrame) -> str:
     """Write a compact Markdown table without an optional tabulate dependency."""
 
     def cell(value):
-        if isinstance(value, float) and np.isnan(value):
-            return "—"
+        if isinstance(value, float):
+            return "—" if np.isnan(value) else f"{value:.4g}"
         return str(value).replace("|", " / ").replace("\n", " ")
 
     return "\n".join(
@@ -43,63 +43,289 @@ def markdown(frame: pd.DataFrame) -> str:
     )
 
 
+COLORS = {"CTA": "#087E8B", "Unsafe": "#AC493B", "Neither": "#A28C68", "Unassigned": "#B9C3CD"}
+
+
+def antigen_label(label: str) -> str:
+    """Display familiar names together with the grouped gene identities."""
+    return {
+        "NY-ESO-1": "NY-ESO-1 (CTAG1A/B)",
+        "CTAG2": "LAGE-1 (CTAG2)",
+        "TBXT": "TBXT (brachyury)",
+    }.get(label, label.replace("MAGEA", "MAGE-A"))
+
+
+def expression_axes(ax, *, x: str, y: str) -> None:
+    """Keep zeros visible on native expression axes without display offsets."""
+    ax.set_xscale("symlog", linthresh=0.1)
+    ax.set_yscale("symlog", linthresh=0.1)
+    ax.set_xlim(left=0)
+    ax.set_ylim(bottom=0)
+    ax.set_xlabel(x)
+    ax.set_ylabel(y)
+
+
+def highlight_antigens(ax, frame: pd.DataFrame, x: str, y: str, *, high_both=False):
+    """Label comparators and, optionally, measured groups high on both axes."""
+    from adjustText import adjust_text
+
+    mask = frame.protein_group_label.isin(COMPARATORS)
+    if high_both:
+        mask |= frame[x].ge(5) & frame[y].ge(5)
+    labels = []
+    for _, row in frame[mask].iterrows():
+        ax.scatter(row[x], row[y], s=85, facecolors="none", edgecolors=style.INK, lw=1)
+        labels.append(
+            ax.text(
+                row[x],
+                row[y],
+                antigen_label(row.protein_group_label),
+                fontsize=11,
+                bbox={"facecolor": style.BG, "edgecolor": "none", "alpha": 0.85, "pad": 0.8},
+            )
+        )
+    adjust_text(
+        labels,
+        ax=ax,
+        iter_lim=300,
+        expand=(1.12, 1.25),
+        arrowprops={"arrowstyle": "-", "color": style.MUTED, "lw": 0.6},
+    )
+    return labels
+
+
+def missing_expression_strip(ax, frame: pd.DataFrame, x: str, *, color=None, norm=None):
+    """Show missing y measurements in a separate categorical band, never at zero.
+
+    Vertical staggering is for legibility only and has no expression meaning.
+    Every missing-y group with measured x appears, including missing color values.
+    """
+    band = frame[frame[x].notna()].sort_values([x, "protein_group_label"]).copy()
+    band["band_position"] = 0.2 + (np.arange(len(band)) % 5) * 0.11
+    cmap = plt.get_cmap("viridis").copy()
+    cmap.set_bad("#A8B1B8")
+    colors = band[color] if color else band.category.fillna("Unassigned").map(COLORS)
+    ax.scatter(
+        band[x],
+        band.band_position,
+        c=colors,
+        cmap=cmap if color else None,
+        norm=norm,
+        plotnonfinite=True,
+        s=27,
+        alpha=0.8,
+        edgecolors="white",
+        linewidths=0.3,
+    )
+    ax.set_facecolor("#EAF0F2")
+    ax.set_ylim(0, 1)
+    ax.set_yticks([])
+    ax.set_title(
+        f"Embryonic measurement unavailable · {len(band):,} groups", loc="left", fontsize=11, pad=8
+    )
+    labels = highlight_antigens(ax, band, x, "band_position")
+    return labels
+
+
+def save_expression_figure(fig, ax, band, out: Path, name: str, note: str, *, colorbar=None):
+    """Export a full-width report figure and a landscape slide version."""
+    style.footer(fig, note)
+    style.save(fig, out, name)
+    fig.set_size_inches(16, 6.5)
+    for annotation in fig.texts:
+        annotation.set_visible(False)
+    if band is not None:
+        ax.set_position([0.085, 0.43, 0.75 if colorbar else 0.86, 0.53])
+        band.set_position([0.085, 0.14, 0.75 if colorbar else 0.86, 0.15])
+    else:
+        ax.set_position([0.085, 0.16, 0.86, 0.80])
+    if colorbar is not None:
+        colorbar.ax.set_position([0.89, 0.15, 0.018, 0.81])
+    ax.tick_params(labelsize=12)
+    ax.yaxis.label.set_size(13)
+    if band is None:
+        ax.xaxis.label.set_size(13)
+    else:
+        band.xaxis.label.set_size(13)
+    fig.savefig(out / (name + "-slide.png"), dpi=200, facecolor=style.BG)
+
+
+def expression_figures(facts: pd.DataFrame, out: Path) -> None:
+    """Render full-width expression plots with explicit missing-measurement bands."""
+    from matplotlib.colors import SymLogNorm
+
+    embryo = "developmental_all_lineage_max_tpm"
+    reproductive = "reproductive_ntpm"
+    bulk = "adult_bulk_max_ntpm"
+    selected = facts[facts.category.eq("CTA")].copy()
+    for column, label, suffix in [
+        (reproductive, "Reproductive RNA (nTPM)", "reproductive"),
+        (embryo, "Embryonic lineage mean (TPM)", "embryonic"),
+    ]:
+        fig = plt.figure(figsize=(16, 10))
+        has_band = column == embryo
+        ax = fig.add_axes([0.095, 0.39 if has_band else 0.20, 0.85, 0.43 if has_band else 0.62])
+        style.title(
+            fig,
+            f"Widely studied antigens: {suffix} expression",
+            "Current categories; highlighted antigens follow the same selection rules",
+        )
+        measured = facts[facts[column].notna() & facts[bulk].notna()]
+        for category, color in COLORS.items():
+            part = measured[measured.category.fillna("Unassigned").eq(category)]
+            ax.scatter(
+                part[bulk],
+                part[column],
+                s=10,
+                alpha=0.24,
+                color=color,
+                label=category,
+                rasterized=True,
+            )
+        expression_axes(ax, x="Adult bulk RNA (nTPM)", y=label)
+        highlight_antigens(ax, measured, bulk, column)
+        ax.legend(frameon=False, fontsize=11, markerscale=2)
+        band = None
+        if has_band:
+            band = fig.add_axes([0.095, 0.16, 0.85, 0.13], sharex=ax)
+            missing_expression_strip(band, facts[facts[column].isna()], bulk)
+            ax.set_xlabel("")
+            ax.tick_params(labelbottom=False)
+            band.set_xlabel("Adult bulk RNA (nTPM)")
+        save_expression_figure(
+            fig,
+            ax,
+            band,
+            out,
+            "widely-studied-antigens-" + suffix,
+            "Each dot is a protein-equivalence group. Missing embryonic values are shown separately, not imputed as zero.\nLabels include PRAME, CTAG1A/B, XAGE1A/B, MAGE-A4, CT83, SSX2/B and TBXT where the corresponding measurement exists.",
+        )
+    for field, unit, suffix in [
+        ("healthy_maximum_ntpm", "nTPM", ""),
+        ("healthy_maximum_tpm", "TPM", "-immune"),
+        ("healthy_maximum_cp10k", "CP10K", "-cornea"),
+    ]:
+        fig = plt.figure(figsize=(16, 10))
+        ax = fig.add_axes([0.095, 0.39, 0.74, 0.43])
+        band = fig.add_axes([0.095, 0.16, 0.74, 0.13], sharex=ax)
+        style.title(
+            fig,
+            "Selected CTA: reproductive versus embryonic RNA",
+            f"All {len(selected)} selected groups · color: non-disposable healthy maximum ({unit}); gray: color unavailable",
+        )
+        norm = SymLogNorm(
+            linthresh=0.1 if unit != "CP10K" else 0.001,
+            vmin=0,
+            vmax=max(selected[field].max(), 0.1),
+        )
+        cmap = plt.get_cmap("viridis").copy()
+        cmap.set_bad("#A8B1B8")
+        part = selected[selected[reproductive].notna() & selected[embryo].notna()]
+        points = ax.scatter(
+            part[reproductive],
+            part[embryo],
+            c=part[field],
+            norm=norm,
+            cmap=cmap,
+            plotnonfinite=True,
+            s=40,
+            alpha=0.85,
+            edgecolors="white",
+            linewidths=0.4,
+        )
+        colorbar = fig.colorbar(
+            points, cax=fig.add_axes([0.89, 0.16, 0.018, 0.66]), label=f"Healthy maximum ({unit})"
+        )
+        ax.axvline(5, ls=":", color=style.MUTED, lw=0.8)
+        ax.axhline(5, ls=":", color=style.MUTED, lw=0.8)
+        expression_axes(ax, x="", y="Embryonic lineage mean (TPM)")
+        ax.set_xlim(0, selected[reproductive].max() * 1.3)
+        ax.set_ylim(0, part[embryo].max() * 1.3)
+        missing = selected[selected[embryo].isna()]
+        missing_expression_strip(band, missing, reproductive, color=field, norm=norm)
+        ax.tick_params(labelbottom=False)
+        band.set_xlabel("Reproductive RNA (nTPM)")
+        highlight_antigens(ax, part, reproductive, embryo, high_both=True)
+        save_expression_figure(
+            fig,
+            ax,
+            band,
+            out,
+            "selected-reproductive-embryonic" + suffix,
+            f"{len(part)} measured on both axes; {len(missing)} shown in the missing-embryonic band. Band height is categorical, not expression.\nThe embryo source is a filtered gene matrix from one early embryo. Missing rows cannot establish absent expression.\nLabels: widely studied antigens and groups ≥5 on both axes. Colors retain separate native units; no mixed-unit maximum.",
+            colorbar=colorbar,
+        )
+    selected["embryonic_plot_status"] = np.where(
+        selected[embryo].notna(), "measured", "unavailable"
+    )
+    selected.to_csv(
+        OUTPUT / "selected-expression-scatter.csv.gz",
+        index=False,
+        compression={"method": "gzip", "mtime": 0},
+    )
+
+
 def figures(facts: pd.DataFrame, audit) -> None:
-    """Use citation labels, explicit decision thresholds and unshifted RNA axes."""
+    """Render counts and native-unit expression without imputing missing values."""
     style.setup()
     out = OUTPUT / "figures"
     out.mkdir(exist_ok=True)
-    colors = {"CTA": style.TEAL, "Unsafe": style.RED, "Neither": "#A28C68"}
-    fig, ax = plt.subplots(figsize=(15, 9))
-    fig.subplots_adjust(left=0.29, right=0.77, top=0.82, bottom=0.16)
+    facts.category.fillna("Unassigned").value_counts()
+    selected = facts[facts.category.eq("CTA")]
+    annotated = audit.memberships.loc[audit.memberships.category.eq("CTA"), "entity_id"].nunique()
+    unannotated = len(selected) - annotated
+    fig, ax = plt.subplots(figsize=(16, 9))
+    fig.subplots_adjust(left=0.29, right=0.77, top=0.83, bottom=0.16)
     style.title(
         fig,
         "Human selection funnel",
-        "19,863 protein-equivalence groups; each layer can change the category",
+        f"{len(facts):,} protein-equivalence groups; every layer evaluates every group",
     )
     left = np.zeros(len(audit.funnel))
     for key, label in [
         ("eligible", "Eligible so far"),
         ("Unsafe", "Unsafe"),
         ("Neither", "Neither"),
+        ("Unassigned", "Unassigned"),
     ]:
         ax.barh(
             audit.funnel.stage,
             audit.funnel[key],
             left=left,
-            color=colors.get(key, style.TEAL),
+            color=COLORS.get(key, COLORS["CTA"]),
             label=label,
         )
         left += audit.funnel[key].to_numpy()
     ax.invert_yaxis()
     ax.set_xlabel("Protein-equivalence groups")
-    ax.legend(frameon=False, ncol=3, loc="upper left", bbox_to_anchor=(0, -0.08), fontsize=9)
-    ax.text(1.02, 1.025, "Eligible   Unsafe   Neither", transform=ax.transAxes, fontsize=9)
+    ax.legend(frameon=False, ncol=4, loc="upper left", bbox_to_anchor=(0, -0.08), fontsize=9)
+    ax.text(
+        1.02, 1.025, "Eligible / Unsafe / Neither / Unassigned", transform=ax.transAxes, fontsize=9
+    )
     for i, row in enumerate(audit.funnel.itertuples()):
         ax.text(
             1.02,
             i,
-            f"{row.eligible:>6,}  {row.Unsafe:>6,}  {row.Neither:>6,}",
+            f"{row.eligible:,} / {row.Unsafe:,} / {row.Neither:,} / {row.Unassigned:,}",
             transform=ax.get_yaxis_transform(),
             va="center",
-            fontfamily="monospace",
             fontsize=9,
         )
     style.footer(
         fig,
-        "Current policy: 463 CTA / 17,388 Unsafe / 2,012 Neither. Intermediate eligibility is not a final CTA assignment.\nSequential removals depend on display order; final classifications do not.",
+        "Neither is assigned by a measured expression profile at the final stage. Earlier holds remain unassigned.\nSequential removals depend on display order; final assignments do not. Unsafe denotes policy exclusion, not demonstrated toxicity.",
     )
     style.save(fig, out, "human-funnel")
-
     fig, ax = plt.subplots(figsize=(12, 7))
-    fig.subplots_adjust(left=0.24, right=0.96, top=0.79, bottom=0.24)
-    style.title(fig, "Active RNA cutoffs", "Candidate ceilings under the released 1.21.0 policy")
-    grid = np.array([[base * 2**i for i in range(4)] for base in (4, 8, 16, 32)])
+    fig.subplots_adjust(left=0.22, right=0.96, top=0.78, bottom=0.24)
+    style.title(fig, "RNA cutoffs", "One ceiling per tissue tier and usable negative-IHC grade")
+    grid = np.array([[b * 2**i for i in range(4)] for b in (4, 8, 16)])
     ax.imshow(np.log2(grid), cmap="YlGnBu", aspect="auto")
     ax.set_xticks(
         range(4),
-        ["Unmatched / unusable", "Approved negative", "Supported negative", "Enhanced negative"],
+        ["Missing / unusable", "Approved negative", "Supported negative", "Enhanced negative"],
     )
-    ax.set_yticks(range(4), ["Vital", "Protected", "Manageable", "Specified bowel epithelium"])
+    ax.set_yticks(range(3), ["Vital", "Protected", "Manageable"])
     for i, j in np.ndindex(grid.shape):
         ax.text(
             j,
@@ -107,66 +333,15 @@ def figures(facts: pd.DataFrame, audit) -> None:
             str(grid[i, j]),
             ha="center",
             va="center",
-            fontsize=20,
+            fontsize=24,
             color="white" if grid[i, j] >= 32 else style.INK,
         )
     style.footer(
         fig,
-        "At/below the ceiling passes; above it holds. The released Unsafe RNA threshold is 2× each value.\nTPM/nTPM retain native assay units. Corneal CP10K uses nominal limits /100, not a TPM conversion.\nSame-tissue negative IHC is shown separately when cell-type coverage is unresolved.",
+        "Above ceiling: Vital/Protected supplies Unsafe evidence; Manageable blocks CTA admission. Equality passes.\nBowel epithelium and identified fibroblasts use Manageable; bulk retains its organ tier.\nNative TPM/nTPM numbers are linked. Corneal CP10K uses nominal /100, not a TPM conversion.",
     )
     style.save(fig, out, "active-rna-cutoffs")
-
-    fig, axes = plt.subplots(1, 2, figsize=(16, 8))
-    fig.subplots_adjust(left=0.075, right=0.97, top=0.80, bottom=0.20, wspace=0.21)
-    style.title(
-        fig,
-        "Widely studied antigens",
-        "Reproductive and developmental routes remain separate measurements",
-    )
-    from adjustText import adjust_text
-
-    comparators = facts[facts.protein_group_label.isin(COMPARATORS)]
-    for ax, column, label in zip(
-        axes,
-        ["reproductive_ntpm", "developmental_mean_tpm"],
-        ["Reproductive RNA (nTPM)", "Embryonic lineage RNA (TPM)"],
-        strict=True,
-    ):
-        valid = facts.adult_bulk_max_ntpm.notna() & facts[column].notna()
-        for category, color in colors.items():
-            part = facts[valid & facts.category.eq(category)]
-            ax.scatter(
-                part.adult_bulk_max_ntpm,
-                part[column],
-                s=8,
-                color=color,
-                alpha=0.22,
-                rasterized=True,
-                label=f"{category}: {len(part):,} plotted",
-            )
-        ax.set_xscale("symlog", linthresh=0.1)
-        ax.set_yscale("symlog", linthresh=0.1)
-        labels = []
-        for row in comparators[comparators[column].notna()].to_dict("records"):
-            x, y = row["adult_bulk_max_ntpm"], row[column]
-            ax.scatter(x, y, color=colors[row["category"]], s=38, edgecolor=style.INK, zorder=3)
-            display = row["protein_group_label"].replace("MAGEA", "MAGE-A")
-            labels.append(ax.text(x, y, display, fontsize=9))
-        adjust_text(
-            labels,
-            ax=ax,
-            iter_lim=200,
-            arrowprops={"arrowstyle": "-", "color": style.MUTED, "lw": 0.6},
-        )
-        ax.set_xlabel("Adult bulk RNA (nTPM)")
-        ax.set_ylabel(label)
-        ax.legend(frameon=False, fontsize=8, loc="upper left")
-    style.footer(
-        fig,
-        "Axes include zero on a symmetric-log scale. Only groups with measurements are plotted; colors use the complete funnel.\nTBXT enters through the developmental route. MAGE-A1, MAGE-A3 and MAGE-A12 are comparators, not forced positive controls.",
-    )
-    style.save(fig, out, "widely-studied-antigens")
-
+    expression_figures(facts, out)
     ranked = audit.sources.sort_values("mapped_entities", ascending=False)
     fig, ax = plt.subplots(figsize=(13, 8.5))
     fig.subplots_adjust(left=0.25, right=0.94, top=0.82, bottom=0.18)
@@ -189,7 +364,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
     ax.legend(frameon=False, ncol=2, loc="upper left", bbox_to_anchor=(0, -0.07), fontsize=10)
     style.footer(
         fig,
-        "Union: 2,482 mapped groups / 2,538 mapped loci; 418 selected groups have a registered list annotation.\n45 selected groups have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.",
+        f"Union: 2,482 mapped groups / 2,538 mapped loci; {annotated} selected groups have a registered list annotation.\n{unannotated} selected groups have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.",
     )
     style.save(fig, out, "published-list-contributions")
 
@@ -251,7 +426,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
         ],
         ["Tumor RNA", "Cohort blocked", "Count/FPKM and annotation conflict"],
         ["Normal IHC / MS", "Limited IHC; pooled iBAQ", "Not a complete tissue-cell panel"],
-        ["Selection", "14 Neither / unassessed", "No passing/failing count is inferred"],
+        ["Selection", "14 unassigned / unassessed", "No passing/failing count is inferred"],
     ]
     table = ax.table(
         cellText=values,
@@ -274,211 +449,367 @@ def figures(facts: pd.DataFrame, audit) -> None:
     style.save(fig, out, "dog-funnel")
 
 
-def bowel_comparison(facts: pd.DataFrame) -> pd.DataFrame:
-    """Evaluate only the monotonic change from the bowel 32 row to Manageable 16."""
-    contexts = pd.read_csv(RELEASE / "changed-compartment-contexts.csv.gz")
-    bowel = contexts[contexts.selection_tier.eq("renewing_mucosa")].copy()
-    bowel["hold"] = bowel.value.gt(bowel.candidate_ceiling / 2)
-    bowel["unsafe"] = bowel.value.ge(bowel.candidate_ceiling)
-    changed = bowel.groupby("gene_id")[["hold", "unsafe"]].any()
-    result = facts.copy()
-    result["hold:HPA tissue clusters"] |= result.representative_gene_id.map(changed.hold).fillna(
-        False
-    )
-    result["unsafe:HPA tissue clusters"] |= result.representative_gene_id.map(
-        changed.unsafe
-    ).fillna(False)
-    held = result.filter(regex="^hold:").any(axis=1)
-    unsafe = result.filter(regex="^unsafe:").any(axis=1)
-    result["comparison_category"] = np.select([unsafe, held], ["Unsafe", "Neither"], default="CTA")
-    delta = result[result.category.ne(result.comparison_category)]
-    delta[
-        ["protein_equivalence_group_id", "protein_group_label", "category", "comparison_category"]
-    ].to_csv(OUTPUT / "bowel-manageable16-comparison.csv", index=False)
-    return result
-
-
 def build() -> None:
-    """Render documents and plots against the current, unchanged selection snapshot."""
-    audit = cta_selection.audit()
-    dog = cta_selection.audit(species="dog")
+    """Publish consistent reports, figure data and slide inputs from one replay."""
+    import hashlib
+
     facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
-    comparison = bowel_comparison(facts)
+    summary = json.loads((RELEASE / "summary.json").read_text())
+    audit, dog = cta_selection.audit(), cta_selection.audit(species="dog")
     figures(facts, audit)
-    known = facts[facts.protein_group_label.isin(COMPARATORS)].copy()
-    known["detailed_reason"] = known.protein_equivalence_group_id.map(
-        audit.explanations[audit.explanations.decision.isin(["hold", "unsafe", "flag"])]
-        .groupby("entity_id")
-        .reason.agg(" | ".join)
-    ).fillna("Passes the released rules; retained observations remain in the detailed evidence")
-    known[
+    counts = summary["categories"]
+    comparators = facts[facts.protein_group_label.isin(COMPARATORS)][
+        [
+            "protein_group_label",
+            "category",
+            "assessment_status",
+            "reproductive_ntpm",
+            "developmental_all_lineage_max_tpm",
+            "adult_bulk_max_ntpm",
+            "exclusion_reasons",
+        ]
+    ].copy()
+    comparators["category"] = comparators.category.fillna("Unassigned")
+    detailed_reasons = {}
+    for label in comparators.protein_group_label:
+        evidence = audit.explain(label)
+        reasons = []
+        for row in evidence[evidence.decision.isin(["unsafe", "hold"])].itertuples():
+            if pd.notna(row.value) and pd.notna(row.tissue):
+                context = f"{row.tissue}: {row.cell_type}; {row.value} {row.unit}"
+                if pd.notna(row.candidate_ceiling):
+                    context += f" (ceiling {row.candidate_ceiling:g})"
+                reasons.append(context)
+            else:
+                reasons.append(row.reason)
+        detailed_reasons[label] = " | ".join(reasons)
+    comparators["exclusion_reasons"] = comparators.protein_group_label.map(detailed_reasons)
+    comparators.to_csv(OUTPUT / "widely-studied-antigens.csv", index=False)
+    unassigned = facts[facts.category.isna()].copy()
+    gap_columns = {
+        "normal_panel_missing": ~unassigned.required_coverage,
+        "tumor_measurement_missing": ~unassigned.tumor_measured,
+        "embryonic_measurement_missing": ~unassigned.developmental_measured,
+        "unresolved_evidence": unassigned.unresolved_evidence,
+    }
+    gaps = unassigned[
         [
             "protein_equivalence_group_id",
             "protein_group_label",
-            "category",
-            "detailed_reason",
-            "reproductive_ntpm",
-            "developmental_mean_tpm",
+            "member_gene_ids",
+            "assessment_status",
         ]
-    ].to_csv(OUTPUT / "widely-studied-antigens.csv", index=False)
-    paper = audit.sources.copy()
-    paper["Paper"] = paper.apply(lambda r: f"[{r.citation}]({r.source_url})", axis=1)
-    paper = paper.rename(
-        columns={
-            "mapped_entities": "Mapped groups",
-            "mapped_gene_loci": "Gene loci",
-            "unique_entities": "Unique to this paper",
-        }
+    ].assign(**gap_columns)
+    gaps.to_csv(OUTPUT / "unassigned-evidence-gaps.csv", index=False)
+    incomplete = gaps[gaps.assessment_status.eq("incomplete_evidence")]
+    gap_counts = pd.DataFrame(
+        [
+            {"Evidence gap": name.replace("_", " "), "Groups": int(incomplete[name].sum())}
+            for name in gap_columns
+        ]
     )
-    association = []
-    for name, mask in [
-        ("Reproductive only", facts.reproductive_route & ~facts.developmental_route),
-        ("Developmental only", ~facts.reproductive_route & facts.developmental_route),
-        ("Both", facts.reproductive_route & facts.developmental_route),
-    ]:
-        association.append(
+    intake = pd.read_csv(ROOT / "oncoref/data/cta-publication-membership.csv").fillna("")
+    registry = pd.read_csv(ROOT / "oncoref/data/cta-publication-sources.csv")
+    context = pd.read_csv(ROOT / "oncoref/data/cta-publication-context.csv")
+    context.to_csv(OUTPUT / "publication-context.csv", index=False)
+    registry["citation"] = registry.source_tag.map(citation)
+    registry[
+        ["citation", "source_tag", "published_rows", "source_table", "evidence_scope", "source_url"]
+    ].to_csv(OUTPUT / "paper-source-scope.csv", index=False)
+    targeted, expanded_members = [], []
+    source_labels = audit.sources.set_index("source_id").citation
+    for tag in ["Bai2016_EGFL6", "Garg2007_SPAG9", "Boel1995_BAGE"]:
+        row = intake[intake.source_tag.eq(tag)].iloc[0]
+        source = registry[registry.source_tag.eq(tag)].iloc[0]
+        match = audit.memberships[audit.memberships.source_id.eq(source.doi)]
+        extra = context[context.source_tag.eq(tag)]
+        targeted.append(
             {
-                "Route": name,
-                "Entrants": int(mask.sum()),
-                "Final CTA": int((mask & facts.category.eq("CTA")).sum()),
+                "Paper": citation(tag),
+                "Principal target": row.source_symbol,
+                "Previously recognized CTAs": "; ".join(
+                    extra.label.map(antigen_label).str.replace("\n", " ")
+                )
+                or "None curated",
+                "Mapped groups": len(match),
+                "Selected CTA": int(match.category.eq("CTA").sum()),
+                "Source": "https://doi.org/" + source.doi,
             }
         )
-    sources = cta_selection.sources()
-    used = sources[sources.status.eq("used_in_selection")].copy()
-    used["Source"] = used.apply(lambda r: f"[{r['name']}]({r.source_url})", axis=1)
-    used = used.rename(
-        columns={
-            "evidence_category": "Role",
-            "native_unit": "Unit",
-            "limitations": "Scope / limitations",
-        }
+        for target in match.itertuples():
+            others = audit.memberships.loc[
+                audit.memberships.entity_id.eq(target.entity_id)
+                & ~audit.memberships.source_id.eq(source.doi),
+                "source_id",
+            ]
+            expanded_members.append(
+                {
+                    "Paper": citation(tag),
+                    "Target": target.label,
+                    "Category": target.category if pd.notna(target.category) else "Unassigned",
+                    "Other registered papers": "; ".join(source_labels.loc[others]) or "None",
+                    "entity_id": target.entity_id,
+                    "member_gene_ids": json.dumps(list(target.gene_ids)),
+                }
+            )
+    targeted = pd.DataFrame(targeted)
+    targeted.to_csv(OUTPUT / "targeted-paper-contributions.csv", index=False)
+    expanded_members = pd.DataFrame(expanded_members)
+    expanded_members.to_csv(OUTPUT / "targeted-paper-overlaps.csv", index=False)
+    embryonic_coverage = pd.read_csv(OUTPUT / "embryonic-comparator-coverage.csv")
+    routes = pd.DataFrame(
+        [
+            {
+                "route": label,
+                "entrants": int(mask.sum()),
+                "CTA": int((mask & facts.category.eq("CTA")).sum()),
+            }
+            for label, mask in [
+                ("Reproductive only", facts.reproductive_route & ~facts.developmental_route),
+                ("Developmental only", ~facts.reproductive_route & facts.developmental_route),
+                ("Both", facts.reproductive_route & facts.developmental_route),
+            ]
+        ]
     )
-    overview = f"""# Human and dog CTA evidence walkthrough
+    inventory = cta_selection.sources()
+    inventory.to_csv(OUTPUT / "human-measurement-sources.csv", index=False)
+    dog_sources = cta_selection.sources(species="dog")
+    dog_sources.to_csv(OUTPUT / "dog-measurement-sources.csv", index=False)
+    known = pd.read_csv(RELEASE / "known-cta-decisions.csv.gz", low_memory=False)
+    # This is a comparison cohort, never a second set of current CTA assignments.
+    [c for c in known if "histor" in c or "Expression category" in c]
+    historical = known[
+        known.get("historical_expression_category", pd.Series("", index=known.index)).eq("CTA")
+    ]
+    if historical.empty:
+        historical = known[
+            known.get("historical_category", pd.Series("", index=known.index)).eq("CTA")
+        ]
+    historical_counts = (
+        historical.protein_group_category.fillna("Unassigned").value_counts().to_dict()
+    )
+    annotated = audit.memberships.loc[audit.memberships.category.eq("CTA"), "entity_id"].nunique()
+    missing = facts[facts.category.isna()].assessment_status.value_counts().to_dict()
+    funnel = pd.read_csv(RELEASE / "filtering-funnel.csv")
+    overview = f"""# CTA and oncofetal selection
 
-This walkthrough explains the **released 1.21.0 decisions** with more specific reasons and consistent labels. It does not change the thresholds or claim a completed canine quantitative selection. [Dog funnel](dog.md) · [Policy questions and developmental sources](policy-review.md) · [Shared API](api.md).
+**{counts.get("CTA", 0):,} CTA groups ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Neither", 0):,} Neither and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 protein-equivalence groups. Policy: `{summary["policy"]}`. This is the current PR policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[Download the 17-slide evidence walkthrough](slides/cta-evidence-walkthrough.pptx).
+[Slides](slides/cta-evidence-walkthrough-expanded.pptx) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
-## Published candidate sources
+## Categories
 
-Counts below are OncoRef mappings, not the papers' original row counts. Tables from one paper are unioned; distinct papers can share genes. Protein-equivalence groups and gene loci remain separate denominators. The union is **2,482 groups / 2,538 loci**. Of the 463 selected groups, **418** have a registered paper annotation and **45** do not. A paper annotation does not bypass any quantitative gate. Boël's unresolved BAGE record has no mapped eligible group in this registry.
+- **CTA:** reproductive or embryonic association, measured tumor expression, required coverage and acceptable normal expression all pass.
+- **Unsafe:** above the single RNA ceiling in Vital/Protected, accepted non-Low protein in those compartments, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
+- **Neither:** an affirmative low-expression profile or diffuse-Manageable profile, with complete required RNA coverage and no unresolved evidence. Failed candidate gates alone do not establish Neither.
+- **Unassigned:** missing/uncertain evidence or an observed profile that fits none of those definitions. In the API, category is null and assessment_status explains why.
 
-{markdown(paper[["Paper", "Gene loci", "Mapped groups", "CTA", "Unsafe", "Neither", "Unique to this paper"]])}
+The separate **2× Strong boundary is removed**. Every layer evaluates every group; Neither is assigned only after its complete-profile check. DICE and corneal coverage remain optional, but observed counterevidence contributes.
+
+## Neither profiles
+
+The shared appreciable-expression floor is **2** in native TPM/nTPM, matching the tumor gate. Corneal CP10K uses the existing nominal /100 policy. This is an operational threshold, not a source-validated detection limit.
+
+| Profile | Required evidence | Groups |
+|---|---|---:|
+| Low expression | All measured normal, reproductive, embryonic and tumor RNA below 2; required normal panels and mapped tumor/developmental measurements present; no detected protein | {summary["neither_profiles"].get("low_expression", 0)} |
+| Diffuse Manageable | Fails both reproductive/developmental association routes; RNA ≥2 in at least two distinct Manageable tissue concepts; required normal coverage; no above-cutoff or accepted non-Low Vital/Protected protein evidence | {summary["neither_profiles"].get("diffuse_manageable", 0)} |
+
+Colon and rectum count as one tissue for breadth. A high reproductive measurement cannot conceal broad normal expression. Missing optional measurements are disclosed, not set to zero. No group currently meets the complete low-expression profile; this does not establish that such genes do not exist. Unassigned statuses: {missing}.
+
+## What the assessment statuses mean
+
+| API status | Meaning | Human groups |
+|---|---|---:|
+| `screened` | A CTA, Unsafe or Neither category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | {int(facts.category.notna().sum()):,} |
+| `incomplete_evidence` | No category was assigned, and required normal coverage, mapped tumor/developmental measurements or evidence resolution is missing. | {missing.get("incomplete_evidence", 0):,} |
+| `outside_category_definitions` | No category was assigned; the tracked coverage/resolution checks pass but the observed profile meets none of the three definitions. | {missing.get("outside_category_definitions", 0):,} |
+| `unassessed` | No species-specific quantitative policy has been applied; used for native dog nominations. | 0 |
+
+An available exclusion can establish Unsafe despite another missing assay. A reproductive-route CTA need not have embryonic measurements. The low-expression Neither profile needs both tumor and embryonic coverage; the diffuse-Manageable profile has different requirements.
+
+Among the 1,329 incomplete assessments, gaps overlap:
+
+{markdown(gap_counts)}
+
+[Per-group gaps, including all member gene IDs](unassigned-evidence-gaps.csv). MAGE-A1 fails the reproductive association gate (4.4 nTPM) and lacks embryonic data. MAGE-A3 has colon undifferentiated-cell RNA of 53.1 nTPM above its Manageable ceiling of 16, and also lacks embryonic data. That missing measurement is not the cause of its colon hold; it limits further profile assessment.
+
+## Sources of candidate annotations
+
+These published lists annotate the selection; they do not provide a gene-specific admission bypass. The union is **2,482 mapped groups / 2,538 loci**. **{annotated}** selected groups have a listed-paper annotation; **{counts.get("CTA", 0) - annotated}** do not. Source contribution counts overlap. **Mapped groups means curated nominations linked to the current reference, not newly discovered genes or selected CTAs.** The CTA column reports the subset passing the current funnel.
+
+{markdown(audit.sources[["citation", "mapped_entities", "CTA", "Unsafe", "Neither", "Unassigned", "source_url"]])}
+
+### Expanded author-recognized CTA sets
+
+The original targeted intake recorded only each paper's principal target. The current paper counts also include explicitly recognized prior CT antigens, with a separate evidence role and source location. Garg therefore contributes five mapped groups and Boël two, plus its still-unresolved BAGE target. These additions are already in other lists: the overall union and selection counts do not change.
+
+{markdown(targeted)}
+
+Bai studies EGFL6 as an ovarian-cancer therapeutic target, without establishing a CTA-restricted set. Its larger analysis contains **538 EGFL6-correlated genes**, not 538 proposed CTAs; signaling partners such as SHP2/ERK are not added as CT antigens. Garg explicitly compares SPAG9 with SPA17, SYCP1, NY-ESO-1 and SSX4. Boël recognizes MAGE-1/MAGE-3 as prior testis-restricted tumor antigens alongside its BAGE discovery. Family mentions without resolved members are not expanded into all paralogs. [Bai et al.](https://pubmed.ncbi.nlm.nih.gov/27803106/), [Garg et al.](https://pubmed.ncbi.nlm.nih.gov/17332284/), [Boël et al.](https://pubmed.ncbi.nlm.nih.gov/7895173/).
+
+EGFL6 and SPAG9 occur in no other currently registered paper membership, though EGFL6 also has a separate CTpedia annotation. BAGE occurs in Seager et al. (2024) as an unresolved target label: that textual overlap does not enter the mapped-gene overlap matrix. These are coverage statements about our curation, not claims that no other literature studies them. Bradley et al. (2020) is different: its ten curated genes collapse to nine protein groups, of which **PLAC1 is the one selected CTA**; the other eight are Unsafe.
+
+{markdown(expanded_members[["Paper", "Target", "Category", "Other registered papers"]])}
+
+[Expanded memberships and group IDs](targeted-paper-overlaps.csv) · [Evidence roles and exact source locations](publication-context.csv) · [Every registered paper table and its extraction scope](paper-source-scope.csv).
+
+The larger papers already contribute their registered gene sets, including Wang's 1,019 CT-pattern genes, Bruggeman's 756 germ-cell genes, da Silva's 1,103 testis-biased and nested 745 CT genes, Chang's 1,036 TGCT genes, Carter's 103 final CT genes, and Loriot's 146 strict plus 134 preferential annotations. Input rows, gene loci and collapsed protein groups differ; these numbers must not be summed. Gong contributes reproductive/placental expression nominations rather than a claimed CTA list. This audit extends the three targeted entries; it does not claim a fresh exhaustive full-text review of every large source.
+
+EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nTPM) and corneal evidence. SPAG9 has accepted bronchial protein staining and broad RNA counterevidence, including spinal cord (66.3 nTPM) and brain oligodendrocytes (287.1 nTPM). These are current quantitative-policy exclusions, irrespective of the original paper's terminology.
 
 ![Published source contributions](figures/published-list-contributions.png)
-![Paper overlaps](figures/published-list-overlaps.png)
+![Published source overlaps](figures/published-list-overlaps.png)
 
-[All source memberships](human-memberships.csv.gz) · [All pairwise overlaps](human-overlaps.csv.gz). Unique means present in only that paper within this registry, not uniquely discovered or independently validated.
+[All pairwise overlaps](human-overlaps.csv.gz) · [Memberships and gene IDs](human-memberships.csv.gz)
 
-## Why 12,139 groups enter
+## Why roughly 12,000 groups have reproductive or developmental association
 
-The starting universe is **19,863 protein-equivalence groups / 20,097 loci**. The first gate uses measured RNA across this universe, not the 2,482-group literature union. It accepts reproductive maximum ≥5 nTPM and >adult bulk maximum **or** a supported Tyser embryonic lineage mean ≥5 TPM.
+The starting association set comes from whole-reference **RNA measurements**, not a 12,000-gene literature list. Reproductive association requires HPA ≥5 nTPM and greater than adult nonreproductive bulk maximum. The developmental route requires a Tyser lineage mean ≥5 TPM, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. It establishes embryonic presence, not embryonic restriction. Later fetal and child/adult developmental atlases are not yet integrated.
 
-{markdown(pd.DataFrame(association))}
+{markdown(routes)}
 
-The developmental criterion tests expression, not restriction. Consequently it admits many broadly expressed genes before normal-tissue filtering. Tyser measures one Carnegie-stage-7 embryo; later fetal atlases are not integrated. Reproductive and developmental routes share a permissive-context role but retain distinct stage, tissue and units. TBXT has reproductive 0.2 nTPM, adult bulk maximum 2.5 nTPM, and supported embryonic lineage mean 245.088 TPM: it enters through the developmental route.
+[Tyser et al. (2021)](https://doi.org/10.1038/s41586-021-04158-y), [HPA v23 downloads](https://v23.proteinatlas.org/about/download).
 
-## Normal and tumor evidence
+## Measurement sources and filtering rules
 
-{markdown(used[["Role", "Source", "Unit", "Scope / limitations"]])}
+{markdown(inventory[["name", "evidence_category", "native_unit", "status", "source_url"]])}
 
-The OncoRef tumor union uses **132 compatible cohort views of 143 registered**, with **17,763 sample occurrences**, **14,452 namespace-deduplicated sample IDs**, and **34 source namespaces**. These are not 14,452 proven independent patients. HPA cancer can overlap the underlying cohorts. [Per-cohort availability and provenance](../cta-expanded-funnel-20261027/tumor-union/cohort-availability.csv).
+{markdown(audit.criteria[["stage", "rule"]])}
 
-## Active criteria and funnel
+![RNA cutoffs](figures/active-rna-cutoffs.png)
 
-{markdown(audit.criteria[["stage", "rule"]].rename(columns={"stage": "Stage", "rule": "Criterion"}))}
+The negative-IHC columns require a usable profile control, complete group-member coverage and a supported tissue/cell match. Same-tissue IHC for an unrelated cell cannot increase a ceiling. Values retain their native units; pTPM denotes protein-coding **RNA** TPM. Tumor eligibility uses ≥2 in at least one compatible OncoRef TPM or HPA pTPM sample, without summing maxima from different samples.
 
-![Active RNA cutoffs](figures/active-rna-cutoffs.png)
+## Filtering funnel
 
-“Unsafe threshold” is the released second RNA boundary, **2× the candidate ceiling**. It is not an IHC intensity category. Above the candidate ceiling but below that boundary creates a hold; another source can independently make the final decision Unsafe. These are the active policy cutoffs, not clinically measured toxicity limits.
+{markdown(funnel)}
 
-{markdown(audit.funnel[["stage", "candidate_removals", "eligible", "Unsafe", "Neither"]].rename(columns={"stage": "Stage", "candidate_removals": "New removals", "eligible": "Eligible so far"}))}
+![Human funnel](figures/human-funnel.png)
 
-![Human filtering funnel](figures/human-funnel.png)
+[Independent layer effects](../cta-selection-20261028/independent-layer-effects.csv) distinguish overlapping evidence from order-dependent first removals. All counts use protein-equivalence groups; gene-locus counts are explicitly labelled.
+
+## Selected CTA expression
+
+These plots compare reproductive nTPM against the highest measured embryonic lineage mean TPM. **204 of 466 selected groups (44%) have both coordinates; 262 (56%) lack an embryonic coordinate.** The plotted source is the EBI filtered gene matrix from one Carnegie-stage-7 embryo, approximately 16–19 days after fertilization—not a broad fetal atlas. PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B have no gene rows in that downloaded matrix. Missing rows alone cannot establish zero or absent developmental expression.
+
+The follow-up checked the study authors' **57,490-column raw-count matrix**, separately from the atlas's 25,330-row filtered matrix. The atlas download labelled “Raw counts” is also filtered and retains the same gene rows. Direct author observations are:
+
+{markdown(embryonic_coverage[["source_symbol", "gene_column_present", "cells", "total_reported_reads", "positive_cells"]])}
+
+PRAME, CT83, CTAG1A/B and XAGE1B have zero reported reads across these 1,195 cells; MAGE-A4 has 14 reads in one cell. TBXT has 31,149 reported reads in 226 cells. XAGE1A has no separate column, so complete XAGE1A/B group coverage is not established. These are observed nondetections or sparse signals in one early embryo, **not absence throughout fetal development**. The exact per-gene reason for exclusion from the atlas remains unavailable; the authors' counts support low detection but come from a separate quantification. They are not converted to TPM or inserted into the selection funnel. [Author data](https://github.com/ScialdoneLab/human-gastrula-shiny), [count evidence and gene IDs](embryonic-comparator-coverage.csv), [source hashes](embryonic-coverage-receipt.json).
+
+Each figure now shows the 204 measured groups above and the 262 missing-embryonic groups in a separate categorical band below. All selected groups are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Labels highlight the widely studied antigens, including their gene-group names, and every measured group ≥5 on both axes. The latter is a descriptive expression criterion; developmental admission also requires cell support.
+
+![Selected CTA reproductive versus embryonic expression](figures/selected-reproductive-embryonic.png)
+![Selected CTA colored by normal immune TPM](figures/selected-reproductive-embryonic-immune.png)
+![Selected CTA colored by adult corneal CP10K](figures/selected-reproductive-embryonic-cornea.png)
+
+Color uses the maximum supported value across non-disposable healthy compartments within each unit: HPA bulk/cell/immune nTPM, Monaco/DICE TPM, or corneal CP10K. No maximum mixes units. Reproductive/developmental locations are excluded from the color scale. Missing embryonic measurements are not plotted at zero. [Every selected group's plot data](selected-expression-scatter.csv.gz).
 
 ## Widely studied antigens
 
-MAGE-A1, MAGE-A3 and MAGE-A12 are comparison genes, not forced positive controls. Detailed explanations retain the source, tissue, cell type, value, units, threshold and evidence uncertainty.
+{markdown(comparators)}
 
-{markdown(known[["protein_group_label", "category", "detailed_reason"]].rename(columns={"protein_group_label": "Antigen / group", "category": "Decision", "detailed_reason": "Reason"}))}
+Each comparison has its own full-width figure. The embryonic comparison retains missing-measurement antigens in a separate band.
 
-![Widely studied antigen distributions](figures/widely-studied-antigens.png)
+![Widely studied antigens: reproductive expression](figures/widely-studied-antigens-reproductive.png)
+![Widely studied antigens: embryonic expression](figures/widely-studied-antigens-embryonic.png)
 
-[All detailed human decisions](human-explanations.csv.gz) · [Comparison table](widely-studied-antigens.csv). Each RNA layer links a representative supported context and the complete source export; it does not claim that this is the only normal expression.
+[Detailed tissue/cell/value explanations](human-explanations.csv.gz), [all comparator contexts](../cta-selection-20261028/widely-studied-contexts.csv.gz), and [every previously annotated CTA and its current category](../cta-selection-20261028/known-cta-decisions.csv.gz). Previous CTA labels are comparison annotations only. Historical-cohort counts, where available: {historical_counts}.
 
-## Folding bowel into Manageable
+## Evidence limits
 
-Moving specified bowel epithelium from its current base ceiling 32 to the existing Manageable base 16, preserving all other released rules, gives **{int(comparison.comparison_category.eq("CTA").sum())} CTA / {int(comparison.comparison_category.eq("Unsafe").sum()):,} Unsafe / {int(comparison.comparison_category.eq("Neither").sum()):,} Neither**. PRAME moves to Neither; MAGE-A3, HOXA13 and FAM72B move from Neither to Unsafe. This is a comparison, not a replacement release. [Every changed decision](bowel-manageable16-comparison.csv).
-
-PRAME has Enhanced “Not detected” HPA colon glandular, endothelial and peripheral nerve/ganglion staining. Its 20.3 nTPM signal is in undifferentiated colon cells. The current match requires cell-type coverage, so this is **same-tissue negative IHC with unresolved cell-type coverage**, not absent IHC. Assigning Enhanced credit to the undifferentiated cells requires evidence that the stained compartment covers them. [HPA PRAME tissue evidence](https://v23.proteinatlas.org/ENSG00000185686-PRAME/tissue/colon).
+Adult normal panels do not establish pediatric safety. Tyser contains one early embryo. RNA expression does not measure peptide-HLA presentation; HPA negative staining has finite sensitivity. PRAME informed earlier parameter choices and is not independent validation. All gene IDs, equivalence-group members, source versions and native units remain in the exports.
 """
     (OUTPUT / "index.md").write_text(overview)
-    dog_sources = cta_selection.sources(species="dog").copy()
-    dog_sources["Source"] = dog_sources.apply(lambda r: f"[{r['name']}]({r.source_url})", axis=1)
-    dog_sources = (
-        dog_sources.groupby(["Source", "status", "native_unit"], sort=False)
-        .agg(
-            Roles=("evidence_category", lambda x: ", ".join(x)),
-            Limitations=("limitations", "first"),
-        )
-        .reset_index()
-    )
-    dog_doc = f"""# Dog CTA sources and evidence funnel
+    (OUTPUT / "policy-review.md").write_text("""# Current policy and IHC matching
 
-Dogs use the same source categories, identity contracts and audit schema as humans. **Quantitative selection is not yet evaluated.** The current output is **14 Neither / unassessed nominations**, not a genome-wide statement that dogs have zero CTAs or zero unsafe genes.
+The active RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Neither.
 
-## Candidate studies and overlap
+## RNA/IHC correspondence
 
-{markdown(dog.sources[["citation", "mapped_entities", "mapped_gene_loci", "unique_entities"]].rename(columns={"citation": "Study", "mapped_entities": "Nominations", "mapped_gene_loci": "Mapped loci / alternatives", "unique_entities": "Not in the other study"}))}
+The matcher records **exact_cell**, **reviewed_compartment**, **same_tissue_unresolved_cell**, or **unmatched**. Its source/version-specific crosswalk is gene-independent. Exact adult tissue/cell matches and declared histological compartment matches can receive negative-IHC credit; unrelated same-tissue cells, stimulated immune cells, fetal samples and other species cannot.
 
-[Nemec et al. (2019)](https://doi.org/10.1111/vco.12475) contributes five curated nominees: AKR1E2, IGF2BP3, NT5C1B, SPECC1 and TPX2. [Hindriks et al. (2025)](https://doi.org/10.1016/j.vetimm.2025.110946) contributes eight assay targets and two MAGE follow-ups: CAGE1, CTCFL, DDX53, MAGE, MAGEA13P, MAGEB10, NT5C1B, PAGE3-like, PRAME and SSX6. **NT5C1B is the one shared nomination: 5 + 10 − 1 = 14.** The MAGE family assay overlaps its gene follow-ups; it is not an additional resolved gene. Thirteen nomination identities are unique; one is an ambiguous family assay.
+The new compartment mapping relates intestinal epithelial populations to HPA glandular cells, and bronchial basal/club/ciliated cells to respiratory epithelial cells. This is an anatomical interpretation of the histological compartment, not direct proof that every rare/stem cell was observed. The source grade is retained, and the coverage limitation is explicit. Undifferentiated intestinal populations retain a progenitor caution. This assumption affects selection and requires empirical validation; a crosswalk does not improve antibody sensitivity.
 
-The snapshot retains 209 observations, with 10 nominations described as conflicting and four as limited. These source-evidence statuses do not replace a quantitative CTA/Unsafe decision. Nemec is abstract-level curation; its grouped normal-tissue statement cannot allocate each tissue to an individual gene. Hindriks retains numeric PCR percentages and reported categorical signs separately because some disagree.
+[HPA colon histology](https://www.proteinatlas.org/learn/dictionary/normal/colon), [HPA bronchus histology](https://www.proteinatlas.org/learn/dictionary/normal/bronchus), [all matched measurements](../cta-selection-20261028/compartment-ihc-matches.csv.gz).
 
-## Normal, developmental, tumor and protein resources
+PRAME colon RNA is 20.3 nTPM with 96 reads. It receives the declared epithelial-compartment match to Enhanced-negative glandular IHC. Its Manageable ceiling is therefore 128. PRAME's adrenal bulk 3.6 nTPM retains the missing-IHC ceiling 4: glandular-cell staining does not supply complete coverage of the specified adrenal medullary and cortical subcompartments. Low reported adrenal protein remains a positive flag, not negative evidence.
 
-{markdown(dog_sources.rename(columns={"status": "Integration status", "native_unit": "Native unit"}))}
+CTAG2/LAGE-1 has Enhanced-negative heart cardiomyocyte IHC and bronchial respiratory-epithelial IHC. The revised matcher applies the latter to the basal respiratory compartment; the report retains the parent-compartment coverage assumption. Negative IHC is counterevidence, not proof of clinical safety.
 
-BarkBase's local matrix has **37,149 features × 150 TMM-CPM columns**. Bgee/BarkBase reuse 46 libraries, which must not count as independent dogs. Pfizer protein has **9,929 reported groups × 38 tissue pools**, including **64,047 missing matrix cells**. These are native features/protein groups, not reconciled CTA candidate counts. A pooled protein signal does not establish detection in each donor or identify a cell type.
+## Anatomy and protein
 
-## Funnel status
+Identified fibroblasts and large-bowel epithelial cells use Manageable in both RNA and HPA protein assessment. They are not called disposable. Other cell types retain their anatomical tiers; organ-level bulk is not assigned the tier of one constituent cell type. Accepted non-Low Vital/Protected protein can independently supply Unsafe evidence. Manageable protein blocks CTA only. Uncertain staining is unresolved; explicitly Low protein remains flagged under the existing policy.
 
-{markdown(dog.funnel[["stage", "status", "note"]].rename(columns={"stage": "Stage", "status": "Status", "note": "Evidence / gap"}))}
+Selective fibroblast depletion in mouse contexts is not evidence that all human tissue-resident fibroblasts are dispensable. [Kuwabara et al. (2022)](https://elifesciences.org/articles/69854). Epithelial targeting can cause severe colitis: [Parkhurst et al. (2011)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3048186/). The tier choices describe this screening policy's tolerance assumptions, not validated toxicity predictions.
 
-![Dog evidence funnel](figures/dog-funnel.png)
+## Curated developmental nominations
 
-No human RNA cutoff, HPA antibody grade or clinical finding transfers by orthology. The eventual dog filter can use the same logical gates, with native source adapters, explicit developmental stages, canine tissue panels and unit-aware thresholds. Until those inputs are reconciled, per-stage pass/fail numbers are **unknown**, not zero.
+The current developmental input is Tyser embryonic expression. Newly identified literature sources remain outside current counts: [Shaw et al. (2024)](https://doi.org/10.1038/s41467-024-47649-y) reports 157 cancer-specific targets with six oncofetal annotations, including exon-specific FN1/TNC evidence; [the TRIM71 liver study](https://pmc.ncbi.nlm.nih.gov/articles/PMC11388079/) contains a liver oncofetal signature. [Cardoso-Moreira et al. (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6658352/) supplies developmental organ trajectories with child/adult comparisons. Their identities, feature scope and developmental/postnatal measurements require ingestion before contributing nominations or exclusion evidence.
+""")
+    (OUTPUT / "dog.md").write_text(f"""# Dog CTA evidence funnel
 
-## Tracked work
+**14 native nominations, all unassigned/unassessed.** There is no completed canine quantitative selection or genome-wide denominator. None is automatically called Neither. Human RNA ceilings, HPA grades and clinical evidence do not transfer by orthology.
 
-- [OncoRef #574](https://github.com/pirl-unc/oncoref/issues/574): Bgee/BarkBase, complete DoGA and Pfizer RNA, reference reconciliation, tumor cohorts and source/sample lineage.
-- [OncoRef #585](https://github.com/pirl-unc/oncoref/issues/585): consume the shared Pfizer canine bulk-MS artifact; richer protein/group assignments and missingness.
-- [orfdata #7](https://github.com/openvax/orfdata/issues/7), [#23](https://github.com/openvax/orfdata/issues/23), [#24](https://github.com/openvax/orfdata/issues/24): generic atlas extraction and compact versioned source data.
-- [Hitlist #666](https://github.com/pirl-unc/hitlist/issues/666), [#668](https://github.com/pirl-unc/hitlist/issues/668): peptide/DLA-facing coverage and consumer integration. Bulk MS is not evidence of normal DLA presentation.
+{markdown(dog.sources[["citation", "mapped_entities", "mapped_gene_loci", "source_url"]])}
 
-No dedicated OncoRef issue for systematic expansion of canine IHC was found in searches of issue titles and canine/IHC issue text. The missing work is a source/reagent/tissue-cell inventory with measured staining, validation evidence, cross-reactivity and explicit negative/missing states; it should not inherit HPA grades.
+Nemec et al. contributes 5 nominations; Hindriks et al. contributes 10; NT5C1B is shared, giving 14. Thirteen have unique gene mappings; one MAGE family assay remains ambiguous. A unique gene mapping does not establish identical protein isoforms.
 
-[Shared API](api.md) · [All native source memberships](dog-memberships.csv.gz) · [Human walkthrough](index.md).
-"""
-    (OUTPUT / "dog.md").write_text(dog_doc)
-    presentation = json.loads((RELEASE / "presentation-data.json").read_text())
-    presentation["named"] = records(known)
-    presentation["papers"] = [
-        {
-            "paper": r.citation,
-            "doi": r.source_id,
-            "mapped_groups": r.mapped_entities,
-            "CTA": r.CTA,
-            "Unsafe": r.Unsafe,
-            "Neither": r.Neither,
-        }
-        for r in audit.sources.itertuples()
-    ]
-    presentation["overlap_order"] = audit.sources.head(6).citation.tolist()
-    presentation["funnel"][0]["layer"] = "Reproductive or developmental expression"
-    presentation["dog_funnel"] = records(dog.funnel)
+![Dog funnel](figures/dog-funnel.png)
+
+{markdown(dog.funnel[["stage", "status", "note"]])}
+
+## Sources and gaps
+
+{markdown(dog_sources[["name", "evidence_category", "native_unit", "status", "source_url"]])}
+
+Bgee and BarkBase include 46 overlapping libraries, not independent replication. BarkBase has 37,149 features × 150 TMM-CPM columns; Pfizer MS has 9,929 reported groups × 38 tissue pools and missing matrix cells. Pooled iBAQ is not cell-specific IHC or antigen presentation. Tumor GSE304066 count/FPKM and reference provenance remain unresolved. These quantities must retain their native scales.
+
+[RNA/reference/lineage integration issue #574](https://github.com/pirl-unc/oncoref/issues/574) and [Pfizer MS integration issue #585](https://github.com/pirl-unc/oncoref/issues/585) track the main work. Systematic canine IHC and normal-cell atlases remain coverage gaps. [Pairwise nomination overlaps](dog-overlaps.csv.gz).
+
+The same API exposes sources, memberships, overlaps, criteria, funnel and explanations for human, dog and mouse; unavailable evaluations have null counts and null biological categories.
+""")
+    (OUTPUT / "api.md").write_text("""# Shared CTA selection API
+
+```python
+from oncoref import cta_selection
+
+results = cta_selection.results(species="human")
+selected = cta_selection.results(species="human", category="CTA")
+unassigned = results[results.category.isna()]
+audit = cta_selection.audit(species="human")
+audit.sources
+audit.overlaps
+audit.funnel
+audit.criteria
+audit.explain("PRAME")
+```
+
+The same calls accept `dog` and `mouse`. `category` is CTA, Unsafe, Neither, or null. Null is an assessment status, not a fourth biological class. `assessment_status="screened"` means a category was assigned, not that safety was established or every source was complete. `incomplete_evidence` means an unassigned group lacks required coverage, a tumor/developmental measurement or evidence resolution; `outside_category_definitions` means those tracked checks pass but no category definition fits. `unassessed` denotes native nominations without an applied species policy. [Status definitions and per-group gaps](index.md#what-the-assessment-statuses-mean) are in the report. Coverage counts include an `Unassigned` count so the denominator reconciles.
+
+Human entities are protein-equivalence groups with all member ENSG IDs and curated synonyms/history. Dog entities are native nominations with their actual identity status. Species-specific units, references and coverage remain explicit. `sources()` inventories measurement roles; `audit.sources` counts published list annotations. Every source table retains its citation/URL.
+
+`audit.explain()` accepts an exact entity ID, gene ID or case-insensitive display label. RNA explanations contain the actual tissue, cell type, value, native unit, tier, single ceiling and IHC-match scope. HPA protein and imported categorical observations remain on their own scales. Unknown queries fail rather than fuzzy-matching a different gene.
+
+All results are packaged and checksum-verified. Frozen release audits remain separately accessible; changing the current policy does not rewrite their categories or figures.
+""")
+    presentation = {
+        "summary": summary,
+        "report_sha256": hashlib.sha256(
+            (RELEASE / "protein-group-classifications.csv.gz").read_bytes()
+        ).hexdigest(),
+        "papers": records(audit.sources),
+        "funnel": records(funnel),
+        "comparators": records(comparators),
+        "routes": records(routes),
+        "annotated": annotated,
+        "unannotated": counts.get("CTA", 0) - annotated,
+        "neither_profiles": summary["neither_profiles"],
+    }
     (OUTPUT / "presentation-data.json").write_text(json.dumps(presentation, indent=2) + "\n")
-    print(OUTPUT)
+    print(f"Rendered current report and figures: {counts}")
 
 
 if __name__ == "__main__":

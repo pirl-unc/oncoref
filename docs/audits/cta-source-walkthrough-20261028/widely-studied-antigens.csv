@@ -1,14 +1,14 @@
-protein_equivalence_group_id,protein_group_label,category,detailed_reason,reproductive_ntpm,developmental_mean_tpm
-PEG:c21666d5191d73e4197c,PAGE1,CTA,Passes the released rules; retained observations remain in the detailed evidence,16.7,
-PEG:a5fd72d9c77bf49c00d7,SMC1B,CTA,Passes the released rules; retained observations remain in the detailed evidence,30.2,
-PEG:0c251c50f994bfdf3967,CTAG2,Unsafe,bronchus / basal respiratory cells: 24.9 nTPM; candidate ceiling 4; Unsafe threshold 8. Same-tissue negative IHC; cell-type coverage unresolved: respiratory epithelial cells (Enhanced). 58 reads.,10.1,
-PEG:70dd37fba425999495d4,MAGEA4,CTA,Passes the released rules; retained observations remain in the detailed evidence,21.5,
-PEG:95e7249f96b06e2f63c5,TBXT,CTA,Source antibody concern retained after evidence reconciliation | External staining review flag retained; inspect reagent and tissue scope,0.2,245.08799066813725
-PEG:92c0ae3f131964f8a71d,PRAME,CTA,"Normal human adrenal cortex: Low (author_description); retained positive finding, no negative-IHC credit. | Protein evidence has limited scope; unmeasured tissues remain unknown | Low normal-protein observation retained without negative-IHC credit | Supported stem/progenitor RNA observation retained",102.2,
-PEG:d8f87170210d6b4f6fc0,MAGEA1,Neither,Reproductive maximum 4.4 nTPM; requires ≥5 and > adult bulk maximum 0 nTPM. Supported embryonic lineage: no qualifying supported measurement; requires mean ≥5 TPM with cell-support guards.,4.4,
-PEG:39184a6829a33b6ab2b8,CT83,CTA,External staining review flag retained; inspect reagent and tissue scope,62.2,
-PEG:4182d88ed01f30868284,MAGEA12,Unsafe,Reproductive maximum 2.7 nTPM; requires ≥5 and > adult bulk maximum 0.5 nTPM. Supported embryonic lineage: no qualifying supported measurement; requires mean ≥5 TPM with cell-support guards. | Gene-resolved MAGE-A12 RNA was detected in normal brain. A cross-reactive anti-MAGE-A3/A9/A12 TCR was associated with severe neurological toxicity including deaths. Hold clinical prioritization despite HPA screening compatibility. Neuronal IHC used a pan-MAGE antibody and the TCR recognized multiple antigens; unique causal attribution to MAGE-A12 is not proven. This is a precautionary evidence-based hold.,2.7,
-PEG:8fe6e7c0c5898d381def,MAGEA3,Neither,colon / undifferentiated cells: 53.1 nTPM; candidate ceiling 32; Unsafe threshold 64. No usable matched negative IHC. 251 reads. | Supported stem/progenitor RNA observation retained,7.8,
-PEG:dde00652f75f5114eae1,NY-ESO-1,CTA,Passes the released rules; retained observations remain in the detailed evidence,15.5,
-PEG:ea4a5b47e25b6870bbb5,SSX2/B,CTA,Passes the released rules; retained observations remain in the detailed evidence,32.7,
-PEG:61d3553743c78ae41bd5,XAGE1A/B,CTA,Passes the released rules; retained observations remain in the detailed evidence,98.8,
+protein_group_label,category,assessment_status,reproductive_ntpm,developmental_all_lineage_max_tpm,adult_bulk_max_ntpm,exclusion_reasons
+PAGE1,CTA,screened,16.7,,0.0,
+SMC1B,CTA,screened,30.2,0.4185918769309506,0.3,
+CTAG2,CTA,screened,10.1,,5.1,
+MAGEA4,CTA,screened,21.5,,0.6,
+TBXT,CTA,screened,0.2,245.08799066813725,2.5,
+PRAME,CTA,screened,102.2,,3.6,
+MAGEA1,Unassigned,incomplete_evidence,4.4,,0.0,Reproductive 4.4 nTPM versus adult bulk 0 nTPM; supported embryonic mean unavailable TPM. Neither association route passes.
+CT83,CTA,screened,62.2,,2.6,
+MAGEA12,Unsafe,screened,2.7,,0.5,Reproductive 2.7 nTPM versus adult bulk 0.5 nTPM; supported embryonic mean unavailable TPM. Neither association route passes. | Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use.
+MAGEA3,Unassigned,incomplete_evidence,7.8,,0.2,colon: undifferentiated cells; 53.1 nTPM (ceiling 16)
+NY-ESO-1,CTA,screened,15.5,,0.2,
+SSX2/B,CTA,screened,32.7,0.4236904903855486,0.5,
+XAGE1A/B,CTA,screened,98.8,,1.5,

@@ -1,0 +1,14 @@
+layer,candidate_exclusions_anywhere,Unsafe_evidence_anywhere,CTA_added_if_layer_removed,Unsafe_reclassified_if_layer_removed
+Reproductive / embryonic association,7724,0,1015,0
+Tumor sample ≥2 TPM/pTPM,154,0,0,0
+HPA normal protein,12360,10094,19,74
+Required RNA coverage,824,0,48,0
+Normal bulk,16382,16254,33,195
+HPA tissue clusters,17067,17035,216,583
+HPA immune,8093,8093,4,21
+Monaco immune,10794,10794,7,28
+DICE immune,11822,11821,21,88
+Adult cornea,12098,12098,4,18
+Accepted normal-protein evidence,9,8,1,2
+Clinical safety exclusion,1,1,0,1
+External validated normal protein,0,0,0,0

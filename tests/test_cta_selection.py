@@ -24,20 +24,20 @@ def test_common_selection_schema_species_and_counts(module, taxon):
 
 
 def test_human_current_selection_matches_the_complete_released_funnel():
-    audit = Path(__file__).resolve().parents[1] / "docs/audits/cta-release-1.21.0"
+    audit = Path(__file__).resolve().parents[1] / "docs/audits/cta-selection-20261028"
     expected = json.loads((audit / "summary.json").read_text())
     assert human.cta_selection_coverage()["counts"] == expected["categories"]
     selected = human.cta_selection(category="CTA")
     assert selected.gene_ids.map(len).sum() == expected["selected_member_loci"]
     assert {"PRAME", "MAGEA4", "NY-ESO-1", "TBXT", "XAGE1A/B", "CT83"} <= set(selected.label)
-    assert "CTAG2" in set(human.cta_selection(category="Unsafe").label)
+    assert "CTAG2" in set(selected.label)
     assert selected.identity_status.eq("resolved").all()
 
 
 def test_native_nominations_never_inherit_human_admission_or_human_gene_ids():
     frame = canine.cta_selection()
     assert len(frame) == 14
-    assert frame.category.eq("Neither").all()
+    assert frame.category.isna().all()
     assert frame.assessment_status.eq("unassessed").all()
     assert frame.policy_id.isna().all()
     assert frame.entity_kind.eq("native_nomination").all()

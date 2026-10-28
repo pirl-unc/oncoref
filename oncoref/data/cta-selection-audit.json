@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-selection-audit",
   "version": 1,
-  "decision_policy": "oncoref.cta-selection.1.21.0",
+  "decision_policy": "oncoref.cta-selection.2026-10-28",
   "columns": {
     "sources": [
       "source_id",
@@ -13,6 +13,7 @@
       "CTA",
       "Unsafe",
       "Neither",
+      "Unassigned",
       "unique_entities",
       "status"
     ],
@@ -36,6 +37,7 @@
       "eligible",
       "Unsafe",
       "Neither",
+      "Unassigned",
       "note"
     ],
     "criteria": [
@@ -56,39 +58,21 @@
       "value",
       "unit",
       "candidate_ceiling",
-      "unsafe_threshold",
+      "selection_tier",
       "ihc_coverage",
       "reason",
       "source_url"
     ]
   },
   "files": {
-    "cta-selection-audit-human.json.gz": "debc32f507eeb7b2774a0c586fe33a0a2d6bfc425bca573e5cdd25ce68fd20a5",
-    "cta-selection-audit-dog.json.gz": "75f4044feb0dd2576cb265665e1803a53a9ca44f30d22e06dd41adb931c43444",
-    "cta-selection-audit-mouse.json.gz": "435c03c4bfc16ef77204fed8b7fe6d8550af5a383f2f3f690da9f9611b471a0f"
-  },
-  "native_table_receipts": {
-    "hpa_normal_tissue_v23_csv_sha256": "1a6d6c921148492c0f6fa57fd36ad6c174675c56c579192806928d87a88123fc"
+    "cta-selection-audit-human.json.gz": "3a04d69ff65f0d54775cb8b91b21a781adbd6ea11338882d24cb9feffd1f045c",
+    "cta-selection-audit-dog.json.gz": "db4b5c35e56ea582e8a39a0f0fe74afd74fed1eecf8e484485e20b8bbbdbc349",
+    "cta-selection-audit-mouse.json.gz": "1da743dcae8f1a2b3b4c97d4c68a924bb6e5ce872e7c9070947f27c0e4265492"
   },
   "inputs": {
-    "docs/audits/cta-release-1.21.0/manifest.json": "79a0247b8c94d853e76a4270a5c93f2d758a879a08f5b9d336c476feddcd2b8f",
-    "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
-    "docs/audits/cta-release-1.21.0/known-cta-decisions.csv.gz": "d5f86a8ea72bbca53fc7c05b6a2cd804d457d35547f2047f7c9d32dad8780a98",
-    "docs/audits/cta-release-1.21.0/filtering-funnel.csv": "7d3b72d38f97e7cf6720f8c2fc14ef058d89f620ea1f3f15a3bdeddf5b31daf9",
-    "docs/audits/cta-release-1.21.0/imported-protein-review-decisions.csv": "13b90dd7acab8fafaf0743f1c8c60bac3e651a9cdaec722d1a40af6980e63a5b",
-    "docs/audits/cta-release-1.21.0/bulk-contexts.csv.gz": "568b29e3c27ec3403d634d3b83c748d46b5bf2f0335bc670605d79e9ff7efdd7",
-    "docs/audits/cta-release-1.21.0/cluster-peak-evidence.csv.gz": "5ecb28394d67ba9167cf8fdf01f22b16fa80a9f6891b970450d2f6fb35f927e0",
-    "docs/audits/cta-release-1.21.0/immune-cornea-contexts.csv.gz": "f46543d6021025640a1c176ab61849efd0506c31ef1f4d2741660ef016567871",
-    "docs/audits/cta-release-1.21.0/dice-group-contexts.csv.gz": "7dc0ac2241cfb57925d3d3b6a4c5952019691f0920585769645be9cacd3ea267",
-    "docs/audits/cta-release-1.21.0/cornea-group-contexts.csv.gz": "80339a1d728a40bafdc94215ac14138663c1e6733a652e00111bc2f7c8781307",
-    "docs/audits/cta-release-1.21.0/changed-compartment-contexts.csv.gz": "c56149739d95772bff83162b4be728e5e0a7f98ac0f5f44a18b61b892e8d736b",
-    "docs/audits/cta-expanded-funnel-20261027/mandatory-coverage-gaps.csv.gz": "94b166583c13e3db0cb967cc1f313145078b977ea0b692cd1b38f4d2b202bb0e",
+    "docs/audits/cta-selection-20261028/manifest.json": "de42da35d4ad8d0cd985cec841620dc5f1fd8b12c6b5de500e836160ffc008ed",
+    "scripts/build_cta_selection_audit.py": "fbe4337690a72585c77edc3bc3b5faea8b7d021d2309a3d2862fedb95657195f",
     "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c",
-    "oncoref/data/cta-external-safety-reviews.csv": "a4ff8aa9da603cb790127aaf00f193432f768dce58689f8f53a1adf6569e64c8",
-    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
-    "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
-    "oncoref/species_antigens.py": "7dee761d1d667b696b5cd986a4318822bb822a428f86ec8469731353486bdfb3",
-    "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
-    "scripts/build_cta_selection_audit.py": "010e1eb8a0a1206cbe0d860dcba4a79162bb9a8f0b6cfc7a9eaddfda1cf1157a"
+    "oncoref/data/cta-publication-context.csv": "c6081d93bab5e5775546245fd61f529a5d7f63a24a13b4a792a7e4b7f722113a"
   }
 }

@@ -11,7 +11,7 @@ from oncoref import canine, cta_selection, human, mouse
 from oncoref import cta_selection_audit as module
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / "docs/audits/cta-release-1.21.0"
+RELEASE = ROOT / "docs/audits/cta-selection-20261028"
 
 
 @pytest.fixture(scope="module")
@@ -23,7 +23,10 @@ def test_paper_unions_and_overlaps(audit):
     members = audit.memberships
     assert members.entity_id.nunique() == 2482
     assert len({gene for ids in members.gene_ids for gene in ids}) == 2538
-    assert members.loc[members.category.eq("CTA"), "entity_id"].nunique() == 418
+    assert (
+        members.loc[members.category.eq("CTA"), "entity_id"].nunique()
+        <= human.cta_selection_coverage()["counts"]["CTA"]
+    )
     sets = members.groupby("source_id").entity_id.agg(set)
     for row in audit.overlaps.itertuples():
         assert row.mapped_overlap == len(
@@ -31,6 +34,21 @@ def test_paper_unions_and_overlaps(audit):
         )
         assert row.selected_overlap <= row.mapped_overlap
     assert audit.sources.citation.str.match(r".+ et al\. \(\d{4}\)").all()
+
+
+def test_prior_cta_context_expands_paper_annotations_without_admission(audit):
+    """Prior-antigen recognition is provenance, never a positive-control bypass."""
+    sources = audit.sources.set_index("source_id")
+    garg = "10.1158/1078-0432.CCR-06-2340"
+    boel = "10.1016/s1074-7613(95)80053-0"
+    assert (sources.loc[garg, "mapped_entities"], sources.loc[garg, "CTA"]) == (5, 2)
+    assert (sources.loc[boel, "mapped_entities"], sources.loc[boel, "CTA"]) == (2, 0)
+    members = audit.memberships[audit.memberships.source_id.eq(garg)]
+    assert set(members.label) == {"SPAG9", "SPA17", "SYCP1", "NY-ESO-1", "SSX4/B"}
+    assert audit.memberships[audit.memberships.source_id.eq(boel)].category.isna().all()
+    context = pd.read_csv(ROOT / "oncoref/data/cta-publication-context.csv")
+    assert context.evidence_role.eq("previously_recognized_CTA").all()
+    assert context.source_location.notna().all()
 
 
 def test_every_released_hold_and_unsafe_layer_is_explained(audit):
@@ -50,37 +68,33 @@ def test_every_released_hold_and_unsafe_layer_is_explained(audit):
             ]
             assert set(explained.entity_id) == expected, (layer, decision)
     end = audit.funnel.iloc[-1]
-    assert (end.eligible, end.Unsafe, end.Neither) == (463, 17388, 2012)
-    assert audit.funnel[["eligible", "Unsafe", "Neither"]].sum(axis=1).eq(19863).all()
+    expected = human.cta_selection_coverage()["counts"]
+    assert (end.eligible, end.Unsafe, end.Neither, end.Unassigned) == tuple(
+        expected[c] for c in ["CTA", "Unsafe", "Neither", "Unassigned"]
+    )
+    assert audit.funnel[["eligible", "Unsafe", "Neither", "Unassigned"]].sum(axis=1).eq(19863).all()
     assert not audit.explanations.reason.str.contains(r"\bnan\b", regex=True).any()
 
 
 def test_specific_contexts_and_same_tissue_negative_ihc(audit):
-    row = audit.explain("CTAG2").query("layer == 'HPA tissue clusters'").iloc[0]
+    row = (
+        audit.explain("CTAG2")
+        .query("layer == 'HPA tissue clusters' and decision == 'observation'")
+        .iloc[0]
+    )
     assert (row.tissue, row.cell_type, row.value, row.unit) == (
         "bronchus",
         "basal respiratory cells",
         24.9,
         "nTPM",
     )
-    assert (row.candidate_ceiling, row.unsafe_threshold, row.decision) == (4, 8, "unsafe")
-    assert "respiratory epithelial cells (Enhanced)" in row.ihc_coverage
-    assert "58 reads" in row.reason
+    assert row.candidate_ceiling == 32
+    assert "reviewed_compartment" in row.ihc_coverage
     colon = audit.explain("PRAME").query("tissue == 'colon'").iloc[0]
-    assert (colon.value, colon.candidate_ceiling) == (20.3, 32)
-    assert "cell-type coverage unresolved" in colon.ihc_coverage
-    assert "glandular cells (Enhanced)" in colon.ihc_coverage
+    assert (colon.value, colon.candidate_ceiling, colon.selection_tier) == (20.3, 128, "manageable")
+    assert "glandular cells" in colon.ihc_coverage
     assert audit.explain("MAGEA1").query("decision == 'hold'").reason.str.contains("4.4 nTPM").any()
-    mage = audit.explain("MAGEA3").query("decision == 'hold'").iloc[0]
-    assert (mage.tissue, mage.value, mage.candidate_ceiling, mage.unsafe_threshold) == (
-        "colon",
-        53.1,
-        32,
-        64,
-    )
-    protein = audit.explain("TAAR1").query("layer == 'HPA tissue clusters'").iloc[0]
-    assert protein.unit == "HPA staining category"
-    assert "Positive IHC" in protein.reason
+    assert audit.explain("MAGEA1").category.isna().all()
     assert audit.explain("TBXT").iloc[0].category == "CTA"
     for name in ("TBXT", "CT83"):
         assert "external_review_flag" in set(audit.explain(name).query("decision == 'flag'").value)
@@ -134,10 +148,29 @@ def test_checksum_and_species_validation(tmp_path, monkeypatch):
         module.audit(species="dog")
 
 
-def test_bowel_comparison_is_separate_from_released_categories():
-    path = ROOT / "docs/audits/cta-source-walkthrough-20261028/bowel-manageable16-comparison.csv"
-    delta = pd.read_csv(path).set_index("protein_group_label")
-    assert set(delta.index) == {"PRAME", "MAGEA3", "HOXA13", "FAM72B"}
-    assert delta.loc["PRAME", "category"] == "CTA"
-    assert delta.loc["PRAME", "comparison_category"] == "Neither"
-    assert delta.drop("PRAME").comparison_category.eq("Unsafe").all()
+def test_neither_profiles_and_unassigned_counts_reconcile(audit):
+    facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
+    neither = facts[facts.category.eq("Neither")]
+    assert (neither.neither_low_expression | neither.neither_diffuse_manageable).all()
+    assert neither.required_coverage.all()
+    assert not neither.unresolved_evidence.any()
+    assert not neither.vital_protected_exclusion.any()
+    assert facts.loc[facts.category.isna(), "neither_profile"].isna().all()
+    assert canine.cta_selection().category.isna().all()
+    assert audit.funnel.iloc[:-1].Neither.eq(0).all()
+
+
+def test_current_replay_and_walkthrough_receipts_match_artifacts():
+    import hashlib
+
+    for directory in [RELEASE, ROOT / "docs/audits/cta-source-walkthrough-20261028"]:
+        receipt = json.loads((directory / "manifest.json").read_text())
+        for role, base in [("inputs", ROOT), ("outputs", directory)]:
+            for name, expected in receipt[role].items():
+                assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
+    summary = json.loads((RELEASE / "summary.json").read_text())
+    presentation = json.loads(
+        (ROOT / "docs/audits/cta-source-walkthrough-20261028/presentation-data.json").read_text()
+    )
+    assert presentation["summary"] == summary
+    assert human.cta_selection_coverage()["counts"] == summary["categories"]

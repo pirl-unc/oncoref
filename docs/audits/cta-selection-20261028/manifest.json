@@ -1,0 +1,33 @@
+{
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "oncoref/cta_selection_policy.py": "ee745c05f84132b753eb89b77486463c0205be29276e687f2322be53fe7f2779",
+    "oncoref/data/cta-ihc-compartments.csv": "8233e0a50394680b429d8333a3995611f161e5e881160481f1b81c8c3b062182",
+    "scripts/replay_cta_selection.py": "11ecc9db3c4ea6bed619d7f974078e87bd1fb31d14376b815128ffd2e09b4452",
+    "docs/audits/cta-release-1.21.0/manifest.json": "79a0247b8c94d853e76a4270a5c93f2d758a879a08f5b9d336c476feddcd2b8f",
+    "docs/audits/cta-quantitative-20261026/developmental-lineages.csv.gz": "91bab6202fbb43e860175c9dc6bd9d7ea0f15258179d5ebde8139442ec038a01",
+    "docs/audits/cta-harmonized-20261027/group-normal/developmental-lineage-bounds.csv.gz": "74aa5f5dee7a4e24fa2a1596711e358fa4344e0f0001c27d98d1c1c42074492e",
+    "docs/audits/external-ihc-20261027/assessed-evidence.csv.gz": "f0b8ee1b2d9243930205b1d372449b6499d99456bd18446634aa7497b8936b10"
+  },
+  "outputs": {
+    "assay-assessments.csv.gz": "bb3e46e157de9abcfad260750f55a1a33899993ec600b65ed024056ecff153fd",
+    "classification-changes.csv.gz": "3bd7366462df05cc0466fd54dae8635e28c1ed69508ba93bee037c45d65cf42c",
+    "cluster-source.json": "ca14f099582e33170fb7b6ce147aac9b79f2ca1f6bea156e414cde64ed0428c9",
+    "compartment-ihc-matches.csv.gz": "36b8a0e169b2d676327d26cbd7c0aec2417eb3c9a462e0485b18887c0d342568",
+    "context-replay.json": "c8d7d09203491074a3a8677628487eaf61bd9ccc6d4d8b0010bb1875a14dc57c",
+    "external-protein-evidence.csv.gz": "d201f1b49fa827482c7d0ad4de88d93cfc7ae0e3371ad9bd1664910ee1b4cd06",
+    "filtering-funnel.csv": "a368dd73b0af478f71a4a77d6c39f51f2c6038ed46882421b2a19ccb60aef896",
+    "gene-to-protein-group-decisions.csv.gz": "e61a36b166811d5bf718f8cb92cb893b221cd59e7f2c756695193d6e3bc3afc6",
+    "group-ihc.csv.gz": "79313e9ee156daae46b46ef9e2f9e776e3fe4cee131569bcfa0aed555592a2e3",
+    "hpa-protein-evidence.csv.gz": "3c835ffa9fe8b7bfc003578be1753e223e496f80b7b26dc6c932423d81af77dc",
+    "imported-protein-review-decisions.csv": "9efe89e5426804ca316429194b176a11946267e9f0ae1a183cce2253cf4b9fb2",
+    "independent-layer-effects.csv": "cc112aa9dd96278e76e42b0d683f6853b3655941fea360d50cd512400f729722",
+    "index.md": "05cfd15209e01d4817550c5b02e350ff4801ce81dd8a810789da5f1be290573f",
+    "known-cta-decisions.csv.gz": "fa691a390c47f51eb86553fc073d9939c7345dede6121e5abafdcc500216711b",
+    "manageable-breadth.csv.gz": "edef93d5f24225ed879d942e86bb0b4fde45379bf7d1c34a4c032e2396d0e2cf",
+    "normal-peak-evidence.csv.gz": "d8696010c91a5735c462f85423ae46658a88cc1d624540dc0e0b0499bd4e1845",
+    "protein-group-classifications.csv.gz": "e2f607d067f8cfe3ddd511ba32a8fd9bc60ab162bdae5c5656e0c593d6c50436",
+    "summary.json": "25bed55f075b45e26f2eac22091ee190d53898237246de80f889166d6d7ec84f",
+    "widely-studied-contexts.csv.gz": "9e39ed33dbf8d3a7790ee8c9a145f290d7e72ff96a7799672978b96464841e2b"
+  }
+}

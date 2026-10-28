@@ -247,7 +247,7 @@ z
 " style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
     </g>
     <g id="text_20">
-     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="324.157852" transform="rotate(-0 294.75 324.157852)">14 Neither / unassessed</text>
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="324.157852" transform="rotate(-0 294.75 324.157852)">14 unassigned / unassessed</text>
     </g>
     <g id="patch_22">
      <path d="M 477 333.9 

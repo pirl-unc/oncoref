@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Build shared species audit tables from the frozen 1.21.0 selection evidence.
-
-This is an explanation/export pass: it does not change eligibility thresholds,
-reclassify genes, substitute antibody matches, or infer canine measurements.
-"""
+"""Build shared species audit tables from the current pinned selection replay."""
 
 from __future__ import annotations
 
@@ -19,13 +15,13 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from oncoref import cta_selection, hpa, normal_cell_screen  # noqa: E402
+from oncoref import cta_selection  # noqa: E402
 from oncoref.species_antigens import cta_snapshot  # noqa: E402
 
-RELEASE = ROOT / "docs/audits/cta-release-1.21.0"
+RELEASE = ROOT / "docs/audits/cta-selection-20261028"
 OUTPUT = ROOT / "docs/audits/cta-source-walkthrough-20261028"
 DATA = ROOT / "oncoref/data"
-BASE_URL = "https://pirl-unc.github.io/oncoref/audits/cta-release-1.21.0/"
+BASE_URL = "https://pirl-unc.github.io/oncoref/audits/cta-source-walkthrough-20261028/"
 COMPARATORS = (
     "PRAME",
     "MAGEA1",
@@ -52,12 +48,22 @@ TABLE_COLUMNS = {
         "CTA",
         "Unsafe",
         "Neither",
+        "Unassigned",
         "unique_entities",
         "status",
     ],
     "memberships": ["source_id", "entity_id", "label", "gene_ids", "category"],
     "overlaps": ["source_a", "source_b", "mapped_overlap", "selected_overlap"],
-    "funnel": ["stage", "status", "candidate_removals", "eligible", "Unsafe", "Neither", "note"],
+    "funnel": [
+        "stage",
+        "status",
+        "candidate_removals",
+        "eligible",
+        "Unsafe",
+        "Neither",
+        "Unassigned",
+        "note",
+    ],
     "criteria": ["stage", "status", "rule", "source_ids"],
     "explanations": [
         "entity_id",
@@ -71,7 +77,7 @@ TABLE_COLUMNS = {
         "value",
         "unit",
         "candidate_ceiling",
-        "unsafe_threshold",
+        "selection_tier",
         "ihc_coverage",
         "reason",
         "source_url",
@@ -87,7 +93,7 @@ HUMAN_RULES = {
         ["oncoref_tumor_union", "hpa_cancer"],
     ),
     "HPA normal protein": (
-        "Medium/High or other non-Low positives exclude; accepted reliability supplies Unsafe evidence; uncertain positives retain a hold. Low remains flagged.",
+        "Reliable non-Low positives in Vital/Protected supply Unsafe evidence; Manageable positives block CTA only; uncertain evidence remains unresolved. Low is flagged.",
         ["hpa_normal_tissue"],
     ),
     "Required RNA coverage": (
@@ -95,11 +101,11 @@ HUMAN_RULES = {
         ["hpa_rna_consensus", "hpa_single_cell_tissue", "hpa_immune_cell", "hpa_immune_monaco"],
     ),
     "Normal bulk": (
-        "RNA at or below tissue/IHC ceiling passes; >ceiling holds; ≥2× supplies Unsafe evidence. Matched positive IHC can independently exclude.",
+        "One inclusive tissue/IHC ceiling: above it in Vital/Protected supplies Unsafe evidence; above it in Manageable blocks CTA. No second RNA boundary.",
         ["hpa_rna_consensus"],
     ),
     "HPA tissue clusters": (
-        "RNA requires ≥20 reads; apply the cell/tissue/IHC ceiling. Matched positive IHC can independently exclude. Same-tissue negative IHC alone does not establish cell-type coverage.",
+        "RNA requires ≥20 reads and uses the single ceiling. IHC credit requires an exact or declared compartment match; unrelated cells in the same tissue cannot inherit it.",
         ["hpa_single_cell_tissue"],
     ),
     "HPA immune": (
@@ -175,6 +181,24 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
                         "category": row.protein_group_category,
                     }
                 )
+        # Author-recognized prior CT antigens annotate the paper without being
+        # misrepresented as new discoveries or quantitative admission evidence.
+        context = pd.read_csv(DATA / "cta-publication-context.csv")
+        current = cta_selection.results().set_index("entity_id")
+        for row in context.itertuples():
+            target = current.loc[row.entity_id]
+            if set(json.loads(row.member_gene_ids)) != set(target.gene_ids):
+                raise ValueError(f"Stale publication protein-group identity: {row.entity_id}")
+            for gene_id in target.gene_ids:
+                members.append(
+                    {
+                        "source_id": row.source_id,
+                        "entity_id": row.entity_id,
+                        "label": row.label,
+                        "gene_id": gene_id,
+                        "category": target.category,
+                    }
+                )
         frame = pd.DataFrame(members)
         grouped = (
             frame.groupby(["source_id", "entity_id"], sort=True)
@@ -195,7 +219,7 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
                         "entity_id": f"nomination:9615:{row['id']}",
                         "label": row["label"],
                         "gene_ids": row["gene_ids"],
-                        "category": "Neither",
+                        "category": None,
                     }
                 )
         grouped = pd.DataFrame(members, columns=TABLE_COLUMNS["memberships"]).drop_duplicates(
@@ -231,6 +255,7 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
                 "mapped_entities": len(part),
                 "mapped_gene_loci": len({gene for ids in part.gene_ids for gene in ids}),
                 **{c: int(part.category.eq(c).sum()) for c in cta_selection.CATEGORIES},
+                "Unassigned": int(part.category.isna().sum()),
                 "unique_entities": len(all_sets[sid] - others),
                 "status": status,
             }
@@ -252,359 +277,244 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
     }
 
 
-def rna_peaks() -> pd.DataFrame:
-    """Keep one supported worst-margin context per entity/assay for explanations.
+HUMAN_RULES["Neither expression profiles"] = (
+    "Neither requires complete required RNA coverage and either all measured RNA below the shared 2-unit floor with no detected protein, or failed reproductive/developmental association with appreciable RNA in >=2 Manageable tissue concepts and no Vital/Protected exclusion. Missing/unresolved evidence and other profiles are unassigned.",
+    [
+        "hpa_rna_consensus",
+        "hpa_single_cell_tissue",
+        "tyser_E-MTAB-9388",
+        "oncoref_tumor_union",
+        "hpa_normal_tissue",
+    ],
+)
 
-    Complete context exports remain linked. Bounds for unpaired multi-locus
-    DICE/cornea observations stay explicit; upper bounds are not measurements.
-    """
-    peaks = []
-    keep = {
+
+def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
+    """Explain every contributing layer with a measured context when available."""
+    evidence_fields = {
         "gene_id",
+        "assay",
+        "source",
         "tissue",
         "cell_type",
         "value",
-        "value_upper",
-        "upper_supported_value",
         "unit",
-        "negative_ihc_grade",
         "candidate_ceiling",
-        "strong_boundary",
+        "selection_tier",
+        "ihc_match_scope",
+        "negative_ihc_grade",
         "Read count",
+        "value_upper",
+        "ratio",
         "candidate_exclusion",
         "unsafe_evidence",
-        "assay",
-        "category",
-        "selection_tier",
-        "ihc_positive",
-        "Level",
-        "Reliability",
     }
-    for filename, assay in [
-        ("bulk-contexts.csv.gz", "Normal bulk"),
-        ("cluster-peak-evidence.csv.gz", "HPA tissue clusters"),
-        ("immune-cornea-contexts.csv.gz", None),
-        ("dice-group-contexts.csv.gz", "DICE immune"),
-        ("cornea-group-contexts.csv.gz", "Adult cornea"),
-    ]:
-        for frame in pd.read_csv(RELEASE / filename, usecols=lambda x: x in keep, chunksize=150000):
-            if assay:
-                frame["assay"] = assay
-            frame["ratio"] = frame.value / frame.candidate_ceiling
-            for bound in ("value_upper", "upper_supported_value"):
-                if bound in frame:
-                    frame["ratio"] = pd.concat(
-                        [frame.ratio, frame[bound] / frame.candidate_ceiling], axis=1
-                    ).max(axis=1)
-            frame["context_file"] = filename
-            peaks.append(
-                frame.sort_values(
-                    ["unsafe_evidence", "candidate_exclusion", "ratio"], ascending=False
-                ).drop_duplicates(["gene_id", "assay"])
-            )
-    return (
-        pd.concat(peaks, ignore_index=True)
-        .sort_values(["unsafe_evidence", "candidate_exclusion", "ratio"], ascending=False)
-        .drop_duplicates(["gene_id", "assay"])
-    )
-
-
-def human_explanations(facts: pd.DataFrame, peaks: pd.DataFrame) -> pd.DataFrame:
-    """Attach actual observations to each active layer, without inventing evidence."""
-    index = peaks.set_index(["gene_id", "assay"])
-    raw = hpa._read_hpa("hpa_normal_tissue", "v23").copy()
-    raw = raw.rename(columns={"Gene": "gene_id", "Tissue": "tissue", "Cell type": "cell_type"})
-    raw["source"], raw["version"], raw["taxonomy_id"] = "hpa_normal_tissue", "v23", 9606
-    normal = normal_cell_screen.contexts(raw)
-    normal = normal[normal.category.isin(["vital", "protected", "manageable"])]
-    protein = normal[normal.Level.isin(["Medium", "High", "Ascending", "Descending"])].copy()
-    protein["reliable"] = protein.Reliability.isin(["Approved", "Supported", "Enhanced"])
-    protein["level_rank"] = protein.Level.map(
-        {"Medium": 1, "High": 2, "Ascending": 3, "Descending": 3}
-    )
-    protein = (
-        protein.sort_values(["reliable", "level_rank"], ascending=False)
-        .drop_duplicates("gene_id")
-        .set_index("gene_id")
-    )
-    negatives = raw[
-        raw.Level.eq("Not detected") & raw.Reliability.isin(["Approved", "Supported", "Enhanced"])
-    ].copy()
-    negatives["description"] = negatives.cell_type + " (" + negatives.Reliability + ")"
-    same_tissue = negatives.groupby(["gene_id", "tissue"]).description.agg("; ".join).to_dict()
-    imported = pd.read_csv(RELEASE / "imported-protein-review-decisions.csv").set_index("Gene ID")
-    findings = pd.read_csv(DATA / "cta-external-safety-reviews.csv")
-    gaps = pd.read_csv(
-        ROOT / "docs/audits/cta-expanded-funnel-20261027/mandatory-coverage-gaps.csv.gz",
+    peaks = pd.read_csv(
+        RELEASE / "normal-peak-evidence.csv.gz",
         low_memory=False,
-    ).set_index("gene_id")
-    compartments = pd.read_csv(RELEASE / "changed-compartment-contexts.csv.gz")
+        usecols=lambda column: column in evidence_fields,
+    )
+    proteins = pd.read_csv(RELEASE / "hpa-protein-evidence.csv.gz", low_memory=False)
+    imported = pd.read_csv(RELEASE / "imported-protein-review-decisions.csv")
     rows = []
-    for fact in facts.to_dict("records"):
-        gene = fact["representative_gene_id"]
+    peak_index, protein_index = {}, {}
+    for unsafe, column in [(False, "candidate_exclusion"), (True, "unsafe_evidence")]:
+        best = (
+            peaks[peaks[column]]
+            .sort_values("ratio", ascending=False)
+            .drop_duplicates(["gene_id", "assay"])
+        )
+        peak_index.update(
+            {(row["gene_id"], row["assay"], unsafe): row for row in best.to_dict("records")}
+        )
+        best_protein = proteins[proteins[column]].drop_duplicates("representative_gene_id")
+        protein_index.update(
+            {
+                (row["representative_gene_id"], unsafe): row
+                for row in best_protein.to_dict("records")
+            }
+        )
+    hold_columns = [column for column in facts if column.startswith("hold:")]
+    for r in facts.to_dict("records"):
         base = {
-            "entity_id": fact["protein_equivalence_group_id"],
-            "label": fact["protein_group_label"],
-            "gene_ids": json.loads(fact["member_gene_ids"]),
-            "category": fact["category"],
+            "entity_id": r["protein_equivalence_group_id"],
+            "label": r["protein_group_label"],
+            "gene_ids": json.loads(r["member_gene_ids"]),
+            "category": None if pd.isna(r["category"]) else r["category"],
         }
-
-        def add(layer: str, decision: str, reason: str, *, base=base, **values: object) -> None:
-            rows.append(
-                {
-                    **dict.fromkeys(TABLE_COLUMNS["explanations"]),
-                    **base,
-                    "layer": layer,
-                    "decision": decision,
-                    "reason": reason,
-                    **values,
-                }
+        for column in hold_columns:
+            layer = column[5:]
+            hold, unsafe = r[column], r["unsafe:" + layer]
+            if not hold:
+                continue
+            row = dict.fromkeys(TABLE_COLUMNS["explanations"])
+            row.update(
+                base,
+                layer=layer.replace(
+                    "Reproductive / embryonic association",
+                    "Reproductive or developmental expression",
+                ),
+                decision="unsafe" if unsafe else "hold",
+                source_url=BASE_URL,
             )
-
-        repro, adult, embryo = (
-            fact["reproductive_ntpm"],
-            fact["adult_bulk_max_ntpm"],
-            fact["developmental_mean_tpm"],
-        )
-        embryo_text = (
-            f"{embryo:.3g} TPM" if pd.notna(embryo) else "no qualifying supported measurement"
-        )
-        add(
-            "Reproductive or developmental expression",
-            "pass" if fact["positive_context"] else "hold",
-            f"Reproductive maximum {display(repro)} nTPM; requires ≥5 and > adult bulk maximum {display(adult)} nTPM. "
-            f"Supported embryonic lineage: {embryo_text}; requires mean ≥5 TPM with cell-support guards.",
-            source_url=BASE_URL,
-        )
-        add(
-            "Tumor sample ≥2 TPM/pTPM",
-            "pass" if fact["tumor_union_ge2"] else "hold",
-            f"OncoRef maximum {display(fact['oncoref_maximum_tpm'])} TPM, sample {display(fact['oncoref_maximum_sample'])} "
-            f"({display(fact['oncoref_cancer_code'])}); HPA group lower bound {display(fact['hpa_tumor_group_lower_bound_ptpm'])} pTPM. Requires ≥2 in either compatible source.",
-            source_url="https://pirl-unc.github.io/oncoref/audits/cta-expanded-funnel-20261027/tumor-union/tumor-maxima.csv.gz",
-        )
-        for layer in [col[5:] for col in facts if col.startswith("hold:")]:
-            if layer in ("Reproductive / embryonic association", "Tumor sample ≥2 TPM/pTPM"):
-                continue
-            excluded = fact["hold:" + layer]
-            unsafe = fact["unsafe:" + layer]
-            if not (excluded or unsafe) and (gene, layer) not in index.index:
-                continue
-            decision = "unsafe" if unsafe else "hold" if excluded else "pass"
-            if (gene, layer) in index.index:
-                obs = index.loc[(gene, layer)]
-                unit, value, ceiling, threshold = (
-                    obs.unit,
-                    obs.value,
-                    obs.candidate_ceiling,
-                    obs.strong_boundary,
+            candidate = peak_index.get((r["representative_gene_id"], layer, unsafe))
+            if candidate is not None:
+                p = pd.Series(candidate)
+                row.update(
+                    tissue=p.tissue,
+                    cell_type=p.cell_type,
+                    value=p.value,
+                    unit=p.unit,
+                    candidate_ceiling=p.candidate_ceiling,
+                    selection_tier=p.selection_tier,
+                    ihc_coverage=f"{display(p.get('ihc_match_scope'))} / {p.negative_ihc_grade}",
                 )
-                cell = obs.get("cell_type")
-                cell = cell if pd.notna(cell) else "bulk tissue"
-                ihc = str(obs.negative_ihc_grade)
-                if ihc in ("Missing", "Missing/uncertain", "Uncertain"):
-                    negative = same_tissue.get((gene, obs.tissue))
-                    ihc = (
-                        ("Same-tissue negative IHC; cell-type coverage unresolved: " + negative)
-                        if negative
-                        else "No usable matched negative IHC"
-                    )
-                detail = f"{obs.tissue} / {cell}: {display(value)} {unit}; candidate ceiling {display(ceiling)}; Unsafe threshold {display(threshold)}. {ihc}."
-                if pd.notna(obs.get("ihc_positive")) and bool(obs.get("ihc_positive")):
-                    detail += f" Matched HPA IHC: {display(obs.get('Level'))}, {display(obs.get('Reliability'))}; non-Low positive staining independently triggers exclusion."
-                if pd.isna(value):
-                    detail += " No supported quantitative summary; absence of a triggered exclusion is not measured zero."
-                if excluded and not obs.candidate_exclusion:
-                    detail += " Layer hold includes unresolved coverage/anatomy beyond this representative measured context."
-                if pd.notna(obs.get("Read count")):
-                    detail += f" {int(obs['Read count'])} reads."
-                for bound in ("value_upper", "upper_supported_value"):
-                    if pd.notna(obs.get(bound)) and obs[bound] > value:
-                        detail += f" Unpaired-group upper bound {obs[bound]:g} {unit}; not a paired measurement."
-                add(
-                    layer,
-                    decision,
-                    detail,
-                    tissue=obs.tissue,
-                    cell_type=cell,
-                    value=value,
-                    unit=unit,
-                    candidate_ceiling=ceiling,
-                    unsafe_threshold=threshold,
-                    ihc_coverage=ihc,
-                    source_url=BASE_URL + obs.context_file,
+                row["reason"] = (
+                    f"{p.tissue} / {p.cell_type}: {display(p.value)} {p.unit}; {p.selection_tier} ceiling {display(p.candidate_ceiling)}; {row['ihc_coverage']}."
                 )
-            elif layer == "HPA normal protein" or (layer == "HPA tissue clusters" and unsafe):
-                options = protein[protein.index.isin(base["gene_ids"])]
-                if options.empty:
-                    options = raw[
-                        raw.gene_id.isin(base["gene_ids"])
-                        & raw.Level.isin(["Medium", "High", "Ascending", "Descending"])
-                    ].set_index("gene_id")
-                if not options.empty:
-                    obs = options.iloc[0]
-                    basis = (
-                        " Positive IHC can trigger the cell-context layer independently; no supported RNA peak is available in this export."
-                        if layer == "HPA tissue clusters"
-                        else ""
+                if pd.notna(p.get("Read count")):
+                    row["reason"] += f" {int(p['Read count'])} reads."
+                if pd.notna(p.get("value_upper")):
+                    row["reason"] += (
+                        f" Unpaired upper bound {display(p.value_upper)}; not a paired measurement."
                     )
-                    add(
-                        layer,
-                        decision,
-                        f"{obs.tissue} / {obs.cell_type}: {obs.Level} HPA staining, {obs.Reliability} reliability."
-                        + basis,
-                        tissue=obs.tissue,
-                        cell_type=obs.cell_type,
-                        value=obs.Level,
+                row["source_url"] = (
+                    "https://v23.proteinatlas.org/about/download"
+                    if str(p.source).startswith("hpa")
+                    else (
+                        "https://dice-database.org/"
+                        if str(p.source).startswith("dice")
+                        else "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683"
+                    )
+                )
+            elif layer == "HPA normal protein":
+                candidate = protein_index.get((r["representative_gene_id"], unsafe))
+                if candidate is not None:
+                    p = pd.Series(candidate)
+                    row.update(
+                        tissue=p.tissue,
+                        cell_type=p.cell_type,
+                        value=p.Level,
                         unit="HPA staining category",
-                        source_url=f"https://v23.proteinatlas.org/{options.index[0]}/tissue",
-                    )
-                else:
-                    add(
-                        layer,
-                        decision,
-                        "Archived positive HPA hold; no matching representative context in this export; inspect full member evidence.",
-                        source_url=BASE_URL + "hpa-protein-level-summary.csv.gz",
+                        selection_tier=p.selection_tier,
+                        reason=f"{p.Level} HPA staining in {p.tissue} / {p.cell_type}; {p.Reliability} reliability; {p.selection_tier} compartment.",
+                        source_url=f"https://v23.proteinatlas.org/{p.gene_id}/tissue",
                     )
             elif layer == "Accepted normal-protein evidence":
-                options = imported[imported.index.isin(base["gene_ids"])]
-                for _, obs in options.iterrows():
-                    add(
-                        layer,
-                        decision,
-                        f"{obs['Context']}: {obs['protein_level']}. {obs['Rationale']}",
-                        tissue=obs["Context"],
-                        value=obs["protein_level"],
-                        unit=obs["protein_scale"],
-                        source_url=obs["Source"],
-                    )
-            elif layer == "Clinical safety exclusion":
-                options = findings[findings.Ensembl_Gene_ID.isin(base["gene_ids"])]
-                for _, obs in options.iterrows():
-                    add(
-                        layer,
-                        decision,
-                        f"{obs.rationale} {obs.limitations}",
-                        source_url=obs.source_url,
-                    )
-                if options.empty:
-                    add(
-                        layer,
-                        decision,
-                        "Reviewed clinical exclusion; see product-specific finding and attribution limits.",
-                        source_url=BASE_URL + "problematic-target-checks.csv",
-                    )
+                p = imported[
+                    imported["Gene ID"].isin(base["gene_ids"]) & imported.retained_protein_exclusion
+                ].iloc[0]
+                row.update(
+                    tissue=p.Context,
+                    value=p.protein_level,
+                    unit=p.protein_scale,
+                    selection_tier=p["Tissue category"],
+                    reason=f"Accepted protein evidence: {p.Context}; {p.protein_level} ({p.protein_scale}).",
+                    source_url=p.Source,
+                )
+            elif layer == "Reproductive / embryonic association":
+                row["reason"] = (
+                    f"Reproductive {display(r['reproductive_ntpm'])} nTPM versus adult bulk {display(r['adult_bulk_max_ntpm'])} nTPM; supported embryonic mean {display(r['developmental_mean_tpm'])} TPM. Neither association route passes."
+                )
+            elif layer == "Tumor sample ≥2 TPM/pTPM":
+                row["reason"] = (
+                    f"OncoRef tumor maximum {display(r['oncoref_maximum_tpm'])} TPM; HPA lower bound {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No measured qualifying sample."
+                )
             elif layer == "Required RNA coverage":
-                details = []
-                for member in base["gene_ids"]:
-                    if member not in gaps.index:
-                        continue
-                    evidence = gaps.loc[member]
-                    for field, required, panel in [
-                        ("normal_bulk_tissues", 50, "bulk tissues"),
-                        ("cell_records", 426, "tissue-cell records"),
-                        ("hpa_immune_cell_records", 19, "HPA immune records"),
-                        ("hpa_immune_monaco_records", 30, "Monaco records"),
-                    ]:
-                        if evidence[field] != required:
-                            details.append(
-                                f"{member}: {display(evidence[field])}/{required} {panel}"
-                            )
-                reason = (
-                    "; ".join(details)
-                    or "Required measurement or complete-member aggregation unavailable; see member coverage"
+                row["reason"] = (
+                    "Incomplete required bulk/tissue-cluster/HPA-immune/Monaco coverage; missing is not zero. See mandatory-coverage-gaps.csv.gz in the expanded audit."
                 )
-                add(
-                    layer,
-                    decision,
-                    reason + ". Optional DICE/cornea absence does not cause this hold.",
-                    source_url="https://pirl-unc.github.io/oncoref/audits/cta-expanded-funnel-20261027/mandatory-coverage-gaps.csv.gz",
+            if not row["reason"]:
+                row["reason"] = HUMAN_RULES.get(row["layer"], (layer, []))[0]
+            rows.append(row)
+        row = dict.fromkeys(TABLE_COLUMNS["explanations"])
+        row.update(
+            base,
+            layer="Final assignment",
+            decision="assignment",
+            source_url=BASE_URL,
+            reason=(
+                f"Neither profile: {r['neither_profile']}; {r['manageable_tissue_count']} appreciably expressed Manageable tissue concepts."
+                if r["category"] == "Neither"
+                else f"{r['assessment_status']}: "
+                + (
+                    str(r["category"])
+                    if pd.notna(r["category"])
+                    else "no biological category assigned"
                 )
-            else:
-                add(
-                    layer,
-                    decision,
-                    f"{layer}: no supported representative measurement in the released context export. The retained hold reflects missing coverage or unresolved source/anatomical evidence; no quantitative value is imputed.",
-                    source_url=BASE_URL + "protein-group-classifications.csv.gz",
+            ),
+        )
+        rows.append(row)
+        for flag in [
+            "Antibody concern",
+            "external_review_flag",
+            "low_normal_protein_flag",
+            "limited_protein_review_flag",
+            "stem_progenitor_expression_flag",
+        ]:
+            if r[flag]:
+                row = dict.fromkeys(TABLE_COLUMNS["explanations"])
+                row.update(
+                    base,
+                    layer="Retained evidence flag",
+                    decision="flag",
+                    value=flag,
+                    reason=flag.replace("_", " "),
+                    source_url=BASE_URL,
                 )
-        if fact["low_normal_protein_flag"]:
-            options = imported[
-                imported.index.isin(base["gene_ids"]) & imported.low_normal_protein_flag
-            ]
-            for _, obs in options.iterrows():
-                add(
-                    "Normal protein observation",
-                    "flag",
-                    f"{obs['Context']}: {obs['protein_level']} ({obs['protein_scale']}); retained positive finding, no negative-IHC credit.",
-                    tissue=obs["Context"],
-                    value=obs["protein_level"],
-                    unit=obs["protein_scale"],
-                    source_url=obs["Source"],
-                )
-        if fact["protein_group_label"] in COMPARATORS:
-            for obs in compartments[compartments.gene_id.eq(gene)].itertuples():
-                ihc = same_tissue.get((gene, obs.tissue))
-                ihc = (
-                    "Same-tissue negative IHC; cell-type coverage unresolved: " + ihc
-                    if ihc
-                    else "No usable matched negative IHC"
-                )
-                add(
-                    "Additional tissue-cluster context",
-                    "observation",
-                    f"{obs.tissue} / {obs.cell_type}: {display(obs.value)} {obs.unit}; candidate ceiling {display(obs.candidate_ceiling)}; Unsafe threshold {display(obs.strong_boundary)}. {ihc}.",
-                    tissue=obs.tissue,
-                    cell_type=obs.cell_type,
-                    value=obs.value,
-                    unit=obs.unit,
-                    candidate_ceiling=obs.candidate_ceiling,
-                    unsafe_threshold=obs.strong_boundary,
-                    ihc_coverage=ihc,
-                    source_url=BASE_URL + "changed-compartment-contexts.csv.gz",
-                )
-        for field, description in {
-            "Antibody concern": "Source antibody concern retained after evidence reconciliation",
-            "external_review_flag": "External staining review flag retained; inspect reagent and tissue scope",
-            "limited_protein_review_flag": "Protein evidence has limited scope; unmeasured tissues remain unknown",
-            "low_normal_protein_flag": "Low normal-protein observation retained without negative-IHC credit",
-            "stem_progenitor_expression_flag": "Supported stem/progenitor RNA observation retained",
-        }.items():
-            if fact[field]:
-                add(
-                    "Retained evidence flag",
-                    "flag",
-                    description,
-                    value=field,
-                    unit="categorical evidence flag",
-                    source_url=BASE_URL + "protein-group-classifications.csv.gz",
-                )
+                rows.append(row)
+    # Preserve low-valued comparator observations and matching provenance too.
+    contexts = pd.read_csv(RELEASE / "widely-studied-contexts.csv.gz", low_memory=False)
+    contexts = contexts[contexts.value.notna() & contexts.candidate_ceiling.notna()]
+    wanted = contexts[
+        contexts.get("ihc_match_scope").eq("reviewed_compartment") & contexts.value.ge(5)
+    ]
+    contexts = pd.concat(
+        [
+            contexts.sort_values("ratio", ascending=False).drop_duplicates(["gene_id", "assay"]),
+            wanted,
+        ]
+    ).drop_duplicates(["gene_id", "assay", "tissue", "cell_type", "value"])
+    lookup = facts.set_index("representative_gene_id")
+    for p in contexts.to_dict("records"):
+        r = lookup.loc[p["gene_id"]]
+        row = dict.fromkeys(TABLE_COLUMNS["explanations"])
+        row.update(
+            entity_id=r.protein_equivalence_group_id,
+            label=r.protein_group_label,
+            gene_ids=json.loads(r.member_gene_ids),
+            category=None if pd.isna(r.category) else r.category,
+            layer=p["assay"],
+            decision="observation",
+            tissue=p["tissue"],
+            cell_type=p["cell_type"],
+            value=p["value"],
+            unit=p["unit"],
+            candidate_ceiling=p["candidate_ceiling"],
+            selection_tier=p["selection_tier"],
+            ihc_coverage=f"{display(p.get('ihc_match_scope'))}; {p['negative_ihc_grade']}; IHC cells: {display(p.get('ihc_cell_type'))}",
+            reason=f"{p['tissue']} / {p['cell_type']}: {display(p['value'])} {p['unit']}; {p['selection_tier']} ceiling {display(p['candidate_ceiling'])}.",
+            source_url="https://v23.proteinatlas.org/about/download",
+        )
+        rows.append(row)
     return pd.DataFrame(rows, columns=TABLE_COLUMNS["explanations"])
 
 
 def build() -> None:
-    """Export source accounting and detailed decisions in one schema for all species."""
+    """Export the same accounting schema for measured and unassessed species."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
     facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
-    peaks = rna_peaks()
-    peaks.to_csv(
-        OUTPUT / "normal-rna-evidence.csv.gz",
-        index=False,
-        compression={"method": "gzip", "mtime": 0},
-    )
-    explanations = human_explanations(facts, peaks)
-    explanations.to_csv(
-        OUTPUT / "human-explanations.csv.gz",
-        index=False,
-        compression={"method": "gzip", "mtime": 0},
-    )
+    from oncoref.cta_selection_policy import POLICY_ID
+
+    explanations = human_explanations(facts)
     files = {}
     for species, taxon in [("human", 9606), ("dog", 9615), ("mouse", 10090)]:
-        data = {
-            "taxon_id": taxon,
-            "status": "screened" if species == "human" else "unassessed",
-            "policy_id": "oncoref.cta-selection.1.21.0" if species == "human" else None,
+        data = dict(
+            taxon_id=taxon,
+            status="screened" if species == "human" else "unassessed",
+            policy_id=POLICY_ID if species == "human" else None,
             **membership_tables(species),
-        }
+        )
         if species == "human":
             funnel = pd.read_csv(RELEASE / "filtering-funnel.csv")
             data["funnel"] = [
@@ -618,79 +528,68 @@ def build() -> None:
                     "eligible": r.CTA_eligible_so_far,
                     "Unsafe": r.Unsafe,
                     "Neither": r.Neither,
-                    "note": "Eligible so far until the final stage; every layer evaluates every group",
+                    "Unassigned": r.Unassigned,
+                    "note": "Eligible so far; Neither requires the final expression-profile evaluation",
                 }
                 for r in funnel.itertuples()
             ]
             data["explanations"] = records(explanations)
         else:
             candidates = cta_snapshot(species).candidates()
-            n = len(candidates)
+            stages = [
+                (
+                    "Curated native nominations",
+                    "available" if candidates else "unavailable",
+                    f"{len(candidates)} native nominations; not a genome-wide screen",
+                ),
+                (
+                    "Reference and assay identity",
+                    "partial",
+                    "13 unique canine mappings and one ambiguous MAGE-family assay",
+                ),
+                (
+                    "Normal and reproductive/developmental RNA",
+                    "not_evaluated",
+                    "Bgee TPM and BarkBase TMM-CPM require native reference reconciliation",
+                ),
+                (
+                    "Tumor RNA",
+                    "not_evaluated",
+                    "GSE304066 count/FPKM and source-reference conflicts unresolved",
+                ),
+                (
+                    "Normal protein",
+                    "not_evaluated",
+                    "Study IHC is limited; Pfizer pooled iBAQ is not cell-resolved IHC",
+                ),
+                (
+                    "Quantitative selection",
+                    "not_evaluated",
+                    "No native species selection policy; no biological category assignment",
+                ),
+            ]
+            if species == "mouse":
+                stages = stages[:1]
             data["funnel"] = [
                 {
-                    "stage": "Curated native nominations",
-                    "status": "available" if n else "unavailable",
+                    "stage": stage,
+                    "status": status,
                     "candidate_removals": None,
                     "eligible": None,
-                    "Unsafe": 0,
-                    "Neither": n,
-                    "note": f"{n} nominations; not a genome-wide screen",
-                },
-                {
-                    "stage": "Reference and assay identity",
-                    "status": "partial" if n else "unavailable",
-                    "candidate_removals": None,
-                    "eligible": None,
-                    "Unsafe": 0,
-                    "Neither": n,
-                    "note": "Dog: 13 unique gene nominations, 1 ambiguous MAGE family assay; unique mapping is not measured protein equivalence"
-                    if n
-                    else "No integrated native nomination identities",
-                },
-                {
-                    "stage": "Normal and reproductive/developmental RNA",
-                    "status": "not_evaluated",
-                    "candidate_removals": None,
-                    "eligible": None,
-                    "Unsafe": 0,
-                    "Neither": n,
-                    "note": "Dog native matrices retain TPM/TMM-CPM and unresolved quantification-reference equivalence; no selection counts",
-                },
-                {
-                    "stage": "Tumor RNA",
-                    "status": "not_evaluated",
-                    "candidate_removals": None,
-                    "eligible": None,
-                    "Unsafe": 0,
-                    "Neither": n,
-                    "note": "Dog GSE304066 has count/FPKM and source-reference conflicts; study PCR is not a TPM cohort",
-                },
-                {
-                    "stage": "Normal IHC and mass spectrometry",
-                    "status": "not_evaluated",
-                    "candidate_removals": None,
-                    "eligible": None,
-                    "Unsafe": 0,
-                    "Neither": n,
-                    "note": "Dog study IHC is limited; Pfizer iBAQ is pooled bulk protein, not cell IHC or DLA presentation",
-                },
-                {
-                    "stage": "Quantitative expression and protein selection",
-                    "status": "not_evaluated",
-                    "candidate_removals": None,
-                    "eligible": None,
-                    "Unsafe": 0,
-                    "Neither": n,
-                    "note": "Native reference/units, required panels and selection policy unresolved",
-                },
+                    "Unsafe": None,
+                    "Neither": None,
+                    "Unassigned": len(candidates),
+                    "note": note,
+                }
+                for stage, status, note in stages
             ]
             data["explanations"] = [
-                {
-                    **dict.fromkeys(TABLE_COLUMNS["explanations"]),
+                dict.fromkeys(TABLE_COLUMNS["explanations"])
+                | {
                     "entity_id": f"nomination:{taxon}:{c['id']}",
                     "label": c["label"],
                     "gene_ids": c["gene_ids"],
-                    "category": "Neither",
+                    "category": None,
                     "layer": "Selection coverage",
                     "decision": "unassessed",
                     "reason": "; ".join(c["evidence_coverage"]["missing"]),
@@ -698,20 +597,17 @@ def build() -> None:
                 }
                 for c in candidates
             ]
-            if species == "mouse":
-                data["funnel"] = data["funnel"][:1]
         data["criteria"] = [
             {
-                "stage": row["stage"],
-                "status": row["status"],
-                "rule": HUMAN_RULES[row["stage"]][0] if species == "human" else row["note"],
-                "source_ids": HUMAN_RULES[row["stage"]][1] if species == "human" else [],
+                "stage": r["stage"],
+                "status": r["status"],
+                "rule": HUMAN_RULES[r["stage"]][0] if species == "human" else r["note"],
+                "source_ids": HUMAN_RULES[r["stage"]][1] if species == "human" else [],
             }
-            for row in data["funnel"]
+            for r in data["funnel"]
         ]
-        for key in TABLE_COLUMNS:
-            frame = pd.DataFrame(data[key], columns=TABLE_COLUMNS[key])
-            frame.to_csv(
+        for key, columns in TABLE_COLUMNS.items():
+            pd.DataFrame(data[key], columns=columns).to_csv(
                 OUTPUT / f"{species}-{key}.csv.gz",
                 index=False,
                 compression={"method": "gzip", "mtime": 0},
@@ -725,46 +621,21 @@ def build() -> None:
     receipt = {
         "schema": "oncoref.cta-selection-audit",
         "version": 1,
-        "decision_policy": "oncoref.cta-selection.1.21.0",
+        "decision_policy": POLICY_ID,
         "columns": TABLE_COLUMNS,
         "files": files,
-        "native_table_receipts": {
-            "hpa_normal_tissue_v23_csv_sha256": hashlib.sha256(
-                hpa._read_hpa("hpa_normal_tissue", "v23").to_csv(index=False).encode()
-            ).hexdigest()
-        },
         "inputs": {
             str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in [
                 RELEASE / "manifest.json",
-                RELEASE / "protein-group-classifications.csv.gz",
-                RELEASE / "known-cta-decisions.csv.gz",
-                RELEASE / "filtering-funnel.csv",
-                RELEASE / "imported-protein-review-decisions.csv",
-                RELEASE / "bulk-contexts.csv.gz",
-                RELEASE / "cluster-peak-evidence.csv.gz",
-                RELEASE / "immune-cornea-contexts.csv.gz",
-                RELEASE / "dice-group-contexts.csv.gz",
-                RELEASE / "cornea-group-contexts.csv.gz",
-                RELEASE / "changed-compartment-contexts.csv.gz",
-                ROOT / "docs/audits/cta-expanded-funnel-20261027/mandatory-coverage-gaps.csv.gz",
-                DATA / "cta-publication-sources.csv",
-                DATA / "cta-external-safety-reviews.csv",
-                DATA / "normal-tissue-taxonomy.yaml",
-                ROOT / "oncoref/normal_cell_screen.py",
-                ROOT / "oncoref/species_antigens.py",
-                *sorted((DATA / "species").glob("*/*cta*")),
                 Path(__file__),
+                DATA / "cta-publication-sources.csv",
+                DATA / "cta-publication-context.csv",
             ]
         },
     }
     (DATA / "cta-selection-audit.json").write_text(json.dumps(receipt, indent=2) + "\n")
-    print(
-        json.dumps(
-            {"explanation_rows": len(explanations), "output": str(OUTPUT), "artifacts": files},
-            indent=2,
-        )
-    )
+    print(f"Exported {len(explanations):,} human explanations and all species tables")
 
 
 if __name__ == "__main__":

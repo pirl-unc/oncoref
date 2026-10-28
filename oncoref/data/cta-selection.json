@@ -1,16 +1,16 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.21.0",
+  "release": null,
   "data_sha256": {
-    "cta-selection-human.csv.gz": "44b0a84c6dba3d0731230f884f0ef9be01ee5d810a326a1fff4917d48a7f0300",
+    "cta-selection-human.csv.gz": "c71793fea93ac8dfefd1e787cd844783e4d5f98bac2c814a0b491a446a70771a",
     "cta-selection-sources.csv": "4ba97695919d7e3aa7866254294cb612889bd24c5d17509a354cd946b7eb6c69"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.1.21.0",
+      "policy_id": "oncoref.cta-selection.2026-10-28",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
@@ -69,7 +69,7 @@
         "No validated species-specific quantitative selection policy",
         "Native normal matrices need reference reconciliation and source-specific scale handling",
         "Tumor cohort integration is blocked by unit/reference provenance",
-        "Unassessed nominations are Neither; human expression and safety evidence never transfer by orthology"
+        "Unassessed nominations have null categories; human expression and safety evidence never transfer by orthology"
       ]
     },
     "mouse": {
@@ -86,7 +86,7 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
-    "report_manifest": "79a0247b8c94d853e76a4270a5c93f2d758a879a08f5b9d336c476feddcd2b8f"
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "e2f607d067f8cfe3ddd511ba32a8fd9bc60ab162bdae5c5656e0c593d6c50436",
+    "report_manifest": "de42da35d4ad8d0cd985cec841620dc5f1fd8b12c6b5de500e836160ffc008ed"
   }
 }

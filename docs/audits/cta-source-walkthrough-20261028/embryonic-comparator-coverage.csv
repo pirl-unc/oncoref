@@ -1,0 +1,9 @@
+source_symbol,gene_column_present,cells,total_reported_reads,positive_cells,maximum_cell_reads,gene_id,protein_equivalence_group_id,atlas_tpm_row,atlas_count_row,unit,scope
+PRAME,True,1195,0.0,0.0,0.0,ENSG00000185686,PEG:92c0ae3f131964f8a71d,False,False,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence
+MAGEA4,True,1195,14.0,1.0,14.0,ENSG00000147381,PEG:70dd37fba425999495d4,False,False,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence
+CTAG1A,True,1195,0.0,0.0,0.0,ENSG00000268651,PEG:dde00652f75f5114eae1,False,False,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence
+CTAG1B,True,1195,0.0,0.0,0.0,ENSG00000184033,PEG:dde00652f75f5114eae1,False,False,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence
+XAGE1A,False,1195,,,,ENSG00000204379,PEG:61d3553743c78ae41bd5,False,False,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence
+XAGE1B,True,1195,0.0,0.0,0.0,ENSG00000204382,PEG:61d3553743c78ae41bd5,False,False,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence
+CT83,True,1195,0.0,0.0,0.0,ENSG00000204019,PEG:39184a6829a33b6ab2b8,False,False,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence
+TBXT,True,1195,31149.005,226.0,912.999,ENSG00000164458,PEG:95e7249f96b06e2f63c5,True,True,author-reported unnormalized reads,One Carnegie-stage-7 embryo; not fetal-wide absence

@@ -1,0 +1,14 @@
+{
+  "policy": "oncoref.cta-selection.2026-10-28",
+  "categories": {
+    "Unsafe": 17718,
+    "Unassigned": 1662,
+    "CTA": 466,
+    "Neither": 17
+  },
+  "selected_member_loci": 484,
+  "neither_profiles": {
+    "diffuse_manageable": 17
+  },
+  "order_independent": true
+}
