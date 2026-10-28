@@ -382,6 +382,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "experimental uniform quantitative CTA/developmental candidates, measured gates, coverage and retained expression-risk flags",
     ),
+    "cta-selection-human": (
+        "cta",
+        "current research selection across the full human protein-group reference, with decisions, member identities and retained flags",
+    ),
+    "cta-selection-sources": (
+        "cta-evidence",
+        "species-scoped evidence roles, native units, source integration status and coverage gaps",
+    ),
     "cta-membership-evidence": (
         "cta-evidence",
         "reference-bound reviewed reproductive/developmental and tumor evidence with primary citations",

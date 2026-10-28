@@ -1,0 +1,46 @@
+protein_group_label,category_decision,assay,tissue,cell_type,value,unit,negative_ihc_grade,candidate_ceiling,strong_boundary,ratio
+CTAG2,Unsafe,HPA tissue clusters,bronchus,basal respiratory cells,24.9,nTPM,Missing/uncertain,4.0,8.0,6.225
+PRAME,CTA,Normal bulk,adrenal gland,bulk,3.6,nTPM,Missing,4.0,8.0,0.9
+CTAG2,Unsafe,Normal bulk,kidney,bulk,3.4,nTPM,Missing,4.0,8.0,0.85
+PRAME,CTA,HPA tissue clusters,heart muscle,fibroblasts,12.0,nTPM,Missing/uncertain,16.0,32.0,0.75
+SMC1B,CTA,HPA tissue clusters,brain,excitatory neurons,1.9,nTPM,Missing/uncertain,4.0,8.0,0.475
+SMC1B,CTA,DICE immune,blood,CD4_STIM,3.49973373352,TPM,Missing/uncertain,8.0,16.0,0.43746671669
+XAGE1A/B,CTA,Normal bulk,liver,bulk,1.5,nTPM,Missing,4.0,8.0,0.375
+TBXT,CTA,Normal bulk,pituitary gland,bulk,1.3,nTPM,Missing,4.0,8.0,0.325
+CT83,CTA,Normal bulk,salivary gland,bulk,2.6,nTPM,Missing,8.0,16.0,0.325
+CTAG2,Unsafe,DICE immune,blood,TREG_NAIVE,1.64617382468,TPM,Missing/uncertain,8.0,16.0,0.205771728085
+XAGE1A/B,CTA,HPA immune,blood,plasmacytoid dc,1.6,nTPM,Missing/uncertain,8.0,16.0,0.2
+XAGE1A/B,CTA,Monaco immune,blood,intermediate monocyte,0.9,TPM,Missing/uncertain,8.0,16.0,0.1125
+TBXT,CTA,DICE immune,blood,B_CELL_NAIVE,0.832306320388,TPM,Missing/uncertain,8.0,16.0,0.1040382900485
+TBXT,CTA,Monaco immune,blood,Exhausted memory B-cell,0.8,TPM,Missing/uncertain,8.0,16.0,0.1
+TBXT,CTA,HPA immune,blood,naive B-cell,0.8,nTPM,Missing/uncertain,8.0,16.0,0.1
+SMC1B,CTA,Monaco immune,blood,naive CD4 T-cell,0.7,TPM,Missing/uncertain,8.0,16.0,0.0875
+TBXT,CTA,HPA tissue clusters,adipose tissue,fibroblasts,1.2,nTPM,Missing/uncertain,16.0,32.0,0.075
+CT83,CTA,HPA tissue clusters,salivary gland,mucus glandular cells,0.6,nTPM,Missing/uncertain,8.0,16.0,0.075
+NY-ESO-1,CTA,Normal bulk,cerebellum,bulk,0.2,nTPM,Missing,4.0,8.0,0.05
+PRAME,CTA,DICE immune,blood,CD8_NAIVE,0.220316573527,TPM,Missing/uncertain,8.0,16.0,0.027539571690875
+SSX2/B,CTA,Monaco immune,blood,mait t-cell,0.2,TPM,Missing/uncertain,8.0,16.0,0.025
+MAGEA4,CTA,Normal bulk,small intestine,bulk,0.1,nTPM,Missing,4.0,8.0,0.025
+PRAME,CTA,Monaco immune,blood,Memory CD4 T-cell Th2,0.2,TPM,Missing/uncertain,8.0,16.0,0.025
+SSX2/B,CTA,Normal bulk,choroid plexus,bulk,0.1,nTPM,Missing,4.0,8.0,0.025
+SMC1B,CTA,Normal bulk,lymph node,bulk,0.2,nTPM,Missing,8.0,16.0,0.025
+NY-ESO-1,CTA,DICE immune,blood,th2,0.0998981395847,TPM,Missing/uncertain,8.0,16.0,0.0124872674480875
+MAGEA4,CTA,Monaco immune,blood,intermediate monocyte,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+CT83,CTA,Monaco immune,blood,Memory CD4 T-cell TFH,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+PAGE1,CTA,Normal bulk,adipose tissue,bulk,0.0,nTPM,Enhanced,128.0,256.0,0.0
+PAGE1,CTA,Monaco immune,blood,intermediate monocyte,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+CTAG2,Unsafe,Monaco immune,blood,Central memory CD8 T-cell,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+SSX2/B,CTA,HPA immune,blood,total pbmc,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0
+NY-ESO-1,CTA,Monaco immune,blood,naive cd8 t-cell,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+PAGE1,CTA,DICE immune,blood,TFH,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+MAGEA4,CTA,DICE immune,blood,TFH,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+CT83,CTA,DICE immune,blood,TFH,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+SSX2/B,CTA,DICE immune,blood,treg_naive,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+XAGE1A/B,CTA,DICE immune,blood,treg_naive,0.0,TPM,Missing/uncertain,8.0,16.0,0.0
+CT83,CTA,HPA immune,blood,naive CD8 T-cell,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0
+PRAME,CTA,HPA immune,blood,intermediate monocyte,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0
+MAGEA4,CTA,HPA immune,blood,neutrophil,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0
+NY-ESO-1,CTA,HPA immune,blood,memory b-cell,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0
+PAGE1,CTA,HPA immune,blood,MAIT T-cell,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0
+CTAG2,Unsafe,HPA immune,blood,plasmacytoid DC,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0
+SMC1B,CTA,HPA immune,blood,memory B-cell,0.0,nTPM,Missing/uncertain,8.0,16.0,0.0

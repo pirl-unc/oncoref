@@ -1,0 +1,92 @@
+{
+  "schema": "oncoref.cta-selection",
+  "schema_version": 1,
+  "release": "1.21.0",
+  "data_sha256": {
+    "cta-selection-human.csv.gz": "44b0a84c6dba3d0731230f884f0ef9be01ee5d810a326a1fff4917d48a7f0300",
+    "cta-selection-sources.csv": "4ba97695919d7e3aa7866254294cb612889bd24c5d17509a354cd946b7eb6c69"
+  },
+  "species": {
+    "human": {
+      "selection_status": "available",
+      "evidence_status": "partial",
+      "policy_id": "oncoref.cta-selection.1.21.0",
+      "universe": "19863 protein-equivalence groups covering 20097 gene loci",
+      "reference": {
+        "annotation_release": "115",
+        "annotation_source": "Ensembl",
+        "assembly_accession": "GCA_000001405.29",
+        "content_provenance": {
+          "canonical_gene_space": "b77d1b751a6dd5f05c1de8611b2666c4c4159ba76f16ffb9cbe305e9bf4282df"
+        },
+        "identifier_namespaces": {
+          "gene": "Ensembl gene",
+          "transcript": "Ensembl transcript"
+        },
+        "reference_id": "openvax:reference:v1:sha256:00bdffd455b7227d0b77e8f7a67d7e2e3d8146526281f2ed33a154b1f10b01d2",
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "source_version": "Ensembl-115-oncoref-primary-gene-space",
+        "taxon_id": 9606
+      },
+      "limitations": [
+        "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
+        "Only one embryonic atlas embryo; later fetal atlases are not integrated",
+        "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
+        "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
+        "Representative-protein equivalence is not exhaustive isoform identity"
+      ]
+    },
+    "dog": {
+      "selection_status": "unavailable",
+      "evidence_status": "partial",
+      "policy_id": null,
+      "universe": "14 curated native nominations; not a genome-wide classification",
+      "reference": {
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "taxon_id": 9615,
+        "assembly_accession": "GCF_011100685.1",
+        "annotation_source": "NCBI RefSeq",
+        "annotation_release": "106",
+        "source_version": "NCBI-AR106-2021-01-11",
+        "identifier_namespaces": {
+          "gene": "NCBI Gene",
+          "protein": "NCBI RefSeq protein",
+          "transcript": "NCBI RefSeq RNA"
+        },
+        "content_provenance": {
+          "cds": "a06f0ec4fa19181ecc9e44c26f0366baba85a9957f1adbcd4b31b5e089041e1e",
+          "feature_table": "2748ac54c6e031b3b6b20f06d8383e19e3caa6667494381d570e2b06c3d25c19",
+          "genome": "55d9bdd260ccf8a427dc4735bfdb61102af573411cf9a9432e5e71a29f4065c8",
+          "gtf": "5d3ce6df08c469b4317f3375829185f852ee4026080cb2d87f35851d28a08e78",
+          "protein": "478ff85988e53be0f8c36fcf290a4d512792bbdb8148a0c5132e1022e15eeb49",
+          "rna": "0a291886292dae885a14337e674db66019c18962700c79c01723c550fc1070b7"
+        },
+        "reference_id": "openvax:reference:v1:sha256:cd23d1e4d15d03a43e3f3e30fe14e9f12150be37362a74b1497660d554e1d4c3"
+      },
+      "limitations": [
+        "No validated species-specific quantitative selection policy",
+        "Native normal matrices need reference reconciliation and source-specific scale handling",
+        "Tumor cohort integration is blocked by unit/reference provenance",
+        "Unassessed nominations are Neither; human expression and safety evidence never transfer by orthology"
+      ]
+    },
+    "mouse": {
+      "selection_status": "unavailable",
+      "evidence_status": "unavailable",
+      "policy_id": null,
+      "universe": "No curated mouse nomination or selection snapshot",
+      "reference": null,
+      "limitations": [
+        "Source inventory identifies relevant resources but their data are not integrated",
+        "Zero returned rows is unavailable curation, not zero biological CTA genes",
+        "A native tumor cohort, reference-bound gene mapping and normal-panel policy are required"
+      ]
+    }
+  },
+  "inputs": {
+    "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
+    "report_manifest": "79a0247b8c94d853e76a4270a5c93f2d758a879a08f5b9d336c476feddcd2b8f"
+  }
+}

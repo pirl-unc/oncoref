@@ -1,0 +1,12 @@
+protein_equivalence_group_id,label,field,previous,reviewed
+PEG:ce8281ac2dc9931e3e3f,ENSG00000124593/PRICKLE4,hold:HPA tissue clusters,False,True
+PEG:01c5b24952eb4e4fa1fc,ENSG00000183889/NPIPA9,hold:HPA tissue clusters,False,True
+PEG:a0f7e714792cd3a135a4,ENSG00000269741/KLK9,hold:HPA tissue clusters,False,True
+PEG:7b4080ed8e98dd11d2bc,NPIPA7/8,hold:HPA tissue clusters,False,True
+PEG:eedbe1e89a56c9d03fd6,TBC1D3/C,hold:HPA tissue clusters,False,True
+PEG:ce8281ac2dc9931e3e3f,ENSG00000124593/PRICKLE4,unsafe:HPA tissue clusters,False,True
+PEG:01c5b24952eb4e4fa1fc,ENSG00000183889/NPIPA9,unsafe:HPA tissue clusters,False,True
+PEG:a0f7e714792cd3a135a4,ENSG00000269741/KLK9,unsafe:HPA tissue clusters,False,True
+PEG:7b4080ed8e98dd11d2bc,NPIPA7/8,unsafe:HPA tissue clusters,False,True
+PEG:eedbe1e89a56c9d03fd6,TBC1D3/C,unsafe:HPA tissue clusters,False,True
+PEG:b2dfdb012e97e1c25f7e,UPK3BL1/2,unsafe:HPA tissue clusters,False,True

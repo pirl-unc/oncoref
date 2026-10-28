@@ -4,7 +4,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oncoref.compartment_rna_policy import assess_contexts, assess_imported_protein_reviews
+from oncoref.compartment_rna_policy import (
+    assess_contexts,
+    assess_imported_protein_reviews,
+    collapse_hpa_ihc,
+)
 
 
 def context(**changes):
@@ -107,6 +111,12 @@ def test_protein_intensity_rule_is_independent_of_gene_name_and_source_access():
         {
             "Review ID": ["a", "b", "c", "d"],
             "protein_level": ["Low", "High", "Low", "Detected_unquantified"],
+            "protein_scale": [
+                "author_description",
+                "author_description",
+                "author_description",
+                "not_extracted",
+            ],
             "intensity_source": "primary_source",
             "intensity_locator": "results",
         }
@@ -130,3 +140,56 @@ def test_low_protein_is_flagged_but_cannot_erase_rna_or_gain_negative_ihc_credit
     assert r.candidate_exclusion.tolist() == [False, True, True]
     assert r.unsafe_evidence.tolist() == [False, True, True]
     assert r.negative_ihc_grade.eq("Missing/uncertain").all()
+
+
+def test_group_ihc_preserves_level_and_keeps_confidence_attached_to_that_level():
+    groups = pd.DataFrame(
+        [
+            {
+                "protein_equivalence_group_id": "g",
+                "representative_gene_id": "a",
+                "member_count": 2,
+                "member_gene_ids": '["a","b"]',
+            }
+        ]
+    )
+    data = pd.DataFrame(
+        [
+            {
+                "Gene": "a",
+                "Tissue": "lung",
+                "Cell type": "alveolar cells",
+                "Level": "High",
+                "Reliability": "Uncertain",
+            },
+            {
+                "Gene": "b",
+                "Tissue": "lung",
+                "Cell type": "alveolar cells",
+                "Level": "Low",
+                "Reliability": "Enhanced",
+            },
+        ]
+    )
+    row = collapse_hpa_ihc(data, groups).iloc[0]
+    assert row.Level == "High" and row.Reliability == "Uncertain"
+    assert row.observed_levels == '["High", "Low"]'
+    data["Level"] = "Not detected"
+    data["Reliability"] = ["Supported", "Enhanced"]
+    assert collapse_hpa_ihc(data, groups).iloc[0].Reliability == "Supported"
+    partial = collapse_hpa_ihc(data.iloc[:1], groups).iloc[0]
+    assert partial.Level == "Missing" and not partial.complete_members
+
+
+def test_unknown_tier_and_positive_ihc_credit_cannot_silently_pass():
+    with pytest.raises(ValueError, match="Unknown anatomical"):
+        assess_contexts(pd.DataFrame([context(category="typo")]))
+    with pytest.raises(ValueError, match="Positive IHC"):
+        assess_contexts(
+            pd.DataFrame(
+                [context(value=0, Level="Low", ihc_positive=True, negative_ihc_grade="Enhanced")]
+            )
+        )
+    assert not assess_contexts(
+        pd.DataFrame([context(tissue="colon", cell_type="undifferentiated cells", value=0)])
+    ).stem_progenitor_caution.any()

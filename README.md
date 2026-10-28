@@ -10,40 +10,37 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [uniform quantitative CTA/developmental proposal](docs/audits/cta-quantitative-20261026/index.md)
-selects **447 research candidates** from the fixed **20,097-gene reference universe**.
-Use `oncoref.cta_quantitative.gene_ids()` or `oncoref.cta_quantitative.results()`.
-It uses measured reproductive/developmental and tumor expression, common adult
-RNA/protein limits, and explicit RNA-panel coverage. PRAME, MAGEA4, CTAG1A/B,
-XAGE1A/B, CTAG2, SSX2, CT83 and TBXT pass without literature or gene-specific
-admission overrides. Quantitative developmental evidence now includes all genes
-in the E-MTAB-9388 single-embryo atlas; this is not comprehensive fetal coverage.
+The [current CTA/oncofetal selection](docs/audits/cta-release-1.21.0/index.md)
+contains **463 protein-equivalence groups representing 481 gene loci**. The full
+19,863-group reference receives **463 CTA / 17,388 Unsafe / 2,012 Neither**
+assignments. The common rules use measured reproductive or embryonic association,
+tumor expression, compartment-specific normal RNA, protein evidence and coverage.
+PRAME, MAGEA4, CTAG1A/B, XAGE1A/B, SSX2/B, CT83 and TBXT pass. CTAG2 remains
+excluded by bronchial basal-cell RNA. PRAME informed calibration; these are
+research prioritization decisions, not validated clinical safety limits.
 
-The 447 include 371 reproductive-only, 54 developmental-only and 22 overlapping
-candidates. Existing expression labels remain attached: **127 CTA, 110 Unsafe,
-210 Neither**. **271 lack measured adult IHC.** These exploratory thresholds
-select research candidates, not clinically safe targets. Native assay units,
-anatomical breadth, coverage gaps and donor uncertainty remain separate.
+```python
+from oncoref import human, canine, mouse
 
-The earlier [1,416-gene literature-inclusive catalogue](docs/audits/cta-membership-20261026/index.md)
-remains available as `oncoref.cta_membership`; its reviewed/publication admission
-routes do not enter the quantitative proposal. The earlier
-[215-gene shortlist](docs/audits/cta-research-20261026/index.md) remains available
-as `oncoref.cta_research_policy`. The released expression and sequence policies
-are unchanged. [Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md)
-remains descriptive, with missing-coverage bounds; comprehensive individual
-literature review and donor assessment remain incomplete.
+selected = human.cta_selection(category="CTA")
+all_decisions = human.cta_selection()
+canine.cta_selection()           # 14 native nominations, Neither/unassessed
+mouse.cta_selection_coverage()   # Explicitly unavailable selection
+human.cta_sources()              # Biological role, native unit, integration status
+```
 
-The released `oncoref.target_sets` API partitions genes and exact proteins into
-**CTA**, **Unsafe** and **Neither**. Only Unsafe supplies the forbidden protein
-background. Admission requires reproductive RNA ≥5 nTPM, reliable reproductive
-protein, or reviewed reproductive plus tumor/recognition evidence. Accepted
-normal-protein findings exclude; material unresolved conflicts hold. The
-[plain-language definitions](https://pirl-unc.github.io/oncoref/target-sets/)
-give the full hierarchy and unchanged numerical thresholds. The current build
-contains **213 CTA genes** and **359 distinct complete CTA protein sequences**.
-Use the matching [v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
-and their k-mer exclusion recipe. `oncoref.cta_policy.manifest()` identifies the active policy.
+The same API retains native species identities, source provenance and missing
+coverage. Dog PCR percentages, TMM-CPM and protein iBAQ never become human TPM.
+Mouse atlas entries identify resources for integration; no mouse classification
+is inferred from human orthology. See the [API and species guide](docs/cta-selection.md).
+
+Earlier 215-, 447- and 1,416-gene accessors are frozen comparisons. The exact
+protein background remains separately pinned to the
+[v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
+and their explicit exclusion recipe. Candidate protein-equivalence groups
+represent identical chosen reference proteins, not every splice isoform.
+[Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md)
+remains a descriptive measure with missing-coverage bounds.
 
 The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)
 classify Reproductive, Normal and Other independently of CTA nomination.

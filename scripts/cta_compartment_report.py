@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replay a provisional compartment-aware CTA policy across the full reference."""
+"""Replay the versioned human CTA research policy across the full reference."""
 
 from __future__ import annotations
 
@@ -18,23 +18,32 @@ sys.path.insert(0, str(ROOT))
 
 from cta_cell_policy_report import summarize  # noqa: E402
 from cta_expanded_funnel import markdown_table  # noqa: E402
-from cta_harmonized_report import ASSAYS, decision_layers, figures  # noqa: E402
+from cta_expanded_normal import bulk_assessment  # noqa: E402
+from cta_harmonized_report import decision_layers, figures  # noqa: E402
 from cta_quantitative_threshold_report import positive_profile_controls  # noqa: E402
 from cta_report_common import input_hashes, sha256, write_csv  # noqa: E402
 
-from oncoref import cell_rna_policy, hpa, normal_cell_screen, reference_data  # noqa: E402
+from oncoref import (  # noqa: E402
+    cell_rna_policy,
+    hpa,
+    normal_cell_data,
+    normal_cell_screen,
+    reference_data,
+)
 from oncoref.compartment_rna_policy import (  # noqa: E402
     IHC_RANKS,
     POLICY_ID,
     TIER_BASES,
     assess_contexts,
     assess_imported_protein_reviews,
+    collapse_hpa_ihc,
 )
 from oncoref.cta_funnel import classify_layers  # noqa: E402
 
 BASE = ROOT / "docs/audits/cta-harmonized-20261027"
 EXPANDED = ROOT / "docs/audits/cta-expanded-funnel-20261027"
-OUTPUT = ROOT / "docs/audits/cta-compartment-policy-20261027"
+PRIOR = ROOT / "docs/audits/cta-compartment-policy-20261027"
+OUTPUT = ROOT / "docs/audits/cta-release-1.21.0"
 PROBLEMATIC = {
     "CEACAM5",
     "CA9",
@@ -64,6 +73,9 @@ def label_baseline_locus_decisions(frame: pd.DataFrame) -> pd.DataFrame:
             "gene_exclusion_reasons": "baseline_gene_exclusion_reasons",
             "Unsafe_reasons": "baseline_gene_unsafe_reasons",
             "policy": "baseline_policy",
+            "Expression category": "historical_expression_category",
+            "Expression detail": "historical_expression_detail",
+            "Expression forbidden": "historical_expression_forbidden",
         }
     )
     return frame.rename(columns=names)
@@ -77,12 +89,13 @@ def apply_hpa_protein_levels(facts: pd.DataFrame, output: Path) -> set[str]:
     d = normal_cell_screen.contexts(d)
     normal = d.category.isin(["vital", "protected", "manageable"])
     d["low_protein"] = normal & d.Level.eq("Low")
+    d["reliable_low_protein"] = d.low_protein & d.Reliability.isin(cell_rna_policy.GRADES)
     d["protein_exclusion"] = normal & d.Level.isin(cell_rna_policy.POSITIVE - {"Low"})
     d["reliable_protein_exclusion"] = d.protein_exclusion & d.Reliability.isin(
         cell_rna_policy.GRADES
     )
     summary = d.groupby("gene_id")[
-        ["low_protein", "protein_exclusion", "reliable_protein_exclusion"]
+        ["low_protein", "reliable_low_protein", "protein_exclusion", "reliable_protein_exclusion"]
     ].any()
     write_csv(summary.reset_index(), output / "hpa-protein-level-summary.csv.gz")
     members = facts.member_gene_ids.map(json.loads)
@@ -91,35 +104,39 @@ def apply_hpa_protein_levels(facts: pd.DataFrame, output: Path) -> set[str]:
     only_low = members.map(
         lambda group: bool(set(group) & low_ids) and not bool(set(group) & other_ids)
     )
+    reliable_low_ids = set(summary.index[summary.reliable_low_protein])
+    reliable_other_ids = set(summary.index[summary.reliable_protein_exclusion])
+    only_reliable_low = members.map(
+        lambda group: (
+            bool(set(group) & reliable_low_ids) and not bool(set(group) & reliable_other_ids)
+        )
+    )
     # Relax only a baseline HPA finding whose observed positives are all Low.
     # Unexplained prior findings cannot disappear merely because this extraction
     # lacks a matching row or uses a different source annotation.
     facts["hpa_low_only_relaxation"] = facts.ihc_detected & only_low
     facts["ihc_detected"] &= ~only_low
-    facts["ihc_reliable_detected"] &= ~only_low
+    facts["hpa_reliable_low_relaxation"] = facts.ihc_reliable_detected & only_reliable_low
+    facts["ihc_reliable_detected"] &= ~only_reliable_low
     return low_ids
 
 
-def linked_assays(facts: pd.DataFrame) -> None:
-    """Replay uniformly doubled RNA limits, retaining unresolved nonnumeric holds.
-
-    The maximum normalized ratio is sufficient when every ceiling scales equally.
-    Protein/unknown-context residuals are retained separately. Group DICE and cornea
-    are replaced below using their uncertainty bounds, rather than assuming paired
-    donors or cell detections. Bulk and clusters are also replaced by full contexts.
-    """
-    single = pd.read_csv(EXPANDED / "normal/normal-peak-evidence.csv.gz")
-    grouped = pd.read_csv(BASE / "group-normal/normal-peak-evidence.csv.gz")
-    peaks = pd.concat([single[~single.gene_id.isin(grouped.gene_id)], grouped])
-    for assay in ASSAYS:
-        ratio = facts.representative_gene_id.map(
-            peaks[peaks.assay.eq(assay)].set_index("gene_id").ratio
-        )
-        old_hold, old_strong = facts["hold:" + assay], facts["unsafe:" + assay]
-        residual_hold = old_hold & ~ratio.gt(1)
-        residual_strong = old_strong & ~ratio.ge(2)
-        facts["hold:" + assay] = ratio.gt(2) | residual_hold
-        facts["unsafe:" + assay] = ratio.ge(4) | residual_strong
+def group_ihc_evidence(
+    facts: pd.DataFrame, output: Path
+) -> tuple[pd.DataFrame, set[str], set[str]]:
+    """Rebuild group IHC levels and require positive controls for every member."""
+    groups = facts[facts.member_count.gt(1)]
+    raw = hpa._read_hpa("hpa_normal_tissue", "v23").dropna(subset=["Tissue", "Cell type", "Level"])
+    combined = collapse_hpa_ihc(raw, groups)
+    controls = positive_profile_controls(raw)
+    group_controls = {
+        row.representative_gene_id
+        for row in groups.itertuples()
+        if set(json.loads(row.member_gene_ids)) <= controls
+    }
+    conflicts = set(groups.loc[groups["Antibody concern"], "representative_gene_id"])
+    write_csv(combined, output / "group-ihc.csv.gz")
+    return combined, group_controls, conflicts
 
 
 def apply_assay(
@@ -134,7 +151,11 @@ def apply_assay(
 
 
 def cluster_assessments(
-    facts: pd.DataFrame, output: Path, *, reuse: bool = False
+    facts: pd.DataFrame,
+    output: Path,
+    grouped_ihc: tuple[pd.DataFrame, set[str], set[str]],
+    *,
+    reuse: bool = False,
 ) -> tuple[pd.DataFrame, list[dict]]:
     """Stream every singleton and use already summed multi-locus cluster values."""
     receipts = [
@@ -154,10 +175,15 @@ def cluster_assessments(
             EXPANDED / "gene-classifications.csv.gz",
             BASE / "protein-group-classifications.csv.gz",
             BASE / "group-normal/cluster-contexts.csv.gz",
+            output / "group-ihc.csv.gz",
         ]
     )
     signature = hashlib.sha256(
-        (inspect.getsource(cluster_assessments) + inspect.getsource(aggregate_contexts)).encode()
+        (
+            inspect.getsource(cluster_assessments)
+            + inspect.getsource(aggregate_contexts)
+            + inspect.getsource(group_ihc_evidence)
+        ).encode()
     ).hexdigest()
     cache_path = output / "cluster-replay.json"
     if reuse and cache_path.exists():
@@ -178,11 +204,14 @@ def cluster_assessments(
     ihc = hpa._read_hpa("hpa_normal_tissue", "v23").dropna(subset=["Tissue", "Cell type", "Level"])
     controls = positive_profile_controls(ihc)
     receipt = receipts[0]
-    summaries, changed = [], []
+    summaries, changed, peaks = [], [], []
 
     def collect(d: pd.DataFrame) -> None:
         result = assess_contexts(d)
         summaries.append(aggregate_contexts(result))
+        measured = result[result.candidate_ceiling.notna() & result.value.notna()].copy()
+        measured["ratio"] = measured.value / measured.candidate_ceiling
+        peaks.append(measured.sort_values("ratio", ascending=False).drop_duplicates("gene_id"))
         altered = result.compartment_basis.ne("anatomical_default") & result.value.notna()
         # Preserve every measured context whose compartment rule changed.
         changed.append(
@@ -238,27 +267,57 @@ def cluster_assessments(
         collect(d)
         if number % 10 == 0:
             print(f"Cluster source chunk {number}", flush=True)
-    collect(pd.read_csv(BASE / "group-normal/cluster-contexts.csv.gz", low_memory=False))
+    grouped = pd.read_csv(BASE / "group-normal/cluster-contexts.csv.gz", low_memory=False)
+    grouped = grouped.drop(
+        columns=["Level", "Reliability", "ihc_positive", "ihc_exact_match", "negative_ihc_grade"],
+        errors="ignore",
+    )
+    combined, group_controls, group_conflicts = grouped_ihc
+    grouped = cell_rna_policy.match_negative_ihc(
+        grouped, combined, positive_controls=group_controls, conflicting_genes=group_conflicts
+    )
+    collect(grouped)
     write_csv(pd.concat(changed, ignore_index=True), output / "changed-compartment-contexts.csv.gz")
     aggregated = pd.concat(summaries).groupby(level=0).any()
     write_csv(aggregated.reset_index(), output / "cluster-assessments.csv.gz")
+    write_csv(
+        pd.concat(peaks, ignore_index=True)
+        .sort_values("ratio", ascending=False)
+        .drop_duplicates("gene_id"),
+        output / "cluster-peak-evidence.csv.gz",
+    )
     cache = {
         "inputs": cache_inputs,
         "sources": sources,
         "function_sha256": signature,
         "outputs": {
             name: sha256(output / name)
-            for name in ["cluster-assessments.csv.gz", "changed-compartment-contexts.csv.gz"]
+            for name in [
+                "cluster-assessments.csv.gz",
+                "changed-compartment-contexts.csv.gz",
+                "cluster-peak-evidence.csv.gz",
+            ]
         },
     }
     cache_path.write_text(json.dumps(cache, indent=2) + "\n")
     return aggregated, sources
 
 
-def bulk_assessments(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
+def bulk_assessments(
+    facts: pd.DataFrame, output: Path, grouped_ihc: tuple[pd.DataFrame, set[str], set[str]]
+) -> pd.DataFrame:
     """Reassess every matched bulk context, preserving missing-measurement holds."""
     single = pd.read_csv(EXPANDED / "normal/bulk-contexts.csv.gz", low_memory=False)
     grouped = pd.read_csv(BASE / "group-normal/bulk-contexts.csv.gz", low_memory=False)
+    combined, controls, conflicts = grouped_ihc
+    grouped = bulk_assessment(
+        grouped[["Ensembl_Gene_ID", "tissue", "rna_ntpm"]].rename(
+            columns={"Ensembl_Gene_ID": "Gene", "tissue": "Tissue", "rna_ntpm": "nTPM"}
+        ),
+        combined,
+        controls,
+        conflicts,
+    )
     d = pd.concat(
         [single[~single.Ensembl_Gene_ID.isin(grouped.Ensembl_Gene_ID)], grouped], ignore_index=True
     )
@@ -295,7 +354,91 @@ def bulk_assessments(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
     return aggregate_contexts(r)
 
 
-def uncertain_group_assays(facts: pd.DataFrame) -> None:
+def other_assay_assessments(facts: pd.DataFrame, output: Path) -> list[dict]:
+    """Replay complete immune/corneal contexts instead of rescaling a peak.
+
+    A peak RNA ratio cannot encode a second, unmapped context or an independent
+    protein finding. Reassessing all contexts preserves those concurrent holds.
+    Multi-locus DICE and cornea use their dedicated uncertainty bounds afterward.
+    """
+    singleton_ids = set(facts.loc[facts.member_count.eq(1), "representative_gene_id"])
+    records: list[pd.DataFrame] = []
+    receipts = []
+    ambiguous = []
+
+    def receipt(source: str) -> None:
+        item = reference_data.provenance(source, verify_content=True)
+        receipts.append({k: item[k] for k in ["name", "version", "url", "sha256"]})
+
+    def collect(data: pd.DataFrame, assay: str) -> None:
+        if data.empty:
+            return
+        d = normal_cell_screen.contexts(
+            data.drop(
+                columns=[
+                    "category",
+                    "mapping_status",
+                    "concept_id",
+                    "prior_context_category",
+                    "prior_immune_category",
+                ],
+                errors="ignore",
+            )
+        )
+        d = cell_rna_policy.reproductive_immune_contexts(d)
+        d = cell_rna_policy.protected_immune_contexts(d)
+        # No reviewed cell/IHC equivalences exist for these source assays.
+        d["negative_ihc_grade"] = "Missing/uncertain"
+        d["ihc_positive"] = False
+        d = assess_contexts(d)
+        d["assay"] = assay
+        records.append(d)
+
+    for source, label in [
+        ("hpa_immune_cell", "HPA immune"),
+        ("hpa_immune_monaco", "Monaco immune"),
+    ]:
+        receipt(source)
+        d = normal_cell_screen.contexts(normal_cell_data.observations(source, genes=singleton_ids))
+        collect(summarize(d, support=d.value.notna()), label)
+        collect(pd.read_csv(BASE / f"group-normal/{source}-contexts.csv.gz"), label)
+    for source in normal_cell_data.sources().source:
+        if not source.startswith("dice_"):
+            continue
+        receipt(source)
+        d = normal_cell_data.dice_observations(source, genes=singleton_ids)
+        duplicated = set(d.loc[d.duplicated(["gene_id", "replicate_slot"], keep=False), "gene_id"])
+        ambiguous.extend(
+            {
+                "gene_id": gid,
+                "source": source,
+                "reason": "ambiguous replicate identity; no invented donor pairing",
+            }
+            for gid in sorted(duplicated)
+        )
+        d = normal_cell_screen.contexts(d[~d.gene_id.isin(duplicated)])
+        collect(
+            summarize(d, support=d.value.notna(), rank=3, unique="replicate_slot"), "DICE immune"
+        )
+    for source in ["cornea_collin_adult_counts", "cornea_collin_adultcornea_cells"]:
+        receipt(source)
+    d = normal_cell_screen.contexts(normal_cell_data.cornea_summary(genes=singleton_ids))
+    collect(
+        summarize(d, support=d.positive_cells.ge(5) & d.read_count.ge(20), rank=2, unique="sample"),
+        "Adult cornea",
+    )
+    contexts = pd.concat(records, ignore_index=True)
+    write_csv(contexts, output / "immune-cornea-contexts.csv.gz")
+    write_csv(
+        pd.DataFrame(ambiguous, columns=["gene_id", "source", "reason"]),
+        output / "optional-ambiguous-observations.csv",
+    )
+    for assay, part in contexts.groupby("assay"):
+        apply_assay(facts, aggregate_contexts(part), assay)
+    return receipts
+
+
+def uncertain_group_assays(facts: pd.DataFrame, output: Path) -> None:
     """Recompute unpaired DICE and corneal detection uncertainty at new limits."""
     multi = facts.member_count.gt(1)
     dice = pd.read_csv(BASE / "group-normal/dice-rank-bounds.csv.gz")
@@ -304,6 +447,7 @@ def uncertain_group_assays(facts: pd.DataFrame) -> None:
         d.candidate_ceiling
     )
     apply_assay(facts, aggregate_contexts(d), "DICE immune", subset=multi)
+    write_csv(d, output / "dice-group-contexts.csv.gz")
     lower = pd.read_csv(BASE / "group-normal/cornea-contexts.csv.gz")
     d = assess_contexts(lower)
     raw = pd.read_csv(BASE / "group-normal/cornea-detection-bounds.csv.gz", low_memory=False)
@@ -322,6 +466,7 @@ def uncertain_group_assays(facts: pd.DataFrame) -> None:
     )
     d["candidate_exclusion"] |= d.upper_supported_value.gt(d.candidate_ceiling)
     apply_assay(facts, aggregate_contexts(d), "Adult cornea", subset=multi)
+    write_csv(d, output / "cornea-group-contexts.csv.gz")
 
 
 def threshold_figure(output: Path) -> None:
@@ -423,6 +568,103 @@ def component_effects(facts: pd.DataFrame, contexts: pd.DataFrame) -> pd.DataFra
     return frame
 
 
+def review_changes(result: pd.DataFrame, output: Path) -> dict:
+    """Compare this review with the actual prior proposal, including layer masks."""
+    prior = pd.read_csv(PRIOR / "protein-group-classifications.csv.gz", low_memory=False).set_index(
+        "protein_equivalence_group_id"
+    )
+    current = result.set_index("protein_equivalence_group_id").reindex(prior.index)
+    changes = []
+    for field in [
+        "category",
+        *[c for c in current if c.startswith(("hold:", "unsafe:"))],
+        "stem_progenitor_expression_flag",
+    ]:
+        mask = current[field].ne(prior[field])
+        changes.extend(
+            {
+                "protein_equivalence_group_id": gid,
+                "label": current.loc[gid, "protein_group_label"],
+                "field": field,
+                "previous": prior.loc[gid, field],
+                "reviewed": current.loc[gid, field],
+            }
+            for gid in current.index[mask]
+        )
+    write_csv(
+        pd.DataFrame(
+            changes,
+            columns=["protein_equivalence_group_id", "label", "field", "previous", "reviewed"],
+        ),
+        output / "review-decision-changes.csv",
+    )
+    old = pd.read_csv(BASE / "group-normal/group-ihc.csv.gz")
+    new = pd.read_csv(output / "group-ihc.csv.gz")
+    ihc = old.merge(
+        new,
+        on=["Gene", "Tissue", "Cell type"],
+        suffixes=("_previous", "_reviewed"),
+        validate="one_to_one",
+    )
+    changed = ihc.Level_previous.ne(ihc.Level_reviewed)
+    write_csv(ihc[changed], output / "review-ihc-level-changes.csv.gz")
+    return {
+        "changed_final_categories": int(current.category.ne(prior.category).sum()),
+        "changed_layer_decisions": len(changes),
+        "corrected_group_ihc_levels": int(changed.sum()),
+    }
+
+
+def named_normal_evidence(named: pd.DataFrame, output: Path) -> pd.DataFrame:
+    """Report the maximum measured fraction of each assay's own policy ceiling."""
+    records = []
+    for filename, assay in [
+        ("bulk-contexts.csv.gz", "Normal bulk"),
+        ("cluster-peak-evidence.csv.gz", "HPA tissue clusters"),
+        ("immune-cornea-contexts.csv.gz", None),
+        ("dice-group-contexts.csv.gz", "DICE immune"),
+        ("cornea-group-contexts.csv.gz", "Adult cornea"),
+    ]:
+        frame = pd.read_csv(output / filename, low_memory=False)
+        frame = frame[
+            frame.gene_id.isin(named.representative_gene_id)
+            & frame.value.notna()
+            & frame.candidate_ceiling.notna()
+        ].copy()
+        if assay is not None:
+            frame["assay"] = assay
+        frame["ratio"] = frame.value / frame.candidate_ceiling
+        frame["cell_type"] = frame.get("cell_type", "bulk")
+        records.append(frame)
+    combined = (
+        pd.concat(records, ignore_index=True)
+        .sort_values("ratio", ascending=False)
+        .drop_duplicates(["gene_id", "assay"])
+    )
+    combined = combined.drop(columns=["protein_group_label"], errors="ignore").merge(
+        named[["representative_gene_id", "protein_group_label", "category"]],
+        left_on="gene_id",
+        right_on="representative_gene_id",
+        suffixes=("_tissue", "_decision"),
+        validate="many_to_one",
+    )
+    columns = [
+        "protein_group_label",
+        "category_decision",
+        "assay",
+        "tissue",
+        "cell_type",
+        "value",
+        "unit",
+        "negative_ihc_grade",
+        "candidate_ceiling",
+        "strong_boundary",
+        "ratio",
+    ]
+    write_csv(combined[columns], output / "named-normal-evidence.csv")
+    return combined[columns]
+
+
 def build(output: Path = OUTPUT, *, reuse_clusters: bool = False) -> None:
     """Publish complete decisions, admission changes, known targets and figures."""
     output.mkdir(parents=True, exist_ok=True)
@@ -431,11 +673,12 @@ def build(output: Path = OUTPUT, *, reuse_clusters: bool = False) -> None:
     facts["baseline_exclusion_reasons"] = facts.exclusion_reasons
     facts = facts.rename(columns={"member_gene_categories": "baseline_member_gene_categories"})
     facts["baseline_accepted_normal_protein"] = facts["Accepted normal protein"]
-    linked_assays(facts)
-    apply_assay(facts, bulk_assessments(facts, output), "Normal bulk")
-    clusters, receipts = cluster_assessments(facts, output, reuse=reuse_clusters)
+    grouped_ihc = group_ihc_evidence(facts, output)
+    apply_assay(facts, bulk_assessments(facts, output, grouped_ihc), "Normal bulk")
+    clusters, receipts = cluster_assessments(facts, output, grouped_ihc, reuse=reuse_clusters)
     apply_assay(facts, clusters, "HPA tissue clusters")
-    uncertain_group_assays(facts)
+    receipts.extend(other_assay_assessments(facts, output))
+    uncertain_group_assays(facts, output)
     low_hpa = apply_hpa_protein_levels(facts, output)
     protein = assess_imported_protein_reviews(
         pd.read_csv(ROOT / "oncoref/data/cta-policy-findings.csv"),
@@ -463,6 +706,7 @@ def build(output: Path = OUTPUT, *, reuse_clusters: bool = False) -> None:
     write_csv(components, output / "policy-component-effects.csv")
     stem_ids = set(cautions.loc[cautions.stem_progenitor_caution, "gene_id"])
     result["stem_progenitor_expression_flag"] = result.representative_gene_id.isin(stem_ids)
+    reviewed = review_changes(result, output)
     write_csv(result, output / "protein-group-classifications.csv.gz")
     for category in ["CTA", "Unsafe", "Neither"]:
         write_csv(
@@ -477,6 +721,7 @@ def build(output: Path = OUTPUT, *, reuse_clusters: bool = False) -> None:
     write_csv(added, output / "newly-selected-groups.csv")
     named = result[result.member_named_controls.fillna("").ne("")]
     write_csv(named, output / "named-antigen-decisions.csv")
+    named_normal_evidence(named, output)
     write_csv(
         result[result.protein_group_label.isin(PROBLEMATIC)],
         output / "problematic-target-checks.csv",
@@ -544,13 +789,20 @@ def build(output: Path = OUTPUT, *, reuse_clusters: bool = False) -> None:
         ),
         "named_categories": named.set_index("protein_group_label").category.to_dict(),
         "order_independent": True,
+        "review": reviewed,
     }
     (output / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
-    (output / "index.md").write_text(f"""# Provisional compartment-aware CTA candidate set
+    (output / "index.md").write_text(f"""# OncoRef 1.21.0 CTA/oncofetal research selection
 
 **{summary["categories"].get("CTA", 0):,} selected groups ({summary["selected_member_loci"]:,} loci), {summary["categories"].get("Unsafe", 0):,} Unsafe and {summary["categories"].get("Neither", 0):,} Neither** across the complete 19,863-group reference. There are **{len(added)} new admissions** and **{summary["lost_selected_groups"]} lost selections** relative to the previous 343-group funnel.
 
 This is a deliberately more permissive research prioritization policy, not a clinically validated safety model. PRAME informed the parameter choice and is therefore a calibration example, not independent validation. No gene name or clinical product bypasses the rules.
+
+Use the [shared human, dog and mouse API](../../cta-selection.md). The [literature and implementation review](literature-review.md) records the corrected assumptions and code. [Slides](slides/cta-selection-1.21.0.pptx) and the [PDF report](cta-selection-1.21.0.pdf) use these same data.
+
+CTA passes every gate. Unsafe indicates stronger evidence under this screening policy, not demonstrated toxicity. Neither includes intermediate RNA, missing required coverage and unresolved evidence. Every layer evaluates every group, even after an earlier hold.
+
+The release review corrected **{reviewed["corrected_group_ihc_levels"]:,} grouped IHC levels** and **{reviewed["changed_layer_decisions"]} intermediate decisions**, with **{reviewed["changed_final_categories"]} final category changes** relative to the prior 463-group proposal. [Decision changes](review-decision-changes.csv) and [IHC corrections](review-ihc-level-changes.csv.gz) retain the audit.
 
 ## Uniform rules
 
@@ -561,6 +813,8 @@ Missing/unusable-IHC RNA ceilings are **Vital 4, Protected 8, Manageable 16, spe
 Mapped adult HPA **fibroblasts** use Manageable. Colon/rectum distal enterocytes, intestinal goblet cells, Paneth cells and undifferentiated cells use the renewing-mucosa row. Other cells keep their anatomical tier. Undifferentiated cells retain a stem/progenitor caution: their admission is an explicit tolerance assumption, not evidence that the regenerative compartment is disposable. Cardiomyocytes, endothelial cells and airway basal cells receive no such relaxation. Bulk retains its organ tier.
 
 Explicitly **Low** normal HPA staining or an Accepted literature finding with extracted **Low** intensity remains an observed protein flag when RNA passes. Medium/High HPA staining retains its hold/exclusion, and Accepted literature positives without an extracted intensity retain their exclusion. Low staining never supplies negative-IHC credit. Review access (abstract/full text) is recorded separately and never erases a known positive. Every imported finding is audited in [the protein-review table](imported-protein-review-decisions.csv), alongside [HPA protein-level decisions](hpa-protein-level-summary.csv.gz).
+
+Author-described low expression and HPA Low retain different reporting scales. This policy tolerates both categories without claiming equal intensity, a known stained fraction or a calibrated H-score. Group aggregation retains the strongest observed level and its own confidence; negative-IHC credit requires complete member coverage and a positive profile control for every member.
 
 ## Contribution of each policy change
 
@@ -573,6 +827,8 @@ These are cumulative changes in the displayed order; admissions are not independ
 {markdown_table(named[["protein_group_label", "category", "exclusion_reasons"]].fillna("All gates pass"))}
 
 [All new admissions](newly-selected-groups.csv), [every changed classification](classification-changes.csv), [known CTA/source-list decisions](known-cta-decisions.csv.gz), [problematic target checks](problematic-target-checks.csv), [all group decisions](protein-group-classifications.csv.gz), and [all loci with identity and group decisions](gene-to-protein-group-decisions.csv.gz).
+
+[Named-target normal evidence](named-normal-evidence.csv) shows the largest measured fraction of each assay's own tissue/IHC ceiling. This ratio compares policy margins and does not equate native assay units or predict toxicity.
 
 ## Filtering funnel
 
@@ -596,7 +852,7 @@ No numerical cutoff here predicts peptide presentation or injury severity. The p
 
 ## Reproduction
 
-Run `python scripts/cta_compartment_report.py`. [Changed cell compartments](changed-compartment-contexts.csv.gz), [bulk contexts](bulk-contexts.csv.gz), [per-layer effects](independent-layer-effects.csv), [counts](summary.json), and [provenance](manifest.json) retain the decisions. Multi-locus values are summed before assessment; unpaired DICE and corneal detection uncertainty remain explicit. Figures also have SVG versions.
+Run `python scripts/cta_compartment_report.py`, then `python scripts/build_cta_selection_release.py`. [Changed cell compartments](changed-compartment-contexts.csv.gz), [bulk contexts](bulk-contexts.csv.gz), [immune/corneal contexts](immune-cornea-contexts.csv.gz), [per-layer effects](independent-layer-effects.csv), [counts](summary.json), and [provenance](manifest.json) retain the decisions. Multi-locus values are summed before assessment; unpaired DICE and corneal detection uncertainty remain explicit. Figures also have SVG versions. The earlier 463-group audit preserves its original implementation bytes under `source-code/` and remains reproducible from commit `d79f4d4`.
 """)
     inputs = [
         Path(__file__),
@@ -604,6 +860,9 @@ Run `python scripts/cta_compartment_report.py`. [Changed cell compartments](chan
         ROOT / "scripts/cta_harmonized_report.py",
         ROOT / "scripts/cta_cell_policy_report.py",
         ROOT / "scripts/cta_quantitative_threshold_report.py",
+        ROOT / "scripts/cta_expanded_normal.py",
+        ROOT / "scripts/cta_report_common.py",
+        ROOT / "oncoref/normal_cell_data.py",
         ROOT / "oncoref/normal_cell_screen.py",
         ROOT / "oncoref/normal_tissues.py",
         ROOT / "oncoref/data/normal-tissue-taxonomy.yaml",
@@ -613,16 +872,33 @@ Run `python scripts/cta_compartment_report.py`. [Changed cell compartments](chan
         ROOT / "oncoref/data/cta-policy-findings.csv",
         output / "protein-intensity-input.csv",
         BASE / "manifest.json",
+        BASE / "protein-group-classifications.csv.gz",
+        BASE / "known-cta-decisions.csv.gz",
+        BASE / "gene-to-protein-group-decisions.csv.gz",
         BASE / "group-normal/manifest.json",
         EXPANDED / "normal/manifest.json",
     ]
+    # Presentation/package outputs have their own final receipt. Excluding them
+    # here prevents a report -> package -> report provenance cycle on reruns.
+    ancillary = {
+        "manifest.json",
+        "release-manifest.json",
+        "species-source-inventory.csv",
+        "literature-review.md",
+        "release-notes.md",
+        "validation.json",
+        "presentation-data.json",
+        "cta-selection-1.21.0.pdf",
+    }
     manifest = {
         "inputs": input_hashes(inputs),
         "sources": receipts,
         "outputs": {
             str(p.relative_to(output)): sha256(p)
             for p in sorted(output.rglob("*"))
-            if p.is_file() and p.name != "manifest.json"
+            if p.is_file()
+            and p.name not in ancillary
+            and "slides" not in p.relative_to(output).parts
         },
     }
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

@@ -1,21 +1,19 @@
-# Released CTA expression-restriction policy
+# Versioned exact-protein background policy
 
-For the current **1,416-gene biological CTA/oncofetal set**, use
-[`oncoref.cta_membership`](audits/cta-membership-20261026/index.md).
-For the earlier **215-gene research selection**, including PRAME and
-MAGE-A4 with clinical qualifications, use
-[`cta_research_policy`](audits/cta-research-20261026/index.md). This page documents
-the released expression policy and its protein-background semantics. The new
-selection preserves these findings as explicit annotations; it does not imply
-that every peptide of a selected gene is absent from normal tissues.
+For current CTA/oncofetal research decisions, use
+[`cta_selection`](cta-selection.md): **463 groups representing 481 loci**.
+This page documents the separately pinned v1.20.0 expression and exact-protein
+background policy. Its counts and classifications describe that policy only.
+A candidate selection does not establish that every peptide or isoform is absent
+from normal tissues.
 
 **CTA means a reproductive-associated target candidate that passes this research screen.**
-It does not mean clinically proven safe. The current policy is
+It does not mean clinically proven safe. The policy documented here is
 `oncoref.target-sets.2026-10-25.2`: **213 CTA, 741 Neither and 1,586 Unsafe** among
 2,540 mapped nominations. Across all 20,097 canonical human genes the counts are
 213 / 2,179 / 17,705, respectively.
 
-[Current report and changes](audits/cta-policy-20261025/index.md) ·
+[Versioned report and changes](audits/cta-policy-20261025/index.md) ·
 [Four-page PDF brief](https://github.com/pirl-unc/oncoref/releases/download/v1.20.0/cta-policy-1.20.0.pdf) ·
 [All candidate decisions](audits/cta-policy-20261025/candidate-results.csv.gz) ·
 [Reviewed findings and citations](audits/cta-policy-20261025/reviewed-findings.csv) ·
@@ -260,6 +258,6 @@ adopt `target_sets.results()` or `target_sets.gene_ids("CTA")`, record
 `cta_policy.manifest()`, and rebuild its peptide exclusion basis from matching
 release assets. A version upgrade alone does not switch the legacy selection.
 
-The current PDF brief is reproducible with `python scripts/build_cta_release_pdf.py`
+The v1.20 sequence-background PDF brief is reproducible with `python scripts/build_cta_release_pdf.py`
 using the `reports` extras. The separately saved `scripts/slides/` workflow
 reproduces the historical 24 October slide deck; it does not relabel it as current.

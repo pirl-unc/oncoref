@@ -1,0 +1,199 @@
+{
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "scripts/cta_compartment_report.py": "adae787db1bd205fa00a84d987700df2efeca862307c26f1fee750876afe5bcc",
+    "oncoref/compartment_rna_policy.py": "72ebc17a2cd3184126b1894b913da732515630d5d9d99344f10813f9a06e1c38",
+    "scripts/cta_harmonized_report.py": "58b79bdd1a176239bf22808c195d1cee081bc03f74dbff0be9a713e91f506986",
+    "scripts/cta_cell_policy_report.py": "c5463acbc19e748a5b8f41a056c4810d0b86c1f06933eed7f812f156a8a15982",
+    "scripts/cta_quantitative_threshold_report.py": "ad4a1c7e7ac45f37c7f1e0b22d28000afc711ee954dc54f6b63ae75e140b7389",
+    "scripts/cta_expanded_normal.py": "c3eaefdb22e6b0b88659b2e2fb90807b091dda1a56174abf6a05da77a5441e94",
+    "oncoref/normal_cell_data.py": "e8f93223eae4d6eea774209f30aaea335e135654b5e106a0cfd5cdb342f5c56a",
+    "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
+    "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
+    "oncoref/data/normal-tissue-mappings.csv": "ed83eaca220f27514c27bf0328440fab1ec85d7f11c44ff1d5dda4bb7adc0538",
+    "oncoref/cell_rna_policy.py": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
+    "oncoref/cta_funnel.py": "14641c0b446da9f717287e52adc547c1f5e696aff8fb6d0eab22806120a9d21e",
+    "oncoref/data/cta-policy-findings.csv": "7975aca62e551db217b635777db4ff7581a9cb7a597cb782c44f03d9d38cdbe7",
+    "docs/audits/cta-release-1.21.0/protein-intensity-input.csv": "57b4362046ea4e029f42f5819ce6c56a054a8f9ba36a80e2d0739aee7368681d",
+    "docs/audits/cta-harmonized-20261027/manifest.json": "a76d1a3bbcd3e91f4a987c70282587b433d667adea080cb41a1506f3141e8de7",
+    "docs/audits/cta-harmonized-20261027/protein-group-classifications.csv.gz": "745042f7d1a392e0087ec99fedc28e4c10a50bcdde78cc04e5160bd45ad1d2b6",
+    "docs/audits/cta-harmonized-20261027/known-cta-decisions.csv.gz": "ec4662e9a13e1739bbc47675efa9daaae5e80f82d4c065ad41cb90b4a82e0dc2",
+    "docs/audits/cta-harmonized-20261027/gene-to-protein-group-decisions.csv.gz": "88f5c8349647612ebb8f8730d416483c5182c0ee5d743c26d494cd8c64dc0c97",
+    "docs/audits/cta-harmonized-20261027/group-normal/manifest.json": "4d7e45fbe6df210b846af49597cc80d8f7c9eff50017edd17841cfc0fc2adcb4",
+    "docs/audits/cta-expanded-funnel-20261027/normal/manifest.json": "57f2d9d615cbb77e1afa692c7542623a4f9883aeb6004197875521935a96beea"
+  },
+  "sources": [
+    {
+      "name": "hpa_single_cell_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_type_tissue.tsv.zip",
+      "sha256": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7"
+    },
+    {
+      "name": "hpa_normal_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"
+    },
+    {
+      "name": "hpa_immune_cell",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell.tsv.zip",
+      "sha256": "206f4d2be7bb58731dfead00185081532b9b022164ce28e7878171e34372ccba"
+    },
+    {
+      "name": "hpa_immune_monaco",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell_monaco.tsv.zip",
+      "sha256": "a8013c229261b87f19598827e0dc5334529d6f1c82f002825a77ba6c04f1dabd"
+    },
+    {
+      "name": "dice_b_cell_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/B_CELL_NAIVE_TPM.csv",
+      "sha256": "9d71a15fb22fb55f3f3f606179d3f267dcccb70868a028dbf2d45a29f2b2eed1"
+    },
+    {
+      "name": "dice_monocytes",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/MONOCYTES_TPM.csv",
+      "sha256": "fb1d82f9fbc61397d46520581877e74424f77c4db0ee468a0f3efa0aed4110dc"
+    },
+    {
+      "name": "dice_m2",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/M2_TPM.csv",
+      "sha256": "00960e38779fae323b059395613f3a5248d680a884d753f5bee6608b84c38e94"
+    },
+    {
+      "name": "dice_nk",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/NK_TPM.csv",
+      "sha256": "1d489470a78d5c96df60f15d4e2f626044409af3a8354de669315186f9a88765"
+    },
+    {
+      "name": "dice_treg_mem",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TREG_MEM_TPM.csv",
+      "sha256": "6b1710199210fe1178e48570425562cbb6af068c3c013bd1bc76da9bccec9419"
+    },
+    {
+      "name": "dice_cd4_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD4_NAIVE_TPM.csv",
+      "sha256": "94692f4d6ca8ea92bb4a37dd1d52607b174c1654316001c6d4e732789bec8820"
+    },
+    {
+      "name": "dice_cd4_stim",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD4_STIM_TPM.csv",
+      "sha256": "beaa9ab1497d176b1eb27580549ce1354a039f9c33abc0620f544764763d9f75"
+    },
+    {
+      "name": "dice_treg_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TREG_NAIVE_TPM.csv",
+      "sha256": "a320a4238010691b4af484e4697058e4b79cde4bc44d6890436b982508b3ff4b"
+    },
+    {
+      "name": "dice_tfh",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TFH_TPM.csv",
+      "sha256": "029ff1f86d7f14c9cebc97f7fe0c3125c3b9bc04ea5bbc1c0eabadc5f953de30"
+    },
+    {
+      "name": "dice_th1",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TH1_TPM.csv",
+      "sha256": "a73c666724a8efbc2e36efdd889b19d284b9aa35890f20d973d31a88e4c89e80"
+    },
+    {
+      "name": "dice_thstar",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/THSTAR_TPM.csv",
+      "sha256": "f9607b8a6637aca5f7acdacd74929911098c05d8ec72fc226515be59a1c3d2d0"
+    },
+    {
+      "name": "dice_th17",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TH17_TPM.csv",
+      "sha256": "d7d76987004bc565b4a1d14d89a52c6450e467d04dce3e576e8e4d30c6750137"
+    },
+    {
+      "name": "dice_th2",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TH2_TPM.csv",
+      "sha256": "2eb57e51b6a77016dd97c9f338527bb1b96bd43146a626b059cb6f7367ea195a"
+    },
+    {
+      "name": "dice_cd8_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD8_NAIVE_TPM.csv",
+      "sha256": "e9a4828d5cb0227cd45e8ba6df635a1db30268dbb1deef039d88d5128e2dd86c"
+    },
+    {
+      "name": "dice_cd8_stim",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD8_STIM_TPM.csv",
+      "sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198"
+    },
+    {
+      "name": "cornea_collin_adult_counts",
+      "version": "GSE155683-20200804",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_adult_cornea.txt.gz",
+      "sha256": "030cfd2f7c2b5c001698c29bd1cb5d6304890e405b06b6080299224aea59f66e"
+    },
+    {
+      "name": "cornea_collin_adultcornea_cells",
+      "version": "HCA-20220228",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/f001e7ffd9cce1dc584cf35241a4562bdcfcf6640159904609242f67eb028c78.sha256",
+      "sha256": "f001e7ffd9cce1dc584cf35241a4562bdcfcf6640159904609242f67eb028c78"
+    }
+  ],
+  "outputs": {
+    "bulk-contexts.csv.gz": "568b29e3c27ec3403d634d3b83c748d46b5bf2f0335bc670605d79e9ff7efdd7",
+    "changed-compartment-contexts.csv.gz": "c56149739d95772bff83162b4be728e5e0a7f98ac0f5f44a18b61b892e8d736b",
+    "classification-changes.csv": "cf3bba8f66e55a277e8947a3be04f72177e9d822bffae7784e74e283a7121d2d",
+    "cluster-assessments.csv.gz": "d39ceeda5e3707d33420b47dae3a4aa66aed762a47d30997230ec48fb9e8e26d",
+    "cluster-peak-evidence.csv.gz": "5ecb28394d67ba9167cf8fdf01f22b16fa80a9f6891b970450d2f6fb35f927e0",
+    "cluster-replay.json": "a7e6ec7c2f67fc7e1e22537eb589d0f8c00456376435d7936681ea47508393b6",
+    "cornea-group-contexts.csv.gz": "80339a1d728a40bafdc94215ac14138663c1e6733a652e00111bc2f7c8781307",
+    "cta-protein-groups.csv.gz": "5f4d2c94eec68891d604d46b90552d586d89da29ac571e2e3801591aca7f2f80",
+    "dice-group-contexts.csv.gz": "7dc0ac2241cfb57925d3d3b6a4c5952019691f0920585769645be9cacd3ea267",
+    "figures/classification-funnel.png": "0d80c24e9fa4d98cea669605572cdcd13dfec5c048d448aa56beedede6ccd6f1",
+    "figures/classification-funnel.svg": "0e51553536b7a2c33e451ee2a2abe874cdf081a086c7c9c13b7e61d70d111a32",
+    "figures/filter-removals.png": "a3b3c98f2c5abe80faaa8518f3226813a242363bc24e73c55c7dbef9caebcec4",
+    "figures/filter-removals.svg": "e4b4bde4c81e42ee6c84c4bd795c97a36f4fc952c64ab54c17e1b67175922dd4",
+    "figures/named-antigen-distribution.png": "6778b0d491f768246a8d43378e885ad24a89a4e9f0790bf860373677da7fd2cd",
+    "figures/named-antigen-distribution.svg": "609f5172ed3570ee5f3562a04c2ee41888265751416660e8e5ec129e32c2103e",
+    "figures/published-list-overlaps.png": "d3ae5845572ca09bb057e7e6d4e13b0e97c3bf828e3baf0c7fe0d773d0c4499e",
+    "figures/published-list-overlaps.svg": "4c9255ee466e25c4675fad8a8796e536e4ee56d9ee4459e4eec703c9bf84a354",
+    "figures/threshold-grid.png": "0243a2dbfd17c18c6d26d04b0393937e2904708c9890bcb9b47b4f17240d993e",
+    "figures/threshold-grid.svg": "0682cbb685f0e8b9c4188d4921bf9cdd0ffc6f67c2a1848d85a282da233b4f75",
+    "filtering-funnel.csv": "7d3b72d38f97e7cf6720f8c2fc14ef058d89f620ea1f3f15a3bdeddf5b31daf9",
+    "gene-to-protein-group-decisions.csv.gz": "384b4027ae66f9a03c6ae77f5d534f1d0d1d9007a4d9cdeb17079859f49c09ad",
+    "group-ihc.csv.gz": "79313e9ee156daae46b46ef9e2f9e776e3fe4cee131569bcfa0aed555592a2e3",
+    "hpa-protein-level-summary.csv.gz": "7ecee482fcb73ac9d2aa13ca6bc585b442d7c7f6a7516723317794b7d69910f8",
+    "immune-cornea-contexts.csv.gz": "f46543d6021025640a1c176ab61849efd0506c31ef1f4d2741660ef016567871",
+    "imported-protein-review-decisions.csv": "13b90dd7acab8fafaf0743f1c8c60bac3e651a9cdaec722d1a40af6980e63a5b",
+    "independent-layer-effects.csv": "cf1a6924b78c88bd22a0a579567a59bae9255fd2d32c66c36765981055ecf68b",
+    "index.md": "ff859df10f377c0acac51528ff7ed1831c27c3620c20af697f1182cab21b7584",
+    "known-cta-decisions.csv.gz": "d5f86a8ea72bbca53fc7c05b6a2cd804d457d35547f2047f7c9d32dad8780a98",
+    "named-antigen-decisions.csv": "4e8bd79744126f2ebb6f86f567ee29378a45707f68edfac36044520410c1d604",
+    "named-normal-evidence.csv": "4d75b020437e8ced958c168a4ac68c5c68f869a98c9a78563d5a0c076d07e609",
+    "neither-protein-groups.csv.gz": "b45ad73a733b7c53c7ebd8463afc8674a444f031cd1aa414f2326b9aafc71cf5",
+    "newly-selected-groups.csv": "c2d54f46d346b7c929a39f99f4dc453de77d7cb4bde688a764f24436df02b37e",
+    "optional-ambiguous-observations.csv": "16b551faf61ab74615a478d13c20aa8b2b26779bc32e5b697cb304257a32f63e",
+    "policy-component-effects.csv": "0f58b332640dc2d8abed5f30a36c7d169bf8be73dc2b8747e54e188d8629cb3c",
+    "problematic-target-checks.csv": "e94e7449f8ddf2549e44576cafd50f0345f74425413d51742fe7859f4faf87b3",
+    "protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
+    "protein-intensity-input.csv": "57b4362046ea4e029f42f5819ce6c56a054a8f9ba36a80e2d0739aee7368681d",
+    "review-decision-changes.csv": "1b6c1f50cdf04e495a9c7a4f27aae2b9cc4152e44f2bdf125dbd9240d148528e",
+    "review-ihc-level-changes.csv.gz": "30815ad2eac5561277c8f1ffed21fc22266a8341b1351345adf6608184545322",
+    "source-category-counts.csv": "dafcc8dd32cbd857d02279a5cbad7ee82324b8a7564ff339c68fe73d43bdc934",
+    "source-overlaps.csv": "7cb2a6114816589c487131d559dd66778e48df8d21176ec47c8c72636a4cefe6",
+    "summary.json": "692abc3e68ebcffdf2d6909510413a4f5b7f4e07a1e3775010ff279c2ddfba8d",
+    "unsafe-protein-groups.csv.gz": "e94643776dafd730f774e0d06cf997800c4cc5da2454328e4c2c6ed23a7e124d"
+  }
+}

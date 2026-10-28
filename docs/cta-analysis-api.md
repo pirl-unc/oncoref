@@ -1,6 +1,7 @@
 # CTA analysis APIs and identity conventions
 
-The active research proposal is the [compartment-aware CTA funnel](audits/cta-compartment-policy-20261027/index.md).
+The current released research selection is the [compartment-aware CTA funnel](audits/cta-release-1.21.0/index.md).
+Use the [shared species API](cta-selection.md) for current decisions.
 The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md) is its
 versioned comparison baseline.
 Earlier membership and threshold reports remain versioned comparisons; their
@@ -104,6 +105,7 @@ python scripts/cta_protein_group_normal.py docs/audits/cta-harmonized-20261027/g
 python scripts/curate_external_ihc.py
 python scripts/cta_harmonized_report.py docs/audits/cta-harmonized-20261027
 python scripts/cta_compartment_report.py
+python scripts/build_cta_selection_release.py
 ```
 
 The external curation command uses the checked-in categorical source extraction;
@@ -118,9 +120,10 @@ fresh locus-only analysis.
 
 Group decision exports contain only group-level quantities. They do not copy a
 representative locus's old maxima or selection flags into group measurement
-columns. `Expression category`, `Expression detail` and `Expression forbidden`
-in the locus and concordance exports are explicitly historical annotations;
-`category` and the named `hold:` / `unsafe:` columns describe the current proposal.
+columns. The locus and concordance exports rename the old expression fields to
+`historical_expression_category`, `historical_expression_detail` and
+`historical_expression_forbidden`. Their `protein_group_category` is current;
+the group table's `category` and `hold:` / `unsafe:` columns use the released policy.
 
 The current policy uses unusable or disputed antibodies to disable negative-IHC
 threshold boosts, without an additional gene-wide antibody veto after the strict

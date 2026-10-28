@@ -639,7 +639,24 @@ comparison plots and the downstream migration contract.
 
 ## CTA Antigens
 
-The experimental [uniform quantitative proposal](audits/cta-quantitative-20261026/index.md)
+The current research set is available through the same species-scoped API:
+
+```python
+from oncoref import human, canine, mouse
+human.cta_selection(category="CTA")
+canine.cta_selection()
+mouse.cta_selection_coverage()
+human.cta_sources(category="normal_protein")
+```
+
+The human release selects **463 groups / 481 loci**. Dog nominations remain
+Neither/unassessed and mouse selection is unavailable. The
+[selection guide](cta-selection.md) documents common fields, native units,
+source categories, identity gaps and the independent sequence-background policy.
+The APIs below preserve their explicitly dated historical snapshots.
+
+
+The historical [uniform quantitative proposal](audits/cta-quantitative-20261026/index.md)
 selects 447 genes without publication or gene-specific admission routes:
 
 ```python
@@ -662,7 +679,7 @@ policy and an evidence-weighted research selection. Neither gene-level call
 establishes presentation by the major histocompatibility complex (MHC) or
 validates every peptide or therapy product.
 
-Use `oncoref.cta_membership.gene_ids()` for the current **1,416-gene biological
+Use `oncoref.cta_membership.gene_ids()` for the historical **1,416-gene biological
 CTA/oncofetal set**; see [membership rules](audits/cta-membership-20261026/index.md).
 `oncoref.cta_research_policy.gene_ids()` preserves the earlier **215-gene research
 selection**, including PRAME, MAGE-A4 and NY-ESO-1 (CTAG1A/B).
@@ -2058,7 +2075,7 @@ oncofetal = cta_membership.gene_ids(category="Oncofetal")
 primary_evidence = cta_membership.evidence()
 ```
 
-This is the current holistic biological set. `Member`, `Classes` and `Evidence tier`
+This is the historical literature-inclusive biological set. `Member`, `Classes` and `Evidence tier`
 are independent of retained normal-expression flags and the existing forbidden-protein
 reference. Classes can overlap: `Cancer-germline`, `Cancer-placental`,
 `Cancer-reproductive`, and `Oncofetal`. The established tier currently covers the
@@ -2071,6 +2088,6 @@ expression classification retain their historical semantics. See the
 
 The newer [harmonized analysis APIs](cta-analysis-api.md) separate reference gene
 matching, same-context protein-equivalence sums, external IHC adjudication and
-three-way decision layers. The [current research funnel](audits/cta-harmonized-20261027/index.md)
+three-way decision layers. The [current research funnel](audits/cta-release-1.21.0/index.md)
 reports both locus and group counts and follows every historical CTA through the
 new rules; the historical accessors above remain frozen comparisons.

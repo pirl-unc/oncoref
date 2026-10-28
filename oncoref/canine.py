@@ -28,6 +28,9 @@ legacy = _data.group("legacy")
 groups = (references, expression, cancer, antigens, normalization, governance, legacy)
 inventory = _data.inventory
 
+cta_selection = antigens.cta_selection
+cta_selection_coverage = antigens.cta_selection_coverage
+cta_sources = antigens.cta_sources
 cta_candidates = antigens.cta_candidates
 cta_evidence = antigens.cta_evidence
 cta_gene_ids = antigens.cta_gene_ids
@@ -55,7 +58,10 @@ __all__ = [
     "cta_candidates",
     "cta_evidence",
     "cta_gene_ids",
+    "cta_selection",
+    "cta_selection_coverage",
     "cta_snapshot",
+    "cta_sources",
     "cta_tissue_annotations",
     "datasets",
     "doga",

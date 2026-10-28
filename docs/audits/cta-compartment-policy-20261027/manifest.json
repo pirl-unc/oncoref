@@ -1,8 +1,8 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/cta_compartment_report.py": "7e13358daef65375c2a2bf3a44132fb5b34cd5a78068fe7727891dd54acc14d3",
-    "oncoref/compartment_rna_policy.py": "3c4391628b32eaf40520b61fa36273193e87e66a7274e1f24e1c443076b7fa6a",
+    "docs/audits/cta-compartment-policy-20261027/source-code/scripts/cta_compartment_report.py": "7e13358daef65375c2a2bf3a44132fb5b34cd5a78068fe7727891dd54acc14d3",
+    "docs/audits/cta-compartment-policy-20261027/source-code/oncoref/compartment_rna_policy.py": "3c4391628b32eaf40520b61fa36273193e87e66a7274e1f24e1c443076b7fa6a",
     "scripts/cta_harmonized_report.py": "58b79bdd1a176239bf22808c195d1cee081bc03f74dbff0be9a713e91f506986",
     "scripts/cta_cell_policy_report.py": "c5463acbc19e748a5b8f41a056c4810d0b86c1f06933eed7f812f156a8a15982",
     "scripts/cta_quantitative_threshold_report.py": "ad4a1c7e7ac45f37c7f1e0b22d28000afc711ee954dc54f6b63ae75e140b7389",
@@ -37,7 +37,7 @@
     "changed-compartment-contexts.csv.gz": "c56149739d95772bff83162b4be728e5e0a7f98ac0f5f44a18b61b892e8d736b",
     "classification-changes.csv": "5b1425e6520427fca6b95583b547421ac167b46a88da56119f1812ee87674a3d",
     "cluster-assessments.csv.gz": "a5aa6f21842c0e1e97ac72188e8190b1062771fee80ba21fec616104cb3c0bd6",
-    "cluster-replay.json": "e0d0d09c465f971acb8ffed8b4a3cd9e63b8f6e9290aa8b3fc5741f72f9df3f0",
+    "cluster-replay.json": "01191c71569d82f6e50affa9ef2950e0c87c71303d4167eb51d691e0f6ff1aa9",
     "cta-protein-groups.csv.gz": "e11e2afb8f3efb3b6f55c183e8f136ea5424ec2a2495515e5dbc766345db07c9",
     "figures/classification-funnel.png": "0d80c24e9fa4d98cea669605572cdcd13dfec5c048d448aa56beedede6ccd6f1",
     "figures/classification-funnel.svg": "0e51553536b7a2c33e451ee2a2abe874cdf081a086c7c9c13b7e61d70d111a32",
@@ -66,6 +66,9 @@
     "source-category-counts.csv": "dafcc8dd32cbd857d02279a5cbad7ee82324b8a7564ff339c68fe73d43bdc934",
     "source-overlaps.csv": "7cb2a6114816589c487131d559dd66778e48df8d21176ec47c8c72636a4cefe6",
     "summary.json": "3f10ae3b0aa9bde669dcb71089e299d2f67cc93d1c89e23c56630d286e55becc",
-    "unsafe-protein-groups.csv.gz": "617c37730eacaee1a9bb80e10d71c83631e8430165652c4860204a8e8df972d4"
-  }
+    "unsafe-protein-groups.csv.gz": "617c37730eacaee1a9bb80e10d71c83631e8430165652c4860204a8e8df972d4",
+    "source-code/oncoref/compartment_rna_policy.py": "3c4391628b32eaf40520b61fa36273193e87e66a7274e1f24e1c443076b7fa6a",
+    "source-code/scripts/cta_compartment_report.py": "7e13358daef65375c2a2bf3a44132fb5b34cd5a78068fe7727891dd54acc14d3"
+  },
+  "source_commit": "d79f4d4626fbbed85e3e2876fb3d886636cf10cc"
 }

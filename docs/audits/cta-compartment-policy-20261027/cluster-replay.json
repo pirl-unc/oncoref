@@ -1,7 +1,7 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "oncoref/compartment_rna_policy.py": "3c4391628b32eaf40520b61fa36273193e87e66a7274e1f24e1c443076b7fa6a",
+    "docs/audits/cta-compartment-policy-20261027/source-code/oncoref/compartment_rna_policy.py": "3c4391628b32eaf40520b61fa36273193e87e66a7274e1f24e1c443076b7fa6a",
     "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
     "oncoref/cell_rna_policy.py": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
     "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
@@ -30,5 +30,6 @@
   "outputs": {
     "cluster-assessments.csv.gz": "a5aa6f21842c0e1e97ac72188e8190b1062771fee80ba21fec616104cb3c0bd6",
     "changed-compartment-contexts.csv.gz": "c56149739d95772bff83162b4be728e5e0a7f98ac0f5f44a18b61b892e8d736b"
-  }
+  },
+  "source_commit": "d79f4d4626fbbed85e3e2876fb3d886636cf10cc"
 }
