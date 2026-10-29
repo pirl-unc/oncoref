@@ -14,6 +14,30 @@ from oncoref.expression_contract import ExpressionContract
 from oncoref.species_expression import combine_expression
 
 
+def test_optional_dataset_discovery_and_cli_failure_without_dependency(monkeypatch, capsys):
+    from oncoref import catalog, cli
+    from oncoref.species_assets import asset_inventory, inspect_asset, species_asset
+
+    def missing(cache_root):
+        raise ImportError("Install oncoref[quantitative]")
+
+    monkeypatch.setattr(managed, "_registry", missing)
+    asset = species_asset("pfizer-dog-protein", species="dog")
+    assert asset.size_bytes == 84379381
+    assert asset.as_dict()["installed_size_bytes"] == 1404428288
+    assert inspect_asset(asset)["status"] == "dependency_missing"
+    assert any(row["name"] == asset.id for row in asset_inventory("dog"))
+    assert catalog.versions(asset.id, species="dog") == ("2026-10-12.1",)
+    assert catalog.path(asset.id, species="dog") is None
+    assert catalog.provenance(asset.id, species="dog")["verification_state"] == "dependency_missing"
+    assert catalog.status(asset.id, species="dog")[0]["present"] is False
+    assert cli.main(["data", "metadata", asset.id, "--species", "dog"]) == 0
+    capsys.readouterr()
+    assert cli.main(["data", "fetch", asset.id, "--species", "dog"]) == 1
+    output = capsys.readouterr()
+    assert "oncoref[quantitative]" in output.err and "Traceback" not in output.err
+
+
 @pytest.fixture
 def release(tmp_path, monkeypatch):
     pytest.importorskip("orfdata")

@@ -257,7 +257,11 @@ def _cmd_data(args: argparse.Namespace) -> int:
     from ._downloads import download_options
 
     with download_options(progress=args.progress, verbose=not args.quiet):
-        return _cmd_data_impl(args)
+        try:
+            return _cmd_data_impl(args)
+        except (ImportError, FileNotFoundError) as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
 
 
 def _cmd_data_impl(args: argparse.Namespace) -> int:
