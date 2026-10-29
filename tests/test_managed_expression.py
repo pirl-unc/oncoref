@@ -32,6 +32,11 @@ def test_optional_dataset_discovery_and_cli_failure_without_dependency(monkeypat
     assert catalog.provenance(asset.id, species="dog")["verification_state"] == "dependency_missing"
     assert catalog.status(asset.id, species="dog")[0]["present"] is False
     assert cli.main(["data", "metadata", asset.id, "--species", "dog"]) == 0
+    peptide = species_asset("pfizer-dog-peptide-evidence", species="dog")
+    assert peptide.size_bytes == 6896030151
+    assert peptide.as_dict()["installed_size_bytes"] == 24710258688
+    assert inspect_asset(peptide)["status"] == "dependency_missing"
+    assert cli.main(["data", "metadata", peptide.id, "--species", "dog"]) == 0
     capsys.readouterr()
     assert cli.main(["data", "fetch", asset.id, "--species", "dog"]) == 1
     output = capsys.readouterr()

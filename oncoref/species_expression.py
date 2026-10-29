@@ -135,6 +135,42 @@ class ExpressionDataset:
         if self._records is not None:
             yield from self._records.records(kind)
 
+    def evidence_sources(self):
+        """Inspect optional assignment sources without importing or downloading them."""
+        from .expression_evidence import evidence_sources
+
+        return evidence_sources(self)
+
+    def with_evidence(
+        self,
+        source_id,
+        *,
+        feature_ids,
+        offline=True,
+        cache_root=None,
+        local_overrides=None,
+        max_bytes=0,
+        max_records=50000,
+    ):
+        """Attach assignments for selected native features, retaining every candidate.
+
+        Values, missingness and the measurement contract are unchanged. Evidence
+        is same-study context, never another observation or isoform allocation.
+        Acquisition requires explicit opt-in and a sufficient transfer budget.
+        """
+        from .expression_evidence import with_evidence
+
+        return with_evidence(
+            self,
+            source_id,
+            feature_ids=feature_ids,
+            offline=offline,
+            cache_root=cache_root,
+            local_overrides=local_overrides,
+            max_bytes=max_bytes,
+            max_records=max_records,
+        )
+
     def tissue_annotations(self):
         """Cited current tissue-scope annotations; retain the frozen sample metadata.
 
