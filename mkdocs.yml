@@ -7,6 +7,9 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
+      - Common panel, diffuseness and unassigned proteins: audits/cta-unassigned-20261029/index.md
+      - ZNF730 calculation tables: audits/cta-unassigned-20261029/znf730.md
+      - Paper titles and database versions: audits/cta-source-walkthrough-20261028/references.md
       - Human sources, thresholds and funnel: audits/cta-source-walkthrough-20261028/index.md
       - Dog sources and funnel coverage: audits/cta-source-walkthrough-20261028/dog.md
       - Policy simplification and developmental sources: audits/cta-source-walkthrough-20261028/policy-review.md

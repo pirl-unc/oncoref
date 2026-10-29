@@ -1,0 +1,53 @@
+native_context,tissue,role
+Adipose_Subcutaneous,adipose tissue,Normal comparator
+Adipose_Visceral_Omentum,adipose tissue,Normal comparator
+Adrenal_Gland,adrenal gland,Normal comparator
+Artery_Aorta,blood vessel,Normal comparator
+Artery_Coronary,blood vessel,Normal comparator
+Artery_Tibial,blood vessel,Normal comparator
+Bladder,urinary bladder,Normal comparator
+Brain_Amygdala,amygdala,Normal comparator
+Brain_Anterior_cingulate_cortex_BA24,cerebral cortex,Normal comparator
+Brain_Caudate_basal_ganglia,basal ganglia,Normal comparator
+Brain_Cerebellar_Hemisphere,cerebellum,Normal comparator
+Brain_Cerebellum,cerebellum,Normal comparator
+Brain_Cortex,cerebral cortex,Normal comparator
+Brain_Frontal_Cortex_BA9,cerebral cortex,Normal comparator
+Brain_Hippocampus,hippocampal formation,Normal comparator
+Brain_Hypothalamus,hypothalamus,Normal comparator
+Brain_Nucleus_accumbens_basal_ganglia,basal ganglia,Normal comparator
+Brain_Putamen_basal_ganglia,basal ganglia,Normal comparator
+Brain_Spinal_cord_cervical_c-1,spinal cord,Normal comparator
+Brain_Substantia_nigra,midbrain,Normal comparator
+Breast_Mammary_Tissue,breast,Reproductive reference
+Cervix_Ectocervix,cervix,Reproductive reference
+Cervix_Endocervix,cervix,Reproductive reference
+Colon_Sigmoid,colon,Normal comparator
+Colon_Transverse,colon,Normal comparator
+Esophagus_Gastroesophageal_Junction,esophagus,Normal comparator
+Esophagus_Mucosa,esophagus,Normal comparator
+Esophagus_Muscularis,esophagus,Normal comparator
+Fallopian_Tube,fallopian tube,Reproductive reference
+Heart_Atrial_Appendage,heart muscle,Normal comparator
+Heart_Left_Ventricle,heart muscle,Normal comparator
+Kidney_Cortex,kidney,Normal comparator
+Kidney_Medulla,kidney,Normal comparator
+Liver,liver,Normal comparator
+Lung,lung,Normal comparator
+Minor_Salivary_Gland,salivary gland,Normal comparator
+Muscle_Skeletal,skeletal muscle,Normal comparator
+Nerve_Tibial,peripheral nerve,Normal comparator
+Ovary,ovary,Reproductive reference
+Pancreas,pancreas,Normal comparator
+Pituitary,pituitary gland,Normal comparator
+Prostate,prostate,Reproductive reference
+Skin_Not_Sun_Exposed_Suprapubic,skin,Normal comparator
+Skin_Sun_Exposed_Lower_leg,skin,Normal comparator
+Small_Intestine_Terminal_Ileum,small intestine,Normal comparator
+Spleen,spleen,Normal comparator
+Stomach,stomach,Normal comparator
+Testis,testis,Reproductive reference
+Thyroid,thyroid gland,Normal comparator
+Uterus,endometrium,Reproductive reference
+Vagina,vagina,Reproductive reference
+Whole_Blood,blood,Normal comparator

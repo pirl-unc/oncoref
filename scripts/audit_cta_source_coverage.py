@@ -334,6 +334,15 @@ def build() -> None:
             "example_genes": "; ".join(missing.label.fillna(missing.entity_id).head(5)),
         },
     )
+    gtex_missing = combined[~combined.gtex_core_complete]
+    summary.append(
+        {
+            "source_id": "gtex_core_panel",
+            "source": "Required GTEx v11 bulk panel (52 contexts)",
+            "groups": len(gtex_missing),
+            "example_genes": "; ".join(gtex_missing.label.head(5)),
+        }
+    )
     pd.DataFrame(summary).to_csv(OUT / "normal-panel-gap-counts.csv", index=False)
     (OUT / "coverage-audit-receipt.json").write_text(
         json.dumps(

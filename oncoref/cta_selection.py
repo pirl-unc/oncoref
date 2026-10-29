@@ -2,7 +2,7 @@
 
 ``results``, ``coverage`` and ``sources`` use the same contract for human, dog
 and mouse. ``audit`` adds source-list accounting and measured decision contexts.
-Human rows describe screened protein-equivalence groups. Native
+Human rows describe proteins: identical selected reference sequences collapsed. Native
 nonhuman nominations remain unassigned/unassessed until their reference identities,
 measurement scales and required panels support a species-specific policy.
 Human expression, antibody grades and clinical outcomes never transfer through
@@ -10,10 +10,14 @@ orthology. The historical nomination/evidence APIs remain separately accessible.
 
 Safety and CTA identity are separate assessments. Only normal-tissue or applicable
 clinical safety evidence supplies Unsafe; failing cancer/reproductive admission
-does not. Cancer presence requires one qualifying measured tumor sample. Adult
-restriction compares qualifying reproductive/developmental RNA with supported
-normal RNA in its own native units. This is distinct from the absolute safety
-ceilings and does not impose a tumor-versus-normal expression ratio.
+does not. Cancer presence requires one qualifying measured tumor sample.
+Reproductive is the umbrella for reproductive, placental, extraembryonic, embryonic
+and fetal contexts; its measured branches have positive-expression rules. Required
+coverage includes the GTEx v11 52-context bulk core for every member locus.
+Neither presence check imposes a normal-expression ratio. Whole-profile
+diffuseness is an active adult/placental identity gate. A supported diffuse
+profile can establish Neither, never Unsafe; developmental concentration remains
+explicitly unassessed without compatible measurements.
 """
 
 from __future__ import annotations
@@ -139,10 +143,11 @@ def results(*, species: SpeciesLike = "human", category: Category | None = None)
     nonhuman assay/family nominations. Tuple-valued identity fields retain every
     supported alternative. No download, orthology inference or zero filling occurs.
 
-    Cancer presence, adult restriction and reproductive/developmental association
-    are separate from safety. All must pass for CTA admission. Adult restriction
-    compares a qualifying association signal with same-unit adult normal RNA;
-    the cancer gate needs one qualifying sample and no tumor-versus-normal ratio.
+    Cancer presence and reproductive/developmental association are separate from
+    safety. All must pass for CTA admission. Neither presence check compares with
+    a normal-tissue maximum. The complete HPA adult/placental concentration gate
+    blocks that route above 10%; supported developmental evidence remains an
+    independent route with concentration explicitly unassessed.
     """
     selected = resolve_species(species)
     if category is not None and category not in CATEGORIES:

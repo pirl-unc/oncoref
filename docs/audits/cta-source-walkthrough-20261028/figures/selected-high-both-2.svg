@@ -68,7 +68,6 @@ z
      <use xlink:href="#mb15e8e0fbc" x="250.76229" y="437.029563" style="fill: #c8d0d6; fill-opacity: 0.35; stroke: #c8d0d6; stroke-opacity: 0.35"/>
      <use xlink:href="#mb15e8e0fbc" x="254.870325" y="473.76227" style="fill: #c8d0d6; fill-opacity: 0.35; stroke: #c8d0d6; stroke-opacity: 0.35"/>
      <use xlink:href="#mb15e8e0fbc" x="262.797484" y="211.579045" style="fill: #c8d0d6; fill-opacity: 0.35; stroke: #c8d0d6; stroke-opacity: 0.35"/>
-     <use xlink:href="#mb15e8e0fbc" x="262.797484" y="465.377823" style="fill: #c8d0d6; fill-opacity: 0.35; stroke: #c8d0d6; stroke-opacity: 0.35"/>
      <use xlink:href="#mb15e8e0fbc" x="266.6254" y="519.863971" style="fill: #c8d0d6; fill-opacity: 0.35; stroke: #c8d0d6; stroke-opacity: 0.35"/>
      <use xlink:href="#mb15e8e0fbc" x="270.368245" y="546.399275" style="fill: #c8d0d6; fill-opacity: 0.35; stroke: #c8d0d6; stroke-opacity: 0.35"/>
      <use xlink:href="#mb15e8e0fbc" x="281.122177" y="425.999667" style="fill: #c8d0d6; fill-opacity: 0.35; stroke: #c8d0d6; stroke-opacity: 0.35"/>
@@ -740,7 +739,7 @@ L 0 3.5
      </g>
     </g>
     <g id="text_3">
-     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="535.68" y="622.740859" transform="rotate(-0 535.68 622.740859)">Reproductive RNA (nTPM)</text>
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="535.68" y="622.740859" transform="rotate(-0 535.68 622.740859)">Adult/placental RNA (nTPM)</text>
     </g>
    </g>
    <g id="matplotlib.axis_2">
@@ -1222,13 +1221,13 @@ z
    </g>
   </g>
   <g id="text_41">
-   <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="51.84" y="48.356719" transform="rotate(-0 51.84 48.356719)">Selected CTA with reproductive and embryonic RNA ≥5</text>
+   <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="51.84" y="48.356719" transform="rotate(-0 51.84 48.356719)">Selected CTA with adult/placental and embryonic RNA ≥5</text>
   </g>
   <g id="text_42">
-   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="51.84" y="80.358281" transform="rotate(-0 51.84 80.358281)">Labels 2 of 3 · 27 of 82 groups · color: healthy maximum nTPM</text>
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="51.84" y="80.358281" transform="rotate(-0 51.84 80.358281)">Labels 2 of 3 · 27 of 81 groups · color: healthy maximum nTPM</text>
   </g>
   <g id="text_43">
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 688.134551)">Colored points and labels cover one third of the selected groups ≥5 on both axes; gray points show the other groups.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 688.134551)">Colored points and labels cover one third of the selected proteins ≥5 on both axes; gray points show the other groups.</text>
    <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 698.937012)">Panels share the same axes. This descriptive threshold does not replace developmental cell-support requirements.</text>
   </g>
  </g>

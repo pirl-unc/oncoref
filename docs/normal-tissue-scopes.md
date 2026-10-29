@@ -485,3 +485,19 @@ positive-evidence rule additionally requires Reproductive expression; Disposable
 expression alone no longer meets the admission requirement.
 
 The [current selection guide](cta-selection.md) documents the active tissue/IHC ceilings and separate safety, cancer, association and restriction requirements. The [2026-10-21 curation report](audits/cta-curation-20261021-r2/index.md) retains its doubled RNA ceilings, readable gene results and searchable explorer as a historical comparison. [Disjoint gene and protein sets](audits/normal-sequence-sets-20261021/index.md) provide the separately versioned basis for subsequent k-mer subtraction.
+
+
+## Permissive expression-profile role
+
+The [diffuseness policy](audits/cta-unassigned-20261029/diffuseness-impact.md) assigns
+adult thymus a **Permissive** role: exclude it from both the normal comparator and
+the Reproductive reference. Its RNA remains visible and it is not Disposable.
+This is orthogonal to its existing Manageable safety tier. Resolved thymic anatomy
+and descendants use this identity role across human, dog and mouse; the quantitative
+score is currently implemented for human HPA v23. Explicit embryonic/fetal stage
+retains the Reproductive umbrella. This profile role is distinct from the historical
+`permissive` alias for the extended reproductive scope.
+
+The rationale is thymic expression of peripheral antigens during central tolerance:
+[Projection of an Immunological Self Shadow Within the Thymus by the Aire Protein](https://doi.org/10.1126/science.1075958).
+Spleen, lymph node, tonsil and Disposable anatomy remain comparator tissues.

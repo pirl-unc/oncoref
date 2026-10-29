@@ -1,13 +1,13 @@
 # Which sources have missing evidence?
 
-These counts describe the **617 unassigned groups with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **694 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
-| Evidence gap | Groups |
+| Evidence gap | Proteins |
 | --- | --- |
-| normal panel missing | 371 |
+| normal panel missing | 453 |
 | tumor measurement missing | 34 |
 | tumor group profile incomplete | 17 |
-| embryonic measurement missing | 296 |
+| embryonic measurement missing | 297 |
 | unresolved evidence | 28 |
 
 The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **34** groups lack a mapped measurement, while **17** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
@@ -16,15 +16,16 @@ The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted
 
 ## Required normal panels
 
-| Source | Groups | Examples |
+| Source | Proteins | Examples |
 | --- | --- | --- |
 | HPA v23 consensus bulk | 414 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
 | Combined normal bulk: HPA consensus + HPA brain + direct GTEx | 366 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
 | HPA v23 tissue-cell clusters | 335 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
 | HPA v23 immune cells | 304 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
 | Monaco immune cells via HPA v23 | 304 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
+| Required GTEx v11 bulk panel (52 contexts) | 413 | BORCS8-MEF2B; ENSG00000100101; CORO7-PAM16; ENSG00000125695; ZNF670-ZNF695 |
 
-Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. Reproductive tissues do not block normal-organ coverage. The separate requirements remain 426 HPA tissue/cell contexts, 19 HPA immune populations and 30 Monaco immune populations for every group member. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. DICE and adult cornea remain optional and do not contribute to this mandatory-panel gap.
+Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. The fixed GTEx v11 core additionally requires all 52 native bulk contexts, including its nine adult Reproductive contexts, for every member locus. The separate requirements remain 426 HPA tissue/cell contexts, 19 HPA immune populations and 30 Monaco immune populations for every group member. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. DICE and adult cornea remain optional and do not contribute to this mandatory-panel gap.
 
 [Every missing group/source/context](normal-panel-coverage-gaps.csv.gz) · [Every member, current/historical IDs, synonyms and observed/missing contexts](normal-panel-member-coverage.csv.gz) · [Source-row identity matches and unresolved alternatives](coverage-identity-matches.csv.gz).
 
@@ -35,9 +36,9 @@ Bulk completeness now requires every nonreproductive tissue concept in the HPA c
 | HPA 25.1 | 31 | 341 |
 | OncoRef | 132 | 34 |
 
-[Per-group, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
+[Per-protein, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
 
-Embryonic coverage now combines **Tyser et al. (2021), E-MTAB-9388** (gastrulation) and **Petropoulos et al. (2016), E-MTAB-3929** (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **296** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
+Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **297** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
 
 The new identity pass recovers 19 gene rows omitted by the earlier exact-ID filter. It keeps 5 conflicting alternate-row cases unresolved. [Every attempted recovery and source ID](developmental-identity-recoveries.csv). Canonical rows take precedence; multiple alternative rows are accepted only when their entire cell-expression vectors agree. Different values are neither added nor arbitrarily selected.
 

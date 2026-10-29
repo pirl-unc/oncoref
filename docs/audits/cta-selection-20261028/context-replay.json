@@ -1,8 +1,8 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/replay_cta_selection.py": "cf79689f088a2750331ec49e99e7bcd253fca85890f927d31ff1494d2f67029c",
-    "oncoref/cta_selection_policy.py": "757aeb6669518090cc44f02ec6463da50ead0c709929508c3c775c7974219e36",
+    "scripts/replay_cta_selection.py": "556dc2b8acffc29e556e28f3d9d668b2871554943a704174455ae74d811690fd",
+    "oncoref/cta_selection_policy.py": "baa5ec76cb63611827a71abe20a005433b1d37f671b73ecdcdbe3b2d5210fd4c",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
     "oncoref/data/cta-ihc-compartments.csv": "8233e0a50394680b429d8333a3995611f161e5e881160481f1b81c8c3b062182",
     "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
@@ -37,9 +37,9 @@
   ],
   "outputs": {
     "assay-assessments.csv.gz": "1ad41542bd11350687dc2b677f12b4c2b2eb926c64601a1aedba6cdbf75911e8",
-    "normal-peak-evidence.csv.gz": "a9ceed4808fb2cb07244a01255dcdf76624222f4fdec69e1301c3836c461c9a8",
-    "widely-studied-contexts.csv.gz": "d3e80441215f5a639b1a551d15280b953b677cbefc9c2d6298345eb7e065e5f9",
-    "compartment-ihc-matches.csv.gz": "9aa77d8697ca98f0ca7332bd8a5dac8c8a490c19d7bfdb65ffb321c572959768",
+    "normal-peak-evidence.csv.gz": "47760c0ffd8f2be0367769ab6a2278235fa43d178035623c88b4a1cb954ca327",
+    "widely-studied-contexts.csv.gz": "512033b825bf1668805d472d02496badf3fc39a84b4b368edc497ab3cbf63c43",
+    "compartment-ihc-matches.csv.gz": "e2dac2bb92b98aea254970653c6df33ab7bfe7e7f25e1fe2ed69abe4c705462a",
     "manageable-breadth.csv.gz": "7d2a837efecc57f8814e5e56d968ee6b71d5e299de385a0e0d807c07a52b00aa"
   }
 }

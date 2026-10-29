@@ -1,0 +1,72 @@
+# Papers and database versions
+
+Paper titles open the publication. Database names open the source's documentation or release page. Exact input URLs, extraction scope and checksums remain in the downloadable provenance.
+
+| citation | paper | source_table | artifact |
+| --- | --- | --- | --- |
+| Gong et al. (2021) | [The RNA landscape of the human placenta in health and disease](https://doi.org/10.1038/s41467-021-22695-y) | Supplementary Data 5: placenta rows | [Extracted source](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx) |
+| Gong et al. (2021) | [The RNA landscape of the human placenta in health and disease](https://doi.org/10.1038/s41467-021-22695-y) | Supplementary Data 6: placenta rows | [Extracted source](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx) |
+| Bradley et al. (2020) | [Vestigial-like 1 is a shared targetable cancer-placenta antigen expressed by pancreatic and basal-like breast cancers](https://doi.org/10.1038/s41467-020-19141-w) | Figure 3: ten CPA candidates | [Extracted source](https://www.nature.com/articles/s41467-020-19141-w/figures/3) |
+| Wang et al. (2016) | [Systematic identification of genes with a cancer-testis expression pattern in 19 cancer types](https://doi.org/10.1038/ncomms10499) | Supplementary Data 3A | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4737856/supplementaryFiles) |
+| Bruggeman et al. (2018) | [Massive expression of germ cell-specific genes is a hallmark of cancer and a potential target for novel treatment development](https://doi.org/10.1038/s41388-018-0357-2) | 1D | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6193945/supplementaryFiles) |
+| da Silva et al. (2017) | [Genome-wide identification of cancer/testis genes and their association with prognosis in a pan-cancer analysis](https://doi.org/10.18632/oncotarget.21715) | 1103 CTs predicted | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5696236/supplementaryFiles) |
+| da Silva et al. (2017) | [Genome-wide identification of cancer/testis genes and their association with prognosis in a pan-cancer analysis](https://doi.org/10.18632/oncotarget.21715) | Sheet1 | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5696236/supplementaryFiles) |
+| Jamin et al. (2021) | [Combined RNA/tissue profiling identifies novel Cancer/testis genes](https://doi.org/10.1002/1878-0261.12900) | Expression data and classes | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8564638/supplementaryFiles) |
+| Jamin et al. (2021) | [Combined RNA/tissue profiling identifies novel Cancer/testis genes](https://doi.org/10.1002/1878-0261.12900) | Annotation | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8564638/supplementaryFiles) |
+| Chang et al. (2019) | [Comprehensive characterization of cancer-testis genes in testicular germ cell tumor](https://doi.org/10.1002/cam4.2223) | Suppl Table 2 | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6601584/supplementaryFiles) |
+| Carter et al. (2023) | [Identification of pan-cancer/testis genes and validation of therapeutic targeting in triple-negative breast cancer](https://doi.org/10.1136/jitc-2023-007935) | Supplementary Table 2 | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10749072/supplementaryFiles) |
+| Seager et al. (2024) | [Cancer testis antigen burden (CTAB): a novel biomarker of tumor-associated antigens in lung cancer](https://doi.org/10.1186/s12967-024-04918-0) | Methods: Data processing and statistical analysis; Figure 1 | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10851610/fullTextXML) |
+| Loriot et al. (2025) | [A survey of human cancer-germline genes: Linking X chromosome localization, DNA methylation and sex-biased expression in early embryos](https://doi.org/10.1371/journal.pgen.1011734) | List of 146 CG genes | [Extracted source](https://doi.org/10.1371/journal.pgen.1011734.s004) |
+| Loriot et al. (2025) | [A survey of human cancer-germline genes: Linking X chromosome localization, DNA methylation and sex-biased expression in early embryos](https://doi.org/10.1371/journal.pgen.1011734) | List of 134 CG-Preferential gen | [Extracted source](https://doi.org/10.1371/journal.pgen.1011734.s005) |
+| Gong et al. (2021) | [The RNA landscape of the human placenta in health and disease](https://doi.org/10.1038/s41467-021-22695-y) | Data 5 - tissue-enriched PC | [Extracted source](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx) |
+| Gong et al. (2021) | [The RNA landscape of the human placenta in health and disease](https://doi.org/10.1038/s41467-021-22695-y) | Data 6 tissue-enriched lncR | [Extracted source](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx) |
+| da Silva et al. (2017) | [Genome-wide identification of cancer/testis genes and their association with prognosis in a pan-cancer analysis](https://doi.org/10.18632/oncotarget.21715) | Supplementary_Table3 | [Extracted source](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5696236/supplementaryFiles) |
+| Bai et al. (2016) | [EGFL6 regulates the asymmetric division, maintenance and metastasis of ALDH+ ovarian cancer cells](https://doi.org/10.1158/0008-5472.CAN-16-0225) | Abstract | [Extracted source](https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_xml/PMC5120866/unicode) |
+| Boël et al. (1995) | [BAGE: a new gene encoding an antigen recognized on human melanomas by cytolytic T lymphocytes.](https://doi.org/10.1016/s1074-7613(95)80053-0) | Targeted primary nomination: BAGE; PMID 7895173 | [Extracted source](https://pubmed.ncbi.nlm.nih.gov/7895173/) |
+| Garg et al. (2007) | [Sperm-associated antigen 9, a novel cancer testis antigen, is a potential target for immunotherapy in epithelial ovarian cancer.](https://doi.org/10.1158/1078-0432.CCR-06-2340) | Targeted primary nomination: SPAG9; PMID 17332284 | [Extracted source](https://pubmed.ncbi.nlm.nih.gov/17332284/) |
+| Sasaroli et al. (2011) | [Novel surface targets and serum biomarkers from the ovarian cancer vasculature](https://doi.org/10.4161/cbt.12.3.16260) | Results: 13 promising genes; Figure 2B | [Extracted source](https://pmc.ncbi.nlm.nih.gov/articles/PMC3230481/) |
+| Hirbo et al. (2015) | [Integrating Diverse Types of Genomic Data to Identify Genes that Underlie Adverse Pregnancy Phenotypes](https://doi.org/10.1371/journal.pone.0144155) | S1 Table: J4:J89; AC4:AF33 tracks the 30 fast-evolving subset | [Extracted source](https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0144155.s002&type=supplementary) |
+
+## Measurement resources
+
+| name | evidence_category | native_unit | source_url |
+| --- | --- | --- | --- |
+| [HPA v23 / GTEx consensus](https://v23.proteinatlas.org/about/download) | normal_bulk_rna | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
+| [HPA v23 / GTEx consensus](https://v23.proteinatlas.org/about/download) | reproductive_expression | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
+| [Tyser human gastrulation atlas](https://doi.org/10.1038/s41586-021-04158-y) | developmental_expression | TPM | [Source](https://doi.org/10.1038/s41586-021-04158-y) |
+| [Petropoulos preimplantation atlas](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) | developmental_expression | TPM | [Source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) |
+| [HPA v23 human brain, 193 subregions](https://v23.proteinatlas.org/about/download) | normal_bulk_rna | nTPM | [Source](https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip) |
+| [Direct GTEx v11 tissue medians](https://gtexportal.org/home/downloads/adult-gtex) | normal_bulk_rna | TPM | [Source](https://gtexportal.org/home/downloads/adult-gtex) |
+| [OncoRef source-mapped tumor union](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/cta-expanded-funnel-20261027/tumor-union) | tumor_expression | TPM | [Source](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/cta-expanded-funnel-20261027/tumor-union) |
+| [HPA v23 cancer sample measurements](https://v23.proteinatlas.org/about/download) | tumor_expression | pTPM | [Source](https://v23.proteinatlas.org/about/download) |
+| [HPA v23 tissue/cell clusters](https://v23.proteinatlas.org/about/download) | normal_cell_rna | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
+| [HPA v23 immune summaries](https://v23.proteinatlas.org/about/download) | immune_rna | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
+| [Monaco immune summaries via HPA v23](https://v23.proteinatlas.org/about/download) | immune_rna | TPM | [Source](https://v23.proteinatlas.org/about/download) |
+| [DICE immune distributions](https://dice-database.org/) | immune_rna | TPM | [Source](https://dice-database.org/) |
+| [Collin adult corneal atlas](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683) | normal_cell_rna | CP10K | [Source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683) |
+| [HPA v23 normal-tissue IHC](https://v23.proteinatlas.org/about/assays%2Bannotation) | normal_protein | HPA categorical level and reliability | [Source](https://v23.proteinatlas.org/about/assays%2Bannotation) |
+| [Curated external staining observations](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027) | normal_protein | native categorical findings | [Source](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027) |
+| [Reviewed normal protein and clinical exclusions](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) | normal_protein | categorical reviewed findings | [Source](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) |
+| [Reviewed normal protein and clinical exclusions](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) | clinical_safety | categorical reviewed findings | [Source](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) |
+| [Gong et al., Nature Communications (2021)](https://doi.org/10.1038/s41467-021-22695-y) | nomination | gene-list membership | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
+| [Gong et al., Nature Communications (2021)](https://doi.org/10.1038/s41467-021-22695-y) | nomination | gene-list membership | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
+| [Bradley et al., Nature Communications (2020)](https://doi.org/10.1038/s41467-020-19141-w) | nomination | gene-list membership | [Source](https://doi.org/10.1038/s41467-020-19141-w) |
+| [Wang 2016](https://doi.org/10.1038/ncomms10499) | nomination | gene-list membership | [Source](https://doi.org/10.1038/ncomms10499) |
+| [Bruggeman 2018](https://doi.org/10.1038/s41388-018-0357-2) | nomination | gene-list membership | [Source](https://doi.org/10.1038/s41388-018-0357-2) |
+| [da Silva 2017 · testis-biased](https://doi.org/10.18632/oncotarget.21715) | nomination | gene-list membership | [Source](https://doi.org/10.18632/oncotarget.21715) |
+| [da Silva 2017 · CT](https://doi.org/10.18632/oncotarget.21715) | nomination | gene-list membership | [Source](https://doi.org/10.18632/oncotarget.21715) |
+| [Jamin 2021](https://doi.org/10.1002/1878-0261.12900) | nomination | gene-list membership | [Source](https://doi.org/10.1002/1878-0261.12900) |
+| [Jamin 2021 · core](https://doi.org/10.1002/1878-0261.12900) | nomination | gene-list membership | [Source](https://doi.org/10.1002/1878-0261.12900) |
+| [Chang 2019 · TGCT](https://doi.org/10.1002/cam4.2223) | nomination | gene-list membership | [Source](https://doi.org/10.1002/cam4.2223) |
+| [Carter 2023](https://doi.org/10.1136/jitc-2023-007935) | nomination | gene-list membership | [Source](https://doi.org/10.1136/jitc-2023-007935) |
+| [Seager 2024 · panel](https://doi.org/10.1186/s12967-024-04918-0) | nomination | gene-list membership | [Source](https://doi.org/10.1186/s12967-024-04918-0) |
+| [Loriot 2025 · strict](https://doi.org/10.1371/journal.pgen.1011734) | nomination | gene-list membership | [Source](https://doi.org/10.1371/journal.pgen.1011734) |
+| [Loriot 2025 · preferential](https://doi.org/10.1371/journal.pgen.1011734) | nomination | gene-list membership | [Source](https://doi.org/10.1371/journal.pgen.1011734) |
+| [Gong 2021 · reproductive coding](https://doi.org/10.1038/s41467-021-22695-y) | nomination | gene-list membership | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
+| [Gong 2021 · reproductive noncoding](https://doi.org/10.1038/s41467-021-22695-y) | nomination | gene-list membership | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
+| [da Silva 2017 · tumor proteomics](https://doi.org/10.18632/oncotarget.21715) | nomination | gene-list membership | [Source](https://doi.org/10.18632/oncotarget.21715) |
+| [Bai 2016](https://doi.org/10.1158/0008-5472.CAN-16-0225) | nomination | gene-list membership | [Source](https://doi.org/10.1158/0008-5472.CAN-16-0225) |
+| [Boël et al., Immunity (1995)](https://doi.org/10.1016/s1074-7613(95)80053-0) | nomination | gene-list membership | [Source](https://doi.org/10.1016/s1074-7613(95)80053-0) |
+| [Garg et al., Clinical Cancer Research (2007)](https://doi.org/10.1158/1078-0432.CCR-06-2340) | nomination | gene-list membership | [Source](https://doi.org/10.1158/1078-0432.CCR-06-2340) |
+| [Sasaroli et al. (2011)](https://doi.org/10.4161/cbt.12.3.16260) | nomination | gene-list membership | [Source](https://doi.org/10.4161/cbt.12.3.16260) |
+| [Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155) | nomination | gene-list membership | [Source](https://doi.org/10.1371/journal.pone.0144155) |

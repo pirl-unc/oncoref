@@ -1,0 +1,11 @@
+Failed requirements,Proteins
+Reproductive expression,566
+Reproductive expression + Normal bulk,19
+Reproductive expression + HPA normal protein + Normal bulk,3
+Normal bulk,2
+Reproductive expression + HPA normal protein,1
+Reproductive expression + HPA tissue clusters,1
+HPA normal protein + Normal bulk,1
+Reproductive expression + HPA normal protein + Normal bulk + HPA tissue clusters,1
+HPA tissue clusters,1
+Reproductive expression + Cancer expression,1

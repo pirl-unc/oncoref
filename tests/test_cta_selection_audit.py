@@ -103,17 +103,42 @@ def test_every_released_hold_and_unsafe_layer_is_explained(audit):
     assert not audit.explanations.reason.str.contains(r"\bnan\b", regex=True).any()
 
 
-def test_four_assessments_and_only_normal_safety_can_establish_unsafe(audit):
+def test_independent_assessments_and_only_normal_safety_can_establish_unsafe(audit):
     axes = audit.explanations[audit.explanations.layer.str.startswith("Assessment: ")]
     assert axes.groupby("entity_id").size().eq(4).all()
+    assert not audit.explanations.layer.str.contains("Adult restriction", regex=False).any()
     assert not axes.loc[~axes.layer.eq("Assessment: Safety"), "decision"].eq("unsafe").any()
-    assert axes.loc[axes.category.eq("CTA"), "decision"].eq("pass").all()
+    assert (
+        axes.loc[
+            axes.category.eq("CTA") & ~axes.layer.eq("Assessment: Reproductive concentration"),
+            "decision",
+        ]
+        .eq("pass")
+        .all()
+    )
     for label in ["MAGEA4", "NY-ESO-1", "PRAME", "CTAG2", "XAGE1A/B"]:
         assert audit.explain(label).category.eq("CTA").all()
     for label in ["TGIF2-RAB5IF", "ATF7-NPFF"]:
         rows = audit.explain(label)
         assert rows.category.isna().all()
-        assert rows.loc[rows.layer.eq("Assessment: Adult restriction"), "decision"].eq("hold").all()
+        assert (
+            rows.loc[rows.layer.eq("Required RNA coverage"), "reason"]
+            .str.contains("GTEx v11")
+            .all()
+        )
+
+
+def test_required_gtex_core_cannot_be_replaced_with_other_bulk_sources(audit):
+    """Coverage failures with other passing evidence remain unknown, not Unsafe."""
+    coverage = pd.read_csv(RELEASE / "combined-rna-coverage.csv.gz").set_index("entity_id")
+    selected = human.cta_selection(category="CTA")
+    assert coverage.loc[selected.entity_id, "gtex_core_complete"].all()
+    for label in ["TSSK2", "NEDD8-MDP1", "NPHP3-ACAD11"]:
+        explanation = audit.explain(label)
+        assert explanation.category.isna().all()
+        reason = explanation[explanation.layer.eq("Required RNA coverage")]
+        assert reason.reason.str.contains("GTEx v11").all()
+        assert reason.decision.eq("hold").all()
 
 
 def test_specific_contexts_and_same_tissue_negative_ihc(audit):
@@ -199,7 +224,11 @@ def test_checksum_and_species_validation(tmp_path, monkeypatch):
 def test_neither_profiles_and_unassigned_counts_reconcile(audit):
     facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
     neither = facts[facts.category.eq("Neither")]
-    assert (neither.neither_low_expression | neither.neither_diffuse_manageable).all()
+    assert (
+        neither.neither_low_expression
+        | neither.neither_diffuse_manageable
+        | neither.neither_profile.eq("diffuse_reproductive")
+    ).all()
     assert neither.required_coverage.all()
     assert not neither.unresolved_evidence.any()
     assert not neither.vital_protected_exclusion.any()
@@ -299,3 +328,31 @@ def test_normal_evidence_keeps_native_source_and_concrete_release(audit):
     assert gtex.source_context.notna().all()
     assert gtex.source_url.str.contains("adult-gtex/bulk-gex/v11/", regex=False).all()
     assert audit.explanations.label.notna().all()
+
+
+def test_diffuseness_changes_identity_without_changing_safety(audit):
+    before = pd.read_csv(
+        ROOT / "docs/audits/cta-unassigned-20261029/before-diffuseness.csv.gz", low_memory=False
+    ).set_index("protein_equivalence_group_id")
+    after = pd.read_csv(
+        RELEASE / "protein-group-classifications.csv.gz", low_memory=False
+    ).set_index("protein_equivalence_group_id")
+    assert set(before[before.category.eq("Unsafe")].index) == set(
+        after[after.category.eq("Unsafe")].index
+    )
+    changed = after.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))
+    assert after.loc[changed, "protein_group_label"].tolist() == ["MTCP1"]
+    assert after.loc[changed, "category"].tolist() == ["Neither"]
+    row = after.loc[changed].iloc[0]
+    assert row.hpa_diffuseness == pytest.approx(0.24533644300531762)
+    assert row.neither_profile == "diffuse_reproductive"
+    explanation = audit.explain("MTCP1")
+    assert explanation[explanation.layer.eq("Assessment: Safety")].decision.eq("pass").all()
+    assert (
+        explanation[explanation.layer.eq("Reproductive concentration")]
+        .reason.str.contains("24.53%")
+        .all()
+    )
+    selected = human.cta_selection(category="CTA").set_index("label")
+    assert "Developmental concentration unassessed" in selected.loc["FAM72D", "evidence_flags"]
+    assert "Adult concentration unassessed" in selected.loc["ZC3H11C", "evidence_flags"]

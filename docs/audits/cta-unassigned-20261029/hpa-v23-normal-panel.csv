@@ -1,0 +1,39 @@
+compartment,anatomy,weight
+amygdala,brain,0.004310344827586207
+basal ganglia,brain,0.004310344827586207
+cerebellum,brain,0.004310344827586207
+cerebral cortex,brain,0.004310344827586207
+choroid plexus,brain,0.004310344827586207
+hippocampal formation,brain,0.004310344827586207
+hypothalamus,brain,0.004310344827586207
+midbrain,brain,0.004310344827586207
+colon,colon,0.017241379310344827
+rectum,colon,0.017241379310344827
+small intestine,small intestine,0.017241379310344827
+duodenum,small intestine,0.017241379310344827
+adipose tissue,adipose tissue,0.034482758620689655
+adrenal gland,adrenal gland,0.034482758620689655
+appendix,appendix,0.034482758620689655
+bone marrow,bone marrow,0.034482758620689655
+esophagus,esophagus,0.034482758620689655
+gallbladder,gallbladder,0.034482758620689655
+heart muscle,heart muscle,0.034482758620689655
+kidney,kidney,0.034482758620689655
+liver,liver,0.034482758620689655
+lung,lung,0.034482758620689655
+lymph node,lymph node,0.034482758620689655
+pancreas,pancreas,0.034482758620689655
+parathyroid gland,parathyroid gland,0.034482758620689655
+pituitary gland,pituitary gland,0.034482758620689655
+retina,retina,0.034482758620689655
+salivary gland,salivary gland,0.034482758620689655
+skeletal muscle,skeletal muscle,0.034482758620689655
+skin,skin,0.034482758620689655
+smooth muscle,smooth muscle,0.034482758620689655
+spinal cord,spinal cord,0.034482758620689655
+spleen,spleen,0.034482758620689655
+stomach,stomach,0.034482758620689655
+thyroid gland,thyroid gland,0.034482758620689655
+tongue,tongue,0.034482758620689655
+tonsil,tonsil,0.034482758620689655
+urinary bladder,urinary bladder,0.034482758620689655

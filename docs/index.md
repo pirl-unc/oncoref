@@ -1,12 +1,13 @@
 # oncoref
 
-**Current released research selection: [546-group CTA/oncofetal candidate funnel](audits/cta-source-walkthrough-20261028/index.md)**
-(582 gene loci), with uniform compartment-specific rules, retained normal-expression
-flags and explicit CTA / Unsafe / Neither decisions or unassigned status across the full reference.
-The [four requirements](cta-evidence-axes.md) separate safety, cancer expression,
-adult restriction and reproductive/developmental association. Only safety can
-establish Unsafe. [Release notes and PDFs](cta-release-1.22.0.md).
-PRAME informed this calibration; the cutoffs are not clinically validated safety limits.
+**Current research selection: [523-protein CTA funnel](audits/cta-source-walkthrough-20261028/index.md)**,
+with explicit CTA / Unsafe / Neither decisions or unassigned evidence status.
+[Independent requirements](cta-evidence-axes.md) distinguish normal-tissue safety,
+cancer expression and Reproductive evidence. Reproductive includes adult reproductive,
+placental, extraembryonic, embryonic and fetal contexts. Only safety establishes Unsafe.
+[Common coverage, diffuseness and unassigned reasons](audits/cta-unassigned-20261029/index.md)
+explains the required GTEx panel and the proposed continuous identity score.
+[Published 1.22.0 notes](cta-release-1.22.0.md) retain the previous policy.
 
 The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
 [1,416-gene biological membership comparison](audits/cta-membership-20261026/index.md)

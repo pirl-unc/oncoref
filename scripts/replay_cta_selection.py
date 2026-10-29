@@ -544,6 +544,7 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
     and immune panels retain their distinct, non-interchangeable coverage roles.
     """
     from audit_cta_source_coverage import PANELS
+    from build_cta_alternative_evidence import GTEX_TISSUES
 
     complete_by_source, rows = {}, []
     bulk_seen = {}
@@ -594,8 +595,20 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
             bulk_seen, bulk_universe = seen, universe
             bulk_before = complete_by_source[source].copy()
         print(f"Resolved required coverage: {source}", flush=True)
+    gtex_expected = set(GTEX_TISSUES.values())
+    gtex_seen = {}
     for source in ["hpa_brain", "gtex_tissue_rna"]:
         coverage = read(ALTERNATIVE / f"{source}-member-coverage.csv.gz")
+        if source == "gtex_tissue_rna":
+            # The adapter records an anatomical context only when every native
+            # subregion is measured. All 37 concepts therefore cover all 52
+            # pinned bulk columns, including the nine Reproductive contexts.
+            gtex_seen = {
+                row.gene_id: set(json.loads(row.available_tissues)) for row in coverage.itertuples()
+            }
+            complete_by_source[source] = {
+                gene for gene, contexts in gtex_seen.items() if gtex_expected <= contexts
+            }
         for row in coverage.itertuples():
             bulk_seen.setdefault(row.gene_id, set()).update(
                 set(json.loads(row.available_tissues)) & bulk_universe
@@ -606,6 +619,7 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
     for row in facts.itertuples():
         ids = set(json.loads(row.member_gene_ids))
         missing = sorted(set().union(*(bulk_universe - bulk_seen.get(g, set()) for g in ids)))
+        gtex_missing = sorted(set().union(*(gtex_expected - gtex_seen.get(g, set()) for g in ids)))
         rows.append(
             {
                 "entity_id": row.protein_equivalence_group_id,
@@ -614,6 +628,11 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
                 "missing_bulk_tissues": json.dumps(missing),
                 "bulk_complete_before": ids <= bulk_before,
                 "bulk_complete": not missing,
+                "gtex_core_complete": not gtex_missing,
+                "missing_gtex_tissues": json.dumps(gtex_missing),
+                "missing_gtex_member_ids": json.dumps(
+                    sorted(g for g in ids if not gtex_expected <= gtex_seen.get(g, set()))
+                ),
                 "required_coverage": all(
                     ids <= measured for measured in complete_by_source.values()
                 ),
@@ -621,6 +640,7 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
         )
     coverage = pd.DataFrame(rows)
     facts["required_coverage"] = coverage.required_coverage.to_numpy()
+    facts["gtex_core_complete"] = coverage.gtex_core_complete.to_numpy()
     write_csv(coverage, output / "combined-rna-coverage.csv.gz")
 
 
@@ -745,16 +765,21 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         "healthy_maximum_cp10k",
     ]:
         facts[col] = facts.representative_gene_id.map(summary.groupby("gene_id")[col].max())
-    facts = policy.association_and_restriction(facts)
+    from cta_profile_data import hpa_summary
+
+    facts = policy.association_evidence(facts)
+    profile_scores = hpa_summary(facts, output)
+    write_csv(profile_scores, output / "hpa-diffuseness.csv.gz")
+    facts = policy.concentration_evidence(facts, profile_scores)
     empty = pd.Series(False, index=facts.index)
     layers = [
         EvidenceLayer("Reproductive / embryonic association", ~facts.positive_context, empty),
         EvidenceLayer("Tumor sample ≥2 TPM/pTPM", ~facts.tumor_union_ge2, empty),
-        EvidenceLayer("Adult restriction", ~facts.adult_restriction, empty),
         EvidenceLayer("Required RNA coverage", ~facts.required_coverage, empty),
+        EvidenceLayer("Reproductive concentration", facts.reproductive_concentration_hold, empty),
     ]
     proteins = protein_layers(facts, output)
-    layers.insert(3, proteins[0])
+    layers.insert(2, proteins[0])
     for assay in ASSAYS:
         part = summary[summary.assay.eq(assay)].set_index("gene_id")
         masks = [

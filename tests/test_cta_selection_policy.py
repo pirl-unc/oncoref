@@ -185,7 +185,7 @@ def test_normal_safety_is_evaluated_even_after_cancer_admission_fails():
     assert result.Unsafe_reasons.eq("Normal bulk").all()
 
 
-def test_association_is_not_restriction_and_units_do_not_cross():
+def test_association_does_not_depend_on_normal_expression_or_coverage():
     facts = pd.DataFrame(
         {
             "reproductive_ntpm": [5, 5, 4, 0, 100, 0],
@@ -194,19 +194,94 @@ def test_association_is_not_restriction_and_units_do_not_cross():
             "healthy_maximum_tpm": [100, 0, 0, 4, 0, float("nan")],
         }
     )
-    result = policy.association_and_restriction(facts)
+    result = policy.association_evidence(facts)
     assert result.positive_context.tolist() == [True, True, False, True, True, True]
-    assert result.adult_restriction.tolist() == [True, False, False, True, False, False]
-    assert result.reproductive_restriction.tolist() == [True, False, False, False, False, False]
-    assert result.developmental_restriction.tolist() == [False, False, False, True, False, False]
+    assert result.reproductive_route.tolist() == [True, True, False, False, True, False]
+    assert result.developmental_route.tolist() == [False, False, False, True, False, True]
+    assert "adult_restriction" not in result
 
 
-def test_restriction_failure_does_not_make_expression_unsafe():
+def test_association_failure_does_not_make_expression_unsafe():
     facts = policy.neither_profiles(profiles())
     facts["neither_low_expression"] = False
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
     result = policy.classify(
-        facts, [EvidenceLayer("Adult restriction", yes, no)], entity_column="entity"
+        facts,
+        [EvidenceLayer("Reproductive / embryonic association", yes, no)],
+        entity_column="entity",
     ).classifications
     assert result.category.isna().all()
     assert result.Unsafe_reasons.eq("").all()
+
+
+def test_diffuseness_is_route_specific_and_missingness_is_not_failure():
+    facts = policy.association_evidence(
+        pd.DataFrame(
+            {
+                "protein_equivalence_group_id": list("abcdef"),
+                "reproductive_ntpm": [5, 5, 1, 5, 5, 5],
+                "developmental_mean_tpm": [0, 10, 10, 0, 0, 0],
+            }
+        )
+    )
+    scores = pd.DataFrame(
+        {
+            "entity_id": list("abcdef"),
+            "source": "hpa_rna_consensus",
+            "version": "v23",
+            "unit": "nTPM",
+            "taxonomy_id": 9606,
+            "summary": "consensus",
+            "diffuseness": [0.2, 0.2, 0.9, float("nan"), 0.1, 0.2],
+            "reference_value": [5, 5, 1, 5, 5, 5],
+            "reference_complete": [True, True, True, False, True, True],
+            "normal_coverage": [1, 1, 1, 0.5, 1, 0.9],
+        }
+    )
+    result = policy.concentration_evidence(facts, scores)
+    assert result.reproductive_concentration_hold.tolist() == [
+        True,
+        False,
+        False,
+        False,
+        False,
+        False,
+    ]
+    assert result.adult_profile_status.tolist() == [
+        "diffuse",
+        "diffuse",
+        "no_qualifying_adult_reference",
+        "unassessed",
+        "concentrated",
+        "unassessed",
+    ]
+    assert result.reproductive_route.tolist() == [False, False, False, True, True, True]
+    with pytest.raises(ValueError, match="HPA v23"):
+        policy.concentration_evidence(facts, scores.assign(source="gtex_tissue_rna"))
+
+
+def test_diffuse_reproductive_neither_requires_clear_safety_and_complete_coverage():
+    facts = policy.neither_profiles(profiles())
+    facts[["neither_low_expression", "neither_diffuse_manageable"]] = False
+    facts.loc[3, "required_coverage"] = False
+    facts.loc[4, "unresolved_evidence"] = True
+    yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
+    layers = [
+        EvidenceLayer("Reproductive concentration", yes, no),
+        EvidenceLayer(
+            "Normal bulk",
+            pd.Series([False, True, True, False, False]),
+            pd.Series([False, False, True, False, False]),
+        ),
+    ]
+    first = policy.classify(facts, layers, entity_column="entity").classifications
+    second = policy.classify(facts, list(reversed(layers)), entity_column="entity").classifications
+    assert first.category.fillna("Unassigned").tolist() == [
+        "Neither",
+        "Unassigned",
+        "Unsafe",
+        "Unassigned",
+        "Unassigned",
+    ]
+    assert first.neither_profile.iloc[0] == "diffuse_reproductive"
+    pd.testing.assert_series_equal(first.category, second.category)

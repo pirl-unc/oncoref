@@ -122,7 +122,7 @@ def source_inventory() -> pd.DataFrame:
     add(
         9606,
         "hpa_cancer",
-        "HPA cancer sample measurements",
+        "HPA v23 cancer sample measurements",
         ["tumor_expression"],
         "used_in_selection",
         "pTPM",
@@ -133,7 +133,7 @@ def source_inventory() -> pd.DataFrame:
     add(
         9606,
         "hpa_single_cell_tissue",
-        "HPA tissue/cell clusters",
+        "HPA v23 tissue/cell clusters",
         ["normal_cell_rna"],
         "used_in_selection",
         "nTPM",
@@ -142,8 +142,8 @@ def source_inventory() -> pd.DataFrame:
         "At least 20 reads; missing cell types and disease states remain uncovered",
     )
     for source, name, unit in [
-        ("hpa_immune_cell", "HPA immune summaries", "nTPM"),
-        ("hpa_immune_monaco", "Monaco immune summaries", "TPM"),
+        ("hpa_immune_cell", "HPA v23 immune summaries", "nTPM"),
+        ("hpa_immune_monaco", "Monaco immune summaries via HPA v23", "TPM"),
     ]:
         add(
             9606,
@@ -181,7 +181,7 @@ def source_inventory() -> pd.DataFrame:
     add(
         9606,
         "hpa_normal_tissue",
-        "HPA normal-tissue IHC",
+        "HPA v23 normal-tissue IHC",
         ["normal_protein"],
         "used_in_selection",
         "HPA categorical level and reliability",
@@ -387,7 +387,19 @@ def build(audit: Path = AUDIT) -> None:
                     if pd.notna(row["exclusion_reasons"])
                     else []
                 ),
-                "evidence_flags": json.dumps([column for column in flag_columns if row[column]]),
+                "evidence_flags": json.dumps(
+                    [column for column in flag_columns if row[column]]
+                    + (
+                        ["Adult concentration unassessed"]
+                        if row.get("adult_profile_status") == "unassessed"
+                        else []
+                    )
+                    + (
+                        ["Developmental concentration unassessed"]
+                        if row.get("developmental_association", False)
+                        else []
+                    )
+                ),
                 "source_snapshot_id": source_identity,
             }
         )
@@ -416,6 +428,7 @@ def build(audit: Path = AUDIT) -> None:
                     "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
                     "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
                     "Representative-protein equivalence is not exhaustive isoform identity",
+                    "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
                 ],
             },
             "dog": {
