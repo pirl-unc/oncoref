@@ -250,8 +250,12 @@ No seed files need copying into the destination.
 
 ## Canine protein abundance and explicit gaps (1.9.3)
 
-`dog.pfizer_canine_protein.read(...)` imports the deposited **IBAQ**
-column from MassIVE MSV000099744. It retains ProteinGroup and representative
+`dog.pfizer_canine_protein.read(...)` consumes the released ORFdata
+`pfizer-atlas-dog-protein` generation `2026-10-12.1`. Install
+`oncoref[quantitative]` on Python 3.11+ for managed quantitative reads. The core
+package and portable exports continue to work on Python 3.10 without ORFdata.
+The reader retains the deposited **IBAQ** column from MassIVE MSV000099744,
+ProteinGroup and representative
 Protein identifiers, source run/channel/sample fields, and missing measurements.
 The real table contains 9,929 reported groups across 38 tissue pools. This is bulk
 protein-group evidence; resolving those groups to complete sequences or genes
@@ -264,7 +268,54 @@ cannot report independent donor detection. The exact deposited searched FASTA is
 available as `dog.references.ensure("pfizer-dog-search-fasta", ...)` and its SHA-256
 is also carried in the protein source contract. It is not assigned a guessed
 assembly/annotation identity. Protein data and searched sequence bytes stay outside
-the wheel and can be reused from local overrides.
+the wheel. The processed download is 84,379,381 bytes and occupies 1,404,428,288
+bytes installed. It reuses ORFdata's managed cache; ordinary reads never fetch
+the vendor database or optional peptide evidence. The old and new imports are
+the same experiment and cannot supply independent biological support.
+
+```bash
+pip install 'oncoref[quantitative]'
+oncoref data metadata pfizer-dog-protein --species dog
+oncoref data fetch pfizer-dog-protein --species dog
+oncoref data path pfizer-dog-protein --species dog
+```
+
+The existing high-level API is unchanged:
+
+```python
+from oncoref import for_species
+from oncoref.species_expression import ExpressionDataset
+
+data = for_species("dog").expression.read("pfizer-dog-protein", offline=True)
+matrix = data.values
+source_manifest = data.provenance["manifest"]
+first_native_record = next(data.native_records("measurements"))
+data.save("dog-expression-export")
+replayed = ExpressionDataset.load("dog-expression-export")
+```
+
+`native_records(kind)` streams `samples`, `assays`, `measurements`,
+`reference_mappings`, `mappings`, `relations`, or `pairings`. These records use
+the producer's declared schema and retain original identifiers, source row and
+column, native text, quantities, reference identities, and mapping uncertainty.
+The archive contains all 626,526 source measurements (iBAQ and rIBAQ); the matrix
+selects native iBAQ without aggregation. Eight explicit missing iBAQ records and
+64,039 absent matrix cells remain distinguishable through the records. The 9,929
+reported representative mappings remain unresolved. The summary release has no
+peptide assignments or assay pairings; empty iterators do not establish absence.
+
+Exports with records use a checksummed, streamed version-2 archive and can replay
+offline without ORFdata or a source cache. Matrix-only version-1 exports remain
+readable. Source records do not allocate group abundance to a representative or
+turn bulk proteomics into presentation evidence. Optional peptide enrichment is
+tracked separately in [#585](https://github.com/pirl-unc/oncoref/issues/585).
+
+Use `cache_root` consistently across ORFdata and OncoRef to select a shared cache.
+A local override maps `9615:pfizer-atlas-dog-protein` to the released
+`dataset.sqlite`; the reader verifies its pinned size, checksum, and manifest.
+Historical raw TSV overrides are source-audit inputs, not quantitative reader
+inputs. A missing offline cache, corrupt override, changed source/reference,
+or incompatible producer release fails before returning a matrix.
 
 The expression source catalog also exposes these explicit gaps:
 

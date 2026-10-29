@@ -30,6 +30,7 @@ jobs:
           import warnings
 
           assert importlib.util.find_spec("pyensembl") is None
+          assert importlib.util.find_spec("orfdata") is None
           for dependency in ("matplotlib", "adjustText", "matplotlib_venn"):
               assert importlib.util.find_spec(dependency) is not None, dependency
 
@@ -47,6 +48,11 @@ jobs:
           assert len(mouse) == 1 and mouse.category.isna().all()
           assert mouse.assessment_status.eq("unassessed").all()
           assert oncoref.mouse.cta_snapshot().coverage["status"] == "partial"
+
+          from oncoref.species_assets import inspect_asset, species_asset
+          protein = species_asset("pfizer-dog-protein", species="dog")
+          assert protein.as_dict()["provider"] == "orfdata"
+          assert inspect_asset(protein)["status"] == "dependency_missing"
 
           from oncoref.drivers import DriverGeneIdentityWarning
 

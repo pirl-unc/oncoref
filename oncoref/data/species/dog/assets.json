@@ -133,7 +133,7 @@
       "url": "https://data.broadinstitute.org/barkbase/RNA-seq/counts/TMM_normalized/CPM_cutoff_0.16/TMM_norm_gene_counts_cpm_0.16.txt"
     },
     {
-      "description": "Canine Pfizer atlas: dog-protein-abundance.tsv",
+      "description": "Historical raw protein table for source auditing; current expression reads use pfizer-dog-protein managed dataset",
       "filename": "dog-protein-abundance.tsv",
       "group": "expression",
       "id": "pfizer-dog-protein-matrix",

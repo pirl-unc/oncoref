@@ -364,32 +364,6 @@ def test_registered_corrections_and_lineage_evidence():
     assert overlap["independent_donors"] is None
 
 
-@pytest.mark.parametrize(
-    "compressed,filename", [(False, "protein.tsv"), (True, "override"), (False, "override.gz")]
-)
-def test_protein_groups_and_missing_ibaq_survive_without_allocation(tmp_path, compressed, filename):
-    from oncoref.species_expression import _read_pfizer_protein
-
-    file = tmp_path / filename
-    text = (
-        "Run\tProtein\tChannel\tBioReplicate\tCondition\tTechRepMixture\tMixture\tsample.type\tProteinGroup\tIBAQ\n"
-        "Pool1_1\tP1\t126\tpool-a\theart\t1\tPool1\tsample\tP1;P2\t0\n"
-        "Pool1_1\tP1\t127\tpool-b\tliver\t1\tPool1\tsample\tP1;P2\tNA\n"
-    )
-    raw = text.encode("utf-8")
-    file.write_bytes(gzip.compress(raw) if compressed else raw)
-    values, features = _read_pfizer_protein(file)
-    assert values.shape == (1, 2)
-    assert values.isna().sum().sum() == 1
-    assert values.iloc[0].dropna().tolist() == [0]
-    assert features.index.tolist() == ["P1;P2"]
-    assert features.Protein.tolist() == ["P1"]
-    raw = (text + text.splitlines()[1] + "\n").encode("utf-8")
-    file.write_bytes(gzip.compress(raw) if compressed else raw)
-    with pytest.raises(ValueError, match="silently aggregated"):
-        _read_pfizer_protein(file)
-
-
 def test_registered_protein_scope_and_pooled_samples():
     source = registry.expression_source("pfizer-dog-protein", species="dog")
     assert source.expression_contract.measurement.feature_level == "protein_group"
@@ -431,3 +405,45 @@ def test_reused_run_inside_one_dataset_cannot_inflate_coverage(dataset):
     samples.at["s2", "run_ids"] = ["r1"]
     with pytest.raises(ValueError, match="Run reused"):
         ExpressionDataset(dataset.values, dataset.features, samples, dataset.contract)
+
+
+def test_native_records_portable_and_defensive_without_optional_dependencies(dataset, tmp_path):
+    from oncoref.expression_records import ExpressionRecords
+
+    facts = [
+        {
+            "measurement_id": "source:7",
+            "value": None,
+            "status": "missing",
+            "provenance": {"line": 7, "native_value": "NA"},
+        }
+    ]
+    records = ExpressionRecords(
+        {"reference_status": "unresolved", "schema": "fixture.v1"},
+        lambda kind: facts if kind == "measurements" else (),
+    )
+    features = dataset.features
+    features["feature_id"] = ["original-label-1", "original-label-2"]
+    with_records = ExpressionDataset(
+        dataset.values, features, dataset.samples, dataset.contract, records=records
+    )
+    one = next(with_records.native_records("measurements"))
+    one["provenance"]["line"] = 999
+    assert next(with_records.native_records("measurements"))["provenance"]["line"] == 7
+    a = with_records.save(tmp_path / "a")
+    b = with_records.save(tmp_path / "b")
+    assert (
+        json.loads((a / "metadata.json").read_text())["artifact_id"]
+        == json.loads((b / "metadata.json").read_text())["artifact_id"]
+    )
+    restored = ExpressionDataset.load(a)
+    assert restored.provenance == with_records.provenance
+    assert list(restored.native_records("measurements")) == facts
+    pd.testing.assert_frame_equal(restored.features, features)
+    assert list(dataset.native_records("measurements")) == []
+    assert dataset.provenance is None
+    with pytest.raises(ValueError, match="Unknown expression record"):
+        list(restored.native_records("invalid"))
+    (a / "measurements.jsonl.gz").write_bytes(b"changed")
+    with pytest.raises(ValueError, match="checksum mismatch"):
+        ExpressionDataset.load(a)

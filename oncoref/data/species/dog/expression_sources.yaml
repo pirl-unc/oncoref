@@ -146,18 +146,23 @@ sources:
       transformations: []
     content_provenance:
       matrix: ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2
+      quantitative_artifact: 33d5506874eb32b5426aee7e5d528bb4f754ecf3ac5bc00f5e3fb16fd3ee0694
+      quantitative_manifest: 867b50493534f11be31742d12f59e8325dde514e90f3863f39941786be8df9a2
       samples: c009998a3525758c31295b881b900d78461b99ddeda1af649d9161155218b5b2
       searched_fasta: d8488bf283de653efcff2e5de6d413b116e1ba4a2eb89298bd31205e72fef682
     provenance_notes: Deposited IBAQ column, weighted across TMT channels by the source.
       Bulk tissue pools; no individual-donor or MHC-presentation inference. Representative/group
       IDs remain distinct from resolved complete protein sequences. Exact searched
-      FASTA is pinned; assembly/annotation reconciliation remains unresolved.
-    contract_id: openvax:expression-contract:v1:sha256:c14e0c074ff47838538ec592b5804d899d0724e7d5ae80e6fd5f37cf68b24424
-  matrix_asset: pfizer-dog-protein-matrix
+      FASTA is pinned; assembly/annotation reconciliation remains unresolved. Managed
+      ORFdata generation retains all native records. It is the same MSV000099744 experiment
+      as the historical raw-table import, not independent biological support.
+    contract_id: openvax:expression-contract:v1:sha256:3e2e410d798f6cbb23a31f704f64a15fe2a1ef4eaaaf549e7364f2ddc01f9fed
   sample_metadata: pfizer-dog-protein-samples.json
-  adapter: pfizer-protein
-  acquisition_status: native_matrix_available
+  adapter: orfdata
+  acquisition_status: managed_dataset_available
   citation: https://doi.org/10.1038/s41597-026-07512-9
+  managed_dataset: pfizer-dog-protein-managed.json
+  expected_size_gb: 0.084379381
 - id: doga
   taxon_id: 9615
   category: expression

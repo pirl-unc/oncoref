@@ -32,7 +32,9 @@ def read(
 ) -> ExpressionDataset:
     """Native protein-group iBAQ across tissue pools, not independent donors.
 
-    Assets use the shared verified cache or taxon-qualified local overrides.
+    Uses the pinned ORFdata dataset and shared managed cache. Requires
+    oncoref[quantitative] on Python 3.11+. An override names
+    ``9615:pfizer-atlas-dog-protein`` and the released dataset.sqlite file.
     """
     return _expression.read_species_expression(
         "pfizer-dog-protein",
