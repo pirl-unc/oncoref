@@ -1,0 +1,99 @@
+{
+  "schema": "oncoref.mouse-cta-curation",
+  "version": 1,
+  "source_version": "2026-10-29.1",
+  "inputs": [
+    {
+      "name": "sarma1999.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2192944/fullTextXML",
+      "size": 113887,
+      "sha256": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7",
+      "type": "application/xml"
+    },
+    {
+      "name": "vandeneynde1991.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2190831/fullTextXML",
+      "size": 101017,
+      "sha256": "b6f5d3a32a540c8638f14209f9f0ee13a71792d004c015b244e3039568750a59",
+      "type": "application/xml"
+    },
+    {
+      "name": "M36387.1.gb",
+      "url": "https://www.ncbi.nlm.nih.gov/sviewer/viewer.fcgi?id=M36387.1&db=nuccore&report=genbank&retmode=text",
+      "size": 3373,
+      "sha256": "789a832f9dc1e4048ff2d9742926fc1a3419a2e1fccb94c3f2307bce2b405267",
+      "type": "text/plain"
+    },
+    {
+      "name": "NM_011635.2.gb",
+      "url": "https://www.ncbi.nlm.nih.gov/sviewer/viewer.fcgi?id=NM_011635.2&db=nuccore&report=genbank&retmode=text",
+      "size": 10718,
+      "sha256": "0300f700336da1950718ab2905b875a805eb1fa48eec5c6957ab4726eab2d643",
+      "type": "text/plain"
+    },
+    {
+      "name": "NP_035765.1.gb",
+      "url": "https://www.ncbi.nlm.nih.gov/sviewer/viewer.fcgi?id=NP_035765.1&db=protein&report=genbank&retmode=text",
+      "size": 7411,
+      "sha256": "7f7c4754ccdf856de3499a0561ca959fedcaa658dea06583d0c095707e20f64d",
+      "type": "text/plain"
+    },
+    {
+      "name": "gene-22037.json",
+      "url": "https://api.ncbi.nlm.nih.gov/datasets/v2/gene/id/22037",
+      "size": 1413,
+      "sha256": "a2ee9d2660cf52f3ea63c22ff0071ce120efd27ff1f0ba58ee5b2ad5bfda532c",
+      "type": "application/json"
+    },
+    {
+      "name": "gene-22037-products.json",
+      "url": "https://api.ncbi.nlm.nih.gov/datasets/v2/gene/id/22037/product_report",
+      "size": 1210,
+      "sha256": "6cd41d87b9b4bb7e33de0d0821dc3f697288b2b2b79313a3dc62e7a4b9616801",
+      "type": "application/json"
+    }
+  ],
+  "reference_scope": "Only NCBI Gene 22037 and its one reported transcript/protein pair, not a full assembly annotation. GCF_000001635.27 / RS_2024_02; product report binds NM_011635.2 and NP_035765.1 to NC_000086.8, GRCm39 C57BL/6J.",
+  "identity_audit": {
+    "source_rna": "M36387.1",
+    "source_protein": "AAA40475.1",
+    "target_rna": "NM_011635.2",
+    "target_protein": "NP_035765.1",
+    "source_protein_length": 224,
+    "target_protein_length": 224,
+    "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+    "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+    "protein_changes": [],
+    "cds_identical": false,
+    "rna_identical": false,
+    "refseq_translation_matches_protein": true,
+    "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+    "target_source_qualifiers": {
+      "organism": [
+        "Mus musculus"
+      ],
+      "mol_type": [
+        "mRNA"
+      ],
+      "strain": [
+        "C57BL/6"
+      ],
+      "db_xref": [
+        "taxon:10090"
+      ],
+      "chromosome": [
+        "X"
+      ],
+      "map": [
+        "X 61.35 cM"
+      ]
+    }
+  },
+  "curation_scope": "Van den Eynde 1991: nomination/identity only. Sarma 1999: endogenous RNA in five BALB/c normal organs and J558 cells (Figure 1 and corresponding Results). No source paper is redistributed; observations are curated facts and paraphrases.",
+  "omissions": [
+    "Uyttenhove 1997 placenta and spermatogonia protein observations not yet imported; full-paper review needed.",
+    "2024 P1A presentation study not imported; presentation is distinct from expression.",
+    "No transgenic expression, tolerance, cytotoxicity, absolute abundance or measured isoform claims."
+  ],
+  "independence": "Six qualitative observations from one study/assay lineage. Unknown sample/donor/replicate counts and J558 strain remain unknown."
+}

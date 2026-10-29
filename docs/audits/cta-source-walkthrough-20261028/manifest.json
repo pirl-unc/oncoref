@@ -108,5 +108,16 @@
     "unassigned-evidence-gaps.csv": "8e70fa07b1c695f1bd7be05cfe22034346a6e65f82efb1bed1deda3717c16c4c",
     "unresolved-protein-contexts.csv.gz": "318682223457b71052b16ecb2bb31417614a5a7e8f97e68035e243673b52ef1d",
     "widely-studied-antigens.csv": "a9a6ed8d691ae68ed842dac2174c7ff5bacfa4c9af87c3102e10199a3d48d6ae"
+  },
+  "input_snapshots": [
+    "oncoref/data/cta-selection.json",
+    "oncoref/data/cta-selection-audit.json",
+    "scripts/build_cta_selection_audit.py",
+    "scripts/build_cta_selection_release.py"
+  ],
+  "input_snapshot_note": "The report remains the 1.22.0 audit. Inputs superseded by later native evidence updates are preserved byte-for-byte here; current mouse evidence is documented in species-cta-evidence.md.",
+  "input_snapshot_archive": {
+    "path": "frozen-inputs-1.22.0.zip",
+    "sha256": "f004a11549a46549e9bf2511a855130e44d3977e56401f3183476edb9716cfd9"
   }
 }

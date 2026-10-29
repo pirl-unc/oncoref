@@ -46,7 +46,7 @@ def test_canine_aliases_are_equivalent(command, alias, capsys):
 
 
 @pytest.mark.parametrize("width", [40, 80, 100])
-@pytest.mark.parametrize("species", ["human", "canine"])
+@pytest.mark.parametrize("species", ["human", "canine", "mouse"])
 @pytest.mark.parametrize("command", [["data", "list"], ["expression-sources"]])
 def test_listing_fits_terminal_and_keeps_every_id(command, species, width, capsys, monkeypatch):
     monkeypatch.setenv("COLUMNS", str(width))
@@ -89,7 +89,9 @@ def test_source_json_preserves_complete_codes_and_contracts(capsys):
         assert rows[source.id]["contract"] == source.expression_contract.as_dict()
 
 
-@pytest.mark.parametrize("command", [["data", "list"], ["expression-sources"]])
+@pytest.mark.parametrize(
+    "command", [["data", "list", "--group", "expression"], ["expression-sources"]]
+)
 def test_empty_species_and_invalid_species_have_distinct_results(command, capsys):
     assert cli.main([*command, "--species", "mouse"]) == 0
     output = capsys.readouterr()
@@ -101,6 +103,15 @@ def test_empty_species_and_invalid_species_have_distinct_results(command, capsys
     error = capsys.readouterr()
     assert not error.out
     assert "Unknown species" in error.err and "Traceback" not in error.err
+
+
+def test_mouse_lists_packaged_evidence_without_claiming_expression_matrices(capsys):
+    assert cli.main(["data", "list", "--species", "mouse", "--json"]) == 0
+    (row,) = json.loads(capsys.readouterr().out)
+    assert row["name"] == "cta-evidence" and row["group"] == "antigens"
+    assert row["held"] == "wheel" and row["available"] is True
+    assert row["taxon_id"] == 10090
+    assert row["source_version"] == "2026-10-29.1"
 
 
 def test_filters_and_empty_selection(capsys):

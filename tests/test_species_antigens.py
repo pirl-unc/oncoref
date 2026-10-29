@@ -54,12 +54,12 @@ def test_species_collection_and_reference_boundary(snapshot):
         dog.expression.cta_snapshot()
 
 
-def test_unavailable_mouse_and_unchanged_human_defaults(snapshot):
+def test_partial_mouse_and_unchanged_human_defaults(snapshot):
     mouse = oncoref.for_species("mouse").antigens
-    assert mouse.coverage()["coverage"] == "unavailable"
+    assert mouse.coverage()["coverage"] == "partial"
     missing = mouse.cta_snapshot()
-    assert missing.coverage["status"] == "unavailable"
-    assert missing.as_dict()["candidates"] == []
+    assert missing.coverage["status"] == "partial"
+    assert len(missing.as_dict()["candidates"]) == 1
     with pytest.raises(ValueError, match="annotation"):
         mouse.cta_candidates(reference="refseq106")
     # Historical flat human APIs still return their own human gene universe.
@@ -68,8 +68,8 @@ def test_unavailable_mouse_and_unchanged_human_defaults(snapshot):
     assert not set(human_ids) & snapshot.gene_ids(reference="refseq106")
     assert oncoref.human.antigens.datasets()
     assert oncoref.human.cta_snapshot().coverage["status"] == "partial"
-    assert oncoref.mouse.cta_candidates() == ()
-    assert oncoref.mouse.cta_evidence() == ()
+    assert len(oncoref.mouse.cta_candidates()) == 1
+    assert len(oncoref.mouse.cta_evidence()) == 6
 
 
 def test_source_backed_counterevidence_and_native_units(snapshot):

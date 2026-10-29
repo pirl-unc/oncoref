@@ -57,7 +57,7 @@ views. Imports do not load matrices or fetch assets.
 The existing `for_species(...)` helper and registry IDs remain available for
 dynamic callers, CLI input and serialized provenance. Historical flat human APIs,
 `oncoref.hpa` and `oncoref.hpa_cancer` continue to work. The mouse registry entry
-has an explicit `oncoref.mouse` module with unavailable coverage and no human fallback.
+has an explicit `oncoref.mouse` module with a sparse P1A evidence seed and no human fallback.
 
 The direct species methods `cta_candidates()`, `cta_evidence()`,
 `cta_gene_ids(reference=...)`, and `cta_snapshot()` expose a common evidence
