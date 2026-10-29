@@ -91,7 +91,7 @@ figure(s,'published-list-overlaps',36,152,1208,500);
 const s=slide('Reproductive and developmental association','Positive expression contexts','Tyser et al. (2021): https://doi.org/10.1038/s41586-021-04158-y . HPA v23 https://v23.proteinatlas.org/about/download .');
 table(s,[['Qualifying route','Entrants','Final CTA'],...data.routes.map(r=>[r.route,n(r.entrants),n(r.CTA)])],{widths:[620,266,266],h:280,size:29});
 text(s,'Whole-reference RNA measurements create this set',64,495,1152,50,32,C.teal,true);
-note(s,'This is not a 12,000-gene literature list. Embryonic presence does not establish developmental restriction.',565,26);
+note(s,'The table counts association before adult restriction. Presence in a reproductive or developmental context does not establish restriction.',565,26);
 }
 {
 const s=slide('Normal and cancer measurement sources','Human evidence','HPA https://v23.proteinatlas.org/about/download ; DICE https://dice-database.org/ ; cornea https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683 ; Tyser https://doi.org/10.1038/s41586-021-04158-y . Full URLs and sample lineage accompany the report.');

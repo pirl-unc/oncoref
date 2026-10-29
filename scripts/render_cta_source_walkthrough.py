@@ -801,9 +801,9 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 
 [All pairwise overlaps](human-overlaps.csv.gz) · [Memberships and gene IDs](human-memberships.csv.gz)
 
-## Why roughly 12,000 groups have reproductive or developmental association
+## Reproductive and developmental association before restriction
 
-The starting association set comes from whole-reference **RNA measurements**, not a 12,000-gene literature list. Reproductive association requires HPA ≥5 nTPM and greater than adult nonreproductive bulk maximum. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. It establishes embryonic presence, not embryonic restriction. Later fetal and child/adult developmental atlases are not yet integrated.
+The association set comes from whole-reference **RNA measurements**. Reproductive association requires HPA ≥5 nTPM. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. These establish presence in a qualifying context. The separate adult-restriction requirement compares a qualifying signal with supported Vital/Protected/Manageable normal expression in the same native unit. The table below counts association independently of restriction. Later fetal and child/adult developmental atlases are not yet integrated.
 
 {markdown(routes)}
 
