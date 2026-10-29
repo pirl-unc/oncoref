@@ -422,8 +422,10 @@ def test_native_records_portable_and_defensive_without_optional_dependencies(dat
         {"reference_status": "unresolved", "schema": "fixture.v1"},
         lambda kind: facts if kind == "measurements" else (),
     )
+    features = dataset.features
+    features["feature_id"] = ["original-label-1", "original-label-2"]
     with_records = ExpressionDataset(
-        dataset.values, dataset.features, dataset.samples, dataset.contract, records=records
+        dataset.values, features, dataset.samples, dataset.contract, records=records
     )
     one = next(with_records.native_records("measurements"))
     one["provenance"]["line"] = 999
@@ -437,7 +439,7 @@ def test_native_records_portable_and_defensive_without_optional_dependencies(dat
     restored = ExpressionDataset.load(a)
     assert restored.provenance == with_records.provenance
     assert list(restored.native_records("measurements")) == facts
-    pd.testing.assert_frame_equal(restored.features, dataset.features)
+    pd.testing.assert_frame_equal(restored.features, features)
     assert list(dataset.native_records("measurements")) == []
     assert dataset.provenance is None
     with pytest.raises(ValueError, match="Unknown expression record"):

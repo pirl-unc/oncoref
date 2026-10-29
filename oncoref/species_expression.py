@@ -222,9 +222,8 @@ class ExpressionDataset:
                 feature_file = "features.parquet"
             else:
                 feature_file = "features.json"
-                features = self._features.to_dict("records")
-                for feature_id, row in zip(self._features.index, features):
-                    row["feature_id"] = feature_id
+                # Keep the index separate from arbitrary native feature columns.
+                features = self._features.to_dict("tight")
                 (staged / feature_file).write_text(json.dumps(features, allow_nan=False) + "\n")
             # JSON retains nested original sample facts and provenance without stringifying them.
             records = copy.deepcopy(
@@ -297,8 +296,8 @@ class ExpressionDataset:
             pd.read_parquet(directory / "values.parquet"),
             pd.read_parquet(directory / "features.parquet")
             if version == 1
-            else pd.DataFrame(json.loads((directory / "features.json").read_text())).set_index(
-                "feature_id"
+            else pd.DataFrame.from_dict(
+                json.loads((directory / "features.json").read_text()), orient="tight"
             ),
             samples,
             ExpressionContract.from_dict(record["contract"]),
