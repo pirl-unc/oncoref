@@ -17,8 +17,8 @@ from oncoref import cta_regen, hpa, reference_data
 
 _CSV = Path(__file__).resolve().parents[1] / "oncoref" / "data" / "cancer-testis-antigens.csv"
 
-_HPA_READY = reference_data.is_cached("hpa_rna_consensus") and reference_data.is_cached(
-    "hpa_normal_tissue"
+_HPA_READY = reference_data.is_cached("hpa_rna_consensus", "v23") and reference_data.is_cached(
+    "hpa_normal_tissue", "v23"
 )
 
 
@@ -106,7 +106,7 @@ def test_reproductive_tier_audit_separates_accessory_expression_and_missing_data
     monkeypatch.setattr(
         hpa,
         "hpa_rna_consensus",
-        lambda: pd.DataFrame(
+        lambda version=None: pd.DataFrame(
             {
                 "Gene": ["ENSG1", "ENSG1", "ENSG1"],
                 "Tissue": ["placenta", "epididymis", "smooth muscle"],
@@ -193,14 +193,14 @@ def test_regeneration_clears_missing_rna_instead_of_reusing_old_evidence(
     monkeypatch.setattr(
         hpa,
         "hpa_rna_consensus",
-        lambda: pd.DataFrame(
+        lambda version=None: pd.DataFrame(
             {"Gene": [page4_id] * 3, "Tissue": ["testis", "epididymis", "liver"], "nTPM": [0.0] * 3}
         ),
     )
     monkeypatch.setattr(
         hpa,
         "hpa_normal_tissue",
-        lambda: pd.DataFrame(
+        lambda version=None: pd.DataFrame(
             [[rnase12_id, "epididymis", "High", "Enhanced"]] if protein_observed else [],
             columns=["Gene", "Tissue", "Level", "Reliability"],
         ),

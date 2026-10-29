@@ -15,7 +15,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from oncoref import cta_selection  # noqa: E402
+from oncoref import cta_selection, reference_data  # noqa: E402
 from oncoref.species_antigens import cta_snapshot  # noqa: E402
 
 RELEASE = ROOT / "docs/audits/cta-selection-20261028"
@@ -50,6 +50,9 @@ TABLE_COLUMNS = {
         "Neither",
         "Unassigned",
         "unique_entities",
+        "primary_source",
+        "covered_by",
+        "evidence_scope",
         "status",
     ],
     "memberships": ["source_id", "entity_id", "label", "gene_ids", "category"],
@@ -79,14 +82,17 @@ TABLE_COLUMNS = {
         "candidate_ceiling",
         "selection_tier",
         "ihc_coverage",
+        "source_id",
+        "source_version",
+        "source_context",
         "reason",
         "source_url",
     ],
 }
 HUMAN_RULES = {
     "Reproductive or developmental expression": (
-        "Reproductive ≥5 nTPM and > adult bulk maximum OR Tyser embryonic lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM.",
-        ["hpa_rna_consensus", "tyser_E-MTAB-9388"],
+        "Reproductive ≥5 nTPM and > adult bulk maximum OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Sources are assessed separately.",
+        ["hpa_rna_consensus", "tyser_E-MTAB-9388", "petropoulos_E-MTAB-3929"],
     ),
     "Tumor sample ≥2 TPM/pTPM": (
         "At least one measured compatible tumor sample ≥2 in native TPM or HPA pTPM; do not add maxima from different samples.",
@@ -97,12 +103,19 @@ HUMAN_RULES = {
         ["hpa_normal_tissue"],
     ),
     "Required RNA coverage": (
-        "Required bulk and tissue-cell/immune panels; missing members are not zeros. DICE and cornea are optional coverage.",
-        ["hpa_rna_consensus", "hpa_single_cell_tissue", "hpa_immune_cell", "hpa_immune_monaco"],
+        "Required nonreproductive bulk anatomy across HPA consensus, HPA brain or direct GTEx, plus distinct tissue-cell/immune panels; every group member measured. DICE and cornea are optional coverage.",
+        [
+            "hpa_rna_consensus",
+            "hpa_brain",
+            "gtex_tissue_rna",
+            "hpa_single_cell_tissue",
+            "hpa_immune_cell",
+            "hpa_immune_monaco",
+        ],
     ),
     "Normal bulk": (
         "One inclusive tissue/IHC ceiling: above it in Vital/Protected supplies Unsafe evidence; above it in Manageable blocks CTA. No second RNA boundary.",
-        ["hpa_rna_consensus"],
+        ["hpa_rna_consensus", "hpa_brain", "gtex_tissue_rna"],
     ),
     "HPA tissue clusters": (
         "RNA requires ≥20 reads and uses the single ceiling. IHC credit requires an exact or declared compartment match; unrelated cells in the same tissue cannot inherit it.",
@@ -162,12 +175,13 @@ def display(value: object) -> str:
 
 def membership_tables(species: str) -> dict[str, list[dict]]:
     """Union tables within each paper, then count distinct entities and loci."""
-    members, info = [], {}
+    members, info, scopes = [], {}, {}
     if species == "human":
         registry = pd.read_csv(DATA / "cta-publication-sources.csv").set_index("source_tag")
         known = pd.read_csv(RELEASE / "known-cta-decisions.csv.gz", low_memory=False)
         for doi, rows in registry.groupby("doi"):
             info[doi] = (citation(rows.index[0]), "https://doi.org/" + doi)
+            scopes[doi] = "; ".join(sorted(set(rows.evidence_scope)))
         for row in known.dropna(subset=["membership_sources"]).itertuples():
             for tag in row.membership_sources.split(";"):
                 members.append(
@@ -185,6 +199,25 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
         # misrepresented as new discoveries or quantitative admission evidence.
         context = pd.read_csv(DATA / "cta-publication-context.csv")
         current = cta_selection.results().set_index("entity_id")
+        # New publication sets use the common mapped-intake contract. The
+        # frozen known-CTA comparison remains a separate historical cohort.
+        registered = {tag for tags in known.membership_sources.dropna() for tag in tags.split(";")}
+        intake = pd.read_csv(DATA / "cta-publication-membership.csv").fillna("")
+        gene_to_entity = {g: entity for entity, row in current.iterrows() for g in row.gene_ids}
+        for row in intake[~intake.source_tag.isin(registered)].itertuples():
+            entity = gene_to_entity.get(row.Ensembl_Gene_ID)
+            if row.mapping_status != "mapped" or entity is None:
+                continue
+            target = current.loc[entity]
+            members.append(
+                {
+                    "source_id": registry.loc[row.source_tag, "doi"],
+                    "entity_id": entity,
+                    "label": target.label,
+                    "gene_id": row.Ensembl_Gene_ID,
+                    "category": target.category,
+                }
+            )
         for row in context.itertuples():
             target = current.loc[row.entity_id]
             if set(json.loads(row.member_gene_ids)) != set(target.gene_ids):
@@ -237,11 +270,20 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
             else {}
         )
         kind, status = "native_nomination", "unassessed"
+        scopes = dict.fromkeys(info, "Native canine literature nominations; assay scope retained")
     all_sets = {sid: set(grouped.loc[grouped.source_id.eq(sid), "entity_id"]) for sid in info}
     selected = {
         sid: set(grouped.loc[grouped.source_id.eq(sid) & grouped.category.eq("CTA"), "entity_id"])
         for sid in info
     }
+    # Only retire a single-digit list when retained sources cover its entire
+    # mapped set. Sequential decisions preserve the union even for mutually
+    # covering small lists. Provenance memberships always remain available.
+    primary = {sid for sid, values in all_sets.items() if len(values) >= 10}
+    for sid in sorted(set(info) - primary, key=lambda x: (-len(all_sets[x]), x)):
+        covered = set().union(*(all_sets[x] for x in primary))
+        if species != "human" or not all_sets[sid] <= covered:
+            primary.add(sid)
     counts = []
     for sid, (label, url) in info.items():
         part = grouped[grouped.source_id.eq(sid)]
@@ -257,6 +299,11 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
                 **{c: int(part.category.eq(c).sum()) for c in cta_selection.CATEGORIES},
                 "Unassigned": int(part.category.isna().sum()),
                 "unique_entities": len(all_sets[sid] - others),
+                "primary_source": sid in primary,
+                "covered_by": sorted(x for x in primary if all_sets[x] & all_sets[sid])
+                if sid not in primary
+                else [],
+                "evidence_scope": scopes[sid],
                 "status": status,
             }
         )
@@ -289,12 +336,39 @@ HUMAN_RULES["Neither expression profiles"] = (
 )
 
 
+def observation_source(row: dict | pd.Series) -> dict:
+    """Retain the actual assay/version and native context in every RNA reason."""
+    source = str(row.get("source", ""))
+    version = row.get("version")
+    version = str(version) if pd.notna(version) else None
+    native = row.get("source_context")
+    native = str(native) if pd.notna(native) else None
+    if source in reference_data.REFERENCE_SOURCES and version:
+        url = reference_data.REFERENCE_SOURCES[source]["urls"].get(version, BASE_URL)
+    elif source.startswith("hpa"):
+        url = "https://v23.proteinatlas.org/about/download"
+    elif source.startswith("dice"):
+        url = "https://dice-database.org/"
+    elif "cornea" in source.lower() or "GSE155683" in source:
+        url = "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683"
+    else:
+        url = BASE_URL
+    return {
+        "source_id": source or None,
+        "source_version": version,
+        "source_context": native,
+        "source_url": url,
+    }
+
+
 def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
     """Explain every contributing layer with a measured context when available."""
     evidence_fields = {
         "gene_id",
         "assay",
         "source",
+        "version",
+        "source_context",
         "tissue",
         "cell_type",
         "value",
@@ -318,6 +392,7 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
     imported = pd.read_csv(RELEASE / "imported-protein-review-decisions.csv")
     coverage = pd.read_csv(OUTPUT / "normal-panel-coverage-gaps.csv.gz")
     coverage_by_entity = dict(iter(coverage.groupby("entity_id")))
+    combined_bulk = pd.read_csv(OUTPUT / "combined-rna-coverage.csv.gz").set_index("entity_id")
     rows = []
     peak_index, protein_index = {}, {}
     for unsafe, column in [(False, "candidate_exclusion"), (True, "unsafe_evidence")]:
@@ -380,15 +455,9 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     row["reason"] += (
                         f" Unpaired upper bound {display(p.value_upper)}; not a paired measurement."
                     )
-                row["source_url"] = (
-                    "https://v23.proteinatlas.org/about/download"
-                    if str(p.source).startswith("hpa")
-                    else (
-                        "https://dice-database.org/"
-                        if str(p.source).startswith("dice")
-                        else "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683"
-                    )
-                )
+                row.update(observation_source(p))
+                if row["source_context"]:
+                    row["reason"] += f" Native context: {row['source_context']}."
             elif layer == "HPA normal protein":
                 candidate = protein_index.get((r["representative_gene_id"], unsafe))
                 if candidate is not None:
@@ -424,7 +493,14 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 )
             elif layer == "Required RNA coverage":
                 details = []
+                combined = combined_bulk.loc[base["entity_id"]]
+                if not combined.bulk_complete:
+                    details.append(
+                        f"Combined normal bulk missing required tissues: {combined.missing_bulk_tissues}"
+                    )
                 for gap in coverage_by_entity.get(base["entity_id"], pd.DataFrame()).itertuples():
+                    if gap.source_id == "hpa_rna_consensus":
+                        continue
                     contexts = json.loads(gap.missing_contexts)
                     preview = ", ".join(contexts[:6])
                     if len(contexts) > 6:
@@ -507,8 +583,10 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             selection_tier=p["selection_tier"],
             ihc_coverage=f"{display(p.get('ihc_match_scope'))}; {p['negative_ihc_grade']}; IHC cells: {display(p.get('ihc_cell_type'))}",
             reason=f"{p['tissue']} / {p['cell_type']}: {display(p['value'])} {p['unit']}; {p['selection_tier']} ceiling {display(p['candidate_ceiling'])}.",
-            source_url="https://v23.proteinatlas.org/about/download",
+            **observation_source(p),
         )
+        if row["source_context"]:
+            row["reason"] += f" Native context: {row['source_context']}."
         rows.append(row)
     return pd.DataFrame(rows, columns=TABLE_COLUMNS["explanations"])
 
@@ -643,6 +721,8 @@ def build() -> None:
                 RELEASE / "manifest.json",
                 Path(__file__),
                 DATA / "cta-publication-sources.csv",
+                DATA / "cta-publication-membership.csv",
+                RELEASE / "alternative-evidence/manifest.json",
                 DATA / "cta-publication-context.csv",
                 OUTPUT / "coverage-audit-receipt.json",
             ]

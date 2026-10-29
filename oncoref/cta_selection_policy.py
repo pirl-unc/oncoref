@@ -23,6 +23,7 @@ TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 MIN_MANAGEABLE_TISSUES = 2
 UNIT_SCALE = {"TPM": 1.0, "nTPM": 1.0, "CP10K": 0.01}
+ADDITIONAL_BULK_UNITS = {"hpa_brain": "nTPM", "gtex_tissue_rna": "TPM"}
 BOWEL_EPITHELIAL_CELLS = frozenset(
     {
         "distal enterocytes",
@@ -154,7 +155,9 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
     if not contexts.taxonomy_id.eq(9606).all() or not contexts.stage.eq("adult").all():
         raise ValueError("This measurement policy requires adult human contexts")
     assay = contexts.source.where(~contexts.source.str.startswith("dice_"), "dice")
-    if not contexts.unit.eq(assay.map(EXPECTED_UNITS | {"hpa_rna_consensus": "nTPM"})).all():
+    if not contexts.unit.eq(
+        assay.map(EXPECTED_UNITS | {"hpa_rna_consensus": "nTPM"} | ADDITIONAL_BULK_UNITS)
+    ).all():
         raise ValueError("Source and native unit do not match")
     if not contexts.negative_ihc_grade.isin(IHC_RANKS).all():
         raise ValueError("Unknown IHC grade")

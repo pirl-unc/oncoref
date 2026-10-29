@@ -58,6 +58,7 @@ nav:
       - Species and data groups: species.md
       - Species CTA evidence: species-cta-evidence.md
   - Data:
+      - Data versions and reproducibility: data-versions.md
       - SRA expression sources: sra-expression-integration.md
       - HPA cancer reference: hpa-cancer-reference.md
       - CTA gene identities: cta-gene-identities.md

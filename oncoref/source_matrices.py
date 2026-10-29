@@ -35,6 +35,7 @@ new release. Cache layout:
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import tempfile
 import time
@@ -351,40 +352,58 @@ def cache_dir(*, version: str = SOURCE_MATRIX_VERSION) -> Path:
     return out
 
 
-def local_path(code: str) -> Path:
+def resolve_version(code: str, version: str | None = None) -> str:
+    """Resolve the default cohort release or an explicit historical release.
+
+    Historical release availability is checked by the download endpoint; an
+    unavailable version never falls back to the current matrix. Version labels
+    describe OncoRef matrix builds, separately from upstream study accessions.
+    """
+    current = source_matrix_version(code)
+    if version is None or version == "latest":
+        return current
+    value = version.removeprefix("v")
+    if not re.fullmatch(r"[0-9]+(?:\.[0-9]+){2}", value):
+        raise SourceMatrixError(f"Invalid matrix release {version!r}; use a numeric X.Y.Z release")
+    return value
+
+
+def local_path(code: str, version: str | None = None) -> Path:
     """Expected cache path for a cohort's matrix (may not exist yet)."""
     resolved = _resolve(code)
-    return cache_dir(version=source_matrix_version(resolved)) / f"{resolved}.parquet"
+    return cache_dir(version=resolve_version(resolved, version)) / f"{resolved}.parquet"
 
 
-def is_cached(code: str) -> bool:
-    return local_path(code).exists()
+def is_cached(code: str, version: str | None = None) -> bool:
+    return local_path(code, version).exists()
 
 
-def release_url(code: str) -> str:
+def release_url(code: str, version: str | None = None) -> str:
     resolved = _resolve(code)
-    release_tag = f"source-v{source_matrix_version(resolved)}"
+    release_tag = f"source-v{resolve_version(resolved, version)}"
     return (
         f"https://github.com/{GITHUB_REPO}/releases/download/"
         f"{release_tag}/{resolved}_per_sample_tpm.parquet"
     )
 
 
-def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
+def fetch(
+    code: str, *, version: str | None = None, force: bool = False, verbose: bool = True
+) -> Path:
     """Download one cohort's per-sample matrix into the cache. Returns the path.
 
     Concurrent cold callers share one download, locked per cohort/version path.
     Each explicit ``force=True`` call refreshes the file, even after waiting for
     another writer. A failed refresh leaves the previous matrix intact.
     """
-    dest = local_path(code)
+    dest = local_path(code, version)
     label = f"per-sample matrix {dest.stem}"
     if dest.parent.name.startswith("v"):
         label += f" ({dest.parent.name})"
     if dest.exists() and not force:
         _downloads.report_cached(label, dest, verbose=verbose)
         return dest
-    url = release_url(code)
+    url = release_url(code, version)
     try:
         with FileLock(str(dest.with_name(f".{dest.name}.oncoref.lock"))):
             # Another process may have populated the cache while we waited.
@@ -439,10 +458,10 @@ def fetch(code: str, *, force: bool = False, verbose: bool = True) -> Path:
     return dest
 
 
-def ensure(code: str) -> Path:
+def ensure(code: str, version: str | None = None) -> Path:
     """Local path to a cohort's per-sample matrix, downloading if absent."""
-    dest = local_path(code)
-    return dest if dest.exists() else fetch(code)
+    dest = local_path(code, version)
+    return dest if dest.exists() else fetch(code, version=version)
 
 
 def sample_qc(

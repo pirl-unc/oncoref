@@ -28,6 +28,8 @@ class SelectionAudit:
     ``memberships`` counts source annotations, not causal admissions. ``sources``
     counts published candidate-list annotations; ``cta_selection.sources()``
     inventories all measurement sources and their integration status.
+    ``sources.primary_source`` identifies the compact source display. Redundant
+    single-digit lists retain all memberships and their ``covered_by`` sources.
     """
 
     species: str
@@ -82,7 +84,7 @@ def audit(*, species: Species | str | int = "human") -> SelectionAudit:
         key: pd.DataFrame(data[key], columns=receipt["columns"][key]) for key in receipt["columns"]
     }
     for frame in tables.values():
-        for column in ("gene_ids", "source_ids"):
+        for column in ("gene_ids", "source_ids", "covered_by"):
             if column in frame:
                 frame[column] = frame[column].map(tuple)
     return SelectionAudit(

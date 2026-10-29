@@ -9,7 +9,6 @@ import sys
 import zipfile
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,12 +21,17 @@ from cta_report_common import input_hashes, sha256, write_csv  # noqa: E402
 from oncoref import cell_rna_policy, hpa, normal_cell_screen, reference_data  # noqa: E402
 from oncoref import cta_selection_policy as policy  # noqa: E402
 from oncoref.cta_funnel import EvidenceLayer  # noqa: E402
-from oncoref.gene_matching import match_reference_genes  # noqa: E402
+from oncoref.gene_matching import (  # noqa: E402
+    match_reference_genes,
+    resolve_long_measurement_ids,
+    resolve_measurement_rows,
+)
 
 FROZEN = ROOT / "docs/audits/cta-release-1.21.0"
 BASE = ROOT / "docs/audits/cta-harmonized-20261027"
 OUTPUT = ROOT / "docs/audits/cta-selection-20261028"
 CROSSWALK = ROOT / "oncoref/data/cta-ihc-compartments.csv"
+ALTERNATIVE = OUTPUT / "alternative-evidence"
 ASSAYS = [
     "Normal bulk",
     "HPA tissue clusters",
@@ -171,15 +175,58 @@ def replay_contexts(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
     """Stream all HPA clusters; reassess all pinned bulk/immune/corneal rows."""
     collector = ContextCollector(facts, output)
     # Bulk IHC requires complete routine tissue coverage, as in the frozen audit.
-    bulk = read(FROZEN / "bulk-contexts.csv.gz")
-    bulk = bulk.assign(
-        source="hpa_rna_consensus",
-        taxonomy_id=9606,
-        stage="adult",
-        cell_type="bulk",
-        mapping_status=np.where(bulk.category.eq("unresolved"), "unmapped", "mapped"),
+    old_bulk = read(FROZEN / "bulk-contexts.csv.gz")
+    member_to_rep = {
+        g: r.representative_gene_id
+        for r in facts.itertuples()
+        for g in json.loads(r.member_gene_ids)
+    }
+    raw_bulk = hpa._read_hpa("hpa_rna_consensus", "v23")
+    lookup = (
+        read(output / "hpa_rna_consensus-accepted-identities.csv.gz")
+        .set_index("source_gene_id")
+        .canonical_gene_id
     )
+    raw_bulk["member"] = raw_bulk.Gene.map(lookup)
+    raw_bulk = raw_bulk[raw_bulk.member.isin(member_to_rep)].copy()
+    if raw_bulk.duplicated(["member", "Tissue"]).any():
+        raise ValueError("Duplicate bulk measurement vectors require resolution")
+    raw_bulk["gene_id"] = raw_bulk.member.map(member_to_rep)
+    bulk = (
+        raw_bulk.groupby(["gene_id", "Tissue"])
+        .nTPM.sum(min_count=1)
+        .reset_index()
+        .rename(columns={"Tissue": "tissue", "nTPM": "value"})
+    )
+    bulk = normal_cell_screen.contexts(
+        bulk.assign(
+            source="hpa_rna_consensus",
+            version="v23",
+            unit="nTPM",
+            taxonomy_id=9606,
+            stage="adult",
+            cell_type="bulk",
+        )
+    )
+    bulk = bulk.merge(
+        old_bulk[["gene_id", "tissue", "negative_ihc_grade"]],
+        on=["gene_id", "tissue"],
+        how="left",
+        validate="one_to_one",
+    )
+    bulk["negative_ihc_grade"] = bulk.negative_ihc_grade.fillna("Missing")
     collector.collect(bulk, "Normal bulk")
+    alternative = read(ALTERNATIVE / "normal-bulk.csv.gz")
+    # Exact whole-organ correspondence permits the same routine bulk IHC grade
+    # across RNA assays. Regional brain peaks retain Missing: a parent organ's
+    # IHC cannot establish negative staining in every anatomical subregion.
+    grades = old_bulk.set_index(["gene_id", "tissue"]).negative_ihc_grade
+    equivalent_bulk = alternative.source.eq("gtex_tissue_rna")
+    keys = pd.MultiIndex.from_frame(alternative[["gene_id", "tissue"]])
+    alternative.loc[equivalent_bulk, "negative_ihc_grade"] = (
+        grades.reindex(keys).fillna("Missing").to_numpy()[equivalent_bulk]
+    )
+    collector.collect(alternative, "Normal bulk")
     grouped_ihc, grouped_controls, grouped_conflicts = group_ihc_evidence(facts, output)
     ihc = hpa._read_hpa("hpa_normal_tissue", "v23").dropna(subset=["Tissue", "Cell type", "Level"])
     controls = positive_profile_controls(ihc)
@@ -187,7 +234,14 @@ def replay_contexts(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
     single = set(facts.loc[facts.member_count.eq(1), "representative_gene_id"])
     crosswalk = read(CROSSWALK)
     receipt = reference_data.provenance("hpa_single_cell_tissue", verify_content=True)
+    lookup = (
+        read(output / "hpa_single_cell_tissue-accepted-identities.csv.gz")
+        .set_index("source_gene_id")
+        .canonical_gene_id
+    )
     for number, chunk in enumerate(pd.read_csv(receipt["path"], sep="\t", chunksize=250000)):
+        chunk["source_gene_id"] = chunk.Gene
+        chunk["Gene"] = chunk.Gene.map(lookup)
         d = (
             chunk[chunk.Gene.isin(single)]
             .rename(
@@ -239,6 +293,47 @@ def replay_contexts(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
         "HPA tissue clusters",
     )
     for assay, d in read(FROZEN / "immune-cornea-contexts.csv.gz").groupby("assay"):
+        if assay in {"HPA immune", "Monaco immune"}:
+            continue
+        collector.collect(d, assay)
+    member_to_rep = {
+        g: r.representative_gene_id
+        for r in facts.itertuples()
+        for g in json.loads(r.member_gene_ids)
+    }
+    for source, assay, unit in [
+        ("hpa_immune_cell", "HPA immune", "nTPM"),
+        ("hpa_immune_monaco", "Monaco immune", "TPM"),
+    ]:
+        raw = hpa._read_hpa(source, "v23")
+        lookup = (
+            read(output / f"{source}-accepted-identities.csv.gz")
+            .set_index("source_gene_id")
+            .canonical_gene_id
+        )
+        raw["member"] = raw.Gene.map(lookup)
+        raw = raw[raw.member.isin(member_to_rep)].copy()
+        # Duplicate aliases of a locus cannot count twice in a group sum.
+        if raw.duplicated(["member", "Immune cell"]).any():
+            raise ValueError(f"Duplicate immune measurement vectors require resolution: {source}")
+        raw["gene_id"] = raw.member.map(member_to_rep)
+        d = (
+            raw.groupby(["gene_id", "Immune cell"])[unit]
+            .sum(min_count=1)
+            .reset_index()
+            .rename(columns={"Immune cell": "cell_type", unit: "value"})
+        )
+        d = d.assign(
+            source=source,
+            version="v23",
+            unit=unit,
+            taxonomy_id=9606,
+            stage="adult",
+            tissue="blood",
+            mapping_status="mapped",
+            category="protected",
+            negative_ihc_grade="Missing",
+        )
         collector.collect(d, assay)
     collector.collect(read(FROZEN / "dice-group-contexts.csv.gz"), "DICE immune")
     collector.collect(read(FROZEN / "cornea-group-contexts.csv.gz"), "Adult cornea")
@@ -380,26 +475,15 @@ def developmental_coverage(facts: pd.DataFrame, output: Path) -> None:
         matrix = mmread(archive.open(name)).tocsr()
     meta = pd.read_csv(directory / "atlas_design", sep="\t").set_index("Assay").loc[cells]
     lineages = meta.groupby("Sample Characteristic[inferred cell type - authors labels]").indices
-    additions, decisions = [], []
-    for gid, candidates_for_gene in candidates.groupby("canonical_gene_id"):
-        chosen = candidates_for_gene.index[0]
-        canonical = candidates_for_gene[candidates_for_gene.source_gene_id.eq(gid)]
-        if not canonical.empty:
-            chosen = canonical.index[0]
-            status = "canonical_row_recovered"
-        elif all((matrix[chosen] != matrix[i]).nnz == 0 for i in candidates_for_gene.index):
-            status = "registered_alias_recovered"
-        else:
-            status = "conflicting_alias_vectors"
-        decisions.append(
-            {
-                "gene_id": gid,
-                "source_gene_ids": json.dumps(candidates_for_gene.source_gene_id.tolist()),
-                "status": status,
-            }
-        )
-        if status == "conflicting_alias_vectors":
+    additions = []
+    decisions = resolve_measurement_rows(
+        candidates, equivalent=lambda a, b: (matrix[a] != matrix[b]).nnz == 0
+    )
+    for row in decisions.itertuples():
+        gid, chosen = row.gene_id, row.row_position
+        if pd.isna(chosen):
             continue
+        chosen = int(chosen)
         for lineage, indices in lineages.items():
             values = matrix[chosen, indices]
             count = int((values >= 1).sum())
@@ -414,8 +498,10 @@ def developmental_coverage(facts: pd.DataFrame, output: Path) -> None:
                     "Embryos": 1,
                 }
             )
-    write_csv(pd.DataFrame(decisions), output / "developmental-identity-recoveries.csv")
+    write_csv(decisions, output / "developmental-identity-recoveries.csv")
     d = pd.concat([d, pd.DataFrame(additions)], ignore_index=True)
+    d = d.assign(source="tyser_E-MTAB-9388", stage="Carnegie stage 7", unit="TPM")
+    d = pd.concat([d, read(ALTERNATIVE / "developmental-lineages.csv.gz")], ignore_index=True)
     write_csv(d, output / "developmental-lineages.csv.gz")
     member_to_rep = {
         g: r.representative_gene_id
@@ -424,7 +510,7 @@ def developmental_coverage(facts: pd.DataFrame, output: Path) -> None:
     }
     d["representative"] = d["Gene ID"].map(member_to_rep)
     groups = (
-        d.groupby(["representative", "Lineage"])
+        d.groupby(["representative", "source", "stage", "Lineage"])
         .agg(
             mean_tpm=("Mean TPM", "sum"),
             cells=("Cells", "min"),
@@ -449,11 +535,107 @@ def developmental_coverage(facts: pd.DataFrame, output: Path) -> None:
     facts["developmental_measured"] = members.map(lambda ids: set(ids) <= measured_ids)
 
 
+def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
+    """Require anatomical coverage across compatible sources, not one export.
+
+    Reproductive tissues do not supply normal-organ exclusion coverage. Every
+    group member must have finite measurements for every required normal tissue;
+    all native subregions of an alternative tissue must be present. Tissue-cell
+    and immune panels retain their distinct, non-interchangeable coverage roles.
+    """
+    from audit_cta_source_coverage import PANELS
+
+    complete_by_source, rows = {}, []
+    bulk_seen = {}
+    for source, _title, columns, unit, expected in PANELS:
+        receipt = reference_data.provenance(source, "v23", verify_content=True)
+        values = [unit, "Read count"] if source == "hpa_single_cell_tissue" else [unit]
+        d = pd.read_csv(receipt["path"], sep="\t", usecols=["Gene", "Gene name", *columns, *values])
+        accepted, decisions = resolve_long_measurement_ids(
+            d,
+            id_column="Gene",
+            symbol_column="Gene name",
+            context_columns=columns,
+            value_columns=values,
+            source=source,
+            source_version="v23",
+        )
+        write_csv(accepted, output / f"{source}-accepted-identities.csv.gz")
+        write_csv(decisions, output / f"{source}-identity-decisions.csv.gz")
+        lookup = accepted.set_index("source_gene_id").canonical_gene_id
+        d["gene_id"] = d.Gene.map(lookup)
+        if source in {"hpa_single_cell_tissue", "hpa_rna_consensus"}:
+            tissue = (
+                d[["Tissue", *(["Cell type"] if "Cell type" in d else [])]]
+                .drop_duplicates()
+                .rename(columns={"Tissue": "tissue", "Cell type": "cell_type"})
+            )
+            if "cell_type" not in tissue:
+                tissue["cell_type"] = "bulk"
+            tissue = normal_cell_screen.contexts(
+                tissue.assign(source=source, version="v23", taxonomy_id=9606, stage="adult")
+            )
+            allowed = tissue[~tissue.category.isin(cell_rna_policy.PERMITTED)]
+            keys = ["Tissue", "Cell type"] if "Cell type" in d else ["Tissue"]
+            d = d.merge(
+                allowed.rename(columns={"tissue": "Tissue", "cell_type": "Cell type"})[keys],
+                on=keys,
+                validate="many_to_one",
+            )
+        d["context"] = d[columns[0]].astype(str)
+        for column in columns[1:]:
+            d["context"] = d.context + " / " + d[column].astype(str)
+        universe = set(d.context)
+        if source != "hpa_rna_consensus" and len(universe) != expected:
+            raise ValueError(f"Changed required source contexts: {source}")
+        seen = d[d[unit].notna()].groupby("gene_id").context.agg(set).to_dict()
+        complete_by_source[source] = {g for g, contexts in seen.items() if contexts == universe}
+        if source == "hpa_rna_consensus":
+            bulk_seen, bulk_universe = seen, universe
+            bulk_before = complete_by_source[source].copy()
+        print(f"Resolved required coverage: {source}", flush=True)
+    for source in ["hpa_brain", "gtex_tissue_rna"]:
+        coverage = read(ALTERNATIVE / f"{source}-member-coverage.csv.gz")
+        for row in coverage.itertuples():
+            bulk_seen.setdefault(row.gene_id, set()).update(
+                set(json.loads(row.available_tissues)) & bulk_universe
+            )
+    complete_by_source["hpa_rna_consensus"] = {
+        g for g, seen in bulk_seen.items() if bulk_universe <= seen
+    }
+    for row in facts.itertuples():
+        ids = set(json.loads(row.member_gene_ids))
+        missing = sorted(set().union(*(bulk_universe - bulk_seen.get(g, set()) for g in ids)))
+        rows.append(
+            {
+                "entity_id": row.protein_equivalence_group_id,
+                "label": row.protein_group_label,
+                "required_bulk_tissues": len(bulk_universe),
+                "missing_bulk_tissues": json.dumps(missing),
+                "bulk_complete_before": ids <= bulk_before,
+                "bulk_complete": not missing,
+                "required_coverage": all(
+                    ids <= measured for measured in complete_by_source.values()
+                ),
+            }
+        )
+    coverage = pd.DataFrame(rows)
+    facts["required_coverage"] = coverage.required_coverage.to_numpy()
+    write_csv(coverage, output / "combined-rna-coverage.csv.gz")
+
+
 def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     """Regenerate decisions, complete profile evidence and all counting exports."""
     output.mkdir(parents=True, exist_ok=True)
     facts = read(FROZEN / "protein-group-classifications.csv.gz")
+    # Unnamed canonical loci retain their stable ID as the display label.
+    facts["protein_group_label"] = facts.protein_group_label.fillna(facts.representative_gene_id)
     facts["previous_category"] = facts.category
+    alternative_receipt = json.loads((ALTERNATIVE / "manifest.json").read_text())
+    for name, digest in alternative_receipt["outputs"].items():
+        if sha256(ALTERNATIVE / name) != digest:
+            raise ValueError(f"Changed alternative evidence: {name}")
+    required_rna_coverage(facts, output)
     repaired = output / "tumor-identity-repair"
     receipt = json.loads((repaired / "manifest.json").read_text())
     for name, expected in receipt["outputs"].items():
@@ -484,6 +666,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     inputs = [
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/gene_matching.py",
         CROSSWALK,
         FROZEN / "protein-group-classifications.csv.gz",
         FROZEN / "bulk-contexts.csv.gz",
@@ -499,6 +682,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         ROOT / "oncoref/data/normal-tissue-mappings.csv",
         ROOT / "scripts/cta_compartment_report.py",
         ROOT / "scripts/cta_quantitative_threshold_report.py",
+        ALTERNATIVE / "manifest.json",
     ]
     sources = []
     for name in ["hpa_single_cell_tissue", "hpa_normal_tissue"]:
@@ -518,7 +702,9 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         )
         facts["manageable_tissue_count"] = facts.representative_gene_id.map(breadth)
     else:
-        summary = replay_contexts(facts, output)
+        replay_contexts(facts, output)
+        # Both modes use the same persisted numeric representation.
+        summary = read(output / "assay-assessments.csv.gz")
         write_csv(
             facts[["representative_gene_id", "manageable_tissue_count"]].rename(
                 columns={"representative_gene_id": "gene_id"}
@@ -548,6 +734,14 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         .fillna(False)
         .astype(bool)
     )
+    bulk_maximum = (
+        summary[summary.assay.eq("Normal bulk")].set_index("gene_id").healthy_maximum_ntpm
+    )
+    facts["adult_bulk_max_ntpm"] = facts.representative_gene_id.map(bulk_maximum)
+    facts["reproductive_route"] = facts.reproductive_ntpm.ge(5) & facts.reproductive_ntpm.gt(
+        facts.adult_bulk_max_ntpm
+    )
+    facts["positive_context"] = facts.reproductive_route | facts.developmental_route
     for col in [
         "normal_maximum_floor_ratio",
         "healthy_maximum_ntpm",

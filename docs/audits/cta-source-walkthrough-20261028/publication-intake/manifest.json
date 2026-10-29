@@ -1,0 +1,42 @@
+{
+  "identity_catalog_sha256": "3f6e446737df45838a3f086418b740040b34e047969ca0fa0ceb0c210c84c702",
+  "sources": [
+    {
+      "source_tag": "Sasaroli2011_vascular",
+      "citation": "Sasaroli et al. (2011)",
+      "title": "Novel surface targets and serum biomarkers from the ovarian cancer vasculature",
+      "doi": "10.4161/cbt.12.3.16260",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3230481/",
+      "source_table": "Results: 13 promising genes; Figure 2B",
+      "published_rows": 13,
+      "input_sha256": "e042c6f02af4e153c31d4fcf5944ab9ecb3531e8fd8105b03bb56aa267de93d0",
+      "hash_scope": "Transcribed published 13-member list with original names and explicit paper aliases, UTF-8 CSV bytes",
+      "evidence_scope": "Tumor-vascular candidate list; includes secreted and transmembrane proteins; not a CTA-restricted list",
+      "canonical_reference_sha256": "a64ce472399c1954b71fbd6ced1ed0cd517bfc8c38df1f24225c5fcbfd5a81a3",
+      "canonical_ensembl_release": 115,
+      "retrieved_date": "2026-10-28",
+      "paper_reported_genes": 13
+    },
+    {
+      "source_tag": "Hirbo2015_placenta",
+      "citation": "Hirbo et al. (2015)",
+      "title": "Integrating Diverse Types of Genomic Data to Identify Genes that Underlie Adverse Pregnancy Phenotypes",
+      "doi": "10.1371/journal.pone.0144155",
+      "source_url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0144155.s002&type=supplementary",
+      "source_table": "S1 Table: J4:J89; AC4:AF33 tracks the 30 fast-evolving subset",
+      "published_rows": 86,
+      "input_sha256": "d2697770649ff5c3407b5e4fe4cfb6eeb69acbcfbc171d15d407ce07107ee000",
+      "hash_scope": "Original supplementary XLSX bytes",
+      "evidence_scope": "HPA v13 placenta-enriched nominations; 30/86 fast-evolving subset retained as metadata; not tumor validation",
+      "canonical_reference_sha256": "a64ce472399c1954b71fbd6ced1ed0cd517bfc8c38df1f24225c5fcbfd5a81a3",
+      "canonical_ensembl_release": 115,
+      "retrieved_date": "2026-10-28",
+      "paper_reported_genes": 86
+    }
+  ],
+  "code_sha256": "6c9151bb8976b396702a826cbcf3933474573c00a9b92bb54d85e07101466f65",
+  "outputs": {
+    "sasaroli-transcribed-13.csv": "e042c6f02af4e153c31d4fcf5944ab9ecb3531e8fd8105b03bb56aa267de93d0",
+    "mapped-source-rows.csv": "a9fc8333648e947aef57890fab2faaa41fd1a0cab8d7ecc2d944a0986c989c75"
+  }
+}

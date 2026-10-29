@@ -24,6 +24,7 @@ def receipts() -> None:
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
         ROOT / "oncoref/gene_matching.py",
+        OUTPUT / "alternative-evidence/manifest.json",
         OUTPUT / "tumor-identity-repair/manifest.json",
         ROOT / "oncoref/data/cta-ihc-compartments.csv",
         ROOT / "scripts/replay_cta_selection.py",
@@ -61,8 +62,13 @@ def walkthrough_receipt() -> None:
         ROOT / "scripts/build_cta_selection_release.py",
         ROOT / "scripts/render_cta_source_walkthrough.py",
         ROOT / "scripts/build_cta_source_slides.mjs",
+        ROOT / "oncoref/data/reference-releases.json",
+        ROOT / "docs/data-versions.md",
         ROOT / "scripts/audit_cta_embryonic_coverage.py",
         ROOT / "scripts/audit_cta_source_coverage.py",
+        ROOT / "scripts/build_cta_alternative_evidence.py",
+        ROOT / "scripts/import_cta_related_sources.py",
+        ROOT / "oncoref/data/cta-publication-membership.csv",
         ROOT / "oncoref/data/cta-publication-context.csv",
         Path(__file__),
     ]
@@ -82,6 +88,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reuse-contexts", action="store_true")
     parser.add_argument(
+        "--verify-replay",
+        action="store_true",
+        help="Compare complete and cached replay outputs byte for byte",
+    )
+    parser.add_argument(
         "--finalize-receipts",
         action="store_true",
         help="Refresh the walkthrough receipt after finalizing the slides",
@@ -90,7 +101,32 @@ def main() -> None:
     if args.finalize_receipts:
         walkthrough_receipt()
         return
+    if args.verify_replay and args.reuse_contexts:
+        parser.error("--verify-replay requires a complete first replay")
     build(reuse_contexts=args.reuse_contexts)
+    compared = [
+        "protein-group-classifications.csv.gz",
+        "filtering-funnel.csv",
+        "known-cta-decisions.csv.gz",
+        "summary.json",
+    ]
+    if args.verify_replay:
+        before = {name: sha256(OUTPUT / name) for name in compared}
+        build(reuse_contexts=True)
+        after = {name: sha256(OUTPUT / name) for name in compared}
+        if before != after:
+            raise ValueError("Complete and cached replay outputs differ")
+        (OUTPUT / "reproducibility.json").write_text(
+            json.dumps({"complete_vs_cached_replay": "byte_identical", "outputs": after}, indent=2)
+            + "\n"
+        )
+        print("Complete and cached replay outputs are byte-identical", flush=True)
+    else:
+        check = OUTPUT / "reproducibility.json"
+        if check.exists() and json.loads(check.read_text())["outputs"] != {
+            name: sha256(OUTPUT / name) for name in compared
+        }:
+            check.unlink()
     (OUTPUT / "index.md").write_text(
         "# Current CTA selection replay\n\n[Human and dog report, figures and sources](../cta-source-walkthrough-20261028/index.md).\n\nThis directory contains the versioned full-context replay, expression-profile evidence, classifications, source receipts and gene/group identity crosswalks.\n"
     )

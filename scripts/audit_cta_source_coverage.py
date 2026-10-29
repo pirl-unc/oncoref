@@ -68,7 +68,7 @@ def build() -> None:
     ]
     source_receipts, matches, normal_rows, members = [], [], [], []
     for source, title, context_cols, unit, expected in PANELS:
-        receipt = reference_data.provenance(source, verify_content=True)
+        receipt = reference_data.provenance(source, "v23", verify_content=True)
         source_receipts.append({k: receipt[k] for k in ["name", "version", "url", "sha256"]})
         d = pd.read_csv(
             receipt["path"], sep="\t", usecols=["Gene", "Gene name", *context_cols, unit]
@@ -104,7 +104,9 @@ def build() -> None:
                 set(json.loads(row.candidate_gene_ids)) | {row.source_gene_id}
             ) & target_ids:
                 identity_candidates.setdefault(gid, []).append(row)
-        good = identity[identity.identity_status.eq("matched")]
+        accepted_path = CURRENT / f"{source}-accepted-identities.csv.gz"
+        inputs.append(accepted_path)
+        good = pd.read_csv(accepted_path)
         lookup = good.set_index("source_gene_id").canonical_gene_id
         if not lookup.index.is_unique:
             raise ValueError(f"Conflicting source names for one ID: {source}")
@@ -197,20 +199,26 @@ def build() -> None:
     matches.append(
         identity[identity.candidate_gene_ids.map(lambda x: bool(set(json.loads(x)) & target_ids))]
     )
-    measured = set(
-        pd.read_csv(CURRENT / "developmental-lineages.csv.gz", usecols=["Gene ID"])["Gene ID"]
+    lineage_rows = pd.read_csv(
+        CURRENT / "developmental-lineages.csv.gz", usecols=["Gene ID", "source"]
     )
+    measured = set(lineage_rows["Gene ID"])
+    developmental_sources = {
+        source: set(part["Gene ID"]) for source, part in lineage_rows.groupby("source")
+    }
+    developmental_sources["combined_developmental_TPM"] = measured
     developmental = []
     for r in target.itertuples():
-        missing = set(r.member_gene_ids) - measured
-        if missing:
+        for source, available in developmental_sources.items():
+            missing = set(r.member_gene_ids) - available
             developmental.append(
                 {
                     "entity_id": r.protein_equivalence_group_id,
                     "label": r.protein_group_label,
                     "assessment_status": r.assessment_status,
                     "missing_member_gene_ids": encoded(missing),
-                    "source_id": "tyser_E-MTAB-9388",
+                    "source_id": source,
+                    "complete": not missing,
                     "source_version": "Ensembl106_filtered_TPM",
                 }
             )
@@ -284,6 +292,7 @@ def build() -> None:
         "normal-panel-member-coverage.csv.gz": pd.DataFrame(members),
         "coverage-identity-matches.csv.gz": pd.concat(matches, ignore_index=True),
         "embryonic-coverage-gaps.csv.gz": pd.DataFrame(developmental),
+        "combined-rna-coverage.csv.gz": pd.read_csv(CURRENT / "combined-rna-coverage.csv.gz"),
         "tumor-cohort-coverage.csv.gz": pd.DataFrame(cohorts),
         "tumor-missing-identity-candidates.csv.gz": pd.concat(tumor_identities, ignore_index=True),
     }
@@ -307,6 +316,24 @@ def build() -> None:
                 "example_genes": "; ".join(s.label.dropna().head(5)),
             }
         )
+    combined = outputs["combined-rna-coverage.csv.gz"]
+    combined = combined[
+        combined.entity_id.isin(
+            target.loc[
+                target.assessment_status.eq("incomplete_evidence"), "protein_equivalence_group_id"
+            ]
+        )
+    ]
+    missing = combined[~combined.bulk_complete]
+    summary.insert(
+        1,
+        {
+            "source_id": "combined_normal_bulk",
+            "source": "Combined normal bulk: HPA consensus + HPA brain + direct GTEx",
+            "groups": len(missing),
+            "example_genes": "; ".join(missing.label.fillna(missing.entity_id).head(5)),
+        },
+    )
     pd.DataFrame(summary).to_csv(OUT / "normal-panel-gap-counts.csv", index=False)
     (OUT / "coverage-audit-receipt.json").write_text(
         json.dumps(

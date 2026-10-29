@@ -76,6 +76,39 @@ def source_inventory() -> pd.DataFrame:
     )
     add(
         9606,
+        "petropoulos_E-MTAB-3929",
+        "Petropoulos preimplantation atlas",
+        ["developmental_expression"],
+        "used_in_selection",
+        "TPM",
+        "3–7 days, stage × inferred lineage",
+        "https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results",
+        "1,519 measured cells; stage and embryo counts retained; not coverage of all fetal stages",
+    )
+    add(
+        9606,
+        "hpa_brain",
+        "HPA v23 human brain, 193 subregions",
+        ["normal_bulk_rna"],
+        "used_in_selection",
+        "nTPM",
+        "adult",
+        "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+        "Maximum subregion mean after within-context group sums; no automatic negative-IHC credit",
+    )
+    add(
+        9606,
+        "gtex_tissue_rna",
+        "Direct GTEx v11 tissue medians",
+        ["normal_bulk_rna"],
+        "used_in_selection",
+        "TPM",
+        "adult",
+        "https://gtexportal.org/home/downloads/adult-gtex",
+        "52 native whole-organ contexts; 14 microdissected and two cultured/transformed contexts remain outside this adapter. Exact whole-organ HPA negative-IHC grades apply; donor medians do not exclude donor outliers. Native reader preserves all 68 contexts.",
+    )
+    add(
+        9606,
         "oncoref_tumor_union",
         "OncoRef source-mapped tumor union",
         ["tumor_expression"],

@@ -72,3 +72,8 @@ def test_unknown_registry_members_are_visible_instead_of_silently_dropped():
     # Ordinary singletons are still full entities, never inferred missing groups.
     assert len(groups) == 1
     assert json.loads(groups.member_gene_ids.iloc[0])
+
+
+def test_unnamed_locus_uses_its_stable_id_as_display_label():
+    group = equivalence_groups(["ENSG00000198211"])
+    assert group.protein_group_label.iloc[0] == "ENSG00000198211"

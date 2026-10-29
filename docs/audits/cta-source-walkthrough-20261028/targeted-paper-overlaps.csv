@@ -1,9 +1,9 @@
 Paper,Target,Category,Other registered papers,entity_id,member_gene_ids
-Bai et al. (2016),EGFL6,Unsafe,None,PEG:7cad4e44e13363bd4b0e,"[""ENSG00000198759""]"
-Garg et al. (2007),SSX4/B,Unassigned,Jamin et al. (2021); da Silva et al. (2017),PEG:027b04888fd9198d31ce,"[""ENSG00000268009"", ""ENSG00000269791""]"
+Bai et al. (2016),EGFL6,Unsafe,Hirbo et al. (2015); Sasaroli et al. (2011),PEG:7cad4e44e13363bd4b0e,"[""ENSG00000198759""]"
+Garg et al. (2007),SSX4/B,CTA,Jamin et al. (2021); da Silva et al. (2017),PEG:027b04888fd9198d31ce,"[""ENSG00000268009"", ""ENSG00000269791""]"
 Garg et al. (2007),SPA17,Unsafe,Chang et al. (2019); Wang et al. (2016); da Silva et al. (2017),PEG:03390ed98092aa8e9c91,"[""ENSG00000064199""]"
 Garg et al. (2007),SYCP1,CTA,Chang et al. (2019); Wang et al. (2016); Gong et al. (2021); Loriot et al. (2025); da Silva et al. (2017),PEG:dc3fe86d8f1d0f1ed671,"[""ENSG00000198765""]"
 Garg et al. (2007),NY-ESO-1,CTA,Jamin et al. (2021); Wang et al. (2016); Seager et al. (2024); Loriot et al. (2025); da Silva et al. (2017),PEG:dde00652f75f5114eae1,"[""ENSG00000184033"", ""ENSG00000268651""]"
 Garg et al. (2007),SPAG9,Unsafe,None,PEG:ff1945913ca6c491259a,"[""ENSG00000008294""]"
 Boël et al. (1995),MAGEA3,Unassigned,Jamin et al. (2021); Chang et al. (2019); Wang et al. (2016); Bruggeman et al. (2018); Gong et al. (2021); Carter et al. (2023); Seager et al. (2024); Loriot et al. (2025); da Silva et al. (2017),PEG:8fe6e7c0c5898d381def,"[""ENSG00000221867""]"
-Boël et al. (1995),MAGEA1,Unassigned,Jamin et al. (2021); Chang et al. (2019); Wang et al. (2016); Gong et al. (2021); Carter et al. (2023); Seager et al. (2024); Loriot et al. (2025); da Silva et al. (2017),PEG:d8f87170210d6b4f6fc0,"[""ENSG00000198681""]"
+Boël et al. (1995),MAGEA1,CTA,Jamin et al. (2021); Chang et al. (2019); Wang et al. (2016); Gong et al. (2021); Carter et al. (2023); Seager et al. (2024); Loriot et al. (2025); da Silva et al. (2017),PEG:d8f87170210d6b4f6fc0,"[""ENSG00000198681""]"

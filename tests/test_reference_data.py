@@ -4,6 +4,7 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 
+import copy
 import hashlib
 import io
 import json
@@ -17,9 +18,19 @@ import requests
 from oncoref import reference_data
 
 
-def _seed_cache(name, content: bytes, version="v23"):
+@pytest.fixture(autouse=True)
+def unpinned_cache_fixture(monkeypatch):
+    # These legacy-cache tests exercise recorded checksums. The separate version
+    # tests exercise independently pinned releases and current defaults.
+    sources = copy.deepcopy(reference_data.REFERENCE_SOURCES)
+    sources["hpa_rna_consensus"].pop("pins", None)
+    monkeypatch.setattr(reference_data, "REFERENCE_SOURCES", sources)
+
+
+def _seed_cache(name, content: bytes, version=None):
     """Write a cached TSV + a manifest recording its true size/sha256, merging
     into any existing manifest (so multiple versions can be seeded)."""
+    version = reference_data.resolve_version(name, version)
     dest = reference_data.local_path(name, version)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_bytes(content)
@@ -45,8 +56,8 @@ def test_cache_dir_honors_env(monkeypatch, tmp_path):
 
 
 def test_resolve_version_default_and_errors():
-    assert reference_data.resolve_version("hpa_rna_consensus") == "v23"
-    assert reference_data.resolve_version("hpa_rna_consensus", "latest") == "latest"
+    assert reference_data.resolve_version("hpa_rna_consensus") == "v25.1"
+    assert reference_data.resolve_version("hpa_rna_consensus", "latest") == "v25.1"
     with pytest.raises(reference_data.ReferenceDataError):
         reference_data.resolve_version("hpa_normal_tissue", "v99")
     with pytest.raises(reference_data.ReferenceDataError):
@@ -56,7 +67,7 @@ def test_resolve_version_default_and_errors():
 def test_local_path_and_is_cached(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_DATA_DIR", str(tmp_path))
     p = reference_data.local_path("hpa_rna_consensus")
-    assert p == tmp_path / "sources" / "hpa_rna_consensus" / "v23" / "rna_tissue_consensus.tsv"
+    assert p == tmp_path / "sources" / "hpa_rna_consensus" / "v25.1" / "rna_tissue_consensus.tsv"
     assert not reference_data.is_cached("hpa_rna_consensus")
     p.parent.mkdir(parents=True)
     p.write_text("Gene\tTissue\tnTPM\n")
@@ -112,7 +123,7 @@ def test_concurrent_downloads_share_one_hpa_archive(monkeypatch, tmp_path):
     assert paths == [reference_data.local_path("hpa_rna_consensus")] * 2
     assert paths[0].read_bytes() == content
     assert len(calls) == 1
-    assert reference_data._manifest_record("hpa_rna_consensus", "v23")["bytes"] == len(content)
+    assert reference_data._manifest_record("hpa_rna_consensus", "v25.1")["bytes"] == len(content)
     assert not list(paths[0].parent.glob(".hpa-*"))
 
 
@@ -120,9 +131,9 @@ def test_cached_file_ok_detects_truncation(monkeypatch, tmp_path):
     # #21: a TSV left truncated by a killed extract must NOT be served as valid.
     monkeypatch.setenv("CANCERDATA_DATA_DIR", str(tmp_path))
     dest = _seed_cache("hpa_rna_consensus", b"Gene\tTissue\tnTPM\n" * 100)
-    assert reference_data._cached_file_ok("hpa_rna_consensus", "v23", dest) is True
+    assert reference_data._cached_file_ok("hpa_rna_consensus", "v25.1", dest) is True
     dest.write_bytes(b"Gene\tTissue\n")  # truncated -> size no longer matches manifest
-    assert reference_data._cached_file_ok("hpa_rna_consensus", "v23", dest) is False
+    assert reference_data._cached_file_ok("hpa_rna_consensus", "v25.1", dest) is False
 
 
 def test_cached_file_ok_trusts_unrecorded(monkeypatch, tmp_path):
@@ -131,7 +142,7 @@ def test_cached_file_ok_trusts_unrecorded(monkeypatch, tmp_path):
     dest = reference_data.local_path("hpa_rna_consensus")
     dest.parent.mkdir(parents=True)
     dest.write_text("Gene\tTissue\tnTPM\n")
-    assert reference_data._cached_file_ok("hpa_rna_consensus", "v23", dest) is True
+    assert reference_data._cached_file_ok("hpa_rna_consensus", "v25.1", dest) is True
 
 
 def test_cached_file_ok_is_per_version(monkeypatch, tmp_path):
@@ -141,11 +152,11 @@ def test_cached_file_ok_is_per_version(monkeypatch, tmp_path):
     v23 = _seed_cache("hpa_rna_consensus", b"v23-data" * 50, version="v23")
     latest = _seed_cache("hpa_rna_consensus", b"latest-data" * 80, version="latest")
     assert reference_data._cached_file_ok("hpa_rna_consensus", "v23", v23) is True
-    assert reference_data._cached_file_ok("hpa_rna_consensus", "latest", latest) is True
+    assert reference_data._cached_file_ok("hpa_rna_consensus", "v25.1", latest) is True
     v23.write_bytes(b"trunc")  # corrupt only v23
     assert reference_data._cached_file_ok("hpa_rna_consensus", "v23", v23) is False
     # 'latest' is unaffected — its own record still matches.
-    assert reference_data._cached_file_ok("hpa_rna_consensus", "latest", latest) is True
+    assert reference_data._cached_file_ok("hpa_rna_consensus", "v25.1", latest) is True
 
 
 def test_verify_is_per_version(monkeypatch, tmp_path):
@@ -201,7 +212,7 @@ def test_provenance_selects_exact_cached_version(monkeypatch, tmp_path):
     assert v23_record["version"] == "v23"
     assert v23_record["path"] == str(v23)
     assert v23_record["sha256"] == hashlib.sha256(b"v23-data").hexdigest()
-    assert latest_record["version"] == "latest"
+    assert latest_record["version"] == "v25.1"
     assert latest_record["path"] == str(latest)
     assert latest_record["sha256"] == hashlib.sha256(b"latest-data").hexdigest()
 
@@ -244,9 +255,9 @@ def test_provenance_distinguishes_no_manifest_and_missing_checksum(monkeypatch, 
     manifest_path.write_text(
         json.dumps(
             {
-                reference_data._manifest_key("hpa_rna_consensus", "v23"): {
+                reference_data._manifest_key("hpa_rna_consensus", "v25.1"): {
                     "name": "hpa_rna_consensus",
-                    "version": "v23",
+                    "version": "v25.1",
                     "url": "http://example/test",
                     "path": str(dest),
                     "bytes": len(b"unrecorded"),

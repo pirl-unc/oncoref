@@ -157,6 +157,7 @@ def test_hpa_matches_reference_sources():
         set(data_manifest.HPA)
         | set(reference_data._normal_manifest["artifacts"])
         | set(reference_data._annotation_manifest["artifacts"])
+        | set(reference_data._release_manifest["sources"])
     ) == set(reference_data.REFERENCE_SOURCES)
 
 

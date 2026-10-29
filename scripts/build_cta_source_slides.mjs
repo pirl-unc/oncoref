@@ -1,6 +1,6 @@
 // Editable release deck from presentation-data.json; scientific scatter from the audit.
 // Required: RUNTIME_NODE_MODULES, ONCOREF_PRESENTATIONS_SKILL, RUNTIME_PYTHON.
-// Run prepare_cta_release_presentation.py first. Output goes to the versioned audit.
+// Run render_cta_source_walkthrough.py first. Output goes to the versioned audit.
 import fs from 'node:fs/promises';
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
@@ -65,12 +65,12 @@ note(s,'Sources, expression profiles, single-cutoff filtering and measured tissu
 {
 const s=slide('Published candidate lists','Human annotations',data.papers.map(r=>`${r.citation}: ${r.source_url}`).join('\n'));
 table(s,[['Paper','Groups','CTA','Unsafe','Neither','Unassigned'],...data.papers.map(r=>[r.citation,n(r.mapped_entities),r.CTA,r.Unsafe,r.Neither,r.Unassigned])],{widths:[390,150,140,160,150,162],size:19,h:420,y:158});
-note(s,`Union: 2,482 groups / 2,538 loci. ${data.annotated} selected groups have an annotation; ${data.unannotated} do not.`,600,23);
+note(s,`Union: ${n(data.paper_union_groups)} groups / ${n(data.paper_union_loci)} loci. ${data.annotated} selected groups have an annotation; ${data.unannotated} do not.`,600,23);
 }
 {
-const s=slide('What the small paper sets actually contain','Publication scope','Garg et al. (2007), Discussion https://doi.org/10.1158/1078-0432.CCR-06-2340 ; Boël et al. (1995), Abstract https://pubmed.ncbi.nlm.nih.gov/7895173/ ; Bai et al. (2016) https://pubmed.ncbi.nlm.nih.gov/27803106/ . Prior recognized antigens have a separate evidence role and do not inherit new-target validation.');
-table(s,[['Paper','Principal target','Prior CTAs recognized','Mapped / selected'],['Bai (2016)','EGFL6','No larger CTA list','1 / 0'],['Garg (2007)','SPAG9','SPA17, SYCP1, NY-ESO-1, SSX4','5 / 2'],['Boël (1995)','BAGE: unresolved locus','MAGE-A1, MAGE-A3','2 / 0']],{widths:[225,285,440,202],size:24,h:300});
-note(s,'Bai’s 538 correlated genes are not a CTA set. Added prior-CTA memberships change overlaps, not the overall union or selection.',550,26);
+const s=slide('Broader published nominations','Publication scope','Sasaroli et al. (2011) https://doi.org/10.4161/cbt.12.3.16260 . Hirbo et al. (2015) https://doi.org/10.1371/journal.pone.0144155 . Exact extracted rows and matching receipts accompany the report.');
+table(s,[['Paper','Published scope','Identity accounting'],['Sasaroli et al. (2011)','13 detailed tumor-vascular candidates','13 matched genes'],['Hirbo et al. (2015)','86 placenta-enriched genes, including 30 fast-evolving','82 matched, 4 unresolved'],['Compact source view','Bai, Boël and Bradley covered by larger sets','All memberships retained'],['Garg et al. (2007)','Still uniquely contributes SPAG9','Retained in main view']],{widths:[290,570,292],size:25,h:350});
+note(s,'Vascular and placental nominations retain their scope. Paper membership never bypasses the quantitative funnel.',580,26);
 }
 {
 const s=slide('Overlap between published lists','Human annotations','Tables and author-recognized prior antigens within the same paper are unioned. Evidence roles, source IDs and pairwise counts accompany the report.');
@@ -84,7 +84,7 @@ note(s,'This is not a 12,000-gene literature list. Embryonic presence does not e
 }
 {
 const s=slide('Normal and cancer measurement sources','Human evidence','HPA https://v23.proteinatlas.org/about/download ; DICE https://dice-database.org/ ; cornea https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683 ; Tyser https://doi.org/10.1038/s41586-021-04158-y . Full URLs and sample lineage accompany the report.');
-table(s,[['Evidence','Source','Quantity'],['Normal / reproductive bulk','HPA consensus with GTEx','nTPM'],['Normal tissue cells','HPA clusters, at least 20 reads','nTPM'],['Immune cells','HPA / Monaco / original DICE','Native nTPM / TPM'],['Adult cornea','Collin et al., GSE155683','CP10K'],['Normal protein','HPA + curated external IHC','Staining / reagent confidence'],['Cancer','132 compatible OncoRef cohort views + HPA','TPM / protein-coding TPM'],['Developmental','Tyser et al. (2021), one embryo','Lineage mean TPM']],{widths:[310,570,272],size:22,h:405});
+table(s,[['Evidence','Source','Quantity'],['Normal / reproductive bulk','HPA consensus + HPA brain + direct GTEx','nTPM / TPM'],['Normal tissue cells','HPA clusters, at least 20 reads','nTPM'],['Immune cells','HPA / Monaco / original DICE','Native nTPM / TPM'],['Adult cornea','Collin et al., GSE155683','CP10K'],['Normal protein','HPA + curated external IHC','Staining / reagent confidence'],['Cancer','132 compatible OncoRef cohort views + HPA','TPM / protein-coding TPM'],['Developmental','Tyser gastrulation + Petropoulos preimplantation','Stage / lineage mean TPM']],{widths:[310,570,272],size:22,h:405});
 note(s,'DICE and corneal coverage are optional. Measured counterevidence still contributes.',600,24);
 }
 {
@@ -114,28 +114,33 @@ const s=slide('IHC matching to measured RNA compartments','Anatomy and evidence'
 table(s,[['Context','Evidence and current ceiling'],['PRAME colon epithelial cells','20.3 nTPM / 96 reads; Enhanced-negative glandular IHC; Manageable 128'],['PRAME adrenal bulk','3.6 nTPM; incomplete compartment IHC coverage; Vital 4'],['CTAG2 bronchial basal cells','24.9 nTPM / 58 reads; Enhanced-negative respiratory IHC; Vital 32'],['Unrelated cells in the same tissue','No negative-IHC credit without exact or declared compartment coverage']],{widths:[365,787],size:25,h:350});
 note(s,'PRAME and CTAG2 pass this policy. Parent-compartment sensitivity and PRAME’s Low adrenal protein remain explicit limitations.',590,23);
 }
-for(const [name,title] of [['selected-reproductive-embryonic','Selected CTA: reproductive versus embryonic RNA'],['selected-reproductive-embryonic-immune','Selected CTA: normal immune RNA'],['selected-reproductive-embryonic-cornea','Selected CTA: normal corneal RNA']]){
-const s=slide(title,'Expression distributions','Color uses the highest supported non-disposable healthy expression within the stated native unit. There is no mixed-unit maximum. Labels include widely studied antigens with mapped values and all genes ≥5 on both axes. Missing embryonic measurements appear in a separate categorical band; every selected group is represented without zero filling.');
+for(const [name,title] of [['selected-reproductive-embryonic','Selected CTA: reproductive versus embryonic RNA'],['selected-reproductive-embryonic-immune','Selected CTA: healthy RNA in TPM'],['selected-reproductive-embryonic-cornea','Selected CTA: normal corneal RNA']]){
+const s=slide(title,'Expression distributions','Color uses the highest supported non-disposable healthy expression within the stated native unit. There is no mixed-unit maximum. Labels include widely studied antigens with mapped values. Companion panels label all selected groups ≥5 on both axes. Missing embryonic measurements appear in a separate categorical band; every selected group is represented without zero filling.');
 figure(s,name+'-slide',48,160,1184,475);
 text(s,'Gray: healthy measurement unavailable. The lower band has no embryonic-expression value.',64,639,1152,25,16,C.muted);
 }
+for(const number of [1,2,3]){
+const s=slide(`High reproductive and embryonic RNA: labels ${number} of 3`,'Selected CTA detail','The three panels use identical axes and together label all selected groups with reproductive nTPM ≥5 and measured embryonic lineage-mean TPM ≥5. This descriptive threshold does not replace developmental cell-support requirements. Color is the highest non-disposable healthy nTPM.');
+figure(s,`selected-high-both-${number}-slide`,48,160,1184,475);
+}
 {
-const s=slide('Why familiar CTAs lack an atlas TPM row','Embryonic measurement coverage','Author raw counts: https://github.com/ScialdoneLab/human-gastrula-shiny/tree/3e6ab8546e57decc5ec09770720709b5fa6428ef . All values below are raw-count observations, not TPM. The 25,330-row atlas download is gene-filtered; the author table has 57,490 columns and the same number of cells. Different quantification pipelines remain separate.');
-table(s,[['Author gene column','Reported reads','Positive cells / 1,195'],['PRAME, CT83, CTAG1A, CTAG1B','0 for each','0 for each'],['XAGE1B','0','0'],['MAGE-A4','14','1'],['TBXT','31,149','226'],['XAGE1A','No separate column','Unknown']],{widths:[520,280,352],size:25,h:350});
-note(s,'One early embryo: nondetection does not establish absence throughout fetal development. Counts are not substituted for TPM.',580,25);
+const s=slide('Complementary embryonic measurements','Developmental coverage','Tyser E-MTAB-9388 https://doi.org/10.1038/s41586-021-04158-y . Petropoulos E-MTAB-3929 https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results . Sources retain their own stage, cell support and donor counts.');
+table(s,[['Source','Measured cells / embryos','Developmental scope'],['Tyser et al. (2021)','1,195 cells / 1 embryo','Gastrulation, Carnegie stage 7'],['Petropoulos et al. (2016)','1,519 cells / 88 embryos','Preimplantation, days 3–7'],['Recovered coverage','683 of 1,006 earlier missing groups','Measured TPM, including familiar CTAs']],{widths:[360,420,372],size:26,h:320});
+text(s,'PRAME, MAGE-A4, CTAG1A/B, XAGE1A/B and CT83 now have TPM rows',64,525,1152,70,28,C.teal,true);
+note(s,'Each source keeps its own stages. Neither atlas covers all fetal or pediatric development.',610,23);
 }
 for(const [name,title] of [['reproductive','Widely studied antigens: reproductive RNA'],['embryonic','Widely studied antigens: embryonic RNA']]){
 const s=slide(title,'Current assignments','MAGE-A1 and MAGE-A3 are comparators, not admission controls. Full-width figures highlight PRAME, NY-ESO-1 (CTAG1A/B), XAGE1A/B, MAGE-A4, CT83, SSX2/B and TBXT. Missing embryonic measurements are in a separate band.');
 figure(s,'widely-studied-antigens-'+name+'-slide',48,160,1184,475);
 }
 {
-const s=slide('Assessment status is separate from category','Reading the results','A category can be assigned despite gaps in optional or irrelevant sources. Screened does not mean clinically safe or fully measured. MAGE-A3 has a colon hold plus missing embryonic measurements; the missing measurement is not the cause of the colon hold.');
+const s=slide('Assessment status is separate from category','Reading the results','A category can be assigned despite gaps in optional or irrelevant sources. Screened does not mean clinically safe or fully measured. MAGE-A3 has measured colon counterevidence. An independent developmental measurement cannot erase it.');
 table(s,[['API status','Meaning','Human groups'],['screened','CTA, Unsafe or Neither assigned',n(counts.CTA+counts.Unsafe+counts.Neither)],['incomplete_evidence','Unassigned with missing coverage or unresolved evidence',n(data.assessment_statuses.incomplete_evidence)],['outside_category_definitions','Tracked coverage checks pass; no definition fits',n(data.assessment_statuses.outside_category_definitions)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:24,h:335});
 note(s,'Neither requires a measured biological profile. Unassigned does not mean Unsafe or low expression.',585,26);
 }
 {
 const s=slide('Which sources have incomplete evidence','Coverage audit','Source versions, complete missing tissue/cell contexts, member ENSG IDs, historical IDs, synonyms and tumor cohort coverage: '+URL+'coverage/ . Counts overlap and do not sum to a total.');
-table(s,[['Source or unresolved evidence','Groups'],...data.normal_gap_counts.map(r=>[r.source,r.groups]),['Tyser E-MTAB-9388 filtered TPM',data.evidence_gap_counts.embryonic_measurement_missing],['No tumor measurement: OncoRef + HPA',data.evidence_gap_counts.tumor_measurement_missing],['Measured tumor, incomplete group profile',data.evidence_gap_counts.tumor_group_profile_incomplete],['HPA v23 Uncertain normal-tissue IHC',data.evidence_gap_counts.unresolved_evidence]],{widths:[970,182],size:22,h:395,y:170});
+table(s,[['Source or unresolved evidence','Groups'],...data.normal_gap_counts.map(r=>[r.source,r.groups]),['Combined Tyser + Petropoulos TPM',data.evidence_gap_counts.embryonic_measurement_missing],['No tumor measurement: OncoRef + HPA',data.evidence_gap_counts.tumor_measurement_missing],['Measured tumor, incomplete group profile',data.evidence_gap_counts.tumor_group_profile_incomplete],['HPA v23 Uncertain normal-tissue IHC',data.evidence_gap_counts.unresolved_evidence]],{widths:[970,182],size:22,h:395,y:170});
 note(s,`Overlapping gaps within ${n(data.assessment_statuses.incomplete_evidence)} unassigned groups. DICE and corneal coverage are optional.`,600,24);
 }
 {
@@ -145,7 +150,7 @@ note(s,'Human thresholds, antibody grades and normal-tissue absence never transf
 }
 {
 const s=slide('Curated oncofetal sources','Developmental nominations','Shaw et al. (2024) https://doi.org/10.1038/s41467-024-47649-y ; TRIM71 liver study https://pmc.ncbi.nlm.nih.gov/articles/PMC11388079/ ; Cardoso-Moreira et al. (2019) https://pmc.ncbi.nlm.nih.gov/articles/PMC6658352/ . Newly identified sources are not in current selection counts.');
-table(s,[['Source','Scope and integration status'],['Tyser et al. (2021)','Current embryonic-expression route; one early embryo, not a restricted-gene list'],['Shaw et al. (2024)','157 cancer-specific targets; six oncofetal annotations. Exon-specific scope retained'],['TRIM71 liver study (2024)','Liver oncofetal signature; requires identity and measurement ingestion'],['Cardoso-Moreira et al. (2019)','Developmental organ trajectories with child/adult comparisons; not integrated']],{widths:[380,772],size:25,h:350});
+table(s,[['Source','Scope and integration status'],['Tyser + Petropoulos','Current gastrulation and preimplantation TPM sources'],['Shaw et al. (2024)','157 cancer-specific targets; six oncofetal annotations. Exon-specific scope retained'],['TRIM71 liver study (2024)','Liver oncofetal signature; requires identity and measurement ingestion'],['Cardoso-Moreira et al. (2019)','Developmental organ trajectories with child/adult comparisons; not integrated']],{widths:[380,772],size:25,h:350});
 note(s,'Published nominations need independent normal/tumor filtering and postnatal coverage.',590,26);
 }
 {
@@ -153,6 +158,12 @@ const s=slide('Common API with native evidence underneath','API','Human, dog and
 text(s,'results = cta_selection.results(species="human")\naudit = cta_selection.audit(species="human")\naudit.sources    audit.overlaps    audit.funnel\naudit.explain("PRAME")',64,180,1152,200,31,C.teal,true);
 table(s,[['Field','Meaning'],['category','CTA / Unsafe / Neither, or null when unassigned'],['assessment_status','Screened, incomplete evidence, outside definitions, or unassessed'],['gene_ids / gene_identities','All group members, stable IDs, history and curated synonyms']],{y:400,h:190,widths:[335,817],size:25});
 note(s,'Source-specific native units, tissue/cell context, confidence and coverage remain inspectable.',610,24);
+}
+{
+const s=slide('Every source resolves to a concrete version','Data API','Data version API: https://pirl-unc.github.io/oncoref/data-versions/ . GTEx versions and pipelines: https://github.com/broadinstitute/gtex-pipeline/blob/master/rnaseq/README.md . HPA current RNA snapshot: https://github.com/pirl-unc/oncoref/releases/tag/reference-hpa-v25.1-20261028 .');
+text(s,'catalog.ensure("gtex_tissue_rna")               # v11\ncatalog.ensure("gtex_tissue_rna", version="v10")\ncatalog.provenance("gtex_tissue_rna", "v11")',64,173,1152,145,28,C.teal,true);
+table(s,[['Shared choice','Source-specific meaning'],['Default / latest','Newest registered release; saved runs keep explicit pins'],['Concrete version','GTEx v11; HPA v25.1; a study snapshot or OncoRef build'],['Provenance','Version, content checksum, native unit, annotation and pipeline'],['Species','The same selector applies to native dog and mouse assets']],{y:340,h:235,widths:[310,842],size:24});
+note(s,'This analysis pins GTEx v11 and HPA v23 normal panels. A newer public default does not rewrite it.',605,23);
 }
 for(const [i,s] of p.slides.items.entries()){
  await fs.writeFile(path.join(build,'rendered',`slide-${String(i+1).padStart(2,'0')}.png`),new Uint8Array(await(await p.export({slide:s,format:'png',scale:1.5})).arrayBuffer()));

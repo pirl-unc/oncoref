@@ -215,6 +215,8 @@ oncoref plot cta-curation --out cta_curation_out
 ```bash
 oncoref data list               # every wheel/bundle/HPA/source dataset
 oncoref data status bundle      # expression-bundle cache state (no download)
+oncoref data versions gtex_tissue_rna
+oncoref data path gtex_tissue_rna --version v10
 oncoref data metadata           # package/data/cache/release contract JSON
 oncoref data fetch bundle       # download the large expression bundle
 oncoref data fetch hpa          # HPA RNA / immunohistochemistry / single-cell data
@@ -222,6 +224,8 @@ oncoref data dir bundle         # where the data bundle is cached
 oncoref data prune --yes        # delete stale bundle version caches
 oncoref version
 ```
+
+Data readers select the newest registered release by default and accept explicit historical versions through `catalog.ensure(name, version=...)`. Provenance records the concrete release and checksum; saved analyses keep their pins. See [data versions and reproducibility](docs/data-versions.md).
 
 HPA files, expression bundles (including overlays and release metadata), and
 ordinary expression build-source files use `datacache>=1.19.0` for streaming

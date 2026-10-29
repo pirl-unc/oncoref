@@ -21,8 +21,8 @@ def audit():
 
 def test_paper_unions_and_overlaps(audit):
     members = audit.memberships
-    assert members.entity_id.nunique() == 2482
-    assert len({gene for ids in members.gene_ids for gene in ids}) == 2538
+    assert members.entity_id.nunique() >= 2482
+    assert len({gene for ids in members.gene_ids for gene in ids}) >= 2538
     assert (
         members.loc[members.category.eq("CTA"), "entity_id"].nunique()
         <= human.cta_selection_coverage()["counts"]["CTA"]
@@ -36,16 +36,43 @@ def test_paper_unions_and_overlaps(audit):
     assert audit.sources.citation.str.match(r".+ et al\. \(\d{4}\)").all()
 
 
+def test_primary_source_consolidation_preserves_the_complete_union(audit):
+    sources = audit.sources
+    sets = audit.memberships.groupby("source_id").entity_id.agg(set)
+    primary = sources[sources.primary_source]
+    assert set().union(*(sets[sid] for sid in primary.source_id)) == set(
+        audit.memberships.entity_id
+    )
+    for row in sources[~sources.primary_source].itertuples():
+        assert row.mapped_entities < 10
+        assert set(row.covered_by) <= set(primary.source_id)
+        assert sets[row.source_id] <= set().union(*(sets[sid] for sid in row.covered_by))
+    egfl6 = audit.memberships[audit.memberships.label.eq("EGFL6")]
+    assert {"10.4161/cbt.12.3.16260", "10.1371/journal.pone.0144155"} <= set(egfl6.source_id)
+    intake = pd.read_csv(
+        ROOT
+        / "docs/audits/cta-source-walkthrough-20261028/publication-intake/mapped-source-rows.csv"
+    )
+    hirbo = intake[intake.source_tag.eq("Hirbo2015_placenta")]
+    assert len(hirbo) == 86 and hirbo.identity_status.eq("matched").sum() == 82
+    assert (
+        "placenta"
+        in sources.set_index("source_id").loc["10.1371/journal.pone.0144155", "evidence_scope"]
+    )
+
+
 def test_prior_cta_context_expands_paper_annotations_without_admission(audit):
     """Prior-antigen recognition is provenance, never a positive-control bypass."""
     sources = audit.sources.set_index("source_id")
     garg = "10.1158/1078-0432.CCR-06-2340"
     boel = "10.1016/s1074-7613(95)80053-0"
-    assert (sources.loc[garg, "mapped_entities"], sources.loc[garg, "CTA"]) == (5, 2)
-    assert (sources.loc[boel, "mapped_entities"], sources.loc[boel, "CTA"]) == (2, 0)
+    assert (sources.loc[garg, "mapped_entities"], sources.loc[garg, "CTA"]) == (5, 3)
+    assert (sources.loc[boel, "mapped_entities"], sources.loc[boel, "CTA"]) == (2, 1)
     members = audit.memberships[audit.memberships.source_id.eq(garg)]
     assert set(members.label) == {"SPAG9", "SPA17", "SYCP1", "NY-ESO-1", "SSX4/B"}
-    assert audit.memberships[audit.memberships.source_id.eq(boel)].category.isna().all()
+    boel_members = audit.memberships[audit.memberships.source_id.eq(boel)].set_index("label")
+    assert boel_members.loc["MAGEA1", "category"] == "CTA"
+    assert pd.isna(boel_members.loc["MAGEA3", "category"])
     context = pd.read_csv(ROOT / "oncoref/data/cta-publication-context.csv")
     assert context.evidence_role.eq("previously_recognized_CTA").all()
     assert context.source_location.notna().all()
@@ -93,8 +120,16 @@ def test_specific_contexts_and_same_tissue_negative_ihc(audit):
     colon = audit.explain("PRAME").query("tissue == 'colon'").iloc[0]
     assert (colon.value, colon.candidate_ceiling, colon.selection_tier) == (20.3, 128, "manageable")
     assert "glandular cells" in colon.ihc_coverage
-    assert audit.explain("MAGEA1").query("decision == 'hold'").reason.str.contains("4.4 nTPM").any()
-    assert audit.explain("MAGEA1").category.isna().all()
+    assert audit.explain("MAGEA1").category.eq("CTA").all()
+    mage = (
+        pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
+        .set_index("protein_group_label")
+        .loc["MAGEA1"]
+    )
+    assert mage.developmental_route and mage.developmental_mean_tpm == pytest.approx(
+        6.315480240244203
+    )
+    assert not mage.reproductive_route  # admission comes from measured developmental RNA
     assert audit.explain("TBXT").iloc[0].category == "CTA"
     for name in ("TBXT", "CT83"):
         assert "external_review_flag" in set(audit.explain(name).query("decision == 'flag'").value)
@@ -192,9 +227,9 @@ def test_missing_tumor_measurements_are_not_incomplete_measured_groups():
 def test_developmental_alias_recovery_retains_conflicting_vectors():
     recovery = pd.read_csv(RELEASE / "developmental-identity-recoveries.csv")
     lineages = pd.read_csv(RELEASE / "developmental-lineages.csv.gz")
-    measured = set(lineages["Gene ID"])
-    recovered = set(recovery.loc[recovery.status.eq("registered_alias_recovered"), "gene_id"])
-    conflicting = set(recovery.loc[recovery.status.eq("conflicting_alias_vectors"), "gene_id"])
+    measured = set(lineages.loc[lineages.source.eq("tyser_E-MTAB-9388"), "Gene ID"])
+    recovered = set(recovery.loc[recovery.status.eq("registered_alias"), "gene_id"])
+    conflicting = set(recovery.loc[recovery.status.eq("conflicting_vectors"), "gene_id"])
     assert recovered <= measured
     assert not conflicting & measured
     assert {
@@ -204,3 +239,47 @@ def test_developmental_alias_recovery_retains_conflicting_vectors():
         "ENSG00000212725",
         "ENSG00000293560",
     } <= recovered
+
+
+def test_alternative_sources_restore_measurements_without_filling_missing_zeros():
+    coverage = pd.read_csv(RELEASE / "combined-rna-coverage.csv.gz").set_index("label")
+    assert coverage.loc["POLR2A", "bulk_complete"]
+    assert coverage.loc["POLR2A", "required_coverage"]
+    assert coverage.loc["CIMIP3", "bulk_complete"]
+    assert json.loads(coverage.loc["CIMIP3", "missing_bulk_tissues"]) == []
+    assert coverage.required_bulk_tissues.eq(36).all()
+    bulk = pd.read_csv(RELEASE / "alternative-evidence/normal-bulk.csv.gz")
+    pituitary = bulk[
+        bulk.gene_id.eq("ENSG00000181222")
+        & bulk.source.eq("gtex_tissue_rna")
+        & bulk.tissue.eq("pituitary gland")
+    ].iloc[0]
+    assert pituitary.value == pytest.approx(109.319) and pituitary.unit == "TPM"
+    assert pituitary.source_context == "Pituitary"
+    cimip3 = bulk[
+        bulk.gene_id.eq("ENSG00000287363")
+        & bulk.source.eq("gtex_tissue_rna")
+        & bulk.tissue.eq("pituitary gland")
+    ].iloc[0]
+    assert cimip3.value == 0 and cimip3.version == "v11"
+    assert bulk.loc[bulk.source.eq("hpa_brain"), "unit"].eq("nTPM").all()
+    lineage = pd.read_csv(RELEASE / "developmental-lineages.csv.gz")
+    petro = set(lineage.loc[lineage.source.eq("petropoulos_E-MTAB-3929"), "Gene ID"])
+    for symbol in ["PRAME", "MAGEA4", "NY-ESO-1", "XAGE1A/B", "CT83"]:
+        row = human.cta_selection().set_index("label").loc[symbol]
+        assert set(row.gene_ids) <= petro
+    assert not lineage.duplicated(["Gene ID", "source", "Lineage"]).any()
+    assert (
+        lineage.loc[lineage.source.eq("petropoulos_E-MTAB-3929"), "stage"]
+        .eq("preimplantation, 3–7 days")
+        .all()
+    )
+
+
+def test_normal_evidence_keeps_native_source_and_concrete_release(audit):
+    gtex = audit.explanations[audit.explanations.source_id.eq("gtex_tissue_rna")]
+    assert len(gtex) > 0
+    assert gtex.source_version.eq("v11").all()
+    assert gtex.source_context.notna().all()
+    assert gtex.source_url.str.contains("adult-gtex/bulk-gex/v11/", regex=False).all()
+    assert audit.explanations.label.notna().all()

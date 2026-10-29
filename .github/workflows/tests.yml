@@ -226,10 +226,10 @@ jobs:
               "hpa_normal_tissue": os.environ["CI_HPA_NORMAL_TISSUE_SHA256"],
           }
           for name, expected_sha256 in hpa_sources.items():
-              path = reference_data.local_path(name)
+              path = reference_data.local_path(name, "v23")
               if path.is_file() and sha256(path) != expected_sha256:
                   path.unlink()
-              path = reference_data.download(name)
+              path = reference_data.download(name, "v23")
               observed_sha256 = sha256(path)
               assert observed_sha256 == expected_sha256, (observed_sha256, expected_sha256)
               print(path)

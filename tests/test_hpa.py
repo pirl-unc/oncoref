@@ -6,7 +6,7 @@
 
 import pytest
 
-from oncoref import hpa, load_dataset
+from oncoref import hpa, load_dataset, reference_data
 
 
 def _seed(cache_root, name, version, filename, text):
@@ -19,12 +19,14 @@ def _seed(cache_root, name, version, filename, text):
 @pytest.fixture
 def hpa_cache(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_DATA_DIR", str(tmp_path))
+    for name in ("hpa_rna_consensus", "hpa_single_cell"):
+        monkeypatch.setitem(reference_data.REFERENCE_SOURCES[name], "default_version", "v23")
     # clear lru_caches so each test sees its own fixture
     for fn in (
-        hpa.hpa_rna_consensus,
+        hpa._hpa_rna_consensus_for_version,
         hpa._hpa_normal_tissue_for_version,
         hpa._hpa_normal_tissue_labels_for_version,
-        hpa.hpa_single_cell,
+        hpa._hpa_single_cell_for_version,
         hpa.hpa_cell_type_expression,
     ):
         fn.cache_clear()
@@ -58,10 +60,10 @@ def hpa_cache(monkeypatch, tmp_path):
     )
     yield tmp_path
     for fn in (
-        hpa.hpa_rna_consensus,
+        hpa._hpa_rna_consensus_for_version,
         hpa._hpa_normal_tissue_for_version,
         hpa._hpa_normal_tissue_labels_for_version,
-        hpa.hpa_single_cell,
+        hpa._hpa_single_cell_for_version,
         hpa.hpa_cell_type_expression,
     ):
         fn.cache_clear()

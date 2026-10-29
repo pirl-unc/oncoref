@@ -3,8 +3,8 @@
   "schema_version": 1,
   "release": null,
   "data_sha256": {
-    "cta-selection-human.csv.gz": "c174b4ae6de7e468d43707d727d1cda5573def5459a6ed85e7a64f5afba00952",
-    "cta-selection-sources.csv": "4ba97695919d7e3aa7866254294cb612889bd24c5d17509a354cd946b7eb6c69"
+    "cta-selection-human.csv.gz": "e79482edaeca7861889388bb721223b31c089ac3d66547b5ab944e8f088bdba3",
+    "cta-selection-sources.csv": "297944823b04cb18545825a12b40d25f87754aa1d3b910bca24ad88fd7211901"
   },
   "species": {
     "human": {
@@ -86,7 +86,7 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "56725e3c3b28dd2793a2da63d6f2222da1088d96af0a60ce30bc4966e3c636c3",
-    "report_manifest": "0db8a6b9df6bee344158f87c32a136330dbb731268ba8844c7a632001155f8ae"
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "7ef01de6115fb0cbe7220f8ebeea9ed457214731b637b2672399f87376e9f3a0",
+    "report_manifest": "7aaf828fdcc48c854f6aac1fdaa4d356bbbbc911d036d5ecd590281ec37af452"
   }
 }
