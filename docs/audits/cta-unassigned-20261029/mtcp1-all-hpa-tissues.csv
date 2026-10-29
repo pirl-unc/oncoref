@@ -1,0 +1,51 @@
+Tissue,nTPM,role
+adipose tissue,1.0,normal
+adrenal gland,2.0,normal
+amygdala,0.5,normal
+appendix,1.8,normal
+basal ganglia,0.7,normal
+bone marrow,2.8,normal
+breast,1.7,reproductive
+cerebellum,0.9,normal
+cerebral cortex,0.6,normal
+cervix,1.2,reproductive
+choroid plexus,2.9,normal
+colon,1.6,normal
+duodenum,1.9,normal
+endometrium,1.6,reproductive
+epididymis,2.6,reproductive
+esophagus,1.2,normal
+fallopian tube,1.4,reproductive
+gallbladder,1.3,normal
+heart muscle,1.4,normal
+hippocampal formation,0.6,normal
+hypothalamus,0.5,normal
+kidney,1.7,normal
+liver,2.4,normal
+lung,1.2,normal
+lymph node,2.4,normal
+midbrain,0.7,normal
+ovary,2.3,reproductive
+pancreas,2.5,normal
+parathyroid gland,0.9,normal
+pituitary gland,1.6,normal
+placenta,1.0,reproductive
+prostate,1.6,reproductive
+rectum,1.9,normal
+retina,2.4,normal
+salivary gland,1.6,normal
+seminal vesicle,1.4,reproductive
+skeletal muscle,1.1,normal
+skin,4.1,normal
+small intestine,1.8,normal
+smooth muscle,1.3,normal
+spinal cord,0.8,normal
+spleen,1.9,normal
+stomach,2.0,normal
+testis,5.1,reproductive
+thymus,1.9,permissive
+thyroid gland,1.9,normal
+tongue,0.6,normal
+tonsil,2.5,normal
+urinary bladder,1.3,normal
+vagina,0.9,reproductive

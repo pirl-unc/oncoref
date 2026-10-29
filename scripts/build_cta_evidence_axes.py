@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the four-question CTA definition with independent safety and admission.
+"""Render the three-question CTA definition with independent safety and admission.
 
 This explanatory figure reads the documented rule contract; the selection replay supplies decisions.
 The source script, PDF and PNG preserve the distinction between safety evidence
@@ -35,7 +35,7 @@ def build():
     page.drawString(36, 575, "ONCOREF  /  SAFETY AND CANDIDATE IDENTITY")
     page.setFillColor(INK)
     page.setFont("Helvetica-Bold", 26)
-    page.drawString(36, 537, "Four separate CTA requirements")
+    page.drawString(36, 537, "Safety, cancer and Reproductive evidence")
     paragraph = ParagraphStyle(
         "body", fontName="Helvetica", fontSize=12, leading=16, textColor=INK, alignment=TA_LEFT
     )
@@ -57,12 +57,7 @@ def build():
             "Active. At least 2 in native TPM or HPA pTPM. One sample qualifies. No tumor-versus-normal ratio.",
         ],
         [
-            "<b>Adult restriction</b>",
-            "A qualifying reproductive or developmental signal exceeds supported adult normal RNA in its own native unit.",
-            "Active. Compare with Vital / Protected / Manageable. Exclude Reproductive / Disposable. CP10K stays safety-only.",
-        ],
-        [
-            "<b>Reproductive / developmental association</b>",
+            "<b>Reproductive evidence</b>",
             "Affirmative expression in reproductive, placental, embryonic or fetal contexts.",
             "Active quantified routes. Reproductive or supported developmental expression can qualify.",
         ],
@@ -70,13 +65,13 @@ def build():
     table = Table(
         [[p(value, row == 0) for value in values] for row, values in enumerate(entries)],
         colWidths=[150, 275, 295],
-        rowHeights=[31, 84, 65, 84, 77],
+        rowHeights=[31, 84, 65, 77],
     )
     table.setStyle(
         TableStyle(
             [
                 ("BACKGROUND", (0, 0), (-1, 0), INK),
-                ("BACKGROUND", (0, 3), (-1, 3), colors.HexColor("#FFF4DB")),
+                ("BACKGROUND", (0, 3), (-1, 3), colors.HexColor("#F3F6F8")),
                 ("VALIGN", (0, 0), (-1, -1), "TOP"),
                 ("LEFTPADDING", (0, 0), (-1, -1), 9),
                 ("RIGHTPADDING", (0, 0), (-1, -1), 9),
@@ -86,20 +81,23 @@ def build():
         )
     )
     table.wrapOn(page, 720, 400)
-    table.drawOn(page, 36, 178)
+    table.drawOn(page, 36, 235)
     statement = p(
-        "<b>CTA:</b> acceptable safety AND cancer expression AND adult restriction "
-        "AND reproductive/developmental association, with adequate evidence.<br/>"
-        "<b>Only safety can establish Unsafe.</b> Other failed or missing requirements block CTA. "
-        "Neither needs its measured-profile definition; other cases remain unassigned."
+        "<b>CTA:</b> safety AND cancer expression AND Reproductive evidence, with complete "
+        'required coverage, including the 52-context <link href="https://gtexportal.org/home/downloads/adult-gtex">GTEx v11</link> core.<br/>'
+        "<b>Reproductive</b> includes reproductive organs, placenta, extraembryonic, embryonic and fetal contexts.<br/>"
+        "<b>Diffuseness:</b> HPA average N / (N + R) >10% blocks a complete adult/placental route. "
+        "Disposable counts; Permissive thymus is excluded. Embryonic concentration is unassessed.<br/>"
+        "<b>Only safety establishes Unsafe.</b> Missing core data remain unassigned. "
+        "The former maximum-versus-maximum restriction rule is removed."
     )
     _, height = statement.wrap(720, 120)
-    statement.drawOn(page, 36, 154 - height)
+    statement.drawOn(page, 36, 205 - height)
     page.setFont("Helvetica", 9)
     page.drawString(
         36,
         25,
-        "Current snapshot: oncoref.cta-selection.2026-10-29. Research policy, not clinical safety clearance.",
+        "Local policy: oncoref.cta-selection.2026-10-29.3. Research policy, not clinical safety clearance.",
     )
     page.save()
     shutil.copyfile(destination, images / destination.name)

@@ -1,15 +1,16 @@
 {
-  "policy": "oncoref.cta-selection.2026-10-29",
+  "policy": "oncoref.cta-selection.2026-10-29.3",
   "categories": {
     "Unsafe": 18031,
-    "Unassigned": 1266,
-    "CTA": 546,
+    "Unassigned": 1290,
+    "CTA": 522,
     "Neither": 20
   },
-  "selected_member_loci": 582,
+  "selected_member_loci": 558,
   "neither_profiles": {
-    "diffuse_manageable": 11,
-    "low_expression": 9
+    "diffuse_manageable": 10,
+    "low_expression": 9,
+    "diffuse_reproductive": 1
   },
   "order_independent": true
 }

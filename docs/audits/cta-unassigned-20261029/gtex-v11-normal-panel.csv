@@ -1,0 +1,44 @@
+compartment,anatomy,tissue,weight
+Adipose_Subcutaneous,adipose tissue,adipose tissue,0.021739130434782608
+Adipose_Visceral_Omentum,adipose tissue,adipose tissue,0.021739130434782608
+Adrenal_Gland,adrenal gland,adrenal gland,0.043478260869565216
+Artery_Aorta,blood vessel,blood vessel,0.014492753623188404
+Artery_Coronary,blood vessel,blood vessel,0.014492753623188404
+Artery_Tibial,blood vessel,blood vessel,0.014492753623188404
+Bladder,urinary bladder,urinary bladder,0.043478260869565216
+Brain_Amygdala,brain,amygdala,0.003623188405797101
+Brain_Anterior_cingulate_cortex_BA24,brain,cerebral cortex,0.003623188405797101
+Brain_Caudate_basal_ganglia,brain,basal ganglia,0.003623188405797101
+Brain_Cerebellar_Hemisphere,brain,cerebellum,0.003623188405797101
+Brain_Cerebellum,brain,cerebellum,0.003623188405797101
+Brain_Cortex,brain,cerebral cortex,0.003623188405797101
+Brain_Frontal_Cortex_BA9,brain,cerebral cortex,0.003623188405797101
+Brain_Hippocampus,brain,hippocampal formation,0.003623188405797101
+Brain_Hypothalamus,brain,hypothalamus,0.003623188405797101
+Brain_Nucleus_accumbens_basal_ganglia,brain,basal ganglia,0.003623188405797101
+Brain_Putamen_basal_ganglia,brain,basal ganglia,0.003623188405797101
+Brain_Spinal_cord_cervical_c-1,spinal cord,spinal cord,0.043478260869565216
+Brain_Substantia_nigra,brain,midbrain,0.003623188405797101
+Colon_Sigmoid,colon,colon,0.021739130434782608
+Colon_Transverse,colon,colon,0.021739130434782608
+Esophagus_Gastroesophageal_Junction,esophagus,esophagus,0.014492753623188404
+Esophagus_Mucosa,esophagus,esophagus,0.014492753623188404
+Esophagus_Muscularis,esophagus,esophagus,0.014492753623188404
+Heart_Atrial_Appendage,heart muscle,heart muscle,0.021739130434782608
+Heart_Left_Ventricle,heart muscle,heart muscle,0.021739130434782608
+Kidney_Cortex,kidney,kidney,0.021739130434782608
+Kidney_Medulla,kidney,kidney,0.021739130434782608
+Liver,liver,liver,0.043478260869565216
+Lung,lung,lung,0.043478260869565216
+Minor_Salivary_Gland,salivary gland,salivary gland,0.043478260869565216
+Muscle_Skeletal,skeletal muscle,skeletal muscle,0.043478260869565216
+Nerve_Tibial,peripheral nerve,peripheral nerve,0.043478260869565216
+Pancreas,pancreas,pancreas,0.043478260869565216
+Pituitary,pituitary gland,pituitary gland,0.043478260869565216
+Skin_Not_Sun_Exposed_Suprapubic,skin,skin,0.021739130434782608
+Skin_Sun_Exposed_Lower_leg,skin,skin,0.021739130434782608
+Small_Intestine_Terminal_Ileum,small intestine,small intestine,0.043478260869565216
+Spleen,spleen,spleen,0.043478260869565216
+Stomach,stomach,stomach,0.043478260869565216
+Thyroid,thyroid gland,thyroid gland,0.043478260869565216
+Whole_Blood,blood,blood,0.043478260869565216

@@ -4,8 +4,8 @@
 
 | citation | mapped_entities | mapped_gene_loci | source_url |
 | --- | --- | --- | --- |
-| Hindriks et al. (2025) | 10 | 9 | https://doi.org/10.1016/j.vetimm.2025.110946 |
-| Nemec et al. (2019) | 5 | 5 | https://doi.org/10.1111/vco.12475 |
+| [Hindriks et al. (2025)](https://doi.org/10.1016/j.vetimm.2025.110946) | 10 | 9 | [Source](https://doi.org/10.1016/j.vetimm.2025.110946) |
+| [Nemec et al. (2019)](https://doi.org/10.1111/vco.12475) | 5 | 5 | [Source](https://doi.org/10.1111/vco.12475) |
 
 Nemec et al. contributes 5 nominations; Hindriks et al. contributes 10; NT5C1B is shared, giving 14. Thirteen have unique gene mappings; one MAGE family assay remains ambiguous. A unique gene mapping does not establish identical protein isoforms.
 
@@ -24,27 +24,27 @@ Nemec et al. contributes 5 nominations; Hindriks et al. contributes 10; NT5C1B i
 
 | name | evidence_category | native_unit | status | source_url |
 | --- | --- | --- | --- | --- |
-| bgee-srp009687 | normal_bulk_rna | TPM | native_matrix | https://www.ncbi.nlm.nih.gov/sra/?term=SRP009687 |
-| bgee-srp009687 | reproductive_expression | TPM | native_matrix | https://www.ncbi.nlm.nih.gov/sra/?term=SRP009687 |
-| bgee-srp181218 | normal_bulk_rna | TPM | native_matrix | https://www.ncbi.nlm.nih.gov/sra/?term=SRP181218 |
-| bgee-srp181218 | reproductive_expression | TPM | native_matrix | https://www.ncbi.nlm.nih.gov/sra/?term=SRP181218 |
-| barkbase | normal_bulk_rna | TMM-CPM | native_matrix | https://pubmed.ncbi.nlm.nih.gov/31181663/ |
-| barkbase | reproductive_expression | TMM-CPM | native_matrix | https://pubmed.ncbi.nlm.nih.gov/31181663/ |
-| barkbase | developmental_expression | TMM-CPM | native_matrix | https://pubmed.ncbi.nlm.nih.gov/31181663/ |
-| pfizer-dog-protein | normal_protein | iBAQ | native_matrix | https://doi.org/10.1038/s41597-026-07512-9 |
-| doga | normal_bulk_rna | unresolved | metadata_only | https://doi.org/10.1038/s41467-024-52798-1 |
-| doga | reproductive_expression | unresolved | metadata_only | https://doi.org/10.1038/s41467-024-52798-1 |
-| doga | developmental_expression | unresolved | metadata_only | https://doi.org/10.1038/s41467-024-52798-1 |
-| pfizer-dog-rna | normal_bulk_rna | unresolved | metadata_only | https://doi.org/10.1038/s41597-026-07512-9 |
-| gse304066-osteosarcoma | tumor_expression | unresolved | blocked_provenance | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE304066 |
-| hindriks2025 | nomination | native PCR, categorical protein and reported study summaries | native_observations | https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf |
-| hindriks2025 | normal_bulk_rna | native PCR, categorical protein and reported study summaries | native_observations | https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf |
-| hindriks2025 | normal_protein | native PCR, categorical protein and reported study summaries | native_observations | https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf |
-| hindriks2025 | reproductive_expression | native PCR, categorical protein and reported study summaries | native_observations | https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf |
-| hindriks2025 | tumor_expression | native PCR, categorical protein and reported study summaries | native_observations | https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf |
-| nemec2019 | nomination | native PCR, categorical protein and reported study summaries | native_observations | https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json |
-| nemec2019 | normal_bulk_rna | native PCR, categorical protein and reported study summaries | native_observations | https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json |
-| nemec2019 | tumor_expression | native PCR, categorical protein and reported study summaries | native_observations | https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json |
+| [bgee-srp009687](https://www.ncbi.nlm.nih.gov/sra/?term=SRP009687) | normal_bulk_rna | TPM | native_matrix | [Source](https://www.ncbi.nlm.nih.gov/sra/?term=SRP009687) |
+| [bgee-srp009687](https://www.ncbi.nlm.nih.gov/sra/?term=SRP009687) | reproductive_expression | TPM | native_matrix | [Source](https://www.ncbi.nlm.nih.gov/sra/?term=SRP009687) |
+| [bgee-srp181218](https://www.ncbi.nlm.nih.gov/sra/?term=SRP181218) | normal_bulk_rna | TPM | native_matrix | [Source](https://www.ncbi.nlm.nih.gov/sra/?term=SRP181218) |
+| [bgee-srp181218](https://www.ncbi.nlm.nih.gov/sra/?term=SRP181218) | reproductive_expression | TPM | native_matrix | [Source](https://www.ncbi.nlm.nih.gov/sra/?term=SRP181218) |
+| [barkbase](https://pubmed.ncbi.nlm.nih.gov/31181663/) | normal_bulk_rna | TMM-CPM | native_matrix | [Source](https://pubmed.ncbi.nlm.nih.gov/31181663/) |
+| [barkbase](https://pubmed.ncbi.nlm.nih.gov/31181663/) | reproductive_expression | TMM-CPM | native_matrix | [Source](https://pubmed.ncbi.nlm.nih.gov/31181663/) |
+| [barkbase](https://pubmed.ncbi.nlm.nih.gov/31181663/) | developmental_expression | TMM-CPM | native_matrix | [Source](https://pubmed.ncbi.nlm.nih.gov/31181663/) |
+| [pfizer-dog-protein](https://doi.org/10.1038/s41597-026-07512-9) | normal_protein | iBAQ | native_matrix | [Source](https://doi.org/10.1038/s41597-026-07512-9) |
+| [doga](https://doi.org/10.1038/s41467-024-52798-1) | normal_bulk_rna | unresolved | metadata_only | [Source](https://doi.org/10.1038/s41467-024-52798-1) |
+| [doga](https://doi.org/10.1038/s41467-024-52798-1) | reproductive_expression | unresolved | metadata_only | [Source](https://doi.org/10.1038/s41467-024-52798-1) |
+| [doga](https://doi.org/10.1038/s41467-024-52798-1) | developmental_expression | unresolved | metadata_only | [Source](https://doi.org/10.1038/s41467-024-52798-1) |
+| [pfizer-dog-rna](https://doi.org/10.1038/s41597-026-07512-9) | normal_bulk_rna | unresolved | metadata_only | [Source](https://doi.org/10.1038/s41597-026-07512-9) |
+| [gse304066-osteosarcoma](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE304066) | tumor_expression | unresolved | blocked_provenance | [Source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE304066) |
+| [hindriks2025](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) | nomination | source-native observations; no absolute expression unit | native_observations | [Source](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) |
+| [hindriks2025](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) | normal_bulk_rna | source-native observations; no absolute expression unit | native_observations | [Source](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) |
+| [hindriks2025](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) | normal_protein | source-native observations; no absolute expression unit | native_observations | [Source](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) |
+| [hindriks2025](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) | reproductive_expression | source-native observations; no absolute expression unit | native_observations | [Source](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) |
+| [hindriks2025](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) | tumor_expression | source-native observations; no absolute expression unit | native_observations | [Source](https://research-portal.uu.nl/ws/portalfiles/portal/264124617/1-s2.0-S0165242725000662-main.pdf) |
+| [nemec2019](https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json) | nomination | source-native observations; no absolute expression unit | native_observations | [Source](https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json) |
+| [nemec2019](https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json) | normal_bulk_rna | source-native observations; no absolute expression unit | native_observations | [Source](https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json) |
+| [nemec2019](https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json) | tumor_expression | source-native observations; no absolute expression unit | native_observations | [Source](https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:30854786%20AND%20SRC:MED&resultType=core&format=json) |
 
 Bgee and BarkBase include 46 overlapping libraries, not independent replication. BarkBase has 37,149 features × 150 TMM-CPM columns; Pfizer MS has 9,929 reported groups × 38 tissue pools and missing matrix cells. Pooled iBAQ is not cell-specific IHC or antigen presentation. Tumor GSE304066 count/FPKM and reference provenance remain unresolved. These quantities must retain their native scales.
 

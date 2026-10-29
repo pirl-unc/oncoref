@@ -6,11 +6,12 @@ CTA admission but does not establish either Unsafe or Neither. Neither requires
 an affirmative expression profile. Unresolved results have a null category.
 These are research selection rules, not estimates of clinical toxicity.
 
-Normal-tissue safety, cancer expression, adult restriction and reproductive /
+Normal-tissue safety, cancer expression and reproductive /
 developmental association are distinct questions. Only safety evidence can
 establish Unsafe. Cancer requires one qualifying measured sample, without a
-tumor-versus-normal ratio. Adult restriction compares a qualifying reproductive
-or developmental signal with supported normal RNA in the same native unit.
+tumor-versus-normal ratio. Association requires positive expression, without a
+reproductive-versus-normal maximum veto. Profile diffuseness is assessed
+separately from normal-tissue safety.
 """
 
 from __future__ import annotations
@@ -23,8 +24,9 @@ import pandas as pd
 from .cell_rna_policy import EXPECTED_UNITS, GRADES, NEUTRAL_REPRODUCTIVE_IMMUNE, POSITIVE
 from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
+from .expression_diffuseness import MAX_DIFFUSENESS
 
-POLICY_ID = "oncoref.cta-selection.2026-10-29"
+POLICY_ID = "oncoref.cta-selection.2026-10-29.3"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 MIN_MANAGEABLE_TISSUES = 2
@@ -32,9 +34,8 @@ CANDIDATE_ONLY_LAYERS = frozenset(
     {
         "Reproductive / embryonic association",
         "Tumor sample ≥2 TPM/pTPM",
-        "Cancer specificity",
-        "Adult restriction",
         "Required RNA coverage",
+        "Reproductive concentration",
     }
 )
 UNIT_SCALE = {"TPM": 1.0, "nTPM": 1.0, "CP10K": 0.01}
@@ -50,32 +51,73 @@ BOWEL_EPITHELIAL_CELLS = frozenset(
 )
 
 
-def association_and_restriction(facts: pd.DataFrame) -> pd.DataFrame:
-    """Separate positive association from relative adult restriction.
+def association_evidence(facts: pd.DataFrame) -> pd.DataFrame:
+    """Assess positive reproductive/developmental expression independently.
 
     Association uses the existing reproductive >=5 nTPM or supported developmental
-    >=5 TPM routes. Restriction requires a qualifying route's expression to be
-    strictly greater than supported Vital/Protected/Manageable normal RNA in the
-    same native unit. Reproductive and Disposable contexts are not adverse
-    comparators. CP10K has no ratio here; its independent safety rule still applies.
-    Source-specific support statistics and required coverage remain upstream;
-    a missing comparator never becomes zero. These nominal comparisons are
-    enrichment heuristics, not calibrated cross-assay fold changes or toxicity.
+    >=5 TPM routes. Developmental cell-support criteria are applied upstream.
+    Normal-tissue expression is not an input to this presence assessment;
+    normal safety and whole-profile concentration answer separate questions.
     """
     d = facts.copy()
     d["reproductive_association"] = d.reproductive_ntpm.ge(5)
     d["developmental_association"] = d.developmental_mean_tpm.ge(5)
-    d["reproductive_restriction"] = d.reproductive_association & d.reproductive_ntpm.gt(
-        d.healthy_maximum_ntpm
-    )
-    d["developmental_restriction"] = d.developmental_association & d.developmental_mean_tpm.gt(
-        d.healthy_maximum_tpm
-    )
     d["positive_context"] = d.reproductive_association | d.developmental_association
-    d["adult_restriction"] = d.reproductive_restriction | d.developmental_restriction
-    # Compatibility fields describe the complete qualifying routes.
-    d["reproductive_route"] = d.reproductive_restriction
-    d["developmental_route"] = d.developmental_restriction
+    d["reproductive_route"] = d.reproductive_association
+    d["developmental_route"] = d.developmental_association
+    return d
+
+
+def concentration_evidence(facts: pd.DataFrame, scores: pd.DataFrame) -> pd.DataFrame:
+    """Apply the fixed HPA adult/placental identity contrast, never a safety veto.
+
+    A complete same-source profile above 10% blocks the adult/placental route.
+    The existing >=5 nTPM association floor prevents weak adult references from
+    deciding embryonic identity. Supported embryonic evidence remains a separate
+    route with developmental concentration explicitly unassessed. Missing HPA
+    comparisons are reported, not imputed or substituted with a GTEx ratio.
+    """
+    if (
+        scores.entity_id.duplicated().any()
+        or not (
+            scores.source.eq("hpa_rna_consensus")
+            & scores.version.eq("v23")
+            & scores.unit.eq("nTPM")
+            & scores.taxonomy_id.eq(9606)
+            & scores.summary.eq("consensus")
+        ).all()
+    ):
+        raise ValueError("Require one human HPA v23 consensus score per protein")
+    d = facts.copy()
+    indexed = scores.set_index("entity_id")
+    key = d.protein_equivalence_group_id
+    d["hpa_diffuseness"] = key.map(indexed.diffuseness)
+    d["hpa_diffuseness_reference"] = key.map(indexed.reference_value)
+    complete = (
+        key.map(indexed.reference_complete).fillna(False).astype(bool)
+        & np.isclose(key.map(indexed.normal_coverage), 1)
+        & d.hpa_diffuseness.notna()
+    )
+    # The association and contrast must refer to exactly the same reproductive RNA.
+    comparable = complete & np.isclose(d.hpa_diffuseness_reference, d.reproductive_ntpm)
+    d["adult_profile_status"] = np.select(
+        [
+            ~d.reproductive_association,
+            ~comparable,
+            d.hpa_diffuseness.gt(MAX_DIFFUSENESS),
+        ],
+        ["no_qualifying_adult_reference", "unassessed", "diffuse"],
+        default="concentrated",
+    )
+    d["developmental_profile_status"] = np.where(
+        d.developmental_association,
+        "unassessed_comparable_panel_missing",
+        "no_qualifying_reference",
+    )
+    d["reproductive_concentration_hold"] = (
+        d.adult_profile_status.eq("diffuse") & ~d.developmental_association
+    )
+    d["reproductive_route"] = d.reproductive_association & ~d.adult_profile_status.eq("diffuse")
     return d
 
 
@@ -317,7 +359,16 @@ def classify(
     holds = pd.DataFrame({name: hold | unsafe for name, hold, unsafe in layers})
     exclusions = pd.DataFrame({name: unsafe for name, _, unsafe in layers})
     held, unsafe = holds.any(axis=1), exclusions.any(axis=1)
-    profiles = facts.neither_low_expression | facts.neither_diffuse_manageable
+    # A measured diffuse identity can establish Neither only when normal safety
+    # has no unresolved hold. Tumor/developmental presence is not required for Neither.
+    concentration_hold = holds.get(
+        "Reproductive concentration", pd.Series(False, index=facts.index)
+    )
+    safety_hold = holds[[n for n in holds if n not in CANDIDATE_ONLY_LAYERS]].any(axis=1)
+    diffuse = (
+        concentration_hold & facts.required_coverage & ~facts.unresolved_evidence & ~safety_hold
+    )
+    profiles = facts.neither_low_expression | facts.neither_diffuse_manageable | diffuse
     neither = held & profiles & ~unsafe
     eligible = ~(held | unsafe)
     result = facts.drop(columns=[c for c in facts if c.startswith(("hold:", "unsafe:"))]).copy()
@@ -336,8 +387,12 @@ def classify(
         default="outside_category_definitions",
     )
     result["neither_profile"] = np.select(
-        [neither & facts.neither_low_expression, neither & facts.neither_diffuse_manageable],
-        ["low_expression", "diffuse_manageable"],
+        [
+            neither & diffuse,
+            neither & facts.neither_low_expression,
+            neither & facts.neither_diffuse_manageable,
+        ],
+        ["diffuse_reproductive", "low_expression", "diffuse_manageable"],
         default="",
     )
     result["exclusion_reasons"] = holds.apply(lambda row: " | ".join(row.index[row]), axis=1)

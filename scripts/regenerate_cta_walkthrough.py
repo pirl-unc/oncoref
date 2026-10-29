@@ -18,11 +18,16 @@ import render_cta_source_walkthrough
 from cta_report_common import input_hashes, sha256
 from replay_cta_selection import OUTPUT, ROOT, build
 
+from oncoref import reference_data
+
 
 def receipts() -> None:
     """Record the measurement replay and current exports without self-hashing."""
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/expression_diffuseness.py",
+        ROOT / "scripts/cta_profile_data.py",
+        OUTPUT / "hpa_rna_consensus-accepted-identities.csv.gz",
         ROOT / "oncoref/gene_matching.py",
         OUTPUT / "alternative-evidence/manifest.json",
         OUTPUT / "tumor-identity-repair/manifest.json",
@@ -34,10 +39,14 @@ def receipts() -> None:
         / "docs/audits/cta-harmonized-20261027/group-normal/developmental-lineage-bounds.csv.gz",
         ROOT / "docs/audits/external-ihc-20261027/assessed-evidence.csv.gz",
     ]
+    profile_source = reference_data.provenance("hpa_rna_consensus", "v23", verify_content=True)
     (OUTPUT / "manifest.json").write_text(
         json.dumps(
             {
                 "inputs": input_hashes(inputs),
+                "profile_sources": [
+                    {k: profile_source[k] for k in ["name", "version", "url", "sha256"]}
+                ],
                 "outputs": {
                     p.name: sha256(p)
                     for p in sorted(OUTPUT.iterdir())
@@ -61,6 +70,7 @@ def walkthrough_receipt() -> None:
         ROOT / "scripts/build_cta_selection_audit.py",
         ROOT / "scripts/build_cta_selection_release.py",
         ROOT / "scripts/render_cta_source_walkthrough.py",
+        ROOT / "scripts/cta_source_links.py",
         ROOT / "scripts/build_cta_source_slides.mjs",
         ROOT / "scripts/build_cta_evidence_axes.py",
         ROOT / "docs/cta-evidence-axes.md",
@@ -68,6 +78,9 @@ def walkthrough_receipt() -> None:
         ROOT / "docs/images/cta-evidence-axes.png",
         ROOT / "oncoref/data/reference-releases.json",
         ROOT / "docs/data-versions.md",
+        ROOT / "scripts/audit_cta_profile_concentration.py",
+        ROOT / "oncoref/expression_diffuseness.py",
+        ROOT / "docs/audits/cta-unassigned-20261029/manifest.json",
         ROOT / "scripts/audit_cta_embryonic_coverage.py",
         ROOT / "scripts/audit_cta_source_coverage.py",
         ROOT / "scripts/build_cta_alternative_evidence.py",

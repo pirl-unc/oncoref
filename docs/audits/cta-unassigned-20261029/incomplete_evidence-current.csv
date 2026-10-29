@@ -1,0 +1,14 @@
+Failed requirements,Proteins
+Reproductive expression + Required coverage,269
+Reproductive expression,191
+Reproductive expression + Cancer expression + Required coverage,87
+Required coverage,84
+Reproductive expression + Normal bulk,19
+HPA normal protein,11
+Reproductive expression + HPA normal protein,11
+Reproductive expression + HPA normal protein + Required coverage,6
+Cancer expression + Required coverage,6
+Reproductive expression + Cancer expression,5
+Reproductive expression + Normal bulk + HPA tissue clusters,3
+Reproductive expression + Accepted normal-protein evidence,1
+Reproductive expression + Cancer expression + Required coverage + Normal bulk,1

@@ -1,0 +1,23 @@
+Protein,category,source,reference_value,unit,Score (%),review
+CTAG2,CTA,hpa_rna_consensus,10.1,nTPM,5.146716861002589,concentrated
+CT83,CTA,hpa_rna_consensus,62.2,nTPM,0.1494089137767299,concentrated
+FOXR2,,hpa_rna_consensus,1.2,nTPM,0.0,weak_reference
+XAGE1A/B,CTA,hpa_rna_consensus,98.80000000000001,nTPM,0.22465201206919114,concentrated
+MAGEA4,CTA,hpa_rna_consensus,21.5,nTPM,0.15148871956681284,concentrated
+ZNF730,Unsafe,hpa_rna_consensus,4.9,nTPM,9.531562103403083,concentrated
+CT55,CTA,hpa_rna_consensus,3.7,nTPM,0.33402263948997163,concentrated
+PRAME,CTA,hpa_rna_consensus,102.2,nTPM,0.30402380630090287,concentrated
+TBXT,CTA,hpa_rna_consensus,0.2,nTPM,15.146871008939975,weak_reference
+NY-ESO-1,CTA,hpa_rna_consensus,15.5,nTPM,0.07180388247816318,concentrated
+MTCP1,Neither,hpa_rna_consensus,5.1,nTPM,24.533644300531762,diffuse
+CTAG2,CTA,gtex_tissue_rna,14.3299,TPM,0.0347988183270229,concentrated
+CT83,CTA,gtex_tissue_rna,113.394,TPM,0.049528185102749325,concentrated
+FOXR2,,gtex_tissue_rna,2.67067,TPM,0.0,concentrated
+XAGE1A/B,CTA,gtex_tissue_rna,0.184662,TPM,0.0,weak_reference
+MAGEA4,CTA,gtex_tissue_rna,26.8844,TPM,0.0,concentrated
+ZNF730,Unsafe,gtex_tissue_rna,4.91414,TPM,1.6459934359835515,concentrated
+CT55,CTA,gtex_tissue_rna,4.10115,TPM,0.15382014811172834,concentrated
+PRAME,CTA,gtex_tissue_rna,166.051,TPM,0.1415946628621279,concentrated
+TBXT,CTA,gtex_tissue_rna,0.603451,TPM,5.5970937233693245,weak_reference
+NY-ESO-1,CTA,gtex_tissue_rna,0.10671850000000001,TPM,2.0615353390488447,weak_reference
+MTCP1,Neither,gtex_tissue_rna,9.74623,TPM,16.819276909786403,diffuse

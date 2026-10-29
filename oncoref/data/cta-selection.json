@@ -1,16 +1,16 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.22.0",
+  "release": "1.23.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "6a2a71e01011563436a7530cf8dbaaaa3c21403f1b3b677793e3b2d022bd4bca",
-    "cta-selection-sources.csv": "d1cc2943b05736a4bd9503eeb8826be02bdaa7accd32008808378e2b547e152d"
+    "cta-selection-human.csv.gz": "ede078c0b66136f47a72a16e59049ab4831c68499389394d0f9d50ec53f03d90",
+    "cta-selection-sources.csv": "4bb650d4a026e6b69f0fe2b02447fda4e9b0eab05410bcb8e52318d3a560986e"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-10-29",
+      "policy_id": "oncoref.cta-selection.2026-10-29.3",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
@@ -34,7 +34,8 @@
         "Developmental coverage is stage-limited; gastrulation and preimplantation measurements do not cover later fetal/postnatal development",
         "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
         "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
-        "Representative-protein equivalence is not exhaustive isoform identity"
+        "Representative-protein equivalence is not exhaustive isoform identity",
+        "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel"
       ]
     },
     "dog": {
@@ -111,8 +112,10 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "8060d4401bc5c9ea129e42a896575deb8a570c2cd1a72759be8f3a4d7fc23029",
-    "report_manifest": "cd50fbdd4c795bd79cc5af74d058c11b5a8bd7a6173ada6357da343528cb0c78",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "cbf16d3371962e3b73f6a6fb19c1dbe1c8d1a35458666d6e9fa46fd6a743e118",
+    "report_manifest": "32145ba4d9088e60e588e77a1472e5bb4acbc880834e4c8247e7210926f343d2",
+    "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
+    "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"
   }
 }
