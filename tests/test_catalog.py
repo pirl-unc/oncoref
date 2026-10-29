@@ -274,7 +274,8 @@ def test_inventory_covers_all_held_buckets():
     # wheel/bundle/hpa/source (planned only appears while tables remain to port).
     held = {r["held"] for r in rows}
     assert {"wheel", "bundle", "hpa", "source"} <= held
-    assert held <= {"wheel", "bundle", "hpa", "reference", "source", "planned"}
+    assert held <= {"wheel", "bundle", "hpa", "reference", "source", "planned", "asset"}
+    assert {"ensembl115-gtf", "ensembl115-rna", "ensembl115-ncrna", "ensembl115-protein"} <= names
 
 
 def test_inventory_wheel_always_available():

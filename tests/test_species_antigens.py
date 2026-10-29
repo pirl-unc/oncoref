@@ -332,11 +332,12 @@ def test_rbmy_corrected_transcripts_propagate_without_merging_genes():
     assert set(expected) <= oncoref.cta_gene_ids()
     for gid, tid in expected.items():
         assert candidates[gid]["gene_ids"] == [gid]
-        assert candidates[gid]["mapping"]["targets"] == [
-            {
-                "id": gid,
-                "symbol": evidence[gid]["Symbol"],
-                "sequences": [{"transcript_id": tid, "protein_id": None}],
-            }
-        ]
+        (target,) = candidates[gid]["mapping"]["targets"]
+        assert target["id"] == gid
+        assert target["symbol"] == evidence[gid]["Symbol"]
+        assert any(
+            s["transcript_id"].startswith(tid + ".") and s["protein_id"]
+            for s in target["sequences"]
+        )
+        assert len(target["sequences"]) > 1
         assert evidence[gid]["Canonical_Transcript_ID"] == tid

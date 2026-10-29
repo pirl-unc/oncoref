@@ -1,0 +1,35 @@
+{
+  "genes": [
+    "ENSG00000169800",
+    "ENSG00000185686",
+    "ENSG00000226941"
+  ],
+  "origin": "Exact unmodified Ensembl 115 records for RBMY1F, RBMY1J and PRAME. Gzip containers are deterministic fixture slices, distinct from full source assets.",
+  "full_reference": {
+    "schema": "openvax.reference",
+    "schema_version": 1,
+    "taxon_id": 9606,
+    "assembly_accession": "GCA_000001405.29",
+    "annotation_source": "Ensembl",
+    "annotation_release": "115",
+    "source_version": "Ensembl-115",
+    "identifier_namespaces": {
+      "gene": "Ensembl gene",
+      "protein": "Ensembl protein",
+      "transcript": "Ensembl transcript"
+    },
+    "content_provenance": {
+      "gtf": "02df5a2a8c7a41e513209e0780c56cf197941b6b35ef8bab3e9a6317eecd17ef",
+      "ncrna": "7825db09257902df82172928537c1da16cfe79edcca56425556f74f1507437a0",
+      "protein": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96",
+      "rna": "93af088ed22a46daa9645fc6292fb120c1e4ffe791d24abbcbd35062666c03f1"
+    },
+    "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
+  },
+  "fixture_sha256": {
+    "gtf": "de85c95325b13e99e6caae3d5d9b4321b8c26ad379ec7103d012425f35fca810",
+    "protein": "81e89235b3e19c7d757d6c8cee00604a98d72fc127da33f22e7112bca0f611e9",
+    "rna": "8a87a2bb477ef971a4b9b0486450962a3875d8549307f3bb059d0f89866da812",
+    "ncrna": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837"
+  }
+}

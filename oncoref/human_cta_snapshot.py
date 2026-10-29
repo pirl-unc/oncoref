@@ -12,8 +12,9 @@ import json
 from functools import lru_cache
 
 from .expression_contract import ExpressionContract, ExpressionMeasurement
-from .load_dataset import _register_derived_cache, get_data
-from .reference_identity import ReferenceIdentity, _canonical_json, _identity
+from .human_cta_reference import human_cta_reference
+from .load_dataset import _register_derived_cache
+from .reference_identity import _canonical_json, _identity
 from .species_antigens import CTAEvidenceSnapshot
 from .version import __version__
 
@@ -25,24 +26,8 @@ def human_cta_snapshot():
     # Hash logical records, including the historical human-specific curation.
     # This also honors the existing dataset cache invalidation/override hooks.
     rows = json.loads(cta_evidence().to_json(orient="records", double_precision=15))
-    canonical = get_data("canonical-gene-space", copy=False)
-    if set(canonical.ensembl_release.astype(int)) != {115}:
-        raise ValueError("Human CTA adapter requires the curated Ensembl 115 gene space")
-    reference_rows = json.loads(canonical.to_json(orient="records"))
-    reference_hash = hashlib.sha256(_canonical_json(reference_rows).encode("ascii")).hexdigest()
+    reference, mappings = human_cta_reference()
     source_hash = hashlib.sha256(_canonical_json(rows).encode("ascii")).hexdigest()
-    reference = ReferenceIdentity(
-        taxon_id=9606,
-        # Verified against the release-115 GTF header. Content identity is the
-        # shipped gene-space projection, not a full GTF/sequence asset identity.
-        assembly_accession="GCA_000001405.29",
-        annotation_source="Ensembl",
-        annotation_release="115",
-        source_version="Ensembl-115-oncoref-primary-gene-space",
-        identifier_namespaces={"gene": "Ensembl gene", "transcript": "Ensembl transcript"},
-        content_provenance={"canonical_gene_space": reference_hash},
-    )
-    known = set(canonical.ensembl_gene_id)
     source_id = "oncoref-human-cta"
     version = f"oncoref-{__version__}-human-cta-summary"
     contract = ExpressionContract(
@@ -79,7 +64,7 @@ def human_cta_snapshot():
                 "Lossless adapter of the existing human CTA summary; patient-level admission is not supplied.",
                 "Summary fields mix native nTPM, categorical IHC, ratios and curation decisions. They are not interchangeable measurements.",
                 "Sample/donor counts, study independence and complete upstream annotation provenance are not reconstructed from the summary.",
-                "Ensembl 115 mapping is to the bundled primary gene-space projection, not a full sequence reference. Canonical transcript labels from the summary are not an exhaustive isoform mapping.",
+                "Ensembl 115 mapping enumerates pinned annotation RNA/protein alternatives. Noncoding transcripts retain null protein IDs. Sequence mapping does not establish equivalence to historical assay references or measured isoform abundance.",
                 "Nomination provenance remains legacy_human; source_databases and specificity decisions are retained verbatim in source_fields.",
             ],
         },
@@ -92,19 +77,17 @@ def human_cta_snapshot():
     for row in rows:
         gid, label = row["Ensembl_Gene_ID"], row["Symbol"]
         eid = f"human-summary:{gid}"
-        transcript = row.get("Canonical_Transcript_ID")
-        targets = (
-            [
-                {
-                    "id": gid,
-                    "symbol": label,
-                    "sequences": [{"transcript_id": transcript, "protein_id": None}]
-                    if transcript
-                    else [],
-                }
-            ]
-            if gid in known
-            else []
+        mapping = mappings.get(
+            gid,
+            {
+                "reference_id": reference.reference_id,
+                "gene_namespace": "Ensembl gene",
+                "status": "unresolved",
+                "method": "Exact lookup in the bundled sequence-backed CTA annotation inventory",
+                "complete": False,
+                "targets": [],
+                "notes": "Candidate is outside the verified annotation inventory; no symbol or historical canonical-transcript fallback is applied.",
+            },
         )
         payload["candidates"].append(
             {
@@ -120,17 +103,7 @@ def human_cta_snapshot():
                         "note": "Historical candidate provenance retained in source_fields.source_databases; not reclassified by this adapter.",
                     }
                 ],
-                "mappings": [
-                    {
-                        "reference_id": reference.reference_id,
-                        "gene_namespace": "Ensembl gene",
-                        "status": "unique" if targets else "unresolved",
-                        "method": "Exact ID membership in the shipped Ensembl 115 primary gene space",
-                        "complete": bool(targets),
-                        "targets": targets,
-                        "notes": "Gene mapping only. A supplied canonical transcript is not a measured isoform or exhaustive transcript mapping.",
-                    }
-                ],
+                "mappings": [mapping],
                 "evidence_ids": [eid],
                 "notes": "Historical human curation is preserved; these rules are never applied to other species.",
             }

@@ -105,12 +105,21 @@ def _cmd_data_list(args, selected):
 
     if args.group is not None and args.group not in DATA_GROUPS:
         raise ValueError(f"Unknown data group {args.group!r}")
-    if selected.taxon_id != 9606 and (args.cache_root or args.asset_overrides):
+    if args.cache_root or args.asset_overrides:
         from . import species_assets as assets
         from .species_antigens import antigen_inventory
 
         rows = assets.asset_inventory(selected, group=args.group, **_species_asset_options(args))
-        if args.group in (None, "antigens"):
+        if selected.taxon_id == 9606:
+            # Keep the historical inventory while applying explicit cache options
+            # only to registered species assets.
+            asset_names = {a.id for a in assets.species_assets(selected)}
+            rows += [
+                r
+                for r in catalog.inventory(species=selected, group=args.group)
+                if r["name"] not in asset_names
+            ]
+        elif args.group in (None, "antigens"):
             rows += antigen_inventory(selected)
     else:
         rows = catalog.inventory(species=selected, group=args.group)
@@ -284,9 +293,16 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         raise ValueError("--version is supported for status, fetch, path and provenance")
     if args.json and args.action != "list":
         raise ValueError("--json is supported for data list")
-    if args.action != "list" and selected.taxon_id != 9606:
+    from .species_assets import species_assets
+
+    asset_target = any(args.name in (a.id, a.group) for a in species_assets(selected))
+    if args.action != "list" and (selected.taxon_id != 9606 or asset_target):
         return _cmd_species_data(args)
-    if selected.taxon_id == 9606 and (args.offline or args.asset_overrides or args.cache_root):
+    if (
+        args.action != "list"
+        and selected.taxon_id == 9606
+        and (args.offline or args.asset_overrides or args.cache_root)
+    ):
         raise ValueError(
             "Species asset options require a registered species asset; legacy human data uses its existing cache API"
         )
