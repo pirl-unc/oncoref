@@ -150,6 +150,30 @@ def _packaged_versions(relative: str) -> tuple[str, ...]:
     return tuple(dict.fromkeys((f"oncoref-{__version__}", *cached)))
 
 
+def _uses_species_assets(name, species):
+    """Route by registered capability; human assets use the same contracts."""
+    if species.taxon_id != 9606:
+        return True
+    # The human expression registry is large. Existing table lookups must not
+    # parse it once per inventory row just to discover unrelated optional assets.
+    if (
+        name is None
+        or name.startswith(_PER_SAMPLE)
+        or name
+        in (
+            data_manifest.WHEEL.keys()
+            | data_manifest.CANCERDATA_ORIGINATED.keys()
+            | data_manifest.BUNDLE.keys()
+            | reference_data.REFERENCE_SOURCES.keys()
+            | set(data_bundle.DOWNLOADABLE_PATHS)
+        )
+    ):
+        return False
+    from .species_assets import species_assets
+
+    return any(asset.id == name for asset in species_assets(species))
+
+
 def versions(name: str, *, species: Species | str | int = "human") -> tuple[str, ...]:
     """Known versions, newest registered default first; never queries the network.
 
@@ -160,7 +184,7 @@ def versions(name: str, *, species: Species | str | int = "human") -> tuple[str,
     from .species import resolve_species
 
     selected = resolve_species(species)
-    if selected.taxon_id != 9606:
+    if _uses_species_assets(name, selected):
         packaged = _species_packaged(name, selected)
         if packaged:
             return _packaged_versions(f"species/{selected.name}/{packaged[0].name}")
@@ -198,7 +222,7 @@ def resolve_version(
     from .species import resolve_species
 
     selected = resolve_species(species)
-    if selected.taxon_id != 9606:
+    if _uses_species_assets(name, selected):
         packaged = _species_packaged(name, selected)
         if packaged:
             return packaged_data.resolve_version(version)
@@ -244,7 +268,7 @@ def provenance(
 
     selected = resolve_species(species)
     concrete = resolve_version(name, version, species=selected)
-    if selected.taxon_id != 9606:
+    if _uses_species_assets(name, selected):
         packaged = _species_packaged(name, selected)
         if packaged:
             dest = path(name, concrete, species=selected)
@@ -355,7 +379,7 @@ def path(
     from .species import resolve_species
 
     selected = resolve_species(species)
-    if selected.taxon_id != 9606:
+    if _uses_species_assets(name, selected):
         packaged = _species_packaged(name, selected)
         if packaged:
             concrete = packaged_data.resolve_version(version)
@@ -428,7 +452,7 @@ def ensure(
     from .species import resolve_species
 
     selected = resolve_species(species)
-    if selected.taxon_id != 9606:
+    if _uses_species_assets(name, selected):
         packaged = _species_packaged(name, selected)
         if packaged:
             concrete = packaged_data.resolve_version(version)
@@ -484,7 +508,7 @@ def fetch(
     from .species import resolve_species
 
     selected = resolve_species(species)
-    if selected.taxon_id != 9606:
+    if _uses_species_assets(target, selected):
         from .species_assets import species_assets
 
         if force:
@@ -670,6 +694,9 @@ def inventory(*, species: Species | str | int = "human", group=None) -> list[dic
         else:
             row["default_version"] = None
         row.update(taxon_id=selected.taxon_id, species=selected.name, group=_human_data_group(row))
+    from .species_assets import asset_inventory
+
+    rows.extend(asset_inventory(selected, group=group))
     return [row for row in rows if group is None or row["group"] == group]
 
 
@@ -682,7 +709,7 @@ def status(
     from .species import resolve_species
 
     selected = resolve_species(species)
-    if selected.taxon_id != 9606:
+    if _uses_species_assets(name, selected):
         from .species_assets import species_assets
 
         names = [a.id for a in species_assets(selected)] if name in (None, "all") else [name]

@@ -275,7 +275,7 @@ def test_native_censoring_counts_lineage_and_group_scope_are_lossless(dog):
 def test_capabilities_describe_real_gaps_without_taxon_admission_rules(human, dog):
     h = human.evidence(candidate_id="ENSG00000185686")[0]["candidates"][0]
     d = dog.evidence(candidate_id="PRAME")[0]["candidates"][0]
-    assert "sequence_reference_assets" in h["evidence_coverage"]["missing"]
+    assert "sequence_reference_assets" not in h["evidence_coverage"]["missing"]
     assert "transcript_protein_pairs" in h["evidence_coverage"]["missing"]
     assert "sequence_reference_assets" not in d["evidence_coverage"]["missing"]
     assert "transcript_protein_pairs" not in d["evidence_coverage"]["missing"]

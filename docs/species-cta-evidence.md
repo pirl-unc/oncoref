@@ -120,13 +120,14 @@ is `null` because no complete tissue-panel denominator is declared. Per-observat
 counts remain available on the evidence record.
 
 A unique gene mapping is still separate from measured tissue restriction and
-complete sequence coverage. Human mappings currently lack a full sequence-asset
-identity and exhaustive transcript/protein mappings; those gaps are explicit.
-Canine mappings retain their pinned reference assets and sequence pairs. A
+complete sequence coverage. Human mappings enumerate all versioned transcript/protein pairs for each
+candidate in the pinned Ensembl 115 full annotation, with RNA and peptide asset
+identities. Noncoding transcripts retain null protein IDs; those records do not
+claim a protein. Canine mappings retain their pinned reference assets and sequence
+pairs. A
 measurement verified against another reference reports
 `matching_quantification_reference` as missing. Matching assembly labels or
-symbols never establish reference equivalence. The human sequence identity bridge
-and initial mouse curation remain follow-up work in #599 and #600.
+symbols never establish reference equivalence. The mouse P1A seed also uses the shared facts and reference contract.
 
 ## Reading a record
 
@@ -153,9 +154,48 @@ and initial mouse curation remain follow-up work in #599 and #600.
   Its expression contract remains `legacy_human`; donor counts and upstream
   quantification-reference equivalence are not reconstructed.
 
-The human `ensembl115` reference identifies the bundled primary gene-space
-projection of Ensembl 115 / GRCh38.p14 (GCA_000001405.29), hashed as logical JSON
-records. It is distinct from a full GTF/sequence-backed reference identity. The
+The live human `ensembl115` reference identifies the full Ensembl 115 / GRCh38.p14
+(GCA_000001405.29) GTF including patches, haplotypes and scaffolds, cDNA, ncRNA
+and peptide files. Its content identity differs from the former primary gene-space
+projection. Saved snapshots retain their original identity and observations;
+reading one does not upgrade its reference or consult current assets.
+
+The bundled 2.2 MB mapping receipt enumerates all 21,500 transcripts and 17,123
+transcript/protein pairs across the 2,533 current candidates. Exact versioned
+GTF identifiers are checked against the RNA/protein FASTA headers and sequence
+bytes. All these annotation sequences are available in the pinned files. A null
+protein ID means no annotated CDS, rather than an inferred protein. Alternative
+transcripts and distinct paralogous genes remain separate; identical protein
+sequences never merge genes or imply uniquely attributable expression.
+
+The same species API supplies the full files on explicit request:
+
+```python
+human.references.registered_references()
+reference, paths = human.references.ensure_reference(
+    "ensembl115", max_bytes=300_000_000,
+)
+```
+
+Use `oncoref data list --species human` to inspect optional assets and
+`oncoref data fetch ensembl115-protein --species human` to fetch one. The complete
+reference transfer is 288,155,880 bytes; no genome FASTA or annotation index is
+required by OncoRef. As for dog references, offline use can verify explicitly
+provided local files through `local_overrides` and `offline=True`.
+
+Rebuild the small annotation inventory with
+`scripts/build_human_cta_reference.py paths.json cta-reference-mappings.json.gz`,
+where the JSON maps `gtf`, `rna`, `ncrna` and `protein` to the exact pinned files.
+The script verifies all four digests first, retains every candidate annotation
+alternative, rejects conflicting sequence identities, and marks absent sequence
+bytes incomplete. Mapping notes retain exact versioned gene loci and missing
+accessions. The receipt also records each RNA/protein sequence hash and length.
+This proves annotation identity; it does not establish historical assay-reference
+equivalence, measured isoform abundance, normal-tissue restriction or presentation.
+
+Source files are available in the [Ensembl 115 archive](https://ftp.ensembl.org/pub/release-115/),
+under the [Ensembl data-use terms](https://www.ensembl.org/info/about/legal/disclaimer.html).
+ The
 canine `refseq106` mapping reuses the existing registered reference identity,
 including its source asset checksums. Historical canine assay references remain
 `unresolved`; mapping a target to annotation 106 does not retroactively establish

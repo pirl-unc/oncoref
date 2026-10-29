@@ -89,6 +89,7 @@ oncoref = [
     "data/*.yaml",
     "data/species/*/*.yaml",
     "data/species/*/*.json",
+    "data/species/*/*.json.gz",
     "data/hpa-cancer-sources.json",
     "data/normal-cell-sources.json",
     "data/reference-releases.json",
