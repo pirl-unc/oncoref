@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     import pandas as pd
 
     from .cta_selection import Category
+    from .cta_selection_audit import SelectionAudit
 
 
 @dataclass(frozen=True)
@@ -155,6 +156,14 @@ class SpeciesDataGroup:
         from .cta_selection import sources
 
         return sources(species=self.species, category=category)
+
+    def cta_selection_audit(self) -> SelectionAudit:
+        """Source membership, overlaps, rules, funnel and specific decision evidence."""
+        if self.name != "antigens":
+            raise ValueError("cta_selection_audit() requires the antigens group")
+        from .cta_selection_audit import audit
+
+        return audit(species=self.species)
 
     def cta_evidence(self, *, reference=None, candidate_id=None):
         """Native study observations, optionally for one returned candidate ID."""

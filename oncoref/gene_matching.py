@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from functools import lru_cache
 from typing import Literal
 
@@ -107,6 +107,89 @@ def gene_identity_catalog() -> pd.DataFrame:
     return _catalog()[0].copy()
 
 
+def resolve_measurement_rows(
+    identities: pd.DataFrame, *, equivalent: Callable[[int, int], bool]
+) -> pd.DataFrame:
+    """Choose source rows without adding aliases as though they were loci.
+
+    ``identities`` must have unique integer row positions from
+    :func:`match_reference_genes`. ``equivalent`` compares complete measurement
+    vectors, including their missing-value pattern. Prefer an explicit canonical
+    ID; otherwise accept one alias or identical alias vectors. Conflicting alias
+    vectors remain unresolved. Distinct canonical loci are never collapsed here.
+    """
+    if not identities.index.is_unique:
+        raise ValueError("Measurement row positions must be unique")
+    records = []
+    for gid, rows in identities[identities.identity_status.eq("matched")].groupby(
+        "canonical_gene_id"
+    ):
+        canonical = rows[rows.source_gene_id.map(unversioned).eq(gid)]
+        choices = canonical if len(canonical) else rows
+        chosen = int(choices.index[0])
+        consistent = all(equivalent(chosen, int(i)) for i in choices.index)
+        records.append(
+            {
+                "gene_id": gid,
+                "row_position": chosen if consistent else pd.NA,
+                "status": ("canonical" if len(canonical) else "registered_alias")
+                if consistent
+                else "conflicting_vectors",
+                "source_gene_ids": _json(rows.source_gene_id),
+            }
+        )
+    return pd.DataFrame(records, columns=["gene_id", "row_position", "status", "source_gene_ids"])
+
+
+def resolve_long_measurement_ids(
+    frame: pd.DataFrame,
+    *,
+    id_column: str,
+    symbol_column: str,
+    context_columns: Sequence[str],
+    value_columns: Sequence[str],
+    source: str,
+    source_version: str,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Return an accepted source-ID crosswalk and decisions for a long table.
+
+    Vector comparisons include every context and measurement column. Missing
+    context rows differ from observed zeros. Comparisons are only materialized
+    for duplicate mappings, so large cell atlases need no full wide pivot.
+    """
+    pairs = frame[[id_column, symbol_column]].drop_duplicates().reset_index(drop=True)
+    identities = match_reference_genes(
+        pairs,
+        id_column=id_column,
+        symbol_column=symbol_column,
+        source=source,
+        source_version=source_version,
+    )
+    if identities.source_gene_id.duplicated().any():
+        raise ValueError(f"Conflicting labels for one source ID in {source}")
+    matched = identities[identities.identity_status.eq("matched")]
+    duplicates = matched[matched.canonical_gene_id.duplicated(keep=False)]
+    vectors = {}
+    for sid, rows in frame[frame[id_column].isin(duplicates.source_gene_id)].groupby(id_column):
+        if rows.duplicated(list(context_columns)).any():
+            raise ValueError(f"Repeated source gene/context observations in {source}: {sid}")
+        vectors[sid] = rows.set_index(list(context_columns))[list(value_columns)].sort_index()
+
+    def equivalent(a: int, b: int) -> bool:
+        if a == b:
+            return True
+        return vectors[identities.loc[a, "source_gene_id"]].equals(
+            vectors[identities.loc[b, "source_gene_id"]]
+        )
+
+    decisions = resolve_measurement_rows(identities, equivalent=equivalent)
+    selected = decisions.row_position.dropna().astype(int)
+    crosswalk = identities.loc[
+        selected, ["source_gene_id", "canonical_gene_id", "identity_method"]
+    ].reset_index(drop=True)
+    return crosswalk, decisions
+
+
 def match_reference_genes(
     frame: pd.DataFrame,
     *,
@@ -142,7 +225,12 @@ def match_reference_genes(
     for row in pairs.drop_duplicates().itertuples(index=False):
         raw, name = row
         gid = unversioned(raw).upper() if raw else ""
-        name_candidates = official.get(name.upper(), synonyms.get(name.upper(), set()))
+        # NaN is also a historical SCN11A synonym. In tabular reference input,
+        # missing-value sentinels cannot supply or contradict gene identity.
+        missing_name = name.casefold() in {"", "nan", "na", "n/a", "none", "null", "-"}
+        name_candidates = (
+            set() if missing_name else official.get(name.upper(), synonyms.get(name.upper(), set()))
+        )
         candidates, status, method, chosen = set(), "unmapped", "", ""
         if raw:
             candidates = aliases.get(gid, {gid} if gid in ids else set())

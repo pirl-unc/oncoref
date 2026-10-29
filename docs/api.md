@@ -649,10 +649,15 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-The human release selects **463 groups / 481 loci**. Dog nominations remain
-Neither/unassessed and mouse selection is unavailable. The
+The human release selects **546 groups / 582 loci**. Dog nominations remain
+unassigned/unassessed and mouse selection is unavailable. The
 [selection guide](cta-selection.md) documents common fields, native units,
 source categories, identity gaps and the independent sequence-background policy.
+The [four assessments](cta-evidence-axes.md) separate normal safety, one qualifying
+cancer sample, adult restriction and reproductive/developmental association.
+Only safety can establish Unsafe; missing evidence remains unknown. The audit
+records each assessment, including passes, through
+`oncoref.cta_selection.audit().explain("PRAME")`.
 The APIs below preserve their explicitly dated historical snapshots.
 
 
@@ -695,7 +700,7 @@ normal-expression burdens and explicit missing-coverage bounds;
 and does not change eligibility. See [profiles, donor summaries and weighting
 sensitivity](audits/normal-breadth-20261026/index.md).
 
-Use `oncoref.target_sets` for the released disjoint **CTA**, **Unsafe** and
+Use `oncoref.target_sets` for the historical v1.20 disjoint **CTA**, **Unsafe** and
 **Neither** groups. `gene_ids("CTA")`, `gene_ids("Unsafe")` and
 `gene_ids("Neither")` return separate sets; only Unsafe is the forbidden
 background. `results()` includes the 5 nTPM admission rule, IHC coverage and
@@ -709,7 +714,7 @@ The earlier v1.15 ordered research screen remains available through `oncoref.cta
 excluded from selection**, with reviewed zero/failing vital-tissue RNA donors
 and negative local IHC recorded for reconsideration. Donors use the same
 IHC-dependent RNA limits as the main screen. See the [rules and API](cta-screen.md)
-and [current report](audits/cta-screen-20261023/index.md). Only CTAG2 currently
+and its [dated report](audits/cta-screen-20261023/index.md). Only CTAG2 currently
 has imported individual-donor RNA; other genes' donor variation is unassessed.
 
 The opt-in `oncoref.cta_continuous_screen` module adds continuous expression
@@ -2088,6 +2093,6 @@ expression classification retain their historical semantics. See the
 
 The newer [harmonized analysis APIs](cta-analysis-api.md) separate reference gene
 matching, same-context protein-equivalence sums, external IHC adjudication and
-three-way decision layers. The [current research funnel](audits/cta-release-1.21.0/index.md)
+decision layers. The [current research funnel](audits/cta-source-walkthrough-20261028/index.md)
 reports both locus and group counts and follows every historical CTA through the
 new rules; the historical accessors above remain frozen comparisons.

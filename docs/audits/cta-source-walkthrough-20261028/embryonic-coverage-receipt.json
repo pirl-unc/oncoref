@@ -1,0 +1,29 @@
+{
+  "author_commit": "3e6ab8546e57decc5ec09770720709b5fa6428ef",
+  "sources": {
+    "author_raw_counts": {
+      "url": "https://github.com/ScialdoneLab/human-gastrula-shiny/blob/3e6ab8546e57decc5ec09770720709b5fa6428ef/raw_reads.rds",
+      "sha256": "a13ad308d9bf090bcaf4d9ac57dcc6ff879c834311abd029c06376c52305cb34",
+      "matrix_shape": {
+        "cells": 1195,
+        "gene_columns": 57490
+      }
+    },
+    "atlas_counts": {
+      "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-9388/download/zip?fileType=quantification-raw",
+      "sha256": "0eeb65d1871307084157f6784b969503f04aff216d293a7329b638f82189bed5",
+      "matrix_shape": {
+        "gene_rows": 25330,
+        "cells": 1195
+      },
+      "note": "The Raw counts download itself contains aggregated_filtered_counts; it does not restore excluded gene rows."
+    },
+    "atlas_tpm": {
+      "sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03",
+      "receipt": "../cta-quantitative-20261026/developmental-source.json"
+    }
+  },
+  "script_sha256": "fc158cf46845de973da36bbfce0f8c9bc2faf54a32717801722bd1ad29c6d0eb",
+  "output_sha256": "ec778a5a9b82a6de09509647cce684e5de2974e2444fc38bf2bb01955dd701dc",
+  "interpretation": "Zero reported reads is a measured nondetection in this source; absent columns remain missing. Counts are not converted to TPM or inserted in the selection funnel."
+}

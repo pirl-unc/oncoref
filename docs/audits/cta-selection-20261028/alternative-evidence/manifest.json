@@ -1,0 +1,65 @@
+{
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "scripts/build_cta_alternative_evidence.py": "95241c7f81530e74ff186c90ffd6b29bcd974b0a9c0919f682c9a1866c8d7989",
+    "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
+    "oncoref/data/reference-releases.json": "5f48bb10b9dd0512ed9d178cab5c3cbdbb2aa2a69557121fef7416a254d969d6"
+  },
+  "sources": [
+    {
+      "name": "hpa_brain",
+      "version": "v23",
+      "file": "rna_brain_hpa.tsv.zip",
+      "url": "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+      "sha256": "96e4be538cdf4c480ff15008206a721007e78a2571a2d5054463bf28fdd4bbb5"
+    },
+    {
+      "name": "hpa_brain_anatomy",
+      "version": "v25.1-20261028",
+      "file": "rna_brain_hpa_subregions-current.tsv.zip",
+      "url": "https://www.proteinatlas.org/download/tsv/rna_brain_hpa_subregions.tsv.zip",
+      "sha256": "3544182193a0ed9bd1bc1092554c4209807ae2360a586719c7582eacf2250f62"
+    },
+    {
+      "name": "gtex_tissue_rna",
+      "version": "v11",
+      "file": "gtex-v11-median-tpm.gct.gz",
+      "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/GTEx_Analysis_2025-08-22_v11_RNASeQCv2.4.3_gene_median_tpm.gct.gz",
+      "sha256": "eb29994ed9175aa0a575aa78a2dc67a489241e11df8fc076ba8061aca2613196"
+    },
+    {
+      "name": "petropoulos_embryonic_tpm",
+      "version": "E-MTAB-3929-20261028",
+      "file": "petropoulos-tpm.zip",
+      "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-3929/download/zip?fileType=quantification-filtered",
+      "sha256": "f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334"
+    },
+    {
+      "name": "petropoulos_embryonic_design",
+      "version": "E-MTAB-3929-20261028",
+      "file": "petropoulos-design.tsv",
+      "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-3929/download?fileType=experiment-design",
+      "sha256": "c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573"
+    }
+  ],
+  "outputs": {
+    "developmental-lineages.csv.gz": "94b4d16fc0f44a387421f5bf90180697f02251ed8386f09b4cca0e932458c6ad",
+    "gtex-scope.json": "fd4366d1edbe118559fee34c9bb87e1f2f0ce1081be0d3c0234d7fc27955417e",
+    "gtex_tissue_rna-identity.csv.gz": "643fbb9a1abc38ecbb9366c18dadd8e47513dc8c311f2dd44c22e74710ff78e1",
+    "gtex_tissue_rna-member-coverage.csv.gz": "775af579a3c7feb90294883b8ac117d18309f531252bdfe2ed1fdf200014f6c7",
+    "gtex_tissue_rna-row-decisions.csv.gz": "85d9779dc98116b1dbcacc9dad58498facd6c03f67e4c2723b3ccc6a4b727b02",
+    "hpa-brain-anatomy.csv": "e74e0a1935f72ec7ed615ae2f81ad01dd04c00d355569561be745d6e3d2785f1",
+    "hpa_brain-identity.csv.gz": "dc1dbcdfab0d00a578e813bf478e5a31c1537e252ba6c79fa352ffb16d54a538",
+    "hpa_brain-member-coverage.csv.gz": "e22a8dc9beabd8e7c3ea5055b4cde5897d5bcd290c35a622830236b8ee43f9b2",
+    "hpa_brain-row-decisions.csv.gz": "48b67cecfa4e72e937ada805d2c1a803cd2d082eddc308f2c2770f69022e4bba",
+    "normal-bulk.csv.gz": "9a136024a6d48a2e7dc4a11505c1b1bdcdf0374c932b950242fabff241ca6d55",
+    "petropoulos-measured-cell-metadata.csv.gz": "994812dc71b234b36d162c297398448d2c993f1965f16780048d274b0ac66f40",
+    "petropoulos_E-MTAB-3929-identity.csv.gz": "cc05686b1b2e5cbe76a54bc6aca1762665215d911d2f3203ba6b1e447c80b804",
+    "petropoulos_E-MTAB-3929-row-decisions.csv.gz": "9f9ee886e7be2e22a03c911f16a7344c6be825849631ab3797f728337e285a0e"
+  },
+  "limitations": [
+    "GTEx donor medians do not exclude high expression in individual donors.",
+    "HPA anatomical crosswalk downloaded 2026-10-28; all 193 labels verified against v23.",
+    "Measured preimplantation stages complement one gastrulating embryo; they do not cover all fetal or pediatric stages."
+  ]
+}

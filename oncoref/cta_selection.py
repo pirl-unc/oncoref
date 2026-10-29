@@ -1,11 +1,19 @@
 """Current CTA/oncofetal candidate decisions with explicit species coverage.
 
 ``results``, ``coverage`` and ``sources`` use the same contract for human, dog
-and mouse. Human rows describe screened protein-equivalence groups. Native
-nonhuman nominations remain Neither/unassessed until their reference identities,
+and mouse. ``audit`` adds source-list accounting and measured decision contexts.
+Human rows describe screened protein-equivalence groups. Native
+nonhuman nominations remain unassigned/unassessed until their reference identities,
 measurement scales and required panels support a species-specific policy.
 Human expression, antibody grades and clinical outcomes never transfer through
 orthology. The historical nomination/evidence APIs remain separately accessible.
+
+Safety and CTA identity are separate assessments. Only normal-tissue or applicable
+clinical safety evidence supplies Unsafe; failing cancer/reproductive admission
+does not. Cancer presence requires one qualifying measured tumor sample. Adult
+restriction compares qualifying reproductive/developmental RNA with supported
+normal RNA in its own native units. This is distinct from the absolute safety
+ceilings and does not impose a tumor-versus-normal expression ratio.
 """
 
 from __future__ import annotations
@@ -17,6 +25,7 @@ from typing import Literal
 
 import pandas as pd
 
+from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
 Category = Literal["CTA", "Unsafe", "Neither"]
@@ -105,7 +114,7 @@ def _native_nominations(species: Species) -> pd.DataFrame:
                 if mapping["status"] == "unique" and mapping["complete"]
                 else mapping["status"],
                 "reference_id": mapping["reference_id"],
-                "category": "Neither",
+                "category": None,
                 "assessment_status": "unassessed",
                 "policy_id": None,
                 "reasons": (
@@ -123,24 +132,31 @@ def results(*, species: SpeciesLike = "human", category: Category | None = None)
     """Return detached current decisions in the common species-scoped schema.
 
     CTA means every gate of the named research policy passes. Unsafe denotes
-    stronger exclusion evidence under that policy, not demonstrated toxicity.
-    Neither includes insufficient evidence and unassessed native nominations.
+    exclusion evidence under that policy, not demonstrated toxicity. Neither
+    requires a measured low-expression or diffuse-Manageable profile. A null
+    category denotes unassigned evidence; ``assessment_status`` explains why.
     ``entity_kind`` prevents comparing human protein groups with unresolved
     nonhuman assay/family nominations. Tuple-valued identity fields retain every
     supported alternative. No download, orthology inference or zero filling occurs.
+
+    Cancer presence, adult restriction and reproductive/developmental association
+    are separate from safety. All must pass for CTA admission. Adult restriction
+    compares a qualifying association signal with same-unit adult normal RNA;
+    the cancer gate needs one qualifying sample and no tumor-versus-normal ratio.
     """
     selected = resolve_species(species)
     if category is not None and category not in CATEGORIES:
         raise ValueError(f"Unknown category {category!r}; choose from {CATEGORIES}")
     if selected.taxon_id == 9606:
         frame = _checked_table("cta-selection-human.csv.gz")
+        frame["category"] = frame.category.replace("", pd.NA)
         for column in JSON_COLUMNS:
             frame[column] = frame[column].map(lambda value: tuple(json.loads(value)))
     else:
         frame = _native_nominations(selected)
     if tuple(frame.columns) != RESULT_COLUMNS or not frame.taxon_id.eq(selected.taxon_id).all():
         raise ValueError("CTA result schema or species mismatch")
-    if not frame.category.isin(CATEGORIES).all():
+    if not (frame.category.isna() | frame.category.isin(CATEGORIES)).all():
         raise ValueError("Unknown packaged CTA decision")
     frame["taxon_id"] = frame.taxon_id.astype("int64")
     for column in RESULT_COLUMNS:
@@ -202,6 +218,9 @@ def coverage(*, species: SpeciesLike = "human") -> dict:
         "species": selected.name,
         **policy,
         "entities": len(frame),
-        "counts": {category: int(frame.category.eq(category).sum()) for category in CATEGORIES},
+        "counts": {
+            **{category: int(frame.category.eq(category).sum()) for category in CATEGORIES},
+            "Unassigned": int(frame.category.isna().sum()),
+        },
         "evidence_categories": categories,
     }

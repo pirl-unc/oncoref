@@ -35,7 +35,8 @@ def test_status_uniform_and_absent(monkeypatch, tmp_path):
     rows = catalog.status()
     assert {r["name"] for r in rows} == {d.name for d in catalog.datasets()}
     assert all(
-        set(r) == {"name", "kind", "present", "path", "size_bytes", "cohorts", "description"}
+        set(r)
+        == {"name", "version", "kind", "present", "path", "size_bytes", "cohorts", "description"}
         for r in rows
     )
     assert all(r["present"] is False and r["size_bytes"] == 0 for r in rows)

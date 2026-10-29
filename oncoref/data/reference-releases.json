@@ -1,0 +1,192 @@
+{
+  "schema": "oncoref.reference-releases",
+  "schema_version": 1,
+  "sources": {
+    "gtex_tissue_rna": {
+      "description": "GTEx normal-tissue gene median TPM",
+      "filename": "gene_median_tpm.gct.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "v11",
+      "versions": {
+        "v8": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v8/rna-seq/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct.gz",
+          "sha256": "ee7201ff2f280b0de5657d4b08e9a240362d9757efed7f7bd5dba35a5f8617b8",
+          "archive_sha256": "ee7201ff2f280b0de5657d4b08e9a240362d9757efed7f7bd5dba35a5f8617b8",
+          "bytes": 6952331,
+          "reference": "GENCODE v26",
+          "processing_pipeline": "RNA-SeQC 1.1.9",
+          "unit": "TPM",
+          "statistic": "donor median",
+          "taxon_id": 9606
+        },
+        "v10": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v10/rna-seq/GTEx_Analysis_v10_RNASeQCv2.4.2_gene_median_tpm.gct.gz",
+          "sha256": "b951fd32aae5cad48435026e07225860596a411a75efd0519e00f330b7a98294",
+          "archive_sha256": "b951fd32aae5cad48435026e07225860596a411a75efd0519e00f330b7a98294",
+          "bytes": 8846936,
+          "reference": "GENCODE v39",
+          "processing_pipeline": "RNA-SeQC 2.4.2",
+          "unit": "TPM",
+          "statistic": "donor median",
+          "taxon_id": 9606
+        },
+        "v11": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/GTEx_Analysis_2025-08-22_v11_RNASeQCv2.4.3_gene_median_tpm.gct.gz",
+          "sha256": "eb29994ed9175aa0a575aa78a2dc67a489241e11df8fc076ba8061aca2613196",
+          "archive_sha256": "eb29994ed9175aa0a575aa78a2dc67a489241e11df8fc076ba8061aca2613196",
+          "bytes": 10129906,
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "donor median",
+          "taxon_id": 9606
+        }
+      }
+    },
+    "hpa_rna_consensus": {
+      "default_version": "v25.1",
+      "versions": {
+        "v25.1": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-hpa-v25.1-20261028/rna_tissue_consensus.tsv.zip",
+          "sha256": "cdedaeaf3cdfc89e22b3891ea24ae2afabc0afd26d8883076121a363608450b6",
+          "archive_sha256": "b001903da23f802c8dfbd1b6b3a8c20b831fedd4932f4bb721b06622d83ae60b",
+          "bytes": 39004810,
+          "unit": "nTPM",
+          "taxon_id": 9606,
+          "reference": "Ensembl 109",
+          "retrieved_at": "2026-10-28",
+          "publication_url": "https://www.proteinatlas.org/about/releases",
+          "upstream_url": "https://www.proteinatlas.org/download/tsv/rna_tissue_consensus.tsv.zip"
+        }
+      }
+    },
+    "hpa_single_cell": {
+      "default_version": "v25.1",
+      "versions": {
+        "v25.1": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-hpa-v25.1-20261028/rna_single_cell_type.tsv.zip",
+          "sha256": "93a9cddda40e886d2fd85136a531b4525bbb882cf24722091fe9dcf56fe831cc",
+          "archive_sha256": "2ddd3d90fb050a8efea508792ba7741c510fb5aa3d89f352aab99794ec2c9d64",
+          "bytes": 148795332,
+          "unit": "nTPM",
+          "taxon_id": 9606,
+          "reference": "Ensembl 109",
+          "retrieved_at": "2026-10-28",
+          "publication_url": "https://www.proteinatlas.org/about/releases",
+          "upstream_url": "https://www.proteinatlas.org/download/tsv/rna_single_cell_type.tsv.zip"
+        }
+      }
+    },
+    "hpa_brain": {
+      "description": "HPA brain subregion RNA",
+      "filename": "rna_brain_hpa.tsv.zip",
+      "archive_format": "file",
+      "kind": "hpa",
+      "default_version": "v23",
+      "versions": {
+        "v23": {
+          "url": "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+          "sha256": "96e4be538cdf4c480ff15008206a721007e78a2571a2d5054463bf28fdd4bbb5",
+          "archive_sha256": "96e4be538cdf4c480ff15008206a721007e78a2571a2d5054463bf28fdd4bbb5",
+          "bytes": 33070387,
+          "taxon_id": 9606,
+          "retrieved_at": "2026-10-28",
+          "unit": "nTPM"
+        }
+      }
+    },
+    "hpa_brain_anatomy": {
+      "description": "HPA brain subregion anatomical crosswalk",
+      "filename": "rna_brain_hpa_subregions-current.tsv.zip",
+      "archive_format": "file",
+      "kind": "hpa",
+      "default_version": "v25.1-20261028",
+      "versions": {
+        "v25.1-20261028": {
+          "url": "https://www.proteinatlas.org/download/tsv/rna_brain_hpa_subregions.tsv.zip",
+          "sha256": "3544182193a0ed9bd1bc1092554c4209807ae2360a586719c7582eacf2250f62",
+          "archive_sha256": "3544182193a0ed9bd1bc1092554c4209807ae2360a586719c7582eacf2250f62",
+          "bytes": 1834,
+          "taxon_id": 9606,
+          "retrieved_at": "2026-10-28"
+        }
+      }
+    },
+    "petropoulos_embryonic_tpm": {
+      "description": "Petropoulos preimplantation filtered cell TPM matrix archive",
+      "filename": "petropoulos-tpm.zip",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "E-MTAB-3929-20261028",
+      "versions": {
+        "E-MTAB-3929-20261028": {
+          "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-3929/download/zip?fileType=quantification-filtered",
+          "sha256": "f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334",
+          "archive_sha256": "f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334",
+          "bytes": 268291946,
+          "taxon_id": 9606,
+          "retrieved_at": "2026-10-28",
+          "unit": "TPM"
+        }
+      }
+    },
+    "petropoulos_embryonic_design": {
+      "description": "Petropoulos preimplantation cell metadata",
+      "filename": "petropoulos-design.tsv",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "E-MTAB-3929-20261028",
+      "versions": {
+        "E-MTAB-3929-20261028": {
+          "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-3929/download?fileType=experiment-design",
+          "sha256": "c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573",
+          "archive_sha256": "c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573",
+          "bytes": 453232,
+          "taxon_id": 9606,
+          "retrieved_at": "2026-10-28"
+        }
+      }
+    },
+    "tyser_embryonic_tpm": {
+      "description": "Tyser human gastrulation cell TPM matrix",
+      "filename": "filtered-tpm.zip",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "E-MTAB-9388-20261026",
+      "versions": {
+        "E-MTAB-9388-20261026": {
+          "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-9388/download/zip?fileType=quantification-filtered",
+          "bytes": 75849726,
+          "sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03",
+          "archive_sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03",
+          "reference": "Ensembl 106",
+          "taxon_id": 9606,
+          "retrieved_at": "2026-10-26",
+          "publication_url": "https://doi.org/10.1038/s41586-021-04158-y",
+          "unit": "TPM",
+          "processing_pipeline": "Kallisto 0.46.2"
+        }
+      }
+    },
+    "tyser_embryonic_design": {
+      "description": "Tyser human gastrulation cell metadata",
+      "filename": "experiment-design.tsv",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "E-MTAB-9388-20261026",
+      "versions": {
+        "E-MTAB-9388-20261026": {
+          "url": "https://www.ebi.ac.uk/gxa/sc/experiment/E-MTAB-9388/download?fileType=experiment-design",
+          "bytes": 665846,
+          "sha256": "5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3",
+          "archive_sha256": "5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3",
+          "reference": "Ensembl 106",
+          "taxon_id": 9606,
+          "retrieved_at": "2026-10-26",
+          "publication_url": "https://doi.org/10.1038/s41586-021-04158-y"
+        }
+      }
+    }
+  }
+}

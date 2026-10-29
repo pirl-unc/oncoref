@@ -109,8 +109,13 @@ includes the threshold table, source distinctions and exclusion reasons.
 python scripts/cta_adaptive_report.py --out outputs/cta-adaptive-current
 ```
 
-The [current curation report](audits/cta-curation-20261021-r2/index.md) adds
-a searchable gene explorer, current publication-source counts, fixed/adaptive/zero-outside-RNA
+The [current selection report](audits/cta-source-walkthrough-20261028/index.md)
+provides the four-assessment funnel, source contributions, expression profiles,
+coverage gaps and measured exclusion reasons. The [1.22.0 downloads](cta-release-1.22.0.md)
+include its 28-slide PDF, editable deck and one-page logic diagram.
+
+The [2026-10-21 curation report](audits/cta-curation-20261021-r2/index.md) retains
+a searchable gene explorer, its publication-source counts, fixed/adaptive/zero-outside-RNA
 comparisons, primary clinical evidence and an updated PNG/SVG funnel. Its downloadable decisions distinguish
 normal protein counterevidence from RNA thresholds and reference-coverage gaps.
 The [genome-wide categories](audits/normal-expression-categories-20261021-r2/index.md)

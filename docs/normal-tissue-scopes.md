@@ -484,4 +484,4 @@ change leaves category membership, RNA ceilings and IHC gates unchanged. The new
 positive-evidence rule additionally requires Reproductive expression; Disposable
 expression alone no longer meets the admission requirement.
 
-The [current curation report](audits/cta-curation-20261021-r2/index.md) includes the doubled RNA ceilings, readable gene results and a searchable explorer. [Disjoint gene and protein sets](audits/normal-sequence-sets-20261021/index.md) provide the versioned basis for subsequent k-mer subtraction.
+The [current selection guide](cta-selection.md) documents the active tissue/IHC ceilings and separate safety, cancer, association and restriction requirements. The [2026-10-21 curation report](audits/cta-curation-20261021-r2/index.md) retains its doubled RNA ceilings, readable gene results and searchable explorer as a historical comparison. [Disjoint gene and protein sets](audits/normal-sequence-sets-20261021/index.md) provide the separately versioned basis for subsequent k-mer subtraction.

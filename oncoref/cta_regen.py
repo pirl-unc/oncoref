@@ -399,7 +399,7 @@ def reproductive_tier_audit(table: pd.DataFrame | None = None) -> pd.DataFrame:
     from . import hpa
 
     table = get_data("cancer-testis-antigens") if table is None else table
-    ntpm_by_gene = _build_ntpm_by_gene(hpa.hpa_rna_consensus())
+    ntpm_by_gene = _build_ntpm_by_gene(hpa.hpa_rna_consensus("v23"))
     records = []
     for _, row in table.iterrows():
         gid = str(row.Ensembl_Gene_ID).split(".")[0]
@@ -616,8 +616,8 @@ def regenerate_cta_columns(table: pd.DataFrame, *, tissue_scope: str = "core") -
     columns = list(dict.fromkeys([*table.columns, "rna_reproductive_tissue_scope"]))
     seed = table.copy()
 
-    consensus = hpa.hpa_rna_consensus()
-    normal_tissue = hpa.hpa_normal_tissue()
+    consensus = hpa.hpa_rna_consensus("v23")
+    normal_tissue = hpa.hpa_normal_tissue("v23")
     ntpm_by_gene = _build_ntpm_by_gene(consensus)
 
     # Protein/IHC first -- the RNA restriction axes and the filters read it.

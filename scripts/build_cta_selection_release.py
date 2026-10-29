@@ -17,6 +17,7 @@ from cta_report_common import sha256, write_csv  # noqa: E402
 from oncoref import canine, human  # noqa: E402
 from oncoref.cta_selection import RESULT_COLUMNS  # noqa: E402
 from oncoref.expression_registry import expression_sources  # noqa: E402
+from oncoref.version import __version__  # noqa: E402
 
 AUDIT = ROOT / "docs/audits/cta-release-1.21.0"
 DATA = ROOT / "oncoref/data"
@@ -73,6 +74,39 @@ def source_inventory() -> pd.DataFrame:
         "Carnegie stage 7",
         "https://doi.org/10.1038/s41586-021-04158-y",
         "One embryo; cell support does not establish independent-donor replication",
+    )
+    add(
+        9606,
+        "petropoulos_E-MTAB-3929",
+        "Petropoulos preimplantation atlas",
+        ["developmental_expression"],
+        "used_in_selection",
+        "TPM",
+        "3–7 days, stage × inferred lineage",
+        "https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results",
+        "1,519 measured cells; stage and embryo counts retained; not coverage of all fetal stages",
+    )
+    add(
+        9606,
+        "hpa_brain",
+        "HPA v23 human brain, 193 subregions",
+        ["normal_bulk_rna"],
+        "used_in_selection",
+        "nTPM",
+        "adult",
+        "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+        "Maximum subregion mean after within-context group sums; no automatic negative-IHC credit",
+    )
+    add(
+        9606,
+        "gtex_tissue_rna",
+        "Direct GTEx v11 tissue medians",
+        ["normal_bulk_rna"],
+        "used_in_selection",
+        "TPM",
+        "adult",
+        "https://gtexportal.org/home/downloads/adult-gtex",
+        "52 native whole-organ contexts; 14 microdissected and two cultured/transformed contexts remain outside this adapter. Exact whole-organ HPA negative-IHC grades apply; donor medians do not exclude donor outliers. Native reader preserves all 68 contexts.",
     )
     add(
         9606,
@@ -296,9 +330,9 @@ def source_inventory() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def build() -> None:
+def build(audit: Path = AUDIT) -> None:
     """Export a small wheel-backed table, preserving every group and member identity."""
-    source = AUDIT / "protein-group-classifications.csv.gz"
+    source = audit / "protein-group-classifications.csv.gz"
     decisions = pd.read_csv(source, low_memory=False)
     source_identity = "sha256:" + sha256(source)
     reference = human.cta_snapshot().as_dict()["references"][0]["identity"]
@@ -346,7 +380,7 @@ def build() -> None:
                 else "partial",
                 "reference_id": reference["reference_id"],
                 "category": row["category"],
-                "assessment_status": "screened",
+                "assessment_status": row.get("assessment_status", "screened"),
                 "policy_id": row["policy"],
                 "reasons": json.dumps(
                     row["exclusion_reasons"].split(" | ")
@@ -360,11 +394,11 @@ def build() -> None:
     write_csv(pd.DataFrame(rows, columns=RESULT_COLUMNS), DATA / "cta-selection-human.csv.gz")
     inventory = source_inventory()
     write_csv(inventory, DATA / "cta-selection-sources.csv")
-    write_csv(inventory, AUDIT / "species-source-inventory.csv")
+    write_csv(inventory, audit / "species-source-inventory.csv")
     metadata = {
         "schema": "oncoref.cta-selection",
         "schema_version": 1,
-        "release": "1.21.0",
+        "release": "1.21.0" if audit == AUDIT else __version__,
         "data_sha256": {
             name: sha256(DATA / name)
             for name in ["cta-selection-human.csv.gz", "cta-selection-sources.csv"]
@@ -378,7 +412,7 @@ def build() -> None:
                 "reference": reference,
                 "limitations": [
                     "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
-                    "Only one embryonic atlas embryo; later fetal atlases are not integrated",
+                    "Developmental coverage is stage-limited; gastrulation and preimplantation measurements do not cover later fetal/postnatal development",
                     "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
                     "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
                     "Representative-protein equivalence is not exhaustive isoform identity",
@@ -394,7 +428,7 @@ def build() -> None:
                     "No validated species-specific quantitative selection policy",
                     "Native normal matrices need reference reconciliation and source-specific scale handling",
                     "Tumor cohort integration is blocked by unit/reference provenance",
-                    "Unassessed nominations are Neither; human expression and safety evidence never transfer by orthology",
+                    "Unassessed nominations have null categories; human expression and safety evidence never transfer by orthology",
                 ],
             },
             "mouse": {
@@ -412,7 +446,7 @@ def build() -> None:
         },
         "inputs": {
             str(source.relative_to(ROOT)): sha256(source),
-            "report_manifest": sha256(AUDIT / "manifest.json"),
+            "report_manifest": sha256(audit / "manifest.json"),
         },
     }
     (DATA / "cta-selection.json").write_text(json.dumps(metadata, indent=2) + "\n")

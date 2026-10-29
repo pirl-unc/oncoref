@@ -1,9 +1,10 @@
 # CTA analysis APIs and identity conventions
 
-The current released research selection is the [compartment-aware CTA funnel](audits/cta-release-1.21.0/index.md).
+The current released research selection is the [four-assessment CTA funnel](audits/cta-source-walkthrough-20261028/index.md).
 Use the [shared species API](cta-selection.md) for current decisions.
-The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md) is its
-versioned comparison baseline.
+The [463-group 1.21.0 release](audits/cta-release-1.21.0/index.md) and
+[343-group harmonized funnel](audits/cta-harmonized-20261027/index.md) retain their
+versioned comparison baselines.
 Earlier membership and threshold reports remain versioned comparisons; their
 `results()` accessors return frozen datasets, not the latest research selection.
 
@@ -31,6 +32,9 @@ gene-specific regulation. Reports always label whether counts represent loci or 
 `gene_matching` handles identity, `protein_equivalence` handles additive measurements,
 `cell_rna_policy` handles context-specific RNA thresholds, and `cta_funnel` handles
 independent decision layers. Report scripts assemble these APIs and render artifacts.
+The current `cta_selection_policy` separates [safety and CTA identity](cta-evidence-axes.md)
+and reserves Unsafe for safety evidence; the earlier policy helpers below retain
+their own dated behavior.
 `compartment_rna_policy.assess_contexts()` applies the provisional cell-compartment
 tiers while retaining original anatomy, values and IHC grades. Its protein review
 API distinguishes explicitly Low staining from ungraded accepted positives;

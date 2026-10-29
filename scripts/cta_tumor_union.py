@@ -73,7 +73,7 @@ def winning_observations(paths: Iterable[Path], *, entity_column: str) -> pd.Dat
     return best.reset_index(drop=True)
 
 
-def build(out: Path, download_cache: Path) -> None:
+def build(out: Path, download_cache: Path, *, cancer_codes: set[str] | None = None) -> None:
     """Recompute per-sample maxima and auditable identities across compatible cohorts."""
     out.mkdir(parents=True, exist_ok=True)
     shards = out / "cohorts"
@@ -94,6 +94,11 @@ def build(out: Path, download_cache: Path) -> None:
         for gid in json.loads(r.member_gene_ids)
     }
     registry = source_matrices.registry()
+    if cancer_codes is not None:
+        unknown = cancer_codes - set(registry.cancer_code)
+        if unknown:
+            raise ValueError(f"Unknown cancer codes: {sorted(unknown)}")
+        registry = registry[registry.cancer_code.isin(cancer_codes)].copy()
     availability_path = ROOT / "oncoref/data/cancer-reference-expression-availability.csv"
     availability = pd.read_csv(availability_path).drop_duplicates(["cancer_code", "source_cohort"])
     inventory = registry.merge(
@@ -271,5 +276,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--download-cache", type=Path, default=Path("/tmp/oncoref-cta-expanded-matrices")
     )
+    parser.add_argument("--cancer-codes", nargs="+", help="Rebuild specified cohort views only")
     args = parser.parse_args()
-    build(args.output, args.download_cache)
+    build(
+        args.output,
+        args.download_cache,
+        cancer_codes=set(args.cancer_codes) if args.cancer_codes else None,
+    )

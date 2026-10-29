@@ -55,6 +55,7 @@ import contextlib
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tarfile
@@ -186,12 +187,51 @@ def cache_root() -> Path:
     return _DEFAULT_CACHE_PARENT
 
 
-def cache_dir() -> Path:
+def resolve_version(version: str | None = None) -> str:
+    """Resolve latest to this build's registered data release; validate a pin."""
+    if version is None or version == "latest":
+        return DATA_VERSION
+    value = version.removeprefix("v")
+    if not re.fullmatch(r"[0-9]+(?:\.[0-9]+){2}", value):
+        raise ValueError(f"Invalid bundle release {version!r}; use a numeric X.Y.Z release")
+    return value
+
+
+def release_sources(version: str | None = None) -> tuple[dict, ...]:
+    """Exact release URLs. Historical downloads require a matching manifest."""
+    concrete = resolve_version(version)
+    if concrete == DATA_VERSION:
+        return RELEASE_SOURCES
+    filename = f"oncoref-data-v{concrete}.tar.gz"
+    return (
+        {
+            "name": "oncoref",
+            "repo": GITHUB_REPO,
+            "url": _release_url(GITHUB_REPO, filename, data_version=concrete),
+            "tarball_filename": filename,
+            "manifest_url": _release_url(
+                GITHUB_REPO, f"oncoref-data-v{concrete}.manifest.json", data_version=concrete
+            ),
+            "checksum_url": _release_url(GITHUB_REPO, f"{filename}.sha256", data_version=concrete),
+            "require_integrity": True,
+        },
+    )
+
+
+def cache_dir(version: str | None = None) -> Path:
     """Where the downloaded bundle lives on disk for this version."""
+    concrete = resolve_version(version)
     override = _cache_override()
     if override:
-        return Path(override).expanduser()
-    return cache_root() / f"v{DATA_VERSION}"
+        current = Path(override).expanduser()
+        # The override identifies the current release, never all versions.
+        if concrete == DATA_VERSION:
+            return current
+        historical = current.parent / f"v{concrete}"
+        if historical.resolve() == current.resolve():
+            historical = current.parent / "historical" / f"v{concrete}"
+        return historical
+    return cache_root() / f"v{concrete}"
 
 
 def _cache_lock(root: Path) -> FileLock:
@@ -634,20 +674,20 @@ def _write_completion_marker(
     os.replace(tmp, marker)
 
 
-def bundle_is_local() -> bool:
+def bundle_is_local(version: str | None = None) -> bool:
     """Whether every downloadable item is non-empty in the active cache."""
-    root = cache_dir()
+    root = cache_dir(version)
     return all(_path_complete(root / p) for p in DOWNLOADABLE_PATHS)
 
 
-def is_local() -> bool:
+def is_local(version: str | None = None) -> bool:
     """Backward-compatible alias for :func:`bundle_is_local`."""
-    return bundle_is_local()
+    return bundle_is_local(version)
 
 
-def find(relative_path: str) -> Path | None:
+def find(relative_path: str, version: str | None = None) -> Path | None:
     """Resolve a non-empty item in the active bundle cache, or return ``None``."""
-    candidate = cache_dir() / relative_path
+    candidate = cache_dir(version) / relative_path
     return candidate if _path_complete(candidate) else None
 
 
@@ -1100,7 +1140,7 @@ def _ensure_overlay_base(
     return destination
 
 
-def _fetch_into_cache(root: Path, *, verbose: bool) -> Path:
+def _fetch_into_cache(root: Path, *, verbose: bool, version: str | None = None) -> Path:
     """Download and replace ``root`` while its cache lock is held.
 
     The oncoref-owned source must publish a same-release manifest or sha256 asset
@@ -1108,26 +1148,38 @@ def _fetch_into_cache(root: Path, *, verbose: bool) -> Path:
     failures stop the fetch instead of silently relying on a cross-project
     fallback.
     """
+    concrete = resolve_version(version)
     root.mkdir(parents=True, exist_ok=True)
     verbose = _downloads.is_verbose(verbose)
     errors: list[str] = []
-    for source in RELEASE_SOURCES:
+    for source in release_sources(concrete):
         url = source["url"]
         if verbose:
             sys.stderr.write(
-                f"oncoref: downloading data bundle for v{DATA_VERSION} "
+                f"oncoref: downloading data bundle for v{concrete} "
                 "(large, one-time)\n"
                 f"  from {url}\n"
                 f"  to   {root}\n"
             )
             sys.stderr.flush()
         try:
-            release_manifest = _fetch_release_manifest(source)
+            release_manifest = (
+                _fetch_release_manifest(source)
+                if concrete == DATA_VERSION
+                else _fetch_release_manifest(
+                    source, expected_data_version=concrete, expected_source_matrix_version=None
+                )
+            )
             if release_manifest and release_manifest.get("bundle_layout") == "overlay":
                 base_root = _ensure_overlay_base(
                     root,
                     release_manifest["base_bundle"],
                     verbose=verbose,
+                    **(
+                        {"_seen_versions": frozenset({concrete})}
+                        if concrete != DATA_VERSION
+                        else {}
+                    ),
                 )
                 _download_and_apply_overlay(
                     url,
@@ -1135,6 +1187,7 @@ def _fetch_into_cache(root: Path, *, verbose: bool) -> Path:
                     base_root=base_root,
                     verbose=verbose,
                     release_manifest=release_manifest,
+                    **({"data_version": concrete} if concrete != DATA_VERSION else {}),
                 )
             else:
                 _download_and_extract(
@@ -1142,6 +1195,7 @@ def _fetch_into_cache(root: Path, *, verbose: bool) -> Path:
                     root,
                     verbose=verbose,
                     release_manifest=release_manifest,
+                    **({"data_version": concrete} if concrete != DATA_VERSION else {}),
                 )
         except BundleIntegrityError as e:
             errors.append(f"{url}: {e}")
@@ -1178,26 +1232,30 @@ def _fetch_into_cache(root: Path, *, verbose: bool) -> Path:
     )
 
 
-def fetch(*, verbose: bool = True) -> Path:
+def fetch(*, version: str | None = None, verbose: bool = True) -> Path:
     """Download + extract the bundle for this version into the cache.
 
     Concurrent writers are serialized. This operation always overwrites the
     active version so callers can deliberately repair a corrupt cache.
     """
-    root = cache_dir()
+    root = cache_dir(version) if version is not None else cache_dir()
     with _cache_lock(root):
-        return _fetch_into_cache(root, verbose=verbose)
+        return _fetch_into_cache(
+            root, verbose=verbose, **({"version": version} if version is not None else {})
+        )
 
 
-def ensure_local(*, auto_fetch: bool = True, verbose: bool = True) -> Path:
+def ensure_local(
+    *, version: str | None = None, auto_fetch: bool = True, verbose: bool = True
+) -> Path:
     """Make sure the bundle is present locally; download if not.
 
     With ``auto_fetch=False``, raises ``FileNotFoundError`` instead of
     triggering a network call — for read-only inspection paths that shouldn't
     surprise users with a large download.
     """
-    root = cache_dir()
-    if bundle_is_local():
+    root = cache_dir(version) if version is not None else cache_dir()
+    if bundle_is_local(version) if version is not None else bundle_is_local():
         return root
     if not auto_fetch:
         raise FileNotFoundError(
@@ -1207,9 +1265,11 @@ def ensure_local(*, auto_fetch: bool = True, verbose: bool = True) -> Path:
     with _cache_lock(root):
         # Another process may have populated the cache while this caller waited.
         # Reuse it instead of replacing files under that process's readers.
-        if bundle_is_local():
+        if bundle_is_local(version) if version is not None else bundle_is_local():
             return root
-        return _fetch_into_cache(root, verbose=verbose)
+        return _fetch_into_cache(
+            root, verbose=verbose, **({"version": version} if version is not None else {})
+        )
 
 
 def status() -> dict:

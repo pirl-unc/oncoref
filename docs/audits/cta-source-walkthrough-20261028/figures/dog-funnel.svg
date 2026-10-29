@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="900pt" height="468pt" viewBox="0 0 900 468" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 468 
+L 900 468 
+L 900 0 
+L 0 0 
+z
+" style="fill: #f7f9f8"/>
+  </g>
+  <g id="axes_1">
+   <g id="table_1">
+    <g id="patch_2">
+     <path d="M 72 182.7 
+L 274.5 182.7 
+L 274.5 157.5 
+L 72 157.5 
+z
+" style="fill: #172b3a; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_1">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="173.25" y="172.957422" transform="rotate(-0 173.25 172.957422)">Stage</text>
+    </g>
+    <g id="patch_3">
+     <path d="M 274.5 182.7 
+L 477 182.7 
+L 477 157.5 
+L 274.5 157.5 
+z
+" style="fill: #172b3a; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_2">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="375.75" y="172.957852" transform="rotate(-0 375.75 172.957852)">Available evidence</text>
+    </g>
+    <g id="patch_4">
+     <path d="M 477 182.7 
+L 882 182.7 
+L 882 157.5 
+L 477 157.5 
+z
+" style="fill: #172b3a; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_3">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="679.5" y="172.957852" transform="rotate(-0 679.5 172.957852)">Interpretation</text>
+    </g>
+    <g id="patch_5">
+     <path d="M 72 207.9 
+L 274.5 207.9 
+L 274.5 182.7 
+L 72 182.7 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_4">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="92.25" y="198.157852" transform="rotate(-0 92.25 198.157852)">Nominations</text>
+    </g>
+    <g id="patch_6">
+     <path d="M 274.5 207.9 
+L 477 207.9 
+L 477 182.7 
+L 274.5 182.7 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_5">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="198.157422" transform="rotate(-0 294.75 198.157422)">5 + 10 − 1 = 14</text>
+    </g>
+    <g id="patch_7">
+     <path d="M 477 207.9 
+L 882 207.9 
+L 882 182.7 
+L 477 182.7 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_6">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="517.5" y="198.157852" transform="rotate(-0 517.5 198.157852)">NT5C1B is shared between the two studies</text>
+    </g>
+    <g id="patch_8">
+     <path d="M 72 233.1 
+L 274.5 233.1 
+L 274.5 207.9 
+L 72 207.9 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_7">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="92.25" y="223.357852" transform="rotate(-0 92.25 223.357852)">Identity</text>
+    </g>
+    <g id="patch_9">
+     <path d="M 274.5 233.1 
+L 477 233.1 
+L 477 207.9 
+L 274.5 207.9 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_8">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="223.357852" transform="rotate(-0 294.75 223.357852)">13 unique; 1 family</text>
+    </g>
+    <g id="patch_10">
+     <path d="M 477 233.1 
+L 882 233.1 
+L 882 207.9 
+L 477 207.9 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_9">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="517.5" y="223.357852" transform="rotate(-0 517.5 223.357852)">MAGE assay remains ambiguous</text>
+    </g>
+    <g id="patch_11">
+     <path d="M 72 258.3 
+L 274.5 258.3 
+L 274.5 233.1 
+L 72 233.1 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_10">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="92.25" y="248.557852" transform="rotate(-0 92.25 248.557852)">Normal / developmental RNA</text>
+    </g>
+    <g id="patch_12">
+     <path d="M 274.5 258.3 
+L 477 258.3 
+L 477 233.1 
+L 274.5 233.1 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_11">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="248.557852" transform="rotate(-0 294.75 248.557852)">Native matrices available</text>
+    </g>
+    <g id="patch_13">
+     <path d="M 477 258.3 
+L 882 258.3 
+L 882 233.1 
+L 477 233.1 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_12">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="517.5" y="248.557852" transform="rotate(-0 517.5 248.557852)">Reference reconciliation and scale policy needed</text>
+    </g>
+    <g id="patch_14">
+     <path d="M 72 283.5 
+L 274.5 283.5 
+L 274.5 258.3 
+L 72 258.3 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_13">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="92.25" y="273.757422" transform="rotate(-0 92.25 273.757422)">Tumor RNA</text>
+    </g>
+    <g id="patch_15">
+     <path d="M 274.5 283.5 
+L 477 283.5 
+L 477 258.3 
+L 274.5 258.3 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_14">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="273.757852" transform="rotate(-0 294.75 273.757852)">Cohort blocked</text>
+    </g>
+    <g id="patch_16">
+     <path d="M 477 283.5 
+L 882 283.5 
+L 882 258.3 
+L 477 258.3 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_15">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="517.5" y="273.757852" transform="rotate(-0 517.5 273.757852)">Count/FPKM and annotation conflict</text>
+    </g>
+    <g id="patch_17">
+     <path d="M 72 308.7 
+L 274.5 308.7 
+L 274.5 283.5 
+L 72 283.5 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_16">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="92.25" y="298.957852" transform="rotate(-0 92.25 298.957852)">Normal IHC / MS</text>
+    </g>
+    <g id="patch_18">
+     <path d="M 274.5 308.7 
+L 477 308.7 
+L 477 283.5 
+L 274.5 283.5 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_17">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="298.957852" transform="rotate(-0 294.75 298.957852)">Limited IHC; pooled iBAQ</text>
+    </g>
+    <g id="patch_19">
+     <path d="M 477 308.7 
+L 882 308.7 
+L 882 283.5 
+L 477 283.5 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_18">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="517.5" y="298.957852" transform="rotate(-0 517.5 298.957852)">Not a complete tissue-cell panel</text>
+    </g>
+    <g id="patch_20">
+     <path d="M 72 333.9 
+L 274.5 333.9 
+L 274.5 308.7 
+L 72 308.7 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_19">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="92.25" y="324.157852" transform="rotate(-0 92.25 324.157852)">Selection</text>
+    </g>
+    <g id="patch_21">
+     <path d="M 274.5 333.9 
+L 477 333.9 
+L 477 308.7 
+L 274.5 308.7 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_20">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="294.75" y="324.157852" transform="rotate(-0 294.75 324.157852)">14 unassigned / unassessed</text>
+    </g>
+    <g id="patch_22">
+     <path d="M 477 333.9 
+L 882 333.9 
+L 882 308.7 
+L 477 308.7 
+z
+" style="fill: #f7f9f8; stroke: #dce7ea; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_21">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="517.5" y="324.157852" transform="rotate(-0 517.5 324.157852)">No passing/failing count is inferred</text>
+    </g>
+   </g>
+  </g>
+  <g id="text_22">
+   <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="40.5" y="37.016719" transform="rotate(-0 40.5 37.016719)">Dog evidence funnel</text>
+  </g>
+  <g id="text_23">
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="40.5" y="55.158281" transform="rotate(-0 40.5 55.158281)">14 native nominations; quantitative selection has not been evaluated</text>
+  </g>
+  <g id="text_24">
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(40.5 442.434551)">Hindriks et al. (2025): eight original assay targets plus two MAGE follow-ups. Nemec et al. (2019): five curated nominees.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(40.5 453.237012)">Missing canine evidence does not inherit human HPA grades, thresholds, or normal-tissue absence.</text>
+  </g>
+ </g>
+</svg>

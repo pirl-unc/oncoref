@@ -17,8 +17,9 @@ distinct from the heavy per-cohort expression bundle (:mod:`oncoref.data_bundle`
 a single tarball). They back the CTA tissue-restriction definition and the
 protein-level / single-cell normal-tissue comparisons.
 
-Normal-tissue sources are pinned to HPA ``v23`` — whose mirror serves RNA consensus
-AND IHC ``normal_tissue`` as a matched pair (newer mirrors drop ``normal_tissue``).
+Each source defaults to its newest registered concrete release. Historical
+analyses explicitly pin HPA ``v23`` for the matched RNA/IHC panel. Unversioned
+provider URLs are accepted only under a concrete snapshot label and checksum.
 Cancer sources have their own release, archived URLs, and mandatory raw/content
 hashes in ``hpa-cancer-sources.json``. The large sample RNA source stays gzipped.
 
@@ -58,7 +59,6 @@ REFERENCE_SOURCES: dict[str, dict] = {
         "filename": "rna_tissue_consensus.tsv",
         "urls": {
             "v23": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
-            "latest": "https://www.proteinatlas.org/download/tsv/rna_tissue_consensus.tsv.zip",
         },
     },
     "hpa_normal_tissue": {
@@ -73,7 +73,6 @@ REFERENCE_SOURCES: dict[str, dict] = {
         "filename": "rna_single_cell_type.tsv",
         "urls": {
             "v23": "https://v23.proteinatlas.org/download/rna_single_cell_type.tsv.zip",
-            "latest": "https://www.proteinatlas.org/download/tsv/rna_single_cell_type.tsv.zip",
         },
     },
 }
@@ -118,6 +117,23 @@ for _name, _artifact in _annotation_manifest["artifacts"].items():
         "pins": {_version: _artifact},
     }
 
+# One stable source identifier can own several concrete upstream releases.
+# A moving selector is never used as the cache/provenance version.
+_release_manifest = json.loads(
+    (Path(__file__).parent / "data" / "reference-releases.json").read_text()
+)
+for _name, _source_spec in _release_manifest["sources"].items():
+    _previous = REFERENCE_SOURCES.get(_name, {})
+    REFERENCE_SOURCES[_name] = {
+        **_previous,
+        **{k: v for k, v in _source_spec.items() if k != "versions"},
+        "urls": {
+            **_previous.get("urls", {}),
+            **{v: record["url"] for v, record in _source_spec["versions"].items()},
+        },
+        "pins": {**_previous.get("pins", {}), **_source_spec["versions"]},
+    }
+
 #: Env var overriding the reference-data cache root.
 CACHE_DIR_ENV_KEY = "CANCERDATA_DATA_DIR"
 
@@ -144,14 +160,21 @@ def _source(name: str) -> dict:
 
 
 def resolve_version(name: str, version: str | None = None) -> str:
-    """Concrete version for *name* (defaults to the pinned HPA release)."""
+    """Concrete newest registered release, or the exact requested historical pin."""
     spec = _source(name)
-    if version is None:
+    if version is None or version == "latest":
         version = spec.get("default_version", DEFAULT_HPA_VERSION)
     if version not in spec["urls"]:
         avail = ", ".join(sorted(spec["urls"]))
         raise ReferenceDataError(f"{name!r} has no version {version!r}; available: {avail}")
     return version
+
+
+def versions(name: str) -> tuple[str, ...]:
+    """Registered concrete versions, default first; upstream labels are opaque."""
+    spec = _source(name)
+    default = resolve_version(name)
+    return (default, *(version for version in reversed(spec["urls"]) if version != default))
 
 
 def local_path(name: str, version: str | None = None) -> Path:
@@ -171,7 +194,7 @@ def _manifest_path() -> Path:
 
 def _manifest_key(name: str, version: str) -> str:
     """Manifest record key. Keyed by ``(name, version)`` so each cached version of
-    a multi-version source (e.g. ``hpa_rna_consensus`` v23 + latest) keeps its own
+    a multi-version source (e.g. ``hpa_rna_consensus`` v23 + v25.1) keeps its own
     size/sha256 record — a single per-name record would only validate whichever
     version was downloaded last."""
     return f"{name}@{version}"
@@ -398,6 +421,18 @@ def provenance(
         verification_state = "not_checked"
 
     return {
+        **{
+            field: pin.get(field) if pin else None
+            for field in (
+                "reference",
+                "processing_pipeline",
+                "unit",
+                "statistic",
+                "retrieved_at",
+                "publication_url",
+                "upstream_url",
+            )
+        },
         "name": name,
         "version": version,
         "url": spec["urls"][version] if pin else record.get("url") or spec["urls"][version],

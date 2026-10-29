@@ -1,0 +1,10 @@
+{
+  "source_commit": "637cd53102c6ab6883f75a2f086301f0f915713f",
+  "purpose": "Exact historical inputs for frozen 1.21.0-era report verification and legacy candidate import tests. Current selection uses current source lists.",
+  "sha256": {
+    "oncoref/gene_matching.py": "74532a8d862030814440e433d0e0295d8ac6badd9a4cc7544b3f1c0390593707",
+    "oncoref/protein_equivalence.py": "647a94b56cff08ede55b785373e7d8daa1f29f1ec42fff53b451fb6ff24dfc4b",
+    "oncoref/data/cta-publication-membership.csv": "be2c3d9b3d202b0664e7e025926ba9743b1516cf100182cf6c14fb1b42af8b09",
+    "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c"
+  }
+}

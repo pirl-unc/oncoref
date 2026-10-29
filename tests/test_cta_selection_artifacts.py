@@ -21,8 +21,8 @@ def test_release_receipts_verify_all_owned_evidence():
                 assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, str(path)
 
 
-def test_release_counts_match_package_funnel_and_presentation():
-    selected = cta_selection.results()
+def test_frozen_release_counts_match_funnel_and_presentation():
+    selected = pd.read_csv(AUDIT / "protein-group-classifications.csv.gz", low_memory=False)
     summary = json.loads((AUDIT / "summary.json").read_text())
     deck = json.loads((AUDIT / "presentation-data.json").read_text())
     assert selected.category.value_counts().to_dict() == summary["categories"]

@@ -144,21 +144,31 @@ def _read_hpa(name: str, version: str | None = None) -> pd.DataFrame:
     so repeated/cold reads are fast and compact (HPA TSVs are large — single-cell
     is tens of MB; parquet is a few-fold smaller and skips re-parsing). The parquet
     cache is best-effort and regenerated if the TSV is re-downloaded."""
-    tsv = reference_data.ensure(name, version)
+    concrete = reference_data.resolve_version(name, version)
+    tsv = reference_data.ensure(name, concrete)
     parquet = tsv.with_suffix(".parquet")
     if parquet.exists() and parquet.stat().st_mtime >= tsv.stat().st_mtime:
-        return pd.read_parquet(parquet)
+        result = pd.read_parquet(parquet)
+        result.attrs.update(reference_data.provenance(name, concrete))
+        return result
     df = pd.read_csv(tsv, sep="\t")
     # parquet cache is an optimization, not required — never fail a read over it.
     with contextlib.suppress(Exception):
         df.to_parquet(parquet, index=False)
+    df.attrs.update(reference_data.provenance(name, concrete))
     return df
 
 
-@lru_cache(maxsize=1)
-def hpa_rna_consensus() -> pd.DataFrame:
-    """HPA RNA consensus per-tissue nTPM (downloads HPA v23 on first use)."""
-    return _read_hpa("hpa_rna_consensus")
+@cache
+def _hpa_rna_consensus_for_version(version: str) -> pd.DataFrame:
+    return _read_hpa("hpa_rna_consensus", version)
+
+
+def hpa_rna_consensus(version: str | None = None) -> pd.DataFrame:
+    """HPA tissue nTPM; newest registered release unless explicitly pinned."""
+    return _hpa_rna_consensus_for_version(
+        reference_data.resolve_version("hpa_rna_consensus", version)
+    )
 
 
 @cache
@@ -173,10 +183,14 @@ def hpa_normal_tissue(version: str | None = None) -> pd.DataFrame:
     return _hpa_normal_tissue_for_version(concrete_version)
 
 
-@lru_cache(maxsize=1)
-def hpa_single_cell() -> pd.DataFrame:
-    """HPA single-cell-type RNA nTPM (downloads on first use)."""
-    return _read_hpa("hpa_single_cell")
+@cache
+def _hpa_single_cell_for_version(version: str) -> pd.DataFrame:
+    return _read_hpa("hpa_single_cell", version)
+
+
+def hpa_single_cell(version: str | None = None) -> pd.DataFrame:
+    """HPA cell-type nTPM; newest registered release unless explicitly pinned."""
+    return _hpa_single_cell_for_version(reference_data.resolve_version("hpa_single_cell", version))
 
 
 @lru_cache(maxsize=1)

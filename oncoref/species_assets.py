@@ -67,8 +67,8 @@ def _manifest(species):
     ):
         raise ValueError("Invalid species asset manifest schema or taxon")
     assets = [SpeciesAsset(**row) for row in record["assets"]]
-    by_id = {a.id: a for a in assets}
-    if len(by_id) != len(assets) or any(a.taxon_id != selected.taxon_id for a in assets):
+    identities = {(a.id, a.source_version) for a in assets}
+    if len(identities) != len(assets) or any(a.taxon_id != selected.taxon_id for a in assets):
         raise ValueError("Duplicate asset IDs or mixed species in manifest")
     seen = set()
     for row in record["references"]:
@@ -83,7 +83,14 @@ def _manifest(species):
         ):
             raise ValueError("Registered reference taxon/asset roles disagree")
         for role, asset_id in row["assets"].items():
-            asset = by_id.get(asset_id)
+            asset = next(
+                (
+                    a
+                    for a in assets
+                    if a.id == asset_id and a.sha256 == reference.content_provenance[role]
+                ),
+                None,
+            )
             if (
                 asset is None
                 or asset.group != "references"
@@ -94,20 +101,33 @@ def _manifest(species):
 
 
 def species_assets(species, *, group=None) -> tuple[SpeciesAsset, ...]:
+    """Newest registered artifact per stable ID (manifest order is release order)."""
     if group is not None and group not in DATA_GROUPS:
         raise ValueError(f"Unknown data group {group!r}")
-    return tuple(
-        SpeciesAsset(**row)
-        for row in _manifest(species)["assets"]
-        if group is None or row["group"] == group
+    latest = {row["id"]: SpeciesAsset(**row) for row in _manifest(species)["assets"]}
+    return tuple(asset for asset in latest.values() if group is None or asset.group == group)
+
+
+def asset_versions(asset_id: str, *, species) -> tuple[str, ...]:
+    """Concrete releases, newest first; adding a release preserves older rows."""
+    versions = tuple(
+        row["source_version"]
+        for row in reversed(_manifest(species)["assets"])
+        if row["id"] == asset_id
     )
+    if not versions:
+        raise KeyError(f"Unknown {resolve_species(species).name} asset {asset_id!r}")
+    return versions
 
 
-def species_asset(asset_id, *, species) -> SpeciesAsset:
-    for asset in species_assets(species):
-        if asset.id == asset_id:
-            return asset
-    raise KeyError(f"Unknown {resolve_species(species).name} asset {asset_id!r}")
+def species_asset(asset_id: str, *, species, version: str | None = None) -> SpeciesAsset:
+    """Resolve an exact source release; latest never becomes a cache identity."""
+    available = asset_versions(asset_id, species=species)
+    concrete = available[0] if version in (None, "latest") else version
+    for row in _manifest(species)["assets"]:
+        if row["id"] == asset_id and row["source_version"] == concrete:
+            return SpeciesAsset(**row)
+    raise ValueError(f"{asset_id!r} has no version {version!r}; available: {', '.join(available)}")
 
 
 def registered_references(species) -> tuple[dict, ...]:
@@ -227,8 +247,15 @@ def ensure_reference(
     row = next((r for r in registered_references(species) if r["id"] == reference_id), None)
     if row is None:
         raise KeyError(f"Unknown registered reference {reference_id!r}")
+    reference = ReferenceIdentity.from_dict(row["identity"])
+    registered_assets = [SpeciesAsset(**a) for a in _manifest(species)["assets"]]
     assets = {
-        role: species_asset(asset_id, species=species) for role, asset_id in row["assets"].items()
+        role: next(
+            a
+            for a in registered_assets
+            if a.id == asset_id and a.sha256 == reference.content_provenance[role]
+        )
+        for role, asset_id in row["assets"].items()
     }
     missing_bytes = sum(
         a.size_bytes
@@ -268,6 +295,7 @@ def asset_inventory(species, *, group=None, cache_root=None, local_overrides=Non
             "species": selected.name,
             "taxon_id": selected.taxon_id,
             "size_bytes": asset.size_bytes,
+            "default_version": asset.source_version,
             "sha256": asset.sha256,
         }
         for asset in species_assets(selected, group=group)

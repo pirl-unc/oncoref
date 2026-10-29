@@ -1,0 +1,87 @@
+{
+  "schema": "oncoref.cta-selection-audit",
+  "version": 1,
+  "decision_policy": "oncoref.cta-selection.2026-10-29",
+  "columns": {
+    "sources": [
+      "source_id",
+      "citation",
+      "source_url",
+      "entity_kind",
+      "mapped_entities",
+      "mapped_gene_loci",
+      "CTA",
+      "Unsafe",
+      "Neither",
+      "Unassigned",
+      "unique_entities",
+      "primary_source",
+      "covered_by",
+      "evidence_scope",
+      "status"
+    ],
+    "memberships": [
+      "source_id",
+      "entity_id",
+      "label",
+      "gene_ids",
+      "category"
+    ],
+    "overlaps": [
+      "source_a",
+      "source_b",
+      "mapped_overlap",
+      "selected_overlap"
+    ],
+    "funnel": [
+      "stage",
+      "status",
+      "candidate_removals",
+      "eligible",
+      "Unsafe",
+      "Neither",
+      "Unassigned",
+      "note"
+    ],
+    "criteria": [
+      "stage",
+      "status",
+      "rule",
+      "source_ids"
+    ],
+    "explanations": [
+      "entity_id",
+      "label",
+      "gene_ids",
+      "category",
+      "layer",
+      "decision",
+      "tissue",
+      "cell_type",
+      "value",
+      "unit",
+      "candidate_ceiling",
+      "selection_tier",
+      "ihc_coverage",
+      "source_id",
+      "source_version",
+      "source_context",
+      "reason",
+      "source_url"
+    ]
+  },
+  "files": {
+    "cta-selection-audit-human.json.gz": "9fa7a32cea56ae2f33ee27fbd97a0ab5bd2b6695a1fde9a4a50d29b4f7e3cd1d",
+    "cta-selection-audit-dog.json.gz": "b9e359fc4c69b6e8b498e3f0a368cfc25e4a05a52cd717d7a11acac0c3403670",
+    "cta-selection-audit-mouse.json.gz": "1da743dcae8f1a2b3b4c97d4c68a924bb6e5ce872e7c9070947f27c0e4265492"
+  },
+  "inputs": {
+    "docs/audits/cta-selection-20261028/manifest.json": "cd50fbdd4c795bd79cc5af74d058c11b5a8bd7a6173ada6357da343528cb0c78",
+    "scripts/build_cta_selection_audit.py": "40a989ce6fe6deb623652852d281eab4fa4c59ff5314862d834af5f9b0a92527",
+    "oncoref/data/cta-publication-sources.csv": "f62e6edfadcfe039ac8e05e7cf6f4029a0289fde8b609c3c1b7a2519967c2f04",
+    "oncoref/data/cta-publication-membership.csv": "690adeecfff44d13d40fa7ec6ecfc74193adbf9b9286e54e9c498bae23e9f546",
+    "docs/audits/cta-selection-20261028/alternative-evidence/manifest.json": "4597fb0eb7532a92f035fbf8e14190738f3afd0e9e4d607c31b6e4bf9ebaad94",
+    "oncoref/data/cta-publication-context.csv": "c6081d93bab5e5775546245fd61f529a5d7f63a24a13b4a792a7e4b7f722113a",
+    "docs/audits/cta-source-walkthrough-20261028/coverage-audit-receipt.json": "0030fbfafe35c903317b610b87e584361da926bd393e4b1bfa11a3d52d0c7b55"
+  }
+}

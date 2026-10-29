@@ -32,7 +32,7 @@ def plot(out):
     audit = bradley_candidate_audit()
     audit.to_csv(out / "bradley-gate-audit.csv", index=False)
     ids = set(audit.Ensembl_Gene_ID)
-    rna = hpa.hpa_rna_consensus()
+    rna = hpa.hpa_rna_consensus("v23")
     rna = rna[rna.Gene.isin(ids)].copy()
     ihc = hpa.hpa_normal_tissue()
     ihc = ihc[ihc.Gene.isin(ids)].copy()

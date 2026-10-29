@@ -1,16 +1,16 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.21.0",
+  "release": "1.22.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "44b0a84c6dba3d0731230f884f0ef9be01ee5d810a326a1fff4917d48a7f0300",
-    "cta-selection-sources.csv": "4ba97695919d7e3aa7866254294cb612889bd24c5d17509a354cd946b7eb6c69"
+    "cta-selection-human.csv.gz": "6a2a71e01011563436a7530cf8dbaaaa3c21403f1b3b677793e3b2d022bd4bca",
+    "cta-selection-sources.csv": "297944823b04cb18545825a12b40d25f87754aa1d3b910bca24ad88fd7211901"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.1.21.0",
+      "policy_id": "oncoref.cta-selection.2026-10-29",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
@@ -31,7 +31,7 @@
       },
       "limitations": [
         "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
-        "Only one embryonic atlas embryo; later fetal atlases are not integrated",
+        "Developmental coverage is stage-limited; gastrulation and preimplantation measurements do not cover later fetal/postnatal development",
         "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
         "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
         "Representative-protein equivalence is not exhaustive isoform identity"
@@ -69,7 +69,7 @@
         "No validated species-specific quantitative selection policy",
         "Native normal matrices need reference reconciliation and source-specific scale handling",
         "Tumor cohort integration is blocked by unit/reference provenance",
-        "Unassessed nominations are Neither; human expression and safety evidence never transfer by orthology"
+        "Unassessed nominations have null categories; human expression and safety evidence never transfer by orthology"
       ]
     },
     "mouse": {
@@ -86,7 +86,7 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
-    "report_manifest": "79a0247b8c94d853e76a4270a5c93f2d758a879a08f5b9d336c476feddcd2b8f"
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "8060d4401bc5c9ea129e42a896575deb8a570c2cd1a72759be8f3a4d7fc23029",
+    "report_manifest": "cd50fbdd4c795bd79cc5af74d058c11b5a8bd7a6173ada6357da343528cb0c78"
   }
 }

@@ -11,7 +11,68 @@ from oncoref.gene_matching import (
     gene_identity_catalog,
     harmonize_reference_expression,
     match_reference_genes,
+    resolve_long_measurement_ids,
+    resolve_measurement_rows,
 )
+
+
+def test_measurement_aliases_are_not_summed_or_arbitrarily_selected():
+    identities = pd.DataFrame(
+        {
+            "canonical_gene_id": ["A", "A", "B", "B", "C", "C", "D", "D"],
+            "source_gene_id": ["A.2", "oldA", "oldB1", "oldB2", "oldC1", "oldC2", "D.1", "D.2"],
+            "identity_status": ["matched"] * 8,
+        }
+    )
+    values = np.array([[1, 2], [8, 9], [3, 4], [3, 4], [1, 0], [0, 1], [1, 0], [0, 1]])
+    decisions = resolve_measurement_rows(
+        identities, equivalent=lambda a, b: np.array_equal(values[a], values[b])
+    ).set_index("gene_id")
+    assert decisions.loc["A", "row_position"] == 0
+    assert decisions.loc["B", "row_position"] == 2
+    assert decisions.loc[["C", "D"], "row_position"].isna().all()
+    assert decisions.loc[["C", "D"], "status"].eq("conflicting_vectors").all()
+
+
+def test_missing_pattern_is_part_of_measurement_equivalence():
+    identities = pd.DataFrame(
+        {
+            "canonical_gene_id": ["A", "A"],
+            "source_gene_id": ["old1", "old2"],
+            "identity_status": ["matched", "matched"],
+        }
+    )
+    values = np.array([[0, np.nan], [0, 0]])
+    result = resolve_measurement_rows(
+        identities, equivalent=lambda a, b: np.array_equal(values[a], values[b], equal_nan=True)
+    )
+    assert result.row_position.isna().all()
+
+
+def test_long_measurements_keep_canonical_rows_and_observed_zero():
+    catalog = gene_identity_catalog()
+    row = catalog[catalog.alternate_ensembl_gene_ids.ne("[]")].iloc[0]
+    alias = json.loads(row.alternate_ensembl_gene_ids)[0]
+    canonical = row.canonical_gene_id
+    data = pd.DataFrame(
+        {
+            "id": [canonical, canonical, alias, alias],
+            "name": [row.canonical_symbol] * 4,
+            "tissue": ["heart", "colon"] * 2,
+            "value": [0.0, 1.0, 100.0, 0.0],
+        }
+    )
+    accepted, decisions = resolve_long_measurement_ids(
+        data,
+        id_column="id",
+        symbol_column="name",
+        context_columns=["tissue"],
+        value_columns=["value"],
+        source="fixture",
+        source_version="1",
+    )
+    assert accepted.source_gene_id.tolist() == [canonical]
+    assert decisions.status.tolist() == ["canonical"]
 
 
 def match(frame):
@@ -56,6 +117,17 @@ def test_unknown_source_label_does_not_erase_verified_id():
     assert result.identity_status.iloc[0] == "matched"
     assert result.source_name_unrecognized.iloc[0]
     assert result.source_gene_name.iloc[0] == "old-unregistered-label"
+
+
+def test_missing_name_sentinels_cannot_become_scn11a_synonyms():
+    result = match(
+        pd.DataFrame(
+            {"id": ["ENSG00000181222", "", "ENSG00000168356"], "name": ["NaN", "NaN", "NaN"]}
+        )
+    )
+    assert result.identity_status.tolist() == ["matched", "unmapped", "matched"]
+    assert result.canonical_gene_id.tolist() == ["ENSG00000181222", "", "ENSG00000168356"]
+    assert result.source_gene_name.tolist() == ["NaN"] * 3
 
 
 def test_symbol_only_and_empty_inputs():

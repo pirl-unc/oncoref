@@ -74,7 +74,7 @@ def equivalence_groups(gene_ids: Iterable[str], *, scope: str = "genome") -> pd.
                 "protein_equivalence_group_id": group_identifier(members),
                 "protein_group_label": label
                 if len(members) > 1
-                else bundles[members[0]]["canonical_symbol"],
+                else (bundles[members[0]]["canonical_symbol"] or members[0]),
                 "proteoform_key": label,
                 "representative_gene_id": members[0],
                 "member_gene_ids": _json(members),

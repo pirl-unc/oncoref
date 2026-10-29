@@ -207,6 +207,12 @@ def _cmd_species_data(args):
     selected = assets.species_assets(args.species)
     if target != "all":
         selected = tuple(a for a in selected if a.id == target or a.group == target)
+    if args.data_version is not None:
+        if len(selected) != 1:
+            raise ValueError("Select one asset when pinning a version")
+        selected = (
+            assets.species_asset(selected[0].id, species=args.species, version=args.data_version),
+        )
     if not selected:
         print(
             f"Error: unavailable {args.species} asset/group {target!r}; no human fallback",
@@ -260,6 +266,18 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
     from .species import resolve_species
 
     selected = resolve_species(args.species)
+    if args.action in {"versions", "provenance"}:
+        if not args.name:
+            raise ValueError(f"data {args.action} requires a dataset name")
+        result = (
+            catalog.versions(args.name, species=selected)
+            if args.action == "versions"
+            else catalog.provenance(args.name, args.data_version, species=selected)
+        )
+        print(json.dumps(result, indent=2))
+        return 0
+    if args.data_version is not None and args.action not in {"status", "fetch", "path"}:
+        raise ValueError("--version is supported for status, fetch, path and provenance")
     if args.json and args.action != "list":
         raise ValueError("--json is supported for data list")
     if args.action != "list" and selected.taxon_id != 9606:
@@ -273,7 +291,10 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
 
     if args.action == "status":
         try:
-            rows = catalog.status(args.name)
+            rows = catalog.status(
+                args.name,
+                **({"version": args.data_version} if args.data_version is not None else {}),
+            )
         except KeyError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 1
@@ -338,7 +359,11 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
 
     if args.action == "fetch":
         try:
-            downloaded = catalog.fetch(args.name or "all", force=args.force)
+            downloaded = catalog.fetch(
+                args.name or "all",
+                force=args.force,
+                **({"version": args.data_version} if args.data_version is not None else {}),
+            )
         except KeyError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 1
@@ -353,7 +378,12 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
             print("Error: 'data path' requires a dataset name", file=sys.stderr)
             return 1
         try:
-            print(catalog.ensure(args.name))
+            print(
+                catalog.ensure(
+                    args.name,
+                    **({"version": args.data_version} if args.data_version is not None else {}),
+                )
+            )
         except KeyError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 1
@@ -952,6 +982,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "contract",
             "metadata",
             "release-manifest",
+            "versions",
+            "provenance",
             "dir",
             "fetch",
             "path",
@@ -982,6 +1014,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--quiet",
         action="store_true",
         help="Suppress download status and bars; retain results, errors, and retry warnings",
+    )
+    p_data.add_argument(
+        "--version",
+        dest="data_version",
+        help="Concrete source release; default is newest registered (same as latest)",
     )
     p_data.add_argument("--force", action="store_true", help="Re-download even if cached")
     p_data.add_argument(

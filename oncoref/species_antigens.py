@@ -583,6 +583,8 @@ def cta_snapshot(species, *, path=None, expected_snapshot_id=None):
 
 
 def antigen_inventory(species):
+    from .version import __version__
+
     selected = resolve_species(species)
     if not _snapshot_path(selected).is_file():
         return []
@@ -597,5 +599,7 @@ def antigen_inventory(species):
             "available": True,
             "cohorts": None,
             "description": "Versioned CTA nominations, native observations and counterevidence; not patient admission",
+            "default_version": f"oncoref-{__version__}",
+            "source_version": json.loads(_snapshot_path(selected).read_text())["source_version"],
         }
     ]

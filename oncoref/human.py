@@ -25,6 +25,7 @@ datasets = (human_protein_atlas, normal_cell_data)
 
 cta_selection = antigens.cta_selection
 cta_selection_coverage = antigens.cta_selection_coverage
+cta_selection_audit = antigens.cta_selection_audit
 cta_sources = antigens.cta_sources
 cta_candidates = antigens.cta_candidates
 cta_evidence = antigens.cta_evidence
@@ -41,6 +42,7 @@ __all__ = [
     "cta_evidence",
     "cta_gene_ids",
     "cta_selection",
+    "cta_selection_audit",
     "cta_selection_coverage",
     "cta_snapshot",
     "cta_sources",

@@ -1,0 +1,53 @@
+{
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "oncoref/data/cancer-reference-expression-availability.csv": "5d9b7d7503773e52010b19e4bc4f79737fc0733f5971e24efb5ef20570bf1f0c",
+    "/Users/iskander/.cache/oncoref/bundled_data/v5.23.26/source-matrix-sample-qc.csv": "5523c9eb5f6c95c208a169beed922a52972d77d3cd74ef9c64c28d2ec5e7dde4",
+    "oncoref/data/source-matrices.csv": "d6aa65cdea8af226a3b697e178ec415fbc2dc446ea6527570e255e9ede4179d5",
+    "oncoref/gene_matching.py": "2ddc85fd423c566e73d4a24b1065b2198e1d7400d1eaf0c5a5f9c52177134f00",
+    "oncoref/protein_equivalence.py": "647a94b56cff08ede55b785373e7d8daa1f29f1ec42fff53b451fb6ff24dfc4b",
+    "oncoref/gene_ids.py": "9fe092959ede0d1a9674527c81e66ffc08aebfe9b824e8ace5ed59e000fe445c",
+    "oncoref/data/canonical-gene-space.csv.gz": "1eb19e37e0dc1a24a57096bbefd65c0cf69a1599a5633ff5168daba76af176ff",
+    "oncoref/data/ensembl-id-aliases.csv": "fb21004d72408a3bb283334a62fc9de2ed3345edd917eb16ed07d3596d353df4",
+    "oncoref/data/ncbi-symbol-synonyms.csv.gz": "2296b976ed79e1ec87d341558ff7ec6e0270c83108ea96127b2d36f5cc803f8d",
+    "oncoref/data/proteoform-groups-genome.csv": "b3af433842c91353d1d528288d25e4c2ff0828ca883265791f9e0ffbab5f9b7c",
+    "scripts/cta_tumor_union.py": "52bf2454db1248a6823952d4a271c5ec57d2278e1213aff15154188fa0741547"
+  },
+  "matrices": {
+    "/tmp/oncoref-cta-expanded-matrices/v5.22.10/ACINIC.parquet": "c96706605283e3a94091132f6b1c59f502d723e517f05d5e39b1ee5352681025",
+    "/tmp/oncoref-cta-expanded-matrices/v5.22.10/ADCC.parquet": "7c7da7daa945d3ccc2e9d1edf0f7b6174a644f111fc162dc2d15edb97f85d773",
+    "/tmp/oncoref-cta-expanded-matrices/v5.22.11/CRANIO.parquet": "ad16f5b231f1256fe6a42f56ca3c6b42e3b246cbf66ee6df71e4fb3d80073753",
+    "/tmp/oncoref-cta-expanded-matrices/v5.22.11/DIPG.parquet": "8094701bc876aa1571ce3828a4c12c5f2a9f336fdc57815e4f55e98493165d17",
+    "/tmp/oncoref-cta-expanded-matrices/v5.22.13/MENINGIOMA.parquet": "2136e2b199c15ac872fbdefbacdb7cf6afd85017c279c9087534aafdc311f8a9",
+    "/tmp/oncoref-cta-expanded-matrices/v5.22.10/SARC_MMNST.parquet": "08fcfc75fe12278874d21020c401abe83c72f0c946227feaf9a669f02265145e",
+    "/tmp/oncoref-cta-expanded-matrices/v5.22.12/VSCC.parquet": "a6316626888f46566ab364bfb10358c75173e34949dadc31890bb3050fd1e39a"
+  },
+  "outputs": {
+    "summary.json": "6a157dca51909e7102a4ec31fb416659a5cb2594e8d40331af70c74259a9fe88",
+    "tumor-maxima.csv.gz": "2c40383068cc5d67ab667e3eb96fd614423cb6078048441e49e249301fe7a10a",
+    "sample-identity.csv.gz": "30b9c1557b874338800aa59570696176d6a163757f675194bb4c6e1d653def14",
+    "protein-group-tumor-maxima.csv.gz": "7b01bd5e56d07d13e3673a16f961930e47edc6fd8a94ad5a6f2230a12a97893d",
+    "cohort-availability.csv": "365605b6c9f4fa52256519d25342e6032c9435ab175a4c8f242444a34361030d",
+    "identity/SARC_MMNST.csv.gz": "58e2fe1e980a5f3bc65d442b1a877621e32012046f28728f7c903c67906becfd",
+    "identity/DIPG.csv.gz": "8a352708d23dfbbf53581717d2747a29c3cd91d6ad34d72e265aad584475685b",
+    "identity/VSCC.csv.gz": "7709b7f0cacfc5ec310aeca41acac86338f3f37f34226e1e48947c5f9977e8d1",
+    "identity/ADCC.csv.gz": "74215160255b77571d0f292022e12bb002bf0849a3495cce02deb62658164c58",
+    "identity/MENINGIOMA.csv.gz": "da336c2695cef832b1711838426b8ff3326dfcf46011d100741c377d384aef38",
+    "identity/ACINIC.csv.gz": "74215160255b77571d0f292022e12bb002bf0849a3495cce02deb62658164c58",
+    "identity/CRANIO.csv.gz": "07bbe048e22c4d2e599fba67f7ad7a871d390db048b506d203aff470a6e28441",
+    "cohorts/SARC_MMNST.csv.gz": "2fb31548286d8cf6e7c60b066a775265ca97a3289167faae593017f7c4a48cc5",
+    "cohorts/DIPG.csv.gz": "55750cb20291804c33737c21c9b1bba0b4ac78142512d085911d1d7579d47cb1",
+    "cohorts/VSCC.csv.gz": "e75529be14f634745164ce63d7a9814e385789d9146744a31fa2d99c03d0554b",
+    "cohorts/ADCC.csv.gz": "d7d05afe41fc42c4acf229d9588d98b8dc96add661e38d54b9f05956ae7ef77c",
+    "cohorts/MENINGIOMA.csv.gz": "b35fcef48b185f08e8f46161289f33652ad5f4ca3139383b41c6e7f4313e4f3b",
+    "cohorts/ACINIC.csv.gz": "dbaa300d0d6bff5a76cfd48eee00d2e06477dbb2ec50049f58e76c966018bd9c",
+    "cohorts/CRANIO.csv.gz": "135a2be8c7a61ebe8d715a5a59fea899545be68c080a2fb8f77ba421a84f69f7",
+    "protein-groups/SARC_MMNST.csv.gz": "639e7732ca2534eb0c75cab18ef40377468a7aee88d01744cd317ca7c617c27b",
+    "protein-groups/DIPG.csv.gz": "878fc7083ddf998c3234ae8f6df247bf2561510da0c1849aaa6368b46fd5245d",
+    "protein-groups/VSCC.csv.gz": "4db6a446336e7141a974e2dd8fac1eec2ff57f3a1e916f0d04171fb0725e7e93",
+    "protein-groups/ADCC.csv.gz": "d4572c1e9408fbc0c48b00d99fd5102058c00a5eef871269064230c5446e458e",
+    "protein-groups/MENINGIOMA.csv.gz": "9d1ca7c2c09f2f846d449dc7f418d4547ca632a079cccb14ffa827f48859b2d7",
+    "protein-groups/ACINIC.csv.gz": "aca29faa6f3af42890a522adf29a622459f9497e843f8776334b0e11aa393db4",
+    "protein-groups/CRANIO.csv.gz": "e10c90618fc8c7e92919db22f781153ccef1a4358d7f67b184c2c9cdb8326663"
+  }
+}

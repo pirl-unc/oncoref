@@ -1,7 +1,7 @@
 # Versioned exact-protein background policy
 
 For current CTA/oncofetal research decisions, use
-[`cta_selection`](cta-selection.md): **463 groups representing 481 loci**.
+[`cta_selection`](cta-selection.md): **546 groups representing 582 loci**.
 This page documents the separately pinned v1.20.0 expression and exact-protein
 background policy. Its counts and classifications describe that policy only.
 A candidate selection does not establish that every peptide or isoform is absent
