@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from cta_report_common import sha256, write_csv  # noqa: E402
 
-from oncoref import canine, human  # noqa: E402
+from oncoref import canine, human, mouse  # noqa: E402
 from oncoref.cta_selection import RESULT_COLUMNS  # noqa: E402
 from oncoref.expression_registry import expression_sources  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
@@ -257,37 +257,38 @@ def source_inventory() -> pd.DataFrame:
             urls[source.id],
             source.expression_contract.provenance_notes,
         )
-    native = canine.cta_snapshot().as_dict()
-    parents = {record["id"]: record for record in native["evidence"]}
-    for source in native["sources"]:
-        facts = [
-            fact
-            for fact in native["facts"]
-            if parents[fact["evidence_id"]]["source_id"] == source["id"]
-        ]
-        categories = {"nomination"}
-        for fact in facts:
-            if fact["observation"]["status"] == "not_reported":
-                continue
-            role = fact["tissue_role"]
-            protein = fact["measurement"]["feature_level"] in {"protein", "protein_group"}
-            if role == "reproductive":
-                categories.add("reproductive_expression")
-            elif role == "tumor":
-                categories.add("tumor_expression")
-            elif role == "somatic":
-                categories.add("normal_protein" if protein else "normal_bulk_rna")
-        add(
-            9615,
-            source["id"],
-            source["id"],
-            sorted(categories),
-            "native_observations",
-            "native PCR, categorical protein and reported study summaries",
-            "reported study scope",
-            source["url"],
-            "14 nominees across two studies; family assays, ambiguous identities and conflicting counterevidence remain explicit; no quantitative CTA policy",
-        )
+    for species in (canine, mouse):
+        native = species.cta_snapshot().as_dict()
+        parents = {record["id"]: record for record in native["evidence"]}
+        for source in native["sources"]:
+            facts = [
+                fact
+                for fact in native["facts"]
+                if parents[fact["evidence_id"]]["source_id"] == source["id"]
+            ]
+            categories = {"nomination"}
+            for fact in facts:
+                if fact["observation"]["status"] == "not_reported":
+                    continue
+                role = fact["tissue_role"]
+                protein = fact["measurement"]["feature_level"] in {"protein", "protein_group"}
+                if role == "reproductive":
+                    categories.add("reproductive_expression")
+                elif role == "tumor":
+                    categories.add("tumor_expression")
+                elif role == "somatic":
+                    categories.add("normal_protein" if protein else "normal_bulk_rna")
+            add(
+                native["taxon_id"],
+                source["id"],
+                source["id"],
+                sorted(categories),
+                "native_observations",
+                "source-native observations; no absolute expression unit",
+                "reported study scope",
+                source["url"],
+                source["scope"] + "; no quantitative CTA policy",
+            )
     for source, name, categories, unit, stage, url, limitation in [
         (
             "tabula_muris",
@@ -328,6 +329,24 @@ def source_inventory() -> pd.DataFrame:
     ]:
         add(10090, source, name, categories, "not_integrated", unit, stage, url, limitation)
     return pd.DataFrame(rows)
+
+
+def mouse_selection_metadata() -> dict:
+    """Describe the sparse native seed without implying a mouse admission policy."""
+    snapshot = mouse.cta_snapshot()
+    candidates = snapshot.candidates()
+    return {
+        "selection_status": "unavailable",
+        "evidence_status": snapshot.coverage["status"],
+        "policy_id": None,
+        "universe": f"{len(candidates)} curated native nominations; not a genome-wide classification",
+        "reference": candidates[0]["reference"] if candidates else None,
+        "limitations": [
+            *snapshot.coverage["limitations"],
+            "No quantitative mouse selection policy; unassessed nominations have null categories.",
+            "Literature-identified atlases remain unintegrated; no complete normal panel or strain equivalence is inferred.",
+        ],
+    }
 
 
 def build(audit: Path = AUDIT) -> None:
@@ -431,18 +450,7 @@ def build(audit: Path = AUDIT) -> None:
                     "Unassessed nominations have null categories; human expression and safety evidence never transfer by orthology",
                 ],
             },
-            "mouse": {
-                "selection_status": "unavailable",
-                "evidence_status": "unavailable",
-                "policy_id": None,
-                "universe": "No curated mouse nomination or selection snapshot",
-                "reference": None,
-                "limitations": [
-                    "Source inventory identifies relevant resources but their data are not integrated",
-                    "Zero returned rows is unavailable curation, not zero biological CTA genes",
-                    "A native tumor cohort, reference-bound gene mapping and normal-panel policy are required",
-                ],
-            },
+            "mouse": mouse_selection_metadata(),
         },
         "inputs": {
             str(source.relative_to(ROOT)): sha256(source),

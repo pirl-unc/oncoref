@@ -43,7 +43,10 @@ jobs:
           assert 0 < len(selected) == oncoref.human.cta_selection_coverage()["counts"]["CTA"]
           assert {"PRAME", "NY-ESO-1", "MAGEA4", "TBXT"} <= set(selected.label)
           assert oncoref.canine.cta_selection().assessment_status.eq("unassessed").all()
-          assert oncoref.mouse.cta_selection().empty
+          mouse = oncoref.mouse.cta_selection()
+          assert len(mouse) == 1 and mouse.category.isna().all()
+          assert mouse.assessment_status.eq("unassessed").all()
+          assert oncoref.mouse.cta_snapshot().coverage["status"] == "partial"
 
           from oncoref.drivers import DriverGeneIdentityWarning
 

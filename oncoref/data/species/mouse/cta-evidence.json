@@ -1,0 +1,745 @@
+{
+  "candidates": [
+    {
+      "derivation": [
+        {
+          "kind": "published_nomination",
+          "locator": "Abstract; P1A cDNA clone 211 and accession M36387",
+          "note": "Native DBA/2 P815 rejection antigen; no mouse-wide restriction claim.",
+          "source_id": "vandeneynde1991"
+        },
+        {
+          "kind": "assay_followup",
+          "locator": "Figure 1 and accompanying results",
+          "note": "Normal somatic RNA counterevidence and J558 tumor-cell expression.",
+          "source_id": "sarma1999"
+        }
+      ],
+      "evidence_ids": [
+        "sarma1999:001",
+        "sarma1999:002",
+        "sarma1999:003",
+        "sarma1999:004",
+        "sarma1999:005",
+        "sarma1999:006"
+      ],
+      "evidence_status": "conflicting",
+      "id": "P1A",
+      "label": "P1A (Trap1a)",
+      "mappings": [
+        {
+          "complete": true,
+          "gene_namespace": "NCBI Gene",
+          "method": "Native AAA40475.1 protein exactly matches NP_035765.1; NCBI Gene 22037 product report binds NM_011635.2/NP_035765.1 to GRCm39 NC_000086.8. All products in this pinned single-gene subset retained.",
+          "notes": "Reference assembly is C57BL/6J; RefSeq RNA source strain is C57BL/6. Native P815 source is DBA/2 with unspecified substrain. Proteins match (224 aa), but RNA/CDS differ. This is an annotation association, not measured reference-strain or isoform expression. See cta-curation.json for checked asset scope.",
+          "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d",
+          "status": "unique",
+          "targets": [
+            {
+              "id": "22037",
+              "sequences": [
+                {
+                  "protein_id": "NP_035765.1",
+                  "transcript_id": "NM_011635.2"
+                }
+              ],
+              "symbol": "Trap1a"
+            }
+          ]
+        }
+      ],
+      "nomination_kind": "published_nomination",
+      "notes": "A sparse nomination with positive normal-tissue RNA counterevidence. No tumor restriction, safety or vaccine admission is inferred."
+    }
+  ],
+  "contracts": [
+    {
+      "content_provenance": {
+        "curation_receipt": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+        "nomination_sequence": "789a832f9dc1e4048ff2d9742926fc1a3419a2e1fccb94c3f2307bce2b405267",
+        "source": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7"
+      },
+      "context": "normal",
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "feature_namespace": "study assay target P1A",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "provenance_notes": "Historical assay reference and measured isoform are unresolved. Reference mapping does not transfer expression between strains.",
+      "reference": null,
+      "reference_status": "unresolved",
+      "schema": "oncoref.expression-contract",
+      "schema_version": 1,
+      "source_id": "sarma1999",
+      "source_version": "Europe PMC full-text XML retrieved 2026-10-29",
+      "taxon_id": 10090
+    },
+    {
+      "content_provenance": {
+        "curation_receipt": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+        "nomination_sequence": "789a832f9dc1e4048ff2d9742926fc1a3419a2e1fccb94c3f2307bce2b405267",
+        "source": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7"
+      },
+      "context": "cell_line",
+      "contract_id": "openvax:expression-contract:v1:sha256:8c30fb2e12d6d4ecd0f0ab28f321d5b51d49d2a9303629dae0eb8b5c6c31031f",
+      "feature_namespace": "study assay target P1A",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "provenance_notes": "Historical assay reference and measured isoform are unresolved. Reference mapping does not transfer expression between strains.",
+      "reference": null,
+      "reference_status": "unresolved",
+      "schema": "oncoref.expression-contract",
+      "schema_version": 1,
+      "source_id": "sarma1999",
+      "source_version": "Europe PMC full-text XML retrieved 2026-10-29",
+      "taxon_id": 10090
+    }
+  ],
+  "coverage": {
+    "limitations": [
+      "One P1A nomination; not a mouse CTA panel, genome-wide screen or quantitative admission policy.",
+      "Only Sarma 1999 Figure 1 and accompanying endogenous RNA results are imported. Protein abundance, placental expression, presentation and transgenic experiments are outside this seed.",
+      "Five normal organs from BALB/c mice do not establish a complete normal panel; strain, stage, cell type and donor coverage remain limited.",
+      "Donor/sample counts, biological independence and technical replicate counts are unreported for these imported observations; no counts are inferred from figure lanes.",
+      "Qualitative assay signals and source-relative comparisons are not TPM, protein abundance or isoform-specific measurements. Less sensitive Northern results do not negate sensitive RT-PCR signals.",
+      "Reference assets are an explicitly scoped NCBI Gene 22037 subset, not a full annotation release. Historical assay-to-reference sequence equivalence remains unresolved."
+    ],
+    "status": "partial"
+  },
+  "curation": [],
+  "evidence": [
+    {
+      "assay": "RT-PCR with Southern detection",
+      "candidate_ids": [
+        "P1A"
+      ],
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "donor_count": null,
+      "id": "sarma1999:001",
+      "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
+      "notes": "Same study/assay lineage; figure comparisons are not independent donor replication. Strain and substrain are not inferred for J558. Quantitative titration bounds remain source-relative fields, not absolute measurements.",
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; highest RNA signal among the normal tissues examined.",
+        "status": "qualitative",
+        "value": null
+      },
+      "sample_count": null,
+      "sample_ids": [],
+      "source_fields": {
+        "cell_line": null,
+        "expression_origin": "endogenous",
+        "host_taxon_id": 10090,
+        "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
+        "northern_context": "Detected reproducibly by Northern; other normal organs lacked reproducible significant Northern signal.",
+        "relative_comparison": null,
+        "sample_ids_reported": false,
+        "strain": "BALB/c",
+        "substrain": null
+      },
+      "source_id": "sarma1999",
+      "study_id": "PMID:10049945",
+      "technical_replicates": null,
+      "tissue": "testis",
+      "tissue_role": "reproductive"
+    },
+    {
+      "assay": "RT-PCR with Southern detection",
+      "candidate_ids": [
+        "P1A"
+      ],
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "donor_count": null,
+      "id": "sarma1999:002",
+      "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
+      "notes": "Same study/assay lineage; figure comparisons are not independent donor replication. Strain and substrain are not inferred for J558. Quantitative titration bounds remain source-relative fields, not absolute measurements.",
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; RNA signal greater than liver in the reported comparison.",
+        "status": "qualitative",
+        "value": null
+      },
+      "sample_count": null,
+      "sample_ids": [],
+      "source_fields": {
+        "cell_line": null,
+        "expression_origin": "endogenous",
+        "host_taxon_id": 10090,
+        "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
+        "northern_context": null,
+        "relative_comparison": null,
+        "sample_ids_reported": false,
+        "strain": "BALB/c",
+        "substrain": null
+      },
+      "source_id": "sarma1999",
+      "study_id": "PMID:10049945",
+      "technical_replicates": null,
+      "tissue": "lung",
+      "tissue_role": "somatic"
+    },
+    {
+      "assay": "RT-PCR with Southern detection",
+      "candidate_ids": [
+        "P1A"
+      ],
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "donor_count": null,
+      "id": "sarma1999:003",
+      "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
+      "notes": "Same study/assay lineage; figure comparisons are not independent donor replication. Strain and substrain are not inferred for J558. Quantitative titration bounds remain source-relative fields, not absolute measurements.",
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; RNA signal greater than liver and lower than J558 tumor cells.",
+        "status": "qualitative",
+        "value": null
+      },
+      "sample_count": null,
+      "sample_ids": [],
+      "source_fields": {
+        "cell_line": null,
+        "expression_origin": "endogenous",
+        "host_taxon_id": 10090,
+        "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
+        "northern_context": null,
+        "relative_comparison": {
+          "reference": "J558 tumor cells",
+          "reported_fold_lower_range": [
+            100,
+            1000
+          ]
+        },
+        "sample_ids_reported": false,
+        "strain": "BALB/c",
+        "substrain": null
+      },
+      "source_id": "sarma1999",
+      "study_id": "PMID:10049945",
+      "technical_replicates": null,
+      "tissue": "spleen",
+      "tissue_role": "somatic"
+    },
+    {
+      "assay": "RT-PCR with Southern detection",
+      "candidate_ids": [
+        "P1A"
+      ],
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "donor_count": null,
+      "id": "sarma1999:004",
+      "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
+      "notes": "Same study/assay lineage; figure comparisons are not independent donor replication. Strain and substrain are not inferred for J558. Quantitative titration bounds remain source-relative fields, not absolute measurements.",
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected at a lower RNA signal than lung and spleen.",
+        "status": "qualitative",
+        "value": null
+      },
+      "sample_count": null,
+      "sample_ids": [],
+      "source_fields": {
+        "cell_line": null,
+        "expression_origin": "endogenous",
+        "host_taxon_id": 10090,
+        "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
+        "northern_context": null,
+        "relative_comparison": null,
+        "sample_ids_reported": false,
+        "strain": "BALB/c",
+        "substrain": null
+      },
+      "source_id": "sarma1999",
+      "study_id": "PMID:10049945",
+      "technical_replicates": null,
+      "tissue": "liver",
+      "tissue_role": "somatic"
+    },
+    {
+      "assay": "RT-PCR with Southern detection",
+      "candidate_ids": [
+        "P1A"
+      ],
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "donor_count": null,
+      "id": "sarma1999:005",
+      "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
+      "notes": "Same study/assay lineage; figure comparisons are not independent donor replication. Strain and substrain are not inferred for J558. Quantitative titration bounds remain source-relative fields, not absolute measurements.",
+      "observation": {
+        "positive_count": null,
+        "reported": "RNA detected in some experiments; intermittent detection is not a measured zero.",
+        "status": "qualitative",
+        "value": null
+      },
+      "sample_count": null,
+      "sample_ids": [],
+      "source_fields": {
+        "cell_line": null,
+        "expression_origin": "endogenous",
+        "host_taxon_id": 10090,
+        "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
+        "northern_context": null,
+        "relative_comparison": {
+          "reference": "spleen",
+          "reported_fold_lower_minimum": 10
+        },
+        "sample_ids_reported": false,
+        "strain": "BALB/c",
+        "substrain": null
+      },
+      "source_id": "sarma1999",
+      "study_id": "PMID:10049945",
+      "technical_replicates": null,
+      "tissue": "thymus",
+      "tissue_role": "somatic"
+    },
+    {
+      "assay": "RT-PCR with Southern detection",
+      "candidate_ids": [
+        "P1A"
+      ],
+      "contract_id": "openvax:expression-contract:v1:sha256:8c30fb2e12d6d4ecd0f0ab28f321d5b51d49d2a9303629dae0eb8b5c6c31031f",
+      "donor_count": null,
+      "id": "sarma1999:006",
+      "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
+      "notes": "Same study/assay lineage; figure comparisons are not independent donor replication. Strain and substrain are not inferred for J558. Quantitative titration bounds remain source-relative fields, not absolute measurements.",
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; RNA signal greater than normal spleen in the reported comparison.",
+        "status": "qualitative",
+        "value": null
+      },
+      "sample_count": null,
+      "sample_ids": [],
+      "source_fields": {
+        "cell_line": "J558",
+        "expression_origin": "endogenous",
+        "host_taxon_id": 10090,
+        "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
+        "northern_context": null,
+        "relative_comparison": null,
+        "sample_ids_reported": false,
+        "strain": null,
+        "substrain": null
+      },
+      "source_id": "sarma1999",
+      "study_id": "PMID:10049945",
+      "technical_replicates": null,
+      "tissue": "J558 tumor cells",
+      "tissue_role": "tumor"
+    }
+  ],
+  "facts": [
+    {
+      "evidence_id": "sarma1999:001",
+      "id": "sarma1999:001:observation",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; highest RNA signal among the normal tissues examined.",
+        "status": "qualitative",
+        "value": null
+      },
+      "source_field": null,
+      "statistic": "native_observation",
+      "tissue": "testis",
+      "tissue_role": "reproductive"
+    },
+    {
+      "evidence_id": "sarma1999:002",
+      "id": "sarma1999:002:observation",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; RNA signal greater than liver in the reported comparison.",
+        "status": "qualitative",
+        "value": null
+      },
+      "source_field": null,
+      "statistic": "native_observation",
+      "tissue": "lung",
+      "tissue_role": "somatic"
+    },
+    {
+      "evidence_id": "sarma1999:003",
+      "id": "sarma1999:003:observation",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; RNA signal greater than liver and lower than J558 tumor cells.",
+        "status": "qualitative",
+        "value": null
+      },
+      "source_field": null,
+      "statistic": "native_observation",
+      "tissue": "spleen",
+      "tissue_role": "somatic"
+    },
+    {
+      "evidence_id": "sarma1999:004",
+      "id": "sarma1999:004:observation",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected at a lower RNA signal than lung and spleen.",
+        "status": "qualitative",
+        "value": null
+      },
+      "source_field": null,
+      "statistic": "native_observation",
+      "tissue": "liver",
+      "tissue_role": "somatic"
+    },
+    {
+      "evidence_id": "sarma1999:005",
+      "id": "sarma1999:005:observation",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "observation": {
+        "positive_count": null,
+        "reported": "RNA detected in some experiments; intermittent detection is not a measured zero.",
+        "status": "qualitative",
+        "value": null
+      },
+      "source_field": null,
+      "statistic": "native_observation",
+      "tissue": "thymus",
+      "tissue_role": "somatic"
+    },
+    {
+      "evidence_id": "sarma1999:006",
+      "id": "sarma1999:006:observation",
+      "measurement": {
+        "feature_level": "gene",
+        "is_proxy": false,
+        "scale": "source_native",
+        "transformations": [],
+        "unit": null
+      },
+      "observation": {
+        "positive_count": null,
+        "reported": "Detected; RNA signal greater than normal spleen in the reported comparison.",
+        "status": "qualitative",
+        "value": null
+      },
+      "source_field": null,
+      "statistic": "native_observation",
+      "tissue": "J558 tumor cells",
+      "tissue_role": "tumor"
+    }
+  ],
+  "references": [
+    {
+      "id": "p1a-refseq-rs2024-02",
+      "identity": {
+        "annotation_release": "RS_2024_02",
+        "annotation_source": "NCBI RefSeq",
+        "assembly_accession": "GCF_000001635.27",
+        "content_provenance": {
+          "gene_record_subset": "a2ee9d2660cf52f3ea63c22ff0071ce120efd27ff1f0ba58ee5b2ad5bfda532c",
+          "product_report_subset": "6cd41d87b9b4bb7e33de0d0821dc3f697288b2b2b79313a3dc62e7a4b9616801",
+          "protein": "7f7c4754ccdf856de3499a0561ca959fedcaa658dea06583d0c095707e20f64d",
+          "rna": "0300f700336da1950718ab2905b875a805eb1fa48eec5c6957ab4726eab2d643"
+        },
+        "identifier_namespaces": {
+          "gene": "NCBI Gene",
+          "protein": "RefSeq",
+          "transcript": "RefSeq"
+        },
+        "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d",
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "source_version": "NCBI Gene 22037 single-gene subset retrieved 2026-10-29",
+        "taxon_id": 10090
+      }
+    }
+  ],
+  "schema": "oncoref.cta-evidence",
+  "schema_version": 2,
+  "snapshot_id": "openvax:cta-evidence:v2:sha256:6b91449358dcbdca68c2858b2eec8a5a8717453faece1138d020add22ccf93b8",
+  "source_version": "2026-10-29.1",
+  "sources": [
+    {
+      "doi": "10.1084/jem.173.6.1373",
+      "id": "vandeneynde1991",
+      "lineage": [
+        "PMID:1903428",
+        "P1A:P815-clone-211"
+      ],
+      "pmid": "1903428",
+      "scope": "P1A nomination and native M36387.1/AAA40475.1 identity from DBA/2 P815 clone 211; expression figures are not digitized.",
+      "sha256": "b6f5d3a32a540c8638f14209f9f0ee13a71792d004c015b244e3039568750a59",
+      "study_id": "PMID:1903428",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2190831/",
+      "version": "Europe PMC full-text XML retrieved 2026-10-29"
+    },
+    {
+      "doi": "10.1084/jem.189.5.811",
+      "id": "sarma1999",
+      "lineage": [
+        "PMID:10049945",
+        "P1A:normal-tissue-RNA"
+      ],
+      "pmid": "10049945",
+      "scope": "Figure 1 and accompanying normal-tissue results: endogenous qualitative RNA only; no transgenic, tolerance or presentation results imported.",
+      "sha256": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7",
+      "study_id": "PMID:10049945",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2192944/",
+      "version": "Europe PMC full-text XML retrieved 2026-10-29"
+    }
+  ],
+  "taxon_id": 10090
+}

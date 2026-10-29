@@ -50,9 +50,9 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 |---|---:|---|---|
 | Human | 19,863 protein-equivalence groups | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-29` |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
-| Mouse | 0 | Unavailable | No integrated nomination/selection snapshot; this does not mean mice have no CTAs |
+| Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 
-The contract is identical even when the evidence is not. Human thresholds, antibody grades, developmental measurements and clinical observations are never inherited through orthology. Canine matrices still need unit/reference reconciliation and a species policy; the registered tumor source has unresolved unit/reference provenance. Mouse sources are identified, not ingested.
+The contract is identical even when the evidence is not. Human thresholds, antibody grades, developmental measurements and clinical observations are never inherited through orthology. Canine matrices still need unit/reference reconciliation and a species policy; the registered tumor source has unresolved unit/reference provenance. Mouse P1A literature evidence is imported; the listed mouse atlases remain unintegrated.
 
 ## Result fields and identities
 

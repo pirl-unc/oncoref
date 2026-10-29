@@ -4,7 +4,7 @@
   "release": "1.22.0",
   "data_sha256": {
     "cta-selection-human.csv.gz": "6a2a71e01011563436a7530cf8dbaaaa3c21403f1b3b677793e3b2d022bd4bca",
-    "cta-selection-sources.csv": "297944823b04cb18545825a12b40d25f87754aa1d3b910bca24ad88fd7211901"
+    "cta-selection-sources.csv": "d1cc2943b05736a4bd9503eeb8826be02bdaa7accd32008808378e2b547e152d"
   },
   "species": {
     "human": {
@@ -74,19 +74,45 @@
     },
     "mouse": {
       "selection_status": "unavailable",
-      "evidence_status": "unavailable",
+      "evidence_status": "partial",
       "policy_id": null,
-      "universe": "No curated mouse nomination or selection snapshot",
-      "reference": null,
+      "universe": "1 curated native nominations; not a genome-wide classification",
+      "reference": {
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "taxon_id": 10090,
+        "assembly_accession": "GCF_000001635.27",
+        "annotation_source": "NCBI RefSeq",
+        "annotation_release": "RS_2024_02",
+        "source_version": "NCBI Gene 22037 single-gene subset retrieved 2026-10-29",
+        "identifier_namespaces": {
+          "gene": "NCBI Gene",
+          "protein": "RefSeq",
+          "transcript": "RefSeq"
+        },
+        "content_provenance": {
+          "gene_record_subset": "a2ee9d2660cf52f3ea63c22ff0071ce120efd27ff1f0ba58ee5b2ad5bfda532c",
+          "product_report_subset": "6cd41d87b9b4bb7e33de0d0821dc3f697288b2b2b79313a3dc62e7a4b9616801",
+          "protein": "7f7c4754ccdf856de3499a0561ca959fedcaa658dea06583d0c095707e20f64d",
+          "rna": "0300f700336da1950718ab2905b875a805eb1fa48eec5c6957ab4726eab2d643"
+        },
+        "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d"
+      },
       "limitations": [
-        "Source inventory identifies relevant resources but their data are not integrated",
-        "Zero returned rows is unavailable curation, not zero biological CTA genes",
-        "A native tumor cohort, reference-bound gene mapping and normal-panel policy are required"
+        "One P1A nomination; not a mouse CTA panel, genome-wide screen or quantitative admission policy.",
+        "Only Sarma 1999 Figure 1 and accompanying endogenous RNA results are imported. Protein abundance, placental expression, presentation and transgenic experiments are outside this seed.",
+        "Five normal organs from BALB/c mice do not establish a complete normal panel; strain, stage, cell type and donor coverage remain limited.",
+        "Donor/sample counts, biological independence and technical replicate counts are unreported for these imported observations; no counts are inferred from figure lanes.",
+        "Qualitative assay signals and source-relative comparisons are not TPM, protein abundance or isoform-specific measurements. Less sensitive Northern results do not negate sensitive RT-PCR signals.",
+        "Reference assets are an explicitly scoped NCBI Gene 22037 subset, not a full annotation release. Historical assay-to-reference sequence equivalence remains unresolved.",
+        "No quantitative mouse selection policy; unassessed nominations have null categories.",
+        "Literature-identified atlases remain unintegrated; no complete normal panel or strain equivalence is inferred."
       ]
     }
   },
   "inputs": {
     "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "8060d4401bc5c9ea129e42a896575deb8a570c2cd1a72759be8f3a4d7fc23029",
-    "report_manifest": "cd50fbdd4c795bd79cc5af74d058c11b5a8bd7a6173ada6357da343528cb0c78"
+    "report_manifest": "cd50fbdd4c795bd79cc5af74d058c11b5a8bd7a6173ada6357da343528cb0c78",
+    "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"
   }
 }
