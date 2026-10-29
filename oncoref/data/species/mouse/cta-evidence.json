@@ -55,10 +55,12 @@
   "contracts": [
     {
       "content_provenance": {
+        "curation_receipt": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+        "nomination_sequence": "789a832f9dc1e4048ff2d9742926fc1a3419a2e1fccb94c3f2307bce2b405267",
         "source": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7"
       },
       "context": "normal",
-      "contract_id": "openvax:expression-contract:v1:sha256:749a0fc9f28fb6639537fee7dec645b245610f1d385e0fd893bbc5d6dceed6d1",
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
       "feature_namespace": "study assay target P1A",
       "measurement": {
         "feature_level": "gene",
@@ -78,10 +80,12 @@
     },
     {
       "content_provenance": {
+        "curation_receipt": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+        "nomination_sequence": "789a832f9dc1e4048ff2d9742926fc1a3419a2e1fccb94c3f2307bce2b405267",
         "source": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7"
       },
       "context": "cell_line",
-      "contract_id": "openvax:expression-contract:v1:sha256:45f93cea1733c40f1c333aaf86148b1371757abeb273ff498700a4acb87a4cf2",
+      "contract_id": "openvax:expression-contract:v1:sha256:8c30fb2e12d6d4ecd0f0ab28f321d5b51d49d2a9303629dae0eb8b5c6c31031f",
       "feature_namespace": "study assay target P1A",
       "measurement": {
         "feature_level": "gene",
@@ -118,7 +122,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:749a0fc9f28fb6639537fee7dec645b245610f1d385e0fd893bbc5d6dceed6d1",
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
       "donor_count": null,
       "id": "sarma1999:001",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -136,6 +140,42 @@
         "expression_origin": "endogenous",
         "host_taxon_id": 10090,
         "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
         "northern_context": "Detected reproducibly by Northern; other normal organs lacked reproducible significant Northern signal.",
         "relative_comparison": null,
         "sample_ids_reported": false,
@@ -153,7 +193,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:749a0fc9f28fb6639537fee7dec645b245610f1d385e0fd893bbc5d6dceed6d1",
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
       "donor_count": null,
       "id": "sarma1999:002",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -171,6 +211,42 @@
         "expression_origin": "endogenous",
         "host_taxon_id": 10090,
         "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
         "northern_context": null,
         "relative_comparison": null,
         "sample_ids_reported": false,
@@ -188,7 +264,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:749a0fc9f28fb6639537fee7dec645b245610f1d385e0fd893bbc5d6dceed6d1",
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
       "donor_count": null,
       "id": "sarma1999:003",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -206,6 +282,42 @@
         "expression_origin": "endogenous",
         "host_taxon_id": 10090,
         "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
         "northern_context": null,
         "relative_comparison": {
           "reference": "J558 tumor cells",
@@ -229,7 +341,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:749a0fc9f28fb6639537fee7dec645b245610f1d385e0fd893bbc5d6dceed6d1",
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
       "donor_count": null,
       "id": "sarma1999:004",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -247,6 +359,42 @@
         "expression_origin": "endogenous",
         "host_taxon_id": 10090,
         "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
         "northern_context": null,
         "relative_comparison": null,
         "sample_ids_reported": false,
@@ -264,7 +412,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:749a0fc9f28fb6639537fee7dec645b245610f1d385e0fd893bbc5d6dceed6d1",
+      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
       "donor_count": null,
       "id": "sarma1999:005",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -282,6 +430,42 @@
         "expression_origin": "endogenous",
         "host_taxon_id": 10090,
         "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
         "northern_context": null,
         "relative_comparison": {
           "reference": "spleen",
@@ -302,7 +486,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:45f93cea1733c40f1c333aaf86148b1371757abeb273ff498700a4acb87a4cf2",
+      "contract_id": "openvax:expression-contract:v1:sha256:8c30fb2e12d6d4ecd0f0ab28f321d5b51d49d2a9303629dae0eb8b5c6c31031f",
       "donor_count": null,
       "id": "sarma1999:006",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -320,6 +504,42 @@
         "expression_origin": "endogenous",
         "host_taxon_id": 10090,
         "measured_isoform": null,
+        "nomination_identity": {
+          "cds_identical": false,
+          "protein_changes": [],
+          "refseq_translation_matches_protein": true,
+          "rna_identical": false,
+          "role": "Nomination sequence comparison, not the measured assay isoform",
+          "source_protein": "AAA40475.1",
+          "source_protein_length": 224,
+          "source_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "source_rna": "M36387.1",
+          "source_strain_statement": "Original source text: Mouse (strain DBA/2; haplotype H-2d)\nmastocytoma P815, cDNA to mRNA, clone 211.",
+          "target_protein": "NP_035765.1",
+          "target_protein_length": 224,
+          "target_protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+          "target_rna": "NM_011635.2",
+          "target_source_qualifiers": {
+            "chromosome": [
+              "X"
+            ],
+            "db_xref": [
+              "taxon:10090"
+            ],
+            "map": [
+              "X 61.35 cM"
+            ],
+            "mol_type": [
+              "mRNA"
+            ],
+            "organism": [
+              "Mus musculus"
+            ],
+            "strain": [
+              "C57BL/6"
+            ]
+          }
+        },
         "northern_context": null,
         "relative_comparison": null,
         "sample_ids_reported": false,
@@ -489,7 +709,7 @@
   ],
   "schema": "oncoref.cta-evidence",
   "schema_version": 2,
-  "snapshot_id": "openvax:cta-evidence:v2:sha256:83f5483d07ebda2299dc08ba8a770a2e267abc0d5e72f75edf0f22b92d016abe",
+  "snapshot_id": "openvax:cta-evidence:v2:sha256:6b91449358dcbdca68c2858b2eec8a5a8717453faece1138d020add22ccf93b8",
   "source_version": "2026-10-29.1",
   "sources": [
     {

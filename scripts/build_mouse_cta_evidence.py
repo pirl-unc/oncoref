@@ -202,7 +202,13 @@ def build(source_dir: Path) -> CTAEvidenceSnapshot:
             "unresolved",
             "study assay target P1A",
             ExpressionMeasurement("gene", None, "source_native", False),
-            {"source": source["sha256"]},
+            {
+                "source": source["sha256"],
+                "nomination_sequence": pins["M36387.1.gb"],
+                "curation_receipt": hashlib.sha256(
+                    (DATA / "cta-curation.json").read_bytes()
+                ).hexdigest(),
+            },
             "Historical assay reference and measured isoform are unresolved. Reference mapping does not transfer expression between strains.",
         )
         if contract.as_dict() not in payload["contracts"]:
@@ -236,6 +242,10 @@ def build(source_dir: Path) -> CTAEvidenceSnapshot:
                     "cell_line": cell_line,
                     "expression_origin": "endogenous",
                     "measured_isoform": None,
+                    "nomination_identity": {
+                        "role": "Nomination sequence comparison, not the measured assay isoform",
+                        **receipt["identity_audit"],
+                    },
                     "sample_ids_reported": False,
                     "northern_context": northern,
                     "relative_comparison": {

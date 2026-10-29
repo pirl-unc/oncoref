@@ -1,5 +1,6 @@
 """P1A is a strain-qualified nomination, not a measured mouse-wide CTA panel."""
 
+import hashlib
 import json
 from dataclasses import replace
 from importlib.resources import files
@@ -63,6 +64,16 @@ def test_positive_normal_rna_keeps_assay_limits_strain_and_unknown_counts():
         assert row["contract"]["reference"] is None
         assert row["source_fields"]["expression_origin"] == "endogenous"
         assert row["source_fields"]["measured_isoform"] is None
+        identity = row["source_fields"]["nomination_identity"]
+        assert identity["source_rna"] == "M36387.1"
+        assert identity["source_protein"] == "AAA40475.1"
+        assert identity["source_protein_sha256"] == identity["target_protein_sha256"]
+        assert identity["cds_identical"] is identity["rna_identical"] is False
+        receipt = files("oncoref").joinpath("data/species/mouse/cta-curation.json").read_bytes()
+        pins = row["contract"]["content_provenance"]
+        assert pins["curation_receipt"] == hashlib.sha256(receipt).hexdigest()
+        native = next(r for r in json.loads(receipt)["inputs"] if r["name"] == "M36387.1.gb")
+        assert pins["nomination_sequence"] == native["sha256"]
         (fact,) = row["facts"]
         assert fact["measurement"]["feature_level"] == "gene"
         assert fact["measurement"]["unit"] is None

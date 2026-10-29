@@ -272,6 +272,10 @@ reference identity pins a **single-gene subset**, not the entire annotation.
 Its assembly is C57BL/6J, while the RefSeq RNA record reports C57BL/6 and the
 original P815 source reports DBA/2 without a substrain. These distinctions are
 preserved in the packaged `data/species/mouse/cta-curation.json` receipt.
+The same identity audit is frozen in each observation's
+`source_fields.nomination_identity`; its role explicitly excludes measured-isoform
+claims. The contract pins both the native sequence record and curation receipt,
+so exporting the snapshot retains this provenance.
 
 Historical expression contracts remain unresolved against that target reference.
 The BALB/c observations do not establish C57BL/6J expression, protein abundance,

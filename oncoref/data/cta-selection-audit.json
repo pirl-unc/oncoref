@@ -86,8 +86,8 @@
   },
   "native_updates": {
     "mouse": {
-      "scripts/build_mouse_cta_evidence.py": "c0e65ab9e6f84f2abf12a47830bc3f2aa2c83b4cd88e0f88172f550fee98cb4c",
-      "oncoref/data/species/mouse/cta-evidence.json": "63a6a9484dd84555be57dba33081edc0953a519a3236dfd7d90ce8a73b0d9614",
+      "scripts/build_mouse_cta_evidence.py": "865f012718704bc5f5630440b295a7dc3a62541f3e632239c1670cdb26919ed2",
+      "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc",
       "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2"
     }
   }
