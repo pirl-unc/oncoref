@@ -15,6 +15,7 @@ import pandas as pd
 
 from ._table_io import read_csv
 from .expression_contract import ExpressionContract, validate_expression_join
+from .expression_records import RECORD_KINDS, ExpressionRecords
 from .expression_registry import (
     expression_source,
     expression_source_registry_entries,
@@ -51,10 +52,13 @@ class ExpressionDataset:
     labels, all mapping alternatives, pooling and unresolved donor/reference facts.
     """
 
-    def __init__(self, values, features, samples, contract):
+    def __init__(self, values, features, samples, contract, *, records=None):
         if not isinstance(contract, ExpressionContract):
             raise ValueError("ExpressionContract required")
         self._contract = contract
+        if records is not None and not isinstance(records, ExpressionRecords):
+            raise TypeError("records must be ExpressionRecords or None")
+        self._records = records
         self._values = _numbers(values.copy())
         self._features = pd.DataFrame(
             copy.deepcopy(features.to_dict("list")), index=features.index.copy()
@@ -113,6 +117,23 @@ class ExpressionDataset:
         return pd.DataFrame(
             copy.deepcopy(self._samples.to_dict("list")), index=self._samples.index.copy()
         )
+
+    @property
+    def provenance(self):
+        """Native dataset identity and processing, or None for a matrix-only snapshot."""
+        return self._records.provenance if self._records is not None else None
+
+    def native_records(self, kind):
+        """Stream source records with their original schema, IDs and uncertainty.
+
+        Kinds: samples, assays, measurements, reference_mappings, mappings,
+        relations, pairings. An empty iterator does not establish biological absence.
+        Historical matrix-only snapshots have no native record archive.
+        """
+        if kind not in RECORD_KINDS:
+            raise ValueError(f"Unknown expression record kind {kind!r}")
+        if self._records is not None:
+            yield from self._records.records(kind)
 
     def tissue_annotations(self):
         """Cited current tissue-scope annotations; retain the frozen sample metadata.
@@ -195,7 +216,16 @@ class ExpressionDataset:
             staged = Path(temporary) / "artifact"
             staged.mkdir()
             self._values.to_parquet(staged / "values.parquet")
-            self._features.to_parquet(staged / "features.parquet")
+            version = 2 if self._records is not None else 1
+            if version == 1:
+                self._features.to_parquet(staged / "features.parquet")
+                feature_file = "features.parquet"
+            else:
+                feature_file = "features.json"
+                features = self._features.to_dict("records")
+                for feature_id, row in zip(self._features.index, features):
+                    row["feature_id"] = feature_id
+                (staged / feature_file).write_text(json.dumps(features, allow_nan=False) + "\n")
             # JSON retains nested original sample facts and provenance without stringifying them.
             records = copy.deepcopy(
                 self._samples.astype(object).where(self._samples.notna(), None).to_dict("records")
@@ -203,19 +233,24 @@ class ExpressionDataset:
             for sample_id, row in zip(self._samples.index, records):
                 row["sample_id"] = sample_id
             (staged / "samples.json").write_text(json.dumps(records, allow_nan=False) + "\n")
+            names = ["values.parquet", feature_file, "samples.json"]
+            if self._records is not None:
+                names.extend(self._records.write(staged))
             payload = {
                 "schema": "oncoref.expression-dataset",
-                "schema_version": 1,
+                "schema_version": version,
                 "contract": self.contract.as_dict(),
                 "files": {
                     name: {
                         "sha256": _sha256(staged / name),
                         "size_bytes": (staged / name).stat().st_size,
                     }
-                    for name in ("values.parquet", "features.parquet", "samples.json")
+                    for name in names
                 },
             }
-            record = {**payload, "artifact_id": _identity("expression-dataset", 1, payload)}
+            if version == 2:
+                payload["provenance"] = self.provenance
+            record = {**payload, "artifact_id": _identity("expression-dataset", version, payload)}
             (staged / "metadata.json").write_text(
                 json.dumps(record, indent=2, sort_keys=True) + "\n"
             )
@@ -227,17 +262,25 @@ class ExpressionDataset:
         """Offline replay validates the metadata identity and every artifact file."""
         directory = Path(directory)
         record = json.loads((directory / "metadata.json").read_text())
+        version = record.get("schema_version")
+        fields = {"schema", "schema_version", "contract", "files", "artifact_id"}
+        if version == 2:
+            fields.add("provenance")
         if (
-            set(record) != {"schema", "schema_version", "contract", "files", "artifact_id"}
+            set(record) != fields
             or record["schema"] != "oncoref.expression-dataset"
             or type(record["schema_version"]) is not int
-            or record["schema_version"] != 1
+            or version not in (1, 2)
         ):
             raise ValueError("Unsupported expression artifact schema")
         payload = {key: value for key, value in record.items() if key != "artifact_id"}
-        if record["artifact_id"] != _identity("expression-dataset", 1, payload):
+        if record["artifact_id"] != _identity("expression-dataset", version, payload):
             raise ValueError("Expression artifact metadata digest mismatch")
-        if set(record["files"]) != {"values.parquet", "features.parquet", "samples.json"}:
+        expected = {"values.parquet", "features.parquet", "samples.json"}
+        if version == 2:
+            expected = {"values.parquet", "features.json", "samples.json"}
+            expected.update(f"{kind}.jsonl.gz" for kind in RECORD_KINDS)
+        if set(record["files"]) != expected:
             raise ValueError("Unexpected expression artifact file inventory")
         for name, info in record["files"].items():
             path = directory / name
@@ -252,9 +295,16 @@ class ExpressionDataset:
         )
         return cls(
             pd.read_parquet(directory / "values.parquet"),
-            pd.read_parquet(directory / "features.parquet"),
+            pd.read_parquet(directory / "features.parquet")
+            if version == 1
+            else pd.DataFrame(json.loads((directory / "features.json").read_text())).set_index(
+                "feature_id"
+            ),
             samples,
             ExpressionContract.from_dict(record["contract"]),
+            records=ExpressionRecords.from_directory(directory, record["provenance"])
+            if version == 2
+            else None,
         )
 
 
@@ -271,35 +321,6 @@ PROTEIN_SAMPLE_COLUMNS = (
 
 def protein_sample_id(record):
     return _identity("protein-sample", 1, {key: record[key] for key in PROTEIN_SAMPLE_COLUMNS})
-
-
-def _read_pfizer_protein(path):
-    frame = read_csv(path, sep="\t", dtype=str, keep_default_na=False)
-    required = {*PROTEIN_SAMPLE_COLUMNS, "ProteinGroup", "Protein", "IBAQ"}
-    if not required <= set(frame) or set(frame["sample.type"]) != {"sample"}:
-        raise ValueError("Unexpected Pfizer protein table columns or sample roles")
-    sample_rows = frame[list(PROTEIN_SAMPLE_COLUMNS)].drop_duplicates()
-    sample_keys = {
-        tuple(row[key] for key in PROTEIN_SAMPLE_COLUMNS): protein_sample_id(row)
-        for row in sample_rows.to_dict("records")
-    }
-    frame["sample_id"] = [
-        sample_keys[tuple(row)]
-        for row in frame[list(PROTEIN_SAMPLE_COLUMNS)].itertuples(index=False, name=None)
-    ]
-    if frame.duplicated(["ProteinGroup", "sample_id"]).any():
-        raise ValueError(
-            "Duplicate protein-group/sample measurements cannot be silently aggregated"
-        )
-    features = frame[["ProteinGroup", "Protein"]].drop_duplicates().set_index("ProteinGroup")
-    if not features.index.is_unique:
-        raise ValueError(
-            "Conflicting protein-group representative metadata; raw evidence requires reconciliation"
-        )
-    features.insert(0, "source_feature_id", features.index)
-    frame["IBAQ"] = _numbers(frame[["IBAQ"]])["IBAQ"]
-    values = frame.pivot(index="ProteinGroup", columns="sample_id", values="IBAQ")
-    return values, features.loc[values.index]
 
 
 def read_species_expression(
@@ -322,7 +343,7 @@ def read_species_expression(
         if row["id"] == source_id
     )
     adapter = entry.get("adapter")
-    if adapter not in {"bgee", "barkbase", "pfizer-protein"}:
+    if adapter not in {"bgee", "barkbase", "orfdata"}:
         raise ValueError(
             f"{selected.name}/{source_id} is unavailable ({source.acquisition_status or 'reader_not_registered'}): {source.notes or 'no native reader registered'}"
         )
@@ -330,17 +351,13 @@ def read_species_expression(
     expected = {
         "bgee": ("gene", "TPM"),
         "barkbase": ("gene", "TMM-CPM"),
-        "pfizer-protein": ("protein_group", "iBAQ"),
-    }[adapter]
+    }.get(adapter, (contract.measurement.feature_level, contract.measurement.unit))
     if (
         (contract.measurement.feature_level, contract.measurement.unit) != expected
         or contract.measurement.scale != "linear"
         or contract.measurement.is_proxy is not False
     ):
         raise ValueError("Native reader and declared measurement semantics disagree")
-    asset = species_asset(entry["matrix_asset"], species=selected)
-    if asset.sha256 != contract.content_provenance["matrix"]:
-        raise ValueError("Matrix asset and expression contract disagree")
     filename = entry["sample_metadata"]
     if Path(filename).name != filename:
         raise ValueError("Sample metadata must be a package-local filename")
@@ -358,6 +375,21 @@ def read_species_expression(
     ):
         raise ValueError("Expression sample metadata source/schema mismatch")
     samples = pd.DataFrame(metadata["samples"]).set_index("sample_id")
+    if adapter == "orfdata":
+        from .managed_expression import read_managed_expression
+
+        return read_managed_expression(
+            entry,
+            samples,
+            contract,
+            offline=offline,
+            cache_root=cache_root,
+            local_overrides=local_overrides,
+            max_bytes=max_bytes,
+        )
+    asset = species_asset(entry["matrix_asset"], species=selected)
+    if asset.sha256 != contract.content_provenance["matrix"]:
+        raise ValueError("Matrix asset and expression contract disagree")
     path = ensure_asset(
         asset,
         offline=offline,
@@ -382,8 +414,6 @@ def read_species_expression(
         frame["TPM"] = _numbers(frame[["TPM"]])["TPM"]
         values = frame.pivot(index="Gene ID", columns="Library ID", values="TPM")
         features = pd.DataFrame({"source_feature_id": values.index}, index=values.index)
-    elif adapter == "pfizer-protein":
-        values, features = _read_pfizer_protein(path)
     else:
         frame = read_csv(path, sep="\t", dtype=str, keep_default_na=False)
         required = {"StringTieID", "EnsemblGeneID", "GeneSymbol"}

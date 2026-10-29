@@ -14,6 +14,7 @@ import hashlib
 import json
 import re
 import xml.etree.ElementTree as ET
+from dataclasses import replace
 from importlib.resources import files
 from pathlib import Path
 
@@ -21,6 +22,8 @@ import pandas as pd
 import yaml
 
 from oncoref.expression_contract import ExpressionContract, ExpressionMeasurement
+from oncoref.expression_registry import expression_source_registry_entries
+from oncoref.managed_expression import _digest, specification, transfer_size
 from oncoref.species_expression import PROTEIN_SAMPLE_COLUMNS, protein_sample_id
 
 
@@ -417,6 +420,43 @@ def add_protein_and_gaps(root, output, manifest, sources, overrides, audit):
             "citation": "https://doi.org/10.1038/s41597-026-07512-9",
         }
     )
+    # The intake script curates sample facts; the consumer uses the independently
+    # released ORFdata extraction only when its raw-source identities agree.
+    published = next(
+        row
+        for row in expression_source_registry_entries(species="dog")
+        if row["id"] == "pfizer-dog-protein"
+    )
+    spec = specification(published)
+    pins = {row["asset_id"]: row["sha256"] for row in spec["manifest"]["sources"]}
+    if all(
+        contract.content_provenance[role] == pins[asset]
+        for role, asset in spec["source_roles"].items()
+    ):
+        contract = replace(
+            contract,
+            content_provenance={
+                **contract.content_provenance,
+                "quantitative_manifest": _digest(spec["manifest"]),
+                "quantitative_artifact": spec["download"]["assets"]["dataset.sqlite"]["sha256"],
+            },
+            provenance_notes=published["contract"]["provenance_notes"],
+        )
+        sources[-1].pop("matrix_asset")
+        sources[-1].update(
+            adapter="orfdata",
+            managed_dataset=published["managed_dataset"],
+            acquisition_status="managed_dataset_available",
+            expected_size_gb=transfer_size(spec["download"]) / 1e9,
+            contract=contract.as_dict(),
+        )
+        write_json(output / published["managed_dataset"], spec)
+    else:
+        sources[-1].pop("adapter")
+        sources[-1]["acquisition_status"] = "unreleased_source_snapshot"
+        sources[-1]["notes"] = (
+            "Source bytes differ from the released quantitative dataset; independent release reconciliation required."
+        )
     audit.append(
         {
             "source": "pfizer-dog-protein",
