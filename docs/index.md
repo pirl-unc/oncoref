@@ -1,8 +1,11 @@
 # oncoref
 
-**Current released research selection: [463-group CTA/oncofetal candidate funnel](audits/cta-release-1.21.0/index.md)**
-(481 gene loci), with uniform compartment-specific rules, retained normal-expression
-flags and explicit CTA / Unsafe / Neither assignments across the full reference.
+**Current released research selection: [546-group CTA/oncofetal candidate funnel](audits/cta-source-walkthrough-20261028/index.md)**
+(582 gene loci), with uniform compartment-specific rules, retained normal-expression
+flags and explicit CTA / Unsafe / Neither decisions or unassigned status across the full reference.
+The [four requirements](cta-evidence-axes.md) separate safety, cancer expression,
+adult restriction and reproductive/developmental association. Only safety can
+establish Unsafe. [Release notes and PDFs](cta-release-1.22.0.md).
 PRAME informed this calibration; the cutoffs are not clinically validated safety limits.
 
 The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
@@ -91,7 +94,7 @@ packages can join domains without maintaining private name mappings.
   [22 October pilot](audits/cta-continuous-20261022/index.md). It separates point-screen
   passes from uncertainty-qualified inclusion; donor-model inputs are not yet available.
 - Need the latest candidate research set? See the
-  [compartment-aware funnel](audits/cta-release-1.21.0/index.md)
+  [current selection funnel](audits/cta-source-walkthrough-20261028/index.md)
   and [identity and analysis APIs](cta-analysis-api.md).
 - Need the released target and forbidden-protein sets? See the
   [CTA, Unsafe and Neither report](audits/cta-policy-20261025/index.md) and

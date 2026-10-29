@@ -10,13 +10,14 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [current CTA/oncofetal selection](docs/audits/cta-release-1.21.0/index.md)
-contains **463 protein-equivalence groups representing 481 gene loci**. The full
-19,863-group reference receives **463 CTA / 17,388 Unsafe / 2,012 Neither**
-assignments. The common rules use measured reproductive or embryonic association,
-tumor expression, compartment-specific normal RNA, protein evidence and coverage.
-PRAME, MAGEA4, CTAG1A/B, XAGE1A/B, SSX2/B, CT83 and TBXT pass. CTAG2 remains
-excluded by bronchial basal-cell RNA. PRAME informed calibration; these are
+The [current CTA/oncofetal selection](docs/audits/cta-source-walkthrough-20261028/index.md)
+contains **546 protein-equivalence groups representing 582 gene loci**. The full
+19,863-group reference receives **546 CTA / 18,031 Unsafe / 20 Neither / 1,266
+unassigned** decisions. [Four separate requirements](docs/cta-evidence-axes.md)
+assess safety, cancer expression, adult restriction and reproductive/developmental
+association. Only safety can establish Unsafe. Cancer needs one qualifying
+sample, without a tumor-versus-normal ratio. PRAME, MAGEA4, CTAG1A/B, CTAG2,
+XAGE1A/B, SSX2/B, CT83 and TBXT pass. PRAME informed calibration; these are
 research prioritization decisions, not validated clinical safety limits.
 
 ```python
@@ -24,7 +25,7 @@ from oncoref import human, canine, mouse
 
 selected = human.cta_selection(category="CTA")
 all_decisions = human.cta_selection()
-canine.cta_selection()           # 14 native nominations, Neither/unassessed
+canine.cta_selection()           # 14 native nominations, unassigned/unassessed
 mouse.cta_selection_coverage()   # Explicitly unavailable selection
 human.cta_sources()              # Biological role, native unit, integration status
 ```
