@@ -91,33 +91,23 @@ TABLE_COLUMNS = {
 }
 HUMAN_RULES = {
     "Reproductive or developmental expression": (
-        "Reproductive ≥5 nTPM OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. This tests association; adult restriction is separate.",
+        "Reproductive ≥5 nTPM OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. This tests positive expression without a normal comparison.",
         ["hpa_rna_consensus", "tyser_E-MTAB-9388", "petropoulos_E-MTAB-3929"],
     ),
     "Tumor sample ≥2 TPM/pTPM": (
         "At least one measured compatible tumor sample ≥2 in native TPM or HPA pTPM; do not add maxima from different samples.",
         ["oncoref_tumor_union", "hpa_cancer"],
     ),
-    "Adult restriction": (
-        "A qualifying reproductive signal must exceed supported adult normal nTPM, OR a qualifying developmental signal must exceed supported adult normal TPM. Compare within native units across Vital/Protected/Manageable; Reproductive/Disposable are excluded. CP10K remains safety-only. Missing comparators do not pass; no tumor-versus-normal gate.",
-        [
-            "hpa_rna_consensus",
-            "hpa_brain",
-            "hpa_single_cell_tissue",
-            "hpa_immune_cell",
-            "gtex_tissue_rna",
-            "hpa_immune_monaco",
-            "dice",
-            "tyser_E-MTAB-9388",
-            "petropoulos_E-MTAB-3929",
-        ],
-    ),
     "HPA normal protein": (
         "Reliable non-Low positives in Vital/Protected supply Unsafe evidence; Manageable positives block CTA only; uncertain evidence remains unresolved. Low is flagged.",
         ["hpa_normal_tissue"],
     ),
+    "Reproductive concentration": (
+        "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is >=5 nTPM and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
+        ["hpa_rna_consensus"],
+    ),
     "Required RNA coverage": (
-        "Required nonreproductive bulk anatomy across HPA consensus, HPA brain or direct GTEx, plus distinct tissue-cell/immune panels; every group member measured. DICE and cornea are optional coverage.",
+        "Complete GTEx v11 bulk core (52 native contexts), required nonreproductive bulk anatomy across compatible sources, and distinct HPA tissue-cell/immune panels; every protein member measured. DICE and cornea coverage is optional.",
         [
             "hpa_rna_consensus",
             "hpa_brain",
@@ -344,7 +334,7 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
 
 
 HUMAN_RULES["Neither expression profiles"] = (
-    "Neither requires complete required RNA coverage and either all measured RNA below the shared 2-unit floor with no detected protein, or failed reproductive/developmental association with appreciable RNA in >=2 Manageable tissue concepts and no Vital/Protected exclusion. Missing/unresolved evidence and other profiles are unassigned.",
+    "Neither requires complete required RNA coverage and either all measured RNA below the shared 2-unit floor with no detected protein, or failed reproductive/developmental association with appreciable RNA in >=2 Manageable tissue concepts and no Vital/Protected exclusion. A complete diffuse adult/placental identity profile with no other qualifying route and clear normal safety also establishes Neither. Missing/unresolved evidence and other profiles are unassigned.",
     [
         "hpa_rna_consensus",
         "hpa_single_cell_tissue",
@@ -445,8 +435,8 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             not in {
                 "Reproductive / embryonic association",
                 "Tumor sample ≥2 TPM/pTPM",
-                "Adult restriction",
                 "Required RNA coverage",
+                "Reproductive concentration",
             }
         ]
         safety_status = (
@@ -468,11 +458,6 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 "Cancer expression",
                 "pass" if r["tumor_union_ge2"] else "hold" if r["tumor_measured"] else "unknown",
                 f"One sample ≥2: OncoRef {display(r['oncoref_maximum_tpm'])} TPM; HPA {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No tumor-versus-normal ratio.",
-            ),
-            (
-                "Adult restriction",
-                "pass" if r["adult_restriction"] else "hold",
-                f"Qualifying reproductive {display(r['reproductive_ntpm'])} vs supported adult normal {display(r['healthy_maximum_ntpm'])} nTPM; qualifying developmental {display(r['developmental_mean_tpm'])} vs supported adult normal {display(r['healthy_maximum_tpm'])} TPM. At least one same-unit route must be strictly higher.",
             ),
             (
                 "Reproductive/developmental association",
@@ -557,9 +542,12 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 row["reason"] = (
                     f"Reproductive {display(r['reproductive_ntpm'])} nTPM; supported developmental mean {display(r['developmental_mean_tpm'])} TPM. Neither reaches the 5-unit association floor in its own units."
                 )
-            elif layer == "Adult restriction":
+            elif layer == "Reproductive concentration":
                 row["reason"] = (
-                    f"Reproductive {display(r['reproductive_ntpm'])} versus supported adult normal {display(r['healthy_maximum_ntpm'])} nTPM; developmental {display(r['developmental_mean_tpm'])} versus supported adult normal {display(r['healthy_maximum_tpm'])} TPM. No qualifying association route is strictly above its same-unit comparator. This is not Unsafe evidence."
+                    f"HPA diffuseness {100 * r['hpa_diffuseness']:.2f}% exceeds 10%; reference {r['hpa_diffuseness_reference']:.3g} nTPM. Complete 29-unit adult/placental comparison, excluding thymus; no other qualifying Reproductive route. This is an identity failure, not a safety exclusion."
+                )
+                row["source_url"] = (
+                    "https://pirl-unc.github.io/oncoref/audits/cta-unassigned-20261029/diffuseness-impact/"
                 )
             elif layer == "Tumor sample ≥2 TPM/pTPM":
                 row["reason"] = (
@@ -571,6 +559,13 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 if not combined.bulk_complete:
                     details.append(
                         f"Combined normal bulk missing required tissues: {combined.missing_bulk_tissues}"
+                    )
+                if not combined.gtex_core_complete:
+                    details.append(
+                        "Required GTEx v11 core panel is incomplete (52 native bulk contexts); "
+                        f"missing member identities {combined.missing_gtex_member_ids}; "
+                        f"uncovered tissue concepts {combined.missing_gtex_tissues}. "
+                        "A missing measurement is not zero expression."
                     )
                 for gap in coverage_by_entity.get(base["entity_id"], pd.DataFrame()).itertuples():
                     if gap.source_id == "hpa_rna_consensus":
@@ -606,6 +601,19 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     else "no biological category assigned"
                 )
             ),
+        )
+        rows.append(row)
+        row = dict.fromkeys(TABLE_COLUMNS["explanations"])
+        row.update(
+            base,
+            layer="Assessment: Reproductive concentration",
+            decision="hold"
+            if r["reproductive_concentration_hold"]
+            else "pass"
+            if r["adult_profile_status"] == "concentrated"
+            else "unknown",
+            reason=f"Adult/placental contrast: {r['adult_profile_status']}; HPA score {display(100 * r['hpa_diffuseness'])}%; reference {display(r['hpa_diffuseness_reference'])} nTPM. Developmental contrast: {r['developmental_profile_status']}. Unassessed is not a measured pass.",
+            source_url="https://pirl-unc.github.io/oncoref/audits/cta-unassigned-20261029/diffuseness-impact/",
         )
         rows.append(row)
         for flag in [
@@ -830,6 +838,8 @@ def build() -> None:
                 RELEASE / "alternative-evidence/manifest.json",
                 DATA / "cta-publication-context.csv",
                 OUTPUT / "coverage-audit-receipt.json",
+                *sorted((DATA / "species" / "dog").glob("cta-*.json")),
+                *sorted((DATA / "species" / "mouse").glob("cta-*.json")),
             ]
         },
     }

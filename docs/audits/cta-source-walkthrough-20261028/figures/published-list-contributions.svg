@@ -134,8 +134,8 @@ z
    </g>
    <g id="patch_15">
     <path d="M 234 127.963636 
-L 433.04577 127.963636 
-L 433.04577 152.10416 
+L 430.928262 127.963636 
+L 430.928262 152.10416 
 L 234 152.10416 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
@@ -305,7 +305,7 @@ L 0 3.5
      </g>
     </g>
     <g id="text_8">
-     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="556.92" y="532.198281" transform="rotate(-0 556.92 532.198281)">Protein-equivalence groups</text>
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #172b3a" x="556.92" y="532.198281" transform="rotate(-0 556.92 532.198281)">Proteins</text>
     </g>
    </g>
    <g id="matplotlib.axis_2">
@@ -436,7 +436,7 @@ L -3.5 0
     </g>
    </g>
    <g id="text_21">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="780.317115" y="142.371789" transform="rotate(-0 780.317115 142.371789)">376 / 1,017</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="780.317115" y="142.371789" transform="rotate(-0 780.317115 142.371789)">372 / 1,017</text>
    </g>
    <g id="text_22">
     <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="764.96518" y="172.547444" transform="rotate(-0 764.96518 172.547444)">264 / 988</text>
@@ -481,18 +481,18 @@ z
 " style="fill: #dce7ea"/>
     </g>
     <g id="text_33">
-     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="271" y="545.856037" transform="rotate(-0 271 545.856037)">Mapped groups</text>
+     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="271" y="545.856037" transform="rotate(-0 271 545.856037)">Mapped proteins</text>
     </g>
     <g id="patch_28">
-     <path d="M 368.385938 545.856037 
-L 388.385938 545.856037 
-L 388.385938 538.856037 
-L 368.385938 538.856037 
+     <path d="M 374.889063 545.856037 
+L 394.889063 545.856037 
+L 394.889063 538.856037 
+L 374.889063 538.856037 
 z
 " style="fill: #087e83"/>
     </g>
     <g id="text_34">
-     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="396.385938" y="545.856037" transform="rotate(-0 396.385938 545.856037)">Selected CTA groups</text>
+     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="402.889063" y="545.856037" transform="rotate(-0 402.889063 545.856037)">Selected CTA proteins</text>
     </g>
    </g>
   </g>
@@ -503,8 +503,8 @@ z
    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="42.12" y="69.558281" transform="rotate(-0 42.12 69.558281)">Tables from the same paper are unioned before counting</text>
   </g>
   <g id="text_37">
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 582.834551)">Union: 2,514 mapped groups / 2,570 mapped loci; 438 selected groups have a registered list annotation.</text>
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 593.637012)">108 selected groups have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 582.834551)">Union: 2,514 mapped proteins / 2,570 mapped loci; 434 selected proteins have a registered list annotation.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 593.637012)">88 selected proteins have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.</text>
   </g>
  </g>
  <defs>

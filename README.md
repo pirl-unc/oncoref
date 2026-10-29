@@ -11,14 +11,17 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 The [current CTA/oncofetal selection](docs/audits/cta-source-walkthrough-20261028/index.md)
-contains **546 protein-equivalence groups representing 582 gene loci**. The full
-19,863-group reference receives **546 CTA / 18,031 Unsafe / 20 Neither / 1,266
-unassigned** decisions. [Four separate requirements](docs/cta-evidence-axes.md)
-assess safety, cancer expression, adult restriction and reproductive/developmental
-association. Only safety can establish Unsafe. Cancer needs one qualifying
-sample, without a tumor-versus-normal ratio. PRAME, MAGEA4, CTAG1A/B, CTAG2,
-XAGE1A/B, SSX2/B, CT83 and TBXT pass. PRAME informed calibration; these are
-research prioritization decisions, not validated clinical safety limits.
+contains **522 selected proteins**. The 19,863-protein reference receives
+**522 CTA / 18,031 Unsafe / 20 Neither / 1,290 unassigned** decisions.
+[Independent requirements](docs/cta-evidence-axes.md) assess normal-tissue safety,
+cancer expression and Reproductive evidence, with complete required coverage.
+Reproductive includes reproductive organs, placenta, extraembryonic, embryonic and
+fetal contexts. Only safety can establish Unsafe. The old normal-maximum veto is
+removed; [continuous diffuseness](docs/audits/cta-unassigned-20261029/index.md) is
+active at >10% for complete HPA adult/placental profiles, excluding thymus.
+MTCP1 moves to Neither; supported embryonic routes remain independently eligible. PRAME, MAGEA4, CTAG1A/B, CTAG2,
+XAGE1A/B, SSX2/B, CT83 and TBXT retain CTA status. These are research assignments,
+not validated clinical safety limits.
 
 ```python
 from oncoref import human, canine, mouse

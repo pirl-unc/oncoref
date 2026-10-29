@@ -1,0 +1,24 @@
+protein_equivalence_group_id,protein_group_label,member_gene_ids,category,assessment_status,exclusion_reasons
+PEG:29a45ff715f41f977610,ENSG00000198211,"[""ENSG00000198211""]",,incomplete_evidence,Required RNA coverage
+PEG:c844633e53f9544199bb,TSSK2,"[""ENSG00000206203""]",,incomplete_evidence,Required RNA coverage
+PEG:7a81a2cf3631c7adb27c,ENSG00000241690,"[""ENSG00000241690""]",,incomplete_evidence,Required RNA coverage
+PEG:983af5605adaf41d6a8c,PRR5-ARHGAP8,"[""ENSG00000248405""]",,incomplete_evidence,Required RNA coverage
+PEG:7c05ea54d8510c796222,EPPIN-WFDC6,"[""ENSG00000249139""]",,incomplete_evidence,Required RNA coverage
+PEG:97c9d25f625bf06c68a4,ENSG00000249967,"[""ENSG00000249967""]",,incomplete_evidence,Required RNA coverage
+PEG:0181584501faae418211,CCDC169-SOHLH2,"[""ENSG00000250709""]",,incomplete_evidence,Required RNA coverage
+PEG:16e906e3c6106c679f1c,NT5C1B-RDH14,"[""ENSG00000250741""]",,incomplete_evidence,Required RNA coverage
+PEG:2d5f0c7ea5ae2becb985,NEDD8-MDP1,"[""ENSG00000255526""]",,incomplete_evidence,Required RNA coverage
+PEG:fa7045fb40829c98bc73,ENSG00000257390,"[""ENSG00000257390""]",,incomplete_evidence,Required RNA coverage
+PEG:4f42fb5edacecbeca83e,ENSG00000257921,"[""ENSG00000257921""]",,incomplete_evidence,Required RNA coverage
+PEG:24c69136cf11d62d3f1a,ENSG00000258417,"[""ENSG00000258417""]",,incomplete_evidence,Required RNA coverage
+PEG:d90698b2ff249b733c09,ENSG00000260371,"[""ENSG00000260371""]",,incomplete_evidence,Required RNA coverage
+PEG:42d973ce0013cb301a57,ENSG00000267261,"[""ENSG00000267261""]",,incomplete_evidence,Required RNA coverage
+PEG:c2f582a2bc1d7b189664,ENSG00000268083,"[""ENSG00000268083""]",,incomplete_evidence,Required RNA coverage
+PEG:612ff9086ed5b0eaf825,ENSG00000270249,"[""ENSG00000270249""]",,incomplete_evidence,Required RNA coverage
+PEG:f1d0c6f08a7be5709bb2,URGCP-MRPS24,"[""ENSG00000270617""]",,incomplete_evidence,Required RNA coverage
+PEG:b15cc35ce4b58fcf6e74,ENSG00000271810,"[""ENSG00000271810""]",,incomplete_evidence,Required RNA coverage
+PEG:1f1a10caec58d2d32020,ENSG00000273155,"[""ENSG00000273155""]",,incomplete_evidence,Required RNA coverage
+PEG:c6e009faf668796d8a82,ENSG00000273291,"[""ENSG00000273291""]",,incomplete_evidence,Required RNA coverage
+PEG:cd8eaef0aa7ffbe4d21b,ENSG00000274944,"[""ENSG00000274944""]",,incomplete_evidence,Required RNA coverage
+PEG:e6e34203e737ecbd1e52,ENSG00000280778,"[""ENSG00000280778""]",,incomplete_evidence,Required RNA coverage
+PEG:eb4392b3d184a7ca2ba5,ENSG00000281613,"[""ENSG00000281613""]",,incomplete_evidence,Required RNA coverage

@@ -19,12 +19,14 @@ sys.path.insert(0, str(ROOT))
 
 import plot_cta_geometric as style  # noqa: E402
 from build_cta_selection_audit import COMPARATORS, OUTPUT, RELEASE, citation, records  # noqa: E402
+from cta_source_links import linked_sources, markdown_link  # noqa: E402
 
 from oncoref import cta_selection  # noqa: E402
 
 
 def markdown(frame: pd.DataFrame) -> str:
     """Write a compact Markdown table without an optional tabulate dependency."""
+    frame = linked_sources(frame)
 
     def cell(value):
         if isinstance(value, float):
@@ -177,7 +179,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
     bulk = "adult_bulk_max_ntpm"
     selected = facts[facts.category.eq("CTA")].copy()
     for column, label, suffix in [
-        (reproductive, "Reproductive RNA (nTPM)", "reproductive"),
+        (reproductive, "Adult/placental RNA (nTPM)", "reproductive"),
         (embryo, "Embryonic lineage mean (TPM)", "embryonic"),
     ]:
         fig = plt.figure(figsize=(16, 10))
@@ -216,7 +218,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
             band,
             out,
             "widely-studied-antigens-" + suffix,
-            "Each dot is a protein-equivalence group. Missing embryonic values are shown separately, not imputed as zero.\nLabels include PRAME, CTAG1A/B, XAGE1A/B, MAGE-A4, CT83, SSX2/B and TBXT where the corresponding measurement exists.",
+            "Each dot is one protein (identical selected reference sequences collapsed). Missing embryonic values are shown separately, not imputed as zero.\nLabels include PRAME, CTAG1A/B, XAGE1A/B, MAGE-A4, CT83, SSX2/B and TBXT where the corresponding measurement exists.",
         )
     for field, unit, suffix in [
         ("healthy_maximum_ntpm", "nTPM", ""),
@@ -228,8 +230,8 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
         band = fig.add_axes([0.095, 0.16, 0.74, 0.13], sharex=ax)
         style.title(
             fig,
-            "Selected CTA: reproductive versus embryonic RNA",
-            f"All {len(selected)} selected groups · color: non-disposable healthy maximum ({unit}); gray: color unavailable",
+            "Selected CTA: adult/placental versus embryonic RNA",
+            f"All {len(selected)} selected proteins · color: non-disposable healthy maximum ({unit}); gray: color unavailable",
         )
         norm = SymLogNorm(
             linthresh=0.1 if unit != "CP10K" else 0.001,
@@ -262,7 +264,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
         missing = selected[selected[embryo].isna()]
         missing_expression_strip(band, missing, reproductive, color=field, norm=norm)
         ax.tick_params(labelbottom=False)
-        band.set_xlabel("Reproductive RNA (nTPM)")
+        band.set_xlabel("Adult/placental RNA (nTPM)")
         highlight_antigens(ax, part, reproductive, embryo)
         save_expression_figure(
             fig,
@@ -270,7 +272,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
             band,
             out,
             "selected-reproductive-embryonic" + suffix,
-            f"{len(part)} measured on both axes; {len(missing)} shown in the missing-embryonic band. Band height is categorical, not expression.\nEmbryonic TPM combines source-separated preimplantation and gastrulation contexts. Missing rows are not zero.\nLabels: widely studied antigens. Companion panels label every selected group ≥5 on both axes. No mixed-unit color maximum.",
+            f"{len(part)} measured on both axes; {len(missing)} shown in the missing-embryonic band. Band height is categorical, not expression.\nEmbryonic TPM combines source-separated preimplantation and gastrulation contexts. Missing rows are not zero.\nLabels: widely studied antigens. Companion panels label every selected protein ≥5 on both axes. No mixed-unit color maximum.",
             colorbar=colorbar,
         )
     # Label all high-on-both groups in three readable panels; the overview keeps
@@ -283,7 +285,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
         ax = fig.add_axes([0.095, 0.18, 0.74, 0.63])
         style.title(
             fig,
-            "Selected CTA with reproductive and embryonic RNA ≥5",
+            "Selected CTA with adult/placental and embryonic RNA ≥5",
             f"Labels {number} of 3 · {len(part)} of {len(high)} groups · color: healthy maximum nTPM",
         )
         ax.scatter(high[reproductive], high[embryo], c="#C8D0D6", alpha=0.35, s=28)
@@ -300,7 +302,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
         colorbar = fig.colorbar(
             points, cax=fig.add_axes([0.89, 0.18, 0.018, 0.63]), label="Healthy maximum (nTPM)"
         )
-        expression_axes(ax, x="Reproductive RNA (nTPM)", y="Embryonic lineage mean (TPM)")
+        expression_axes(ax, x="Adult/placental RNA (nTPM)", y="Embryonic lineage mean (TPM)")
         ax.set_xlim(3.5, high[reproductive].max() * 1.5)
         ax.set_ylim(3.5, high[embryo].max() * 1.7)
         highlight_antigens(ax, part, reproductive, embryo, high_both=True)
@@ -310,7 +312,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
             None,
             out,
             f"selected-high-both-{number}",
-            "Colored points and labels cover one third of the selected groups ≥5 on both axes; gray points show the other groups.\nPanels share the same axes. This descriptive threshold does not replace developmental cell-support requirements.",
+            "Colored points and labels cover one third of the selected proteins ≥5 on both axes; gray points show the other groups.\nPanels share the same axes. This descriptive threshold does not replace developmental cell-support requirements.",
             colorbar=colorbar,
         )
     selected["embryonic_plot_status"] = np.where(
@@ -338,7 +340,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
     style.title(
         fig,
         "Human selection funnel",
-        f"{len(facts):,} protein-equivalence groups; every layer evaluates every group",
+        f"{len(facts):,} proteins (identical selected reference sequences collapsed); every layer evaluates every group",
     )
     left = np.zeros(len(audit.funnel))
     for key, label in [
@@ -356,7 +358,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
         )
         left += audit.funnel[key].to_numpy()
     ax.invert_yaxis()
-    ax.set_xlabel("Protein-equivalence groups")
+    ax.set_xlabel("Proteins")
     ax.legend(frameon=False, ncol=4, loc="upper left", bbox_to_anchor=(0, -0.08), fontsize=9)
     ax.text(
         1.02, 1.025, "Eligible / Unsafe / Neither / Unassigned", transform=ax.transAxes, fontsize=9
@@ -409,8 +411,8 @@ def figures(facts: pd.DataFrame, audit) -> None:
     style.title(
         fig, "Published candidate lists", "Tables from the same paper are unioned before counting"
     )
-    ax.barh(ranked.citation, ranked.mapped_entities, color=style.PALE, label="Mapped groups")
-    ax.barh(ranked.citation, ranked.CTA, color=style.TEAL, label="Selected CTA groups")
+    ax.barh(ranked.citation, ranked.mapped_entities, color=style.PALE, label="Mapped proteins")
+    ax.barh(ranked.citation, ranked.CTA, color=style.TEAL, label="Selected CTA proteins")
     ax.set_xlim(0, 1220)
     for i, row in enumerate(ranked.itertuples()):
         ax.text(
@@ -421,11 +423,11 @@ def figures(facts: pd.DataFrame, audit) -> None:
             fontsize=9,
         )
     ax.invert_yaxis()
-    ax.set_xlabel("Protein-equivalence groups")
+    ax.set_xlabel("Proteins")
     ax.legend(frameon=False, ncol=2, loc="upper left", bbox_to_anchor=(0, -0.07), fontsize=10)
     style.footer(
         fig,
-        f"Union: {audit.memberships.entity_id.nunique():,} mapped groups / {len({g for ids in audit.memberships.gene_ids for g in ids}):,} mapped loci; {annotated} selected groups have a registered list annotation.\n{unannotated} selected groups have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.",
+        f"Union: {audit.memberships.entity_id.nunique():,} mapped proteins / {len({g for ids in audit.memberships.gene_ids for g in ids}):,} mapped loci; {annotated} selected proteins have a registered list annotation.\n{unannotated} selected proteins have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.",
     )
     style.save(fig, out, "published-list-contributions")
 
@@ -441,7 +443,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
     for ax, field, title in zip(
         axes,
         ["mapped_overlap", "selected_overlap"],
-        ["All mapped groups", "Selected CTA groups"],
+        ["All mapped proteins", "Selected CTA proteins"],
         strict=True,
     ):
         matrix = (
@@ -465,7 +467,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
             )
     style.footer(
         fig,
-        "Diagonal cells give each paper's set size. Off-diagonal cells count shared groups, not independent validation studies.\nCitations and original source-table IDs remain linked in the source inventory.",
+        "Diagonal cells give each paper's set size. Off-diagonal cells count shared proteins, not independent validation studies.\nCitations and original source-table IDs remain linked in the source inventory.",
     )
     style.save(fig, out, "published-list-overlaps")
 
@@ -570,7 +572,7 @@ def build() -> None:
     incomplete = gaps[gaps.assessment_status.eq("incomplete_evidence")]
     gap_counts = pd.DataFrame(
         [
-            {"Evidence gap": name.replace("_", " "), "Groups": int(incomplete[name].sum())}
+            {"Evidence gap": name.replace("_", " "), "Proteins": int(incomplete[name].sum())}
             for name in gap_columns
         ]
     )
@@ -595,7 +597,7 @@ def build() -> None:
     recovery.to_csv(OUTPUT / "developmental-identity-recoveries.csv", index=False)
     coverage_text = f"""# Which sources have missing evidence?
 
-These counts describe the **{len(incomplete):,} unassigned groups with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **{len(incomplete):,} unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
 {markdown(gap_counts)}
 
@@ -605,9 +607,9 @@ The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted
 
 ## Required normal panels
 
-{markdown(normal_gaps.rename(columns={"source": "Source", "groups": "Groups", "example_genes": "Examples"})[["Source", "Groups", "Examples"]])}
+{markdown(normal_gaps.rename(columns={"source": "Source", "groups": "Proteins", "example_genes": "Examples"})[["Source", "Proteins", "Examples"]])}
 
-Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. Reproductive tissues do not block normal-organ coverage. The separate requirements remain 426 HPA tissue/cell contexts, 19 HPA immune populations and 30 Monaco immune populations for every group member. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. DICE and adult cornea remain optional and do not contribute to this mandatory-panel gap.
+Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. The fixed GTEx v11 core additionally requires all 52 native bulk contexts, including its nine adult Reproductive contexts, for every member locus. The separate requirements remain 426 HPA tissue/cell contexts, 19 HPA immune populations and 30 Monaco immune populations for every group member. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. DICE and adult cornea remain optional and do not contribute to this mandatory-panel gap.
 
 [Every missing group/source/context](normal-panel-coverage-gaps.csv.gz) · [Every member, current/historical IDs, synonyms and observed/missing contexts](normal-panel-member-coverage.csv.gz) · [Source-row identity matches and unresolved alternatives](coverage-identity-matches.csv.gz).
 
@@ -615,9 +617,9 @@ Bulk completeness now requires every nonreproductive tissue concept in the HPA c
 
 {markdown(pd.DataFrame(tumor_source_counts))}
 
-[Per-group, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
+[Per-protein, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
 
-Embryonic coverage now combines **Tyser et al. (2021), E-MTAB-9388** (gastrulation) and **Petropoulos et al. (2016), E-MTAB-3929** (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **{int(incomplete.embryonic_measurement_missing.sum()):,}** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
+Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **{int(incomplete.embryonic_measurement_missing.sum()):,}** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
 
 The new identity pass recovers {int(recovery.status.ne("conflicting_vectors").sum())} gene rows omitted by the earlier exact-ID filter. It keeps {int(recovery.status.eq("conflicting_vectors").sum())} conflicting alternate-row cases unresolved. [Every attempted recovery and source ID](developmental-identity-recoveries.csv). Canonical rows take precedence; multiple alternative rows are accepted only when their entire cell-expression vectors agree. Different values are neither added nor arbitrarily selected.
 
@@ -641,6 +643,26 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
     context = pd.read_csv(ROOT / "oncoref/data/cta-publication-context.csv")
     context.to_csv(OUTPUT / "publication-context.csv", index=False)
     registry["citation"] = registry.source_tag.map(citation)
+    bibliography = registry.copy()
+    bibliography["paper"] = [
+        markdown_link(title, "https://doi.org/" + doi)
+        for title, doi in zip(bibliography.title, bibliography.doi)
+    ]
+    bibliography["artifact"] = bibliography.source_url.map(
+        lambda url: markdown_link("Extracted source", url)
+    )
+    (OUTPUT / "references.md").write_text(
+        "# Papers and database versions\n\n"
+        "Paper titles open the publication. Database names open the source's "
+        "documentation or release page. Exact input URLs, extraction scope and "
+        "checksums remain in the downloadable provenance.\n\n"
+        + markdown(bibliography[["citation", "paper", "source_table", "artifact"]])
+        + "\n\n## Measurement resources\n\n"
+        + markdown(
+            cta_selection.sources()[["name", "evidence_category", "native_unit", "source_url"]]
+        )
+        + "\n"
+    )
     registry[
         ["citation", "source_tag", "published_rows", "source_table", "evidence_scope", "source_url"]
     ].to_csv(OUTPUT / "paper-source-scope.csv", index=False)
@@ -659,7 +681,7 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
                     extra.label.map(antigen_label).str.replace("\n", " ")
                 )
                 or "None curated",
-                "Mapped groups": len(match),
+                "Mapped proteins": len(match),
                 "Selected CTA": int(match.category.eq("CTA").sum()),
                 "Source": "https://doi.org/" + source.doi,
             }
@@ -694,14 +716,17 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
             }
             for label, mask in [
                 (
-                    "Reproductive only",
+                    "Adult/placental evidence only",
                     facts.reproductive_association & ~facts.developmental_association,
                 ),
                 (
-                    "Developmental only",
+                    "Embryonic-only evidence",
                     ~facts.reproductive_association & facts.developmental_association,
                 ),
-                ("Both", facts.reproductive_association & facts.developmental_association),
+                (
+                    "Both measured routes",
+                    facts.reproductive_association & facts.developmental_association,
+                ),
             ]
         ]
     )
@@ -727,58 +752,62 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
     funnel = pd.read_csv(RELEASE / "filtering-funnel.csv")
     overview = f"""# CTA and oncofetal selection
 
-**{counts.get("CTA", 0):,} CTA groups ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Neither", 0):,} Neither and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 protein-equivalence groups. Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Neither", 0):,} Neither and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[Slides](slides/cta-evidence-walkthrough-expanded.pptx) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[Slides](slides/cta-evidence-walkthrough-expanded.pptx) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 ## Categories
 
-**Safety, cancer expression, adult restriction and reproductive/developmental
-association are separate requirements. Only safety evidence can establish Unsafe.**
+**Safety, cancer expression and Reproductive
+evidence are separate requirements. Only safety evidence can establish Unsafe.**
 Cancer needs one qualifying measured sample, without a tumor-versus-normal ratio.
-Restriction compares a qualifying association signal against supported adult
-normal expression in its own native units. [Definitions and logic](../../cta-evidence-axes.md).
+The reproductive-versus-normal maximum veto has been removed. Whole-profile
+HPA diffuseness above 10% blocks a completely measured adult/placental identity
+route. Thymus is Permissive and excluded; Disposable tissues count. Supported
+embryonic evidence remains independent and its concentration is unassessed.
+[Rule, changed proteins and sensitivity](../cta-unassigned-20261029/diffuseness-impact.md). [Definitions and logic](../../cta-evidence-axes.md).
 
-![Four separate CTA requirements](../../images/cta-evidence-axes.png)
+![Three separate CTA requirements](../../images/cta-evidence-axes.png)
 
-- **CTA:** association, adult restriction, one qualifying cancer sample, required coverage and acceptable normal expression all pass.
+- **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage and acceptable normal expression all pass.
 - **Unsafe:** above the single RNA ceiling in Vital/Protected, accepted non-Low protein in those compartments, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
-- **Neither:** an affirmative low-expression profile or diffuse-Manageable profile, with complete required RNA coverage and no unresolved evidence. Failed candidate gates alone do not establish Neither.
+- **Neither:** an affirmative low-expression, diffuse-Manageable or diffuse-Reproductive profile, with complete required RNA coverage and no unresolved evidence. Failed candidate gates alone do not establish Neither.
 - **Unassigned:** missing/uncertain evidence or an observed profile that fits none of those definitions. In the API, category is null and assessment_status explains why.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every group; Neither is assigned only after its complete-profile check. DICE and corneal coverage remain optional, but observed counterevidence contributes.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Neither is assigned only after its complete-profile check. The fixed [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex) core requires all 52 bulk contexts for every protein member. DICE and corneal coverage remain optional, but observed counterevidence contributes.
 
 ## Neither profiles
 
 The shared appreciable-expression floor is **2** in native TPM/nTPM, matching the tumor gate. Corneal CP10K uses the existing nominal /100 policy. This is an operational threshold, not a source-validated detection limit.
 
-| Profile | Required evidence | Groups |
+| Profile | Required evidence | Proteins |
 |---|---|---:|
 | Low expression | All measured normal, reproductive, embryonic and tumor RNA below 2; required normal panels and mapped tumor/developmental measurements present; no detected protein | {summary["neither_profiles"].get("low_expression", 0)} |
 | Diffuse Manageable | Fails both reproductive/developmental association routes; RNA ≥2 in at least two distinct Manageable tissue concepts; required normal coverage; no above-cutoff or accepted non-Low Vital/Protected protein evidence | {summary["neither_profiles"].get("diffuse_manageable", 0)} |
+| Diffuse Reproductive | Complete HPA adult/placental score >10%, reference ≥5 nTPM, no remaining qualifying route, complete required coverage and no normal-safety hold | {summary["neither_profiles"].get("diffuse_reproductive", 0)} |
 
-Colon and rectum count as one tissue for breadth. A high reproductive measurement cannot conceal broad normal expression. Missing optional measurements are disclosed, not set to zero. {int(summary.get("neither_profiles", {}).get("low_expression", 0))} groups meet the complete low-expression profile. Unassigned statuses: {missing}.
+Colon and rectum count as one tissue for breadth. A high reproductive measurement cannot conceal broad normal expression. Missing optional measurements are disclosed, not set to zero. {int(summary.get("neither_profiles", {}).get("low_expression", 0))} proteins meet the complete low-expression profile. Unassigned statuses: {missing}.
 
 ## What the assessment statuses mean
 
-| API status | Meaning | Human groups |
+| API status | Meaning | Human proteins |
 |---|---|---:|
 | `screened` | A CTA, Unsafe or Neither category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | {int(facts.category.notna().sum()):,} |
-| `incomplete_evidence` | No category was assigned, and required normal coverage, mapped tumor/developmental measurements or evidence resolution is missing. | {missing.get("incomplete_evidence", 0):,} |
-| `outside_category_definitions` | No category was assigned; the tracked coverage/resolution checks pass but the observed profile meets none of the three definitions. | {missing.get("outside_category_definitions", 0):,} |
+| `incomplete_evidence` | At least one tracked evidence gap exists. The detailed audit separates missing measurements from additional observed failures; some gaps affect Neither assessment rather than CTA admission. | {missing.get("incomplete_evidence", 0):,} |
+| `outside_category_definitions` | Tracked coverage/resolution checks pass, but an admission rule fails and neither measured Neither profile applies. The detailed audit names the actual failures. | {missing.get("outside_category_definitions", 0):,} |
 | `unassessed` | No species-specific quantitative policy has been applied; used for native dog nominations. | 0 |
 
-An available exclusion can establish Unsafe despite another missing assay. A reproductive-route CTA need not have embryonic measurements. The low-expression Neither profile needs both tumor and embryonic coverage; the diffuse-Manageable profile has different requirements.
+An available exclusion can establish Unsafe despite another missing assay. A CTA supported by adult/placental Reproductive evidence need not have embryonic measurements. The low-expression Neither profile needs both tumor and embryonic coverage; the diffuse-Manageable profile has different requirements.
 
 Among the {len(incomplete):,} incomplete assessments, gaps overlap:
 
 {markdown(gap_counts)}
 
-[Exact data sources, missing tissue/cell contexts, member identities and cohort coverage](coverage.md) · [Per-group gap flags](unassigned-evidence-gaps.csv). The previous 71 tumor gaps combined 41 missing measurements and 30 measured groups with incomplete low-expression-profile coverage. The table above reflects the subsequent identity repair. The comparator table below reflects the new developmental and normal-bulk sources; MAGE family members are not admission controls.
+[Exact data sources, missing tissue/cell contexts, member identities and cohort coverage](coverage.md) · [Per-protein gap flags](unassigned-evidence-gaps.csv). The previous 71 tumor gaps combined 41 missing measurements and 30 measured groups with incomplete low-expression-profile coverage. The table above reflects the subsequent identity repair. The comparator table below reflects the new developmental and normal-bulk sources; MAGE family members are not admission controls.
 
 ## Sources of candidate annotations
 
-These published lists annotate the selection; they do not provide a gene-specific admission bypass. The union is **{audit.memberships.entity_id.nunique():,} mapped groups / {len({g for ids in audit.memberships.gene_ids for g in ids}):,} loci**. **{annotated}** selected groups have a listed-paper annotation; **{counts.get("CTA", 0) - annotated}** do not. Source contribution counts overlap. **Mapped groups means curated nominations linked to the current reference, not newly discovered genes or selected CTAs.** The CTA column reports the subset passing the current funnel.
+These published lists annotate the selection; they do not provide a gene-specific admission bypass. The union is **{audit.memberships.entity_id.nunique():,} mapped proteins / {len({g for ids in audit.memberships.gene_ids for g in ids}):,} loci**. **{annotated}** selected proteins have a listed-paper annotation; **{counts.get("CTA", 0) - annotated}** do not. Source contribution counts overlap. **Mapped proteins means curated nominations linked to the current reference, not newly discovered genes or selected CTAs.** The CTA column reports the subset passing the current funnel.
 
 {markdown(audit.sources[audit.sources.primary_source][["citation", "mapped_entities", "CTA", "Unsafe", "Neither", "Unassigned", "source_url"]])}
 
@@ -788,7 +817,7 @@ These published lists annotate the selection; they do not provide a gene-specifi
 
 EGFL6 now occurs in Sasaroli, Hirbo and Bai. The main source table and plots omit fully redundant single-digit sets: Bai, Boël and Bradley. Their memberships and citations remain in the downloadable provenance. Garg stays because it uniquely contributes SPAG9 in the current registry. A source is retired from the main view only if the retained sources cover its entire mapped set; the union is unchanged by this presentation choice.
 
-{markdown(audit.sources[~audit.sources.primary_source][["citation", "mapped_entities", "covered_by"]])}
+{markdown(audit.sources[~audit.sources.primary_source][["citation", "mapped_entities", "covered_by", "source_url"]])}
 
 Bai's 538 EGFL6-correlated genes are not a CTA list. Garg recognizes SPA17, SYCP1, NY-ESO-1 and SSX4 alongside SPAG9; Boël recognizes MAGE-A1/A3 alongside the unresolved BAGE label. BAGE's textual overlap with Seager remains outside mapped overlap counts. [Original targeted sets and overlaps](targeted-paper-overlaps.csv) · [Evidence roles](publication-context.csv) · [Every paper's extraction scope](paper-source-scope.csv) · [New source rows, aliases and unresolved names](publication-intake/mapped-source-rows.csv).
 
@@ -801,9 +830,9 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 
 [All pairwise overlaps](human-overlaps.csv.gz) · [Memberships and gene IDs](human-memberships.csv.gz)
 
-## Reproductive and developmental association before restriction
+## Reproductive evidence and its branches
 
-The association set comes from whole-reference **RNA measurements**. Reproductive association requires HPA ≥5 nTPM. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. These establish presence in a qualifying context. The separate adult-restriction requirement compares a qualifying signal with supported Vital/Protected/Manageable normal expression in the same native unit. The table below counts association independently of restriction. Later fetal and child/adult developmental atlases are not yet integrated.
+**Reproductive** includes adult reproductive, placental, extraembryonic, embryonic and fetal tissues. Branch labels describe the measured anatomical/stage evidence; “embryonic-only evidence” does not imply absence from unmeasured branches. [Branch definitions and measurements](../cta-unassigned-20261029/index.md#reproductive-is-the-umbrella). The association set comes from whole-reference **RNA measurements**. Reproductive association requires HPA ≥5 nTPM. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. These establish presence in a qualifying context. This presence check does not compare with normal expression; normal safety and profile diffuseness answer separate questions. Later fetal and child/adult developmental atlases are not yet integrated.
 
 {markdown(routes)}
 
@@ -825,11 +854,11 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 ![Human funnel](figures/human-funnel.png)
 
-[Independent layer effects](../cta-selection-20261028/independent-layer-effects.csv) distinguish overlapping evidence from order-dependent first removals. All counts use protein-equivalence groups; gene-locus counts are explicitly labelled.
+[Independent layer effects](../cta-selection-20261028/independent-layer-effects.csv) distinguish overlapping evidence from order-dependent first removals. All counts use proteins (identical selected reference sequences collapsed); gene-locus counts are explicitly labelled.
 
 ## Selected CTA expression
 
-These plots compare reproductive nTPM against the highest measured embryonic lineage mean TPM. **{embryo_measured_count} of {len(selected)} selected groups ({embryo_measured_count / len(selected):.0%}) have both coordinates; {embryo_missing_count} ({embryo_missing_count / len(selected):.0%}) lack an embryonic coordinate.** The plotted embryonic coordinate is the maximum across separate stage/lineage means from Tyser (gastrulation) and Petropoulos (days 3–7). It is not an average across studies. Petropoulos restores measured rows for PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B. Missing rows remain unavailable; neither atlas establishes expression throughout later fetal development.
+These plots compare adult/placental nTPM against the highest measured embryonic lineage mean TPM. **{embryo_measured_count} of {len(selected)} selected proteins ({embryo_measured_count / len(selected):.0%}) have both coordinates; {embryo_missing_count} ({embryo_missing_count / len(selected):.0%}) lack an embryonic coordinate.** The plotted embryonic coordinate is the maximum across separate stage/lineage means from Tyser (gastrulation) and Petropoulos (days 3–7). It is not an average across studies. Petropoulos restores measured rows for PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B. Missing rows remain unavailable; neither atlas establishes expression throughout later fetal development.
 
 The follow-up checked the study authors' **57,490-column raw-count matrix**, separately from the atlas's 25,330-row filtered matrix. The atlas download labelled “Raw counts” is also filtered and retains the same gene rows. Direct author observations are:
 
@@ -837,13 +866,13 @@ The follow-up checked the study authors' **57,490-column raw-count matrix**, sep
 
 PRAME, CT83, CTAG1A/B and XAGE1B have zero reported reads across these 1,195 cells; MAGE-A4 has 14 reads in one cell. TBXT has 31,149 reported reads in 226 cells. XAGE1A has no separate column, so complete XAGE1A/B group coverage is not established in this raw-count source; the separate Petropoulos TPM matrix does measure both loci. These are observed nondetections or sparse signals in one early embryo, **not absence throughout fetal development**. The exact per-gene reason for exclusion from the atlas remains unavailable; the authors' counts support low detection but come from a separate quantification. They are not converted to TPM or inserted into the selection funnel. [Author data](https://github.com/ScialdoneLab/human-gastrula-shiny), [count evidence and gene IDs](embryonic-comparator-coverage.csv), [source hashes](embryonic-coverage-receipt.json).
 
-Each figure now shows the {embryo_measured_count} measured groups above and the {embryo_missing_count} missing-embryonic groups in a separate categorical band below. All selected groups are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Overview labels highlight the widely studied antigens, including their gene-group names. Three companion panels label every selected group ≥5 on both axes, with the same axes and one third of the names per panel. The latter is a descriptive expression criterion; developmental admission also requires cell support.
+Each figure now shows the {embryo_measured_count} measured groups above and the {embryo_missing_count} missing-embryonic groups in a separate categorical band below. All selected proteins are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Overview labels highlight the widely studied antigens, including their gene-group names. Three companion panels label every selected protein ≥5 on both axes, with the same axes and one third of the names per panel. The latter is a descriptive expression criterion; developmental admission also requires cell support.
 
 ![Selected CTA reproductive versus embryonic expression](figures/selected-reproductive-embryonic.png)
 ![Selected CTA colored by healthy TPM](figures/selected-reproductive-embryonic-immune.png)
 ![Selected CTA colored by adult corneal CP10K](figures/selected-reproductive-embryonic-cornea.png)
 
-Color uses the maximum supported value across non-disposable healthy compartments within each unit: HPA bulk/brain/cell/immune nTPM, direct GTEx/Monaco/DICE TPM, or corneal CP10K. No maximum mixes units. Reproductive/developmental locations are excluded from the color scale. Missing embryonic measurements are not plotted at zero. [Every selected group's plot data](selected-expression-scatter.csv.gz).
+Color uses the maximum supported value across non-disposable healthy compartments within each unit: HPA bulk/brain/cell/immune nTPM, direct GTEx/Monaco/DICE TPM, or corneal CP10K. No maximum mixes units. Reproductive/developmental locations are excluded from the color scale. Missing embryonic measurements are not plotted at zero. [Every selected protein's plot data](selected-expression-scatter.csv.gz).
 
 ### Groups high in both expression compartments
 
@@ -931,9 +960,9 @@ audit.criteria
 audit.explain("PRAME")
 ```
 
-The same calls accept `dog` and `mouse`. `category` is CTA, Unsafe, Neither, or null. Null is an assessment status, not a fourth biological class. `assessment_status="screened"` means a category was assigned, not that safety was established or every source was complete. `incomplete_evidence` means an unassigned group lacks required coverage, a tumor/developmental measurement or evidence resolution; `outside_category_definitions` means those tracked checks pass but no category definition fits. `unassessed` denotes native nominations without an applied species policy. [Status definitions and per-group gaps](index.md#what-the-assessment-statuses-mean) are in the report. Coverage counts include an `Unassigned` count so the denominator reconciles.
+The same calls accept `dog` and `mouse`. `category` is CTA, Unsafe, Neither, or null. Null is an assessment status, not a fourth biological class. `assessment_status="screened"` means a category was assigned, not that safety was established or every source was complete. `incomplete_evidence` means an unassigned group lacks required coverage, a tumor/developmental measurement or evidence resolution; `outside_category_definitions` means those tracked checks pass but no category definition fits. `unassessed` denotes native nominations without an applied species policy. [Status definitions and per-protein gaps](index.md#what-the-assessment-statuses-mean) are in the report. Coverage counts include an `Unassigned` count so the denominator reconciles.
 
-Human entities are protein-equivalence groups with all member ENSG IDs and curated synonyms/history. Dog entities are native nominations with their actual identity status. Species-specific units, references and coverage remain explicit. `sources()` inventories measurement roles; `audit.sources` counts all published list annotations; `primary_source` selects the compact source view and `covered_by` records retained coverage of retired small sets. Every source table retains its citation/URL.
+Human entities are proteins (identical selected reference sequences collapsed) with all member ENSG IDs and curated synonyms/history. Dog entities are native nominations with their actual identity status. Species-specific units, references and coverage remain explicit. `sources()` inventories measurement roles; `audit.sources` counts all published list annotations; `primary_source` selects the compact source view and `covered_by` records retained coverage of retired small sets. Every source table retains its citation/URL.
 
 `audit.explain()` accepts an exact entity ID, gene ID or case-insensitive display label. RNA explanations contain the actual tissue, cell type, value, native unit, tier, single ceiling and IHC-match scope. HPA protein and imported categorical observations remain on their own scales. Unknown queries fail rather than fuzzy-matching a different gene.
 
@@ -958,6 +987,7 @@ All results are packaged and checksum-verified. Frozen release audits remain sep
             (RELEASE / "protein-group-classifications.csv.gz").read_bytes()
         ).hexdigest(),
         "papers": records(audit.sources[audit.sources.primary_source]),
+        "paper_titles": records(registry[["citation", "title", "doi", "source_url"]]),
         "paper_union_groups": audit.memberships.entity_id.nunique(),
         "paper_union_loci": len({g for ids in audit.memberships.gene_ids for g in ids}),
         "retired_papers": records(audit.sources[~audit.sources.primary_source]),

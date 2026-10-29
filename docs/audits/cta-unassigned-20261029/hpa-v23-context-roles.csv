@@ -1,0 +1,51 @@
+compartment,anatomy,weight,role
+amygdala,brain,0.004310344827586207,normal
+basal ganglia,brain,0.004310344827586207,normal
+cerebellum,brain,0.004310344827586207,normal
+cerebral cortex,brain,0.004310344827586207,normal
+choroid plexus,brain,0.004310344827586207,normal
+hippocampal formation,brain,0.004310344827586207,normal
+hypothalamus,brain,0.004310344827586207,normal
+midbrain,brain,0.004310344827586207,normal
+colon,colon,0.017241379310344827,normal
+rectum,colon,0.017241379310344827,normal
+small intestine,small intestine,0.017241379310344827,normal
+duodenum,small intestine,0.017241379310344827,normal
+adipose tissue,adipose tissue,0.034482758620689655,normal
+adrenal gland,adrenal gland,0.034482758620689655,normal
+appendix,appendix,0.034482758620689655,normal
+bone marrow,bone marrow,0.034482758620689655,normal
+esophagus,esophagus,0.034482758620689655,normal
+gallbladder,gallbladder,0.034482758620689655,normal
+heart muscle,heart muscle,0.034482758620689655,normal
+kidney,kidney,0.034482758620689655,normal
+liver,liver,0.034482758620689655,normal
+lung,lung,0.034482758620689655,normal
+lymph node,lymph node,0.034482758620689655,normal
+pancreas,pancreas,0.034482758620689655,normal
+parathyroid gland,parathyroid gland,0.034482758620689655,normal
+pituitary gland,pituitary gland,0.034482758620689655,normal
+retina,retina,0.034482758620689655,normal
+salivary gland,salivary gland,0.034482758620689655,normal
+skeletal muscle,skeletal muscle,0.034482758620689655,normal
+skin,skin,0.034482758620689655,normal
+smooth muscle,smooth muscle,0.034482758620689655,normal
+spinal cord,spinal cord,0.034482758620689655,normal
+spleen,spleen,0.034482758620689655,normal
+stomach,stomach,0.034482758620689655,normal
+thyroid gland,thyroid gland,0.034482758620689655,normal
+tongue,tongue,0.034482758620689655,normal
+tonsil,tonsil,0.034482758620689655,normal
+urinary bladder,urinary bladder,0.034482758620689655,normal
+testis,Testicular,0.0,reproductive
+epididymis,Other male,0.0,reproductive
+prostate,Other male,0.0,reproductive
+seminal vesicle,Other male,0.0,reproductive
+ovary,Ovarian,0.0,reproductive
+fallopian tube,Female tract,0.0,reproductive
+endometrium,Female tract,0.0,reproductive
+cervix,Female tract,0.0,reproductive
+vagina,Female tract,0.0,reproductive
+breast,Mammary,0.0,reproductive
+placenta,Placental,0.0,reproductive
+thymus,thymus,0.0,permissive

@@ -1,20 +1,21 @@
 {
   "summary": {
-    "policy": "oncoref.cta-selection.2026-10-29",
+    "policy": "oncoref.cta-selection.2026-10-29.3",
     "categories": {
       "Unsafe": 18031,
-      "Unassigned": 1266,
-      "CTA": 546,
+      "Unassigned": 1290,
+      "CTA": 522,
       "Neither": 20
     },
-    "selected_member_loci": 582,
+    "selected_member_loci": 558,
     "neither_profiles": {
-      "diffuse_manageable": 11,
-      "low_expression": 9
+      "diffuse_manageable": 10,
+      "low_expression": 9,
+      "diffuse_reproductive": 1
     },
     "order_independent": true
   },
-  "report_sha256": "8060d4401bc5c9ea129e42a896575deb8a570c2cd1a72759be8f3a4d7fc23029",
+  "report_sha256": "cbf16d3371962e3b73f6a6fb19c1dbe1c8d1a35458666d6e9fa46fd6a743e118",
   "papers": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -23,10 +24,10 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 1017,
       "mapped_gene_loci": 1066,
-      "CTA": 376,
+      "CTA": 372,
       "Unsafe": 401,
       "Neither": 1,
-      "Unassigned": 239,
+      "Unassigned": 243,
       "unique_entities": 275,
       "primary_source": true,
       "covered_by": [],
@@ -221,6 +222,140 @@
       "status": "annotation"
     }
   ],
+  "paper_titles": [
+    {
+      "citation": "Gong et al. (2021)",
+      "title": "The RNA landscape of the human placenta in health and disease",
+      "doi": "10.1038/s41467-021-22695-y",
+      "source_url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx"
+    },
+    {
+      "citation": "Gong et al. (2021)",
+      "title": "The RNA landscape of the human placenta in health and disease",
+      "doi": "10.1038/s41467-021-22695-y",
+      "source_url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx"
+    },
+    {
+      "citation": "Bradley et al. (2020)",
+      "title": "Vestigial-like 1 is a shared targetable cancer-placenta antigen expressed by pancreatic and basal-like breast cancers",
+      "doi": "10.1038/s41467-020-19141-w",
+      "source_url": "https://www.nature.com/articles/s41467-020-19141-w/figures/3"
+    },
+    {
+      "citation": "Wang et al. (2016)",
+      "title": "Systematic identification of genes with a cancer-testis expression pattern in 19 cancer types",
+      "doi": "10.1038/ncomms10499",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4737856/supplementaryFiles"
+    },
+    {
+      "citation": "Bruggeman et al. (2018)",
+      "title": "Massive expression of germ cell-specific genes is a hallmark of cancer and a potential target for novel treatment development",
+      "doi": "10.1038/s41388-018-0357-2",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6193945/supplementaryFiles"
+    },
+    {
+      "citation": "da Silva et al. (2017)",
+      "title": "Genome-wide identification of cancer/testis genes and their association with prognosis in a pan-cancer analysis",
+      "doi": "10.18632/oncotarget.21715",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5696236/supplementaryFiles"
+    },
+    {
+      "citation": "da Silva et al. (2017)",
+      "title": "Genome-wide identification of cancer/testis genes and their association with prognosis in a pan-cancer analysis",
+      "doi": "10.18632/oncotarget.21715",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5696236/supplementaryFiles"
+    },
+    {
+      "citation": "Jamin et al. (2021)",
+      "title": "Combined RNA/tissue profiling identifies novel Cancer/testis genes",
+      "doi": "10.1002/1878-0261.12900",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8564638/supplementaryFiles"
+    },
+    {
+      "citation": "Jamin et al. (2021)",
+      "title": "Combined RNA/tissue profiling identifies novel Cancer/testis genes",
+      "doi": "10.1002/1878-0261.12900",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8564638/supplementaryFiles"
+    },
+    {
+      "citation": "Chang et al. (2019)",
+      "title": "Comprehensive characterization of cancer-testis genes in testicular germ cell tumor",
+      "doi": "10.1002/cam4.2223",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6601584/supplementaryFiles"
+    },
+    {
+      "citation": "Carter et al. (2023)",
+      "title": "Identification of pan-cancer/testis genes and validation of therapeutic targeting in triple-negative breast cancer",
+      "doi": "10.1136/jitc-2023-007935",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10749072/supplementaryFiles"
+    },
+    {
+      "citation": "Seager et al. (2024)",
+      "title": "Cancer testis antigen burden (CTAB): a novel biomarker of tumor-associated antigens in lung cancer",
+      "doi": "10.1186/s12967-024-04918-0",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10851610/fullTextXML"
+    },
+    {
+      "citation": "Loriot et al. (2025)",
+      "title": "A survey of human cancer-germline genes: Linking X chromosome localization, DNA methylation and sex-biased expression in early embryos",
+      "doi": "10.1371/journal.pgen.1011734",
+      "source_url": "https://doi.org/10.1371/journal.pgen.1011734.s004"
+    },
+    {
+      "citation": "Loriot et al. (2025)",
+      "title": "A survey of human cancer-germline genes: Linking X chromosome localization, DNA methylation and sex-biased expression in early embryos",
+      "doi": "10.1371/journal.pgen.1011734",
+      "source_url": "https://doi.org/10.1371/journal.pgen.1011734.s005"
+    },
+    {
+      "citation": "Gong et al. (2021)",
+      "title": "The RNA landscape of the human placenta in health and disease",
+      "doi": "10.1038/s41467-021-22695-y",
+      "source_url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx"
+    },
+    {
+      "citation": "Gong et al. (2021)",
+      "title": "The RNA landscape of the human placenta in health and disease",
+      "doi": "10.1038/s41467-021-22695-y",
+      "source_url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-021-22695-y/MediaObjects/41467_2021_22695_MOESM2_ESM.xlsx"
+    },
+    {
+      "citation": "da Silva et al. (2017)",
+      "title": "Genome-wide identification of cancer/testis genes and their association with prognosis in a pan-cancer analysis",
+      "doi": "10.18632/oncotarget.21715",
+      "source_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5696236/supplementaryFiles"
+    },
+    {
+      "citation": "Bai et al. (2016)",
+      "title": "EGFL6 regulates the asymmetric division, maintenance and metastasis of ALDH+ ovarian cancer cells",
+      "doi": "10.1158/0008-5472.CAN-16-0225",
+      "source_url": "https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_xml/PMC5120866/unicode"
+    },
+    {
+      "citation": "Bo\u00ebl et al. (1995)",
+      "title": "BAGE: a new gene encoding an antigen recognized on human melanomas by cytolytic T lymphocytes.",
+      "doi": "10.1016/s1074-7613(95)80053-0",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/7895173/"
+    },
+    {
+      "citation": "Garg et al. (2007)",
+      "title": "Sperm-associated antigen 9, a novel cancer testis antigen, is a potential target for immunotherapy in epithelial ovarian cancer.",
+      "doi": "10.1158/1078-0432.CCR-06-2340",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/17332284/"
+    },
+    {
+      "citation": "Sasaroli et al. (2011)",
+      "title": "Novel surface targets and serum biomarkers from the ovarian cancer vasculature",
+      "doi": "10.4161/cbt.12.3.16260",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3230481/"
+    },
+    {
+      "citation": "Hirbo et al. (2015)",
+      "title": "Integrating Diverse Types of Genomic Data to Identify Genes that Underlie Adverse Pregnancy Phenotypes",
+      "doi": "10.1371/journal.pone.0144155",
+      "source_url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0144155.s002&type=supplementary"
+    }
+  ],
   "paper_union_groups": 2514,
   "paper_union_loci": 2570,
   "retired_papers": [
@@ -318,121 +453,121 @@
       "Unassigned": 4549
     },
     {
-      "layer": "Adult restriction",
-      "new_candidate_removals": 10212,
-      "new_Unsafe": 0,
-      "CTA_eligible_so_far": 5102,
-      "Unsafe": 0,
-      "Neither": 0,
-      "Unassigned": 14761
-    },
-    {
       "layer": "HPA normal protein",
-      "new_candidate_removals": 3041,
+      "new_candidate_removals": 10900,
       "new_Unsafe": 10094,
-      "CTA_eligible_so_far": 2061,
+      "CTA_eligible_so_far": 4414,
       "Unsafe": 10094,
       "Neither": 0,
-      "Unassigned": 7708
+      "Unassigned": 5355
     },
     {
       "layer": "Required RNA coverage",
-      "new_candidate_removals": 71,
+      "new_candidate_removals": 191,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 1990,
+      "CTA_eligible_so_far": 4223,
       "Unsafe": 10094,
       "Neither": 0,
-      "Unassigned": 7779
+      "Unassigned": 5546
+    },
+    {
+      "layer": "Reproductive concentration",
+      "new_candidate_removals": 211,
+      "new_Unsafe": 0,
+      "CTA_eligible_so_far": 4012,
+      "Unsafe": 10094,
+      "Neither": 0,
+      "Unassigned": 5757
     },
     {
       "layer": "Normal bulk",
-      "new_candidate_removals": 1284,
+      "new_candidate_removals": 3281,
       "new_Unsafe": 7406,
-      "CTA_eligible_so_far": 706,
+      "CTA_eligible_so_far": 731,
       "Unsafe": 17500,
       "Neither": 0,
-      "Unassigned": 1657
+      "Unassigned": 1632
     },
     {
       "layer": "HPA tissue clusters",
-      "new_candidate_removals": 130,
+      "new_candidate_removals": 179,
       "new_Unsafe": 414,
-      "CTA_eligible_so_far": 576,
+      "CTA_eligible_so_far": 552,
       "Unsafe": 17914,
       "Neither": 0,
-      "Unassigned": 1373
+      "Unassigned": 1397
     },
     {
       "layer": "HPA immune",
       "new_candidate_removals": 7,
       "new_Unsafe": 30,
-      "CTA_eligible_so_far": 569,
+      "CTA_eligible_so_far": 545,
       "Unsafe": 17944,
       "Neither": 0,
-      "Unassigned": 1350
+      "Unassigned": 1374
     },
     {
       "layer": "Monaco immune",
       "new_candidate_removals": 3,
       "new_Unsafe": 17,
-      "CTA_eligible_so_far": 566,
+      "CTA_eligible_so_far": 542,
       "Unsafe": 17961,
       "Neither": 0,
-      "Unassigned": 1336
+      "Unassigned": 1360
     },
     {
       "layer": "DICE immune",
       "new_candidate_removals": 15,
       "new_Unsafe": 55,
-      "CTA_eligible_so_far": 551,
+      "CTA_eligible_so_far": 527,
       "Unsafe": 18016,
       "Neither": 0,
-      "Unassigned": 1296
+      "Unassigned": 1320
     },
     {
       "layer": "Adult cornea",
       "new_candidate_removals": 3,
       "new_Unsafe": 12,
-      "CTA_eligible_so_far": 548,
+      "CTA_eligible_so_far": 524,
       "Unsafe": 18028,
       "Neither": 0,
-      "Unassigned": 1287
+      "Unassigned": 1311
     },
     {
       "layer": "Accepted normal-protein evidence",
       "new_candidate_removals": 1,
       "new_Unsafe": 2,
-      "CTA_eligible_so_far": 547,
+      "CTA_eligible_so_far": 523,
       "Unsafe": 18030,
       "Neither": 0,
-      "Unassigned": 1286
+      "Unassigned": 1310
     },
     {
       "layer": "Clinical safety exclusion",
       "new_candidate_removals": 1,
       "new_Unsafe": 1,
-      "CTA_eligible_so_far": 546,
+      "CTA_eligible_so_far": 522,
       "Unsafe": 18031,
       "Neither": 0,
-      "Unassigned": 1286
+      "Unassigned": 1310
     },
     {
       "layer": "External validated normal protein",
       "new_candidate_removals": 0,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 546,
+      "CTA_eligible_so_far": 522,
       "Unsafe": 18031,
       "Neither": 0,
-      "Unassigned": 1286
+      "Unassigned": 1310
     },
     {
       "layer": "Neither expression profiles",
       "new_candidate_removals": 0,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 546,
+      "CTA_eligible_so_far": 522,
       "Unsafe": 18031,
       "Neither": 20,
-      "Unassigned": 1266
+      "Unassigned": 1290
     }
   ],
   "comparators": [
@@ -556,30 +691,31 @@
   ],
   "routes": [
     {
-      "route": "Reproductive only",
+      "route": "Adult/placental evidence only",
       "entrants": 2322,
-      "CTA": 298
+      "CTA": 291
     },
     {
-      "route": "Developmental only",
+      "route": "Embryonic-only evidence",
       "entrants": 2095,
-      "CTA": 170
+      "CTA": 154
     },
     {
-      "route": "Both",
+      "route": "Both measured routes",
       "entrants": 10910,
-      "CTA": 78
+      "CTA": 77
     }
   ],
-  "annotated": 438,
-  "unannotated": 108,
+  "annotated": 434,
+  "unannotated": 88,
   "neither_profiles": {
-    "diffuse_manageable": 11,
-    "low_expression": 9
+    "diffuse_manageable": 10,
+    "low_expression": 9,
+    "diffuse_reproductive": 1
   },
   "assessment_statuses": {
-    "outside_category_definitions": 649,
-    "incomplete_evidence": 617
+    "incomplete_evidence": 694,
+    "outside_category_definitions": 596
   },
   "normal_gap_counts": [
     {
@@ -611,13 +747,19 @@
       "source": "Monaco immune cells via HPA v23",
       "groups": 304,
       "example_genes": "RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979"
+    },
+    {
+      "source_id": "gtex_core_panel",
+      "source": "Required GTEx v11 bulk panel (52 contexts)",
+      "groups": 413,
+      "example_genes": "BORCS8-MEF2B; ENSG00000100101; CORO7-PAM16; ENSG00000125695; ZNF670-ZNF695"
     }
   ],
   "evidence_gap_counts": {
-    "normal_panel_missing": 371,
+    "normal_panel_missing": 453,
     "tumor_measurement_missing": 34,
     "tumor_group_profile_incomplete": 17,
-    "embryonic_measurement_missing": 296,
+    "embryonic_measurement_missing": 297,
     "unresolved_evidence": 28
   }
 }
