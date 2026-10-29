@@ -116,6 +116,9 @@ def _by_name() -> dict[str, Dataset]:
 
 def dataset(name: str) -> Dataset:
     """The :class:`Dataset` for ``name``; raises ``KeyError`` if unknown."""
+    # Inventory names omit .csv for legacy bundle tables. Accept those stable
+    # names as well as the concrete artifact names used by the cache backend.
+    name = {p.removesuffix(".csv"): p for p in data_bundle.DOWNLOADABLE_PATHS}.get(name, name)
     wheel = {**data_manifest.WHEEL, **data_manifest.CANCERDATA_ORIGINATED}
     if name in wheel and name not in _by_name():
         return Dataset(name, "wheel", wheel[name][1])
@@ -363,7 +366,7 @@ def path(
             return _wheel_path(name)
         dest = packaged_data.local_path(_wheel_path(name).name, concrete)
         return dest if dest.is_file() else None
-    return data_bundle.find(name, **({"version": version} if version is not None else {}))
+    return data_bundle.find(d.name, **({"version": version} if version is not None else {}))
 
 
 def _per_sample_status_row(name: str, version: str | None = None) -> dict:
@@ -433,7 +436,7 @@ def ensure(
             else packaged_data.ensure(_wheel_path(name).name, concrete)
         )
     data_bundle.ensure_local(**({"version": version} if version is not None else {}))
-    resolved = data_bundle.find(name, **({"version": version} if version is not None else {}))
+    resolved = data_bundle.find(d.name, **({"version": version} if version is not None else {}))
     if resolved is None:
         raise FileNotFoundError(
             f"{name!r} missing from the expression bundle after fetch ({data_bundle.cache_dir()})"

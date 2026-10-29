@@ -221,3 +221,27 @@ def test_historical_curated_data_verify_wheel_without_executing_code(
 def test_bundle_override_named_like_older_release_does_not_collapse_versions(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_BUNDLED_DATA", str(tmp_path / "v5.23.25"))
     assert data_bundle.cache_dir() != data_bundle.cache_dir("5.23.25")
+
+
+def test_inventory_names_resolve_their_declared_versions():
+    for species in ("human", "dog", "mouse"):
+        for row in catalog.inventory(species=species):
+            if row.get("default_version") is not None:
+                assert (
+                    catalog.resolve_version(row["name"], species=species) == row["default_version"]
+                )
+
+
+def test_inventory_bundle_alias_preserves_explicit_version(monkeypatch, tmp_path):
+    calls = []
+
+    def find(name, *, version):
+        calls.append((name, version))
+        return tmp_path / version / name
+
+    monkeypatch.setattr(data_bundle, "find", find)
+    monkeypatch.setattr(data_bundle, "ensure_local", lambda **kwargs: None)
+    expected = tmp_path / "5.23.25" / "pan-cancer-expression.csv"
+    assert catalog.path("pan-cancer-expression", "5.23.25") == expected
+    assert catalog.ensure("pan-cancer-expression", "5.23.25") == expected
+    assert calls == [("pan-cancer-expression.csv", "5.23.25")] * 2
