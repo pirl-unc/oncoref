@@ -39,7 +39,9 @@ jobs:
           assert oncoref.canonical_gene_id("NOT_A_REAL_GENE") is None
           assert not oncoref.cancer_tmb_df().empty
           assert not oncoref.cancer_type_registry().empty
-          assert len(oncoref.cta_selection.results(category="CTA")) == 463
+          selected = oncoref.cta_selection.results(category="CTA")
+          assert 0 < len(selected) == oncoref.human.cta_selection_coverage()["counts"]["CTA"]
+          assert {"PRAME", "NY-ESO-1", "MAGEA4", "TBXT"} <= set(selected.label)
           assert oncoref.canine.cta_selection().assessment_status.eq("unassessed").all()
           assert oncoref.mouse.cta_selection().empty
 

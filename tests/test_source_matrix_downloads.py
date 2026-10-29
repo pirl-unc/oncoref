@@ -91,8 +91,10 @@ def _synchronized_first_check(destination, barrier):
 @pytest.fixture
 def destination(monkeypatch, tmp_path):
     path = tmp_path / "TEST.parquet"
-    monkeypatch.setattr(sm, "local_path", lambda code: path)
-    monkeypatch.setattr(sm, "release_url", lambda code: "https://example.invalid/TEST.parquet")
+    monkeypatch.setattr(sm, "local_path", lambda code, version=None: path)
+    monkeypatch.setattr(
+        sm, "release_url", lambda code, version=None: "https://example.invalid/TEST.parquet"
+    )
     return path
 
 
@@ -180,25 +182,39 @@ def test_simultaneous_processes_download_once(tmp_path, matrix_bytes, method):
 def test_different_destinations_can_download_concurrently(
     monkeypatch, tmp_path, matrix_bytes, separate_versions
 ):
-    def local_path(code):
+    def local_path(code, version=None):
         path = (
-            tmp_path / code / "TEST.parquet" if separate_versions else tmp_path / f"{code}.parquet"
+            tmp_path / version / f"{code}.parquet"
+            if version is not None
+            else tmp_path / f"{code}.parquet"
         )
         path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
     monkeypatch.setattr(sm, "local_path", local_path)
-    monkeypatch.setattr(sm, "release_url", lambda code: f"https://example.invalid/{code}")
+    monkeypatch.setattr(
+        sm, "release_url", lambda code, version=None: f"https://example.invalid/{version}/{code}"
+    )
     downloading = Barrier(2)
+    calls = []
 
     def urlopen(url):
+        calls.append(url)
         downloading.wait(timeout=20)
         return io.BytesIO(matrix_bytes)
 
     monkeypatch.setattr(sm.urllib.request, "urlopen", urlopen)
+    requests = (
+        [("TEST", "1.0.0"), ("TEST", "2.0.0")]
+        if separate_versions
+        else [("FIRST", None), ("SECOND", None)]
+    )
     with ThreadPoolExecutor(max_workers=2) as pool:
-        paths = list(pool.map(sm.fetch, ["FIRST", "SECOND"]))
-    assert paths == [local_path("FIRST"), local_path("SECOND")]
+        futures = [pool.submit(sm.fetch, code, version=version) for code, version in requests]
+        paths = [future.result(timeout=25) for future in futures]
+    assert paths == [local_path(code, version) for code, version in requests]
+    assert len(set(paths)) == 2
+    assert set(calls) == {sm.release_url(code, version) for code, version in requests}
     assert all(path.read_bytes() == matrix_bytes for path in paths)
 
 
