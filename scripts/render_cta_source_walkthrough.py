@@ -693,9 +693,15 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
                 "CTA": int((mask & facts.category.eq("CTA")).sum()),
             }
             for label, mask in [
-                ("Reproductive only", facts.reproductive_route & ~facts.developmental_route),
-                ("Developmental only", ~facts.reproductive_route & facts.developmental_route),
-                ("Both", facts.reproductive_route & facts.developmental_route),
+                (
+                    "Reproductive only",
+                    facts.reproductive_association & ~facts.developmental_association,
+                ),
+                (
+                    "Developmental only",
+                    ~facts.reproductive_association & facts.developmental_association,
+                ),
+                ("Both", facts.reproductive_association & facts.developmental_association),
             ]
         ]
     )
@@ -721,13 +727,21 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
     funnel = pd.read_csv(RELEASE / "filtering-funnel.csv")
     overview = f"""# CTA and oncofetal selection
 
-**{counts.get("CTA", 0):,} CTA groups ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Neither", 0):,} Neither and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 protein-equivalence groups. Policy: `{summary["policy"]}`. This is the current PR policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**{counts.get("CTA", 0):,} CTA groups ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Neither", 0):,} Neither and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 protein-equivalence groups. Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
 [Slides](slides/cta-evidence-walkthrough-expanded.pptx) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 ## Categories
 
-- **CTA:** reproductive or embryonic association, measured tumor expression, required coverage and acceptable normal expression all pass.
+**Safety, cancer expression, adult restriction and reproductive/developmental
+association are separate requirements. Only safety evidence can establish Unsafe.**
+Cancer needs one qualifying measured sample, without a tumor-versus-normal ratio.
+Restriction compares a qualifying association signal against supported adult
+normal expression in its own native units. [Definitions and logic](../../cta-evidence-axes.md).
+
+![Four separate CTA requirements](../../images/cta-evidence-axes.png)
+
+- **CTA:** association, adult restriction, one qualifying cancer sample, required coverage and acceptable normal expression all pass.
 - **Unsafe:** above the single RNA ceiling in Vital/Protected, accepted non-Low protein in those compartments, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
 - **Neither:** an affirmative low-expression profile or diffuse-Manageable profile, with complete required RNA coverage and no unresolved evidence. Failed candidate gates alone do not establish Neither.
 - **Unassigned:** missing/uncertain evidence or an observed profile that fits none of those definitions. In the API, category is null and assessment_status explains why.

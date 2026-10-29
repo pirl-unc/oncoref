@@ -27,11 +27,9 @@ from oncoref.cta_sources import (
 from oncoref.load_dataset import get_data
 
 
-def test_shipped_candidate_import_is_idempotent():
+def test_shipped_candidate_import_is_idempotent(legacy_cta_membership):
     original = get_data("cancer-testis-antigens")
-    imported = add_gene_evidence_tags(
-        add_publication_candidates(original, publication_membership())
-    )
+    imported = add_gene_evidence_tags(add_publication_candidates(original, legacy_cta_membership))
     pd.testing.assert_frame_equal(original, imported)
 
 
@@ -72,14 +70,16 @@ def test_source_id_mapping_does_not_fall_back_to_potentially_wrong_symbol():
     assert not resolved.iloc[0].protein_candidate_eligible
 
 
-def test_import_is_idempotent_and_preserves_existing_evidence():
+def test_import_is_idempotent_and_preserves_existing_evidence(legacy_cta_membership):
     table = get_data("cancer-testis-antigens")
-    updated = add_publication_candidates(table, publication_membership())
+    updated = add_publication_candidates(table, legacy_cta_membership)
     pd.testing.assert_frame_equal(table, updated)
 
 
 @pytest.mark.parametrize("add_new_rows", [False, True])
-def test_legacy_core_import_is_complete_idempotent_and_auditable(monkeypatch, add_new_rows):
+def test_legacy_core_import_is_complete_idempotent_and_auditable(
+    monkeypatch, add_new_rows, legacy_cta_membership
+):
     from oncoref import cta_regen
 
     shipped = get_data("cancer-testis-antigens")
@@ -105,7 +105,7 @@ def test_legacy_core_import_is_complete_idempotent_and_auditable(monkeypatch, ad
         )
 
     monkeypatch.setattr(cta_regen, "regenerate_cta_columns", regenerate_new_rows)
-    membership = publication_membership()
+    membership = legacy_cta_membership
     migrated = add_publication_candidates(legacy, membership)
     assert len(migrated) == len(shipped)
     assert list(migrated.columns) == list(shipped.columns)
@@ -220,16 +220,16 @@ def test_distinct_source_symbols_cannot_collapse_within_one_source():
     assert len(resolve_membership(rows)) == 2  # Cross-source agreement is legitimate.
 
 
-def test_versioned_candidate_is_annotated_without_duplicate_addition():
+def test_versioned_candidate_is_annotated_without_duplicate_addition(legacy_cta_membership):
     table = get_data("cancer-testis-antigens")
     table["Ensembl_Gene_ID"] += ".1"
-    updated = add_publication_candidates(table, publication_membership())
+    updated = add_publication_candidates(table, legacy_cta_membership)
     pd.testing.assert_frame_equal(table, updated)
     duplicate = pd.concat(
         [table, table.iloc[[0]].assign(Ensembl_Gene_ID=table.iloc[0].Ensembl_Gene_ID.split(".")[0])]
     )
     with pytest.raises(ValueError, match="Duplicate candidate Ensembl IDs"):
-        add_publication_candidates(duplicate, publication_membership())
+        add_publication_candidates(duplicate, legacy_cta_membership)
 
 
 def test_intake_uses_supplied_table_and_normalizes_versions():
@@ -248,12 +248,12 @@ def test_new_candidates_without_hpa_fail_closed(monkeypatch):
     from oncoref import hpa
 
     monkeypatch.setattr(
-        hpa, "hpa_rna_consensus", lambda: pd.DataFrame(columns=["Gene", "Tissue", "nTPM"])
+        hpa, "hpa_rna_consensus", lambda version: pd.DataFrame(columns=["Gene", "Tissue", "nTPM"])
     )
     monkeypatch.setattr(
         hpa,
         "hpa_normal_tissue",
-        lambda: pd.DataFrame(columns=["Gene", "Tissue", "Level", "Reliability"]),
+        lambda version: pd.DataFrame(columns=["Gene", "Tissue", "Level", "Reliability"]),
     )
     refs = publication_membership()
     refs = refs[refs.source_symbol.isin(["PAGE4", "DSCR4", "TXNRD3NB"])]

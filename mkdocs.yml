@@ -13,6 +13,7 @@ nav:
       - Source and decision audit API: audits/cta-source-walkthrough-20261028/api.md
       - Current selection and release report: audits/cta-release-1.21.0/index.md
       - Selection API across species: cta-selection.md
+      - Safety and CTA identity: cta-evidence-axes.md
       - Reviewed 463-group proposal: audits/cta-compartment-policy-20261027/index.md
       - Prior 343-group harmonized funnel: audits/cta-harmonized-20261027/index.md
       - PRAME, CTAG2 and TBXT source evidence: audits/cta-target-evidence-20261027/index.md

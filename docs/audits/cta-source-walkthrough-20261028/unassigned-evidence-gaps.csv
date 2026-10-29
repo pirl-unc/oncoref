@@ -837,6 +837,7 @@ PEG:5830f6896cbb01335e32,ENSG00000259164,"[""ENSG00000259164""]",incomplete_evid
 PEG:8346f28de14f003037d1,BUB1B-PAK6,"[""ENSG00000259288""]",incomplete_evidence,True,False,False,False,False
 PEG:a49d07da86dc6b18c997,ENSG00000259316,"[""ENSG00000259316""]",incomplete_evidence,True,False,False,False,False
 PEG:6dc708d0d8f81565d753,ENSG00000259371,"[""ENSG00000259371""]",outside_category_definitions,False,False,False,False,False
+PEG:30e9edbb196d82deb463,TGIF2-RAB5IF,"[""ENSG00000259399""]",outside_category_definitions,False,False,False,False,False
 PEG:c5fdf240029cfd40a6ba,ENSG00000259522,"[""ENSG00000259522""]",incomplete_evidence,True,False,False,False,False
 PEG:8408b226258a6741175a,ENSG00000259753,"[""ENSG00000259753""]",incomplete_evidence,True,False,False,False,False
 PEG:864a7d5669b311f2fa71,ENSG00000259900,"[""ENSG00000259900""]",incomplete_evidence,True,False,False,False,False
@@ -888,6 +889,7 @@ PEG:6123535bc77a3bbad885,ENSG00000267157,"[""ENSG00000267157""]",outside_categor
 PEG:0e0c7fc3938417ea6be4,ENSG00000267168,"[""ENSG00000267168""]",outside_category_definitions,False,False,False,False,False
 PEG:0d13e45473ed0f681c28,ENSG00000267173,"[""ENSG00000267173""]",outside_category_definitions,False,False,False,False,False
 PEG:b66d77b7b76f44d21dec,ENSG00000267179,"[""ENSG00000267179""]",incomplete_evidence,False,False,False,False,True
+PEG:4ec273108e0908d9e2f3,ATF7-NPFF,"[""ENSG00000267281""]",outside_category_definitions,False,False,False,False,False
 PEG:c8299579611a57fb1f6a,ENSG00000267303,"[""ENSG00000267303""]",incomplete_evidence,True,False,False,False,False
 PEG:f69b47d6699c94ff9e82,ENSG00000267314,"[""ENSG00000267314""]",incomplete_evidence,True,False,False,False,False
 PEG:01b6790ced9efd75759d,ENSG00000267385,"[""ENSG00000267385""]",incomplete_evidence,True,False,False,False,False

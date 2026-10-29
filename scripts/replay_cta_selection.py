@@ -738,10 +738,6 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         summary[summary.assay.eq("Normal bulk")].set_index("gene_id").healthy_maximum_ntpm
     )
     facts["adult_bulk_max_ntpm"] = facts.representative_gene_id.map(bulk_maximum)
-    facts["reproductive_route"] = facts.reproductive_ntpm.ge(5) & facts.reproductive_ntpm.gt(
-        facts.adult_bulk_max_ntpm
-    )
-    facts["positive_context"] = facts.reproductive_route | facts.developmental_route
     for col in [
         "normal_maximum_floor_ratio",
         "healthy_maximum_ntpm",
@@ -749,14 +745,16 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         "healthy_maximum_cp10k",
     ]:
         facts[col] = facts.representative_gene_id.map(summary.groupby("gene_id")[col].max())
+    facts = policy.association_and_restriction(facts)
     empty = pd.Series(False, index=facts.index)
     layers = [
         EvidenceLayer("Reproductive / embryonic association", ~facts.positive_context, empty),
         EvidenceLayer("Tumor sample ≥2 TPM/pTPM", ~facts.tumor_union_ge2, empty),
+        EvidenceLayer("Adult restriction", ~facts.adult_restriction, empty),
         EvidenceLayer("Required RNA coverage", ~facts.required_coverage, empty),
     ]
     proteins = protein_layers(facts, output)
-    layers.insert(2, proteins[0])
+    layers.insert(3, proteins[0])
     for assay in ASSAYS:
         part = summary[summary.assay.eq(assay)].set_index("gene_id")
         masks = [

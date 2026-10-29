@@ -1,20 +1,20 @@
 {
   "summary": {
-    "policy": "oncoref.cta-selection.2026-10-28",
+    "policy": "oncoref.cta-selection.2026-10-29",
     "categories": {
       "Unsafe": 18031,
-      "Unassigned": 1264,
-      "CTA": 548,
+      "Unassigned": 1266,
+      "CTA": 546,
       "Neither": 20
     },
-    "selected_member_loci": 584,
+    "selected_member_loci": 582,
     "neither_profiles": {
       "diffuse_manageable": 11,
       "low_expression": 9
     },
     "order_independent": true
   },
-  "report_sha256": "7ef01de6115fb0cbe7220f8ebeea9ed457214731b637b2672399f87376e9f3a0",
+  "report_sha256": "8060d4401bc5c9ea129e42a896575deb8a570c2cd1a72759be8f3a4d7fc23029",
   "papers": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -301,129 +301,138 @@
   "funnel": [
     {
       "layer": "Reproductive / embryonic association",
-      "new_candidate_removals": 6099,
+      "new_candidate_removals": 4536,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 13764,
+      "CTA_eligible_so_far": 15327,
       "Unsafe": 0,
       "Neither": 0,
-      "Unassigned": 6099
+      "Unassigned": 4536
     },
     {
       "layer": "Tumor sample \u22652 TPM/pTPM",
-      "new_candidate_removals": 10,
+      "new_candidate_removals": 13,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 13754,
+      "CTA_eligible_so_far": 15314,
       "Unsafe": 0,
       "Neither": 0,
-      "Unassigned": 6109
+      "Unassigned": 4549
+    },
+    {
+      "layer": "Adult restriction",
+      "new_candidate_removals": 10212,
+      "new_Unsafe": 0,
+      "CTA_eligible_so_far": 5102,
+      "Unsafe": 0,
+      "Neither": 0,
+      "Unassigned": 14761
     },
     {
       "layer": "HPA normal protein",
-      "new_candidate_removals": 9838,
+      "new_candidate_removals": 3041,
       "new_Unsafe": 10094,
-      "CTA_eligible_so_far": 3916,
+      "CTA_eligible_so_far": 2061,
       "Unsafe": 10094,
       "Neither": 0,
-      "Unassigned": 5853
+      "Unassigned": 7708
     },
     {
       "layer": "Required RNA coverage",
-      "new_candidate_removals": 96,
+      "new_candidate_removals": 71,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 3820,
+      "CTA_eligible_so_far": 1990,
       "Unsafe": 10094,
       "Neither": 0,
-      "Unassigned": 5949
+      "Unassigned": 7779
     },
     {
       "layer": "Normal bulk",
-      "new_candidate_removals": 3054,
+      "new_candidate_removals": 1284,
       "new_Unsafe": 7406,
-      "CTA_eligible_so_far": 766,
+      "CTA_eligible_so_far": 706,
       "Unsafe": 17500,
       "Neither": 0,
-      "Unassigned": 1597
+      "Unassigned": 1657
     },
     {
       "layer": "HPA tissue clusters",
-      "new_candidate_removals": 185,
+      "new_candidate_removals": 130,
       "new_Unsafe": 414,
-      "CTA_eligible_so_far": 581,
+      "CTA_eligible_so_far": 576,
       "Unsafe": 17914,
       "Neither": 0,
-      "Unassigned": 1368
+      "Unassigned": 1373
     },
     {
       "layer": "HPA immune",
-      "new_candidate_removals": 9,
+      "new_candidate_removals": 7,
       "new_Unsafe": 30,
-      "CTA_eligible_so_far": 572,
+      "CTA_eligible_so_far": 569,
       "Unsafe": 17944,
       "Neither": 0,
-      "Unassigned": 1347
+      "Unassigned": 1350
     },
     {
       "layer": "Monaco immune",
       "new_candidate_removals": 3,
       "new_Unsafe": 17,
-      "CTA_eligible_so_far": 569,
+      "CTA_eligible_so_far": 566,
       "Unsafe": 17961,
       "Neither": 0,
-      "Unassigned": 1333
+      "Unassigned": 1336
     },
     {
       "layer": "DICE immune",
-      "new_candidate_removals": 16,
+      "new_candidate_removals": 15,
       "new_Unsafe": 55,
-      "CTA_eligible_so_far": 553,
+      "CTA_eligible_so_far": 551,
       "Unsafe": 18016,
       "Neither": 0,
-      "Unassigned": 1294
+      "Unassigned": 1296
     },
     {
       "layer": "Adult cornea",
       "new_candidate_removals": 3,
       "new_Unsafe": 12,
-      "CTA_eligible_so_far": 550,
+      "CTA_eligible_so_far": 548,
       "Unsafe": 18028,
       "Neither": 0,
-      "Unassigned": 1285
+      "Unassigned": 1287
     },
     {
       "layer": "Accepted normal-protein evidence",
       "new_candidate_removals": 1,
       "new_Unsafe": 2,
-      "CTA_eligible_so_far": 549,
+      "CTA_eligible_so_far": 547,
       "Unsafe": 18030,
       "Neither": 0,
-      "Unassigned": 1284
+      "Unassigned": 1286
     },
     {
       "layer": "Clinical safety exclusion",
       "new_candidate_removals": 1,
       "new_Unsafe": 1,
-      "CTA_eligible_so_far": 548,
+      "CTA_eligible_so_far": 546,
       "Unsafe": 18031,
       "Neither": 0,
-      "Unassigned": 1284
+      "Unassigned": 1286
     },
     {
       "layer": "External validated normal protein",
       "new_candidate_removals": 0,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 548,
+      "CTA_eligible_so_far": 546,
       "Unsafe": 18031,
       "Neither": 0,
-      "Unassigned": 1284
+      "Unassigned": 1286
     },
     {
       "layer": "Neither expression profiles",
       "new_candidate_removals": 0,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 548,
+      "CTA_eligible_so_far": 546,
       "Unsafe": 18031,
       "Neither": 20,
-      "Unassigned": 1264
+      "Unassigned": 1266
     }
   ],
   "comparators": [
@@ -506,7 +515,7 @@
       "reproductive_ntpm": 2.7,
       "developmental_all_lineage_max_tpm": 102.0879428067,
       "adult_bulk_max_ntpm": 0.5,
-      "exclusion_reasons": "Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use."
+      "exclusion_reasons": "Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion. | Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use."
     },
     {
       "protein_group_label": "MAGEA3",
@@ -515,7 +524,7 @@
       "reproductive_ntpm": 7.8,
       "developmental_all_lineage_max_tpm": 71.751765022,
       "adult_bulk_max_ntpm": 0.2,
-      "exclusion_reasons": "colon: undifferentiated cells; 53.1 nTPM (ceiling 16)"
+      "exclusion_reasons": "Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion. | colon: undifferentiated cells; 53.1 nTPM (ceiling 16)"
     },
     {
       "protein_group_label": "NY-ESO-1",
@@ -548,28 +557,28 @@
   "routes": [
     {
       "route": "Reproductive only",
-      "entrants": 759,
+      "entrants": 2322,
       "CTA": 298
     },
     {
       "route": "Developmental only",
-      "entrants": 11717,
-      "CTA": 172
+      "entrants": 2095,
+      "CTA": 170
     },
     {
       "route": "Both",
-      "entrants": 1288,
+      "entrants": 10910,
       "CTA": 78
     }
   ],
   "annotated": 438,
-  "unannotated": 110,
+  "unannotated": 108,
   "neither_profiles": {
     "diffuse_manageable": 11,
     "low_expression": 9
   },
   "assessment_statuses": {
-    "outside_category_definitions": 647,
+    "outside_category_definitions": 649,
     "incomplete_evidence": 617
   },
   "normal_gap_counts": [

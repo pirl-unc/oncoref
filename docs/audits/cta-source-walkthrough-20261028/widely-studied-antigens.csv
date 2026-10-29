@@ -7,8 +7,8 @@ TBXT,CTA,screened,0.2,245.08799066813725,2.5,
 PRAME,CTA,screened,102.2,22.885319739832575,3.6,
 MAGEA1,CTA,screened,4.4,6.315480240244203,0.0,
 CT83,CTA,screened,62.2,4.286272805921179,2.6,
-MAGEA12,Unsafe,screened,2.7,102.08794280669233,0.5,Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use.
-MAGEA3,Unassigned,outside_category_definitions,7.8,71.75176502197849,0.2,colon: undifferentiated cells; 53.1 nTPM (ceiling 16)
+MAGEA12,Unsafe,screened,2.7,102.08794280669233,0.5,"Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion. | Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use."
+MAGEA3,Unassigned,outside_category_definitions,7.8,71.75176502197849,0.2,"Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion. | colon: undifferentiated cells; 53.1 nTPM (ceiling 16)"
 NY-ESO-1,CTA,screened,15.5,0.9472640193772602,0.5,
 SSX2/B,CTA,screened,32.7,80.24632386454805,2.8000000000000003,
 XAGE1A/B,CTA,screened,98.8,2.236774839382269,1.5,

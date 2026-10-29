@@ -7,6 +7,13 @@ nonhuman nominations remain unassigned/unassessed until their reference identiti
 measurement scales and required panels support a species-specific policy.
 Human expression, antibody grades and clinical outcomes never transfer through
 orthology. The historical nomination/evidence APIs remain separately accessible.
+
+Safety and CTA identity are separate assessments. Only normal-tissue or applicable
+clinical safety evidence supplies Unsafe; failing cancer/reproductive admission
+does not. Cancer presence requires one qualifying measured tumor sample. Adult
+restriction compares qualifying reproductive/developmental RNA with supported
+normal RNA in its own native units. This is distinct from the absolute safety
+ceilings and does not impose a tumor-versus-normal expression ratio.
 """
 
 from __future__ import annotations
@@ -131,6 +138,11 @@ def results(*, species: SpeciesLike = "human", category: Category | None = None)
     ``entity_kind`` prevents comparing human protein groups with unresolved
     nonhuman assay/family nominations. Tuple-valued identity fields retain every
     supported alternative. No download, orthology inference or zero filling occurs.
+
+    Cancer presence, adult restriction and reproductive/developmental association
+    are separate from safety. All must pass for CTA admission. Adult restriction
+    compares a qualifying association signal with same-unit adult normal RNA;
+    the cancer gate needs one qualifying sample and no tumor-versus-normal ratio.
     """
     selected = resolve_species(species)
     if category is not None and category not in CATEGORIES:

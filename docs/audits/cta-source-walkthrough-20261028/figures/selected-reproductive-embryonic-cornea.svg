@@ -1335,9 +1335,6 @@ z
      <use xlink:href="#C0_0_a87c227e06" x="485.94889" y="360.808085" style="fill: #a8b1b8; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
     </g>
     <g clip-path="url(#p16f26e5486)">
-     <use xlink:href="#C0_0_a87c227e06" x="456.224472" y="295.336625" style="fill: #a8b1b8; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
-    </g>
-    <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="580.524083" y="338.842795" style="fill: #a8b1b8; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
     </g>
     <g clip-path="url(#p16f26e5486)">
@@ -1360,9 +1357,6 @@ z
     </g>
     <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="258.31229" y="281.374196" style="fill: #a8b1b8; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
-    </g>
-    <g clip-path="url(#p16f26e5486)">
-     <use xlink:href="#C0_0_a87c227e06" x="298.645813" y="297.363935" style="fill: #a8b1b8; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
     </g>
     <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="322.239411" y="289.310635" style="fill: #a8b1b8; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
@@ -2445,10 +2439,10 @@ z
    <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="51.84" y="48.356719" transform="rotate(-0 51.84 48.356719)">Selected CTA: reproductive versus embryonic RNA</text>
   </g>
   <g id="text_35">
-   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="51.84" y="80.358281" transform="rotate(-0 51.84 80.358281)">All 548 selected groups · color: non-disposable healthy maximum (CP10K); gray: color unavailable</text>
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="51.84" y="80.358281" transform="rotate(-0 51.84 80.358281)">All 546 selected groups · color: non-disposable healthy maximum (CP10K); gray: color unavailable</text>
   </g>
   <g id="text_36">
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 677.33209)">524 measured on both axes; 24 shown in the missing-embryonic band. Band height is categorical, not expression.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 677.33209)">522 measured on both axes; 24 shown in the missing-embryonic band. Band height is categorical, not expression.</text>
    <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 688.134551)">Embryonic TPM combines source-separated preimplantation and gastrulation contexts. Missing rows are not zero.</text>
    <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 698.937012)">Labels: widely studied antigens. Companion panels label every selected group ≥5 on both axes. No mixed-unit color maximum.</text>
   </g>

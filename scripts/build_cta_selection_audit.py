@@ -91,12 +91,26 @@ TABLE_COLUMNS = {
 }
 HUMAN_RULES = {
     "Reproductive or developmental expression": (
-        "Reproductive ≥5 nTPM and > adult bulk maximum OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Sources are assessed separately.",
+        "Reproductive ≥5 nTPM OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. This tests association; adult restriction is separate.",
         ["hpa_rna_consensus", "tyser_E-MTAB-9388", "petropoulos_E-MTAB-3929"],
     ),
     "Tumor sample ≥2 TPM/pTPM": (
         "At least one measured compatible tumor sample ≥2 in native TPM or HPA pTPM; do not add maxima from different samples.",
         ["oncoref_tumor_union", "hpa_cancer"],
+    ),
+    "Adult restriction": (
+        "A qualifying reproductive signal must exceed supported adult normal nTPM, OR a qualifying developmental signal must exceed supported adult normal TPM. Compare within native units across Vital/Protected/Manageable; Reproductive/Disposable are excluded. CP10K remains safety-only. Missing comparators do not pass; no tumor-versus-normal gate.",
+        [
+            "hpa_rna_consensus",
+            "hpa_brain",
+            "hpa_single_cell_tissue",
+            "hpa_immune_cell",
+            "gtex_tissue_rna",
+            "hpa_immune_monaco",
+            "dice",
+            "tyser_E-MTAB-9388",
+            "petropoulos_E-MTAB-3929",
+        ],
     ),
     "HPA normal protein": (
         "Reliable non-Low positives in Vital/Protected supply Unsafe evidence; Manageable positives block CTA only; uncertain evidence remains unresolved. Low is flagged.",
@@ -419,6 +433,57 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             "gene_ids": json.loads(r["member_gene_ids"]),
             "category": None if pd.isna(r["category"]) else r["category"],
         }
+        safety_layers = [
+            c
+            for c in hold_columns
+            if c[5:]
+            not in {
+                "Reproductive / embryonic association",
+                "Tumor sample ≥2 TPM/pTPM",
+                "Adult restriction",
+                "Required RNA coverage",
+            }
+        ]
+        safety_status = (
+            "unsafe"
+            if r["vital_protected_exclusion"]
+            else "hold"
+            if any(r[c] for c in safety_layers)
+            else "unknown"
+            if not r["required_coverage"]
+            else "pass"
+        )
+        for axis, status, reason in [
+            (
+                "Safety",
+                safety_status,
+                "Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion.",
+            ),
+            (
+                "Cancer expression",
+                "pass" if r["tumor_union_ge2"] else "hold" if r["tumor_measured"] else "unknown",
+                f"One sample ≥2: OncoRef {display(r['oncoref_maximum_tpm'])} TPM; HPA {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No tumor-versus-normal ratio.",
+            ),
+            (
+                "Adult restriction",
+                "pass" if r["adult_restriction"] else "hold",
+                f"Qualifying reproductive {display(r['reproductive_ntpm'])} vs supported adult normal {display(r['healthy_maximum_ntpm'])} nTPM; qualifying developmental {display(r['developmental_mean_tpm'])} vs supported adult normal {display(r['healthy_maximum_tpm'])} TPM. At least one same-unit route must be strictly higher.",
+            ),
+            (
+                "Reproductive/developmental association",
+                "pass" if r["positive_context"] else "hold",
+                f"Reproductive {display(r['reproductive_ntpm'])} nTPM or supported developmental {display(r['developmental_mean_tpm'])} TPM must reach 5; developmental cell-support criteria apply.",
+            ),
+        ]:
+            row = dict.fromkeys(TABLE_COLUMNS["explanations"])
+            row.update(
+                base,
+                layer="Assessment: " + axis,
+                decision=status,
+                reason=reason,
+                source_url=BASE_URL,
+            )
+            rows.append(row)
         for column in hold_columns:
             layer = column[5:]
             hold, unsafe = r[column], r["unsafe:" + layer]
@@ -485,7 +550,11 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 )
             elif layer == "Reproductive / embryonic association":
                 row["reason"] = (
-                    f"Reproductive {display(r['reproductive_ntpm'])} nTPM versus adult bulk {display(r['adult_bulk_max_ntpm'])} nTPM; supported embryonic mean {display(r['developmental_mean_tpm'])} TPM. Neither association route passes."
+                    f"Reproductive {display(r['reproductive_ntpm'])} nTPM; supported developmental mean {display(r['developmental_mean_tpm'])} TPM. Neither reaches the 5-unit association floor in its own units."
+                )
+            elif layer == "Adult restriction":
+                row["reason"] = (
+                    f"Reproductive {display(r['reproductive_ntpm'])} versus supported adult normal {display(r['healthy_maximum_ntpm'])} nTPM; developmental {display(r['developmental_mean_tpm'])} versus supported adult normal {display(r['healthy_maximum_tpm'])} TPM. No qualifying association route is strictly above its same-unit comparator. This is not Unsafe evidence."
                 )
             elif layer == "Tumor sample ≥2 TPM/pTPM":
                 row["reason"] = (

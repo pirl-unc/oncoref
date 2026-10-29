@@ -263,10 +263,12 @@ def test_multiple_tables_of_one_doi_do_not_count_as_multiple_papers():
     assert result["Cancer-germline papers"].iloc[0] == 1
 
 
-def test_published_reprocessing_and_benchmark_contract():
+def test_published_reprocessing_and_benchmark_contract(historical_cta_input):
     manifest = json.loads((AUDIT / "run-manifest.json").read_text())
     for name, digest in manifest["inputs"].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+        assert (
+            hashlib.sha256(historical_cta_input(name, digest).read_bytes()).hexdigest() == digest
+        ), name
     for name, digest in manifest["outputs"].items():
         assert hashlib.sha256((AUDIT / name).read_bytes()).hexdigest() == digest, name
     shipped = policy.results()

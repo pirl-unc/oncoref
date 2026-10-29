@@ -17,6 +17,7 @@ from cta_report_common import sha256, write_csv  # noqa: E402
 from oncoref import canine, human  # noqa: E402
 from oncoref.cta_selection import RESULT_COLUMNS  # noqa: E402
 from oncoref.expression_registry import expression_sources  # noqa: E402
+from oncoref.version import __version__  # noqa: E402
 
 AUDIT = ROOT / "docs/audits/cta-release-1.21.0"
 DATA = ROOT / "oncoref/data"
@@ -397,7 +398,7 @@ def build(audit: Path = AUDIT) -> None:
     metadata = {
         "schema": "oncoref.cta-selection",
         "schema_version": 1,
-        "release": "1.21.0" if audit == AUDIT else None,
+        "release": "1.21.0" if audit == AUDIT else __version__,
         "data_sha256": {
             name: sha256(DATA / name)
             for name in ["cta-selection-human.csv.gz", "cta-selection-sources.csv"]
@@ -411,7 +412,7 @@ def build(audit: Path = AUDIT) -> None:
                 "reference": reference,
                 "limitations": [
                     "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
-                    "Only one embryonic atlas embryo; later fetal atlases are not integrated",
+                    "Developmental coverage is stage-limited; gastrulation and preimplantation measurements do not cover later fetal/postnatal development",
                     "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
                     "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
                     "Representative-protein equivalence is not exhaustive isoform identity",

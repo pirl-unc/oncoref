@@ -1,0 +1,8 @@
+{
+  "baseline_commit": "ac2507c662353ebd35cc3a3675f70e955e5503fc",
+  "baseline_file": "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
+  "baseline_sha256": "7ef01de6115fb0cbe7220f8ebeea9ed457214731b637b2672399f87376e9f3a0",
+  "current_policy": "oncoref.cta-selection.2026-10-29",
+  "comparison": "Complete categories matched by protein_equivalence_group_id; only two CTA-to-unassigned changes; all safety exclusion flags identical.",
+  "changes_sha256": "4da6472accbc9169ddee184b87b25e74c2401f019217bb975085e83587852d02"
+}

@@ -27,8 +27,15 @@ def test_minimum_counts_papers_once_and_has_indispensable_witnesses():
     cover = source_cover()
     assert len(paper_membership().source_tag.unique()) > len(cover["papers_considered"])
     assert cover["minimum_papers"] == 10
-    assert len(cover["all_minimum_covers"]) == 1
-    assert all(cover["indispensable_witness_gene_ids"].values())
+    assert cover["all_minimum_covers"]
+    members = paper_membership()
+    sets = members[members.protein_candidate_eligible].groupby("doi").Ensembl_Gene_ID.agg(set)
+    target = cta.cta_gene_ids()
+    for solution in cover["all_minimum_covers"]:
+        assert len(solution) == cover["minimum_papers"]
+        assert target <= set().union(*(sets[doi] for doi in solution))
+        for omitted in solution:
+            assert not target <= set().union(*(sets[doi] for doi in solution if doi != omitted))
     assert "10.1038/s41467-020-19141-w" not in cover["selected_dois"]
 
 

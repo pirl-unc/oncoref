@@ -3,7 +3,7 @@
 import pandas as pd
 import pytest
 
-from oncoref import cta, cta_curation_plots
+from oncoref import cta, cta_curation_plots, cta_selection
 from oncoref.cta_landscape import INPUTS, extract_landscapes, resolve_landscape_membership
 from oncoref.cta_sources import publication_membership, publication_sources
 from oncoref.load_dataset import get_data
@@ -33,7 +33,9 @@ def test_full_paper_sets_are_imported_not_just_the_twelve_audit_genes():
     source_counts = publication_sources().set_index("source_tag").published_rows
     assert (source_counts.loc[counts.index] == counts).all()
     loci = set(refs.loc[refs.protein_candidate_eligible, "Ensembl_Gene_ID"])
-    assert loci <= set(get_data("cancer-testis-antigens").Ensembl_Gene_ID)
+    # Current source additions are assessed by the current selection, not
+    # retroactively inserted into the independently versioned legacy table.
+    assert loci <= {gid for group in cta_selection.results().gene_ids for gid in group}
     assert len(loci) > 2000
 
 

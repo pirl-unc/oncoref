@@ -32,7 +32,7 @@ function slide(title,section,notes=''){
  const s=p.slides.add();s.background.fill=C.white;current={title,text:[],links:[{url:URL,x:64,y:670,w:1100,h:24}]};pages.push(current);
  text(s,section.toUpperCase(),64,28,1152,25,16,C.teal,true);
  text(s,title,64,72,1152,85,42,C.ink,true);
- text(s,'OncoRef CTA evidence walkthrough   •   28 October 2026',64,670,1100,26,16,C.muted);
+ text(s,'OncoRef CTA evidence walkthrough   •   29 October 2026',64,670,1100,26,16,C.muted);
  text(s,String(pages.length).padStart(2,'0'),1174,668,42,30,19,C.muted,true);
  s.speakerNotes.text=`${title}\n${notes}\nReport: ${URL}\nPolicy: ${data.summary.policy}\nDecision snapshot SHA256: ${data.report_sha256}`;
  return s;
@@ -61,6 +61,17 @@ text(s,`${n(counts.CTA)} human CTA groups`,64,202,1152,100,66,C.teal,true);
 text(s,`${n(data.summary.selected_member_loci)} loci   /   ${n(counts.Unsafe)} Unsafe   /   ${n(counts.Neither)} Neither`,64,335,1152,65,32);
 text(s,`${n(counts.Unassigned)} unassigned; dog selection remains unassessed`,64,446,1152,95,32);
 note(s,'Sources, expression profiles, single-cutoff filtering and measured tissue evidence.',580,26);
+}
+{
+const s=slide('Safety and CTA identity','Four separate requirements','CTA requires acceptable safety, cancer expression, adult restriction and reproductive/developmental association. Only safety evidence can establish Unsafe. Cancer expression requires one sample without a normal comparison. See docs/cta-evidence-axes.md.');
+table(s,[['Assessment','Question','Current rule'],['Safety','Concerning healthy-tissue protein production?','Absolute RNA / IHC and clinical rules'],['Cancer expression','Expressed in a measured cancer?','One sample ≥2 TPM or pTPM'],['Adult restriction','Preferential to relevant adult normal expression?','Qualifying association signal > supported same-unit adult normal RNA'],['Reproductive / developmental','Affirmative expression in a qualifying context?','Reproductive ≥5 nTPM or supported developmental ≥5 TPM']],{widths:[300,502,350],size:24,h:380,y:170});
+note(s,'Only safety can establish Unsafe. Other failed requirements block CTA. Missing evidence remains unknown.',580,26);
+}
+{
+const s=slide('Adult restriction and cancer presence','Independent assessments','Restriction compares reproductive nTPM with supported adult nTPM or developmental TPM with supported adult TPM. Vital/Protected/Manageable form the adverse comparator. Reproductive/Disposable are excluded. CP10K stays in the separate safety screen. Nominal cross-assay comparisons are not calibrated fold changes.');
+table(s,[['Assessment','Comparator'],['Cancer expression','One qualifying sample. No normal ratio.'],['Reproductive restriction','Qualifying reproductive nTPM > supported adult nTPM'],['Developmental restriction','Qualifying developmental TPM > supported adult TPM']],{widths:[335,817],size:27,h:280,y:175});
+text(s,'Safety is absolute. Adult restriction is relative.',64,500,1152,50,32,C.teal,true);
+note(s,'Compare supported Vital / Protected / Manageable expression. Exclude Reproductive / Disposable. Keep native units separate.',568,25);
 }
 {
 const s=slide('Published candidate lists','Human annotations',data.papers.map(r=>`${r.citation}: ${r.source_url}`).join('\n'));
@@ -100,7 +111,7 @@ note(s,'Both require complete normal RNA coverage and resolved evidence. Other f
 }
 {
 const s=slide('Every filtering layer can contribute','Human funnel','The gray segment is held/unassigned evidence, not Neither. The final profile check assigns Neither. All layers evaluate every group; final categories are independent of display order.');
-const labels=['Association','Tumor','HPA protein','Coverage','Bulk RNA','Tissue clusters','HPA immune','Monaco','DICE','Cornea','Curated protein','Clinical safety','External IHC','Neither profiles'];
+const labels=['Association','Tumor','Restriction','HPA protein','Coverage','Bulk RNA','Tissue clusters','HPA immune','Monaco','DICE','Cornea','Curated protein','Clinical safety','External IHC','Neither profiles'];
 chart(s,labels,[{name:'Eligible so far',values:data.funnel.map(r=>r.CTA_eligible_so_far),fill:C.teal},{name:'Unsafe',values:data.funnel.map(r=>r.Unsafe),fill:C.rust},{name:'Neither',values:data.funnel.map(r=>r.Neither),fill:'#A28C68'},{name:'Unassigned',values:data.funnel.map(r=>r.Unassigned),fill:'#B9C3CD'}],{h:435,y:158,stacked:true,size:20});
 note(s,`Final: ${n(counts.CTA)} CTA / ${n(counts.Unsafe)} Unsafe / ${n(counts.Neither)} Neither / ${n(counts.Unassigned)} unassigned.`,610,24);
 }

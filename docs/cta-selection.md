@@ -1,6 +1,37 @@
 # Current CTA and oncofetal selection
 
-The current PR policy supplies **466 selected human protein-equivalence groups (484 loci), 17,718 Unsafe, 17 Neither and 1,662 unassigned** across 19,863 groups. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **546 selected human protein-equivalence groups (582 loci), 18,031 Unsafe, 20 Neither and 1,266 unassigned** across 19,863 groups. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+
+## Four separate requirements
+
+**CTA requires acceptable safety AND cancer expression AND adult restriction AND
+reproductive/developmental association**, with adequate evidence. Only safety
+can establish **Unsafe**. A failed admission requirement is not evidence of
+normal-tissue danger. Missing evidence remains unknown.
+
+| Assessment | Question | Current rule |
+|---|---|---|
+| **Safety** | Is there concerning evidence of protein production in healthy Vital, Protected or Manageable compartments? | Absolute tissue/IHC RNA ceilings, separate positive-protein rules and reviewed clinical exclusions. Vital/Protected exclusions can establish Unsafe. Manageable excess blocks CTA. |
+| **Cancer expression** | Is the target expressed in at least one cancer? | One measured tumor sample ≥2 TPM or HPA pTPM, in its native units. No tumor-versus-normal ratio. RNA supports expression; it does not prove protein abundance. |
+| **Adult restriction** | Is a qualifying reproductive/developmental signal preferential to relevant adult normal expression? | Reproductive nTPM > supported adult normal nTPM OR supported developmental TPM > supported adult normal TPM. The same route must meet the association floor. |
+| **Reproductive/developmental association** | Is there affirmative expression in a qualifying context? | Reproductive maximum ≥5 nTPM OR a supported developmental lineage mean ≥5 TPM. Cell-support requirements remain below. |
+
+Restriction compares with all **supported, mapped Vital/Protected/Manageable**
+observations in the matching native unit. Reproductive and Disposable compartments
+are excluded from the adverse comparator. Cell and immune observations count;
+source-specific support statistics remain intact. CP10K has no valid ratio to
+TPM/nTPM and retains its separate safety rule. Optional unmeasured contexts remain
+gaps, not zero values. The nominal cross-assay comparison is a research enrichment
+heuristic, not a calibrated fold change or demonstration of tumor exclusivity.
+
+**Safety is absolute; restriction is relative.** For example, reproductive 5 nTPM
+versus adult normal 6 nTPM may pass a Protected absolute ceiling but fail the
+reproductive restriction route. A qualifying developmental route can still pass
+its independent TPM comparison. Failing both restriction routes blocks CTA but
+never supplies Unsafe evidence. [Logic figure and examples](cta-evidence-axes.md).
+
+Neither retains its measured-profile definition below. Other incomplete or
+nonqualifying candidates remain **unassigned**, separately from Unsafe.
 
 ## One API for each species
 
@@ -17,7 +48,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,863 protein-equivalence groups | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-28` |
+| Human | 19,863 protein-equivalence groups | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-29` |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 0 | Unavailable | No integrated nomination/selection snapshot; this does not mean mice have no CTAs |
 
@@ -45,9 +76,10 @@ TPM/nTPM is summed only for matched group-member measurements in the same source
 
 | Gate | Rule |
 |---|---|
-| Reproductive association | HPA reproductive maximum ≥5 nTPM and greater than the nonpermitted adult bulk maximum |
+| Reproductive association | HPA reproductive maximum ≥5 nTPM; adult restriction is evaluated separately |
 | Alternative developmental association | Supported Tyser embryonic lineage mean ≥5 TPM; ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM |
-| Tumor expression | ≥2 in one measured sample, in each compatible source's native TPM or HPA pTPM |
+| Tumor expression | ≥2 in one measured sample, in its native TPM or HPA pTPM; no normal comparison |
+| Adult restriction | Qualifying reproductive nTPM > supported adult normal nTPM OR qualifying developmental TPM > supported adult normal TPM |
 | Required coverage | Specified bulk and cell/immune panels must be complete; DICE and cornea are optional, but their measured signals count |
 | Normal RNA | One inclusive tissue/IHC ceiling; above it supplies Unsafe evidence in Vital/Protected and blocks CTA in Manageable |
 | Normal protein | Low remains a positive flag; stronger HPA or accepted unquantified literature positives retain their hold/exclusion; validated external normal positives and clinical exclusions remain active |

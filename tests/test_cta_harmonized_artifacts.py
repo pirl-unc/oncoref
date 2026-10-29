@@ -48,11 +48,13 @@ def test_selected_groups_pass_all_layers_and_all_historical_ctas_are_retained():
     )
 
 
-def test_active_report_receipts_pin_implementation_and_artifacts():
+def test_active_report_receipts_pin_implementation_and_artifacts(historical_cta_input):
     for path in [AUDIT / "manifest.json", AUDIT / "group-normal/manifest.json"]:
         manifest = json.loads(path.read_text())
         for role in ["inputs", "outputs"]:
             for name, expected in manifest[role].items():
                 assert not Path(name).is_absolute(), "Published receipts must be portable"
-                source = ROOT / name if role == "inputs" else path.parent / name
+                source = (
+                    historical_cta_input(name, expected) if role == "inputs" else path.parent / name
+                )
                 assert hashlib.sha256(source.read_bytes()).hexdigest() == expected, str(source)

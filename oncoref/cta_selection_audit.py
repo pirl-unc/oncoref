@@ -28,6 +28,9 @@ class SelectionAudit:
     ``memberships`` counts source annotations, not causal admissions. ``sources``
     counts published candidate-list annotations; ``cta_selection.sources()``
     inventories all measurement sources and their integration status.
+    ``criteria`` separates safety, cancer presence, adult restriction and
+    reproductive/developmental association. A failure of cancer, restriction
+    or association admission is never itself an Unsafe observation.
     ``sources.primary_source`` identifies the compact source display. Redundant
     single-digit lists retain all memberships and their ``covered_by`` sources.
     """

@@ -103,6 +103,19 @@ def test_every_released_hold_and_unsafe_layer_is_explained(audit):
     assert not audit.explanations.reason.str.contains(r"\bnan\b", regex=True).any()
 
 
+def test_four_assessments_and_only_normal_safety_can_establish_unsafe(audit):
+    axes = audit.explanations[audit.explanations.layer.str.startswith("Assessment: ")]
+    assert axes.groupby("entity_id").size().eq(4).all()
+    assert not axes.loc[~axes.layer.eq("Assessment: Safety"), "decision"].eq("unsafe").any()
+    assert axes.loc[axes.category.eq("CTA"), "decision"].eq("pass").all()
+    for label in ["MAGEA4", "NY-ESO-1", "PRAME", "CTAG2", "XAGE1A/B"]:
+        assert audit.explain(label).category.eq("CTA").all()
+    for label in ["TGIF2-RAB5IF", "ATF7-NPFF"]:
+        rows = audit.explain(label)
+        assert rows.category.isna().all()
+        assert rows.loc[rows.layer.eq("Assessment: Adult restriction"), "decision"].eq("hold").all()
+
+
 def test_specific_contexts_and_same_tissue_negative_ihc(audit):
     row = (
         audit.explain("CTAG2")
@@ -209,6 +222,9 @@ def test_current_replay_and_walkthrough_receipts_match_artifacts():
     )
     assert presentation["summary"] == summary
     assert human.cta_selection_coverage()["counts"] == summary["categories"]
+    facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
+    assert sum(row["entrants"] for row in presentation["routes"]) == facts.positive_context.sum()
+    assert sum(row["CTA"] for row in presentation["routes"]) == facts.category.eq("CTA").sum()
 
 
 def test_missing_tumor_measurements_are_not_incomplete_measured_groups():

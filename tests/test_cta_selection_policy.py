@@ -159,3 +159,54 @@ def test_tumor_measurement_is_distinct_from_complete_low_expression_profile():
     result = policy.neither_profiles(facts)
     assert result.tumor_measured.all()
     assert not result.neither_low_expression.any()
+
+
+@pytest.mark.parametrize("name", sorted(policy.CANDIDATE_ONLY_LAYERS))
+def test_admission_failures_cannot_be_wired_as_unsafe(name):
+    facts = policy.neither_profiles(profiles())
+    yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
+    result = policy.classify(
+        facts, [EvidenceLayer(name, yes, no)], entity_column="entity"
+    ).classifications
+    assert not result.category.eq("Unsafe").any()
+    with pytest.raises(ValueError, match="admission requirement, not safety evidence"):
+        policy.classify(facts, [EvidenceLayer(name, yes, yes)], entity_column="entity")
+
+
+def test_normal_safety_is_evaluated_even_after_cancer_admission_fails():
+    facts = policy.neither_profiles(profiles())
+    yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
+    layers = [
+        EvidenceLayer("Tumor sample ≥2 TPM/pTPM", yes, no),
+        EvidenceLayer("Normal bulk", yes, yes),
+    ]
+    result = policy.classify(facts, layers, entity_column="entity").classifications
+    assert result.category.eq("Unsafe").all()
+    assert result.Unsafe_reasons.eq("Normal bulk").all()
+
+
+def test_association_is_not_restriction_and_units_do_not_cross():
+    facts = pd.DataFrame(
+        {
+            "reproductive_ntpm": [5, 5, 4, 0, 100, 0],
+            "developmental_mean_tpm": [0, 0, 0, 5, 0, 5],
+            "healthy_maximum_ntpm": [4, 5, 0, 100, float("nan"), 0],
+            "healthy_maximum_tpm": [100, 0, 0, 4, 0, float("nan")],
+        }
+    )
+    result = policy.association_and_restriction(facts)
+    assert result.positive_context.tolist() == [True, True, False, True, True, True]
+    assert result.adult_restriction.tolist() == [True, False, False, True, False, False]
+    assert result.reproductive_restriction.tolist() == [True, False, False, False, False, False]
+    assert result.developmental_restriction.tolist() == [False, False, False, True, False, False]
+
+
+def test_restriction_failure_does_not_make_expression_unsafe():
+    facts = policy.neither_profiles(profiles())
+    facts["neither_low_expression"] = False
+    yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
+    result = policy.classify(
+        facts, [EvidenceLayer("Adult restriction", yes, no)], entity_column="entity"
+    ).classifications
+    assert result.category.isna().all()
+    assert result.Unsafe_reasons.eq("").all()

@@ -5,6 +5,12 @@ Vital/Protected compartments; crossing it in Manageable compartments prevents
 CTA admission but does not establish either Unsafe or Neither. Neither requires
 an affirmative expression profile. Unresolved results have a null category.
 These are research selection rules, not estimates of clinical toxicity.
+
+Normal-tissue safety, cancer expression, adult restriction and reproductive /
+developmental association are distinct questions. Only safety evidence can
+establish Unsafe. Cancer requires one qualifying measured sample, without a
+tumor-versus-normal ratio. Adult restriction compares a qualifying reproductive
+or developmental signal with supported normal RNA in the same native unit.
 """
 
 from __future__ import annotations
@@ -18,10 +24,19 @@ from .cell_rna_policy import EXPECTED_UNITS, GRADES, NEUTRAL_REPRODUCTIVE_IMMUNE
 from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
 
-POLICY_ID = "oncoref.cta-selection.2026-10-28"
+POLICY_ID = "oncoref.cta-selection.2026-10-29"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 MIN_MANAGEABLE_TISSUES = 2
+CANDIDATE_ONLY_LAYERS = frozenset(
+    {
+        "Reproductive / embryonic association",
+        "Tumor sample ≥2 TPM/pTPM",
+        "Cancer specificity",
+        "Adult restriction",
+        "Required RNA coverage",
+    }
+)
 UNIT_SCALE = {"TPM": 1.0, "nTPM": 1.0, "CP10K": 0.01}
 ADDITIONAL_BULK_UNITS = {"hpa_brain": "nTPM", "gtex_tissue_rna": "TPM"}
 BOWEL_EPITHELIAL_CELLS = frozenset(
@@ -33,6 +48,35 @@ BOWEL_EPITHELIAL_CELLS = frozenset(
         "glandular cells",
     }
 )
+
+
+def association_and_restriction(facts: pd.DataFrame) -> pd.DataFrame:
+    """Separate positive association from relative adult restriction.
+
+    Association uses the existing reproductive >=5 nTPM or supported developmental
+    >=5 TPM routes. Restriction requires a qualifying route's expression to be
+    strictly greater than supported Vital/Protected/Manageable normal RNA in the
+    same native unit. Reproductive and Disposable contexts are not adverse
+    comparators. CP10K has no ratio here; its independent safety rule still applies.
+    Source-specific support statistics and required coverage remain upstream;
+    a missing comparator never becomes zero. These nominal comparisons are
+    enrichment heuristics, not calibrated cross-assay fold changes or toxicity.
+    """
+    d = facts.copy()
+    d["reproductive_association"] = d.reproductive_ntpm.ge(5)
+    d["developmental_association"] = d.developmental_mean_tpm.ge(5)
+    d["reproductive_restriction"] = d.reproductive_association & d.reproductive_ntpm.gt(
+        d.healthy_maximum_ntpm
+    )
+    d["developmental_restriction"] = d.developmental_association & d.developmental_mean_tpm.gt(
+        d.healthy_maximum_tpm
+    )
+    d["positive_context"] = d.reproductive_association | d.developmental_association
+    d["adult_restriction"] = d.reproductive_restriction | d.developmental_restriction
+    # Compatibility fields describe the complete qualifying routes.
+    d["reproductive_route"] = d.reproductive_restriction
+    d["developmental_route"] = d.developmental_restriction
+    return d
 
 
 def compartment_tiers(contexts: pd.DataFrame) -> pd.Series:
@@ -257,15 +301,19 @@ def classify(
     explains incomplete evidence versus an observed profile outside the three
     definitions. The funnel partitions all entities at every stage. Neither is
     shown only after its complete-profile evaluation, never as a synonym for hold.
+    Cancer presence, specificity, developmental/reproductive association and
+    coverage can block CTA admission but can never supply Unsafe evidence.
     """
     if facts[entity_column].isna().any() or not facts[entity_column].is_unique:
         raise ValueError("Require unique entity identities")
     if not layers or len({layer[0] for layer in layers}) != len(layers):
         raise ValueError("Require uniquely named evidence layers")
-    for _, hold, unsafe in layers:
+    for name, hold, unsafe in layers:
         for mask in (hold, unsafe):
             if not mask.index.equals(facts.index) or mask.isna().any() or mask.dtype != bool:
                 raise ValueError("Complete aligned boolean evidence required")
+        if name in CANDIDATE_ONLY_LAYERS and unsafe.any():
+            raise ValueError(f"{name} is an admission requirement, not safety evidence")
     holds = pd.DataFrame({name: hold | unsafe for name, hold, unsafe in layers})
     exclusions = pd.DataFrame({name: unsafe for name, _, unsafe in layers})
     held, unsafe = holds.any(axis=1), exclusions.any(axis=1)
