@@ -57,7 +57,7 @@ views. Imports do not load matrices or fetch assets.
 The existing `for_species(...)` helper and registry IDs remain available for
 dynamic callers, CLI input and serialized provenance. Historical flat human APIs,
 `oncoref.hpa` and `oncoref.hpa_cancer` continue to work. The mouse registry entry
-has an explicit `oncoref.mouse` module with unavailable coverage and no human fallback.
+has an explicit `oncoref.mouse` module with a sparse P1A evidence seed and no human fallback.
 
 The direct species methods `cta_candidates()`, `cta_evidence()`,
 `cta_gene_ids(reference=...)`, and `cta_snapshot()` expose a common evidence
@@ -250,8 +250,12 @@ No seed files need copying into the destination.
 
 ## Canine protein abundance and explicit gaps (1.9.3)
 
-`dog.pfizer_canine_protein.read(...)` imports the deposited **IBAQ**
-column from MassIVE MSV000099744. It retains ProteinGroup and representative
+`dog.pfizer_canine_protein.read(...)` consumes the released ORFdata
+`pfizer-atlas-dog-protein` generation `2026-10-12.1`. Install
+`oncoref[quantitative]` on Python 3.11+ for managed quantitative reads. The core
+package and portable exports continue to work on Python 3.10 without ORFdata.
+The reader retains the deposited **IBAQ** column from MassIVE MSV000099744,
+ProteinGroup and representative
 Protein identifiers, source run/channel/sample fields, and missing measurements.
 The real table contains 9,929 reported groups across 38 tissue pools. This is bulk
 protein-group evidence; resolving those groups to complete sequences or genes
@@ -264,7 +268,105 @@ cannot report independent donor detection. The exact deposited searched FASTA is
 available as `dog.references.ensure("pfizer-dog-search-fasta", ...)` and its SHA-256
 is also carried in the protein source contract. It is not assigned a guessed
 assembly/annotation identity. Protein data and searched sequence bytes stay outside
-the wheel and can be reused from local overrides.
+the wheel. The processed download is 84,379,381 bytes and occupies 1,404,428,288
+bytes installed. It reuses ORFdata's managed cache; ordinary reads never fetch
+the vendor database or optional peptide evidence. The old and new imports are
+the same experiment and cannot supply independent biological support.
+
+```bash
+pip install 'oncoref[quantitative]'
+oncoref data metadata pfizer-dog-protein --species dog
+oncoref data fetch pfizer-dog-protein --species dog
+oncoref data path pfizer-dog-protein --species dog
+```
+
+The existing high-level API is unchanged:
+
+```python
+from oncoref import for_species
+from oncoref.species_expression import ExpressionDataset
+
+data = for_species("dog").expression.read("pfizer-dog-protein", offline=True)
+matrix = data.values
+source_manifest = data.provenance["manifest"]
+first_native_record = next(data.native_records("measurements"))
+data.save("dog-expression-export")
+replayed = ExpressionDataset.load("dog-expression-export")
+```
+
+`native_records(kind)` streams `samples`, `assays`, `measurements`,
+`reference_mappings`, `mappings`, `relations`, or `pairings`. These records use
+the producer's declared schema and retain original identifiers, source row and
+column, native text, quantities, reference identities, and mapping uncertainty.
+The archive contains all 626,526 source measurements (iBAQ and rIBAQ); the matrix
+selects native iBAQ without aggregation. Eight explicit missing iBAQ records and
+64,039 absent matrix cells remain distinguishable through the records. The 9,929
+reported representative mappings remain unresolved. The summary release has no
+peptide assignments or assay pairings; empty iterators do not establish absence.
+
+Exports with records use a checksummed, streamed version-2 archive and can replay
+offline without ORFdata or a source cache. Matrix-only version-1 exports remain
+readable. Source records do not allocate group abundance to a representative or
+turn bulk proteomics into presentation evidence. Optional peptide enrichment is
+tracked separately in [#585](https://github.com/pirl-unc/oncoref/issues/585).
+
+Use `cache_root` consistently across ORFdata and OncoRef to select a shared cache.
+A local override maps `9615:pfizer-atlas-dog-protein` to the released
+`dataset.sqlite`; the reader verifies its pinned size, checksum, and manifest.
+Optional peptide assignments use the same `ExpressionDataset` interface:
+
+```python
+data.evidence_sources()  # bundled release pins and transfer/install sizes; no download
+enriched = data.with_evidence(
+    "pfizer-dog-peptide-evidence",
+    feature_ids=["A0A5F4CET6"],  # explicit native summary groups
+    offline=True,
+)
+assignments = list(enriched.native_records("mappings"))
+memberships = list(enriched.native_records("relations"))
+enriched.save("protein-with-selected-assignments")
+```
+
+The optional dataset is ORFdata `pfizer-atlas-dog-peptide-evidence`, generation
+`2026-10-27.1`. It transfers 6,896,030,151 bytes and occupies 24,710,258,688 bytes
+installed. Acquisition is an explicit operation through the existing data manager:
+
+```bash
+oncoref data metadata pfizer-dog-peptide-evidence --species dog
+oncoref data fetch pfizer-dog-peptide-evidence --species dog --max-bytes 6896030151
+```
+
+`with_evidence()` defaults to offline use and a zero transfer budget. To acquire
+through that method, set `offline=False` and an adequate `max_bytes`; alternatively
+provide the exact released SQLite file as the override
+`9615:pfizer-atlas-dog-peptide-evidence`. Ordinary matrix reads remain summary-only.
+The default `max_records=50000` bounds the selected assignment records; choose
+fewer features or explicitly raise it for a larger export. All companion
+candidates remain present when selecting one representative, including reported
+parent sets that differ from sequence-compatible candidates. Native group
+memberships retain all members.
+
+The producer's reconciled summary index connects accession-like summary groups
+to distinct numeric native groups. This is **same-study representative context**,
+not a unique attribution of the group's iBAQ. Values, missingness, the measurement
+contract, tissue summaries and donor counts do not change. Search-reference
+compatibility does not establish protein detection or MHC presentation.
+
+`provenance["enrichment"]` records the selected features, native summary contexts,
+full source/reference/artifact pins and assignment record IDs. Reported mappings
+also retain their original native record and all reported links/endpoints under
+`provenance["oncoref_native_context"]`, including confidence and exclusion fields.
+Binary native fields use `{"__oncoref_native__": "bytes", "base64": ...}`;
+integers outside JSON's exact 53-bit range use `"integer"` with decimal text;
+nonfinite doubles use `"float64"` with little-endian IEEE-754 hexadecimal bytes.
+These encodings preserve raw facts without silently interpreting source QC flags.
+The portable artifact retains these records and replays without ORFdata. Its
+fingerprint changes with the selected evidence. Re-enrichment requires starting
+from the original snapshot, so repeated calls cannot duplicate evidence.
+
+Historical raw TSV overrides are source-audit inputs, not quantitative reader
+inputs. A missing offline cache, corrupt override, changed source/reference,
+or incompatible producer release fails before returning a matrix.
 
 The expression source catalog also exposes these explicit gaps:
 

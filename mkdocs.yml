@@ -7,6 +7,7 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
+      - Current release 1.23.0: cta-release-1.23.0.md
       - Common panel, diffuseness and unassigned proteins: audits/cta-unassigned-20261029/index.md
       - ZNF730 calculation tables: audits/cta-unassigned-20261029/znf730.md
       - Paper titles and database versions: audits/cta-source-walkthrough-20261028/references.md
@@ -14,7 +15,7 @@ nav:
       - Dog sources and funnel coverage: audits/cta-source-walkthrough-20261028/dog.md
       - Policy simplification and developmental sources: audits/cta-source-walkthrough-20261028/policy-review.md
       - Source and decision audit API: audits/cta-source-walkthrough-20261028/api.md
-      - Current selection and release report: audits/cta-release-1.21.0/index.md
+      - Historical release 1.21.0: audits/cta-release-1.21.0/index.md
       - Selection API across species: cta-selection.md
       - Safety and CTA identity: cta-evidence-axes.md
       - Reviewed 463-group proposal: audits/cta-compartment-policy-20261027/index.md

@@ -185,7 +185,8 @@ def test_unassessed_species_and_detached_tables(audit):
     assert dog.overlaps.selected_overlap.isna().all()
     assert dog.overlaps.query("source_a != source_b").mapped_overlap.eq(1).all()
     unavailable = mouse.cta_selection_audit()
-    assert unavailable.explanations.empty and unavailable.memberships.empty
+    assert len(unavailable.explanations) == 1
+    assert len(unavailable.memberships) == 2
     assert not unavailable.funnel.note.str.contains("Dog").any()
     for name in ("sources", "memberships", "overlaps", "criteria", "explanations", "funnel"):
         assert (
@@ -239,12 +240,21 @@ def test_neither_profiles_and_unassigned_counts_reconcile(audit):
 
 def test_current_replay_and_walkthrough_receipts_match_artifacts():
     import hashlib
+    import zipfile
 
     for directory in [RELEASE, ROOT / "docs/audits/cta-source-walkthrough-20261028"]:
         receipt = json.loads((directory / "manifest.json").read_text())
         for role, base in [("inputs", ROOT), ("outputs", directory)]:
             for name, expected in receipt[role].items():
-                assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
+                if role == "inputs" and name in receipt.get("input_snapshots", []):
+                    saved = receipt["input_snapshot_archive"]
+                    path = directory / saved["path"]
+                    assert hashlib.sha256(path.read_bytes()).hexdigest() == saved["sha256"]
+                    with zipfile.ZipFile(path) as archive:
+                        content = archive.read(name)
+                else:
+                    content = (base / name).read_bytes()
+                assert hashlib.sha256(content).hexdigest() == expected, name
     summary = json.loads((RELEASE / "summary.json").read_text())
     presentation = json.loads(
         (ROOT / "docs/audits/cta-source-walkthrough-20261028/presentation-data.json").read_text()

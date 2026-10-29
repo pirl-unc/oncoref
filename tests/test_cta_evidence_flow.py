@@ -288,8 +288,9 @@ def test_capabilities_describe_real_gaps_without_taxon_admission_rules(human, do
         assert "independent_donor_total" in coverage["missing"]
     mouse = oncoref.mouse.cta_snapshot()
     assert mouse.as_dict()["schema_version"] == 2
-    assert mouse.as_dict()["facts"] == mouse.as_dict()["curation"] == []
-    assert mouse.coverage["status"] == "unavailable"
+    assert len(mouse.as_dict()["facts"]) == 6
+    assert mouse.as_dict()["curation"] == []
+    assert mouse.coverage["status"] == "partial"
 
 
 @pytest.mark.parametrize("species", [oncoref.human, oncoref.canine, oncoref.mouse])

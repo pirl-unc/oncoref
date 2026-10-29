@@ -1,0 +1,19 @@
+{
+  "producer": "openvax/orfdata",
+  "commit": "985a93e59c34b1c59dee76ac52b044af4a1c32c8",
+  "construction": "test_pfizer_evidence.source(synthetic-memberships), test_pfizer_native.inputs, public import_native",
+  "dataset_sha256": "5300a2bf13bd7b41c2172d35983767af826070bff252527529ab2e24a562b86f",
+  "dataset_size": 5685248,
+  "compressed_sha256": "ec34a5440cc95f6ca1f9e29fb1aeca62332d3a6de5fd22ece57344630dbd2dd2",
+  "counts": {
+    "assay": 1100,
+    "assay_pair": 0,
+    "mapping": 15,
+    "measurement": 429,
+    "reference_mapping": 0,
+    "sample": 44,
+    "target": 6,
+    "target_relation": 3
+  },
+  "scope": "Audited factual native slices plus explicitly synthetic summary quantities, acquisition ordering and shared/dangling membership links; not the released full source"
+}

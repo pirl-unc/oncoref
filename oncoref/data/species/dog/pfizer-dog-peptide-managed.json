@@ -1,0 +1,241 @@
+{
+  "manifest": {
+    "dataset_id": "pfizer-atlas-dog-peptide-evidence",
+    "version": "2026-10-27.1",
+    "title": "Pfizer canine native peptide, PSM and protein-group evidence",
+    "references": [
+      {
+        "taxon_id": 9615,
+        "species": "dog",
+        "genome_build": null,
+        "annotation_name": "uniprot",
+        "annotation_version": null,
+        "assembly_accession": null,
+        "strain": null,
+        "strain_taxon_id": null,
+        "sequence_sha256": "d8488bf283de653efcff2e5de6d413b116e1ba4a2eb89298bd31205e72fef682",
+        "taxonomy_version": "ncbi-2026-10-12",
+        "source_sha256": null
+      }
+    ],
+    "sources": [
+      {
+        "asset_id": "evidence.sqlite",
+        "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/archive.json",
+        "sha256": "dace2a88acf31e6013b590854be5d5f6bd869786beefba3c8cad856245766b5f",
+        "size": 18662281216,
+        "access_terms": "MassIVE MSV000099744 deposited analysis facts, CC0-1.0; Oziolor et al., Pfizer",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "redistributable": true,
+        "metadata": {
+          "archive": {
+            "format": "tar.gz",
+            "parts": [
+              {
+                "sha256": "78d1dac7c8de1a26ecc22374ffc869ae2c2e26feed0043bb4514ce279afb10ec",
+                "size": 1992294400,
+                "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/evidence.sqlite.tar.gz.part0000"
+              },
+              {
+                "sha256": "81058905cff07fbbb390e32938acc8fc7cb119aa6975c5710400ec70c3ed8333",
+                "size": 1992294400,
+                "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/evidence.sqlite.tar.gz.part0001"
+              },
+              {
+                "sha256": "ccd53d910abb1c59e1e95d75588640a589de8a601c993b6ccd3ed4e935662d8a",
+                "size": 1390586643,
+                "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/evidence.sqlite.tar.gz.part0002"
+              }
+            ],
+            "sha256": "db4077a264ab798c338e8dcf0974b5d4ed664a5e66c3bb51e97dd2b89ad99ba8",
+            "size": 5375175443
+          },
+          "integrity_scope": "Lossless selected native facts; the vendor database has no authoritative full-file checksum",
+          "scope": "Complete selected native source facts; no spectra/peak arrays"
+        }
+      },
+      {
+        "asset_id": "lineage.json",
+        "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/lineage.json",
+        "sha256": "94224897f6b63661f378b627a9b1dc2cbb0277c38d5f90b2e0de26e1dbf67597",
+        "size": 225368,
+        "access_terms": "Compiled factual run/channel/tissue associations; deposited metadata CC0-1.0. Publication supplement CC BY-NC-ND 4.0; original workbook not redistributed.",
+        "license_url": null,
+        "redistributable": true,
+        "metadata": {
+          "derivation": "Literal factual associations with source hashes/cell locations; no original workbook",
+          "source_article": "https://doi.org/10.1038/s41597-026-07512-9"
+        }
+      },
+      {
+        "asset_id": "search.fasta",
+        "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/sequence/Dog_UP000002254_9615_noisoform.fasta",
+        "sha256": "d8488bf283de653efcff2e5de6d413b116e1ba4a2eb89298bd31205e72fef682",
+        "size": 14659832,
+        "access_terms": "UniProt Consortium CC-BY-4.0; deposited search FASTA",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistributable": true,
+        "metadata": {
+          "attribution": "UniProt Consortium",
+          "deposit": "https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=062b109e9adf461ba619369dd0d85aa9",
+          "source_update": "deposited original FASTA; UniProt release unspecified",
+          "terms_verified": "2026-10-12"
+        }
+      },
+      {
+        "asset_id": "protein.tsv",
+        "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000099744/updates/2026-03-23_jfederspiel_6c91304a/other/t04_protein_postbridge_ibaq_pd.txt",
+        "sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+        "size": 48196601,
+        "access_terms": "MassIVE dataset CC0-1.0; source numeric table",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "redistributable": true,
+        "metadata": {
+          "attribution": "Oziolor et al. and Joel D. Federspiel, Pfizer",
+          "deposit": "https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=062b109e9adf461ba619369dd0d85aa9",
+          "source_update": "2026-03-23",
+          "terms_verified": "2026-10-12"
+        }
+      }
+    ],
+    "citations": [
+      "https://doi.org/10.1038/s41597-026-07512-9",
+      "https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=062b109e9adf461ba619369dd0d85aa9",
+      "https://www.uniprot.org/help/license"
+    ],
+    "assay_kinds": [
+      "digest_ms"
+    ],
+    "coverage": {
+      "accession": "MSV000099744",
+      "attribution": "All source memberships and exact/I-L sequence-compatible candidates retained separately",
+      "bridge_channels": 4,
+      "channels": 44,
+      "empty_channels": 2,
+      "individual_positive_dogs": "unresolved tissue pools",
+      "native_counts": {
+        "DataDistributionBoxes": 1008,
+        "DataDistributionLevels": 131,
+        "DataDistributionMaps": 62,
+        "DataTypes": 30,
+        "DataTypesColumns": 577,
+        "DecoyPeptideGroups": 1076028,
+        "DecoyPeptideGroupsDecoyProteins": 1179103,
+        "DecoyProteinGroups": 1521,
+        "DecoyProteinGroupsDecoyPeptideGroups": 1725,
+        "DecoyProteinGroupsDecoyProteins": 1745,
+        "DecoyProteinGroupsDecoyPsms": 4003,
+        "DecoyProteins": 20596,
+        "DecoyPsms": 3320389,
+        "DecoyPsmsDecoyPeptideGroups": 3320389,
+        "DecoyPsmsDecoyProteins": 3637761,
+        "DecoyPsmsMSnSpectrumInfo": 3320389,
+        "EnumDataTypeValues": 141,
+        "EnumDataTypes": 20,
+        "FoundModifications": 1787,
+        "FoundModificationsDecoyPsms": 7644492,
+        "FoundModificationsTargetPsms": 10063345,
+        "MSnSpectrumInfo": 7813974,
+        "ProteinIdentificationGroups": 1,
+        "QuanSpectrumInfo": 265430,
+        "QuanSpectrumInfoReporterQuanResults": 2913955,
+        "QuanSpectrumInfoTargetPeptideGroups": 152869,
+        "ReportInfo": 1,
+        "ReporterQuanResults": 2913955,
+        "SchemaInfo": 3,
+        "TargetPeptideGroups": 1145689,
+        "TargetPeptideGroupsTargetProteins": 1262557,
+        "TargetProteinGroups": 12654,
+        "TargetProteinGroupsTargetPeptideGroups": 170084,
+        "TargetProteinGroupsTargetProteins": 15726,
+        "TargetProteinGroupsTargetPsms": 962755,
+        "TargetProteins": 20598,
+        "TargetPsms": 4493585,
+        "TargetPsmsMSnSpectrumInfo": 4493585,
+        "TargetPsmsQuanSpectrumInfo": 265440,
+        "TargetPsmsTargetPeptideGroups": 4493585,
+        "TargetPsmsTargetProteins": 5289013,
+        "WorkflowInputFiles": 97
+      },
+      "normal_tissue_dla_presentation": false,
+      "proteomexchange_accession": "PXD070290",
+      "runs": 96,
+      "search_sequences": 20649,
+      "searched_reference": "Deposited no-isoform search FASTA; not a complete canine isoform background",
+      "tissue_pools": 38
+    },
+    "processing": {
+      "importer": "pfizer-canine-evidence-v1",
+      "instrument_status": "Publication Eclipse/deposit Lumos conflict retained with native run reports",
+      "limits": {
+        "output_bytes": 34359738368,
+        "scratch_bytes": 68719476736
+      },
+      "protein_summary": {
+        "dataset_id": "pfizer-atlas-dog-protein",
+        "source_counts": {
+          "IBAQ:missing": 8,
+          "IBAQ:positive": 312143,
+          "IBAQ:zero": 1112,
+          "absent_matrix_cells": 64039,
+          "assays": 38,
+          "groups": 9929,
+          "rIBAQ:missing": 8,
+          "rIBAQ:positive": 312143,
+          "rIBAQ:zero": 1112,
+          "rows": 313263
+        },
+        "source_sha256": "ae2953c3fe3c31bc5fa06a9a0b222815376faea25489e6626af3736b7f4cbef2",
+        "version": "2026-10-12.1"
+      },
+      "protein_summary_use": "Same-study context only; original abundance series remain in the pinned baseline",
+      "quantities": "Native peptide-group and PSM columns, unfiltered and untransformed",
+      "selection_sha256": "e4f87d4db70279dc2b9d028a9ef177c6f2f7cf864953402405061eb3c414557f"
+    },
+    "schema": "orfdata.measurements.v1"
+  },
+  "download": {
+    "distribution": {
+      "acceptance_sha256": "860b8c634ff4577b34d4e1397ba339362cd3c30fc9edd4bf35bf3aadc8e77b0b",
+      "access_terms": "Native deposited analysis facts: MassIVE CC0-1.0, Oziolor et al./Pfizer. Full searched FASTA and UniProt annotations: CC-BY-4.0, attribution to UniProt Consortium. Compiled factual lineage cites the CC BY-NC-ND 4.0 supplement; original workbook excluded. ORFdata transformation code: Apache-2.0.",
+      "data_release": "data-pfizer-dog-peptide-evidence-2026-10-27.1",
+      "download_sha256": "ddf177c6439aeea1fb3705f8146b7a469da8e5cc3662ea83449c631d31e01e4c",
+      "download_size": 6896030151,
+      "installed_size": 24710258688,
+      "redistributable": true
+    },
+    "assets": {
+      "dataset.sqlite": {
+        "sha256": "9014c5201e21d76d50d286bdc56abc6d2eaafdd7b936d927255bda72c7e28a57",
+        "size": 24710258688
+      }
+    },
+    "archive": {
+      "format": "tar.gz",
+      "parts": [
+        {
+          "sha256": "07c6bbdb9c8cf9abaad7880b62d0de51b5b4614749be061a8b9044e118aa0a76",
+          "size": 1992294400,
+          "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/dataset.sqlite.tar.gz.part0000"
+        },
+        {
+          "sha256": "dcbc9bc8f29d73d35cc486a74bfb0216277845c91afe9214145765972a7ff9f5",
+          "size": 1992294400,
+          "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/dataset.sqlite.tar.gz.part0001"
+        },
+        {
+          "sha256": "b46e89411b1ea2f08f29d752697ca34c5af999ebbb9a52b198941c0b9ec671e9",
+          "size": 1992294400,
+          "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/dataset.sqlite.tar.gz.part0002"
+        },
+        {
+          "sha256": "a36a32764d811d25f894c4363e857b09989b5fb9f2e524430b914bdbb7969358",
+          "size": 919146951,
+          "url": "https://github.com/openvax/orfdata/releases/download/data-pfizer-dog-peptide-evidence-2026-10-27.1/dataset.sqlite.tar.gz.part0003"
+        }
+      ],
+      "sha256": "ddf177c6439aeea1fb3705f8146b7a469da8e5cc3662ea83449c631d31e01e4c",
+      "size": 6896030151
+    }
+  }
+}

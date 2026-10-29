@@ -62,6 +62,7 @@
   "outputs": {
     "baseline-1.22.0.csv.gz": "9cebe6809e2b408c11c0f3442ac70046fc52b1d1f4c90365a0f01d376bea04a1",
     "before-diffuseness.csv.gz": "3bacb624b8fc6a9e691c869cc7df5237d71816eef4f38e76ade57c9aa0c7405a",
+    "cta-diffuseness-1.23.0.pdf": "03c8c309c6935b95164eb923feaef706e0ff81528d7e9018474e3a1493ecf053",
     "diffuseness-benchmarks.csv": "8f2fc8f5c892681bb2ae8381e6bd8f32aba5f22808661c0b9faef55f41f3d3ac",
     "diffuseness-category-changes.csv": "3408ea0863cb7e875e15f51336161d39815b28a6bb323922899d9a2182178209",
     "diffuseness-impact.md": "5a133469befc059cc58387bc2c9d613c487cc163528e2c432097846baa6a3dd4",

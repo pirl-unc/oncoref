@@ -248,12 +248,14 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
         )
         kind, status = "protein_equivalence_group", "annotation"
     else:
-        for row in cta_snapshot(species).candidates():
+        snapshot = cta_snapshot(species)
+        native = snapshot.as_dict()
+        for row in snapshot.candidates():
             for source in row["derivation"]:
                 members.append(
                     {
                         "source_id": source["source_id"],
-                        "entity_id": f"nomination:9615:{row['id']}",
+                        "entity_id": f"nomination:{native['taxon_id']}:{row['id']}",
                         "label": row["label"],
                         "gene_ids": row["gene_ids"],
                         "category": None,
@@ -271,10 +273,13 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
                 "nemec2019": ("Nemec et al. (2019)", "https://doi.org/10.1111/vco.12475"),
             }
             if species == "dog"
-            else {}
+            else {
+                source["id"]: (f"PMID:{source['pmid']}", source["url"])
+                for source in native["sources"]
+            }
         )
         kind, status = "native_nomination", "unassessed"
-        scopes = dict.fromkeys(info, "Native canine literature nominations; assay scope retained")
+        scopes = {source["id"]: source["scope"] for source in native["sources"]}
     all_sets = {sid: set(grouped.loc[grouped.source_id.eq(sid), "entity_id"]) for sid in info}
     selected = {
         sid: set(grouped.loc[grouped.source_id.eq(sid) & grouped.category.eq("CTA"), "entity_id"])
@@ -668,6 +673,98 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=TABLE_COLUMNS["explanations"])
 
 
+def native_assessment(species: str) -> dict:
+    """Frozen audit of native evidence availability; no admission inference."""
+    taxon = cta_snapshot(species).as_dict()["taxon_id"]
+    data = {}
+    candidates = cta_snapshot(species).candidates()
+    stages = [
+        (
+            "Curated native nominations",
+            "available" if candidates else "unavailable",
+            f"{len(candidates)} native nominations; not a genome-wide screen",
+        ),
+        (
+            "Reference and assay identity",
+            "partial",
+            "13 unique canine mappings and one ambiguous MAGE-family assay",
+        ),
+        (
+            "Normal and reproductive/developmental RNA",
+            "not_evaluated",
+            "Bgee TPM and BarkBase TMM-CPM require native reference reconciliation",
+        ),
+        (
+            "Tumor RNA",
+            "not_evaluated",
+            "GSE304066 count/FPKM and source-reference conflicts unresolved",
+        ),
+        (
+            "Normal protein",
+            "not_evaluated",
+            "Study IHC is limited; Pfizer pooled iBAQ is not cell-resolved IHC",
+        ),
+        (
+            "Quantitative selection",
+            "not_evaluated",
+            "No native species selection policy; no biological category assignment",
+        ),
+    ]
+    if species == "mouse":
+        stages = [
+            *stages[:1],
+            (
+                "Reference and assay identity",
+                "partial",
+                "Pinned single-gene RefSeq subset; historical BALB/c assays do not establish C57BL/6J expression",
+            ),
+            (
+                "Normal and reproductive/developmental RNA",
+                "partial",
+                "Five BALB/c normal organs with qualitative P1A RNA; somatic positives retained, donor counts unknown",
+            ),
+            (
+                "Tumor RNA",
+                "partial",
+                "J558 cell-line RNA only; no tumor cohort or absolute abundance",
+            ),
+            ("Normal protein", "unavailable", "No protein observations imported in this seed"),
+            (
+                "Quantitative selection",
+                "not_evaluated",
+                "No quantitative mouse selection policy; no biological category assignment",
+            ),
+        ]
+    data["funnel"] = [
+        {
+            "stage": stage,
+            "status": status,
+            "candidate_removals": None,
+            "eligible": None,
+            "Unsafe": None,
+            "Neither": None,
+            "Unassigned": len(candidates),
+            "note": note,
+        }
+        for stage, status, note in stages
+    ]
+    data["explanations"] = [
+        dict.fromkeys(TABLE_COLUMNS["explanations"])
+        | {
+            "entity_id": f"nomination:{taxon}:{c['id']}",
+            "label": c["label"],
+            "gene_ids": c["gene_ids"],
+            "category": None,
+            "layer": "Selection coverage",
+            "decision": "unassessed",
+            "reason": "; ".join(c["evidence_coverage"]["missing"]),
+            "source_url": "https://github.com/pirl-unc/oncoref/issues/574",
+        }
+        for c in candidates
+    ]
+    return data
+
+
 def build() -> None:
     """Export the same accounting schema for measured and unassessed species."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -703,68 +800,7 @@ def build() -> None:
             ]
             data["explanations"] = records(explanations)
         else:
-            candidates = cta_snapshot(species).candidates()
-            stages = [
-                (
-                    "Curated native nominations",
-                    "available" if candidates else "unavailable",
-                    f"{len(candidates)} native nominations; not a genome-wide screen",
-                ),
-                (
-                    "Reference and assay identity",
-                    "partial",
-                    "13 unique canine mappings and one ambiguous MAGE-family assay",
-                ),
-                (
-                    "Normal and reproductive/developmental RNA",
-                    "not_evaluated",
-                    "Bgee TPM and BarkBase TMM-CPM require native reference reconciliation",
-                ),
-                (
-                    "Tumor RNA",
-                    "not_evaluated",
-                    "GSE304066 count/FPKM and source-reference conflicts unresolved",
-                ),
-                (
-                    "Normal protein",
-                    "not_evaluated",
-                    "Study IHC is limited; Pfizer pooled iBAQ is not cell-resolved IHC",
-                ),
-                (
-                    "Quantitative selection",
-                    "not_evaluated",
-                    "No native species selection policy; no biological category assignment",
-                ),
-            ]
-            if species == "mouse":
-                stages = stages[:1]
-            data["funnel"] = [
-                {
-                    "stage": stage,
-                    "status": status,
-                    "candidate_removals": None,
-                    "eligible": None,
-                    "Unsafe": None,
-                    "Neither": None,
-                    "Unassigned": len(candidates),
-                    "note": note,
-                }
-                for stage, status, note in stages
-            ]
-            data["explanations"] = [
-                dict.fromkeys(TABLE_COLUMNS["explanations"])
-                | {
-                    "entity_id": f"nomination:{taxon}:{c['id']}",
-                    "label": c["label"],
-                    "gene_ids": c["gene_ids"],
-                    "category": None,
-                    "layer": "Selection coverage",
-                    "decision": "unassessed",
-                    "reason": "; ".join(c["evidence_coverage"]["missing"]),
-                    "source_url": "https://github.com/pirl-unc/oncoref/issues/574",
-                }
-                for c in candidates
-            ]
+            data.update(native_assessment(species))
         data["criteria"] = [
             {
                 "stage": r["stage"],
@@ -802,6 +838,8 @@ def build() -> None:
                 RELEASE / "alternative-evidence/manifest.json",
                 DATA / "cta-publication-context.csv",
                 OUTPUT / "coverage-audit-receipt.json",
+                *sorted((DATA / "species" / "dog").glob("cta-*.json")),
+                *sorted((DATA / "species" / "mouse").glob("cta-*.json")),
             ]
         },
     }

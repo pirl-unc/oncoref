@@ -53,9 +53,9 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 |---|---:|---|---|
 | Human | 19,863 proteins (identical selected reference sequences collapsed) | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-29.3` |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
-| Mouse | 0 | Unavailable | No integrated nomination/selection snapshot; this does not mean mice have no CTAs |
+| Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 
-The contract is identical even when the evidence is not. Human thresholds, antibody grades, developmental measurements and clinical observations are never inherited through orthology. Canine matrices still need unit/reference reconciliation and a species policy; the registered tumor source has unresolved unit/reference provenance. Mouse sources are identified, not ingested.
+The contract is identical even when the evidence is not. Human thresholds, antibody grades, developmental measurements and clinical observations are never inherited through orthology. Canine matrices still need unit/reference reconciliation and a species policy; the registered tumor source has unresolved unit/reference provenance. Mouse P1A literature evidence is imported; the listed mouse atlases remain unintegrated.
 
 ## Result fields and identities
 
@@ -108,11 +108,11 @@ Other failures are **unassigned**, with `category` null and an explanatory `asse
 
 | Category | Human selection | Dog resources | Mouse resources identified |
 |---|---|---|---|
-| Nomination | Published CTA/placental lists as annotations | Two native CTA studies | No curated list |
-| Reproductive expression | HPA bulk | Bgee matrices, BarkBase, native study assays | Requires reproductive panel integration |
+| Nomination | Published CTA/placental lists as annotations | Two native CTA studies | One P1A/Trap1a literature nomination |
+| Reproductive expression | HPA bulk | Bgee matrices, BarkBase, native study assays | Qualitative P1A testis RNA; no complete reproductive panel |
 | Developmental expression | Tyser gastrulation | BarkBase matrix; DoGA metadata | MOCA, gastrulation atlas, GXD |
-| Tumor expression | 132 compatible OncoRef cohorts + HPA cancer | Native studies; cohort provenance unresolved | Native tumor cohort needed |
-| Normal bulk RNA | HPA consensus | Bgee, BarkBase; DoGA/Pfizer RNA metadata | GXD assay resource |
+| Tumor expression | 132 compatible OncoRef cohorts + HPA cancer | Native studies; cohort provenance unresolved | Qualitative J558 cell-line RNA; no cohort |
+| Normal bulk RNA | HPA consensus | Bgee, BarkBase; DoGA/Pfizer RNA metadata | Five BALB/c organs for P1A; GXD remains unintegrated |
 | Normal cell RNA | HPA tissue clusters, adult cornea | No equivalent integrated atlas | Tabula Muris/Senis |
 | Immune RNA | HPA, Monaco, DICE | No equivalent integrated panel | Tabula Muris/Senis |
 | Normal protein | HPA IHC, curated external IHC/protein | Pfizer iBAQ matrix, native IHC study | GXD assay resource |
@@ -123,6 +123,15 @@ Other failures are **unassigned**, with `category` null and an explanatory `asse
 ## Versioning and reproduction
 
 Use this API for the new funnel. Older `cta_genes`, nomination snapshots and exact-protein forbidden-background APIs remain independently versioned compatibility/reference products. Their counts must not be presented as this selection; a CTA admission does not automatically remove a protein from a near-self background. See [the exact-protein policy](target-sets.md).
+
+The older `normal_expression_categories.classify_normal_expression()` API still
+provides **Other → Disposable/Silent** under
+`oncoref.normal-expression-categories.2026-10-21.2`. Those are below-threshold
+expression sets using that older RNA/IHC policy. They are not aliases for this
+release's Neither category, which has no dedicated Disposable-only route.
+Downstream analyses must preserve the policy ID and must not silently transfer
+these classifications into the current selection or k-mer exclusions.
+The migration is tracked in [#647](https://github.com/pirl-unc/oncoref/issues/647).
 
 Run from a checkout with the pinned reference inputs available:
 

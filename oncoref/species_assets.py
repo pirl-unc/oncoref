@@ -105,11 +105,19 @@ def species_assets(species, *, group=None) -> tuple[SpeciesAsset, ...]:
     if group is not None and group not in DATA_GROUPS:
         raise ValueError(f"Unknown data group {group!r}")
     latest = {row["id"]: SpeciesAsset(**row) for row in _manifest(species)["assets"]}
+    from .managed_expression import managed_assets
+
+    latest.update((asset.id, asset) for asset in managed_assets(species))
     return tuple(asset for asset in latest.values() if group is None or asset.group == group)
 
 
 def asset_versions(asset_id: str, *, species) -> tuple[str, ...]:
     """Concrete releases, newest first; adding a release preserves older rows."""
+    from .managed_expression import managed_assets
+
+    managed = next((a for a in managed_assets(species) if a.id == asset_id), None)
+    if managed is not None:
+        return (managed.source_version,)
     versions = tuple(
         row["source_version"]
         for row in reversed(_manifest(species)["assets"])
@@ -124,6 +132,11 @@ def species_asset(asset_id: str, *, species, version: str | None = None) -> Spec
     """Resolve an exact source release; latest never becomes a cache identity."""
     available = asset_versions(asset_id, species=species)
     concrete = available[0] if version in (None, "latest") else version
+    from .managed_expression import managed_assets
+
+    managed = next((a for a in managed_assets(species) if a.id == asset_id), None)
+    if managed is not None and concrete == managed.source_version:
+        return managed
     for row in _manifest(species)["assets"]:
         if row["id"] == asset_id and row["source_version"] == concrete:
             return SpeciesAsset(**row)
@@ -156,6 +169,15 @@ def _overrides(local_overrides):
 
 def asset_path(asset, *, cache_root=None, local_overrides=None) -> Path:
     """Compute a path without reads/writes. Overrides are verified before use."""
+    from .managed_expression import ManagedExpressionAsset, inspect_managed
+
+    if isinstance(asset, ManagedExpressionAsset):
+        state = inspect_managed(
+            asset, cache_root=cache_root, local_overrides=local_overrides, verify_files=False
+        )
+        if state["path"] is None:
+            raise ImportError(state["error"])
+        return Path(state["path"])
     overrides = _overrides(local_overrides)
     # Taxonomy prefixes prevent similarly named assets in different species colliding.
     key = f"{asset.taxon_id}:{asset.id}"
@@ -173,6 +195,11 @@ def asset_path(asset, *, cache_root=None, local_overrides=None) -> Path:
 def inspect_asset(asset, *, cache_root=None, local_overrides=None):
     """Read-only integrity check; never downloads, repairs or copies an override."""
     from datacache import inspect_file
+
+    from .managed_expression import ManagedExpressionAsset, inspect_managed
+
+    if isinstance(asset, ManagedExpressionAsset):
+        return inspect_managed(asset, cache_root=cache_root, local_overrides=local_overrides)
 
     path = asset_path(asset, cache_root=cache_root, local_overrides=local_overrides)
     state = inspect_file(path, expected_sha256=asset.sha256, expected_size=asset.size_bytes)
@@ -200,6 +227,18 @@ def ensure_asset(
     size. Other platforms use a verified, non-resumable download.
     """
     from datacache import fetch_file
+
+    from .managed_expression import ManagedExpressionAsset, open_managed
+
+    if isinstance(asset, ManagedExpressionAsset):
+        return open_managed(
+            asset.spec,
+            taxon_id=asset.taxon_id,
+            offline=offline,
+            cache_root=cache_root,
+            local_overrides=local_overrides,
+            max_bytes=max_bytes,
+        ).path
 
     if type(max_bytes) is not int or max_bytes < 0:
         raise ValueError("max_bytes must be a nonnegative integer transfer budget")
@@ -279,6 +318,21 @@ def ensure_reference(
 
 
 def asset_inventory(species, *, group=None, cache_root=None, local_overrides=None):
+    from .managed_expression import ManagedExpressionAsset, inspect_managed
+
+    def available(asset):
+        if isinstance(asset, ManagedExpressionAsset):
+            return (
+                inspect_managed(
+                    asset,
+                    cache_root=cache_root,
+                    local_overrides=local_overrides,
+                    verify_files=False,
+                )["status"]
+                == "available"
+            )
+        return asset_path(asset, cache_root=cache_root, local_overrides=local_overrides).is_file()
+
     selected = resolve_species(species)
     return [
         {
@@ -286,9 +340,7 @@ def asset_inventory(species, *, group=None, cache_root=None, local_overrides=Non
             "held": "asset",
             "category": asset.group,
             "group": asset.group,
-            "available": asset_path(
-                asset, cache_root=cache_root, local_overrides=local_overrides
-            ).is_file(),
+            "available": available(asset),
             "integrity": "not_checked",
             "cohorts": None,
             "description": asset.description,

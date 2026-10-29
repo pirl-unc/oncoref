@@ -421,7 +421,7 @@ def test_explicit_snapshot_annotation_preserves_frozen_archive():
     assert annotations
     assert any("placental" in r["annotation"]["scopes"] for r in annotations)
     assert snapshot.as_dict() == original
-    assert mouse.cta_tissue_annotations() == ()
+    assert mouse.cta_tissue_annotations()
     with pytest.raises(ValueError, match="Unknown CTA candidate"):
         snapshot.tissue_annotations(candidate_id="missing")
 

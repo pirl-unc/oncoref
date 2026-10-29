@@ -279,9 +279,23 @@ def provenance(
                     except (OSError, ValueError, KeyError):
                         record["source_version"] = None
             return record
+        from .managed_expression import ManagedExpressionAsset, inspect_managed
         from .species_assets import asset_path, inspect_asset, species_asset
 
         asset = species_asset(name, species=selected, version=concrete)
+        if isinstance(asset, ManagedExpressionAsset):
+            state = inspect_managed(asset, verify_files=verify_content)
+            return {
+                **asset.as_dict(),
+                "name": name,
+                "version": concrete,
+                "kind": "asset",
+                "path": state["path"],
+                "exists": state["status"] == "available",
+                "verification_state": state["status"]
+                if verify_content or state["status"] != "available"
+                else "not_checked",
+            }
         dest = asset_path(asset)
         state = inspect_asset(asset)["status"] if verify_content else "not_checked"
         return {
@@ -349,9 +363,14 @@ def path(
                 return packaged[0]
             dest = packaged_data.local_path(f"species/{selected.name}/{packaged[0].name}", concrete)
             return dest if dest.is_file() else None
+        from .managed_expression import ManagedExpressionAsset, inspect_managed
         from .species_assets import asset_path, species_asset
 
-        dest = asset_path(species_asset(name, species=selected, version=version))
+        asset = species_asset(name, species=selected, version=version)
+        if isinstance(asset, ManagedExpressionAsset):
+            state = inspect_managed(asset, verify_files=False)
+            return Path(state["path"]) if state["status"] == "available" else None
+        dest = asset_path(asset)
         return dest if dest.is_file() else None
     if name.startswith(_PER_SAMPLE):
         dest = source_matrices.local_path(name[len(_PER_SAMPLE) :], version)

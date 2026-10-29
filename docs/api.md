@@ -650,7 +650,8 @@ human.cta_sources(category="normal_protein")
 ```
 
 The human release selects **546 groups / 582 loci**. Dog nominations remain
-unassigned/unassessed and mouse selection is unavailable. The
+unassigned/unassessed. Mouse returns one unassessed P1A nomination with partial
+evidence; quantitative mouse selection remains unavailable. The
 [selection guide](cta-selection.md) documents common fields, native units,
 source categories, identity gaps and the independent sequence-background policy.
 The [four assessments](cta-evidence-axes.md) separate normal safety, one qualifying

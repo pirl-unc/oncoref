@@ -192,8 +192,8 @@ def sources(*, species: SpeciesLike = "human", category: str | None = None) -> p
 def coverage(*, species: SpeciesLike = "human") -> dict:
     """Report the selection denominator, source categories and missing capabilities.
 
-    Empty mouse results mean unavailable curation, not zero biological CTAs.
-    Dog counts describe curated nominations only, not the canine genome. Source
+    Dog and mouse counts describe curated nominations only, not their genomes.
+    Unavailable selection means no quantitative species policy. Source
     counts deduplicate source IDs within each evidence category, not donors.
     """
     selected = resolve_species(species)

@@ -67,8 +67,8 @@ class SelectionAudit:
 def audit(*, species: Species | str | int = "human") -> SelectionAudit:
     """Load the pinned explanation, provenance and funnel tables without network.
 
-    Human counts use protein-equivalence groups. Dog counts use native assay or
-    gene nominations; mouse has no curated nomination denominator. Unknowns are
+    Human counts use protein-equivalence groups. Dog and mouse counts use native assay or
+    gene nominations, never a genome-wide denominator. Unknowns are
     retained as nulls, not represented as zero passing or failing genes.
     """
     selected = resolve_species(species)

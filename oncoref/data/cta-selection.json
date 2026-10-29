@@ -4,7 +4,7 @@
   "release": "1.23.0",
   "data_sha256": {
     "cta-selection-human.csv.gz": "ede078c0b66136f47a72a16e59049ab4831c68499389394d0f9d50ec53f03d90",
-    "cta-selection-sources.csv": "6a34a6738da85e996c0dd372bb64cc1e993cb71fe8c9026910a1967915852679"
+    "cta-selection-sources.csv": "4bb650d4a026e6b69f0fe2b02447fda4e9b0eab05410bcb8e52318d3a560986e"
   },
   "species": {
     "human": {
@@ -75,19 +75,47 @@
     },
     "mouse": {
       "selection_status": "unavailable",
-      "evidence_status": "unavailable",
+      "evidence_status": "partial",
       "policy_id": null,
-      "universe": "No curated mouse nomination or selection snapshot",
-      "reference": null,
+      "universe": "1 curated native nominations; not a genome-wide classification",
+      "reference": {
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "taxon_id": 10090,
+        "assembly_accession": "GCF_000001635.27",
+        "annotation_source": "NCBI RefSeq",
+        "annotation_release": "RS_2024_02",
+        "source_version": "NCBI Gene 22037 single-gene subset retrieved 2026-10-29",
+        "identifier_namespaces": {
+          "gene": "NCBI Gene",
+          "protein": "RefSeq",
+          "transcript": "RefSeq"
+        },
+        "content_provenance": {
+          "gene_record_subset": "a2ee9d2660cf52f3ea63c22ff0071ce120efd27ff1f0ba58ee5b2ad5bfda532c",
+          "product_report_subset": "6cd41d87b9b4bb7e33de0d0821dc3f697288b2b2b79313a3dc62e7a4b9616801",
+          "protein": "7f7c4754ccdf856de3499a0561ca959fedcaa658dea06583d0c095707e20f64d",
+          "rna": "0300f700336da1950718ab2905b875a805eb1fa48eec5c6957ab4726eab2d643"
+        },
+        "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d"
+      },
       "limitations": [
-        "Source inventory identifies relevant resources but their data are not integrated",
-        "Zero returned rows is unavailable curation, not zero biological CTA genes",
-        "A native tumor cohort, reference-bound gene mapping and normal-panel policy are required"
+        "One P1A nomination; not a mouse CTA panel, genome-wide screen or quantitative admission policy.",
+        "Only Sarma 1999 Figure 1 and accompanying endogenous RNA results are imported. Protein abundance, placental expression, presentation and transgenic experiments are outside this seed.",
+        "Five normal organs from BALB/c mice do not establish a complete normal panel; strain, stage, cell type and donor coverage remain limited.",
+        "Donor/sample counts, biological independence and technical replicate counts are unreported for these imported observations; no counts are inferred from figure lanes.",
+        "Qualitative assay signals and source-relative comparisons are not TPM, protein abundance or isoform-specific measurements. Less sensitive Northern results do not negate sensitive RT-PCR signals.",
+        "Reference assets are an explicitly scoped NCBI Gene 22037 subset, not a full annotation release. Historical assay-to-reference sequence equivalence remains unresolved.",
+        "No quantitative mouse selection policy; unassessed nominations have null categories.",
+        "Literature-identified atlases remain unintegrated; no complete normal panel or strain equivalence is inferred."
       ]
     }
   },
   "inputs": {
     "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "cbf16d3371962e3b73f6a6fb19c1dbe1c8d1a35458666d6e9fa46fd6a743e118",
-    "report_manifest": "67241f11a1f713bf220087c60547953494a154348e46354008469668bd1e496a"
+    "report_manifest": "32145ba4d9088e60e588e77a1472e5bb4acbc880834e4c8247e7210926f343d2",
+    "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
+    "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+    "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"
   }
 }

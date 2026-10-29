@@ -12,11 +12,11 @@ from oncoref import human, canine, mouse
 
 human.cta_candidates()       # existing human curation, wrapped without losing fields
 canine.cta_candidates()      # canine study nominations and assay follow-ups
-mouse.cta_candidates()       # () -- no curated mouse evidence yet
+mouse.cta_candidates()       # one P1A/Trap1a nomination; partial coverage
 
 canine.cta_evidence()        # all native observations, sources and mapping details
 canine.cta_evidence(candidate_id="CTCFL")
-mouse.cta_snapshot().coverage  # {"status": "unavailable", "limitations": [...]}
+mouse.cta_snapshot().coverage  # {"status": "partial", "limitations": [...]}
 ```
 
 Each query returns a tuple of detached JSON records. Candidate and evidence
@@ -30,6 +30,7 @@ For an annotation-bound set of **candidate** gene IDs, choose the reference:
 ```python
 canine.cta_gene_ids(reference="refseq106")
 human.cta_gene_ids(reference="ensembl115")
+mouse.cta_gene_ids(reference="p1a-refseq-rs2024-02")  # {"22037"}
 ```
 
 This set contains only complete, unique **gene** mappings. Ambiguous alternatives
@@ -42,8 +43,8 @@ in this set establishes normal-tissue restriction.
 for display; the returned records include its full identity. Their optional
 `reference=` argument also accepts a `ReferenceIdentity`. The ID query requires
 an explicit reference. Unknown annotations, changed content identities and
-wrong-species references raise `ValueError`. Empty mouse evidence does not permit
-a reference-bound ID query. Inspect coverage before querying its IDs.
+wrong-species references raise `ValueError`. Inspect the reference identity and
+coverage before interpreting annotation-bound IDs.
 
 The original flat `oncoref.cta_gene_ids()` keeps its historical human default
 panel and options. The new `human.cta_gene_ids(reference=...)` enumerates the
@@ -251,3 +252,50 @@ species reference registry. If an upstream response changes, reacquiring a URL
 does not authorize silently updating its checksum. Raw study files are not
 redistributed in the wheel. The packaged snapshot supports offline replay
 independently of those upstream files.
+
+
+## Mouse P1A seed
+
+The frozen mouse snapshot contains one **P1A (Trap1a)** nomination and six
+qualitative RNA observations. [Van den Eynde et al. 1991](https://pmc.ncbi.nlm.nih.gov/articles/PMC2190831/)
+provides the original DBA/2 P815 identity. [Sarma et al. 1999](https://pmc.ncbi.nlm.nih.gov/articles/PMC2192944/),
+Figure 1 and its accompanying results, supplies endogenous RNA observations in
+BALB/c testis, lung, spleen, liver and thymus, plus J558 tumor cells. Normal somatic
+signals remain positive counterevidence. Thymus detection was intermittent;
+unreported counts and less sensitive Northern results do not become measured zeros.
+
+The native P815 protein `AAA40475.1` from `M36387.1` matches the 224-residue
+RefSeq `NP_035765.1` sequence exactly. Their RNA and CDS sequences differ.
+The checked NCBI Gene 22037 product report links `NM_011635.2` / `NP_035765.1`
+to GRCm39 (`GCF_000001635.27`, `NC_000086.8`, annotation `RS_2024_02`). The
+reference identity pins a **single-gene subset**, not the entire annotation.
+Its assembly is C57BL/6J, while the RefSeq RNA record reports C57BL/6 and the
+original P815 source reports DBA/2 without a substrain. These distinctions are
+preserved in the packaged `data/species/mouse/cta-curation.json` receipt.
+The same identity audit is frozen in each observation's
+`source_fields.nomination_identity`; its role explicitly excludes measured-isoform
+claims. The contract pins both the native sequence record and curation receipt,
+so exporting the snapshot retains this provenance.
+
+Historical expression contracts remain unresolved against that target reference.
+The BALB/c observations do not establish C57BL/6J expression, protein abundance,
+measured isoforms or complete normal-tissue restriction. J558 strain and unknown
+sample/donor counts remain unknown. The source-relative titration comparisons are
+retained as source fields; they are not converted into absolute expression units.
+
+`mouse.cta_selection()` returns the nomination with a null category and an
+`unassessed` status. No selection policy or vaccine admission is inferred.
+Placental/protein observations from the 1997 paper and presentation observations
+from the 2024 study remain outside this initial seed.
+
+To reproduce the packaged evidence offline, acquire the seven inputs listed in
+`oncoref/data/species/mouse/cta-curation.json` from their pinned URLs, verify the
+SHA-256 hashes, then run:
+
+```bash
+python scripts/build_mouse_cta_evidence.py --source-dir /path/to/pinned-inputs --refresh-tables
+```
+
+The generator verifies every input hash and refreshes the shared source inventory
+and mouse audit. The frozen human decision artifacts are unchanged. The source
+papers themselves are not redistributed.

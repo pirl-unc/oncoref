@@ -44,7 +44,8 @@ def test_native_nominations_never_inherit_human_admission_or_human_gene_ids():
     assert not any(gid.startswith("ENSG") for ids in frame.gene_ids for gid in ids)
     assert any(len(ids) > 1 for ids in frame.gene_ids)  # Ambiguous family assays remain visible.
     assert canine.cta_selection(category="CTA").empty
-    assert mouse.cta_selection().empty
+    assert len(mouse.cta_selection()) == 1
+    assert mouse.cta_selection().category.isna().all()
     assert mouse.cta_selection_coverage()["selection_status"] == "unavailable"
 
 
@@ -54,7 +55,7 @@ def test_sources_distinguish_native_units_and_unintegrated_resources():
     assert dog.loc["pfizer-dog-protein", "native_unit"] == "iBAQ"
     assert dog.loc["doga", "status"] == "metadata_only"
     assert dog.loc["gse304066-osteosarcoma", "status"] == "blocked_provenance"
-    assert mouse.cta_sources().status.eq("not_integrated").all()
+    assert set(mouse.cta_sources().status) == {"not_integrated", "native_observations"}
     assert not canine.cta_sources(category="normal_protein").source_id.eq("nemec2019").any()
 
 

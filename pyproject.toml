@@ -42,11 +42,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+quantitative = ["orfdata>=0.42.2,<1"]
 reports = ["reportlab>=4", "pypdf>=5", "Pillow", "xlrd>=2", "Markdown>=3.5"]
 genome = [
     "pyensembl>=2.27.0",
 ]
 dev = [
+    "orfdata>=0.42.2,<1; python_version >= '3.11'",
     "reportlab>=4",
     "pypdf>=5",
     "Pillow",
