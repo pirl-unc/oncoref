@@ -162,6 +162,10 @@ sources:
   acquisition_status: managed_dataset_available
   citation: https://doi.org/10.1038/s41597-026-07512-9
   managed_dataset: pfizer-dog-protein-managed.json
+  evidence_sources:
+  - id: pfizer-dog-peptide-evidence
+    adapter: pfizer-summary
+    managed_dataset: pfizer-dog-peptide-managed.json
   expected_size_gb: 0.084379381
 - id: doga
   taxon_id: 9615

@@ -451,6 +451,14 @@ def add_protein_and_gaps(root, output, manifest, sources, overrides, audit):
             contract=contract.as_dict(),
         )
         write_json(output / published["managed_dataset"], spec)
+        if published.get("evidence_sources"):
+            from oncoref.managed_expression import evidence_specification
+
+            sources[-1]["evidence_sources"] = published["evidence_sources"]
+            for profile in published["evidence_sources"]:
+                write_json(
+                    output / profile["managed_dataset"], evidence_specification(profile, 9615)
+                )
     else:
         sources[-1].pop("adapter")
         sources[-1]["acquisition_status"] = "unreleased_source_snapshot"

@@ -63,6 +63,13 @@ def managed_assets(species):
                     entry["id"], entry["taxon_id"], spec["manifest"]["version"], spec
                 )
             )
+        for profile in entry.get("evidence_sources", []):
+            spec = evidence_specification(profile, entry["taxon_id"])
+            result.append(
+                ManagedExpressionAsset(
+                    profile["id"], entry["taxon_id"], spec["manifest"]["version"], spec
+                )
+            )
     return tuple(result)
 
 
@@ -126,12 +133,23 @@ def transfer_size(download):
 
 def specification(entry):
     """Read a bundled pin without importing the optional quantitative dependency."""
-    filename = entry["managed_dataset"]
+    return _specification(
+        entry["managed_dataset"],
+        entry["taxon_id"],
+        {"manifest", "download", "selection", "source_roles", "feature_fields"},
+    )
+
+
+def evidence_specification(profile, species):
+    return _specification(profile["managed_dataset"], species, {"manifest", "download"})
+
+
+def _specification(filename, species, keys):
     if Path(filename).name != filename:
         raise ValueError("Managed dataset specification must be package-local")
-    path = expression_source_registry_path(species=entry["taxon_id"]).parent / filename
+    path = expression_source_registry_path(species=species).parent / filename
     spec = json.loads(path.read_text())
-    if set(spec) != {"manifest", "download", "selection", "source_roles", "feature_fields"}:
+    if set(spec) != keys:
         raise ValueError("Unsupported managed expression specification")
     if spec["manifest"].get("schema") != "orfdata.measurements.v1":
         raise ValueError("Unsupported quantitative manifest schema")

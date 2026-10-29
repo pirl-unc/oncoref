@@ -5,6 +5,7 @@
 recursive-include scripts *.py
 recursive-include tests *.py
 recursive-include tests/fixtures *.json *.csv
+recursive-include tests/data/pfizer-assignments *.json *.gz *.tsv *.md
 recursive-exclude oncoref/data/cancer-reference-expression *
 recursive-exclude oncoref/data/cancer-reference-expression-percentiles *
 recursive-exclude oncoref/data/cancer-reference-expression-representatives *
