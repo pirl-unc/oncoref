@@ -1,5 +1,7 @@
 # OncoRef 1.25.0: Neither fallback and reproductive protein evidence
 
+**Draft: further admission review is in progress.** The [Other-subtype audit](audits/cta-other-20261030/index.md) found a stale Reproductive bulk input and an omitted reproductive-cell RNA route. Its corrected counts are diagnostic; the packaged decisions below have not yet changed. PR #652 remains a draft and 1.25.0 has not been released.
+
 **573 CTA proteins, 725 Neither, 18,031 Unsafe and 534 unassigned.** All 522
 previous CTAs remain included, and Unsafe membership is unchanged. CTA represents
 615 member loci after identical selected reference protein sequences are collapsed.
