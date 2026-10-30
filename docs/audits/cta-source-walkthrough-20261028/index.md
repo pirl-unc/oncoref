@@ -1,8 +1,8 @@
 # CTA and oncofetal selection
 
-**522 CTA proteins (558 loci), 18,031 Unsafe, 20 Neither and 1,290 unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `oncoref.cta-selection.2026-10-29.3`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**522 CTA proteins (558 loci), 18,031 Unsafe, 20 Neither and 1,290 unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `oncoref.cta-selection.2026-10-29.4`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[Slides](slides/cta-evidence-walkthrough-expanded.pptx) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[PDF slides](cta-selection-1.24.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-expanded.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 ## Categories
 
@@ -134,6 +134,18 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 | [Curated external staining observations](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027) | normal_protein | native categorical findings | used_in_selection | [Source](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027) |
 | [Reviewed normal protein and clinical exclusions](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) | normal_protein | categorical reviewed findings | used_in_selection | [Source](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) |
 | [Reviewed normal protein and clinical exclusions](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) | clinical_safety | categorical reviewed findings | used_in_selection | [Source](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) |
+| [Letetresgene Autoleucel in Advanced/Metastatic Myxoid/Round Cell Liposarcoma](https://doi.org/10.1200/JCO-24-01466) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1200/JCO-24-01466) |
+| [Autologous T cell therapy for PRAME+ advanced solid tumors in HLA-A*02+ patients: a phase 1 trial](https://doi.org/10.1038/s41591-025-03650-6) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1038/s41591-025-03650-6) |
+| [Autologous T cell therapy for MAGE-A4+ solid cancers in HLA-A*02+ patients: a phase 1 trial](https://doi.org/10.1038/s41591-022-02128-z) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1038/s41591-022-02128-z) |
+| [SPEARHEAD-1: a single-arm phase 2 trial of afamitresgene autoleucel in advanced synovial sarcoma and myxoid/round cell liposarcoma](https://doi.org/10.1016/S0140-6736(24)00319-2) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1016/S0140-6736(24)00319-2) |
+| [Identification of a Titin-Derived HLA-A1-Presented Peptide as a Cross-Reactive Target for Engineered MAGE A3-Directed T Cells](https://doi.org/10.1126/scitranslmed.3006034) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1126/scitranslmed.3006034) |
+| [Guillain-Barre syndrome observed with adoptive transfer of lymphocytes genetically engineered with an NY-ESO-1 reactive T-cell receptor](https://doi.org/10.1186/s40425-019-0759-x) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1186/s40425-019-0759-x) |
+| [NCT03709706 protocol: NY-ESO-1/LAGE-1A shared peptide and c259 receptor](https://cdn.clinicaltrials.gov/large-docs/06/NCT03709706/Prot_000.pdf) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://cdn.clinicaltrials.gov/large-docs/06/NCT03709706/Prot_000.pdf) |
+| [NCT03132922 protocol: MAGE-A4 c1032 target peptide](https://cdn.clinicaltrials.gov/large-docs/22/NCT03132922/Prot_000.pdf) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://cdn.clinicaltrials.gov/large-docs/22/NCT03132922/Prot_000.pdf) |
+| [First-in-human dose escalation trial to evaluate the clinical safety and efficacy of an anti-MAGEA1 autologous TCR-transgenic T cell therapy in relapsed and refractory solid tumors](https://doi.org/10.1136/jitc-2023-008668) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1136/jitc-2023-008668) |
+| [Phase I clinical trial evaluating the safety and efficacy of ADP-A2M10 SPEAR T cells in patients with MAGE-A10+ advanced non-small cell lung cancer](https://doi.org/10.1136/jitc-2021-003581) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1136/jitc-2021-003581) |
+| [NY-ESO-1-specific redirected T cells with endogenous TCR knockdown mediate tumor response and cytokine release syndrome](https://doi.org/10.1136/jitc-2021-003811) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://doi.org/10.1136/jitc-2021-003811) |
+| [Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy](https://pubmed.ncbi.nlm.nih.gov/23377668/) | clinical_safety | reviewed clinical attribution | used_in_selection | [Source](https://pubmed.ncbi.nlm.nih.gov/23377668/) |
 | [Gong et al., Nature Communications (2021)](https://doi.org/10.1038/s41467-021-22695-y) | nomination | gene-list membership | annotation | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
 | [Gong et al., Nature Communications (2021)](https://doi.org/10.1038/s41467-021-22695-y) | nomination | gene-list membership | annotation | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
 | [Bradley et al., Nature Communications (2020)](https://doi.org/10.1038/s41467-020-19141-w) | nomination | gene-list membership | annotation | [Source](https://doi.org/10.1038/s41467-020-19141-w) |
@@ -260,6 +272,25 @@ Each comparison has its own full-width figure. The embryonic comparison retains 
 ![Widely studied antigens: embryonic expression](figures/widely-studied-antigens-embryonic.png)
 
 [Detailed tissue/cell/value explanations](human-explanations.csv.gz), [all comparator contexts](../cta-selection-20261028/widely-studied-contexts.csv.gz), and [every previously annotated CTA and its current category](../cta-selection-20261028/known-cta-decisions.csv.gz). Previous CTA labels are comparison annotations only. Historical-cohort counts, where available: {'CTA': 151, 'Unsafe': 48, 'Unassigned': 14}.
+
+## Serious adverse events from CTA-directed TCR-T
+
+**Treatment toxicity and antigen-specific injury are different findings.** SAE seriousness (for example hospitalization or death) is distinct from CTCAE severity. This targeted review includes important severe events and ungraded serious cases; it is not an exhaustive SAE database or a pooled incidence estimate.
+
+| Protein origins (current screen) | Receptor / product | Important events | RNA credit |
+|---|---|---|---|
+| CTAG1A: CTA; CTAG1B: CTA; CTAG2: CTA | [Letetresgene autoleucel / NY-ESO-1 c259](https://doi.org/10.1200/JCO-24-01466) | Fatal cardiac arrest, day 161. Guillain-Barre / inflammatory demyelinating neuropathy. | One step, capped |
+| PRAME: CTA | [IMA203](https://doi.org/10.1038/s41591-025-03650-6) | Grade 4 transaminitis during a grade 3 CRS episode. | One step, capped |
+| MAGEA4: CTA | [Afamitresgene autoleucel / c1032](https://doi.org/10.1038/s41591-022-02128-z) | Fatal aplastic anemia, day 55. Fatal ischemic cerebrovascular accident, day 17. | One step, capped |
+| MAGEA3: Unassigned | [MAGE-A3 affinity-enhanced a3a receptor](https://doi.org/10.1126/scitranslmed.3006034) | Fatal cardiac injury with titin cross-recognition. | None |
+| MAGEA1: CTA | [IMA202](https://doi.org/10.1136/jitc-2023-008668) | Fatal dyspnea. | One step, capped |
+| MAGEA10: CTA | [ADP-A2M10 / MAGE-A10 c796](https://doi.org/10.1136/jitc-2021-003581) | Grade 4 CRS. Fatal marrow aplasia, sepsis and respiratory distress after repeat infusion. | One step, capped |
+| CTAG1A: CTA; CTAG1B: CTA; CTAG2: CTA | [TBI-1301](https://doi.org/10.1136/jitc-2021-003811) | Steroid-responsive lung injury with TCR-T infiltration. | None |
+| MAGEA3: Unassigned; MAGEA9: CTA; MAGEA12: Unsafe; MAGEA9B: CTA | [NCI HLA-A*02-restricted MAGE-A3/A9/A12-reactive TCR](https://pubmed.ncbi.nlm.nih.gov/23377668/) | Fatal neurological injury; MAGE-A12 cross-recognition implicated. | None |
+
+The MAGE-A3 **a3a** cardiac cases implicated **titin (TTN)**, an unintended target; the separate NCI MAGE-A3/A9 receptor neurological cases implicated the cross-recognized **MAGE-A12** peptide. These findings do not establish that MAGE-A3 itself was present in heart or brain. TBI-1301's grade 3 lung injury retains an unresolved-specificity hold for that product. c259's late cardiac death and Guillain-Barre cases remain caveats without an established peptide-specific mechanism.
+
+[Full attribution, epitope/HLA mappings, cohort denominators and limitations](../cta-tcr-trials-20261029/index.md). A favorable reviewed product supplies one capped RNA step, never protein or clinical-injury clearance. The exact tested peptide matters: NY-ESO-1 and **CTAG2/LAGE-1A** share SLLMWITQC; this does not clear LAGE-1B or other CTAG2 peptides.
 
 ## Evidence limits
 

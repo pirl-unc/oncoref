@@ -51,7 +51,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,863 proteins (identical selected reference sequences collapsed) | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-29.3` |
+| Human | 19,863 proteins (identical selected reference sequences collapsed) | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-29.4` |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 
@@ -91,6 +91,24 @@ TPM/nTPM is summed only for matched group-member measurements in the same source
 | Vital | 4 | 8 | 16 | 32 |
 | Protected | 8 | 16 | 32 | 64 |
 | Manageable | 16 | 32 | 64 | 128 |
+
+A reviewed TCR-T cohort with no identified grade 4-5 specificity-related toxicity
+can supply **one additional RNA step, capped at Enhanced**. The resulting ladders
+are Vital **8/16/32/32**, Protected **16/32/64/64**, and Manageable **32/64/128/128**.
+Trials do not stack or change the observed IHC grade. A severe suspected specificity
+signal, ungraded suspected specificity injury or unassessed event attribution blocks
+credit for that receptor. Protein and clinical-injury exclusions still apply.
+
+This is a protein-profile screening inference with explicit peptide, isoform, HLA,
+receptor and population limitations. It does not clear every epitope of a protein.
+**CTAG2/LAGE-1A and NY-ESO-1 share the c259 target peptide**; CTAG2 already passed
+before the credit. Its Enhanced-negative heart ceiling is capped and stays at 32.
+[Serious adverse events, attribution, clinical cohorts and exact epitope mappings](audits/cta-tcr-trials-20261029/index.md).
+
+`oncoref.tcr_trials` exposes the ledger, cohorts, sentinel events and clinical-credit
+assessment. `oncoref tcr-trials --table all` exports it as JSON. Original source
+artifacts use the shared versioned reference cache with checksums. Unreviewed or
+unreported outcomes never become evidence of no toxicity.
 
 These are policy parameters, not measured toxicity limits. TPM/nTPM assays share nominal limits while retaining their units; corneal CP10K uses nominal limits divided by 100, **not a TPM conversion**. HPA clusters require ≥20 reads; DICE requires three reported values; cornea requires ≥5 positive cells and ≥20 counts in at least two sample groups. The source-specific support statistics are preserved rather than calling every measurement a comparable sample maximum.
 

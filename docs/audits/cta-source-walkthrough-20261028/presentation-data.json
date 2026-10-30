@@ -1,6 +1,6 @@
 {
   "summary": {
-    "policy": "oncoref.cta-selection.2026-10-29.3",
+    "policy": "oncoref.cta-selection.2026-10-29.4",
     "categories": {
       "Unsafe": 18031,
       "Unassigned": 1290,
@@ -15,7 +15,7 @@
     },
     "order_independent": true
   },
-  "report_sha256": "cbf16d3371962e3b73f6a6fb19c1dbe1c8d1a35458666d6e9fa46fd6a743e118",
+  "report_sha256": "461a37f80b2dcf64845a0805a72acc13f363a373aaddb487a6f64b7131cace3e",
   "papers": [
     {
       "source_id": "10.18632/oncotarget.21715",

@@ -514,6 +514,18 @@ def _no_ici_orr_message(code: str, *, inherit: bool) -> str:
     return f"{message}\n{note}" if note else message
 
 
+def _cmd_tcr_trials(args: argparse.Namespace) -> int:
+    """Export the reviewed trial evidence without downloading source papers."""
+    from . import tcr_trials
+
+    if args.table == "all":
+        print(json.dumps(tcr_trials.evidence(), indent=2))
+    else:
+        frame = getattr(tcr_trials, args.table)()
+        print(frame.to_json(orient="records", indent=2))
+    return 0
+
+
 def _cmd_cta(args: argparse.Namespace) -> int:
     if args.unfiltered:
         genes = cta.cta_unfiltered_gene_ids() if args.ids else cta.cta_unfiltered_gene_names()
@@ -848,6 +860,14 @@ def _build_parser() -> argparse.ArgumentParser:
     p_cta.add_argument("--ids", action="store_true", help="Ensembl gene IDs instead of symbols")
     p_cta.add_argument("--count", action="store_true", help="Print the count only")
     p_cta.set_defaults(func=_cmd_cta)
+
+    p_trials = sub.add_parser(
+        "tcr-trials", help="Reviewed CTA TCR-T cohorts, epitopes and serious events"
+    )
+    p_trials.add_argument(
+        "--table", choices=["all", "products", "cohorts", "events"], default="products"
+    )
+    p_trials.set_defaults(func=_cmd_tcr_trials)
 
     p_proteoforms = sub.add_parser(
         "proteoforms",

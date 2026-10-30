@@ -1,0 +1,121 @@
+{
+  "schema": "oncoref.cta-selection",
+  "schema_version": 1,
+  "release": "1.23.0",
+  "data_sha256": {
+    "cta-selection-human.csv.gz": "ede078c0b66136f47a72a16e59049ab4831c68499389394d0f9d50ec53f03d90",
+    "cta-selection-sources.csv": "4bb650d4a026e6b69f0fe2b02447fda4e9b0eab05410bcb8e52318d3a560986e"
+  },
+  "species": {
+    "human": {
+      "selection_status": "available",
+      "evidence_status": "partial",
+      "policy_id": "oncoref.cta-selection.2026-10-29.3",
+      "universe": "19863 protein-equivalence groups covering 20097 gene loci",
+      "reference": {
+        "annotation_release": "115",
+        "annotation_source": "Ensembl",
+        "assembly_accession": "GCA_000001405.29",
+        "content_provenance": {
+          "canonical_gene_space": "b77d1b751a6dd5f05c1de8611b2666c4c4159ba76f16ffb9cbe305e9bf4282df"
+        },
+        "identifier_namespaces": {
+          "gene": "Ensembl gene",
+          "transcript": "Ensembl transcript"
+        },
+        "reference_id": "openvax:reference:v1:sha256:00bdffd455b7227d0b77e8f7a67d7e2e3d8146526281f2ed33a154b1f10b01d2",
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "source_version": "Ensembl-115-oncoref-primary-gene-space",
+        "taxon_id": 9606
+      },
+      "limitations": [
+        "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
+        "Developmental coverage is stage-limited; gastrulation and preimplantation measurements do not cover later fetal/postnatal development",
+        "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
+        "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
+        "Representative-protein equivalence is not exhaustive isoform identity",
+        "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel"
+      ]
+    },
+    "dog": {
+      "selection_status": "unavailable",
+      "evidence_status": "partial",
+      "policy_id": null,
+      "universe": "14 curated native nominations; not a genome-wide classification",
+      "reference": {
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "taxon_id": 9615,
+        "assembly_accession": "GCF_011100685.1",
+        "annotation_source": "NCBI RefSeq",
+        "annotation_release": "106",
+        "source_version": "NCBI-AR106-2021-01-11",
+        "identifier_namespaces": {
+          "gene": "NCBI Gene",
+          "protein": "NCBI RefSeq protein",
+          "transcript": "NCBI RefSeq RNA"
+        },
+        "content_provenance": {
+          "cds": "a06f0ec4fa19181ecc9e44c26f0366baba85a9957f1adbcd4b31b5e089041e1e",
+          "feature_table": "2748ac54c6e031b3b6b20f06d8383e19e3caa6667494381d570e2b06c3d25c19",
+          "genome": "55d9bdd260ccf8a427dc4735bfdb61102af573411cf9a9432e5e71a29f4065c8",
+          "gtf": "5d3ce6df08c469b4317f3375829185f852ee4026080cb2d87f35851d28a08e78",
+          "protein": "478ff85988e53be0f8c36fcf290a4d512792bbdb8148a0c5132e1022e15eeb49",
+          "rna": "0a291886292dae885a14337e674db66019c18962700c79c01723c550fc1070b7"
+        },
+        "reference_id": "openvax:reference:v1:sha256:cd23d1e4d15d03a43e3f3e30fe14e9f12150be37362a74b1497660d554e1d4c3"
+      },
+      "limitations": [
+        "No validated species-specific quantitative selection policy",
+        "Native normal matrices need reference reconciliation and source-specific scale handling",
+        "Tumor cohort integration is blocked by unit/reference provenance",
+        "Unassessed nominations have null categories; human expression and safety evidence never transfer by orthology"
+      ]
+    },
+    "mouse": {
+      "selection_status": "unavailable",
+      "evidence_status": "partial",
+      "policy_id": null,
+      "universe": "1 curated native nominations; not a genome-wide classification",
+      "reference": {
+        "schema": "openvax.reference",
+        "schema_version": 1,
+        "taxon_id": 10090,
+        "assembly_accession": "GCF_000001635.27",
+        "annotation_source": "NCBI RefSeq",
+        "annotation_release": "RS_2024_02",
+        "source_version": "NCBI Gene 22037 single-gene subset retrieved 2026-10-29",
+        "identifier_namespaces": {
+          "gene": "NCBI Gene",
+          "protein": "RefSeq",
+          "transcript": "RefSeq"
+        },
+        "content_provenance": {
+          "gene_record_subset": "a2ee9d2660cf52f3ea63c22ff0071ce120efd27ff1f0ba58ee5b2ad5bfda532c",
+          "product_report_subset": "6cd41d87b9b4bb7e33de0d0821dc3f697288b2b2b79313a3dc62e7a4b9616801",
+          "protein": "7f7c4754ccdf856de3499a0561ca959fedcaa658dea06583d0c095707e20f64d",
+          "rna": "0300f700336da1950718ab2905b875a805eb1fa48eec5c6957ab4726eab2d643"
+        },
+        "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d"
+      },
+      "limitations": [
+        "One P1A nomination; not a mouse CTA panel, genome-wide screen or quantitative admission policy.",
+        "Only Sarma 1999 Figure 1 and accompanying endogenous RNA results are imported. Protein abundance, placental expression, presentation and transgenic experiments are outside this seed.",
+        "Five normal organs from BALB/c mice do not establish a complete normal panel; strain, stage, cell type and donor coverage remain limited.",
+        "Donor/sample counts, biological independence and technical replicate counts are unreported for these imported observations; no counts are inferred from figure lanes.",
+        "Qualitative assay signals and source-relative comparisons are not TPM, protein abundance or isoform-specific measurements. Less sensitive Northern results do not negate sensitive RT-PCR signals.",
+        "Reference assets are an explicitly scoped NCBI Gene 22037 subset, not a full annotation release. Historical assay-to-reference sequence equivalence remains unresolved.",
+        "No quantitative mouse selection policy; unassessed nominations have null categories.",
+        "Literature-identified atlases remain unintegrated; no complete normal panel or strain equivalence is inferred."
+      ]
+    }
+  },
+  "inputs": {
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "cbf16d3371962e3b73f6a6fb19c1dbe1c8d1a35458666d6e9fa46fd6a743e118",
+    "report_manifest": "32145ba4d9088e60e588e77a1472e5bb4acbc880834e4c8247e7210926f343d2",
+    "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
+    "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+    "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"
+  }
+}

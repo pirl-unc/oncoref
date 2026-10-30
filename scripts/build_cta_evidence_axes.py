@@ -97,7 +97,7 @@ def build():
     page.drawString(
         36,
         25,
-        "Local policy: oncoref.cta-selection.2026-10-29.3. Research policy, not clinical safety clearance.",
+        "Local policy: oncoref.cta-selection.2026-10-29.4. Clinical RNA credit retains tested epitope limits.",
     )
     page.save()
     shutil.copyfile(destination, images / destination.name)

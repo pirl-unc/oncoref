@@ -1,0 +1,1107 @@
+{
+  "schema": "oncoref.tcr-trial-evidence",
+  "schema_version": 1,
+  "reviewed_on": "2026-10-29",
+  "coverage": "Targeted initial review, not an exhaustive trial or adverse-event database. Unlisted proteins/products are unreviewed, not negative.",
+  "clinical_credit": "One RNA ladder step, capped at rank 3; research prioritization, not a clinically validated limit.",
+  "sources": {
+    "lete_mrcls_2025": {
+      "source_id": "tcr_trial_lete_mrcls_2025",
+      "version": "snapshot-2026-10-29",
+      "title": "Letetresgene Autoleucel in Advanced/Metastatic Myxoid/Round Cell Liposarcoma",
+      "url": "https://doi.org/10.1200/JCO-24-01466",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12084024/fullTextXML",
+      "sha256": "5825979134db05488b2949cb8aa4e69e88eae8db6e5fd655e4cdbb8a8122f8f3"
+    },
+    "ima203_2025": {
+      "source_id": "tcr_trial_ima203_2025",
+      "version": "snapshot-2026-10-29",
+      "title": "Autologous T cell therapy for PRAME+ advanced solid tumors in HLA-A*02+ patients: a phase 1 trial",
+      "url": "https://doi.org/10.1038/s41591-025-03650-6",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12283372/fullTextXML",
+      "sha256": "6d799be68557abfba8ffa0d0be4b5c754155a27d388709baa51f65af1018f72e"
+    },
+    "afami_phase1_2023": {
+      "source_id": "tcr_trial_afami_phase1_2023",
+      "version": "snapshot-2026-10-29",
+      "title": "Autologous T cell therapy for MAGE-A4+ solid cancers in HLA-A*02+ patients: a phase 1 trial",
+      "url": "https://doi.org/10.1038/s41591-022-02128-z",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9873554/fullTextXML",
+      "sha256": "37b4dc97c375f01daca0ba2c4c3ab027d9e10156acee63f8fbaaf77b0209ee96"
+    },
+    "spearhead1_2024": {
+      "source_id": "tcr_trial_spearhead1_2024",
+      "version": "snapshot-2026-10-29",
+      "title": "SPEARHEAD-1: a single-arm phase 2 trial of afamitresgene autoleucel in advanced synovial sarcoma and myxoid/round cell liposarcoma",
+      "url": "https://doi.org/10.1016/S0140-6736(24)00319-2",
+      "artifact_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11419333/",
+      "sha256": "7e6562a5442e94dc20808904b378325a4ee968af16a4ca003da0aba920573673"
+    },
+    "magea3_titin_2013": {
+      "source_id": "tcr_trial_magea3_titin_2013",
+      "version": "snapshot-2026-10-29",
+      "title": "Identification of a Titin-Derived HLA-A1-Presented Peptide as a Cross-Reactive Target for Engineered MAGE A3-Directed T Cells",
+      "url": "https://doi.org/10.1126/scitranslmed.3006034",
+      "artifact_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6002776/",
+      "sha256": "a9c23e35f84c9d60b8d5c487e0e249954cc6af8aaa9565209df51c8538cb14ae"
+    },
+    "lete_gbs_2019": {
+      "source_id": "tcr_trial_lete_gbs_2019",
+      "version": "snapshot-2026-10-29",
+      "title": "Guillain-Barre syndrome observed with adoptive transfer of lymphocytes genetically engineered with an NY-ESO-1 reactive T-cell receptor",
+      "url": "https://doi.org/10.1186/s40425-019-0759-x",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6842215/fullTextXML",
+      "sha256": "50d8fc2d84ec01a90a9f6b37b79b6619b93dd351935a5a5e08349ec0e7869c6c"
+    },
+    "lete_protocol": {
+      "source_id": "tcr_trial_lete_protocol",
+      "version": "snapshot-2026-10-29",
+      "title": "NCT03709706 protocol: NY-ESO-1/LAGE-1A shared peptide and c259 receptor",
+      "url": "https://cdn.clinicaltrials.gov/large-docs/06/NCT03709706/Prot_000.pdf",
+      "artifact_url": "https://cdn.clinicaltrials.gov/large-docs/06/NCT03709706/Prot_000.pdf",
+      "sha256": "08e9dab6a681dbf70b94dac9d109fe74a3af3da10673a7046e2a20b0effd5527"
+    },
+    "afami_protocol": {
+      "source_id": "tcr_trial_afami_protocol",
+      "version": "snapshot-2026-10-29",
+      "title": "NCT03132922 protocol: MAGE-A4 c1032 target peptide",
+      "url": "https://cdn.clinicaltrials.gov/large-docs/22/NCT03132922/Prot_000.pdf",
+      "artifact_url": "https://cdn.clinicaltrials.gov/large-docs/22/NCT03132922/Prot_000.pdf",
+      "sha256": "d907341dd409ef336417cc68e3088025e46b22bcd9beca431b386c4794b5628f"
+    },
+    "magea1_2024": {
+      "source_id": "tcr_trial_magea1_2024",
+      "version": "snapshot-2026-10-29",
+      "title": "First-in-human dose escalation trial to evaluate the clinical safety and efficacy of an anti-MAGEA1 autologous TCR-transgenic T cell therapy in relapsed and refractory solid tumors",
+      "url": "https://doi.org/10.1136/jitc-2023-008668",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11268062/fullTextXML",
+      "sha256": "96edd4bcc4770adb537a5c1f013d4dd0175913bbf7536f3c7713ae09c2e820e1"
+    },
+    "magea10_2022": {
+      "source_id": "tcr_trial_magea10_2022",
+      "version": "snapshot-2026-10-29",
+      "title": "Phase I clinical trial evaluating the safety and efficacy of ADP-A2M10 SPEAR T cells in patients with MAGE-A10+ advanced non-small cell lung cancer",
+      "url": "https://doi.org/10.1136/jitc-2021-003581",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8796260/fullTextXML",
+      "sha256": "2533a5a940c566bd3354f0f7c996d54e543d66c6e49e065def9246687ff8a41f"
+    },
+    "tbi1301_2022": {
+      "source_id": "tcr_trial_tbi1301_2022",
+      "version": "snapshot-2026-10-29",
+      "title": "NY-ESO-1-specific redirected T cells with endogenous TCR knockdown mediate tumor response and cytokine release syndrome",
+      "url": "https://doi.org/10.1136/jitc-2021-003811",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9244667/fullTextXML",
+      "sha256": "459b4e9d0d18aecdd73577af987bca56e36a3eeb80916ffbf40d3d2b4164a635"
+    },
+    "magea3_neuro_2013": {
+      "source_id": "tcr_trial_magea3_neuro_2013",
+      "version": "snapshot-2026-10-29",
+      "title": "Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23377668/",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:23377668%20AND%20SRC:MED&format=json&resultType=core",
+      "sha256": "0acb2511db53c762ae3b6f467b39e336ed89df03516cc4a9daadfdb1d0db1f56"
+    }
+  },
+  "products": [
+    {
+      "product_id": "lete_cel_c259",
+      "name": "Letetresgene autoleucel / NY-ESO-1 c259",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*02:01",
+        "HLA-A*02:05",
+        "HLA-A*02:06"
+      ],
+      "targets": [
+        {
+          "symbol": "CTAG1A",
+          "gene_id": "ENSG00000268651",
+          "peptide": "SLLMWITQC",
+          "isoform_scope": "NY-ESO-1 157-165",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000469441.1",
+              "length": 180,
+              "sequence_sha256": "8bc781a703ce6e2649f88d9263abc8327cf5e4a4846edf5103d0dde5d4a0a802",
+              "start_1based": 157
+            }
+          ]
+        },
+        {
+          "symbol": "CTAG1B",
+          "gene_id": "ENSG00000184033",
+          "peptide": "SLLMWITQC",
+          "isoform_scope": "NY-ESO-1 157-165",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000332602.2",
+              "length": 180,
+              "sequence_sha256": "8bc781a703ce6e2649f88d9263abc8327cf5e4a4846edf5103d0dde5d4a0a802",
+              "start_1based": 157
+            }
+          ]
+        },
+        {
+          "symbol": "CTAG2",
+          "gene_id": "ENSG00000126890",
+          "peptide": "SLLMWITQC",
+          "isoform_scope": "LAGE-1A 157-165; no transfer to LAGE-1B or other CTAG2 peptides",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000358598.3",
+              "length": 180,
+              "sequence_sha256": "5608df0b33405188339c7831de55351f60eda47a1002ae5ea1ef320c9738106b",
+              "start_1based": 157
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "lete_protocol"
+      ],
+      "review_scope": "Published MRCLS cohort and neurological case report; not a systematic review of every c259 trial."
+    },
+    {
+      "product_id": "ima203",
+      "name": "IMA203",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*02:01"
+      ],
+      "targets": [
+        {
+          "symbol": "PRAME",
+          "gene_id": "ENSG00000185686",
+          "peptide": "SLLQHLIGL",
+          "isoform_scope": "PRAME-004; sequence positions 425-433 in matched reference proteins",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000384343.3",
+              "length": 509,
+              "sequence_sha256": "fc396a5c68766e4cde3bca3519fc62a656c56949335d53064652142a668a62e0",
+              "start_1based": 425
+            },
+            {
+              "protein_id": "ENSP00000381728.2",
+              "length": 509,
+              "sequence_sha256": "fc396a5c68766e4cde3bca3519fc62a656c56949335d53064652142a668a62e0",
+              "start_1based": 425
+            },
+            {
+              "protein_id": "ENSP00000381726.1",
+              "length": 509,
+              "sequence_sha256": "fc396a5c68766e4cde3bca3519fc62a656c56949335d53064652142a668a62e0",
+              "start_1based": 425
+            },
+            {
+              "protein_id": "ENSP00000445675.1",
+              "length": 509,
+              "sequence_sha256": "fc396a5c68766e4cde3bca3519fc62a656c56949335d53064652142a668a62e0",
+              "start_1based": 425
+            },
+            {
+              "protein_id": "ENSP00000385198.1",
+              "length": 509,
+              "sequence_sha256": "fc396a5c68766e4cde3bca3519fc62a656c56949335d53064652142a668a62e0",
+              "start_1based": 425
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "ima203_2025"
+      ],
+      "review_scope": "Published 2025 phase 1a/1b monotherapy analysis; not every ongoing cohort."
+    },
+    {
+      "product_id": "afami_cel_c1032",
+      "name": "Afamitresgene autoleucel / c1032",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*02:01",
+        "HLA-A*02:02",
+        "HLA-A*02:03",
+        "HLA-A*02:06"
+      ],
+      "targets": [
+        {
+          "symbol": "MAGEA4",
+          "gene_id": "ENSG00000147381",
+          "peptide": "GVYDGREHTV",
+          "isoform_scope": "MAGE-A4 230-239; only peptide-containing isoforms",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000506838.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000276344.2",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000394149.2",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000402624.1",
+              "length": 241,
+              "sequence_sha256": "2527446981c2c7982c45e77647710901d933ace4dc07d62360b251d69b351450",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000359365.3",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000507023.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000377498.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000377497.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000402186.2",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000359360.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000353379.2",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000390096.1",
+              "length": 241,
+              "sequence_sha256": "2527446981c2c7982c45e77647710901d933ace4dc07d62360b251d69b351450",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581973.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581974.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581975.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581976.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581977.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581978.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581979.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581980.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581981.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581982.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581983.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581984.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581985.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581986.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581987.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            },
+            {
+              "protein_id": "ENSP00000581988.1",
+              "length": 317,
+              "sequence_sha256": "660f85d6da75ad79cf925fe2843acea6d4e2abea2b6bf202c635609810a6a239",
+              "start_1based": 230
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "afami_protocol"
+      ],
+      "review_scope": "Phase 1 and SPEARHEAD-1 cohort 1 publications; not a postmarketing surveillance census."
+    },
+    {
+      "product_id": "magea3_a3a",
+      "name": "MAGE-A3 affinity-enhanced a3a receptor",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*01:01"
+      ],
+      "targets": [
+        {
+          "symbol": "MAGEA3",
+          "gene_id": "ENSG00000221867",
+          "peptide": "EVDPIGHLY",
+          "isoform_scope": "Intended MAGE-A3 target; adverse specificity is titin cross-recognition",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000392758.1",
+              "length": 198,
+              "sequence_sha256": "a32e47a4fda64c72abb6ecf3e2f76255ac2e6b9dc894067f96dae9df3eebdea7",
+              "start_1based": 168
+            },
+            {
+              "protein_id": "ENSP00000473093.1",
+              "length": 314,
+              "sequence_sha256": "2144e0047f0cd67d310fa25f966fc8a76354fb49c104060a2986dabeb21defc2",
+              "start_1based": 168
+            },
+            {
+              "protein_id": "ENSP00000359301.3",
+              "length": 314,
+              "sequence_sha256": "2144e0047f0cd67d310fa25f966fc8a76354fb49c104060a2986dabeb21defc2",
+              "start_1based": 168
+            },
+            {
+              "protein_id": "ENSP00000603948.1",
+              "length": 314,
+              "sequence_sha256": "2144e0047f0cd67d310fa25f966fc8a76354fb49c104060a2986dabeb21defc2",
+              "start_1based": 168
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "magea3_titin_2013"
+      ],
+      "review_scope": "Two fatal cases and the mechanistic investigation; different MAGE-A3 receptors require separate review."
+    },
+    {
+      "product_id": "ima202",
+      "name": "IMA202",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*02:01"
+      ],
+      "targets": [
+        {
+          "symbol": "MAGEA1",
+          "gene_id": "ENSG00000198681",
+          "peptide": "KVLEYVIKV",
+          "isoform_scope": "MAGE-A1 peptide; other receptors are separate products",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000349085.5",
+              "length": 309,
+              "sequence_sha256": "e1f5470ac673d2c4a5a7e2226bb8431176f15ce407e229102ddf6d9e8c9cca5f",
+              "start_1based": 278
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "magea1_2024"
+      ],
+      "review_scope": "Published IMA202-101 cohort; no transfer from other MAGEA1 products."
+    },
+    {
+      "product_id": "adp_a2m10",
+      "name": "ADP-A2M10 / MAGE-A10 c796",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*02:01",
+        "HLA-A*02:06"
+      ],
+      "targets": [
+        {
+          "symbol": "MAGEA10",
+          "gene_id": "ENSG00000124260",
+          "peptide": "GLYDGMEHL",
+          "isoform_scope": "MAGE-A10 peptide",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000359347.4",
+              "length": 369,
+              "sequence_sha256": "793a8d14f37fb7051c97220b2c7007cd0c44704c242de1bb001fcad3c1c8e824",
+              "start_1based": 254
+            },
+            {
+              "protein_id": "ENSP00000244096.3",
+              "length": 369,
+              "sequence_sha256": "793a8d14f37fb7051c97220b2c7007cd0c44704c242de1bb001fcad3c1c8e824",
+              "start_1based": 254
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "magea10_2022"
+      ],
+      "review_scope": "Published NSCLC cohort; another solid-tumor cohort not yet adjudicated here."
+    },
+    {
+      "product_id": "tbi1301",
+      "name": "TBI-1301",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*02:01",
+        "HLA-A*02:06"
+      ],
+      "targets": [
+        {
+          "symbol": "CTAG1A",
+          "gene_id": "ENSG00000268651",
+          "peptide": "SLLMWITQC",
+          "isoform_scope": "NY-ESO-1 157-165",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000469441.1",
+              "length": 180,
+              "sequence_sha256": "8bc781a703ce6e2649f88d9263abc8327cf5e4a4846edf5103d0dde5d4a0a802",
+              "start_1based": 157
+            }
+          ]
+        },
+        {
+          "symbol": "CTAG1B",
+          "gene_id": "ENSG00000184033",
+          "peptide": "SLLMWITQC",
+          "isoform_scope": "NY-ESO-1 157-165",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000332602.2",
+              "length": 180,
+              "sequence_sha256": "8bc781a703ce6e2649f88d9263abc8327cf5e4a4846edf5103d0dde5d4a0a802",
+              "start_1based": 157
+            }
+          ]
+        },
+        {
+          "symbol": "CTAG2",
+          "gene_id": "ENSG00000126890",
+          "peptide": "SLLMWITQC",
+          "isoform_scope": "LAGE-1A 157-165; no transfer to LAGE-1B or other CTAG2 peptides",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000358598.3",
+              "length": 180,
+              "sequence_sha256": "5608df0b33405188339c7831de55351f60eda47a1002ae5ea1ef320c9738106b",
+              "start_1based": 157
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "tbi1301_2022"
+      ],
+      "review_scope": "Published nine-person cohort; unresolved grade 3 lung-injury mechanism prevents favorable credit."
+    },
+    {
+      "product_id": "magea3_a2_neuro",
+      "name": "NCI HLA-A*02-restricted MAGE-A3/A9/A12-reactive TCR",
+      "modality": "TCR-T",
+      "taxon_id": 9606,
+      "hla": [
+        "HLA-A*02:01"
+      ],
+      "targets": [
+        {
+          "symbol": "MAGEA3",
+          "gene_id": "ENSG00000221867",
+          "peptide": "KVAELVHFL",
+          "isoform_scope": "Shared intended peptide",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000392758.1",
+              "length": 198,
+              "sequence_sha256": "a32e47a4fda64c72abb6ecf3e2f76255ac2e6b9dc894067f96dae9df3eebdea7",
+              "start_1based": 112
+            },
+            {
+              "protein_id": "ENSP00000473093.1",
+              "length": 314,
+              "sequence_sha256": "2144e0047f0cd67d310fa25f966fc8a76354fb49c104060a2986dabeb21defc2",
+              "start_1based": 112
+            },
+            {
+              "protein_id": "ENSP00000359301.3",
+              "length": 314,
+              "sequence_sha256": "2144e0047f0cd67d310fa25f966fc8a76354fb49c104060a2986dabeb21defc2",
+              "start_1based": 112
+            },
+            {
+              "protein_id": "ENSP00000603948.1",
+              "length": 314,
+              "sequence_sha256": "2144e0047f0cd67d310fa25f966fc8a76354fb49c104060a2986dabeb21defc2",
+              "start_1based": 112
+            }
+          ]
+        },
+        {
+          "symbol": "MAGEA9",
+          "gene_id": "ENSG00000123584",
+          "peptide": "KVAELVHFL",
+          "isoform_scope": "Shared intended peptide",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000243314.5",
+              "length": 315,
+              "sequence_sha256": "0bc7ebd4e1561184c6891757f9ef2d0843d5022016750fd5cb092a25baad51a2",
+              "start_1based": 111
+            }
+          ]
+        },
+        {
+          "symbol": "MAGEA12",
+          "gene_id": "ENSG00000213401",
+          "peptide": "KMAELVHFL",
+          "isoform_scope": "Cross-recognized variant peptide; suspected normal brain source",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000377447.3",
+              "length": 314,
+              "sequence_sha256": "0109d7827258db081cc89240a49da2500deec2eff44b1896903344e0075a54be",
+              "start_1based": 112
+            },
+            {
+              "protein_id": "ENSP00000350592.4",
+              "length": 314,
+              "sequence_sha256": "0109d7827258db081cc89240a49da2500deec2eff44b1896903344e0075a54be",
+              "start_1based": 112
+            },
+            {
+              "protein_id": "ENSP00000377478.3",
+              "length": 314,
+              "sequence_sha256": "0109d7827258db081cc89240a49da2500deec2eff44b1896903344e0075a54be",
+              "start_1based": 112
+            },
+            {
+              "protein_id": "ENSP00000586307.1",
+              "length": 314,
+              "sequence_sha256": "0109d7827258db081cc89240a49da2500deec2eff44b1896903344e0075a54be",
+              "start_1based": 112
+            }
+          ]
+        },
+        {
+          "symbol": "MAGEA9B",
+          "gene_id": "ENSG00000267978",
+          "peptide": "KVAELVHFL",
+          "isoform_scope": "Reference-verified shared peptide; MAGE-A9 protein-identical partner, not separately attributed clinical expression",
+          "sequence_reference": "Ensembl 115 / GRCh38",
+          "sequence_matches": [
+            {
+              "protein_id": "ENSP00000471017.1",
+              "length": 315,
+              "sequence_sha256": "0bc7ebd4e1561184c6891757f9ef2d0843d5022016750fd5cb092a25baad51a2",
+              "start_1based": 111
+            },
+            {
+              "protein_id": "ENSP00000472733.1",
+              "length": 195,
+              "sequence_sha256": "bc4feda2bf50320586fa625b7be05400ba24bcd837c2fe7d81fc4eb91c4af78e",
+              "start_1based": 111
+            },
+            {
+              "protein_id": "ENSP00000620192.1",
+              "length": 315,
+              "sequence_sha256": "0bc7ebd4e1561184c6891757f9ef2d0843d5022016750fd5cb092a25baad51a2",
+              "start_1based": 111
+            }
+          ]
+        }
+      ],
+      "identity_sources": [
+        "magea3_neuro_2013"
+      ],
+      "review_scope": "Primary abstract and indexed full-text epitope/mechanism passages; normal neuronal antigen attribution remains proposed."
+    }
+  ],
+  "cohorts": [
+    {
+      "cohort_id": "lete_mrcls_20",
+      "product_id": "lete_cel_c259",
+      "trial_ids": [
+        "NCT02992743"
+      ],
+      "patients_treated": 20,
+      "population": "Advanced/metastatic myxoid/round cell liposarcoma",
+      "source": "lete_mrcls_2025",
+      "source_sections": "Results: Patients; Safety; Discussion",
+      "review_status": "reviewed",
+      "grade45_specificity": "none_identified",
+      "follow_up": "Safety cutoff May 2022; survival follow-up January 2023. A fatal cardiac event occurred on day 161.",
+      "overlap_note": "Two sequential 10-person cohorts counted once; repeat infusion does not add a patient.",
+      "finding": "No grade 4-5 event was attributed to peptide-specific recognition of normal tissue. Grade 4 cytopenias occurred; one late cardiac death remained potentially treatment-related without an established specificity mechanism.",
+      "qualification": "This is a curation conclusion about reported attribution, not an author-reported zero-event rate or proof of safety.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT02992743"
+      ]
+    },
+    {
+      "cohort_id": "ima203_phase1_40",
+      "product_id": "ima203",
+      "trial_ids": [
+        "NCT03686124"
+      ],
+      "patients_treated": 40,
+      "population": "PRAME-positive advanced solid tumors",
+      "source": "ima203_2025",
+      "source_sections": "Results: Safety; preclinical specificity; Methods: Statistical analysis",
+      "review_status": "reviewed",
+      "grade45_specificity": "none_identified",
+      "follow_up": "Interim cutoff July 4, 2023; phase 1a and phase 1b monotherapy.",
+      "overlap_note": "40 infused, 41 started lymphodepletion. Do not count the pre-infusion death as TCR exposure.",
+      "finding": "No treatment-related deaths after IMA203 infusion were reported. Severe cytopenias and CRS occurred; no clinical renal toxicity was seen despite weak reactivity in one in-vitro renal donor.",
+      "qualification": "Normal peptide non-detection is assay-limited; this does not clear all PRAME peptides.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT03686124"
+      ]
+    },
+    {
+      "cohort_id": "afami_phase1_38",
+      "product_id": "afami_cel_c1032",
+      "trial_ids": [
+        "NCT03132922"
+      ],
+      "patients_treated": 38,
+      "population": "MAGE-A4-positive advanced solid tumors",
+      "source": "afami_phase1_2023",
+      "source_sections": "Results: Safety; Discussion",
+      "review_status": "reviewed",
+      "grade45_specificity": "none_identified",
+      "follow_up": "Published phase 1 analysis; fatal events at days 17 and 55.",
+      "overlap_note": "Separate patients from SPEARHEAD-1 cohort 1.",
+      "finding": "Two possibly treatment-related deaths occurred: aplastic anemia and ischemic stroke. Marrow evaluation did not support MAGE-A4-directed injury; high-dose conditioning and inflammation were considered contributors.",
+      "qualification": "The fatal stroke has no demonstrated specificity mechanism; neither death is relabelled unrelated.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT03132922"
+      ]
+    },
+    {
+      "cohort_id": "spearhead1_cohort1_52",
+      "product_id": "afami_cel_c1032",
+      "trial_ids": [
+        "NCT04044768"
+      ],
+      "patients_treated": 52,
+      "population": "Synovial sarcoma or myxoid/round cell liposarcoma",
+      "source": "spearhead1_2024",
+      "source_sections": "Results: Safety; Table 2; Discussion",
+      "review_status": "reviewed",
+      "grade45_specificity": "none_identified",
+      "follow_up": "Published cohort 1 analysis; later cohorts are outside this snapshot.",
+      "overlap_note": "One 52-person cohort, not independent counts per indication or subsequent publication.",
+      "finding": "No grade 5 adverse events or treatment-related deaths were reported; severe cytopenias and mostly low-grade CRS remained important regimen toxicities.",
+      "qualification": "No identified specificity event in this selected cohort does not establish a population-wide zero risk.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT04044768"
+      ]
+    },
+    {
+      "cohort_id": "magea3_a3a_two_cases",
+      "product_id": "magea3_a3a",
+      "trial_ids": [
+        "NCT01350401",
+        "NCT01352286"
+      ],
+      "patients_treated": 2,
+      "population": "One melanoma and one multiple myeloma patient",
+      "source": "magea3_titin_2013",
+      "source_sections": "Abstract; Results: Post-clinical investigations; Discussion",
+      "review_status": "reviewed",
+      "grade45_specificity": "suspected_or_confirmed",
+      "follow_up": "Fatal cardiac injury within 4-5 days of infusion.",
+      "overlap_note": "The two patients described in linked clinical and mechanistic reports are counted once.",
+      "finding": "Fatal cardiac injury was attributed to T-cell cross-recognition, with titin identified as the likely unintended antigen.",
+      "qualification": "The finding blocks credit for this receptor; it does not prove that MAGE-A3 protein was present in heart or that every MAGE-A3 receptor is unsafe.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT01350401",
+        "https://clinicaltrials.gov/study/NCT01352286"
+      ]
+    },
+    {
+      "cohort_id": "ima202_16",
+      "product_id": "ima202",
+      "trial_ids": [
+        "NCT03441100"
+      ],
+      "patients_treated": 16,
+      "population": "MAGE-A1-positive advanced solid tumors",
+      "source": "magea1_2024",
+      "source_sections": "Results: safety and Discussion; primary abstract for Morgan 2013",
+      "review_status": "reviewed",
+      "grade45_specificity": "none_identified",
+      "follow_up": "Published cohort snapshot; later trials are not pooled.",
+      "overlap_note": "One cohort per publication; repeated infusions and mechanistic follow-up do not add patients.",
+      "finding": "Severe cytopenias and one grade 3 CRS occurred. No on-target/off-tumor toxicity was observed; fatal dyspnea was considered unrelated.",
+      "qualification": "The primary paper header lists other MAGEA1 trials; IMA202-101 identity is independently linked by the Columbia trial listing. No objective RECIST responses were required for this safety-only credit.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT03441100"
+      ],
+      "trial_identity_source": "https://recruit.cumc.columbia.edu/studyinfopage/1955"
+    },
+    {
+      "cohort_id": "adp_a2m10_nsclc_11",
+      "product_id": "adp_a2m10",
+      "trial_ids": [
+        "NCT02592577"
+      ],
+      "patients_treated": 11,
+      "population": "Advanced non-small cell lung cancer",
+      "source": "magea10_2022",
+      "source_sections": "Results: safety and Discussion; primary abstract for Morgan 2013",
+      "review_status": "reviewed",
+      "grade45_specificity": "none_identified",
+      "follow_up": "Published cohort snapshot; later trials are not pooled.",
+      "overlap_note": "One cohort per publication; repeated infusions and mechanistic follow-up do not add patients.",
+      "finding": "One grade 4 CRS and one treatment-related death after repeat infusion/intensified conditioning. Investigations favored conditioning over MAGE-A10-mediated marrow injury.",
+      "qualification": "Patient marrow antigen testing was limited by specimen quality; absence of engineered-cell enrichment does not prove no risk.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT02592577"
+      ]
+    },
+    {
+      "cohort_id": "tbi1301_9",
+      "product_id": "tbi1301",
+      "trial_ids": [
+        "NCT02366546"
+      ],
+      "patients_treated": 9,
+      "population": "NY-ESO-1-positive advanced solid tumors",
+      "source": "tbi1301_2022",
+      "source_sections": "Results: safety and Discussion; primary abstract for Morgan 2013",
+      "review_status": "reviewed",
+      "grade45_specificity": "none_identified",
+      "follow_up": "Published cohort snapshot; later trials are not pooled.",
+      "overlap_note": "One cohort per publication; repeated infusions and mechanistic follow-up do not add patients.",
+      "finding": "One grade 3 lung injury with TCR-T infiltration; resolved with steroids. Authors favored cytokine-mediated capillary leak but could not exclude normal-peptide recognition.",
+      "qualification": "Retain unresolved specificity as a review hold for this product; do not borrow favorable c259 evidence to clear TBI-1301.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT02366546"
+      ]
+    },
+    {
+      "cohort_id": "magea3_a2_neuro_9",
+      "product_id": "magea3_a2_neuro",
+      "trial_ids": [
+        "NCT01273181"
+      ],
+      "patients_treated": 9,
+      "population": "Advanced cancers",
+      "source": "magea3_neuro_2013",
+      "source_sections": "Results: safety and Discussion; primary abstract for Morgan 2013",
+      "review_status": "reviewed",
+      "grade45_specificity": "suspected_or_confirmed",
+      "follow_up": "Published cohort snapshot; later trials are not pooled.",
+      "overlap_note": "One cohort per publication; repeated infusions and mechanistic follow-up do not add patients.",
+      "finding": "Three neurological events, including two fatal cases. Authors implicated cross-recognized MAGE-A12 in brain.",
+      "qualification": "Brain staining recognized multiple MAGE-family proteins; MAGE-A12 attribution is supported but not uniquely proven.",
+      "trial_registration_urls": [
+        "https://clinicaltrials.gov/study/NCT01273181"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "event_id": "lete_late_cardiac_death",
+      "product_id": "lete_cel_c259",
+      "cohort_id": "lete_mrcls_20",
+      "source": "lete_mrcls_2025",
+      "source_sections": "Safety",
+      "event": "Fatal cardiac arrest, day 161",
+      "patients": 1,
+      "grade": 5,
+      "grade_basis": "Fatal outcome",
+      "treatment_attribution": "potentially_related",
+      "specificity_attribution": "not_established",
+      "mechanism": "unresolved",
+      "affected_tissue": "heart",
+      "recognized_protein": null,
+      "details": "Progressive disease, hypotension, renal insufficiency and intervening radiation/pazopanib complicate attribution. The report does not establish CTAG2-mediated heart injury.",
+      "seriousness_basis": "fatal_outcome"
+    },
+    {
+      "event_id": "lete_gbs_cases",
+      "product_id": "lete_cel_c259",
+      "cohort_id": null,
+      "source": "lete_gbs_2019",
+      "source_sections": "Case presentations; Discussion",
+      "event": "Guillain-Barre / inflammatory demyelinating neuropathy",
+      "patients": 2,
+      "grade": null,
+      "grade_basis": "GBS severity not assigned a CTCAE grade in the case report; do not infer grade from disability",
+      "treatment_attribution": "suspected",
+      "specificity_attribution": "not_established",
+      "mechanism": "unresolved",
+      "affected_tissue": "peripheral nerves",
+      "recognized_protein": null,
+      "details": "Authors suspected treatment association and discussed indirect immune effects. No identified peptide cross-reaction explains the cases. Case reports have no independent treated-cohort denominator and confer no favorable credit.",
+      "seriousness_basis": "hospitalization_or_major_intervention"
+    },
+    {
+      "event_id": "ima203_crs_transaminitis",
+      "product_id": "ima203",
+      "cohort_id": "ima203_phase1_40",
+      "source": "ima203_2025",
+      "source_sections": "Safety",
+      "event": "Grade 4 transaminitis during a grade 3 CRS episode",
+      "patients": 1,
+      "grade": 4,
+      "grade_basis": "Reported grade 4 transaminitis; CRS itself graded 3",
+      "treatment_attribution": "related",
+      "specificity_attribution": "not_established",
+      "mechanism": "systemic_inflammation",
+      "affected_tissue": "liver",
+      "recognized_protein": null,
+      "details": "Recorded as part of CRS, without evidence that the TCR recognized PRAME in hepatocytes.",
+      "seriousness_basis": "severe_grade_seriousness_not_separately_reported"
+    },
+    {
+      "event_id": "afami_aplasia_death",
+      "product_id": "afami_cel_c1032",
+      "cohort_id": "afami_phase1_38",
+      "source": "afami_phase1_2023",
+      "source_sections": "Safety; Discussion",
+      "event": "Fatal aplastic anemia, day 55",
+      "patients": 1,
+      "grade": 5,
+      "grade_basis": "Fatal outcome",
+      "treatment_attribution": "possibly_related",
+      "specificity_attribution": "not_supported",
+      "mechanism": "conditioning_and_inflammation",
+      "affected_tissue": "bone marrow",
+      "recognized_protein": null,
+      "details": "No marrow MAGE-A4 or enrichment of engineered T cells was detected; conditioning and systemic inflammation were considered contributors.",
+      "seriousness_basis": "fatal_outcome"
+    },
+    {
+      "event_id": "afami_stroke_death",
+      "product_id": "afami_cel_c1032",
+      "cohort_id": "afami_phase1_38",
+      "source": "afami_phase1_2023",
+      "source_sections": "Safety",
+      "event": "Fatal ischemic cerebrovascular accident, day 17",
+      "patients": 1,
+      "grade": 5,
+      "grade_basis": "Fatal outcome",
+      "treatment_attribution": "possibly_related",
+      "specificity_attribution": "not_established",
+      "mechanism": "unresolved",
+      "affected_tissue": "brain",
+      "recognized_protein": null,
+      "details": "Occurred after grade 3 neurotoxicity; no demonstrated MAGE-A4-specific brain injury mechanism was reported.",
+      "seriousness_basis": "fatal_outcome"
+    },
+    {
+      "event_id": "magea3_titin_deaths",
+      "product_id": "magea3_a3a",
+      "cohort_id": "magea3_a3a_two_cases",
+      "source": "magea3_titin_2013",
+      "source_sections": "Post-clinical investigations; Discussion",
+      "event": "Fatal cardiac injury with titin cross-recognition",
+      "patients": 2,
+      "grade": 5,
+      "grade_basis": "Fatal outcomes",
+      "treatment_attribution": "related",
+      "specificity_attribution": "suspected",
+      "mechanism": "off_target_cross_reactivity",
+      "affected_tissue": "heart",
+      "recognized_protein": "TTN",
+      "details": "Mechanistic work identified titin as the likely unintended target; MAGE antigens were not detected in patient heart samples.",
+      "seriousness_basis": "fatal_outcome"
+    },
+    {
+      "event_id": "ima202_fatal_dyspnea",
+      "product_id": "ima202",
+      "cohort_id": "ima202_16",
+      "source": "magea1_2024",
+      "source_sections": "Safety; Discussion",
+      "event": "Fatal dyspnea",
+      "patients": 1,
+      "grade": 5,
+      "grade_basis": "Fatal outcome",
+      "treatment_attribution": "unrelated",
+      "specificity_attribution": "not_supported",
+      "mechanism": "unrelated",
+      "affected_tissue": "lung",
+      "recognized_protein": null,
+      "details": "Investigators considered this death unrelated to treatment; severe conditioning cytopenias and grade 3 CRS occurred in the cohort.",
+      "seriousness_basis": "fatal_outcome"
+    },
+    {
+      "event_id": "magea10_grade4_crs",
+      "product_id": "adp_a2m10",
+      "cohort_id": "adp_a2m10_nsclc_11",
+      "source": "magea10_2022",
+      "source_sections": "Safety; Discussion",
+      "event": "Grade 4 CRS",
+      "patients": 1,
+      "grade": 4,
+      "grade_basis": "Reported CTCAE grade",
+      "treatment_attribution": "related",
+      "specificity_attribution": "not_established",
+      "mechanism": "systemic_inflammation",
+      "affected_tissue": "systemic",
+      "recognized_protein": null,
+      "details": "Required intensive supportive care; symptoms resolved. The subsequent death of this patient was attributed to disease progression.",
+      "seriousness_basis": "reported_serious_event"
+    },
+    {
+      "event_id": "magea10_aplasia_death",
+      "product_id": "adp_a2m10",
+      "cohort_id": "adp_a2m10_nsclc_11",
+      "source": "magea10_2022",
+      "source_sections": "Safety; Discussion",
+      "event": "Fatal marrow aplasia, sepsis and respiratory distress after repeat infusion",
+      "patients": 1,
+      "grade": 5,
+      "grade_basis": "Fatal outcome",
+      "treatment_attribution": "related",
+      "specificity_attribution": "not_supported",
+      "mechanism": "conditioning_and_infection",
+      "affected_tissue": "bone marrow",
+      "recognized_protein": null,
+      "details": "Authors favored intensified lymphodepletion; patient marrow antigen testing was limited. Fatality was 98 days after the second infusion.",
+      "seriousness_basis": "fatal_outcome"
+    },
+    {
+      "event_id": "tbi1301_lung_injury",
+      "product_id": "tbi1301",
+      "cohort_id": "tbi1301_9",
+      "source": "tbi1301_2022",
+      "source_sections": "Safety; Discussion",
+      "event": "Steroid-responsive lung injury with TCR-T infiltration",
+      "patients": 1,
+      "grade": 3,
+      "grade_basis": "Reported CTCAE grade",
+      "treatment_attribution": "related",
+      "specificity_attribution": "unresolved",
+      "mechanism": "unresolved",
+      "affected_tissue": "lung",
+      "recognized_protein": null,
+      "details": "Cytokine-mediated capillary leak was favored, but normal-peptide recognition remained a possibility. Below grade 4 does not mean clinically irrelevant.",
+      "seriousness_basis": "hospitalization_or_major_intervention"
+    },
+    {
+      "event_id": "magea3_neurological_deaths",
+      "product_id": "magea3_a2_neuro",
+      "cohort_id": "magea3_a2_neuro_9",
+      "source": "magea3_neuro_2013",
+      "source_sections": "Safety; Discussion",
+      "event": "Fatal neurological injury; MAGE-A12 cross-recognition implicated",
+      "patients": 2,
+      "grade": 5,
+      "grade_basis": "Fatal outcome",
+      "treatment_attribution": "related",
+      "specificity_attribution": "suspected",
+      "mechanism": "cross_recognized_family_peptide",
+      "affected_tissue": "brain",
+      "recognized_protein": "MAGEA12",
+      "details": "Two deaths among three neurological cases in nine treated patients; the third recovered. Attribution of normal brain antigen to MAGE-A12 is proposed rather than exclusive.",
+      "seriousness_basis": "fatal_outcome"
+    }
+  ],
+  "sequence_audit": {
+    "source_url": "https://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz",
+    "sha256": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96",
+    "scope": "Verified listed peptide-to-locus/isoform links; not an exhaustive proteome-wide epitope search."
+  }
+}

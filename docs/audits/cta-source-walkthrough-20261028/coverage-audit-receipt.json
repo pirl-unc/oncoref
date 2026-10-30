@@ -2,7 +2,7 @@
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
     "scripts/audit_cta_source_coverage.py": "a14f08d8751e241d7d0fb63bd1290f9ead58c4ac064b3b7b8aac29390d6aa666",
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "cbf16d3371962e3b73f6a6fb19c1dbe1c8d1a35458666d6e9fa46fd6a743e118",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "461a37f80b2dcf64845a0805a72acc13f363a373aaddb487a6f64b7131cace3e",
     "docs/audits/cta-selection-20261028/hpa-protein-evidence.csv.gz": "3c835ffa9fe8b7bfc003578be1753e223e496f80b7b26dc6c932423d81af77dc",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/manifest.json": "2de97ad9daa6ff4baeb3179c90366f131ae91e77ee5f92caa5d10dd27d148b86",
     "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",

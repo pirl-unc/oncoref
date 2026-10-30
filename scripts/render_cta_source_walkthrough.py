@@ -19,9 +19,11 @@ sys.path.insert(0, str(ROOT))
 
 import plot_cta_geometric as style  # noqa: E402
 from build_cta_selection_audit import COMPARATORS, OUTPUT, RELEASE, citation, records  # noqa: E402
+from build_tcr_trial_report import summary_markdown  # noqa: E402
 from cta_source_links import linked_sources, markdown_link  # noqa: E402
 
 from oncoref import cta_selection  # noqa: E402
+from oncoref.version import __version__  # noqa: E402
 
 
 def markdown(frame: pd.DataFrame) -> str:
@@ -754,7 +756,7 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
 
 **{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Neither", 0):,} Neither and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[Slides](slides/cta-evidence-walkthrough-expanded.pptx) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[PDF slides](cta-selection-{__version__}.pdf) · [Editable slides](slides/cta-evidence-walkthrough-expanded.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 ## Categories
 
@@ -891,6 +893,8 @@ Each comparison has its own full-width figure. The embryonic comparison retains 
 
 [Detailed tissue/cell/value explanations](human-explanations.csv.gz), [all comparator contexts](../cta-selection-20261028/widely-studied-contexts.csv.gz), and [every previously annotated CTA and its current category](../cta-selection-20261028/known-cta-decisions.csv.gz). Previous CTA labels are comparison annotations only. Historical-cohort counts, where available: {historical_counts}.
 
+{summary_markdown()}
+
 ## Evidence limits
 
 Adult normal panels do not establish pediatric safety. Tyser contains one gastrulating embryo; Petropoulos adds preimplantation embryos. Later fetal and pediatric coverage remains incomplete. RNA expression does not measure peptide-HLA presentation; HPA negative staining has finite sensitivity. PRAME informed earlier parameter choices and is not independent validation. All gene IDs, equivalence-group members, source versions and native units remain in the exports.
@@ -898,7 +902,9 @@ Adult normal panels do not establish pediatric safety. Tyser contains one gastru
     (OUTPUT / "index.md").write_text(overview)
     (OUTPUT / "policy-review.md").write_text("""# Current policy and IHC matching
 
-The active RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Neither.
+The baseline RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Neither.
+
+Reviewed TCR-T evidence can add one RNA step, capped at Enhanced: Vital 8/16/32/32, Protected 16/32/64/64, Manageable 32/64/128/128. The IHC label stays unchanged. Clinical credit carries the exact peptide/HLA/product limits and does not override normal-protein or clinical-injury exclusions. [Trial and SAE review](../cta-tcr-trials-20261029/index.md).
 
 ## RNA/IHC correspondence
 
@@ -908,7 +914,7 @@ The new compartment mapping relates intestinal epithelial populations to HPA gla
 
 [HPA colon histology](https://www.proteinatlas.org/learn/dictionary/normal/colon), [HPA bronchus histology](https://www.proteinatlas.org/learn/dictionary/normal/bronchus), [all matched measurements](../cta-selection-20261028/compartment-ihc-matches.csv.gz).
 
-PRAME colon RNA is 20.3 nTPM with 96 reads. It receives the declared epithelial-compartment match to Enhanced-negative glandular IHC. Its Manageable ceiling is therefore 128. PRAME's adrenal bulk 3.6 nTPM retains the missing-IHC ceiling 4: glandular-cell staining does not supply complete coverage of the specified adrenal medullary and cortical subcompartments. Low reported adrenal protein remains a positive flag, not negative evidence.
+PRAME colon RNA is 20.3 nTPM with 96 reads. It receives the declared epithelial-compartment match to Enhanced-negative glandular IHC. Its Manageable ceiling stays capped at 128. PRAME's adrenal bulk 3.6 nTPM has a missing-IHC baseline ceiling of 4, raised to 8 by the IMA203 clinical credit. Glandular-cell staining does not supply complete coverage of the specified adrenal medullary and cortical subcompartments; the clinical credit does not change that IHC finding. Low reported adrenal protein remains a positive flag, not negative evidence.
 
 CTAG2/LAGE-1 has Enhanced-negative heart cardiomyocyte IHC and bronchial respiratory-epithelial IHC. The revised matcher applies the latter to the basal respiratory compartment; the report retains the parent-compartment coverage assumption. Negative IHC is counterevidence, not proof of clinical safety.
 

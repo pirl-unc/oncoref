@@ -18,7 +18,13 @@ from cta_compartment_report import group_ihc_evidence  # noqa: E402
 from cta_quantitative_threshold_report import positive_profile_controls  # noqa: E402
 from cta_report_common import input_hashes, sha256, write_csv  # noqa: E402
 
-from oncoref import cell_rna_policy, hpa, normal_cell_screen, reference_data  # noqa: E402
+from oncoref import (  # noqa: E402
+    cell_rna_policy,
+    hpa,
+    normal_cell_screen,
+    reference_data,
+    tcr_trials,
+)
 from oncoref import cta_selection_policy as policy  # noqa: E402
 from oncoref.cta_funnel import EvidenceLayer  # noqa: E402
 from oncoref.gene_matching import (  # noqa: E402
@@ -59,6 +65,17 @@ class ContextCollector:
         self.mapped: list[pd.DataFrame] = []
 
     def collect(self, frame: pd.DataFrame, assay: str) -> None:
+        frame = frame.copy()
+        credit = self.facts.set_index("representative_gene_id")
+        for column in [
+            "clinical_rna_credit",
+            "clinical_product_ids",
+            "clinical_cohort_ids",
+            "clinical_credit_scope",
+        ]:
+            frame[column] = frame.gene_id.map(credit[column])
+        if frame.clinical_rna_credit.isna().any():
+            raise ValueError("Normal context lacks a reference-bound clinical assessment")
         d = policy.assess_contexts(frame)
         d["assay"] = assay
         if "value_upper" in d:
@@ -108,7 +125,8 @@ class ContextCollector:
         self.breadth.append(part.drop_duplicates())
         names = set(
             self.facts.loc[
-                self.facts.protein_group_label.isin(
+                self.facts.clinical_credit_scope.ne("unreviewed")
+                | self.facts.protein_group_label.isin(
                     [
                         "PRAME",
                         "CTAG2",
@@ -683,9 +701,12 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         2
     ) | facts.hpa_tumor_group_lower_bound_ptpm.ge(2)
     developmental_coverage(facts, output)
+    facts = tcr_trials.annotate_proteins(facts)
     inputs = [
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/tcr_trials.py",
+        ROOT / "oncoref/data/tcr-trial-evidence.json",
         ROOT / "oncoref/gene_matching.py",
         CROSSWALK,
         FROZEN / "protein-group-classifications.csv.gz",

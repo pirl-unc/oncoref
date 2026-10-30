@@ -42,6 +42,12 @@ Negative IHC adjusts the RNA ceiling only with the required antibody and local-c
 coverage. Missing or unrelated staining is not negative evidence. The exact numeric
 rules remain in the [current policy table](cta-selection.md#uniform-human-rules).
 
+Reviewed TCR-T clinical experience can add one RNA ladder step, capped at the
+Enhanced-negative ceiling. It does not change the IHC grade or any cancer,
+Reproductive, coverage or diffuseness criterion. The exact epitope/HLA/product
+limitations and serious-event attribution remain attached to the protein-level
+credit. [Clinical evidence and SAE review](audits/cta-tcr-trials-20261029/index.md).
+
 ## Profile concentration
 
 The old rule requiring a Reproductive value above the highest normal measurement

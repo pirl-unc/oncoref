@@ -1,6 +1,8 @@
 # Current policy and IHC matching
 
-The active RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Neither.
+The baseline RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Neither.
+
+Reviewed TCR-T evidence can add one RNA step, capped at Enhanced: Vital 8/16/32/32, Protected 16/32/64/64, Manageable 32/64/128/128. The IHC label stays unchanged. Clinical credit carries the exact peptide/HLA/product limits and does not override normal-protein or clinical-injury exclusions. [Trial and SAE review](../cta-tcr-trials-20261029/index.md).
 
 ## RNA/IHC correspondence
 
@@ -10,7 +12,7 @@ The new compartment mapping relates intestinal epithelial populations to HPA gla
 
 [HPA colon histology](https://www.proteinatlas.org/learn/dictionary/normal/colon), [HPA bronchus histology](https://www.proteinatlas.org/learn/dictionary/normal/bronchus), [all matched measurements](../cta-selection-20261028/compartment-ihc-matches.csv.gz).
 
-PRAME colon RNA is 20.3 nTPM with 96 reads. It receives the declared epithelial-compartment match to Enhanced-negative glandular IHC. Its Manageable ceiling is therefore 128. PRAME's adrenal bulk 3.6 nTPM retains the missing-IHC ceiling 4: glandular-cell staining does not supply complete coverage of the specified adrenal medullary and cortical subcompartments. Low reported adrenal protein remains a positive flag, not negative evidence.
+PRAME colon RNA is 20.3 nTPM with 96 reads. It receives the declared epithelial-compartment match to Enhanced-negative glandular IHC. Its Manageable ceiling stays capped at 128. PRAME's adrenal bulk 3.6 nTPM has a missing-IHC baseline ceiling of 4, raised to 8 by the IMA203 clinical credit. Glandular-cell staining does not supply complete coverage of the specified adrenal medullary and cortical subcompartments; the clinical credit does not change that IHC finding. Low reported adrenal protein remains a positive flag, not negative evidence.
 
 CTAG2/LAGE-1 has Enhanced-negative heart cardiomyocyte IHC and bronchial respiratory-epithelial IHC. The revised matcher applies the latter to the basal respiratory compartment; the report retains the parent-compartment coverage assumption. Negative IHC is counterevidence, not proof of clinical safety.
 

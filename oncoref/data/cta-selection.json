@@ -1,32 +1,36 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.23.0",
+  "release": "1.24.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "ede078c0b66136f47a72a16e59049ab4831c68499389394d0f9d50ec53f03d90",
-    "cta-selection-sources.csv": "4bb650d4a026e6b69f0fe2b02447fda4e9b0eab05410bcb8e52318d3a560986e"
+    "cta-selection-human.csv.gz": "ae0b6cceda988c1525e5c81f79d3ac3d57b269fe86baebc44691705fdacc9791",
+    "cta-selection-sources.csv": "ac2da4124e3903b275598f4fe999f8544337c3ad3628bb8425e2dcdf61a069f8"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-10-29.3",
+      "policy_id": "oncoref.cta-selection.2026-10-29.4",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
         "annotation_source": "Ensembl",
         "assembly_accession": "GCA_000001405.29",
         "content_provenance": {
-          "canonical_gene_space": "b77d1b751a6dd5f05c1de8611b2666c4c4159ba76f16ffb9cbe305e9bf4282df"
+          "gtf": "02df5a2a8c7a41e513209e0780c56cf197941b6b35ef8bab3e9a6317eecd17ef",
+          "ncrna": "7825db09257902df82172928537c1da16cfe79edcca56425556f74f1507437a0",
+          "protein": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96",
+          "rna": "93af088ed22a46daa9645fc6292fb120c1e4ffe791d24abbcbd35062666c03f1"
         },
         "identifier_namespaces": {
           "gene": "Ensembl gene",
+          "protein": "Ensembl protein",
           "transcript": "Ensembl transcript"
         },
-        "reference_id": "openvax:reference:v1:sha256:00bdffd455b7227d0b77e8f7a67d7e2e3d8146526281f2ed33a154b1f10b01d2",
+        "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
         "schema": "openvax.reference",
         "schema_version": 1,
-        "source_version": "Ensembl-115-oncoref-primary-gene-space",
+        "source_version": "Ensembl-115",
         "taxon_id": 9606
       },
       "limitations": [
@@ -35,6 +39,7 @@
         "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
         "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
         "Representative-protein equivalence is not exhaustive isoform identity",
+        "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
         "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel"
       ]
     },
@@ -112,8 +117,8 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "cbf16d3371962e3b73f6a6fb19c1dbe1c8d1a35458666d6e9fa46fd6a743e118",
-    "report_manifest": "32145ba4d9088e60e588e77a1472e5bb4acbc880834e4c8247e7210926f343d2",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "461a37f80b2dcf64845a0805a72acc13f363a373aaddb487a6f64b7131cace3e",
+    "report_manifest": "cf6b430c0546c374f247e727429a20967a201db246cc294848a03a6b96858921",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

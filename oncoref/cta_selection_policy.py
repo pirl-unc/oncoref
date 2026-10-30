@@ -26,7 +26,7 @@ from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 
-POLICY_ID = "oncoref.cta-selection.2026-10-29.3"
+POLICY_ID = "oncoref.cta-selection.2026-10-29.4"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 MIN_MANAGEABLE_TISSUES = 2
@@ -223,6 +223,8 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
     CP10K has a nominal numerical /100 policy, not a biochemical TPM conversion.
     Fibroblasts and bowel epithelium use Manageable; organ bulk retains its tier.
     Protein observations are assessed in their own layer, avoiding double counts.
+    Reviewed TCR-T evidence may add one RNA ladder step, capped at Enhanced.
+    This never relabels IHC, supplies coverage, or overrides protein/clinical injury.
     """
     required = {
         "source",
@@ -287,11 +289,29 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
         stroma & normal, "identified_fibroblast", "anatomical_default"
     )
     d.loc[d.selection_tier.ne(d.category) & ~stroma, "compartment_basis"] = "large_bowel_epithelium"
-    d["candidate_ceiling"] = (
+    d["baseline_ceiling"] = (
         d.selection_tier.map(TIER_BASES)
         * 2.0 ** d.negative_ihc_grade.map(IHC_RANKS)
         * d.unit.map(UNIT_SCALE)
     )
+    if "clinical_rna_credit" not in d:
+        d["clinical_rna_credit"] = False
+    if not d.clinical_rna_credit.map(lambda value: isinstance(value, (bool, np.bool_))).all():
+        raise ValueError("Clinical RNA credit must be explicitly boolean")
+    credit = d.clinical_rna_credit & normal
+    if credit.any() and (
+        "clinical_product_ids" not in d
+        or d.loc[credit, "clinical_product_ids"].fillna("").eq("").any()
+    ):
+        raise ValueError("Clinical RNA credit requires reviewed product provenance")
+    rank = d.negative_ihc_grade.map(IHC_RANKS)
+    d["candidate_ceiling"] = (
+        d.selection_tier.map(TIER_BASES)
+        * 2.0 ** (rank + credit.astype(int)).clip(upper=3)
+        * d.unit.map(UNIT_SCALE)
+    )
+    d["clinical_credit_applied"] = credit & d.candidate_ceiling.gt(d.baseline_ceiling)
+    d["baseline_exclusion"] = normal & d.value.gt(d.baseline_ceiling)
     d["candidate_exclusion"] = normal & d.value.gt(d.candidate_ceiling)
     d["unsafe_evidence"] = d.candidate_exclusion & d.selection_tier.isin(["vital", "protected"])
     d["unresolved_context"] = ~d.mapping_status.eq("mapped")

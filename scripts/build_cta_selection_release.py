@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from cta_report_common import sha256, write_csv  # noqa: E402
 
-from oncoref import canine, human, mouse  # noqa: E402
+from oncoref import canine, human, mouse, tcr_trials  # noqa: E402
 from oncoref.cta_selection import RESULT_COLUMNS  # noqa: E402
 from oncoref.expression_registry import expression_sources  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
@@ -211,6 +211,18 @@ def source_inventory() -> pd.DataFrame:
         "https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv",
         "Qualitative reported Low is distinct from HPA Low and numerical intensity; clinical evidence is product-specific",
     )
+    for clinical in tcr_trials.evidence()["sources"].values():
+        add(
+            9606,
+            clinical["source_id"],
+            clinical["title"],
+            ["clinical_safety"],
+            "used_in_selection",
+            "reviewed clinical attribution",
+            "adult clinical cohort",
+            clinical["url"],
+            "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer",
+        )
     papers = pd.read_csv(DATA / "cta-publication-sources.csv").drop_duplicates("source_tag")
     for row in papers.itertuples():
         add(
@@ -409,6 +421,15 @@ def build(audit: Path = AUDIT) -> None:
                 "evidence_flags": json.dumps(
                     [column for column in flag_columns if row[column]]
                     + (
+                        [
+                            "Clinical RNA credit: "
+                            + str(row.get("clinical_product_ids"))
+                            + "; tested epitope limits apply"
+                        ]
+                        if row.get("clinical_rna_credit", False)
+                        else []
+                    )
+                    + (
                         ["Adult concentration unassessed"]
                         if row.get("adult_profile_status") == "unassessed"
                         else []
@@ -447,6 +468,7 @@ def build(audit: Path = AUDIT) -> None:
                     "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
                     "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
                     "Representative-protein equivalence is not exhaustive isoform identity",
+                    "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
                     "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
                 ],
             },
