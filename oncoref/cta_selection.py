@@ -37,9 +37,10 @@ import pandas as pd
 from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
-Category = Literal["CTA", "Unsafe", "Neither"]
+Category = Literal["CTA", "Unsafe", "Neither", "Tumor-restricted"]
 SpeciesLike = Species | str | int
-CATEGORIES = ("CTA", "Unsafe", "Neither")
+CATEGORIES = ("CTA", "Unsafe", "Neither", "Tumor-restricted")
+CANDIDATE_CATEGORIES = ("CTA", "Tumor-restricted")
 EVIDENCE_CATEGORIES = (
     "nomination",
     "reproductive_expression",
@@ -142,7 +143,9 @@ def results(*, species: SpeciesLike = "human", category: Category | None = None)
 
     CTA means every gate of the named research policy passes. Unsafe denotes
     exclusion evidence under that policy, not demonstrated toxicity. Neither
-    requires a measured low-expression or diffuse-Manageable profile. A null
+    is the adequately assessed normal-pass noncandidate fallback. Tumor-restricted
+    is a separate non-reproductive candidate subtype, requiring strong tumor
+    support and low expression throughout the assayed normal/developmental panel. A null
     category denotes unassigned evidence; ``assessment_status`` explains why.
     ``entity_kind`` prevents comparing human protein groups with unresolved
     nonhuman assay/family nominations. Tuple-valued identity fields retain every
@@ -175,6 +178,16 @@ def results(*, species: SpeciesLike = "human", category: Category | None = None)
     if category is not None:
         frame = frame.loc[frame.category.eq(category)]
     return frame.reset_index(drop=True)
+
+
+def candidates(*, species: SpeciesLike = "human") -> pd.DataFrame:
+    """Return both candidate subtypes without relabelling non-reproductive proteins CTA.
+
+    This is a research screening set, not a clinical safety assertion or an
+    exact-peptide clearance. Existing ``results(category='CTA')`` keeps its scope.
+    """
+    frame = results(species=species)
+    return frame.loc[frame.category.isin(CANDIDATE_CATEGORIES)].reset_index(drop=True)
 
 
 def sources(*, species: SpeciesLike = "human", category: str | None = None) -> pd.DataFrame:

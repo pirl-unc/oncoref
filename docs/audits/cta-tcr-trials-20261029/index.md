@@ -69,7 +69,7 @@ The MAGE-A3 **a3a** cardiac cases implicated **titin (TTN)**, an unintended targ
 
 ## Measured impact
 
-**0 protein category changes** versus the pinned oncoref.cta-selection.2026-10-29.3 snapshot. [Membership comparison](membership-changes.csv). RNA-ceiling changes and individual exclusion effects are in the linked context and assay tables; a changed ceiling need not change the final category.
+**770 protein category changes** versus the pinned oncoref.cta-selection.2026-10-29.3 snapshot. This is a release-to-release comparison, not an estimate of clinical-credit effects; the 1.25 IHC/fallback changes also contribute. [Membership comparison](membership-changes.csv). RNA-ceiling changes and individual exclusion effects are in the linked context and assay tables; a changed ceiling need not change the final category.
 
 
 ## Letetresgene autoleucel / NY-ESO-1 c259
@@ -246,4 +246,4 @@ on each build. New evidence requires an explicit reviewed ledger update.
 [Context-level RNA effects](clinical-credit-contexts.csv.gz) · [RNA effects by assay](clinical-credit-impact.csv)
 
 
-[PDF report](cta-tcr-safety-1.24.0.pdf)
+[PDF report](cta-tcr-safety-1.25.0.pdf)

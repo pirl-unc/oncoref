@@ -16,12 +16,15 @@ Acceptable safety AND one qualifying cancer sample
 AND a qualifying Reproductive route after concentration assessment
 AND complete required coverage -> CTA
 
-Otherwise: supported Neither profile -> Neither; remaining cases -> unassigned
+Otherwise: supported tumor restriction and normal coverage review -> Tumor-restricted
+Otherwise: complete normal screen passes -> Neither
+Remaining missing normal evidence or normal-screen holds -> unassigned
 ```
 
 Reproductive means reproductive, placental, extraembryonic, embryonic and fetal.
 Named branches retain anatomical and developmental precision. The current measured
-routes are HPA adult/placental RNA ≥5 nTPM or supported Tyser/Petropoulos embryonic
+routes are HPA adult/placental RNA ≥5 nTPM, reliable positive reproductive IHC,
+or supported Tyser/Petropoulos embryonic
 lineage mean ≥5 TPM (≥20 cells, ≥5 positive cells, ≥10% positive at ≥1 TPM).
 The current inputs do not cover every fetal stage.
 
@@ -57,7 +60,9 @@ normal panel, including Disposable tissues. N is that tissue's RNA; R is the sou
 Reproductive reference. It is **not a percentage of tissues**.
 
 The **HPA v23 >10% boundary is active** for completely measured adult/placental
-profiles with the existing reference of at least 5 nTPM. Disposable tissues count;
+profiles with a positive RNA reference and a qualifying RNA or IHC association.
+RNA-only association still requires 5 nTPM. A zero RNA reference leaves concentration
+unassessed even when IHC qualifies. Disposable tissues count;
 **Permissive thymus is excluded from both the comparator and the reference**.
 The fixed panel is 38 contexts / 29 anatomy units. A failed route with no other
 qualifying Reproductive route and clear safety becomes Neither. MTCP1 moves to

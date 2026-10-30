@@ -394,6 +394,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "source-specific RNA/IHC compartment correspondences with citations and coverage limits",
     ),
+    "tumor-protein-evidence": (
+        "cta-evidence",
+        "review ledger for reliable tumor protein support with assay, source and identity scope",
+    ),
+    "tumor-restriction-reviews": (
+        "cta-evidence",
+        "normal-context coverage reviews required for Tumor-restricted candidate admission",
+    ),
     "cta-publication-context": (
         "cta-evidence",
         "author-recognized prior CT antigens with protein-group identities and source locations",

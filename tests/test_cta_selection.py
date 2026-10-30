@@ -34,6 +34,20 @@ def test_human_current_selection_matches_the_complete_released_funnel():
     assert selected.identity_status.eq("resolved").all()
 
 
+def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate():
+    root = Path(__file__).resolve().parents[1]
+    old = pd.read_csv(root / "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz")
+    current = human.cta_selection().set_index("label")
+    previous_ctas = set(old.loc[old.category.eq("CTA"), "protein_group_label"])
+    assert current.loc[sorted(previous_ctas), "category"].eq("CTA").all()
+    assert current.loc[["SAGE1", "GAGE10", "CDY2A/B", "CT45A2/8/9"], "category"].eq("CTA").all()
+    assert current.loc["CDY1/B", "category"] == "Neither"
+    assert current.loc[["USP17L3", "FAM90A9"], "category"].eq("Neither").all()
+    candidates = cta_selection.candidates()
+    assert set(candidates.category) <= set(cta_selection.CANDIDATE_CATEGORIES)
+    assert not candidates.entity_id.duplicated().any()
+
+
 def test_native_nominations_never_inherit_human_admission_or_human_gene_ids():
     frame = canine.cta_selection()
     assert len(frame) == 14

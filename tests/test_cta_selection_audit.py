@@ -99,18 +99,27 @@ def test_every_released_hold_and_unsafe_layer_is_explained(audit):
     assert (end.eligible, end.Unsafe, end.Neither, end.Unassigned) == tuple(
         expected[c] for c in ["CTA", "Unsafe", "Neither", "Unassigned"]
     )
-    assert audit.funnel[["eligible", "Unsafe", "Neither", "Unassigned"]].sum(axis=1).eq(19863).all()
+    assert (
+        audit.funnel[["eligible", "Tumor-restricted", "Unsafe", "Neither", "Unassigned"]]
+        .sum(axis=1)
+        .eq(19863)
+        .all()
+    )
+    assert end["Tumor-restricted"] == expected.get("Tumor-restricted", 0)
     assert not audit.explanations.reason.str.contains(r"\bnan\b", regex=True).any()
 
 
 def test_independent_assessments_and_only_normal_safety_can_establish_unsafe(audit):
     axes = audit.explanations[audit.explanations.layer.str.startswith("Assessment: ")]
-    assert axes.groupby("entity_id").size().eq(4).all()
+    assert axes.groupby("entity_id").size().eq(5).all()
     assert not audit.explanations.layer.str.contains("Adult restriction", regex=False).any()
     assert not axes.loc[~axes.layer.eq("Assessment: Safety"), "decision"].eq("unsafe").any()
     assert (
         axes.loc[
-            axes.category.eq("CTA") & ~axes.layer.eq("Assessment: Reproductive concentration"),
+            axes.category.eq("CTA")
+            & ~axes.layer.isin(
+                ["Assessment: Reproductive concentration", "Assessment: Tumor-restricted"]
+            ),
             "decision",
         ]
         .eq("pass")
@@ -167,7 +176,8 @@ def test_specific_contexts_and_same_tissue_negative_ihc(audit):
     assert mage.developmental_route and mage.developmental_mean_tpm == pytest.approx(
         6.315480240244203
     )
-    assert not mage.reproductive_route  # admission comes from measured developmental RNA
+    assert mage.reproductive_route and mage.reproductive_protein_association
+    assert not mage.reproductive_rna_association  # Protein independently supports the adult route.
     assert audit.explain("TBXT").iloc[0].category == "CTA"
     for name in ("TBXT", "CT83"):
         assert "external_review_flag" in set(audit.explain(name).query("decision == 'flag'").value)
@@ -225,11 +235,10 @@ def test_checksum_and_species_validation(tmp_path, monkeypatch):
 def test_neither_profiles_and_unassigned_counts_reconcile(audit):
     facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
     neither = facts[facts.category.eq("Neither")]
-    assert (
-        neither.neither_low_expression
-        | neither.neither_diffuse_manageable
-        | neither.neither_profile.eq("diffuse_reproductive")
-    ).all()
+    from oncoref.cta_selection_policy import CANDIDATE_ONLY_LAYERS
+
+    safety = [c for c in facts if c.startswith("hold:") and c[5:] not in CANDIDATE_ONLY_LAYERS]
+    assert not neither[safety].any(axis=1).any()
     assert neither.required_coverage.all()
     assert not neither.unresolved_evidence.any()
     assert not neither.vital_protected_exclusion.any()
@@ -260,6 +269,12 @@ def test_current_replay_and_walkthrough_receipts_match_artifacts():
         (ROOT / "docs/audits/cta-source-walkthrough-20261028/presentation-data.json").read_text()
     )
     assert presentation["summary"] == summary
+    assert (
+        presentation["report_sha256"]
+        == hashlib.sha256(
+            (RELEASE / "protein-group-classifications.csv.gz").read_bytes()
+        ).hexdigest()
+    )
     assert human.cta_selection_coverage()["counts"] == summary["categories"]
     facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
     assert sum(row["entrants"] for row in presentation["routes"]) == facts.positive_context.sum()
@@ -350,10 +365,13 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     assert set(before[before.category.eq("Unsafe")].index) == set(
         after[after.category.eq("Unsafe")].index
     )
-    changed = after.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))
-    assert after.loc[changed, "protein_group_label"].tolist() == ["MTCP1"]
-    assert after.loc[changed, "category"].tolist() == ["Neither"]
-    row = after.loc[changed].iloc[0]
+    frozen = pd.read_csv(
+        ROOT / "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz", low_memory=False
+    ).set_index("protein_equivalence_group_id")
+    changed = frozen.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))
+    assert frozen.loc[changed, "protein_group_label"].tolist() == ["MTCP1"]
+    row = after.loc[after.protein_group_label.eq("MTCP1")].iloc[0]
+    assert row.category == "Neither"
     assert row.hpa_diffuseness == pytest.approx(0.24533644300531762)
     assert row.neither_profile == "diffuse_reproductive"
     explanation = audit.explain("MTCP1")

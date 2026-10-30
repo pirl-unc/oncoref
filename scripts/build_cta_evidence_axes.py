@@ -59,7 +59,7 @@ def build():
         [
             "<b>Reproductive evidence</b>",
             "Affirmative expression in reproductive, placental, embryonic or fetal contexts.",
-            "Active quantified routes. Reproductive or supported developmental expression can qualify.",
+            "RNA ≥5 in its native unit, or reliable positive reproductive IHC. Developmental RNA needs lineage/cell support.",
         ],
     ]
     table = Table(
@@ -89,7 +89,7 @@ def build():
         "<b>Diffuseness:</b> HPA average N / (N + R) >10% blocks a complete adult/placental route. "
         "Disposable counts; Permissive thymus is excluded. Embryonic concentration is unassessed.<br/>"
         "<b>Only safety establishes Unsafe.</b> Missing core data remain unassigned. "
-        "The former maximum-versus-maximum restriction rule is removed."
+        "<b>Neither:</b> complete normal screen passes, but no candidate subtype qualifies.<br/> <b>Tumor-restricted:</b> ≥10 TPM in two tumors or reviewed tumor protein, low normal expression and a normal-context coverage review."
     )
     _, height = statement.wrap(720, 120)
     statement.drawOn(page, 36, 205 - height)
@@ -97,7 +97,7 @@ def build():
     page.drawString(
         36,
         25,
-        "Local policy: oncoref.cta-selection.2026-10-29.4. Clinical RNA credit retains tested epitope limits.",
+        "Local policy: oncoref.cta-selection.2026-10-30.1. Clinical RNA credit retains tested epitope limits.",
     )
     page.save()
     shutil.copyfile(destination, images / destination.name)

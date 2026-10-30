@@ -1,16 +1,16 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.24.0",
+  "release": "1.25.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "ae0b6cceda988c1525e5c81f79d3ac3d57b269fe86baebc44691705fdacc9791",
-    "cta-selection-sources.csv": "ac2da4124e3903b275598f4fe999f8544337c3ad3628bb8425e2dcdf61a069f8"
+    "cta-selection-human.csv.gz": "93667aa7edbb9d305c30ec2430f4c4b6814ab3a37c57fc7401d44d558509d148",
+    "cta-selection-sources.csv": "e40fb73380710144865bf7a76cb4174b85c3a639e3e0070824a6300bf9557bd5"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-10-29.4",
+      "policy_id": "oncoref.cta-selection.2026-10-30.1",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
@@ -40,7 +40,8 @@
         "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
         "Representative-protein equivalence is not exhaustive isoform identity",
         "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
-        "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel"
+        "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
+        "Tumor-restricted is panel-defined: >=10 TPM in two distinct samples or reviewed reliable tumor protein, with low measured normal/developmental expression; rare normal states may remain unmeasured"
       ]
     },
     "dog": {
@@ -117,8 +118,8 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "461a37f80b2dcf64845a0805a72acc13f363a373aaddb487a6f64b7131cace3e",
-    "report_manifest": "cf6b430c0546c374f247e727429a20967a201db246cc294848a03a6b96858921",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "6b390e742c2d5adfa7350cc382f3323e411bff47eacc37e7b3ece7a39ed09ece",
+    "report_manifest": "1b73a59846663f6fd9be26183e9f579c2f6aba041d0607eafb76c8908677ed0a",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

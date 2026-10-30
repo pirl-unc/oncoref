@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **522 selected human proteins, 18,031 Unsafe, 20 Neither and 1,290 unassigned** across 19,863 proteins. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **573 CTA proteins, 0 Tumor-restricted, 18,031 Unsafe, 725 Neither and 534 unassigned** across 19,863 proteins. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
 
 ## Safety, cancer expression and Reproductive evidence
 
@@ -15,7 +15,7 @@ embryonic and fetal contexts. Branches describe the actual tissue and stage;
 |---|---|---|
 | Safety | Is normal-tissue expression concerning under the tissue/IHC policy? | Absolute RNA ceilings, separate positive-protein rules and reviewed clinical exclusions. Vital/Protected exclusions can establish Unsafe. Manageable excess blocks CTA. |
 | Cancer expression | Is there expression in at least one measured cancer? | One sample ≥2 TPM or HPA pTPM. No tumor-versus-normal ratio. |
-| Reproductive evidence | Is there positive expression in a qualifying branch? | HPA adult/placental maximum ≥5 nTPM OR supported embryonic lineage mean ≥5 TPM. |
+| Reproductive evidence | Is there positive expression in a qualifying branch? | HPA adult/placental maximum ≥5 nTPM OR reliable positive reproductive IHC OR supported embryonic lineage mean ≥5 TPM. |
 | Coverage | Is the comparison adequately observed? | Complete GTEx v11 core: 52 bulk contexts for every member locus; required normal bulk/cell/immune panels also apply. DICE/cornea coverage remains optional. |
 
 The former maximum-versus-maximum restriction rule is removed. The
@@ -25,8 +25,9 @@ anatomical units / 38 contexts**. R is the highest adult/placental Reproductive
 nTPM in the same matrix. Disposable tissues count; **Permissive thymus** belongs
 to neither the comparator nor the Reproductive reference. Its safety tier is unchanged.
 
-A score **above 10%** blocks the adult/placental route when R meets the existing
-**5 nTPM** floor and the full HPA comparison is measured. Missing comparisons
+A score **above 10%** blocks a qualifying adult/placental route when R is positive
+and the full HPA comparison is measured. RNA-only admission still requires **5 nTPM**;
+reliable positive IHC can establish association below that floor. Missing comparisons
 remain explicitly unassessed. An independently supported embryonic route remains
 eligible; its concentration needs a compatible developmental/adult panel. GTEx
 remains the required coverage core and a descriptive comparison, not a second veto.
@@ -51,7 +52,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,863 proteins (identical selected reference sequences collapsed) | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-29.4` |
+| Human | 19,863 proteins (identical selected reference sequences collapsed) | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-30.1` |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 
@@ -67,7 +68,7 @@ The contract is identical even when the evidence is not. Human thresholds, antib
 | `entity_id`, `entity_kind`, `label` | Stable result key; human protein-equivalence group versus native nomination; display label |
 | `gene_ids`, `gene_identities` | Every supported member/alternative; IDs, symbols, namespaces, historical/alternate IDs, synonyms and identity status |
 | `identity_status`, `reference_id` | Resolution completeness and exact reference receipt |
-| `category`, `assessment_status`, `policy_id` | CTA / Unsafe / Neither or null; screened, incomplete evidence, outside category definitions or unassessed; versioned policy |
+| `category`, `assessment_status`, `policy_id` | CTA / Tumor-restricted / Unsafe / Neither or null; screened, incomplete evidence, normal-evidence hold or unassessed; versioned policy |
 | `reasons`, `evidence_flags` | All contributing exclusions and retained observations, including Low protein, antibody review and stem/progenitor expression |
 | `source_snapshot_id` | Content identity of the decision snapshot |
 
@@ -79,7 +80,7 @@ TPM/nTPM is summed only for matched group-member measurements in the same source
 
 | Gate | Rule |
 |---|---|
-| Adult/placental Reproductive evidence | HPA maximum ≥5 nTPM; no normal maximum comparison |
+| Adult/placental Reproductive evidence | HPA maximum ≥5 nTPM OR reliable positive reproductive IHC; no normal maximum comparison |
 | Embryonic Reproductive evidence | Supported Tyser or Petropoulos lineage mean ≥5 TPM; ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM |
 | Tumor expression | ≥2 in one measured sample, in its native TPM or HPA pTPM; no normal comparison |
 | Required coverage | GTEx v11 core (52 native bulk contexts) and specified bulk/cell/immune panels must be complete; DICE and cornea coverage is optional, but their measured signals count |
@@ -116,9 +117,13 @@ Exact adult tissue/cell matching or a declared source-specific histological-comp
 
 Mapped HPA adult fibroblasts use Manageable; bulk heart and cardiomyocytes retain their organ tiers. Colon/rectum distal enterocytes, goblet cells, Paneth cells and undifferentiated cells use Manageable in both RNA and HPA protein assessment. Undifferentiated expression retains a stem/progenitor flag. This permissive mucosal assumption and the numeric cutoffs have not been clinically validated. Reproductive/placental immune cells receive neutral anatomical treatment, not an assertion that all immune cells are disposable. Adult normal panels do not establish pediatric safety.
 
-Every layer evaluates every group. **Unsafe** takes precedence when Vital/Protected or clinical exclusion evidence is present. **Neither** requires complete normal RNA coverage, resolved evidence and one of two measured profiles: all measured RNA below the shared 2-unit expression floor with no detected protein, or no reproductive/developmental association and RNA ≥2 in at least two Manageable tissue concepts with no Vital/Protected exclusion. A third route is a complete diffuse adult/placental identity profile with no remaining qualifying reproductive route and no normal-safety hold; it does not require cancer expression. The low-expression route additionally requires mapped tumor and developmental measurements. The current counts are reported in the generated funnel; all measured-profile requirements must hold.
+Every layer evaluates every protein. **Unsafe** takes precedence when Vital/Protected or clinical exclusion evidence is present. **Neither** is the general fallback for complete required normal coverage, resolved evidence and no normal-screen hold when no candidate subtype qualifies. Tumor RNA can be high, low or missing. Missing cancer or developmental measurements alone do not prevent Neither. Low, diffuse and permitted-normal profiles describe the result; they are not separate admission loopholes.
 
-Other failures are **unassigned**, with `category` null and an explanatory `assessment_status`; they are not automatically Neither. Only groups passing all CTA gates are CTA. The final funnel partitions CTA, Unsafe, Neither and unassigned counts. Intermediate rows display candidate eligibility, Unsafe and unassigned holds until the final Neither-profile evaluation. Final assignments do not depend on layer order.
+Reliable **positive reproductive IHC** is an independent association route alongside reproductive RNA ≥5 nTPM or supported developmental RNA ≥5 TPM. It requires a mapped human HPA v23 reproductive compartment, Low/Medium/High staining with Approved/Supported/Enhanced reliability, positive evidence for every member locus, and no unresolved antibody concern. It does not override normal ceilings, cancer presence or the concentration check. A zero reproductive RNA reference leaves RNA concentration unassessed; no abundance is invented from an IHC category.
+
+**Tumor-restricted** is a separate non-reproductive candidate subtype. Its RNA route requires at least 10 native TPM in two distinct tumor samples; source views and TCGA participant/aliquot duplicates do not count as replication. Reviewed reliable tumor protein can provide an alternative. Aggregate cancer-IHC counts alone lack the reagent-validation detail required for that route. Normal restriction requires adequate coverage, low measured expression outside cancer, and no detected normal protein; the current low-expression convention is <2 TPM/nTPM, with the separate nominal CP10K floor. An accepted review must also address relevant rare normal cells and physiological states; numerical matches remain leads until that coverage is established. These are panel-defined research criteria, not proof of universal tumor specificity.
+
+Proteins with missing required normal coverage, unresolved evidence or an outstanding normal-screen hold remain **unassigned**, with a null category and an explanatory status. In particular, exceeding a Manageable ceiling cannot be rescued into Neither by expression in a second Manageable tissue. Existing Unsafe boundaries are unchanged. The final funnel partitions CTA, Tumor-restricted, Unsafe, Neither and unassigned. `cta_selection.candidates()` returns the union of both candidate subtypes; existing CTA queries retain their scope. Final assignments do not depend on layer order.
 
 ## Evidence categories across species
 
@@ -127,7 +132,7 @@ Other failures are **unassigned**, with `category` null and an explanatory `asse
 | Category | Human selection | Dog resources | Mouse resources identified |
 |---|---|---|---|
 | Nomination | Published CTA/placental lists as annotations | Two native CTA studies | One P1A/Trap1a literature nomination |
-| Reproductive expression | HPA bulk | Bgee matrices, BarkBase, native study assays | Qualitative P1A testis RNA; no complete reproductive panel |
+| Reproductive expression | HPA bulk and reliable reproductive IHC | Bgee matrices, BarkBase, native study assays | Qualitative P1A testis RNA; no complete reproductive panel |
 | Developmental expression | Tyser gastrulation | BarkBase matrix; DoGA metadata | MOCA, gastrulation atlas, GXD |
 | Tumor expression | 132 compatible OncoRef cohorts + HPA cancer | Native studies; cohort provenance unresolved | Qualitative J558 cell-line RNA; no cohort |
 | Normal bulk RNA | HPA consensus | Bgee, BarkBase; DoGA/Pfizer RNA metadata | Five BALB/c organs for P1A; GXD remains unintegrated |
@@ -146,7 +151,7 @@ The older `normal_expression_categories.classify_normal_expression()` API still
 provides **Other → Disposable/Silent** under
 `oncoref.normal-expression-categories.2026-10-21.2`. Those are below-threshold
 expression sets using that older RNA/IHC policy. They are not aliases for this
-release's Neither category, which has no dedicated Disposable-only route.
+release's Neither category, which now includes qualifying permitted-normal profiles through its normal-pass fallback.
 Downstream analyses must preserve the policy ID and must not silently transfer
 these classifications into the current selection or k-mer exclusions.
 The migration is tracked in [#647](https://github.com/pirl-unc/oncoref/issues/647).

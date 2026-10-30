@@ -1,8 +1,8 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/replay_cta_selection.py": "9c6357cd64595637874651b75d330db2863252daf26444343eac3404c48c84cd",
-    "oncoref/cta_selection_policy.py": "dfdf83b92045d3cd3567d9aeb932f45fbc245e72b1b49efc2812d9e47a7c185f",
+    "scripts/replay_cta_selection.py": "33c0361ef6019355a66fd9f6856a5aff9d06638cc84c2bd6b9f0506ae3a6bddd",
+    "oncoref/cta_selection_policy.py": "adeb9a400367c20c35d9ffc0cfccbc3fd04ff2537a4e08e12ebbeae4c5649c69",
     "oncoref/tcr_trials.py": "80f277ad43c1f90d33c760d55ba140499a062ad251d0315f712df484525f652d",
     "oncoref/data/tcr-trial-evidence.json": "c56544c5a3d9a0dbb88a1a2a815c837cbfa9325bc160ecbaaefc10c1029f25d8",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
@@ -39,9 +39,9 @@
   ],
   "outputs": {
     "assay-assessments.csv.gz": "1ad41542bd11350687dc2b677f12b4c2b2eb926c64601a1aedba6cdbf75911e8",
-    "normal-peak-evidence.csv.gz": "b32620f229491f5a08fbbf3b718e078e3d81110af1d6c3b815eaccf780d250e0",
-    "widely-studied-contexts.csv.gz": "9988fe0f7070e817acb27f9f1156a6865e74b8fa9796a2cca867e2a1d8a4c7b3",
-    "compartment-ihc-matches.csv.gz": "4fe4078b5fce532735d1dbd0e53db6347a719a1e3745b615a86c85656a0b9c2f",
+    "normal-peak-evidence.csv.gz": "85bf321638d2b65a87c5aa5849712bb277ef4f26100b5f0f22d8f984696bab04",
+    "widely-studied-contexts.csv.gz": "5aff3730c00e78178dc027fa29c3354e0f769fab019da0dad924cadb9f6bc670",
+    "compartment-ihc-matches.csv.gz": "4208e0e0b4381106e93f9646e27c859cb4a0c41e08e567b13241b3c3eac98890",
     "manageable-breadth.csv.gz": "7d2a837efecc57f8814e5e56d968ee6b71d5e299de385a0e0d807c07a52b00aa"
   }
 }

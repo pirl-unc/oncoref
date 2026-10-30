@@ -1,28 +1,29 @@
 {
-  "policy_id": "oncoref.cta-selection.2026-10-29.4",
+  "policy_id": "oncoref.cta-selection.2026-10-30.1",
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/build_tcr_trial_report.py": "ddf8874373091812e3694e148f118b2c22c1f898576eacc370daea0d0d2ea932",
+    "scripts/build_tcr_trial_report.py": "f91b222d5479abacb88f14bd001419646bf661eca8bf9a7829346a87f4f92c78",
     "oncoref/tcr_trials.py": "80f277ad43c1f90d33c760d55ba140499a062ad251d0315f712df484525f652d",
-    "oncoref/cta_selection_policy.py": "dfdf83b92045d3cd3567d9aeb932f45fbc245e72b1b49efc2812d9e47a7c185f",
+    "oncoref/cta_selection_policy.py": "adeb9a400367c20c35d9ffc0cfccbc3fd04ff2537a4e08e12ebbeae4c5649c69",
     "oncoref/data/tcr-trial-evidence.json": "c56544c5a3d9a0dbb88a1a2a815c837cbfa9325bc160ecbaaefc10c1029f25d8",
     "oncoref/data/reference-releases.json": "5f83eeea9c1197437d77bb0e5c3a9b94ee71a551250f8dc3a98eccab77522ffa",
-    "oncoref/data/cta-selection.json": "b8433e1fba4ae3f4aa58678c572d3f5866838974aedacc2b584a0d5c685a235d",
+    "oncoref/data/cta-selection.json": "082b5ea8b099f1c3465b0fea4c30869953655ee7b381336269a4432b6a1c9d1b",
     "scripts/verify_tcr_trial_sequences.py": "98a134560e1322219f884c51481bb9603459b62bb91a57beff8f5ea3354a4110",
     "docs/audits/cta-tcr-trials-20261029/baseline-metadata.json": "6afb36c9e93a9b30dda6e162e2bf6cf6424faf6dac5b12b13606353035d09e26",
     "docs/audits/cta-tcr-trials-20261029/baseline-human.csv.gz": "ede078c0b66136f47a72a16e59049ab4831c68499389394d0f9d50ec53f03d90",
-    "docs/audits/cta-selection-20261028/widely-studied-contexts.csv.gz": "9988fe0f7070e817acb27f9f1156a6865e74b8fa9796a2cca867e2a1d8a4c7b3"
+    "docs/audits/cta-selection-20261028/widely-studied-contexts.csv.gz": "5aff3730c00e78178dc027fa29c3354e0f769fab019da0dad924cadb9f6bc670"
   },
   "outputs": {
     "baseline-human.csv.gz": "ede078c0b66136f47a72a16e59049ab4831c68499389394d0f9d50ec53f03d90",
     "baseline-metadata.json": "6afb36c9e93a9b30dda6e162e2bf6cf6424faf6dac5b12b13606353035d09e26",
-    "clinical-credit-contexts.csv.gz": "a0d63e67159c295023a794c01fe6dd9b0632d01814a8b1c74356803ba5f55e86",
+    "clinical-credit-contexts.csv.gz": "0760ff4f2d5721cc4edd2cea686fe9dcf737c79224590a916ddaed634fcae8ec",
     "clinical-credit-impact.csv": "a7e96ea9cff9377d0716f26fccb09597d694c76539ed92307d16f9c86bfdac3e",
     "cohorts.csv": "6aabcf4de3f4fd42470aeea7c3387b417a3128f431222d20ec524e33dcd2ecfd",
     "cta-tcr-safety-1.24.0.pdf": "d075f9b2e8a518a7b7cc576732071cabd9de8598a29f12d568ab9d1ef81a2aac",
+    "cta-tcr-safety-1.25.0.pdf": "54271d8c8c9aeaffacb294860f8bee42a8bd23c0cd290a48e36bdd6c8abcbcf4",
     "evidence.json": "c56544c5a3d9a0dbb88a1a2a815c837cbfa9325bc160ecbaaefc10c1029f25d8",
-    "index.md": "573bf9ec7a11ac39b3198d56f4c6fa27ac46aca705efbc2e4c7e8247c63041d2",
-    "membership-changes.csv": "1543da2f2f64a43340466b530649c70202263c42ec65d30e7b47c0fcbd4a1ef5",
+    "index.md": "13d2774ee724e3523cb6c901fc603af76bb3e4da603b9c733f3c655deb31ca9f",
+    "membership-changes.csv": "881a019e5321027690b1945412164c75cd287ebac957ed0ddf51bc7f35b98fc1",
     "sentinel-events.csv": "bb7bbd4928c32415d94ef488e103808951ecc281b0f0313795d465477f31d890",
     "tcr-trial-summary.csv": "09af17b5b495011f731595aa9b7ba38df8c594c48567c90a65181a728a389236"
   }

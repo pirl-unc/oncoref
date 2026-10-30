@@ -1,16 +1,16 @@
 # Which sources have missing evidence?
 
-These counts describe the **694 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **475 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
 | Evidence gap | Proteins |
 | --- | --- |
 | normal panel missing | 453 |
 | tumor measurement missing | 34 |
-| tumor group profile incomplete | 17 |
-| embryonic measurement missing | 297 |
+| tumor group profile incomplete | 3 |
+| embryonic measurement missing | 86 |
 | unresolved evidence | 28 |
 
-The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **34** groups lack a mapped measurement, while **17** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
+The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **34** groups lack a mapped measurement, while **3** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
 
 The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted as a historical SCN11A synonym instead of a missing name, contradicting valid ENSG IDs. Seven affected cohort views were reprocessed from their pinned sample matrices and original passing-sample QC: ACINIC, ADCC, CRANIO, DIPG, MENINGIOMA, SARC_MMNST and VSCC. Their corrected measurements replace the older cohort summaries; source samples and units are unchanged. [Repaired cohort evidence and hashes](../cta-selection-20261028/tumor-identity-repair/manifest.json).
 
@@ -18,7 +18,7 @@ The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted
 
 | Source | Proteins | Examples |
 | --- | --- | --- |
-| HPA v23 consensus bulk | 414 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
+| HPA v23 consensus bulk | 374 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
 | Combined normal bulk: HPA consensus + HPA brain + direct GTEx | 366 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
 | HPA v23 tissue-cell clusters | 335 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
 | HPA v23 immune cells | 304 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
@@ -33,12 +33,12 @@ Bulk completeness now requires every nonreproductive tissue concept in the HPA c
 
 | Source | Cohort views | Groups without any mapped measurement |
 | --- | --- | --- |
-| HPA 25.1 | 31 | 341 |
+| HPA 25.1 | 31 | 332 |
 | OncoRef | 132 | 34 |
 
 [Per-protein, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
 
-Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **297** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
+Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **86** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
 
 The new identity pass recovers 19 gene rows omitted by the earlier exact-ID filter. It keeps 5 conflicting alternate-row cases unresolved. [Every attempted recovery and source ID](developmental-identity-recoveries.csv). Canonical rows take precedence; multiple alternative rows are accepted only when their entire cell-expression vectors agree. Different values are neither added nor arbitrarily selected.
 

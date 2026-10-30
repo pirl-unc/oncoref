@@ -182,7 +182,7 @@ def source_inventory() -> pd.DataFrame:
         9606,
         "hpa_normal_tissue",
         "HPA v23 normal-tissue IHC",
-        ["normal_protein"],
+        ["normal_protein", "reproductive_expression"],
         "used_in_selection",
         "HPA categorical level and reliability",
         "adult",
@@ -374,6 +374,10 @@ def build(audit: Path = AUDIT) -> None:
         "low_normal_protein_flag",
         "limited_protein_review_flag",
         "stem_progenitor_expression_flag",
+        "reproductive_protein_association",
+        "tumor_restricted_rna_support",
+        "reliable_tumor_protein",
+        "tumor_restricted_lead",
     ]
     for row in decisions.to_dict("records"):
         identities = [
@@ -419,7 +423,7 @@ def build(audit: Path = AUDIT) -> None:
                     else []
                 ),
                 "evidence_flags": json.dumps(
-                    [column for column in flag_columns if row[column]]
+                    [column for column in flag_columns if row.get(column, False)]
                     + (
                         [
                             "Clinical RNA credit: "
@@ -470,6 +474,7 @@ def build(audit: Path = AUDIT) -> None:
                     "Representative-protein equivalence is not exhaustive isoform identity",
                     "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
                     "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
+                    "Tumor-restricted is panel-defined: >=10 TPM in two distinct samples or reviewed reliable tumor protein, with low measured normal/developmental expression; rare normal states may remain unmeasured",
                 ],
             },
             "dog": {

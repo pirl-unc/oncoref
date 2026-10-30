@@ -1,0 +1,67 @@
+protein_equivalence_group_id,protein_group_label,tumor_samples_ge10,normal_maximum_floor_ratio,developmental_all_lineage_max_tpm,coverage_review
+PEG:114ce8180fed0c05d267,CLDN25,2.0,0.73404483199,0.1297390764393285,Relevant normal cells and physiological states require review
+PEG:4d4516c1a1e592762599,CNGA2,2.0,0.229086,0.0406064811461808,Olfactory sensory neurons
+PEG:9fac95b13d17e0e6dd6e,DBX1,2.0,0.6,1.2554806557956264,Relevant normal cells and physiological states require review
+PEG:c1207e52a9858c92e2f8,GFRAL,2.0,0.55,0.2419397215160548,Area postrema and nucleus tractus solitarius
+PEG:7745d1207dccb8cc49c2,HES3,2.0,0.5,0.5981336932110383,Relevant normal cells and physiological states require review
+PEG:e0245de92e5231aff80e,IFNA4,2.0,0.72503964628,0.0213602087299692,Induced antiviral immune states
+PEG:d84ecd658a8fcbedf664,IFNW1,2.0,0.75,0.1449281961836911,Induced antiviral immune states
+PEG:3b67faa4606bd9c23eac,KCNA10,2.0,0.45,0.0216939696901954,Relevant normal cells and physiological states require review
+PEG:ab528d81df8561b86c52,KRTAP20-2,2.0,0.9,0.6291138756969038,Relevant normal cells and physiological states require review
+PEG:f9bac9ec8f55cf359c58,KRTAP21-1,2.0,0.5003466737,0.0523463384818564,Relevant normal cells and physiological states require review
+PEG:3a2ca59b8f56b758d1ec,MARCOL,2.0,0.95,0.049716703236919,Relevant normal cells and physiological states require review
+PEG:3abf1c347fc5c6c11d18,MRGPRX4,2.0,0.55,0.0386188545133921,Relevant normal cells and physiological states require review
+PEG:324139bf0dd01b341be6,MSLNL,2.0,0.469231,0.0630522194965473,Relevant normal cells and physiological states require review
+PEG:f7e2578d2118433faeff,NPY4R2,2.0,0.8,0.0337814374154819,Relevant normal cells and physiological states require review
+PEG:4c5c7cffefc6c2746d7f,OC90,2.0,0.6,0.3192255167215039,Specialized inner-ear cells
+PEG:2ac2b01ecdcddd746683,OR10A4,2.0,0.95,0.2742768308981441,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:de739c95c494dab4ba24,OR10A5,2.0,0.95,0.2801530853840104,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:67063e067a1bca19a6be,OR11H1,2.0,0.0,0.0033744728777724,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:e69ab82051f30d8b90cb,OR11H12,2.0,0.0,0.037959513083388,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:9a5c09f08819375aae74,OR11H2,2.0,0.05,0.0374905924090839,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:c0cba8466266f31bbef4,OR11H6,2.0,0.4824944542405,0.1342653191801318,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:a96a1ae71923dfd69880,OR12D2,2.0,0.55,0.0681984154078635,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:e647362949877722eda0,OR13G1,2.0,0.59525793716933,0.0042179301852523,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:b9d04f48fc7943317f12,OR13H1,2.0,0.2,0.0614202385642343,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:759069a169cc76548c65,OR14C36,2.0,0.35,0.1376887319001007,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:20e20c875c149d1602c0,OR1D5,2.0,0.896346144485,0.0383808696824311,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:572a0cbceecefc7ec863,OR1G1,2.0,0.64278595505,0.0318284604553412,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:fb48e01e5015a6c72e1b,OR1L1,2.0,0.5,0.3341197636799403,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:49c446c92b27a6205684,OR1L4,2.0,0.7,0.0130295369820752,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:68369dd152e83bc315d8,OR1P1,2.0,0.4354722963825,0.047440052677173,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:f97f563c819bff14c9ee,OR2B2,2.0,0.2885675659465,1.8396953235201716,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:71f0b23b0340f4054e86,OR2M2,2.0,0.85,0.1268490230032569,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:c1815179f157b9cc327c,OR2M5,2.0,0.95,0.0104740178987579,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:9383fd1c8c23d59d940c,OR2S2,2.0,0.206655392933,0.0296043230773743,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:2bd8bd3da7a973c2d536,OR2T5,2.0,0.35,0.0859436309091427,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:5f68f2d0a35dd83c9604,OR4D10,2.0,0.8,0.0337332825790254,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:fc2e37d7d1b0a279e40e,OR4F21,2.0,0.55,0.1624567359212132,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:2097b73cb386bcdc1146,OR4M2B,2.0,0.74861,0.0444237907013111,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:97218b1213751ad8c617,OR51B2,2.0,0.75,0.1003317551287614,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:5fd5d9f9a12134fa53dd,OR51B6,2.0,0.65407325765,0.5168330896940421,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:dca6ce5e3092779c0cac,OR52E2,2.0,0.75,0.0184323881833542,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:bd8558f5ccb394d84ca5,OR52E5,2.0,0.5,0.4159167546821077,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:9d97ad3b1d5d93a4ac50,OR52E6,2.0,0.35,0.9156461048343152,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:2985614fe010ac02e5ec,OR52E8,2.0,0.3,0.1597502684665686,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:28731a8b99ad92d592c8,OR52I2,2.0,0.4491695815079999,0.2119879948349797,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:d7323dfea27777939878,OR52L1,2.0,0.8,0.019692541054129,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:19fe58cf3cc434e81521,OR56A5,2.0,0.8,0.0752830339505954,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:33a169a22a57db43daea,OR5C1,2.0,0.95,0.0098058557245409,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:0ae7cd743c880ba6c94a,OR5D18,2.0,0.05,0.1123240971631801,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:5bee90871cda5f0ac662,OR6S1,2.0,0.187022800241,0.4110426543989373,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:25a8660e93502e7953d5,OR6V1,2.0,0.3205053052995,0.0420594101876293,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:9b8b505b9cf0f570629b,OR7G3,2.0,0.1533638678315,0.0078009087611943,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:b379a102a32da2004fa4,OR8S1,2.0,0.75,0.1385348673465317,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:3262f1b963f818562b7f,OR9A1P,2.0,0.73039617669,0.0201318037471733,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:f35d82c3dc3dc71d6de9,OR9G1,2.0,0.75,0.0084694219062134,Olfactory sensory epithelium; locus-specific expression/sequence attribution
+PEG:8531bb0100c799b0c54d,OTOR,2.0,0.95,0.0218409264308052,Specialized inner-ear cells
+PEG:8ac3561fd543dd031e8d,SCN10A,2.0,0.5,0.0498391804885396,Human peripheral sensory neurons / dorsal root ganglia
+PEG:587fb02c7d1c6a6edf9a,SCYGR2,2.0,0.4,0.007395431985685,Relevant normal cells and physiological states require review
+PEG:2c6db6330fccee6eb8e2,SCYGR8,2.0,0.1,0.0056515320831754,Relevant normal cells and physiological states require review
+PEG:afa191f7f2fe243a16a8,TAAR6,2.0,0.436580356145,0.5432498166431821,Relevant normal cells and physiological states require review
+PEG:f7ef5a8e8dadb9162d3f,TAAR8,2.0,0.342960688846,0.2379997088287624,Relevant normal cells and physiological states require review
+PEG:226de5a6ebf1bde090e5,TAS2R42,2.0,0.99233929784,0.0481228132244859,Relevant normal cells and physiological states require review
+PEG:7bdab475d6ba9c050915,TEX13B,2.0,0.95,0.4945079065559697,Relevant normal cells and physiological states require review
+PEG:6f07b341fb7553fd51f6,TGM6,2.0,0.25,0.0532787143507451,Relevant normal cells and physiological states require review
+PEG:60df4b11c6c6b125d0aa,USP17L13,2.0,0.15,0.0076898254108557,Relevant normal cells and physiological states require review
+PEG:31425208a98bab0fa3ab,USP17L8,2.0,0.101075513306,0.0081958491685215,Relevant normal cells and physiological states require review

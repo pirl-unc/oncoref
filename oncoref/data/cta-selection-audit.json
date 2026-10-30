@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-selection-audit",
   "version": 1,
-  "decision_policy": "oncoref.cta-selection.2026-10-29.4",
+  "decision_policy": "oncoref.cta-selection.2026-10-30.1",
   "columns": {
     "sources": [
       "source_id",
@@ -13,6 +13,7 @@
       "CTA",
       "Unsafe",
       "Neither",
+      "Tumor-restricted",
       "Unassigned",
       "unique_entities",
       "primary_source",
@@ -40,6 +41,7 @@
       "eligible",
       "Unsafe",
       "Neither",
+      "Tumor-restricted",
       "Unassigned",
       "note"
     ],
@@ -74,18 +76,18 @@
     ]
   },
   "files": {
-    "cta-selection-audit-human.json.gz": "d9d954e7848ec12986eeb34fe5b637e0742f9e39a4a747c576caac390ee74cc9",
-    "cta-selection-audit-dog.json.gz": "aa3960fdc3bfa077069117d8bc39ebc0859c661032945dd7545d1b6e9743f662",
-    "cta-selection-audit-mouse.json.gz": "4e484587a2872c7dd722fb26493d3397e48784bd2f7ddfaf1149320497afdc0f"
+    "cta-selection-audit-human.json.gz": "9467ddf1794b926256c25dbe80b9a750a59bad3cce6d7c98a687a22c47586439",
+    "cta-selection-audit-dog.json.gz": "552b8d68cd41bb2099e368809d51185b344be76662d1309cd35dc9d88c9c3a7f",
+    "cta-selection-audit-mouse.json.gz": "b0f1ed9f0a7500a284b4471a980f06e7af8fdd1b6ca3156b431dee49e3d83683"
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/manifest.json": "cf6b430c0546c374f247e727429a20967a201db246cc294848a03a6b96858921",
-    "scripts/build_cta_selection_audit.py": "1d72b9062b095ae6caf59d2724b3efd97ec839c11c926e254ef1e7682d3e70e2",
+    "docs/audits/cta-selection-20261028/manifest.json": "1b73a59846663f6fd9be26183e9f579c2f6aba041d0607eafb76c8908677ed0a",
+    "scripts/build_cta_selection_audit.py": "3588648d82f93fad4cff81e1639872d4f0d4cf88dd5505868de69ad3cf76d1b8",
     "oncoref/data/cta-publication-sources.csv": "f62e6edfadcfe039ac8e05e7cf6f4029a0289fde8b609c3c1b7a2519967c2f04",
     "oncoref/data/cta-publication-membership.csv": "690adeecfff44d13d40fa7ec6ecfc74193adbf9b9286e54e9c498bae23e9f546",
     "docs/audits/cta-selection-20261028/alternative-evidence/manifest.json": "4597fb0eb7532a92f035fbf8e14190738f3afd0e9e4d607c31b6e4bf9ebaad94",
     "oncoref/data/cta-publication-context.csv": "c6081d93bab5e5775546245fd61f529a5d7f63a24a13b4a792a7e4b7f722113a",
-    "docs/audits/cta-source-walkthrough-20261028/coverage-audit-receipt.json": "08df17bdb9084b25e4bd997a00aa4b05f9eb10f682341278f2e33503e060d1dc",
+    "docs/audits/cta-source-walkthrough-20261028/coverage-audit-receipt.json": "1999122afe0bb1a12d29cba1b866cec0c386159012ba3fb9557c027ef0aa16d7",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

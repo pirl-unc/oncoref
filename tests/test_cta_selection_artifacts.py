@@ -6,8 +6,6 @@ from pathlib import Path
 
 import pandas as pd
 
-from oncoref import cta_selection
-
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT = ROOT / "docs/audits/cta-release-1.21.0"
 
@@ -35,7 +33,7 @@ def test_frozen_release_counts_match_funnel_and_presentation():
     assert funnel.new_candidate_removals.sum() + summary["categories"]["CTA"] == len(selected)
     final = funnel.iloc[-1]
     assert [final.CTA_eligible_so_far, final.Unsafe, final.Neither] == [
-        summary["categories"][category] for category in cta_selection.CATEGORIES
+        summary["categories"][category] for category in ("CTA", "Unsafe", "Neither")
     ]
     known = pd.read_csv(AUDIT / "known-cta-decisions.csv.gz", low_memory=False)
     assert (

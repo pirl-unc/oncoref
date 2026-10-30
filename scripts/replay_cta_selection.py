@@ -788,6 +788,11 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         facts[col] = facts.representative_gene_id.map(summary.groupby("gene_id")[col].max())
     from cta_profile_data import hpa_summary
 
+    proteins = protein_layers(facts, output)
+    facts, reproductive_ihc = policy.reproductive_protein_evidence(
+        facts, read(output / "hpa-protein-evidence.csv.gz")
+    )
+    write_csv(reproductive_ihc, output / "reproductive-protein-evidence.csv.gz")
     facts = policy.association_evidence(facts)
     profile_scores = hpa_summary(facts, output)
     write_csv(profile_scores, output / "hpa-diffuseness.csv.gz")
@@ -799,7 +804,6 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         EvidenceLayer("Required RNA coverage", ~facts.required_coverage, empty),
         EvidenceLayer("Reproductive concentration", facts.reproductive_concentration_hold, empty),
     ]
-    proteins = protein_layers(facts, output)
     layers.insert(2, proteins[0])
     for assay in ASSAYS:
         part = summary[summary.assay.eq(assay)].set_index("gene_id")
@@ -824,6 +828,33 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     # expression of an incompletely measured group. Low profiles require singletons.
     facts["tumor_profile_complete"] = facts.tumor_measured & facts.member_count.eq(1)
     facts["tumor_maximum_floor_ratio"] = tumor.max(axis=1) / policy.APPRECIABLE_RNA
+    tumor_support = read(output / "tumor-restricted-support.csv.gz").set_index(
+        "protein_equivalence_group_id"
+    )
+    for column in ["tumor_samples_ge10", "tumor_identity_resolved", "reliable_tumor_protein"]:
+        facts[column] = facts.protein_equivalence_group_id.map(tumor_support[column])
+    for column in ["tumor_identity_resolved", "reliable_tumor_protein"]:
+        facts[column] = facts[column].fillna(False).astype(bool)
+    restriction_reviews = read(ROOT / "oncoref/data/tumor-restriction-reviews.csv")
+    accepted_reviews = restriction_reviews[restriction_reviews.review_status.eq("Accepted")]
+    if accepted_reviews.protein_equivalence_group_id.duplicated().any():
+        raise ValueError("Conflicting normal-restriction reviews")
+    for review in accepted_reviews.itertuples():
+        if (
+            not str(review.source_urls).startswith("https://")
+            or pd.isna(review.normal_contexts_reviewed)
+            or not str(review.normal_contexts_reviewed).strip()
+            or review.coverage_limitations != "none_unresolved"
+            or review.protein_equivalence_group_id not in set(facts.protein_equivalence_group_id)
+        ):
+            raise ValueError(
+                "Accepted restriction review needs identified contexts, sources and resolved coverage"
+            )
+        pd.to_datetime(review.review_date, format="%Y-%m-%d", errors="raise")
+    facts["normal_restriction_reviewed"] = facts.protein_equivalence_group_id.isin(
+        accepted_reviews.protein_equivalence_group_id
+    )
+    facts = policy.tumor_restricted_evidence(facts)
     facts = policy.neither_profiles(facts)
     result, funnel, independent = policy.classify(
         facts, layers, entity_column="protein_equivalence_group_id"
@@ -851,6 +882,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         d["policy"] = policy.POLICY_ID
         write_csv(d, output / name)
     counts = result.category.fillna("Unassigned").value_counts().to_dict()
+    counts.setdefault("Tumor-restricted", 0)
     meta = {
         "policy": policy.POLICY_ID,
         "categories": counts,
