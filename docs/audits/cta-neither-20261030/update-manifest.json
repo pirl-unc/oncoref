@@ -2,19 +2,33 @@
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
     "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz": "461a37f80b2dcf64845a0805a72acc13f363a373aaddb487a6f64b7131cace3e",
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "6b390e742c2d5adfa7350cc382f3323e411bff47eacc37e7b3ece7a39ed09ece",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "8ccdf5e2747a3059482491149a0a755943c755fab7bac92d5e6d21b4a2d57015",
     "docs/audits/cta-selection-20261028/reproductive-protein-evidence.csv.gz": "3146bc8441f8b3b6331f460d17c621147df653e6518e7935d91eba25445d892a",
+    "docs/audits/cta-selection-20261028/reproductive-cell-evidence.csv.gz": "70eba1387b3dcfb5435a593cd7b013ad370b2f045a270ae375783b39aeffe762",
     "docs/audits/cta-selection-20261028/tumor-restricted-observations.csv.gz": "eddaf3231c031e53e0625a95db0a8dce6956ee4edf594b83f79f62ca1fc186ac",
-    "scripts/report_cta_125_changes.py": "f62f1b238bf1aed9c538c7facfc0036abfbb9316c2774b66ebe491b0bae1114d"
+    "scripts/report_cta_125_changes.py": "b974894215a53b12bb6ca5315d57de830c0c78b70dc86d17e73c0b3246319d66",
+    "oncoref/cta_selection_policy.py": "7b2f16fd84722cdb85c642de39810205d28b0b37c9e2ce30042acc2269a0baa6",
+    "oncoref/data/normal-induction-evidence.csv": "4ed7375ec2ec7d05203c45a8dcbe66b952f2231ffc184c07080b8250e09afb19"
   },
   "outputs": {
-    "changes-1.25.0.csv.gz": "1b2242b71567d10832bc4295ff757babb11cb59e53816c676842cf8860ea20e9",
-    "previous-neither-normal-holds-1.25.0.csv": "9453769ceb6866ffc7882dadf2585b9f4cec556d8cef2a6857060629cc382829",
-    "restored-CTA-1.25.0.csv": "6300c196fe3dd884f98193bab85f8add5993aa9044c0626ccb112a993f2a4945",
+    "changes-1.25.0.csv.gz": "b683f4b28a185f133fbd633b2b7f5d7c4e02a43600f9f820323e06983b34955a",
+    "other-categories-1.25.0.csv": "4cf8de63f41651b2d9d0401337495d3065b19da619790edfe5843547e38d8975",
+    "other-diffuse-1.25.0.csv": "f779603549d1014baa1c16f852e73087178e2cb3cab6016a19b14f0771b6baf2",
+    "other-disposable-1.25.0.csv": "3750ba5da970f57d8d734bdb935e047c6ae8ece822a5f7f5a50a64bfd43134f8",
+    "other-inducible-1.25.0.csv": "06dd024872ea523e61abe1ca271601b8fe4ab04725e304ae5407db09f9add0d1",
+    "other-low-1.25.0.csv": "2a746768f3f5b9d6ab2fe5832332b513759e97718999bc49b2d79e53cb382361",
+    "other-normal-1.25.0.csv": "71edcf3ecb5156a639eb59e7459193d7c5033f1a2db64f26fafa68040407e45b",
+    "other-reproductive-1.25.0.csv": "e3177c290b6afd8f6de3fd3d277dd737560cbcca2570b48c151849a3b719732c",
+    "other-tumor-supported-1.25.0.csv": "0e88ab3fed41ec11a18ca2282072a9acd6f6bddc6e2658f27d0ac565de0e1443",
+    "other-weak-1.25.0.csv": "a343c53f9642af4707d40af79b03ce26629a53f4b2af3a134460aa965411e983",
+    "previous-neither-normal-holds-1.25.0.csv": "950ca70d8bd9d45b98053b143cf4b4c4da3e5b72bd3ecf611bc1c4b0598d6c44",
+    "protein-categories-1.25.0.csv": "a0e0034b8f0a98e98e746f0236525065c08d8ae5244b5407efc5d8399f131889",
+    "restored-CTA-1.25.0.csv": "c827b7db2d7999a57dcd99d168e1b0de3e5e6c53712a1a399de18398bc373001",
     "restored-reproductive-IHC-1.25.0.csv": "ecc703d0355654104f807a2fe1999614f841da8f784d6046c1938508e695e6c4",
-    "transitions-1.25.0.csv": "e8b17790ed78e55f999c877e3dc3a49e35e79a5d52704fc659d0a2f4361e423d",
+    "restored-reproductive-cell-1.25.0.csv": "a8c283203b72e76346b4926e5a7e074eb44ed877da19910fb4a078bb344bcb64",
+    "transitions-1.25.0.csv": "f447543c5a38ac00b806356515fad9f7ba940ce675f2242bdb05c977ddad1de2",
     "tumor-restricted-lead-observations-1.25.0.csv": "fc8a038f6c3946da64ef566c41639520da8df146ef70b2bc93439ec88e9fc78f",
-    "tumor-restricted-leads-1.25.0.csv": "2539e9f33ab8f50bac90a344f04c189c344025aae9b9316aa387ece91ccb250c",
-    "update-1.25.0.md": "7218b9bcc355526969e64ada55ea079a72c3d48ea8672d58c2e0cc6980fc21ca"
+    "tumor-restricted-leads-1.25.0.csv": "dde65e3f68decc96c866e8afb04a9f1945c059a8f6f6391ecd694991bc7ab9e7",
+    "update-1.25.0.md": "4592ce02138b87f3bc11658277f05a57dab037a057efb0e0a9590eb025a6cba7"
   }
 }

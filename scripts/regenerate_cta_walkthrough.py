@@ -26,6 +26,8 @@ def receipts() -> None:
     """Record the measurement replay and current exports without self-hashing."""
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/reproductive_evidence.py",
+        ROOT / "oncoref/data/normal-induction-evidence.csv",
         ROOT / "oncoref/tcr_trials.py",
         ROOT / "oncoref/data/tcr-trial-evidence.json",
         ROOT / "oncoref/expression_diffuseness.py",

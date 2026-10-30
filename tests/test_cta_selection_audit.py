@@ -96,16 +96,10 @@ def test_every_released_hold_and_unsafe_layer_is_explained(audit):
             assert set(explained.entity_id) == expected, (layer, decision)
     end = audit.funnel.iloc[-1]
     expected = human.cta_selection_coverage()["counts"]
-    assert (end.eligible, end.Unsafe, end.Neither, end.Unassigned) == tuple(
-        expected[c] for c in ["CTA", "Unsafe", "Neither", "Unassigned"]
+    assert (end.eligible, end.Unsafe, end.Other, end.Unassigned) == tuple(
+        expected[c] for c in ["CTA", "Unsafe", "Other", "Unassigned"]
     )
-    assert (
-        audit.funnel[["eligible", "Tumor-restricted", "Unsafe", "Neither", "Unassigned"]]
-        .sum(axis=1)
-        .eq(19863)
-        .all()
-    )
-    assert end["Tumor-restricted"] == expected.get("Tumor-restricted", 0)
+    assert audit.funnel[["eligible", "Unsafe", "Other", "Unassigned"]].sum(axis=1).eq(19863).all()
     assert not audit.explanations.reason.str.contains(r"\bnan\b", regex=True).any()
 
 
@@ -118,7 +112,7 @@ def test_independent_assessments_and_only_normal_safety_can_establish_unsafe(aud
         axes.loc[
             axes.category.eq("CTA")
             & ~axes.layer.isin(
-                ["Assessment: Reproductive concentration", "Assessment: Tumor-restricted"]
+                ["Assessment: Reproductive concentration", "Assessment: Tumor-supported"]
             ),
             "decision",
         ]
@@ -234,7 +228,7 @@ def test_checksum_and_species_validation(tmp_path, monkeypatch):
 
 def test_neither_profiles_and_unassigned_counts_reconcile(audit):
     facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
-    neither = facts[facts.category.eq("Neither")]
+    neither = facts[facts.category.eq("Other")]
     from oncoref.cta_selection_policy import CANDIDATE_ONLY_LAYERS
 
     safety = [c for c in facts if c.startswith("hold:") and c[5:] not in CANDIDATE_ONLY_LAYERS]
@@ -242,9 +236,9 @@ def test_neither_profiles_and_unassigned_counts_reconcile(audit):
     assert neither.required_coverage.all()
     assert not neither.unresolved_evidence.any()
     assert not neither.vital_protected_exclusion.any()
-    assert facts.loc[facts.category.isna(), "neither_profile"].isna().all()
+    assert facts.loc[facts.category.isna(), "subtype"].isna().all()
     assert canine.cta_selection().category.isna().all()
-    assert audit.funnel.iloc[:-1].Neither.eq(0).all()
+    assert audit.funnel.iloc[:-1].Other.eq(0).all()
 
 
 def test_current_replay_and_walkthrough_receipts_match_artifacts():
@@ -371,9 +365,9 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     changed = frozen.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))
     assert frozen.loc[changed, "protein_group_label"].tolist() == ["MTCP1"]
     row = after.loc[after.protein_group_label.eq("MTCP1")].iloc[0]
-    assert row.category == "Neither"
+    assert row.category == "Other"
     assert row.hpa_diffuseness == pytest.approx(0.24533644300531762)
-    assert row.neither_profile == "diffuse_reproductive"
+    assert row.subtype == "Diffuse"
     explanation = audit.explain("MTCP1")
     assert explanation[explanation.layer.eq("Assessment: Safety")].decision.eq("pass").all()
     assert (

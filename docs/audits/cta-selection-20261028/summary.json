@@ -1,18 +1,21 @@
 {
-  "policy": "oncoref.cta-selection.2026-10-30.1",
+  "policy": "oncoref.cta-selection.2026-10-30.2",
   "categories": {
     "Unsafe": 18031,
-    "Neither": 725,
-    "CTA": 573,
-    "Unassigned": 534,
-    "Tumor-restricted": 0
+    "CTA": 698,
+    "Other": 600,
+    "Unassigned": 534
   },
-  "selected_member_loci": 615,
-  "neither_profiles": {
-    "normal_pass_noncandidate": 400,
-    "low_normal_expression": 321,
-    "manageable_expression": 3,
-    "diffuse_reproductive": 1
+  "selected_member_loci": 741,
+  "other_subtypes": {
+    "Low": 254,
+    "Normal": 171,
+    "Weak": 92,
+    "Tumor-supported": 66,
+    "Diffuse": 8,
+    "Inducible": 5,
+    "Reproductive": 2,
+    "Disposable": 2
   },
   "order_independent": true
 }

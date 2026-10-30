@@ -55,6 +55,17 @@ def source_inventory() -> pd.DataFrame:
 
     add(
         9606,
+        "normal-induction-evidence",
+        "Published human normal immune induction contexts",
+        ["reproductive_expression", "normal_cell_rna"],
+        "used_in_selection",
+        "qualitative reported RNA induction",
+        "adult; activated",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/",
+        "Qualitative counterevidence to indirect reproductive-site restriction; no TPM or clinical-toxicity inference",
+    )
+    add(
+        9606,
         "hpa_rna_consensus",
         "HPA v23 / GTEx consensus",
         ["normal_bulk_rna", "reproductive_expression"],
@@ -134,7 +145,7 @@ def source_inventory() -> pd.DataFrame:
         9606,
         "hpa_single_cell_tissue",
         "HPA v23 tissue/cell clusters",
-        ["normal_cell_rna"],
+        ["normal_cell_rna", "reproductive_expression"],
         "used_in_selection",
         "nTPM",
         "source-labelled adult; reproductive locations explicit",
@@ -375,6 +386,9 @@ def build(audit: Path = AUDIT) -> None:
         "limited_protein_review_flag",
         "stem_progenitor_expression_flag",
         "reproductive_protein_association",
+        "reproductive_cell_association",
+        "reproductive_cell_indirect_association",
+        "normal_induction_evidence",
         "tumor_restricted_rna_support",
         "reliable_tumor_protein",
         "tumor_restricted_lead",
@@ -415,6 +429,8 @@ def build(audit: Path = AUDIT) -> None:
                 else "partial",
                 "reference_id": reference["reference_id"],
                 "category": row["category"],
+                "subtype": row.get("subtype"),
+                "classification": row.get("classification", row["category"]),
                 "assessment_status": row.get("assessment_status", "screened"),
                 "policy_id": row["policy"],
                 "reasons": json.dumps(
@@ -474,7 +490,8 @@ def build(audit: Path = AUDIT) -> None:
                     "Representative-protein equivalence is not exhaustive isoform identity",
                     "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
                     "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
-                    "Tumor-restricted is panel-defined: >=10 TPM in two distinct samples or reviewed reliable tumor protein, with low measured normal/developmental expression; rare normal states may remain unmeasured",
+                    "Other:Tumor-supported denotes strong tumor evidence with low measured normal/developmental expression; rare normal states may remain unmeasured. It is not an admitted target category.",
+                    "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply.",
                 ],
             },
             "dog": {

@@ -48,6 +48,10 @@ from __future__ import annotations
 
 #: {name: (category, description)} — small curated tables shipped in the wheel.
 WHEEL: dict[str, tuple[str, str]] = {
+    "normal-induction-evidence": (
+        "expression",
+        "Cited normal induction contexts; qualitative reproductive-association counterevidence",
+    ),
     "cancer-type-registry": ("ontology", "cancer-type codes, hierarchy, family/tissue"),
     "cancer-subtype-groupings": ("ontology", "cross-cutting MSI/POLE/HPV/MYCN axes"),
     "cancer-cohort-aggregates": ("ontology", "computed histology rollups (SARC_RMS, …)"),

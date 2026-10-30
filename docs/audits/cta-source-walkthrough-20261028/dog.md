@@ -1,6 +1,6 @@
 # Dog CTA evidence funnel
 
-**14 native nominations, all unassigned/unassessed.** There is no completed canine quantitative selection or genome-wide denominator. None is automatically called Neither. Human RNA ceilings, HPA grades and clinical evidence do not transfer by orthology.
+**14 native nominations, all unassigned/unassessed.** There is no completed canine quantitative selection or genome-wide denominator. None is automatically called Other. Human RNA ceilings, HPA grades and clinical evidence do not transfer by orthology.
 
 | citation | mapped_entities | mapped_gene_loci | source_url |
 | --- | --- | --- | --- |

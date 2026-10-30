@@ -16,19 +16,20 @@ Acceptable safety AND one qualifying cancer sample
 AND a qualifying Reproductive route after concentration assessment
 AND complete required coverage -> CTA
 
-Otherwise: supported tumor restriction and normal coverage review -> Tumor-restricted
-Otherwise: complete normal screen passes -> Neither
-Remaining missing normal evidence or normal-screen holds -> unassigned
+Otherwise: complete normal screen passes -> one named Other category
+Remaining missing normal evidence or normal-screen holds -> Unassessed
 ```
 
 Reproductive means reproductive, placental, extraembryonic, embryonic and fetal.
 Named branches retain anatomical and developmental precision. The current measured
-routes are HPA adult/placental RNA ≥5 nTPM, reliable positive reproductive IHC,
+routes are full mapped HPA reproductive bulk RNA ≥5 nTPM, supported reproductive
+cell RNA ≥5 nTPM with ≥20 reads, reliable positive reproductive IHC,
 or supported Tyser/Petropoulos embryonic
 lineage mean ≥5 TPM (≥20 cells, ≥5 positive cells, ≥10% positive at ≥1 TPM).
 The current inputs do not cover every fetal stage.
 
-Cancer requires one sample ≥2 TPM or HPA pTPM, without a normal-expression ratio.
+Cancer requires one sample ≥2 TPM or HPA pTPM, or reviewed reliable tumor protein,
+without a normal-expression ratio.
 This establishes qualifying RNA, not necessarily translated protein, presentation
 or expression in a specified fraction of patients.
 
@@ -65,8 +66,8 @@ RNA-only association still requires 5 nTPM. A zero RNA reference leaves concentr
 unassessed even when IHC qualifies. Disposable tissues count;
 **Permissive thymus is excluded from both the comparator and the reference**.
 The fixed panel is 38 contexts / 29 anatomy units. A failed route with no other
-qualifying Reproductive route and clear safety becomes Neither. MTCP1 moves to
-Neither (24.53%). Independent Unsafe assignments do not change.
+qualifying Reproductive route and clear safety becomes Other:Diffuse. MTCP1 is one example
+(24.53%). Independent Unsafe assignments do not change.
 
 A weak adult reference does not decide embryonic identity. Supported embryonic
 routes remain eligible with concentration explicitly unassessed until compatible
@@ -81,3 +82,20 @@ All entries called **Proteins** collapse identical selected reference sequences;
 originating loci remain listed. This is not a catalog of every alternative isoform
 or modified proteoform. Human measurements and thresholds do not transfer to dog
 or mouse through orthology.
+
+## Other categories
+
+| Category | Proteins | Definition |
+|---|---:|---|
+| Other:Diffuse | 8 | Complete HPA profile is dispersed (score >10% with a reference ≥2 nTPM), or the active concentration gate fails; no CTA route remains. |
+| Other:Reproductive | 2 | Qualifying Reproductive evidence, but no qualifying cancer expression; the normal screen passes. |
+| Other:Inducible | 5 | Cited expression in activated nonreproductive normal cells; a localized indirect atlas signal cannot establish Reproductive identity. |
+| Other:Tumor-supported | 66 | Two distinct tumors ≥10 native TPM or reviewed reliable tumor protein, with low measured normal/developmental expression; not established tumor restriction. |
+| Other:Disposable | 2 | Positive Disposable RNA/protein; measured RNA elsewhere below the descriptive 2-unit floor and no detected protein elsewhere, including low measured developmental RNA. |
+| Other:Low | 254 | All measured normal RNA below the descriptive 2-unit floor and no detected normal protein. Cancer expression need not be low. |
+| Other:Normal | 171 | Supported nonreproductive normal RNA reaches the descriptive 2-unit floor or reliable protein is detected; no preceding subtype or CTA definition qualifies. |
+| Other:Weak | 92 | Reproductive signals are below admission requirements or lack support; no preceding subtype qualifies and no supported appreciable nonreproductive expression is established. |
+
+Categories follow the table's priority order and are mutually exclusive. See the
+[complete rules](cta-selection.md#categorical-assignments) for indirect reproductive
+cell evidence, descriptive floors, source support and the categorical API.

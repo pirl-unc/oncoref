@@ -24,7 +24,7 @@ def test_packaged_leads_have_two_distinct_resolved_native_tpm_observations():
     obs = pd.read_csv(folder / "tumor-restricted-observations.csv.gz")
     leads = facts[facts.tumor_restricted_lead]
     assert len(leads) == 66
-    assert leads.category.eq("Neither").all()
+    assert leads.category.eq("Other").all()
     assert not leads.normal_restriction_reviewed.any()
     obs = obs[obs.protein_equivalence_group_id.isin(leads.protein_equivalence_group_id)]
     assert obs.unit.eq("TPM").all()

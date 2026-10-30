@@ -19,5 +19,19 @@
     "summary.json": "4332d85344cbb081324edd3305f43d54a4c74dc55d15f481f10c34a1a87e0d7f",
     "supported-cell-peaks.csv.gz": "9b6dc891015d3bb45299cf18641f39017cdbe70f5c3a3d6e15c3c51db382f16f",
     "tumor-supported.csv": "9dfd7148f760b6c96d5dcf5514d77f3988c01cc1a543ae9b31654507ef956471"
-  }
+  },
+  "input_snapshots": [
+    "scripts/cta_report_common.py",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
+    "docs/audits/cta-selection-20261028/hpa-diffuseness.csv.gz",
+    "scripts/audit_cta_other_subtypes.py",
+    "oncoref/cta_selection_policy.py",
+    "scripts/cta_profile_data.py",
+    "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz"
+  ],
+  "input_snapshot_archive": {
+    "path": "frozen-inputs.zip",
+    "sha256": "c7d6e9235432cd88413e8e6e87243ba0dfcd37f4e0a793c213265c4bc73fe4d9"
+  },
+  "reproduction_commit": "fcfb7a1816ae86d797cae4666eb0869d07d84039"
 }

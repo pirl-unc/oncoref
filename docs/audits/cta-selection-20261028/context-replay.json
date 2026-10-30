@@ -1,8 +1,10 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/replay_cta_selection.py": "33c0361ef6019355a66fd9f6856a5aff9d06638cc84c2bd6b9f0506ae3a6bddd",
-    "oncoref/cta_selection_policy.py": "adeb9a400367c20c35d9ffc0cfccbc3fd04ff2537a4e08e12ebbeae4c5649c69",
+    "scripts/replay_cta_selection.py": "3391aa05cd92bb58ec5d1102beaa8f599f2baadffeed351ac775d2e740cc5d44",
+    "oncoref/cta_selection_policy.py": "7b2f16fd84722cdb85c642de39810205d28b0b37c9e2ce30042acc2269a0baa6",
+    "oncoref/reproductive_evidence.py": "9239dad65042033d487decc556c1befb33a582a5e3029b2795dd54fa42ee4d97",
+    "oncoref/data/normal-induction-evidence.csv": "4ed7375ec2ec7d05203c45a8dcbe66b952f2231ffc184c07080b8250e09afb19",
     "oncoref/tcr_trials.py": "80f277ad43c1f90d33c760d55ba140499a062ad251d0315f712df484525f652d",
     "oncoref/data/tcr-trial-evidence.json": "c56544c5a3d9a0dbb88a1a2a815c837cbfa9325bc160ecbaaefc10c1029f25d8",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
@@ -38,10 +40,12 @@
     }
   ],
   "outputs": {
-    "assay-assessments.csv.gz": "1ad41542bd11350687dc2b677f12b4c2b2eb926c64601a1aedba6cdbf75911e8",
-    "normal-peak-evidence.csv.gz": "85bf321638d2b65a87c5aa5849712bb277ef4f26100b5f0f22d8f984696bab04",
-    "widely-studied-contexts.csv.gz": "5aff3730c00e78178dc027fa29c3354e0f769fab019da0dad924cadb9f6bc670",
-    "compartment-ihc-matches.csv.gz": "4208e0e0b4381106e93f9646e27c859cb4a0c41e08e567b13241b3c3eac98890",
-    "manageable-breadth.csv.gz": "7d2a837efecc57f8814e5e56d968ee6b71d5e299de385a0e0d807c07a52b00aa"
+    "assay-assessments.csv.gz": "57e83a9e3eb6ec464ae3a08da578a9029aaa06c8fdd85d303ad194f57cb22f50",
+    "normal-peak-evidence.csv.gz": "a51ce0be9fbecb8c3894352b8c86cfa42f28e1740f9e574e1ae7a4d78da8cb09",
+    "widely-studied-contexts.csv.gz": "ec5580f1d706278008d32287a5383c54e26d65c9be89b2d64dbe058d1e1c44c0",
+    "compartment-ihc-matches.csv.gz": "286ee33860c8aabeb97b810c8887caccec0d0f2f3f88d73557906de23518db15",
+    "manageable-breadth.csv.gz": "7d2a837efecc57f8814e5e56d968ee6b71d5e299de385a0e0d807c07a52b00aa",
+    "reproductive-cell-evidence.csv.gz": "70eba1387b3dcfb5435a593cd7b013ad370b2f045a270ae375783b39aeffe762",
+    "outside-reproductive-cluster-coverage.csv.gz": "09dc633e0885c09e91b7847bf4c4400d498273715b28da314366afe664616951"
   }
 }

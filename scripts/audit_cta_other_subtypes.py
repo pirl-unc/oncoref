@@ -128,6 +128,12 @@ def table(frame):
 
 
 def build():
+    if policy.POLICY_ID != "oncoref.cta-selection.2026-10-30.1":
+        raise RuntimeError(
+            "Historical diagnostic: reproduce from commit fcfb7a1. "
+            "Use report_cta_125_changes.py for the current categorical release. "
+            "Original inputs are preserved in cta-other-20261030/frozen-inputs.zip."
+        )
     OUT.mkdir(parents=True, exist_ok=True)
     paths = [CURRENT / "protein-group-classifications.csv.gz", CURRENT / "hpa-diffuseness.csv.gz"]
     facts, scores = [pd.read_csv(p, low_memory=False) for p in paths]

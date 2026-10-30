@@ -1,49 +1,54 @@
-# OncoRef 1.25.0: Neither fallback and reproductive protein evidence
+# OncoRef 1.25.0: categorical protein decisions
 
-**Draft: further admission review is in progress.** The [Other-subtype audit](audits/cta-other-20261030/index.md) found a stale Reproductive bulk input and an omitted reproductive-cell RNA route. Its corrected counts are diagnostic; the packaged decisions below have not yet changed. PR #652 remains a draft and 1.25.0 has not been released.
-
-**573 CTA proteins, 725 Neither, 18,031 Unsafe and 534 unassigned.** All 522
-previous CTAs remain included, and Unsafe membership is unchanged. CTA represents
-615 member loci after identical selected reference protein sequences are collapsed.
+**698 CTA proteins, 600 Other, 18,031 Unsafe and 534 Unassessed.** All 522 previous
+CTAs remain included. Unsafe membership is unchanged. CTA represents 741 member
+loci after identical selected reference protein sequences are collapsed.
 
 [Full report and funnel](audits/cta-source-walkthrough-20261028/index.md) ·
-[Updated PDF slides](audits/cta-source-walkthrough-20261028/cta-selection-1.25.0.pdf) ·
-[Changes and individual evidence](audits/cta-neither-20261030/update-1.25.0.md) ·
+[PDF slides](audits/cta-source-walkthrough-20261028/cta-selection-1.25.0.pdf) ·
+[Every change and individual evidence](audits/cta-neither-20261030/update-1.25.0.md) ·
 [Rules and API](cta-selection.md)
 
 | Category | 1.24.0 | 1.25.0 |
 |---|---:|---:|
-| CTA | 522 | 573 |
-| Tumor-restricted | 0 | 0 |
-| Neither | 20 | 725 |
+| CTA | 522 | 698 |
+| Other (formerly Neither) | 20 | 600 |
 | Unsafe | 18,031 | 18,031 |
-| Unassigned | 1,290 | 534 |
+| Unassessed | 1,290 | 534 |
 
 ## What changed
 
-**Neither now means the required normal screen passes but no candidate subtype
-qualifies.** High or missing cancer expression no longer prevents Neither. Missing
-required normal evidence or a normal-screen hold still prevents that assignment.
-Seven old Neither proteins with Manageable-tissue holds return to unassigned.
+Other now requires the complete normal screen to pass, without requiring cancer
+or Reproductive identity. Every Other protein receives a named category:
 
-**Reliable positive reproductive IHC again supplies an independent CTA association
-route.** The selection rewrite had retained IHC as an antibody control but omitted
-this admission route. The fix restores 51 of 52 reviewed proteins, including SAGE1
-and GAGE10. CDY1/B remains Neither because it lacks qualifying cancer expression.
-The rule requires reliable mapped positive staining for every member locus and
-no unresolved antibody concern. All normal gates and cancer requirements still apply.
+| Category | Proteins | Definition |
+|---|---:|---|
+| Other:Diffuse | 8 | Complete HPA profile is dispersed (score >10% with a reference ≥2 nTPM), or the active concentration gate fails; no CTA route remains. |
+| Other:Reproductive | 2 | Qualifying Reproductive evidence, but no qualifying cancer expression; the normal screen passes. |
+| Other:Inducible | 5 | Cited expression in activated nonreproductive normal cells; a localized indirect atlas signal cannot establish Reproductive identity. |
+| Other:Tumor-supported | 66 | Two distinct tumors ≥10 native TPM or reviewed reliable tumor protein, with low measured normal/developmental expression; not established tumor restriction. |
+| Other:Disposable | 2 | Positive Disposable RNA/protein; measured RNA elsewhere below the descriptive 2-unit floor and no detected protein elsewhere, including low measured developmental RNA. |
+| Other:Low | 254 | All measured normal RNA below the descriptive 2-unit floor and no detected normal protein. Cancer expression need not be low. |
+| Other:Normal | 171 | Supported nonreproductive normal RNA reaches the descriptive 2-unit floor or reliable protein is detected; no preceding subtype or CTA definition qualifies. |
+| Other:Weak | 92 | Reproductive signals are below admission requirements or lack support; no preceding subtype qualifies and no supported appreciable nonreproductive expression is established. |
 
-**Tumor-restricted is a separate candidate subtype.** It requires ≥10 native TPM
-in two distinct tumor samples, or reviewed reliable tumor protein evidence, plus
-low measured normal/developmental expression, resolved identity, required normal
-coverage and a review of relevant normal cells and states. The existing CTA cancer
-rule remains ≥2 TPM or HPA pTPM in one sample.
+The rules apply in table order. Normal describes supported normal expression below
+the safety ceilings; Weak describes signals insufficient for an earlier category.
+Low means low in measured normal panels, not never expressed. The 66 Tumor-supported
+proteins remain reconsideration leads, with rare normal-cell coverage tracked in
+[#653](https://github.com/pirl-unc/oncoref/issues/653).
 
-There are **66 numerical Tumor-restricted leads within Neither**, awaiting normal
-coverage review. Forty are olfactory-receptor genes, illustrating why a bulk panel
-alone cannot establish restriction from rare normal cells. No protein has yet been
-admitted to the new subtype. The report provides their qualifying tumor samples
-and coverage questions. These are research classifications, not clinical clearance.
+Three admission repairs add 176 CTA proteins: reliable positive reproductive IHC
+again counts independently; the bulk maximum uses the full mapped Reproductive
+panel; and supported reproductive-cell RNA supplies a presence route. MAGEA11,
+FOXR2, CAGE1, PRDM9, SAGE1 and GAGE10 illustrate the corrections. The routes overlap,
+so their counts must not be added. MAGE-A4, NY-ESO-1, PRAME, CTAG2 and XAGE1A/B remain CTA.
+
+Generic or immune cells sampled in reproductive tissue may supply indirect
+association if the same-source outside panel is complete and every outside cluster
+is below 5 nTPM. Published normal induction contradicts indirect-only localization:
+IFNA2/14 remain Other:Inducible. A sampling site does not establish the producing cell.
+All safety, normal coverage, cancer and measured concentration gates still apply.
 
 ## Downstream contract
 
@@ -51,21 +56,23 @@ and coverage questions. These are research classifications, not clinical clearan
 from oncoref import cta_selection
 
 cta_selection.results(category="CTA")
-cta_selection.results(category="Tumor-restricted")
-cta_selection.candidates()  # CTA + Tumor-restricted
-cta_selection.results(category="Neither")
-cta_selection.audit().explain("SAGE1")
+cta_selection.results(category="Other", subtype="Low")
+cta_selection.results()[["label", "classification", "reasons"]]
+cta_selection.candidates()  # CTA only
+cta_selection.audit().explain("FOXR2")
 ```
 
-The accepted category vocabulary gains `Tumor-restricted`. Existing CTA queries
-retain their scope. Unassigned normal holds now use `normal_evidence_hold`; missing
-required normal coverage/resolution uses `incomplete_evidence`. Neither does not
-imply absent Reproductive or cancer expression. Its profile labels are descriptive.
-Pin policy **`oncoref.cta-selection.2026-10-30.1`** and the returned source snapshot.
+`classification` is CTA, Unsafe, Other:<subtype>, or Unassessed. `category` retains
+CTA / Unsafe / Other / null, and `subtype` names each Other category. The deprecated
+`category="Neither"` query returns Other and warns. No top-level Tumor-restricted
+category is introduced. Missing normal coverage uses `incomplete_evidence`;
+unresolved normal-screen holds use `normal_evidence_hold`.
 
-This release does not silently change the independently versioned exact-protein
-background, legacy CTA sets or k-mer exclusion APIs. Downstream code must choose
-the intended policy and preserve the normal evidence for shared subsequences.
-Full and cached selection replays produce byte-identical decisions. Regression
-tests preserve all prior CTAs and Unsafe proteins, enforce IHC identity/quality,
-and reject duplicate tumor observations as independent replication.
+Pin policy **`oncoref.cta-selection.2026-10-30.2`** and the source snapshot. Dog and
+mouse retain native nominations with Unassessed status; human decisions do not
+transfer through orthology. The separately versioned legacy CTA and exact-protein
+background APIs retain their own policies, including k-mer exclusion semantics.
+
+These are research screening assignments, not demonstrated clinical safety or
+clearance of every epitope. The report retains source units, missing coverage,
+antibody concerns and exact clinical epitope/HLA/product limitations.

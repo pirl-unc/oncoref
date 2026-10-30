@@ -23,6 +23,7 @@ from oncoref import (  # noqa: E402
     hpa,
     normal_cell_screen,
     reference_data,
+    reproductive_evidence,
     tcr_trials,
 )
 from oncoref import cta_selection_policy as policy  # noqa: E402
@@ -63,6 +64,9 @@ class ContextCollector:
         self.breadth: list[pd.DataFrame] = []
         self.comparators: list[pd.DataFrame] = []
         self.mapped: list[pd.DataFrame] = []
+        self.reproductive_cells: list[pd.DataFrame] = []
+        self.outside_clusters: list[pd.DataFrame] = []
+        self.outside_cluster_keys: set[tuple] = set()
 
     def collect(self, frame: pd.DataFrame, assay: str) -> None:
         frame = frame.copy()
@@ -93,6 +97,15 @@ class ContextCollector:
         d["normal_maximum_floor_ratio"] = raw / (
             policy.APPRECIABLE_RNA * d.unit.map(policy.UNIT_SCALE)
         )
+        d["disposable_maximum_floor_ratio"] = d.normal_maximum_floor_ratio.where(
+            d.selection_tier.eq("disposable")
+        )
+        d["outside_disposable_floor_ratio"] = d.normal_maximum_floor_ratio.where(
+            ~d.selection_tier.eq("disposable")
+        )
+        d["nonreproductive_supported_floor_ratio"] = (
+            d.value / (policy.APPRECIABLE_RNA * d.unit.map(policy.UNIT_SCALE))
+        ).where(~d.category.isin(["reproductive", cell_rna_policy.NEUTRAL_REPRODUCTIVE_IMMUNE]))
         d["healthy_maximum_ntpm"] = d.value.where(normal & d.unit.eq("nTPM"))
         d["healthy_maximum_tpm"] = d.value.where(normal & d.unit.eq("TPM"))
         d["healthy_maximum_cp10k"] = d.value.where(normal & d.unit.eq("CP10K"))
@@ -104,6 +117,12 @@ class ContextCollector:
                 unsafe_evidence=("unsafe_evidence", "any"),
                 unresolved_context=("unresolved_context", "any"),
                 normal_maximum_floor_ratio=("normal_maximum_floor_ratio", "max"),
+                disposable_maximum_floor_ratio=("disposable_maximum_floor_ratio", "max"),
+                outside_disposable_floor_ratio=("outside_disposable_floor_ratio", "max"),
+                nonreproductive_supported_floor_ratio=(
+                    "nonreproductive_supported_floor_ratio",
+                    "max",
+                ),
                 healthy_maximum_ntpm=("healthy_maximum_ntpm", "max"),
                 healthy_maximum_tpm=("healthy_maximum_tpm", "max"),
                 healthy_maximum_cp10k=("healthy_maximum_cp10k", "max"),
@@ -111,6 +130,30 @@ class ContextCollector:
             .reset_index()
             .assign(assay=assay)
         )
+        if assay == "HPA tissue clusters":
+            cell_rows = reproductive_evidence.cell_observations(d)
+            outside = cell_rows[~cell_rows.reproductive_sampling_site].copy()
+            self.outside_cluster_keys.update(
+                outside[["tissue", "Cluster", "cell_type"]].itertuples(index=False, name=None)
+            )
+            outside["observed"] = (
+                outside.complete_members.eq(True) & outside.raw_maximum.notna()
+                if "raw_maximum" in outside
+                else outside.complete_members.eq(True) & outside.value.notna()
+            )
+            outside["native_value"] = outside.get("raw_maximum", outside.value)
+            self.outside_clusters.append(
+                outside.groupby("gene_id").agg(
+                    outside_cluster_measured=("observed", "sum"),
+                    outside_cluster_max_ntpm=("native_value", "max"),
+                )
+            )
+            cell_rows = cell_rows[cell_rows.reproductive_sampling_site].copy()
+            self.reproductive_cells.append(
+                cell_rows.sort_values("value", ascending=False).drop_duplicates(
+                    ["gene_id", "reproductive_cell_usable", "reproductive_cell_reason"]
+                )
+            )
         # Keep separate worst Unsafe and worst non-Unsafe contexts. The maximum
         # ratio alone can hide a second, Vital/Protected exclusion.
         chosen = d[d.value.notna() & d.candidate_ceiling.notna()].sort_values(
@@ -160,6 +203,9 @@ class ContextCollector:
                     "unsafe_evidence": "any",
                     "unresolved_context": "any",
                     "normal_maximum_floor_ratio": "max",
+                    "disposable_maximum_floor_ratio": "max",
+                    "outside_disposable_floor_ratio": "max",
+                    "nonreproductive_supported_floor_ratio": "max",
                     "healthy_maximum_ntpm": "max",
                     "healthy_maximum_tpm": "max",
                     "healthy_maximum_cp10k": "max",
@@ -173,6 +219,27 @@ class ContextCollector:
             .drop_duplicates(["gene_id", "assay", "unsafe_evidence"])
         )
         write_csv(summary, self.output / "assay-assessments.csv.gz")
+        write_csv(
+            pd.concat(self.reproductive_cells, ignore_index=True)
+            .sort_values("value", ascending=False)
+            .drop_duplicates(["gene_id", "reproductive_cell_usable", "reproductive_cell_reason"]),
+            self.output / "reproductive-cell-evidence.csv.gz",
+        )
+        outside = (
+            pd.concat(self.outside_clusters)
+            .groupby(level=0)
+            .agg(
+                outside_cluster_measured=("outside_cluster_measured", "sum"),
+                outside_cluster_max_ntpm=("outside_cluster_max_ntpm", "max"),
+            )
+        )
+        outside["outside_cluster_expected"] = len(self.outside_cluster_keys)
+        outside["outside_cluster_complete"] = outside.outside_cluster_measured.eq(
+            outside.outside_cluster_expected
+        )
+        write_csv(
+            outside.reset_index(), self.output / "outside-reproductive-cluster-coverage.csv.gz"
+        )
         write_csv(peaks, self.output / "normal-peak-evidence.csv.gz")
         write_csv(
             pd.concat(self.comparators, ignore_index=True),
@@ -281,6 +348,8 @@ def replay_contexts(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
             state="unspecified",
             stage="adult",
             unit="nTPM",
+            member_count=1,
+            complete_members=True,
         )
         d["raw_maximum"] = d.value
         d["value"] = d.value.where(d["Read count"].ge(20))
@@ -401,6 +470,21 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
     facts["unresolved_evidence"] |= lookup("unresolved_evidence")
     detected = set(d.loc[positive, "representative_gene_id"].dropna())
     facts["any_detected_protein"] = facts.representative_gene_id.isin(detected)
+    facts["disposable_protein_positive"] = facts.representative_gene_id.isin(
+        d.loc[
+            positive & d.category.eq("disposable") & d.Reliability.isin(cell_rna_policy.GRADES),
+            "representative_gene_id",
+        ]
+    )
+    facts["protein_outside_disposable"] = facts.representative_gene_id.isin(
+        d.loc[positive & ~d.category.eq("disposable"), "representative_gene_id"]
+    )
+    facts["supported_nonreproductive_protein"] = facts.representative_gene_id.isin(
+        d.loc[
+            positive & d.Reliability.isin(cell_rna_policy.GRADES) & ~d.category.eq("reproductive"),
+            "representative_gene_id",
+        ]
+    )
     write_csv(d[positive | d.candidate_exclusion], output / "hpa-protein-evidence.csv.gz")
     layers = [
         EvidenceLayer(
@@ -426,6 +510,17 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
     )
     detected_ids = set(imported["Gene ID"])
     facts["any_detected_protein"] |= members.map(lambda group: bool(set(group) & detected_ids))
+    outside_ids = set(imported.loc[~imported["Tissue category"].eq("disposable"), "Gene ID"])
+    facts["protein_outside_disposable"] |= members.map(lambda ids: bool(set(ids) & outside_ids))
+    normal_ids = set(
+        imported.loc[
+            imported.retained_protein_exclusion & ~imported["Tissue category"].eq("reproductive"),
+            "Gene ID",
+        ]
+    )
+    facts["supported_nonreproductive_protein"] |= members.map(
+        lambda ids: bool(set(ids) & normal_ids)
+    )
     write_csv(imported, output / "imported-protein-review-decisions.csv")
     # Eligible external observations already require exact cell coverage and a
     # validated reagent. Resolve their anatomical tier independently of intensity.
@@ -450,6 +545,12 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
         )
         facts["any_detected_protein"] |= members.map(
             lambda ids: bool(set(ids) & set(external.gene_id))
+        )
+        outside_ids = set(external.loc[~external.category.eq("disposable"), "gene_id"])
+        facts["protein_outside_disposable"] |= members.map(lambda ids: bool(set(ids) & outside_ids))
+        normal_ids = set(external.loc[~external.category.eq("reproductive"), "gene_id"])
+        facts["supported_nonreproductive_protein"] |= members.map(
+            lambda ids: bool(set(ids) & normal_ids)
         )
     write_csv(external, output / "external-protein-evidence.csv.gz")
     return layers
@@ -705,6 +806,8 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     inputs = [
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/reproductive_evidence.py",
+        ROOT / "oncoref/data/normal-induction-evidence.csv",
         ROOT / "oncoref/tcr_trials.py",
         ROOT / "oncoref/data/tcr-trial-evidence.json",
         ROOT / "oncoref/gene_matching.py",
@@ -758,6 +861,8 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
             "widely-studied-contexts.csv.gz",
             "compartment-ihc-matches.csv.gz",
             "manageable-breadth.csv.gz",
+            "reproductive-cell-evidence.csv.gz",
+            "outside-reproductive-cluster-coverage.csv.gz",
         ]
         cache.write_text(
             json.dumps(
@@ -781,6 +886,9 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     facts["adult_bulk_max_ntpm"] = facts.representative_gene_id.map(bulk_maximum)
     for col in [
         "normal_maximum_floor_ratio",
+        "disposable_maximum_floor_ratio",
+        "outside_disposable_floor_ratio",
+        "nonreproductive_supported_floor_ratio",
         "healthy_maximum_ntpm",
         "healthy_maximum_tpm",
         "healthy_maximum_cp10k",
@@ -793,9 +901,34 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         facts, read(output / "hpa-protein-evidence.csv.gz")
     )
     write_csv(reproductive_ihc, output / "reproductive-protein-evidence.csv.gz")
-    facts = policy.association_evidence(facts)
     profile_scores = hpa_summary(facts, output)
     write_csv(profile_scores, output / "hpa-diffuseness.csv.gz")
+    facts = reproductive_evidence.bulk_reference(facts, profile_scores)
+    cells = read(output / "reproductive-cell-evidence.csv.gz")
+    supported_cells = cells[cells.reproductive_cell_usable].groupby("gene_id").value.max()
+    facts["reproductive_cell_ntpm"] = facts.representative_gene_id.map(supported_cells)
+    outside = read(output / "outside-reproductive-cluster-coverage.csv.gz").set_index("gene_id")
+    for column in outside:
+        facts[column] = facts.representative_gene_id.map(outside[column])
+    indirect = cells[cells.reproductive_cell_indirect_candidate].groupby("gene_id").value.max()
+    facts["reproductive_cell_indirect_ntpm"] = facts.representative_gene_id.map(indirect)
+    induction = read(ROOT / "oncoref/data/normal-induction-evidence.csv")
+    if (
+        not induction.taxonomy_id.eq(9606).all()
+        or not induction.source_url.str.startswith("https://").all()
+    ):
+        raise ValueError("Normal induction evidence requires human identity and source provenance")
+    induction_ids = set(induction.gene_id)
+    facts["normal_induction_evidence"] = facts.member_gene_ids.map(
+        lambda ids: bool(set(json.loads(ids)) & induction_ids)
+    )
+    facts["reproductive_cell_indirect_association"] = reproductive_evidence.indirect_association(
+        facts
+    )
+    facts["reproductive_cell_association"] = (
+        facts.reproductive_cell_ntpm.ge(5) | facts.reproductive_cell_indirect_association
+    )
+    facts = policy.association_evidence(facts)
     facts = policy.concentration_evidence(facts, profile_scores)
     empty = pd.Series(False, index=facts.index)
     layers = [
@@ -828,6 +961,14 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     # expression of an incompletely measured group. Low profiles require singletons.
     facts["tumor_profile_complete"] = facts.tumor_measured & facts.member_count.eq(1)
     facts["tumor_maximum_floor_ratio"] = tumor.max(axis=1) / policy.APPRECIABLE_RNA
+    tumor_receipt = json.loads((output / "tumor-restricted-manifest.json").read_text())
+    for name, digest in tumor_receipt["outputs"].items():
+        if sha256(output / name) != digest:
+            raise ValueError(f"Changed tumor support: {name}")
+    if tumor_receipt["inputs"]["oncoref/data/tumor-protein-evidence.csv"] != sha256(
+        ROOT / "oncoref/data/tumor-protein-evidence.csv"
+    ):
+        raise ValueError("Rebuild tumor support after changing reviewed tumor protein evidence")
     tumor_support = read(output / "tumor-restricted-support.csv.gz").set_index(
         "protein_equivalence_group_id"
     )
@@ -835,6 +976,8 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         facts[column] = facts.protein_equivalence_group_id.map(tumor_support[column])
     for column in ["tumor_identity_resolved", "reliable_tumor_protein"]:
         facts[column] = facts[column].fillna(False).astype(bool)
+    facts["cancer_association"] = facts.tumor_union_ge2 | facts.reliable_tumor_protein
+    layers[1] = EvidenceLayer("Cancer expression", ~facts.cancer_association, empty)
     restriction_reviews = read(ROOT / "oncoref/data/tumor-restriction-reviews.csv")
     accepted_reviews = restriction_reviews[restriction_reviews.review_status.eq("Accepted")]
     if accepted_reviews.protein_equivalence_group_id.duplicated().any():
@@ -855,14 +998,16 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         accepted_reviews.protein_equivalence_group_id
     )
     facts = policy.tumor_restricted_evidence(facts)
-    facts = policy.neither_profiles(facts)
+    facts = policy.other_profiles(facts)
     result, funnel, independent = policy.classify(
         facts, layers, entity_column="protein_equivalence_group_id"
     )
     reverse = policy.classify(
         facts, list(reversed(layers)), entity_column="protein_equivalence_group_id"
     ).classifications
-    if not result.category.equals(reverse.category):
+    if not result[["category", "subtype", "classification"]].equals(
+        reverse[["category", "subtype", "classification"]]
+    ):
         raise ValueError("Final assignments depend on layer order")
     write_csv(result, output / "protein-group-classifications.csv.gz")
     write_csv(funnel, output / "filtering-funnel.csv")
@@ -882,12 +1027,11 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         d["policy"] = policy.POLICY_ID
         write_csv(d, output / name)
     counts = result.category.fillna("Unassigned").value_counts().to_dict()
-    counts.setdefault("Tumor-restricted", 0)
     meta = {
         "policy": policy.POLICY_ID,
         "categories": counts,
         "selected_member_loci": int(result.loc[result.category.eq("CTA"), "member_count"].sum()),
-        "neither_profiles": result.loc[result.category.eq("Neither"), "neither_profile"]
+        "other_subtypes": result.loc[result.category.eq("Other"), "subtype"]
         .value_counts()
         .to_dict(),
         "order_independent": True,
