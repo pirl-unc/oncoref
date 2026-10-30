@@ -187,6 +187,210 @@
           "publication_url": "https://doi.org/10.1038/s41586-021-04158-y"
         }
       }
+    },
+    "tcr_trial_lete_mrcls_2025": {
+      "description": "Letetresgene Autoleucel in Advanced/Metastatic Myxoid/Round Cell Liposarcoma",
+      "filename": "PMC12084024.xml",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12084024/fullTextXML",
+          "sha256": "5825979134db05488b2949cb8aa4e69e88eae8db6e5fd655e4cdbb8a8122f8f3",
+          "archive_sha256": "5825979134db05488b2949cb8aa4e69e88eae8db6e5fd655e4cdbb8a8122f8f3",
+          "bytes": 126473,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_ima203_2025": {
+      "description": "Autologous T cell therapy for PRAME+ advanced solid tumors in HLA-A*02+ patients: a phase 1 trial",
+      "filename": "PMC12283372.xml",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12283372/fullTextXML",
+          "sha256": "6d799be68557abfba8ffa0d0be4b5c754155a27d388709baa51f65af1018f72e",
+          "archive_sha256": "6d799be68557abfba8ffa0d0be4b5c754155a27d388709baa51f65af1018f72e",
+          "bytes": 210185,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_afami_phase1_2023": {
+      "description": "Autologous T cell therapy for MAGE-A4+ solid cancers in HLA-A*02+ patients: a phase 1 trial",
+      "filename": "PMC9873554.xml",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9873554/fullTextXML",
+          "sha256": "37b4dc97c375f01daca0ba2c4c3ab027d9e10156acee63f8fbaaf77b0209ee96",
+          "archive_sha256": "37b4dc97c375f01daca0ba2c4c3ab027d9e10156acee63f8fbaaf77b0209ee96",
+          "bytes": 181372,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_spearhead1_2024": {
+      "description": "SPEARHEAD-1: a single-arm phase 2 trial of afamitresgene autoleucel in advanced synovial sarcoma and myxoid/round cell liposarcoma",
+      "filename": "PMC11419333.html",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11419333/",
+          "sha256": "7e6562a5442e94dc20808904b378325a4ee968af16a4ca003da0aba920573673",
+          "archive_sha256": "7e6562a5442e94dc20808904b378325a4ee968af16a4ca003da0aba920573673",
+          "bytes": 240430,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_magea3_titin_2013": {
+      "description": "Identification of a Titin-Derived HLA-A1-Presented Peptide as a Cross-Reactive Target for Engineered MAGE A3-Directed T Cells",
+      "filename": "PMC6002776.html",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6002776/",
+          "sha256": "a9c23e35f84c9d60b8d5c487e0e249954cc6af8aaa9565209df51c8538cb14ae",
+          "archive_sha256": "a9c23e35f84c9d60b8d5c487e0e249954cc6af8aaa9565209df51c8538cb14ae",
+          "bytes": 236004,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_lete_gbs_2019": {
+      "description": "Guillain-Barre syndrome observed with adoptive transfer of lymphocytes genetically engineered with an NY-ESO-1 reactive T-cell receptor",
+      "filename": "PMC6842215.xml",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6842215/fullTextXML",
+          "sha256": "50d8fc2d84ec01a90a9f6b37b79b6619b93dd351935a5a5e08349ec0e7869c6c",
+          "archive_sha256": "50d8fc2d84ec01a90a9f6b37b79b6619b93dd351935a5a5e08349ec0e7869c6c",
+          "bytes": 62607,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_lete_protocol": {
+      "description": "NCT03709706 protocol: NY-ESO-1/LAGE-1A shared peptide and c259 receptor",
+      "filename": "NCT03709706.pdf",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://cdn.clinicaltrials.gov/large-docs/06/NCT03709706/Prot_000.pdf",
+          "sha256": "08e9dab6a681dbf70b94dac9d109fe74a3af3da10673a7046e2a20b0effd5527",
+          "archive_sha256": "08e9dab6a681dbf70b94dac9d109fe74a3af3da10673a7046e2a20b0effd5527",
+          "bytes": 6049478,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_afami_protocol": {
+      "description": "NCT03132922 protocol: MAGE-A4 c1032 target peptide",
+      "filename": "NCT03132922.pdf",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://cdn.clinicaltrials.gov/large-docs/22/NCT03132922/Prot_000.pdf",
+          "sha256": "d907341dd409ef336417cc68e3088025e46b22bcd9beca431b386c4794b5628f",
+          "archive_sha256": "d907341dd409ef336417cc68e3088025e46b22bcd9beca431b386c4794b5628f",
+          "bytes": 2466279,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_magea1_2024": {
+      "description": "First-in-human dose escalation trial to evaluate the clinical safety and efficacy of an anti-MAGEA1 autologous TCR-transgenic T cell therapy in relapsed and refractory solid tumors",
+      "filename": "PMC11268062.xml",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11268062/fullTextXML",
+          "sha256": "96edd4bcc4770adb537a5c1f013d4dd0175913bbf7536f3c7713ae09c2e820e1",
+          "archive_sha256": "96edd4bcc4770adb537a5c1f013d4dd0175913bbf7536f3c7713ae09c2e820e1",
+          "bytes": 195201,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_magea10_2022": {
+      "description": "Phase I clinical trial evaluating the safety and efficacy of ADP-A2M10 SPEAR T cells in patients with MAGE-A10+ advanced non-small cell lung cancer",
+      "filename": "PMC8796260.xml",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8796260/fullTextXML",
+          "sha256": "2533a5a940c566bd3354f0f7c996d54e543d66c6e49e065def9246687ff8a41f",
+          "archive_sha256": "2533a5a940c566bd3354f0f7c996d54e543d66c6e49e065def9246687ff8a41f",
+          "bytes": 130661,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_tbi1301_2022": {
+      "description": "NY-ESO-1-specific redirected T cells with endogenous TCR knockdown mediate tumor response and cytokine release syndrome",
+      "filename": "PMC9244667.xml",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9244667/fullTextXML",
+          "sha256": "459b4e9d0d18aecdd73577af987bca56e36a3eeb80916ffbf40d3d2b4164a635",
+          "archive_sha256": "459b4e9d0d18aecdd73577af987bca56e36a3eeb80916ffbf40d3d2b4164a635",
+          "bytes": 129759,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
+    },
+    "tcr_trial_magea3_neuro_2013": {
+      "description": "Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy",
+      "filename": "PMID23377668.json",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-10-29",
+      "versions": {
+        "snapshot-2026-10-29": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:23377668%20AND%20SRC:MED&format=json&resultType=core",
+          "sha256": "0acb2511db53c762ae3b6f467b39e336ed89df03516cc4a9daadfdb1d0db1f56",
+          "archive_sha256": "0acb2511db53c762ae3b6f467b39e336ed89df03516cc4a9daadfdb1d0db1f56",
+          "bytes": 12045,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-10-29"
+        }
+      }
     }
   }
 }

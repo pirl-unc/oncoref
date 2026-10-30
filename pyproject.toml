@@ -95,6 +95,7 @@ oncoref = [
     "data/reference-releases.json",
     "data/cta-policy.json",
     "data/cta-selection.json",
+    "data/tcr-trial-evidence.json",
     "data/cta-selection-audit.json",
     "data/cta-selection-audit-*.json.gz",
     "data/protein-annotation-sources.json",

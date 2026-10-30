@@ -18,6 +18,11 @@ Neither presence check imposes a normal-expression ratio. Whole-profile
 diffuseness is an active adult/placental identity gate. A supported diffuse
 profile can establish Neither, never Unsafe; developmental concentration remains
 explicitly unassessed without compatible measurements.
+
+Reviewed TCR-T evidence can raise a protein-profile RNA ceiling by one ladder
+step, capped at Enhanced-negative. The IHC grade is unchanged. This inference
+retains exact peptide/HLA/product limitations and does not override protein or
+clinical-injury exclusions. See :mod:`oncoref.tcr_trials` for cohorts and events.
 """
 
 from __future__ import annotations

@@ -127,10 +127,10 @@ jobs:
           python -m pip check
 
       - name: Lint with ruff
-        run: ruff check oncoref tests scripts/*cta*.py scripts/target_sets_report.py
+        run: ruff check oncoref tests scripts/*cta*.py scripts/*tcr*.py scripts/target_sets_report.py
 
       - name: Check formatting with ruff
-        run: ruff format --check oncoref tests scripts/*cta*.py scripts/target_sets_report.py
+        run: ruff format --check oncoref tests scripts/*cta*.py scripts/*tcr*.py scripts/target_sets_report.py
 
   test:
     runs-on: ubuntu-latest

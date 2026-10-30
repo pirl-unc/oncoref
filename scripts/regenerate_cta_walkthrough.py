@@ -14,6 +14,7 @@ from pathlib import Path
 import audit_cta_source_coverage
 import build_cta_selection_audit
 import build_cta_selection_release
+import build_tcr_trial_report
 import render_cta_source_walkthrough
 from cta_report_common import input_hashes, sha256
 from replay_cta_selection import OUTPUT, ROOT, build
@@ -25,6 +26,8 @@ def receipts() -> None:
     """Record the measurement replay and current exports without self-hashing."""
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/tcr_trials.py",
+        ROOT / "oncoref/data/tcr-trial-evidence.json",
         ROOT / "oncoref/expression_diffuseness.py",
         ROOT / "scripts/cta_profile_data.py",
         OUTPUT / "hpa_rna_consensus-accepted-identities.csv.gz",
@@ -77,6 +80,10 @@ def walkthrough_receipt() -> None:
         ROOT / "docs/images/cta-evidence-axes.pdf",
         ROOT / "docs/images/cta-evidence-axes.png",
         ROOT / "oncoref/data/reference-releases.json",
+        ROOT / "oncoref/data/tcr-trial-evidence.json",
+        ROOT / "oncoref/tcr_trials.py",
+        ROOT / "scripts/build_tcr_trial_report.py",
+        ROOT / "docs/audits/cta-tcr-trials-20261029/manifest.json",
         ROOT / "docs/data-versions.md",
         ROOT / "scripts/audit_cta_profile_concentration.py",
         ROOT / "oncoref/expression_diffuseness.py",
@@ -151,6 +158,7 @@ def main() -> None:
     build_cta_selection_release.build(OUTPUT)
     audit_cta_source_coverage.build()
     build_cta_selection_audit.build()
+    build_tcr_trial_report.build()
     render_cta_source_walkthrough.build()
     walkthrough_receipt()
 

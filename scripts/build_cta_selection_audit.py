@@ -80,6 +80,9 @@ TABLE_COLUMNS = {
         "value",
         "unit",
         "candidate_ceiling",
+        "baseline_ceiling",
+        "clinical_product_ids",
+        "clinical_credit_applied",
         "selection_tier",
         "ihc_coverage",
         "source_id",
@@ -383,6 +386,9 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
         "value",
         "unit",
         "candidate_ceiling",
+        "baseline_ceiling",
+        "clinical_product_ids",
+        "clinical_credit_applied",
         "selection_tier",
         "ihc_match_scope",
         "negative_ihc_grade",
@@ -498,12 +504,20 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     value=p.value,
                     unit=p.unit,
                     candidate_ceiling=p.candidate_ceiling,
+                    baseline_ceiling=p.get("baseline_ceiling"),
+                    clinical_product_ids=p.get("clinical_product_ids"),
+                    clinical_credit_applied=p.get("clinical_credit_applied", False),
                     selection_tier=p.selection_tier,
                     ihc_coverage=f"{display(p.get('ihc_match_scope'))} / {p.negative_ihc_grade}",
                 )
                 row["reason"] = (
                     f"{p.tissue} / {p.cell_type}: {display(p.value)} {p.unit}; {p.selection_tier} ceiling {display(p.candidate_ceiling)}; {row['ihc_coverage']}."
                 )
+                if p.get("clinical_credit_applied", False):
+                    row["reason"] += (
+                        f" Baseline ceiling {display(p.baseline_ceiling)}; one-step clinical RNA credit"
+                        f" from {p.clinical_product_ids}. Tested epitope/HLA/product limits apply."
+                    )
                 if pd.notna(p.get("Read count")):
                     row["reason"] += f" {int(p['Read count'])} reads."
                 if pd.notna(p.get("value_upper")):
@@ -662,6 +676,9 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             value=p["value"],
             unit=p["unit"],
             candidate_ceiling=p["candidate_ceiling"],
+            baseline_ceiling=p.get("baseline_ceiling"),
+            clinical_product_ids=p.get("clinical_product_ids"),
+            clinical_credit_applied=p.get("clinical_credit_applied", False),
             selection_tier=p["selection_tier"],
             ihc_coverage=f"{display(p.get('ihc_match_scope'))}; {p['negative_ihc_grade']}; IHC cells: {display(p.get('ihc_cell_type'))}",
             reason=f"{p['tissue']} / {p['cell_type']}: {display(p['value'])} {p['unit']}; {p['selection_tier']} ceiling {display(p['candidate_ceiling'])}.",
@@ -669,6 +686,11 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
         )
         if row["source_context"]:
             row["reason"] += f" Native context: {row['source_context']}."
+        if p.get("clinical_credit_applied", False):
+            row["reason"] += (
+                f" Baseline ceiling {display(p['baseline_ceiling'])}; one-step clinical RNA credit"
+                f" from {p['clinical_product_ids']}. Tested epitope/HLA/product limits apply."
+            )
         rows.append(row)
     return pd.DataFrame(rows, columns=TABLE_COLUMNS["explanations"])
 

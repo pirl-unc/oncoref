@@ -11,6 +11,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const audit=path.join(root,'docs/audits/cta-source-walkthrough-20261028');
 const build=process.env.CTA_SLIDE_BUILD_DIR||path.join(root,'tmp/cta-source-slides-expanded');
 const data=JSON.parse(await fs.readFile(path.join(audit,'presentation-data.json'),'utf8'));
+const trials=JSON.parse(await fs.readFile(path.join(root,'oncoref/data/tcr-trial-evidence.json'),'utf8'));
 const skill=process.env.ONCOREF_PRESENTATIONS_SKILL;
 const runtime=process.env.RUNTIME_NODE_MODULES;
 if(!skill||!runtime) throw Error('Set presentation skill and runtime paths');
@@ -35,6 +36,7 @@ const linksByName=new Map([
  ['Shaw et al. (2024)','https://doi.org/10.1038/s41467-024-47649-y'],
  ['TRIM71 liver study (2024)','https://pmc.ncbi.nlm.nih.gov/articles/PMC11388079/'],
  ['Cardoso-Moreira et al. (2019)','https://pmc.ncbi.nlm.nih.gov/articles/PMC6658352/'],
+ ['Clinical trial and SAE review','https://pirl-unc.github.io/oncoref/audits/cta-tcr-trials-20261029/'],
 ]);
 await fs.mkdir(path.join(build,'rendered'),{recursive:true});
 await fs.mkdir(path.join(audit,'slides'),{recursive:true});
@@ -141,6 +143,17 @@ text(s,'One boundary: above-cutoff Vital / Protected is Unsafe',64,500,1152,48,2
 note(s,'Manageable excess blocks CTA. Bowel epithelium and identified fibroblasts use Manageable. Equality passes.',568,25);
 }
 {
+const s=slide('Clinical evidence adjusts RNA ceilings','TCR-T evidence','One step for reviewed treated-cohort evidence without identified grade 4-5 specificity-related toxicity; cap at Enhanced. Unknown or suspected specificity injury blocks product credit. Exact peptide/HLA/receptor limits remain. Clinical trial and SAE review: https://pirl-unc.github.io/oncoref/audits/cta-tcr-trials-20261029/');
+table(s,[['With clinical credit','Missing / unusable','Approved −','Supported −','Enhanced −'],['Vital',8,16,32,32],['Protected',16,32,64,64],['Manageable',32,64,128,128]],{widths:[310,245,199,199,199],size:25,h:285});
+text(s,'IHC grades stay unchanged. Trials do not stack.',64,488,1152,48,29,C.teal,true);
+note(s,'Protein and clinical-injury exclusions remain. This is protein-profile credit with tested epitope limitations, not clinical clearance.',550,25);
+}
+{
+const s=slide('Serious events and antigen specificity','Clinical safety',Object.values(trials.sources).map(r=>`${r.title}: ${r.url}`).join('\n'));
+table(s,[['Targeted CTA epitope','Important event','Specificity attribution'],['MAGE-A3 / a3a','Two fatal cardiac injuries','Titin cross-recognition implicated'],['MAGE-A3/A9 / NCI receptor','Three neurological cases; two deaths','MAGE-A12 brain recognition implicated'],['NY-ESO-1 / LAGE-1A, c259','Late cardiac death; two GBS cases','Peptide-specific mechanism not established'],['NY-ESO-1 / TBI-1301','Grade 3 lung injury','Unresolved; no credit for this product'],['MAGE-A4 / afami-cel','Aplasia and stroke deaths in phase 1','No demonstrated antigen-specific mechanism'],['MAGE-A10 / ADP-A2M10','Grade 4 CRS; fatal aplasia after repeat treatment','Conditioning favored for marrow injury']],{widths:[355,410,387],size:21,h:405});
+note(s,'Clinical trial and SAE review. Seriousness differs from severity; this is a selected summary, not a pooled event rate.',602,23);
+}
+{
 const s=slide('Neither describes a measured profile','Category definitions','Low means below the common 2-unit expression floor in every measured source, with required normal panels and tumor/developmental measurements. Missing optional DICE/cornea is disclosed. No detected protein is not proof of absence in every unmeasured tissue.');
 table(s,[['Profile','Required evidence','Proteins'],['Low expression','RNA below 2 across measured normal / reproductive / embryonic / tumor panels; no detected protein',data.neither_profiles.low_expression||0],['Diffuse Manageable','No association route; RNA ≥2 in at least two Manageable tissue concepts; no Vital / Protected exclusion',data.neither_profiles.diffuse_manageable||0],['Diffuse Reproductive','HPA score >10%; no qualifying route left; normal safety passes',data.neither_profiles.diffuse_reproductive||0]],{widths:[265,747,140],size:24,h:360});
 note(s,'All require complete normal RNA coverage and resolved evidence. Other failures remain unassigned.',550,28);
@@ -159,7 +172,7 @@ note(s,'Only MTCP1 changes category; other concentration failures also fail othe
 }
 {
 const s=slide('IHC matching to measured RNA compartments','Anatomy and evidence','HPA colon https://www.proteinatlas.org/learn/dictionary/normal/colon ; bronchus https://www.proteinatlas.org/learn/dictionary/normal/bronchus . Parent-compartment credit is a declared anatomical interpretation, not proof that all rare cells were sampled.');
-table(s,[['Context','Evidence and current ceiling'],['PRAME colon epithelial cells','20.3 nTPM / 96 reads; Enhanced-negative glandular IHC; Manageable 128'],['PRAME adrenal bulk','3.6 nTPM; incomplete compartment IHC coverage; Vital 4'],['CTAG2 bronchial basal cells','24.9 nTPM / 58 reads; Enhanced-negative respiratory IHC; Vital 32'],['Unrelated cells in the same tissue','No negative-IHC credit without exact or declared compartment coverage']],{widths:[365,787],size:25,h:350});
+table(s,[['Context','Evidence and current ceiling'],['PRAME colon epithelial cells','20.3 nTPM / 96 reads; Enhanced-negative glandular IHC; Manageable 128'],['PRAME adrenal bulk','3.6 nTPM; incomplete IHC coverage; Vital 4 → 8 with IMA203 credit'],['CTAG2 bronchial basal cells','24.9 nTPM / 58 reads; Enhanced-negative respiratory IHC; Vital 32'],['Unrelated cells in the same tissue','No negative-IHC credit without exact or declared compartment coverage']],{widths:[365,787],size:25,h:350});
 note(s,'PRAME and CTAG2 pass this policy. Parent-compartment sensitivity and PRAME’s Low adrenal protein remain explicit limitations.',590,23);
 }
 for(const [name,title] of [['selected-reproductive-embryonic','Selected CTA: adult/placental versus embryonic RNA'],['selected-reproductive-embryonic-immune','Selected CTA: healthy RNA in TPM'],['selected-reproductive-embryonic-cornea','Selected CTA: normal corneal RNA']]){

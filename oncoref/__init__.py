@@ -45,6 +45,7 @@ from . import (
     pfizer_canine_rna,
     rna_protein,
     source_matrices,
+    tcr_trials,
     therapy_evidence,
 )
 from .apd1 import (
