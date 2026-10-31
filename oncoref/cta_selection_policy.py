@@ -26,7 +26,7 @@ from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 
-POLICY_ID = "oncoref.cta-selection.2026-10-30.2"
+POLICY_ID = "oncoref.cta-selection.2026-10-30.3"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 OTHER_SUBTYPE_RULES = {
@@ -66,7 +66,8 @@ def association_evidence(facts: pd.DataFrame) -> pd.DataFrame:
 
     Association uses reproductive >=5 nTPM, supported developmental >=5 TPM, or
     supported reproductive-lineage cell RNA >=5 nTPM (>=20 reads), or
-    reliable positive reproductive IHC. IHC must be mapped and support every
+    reliable positive reproductive IHC or reviewed human reproductive protein.
+    Protein findings must be mapped and support every
     member locus, without an unresolved antibody concern. It supplies presence
     only: normal safety, cancer presence and concentration remain separate gates.
     Developmental cell-support criteria are applied upstream.
@@ -83,7 +84,10 @@ def association_evidence(facts: pd.DataFrame) -> pd.DataFrame:
     if cell.isna().any() or cell.dtype != bool:
         raise ValueError("Reproductive cell evidence must be explicitly boolean")
     d["reproductive_cell_association"] = cell
-    d["reproductive_association"] = d.reproductive_rna_association | protein | cell
+    literature = d.get("knowledge_reproductive_support", pd.Series(False, index=d.index))
+    if literature.isna().any() or literature.dtype != bool:
+        raise ValueError("Reviewed reproductive knowledge must be explicitly boolean")
+    d["reproductive_association"] = d.reproductive_rna_association | protein | cell | literature
     d["developmental_association"] = d.developmental_mean_tpm.ge(5)
     d["positive_context"] = d.reproductive_association | d.developmental_association
     d["reproductive_route"] = d.reproductive_association

@@ -54,12 +54,12 @@ def build():
         [
             "<b>Cancer expression</b>",
             "Expression in at least one measured cancer sample.",
-            "Active. One sample ≥2 native TPM/pTPM or reviewed reliable tumor protein. No normal-expression ratio.",
+            "Active. One sample >0 native TPM/pTPM or reviewed reliable tumor protein. No normal-expression ratio.",
         ],
         [
             "<b>Reproductive evidence</b>",
             "Affirmative expression in reproductive, placental, embryonic or fetal contexts.",
-            "Bulk RNA ≥5 nTPM, supported reproductive cell RNA ≥5 nTPM / ≥20 reads, reliable IHC, or supported developmental RNA.",
+            "Bulk RNA ≥5 nTPM, supported reproductive cell RNA ≥5 nTPM / ≥20 reads, reliable reproductive protein, or supported developmental RNA.",
         ],
     ]
     table = Table(
@@ -89,7 +89,7 @@ def build():
         "<b>Diffuseness:</b> HPA average N / (N + R) >10% blocks a complete adult/placental route. "
         "Disposable counts; Permissive thymus is excluded. Embryonic concentration is unassessed.<br/>"
         "<b>Only safety establishes Unsafe.</b> Missing core data remain unassigned. "
-        "<b>Other:</b> normal screen passes, CTA identity does not. Every protein receives one subtype: Diffuse, Reproductive, Inducible, Tumor-supported, Disposable, Low, Normal or Weak."
+        "<b>Other:</b> normal screen passes, CTA identity does not. Every protein receives one subtype: Diffuse, Tumor-supported, Disposable, Low, Normal or Weak."
     )
     _, height = statement.wrap(720, 120)
     statement.drawOn(page, 36, 205 - height)
@@ -97,7 +97,7 @@ def build():
     page.drawString(
         36,
         25,
-        "Local policy: oncoref.cta-selection.2026-10-30.2. Clinical RNA credit retains tested epitope limits.",
+        "Local policy: oncoref.cta-selection.2026-10-30.3. Clinical RNA credit retains tested epitope limits.",
     )
     page.save()
     shutil.copyfile(destination, images / destination.name)

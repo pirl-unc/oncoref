@@ -31,6 +31,10 @@ Paper titles open the publication. Database names open the source's documentatio
 
 | name | evidence_category | native_unit | source_url |
 | --- | --- | --- | --- |
+| [Reviewed human gene knowledge: normal cells and reproductive protein](https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/) | normal_protein | source-native qualitative and quantitative observations | [Source](https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/) |
+| [Reviewed human gene knowledge: normal cells and reproductive protein](https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/) | normal_cell_rna | source-native qualitative and quantitative observations | [Source](https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/) |
+| [Reviewed human gene knowledge: normal cells and reproductive protein](https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/) | reproductive_expression | source-native qualitative and quantitative observations | [Source](https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/) |
+| [Durante et al. 2020 adult human olfactory atlas supplementary tables](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/) | normal_cell_rna | positive neurons; cluster detection fraction | [Source](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/) |
 | [Published human normal immune induction contexts](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) | reproductive_expression | qualitative reported RNA induction | [Source](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) |
 | [Published human normal immune induction contexts](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) | normal_cell_rna | qualitative reported RNA induction | [Source](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) |
 | [HPA v23 / GTEx consensus](https://v23.proteinatlas.org/about/download) | normal_bulk_rna | nTPM | [Source](https://v23.proteinatlas.org/about/download) |

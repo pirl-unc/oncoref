@@ -1,0 +1,683 @@
+gene_id,assay,source,version,tissue,cell_type,category,selection_tier,value,raw_value,unit,Read count,negative_ihc_grade,candidate_ceiling,supported_at_least_floor,raw_at_least_floor,protein_label,baseline_subtype
+ENSG00000099984,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,3.4,3.4,nTPM,,Missing,16.0,True,True,GSTT2,Normal
+ENSG00000108417,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,6.0,6.0,nTPM,,Missing,16.0,True,True,KRT37,Normal
+ENSG00000109424,Normal bulk,hpa_rna_consensus,v23,adrenal gland,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,UCP1,Normal
+ENSG00000123364,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,9.3,9.3,nTPM,,Missing,16.0,True,True,HOXC13,Normal
+ENSG00000123407,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,2.8,2.8,nTPM,,Missing,16.0,True,True,HOXC12,Normal
+ENSG00000136696,Normal bulk,hpa_rna_consensus,v23,esophagus,bulk,protected,protected,2.1,2.1,nTPM,,Missing,8.0,True,True,IL36B,Normal
+ENSG00000136696,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,7.9,7.9,nTPM,,Missing,16.0,True,True,IL36B,Normal
+ENSG00000136696,Normal bulk,hpa_rna_consensus,v23,tonsil,bulk,disposable,disposable,3.7,3.7,nTPM,,Missing,,True,True,IL36B,Normal
+ENSG00000136697,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,12.1,12.1,nTPM,,Missing,16.0,True,True,IL1F10,Normal
+ENSG00000136697,Normal bulk,hpa_rna_consensus,v23,tonsil,bulk,disposable,disposable,2.7,2.7,nTPM,,Missing,,True,True,IL1F10,Normal
+ENSG00000141748,Normal bulk,hpa_rna_consensus,v23,thymus,bulk,manageable,manageable,3.3,3.3,nTPM,,Missing,16.0,True,True,ARL5C,Normal
+ENSG00000161850,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,12.3,12.3,nTPM,,Missing,16.0,True,True,KRT82,Normal
+ENSG00000165694,Normal bulk,hpa_rna_consensus,v23,kidney,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,FRMD7,Normal
+ENSG00000165694,Normal bulk,hpa_rna_consensus,v23,smooth muscle,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,FRMD7,Normal
+ENSG00000167104,Normal bulk,hpa_rna_consensus,v23,salivary gland,bulk,protected,protected,3.2,3.2,nTPM,,Missing,8.0,True,True,BPIFB6,Normal
+ENSG00000171360,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,15.5,15.5,nTPM,,Missing,16.0,True,True,KRT38,Normal
+ENSG00000171403,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,2.4,2.4,nTPM,,Missing,16.0,True,True,KRT9,Normal
+ENSG00000171403,Normal bulk,hpa_rna_consensus,v23,thymus,bulk,manageable,manageable,11.8,11.8,nTPM,,Missing,16.0,True,True,KRT9,Normal
+ENSG00000173908,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,11.3,11.3,nTPM,,Missing,16.0,True,True,KRT28,Normal
+ENSG00000175065,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,2.8,2.8,nTPM,,Missing,16.0,True,True,DSG4,Normal
+ENSG00000178084,Normal bulk,hpa_rna_consensus,v23,lung,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,HTR3C,Normal
+ENSG00000180386,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,7.8,7.8,nTPM,,Missing,16.0,True,True,KRTAP9-7,Normal
+ENSG00000181273,Normal bulk,hpa_rna_consensus,v23,spleen,bulk,manageable,manageable,5.4,5.4,nTPM,,Missing,16.0,True,True,OR5AK2,Normal
+ENSG00000184210,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,5.6,5.6,nTPM,,Missing,16.0,True,True,DGAT2L6,Normal
+ENSG00000184351,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,16.0,16.0,nTPM,,Missing,16.0,True,True,KRTAP19-1,Normal
+ENSG00000184724,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,2.0,2.0,nTPM,,Missing,16.0,True,True,KRTAP6-1,Normal
+ENSG00000185940,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,3.4,3.4,nTPM,,Missing,16.0,True,True,KRTAP5-5,Normal
+ENSG00000186766,Normal bulk,hpa_rna_consensus,v23,kidney,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,FOXI2,Normal
+ENSG00000186912,Normal bulk,hpa_rna_consensus,v23,small intestine,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,P2RY4,Normal
+ENSG00000187170,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,4.3,4.3,nTPM,,Missing,16.0,True,True,LCE4A,Normal
+ENSG00000187238,Normal bulk,hpa_rna_consensus,v23,tonsil,bulk,disposable,disposable,3.0,3.0,nTPM,,Missing,,True,True,LCE3B,Normal
+ENSG00000187766,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,7.5,7.5,nTPM,,Missing,16.0,True,True,KRTAP10-8,Normal
+ENSG00000188076,Normal bulk,hpa_rna_consensus,v23,retina,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,SCGB1C1,Normal
+ENSG00000188155,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,2.5,2.5,nTPM,,Missing,16.0,True,True,KRTAP10-6,Normal
+ENSG00000189169,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,9.5,9.5,nTPM,,Missing,16.0,True,True,KRTAP10-12,Normal
+ENSG00000196224,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,7.9,7.9,nTPM,,Missing,16.0,True,True,KRTAP5-3,Normal
+ENSG00000196859,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,5.2,5.2,nTPM,,Missing,16.0,True,True,KRT39,Normal
+ENSG00000197241,Normal bulk,hpa_rna_consensus,v23,duodenum,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,SLC2A7,Normal
+ENSG00000197241,Normal bulk,hpa_rna_consensus,v23,small intestine,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,SLC2A7,Normal
+ENSG00000198271,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,12.0,12.0,nTPM,,Missing,16.0,True,True,KRTAP4-5,Normal
+ENSG00000198390,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,8.7,8.7,nTPM,,Missing,16.0,True,True,KRTAP13-1,Normal
+ENSG00000204571,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,5.1,5.1,nTPM,,Missing,16.0,True,True,KRTAP5-11,Normal
+ENSG00000204572,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,4.8,4.8,nTPM,,Missing,16.0,True,True,KRTAP5-10,Normal
+ENSG00000205439,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,9.1,9.1,nTPM,,Missing,16.0,True,True,KRTAP12-3,Normal
+ENSG00000205445,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,14.6,14.6,nTPM,,Missing,16.0,True,True,KRTAP10-2,Normal
+ENSG00000205864,Normal bulk,hpa_rna_consensus,v23,liver,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,KRTAP5-6,Normal
+ENSG00000212659,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,2.5,2.5,nTPM,,Missing,16.0,True,True,KRTAP9-6,Normal
+ENSG00000215454,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,7.3,7.3,nTPM,,Missing,16.0,True,True,KRTAP10-4,Normal
+ENSG00000215455,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,10.1,10.1,nTPM,,Missing,16.0,True,True,KRTAP10-1,Normal
+ENSG00000215906,Normal bulk,hpa_rna_consensus,v23,retina,bulk,vital,vital,3.8,3.8,nTPM,,Missing,4.0,True,True,LACTBL1,Normal
+ENSG00000221837,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,10.5,10.5,nTPM,,Missing,16.0,True,True,KRTAP10-9,Normal
+ENSG00000233087,Normal bulk,hpa_rna_consensus,v23,parathyroid gland,bulk,protected,protected,6.7,6.7,nTPM,,Missing,8.0,True,True,RAB6D,Normal
+ENSG00000236543,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,8.4,8.4,nTPM,,Missing,16.0,True,True,ENSG00000236543,Normal
+ENSG00000241123,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,15.9,15.9,nTPM,,Missing,16.0,True,True,KRTAP10-5,Normal
+ENSG00000241598,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,4.5,4.5,nTPM,,Missing,16.0,True,True,KRTAP5-4,Normal
+ENSG00000243489,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,8.9,8.9,nTPM,,Missing,16.0,True,True,KRTAP10-11,Normal
+ENSG00000244057,Normal bulk,hpa_rna_consensus,v23,tonsil,bulk,disposable,disposable,23.4,23.4,nTPM,,Missing,,True,True,LCE3C,Normal
+ENSG00000244411,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,5.1,5.1,nTPM,,Missing,16.0,True,True,KRTAP5-7,Normal
+ENSG00000260458,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,7.3,7.3,nTPM,,Missing,16.0,True,True,KCNJ18,Normal
+ENSG00000262543,Normal bulk,hpa_rna_consensus,v23,colon,bulk,protected,protected,2.2,2.2,nTPM,,Missing,8.0,True,True,SMIM28,Normal
+ENSG00000272804,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,13.8,13.8,nTPM,,Missing,16.0,True,True,KRTAP10-7,Normal
+ENSG00000285946,Normal bulk,hpa_rna_consensus,v23,skin,bulk,manageable,manageable,2.1,2.1,nTPM,,Missing,16.0,True,True,LCE7A,Normal
+ENSG00000288611,Normal bulk,hpa_rna_consensus,v23,liver,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,NPBWR1,Normal
+ENSG00000125363,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,AMELX,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000260596,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,DUX4,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,amygdala,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000166368,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR2D2,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,3.4,3.4,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000177212,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR2T33,Normal
+ENSG00000179055,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR13D1,Normal
+ENSG00000180613,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,GSX2,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,3.2,3.2,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000187616,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,MYMK,Normal
+ENSG00000196341,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR8D1,Normal
+ENSG00000196427,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,NBPF4,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000233816,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,IFNA13,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000236125,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,USP17L4,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000260596,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,DUX4,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000278803,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,PWWP4,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000284395,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,PERCC1,Normal
+ENSG00000288611,Normal bulk,hpa_brain,v23,basal ganglia,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,NPBWR1,Normal
+ENSG00000109424,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,UCP1,Normal
+ENSG00000124227,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,ANKRD60,Normal
+ENSG00000128310,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,GALR3,Normal
+ENSG00000159961,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR3A3,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.4,3.4,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.9,3.9,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.9,3.9,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000172365,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR5B2,Normal
+ENSG00000173302,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,GPR148,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.6,3.6,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000179626,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR6C4,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.8,3.8,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181718,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR5T2,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000188076,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,SCGB1C1,Normal
+ENSG00000189030,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.8,3.8,nTPM,,Missing,4.0,True,True,VHLL,Normal
+ENSG00000197919,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,IFNA1,Normal
+ENSG00000212126,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,TAS2R50,Normal
+ENSG00000212128,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,TAS2R13,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.2,3.2,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.2,3.2,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,3.7,3.7,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000284395,Normal bulk,hpa_brain,v23,cerebellum,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,PERCC1,Normal
+ENSG00000099984,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,GSTT2,Normal
+ENSG00000123407,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,HOXC12,Normal
+ENSG00000132671,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,SSTR4,Normal
+ENSG00000145839,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,IL9,Normal
+ENSG00000154143,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,PANX3,Normal
+ENSG00000159961,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR3A3,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000166368,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR2D2,Normal
+ENSG00000170790,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR10A2,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000173302,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,GPR148,Normal
+ENSG00000175485,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR52W1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.6,3.6,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000177212,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,OR2T33,Normal
+ENSG00000178358,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR2D3,Normal
+ENSG00000179055,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR13D1,Normal
+ENSG00000179626,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR6C4,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.9,3.9,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000196341,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR8D1,Normal
+ENSG00000197919,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,IFNA1,Normal
+ENSG00000212128,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,TAS2R13,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000233816,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,IFNA13,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000236125,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,USP17L4,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000250745,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,USP17L20,Normal
+ENSG00000257008,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,GPR142,Normal
+ENSG00000260596,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,3.4,3.4,nTPM,,Missing,4.0,True,True,DUX4,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000284395,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,PERCC1,Normal
+ENSG00000284667,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,SCYGR5,Normal
+ENSG00000288611,Normal bulk,hpa_brain,v23,cerebral cortex,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,NPBWR1,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000179626,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR6C4,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000186795,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,KCNK18,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,choroid plexus,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000132671,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,SSTR4,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000175485,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR52W1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000177212,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR2T33,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182447,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OTOL1,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000236125,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,USP17L4,Normal
+ENSG00000260596,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,DUX4,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,hippocampal formation,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000128310,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,GALR3,Normal
+ENSG00000145839,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,IL9,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000179930,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,ZNF648,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000196341,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR8D1,Normal
+ENSG00000212128,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,TAS2R13,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000278803,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,PWWP4,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000288611,Normal bulk,hpa_brain,v23,hypothalamus,bulk,vital,vital,3.6,3.6,nTPM,,Missing,4.0,True,True,NPBWR1,Normal
+ENSG00000124227,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,ANKRD60,Normal
+ENSG00000125533,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,BHLHE23,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000166368,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR2D2,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,3.4,3.4,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000177212,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR2T33,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000204700,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR2J2,Normal
+ENSG00000212128,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,TAS2R13,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000233136,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,USP17L11,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000236125,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,USP17L4,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000288611,Normal bulk,hpa_brain,v23,medulla oblongata,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,NPBWR1,Normal
+ENSG00000102539,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,MLNR,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000204700,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR2J2,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,midbrain,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,3.2,3.2,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000177212,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR2T33,Normal
+ENSG00000179055,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR13D1,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000188076,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,3.7,3.7,nTPM,,Missing,4.0,True,True,SCGB1C1,Normal
+ENSG00000212128,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,TAS2R13,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000236125,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,USP17L4,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000257008,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,GPR142,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000276119,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR13C2,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000286102,Normal bulk,hpa_brain,v23,pons,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,FAM246A,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,spinal cord,bulk,vital,vital,2.0,2.0,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000179930,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,ZNF648,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000187616,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,MYMK,Normal
+ENSG00000197919,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,IFNA1,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233816,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,IFNA13,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000236125,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,USP17L4,Normal
+ENSG00000241241,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,KRTAP4-16,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,thalamus,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000124227,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.2,2.2,nTPM,,Missing,4.0,True,True,ANKRD60,Normal
+ENSG00000127780,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR1E2,Normal
+ENSG00000145839,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,IL9,Normal
+ENSG00000159961,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR3A3,Normal
+ENSG00000163352,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.2,3.2,nTPM,,Missing,4.0,True,True,LENEP,Normal
+ENSG00000166368,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.8,2.8,nTPM,,Missing,4.0,True,True,OR2D2,Normal
+ENSG00000170923,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.5,3.5,nTPM,,Missing,4.0,True,True,OR7G2,Normal
+ENSG00000171815,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,PCDHB1,Normal
+ENSG00000176495,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.8,3.8,nTPM,,Missing,4.0,True,True,OR5AN1,Normal
+ENSG00000177212,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,OR2T33,Normal
+ENSG00000179055,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR13D1,Normal
+ENSG00000179626,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.3,2.3,nTPM,,Missing,4.0,True,True,OR6C4,Normal
+ENSG00000180934,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.7,3.7,nTPM,,Missing,4.0,True,True,OR56A1,Normal
+ENSG00000181273,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,OR5AK2,Normal
+ENSG00000181693,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR8H1,Normal
+ENSG00000181927,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR4P4,Normal
+ENSG00000182613,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.9,3.9,nTPM,,Missing,4.0,True,True,OR2V2,Normal
+ENSG00000196341,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.1,2.1,nTPM,,Missing,4.0,True,True,OR8D1,Normal
+ENSG00000212128,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,TAS2R13,Normal
+ENSG00000221888,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR1C1,Normal
+ENSG00000230178,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.4000000000000004,2.4000000000000004,nTPM,,Missing,4.0,True,True,OR4F16/29/3,Normal
+ENSG00000230549,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.7,2.7,nTPM,,Missing,4.0,True,True,USP17L1,Normal
+ENSG00000233087,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.6,2.6,nTPM,,Missing,4.0,True,True,RAB6D,Normal
+ENSG00000233816,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.0,3.0,nTPM,,Missing,4.0,True,True,IFNA13,Normal
+ENSG00000236032,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,OR5H14,Normal
+ENSG00000236125,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.3,3.3,nTPM,,Missing,4.0,True,True,USP17L4,Normal
+ENSG00000274529,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.5,2.5,nTPM,,Missing,4.0,True,True,SEBOX,Normal
+ENSG00000277556,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.4,3.4,nTPM,,Missing,4.0,True,True,OR13C5,Normal
+ENSG00000279486,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.4,2.4,nTPM,,Missing,4.0,True,True,OR2AG1,Normal
+ENSG00000283329,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,3.1,3.1,nTPM,,Missing,4.0,True,True,FAM240B,Normal
+ENSG00000284629,Normal bulk,hpa_brain,v23,white matter,bulk,vital,vital,2.9,2.9,nTPM,,Missing,4.0,True,True,SCYGR1,Normal
+ENSG00000123407,Normal bulk,gtex_tissue_rna,v11,blood vessel,bulk,vital,vital,2.88093,2.88093,TPM,,Missing,4.0,True,True,HOXC12,Normal
+ENSG00000262543,Normal bulk,gtex_tissue_rna,v11,colon,bulk,protected,protected,4.65934,4.65934,TPM,,Missing,8.0,True,True,SMIM28,Normal
+ENSG00000186766,Normal bulk,gtex_tissue_rna,v11,esophagus,bulk,protected,protected,2.70131,2.70131,TPM,,Missing,8.0,True,True,FOXI2,Normal
+ENSG00000186766,Normal bulk,gtex_tissue_rna,v11,kidney,bulk,vital,vital,2.80466,2.80466,TPM,,Missing,4.0,True,True,FOXI2,Normal
+ENSG00000205864,Normal bulk,gtex_tissue_rna,v11,liver,bulk,vital,vital,2.44161,2.44161,TPM,,Missing,4.0,True,True,KRTAP5-6,Normal
+ENSG00000178084,Normal bulk,gtex_tissue_rna,v11,lung,bulk,vital,vital,2.88923,2.88923,TPM,,Missing,4.0,True,True,HTR3C,Normal
+ENSG00000186766,Normal bulk,gtex_tissue_rna,v11,pituitary gland,bulk,vital,vital,2.01644,2.01644,TPM,,Missing,4.0,True,True,FOXI2,Normal
+ENSG00000115488,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,2.12915,2.12915,TPM,,Missing,16.0,True,True,NEU2,Normal
+ENSG00000123364,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,13.732,13.732,TPM,,Missing,16.0,True,True,HOXC13,Normal
+ENSG00000123407,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,5.39121,5.39121,TPM,,Missing,16.0,True,True,HOXC12,Normal
+ENSG00000136696,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,7.16333,7.16333,TPM,,Missing,16.0,True,True,IL36B,Normal
+ENSG00000136697,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,13.939,13.939,TPM,,Missing,16.0,True,True,IL1F10,Normal
+ENSG00000171403,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,2.51909,2.51909,TPM,,Missing,16.0,True,True,KRT9,Normal
+ENSG00000187170,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,2.43878,2.43878,TPM,,Missing,16.0,True,True,LCE4A,Normal
+ENSG00000236543,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,15.3163,15.3163,TPM,,Missing,16.0,True,True,ENSG00000236543,Normal
+ENSG00000260458,Normal bulk,gtex_tissue_rna,v11,skin,bulk,manageable,manageable,10.3866,10.3866,TPM,,Missing,16.0,True,True,KCNJ18,Normal
+ENSG00000181273,Normal bulk,gtex_tissue_rna,v11,spleen,bulk,manageable,manageable,8.19694,8.19694,TPM,,Missing,16.0,True,True,OR5AK2,Normal
+ENSG00000181282,Normal bulk,gtex_tissue_rna,v11,spleen,bulk,manageable,manageable,2.35042,2.35042,TPM,,Missing,16.0,True,True,OR5AK3P,Normal
+ENSG00000185038,Normal bulk,gtex_tissue_rna,v11,thyroid gland,bulk,manageable,manageable,2.5809,2.5809,TPM,,Missing,16.0,True,True,MROH2A,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.9,2.9,nTPM,332.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.6,2.6,nTPM,358.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.3,2.3,nTPM,202.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.3,2.3,nTPM,158.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.5,2.5,nTPM,134.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.5,3.5,nTPM,274.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.7,3.7,nTPM,181.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.7,3.7,nTPM,164.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.1,2.1,nTPM,74.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.2,2.2,nTPM,53.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000099984,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.6,2.6,nTPM,26.0,Missing/uncertain,4.0,True,True,GSTT2,Normal
+ENSG00000120436,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,schwann cells,manageable,manageable,14.8,14.8,nTPM,38.0,Missing/uncertain,16.0,True,True,GPR31,Normal
+ENSG00000123364,HPA tissue clusters,hpa_single_cell_tissue,v23,tongue,suprabasal keratinocytes,protected,protected,3.5,3.5,nTPM,105.0,Missing/uncertain,8.0,True,True,HOXC13,Normal
+ENSG00000128313,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.0,2.0,nTPM,64.0,Missing/uncertain,4.0,True,True,APOL5,Normal
+ENSG00000128313,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.2,2.2,nTPM,42.0,Missing/uncertain,4.0,True,True,APOL5,Normal
+ENSG00000141748,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.4,3.4,nTPM,38.0,Missing/uncertain,4.0,True,True,ARL5C,Normal
+ENSG00000154143,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.0,3.0,nTPM,30.0,Missing/uncertain,4.0,True,True,PANX3,Normal
+ENSG00000170178,HPA tissue clusters,hpa_single_cell_tissue,v23,rectum,undifferentiated cells,protected,manageable,3.7,3.7,nTPM,20.0,Missing/uncertain,16.0,True,True,HOXD12,Normal
+ENSG00000170178,HPA tissue clusters,hpa_single_cell_tissue,v23,rectum,undifferentiated cells,protected,manageable,3.3,3.3,nTPM,21.0,Missing/uncertain,16.0,True,True,HOXD12,Normal
+ENSG00000171136,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,macrophages,protected,protected,2.1,2.1,nTPM,29.0,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000171136,HPA tissue clusters,hpa_single_cell_tissue,v23,lung,macrophages,protected,protected,2.2,2.2,nTPM,46.0,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000171136,HPA tissue clusters,hpa_single_cell_tissue,v23,vascular,macrophages,protected,protected,3.2,3.2,nTPM,68.0,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000171403,HPA tissue clusters,hpa_single_cell_tissue,v23,skin,basal keratinocytes,manageable,manageable,4.7,4.7,nTPM,23.0,Missing/uncertain,16.0,True,True,KRT9,Normal
+ENSG00000171855,HPA tissue clusters,hpa_single_cell_tissue,v23,vascular,macrophages,protected,protected,6.0,6.0,nTPM,127.0,Missing/uncertain,8.0,True,True,IFNB1,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.7,2.7,nTPM,409.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.3,2.3,nTPM,294.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.7,3.7,nTPM,174.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.2,2.2,nTPM,109.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.0,3.0,nTPM,70.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.8,2.8,nTPM,69.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.1,2.1,nTPM,52.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.2,2.2,nTPM,22.0,Missing/uncertain,4.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,lung,macrophages,protected,protected,6.6,6.6,nTPM,213.0,Missing/uncertain,8.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,lung,macrophages,protected,protected,4.8,4.8,nTPM,164.0,Missing/uncertain,8.0,True,True,SH2D4B,Normal
+ENSG00000178217,HPA tissue clusters,hpa_single_cell_tissue,v23,lung,macrophages,protected,protected,5.9,5.9,nTPM,79.0,Missing/uncertain,8.0,True,True,SH2D4B,Normal
+ENSG00000179930,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,3.2,3.2,nTPM,97.0,Missing/uncertain,4.0,True,True,ZNF648,Normal
+ENSG00000182798,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.2,2.2,nTPM,49.0,Missing/uncertain,4.0,True,True,MAGEB17,Normal
+ENSG00000182798,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.8,2.8,nTPM,57.0,Missing/uncertain,4.0,True,True,MAGEB17,Normal
+ENSG00000185038,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.5,3.5,nTPM,88.0,Missing/uncertain,4.0,True,True,MROH2A,Normal
+ENSG00000185038,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.6,2.6,nTPM,44.0,Missing/uncertain,4.0,True,True,MROH2A,Normal
+ENSG00000186766,HPA tissue clusters,hpa_single_cell_tissue,v23,skeletal muscle,fibroblasts,vital,manageable,4.3,4.3,nTPM,35.0,Missing/uncertain,16.0,True,True,FOXI2,Normal
+ENSG00000186971,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,fibroblasts,manageable,manageable,6.4,6.4,nTPM,378.0,Missing/uncertain,16.0,True,True,KRTAP13-4,Normal
+ENSG00000186971,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,fibroblasts,manageable,manageable,6.0,6.0,nTPM,103.0,Missing/uncertain,16.0,True,True,KRTAP13-4,Normal
+ENSG00000196832,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,t-cells,protected,protected,2.5,2.5,nTPM,54.0,Missing/uncertain,8.0,True,True,OR11G2,Normal
+ENSG00000196832,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,t-cells,protected,protected,4.9,4.9,nTPM,78.0,Missing/uncertain,8.0,True,True,OR11G2,Normal
+ENSG00000196832,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,t-cells,protected,protected,2.3,2.3,nTPM,40.0,Missing/uncertain,8.0,True,True,OR11G2,Normal
+ENSG00000196832,HPA tissue clusters,hpa_single_cell_tissue,v23,adipose tissue,t-cells,protected,protected,2.8,2.8,nTPM,33.0,Missing/uncertain,8.0,True,True,OR11G2,Normal
+ENSG00000196832,HPA tissue clusters,hpa_single_cell_tissue,v23,salivary gland,b-cells,protected,protected,4.7,4.7,nTPM,42.0,Missing/uncertain,8.0,True,True,OR11G2,Normal
+ENSG00000196832,HPA tissue clusters,hpa_single_cell_tissue,v23,tongue,t-cells,protected,protected,5.5,5.5,nTPM,33.0,Missing/uncertain,8.0,True,True,OR11G2,Normal
+ENSG00000233087,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,3.8,3.8,nTPM,198.0,Missing/uncertain,4.0,True,True,RAB6D,Normal
+ENSG00000233087,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.3,2.3,nTPM,63.0,Missing/uncertain,4.0,True,True,RAB6D,Normal
+ENSG00000268223,HPA tissue clusters,hpa_single_cell_tissue,v23,colon,undifferentiated cells,protected,manageable,7.4,7.4,nTPM,35.0,Missing/uncertain,16.0,True,True,ARL14EPL,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.3,2.3,nTPM,351.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.3,2.3,nTPM,291.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.0,2.0,nTPM,235.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.4,2.4,nTPM,331.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.0,2.0,nTPM,184.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.3,2.3,nTPM,167.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.7,2.7,nTPM,125.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.7,2.7,nTPM,215.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.3,2.3,nTPM,74.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.7,2.7,nTPM,120.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.0,2.0,nTPM,61.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.3,3.3,nTPM,144.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.1,2.1,nTPM,48.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,inhibitory neurons,vital,vital,2.0,2.0,nTPM,44.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.1,2.1,nTPM,82.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.8,2.8,nTPM,69.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,2.0,2.0,nTPM,34.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.7,3.7,nTPM,42.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000284873,HPA tissue clusters,hpa_single_cell_tissue,v23,brain,excitatory neurons,vital,vital,3.4,3.4,nTPM,34.0,Missing/uncertain,4.0,True,True,OOSP1,Normal
+ENSG00000136834,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.1824512334,2.85844832287,TPM,,Missing/uncertain,8.0,True,True,OR1J1,Normal
+ENSG00000141977,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,4.038071481,5.81727587053,TPM,,Missing/uncertain,8.0,True,True,CIB3,Normal
+ENSG00000168158,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.8609207104500003,3.22311813427,TPM,,Missing/uncertain,8.0,True,True,OR2C1,Normal
+ENSG00000170683,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.52578312269,3.06317892918,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000175514,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,3.7917467985300006,4.3742063924800005,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000180988,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.03107440202,3.08711823847,TPM,,Missing/uncertain,8.0,True,True,OR52N2,Normal
+ENSG00000181017,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,5.68897306883,7.591330549089999,TPM,,Missing/uncertain,8.0,True,True,OR56B2,Normal
+ENSG00000181023,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,4.071957251230001,4.6582249523699994,TPM,,Missing/uncertain,8.0,True,True,OR56B1,Normal
+ENSG00000181109,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,7.0283650602,10.098131099,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000183310,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.04610303066,4.15640963251,TPM,,Missing/uncertain,8.0,True,True,OR2T34,Normal
+ENSG00000186912,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.31571393811,3.51287364078,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000196240,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.17315800272,2.65464080949,TPM,,Missing/uncertain,8.0,True,True,OR2T2,Normal
+ENSG00000196539,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,3.62023566072,4.66542837353,TPM,,Missing/uncertain,8.0,True,True,OR2T3,Normal
+ENSG00000212126,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,4.67406587378,4.83004487938,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000232268,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.51740374366,2.5835454301299996,TPM,,Missing/uncertain,8.0,True,True,OR52I1,Normal
+ENSG00000244411,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.2031692883200003,2.98862190918,TPM,,Missing/uncertain,8.0,True,True,KRTAP5-7,Normal
+ENSG00000244623,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,2.22337501573,3.04606536028,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_b_cell_naive,DICE-DB1-20220223,blood,B_CELL_NAIVE,protected,protected,6.54843142374,7.00056562455,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000170683,DICE immune,dice_monocytes,DICE-DB1-20220223,blood,MONOCYTES,protected,protected,2.05883724752,2.4604939076299996,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000184389,DICE immune,dice_monocytes,DICE-DB1-20220223,blood,MONOCYTES,protected,protected,3.00228931879,3.1775289032200003,TPM,,Missing/uncertain,8.0,True,True,A3GALT2,Normal
+ENSG00000185899,DICE immune,dice_monocytes,DICE-DB1-20220223,blood,MONOCYTES,protected,protected,2.36815948803,3.27291332786,TPM,,Missing/uncertain,8.0,True,True,TAS2R60,Normal
+ENSG00000221855,DICE immune,dice_monocytes,DICE-DB1-20220223,blood,MONOCYTES,protected,protected,2.10250147027,3.756678903480001,TPM,,Missing/uncertain,8.0,True,True,TAS2R41,Normal
+ENSG00000141977,DICE immune,dice_m2,DICE-DB1-20220223,blood,M2,protected,protected,2.31839279439,4.2754857280300005,TPM,,Missing/uncertain,8.0,True,True,CIB3,Normal
+ENSG00000185899,DICE immune,dice_m2,DICE-DB1-20220223,blood,M2,protected,protected,2.93311343385,3.34834050174,TPM,,Missing/uncertain,8.0,True,True,TAS2R60,Normal
+ENSG00000186912,DICE immune,dice_m2,DICE-DB1-20220223,blood,M2,protected,protected,2.15503053406,2.32862620107,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000255374,DICE immune,dice_m2,DICE-DB1-20220223,blood,M2,protected,protected,2.18763063887,2.94069209439,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000139223,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,2.17967731146,3.27716935699,TPM,,Missing/uncertain,8.0,True,True,ANP32D,Normal
+ENSG00000141977,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,6.5892469146899995,7.1600239654,TPM,,Missing/uncertain,8.0,True,True,CIB3,Normal
+ENSG00000170683,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,2.42758834195,3.70546113691,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000175514,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,3.37636936992,5.11863748383,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000180988,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,2.39373035333,2.4870218045200003,TPM,,Missing/uncertain,8.0,True,True,OR52N2,Normal
+ENSG00000181109,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,3.03286694601,3.71612344571,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000186912,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,3.1677669776200004,4.12424618994,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000212126,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,3.9493310140699993,5.25796313154,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000212128,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,2.0622613289,3.22088607519,TPM,,Missing/uncertain,8.0,True,True,TAS2R13,Normal
+ENSG00000242019,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,6.8007467750999995,25.459475448000003,TPM,,Missing/uncertain,8.0,True,True,KIR3DL3,Normal
+ENSG00000244623,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,3.51531672317,3.96763448462,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,3.29729893459,4.68827111546,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_nk,DICE-DB1-20220223,blood,NK,protected,protected,3.56014328194,3.69727752746,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000075290,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,3.29888922338,3.8452069817,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000136834,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,3.696492272159999,4.55575933161,TPM,,Missing/uncertain,8.0,True,True,OR1J1,Normal
+ENSG00000141977,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.78975941328,3.8582658055,TPM,,Missing/uncertain,8.0,True,True,CIB3,Normal
+ENSG00000170683,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.1383053323400003,2.85180741816,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000171136,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.26881199466,2.64117541706,TPM,,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000175514,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,4.2933577924,5.682701700009999,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000181017,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.04383209352,2.08731474157,TPM,,Missing/uncertain,8.0,True,True,OR56B2,Normal
+ENSG00000181109,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,3.4462976464699997,3.93440352316,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000186912,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,3.2528284291900005,4.3042697633,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000198283,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.24935268273,2.52087376569,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000212126,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.1666285802900003,3.78259490559,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000239590,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.77965173923,4.38913549701,TPM,,Missing/uncertain,8.0,True,True,OR1J4,Normal
+ENSG00000244623,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,3.94350812768,5.32408927807,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.93747197437,3.9763545048,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.48878182504,3.38656688088,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000280094,DICE immune,dice_treg_mem,DICE-DB1-20220223,blood,TREG_MEM,protected,protected,2.19449723654,3.62750514589,TPM,,Missing/uncertain,8.0,True,True,OR1B1,Normal
+ENSG00000075290,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,3.27292436122,3.4490987593800004,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000171136,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,2.12674472338,3.1385502463200003,TPM,,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000175514,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,2.47009698877,3.1870554278900003,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000176510,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,2.6722766976599996,3.3179901605799995,TPM,,Missing/uncertain,8.0,True,True,OR10AC1,Normal
+ENSG00000181017,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,2.3990907385,2.8626566681,TPM,,Missing/uncertain,8.0,True,True,OR56B2,Normal
+ENSG00000181109,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,2.70276413838,2.84381739546,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000185899,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,3.75554326311,4.85716379092,TPM,,Missing/uncertain,8.0,True,True,TAS2R60,Normal
+ENSG00000186912,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,2.32173308866,3.17459782662,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000212126,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,4.18559581079,5.018463699,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000221855,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,4.10997040053,5.67623110115,TPM,,Missing/uncertain,8.0,True,True,TAS2R41,Normal
+ENSG00000244623,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,3.29794363827,3.54255673084,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,4.831048640430001,6.38877003806,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,protected,protected,2.2721271783000003,2.54933142258,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000189030,DICE immune,dice_cd4_stim,DICE-DB1-20220223,blood,CD4_STIM,protected,protected,2.1475447771700003,3.28760498365,TPM,,Missing/uncertain,8.0,True,True,VHLL,Normal
+ENSG00000198283,DICE immune,dice_cd4_stim,DICE-DB1-20220223,blood,CD4_STIM,protected,protected,3.3661579717000003,3.5318994017300005,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000255374,DICE immune,dice_cd4_stim,DICE-DB1-20220223,blood,CD4_STIM,protected,protected,7.05400775742,14.6476935924,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000263353,DICE immune,dice_cd4_stim,DICE-DB1-20220223,blood,CD4_STIM,protected,protected,2.4716793354499997,4.4838919083199995,TPM,,Missing/uncertain,8.0,True,True,PPIAL4A,Normal
+ENSG00000075290,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.90784632231,3.959834307109999,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000136834,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.3617402170700004,3.5731615871599995,TPM,,Missing/uncertain,8.0,True,True,OR1J1,Normal
+ENSG00000168158,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.46034359898,2.6752967299200003,TPM,,Missing/uncertain,8.0,True,True,OR2C1,Normal
+ENSG00000171136,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.72667611679,3.45512523695,TPM,,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000175514,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.8718306602099997,3.21798971703,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000176510,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.2323004335900003,2.54668123842,TPM,,Missing/uncertain,8.0,True,True,OR10AC1,Normal
+ENSG00000180988,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.13139397093,2.3086735836099996,TPM,,Missing/uncertain,8.0,True,True,OR52N2,Normal
+ENSG00000181017,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,3.68560475895,4.9909182533,TPM,,Missing/uncertain,8.0,True,True,OR56B2,Normal
+ENSG00000181023,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.1897742086300003,3.4769597121800007,TPM,,Missing/uncertain,8.0,True,True,OR56B1,Normal
+ENSG00000181109,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,3.72192703899,5.15800035375,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000185899,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.88360666505,6.65921418296,TPM,,Missing/uncertain,8.0,True,True,TAS2R60,Normal
+ENSG00000186912,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,3.53964832951,5.32090379842,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000198283,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.63861286046,3.68586927304,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000206102,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.87864939666,3.99724468925,TPM,,Missing/uncertain,8.0,True,True,KRTAP19-8,Normal
+ENSG00000212126,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,4.723505257659999,6.11135710845,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000221855,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,3.74819660208,3.96783886177,TPM,,Missing/uncertain,8.0,True,True,TAS2R41,Normal
+ENSG00000231861,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.07148645691,2.51259710535,TPM,,Missing/uncertain,8.0,True,True,OR5K2,Normal
+ENSG00000244623,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,5.20138573123,5.7922125820599994,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,7.84088021413,8.754214550599999,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000284395,DICE immune,dice_treg_naive,DICE-DB1-20220223,blood,TREG_NAIVE,protected,protected,2.0388808548900004,2.6259860308099996,TPM,,Missing/uncertain,8.0,True,True,PERCC1,Normal
+ENSG00000075290,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,2.7030191151599996,4.9606293712000005,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000136834,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.5877497026699996,4.19893582991,TPM,,Missing/uncertain,8.0,True,True,OR1J1,Normal
+ENSG00000170683,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,2.44378687608,2.78888321058,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000171136,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.24644567339,3.81631557633,TPM,,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000175514,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,5.07729514431,5.705025920830001,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000181017,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,2.47083968,2.9023318501200004,TPM,,Missing/uncertain,8.0,True,True,OR56B2,Normal
+ENSG00000181109,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.2728687971499997,4.38777217665,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000185899,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,2.9421190215400004,3.63747420607,TPM,,Missing/uncertain,8.0,True,True,TAS2R60,Normal
+ENSG00000186912,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.60861643359,4.284578766519999,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000198283,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.06910320672,4.06499523971,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000206102,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.0170208346700003,3.65567728588,TPM,,Missing/uncertain,8.0,True,True,KRTAP19-8,Normal
+ENSG00000212126,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.1888789753,5.40967932753,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000221855,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,4.05235388795,4.75114617855,TPM,,Missing/uncertain,8.0,True,True,TAS2R41,Normal
+ENSG00000244623,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.12312170362,3.8813498158800006,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,4.748202941140001,5.50688786993,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_tfh,DICE-DB1-20220223,blood,TFH,protected,protected,3.56566095026,4.33076322111,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000075290,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.02216494382,2.94579717266,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000170683,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.26251328166,2.5446622356299997,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000171136,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.85933116826,3.2467040976,TPM,,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000175514,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.9314094732200005,4.896034342819999,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000181109,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,3.0505008193400003,3.0868888427099996,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000186912,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.72990148673,3.3916587195599996,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000198283,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.08207174145,3.2400243378500004,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000212126,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.64366539431,3.30489287232,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000221855,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.2253075709599996,2.3136770413,TPM,,Missing/uncertain,8.0,True,True,TAS2R41,Normal
+ENSG00000244623,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.63387590582,3.0469371548,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,3.47041578976,4.1266287122000005,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_th1,DICE-DB1-20220223,blood,TH1,protected,protected,2.2719526948,3.2435569622099996,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000075290,DICE immune,dice_thstar,DICE-DB1-20220223,blood,THSTAR,protected,protected,2.48662884259,2.8952633553099996,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000175514,DICE immune,dice_thstar,DICE-DB1-20220223,blood,THSTAR,protected,protected,2.05281931012,2.18562820209,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000181109,DICE immune,dice_thstar,DICE-DB1-20220223,blood,THSTAR,protected,protected,3.02882882621,3.45615312599,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000212126,DICE immune,dice_thstar,DICE-DB1-20220223,blood,THSTAR,protected,protected,3.01051258051,3.3988662052599996,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000244623,DICE immune,dice_thstar,DICE-DB1-20220223,blood,THSTAR,protected,protected,2.4631804448900003,2.9628338106200003,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_thstar,DICE-DB1-20220223,blood,THSTAR,protected,protected,3.7820586134300007,4.41751147243,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_thstar,DICE-DB1-20220223,blood,THSTAR,protected,protected,2.36829275313,2.68829364253,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000075290,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.58464135199,3.2816677001300003,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000136834,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.34922419496,5.15944908069,TPM,,Missing/uncertain,8.0,True,True,OR1J1,Normal
+ENSG00000175514,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.97684433435,3.31105377335,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000181109,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.6295208236099996,2.88106606185,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000186912,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.78621032905,3.28670275635,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000198283,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.0305947967400004,2.2989993695099997,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000212126,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.07952858491,2.9134768742799997,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000239590,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.0091277461200003,3.83307266274,TPM,,Missing/uncertain,8.0,True,True,OR1J4,Normal
+ENSG00000244623,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,3.11549917152,3.27814976991,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,3.57172596425,4.176384709880001,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_th17,DICE-DB1-20220223,blood,TH17,protected,protected,2.05309085021,3.4941023435900003,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000075290,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.73223638521,2.85968401054,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000136834,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,3.46584855411,3.55074269439,TPM,,Missing/uncertain,8.0,True,True,OR1J1,Normal
+ENSG00000170683,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.18543134468,2.41103593523,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000171136,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.57905768777,3.05973292207,TPM,,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000175514,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,3.97713612768,4.245231549340001,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000181109,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.80110071326,3.24148203497,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000185899,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.79734783689,3.78428796956,TPM,,Missing/uncertain,8.0,True,True,TAS2R60,Normal
+ENSG00000186912,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.6815089530000003,3.41080860814,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000198283,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.1489522139200004,3.68215446825,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000205439,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.25374086409,3.58366627172,TPM,,Missing/uncertain,8.0,True,True,KRTAP12-3,Normal
+ENSG00000206102,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.68399799624,4.14491552624,TPM,,Missing/uncertain,8.0,True,True,KRTAP19-8,Normal
+ENSG00000212126,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.7385865246099996,3.29233053352,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000212128,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.09512995322,2.63533145573,TPM,,Missing/uncertain,8.0,True,True,TAS2R13,Normal
+ENSG00000212658,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.2285430366599996,2.87961478177,TPM,,Missing/uncertain,8.0,True,True,KRTAP29-1,Normal
+ENSG00000221855,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,3.13829318415,4.99685729347,TPM,,Missing/uncertain,8.0,True,True,TAS2R41,Normal
+ENSG00000244623,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.95390062393,3.5920898672000003,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,4.034740230880001,6.68634592672,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000263353,DICE immune,dice_th2,DICE-DB1-20220223,blood,TH2,protected,protected,2.22947772133,3.8851520215,TPM,,Missing/uncertain,8.0,True,True,PPIAL4A,Normal
+ENSG00000075290,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,4.89704130502,7.014130069480001,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000170683,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.19693036055,2.79515561353,TPM,,Missing/uncertain,8.0,True,True,OR10A3,Normal
+ENSG00000171136,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.33885947318,2.70254369319,TPM,,Missing/uncertain,8.0,True,True,RLN3,Normal
+ENSG00000175514,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,3.02341457722,3.14057897917,TPM,,Missing/uncertain,8.0,True,True,GPR152,Normal
+ENSG00000176510,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.56612561737,2.9116840472,TPM,,Missing/uncertain,8.0,True,True,OR10AC1,Normal
+ENSG00000181017,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.3695016098700004,3.78553742023,TPM,,Missing/uncertain,8.0,True,True,OR56B2,Normal
+ENSG00000181109,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,3.07660284667,3.90096116948,TPM,,Missing/uncertain,8.0,True,True,OR52P1,Normal
+ENSG00000185899,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,3.65321770823,4.0011249075699995,TPM,,Missing/uncertain,8.0,True,True,TAS2R60,Normal
+ENSG00000186912,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.61766358126,2.91293244749,TPM,,Missing/uncertain,8.0,True,True,P2RY4,Normal
+ENSG00000198283,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.35115503716,2.56468738487,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000212126,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,3.3000274654900004,3.47254396171,TPM,,Missing/uncertain,8.0,True,True,TAS2R50,Normal
+ENSG00000221855,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,4.1024022133599995,4.21984051846,TPM,,Missing/uncertain,8.0,True,True,TAS2R41,Normal
+ENSG00000244623,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,3.82299836056,5.13133091091,TPM,,Missing/uncertain,8.0,True,True,OR2AE1,Normal
+ENSG00000255374,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,5.920341456980001,7.337771010269999,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000258806,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.5123906491,2.9336686598400004,TPM,,Missing/uncertain,8.0,True,True,OR11H7,Normal
+ENSG00000263353,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,2.10953611079,3.56676482824,TPM,,Missing/uncertain,8.0,True,True,PPIAL4A,Normal
+ENSG00000284395,DICE immune,dice_cd8_naive,DICE-DB1-20220223,blood,CD8_NAIVE,protected,protected,3.14671360476,4.91007320566,TPM,,Missing/uncertain,8.0,True,True,PERCC1,Normal
+ENSG00000075290,DICE immune,dice_cd8_stim,DICE-DB1-20220223,blood,CD8_STIM,protected,protected,2.33778529437,4.09566492835,TPM,,Missing/uncertain,8.0,True,True,WNT8B,Normal
+ENSG00000189030,DICE immune,dice_cd8_stim,DICE-DB1-20220223,blood,CD8_STIM,protected,protected,2.6408535104,3.0891322690700003,TPM,,Missing/uncertain,8.0,True,True,VHLL,Normal
+ENSG00000198283,DICE immune,dice_cd8_stim,DICE-DB1-20220223,blood,CD8_STIM,protected,protected,3.82285333928,3.9825814217,TPM,,Missing/uncertain,8.0,True,True,OR5B21,Normal
+ENSG00000255374,DICE immune,dice_cd8_stim,DICE-DB1-20220223,blood,CD8_STIM,protected,protected,3.8261961854300006,6.08798513957,TPM,,Missing/uncertain,8.0,True,True,TAS2R43,Normal
+ENSG00000263353,DICE immune,dice_cd8_stim,DICE-DB1-20220223,blood,CD8_STIM,protected,protected,3.00700928298,3.78534266309,TPM,,Missing/uncertain,8.0,True,True,PPIAL4A,Normal
+ENSG00000096264,HPA immune,hpa_immune_cell,v23,blood,plasmacytoid DC,protected,protected,4.9,4.9,nTPM,,Missing,8.0,True,True,NCR2,Normal
+ENSG00000141977,HPA immune,hpa_immune_cell,v23,blood,eosinophil,protected,protected,2.3,2.3,nTPM,,Missing,8.0,True,True,CIB3,Normal
+ENSG00000159961,HPA immune,hpa_immune_cell,v23,blood,plasmacytoid DC,protected,protected,8.0,8.0,nTPM,,Missing,8.0,True,True,OR3A3,Normal
+ENSG00000180433,HPA immune,hpa_immune_cell,v23,blood,basophil,protected,protected,3.7,3.7,nTPM,,Missing,8.0,True,True,OR6K6,Normal
+ENSG00000180988,HPA immune,hpa_immune_cell,v23,blood,basophil,protected,protected,4.0,4.0,nTPM,,Missing,8.0,True,True,OR52N2,Normal
+ENSG00000188076,HPA immune,hpa_immune_cell,v23,blood,basophil,protected,protected,4.9,4.9,nTPM,,Missing,8.0,True,True,SCGB1C1,Normal
+ENSG00000188076,HPA immune,hpa_immune_cell,v23,blood,total PBMC,protected,protected,3.3,3.3,nTPM,,Missing,8.0,True,True,SCGB1C1,Normal
+ENSG00000196832,HPA immune,hpa_immune_cell,v23,blood,neutrophil,protected,protected,2.2,2.2,nTPM,,Missing,8.0,True,True,OR11G2,Normal
+ENSG00000214943,HPA immune,hpa_immune_cell,v23,blood,myeloid DC,protected,protected,2.6,2.6,nTPM,,Missing,8.0,True,True,GPR33,Normal
+ENSG00000283329,HPA immune,hpa_immune_cell,v23,blood,basophil,protected,protected,4.2,4.2,nTPM,,Missing,8.0,True,True,FAM240B,Normal
+ENSG00000283528,HPA immune,hpa_immune_cell,v23,blood,T-reg,protected,protected,2.1,2.1,nTPM,,Missing,8.0,True,True,TCAF2C,Normal
+ENSG00000283528,HPA immune,hpa_immune_cell,v23,blood,basophil,protected,protected,2.1,2.1,nTPM,,Missing,8.0,True,True,TCAF2C,Normal
+ENSG00000285231,HPA immune,hpa_immune_cell,v23,blood,basophil,protected,protected,5.4,5.4,nTPM,,Missing,8.0,True,True,OOSP3,Normal
+ENSG00000096264,Monaco immune,hpa_immune_monaco,v23,blood,plasmacytoid DC,protected,protected,2.4,2.4,TPM,,Missing,8.0,True,True,NCR2,Normal
+ENSG00000159961,Monaco immune,hpa_immune_monaco,v23,blood,plasmacytoid DC,protected,protected,4.9,4.9,TPM,,Missing,8.0,True,True,OR3A3,Normal
+ENSG00000170923,Monaco immune,hpa_immune_monaco,v23,blood,Non-switched memory B-cell,protected,protected,2.3,2.3,TPM,,Missing,8.0,True,True,OR7G2,Normal
+ENSG00000170923,Monaco immune,hpa_immune_monaco,v23,blood,Switched memory B-cell,protected,protected,2.1,2.1,TPM,,Missing,8.0,True,True,OR7G2,Normal
+ENSG00000170923,Monaco immune,hpa_immune_monaco,v23,blood,naive B-cell,protected,protected,2.3,2.3,TPM,,Missing,8.0,True,True,OR7G2,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Exhausted memory B-cell,protected,protected,2.2,2.2,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Memory CD4 T-cell Th1,protected,protected,3.9,3.9,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Memory CD4 T-cell Th1/Th17,protected,protected,2.1,2.1,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Memory CD4 T-cell Th17,protected,protected,4.4,4.4,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,NK-cell,protected,protected,2.2,2.2,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Non-switched memory B-cell,protected,protected,3.7,3.7,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Progenitor cell,protected,protected,2.4,2.4,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Switched memory B-cell,protected,protected,2.4,2.4,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,T-reg,protected,protected,2.1,2.1,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,Terminal effector memory CD4 T-cell,protected,protected,2.3,2.3,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000175514,Monaco immune,hpa_immune_monaco,v23,blood,naive CD4 T-cell,protected,protected,2.5,2.5,TPM,,Missing,8.0,True,True,GPR152,Normal
+ENSG00000180433,Monaco immune,hpa_immune_monaco,v23,blood,basophil,protected,protected,2.8,2.8,TPM,,Missing,8.0,True,True,OR6K6,Normal
+ENSG00000181616,Monaco immune,hpa_immune_monaco,v23,blood,Progenitor cell,protected,protected,2.1,2.1,TPM,,Missing,8.0,True,True,OR52H1,Normal
+ENSG00000185899,Monaco immune,hpa_immune_monaco,v23,blood,naive CD4 T-cell,protected,protected,3.0,3.0,TPM,,Missing,8.0,True,True,TAS2R60,Normal
+ENSG00000185899,Monaco immune,hpa_immune_monaco,v23,blood,naive CD8 T-cell,protected,protected,3.9,3.9,TPM,,Missing,8.0,True,True,TAS2R60,Normal
+ENSG00000196266,Monaco immune,hpa_immune_monaco,v23,blood,basophil,protected,protected,6.4,6.4,TPM,,Missing,8.0,True,True,OR10J3,Normal
+ENSG00000214943,Monaco immune,hpa_immune_monaco,v23,blood,myeloid DC,protected,protected,4.7,4.7,TPM,,Missing,8.0,True,True,GPR33,Normal
+ENSG00000263353,Monaco immune,hpa_immune_monaco,v23,blood,Non-Vd2 gdTCR,protected,protected,2.1,2.1,TPM,,Missing,8.0,True,True,PPIAL4A,Normal
+ENSG00000263353,Monaco immune,hpa_immune_monaco,v23,blood,naive CD4 T-cell,protected,protected,2.0,2.0,TPM,,Missing,8.0,True,True,PPIAL4A,Normal
+ENSG00000283329,Monaco immune,hpa_immune_monaco,v23,blood,Memory CD4 T-cell Th1,protected,protected,2.0,2.0,TPM,,Missing,8.0,True,True,FAM240B,Normal
+ENSG00000283329,Monaco immune,hpa_immune_monaco,v23,blood,Memory CD4 T-cell Th17,protected,protected,2.0,2.0,TPM,,Missing,8.0,True,True,FAM240B,Normal
+ENSG00000283329,Monaco immune,hpa_immune_monaco,v23,blood,Progenitor cell,protected,protected,2.0,2.0,TPM,,Missing,8.0,True,True,FAM240B,Normal
+ENSG00000283329,Monaco immune,hpa_immune_monaco,v23,blood,basophil,protected,protected,3.2,3.2,TPM,,Missing,8.0,True,True,FAM240B,Normal
+ENSG00000284373,Monaco immune,hpa_immune_monaco,v23,blood,neutrophil,protected,protected,2.7,2.7,TPM,,Missing,8.0,True,True,TAF11L2,Normal
+ENSG00000285231,Monaco immune,hpa_immune_monaco,v23,blood,basophil,protected,protected,2.7,2.7,TPM,,Missing,8.0,True,True,OOSP3,Normal
+ENSG00000285231,Monaco immune,hpa_immune_monaco,v23,blood,neutrophil,protected,protected,3.0,3.0,TPM,,Missing,8.0,True,True,OOSP3,Normal

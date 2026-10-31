@@ -235,6 +235,10 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "gene-knowledge": (
+        "protein",
+        "Reviewed gene findings with exact identities, tissue/state, evidence limits and screening consequences",
+    ),
     "normal-induction-evidence": (
         "expression",
         "Cited normal induction contexts; qualitative reproductive-association counterevidence",

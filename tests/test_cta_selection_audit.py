@@ -356,12 +356,17 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     after = pd.read_csv(
         RELEASE / "protein-group-classifications.csv.gz", low_memory=False
     ).set_index("protein_equivalence_group_id")
-    assert set(before[before.category.eq("Unsafe")].index) == set(
-        after[after.category.eq("Unsafe")].index
-    )
     frozen = pd.read_csv(
         ROOT / "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz", low_memory=False
     ).set_index("protein_equivalence_group_id")
+    assert set(before[before.category.eq("Unsafe")].index) == set(
+        frozen[frozen.category.eq("Unsafe")].index
+    )
+    # Subsequent literature safety additions are independent of diffuseness.
+    old_unsafe = set(before[before.category.eq("Unsafe")].index)
+    new_unsafe = set(after[after.category.eq("Unsafe")].index)
+    assert old_unsafe <= new_unsafe
+    assert after.loc[sorted(new_unsafe - old_unsafe), "knowledge_normal_exclusion"].all()
     changed = frozen.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))
     assert frozen.loc[changed, "protein_group_label"].tolist() == ["MTCP1"]
     row = after.loc[after.protein_group_label.eq("MTCP1")].iloc[0]

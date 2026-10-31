@@ -639,6 +639,19 @@
       "bytes": 49254523,
       "archive_sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198",
       "cell_label": "T cell, CD8, naive [activated]"
+    },
+    "olfactory_durante_supplement": {
+      "version": "2020-02-18",
+      "kind": "reference",
+      "filename": "41593_2020_587_MOESM3_ESM.xlsx",
+      "description": "Durante adult human olfactory atlas: gene-level supplementary tables, native positive-cell counts and enrichment",
+      "archive_format": "file",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41593-020-0587-9/MediaObjects/41593_2020_587_MOESM3_ESM.xlsx",
+      "publication_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/",
+      "taxonomy_id": 9606,
+      "sha256": "00fb8835c18c8e7d660b91acbd49d83a152aff66f47eeb6d6158bbde77887e9e",
+      "bytes": 1283251,
+      "archive_sha256": "00fb8835c18c8e7d660b91acbd49d83a152aff66f47eeb6d6158bbde77887e9e"
     }
   }
 }

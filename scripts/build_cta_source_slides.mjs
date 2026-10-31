@@ -93,7 +93,7 @@ note(s,'Sources, expression profiles, single-cutoff filtering and measured tissu
 }
 {
 const s=slide('Safety, cancer and Reproductive evidence','Independent questions','Only safety supplies Unsafe evidence. Reproductive is the umbrella for adult reproductive, placental, extraembryonic, embryonic and fetal contexts.');
-table(s,[['Assessment','Question','Current rule'],['Safety','Concerning normal expression?','Absolute RNA / IHC and clinical rules'],['Cancer expression','Expressed in a measured cancer?','One sample ≥2 TPM/pTPM or reviewed tumor protein'],['Reproductive evidence','Expression in a qualifying branch?','Bulk/cell RNA ≥5, reliable IHC, or supported embryonic RNA'],['Coverage','Are required panels measured?','All GTEx core contexts and existing HPA panels']],{widths:[300,452,400],size:25,h:380,y:170});
+table(s,[['Assessment','Question','Current rule'],['Safety','Concerning normal expression?','Absolute RNA / IHC and clinical rules'],['Cancer expression','Expressed in a measured cancer?','One sample >0 TPM/pTPM or reviewed tumor protein'],['Reproductive evidence','Expression in a qualifying branch?','Bulk/cell RNA ≥5, reliable reproductive protein, or embryonic RNA'],['Coverage','Are required panels measured?','All GTEx core contexts and existing HPA panels']],{widths:[300,452,400],size:25,h:380,y:170});
 note(s,'Only safety establishes Unsafe. Missing core data remain unassigned. RNA is not a direct protein measurement.',580,25);
 }
 {
@@ -158,7 +158,7 @@ for(const [title,rows] of [
  ['Other categories: identity and cancer',[
   ['Diffuse','Complete measured profile is too dispersed','Diffuse'],
   ['Reproductive','Reproductive evidence qualifies; cancer evidence does not','Reproductive'],
-  ['Inducible','Published induction in nonreproductive normal cells','Inducible'],
+  ['Inducible (legacy)','No current rows; reviewed normal protein enters safety','Inducible'],
   ['Tumor-supported','Strong tumor evidence; restriction remains unestablished','Tumor-supported']]],
  ['Other categories: normal expression',[
   ['Disposable','Positive Disposable evidence; low measured RNA elsewhere','Disposable'],
@@ -172,17 +172,22 @@ for(const [title,rows] of [
 }
 {
 const s=slide('Reproductive cell evidence','Positive association','HPA v23 https://v23.proteinatlas.org/about/download ; passenger transcripts: https://pmc.ncbi.nlm.nih.gov/articles/PMC7459098/ ; normal interferon induction: https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/');
-table(s,[['Route','Positive evidence','Additional requirements'],['Identified lineage','≥5 nTPM with ≥20 reads','Mapped reproductive lineage; all protein loci measured'],['Indirect site','Generic/immune cell in reproductive tissue','Complete outside cluster panel; every value <5 nTPM; no normal-induction conflict'],['Examples','CAGE1 208.9; PRDM9 61.8; FOXR2 5.2 nTPM','Spermatids / spermatocytes / spermatogonia'],['Counterexample','IFNA2 and IFNA14 in breast macrophages','Published normal immune induction → Other:Inducible']],{widths:[275,415,462],size:23,h:375});
+table(s,[['Route','Positive evidence','Additional requirements'],['Identified lineage','≥5 nTPM with ≥20 reads','Mapped reproductive lineage; all protein loci measured'],['Indirect site','Generic/immune cell in reproductive tissue','Complete outside cluster panel; every value <5 nTPM; no normal-induction conflict'],['Examples','CAGE1 208.9; PRDM9 61.8; FOXR2 5.2 nTPM','Spermatids / spermatocytes / spermatogonia'],['Counterexample','IFNA2 and IFNA14 in breast macrophages','Reviewed normal immune protein → Unsafe']],{widths:[275,415,462],size:23,h:375});
 note(s,'Indirect support identifies the sample site, not the producing cell. Normal and bulk-concentration gates still apply.',575,24);
+}
+{
+const s=slide('Reviewed normal-cell knowledge','Literature evidence','OncoRef 1.26.0: https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/ ; pDC protein: https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2022.814627/full ; human olfactory atlas: https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/');
+table(s,[['Evidence','Consequence'],['Established normal production','Vital/Protected protein or localized RNA plus orthogonal cell function can establish Unsafe'],['Unresolved normal findings','Sparse RNA, uncertain species/stage or isoforms remain review holds'],['Reproductive protein','Supplies presence below the RNA floor; safety and concentration still apply'],['Search and curation','All 611 baseline Other genes searched; accepted findings remain separate from search leads']],{widths:[340,812],size:25,h:370});
+note(s,'Rare normal cells and activation states count. Expression exclusions do not assert clinical injury.',590,25);
 }
 {
 const s=slide('Other:Tumor-supported','Reconsideration candidates','Two distinct tumor samples at >=10 native TPM, or reviewed reliable tumor protein. Restriction also requires low measured normal/developmental expression and adequate coverage of relevant rare cells and states.');
 table(s,[['Requirement','Rule'],['Tumor RNA','>=10 TPM in two distinct samples; duplicate source views do not count'],['Protein alternative','Reviewed tumor protein evidence; aggregate IHC counts alone are insufficient'],['Outside cancer','Low measured normal/developmental expression; all normal safety gates pass'],['Coverage review','Relevant rare normal cells and states must be assessed before claiming tumor restriction']],{widths:[315,837],size:23,h:365});
-note(s,`${data.tumor_restricted_leads} numerical leads await coverage review and remain Other. They are not labelled tumor-only.`,565,25);
+note(s,`${data.other_subtypes['Tumor-supported']||0} of ${data.tumor_restricted_leads} numerical leads remain Other; the rest have safety exclusions or review holds. None is labelled tumor-only.`,565,25);
 }
 {
 const s=slide('Every filtering layer can contribute','Human funnel','The gray segment is held/unassigned evidence, not Other. The final profile check assigns Other. All layers evaluate every protein; final categories are independent of display order.');
-const shortLabels={'Reproductive / embryonic association':'Reproductive evidence','Cancer expression':'Cancer expression','HPA normal protein':'HPA protein','Required RNA coverage':'Coverage','Reproductive concentration':'Concentration','Normal bulk':'Bulk RNA','HPA tissue clusters':'Tissue clusters','Monaco immune':'Monaco','DICE immune':'DICE','Adult cornea':'Cornea','Accepted normal-protein evidence':'Curated protein','Clinical safety exclusion':'Clinical safety','External validated normal protein':'External IHC','CTA and Other assignments':'Final categories'};
+const shortLabels={'Reproductive / embryonic association':'Reproductive evidence','Cancer expression':'Cancer expression','HPA normal protein':'HPA protein','Required RNA coverage':'Coverage','Reproductive concentration':'Concentration','Normal bulk':'Bulk RNA','HPA tissue clusters':'Tissue clusters','Monaco immune':'Monaco','DICE immune':'DICE','Adult cornea':'Cornea','Accepted normal-protein evidence':'Curated protein','Reviewed normal-cell knowledge':'Normal-cell knowledge','Clinical safety exclusion':'Clinical safety','External validated normal protein':'External IHC','CTA and Other assignments':'Final categories'};
 const labels=data.funnel.map(r=>shortLabels[r.layer]||r.layer);
 chart(s,labels,[{name:'Eligible so far',values:data.funnel.map(r=>r.CTA_eligible_so_far),fill:C.teal},{name:'Unsafe',values:data.funnel.map(r=>r.Unsafe),fill:C.rust},{name:'Other',values:data.funnel.map(r=>r.Other),fill:'#A28C68'},{name:'Unassigned',values:data.funnel.map(r=>r.Unassigned),fill:'#B9C3CD'}],{h:435,y:158,stacked:true,size:20});
 note(s,`Final: ${n(counts.CTA)} CTA / ${n(counts.Unsafe)} Unsafe / ${n(counts.Other)} Other / ${n(counts.Unassigned)} unassigned.`,610,24);

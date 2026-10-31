@@ -94,7 +94,7 @@ TABLE_COLUMNS = {
 }
 HUMAN_RULES = {
     "Reproductive or developmental expression": (
-        "Full Reproductive bulk ≥5 nTPM OR supported reproductive-cell RNA ≥5 nTPM (≥20 reads; indirect sites additionally need complete outside-cluster coverage and every outside value <5, with no curated normal-induction conflict) OR reliable mapped positive reproductive IHC for every member without an antibody conflict OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Presence evidence never overrides normal exclusions.",
+        "Full Reproductive bulk ≥5 nTPM OR supported reproductive-cell RNA ≥5 nTPM (≥20 reads; indirect sites additionally need complete outside-cluster coverage and every outside value <5, with no curated normal-induction conflict) OR reliable mapped positive reproductive IHC for every member without an antibody conflict OR reviewed human reproductive protein covering every selected member OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Presence evidence never overrides normal exclusions.",
         [
             "hpa_rna_consensus",
             "hpa_normal_tissue",
@@ -105,7 +105,7 @@ HUMAN_RULES = {
         ],
     ),
     "Cancer expression": (
-        "At least one measured compatible tumor sample ≥2 in native TPM or HPA pTPM OR reviewed reliable tumor protein; do not add maxima from different samples.",
+        "At least one measured compatible tumor sample >0 in native TPM or HPA pTPM OR reviewed reliable tumor protein. This establishes presence, not therapeutic abundance; do not add maxima from different samples.",
         ["oncoref_tumor_union", "hpa_cancer"],
     ),
     "HPA normal protein": (
@@ -158,6 +158,10 @@ HUMAN_RULES = {
     "Clinical safety exclusion": (
         "Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use.",
         ["cta_policy_findings"],
+    ),
+    "Reviewed normal-cell knowledge": (
+        "Reviewed adult human normal protein, or localized RNA with orthogonal normal-cell function, in Vital/Protected supplies Unsafe evidence. Sparse RNA, uncertain species/stage or unresolved identity produces a review hold. Activation and rare-cell frequency do not exempt normal cells. Every finding retains its source and limitations.",
+        ["gene-knowledge"],
     ),
     "External validated normal protein": (
         "Use categorical/quantitative staining only within verified reagent, tissue and cell scope; no inherited HPA reliability label.",
@@ -470,12 +474,12 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             (
                 "Cancer expression",
                 "pass" if r["cancer_association"] else "hold" if r["tumor_measured"] else "unknown",
-                f"One sample ≥2: OncoRef {display(r['oncoref_maximum_tpm'])} TPM; HPA {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM; reviewed reliable tumor protein: {r['reliable_tumor_protein']}. No tumor-versus-normal ratio.",
+                f"One sample >0: OncoRef {display(r['oncoref_maximum_tpm'])} TPM; HPA {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM; reviewed reliable tumor protein: {r['reliable_tumor_protein']}. No tumor-versus-normal ratio.",
             ),
             (
                 "Reproductive/developmental association",
                 "pass" if r["positive_context"] else "hold",
-                f"Reproductive RNA {display(r['reproductive_ntpm'])} nTPM; qualifying reproductive IHC {r['reproductive_protein_association']}; supported lineage-cell RNA {display(r['reproductive_cell_ntpm'])} nTPM; indirect cell support {r['reproductive_cell_indirect_association']} (outside clusters complete: {display(r['outside_cluster_complete'])}; outside maximum: {display(r['outside_cluster_max_ntpm'])} nTPM; normal induction counterevidence: {r['normal_induction_evidence']}); supported developmental RNA {display(r['developmental_mean_tpm'])} TPM. RNA routes require 5 in their own assay; supported cells and reliable reproductive IHC are independent presence routes. Normal and cancer gates still apply.",
+                f"Reproductive RNA {display(r['reproductive_ntpm'])} nTPM; qualifying reproductive IHC {r['reproductive_protein_association']}; reviewed reproductive protein {r['knowledge_reproductive_support']}; supported lineage-cell RNA {display(r['reproductive_cell_ntpm'])} nTPM; indirect cell support {r['reproductive_cell_indirect_association']} (outside clusters complete: {display(r['outside_cluster_complete'])}; outside maximum: {display(r['outside_cluster_max_ntpm'])} nTPM; normal induction counterevidence: {r['normal_induction_evidence']}); supported developmental RNA {display(r['developmental_mean_tpm'])} TPM. RNA routes require 5 in their own assay; supported cells, reliable reproductive IHC and reviewed reproductive protein are independent presence routes. Normal and cancer gates still apply.",
             ),
         ]:
             row = dict.fromkeys(TABLE_COLUMNS["explanations"])
@@ -559,6 +563,22 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     reason=f"Accepted protein evidence: {p.Context}; {p.protein_level} ({p.protein_scale}).",
                     source_url=p.Source,
                 )
+            elif layer == "Reviewed normal-cell knowledge":
+                from oncoref import gene_knowledge
+
+                evidence = gene_knowledge.findings()
+                ids = set(json.loads(r["knowledge_finding_ids"]))
+                relevant = evidence[
+                    evidence.id.isin(ids)
+                    & evidence.effect.isin(["exclude"] if unsafe else ["review", "exclude"])
+                ]
+                row["reason"] = " | ".join(
+                    f"{p.finding} {p.decision_reason} Limitations: {p.limitations}"
+                    for p in relevant.itertuples()
+                )
+                row["source_url"] = " | ".join(relevant.source_url.drop_duplicates())
+                row["tissue"] = " | ".join(relevant.tissue.drop_duplicates())
+                row["cell_type"] = " | ".join(relevant.cell_type.drop_duplicates())
             elif layer == "Reproductive / embryonic association":
                 row["reason"] = (
                     f"Reproductive {display(r['reproductive_ntpm'])} nTPM; supported developmental mean {display(r['developmental_mean_tpm'])} TPM; supported cell RNA {display(r['reproductive_cell_ntpm'])} nTPM; indirect cell support {r['reproductive_cell_indirect_association']}. No RNA/protein/cell route qualifies; normal induction counterevidence can invalidate an indirect-only route."

@@ -20,6 +20,7 @@ from cta_report_common import input_hashes, sha256, write_csv  # noqa: E402
 
 from oncoref import (  # noqa: E402
     cell_rna_policy,
+    gene_knowledge,
     hpa,
     normal_cell_screen,
     reference_data,
@@ -256,9 +257,11 @@ class ContextCollector:
         return summary
 
 
-def replay_contexts(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
+def replay_contexts(
+    facts: pd.DataFrame, output: Path, *, collector: ContextCollector | None = None
+) -> pd.DataFrame:
     """Stream all HPA clusters; reassess all pinned bulk/immune/corneal rows."""
-    collector = ContextCollector(facts, output)
+    collector = collector if collector is not None else ContextCollector(facts, output)
     # Bulk IHC requires complete routine tissue coverage, as in the frozen audit.
     old_bulk = read(FROZEN / "bulk-contexts.csv.gz")
     member_to_rep = {
@@ -801,11 +804,19 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     facts["tumor_union_ge2"] = facts.oncoref_maximum_tpm.ge(
         2
     ) | facts.hpa_tumor_group_lower_bound_ptpm.ge(2)
+    # Cancer presence is independent of target abundance and normal safety.
+    # Retain the old >=2 flag for audit comparison, but any positive measured
+    # tumor RNA can attest to presence. Missing and zero never qualify.
+    facts["tumor_rna_positive"] = facts.oncoref_maximum_tpm.gt(
+        0
+    ) | facts.hpa_tumor_group_lower_bound_ptpm.gt(0)
     developmental_coverage(facts, output)
     facts = tcr_trials.annotate_proteins(facts)
     inputs = [
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/gene_knowledge.py",
+        ROOT / "oncoref/data/gene-knowledge.json",
         ROOT / "oncoref/reproductive_evidence.py",
         ROOT / "oncoref/data/normal-induction-evidence.csv",
         ROOT / "oncoref/tcr_trials.py",
@@ -928,6 +939,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     facts["reproductive_cell_association"] = (
         facts.reproductive_cell_ntpm.ge(5) | facts.reproductive_cell_indirect_association
     )
+    facts = gene_knowledge.annotate(facts)
     facts = policy.association_evidence(facts)
     facts = policy.concentration_evidence(facts, profile_scores)
     empty = pd.Series(False, index=facts.index)
@@ -948,6 +960,11 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     layers.extend(
         [
             proteins[1],
+            EvidenceLayer(
+                "Reviewed normal-cell knowledge",
+                facts.knowledge_normal_hold | facts.knowledge_normal_exclusion,
+                facts.knowledge_normal_exclusion,
+            ),
             EvidenceLayer("Clinical safety exclusion", facts["Safety veto"], facts["Safety veto"]),
             proteins[2],
         ]
@@ -976,7 +993,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         facts[column] = facts.protein_equivalence_group_id.map(tumor_support[column])
     for column in ["tumor_identity_resolved", "reliable_tumor_protein"]:
         facts[column] = facts[column].fillna(False).astype(bool)
-    facts["cancer_association"] = facts.tumor_union_ge2 | facts.reliable_tumor_protein
+    facts["cancer_association"] = facts.tumor_rna_positive | facts.reliable_tumor_protein
     layers[1] = EvidenceLayer("Cancer expression", ~facts.cancer_association, empty)
     restriction_reviews = read(ROOT / "oncoref/data/tumor-restriction-reviews.csv")
     accepted_reviews = restriction_reviews[restriction_reviews.review_status.eq("Accepted")]

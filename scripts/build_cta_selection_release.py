@@ -55,6 +55,28 @@ def source_inventory() -> pd.DataFrame:
 
     add(
         9606,
+        "gene-knowledge",
+        "Reviewed human gene knowledge: normal cells and reproductive protein",
+        ["normal_protein", "normal_cell_rna", "reproductive_expression"],
+        "used_in_selection",
+        "source-native qualitative and quantitative observations",
+        "explicit per-finding stage and activation state",
+        "https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/",
+        "Exact gene/protein attribution; sparse RNA and unresolved species/isoforms remain review holds. Search leads are not accepted findings.",
+    )
+    add(
+        9606,
+        "olfactory_durante_supplement",
+        "Durante et al. 2020 adult human olfactory atlas supplementary tables",
+        ["normal_cell_rna"],
+        "used_in_selection",
+        "positive neurons; cluster detection fraction",
+        "adult",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/",
+        "Exact reported genes enter knowledge review holds; sparse detection is not TPM, protein, donor replication or proof of absence for unlisted genes.",
+    )
+    add(
+        9606,
         "normal-induction-evidence",
         "Published human normal immune induction contexts",
         ["reproductive_expression", "normal_cell_rna"],
@@ -389,6 +411,9 @@ def build(audit: Path = AUDIT) -> None:
         "reproductive_cell_association",
         "reproductive_cell_indirect_association",
         "normal_induction_evidence",
+        "knowledge_normal_exclusion",
+        "knowledge_normal_hold",
+        "knowledge_reproductive_support",
         "tumor_restricted_rna_support",
         "reliable_tumor_protein",
         "tumor_restricted_lead",

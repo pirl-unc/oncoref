@@ -10,7 +10,7 @@ orthology. The historical nomination/evidence APIs remain separately accessible.
 
 Safety and CTA identity are separate assessments. Only normal-tissue or applicable
 clinical safety evidence supplies Unsafe; failing cancer/reproductive admission
-does not. Cancer presence requires one qualifying measured tumor sample.
+does not. Cancer presence requires positive (>0) native TPM/pTPM in one measured tumor sample or reviewed reliable tumor protein.
 Reproductive is the umbrella for reproductive, placental, extraembryonic, embryonic
 and fetal contexts; its measured branches have positive-expression rules. Required
 coverage includes the GTEx v11 52-context bulk core for every member locus.
@@ -179,7 +179,7 @@ def results(
     a normal-tissue maximum. The complete HPA adult/placental concentration gate
     blocks that route above 10%; supported lineage cells and localized indirect
     cells provide positive association without overriding it. Normal induction
-    counterevidence can invalidate indirect-only support. Supported developmental evidence remains an
+    counterevidence can invalidate indirect-only support. Reviewed normal production separately supplies safety exclusion or a hold. Reviewed reproductive protein supplies presence only. Supported developmental evidence remains an
     independent route with concentration explicitly unassessed.
     """
     selected = resolve_species(species)
@@ -235,6 +235,27 @@ def candidates(*, species: SpeciesLike = "human") -> pd.DataFrame:
     """
     frame = results(species=species)
     return frame.loc[frame.category.isin(CANDIDATE_CATEGORIES)].reset_index(drop=True)
+
+
+def sequence_dispositions(*, species: SpeciesLike = "human") -> pd.DataFrame:
+    """Return current screening roles for direct targets and sequence overlap.
+
+    CTA is a direct-target candidate. Unsafe contributes to an exclusion
+    background; unresolved rows require review and must not be silently treated
+    as allowed. Other contributes no exclusion under this named screening policy.
+    These are protein-level research roles, not epitope/HLA clearance. They do
+    not modify the independently versioned legacy exact-protein backgrounds or
+    cover every alternative isoform. IDs, reasons and the policy receipt remain
+    attached so downstream code can choose an explicit review policy.
+    """
+    frame = results(species=species)
+    frame["direct_target_candidate"] = frame.category.eq("CTA").fillna(False)
+    frame["shared_sequence"] = (
+        frame.category.map({"CTA": "allow", "Other": "allow", "Unsafe": "exclude"})
+        .fillna("review")
+        .astype("string")
+    )
+    return frame
 
 
 def sources(*, species: SpeciesLike = "human", category: str | None = None) -> pd.DataFrame:

@@ -7,7 +7,9 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Current release 1.25.0: cta-release-1.25.0.md
+      - Current release 1.26.0: cta-release-1.26.0.md
+      - Other protein literature audit: audits/cta-other-literature-20261030/index.md
+      - Previous release 1.25.0: cta-release-1.25.0.md
       - Previous release 1.24.0: cta-release-1.24.0.md
       - Previous release 1.23.0: cta-release-1.23.0.md
       - Common panel, diffuseness and unassigned proteins: audits/cta-unassigned-20261029/index.md

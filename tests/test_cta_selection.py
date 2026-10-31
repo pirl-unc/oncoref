@@ -41,7 +41,7 @@ def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate(
     previous_ctas = set(old.loc[old.category.eq("CTA"), "protein_group_label"])
     assert current.loc[sorted(previous_ctas), "category"].eq("CTA").all()
     assert current.loc[["SAGE1", "GAGE10", "CDY2A/B", "CT45A2/8/9"], "category"].eq("CTA").all()
-    assert current.loc["CDY1/B", "category"] == "Other"
+    assert current.loc["CDY1/B", "category"] == "CTA"
     assert current.loc[["USP17L3", "FAM90A9"], "category"].eq("Other").all()
     candidates = cta_selection.candidates()
     assert set(candidates.category) <= set(cta_selection.CANDIDATE_CATEGORIES)
@@ -95,7 +95,7 @@ def test_invalid_queries_fail_without_falling_back_to_human():
 def test_exhaustive_categorical_labels_and_legacy_query_alias():
     all_rows = cta_selection.results()
     other = all_rows[all_rows.category.eq("Other")]
-    assert set(other.subtype) == set(cta_selection.OTHER_SUBTYPES)
+    assert set(other.subtype) <= set(cta_selection.OTHER_SUBTYPES)
     assert other.classification.eq("Other:" + other.subtype).all()
     assert all_rows.loc[all_rows.category.isna(), "classification"].eq("Unassessed").all()
     assert all_rows.loc[~all_rows.category.eq("Other").fillna(False), "subtype"].isna().all()
@@ -116,5 +116,5 @@ def test_exhaustive_categorical_labels_and_legacy_query_alias():
 def test_full_reproductive_and_cell_support_preserve_independent_gates():
     rows = cta_selection.results().set_index("label")
     assert rows.loc[["MAGEA11", "FOXR2", "CAGE1", "PRDM9", "XKR5"], "category"].eq("CTA").all()
-    assert rows.loc[["IFNA2", "IFNA14"], "classification"].eq("Other:Inducible").all()
-    assert rows.loc[["CDY1/B", "OR2T7"], "classification"].eq("Other:Reproductive").all()
+    assert rows.loc[["IFNA2", "IFNA14"], "classification"].eq("Unsafe").all()
+    assert rows.loc[["CDY1/B", "OR2T7"], "classification"].eq("CTA").all()
