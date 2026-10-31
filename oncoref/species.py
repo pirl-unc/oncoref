@@ -133,13 +133,15 @@ class SpeciesDataGroup:
         """All CTA nominations, including counterevidence and unresolved mappings."""
         return self.cta_snapshot().candidates(reference=reference)
 
-    def cta_selection(self, *, category: Category | None = None) -> pd.DataFrame:
+    def cta_selection(
+        self, *, category: Category | None = None, subtype: str | None = None
+    ) -> pd.DataFrame:
         """Current research decisions and explicit unassessed native nominations."""
         if self.name != "antigens":
             raise ValueError("cta_selection() requires the antigens group")
         from .cta_selection import results
 
-        return results(species=self.species, category=category)
+        return results(species=self.species, category=category, subtype=subtype)
 
     def cta_selection_coverage(self) -> dict:
         """Selection scope, counts and missing capabilities for this species."""

@@ -1,0 +1,21 @@
+{
+  "status": "diagnostic, not released assignments",
+  "current_counts": {
+    "Unsafe": 18031,
+    "Neither": 725,
+    "CTA": 573,
+    "Unassigned": 534
+  },
+  "bulk_correction_counts": {
+    "Unsafe": 18031,
+    "Neither": 700,
+    "CTA": 598,
+    "Unassigned": 534
+  },
+  "current_reproductive_only": 1,
+  "tumor_supported": 66,
+  "current_generic_bucket": 400,
+  "bulk_correction_promotions": 25,
+  "supported_reproductive_cell_profiles": 113,
+  "additional_cell_profiles_after_bulk_correction": 107
+}

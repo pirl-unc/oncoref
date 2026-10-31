@@ -197,6 +197,8 @@ grades remain null. Case reports do not supply new treated-cohort denominators.
     sections.append(
         f"\n## Measured impact\n\n**{len(changes)} protein category changes** versus "
         f"the pinned {baseline_meta['species']['human']['policy_id']} snapshot. "
+        "This is a release-to-release comparison, not an estimate of clinical-credit effects; "
+        "the 1.25 IHC/fallback changes also contribute. "
         "[Membership comparison](membership-changes.csv). RNA-ceiling changes and "
         "individual exclusion effects are in the linked context and assay tables; "
         "a changed ceiling need not change the final category.\n"

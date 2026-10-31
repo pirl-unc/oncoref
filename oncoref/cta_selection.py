@@ -16,7 +16,7 @@ and fetal contexts; its measured branches have positive-expression rules. Requir
 coverage includes the GTEx v11 52-context bulk core for every member locus.
 Neither presence check imposes a normal-expression ratio. Whole-profile
 diffuseness is an active adult/placental identity gate. A supported diffuse
-profile can establish Neither, never Unsafe; developmental concentration remains
+profile can establish Other:Diffuse, never Unsafe; developmental concentration remains
 explicitly unassessed without compatible measurements.
 
 Reviewed TCR-T evidence can raise a protein-profile RNA ceiling by one ladder
@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import warnings
 from importlib.resources import files
 from typing import Literal
 
@@ -37,9 +38,23 @@ import pandas as pd
 from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
-Category = Literal["CTA", "Unsafe", "Neither"]
+Category = Literal["CTA", "Unsafe", "Other", "Neither"]
+OtherSubtype = Literal[
+    "Low", "Disposable", "Diffuse", "Reproductive", "Tumor-supported", "Inducible", "Normal", "Weak"
+]
 SpeciesLike = Species | str | int
-CATEGORIES = ("CTA", "Unsafe", "Neither")
+CATEGORIES = ("CTA", "Unsafe", "Other")
+OTHER_SUBTYPES = (
+    "Low",
+    "Disposable",
+    "Diffuse",
+    "Reproductive",
+    "Tumor-supported",
+    "Inducible",
+    "Normal",
+    "Weak",
+)
+CANDIDATE_CATEGORIES = ("CTA",)
 EVIDENCE_CATEGORIES = (
     "nomination",
     "reproductive_expression",
@@ -62,6 +77,8 @@ RESULT_COLUMNS = (
     "identity_status",
     "reference_id",
     "category",
+    "subtype",
+    "classification",
     "assessment_status",
     "policy_id",
     "reasons",
@@ -124,6 +141,8 @@ def _native_nominations(species: Species) -> pd.DataFrame:
                 else mapping["status"],
                 "reference_id": mapping["reference_id"],
                 "category": None,
+                "subtype": None,
+                "classification": "Unassessed",
                 "assessment_status": "unassessed",
                 "policy_id": None,
                 "reasons": (
@@ -137,12 +156,19 @@ def _native_nominations(species: Species) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=RESULT_COLUMNS)
 
 
-def results(*, species: SpeciesLike = "human", category: Category | None = None) -> pd.DataFrame:
+def results(
+    *,
+    species: SpeciesLike = "human",
+    category: Category | None = None,
+    subtype: OtherSubtype | None = None,
+) -> pd.DataFrame:
     """Return detached current decisions in the common species-scoped schema.
 
     CTA means every gate of the named research policy passes. Unsafe denotes
-    exclusion evidence under that policy, not demonstrated toxicity. Neither
-    requires a measured low-expression or diffuse-Manageable profile. A null
+    exclusion evidence under that policy, not demonstrated toxicity. Other
+    is the adequately assessed normal-pass noncandidate family. Every Other row
+    has a subtype; classification is the single categorical label (e.g. Other:Low).
+    Tumor-supported remains an Other category, not admitted target clearance. A null
     category denotes unassigned evidence; ``assessment_status`` explains why.
     ``entity_kind`` prevents comparing human protein groups with unresolved
     nonhuman assay/family nominations. Tuple-valued identity fields retain every
@@ -151,15 +177,27 @@ def results(*, species: SpeciesLike = "human", category: Category | None = None)
     Cancer presence and reproductive/developmental association are separate from
     safety. All must pass for CTA admission. Neither presence check compares with
     a normal-tissue maximum. The complete HPA adult/placental concentration gate
-    blocks that route above 10%; supported developmental evidence remains an
+    blocks that route above 10%; supported lineage cells and localized indirect
+    cells provide positive association without overriding it. Normal induction
+    counterevidence can invalidate indirect-only support. Supported developmental evidence remains an
     independent route with concentration explicitly unassessed.
     """
     selected = resolve_species(species)
+    if category == "Neither":
+        warnings.warn(
+            "category='Neither' is deprecated; use 'Other'. Returned rows use Other.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        category = "Other"
     if category is not None and category not in CATEGORIES:
         raise ValueError(f"Unknown category {category!r}; choose from {CATEGORIES}")
+    if subtype is not None and (subtype not in OTHER_SUBTYPES or category not in {None, "Other"}):
+        raise ValueError(f"Unknown or incompatible Other subtype {subtype!r}")
     if selected.taxon_id == 9606:
         frame = _checked_table("cta-selection-human.csv.gz")
         frame["category"] = frame.category.replace("", pd.NA)
+        frame["subtype"] = frame.subtype.replace("", pd.NA)
         for column in JSON_COLUMNS:
             frame[column] = frame[column].map(lambda value: tuple(json.loads(value)))
     else:
@@ -168,13 +206,35 @@ def results(*, species: SpeciesLike = "human", category: Category | None = None)
         raise ValueError("CTA result schema or species mismatch")
     if not (frame.category.isna() | frame.category.isin(CATEGORIES)).all():
         raise ValueError("Unknown packaged CTA decision")
+    other = frame.category.eq("Other").fillna(False)
+    if (
+        not frame.loc[other, "subtype"].isin(OTHER_SUBTYPES).all()
+        or frame.loc[~other, "subtype"].notna().any()
+    ):
+        raise ValueError("Other requires a known subtype; other categories cannot have one")
+    expected = frame.category.fillna("Unassessed").astype(str)
+    expected.loc[other] = "Other:" + frame.loc[other, "subtype"]
+    if not frame.classification.eq(expected).all():
+        raise ValueError("Categorical classification does not match category and subtype")
     frame["taxon_id"] = frame.taxon_id.astype("int64")
     for column in RESULT_COLUMNS:
         if column not in (*JSON_COLUMNS, "taxon_id"):
             frame[column] = frame[column].astype("string")
     if category is not None:
         frame = frame.loc[frame.category.eq(category)]
+    if subtype is not None:
+        frame = frame.loc[frame.category.eq("Other") & frame.subtype.eq(subtype)]
     return frame.reset_index(drop=True)
+
+
+def candidates(*, species: SpeciesLike = "human") -> pd.DataFrame:
+    """Return CTA candidates; Other:Tumor-supported remains a reconsideration lead.
+
+    This is a research screening set, not a clinical safety assertion or an
+    exact-peptide clearance. Existing ``results(category='CTA')`` keeps its scope.
+    """
+    frame = results(species=species)
+    return frame.loc[frame.category.isin(CANDIDATE_CATEGORIES)].reset_index(drop=True)
 
 
 def sources(*, species: SpeciesLike = "human", category: str | None = None) -> pd.DataFrame:
@@ -232,5 +292,6 @@ def coverage(*, species: SpeciesLike = "human") -> dict:
             **{category: int(frame.category.eq(category).sum()) for category in CATEGORIES},
             "Unassigned": int(frame.category.isna().sum()),
         },
+        "other_subtypes": frame.loc[frame.category.eq("Other"), "subtype"].value_counts().to_dict(),
         "evidence_categories": categories,
     }

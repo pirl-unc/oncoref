@@ -47,7 +47,7 @@ TABLE_COLUMNS = {
         "mapped_gene_loci",
         "CTA",
         "Unsafe",
-        "Neither",
+        "Other",
         "Unassigned",
         "unique_entities",
         "primary_source",
@@ -63,7 +63,7 @@ TABLE_COLUMNS = {
         "candidate_removals",
         "eligible",
         "Unsafe",
-        "Neither",
+        "Other",
         "Unassigned",
         "note",
     ],
@@ -94,11 +94,18 @@ TABLE_COLUMNS = {
 }
 HUMAN_RULES = {
     "Reproductive or developmental expression": (
-        "Reproductive ≥5 nTPM OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. This tests positive expression without a normal comparison.",
-        ["hpa_rna_consensus", "tyser_E-MTAB-9388", "petropoulos_E-MTAB-3929"],
+        "Full Reproductive bulk ≥5 nTPM OR supported reproductive-cell RNA ≥5 nTPM (≥20 reads; indirect sites additionally need complete outside-cluster coverage and every outside value <5, with no curated normal-induction conflict) OR reliable mapped positive reproductive IHC for every member without an antibody conflict OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Presence evidence never overrides normal exclusions.",
+        [
+            "hpa_rna_consensus",
+            "hpa_normal_tissue",
+            "hpa_single_cell_tissue",
+            "normal-induction-evidence",
+            "tyser_E-MTAB-9388",
+            "petropoulos_E-MTAB-3929",
+        ],
     ),
-    "Tumor sample ≥2 TPM/pTPM": (
-        "At least one measured compatible tumor sample ≥2 in native TPM or HPA pTPM; do not add maxima from different samples.",
+    "Cancer expression": (
+        "At least one measured compatible tumor sample ≥2 in native TPM or HPA pTPM OR reviewed reliable tumor protein; do not add maxima from different samples.",
         ["oncoref_tumor_union", "hpa_cancer"],
     ),
     "HPA normal protein": (
@@ -106,7 +113,7 @@ HUMAN_RULES = {
         ["hpa_normal_tissue"],
     ),
     "Reproductive concentration": (
-        "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is >=5 nTPM and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
+        "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
         ["hpa_rna_consensus"],
     ),
     "Required RNA coverage": (
@@ -336,8 +343,8 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
     }
 
 
-HUMAN_RULES["Neither expression profiles"] = (
-    "Neither requires complete required RNA coverage and either all measured RNA below the shared 2-unit floor with no detected protein, or failed reproductive/developmental association with appreciable RNA in >=2 Manageable tissue concepts and no Vital/Protected exclusion. A complete diffuse adult/placental identity profile with no other qualifying route and clear normal safety also establishes Neither. Missing/unresolved evidence and other profiles are unassigned.",
+HUMAN_RULES["CTA and Other assignments"] = (
+    "Other is the complete-normal-panel, resolved-evidence fallback when every normal gate passes but no candidate subtype qualifies. Tumor or developmental missingness alone does not block Other. Other:Tumor-supported requires low measured normal/developmental expression and two distinct tumor samples ≥10 TPM or reviewed reliable tumor protein; it is not target admission. Manageable holds remain unassigned, never cleared by breadth.",
     [
         "hpa_rna_consensus",
         "hpa_single_cell_tissue",
@@ -440,7 +447,7 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             if c[5:]
             not in {
                 "Reproductive / embryonic association",
-                "Tumor sample ≥2 TPM/pTPM",
+                "Cancer expression",
                 "Required RNA coverage",
                 "Reproductive concentration",
             }
@@ -462,13 +469,13 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             ),
             (
                 "Cancer expression",
-                "pass" if r["tumor_union_ge2"] else "hold" if r["tumor_measured"] else "unknown",
-                f"One sample ≥2: OncoRef {display(r['oncoref_maximum_tpm'])} TPM; HPA {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No tumor-versus-normal ratio.",
+                "pass" if r["cancer_association"] else "hold" if r["tumor_measured"] else "unknown",
+                f"One sample ≥2: OncoRef {display(r['oncoref_maximum_tpm'])} TPM; HPA {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM; reviewed reliable tumor protein: {r['reliable_tumor_protein']}. No tumor-versus-normal ratio.",
             ),
             (
                 "Reproductive/developmental association",
                 "pass" if r["positive_context"] else "hold",
-                f"Reproductive {display(r['reproductive_ntpm'])} nTPM or supported developmental {display(r['developmental_mean_tpm'])} TPM must reach 5; developmental cell-support criteria apply.",
+                f"Reproductive RNA {display(r['reproductive_ntpm'])} nTPM; qualifying reproductive IHC {r['reproductive_protein_association']}; supported lineage-cell RNA {display(r['reproductive_cell_ntpm'])} nTPM; indirect cell support {r['reproductive_cell_indirect_association']} (outside clusters complete: {display(r['outside_cluster_complete'])}; outside maximum: {display(r['outside_cluster_max_ntpm'])} nTPM; normal induction counterevidence: {r['normal_induction_evidence']}); supported developmental RNA {display(r['developmental_mean_tpm'])} TPM. RNA routes require 5 in their own assay; supported cells and reliable reproductive IHC are independent presence routes. Normal and cancer gates still apply.",
             ),
         ]:
             row = dict.fromkeys(TABLE_COLUMNS["explanations"])
@@ -554,8 +561,13 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 )
             elif layer == "Reproductive / embryonic association":
                 row["reason"] = (
-                    f"Reproductive {display(r['reproductive_ntpm'])} nTPM; supported developmental mean {display(r['developmental_mean_tpm'])} TPM. Neither reaches the 5-unit association floor in its own units."
+                    f"Reproductive {display(r['reproductive_ntpm'])} nTPM; supported developmental mean {display(r['developmental_mean_tpm'])} TPM; supported cell RNA {display(r['reproductive_cell_ntpm'])} nTPM; indirect cell support {r['reproductive_cell_indirect_association']}. No RNA/protein/cell route qualifies; normal induction counterevidence can invalidate an indirect-only route."
                 )
+                if r["normal_induction_evidence"]:
+                    row["source_url"] = "https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/"
+                    row["reason"] += (
+                        " Published human plasmacytoid dendritic-cell induction contradicts indirect-only reproductive localization."
+                    )
             elif layer == "Reproductive concentration":
                 row["reason"] = (
                     f"HPA diffuseness {100 * r['hpa_diffuseness']:.2f}% exceeds 10%; reference {r['hpa_diffuseness_reference']:.3g} nTPM. Complete 29-unit adult/placental comparison, excluding thymus; no other qualifying Reproductive route. This is an identity failure, not a safety exclusion."
@@ -563,9 +575,9 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 row["source_url"] = (
                     "https://pirl-unc.github.io/oncoref/audits/cta-unassigned-20261029/diffuseness-impact/"
                 )
-            elif layer == "Tumor sample ≥2 TPM/pTPM":
+            elif layer == "Cancer expression":
                 row["reason"] = (
-                    f"OncoRef tumor maximum {display(r['oncoref_maximum_tpm'])} TPM; HPA lower bound {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No measured qualifying sample."
+                    f"OncoRef tumor maximum {display(r['oncoref_maximum_tpm'])} TPM; HPA lower bound {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No qualifying tumor RNA or reviewed protein evidence."
                 )
             elif layer == "Required RNA coverage":
                 details = []
@@ -606,8 +618,8 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             decision="assignment",
             source_url=BASE_URL,
             reason=(
-                f"Neither profile: {r['neither_profile']}; {r['manageable_tissue_count']} appreciably expressed Manageable tissue concepts."
-                if r["category"] == "Neither"
+                f"Normal screen passes; no candidate subtype qualifies. Category subtype: {r['subtype']}. Categorical assignment: {r['classification']}. Cancer or reproductive evidence can be missing without implying missing normal coverage."
+                if r["category"] == "Other"
                 else f"{r['assessment_status']}: "
                 + (
                     str(r["category"])
@@ -615,6 +627,15 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     else "no biological category assigned"
                 )
             ),
+        )
+        rows.append(row)
+        row = dict.fromkeys(TABLE_COLUMNS["explanations"])
+        row.update(
+            base,
+            layer="Assessment: Tumor-supported",
+            decision="lead" if r["tumor_restricted_profile"] else "not_qualified",
+            reason=f"Distinct ≥10 TPM tumor samples (lower bound): {display(r['tumor_samples_ge10'])}; resolved tumor identity: {r['tumor_identity_resolved']}; reviewed tumor protein: {r['reliable_tumor_protein']}; low measured normal/developmental profile: {r['tumor_restricted_normal_low']}; normal-coverage review accepted: {r['normal_restriction_reviewed']}; lead awaiting review: {r['tumor_restricted_lead']}. All normal safety gates remain independent.",
+            source_url=BASE_URL,
         )
         rows.append(row)
         row = dict.fromkeys(TABLE_COLUMNS["explanations"])
@@ -764,7 +785,7 @@ def native_assessment(species: str) -> dict:
             "candidate_removals": None,
             "eligible": None,
             "Unsafe": None,
-            "Neither": None,
+            "Other": None,
             "Unassigned": len(candidates),
             "note": note,
         }
@@ -814,9 +835,9 @@ def build() -> None:
                     "candidate_removals": r.new_candidate_removals,
                     "eligible": r.CTA_eligible_so_far,
                     "Unsafe": r.Unsafe,
-                    "Neither": r.Neither,
+                    "Other": r.Other,
                     "Unassigned": r.Unassigned,
-                    "note": "Eligible so far; Neither requires the final expression-profile evaluation",
+                    "note": "CTA eligibility so far; the final row assigns CTA, Unsafe and mutually exclusive Other categories",
                 }
                 for r in funnel.itertuples()
             ]

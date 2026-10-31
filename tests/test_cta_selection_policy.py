@@ -1,4 +1,4 @@
-"""Single RNA boundary and positive, evidence-backed Neither definitions."""
+"""Single RNA boundary and positive, evidence-backed Other definitions."""
 
 import pandas as pd
 import pytest
@@ -110,33 +110,38 @@ def profiles():
     )
 
 
-def test_missingness_failed_gate_and_manageable_excess_are_not_neither():
+def test_normal_pass_fallback_is_independent_of_cancer_but_normal_holds_block_it():
     facts = profiles()
     facts.loc[1, "required_coverage"] = False
-    facts.loc[2, "tumor_maximum_floor_ratio"] = 2  # Failed association alone is insufficient.
+    facts.loc[2, "tumor_maximum_floor_ratio"] = 2
     facts.loc[3, ["positive_context", "normal_maximum_floor_ratio"]] = [True, 20]
     facts.loc[4, ["normal_maximum_floor_ratio", "manageable_tissue_count"]] = [20, 2]
-    facts = policy.neither_profiles(facts)
+    facts = policy.other_profiles(facts)
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
     result = policy.classify(
-        facts, [EvidenceLayer("candidate gate", yes, no)], entity_column="entity"
+        facts,
+        [
+            EvidenceLayer("Reproductive / embryonic association", yes, no),
+            EvidenceLayer("Normal bulk", pd.Series([False, False, False, True, True]), no),
+        ],
+        entity_column="entity",
     )
     assert result.classifications.category.fillna("Unassigned").tolist() == [
-        "Neither",
+        "Other",
+        "Unassigned",
+        "Other",
         "Unassigned",
         "Unassigned",
-        "Unassigned",
-        "Neither",
     ]
-    assert result.classifications.neither_profile.tolist() == [
-        "low_expression",
+    assert result.classifications.subtype.tolist() == [
+        "Low",
+        "",
+        "Low",
         "",
         "",
-        "",
-        "diffuse_manageable",
     ]
     assert (
-        result.funnel[["CTA_eligible_so_far", "Unsafe", "Neither", "Unassigned"]]
+        result.funnel[["CTA_eligible_so_far", "Unsafe", "Other", "Unassigned"]]
         .sum(axis=1)
         .eq(5)
         .all()
@@ -144,7 +149,7 @@ def test_missingness_failed_gate_and_manageable_excess_are_not_neither():
 
 
 def test_unsafe_wins_regardless_of_order_and_cannot_be_rescued_by_neither():
-    facts = policy.neither_profiles(profiles())
+    facts = policy.other_profiles(profiles())
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
     layers = [EvidenceLayer("gate", yes, no), EvidenceLayer("vital", yes, yes)]
     first = policy.classify(facts, layers, entity_column="entity").classifications
@@ -153,17 +158,19 @@ def test_unsafe_wins_regardless_of_order_and_cannot_be_rescued_by_neither():
     pd.testing.assert_series_equal(first.category, second.category)
 
 
-def test_tumor_measurement_is_distinct_from_complete_low_expression_profile():
+def test_missing_tumor_or_developmental_evidence_does_not_revoke_normal_low_profile():
     facts = profiles().iloc[:1].copy()
     facts["tumor_profile_complete"] = False
-    result = policy.neither_profiles(facts)
+    facts["developmental_measured"] = False
+    facts["developmental_all_lineage_max_tpm"] = float("nan")
+    result = policy.other_profiles(facts)
     assert result.tumor_measured.all()
-    assert not result.neither_low_expression.any()
+    assert result.other_low_expression.all()
 
 
 @pytest.mark.parametrize("name", sorted(policy.CANDIDATE_ONLY_LAYERS))
 def test_admission_failures_cannot_be_wired_as_unsafe(name):
-    facts = policy.neither_profiles(profiles())
+    facts = policy.other_profiles(profiles())
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
     result = policy.classify(
         facts, [EvidenceLayer(name, yes, no)], entity_column="entity"
@@ -174,7 +181,7 @@ def test_admission_failures_cannot_be_wired_as_unsafe(name):
 
 
 def test_normal_safety_is_evaluated_even_after_cancer_admission_fails():
-    facts = policy.neither_profiles(profiles())
+    facts = policy.other_profiles(profiles())
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
     layers = [
         EvidenceLayer("Tumor sample ≥2 TPM/pTPM", yes, no),
@@ -202,16 +209,117 @@ def test_association_does_not_depend_on_normal_expression_or_coverage():
 
 
 def test_association_failure_does_not_make_expression_unsafe():
-    facts = policy.neither_profiles(profiles())
-    facts["neither_low_expression"] = False
+    facts = policy.other_profiles(profiles())
+    facts["other_low_expression"] = False
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
     result = policy.classify(
         facts,
         [EvidenceLayer("Reproductive / embryonic association", yes, no)],
         entity_column="entity",
     ).classifications
-    assert result.category.isna().all()
+    assert result.category.eq("Other").all()
     assert result.Unsafe_reasons.eq("").all()
+
+
+def test_reproductive_ihc_route_requires_quality_anatomy_identity_and_all_members():
+    facts = pd.DataFrame(
+        {
+            "member_gene_ids": [
+                '["a"]',
+                '["b"]',
+                '["c"]',
+                '["d"]',
+                '["e", "f"]',
+                '["g", "h"]',
+                '["i"]',
+            ],
+            "Antibody concern": [False, False, False, False, False, False, True],
+            "reproductive_ntpm": 0.1,
+            "developmental_mean_tpm": 0,
+        }
+    )
+    base = {
+        "source": "hpa_normal_tissue",
+        "version": "v23",
+        "taxonomy_id": 9606,
+        "mapping_status": "mapped",
+        "category": "reproductive",
+        "Level": "Low",
+        "Reliability": "Approved",
+    }
+
+    observations = pd.DataFrame(
+        [
+            base | {"gene_id": "a"},
+            base | {"gene_id": "b", "Reliability": "Uncertain"},
+            base | {"gene_id": "c", "category": "disposable"},
+            base | {"gene_id": "d", "taxonomy_id": 10090},
+            base | {"gene_id": "e"},
+            base | {"gene_id": "g"},
+            base | {"gene_id": "h"},
+            base | {"gene_id": "i"},
+        ]
+    )
+    result, evidence = policy.reproductive_protein_evidence(facts, observations)
+    result = policy.association_evidence(result)
+    assert result.positive_context.tolist() == [True, False, False, False, False, True, False]
+    assert result.reproductive_rna_association.eq(False).all()
+    assert not evidence.loc[evidence.gene_id.eq("b"), "qualifying_reproductive_positive"].any()
+
+
+def test_tumor_restricted_support_has_no_reproductive_requirement_and_no_safety_override():
+    facts = profiles()
+    facts["tumor_samples_ge10"] = [2, 1, float("nan"), 2, 2]
+    facts["tumor_identity_resolved"] = [True, True, False, True, True]
+    facts["reliable_tumor_protein"] = [False, False, True, False, False]
+    facts["normal_restriction_reviewed"] = True
+    facts.loc[3, "normal_maximum_floor_ratio"] = 1  # Strictly below 2, not <=2.
+    facts = policy.tumor_restricted_evidence(policy.other_profiles(facts))
+    yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
+    normal = pd.Series([False, False, False, False, True])
+    result = policy.classify(
+        facts,
+        [
+            EvidenceLayer("Reproductive / embryonic association", yes, no),
+            EvidenceLayer("Normal bulk", normal, normal),
+        ],
+        entity_column="entity",
+    )
+    assert result.classifications.category.tolist() == [
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Unsafe",
+    ]
+    assert (
+        result.funnel[["CTA_eligible_so_far", "Other", "Unsafe", "Unassigned"]]
+        .sum(axis=1)
+        .eq(5)
+        .all()
+    )
+
+
+def test_numerical_tumor_restriction_without_normal_context_review_remains_neither():
+    facts = profiles().iloc[:1].copy()
+    facts["tumor_samples_ge10"] = 2
+    facts["tumor_identity_resolved"] = True
+    facts["normal_restriction_reviewed"] = False
+    facts["reliable_tumor_protein"] = False
+    facts = policy.tumor_restricted_evidence(policy.other_profiles(facts))
+    assert facts.tumor_restricted_profile.all()
+    assert facts.tumor_restricted_lead.all()
+    assert not facts.tumor_restricted_identity.any()
+    result = policy.classify(
+        facts,
+        [
+            EvidenceLayer(
+                "Reproductive / embryonic association", pd.Series([True]), pd.Series([False])
+            )
+        ],
+        entity_column="entity",
+    )
+    assert result.classifications.category.tolist() == ["Other"]
 
 
 def test_diffuseness_is_route_specific_and_missingness_is_not_failure():
@@ -260,9 +368,9 @@ def test_diffuseness_is_route_specific_and_missingness_is_not_failure():
         policy.concentration_evidence(facts, scores.assign(source="gtex_tissue_rna"))
 
 
-def test_diffuse_reproductive_neither_requires_clear_safety_and_complete_coverage():
-    facts = policy.neither_profiles(profiles())
-    facts[["neither_low_expression", "neither_diffuse_manageable"]] = False
+def test_Diffuse_neither_requires_clear_safety_and_complete_coverage():
+    facts = policy.other_profiles(profiles())
+    facts[["other_low_expression", "other_disposable"]] = False
     facts.loc[3, "required_coverage"] = False
     facts.loc[4, "unresolved_evidence"] = True
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
@@ -277,11 +385,46 @@ def test_diffuse_reproductive_neither_requires_clear_safety_and_complete_coverag
     first = policy.classify(facts, layers, entity_column="entity").classifications
     second = policy.classify(facts, list(reversed(layers)), entity_column="entity").classifications
     assert first.category.fillna("Unassigned").tolist() == [
-        "Neither",
+        "Other",
         "Unassigned",
         "Unsafe",
         "Unassigned",
         "Unassigned",
     ]
-    assert first.neither_profile.iloc[0] == "diffuse_reproductive"
+    assert first.subtype.iloc[0] == "Diffuse"
     pd.testing.assert_series_equal(first.category, second.category)
+
+
+def test_other_categories_are_exhaustive_exclusive_and_do_not_override_normal_holds():
+    names = list(policy.OTHER_SUBTYPE_RULES)
+    facts = pd.concat([profiles().iloc[:1]] * len(names), ignore_index=True)
+    facts["entity"] = names
+    facts["other_low_expression"] = False
+    facts["other_disposable"] = False
+    facts["normal_induction_evidence"] = False
+    facts["tumor_restricted_profile"] = False
+    facts["nonreproductive_supported_floor_ratio"] = 0.0
+    facts["hpa_diffuseness"] = 0.0
+    facts.loc[0, ["hpa_diffuseness", "reproductive_ntpm", "positive_context"]] = [0.11, 2, True]
+    facts.loc[1, "positive_context"] = True
+    facts.loc[2, ["normal_induction_evidence", "other_low_expression"]] = True
+    facts.loc[3, ["tumor_restricted_profile", "other_low_expression"]] = True
+    facts.loc[4, "other_disposable"] = True
+    facts.loc[5, "other_low_expression"] = True
+    facts.loc[6, "nonreproductive_supported_floor_ratio"] = 1
+    yes = pd.Series(True, index=facts.index)
+    no = pd.Series(False, index=facts.index)
+    layers = [EvidenceLayer("Cancer expression", yes, no), EvidenceLayer("Normal", no, no)]
+    result = policy.classify(facts, layers, entity_column="entity").classifications
+    assert result.subtype.tolist() == names
+    assert result.classification.tolist() == ["Other:" + name for name in names]
+    held = policy.classify(
+        facts, [layers[0], EvidenceLayer("Normal", yes, no)], entity_column="entity"
+    ).classifications
+    assert held.category.isna().all()
+    assert held.classification.eq("Unassessed").all()
+    excluded = policy.classify(
+        facts, [layers[0], EvidenceLayer("Normal", yes, yes)], entity_column="entity"
+    ).classifications
+    assert excluded.classification.eq("Unsafe").all()
+    assert excluded.subtype.eq("").all()

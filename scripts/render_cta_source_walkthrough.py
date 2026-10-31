@@ -23,6 +23,7 @@ from build_tcr_trial_report import summary_markdown  # noqa: E402
 from cta_source_links import linked_sources, markdown_link  # noqa: E402
 
 from oncoref import cta_selection  # noqa: E402
+from oncoref.cta_selection_policy import OTHER_SUBTYPE_RULES  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
 
@@ -47,7 +48,12 @@ def markdown(frame: pd.DataFrame) -> str:
     )
 
 
-COLORS = {"CTA": "#087E8B", "Unsafe": "#AC493B", "Neither": "#A28C68", "Unassigned": "#B9C3CD"}
+COLORS = {
+    "CTA": "#087E8B",
+    "Unsafe": "#AC493B",
+    "Other": "#A28C68",
+    "Unassigned": "#B9C3CD",
+}
 
 
 def antigen_label(label: str) -> str:
@@ -348,7 +354,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
     for key, label in [
         ("eligible", "Eligible so far"),
         ("Unsafe", "Unsafe"),
-        ("Neither", "Neither"),
+        ("Other", "Other"),
         ("Unassigned", "Unassigned"),
     ]:
         ax.barh(
@@ -363,20 +369,20 @@ def figures(facts: pd.DataFrame, audit) -> None:
     ax.set_xlabel("Proteins")
     ax.legend(frameon=False, ncol=4, loc="upper left", bbox_to_anchor=(0, -0.08), fontsize=9)
     ax.text(
-        1.02, 1.025, "Eligible / Unsafe / Neither / Unassigned", transform=ax.transAxes, fontsize=9
+        1.02, 1.025, "Eligible / Unsafe / Other / Unassigned", transform=ax.transAxes, fontsize=9
     )
     for i, row in enumerate(audit.funnel.itertuples()):
         ax.text(
             1.02,
             i,
-            f"{row.eligible:,} / {row.Unsafe:,} / {row.Neither:,} / {row.Unassigned:,}",
+            f"{row.eligible:,} / {row.Unsafe:,} / {row.Other:,} / {row.Unassigned:,}",
             transform=ax.get_yaxis_transform(),
             va="center",
             fontsize=9,
         )
     style.footer(
         fig,
-        "Neither is assigned by a measured expression profile at the final stage. Earlier holds remain unassigned.\nSequential removals depend on display order; final assignments do not. Unsafe denotes policy exclusion, not demonstrated toxicity.",
+        "Other is assigned by a measured expression profile at the final stage. Earlier holds remain unassigned.\nSequential removals depend on display order; final assignments do not. Unsafe denotes policy exclusion, not demonstrated toxicity.",
     )
     style.save(fig, out, "human-funnel")
     fig, ax = plt.subplots(figsize=(12, 7))
@@ -754,9 +760,11 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
     funnel = pd.read_csv(RELEASE / "filtering-funnel.csv")
     overview = f"""# CTA and oncofetal selection
 
-**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Neither", 0):,} Neither and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Other", 0):,} Other and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[PDF slides](cta-selection-{__version__}.pdf) · [Editable slides](slides/cta-evidence-walkthrough-expanded.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[PDF slides](cta-selection-{__version__}.pdf) · [Editable slides](slides/cta-evidence-walkthrough-{__version__}-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+
+[1.25 changes: Reproductive RNA/IHC/cell routes and categorical Other assignments](../cta-neither-20261030/update-1.25.0.md).
 
 ## Categories
 
@@ -773,33 +781,31 @@ embryonic evidence remains independent and its concentration is unassessed.
 
 - **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage and acceptable normal expression all pass.
 - **Unsafe:** above the single RNA ceiling in Vital/Protected, accepted non-Low protein in those compartments, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
-- **Neither:** an affirmative low-expression, diffuse-Manageable or diffuse-Reproductive profile, with complete required RNA coverage and no unresolved evidence. Failed candidate gates alone do not establish Neither.
-- **Unassigned:** missing/uncertain evidence or an observed profile that fits none of those definitions. In the API, category is null and assessment_status explains why.
+- **Other:** complete required normal coverage, resolved evidence and every normal gate passing, but no candidate subtype qualifies. Cancer or reproductive evidence may be absent or missing.
+- **Unassigned:** required normal coverage or evidence resolution is missing, or a normal-screen hold remains. In the API, category is null and assessment_status explains why.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Neither is assigned only after its complete-profile check. The fixed [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex) core requires all 52 bulk contexts for every protein member. DICE and corneal coverage remain optional, but observed counterevidence contributes.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other is assigned only after its complete-profile check. The fixed [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex) core requires all 52 bulk contexts for every protein member. DICE and corneal coverage remain optional, but observed counterevidence contributes.
 
-## Neither profiles
+## Other categories
 
-The shared appreciable-expression floor is **2** in native TPM/nTPM, matching the tumor gate. Corneal CP10K uses the existing nominal /100 policy. This is an operational threshold, not a source-validated detection limit.
+Every normal-pass protein has one categorical assignment: CTA or a named Other category. Safety exclusions remain Unsafe; incomplete normal evidence remains Unassessed. The API exposes `classification` (for example `Other:Low`) as well as `category` and `subtype`.
 
-| Profile | Required evidence | Proteins |
-|---|---|---:|
-| Low expression | All measured normal, reproductive, embryonic and tumor RNA below 2; required normal panels and mapped tumor/developmental measurements present; no detected protein | {summary["neither_profiles"].get("low_expression", 0)} |
-| Diffuse Manageable | Fails both reproductive/developmental association routes; RNA ≥2 in at least two distinct Manageable tissue concepts; required normal coverage; no above-cutoff or accepted non-Low Vital/Protected protein evidence | {summary["neither_profiles"].get("diffuse_manageable", 0)} |
-| Diffuse Reproductive | Complete HPA adult/placental score >10%, reference ≥5 nTPM, no remaining qualifying route, complete required coverage and no normal-safety hold | {summary["neither_profiles"].get("diffuse_reproductive", 0)} |
+{markdown(pd.DataFrame([{"Category": "Other:" + name, "Meaning": description, "Proteins": summary["other_subtypes"].get(name, 0)} for name, description in OTHER_SUBTYPE_RULES.items()]))}
 
-Colon and rectum count as one tissue for breadth. A high reproductive measurement cannot conceal broad normal expression. Missing optional measurements are disclosed, not set to zero. {int(summary.get("neither_profiles", {}).get("low_expression", 0))} proteins meet the complete low-expression profile. Unassigned statuses: {missing}.
+The categories are disjoint and applied in documented priority order. Low and Disposable use the descriptive <2 native TPM/nTPM convention (CP10K retains its separate nominal /100 floor), not an assay detection limit. Tumor abundance need not be low. Every Other category still requires a complete normal-screen pass. No unnamed residual category remains.
+
+[Full categorical table and individual changes](../cta-neither-20261030/update-1.25.0.md). The current admission fixes use the full mapped Reproductive bulk panel plus supported reproductive-lineage cells. Generic/immune cells can provide indirect sample-site evidence only with a complete same-source outside panel, every outside cluster <5 nTPM, and no curated normal-induction conflict. This does not identify the producing cell; macrophages may carry passenger RNA. All safety and concentration gates remain independent.
 
 ## What the assessment statuses mean
 
 | API status | Meaning | Human proteins |
 |---|---|---:|
-| `screened` | A CTA, Unsafe or Neither category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | {int(facts.category.notna().sum()):,} |
-| `incomplete_evidence` | At least one tracked evidence gap exists. The detailed audit separates missing measurements from additional observed failures; some gaps affect Neither assessment rather than CTA admission. | {missing.get("incomplete_evidence", 0):,} |
-| `outside_category_definitions` | Tracked coverage/resolution checks pass, but an admission rule fails and neither measured Neither profile applies. The detailed audit names the actual failures. | {missing.get("outside_category_definitions", 0):,} |
+| `screened` | A CTA, Unsafe or named Other category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | {int(facts.category.notna().sum()):,} |
+| `incomplete_evidence` | Required normal coverage or evidence resolution is missing. Additional missing cancer/developmental measurements are reported separately and do not themselves prevent Other. | {missing.get("incomplete_evidence", 0):,} |
+| `normal_evidence_hold` | Required coverage is present, but a normal-screen hold remains, including Manageable ceiling failures. | {missing.get("normal_evidence_hold", 0):,} |
 | `unassessed` | No species-specific quantitative policy has been applied; used for native dog nominations. | 0 |
 
-An available exclusion can establish Unsafe despite another missing assay. A CTA supported by adult/placental Reproductive evidence need not have embryonic measurements. The low-expression Neither profile needs both tumor and embryonic coverage; the diffuse-Manageable profile has different requirements.
+An available exclusion can establish Unsafe despite another missing assay. A CTA supported by adult/placental Reproductive evidence need not have embryonic measurements. Other does not require tumor or embryonic coverage when the required normal screen is complete and resolved.
 
 Among the {len(incomplete):,} incomplete assessments, gaps overlap:
 
@@ -811,7 +817,7 @@ Among the {len(incomplete):,} incomplete assessments, gaps overlap:
 
 These published lists annotate the selection; they do not provide a gene-specific admission bypass. The union is **{audit.memberships.entity_id.nunique():,} mapped proteins / {len({g for ids in audit.memberships.gene_ids for g in ids}):,} loci**. **{annotated}** selected proteins have a listed-paper annotation; **{counts.get("CTA", 0) - annotated}** do not. Source contribution counts overlap. **Mapped proteins means curated nominations linked to the current reference, not newly discovered genes or selected CTAs.** The CTA column reports the subset passing the current funnel.
 
-{markdown(audit.sources[audit.sources.primary_source][["citation", "mapped_entities", "CTA", "Unsafe", "Neither", "Unassigned", "source_url"]])}
+{markdown(audit.sources[audit.sources.primary_source][["citation", "mapped_entities", "CTA", "Unsafe", "Other", "Unassigned", "source_url"]])}
 
 ### Broader nominations and a compact primary-source list
 
@@ -834,7 +840,7 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 
 ## Reproductive evidence and its branches
 
-**Reproductive** includes adult reproductive, placental, extraembryonic, embryonic and fetal tissues. Branch labels describe the measured anatomical/stage evidence; “embryonic-only evidence” does not imply absence from unmeasured branches. [Branch definitions and measurements](../cta-unassigned-20261029/index.md#reproductive-is-the-umbrella). The association set comes from whole-reference **RNA measurements**. Reproductive association requires HPA ≥5 nTPM. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. These establish presence in a qualifying context. This presence check does not compare with normal expression; normal safety and profile diffuseness answer separate questions. Later fetal and child/adult developmental atlases are not yet integrated.
+**Reproductive** includes adult reproductive, placental, extraembryonic, embryonic and fetal tissues. Branch labels describe the measured anatomical/stage evidence; “embryonic-only evidence” does not imply absence from unmeasured branches. [Branch definitions and measurements](../cta-unassigned-20261029/index.md#reproductive-is-the-umbrella). The association set uses whole-reference RNA and reliable reproductive IHC. Reproductive association requires HPA ≥5 nTPM **or mapped positive reproductive IHC with Approved, Supported or Enhanced reliability for every member, without an antibody conflict**. Protein evidence does not bypass cancer, normal-safety or concentration checks. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. These establish presence in a qualifying context. This presence check does not compare with normal expression; normal safety and profile diffuseness answer separate questions. Later fetal and child/adult developmental atlases are not yet integrated.
 
 {markdown(routes)}
 
@@ -902,7 +908,7 @@ Adult normal panels do not establish pediatric safety. Tyser contains one gastru
     (OUTPUT / "index.md").write_text(overview)
     (OUTPUT / "policy-review.md").write_text("""# Current policy and IHC matching
 
-The baseline RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Neither.
+The baseline RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Other.
 
 Reviewed TCR-T evidence can add one RNA step, capped at Enhanced: Vital 8/16/32/32, Protected 16/32/64/64, Manageable 32/64/128/128. The IHC label stays unchanged. Clinical credit carries the exact peptide/HLA/product limits and does not override normal-protein or clinical-injury exclusions. [Trial and SAE review](../cta-tcr-trials-20261029/index.md).
 
@@ -930,7 +936,7 @@ The current developmental inputs are Tyser gastrulation and Petropoulos preimpla
 """)
     (OUTPUT / "dog.md").write_text(f"""# Dog CTA evidence funnel
 
-**14 native nominations, all unassigned/unassessed.** There is no completed canine quantitative selection or genome-wide denominator. None is automatically called Neither. Human RNA ceilings, HPA grades and clinical evidence do not transfer by orthology.
+**14 native nominations, all unassigned/unassessed.** There is no completed canine quantitative selection or genome-wide denominator. None is automatically called Other. Human RNA ceilings, HPA grades and clinical evidence do not transfer by orthology.
 
 {markdown(dog.sources[["citation", "mapped_entities", "mapped_gene_loci", "source_url"]])}
 
@@ -966,7 +972,7 @@ audit.criteria
 audit.explain("PRAME")
 ```
 
-The same calls accept `dog` and `mouse`. `category` is CTA, Unsafe, Neither, or null. Null is an assessment status, not a fourth biological class. `assessment_status="screened"` means a category was assigned, not that safety was established or every source was complete. `incomplete_evidence` means an unassigned group lacks required coverage, a tumor/developmental measurement or evidence resolution; `outside_category_definitions` means those tracked checks pass but no category definition fits. `unassessed` denotes native nominations without an applied species policy. [Status definitions and per-protein gaps](index.md#what-the-assessment-statuses-mean) are in the report. Coverage counts include an `Unassigned` count so the denominator reconciles.
+The same calls accept `dog` and `mouse`. `category` is CTA, Unsafe, Other, or null. `classification` gives the categorical label, including the named Other category or Unassessed. `cta_selection.candidates()` returns CTA only. Null is an assessment status, not a fourth biological class. `assessment_status="screened"` means a category was assigned, not that safety was established or every source was complete. `incomplete_evidence` means required normal coverage or evidence resolution is missing; `normal_evidence_hold` means a normal-screen hold remains. Missing tumor or developmental evidence alone does not prevent Other. `unassessed` denotes native nominations without an applied species policy. [Status definitions and per-protein gaps](index.md#what-the-assessment-statuses-mean) are in the report. Coverage counts include an `Unassigned` count so the denominator reconciles.
 
 Human entities are proteins (identical selected reference sequences collapsed) with all member ENSG IDs and curated synonyms/history. Dog entities are native nominations with their actual identity status. Species-specific units, references and coverage remain explicit. `sources()` inventories measurement roles; `audit.sources` counts all published list annotations; `primary_source` selects the compact source view and `covered_by` records retained coverage of retired small sets. Every source table retains its citation/URL.
 
@@ -1002,7 +1008,8 @@ All results are packaged and checksum-verified. Frozen release audits remain sep
         "routes": records(routes),
         "annotated": annotated,
         "unannotated": counts.get("CTA", 0) - annotated,
-        "neither_profiles": summary["neither_profiles"],
+        "other_subtypes": summary["other_subtypes"],
+        "tumor_restricted_leads": int(facts.tumor_restricted_lead.sum()),
         "assessment_statuses": missing,
         "normal_gap_counts": records(normal_gaps),
         "evidence_gap_counts": {name: int(incomplete[name].sum()) for name in gap_columns},

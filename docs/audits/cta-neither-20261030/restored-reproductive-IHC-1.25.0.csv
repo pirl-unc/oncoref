@@ -1,0 +1,116 @@
+gene_id,Gene name,tissue,cell_type,Level,Reliability,source,version,taxonomy_id,mapping_status,concept_id,category,selection_tier,candidate_exclusion,unsafe_evidence,unresolved_evidence,representative_gene_id,qualifying_reproductive_positive
+ENSG00000069206,ADAM7,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000069206,True
+ENSG00000104818,CGB2,placenta,trophoblastic cells,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,trophoblast,reproductive,reproductive,False,False,False,ENSG00000104818,True
+ENSG00000104818,CGB2,testis,Leydig cells,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,leydig_cell,reproductive,reproductive,False,False,False,ENSG00000104818,True
+ENSG00000104818,CGB2,testis,spermatogonia cells,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000104818,True
+ENSG00000124157,SEMG2,epididymis,glandular cells,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000124157,True
+ENSG00000124157,SEMG2,seminal vesicle,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,seminal_vesicle,reproductive,reproductive,False,False,False,ENSG00000124157,True
+ENSG00000124812,CRISP1,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000124812,True
+ENSG00000125831,CST11,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000125831,True
+ENSG00000125903,DEFB129,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000125903,True
+ENSG00000126856,PRDM7,testis,round or early spermatids,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000126856,True
+ENSG00000129873,CDY2B,testis,cells in seminiferous ducts,High,Supported,hpa_normal_tissue,v23,9606,mapped,seminiferous_tubule,reproductive,reproductive,False,False,False,ENSG00000129873,True
+ENSG00000130943,PKDREJ,testis,preleptotene spermatocytes,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000130943,True
+ENSG00000130943,PKDREJ,testis,spermatogonia cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000130943,True
+ENSG00000131068,DEFB118,epididymis,glandular cells,Medium,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000131068,True
+ENSG00000134588,USP26,testis,elongated or late spermatids,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000134588,True
+ENSG00000134588,USP26,testis,round or early spermatids,Low,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000134588,True
+ENSG00000143107,FNDC7,testis,Leydig cells,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,leydig_cell,reproductive,reproductive,False,False,False,ENSG00000143107,True
+ENSG00000143107,FNDC7,testis,sertoli cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,sertoli_cell,reproductive,reproductive,False,False,False,ENSG00000143107,True
+ENSG00000143512,HHIPL2,testis,elongated or late spermatids,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000143512,True
+ENSG00000143512,HHIPL2,testis,spermatogonia cells,Medium,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000143512,True
+ENSG00000148386,LCN9,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000148386,True
+ENSG00000149651,SPINT4,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000149651,True
+ENSG00000158077,NLRP14,ovary,follicle cells,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,ovarian_follicle,reproductive,reproductive,False,False,False,ENSG00000158077,True
+ENSG00000158077,NLRP14,testis,elongated or late spermatids,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000158077,True
+ENSG00000158901,WFDC8,epididymis,glandular cells,Medium,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000158901,True
+ENSG00000163810,TGM4,prostate,glandular cells,Medium,Enhanced,hpa_normal_tissue,v23,9606,mapped,prostate,reproductive,reproductive,False,False,False,ENSG00000163810,True
+ENSG00000164871,SPAG11B,epididymis,glandular cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000164871,True
+ENSG00000167531,LALBA,lactating breast,ductal cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,mammary_glandular,reproductive,reproductive,False,False,False,ENSG00000167531,True
+ENSG00000167531,LALBA,lactating breast,lactating glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,mammary_glandular,reproductive,reproductive,False,False,False,ENSG00000167531,True
+ENSG00000170374,SP7,testis,elongated or late spermatids,Medium,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000170374,True
+ENSG00000170374,SP7,testis,pachytene spermatocytes,Medium,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000170374,True
+ENSG00000170374,SP7,testis,preleptotene spermatocytes,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000170374,True
+ENSG00000170374,SP7,testis,round or early spermatids,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000170374,True
+ENSG00000170374,SP7,testis,spermatogonia cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000170374,True
+ENSG00000171053,PATE1,epididymis,glandular cells,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000171053,True
+ENSG00000171053,PATE1,seminal vesicle,glandular cells,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,seminal_vesicle,reproductive,reproductive,False,False,False,ENSG00000171053,True
+ENSG00000171053,PATE1,testis,elongated or late spermatids,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000171053,True
+ENSG00000171053,PATE1,testis,round or early spermatids,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000171053,True
+ENSG00000175718,RBMXL3,testis,pachytene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000175718,True
+ENSG00000175718,RBMXL3,testis,preleptotene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000175718,True
+ENSG00000175718,RBMXL3,testis,round or early spermatids,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000175718,True
+ENSG00000175718,RBMXL3,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000175718,True
+ENSG00000176774,MAGEB18,testis,pachytene spermatocytes,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000176774,True
+ENSG00000176782,DEFB104A,epididymis,glandular cells,Low,Supported,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000176782,True
+ENSG00000177023,DEFB104B,epididymis,glandular cells,Low,Supported,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000176782,True
+ENSG00000178287,SPAG11A,epididymis,glandular cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000178287,True
+ENSG00000181433,SAGE1,testis,preleptotene spermatocytes,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000181433,True
+ENSG00000181433,SAGE1,testis,spermatogonia cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000181433,True
+ENSG00000181552,EDDM3B,epididymis,glandular cells,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000181552,True
+ENSG00000181562,EDDM3A,epididymis,glandular cells,High,Approved,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000181562,True
+ENSG00000181562,EDDM3A,testis,elongated or late spermatids,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000181562,True
+ENSG00000181562,EDDM3A,testis,Leydig cells,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,leydig_cell,reproductive,reproductive,False,False,False,ENSG00000181562,True
+ENSG00000181562,EDDM3A,testis,spermatogonia cells,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000181562,True
+ENSG00000182415,CDY2A,testis,cells in seminiferous ducts,High,Supported,hpa_normal_tissue,v23,9606,mapped,seminiferous_tubule,reproductive,reproductive,False,False,False,ENSG00000129873,True
+ENSG00000186458,DEFB132,epididymis,glandular cells,High,Approved,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000186458,True
+ENSG00000186458,DEFB132,testis,Leydig cells,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,leydig_cell,reproductive,reproductive,False,False,False,ENSG00000186458,True
+ENSG00000186458,DEFB132,testis,round or early spermatids,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000186458,True
+ENSG00000186572,DEFB107A,testis,cells in seminiferous ducts,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,seminiferous_tubule,reproductive,reproductive,False,False,False,ENSG00000186572,True
+ENSG00000186579,DEFB106A,epididymis,glandular cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000186579,True
+ENSG00000187082,DEFB106B,epididymis,glandular cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000186579,True
+ENSG00000187191,DAZ3,testis,pachytene spermatocytes,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000187191,True
+ENSG00000187191,DAZ3,testis,preleptotene spermatocytes,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000187191,True
+ENSG00000187191,DAZ3,testis,spermatogonia cells,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000187191,True
+ENSG00000188425,NANOS2,testis,elongated or late spermatids,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000188425,True
+ENSG00000188425,NANOS2,testis,Leydig cells,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,leydig_cell,reproductive,reproductive,False,False,False,ENSG00000188425,True
+ENSG00000188694,KRTAP24-1,testis,elongated or late spermatids,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000188694,True
+ENSG00000189401,OTUD6A,testis,elongated or late spermatids,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000189401,True
+ENSG00000189401,OTUD6A,testis,pachytene spermatocytes,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000189401,True
+ENSG00000189401,OTUD6A,testis,round or early spermatids,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000189401,True
+ENSG00000198129,DEFB107B,testis,cells in seminiferous ducts,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,seminiferous_tubule,reproductive,reproductive,False,False,False,ENSG00000186572,True
+ENSG00000204548,DEFB121,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000204548,True
+ENSG00000205884,DEFB136,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000205884,True
+ENSG00000205944,DAZ2,testis,pachytene spermatocytes,Medium,Approved,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000205944,True
+ENSG00000205944,DAZ2,testis,preleptotene spermatocytes,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000205944,True
+ENSG00000205944,DAZ2,testis,spermatogonia cells,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000205944,True
+ENSG00000206026,SMIM21,testis,Leydig cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,leydig_cell,reproductive,reproductive,False,False,False,ENSG00000206026,True
+ENSG00000215274,GAGE10,testis,pachytene spermatocytes,Low,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000215274,True
+ENSG00000215274,GAGE10,testis,preleptotene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000215274,True
+ENSG00000215274,GAGE10,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000215274,True
+ENSG00000221878,PSG7,placenta,trophoblastic cells,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,trophoblast,reproductive,reproductive,False,False,False,ENSG00000221878,True
+ENSG00000221878,PSG7,testis,Leydig cells,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,leydig_cell,reproductive,reproductive,False,False,False,ENSG00000221878,True
+ENSG00000221878,PSG7,testis,sertoli cells,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,sertoli_cell,reproductive,reproductive,False,False,False,ENSG00000221878,True
+ENSG00000226372,DCAF8L1,fallopian tube,glandular cells,Medium,Enhanced,hpa_normal_tissue,v23,9606,mapped,fallopian_tube,reproductive,reproductive,False,False,False,ENSG00000226372,True
+ENSG00000226372,DCAF8L1,testis,elongated or late spermatids,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000226372,True
+ENSG00000226372,DCAF8L1,testis,round or early spermatids,Low,Enhanced,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000226372,True
+ENSG00000229549,TSPY8,testis,preleptotene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000229549,True
+ENSG00000229549,TSPY8,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000229549,True
+ENSG00000242389,RBMY1E,testis,pachytene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000242389,True
+ENSG00000242389,RBMY1E,testis,preleptotene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000242389,True
+ENSG00000242389,RBMY1E,testis,round or early spermatids,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000242389,True
+ENSG00000242389,RBMY1E,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000242389,True
+ENSG00000242875,RBMY1B,testis,pachytene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000242875,True
+ENSG00000242875,RBMY1B,testis,preleptotene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000242875,True
+ENSG00000242875,RBMY1B,testis,round or early spermatids,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000242875,True
+ENSG00000242875,RBMY1B,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000242875,True
+ENSG00000244395,RBMY1D,testis,pachytene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000244395,True
+ENSG00000244395,RBMY1D,testis,preleptotene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000244395,True
+ENSG00000244395,RBMY1D,testis,round or early spermatids,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000244395,True
+ENSG00000244395,RBMY1D,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000244395,True
+ENSG00000258436,RNASE12,epididymis,glandular cells,High,Enhanced,hpa_normal_tissue,v23,9606,mapped,epididymis,reproductive,reproductive,False,False,False,ENSG00000258436,True
+ENSG00000270946,CT45A9,testis,pachytene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000270946,CT45A9,testis,preleptotene spermatocytes,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000270946,CT45A9,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000271449,CT45A2,testis,pachytene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000271449,CT45A2,testis,preleptotene spermatocytes,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000271449,CT45A2,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000273513,TBC1D3K,testis,elongated or late spermatids,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000273513,True
+ENSG00000273513,TBC1D3K,testis,round or early spermatids,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000273513,True
+ENSG00000273513,TBC1D3K,testis,sertoli cells,Low,Approved,hpa_normal_tissue,v23,9606,mapped,sertoli_cell,reproductive,reproductive,False,False,False,ENSG00000273513,True
+ENSG00000274226,TBC1D3H,testis,elongated or late spermatids,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000274226,True
+ENSG00000274226,TBC1D3H,testis,round or early spermatids,High,Approved,hpa_normal_tissue,v23,9606,mapped,spermatid,reproductive,reproductive,False,False,False,ENSG00000274226,True
+ENSG00000274226,TBC1D3H,testis,sertoli cells,Low,Approved,hpa_normal_tissue,v23,9606,mapped,sertoli_cell,reproductive,reproductive,False,False,False,ENSG00000274226,True
+ENSG00000278085,CT45A8,testis,pachytene spermatocytes,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000278085,CT45A8,testis,preleptotene spermatocytes,Medium,Supported,hpa_normal_tissue,v23,9606,mapped,spermatocyte,reproductive,reproductive,False,False,False,ENSG00000270946,True
+ENSG00000278085,CT45A8,testis,spermatogonia cells,High,Supported,hpa_normal_tissue,v23,9606,mapped,spermatogonium,reproductive,reproductive,False,False,False,ENSG00000270946,True

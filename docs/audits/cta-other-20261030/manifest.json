@@ -1,0 +1,37 @@
+{
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "6b390e742c2d5adfa7350cc382f3323e411bff47eacc37e7b3ece7a39ed09ece",
+    "docs/audits/cta-selection-20261028/hpa-diffuseness.csv.gz": "eb3a911a623ee3c188c955d9b12213f9de2305eaaa277813b71dacf654c50f23",
+    "scripts/audit_cta_other_subtypes.py": "42c9b389f820e09f8f2dcfed500e274928897f10e3c34354f2c43d6dd3f99e41",
+    "oncoref/cta_selection_policy.py": "adeb9a400367c20c35d9ffc0cfccbc3fd04ff2537a4e08e12ebbeae4c5649c69",
+    "scripts/cta_profile_data.py": "d1079b838f95c2871aeb6b4d78a86d54dafc79a500a89476034965bd09fd8fb0",
+    "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6"
+  },
+  "outputs": {
+    "all-other-proteins.csv": "cd18be591c084d269fe11f172bb6df3dd46a817267836ce3bebfeed686b53b3b",
+    "bulk-correction-CTA.csv": "4830e20fd91cbe374947ab91bf6dc4a42a5cef7714a70a5e284c7d94adfb146b",
+    "cell-evidence-reconsideration.csv": "4d1b54b13bcfd5e903c36b64def97fafd4a6d3cb504c5aadc72c704c003c99a6",
+    "cell-peaks-receipt.json": "aed944a9e7661d6297dbc7ce9c6d1d7186497318853dd9aa8a033506287e62df",
+    "current-generic-bucket.csv": "d046272e4c6e450e0e101d6f74344632fcebbfe126670fd7cb3362bde08f3840",
+    "index.md": "17fbea9a5fd1d55795d873dcb76babc9f1f3ff57ec81a41e5e48a03da68b8270",
+    "reproductive-cell-observations.csv": "ce71d597de52146c67a04fac90e1d5ef2a026fea958c407638f3a6d3a1319a99",
+    "summary.json": "4332d85344cbb081324edd3305f43d54a4c74dc55d15f481f10c34a1a87e0d7f",
+    "supported-cell-peaks.csv.gz": "9b6dc891015d3bb45299cf18641f39017cdbe70f5c3a3d6e15c3c51db382f16f",
+    "tumor-supported.csv": "9dfd7148f760b6c96d5dcf5514d77f3988c01cc1a543ae9b31654507ef956471"
+  },
+  "input_snapshots": [
+    "scripts/cta_report_common.py",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
+    "docs/audits/cta-selection-20261028/hpa-diffuseness.csv.gz",
+    "scripts/audit_cta_other_subtypes.py",
+    "oncoref/cta_selection_policy.py",
+    "scripts/cta_profile_data.py",
+    "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz"
+  ],
+  "input_snapshot_archive": {
+    "path": "frozen-inputs.zip",
+    "sha256": "c7d6e9235432cd88413e8e6e87243ba0dfcd37f4e0a793c213265c4bc73fe4d9"
+  },
+  "reproduction_commit": "fcfb7a1816ae86d797cae4666eb0869d07d84039"
+}

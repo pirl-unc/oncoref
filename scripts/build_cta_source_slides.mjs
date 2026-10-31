@@ -59,7 +59,7 @@ function slide(title,section,notes=''){
  const s=p.slides.add();s.background.fill=C.white;current={title,text:[],links:[{url:URL,x:64,y:670,w:1100,h:24}]};pages.push(current);
  text(s,section.toUpperCase(),64,28,1152,25,16,C.teal,true);
  text(s,title,64,72,1152,85,42,C.ink,true);
- text(s,'OncoRef CTA evidence walkthrough   •   29 October 2026',64,670,1100,26,16,C.muted);
+ text(s,'OncoRef CTA evidence walkthrough   •   30 October 2026',64,670,1100,26,16,C.muted);
  text(s,String(pages.length).padStart(2,'0'),1174,668,42,30,19,C.muted,true);
  s.speakerNotes.text=`${title}\n${notes}\nReport: ${URL}\nPolicy: ${data.summary.policy}\nDecision snapshot SHA256: ${data.report_sha256}`;
  return s;
@@ -83,22 +83,23 @@ const n=v=>Number(v).toLocaleString('en-US');
 
 
 const counts=data.summary.categories;
+const release=readFileSync(path.join(root,'oncoref/version.py'),'utf8').match(/__version__\s*=\s*["']([^"']+)/)[1];
 {
-const s=slide('Human and dog CTA evidence','Current selection','One RNA ceiling. Neither requires an affirmative expression profile. Unassigned is an assessment status, not a biological category.');
+const s=slide('Human and dog CTA evidence','Current selection','One RNA ceiling. Other is the assessed normal-pass, noncandidate fallback. Unassigned is an assessment status, not a biological category.');
 text(s,`${n(counts.CTA)} human CTA proteins`,64,202,1152,100,66,C.teal,true);
-text(s,`${n(data.summary.selected_member_loci)} loci   /   ${n(counts.Unsafe)} Unsafe   /   ${n(counts.Neither)} Neither`,64,335,1152,65,32);
+text(s,`${n(data.summary.selected_member_loci)} loci   /   ${n(counts.Unsafe)} Unsafe   /   ${n(counts.Other)} Other`,64,335,1152,65,32);
 text(s,`${n(counts.Unassigned)} unassigned; dog selection remains unassessed`,64,446,1152,95,32);
 note(s,'Sources, expression profiles, single-cutoff filtering and measured tissue evidence.',580,26);
 }
 {
 const s=slide('Safety, cancer and Reproductive evidence','Independent questions','Only safety supplies Unsafe evidence. Reproductive is the umbrella for adult reproductive, placental, extraembryonic, embryonic and fetal contexts.');
-table(s,[['Assessment','Question','Current rule'],['Safety','Concerning normal expression?','Absolute RNA / IHC and clinical rules'],['Cancer expression','Expressed in a measured cancer?','One sample ≥2 TPM or pTPM'],['Reproductive evidence','Expression in a qualifying branch?','Adult/placental ≥5 nTPM or supported embryonic ≥5 TPM'],['Coverage','Are required panels measured?','All GTEx core contexts and existing HPA panels']],{widths:[300,452,400],size:25,h:380,y:170});
+table(s,[['Assessment','Question','Current rule'],['Safety','Concerning normal expression?','Absolute RNA / IHC and clinical rules'],['Cancer expression','Expressed in a measured cancer?','One sample ≥2 TPM/pTPM or reviewed tumor protein'],['Reproductive evidence','Expression in a qualifying branch?','Bulk/cell RNA ≥5, reliable IHC, or supported embryonic RNA'],['Coverage','Are required panels measured?','All GTEx core contexts and existing HPA panels']],{widths:[300,452,400],size:25,h:380,y:170});
 note(s,'Only safety establishes Unsafe. Missing core data remain unassigned. RNA is not a direct protein measurement.',580,25);
 }
 {
-const s=slide('Diffuse expression is an identity question','HPA profile identity','The old normal-maximum veto is removed. Diffuseness averages N/(N+R) across fixed weighted normal contexts, including Disposable. The active 10% adult/placental identity boundary requires complete HPA measurements and the existing 5 nTPM reference. Thymus is Permissive and excluded. Supported embryonic evidence retains its separate route with unassessed concentration.');
-table(s,[['Term','Meaning'],['N','HPA v23 normal-tissue nTPM'],['R','Highest Reproductive nTPM in HPA v23 (adult/placental)'],['N / (N + R)','Average across 29 organs / 38 contexts; thymus excluded'],['Active boundary','Average >10%, with R ≥5 and a complete comparison']],{widths:[335,817],size:27,h:320,y:170});
-note(s,'MTCP1 moves to Neither: 24.53%. Thymus is excluded. Embryonic concentration remains unassessed.',565,26);
+const s=slide('Diffuse expression is an identity question','HPA profile identity','The old normal-maximum veto is removed. Diffuseness averages N/(N+R) across fixed weighted normal contexts, including Disposable. The active 10% adult/placental identity boundary requires complete HPA measurements and an RNA- or IHC-supported positive reference. Thymus is Permissive and excluded. Supported embryonic evidence retains its separate route with unassessed concentration.');
+table(s,[['Term','Meaning'],['N','HPA v23 normal-tissue nTPM'],['R','Highest Reproductive nTPM in HPA v23 (adult/placental)'],['N / (N + R)','Average across 29 organs / 38 contexts; thymus excluded'],['Active boundary','Average >10%, with a supported positive R and complete comparison']],{widths:[335,817],size:27,h:320,y:170});
+note(s,'MTCP1 is Other:Diffuse at 24.53%. Thymus is excluded. Embryonic concentration remains unassessed.',565,26);
 }
 {
 const s=slide('A fixed GTEx core for every protein','Coverage','GTEx v11 uses 52 native bulk contexts, 9 Reproductive and 43 other. Every member locus must be measured. 19,119 / 19,863 proteins have full coverage; no intermediate coverage profiles occur.');
@@ -113,7 +114,7 @@ note(s,'Thymus exclusion changes HPA 10.34% → 9.53%. Independent safety eviden
 }
 {
 const s=slide('Published candidate lists','Human annotations',data.papers.map(r=>`${r.citation}: ${r.source_url}`).join('\n'));
-table(s,[['Paper','Proteins','CTA','Unsafe','Neither','Unassigned'],...data.papers.map(r=>[r.citation,n(r.mapped_entities),r.CTA,r.Unsafe,r.Neither,r.Unassigned])],{widths:[390,150,140,160,150,162],size:19,h:420,y:158});
+table(s,[['Paper','Proteins','CTA','Unsafe','Other','Unassigned'],...data.papers.map(r=>[r.citation,n(r.mapped_entities),r.CTA,r.Unsafe,r.Other,r.Unassigned])],{widths:[390,150,140,160,150,162],size:19,h:420,y:158});
 note(s,`Union: ${n(data.paper_union_groups)} proteins / ${n(data.paper_union_loci)} loci. ${data.annotated} selected proteins have an annotation; ${data.unannotated} do not.`,600,23);
 }
 {
@@ -128,7 +129,7 @@ figure(s,'published-list-overlaps',36,152,1208,500);
 {
 const s=slide('Reproductive evidence: measured branches','Positive expression contexts','Tyser et al. (2021): https://doi.org/10.1038/s41586-021-04158-y . HPA v23 https://v23.proteinatlas.org/about/download .');
 table(s,[['Qualifying route','Entrants','Final CTA'],...data.routes.map(r=>[r.route,n(r.entrants),n(r.CTA)])],{widths:[620,266,266],h:280,size:29});
-text(s,'Whole-reference RNA measurements create this set',64,495,1152,50,32,C.teal,true);
+text(s,'RNA and reliable reproductive IHC establish association',64,495,1152,50,32,C.teal,true);
 note(s,'Entrants count positive expression before the other admission gates. Reproductive presence and profile concentration are separate questions.',565,26);
 }
 {
@@ -153,22 +154,43 @@ const s=slide('Serious events and antigen specificity','Clinical safety',Object.
 table(s,[['Targeted CTA epitope','Important event','Specificity attribution'],['MAGE-A3 / a3a','Two fatal cardiac injuries','Titin cross-recognition implicated'],['MAGE-A3/A9 / NCI receptor','Three neurological cases; two deaths','MAGE-A12 brain recognition implicated'],['NY-ESO-1 / LAGE-1A, c259','Late cardiac death; two GBS cases','Peptide-specific mechanism not established'],['NY-ESO-1 / TBI-1301','Grade 3 lung injury','Unresolved; no credit for this product'],['MAGE-A4 / afami-cel','Aplasia and stroke deaths in phase 1','No demonstrated antigen-specific mechanism'],['MAGE-A10 / ADP-A2M10','Grade 4 CRS; fatal aplasia after repeat treatment','Conditioning favored for marrow injury']],{widths:[355,410,387],size:21,h:405});
 note(s,'Clinical trial and SAE review. Seriousness differs from severity; this is a selected summary, not a pooled event rate.',602,23);
 }
-{
-const s=slide('Neither describes a measured profile','Category definitions','Low means below the common 2-unit expression floor in every measured source, with required normal panels and tumor/developmental measurements. Missing optional DICE/cornea is disclosed. No detected protein is not proof of absence in every unmeasured tissue.');
-table(s,[['Profile','Required evidence','Proteins'],['Low expression','RNA below 2 across measured normal / reproductive / embryonic / tumor panels; no detected protein',data.neither_profiles.low_expression||0],['Diffuse Manageable','No association route; RNA ≥2 in at least two Manageable tissue concepts; no Vital / Protected exclusion',data.neither_profiles.diffuse_manageable||0],['Diffuse Reproductive','HPA score >10%; no qualifying route left; normal safety passes',data.neither_profiles.diffuse_reproductive||0]],{widths:[265,747,140],size:24,h:360});
-note(s,'All require complete normal RNA coverage and resolved evidence. Other failures remain unassigned.',550,28);
+for(const [title,rows] of [
+ ['Other categories: identity and cancer',[
+  ['Diffuse','Complete measured profile is too dispersed','Diffuse'],
+  ['Reproductive','Reproductive evidence qualifies; cancer evidence does not','Reproductive'],
+  ['Inducible','Published induction in nonreproductive normal cells','Inducible'],
+  ['Tumor-supported','Strong tumor evidence; restriction remains unestablished','Tumor-supported']]],
+ ['Other categories: normal expression',[
+  ['Disposable','Positive Disposable evidence; low measured RNA elsewhere','Disposable'],
+  ['Low','Measured normal RNA <2; no detected normal protein','Low'],
+  ['Normal','Supported normal expression; no preceding category applies','Normal'],
+  ['Weak','Below admission floors or insufficient expression support','Weak']]],
+]){
+ const s=slide(title,'Categorical assignments','Every Other protein passes the required normal screen. Categories are disjoint in the documented priority order. Low does not mean never expressed; normal expression is not proof of injury.');
+ table(s,[['Category','Meaning','Proteins'],...rows.map(([label,meaning,key])=>['Other:'+label,meaning,data.other_subtypes[key]||0])],{widths:[340,672,140],size:24,h:355});
+ note(s,'Every assessed protein has one label. There is no unnamed Other remainder.',550,26);
 }
 {
-const s=slide('Every filtering layer can contribute','Human funnel','The gray segment is held/unassigned evidence, not Neither. The final profile check assigns Neither. All layers evaluate every protein; final categories are independent of display order.');
-const shortLabels={'Reproductive / embryonic association':'Reproductive evidence','Tumor sample ≥2 TPM/pTPM':'Cancer expression','HPA normal protein':'HPA protein','Required RNA coverage':'Coverage','Reproductive concentration':'Concentration','Normal bulk':'Bulk RNA','HPA tissue clusters':'Tissue clusters','Monaco immune':'Monaco','DICE immune':'DICE','Adult cornea':'Cornea','Accepted normal-protein evidence':'Curated protein','Clinical safety exclusion':'Clinical safety','External validated normal protein':'External IHC','Neither expression profiles':'Neither profiles'};
+const s=slide('Reproductive cell evidence','Positive association','HPA v23 https://v23.proteinatlas.org/about/download ; passenger transcripts: https://pmc.ncbi.nlm.nih.gov/articles/PMC7459098/ ; normal interferon induction: https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/');
+table(s,[['Route','Positive evidence','Additional requirements'],['Identified lineage','≥5 nTPM with ≥20 reads','Mapped reproductive lineage; all protein loci measured'],['Indirect site','Generic/immune cell in reproductive tissue','Complete outside cluster panel; every value <5 nTPM; no normal-induction conflict'],['Examples','CAGE1 208.9; PRDM9 61.8; FOXR2 5.2 nTPM','Spermatids / spermatocytes / spermatogonia'],['Counterexample','IFNA2 and IFNA14 in breast macrophages','Published normal immune induction → Other:Inducible']],{widths:[275,415,462],size:23,h:375});
+note(s,'Indirect support identifies the sample site, not the producing cell. Normal and bulk-concentration gates still apply.',575,24);
+}
+{
+const s=slide('Other:Tumor-supported','Reconsideration candidates','Two distinct tumor samples at >=10 native TPM, or reviewed reliable tumor protein. Restriction also requires low measured normal/developmental expression and adequate coverage of relevant rare cells and states.');
+table(s,[['Requirement','Rule'],['Tumor RNA','>=10 TPM in two distinct samples; duplicate source views do not count'],['Protein alternative','Reviewed tumor protein evidence; aggregate IHC counts alone are insufficient'],['Outside cancer','Low measured normal/developmental expression; all normal safety gates pass'],['Coverage review','Relevant rare normal cells and states must be assessed before claiming tumor restriction']],{widths:[315,837],size:23,h:365});
+note(s,`${data.tumor_restricted_leads} numerical leads await coverage review and remain Other. They are not labelled tumor-only.`,565,25);
+}
+{
+const s=slide('Every filtering layer can contribute','Human funnel','The gray segment is held/unassigned evidence, not Other. The final profile check assigns Other. All layers evaluate every protein; final categories are independent of display order.');
+const shortLabels={'Reproductive / embryonic association':'Reproductive evidence','Cancer expression':'Cancer expression','HPA normal protein':'HPA protein','Required RNA coverage':'Coverage','Reproductive concentration':'Concentration','Normal bulk':'Bulk RNA','HPA tissue clusters':'Tissue clusters','Monaco immune':'Monaco','DICE immune':'DICE','Adult cornea':'Cornea','Accepted normal-protein evidence':'Curated protein','Clinical safety exclusion':'Clinical safety','External validated normal protein':'External IHC','CTA and Other assignments':'Final categories'};
 const labels=data.funnel.map(r=>shortLabels[r.layer]||r.layer);
-chart(s,labels,[{name:'Eligible so far',values:data.funnel.map(r=>r.CTA_eligible_so_far),fill:C.teal},{name:'Unsafe',values:data.funnel.map(r=>r.Unsafe),fill:C.rust},{name:'Neither',values:data.funnel.map(r=>r.Neither),fill:'#A28C68'},{name:'Unassigned',values:data.funnel.map(r=>r.Unassigned),fill:'#B9C3CD'}],{h:435,y:158,stacked:true,size:20});
-note(s,`Final: ${n(counts.CTA)} CTA / ${n(counts.Unsafe)} Unsafe / ${n(counts.Neither)} Neither / ${n(counts.Unassigned)} unassigned.`,610,24);
+chart(s,labels,[{name:'Eligible so far',values:data.funnel.map(r=>r.CTA_eligible_so_far),fill:C.teal},{name:'Unsafe',values:data.funnel.map(r=>r.Unsafe),fill:C.rust},{name:'Other',values:data.funnel.map(r=>r.Other),fill:'#A28C68'},{name:'Unassigned',values:data.funnel.map(r=>r.Unassigned),fill:'#B9C3CD'}],{h:435,y:158,stacked:true,size:20});
+note(s,`Final: ${n(counts.CTA)} CTA / ${n(counts.Unsafe)} Unsafe / ${n(counts.Other)} Other / ${n(counts.Unassigned)} unassigned.`,610,24);
 }
 {
 const s=slide('Removals at each filter','Human funnel','Sequential first removals depend on the displayed order; the independent-layer table reports overlaps.');
 table(s,[['Layer','First removals','Eligible','Unsafe'],...data.funnel.map(r=>[r.layer.replace('Reproductive / embryonic association','Association'),n(r.new_candidate_removals),n(r.CTA_eligible_so_far),n(r.Unsafe)])],{widths:[575,190,190,197],size:18,h:430,y:158});
-note(s,'Only MTCP1 changes category; other concentration failures also fail other gates.',612,23);
+note(s,'Sequential removals overlap. Final categories use every applicable evidence layer.',612,23);
 }
 {
 const s=slide('IHC matching to measured RNA compartments','Anatomy and evidence','HPA colon https://www.proteinatlas.org/learn/dictionary/normal/colon ; bronchus https://www.proteinatlas.org/learn/dictionary/normal/bronchus . Parent-compartment credit is a declared anatomical interpretation, not proof that all rare cells were sampled.');
@@ -196,8 +218,8 @@ figure(s,'widely-studied-antigens-'+name+'-slide',48,160,1184,475);
 }
 {
 const s=slide('Assessment status is separate from category','Reading the results','A category can be assigned despite gaps in optional or irrelevant sources. Screened does not mean clinically safe or fully measured. MAGE-A3 has measured colon counterevidence. An independent developmental measurement cannot erase it.');
-table(s,[['API status','Meaning','Human proteins'],['screened','CTA, Unsafe or Neither assigned',n(counts.CTA+counts.Unsafe+counts.Neither)],['incomplete_evidence','Unassigned with missing coverage or unresolved evidence',n(data.assessment_statuses.incomplete_evidence)],['outside_category_definitions','Tracked coverage checks pass; no definition fits',n(data.assessment_statuses.outside_category_definitions)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:24,h:335});
-note(s,'Neither requires a measured biological profile. Unassigned does not mean Unsafe or low expression.',585,26);
+table(s,[['API status','Meaning','Human proteins'],['screened','Candidate, Unsafe or Other assigned',n(counts.CTA+counts.Unsafe+counts.Other)],['incomplete_evidence','Unassigned with missing coverage or unresolved evidence',n(data.assessment_statuses.incomplete_evidence)],['normal_evidence_hold','Required normal coverage passes; a normal-screen hold remains',n(data.assessment_statuses.normal_evidence_hold)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:24,h:335});
+note(s,'Other requires a complete, resolved normal screen. Unassigned does not mean Unsafe or low expression.',585,26);
 }
 {
 const s=slide('Which sources have incomplete evidence','Coverage audit','Source versions, complete missing tissue/cell contexts, member ENSG IDs, historical IDs, synonyms and tumor cohort coverage: '+URL+'coverage/ . Counts overlap and do not sum to a total.');
@@ -217,7 +239,7 @@ note(s,'Published nominations need independent normal/tumor filtering and postna
 {
 const s=slide('Common API with native evidence underneath','API','Human, dog and mouse share schema and explicit unavailable states. Data are offline and checksum-verified. Frozen release reports remain unchanged.');
 text(s,'results = cta_selection.results(species="human")\naudit = cta_selection.audit(species="human")\naudit.sources    audit.overlaps    audit.funnel\naudit.explain("PRAME")',64,180,1152,200,31,C.teal,true);
-table(s,[['Field','Meaning'],['category','CTA / Unsafe / Neither, or null when unassigned'],['assessment_status','Screened, incomplete evidence, outside definitions, or unassessed'],['gene_ids / gene_identities','All member loci, stable IDs, history and curated synonyms']],{y:400,h:190,widths:[335,817],size:25});
+table(s,[['Field','Meaning'],['category','CTA / Unsafe / Other; classification gives the named category'],['assessment_status','Screened, incomplete evidence, normal hold, or unassessed'],['classification / subtype','One categorical label; Other subtype always populated']],{y:400,h:190,widths:[335,817],size:25});
 note(s,'Source-specific native units, tissue/cell context, confidence and coverage remain inspectable.',610,24);
 }
 {
@@ -232,7 +254,7 @@ for(const [i,s] of p.slides.items.entries()){
 await fs.writeFile(path.join(build,'manifest.json'),JSON.stringify({policy:data.summary.policy,commit:'report-sha256:'+data.report_sha256,slideSize:{width:1280,height:720},pages},null,2));
 const candidate=path.join(build,'candidate.pptx');
 await(await PresentationFile.exportPptx(p)).save(candidate);
-const finalPath=path.join(audit,'slides',process.env.CTA_SLIDE_FILENAME||'cta-evidence-walkthrough-expanded.pptx');
+const finalPath=path.join(audit,'slides',process.env.CTA_SLIDE_FILENAME||`cta-evidence-walkthrough-${release}-final.pptx`);
 await finalizePresentation({workspaceDir:root,candidatePath:candidate,finalPath,pythonExecutable:process.env.RUNTIME_PYTHON,
  integrityValidatorPath:path.join(skill,'container_tools/inspect_presentation_package_integrity.py'),layoutValidatorPath:path.join(skill,'container_tools/inspect_presentation_layout_geometry.py'),
  layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-bullet-geometry','--validate-heading-fit',...tableOwners.flatMap(n=>['--require-native-table-slide',String(n)])],

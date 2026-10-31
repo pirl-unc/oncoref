@@ -2,8 +2,8 @@
 
 RNA has one tissue/IHC ceiling. Crossing it supplies exclusion evidence in
 Vital/Protected compartments; crossing it in Manageable compartments prevents
-CTA admission but does not establish either Unsafe or Neither. Neither requires
-an affirmative expression profile. Unresolved results have a null category.
+candidate and Other admission and remains a normal-screen hold. Other is
+the adequately assessed normal-pass fallback. Unresolved results have a null category.
 These are research selection rules, not estimates of clinical toxicity.
 
 Normal-tissue safety, cancer expression and reproductive /
@@ -26,14 +26,24 @@ from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 
-POLICY_ID = "oncoref.cta-selection.2026-10-29.4"
+POLICY_ID = "oncoref.cta-selection.2026-10-30.2"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
-MIN_MANAGEABLE_TISSUES = 2
+OTHER_SUBTYPE_RULES = {
+    "Diffuse": "Complete HPA profile is dispersed (score >10% with a reference ≥2 nTPM), or the active concentration gate fails; no CTA route remains.",
+    "Reproductive": "Qualifying Reproductive evidence, but no qualifying cancer expression; the normal screen passes.",
+    "Inducible": "Cited expression in activated nonreproductive normal cells; a localized indirect atlas signal cannot establish Reproductive identity.",
+    "Tumor-supported": "Two distinct tumors ≥10 native TPM or reviewed reliable tumor protein, with low measured normal/developmental expression; not established tumor restriction.",
+    "Disposable": "Positive Disposable RNA/protein; measured RNA elsewhere below the descriptive 2-unit floor and no detected protein elsewhere, including low measured developmental RNA.",
+    "Low": "All measured normal RNA below the descriptive 2-unit floor and no detected normal protein. Cancer expression need not be low.",
+    "Normal": "Supported nonreproductive normal RNA reaches the descriptive 2-unit floor or reliable protein is detected; no preceding subtype or CTA definition qualifies.",
+    "Weak": "Reproductive signals are below admission requirements or lack support; no preceding subtype qualifies and no supported appreciable nonreproductive expression is established.",
+}
 CANDIDATE_ONLY_LAYERS = frozenset(
     {
         "Reproductive / embryonic association",
         "Tumor sample ≥2 TPM/pTPM",
+        "Cancer expression",
         "Required RNA coverage",
         "Reproductive concentration",
     }
@@ -54,13 +64,26 @@ BOWEL_EPITHELIAL_CELLS = frozenset(
 def association_evidence(facts: pd.DataFrame) -> pd.DataFrame:
     """Assess positive reproductive/developmental expression independently.
 
-    Association uses the existing reproductive >=5 nTPM or supported developmental
-    >=5 TPM routes. Developmental cell-support criteria are applied upstream.
+    Association uses reproductive >=5 nTPM, supported developmental >=5 TPM, or
+    supported reproductive-lineage cell RNA >=5 nTPM (>=20 reads), or
+    reliable positive reproductive IHC. IHC must be mapped and support every
+    member locus, without an unresolved antibody concern. It supplies presence
+    only: normal safety, cancer presence and concentration remain separate gates.
+    Developmental cell-support criteria are applied upstream.
     Normal-tissue expression is not an input to this presence assessment;
     normal safety and whole-profile concentration answer separate questions.
     """
     d = facts.copy()
-    d["reproductive_association"] = d.reproductive_ntpm.ge(5)
+    d["reproductive_rna_association"] = d.reproductive_ntpm.ge(5)
+    protein = d.get("reproductive_protein_association", pd.Series(False, index=d.index))
+    if protein.isna().any() or protein.dtype != bool:
+        raise ValueError("Reproductive protein evidence must be explicitly boolean")
+    d["reproductive_protein_association"] = protein
+    cell = d.get("reproductive_cell_association", pd.Series(False, index=d.index))
+    if cell.isna().any() or cell.dtype != bool:
+        raise ValueError("Reproductive cell evidence must be explicitly boolean")
+    d["reproductive_cell_association"] = cell
+    d["reproductive_association"] = d.reproductive_rna_association | protein | cell
     d["developmental_association"] = d.developmental_mean_tpm.ge(5)
     d["positive_context"] = d.reproductive_association | d.developmental_association
     d["reproductive_route"] = d.reproductive_association
@@ -68,12 +91,50 @@ def association_evidence(facts: pd.DataFrame) -> pd.DataFrame:
     return d
 
 
+def reproductive_protein_evidence(
+    facts: pd.DataFrame, observations: pd.DataFrame
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Admit mapped HPA positives as association, retaining all supporting rows.
+
+    Low/Medium/High with Approved/Supported/Enhanced reliability may attest to
+    reproductive presence. Uncertain, unmapped, foreign-species and foreign-
+    version rows cannot. Every locus in a protein group must have affirmative
+    evidence; evidence is never copied from a related paralog. No normal-safety
+    or RNA-ceiling decision is made here.
+    """
+    import json
+
+    d, evidence = facts.copy(), observations.copy()
+    eligible = (
+        evidence.source.eq("hpa_normal_tissue")
+        & evidence.version.eq("v23")
+        & evidence.taxonomy_id.eq(9606)
+        & evidence.mapping_status.eq("mapped")
+        & evidence.category.eq("reproductive")
+        & evidence.Level.isin(POSITIVE)
+        & evidence.Reliability.isin(GRADES)
+    )
+    positive_ids = set(evidence.loc[eligible, "gene_id"])
+    conflicts = d.get("Antibody concern", pd.Series(False, index=d.index))
+    if conflicts.isna().any() or conflicts.dtype != bool:
+        raise ValueError("Antibody concern must be explicitly boolean")
+    members = d.member_gene_ids.map(json.loads)
+    if members.map(lambda ids: not ids or len(set(ids)) != len(ids)).any():
+        raise ValueError("Require nonempty unique member loci")
+    d["reproductive_protein_association"] = (
+        members.map(lambda ids: set(ids) <= positive_ids) & ~conflicts
+    )
+    evidence["qualifying_reproductive_positive"] = eligible
+    return d, evidence.loc[evidence.category.eq("reproductive")].copy()
+
+
 def concentration_evidence(facts: pd.DataFrame, scores: pd.DataFrame) -> pd.DataFrame:
     """Apply the fixed HPA adult/placental identity contrast, never a safety veto.
 
     A complete same-source profile above 10% blocks the adult/placental route.
-    The existing >=5 nTPM association floor prevents weak adult references from
-    deciding embryonic identity. Supported embryonic evidence remains a separate
+    An RNA-, cell- or IHC-supported adult reference may be assessed in its matched RNA
+    panel; zero/missing RNA references remain explicitly unassessed rather than
+    being replaced with an invented abundance. Supported embryonic evidence remains a separate
     route with developmental concentration explicitly unassessed. Missing HPA
     comparisons are reported, not imputed or substituted with a GTEx ratio.
     """
@@ -99,7 +160,11 @@ def concentration_evidence(facts: pd.DataFrame, scores: pd.DataFrame) -> pd.Data
         & d.hpa_diffuseness.notna()
     )
     # The association and contrast must refer to exactly the same reproductive RNA.
-    comparable = complete & np.isclose(d.hpa_diffuseness_reference, d.reproductive_ntpm)
+    comparable = (
+        complete
+        & d.reproductive_ntpm.gt(0)
+        & np.isclose(d.hpa_diffuseness_reference, d.reproductive_ntpm)
+    )
     d["adult_profile_status"] = np.select(
         [
             ~d.reproductive_association,
@@ -320,49 +385,89 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
     return d
 
 
-def neither_profiles(facts: pd.DataFrame) -> pd.DataFrame:
-    """Identify positive Neither profiles; absence of data never counts as low.
+def other_profiles(facts: pd.DataFrame) -> pd.DataFrame:
+    """Describe normal profiles; final Other requires all normal gates to pass.
 
-    Low-expression: all measured normal, reproductive, embryonic and tumor RNA
-    below the shared 2-unit expression floor, with complete required RNA panels,
-    measured tumor and developmental coverage, and no detected protein.
-    Diffuse-Manageable: no reproductive/developmental association, appreciable
-    expression in >=2 distinct Manageable tissue concepts, complete required RNA
-    coverage, and no above-ceiling or accepted positive Vital/Protected evidence.
+    Low observed normal expression uses complete required normal panels and no
+    detected normal protein. Tumor abundance or missing developmental evidence
+    cannot disqualify a normal-pass protein from Other. Disposable is a descriptive observed profile, with positive permitted evidence
+    and low measured expression elsewhere; it cannot override a normal ceiling.
     Optional DICE/cornea findings count when present; missing optional assays are
     disclosed, not treated as measurements of zero. Protein uncertainty blocks
     assignment until adjudicated. The final classifier gives Unsafe precedence.
     """
     d = facts.copy()
     complete = d.required_coverage & ~d.unresolved_evidence
-    d["neither_low_expression"] = (
+    d["other_low_expression"] = (
+        complete & d.normal_maximum_floor_ratio.lt(1) & ~d.any_detected_protein
+    )
+    d["other_disposable"] = (
         complete
-        & d.tumor_profile_complete
+        & (
+            d.get("disposable_maximum_floor_ratio", pd.Series(float("nan"), index=d.index)).ge(1)
+            | d.get("disposable_protein_positive", pd.Series(False, index=d.index))
+        )
+        & d.get("outside_disposable_floor_ratio", pd.Series(float("nan"), index=d.index)).lt(1)
+        & ~d.get("protein_outside_disposable", pd.Series(True, index=d.index))
         & d.developmental_measured
-        & d.normal_maximum_floor_ratio.lt(1)
-        & d.reproductive_ntpm.lt(APPRECIABLE_RNA)
         & d.developmental_all_lineage_max_tpm.lt(APPRECIABLE_RNA)
-        & d.tumor_maximum_floor_ratio.lt(1)
+    )
+    return d
+
+
+def tumor_restricted_evidence(facts: pd.DataFrame) -> pd.DataFrame:
+    """Separate non-reproductive tumor candidates from weak cancer RNA leads.
+
+    Require >=10 native TPM in >=2 distinct tumor samples with resolved identity,
+    or reviewed reliable tumor protein evidence. Restriction requires complete
+    required normal coverage, all measured normal RNA below the 2-unit floor,
+    no detected normal protein, and measured developmental expression below 2
+    TPM. The floor includes permitted compartments; CP10K retains its separately
+    specified nominal floor, not a TPM conversion. Final safety gates still apply.
+    Missing sample counts never qualify. A reviewed normal-coverage assessment
+    must address relevant rare cells and states before assigning restriction;
+    numerical matches remain leads until then. This is panel-defined restriction,
+    not a claim of absence in every normal cell or physiological state.
+    """
+    d = facts.copy()
+    samples = pd.to_numeric(d.tumor_samples_ge10, errors="raise")
+    if samples.dropna().lt(0).any() or samples.dropna().mod(1).ne(0).any():
+        raise ValueError("Require nonnegative integer tumor sample counts or missing")
+    for column in [
+        "tumor_identity_resolved",
+        "reliable_tumor_protein",
+        "normal_restriction_reviewed",
+    ]:
+        if d[column].isna().any() or d[column].dtype != bool:
+            raise ValueError(f"Explicit boolean required: {column}")
+    d["tumor_restricted_rna_support"] = samples.ge(2) & d.tumor_identity_resolved
+    d["tumor_restricted_normal_low"] = (
+        d.required_coverage
+        & ~d.unresolved_evidence
+        & d.normal_maximum_floor_ratio.lt(1)
         & ~d.any_detected_protein
+        & d.developmental_measured
+        & d.developmental_all_lineage_max_tpm.lt(APPRECIABLE_RNA)
     )
-    d["neither_diffuse_manageable"] = (
-        complete
+    d["tumor_restricted_profile"] = (
+        (d.tumor_restricted_rna_support | d.reliable_tumor_protein)
+        & d.tumor_restricted_normal_low
         & ~d.positive_context
-        & ~d.vital_protected_exclusion
-        & d.manageable_tissue_count.ge(MIN_MANAGEABLE_TISSUES)
     )
+    d["tumor_restricted_identity"] = d.tumor_restricted_profile & d.normal_restriction_reviewed
+    d["tumor_restricted_lead"] = d.tumor_restricted_profile & ~d.normal_restriction_reviewed
     return d
 
 
 def classify(
     facts: pd.DataFrame, layers: Sequence[EvidenceLayer], *, entity_column: str
 ) -> FunnelResult:
-    """Classify every entity using all layers and affirmative Neither profiles.
+    """Classify every entity with normal exclusions taking precedence.
 
     Null category means no supported biological assignment; assessment_status
-    explains incomplete evidence versus an observed profile outside the three
-    definitions. The funnel partitions all entities at every stage. Neither is
-    shown only after its complete-profile evaluation, never as a synonym for hold.
+    explains incomplete normal evidence versus an unresolved normal-screen hold.
+    Other is the normal-pass noncandidate fallback; it is never a synonym for
+    missing normal evidence. Subtypes describe Other without supplying target clearance.
     Cancer presence, specificity, developmental/reproductive association and
     coverage can block CTA admission but can never supply Unsafe evidence.
     """
@@ -379,8 +484,8 @@ def classify(
     holds = pd.DataFrame({name: hold | unsafe for name, hold, unsafe in layers})
     exclusions = pd.DataFrame({name: unsafe for name, _, unsafe in layers})
     held, unsafe = holds.any(axis=1), exclusions.any(axis=1)
-    # A measured diffuse identity can establish Neither only when normal safety
-    # has no unresolved hold. Tumor/developmental presence is not required for Neither.
+    # A measured diffuse identity can establish Other only when normal safety
+    # has no unresolved hold. Tumor/developmental presence is not required for Other.
     concentration_hold = holds.get(
         "Reproductive concentration", pd.Series(False, index=facts.index)
     )
@@ -388,33 +493,67 @@ def classify(
     diffuse = (
         concentration_hold & facts.required_coverage & ~facts.unresolved_evidence & ~safety_hold
     )
-    profiles = facts.neither_low_expression | facts.neither_diffuse_manageable | diffuse
-    neither = held & profiles & ~unsafe
-    eligible = ~(held | unsafe)
+    normal_pass = facts.required_coverage & ~facts.unresolved_evidence & ~safety_hold & ~unsafe
+    eligible = ~(held | unsafe) & normal_pass
+    other = normal_pass & ~eligible
     result = facts.drop(columns=[c for c in facts if c.startswith(("hold:", "unsafe:"))]).copy()
     result["category"] = pd.Series(pd.NA, index=facts.index, dtype="string")
-    for label, mask in [("CTA", eligible), ("Neither", neither), ("Unsafe", unsafe)]:
+    for label, mask in [
+        ("CTA", eligible),
+        ("Other", other),
+        ("Unsafe", unsafe),
+    ]:
         result.loc[mask, "category"] = label
     result["assessment_status"] = np.select(
         [
             result.category.notna(),
-            facts.unresolved_evidence
-            | ~facts.required_coverage
-            | ~facts.tumor_profile_complete
-            | ~facts.developmental_measured,
+            facts.unresolved_evidence | ~facts.required_coverage,
         ],
         ["screened", "incomplete_evidence"],
-        default="outside_category_definitions",
+        default="normal_evidence_hold",
     )
-    result["neither_profile"] = np.select(
+    profile_diffuse = diffuse | (
+        facts.get("hpa_diffuseness", pd.Series(float("nan"), index=facts.index)).gt(MAX_DIFFUSENESS)
+        & facts.get("reproductive_ntpm", pd.Series(float("nan"), index=facts.index)).ge(
+            APPRECIABLE_RNA
+        )
+    )
+    result["subtype"] = np.select(
         [
-            neither & diffuse,
-            neither & facts.neither_low_expression,
-            neither & facts.neither_diffuse_manageable,
+            other & profile_diffuse,
+            other & facts.positive_context,
+            other & facts.get("normal_induction_evidence", pd.Series(False, index=facts.index)),
+            other & facts.get("tumor_restricted_profile", pd.Series(False, index=facts.index)),
+            other & facts.other_disposable,
+            other & facts.other_low_expression,
+            other
+            & (
+                facts.get(
+                    "nonreproductive_supported_floor_ratio",
+                    pd.Series(float("nan"), index=facts.index),
+                ).ge(1)
+                | facts.get(
+                    "supported_nonreproductive_protein", pd.Series(False, index=facts.index)
+                )
+            ),
+            other,
         ],
-        ["diffuse_reproductive", "low_expression", "diffuse_manageable"],
+        [
+            "Diffuse",
+            "Reproductive",
+            "Inducible",
+            "Tumor-supported",
+            "Disposable",
+            "Low",
+            "Normal",
+            "Weak",
+        ],
         default="",
     )
+    result["classification"] = result.category.fillna("Unassessed").astype(str)
+    result.loc[other, "classification"] = "Other:" + result.loc[other, "subtype"]
+    if result.loc[other, "subtype"].eq("").any():
+        raise ValueError("Every Other protein requires a categorical subtype")
     result["exclusion_reasons"] = holds.apply(lambda row: " | ".join(row.index[row]), axis=1)
     result["Unsafe_reasons"] = exclusions.apply(lambda row: " | ".join(row.index[row]), axis=1)
     running_hold = pd.Series(False, index=facts.index)
@@ -432,7 +571,7 @@ def classify(
                 "new_Unsafe": int((running_unsafe & ~previous_unsafe).sum()),
                 "CTA_eligible_so_far": int((~(running_hold | running_unsafe)).sum()),
                 "Unsafe": int(running_unsafe.sum()),
-                "Neither": 0,
+                "Other": 0,
                 "Unassigned": int((running_hold & ~running_unsafe).sum()),
             }
         )
@@ -452,12 +591,12 @@ def classify(
         result["hold:" + name], result["unsafe:" + name] = holds[name], exclusions[name]
     sequential.append(
         {
-            "layer": "Neither expression profiles",
+            "layer": "CTA and Other assignments",
             "new_candidate_removals": 0,
             "new_Unsafe": 0,
             "CTA_eligible_so_far": int(eligible.sum()),
             "Unsafe": int(unsafe.sum()),
-            "Neither": int(neither.sum()),
+            "Other": int(other.sum()),
             "Unassigned": int(result.category.isna().sum()),
         }
     )

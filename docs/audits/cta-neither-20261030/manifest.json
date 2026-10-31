@@ -1,0 +1,31 @@
+{
+  "policy": "oncoref.cta-selection.2026-10-29.4",
+  "scope": "diagnostic only; no released category or threshold changed",
+  "inputs": {
+    "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz": "461a37f80b2dcf64845a0805a72acc13f363a373aaddb487a6f64b7131cace3e",
+    "docs/audits/cta-selection-20261028/normal-peak-evidence.csv.gz": "85bf321638d2b65a87c5aa5849712bb277ef4f26100b5f0f22d8f984696bab04",
+    "docs/audits/cta-selection-20261028/hpa-protein-evidence.csv.gz": "3c835ffa9fe8b7bfc003578be1753e223e496f80b7b26dc6c932423d81af77dc",
+    "docs/audits/cta-unassigned-20261029/hpa-v23-protein-profiles.csv.gz": "00a505d30ad89e58e7df955154fe255ec0e4883e4b229402fec013bb4196eaa1"
+  },
+  "script_sha256": "bce5e9f923be7a63736c3702ae36fddfd38d83739d8f6e270de6275e5e596e58",
+  "current_counts": {
+    "Unsafe": 18031,
+    "Unassigned": 1290,
+    "CTA": 522,
+    "Neither": 20
+  },
+  "unassigned_normal_panel_pass": 763,
+  "unassigned_normal_pass_tumor_positive": 757,
+  "unassigned_normal_pass_reproductive_ihc": 52,
+  "unassigned_normal_pass_strong_reproductive_ihc": 38,
+  "unassigned_normal_pass_strong_reproductive_ihc_tumor_positive": 37,
+  "neither_with_normal_hold": 7,
+  "neither_nonpermitted_normal_above_30_TPM_or_nTPM": 6,
+  "unsafe_rna_only_within_25_percent_of_ceiling": 138,
+  "fallback_counterfactual": {
+    "Unsafe": 18031,
+    "Unassigned": 527,
+    "CTA": 522,
+    "Neither": 783
+  }
+}

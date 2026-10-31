@@ -26,6 +26,8 @@ def receipts() -> None:
     """Record the measurement replay and current exports without self-hashing."""
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/reproductive_evidence.py",
+        ROOT / "oncoref/data/normal-induction-evidence.csv",
         ROOT / "oncoref/tcr_trials.py",
         ROOT / "oncoref/data/tcr-trial-evidence.json",
         ROOT / "oncoref/expression_diffuseness.py",
@@ -34,6 +36,9 @@ def receipts() -> None:
         ROOT / "oncoref/gene_matching.py",
         OUTPUT / "alternative-evidence/manifest.json",
         OUTPUT / "tumor-identity-repair/manifest.json",
+        OUTPUT / "tumor-restricted-manifest.json",
+        ROOT / "oncoref/data/tumor-protein-evidence.csv",
+        ROOT / "oncoref/data/tumor-restriction-reviews.csv",
         ROOT / "oncoref/data/cta-ihc-compartments.csv",
         ROOT / "scripts/replay_cta_selection.py",
         ROOT / "docs/audits/cta-release-1.21.0/manifest.json",

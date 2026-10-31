@@ -235,6 +235,10 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "normal-induction-evidence": (
+        "expression",
+        "Cited normal induction contexts; qualitative reproductive-association counterevidence",
+    ),
     "external-ihc-evidence": (
         "protein",
         "categorical external staining observations, source evidence, reagent identity and explicit validation gaps",
@@ -393,6 +397,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     "cta-ihc-compartments": (
         "cta-evidence",
         "source-specific RNA/IHC compartment correspondences with citations and coverage limits",
+    ),
+    "tumor-protein-evidence": (
+        "cta-evidence",
+        "review ledger for reliable tumor protein support with assay, source and identity scope",
+    ),
+    "tumor-restriction-reviews": (
+        "cta-evidence",
+        "normal-context coverage reviews for tumor-supported reconsideration leads",
     ),
     "cta-publication-context": (
         "cta-evidence",

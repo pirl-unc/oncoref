@@ -1,0 +1,19 @@
+{
+  "inputs": {
+    "/Users/iskander/code/oncoref/docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz": "461a37f80b2dcf64845a0805a72acc13f363a373aaddb487a6f64b7131cace3e",
+    "oncoref/data/tumor-protein-evidence.csv": "173517adc7b3620692870d1c0bfaeecaf2c150bc86e885d5cc3270d641338e77",
+    "/Users/iskander/code/oncoref/docs/audits/cta-expanded-funnel-20261027/tumor-union/manifest.json": "2de97ad9daa6ff4baeb3179c90366f131ae91e77ee5f92caa5d10dd27d148b86",
+    "/Users/iskander/code/oncoref/docs/audits/cta-selection-20261028/tumor-identity-repair/manifest.json": "3a77a76f280584a867f941ecb457209a413d7df9416635602f19cb67dca68f00"
+  },
+  "script_sha256": "c01f0d0fe8efd4bea7b48c81342f7c519d7aed81e583f38a928377c7f08d11ad",
+  "threshold_tpm": 10,
+  "distinct_samples_required": 2,
+  "sample_counts": "lower bounds capped at two; source views and TCGA participants deduplicated",
+  "protein_route": "explicit reviewed evidence; aggregate unvalidated cancer IHC is insufficient",
+  "supported_proteins": 130,
+  "outputs": {
+    "tumor-restricted-support.csv.gz": "b5ac340beba5bef21efbd8859426725bce7e37dbd4898c3ef6dcb78652c73a72",
+    "tumor-restricted-observations.csv.gz": "eddaf3231c031e53e0625a95db0a8dce6956ee4edf594b83f79f62ca1fc186ac",
+    "tumor-restricted-source-coverage.csv": "9d080c0fdfd80a600ad73a0e558cc0aeda90aceecbc7026478dc08ff82033daf"
+  }
+}

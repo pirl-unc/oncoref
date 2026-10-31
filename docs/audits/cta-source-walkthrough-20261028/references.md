@@ -31,6 +31,8 @@ Paper titles open the publication. Database names open the source's documentatio
 
 | name | evidence_category | native_unit | source_url |
 | --- | --- | --- | --- |
+| [Published human normal immune induction contexts](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) | reproductive_expression | qualitative reported RNA induction | [Source](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) |
+| [Published human normal immune induction contexts](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) | normal_cell_rna | qualitative reported RNA induction | [Source](https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/) |
 | [HPA v23 / GTEx consensus](https://v23.proteinatlas.org/about/download) | normal_bulk_rna | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
 | [HPA v23 / GTEx consensus](https://v23.proteinatlas.org/about/download) | reproductive_expression | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
 | [Tyser human gastrulation atlas](https://doi.org/10.1038/s41586-021-04158-y) | developmental_expression | TPM | [Source](https://doi.org/10.1038/s41586-021-04158-y) |
@@ -40,11 +42,13 @@ Paper titles open the publication. Database names open the source's documentatio
 | [OncoRef source-mapped tumor union](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/cta-expanded-funnel-20261027/tumor-union) | tumor_expression | TPM | [Source](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/cta-expanded-funnel-20261027/tumor-union) |
 | [HPA v23 cancer sample measurements](https://v23.proteinatlas.org/about/download) | tumor_expression | pTPM | [Source](https://v23.proteinatlas.org/about/download) |
 | [HPA v23 tissue/cell clusters](https://v23.proteinatlas.org/about/download) | normal_cell_rna | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
+| [HPA v23 tissue/cell clusters](https://v23.proteinatlas.org/about/download) | reproductive_expression | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
 | [HPA v23 immune summaries](https://v23.proteinatlas.org/about/download) | immune_rna | nTPM | [Source](https://v23.proteinatlas.org/about/download) |
 | [Monaco immune summaries via HPA v23](https://v23.proteinatlas.org/about/download) | immune_rna | TPM | [Source](https://v23.proteinatlas.org/about/download) |
 | [DICE immune distributions](https://dice-database.org/) | immune_rna | TPM | [Source](https://dice-database.org/) |
 | [Collin adult corneal atlas](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683) | normal_cell_rna | CP10K | [Source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683) |
 | [HPA v23 normal-tissue IHC](https://v23.proteinatlas.org/about/assays%2Bannotation) | normal_protein | HPA categorical level and reliability | [Source](https://v23.proteinatlas.org/about/assays%2Bannotation) |
+| [HPA v23 normal-tissue IHC](https://v23.proteinatlas.org/about/assays%2Bannotation) | reproductive_expression | HPA categorical level and reliability | [Source](https://v23.proteinatlas.org/about/assays%2Bannotation) |
 | [Curated external staining observations](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027) | normal_protein | native categorical findings | [Source](https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027) |
 | [Reviewed normal protein and clinical exclusions](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) | normal_protein | categorical reviewed findings | [Source](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) |
 | [Reviewed normal protein and clinical exclusions](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) | clinical_safety | categorical reviewed findings | [Source](https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv) |

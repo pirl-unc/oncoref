@@ -34,6 +34,20 @@ def test_human_current_selection_matches_the_complete_released_funnel():
     assert selected.identity_status.eq("resolved").all()
 
 
+def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate():
+    root = Path(__file__).resolve().parents[1]
+    old = pd.read_csv(root / "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz")
+    current = human.cta_selection().set_index("label")
+    previous_ctas = set(old.loc[old.category.eq("CTA"), "protein_group_label"])
+    assert current.loc[sorted(previous_ctas), "category"].eq("CTA").all()
+    assert current.loc[["SAGE1", "GAGE10", "CDY2A/B", "CT45A2/8/9"], "category"].eq("CTA").all()
+    assert current.loc["CDY1/B", "category"] == "Other"
+    assert current.loc[["USP17L3", "FAM90A9"], "category"].eq("Other").all()
+    candidates = cta_selection.candidates()
+    assert set(candidates.category) <= set(cta_selection.CANDIDATE_CATEGORIES)
+    assert not candidates.entity_id.duplicated().any()
+
+
 def test_native_nominations_never_inherit_human_admission_or_human_gene_ids():
     frame = canine.cta_selection()
     assert len(frame) == 14
@@ -76,3 +90,31 @@ def test_invalid_queries_fail_without_falling_back_to_human():
         mouse.cta_sources(category="typo")
     with pytest.raises(ValueError, match="antigens"):
         canine.expression.cta_selection()
+
+
+def test_exhaustive_categorical_labels_and_legacy_query_alias():
+    all_rows = cta_selection.results()
+    other = all_rows[all_rows.category.eq("Other")]
+    assert set(other.subtype) == set(cta_selection.OTHER_SUBTYPES)
+    assert other.classification.eq("Other:" + other.subtype).all()
+    assert all_rows.loc[all_rows.category.isna(), "classification"].eq("Unassessed").all()
+    assert all_rows.loc[~all_rows.category.eq("Other").fillna(False), "subtype"].isna().all()
+    with pytest.warns(DeprecationWarning, match="Other"):
+        legacy = cta_selection.results(category="Neither")
+    pd.testing.assert_frame_equal(legacy, other.reset_index(drop=True))
+    assert (
+        human.cta_selection(subtype="Inducible")
+        .label.isin(["IFNA2", "IFNA5", "IFNA7", "IFNA14", "IFNA17"])
+        .all()
+    )
+    with pytest.raises(ValueError, match="subtype"):
+        cta_selection.results(category="Unsafe", subtype="Low")
+    with pytest.raises(ValueError, match="subtype"):
+        cta_selection.results(subtype="Other")
+
+
+def test_full_reproductive_and_cell_support_preserve_independent_gates():
+    rows = cta_selection.results().set_index("label")
+    assert rows.loc[["MAGEA11", "FOXR2", "CAGE1", "PRDM9", "XKR5"], "category"].eq("CTA").all()
+    assert rows.loc[["IFNA2", "IFNA14"], "classification"].eq("Other:Inducible").all()
+    assert rows.loc[["CDY1/B", "OR2T7"], "classification"].eq("Other:Reproductive").all()
