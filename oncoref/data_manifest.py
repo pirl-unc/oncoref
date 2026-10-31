@@ -48,10 +48,6 @@ from __future__ import annotations
 
 #: {name: (category, description)} — small curated tables shipped in the wheel.
 WHEEL: dict[str, tuple[str, str]] = {
-    "normal-induction-evidence": (
-        "expression",
-        "Cited normal induction contexts; qualitative reproductive-association counterevidence",
-    ),
     "cancer-type-registry": ("ontology", "cancer-type codes, hierarchy, family/tissue"),
     "cancer-subtype-groupings": ("ontology", "cross-cutting MSI/POLE/HPV/MYCN axes"),
     "cancer-cohort-aggregates": ("ontology", "computed histology rollups (SARC_RMS, …)"),
@@ -239,6 +235,10 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "normal-induction-evidence": (
+        "expression",
+        "Cited normal induction contexts; qualitative reproductive-association counterevidence",
+    ),
     "external-ihc-evidence": (
         "protein",
         "categorical external staining observations, source evidence, reagent identity and explicit validation gaps",
@@ -404,7 +404,7 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "tumor-restriction-reviews": (
         "cta-evidence",
-        "normal-context coverage reviews required for Tumor-restricted candidate admission",
+        "normal-context coverage reviews for tumor-supported reconsideration leads",
     ),
     "cta-publication-context": (
         "cta-evidence",
