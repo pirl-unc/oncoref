@@ -28,7 +28,7 @@ or supported Tyser/Petropoulos embryonic
 lineage mean ≥5 TPM (≥20 cells, ≥5 positive cells, ≥10% positive at ≥1 TPM).
 The current inputs do not cover every fetal stage.
 
-Cancer requires one sample ≥2 TPM or HPA pTPM, or reviewed reliable tumor protein,
+Cancer requires one sample >0 TPM or HPA pTPM, or reviewed reliable tumor protein,
 without a normal-expression ratio.
 This establishes qualifying RNA, not necessarily translated protein, presentation
 or expression in a specified fraction of patients.
@@ -87,14 +87,14 @@ or mouse through orthology.
 
 | Category | Proteins | Definition |
 |---|---:|---|
-| Other:Diffuse | 8 | Complete HPA profile is dispersed (score >10% with a reference ≥2 nTPM), or the active concentration gate fails; no CTA route remains. |
-| Other:Reproductive | 2 | Qualifying Reproductive evidence, but no qualifying cancer expression; the normal screen passes. |
-| Other:Inducible | 5 | Cited expression in activated nonreproductive normal cells; a localized indirect atlas signal cannot establish Reproductive identity. |
-| Other:Tumor-supported | 66 | Two distinct tumors ≥10 native TPM or reviewed reliable tumor protein, with low measured normal/developmental expression; not established tumor restriction. |
-| Other:Disposable | 2 | Positive Disposable RNA/protein; measured RNA elsewhere below the descriptive 2-unit floor and no detected protein elsewhere, including low measured developmental RNA. |
-| Other:Low | 254 | All measured normal RNA below the descriptive 2-unit floor and no detected normal protein. Cancer expression need not be low. |
-| Other:Normal | 171 | Supported nonreproductive normal RNA reaches the descriptive 2-unit floor or reliable protein is detected; no preceding subtype or CTA definition qualifies. |
-| Other:Weak | 92 | Reproductive signals are below admission requirements or lack support; no preceding subtype qualifies and no supported appreciable nonreproductive expression is established. |
+| Other:Diffuse | 6 | Complete HPA profile is dispersed (score >10% with a reference ≥2 nTPM), or the active concentration gate fails; no CTA route remains. |
+| Other:Reproductive | 0 | Qualifying Reproductive evidence, but no qualifying cancer expression; the normal screen passes. |
+| Other:Inducible | 0 | Cited expression in activated nonreproductive normal cells; a localized indirect atlas signal cannot establish Reproductive identity. |
+| Other:Tumor-supported | 46 | Two distinct tumors ≥10 native TPM or reviewed reliable tumor protein, with low measured normal/developmental expression; not established tumor restriction. |
+| Other:Disposable | 1 | Positive Disposable RNA/protein; measured RNA elsewhere below the descriptive 2-unit floor and no detected protein elsewhere, including low measured developmental RNA. |
+| Other:Low | 210 | All measured normal RNA below the descriptive 2-unit floor and no detected normal protein. Cancer expression need not be low. |
+| Other:Normal | 124 | Supported nonreproductive normal RNA reaches the descriptive 2-unit floor or reliable protein is detected; no preceding subtype or CTA definition qualifies. |
+| Other:Weak | 67 | Reproductive signals are below admission requirements or lack support; no preceding subtype qualifies and no supported appreciable nonreproductive expression is established. |
 
 Categories follow the table's priority order and are mutually exclusive. See the
 [complete rules](cta-selection.md#categorical-assignments) for indirect reproductive

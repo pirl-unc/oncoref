@@ -323,7 +323,8 @@ def test_historical_normal_cell_report_checksums():
     assert manifest["forbidden_categories"] == ["Unsafe"]
     for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
         for name, expected in manifest[section].items():
-            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+            path = _historical_normal_input(root / name)
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
 
 
 def test_historical_neither_review_checksums():
@@ -332,7 +333,25 @@ def test_historical_neither_review_checksums():
     assert manifest["forbidden_categories"] == ["Unsafe"]
     for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
         for name, expected in manifest[section].items():
-            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+            path = _historical_normal_input(root / name)
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+
+
+def _historical_normal_input(path):
+    # These two frozen reports used the pre-olfactory registry. Preserve their
+    # original digest and bytes rather than rewriting history when sources grow.
+    if path == ROOT / "oncoref/data/normal-cell-sources.json":
+        return ROOT / "docs/audits/cta-normal-cells-20261023/normal-cell-sources.snapshot.json"
+    return path
+
+
+def test_historical_normal_sources_are_preserved_in_current_registry():
+    historical = json.loads(
+        _historical_normal_input(ROOT / "oncoref/data/normal-cell-sources.json").read_text()
+    )
+    current = json.loads((ROOT / "oncoref/data/normal-cell-sources.json").read_text())
+    for name, artifact in historical["artifacts"].items():
+        assert current["artifacts"][name] == artifact, name
 
 
 def test_no_remaining_neither_or_cta_has_high_nonpermitted_measured_rna():

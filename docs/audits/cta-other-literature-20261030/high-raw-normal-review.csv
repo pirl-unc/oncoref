@@ -1,0 +1,4 @@
+gene_id,assay,source,version,tissue,cell_type,category,selection_tier,value,raw_value,unit,Read count,negative_ihc_grade,candidate_ceiling,supported_at_least_floor,raw_at_least_floor,protein_label,baseline_subtype,classification
+ENSG00000124657,HPA tissue clusters,hpa_single_cell_tissue,v23,pbmc,platelets,protected,protected,,47.6,nTPM,5.0,Missing/uncertain,8.0,False,True,OR2B6,Weak,Unassessed
+ENSG00000268320,HPA tissue clusters,hpa_single_cell_tissue,v23,pbmc,platelets,protected,protected,,47.6,nTPM,5.0,Missing/uncertain,8.0,False,True,SCGB1C2,Weak,Unassessed
+ENSG00000179695,DICE immune,dice_m2,DICE-DB1-20220223,blood,M2,protected,protected,0.803293184013,30.923577747600003,TPM,,Missing/uncertain,8.0,False,True,OR6C2,Weak,Unassessed

@@ -764,6 +764,7 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
 
 [PDF slides](cta-selection-{__version__}.pdf) · [Editable slides](slides/cta-evidence-walkthrough-{__version__}-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
+[1.26 literature audit and decisions](../cta-other-literature-20261030/index.md).
 [1.25 changes: Reproductive RNA/IHC/cell routes and categorical Other assignments](../cta-neither-20261030/update-1.25.0.md).
 
 ## Categories
@@ -840,7 +841,7 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 
 ## Reproductive evidence and its branches
 
-**Reproductive** includes adult reproductive, placental, extraembryonic, embryonic and fetal tissues. Branch labels describe the measured anatomical/stage evidence; “embryonic-only evidence” does not imply absence from unmeasured branches. [Branch definitions and measurements](../cta-unassigned-20261029/index.md#reproductive-is-the-umbrella). The association set uses whole-reference RNA and reliable reproductive IHC. Reproductive association requires HPA ≥5 nTPM **or mapped positive reproductive IHC with Approved, Supported or Enhanced reliability for every member, without an antibody conflict**. Protein evidence does not bypass cancer, normal-safety or concentration checks. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. These establish presence in a qualifying context. This presence check does not compare with normal expression; normal safety and profile diffuseness answer separate questions. Later fetal and child/adult developmental atlases are not yet integrated.
+**Reproductive** includes adult reproductive, placental, extraembryonic, embryonic and fetal tissues. Branch labels describe the measured anatomical/stage evidence; “embryonic-only evidence” does not imply absence from unmeasured branches. [Branch definitions and measurements](../cta-unassigned-20261029/index.md#reproductive-is-the-umbrella). The association set uses whole-reference RNA and reliable reproductive IHC. Reproductive association requires HPA ≥5 nTPM **or mapped positive reproductive IHC with Approved, Supported or Enhanced reliability for every member, without an antibody conflict** or reviewed human reproductive protein covering the selected sequence members. Protein evidence does not bypass cancer, normal-safety or concentration checks. The developmental route requires a supported source-specific stage/lineage mean ≥5 TPM in Tyser or Petropoulos, ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM. These establish presence in a qualifying context. This presence check does not compare with normal expression; normal safety and profile diffuseness answer separate questions. Later fetal and child/adult developmental atlases are not yet integrated.
 
 {markdown(routes)}
 
@@ -854,7 +855,7 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 
 ![RNA cutoffs](figures/active-rna-cutoffs.png)
 
-The negative-IHC columns require a usable profile control, complete group-member coverage and a supported tissue/cell match. Same-tissue IHC for an unrelated cell cannot increase a ceiling. Values retain their native units; pTPM denotes protein-coding **RNA** TPM. Tumor eligibility uses ≥2 in at least one compatible OncoRef TPM or HPA pTPM sample, without summing maxima from different samples.
+The negative-IHC columns require a usable profile control, complete group-member coverage and a supported tissue/cell match. Same-tissue IHC for an unrelated cell cannot increase a ceiling. Values retain their native units; pTPM denotes protein-coding **RNA** TPM. Tumor eligibility uses >0 in at least one compatible OncoRef TPM or HPA pTPM sample, without summing maxima from different samples.
 
 ## Filtering funnel
 

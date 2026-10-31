@@ -1,0 +1,14 @@
+{
+  "scope": "611 member genes of 600 baseline Other proteins; retrieval is not paper adjudication",
+  "cutoff": "2026-10-30",
+  "queries": 1350,
+  "successful": 1350,
+  "complete_pagination": 1346,
+  "files": {
+    "uniprot-annotations.csv": "bc66f830b45d2854bed5774c2fba43988dc7b24f6a31497161cd5af4c75865cf",
+    "baseline-proteins.csv.gz": "85a37545a013e1c3546bea2265674a5414296a07239d3b402bf27f1e383cf546",
+    "genes.csv": "27291b4b7d7d34e7d3c9a4481ab6475867c7c64d7d835f43e73881ea4644c004",
+    "searches.csv": "6329664e8cf42018b8acaefbd563fd676b63867edbda3373c14c7897c85015fc",
+    "search-leads.csv.gz": "430d19c68843a1868b11615f6d824bae463deab4e400065a528940c69970336b"
+  }
+}

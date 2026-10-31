@@ -1,16 +1,17 @@
 layer,new_candidate_removals,new_Unsafe,CTA_eligible_so_far,Unsafe,Other,Unassigned
-Reproductive / embryonic association,2173,0,17690,0,0,2173
-Cancer expression,16,0,17674,0,0,2189
-HPA normal protein,12044,10094,5630,10094,0,4139
-Required RNA coverage,208,0,5422,10094,0,4347
-Reproductive concentration,997,0,4425,10094,0,5344
-Normal bulk,3444,7406,981,17500,0,1382
-HPA tissue clusters,238,414,743,17914,0,1206
-HPA immune,12,30,731,17944,0,1188
-Monaco immune,7,17,724,17961,0,1178
-DICE immune,19,55,705,18016,0,1142
-Adult cornea,3,12,702,18028,0,1133
-Accepted normal-protein evidence,3,2,699,18030,0,1134
-Clinical safety exclusion,1,1,698,18031,0,1134
-External validated normal protein,0,0,698,18031,0,1134
-CTA and Other assignments,0,0,698,18031,600,534
+Reproductive / embryonic association,2172,0,17691,0,0,2172
+Cancer expression,9,0,17682,0,0,2181
+HPA normal protein,12044,10094,5638,10094,0,4131
+Required RNA coverage,212,0,5426,10094,0,4343
+Reproductive concentration,997,0,4429,10094,0,5340
+Normal bulk,3445,7406,984,17500,0,1379
+HPA tissue clusters,238,414,746,17914,0,1203
+HPA immune,12,30,734,17944,0,1185
+Monaco immune,7,17,727,17961,0,1175
+DICE immune,19,55,708,18016,0,1139
+Adult cornea,3,12,705,18028,0,1130
+Accepted normal-protein evidence,3,2,702,18030,0,1131
+Reviewed normal-cell knowledge,0,31,702,18061,0,1100
+Clinical safety exclusion,1,1,701,18062,0,1100
+External validated normal protein,0,0,701,18062,0,1100
+CTA and Other assignments,0,0,701,18062,454,646

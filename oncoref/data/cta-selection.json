@@ -1,16 +1,16 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.25.0",
+  "release": "1.26.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "801c17692b41e777166febda2d6e31a8e2747a129a159ceea42449a3bc8c1d5a",
-    "cta-selection-sources.csv": "696b4d6f4a727e303265a4f9c33bb6be0387e0e7e1549b86158887e5b129da7d"
+    "cta-selection-human.csv.gz": "47028e1eaa3eb559a456fc9b357832278b77f09dd96bc63e07f411c0543a9fd3",
+    "cta-selection-sources.csv": "94dbe8f1027340195d2ddd066dc446dc1be3544d625860581fc0ca0d848ac4fd"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-10-30.2",
+      "policy_id": "oncoref.cta-selection.2026-10-30.3",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
@@ -119,8 +119,8 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "8ccdf5e2747a3059482491149a0a755943c755fab7bac92d5e6d21b4a2d57015",
-    "report_manifest": "bd73a9462f95c852487257fc650938407391427e847b3818f67a1161d45171a8",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "6df7702042763caa1ae6542fecfba5ba4e8a41c9610698ecbb5f730752c08fdf",
+    "report_manifest": "87a7a635d434e70992c4bf1244688c6ae92c6a94425ad3272dc83de60841a180",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

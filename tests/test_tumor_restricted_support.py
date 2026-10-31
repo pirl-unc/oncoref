@@ -24,7 +24,15 @@ def test_packaged_leads_have_two_distinct_resolved_native_tpm_observations():
     obs = pd.read_csv(folder / "tumor-restricted-observations.csv.gz")
     leads = facts[facts.tumor_restricted_lead]
     assert len(leads) == 66
-    assert leads.category.eq("Other").all()
+    # Tumor support is independent of normal safety. Later curated findings
+    # must be able to exclude or hold a numerical tumor lead.
+    assert leads.category.fillna("Unassigned").value_counts().to_dict() == {
+        "Other": 46,
+        "Unassigned": 14,
+        "Unsafe": 6,
+    }
+    assert leads.loc[leads.category.eq("Unsafe"), "knowledge_normal_exclusion"].all()
+    assert leads.loc[leads.category.isna(), "knowledge_normal_hold"].all()
     assert not leads.normal_restriction_reviewed.any()
     obs = obs[obs.protein_equivalence_group_id.isin(leads.protein_equivalence_group_id)]
     assert obs.unit.eq("TPM").all()

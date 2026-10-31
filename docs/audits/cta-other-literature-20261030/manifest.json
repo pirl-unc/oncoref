@@ -1,0 +1,31 @@
+{
+  "policy_id": "oncoref.cta-selection.2026-10-30.3",
+  "baseline_proteins": 600,
+  "member_genes": 611,
+  "findings": 210,
+  "inputs": {
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "6df7702042763caa1ae6542fecfba5ba4e8a41c9610698ecbb5f730752c08fdf",
+    "oncoref/data/gene-knowledge.json": "603daa9f3e0aa2553b985f063d0bbb3a11b155daca234721336b3cab997e47ce",
+    "scripts/build_other_literature_report.py": "fb884185596ef298e746981ffa5862c391822de4ea94cb77fba87085ecbf81ef"
+  },
+  "outputs": {
+    "baseline-proteins.csv.gz": "85a37545a013e1c3546bea2265674a5414296a07239d3b402bf27f1e383cf546",
+    "changed-proteins.csv": "e3ab9f3e8f791e4c9d66a90245e476b871325720d5de56eabc55c4a7bc57eb3c",
+    "genes.csv": "27291b4b7d7d34e7d3c9a4481ab6475867c7c64d7d835f43e73881ea4644c004",
+    "high-raw-normal-review.csv": "2665a68ce5087d416226aadab0a33ce935a2816c8efe5b9536981a9bf439a056",
+    "index.md": "a7e4e1b0e71c86a9899ddb0cb67575672b2623e7843c8afe34ab0cb0ed5d300c",
+    "normal-category-tissues.csv": "cf1f45ac335c5b95111e64f70cf9a7d879695663e5483ea327923da4383208d4",
+    "normal-contexts.csv.gz": "a78338bc584bb7a68f974a3c9048f19706549e94a6bce3cff3a984da9bfc1615",
+    "normal-tissue-summary.csv": "c9d7f015bf461fd7c2b8a75b57d20c56513cefd9203b671a8cbd971d34295a73",
+    "other-protein-review.pdf": "3f023993bc17a4d04951889702b8acb590e399395815c0b5576801bf8e2c843e",
+    "protein-decisions.csv": "3560d7efd69b5b0d0ce42b6c68b212723066e51d3c25b5055a6ef0e425538b1a",
+    "requested-cancer-manifest.json": "51bd67bfd2dd05b9b5340128efa403eb8d90afc1bfe495c7c46dfd2c3fffd405",
+    "requested-cancer-sources.csv": "b6a02914d322f9a192b983061815daa233e41d805deaf0d4e30e312d3a4652fb",
+    "reviewed-findings.csv": "2d72ced79306e70a870c01e8d4ee0d227e91f3a79b36aa832598b42dd96b7603",
+    "search-leads.csv.gz": "430d19c68843a1868b11615f6d824bae463deab4e400065a528940c69970336b",
+    "search-manifest.json": "a2dd1dcd6911c7b9f71015804694c5db6e7b77707ee6041e403739d38d1d28f5",
+    "searches.csv": "6329664e8cf42018b8acaefbd563fd676b63867edbda3373c14c7897c85015fc",
+    "transitions.csv": "acad063106f446ab4d90e57d8d4b92f164cfa2c2d8e634b648adef3b26d5fbeb",
+    "uniprot-annotations.csv": "bc66f830b45d2854bed5774c2fba43988dc7b24f6a31497161cd5af4c75865cf"
+  }
+}

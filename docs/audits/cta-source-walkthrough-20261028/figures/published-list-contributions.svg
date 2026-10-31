@@ -134,16 +134,16 @@ z
    </g>
    <g id="patch_15">
     <path d="M 234 127.963636 
-L 484.395344 127.963636 
-L 484.395344 152.10416 
+L 485.454098 127.963636 
+L 485.454098 152.10416 
 L 234 152.10416 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
    </g>
    <g id="patch_16">
     <path d="M 234 158.139291 
-L 403.930033 158.139291 
-L 403.930033 182.279815 
+L 404.45941 158.139291 
+L 404.45941 182.279815 
 L 234 182.279815 
 z
 " clip-path="url(#pf9a73abfc8)" style="fill: #087e83"/>
@@ -436,10 +436,10 @@ L -3.5 0
     </g>
    </g>
    <g id="text_21">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="780.317115" y="142.371789" transform="rotate(-0 780.317115 142.371789)">473 / 1,017</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="780.317115" y="142.371789" transform="rotate(-0 780.317115 142.371789)">475 / 1,017</text>
    </g>
    <g id="text_22">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="764.96518" y="172.547444" transform="rotate(-0 764.96518 172.547444)">321 / 988</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="764.96518" y="172.547444" transform="rotate(-0 764.96518 172.547444)">322 / 988</text>
    </g>
    <g id="text_23">
     <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="763.377049" y="202.723099" transform="rotate(-0 763.377049 202.723099)">332 / 985</text>
@@ -503,8 +503,8 @@ z
    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="42.12" y="69.558281" transform="rotate(-0 42.12 69.558281)">Tables from the same paper are unioned before counting</text>
   </g>
   <g id="text_37">
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 582.834551)">Union: 2,514 mapped proteins / 2,570 mapped loci; 563 selected proteins have a registered list annotation.</text>
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 593.637012)">135 selected proteins have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 582.834551)">Union: 2,514 mapped proteins / 2,570 mapped loci; 565 selected proteins have a registered list annotation.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(42.12 593.637012)">136 selected proteins have no annotation in these lists. Counts overlap; list membership is not an eligibility requirement.</text>
   </g>
  </g>
  <defs>

@@ -11,8 +11,8 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 The [current CTA/oncofetal selection](docs/audits/cta-source-walkthrough-20261028/index.md)
-contains **698 selected proteins**. The 19,863-protein reference receives
-**698 CTA / 18,031 Unsafe / 600 Other / 534 unassessed** decisions.
+contains **701 selected proteins**. The 19,863-protein reference receives
+**701 CTA / 18,062 Unsafe / 454 Other / 646 unassessed** decisions.
 [Independent requirements](docs/cta-evidence-axes.md) assess normal-tissue safety,
 cancer expression and Reproductive evidence, with complete required coverage.
 Reproductive includes reproductive organs, placenta, extraembryonic, embryonic and

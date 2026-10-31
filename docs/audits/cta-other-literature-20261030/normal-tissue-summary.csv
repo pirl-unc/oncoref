@@ -1,0 +1,51 @@
+tissue,selection_tier,unit,proteins,maximum
+blood,protected,TPM,48,7.84088021413
+cerebral cortex,vital,nTPM,43,3.9
+skin,manageable,nTPM,40,16.0
+white matter,vital,nTPM,31,3.9
+basal ganglia,vital,nTPM,31,3.5
+cerebellum,vital,nTPM,27,3.9
+medulla oblongata,vital,nTPM,26,3.4
+pons,vital,nTPM,26,3.7
+hypothalamus,vital,nTPM,25,3.6
+hippocampal formation,vital,nTPM,23,3.3
+thalamus,vital,nTPM,20,3.5
+amygdala,vital,nTPM,19,3.1
+midbrain,vital,nTPM,18,3.0
+blood,protected,nTPM,11,8.0
+brain,vital,nTPM,10,3.8
+choroid plexus,vital,nTPM,9,3.5
+spinal cord,vital,nTPM,9,2.7
+skin,manageable,TPM,9,15.3163
+tonsil,disposable,nTPM,4,23.4
+tongue,protected,nTPM,2,5.5
+spleen,manageable,TPM,2,8.19694
+small intestine,vital,nTPM,2,2.3
+salivary gland,protected,nTPM,2,4.7
+retina,vital,nTPM,2,3.8
+vascular,protected,nTPM,2,6.0
+thymus,manageable,nTPM,2,11.8
+adipose tissue,manageable,nTPM,2,14.8
+lung,protected,nTPM,2,6.6
+liver,vital,nTPM,2,2.9
+kidney,vital,nTPM,2,2.9
+adipose tissue,protected,nTPM,2,4.9
+lung,vital,nTPM,1,2.4
+duodenum,vital,nTPM,1,2.4
+adrenal gland,vital,nTPM,1,2.6
+blood vessel,vital,TPM,1,2.88093
+colon,manageable,nTPM,1,7.4
+thyroid gland,manageable,TPM,1,2.5809
+colon,protected,TPM,1,4.65934
+colon,protected,nTPM,1,2.2
+spleen,manageable,nTPM,1,5.4
+esophagus,protected,nTPM,1,2.1
+esophagus,protected,TPM,1,2.70131
+smooth muscle,vital,nTPM,1,2.1
+kidney,vital,TPM,1,2.80466
+skeletal muscle,manageable,nTPM,1,4.3
+liver,vital,TPM,1,2.44161
+rectum,manageable,nTPM,1,3.7
+pituitary gland,vital,TPM,1,2.01644
+parathyroid gland,protected,nTPM,1,6.7
+lung,vital,TPM,1,2.88923
