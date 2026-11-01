@@ -134,9 +134,9 @@ def test_normal_pass_fallback_is_independent_of_cancer_but_normal_holds_block_it
         "Unassigned",
     ]
     assert result.classifications.subtype.tolist() == [
-        "Low",
+        "Nonreproductive",
         "",
-        "Low",
+        "Nonreproductive",
         "",
         "",
     ]
@@ -371,6 +371,7 @@ def test_diffuseness_is_route_specific_and_missingness_is_not_failure():
 def test_Diffuse_neither_requires_clear_safety_and_complete_coverage():
     facts = policy.other_profiles(profiles())
     facts[["other_low_expression", "other_disposable"]] = False
+    facts["positive_context"] = True
     facts.loc[3, "required_coverage"] = False
     facts.loc[4, "unresolved_evidence"] = True
     yes, no = pd.Series(True, index=facts.index), pd.Series(False, index=facts.index)
@@ -399,32 +400,45 @@ def test_other_categories_are_exhaustive_exclusive_and_do_not_override_normal_ho
     names = list(policy.OTHER_SUBTYPE_RULES)
     facts = pd.concat([profiles().iloc[:1]] * len(names), ignore_index=True)
     facts["entity"] = names
-    facts["other_low_expression"] = False
-    facts["other_disposable"] = False
-    facts["normal_induction_evidence"] = False
-    facts["tumor_restricted_profile"] = False
-    facts["nonreproductive_supported_floor_ratio"] = 0.0
-    facts["hpa_diffuseness"] = 0.0
-    facts.loc[0, ["hpa_diffuseness", "reproductive_ntpm", "positive_context"]] = [0.11, 2, True]
-    facts.loc[1, "positive_context"] = True
-    facts.loc[2, ["normal_induction_evidence", "other_low_expression"]] = True
-    facts.loc[3, ["tumor_restricted_profile", "other_low_expression"]] = True
-    facts.loc[4, "other_disposable"] = True
-    facts.loc[5, "other_low_expression"] = True
-    facts.loc[6, "nonreproductive_supported_floor_ratio"] = 1
+    facts["positive_context"] = [False, True, True]
     yes = pd.Series(True, index=facts.index)
     no = pd.Series(False, index=facts.index)
-    layers = [EvidenceLayer("Cancer expression", yes, no), EvidenceLayer("Normal", no, no)]
+    layers = [
+        EvidenceLayer("Reproductive / embryonic association", pd.Series([True, False, False]), no),
+        EvidenceLayer("Cancer expression", pd.Series([True, True, False]), no),
+        EvidenceLayer("Reproductive concentration", pd.Series([True, True, True]), no),
+        EvidenceLayer("Normal", no, no),
+    ]
     result = policy.classify(facts, layers, entity_column="entity").classifications
     assert result.subtype.tolist() == names
     assert result.classification.tolist() == ["Other:" + name for name in names]
     held = policy.classify(
-        facts, [layers[0], EvidenceLayer("Normal", yes, no)], entity_column="entity"
+        facts, [*layers[:-1], EvidenceLayer("Normal", yes, no)], entity_column="entity"
     ).classifications
     assert held.category.isna().all()
     assert held.classification.eq("Unassessed").all()
     excluded = policy.classify(
-        facts, [layers[0], EvidenceLayer("Normal", yes, yes)], entity_column="entity"
+        facts, [*layers[:-1], EvidenceLayer("Normal", yes, yes)], entity_column="entity"
     ).classifications
     assert excluded.classification.eq("Unsafe").all()
     assert excluded.subtype.eq("").all()
+
+
+def test_adult_disposable_pattern_is_independent_of_developmental_expression():
+    facts = profiles()
+    facts["disposable_maximum_floor_ratio"] = 10.0
+    facts["outside_disposable_floor_ratio"] = 0.2
+    facts["protein_outside_disposable"] = False
+    facts["developmental_measured"] = [False, True, True, True, False]
+    facts["developmental_all_lineage_max_tpm"] = [float("nan"), 0, 1000, 1, float("nan")]
+    result = policy.other_profiles(facts)
+    assert result.other_disposable.all()
+    facts.loc[3, "outside_disposable_floor_ratio"] = 1.0
+    facts.loc[4, "protein_outside_disposable"] = True
+    assert policy.other_profiles(facts).other_disposable.tolist() == [
+        True,
+        True,
+        True,
+        False,
+        False,
+    ]

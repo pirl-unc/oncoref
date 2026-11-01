@@ -1,16 +1,17 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.26.0",
+  "release": "1.27.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "47028e1eaa3eb559a456fc9b357832278b77f09dd96bc63e07f411c0543a9fd3",
-    "cta-selection-sources.csv": "94dbe8f1027340195d2ddd066dc446dc1be3544d625860581fc0ca0d848ac4fd"
+    "cta-selection-human.csv.gz": "805d9eeb57d5c8f5a993b3d7fc8ebb5eb13e30aa849c80fe18fba83da97d739d",
+    "cta-selection-profiles-human.csv.gz": "b76ab91389069fbe4cbc6c0ff1d08bb4b70c5402834fbcb63ee04b75e07f77f1",
+    "cta-selection-sources.csv": "6b871c6c3c18dc47beb8caa9d4305b90b21337618d9afa410ca5d17e0e38e871"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-10-30.3",
+      "policy_id": "oncoref.cta-selection.2026-10-31.1",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
@@ -41,7 +42,7 @@
         "Representative-protein equivalence is not exhaustive isoform identity",
         "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
         "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
-        "Other:Tumor-supported denotes strong tumor evidence with low measured normal/developmental expression; rare normal states may remain unmeasured. It is not an admitted target category.",
+        "Other reasons describe unmet identity gates. Abundance, replicated tumor support and adult Disposable expression are separate attributes; rare normal states may remain unmeasured.",
         "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply."
       ]
     },
@@ -119,8 +120,8 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "6df7702042763caa1ae6542fecfba5ba4e8a41c9610698ecbb5f730752c08fdf",
-    "report_manifest": "87a7a635d434e70992c4bf1244688c6ae92c6a94425ad3272dc83de60841a180",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "8486c036379b765a0bbab05abcb31841bdb74fce1927e90bee4389759ea58177",
+    "report_manifest": "9c5f0ec2c6984ffbda040d213be879d6692eb04393ab65bc4013e666e3674fdb",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

@@ -1,0 +1,14 @@
+{
+  "source": "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
+  "source_sha256": "8486c036379b765a0bbab05abcb31841bdb74fce1927e90bee4389759ea58177",
+  "policy": [
+    "oncoref.cta-selection.2026-10-31.1"
+  ],
+  "final_counts": {
+    "CTA": 701,
+    "Unsafe": 18062,
+    "Other": 453,
+    "Unassessed": 647
+  },
+  "normal_first_display_only": true
+}

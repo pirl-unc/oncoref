@@ -1,0 +1,31 @@
+{
+  "policy": [
+    "oncoref.cta-selection.2026-10-31.1"
+  ],
+  "category_counts": {
+    "Unsafe": 18062,
+    "CTA": 701,
+    "Unassessed": 647,
+    "Other": 453
+  },
+  "other_reason_counts": {
+    "Nonreproductive": 448,
+    "Diffuse": 5
+  },
+  "top_level_changes": [
+    "OR10A4"
+  ],
+  "inputs": {
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "8486c036379b765a0bbab05abcb31841bdb74fce1927e90bee4389759ea58177",
+    "oncoref/data/gene-knowledge.json": "eaf4abab3703d718fcfb2e05c2d8e6fed80e4f0f4362de6602f8d10cb69c2219",
+    "scripts/build_cta_simplification_report.py": "3770c0cf5dae6f21213df85cad0f83d0d8fe71b446713492c3c568a7ce32e44d"
+  },
+  "outputs": {
+    "baseline-1.26.0.csv.gz": "6df7702042763caa1ae6542fecfba5ba4e8a41c9610698ecbb5f730752c08fdf",
+    "classification-transitions.csv": "c713b4804cb9005470788500ccb01f6b09fff27ccddf02ba70eeff6200b64d3f",
+    "example-normal-evidence.csv": "86faa1993cd24a6ef6eafe5cece7c06ae01f855a3454fd6edf709a1c8a67d3ad",
+    "four-protein-review.csv": "50f36fb60af0a87982b2ff124b43cd9ba8c8a3f84db006893f4b6442ff16611d",
+    "index.md": "8c7688e602ed04fd20ff8d5541408f2c09542089a1c1690b75b069f33229aff0",
+    "protein-evidence-profiles.csv.gz": "fea867eccc8a9addfd461762fd0e0e5e21aa343c1bd5454fbc101e084d71248f"
+  }
+}

@@ -26,18 +26,13 @@ from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 
-POLICY_ID = "oncoref.cta-selection.2026-10-30.3"
+POLICY_ID = "oncoref.cta-selection.2026-10-31.1"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 OTHER_SUBTYPE_RULES = {
-    "Diffuse": "Complete HPA profile is dispersed (score >10% with a reference ≥2 nTPM), or the active concentration gate fails; no CTA route remains.",
-    "Reproductive": "Qualifying Reproductive evidence, but no qualifying cancer expression; the normal screen passes.",
-    "Inducible": "Cited expression in activated nonreproductive normal cells; a localized indirect atlas signal cannot establish Reproductive identity.",
-    "Tumor-supported": "Two distinct tumors ≥10 native TPM or reviewed reliable tumor protein, with low measured normal/developmental expression; not established tumor restriction.",
-    "Disposable": "Positive Disposable RNA/protein; measured RNA elsewhere below the descriptive 2-unit floor and no detected protein elsewhere, including low measured developmental RNA.",
-    "Low": "All measured normal RNA below the descriptive 2-unit floor and no detected normal protein. Cancer expression need not be low.",
-    "Normal": "Supported nonreproductive normal RNA reaches the descriptive 2-unit floor or reliable protein is detected; no preceding subtype or CTA definition qualifies.",
-    "Weak": "Reproductive signals are below admission requirements or lack support; no preceding subtype qualifies and no supported appreciable nonreproductive expression is established.",
+    "Nonreproductive": "Normal screen passes, but no qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. This is not proof of absence.",
+    "Reproductive": "Normal screen and reproductive presence pass, but cancer presence is unestablished.",
+    "Diffuse": "Normal screen, reproductive presence and cancer presence pass, but the reproductive concentration gate fails.",
 }
 CANDIDATE_ONLY_LAYERS = frozenset(
     {
@@ -394,8 +389,10 @@ def other_profiles(facts: pd.DataFrame) -> pd.DataFrame:
 
     Low observed normal expression uses complete required normal panels and no
     detected normal protein. Tumor abundance or missing developmental evidence
-    cannot disqualify a normal-pass protein from Other. Disposable is a descriptive observed profile, with positive permitted evidence
-    and low measured expression elsewhere; it cannot override a normal ceiling.
+    cannot disqualify a normal-pass protein from Other. The adult Disposable
+    pattern uses only adult tissue observations. Developmental expression and
+    missing developmental measurements never change this adult designation.
+    It is a descriptive attribute, not an admission or safety override.
     Optional DICE/cornea findings count when present; missing optional assays are
     disclosed, not treated as measurements of zero. Protein uncertainty blocks
     assignment until adjudicated. The final classifier gives Unsafe precedence.
@@ -413,8 +410,6 @@ def other_profiles(facts: pd.DataFrame) -> pd.DataFrame:
         )
         & d.get("outside_disposable_floor_ratio", pd.Series(float("nan"), index=d.index)).lt(1)
         & ~d.get("protein_outside_disposable", pd.Series(True, index=d.index))
-        & d.developmental_measured
-        & d.developmental_all_lineage_max_tpm.lt(APPRECIABLE_RNA)
     )
     return d
 
@@ -488,15 +483,12 @@ def classify(
     holds = pd.DataFrame({name: hold | unsafe for name, hold, unsafe in layers})
     exclusions = pd.DataFrame({name: unsafe for name, _, unsafe in layers})
     held, unsafe = holds.any(axis=1), exclusions.any(axis=1)
-    # A measured diffuse identity can establish Other only when normal safety
-    # has no unresolved hold. Tumor/developmental presence is not required for Other.
+    # Other requires a resolved, passing normal screen. Its reason describes
+    # the first unmet identity gate, never an abundance or confidence class.
     concentration_hold = holds.get(
         "Reproductive concentration", pd.Series(False, index=facts.index)
     )
     safety_hold = holds[[n for n in holds if n not in CANDIDATE_ONLY_LAYERS]].any(axis=1)
-    diffuse = (
-        concentration_hold & facts.required_coverage & ~facts.unresolved_evidence & ~safety_hold
-    )
     normal_pass = facts.required_coverage & ~facts.unresolved_evidence & ~safety_hold & ~unsafe
     eligible = ~(held | unsafe) & normal_pass
     other = normal_pass & ~eligible
@@ -516,42 +508,15 @@ def classify(
         ["screened", "incomplete_evidence"],
         default="normal_evidence_hold",
     )
-    profile_diffuse = diffuse | (
-        facts.get("hpa_diffuseness", pd.Series(float("nan"), index=facts.index)).gt(MAX_DIFFUSENESS)
-        & facts.get("reproductive_ntpm", pd.Series(float("nan"), index=facts.index)).ge(
-            APPRECIABLE_RNA
-        )
-    )
+    association_failed = holds.get("Reproductive / embryonic association", ~facts.positive_context)
+    cancer_failed = holds.get("Cancer expression", pd.Series(False, index=facts.index))
     result["subtype"] = np.select(
         [
-            other & profile_diffuse,
-            other & facts.positive_context,
-            other & facts.get("normal_induction_evidence", pd.Series(False, index=facts.index)),
-            other & facts.get("tumor_restricted_profile", pd.Series(False, index=facts.index)),
-            other & facts.other_disposable,
-            other & facts.other_low_expression,
-            other
-            & (
-                facts.get(
-                    "nonreproductive_supported_floor_ratio",
-                    pd.Series(float("nan"), index=facts.index),
-                ).ge(1)
-                | facts.get(
-                    "supported_nonreproductive_protein", pd.Series(False, index=facts.index)
-                )
-            ),
-            other,
+            other & association_failed,
+            other & cancer_failed,
+            other & concentration_hold,
         ],
-        [
-            "Diffuse",
-            "Reproductive",
-            "Inducible",
-            "Tumor-supported",
-            "Disposable",
-            "Low",
-            "Normal",
-            "Weak",
-        ],
+        ["Nonreproductive", "Reproductive", "Diffuse"],
         default="",
     )
     result["classification"] = result.category.fillna("Unassessed").astype(str)

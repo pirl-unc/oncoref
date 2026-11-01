@@ -7,7 +7,9 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Current release 1.26.0: cta-release-1.26.0.md
+      - Current release 1.27.0: cta-release-1.27.0.md
+      - Simpler decisions and four target reviews: audits/cta-simplification-20261031/index.md
+      - Previous release 1.26.0: cta-release-1.26.0.md
       - Other protein literature audit: audits/cta-other-literature-20261030/index.md
       - Previous release 1.25.0: cta-release-1.25.0.md
       - Previous release 1.24.0: cta-release-1.24.0.md

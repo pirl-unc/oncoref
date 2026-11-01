@@ -348,7 +348,7 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
 
 
 HUMAN_RULES["CTA and Other assignments"] = (
-    "Other is the complete-normal-panel, resolved-evidence fallback when every normal gate passes but no candidate subtype qualifies. Tumor or developmental missingness alone does not block Other. Other:Tumor-supported requires low measured normal/developmental expression and two distinct tumor samples ≥10 TPM or reviewed reliable tumor protein; it is not target admission. Manageable holds remain unassigned, never cleared by breadth.",
+    "Other is the complete-normal-panel, resolved-evidence fallback when every normal gate passes but CTA identity fails. Its reason is missing reproductive presence, missing cancer presence, or diffuse reproductive identity. RNA abundance, cancer support and adult Disposable expression are independent attributes; developmental missingness never changes adult tissue disposition. Manageable holds remain unassigned.",
     [
         "hpa_rna_consensus",
         "hpa_single_cell_tissue",

@@ -23,6 +23,7 @@ from oncoref import (  # noqa: E402
     gene_knowledge,
     hpa,
     normal_cell_screen,
+    normal_tissues,
     reference_data,
     reproductive_evidence,
     tcr_trials,
@@ -68,6 +69,12 @@ class ContextCollector:
         self.reproductive_cells: list[pd.DataFrame] = []
         self.outside_clusters: list[pd.DataFrame] = []
         self.outside_cluster_keys: set[tuple] = set()
+        self.developmental_concepts = frozenset().union(
+            *(
+                normal_tissues.normal_tissue_scope(s, species="human")
+                for s in ["extraembryonic", "embryonic", "fetal"]
+            )
+        )
 
     def collect(self, frame: pd.DataFrame, assay: str) -> None:
         frame = frame.copy()
@@ -95,9 +102,11 @@ class ContextCollector:
             d["unresolved_context"] |= possible & ~d.value.gt(d.candidate_ceiling)
         normal = d.selection_tier.isin(policy.TIER_BASES)
         raw = d.get("raw_maximum", d.value).fillna(d.value)
-        d["normal_maximum_floor_ratio"] = raw / (
-            policy.APPRECIABLE_RNA * d.unit.map(policy.UNIT_SCALE)
-        )
+        adult = ~d.get("concept_id", d.tissue).isin(self.developmental_concepts)
+        adult &= ~d.category.eq("developmental")
+        floor = policy.APPRECIABLE_RNA * d.unit.map(policy.UNIT_SCALE)
+        d["normal_maximum_floor_ratio"] = (raw / floor).where(adult)
+        d["adult_supported_floor_ratio"] = (d.value / floor).where(adult)
         d["disposable_maximum_floor_ratio"] = d.normal_maximum_floor_ratio.where(
             d.selection_tier.eq("disposable")
         )
@@ -118,6 +127,7 @@ class ContextCollector:
                 unsafe_evidence=("unsafe_evidence", "any"),
                 unresolved_context=("unresolved_context", "any"),
                 normal_maximum_floor_ratio=("normal_maximum_floor_ratio", "max"),
+                adult_supported_floor_ratio=("adult_supported_floor_ratio", "max"),
                 disposable_maximum_floor_ratio=("disposable_maximum_floor_ratio", "max"),
                 outside_disposable_floor_ratio=("outside_disposable_floor_ratio", "max"),
                 nonreproductive_supported_floor_ratio=(
@@ -204,6 +214,7 @@ class ContextCollector:
                     "unsafe_evidence": "any",
                     "unresolved_context": "any",
                     "normal_maximum_floor_ratio": "max",
+                    "adult_supported_floor_ratio": "max",
                     "disposable_maximum_floor_ratio": "max",
                     "outside_disposable_floor_ratio": "max",
                     "nonreproductive_supported_floor_ratio": "max",
@@ -443,6 +454,14 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
     d["selection_tier"] = policy.compartment_tiers(d)
     normal = d.category.isin(policy.TIER_BASES)
     positive = d.Level.isin(cell_rna_policy.POSITIVE)
+    adult = ~d.concept_id.isin(
+        frozenset().union(
+            *(
+                normal_tissues.normal_tissue_scope(s, species="human")
+                for s in ["extraembryonic", "embryonic", "fetal"]
+            )
+        )
+    )
     nonlow = positive & ~d.Level.eq("Low") & normal
     d["candidate_exclusion"] = nonlow
     d["unsafe_evidence"] = (
@@ -471,7 +490,7 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
         return facts.representative_gene_id.map(summary[column]).fillna(False).astype(bool)
 
     facts["unresolved_evidence"] |= lookup("unresolved_evidence")
-    detected = set(d.loc[positive, "representative_gene_id"].dropna())
+    detected = set(d.loc[positive & adult, "representative_gene_id"].dropna())
     facts["any_detected_protein"] = facts.representative_gene_id.isin(detected)
     facts["disposable_protein_positive"] = facts.representative_gene_id.isin(
         d.loc[
@@ -480,7 +499,7 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
         ]
     )
     facts["protein_outside_disposable"] = facts.representative_gene_id.isin(
-        d.loc[positive & ~d.category.eq("disposable"), "representative_gene_id"]
+        d.loc[positive & adult & ~d.category.eq("disposable"), "representative_gene_id"]
     )
     facts["supported_nonreproductive_protein"] = facts.representative_gene_id.isin(
         d.loc[
@@ -897,6 +916,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     facts["adult_bulk_max_ntpm"] = facts.representative_gene_id.map(bulk_maximum)
     for col in [
         "normal_maximum_floor_ratio",
+        "adult_supported_floor_ratio",
         "disposable_maximum_floor_ratio",
         "outside_disposable_floor_ratio",
         "nonreproductive_supported_floor_ratio",

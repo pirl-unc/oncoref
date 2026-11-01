@@ -16,6 +16,8 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
 
+from oncoref.cta_selection_policy import POLICY_ID
+
 ROOT = Path(__file__).resolve().parents[1]
 INK = colors.HexColor("#173B55")
 TEAL = colors.HexColor("#087E8B")
@@ -89,7 +91,7 @@ def build():
         "<b>Diffuseness:</b> HPA average N / (N + R) >10% blocks a complete adult/placental route. "
         "Disposable counts; Permissive thymus is excluded. Embryonic concentration is unassessed.<br/>"
         "<b>Only safety establishes Unsafe.</b> Missing core data remain unassigned. "
-        "<b>Other:</b> normal screen passes, CTA identity does not. Every protein receives one subtype: Diffuse, Tumor-supported, Disposable, Low, Normal or Weak."
+        "<b>Other:</b> normal screen passes, CTA identity does not. Other records the unmet identity gate: reproductive evidence, cancer evidence or concentration. Abundance, support and adult Disposable expression are separate attributes."
     )
     _, height = statement.wrap(720, 120)
     statement.drawOn(page, 36, 205 - height)
@@ -97,7 +99,7 @@ def build():
     page.drawString(
         36,
         25,
-        "Local policy: oncoref.cta-selection.2026-10-30.3. Clinical RNA credit retains tested epitope limits.",
+        f"Local policy: {POLICY_ID}. Clinical RNA credit retains tested epitope limits.",
     )
     page.save()
     shutil.copyfile(destination, images / destination.name)

@@ -414,8 +414,8 @@ z
    </g>
    <g id="patch_50">
     <path d="M 831.544224 504.601105 
-L 843.581146 504.601105 
-L 843.581146 524.585455 
+L 843.554633 504.601105 
+L 843.554633 524.585455 
 L 831.544224 524.585455 
 z
 " clip-path="url(#p78b7467daa)" style="fill: #a28c68"/>
@@ -541,10 +541,10 @@ z
 " clip-path="url(#p78b7467daa)" style="fill: #b9c3cd"/>
    </g>
    <g id="patch_66">
-    <path d="M 843.581146 504.601105 
+    <path d="M 843.554633 504.601105 
 L 860.708571 504.601105 
 L 860.708571 524.585455 
-L 843.581146 524.585455 
+L 843.554633 524.585455 
 z
 " clip-path="url(#p78b7467daa)" style="fill: #b9c3cd"/>
    </g>
@@ -864,7 +864,7 @@ L -3.5 0
     <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="898.0992" y="491.950733" transform="rotate(-0 898.0992 491.950733)">701 / 18,062 / 0 / 1,100</text>
    </g>
    <g id="text_43">
-    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="898.0992" y="516.93117" transform="rotate(-0 898.0992 516.93117)">701 / 18,062 / 454 / 646</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="898.0992" y="516.93117" transform="rotate(-0 898.0992 516.93117)">701 / 18,062 / 453 / 647</text>
    </g>
    <g id="legend_1">
     <g id="patch_67">

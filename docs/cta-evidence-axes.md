@@ -83,19 +83,15 @@ originating loci remain listed. This is not a catalog of every alternative isofo
 or modified proteoform. Human measurements and thresholds do not transfer to dog
 or mouse through orthology.
 
-## Other categories
+## Other reasons and independent attributes
 
-| Category | Proteins | Definition |
+| Other reason | Proteins | Meaning |
 |---|---:|---|
-| Other:Diffuse | 6 | Complete HPA profile is dispersed (score >10% with a reference ≥2 nTPM), or the active concentration gate fails; no CTA route remains. |
-| Other:Reproductive | 0 | Qualifying Reproductive evidence, but no qualifying cancer expression; the normal screen passes. |
-| Other:Inducible | 0 | Cited expression in activated nonreproductive normal cells; a localized indirect atlas signal cannot establish Reproductive identity. |
-| Other:Tumor-supported | 46 | Two distinct tumors ≥10 native TPM or reviewed reliable tumor protein, with low measured normal/developmental expression; not established tumor restriction. |
-| Other:Disposable | 1 | Positive Disposable RNA/protein; measured RNA elsewhere below the descriptive 2-unit floor and no detected protein elsewhere, including low measured developmental RNA. |
-| Other:Low | 210 | All measured normal RNA below the descriptive 2-unit floor and no detected normal protein. Cancer expression need not be low. |
-| Other:Normal | 124 | Supported nonreproductive normal RNA reaches the descriptive 2-unit floor or reliable protein is detected; no preceding subtype or CTA definition qualifies. |
-| Other:Weak | 67 | Reproductive signals are below admission requirements or lack support; no preceding subtype qualifies and no supported appreciable nonreproductive expression is established. |
+| Nonreproductive | 448 | No qualifying reproductive / placental / embryonic-fetal presence |
+| Reproductive | 0 | Reproductive presence qualifies; cancer presence does not |
+| Diffuse | 5 | Both presence requirements pass; reproductive concentration fails |
 
-Categories follow the table's priority order and are mutually exclusive. See the
-[complete rules](cta-selection.md#categorical-assignments) for indirect reproductive
-cell evidence, descriptive floors, source support and the categorical API.
+Normal abundance, tumor support and adult Disposable expression are separate
+attributes in `cta_selection.profiles()`. Disposable is an adult tissue designation;
+embryonic/fetal/placental measurements do not change it. The 2-unit descriptive
+floor is not a safety ceiling. [Simple funnel and four example proteins](audits/cta-simplification-20261031/index.md).

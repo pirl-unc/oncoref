@@ -1,0 +1,5 @@
+Protein,Cancer TPM,Adult atlas nTPM,Atlas tissue / cells,Separate adult TPM,TPM tissue / cells,Reproductive bulk nTPM,Developmental lineage mean TPM,Decision
+DBX1,297.5108178501728,0.8,thymus / t-cells,0.75466797449,blood / TFH,0.1,1.2554806557956264,Other:Nonreproductive
+OR2B2,246.268019510807,0.5,pons / bulk,0.3392435143639999,blood / CD8_STIM,0.0,1.8396953235201716,Other:Nonreproductive
+KRTAP20-2,147.57341386645686,1.4,skin / bulk,0.0,blood / plasmacytoid DC,0.1,0.6291138756969038,Other:Nonreproductive
+OR10A4,138.0187043554447,1.9,basal ganglia / bulk,0.8,blood / Progenitor cell,0.1,0.2742768308981441,Unassessed

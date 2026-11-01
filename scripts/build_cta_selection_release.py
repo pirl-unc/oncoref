@@ -75,6 +75,21 @@ def source_inventory() -> pd.DataFrame:
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/",
         "Exact reported genes enter knowledge review holds; sparse detection is not TPM, protein, donor replication or proof of absence for unlisted genes.",
     )
+    for sid, quantity in [
+        ("olfactory_verbeurgt_cq", "native qPCR Cq; assay IDs and donor identity"),
+        ("olfactory_verbeurgt_copies", "estimated RNA copies per 20 ng total RNA"),
+    ]:
+        add(
+            9606,
+            sid,
+            "Verbeurgt et al. 2014 whole human olfactory mucosa",
+            ["normal_cell_rna"],
+            "used_in_selection",
+            quantity,
+            "adult; 26 donor samples",
+            "https://doi.org/10.1371/journal.pone.0096333",
+            "OR10A4 normal RNA supplies a reviewed hold. Native values are not TPM, protein or a clinical toxicity estimate; unlisted genes are not measured zero.",
+        )
     add(
         9606,
         "normal-induction-evidence",
@@ -489,6 +504,32 @@ def build(audit: Path = AUDIT) -> None:
             }
         )
     write_csv(pd.DataFrame(rows, columns=RESULT_COLUMNS), DATA / "cta-selection-human.csv.gz")
+    profiles = pd.DataFrame(
+        {
+            "entity_id": decisions.protein_equivalence_group_id,
+            "tumor_max_tpm": decisions.oncoref_maximum_tpm,
+            "tumor_max_ptpm": decisions.hpa_tumor_group_lower_bound_ptpm,
+            "tumor_samples_ge10": decisions.tumor_samples_ge10,
+            "replicated_tumor_rna": decisions.tumor_restricted_rna_support,
+            "reliable_tumor_protein": decisions.reliable_tumor_protein,
+            "cancer_evidence": decisions.cancer_association,
+            "normal_max_ntpm": decisions.healthy_maximum_ntpm,
+            "normal_max_tpm": decisions.healthy_maximum_tpm,
+            "normal_max_cp10k": decisions.healthy_maximum_cp10k,
+            "adult_rna_below_floor": decisions.normal_maximum_floor_ratio.lt(1),
+            "unconfirmed_normal_signal": decisions.normal_maximum_floor_ratio.ge(1)
+            & decisions.adult_supported_floor_ratio.lt(1),
+            "adult_normal_protein_detected": decisions.any_detected_protein,
+            "adult_disposable_expression": decisions.disposable_maximum_floor_ratio.ge(1)
+            | decisions.disposable_protein_positive,
+            "adult_disposable_only": decisions.other_disposable,
+            "reproductive_max_ntpm": decisions.reproductive_ntpm,
+            "reproductive_evidence": decisions.positive_context,
+            "developmental_lineage_max_tpm": decisions.developmental_all_lineage_max_tpm,
+            "developmental_measured": decisions.developmental_measured,
+        }
+    )
+    write_csv(profiles, DATA / "cta-selection-profiles-human.csv.gz")
     inventory = source_inventory()
     write_csv(inventory, DATA / "cta-selection-sources.csv")
     write_csv(inventory, audit / "species-source-inventory.csv")
@@ -498,7 +539,11 @@ def build(audit: Path = AUDIT) -> None:
         "release": "1.21.0" if audit == AUDIT else __version__,
         "data_sha256": {
             name: sha256(DATA / name)
-            for name in ["cta-selection-human.csv.gz", "cta-selection-sources.csv"]
+            for name in [
+                "cta-selection-human.csv.gz",
+                "cta-selection-profiles-human.csv.gz",
+                "cta-selection-sources.csv",
+            ]
         },
         "species": {
             "human": {
@@ -515,7 +560,7 @@ def build(audit: Path = AUDIT) -> None:
                     "Representative-protein equivalence is not exhaustive isoform identity",
                     "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
                     "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
-                    "Other:Tumor-supported denotes strong tumor evidence with low measured normal/developmental expression; rare normal states may remain unmeasured. It is not an admitted target category.",
+                    "Other reasons describe unmet identity gates. Abundance, replicated tumor support and adult Disposable expression are separate attributes; rare normal states may remain unmeasured.",
                     "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply.",
                 ],
             },

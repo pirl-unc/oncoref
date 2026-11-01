@@ -15,8 +15,8 @@ Reproductive is the umbrella for reproductive, placental, extraembryonic, embryo
 and fetal contexts; its measured branches have positive-expression rules. Required
 coverage includes the GTEx v11 52-context bulk core for every member locus.
 Neither presence check imposes a normal-expression ratio. Whole-profile
-diffuseness is an active adult/placental identity gate. A supported diffuse
-profile can establish Other:Diffuse, never Unsafe; developmental concentration remains
+diffuseness is an active adult/placental identity gate. A qualifying reproductive
+profile that fails concentration can establish Other:Diffuse, never Unsafe; developmental concentration remains
 explicitly unassessed without compatible measurements.
 
 Reviewed TCR-T evidence can raise a protein-profile RNA ceiling by one ladder
@@ -39,21 +39,10 @@ from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
 Category = Literal["CTA", "Unsafe", "Other", "Neither"]
-OtherSubtype = Literal[
-    "Low", "Disposable", "Diffuse", "Reproductive", "Tumor-supported", "Inducible", "Normal", "Weak"
-]
+OtherSubtype = Literal["Nonreproductive", "Reproductive", "Diffuse"]
 SpeciesLike = Species | str | int
 CATEGORIES = ("CTA", "Unsafe", "Other")
-OTHER_SUBTYPES = (
-    "Low",
-    "Disposable",
-    "Diffuse",
-    "Reproductive",
-    "Tumor-supported",
-    "Inducible",
-    "Normal",
-    "Weak",
-)
+OTHER_SUBTYPES = ("Nonreproductive", "Reproductive", "Diffuse")
 CANDIDATE_CATEGORIES = ("CTA",)
 EVIDENCE_CATEGORIES = (
     "nomination",
@@ -167,8 +156,9 @@ def results(
     CTA means every gate of the named research policy passes. Unsafe denotes
     exclusion evidence under that policy, not demonstrated toxicity. Other
     is the adequately assessed normal-pass noncandidate family. Every Other row
-    has a subtype; classification is the single categorical label (e.g. Other:Low).
-    Tumor-supported remains an Other category, not admitted target clearance. A null
+    has a reason subtype: Nonreproductive, Reproductive (cancer missing), or
+    Diffuse. Abundance, tumor support and adult Disposable expression are
+    independent attributes in ``profiles()``. A null
     category denotes unassigned evidence; ``assessment_status`` explains why.
     ``entity_kind`` prevents comparing human protein groups with unresolved
     nonhuman assay/family nominations. Tuple-valued identity fields retain every
@@ -228,13 +218,76 @@ def results(
 
 
 def candidates(*, species: SpeciesLike = "human") -> pd.DataFrame:
-    """Return CTA candidates; Other:Tumor-supported remains a reconsideration lead.
+    """Return CTA candidates; replicated tumor evidence alone is a profile attribute.
 
     This is a research screening set, not a clinical safety assertion or an
     exact-peptide clearance. Existing ``results(category='CTA')`` keeps its scope.
     """
     frame = results(species=species)
     return frame.loc[frame.category.isin(CANDIDATE_CATEGORIES)].reset_index(drop=True)
+
+
+def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
+    """Return current decisions with separate native-unit evidence attributes.
+
+    Tumor support, adult normal abundance, reproductive evidence and Disposable
+    expression are independent columns, not mutually exclusive classes. Adult
+    Disposable-only means positive permitted adult expression with other measured
+    adult contexts below the descriptive floor and no detected protein there.
+    Fetal/placental expression is reported independently and never changes this
+    adult pattern. Tissue permission itself is defined by ``normal_tissues``.
+
+    Normal maxima cover the screened Vital/Protected/Manageable compartments;
+    permitted expression is a separate attribute. These are source-specific
+    supported summaries, not necessarily the highest raw donor. TPM, nTPM and
+    CP10K are never pooled. Developmental maximum
+    is a reported lineage mean, not an individual-cell maximum. Missing numerical
+    and nonhuman evidence remains missing. No profile flag overrides a decision.
+    """
+    selected = resolve_species(species)
+    result = results(species=selected)
+    columns = [
+        "entity_id",
+        "tumor_max_tpm",
+        "tumor_max_ptpm",
+        "tumor_samples_ge10",
+        "replicated_tumor_rna",
+        "reliable_tumor_protein",
+        "cancer_evidence",
+        "normal_max_ntpm",
+        "normal_max_tpm",
+        "normal_max_cp10k",
+        "adult_rna_below_floor",
+        "unconfirmed_normal_signal",
+        "adult_normal_protein_detected",
+        "adult_disposable_expression",
+        "adult_disposable_only",
+        "reproductive_max_ntpm",
+        "reproductive_evidence",
+        "developmental_lineage_max_tpm",
+        "developmental_measured",
+    ]
+    if selected.taxon_id == 9606:
+        evidence = _checked_table("cta-selection-profiles-human.csv.gz")
+        if list(evidence) != columns or not evidence.entity_id.is_unique:
+            raise ValueError("Invalid protein evidence profile schema")
+        if set(evidence.entity_id) != set(result.entity_id):
+            raise ValueError("Protein profiles do not cover the current selection")
+        for column in columns[1:]:
+            if (
+                column.endswith(("_tpm", "_ntpm", "_ptpm", "_cp10k"))
+                or column == "tumor_samples_ge10"
+            ):
+                evidence[column] = pd.to_numeric(evidence[column], errors="coerce")
+            else:
+                if not evidence[column].isin([True, False]).all():
+                    raise ValueError("Protein evidence flags require explicit booleans")
+                evidence[column] = evidence[column].astype("boolean")
+    else:
+        evidence = pd.DataFrame({"entity_id": result.entity_id})
+        for column in columns[1:]:
+            evidence[column] = pd.NA
+    return result.merge(evidence, on="entity_id", validate="one_to_one")
 
 
 def sequence_dispositions(*, species: SpeciesLike = "human") -> pd.DataFrame:

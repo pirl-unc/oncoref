@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import plot_cta_geometric as style  # noqa: E402
+from build_cta_category_funnel import build as build_category_funnel  # noqa: E402
 from build_cta_selection_audit import COMPARATORS, OUTPUT, RELEASE, citation, records  # noqa: E402
 from build_tcr_trial_report import summary_markdown  # noqa: E402
 from cta_source_links import linked_sources, markdown_link  # noqa: E402
@@ -339,6 +340,8 @@ def figures(facts: pd.DataFrame, audit) -> None:
     np.random.seed(0)  # deterministic label placement, independent of replay mode
     out = OUTPUT / "figures"
     out.mkdir(exist_ok=True)
+    build_category_funnel(ROOT, out)
+    style.setup()
     facts.category.fillna("Unassigned").value_counts()
     selected = facts[facts.category.eq("CTA")]
     annotated = audit.memberships.loc[audit.memberships.category.eq("CTA"), "entity_id"].nunique()
@@ -764,6 +767,7 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
 
 [PDF slides](cta-selection-{__version__}.pdf) · [Editable slides](slides/cta-evidence-walkthrough-{__version__}-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
+[Simplified decisions and four target reviews](../cta-simplification-20261031/index.md).
 [1.26 literature audit and decisions](../cta-other-literature-20261030/index.md).
 [1.25 changes: Reproductive RNA/IHC/cell routes and categorical Other assignments](../cta-neither-20261030/update-1.25.0.md).
 
@@ -785,15 +789,15 @@ embryonic evidence remains independent and its concentration is unassessed.
 - **Other:** complete required normal coverage, resolved evidence and every normal gate passing, but no candidate subtype qualifies. Cancer or reproductive evidence may be absent or missing.
 - **Unassigned:** required normal coverage or evidence resolution is missing, or a normal-screen hold remains. In the API, category is null and assessment_status explains why.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other is assigned only after its complete-profile check. The fixed [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex) core requires all 52 bulk contexts for every protein member. DICE and corneal coverage remain optional, but observed counterevidence contributes.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other requires the complete normal screen to pass. The fixed [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex) core requires all 52 bulk contexts for every protein member. DICE and corneal coverage remain optional, but observed counterevidence contributes.
 
 ## Other categories
 
-Every normal-pass protein has one categorical assignment: CTA or a named Other category. Safety exclusions remain Unsafe; incomplete normal evidence remains Unassessed. The API exposes `classification` (for example `Other:Low`) as well as `category` and `subtype`.
+Every normal-pass protein has one categorical assignment: CTA or a named Other category. Safety exclusions remain Unsafe; incomplete normal evidence remains Unassessed. The API exposes `classification` (for example `Other:Nonreproductive`) as well as `category` and `subtype`.
 
 {markdown(pd.DataFrame([{"Category": "Other:" + name, "Meaning": description, "Proteins": summary["other_subtypes"].get(name, 0)} for name, description in OTHER_SUBTYPE_RULES.items()]))}
 
-The categories are disjoint and applied in documented priority order. Low and Disposable use the descriptive <2 native TPM/nTPM convention (CP10K retains its separate nominal /100 floor), not an assay detection limit. Tumor abundance need not be low. Every Other category still requires a complete normal-screen pass. No unnamed residual category remains.
+Other reasons follow the unmet identity requirements: reproductive presence, cancer presence, then concentration. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
 
 [Full categorical table and individual changes](../cta-neither-20261030/update-1.25.0.md). The current admission fixes use the full mapped Reproductive bulk panel plus supported reproductive-lineage cells. Generic/immune cells can provide indirect sample-site evidence only with a complete same-source outside panel, every outside cluster <5 nTPM, and no curated normal-induction conflict. This does not identify the producing cell; macrophages may carry passenger RNA. All safety and concentration gates remain independent.
 
@@ -860,6 +864,14 @@ The negative-IHC columns require a usable profile control, complete group-member
 ## Filtering funnel
 
 {markdown(funnel)}
+
+![Coarse category funnel](figures/category-funnel.png)
+
+The normal screen is evaluated first in this view. Other accumulates as identity
+requirements fail. [Counts at each stage](figures/category-funnel.csv).
+
+The detailed layer view below retains the historical display order; its temporary
+holds are resolved into final categories only after all safety layers are evaluated.
 
 ![Human funnel](figures/human-funnel.png)
 
