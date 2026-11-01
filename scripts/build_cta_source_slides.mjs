@@ -59,7 +59,7 @@ function slide(title,section,notes=''){
  const s=p.slides.add();s.background.fill=C.white;current={title,text:[],links:[{url:URL,x:64,y:670,w:1100,h:24}]};pages.push(current);
  text(s,section.toUpperCase(),64,28,1152,25,16,C.teal,true);
  text(s,title,64,72,1152,85,42,C.ink,true);
- text(s,'OncoRef CTA evidence walkthrough   •   30 October 2026',64,670,1100,26,16,C.muted);
+ text(s,'OncoRef CTA evidence walkthrough   •   31 October 2026',64,670,1100,26,16,C.muted);
  text(s,String(pages.length).padStart(2,'0'),1174,668,42,30,19,C.muted,true);
  s.speakerNotes.text=`${title}\n${notes}\nReport: ${URL}\nPolicy: ${data.summary.policy}\nDecision snapshot SHA256: ${data.report_sha256}`;
  return s;
@@ -154,21 +154,15 @@ const s=slide('Serious events and antigen specificity','Clinical safety',Object.
 table(s,[['Targeted CTA epitope','Important event','Specificity attribution'],['MAGE-A3 / a3a','Two fatal cardiac injuries','Titin cross-recognition implicated'],['MAGE-A3/A9 / NCI receptor','Three neurological cases; two deaths','MAGE-A12 brain recognition implicated'],['NY-ESO-1 / LAGE-1A, c259','Late cardiac death; two GBS cases','Peptide-specific mechanism not established'],['NY-ESO-1 / TBI-1301','Grade 3 lung injury','Unresolved; no credit for this product'],['MAGE-A4 / afami-cel','Aplasia and stroke deaths in phase 1','No demonstrated antigen-specific mechanism'],['MAGE-A10 / ADP-A2M10','Grade 4 CRS; fatal aplasia after repeat treatment','Conditioning favored for marrow injury']],{widths:[355,410,387],size:21,h:405});
 note(s,'Clinical trial and SAE review. Seriousness differs from severity; this is a selected summary, not a pooled event rate.',602,23);
 }
-for(const [title,rows] of [
- ['Other categories: identity and cancer',[
-  ['Diffuse','Complete measured profile is too dispersed','Diffuse'],
-  ['Reproductive','Reproductive evidence qualifies; cancer evidence does not','Reproductive'],
-  ['Inducible (legacy)','No current rows; reviewed normal protein enters safety','Inducible'],
-  ['Tumor-supported','Strong tumor evidence; restriction remains unestablished','Tumor-supported']]],
- ['Other categories: normal expression',[
-  ['Disposable','Positive Disposable evidence; low measured RNA elsewhere','Disposable'],
-  ['Low','Measured normal RNA <2; no detected normal protein','Low'],
-  ['Normal','Supported normal expression; no preceding category applies','Normal'],
-  ['Weak','Below admission floors or insufficient expression support','Weak']]],
-]){
- const s=slide(title,'Categorical assignments','Every Other protein passes the required normal screen. Categories are disjoint in the documented priority order. Low does not mean never expressed; normal expression is not proof of injury.');
- table(s,[['Category','Meaning','Proteins'],...rows.map(([label,meaning,key])=>['Other:'+label,meaning,data.other_subtypes[key]||0])],{widths:[340,672,140],size:24,h:355});
- note(s,'Every assessed protein has one label. There is no unnamed Other remainder.',550,26);
+{
+const s=slide('Other records one unmet identity gate','Categorical decisions','Safety and coverage are assessed independently. Other reasons use reproductive presence, cancer presence, then concentration. No gene is admitted or excluded by an abundance label.');
+table(s,[['Reason','Meaning','Proteins'],['Nonreproductive','No qualifying reproductive / placental / embryonic evidence',data.other_subtypes.Nonreproductive||0],['Reproductive','Reproductive presence qualifies; cancer presence does not',data.other_subtypes.Reproductive||0],['Diffuse','Presence requirements pass; reproductive concentration fails',data.other_subtypes.Diffuse||0]],{widths:[290,722,140],size:25,h:315});
+note(s,'Normal RNA level, tumor support and Disposable expression are separate attributes.',550,25);
+}
+{
+const s=slide('Evidence attributes stay independent','Inspect each protein','The profiles() API preserves native RNA units, supporting samples, adult Disposable pattern and developmental evidence independently of the final decision.');
+table(s,[['Question','Fields / interpretation'],['How high in cancer?','Native TPM / HPA pTPM maxima; two identified tumors >=10 TPM is a support flag'],['How high in adult normal?','Separate nTPM / TPM / CP10K summaries; raw unsupported observations remain visible'],['Adult Disposable pattern?','Permitted adult expression with low measured adult expression elsewhere'],['Developmental expression?','Separate lineage RNA and measured-stage coverage; never changes adult tissue permission']],{widths:[350,802],size:23,h:365});
+note(s,'cta_selection.profiles() exposes these fields. Low / Weak / Normal are no longer competing classes.',570,25);
 }
 {
 const s=slide('Reproductive cell evidence','Positive association','HPA v23 https://v23.proteinatlas.org/about/download ; passenger transcripts: https://pmc.ncbi.nlm.nih.gov/articles/PMC7459098/ ; normal interferon induction: https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/');
@@ -181,9 +175,13 @@ table(s,[['Evidence','Consequence'],['Established normal production','Vital/Prot
 note(s,'Rare normal cells and activation states count. Expression exclusions do not assert clinical injury.',590,25);
 }
 {
-const s=slide('Other:Tumor-supported','Reconsideration candidates','Two distinct tumor samples at >=10 native TPM, or reviewed reliable tumor protein. Restriction also requires low measured normal/developmental expression and adequate coverage of relevant rare cells and states.');
-table(s,[['Requirement','Rule'],['Tumor RNA','>=10 TPM in two distinct samples; duplicate source views do not count'],['Protein alternative','Reviewed tumor protein evidence; aggregate IHC counts alone are insufficient'],['Outside cancer','Low measured normal/developmental expression; all normal safety gates pass'],['Coverage review','Relevant rare normal cells and states must be assessed before claiming tumor restriction']],{widths:[315,837],size:23,h:365});
-note(s,`${data.other_subtypes['Tumor-supported']||0} of ${data.tumor_restricted_leads} numerical leads remain Other; the rest have safety exclusions or review holds. None is labelled tumor-only.`,565,25);
+const s=slide('High tumor expression does not establish CTA identity','Four requested proteins','Pinned normal atlas peaks are source-supported summaries, not exhaustive rare-cell or donor maxima. OR10A4 also has normal human nasal RNA in two primary studies.');
+table(s,[['Protein','Cancer TPM','Adult atlas nTPM','Current reasoning'],['DBX1','297.5','0.8; thymic T cells','No qualifying reproductive evidence'],['OR2B2','246.3','0.5; pons','No qualifying reproductive evidence'],['KRTAP20-2','147.6','1.4; skin','Skin expression; reproductive identity unestablished'],['OR10A4','138.0','1.9; basal ganglia','Normal nasal RNA: review hold']],{widths:[220,175,335,422],size:24,h:360});
+note(s,'Disposable describes allowed adult tissues. Developmental expression is a separate measurement.',575,25);
+}
+{
+const s=slide('Other accumulates as identity gates fail','Coarse category funnel','Normal assessment is displayed first. Identity requirements move proteins into Other without creating Unsafe evidence. All final categories match the released classifier.');
+figure(s,'category-funnel',64,158,1152,475);
 }
 {
 const s=slide('Every filtering layer can contribute','Human funnel','The gray segment is held/unassigned evidence, not Other. The final profile check assigns Other. All layers evaluate every protein; final categories are independent of display order.');

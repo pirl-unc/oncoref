@@ -27,8 +27,8 @@ def test_packaged_leads_have_two_distinct_resolved_native_tpm_observations():
     # Tumor support is independent of normal safety. Later curated findings
     # must be able to exclude or hold a numerical tumor lead.
     assert leads.category.fillna("Unassigned").value_counts().to_dict() == {
-        "Other": 46,
-        "Unassigned": 14,
+        "Other": 45,
+        "Unassigned": 15,
         "Unsafe": 6,
     }
     assert leads.loc[leads.category.eq("Unsafe"), "knowledge_normal_exclusion"].all()

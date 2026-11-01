@@ -102,15 +102,24 @@ def test_exhaustive_categorical_labels_and_legacy_query_alias():
     with pytest.warns(DeprecationWarning, match="Other"):
         legacy = cta_selection.results(category="Neither")
     pd.testing.assert_frame_equal(legacy, other.reset_index(drop=True))
-    assert (
-        human.cta_selection(subtype="Inducible")
-        .label.isin(["IFNA2", "IFNA5", "IFNA7", "IFNA14", "IFNA17"])
-        .all()
-    )
+    assert set(other.subtype) <= {"Nonreproductive", "Reproductive", "Diffuse"}
     with pytest.raises(ValueError, match="subtype"):
         cta_selection.results(category="Unsafe", subtype="Low")
     with pytest.raises(ValueError, match="subtype"):
         cta_selection.results(subtype="Other")
+
+
+def test_evidence_attributes_are_independent_of_the_categorical_decision():
+    profiles = cta_selection.profiles().set_index("label")
+    assert profiles.loc["DBX1", "category"] == "Other"
+    assert profiles.loc["DBX1", "replicated_tumor_rna"]
+    assert not profiles.loc["DBX1", "reproductive_evidence"]
+    assert profiles.loc["DBX1", "tumor_max_tpm"] > 290
+    assert profiles.loc["DBX1", "normal_max_ntpm"] < 1
+    assert profiles.loc[["LCE3B", "LCE3C"], "adult_disposable_only"].all()
+    assert not profiles.loc[["LCE3B", "LCE3C"], "developmental_measured"].any()
+    assert cta_selection.profiles(species="dog").adult_disposable_only.isna().all()
+    assert cta_selection.profiles(species="mouse").normal_max_ntpm.isna().all()
 
 
 def test_full_reproductive_and_cell_support_preserve_independent_gates():

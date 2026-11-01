@@ -3,6 +3,7 @@
 import copy
 import hashlib
 import json
+import zipfile
 from pathlib import Path
 
 import pandas as pd
@@ -29,7 +30,15 @@ def test_other_review_covers_every_baseline_protein_and_preserves_evidence():
     receipt = json.loads((report / "manifest.json").read_text())
     for section, folder in [("inputs", root), ("outputs", report)]:
         for name, expected in receipt[section].items():
-            assert hashlib.sha256((folder / name).read_bytes()).hexdigest() == expected, name
+            if section == "inputs" and name in receipt.get("input_snapshots", []):
+                saved = receipt["input_snapshot_archive"]
+                path = report / saved["path"]
+                assert hashlib.sha256(path.read_bytes()).hexdigest() == saved["sha256"]
+                with zipfile.ZipFile(path) as archive:
+                    content = archive.read(name)
+            else:
+                content = (folder / name).read_bytes()
+            assert hashlib.sha256(content).hexdigest() == expected, name
 
 
 def test_findings_preserve_native_units_and_do_not_transfer_species():

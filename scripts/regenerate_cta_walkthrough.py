@@ -82,6 +82,7 @@ def walkthrough_receipt() -> None:
         ROOT / "scripts/render_cta_source_walkthrough.py",
         ROOT / "scripts/cta_source_links.py",
         ROOT / "scripts/build_cta_source_slides.mjs",
+        ROOT / "scripts/build_cta_category_funnel.py",
         ROOT / "scripts/build_cta_evidence_axes.py",
         ROOT / "docs/cta-evidence-axes.md",
         ROOT / "docs/images/cta-evidence-axes.pdf",

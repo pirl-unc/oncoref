@@ -12,23 +12,24 @@ set of reference plots.
 
 The [current CTA/oncofetal selection](docs/audits/cta-source-walkthrough-20261028/index.md)
 contains **701 selected proteins**. The 19,863-protein reference receives
-**701 CTA / 18,062 Unsafe / 454 Other / 646 unassessed** decisions.
+**701 CTA / 18,062 Unsafe / 453 Other / 647 unassessed** decisions.
 [Independent requirements](docs/cta-evidence-axes.md) assess normal-tissue safety,
 cancer expression and Reproductive evidence, with complete required coverage.
 Reproductive includes reproductive organs, placenta, extraembryonic, embryonic and
 fetal contexts. Only safety can establish Unsafe. The old normal-maximum veto is
 removed; [continuous diffuseness](docs/audits/cta-unassigned-20261029/index.md) is
 active at >10% for complete HPA adult/placental profiles, excluding thymus.
-Every Other protein has a named categorical subtype; supported embryonic routes remain independently eligible. PRAME, MAGEA4, CTAG1A/B, CTAG2,
+Every Other protein records its unmet identity requirement; supported embryonic routes remain independently eligible. PRAME, MAGEA4, CTAG1A/B, CTAG2,
 XAGE1A/B, SSX2/B, CT83 and TBXT retain CTA status. These are research assignments,
 not validated clinical safety limits.
 
 ```python
-from oncoref import human, canine, mouse
+from oncoref import human, canine, mouse, cta_selection
 
 selected = human.cta_selection(category="CTA")
 all_decisions = human.cta_selection()
-other_low = human.cta_selection(category="Other", subtype="Low")
+other = human.cta_selection(category="Other")
+profiles = cta_selection.profiles()
 labels = all_decisions[["label", "classification"]]
 canine.cta_selection()           # 14 native nominations, unassigned/unassessed
 mouse.cta_selection_coverage()   # Explicitly unavailable selection

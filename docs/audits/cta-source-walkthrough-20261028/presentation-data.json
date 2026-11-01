@@ -1,24 +1,20 @@
 {
   "summary": {
-    "policy": "oncoref.cta-selection.2026-10-30.3",
+    "policy": "oncoref.cta-selection.2026-10-31.1",
     "categories": {
       "Unsafe": 18062,
       "CTA": 701,
-      "Unassigned": 646,
-      "Other": 454
+      "Unassigned": 647,
+      "Other": 453
     },
     "selected_member_loci": 747,
     "other_subtypes": {
-      "Low": 210,
-      "Normal": 124,
-      "Weak": 67,
-      "Tumor-supported": 46,
-      "Diffuse": 6,
-      "Disposable": 1
+      "Nonreproductive": 448,
+      "Diffuse": 5
     },
     "order_independent": true
   },
-  "report_sha256": "6df7702042763caa1ae6542fecfba5ba4e8a41c9610698ecbb5f730752c08fdf",
+  "report_sha256": "8486c036379b765a0bbab05abcb31841bdb74fce1927e90bee4389759ea58177",
   "papers": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -29,8 +25,8 @@
       "mapped_gene_loci": 1066,
       "CTA": 475,
       "Unsafe": 406,
-      "Other": 89,
-      "Unassigned": 47,
+      "Other": 88,
+      "Unassigned": 48,
       "unique_entities": 275,
       "primary_source": true,
       "covered_by": [],
@@ -578,8 +574,8 @@
       "new_Unsafe": 0,
       "CTA_eligible_so_far": 701,
       "Unsafe": 18062,
-      "Other": 454,
-      "Unassigned": 646
+      "Other": 453,
+      "Unassigned": 647
     }
   ],
   "comparators": [
@@ -721,17 +717,13 @@
   "annotated": 565,
   "unannotated": 136,
   "other_subtypes": {
-    "Low": 210,
-    "Normal": 124,
-    "Weak": 67,
-    "Tumor-supported": 46,
-    "Diffuse": 6,
-    "Disposable": 1
+    "Nonreproductive": 448,
+    "Diffuse": 5
   },
   "tumor_restricted_leads": 66,
   "assessment_statuses": {
     "incomplete_evidence": 475,
-    "normal_evidence_hold": 171
+    "normal_evidence_hold": 172
   },
   "normal_gap_counts": [
     {

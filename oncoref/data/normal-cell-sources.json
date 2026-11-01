@@ -652,6 +652,32 @@
       "sha256": "00fb8835c18c8e7d660b91acbd49d83a152aff66f47eeb6d6158bbde77887e9e",
       "bytes": 1283251,
       "archive_sha256": "00fb8835c18c8e7d660b91acbd49d83a152aff66f47eeb6d6158bbde77887e9e"
+    },
+    "olfactory_verbeurgt_cq": {
+      "version": "2014-05-06",
+      "kind": "reference",
+      "filename": "pone.0096333.s002.xlsx",
+      "description": "Verbeurgt 2014 whole human olfactory mucosa: Cq values, assay identities and donor metadata",
+      "archive_format": "file",
+      "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0096333.s002&type=supplementary",
+      "publication_url": "https://doi.org/10.1371/journal.pone.0096333",
+      "taxonomy_id": 9606,
+      "sha256": "2611b6bb72230fc3e2e2935f11178ca090227979a5490a61d2f8ca63b701fba8",
+      "bytes": 136972,
+      "archive_sha256": "2611b6bb72230fc3e2e2935f11178ca090227979a5490a61d2f8ca63b701fba8"
+    },
+    "olfactory_verbeurgt_copies": {
+      "version": "2014-05-06",
+      "kind": "reference",
+      "filename": "pone.0096333.s004.xlsx",
+      "description": "Verbeurgt 2014 whole human olfactory mucosa: Native estimated RNA copies and donor metadata",
+      "archive_format": "file",
+      "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0096333.s004&type=supplementary",
+      "publication_url": "https://doi.org/10.1371/journal.pone.0096333",
+      "taxonomy_id": 9606,
+      "sha256": "340c99a905c73211322aedac9998cf2e0d158a633b17656664c928637981b92e",
+      "bytes": 177347,
+      "archive_sha256": "340c99a905c73211322aedac9998cf2e0d158a633b17656664c928637981b92e"
     }
   }
 }

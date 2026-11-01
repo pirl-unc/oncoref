@@ -1,0 +1,5 @@
+stage,eligible,Other,new_Other,Unsafe,Unassessed
+Normal safety + coverage,1154,0,0,18062,647
+Reproductive presence,706,448,448,18062,647
+Cancer presence,706,448,0,18062,647
+Reproductive concentration,701,453,5,18062,647

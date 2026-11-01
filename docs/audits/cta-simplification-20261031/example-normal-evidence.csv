@@ -1,0 +1,19 @@
+Protein,source,version,tissue,cell_type,value,raw_maximum,unit,Read count,candidate_ceiling
+OR10A4,hpa_brain,v23,basal ganglia,bulk,1.9,,nTPM,,4.0
+OR2B2,hpa_brain,v23,pons,bulk,0.5,,nTPM,,4.0
+OR10A4,hpa_immune_monaco,v23,blood,Progenitor cell,0.8,,TPM,,8.0
+DBX1,hpa_single_cell_tissue,v23,thymus,t-cells,0.8,0.8,nTPM,20.0,8.0
+DBX1,dice_tfh,DICE-DB1-20220223,blood,TFH,0.75466797449,0.970195879378,TPM,,8.0
+KRTAP20-2,hpa_rna_consensus,v23,skin,bulk,1.4,,nTPM,,16.0
+OR10A4,hpa_single_cell_tissue,v23,brain,excitatory neurons,0.3,0.3,nTPM,21.0,4.0
+DBX1,hpa_brain,v23,thalamus,bulk,0.2,,nTPM,,4.0
+OR2B2,dice_cd8_stim,DICE-DB1-20220223,blood,CD8_STIM,0.3392435143639999,0.577135131893,TPM,,8.0
+OR10A4,dice_cd4_naive,DICE-DB1-20220223,blood,CD4_NAIVE,0.295109509133,0.671292565892,TPM,,8.0
+DBX1,hpa_immune_monaco,v23,blood,Terminal effector memory CD4 T-cell,0.1,,TPM,,8.0
+OR10A4,hpa_immune_cell,v23,blood,plasmacytoid DC,0.1,,nTPM,,8.0
+KRTAP20-2,hpa_immune_monaco,v23,blood,plasmacytoid DC,0.0,,TPM,,8.0
+OR2B2,hpa_immune_monaco,v23,blood,Memory CD4 T-cell Th17,0.0,,TPM,,8.0
+DBX1,hpa_immune_cell,v23,blood,non-classical monocyte,0.0,,nTPM,,8.0
+KRTAP20-2,hpa_immune_cell,v23,blood,non-classical monocyte,0.0,,nTPM,,8.0
+OR2B2,hpa_immune_cell,v23,blood,plasmacytoid DC,0.0,,nTPM,,8.0
+KRTAP20-2,dice_thstar,DICE-DB1-20220223,blood,THSTAR,0.0,0.0,TPM,,8.0

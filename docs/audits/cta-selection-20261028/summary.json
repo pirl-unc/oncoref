@@ -1,19 +1,15 @@
 {
-  "policy": "oncoref.cta-selection.2026-10-30.3",
+  "policy": "oncoref.cta-selection.2026-10-31.1",
   "categories": {
     "Unsafe": 18062,
     "CTA": 701,
-    "Unassigned": 646,
-    "Other": 454
+    "Unassigned": 647,
+    "Other": 453
   },
   "selected_member_loci": 747,
   "other_subtypes": {
-    "Low": 210,
-    "Normal": 124,
-    "Weak": 67,
-    "Tumor-supported": 46,
-    "Diffuse": 6,
-    "Disposable": 1
+    "Nonreproductive": 448,
+    "Diffuse": 5
   },
   "order_independent": true
 }
