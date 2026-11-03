@@ -39,10 +39,10 @@ from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
 Category = Literal["CTA", "Unsafe", "Other", "Neither"]
-OtherSubtype = Literal["Nonreproductive", "Reproductive", "Diffuse"]
+OtherSubtype = Literal["Nonreproductive", "Reproductive", "Diffuse", "Held", "Contained", "Nested"]
 SpeciesLike = Species | str | int
 CATEGORIES = ("CTA", "Unsafe", "Other")
-OTHER_SUBTYPES = ("Nonreproductive", "Reproductive", "Diffuse")
+OTHER_SUBTYPES = ("Nonreproductive", "Reproductive", "Diffuse", "Held", "Contained", "Nested")
 CANDIDATE_CATEGORIES = ("CTA",)
 EVIDENCE_CATEGORIES = (
     "nomination",
@@ -243,6 +243,16 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
     CP10K are never pooled. Developmental maximum
     is a reported lineage mean, not an individual-cell maximum. Missing numerical
     and nonhuman evidence remains missing. No profile flag overrides a decision.
+
+    ``rare_cell_*`` columns report the rare vital-tissue cell screen for every
+    protein: the highest fraction of expressing cells in a brain, spinal cord,
+    heart or lung alveolar, endothelial or airway basal cell type (``rare_cell_screened`` is False for genes
+    absent from the service). ``rare_cell_flag`` marks at least 1% of such a cell
+    type and is Unsafe evidence; it is a detection frequency among cells, never
+    abundance. See ``rare_cell_screen()``.
+    ``unsafe_sequence_overlap_pct`` is the percentage of a protein's 9-mers that also
+    occur in an Unsafe protein; at 95% or more a would-be CTA is ``Other:Contained``.
+    It is missing for Unsafe proteins, which lie inside the Unsafe set by definition.
     """
     selected = resolve_species(species)
     result = results(species=selected)
@@ -266,6 +276,11 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         "reproductive_evidence",
         "developmental_lineage_max_tpm",
         "developmental_measured",
+        "rare_cell_screened",
+        "rare_cell_flag",
+        "rare_cell_max_pct",
+        "rare_cell_type",
+        "unsafe_sequence_overlap_pct",
     ]
     if selected.taxon_id == 9606:
         evidence = _checked_table("cta-selection-profiles-human.csv.gz")
@@ -274,8 +289,10 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         if set(evidence.entity_id) != set(result.entity_id):
             raise ValueError("Protein profiles do not cover the current selection")
         for column in columns[1:]:
-            if (
-                column.endswith(("_tpm", "_ntpm", "_ptpm", "_cp10k"))
+            if column == "rare_cell_type":
+                evidence[column] = evidence[column].astype("string").replace("", pd.NA)
+            elif (
+                column.endswith(("_tpm", "_ntpm", "_ptpm", "_cp10k", "_pct"))
                 or column == "tumor_samples_ge10"
             ):
                 evidence[column] = pd.to_numeric(evidence[column], errors="coerce")
@@ -288,6 +305,25 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         for column in columns[1:]:
             evidence[column] = pd.NA
     return result.merge(evidence, on="entity_id", validate="one_to_one")
+
+
+def rare_cell_screen() -> pd.DataFrame:
+    """Return the checksummed rare vital-tissue cell screen for every gene.
+
+    Up to three rows per gene: the brain, spinal cord, heart or lung alveolar, endothelial and airway basal cell
+    types (at least 3,000 cells and 10 expressing) with the highest fraction of
+    expressing cells. ``flagged`` is True at 1% or more, which makes the protein
+    Unsafe. Values are detection frequencies, not abundance, and can include ambient
+    RNA, doublets and paralog multimapping; samples cannot be restricted to adults,
+    so developmental cell types are removed by name. ``review_status`` stays
+    ``screen_unreviewed`` for this automated screen.
+    """
+    frame = _checked_table("cta-rare-cell-screen.csv.gz")
+    for column in ("n_expressing", "n_cells", "pct_expressing", "mean_expr_log"):
+        frame[column] = pd.to_numeric(frame[column], errors="raise")
+    if frame.flagged.dtype != bool:
+        raise ValueError("Rare-cell screen flags require explicit booleans")
+    return frame
 
 
 def sequence_dispositions(*, species: SpeciesLike = "human") -> pd.DataFrame:

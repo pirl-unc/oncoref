@@ -1,16 +1,16 @@
 # Which sources have missing evidence?
 
-These counts describe the **475 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **128 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
 | Evidence gap | Proteins |
 | --- | --- |
-| normal panel missing | 453 |
-| tumor measurement missing | 34 |
-| tumor group profile incomplete | 3 |
-| embryonic measurement missing | 86 |
-| unresolved evidence | 28 |
+| normal panel missing | 106 |
+| tumor measurement missing | 29 |
+| tumor group profile incomplete | 2 |
+| embryonic measurement missing | 63 |
+| unresolved evidence | 22 |
 
-The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **34** groups lack a mapped measurement, while **3** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
+The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **29** groups lack a mapped measurement, while **2** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
 
 The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted as a historical SCN11A synonym instead of a missing name, contradicting valid ENSG IDs. Seven affected cohort views were reprocessed from their pinned sample matrices and original passing-sample QC: ACINIC, ADCC, CRANIO, DIPG, MENINGIOMA, SARC_MMNST and VSCC. Their corrected measurements replace the older cohort summaries; source samples and units are unchanged. [Repaired cohort evidence and hashes](../cta-selection-20261028/tumor-identity-repair/manifest.json).
 
@@ -18,14 +18,14 @@ The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted
 
 | Source | Proteins | Examples |
 | --- | --- | --- |
-| HPA v23 consensus bulk | 374 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
-| Combined normal bulk: HPA consensus + HPA brain + direct GTEx | 366 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
-| HPA v23 tissue-cell clusters | 335 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
-| HPA v23 immune cells | 304 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
-| Monaco immune cells via HPA v23 | 304 | RTEL1-TNFRSF6B; ENSG00000100101; ENSG00000125695; ZNF670-ZNF695; ENSG00000141979 |
-| Required GTEx v11 bulk panel (52 contexts) | 413 | BORCS8-MEF2B; ENSG00000100101; CORO7-PAM16; ENSG00000125695; ZNF670-ZNF695 |
+| HPA v23 consensus bulk | 109 | TUBB8B; LINC03040; ZNF840P; MEIS3P2; OR10R2 |
+| Combined normal bulk: HPA consensus + HPA brain + direct GTEx | 106 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
+| HPA v23 tissue-cell clusters | 79 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
+| HPA v23 immune cells | 53 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
+| Monaco immune cells via HPA v23 | 53 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
+| GTEx v11 core panel (52 contexts; informational, not required) | 79 | ENSG00000239395; ENSG00000248751; ENSG00000258653; ENSG00000272647; ENSG00000273088 |
 
-Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. The fixed GTEx v11 core additionally requires all 52 native bulk contexts, including its nine adult Reproductive contexts, for every member locus. The separate requirements remain 426 HPA tissue/cell contexts, 19 HPA immune populations and 30 Monaco immune populations for every group member. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. DICE and adult cornea remain optional and do not contribute to this mandatory-panel gap.
+Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. Only this combined bulk panel is required. The GTEx v11 core (52 native bulk contexts), the 426 HPA tissue/cell contexts, 19 HPA immune populations, 30 Monaco immune populations, DICE and adult cornea are reported when present but never make a protein incomplete. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. Optional-panel gaps are disclosed per protein and do not contribute to the mandatory gap.
 
 [Every missing group/source/context](normal-panel-coverage-gaps.csv.gz) · [Every member, current/historical IDs, synonyms and observed/missing contexts](normal-panel-member-coverage.csv.gz) · [Source-row identity matches and unresolved alternatives](coverage-identity-matches.csv.gz).
 
@@ -33,18 +33,18 @@ Bulk completeness now requires every nonreproductive tissue concept in the HPA c
 
 | Source | Cohort views | Groups without any mapped measurement |
 | --- | --- | --- |
-| HPA 25.1 | 31 | 332 |
-| OncoRef | 132 | 34 |
+| HPA 25.1 | 31 | 77 |
+| OncoRef | 132 | 29 |
 
 [Per-protein, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
 
-Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **86** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
+Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **63** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
 
 The new identity pass recovers 19 gene rows omitted by the earlier exact-ID filter. It keeps 5 conflicting alternate-row cases unresolved. [Every attempted recovery and source ID](developmental-identity-recoveries.csv). Canonical rows take precedence; multiple alternative rows are accepted only when their entire cell-expression vectors agree. Different values are neither added nor arbitrarily selected.
 
 ## Unresolved evidence
 
-The **28** current unresolved groups have contributing **HPA v23 normal-tissue IHC rated Uncertain**, with Medium or High staining. These are measured but unresolved observations. [Exact gene, tissue, cell type, staining and reliability](unresolved-protein-contexts.csv.gz).
+The **22** current unresolved groups have contributing **HPA v23 normal-tissue IHC rated Uncertain**, with Medium or High staining. These are measured but unresolved observations. [Exact gene, tissue, cell type, staining and reliability](unresolved-protein-contexts.csv.gz).
 
 ## Identity matching
 

@@ -1,15 +1,18 @@
 {
   "policy": "oncoref.cta-selection.2026-10-31.1",
   "categories": {
-    "Unsafe": 18062,
-    "CTA": 701,
-    "Unassigned": 647,
-    "Other": 453
+    "Unsafe": 18278,
+    "Other": 689,
+    "CTA": 637,
+    "Unassigned": 0
   },
-  "selected_member_loci": 747,
+  "selected_member_loci": 683,
   "other_subtypes": {
-    "Nonreproductive": 448,
-    "Diffuse": 5
+    "Nonreproductive": 601,
+    "Held": 34,
+    "Nested": 28,
+    "Contained": 20,
+    "Diffuse": 6
   },
   "order_independent": true
 }

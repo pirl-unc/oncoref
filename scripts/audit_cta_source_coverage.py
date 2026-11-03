@@ -48,7 +48,7 @@ def encoded(values) -> str:
 def build() -> None:
     """Export source-specific group gaps, member identities and cohort coverage."""
     facts = pd.read_csv(CURRENT / "protein-group-classifications.csv.gz", low_memory=False)
-    target = facts[facts.category.isna() | ~facts.required_coverage].copy()
+    target = facts[facts.assessment_status.ne("screened") | ~facts.required_coverage].copy()
     target["member_gene_ids"] = target.member_gene_ids.map(json.loads)
     target_ids = {g for ids in target.member_gene_ids for g in ids}
     catalog = gene_identity_catalog().set_index("canonical_gene_id")
@@ -230,7 +230,7 @@ def build() -> None:
         }
     )
 
-    unassigned = target[target.category.isna()]
+    unassigned = target[target.assessment_status.ne("screened")]
     tumor_missing = unassigned[
         unassigned[["oncoref_maximum_tpm", "hpa_tumor_group_lower_bound_ptpm"]].isna().all(axis=1)
     ]
@@ -338,7 +338,7 @@ def build() -> None:
     summary.append(
         {
             "source_id": "gtex_core_panel",
-            "source": "Required GTEx v11 bulk panel (52 contexts)",
+            "source": "GTEx v11 core panel (52 contexts; informational, not required)",
             "groups": len(gtex_missing),
             "example_genes": "; ".join(gtex_missing.label.head(5)),
         }

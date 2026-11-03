@@ -402,6 +402,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "species-scoped evidence roles, native units, source integration status and coverage gaps",
     ),
+    "cta-protein-universe": (
+        "cta-evidence",
+        "coding or established-ncORF status per gene, the stage-0 universe for CTA selection, with evidence and exclusion reason",
+    ),
+    "cta-rare-cell-screen": (
+        "cta-evidence",
+        "unreviewed single-cell screen of rare normal-cell expression for CTA and Held proteins, with source rules and limits",
+    ),
     "cta-ihc-compartments": (
         "cta-evidence",
         "source-specific RNA/IHC compartment correspondences with citations and coverage limits",

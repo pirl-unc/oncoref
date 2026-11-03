@@ -5,7 +5,7 @@ from oncoref import cta_selection
 
 results = cta_selection.results(species="human")
 selected = cta_selection.results(species="human", category="CTA")
-unassigned = results[results.category.isna()]
+unassigned = results[results.assessment_status.ne("screened")]
 audit = cta_selection.audit(species="human")
 audit.sources
 audit.overlaps

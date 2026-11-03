@@ -26,13 +26,11 @@ def test_packaged_leads_have_two_distinct_resolved_native_tpm_observations():
     assert len(leads) == 66
     # Tumor support is independent of normal safety. Later curated findings
     # must be able to exclude or hold a numerical tumor lead.
-    assert leads.category.fillna("Unassigned").value_counts().to_dict() == {
-        "Other": 45,
-        "Unassigned": 15,
-        "Unsafe": 6,
-    }
-    assert leads.loc[leads.category.eq("Unsafe"), "knowledge_normal_exclusion"].all()
-    assert leads.loc[leads.category.isna(), "knowledge_normal_hold"].all()
+    assert leads.category.value_counts().to_dict() == {"Other": 45, "Unsafe": 21}
+    # Reviewed exclusions and unresolved Protected-tissue holds both establish Unsafe.
+    unsafe = leads[leads.category.eq("Unsafe")]
+    assert (unsafe.knowledge_normal_exclusion | unsafe.knowledge_normal_hold).all()
+    assert unsafe.knowledge_normal_hold.sum() == 15
     assert not leads.normal_restriction_reviewed.any()
     obs = obs[obs.protein_equivalence_group_id.isin(leads.protein_equivalence_group_id)]
     assert obs.unit.eq("TPM").all()

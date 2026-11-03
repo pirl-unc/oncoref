@@ -16,23 +16,34 @@ separately from normal-tissue safety.
 
 from __future__ import annotations
 
-from collections.abc import Collection, Sequence
+from collections.abc import Callable, Collection, Sequence
 
 import numpy as np
 import pandas as pd
 
 from .cell_rna_policy import EXPECTED_UNITS, GRADES, NEUTRAL_REPRODUCTIVE_IMMUNE, POSITIVE
 from .compartment_rna_policy import IHC_RANKS
+from .cta_cell_tiers import differentiated_airway
 from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 
 POLICY_ID = "oncoref.cta-selection.2026-10-31.1"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
+# Manageable-tier RNA above the highest Manageable ceiling (16 x 2^3 = 128 in
+# native TPM/nTPM units) is unsafe evidence; lower excess only blocks CTA.
+MANAGEABLE_UNSAFE_FLOOR = 128.0
+# A would-be CTA with at least this fraction of its 9-mers also present in Unsafe
+# proteins is Other:Contained. Unsafe sequence is blacklisted, so such a protein
+# retains almost no usable peptide.
+CONTAINED_FLOOR = 0.95
 OTHER_SUBTYPE_RULES = {
     "Nonreproductive": "Normal screen passes, but no qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. This is not proof of absence.",
     "Reproductive": "Normal screen and reproductive presence pass, but cancer presence is unestablished.",
     "Diffuse": "Normal screen, reproductive presence and cancer presence pass, but the reproductive concentration gate fails.",
+    "Held": "Target gates pass, but an unresolved or marginal normal-tissue signal blocks CTA without establishing Unsafe.",
+    "Nested": "A reference-CDS microprotein (under 50 residues) nested inside a same-strand protein-coding gene and not an established ncORF: its RNA signal belongs to the host, so it cannot be a CTA.",
+    "Contained": "Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist.",
 }
 CANDIDATE_ONLY_LAYERS = frozenset(
     {
@@ -189,7 +200,8 @@ def compartment_tiers(contexts: pd.DataFrame) -> pd.Series:
     """Use the same identified cell-compartment tier for RNA and protein.
 
     Whole-organ bulk retains its anatomical tier. This policy treats identified
-    fibroblasts and large-bowel epithelial populations as Manageable; it does
+    fibroblasts, large-bowel epithelium and differentiated airway epithelium
+    (``cta_cell_tiers``; airway basal cells stay Vital) as Manageable; it does
     not describe them as disposable or establish tolerability of cell killing.
     """
     tiers = contexts.category.replace({"renewing_mucosa": "manageable"}).copy()
@@ -198,8 +210,10 @@ def compartment_tiers(contexts: pd.DataFrame) -> pd.Series:
     )
     cellular = contexts.source.isin(["hpa_single_cell_tissue", "hpa_normal_tissue"])
     cells, tissues = contexts.cell_type.str.lower(), contexts.tissue.str.lower()
-    manageable = cells.eq("fibroblasts") | (
-        tissues.isin(["colon", "rectum"]) & cells.isin(BOWEL_EPITHELIAL_CELLS)
+    manageable = (
+        cells.eq("fibroblasts")
+        | (tissues.isin(["colon", "rectum"]) & cells.isin(BOWEL_EPITHELIAL_CELLS))
+        | differentiated_airway(tissues, cells)
     )
     tiers.loc[mapped & cellular & manageable] = "manageable"
     return tiers
@@ -352,7 +366,13 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
     d["compartment_basis"] = np.where(
         stroma & normal, "identified_fibroblast", "anatomical_default"
     )
+    airway = differentiated_airway(d.tissue, d.cell_type) & d.source.isin(
+        ["hpa_single_cell_tissue", "hpa_normal_tissue"]
+    )
     d.loc[d.selection_tier.ne(d.category) & ~stroma, "compartment_basis"] = "large_bowel_epithelium"
+    d.loc[d.selection_tier.ne(d.category) & airway & normal, "compartment_basis"] = (
+        "differentiated_airway_epithelium"
+    )
     d["baseline_ceiling"] = (
         d.selection_tier.map(TIER_BASES)
         * 2.0 ** d.negative_ihc_grade.map(IHC_RANKS)
@@ -377,7 +397,14 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
     d["clinical_credit_applied"] = credit & d.candidate_ceiling.gt(d.baseline_ceiling)
     d["baseline_exclusion"] = normal & d.value.gt(d.baseline_ceiling)
     d["candidate_exclusion"] = normal & d.value.gt(d.candidate_ceiling)
-    d["unsafe_evidence"] = d.candidate_exclusion & d.selection_tier.isin(["vital", "protected"])
+    manageable_excess = (
+        normal
+        & d.selection_tier.eq("manageable")
+        & d.value.div(d.unit.map(UNIT_SCALE)).gt(MANAGEABLE_UNSAFE_FLOOR)
+    )
+    d["unsafe_evidence"] = (
+        d.candidate_exclusion & d.selection_tier.isin(["vital", "protected"])
+    ) | manageable_excess
     d["unresolved_context"] = ~d.mapping_status.eq("mapped")
     d["candidate_exclusion"] |= d.unresolved_context
     d["selection_policy"] = POLICY_ID
@@ -459,16 +486,27 @@ def tumor_restricted_evidence(facts: pd.DataFrame) -> pd.DataFrame:
 
 
 def classify(
-    facts: pd.DataFrame, layers: Sequence[EvidenceLayer], *, entity_column: str
+    facts: pd.DataFrame,
+    layers: Sequence[EvidenceLayer],
+    *,
+    entity_column: str,
+    unsafe_overlap: Callable[[pd.Series], pd.Series] | None = None,
 ) -> FunnelResult:
     """Classify every entity with normal exclusions taking precedence.
 
-    Null category means no supported biological assignment; assessment_status
-    explains incomplete normal evidence versus an unresolved normal-screen hold.
-    Other is the normal-pass noncandidate fallback; it is never a synonym for
-    missing normal evidence. Subtypes describe Other without supplying target clearance.
+    Every entity receives CTA, Unsafe or Other. CTA means every gate passes.
+    Unsafe requires positive exclusion evidence, including reviewed unresolved
+    Protected-tissue findings and Manageable-tier excess above 128. Other is
+    everything else; assessment_status records whether its normal screen was
+    complete, incomplete or held, and the Held subtype marks proteins whose
+    target gates pass but whose normal signal is unresolved or marginal.
     Cancer presence, specificity, developmental/reproductive association and
     coverage can block CTA admission but can never supply Unsafe evidence.
+
+    ``unsafe_overlap`` maps the Unsafe mask to each entity's fraction of 9-mers
+    that also occur in an Unsafe entity. A would-be CTA at or above
+    ``CONTAINED_FLOOR`` becomes ``Other:Contained``: Unsafe sequence is
+    blacklisted, so a protein almost wholly inside it has no usable peptide.
     """
     if facts[entity_column].isna().any() or not facts[entity_column].is_unique:
         raise ValueError("Require unique entity identities")
@@ -489,9 +527,20 @@ def classify(
         "Reproductive concentration", pd.Series(False, index=facts.index)
     )
     safety_hold = holds[[n for n in holds if n not in CANDIDATE_ONLY_LAYERS]].any(axis=1)
-    normal_pass = facts.required_coverage & ~facts.unresolved_evidence & ~safety_hold & ~unsafe
-    eligible = ~(held | unsafe) & normal_pass
-    other = normal_pass & ~eligible
+    # Every protein ends as CTA, Unsafe or Other. Unsafe needs positive exclusion
+    # evidence; unresolved or marginal normal evidence blocks CTA and is
+    # disclosed in assessment_status, but is never a separate unassessed class.
+    complete = facts.required_coverage & ~facts.unresolved_evidence
+    eligible = ~(held | unsafe) & complete & ~safety_hold
+    overlap = pd.Series(np.nan, index=facts.index)
+    contained = pd.Series(False, index=facts.index)
+    if unsafe_overlap is not None:
+        overlap = unsafe_overlap(unsafe)
+        if not overlap.index.equals(facts.index):
+            raise ValueError("Unsafe sequence overlap must align with the evidence index")
+        contained = eligible & overlap.ge(CONTAINED_FLOOR)
+        eligible = eligible & ~contained
+    other = ~unsafe & ~eligible
     result = facts.drop(columns=[c for c in facts if c.startswith(("hold:", "unsafe:"))]).copy()
     result["category"] = pd.Series(pd.NA, index=facts.index, dtype="string")
     for label, mask in [
@@ -502,7 +551,7 @@ def classify(
         result.loc[mask, "category"] = label
     result["assessment_status"] = np.select(
         [
-            result.category.notna(),
+            unsafe | eligible | (other & complete & ~safety_hold),
             facts.unresolved_evidence | ~facts.required_coverage,
         ],
         ["screened", "incomplete_evidence"],
@@ -510,16 +559,24 @@ def classify(
     )
     association_failed = holds.get("Reproductive / embryonic association", ~facts.positive_context)
     cancer_failed = holds.get("Cancer expression", pd.Series(False, index=facts.index))
+    result["unsafe_sequence_overlap_pct"] = (100 * overlap).round(2)
+    nested = (
+        facts["nested_microprotein"].astype(bool)
+        if "nested_microprotein" in facts
+        else pd.Series(False, index=facts.index)
+    )
     result["subtype"] = np.select(
         [
+            contained,
+            other & nested,
             other & association_failed,
             other & cancer_failed,
             other & concentration_hold,
         ],
-        ["Nonreproductive", "Reproductive", "Diffuse"],
-        default="",
+        ["Contained", "Nested", "Nonreproductive", "Reproductive", "Diffuse"],
+        default=np.where(other, "Held", ""),
     )
-    result["classification"] = result.category.fillna("Unassessed").astype(str)
+    result["classification"] = result.category.astype(str)
     result.loc[other, "classification"] = "Other:" + result.loc[other, "subtype"]
     if result.loc[other, "subtype"].eq("").any():
         raise ValueError("Every Other protein requires a categorical subtype")
@@ -558,6 +615,29 @@ def classify(
             }
         )
         result["hold:" + name], result["unsafe:" + name] = holds[name], exclusions[name]
+    if unsafe_overlap is not None:
+        remaining = ~(running_hold | running_unsafe)
+        sequential.append(
+            {
+                "layer": "Unsafe sequence containment",
+                "new_candidate_removals": int(contained.sum()),
+                "new_Unsafe": 0,
+                "CTA_eligible_so_far": int((remaining & ~contained).sum()),
+                "Unsafe": int(running_unsafe.sum()),
+                "Other": 0,
+                # Contained proteins are assigned Other at the final stage, like holds.
+                "Unassigned": int((running_hold & ~running_unsafe).sum() + contained.sum()),
+            }
+        )
+        independent.append(
+            {
+                "layer": "Unsafe sequence containment",
+                "candidate_exclusions_anywhere": int((overlap.ge(CONTAINED_FLOOR) & ~unsafe).sum()),
+                "Unsafe_evidence_anywhere": 0,
+                "CTA_added_if_layer_removed": int(contained.sum()),
+                "Unsafe_reclassified_if_layer_removed": 0,
+            }
+        )
     sequential.append(
         {
             "layer": "CTA and Other assignments",

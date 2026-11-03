@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import FancyBboxPatch
 
-from oncoref.cta_selection_policy import CANDIDATE_ONLY_LAYERS
+from oncoref.cta_selection_policy import CANDIDATE_ONLY_LAYERS, CONTAINED_FLOOR
 from oncoref.version import __version__
 
 
@@ -32,15 +32,24 @@ def build(root: Path, output: Path) -> None:
         ]
     ].any(axis=1)
     normal_pass = ~unsafe & ~normal_holds & facts.required_coverage & ~facts.unresolved_evidence
-    unassessed = ~unsafe & ~normal_pass
+    # Proteins with a held, incomplete or unresolved normal screen are Other:Held
+    # or Other by gate; they stay outside the candidate track but are not rejected.
+    held = ~unsafe & ~normal_pass
+    layer = "unsafe:Rare vital-tissue cell expression"
+    other_unsafe = facts[[c for c in facts if c.startswith("unsafe:") and c != layer]].any(axis=1)
+    rare_only = int((facts[layer] & ~other_unsafe).sum())
     eligible = normal_pass.copy()
     other = pd.Series(False, index=facts.index)
     rows = []
     for label, failure in [
         ("Normal safety + coverage", pd.Series(False, index=facts.index)),
-        ("Reproductive presence", ~facts.positive_context),
+        ("Reproductive presence", ~facts.positive_context | facts.nested_microprotein),
         ("Cancer presence", ~facts.cancer_association),
         ("Reproductive concentration", facts.reproductive_concentration_hold),
+        (
+            "Unsafe sequence containment",
+            facts.unsafe_sequence_overlap_pct.ge(100 * CONTAINED_FLOOR),
+        ),
     ]:
         new_other = eligible & failure
         other |= new_other
@@ -52,22 +61,22 @@ def build(root: Path, output: Path) -> None:
                 "Other": int(other.sum()),
                 "new_Other": int(new_other.sum()),
                 "Unsafe": int(unsafe.sum()),
-                "Unassessed": int(unassessed.sum()),
+                "Unresolved": int(held.sum()),
             }
         )
     assert eligible.equals(facts.category.eq("CTA"))
-    assert other.equals(facts.category.eq("Other"))
+    assert (other | held).equals(facts.category.eq("Other"))
     assert unsafe.equals(facts.category.eq("Unsafe"))
-    assert unassessed.equals(facts.category.isna())
+    assert not facts.category.isna().any()
     table = pd.DataFrame(rows)
-    assert table[["eligible", "Other", "Unsafe", "Unassessed"]].sum(axis=1).eq(len(facts)).all()
+    assert table[["eligible", "Other", "Unsafe", "Unresolved"]].sum(axis=1).eq(len(facts)).all()
     output.mkdir(parents=True, exist_ok=True)
     table.to_csv(output / "category-funnel.csv", index=False)
     colors = {
         "eligible": "#087E8B",
         "Unsafe": "#AC493B",
         "Other": "#B18335",
-        "Unassessed": "#8995A4",
+        "Unresolved": "#8995A4",
     }
     ink, muted = "#173B55", "#536675"
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 12, "svg.fonttype": "none"})
@@ -86,7 +95,11 @@ def build(root: Path, output: Path) -> None:
         "CTA": int(eligible.sum()),
         "Unsafe": int(unsafe.sum()),
         "Other": int(other.sum()),
-        "Unassessed": int(unassessed.sum()),
+        "Unresolved": int(held.sum()),
+    }
+    sublabels = {
+        "Other": "passed the normal screen, failed a target gate",
+        "Unresolved": "normal screen unresolved; also Other, not rejected",
     }
     for i, (name, count) in enumerate(counts.items()):
         x = 0.055 + i * 0.232
@@ -104,6 +117,8 @@ def build(root: Path, output: Path) -> None:
         )
         fig.text(x + 0.014, 0.84, f"{count:,}", fontsize=25, color=color, weight="bold")
         fig.text(x + 0.014, 0.795, name, fontsize=13, color=ink)
+        if name in sublabels:
+            fig.text(x + 0.014, 0.768, sublabels[name], fontsize=7.5, color=muted)
     fig.text(
         0.055,
         0.709,
@@ -115,7 +130,7 @@ def build(root: Path, output: Path) -> None:
     fig.text(
         0.055,
         0.676,
-        f"{unsafe.sum():,} Unsafe and {unassessed.sum():,} Unassessed remain outside this candidate track at every stage below.",
+        f"{unsafe.sum():,} Unsafe and {held.sum():,} Other proteins with an unresolved normal screen stay outside this track; none is unassessed.",
         fontsize=12,
         color=muted,
     )
@@ -169,23 +184,30 @@ def build(root: Path, output: Path) -> None:
     fig.text(0.69, 0.63, "Other (cumulative)", fontsize=11, color=colors["Other"], weight="bold")
     fig.text(
         0.055,
-        0.152,
-        f"{table.iloc[1].new_Other:,} lack qualifying reproductive evidence; {table.iloc[-1].new_Other:,} additional proteins fail concentration.",
+        0.178,
+        f"{table.iloc[1].new_Other:,} lack qualifying reproductive evidence or are nested microproteins; {table.iloc[3].new_Other:,} fail concentration; {table.iloc[4].new_Other:,} are Contained in Unsafe sequence.",
         fontsize=14,
         color=ink,
         weight="bold",
     )
     fig.text(
         0.055,
-        0.112,
+        0.142,
         f"Cancer presence moves {table.iloc[2].new_Other:,} additional proteins into Other; {table.iloc[2].eligible:,} remain eligible.",
         fontsize=11,
         color=muted,
     )
     fig.text(
         0.055,
-        0.066,
-        "Reproductive includes placental and embryonic/fetal contexts. Other requires a complete, passing normal screen.\nThe figure changes display order only; all final categories exactly match the released classification.",
+        0.108,
+        f"Rare vital-tissue cell expression (at least 1% of a brain, heart or lung alveolar, endothelial or airway basal cell type) is the only Unsafe evidence for {rare_only:,} proteins.",
+        fontsize=10,
+        color=muted,
+    )
+    fig.text(
+        0.055,
+        0.05,
+        "Reproductive includes placental and embryonic/fetal contexts. Unresolved proteins pass no CTA gate but are not Unsafe; Other:Held is the subset passing every target gate.\nThe figure changes display order only; all final categories exactly match the released classification.",
         fontsize=10,
         color=muted,
         linespacing=1.6,
@@ -201,6 +223,7 @@ def build(root: Path, output: Path) -> None:
                 "policy": facts.policy.unique().tolist(),
                 "final_counts": counts,
                 "normal_first_display_only": True,
+                "rare_vital_only_unsafe": rare_only,
             },
             indent=2,
         )
