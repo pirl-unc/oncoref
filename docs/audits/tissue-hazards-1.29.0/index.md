@@ -2733,4 +2733,3 @@ Model: human; design: cell therapy clinical.
 Normal marrow plasma-cell aplasia and prolonged hypogammaglobulinemia followed BCMA-directed CAR T-cell therapy.
 
 **Limit:** Myeloma, prior therapies and conditioning affect immune recovery; this is not an isolated healthy-plasma-cell ablation trial.
-

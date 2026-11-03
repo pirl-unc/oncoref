@@ -500,7 +500,7 @@ def build(out):
             "**Limit:** " + r["limitation"],
             "",
         ]
-    (out / "index.md").write_text("\n".join(lines) + "\n")
+    (out / "index.md").write_text("\n".join(lines).rstrip() + "\n")
     render_html(out, doc, counts, figs, changes)
     render_pdf(out, doc, counts, figs, changes)
     source_files = [
