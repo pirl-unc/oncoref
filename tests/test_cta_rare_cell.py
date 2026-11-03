@@ -66,8 +66,8 @@ def test_lung_tiers_follow_the_shared_cell_type_table():
         "type II pneumocyte": "vital",
         "pulmonary capillary endothelial cell": "vital",
         "basal cell": "vital",
-        "respiratory ciliated cell": "manageable",
-        "club cell": "manageable",
+        "respiratory ciliated cell": "protected",
+        "club cell": "vital",
     }
 
 
@@ -82,17 +82,17 @@ def test_airway_tier_is_shared_with_the_rna_cascade():
                 "alveolar cells type 2",
                 "ciliated cells",
             ],
-            "category": ["vital"] * 5,
+            "category": ["vital"] * 4 + ["reproductive"],
             "mapping_status": ["mapped"] * 5,
             "source": ["hpa_single_cell_tissue"] * 5,
         }
     )
     assert policy.compartment_tiers(contexts).tolist() == [
-        "manageable",
-        "manageable",
+        "protected",
         "vital",
         "vital",
         "vital",
+        "reproductive",
     ]
 
 
@@ -196,6 +196,25 @@ def test_the_layer_can_be_a_review_hold_instead_of_unsafe():
     ]
     result = policy.classify(facts, layers, entity_column="entity").classifications
     assert result.classification.tolist() == ["CTA", "Other:Held"]
+
+
+def test_protected_airway_expression_creates_hold_without_vital_flag(monkeypatch):
+    table = pd.DataFrame(
+        {
+            "gene_id": ["A", "B"],
+            "tissue": ["lung", "lung"],
+            "cell_type": ["ciliated cells", "goblet cells"],
+            "n_expressing": [100, 99],
+            "n_cells": [10000, 10000],
+            "pct_expressing": [1.0, 0.99],
+            "tier": ["protected", "protected"],
+        }
+    )
+    monkeypatch.setattr(cta_rare_cell, "screen_table", lambda: table)
+    monkeypatch.setattr(cta_rare_cell, "provenance", lambda: {"screened_gene_ids": ["A", "B"]})
+    out = cta_rare_cell.annotate(pd.DataFrame({"member_gene_ids": ['["A"]', '["B"]']}))
+    assert out.rare_cell_hold.tolist() == [True, False]
+    assert not out.rare_cell_flag.any()
 
 
 def _passing():

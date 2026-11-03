@@ -208,7 +208,7 @@ def test_published_selection_and_benchmark():
     assert result.loc[list(benchmark), "Donor review"].eq("Not assessed").all()
 
 
-def test_report_hashes_and_published_dataset_agree():
+def test_report_hashes_and_published_dataset_agree(historical_cta_input):
     manifest = json.loads((REPORT / "run-manifest.json").read_text())
     assert manifest["donor_reviewed_genes"] == ["CTAG2"]
     for section, root in [("inputs", ROOT), ("implementation_sha256", ROOT), ("outputs", REPORT)]:
@@ -223,6 +223,8 @@ def test_report_hashes_and_published_dataset_agree():
                     / "docs/audits/normal-tissue-registry-20261021-r2/frozen-inputs"
                     / Path(name).name
                 )
+            elif section != "outputs":
+                path = historical_cta_input(name, expected)
             assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
     dataset = ROOT / "oncoref/data/cta-screen-results.csv"
     assert hashlib.sha256(dataset.read_bytes()).hexdigest() == manifest["published_dataset_sha256"]

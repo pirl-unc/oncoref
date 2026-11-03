@@ -1,6 +1,8 @@
 # oncoref
 
-**Current research selection: [523-protein CTA funnel](audits/cta-source-walkthrough-20261028/index.md)**,
+[Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls, with searchable and PDF reports.
+
+**Current research selection: [CTA funnel](audits/cta-source-walkthrough-20261028/index.md)**,
 with explicit CTA / Unsafe / Neither decisions or unassigned evidence status.
 [Independent requirements](cta-evidence-axes.md) distinguish normal-tissue safety,
 cancer expression and Reproductive evidence. Reproductive includes adult reproductive,

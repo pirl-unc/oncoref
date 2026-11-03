@@ -1,23 +1,23 @@
 {
   "summary": {
-    "policy": "oncoref.cta-selection.2026-10-31.1",
+    "policy": "oncoref.cta-selection.2026-11-03.1",
     "categories": {
-      "Unsafe": 18278,
-      "Other": 689,
-      "CTA": 637,
+      "Unsafe": 18351,
+      "Other": 628,
+      "CTA": 625,
       "Unassigned": 0
     },
-    "selected_member_loci": 683,
+    "selected_member_loci": 671,
     "other_subtypes": {
-      "Nonreproductive": 601,
-      "Held": 34,
+      "Nonreproductive": 550,
       "Nested": 28,
-      "Contained": 20,
-      "Diffuse": 6
+      "Held": 27,
+      "Contained": 19,
+      "Diffuse": 4
     },
     "order_independent": true
   },
-  "report_sha256": "0726dd06ff8f5743c6a93f3cb4067baede94c2e9e6d645fbd45444fca309ec33",
+  "report_sha256": "49abfc0cd2024ab53aa693507f61fa075b0971e7926799e43a9816534a389635",
   "papers": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -26,9 +26,9 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 1017,
       "mapped_gene_loci": 1066,
-      "CTA": 430,
-      "Unsafe": 469,
-      "Other": 118,
+      "CTA": 425,
+      "Unsafe": 490,
+      "Other": 102,
       "Unassigned": 0,
       "unique_entities": 275,
       "primary_source": true,
@@ -43,9 +43,9 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 988,
       "mapped_gene_loci": 994,
-      "CTA": 284,
-      "Unsafe": 678,
-      "Other": 26,
+      "CTA": 280,
+      "Unsafe": 685,
+      "Other": 23,
       "Unassigned": 0,
       "unique_entities": 26,
       "primary_source": true,
@@ -60,9 +60,9 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 985,
       "mapped_gene_loci": 986,
-      "CTA": 296,
-      "Unsafe": 674,
-      "Other": 14,
+      "CTA": 291,
+      "Unsafe": 677,
+      "Other": 16,
       "Unassigned": 1,
       "unique_entities": 21,
       "primary_source": true,
@@ -77,9 +77,9 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 729,
       "mapped_gene_loci": 733,
-      "CTA": 359,
-      "Unsafe": 344,
-      "Other": 26,
+      "CTA": 356,
+      "Unsafe": 346,
+      "Other": 27,
       "Unassigned": 0,
       "unique_entities": 58,
       "primary_source": true,
@@ -94,9 +94,9 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 692,
       "mapped_gene_loci": 692,
-      "CTA": 13,
-      "Unsafe": 674,
-      "Other": 5,
+      "CTA": 12,
+      "Unsafe": 679,
+      "Other": 1,
       "Unassigned": 0,
       "unique_entities": 517,
       "primary_source": true,
@@ -112,8 +112,8 @@
       "mapped_entities": 469,
       "mapped_gene_loci": 481,
       "CTA": 34,
-      "Unsafe": 428,
-      "Other": 7,
+      "Unsafe": 429,
+      "Other": 6,
       "Unassigned": 0,
       "unique_entities": 318,
       "primary_source": true,
@@ -128,8 +128,8 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 202,
       "mapped_gene_loci": 215,
-      "CTA": 86,
-      "Unsafe": 112,
+      "CTA": 85,
+      "Unsafe": 113,
       "Other": 4,
       "Unassigned": 0,
       "unique_entities": 8,
@@ -162,9 +162,9 @@
       "entity_kind": "protein_equivalence_group",
       "mapped_entities": 78,
       "mapped_gene_loci": 79,
-      "CTA": 8,
+      "CTA": 9,
       "Unsafe": 67,
-      "Other": 3,
+      "Other": 2,
       "Unassigned": 0,
       "unique_entities": 21,
       "primary_source": true,
@@ -180,8 +180,8 @@
       "mapped_entities": 15,
       "mapped_gene_loci": 15,
       "CTA": 12,
-      "Unsafe": 2,
-      "Other": 1,
+      "Unsafe": 3,
+      "Other": 0,
       "Unassigned": 0,
       "unique_entities": 2,
       "primary_source": true,
@@ -395,8 +395,8 @@
       "mapped_entities": 2,
       "mapped_gene_loci": 2,
       "CTA": 1,
-      "Unsafe": 0,
-      "Other": 1,
+      "Unsafe": 1,
+      "Other": 0,
       "Unassigned": 0,
       "unique_entities": 0,
       "primary_source": false,
@@ -457,145 +457,154 @@
     {
       "layer": "HPA normal protein",
       "new_candidate_removals": 12044,
-      "new_Unsafe": 10066,
+      "new_Unsafe": 10160,
       "CTA_eligible_so_far": 5579,
-      "Unsafe": 10066,
+      "Unsafe": 10160,
       "Other": 0,
-      "Unassigned": 3959
+      "Unassigned": 3865
     },
     {
       "layer": "Required RNA coverage",
       "new_candidate_removals": 45,
       "new_Unsafe": 0,
       "CTA_eligible_so_far": 5534,
-      "Unsafe": 10066,
+      "Unsafe": 10160,
       "Other": 0,
-      "Unassigned": 4004
+      "Unassigned": 3910
     },
     {
       "layer": "Reproductive concentration",
       "new_candidate_removals": 1007,
       "new_Unsafe": 0,
       "CTA_eligible_so_far": 4527,
-      "Unsafe": 10066,
+      "Unsafe": 10160,
       "Other": 0,
-      "Unassigned": 5011
+      "Unassigned": 4917
     },
     {
       "layer": "Normal bulk",
-      "new_candidate_removals": 3505,
-      "new_Unsafe": 7453,
-      "CTA_eligible_so_far": 1022,
-      "Unsafe": 17519,
+      "new_candidate_removals": 3514,
+      "new_Unsafe": 7476,
+      "CTA_eligible_so_far": 1013,
+      "Unsafe": 17636,
       "Other": 0,
-      "Unassigned": 1063
+      "Unassigned": 955
     },
     {
       "layer": "HPA tissue clusters",
-      "new_candidate_removals": 237,
-      "new_Unsafe": 391,
-      "CTA_eligible_so_far": 785,
-      "Unsafe": 17910,
+      "new_candidate_removals": 236,
+      "new_Unsafe": 365,
+      "CTA_eligible_so_far": 777,
+      "Unsafe": 18001,
       "Other": 0,
-      "Unassigned": 909
+      "Unassigned": 826
     },
     {
       "layer": "HPA immune",
-      "new_candidate_removals": 15,
-      "new_Unsafe": 30,
-      "CTA_eligible_so_far": 770,
-      "Unsafe": 17940,
+      "new_candidate_removals": 14,
+      "new_Unsafe": 27,
+      "CTA_eligible_so_far": 763,
+      "Unsafe": 18028,
       "Other": 0,
-      "Unassigned": 894
+      "Unassigned": 813
     },
     {
       "layer": "Monaco immune",
-      "new_candidate_removals": 8,
-      "new_Unsafe": 18,
-      "CTA_eligible_so_far": 762,
-      "Unsafe": 17958,
+      "new_candidate_removals": 12,
+      "new_Unsafe": 21,
+      "CTA_eligible_so_far": 751,
+      "Unsafe": 18049,
       "Other": 0,
-      "Unassigned": 884
+      "Unassigned": 804
     },
     {
       "layer": "DICE immune",
-      "new_candidate_removals": 21,
-      "new_Unsafe": 45,
-      "CTA_eligible_so_far": 741,
-      "Unsafe": 18003,
+      "new_candidate_removals": 16,
+      "new_Unsafe": 35,
+      "CTA_eligible_so_far": 735,
+      "Unsafe": 18084,
       "Other": 0,
-      "Unassigned": 860
+      "Unassigned": 785
     },
     {
       "layer": "Adult cornea",
-      "new_candidate_removals": 3,
-      "new_Unsafe": 11,
-      "CTA_eligible_so_far": 738,
-      "Unsafe": 18014,
+      "new_candidate_removals": 2,
+      "new_Unsafe": 5,
+      "CTA_eligible_so_far": 733,
+      "Unsafe": 18089,
       "Other": 0,
-      "Unassigned": 852
+      "Unassigned": 782
     },
     {
       "layer": "Accepted normal-protein evidence",
       "new_candidate_removals": 3,
       "new_Unsafe": 2,
-      "CTA_eligible_so_far": 735,
-      "Unsafe": 18016,
+      "CTA_eligible_so_far": 730,
+      "Unsafe": 18091,
       "Other": 0,
-      "Unassigned": 853
+      "Unassigned": 783
     },
     {
       "layer": "Reviewed normal-cell knowledge",
       "new_candidate_removals": 0,
-      "new_Unsafe": 144,
-      "CTA_eligible_so_far": 735,
-      "Unsafe": 18160,
+      "new_Unsafe": 141,
+      "CTA_eligible_so_far": 730,
+      "Unsafe": 18232,
       "Other": 0,
-      "Unassigned": 709
+      "Unassigned": 642
     },
     {
       "layer": "Clinical safety exclusion",
       "new_candidate_removals": 1,
       "new_Unsafe": 1,
-      "CTA_eligible_so_far": 734,
-      "Unsafe": 18161,
+      "CTA_eligible_so_far": 729,
+      "Unsafe": 18233,
       "Other": 0,
-      "Unassigned": 709
+      "Unassigned": 642
     },
     {
       "layer": "Rare vital-tissue cell expression",
-      "new_candidate_removals": 77,
-      "new_Unsafe": 117,
-      "CTA_eligible_so_far": 657,
-      "Unsafe": 18278,
+      "new_candidate_removals": 79,
+      "new_Unsafe": 118,
+      "CTA_eligible_so_far": 650,
+      "Unsafe": 18351,
       "Other": 0,
-      "Unassigned": 669
+      "Unassigned": 603
+    },
+    {
+      "layer": "Rare Protected-cell expression review",
+      "new_candidate_removals": 6,
+      "new_Unsafe": 0,
+      "CTA_eligible_so_far": 644,
+      "Unsafe": 18351,
+      "Other": 0,
+      "Unassigned": 609
     },
     {
       "layer": "External validated normal protein",
       "new_candidate_removals": 0,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 657,
-      "Unsafe": 18278,
+      "CTA_eligible_so_far": 644,
+      "Unsafe": 18351,
       "Other": 0,
-      "Unassigned": 669
+      "Unassigned": 609
     },
     {
       "layer": "Unsafe sequence containment",
-      "new_candidate_removals": 20,
+      "new_candidate_removals": 19,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 637,
-      "Unsafe": 18278,
+      "CTA_eligible_so_far": 625,
+      "Unsafe": 18351,
       "Other": 0,
-      "Unassigned": 689
+      "Unassigned": 628
     },
     {
       "layer": "CTA and Other assignments",
       "new_candidate_removals": 0,
       "new_Unsafe": 0,
-      "CTA_eligible_so_far": 637,
-      "Unsafe": 18278,
-      "Other": 689,
+      "CTA_eligible_so_far": 625,
+      "Unsafe": 18351,
+      "Other": 628,
       "Unassigned": 0
     }
   ],
@@ -683,12 +692,12 @@
     },
     {
       "protein_group_label": "MAGEA3",
-      "category": "Other",
-      "assessment_status": "normal_evidence_hold",
+      "category": "Unsafe",
+      "assessment_status": "screened",
       "reproductive_ntpm": 7.8,
       "developmental_all_lineage_max_tpm": 71.751765022,
       "adult_bulk_max_ntpm": 0.2,
-      "exclusion_reasons": "Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion. | colon: undifferentiated cells; 53.1 nTPM (ceiling 16)"
+      "exclusion_reasons": "Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion. | colon: undifferentiated cells; 53.1 nTPM (ceiling 4)"
     },
     {
       "protein_group_label": "NY-ESO-1",
@@ -722,32 +731,32 @@
     {
       "route": "Adult/placental evidence only",
       "entrants": 4686,
-      "CTA": 419
+      "CTA": 412
     },
     {
       "route": "Embryonic-only evidence",
       "entrants": 400,
-      "CTA": 97
+      "CTA": 96
     },
     {
       "route": "Both measured routes",
       "entrants": 12546,
-      "CTA": 121
+      "CTA": 117
     }
   ],
-  "annotated": 502,
-  "unannotated": 135,
+  "annotated": 496,
+  "unannotated": 129,
   "other_subtypes": {
-    "Nonreproductive": 601,
-    "Held": 34,
+    "Nonreproductive": 550,
     "Nested": 28,
-    "Contained": 20,
-    "Diffuse": 6
+    "Held": 27,
+    "Contained": 19,
+    "Diffuse": 4
   },
   "tumor_restricted_leads": 66,
   "assessment_statuses": {
-    "incomplete_evidence": 128,
-    "normal_evidence_hold": 51
+    "incomplete_evidence": 127,
+    "normal_evidence_hold": 8
   },
   "normal_gap_counts": [
     {
@@ -792,6 +801,6 @@
     "tumor_measurement_missing": 29,
     "tumor_group_profile_incomplete": 2,
     "embryonic_measurement_missing": 63,
-    "unresolved_evidence": 22
+    "unresolved_evidence": 21
   }
 }

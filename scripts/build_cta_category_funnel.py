@@ -185,7 +185,7 @@ def build(root: Path, output: Path) -> None:
     fig.text(
         0.055,
         0.178,
-        f"{table.iloc[1].new_Other:,} lack qualifying reproductive evidence or are nested microproteins; {table.iloc[3].new_Other:,} fail concentration; {table.iloc[4].new_Other:,} are Contained in Unsafe sequence.",
+        f"{table.iloc[1].new_Other:,} lack reproductive evidence / are nested; {table.iloc[3].new_Other:,} fail concentration; {table.iloc[4].new_Other:,} have Unsafe sequence containment.",
         fontsize=14,
         color=ink,
         weight="bold",
@@ -200,7 +200,7 @@ def build(root: Path, output: Path) -> None:
     fig.text(
         0.055,
         0.108,
-        f"Rare vital-tissue cell expression (at least 1% of a brain, heart or lung alveolar, endothelial or airway basal cell type) is the only Unsafe evidence for {rare_only:,} proteins.",
+        f"Rare vital-tissue cell expression (at least 1% in a named Vital population in the existing brain/spinal-cord/heart/lung panel) is the only Unsafe evidence for {rare_only:,} proteins.",
         fontsize=10,
         color=muted,
     )

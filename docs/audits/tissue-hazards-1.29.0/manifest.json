@@ -1,0 +1,47 @@
+{
+  "schema": "oncoref.tissue-hazard-report.v1",
+  "registry_id": "oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
+  "review_date": "2026-11-03",
+  "baseline": {
+    "version": "1.28.0",
+    "revision": "24cca2808de612940036df74a12243af43b5ca1f",
+    "file": "baseline-classifications.csv.gz"
+  },
+  "counts": {
+    "assessments": 107,
+    "references": 50,
+    "anatomy": 123,
+    "native_mappings": 1072,
+    "classification_changes": 104
+  },
+  "inputs": {
+    "oncoref/data/normal-tissue-hazards.yaml": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",
+    "oncoref/data/normal-tissue-mappings.csv": "ed83eaca220f27514c27bf0328440fab1ec85d7f11c44ff1d5dda4bb7adc0538",
+    "oncoref/tissue_hazards.py": "61e7e94d4f2c7c353a84d84d27b3c2d98a4216be64dbbd6967c2f7af23ffdeb8",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "49abfc0cd2024ab53aa693507f61fa075b0971e7926799e43a9816534a389635",
+    "docs/audits/cta-selection-20261028/normal-peak-evidence.csv.gz": "928a4bda859d59ffc3b84d33dca54880f697b02dd96f33d66cbd1e6f4a767069",
+    "scripts/build_tissue_hazard_report.py": "c2b93d141101ef3d64c98486b885c0fffa4820609596525eb431f987f50270e2"
+  },
+  "outputs": {
+    "assessments.csv": "19151d98f57e668a2465c3b3484ec21591f07bbc1fdf0c17bc9d28ab099362b2",
+    "baseline-classifications.csv.gz": "7351131c0057539a0a7c80b511a4e5c192b855d10fac1db0d04ed72178c03a25",
+    "bulk-cell-distinctions.png": "206799de5e3a873979efc2f1849dc03df01770a0c1eb85648bb1c7e4af4992b2",
+    "bulk-cell-distinctions.svg": "8bfa0a439293f943088d8462d8030b64d14627f8f5335340325011607fa3f71a",
+    "canonical-anatomy.csv": "8d5dd41678f28667d006647717814a72658cbdcfbe47edcc7623a0a75c90d264",
+    "changed-protein-rna-contexts.csv": "7688f04c8e7646fb0d9bb6a1b5ec4a322aa2ecb8e056db51c1ac22a4eb5c4e62",
+    "classification-changes.csv": "6de17ff419f38f2bd32b2d1c9d56c79ce94dbe15b6b7ad6e66f46a1ff5202bda",
+    "index.md": "d72725a08fc5f80ac4a5898b657c23066e5d27eca284aa045bb2814358a94dcb",
+    "lung-evidence.png": "d3fffa8b71f9d573795ef5275bf4a38e744ee2bdabf04b677dbc4f24a10591e2",
+    "lung-evidence.svg": "37b99e164e18797500a388e10367083ca1bf99588279130ac1cf307bf6953e14",
+    "native-mappings.csv": "b7f61db3ef2d4ebcf4f3861c4534c6a11e18ddfe98e7e7eba117ce1ebc0028d5",
+    "ontology-logic.png": "32373f5fdb630180e41673a5dcdb1d3cd5869b477404edb8d2dbf6e928cb6e0a",
+    "ontology-logic.svg": "528c1900deca0df5b2fc4c652c68226ef31dfdccbb8049186457dd610cf2e232",
+    "organ-coverage.png": "08eb4366bb93a64524f5691ded8bef15057c903ef761bb9a0734b67650fa63a9",
+    "organ-coverage.svg": "2d2b9d286f499e9d43aedc8ef624a4a26c82db0257407c92ed16843bd1e8f3f1",
+    "references.csv": "fb79513ef3c4b477e0e1db39252249362bd9d377fa183cbe664516963be67225",
+    "registry.json": "df0aa3d2d6ee74374a912b423ad2b7a6e05bf9ad8d45d1ad80094611da62ef6e",
+    "report.html": "59fd7ddb81ce5b5d282588badb1e730603c9d82c00ef753e2c2c8c51c0cbad35",
+    "tissue-hazard-ontology.pdf": "7801f09a74c39ebdabf43abfa0c00de378c2f9ae271e296819ba9eeaa6560116"
+  }
+}

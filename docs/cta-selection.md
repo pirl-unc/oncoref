@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **637 CTA proteins, 18,278 Unsafe and 689 Other (601 Nonreproductive, 34 Held, 28 Nested, 20 Contained, 6 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. No protein is unassessed. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **625 CTA proteins, 18,351 Unsafe and 628 Other (550 Nonreproductive, 27 Held, 28 Nested, 19 Contained, 4 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. No protein is unassessed. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
 
 ## Safety, cancer expression and Reproductive evidence
 
@@ -64,7 +64,7 @@ or an essential unknown, and never rests on missing optional panels.
 | What puts a protein in Unsafe | Example |
 |---|---|
 | Vital/Protected expression above the tissue/IHC ceiling | Established adult protein or localized RNA with function |
-| **Manageable-tier excess above 128** (the top Manageable ceiling) | Skin-barrier genes such as KRT85, KRT77, LCE1A |
+| **Manageable-tier excess above 128** (the top Manageable ceiling) | Resolved Manageable compartments above the 128 ceiling |
 | **Reviewed unresolved Protected-tissue finding** (an essential unknown) | Findings marked “resolve before shared-sequence clearance” |
 | Reviewed clinical safety exclusion | MAGEA12 |
 
@@ -75,17 +75,19 @@ are peptide liabilities, so MAGEA3 is assessed on its own expression.
 
 ## Cell-type tiers and the rare vital-tissue screen
 
-One table (`oncoref.cta_cell_tiers`) assigns cell types to a tier, and both the RNA
-cascade and the rare-cell screen read it, so a cell type means the same thing
-everywhere.
+The [central tissue-hazard ontology](tissue-hazards.md) supplies organ and cell calls
+for RNA, IHC and the rare-cell screen. Its complete report provides the rationale,
+evidence designs and limitations for every rule.
 
-| Tier | Cell types | Why |
-|---|---|---|
-| **Vital** | Neurons, glia, cardiomyocytes, alveolar types 1 and 2, vital-organ endothelium, airway **basal** cells | Post-mitotic, needed for gas exchange or perfusion, or the stem pool that makes renewal possible |
-| **Manageable** | Differentiated airway epithelium (ciliated, club, goblet, secretory, ionocytes), fibroblasts, large-bowel epithelium | Renewing barriers replaced from stem cells; the same logic as bowel epithelium |
+| Tier | Examples |
+|---|---|
+| Vital | Neurons, cardiomyocytes, AT1/AT2, club and basal airway cells, intestinal crypt progenitors |
+| Protected | Ciliated/goblet airway cells, generic fibroblasts, differentiated bowel epithelium |
+| Manageable | Resolved mature B cells, thyroid follicular cells |
+| Disposable | Cutaneous melanocytes and hair-follicle compartments |
 
-The tier is a policy judgement about how much harm losing a cell type does, not a
-measurement of tolerability.
+These are consequence-based policy calls, not measured probabilities of toxicity.
+Bulk tissue retains its broader organ concern.
 
 Pooled panels average away rare normal cells, so a protein can read near zero in
 every bulk, cluster and immune measurement while a small population expresses it.
@@ -94,19 +96,16 @@ values are near zero, but 293 of 19,760 midbrain dopaminergic neurons (1.5%)
 express it in the CELLxGENE summaries, matching the rare positive neurons reported
 after anti-MAGE-A3 TCR neurotoxicity.
 
-Every gene is screened (`scripts/build_cta_rare_cell_screen.py`) against CELLxGENE
-normal-sample summaries, **in Vital cell types of brain, spinal cord, heart and lung
-only**. A cell type needs at least 3,000 cells and 10 expressing cells; broad parent
-terms covering over 10% of a tissue, immune lineages (including microglia),
-fibroblasts and stroma, adipose and clearly developmental cell types are ignored.
-Rare expression in spleen, adipose, immune subsets or differentiated airway cells does
-not make a protein Unsafe (Manageable-tier cell types are recorded in the screen table
-but never flagged).
+The available genes are screened (`scripts/build_cta_rare_cell_screen.py`) against
+CELLxGENE normal-sample summaries in brain, spinal cord, heart and selected lung
+populations. A cell type needs at least 3,000 cells and 10 expressing cells. The
+existing exclusions of broad parent terms, immune lineages, fibroblasts/stroma
+and developmental labels are coverage limits, not evidence of tolerance.
 
-**A protein is Unsafe when any member gene is expressed by at least 1% of a Vital
-cell type.** The layer is a safety layer in the cascade, evaluated for every protein.
-It flags 15,888 of 19,604 proteins, most of which are Unsafe for other reasons; **117
-proteins are Unsafe only because of it**. No CTA is flagged.
+At least 1% expression in a Vital cell type supplies Unsafe evidence. At least 1%
+in a Protected population creates a candidate review hold. The complete funnel
+and packaged profiles report the current counts; the central ontology extends
+beyond the organs measured by this existing rare-cell panel.
 
 It reports detection frequency among cells, not abundance: expressing cells typically
 carry about one UMI, and ambient RNA, doublets and close-paralog multimapping can
@@ -115,7 +114,7 @@ are removed by name only. `cta_rare_cell.UNSAFE = False` turns the layer into a
 review hold instead.
 
 `cta_selection.profiles()` carries `rare_cell_screened`, `rare_cell_flag`,
-`rare_cell_max_pct`, `rare_cell_type` and `rare_cell_detail`, and
+`rare_cell_hold`, `rare_cell_max_pct` and `rare_cell_type`, and
 `cta_selection.rare_cell_screen()` returns every supporting cell type with its `tier`
 and `review_status = screen_unreviewed`.
 
@@ -258,7 +257,7 @@ These are policy parameters, not measured toxicity limits. TPM/nTPM assays share
 
 Exact adult tissue/cell matching or a declared source-specific histological-compartment correspondence, reliable negative staining, a positive profile control and no unresolved antibody conflict are required for IHC credit. Every expected member needs a positive profile control for a group negative. Low positive staining grants no negative-IHC credit. Author-described Low and HPA Low retain different scales, with unknown fractions/H-scores left unknown.
 
-Mapped HPA adult fibroblasts use Manageable; bulk heart and cardiomyocytes retain their organ tiers. Colon/rectum distal enterocytes, goblet cells, Paneth cells and undifferentiated cells use Manageable in both RNA and HPA protein assessment. Undifferentiated expression retains a stem/progenitor flag. This permissive mucosal assumption and the numeric cutoffs have not been clinically validated. Reproductive/placental immune cells receive neutral anatomical treatment, not an assertion that all immune cells are disposable. Adult normal panels do not establish pediatric safety.
+Adult human fibroblasts and differentiated bowel epithelium use Protected; intestinal crypt/undifferentiated populations use Vital. Bulk organs retain their organ tiers. Sorted immune and corneal populations use resolved cellular calls from the same registry. Reproductive membership remains independent, and adult evidence does not establish pediatric safety.
 
 ## Categorical assignments
 

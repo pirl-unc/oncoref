@@ -40,12 +40,21 @@ def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate(
     current = human.cta_selection().set_index("label")
     previous_ctas = set(old.loc[old.category.eq("CTA"), "protein_group_label"])
     kept = current.loc[sorted(previous_ctas)]
-    # A previous CTA stays CTA unless most of its sequence is inside Unsafe proteins
-    # or the rare vital-tissue screen flags it.
+    # Earlier CTAs can leave under a revised tissue policy. Each removal must
+    # retain a concrete exclusion or hold rather than silently losing evidence.
     profiles = cta_selection.profiles().set_index("label")
     contained = kept.classification.eq("Other:Contained")
-    rare = profiles.rare_cell_flag.loc[kept.index].astype(bool) & kept.category.eq("Unsafe")
-    assert kept.loc[~contained & ~rare, "category"].eq("CTA").all()
+    facts = pd.read_csv(
+        root / "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
+        low_memory=False,
+    ).set_index("protein_group_label")
+    removed = kept.index[~kept.category.eq("CTA") & ~contained]
+    safety = [c for c in facts if c.startswith("unsafe:")]
+    unsafe = removed[kept.loc[removed, "category"].eq("Unsafe")]
+    assert facts.loc[unsafe, safety].any(axis=1).all()
+    held = removed[kept.loc[removed, "classification"].eq("Other:Held")]
+    assert facts.loc[held, "rare_cell_hold"].all()
+    assert set(removed) == set(unsafe) | set(held)
     overlap = profiles.unsafe_sequence_overlap_pct
     assert overlap.loc[kept.index[contained]].ge(95).all()
     assert contained.sum() <= 40

@@ -1,15 +1,15 @@
 {
   "source": "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
-  "source_sha256": "0726dd06ff8f5743c6a93f3cb4067baede94c2e9e6d645fbd45444fca309ec33",
+  "source_sha256": "49abfc0cd2024ab53aa693507f61fa075b0971e7926799e43a9816534a389635",
   "policy": [
-    "oncoref.cta-selection.2026-10-31.1"
+    "oncoref.cta-selection.2026-11-03.1"
   ],
   "final_counts": {
-    "CTA": 637,
-    "Unsafe": 18278,
-    "Other": 510,
-    "Unresolved": 179
+    "CTA": 625,
+    "Unsafe": 18351,
+    "Other": 493,
+    "Unresolved": 135
   },
   "normal_first_display_only": true,
-  "rare_vital_only_unsafe": 117
+  "rare_vital_only_unsafe": 118
 }

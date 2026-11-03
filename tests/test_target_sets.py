@@ -302,12 +302,13 @@ def test_published_gene_groups_and_important_targets():
     assert removed["Maximum RNA (nTPM)"].lt(5).all()
 
 
-def test_current_report_and_dataset_checksums():
+def test_current_report_and_dataset_checksums(historical_cta_input):
     manifest = json.loads((REPORT / "run-manifest.json").read_text())
     assert manifest["forbidden_categories"] == ["Unsafe"]
     for section, root in [("inputs", ROOT), ("implementation_sha256", ROOT), ("outputs", REPORT)]:
         for name, expected in manifest[section].items():
-            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+            path = root / name if section == "outputs" else historical_cta_input(name, expected)
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
     historical = REPORT / "gene-results.csv.gz"
     assert (
         hashlib.sha256(historical.read_bytes()).hexdigest() == manifest["published_dataset_sha256"]
@@ -317,23 +318,27 @@ def test_current_report_and_dataset_checksums():
     assert recipe["neither_forbidden"] is False
 
 
-def test_historical_normal_cell_report_checksums():
+def test_historical_normal_cell_report_checksums(historical_cta_input):
     report = ROOT / "docs/audits/cta-normal-cells-20261023"
     manifest = json.loads((report / "run-manifest.json").read_text())
     assert manifest["forbidden_categories"] == ["Unsafe"]
     for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
         for name, expected in manifest[section].items():
             path = _historical_normal_input(root / name)
+            if section != "outputs" and path == root / name:
+                path = historical_cta_input(name, expected)
             assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
 
 
-def test_historical_neither_review_checksums():
+def test_historical_neither_review_checksums(historical_cta_input):
     report = ROOT / "docs/audits/cta-neither-review-20261024"
     manifest = json.loads((report / "run-manifest.json").read_text())
     assert manifest["forbidden_categories"] == ["Unsafe"]
     for section, root in [("implementation_and_inputs", ROOT), ("outputs", report)]:
         for name, expected in manifest[section].items():
             path = _historical_normal_input(root / name)
+            if section != "outputs" and path == root / name:
+                path = historical_cta_input(name, expected)
             assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
 
 

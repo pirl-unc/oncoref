@@ -1,0 +1,4404 @@
+{
+  "schema": "oncoref.normal-tissue-hazards",
+  "schema_version": 1,
+  "policy_version": "2026-11-03.1",
+  "review_date": "2026-11-03",
+  "scope": "Adult human functional hazard; animal experiments are supporting evidence, not transferred clinical tolerability.",
+  "tier_definitions": {
+    "vital": "Highest protection priority: plausible life-threatening failure, major irreversible neurological/sensory loss, or loss of indispensable regenerative support.",
+    "protected": "Persistent functional or structural injury is a major concern; compensation is incomplete or direct immune-depletion evidence is insufficient.",
+    "manageable": "A defined compartment has credible replacement, compensation or supportive-treatment precedent; acute inflammation and persistent recognition still require review.",
+    "disposable": "Narrow conditional allowance for loss of a specified compartment; does not imply painless, reversible or inflammation-free ablation."
+  },
+  "interpretation": [
+    "Tiers are ordinal policy judgments, not measured fatality probabilities or RNA cutoffs.",
+    "Regeneration after a finite insult does not establish recovery under persistent antigen recognition.",
+    "Recognized cells, inflammatory amplifiers and cells causing final organ failure can differ.",
+    "Bulk observations cannot receive a narrower cell-specific downgrade.",
+    "Reproductive/developmental membership is a separate axis, not a fifth severity tier.",
+    "Unknown identity, mixed cell labels and nonadult/nonhuman contexts cannot earn a cell-specific downgrade."
+  ],
+  "references": {
+    "pardo2015": {
+      "title": "Parent stem cells can serve as niches for their daughter cells",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4521991/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Approximately 79% ciliated-cell depletion did not accelerate replacement; basal and secretory populations persisted.",
+      "limitation": "Large-airway homeostasis experiment, not human immune killing or a validated tolerability threshold.",
+      "checked": "2026-11-03"
+    },
+    "dumm2019": {
+      "title": "Non-lytic clearance of influenza B virus from infected cells preserves epithelial barrier function",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6377627/",
+      "model": "mouse",
+      "design": "infection_and_ablation",
+      "finding": "Depletion of infection-surviving, predominantly ciliated-like cells worsened epithelial permeability and recovery.",
+      "limitation": "Mixed survivor population in an infected lung; not selective depletion of healthy mature ciliated cells.",
+      "checked": "2026-11-03"
+    },
+    "perl2011": {
+      "title": "Conditional Depletion of Airway Progenitor Cells Induces Peribronchiolar Fibrosis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3056226/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Sustained club-compartment depletion caused persistent peribronchiolar fibrosis despite later epithelial regeneration.",
+      "limitation": "Promoter-defined compartment and toxin exposure do not quantify human receptor-specific risk.",
+      "checked": "2026-11-03"
+    },
+    "guild2023": {
+      "title": "Evidence for lung barrier regeneration by differentiation prior to binucleated and stem cell division",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10579698/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "AT2 differentiation rapidly compensated AT1 loss; repeated injury produced abnormal epithelial hyperplasia.",
+      "limitation": "Intact repair under finite experimental insults is not proof of tolerance to persistent T-cell attack.",
+      "checked": "2026-11-03"
+    },
+    "garcia2016": {
+      "title": "Targeted Type 2 Alveolar Cell Depletion: A Dynamic Functional Model for Lung Injury Repair",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4821031/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "AT2 depletion produced recovery, fibrosis or lethal edema depending on severity and kinetics.",
+      "limitation": "Drug toxicity and model kinetics prevent transfer of depletion percentages to clinical thresholds.",
+      "checked": "2026-11-03"
+    },
+    "zhao2000": {
+      "title": "Alveolar epithelial cell chemokine expression triggered by antigen-specific cytolytic CD8+ T cell recognition",
+      "url": "https://www.jci.org/articles/view/9786",
+      "model": "mouse",
+      "design": "antigen_specific_t_cells",
+      "finding": "Alveolar antigen recognition initiated inflammatory recruitment and progressive lethal lung injury.",
+      "limitation": "Transgenic antigen and transferred T cells; not a human engineered-TCR clinical risk estimate.",
+      "checked": "2026-11-03"
+    },
+    "haas2023": {
+      "title": "Two cases of severe pulmonary toxicity from highly active mesothelin-directed CAR T cells",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10422001/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Two severe pulmonary toxicities, one fatal, implicated benign pneumocyte expression in injured lung.",
+      "limitation": "AT1 versus AT2 initiation was not resolved; product, dose and pre-existing injury matter.",
+      "checked": "2026-11-03"
+    },
+    "halbeisen2022": {
+      "title": "Lung function from school age to adulthood in primary ciliary dyskinesia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9582507/",
+      "model": "human",
+      "design": "functional_disease_cohort",
+      "finding": "Lung function declined on average in 486 patients, with heterogeneous trajectories despite treatment.",
+      "limitation": "Inherited ciliary dysfunction is not epithelial ablation or an immune-toxicity model.",
+      "checked": "2026-11-03"
+    },
+    "roy2014": {
+      "title": "Muc5b is required for airway defence",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4001806/",
+      "model": "mouse",
+      "design": "functional_gene_deletion",
+      "finding": "Muc5b deficiency impaired clearance and host defence, unlike Muc5ac deficiency.",
+      "limitation": "Mucin deletion is not goblet-cell killing; multiple secretory populations produce MUC5B.",
+      "checked": "2026-11-03"
+    },
+    "tata2013": {
+      "title": "Dedifferentiation of committed epithelial cells into stem cells in vivo",
+      "url": "https://www.nature.com/articles/nature12777",
+      "model": "mouse",
+      "design": "selective_ablation_and_lineage_tracing",
+      "finding": "Secretory cells restored basal stem cells after basal-cell depletion.",
+      "limitation": "Alternative repair depends on surviving populations and does not establish tolerance to repeated recognition.",
+      "checked": "2026-11-03"
+    },
+    "clad2023": {
+      "title": "JAK-STAT activation contributes to cytotoxic T cell-mediated basal cell death in human chronic lung allograft dysfunction",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36946463/",
+      "model": "human",
+      "design": "disease_tissue_and_mechanistic",
+      "finding": "Basal-cell MHC-I induction and cytotoxic T-cell killing were linked to airway-centered allograft injury.",
+      "limitation": "Alloreactivity affects multiple compartments and is not an isolated engineered-receptor trial.",
+      "checked": "2026-11-03"
+    },
+    "bergmann2009": {
+      "title": "Evidence for cardiomyocyte renewal in humans",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2991140/",
+      "model": "human",
+      "design": "cell_turnover",
+      "finding": "Carbon dating demonstrated limited adult cardiomyocyte renewal.",
+      "limitation": "Renewal is nonzero; a turnover estimate does not measure replacement during acute destructive injury.",
+      "checked": "2026-11-03"
+    },
+    "linette2013": {
+      "title": "Cardiovascular toxicity and titin cross-reactivity of affinity-enhanced T cells in myeloma and melanoma",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3743463/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Titin cross-recognition by an engineered TCR caused fatal cardiac toxicity.",
+      "limitation": "Receptor-specific cross-reactivity; not evidence that every MAGEA3-directed receptor recognizes heart.",
+      "checked": "2026-11-03"
+    },
+    "morgan2013": {
+      "title": "Cancer regression and neurologic toxicity following anti-MAGE-A3 TCR gene therapy",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3581823/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Severe neurological injury was associated with a cross-reactive TCR and neural MAGEA12 expression.",
+      "limitation": "Peptide and receptor specificity matter; rare RNA detection alone does not reproduce this evidence.",
+      "checked": "2026-11-03"
+    },
+    "wharram2005": {
+      "title": "Podocyte depletion causes glomerulosclerosis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16107576/",
+      "model": "rat",
+      "design": "selective_ablation",
+      "finding": "Increasing podocyte depletion caused persistent proteinuria, sclerosis and renal dysfunction.",
+      "limitation": "Model depletion thresholds are not human safety cutoffs.",
+      "checked": "2026-11-03"
+    },
+    "grgic2012": {
+      "title": "Targeted proximal tubule injury triggers interstitial fibrosis and glomerulosclerosis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3480325/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Repeated tubular injury caused chronic atrophy, fibrosis and secondary glomerular injury.",
+      "limitation": "Cre distribution and toxin sensitivity qualify compartment specificity; not clinical immune targeting.",
+      "checked": "2026-11-03"
+    },
+    "raven2017": {
+      "title": "Cholangiocytes act as facultative liver stem cells during impaired hepatocyte regeneration",
+      "url": "https://www.nature.com/articles/nature23015",
+      "model": "mouse",
+      "design": "lineage_tracing_and_injury",
+      "finding": "Biliary cells contributed hepatocytes when hepatocyte proliferation was impaired.",
+      "limitation": "Compensatory plasticity does not establish tolerance of combined biliary and hepatocyte destruction.",
+      "checked": "2026-11-03"
+    },
+    "parkhurst2011": {
+      "title": "T cells targeting carcinoembryonic antigen can mediate regression of metastatic colorectal cancer but induce severe transient colitis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3048186/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "CEA-directed TCR treatment caused severe transient colitis in all three treated patients.",
+      "limitation": "Recovery in a small product-specific trial does not establish general controllability of persistent mucosal targeting.",
+      "checked": "2026-11-03"
+    },
+    "tian2011": {
+      "title": "A reserve stem cell population in small intestine renders Lgr5-positive cells dispensable",
+      "url": "https://www.nature.com/articles/nature10408",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Alternative progenitors maintained intestinal epithelium during Lgr5-cell depletion.",
+      "limitation": "An Lgr5-specific insult is narrower than destroying all crypt regenerative populations.",
+      "checked": "2026-11-03"
+    },
+    "maude2018": {
+      "title": "Tisagenlecleucel in Children and Young Adults with B-Cell Lymphoblastic Leukemia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5996391/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Responders developed B-cell aplasia; immunoglobulin replacement was commonly used.",
+      "limitation": "Manageability requires support; this does not generalize to all lymphocytes or marrow progenitors.",
+      "checked": "2026-11-03"
+    },
+    "tran2013": {
+      "title": "Immune targeting of fibroblast activation protein triggers recognition of multipotent bone marrow stromal cells and cachexia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3674706/",
+      "model": "mouse",
+      "design": "car_t_experiment",
+      "finding": "FAP-reactive T cells recognized marrow stromal cells and caused severe systemic toxicity.",
+      "limitation": "Target distribution and receptor properties matter; not all fibroblasts or all FAP products have equivalent effects.",
+      "checked": "2026-11-03"
+    },
+    "roberts2013": {
+      "title": "Depletion of stromal cells expressing fibroblast activation protein-alpha from skeletal muscle and bone marrow results in cachexia and anemia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3674708/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Distributed FAP-positive stromal depletion disrupted muscle and hematopoietic support.",
+      "limitation": "Distributed target-defined cells differ from a localized dermal fibroblast population.",
+      "checked": "2026-11-03"
+    },
+    "wang2014": {
+      "title": "Targeting Fibroblast Activation Protein in Tumor Stroma with Chimeric Antigen Receptor T Cells Can Inhibit Tumor Growth and Augment Host Immunity Without Severe Toxicity",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24778279/",
+      "model": "mouse",
+      "design": "car_t_experiment",
+      "finding": "A different FAP CAR achieved antitumor effects without the severe toxicity of other models.",
+      "limitation": "Counterevidence emphasizes receptor/epitope and target-density dependence, not universal stromal safety.",
+      "checked": "2026-11-03"
+    },
+    "sambasivan2011": {
+      "title": "Pax7-expressing satellite cells are indispensable for adult skeletal muscle regeneration",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21828093/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Satellite-cell depletion prevented normal muscle regeneration after injury.",
+      "limitation": "Localized experimental depletion does not estimate human systemic immune toxicity.",
+      "checked": "2026-11-03"
+    },
+    "murphy2011": {
+      "title": "Satellite cells, connective tissue fibroblasts and their interactions are crucial for muscle regeneration",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3152921/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Fibroblast depletion altered satellite-cell dynamics and impaired regenerated myofibers.",
+      "limitation": "Niche-specific dependence cannot be generalized to all fibroblast populations.",
+      "checked": "2026-11-03"
+    },
+    "stamatouli2018": {
+      "title": "Collateral Damage: Insulin-Dependent Diabetes Induced With Checkpoint Inhibitors",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6054443/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Checkpoint treatment was associated with insulin deficiency and frequent ketoacidosis at presentation.",
+      "limitation": "Checkpoint autoimmunity is not selective engineered-TCR beta-cell killing; insulin replacement is ongoing support.",
+      "checked": "2026-11-03"
+    },
+    "iyer2018": {
+      "title": "Immune-Related Thyroiditis with Immune Checkpoint Inhibitors",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6157359/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Destructive thyroiditis often progressed to hypothyroidism requiring hormone replacement.",
+      "limitation": "Controlling hormone deficiency does not establish control of acute inflammatory injury.",
+      "checked": "2026-11-03"
+    },
+    "hypophysitis2021": {
+      "title": "Immune checkpoint inhibitor related hypophysitis: diagnostic criteria and recovery patterns",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8183642/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Pituitary hormone deficits showed limited recovery, particularly the adrenal axis.",
+      "limitation": "Anatomical swelling, affected axes and hormone support distinguish patients; not a cell-specific ablation trial.",
+      "checked": "2026-11-03"
+    },
+    "rama2010": {
+      "title": "Limbal Stem-Cell Therapy and Long-Term Corneal Regeneration",
+      "url": "https://www.nejm.org/doi/abs/10.1056/NEJMoa0905955",
+      "model": "human",
+      "design": "regenerative_clinical",
+      "finding": "Limbal-cell grafts restored corneal epithelial maintenance after destructive injury.",
+      "limitation": "Successful transplantation does not make spontaneous limbal recovery reliable or treat retinal injury.",
+      "checked": "2026-11-03"
+    },
+    "golub2012": {
+      "title": "Hair Cell Replacement in Adult Mouse Utricles after Targeted Ablation of Hair Cells with Diphtheria Toxin",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3544304/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Adult vestibular hair-cell loss was followed by limited replacement.",
+      "limitation": "Utricular findings do not establish restoration of human cochlear hearing.",
+      "checked": "2026-11-03"
+    },
+    "shin2011": {
+      "title": "Hedgehog/Wnt feedback supports regenerative proliferation of epithelial stem cells in bladder",
+      "url": "https://www.nature.com/articles/nature09851",
+      "model": "mouse",
+      "design": "injury_and_lineage_tracing",
+      "finding": "Urothelial and stromal signaling supported epithelial regeneration after injury.",
+      "limitation": "Repair after finite injury is not evidence that continuous urothelial killing is tolerable.",
+      "checked": "2026-11-03"
+    },
+    "spalding2008": {
+      "title": "Dynamics of fat cell turnover in humans",
+      "url": "https://www.nature.com/articles/nature06902",
+      "model": "human",
+      "design": "cell_turnover",
+      "finding": "Adult adipocytes turn over while population size is regulated.",
+      "limitation": "Turnover does not establish the metabolic tolerability of generalized adipocyte destruction.",
+      "checked": "2026-11-03"
+    },
+    "johnson2009": {
+      "title": "Gene therapy with human and mouse T-cell receptors mediates cancer regression and targets normal tissues expressing cognate antigen",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2929689/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Melanocyte-antigen TCR therapy injured skin, eye and ear compartments.",
+      "limitation": "Cutaneous depigmentation cannot justify ocular or cochlear melanocyte depletion.",
+      "checked": "2026-11-03"
+    },
+    "warner2019": {
+      "title": "Sicca Syndrome Associated with Immune Checkpoint Inhibitor Therapy",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30996010/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Checkpoint-associated sicca included persistent salivary hypofunction.",
+      "limitation": "Symptom improvement did not guarantee restoration of secretion; not selective receptor targeting.",
+      "checked": "2026-11-03"
+    },
+    "kristinsson2014": {
+      "title": "Long-term risks after splenectomy among 8149 cancer-free American veterans",
+      "url": "https://haematologica.org/article/view/6942",
+      "model": "human",
+      "design": "surgical_cohort",
+      "finding": "Splenectomy was associated with lasting infection and thromboembolic risks.",
+      "limitation": "Observational organ-removal evidence is not systemic immune-cell depletion.",
+      "checked": "2026-11-03"
+    },
+    "kooshesh2023": {
+      "title": "Health Consequences of Thymus Removal in Adults",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10557034/",
+      "model": "human",
+      "design": "surgical_cohort",
+      "finding": "Adult thymectomy was associated with adverse long-term health outcomes.",
+      "limitation": "Observational association, potential confounding and adult context limit causal inference.",
+      "checked": "2026-11-03"
+    },
+    "heinemeier2016": {
+      "title": "Radiocarbon dating reveals minimal collagen turnover in both healthy and osteoarthritic human cartilage",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27384346/",
+      "model": "human",
+      "design": "matrix_turnover",
+      "finding": "Adult articular collagen showed very limited turnover.",
+      "limitation": "Matrix turnover is not chondrocyte turnover or a direct immune-injury experiment.",
+      "checked": "2026-11-03"
+    },
+    "braaten2020": {
+      "title": "Immune checkpoint inhibitor-induced inflammatory arthritis persists after immunotherapy cessation",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7031780/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Inflammatory arthritis could persist after checkpoint treatment stopped.",
+      "limitation": "Mixed joint tissues; not selective cartilage-cell ablation.",
+      "checked": "2026-11-03"
+    },
+    "nhs_tonsillectomy": {
+      "title": "Making a decision about recurrent tonsillitis in children and adults",
+      "url": "https://www.england.nhs.uk/wp-content/uploads/2023/10/decision-support-tool-making-a-decision-about-recurrent-tonsillitis-in-children-and-adults.pdf",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Tonsil removal is an established treatment with recognized procedural risks.",
+      "limitation": "Local removal is not systemic lymphocyte depletion.",
+      "checked": "2026-11-03"
+    },
+    "nhs_appendix": {
+      "title": "Appendicitis",
+      "url": "https://www.nhs.uk/conditions/appendicitis/",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Appendectomy permits survival without the appendix.",
+      "limitation": "Removal does not establish tolerance of in-situ perforation or shared intestinal targeting.",
+      "checked": "2026-11-03"
+    },
+    "niddk_gallbladder": {
+      "title": "Treatment for Gallstones",
+      "url": "https://www.niddk.nih.gov/health-information/digestive-diseases/gallstones/treatment",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Cholecystectomy is an established treatment for symptomatic gallstones.",
+      "limitation": "Does not justify bile-duct or liver targeting, or uncontrolled in-situ inflammation.",
+      "checked": "2026-11-03"
+    },
+    "niddk_adrenal": {
+      "title": "Definition and Facts of Adrenal Insufficiency and Addison's Disease",
+      "url": "https://www.niddk.nih.gov/health-information/endocrine-diseases/adrenal-insufficiency-addisons-disease/definition-facts",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Adrenal insufficiency can cause crisis and requires hormone replacement.",
+      "limitation": "Replacement availability does not establish acute-injury control.",
+      "checked": "2026-11-03"
+    },
+    "nci_lymph_nodes": {
+      "title": "Sentinel Lymph Node Biopsy",
+      "url": "https://www.cancer.gov/about-cancer/diagnosis-staging/staging/sentinel-node-biopsy-fact-sheet",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Regional nodal surgery can cause lymphatic morbidity.",
+      "limitation": "Regional excision is narrower than distributed lymphatic injury.",
+      "checked": "2026-11-03"
+    },
+    "sitc2021": {
+      "title": "SITC clinical practice guideline on immune checkpoint inhibitor-related adverse events",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8237720/",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Immune injuries span organ-specific acute and persistent consequences.",
+      "limitation": "Checkpoint-toxicity management cannot validate engineered-cell killing for an untested compartment.",
+      "checked": "2026-11-03"
+    },
+    "hpa_tissues": {
+      "title": "Human Protein Atlas tissue and cell-type definitions",
+      "url": "https://www.proteinatlas.org/humanproteome/tissue/data",
+      "model": "human",
+      "design": "anatomy_reference",
+      "finding": "Defines tissue and cell annotations used for expression mapping.",
+      "limitation": "Anatomy supports identity, not tolerability or receptor recognition.",
+      "checked": "2026-11-03"
+    },
+    "openstax_female": {
+      "title": "Anatomy and Physiology: Female Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/27-2-anatomy-and-physiology-of-the-female-reproductive-system",
+      "model": "human",
+      "design": "anatomy_reference",
+      "finding": "Defines female reproductive organs and physiological functions.",
+      "limitation": "Reproductive membership is independent of clinical hazard.",
+      "checked": "2026-11-03"
+    },
+    "openstax_male": {
+      "title": "Anatomy and Physiology: Male Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/27-1-anatomy-and-physiology-of-the-male-reproductive-system",
+      "model": "human",
+      "design": "anatomy_reference",
+      "finding": "Defines male reproductive organs and physiological functions.",
+      "limitation": "Reproductive membership is independent of clinical hazard.",
+      "checked": "2026-11-03"
+    },
+    "purba2019": {
+      "title": "CDK4/6 inhibition mitigates stem cell damage in a novel model for taxane-induced alopecia",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31512803/",
+      "model": "human_ex_vivo",
+      "design": "injury_experiment",
+      "finding": "Hair-follicle stem-cell injury was investigated in an experimental chemotherapy model.",
+      "limitation": "Chemotherapy injury is not immune ablation; permanent alopecia remains possible.",
+      "checked": "2026-11-03"
+    },
+    "collin2021": {
+      "title": "A single cell atlas of human cornea that defines its development, limbal progenitor cells and their interactions with the immune cells",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/",
+      "model": "human",
+      "design": "cell_atlas",
+      "finding": "Distinguishes corneal and limbal cell populations.",
+      "limitation": "Cell identity and expression alone do not measure toxicity.",
+      "checked": "2026-11-03"
+    },
+    "wang2021_bcma": {
+      "title": "Humoral immune reconstitution after anti-BCMA CAR T-cell therapy in relapsed/refractory multiple myeloma",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9153033/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Normal marrow plasma-cell aplasia and prolonged hypogammaglobulinemia followed BCMA-directed CAR T-cell therapy.",
+      "limitation": "Myeloma, prior therapies and conditioning affect immune recovery; this is not an isolated healthy-plasma-cell ablation trial.",
+      "checked": "2026-11-03"
+    }
+  },
+  "assessments": [
+    {
+      "id": "heart",
+      "label": "Heart",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Cardiovascular",
+      "tissues": [
+        "heart"
+      ],
+      "mechanisms": [
+        "pump",
+        "conduction",
+        "repair"
+      ],
+      "acute_loss": "Pump or conduction failure can be immediately fatal.",
+      "persistent_loss": "Lost contractile reserve and scar can persist.",
+      "repair": "Adult cardiomyocyte renewal is limited, not absent.",
+      "management": "Mechanical support/transplant are not routine compensation for target-mediated injury.",
+      "rationale": "Protect bulk heart because expression cannot exclude contractile or conduction cells.",
+      "references": [
+        "bergmann2009",
+        "linette2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Human antigen-directed T-cell injury or depletion provides a clinical anchor; findings remain receptor/product-specific and may not resolve every subset in this rule."
+    },
+    {
+      "id": "vascular",
+      "label": "Blood vessels and endothelium",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Cardiovascular",
+      "tissues": [
+        "blood_vessel",
+        "endothelium"
+      ],
+      "mechanisms": [
+        "barrier",
+        "perfusion",
+        "inflammation"
+      ],
+      "acute_loss": "Leak, thrombosis and disrupted perfusion can injure several organs.",
+      "persistent_loss": "Vascular remodeling and ischemic injury can persist.",
+      "repair": "Endothelial repair depends on injury extent and the vascular bed.",
+      "management": "No general replacement for distributed vascular function.",
+      "rationale": "A broad vascular label does not locate a safely expendable vessel population.",
+      "references": [
+        "sitc2021",
+        "haas2023"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "cns",
+      "label": "Brain and spinal cord",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Nervous",
+      "tissues": [
+        "brain",
+        "spinal_cord"
+      ],
+      "mechanisms": [
+        "neural",
+        "sensory",
+        "repair"
+      ],
+      "acute_loss": "Circuit disruption can cause major neurological disability or death.",
+      "persistent_loss": "Neuronal loss and disconnection may be irreversible.",
+      "repair": "Repair varies by lineage; preservation of some progenitors does not restore complex circuits.",
+      "management": "Rehabilitation is not replacement of lost circuits.",
+      "rationale": "Small specialized populations can have high consequence; bulk dilution cannot establish safety.",
+      "references": [
+        "morgan2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Human antigen-directed T-cell injury or depletion provides a clinical anchor; findings remain receptor/product-specific and may not resolve every subset in this rule."
+    },
+    {
+      "id": "peripheral_nerve",
+      "label": "Peripheral nerve",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Nervous",
+      "tissues": [
+        "peripheral_nerve"
+      ],
+      "mechanisms": [
+        "neural",
+        "repair"
+      ],
+      "acute_loss": "Motor, sensory and autonomic failure may be disabling or life-threatening.",
+      "persistent_loss": "Denervation and failed reinnervation can persist.",
+      "repair": "Axonal repair requires surviving neurons, Schwann cells and permissive paths.",
+      "management": "Support does not guarantee functional restoration.",
+      "rationale": "Potential regeneration is insufficient for a default downgrade of a mixed nerve sample.",
+      "references": [
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "eye",
+      "label": "Eye and retina",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Sensory",
+      "tissues": [
+        "eye",
+        "retina"
+      ],
+      "mechanisms": [
+        "sensory",
+        "barrier",
+        "repair"
+      ],
+      "acute_loss": "Injury can cause vision loss.",
+      "persistent_loss": "Retinal or optic damage may be irreversible.",
+      "repair": "Corneal epithelial repair and retinal neural replacement are different processes.",
+      "management": "Local treatment or grafting applies only to selected compartments.",
+      "rationale": "A bulk eye sample cannot establish restriction to replaceable surface epithelium.",
+      "references": [
+        "johnson2009",
+        "rama2010",
+        "collin2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "inner_ear",
+      "label": "Inner ear",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Sensory",
+      "tissues": [
+        "inner_ear"
+      ],
+      "mechanisms": [
+        "sensory",
+        "neural"
+      ],
+      "acute_loss": "Hearing and balance may be lost.",
+      "persistent_loss": "Sensory deficits can persist despite suppression of inflammation.",
+      "repair": "Limited vestibular replacement in mice does not establish human cochlear regeneration.",
+      "management": "Assistive devices do not fully replace native sensory function.",
+      "rationale": "Critical sensory disability is included in Vital even when injury is not lethal.",
+      "references": [
+        "golub2012",
+        "johnson2009"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "lung",
+      "label": "Lung and bronchus",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "gas_exchange",
+        "barrier",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Diffuse injury can cause edema and respiratory failure.",
+      "persistent_loss": "Fibrosis and impaired clearance can persist.",
+      "repair": "AT2 and airway progenitors can repair finite injury but may be targeted themselves.",
+      "management": "Ventilation treats failure without proving recovery or stopping recognition.",
+      "rationale": "Bulk lung includes alveolar, vascular and regenerative compartments; use explicit cell subsets for narrower calls.",
+      "references": [
+        "garcia2016",
+        "guild2023",
+        "perl2011",
+        "haas2023",
+        "zhao2000"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "liver",
+      "label": "Liver",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Hepatobiliary",
+      "tissues": [
+        "liver"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "secretion",
+        "repair"
+      ],
+      "acute_loss": "Loss of detoxification and synthetic function can be life-threatening.",
+      "persistent_loss": "Fibrosis, cholestasis and depleted regenerative reserve can persist.",
+      "repair": "Hepatocytes regenerate; biliary compensation depends on surviving lineages.",
+      "management": "Transplantation is not a general workaround for persistent antigen recognition.",
+      "rationale": "High regenerative capacity does not make widespread or repeated hepatic injury manageable.",
+      "references": [
+        "raven2017",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "kidney",
+      "label": "Kidney",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Renal",
+      "tissues": [
+        "kidney"
+      ],
+      "mechanisms": [
+        "filtration",
+        "homeostasis",
+        "repair"
+      ],
+      "acute_loss": "Filtration, electrolyte and volume failure can be life-threatening.",
+      "persistent_loss": "Podocyte depletion and repeated tubular injury can cause sclerosis and fibrosis.",
+      "repair": "Tubules and podocytes have different repair capacity; both matter in bulk kidney.",
+      "management": "Dialysis is substantial support and does not prevent all injury consequences.",
+      "rationale": "Retain high protection for both irreversible glomerular loss and sustained tubular injury.",
+      "references": [
+        "wharram2005",
+        "grgic2012"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "pancreas",
+      "label": "Pancreas",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pancreas"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "secretion",
+        "inflammation"
+      ],
+      "acute_loss": "Inflammatory injury and endocrine failure can cause acute severe illness.",
+      "persistent_loss": "Diabetes and digestive insufficiency can require lifelong support.",
+      "repair": "Endocrine and exocrine populations differ; bulk does not establish isolated beta-cell exposure.",
+      "management": "Insulin and enzymes replace selected outputs, not all acute organ injury.",
+      "rationale": "A broad pancreas signal retains Vital; isolated cell populations are assessed separately.",
+      "references": [
+        "stamatouli2018",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "adrenal",
+      "label": "Adrenal gland",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "adrenal_gland"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "homeostasis"
+      ],
+      "acute_loss": "Glucocorticoid/mineralocorticoid failure can precipitate crisis.",
+      "persistent_loss": "Deficits require continuing replacement and stress dosing.",
+      "repair": "Reliable restoration after destructive immune injury is unestablished.",
+      "management": "Replacement mitigates deficiency but requires sustained clinical management.",
+      "rationale": "Bulk adrenal cannot exclude multiple axes or rapidly destabilizing cortical injury.",
+      "references": [
+        "niddk_adrenal"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "pituitary",
+      "label": "Pituitary gland",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pituitary_gland"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "homeostasis"
+      ],
+      "acute_loss": "ACTH failure and disturbed water balance may be life-threatening.",
+      "persistent_loss": "Several hormone deficits may persist.",
+      "repair": "Clinical inflammatory injury shows incomplete hormonal recovery.",
+      "management": "Multiple hormones and fluid balance may need ongoing support.",
+      "rationale": "A mixed pituitary sample cannot establish exposure limited to a readily compensated axis.",
+      "references": [
+        "hypophysitis2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "thyroid",
+      "label": "Thyroid gland",
+      "level": "bulk",
+      "tier": "manageable",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "thyroid_gland"
+      ],
+      "mechanisms": [
+        "endocrine"
+      ],
+      "acute_loss": "Destructive thyroiditis can release hormone and cause symptomatic thyrotoxicosis.",
+      "persistent_loss": "Hypothyroidism may be permanent.",
+      "repair": "Functional recovery is variable; the rationale is replaceable output rather than guaranteed regeneration.",
+      "management": "Thyroid hormone replacement is an established form of compensation.",
+      "rationale": "Manageable is conditional on controlling acute injury and maintaining replacement; not Disposable.",
+      "references": [
+        "iyer2018"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "parathyroid",
+      "label": "Parathyroid gland",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "parathyroid_gland"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "homeostasis"
+      ],
+      "acute_loss": "Calcium disturbance can affect neuromuscular and cardiac function.",
+      "persistent_loss": "Persistent hormone deficiency can require complex supplementation.",
+      "repair": "Reliable regeneration after extensive immune injury is unestablished.",
+      "management": "Replacement of mineral balance is feasible but imperfect.",
+      "rationale": "Persistent homeostatic consequences justify more protection than a simple removable-gland analogy.",
+      "references": [
+        "sitc2021",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "salivary",
+      "label": "Salivary glands",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "salivary_gland"
+      ],
+      "mechanisms": [
+        "secretion",
+        "defence"
+      ],
+      "acute_loss": "Inflammation can impair oral intake and secretion.",
+      "persistent_loss": "Severe dryness, dental injury and infection risk can persist.",
+      "repair": "Clinical symptomatic recovery need not restore salivary flow.",
+      "management": "Symptomatic management incompletely replaces gland function.",
+      "rationale": "Local accessibility does not ensure recovery of secretory tissue.",
+      "references": [
+        "warner2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "marrow",
+      "label": "Bone marrow",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Blood and immune",
+      "tissues": [
+        "bone_marrow"
+      ],
+      "mechanisms": [
+        "hematopoiesis",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Loss of blood-cell production can cause infection, anemia and bleeding.",
+      "persistent_loss": "Stem-cell or niche depletion can prevent recovery.",
+      "repair": "Requires surviving progenitors and a functional stromal niche.",
+      "management": "Transfusion and transplantation do not establish general target tolerability.",
+      "rationale": "Marrow is a mixed regenerative organ; mature B-cell experience cannot be generalized to it.",
+      "references": [
+        "maude2018",
+        "tran2013",
+        "roberts2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "blood",
+      "label": "Blood",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Blood and immune",
+      "tissues": [
+        "blood"
+      ],
+      "mechanisms": [
+        "oxygen_transport",
+        "hemostasis",
+        "defence"
+      ],
+      "acute_loss": "Distributed cell depletion can compromise oxygen delivery, hemostasis or host defence.",
+      "persistent_loss": "Persistent targeting can prevent hematopoietic replenishment.",
+      "repair": "Renewal depends on spared marrow and antigen distribution during maturation.",
+      "management": "Lineage-specific support exists but is not equivalent across cell types.",
+      "rationale": "Bulk blood must not inherit a mature B-cell exception.",
+      "references": [
+        "maude2018",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "nodes",
+      "label": "Lymph nodes",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "lymph_node"
+      ],
+      "mechanisms": [
+        "defence",
+        "drainage",
+        "repair"
+      ],
+      "acute_loss": "Inflammation can disrupt immune organization and drainage.",
+      "persistent_loss": "Lymphatic and stromal injury may cause lasting dysfunction.",
+      "repair": "Removal of one node does not model depletion of all nodes or shared lineages.",
+      "management": "No complete replacement for distributed nodal organization.",
+      "rationale": "Distinguish circulating immune cells from resident lymphatic and stromal structure.",
+      "references": [
+        "nci_lymph_nodes",
+        "maude2018"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "spleen",
+      "label": "Spleen",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "spleen"
+      ],
+      "mechanisms": [
+        "defence",
+        "filtration"
+      ],
+      "acute_loss": "Inflammatory or vascular injury can be severe.",
+      "persistent_loss": "Functional asplenia increases long-term infection risk.",
+      "repair": "Other immune organs compensate incompletely.",
+      "management": "Vaccination and infection management reduce, but do not remove, consequences.",
+      "rationale": "Surgical survival supports partial compensation, not a low-consequence or Disposable designation.",
+      "references": [
+        "kristinsson2014"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "thymus",
+      "label": "Thymus",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "thymus"
+      ],
+      "mechanisms": [
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Immediate effects vary with age and pre-existing immune reserve.",
+      "persistent_loss": "Loss of T-cell renewal may have delayed consequences.",
+      "repair": "Adult involution does not establish absence of continuing function.",
+      "management": "No routine full replacement of thymic function.",
+      "rationale": "Adult thymectomy associations argue for protection; pediatric risk requires separate review.",
+      "references": [
+        "kooshesh2023"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "tonsil",
+      "label": "Tonsil",
+      "level": "bulk",
+      "tier": "disposable",
+      "system": "Blood and immune",
+      "tissues": [
+        "tonsil"
+      ],
+      "mechanisms": [
+        "defence"
+      ],
+      "acute_loss": "In-situ inflammation, swelling or bleeding can still be serious.",
+      "persistent_loss": "Local organ loss is often compensated by other immune sites.",
+      "repair": "Allowance rests on local removal tolerance, not regeneration.",
+      "management": "Surgery is a local precedent, not evidence for systemic immune-lineage depletion.",
+      "rationale": "The exception requires restriction to tonsillar tissue and excludes the same lymphocyte lineage elsewhere.",
+      "references": [
+        "nhs_tonsillectomy"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "small_bowel",
+      "label": "Small intestine",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "small_intestine"
+      ],
+      "mechanisms": [
+        "barrier",
+        "absorption",
+        "repair"
+      ],
+      "acute_loss": "Diffuse barrier failure can cause sepsis and fluid loss.",
+      "persistent_loss": "Extensive loss can compromise nutrient absorption and renewal.",
+      "repair": "Crypt alternatives can compensate for selected insults; shared progenitor targeting changes the result.",
+      "management": "Nutritional support does not guarantee control of destructive enteritis.",
+      "rationale": "Renewal alone does not justify lowering a whole-organ small-intestine finding.",
+      "references": [
+        "tian2011",
+        "parkhurst2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "large_bowel",
+      "label": "Colon and rectum",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "colon",
+        "rectum"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Colitis can cause severe diarrhea, bleeding or perforation.",
+      "persistent_loss": "Persistent targeting can cause chronic injury and impaired repair.",
+      "repair": "Mature cells renew if regenerative compartments survive.",
+      "management": "Clinical recovery after some TCR injuries is not universal rescue.",
+      "rationale": "Bulk bowel does not establish restriction to mature replaceable epithelium.",
+      "references": [
+        "parkhurst2011",
+        "tian2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "upper_gi",
+      "label": "Esophagus and stomach",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "esophagus",
+        "stomach"
+      ],
+      "mechanisms": [
+        "barrier",
+        "secretion",
+        "repair"
+      ],
+      "acute_loss": "Mucosal injury can impair intake, bleed or perforate.",
+      "persistent_loss": "Stricture and gland loss may be persistent.",
+      "repair": "Renewal requires surviving progenitors and control of inflammation.",
+      "management": "Supportive therapy and local access do not guarantee recovery.",
+      "rationale": "Mixed mucosa, glands and muscle merit protection even where some lining cells renew.",
+      "references": [
+        "sitc2021",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "oral",
+      "label": "Oral and upper-airway mucosa",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "sensory"
+      ],
+      "acute_loss": "Injury can impair swallowing, intake or airway patency.",
+      "persistent_loss": "Scarring, dryness and sensory deficits can persist.",
+      "repair": "Surface renewal differs from gland, neural and muscle repair.",
+      "management": "Local treatment is conditional on injury extent and persistence.",
+      "rationale": "Bulk mucosal labels cannot exclude important underlying structures.",
+      "references": [
+        "sitc2021",
+        "warner2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "appendix",
+      "label": "Appendix",
+      "level": "bulk",
+      "tier": "disposable",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "appendix"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence"
+      ],
+      "acute_loss": "In-situ inflammation may perforate or spread.",
+      "persistent_loss": "Organ absence can be tolerated after controlled removal.",
+      "repair": "Removal tolerance, not regeneration, underlies the exception.",
+      "management": "Surgery is not equivalent to uncontrolled antigen-directed destruction.",
+      "rationale": "Restriction must be to appendix, not a shared bowel or immune lineage.",
+      "references": [
+        "nhs_appendix"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "gallbladder",
+      "label": "Gallbladder",
+      "level": "bulk",
+      "tier": "disposable",
+      "system": "Hepatobiliary",
+      "tissues": [
+        "gallbladder"
+      ],
+      "mechanisms": [
+        "secretion"
+      ],
+      "acute_loss": "Inflammation, obstruction or bile leakage can be serious.",
+      "persistent_loss": "Loss of storage function is generally compensated after removal.",
+      "repair": "Allowance rests on organ-removal experience.",
+      "management": "Adjacent bile ducts and liver are not covered by the exception.",
+      "rationale": "Local removability supports a narrow allowance rather than permission for generic biliary cells.",
+      "references": [
+        "niddk_gallbladder"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "urinary",
+      "label": "Bladder and ureter",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Renal",
+      "tissues": [
+        "urinary_bladder",
+        "ureter"
+      ],
+      "mechanisms": [
+        "barrier",
+        "drainage",
+        "repair"
+      ],
+      "acute_loss": "Inflammation and obstruction can compromise urinary drainage.",
+      "persistent_loss": "Stricture, poor compliance and barrier dysfunction can persist.",
+      "repair": "Urothelial regeneration depends on intact progenitor/stromal signaling.",
+      "management": "Diversion or reconstruction is substantial intervention, not ordinary compensation.",
+      "rationale": "Renewing urothelium does not make distributed or muscular injury low consequence.",
+      "references": [
+        "shin2011",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "skin",
+      "label": "Skin",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Integument",
+      "tissues": [
+        "skin"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Extensive epithelial loss threatens barrier, fluid balance and infection control.",
+      "persistent_loss": "Scarring, chronic wounds and lost appendages can persist.",
+      "repair": "Repair depends on viable epidermal and appendage progenitors and injury extent.",
+      "management": "Local treatment applies to selected injuries; extensive loss needs systemic care.",
+      "rationale": "Bulk skin is broader than cutaneous melanocytes or hair follicles and must retain barrier concern.",
+      "references": [
+        "johnson2009",
+        "sitc2021",
+        "purba2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "cutaneous_pigment",
+      "label": "Cutaneous melanocytes",
+      "level": "bulk",
+      "tier": "disposable",
+      "system": "Integument",
+      "tissues": [
+        "cutaneous_melanocyte"
+      ],
+      "mechanisms": [
+        "pigment"
+      ],
+      "acute_loss": "Inflammation may accompany pigment-cell killing.",
+      "persistent_loss": "Depigmentation may persist.",
+      "repair": "Return of pigment is not required for the conditional allowance.",
+      "management": "Sun protection and skin surveillance may be required.",
+      "rationale": "Cutaneous restriction is essential; eye and inner-ear pigment cells are excluded.",
+      "references": [
+        "johnson2009"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "hair",
+      "label": "Hair follicles",
+      "level": "bulk",
+      "tier": "disposable",
+      "system": "Integument",
+      "tissues": [
+        "hair_follicle"
+      ],
+      "mechanisms": [
+        "appendage",
+        "repair"
+      ],
+      "acute_loss": "Follicular inflammation can be painful and extensive.",
+      "persistent_loss": "Alopecia can be permanent after stem-cell injury.",
+      "repair": "Regrowth depends on the surviving follicular stem-cell niche.",
+      "management": "Loss is generally compatible with systemic function, but can be consequential to the patient.",
+      "rationale": "An explicit follicular sample can receive a narrow allowance; generic skin stem cells cannot.",
+      "references": [
+        "purba2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "adipose",
+      "label": "Adipose tissue",
+      "level": "bulk",
+      "tier": "manageable",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "adipose_tissue"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "endocrine"
+      ],
+      "acute_loss": "Widespread inflammatory injury may disturb metabolism.",
+      "persistent_loss": "Generalized fat loss can cause major metabolic dysfunction.",
+      "repair": "Adult turnover exists but does not imply rapid restoration of widespread loss.",
+      "management": "Compensation depends strongly on extent, depot and metabolic reserve.",
+      "rationale": "Conditional lower priority for limited depot injury; pan-adipocyte targeting needs an explicit extent review.",
+      "references": [
+        "spalding2008",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "skeletal",
+      "label": "Skeletal muscle",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "skeletal_muscle"
+      ],
+      "mechanisms": [
+        "motor",
+        "homeostasis",
+        "repair"
+      ],
+      "acute_loss": "Respiratory weakness or extensive myonecrosis may be life-threatening.",
+      "persistent_loss": "Weakness and fibrosis may persist if regenerative support is damaged.",
+      "repair": "Satellite cells and supportive fibroblasts are required for effective repair.",
+      "management": "Support and rehabilitation do not replace destroyed respiratory muscle.",
+      "rationale": "A generic muscle label cannot exclude diaphragm or distributed injury.",
+      "references": [
+        "sambasivan2011",
+        "murphy2011",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "smooth",
+      "label": "Smooth muscle",
+      "level": "bulk",
+      "tier": "vital",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "smooth_muscle"
+      ],
+      "mechanisms": [
+        "perfusion",
+        "motility",
+        "drainage"
+      ],
+      "acute_loss": "Vascular or visceral contractile failure can threaten perfusion and organ function.",
+      "persistent_loss": "Dysmotility or structural remodeling can persist.",
+      "repair": "Repair is site dependent and not established from a generic label.",
+      "management": "No single replacement applies to all smooth-muscle sites.",
+      "rationale": "Unknown anatomical site retains high protection; local uterine membership remains a separate scope.",
+      "references": [
+        "hpa_tissues",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "cartilage",
+      "label": "Cartilage",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "cartilage"
+      ],
+      "mechanisms": [
+        "structure",
+        "repair"
+      ],
+      "acute_loss": "Location determines consequences, including airway support.",
+      "persistent_loss": "Matrix damage and deformity may be persistent.",
+      "repair": "Adult articular collagen turns over slowly; this is indirect evidence for cell-loss effects.",
+      "management": "Symptom control does not restore structural integrity.",
+      "rationale": "Articular evidence supports protection; unknown cartilage site does not justify assuming a harmless joint compartment.",
+      "references": [
+        "heinemeier2016",
+        "braaten2020"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "male_gonad",
+      "label": "Testis",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Reproductive",
+      "tissues": [
+        "testis",
+        "spermatozoon"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "fertility",
+        "repair"
+      ],
+      "acute_loss": "Inflammation can cause pain and endocrine disturbance.",
+      "persistent_loss": "Fertility and androgen production can be permanently lost.",
+      "repair": "Germline renewal requires surviving stem and supporting cells.",
+      "management": "Hormone replacement cannot restore fertility.",
+      "rationale": "Reproductive expression is a CTA association axis, not evidence that testicular injury is harmless.",
+      "references": [
+        "openstax_male"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "female_gonad",
+      "label": "Ovary",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Reproductive",
+      "tissues": [
+        "ovary"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "fertility"
+      ],
+      "acute_loss": "Inflammation may disrupt ovarian function.",
+      "persistent_loss": "Oocyte depletion can cause irreversible infertility and endocrine failure.",
+      "repair": "Finite reserve differs from a renewable epithelial barrier.",
+      "management": "Hormone replacement does not replace oocyte reserve.",
+      "rationale": "Reproductive membership must not be read as a severity category.",
+      "references": [
+        "openstax_female"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "reproductive_tract",
+      "label": "Reproductive ducts and accessory organs",
+      "level": "bulk",
+      "tier": "protected",
+      "system": "Reproductive",
+      "tissues": [
+        "epididymis",
+        "vas_deferens",
+        "prostate",
+        "penis",
+        "seminal_vesicle",
+        "bulbourethral_gland",
+        "fallopian_tube",
+        "uterus",
+        "vagina",
+        "vulva",
+        "clitoris"
+      ],
+      "mechanisms": [
+        "fertility",
+        "barrier",
+        "secretion"
+      ],
+      "acute_loss": "Injury can cause inflammation, obstruction and mucosal damage.",
+      "persistent_loss": "Infertility, scarring and functional losses may be persistent.",
+      "repair": "Repair differs between glands, ducts, muscle and mucosa.",
+      "management": "Selected removal is possible but not a general model for distributed immune injury.",
+      "rationale": "Keep hazard separate from the project reproductive permission; broad organs contain several important cell populations.",
+      "references": [
+        "openstax_female",
+        "openstax_male"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "mammary",
+      "label": "Mammary tissue",
+      "level": "bulk",
+      "tier": "manageable",
+      "system": "Reproductive",
+      "tissues": [
+        "mammary_tissue"
+      ],
+      "mechanisms": [
+        "secretion",
+        "barrier"
+      ],
+      "acute_loss": "Inflammation may be substantial, particularly during lactation.",
+      "persistent_loss": "Loss can impair lactation and cause permanent structural changes.",
+      "repair": "Epithelial plasticity depends on physiological state and surviving progenitors.",
+      "management": "Systemic survival is compatible with gland loss; patient context remains important.",
+      "rationale": "Conditional lower priority applies to nonlactating adult context; reproductive membership remains independent.",
+      "references": [
+        "openstax_female"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "airway_ciliated",
+      "label": "Mature airway ciliated cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "defence",
+        "barrier"
+      ],
+      "acute_loss": "Loss impairs clearance; cytotoxic elimination also disrupts epithelial integrity.",
+      "persistent_loss": "Infection and chronic airway damage can accumulate during sustained depletion.",
+      "repair": "Spared progenitors permit renewal, but selective depletion did not trigger rapid replacement in mice.",
+      "management": "Airway clearance and infection treatment do not fully replace ciliary function.",
+      "rationale": "Lower immediate loss-of-function concern than alveolar failure is plausible; slow renewal and chronic consequences prevent an automatic Manageable allowance.",
+      "references": [
+        "pardo2015",
+        "dumm2019",
+        "halbeisen2022"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(ciliated|multiciliated)\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "airway_club",
+      "label": "Airway club cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "repair",
+        "secretion",
+        "defence"
+      ],
+      "acute_loss": "Secretory and airway progenitor function may be lost.",
+      "persistent_loss": "Repeated depletion can exhaust repair and leave lasting peribronchiolar fibrosis.",
+      "repair": "Club cells themselves provide regenerative capacity; surviving basal or alternative populations may compensate only conditionally.",
+      "management": "Ventilation treats failure without proving recovery or stopping recognition.",
+      "rationale": "Club cells cannot be treated as merely replaceable mature luminal cells; persistent loss directly threatens airway repair.",
+      "references": [
+        "perl2011",
+        "tata2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(club|clara)\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "airway_basal",
+      "label": "Airway basal cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "repair",
+        "barrier"
+      ],
+      "acute_loss": "Depletion removes a principal conducting-airway regenerative compartment; immediate effects depend on existing epithelial integrity.",
+      "persistent_loss": "Persistent loss can impair re-epithelialization and contribute to airway fibrosis.",
+      "repair": "Surviving secretory cells can dedifferentiate after finite basal-cell loss in mice; shared targeting can remove this alternative.",
+      "management": "Respiratory support does not replace the regenerative pool or establish control of continuing recognition.",
+      "rationale": "Protect principal airway progenitors while recording secretory-cell dedifferentiation as conditional counterevidence.",
+      "references": [
+        "clad2023",
+        "tata2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bbasal\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "airway_goblet",
+      "label": "Mature airway goblet cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "secretion",
+        "defence",
+        "barrier"
+      ],
+      "acute_loss": "Isolated loss principally disrupts mucus defence rather than alveolar gas exchange.",
+      "persistent_loss": "Loss of secretory defence may permit recurrent infection and chronic injury.",
+      "repair": "Secretory-state plasticity is possible, but replacement cells may remain targets.",
+      "management": "Airway clearance and infection treatment do not reproduce all mucus-defense functions.",
+      "rationale": "Mucin knockout and altered differentiation are not cytotoxic ablation; sparse direct evidence supports a provisional Protected call.",
+      "references": [
+        "roy2014",
+        "dumm2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bgoblet\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "airway_secretory",
+      "label": "Unresolved airway secretory cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "gas_exchange",
+        "barrier",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "A broad secretory label may include both mature mucus-producing cells and regenerative club populations.",
+      "persistent_loss": "Persistent targeting may compromise defense and renewal, depending on the actual cell mixture.",
+      "repair": "Unknown secretory identity cannot establish spared club or alternative progenitors.",
+      "management": "Support for mucus clearance does not compensate for loss of regeneration.",
+      "rationale": "A broad secretory label may include club progenitors or essential gland populations and cannot inherit a mature-goblet downgrade.",
+      "references": [
+        "perl2011",
+        "roy2014"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(secretory|serous|mucous)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "airway_ionocyte",
+      "label": "Airway ionocytes",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "homeostasis",
+        "defence"
+      ],
+      "acute_loss": "Selective loss could alter airway ion transport and surface-liquid homeostasis.",
+      "persistent_loss": "Persistent transport disturbance could impair mucus handling; selective immune-depletion outcomes remain unresolved.",
+      "repair": "Rarity is not evidence of dispensability, and regeneration after selective immune loss is unestablished.",
+      "management": "Compensation by other transport-expressing cells is a question for testing, not an established replacement strategy.",
+      "rationale": "Specialized ion transport supports airway physiology; direct cell-depletion tolerability evidence is insufficient for a lower default.",
+      "references": [
+        "hpa_tissues",
+        "roy2014"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bionocytes?\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "alveolar_at1",
+      "label": "Alveolar type 1 cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "gas_exchange",
+        "barrier",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Extensive uncompensated loss can disrupt the gas-exchange epithelial barrier.",
+      "persistent_loss": "Repeated injury can drive abnormal epithelial repair; barrier dysfunction depends on compensation.",
+      "repair": "AT2 cells can rapidly flatten and differentiate after finite AT1 injury; persistent recognition may alter repair states.",
+      "management": "Ventilation treats failure without proving recovery or stopping recognition.",
+      "rationale": "Barrier function merits high protection; record rapid AT2 compensation rather than describing AT1 cells as irreplaceable.",
+      "references": [
+        "guild2023",
+        "haas2023"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(type (?:i|1) (?:pneumocyte|alveolar)|at1|alveolar.*type (?:i|1))\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "alveolar_at2",
+      "label": "Alveolar type 2 cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "gas_exchange",
+        "barrier",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Loss threatens surfactant function and can initiate edema and respiratory failure.",
+      "persistent_loss": "Depletion can impair alveolar repair and initiate fibrosis.",
+      "repair": "Recovery depends on surviving AT2/alternative progenitors, injury kinetics and supporting tissue.",
+      "management": "Ventilation supports gas exchange but does not restore the surfactant-producing regenerative compartment.",
+      "rationale": "Surfactant output and alveolar renewal combine immediate and regenerative consequences; animal depletion and antigen-specific injury support major hazard.",
+      "references": [
+        "garcia2016",
+        "zhao2000"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(type (?:ii|2) (?:pneumocyte|alveolar)|at2|alveolar.*type (?:ii|2))\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "alveolar_unspecified",
+      "label": "Unresolved alveolar epithelium",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "gas_exchange",
+        "barrier",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Diffuse injury can cause edema and respiratory failure.",
+      "persistent_loss": "Persistent injury can compromise alveolar repair and produce fibrosis.",
+      "repair": "A broad pneumocyte label does not establish whether AT2 repair is spared.",
+      "management": "Ventilation treats failure without proving recovery or stopping recognition.",
+      "rationale": "Unresolved pneumocyte labels must not acquire the repair assumptions of an isolated mature subtype.",
+      "references": [
+        "garcia2016",
+        "guild2023",
+        "haas2023"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(?:alveolar (?:epithelial )?cells?|pneumocytes?)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "lung_endothelium",
+      "label": "Pulmonary endothelium",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Respiratory",
+      "tissues": [
+        "lung",
+        "bronchus"
+      ],
+      "mechanisms": [
+        "barrier",
+        "perfusion",
+        "inflammation"
+      ],
+      "acute_loss": "Vascular leak, edema and impaired perfusion can disrupt gas exchange.",
+      "persistent_loss": "Persistent microvascular injury can impair alveolar function and tissue repair.",
+      "repair": "Alveolar epithelial repair does not establish endothelial recovery; vascular-bed and injury-extent effects matter.",
+      "management": "Respiratory support does not replace a functioning pulmonary microvascular barrier.",
+      "rationale": "The alveolar-capillary interface can fail through direct recognition or secondary inflammatory vascular injury.",
+      "references": [
+        "haas2023",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 40,
+      "cell_pattern": "\\b(endotheli|endothelial|aerocytes?)",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "cardiomyocyte",
+      "label": "Cardiomyocytes and conduction cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Cardiovascular",
+      "tissues": [
+        "heart"
+      ],
+      "mechanisms": [
+        "pump",
+        "conduction",
+        "repair"
+      ],
+      "acute_loss": "Pump or conduction failure can be immediately fatal.",
+      "persistent_loss": "Lost contractile reserve and scar can persist.",
+      "repair": "Adult cardiomyocyte renewal is limited, not absent.",
+      "management": "Mechanical support/transplant are not routine compensation for target-mediated injury.",
+      "rationale": "Limited adult renewal and direct receptor-specific cardiac toxicity support high protection; electrically specialized subsets are not discounted by rarity.",
+      "references": [
+        "bergmann2009",
+        "linette2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(cardiomyocytes?|cardiac muscle|myocytes?|purkinje|pacemaker|conduction)\\b",
+      "evidence_scope": "Human antigen-directed T-cell injury or depletion provides a clinical anchor; findings remain receptor/product-specific and may not resolve every subset in this rule."
+    },
+    {
+      "id": "neurons",
+      "label": "CNS neurons",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Nervous",
+      "tissues": [
+        "brain",
+        "spinal_cord"
+      ],
+      "mechanisms": [
+        "neural",
+        "sensory",
+        "repair"
+      ],
+      "acute_loss": "Circuit disruption can cause major neurological disability or death.",
+      "persistent_loss": "Neuronal loss and disconnection may be irreversible.",
+      "repair": "Repair varies by lineage; preservation of some progenitors does not restore complex circuits.",
+      "management": "Rehabilitation is not replacement of lost circuits.",
+      "rationale": "Protect specialized neural circuits even where a small fraction of cells expresses the target.",
+      "references": [
+        "morgan2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(neurons?|neuronal|purkinje|pyramidal|granule cells?)\\b",
+      "evidence_scope": "Human antigen-directed T-cell injury or depletion provides a clinical anchor; findings remain receptor/product-specific and may not resolve every subset in this rule."
+    },
+    {
+      "id": "cns_glia",
+      "label": "Astrocytes and oligodendroglia",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Nervous",
+      "tissues": [
+        "brain",
+        "spinal_cord"
+      ],
+      "mechanisms": [
+        "neural",
+        "sensory",
+        "repair"
+      ],
+      "acute_loss": "Loss of ion buffering, metabolic support or myelin can disrupt neural function.",
+      "persistent_loss": "Demyelination, secondary axonal injury and disrupted homeostasis can persist.",
+      "repair": "Repair differs among astrocytes and oligodendrocyte-lineage cells; surviving progenitors do not guarantee restoration under repeated attack.",
+      "management": "Supportive care cannot replace distributed glial functions.",
+      "rationale": "Distributed support, myelination and homeostatic roles can make non-neuronal loss disabling; neuron-to-glia equivalence is a mechanistic inference.",
+      "references": [
+        "morgan2013",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(astrocytes?|oligodendrocytes?|oligodendroglia|glial cells?)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "ependymal",
+      "label": "Ependymal cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Nervous",
+      "tissues": [
+        "brain",
+        "spinal_cord"
+      ],
+      "mechanisms": [
+        "homeostasis",
+        "barrier"
+      ],
+      "acute_loss": "Injury may disturb CSF-facing epithelial and ciliary functions.",
+      "persistent_loss": "Persistent ventricular-lining injury may alter CSF homeostasis; direct selective clinical evidence is limited.",
+      "repair": "Airway ciliated-cell replacement is not evidence for adult ependymal repair.",
+      "management": "Treating downstream CSF disturbances would not necessarily restore the lining.",
+      "rationale": "CSF-facing homeostasis and ciliary function warrant protection; airway-cilia policy must not be transferred to CNS ependyma.",
+      "references": [
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bependymal\\b",
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "schwann",
+      "label": "Schwann cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Nervous",
+      "tissues": [
+        "peripheral_nerve"
+      ],
+      "mechanisms": [
+        "neural",
+        "repair"
+      ],
+      "acute_loss": "Motor, sensory and autonomic failure may be disabling or life-threatening.",
+      "persistent_loss": "Denervation and failed reinnervation can persist.",
+      "repair": "Axonal repair requires surviving neurons, Schwann cells and permissive paths.",
+      "management": "Support does not guarantee functional restoration.",
+      "rationale": "Myelination and regeneration support are both at stake; peripheral repair depends on surviving axons and support cells.",
+      "references": [
+        "hpa_tissues",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bschwann\\b",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "retinal_neurons",
+      "label": "Retinal neurons and photoreceptors",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Sensory",
+      "tissues": [
+        "eye",
+        "retina"
+      ],
+      "mechanisms": [
+        "sensory",
+        "barrier",
+        "repair"
+      ],
+      "acute_loss": "Injury can cause vision loss.",
+      "persistent_loss": "Retinal or optic damage may be irreversible.",
+      "repair": "Adult human retinal circuit replacement is not reliably achieved after destructive loss.",
+      "management": "Vision aids do not restore native retinal circuits.",
+      "rationale": "Loss can irreversibly affect visual processing; a whole-eye immune-toxicity precedent does not resolve individual retinal lineages.",
+      "references": [
+        "johnson2009",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(photoreceptor|rods?|cones?|retinal.*neuron|ganglion|bipolar|amacrine|horizontal)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "rpe",
+      "label": "Retinal pigment epithelium",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Sensory",
+      "tissues": [
+        "eye",
+        "retina"
+      ],
+      "mechanisms": [
+        "sensory",
+        "barrier",
+        "repair"
+      ],
+      "acute_loss": "Loss of retinal pigment epithelial support can compromise photoreceptor function.",
+      "persistent_loss": "Secondary photoreceptor injury and visual loss may persist.",
+      "repair": "Restoring an organized functional RPE layer after diffuse immune loss is unestablished.",
+      "management": "Cutaneous depigmentation experience does not establish compensation for retinal support loss.",
+      "rationale": "Retinal support differs fundamentally from cutaneous pigment function; retain high protection.",
+      "references": [
+        "hpa_tissues",
+        "johnson2009"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(retinal pigment|rpe)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "limbal_stem",
+      "label": "Limbal stem/progenitor cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Sensory",
+      "tissues": [
+        "eye",
+        "retina"
+      ],
+      "mechanisms": [
+        "sensory",
+        "barrier",
+        "repair"
+      ],
+      "acute_loss": "Injury can cause vision loss.",
+      "persistent_loss": "Persistent epithelial defects, corneal opacity and loss of vision can follow injury; retinal loss is a separate compartment.",
+      "repair": "Loss of limbal reserve can prevent sustained corneal resurfacing; transplantation is conditional rescue.",
+      "management": "Local treatment or grafting applies only to selected compartments.",
+      "rationale": "Protect the regenerative compartment needed to maintain a transparent corneal surface.",
+      "references": [
+        "rama2010",
+        "collin2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(limbal.*(?:stem|progenitor)|corneal.*stem)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "corneal_epithelium",
+      "label": "Mature corneal epithelial cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Sensory",
+      "tissues": [
+        "eye",
+        "retina"
+      ],
+      "mechanisms": [
+        "sensory",
+        "barrier",
+        "repair"
+      ],
+      "acute_loss": "Surface defects can cause pain, infection and impaired vision.",
+      "persistent_loss": "Persistent epithelial defects and scarring can impair transparency.",
+      "repair": "Surface renewal depends on spared limbal and basal regenerative populations.",
+      "management": "Local support and selected grafts do not guarantee recovery during persistent recognition.",
+      "rationale": "Surface replacement is possible with spared limbal reserve; ulceration and scarring remain important.",
+      "references": [
+        "rama2010",
+        "collin2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 20,
+      "cell_pattern": "\\b((?:corneal|conjunctival|limbal).*(?:suprabasal|superficial)|corneal epithelial)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "corneal_endothelium",
+      "label": "Corneal endothelium",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Sensory",
+      "tissues": [
+        "eye",
+        "retina"
+      ],
+      "mechanisms": [
+        "sensory",
+        "barrier",
+        "repair"
+      ],
+      "acute_loss": "Loss of endothelial fluid regulation can cause corneal edema and impaired vision.",
+      "persistent_loss": "Persistent edema and secondary structural changes can impair transparency.",
+      "repair": "Routine complete functional restoration after extensive adult human endothelial loss is not established.",
+      "management": "Selected endothelial grafting requires a permissive environment; it does not establish tolerance of continuing immune attack.",
+      "rationale": "Corneal transparency and fluid control are high-consequence sensory functions; vascular-endothelial analogies are inappropriate.",
+      "references": [
+        "collin2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bcorneal endotheli",
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "ear_hair",
+      "label": "Inner-ear hair cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Sensory",
+      "tissues": [
+        "inner_ear"
+      ],
+      "mechanisms": [
+        "sensory",
+        "neural"
+      ],
+      "acute_loss": "Hearing and balance may be lost.",
+      "persistent_loss": "Sensory deficits can persist despite suppression of inflammation.",
+      "repair": "Limited vestibular replacement in mice does not establish human cochlear regeneration.",
+      "management": "Assistive devices do not fully replace native sensory function.",
+      "rationale": "Do not generalize limited mouse vestibular regeneration to recoverable human hearing.",
+      "references": [
+        "golub2012"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bhair cells?\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "hepatocyte",
+      "label": "Hepatocytes",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Hepatobiliary",
+      "tissues": [
+        "liver"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "secretion",
+        "repair"
+      ],
+      "acute_loss": "Loss of detoxification and synthetic function can be life-threatening.",
+      "persistent_loss": "Fibrosis, cholestasis and depleted regenerative reserve can persist.",
+      "repair": "Hepatocytes regenerate; biliary compensation depends on surviving lineages.",
+      "management": "Transplantation is not a general workaround for persistent antigen recognition.",
+      "rationale": "Finite-injury regeneration is substantial but depends on survivors; distributed persistent loss threatens metabolic and synthetic function.",
+      "references": [
+        "raven2017",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bhepatocytes?\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "cholangiocyte",
+      "label": "Cholangiocytes",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Hepatobiliary",
+      "tissues": [
+        "liver"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "secretion",
+        "repair"
+      ],
+      "acute_loss": "Bile-duct epithelial injury can impair bile flow and initiate cholestatic inflammation.",
+      "persistent_loss": "Duct loss, cholestasis and fibrosis can become chronic.",
+      "repair": "Biliary repair and facultative hepatocyte contribution require surviving responsive populations.",
+      "management": "Drainage or transplantation is substantial intervention; suppressing inflammation need not restore lost ducts.",
+      "rationale": "Biliary injury can cause chronic cholestasis and fibrosis; shared biliary/hepatocyte expression removes a potential repair route.",
+      "references": [
+        "raven2017",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(cholangiocytes?|biliary epithelial|bile duct)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "podocyte",
+      "label": "Podocytes",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Renal",
+      "tissues": [
+        "kidney"
+      ],
+      "mechanisms": [
+        "filtration",
+        "homeostasis",
+        "repair"
+      ],
+      "acute_loss": "Filtration-barrier disruption can cause substantial proteinuria.",
+      "persistent_loss": "Progressive glomerulosclerosis and loss of filtration can follow depletion.",
+      "repair": "Podocyte replacement is limited; remaining cells can compensate only within model-dependent bounds.",
+      "management": "Dialysis does not restore the glomerular barrier and is not a simple replacement of podocyte function.",
+      "rationale": "Selective depletion directly supports progressive filtration-barrier failure and sclerosis.",
+      "references": [
+        "wharram2005"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bpodocytes?\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "renal_tubule",
+      "label": "Renal tubular epithelium",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Renal",
+      "tissues": [
+        "kidney"
+      ],
+      "mechanisms": [
+        "filtration",
+        "homeostasis",
+        "repair"
+      ],
+      "acute_loss": "Filtration, electrolyte and volume failure can be life-threatening.",
+      "persistent_loss": "Podocyte depletion and repeated tubular injury can cause sclerosis and fibrosis.",
+      "repair": "Tubules and podocytes have different repair capacity; both matter in bulk kidney.",
+      "management": "Dialysis is substantial support and does not prevent all injury consequences.",
+      "rationale": "Renewal after limited injury does not protect against extensive or repeated loss of transport and homeostasis.",
+      "references": [
+        "grgic2012"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(proximal tubul|distal tubul|collecting duct|loop of henle|tubular|connecting tubul)",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "renal_mesangial",
+      "label": "Mesangial cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Renal",
+      "tissues": [
+        "kidney"
+      ],
+      "mechanisms": [
+        "filtration",
+        "homeostasis",
+        "repair"
+      ],
+      "acute_loss": "Loss of glomerular support and regulatory functions could impair filtration architecture.",
+      "persistent_loss": "Persistent glomerular remodeling is a concern; selective human immune-depletion outcomes are unresolved.",
+      "repair": "Podocyte and tubular depletion studies are adjacent-compartment evidence, not direct mesangial regeneration measurements.",
+      "management": "Whole-kidney support does not establish manageable selective mesangial loss.",
+      "rationale": "Glomerular structural support warrants protection; direct selective immune-killing evidence is limited.",
+      "references": [
+        "wharram2005",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bmesangial\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "beta",
+      "label": "Pancreatic beta cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pancreas"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "metabolic"
+      ],
+      "acute_loss": "Insulin deficiency can present with life-threatening ketoacidosis.",
+      "persistent_loss": "Insulin dependence may be permanent.",
+      "repair": "Reliable restoration after destructive immune injury is not established.",
+      "management": "Insulin replacement permits survival but creates lifelong monitoring and treatment needs.",
+      "rationale": "A cell-specific compensated endocrine deficit differs from whole-pancreas injury; Protected records the lasting burden and acute crisis risk.",
+      "references": [
+        "stamatouli2018"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(beta|insulin.producing)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "pancreas_alpha",
+      "label": "Pancreatic alpha cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pancreas"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "secretion",
+        "inflammation"
+      ],
+      "acute_loss": "Glucagon deficiency could impair metabolic counterregulation.",
+      "persistent_loss": "Persistent loss may impair defense against hypoglycemia, particularly with coexisting insulin deficiency.",
+      "repair": "Reliable recovery under ongoing alpha-cell recognition has not been established.",
+      "management": "Beta-cell insulin-replacement experience does not establish compensation for counterregulatory loss.",
+      "rationale": "Counterregulatory hormone loss can disturb metabolic control; beta-cell replacement experience does not establish alpha-cell safety.",
+      "references": [
+        "hpa_tissues",
+        "stamatouli2018"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\balpha\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "pancreas_acinar",
+      "label": "Pancreatic acinar cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pancreas"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "secretion",
+        "inflammation"
+      ],
+      "acute_loss": "Acinar destruction can initiate pancreatic inflammation and enzyme-mediated injury.",
+      "persistent_loss": "Exocrine insufficiency and fibrosis can impair digestion.",
+      "repair": "Repair after finite injury depends on surviving cells and the ductal/stromal environment.",
+      "management": "Pancreatic enzymes can replace selected digestive outputs; they do not treat every consequence of acute pancreatitis.",
+      "rationale": "Enzyme replacement can compensate selected output loss; inflammatory pancreatic injury can remain severe.",
+      "references": [
+        "sitc2021",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bacinar\\b",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "pancreas_duct",
+      "label": "Pancreatic ductal cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pancreas"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "secretion",
+        "inflammation"
+      ],
+      "acute_loss": "Duct epithelial injury can disrupt flow and promote pancreatic inflammation.",
+      "persistent_loss": "Obstruction, fibrosis and secondary exocrine injury may persist.",
+      "repair": "Ductal repair requires an intact tissue environment; continued antigen recognition could injure replacements.",
+      "management": "Enzyme replacement does not correct duct obstruction or establish control of destructive inflammation.",
+      "rationale": "Duct injury and obstruction can propagate parenchymal inflammation; mature secretory-cell arguments do not establish ductal safety.",
+      "references": [
+        "sitc2021",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bduct",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "thyroid_follicular",
+      "label": "Thyroid follicular cells",
+      "level": "cell",
+      "tier": "manageable",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "thyroid_gland"
+      ],
+      "mechanisms": [
+        "endocrine"
+      ],
+      "acute_loss": "Destructive thyroiditis can release hormone and cause symptomatic thyrotoxicosis.",
+      "persistent_loss": "Hypothyroidism may be permanent.",
+      "repair": "Functional recovery is variable; the rationale is replaceable output rather than guaranteed regeneration.",
+      "management": "Thyroid hormone replacement is an established form of compensation.",
+      "rationale": "Replacement of thyroid hormone supplies direct clinical compensation precedent, conditional on acute-injury control.",
+      "references": [
+        "iyer2018"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(follicular|thyrocytes?)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "thyroid_c",
+      "label": "Thyroid parafollicular cells",
+      "level": "cell",
+      "tier": "manageable",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "thyroid_gland"
+      ],
+      "mechanisms": [
+        "endocrine"
+      ],
+      "acute_loss": "Selective calcitonin-cell loss differs from destructive injury to thyroid hormone-producing follicles.",
+      "persistent_loss": "The endocrine consequence is loss of calcitonin secretion; selective immune-killing outcomes are poorly characterized.",
+      "repair": "This call does not depend on proven C-cell regeneration.",
+      "management": "Thyroidectomy provides indirect whole-organ survival precedent, but levothyroxine replaces follicular output, not calcitonin.",
+      "rationale": "A restricted calcitonin-producing population has a different role from parathyroid calcium control; selective immune-killing evidence remains limited.",
+      "references": [
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(parafollicular|c cells?)\\b",
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "adrenal_cortex",
+      "label": "Adrenal cortical cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "adrenal_gland"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "homeostasis"
+      ],
+      "acute_loss": "Glucocorticoid/mineralocorticoid failure can precipitate crisis.",
+      "persistent_loss": "Deficits require continuing replacement and stress dosing.",
+      "repair": "Reliable restoration after destructive immune injury is unestablished.",
+      "management": "Replacement mitigates deficiency but requires sustained clinical management.",
+      "rationale": "Hormone replacement exists, but rapid or persistent broad cortical injury can precipitate adrenal crisis.",
+      "references": [
+        "niddk_adrenal"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(cortical|cortex|zona)\\b",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "adrenal_chromaffin",
+      "label": "Adrenal chromaffin cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "adrenal_gland"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "homeostasis"
+      ],
+      "acute_loss": "Inflammatory injury could disturb catecholamine release and cardiovascular responses.",
+      "persistent_loss": "Medullary endocrine loss differs from adrenal cortical insufficiency.",
+      "repair": "Reliable chromaffin-cell recovery under persistent immune recognition is unestablished.",
+      "management": "Cortisol and mineralocorticoid replacement do not replace medullary function; extra-adrenal sympathetic compensation is an inference.",
+      "rationale": "Catecholamine release and autonomic physiology require review; cortical replacement logic does not directly apply.",
+      "references": [
+        "hpa_tissues",
+        "niddk_adrenal"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(chromaffin|medullary|medulla)\\b",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "pituitary_corticotroph",
+      "label": "Pituitary corticotrophs",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pituitary_gland"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "homeostasis"
+      ],
+      "acute_loss": "ACTH deficiency can cause secondary adrenal insufficiency and crisis.",
+      "persistent_loss": "ACTH-axis deficits may require continuing glucocorticoid replacement.",
+      "repair": "Clinical hypophysitis shows limited recovery of the adrenal axis; this does not resolve selective corticotroph killing.",
+      "management": "Glucocorticoid replacement and stress dosing require ongoing management.",
+      "rationale": "ACTH-axis failure can be acute and persistent; clinical hormone-deficit recovery is limited.",
+      "references": [
+        "hypophysitis2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bcorticotroph",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "pituitary_other",
+      "label": "Other identified anterior pituitary endocrine cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "pituitary_gland"
+      ],
+      "mechanisms": [
+        "endocrine",
+        "homeostasis"
+      ],
+      "acute_loss": "The consequence depends on the recognized hormone-producing subset and local inflammation.",
+      "persistent_loss": "Loss of selected axes can cause lasting endocrine and reproductive dysfunction.",
+      "repair": "Clinical recovery varies by hormone axis; mixed pituitary injury does not establish subset-specific regeneration.",
+      "management": "Selected hormonal deficits can be supported, but replacement and monitoring differ by axis.",
+      "rationale": "Restricted axes can be supported, but enduring endocrine loss is consequential; mixed pituitary labels retain Vital.",
+      "references": [
+        "hypophysitis2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(somatotroph|lactotroph|gonadotroph|thyrotroph)",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "salivary_acinar",
+      "label": "Salivary acinar cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "salivary_gland"
+      ],
+      "mechanisms": [
+        "secretion",
+        "defence"
+      ],
+      "acute_loss": "Inflammation can impair oral intake and secretion.",
+      "persistent_loss": "Severe dryness, dental injury and infection risk can persist.",
+      "repair": "Clinical symptomatic recovery need not restore salivary flow.",
+      "management": "Symptomatic management incompletely replaces gland function.",
+      "rationale": "Persistent loss of salivary output is clinically documented even when inflammatory symptoms improve.",
+      "references": [
+        "warner2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(acinar|serous|mucous)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "salivary_duct",
+      "label": "Salivary ductal cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Endocrine and exocrine",
+      "tissues": [
+        "salivary_gland"
+      ],
+      "mechanisms": [
+        "secretion",
+        "defence"
+      ],
+      "acute_loss": "Inflammation can impair oral intake and secretion.",
+      "persistent_loss": "Severe dryness, dental injury and infection risk can persist.",
+      "repair": "Clinical symptomatic recovery need not restore salivary flow.",
+      "management": "Symptomatic management incompletely replaces gland function.",
+      "rationale": "Drainage, secretion modification and repair may be impaired; local gland accessibility is not proof of reversibility.",
+      "references": [
+        "warner2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bduct",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "intestinal_crypt",
+      "label": "Intestinal stem and undifferentiated crypt cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "small_intestine",
+        "colon",
+        "rectum"
+      ],
+      "mechanisms": [
+        "barrier",
+        "absorption",
+        "repair"
+      ],
+      "acute_loss": "Diffuse barrier failure can cause sepsis and fluid loss.",
+      "persistent_loss": "Extensive loss can compromise nutrient absorption and renewal.",
+      "repair": "Crypt alternatives can compensate for selected insults; shared progenitor targeting changes the result.",
+      "management": "Nutritional support does not guarantee control of destructive enteritis.",
+      "rationale": "Broad progenitor depletion threatens barrier renewal; selective Lgr5 ablation shows reserve, not tolerance of all regenerative-cell loss.",
+      "references": [
+        "tian2011",
+        "parkhurst2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(stem|crypt|undifferentiated|transit.amplifying)\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "intestinal_paneth",
+      "label": "Paneth cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "small_intestine",
+        "colon",
+        "rectum"
+      ],
+      "mechanisms": [
+        "barrier",
+        "absorption",
+        "repair"
+      ],
+      "acute_loss": "Loss can impair antimicrobial secretion and interactions with the crypt niche.",
+      "persistent_loss": "Persistent loss may compromise host defense and regenerative support.",
+      "repair": "Other niche cells can contribute support; selective Lgr5 depletion is not direct evidence for Paneth-cell tolerability.",
+      "management": "Clinical control of colitis does not establish replacement of Paneth functions.",
+      "rationale": "Antimicrobial and niche support functions differ from mature absorptive-cell loss; not a generic renewing-mucosa exception.",
+      "references": [
+        "tian2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bpaneth\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "enterocyte",
+      "label": "Mature intestinal absorptive cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "small_intestine",
+        "colon",
+        "rectum"
+      ],
+      "mechanisms": [
+        "barrier",
+        "absorption",
+        "repair"
+      ],
+      "acute_loss": "Diffuse barrier failure can cause sepsis and fluid loss.",
+      "persistent_loss": "Extensive loss can compromise nutrient absorption and renewal.",
+      "repair": "Crypt alternatives can compensate for selected insults; shared progenitor targeting changes the result.",
+      "management": "Nutritional support does not guarantee control of destructive enteritis.",
+      "rationale": "Regenerative reserve supports replacement after finite injury, while extensive persistent loss threatens absorption and barrier function.",
+      "references": [
+        "tian2011",
+        "parkhurst2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(enterocytes?|colonocytes?|absorptive)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "intestinal_goblet",
+      "label": "Intestinal goblet cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "small_intestine",
+        "colon",
+        "rectum"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Colitis can cause severe diarrhea, bleeding or perforation.",
+      "persistent_loss": "Persistent targeting can cause chronic injury and impaired repair.",
+      "repair": "Mature cells renew if regenerative compartments survive.",
+      "management": "Clinical recovery after some TCR injuries is not universal rescue.",
+      "rationale": "Mucus defence and epithelial interactions warrant protection; airway goblet and mucin experiments cannot establish gut-cell tolerability.",
+      "references": [
+        "tian2011",
+        "parkhurst2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bgoblet\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "intestinal_endocrine",
+      "label": "Enteroendocrine cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "small_intestine",
+        "colon",
+        "rectum",
+        "stomach"
+      ],
+      "mechanisms": [
+        "barrier",
+        "absorption",
+        "repair"
+      ],
+      "acute_loss": "Loss of distributed gut hormone signals could disrupt metabolic and digestive regulation.",
+      "persistent_loss": "Deficits may affect motility, nutrient sensing and endocrine signaling.",
+      "repair": "Replacement from crypt progenitors depends on survival and lack of repeated recognition.",
+      "management": "No general replacement regimen establishes control of broad enteroendocrine-cell loss.",
+      "rationale": "Distributed hormonal control cannot be inferred expendable from rarity; receptor-specific injury evidence is limited.",
+      "references": [
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\b(enteroendocrine|enterochromaffin)\\b",
+      "evidence_scope": "Identity/function evidence only; no direct selective-depletion or immune-injury study is cited for this call."
+    },
+    {
+      "id": "bowel_glandular",
+      "label": "Unresolved bowel glandular epithelium",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Gastrointestinal",
+      "tissues": [
+        "colon",
+        "rectum"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Colitis can cause severe diarrhea, bleeding or perforation.",
+      "persistent_loss": "Persistent targeting can cause chronic injury and impaired repair.",
+      "repair": "Mature cells renew if regenerative compartments survive.",
+      "management": "Clinical recovery after some TCR injuries is not universal rescue.",
+      "rationale": "A broad glandular label does not establish mature-cell restriction or preserved crypt progenitors.",
+      "references": [
+        "parkhurst2011",
+        "tian2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bglandular\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "epidermal_basal",
+      "label": "Basal epidermal keratinocytes",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Integument",
+      "tissues": [
+        "skin"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Extensive epithelial loss threatens barrier, fluid balance and infection control.",
+      "persistent_loss": "Scarring, chronic wounds and lost appendages can persist.",
+      "repair": "Repair depends on viable epidermal and appendage progenitors and injury extent.",
+      "management": "Local treatment applies to selected injuries; extensive loss needs systemic care.",
+      "rationale": "The regenerative epidermal compartment requires protection even when mature keratinocytes can be replaced.",
+      "references": [
+        "sitc2021",
+        "purba2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(basal|stem)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "keratinocyte",
+      "label": "Mature epidermal keratinocytes",
+      "level": "cell",
+      "tier": "manageable",
+      "system": "Integument",
+      "tissues": [
+        "skin"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Extensive epithelial loss threatens barrier, fluid balance and infection control.",
+      "persistent_loss": "Scarring, chronic wounds and lost appendages can persist.",
+      "repair": "Repair depends on viable epidermal and appendage progenitors and injury extent.",
+      "management": "Local treatment applies to selected injuries; extensive loss needs systemic care.",
+      "rationale": "Conditional lower priority requires mature-cell restriction and spared regenerative reserve; broad keratinocyte labels stay Protected.",
+      "references": [
+        "sitc2021",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(suprabasal|differentiated keratinocyte|superficial keratinocyte|cornified)\\b",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "skin_melanocyte",
+      "label": "Cutaneous melanocytes identified by cell label",
+      "level": "cell",
+      "tier": "disposable",
+      "system": "Integument",
+      "tissues": [
+        "skin"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Localized pigment-cell injury can cause inflammation and depigmentation.",
+      "persistent_loss": "Depigmentation may persist; ocular and inner-ear melanocytes are outside this exception.",
+      "repair": "Recovery depends on surviving pigment-cell and follicular reservoirs.",
+      "management": "The allowance accepts a localized pigmentation deficit; it does not establish inflammatory control.",
+      "rationale": "Local skin pigment-cell loss has a specific clinical precedent; this rule is anatomically restricted.",
+      "references": [
+        "johnson2009"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\bmelanocytes?\\b",
+      "evidence_scope": "Human antigen-directed T-cell injury or depletion provides a clinical anchor; findings remain receptor/product-specific and may not resolve every subset in this rule."
+    },
+    {
+      "id": "skin_follicular",
+      "label": "Hair-follicle cells identified by cell label",
+      "level": "cell",
+      "tier": "disposable",
+      "system": "Integument",
+      "tissues": [
+        "skin"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Follicular injury can cause inflammation and hair loss.",
+      "persistent_loss": "Alopecia can be persistent when follicular regenerative cells are lost.",
+      "repair": "Mature shaft-cell loss and stem-cell destruction differ in reversibility.",
+      "management": "Hair loss can be accepted in a defined context; generic epidermal loss is not included.",
+      "rationale": "Narrow follicular loss can be tolerated; permanent alopecia is possible and generic epidermal stem cells are excluded.",
+      "references": [
+        "purba2019"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(hair follic|hair matrix|hair shaft|hair root)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "skin_glands",
+      "label": "Sweat and sebaceous gland cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Integument",
+      "tissues": [
+        "skin"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Secretory loss can impair lubrication or sweating; extensive sweat-gland loss can impair heat control.",
+      "persistent_loss": "Distributed gland loss may cause persistent dryness and thermoregulatory impairment.",
+      "repair": "Regeneration and surviving reserve vary by appendage and injury extent.",
+      "management": "Local skin care does not replace distributed thermoregulatory function.",
+      "rationale": "Distributed gland loss has barrier and thermoregulatory consequences; hair-follicle permission cannot be extended to every appendage.",
+      "references": [
+        "hpa_tissues",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(sweat|sebaceous|eccrine|apocrine)\\b",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "dermal_fibroblast",
+      "label": "Dermal fibroblasts",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Integument",
+      "tissues": [
+        "skin"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Disruption of matrix and wound-support functions can impair tissue integrity.",
+      "persistent_loss": "Poor wound repair and altered matrix organization may persist.",
+      "repair": "Replacement requires viable stromal and epithelial interactions.",
+      "management": "Local wound management does not establish tolerance of distributed fibroblast killing.",
+      "rationale": "Matrix and repair support warrant explicit review; fibroblast identity alone does not establish dispensability.",
+      "references": [
+        "murphy2011",
+        "roberts2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bfibroblast",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "muscle_satellite",
+      "label": "Skeletal-muscle satellite cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "skeletal_muscle"
+      ],
+      "mechanisms": [
+        "motor",
+        "homeostasis",
+        "repair"
+      ],
+      "acute_loss": "An isolated finite loss may spare existing fibers initially while depleting regenerative reserve.",
+      "persistent_loss": "Subsequent or concurrent muscle injury can fail to regenerate and produce lasting weakness/fibrosis.",
+      "repair": "Selective Pax7-compartment ablation directly impairs regeneration in experimental muscle injury.",
+      "management": "Rehabilitation cannot restore an eliminated regenerative compartment; widespread consequences are a mechanistic inference.",
+      "rationale": "Selective ablation demonstrates indispensable regenerative capacity in the tested model.",
+      "references": [
+        "sambasivan2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(satellite|myogenic.*stem)\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "muscle_fibroblast",
+      "label": "Muscle fibroblasts and fibro-adipogenic support",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "skeletal_muscle"
+      ],
+      "mechanisms": [
+        "motor",
+        "homeostasis",
+        "repair"
+      ],
+      "acute_loss": "Niche disruption can alter myogenic-cell dynamics during injury.",
+      "persistent_loss": "Abnormal repair and matrix remodeling can persist.",
+      "repair": "Experimental fibroblast depletion impairs regeneration; dependence is niche-specific.",
+      "management": "Supportive care does not restore the cell interactions required for normal repair.",
+      "rationale": "Repair depends on niche interactions; renewing stroma is not automatically low consequence.",
+      "references": [
+        "murphy2011",
+        "roberts2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(fibroblast|fibro.adipogenic)\\b",
+      "evidence_scope": "Lineage-focused animal depletion/repair evidence supports the mechanism; promoter specificity, injury kinetics and spared alternatives limit translation."
+    },
+    {
+      "id": "chondrocyte",
+      "label": "Articular chondrocytes",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "cartilage"
+      ],
+      "mechanisms": [
+        "structure",
+        "repair"
+      ],
+      "acute_loss": "Location determines consequences, including airway support.",
+      "persistent_loss": "Matrix damage and deformity may be persistent.",
+      "repair": "Adult articular collagen turns over slowly; this is indirect evidence for cell-loss effects.",
+      "management": "Symptom control does not restore structural integrity.",
+      "rationale": "Matrix maintenance and lasting structural damage justify protection; anatomical site remains important.",
+      "references": [
+        "heinemeier2016",
+        "braaten2020"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\bchondrocyte",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "urothelial_surface",
+      "label": "Mature umbrella urothelial cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Renal",
+      "tissues": [
+        "urinary_bladder",
+        "ureter"
+      ],
+      "mechanisms": [
+        "barrier",
+        "drainage",
+        "repair"
+      ],
+      "acute_loss": "Inflammation and obstruction can compromise urinary drainage.",
+      "persistent_loss": "Stricture, poor compliance and barrier dysfunction can persist.",
+      "repair": "Urothelial regeneration depends on intact progenitor/stromal signaling.",
+      "management": "Diversion or reconstruction is substantial intervention, not ordinary compensation.",
+      "rationale": "Finite-injury regeneration is established, but barrier dysfunction and persistent targeting remain consequential.",
+      "references": [
+        "shin2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(umbrella|superficial urothelial)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "urothelial_basal",
+      "label": "Basal urothelial cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Renal",
+      "tissues": [
+        "urinary_bladder",
+        "ureter"
+      ],
+      "mechanisms": [
+        "barrier",
+        "drainage",
+        "repair"
+      ],
+      "acute_loss": "Inflammation and obstruction can compromise urinary drainage.",
+      "persistent_loss": "Stricture, poor compliance and barrier dysfunction can persist.",
+      "repair": "Urothelial regeneration depends on intact progenitor/stromal signaling.",
+      "management": "Diversion or reconstruction is substantial intervention, not ordinary compensation.",
+      "rationale": "Protect regenerative and intermediate populations; continuous recognition can defeat surface renewal.",
+      "references": [
+        "shin2011"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(basal|intermediate)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "mature_b",
+      "label": "Mature B lymphocytes",
+      "level": "cell",
+      "tier": "manageable",
+      "system": "Blood and immune",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "defence"
+      ],
+      "acute_loss": "Depletion reduces humoral defence and may accompany systemic inflammatory toxicity.",
+      "persistent_loss": "Aplasia and hypogammaglobulinemia may persist.",
+      "repair": "Renewal requires spared progenitors and cessation or evasion of recognition.",
+      "management": "Immunoglobulin replacement and infection management have direct clinical precedent.",
+      "rationale": "The exception is lineage specific and does not extend to HSCs, all marrow or all immune cells.",
+      "references": [
+        "maude2018"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 5,
+      "cell_pattern": "\\b(b cells?|b lymphocytes?)\\b",
+      "evidence_scope": "Human antigen-directed T-cell injury or depletion provides a clinical anchor; findings remain receptor/product-specific and may not resolve every subset in this rule."
+    },
+    {
+      "id": "t_lymphocyte",
+      "label": "T lymphocytes",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "oxygen_transport",
+        "hemostasis",
+        "defence"
+      ],
+      "acute_loss": "Distributed loss can impair cellular immune defense and immune regulation.",
+      "persistent_loss": "Persistent depletion can sustain susceptibility to infection and dysregulated immunity.",
+      "repair": "Restoration depends on spared progenitors, thymic/peripheral reserve and antigen expression in replacements.",
+      "management": "Antimicrobial support does not replace the range of T-cell functions.",
+      "rationale": "Distributed cellular immunity cannot be assigned the mature B-cell compensation precedent.",
+      "references": [
+        "maude2018",
+        "kooshesh2023"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 5,
+      "cell_pattern": "\\b(t cells?|t lymphocytes?|t.cell|cd[48]|treg|t reg|tfh|th1|th2|th17|thstar|gdt cell)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "myeloid",
+      "label": "Monocytes, macrophages and dendritic cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "oxygen_transport",
+        "hemostasis",
+        "defence"
+      ],
+      "acute_loss": "Depletion can compromise phagocytosis, antigen presentation and tissue-specific maintenance.",
+      "persistent_loss": "Persistent loss can impair defense and repair; tissue-resident subsets differ in replenishment.",
+      "repair": "Blood-derived replenishment cannot be assumed equivalent to restoration of every resident macrophage population.",
+      "management": "Antimicrobial and supportive treatment cannot fully substitute for distributed myeloid function.",
+      "rationale": "Host defence and tissue-resident support vary by lineage and site; broad myeloid labels do not justify a low tier.",
+      "references": [
+        "roy2014",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 5,
+      "cell_pattern": "\\b(macrophage|monocyte|dendritic|microglia|myeloid dc|plasmacytoid dc|m2)",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "granulocyte",
+      "label": "Granulocytes and NK cells",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "oxygen_transport",
+        "hemostasis",
+        "defence"
+      ],
+      "acute_loss": "Loss can impair antimicrobial or cytotoxic innate defense; consequences differ by subset.",
+      "persistent_loss": "Persistent depletion may sustain infection susceptibility.",
+      "repair": "Marrow reserve can replenish some short-lived subsets if progenitors and replacements are spared.",
+      "management": "Growth factors and antimicrobials have context-specific roles, not universal replacement of innate defense.",
+      "rationale": "Regeneration may be rapid if progenitors survive, but ongoing depletion can impair host defence; lineage and extent require review.",
+      "references": [
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 5,
+      "cell_pattern": "\\b(neutrophil|eosinophil|basophil|mast cell|natural killer|nk)",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "hsc",
+      "label": "Hematopoietic stem/progenitor cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Blood and immune",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "hematopoiesis",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Loss of blood-cell production can cause infection, anemia and bleeding.",
+      "persistent_loss": "Stem-cell or niche depletion can prevent recovery.",
+      "repair": "Requires surviving progenitors and a functional stromal niche.",
+      "management": "Transfusion and transplantation do not establish general target tolerability.",
+      "rationale": "Distributed blood-cell renewal depends on surviving progenitors and niche support.",
+      "references": [
+        "tran2013",
+        "roberts2013"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 40,
+      "cell_pattern": "\\b(hematopoietic.*(?:stem|progenitor)|haematopoietic.*(?:stem|progenitor)|hsc)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "marrow_stroma",
+      "label": "Marrow stromal niche cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Blood and immune",
+      "tissues": [
+        "bone_marrow"
+      ],
+      "mechanisms": [
+        "hematopoiesis",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Loss of blood-cell production can cause infection, anemia and bleeding.",
+      "persistent_loss": "Stem-cell or niche depletion can prevent recovery.",
+      "repair": "Requires surviving progenitors and a functional stromal niche.",
+      "management": "Transfusion and transplantation do not establish general target tolerability.",
+      "rationale": "Targeted niche-cell injury can compromise hematopoiesis; stromal identity is not a safe exemption.",
+      "references": [
+        "tran2013",
+        "roberts2013",
+        "wang2014"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 40,
+      "cell_pattern": "\\b(stromal|fibroblast|mesenchymal|reticular)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "erythroid",
+      "label": "Erythroid cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Blood and immune",
+      "tissues": [
+        "blood",
+        "bone_marrow",
+        "spleen"
+      ],
+      "mechanisms": [
+        "oxygen_transport",
+        "hemostasis",
+        "defence"
+      ],
+      "acute_loss": "Extensive loss can reduce oxygen-carrying capacity and cause severe anemia.",
+      "persistent_loss": "Repeated targeting of precursors or mature cells can prevent durable correction.",
+      "repair": "Erythropoiesis requires spared progenitors, marrow support and nonrecognized replacement cells.",
+      "management": "Transfusion is substantial repeated support and may be ineffective if donor cells share the target.",
+      "rationale": "Oxygen transport and ongoing erythropoiesis are critical; mature erythrocytes differ in receptor accessibility from nucleated precursors.",
+      "references": [
+        "roberts2013",
+        "hpa_tissues"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 30,
+      "cell_pattern": "\\b(erythro|red blood)",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "megakaryocyte",
+      "label": "Megakaryocytes and platelets",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Blood and immune",
+      "tissues": [
+        "blood",
+        "bone_marrow",
+        "spleen",
+        "lung"
+      ],
+      "mechanisms": [
+        "hematopoiesis",
+        "repair",
+        "defence"
+      ],
+      "acute_loss": "Platelet loss can cause serious bleeding and impaired hemostasis.",
+      "persistent_loss": "Persistent megakaryocyte or platelet targeting can sustain thrombocytopenia.",
+      "repair": "Platelet recovery requires spared megakaryopoiesis and survival of new platelets.",
+      "management": "Transfusions may be short-lived if replacement platelets remain targets.",
+      "rationale": "Persistent loss can undermine hemostasis; anucleate platelets and marrow precursors require distinct recognition evidence.",
+      "references": [
+        "hpa_tissues",
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 40,
+      "cell_pattern": "\\b(megakaryocyte|platelet|thrombocyte)",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "generic_fibroblast",
+      "label": "Other anatomically located fibroblasts",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Integument",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "barrier",
+        "defence",
+        "repair"
+      ],
+      "acute_loss": "Distributed stromal injury can disrupt tissue support and repair.",
+      "persistent_loss": "Persistent matrix, regenerative-niche or metabolic effects depend on anatomical distribution.",
+      "repair": "Turnover does not demonstrate successful replacement during ongoing immune attack.",
+      "management": "FAP-model outcomes differ by receptor and distribution; no general compensation precedent covers all fibroblasts.",
+      "rationale": "Protect matrix and regenerative support until a site-specific exception is justified; FAP studies demonstrate target-dependent systemic liabilities.",
+      "references": [
+        "tran2013",
+        "roberts2013",
+        "wang2014"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 1,
+      "cell_pattern": "\\bfibroblast",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "generic_endothelium",
+      "label": "Other vascular endothelial cells",
+      "level": "cell",
+      "tier": "vital",
+      "system": "Cardiovascular",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "barrier",
+        "perfusion",
+        "inflammation"
+      ],
+      "acute_loss": "Leak, thrombosis and disrupted perfusion can injure several organs.",
+      "persistent_loss": "Vascular remodeling and ischemic injury can persist.",
+      "repair": "Endothelial repair depends on injury extent and the vascular bed.",
+      "management": "No general replacement for distributed vascular function.",
+      "rationale": "Distributed vascular barrier and perfusion functions remain high priority across organs.",
+      "references": [
+        "sitc2021"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 1,
+      "cell_pattern": "\\bendothelial",
+      "evidence_scope": "Physiological/clinical analogy; no direct selective immune-depletion study is cited for this call."
+    },
+    {
+      "id": "adipocyte",
+      "label": "Adipocytes",
+      "level": "cell",
+      "tier": "manageable",
+      "system": "Metabolic and structural",
+      "tissues": [
+        "adipose_tissue"
+      ],
+      "mechanisms": [
+        "metabolic",
+        "endocrine"
+      ],
+      "acute_loss": "Widespread inflammatory injury may disturb metabolism.",
+      "persistent_loss": "Generalized fat loss can cause major metabolic dysfunction.",
+      "repair": "Adult turnover exists but does not imply rapid restoration of widespread loss.",
+      "management": "Compensation depends strongly on extent, depot and metabolic reserve.",
+      "rationale": "Retain conditional depot-level compensation; widespread adipocyte recognition requires a separate metabolic extent assessment.",
+      "references": [
+        "spalding2008"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 10,
+      "cell_pattern": "\\badipocytes?\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "pooled_leukocytes",
+      "label": "Unresolved mature immune-cell mixtures",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "oxygen_transport",
+        "hemostasis",
+        "defence"
+      ],
+      "acute_loss": "Loss of a mature immune-cell mixture can compromise host defense and regulation.",
+      "persistent_loss": "Persistent depletion may impair antimicrobial and adaptive responses.",
+      "repair": "Composition and surviving hematopoietic progenitors determine replacement.",
+      "management": "A B-cell-specific replacement precedent does not establish compensation for an unresolved leukocyte mixture.",
+      "rationale": "A mature leukocyte mixture does not establish B-cell restriction; preserve the broader concern for loss of cellular defense.",
+      "references": [
+        "maude2018",
+        "kooshesh2023"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Mixed immune identity requires lineage resolution; no receptor-specific recognition is inferred.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 1,
+      "cell_pattern": "\\b(immune cells?|lymphocytes?|lymphoid cells?|leukocytes?|pbmc|peripheral blood mononuclear)\\b",
+      "evidence_scope": "Compartment-level mechanistic inference; cited clinical or experimental evidence does not quantify receptor-specific human risk."
+    },
+    {
+      "id": "plasma_cells",
+      "label": "Plasma cells and plasmablasts",
+      "level": "cell",
+      "tier": "protected",
+      "system": "Blood and immune",
+      "tissues": [
+        "heart",
+        "blood_vessel",
+        "endothelium",
+        "brain",
+        "spinal_cord",
+        "peripheral_nerve",
+        "eye",
+        "retina",
+        "inner_ear",
+        "lung",
+        "bronchus",
+        "liver",
+        "kidney",
+        "pancreas",
+        "adrenal_gland",
+        "pituitary_gland",
+        "thyroid_gland",
+        "parathyroid_gland",
+        "salivary_gland",
+        "bone_marrow",
+        "blood",
+        "lymph_node",
+        "spleen",
+        "thymus",
+        "tonsil",
+        "small_intestine",
+        "colon",
+        "rectum",
+        "esophagus",
+        "stomach",
+        "oral_mucosa",
+        "nasopharynx",
+        "tongue",
+        "appendix",
+        "gallbladder",
+        "urinary_bladder",
+        "ureter",
+        "skin",
+        "adipose_tissue",
+        "skeletal_muscle",
+        "smooth_muscle",
+        "cartilage"
+      ],
+      "mechanisms": [
+        "defence"
+      ],
+      "acute_loss": "Loss reduces antibody secretion; consequences depend on residual antibodies and prior immune reserve.",
+      "persistent_loss": "Prolonged plasma-cell aplasia can produce lasting deficits across immunoglobulin classes.",
+      "repair": "Recovery requires surviving B-cell precursors, differentiation and cessation or evasion of recognition.",
+      "management": "Immunoglobulin replacement provides partial support and does not reproduce all mucosal antibody functions.",
+      "rationale": "Direct BCMA clinical evidence demonstrates lasting humoral deficiency. Protect this antibody-secreting compartment separately from mature circulating B cells.",
+      "references": [
+        "wang2021_bcma"
+      ],
+      "inference": "mechanistic_inference",
+      "recognition_evidence": "Target/receptor-specific evidence is required separately.",
+      "taxon_ids": [
+        9606
+      ],
+      "stage": "adult",
+      "priority": 5,
+      "cell_pattern": "\\b(plasma cells?|plasmablasts?)\\b",
+      "evidence_scope": "Human cell-therapy depletion provides a clinical anchor; disease, prior treatment and conditioning complicate attribution."
+    }
+  ],
+  "mechanism_definitions": {
+    "absorption": "absorption",
+    "appendage": "appendage",
+    "barrier": "barrier",
+    "conduction": "conduction",
+    "defence": "defence",
+    "drainage": "drainage",
+    "endocrine": "endocrine",
+    "fertility": "fertility",
+    "filtration": "filtration",
+    "gas_exchange": "gas exchange",
+    "hematopoiesis": "hematopoiesis",
+    "hemostasis": "hemostasis",
+    "homeostasis": "homeostasis",
+    "inflammation": "inflammation",
+    "metabolic": "metabolic",
+    "motility": "motility",
+    "motor": "motor",
+    "neural": "neural",
+    "oxygen_transport": "oxygen transport",
+    "perfusion": "perfusion",
+    "pigment": "pigment",
+    "pump": "pump",
+    "repair": "repair",
+    "secretion": "secretion",
+    "sensory": "sensory",
+    "structure": "structure"
+  },
+  "legacy_nonhuman_screening_roots": {
+    "vital": [
+      "heart",
+      "lung",
+      "bronchus",
+      "brain",
+      "spinal_cord",
+      "liver",
+      "kidney",
+      "bone_marrow",
+      "blood",
+      "adrenal_gland",
+      "pituitary_gland",
+      "pancreas",
+      "small_intestine",
+      "skeletal_muscle",
+      "smooth_muscle",
+      "peripheral_nerve",
+      "endothelium",
+      "blood_vessel",
+      "retina",
+      "eye",
+      "inner_ear"
+    ],
+    "protected": [
+      "salivary_gland",
+      "parathyroid_gland",
+      "lymph_node",
+      "esophagus",
+      "stomach",
+      "colon",
+      "rectum",
+      "urinary_bladder",
+      "ureter",
+      "cartilage",
+      "oral_mucosa",
+      "nasopharynx",
+      "tongue"
+    ],
+    "manageable": [
+      "skin",
+      "spleen",
+      "thymus",
+      "thyroid_gland",
+      "adipose_tissue"
+    ]
+  },
+  "legacy_nonhuman_notice": "Compatibility anatomy categories only; adult human clinical tolerability is not validated in other species.",
+  "cell_aliases": {
+    "non vd2 gdtcr": "gamma delta t cells",
+    "vd2 gdtcr": "gamma delta t cells",
+    "memory cd4 t cell th1/th17": "memory cd4 t cell"
+  },
+  "registry_id": "oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda"
+}

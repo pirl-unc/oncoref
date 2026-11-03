@@ -1,5 +1,7 @@
 # Tissue injury and manageability: evidence for policy
 
+The [1.29.0 central ontology](tissue-hazards.md) is the current source of tissue and cell calls. The numerical grids below document the earlier tissue-scope screening API; the current CTA cascade is described in [CTA selection](cta-selection.md).
+
 This review concerns **significant immune injury**, its consequences, persistence
 and control. Complete organ removal is one evidence source; it is not a model for
 every pattern of immune injury. Reproductive, Disposable, Manageable, Protected and Vital are
@@ -66,8 +68,8 @@ is a published anchor. Our exact assignments remain project inferences:
 | Category | Assignment relevant to this review | Evidence and interpretation |
 |---|---|---|
 | Disposable | Cutaneous melanocytes, hair follicles, tonsil, appendix, gallbladder | Selected compartment-loss or organ-removal rationale; acute immune injury still needs review |
-| Manageable | Whole skin, spleen, thymus, thyroid, adipose | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
-| Protected | Salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
+| Manageable | Thyroid, adipose; resolved mature B cells | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
+| Protected | Whole skin, spleen, thymus, salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
 | Vital | Existing vital and critical sensory/neurological organs | Highest protection priority; local access does not remove irreversible-loss concerns |
 
 Reproductive remains the separate anatomical/developmental union. See the

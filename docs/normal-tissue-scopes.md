@@ -1,5 +1,7 @@
 # Normal tissue scopes
 
+Current adult human hazard calls are centralized in the [tissue-hazard ontology](tissue-hazards.md), independently of reproductive membership.
+
 oncoref uses one cited anatomical vocabulary for human, dog and mouse. A **scope
 is a set of permitted normal anatomical/developmental contexts**. A detected
 protein or gene is compatible with that scope only if **every detection** belongs
@@ -141,19 +143,19 @@ life-threatening injury. Injury in Manageable or Protected can also be serious.
 
 Mapped descendants inherit their root assignment, with **explicit permitted
 compartments taking precedence**. Thus cutaneous melanocytes and follicles are
-Disposable, while bulk skin and other skin compartments are Manageable. A broad
+Disposable, while bulk skin is Protected; resolved differentiated keratinocytes can be Manageable. A broad
 measurement never establishes the narrower compartment's restriction.
 
 | Category | Complete root list |
 |---|---|
 | **Reproductive** | Testis and male reproductive organs; ovary/oocytes and female reproductive tract; mammary; placenta; other extraembryonic; explicitly embryonic/fetal contexts, as defined above. |
 | **Disposable** | Cutaneous melanocytes; hair follicles; tonsil; human appendix; gallbladder. |
-| **Manageable** | Skin; spleen; thymus; thyroid gland; adipose tissue. Nail bed inherits skin; a thymus-sited sample retains the thymus category without inferring a narrower compartment. |
-| **Protected** | Salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
+| **Manageable** | Thyroid gland; adipose tissue. Mammary tissue retains Reproductive membership while its independent functional hazard is Manageable. Narrow cell rules are recorded separately in the central ontology. |
+| **Protected** | Skin; spleen; thymus; salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
 | **Vital** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
-The [complete human/dog/mouse inventories](audits/normal-tissue-registry-20261021-r2/index.md)
+The current human [hazard inventory](audits/tissue-hazards-1.29.0/canonical-anatomy.csv) records functional tiers independently of permitted membership. The historical [human/dog/mouse inventories](audits/normal-tissue-registry-20261021-r2/index.md)
 list every concept and native source mapping, its category, species applicability,
 policy references and review flags. A concept's anatomy citation and the project's
 category-policy citations are kept in separate export fields. Mapping rows and
@@ -168,13 +170,13 @@ Hazard, and skin/adipose Non-essential in that study. Our categories are an expl
 adaptation: the study does not classify thymus or cartilage for us, and its GTEx TPM
 values do not validate HPA nTPM thresholds.
 
-- **Skin:** Manageable acknowledges potentially manageable inflammation, while preserving
+- **Skin:** Protected recognizes extensive barrier-injury consequences, preserving
   RNA and positive-IHC exclusion gates. Only explicit cutaneous melanocyte/follicle
   compartments remain permitted. Local treatment evidence concerns selected
   manifestations, not guaranteed control of all skin-directed T-cell injury.
-- **Spleen:** Manageable reflects survivable organ loss with persistent infection and
+- **Spleen:** Protected recognizes persistent infection and
   thrombotic concerns. [Long-term splenectomy cohort](https://haematologica.org/article/view/6942)
-- **Thymus:** Manageable is a project inference, with an age/immune-reserve flag. Adult
+- **Thymus:** Protected is a project inference, with an age/immune-reserve flag. Adult
   thymectomy was associated with mortality and cancer in an observational study;
   it is not evidence that thymic immune injury is locally controllable.
   [Kooshesh et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC10557034/)
@@ -205,7 +207,7 @@ previous memberships. Cached annotations must be resolved against the new taxono
 |---|---|
 | Tonsil | Conditional allowance, with palatine tonsillectomy as the human rationale. Native `tonsil` labels retain their source resolution; adenoids, all mucosal lymphoid tissue and mouse NALT are not inferred. Review age, immune reserve and expressing-cell distribution. |
 | Appendix / gallbladder | Conditional allowance based on removal tolerance. In-situ inflammation, leakage or obstruction still requires review. Adjacent bowel, liver and bile ducts are not included. |
-| Spleen / thymus | Manageable, with positive-IHC veto and RNA ceilings. Review immune-cell distribution, age and immune reserve; spleen also carries infection-risk review. |
+| Spleen / thymus | Protected, with positive-IHC veto and RNA ceilings. Review immune-cell distribution, age and immune reserve; spleen also carries infection-risk review. |
 | Lymph nodes | Protected. Regional removal does not justify systemic depletion or injury to lymphatic stroma. |
 | Blood / marrow | Vital. No general immune-lineage exception; unsited B/T-cell labels remain unresolved. |
 
@@ -247,7 +249,7 @@ from oncoref.normal_tissues import (
 )
 
 skin = normal_tissue_screening_details(resolve_normal_tissue("skin", species="human"))
-assert skin["tissue_category"] == "manageable"
+assert skin["tissue_category"] == "protected"
 cartilage = normal_tissue_screening_details(resolve_normal_tissue("cartilage", species="human"))
 assert cartilage["tissue_category"] == "protected"
 melanocyte = normal_tissue_screening_details(
@@ -492,7 +494,7 @@ The [current selection guide](cta-selection.md) documents the active tissue/IHC 
 The [diffuseness policy](audits/cta-unassigned-20261029/diffuseness-impact.md) assigns
 adult thymus a **Permissive** role: exclude it from both the normal comparator and
 the Reproductive reference. Its RNA remains visible and it is not Disposable.
-This is orthogonal to its existing Manageable safety tier. Resolved thymic anatomy
+This is orthogonal to its adult human Protected safety tier. Resolved thymic anatomy
 and descendants use this identity role across human, dog and mouse; the quantitative
 score is currently implemented for human HPA v23. Explicit embryonic/fetal stage
 retains the Reproductive umbrella. This profile role is distinct from the historical

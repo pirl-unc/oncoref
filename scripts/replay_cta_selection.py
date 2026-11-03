@@ -456,7 +456,7 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
     ).assign(source="hpa_normal_tissue", version="v23", taxonomy_id=9606)
     d = normal_cell_screen.contexts(d)
     d["selection_tier"] = policy.compartment_tiers(d)
-    normal = d.category.isin(policy.TIER_BASES)
+    normal = d.selection_tier.isin(policy.TIER_BASES)
     positive = d.Level.isin(cell_rna_policy.POSITIVE)
     adult = ~d.concept_id.isin(
         frozenset().union(
@@ -498,12 +498,14 @@ def protein_layers(facts: pd.DataFrame, output: Path) -> list[EvidenceLayer]:
     facts["any_detected_protein"] = facts.representative_gene_id.isin(detected)
     facts["disposable_protein_positive"] = facts.representative_gene_id.isin(
         d.loc[
-            positive & d.category.eq("disposable") & d.Reliability.isin(cell_rna_policy.GRADES),
+            positive
+            & d.selection_tier.eq("disposable")
+            & d.Reliability.isin(cell_rna_policy.GRADES),
             "representative_gene_id",
         ]
     )
     facts["protein_outside_disposable"] = facts.representative_gene_id.isin(
-        d.loc[positive & adult & ~d.category.eq("disposable"), "representative_gene_id"]
+        d.loc[positive & adult & ~d.selection_tier.eq("disposable"), "representative_gene_id"]
     )
     facts["supported_nonreproductive_protein"] = facts.representative_gene_id.isin(
         d.loc[
@@ -909,6 +911,9 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         ROOT / "oncoref/normal_tissues.py",
         ROOT / "oncoref/compartment_rna_policy.py",
         ROOT / "oncoref/data/normal-tissue-taxonomy.yaml",
+        ROOT / "oncoref/data/normal-tissue-hazards.yaml",
+        ROOT / "oncoref/tissue_hazards.py",
+        ROOT / "oncoref/cta_cell_tiers.py",
         ROOT / "oncoref/data/normal-tissue-mappings.csv",
         ROOT / "scripts/cta_compartment_report.py",
         ROOT / "scripts/cta_quantitative_threshold_report.py",
@@ -1055,6 +1060,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
                 facts.rare_cell_flag,
                 facts.rare_cell_flag if cta_rare_cell.UNSAFE else empty,
             ),
+            EvidenceLayer("Rare Protected-cell expression review", facts.rare_cell_hold, empty),
             proteins[2],
         ]
     )

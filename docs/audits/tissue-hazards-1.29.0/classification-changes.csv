@@ -1,0 +1,105 @@
+protein_equivalence_group_id,category_before,classification_before,prior_exclusion_reasons,category_after,classification_after,protein_group_label,exclusion_reasons
+PEG:01ba36c22e84d2cfe147,Unsafe,Unsafe,Reproductive / embryonic association | DICE immune,Other,Other:Nonreproductive,BTNL2,Reproductive / embryonic association
+PEG:0863dc3ff712375aeea5,CTA,CTA,,Unsafe,Unsafe,MESP2,HPA tissue clusters
+PEG:0a48677ce4d9f60fb792,Unsafe,Unsafe,Reproductive / embryonic association | HPA tissue clusters | DICE immune,Other,Other:Nonreproductive,RPS4Y2,Reproductive / embryonic association
+PEG:0c8704e1b975b995f1ba,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRT83,Reproductive / embryonic association | Normal bulk
+PEG:0d5c20e2c98814b9fcad,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,FABP9,Reproductive / embryonic association | Normal bulk
+PEG:0e0c68a00f86804e1e28,Unsafe,Unsafe,DICE immune,CTA,CTA,C12orf71,
+PEG:0e40b917e5914e456fea,Other,Other:Held,Normal bulk,Unsafe,Unsafe,TBATA,Normal bulk
+PEG:175460e5a3be32714c1b,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP13-1,Reproductive / embryonic association | Normal bulk
+PEG:176ac874418440de6ab4,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,LCE1D,Reproductive / embryonic association | Normal bulk
+PEG:19f84f66e4fd695316c4,CTA,CTA,,Unsafe,Unsafe,TMDD1,HPA tissue clusters
+PEG:1abe8d4115ac520b90d9,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,OR5AK2,Reproductive / embryonic association | Normal bulk
+PEG:201fda5be7544e6def81,Unsafe,Unsafe,HPA immune | Monaco immune | DICE immune,Other,Other:Held,TCL1B,Monaco immune
+PEG:24a0f09cd42aa3fc80d2,Other,Other:Contained,,Unsafe,Unsafe,ZNF475,HPA tissue clusters | Rare Protected-cell expression review
+PEG:258cf445f5ad00333d39,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP12-2,Reproductive / embryonic association | Normal bulk
+PEG:25a25ebeea59815e05b2,CTA,CTA,,Unsafe,Unsafe,NPIPB8,Monaco immune
+PEG:26626733bad62cdf90de,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRT33A,Reproductive / embryonic association | Normal bulk
+PEG:2947e360bb3b5e248783,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP12-1,Reproductive / embryonic association | Normal bulk
+PEG:294a96156fd4244f745b,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP3-3,Reproductive / embryonic association | Normal bulk
+PEG:2da86df362631de11a5b,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,MCIDAS,Reproductive / embryonic association | HPA tissue clusters
+PEG:2dee2bda40dc2bcb386f,Unsafe,Unsafe,HPA tissue clusters,CTA,CTA,PAGE2,
+PEG:30a555bbca3f0ca03dd3,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP9-9,Reproductive / embryonic association | Normal bulk
+PEG:30e9edbb196d82deb463,CTA,CTA,,Unsafe,Unsafe,TGIF2-RAB5IF,Monaco immune
+PEG:331ea56d4ade7dcab487,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,HOXC13,Reproductive / embryonic association | Normal bulk
+PEG:33f2d290b03cf166d101,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP4-5,Reproductive / embryonic association | Normal bulk
+PEG:346b7a239621d305f244,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP10-3,Reproductive / embryonic association | Normal bulk
+PEG:355422fb5ffe5eb25076,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP4-3,Reproductive / embryonic association | Normal bulk
+PEG:35a816043b0f956bd313,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP9-3,Reproductive / embryonic association | Normal bulk
+PEG:3a9d53cd62145b476bfb,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP2-2,Reproductive / embryonic association | Normal bulk
+PEG:3cf7a3c4d34fd94b4616,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRT9,Reproductive / embryonic association | Normal bulk
+PEG:3dc956de68e55979864b,CTA,CTA,,Unsafe,Unsafe,CIMAP1C,HPA tissue clusters
+PEG:3fce9813f6324f79a79c,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP9-4,Reproductive / embryonic association | Normal bulk
+PEG:407b416ceeef669f77ff,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP26-1,Reproductive / embryonic association | Normal bulk
+PEG:43829bcb8253c0e8dfa7,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP12-3,Reproductive / embryonic association | Normal bulk
+PEG:4456fcc57e62212c7051,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP10-7,Reproductive / embryonic association | Normal bulk
+PEG:4ad822fad2998037b03b,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,LIPK,Reproductive / embryonic association | Normal bulk
+PEG:4e734eeed3dbd737d582,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP7-1,Reproductive / embryonic association | Normal bulk
+PEG:4e8005e14c532307f75b,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP2-1,Reproductive / embryonic association | Normal bulk
+PEG:4fad410c7226c996967a,Other,Other:Nonreproductive,Reproductive / embryonic association | HPA normal protein,Unsafe,Unsafe,NLRP10,Reproductive / embryonic association | HPA normal protein | Normal bulk
+PEG:52a196f285b9c86af3f3,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP8-1,Reproductive / embryonic association | Normal bulk
+PEG:52b48580d5d32915bcc9,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP1-3,Reproductive / embryonic association | Normal bulk
+PEG:5694430d0f81e6d75709,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP10-11,Reproductive / embryonic association | Normal bulk
+PEG:58e8fda61ef96a05b4e2,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP9-8,Reproductive / embryonic association | Normal bulk
+PEG:5d3268853a47ba6c4ee3,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,ENSG00000236543,Reproductive / embryonic association | Normal bulk
+PEG:5e2e62cbb514007ea08f,Unsafe,Unsafe,DICE immune,Other,Other:Held,ARMH2,Rare Protected-cell expression review
+PEG:5f8fc671110b120a856a,CTA,CTA,,Unsafe,Unsafe,SPDYE4,Monaco immune
+PEG:612045266ac53328445a,Unsafe,Unsafe,HPA tissue clusters,CTA,CTA,FSCN3,
+PEG:639b75885ff8db376581,CTA,CTA,,Other,Other:Held,PRSS54,Rare Protected-cell expression review
+PEG:6701a6c4a4f70d148a1e,Other,Other:Held,HPA tissue clusters,Unsafe,Unsafe,KLK15,HPA tissue clusters
+PEG:6d6a9073709926e29fa1,Other,Other:Nonreproductive,Reproductive / embryonic association | Required RNA coverage,Unsafe,Unsafe,ENSG00000288695,Reproductive / embryonic association | Required RNA coverage | HPA tissue clusters
+PEG:6dc7fe2dcc74049fcbe7,Other,Other:Diffuse,Reproductive concentration | HPA tissue clusters,Unsafe,Unsafe,CLDN22,Reproductive concentration | HPA tissue clusters
+PEG:7354dab0c4f554d92e3b,CTA,CTA,,Unsafe,Unsafe,SPAG11B,Rare vital-tissue cell expression
+PEG:73cec56f858497ad7b54,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,UCN2,Reproductive / embryonic association | Normal bulk
+PEG:753a52e4166cfe24080d,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,LIPM,Reproductive / embryonic association | Normal bulk
+PEG:7a8c4b71c1f5087b54ac,CTA,CTA,,Unsafe,Unsafe,MAGEB2,HPA tissue clusters
+PEG:7a9ee8205689e78fc108,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP4-2,Reproductive / embryonic association | Normal bulk
+PEG:7aa0977686e4b1eb00d4,Other,Other:Held,Normal bulk | HPA tissue clusters,Unsafe,Unsafe,IL37,Normal bulk | HPA tissue clusters
+PEG:7c3e8fac2764c1cfa3e4,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP10-2,Reproductive / embryonic association | Normal bulk
+PEG:7f9a31f0348c1c74b822,Other,Other:Held,HPA tissue clusters,Unsafe,Unsafe,MEIG1,HPA tissue clusters | Rare Protected-cell expression review
+PEG:817256e68c9cbdf6c0cf,Unsafe,Unsafe,Reproductive / embryonic association | HPA tissue clusters,Other,Other:Nonreproductive,ENSG00000248993,Reproductive / embryonic association
+PEG:832fc7aa62e39cf093fe,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,IL1F10,Reproductive / embryonic association | Normal bulk
+PEG:8a6c05dc85c36b8365a2,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP19-5,Reproductive / embryonic association | Normal bulk
+PEG:8b43e9e60e390c25c7c4,Other,Other:Held,Normal bulk,Unsafe,Unsafe,KRT34,Normal bulk
+PEG:8ca1ea65531dce44b74c,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP10-10,Reproductive / embryonic association | Normal bulk
+PEG:8fe6e7c0c5898d381def,Other,Other:Held,HPA tissue clusters,Unsafe,Unsafe,MAGEA3,HPA tissue clusters
+PEG:91b542c5442254e4838f,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP4-12,Reproductive / embryonic association | Normal bulk
+PEG:91cc4671f153832e281d,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP10-12,Reproductive / embryonic association | Normal bulk
+PEG:941a08a702068efc8f35,Unsafe,Unsafe,DICE immune,CTA,CTA,DAZL,
+PEG:96761b223d1184bc732c,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRT38,Reproductive / embryonic association | Normal bulk
+PEG:99a8115f0f9bd355b3f6,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRT82,Reproductive / embryonic association | Normal bulk
+PEG:9b6c576d20f8aaa44aaf,CTA,CTA,,Other,Other:Held,TXNDC8,Rare Protected-cell expression review
+PEG:9fb6804f0d3ba6105827,Unsafe,Unsafe,HPA tissue clusters,CTA,CTA,PSG3,
+PEG:a025925c89c0b74bcc01,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP10-5,Reproductive / embryonic association | Normal bulk
+PEG:a043c06073a25fb9fd72,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP19-1,Reproductive / embryonic association | Normal bulk
+PEG:a1f51afbecb6c0777ee2,Other,Other:Held,HPA normal protein,Unsafe,Unsafe,SPINT3,HPA normal protein
+PEG:ab59c185851d220bd1fa,Other,Other:Held,Normal bulk,Unsafe,Unsafe,LCE2A,Normal bulk
+PEG:ac234c30c8a3cdb19ae7,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP10-9,Reproductive / embryonic association | Normal bulk
+PEG:afe6c50b03e09614e771,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRT28,Reproductive / embryonic association | Normal bulk
+PEG:b04e566285aeb99db056,CTA,CTA,,Unsafe,Unsafe,FAM72D,HPA tissue clusters
+PEG:b53b4164ab169b88927e,Other,Other:Diffuse,Reproductive concentration | Normal bulk,Unsafe,Unsafe,CRYGN,Reproductive concentration | Normal bulk | HPA tissue clusters
+PEG:ba11c7bd43f05930ef56,CTA,CTA,,Other,Other:Held,FKBP6,Rare Protected-cell expression review
+PEG:ba955e011e0a3b70e803,Unsafe,Unsafe,Reproductive / embryonic association | DICE immune,Other,Other:Nonreproductive,OR9H1,Reproductive / embryonic association
+PEG:be652c0b9af0fad8be61,Other,Other:Held,HPA normal protein | Normal bulk,Unsafe,Unsafe,PSMB11,HPA normal protein | Normal bulk
+PEG:c21bc24bf667c21f155d,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,KRTAP10-1,Reproductive / embryonic association | Normal bulk
+PEG:c600519ebe19bab3bbd2,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP4-4,Reproductive / embryonic association | Normal bulk
+PEG:cc0425c931c1935de716,Other,Other:Held,Normal bulk,Unsafe,Unsafe,KRT25,Normal bulk
+PEG:ceee96d9598d409a0417,Unsafe,Unsafe,Reproductive / embryonic association | DICE immune,Other,Other:Nonreproductive,OR13A1,Reproductive / embryonic association
+PEG:cf7c71debea4fd885098,Unsafe,Unsafe,Reproductive / embryonic association | Required RNA coverage | HPA immune,Other,Other:Nonreproductive,ENSG00000285947,Reproductive / embryonic association | Required RNA coverage | HPA immune
+PEG:d1701132a5735e682500,Other,Other:Held,Normal bulk,Unsafe,Unsafe,KRTAP4-7,Normal bulk
+PEG:d1dd05713ae43f42512a,CTA,CTA,,Unsafe,Unsafe,FAM72C,HPA tissue clusters
+PEG:d5662dc10a974fd32500,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,LCE1E,Reproductive / embryonic association | Normal bulk
+PEG:d5c863eddb09824eacc7,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRT35,Reproductive / embryonic association | Normal bulk
+PEG:d88b5d2ec3404b5d529c,CTA,CTA,,Unsafe,Unsafe,SPAG11A,Rare vital-tissue cell expression
+PEG:dccb4e902182d6aa47b8,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP9-2,Reproductive / embryonic association | Normal bulk
+PEG:dfcaf54bcb1033097573,Other,Other:Held,Normal bulk,Unsafe,Unsafe,LY6G6D,Normal bulk
+PEG:e310d3bfc4df3dc23138,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP1-5,Reproductive / embryonic association | Normal bulk
+PEG:ed5832fb1d761fb386c6,Other,Other:Held,Normal bulk,Unsafe,Unsafe,LCE5A,Normal bulk
+PEG:edd9f1eb7db205dcbe55,Other,Other:Nonreproductive,Reproductive / embryonic association,Unsafe,Unsafe,ARL14EPL,Reproductive / embryonic association | HPA tissue clusters
+PEG:eecefecaafe9399877f0,CTA,CTA,,Unsafe,Unsafe,ZNF695,HPA tissue clusters
+PEG:f26812539843d0cfa77b,CTA,CTA,,Other,Other:Held,SPMIP3,Rare Protected-cell expression review
+PEG:f6e3ddedb686caa0ea5a,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP17-1,Reproductive / embryonic association | Normal bulk
+PEG:fbb2a66a685ba6cc5f31,Other,Other:Held,HPA tissue clusters,Unsafe,Unsafe,FNDC11,HPA tissue clusters | Rare Protected-cell expression review
+PEG:fcac5eded906d08e81be,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRTAP4-8,Reproductive / embryonic association | Normal bulk
+PEG:fd021c1ba851e4283b42,CTA,CTA,,Other,Other:Held,WFDC6,Rare Protected-cell expression review
+PEG:fd41198aa89655bdea84,Other,Other:Nonreproductive,Reproductive / embryonic association | Normal bulk,Unsafe,Unsafe,KRT71,Reproductive / embryonic association | Normal bulk

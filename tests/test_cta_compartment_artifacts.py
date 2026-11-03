@@ -44,10 +44,14 @@ def test_named_calibration_target_keeps_its_evidence_flags():
     # calibration example, not held-out clinical validation.
 
 
-def test_compartment_report_receipts_match_implementation_and_outputs():
+def test_compartment_report_receipts_match_implementation_and_outputs(historical_cta_input):
     for manifest in [AUDIT / "manifest.json", AUDIT / "cluster-replay.json"]:
         data = json.loads(manifest.read_text())
         for role in ["inputs", "outputs"]:
             for name, expected in data[role].items():
-                source = ROOT / name if role == "inputs" else manifest.parent / name
+                source = (
+                    historical_cta_input(name, expected)
+                    if role == "inputs"
+                    else manifest.parent / name
+                )
                 assert hashlib.sha256(source.read_bytes()).hexdigest() == expected, str(source)

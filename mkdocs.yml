@@ -7,7 +7,8 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
-      - Current release 1.28.0: cta-release-1.28.0.md
+      - Current release 1.29.0: cta-release-1.29.0.md
+      - Previous release 1.28.0: cta-release-1.28.0.md
       - Previous release 1.27.0: cta-release-1.27.0.md
       - Simpler decisions and four target reviews: audits/cta-simplification-20261031/index.md
       - Previous release 1.26.0: cta-release-1.26.0.md
@@ -63,6 +64,7 @@ nav:
       - Placental CTA sources: cta-publication-sources.md
       - Bradley CTA audit: cta-bradley-audit.md
   - Tissues:
+      - Tissue hazard ontology: tissue-hazards.md
       - Normal tissue scopes: normal-tissue-scopes.md
       - Tissue injury and manageability: normal-tissue-manageability.md
       - Patient-context gene filters: normal-tissue-gene-filters.md

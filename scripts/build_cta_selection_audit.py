@@ -15,7 +15,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from oncoref import cta_selection, reference_data  # noqa: E402
+from oncoref import cta_rare_cell, cta_selection, reference_data  # noqa: E402
 from oncoref.species_antigens import cta_snapshot  # noqa: E402
 
 RELEASE = ROOT / "docs/audits/cta-selection-20261028"
@@ -117,7 +117,11 @@ HUMAN_RULES = {
         ["hpa_rna_consensus"],
     ),
     "Rare vital-tissue cell expression": (
-        "At least 1% of cells in a brain, spinal cord, heart or lung alveolar, endothelial or airway basal cell type (at least 3,000 cells, 10 expressing) express a member gene in CELLxGENE normal single-cell summaries. Rare expression in an essential tissue is an unresolved unknown and supplies Unsafe evidence. Immune lineages, stroma, adipose and developmental cell types are ignored, so spleen, adipose and immune-subset expression is allowed. Detection frequency, not abundance.",
+        "At least 1% detection in a centrally assigned Vital population in the existing brain/spinal-cord/heart/lung CELLxGENE panel supplies Unsafe evidence. At least 3,000 cells and 10 expressing cells are required. Excluded or unmeasured populations are coverage limits, not allowances. Detection frequency is distinct from abundance.",
+        [],
+    ),
+    "Rare Protected-cell expression review": (
+        "At least 1% detection in a centrally assigned Protected population in the existing CELLxGENE panel blocks CTA admission without itself establishing Unsafe. The same cell-support criteria apply. Source age restrictions and detection artifacts remain limitations.",
         [],
     ),
     "Unsafe sequence containment": (
@@ -144,15 +148,15 @@ HUMAN_RULES = {
         ["hpa_single_cell_tissue"],
     ),
     "HPA immune": (
-        "Protected-tier native nTPM limits without matched negative-IHC credit; reproductive/placental location remains neutral.",
+        "Central cell-specific tiers with native nTPM limits and no matched negative-IHC credit; reproductive/placental location remains neutral.",
         ["hpa_immune_cell"],
     ),
     "Monaco immune": (
-        "Protected-tier native TPM limits without matched negative-IHC credit.",
+        "Central cell-specific tiers with native TPM limits and no matched negative-IHC credit.",
         ["hpa_immune_monaco"],
     ),
     "DICE immune": (
-        "Third-highest reported TPM value; native protected-tier limits. Unpaired group distributions retain bounds. Missing coverage alone does not exclude.",
+        "Third-highest reported TPM value; central cell-specific tiers. Unpaired group distributions retain bounds. Missing coverage alone does not exclude.",
         ["dice"],
     ),
     "Adult cornea": (
@@ -394,6 +398,14 @@ def observation_source(row: dict | pd.Series) -> dict:
 
 def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
     """Explain every contributing layer with a measured context when available."""
+    rare = cta_rare_cell.screen_table()
+    protected = (
+        rare[rare.tier.eq("protected") & rare.pct_expressing.ge(cta_rare_cell.FLAG_PCT)]
+        .sort_values("pct_expressing", ascending=False)
+        .drop_duplicates("gene_id")
+        .set_index("gene_id")
+        .to_dict("index")
+    )
     evidence_fields = {
         "gene_id",
         "assay",
@@ -614,6 +626,23 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     f"{r['rare_cell_max_pct']:.2f}% of {r['rare_cell_type']} cells express it ({r['rare_cell_detail']}); at least 1% of a vital-tissue cell type. Detection frequency, not abundance; developmental cell types are excluded by name, not donor age."
                 )
                 row["source_url"] = "https://cellxgene.cziscience.com/gene-expression"
+            elif layer == "Rare Protected-cell expression review":
+                hits = [protected[g] for g in json.loads(r["member_gene_ids"]) if g in protected]
+                if not hits:
+                    raise ValueError("Protected rare-cell hold lacks supporting measurements")
+                hit = max(hits, key=lambda h: h["pct_expressing"])
+                row.update(
+                    tissue=hit["tissue"],
+                    cell_type=hit["cell_type"],
+                    selection_tier="protected",
+                    source_url="https://cellxgene.cziscience.com/gene-expression",
+                    reason=(
+                        f"{hit['pct_expressing']:.2f}% of {hit['tissue']}: {hit['cell_type']} "
+                        f"({int(hit['n_expressing']):,} of {int(hit['n_cells']):,} cells) express a member gene. "
+                        "Protected-population detection at or above 1% creates a candidate review hold. "
+                        "Detection frequency is not abundance or demonstrated receptor recognition."
+                    ),
+                )
             elif layer == "Cancer expression":
                 row["reason"] = (
                     f"OncoRef tumor maximum {display(r['oncoref_maximum_tpm'])} TPM; HPA lower bound {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No qualifying tumor RNA or reviewed protein evidence."

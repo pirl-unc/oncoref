@@ -100,7 +100,9 @@ def test_thymus_is_permissive_not_disposable_or_a_reproductive_reference():
     for species in ("human", "dog", "mouse"):
         thymus = resolve_normal_tissue("thymus", species=species)
         assert profile_role(thymus) == "permissive"
-        assert normal_tissue_category(thymus) == "manageable"
+        assert normal_tissue_category(thymus) == (
+            "protected" if species == "human" else "manageable"
+        )
         assert (
             profile_role(resolve_normal_tissue("thymus", species=species, stage="fetal"))
             == "reproductive"

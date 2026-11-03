@@ -5,6 +5,8 @@
     "oncoref/gene_matching.py": "74532a8d862030814440e433d0e0295d8ac6badd9a4cc7544b3f1c0390593707",
     "oncoref/protein_equivalence.py": "647a94b56cff08ede55b785373e7d8daa1f29f1ec42fff53b451fb6ff24dfc4b",
     "oncoref/data/cta-publication-membership.csv": "be2c3d9b3d202b0664e7e025926ba9743b1516cf100182cf6c14fb1b42af8b09",
-    "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c"
+    "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c",
+    "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a"
   }
 }
