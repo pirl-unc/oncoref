@@ -39,8 +39,18 @@ def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate(
     old = pd.read_csv(root / "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz")
     current = human.cta_selection().set_index("label")
     previous_ctas = set(old.loc[old.category.eq("CTA"), "protein_group_label"])
-    assert current.loc[sorted(previous_ctas), "category"].eq("CTA").all()
-    assert current.loc[["SAGE1", "GAGE10", "CDY2A/B", "CT45A2/8/9"], "category"].eq("CTA").all()
+    kept = current.loc[sorted(previous_ctas)]
+    # A previous CTA stays CTA unless most of its sequence is inside Unsafe proteins
+    # or the rare vital-tissue screen flags it.
+    profiles = cta_selection.profiles().set_index("label")
+    contained = kept.classification.eq("Other:Contained")
+    rare = profiles.rare_cell_flag.loc[kept.index].astype(bool) & kept.category.eq("Unsafe")
+    assert kept.loc[~contained & ~rare, "category"].eq("CTA").all()
+    overlap = profiles.unsafe_sequence_overlap_pct
+    assert overlap.loc[kept.index[contained]].ge(95).all()
+    assert contained.sum() <= 40
+    assert current.loc[["SAGE1", "GAGE10", "CDY2A/B"], "category"].eq("CTA").all()
+    assert current.loc["CT45A2/8/9", "category"] == "CTA"  # below the 95% containment floor
     assert current.loc["CDY1/B", "category"] == "CTA"
     assert current.loc[["USP17L3", "FAM90A9"], "category"].eq("Other").all()
     candidates = cta_selection.candidates()
@@ -97,12 +107,19 @@ def test_exhaustive_categorical_labels_and_legacy_query_alias():
     other = all_rows[all_rows.category.eq("Other")]
     assert set(other.subtype) <= set(cta_selection.OTHER_SUBTYPES)
     assert other.classification.eq("Other:" + other.subtype).all()
-    assert all_rows.loc[all_rows.category.isna(), "classification"].eq("Unassessed").all()
+    assert all_rows.category.notna().all(), "every human protein resolves to CTA, Unsafe or Other"
     assert all_rows.loc[~all_rows.category.eq("Other").fillna(False), "subtype"].isna().all()
     with pytest.warns(DeprecationWarning, match="Other"):
         legacy = cta_selection.results(category="Neither")
     pd.testing.assert_frame_equal(legacy, other.reset_index(drop=True))
-    assert set(other.subtype) <= {"Nonreproductive", "Reproductive", "Diffuse"}
+    assert set(other.subtype) <= {
+        "Nonreproductive",
+        "Reproductive",
+        "Diffuse",
+        "Held",
+        "Contained",
+        "Nested",
+    }
     with pytest.raises(ValueError, match="subtype"):
         cta_selection.results(category="Unsafe", subtype="Low")
     with pytest.raises(ValueError, match="subtype"):

@@ -1,5 +1,7 @@
 """Complete literature intake precedes curation and preserves assay limitations."""
 
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
@@ -35,7 +37,13 @@ def test_full_paper_sets_are_imported_not_just_the_twelve_audit_genes():
     loci = set(refs.loc[refs.protein_candidate_eligible, "Ensembl_Gene_ID"])
     # Current source additions are assessed by the current selection, not
     # retroactively inserted into the independently versioned legacy table.
-    assert loci <= {gid for group in cta_selection.results().gene_ids for gid in group}
+    current = {gid for group in cta_selection.results().gene_ids for gid in group}
+    # Paper loci outside the coding or established-ncORF universe are not classified.
+    universe = pd.read_csv(
+        Path(__file__).resolve().parents[1] / "oncoref/data/cta-protein-universe.csv"
+    )
+    excluded = set(universe.loc[universe.universe.eq("excluded"), "gene_id"])
+    assert loci - current <= excluded
     assert len(loci) > 2000
 
 

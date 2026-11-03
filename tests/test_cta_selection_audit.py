@@ -72,7 +72,8 @@ def test_prior_cta_context_expands_paper_annotations_without_admission(audit):
     assert set(members.label) == {"SPAG9", "SPA17", "SYCP1", "NY-ESO-1", "SSX4/B"}
     boel_members = audit.memberships[audit.memberships.source_id.eq(boel)].set_index("label")
     assert boel_members.loc["MAGEA1", "category"] == "CTA"
-    assert pd.isna(boel_members.loc["MAGEA3", "category"])
+    # MAGEA3's colon signal blocks CTA without establishing Unsafe: Other:Held.
+    assert boel_members.loc["MAGEA3", "category"] == "Other"
     context = pd.read_csv(ROOT / "oncoref/data/cta-publication-context.csv")
     assert context.evidence_role.eq("previously_recognized_CTA").all()
     assert context.source_location.notna().all()
@@ -99,7 +100,9 @@ def test_every_released_hold_and_unsafe_layer_is_explained(audit):
     assert (end.eligible, end.Unsafe, end.Other, end.Unassigned) == tuple(
         expected[c] for c in ["CTA", "Unsafe", "Other", "Unassigned"]
     )
-    assert audit.funnel[["eligible", "Unsafe", "Other", "Unassigned"]].sum(axis=1).eq(19863).all()
+    assert (
+        audit.funnel[["eligible", "Unsafe", "Other", "Unassigned"]].sum(axis=1).eq(len(facts)).all()
+    )
     assert not audit.explanations.reason.str.contains(r"\bnan\b", regex=True).any()
 
 
@@ -121,27 +124,27 @@ def test_independent_assessments_and_only_normal_safety_can_establish_unsafe(aud
     )
     for label in ["MAGEA4", "NY-ESO-1", "PRAME", "CTAG2", "XAGE1A/B"]:
         assert audit.explain(label).category.eq("CTA").all()
-    for label in ["TGIF2-RAB5IF", "ATF7-NPFF"]:
+    for label in ["ENSG00000206356", "LINC03040"]:
         rows = audit.explain(label)
-        assert rows.category.isna().all()
-        assert (
-            rows.loc[rows.layer.eq("Required RNA coverage"), "reason"]
-            .str.contains("GTEx v11")
-            .all()
-        )
+        # Missing combined bulk blocks CTA but never supplies Unsafe evidence.
+        assert rows.category.eq("Other").all()
+        reason = rows.loc[rows.layer.eq("Required RNA coverage"), "reason"]
+        assert reason.str.contains("Combined normal bulk missing").all()
 
 
-def test_required_gtex_core_cannot_be_replaced_with_other_bulk_sources(audit):
-    """Coverage failures with other passing evidence remain unknown, not Unsafe."""
+def test_only_combined_bulk_is_required_and_gtex_core_is_informational(audit):
+    """Coverage failures stay Other, never Unsafe; optional panels never block a label."""
     coverage = pd.read_csv(RELEASE / "combined-rna-coverage.csv.gz").set_index("entity_id")
     selected = human.cta_selection(category="CTA")
-    assert coverage.loc[selected.entity_id, "gtex_core_complete"].all()
-    for label in ["TSSK2", "NEDD8-MDP1", "NPHP3-ACAD11"]:
-        explanation = audit.explain(label)
-        assert explanation.category.isna().all()
-        reason = explanation[explanation.layer.eq("Required RNA coverage")]
-        assert reason.reason.str.contains("GTEx v11").all()
-        assert reason.decision.eq("hold").all()
+    assert coverage.loc[selected.entity_id, "required_coverage"].all()
+    assert coverage.loc[selected.entity_id, "bulk_complete"].all()
+    # The GTEx core is reported but optional: a CTA may lack it.
+    assert not coverage.loc[selected.entity_id, "gtex_core_complete"].all()
+    assert coverage.required_coverage.eq(coverage.bulk_complete).all()
+    explanation = audit.explain("TSSK2")
+    assert explanation.category.eq("CTA").all()
+    incomplete = human.cta_selection().query("assessment_status == 'incomplete_evidence'")
+    assert incomplete.category.eq("Other").all()
 
 
 def test_specific_contexts_and_same_tissue_negative_ihc(audit):
@@ -232,11 +235,16 @@ def test_neither_profiles_and_unassigned_counts_reconcile(audit):
     from oncoref.cta_selection_policy import CANDIDATE_ONLY_LAYERS
 
     safety = [c for c in facts if c.startswith("hold:") and c[5:] not in CANDIDATE_ONLY_LAYERS]
-    assert not neither[safety].any(axis=1).any()
-    assert neither.required_coverage.all()
-    assert not neither.unresolved_evidence.any()
+    # Every protein resolves; Other that cleared the normal screen has no hold.
+    assert facts.category.notna().all()
+    cleared = neither[neither.assessment_status.eq("screened")]
+    assert not cleared[safety].any(axis=1).any()
+    assert cleared.required_coverage.all()
+    assert not cleared.unresolved_evidence.any()
+    # The rest are disclosed holds or incomplete coverage, never Unsafe evidence.
+    uncleared = neither[~neither.assessment_status.eq("screened")]
+    assert uncleared.assessment_status.isin(["incomplete_evidence", "normal_evidence_hold"]).all()
     assert not neither.vital_protected_exclusion.any()
-    assert facts.loc[facts.category.isna(), "subtype"].isna().all()
     assert canine.cta_selection().category.isna().all()
     assert audit.funnel.iloc[:-1].Other.eq(0).all()
 
@@ -365,21 +373,38 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     # Subsequent literature safety additions are independent of diffuseness.
     old_unsafe = set(before[before.category.eq("Unsafe")].index)
     new_unsafe = set(after[after.category.eq("Unsafe")].index)
-    assert old_unsafe <= new_unsafe
-    assert after.loc[sorted(new_unsafe - old_unsafe), "knowledge_normal_exclusion"].all()
+    # Unsafe groups can only leave by falling outside the coding/ncORF universe, or
+    # because differentiated airway cells moved from Vital to Manageable.
+    left = old_unsafe - new_unsafe
+    outside = set(pd.read_csv(RELEASE / "out-of-universe.csv.gz").protein_equivalence_group_id)
+    airway_released = left - outside
+    assert before.loc[sorted(airway_released), "unsafe:HPA tissue clusters"].astype(bool).all()
+    assert len(airway_released) <= 15
+    unsafe_layers = [c for c in after if c.startswith("unsafe:")]
+    assert after.loc[sorted(new_unsafe - old_unsafe), unsafe_layers].any(axis=1).all()
     changed = frozen.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))
     assert frozen.loc[changed, "protein_group_label"].tolist() == ["MTCP1"]
-    row = after.loc[after.protein_group_label.eq("MTCP1")].iloc[0]
+    # MTCP1 was the diffuse example (24.53%) until the rare vital-tissue screen made it
+    # Unsafe on its own (cerebellar granule cells); diffuseness never creates Unsafe.
+    mtcp1 = after.loc[after.protein_group_label.eq("MTCP1")].iloc[0]
+    assert mtcp1.category == "Unsafe"
+    assert mtcp1.Unsafe_reasons == "Rare vital-tissue cell expression"
+    assert mtcp1.hpa_diffuseness == pytest.approx(0.24533644300531762)
+    row = after.loc[after.protein_group_label.eq("VN1R2")].iloc[0]
     assert row.category == "Other"
-    assert row.hpa_diffuseness == pytest.approx(0.24533644300531762)
+    assert row.hpa_diffuseness == pytest.approx(0.211729, abs=1e-5)
     assert row.subtype == "Diffuse"
-    explanation = audit.explain("MTCP1")
+    explanation = audit.explain("VN1R2")
     assert explanation[explanation.layer.eq("Assessment: Safety")].decision.eq("pass").all()
     assert (
         explanation[explanation.layer.eq("Reproductive concentration")]
-        .reason.str.contains("24.53%")
+        .reason.str.contains("21.17%")
         .all()
     )
     selected = human.cta_selection(category="CTA").set_index("label")
-    assert "Developmental concentration unassessed" in selected.loc["FAM72D", "evidence_flags"]
-    assert "Adult concentration unassessed" in selected.loc["ZC3H11C", "evidence_flags"]
+    assert "Developmental concentration unassessed" in selected.loc["MAGEC2", "evidence_flags"]
+    # DAZ2 lies wholly inside Unsafe DAZ paralogs and is Other:Contained.
+    assert (
+        human.cta_selection().set_index("label").loc["DAZ2", "classification"] == "Other:Contained"
+    )
+    assert "Adult concentration unassessed" in selected.loc["LCN9", "evidence_flags"]

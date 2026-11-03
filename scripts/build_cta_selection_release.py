@@ -527,6 +527,13 @@ def build(audit: Path = AUDIT) -> None:
             "reproductive_evidence": decisions.positive_context,
             "developmental_lineage_max_tpm": decisions.developmental_all_lineage_max_tpm,
             "developmental_measured": decisions.developmental_measured,
+            "rare_cell_screened": decisions.rare_cell_screened,
+            "rare_cell_flag": decisions.rare_cell_flag,
+            "rare_cell_max_pct": decisions.rare_cell_max_pct,
+            "rare_cell_type": decisions.rare_cell_type,
+            "unsafe_sequence_overlap_pct": decisions.unsafe_sequence_overlap_pct.where(
+                decisions.category.ne("Unsafe")
+            ),
         }
     )
     write_csv(profiles, DATA / "cta-selection-profiles-human.csv.gz")
@@ -543,6 +550,7 @@ def build(audit: Path = AUDIT) -> None:
                 "cta-selection-human.csv.gz",
                 "cta-selection-profiles-human.csv.gz",
                 "cta-selection-sources.csv",
+                "cta-rare-cell-screen.csv.gz",
             ]
         },
         "species": {
@@ -561,6 +569,7 @@ def build(audit: Path = AUDIT) -> None:
                     "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
                     "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
                     "Other reasons describe unmet identity gates. Abundance, replicated tumor support and adult Disposable expression are separate attributes; rare normal states may remain unmeasured.",
+                    "Rare vital-tissue cell expression: a protein is Unsafe when at least 1% of cells in a brain, spinal cord, heart or lung alveolar, endothelial or airway basal cell type express it in CELLxGENE normal single-cell summaries. Detection frequency, not abundance; samples cannot be restricted to adults; spleen, adipose, immune and stromal expression is allowed.",
                     "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply.",
                 ],
             },

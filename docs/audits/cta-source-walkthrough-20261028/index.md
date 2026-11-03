@@ -1,8 +1,8 @@
 # CTA and oncofetal selection
 
-**701 CTA proteins (747 loci), 18,062 Unsafe, 453 Other and 647 unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `oncoref.cta-selection.2026-10-31.1`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**637 CTA proteins (683 loci), 18,278 Unsafe, and 689 Other (34 of them Held)**, with none unassessed, across 19,604 proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; 259 out-of-universe groups are listed separately). Policy: `oncoref.cta-selection.2026-10-31.1`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[PDF slides](cta-selection-1.27.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.27.0-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[PDF slides, 1.27.0 (not regenerated for 1.28.0)](cta-selection-1.27.0.pdf) · [Editable slides, 1.27.0 (not regenerated for 1.28.0)](slides/cta-evidence-walkthrough-1.27.0-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 [Simplified decisions and four target reviews](../cta-simplification-20261031/index.md).
 [1.26 literature audit and decisions](../cta-other-literature-20261030/index.md).
@@ -22,65 +22,111 @@ embryonic evidence remains independent and its concentration is unassessed.
 ![Three separate CTA requirements](../../images/cta-evidence-axes.png)
 
 - **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage and acceptable normal expression all pass.
-- **Unsafe:** above the single RNA ceiling in Vital/Protected, accepted non-Low protein in those compartments, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
-- **Other:** complete required normal coverage, resolved evidence and every normal gate passing, but no candidate subtype qualifies. Cancer or reproductive evidence may be absent or missing.
-- **Unassigned:** required normal coverage or evidence resolution is missing, or a normal-screen hold remains. In the API, category is null and assessment_status explains why.
+- **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, a reviewed unresolved Protected-tissue finding, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
+- **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` records whether coverage was incomplete or a hold applied.
+- **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other requires the complete normal screen to pass. The fixed [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex) core requires all 52 bulk contexts for every protein member. DICE and corneal coverage remain optional, but observed counterevidence contributes.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other requires the complete normal screen to pass. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
 
 ## Other categories
 
-Every normal-pass protein has one categorical assignment: CTA or a named Other category. Safety exclusions remain Unsafe; incomplete normal evidence remains Unassessed. The API exposes `classification` (for example `Other:Nonreproductive`) as well as `category` and `subtype`.
+Every protein has one categorical assignment: CTA, Unsafe or a named Other category. Safety exclusions remain Unsafe; incomplete or unresolved normal evidence gives Other with `assessment_status` recording why. The API exposes `classification` (for example `Other:Nonreproductive`) as well as `category` and `subtype`.
 
 | Category | Meaning | Proteins |
 | --- | --- | --- |
-| Other:Nonreproductive | Normal screen passes, but no qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. This is not proof of absence. | 448 |
+| Other:Nonreproductive | Normal screen passes, but no qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. This is not proof of absence. | 601 |
 | Other:Reproductive | Normal screen and reproductive presence pass, but cancer presence is unestablished. | 0 |
-| Other:Diffuse | Normal screen, reproductive presence and cancer presence pass, but the reproductive concentration gate fails. | 5 |
+| Other:Diffuse | Normal screen, reproductive presence and cancer presence pass, but the reproductive concentration gate fails. | 6 |
+| Other:Held | Target gates pass, but an unresolved or marginal normal-tissue signal blocks CTA without establishing Unsafe. | 34 |
+| Other:Nested | A reference-CDS microprotein (under 50 residues) nested inside a same-strand protein-coding gene and not an established ncORF: its RNA signal belongs to the host, so it cannot be a CTA. | 28 |
+| Other:Contained | Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist. | 20 |
 
 Other reasons follow the unmet identity requirements: reproductive presence, cancer presence, then concentration. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
 
 [Full categorical table and individual changes](../cta-neither-20261030/update-1.25.0.md). The current admission fixes use the full mapped Reproductive bulk panel plus supported reproductive-lineage cells. Generic/immune cells can provide indirect sample-site evidence only with a complete same-source outside panel, every outside cluster <5 nTPM, and no curated normal-induction conflict. This does not identify the producing cell; macrophages may carry passenger RNA. All safety and concentration gates remain independent.
 
+## Rare vital-tissue cell expression
+
+Pooled panels average away rare normal cells, so a protein can read near zero in
+every bulk, cluster and immune measurement while a small population of an essential
+tissue expresses it. The reviewed example is **MAGEA12**, whose neurotoxicity in a
+MAGE-A3 TCR trial followed rare positive neurons: HPA bulk, GTEx medians and HPA
+single-nucleus clusters read near zero, but 293 of 19,760 midbrain dopaminergic neurons
+(1.5%) express it in the CELLxGENE summaries.
+
+Every gene is screened (`scripts/build_cta_rare_cell_screen.py`) against CELLxGENE
+normal-sample summaries, **in vital tissues only: brain, spinal cord, heart and lung gas-exchange cells (alveolar epithelium and endothelium)**. A cell type needs at least 3,000 cells and 10 expressing cells. Immune
+lineages (including microglia), fibroblasts and stroma, adipose and clearly
+developmental cell types are ignored, so rare expression in spleen, adipose or immune
+subsets is allowed. **A protein is Unsafe when any member gene is expressed by at least
+1% of a vital-tissue cell type.** 15,888 proteins are flagged, and for
+**117 of them this is the only Unsafe evidence**.
+
+This is an automated screen, and it measures detection frequency among cells, not
+abundance: expressing cells typically carry about one UMI, and ambient RNA, doublets and
+close-paralog multimapping can create detections. The service cannot restrict samples to
+adult donors, so developmental cell types are removed by name. Every protein has a status
+for this filter (`rare_cell_*` columns in `cta_selection.profiles()`, with
+`cta_selection.rare_cell_screen()` returning the supporting cell types); genes absent from
+the service are `rare_cell_screened = False` and are never flagged.
+
+| Protein | Vital-tissue cell type | Expressing / cells | % of cells |
+| --- | --- | --- | --- |
+| LINC03051 | brain: L6 intratelencephalic projecting glutamatergic neuron of the primary motor cortex | 3,951 of 4,206 cells | 93.94 |
+| ENSG00000285708 | brain: L4/5 intratelencephalic projecting glutamatergic neuron | 2,219 of 7,153 cells | 31.02 |
+| GRXCR2 | heart: cardiac muscle myoblast | 4,906 of 18,307 cells | 26.8 |
+| REDIC1 | brain: L4/5 intratelencephalic projecting glutamatergic neuron | 902 of 7,153 cells | 12.61 |
+| ENSG00000285542 | brain: L4/5 intratelencephalic projecting glutamatergic neuron | 783 of 7,153 cells | 10.95 |
+| ENSG00000285547 | brain: L4/5 intratelencephalic projecting glutamatergic neuron | 783 of 7,153 cells | 10.95 |
+| PABPC3 | lung: respiratory basal cell | 1,293 of 12,349 cells | 10.47 |
+| MDFIC2 | heart: mesothelial cell of epicardium | 431 of 4,332 cells | 9.95 |
+| OOEP | brain: leptomeningeal cell | 1,027 of 13,072 cells | 7.86 |
+| MORC1 | spinal cord: mononuclear phagocyte | 282 of 3,679 cells | 7.67 |
+| PKD1L3 | heart: mesothelial cell | 2,299 of 32,755 cells | 7.02 |
+| ENSG00000282218 | heart: mural cell | 9,356 of 136,031 cells | 6.88 |
+| ENSG00000267618 | brain: stellate neuron | 1,894 of 31,613 cells | 5.99 |
+| OLIG3 | brain: neural stem cell | 5,952 of 109,469 cells | 5.44 |
+| ENSG00000256407 | heart: endothelial cell of lymphatic vessel | 197 of 3,904 cells | 5.05 |
+
 ## What the assessment statuses mean
 
 | API status | Meaning | Human proteins |
 |---|---|---:|
-| `screened` | A CTA, Unsafe or named Other category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | 19,216 |
-| `incomplete_evidence` | Required normal coverage or evidence resolution is missing. Additional missing cancer/developmental measurements are reported separately and do not themselves prevent Other. | 475 |
-| `normal_evidence_hold` | Required coverage is present, but a normal-screen hold remains, including Manageable ceiling failures. | 172 |
+| `screened` | A CTA, Unsafe or named Other category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | 19,604 |
+| `incomplete_evidence` | Required normal coverage or evidence resolution is missing. Additional missing cancer/developmental measurements are reported separately and do not themselves prevent Other. | 128 |
+| `normal_evidence_hold` | Required coverage is present, but a normal-screen hold remains, including Manageable ceiling failures. | 51 |
 | `unassessed` | No species-specific quantitative policy has been applied; used for native dog nominations. | 0 |
 
 An available exclusion can establish Unsafe despite another missing assay. A CTA supported by adult/placental Reproductive evidence need not have embryonic measurements. Other does not require tumor or embryonic coverage when the required normal screen is complete and resolved.
 
-Among the 475 incomplete assessments, gaps overlap:
+Among the 128 incomplete assessments, gaps overlap:
 
 | Evidence gap | Proteins |
 | --- | --- |
-| normal panel missing | 453 |
-| tumor measurement missing | 34 |
-| tumor group profile incomplete | 3 |
-| embryonic measurement missing | 86 |
-| unresolved evidence | 28 |
+| normal panel missing | 106 |
+| tumor measurement missing | 29 |
+| tumor group profile incomplete | 2 |
+| embryonic measurement missing | 63 |
+| unresolved evidence | 22 |
 
 [Exact data sources, missing tissue/cell contexts, member identities and cohort coverage](coverage.md) · [Per-protein gap flags](unassigned-evidence-gaps.csv). The previous 71 tumor gaps combined 41 missing measurements and 30 measured groups with incomplete low-expression-profile coverage. The table above reflects the subsequent identity repair. The comparator table below reflects the new developmental and normal-bulk sources; MAGE family members are not admission controls.
 
 ## Sources of candidate annotations
 
-These published lists annotate the selection; they do not provide a gene-specific admission bypass. The union is **2,514 mapped proteins / 2,570 loci**. **565** selected proteins have a listed-paper annotation; **136** do not. Source contribution counts overlap. **Mapped proteins means curated nominations linked to the current reference, not newly discovered genes or selected CTAs.** The CTA column reports the subset passing the current funnel.
+These published lists annotate the selection; they do not provide a gene-specific admission bypass. The union is **2,514 mapped proteins / 2,570 loci**. **502** selected proteins have a listed-paper annotation; **135** do not. Source contribution counts overlap. **Mapped proteins means curated nominations linked to the current reference, not newly discovered genes or selected CTAs.** The CTA column reports the subset passing the current funnel.
 
 | citation | mapped_entities | CTA | Unsafe | Other | Unassigned | source_url |
 | --- | --- | --- | --- | --- | --- | --- |
-| [da Silva et al. (2017)](https://doi.org/10.18632/oncotarget.21715) | 1017 | 475 | 406 | 88 | 48 | [Source](https://doi.org/10.18632/oncotarget.21715) |
-| [Wang et al. (2016)](https://doi.org/10.1038/ncomms10499) | 988 | 322 | 641 | 14 | 11 | [Source](https://doi.org/10.1038/ncomms10499) |
-| [Chang et al. (2019)](https://doi.org/10.1002/cam4.2223) | 985 | 332 | 639 | 3 | 11 | [Source](https://doi.org/10.1002/cam4.2223) |
-| [Gong et al. (2021)](https://doi.org/10.1038/s41467-021-22695-y) | 729 | 399 | 306 | 14 | 10 | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
-| [Bruggeman et al. (2018)](https://doi.org/10.1038/s41388-018-0357-2) | 692 | 24 | 663 | 0 | 5 | [Source](https://doi.org/10.1038/s41388-018-0357-2) |
-| [Jamin et al. (2021)](https://doi.org/10.1002/1878-0261.12900) | 469 | 39 | 427 | 1 | 2 | [Source](https://doi.org/10.1002/1878-0261.12900) |
-| [Loriot et al. (2025)](https://doi.org/10.1371/journal.pgen.1011734) | 202 | 99 | 101 | 0 | 2 | [Source](https://doi.org/10.1371/journal.pgen.1011734) |
-| [Carter et al. (2023)](https://doi.org/10.1136/jitc-2023-007935) | 103 | 65 | 37 | 0 | 1 | [Source](https://doi.org/10.1136/jitc-2023-007935) |
-| [Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155) | 78 | 13 | 64 | 0 | 1 | [Source](https://doi.org/10.1371/journal.pone.0144155) |
-| [Seager et al. (2024)](https://doi.org/10.1186/s12967-024-04918-0) | 15 | 12 | 2 | 0 | 1 | [Source](https://doi.org/10.1186/s12967-024-04918-0) |
+| [da Silva et al. (2017)](https://doi.org/10.18632/oncotarget.21715) | 1017 | 430 | 469 | 118 | 0 | [Source](https://doi.org/10.18632/oncotarget.21715) |
+| [Wang et al. (2016)](https://doi.org/10.1038/ncomms10499) | 988 | 284 | 678 | 26 | 0 | [Source](https://doi.org/10.1038/ncomms10499) |
+| [Chang et al. (2019)](https://doi.org/10.1002/cam4.2223) | 985 | 296 | 674 | 14 | 1 | [Source](https://doi.org/10.1002/cam4.2223) |
+| [Gong et al. (2021)](https://doi.org/10.1038/s41467-021-22695-y) | 729 | 359 | 344 | 26 | 0 | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
+| [Bruggeman et al. (2018)](https://doi.org/10.1038/s41388-018-0357-2) | 692 | 13 | 674 | 5 | 0 | [Source](https://doi.org/10.1038/s41388-018-0357-2) |
+| [Jamin et al. (2021)](https://doi.org/10.1002/1878-0261.12900) | 469 | 34 | 428 | 7 | 0 | [Source](https://doi.org/10.1002/1878-0261.12900) |
+| [Loriot et al. (2025)](https://doi.org/10.1371/journal.pgen.1011734) | 202 | 86 | 112 | 4 | 0 | [Source](https://doi.org/10.1371/journal.pgen.1011734) |
+| [Carter et al. (2023)](https://doi.org/10.1136/jitc-2023-007935) | 103 | 55 | 47 | 1 | 0 | [Source](https://doi.org/10.1136/jitc-2023-007935) |
+| [Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155) | 78 | 8 | 67 | 3 | 0 | [Source](https://doi.org/10.1371/journal.pone.0144155) |
+| [Seager et al. (2024)](https://doi.org/10.1186/s12967-024-04918-0) | 15 | 12 | 2 | 1 | 0 | [Source](https://doi.org/10.1186/s12967-024-04918-0) |
 | [Sasaroli et al. (2011)](https://doi.org/10.4161/cbt.12.3.16260) | 13 | 0 | 13 | 0 | 0 | [Source](https://doi.org/10.4161/cbt.12.3.16260) |
 | [Garg et al. (2007)](https://doi.org/10.1158/1078-0432.CCR-06-2340) | 5 | 3 | 2 | 0 | 0 | [Source](https://doi.org/10.1158/1078-0432.CCR-06-2340) |
 
@@ -113,9 +159,9 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 
 | route | entrants | CTA |
 | --- | --- | --- |
-| Adult/placental evidence only | 4686 | 470 |
-| Embryonic-only evidence | 459 | 92 |
-| Both measured routes | 12546 | 139 |
+| Adult/placental evidence only | 4686 | 419 |
+| Embryonic-only evidence | 400 | 97 |
+| Both measured routes | 12546 | 121 |
 
 [Tyser et al. (2021)](https://doi.org/10.1038/s41586-021-04158-y), [HPA v23 downloads](https://v23.proteinatlas.org/about/download).
 
@@ -190,9 +236,9 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 | Reproductive or developmental expression | Full Reproductive bulk ≥5 nTPM OR supported reproductive-cell RNA ≥5 nTPM (≥20 reads; indirect sites additionally need complete outside-cluster coverage and every outside value <5, with no curated normal-induction conflict) OR reliable mapped positive reproductive IHC for every member without an antibody conflict OR reviewed human reproductive protein covering every selected member OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Presence evidence never overrides normal exclusions. |
 | Cancer expression | At least one measured compatible tumor sample >0 in native TPM or HPA pTPM OR reviewed reliable tumor protein. This establishes presence, not therapeutic abundance; do not add maxima from different samples. |
 | HPA normal protein | Reliable non-Low positives in Vital/Protected supply Unsafe evidence; Manageable positives block CTA only; uncertain evidence remains unresolved. Low is flagged. |
-| Required RNA coverage | Complete GTEx v11 bulk core (52 native contexts), required nonreproductive bulk anatomy across compatible sources, and distinct HPA tissue-cell/immune panels; every protein member measured. DICE and cornea coverage is optional. |
+| Required RNA coverage | Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the only blocking requirement: every nonreproductive tissue concept measured for every protein member. The GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels are used when present and never block a label. |
 | Reproductive concentration | HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence. |
-| Normal bulk | One inclusive tissue/IHC ceiling: above it in Vital/Protected supplies Unsafe evidence; above it in Manageable blocks CTA. No second RNA boundary. |
+| Normal bulk | One inclusive tissue/IHC ceiling: above it in Vital/Protected supplies Unsafe evidence; above it in Manageable blocks CTA, and above 128 (the top Manageable ceiling) supplies Unsafe evidence. No second RNA boundary. |
 | HPA tissue clusters | RNA requires ≥20 reads and uses the single ceiling. IHC credit requires an exact or declared compartment match; unrelated cells in the same tissue cannot inherit it. |
 | HPA immune | Protected-tier native nTPM limits without matched negative-IHC credit; reproductive/placental location remains neutral. |
 | Monaco immune | Protected-tier native TPM limits without matched negative-IHC credit. |
@@ -201,7 +247,9 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 | Accepted normal-protein evidence | Accepted positive protein findings exclude unless extracted Low intensity retains a flag; unquantified does not mean negative. |
 | Reviewed normal-cell knowledge | Reviewed adult human normal protein, or localized RNA with orthogonal normal-cell function, in Vital/Protected supplies Unsafe evidence. Sparse RNA, uncertain species/stage or unresolved identity produces a review hold. Activation and rare-cell frequency do not exempt normal cells. Every finding retains its source and limitations. |
 | Clinical safety exclusion | Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use. |
+| Rare vital-tissue cell expression | At least 1% of cells in a brain, spinal cord, heart or lung alveolar, endothelial or airway basal cell type (at least 3,000 cells, 10 expressing) express a member gene in CELLxGENE normal single-cell summaries. Rare expression in an essential tissue is an unresolved unknown and supplies Unsafe evidence. Immune lineages, stroma, adipose and developmental cell types are ignored, so spleen, adipose and immune-subset expression is allowed. Detection frequency, not abundance. |
 | External validated normal protein | Use categorical/quantitative staining only within verified reagent, tissue and cell scope; no inherited HPA reliability label. |
+| Unsafe sequence containment | A would-be CTA with at least 95% of its 9-mers also present in Unsafe proteins becomes Other:Contained: Unsafe sequence is blacklisted, so almost no peptide survives. Computed over all protein-coding transcripts of Ensembl 115. This is a sequence rule, not expression evidence. |
 | CTA and Other assignments | Other is the complete-normal-panel, resolved-evidence fallback when every normal gate passes but CTA identity fails. Its reason is missing reproductive presence, missing cancer presence, or diffuse reproductive identity. RNA abundance, cancer support and adult Disposable expression are independent attributes; developmental missingness never changes adult tissue disposition. Manageable holds remain unassigned. |
 
 ![RNA cutoffs](figures/active-rna-cutoffs.png)
@@ -212,22 +260,24 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 | layer | new_candidate_removals | new_Unsafe | CTA_eligible_so_far | Unsafe | Other | Unassigned |
 | --- | --- | --- | --- | --- | --- | --- |
-| Reproductive / embryonic association | 2172 | 0 | 17691 | 0 | 0 | 2172 |
-| Cancer expression | 9 | 0 | 17682 | 0 | 0 | 2181 |
-| HPA normal protein | 12044 | 10094 | 5638 | 10094 | 0 | 4131 |
-| Required RNA coverage | 212 | 0 | 5426 | 10094 | 0 | 4343 |
-| Reproductive concentration | 997 | 0 | 4429 | 10094 | 0 | 5340 |
-| Normal bulk | 3445 | 7406 | 984 | 17500 | 0 | 1379 |
-| HPA tissue clusters | 238 | 414 | 746 | 17914 | 0 | 1203 |
-| HPA immune | 12 | 30 | 734 | 17944 | 0 | 1185 |
-| Monaco immune | 7 | 17 | 727 | 17961 | 0 | 1175 |
-| DICE immune | 19 | 55 | 708 | 18016 | 0 | 1139 |
-| Adult cornea | 3 | 12 | 705 | 18028 | 0 | 1130 |
-| Accepted normal-protein evidence | 3 | 2 | 702 | 18030 | 0 | 1131 |
-| Reviewed normal-cell knowledge | 0 | 31 | 702 | 18061 | 0 | 1100 |
-| Clinical safety exclusion | 1 | 1 | 701 | 18062 | 0 | 1100 |
-| External validated normal protein | 0 | 0 | 701 | 18062 | 0 | 1100 |
-| CTA and Other assignments | 0 | 0 | 701 | 18062 | 453 | 647 |
+| Reproductive / embryonic association | 1975 | 0 | 17629 | 0 | 0 | 1975 |
+| Cancer expression | 6 | 0 | 17623 | 0 | 0 | 1981 |
+| HPA normal protein | 12044 | 10066 | 5579 | 10066 | 0 | 3959 |
+| Required RNA coverage | 45 | 0 | 5534 | 10066 | 0 | 4004 |
+| Reproductive concentration | 1007 | 0 | 4527 | 10066 | 0 | 5011 |
+| Normal bulk | 3505 | 7453 | 1022 | 17519 | 0 | 1063 |
+| HPA tissue clusters | 237 | 391 | 785 | 17910 | 0 | 909 |
+| HPA immune | 15 | 30 | 770 | 17940 | 0 | 894 |
+| Monaco immune | 8 | 18 | 762 | 17958 | 0 | 884 |
+| DICE immune | 21 | 45 | 741 | 18003 | 0 | 860 |
+| Adult cornea | 3 | 11 | 738 | 18014 | 0 | 852 |
+| Accepted normal-protein evidence | 3 | 2 | 735 | 18016 | 0 | 853 |
+| Reviewed normal-cell knowledge | 0 | 144 | 735 | 18160 | 0 | 709 |
+| Clinical safety exclusion | 1 | 1 | 734 | 18161 | 0 | 709 |
+| Rare vital-tissue cell expression | 77 | 117 | 657 | 18278 | 0 | 669 |
+| External validated normal protein | 0 | 0 | 657 | 18278 | 0 | 669 |
+| Unsafe sequence containment | 20 | 0 | 637 | 18278 | 0 | 689 |
+| CTA and Other assignments | 0 | 0 | 637 | 18278 | 689 | 0 |
 
 ![Coarse category funnel](figures/category-funnel.png)
 
@@ -243,7 +293,7 @@ holds are resolved into final categories only after all safety layers are evalua
 
 ## Selected CTA expression
 
-These plots compare adult/placental nTPM against the highest measured embryonic lineage mean TPM. **658 of 701 selected proteins (94%) have both coordinates; 43 (6%) lack an embryonic coordinate.** The plotted embryonic coordinate is the maximum across separate stage/lineage means from Tyser (gastrulation) and Petropoulos (days 3–7). It is not an average across studies. Petropoulos restores measured rows for PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B. Missing rows remain unavailable; neither atlas establishes expression throughout later fetal development.
+These plots compare adult/placental nTPM against the highest measured embryonic lineage mean TPM. **595 of 637 selected proteins (93%) have both coordinates; 42 (7%) lack an embryonic coordinate.** The plotted embryonic coordinate is the maximum across separate stage/lineage means from Tyser (gastrulation) and Petropoulos (days 3–7). It is not an average across studies. Petropoulos restores measured rows for PRAME, MAGE-A4, CT83, CTAG1A/B and XAGE1A/B. Missing rows remain unavailable; neither atlas establishes expression throughout later fetal development.
 
 The follow-up checked the study authors' **57,490-column raw-count matrix**, separately from the atlas's 25,330-row filtered matrix. The atlas download labelled “Raw counts” is also filtered and retains the same gene rows. Direct author observations are:
 
@@ -260,7 +310,7 @@ The follow-up checked the study authors' **57,490-column raw-count matrix**, sep
 
 PRAME, CT83, CTAG1A/B and XAGE1B have zero reported reads across these 1,195 cells; MAGE-A4 has 14 reads in one cell. TBXT has 31,149 reported reads in 226 cells. XAGE1A has no separate column, so complete XAGE1A/B group coverage is not established in this raw-count source; the separate Petropoulos TPM matrix does measure both loci. These are observed nondetections or sparse signals in one early embryo, **not absence throughout fetal development**. The exact per-gene reason for exclusion from the atlas remains unavailable; the authors' counts support low detection but come from a separate quantification. They are not converted to TPM or inserted into the selection funnel. [Author data](https://github.com/ScialdoneLab/human-gastrula-shiny), [count evidence and gene IDs](embryonic-comparator-coverage.csv), [source hashes](embryonic-coverage-receipt.json).
 
-Each figure now shows the 658 measured groups above and the 43 missing-embryonic groups in a separate categorical band below. All selected proteins are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Overview labels highlight the widely studied antigens, including their gene-group names. Three companion panels label every selected protein ≥5 on both axes, with the same axes and one third of the names per panel. The latter is a descriptive expression criterion; developmental admission also requires cell support.
+Each figure now shows the 595 measured groups above and the 42 missing-embryonic groups in a separate categorical band below. All selected proteins are represented; the band has no embryonic-expression value. Gray points mean the healthy-expression color is unavailable. Overview labels highlight the widely studied antigens, including their gene-group names. Three companion panels label every selected protein ≥5 on both axes, with the same axes and one third of the names per panel. The latter is a descriptive expression criterion; developmental admission also requires cell support.
 
 ![Selected CTA reproductive versus embryonic expression](figures/selected-reproductive-embryonic.png)
 ![Selected CTA colored by healthy TPM](figures/selected-reproductive-embryonic-immune.png)
@@ -279,15 +329,15 @@ Color uses the maximum supported value across non-disposable healthy compartment
 | protein_group_label | category | assessment_status | reproductive_ntpm | developmental_all_lineage_max_tpm | adult_bulk_max_ntpm | exclusion_reasons |
 | --- | --- | --- | --- | --- | --- | --- |
 | PAGE1 | CTA | screened | 16.7 | 26.69 | 0 |  |
-| SMC1B | CTA | screened | 30.2 | 1.417 | 0.7 |  |
+| SMC1B | Unsafe | screened | 30.2 | 1.417 | 0.7 | Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion.  /  2.12% of brain: cerebellar granule cell cells express it (1,242 of 58,474 cells); at least 1% of a vital-tissue cell type. Detection frequency, not abundance; developmental cell types are excluded by name, not donor age. |
 | CTAG2 | CTA | screened | 10.1 | 7.151 | 5.1 |  |
 | MAGEA4 | CTA | screened | 21.5 | 203.6 | 0.6 |  |
 | TBXT | CTA | screened | 0.2 | 245.1 | 2.5 |  |
 | PRAME | CTA | screened | 102.2 | 22.89 | 3.6 |  |
 | MAGEA1 | CTA | screened | 4.4 | 6.315 | 0 |  |
 | CT83 | CTA | screened | 62.2 | 4.286 | 2.6 |  |
-| MAGEA12 | Unsafe | screened | 2.7 | 102.1 | 0.5 | Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion.  /  Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use. |
-| MAGEA3 | Unassigned | normal_evidence_hold | 7.8 | 71.75 | 0.2 | Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion.  /  colon: undifferentiated cells; 53.1 nTPM (ceiling 16) |
+| MAGEA12 | Unsafe | screened | 2.7 | 102.1 | 0.5 | Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion.  /  Retain reviewed product-specific clinical injury counterevidence and causal-attribution limits; no admission shortcut from clinical use.  /  1.48% of brain: midbrain dopaminergic neuron cells express it (293 of 19,760 cells); at least 1% of a vital-tissue cell type. Detection frequency, not abundance; developmental cell types are excluded by name, not donor age. |
+| MAGEA3 | Other | normal_evidence_hold | 7.8 | 71.75 | 0.2 | Absolute tissue/IHC RNA limits, qualifying normal protein and clinical safety evidence; required coverage is separate from absence of a detected exclusion.  /  colon: undifferentiated cells; 53.1 nTPM (ceiling 16) |
 | NY-ESO-1 | CTA | screened | 15.5 | 0.9473 | 0.5 |  |
 | SSX2/B | CTA | screened | 32.7 | 80.25 | 2.8 |  |
 | XAGE1A/B | CTA | screened | 98.8 | 2.237 | 1.5 |  |
@@ -297,7 +347,7 @@ Each comparison has its own full-width figure. The embryonic comparison retains 
 ![Widely studied antigens: reproductive expression](figures/widely-studied-antigens-reproductive.png)
 ![Widely studied antigens: embryonic expression](figures/widely-studied-antigens-embryonic.png)
 
-[Detailed tissue/cell/value explanations](human-explanations.csv.gz), [all comparator contexts](../cta-selection-20261028/widely-studied-contexts.csv.gz), and [every previously annotated CTA and its current category](../cta-selection-20261028/known-cta-decisions.csv.gz). Previous CTA labels are comparison annotations only. Historical-cohort counts, where available: {'CTA': 165, 'Unsafe': 48}.
+[Detailed tissue/cell/value explanations](human-explanations.csv.gz), [all comparator contexts](../cta-selection-20261028/widely-studied-contexts.csv.gz), and [every previously annotated CTA and its current category](../cta-selection-20261028/known-cta-decisions.csv.gz). Previous CTA labels are comparison annotations only. Historical-cohort counts, where available: {'CTA': 151, 'Unsafe': 62}.
 
 ## Serious adverse events from CTA-directed TCR-T
 
@@ -308,11 +358,11 @@ Each comparison has its own full-width figure. The embryonic comparison retains 
 | CTAG1A: CTA; CTAG1B: CTA; CTAG2: CTA | [Letetresgene autoleucel / NY-ESO-1 c259](https://doi.org/10.1200/JCO-24-01466) | Fatal cardiac arrest, day 161. Guillain-Barre / inflammatory demyelinating neuropathy. | One step, capped |
 | PRAME: CTA | [IMA203](https://doi.org/10.1038/s41591-025-03650-6) | Grade 4 transaminitis during a grade 3 CRS episode. | One step, capped |
 | MAGEA4: CTA | [Afamitresgene autoleucel / c1032](https://doi.org/10.1038/s41591-022-02128-z) | Fatal aplastic anemia, day 55. Fatal ischemic cerebrovascular accident, day 17. | One step, capped |
-| MAGEA3: Unassigned | [MAGE-A3 affinity-enhanced a3a receptor](https://doi.org/10.1126/scitranslmed.3006034) | Fatal cardiac injury with titin cross-recognition. | None |
+| MAGEA3: Other | [MAGE-A3 affinity-enhanced a3a receptor](https://doi.org/10.1126/scitranslmed.3006034) | Fatal cardiac injury with titin cross-recognition. | None |
 | MAGEA1: CTA | [IMA202](https://doi.org/10.1136/jitc-2023-008668) | Fatal dyspnea. | One step, capped |
 | MAGEA10: CTA | [ADP-A2M10 / MAGE-A10 c796](https://doi.org/10.1136/jitc-2021-003581) | Grade 4 CRS. Fatal marrow aplasia, sepsis and respiratory distress after repeat infusion. | One step, capped |
 | CTAG1A: CTA; CTAG1B: CTA; CTAG2: CTA | [TBI-1301](https://doi.org/10.1136/jitc-2021-003811) | Steroid-responsive lung injury with TCR-T infiltration. | None |
-| MAGEA3: Unassigned; MAGEA9: CTA; MAGEA12: Unsafe; MAGEA9B: CTA | [NCI HLA-A*02-restricted MAGE-A3/A9/A12-reactive TCR](https://pubmed.ncbi.nlm.nih.gov/23377668/) | Fatal neurological injury; MAGE-A12 cross-recognition implicated. | None |
+| MAGEA3: Other; MAGEA9: CTA; MAGEA12: Unsafe; MAGEA9B: CTA | [NCI HLA-A*02-restricted MAGE-A3/A9/A12-reactive TCR](https://pubmed.ncbi.nlm.nih.gov/23377668/) | Fatal neurological injury; MAGE-A12 cross-recognition implicated. | None |
 
 The MAGE-A3 **a3a** cardiac cases implicated **titin (TTN)**, an unintended target; the separate NCI MAGE-A3/A9 receptor neurological cases implicated the cross-recognized **MAGE-A12** peptide. These findings do not establish that MAGE-A3 itself was present in heart or brain. TBI-1301's grade 3 lung injury retains an unresolved-specificity hold for that product. c259's late cardiac death and Guillain-Barre cases remain caveats without an established peptide-specific mechanism.
 

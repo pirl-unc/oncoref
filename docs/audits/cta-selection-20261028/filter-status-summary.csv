@@ -1,0 +1,59 @@
+filter,status,proteins
+Accepted normal-protein evidence,hold,1
+Accepted normal-protein evidence,not_evaluated,259
+Accepted normal-protein evidence,pass,19595
+Accepted normal-protein evidence,unsafe,8
+Adult cornea,not_evaluated,259
+Adult cornea,pass,7506
+Adult cornea,unsafe,12098
+Cancer expression,fail,65
+Cancer expression,not_evaluated,259
+Cancer expression,pass,19539
+Clinical safety exclusion,not_evaluated,259
+Clinical safety exclusion,pass,19603
+Clinical safety exclusion,unsafe,1
+DICE immune,hold,1
+DICE immune,not_evaluated,259
+DICE immune,pass,7793
+DICE immune,unsafe,11810
+External validated normal protein,not_evaluated,259
+External validated normal protein,pass,19604
+HPA immune,not_evaluated,259
+HPA immune,pass,11512
+HPA immune,unsafe,8092
+HPA normal protein,hold,2293
+HPA normal protein,not_evaluated,259
+HPA normal protein,pass,7245
+HPA normal protein,unsafe,10066
+HPA tissue clusters,hold,57
+HPA tissue clusters,not_evaluated,259
+HPA tissue clusters,pass,2560
+HPA tissue clusters,unsafe,16987
+Monaco immune,not_evaluated,259
+Monaco immune,pass,8809
+Monaco immune,unsafe,10795
+Normal bulk,hold,87
+Normal bulk,not_evaluated,259
+Normal bulk,pass,2114
+Normal bulk,unsafe,17403
+Rare vital-tissue cell expression,no_data,85
+Rare vital-tissue cell expression,not_evaluated,259
+Rare vital-tissue cell expression,pass,3631
+Rare vital-tissue cell expression,unsafe,15888
+Reproductive / embryonic association,fail,1975
+Reproductive / embryonic association,not_evaluated,259
+Reproductive / embryonic association,pass,17629
+Reproductive concentration,fail,2884
+Reproductive concentration,not_evaluated,259
+Reproductive concentration,pass,16720
+Required RNA coverage,fail,292
+Required RNA coverage,not_evaluated,259
+Required RNA coverage,pass,19312
+Reviewed normal-cell knowledge,not_evaluated,259
+Reviewed normal-cell knowledge,pass,19459
+Reviewed normal-cell knowledge,unsafe,145
+Unsafe sequence overlap,fail,81
+Unsafe sequence overlap,no_9mer,35
+Unsafe sequence overlap,not_applicable,18278
+Unsafe sequence overlap,not_evaluated,259
+Unsafe sequence overlap,pass,1210

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -334,6 +335,26 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
     )
 
 
+def presentation_link(label: str, pattern: str, template: str) -> str:
+    """Link this release's deck if it exists, else the newest one, labelled as older.
+
+    Slide decks need external presentation tooling and are produced per release
+    separately; a link must never point at a file that is not published.
+    """
+    if (OUTPUT / template.format(v=__version__)).exists():
+        return f"[{label}]({template.format(v=__version__)})"
+
+    def version(path: Path) -> tuple[int, ...]:
+        return tuple(int(x) for x in re.search(r"\d+\.\d+\.\d+", path.name).group().split("."))
+
+    found = sorted(OUTPUT.glob(pattern), key=version)
+    if not found:
+        return f"{label} (not published)"
+    latest = found[-1]
+    tag = ".".join(map(str, version(latest)))
+    return f"[{label}, {tag} (not regenerated for {__version__})]({latest.relative_to(OUTPUT).as_posix()})"
+
+
 def figures(facts: pd.DataFrame, audit) -> None:
     """Render counts and native-unit expression without imputing missing values."""
     style.setup()
@@ -358,7 +379,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
         ("eligible", "Eligible so far"),
         ("Unsafe", "Unsafe"),
         ("Other", "Other"),
-        ("Unassigned", "Unassigned"),
+        ("Unassigned", "Not yet assigned (held or contained; becomes Other)"),
     ]:
         ax.barh(
             audit.funnel.stage,
@@ -372,7 +393,11 @@ def figures(facts: pd.DataFrame, audit) -> None:
     ax.set_xlabel("Proteins")
     ax.legend(frameon=False, ncol=4, loc="upper left", bbox_to_anchor=(0, -0.08), fontsize=9)
     ax.text(
-        1.02, 1.025, "Eligible / Unsafe / Other / Unassigned", transform=ax.transAxes, fontsize=9
+        1.02,
+        1.025,
+        "Eligible / Unsafe / Other / Not yet assigned",
+        transform=ax.transAxes,
+        fontsize=9,
     )
     for i, row in enumerate(audit.funnel.itertuples()):
         ax.text(
@@ -383,9 +408,12 @@ def figures(facts: pd.DataFrame, audit) -> None:
             va="center",
             fontsize=9,
         )
+    rare_unsafe = int(facts["unsafe:Rare vital-tissue cell expression"].sum())
     style.footer(
         fig,
-        "Other is assigned by a measured expression profile at the final stage. Earlier holds remain unassigned.\nSequential removals depend on display order; final assignments do not. Unsafe denotes policy exclusion, not demonstrated toxicity.",
+        "Unresolved proteins pass no CTA gate yet but are not Unsafe; they receive Other at the final stage, so none remains unassessed.\n"
+        "Sequential removals depend on display order, not importance; independent layer effects are in independent-layer-effects.csv. "
+        f"Rare vital-tissue cell expression (brain, heart, lung alveolar, endothelial and airway basal cells; at least 1%) marks {rare_unsafe:,} proteins Unsafe.",
     )
     style.save(fig, out, "human-funnel")
     fig, ax = plt.subplots(figsize=(12, 7))
@@ -562,7 +590,7 @@ def build() -> None:
         detailed_reasons[label] = " | ".join(reasons)
     comparators["exclusion_reasons"] = comparators.protein_group_label.map(detailed_reasons)
     comparators.to_csv(OUTPUT / "widely-studied-antigens.csv", index=False)
-    unassigned = facts[facts.category.isna()].copy()
+    unassigned = facts[facts.assessment_status.ne("screened")].copy()
     gap_columns = {
         "normal_panel_missing": ~unassigned.required_coverage,
         "tumor_measurement_missing": ~unassigned.tumor_measured,
@@ -620,7 +648,7 @@ The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted
 
 {markdown(normal_gaps.rename(columns={"source": "Source", "groups": "Proteins", "example_genes": "Examples"})[["Source", "Proteins", "Examples"]])}
 
-Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. The fixed GTEx v11 core additionally requires all 52 native bulk contexts, including its nine adult Reproductive contexts, for every member locus. The separate requirements remain 426 HPA tissue/cell contexts, 19 HPA immune populations and 30 Monaco immune populations for every group member. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. DICE and adult cornea remain optional and do not contribute to this mandatory-panel gap.
+Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. Only this combined bulk panel is required. The GTEx v11 core (52 native bulk contexts), the 426 HPA tissue/cell contexts, 19 HPA immune populations, 30 Monaco immune populations, DICE and adult cornea are reported when present but never make a protein incomplete. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. Optional-panel gaps are disclosed per protein and do not contribute to the mandatory gap.
 
 [Every missing group/source/context](normal-panel-coverage-gaps.csv.gz) · [Every member, current/historical IDs, synonyms and observed/missing contexts](normal-panel-member-coverage.csv.gz) · [Source-row identity matches and unresolved alternatives](coverage-identity-matches.csv.gz).
 
@@ -759,13 +787,37 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
         historical.protein_group_category.fillna("Unassigned").value_counts().to_dict()
     )
     annotated = audit.memberships.loc[audit.memberships.category.eq("CTA"), "entity_id"].nunique()
-    missing = facts[facts.category.isna()].assessment_status.value_counts().to_dict()
+    missing = (
+        facts[facts.assessment_status.ne("screened")].assessment_status.value_counts().to_dict()
+    )
+    held_other = int(facts.classification.eq("Other:Held").sum())
+    n_out_of_universe = len(pd.read_csv(RELEASE / "out-of-universe.csv.gz"))
+    rare_layer = "unsafe:Rare vital-tissue cell expression"
+    rare_other_unsafe = facts[
+        [c for c in facts if c.startswith("unsafe:") and c != rare_layer]
+    ].any(axis=1)
+    rare_only = facts[facts[rare_layer] & ~rare_other_unsafe]
+    rare_flagged = int(facts.rare_cell_flag.sum())
+    rare_table = pd.DataFrame(
+        {
+            "Protein": rare_only.protein_group_label,
+            "Vital-tissue cell type": rare_only.rare_cell_type,
+            "Expressing / cells": rare_only.rare_cell_detail,
+            "% of cells": rare_only.rare_cell_max_pct.round(2),
+        }
+    ).sort_values("% of cells", ascending=False)
     funnel = pd.read_csv(RELEASE / "filtering-funnel.csv")
+    pdf_link = presentation_link("PDF slides", "cta-selection-*.pdf", "cta-selection-{v}.pdf")
+    deck_link = presentation_link(
+        "Editable slides",
+        "slides/cta-evidence-walkthrough-*-final.pptx",
+        "slides/cta-evidence-walkthrough-{v}-final.pptx",
+    )
     overview = f"""# CTA and oncofetal selection
 
-**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, {counts.get("Other", 0):,} Other and {counts.get("Unassigned", 0):,} unassigned**, across 19,863 proteins (identical selected reference sequences collapsed). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, and {counts.get("Other", 0):,} Other ({held_other:,} of them Held)**, with none unassessed, across {len(facts):,} proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; {n_out_of_universe:,} out-of-universe groups are listed separately). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[PDF slides](cta-selection-{__version__}.pdf) · [Editable slides](slides/cta-evidence-walkthrough-{__version__}-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+{pdf_link} · {deck_link} · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 [Simplified decisions and four target reviews](../cta-simplification-20261031/index.md).
 [1.26 literature audit and decisions](../cta-other-literature-20261030/index.md).
@@ -785,21 +837,48 @@ embryonic evidence remains independent and its concentration is unassessed.
 ![Three separate CTA requirements](../../images/cta-evidence-axes.png)
 
 - **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage and acceptable normal expression all pass.
-- **Unsafe:** above the single RNA ceiling in Vital/Protected, accepted non-Low protein in those compartments, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
-- **Other:** complete required normal coverage, resolved evidence and every normal gate passing, but no candidate subtype qualifies. Cancer or reproductive evidence may be absent or missing.
-- **Unassigned:** required normal coverage or evidence resolution is missing, or a normal-screen hold remains. In the API, category is null and assessment_status explains why.
+- **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, a reviewed unresolved Protected-tissue finding, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
+- **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` records whether coverage was incomplete or a hold applied.
+- **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other requires the complete normal screen to pass. The fixed [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex) core requires all 52 bulk contexts for every protein member. DICE and corneal coverage remain optional, but observed counterevidence contributes.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other requires the complete normal screen to pass. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
 
 ## Other categories
 
-Every normal-pass protein has one categorical assignment: CTA or a named Other category. Safety exclusions remain Unsafe; incomplete normal evidence remains Unassessed. The API exposes `classification` (for example `Other:Nonreproductive`) as well as `category` and `subtype`.
+Every protein has one categorical assignment: CTA, Unsafe or a named Other category. Safety exclusions remain Unsafe; incomplete or unresolved normal evidence gives Other with `assessment_status` recording why. The API exposes `classification` (for example `Other:Nonreproductive`) as well as `category` and `subtype`.
 
 {markdown(pd.DataFrame([{"Category": "Other:" + name, "Meaning": description, "Proteins": summary["other_subtypes"].get(name, 0)} for name, description in OTHER_SUBTYPE_RULES.items()]))}
 
 Other reasons follow the unmet identity requirements: reproductive presence, cancer presence, then concentration. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
 
 [Full categorical table and individual changes](../cta-neither-20261030/update-1.25.0.md). The current admission fixes use the full mapped Reproductive bulk panel plus supported reproductive-lineage cells. Generic/immune cells can provide indirect sample-site evidence only with a complete same-source outside panel, every outside cluster <5 nTPM, and no curated normal-induction conflict. This does not identify the producing cell; macrophages may carry passenger RNA. All safety and concentration gates remain independent.
+
+## Rare vital-tissue cell expression
+
+Pooled panels average away rare normal cells, so a protein can read near zero in
+every bulk, cluster and immune measurement while a small population of an essential
+tissue expresses it. The reviewed example is **MAGEA12**, whose neurotoxicity in a
+MAGE-A3 TCR trial followed rare positive neurons: HPA bulk, GTEx medians and HPA
+single-nucleus clusters read near zero, but 293 of 19,760 midbrain dopaminergic neurons
+(1.5%) express it in the CELLxGENE summaries.
+
+Every gene is screened (`scripts/build_cta_rare_cell_screen.py`) against CELLxGENE
+normal-sample summaries, **in vital tissues only: brain, spinal cord, heart and lung gas-exchange cells (alveolar epithelium and endothelium)**. A cell type needs at least 3,000 cells and 10 expressing cells. Immune
+lineages (including microglia), fibroblasts and stroma, adipose and clearly
+developmental cell types are ignored, so rare expression in spleen, adipose or immune
+subsets is allowed. **A protein is Unsafe when any member gene is expressed by at least
+1% of a vital-tissue cell type.** {rare_flagged:,} proteins are flagged, and for
+**{len(rare_only):,} of them this is the only Unsafe evidence**.
+
+This is an automated screen, and it measures detection frequency among cells, not
+abundance: expressing cells typically carry about one UMI, and ambient RNA, doublets and
+close-paralog multimapping can create detections. The service cannot restrict samples to
+adult donors, so developmental cell types are removed by name. Every protein has a status
+for this filter (`rare_cell_*` columns in `cta_selection.profiles()`, with
+`cta_selection.rare_cell_screen()` returning the supporting cell types); genes absent from
+the service are `rare_cell_screened = False` and are never flagged.
+
+{markdown(rare_table.head(15)) if len(rare_table) else ""}
 
 ## What the assessment statuses mean
 
@@ -976,7 +1055,7 @@ from oncoref import cta_selection
 
 results = cta_selection.results(species="human")
 selected = cta_selection.results(species="human", category="CTA")
-unassigned = results[results.category.isna()]
+unassigned = results[results.assessment_status.ne("screened")]
 audit = cta_selection.audit(species="human")
 audit.sources
 audit.overlaps

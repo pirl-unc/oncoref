@@ -20,6 +20,8 @@ from cta_report_common import input_hashes, sha256, write_csv  # noqa: E402
 
 from oncoref import (  # noqa: E402
     cell_rna_policy,
+    cta_rare_cell,
+    cta_sequence_overlap,
     gene_knowledge,
     hpa,
     normal_cell_screen,
@@ -40,6 +42,7 @@ FROZEN = ROOT / "docs/audits/cta-release-1.21.0"
 BASE = ROOT / "docs/audits/cta-harmonized-20261027"
 OUTPUT = ROOT / "docs/audits/cta-selection-20261028"
 CROSSWALK = ROOT / "oncoref/data/cta-ihc-compartments.csv"
+UNIVERSE = ROOT / "oncoref/data/cta-protein-universe.csv"
 ALTERNATIVE = OUTPUT / "alternative-evidence"
 ASSAYS = [
     "Normal bulk",
@@ -77,8 +80,9 @@ class ContextCollector:
         )
 
     def collect(self, frame: pd.DataFrame, assay: str) -> None:
-        frame = frame.copy()
         credit = self.facts.set_index("representative_gene_id")
+        # Out-of-universe groups were dropped at stage 0; their genes carry no credit.
+        frame = frame[frame.gene_id.isin(credit.index)].copy()
         for column in [
             "clinical_rna_credit",
             "clinical_product_ids",
@@ -774,7 +778,11 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
                 "missing_gtex_member_ids": json.dumps(
                     sorted(g for g in ids if not gtex_expected <= gtex_seen.get(g, set()))
                 ),
-                "required_coverage": all(
+                # Combined bulk coverage (HPA consensus, HPA brain and GTEx) is the
+                # only blocking requirement; cell-cluster, immune, DICE and cornea
+                # panels are used when present but never make a protein incomplete.
+                "required_coverage": not missing,
+                "optional_panels_complete": all(
                     ids <= measured for measured in complete_by_source.values()
                 ),
             }
@@ -785,10 +793,58 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
     write_csv(coverage, output / "combined-rna-coverage.csv.gz")
 
 
+def restrict_to_universe(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
+    """Keep only proteins translated from coding transcripts or established ncORFs.
+
+    Stage 0 of the funnel. A protein group is in the universe when any member
+    gene has a coding reference CDS or an established non-canonical ORF. Dropped
+    groups are written to ``out-of-universe.csv.gz`` with the reason, so no
+    protein disappears silently.
+    """
+    universe = read(UNIVERSE).set_index("gene_id")
+    members = facts.member_gene_ids.map(json.loads)
+    status = members.map(lambda ids: [universe.universe.get(g, "excluded") for g in ids])
+    keep = status.map(lambda values: "coding" in values)
+    source = members.map(
+        lambda ids: next(
+            (
+                universe.protein_source[g]
+                for g in ids
+                if universe.universe.get(g) == "coding"
+                and universe.protein_source[g] == "reference_cds"
+            ),
+            next(
+                ("nc_orf" for g in ids if universe.universe.get(g) == "coding"),
+                "none",
+            ),
+        )
+    )
+    reason = members.map(
+        lambda ids: ";".join(
+            sorted({universe.evidence.get(g, "no_translated_sequence") for g in ids})
+        )
+    )
+    dropped = facts.loc[~keep, ["protein_equivalence_group_id", "protein_group_label"]].assign(
+        reason=reason[~keep], previous_category=facts.category[~keep]
+    )
+    write_csv(dropped, output / "out-of-universe.csv.gz")
+    facts = facts.loc[keep].reset_index(drop=True)
+    facts["protein_source"] = source[keep].to_numpy()
+    kept_status = members[keep].map(
+        lambda ids: [universe.evidence[g] for g in ids if universe.universe.get(g) == "coding"]
+    )
+    facts["nested_microprotein"] = kept_status.map(
+        lambda values: bool(values) and all(v == "nested_microprotein" for v in values)
+    ).to_numpy()
+    print(f"Universe: kept {len(facts)}, dropped {len(dropped)}", flush=True)
+    return facts
+
+
 def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     """Regenerate decisions, complete profile evidence and all counting exports."""
     output.mkdir(parents=True, exist_ok=True)
     facts = read(FROZEN / "protein-group-classifications.csv.gz")
+    facts = restrict_to_universe(facts, output)
     # Unnamed canonical loci retain their stable ID as the display label.
     facts["protein_group_label"] = facts.protein_group_label.fillna(facts.representative_gene_id)
     facts["previous_category"] = facts.category
@@ -960,11 +1016,16 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         facts.reproductive_cell_ntpm.ge(5) | facts.reproductive_cell_indirect_association
     )
     facts = gene_knowledge.annotate(facts)
+    facts = cta_rare_cell.annotate(facts)
     facts = policy.association_evidence(facts)
     facts = policy.concentration_evidence(facts, profile_scores)
     empty = pd.Series(False, index=facts.index)
     layers = [
-        EvidenceLayer("Reproductive / embryonic association", ~facts.positive_context, empty),
+        EvidenceLayer(
+            "Reproductive / embryonic association",
+            ~facts.positive_context | facts.nested_microprotein,
+            empty,
+        ),
         EvidenceLayer("Tumor sample ≥2 TPM/pTPM", ~facts.tumor_union_ge2, empty),
         EvidenceLayer("Required RNA coverage", ~facts.required_coverage, empty),
         EvidenceLayer("Reproductive concentration", facts.reproductive_concentration_hold, empty),
@@ -983,9 +1044,17 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
             EvidenceLayer(
                 "Reviewed normal-cell knowledge",
                 facts.knowledge_normal_hold | facts.knowledge_normal_exclusion,
-                facts.knowledge_normal_exclusion,
+                # Reviewed unresolved Protected-tissue findings are essential
+                # unknowns; resolve them before any shared-sequence clearance.
+                facts.knowledge_normal_hold | facts.knowledge_normal_exclusion,
             ),
             EvidenceLayer("Clinical safety exclusion", facts["Safety veto"], facts["Safety veto"]),
+            # Rare expression in brain, heart or lung alveolar, endothelial and airway basal cells: an essential unknown.
+            EvidenceLayer(
+                "Rare vital-tissue cell expression",
+                facts.rare_cell_flag,
+                facts.rare_cell_flag if cta_rare_cell.UNSAFE else empty,
+            ),
             proteins[2],
         ]
     )
@@ -1036,11 +1105,18 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     )
     facts = policy.tumor_restricted_evidence(facts)
     facts = policy.other_profiles(facts)
+    # Unsafe sequence is blacklisted; a would-be CTA mostly inside it is Contained.
+    overlap = cta_sequence_overlap.unsafe_overlap(
+        cta_sequence_overlap.group_ninemers(facts.member_gene_ids), facts.index
+    )
     result, funnel, independent = policy.classify(
-        facts, layers, entity_column="protein_equivalence_group_id"
+        facts, layers, entity_column="protein_equivalence_group_id", unsafe_overlap=overlap
     )
     reverse = policy.classify(
-        facts, list(reversed(layers)), entity_column="protein_equivalence_group_id"
+        facts,
+        list(reversed(layers)),
+        entity_column="protein_equivalence_group_id",
+        unsafe_overlap=overlap,
     ).classifications
     if not result[["category", "subtype", "classification"]].equals(
         reverse[["category", "subtype", "classification"]]
@@ -1064,6 +1140,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         d["policy"] = policy.POLICY_ID
         write_csv(d, output / name)
     counts = result.category.fillna("Unassigned").value_counts().to_dict()
+    counts.setdefault("Unassigned", 0)  # no human protein is unassessed
     meta = {
         "policy": policy.POLICY_ID,
         "categories": counts,

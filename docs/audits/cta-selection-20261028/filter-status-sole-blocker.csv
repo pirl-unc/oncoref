@@ -1,0 +1,14 @@
+filter,proteins_blocked_only_by_this_filter
+Reproductive / embryonic association,447
+Normal bulk,174
+HPA tissue clusters,82
+Rare vital-tissue cell expression,77
+HPA normal protein,43
+Unsafe sequence overlap,20
+DICE immune,18
+HPA immune,8
+Reproductive concentration,4
+Required RNA coverage,4
+Accepted normal-protein evidence,3
+Monaco immune,3
+Adult cornea,1

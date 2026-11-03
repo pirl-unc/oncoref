@@ -1,11 +1,11 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **701 CTA proteins, 18,062 Unsafe, 454 Other and 646 unassessed** across 19,863 proteins. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **637 CTA proteins, 18,278 Unsafe and 689 Other (601 Nonreproductive, 34 Held, 28 Nested, 20 Contained, 6 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. No protein is unassessed. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
 
 ## Safety, cancer expression and Reproductive evidence
 
 **Only safety can establish Unsafe.** Cancer expression and Reproductive evidence
-are separate admission requirements. Missing required coverage remains unassigned.
+are separate admission requirements. Every protein receives CTA, Unsafe or Other; missing coverage is disclosed in `assessment_status`, never as a separate class.
 
 **Reproductive** is the umbrella for adult reproductive, placental, extraembryonic,
 embryonic and fetal contexts. Branches describe the actual tissue and stage;
@@ -13,10 +13,10 @@ embryonic and fetal contexts. Branches describe the actual tissue and stage;
 
 | Assessment | Question | Current rule |
 |---|---|---|
-| Safety | Is normal-tissue expression concerning under the tissue/IHC policy? | Absolute RNA ceilings, separate positive-protein rules and reviewed clinical exclusions. Vital/Protected exclusions can establish Unsafe. Manageable excess blocks CTA. |
+| Safety | Is normal-tissue expression concerning under the tissue/IHC policy? | Absolute RNA ceilings, separate positive-protein rules and reviewed clinical exclusions. Vital/Protected exclusions and Manageable excess above 128 establish Unsafe; lower Manageable excess blocks CTA and lands in Other:Held. |
 | Cancer expression | Is there expression in at least one measured cancer? | One sample >0 TPM or HPA pTPM, or reviewed reliable tumor protein. No tumor-versus-normal ratio. |
 | Reproductive evidence | Is there positive expression in a qualifying branch? | Full HPA reproductive bulk maximum ≥5 nTPM OR supported reproductive cell RNA ≥5 nTPM with ≥20 reads OR reliable positive reproductive IHC or reviewed reproductive protein OR supported embryonic lineage mean ≥5 TPM. |
-| Coverage | Is the comparison adequately observed? | Complete GTEx v11 core: 52 bulk contexts for every member locus; required normal bulk/cell/immune panels also apply. DICE/cornea coverage remains optional. |
+| Coverage | Is the comparison adequately observed? | Complete combined bulk (HPA consensus, HPA brain and GTEx v11) for every member locus. Cell-cluster, immune, DICE and cornea panels count when present but never block a label. |
 
 The former maximum-versus-maximum restriction rule is removed. The
 [continuous diffuseness gate](audits/cta-unassigned-20261029/diffuseness-impact.md)
@@ -28,12 +28,133 @@ to neither the comparator nor the Reproductive reference. Its safety tier is unc
 A score **above 10%** blocks a qualifying adult/placental route when R is positive
 and the full HPA comparison is measured. RNA-only admission still requires **5 nTPM**;
 reliable positive IHC can establish association below that floor. Missing comparisons
-remain explicitly unassessed. An independently supported embryonic route remains
+are disclosed in `assessment_status`, never as a separate class. An independently supported embryonic route remains
 eligible; its concentration needs a compatible developmental/adult panel. GTEx
 remains the required coverage core and a descriptive comparison, not a second veto.
 
 A complete diffuse profile with no remaining qualifying route and clear normal
 safety becomes **Other:Diffuse**. MTCP1 (24.53%) is one example. Diffuse identity alone never changes Unsafe membership. [Logic figure and examples](cta-evidence-axes.md).
+
+## The selection funnel
+
+Selection is a funnel. A protein leaves at the first stage it fails, and every later
+stage sees only what remains.
+
+| Stage | Question | Outcome |
+|---|---|---|
+| 0. Universe | Is the protein translated from a coding transcript or an established ncORF? | Otherwise it is **out of universe** and not classified. |
+| 1. Safety | Does normal-tissue, reviewed or clinical evidence exclude it? | **Unsafe** |
+| 2. Target space | Does it have reproductive evidence, cancer expression and concentration? | Otherwise **Other** with the unmet requirement as its subtype |
+| 2a. Nested microprotein | Is it a reference-CDS protein under 50 residues inside a same-strand protein-coding gene, without ncORF evidence? | **Other:Nested**: its RNA belongs to the host gene |
+| 3. Sequence | Is at least 95% of its 9-mers inside Unsafe proteins? | **Other:Contained**: Unsafe sequence is blacklisted, so almost no peptide survives |
+| 4. Outcome | Did everything pass with no unresolved normal signal? | **CTA**; a pass blocked only by a normal-tissue hold is **Other:Held** |
+
+**Stage 0 universe.** The universe is 19,604 protein groups: Ensembl 115 reference CDS
+from a coding-biotype transcript, plus non-canonical ORFs that orfdata records with
+mass-spectrometry peptides or at least two independent Ribo-seq studies. The 259
+groups left out are 254 whose only reference CDS comes from NMD or CDS-not-defined
+transcripts (mostly readthrough genes) and 5 supported by a single Ribo-seq study.
+They are listed with their reason in `out-of-universe.csv.gz`, so none disappears
+silently. Rebuild the gene table with `scripts/build_cta_protein_universe.py`.
+
+**Downstream semantics.** CTA is targeted. Unsafe blacklists any matching subsequence
+from a CTA. Other is ignored for targeting. Unsafe therefore needs positive evidence,
+or an essential unknown, and never rests on missing optional panels.
+
+| What puts a protein in Unsafe | Example |
+|---|---|
+| Vital/Protected expression above the tissue/IHC ceiling | Established adult protein or localized RNA with function |
+| **Manageable-tier excess above 128** (the top Manageable ceiling) | Skin-barrier genes such as KRT85, KRT77, LCE1A |
+| **Reviewed unresolved Protected-tissue finding** (an essential unknown) | Findings marked “resolve before shared-sequence clearance” |
+| Reviewed clinical safety exclusion | MAGEA12 |
+
+Below 128, Manageable excess and unresolved HPA protein evidence block CTA only;
+the protein becomes Other and keeps its reasons. Clinical history stays
+receptor-specific: the titin and MAGE-A12 cross-reactivities of anti-MAGE-A3 TCRs
+are peptide liabilities, so MAGEA3 is assessed on its own expression.
+
+## Cell-type tiers and the rare vital-tissue screen
+
+One table (`oncoref.cta_cell_tiers`) assigns cell types to a tier, and both the RNA
+cascade and the rare-cell screen read it, so a cell type means the same thing
+everywhere.
+
+| Tier | Cell types | Why |
+|---|---|---|
+| **Vital** | Neurons, glia, cardiomyocytes, alveolar types 1 and 2, vital-organ endothelium, airway **basal** cells | Post-mitotic, needed for gas exchange or perfusion, or the stem pool that makes renewal possible |
+| **Manageable** | Differentiated airway epithelium (ciliated, club, goblet, secretory, ionocytes), fibroblasts, large-bowel epithelium | Renewing barriers replaced from stem cells; the same logic as bowel epithelium |
+
+The tier is a policy judgement about how much harm losing a cell type does, not a
+measurement of tolerability.
+
+Pooled panels average away rare normal cells, so a protein can read near zero in
+every bulk, cluster and immune measurement while a small population expresses it.
+**MAGEA12** is the reference case: its HPA bulk, GTEx and single-nucleus cluster
+values are near zero, but 293 of 19,760 midbrain dopaminergic neurons (1.5%)
+express it in the CELLxGENE summaries, matching the rare positive neurons reported
+after anti-MAGE-A3 TCR neurotoxicity.
+
+Every gene is screened (`scripts/build_cta_rare_cell_screen.py`) against CELLxGENE
+normal-sample summaries, **in Vital cell types of brain, spinal cord, heart and lung
+only**. A cell type needs at least 3,000 cells and 10 expressing cells; broad parent
+terms covering over 10% of a tissue, immune lineages (including microglia),
+fibroblasts and stroma, adipose and clearly developmental cell types are ignored.
+Rare expression in spleen, adipose, immune subsets or differentiated airway cells does
+not make a protein Unsafe (Manageable-tier cell types are recorded in the screen table
+but never flagged).
+
+**A protein is Unsafe when any member gene is expressed by at least 1% of a Vital
+cell type.** The layer is a safety layer in the cascade, evaluated for every protein.
+It flags 15,888 of 19,604 proteins, most of which are Unsafe for other reasons; **117
+proteins are Unsafe only because of it**. No CTA is flagged.
+
+It reports detection frequency among cells, not abundance: expressing cells typically
+carry about one UMI, and ambient RNA, doublets and close-paralog multimapping can
+create detections. Samples cannot be restricted to adults, so developmental cell types
+are removed by name only. `cta_rare_cell.UNSAFE = False` turns the layer into a
+review hold instead.
+
+`cta_selection.profiles()` carries `rare_cell_screened`, `rare_cell_flag`,
+`rare_cell_max_pct`, `rare_cell_type` and `rare_cell_detail`, and
+`cta_selection.rare_cell_screen()` returns every supporting cell type with its `tier`
+and `review_status = screen_unreviewed`.
+
+```python
+from oncoref import cta_selection
+
+profiles = cta_selection.profiles()
+rare_only = profiles[profiles.rare_cell_flag & profiles.category.eq("Unsafe")]
+detail = cta_selection.rare_cell_screen()   # tissue, cell type, n_expressing, n_cells, tier
+```
+
+Every filter is evaluated for every protein, including those already Unsafe, so the
+order of filtering changes only the funnel's attribution, never the final category.
+The [filter-status table](audits/cta-selection-20261028/filter-status-summary.csv) lists each
+protein against each filter.
+
+## Contained: too similar to Unsafe
+
+Unsafe proteins blacklist any matching subsequence from a CTA, so a protein whose
+sequence lies almost wholly inside Unsafe proteins has no usable peptide. A would-be
+CTA with **at least 95% of its 9-mers also present in an Unsafe protein** is assigned
+**Other:Contained** (the boundary is inclusive; an undefined overlap, meaning no
+9-mer, is never contained). It is a sequence rule, not expression evidence, and it
+never creates Unsafe. The floor is deliberately strict: copies that keep a few
+distinguishing 9-mers stay CTA, and their usable subsequences are for later review.
+
+The overlap uses every protein-coding transcript of Ensembl 115
+(`oncoref.cta_sequence_overlap`) and is reported as `unsafe_sequence_overlap_pct` in
+`cta_selection.profiles()`. **20 proteins are Contained** (median overlap 99%), among
+them DAZ2/3, PRAMEF27, CT45A3, GAGE2E and TBC1D3G/H/K. Most multi-copy families such as
+the CT45, GAGE, PRAMEF and POTE copies stay CTA.
+
+## Nested microproteins
+
+A reference-CDS protein under 50 residues nested inside a same-strand protein-coding
+gene, without ncORF evidence (two Ribo-seq studies or any mass-spectrometry peptide),
+has RNA that cannot be told from its host's. Its expression says nothing about the
+peptide, so it can never be a CTA: **28 proteins are Other:Nested** (48 such loci in the
+universe table, tagged `nested_microprotein`).
 
 ## Reviewed normal-cell knowledge
 
@@ -50,7 +171,7 @@ and OR2T7 without claiming high tumor abundance. Reviewed germ-cell protein supp
 BPY2/B/C independently of its RNA floor. All 698 prior CTAs remain retained.
 
 `cta_selection.sequence_dispositions()` exposes `direct_target_candidate` and
-`shared_sequence`: `allow` for CTA/Other, `exclude` for Unsafe, `review` for Unassessed.
+`shared_sequence`: `allow` for CTA/Other and `exclude` for Unsafe. Every classified protein resolves; `review` remains only for sequences outside the universe or the nonhuman nominations.
 These roles describe this research screen. They do not establish peptide presentation,
 cover all isoforms or change the independently versioned legacy forbidden backgrounds.
 Downstream systems must preserve the policy/reference receipt and handle review explicitly.
@@ -73,7 +194,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,863 proteins (identical selected reference sequences collapsed) | Available; evidence partial | Complete evaluation of the named reference universe under `oncoref.cta-selection.2026-10-30.3` |
+| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Complete evaluation of the coding or established-ncORF universe under `oncoref.cta-selection.2026-10-31.1` |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 
@@ -89,8 +210,8 @@ The contract is identical even when the evidence is not. Human thresholds, antib
 | `entity_id`, `entity_kind`, `label` | Stable result key; human protein-equivalence group versus native nomination; display label |
 | `gene_ids`, `gene_identities` | Every supported member/alternative; IDs, symbols, namespaces, historical/alternate IDs, synonyms and identity status |
 | `identity_status`, `reference_id` | Resolution completeness and exact reference receipt |
-| `category`, `subtype`, `classification` | CTA / Unsafe / Other or null; mutually exclusive Other subtype; flat label such as Other:Nonreproductive or Unassessed |
-| `assessment_status`, `policy_id` | Screened, incomplete evidence, normal-evidence hold or unassessed; versioned policy |
+| `category`, `subtype`, `classification` | CTA / Unsafe / Other or null; mutually exclusive Other subtype; flat label such as Other:Nonreproductive or Other:Held; human results never have a null category |
+| `assessment_status`, `policy_id` | Screened, incomplete evidence or normal-evidence hold (why an Other was not cleared); versioned policy |
 | `reasons`, `evidence_flags` | All contributing exclusions and retained observations, including Low protein, antibody review and stem/progenitor expression |
 | `source_snapshot_id` | Content identity of the decision snapshot |
 
@@ -105,8 +226,8 @@ TPM/nTPM is summed only for matched group-member measurements in the same source
 | Adult/placental Reproductive evidence | Full mapped HPA bulk maximum ≥5 nTPM OR supported reproductive cell RNA ≥5 nTPM with ≥20 reads OR reliable positive reproductive IHC or reviewed reproductive protein; no normal maximum comparison |
 | Embryonic Reproductive evidence | Supported Tyser or Petropoulos lineage mean ≥5 TPM; ≥20 cells, ≥5 positive cells and ≥10% positive at ≥1 TPM |
 | Tumor expression | >0 in one measured sample, in native TPM or HPA pTPM, or reviewed reliable tumor protein; no normal comparison |
-| Required coverage | GTEx v11 core (52 native bulk contexts) and specified bulk/cell/immune panels must be complete; DICE and cornea coverage is optional, but their measured signals count |
-| Normal RNA | One inclusive tissue/IHC ceiling; above it supplies Unsafe evidence in Vital/Protected and blocks CTA in Manageable |
+| Required coverage | Combined bulk (HPA consensus, HPA brain, GTEx v11) complete for every member locus; cell, immune, DICE and cornea panels are optional and never block, but their measured signals count |
+| Normal RNA | One inclusive tissue/IHC ceiling; above it supplies Unsafe evidence in Vital/Protected and above 128 in Manageable; lower Manageable excess blocks CTA |
 | Normal protein | Low remains a positive flag; stronger HPA or accepted unquantified literature positives retain their hold/exclusion; validated external normal positives and clinical exclusions remain active |
 
 | Candidate ceiling | Missing / unusable IHC | Approved negative | Supported negative | Enhanced negative |
@@ -141,13 +262,15 @@ Mapped HPA adult fibroblasts use Manageable; bulk heart and cardiomyocytes retai
 
 ## Categorical assignments
 
-The decision follows five questions, in this order:
+The decision follows these questions, in this order:
 
-1. **Does normal-tissue or applicable clinical evidence trigger exclusion?** Assign **Unsafe**.
-2. **Is the required normal screen complete and resolved?** Otherwise assign **Unassessed**. This includes unresolved normal evidence and Manageable-tissue holds.
+1. **Is the protein in the universe?** Otherwise it is not classified.
+2. **Does normal-tissue or applicable clinical evidence trigger exclusion?** Assign **Unsafe**. This includes Manageable excess above 128 and reviewed unresolved Protected findings.
 3. **Is there qualifying reproductive evidence?** Otherwise assign **Other:Nonreproductive**. Reproductive includes placenta, embryo and fetus; the label records an unmet evidence requirement, not demonstrated absence.
 4. **Is there measured cancer expression?** Otherwise assign **Other:Reproductive**.
-5. **Does reproductive concentration pass?** Otherwise assign **Other:Diffuse**. Passing every question assigns **CTA**.
+5. **Does reproductive concentration pass?** Otherwise assign **Other:Diffuse**.
+6. **Is at least 95% of its sequence inside Unsafe proteins?** Then assign **Other:Contained**: its peptides are blacklisted.
+7. **Is the normal screen complete and unresolved-free?** Passing everything assigns **CTA**. If target gates pass but a marginal or unresolved normal signal remains, assign **Other:Held**, and `assessment_status` records whether coverage was incomplete or a hold applied.
 
 All safety layers evaluate every protein, even when an identity requirement fails.
 The RNA/IHC safety ceilings and the reproductive/cancer presence requirements

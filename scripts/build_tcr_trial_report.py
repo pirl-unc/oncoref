@@ -112,10 +112,15 @@ def build() -> None:
         raise ValueError("Changed baseline selection snapshot")
     before = pd.read_csv(baseline_file, keep_default_na=False).set_index("entity_id")
     after = cta_selection.results().set_index("entity_id")
-    if set(before.index) != set(after.index):
-        raise ValueError("Clinical-credit comparison requires the same protein universe")
+    if not set(after.index) <= set(before.index):
+        raise ValueError("Clinical-credit comparison found groups absent from the baseline")
+    # Groups outside the coding/established-ncORF universe are explicit changes.
     comparison = pd.DataFrame(
-        {"label": after.label, "before": before.category, "after": after.category.fillna("")}
+        {
+            "label": before.label,
+            "before": before.category,
+            "after": after.category.reindex(before.index).fillna("out_of_universe"),
+        }
     )
     changes = comparison[comparison.before.ne(comparison.after)].reset_index()
     write_csv(changes, OUTPUT / "membership-changes.csv")

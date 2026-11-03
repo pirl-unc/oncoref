@@ -11,8 +11,11 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 The [current CTA/oncofetal selection](docs/audits/cta-source-walkthrough-20261028/index.md)
-contains **701 selected proteins**. The 19,863-protein reference receives
-**701 CTA / 18,062 Unsafe / 453 Other / 647 unassessed** decisions.
+contains **637 selected proteins**. The 19,604-protein coding or established-ncORF
+universe receives **637 CTA / 18,278 Unsafe / 689 Other** decisions; none is unassessed.
+A would-be CTA with 95% or more of its sequence inside Unsafe proteins is
+`Other:Contained`, and a nested microprotein is `Other:Nested`. Expression in at least 1% of a
+Vital cell type (brain, heart, alveolar lung) makes a protein Unsafe.
 [Independent requirements](docs/cta-evidence-axes.md) assess normal-tissue safety,
 cancer expression and Reproductive evidence, with complete required coverage.
 Reproductive includes reproductive organs, placenta, extraembryonic, embryonic and

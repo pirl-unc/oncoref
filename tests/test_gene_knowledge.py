@@ -121,7 +121,7 @@ def test_reproductive_protein_below_rna_floor_does_not_override_safety_hold():
     ]
     result = policy.classify(facts, layers, entity_column="entity").classifications
     assert result.category.iloc[0] == "CTA"
-    assert pd.isna(result.category.iloc[1])
+    assert result.category.iloc[1] == "Other"
     assert result.assessment_status.iloc[1] == "normal_evidence_hold"
     assert result.category.iloc[2] == "Unsafe"
 

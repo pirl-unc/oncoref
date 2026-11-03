@@ -110,7 +110,7 @@ def profiles():
     )
 
 
-def test_normal_pass_fallback_is_independent_of_cancer_but_normal_holds_block_it():
+def test_every_protein_resolves_and_normal_holds_only_block_cta():
     facts = profiles()
     facts.loc[1, "required_coverage"] = False
     facts.loc[2, "tumor_maximum_floor_ratio"] = 2
@@ -126,19 +126,14 @@ def test_normal_pass_fallback_is_independent_of_cancer_but_normal_holds_block_it
         ],
         entity_column="entity",
     )
-    assert result.classifications.category.fillna("Unassigned").tolist() == [
-        "Other",
-        "Unassigned",
-        "Other",
-        "Unassigned",
-        "Unassigned",
-    ]
-    assert result.classifications.subtype.tolist() == [
-        "Nonreproductive",
-        "",
-        "Nonreproductive",
-        "",
-        "",
+    assert result.classifications.category.tolist() == ["Other"] * 5
+    assert result.classifications.subtype.tolist() == ["Nonreproductive"] * 5
+    assert result.classifications.assessment_status.tolist() == [
+        "screened",
+        "incomplete_evidence",
+        "screened",
+        "normal_evidence_hold",
+        "normal_evidence_hold",
     ]
     assert (
         result.funnel[["CTA_eligible_so_far", "Unsafe", "Other", "Unassigned"]]
@@ -368,7 +363,7 @@ def test_diffuseness_is_route_specific_and_missingness_is_not_failure():
         policy.concentration_evidence(facts, scores.assign(source="gtex_tissue_rna"))
 
 
-def test_Diffuse_neither_requires_clear_safety_and_complete_coverage():
+def test_diffuse_other_discloses_holds_and_incomplete_coverage_without_unsafe():
     facts = policy.other_profiles(profiles())
     facts[["other_low_expression", "other_disposable"]] = False
     facts["positive_context"] = True
@@ -385,19 +380,28 @@ def test_Diffuse_neither_requires_clear_safety_and_complete_coverage():
     ]
     first = policy.classify(facts, layers, entity_column="entity").classifications
     second = policy.classify(facts, list(reversed(layers)), entity_column="entity").classifications
-    assert first.category.fillna("Unassigned").tolist() == [
-        "Other",
-        "Unassigned",
-        "Unsafe",
-        "Unassigned",
-        "Unassigned",
+    assert first.category.tolist() == ["Other", "Other", "Unsafe", "Other", "Other"]
+    assert first.subtype.tolist() == ["Diffuse", "Diffuse", "", "Diffuse", "Diffuse"]
+    assert first.assessment_status.tolist() == [
+        "screened",
+        "normal_evidence_hold",
+        "screened",
+        "incomplete_evidence",
+        "incomplete_evidence",
     ]
-    assert first.subtype.iloc[0] == "Diffuse"
     pd.testing.assert_series_equal(first.category, second.category)
 
 
-def test_other_categories_are_exhaustive_exclusive_and_do_not_override_normal_holds():
-    names = list(policy.OTHER_SUBTYPE_RULES)
+def test_other_subtypes_are_exhaustive_and_normal_holds_never_become_unsafe():
+    assert set(policy.OTHER_SUBTYPE_RULES) == {
+        "Nonreproductive",
+        "Reproductive",
+        "Diffuse",
+        "Held",
+        "Contained",
+        "Nested",
+    }
+    names = ["Nonreproductive", "Reproductive", "Diffuse"]
     facts = pd.concat([profiles().iloc[:1]] * len(names), ignore_index=True)
     facts["entity"] = names
     facts["positive_context"] = [False, True, True]
@@ -412,11 +416,26 @@ def test_other_categories_are_exhaustive_exclusive_and_do_not_override_normal_ho
     result = policy.classify(facts, layers, entity_column="entity").classifications
     assert result.subtype.tolist() == names
     assert result.classification.tolist() == ["Other:" + name for name in names]
+    # Target gates pass but a normal-tissue hold blocks CTA: Other:Held, not Unsafe.
+    passing = facts.iloc[:1].copy()
+    passing["positive_context"] = True
+    one = pd.Series([True])
+    gates = [
+        EvidenceLayer(
+            "Reproductive / embryonic association", pd.Series([False]), pd.Series([False])
+        ),
+        EvidenceLayer("Cancer expression", pd.Series([False]), pd.Series([False])),
+        EvidenceLayer("Reproductive concentration", pd.Series([False]), pd.Series([False])),
+    ]
     held = policy.classify(
-        facts, [*layers[:-1], EvidenceLayer("Normal", yes, no)], entity_column="entity"
+        passing, [*gates, EvidenceLayer("Normal", one, ~one)], entity_column="entity"
     ).classifications
-    assert held.category.isna().all()
-    assert held.classification.eq("Unassessed").all()
+    assert held.classification.tolist() == ["Other:Held"]
+    assert held.assessment_status.tolist() == ["normal_evidence_hold"]
+    clear = policy.classify(
+        passing, [*gates, EvidenceLayer("Normal", ~one, ~one)], entity_column="entity"
+    ).classifications
+    assert clear.classification.tolist() == ["CTA"]
     excluded = policy.classify(
         facts, [*layers[:-1], EvidenceLayer("Normal", yes, yes)], entity_column="entity"
     ).classifications
@@ -442,3 +461,109 @@ def test_adult_disposable_pattern_is_independent_of_developmental_expression():
         False,
         False,
     ]
+
+
+def _passing_facts(n):
+    facts = pd.concat([profiles().iloc[:1]] * n, ignore_index=True)
+    facts["entity"] = [f"e{i}" for i in range(n)]
+    facts["positive_context"] = True
+    return facts
+
+
+def _gates(n):
+    no = pd.Series([False] * n)
+    return [
+        EvidenceLayer("Reproductive / embryonic association", no, no),
+        EvidenceLayer("Cancer expression", no, no),
+        EvidenceLayer("Reproductive concentration", no, no),
+        EvidenceLayer("Normal", no, pd.Series([False] * (n - 1) + [True])),
+    ]
+
+
+def test_cta_mostly_inside_unsafe_sequence_is_contained_not_unsafe():
+    facts = policy.other_profiles(_passing_facts(5))
+    # e4 is Unsafe; overlap is the fraction of each entity's 9-mers inside Unsafe proteins.
+    fraction = pd.Series([0.0, 0.94, 0.95, float("nan"), 1.0], index=facts.index)
+    seen = []
+
+    def overlap(unsafe):
+        seen.append(unsafe.tolist())
+        return fraction
+
+    result = policy.classify(
+        facts, _gates(5), entity_column="entity", unsafe_overlap=overlap
+    ).classifications
+    assert result.classification.tolist() == [
+        "CTA",
+        "CTA",
+        "Other:Contained",  # the 95% boundary is inclusive
+        "CTA",  # undefined overlap (no 9-mer) is never contained
+        "Unsafe",  # Unsafe is untouched by its own overlap
+    ]
+    assert seen[0] == [False, False, False, False, True]
+    assert result.subtype.tolist() == ["", "", "Contained", "", ""]
+    assert result.assessment_status.tolist() == ["screened"] * 5
+    assert result.unsafe_sequence_overlap_pct.tolist()[:3] == [0.0, 94.0, 95.0]
+
+
+def test_containment_adds_a_funnel_stage_and_an_independent_effect():
+    facts = policy.other_profiles(_passing_facts(5))
+    fraction = pd.Series([0.0, 0.96, 0.95, 0.1, 1.0], index=facts.index)
+    result = policy.classify(
+        facts, _gates(5), entity_column="entity", unsafe_overlap=lambda unsafe: fraction
+    )
+    stage = result.funnel[result.funnel.layer.eq("Unsafe sequence containment")].iloc[0]
+    assert (stage.new_candidate_removals, stage.CTA_eligible_so_far) == (2, 2)
+    effect = result.independent_effects[
+        result.independent_effects.layer.eq("Unsafe sequence containment")
+    ]
+    assert effect.CTA_added_if_layer_removed.iloc[0] == 2
+    # The final assignment row reconciles with the per-protein categories.
+    final = result.funnel.iloc[-1]
+    assert (final.CTA_eligible_so_far, final.Unsafe, final.Other) == (2, 1, 2)
+
+
+def test_without_an_overlap_input_classification_is_unchanged():
+    facts = policy.other_profiles(_passing_facts(5))
+    plain = policy.classify(facts, _gates(5), entity_column="entity")
+    assert plain.classifications.classification.tolist() == ["CTA"] * 4 + ["Unsafe"]
+    assert plain.classifications.unsafe_sequence_overlap_pct.isna().all()
+    assert "Unsafe sequence containment" not in set(plain.funnel.layer)
+
+
+def test_overlap_must_align_with_the_evidence_index():
+    facts = policy.other_profiles(_passing_facts(5))
+    with pytest.raises(ValueError, match="align"):
+        policy.classify(
+            facts,
+            _gates(5),
+            entity_column="entity",
+            unsafe_overlap=lambda unsafe: pd.Series([0.0] * 5, index=range(10, 15)),
+        )
+
+
+def test_ninemer_overlap_counts_only_unsafe_sequence_and_is_cached():
+    import numpy as np
+
+    from oncoref.cta_sequence_overlap import unsafe_overlap
+
+    groups = [frozenset({"a", "b", "c", "d"}), frozenset({"a", "b", "c", "x"}), frozenset()]
+    fn = unsafe_overlap(groups, pd.RangeIndex(3))
+    fraction = fn(pd.Series([True, False, False]))
+    assert fraction.iloc[1] == pytest.approx(0.75)
+    assert np.isnan(fraction.iloc[2])
+    # Mutating a returned series cannot corrupt later calls.
+    fraction.iloc[1] = 0
+    assert fn(pd.Series([True, False, False])).iloc[1] == pytest.approx(0.75)
+    assert fn(pd.Series([False, False, False])).iloc[1] == 0
+
+
+def test_nested_microprotein_is_other_nested_never_cta():
+    facts = policy.other_profiles(_passing_facts(3))
+    facts["nested_microprotein"] = [False, True, False]
+    layers = _gates(3)
+    layers[0] = EvidenceLayer(
+        "Reproductive / embryonic association", facts.nested_microprotein, layers[0][2]
+    )
+    result = policy.classify(facts, layers, entity_column="entity").classifications
+    assert result.classification.tolist()[:2] == ["CTA", "Other:Nested"]

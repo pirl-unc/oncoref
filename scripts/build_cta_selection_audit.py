@@ -116,8 +116,16 @@ HUMAN_RULES = {
         "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
         ["hpa_rna_consensus"],
     ),
+    "Rare vital-tissue cell expression": (
+        "At least 1% of cells in a brain, spinal cord, heart or lung alveolar, endothelial or airway basal cell type (at least 3,000 cells, 10 expressing) express a member gene in CELLxGENE normal single-cell summaries. Rare expression in an essential tissue is an unresolved unknown and supplies Unsafe evidence. Immune lineages, stroma, adipose and developmental cell types are ignored, so spleen, adipose and immune-subset expression is allowed. Detection frequency, not abundance.",
+        [],
+    ),
+    "Unsafe sequence containment": (
+        "A would-be CTA with at least 95% of its 9-mers also present in Unsafe proteins becomes Other:Contained: Unsafe sequence is blacklisted, so almost no peptide survives. Computed over all protein-coding transcripts of Ensembl 115. This is a sequence rule, not expression evidence.",
+        [],
+    ),
     "Required RNA coverage": (
-        "Complete GTEx v11 bulk core (52 native contexts), required nonreproductive bulk anatomy across compatible sources, and distinct HPA tissue-cell/immune panels; every protein member measured. DICE and cornea coverage is optional.",
+        "Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the only blocking requirement: every nonreproductive tissue concept measured for every protein member. The GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels are used when present and never block a label.",
         [
             "hpa_rna_consensus",
             "hpa_brain",
@@ -128,7 +136,7 @@ HUMAN_RULES = {
         ],
     ),
     "Normal bulk": (
-        "One inclusive tissue/IHC ceiling: above it in Vital/Protected supplies Unsafe evidence; above it in Manageable blocks CTA. No second RNA boundary.",
+        "One inclusive tissue/IHC ceiling: above it in Vital/Protected supplies Unsafe evidence; above it in Manageable blocks CTA, and above 128 (the top Manageable ceiling) supplies Unsafe evidence. No second RNA boundary.",
         ["hpa_rna_consensus", "hpa_brain", "gtex_tissue_rna"],
     ),
     "HPA tissue clusters": (
@@ -579,6 +587,12 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 row["source_url"] = " | ".join(relevant.source_url.drop_duplicates())
                 row["tissue"] = " | ".join(relevant.tissue.drop_duplicates())
                 row["cell_type"] = " | ".join(relevant.cell_type.drop_duplicates())
+            elif layer == "Reproductive / embryonic association" and r.get("nested_microprotein"):
+                row["reason"] = (
+                    "Reference-CDS microprotein (under 50 residues) nested inside a same-strand "
+                    "protein-coding gene and not an established ncORF: its RNA signal belongs to "
+                    "the host gene, so it cannot establish CTA identity (Other:Nested)."
+                )
             elif layer == "Reproductive / embryonic association":
                 row["reason"] = (
                     f"Reproductive {display(r['reproductive_ntpm'])} nTPM; supported developmental mean {display(r['developmental_mean_tpm'])} TPM; supported cell RNA {display(r['reproductive_cell_ntpm'])} nTPM; indirect cell support {r['reproductive_cell_indirect_association']}. No RNA/protein/cell route qualifies; normal induction counterevidence can invalidate an indirect-only route."
@@ -595,23 +609,28 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                 row["source_url"] = (
                     "https://pirl-unc.github.io/oncoref/audits/cta-unassigned-20261029/diffuseness-impact/"
                 )
+            elif layer == "Rare vital-tissue cell expression":
+                row["reason"] = (
+                    f"{r['rare_cell_max_pct']:.2f}% of {r['rare_cell_type']} cells express it ({r['rare_cell_detail']}); at least 1% of a vital-tissue cell type. Detection frequency, not abundance; developmental cell types are excluded by name, not donor age."
+                )
+                row["source_url"] = "https://cellxgene.cziscience.com/gene-expression"
             elif layer == "Cancer expression":
                 row["reason"] = (
                     f"OncoRef tumor maximum {display(r['oncoref_maximum_tpm'])} TPM; HPA lower bound {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No qualifying tumor RNA or reviewed protein evidence."
                 )
             elif layer == "Required RNA coverage":
-                details = []
+                # Only combined bulk (HPA consensus, HPA brain, GTEx v11) blocks a label.
+                # The GTEx core and cell/immune/DICE/cornea panels are disclosed, never required.
+                details, optional = [], []
                 combined = combined_bulk.loc[base["entity_id"]]
                 if not combined.bulk_complete:
                     details.append(
                         f"Combined normal bulk missing required tissues: {combined.missing_bulk_tissues}"
                     )
                 if not combined.gtex_core_complete:
-                    details.append(
-                        "Required GTEx v11 core panel is incomplete (52 native bulk contexts); "
-                        f"missing member identities {combined.missing_gtex_member_ids}; "
-                        f"uncovered tissue concepts {combined.missing_gtex_tissues}. "
-                        "A missing measurement is not zero expression."
+                    optional.append(
+                        "GTEx v11 core (52 native bulk contexts) incomplete for "
+                        f"member identities {combined.missing_gtex_member_ids}"
                     )
                 for gap in coverage_by_entity.get(base["entity_id"], pd.DataFrame()).itertuples():
                     if gap.source_id == "hpa_rna_consensus":
@@ -620,13 +639,18 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     preview = ", ".join(contexts[:6])
                     if len(contexts) > 6:
                         preview += f", plus {len(contexts) - 6} more"
-                    details.append(
-                        f"{gap.source}: least-covered member has {gap.minimum_observed_contexts}/{gap.expected_contexts_per_member} contexts; incomplete members {gap.incomplete_member_gene_ids}; missing {preview}"
+                    optional.append(
+                        f"{gap.source}: least-covered member has {gap.minimum_observed_contexts}/{gap.expected_contexts_per_member} contexts; missing {preview}"
                     )
-                row["reason"] = (
+                reason = (
                     " | ".join(details)
                     or "Group-member coverage remains unresolved; inspect the source coverage audit."
                 )
+                if optional:
+                    reason += " Optional panels (disclosed, never blocking): " + " | ".join(
+                        optional
+                    )
+                row["reason"] = reason + " A missing measurement is not zero expression."
                 row["source_url"] = BASE_URL + "coverage/"
             if not row["reason"]:
                 row["reason"] = HUMAN_RULES.get(row["layer"], (layer, []))[0]
