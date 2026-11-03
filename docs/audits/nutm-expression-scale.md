@@ -87,17 +87,44 @@ provenance defects. It also does not retroactively repair derived artifacts.
 
 The source registry and availability metadata flag NUTM as an invalid legacy
 scale, with `linear_tpm_comparable=False`. The public per-sample reader rejects
-the invalid artifact in every normalization mode. Historical derived NUTM
-artifacts remain invalid and must not be used for quantitative analysis.
+the invalid artifact in every normalization mode.
 
-Remaining work before this incident is resolved:
+### Derived artifacts are withheld (1.27.1)
 
-1. Establish the exact source-field transform, or obtain verified linear TPM
-   and the quantification reference. Do not infer an inverse solely from the
+Before 1.27.1 the per-sample reader rejected the source, but artifacts derived from
+it were still served: `cancer_reference_expression("NUTM")` and
+`cohort_gene_percentiles("NUTM")` returned the invalid summaries without warning.
+Every reader now consults the availability manifest's `source_scale_class` for the
+cohort's *selected* source, so the guard is driven by registry data and applies to any
+source later marked `invalid_legacy_tpm`, not only NUTM:
+
+| Reader | Named invalid cohort | Default or bulk listing |
+|---|---|---|
+| `cohort_gene_percentiles`, `gene_within_sample_top_fraction`, `proteoform_within_sample_top_fraction` | `ValueError` | cohort omitted from `available_*_cohorts()` |
+| `gene_representative_samples`, `proteoform_representative_samples` | `ValueError` | cohort omitted from `available_representative_cohorts()` |
+| `cancer_reference_expression` (artifact and `summary_rows`) | `ValueError`, whatever `on_missing` says | cohort omitted with a `UserWarning` |
+| `cancer_reference_expression(reference_source="summary_rows_all")` | `ValueError` only if the invalid source is named in `source_cohort` | invalid source omitted with a `UserWarning`; a valid source such as Treehouse is returned |
+| `cancer_reference_expression_availability` | describes the source (`available=False`) | still lists it, so the problem stays visible |
+
+A named invalid cohort is never silently dropped as "unavailable", including in a
+multi-cohort request. Valid cohorts are unaffected. Regression tests link the
+registry's source scale to every derived-artifact reader
+(`tests/test_invalid_source_derived_artifacts.py`).
+
+### Still open
+
+This does not repair the source. Issue #604 stays open until:
+
+1. The exact source-field transform is established, or verified linear TPM and the
+   quantification reference are obtained. Do not infer an inverse solely from the
    field name or from current publications using a similarly named output.
-2. Rebuild the selected source with explicit scale and sample provenance;
-   publish it under a new per-cohort source-matrix version.
-3. Rebuild every derived NUTM reference artifact and regenerate affected
-   figures and fitted comparisons. Reassess NUTM1 ranks on that verified input.
+2. The selected source is rebuilt with explicit scale and sample provenance and
+   published under a new per-cohort source-matrix version.
+3. Every derived NUTM reference artifact is rebuilt, figures and fitted comparisons
+   are regenerated, and NUTM1 ranks are reassessed on that verified input.
+4. Cross-source p90/p95 comparisons declare a common ranking universe.
 
-Private case-level input and identifiers are not included in this audit.
+The controlled three-case input is not publicly downloadable and is not included in
+this repository, so none of these steps can be done here. Until then NUTM stays
+withheld. Consumers that read raw artifact files directly (for example the PirlyGenes
+compatibility reader) bypass these guards and must apply the same rule.

@@ -3788,7 +3788,13 @@ def test_artifact_build_metadata_uses_loader_source_cohort_identity():
         suffixes=("_loader", "_metadata"),
         validate="one_to_one",
     )
-    assert len(comparison) == len(matrix_registry)
+    # Cohorts whose selected source has an invalid expression scale are withheld, so
+    # they are unavailable by design; every other registered cohort has an artifact.
+    invalid = set(expression._invalid_selected_source_codes())
+    withheld = availability.loc[~availability["available"]]
+    assert set(withheld["cancer_code"]) == invalid
+    assert withheld["missing_reason"].eq("invalid_source_scale").all()
+    assert len(comparison) == len(matrix_registry) - len(invalid)
     assert (comparison["source_cohort_loader"] == comparison["source_cohort_metadata"]).all()
 
     by_code = comparison.set_index("cancer_code")
