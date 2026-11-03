@@ -107,6 +107,8 @@ def test_availability_still_describes_the_invalid_source_without_raising():
     assert row.source_scale_class == "invalid_legacy_tpm"
     assert not bool(row.linear_tpm_comparable)
     assert not bool(row.available)
+    # The reason says the artifact is withheld, not that it is missing.
+    assert row.missing_reason == "invalid_source_scale"
     all_sources = oncoref.cancer_reference_expression_availability(
         INVALID, reference_source="summary_rows_all", sample_qc="all", all_sources=True
     )

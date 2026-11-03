@@ -4020,6 +4020,9 @@ def _reference_mode_availability(
     artifact_qc_policies: dict[str, tuple[str, ...]],
     artifact_qc_metadata_present: bool,
 ) -> tuple[bool, str]:
+    if reference_source != "summary_rows_all" and code in _invalid_selected_source_codes():
+        # The artifact may exist, but it is built from an invalid source and withheld.
+        return False, "invalid_source_scale"
     if reference_source in {"summary_rows", "summary_rows_all"}:
         if sample_qc == "all":
             return (True, "") if code in summary_available else (False, "no_reference_summary_rows")
