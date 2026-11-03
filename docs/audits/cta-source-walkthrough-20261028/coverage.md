@@ -1,6 +1,6 @@
 # Which sources have missing evidence?
 
-These counts describe the **128 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **127 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
 | Evidence gap | Proteins |
 | --- | --- |
@@ -8,7 +8,7 @@ These counts describe the **128 unassigned proteins with incomplete evidence**, 
 | tumor measurement missing | 29 |
 | tumor group profile incomplete | 2 |
 | embryonic measurement missing | 63 |
-| unresolved evidence | 22 |
+| unresolved evidence | 21 |
 
 The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **29** groups lack a mapped measurement, while **2** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
 
@@ -44,7 +44,7 @@ The new identity pass recovers 19 gene rows omitted by the earlier exact-ID filt
 
 ## Unresolved evidence
 
-The **22** current unresolved groups have contributing **HPA v23 normal-tissue IHC rated Uncertain**, with Medium or High staining. These are measured but unresolved observations. [Exact gene, tissue, cell type, staining and reliability](unresolved-protein-contexts.csv.gz).
+The **21** current unresolved groups have contributing **HPA v23 normal-tissue IHC rated Uncertain**, with Medium or High staining. These are measured but unresolved observations. [Exact gene, tissue, cell type, staining and reliability](unresolved-protein-contexts.csv.gz).
 
 ## Identity matching
 

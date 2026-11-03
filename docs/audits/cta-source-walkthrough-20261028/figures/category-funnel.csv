@@ -1,6 +1,6 @@
 stage,eligible,Other,new_Other,Unsafe,Unresolved
-Normal safety + coverage,1147,0,0,18278,179
-Reproductive presence,661,486,486,18278,179
-Cancer presence,661,486,0,18278,179
-Reproductive concentration,657,490,4,18278,179
-Unsafe sequence containment,637,510,20,18278,179
+Normal safety + coverage,1118,0,0,18351,135
+Reproductive presence,648,470,470,18351,135
+Cancer presence,648,470,0,18351,135
+Reproductive concentration,644,474,4,18351,135
+Unsafe sequence containment,625,493,19,18351,135

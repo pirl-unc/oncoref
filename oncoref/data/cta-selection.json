@@ -1,18 +1,18 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.28.0",
+  "release": "1.29.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "1d0fff4793c8d3cda1fde54df670092eabf269b0a5293c3b09b636160ea73732",
-    "cta-selection-profiles-human.csv.gz": "154f11f7a2edafe39d1ec0213d895544057b70232ab8203deb19682e1e063975",
+    "cta-selection-human.csv.gz": "741b037dad6a19feeabea08f48d4d637175d050221862ae00c89559275901691",
+    "cta-selection-profiles-human.csv.gz": "98ac1c59709ab8b10973c3fef0ff43117aae3edf9b237b84c5ba24daf91447b9",
     "cta-selection-sources.csv": "6b871c6c3c18dc47beb8caa9d4305b90b21337618d9afa410ca5d17e0e38e871",
-    "cta-rare-cell-screen.csv.gz": "4e5118966a8d875daed5067a1edffc17d836242566791dd770174fc318ce736f"
+    "cta-rare-cell-screen.csv.gz": "f33ad87ec64ff642658bea506644fc6788305783aecb90ce6eb8d84084fcb6e1"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-10-31.1",
+      "policy_id": "oncoref.cta-selection.2026-11-03.1",
       "universe": "19863 protein-equivalence groups covering 20097 gene loci",
       "reference": {
         "annotation_release": "115",
@@ -122,8 +122,8 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "0726dd06ff8f5743c6a93f3cb4067baede94c2e9e6d645fbd45444fca309ec33",
-    "report_manifest": "936eaa2bcc1d8f2122cee2ccaf96a0084a8661451940fb46d0e012f35a1ac259",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "49abfc0cd2024ab53aa693507f61fa075b0971e7926799e43a9816534a389635",
+    "report_manifest": "da26cac2751229fa41093fa19a93bbddb8ffc489677230c1fb75451f28e5cfe9",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

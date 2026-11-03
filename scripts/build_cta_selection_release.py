@@ -529,6 +529,7 @@ def build(audit: Path = AUDIT) -> None:
             "developmental_measured": decisions.developmental_measured,
             "rare_cell_screened": decisions.rare_cell_screened,
             "rare_cell_flag": decisions.rare_cell_flag,
+            "rare_cell_hold": decisions.rare_cell_hold,
             "rare_cell_max_pct": decisions.rare_cell_max_pct,
             "rare_cell_type": decisions.rare_cell_type,
             "unsafe_sequence_overlap_pct": decisions.unsafe_sequence_overlap_pct.where(

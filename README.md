@@ -11,18 +11,22 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 The [current CTA/oncofetal selection](docs/audits/cta-source-walkthrough-20261028/index.md)
-contains **637 selected proteins**. The 19,604-protein coding or established-ncORF
-universe receives **637 CTA / 18,278 Unsafe / 689 Other** decisions; none is unassessed.
+contains **625 selected proteins**. The 19,604-protein coding or established-ncORF
+universe receives **625 CTA / 18,351 Unsafe / 628 Other** decisions; none is unassessed.
+
+The [normal-tissue hazard ontology](docs/tissue-hazards.md) centralizes evidence-linked
+bulk and cell-subset calls with generated reports, figures and a Python API.
 A would-be CTA with 95% or more of its sequence inside Unsafe proteins is
 `Other:Contained`, and a nested microprotein is `Other:Nested`. Expression in at least 1% of a
-Vital cell type (brain, heart, alveolar lung) makes a protein Unsafe.
+Vital cell type in the existing brain, spinal-cord, heart and lung panel supplies
+Unsafe evidence. Protected rare-cell findings create a candidate review hold.
 [Independent requirements](docs/cta-evidence-axes.md) assess normal-tissue safety,
 cancer expression and Reproductive evidence, with complete required coverage.
 Reproductive includes reproductive organs, placenta, extraembryonic, embryonic and
 fetal contexts. Only safety can establish Unsafe. The old normal-maximum veto is
 removed; [continuous diffuseness](docs/audits/cta-unassigned-20261029/index.md) is
 active at >10% for complete HPA adult/placental profiles, excluding thymus.
-Every Other protein records its unmet identity requirement; supported embryonic routes remain independently eligible. PRAME, MAGEA4, CTAG1A/B, CTAG2,
+Every Other protein records its unmet admission requirement; supported embryonic routes remain independently eligible. PRAME, MAGEA4, CTAG1A/B, CTAG2,
 XAGE1A/B, SSX2/B, CT83 and TBXT retain CTA status. These are research assignments,
 not validated clinical safety limits.
 

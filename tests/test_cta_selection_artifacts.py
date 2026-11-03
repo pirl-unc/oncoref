@@ -10,12 +10,12 @@ ROOT = Path(__file__).resolve().parents[1]
 AUDIT = ROOT / "docs/audits/cta-release-1.21.0"
 
 
-def test_release_receipts_verify_all_owned_evidence():
+def test_release_receipts_verify_all_owned_evidence(historical_cta_input):
     for filename in ("manifest.json", "cluster-replay.json"):
         receipt = json.loads((AUDIT / filename).read_text())
         for role in ("inputs", "outputs"):
             for name, expected in receipt[role].items():
-                path = (ROOT if role == "inputs" else AUDIT) / name
+                path = historical_cta_input(name, expected) if role == "inputs" else AUDIT / name
                 assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, str(path)
 
 

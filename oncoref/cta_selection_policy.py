@@ -23,11 +23,11 @@ import pandas as pd
 
 from .cell_rna_policy import EXPECTED_UNITS, GRADES, NEUTRAL_REPRODUCTIVE_IMMUNE, POSITIVE
 from .compartment_rna_policy import IHC_RANKS
-from .cta_cell_tiers import differentiated_airway
 from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
+from .tissue_hazards import context_tiers
 
-POLICY_ID = "oncoref.cta-selection.2026-10-31.1"
+POLICY_ID = "oncoref.cta-selection.2026-11-03.1"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 # Manageable-tier RNA above the highest Manageable ceiling (16 x 2^3 = 128 in
@@ -197,26 +197,8 @@ def concentration_evidence(facts: pd.DataFrame, scores: pd.DataFrame) -> pd.Data
 
 
 def compartment_tiers(contexts: pd.DataFrame) -> pd.Series:
-    """Use the same identified cell-compartment tier for RNA and protein.
-
-    Whole-organ bulk retains its anatomical tier. This policy treats identified
-    fibroblasts, large-bowel epithelium and differentiated airway epithelium
-    (``cta_cell_tiers``; airway basal cells stay Vital) as Manageable; it does
-    not describe them as disposable or establish tolerability of cell killing.
-    """
-    tiers = contexts.category.replace({"renewing_mucosa": "manageable"}).copy()
-    mapped = contexts.mapping_status.eq("mapped") & contexts.category.isin(
-        [*TIER_BASES, "renewing_mucosa"]
-    )
-    cellular = contexts.source.isin(["hpa_single_cell_tissue", "hpa_normal_tissue"])
-    cells, tissues = contexts.cell_type.str.lower(), contexts.tissue.str.lower()
-    manageable = (
-        cells.eq("fibroblasts")
-        | (tissues.isin(["colon", "rectum"]) & cells.isin(BOWEL_EPITHELIAL_CELLS))
-        | differentiated_airway(tissues, cells)
-    )
-    tiers.loc[mapped & cellular & manageable] = "manageable"
-    return tiers
+    """Central, cited tissue/cell policy shared by RNA, IHC and rare-cell screens."""
+    return context_tiers(contexts)
 
 
 def match_ihc(
@@ -299,7 +281,7 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
 
     Equality passes. Source-specific support statistics are supplied by adapters.
     CP10K has a nominal numerical /100 policy, not a biochemical TPM conversion.
-    Fibroblasts and bowel epithelium use Manageable; organ bulk retains its tier.
+    Adult human tissue and cell tiers come from the central hazard registry.
     Protein observations are assessed in their own layer, avoiding double counts.
     Reviewed TCR-T evidence may add one RNA ladder step, capped at Enhanced.
     This never relabels IHC, supplies coverage, or overrides protein/clinical injury.
@@ -359,19 +341,11 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
     if d.value.lt(0).any() or np.isinf(d.value).any():
         raise ValueError("Require finite nonnegative RNA or missing")
     d["selection_tier"] = compartment_tiers(d)
-    cells = d.cell_type.fillna("").str.lower()
-    stroma = d.source.eq("hpa_single_cell_tissue") & cells.eq("fibroblasts")
-    normal = d.category.isin([*TIER_BASES, "renewing_mucosa"]) & d.mapping_status.eq("mapped")
-    d.loc[stroma & normal, "selection_tier"] = "manageable"
+    normal = d.selection_tier.isin(TIER_BASES) & d.mapping_status.eq("mapped")
     d["compartment_basis"] = np.where(
-        stroma & normal, "identified_fibroblast", "anatomical_default"
-    )
-    airway = differentiated_airway(d.tissue, d.cell_type) & d.source.isin(
-        ["hpa_single_cell_tissue", "hpa_normal_tissue"]
-    )
-    d.loc[d.selection_tier.ne(d.category) & ~stroma, "compartment_basis"] = "large_bowel_epithelium"
-    d.loc[d.selection_tier.ne(d.category) & airway & normal, "compartment_basis"] = (
-        "differentiated_airway_epithelium"
+        d.selection_tier.ne(d.category) & normal,
+        "central_tissue_hazard_registry",
+        "anatomical_default",
     )
     d["baseline_ceiling"] = (
         d.selection_tier.map(TIER_BASES)

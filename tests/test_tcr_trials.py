@@ -74,7 +74,9 @@ def context(grade, tier="vital", value=6, credit=True):
         "source": "hpa_rna_consensus",
         "taxonomy_id": 9606,
         "stage": "adult",
-        "tissue": "heart muscle",
+        "tissue": {"vital": "heart muscle", "protected": "colon", "manageable": "thyroid gland"}[
+            tier
+        ],
         "cell_type": "bulk",
         "category": tier,
         "mapping_status": "mapped",

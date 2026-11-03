@@ -72,8 +72,8 @@ def test_prior_cta_context_expands_paper_annotations_without_admission(audit):
     assert set(members.label) == {"SPAG9", "SPA17", "SYCP1", "NY-ESO-1", "SSX4/B"}
     boel_members = audit.memberships[audit.memberships.source_id.eq(boel)].set_index("label")
     assert boel_members.loc["MAGEA1", "category"] == "CTA"
-    # MAGEA3's colon signal blocks CTA without establishing Unsafe: Other:Held.
-    assert boel_members.loc["MAGEA3", "category"] == "Other"
+    # MAGEA3's undifferentiated colon population now uses the Vital crypt rule.
+    assert boel_members.loc["MAGEA3", "category"] == "Unsafe"
     context = pd.read_csv(ROOT / "oncoref/data/cta-publication-context.csv")
     assert context.evidence_role.eq("previously_recognized_CTA").all()
     assert context.source_location.notna().all()
@@ -162,7 +162,8 @@ def test_specific_contexts_and_same_tissue_negative_ihc(audit):
     assert row.candidate_ceiling == 32
     assert "reviewed_compartment" in row.ihc_coverage
     colon = audit.explain("PRAME").query("tissue == 'colon'").iloc[0]
-    assert (colon.value, colon.candidate_ceiling, colon.selection_tier) == (20.3, 128, "manageable")
+    assert colon.cell_type == "undifferentiated cells"
+    assert (colon.value, colon.candidate_ceiling, colon.selection_tier) == (20.3, 32, "vital")
     assert "glandular cells" in colon.ihc_coverage
     assert audit.explain("MAGEA1").category.eq("CTA").all()
     mage = (
@@ -373,13 +374,21 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     # Subsequent literature safety additions are independent of diffuseness.
     old_unsafe = set(before[before.category.eq("Unsafe")].index)
     new_unsafe = set(after[after.category.eq("Unsafe")].index)
-    # Unsafe groups can only leave by falling outside the coding/ncORF universe, or
-    # because differentiated airway cells moved from Vital to Manageable.
+    # Later reviewed cell rules can release tissue/immune RNA exclusions;
+    # they cannot erase clinical injury, positive protein or bulk exclusions.
     left = old_unsafe - new_unsafe
     outside = set(pd.read_csv(RELEASE / "out-of-universe.csv.gz").protein_equivalence_group_id)
-    airway_released = left - outside
-    assert before.loc[sorted(airway_released), "unsafe:HPA tissue clusters"].astype(bool).all()
-    assert len(airway_released) <= 15
+    cell_released = left - outside
+    cell_layers = [
+        "unsafe:HPA tissue clusters",
+        "unsafe:HPA immune",
+        "unsafe:Monaco immune",
+        "unsafe:DICE immune",
+    ]
+    other_layers = [c for c in before if c.startswith("unsafe:") and c not in cell_layers]
+    assert before.loc[sorted(cell_released), cell_layers].astype(bool).any(axis=1).all()
+    assert not before.loc[sorted(cell_released), other_layers].astype(bool).any(axis=None)
+    assert len(cell_released) <= 15
     unsafe_layers = [c for c in after if c.startswith("unsafe:")]
     assert after.loc[sorted(new_unsafe - old_unsafe), unsafe_layers].any(axis=1).all()
     changed = frozen.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))

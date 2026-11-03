@@ -6,14 +6,13 @@ zero everywhere while a small population of an essential tissue expresses it
 (MAGEA12 in 1.5% of midbrain dopaminergic neurons). This screen records, per
 gene, the vital-tissue cell types with the highest fraction of expressing cells.
 
-Scope, set by policy
-- Tissues: brain, spinal cord and heart. In lung, alveolar epithelium, endothelium
-  and airway basal cells are Vital; differentiated airway epithelium (ciliated, club,
-  goblet, secretory, ionocytes) is Manageable and recorded but never flagged
-  (oncoref.cta_cell_tiers, shared with the RNA cascade).
-- Ignored: immune lineages (including microglia), fibroblasts and stroma, and
-  clearly developmental cell types, plus broad parent terms. Rare expression in
-  spleen, adipose, immune subsets and similar tissues is allowed.
+Scope, set by the existing expression panel
+- Tissues: brain, spinal cord, heart and selected lung populations. Central adult
+  human hazard calls determine tiers. Club, basal and alveolar populations are
+  Vital; ciliated, goblet and ionocyte populations are Protected and create a
+  candidate review hold when positive.
+- Immune lineages, stroma, broad parent terms and developmental labels remain
+  outside this panel. Their exclusion is missing coverage, not a safety allowance.
 - A cell type needs at least 3,000 cells and 10 expressing cells; the filter fires at
   1% or more of its cells.
 
@@ -39,13 +38,13 @@ import urllib.request
 from datetime import date
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from oncoref.cta_cell_tiers import DIFFERENTIATED_AIRWAY, differentiated_airway  # noqa: E402
+from oncoref.cta_cell_tiers import cell_tiers, differentiated_airway  # noqa: E402
+from oncoref.tissue_hazards import registry as hazard_registry  # noqa: E402
 
 CLASSIFICATIONS = ROOT / "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz"
 OUTPUT = ROOT / "oncoref/data/cta-rare-cell-screen.csv.gz"
@@ -54,9 +53,7 @@ API = "https://api.cellxgene.cziscience.com/wmg/v2"
 NORMAL, HUMAN = "PATO:0000461", "NCBITaxon:9606"
 CACHED_TISSUES = frozenset({"brain", "spinal cord", "heart", "lung"})
 VITAL_TISSUES = frozenset({"brain", "spinal cord", "heart"})
-# Lung: the gas-exchange barrier (alveolar epithelium, endothelium) and airway basal
-# cells (the stem pool) are Vital; differentiated airway epithelium is Manageable.
-# The tier table is shared with the RNA cascade (oncoref.cta_cell_tiers).
+# Scope selectors preserve the collected panel; tier assignment is centralized.
 LUNG_VITAL = re.compile(r"alveolar|pneumocyte|aerocyte|endothelial|basal", re.I)
 EXCLUDED_CELLS = re.compile(
     r"macrophage|monocyte|microglia|\bt cell|\bb cell|\bnk cell|natural killer|lymphocyte|"
@@ -209,7 +206,7 @@ def eligible(raw: pd.DataFrame) -> pd.DataFrame:
     in_tissue = d.tissue.isin(VITAL_TISSUES) | (
         d.tissue.eq("lung") & (d.cell_type.str.contains(LUNG_VITAL) | airway)
     )
-    d = d.assign(tier=np.where(airway, "manageable", "vital"))
+    d = d.assign(tier=cell_tiers(d.tissue, d.cell_type))
     d = d[in_tissue & ~d.cell_type.isin(GENERIC) & ~d.cell_type.str.contains(EXCLUDED_CELLS)]
     d = d[
         d.n_cells.ge(MIN_CELLS)
@@ -221,11 +218,14 @@ def eligible(raw: pd.DataFrame) -> pd.DataFrame:
 
 
 def build(works: list[Path]) -> pd.DataFrame:
-    dims = json.load(urllib.request.urlopen(f"{API}/primary_filter_dimensions", timeout=60))
-    supported = {k for g in dims["gene_terms"][HUMAN] for k in g}
+    # A policy-only rebuild must not label cached measurements as a new live
+    # snapshot. Preserve their original provenance and fingerprint every input.
+    previous = json.loads(PROVENANCE.read_text()) if PROVENANCE.exists() else {}
+    if not previous:
+        raise ValueError("Cached rebuild requires the original source provenance")
     meta = {
-        "snapshot_id": dims.get("snapshot_id"),
-        "unsupported": sorted(set(universe_genes()) - supported),
+        "snapshot_id": previous.get("snapshot_id"),
+        "unsupported": previous.get("unsupported_genes", []),
     }
     parts = sorted(p for work in works for p in work.glob("part-*.parquet"))
     raw = pd.concat(pd.read_parquet(p) for p in parts)
@@ -246,12 +246,18 @@ def build(works: list[Path]) -> pd.DataFrame:
                 "source": "CZ CELLxGENE Discover where-is-my-gene summaries",
                 "endpoint": f"{API}/query",
                 "filters": {"organism": HUMAN, "disease": "normal (PATO:0000461)"},
-                "queried": date.today().isoformat(),
+                "queried": previous["queried"],
+                "policy_rebuilt": date.today().isoformat(),
+                "raw_cache_parts": {
+                    f"{p.parent.name}/{p.name}": hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in parts
+                },
                 "snapshot_id": meta.get("snapshot_id"),
                 "rules": {
                     "vital_tissues": sorted(VITAL_TISSUES),
                     "lung_vital": LUNG_VITAL.pattern,
-                    "lung_manageable_recorded_not_flagged": DIFFERENTIATED_AIRWAY.pattern,
+                    "hazard_registry_id": hazard_registry()["registry_id"],
+                    "protected_action": "candidate_review_hold",
                     "excluded_cell_types": EXCLUDED_CELLS.pattern,
                     "excluded_generic_terms": sorted(GENERIC),
                     "min_cells": MIN_CELLS,

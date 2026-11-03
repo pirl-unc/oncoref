@@ -1,8 +1,8 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/replay_cta_selection.py": "2a4f32c9a9a1851d609c8ef6cd61cf8352236a67b52dde534d1d948fbe468744",
-    "oncoref/cta_selection_policy.py": "ffdf37b8401fd0550ab605e1a055e10c0f9338f2d7b1336f4184cab98bbbe101",
+    "scripts/replay_cta_selection.py": "2e740bd5b7f0ac49a70663088bcbf59e3a6018bee7b30a4def19dda537a56a0f",
+    "oncoref/cta_selection_policy.py": "954639303fe474f29ab2ae9fc10f808a231b15b0e4879b332791900177fe54e5",
     "oncoref/gene_knowledge.py": "ca12b6b5944a08c5dd02396fcf59ce7b75ecc6e89ad706afff2f378d8f4f78f0",
     "oncoref/data/gene-knowledge.json": "eaf4abab3703d718fcfb2e05c2d8e6fed80e4f0f4362de6602f8d10cb69c2219",
     "oncoref/reproductive_evidence.py": "9239dad65042033d487decc556c1befb33a582a5e3029b2795dd54fa42ee4d97",
@@ -19,9 +19,12 @@
     "docs/audits/cta-harmonized-20261027/group-normal/cluster-contexts.csv.gz": "9643fc20efb6d3ced6ef9c0d7ee47621bfed752e1b6a0e8a86bedb7371e2425b",
     "oncoref/normal_cell_screen.py": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
     "oncoref/cell_rna_policy.py": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
-    "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
+    "oncoref/normal_tissues.py": "019c9d05cc86175b3de56140d4f4ce600d6624ec2351120d8565740cdf85ba84",
     "oncoref/compartment_rna_policy.py": "72ebc17a2cd3184126b1894b913da732515630d5d9d99344f10813f9a06e1c38",
-    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",
+    "oncoref/data/normal-tissue-hazards.yaml": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
+    "oncoref/tissue_hazards.py": "61e7e94d4f2c7c353a84d84d27b3c2d98a4216be64dbbd6967c2f7af23ffdeb8",
+    "oncoref/cta_cell_tiers.py": "017c3f252e0b37d85af2ee90610df015561d95c83376a132c0e2024dfb0bbf4d",
     "oncoref/data/normal-tissue-mappings.csv": "ed83eaca220f27514c27bf0328440fab1ec85d7f11c44ff1d5dda4bb7adc0538",
     "scripts/cta_compartment_report.py": "adae787db1bd205fa00a84d987700df2efeca862307c26f1fee750876afe5bcc",
     "scripts/cta_quantitative_threshold_report.py": "ad4a1c7e7ac45f37c7f1e0b22d28000afc711ee954dc54f6b63ae75e140b7389",
@@ -42,12 +45,12 @@
     }
   ],
   "outputs": {
-    "assay-assessments.csv.gz": "0809d8597cb2fd99157e764fa0fa5500ff7f2f694745c7b02b34761acae16ff3",
-    "normal-peak-evidence.csv.gz": "f1191619484249bddf9881c39a47e612fe9e00d3f76a60d51f0d27dfef0786e7",
-    "widely-studied-contexts.csv.gz": "0e2aebc4428154febe407a80b712574baa19456e5773c5c1ec77fbc7300c85fc",
-    "compartment-ihc-matches.csv.gz": "d082ddc314157acb91d717ef3c46e98d99b9120e644563813092f00366585f6f",
-    "manageable-breadth.csv.gz": "0dc359d60dfc9179150a20e6db3b70aa65da6752a37a1e855ac078c76421d23c",
-    "reproductive-cell-evidence.csv.gz": "444beba388b65fcebf20248d881536e60856d795341a1c724628f825e1a76f7c",
-    "outside-reproductive-cluster-coverage.csv.gz": "826e4c040f204754ba91eb081d43a11888a58cf42db2713e173ee32de86e7dc6"
+    "assay-assessments.csv.gz": "8a0627c3e30891455dd781ece2f01c7efc108809b819c0b1c7d00137a33072fe",
+    "normal-peak-evidence.csv.gz": "928a4bda859d59ffc3b84d33dca54880f697b02dd96f33d66cbd1e6f4a767069",
+    "widely-studied-contexts.csv.gz": "b1faa323365b983b2a260d547ee40212489038ca1de9ef50170e98ac78db1523",
+    "compartment-ihc-matches.csv.gz": "1c11b6c85423db9c9fddf932998e293d03038cb7fafdcb970377d682907d8905",
+    "manageable-breadth.csv.gz": "50f1ea70d67e9d6b6d2327dfae5507f910dfb4722dc6aab860465b02921e19b5",
+    "reproductive-cell-evidence.csv.gz": "28f4bed7500c87f4237df36710a7f3e5aa5979595216113cb93a1a2ec792a66e",
+    "outside-reproductive-cluster-coverage.csv.gz": "037d2b4431cd5dca66cbe3b326eaae5644b2ef39be88222e036690de1155dc11"
   }
 }

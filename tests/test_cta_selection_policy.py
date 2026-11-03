@@ -28,16 +28,31 @@ def context(tier="vital", value=4, grade="Missing"):
 @pytest.mark.parametrize("tier,ceiling", [("vital", 4), ("protected", 8), ("manageable", 16)])
 def test_one_boundary_equality_and_anatomical_risk(tier, ceiling):
     rows = pd.DataFrame([context(tier, ceiling), context(tier, ceiling + 0.01)])
+    tissue = {"vital": "heart", "protected": "colon", "manageable": "thyroid gland"}[tier]
+    rows["tissue"] = tissue
     assessed = policy.assess_contexts(rows)
     assert assessed.candidate_exclusion.tolist() == [False, True]
     assert assessed.unsafe_evidence.tolist() == [False, tier != "manageable"]
     assert "strong_boundary" not in assessed
     assert (
-        policy.assess_contexts(pd.DataFrame([context(tier, 0, "Enhanced")])).candidate_ceiling.iloc[
-            0
-        ]
+        policy.assess_contexts(
+            pd.DataFrame([{**context(tier, 0, "Enhanced"), "tissue": tissue}])
+        ).candidate_ceiling.iloc[0]
         == ceiling * 8
     )
+
+
+def test_resolved_cells_are_screened_even_in_a_disposable_organ():
+    rows = pd.DataFrame(
+        [
+            context("disposable", 17) | {"tissue": "tonsil", "cell_type": "B cells"},
+            context("disposable", 9) | {"tissue": "tonsil", "cell_type": "T cells"},
+        ]
+    )
+    assessed = policy.assess_contexts(rows)
+    assert assessed.selection_tier.tolist() == ["manageable", "protected"]
+    assert assessed.candidate_exclusion.tolist() == [True, True]
+    assert assessed.unsafe_evidence.tolist() == [False, True]
 
 
 def test_compartment_match_does_not_transfer_to_other_tissue_state_or_species():

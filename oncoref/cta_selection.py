@@ -244,12 +244,12 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
     is a reported lineage mean, not an individual-cell maximum. Missing numerical
     and nonhuman evidence remains missing. No profile flag overrides a decision.
 
-    ``rare_cell_*`` columns report the rare vital-tissue cell screen for every
-    protein: the highest fraction of expressing cells in a brain, spinal cord,
-    heart or lung alveolar, endothelial or airway basal cell type (``rare_cell_screened`` is False for genes
-    absent from the service). ``rare_cell_flag`` marks at least 1% of such a cell
-    type and is Unsafe evidence; it is a detection frequency among cells, never
-    abundance. See ``rare_cell_screen()``.
+    ``rare_cell_*`` columns report the existing brain/spinal-cord/heart/lung
+    rare-cell panel. ``rare_cell_flag`` marks at least 1% detection in a Vital
+    population; ``rare_cell_hold`` marks qualifying Protected expression.
+    ``rare_cell_max_pct`` and ``rare_cell_type`` describe the highest Vital
+    observation. Detection frequency is not abundance. Missing panel coverage
+    is not tolerability evidence. See ``rare_cell_screen()`` for supporting rows.
     ``unsafe_sequence_overlap_pct`` is the percentage of a protein's 9-mers that also
     occur in an Unsafe protein; at 95% or more a would-be CTA is ``Other:Contained``.
     It is missing for Unsafe proteins, which lie inside the Unsafe set by definition.
@@ -278,6 +278,7 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         "developmental_measured",
         "rare_cell_screened",
         "rare_cell_flag",
+        "rare_cell_hold",
         "rare_cell_max_pct",
         "rare_cell_type",
         "unsafe_sequence_overlap_pct",

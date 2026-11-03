@@ -438,7 +438,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
         )
     style.footer(
         fig,
-        "Above ceiling: Vital/Protected supplies Unsafe evidence; Manageable blocks CTA admission. Equality passes.\nBowel epithelium and identified fibroblasts use Manageable; bulk retains its organ tier.\nNative TPM/nTPM numbers are linked. Corneal CP10K uses nominal /100, not a TPM conversion.",
+        "Above ceiling: Vital/Protected supplies Unsafe evidence; Manageable blocks CTA admission. Equality passes.\nDifferentiated bowel epithelium and fibroblasts use Protected; crypt progenitors use Vital.\nNative TPM/nTPM numbers are linked. Corneal CP10K uses nominal /100, not a TPM conversion.",
     )
     style.save(fig, out, "active-rna-cutoffs")
     expression_figures(facts, out)
@@ -811,7 +811,7 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
     deck_link = presentation_link(
         "Editable slides",
         "slides/cta-evidence-walkthrough-*-final.pptx",
-        "slides/cta-evidence-walkthrough-{v}-final.pptx",
+        "slides/cta-evidence-walkthrough-{v}-validated-final.pptx",
     )
     overview = f"""# CTA and oncofetal selection
 
@@ -863,12 +863,15 @@ single-nucleus clusters read near zero, but 293 of 19,760 midbrain dopaminergic 
 (1.5%) express it in the CELLxGENE summaries.
 
 Every gene is screened (`scripts/build_cta_rare_cell_screen.py`) against CELLxGENE
-normal-sample summaries, **in vital tissues only: brain, spinal cord, heart and lung gas-exchange cells (alveolar epithelium and endothelium)**. A cell type needs at least 3,000 cells and 10 expressing cells. Immune
-lineages (including microglia), fibroblasts and stroma, adipose and clearly
-developmental cell types are ignored, so rare expression in spleen, adipose or immune
-subsets is allowed. **A protein is Unsafe when any member gene is expressed by at least
-1% of a vital-tissue cell type.** {rare_flagged:,} proteins are flagged, and for
-**{len(rare_only):,} of them this is the only Unsafe evidence**.
+normal-sample summaries in brain, spinal cord, heart and selected lung populations.
+The [central tissue-hazard ontology](../tissue-hazards-1.29.0/index.md) assigns each
+resolved population. A cell type needs at least 3,000 cells and 10 expressing cells.
+Immune lineages, fibroblasts/stroma and developmental labels remain outside this
+panel; that is a coverage limit, not an allowance. At least 1% expression in a Vital
+population supplies Unsafe evidence; Protected expression at the same screening
+line creates a candidate review hold. {rare_flagged:,} proteins have a Vital flag,
+and for **{len(rare_only):,} this is the only Unsafe evidence**. The profile field
+`rare_cell_hold` records Protected findings independently.
 
 This is an automated screen, and it measures detection frequency among cells, not
 abundance: expressing cells typically carry about one UMI, and ambient RNA, doublets and
@@ -1012,13 +1015,13 @@ The new compartment mapping relates intestinal epithelial populations to HPA gla
 
 [HPA colon histology](https://www.proteinatlas.org/learn/dictionary/normal/colon), [HPA bronchus histology](https://www.proteinatlas.org/learn/dictionary/normal/bronchus), [all matched measurements](../cta-selection-20261028/compartment-ihc-matches.csv.gz).
 
-PRAME colon RNA is 20.3 nTPM with 96 reads. It receives the declared epithelial-compartment match to Enhanced-negative glandular IHC. Its Manageable ceiling stays capped at 128. PRAME's adrenal bulk 3.6 nTPM has a missing-IHC baseline ceiling of 4, raised to 8 by the IMA203 clinical credit. Glandular-cell staining does not supply complete coverage of the specified adrenal medullary and cortical subcompartments; the clinical credit does not change that IHC finding. Low reported adrenal protein remains a positive flag, not negative evidence.
+PRAME colon undifferentiated-cell RNA is 20.3 nTPM with 96 reads. It receives the declared epithelial-compartment match to Enhanced-negative glandular IHC. Its Vital regenerative-compartment ceiling stays capped at 32. PRAME's adrenal bulk 3.6 nTPM has a missing-IHC baseline ceiling of 4, raised to 8 by the IMA203 clinical credit. Glandular-cell staining does not supply complete coverage of the specified adrenal medullary and cortical subcompartments; the clinical credit does not change that IHC finding. Low reported adrenal protein remains a positive flag, not negative evidence.
 
 CTAG2/LAGE-1 has Enhanced-negative heart cardiomyocyte IHC and bronchial respiratory-epithelial IHC. The revised matcher applies the latter to the basal respiratory compartment; the report retains the parent-compartment coverage assumption. Negative IHC is counterevidence, not proof of clinical safety.
 
 ## Anatomy and protein
 
-Identified fibroblasts and large-bowel epithelial cells use Manageable in both RNA and HPA protein assessment. They are not called disposable. Other cell types retain their anatomical tiers; organ-level bulk is not assigned the tier of one constituent cell type. Accepted non-Low Vital/Protected protein can independently supply Unsafe evidence. Manageable protein blocks CTA only. Uncertain staining is unresolved; explicitly Low protein remains flagged under the existing policy.
+Identified fibroblasts and differentiated large-bowel epithelial cells use Protected in both RNA and HPA protein assessment; crypt/undifferentiated populations use Vital. They are not called disposable. Other cell types retain their anatomical tiers; organ-level bulk is not assigned the tier of one constituent cell type. Accepted non-Low Vital/Protected protein can independently supply Unsafe evidence. Manageable protein blocks CTA only. Uncertain staining is unresolved; explicitly Low protein remains flagged under the existing policy.
 
 Selective fibroblast depletion in mouse contexts is not evidence that all human tissue-resident fibroblasts are dispensable. [Kuwabara et al. (2022)](https://elifesciences.org/articles/69854). Epithelial targeting can cause severe colitis: [Parkhurst et al. (2011)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3048186/). The tier choices describe this screening policy's tolerance assumptions, not validated toxicity predictions.
 

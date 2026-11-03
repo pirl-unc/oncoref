@@ -132,7 +132,9 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
         "parotid gland",
     ):
         assert tier(tissue) == "protected"
-    for tissue in ("skin", "nail bed", "thymus", "spleen", "thyroid gland", "adipose tissue"):
+    for tissue in ("skin", "nail bed", "thymus", "spleen"):
+        assert tier(tissue) == ("protected" if species == "human" else "manageable")
+    for tissue in ("thyroid gland", "adipose tissue"):
         assert tier(tissue) == "manageable"
     assert tier("tonsil") == ("unresolved" if species == "mouse" else "permitted")
     assert tier("appendix") == ("permitted" if species == "human" else "unresolved")
@@ -149,7 +151,7 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
 @pytest.mark.parametrize("species", ["human", "dog", "mouse"])
 def test_every_anatomical_concept_has_one_disjoint_screening_assignment(species):
     taxonomy = normal_tissue_taxonomy()
-    policy = normal_tissue_screening_policy()
+    policy = normal_tissue_screening_policy(species=species)
     taxon = {"human": 9606, "dog": 9615, "mouse": 10090}[species]
 
     def ancestors(cid):
@@ -181,7 +183,7 @@ def test_acceptable_aliases_and_lymphoid_review_do_not_allow_all_immune_cells():
         "permitted_normal", species="human"
     )
     spleen = normal_tissue_screening_details(human.resolve_normal_tissue("spleen"))
-    assert spleen["screening_tier"] == "manageable"
+    assert spleen["screening_tier"] == "protected"
     assert "asplenia_infection_risk_review" in spleen["review_flags"]
     assert "immune_cell_distribution_review" in spleen["review_flags"]
     assert any("cdc.gov" in url for url in spleen["references"])
@@ -223,8 +225,12 @@ def test_five_categories_and_native_mapping_inventory_remain_distinct_from_cover
     assert by_concept["testis"]["tissue_category"] == "reproductive"
     assert by_concept["gallbladder"]["tissue_category"] == "disposable"
     assert by_concept["lymph_node"]["tissue_category"] == "protected"
-    assert by_concept["skin"]["tissue_category"] == "manageable"
-    assert by_concept["skin"]["tissue_category_label"] == "Manageable"
+    assert by_concept["skin"]["tissue_category"] == (
+        "protected" if species == "human" else "manageable"
+    )
+    assert by_concept["skin"]["tissue_category_label"] == (
+        "Protected" if species == "human" else "Manageable"
+    )
     assert by_concept["lymph_node"]["tissue_category_label"] == "Protected"
     assert by_concept["cutaneous_melanocyte"]["tissue_category"] == "disposable"
     assert by_concept["skin"]["category_policy_references"]

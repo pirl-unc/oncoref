@@ -1,0 +1,9 @@
+{
+  "complete_vs_cached_replay": "byte_identical",
+  "outputs": {
+    "protein-group-classifications.csv.gz": "49abfc0cd2024ab53aa693507f61fa075b0971e7926799e43a9816534a389635",
+    "filtering-funnel.csv": "b7a55e75cad5c1a9bf17523a34d98348a72e35f69e685c327f525828b8c948a0",
+    "known-cta-decisions.csv.gz": "0c0b0e961f9a5ada285f3be38c48b6365f34763595f4e3a293d1505b2e4d46d3",
+    "summary.json": "f41cb9589d5b425a020e14c6670affd1e3d8363a9a4450e84f43d610b5453a45"
+  }
+}

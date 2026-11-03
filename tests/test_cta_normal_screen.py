@@ -195,15 +195,15 @@ def test_bulk_skin_cannot_borrow_negativity_from_selected_compartments():
     negatives = [(tissue, cell, "Not detected", "Enhanced") for tissue, cell in required]
     rows = observations("skin", ihc=negatives)
     complete = adaptive_normal_rna_limits(rows, routine_ihc_contexts=required)
-    assert complete.iloc[0].screening_tier == "manageable"
-    assert complete.iloc[0].rna_ceiling_ntpm == 60
+    assert complete.iloc[0].screening_tier == "protected"
+    assert complete.iloc[0].rna_ceiling_ntpm == 24
     assert complete.iloc[0].screening_policy_id.endswith("2026-10-21.2")
     missing = adaptive_normal_rna_limits(rows.iloc[:-1], routine_ihc_contexts=required)
-    assert missing.iloc[0].rna_ceiling_ntpm == 10
+    assert missing.iloc[0].rna_ceiling_ntpm == 6
     # Allowed melanocyte staining cannot establish a negative bulk-skin context.
     rows.loc[2, "ihc_level"] = "Low"
     positive = adaptive_normal_rna_limits(rows, routine_ihc_contexts=required)
-    assert positive.iloc[0].rna_ceiling_ntpm == 10
+    assert positive.iloc[0].rna_ceiling_ntpm == 6
     assert positive.iloc[0].ihc_evidence_status == "positive_ihc"
 
 

@@ -1,0 +1,548 @@
+label,gene_id,assay,source,tissue,cell_type,selection_tier,value,unit,candidate_ceiling,negative_ihc_grade,unsafe_evidence
+TBATA,ENSG00000166220,Normal bulk,hpa_rna_consensus,thymus,bulk,protected,125.3,nTPM,8.0,Missing,True
+KRTAP3-3,ENSG00000212899,Normal bulk,hpa_rna_consensus,skin,bulk,protected,125.3,nTPM,8.0,Missing,True
+LCE2A,ENSG00000187173,Normal bulk,gtex_tissue_rna,skin,bulk,protected,119.184,TPM,8.0,Missing,True
+IL37,ENSG00000125571,Normal bulk,hpa_rna_consensus,skin,bulk,protected,117.8,nTPM,8.0,Missing,True
+LCE5A,ENSG00000186207,Normal bulk,gtex_tissue_rna,skin,bulk,protected,117.234,TPM,8.0,Missing,True
+KLK15,ENSG00000174562,HPA tissue clusters,hpa_single_cell_tissue,rectum,intestinal goblet cells,protected,109.2,nTPM,8.0,Missing/uncertain,True
+KRT25,ENSG00000204897,Normal bulk,hpa_rna_consensus,skin,bulk,protected,108.8,nTPM,8.0,Missing,True
+MAGEA3,ENSG00000221867,HPA tissue clusters,hpa_single_cell_tissue,colon,undifferentiated cells,vital,53.1,nTPM,4.0,Missing/uncertain,True
+KRT71,ENSG00000139648,Normal bulk,hpa_rna_consensus,skin,bulk,protected,96.9,nTPM,8.0,Missing,True
+KRTAP1-3,ENSG00000221880,Normal bulk,hpa_rna_consensus,skin,bulk,protected,92.6,nTPM,8.0,Missing,True
+LCE1D,ENSG00000172155,Normal bulk,gtex_tissue_rna,skin,bulk,protected,86.8962,TPM,8.0,Missing,True
+KRTAP1-5,ENSG00000221852,Normal bulk,hpa_rna_consensus,skin,bulk,protected,76.5,nTPM,8.0,Missing,True
+KRTAP2-1,ENSG00000212725,Normal bulk,hpa_rna_consensus,skin,bulk,protected,66.4,nTPM,8.0,Missing,True
+KRT83,ENSG00000170523,Normal bulk,hpa_rna_consensus,skin,bulk,protected,64.7,nTPM,8.0,Missing,True
+KRT34,ENSG00000131737,Normal bulk,hpa_rna_consensus,skin,bulk,protected,64.5,nTPM,8.0,Missing,True
+LCE1E,ENSG00000186226,Normal bulk,hpa_rna_consensus,skin,bulk,protected,59.5,nTPM,8.0,Missing,True
+KRTAP8-1,ENSG00000183640,Normal bulk,hpa_rna_consensus,skin,bulk,protected,59.4,nTPM,8.0,Missing,True
+KRT35,ENSG00000197079,Normal bulk,hpa_rna_consensus,skin,bulk,protected,56.3,nTPM,8.0,Missing,True
+KRTAP4-7,ENSG00000240871,Normal bulk,hpa_rna_consensus,skin,bulk,protected,56.1,nTPM,8.0,Missing,True
+KRTAP2-2,ENSG00000214518,Normal bulk,hpa_rna_consensus,skin,bulk,protected,52.3,nTPM,8.0,Missing,True
+CLDN22,ENSG00000177300,HPA tissue clusters,hpa_single_cell_tissue,lung,club cells,vital,24.0,nTPM,4.0,Missing/uncertain,True
+KRTAP9-3,ENSG00000204873,Normal bulk,hpa_rna_consensus,skin,bulk,protected,47.8,nTPM,8.0,Missing,True
+MEIG1,ENSG00000197889,HPA tissue clusters,hpa_single_cell_tissue,lung,ciliated cells,protected,47.8,nTPM,8.0,Missing/uncertain,True
+KRT33A,ENSG00000006059,Normal bulk,hpa_rna_consensus,skin,bulk,protected,46.0,nTPM,8.0,Missing,True
+FABP9,ENSG00000205186,Normal bulk,hpa_rna_consensus,skin,bulk,protected,39.6,nTPM,8.0,Missing,True
+KRTAP9-4,ENSG00000241595,Normal bulk,hpa_rna_consensus,skin,bulk,protected,38.7,nTPM,8.0,Missing,True
+FNDC11,ENSG00000125531,HPA tissue clusters,hpa_single_cell_tissue,bronchus,ciliated cells,protected,37.4,nTPM,8.0,Missing/uncertain,True
+KRTAP9-8,ENSG00000187272,Normal bulk,hpa_rna_consensus,skin,bulk,protected,37.0,nTPM,8.0,Missing,True
+KRTAP9-2,ENSG00000239886,Normal bulk,hpa_rna_consensus,skin,bulk,protected,31.7,nTPM,8.0,Missing,True
+KRTAP19-5,ENSG00000186977,Normal bulk,hpa_rna_consensus,skin,bulk,protected,30.6,nTPM,8.0,Missing,True
+PSMB11,ENSG00000222028,Normal bulk,hpa_rna_consensus,thymus,bulk,protected,29.8,nTPM,8.0,Missing,True
+MAGEB2,ENSG00000099399,HPA tissue clusters,hpa_single_cell_tissue,colon,undifferentiated cells,vital,118.4,nTPM,32.0,Enhanced,True
+LIPM,ENSG00000173239,Normal bulk,gtex_tissue_rna,skin,bulk,protected,28.7166,TPM,8.0,Missing,True
+LIPK,ENSG00000204021,Normal bulk,hpa_rna_consensus,skin,bulk,protected,28.2,nTPM,8.0,Missing,True
+KRTAP4-12,ENSG00000213416,Normal bulk,hpa_rna_consensus,skin,bulk,protected,26.0,nTPM,8.0,Missing,True
+KRTAP7-1,ENSG00000274749,Normal bulk,hpa_rna_consensus,skin,bulk,protected,24.3,nTPM,8.0,Missing,True
+ENSG00000288695,ENSG00000288695,HPA tissue clusters,hpa_single_cell_tissue,bronchus,club cells,vital,12.1,nTPM,4.0,Missing/uncertain,True
+KRTAP9-9,ENSG00000198083,Normal bulk,hpa_rna_consensus,skin,bulk,protected,24.0,nTPM,8.0,Missing,True
+KRTAP4-8,ENSG00000204880,Normal bulk,hpa_rna_consensus,skin,bulk,protected,23.9,nTPM,8.0,Missing,True
+LY6G6D,ENSG00000244355,Normal bulk,hpa_rna_consensus,skin,bulk,protected,23.9,nTPM,8.0,Missing,True
+KRTAP12-1,ENSG00000187175,Normal bulk,hpa_rna_consensus,skin,bulk,protected,23.7,nTPM,8.0,Missing,True
+KRTAP17-1,ENSG00000186860,Normal bulk,hpa_rna_consensus,skin,bulk,protected,23.2,nTPM,8.0,Missing,True
+KRTAP10-3,ENSG00000212935,Normal bulk,hpa_rna_consensus,skin,bulk,protected,22.4,nTPM,8.0,Missing,True
+KRTAP4-2,ENSG00000244537,Normal bulk,hpa_rna_consensus,skin,bulk,protected,22.0,nTPM,8.0,Missing,True
+KRTAP12-2,ENSG00000221864,Normal bulk,hpa_rna_consensus,skin,bulk,protected,21.8,nTPM,8.0,Missing,True
+KRTAP26-1,ENSG00000197683,Normal bulk,hpa_rna_consensus,skin,bulk,protected,18.7,nTPM,8.0,Missing,True
+KRTAP4-4,ENSG00000171396,Normal bulk,hpa_rna_consensus,skin,bulk,protected,18.1,nTPM,8.0,Missing,True
+KRTAP10-10,ENSG00000221859,Normal bulk,hpa_rna_consensus,skin,bulk,protected,18.0,nTPM,8.0,Missing,True
+IL37,ENSG00000125571,HPA tissue clusters,hpa_single_cell_tissue,bronchus,ionocytes,protected,18.0,nTPM,8.0,Missing/uncertain,True
+KRTAP4-3,ENSG00000196156,Normal bulk,hpa_rna_consensus,skin,bulk,protected,17.3,nTPM,8.0,Missing,True
+ZNF695,ENSG00000197472,HPA tissue clusters,hpa_single_cell_tissue,colon,undifferentiated cells,vital,8.5,nTPM,4.0,Missing/uncertain,True
+UCN2,ENSG00000145040,Normal bulk,gtex_tissue_rna,skin,bulk,protected,16.2995,TPM,8.0,Missing,True
+KRTAP19-1,ENSG00000184351,Normal bulk,hpa_rna_consensus,skin,bulk,protected,16.0,nTPM,8.0,Missing,True
+KRTAP10-5,ENSG00000241123,Normal bulk,hpa_rna_consensus,skin,bulk,protected,15.9,nTPM,8.0,Missing,True
+FAM72D,ENSG00000215784,HPA tissue clusters,hpa_single_cell_tissue,skin,endothelial cells,vital,7.9,nTPM,4.0,Missing/uncertain,True
+KRT38,ENSG00000171360,Normal bulk,hpa_rna_consensus,skin,bulk,protected,15.5,nTPM,8.0,Missing,True
+ENSG00000236543,ENSG00000236543,Normal bulk,gtex_tissue_rna,skin,bulk,protected,15.3163,TPM,8.0,Missing,True
+MCIDAS,ENSG00000234602,HPA tissue clusters,hpa_single_cell_tissue,lung,club cells,vital,7.5,nTPM,4.0,Missing/uncertain,True
+ARL14EPL,ENSG00000268223,HPA tissue clusters,hpa_single_cell_tissue,colon,undifferentiated cells,vital,7.4,nTPM,4.0,Missing/uncertain,True
+KRTAP10-2,ENSG00000205445,Normal bulk,hpa_rna_consensus,skin,bulk,protected,14.6,nTPM,8.0,Missing,True
+IL1F10,ENSG00000136697,Normal bulk,gtex_tissue_rna,skin,bulk,protected,13.939,TPM,8.0,Missing,True
+KRTAP10-7,ENSG00000272804,Normal bulk,hpa_rna_consensus,skin,bulk,protected,13.8,nTPM,8.0,Missing,True
+HOXC13,ENSG00000123364,Normal bulk,gtex_tissue_rna,skin,bulk,protected,13.732,TPM,8.0,Missing,True
+TMDD1,ENSG00000284730,HPA tissue clusters,hpa_single_cell_tissue,adipose tissue,fibroblasts,protected,13.5,nTPM,8.0,Missing/uncertain,True
+TCL1B,ENSG00000213231,Monaco immune,hpa_immune_monaco,blood,naive B-cell,manageable,26.9,TPM,16.0,Missing,False
+MESP2,ENSG00000188095,HPA tissue clusters,hpa_single_cell_tissue,bronchus,club cells,vital,6.7,nTPM,4.0,Missing/uncertain,True
+ZNF475,ENSG00000250803,HPA tissue clusters,hpa_single_cell_tissue,bronchus,ciliated cells,protected,12.7,nTPM,8.0,Missing/uncertain,True
+KRT82,ENSG00000161850,Normal bulk,hpa_rna_consensus,skin,bulk,protected,12.3,nTPM,8.0,Missing,True
+FAM72C,ENSG00000263513,HPA tissue clusters,hpa_single_cell_tissue,skin,endothelial cells,vital,6.1,nTPM,4.0,Missing/uncertain,True
+KRTAP4-5,ENSG00000198271,Normal bulk,hpa_rna_consensus,skin,bulk,protected,12.0,nTPM,8.0,Missing,True
+KRT9,ENSG00000171403,Normal bulk,hpa_rna_consensus,thymus,bulk,protected,11.8,nTPM,8.0,Missing,True
+TGIF2-RAB5IF,ENSG00000259399,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,5.8,TPM,4.0,Missing,True
+KRT28,ENSG00000173908,Normal bulk,hpa_rna_consensus,skin,bulk,protected,11.3,nTPM,8.0,Missing,True
+KRTAP10-9,ENSG00000221837,Normal bulk,hpa_rna_consensus,skin,bulk,protected,10.5,nTPM,8.0,Missing,True
+NLRP10,ENSG00000182261,Normal bulk,gtex_tissue_rna,skin,bulk,protected,10.3516,TPM,8.0,Missing,True
+KRTAP10-1,ENSG00000215455,Normal bulk,hpa_rna_consensus,skin,bulk,protected,10.1,nTPM,8.0,Missing,True
+NPIPB8,ENSG00000255524,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,4.8,TPM,4.0,Missing,True
+KRTAP10-12,ENSG00000189169,Normal bulk,hpa_rna_consensus,skin,bulk,protected,9.5,nTPM,8.0,Missing,True
+CIMAP1C,ENSG00000182950,HPA tissue clusters,hpa_single_cell_tissue,colon,intestinal goblet cells,protected,9.3,nTPM,8.0,Missing/uncertain,True
+ENSG00000285947,ENSG00000285947,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,18.4,nTPM,16.0,Missing,False
+KRTAP12-3,ENSG00000205439,Normal bulk,hpa_rna_consensus,skin,bulk,protected,9.1,nTPM,8.0,Missing,True
+CRYGN,ENSG00000127377,Normal bulk,gtex_tissue_rna,thyroid gland,bulk,manageable,18.0415,TPM,16.0,Missing,False
+SPDYE4,ENSG00000183318,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,4.5,TPM,4.0,Missing,True
+KRTAP10-11,ENSG00000243489,Normal bulk,hpa_rna_consensus,skin,bulk,protected,8.9,nTPM,8.0,Missing,True
+KRTAP13-1,ENSG00000198390,Normal bulk,hpa_rna_consensus,skin,bulk,protected,8.7,nTPM,8.0,Missing,True
+CRYGN,ENSG00000127377,HPA tissue clusters,hpa_single_cell_tissue,salivary gland,fibroblasts,protected,8.4,nTPM,8.0,Missing/uncertain,True
+OR5AK2,ENSG00000181273,Normal bulk,gtex_tissue_rna,spleen,bulk,protected,8.19694,TPM,8.0,Missing,True
+MEIG1,ENSG00000197889,HPA tissue clusters,hpa_single_cell_tissue,bronchus,club cells,vital,4.0,nTPM,4.0,Missing/uncertain,False
+CIMAP1C,ENSG00000182950,HPA tissue clusters,hpa_single_cell_tissue,skeletal muscle,fibroblasts,protected,8.0,nTPM,8.0,Missing/uncertain,False
+ARMH2,ENSG00000260286,DICE immune,dice_cd4_naive,blood,CD4_NAIVE,protected,7.96056188006,TPM,8.0,Missing/uncertain,False
+NPIPB8,ENSG00000255524,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD4 T-cell,protected,7.9,TPM,8.0,Missing,False
+FAM72D,ENSG00000215784,Normal bulk,hpa_rna_consensus,bone marrow,bulk,vital,3.9,nTPM,4.0,Missing,False
+ENSG00000288695,ENSG00000288695,HPA tissue clusters,hpa_single_cell_tissue,bronchus,basal respiratory cells,vital,3.9,nTPM,4.0,Missing/uncertain,False
+PAGE2,ENSG00000234068,HPA tissue clusters,hpa_single_cell_tissue,pancreas,ductal cells,protected,7.7,nTPM,8.0,Missing/uncertain,False
+SPDYE4,ENSG00000183318,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,3.8,nTPM,4.0,Missing,False
+TGIF2-RAB5IF,ENSG00000259399,Normal bulk,hpa_rna_consensus,bone marrow,bulk,vital,3.8,nTPM,4.0,Missing,False
+BTNL2,ENSG00000204290,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,15.0345451618,TPM,16.0,Missing/uncertain,False
+OR13A1,ENSG00000256574,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,14.8679067559,TPM,16.0,Missing/uncertain,False
+FAM72D,ENSG00000215784,HPA tissue clusters,hpa_single_cell_tissue,adipose tissue,macrophages,protected,7.4,nTPM,8.0,Missing/uncertain,False
+CIMAP1C,ENSG00000182950,Normal bulk,hpa_brain,cerebellum,bulk,vital,3.7,nTPM,4.0,Missing,False
+RPS4Y2,ENSG00000280969,HPA immune,hpa_immune_cell,blood,neutrophil,protected,7.4,nTPM,8.0,Missing,False
+BTNL2,ENSG00000204290,Normal bulk,hpa_brain,hypothalamus,bulk,vital,3.6,nTPM,4.0,Missing,False
+TMDD1,ENSG00000284730,HPA tissue clusters,hpa_single_cell_tissue,adipose tissue,fibroblasts,protected,7.2,nTPM,8.0,Missing/uncertain,False
+RPS4Y2,ENSG00000280969,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,14.3057088998,TPM,16.0,Missing/uncertain,False
+C12orf71,ENSG00000214700,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,7.147564400389999,TPM,8.0,Missing/uncertain,False
+PSG3,ENSG00000221826,HPA tissue clusters,hpa_single_cell_tissue,pancreas,ductal cells,protected,7.1,nTPM,8.0,Missing/uncertain,False
+TBATA,ENSG00000166220,DICE immune,dice_m2,blood,M2,protected,7.067720608189999,TPM,8.0,Missing/uncertain,False
+ENSG00000288695,ENSG00000288695,Normal bulk,hpa_brain,white matter,bulk,vital,3.5,nTPM,4.0,Missing,False
+MESP2,ENSG00000188095,HPA tissue clusters,hpa_single_cell_tissue,salivary gland,mucus glandular cells,protected,6.9,nTPM,8.0,Missing/uncertain,False
+LCE1E,ENSG00000186226,HPA tissue clusters,hpa_single_cell_tissue,skin,suprabasal keratinocytes,manageable,13.4,nTPM,16.0,Missing/uncertain,False
+SPMIP3,ENSG00000173728,DICE immune,dice_nk,blood,NK,protected,6.241597373029999,TPM,8.0,Missing/uncertain,False
+MEIG1,ENSG00000197889,Adult cornea,cornea_collin_adult_counts,cornea/conjunctiva,corneal basal epithelium,vital,0.0311867531642092,CP10K,0.04,Missing/uncertain,False
+TCL1B,ENSG00000213231,HPA immune,hpa_immune_cell,blood,plasmacytoid DC,protected,6.2,nTPM,8.0,Missing,False
+KRT83,ENSG00000170523,Normal bulk,hpa_brain,white matter,bulk,vital,3.1,nTPM,4.0,Missing,False
+OR9H1,ENSG00000228336,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,5.96227813641,TPM,8.0,Missing/uncertain,False
+FSCN3,ENSG00000106328,HPA tissue clusters,hpa_single_cell_tissue,heart muscle,smooth muscle cells,vital,2.9,nTPM,4.0,Missing/uncertain,False
+KRT33A,ENSG00000006059,HPA tissue clusters,hpa_single_cell_tissue,esophagus,squamous epithelial cells,protected,5.7,nTPM,8.0,Missing/uncertain,False
+FAM72C,ENSG00000263513,Normal bulk,hpa_rna_consensus,bone marrow,bulk,vital,2.8,nTPM,4.0,Missing,False
+ZNF475,ENSG00000250803,HPA tissue clusters,hpa_single_cell_tissue,bronchus,ciliated cells,protected,5.5,nTPM,8.0,Missing/uncertain,False
+LY6G6D,ENSG00000244355,Normal bulk,gtex_tissue_rna,colon,bulk,protected,5.41686,TPM,8.0,Missing,False
+OR5AK2,ENSG00000181273,Normal bulk,hpa_rna_consensus,spleen,bulk,protected,5.4,nTPM,8.0,Missing,False
+ZNF695,ENSG00000197472,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,2.7,nTPM,4.0,Missing,False
+CIMAP1C,ENSG00000182950,Adult cornea,cornea_collin_adult_counts,cornea/conjunctiva,corneal superficial epithelium,vital,0.0265578434126582,CP10K,0.04,Missing/uncertain,False
+FNDC11,ENSG00000125531,DICE immune,dice_treg_mem,blood,TREG_MEM,protected,5.24084369273,TPM,8.0,Missing/uncertain,False
+TCL1B,ENSG00000213231,Normal bulk,hpa_brain,white matter,bulk,vital,2.6,nTPM,4.0,Missing,False
+C12orf71,ENSG00000214700,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,2.6,nTPM,4.0,Missing,False
+TCL1B,ENSG00000213231,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,10.0895622151,TPM,16.0,Missing/uncertain,False
+FNDC11,ENSG00000125531,HPA tissue clusters,hpa_single_cell_tissue,bronchus,club cells,vital,2.5,nTPM,4.0,Missing/uncertain,False
+RPS4Y2,ENSG00000280969,HPA tissue clusters,hpa_single_cell_tissue,stomach,b-cells,manageable,9.7,nTPM,16.0,Missing/uncertain,False
+NLRP10,ENSG00000182261,Normal bulk,hpa_rna_consensus,skin,bulk,protected,4.8,nTPM,8.0,Missing,False
+TMDD1,ENSG00000284730,Normal bulk,hpa_brain,hypothalamus,bulk,vital,2.4,nTPM,4.0,Missing,False
+FNDC11,ENSG00000125531,Normal bulk,hpa_brain,hypothalamus,bulk,vital,2.4,nTPM,4.0,Missing,False
+UCN2,ENSG00000145040,Normal bulk,gtex_tissue_rna,esophagus,bulk,protected,4.78699,TPM,8.0,Missing,False
+CLDN22,ENSG00000177300,Normal bulk,hpa_rna_consensus,salivary gland,bulk,protected,4.7,nTPM,8.0,Missing,False
+KRT9,ENSG00000171403,HPA tissue clusters,hpa_single_cell_tissue,skin,basal keratinocytes,protected,4.7,nTPM,8.0,Missing/uncertain,False
+SPDYE4,ENSG00000183318,Monaco immune,hpa_immune_monaco,blood,basophil,protected,4.6,TPM,8.0,Missing,False
+FSCN3,ENSG00000106328,DICE immune,dice_th1,blood,TH1,protected,4.46307021648,TPM,8.0,Missing/uncertain,False
+ARMH2,ENSG00000260286,HPA tissue clusters,hpa_single_cell_tissue,lung,ciliated cells,protected,4.4,nTPM,8.0,Missing/uncertain,False
+ENSG00000248993,ENSG00000248993,HPA tissue clusters,hpa_single_cell_tissue,lymph node,b-cells,manageable,8.7,nTPM,16.0,Missing/uncertain,False
+FABP9,ENSG00000205186,Adult cornea,cornea_collin_adult_counts,cornea/conjunctiva,corneal superficial epithelium,vital,0.0214360494649359,CP10K,0.04,Missing/uncertain,False
+MCIDAS,ENSG00000234602,HPA tissue clusters,hpa_single_cell_tissue,lung,ciliated cells,protected,4.2,nTPM,8.0,Missing/uncertain,False
+MEIG1,ENSG00000197889,DICE immune,dice_th2,blood,TH2,protected,4.09602991458,TPM,8.0,Missing/uncertain,False
+DAZL,ENSG00000092345,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,8.01000299086,TPM,16.0,Missing/uncertain,False
+IL37,ENSG00000125571,HPA tissue clusters,hpa_single_cell_tissue,lung,alveolar cells type 2,vital,2.0,nTPM,4.0,Missing/uncertain,False
+KLK15,ENSG00000174562,Normal bulk,hpa_rna_consensus,salivary gland,bulk,protected,3.9,nTPM,8.0,Missing,False
+CRYGN,ENSG00000127377,DICE immune,dice_tfh,blood,TFH,protected,3.86459546387,TPM,8.0,Missing/uncertain,False
+NPIPB8,ENSG00000255524,Normal bulk,hpa_rna_consensus,cerebellum,bulk,vital,1.9,nTPM,4.0,Missing,False
+CRYGN,ENSG00000127377,HPA tissue clusters,hpa_single_cell_tissue,vascular,smooth muscle cells,vital,1.9,nTPM,4.0,Missing/uncertain,False
+ZNF475,ENSG00000250803,Normal bulk,hpa_brain,midbrain,bulk,vital,1.9,nTPM,4.0,Missing,False
+DAZL,ENSG00000092345,Monaco immune,hpa_immune_monaco,blood,naive B-cell,manageable,7.5,TPM,16.0,Missing,False
+LCE2A,ENSG00000187173,HPA tissue clusters,hpa_single_cell_tissue,pancreas,fibroblasts,protected,3.6,nTPM,8.0,Missing/uncertain,False
+HOXC13,ENSG00000123364,HPA tissue clusters,hpa_single_cell_tissue,tongue,suprabasal keratinocytes,protected,3.5,nTPM,8.0,Missing/uncertain,False
+LCE5A,ENSG00000186207,HPA tissue clusters,hpa_single_cell_tissue,skin,suprabasal keratinocytes,manageable,7.0,nTPM,16.0,Missing/uncertain,False
+PRSS54,ENSG00000103023,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,1.7,nTPM,4.0,Missing,False
+NLRP10,ENSG00000182261,Adult cornea,cornea_collin_adult_counts,cornea/conjunctiva,limbal superficial epithelium,vital,0.0162603104569548,CP10K,0.04,Missing/uncertain,False
+NPIPB8,ENSG00000255524,DICE immune,dice_cd8_naive,blood,CD8_NAIVE,protected,3.2015635524299997,TPM,8.0,Missing/uncertain,False
+MEIG1,ENSG00000197889,Normal bulk,hpa_brain,midbrain,bulk,vital,1.6,nTPM,4.0,Missing,False
+ENSG00000288695,ENSG00000288695,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,1.6,TPM,4.0,Missing,False
+HOXC13,ENSG00000123364,Normal bulk,gtex_tissue_rna,blood vessel,bulk,vital,1.58873,TPM,4.0,Missing,False
+ARMH2,ENSG00000260286,Monaco immune,hpa_immune_monaco,blood,naive CD8 T-cell,protected,3.0,TPM,8.0,Missing,False
+TGIF2-RAB5IF,ENSG00000259399,Monaco immune,hpa_immune_monaco,blood,classical monocyte,protected,3.0,TPM,8.0,Missing,False
+NPIPB8,ENSG00000255524,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,1.5,nTPM,4.0,Missing/uncertain,False
+MESP2,ENSG00000188095,Normal bulk,hpa_brain,pons,bulk,vital,1.5,nTPM,4.0,Missing,False
+KRTAP12-1,ENSG00000187175,Normal bulk,hpa_brain,choroid plexus,bulk,vital,1.5,nTPM,4.0,Missing,False
+SPINT3,ENSG00000101446,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,1.5,nTPM,4.0,Missing,False
+FKBP6,ENSG00000077800,DICE immune,dice_tfh,blood,TFH,protected,2.86690663915,TPM,8.0,Missing/uncertain,False
+FSCN3,ENSG00000106328,Normal bulk,hpa_brain,cerebellum,bulk,vital,1.4,nTPM,4.0,Missing,False
+BTNL2,ENSG00000204290,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,1.4,nTPM,4.0,Missing/uncertain,False
+LCE2A,ENSG00000187173,Normal bulk,hpa_rna_consensus,skeletal muscle,bulk,vital,1.4,nTPM,4.0,Missing,False
+PSMB11,ENSG00000222028,DICE immune,dice_cd4_naive,blood,CD4_NAIVE,protected,2.79813978199,TPM,8.0,Missing/uncertain,False
+ZNF695,ENSG00000197472,HPA tissue clusters,hpa_single_cell_tissue,esophagus,squamous epithelial cells,protected,2.7,nTPM,8.0,Missing/uncertain,False
+MCIDAS,ENSG00000234602,Normal bulk,hpa_rna_consensus,parathyroid gland,bulk,protected,2.7,nTPM,8.0,Missing,False
+WFDC6,ENSG00000243543,Normal bulk,hpa_rna_consensus,lung,bulk,vital,1.3,nTPM,4.0,Missing,False
+ZNF695,ENSG00000197472,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,1.3,TPM,4.0,Missing,False
+KRT9,ENSG00000171403,Normal bulk,gtex_tissue_rna,skin,bulk,protected,2.51909,TPM,8.0,Missing,False
+ARMH2,ENSG00000260286,HPA immune,hpa_immune_cell,blood,neutrophil,protected,2.5,nTPM,8.0,Missing,False
+IL37,ENSG00000125571,DICE immune,dice_nk,blood,NK,protected,2.43945404282,TPM,8.0,Missing/uncertain,False
+KRT34,ENSG00000131737,HPA tissue clusters,hpa_single_cell_tissue,pancreas,fibroblasts,protected,2.4,nTPM,8.0,Missing/uncertain,False
+FABP9,ENSG00000205186,Normal bulk,hpa_brain,white matter,bulk,vital,1.2,nTPM,4.0,Missing,False
+OR9H1,ENSG00000228336,Normal bulk,hpa_brain,pons,bulk,vital,1.2,nTPM,4.0,Missing,False
+FAM72D,ENSG00000215784,Monaco immune,hpa_immune_monaco,blood,myeloid DC,protected,2.4,TPM,8.0,Missing,False
+MESP2,ENSG00000188095,DICE immune,dice_m2,blood,M2,protected,2.37824889542,TPM,8.0,Missing/uncertain,False
+KRTAP12-3,ENSG00000205439,DICE immune,dice_th2,blood,TH2,protected,2.25374086409,TPM,8.0,Missing/uncertain,False
+UCN2,ENSG00000145040,HPA tissue clusters,hpa_single_cell_tissue,tongue,basal keratinocytes,protected,2.2,nTPM,8.0,Missing/uncertain,False
+LIPM,ENSG00000173239,DICE immune,dice_monocytes,blood,MONOCYTES,protected,2.12683311352,TPM,8.0,Missing/uncertain,False
+FNDC11,ENSG00000125531,Monaco immune,hpa_immune_monaco,blood,basophil,protected,2.1,TPM,8.0,Missing,False
+CIMAP1C,ENSG00000182950,DICE immune,dice_monocytes,blood,MONOCYTES,protected,2.07828446788,TPM,8.0,Missing/uncertain,False
+OR13A1,ENSG00000256574,Normal bulk,gtex_tissue_rna,cerebellum,bulk,vital,1.0263,TPM,4.0,Missing,False
+ARMH2,ENSG00000260286,Normal bulk,hpa_rna_consensus,choroid plexus,bulk,vital,1.0,nTPM,4.0,Missing,False
+SPMIP3,ENSG00000173728,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,1.0,nTPM,4.0,Missing/uncertain,False
+LIPM,ENSG00000173239,Normal bulk,hpa_rna_consensus,stomach,bulk,protected,2.0,nTPM,8.0,Missing,False
+KRTAP12-2,ENSG00000221864,Normal bulk,hpa_brain,choroid plexus,bulk,vital,1.0,nTPM,4.0,Missing,False
+OR13A1,ENSG00000256574,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,1.0,nTPM,4.0,Missing/uncertain,False
+KRTAP13-1,ENSG00000198390,HPA tissue clusters,hpa_single_cell_tissue,tongue,suprabasal keratinocytes,protected,1.9,nTPM,8.0,Missing/uncertain,False
+KRT34,ENSG00000131737,Normal bulk,gtex_tissue_rna,cerebellum,bulk,vital,0.932286,TPM,4.0,Missing,False
+CRYGN,ENSG00000127377,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th1,protected,1.8,TPM,8.0,Missing,False
+FSCN3,ENSG00000106328,Monaco immune,hpa_immune_monaco,blood,T-reg,protected,1.8,TPM,8.0,Missing,False
+PAGE2,ENSG00000234068,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,0.9,TPM,4.0,Missing,False
+KRT83,ENSG00000170523,HPA tissue clusters,hpa_single_cell_tissue,salivary gland,mucus glandular cells,protected,1.8,nTPM,8.0,Missing/uncertain,False
+SPAG11B,ENSG00000164871,Normal bulk,hpa_brain,cerebellum,bulk,vital,0.9,nTPM,4.0,Missing,False
+ZNF695,ENSG00000197472,DICE immune,dice_monocytes,blood,MONOCYTES,protected,1.65244141347,TPM,8.0,Missing/uncertain,False
+FNDC11,ENSG00000125531,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,3.3,nTPM,16.0,Missing,False
+ARL14EPL,ENSG00000268223,DICE immune,dice_m2,blood,M2,protected,1.6394020446899995,TPM,8.0,Missing/uncertain,False
+FKBP6,ENSG00000077800,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,0.8,TPM,4.0,Missing,False
+LCE1D,ENSG00000172155,Normal bulk,hpa_rna_consensus,skeletal muscle,bulk,vital,0.8,nTPM,4.0,Missing,False
+PRSS54,ENSG00000103023,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,0.8,nTPM,4.0,Missing/uncertain,False
+FAM72C,ENSG00000263513,HPA tissue clusters,hpa_single_cell_tissue,tongue,basal keratinocytes,protected,1.6,nTPM,8.0,Missing/uncertain,False
+OR13A1,ENSG00000256574,Monaco immune,hpa_immune_monaco,blood,Non-switched memory B-cell,manageable,3.1,TPM,16.0,Missing,False
+KRT33A,ENSG00000006059,Normal bulk,gtex_tissue_rna,esophagus,bulk,protected,1.51693,TPM,8.0,Missing,False
+FAM72C,ENSG00000263513,Monaco immune,hpa_immune_monaco,blood,myeloid DC,protected,1.5,TPM,8.0,Missing,False
+LCE1E,ENSG00000186226,Normal bulk,hpa_rna_consensus,urinary bladder,bulk,protected,1.5,nTPM,8.0,Missing,False
+BTNL2,ENSG00000204290,Monaco immune,hpa_immune_monaco,blood,Non-switched memory B-cell,manageable,2.9,TPM,16.0,Missing,False
+PAGE2,ENSG00000234068,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,1.4459771007799995,TPM,8.0,Missing/uncertain,False
+TBATA,ENSG00000166220,Normal bulk,gtex_tissue_rna,spleen,bulk,protected,1.43639,TPM,8.0,Missing,False
+TXNDC8,ENSG00000204193,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,0.7,nTPM,4.0,Missing/uncertain,False
+KRTAP12-3,ENSG00000205439,HPA tissue clusters,hpa_single_cell_tissue,thymus,t-cells,protected,1.4,nTPM,8.0,Missing/uncertain,False
+KRTAP3-3,ENSG00000212899,HPA tissue clusters,hpa_single_cell_tissue,tongue,suprabasal keratinocytes,protected,1.4,nTPM,8.0,Missing/uncertain,False
+ENSG00000248993,ENSG00000248993,Normal bulk,hpa_rna_consensus,small intestine,bulk,vital,0.7,nTPM,4.0,Missing,False
+LCE5A,ENSG00000186207,Normal bulk,hpa_rna_consensus,skeletal muscle,bulk,vital,0.7,nTPM,4.0,Missing,False
+KRT35,ENSG00000197079,Normal bulk,hpa_brain,hypothalamus,bulk,vital,0.7,nTPM,4.0,Missing,False
+IL37,ENSG00000125571,Normal bulk,hpa_rna_consensus,rectum,bulk,protected,1.3,nTPM,8.0,Missing,False
+KRT25,ENSG00000204897,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,2.6,nTPM,16.0,Missing,False
+ARL14EPL,ENSG00000268223,Monaco immune,hpa_immune_monaco,blood,MAIT T-cell,protected,1.3,TPM,8.0,Missing,False
+LIPK,ENSG00000204021,HPA tissue clusters,hpa_single_cell_tissue,tongue,basal keratinocytes,protected,1.3,nTPM,8.0,Missing/uncertain,False
+SPDYE4,ENSG00000183318,DICE immune,dice_monocytes,blood,MONOCYTES,protected,1.27771532182,TPM,8.0,Missing/uncertain,False
+KRT71,ENSG00000139648,Normal bulk,hpa_brain,choroid plexus,bulk,vital,0.6,nTPM,4.0,Missing,False
+SPMIP3,ENSG00000173728,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,0.6,nTPM,4.0,Missing,False
+CIMAP1C,ENSG00000182950,Monaco immune,hpa_immune_monaco,blood,myeloid DC,protected,1.1,TPM,8.0,Missing,False
+ENSG00000285947,ENSG00000285947,Monaco immune,hpa_immune_monaco,blood,naive B-cell,manageable,2.2,TPM,16.0,Missing,False
+KRTAP12-3,ENSG00000205439,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD4 T-cell,protected,1.1,TPM,8.0,Missing,False
+TXNDC8,ENSG00000204193,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th17,protected,1.1,TPM,8.0,Missing,False
+CRYGN,ENSG00000127377,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,1.1,nTPM,8.0,Missing,False
+FAM72D,ENSG00000215784,DICE immune,dice_m2,blood,M2,protected,1.06012425657,TPM,8.0,Missing/uncertain,False
+SPMIP3,ENSG00000173728,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD4 T-cell,protected,1.0,TPM,8.0,Missing,False
+TXNDC8,ENSG00000204193,Normal bulk,hpa_brain,white matter,bulk,vital,0.5,nTPM,4.0,Missing,False
+C12orf71,ENSG00000214700,HPA immune,hpa_immune_cell,blood,NK-cell,protected,1.0,nTPM,8.0,Missing,False
+TGIF2-RAB5IF,ENSG00000259399,HPA immune,hpa_immune_cell,blood,naive CD8 T-cell,protected,1.0,nTPM,8.0,Missing,False
+MEIG1,ENSG00000197889,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell TFH,protected,0.9,TPM,8.0,Missing,False
+KRTAP4-5,ENSG00000198271,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,1.79777809623,TPM,16.0,Missing/uncertain,False
+LY6G6D,ENSG00000244355,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.8196587167739999,TPM,8.0,Missing/uncertain,False
+FKBP6,ENSG00000077800,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,0.4,nTPM,4.0,Missing/uncertain,False
+C12orf71,ENSG00000214700,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,0.4,nTPM,4.0,Missing/uncertain,False
+FKBP6,ENSG00000077800,Normal bulk,hpa_brain,pons,bulk,vital,0.4,nTPM,4.0,Missing,False
+KRTAP10-9,ENSG00000221837,Normal bulk,hpa_brain,choroid plexus,bulk,vital,0.4,nTPM,4.0,Missing,False
+KRTAP8-1,ENSG00000183640,Normal bulk,hpa_brain,medulla oblongata,bulk,vital,0.4,nTPM,4.0,Missing,False
+PAGE2,ENSG00000234068,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,0.4,nTPM,4.0,Missing,False
+KRTAP4-4,ENSG00000171396,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,1.4133480104299998,TPM,16.0,Missing/uncertain,False
+ENSG00000288695,ENSG00000288695,HPA immune,hpa_immune_cell,blood,intermediate monocyte,protected,0.7,nTPM,8.0,Missing,False
+MEIG1,ENSG00000197889,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,1.4,nTPM,16.0,Missing,False
+KRTAP12-3,ENSG00000205439,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.7,nTPM,8.0,Missing,False
+ZNF695,ENSG00000197472,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.7,nTPM,8.0,Missing,False
+PSMB11,ENSG00000222028,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD4 T-cell,protected,0.7,TPM,8.0,Missing,False
+KRTAP4-12,ENSG00000213416,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,1.37865719352,TPM,16.0,Missing/uncertain,False
+UCN2,ENSG00000145040,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.6861416890979999,TPM,8.0,Missing/uncertain,False
+KRTAP4-3,ENSG00000196156,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,1.269062241,TPM,16.0,Missing/uncertain,False
+KRTAP10-3,ENSG00000212935,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.621732296102,TPM,8.0,Missing/uncertain,False
+KRTAP10-2,ENSG00000205445,DICE immune,dice_tfh,blood,TFH,protected,0.620154507038,TPM,8.0,Missing/uncertain,False
+TMDD1,ENSG00000284730,DICE immune,dice_tfh,blood,TFH,protected,0.617928562126,TPM,8.0,Missing/uncertain,False
+KRTAP4-2,ENSG00000244537,DICE immune,dice_b_cell_naive,blood,B_CELL_NAIVE,manageable,1.22905821923,TPM,16.0,Missing/uncertain,False
+LIPK,ENSG00000204021,Normal bulk,hpa_rna_consensus,esophagus,bulk,protected,0.6,nTPM,8.0,Missing,False
+ARL14EPL,ENSG00000268223,Normal bulk,hpa_rna_consensus,bone marrow,bulk,vital,0.3,nTPM,4.0,Missing,False
+KRTAP12-3,ENSG00000205439,Normal bulk,hpa_brain,basal ganglia,bulk,vital,0.3,nTPM,4.0,Missing,False
+ENSG00000236543,ENSG00000236543,Normal bulk,hpa_brain,basal ganglia,bulk,vital,0.3,nTPM,4.0,Missing,False
+TGIF2-RAB5IF,ENSG00000259399,HPA tissue clusters,hpa_single_cell_tissue,brain,inhibitory neurons,vital,0.3,nTPM,4.0,Missing/uncertain,False
+SPAG11A,ENSG00000178287,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,0.3,nTPM,4.0,Missing,False
+KRTAP7-1,ENSG00000274749,Normal bulk,hpa_brain,pons,bulk,vital,0.3,nTPM,4.0,Missing,False
+TCL1B,ENSG00000213231,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,0.3,nTPM,4.0,Missing/uncertain,False
+KRTAP10-11,ENSG00000243489,Normal bulk,hpa_brain,choroid plexus,bulk,vital,0.3,nTPM,4.0,Missing,False
+KRTAP10-3,ENSG00000212935,Normal bulk,hpa_brain,choroid plexus,bulk,vital,0.3,nTPM,4.0,Missing,False
+KRTAP10-2,ENSG00000205445,Normal bulk,hpa_brain,choroid plexus,bulk,vital,0.3,nTPM,4.0,Missing,False
+PSG3,ENSG00000221826,Normal bulk,hpa_brain,cerebral cortex,bulk,vital,0.3,nTPM,4.0,Missing,False
+KLK15,ENSG00000174562,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,0.3,nTPM,4.0,Missing/uncertain,False
+CLDN22,ENSG00000177300,Monaco immune,hpa_immune_monaco,blood,NK-cell,protected,0.6,TPM,8.0,Missing,False
+FAM72C,ENSG00000263513,DICE immune,dice_m2,blood,M2,protected,0.567108748882,TPM,8.0,Missing/uncertain,False
+KRT71,ENSG00000139648,DICE immune,dice_nk,blood,NK,protected,0.500728359738,TPM,8.0,Missing/uncertain,False
+KRT38,ENSG00000171360,Normal bulk,hpa_rna_consensus,salivary gland,bulk,protected,0.5,nTPM,8.0,Missing,False
+IL37,ENSG00000125571,HPA immune,hpa_immune_cell,blood,NK-cell,protected,0.5,nTPM,8.0,Missing,False
+ARL14EPL,ENSG00000268223,HPA immune,hpa_immune_cell,blood,MAIT T-cell,protected,0.5,nTPM,8.0,Missing,False
+RPS4Y2,ENSG00000280969,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.5,TPM,8.0,Missing,False
+KRTAP4-12,ENSG00000213416,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,1.0,nTPM,16.0,Missing,False
+KRTAP3-3,ENSG00000212899,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.439569,TPM,8.0,Missing,False
+LCE5A,ENSG00000186207,DICE immune,dice_tfh,blood,TFH,protected,0.420081093148,TPM,8.0,Missing/uncertain,False
+DAZL,ENSG00000092345,Normal bulk,hpa_brain,hypothalamus,bulk,vital,0.2,nTPM,4.0,Missing,False
+NLRP10,ENSG00000182261,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,0.2,TPM,4.0,Missing,False
+NLRP10,ENSG00000182261,HPA tissue clusters,hpa_single_cell_tissue,brain,excitatory neurons,vital,0.2,nTPM,4.0,Missing/uncertain,False
+RPS4Y2,ENSG00000280969,Normal bulk,hpa_brain,spinal cord,bulk,vital,0.2,nTPM,4.0,Missing,False
+KRTAP10-5,ENSG00000241123,Normal bulk,hpa_brain,choroid plexus,bulk,vital,0.2,nTPM,4.0,Missing,False
+FAM72D,ENSG00000215784,HPA immune,hpa_immune_cell,blood,intermediate monocyte,protected,0.4,nTPM,8.0,Missing,False
+CIMAP1C,ENSG00000182950,HPA immune,hpa_immune_cell,blood,myeloid DC,protected,0.4,nTPM,8.0,Missing,False
+FAM72C,ENSG00000263513,HPA immune,hpa_immune_cell,blood,T-reg,protected,0.4,nTPM,8.0,Missing,False
+C12orf71,ENSG00000214700,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th17,protected,0.4,TPM,8.0,Missing,False
+KRTAP7-1,ENSG00000274749,HPA immune,hpa_immune_cell,blood,T-reg,protected,0.4,nTPM,8.0,Missing,False
+IL37,ENSG00000125571,Monaco immune,hpa_immune_monaco,blood,NK-cell,protected,0.4,TPM,8.0,Missing,False
+KRTAP10-2,ENSG00000205445,Monaco immune,hpa_immune_monaco,blood,T-reg,protected,0.4,TPM,8.0,Missing,False
+ZNF475,ENSG00000250803,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,0.2,TPM,4.0,Missing,False
+LIPK,ENSG00000204021,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.3775391484309999,TPM,8.0,Missing/uncertain,False
+KRTAP7-1,ENSG00000274749,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.375517296707,TPM,8.0,Missing/uncertain,False
+KRTAP17-1,ENSG00000186860,DICE immune,dice_nk,blood,NK,protected,0.363976166498,TPM,8.0,Missing/uncertain,False
+ENSG00000248993,ENSG00000248993,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,0.7,nTPM,16.0,Missing,False
+KRTAP1-5,ENSG00000221852,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.328696,TPM,8.0,Missing,False
+SPAG11B,ENSG00000164871,Monaco immune,hpa_immune_monaco,blood,naive CD4 T-cell,protected,0.3,TPM,8.0,Missing,False
+KRT25,ENSG00000204897,HPA tissue clusters,hpa_single_cell_tissue,adipose tissue,fibroblasts,protected,0.3,nTPM,8.0,Missing/uncertain,False
+MAGEB2,ENSG00000099399,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD4 T-cell,protected,0.3,TPM,8.0,Missing,False
+KRTAP7-1,ENSG00000274749,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th2,protected,0.3,TPM,8.0,Missing,False
+NPIPB8,ENSG00000255524,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,0.6,nTPM,16.0,Missing,False
+ZNF475,ENSG00000250803,DICE immune,dice_tfh,blood,TFH,protected,0.296803003824,TPM,8.0,Missing/uncertain,False
+KRT34,ENSG00000131737,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.261559471847,TPM,8.0,Missing/uncertain,False
+KRTAP10-11,ENSG00000243489,DICE immune,dice_thstar,blood,THSTAR,protected,0.243652610894,TPM,8.0,Missing/uncertain,False
+MAGEB2,ENSG00000099399,DICE immune,dice_th1,blood,TH1,protected,0.242461354781,TPM,8.0,Missing/uncertain,False
+KRT83,ENSG00000170523,DICE immune,dice_nk,blood,NK,protected,0.236974594034,TPM,8.0,Missing/uncertain,False
+LIPK,ENSG00000204021,Monaco immune,hpa_immune_monaco,blood,intermediate monocyte,protected,0.2,TPM,8.0,Missing,False
+PAGE2,ENSG00000234068,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.2,nTPM,8.0,Missing,False
+KRTAP10-7,ENSG00000272804,Normal bulk,hpa_rna_consensus,pituitary gland,bulk,vital,0.1,nTPM,4.0,Missing,False
+KRTAP26-1,ENSG00000197683,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,0.4,nTPM,16.0,Missing,False
+MAGEB2,ENSG00000099399,Normal bulk,hpa_rna_consensus,lung,bulk,vital,0.1,nTPM,4.0,Missing,False
+ENSG00000285947,ENSG00000285947,Normal bulk,hpa_rna_consensus,bone marrow,bulk,vital,0.1,nTPM,4.0,Missing,False
+PSMB11,ENSG00000222028,Normal bulk,hpa_brain,white matter,bulk,vital,0.1,nTPM,4.0,Missing,False
+KRTAP10-12,ENSG00000189169,Normal bulk,hpa_brain,basal ganglia,bulk,vital,0.1,nTPM,4.0,Missing,False
+KRTAP10-10,ENSG00000221859,Normal bulk,hpa_brain,medulla oblongata,bulk,vital,0.1,nTPM,4.0,Missing,False
+KRTAP10-1,ENSG00000215455,Normal bulk,hpa_brain,thalamus,bulk,vital,0.1,nTPM,4.0,Missing,False
+KRT28,ENSG00000173908,Normal bulk,hpa_brain,choroid plexus,bulk,vital,0.1,nTPM,4.0,Missing,False
+KRTAP19-1,ENSG00000184351,Normal bulk,hpa_rna_consensus,heart muscle,bulk,vital,0.1,nTPM,4.0,Missing,False
+KRTAP17-1,ENSG00000186860,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,0.4,nTPM,16.0,Missing,False
+PSMB11,ENSG00000222028,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.2,nTPM,8.0,Missing,False
+OR13A1,ENSG00000256574,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,0.4,nTPM,16.0,Missing,False
+DAZL,ENSG00000092345,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,0.4,nTPM,16.0,Missing,False
+LIPM,ENSG00000173239,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.2,TPM,8.0,Missing,False
+KRTAP4-12,ENSG00000213416,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th2,protected,0.2,TPM,8.0,Missing,False
+LCE5A,ENSG00000186207,Monaco immune,hpa_immune_monaco,blood,Vd2 gdTCR,protected,0.2,TPM,8.0,Missing,False
+IL1F10,ENSG00000136697,Normal bulk,gtex_tissue_rna,esophagus,bulk,protected,0.198525,TPM,8.0,Missing,False
+KLK15,ENSG00000174562,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.178208589712,TPM,8.0,Missing/uncertain,False
+KRTAP4-7,ENSG00000240871,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.169864,TPM,8.0,Missing,False
+KRTAP10-7,ENSG00000272804,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.168781981961,TPM,8.0,Missing/uncertain,False
+KRTAP19-5,ENSG00000186977,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,0.3,nTPM,16.0,Missing,False
+KRT82,ENSG00000161850,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,0.3,nTPM,16.0,Missing,False
+KRTAP1-3,ENSG00000221880,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.138795,TPM,8.0,Missing,False
+IL1F10,ENSG00000136697,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.132917280344,TPM,8.0,Missing/uncertain,False
+PRSS54,ENSG00000103023,DICE immune,dice_cd4_naive,blood,CD4_NAIVE,protected,0.1234577633359999,TPM,8.0,Missing/uncertain,False
+KRT35,ENSG00000197079,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.109263855935,TPM,8.0,Missing/uncertain,False
+KRT38,ENSG00000171360,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.10561959633,TPM,8.0,Missing/uncertain,False
+NLRP10,ENSG00000182261,DICE immune,dice_nk,blood,NK,protected,0.105375471171,TPM,8.0,Missing/uncertain,False
+TXNDC8,ENSG00000204193,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.101343417518,TPM,8.0,Missing/uncertain,False
+MESP2,ENSG00000188095,HPA immune,hpa_immune_cell,blood,NK-cell,protected,0.1,nTPM,8.0,Missing,False
+LY6G6D,ENSG00000244355,HPA immune,hpa_immune_cell,blood,intermediate monocyte,protected,0.1,nTPM,8.0,Missing,False
+SPDYE4,ENSG00000183318,HPA immune,hpa_immune_cell,blood,plasmacytoid DC,protected,0.1,nTPM,8.0,Missing,False
+TXNDC8,ENSG00000204193,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.1,nTPM,8.0,Missing,False
+LCE5A,ENSG00000186207,HPA immune,hpa_immune_cell,blood,NK-cell,protected,0.1,nTPM,8.0,Missing,False
+KRTAP10-2,ENSG00000205445,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.1,nTPM,8.0,Missing,False
+KRTAP10-10,ENSG00000221859,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.1,TPM,8.0,Missing,False
+SPINT3,ENSG00000101446,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.1,TPM,8.0,Missing,False
+KRTAP10-3,ENSG00000212935,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.1,TPM,8.0,Missing,False
+KRTAP10-9,ENSG00000221837,Monaco immune,hpa_immune_monaco,blood,MAIT T-cell,protected,0.1,TPM,8.0,Missing,False
+MAGEA3,ENSG00000221867,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,0.2,nTPM,16.0,Missing,False
+KRT71,ENSG00000139648,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD8 T-cell,protected,0.1,TPM,8.0,Missing,False
+UCN2,ENSG00000145040,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.1,TPM,8.0,Missing,False
+ENSG00000248993,ENSG00000248993,Monaco immune,hpa_immune_monaco,blood,myeloid DC,protected,0.1,TPM,8.0,Missing,False
+KRT83,ENSG00000170523,Monaco immune,hpa_immune_monaco,blood,basophil,protected,0.1,TPM,8.0,Missing,False
+LY6G6D,ENSG00000244355,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.1,TPM,8.0,Missing,False
+KRTAP4-5,ENSG00000198271,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th2,protected,0.1,TPM,8.0,Missing,False
+KRTAP4-3,ENSG00000196156,HPA immune,hpa_immune_cell,blood,memory CD4 T-cell,protected,0.1,nTPM,8.0,Missing,False
+KRTAP17-1,ENSG00000186860,HPA immune,hpa_immune_cell,blood,memory CD8 T-cell,protected,0.1,nTPM,8.0,Missing,False
+MESP2,ENSG00000188095,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th17,protected,0.1,TPM,8.0,Missing,False
+TMDD1,ENSG00000284730,Monaco immune,hpa_immune_monaco,blood,MAIT T-cell,protected,0.1,TPM,8.0,Missing,False
+PSG3,ENSG00000221826,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0917819296161,TPM,8.0,Missing/uncertain,False
+KRTAP2-2,ENSG00000214518,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.090125,TPM,8.0,Missing,False
+KRTAP9-3,ENSG00000204873,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.083665,TPM,8.0,Missing,False
+KRTAP9-4,ENSG00000241595,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.082961,TPM,8.0,Missing,False
+KRTAP4-12,ENSG00000213416,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.060859,TPM,8.0,Missing,False
+KRTAP4-8,ENSG00000204880,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.051056,TPM,8.0,Missing,False
+BTNL2,ENSG00000204290,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,0.1,nTPM,16.0,Missing,False
+KRTAP13-1,ENSG00000198390,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,0.1,nTPM,16.0,Missing,False
+KRTAP2-1,ENSG00000212725,Normal bulk,hpa_rna_consensus,adipose tissue,bulk,manageable,0.1,nTPM,16.0,Missing,False
+MAGEB2,ENSG00000099399,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,0.1,nTPM,16.0,Missing,False
+KRTAP4-4,ENSG00000171396,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.041269,TPM,8.0,Missing,False
+KRTAP4-3,ENSG00000196156,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.040618,TPM,8.0,Missing,False
+KRTAP9-9,ENSG00000198083,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.039706,TPM,8.0,Missing,False
+KRTAP4-2,ENSG00000244537,Normal bulk,gtex_tissue_rna,skin,bulk,protected,0.037129,TPM,8.0,Missing,False
+KRTAP19-1,ENSG00000184351,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+TBATA,ENSG00000166220,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRTAP9-8,ENSG00000187272,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRTAP8-1,ENSG00000183640,Monaco immune,hpa_immune_monaco,blood,naive CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRT9,ENSG00000171403,Monaco immune,hpa_immune_monaco,blood,Progenitor cell,vital,0.0,TPM,4.0,Missing,False
+KRTAP4-4,ENSG00000171396,Monaco immune,hpa_immune_monaco,blood,intermediate monocyte,protected,0.0,TPM,8.0,Missing,False
+KRT38,ENSG00000171360,Monaco immune,hpa_immune_monaco,blood,classical monocyte,protected,0.0,TPM,8.0,Missing,False
+LCE1E,ENSG00000186226,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+LCE2A,ENSG00000187173,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRTAP12-1,ENSG00000187175,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th1/Th17,protected,0.0,TPM,8.0,Missing,False
+KRTAP19-5,ENSG00000186977,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRT28,ENSG00000173908,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KLK15,ENSG00000174562,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+LCE1D,ENSG00000172155,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+PRSS54,ENSG00000103023,Monaco immune,hpa_immune_monaco,blood,intermediate monocyte,protected,0.0,TPM,8.0,Missing,False
+HOXC13,ENSG00000123364,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD4 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRT34,ENSG00000131737,Monaco immune,hpa_immune_monaco,blood,Effector memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRT82,ENSG00000161850,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+OR5AK2,ENSG00000181273,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+KRTAP17-1,ENSG00000186860,Monaco immune,hpa_immune_monaco,blood,non-classical monocyte,protected,0.0,TPM,8.0,Missing,False
+SPAG11A,ENSG00000178287,Monaco immune,hpa_immune_monaco,blood,Exhausted memory B-cell,manageable,0.0,TPM,16.0,Missing,False
+IL1F10,ENSG00000136697,Monaco immune,hpa_immune_monaco,blood,myeloid DC,protected,0.0,TPM,8.0,Missing,False
+KRTAP10-1,ENSG00000215455,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+PSG3,ENSG00000221826,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+KRTAP12-2,ENSG00000221864,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRTAP1-5,ENSG00000221852,Monaco immune,hpa_immune_monaco,blood,T-reg,protected,0.0,TPM,8.0,Missing,False
+MAGEA3,ENSG00000221867,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+KRTAP13-1,ENSG00000198390,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th2,protected,0.0,TPM,8.0,Missing,False
+KRTAP2-2,ENSG00000214518,Monaco immune,hpa_immune_monaco,blood,T-reg,protected,0.0,TPM,8.0,Missing,False
+KRTAP1-3,ENSG00000221880,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+OR9H1,ENSG00000228336,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+KRTAP10-12,ENSG00000189169,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+KRTAP2-1,ENSG00000212725,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRTAP3-3,ENSG00000212899,Monaco immune,hpa_immune_monaco,blood,Central memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRTAP4-3,ENSG00000196156,Monaco immune,hpa_immune_monaco,blood,Non-Vd2 gdTCR,protected,0.0,TPM,8.0,Missing,False
+MCIDAS,ENSG00000234602,Monaco immune,hpa_immune_monaco,blood,T-reg,protected,0.0,TPM,8.0,Missing,False
+KRTAP9-9,ENSG00000198083,Monaco immune,hpa_immune_monaco,blood,non-classical monocyte,protected,0.0,TPM,8.0,Missing,False
+ENSG00000236543,ENSG00000236543,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell TFH,protected,0.0,TPM,8.0,Missing,False
+WFDC6,ENSG00000243543,Monaco immune,hpa_immune_monaco,blood,classical monocyte,protected,0.0,TPM,8.0,Missing,False
+KRTAP10-11,ENSG00000243489,Monaco immune,hpa_immune_monaco,blood,basophil,protected,0.0,TPM,8.0,Missing,False
+KRTAP4-8,ENSG00000204880,Monaco immune,hpa_immune_monaco,blood,Non-switched memory B-cell,manageable,0.0,TPM,16.0,Missing,False
+KRTAP9-3,ENSG00000204873,Monaco immune,hpa_immune_monaco,blood,Terminal effector memory CD8 T-cell,protected,0.0,TPM,8.0,Missing,False
+KRT25,ENSG00000204897,Monaco immune,hpa_immune_monaco,blood,Exhausted memory B-cell,manageable,0.0,TPM,16.0,Missing,False
+KRTAP9-4,ENSG00000241595,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.0,TPM,8.0,Missing,False
+FABP9,ENSG00000205186,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell Th17,protected,0.0,TPM,8.0,Missing,False
+KRTAP4-2,ENSG00000244537,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell TFH,protected,0.0,TPM,8.0,Missing,False
+KRT35,ENSG00000197079,Monaco immune,hpa_immune_monaco,blood,Non-switched memory B-cell,manageable,0.0,TPM,16.0,Missing,False
+KRT33A,ENSG00000006059,Monaco immune,hpa_immune_monaco,blood,NK-cell,protected,0.0,TPM,8.0,Missing,False
+KRTAP10-5,ENSG00000241123,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+KRTAP4-7,ENSG00000240871,Monaco immune,hpa_immune_monaco,blood,total PBMC,protected,0.0,TPM,8.0,Missing,False
+KRTAP9-2,ENSG00000239886,Monaco immune,hpa_immune_monaco,blood,neutrophil,protected,0.0,TPM,8.0,Missing,False
+KRTAP26-1,ENSG00000197683,Monaco immune,hpa_immune_monaco,blood,T-reg,protected,0.0,TPM,8.0,Missing,False
+KRTAP10-7,ENSG00000272804,Monaco immune,hpa_immune_monaco,blood,Memory CD4 T-cell TFH,protected,0.0,TPM,8.0,Missing,False
+KRTAP2-2,ENSG00000214518,HPA immune,hpa_immune_cell,blood,MAIT T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRT82,ENSG00000161850,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.0,nTPM,8.0,Missing,False
+SPAG11B,ENSG00000164871,HPA immune,hpa_immune_cell,blood,plasmacytoid DC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP10-3,ENSG00000212935,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP10-9,ENSG00000221837,HPA immune,hpa_immune_cell,blood,T-reg,protected,0.0,nTPM,8.0,Missing,False
+KRTAP12-2,ENSG00000221864,HPA immune,hpa_immune_cell,blood,myeloid DC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP10-1,ENSG00000215455,HPA immune,hpa_immune_cell,blood,classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+PSG3,ENSG00000221826,HPA immune,hpa_immune_cell,blood,memory CD8 T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP10-10,ENSG00000221859,HPA immune,hpa_immune_cell,blood,memory CD8 T-cell,protected,0.0,nTPM,8.0,Missing,False
+FSCN3,ENSG00000106328,HPA immune,hpa_immune_cell,blood,MAIT T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP1-5,ENSG00000221852,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,0.0,nTPM,16.0,Missing,False
+MAGEA3,ENSG00000221867,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP2-1,ENSG00000212725,HPA immune,hpa_immune_cell,blood,plasmacytoid DC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP3-3,ENSG00000212899,HPA immune,hpa_immune_cell,blood,naive CD8 T-cell,protected,0.0,nTPM,8.0,Missing,False
+TBATA,ENSG00000166220,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+FKBP6,ENSG00000077800,HPA immune,hpa_immune_cell,blood,plasmacytoid DC,protected,0.0,nTPM,8.0,Missing,False
+ENSG00000236543,ENSG00000236543,HPA immune,hpa_immune_cell,blood,intermediate monocyte,protected,0.0,nTPM,8.0,Missing,False
+KRTAP10-7,ENSG00000272804,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRT25,ENSG00000204897,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP4-8,ENSG00000204880,HPA immune,hpa_immune_cell,blood,non-classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+KRTAP9-3,ENSG00000204873,HPA immune,hpa_immune_cell,blood,T-reg,protected,0.0,nTPM,8.0,Missing,False
+KRTAP4-2,ENSG00000244537,HPA immune,hpa_immune_cell,blood,non-classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+TMDD1,ENSG00000284730,HPA immune,hpa_immune_cell,blood,memory CD8 T-cell,protected,0.0,nTPM,8.0,Missing,False
+WFDC6,ENSG00000243543,HPA immune,hpa_immune_cell,blood,plasmacytoid DC,protected,0.0,nTPM,8.0,Missing,False
+LIPK,ENSG00000204021,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP1-3,ENSG00000221880,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+MCIDAS,ENSG00000234602,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.0,nTPM,8.0,Missing,False
+OR9H1,ENSG00000228336,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,0.0,nTPM,16.0,Missing,False
+KRTAP13-1,ENSG00000198390,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+FABP9,ENSG00000205186,HPA immune,hpa_immune_cell,blood,gdT-cell,protected,0.0,nTPM,8.0,Missing,False
+KRT83,ENSG00000170523,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRT9,ENSG00000171403,HPA immune,hpa_immune_cell,blood,basophil,protected,0.0,nTPM,8.0,Missing,False
+KRT38,ENSG00000171360,HPA immune,hpa_immune_cell,blood,non-classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+KRTAP4-4,ENSG00000171396,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP19-1,ENSG00000184351,HPA immune,hpa_immune_cell,blood,myeloid DC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP8-1,ENSG00000183640,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+OR5AK2,ENSG00000181273,HPA immune,hpa_immune_cell,blood,non-classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+NLRP10,ENSG00000182261,HPA immune,hpa_immune_cell,blood,MAIT T-cell,protected,0.0,nTPM,8.0,Missing,False
+LIPM,ENSG00000173239,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRT71,ENSG00000139648,HPA immune,hpa_immune_cell,blood,NK-cell,protected,0.0,nTPM,8.0,Missing,False
+LCE1D,ENSG00000172155,HPA immune,hpa_immune_cell,blood,memory CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+SPMIP3,ENSG00000173728,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.0,nTPM,8.0,Missing,False
+KRT28,ENSG00000173908,HPA immune,hpa_immune_cell,blood,MAIT T-cell,protected,0.0,nTPM,8.0,Missing,False
+KLK15,ENSG00000174562,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,0.0,nTPM,16.0,Missing,False
+HOXC13,ENSG00000123364,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+PRSS54,ENSG00000103023,HPA immune,hpa_immune_cell,blood,MAIT T-cell,protected,0.0,nTPM,8.0,Missing,False
+CLDN22,ENSG00000177300,HPA immune,hpa_immune_cell,blood,classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+SPAG11A,ENSG00000178287,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,0.0,nTPM,16.0,Missing,False
+UCN2,ENSG00000145040,HPA immune,hpa_immune_cell,blood,NK-cell,protected,0.0,nTPM,8.0,Missing,False
+ZNF475,ENSG00000250803,HPA immune,hpa_immune_cell,blood,gdT-cell,protected,0.0,nTPM,8.0,Missing,False
+ENSG00000248993,ENSG00000248993,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP10-5,ENSG00000241123,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP4-7,ENSG00000240871,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP9-4,ENSG00000241595,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+MAGEA3,ENSG00000221867,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP1-3,ENSG00000221880,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP12-2,ENSG00000221864,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP10-10,ENSG00000221859,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP1-5,ENSG00000221852,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP2-2,ENSG00000214518,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP9-2,ENSG00000239886,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+WFDC6,ENSG00000243543,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+ENSG00000236543,ENSG00000236543,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP19-1,ENSG00000184351,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRT33A,ENSG00000006059,DICE immune,dice_cd8_stim,blood,CD8_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+MCIDAS,ENSG00000234602,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP4-5,ENSG00000198271,Normal bulk,gtex_tissue_rna,thyroid gland,bulk,manageable,0.0,TPM,16.0,Missing,False
+KRTAP9-8,ENSG00000187272,Normal bulk,gtex_tissue_rna,skeletal muscle,bulk,vital,0.0,TPM,4.0,Missing,False
+KRTAP10-9,ENSG00000221837,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+LCE1D,ENSG00000172155,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP10-1,ENSG00000215455,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP3-3,ENSG00000212899,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP2-1,ENSG00000212725,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRT28,ENSG00000173908,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRT9,ENSG00000171403,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+FABP9,ENSG00000205186,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+CLDN22,ENSG00000177300,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRT25,ENSG00000204897,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+SPINT3,ENSG00000101446,DICE immune,dice_thstar,blood,THSTAR,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP8-1,ENSG00000183640,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP26-1,ENSG00000197683,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+HOXC13,ENSG00000123364,DICE immune,dice_m2,blood,M2,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP13-1,ENSG00000198390,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+OR5AK2,ENSG00000181273,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP9-9,ENSG00000198083,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP12-1,ENSG00000187175,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+LCE2A,ENSG00000187173,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP9-8,ENSG00000187272,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP10-12,ENSG00000189169,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+TGIF2-RAB5IF,ENSG00000259399,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+SPAG11A,ENSG00000178287,DICE immune,dice_cd4_stim,blood,CD4_STIM,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP19-5,ENSG00000186977,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+LCE1E,ENSG00000186226,DICE immune,dice_th1,blood,TH1,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP9-3,ENSG00000204873,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+SPAG11B,ENSG00000164871,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP4-8,ENSG00000204880,DICE immune,dice_treg_naive,blood,TREG_NAIVE,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRT82,ENSG00000161850,DICE immune,dice_monocytes,blood,MONOCYTES,protected,0.0,TPM,8.0,Missing/uncertain,False
+KRTAP10-12,ENSG00000189169,HPA immune,hpa_immune_cell,blood,plasmacytoid DC,protected,0.0,nTPM,8.0,Missing,False
+KRT35,ENSG00000197079,HPA immune,hpa_immune_cell,blood,myeloid DC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP9-9,ENSG00000198083,HPA immune,hpa_immune_cell,blood,memory B-cell,manageable,0.0,nTPM,16.0,Missing,False
+LCE1E,ENSG00000186226,HPA immune,hpa_immune_cell,blood,neutrophil,protected,0.0,nTPM,8.0,Missing,False
+KRTAP19-5,ENSG00000186977,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+IL1F10,ENSG00000136697,HPA immune,hpa_immune_cell,blood,non-classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+KRTAP4-5,ENSG00000198271,HPA immune,hpa_immune_cell,blood,myeloid DC,protected,0.0,nTPM,8.0,Missing,False
+KRT34,ENSG00000131737,HPA immune,hpa_immune_cell,blood,T-reg,protected,0.0,nTPM,8.0,Missing,False
+KRTAP4-7,ENSG00000240871,HPA immune,hpa_immune_cell,blood,MAIT T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP9-2,ENSG00000239886,HPA immune,hpa_immune_cell,blood,naive CD8 T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP9-4,ENSG00000241595,HPA immune,hpa_immune_cell,blood,memory CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP10-5,ENSG00000241123,HPA immune,hpa_immune_cell,blood,memory CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP10-11,ENSG00000243489,HPA immune,hpa_immune_cell,blood,naive B-cell,manageable,0.0,nTPM,16.0,Missing,False
+KRT33A,ENSG00000006059,HPA immune,hpa_immune_cell,blood,classical monocyte,protected,0.0,nTPM,8.0,Missing,False
+LCE2A,ENSG00000187173,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP26-1,ENSG00000197683,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP12-1,ENSG00000187175,HPA immune,hpa_immune_cell,blood,total PBMC,protected,0.0,nTPM,8.0,Missing,False
+KRTAP9-8,ENSG00000187272,HPA immune,hpa_immune_cell,blood,naive CD4 T-cell,protected,0.0,nTPM,8.0,Missing,False
+KRTAP9-2,ENSG00000239886,Normal bulk,gtex_tissue_rna,basal ganglia,bulk,vital,0.0,TPM,4.0,Missing,False
+SPINT3,ENSG00000101446,HPA immune,hpa_immune_cell,blood,classical monocyte,protected,0.0,nTPM,8.0,Missing,False

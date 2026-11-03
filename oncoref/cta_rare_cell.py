@@ -9,10 +9,11 @@
 A gene that reads near zero in bulk and cluster panels can still be expressed by a
 small population of an essential tissue (MAGEA12 in rare midbrain dopaminergic
 neurons). ``scripts/build_cta_rare_cell_screen.py`` records, for every gene, the
-brain, spinal cord, heart and lung (alveolar, endothelial, airway basal) cell types with the highest fraction
-of expressing cells in CELLxGENE normal samples. Immune lineages, stroma, adipose
-and developmental cell types are ignored, so rare expression in spleen, adipose
-or immune subsets is allowed.
+brain, spinal cord, heart and selected lung cell types with the highest fraction
+of expressing cells in CELLxGENE normal samples. Central hazard rules assign
+Vital findings to the existing exclusion and Protected findings to a candidate
+review hold. Immune lineages, stroma and developmental labels remain outside this
+panel; their absence is missing coverage, not evidence of tolerance.
 
 A protein group is flagged when any member gene has at least 1% of a vital cell type
 expressing it. Detection frequency is not abundance and can include ambient RNA,
@@ -27,6 +28,8 @@ import json
 from importlib.resources import files
 
 import pandas as pd
+
+from .cta_cell_tiers import cell_tiers
 
 TABLE, PROVENANCE = "cta-rare-cell-screen.csv.gz", "cta-rare-cell-screen.json"
 FLAG_PCT = 1.0
@@ -52,7 +55,11 @@ def annotate(facts: pd.DataFrame, *, member_column: str = "member_gene_ids") -> 
     """Add rare-cell columns for each protein group from its member genes."""
     table = screen_table()
     screened = set(provenance()["screened_gene_ids"])
-    table = table[table.tier.eq("vital")]  # Manageable cell types are recorded, never flagged
+    current = cell_tiers(table.tissue, table.cell_type)
+    if not current.eq(table.tier).all():
+        raise ValueError("Rare-cell tiers are stale; rebuild against the tissue-hazard registry")
+    protected = table[table.tier.eq("protected") & table.pct_expressing.ge(FLAG_PCT)]
+    table = table[table.tier.eq("vital")]
     top = (
         table.sort_values("pct_expressing", ascending=False)
         .drop_duplicates("gene_id")
@@ -84,4 +91,6 @@ def annotate(facts: pd.DataFrame, *, member_column: str = "member_gene_ids") -> 
         )
     )
     out["rare_cell_flag"] = (has & out.rare_cell_max_pct.ge(FLAG_PCT)).astype(bool)
+    protected_genes = set(protected.gene_id)
+    out["rare_cell_hold"] = members.map(lambda ids: bool(protected_genes.intersection(ids)))
     return out
