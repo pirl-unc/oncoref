@@ -246,12 +246,18 @@ def _local_shard_dirs(
 def _available_local_cohorts(
     dataset: ShardDataset, *, proteoform: bool = False, scope: str = "cta"
 ) -> list[str]:
-    """Sorted union of shard codes across package and active-cache roots."""
+    """Sorted union of shard codes across package and active-cache roots.
+
+    Cohorts whose selected source has an invalid expression scale are excluded:
+    their shards are withheld by :func:`_shard_path`.
+    """
+    invalid = _invalid_selected_source_codes()
     return sorted(
         {
             code
             for root in _local_shard_dirs(dataset, proteoform=proteoform, scope=scope)
             for code in _available_shard_codes(root)
+            if code not in invalid
         }
     )
 
@@ -275,7 +281,12 @@ def _available_cohorts(
     local = _available_local_cohorts(dataset, proteoform=proteoform, scope=scope)
     if local:
         return local
-    return _available_shard_codes(_shard_dir(dataset, proteoform=proteoform, scope=scope))
+    invalid = _invalid_selected_source_codes()
+    return [
+        code
+        for code in _available_shard_codes(_shard_dir(dataset, proteoform=proteoform, scope=scope))
+        if code not in invalid
+    ]
 
 
 def _shard_path(
@@ -285,6 +296,7 @@ def _shard_path(
     proteoform: bool = False,
     scope: str = "cta",
 ) -> Path:
+    _reject_invalid_source_code(code, context=f"{dataset.noun} shard")
     filename = f"{code}.parquet"
     for root in _local_shard_dirs(dataset, proteoform=proteoform, scope=scope):
         candidate = root / filename
@@ -3298,6 +3310,13 @@ def cancer_reference_expression(
         source_cohorts=source_cohorts,
         exclude_microarray_proxy=exclude_microarray_proxy,
     )
+    if reference_source != "summary_rows_all":
+        # A named cohort whose selected source is invalid is rejected, never silently
+        # dropped as "unavailable". The source-union view applies its own source filter.
+        for request in requests:
+            _reject_invalid_source_code(
+                request["cancer_code"], context="cancer reference expression"
+            )
     availability = _reference_expression_availability_for_requests(
         requests,
         modes,
@@ -3560,6 +3579,7 @@ def cancer_reference_expression_availability(
         source_kinds=source_kinds,
         source_cohorts=source_cohorts,
         exclude_microarray_proxy=exclude_microarray_proxy,
+        describe_invalid=True,
     )
     return _reference_expression_availability_for_requests(
         requests,
@@ -3691,9 +3711,23 @@ def _reference_expression_requests(
     source_kinds: set[str] | None = None,
     source_cohorts: set[str] | None = None,
     exclude_microarray_proxy: bool = False,
+    describe_invalid: bool = False,
 ) -> list[dict[str, str]]:
-    """Resolved request rows while preserving aggregate-vs-direct intent."""
+    """Resolved request rows while preserving aggregate-vs-direct intent.
+
+    The default listing omits cohorts whose selected source has an invalid expression
+    scale (with a warning); naming one explicitly is rejected when its data is read.
+    ``describe_invalid=True`` keeps them so availability tables can report the problem.
+    """
     if cancer_types is None:
+        invalid = {} if describe_invalid else _invalid_selected_source_codes()
+        if invalid:
+            warnings.warn(
+                f"Omitting cohort(s) {sorted(invalid)} from the default listing: "
+                f"invalid source expression scale (oncoref#604)",
+                UserWarning,
+                stacklevel=3,
+            )
         return [
             {"requested_code": code, "cancer_code": code, "request_kind": "default_available"}
             for code in _reference_available_codes_for_modes(
@@ -3704,6 +3738,7 @@ def _reference_expression_requests(
                 source_cohorts=source_cohorts,
                 exclude_microarray_proxy=exclude_microarray_proxy,
             )
+            if code not in invalid
         ]
     raw_values = [cancer_types] if isinstance(cancer_types, str) else list(cancer_types)
     aggregates = cohort_aggregates()
@@ -3913,6 +3948,7 @@ def _reference_source_union_availability(
             source_kinds=source_kinds,
             source_cohorts=source_cohorts,
             exclude_microarray_proxy=exclude_microarray_proxy,
+            describe_invalid=True,
         )
 
     rows = []
@@ -3984,6 +4020,9 @@ def _reference_mode_availability(
     artifact_qc_policies: dict[str, tuple[str, ...]],
     artifact_qc_metadata_present: bool,
 ) -> tuple[bool, str]:
+    if reference_source != "summary_rows_all" and code in _invalid_selected_source_codes():
+        # The artifact may exist, but it is built from an invalid source and withheld.
+        return False, "invalid_source_scale"
     if reference_source in {"summary_rows", "summary_rows_all"}:
         if sample_qc == "all":
             return (True, "") if code in summary_available else (False, "no_reference_summary_rows")
@@ -4587,6 +4626,50 @@ def _reference_summary_selected_source(code: str) -> dict | None:
     return matches.iloc[0].to_dict()
 
 
+#: Source scale classes whose expression values are known to be invalid. Everything
+#: derived from such a source is withheld, not served with a warning.
+INVALID_SOURCE_SCALE_CLASSES = frozenset({"invalid_legacy_tpm"})
+_INVALID_SOURCE_GUIDANCE = (
+    "rebuild it from verified linear expression "
+    "(see docs/audits/nutm-expression-scale.md and oncoref#604)"
+)
+
+
+def _invalid_source_message(row) -> str:
+    return (
+        f"source {row['source_cohort']} has an invalid expression scale "
+        f"({row['source_scale_class']}); its derived artifacts are withheld until "
+        f"{_INVALID_SOURCE_GUIDANCE}"
+    )
+
+
+@lru_cache(maxsize=1)
+def _invalid_selected_source_codes() -> dict[str, str]:
+    """Cancer codes whose *selected* reference source has an invalid expression scale.
+
+    Derived artifacts (percentiles, representatives, within-sample fractions and the
+    cohort summaries) are built from the selected source, so a code listed here must
+    not be served from any of them.
+    """
+    table = _reference_summary_source_table()
+    if table.empty:
+        return {}
+    flagged = table["source_scale_class"].astype("string").isin(INVALID_SOURCE_SCALE_CLASSES)
+    return {
+        str(row["cancer_code"]): _invalid_source_message(row)
+        for _, row in table.loc[table["selected"] & flagged].iterrows()
+    }
+
+
+_register_derived_cache(_invalid_selected_source_codes.cache_clear)
+
+
+def _reject_invalid_source_code(code: str, *, context: str) -> None:
+    reason = _invalid_selected_source_codes().get(str(code))
+    if reason is not None:
+        raise ValueError(f"{context} for {code}: {reason}")
+
+
 def _reference_summary_shard_path(root: Path, code: str, source_cohort: str) -> Path:
     """Resolve the one physical shard that contains a source/code pair."""
 
@@ -4635,6 +4718,11 @@ def _reference_summary_rows_for_sources(
 
     if sources.empty:
         return pd.DataFrame()
+    invalid = sources.loc[
+        sources["source_scale_class"].astype("string").isin(INVALID_SOURCE_SCALE_CLASSES)
+    ]
+    if not invalid.empty:
+        raise ValueError(f"{code}: {_invalid_source_message(invalid.iloc[0])}")
     root = _bundle_subdir(_REFERENCE_SUMMARY_DATASET, auto_fetch=True)
     source_ids = set(sources["source_cohort"].dropna().astype(str))
     paths = {_reference_summary_shard_path(root, str(code), source) for source in source_ids}
@@ -4786,6 +4874,18 @@ def _reference_summary_all_rows(
         exclude_microarray_proxy=exclude_microarray_proxy,
     )
     sources = sources.loc[sources["cancer_code"].astype(str) == str(code)]
+    flagged = sources["source_scale_class"].astype("string").isin(INVALID_SOURCE_SCALE_CLASSES)
+    if flagged.any():
+        asked = {str(c) for c in (source_cohorts or ())}
+        if not (flagged & sources["source_cohort"].astype(str).isin(asked)).any():
+            omitted = sorted(sources.loc[flagged, "source_cohort"].astype(str))
+            warnings.warn(
+                f"Omitting {code} source(s) {omitted}: invalid expression scale; "
+                f"rebuild from verified linear expression (oncoref#604)",
+                UserWarning,
+                stacklevel=2,
+            )
+            sources = sources.loc[~flagged]
     return _reference_summary_rows_for_sources(
         code,
         sources,
@@ -5435,6 +5535,8 @@ def representative_cohort_samples(
             "representative_cohort_samples normalize must be 'tpm_clean' or "
             "'tpm_clean_log1p' (the artifact ships only in clean TPM)"
         )
+    for code in _resolve_cancer_types(cancer_types, expand_aggregates=True) or []:
+        _reject_invalid_source_code(code, context="representative samples")
     if format not in ("wide", "long"):
         raise ValueError("format must be 'wide' or 'long'")
     if include_provenance and format != "long":

@@ -1344,6 +1344,11 @@ unsuitable for absolute comparison with bulk RNA-seq TPM.
   sole current exemption is the controlled UNC NUTM1 case series. This audit is
   a source-checkout/release-build check because builder scripts are not installed
   in the runtime wheel.
+  Artifacts derived from a source whose `source_scale_class` is `invalid_legacy_tpm`
+  (currently UNC NUTM1) are withheld by every reader: percentile, representative,
+  within-sample and cohort-summary readers raise `ValueError` for a named cohort, bulk
+  listings omit it, and `cancer_reference_expression_availability()` still describes it.
+  See `docs/audits/nutm-expression-scale.md`.
   Use `source_matrices.sample_qc(code)` for the live source-matrix QC audit and
   `source_matrices.sample_qc_manifest(...)` for the optional generated-bundle QC
   manifest that records which samples fed derived artifacts.
