@@ -1,7 +1,7 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "docs/audits/cta-selection-20261028/manifest.json": "936eaa2bcc1d8f2122cee2ccaf96a0084a8661451940fb46d0e012f35a1ac259",
+    "docs/audits/cta-selection-20261028/manifest.json": "784680db31f453891e65c38257236d48fd607098899c772a334cd5a9650274e0",
     "oncoref/data/cta-selection.json": "6189e15da14e51bde15abe72ae1e25d2793ec08fccddfbdf62c599d44d9cd736",
     "oncoref/data/cta-selection-audit.json": "ef0f1c3213ae6805cef2f929a342746d17417f3eb7a24fa9740b6a5cd0f03bf2",
     "scripts/build_cta_selection_audit.py": "783da990dd441e949d8f6de687749c40fc6a25a55f08512da1b6a0c85fb02f64",
