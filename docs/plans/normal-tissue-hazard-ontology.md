@@ -53,5 +53,8 @@ Implementation complete:
 - Deterministic 46-page ontology PDF, searchable HTML, four SVG/PNG figures,
   CSV/JSON exports, and visually reviewed 39-slide current walkthrough.
 - Registry/policy/artifact checks, historical-input checks, lint, strict docs,
-  wheel/sdist builds, wheel smoke and dependency checks pass. Full local suite
-  and cross-version CI are the remaining release gate.
+  wheel/sdist builds, wheel smoke and dependency checks pass. The full local
+  suite completed with 2,896 passes and 22 skips; all 12 stale policy/history
+  assertions identified by that run were corrected and pass on rerun.
+- Release PR: https://github.com/pirl-unc/oncoref/pull/661 . Cross-version CI
+  remains the final merge/release gate.
