@@ -4,16 +4,16 @@ Cancer expression,65,0,0,0
 HPA normal protein,12359,10160,42,41
 Required RNA coverage,292,0,7,0
 Reproductive concentration,2884,0,4,0
-Normal bulk,17533,17528,162,454
-HPA tissue clusters,17065,17056,82,152
+Normal bulk,17533,17528,162,455
+HPA tissue clusters,17065,17056,82,153
 HPA immune,8009,7978,8,11
 Monaco immune,11306,11271,7,15
 DICE immune,11698,11626,14,30
 Adult cornea,12098,12098,1,4
 Accepted normal-protein evidence,9,8,3,2
-Reviewed normal-cell knowledge,145,145,0,138
-Clinical safety exclusion,1,1,0,0
-Rare vital-tissue cell expression,15874,15874,68,118
+Reviewed normal-cell knowledge,148,32,3,30
+Clinical safety exclusion,0,0,0,0
+Rare vital-tissue cell expression,15874,15874,69,121
 Rare Protected-cell expression review,13399,0,6,0
 External validated normal protein,0,0,0,0
-Unsafe sequence containment,81,0,19,0
+Unsafe sequence containment,82,0,19,0

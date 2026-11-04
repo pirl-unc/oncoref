@@ -87,8 +87,10 @@ def summary_markdown() -> str:
     lines += [
         "",
         "The MAGE-A3 **a3a** cardiac cases implicated **titin (TTN)**, an unintended target; "
-        "the separate NCI MAGE-A3/A9 receptor neurological cases implicated the cross-recognized "
-        "**MAGE-A12** peptide. These findings do not establish that MAGE-A3 itself was present in heart or brain. "
+        "the separate NCI MAGE-A3/A9 receptor neurological cases initially implicated "
+        "**MAGE-A12**, while the [2021 re-examination](https://pmc.ncbi.nlm.nih.gov/articles/PMC7946352/) "
+        "supports **EPS8L2** as a competing, unproven cause. Product-specific injury remains established; "
+        "unique peptide causality does not. MAGEA12 retains an independent rare-cell exclusion. "
         "TBI-1301's grade 3 lung injury retains an unresolved-specificity hold for that product. "
         "c259's late cardiac death and Guillain-Barre cases remain caveats without an established peptide-specific mechanism.",
         "",
@@ -263,7 +265,7 @@ on each build. New evidence requires an explicit reviewed ledger update.
 [Context-level RNA effects](clinical-credit-contexts.csv.gz) · [RNA effects by assay](clinical-credit-impact.csv)
 """
     ]
-    name = f"cta-tcr-safety-{__version__}.pdf"
+    name = "cta-tcr-safety-current.pdf"
     sections.append(f"\n[PDF report]({name})\n")
     (OUTPUT / "index.md").write_text("\n".join(sections))
     build_pdf(summary, ledger, name)
@@ -327,7 +329,7 @@ def build_pdf(summary, ledger, name):
 
     story += [
         para("CTA-directed TCR-T: serious events and clinical evidence", "Title"),
-        para(f"OncoRef {__version__} | Reviewed 29 October 2026 | {POLICY_ID}"),
+        para(f"OncoRef {__version__} | Reviewed 4 November 2026 | {POLICY_ID}"),
         para(
             "Clinical experience can modestly relax the RNA screen. It cannot clear every peptide, isoform or receptor from the parent protein.",
             "Heading2",

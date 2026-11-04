@@ -410,7 +410,8 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
         .reason.str.contains("21.17%")
         .all()
     )
-    selected = human.cta_selection(category="CTA").set_index("label")
+    selected = human.cta_selection().set_index("label")
+    assert selected.loc["MAGEC2", "classification"] == "Other:Held"
     assert "Developmental concentration unassessed" in selected.loc["MAGEC2", "evidence_flags"]
     # DAZ2 lies wholly inside Unsafe DAZ paralogs and is Other:Contained.
     assert (

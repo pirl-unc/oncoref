@@ -11,10 +11,10 @@ Monaco immune,12,21,751,18049,0,804
 DICE immune,16,35,735,18084,0,785
 Adult cornea,2,5,733,18089,0,782
 Accepted normal-protein evidence,3,2,730,18091,0,783
-Reviewed normal-cell knowledge,0,141,730,18232,0,642
-Clinical safety exclusion,1,1,729,18233,0,642
-Rare vital-tissue cell expression,79,118,650,18351,0,603
-Rare Protected-cell expression review,6,0,644,18351,0,609
-External validated normal protein,0,0,644,18351,0,609
-Unsafe sequence containment,19,0,625,18351,0,628
-CTA and Other assignments,0,0,625,18351,628,0
+Reviewed normal-cell knowledge,3,31,727,18122,0,755
+Clinical safety exclusion,0,0,727,18122,0,755
+Rare vital-tissue cell expression,80,121,647,18243,0,714
+Rare Protected-cell expression review,6,0,641,18243,0,720
+External validated normal protein,0,0,641,18243,0,720
+Unsafe sequence containment,19,0,622,18243,0,739
+CTA and Other assignments,0,0,622,18243,739,0

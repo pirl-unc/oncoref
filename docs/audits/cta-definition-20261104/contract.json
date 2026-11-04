@@ -50,7 +50,7 @@
   ],
   "taxon_id": 9606,
   "species": "human",
-  "selection_policy_id": "oncoref.cta-selection.2026-11-03.1",
+  "selection_policy_id": "oncoref.cta-selection.2026-11-04.1",
   "selection_status": "available",
   "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
 }

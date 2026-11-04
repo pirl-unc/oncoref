@@ -27,6 +27,7 @@ both, :func:`oncoref.data_bundle.ensure_local` triggers a one-time download.
 from __future__ import annotations
 
 import contextlib
+import os
 import warnings
 from pathlib import Path
 
@@ -199,8 +200,10 @@ def _load_shard_directory(shard_dir: Path) -> pd.DataFrame:
     """Concatenate every ``*.csv[.gz]`` shard in a sharded dataset directory.
 
     Keeps a best-effort parquet cache of the concatenated frame in
-    ``~/.cache/oncoref/shard_cache/``, keyed on a signature of the shard
-    files (count + total size + newest mtime), auto-invalidating on change.
+    ``ONCOREF_SHARD_CACHE_DIR`` or ``~/.cache/oncoref/shard_cache/``. The
+    signature binds the resolved source directory and every shard's name, size
+    and modification time. Changing the override never migrates or prunes the
+    default cache. An already loaded in-memory frame is independent of this cache.
     """
     paths = _shard_paths(shard_dir)
     if not paths:
@@ -208,12 +211,16 @@ def _load_shard_directory(shard_dir: Path) -> pd.DataFrame:
     sig = repr(
         (
             _SHARD_CACHE_SCHEMA_VERSION,
-            len(paths),
-            sum(p.stat().st_size for p in paths),
-            max(p.stat().st_mtime_ns for p in paths),
+            str(shard_dir.resolve()),
+            tuple((p.name, p.stat().st_size, p.stat().st_mtime_ns) for p in paths),
         )
     )
-    cache_dir = Path.home() / ".cache" / "oncoref" / "shard_cache"
+    override = os.environ.get("ONCOREF_SHARD_CACHE_DIR")
+    cache_dir = (
+        Path(override).expanduser()
+        if override
+        else Path.home() / ".cache" / "oncoref" / "shard_cache"
+    )
     cache_file = cache_dir / f"{shard_dir.name}.parquet"
     sig_file = cache_dir / f"{shard_dir.name}.sig"
     try:

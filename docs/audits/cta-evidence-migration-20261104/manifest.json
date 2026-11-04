@@ -1,0 +1,19 @@
+{
+  "inputs": {
+    "scripts/build_cta_migration_report.py": "6dcb2397a18becee7e38dcd9bb1ef8f9dc1e40f7419b3935ab5ac365f1a6ab02",
+    "oncoref/data/gene-knowledge.json": "b230ceda243bc77c5ca926abe394d3aa9400b1e174561bcd5dee744fac95305f",
+    "oncoref/data/cta-finding-migrations.json": "14c54e4a8c9320f0a5babfc05ed1bd048b0e4a3f2bac2cc3b2c66c5582a507ee",
+    "oncoref/data/tcr-trial-evidence.json": "7ef47d7a23e57364bdeff10d4508703451f0e2831834dcbe88bee0c90d3a6413",
+    "oncoref/data/cta-selection-human.csv.gz": "29a52c8f129ef4a2b959e1e3d6bccf3494dacbbbf6bae500657952130c6b37b5",
+    "oncoref/data/cta-selection.json": "18e324fdde781235fb175faaa31f187640f5244b26295a9a4f73054f30923ecf"
+  },
+  "outputs": {
+    "baseline-contract-pr.csv.gz": "1fdd7e5fb7778b5af81f4dcb198bb847defcff3815afe906c1de931e989a8a46",
+    "baseline.json": "4bf7bc5c71c9501e8c2231eb3420c96ced9c4df2444ec0f1b4af31dce289e959",
+    "changes-from-contract-pr.csv": "ef314bf26e53d99b554f626db72ec0f35d26d3c9aaa4b06b99b716b8af5a2ee7",
+    "clinical-counterevidence.json": "7ef47d7a23e57364bdeff10d4508703451f0e2831834dcbe88bee0c90d3a6413",
+    "current-findings.csv.gz": "ab98f89578cd699507a3fde71e215562a78ac15f4ac2d4a7b4ae280f94bdc7d1",
+    "historical-dispositions.csv": "fbb3a62edfa301c226f7faf2b6f54980e7d3ff3fa85e6eb6dca9ee13ace3727a",
+    "index.md": "8d781248d9176c8d20b2934ef9167d9a6e46518b6100c038ed6e5b869cd39f70"
+  }
+}
