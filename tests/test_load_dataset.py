@@ -49,15 +49,15 @@ def test_reference_expression_parquet_cache_preserves_compact_dtypes(tmp_path, m
     _reference_rows(n_rows=20).iloc[:10].to_csv(shard_dir / "a.csv", index=False)
     _reference_rows(n_rows=20).iloc[10:].to_csv(shard_dir / "b.csv", index=False)
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
+    cache_dir = tmp_path / "isolated-shard-cache"
+    monkeypatch.setenv("ONCOREF_SHARD_CACHE_DIR", str(cache_dir))
 
     built = load_dataset._load_shard_directory(shard_dir)
     loaded = load_dataset._load_shard_directory(shard_dir)
 
     pd.testing.assert_frame_equal(loaded, built)
     assert isinstance(loaded["source_cohort"].dtype, pd.CategoricalDtype)
-    signature = (
-        tmp_path / ".cache" / "oncoref" / "shard_cache" / "cancer-reference-expression.sig"
-    ).read_text()
+    signature = (cache_dir / "cancer-reference-expression.sig").read_text()
     assert signature.startswith(f"({load_dataset._SHARD_CACHE_SCHEMA_VERSION},")
 
 

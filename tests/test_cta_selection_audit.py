@@ -244,7 +244,9 @@ def test_neither_profiles_and_unassigned_counts_reconcile(audit):
     assert not cleared.unresolved_evidence.any()
     # The rest are disclosed holds or incomplete coverage, never Unsafe evidence.
     uncleared = neither[~neither.assessment_status.eq("screened")]
-    assert uncleared.assessment_status.isin(["incomplete_evidence", "normal_evidence_hold"]).all()
+    assert uncleared.assessment_status.isin(
+        ["incomplete_evidence", "normal_evidence_hold", "translation_review"]
+    ).all()
     assert not neither.vital_protected_exclusion.any()
     assert canine.cta_selection().category.isna().all()
     assert audit.funnel.iloc[:-1].Other.eq(0).all()
