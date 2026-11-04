@@ -67,7 +67,7 @@ TABLE_COLUMNS = {
         "Unassigned",
         "note",
     ],
-    "criteria": ["stage", "status", "rule", "source_ids"],
+    "criteria": ["gate_id", "stage", "status", "rule", "source_ids"],
     "explanations": [
         "entity_id",
         "label",
@@ -360,7 +360,7 @@ def membership_tables(species: str) -> dict[str, list[dict]]:
 
 
 HUMAN_RULES["CTA and Other assignments"] = (
-    "Other is the complete-normal-panel, resolved-evidence fallback when every normal gate passes but CTA identity fails. Its reason is missing reproductive presence, missing cancer presence, or diffuse reproductive identity. RNA abundance, cancer support and adult Disposable expression are independent attributes; developmental missingness never changes adult tissue disposition. Manageable holds remain unassigned.",
+    "CTA requires all applicable admission gates, required coverage and resolved normal evidence. Unsafe exclusion takes precedence. Other includes assessed noncandidates, held/incomplete evidence, nested microproteins and sequence-contained candidates. Subtype and assessment_status answer different questions; an identity failure cannot erase a normal-evidence hold. Sequence roles require that independent status.",
     [
         "hpa_rna_consensus",
         "hpa_single_cell_tissue",
@@ -885,7 +885,11 @@ def build() -> None:
     """Export the same accounting schema for measured and unassessed species."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
     facts = pd.read_csv(RELEASE / "protein-group-classifications.csv.gz", low_memory=False)
+    from oncoref.cta_contract import gates
     from oncoref.cta_selection_policy import POLICY_ID
+
+    gate_ids = gates().set_index("name").gate_id.to_dict()
+    gate_ids["CTA and Other assignments"] = "final_assignment"
 
     explanations = human_explanations(facts)
     files = {}
@@ -919,6 +923,7 @@ def build() -> None:
             data.update(native_assessment(species))
         data["criteria"] = [
             {
+                "gate_id": gate_ids[r["stage"]] if species == "human" else None,
                 "stage": r["stage"],
                 "status": r["status"],
                 "rule": HUMAN_RULES[r["stage"]][0] if species == "human" else r["note"],

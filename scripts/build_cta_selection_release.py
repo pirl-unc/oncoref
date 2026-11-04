@@ -409,10 +409,43 @@ def mouse_selection_metadata() -> dict:
     }
 
 
+def universe_counts(decisions: pd.DataFrame, audit: Path) -> dict:
+    """Account for the input inventory separately from classified protein groups."""
+    path = audit / "out-of-universe.csv.gz"
+    outside = pd.read_csv(path, low_memory=False) if path.exists() else decisions.iloc[:0]
+    inside_genes = {g for ids in decisions.member_gene_ids for g in json.loads(ids)}
+    outside_genes = set()
+    if len(outside):
+        # The replay starts from this full exact-protein inventory. The current
+        # filter-status display omits member IDs for out-of-universe rows, so it
+        # cannot supply their gene denominator. Join only by exact group ID.
+        mapping = pd.read_csv(
+            AUDIT / "protein-group-classifications.csv.gz",
+            usecols=["protein_equivalence_group_id", "member_gene_ids"],
+        )
+        mapped = outside.merge(mapping, on="protein_equivalence_group_id", validate="one_to_one")
+        if len(mapped) != len(outside):
+            raise ValueError("Out-of-universe group lacks its explicit member identities")
+        if mapped.member_gene_ids.map(lambda value: not json.loads(value)).any():
+            raise ValueError("Out-of-universe member identities are missing")
+        outside_genes = {g for ids in mapped.member_gene_ids for g in json.loads(ids)}
+    return {
+        "counting_unit": "selected_reference_protein_equivalence_group",
+        "input_groups": len(decisions) + len(outside),
+        "classified_groups": len(decisions),
+        "out_of_universe_groups": len(outside),
+        "input_gene_loci": len(inside_genes | outside_genes),
+        "classified_gene_loci": len(inside_genes),
+        "out_of_universe_gene_loci": len(outside_genes),
+        "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
+    }
+
+
 def build(audit: Path = AUDIT) -> None:
     """Export a small wheel-backed table, preserving every group and member identity."""
     source = audit / "protein-group-classifications.csv.gz"
     decisions = pd.read_csv(source, low_memory=False)
+    universe = universe_counts(decisions, audit)
     source_identity = "sha256:" + sha256(source)
     reference = human.cta_snapshot().as_dict()["references"][0]["identity"]
     rows = []
@@ -559,7 +592,8 @@ def build(audit: Path = AUDIT) -> None:
                 "selection_status": "available",
                 "evidence_status": "partial",
                 "policy_id": decisions.policy.iloc[0],
-                "universe": "19863 protein-equivalence groups covering 20097 gene loci",
+                "universe": f"{len(decisions)} classified protein-equivalence groups from {universe['input_groups']} input groups",
+                "universe_counts": universe,
                 "reference": reference,
                 "limitations": [
                     "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
@@ -569,8 +603,8 @@ def build(audit: Path = AUDIT) -> None:
                     "Representative-protein equivalence is not exhaustive isoform identity",
                     "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
                     "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
-                    "Other reasons describe unmet identity gates. Abundance, replicated tumor support and adult Disposable expression are separate attributes; rare normal states may remain unmeasured.",
-                    "Rare vital-tissue cell expression: a protein is Unsafe when at least 1% of cells in a brain, spinal cord, heart or lung alveolar, endothelial or airway basal cell type express it in CELLxGENE normal single-cell summaries. Detection frequency, not abundance; samples cannot be restricted to adults; spleen, adipose, immune and stromal expression is allowed.",
+                    "Other includes assessed noncandidates and held/incomplete cases. Subtype does not establish evidence completeness or sequence allowance.",
+                    "Rare-cell screening uses the existing brain, spinal-cord, heart and selected lung CELLxGENE panels. At least 1% detection in a Vital population supplies exclusion evidence; Protected detection supplies a review hold. Detection frequency is not abundance. Unmeasured ages, organs and excluded lineages remain coverage limits, not allowances.",
                     "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply.",
                 ],
             },
@@ -591,6 +625,9 @@ def build(audit: Path = AUDIT) -> None:
         },
         "inputs": {
             str(source.relative_to(ROOT)): sha256(source),
+            str((AUDIT / "protein-group-classifications.csv.gz").relative_to(ROOT)): sha256(
+                AUDIT / "protein-group-classifications.csv.gz"
+            ),
             "report_manifest": sha256(audit / "manifest.json"),
             **{
                 str(path.relative_to(ROOT)): sha256(path)

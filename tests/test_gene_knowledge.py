@@ -134,6 +134,8 @@ def test_sequence_dispositions_keep_unresolved_background_separate(monkeypatch):
             {
                 "category": pd.Series(["CTA", "Unsafe", "Other", None], dtype="string"),
                 "entity_id": ["a", "b", "c", "d"],
+                "assessment_status": ["screened", "screened", "screened", "unassessed"],
+                "identity_status": ["resolved"] * 4,
             }
         ),
     )

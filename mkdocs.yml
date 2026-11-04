@@ -7,6 +7,7 @@ theme:
 nav:
   - Home: index.md
   - CTA reports:
+      - CTA definition and consumer contract (development): audits/cta-definition-20261104/index.md
       - Current release 1.29.0: cta-release-1.29.0.md
       - Previous release 1.28.0: cta-release-1.28.0.md
       - Previous release 1.27.0: cta-release-1.27.0.md

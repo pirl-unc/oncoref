@@ -1,6 +1,6 @@
 # CTA and oncofetal selection
 
-**625 CTA proteins (671 loci), 18,351 Unsafe, and 628 Other (27 of them Held)**, with none unassessed, across 19,604 proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; 259 out-of-universe groups are listed separately). Policy: `oncoref.cta-selection.2026-11-03.1`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**625 CTA proteins (671 loci), 18,351 Unsafe, and 628 Other (27 of them Held)**, with evidence status recorded independently, across 19,604 proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; 259 out-of-universe groups are listed separately). Policy: `oncoref.cta-selection.2026-11-03.1`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
 [PDF slides, 1.27.0 (not regenerated for 1.29.0)](cta-selection-1.27.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.29.0-validated-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
@@ -26,7 +26,7 @@ embryonic evidence remains independent and its concentration is unassessed.
 - **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` records whether coverage was incomplete or a hold applied.
 - **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other requires the complete normal screen to pass. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
 
 ## Other categories
 
@@ -34,9 +34,9 @@ Every protein has one categorical assignment: CTA, Unsafe or a named Other categ
 
 | Category | Meaning | Proteins |
 | --- | --- | --- |
-| Other:Nonreproductive | Normal screen passes, but no qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. This is not proof of absence. | 550 |
-| Other:Reproductive | Normal screen and reproductive presence pass, but cancer presence is unestablished. | 0 |
-| Other:Diffuse | Normal screen, reproductive presence and cancer presence pass, but the reproductive concentration gate fails. | 4 |
+| Other:Nonreproductive | No qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. Evidence completeness and normal holds are recorded independently; this is not proof of absence. | 550 |
+| Other:Reproductive | Reproductive presence is supported but cancer presence is unestablished. Inspect assessment status for independent normal-evidence gaps or holds. | 0 |
+| Other:Diffuse | Reproductive presence and cancer presence pass, but the reproductive concentration gate fails. Inspect assessment status independently. | 4 |
 | Other:Held | Target gates pass, but an unresolved or marginal normal-tissue signal blocks CTA without establishing Unsafe. | 27 |
 | Other:Nested | A reference-CDS microprotein (under 50 residues) nested inside a same-strand protein-coding gene and not an established ncORF: its RNA signal belongs to the host, so it cannot be a CTA. | 28 |
 | Other:Contained | Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist. | 19 |
@@ -254,7 +254,7 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 | Rare Protected-cell expression review | At least 1% detection in a centrally assigned Protected population in the existing CELLxGENE panel blocks CTA admission without itself establishing Unsafe. The same cell-support criteria apply. Source age restrictions and detection artifacts remain limitations. |
 | External validated normal protein | Use categorical/quantitative staining only within verified reagent, tissue and cell scope; no inherited HPA reliability label. |
 | Unsafe sequence containment | A would-be CTA with at least 95% of its 9-mers also present in Unsafe proteins becomes Other:Contained: Unsafe sequence is blacklisted, so almost no peptide survives. Computed over all protein-coding transcripts of Ensembl 115. This is a sequence rule, not expression evidence. |
-| CTA and Other assignments | Other is the complete-normal-panel, resolved-evidence fallback when every normal gate passes but CTA identity fails. Its reason is missing reproductive presence, missing cancer presence, or diffuse reproductive identity. RNA abundance, cancer support and adult Disposable expression are independent attributes; developmental missingness never changes adult tissue disposition. Manageable holds remain unassigned. |
+| CTA and Other assignments | CTA requires all applicable admission gates, required coverage and resolved normal evidence. Unsafe exclusion takes precedence. Other includes assessed noncandidates, held/incomplete evidence, nested microproteins and sequence-contained candidates. Subtype and assessment_status answer different questions; an identity failure cannot erase a normal-evidence hold. Sequence roles require that independent status. |
 
 ![RNA cutoffs](figures/active-rna-cutoffs.png)
 

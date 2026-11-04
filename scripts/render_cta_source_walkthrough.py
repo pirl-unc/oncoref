@@ -411,7 +411,7 @@ def figures(facts: pd.DataFrame, audit) -> None:
     rare_unsafe = int(facts["unsafe:Rare vital-tissue cell expression"].sum())
     style.footer(
         fig,
-        "Unresolved proteins pass no CTA gate yet but are not Unsafe; they receive Other at the final stage, so none remains unassessed.\n"
+        "Unresolved proteins pass no CTA gate yet but are not Unsafe; they receive Other at the final stage, category assignment does not resolve missing evidence.\n"
         "Sequential removals depend on display order, not importance; independent layer effects are in independent-layer-effects.csv. "
         f"Rare vital-tissue cell expression (brain, heart, lung alveolar, endothelial and airway basal cells; at least 1%) marks {rare_unsafe:,} proteins Unsafe.",
     )
@@ -636,7 +636,7 @@ def build() -> None:
     recovery.to_csv(OUTPUT / "developmental-identity-recoveries.csv", index=False)
     coverage_text = f"""# Which sources have missing evidence?
 
-These counts describe the **{len(incomplete):,} unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **{len(incomplete):,} classified proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
 {markdown(gap_counts)}
 
@@ -815,7 +815,7 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
     )
     overview = f"""# CTA and oncofetal selection
 
-**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, and {counts.get("Other", 0):,} Other ({held_other:,} of them Held)**, with none unassessed, across {len(facts):,} proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; {n_out_of_universe:,} out-of-universe groups are listed separately). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, and {counts.get("Other", 0):,} Other ({held_other:,} of them Held)**, with evidence status recorded independently, across {len(facts):,} proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; {n_out_of_universe:,} out-of-universe groups are listed separately). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
 {pdf_link} · {deck_link} · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
@@ -841,7 +841,7 @@ embryonic evidence remains independent and its concentration is unassessed.
 - **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` records whether coverage was incomplete or a hold applied.
 - **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other requires the complete normal screen to pass. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
 
 ## Other categories
 

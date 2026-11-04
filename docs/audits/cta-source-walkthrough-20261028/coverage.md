@@ -1,6 +1,6 @@
 # Which sources have missing evidence?
 
-These counts describe the **127 unassigned proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **127 classified proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
 | Evidence gap | Proteins |
 | --- | --- |
