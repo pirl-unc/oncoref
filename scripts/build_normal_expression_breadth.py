@@ -16,10 +16,14 @@ sys.path.insert(0, str(ROOT))
 
 from oncoref import cta_policy, hpa, reference_data  # noqa: E402
 from oncoref.normal_expression_breadth import (  # noqa: E402
-    POLICY_ID,
-    anatomical_panel,
+    HISTORICAL_POLICY_ID as POLICY_ID,
+)
+from oncoref.normal_expression_breadth import (  # noqa: E402
     burden,
     donor_summaries,
+)
+from oncoref.normal_expression_breadth import (  # noqa: E402
+    historical_panel as anatomical_panel,
 )
 
 
