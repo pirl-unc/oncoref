@@ -7,6 +7,8 @@
     "oncoref/data/cta-publication-membership.csv": "be2c3d9b3d202b0664e7e025926ba9743b1516cf100182cf6c14fb1b42af8b09",
     "oncoref/data/cta-publication-sources.csv": "b65eec24223cdfc0d080b465666216d9755604309f24b02ff5524839405f0b0c",
     "oncoref/normal_tissues.py": "f3d88fd1dfa36a3a1b2ed53c0e4107ebc273e9b7d6c241b0aa7e844b500d042e",
-    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a"
+    "oncoref/data/normal-tissue-taxonomy.yaml": "d67b303362f31db8deec0ae822cfc7593544c85cc80bd10c5d1616ce8e7f2d3a",
+    "oncoref/normal_expression_breadth.py": "e8031e9b3faae1b6192e01daf7e3d609a35c35e3ad833d9710b8aa8ab2a514fe",
+    "scripts/build_normal_expression_breadth.py": "5a9d3591274a93bd85e7ec4b308a532e4101ac96c1adaef08b1b63aa32b4c3eb"
   }
 }
