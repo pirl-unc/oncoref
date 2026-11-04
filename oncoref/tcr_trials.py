@@ -66,6 +66,17 @@ def validate(record: dict) -> None:
             raise ValueError("Unknown event product/source")
         if e["specificity_attribution"] not in SPECIFICITY_ATTRIBUTIONS:
             raise ValueError("Unknown specificity attribution")
+        for finding in e.get("causal_findings", []):
+            if finding["source"] not in sources or finding["interpretation_status"] not in {
+                "accepted",
+                "unresolved",
+                "rejected",
+            }:
+                raise ValueError("Invalid causal finding source or interpretation")
+            if not all(
+                finding.get(k) for k in ["protein", "peptide", "hla", "evidence", "limitations"]
+            ):
+                raise ValueError("Causal findings require peptide, HLA and evidence scope")
         if e["grade"] is not None and (type(e["grade"]) is not int or not 1 <= e["grade"] <= 5):
             raise ValueError("Grade must be 1-5 or unreported")
         cohort = e["cohort_id"]
@@ -144,6 +155,18 @@ def cohorts() -> pd.DataFrame:
 def events() -> pd.DataFrame:
     """Sentinel clinical events, including ungraded and unresolved attribution."""
     return pd.DataFrame(evidence()["events"])
+
+
+def gene_exclusions() -> pd.DataFrame:
+    """Explicit gene consequences, separate from product injury and credit.
+
+    An unresolved causal peptide is context; independent normal-cell evidence
+    can still exclude its gene through the appropriate normal-evidence gate.
+    """
+    return pd.DataFrame(
+        evidence().get("gene_exclusions", []),
+        columns=["gene_id", "symbol", "effect", "event_id", "rationale"],
+    )
 
 
 def protein_credit(gene_ids, *, taxon_id: int = 9606, record: dict | None = None) -> dict:

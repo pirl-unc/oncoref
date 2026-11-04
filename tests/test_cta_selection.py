@@ -53,7 +53,7 @@ def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate(
     unsafe = removed[kept.loc[removed, "category"].eq("Unsafe")]
     assert facts.loc[unsafe, safety].any(axis=1).all()
     held = removed[kept.loc[removed, "classification"].eq("Other:Held")]
-    assert facts.loc[held, "rare_cell_hold"].all()
+    assert (facts.loc[held, "rare_cell_hold"] | facts.loc[held, "knowledge_normal_hold"]).all()
     assert set(removed) == set(unsafe) | set(held)
     overlap = profiles.unsafe_sequence_overlap_pct
     assert overlap.loc[kept.index[contained]].ge(95).all()

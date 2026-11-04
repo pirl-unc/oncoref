@@ -3,7 +3,7 @@
   "species": "human",
   "selection_status": "available",
   "evidence_status": "partial",
-  "policy_id": "oncoref.cta-selection.2026-11-03.1",
+  "policy_id": "oncoref.cta-selection.2026-11-04.1",
   "universe": "19604 classified protein-equivalence groups from 19863 input groups",
   "universe_counts": {
     "counting_unit": "selected_reference_protein_equivalence_group",
@@ -50,15 +50,15 @@
   ],
   "entities": 19604,
   "counts": {
-    "CTA": 625,
-    "Unsafe": 18351,
-    "Other": 628,
+    "CTA": 622,
+    "Unsafe": 18243,
+    "Other": 739,
     "Unassigned": 0
   },
   "other_subtypes": {
-    "Nonreproductive": 550,
+    "Nonreproductive": 658,
+    "Held": 30,
     "Nested": 28,
-    "Held": 27,
     "Contained": 19,
     "Diffuse": 4
   },
@@ -104,9 +104,9 @@
       "identified_sources": 4
     },
     "clinical_safety": {
-      "used_sources": 13,
-      "available_sources": 13,
-      "identified_sources": 13
+      "used_sources": 14,
+      "available_sources": 14,
+      "identified_sources": 14
     }
   }
 }

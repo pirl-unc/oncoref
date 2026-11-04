@@ -889,6 +889,11 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     ) | facts.hpa_tumor_group_lower_bound_ptpm.gt(0)
     developmental_coverage(facts, output)
     facts = tcr_trials.annotate_proteins(facts)
+    clinical = tcr_trials.gene_exclusions()
+    excluded_genes = set(clinical.loc[clinical.effect.eq("exclude"), "gene_id"])
+    facts["Safety veto"] = facts.member_gene_ids.map(
+        lambda genes: bool(set(json.loads(genes)) & excluded_genes)
+    )
     inputs = [
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
@@ -1049,9 +1054,9 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
             EvidenceLayer(
                 "Reviewed normal-cell knowledge",
                 facts.knowledge_normal_hold | facts.knowledge_normal_exclusion,
-                # Reviewed unresolved Protected-tissue findings are essential
-                # unknowns; resolve them before any shared-sequence clearance.
-                facts.knowledge_normal_hold | facts.knowledge_normal_exclusion,
+                # An accepted review may retain an unresolved interpretation.
+                # It blocks CTA/sequence clearance without asserting normal production.
+                facts.knowledge_normal_exclusion,
             ),
             EvidenceLayer("Clinical safety exclusion", facts["Safety veto"], facts["Safety veto"]),
             # Rare expression in brain, heart or lung alveolar, endothelial and airway basal cells: an essential unknown.

@@ -28,7 +28,7 @@ from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 from .tissue_hazards import context_tiers
 
-POLICY_ID = "oncoref.cta-selection.2026-11-03.1"
+POLICY_ID = "oncoref.cta-selection.2026-11-04.1"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 # Manageable-tier RNA above the highest Manageable ceiling (16 x 2^3 = 128 in

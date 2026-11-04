@@ -63,6 +63,15 @@ class SelectionAudit:
             raise KeyError(f"No audit entity {entity!r} in {self.species}")
         return found.reset_index(drop=True).copy()
 
+    def findings(self, entity: str) -> pd.DataFrame:
+        """All curated findings, including rejected/context records, for this entity."""
+        from . import gene_knowledge
+
+        explanation = self.explain(entity)
+        ids = set(explanation.iloc[0].gene_ids)
+        data = gene_knowledge.findings(taxonomy_id=resolve_species(self.species).taxon_id)
+        return data[data.gene_ids.map(lambda genes: bool(ids & set(genes)))].reset_index(drop=True)
+
 
 def audit(*, species: Species | str | int = "human") -> SelectionAudit:
     """Load the pinned explanation, provenance and funnel tables without network.

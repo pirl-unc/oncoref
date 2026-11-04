@@ -58,7 +58,7 @@ def test_review_is_not_protein_exclusion_and_requires_provenance():
     assert row["effect"] == "review" and row["unit"] == "positive neurons"
     wrong = copy.deepcopy(row)
     wrong["effect"] = "exclude"
-    with pytest.raises(ValueError, match="established adult human"):
+    with pytest.raises(ValueError, match="Unresolved or rejected"):
         gene_knowledge.validate([wrong])
     wrong = copy.deepcopy(row)
     wrong["limitations"] = ""
