@@ -48,12 +48,14 @@ coverage. Dog PCR percentages, TMM-CPM and protein iBAQ never become human TPM.
 Mouse atlas entries identify resources for integration; no mouse classification
 is inferred from human orthology. See the [API and species guide](docs/cta-selection.md).
 
-Earlier 215-, 447- and 1,416-gene accessors are frozen comparisons. The exact
+The [verified sequence bundle](docs/sequence-bundle.md) retains original records,
+all occurrences, ambiguity segments, coverage gaps and current policy roles.
+Earlier 215-, 447- and 1,416-gene accessors are frozen comparisons. The historical
 protein background remains separately pinned to the
 [v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
 and their explicit exclusion recipe. Candidate protein-equivalence groups
 represent identical chosen reference proteins, not every splice isoform.
-[Normal-expression breadth](docs/audits/normal-breadth-20261026/index.md)
+[Normal-expression breadth](docs/audits/normal-breadth-20261104/index.md)
 remains a descriptive measure with missing-coverage bounds.
 
 The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)

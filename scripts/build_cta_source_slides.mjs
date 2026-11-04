@@ -59,7 +59,7 @@ function slide(title,section,notes=''){
  const s=p.slides.add();s.background.fill=C.white;current={title,text:[],links:[{url:URL,x:64,y:670,w:1100,h:24}]};pages.push(current);
  text(s,section.toUpperCase(),64,28,1152,25,16,C.teal,true);
  text(s,title,64,72,1152,85,42,C.ink,true);
- text(s,'OncoRef CTA evidence walkthrough   •   3 November 2026',64,670,1100,26,16,C.muted);
+ text(s,'OncoRef CTA evidence walkthrough   •   4 November 2026',64,670,1100,26,16,C.muted);
  text(s,String(pages.length).padStart(2,'0'),1174,668,42,30,19,C.muted,true);
  s.speakerNotes.text=`${title}\n${notes}\nReport: ${URL}\nPolicy: ${data.summary.policy}\nDecision snapshot SHA256: ${data.report_sha256}`;
  return s;
@@ -228,7 +228,7 @@ figure(s,'widely-studied-antigens-'+name+'-slide',48,160,1184,475);
 }
 {
 const s=slide('Assessment status is separate from category','Reading the results','A category can be assigned despite gaps in optional or irrelevant sources. Screened does not mean clinically safe or fully measured. MAGE-A3 has measured colon counterevidence. An independent developmental measurement cannot erase it.');
-table(s,[['API status','Meaning','Human proteins'],['screened','Classification with a resolved applicable screen',n(counts.CTA+counts.Unsafe+counts.Other-(data.assessment_statuses.incomplete_evidence||0)-(data.assessment_statuses.normal_evidence_hold||0))],['incomplete_evidence','Classified with disclosed evidence gaps',n(data.assessment_statuses.incomplete_evidence)],['normal_evidence_hold','Required normal coverage passes; a normal-screen hold remains',n(data.assessment_statuses.normal_evidence_hold)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:24,h:335});
+table(s,[['API status','Meaning','Human proteins'],['screened','Classification with a resolved applicable screen',n(data.assessment_statuses.screened)],['incomplete_evidence','Classified with disclosed evidence gaps',n(data.assessment_statuses.incomplete_evidence)],['normal_evidence_hold','Required normal coverage passes; a normal-screen hold remains',n(data.assessment_statuses.normal_evidence_hold)],['translation_review','Selected primary translation needs qualification',n(data.assessment_statuses.translation_review)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:22,h:355});
 note(s,'Other includes review holds and sequence rules. No human protein has a null category.',585,26);
 }
 {
@@ -249,7 +249,7 @@ note(s,'Published nominations need independent normal/tumor filtering and postna
 {
 const s=slide('Common API with native evidence underneath','API','Human, dog and mouse share schema and explicit unavailable states. Data are offline and checksum-verified. Frozen release reports remain unchanged.');
 text(s,'results = cta_selection.results(species="human")\naudit = cta_selection.audit(species="human")\naudit.sources    audit.overlaps    audit.funnel\naudit.explain("PRAME")',64,180,1152,200,31,C.teal,true);
-table(s,[['Field','Meaning'],['category','CTA / Unsafe / Other; classification gives the named category'],['assessment_status','Screened, incomplete evidence, normal hold, or unassessed'],['classification / subtype','One categorical label; Other subtype always populated']],{y:400,h:190,widths:[335,817],size:25});
+table(s,[['Field','Meaning'],['category','CTA / Unsafe / Other; classification gives the named category'],['assessment_status','Screened, evidence/translation review, or unassessed'],['classification / subtype','One categorical label; Other subtype always populated']],{y:400,h:190,widths:[335,817],size:25});
 note(s,'Source-specific native units, tissue/cell context, confidence and coverage remain inspectable.',610,24);
 }
 {

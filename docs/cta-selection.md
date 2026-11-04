@@ -47,6 +47,7 @@ the display order changes attrition attribution, not the final category or reaso
 | 1. Safety | Does normal-tissue, reviewed or clinical evidence exclude it? | **Unsafe** |
 | 2. Target space | Does it have reproductive evidence, cancer expression and concentration? | Otherwise **Other** with the unmet requirement as its subtype |
 | 2a. Nested microprotein | Is it a reference-CDS protein under 50 residues inside a same-strand protein-coding gene, without ncORF evidence? | **Other:Nested**: its RNA belongs to the host gene |
+| 2b. Translation | Does the exact selected primary-locus record qualify? | **Other:Translation** and explicit review when annotation or sequence integrity is insufficient; this never creates Unsafe |
 | 3. Sequence | Is at least 95% of its 9-mers inside Unsafe proteins? | **Other:Contained**: Unsafe sequence is blacklisted, so almost no peptide survives |
 | 4. Outcome | Did everything pass with no unresolved normal signal? | **CTA**; a pass blocked only by a normal-tissue hold is **Other:Held** |
 
@@ -169,14 +170,15 @@ species, stage or isoform evidence receive a review hold, with reconsideration r
 A search hit or annotation alone is not accepted protein evidence. Normal findings take
 precedence over reproductive protein or cancer presence.
 
-Cancer RNA now needs only **>0** in one compatible measured sample. This admits CDY1/B
-and OR2T7 without claiming high tumor abundance. Reviewed germ-cell protein supports
+Cancer RNA needs **>0** in one compatible measured sample. CDY1/B and OR2T7 pass
+this presence gate without a claim of high tumor abundance; OR2T7 separately requires
+translation review. Reviewed germ-cell protein supports
 BPY2/B/C independently of its RNA floor. The current versioned report lists every
 addition and removal; earlier candidate counts are historical.
 
 `cta_selection.sequence_dispositions()` exposes `direct_target_candidate` and
 `shared_sequence`: `exclude` for Unsafe, `review` for held/incomplete assessments
-or unresolved identities, and `allow` for assessed identity-resolved CTA/Other.
+or unresolved identities/translations, and `allow` for assessed identity-resolved CTA/Other.
 The 135 held/incomplete Other records in the 1.29 baseline require review even
 when their subtype is Nonreproductive. Keep the separate `role_policy_id` and
 `sequence_role_reasons` in downstream caches and reports.
