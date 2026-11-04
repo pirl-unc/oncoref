@@ -19,10 +19,10 @@ def digest(path):
 
 
 @pytest.mark.parametrize("report", [RESEARCH, BREADTH])
-def test_pinned_implementations_inputs_and_outputs(report):
+def test_pinned_implementations_inputs_and_outputs(report, historical_cta_input):
     manifest = json.loads((report / "run-manifest.json").read_text())
     for name, expected in manifest["inputs"].items():
-        assert digest(ROOT / name) == expected, name
+        assert digest(historical_cta_input(name, expected)) == expected, name
     for name, expected in manifest["outputs"].items():
         assert digest(report / name) == expected, name
     for name, expected in manifest.get("retrieval_inputs", {}).items():

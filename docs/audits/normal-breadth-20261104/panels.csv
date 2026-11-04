@@ -1,0 +1,388 @@
+compartment,organ,category,weight,scenario,brain_weight,anatomy,hazard_assessment_id,policy_id,registry_id
+amygdala,brain,vital,0.003787878787878788,historical,0.5,,,,
+basal ganglia,brain,vital,0.003787878787878788,historical,0.5,,,,
+cerebellum,brain,vital,0.003787878787878788,historical,0.5,,,,
+cerebral cortex,brain,vital,0.003787878787878788,historical,0.5,,,,
+choroid plexus,brain,vital,0.003787878787878788,historical,0.5,,,,
+hippocampal formation,brain,vital,0.003787878787878788,historical,0.5,,,,
+hypothalamus,brain,vital,0.003787878787878788,historical,0.5,,,,
+midbrain,brain,vital,0.003787878787878788,historical,0.5,,,,
+retina,eye,vital,0.030303030303030304,historical,0.5,,,,
+non-retinal eye,eye,vital,0.030303030303030304,historical,0.5,,,,
+heart muscle,heart muscle,vital,0.06060606060606061,historical,0.5,,,,
+lung,lung,vital,0.06060606060606061,historical,0.5,,,,
+spinal cord,spinal cord,vital,0.06060606060606061,historical,0.5,,,,
+liver,liver,vital,0.06060606060606061,historical,0.5,,,,
+kidney,kidney,vital,0.06060606060606061,historical,0.5,,,,
+bone marrow,bone marrow,vital,0.06060606060606061,historical,0.5,,,,
+blood,blood,vital,0.06060606060606061,historical,0.5,,,,
+adrenal gland,adrenal gland,vital,0.06060606060606061,historical,0.5,,,,
+pituitary gland,pituitary gland,vital,0.06060606060606061,historical,0.5,,,,
+pancreas,pancreas,vital,0.06060606060606061,historical,0.5,,,,
+small intestine,small intestine,vital,0.06060606060606061,historical,0.5,,,,
+skeletal muscle,skeletal muscle,vital,0.06060606060606061,historical,0.5,,,,
+smooth muscle,smooth muscle,vital,0.06060606060606061,historical,0.5,,,,
+peripheral nerve,peripheral nerve,vital,0.06060606060606061,historical,0.5,,,,
+inner ear,inner ear,vital,0.06060606060606061,historical,0.5,,,,
+salivary gland,salivary gland,protected,0.07692307692307693,historical,0.5,,,,
+parathyroid gland,parathyroid gland,protected,0.07692307692307693,historical,0.5,,,,
+lymph node,lymph node,protected,0.07692307692307693,historical,0.5,,,,
+esophagus,esophagus,protected,0.07692307692307693,historical,0.5,,,,
+stomach,stomach,protected,0.07692307692307693,historical,0.5,,,,
+colon,colon,protected,0.07692307692307693,historical,0.5,,,,
+rectum,rectum,protected,0.07692307692307693,historical,0.5,,,,
+urinary bladder,urinary bladder,protected,0.07692307692307693,historical,0.5,,,,
+ureter,ureter,protected,0.07692307692307693,historical,0.5,,,,
+cartilage,cartilage,protected,0.07692307692307693,historical,0.5,,,,
+oral mucosa,oral mucosa,protected,0.07692307692307693,historical,0.5,,,,
+nasopharynx,nasopharynx,protected,0.07692307692307693,historical,0.5,,,,
+tongue,tongue,protected,0.07692307692307693,historical,0.5,,,,
+skin,skin,manageable,0.2,historical,0.5,,,,
+spleen,spleen,manageable,0.2,historical,0.5,,,,
+thymus,thymus,manageable,0.2,historical,0.5,,,,
+thyroid gland,thyroid gland,manageable,0.2,historical,0.5,,,,
+adipose tissue,adipose tissue,manageable,0.2,historical,0.5,,,,
+amygdala,brain,vital,0.007352941176470588,historical,1.0,,,,
+basal ganglia,brain,vital,0.007352941176470588,historical,1.0,,,,
+cerebellum,brain,vital,0.007352941176470588,historical,1.0,,,,
+cerebral cortex,brain,vital,0.007352941176470588,historical,1.0,,,,
+choroid plexus,brain,vital,0.007352941176470588,historical,1.0,,,,
+hippocampal formation,brain,vital,0.007352941176470588,historical,1.0,,,,
+hypothalamus,brain,vital,0.007352941176470588,historical,1.0,,,,
+midbrain,brain,vital,0.007352941176470588,historical,1.0,,,,
+retina,eye,vital,0.029411764705882353,historical,1.0,,,,
+non-retinal eye,eye,vital,0.029411764705882353,historical,1.0,,,,
+heart muscle,heart muscle,vital,0.058823529411764705,historical,1.0,,,,
+lung,lung,vital,0.058823529411764705,historical,1.0,,,,
+spinal cord,spinal cord,vital,0.058823529411764705,historical,1.0,,,,
+liver,liver,vital,0.058823529411764705,historical,1.0,,,,
+kidney,kidney,vital,0.058823529411764705,historical,1.0,,,,
+bone marrow,bone marrow,vital,0.058823529411764705,historical,1.0,,,,
+blood,blood,vital,0.058823529411764705,historical,1.0,,,,
+adrenal gland,adrenal gland,vital,0.058823529411764705,historical,1.0,,,,
+pituitary gland,pituitary gland,vital,0.058823529411764705,historical,1.0,,,,
+pancreas,pancreas,vital,0.058823529411764705,historical,1.0,,,,
+small intestine,small intestine,vital,0.058823529411764705,historical,1.0,,,,
+skeletal muscle,skeletal muscle,vital,0.058823529411764705,historical,1.0,,,,
+smooth muscle,smooth muscle,vital,0.058823529411764705,historical,1.0,,,,
+peripheral nerve,peripheral nerve,vital,0.058823529411764705,historical,1.0,,,,
+inner ear,inner ear,vital,0.058823529411764705,historical,1.0,,,,
+salivary gland,salivary gland,protected,0.07692307692307693,historical,1.0,,,,
+parathyroid gland,parathyroid gland,protected,0.07692307692307693,historical,1.0,,,,
+lymph node,lymph node,protected,0.07692307692307693,historical,1.0,,,,
+esophagus,esophagus,protected,0.07692307692307693,historical,1.0,,,,
+stomach,stomach,protected,0.07692307692307693,historical,1.0,,,,
+colon,colon,protected,0.07692307692307693,historical,1.0,,,,
+rectum,rectum,protected,0.07692307692307693,historical,1.0,,,,
+urinary bladder,urinary bladder,protected,0.07692307692307693,historical,1.0,,,,
+ureter,ureter,protected,0.07692307692307693,historical,1.0,,,,
+cartilage,cartilage,protected,0.07692307692307693,historical,1.0,,,,
+oral mucosa,oral mucosa,protected,0.07692307692307693,historical,1.0,,,,
+nasopharynx,nasopharynx,protected,0.07692307692307693,historical,1.0,,,,
+tongue,tongue,protected,0.07692307692307693,historical,1.0,,,,
+skin,skin,manageable,0.2,historical,1.0,,,,
+spleen,spleen,manageable,0.2,historical,1.0,,,,
+thymus,thymus,manageable,0.2,historical,1.0,,,,
+thyroid gland,thyroid gland,manageable,0.2,historical,1.0,,,,
+adipose tissue,adipose tissue,manageable,0.2,historical,1.0,,,,
+amygdala,brain,vital,0.013888888888888888,historical,2.0,,,,
+basal ganglia,brain,vital,0.013888888888888888,historical,2.0,,,,
+cerebellum,brain,vital,0.013888888888888888,historical,2.0,,,,
+cerebral cortex,brain,vital,0.013888888888888888,historical,2.0,,,,
+choroid plexus,brain,vital,0.013888888888888888,historical,2.0,,,,
+hippocampal formation,brain,vital,0.013888888888888888,historical,2.0,,,,
+hypothalamus,brain,vital,0.013888888888888888,historical,2.0,,,,
+midbrain,brain,vital,0.013888888888888888,historical,2.0,,,,
+retina,eye,vital,0.027777777777777776,historical,2.0,,,,
+non-retinal eye,eye,vital,0.027777777777777776,historical,2.0,,,,
+heart muscle,heart muscle,vital,0.05555555555555555,historical,2.0,,,,
+lung,lung,vital,0.05555555555555555,historical,2.0,,,,
+spinal cord,spinal cord,vital,0.05555555555555555,historical,2.0,,,,
+liver,liver,vital,0.05555555555555555,historical,2.0,,,,
+kidney,kidney,vital,0.05555555555555555,historical,2.0,,,,
+bone marrow,bone marrow,vital,0.05555555555555555,historical,2.0,,,,
+blood,blood,vital,0.05555555555555555,historical,2.0,,,,
+adrenal gland,adrenal gland,vital,0.05555555555555555,historical,2.0,,,,
+pituitary gland,pituitary gland,vital,0.05555555555555555,historical,2.0,,,,
+pancreas,pancreas,vital,0.05555555555555555,historical,2.0,,,,
+small intestine,small intestine,vital,0.05555555555555555,historical,2.0,,,,
+skeletal muscle,skeletal muscle,vital,0.05555555555555555,historical,2.0,,,,
+smooth muscle,smooth muscle,vital,0.05555555555555555,historical,2.0,,,,
+peripheral nerve,peripheral nerve,vital,0.05555555555555555,historical,2.0,,,,
+inner ear,inner ear,vital,0.05555555555555555,historical,2.0,,,,
+salivary gland,salivary gland,protected,0.07692307692307693,historical,2.0,,,,
+parathyroid gland,parathyroid gland,protected,0.07692307692307693,historical,2.0,,,,
+lymph node,lymph node,protected,0.07692307692307693,historical,2.0,,,,
+esophagus,esophagus,protected,0.07692307692307693,historical,2.0,,,,
+stomach,stomach,protected,0.07692307692307693,historical,2.0,,,,
+colon,colon,protected,0.07692307692307693,historical,2.0,,,,
+rectum,rectum,protected,0.07692307692307693,historical,2.0,,,,
+urinary bladder,urinary bladder,protected,0.07692307692307693,historical,2.0,,,,
+ureter,ureter,protected,0.07692307692307693,historical,2.0,,,,
+cartilage,cartilage,protected,0.07692307692307693,historical,2.0,,,,
+oral mucosa,oral mucosa,protected,0.07692307692307693,historical,2.0,,,,
+nasopharynx,nasopharynx,protected,0.07692307692307693,historical,2.0,,,,
+tongue,tongue,protected,0.07692307692307693,historical,2.0,,,,
+skin,skin,manageable,0.2,historical,2.0,,,,
+spleen,spleen,manageable,0.2,historical,2.0,,,,
+thymus,thymus,manageable,0.2,historical,2.0,,,,
+thyroid gland,thyroid gland,manageable,0.2,historical,2.0,,,,
+adipose tissue,adipose tissue,manageable,0.2,historical,2.0,,,,
+amygdala,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,amygdala,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+basal ganglia,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,basal ganglia,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebellum,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,cerebellum,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebral cortex,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,cerebral cortex,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+choroid plexus,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,choroid plexus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hippocampal formation,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,hippocampal formation,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hypothalamus,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,hypothalamus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+midbrain,brain,vital,0.003787878787878788,current_tiers_historical_ceilings,0.5,midbrain,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+retina,eye,vital,0.030303030303030304,current_tiers_historical_ceilings,0.5,retina,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+non-retinal eye,eye,vital,0.030303030303030304,current_tiers_historical_ceilings,0.5,eye,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+heart muscle,heart muscle,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,heart muscle,heart,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lung,lung,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,lung,lung,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spinal cord,spinal cord,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,spinal cord,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+liver,liver,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,liver,liver,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+kidney,kidney,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,kidney,kidney,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+bone marrow,bone marrow,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,bone marrow,marrow,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+blood,blood,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,blood,blood,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adrenal gland,adrenal gland,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,adrenal gland,adrenal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pituitary gland,pituitary gland,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,pituitary gland,pituitary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pancreas,pancreas,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,pancreas,pancreas,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+small intestine,small intestine,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,small intestine,small_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skeletal muscle,skeletal muscle,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,skeletal muscle,skeletal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+smooth muscle,smooth muscle,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,smooth muscle,smooth,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+peripheral nerve,peripheral nerve,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,peripheral nerve,peripheral_nerve,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+inner ear,inner ear,vital,0.06060606060606061,current_tiers_historical_ceilings,0.5,inner ear,inner_ear,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+salivary gland,salivary gland,protected,0.0625,current_tiers_historical_ceilings,0.5,salivary gland,salivary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+parathyroid gland,parathyroid gland,protected,0.0625,current_tiers_historical_ceilings,0.5,parathyroid gland,parathyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lymph node,lymph node,protected,0.0625,current_tiers_historical_ceilings,0.5,lymph node,nodes,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+esophagus,esophagus,protected,0.0625,current_tiers_historical_ceilings,0.5,esophagus,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+stomach,stomach,protected,0.0625,current_tiers_historical_ceilings,0.5,stomach,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+colon,colon,protected,0.0625,current_tiers_historical_ceilings,0.5,colon,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+rectum,rectum,protected,0.0625,current_tiers_historical_ceilings,0.5,rectum,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+urinary bladder,urinary bladder,protected,0.0625,current_tiers_historical_ceilings,0.5,urinary bladder,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+ureter,ureter,protected,0.0625,current_tiers_historical_ceilings,0.5,ureter,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cartilage,cartilage,protected,0.0625,current_tiers_historical_ceilings,0.5,cartilage,cartilage,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+oral mucosa,oral mucosa,protected,0.0625,current_tiers_historical_ceilings,0.5,oral mucosa,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+nasopharynx,nasopharynx,protected,0.0625,current_tiers_historical_ceilings,0.5,nasopharynx,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+tongue,tongue,protected,0.0625,current_tiers_historical_ceilings,0.5,tongue,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skin,skin,protected,0.0625,current_tiers_historical_ceilings,0.5,skin,skin,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spleen,spleen,protected,0.0625,current_tiers_historical_ceilings,0.5,spleen,spleen,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thymus,thymus,protected,0.0625,current_tiers_historical_ceilings,0.5,thymus,thymus,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thyroid gland,thyroid gland,manageable,0.5,current_tiers_historical_ceilings,0.5,thyroid gland,thyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adipose tissue,adipose tissue,manageable,0.5,current_tiers_historical_ceilings,0.5,adipose tissue,adipose,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+amygdala,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,amygdala,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+basal ganglia,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,basal ganglia,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebellum,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,cerebellum,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebral cortex,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,cerebral cortex,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+choroid plexus,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,choroid plexus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hippocampal formation,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,hippocampal formation,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hypothalamus,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,hypothalamus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+midbrain,brain,vital,0.007352941176470588,current_tiers_historical_ceilings,1.0,midbrain,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+retina,eye,vital,0.029411764705882353,current_tiers_historical_ceilings,1.0,retina,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+non-retinal eye,eye,vital,0.029411764705882353,current_tiers_historical_ceilings,1.0,eye,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+heart muscle,heart muscle,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,heart muscle,heart,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lung,lung,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,lung,lung,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spinal cord,spinal cord,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,spinal cord,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+liver,liver,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,liver,liver,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+kidney,kidney,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,kidney,kidney,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+bone marrow,bone marrow,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,bone marrow,marrow,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+blood,blood,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,blood,blood,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adrenal gland,adrenal gland,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,adrenal gland,adrenal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pituitary gland,pituitary gland,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,pituitary gland,pituitary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pancreas,pancreas,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,pancreas,pancreas,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+small intestine,small intestine,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,small intestine,small_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skeletal muscle,skeletal muscle,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,skeletal muscle,skeletal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+smooth muscle,smooth muscle,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,smooth muscle,smooth,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+peripheral nerve,peripheral nerve,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,peripheral nerve,peripheral_nerve,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+inner ear,inner ear,vital,0.058823529411764705,current_tiers_historical_ceilings,1.0,inner ear,inner_ear,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+salivary gland,salivary gland,protected,0.0625,current_tiers_historical_ceilings,1.0,salivary gland,salivary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+parathyroid gland,parathyroid gland,protected,0.0625,current_tiers_historical_ceilings,1.0,parathyroid gland,parathyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lymph node,lymph node,protected,0.0625,current_tiers_historical_ceilings,1.0,lymph node,nodes,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+esophagus,esophagus,protected,0.0625,current_tiers_historical_ceilings,1.0,esophagus,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+stomach,stomach,protected,0.0625,current_tiers_historical_ceilings,1.0,stomach,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+colon,colon,protected,0.0625,current_tiers_historical_ceilings,1.0,colon,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+rectum,rectum,protected,0.0625,current_tiers_historical_ceilings,1.0,rectum,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+urinary bladder,urinary bladder,protected,0.0625,current_tiers_historical_ceilings,1.0,urinary bladder,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+ureter,ureter,protected,0.0625,current_tiers_historical_ceilings,1.0,ureter,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cartilage,cartilage,protected,0.0625,current_tiers_historical_ceilings,1.0,cartilage,cartilage,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+oral mucosa,oral mucosa,protected,0.0625,current_tiers_historical_ceilings,1.0,oral mucosa,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+nasopharynx,nasopharynx,protected,0.0625,current_tiers_historical_ceilings,1.0,nasopharynx,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+tongue,tongue,protected,0.0625,current_tiers_historical_ceilings,1.0,tongue,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skin,skin,protected,0.0625,current_tiers_historical_ceilings,1.0,skin,skin,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spleen,spleen,protected,0.0625,current_tiers_historical_ceilings,1.0,spleen,spleen,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thymus,thymus,protected,0.0625,current_tiers_historical_ceilings,1.0,thymus,thymus,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thyroid gland,thyroid gland,manageable,0.5,current_tiers_historical_ceilings,1.0,thyroid gland,thyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adipose tissue,adipose tissue,manageable,0.5,current_tiers_historical_ceilings,1.0,adipose tissue,adipose,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+amygdala,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,amygdala,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+basal ganglia,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,basal ganglia,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebellum,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,cerebellum,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebral cortex,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,cerebral cortex,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+choroid plexus,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,choroid plexus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hippocampal formation,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,hippocampal formation,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hypothalamus,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,hypothalamus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+midbrain,brain,vital,0.013888888888888888,current_tiers_historical_ceilings,2.0,midbrain,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+retina,eye,vital,0.027777777777777776,current_tiers_historical_ceilings,2.0,retina,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+non-retinal eye,eye,vital,0.027777777777777776,current_tiers_historical_ceilings,2.0,eye,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+heart muscle,heart muscle,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,heart muscle,heart,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lung,lung,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,lung,lung,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spinal cord,spinal cord,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,spinal cord,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+liver,liver,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,liver,liver,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+kidney,kidney,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,kidney,kidney,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+bone marrow,bone marrow,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,bone marrow,marrow,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+blood,blood,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,blood,blood,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adrenal gland,adrenal gland,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,adrenal gland,adrenal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pituitary gland,pituitary gland,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,pituitary gland,pituitary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pancreas,pancreas,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,pancreas,pancreas,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+small intestine,small intestine,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,small intestine,small_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skeletal muscle,skeletal muscle,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,skeletal muscle,skeletal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+smooth muscle,smooth muscle,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,smooth muscle,smooth,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+peripheral nerve,peripheral nerve,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,peripheral nerve,peripheral_nerve,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+inner ear,inner ear,vital,0.05555555555555555,current_tiers_historical_ceilings,2.0,inner ear,inner_ear,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+salivary gland,salivary gland,protected,0.0625,current_tiers_historical_ceilings,2.0,salivary gland,salivary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+parathyroid gland,parathyroid gland,protected,0.0625,current_tiers_historical_ceilings,2.0,parathyroid gland,parathyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lymph node,lymph node,protected,0.0625,current_tiers_historical_ceilings,2.0,lymph node,nodes,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+esophagus,esophagus,protected,0.0625,current_tiers_historical_ceilings,2.0,esophagus,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+stomach,stomach,protected,0.0625,current_tiers_historical_ceilings,2.0,stomach,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+colon,colon,protected,0.0625,current_tiers_historical_ceilings,2.0,colon,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+rectum,rectum,protected,0.0625,current_tiers_historical_ceilings,2.0,rectum,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+urinary bladder,urinary bladder,protected,0.0625,current_tiers_historical_ceilings,2.0,urinary bladder,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+ureter,ureter,protected,0.0625,current_tiers_historical_ceilings,2.0,ureter,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cartilage,cartilage,protected,0.0625,current_tiers_historical_ceilings,2.0,cartilage,cartilage,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+oral mucosa,oral mucosa,protected,0.0625,current_tiers_historical_ceilings,2.0,oral mucosa,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+nasopharynx,nasopharynx,protected,0.0625,current_tiers_historical_ceilings,2.0,nasopharynx,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+tongue,tongue,protected,0.0625,current_tiers_historical_ceilings,2.0,tongue,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skin,skin,protected,0.0625,current_tiers_historical_ceilings,2.0,skin,skin,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spleen,spleen,protected,0.0625,current_tiers_historical_ceilings,2.0,spleen,spleen,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thymus,thymus,protected,0.0625,current_tiers_historical_ceilings,2.0,thymus,thymus,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thyroid gland,thyroid gland,manageable,0.5,current_tiers_historical_ceilings,2.0,thyroid gland,thyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adipose tissue,adipose tissue,manageable,0.5,current_tiers_historical_ceilings,2.0,adipose tissue,adipose,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+amygdala,brain,vital,0.003787878787878788,current,0.5,amygdala,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+basal ganglia,brain,vital,0.003787878787878788,current,0.5,basal ganglia,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebellum,brain,vital,0.003787878787878788,current,0.5,cerebellum,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebral cortex,brain,vital,0.003787878787878788,current,0.5,cerebral cortex,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+choroid plexus,brain,vital,0.003787878787878788,current,0.5,choroid plexus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hippocampal formation,brain,vital,0.003787878787878788,current,0.5,hippocampal formation,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hypothalamus,brain,vital,0.003787878787878788,current,0.5,hypothalamus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+midbrain,brain,vital,0.003787878787878788,current,0.5,midbrain,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+retina,eye,vital,0.030303030303030304,current,0.5,retina,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+non-retinal eye,eye,vital,0.030303030303030304,current,0.5,eye,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+heart muscle,heart muscle,vital,0.06060606060606061,current,0.5,heart muscle,heart,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lung,lung,vital,0.06060606060606061,current,0.5,lung,lung,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spinal cord,spinal cord,vital,0.06060606060606061,current,0.5,spinal cord,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+liver,liver,vital,0.06060606060606061,current,0.5,liver,liver,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+kidney,kidney,vital,0.06060606060606061,current,0.5,kidney,kidney,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+bone marrow,bone marrow,vital,0.06060606060606061,current,0.5,bone marrow,marrow,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+blood,blood,vital,0.06060606060606061,current,0.5,blood,blood,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adrenal gland,adrenal gland,vital,0.06060606060606061,current,0.5,adrenal gland,adrenal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pituitary gland,pituitary gland,vital,0.06060606060606061,current,0.5,pituitary gland,pituitary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pancreas,pancreas,vital,0.06060606060606061,current,0.5,pancreas,pancreas,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+small intestine,small intestine,vital,0.06060606060606061,current,0.5,small intestine,small_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skeletal muscle,skeletal muscle,vital,0.06060606060606061,current,0.5,skeletal muscle,skeletal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+smooth muscle,smooth muscle,vital,0.06060606060606061,current,0.5,smooth muscle,smooth,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+peripheral nerve,peripheral nerve,vital,0.06060606060606061,current,0.5,peripheral nerve,peripheral_nerve,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+inner ear,inner ear,vital,0.06060606060606061,current,0.5,inner ear,inner_ear,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+salivary gland,salivary gland,protected,0.0625,current,0.5,salivary gland,salivary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+parathyroid gland,parathyroid gland,protected,0.0625,current,0.5,parathyroid gland,parathyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lymph node,lymph node,protected,0.0625,current,0.5,lymph node,nodes,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+esophagus,esophagus,protected,0.0625,current,0.5,esophagus,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+stomach,stomach,protected,0.0625,current,0.5,stomach,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+colon,colon,protected,0.0625,current,0.5,colon,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+rectum,rectum,protected,0.0625,current,0.5,rectum,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+urinary bladder,urinary bladder,protected,0.0625,current,0.5,urinary bladder,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+ureter,ureter,protected,0.0625,current,0.5,ureter,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cartilage,cartilage,protected,0.0625,current,0.5,cartilage,cartilage,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+oral mucosa,oral mucosa,protected,0.0625,current,0.5,oral mucosa,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+nasopharynx,nasopharynx,protected,0.0625,current,0.5,nasopharynx,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+tongue,tongue,protected,0.0625,current,0.5,tongue,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skin,skin,protected,0.0625,current,0.5,skin,skin,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spleen,spleen,protected,0.0625,current,0.5,spleen,spleen,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thymus,thymus,protected,0.0625,current,0.5,thymus,thymus,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thyroid gland,thyroid gland,manageable,0.5,current,0.5,thyroid gland,thyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adipose tissue,adipose tissue,manageable,0.5,current,0.5,adipose tissue,adipose,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+amygdala,brain,vital,0.007352941176470588,current,1.0,amygdala,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+basal ganglia,brain,vital,0.007352941176470588,current,1.0,basal ganglia,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebellum,brain,vital,0.007352941176470588,current,1.0,cerebellum,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebral cortex,brain,vital,0.007352941176470588,current,1.0,cerebral cortex,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+choroid plexus,brain,vital,0.007352941176470588,current,1.0,choroid plexus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hippocampal formation,brain,vital,0.007352941176470588,current,1.0,hippocampal formation,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hypothalamus,brain,vital,0.007352941176470588,current,1.0,hypothalamus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+midbrain,brain,vital,0.007352941176470588,current,1.0,midbrain,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+retina,eye,vital,0.029411764705882353,current,1.0,retina,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+non-retinal eye,eye,vital,0.029411764705882353,current,1.0,eye,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+heart muscle,heart muscle,vital,0.058823529411764705,current,1.0,heart muscle,heart,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lung,lung,vital,0.058823529411764705,current,1.0,lung,lung,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spinal cord,spinal cord,vital,0.058823529411764705,current,1.0,spinal cord,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+liver,liver,vital,0.058823529411764705,current,1.0,liver,liver,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+kidney,kidney,vital,0.058823529411764705,current,1.0,kidney,kidney,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+bone marrow,bone marrow,vital,0.058823529411764705,current,1.0,bone marrow,marrow,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+blood,blood,vital,0.058823529411764705,current,1.0,blood,blood,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adrenal gland,adrenal gland,vital,0.058823529411764705,current,1.0,adrenal gland,adrenal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pituitary gland,pituitary gland,vital,0.058823529411764705,current,1.0,pituitary gland,pituitary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pancreas,pancreas,vital,0.058823529411764705,current,1.0,pancreas,pancreas,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+small intestine,small intestine,vital,0.058823529411764705,current,1.0,small intestine,small_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skeletal muscle,skeletal muscle,vital,0.058823529411764705,current,1.0,skeletal muscle,skeletal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+smooth muscle,smooth muscle,vital,0.058823529411764705,current,1.0,smooth muscle,smooth,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+peripheral nerve,peripheral nerve,vital,0.058823529411764705,current,1.0,peripheral nerve,peripheral_nerve,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+inner ear,inner ear,vital,0.058823529411764705,current,1.0,inner ear,inner_ear,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+salivary gland,salivary gland,protected,0.0625,current,1.0,salivary gland,salivary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+parathyroid gland,parathyroid gland,protected,0.0625,current,1.0,parathyroid gland,parathyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lymph node,lymph node,protected,0.0625,current,1.0,lymph node,nodes,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+esophagus,esophagus,protected,0.0625,current,1.0,esophagus,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+stomach,stomach,protected,0.0625,current,1.0,stomach,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+colon,colon,protected,0.0625,current,1.0,colon,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+rectum,rectum,protected,0.0625,current,1.0,rectum,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+urinary bladder,urinary bladder,protected,0.0625,current,1.0,urinary bladder,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+ureter,ureter,protected,0.0625,current,1.0,ureter,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cartilage,cartilage,protected,0.0625,current,1.0,cartilage,cartilage,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+oral mucosa,oral mucosa,protected,0.0625,current,1.0,oral mucosa,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+nasopharynx,nasopharynx,protected,0.0625,current,1.0,nasopharynx,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+tongue,tongue,protected,0.0625,current,1.0,tongue,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skin,skin,protected,0.0625,current,1.0,skin,skin,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spleen,spleen,protected,0.0625,current,1.0,spleen,spleen,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thymus,thymus,protected,0.0625,current,1.0,thymus,thymus,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thyroid gland,thyroid gland,manageable,0.5,current,1.0,thyroid gland,thyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adipose tissue,adipose tissue,manageable,0.5,current,1.0,adipose tissue,adipose,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+amygdala,brain,vital,0.013888888888888888,current,2.0,amygdala,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+basal ganglia,brain,vital,0.013888888888888888,current,2.0,basal ganglia,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebellum,brain,vital,0.013888888888888888,current,2.0,cerebellum,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cerebral cortex,brain,vital,0.013888888888888888,current,2.0,cerebral cortex,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+choroid plexus,brain,vital,0.013888888888888888,current,2.0,choroid plexus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hippocampal formation,brain,vital,0.013888888888888888,current,2.0,hippocampal formation,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+hypothalamus,brain,vital,0.013888888888888888,current,2.0,hypothalamus,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+midbrain,brain,vital,0.013888888888888888,current,2.0,midbrain,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+retina,eye,vital,0.027777777777777776,current,2.0,retina,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+non-retinal eye,eye,vital,0.027777777777777776,current,2.0,eye,eye,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+heart muscle,heart muscle,vital,0.05555555555555555,current,2.0,heart muscle,heart,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lung,lung,vital,0.05555555555555555,current,2.0,lung,lung,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spinal cord,spinal cord,vital,0.05555555555555555,current,2.0,spinal cord,cns,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+liver,liver,vital,0.05555555555555555,current,2.0,liver,liver,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+kidney,kidney,vital,0.05555555555555555,current,2.0,kidney,kidney,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+bone marrow,bone marrow,vital,0.05555555555555555,current,2.0,bone marrow,marrow,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+blood,blood,vital,0.05555555555555555,current,2.0,blood,blood,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adrenal gland,adrenal gland,vital,0.05555555555555555,current,2.0,adrenal gland,adrenal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pituitary gland,pituitary gland,vital,0.05555555555555555,current,2.0,pituitary gland,pituitary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+pancreas,pancreas,vital,0.05555555555555555,current,2.0,pancreas,pancreas,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+small intestine,small intestine,vital,0.05555555555555555,current,2.0,small intestine,small_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skeletal muscle,skeletal muscle,vital,0.05555555555555555,current,2.0,skeletal muscle,skeletal,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+smooth muscle,smooth muscle,vital,0.05555555555555555,current,2.0,smooth muscle,smooth,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+peripheral nerve,peripheral nerve,vital,0.05555555555555555,current,2.0,peripheral nerve,peripheral_nerve,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+inner ear,inner ear,vital,0.05555555555555555,current,2.0,inner ear,inner_ear,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+salivary gland,salivary gland,protected,0.0625,current,2.0,salivary gland,salivary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+parathyroid gland,parathyroid gland,protected,0.0625,current,2.0,parathyroid gland,parathyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+lymph node,lymph node,protected,0.0625,current,2.0,lymph node,nodes,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+esophagus,esophagus,protected,0.0625,current,2.0,esophagus,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+stomach,stomach,protected,0.0625,current,2.0,stomach,upper_gi,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+colon,colon,protected,0.0625,current,2.0,colon,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+rectum,rectum,protected,0.0625,current,2.0,rectum,large_bowel,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+urinary bladder,urinary bladder,protected,0.0625,current,2.0,urinary bladder,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+ureter,ureter,protected,0.0625,current,2.0,ureter,urinary,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+cartilage,cartilage,protected,0.0625,current,2.0,cartilage,cartilage,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+oral mucosa,oral mucosa,protected,0.0625,current,2.0,oral mucosa,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+nasopharynx,nasopharynx,protected,0.0625,current,2.0,nasopharynx,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+tongue,tongue,protected,0.0625,current,2.0,tongue,oral,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+skin,skin,protected,0.0625,current,2.0,skin,skin,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+spleen,spleen,protected,0.0625,current,2.0,spleen,spleen,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thymus,thymus,protected,0.0625,current,2.0,thymus,thymus,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+thyroid gland,thyroid gland,manageable,0.5,current,2.0,thyroid gland,thyroid,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda
+adipose tissue,adipose tissue,manageable,0.5,current,2.0,adipose tissue,adipose,oncoref.normal-expression-breadth.2026-11-04.1,oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda

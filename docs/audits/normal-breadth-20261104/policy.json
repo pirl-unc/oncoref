@@ -1,0 +1,16 @@
+{
+  "policy_id": "oncoref.normal-expression-breadth.2026-11-04.1",
+  "hazard_registry_id": "oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
+  "source": "hpa_rna_consensus",
+  "version": "v23",
+  "unit": "nTPM",
+  "taxonomy_id": 9606,
+  "ceilings": {
+    "vital": 4.0,
+    "protected": 8.0,
+    "manageable": 16.0
+  },
+  "weights": "equal organs within tier; brain sensitivity 0.5/1/2; fixed missing weight",
+  "eligibility_effect": "none",
+  "formula": "sum(w * x / (x + L))"
+}

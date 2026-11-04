@@ -2,7 +2,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oncoref.normal_expression_breadth import anatomical_panel, burden, donor_summaries
+from oncoref.normal_expression_breadth import (
+    anatomical_panel,
+    burden,
+    donor_summaries,
+    historical_panel,
+    policy,
+)
 
 
 def profile(values=(1.0, 3.0)):
@@ -98,6 +104,37 @@ def test_fixed_panel_brain_has_one_organ_weight_and_explicit_gaps():
     )
     assert {"inner ear", "non-retinal eye", "cartilage"} <= set(p.compartment)
     assert "testis" not in set(p.compartment)
+
+
+def test_current_tiers_follow_bulk_registry_while_historical_replay_is_preserved():
+    from oncoref import tissue_hazards
+
+    current = anatomical_panel().set_index("compartment")
+    old = historical_panel().set_index("compartment")
+    assert set(current.index) == set(old.index)
+    for tissue in ["skin", "spleen", "thymus"]:
+        assert old.loc[tissue, "category"] == "manageable"
+        assert current.loc[tissue, "category"] == "protected"
+    for row in current.itertuples():
+        assert row.category == tissue_hazards.assess(row.anatomy, resolution="bulk")["tier"]
+    assert current.loc["lung", "category"] == "vital"
+    for weight in [0.5, 1, 2]:
+        p = anatomical_panel(brain_weight=weight)
+        assert np.allclose(p.groupby("category").weight.sum(), 1)
+        brain = p.loc[p.organ.eq("brain"), "weight"].sum()
+        kidney = p.loc[p.organ.eq("kidney"), "weight"].sum()
+        assert brain / kidney == pytest.approx(weight)
+    assert policy()["eligibility_effect"] == "none"
+
+
+def test_historical_panel_reproduces_the_shipped_panel():
+    from pathlib import Path
+
+    archived = pd.read_csv(
+        Path(__file__).resolve().parents[1]
+        / "docs/audits/normal-breadth-20261026/anatomical-panel.csv"
+    )
+    pd.testing.assert_frame_equal(historical_panel(), archived)
 
 
 def test_donor_counts_are_independent_and_sparse_upper_quantiles_unavailable():
