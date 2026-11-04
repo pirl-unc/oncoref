@@ -99,6 +99,7 @@ oncoref = [
     "data/tcr-trial-evidence.json",
     "data/gene-knowledge.json",
     "data/translation-qualification.json",
+    "data/cta-finding-migrations.json",
     "data/cta-selection-audit.json",
     "data/cta-selection-audit-*.json.gz",
     "data/protein-annotation-sources.json",
