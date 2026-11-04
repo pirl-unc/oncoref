@@ -1,0 +1,56 @@
+{
+  "schema": "oncoref.cta-decision-contract",
+  "schema_version": 1,
+  "contract_id": "oncoref.cta-decision-contract.2026-11-04.1",
+  "role_policy_id": "oncoref.sequence-roles.2026-11-04.1",
+  "title": "CTA and oncofetal candidate selection",
+  "definition": "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. Sequence realization requires separately qualified translation records.",
+  "categories": {
+    "CTA": "Candidate under the named policy; not presentation or clinical clearance",
+    "Unsafe": "Normal-tissue or applicable clinical evidence establishes policy exclusion",
+    "Other": "Not admitted; inspect every reason and assessment status"
+  },
+  "assessment_states": {
+    "screened": "Declared assessment completed; not exhaustive biological coverage",
+    "incomplete_evidence": "Required coverage or evidence resolution is incomplete",
+    "normal_evidence_hold": "Normal evidence requires review without establishing exclusion",
+    "unassessed": "No applicable selection policy or no completed assessment"
+  },
+  "interpretation_states": {
+    "accepted": "The specified observation is supported within its recorded scope",
+    "unresolved": "A material identity, assay, context or interpretation question remains",
+    "rejected": "The claimed observation is not supported; retain the rationale and source"
+  },
+  "interpretation_note": "Review completion, interpretation and policy effect are separate. A completed review may retain unresolved evidence; a rejected claim is not proof of absence.",
+  "support_routes": [
+    "testicular",
+    "other_reproductive",
+    "placental",
+    "embryonic_fetal"
+  ],
+  "support_route_note": "Routes may overlap; a developmental route is not adult testis restriction",
+  "sequence_roles": {
+    "exclude": "Retain applicable exclusion evidence; it takes precedence across occurrences",
+    "review": "Evidence, identity, coverage or sequence qualification needs resolution",
+    "allow": "No exclusion from this assessed record under the named policy"
+  },
+  "role_precedence": [
+    "exclude",
+    "review",
+    "allow"
+  ],
+  "role_scope": "selected_representative_protein",
+  "translation_scope": "This decision interface does not qualify every translation or isoform",
+  "consumer_scope": "Use explicitly qualified records as a reference for exact subtraction or approximate near-self screening. Preserve every source occurrence and coverage gap. Patient-HLA prediction, similarity cutoffs and intervention rules are downstream policy; exact matching does not validate approximate matching.",
+  "prohibited_shortcuts": [
+    "Blanket exemption of historical CTA nominations from normal-reference evidence",
+    "A second legacy IHC filter that silently drops exclusions from other evidence",
+    "Interpreting Other, absent records or unmeasured panels as negative normal evidence",
+    "Transfer of human numerical rules to another species by symbol or orthology"
+  ],
+  "taxon_id": 9606,
+  "species": "human",
+  "selection_policy_id": "oncoref.cta-selection.2026-11-03.1",
+  "selection_status": "available",
+  "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
+}

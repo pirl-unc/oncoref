@@ -2,8 +2,9 @@
 
 RNA has one tissue/IHC ceiling. Crossing it supplies exclusion evidence in
 Vital/Protected compartments; crossing it in Manageable compartments prevents
-candidate and Other admission and remains a normal-screen hold. Other is
-the adequately assessed normal-pass fallback. Unresolved results have a null category.
+candidate admission and remains a normal-screen hold unless it exceeds the
+declared Unsafe floor. Other includes assessed noncandidates and held/incomplete
+cases; evidence status is independent of category and subtype.
 These are research selection rules, not estimates of clinical toxicity.
 
 Normal-tissue safety, cancer expression and reproductive /
@@ -38,9 +39,9 @@ MANAGEABLE_UNSAFE_FLOOR = 128.0
 # retains almost no usable peptide.
 CONTAINED_FLOOR = 0.95
 OTHER_SUBTYPE_RULES = {
-    "Nonreproductive": "Normal screen passes, but no qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. This is not proof of absence.",
-    "Reproductive": "Normal screen and reproductive presence pass, but cancer presence is unestablished.",
-    "Diffuse": "Normal screen, reproductive presence and cancer presence pass, but the reproductive concentration gate fails.",
+    "Nonreproductive": "No qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. Evidence completeness and normal holds are recorded independently; this is not proof of absence.",
+    "Reproductive": "Reproductive presence is supported but cancer presence is unestablished. Inspect assessment status for independent normal-evidence gaps or holds.",
+    "Diffuse": "Reproductive presence and cancer presence pass, but the reproductive concentration gate fails. Inspect assessment status independently.",
     "Held": "Target gates pass, but an unresolved or marginal normal-tissue signal blocks CTA without establishing Unsafe.",
     "Nested": "A reference-CDS microprotein (under 50 residues) nested inside a same-strand protein-coding gene and not an established ncORF: its RNA signal belongs to the host, so it cannot be a CTA.",
     "Contained": "Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist.",
@@ -495,8 +496,8 @@ def classify(
     holds = pd.DataFrame({name: hold | unsafe for name, hold, unsafe in layers})
     exclusions = pd.DataFrame({name: unsafe for name, _, unsafe in layers})
     held, unsafe = holds.any(axis=1), exclusions.any(axis=1)
-    # Other requires a resolved, passing normal screen. Its reason describes
-    # the first unmet identity gate, never an abundance or confidence class.
+    # Other includes held and incomplete cases. Its first identity-failure
+    # subtype must never substitute for the independent assessment status.
     concentration_hold = holds.get(
         "Reproductive concentration", pd.Series(False, index=facts.index)
     )

@@ -1,7 +1,7 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "oncoref/cta_selection_policy.py": "954639303fe474f29ab2ae9fc10f808a231b15b0e4879b332791900177fe54e5",
+    "oncoref/cta_selection_policy.py": "c9caf15693977353c2cfae0901ae62ebddec31b3533fc3f6bd42a15b9d5b2f51",
     "oncoref/tissue_hazards.py": "61e7e94d4f2c7c353a84d84d27b3c2d98a4216be64dbbd6967c2f7af23ffdeb8",
     "oncoref/data/normal-tissue-hazards.yaml": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
     "oncoref/data/normal-tissue-taxonomy.yaml": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",

@@ -13,7 +13,8 @@ clinical safety evidence supplies Unsafe; failing cancer/reproductive admission
 does not. Cancer presence requires positive (>0) native TPM/pTPM in one measured tumor sample or reviewed reliable tumor protein.
 Reproductive is the umbrella for reproductive, placental, extraembryonic, embryonic
 and fetal contexts; its measured branches have positive-expression rules. Required
-coverage includes the GTEx v11 52-context bulk core for every member locus.
+coverage requires the combined bulk panel for every member locus; the separate
+GTEx core and cell panels disclose their own coverage.
 Neither presence check imposes a normal-expression ratio. Whole-profile
 diffuseness is an active adult/placental identity gate. A qualifying reproductive
 profile that fails concentration can establish Other:Diffuse, never Unsafe; developmental concentration remains
@@ -35,6 +36,7 @@ from typing import Literal
 
 import pandas as pd
 
+from .cta_contract import gates as gates
 from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
@@ -155,9 +157,9 @@ def results(
 
     CTA means every gate of the named research policy passes. Unsafe denotes
     exclusion evidence under that policy, not demonstrated toxicity. Other
-    is the adequately assessed normal-pass noncandidate family. Every Other row
-    has a reason subtype: Nonreproductive, Reproductive (cancer missing), or
-    Diffuse. Abundance, tumor support and adult Disposable expression are
+    contains assessed noncandidates and held/incomplete cases. Inspect
+    ``assessment_status`` independently of subtype; even a Nonreproductive
+    record can have incomplete normal evidence. Abundance, tumor support and adult Disposable expression are
     independent attributes in ``profiles()``. A null
     category denotes unassigned evidence; ``assessment_status`` explains why.
     ``entity_kind`` prevents comparing human protein groups with unresolved
@@ -330,22 +332,33 @@ def rare_cell_screen() -> pd.DataFrame:
 def sequence_dispositions(*, species: SpeciesLike = "human") -> pd.DataFrame:
     """Return current screening roles for direct targets and sequence overlap.
 
-    CTA is a direct-target candidate. Unsafe contributes to an exclusion
-    background; unresolved rows require review and must not be silently treated
-    as allowed. Other contributes no exclusion under this named screening policy.
+    Assessed, identity-resolved CTA is a direct-target candidate. Unsafe
+    contributes to an exclusion background. Incomplete or held assessments
+    require review, including Other rows with a non-Held subtype. Only assessed,
+    identity-resolved Other contributes no exclusion under this screening policy.
     These are protein-level research roles, not epitope/HLA clearance. They do
     not modify the independently versioned legacy exact-protein backgrounds or
     cover every alternative isoform. IDs, reasons and the policy receipt remain
     attached so downstream code can choose an explicit review policy.
     """
-    frame = results(species=species)
-    frame["direct_target_candidate"] = frame.category.eq("CTA").fillna(False)
-    frame["shared_sequence"] = (
-        frame.category.map({"CTA": "allow", "Other": "allow", "Unsafe": "exclude"})
-        .fillna("review")
-        .astype("string")
-    )
-    return frame
+    from .cta_contract import sequence_roles
+
+    return sequence_roles(results(species=species))
+
+
+def contract(*, species: SpeciesLike = "human") -> dict:
+    """Describe decisions and consumer roles with explicit policy/reference identity."""
+    from .cta_contract import contract as definitions
+
+    selected = resolve_species(species)
+    policy = _metadata()["species"][selected.name]
+    return definitions() | {
+        "taxon_id": selected.taxon_id,
+        "species": selected.name,
+        "selection_policy_id": policy["policy_id"],
+        "selection_status": policy["selection_status"],
+        "reference_id": policy["reference"]["reference_id"],
+    }
 
 
 def sources(*, species: SpeciesLike = "human", category: str | None = None) -> pd.DataFrame:

@@ -1045,7 +1045,7 @@ z
    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="51.84" y="73.158281" transform="rotate(-0 51.84 73.158281)">19,604 proteins (identical selected reference sequences collapsed); every layer evaluates every group</text>
   </g>
   <g id="text_55">
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 617.934551)">Unresolved proteins pass no CTA gate yet but are not Unsafe; they receive Other at the final stage, so none remains unassessed.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 617.934551)">Unresolved proteins pass no CTA gate yet but are not Unsafe; they receive Other at the final stage, category assignment does not resolve missing evidence.</text>
    <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 628.737012)">Sequential removals depend on display order, not importance; independent layer effects are in independent-layer-effects.csv. Rare vital-tissue cell expression (brain, heart, lung alveolar, endothelial and airway basal cells; at least 1%) marks 15,874 proteins Unsafe.</text>
   </g>
  </g>

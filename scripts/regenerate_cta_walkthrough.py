@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 
 import audit_cta_source_coverage
+import build_cta_contract_report
 import build_cta_selection_audit
 import build_cta_selection_release
 import build_tcr_trial_report
@@ -172,6 +173,7 @@ def main() -> None:
     build_cta_selection_audit.build()
     build_tcr_trial_report.build()
     render_cta_source_walkthrough.build()
+    build_cta_contract_report.build()
     walkthrough_receipt()
 
 

@@ -1,0 +1,21 @@
+{
+  "inputs": {
+    "oncoref/cta_contract.py": "83c26c8ed2cc37c8c99bd020db66357ef072762bc99026dc412042439aa04bca",
+    "oncoref/cta_selection.py": "31f3510fbafe5d55116354c447ba26716a8daa561c55e652ece36dcf9f75ade3",
+    "oncoref/data/cta-selection.json": "8d99306d68568d9c87cccc611cc69d486e5d5e72e443a8b4eaa66947ceee41fd",
+    "oncoref/data/cta-selection-human.csv.gz": "741b037dad6a19feeabea08f48d4d637175d050221862ae00c89559275901691",
+    "scripts/build_cta_contract_report.py": "3da412d727f5cd55380d57ca944d0440e98e63d0f98db34d4a3aeca7f2542c62",
+    "docs/audits/cta-definition-20261104/baseline.json": "779f21ee949c0ca7d2ecd61dd418881280604d9a4e96389cb31aef661a3307a5",
+    "docs/audits/cta-definition-20261104/baseline-1.29.0.csv.gz": "4e6291d896d596c498da9144e0c1fd47f9e26110cc0a06632614aefdbbb82ffb"
+  },
+  "outputs": {
+    "baseline-1.29.0.csv.gz": "4e6291d896d596c498da9144e0c1fd47f9e26110cc0a06632614aefdbbb82ffb",
+    "baseline.json": "779f21ee949c0ca7d2ecd61dd418881280604d9a4e96389cb31aef661a3307a5",
+    "changes-from-1.29.0.csv": "7bc66cd2758bd4a5c359349dc2afac940665f8f63477e680c04c1890b4ce1e83",
+    "contract.json": "11fc88f6adb756291d13bdc0db8dad7e12e9f8b40976e1f3f3a322f0048c64ab",
+    "coverage.json": "55f51f5525f7afb45925238e833e6eab5330f01a49d2dd6cbd27ee847366985e",
+    "gate-catalog.csv": "793bd76ee0b6ae1e0918ef697fb2fa0379df583aa4333bd1e1af97830f5ab36e",
+    "index.md": "c8e54150926c0637225dcef0ba8e45d48a8c33be6ccff8ed205e8f26265c93cd",
+    "sequence-roles.csv.gz": "1fdd7e5fb7778b5af81f4dcb198bb847defcff3815afe906c1de931e989a8a46"
+  }
+}

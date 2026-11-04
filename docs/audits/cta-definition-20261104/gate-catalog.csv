@@ -1,0 +1,23 @@
+gate_id,name,axis
+universe,Reference and protein universe,identity
+normal_bulk,Normal bulk,normal_evidence
+normal_clusters,HPA tissue clusters,normal_evidence
+normal_hpa_immune,HPA immune,normal_evidence
+normal_monaco,Monaco immune,normal_evidence
+normal_dice,DICE immune,normal_evidence
+normal_cornea,Adult cornea,normal_evidence
+normal_hpa_protein,HPA normal protein,normal_evidence
+normal_reviewed_protein,Accepted normal-protein evidence,normal_evidence
+normal_knowledge,Reviewed normal-cell knowledge,normal_evidence
+normal_external_protein,External validated normal protein,normal_evidence
+clinical_exclusion,Clinical safety exclusion,clinical_evidence
+rare_vital,Rare vital-tissue cell expression,normal_evidence
+rare_protected,Rare Protected-cell expression review,normal_evidence
+required_coverage,Required RNA coverage,coverage
+cancer_presence,Cancer expression,candidate_identity
+reproductive_support,Reproductive or developmental expression,candidate_identity
+reproductive_concentration,Reproductive concentration,candidate_identity
+nested_microprotein,Nested microprotein,sequence_identity
+unsafe_containment,Unsafe sequence containment,sequence_identity
+translation_qualification,Translation qualification,sequence_identity
+final_assignment,CTA and Other assignments,decision

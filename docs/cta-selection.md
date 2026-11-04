@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **625 CTA proteins, 18,351 Unsafe and 628 Other (550 Nonreproductive, 27 Held, 28 Nested, 19 Contained, 4 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. No protein is unassessed. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **625 CTA proteins, 18,351 Unsafe and 628 Other (550 Nonreproductive, 27 Held, 28 Nested, 19 Contained, 4 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. Every human protein group has a category; its evidence may still be incomplete or held. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [decision and consumer-role contract](audits/cta-definition-20261104/index.md) separates classification from uncertainty and sequence use. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
 
 ## Safety, cancer expression and Reproductive evidence
 
@@ -37,8 +37,9 @@ safety becomes **Other:Diffuse**. MTCP1 (24.53%) is one example. Diffuse identit
 
 ## The selection funnel
 
-Selection is a funnel. A protein leaves at the first stage it fails, and every later
-stage sees only what remains.
+The displayed funnel attributes a protein's removal to its first failing stage.
+Every applicable evidence layer is still evaluated for every protein. Changing
+the display order changes attrition attribution, not the final category or reasons.
 
 | Stage | Question | Outcome |
 |---|---|---|
@@ -143,7 +144,7 @@ distinguishing 9-mers stay CTA, and their usable subsequences are for later revi
 
 The overlap uses every protein-coding transcript of Ensembl 115
 (`oncoref.cta_sequence_overlap`) and is reported as `unsafe_sequence_overlap_pct` in
-`cta_selection.profiles()`. **20 proteins are Contained** (median overlap 99%), among
+`cta_selection.profiles()`. **19 proteins are Contained**, among
 them DAZ2/3, PRAMEF27, CT45A3, GAGE2E and TBC1D3G/H/K. Most multi-copy families such as
 the CT45, GAGE, PRAMEF and POTE copies stay CTA.
 
@@ -167,10 +168,15 @@ precedence over reproductive protein or cancer presence.
 
 Cancer RNA now needs only **>0** in one compatible measured sample. This admits CDY1/B
 and OR2T7 without claiming high tumor abundance. Reviewed germ-cell protein supports
-BPY2/B/C independently of its RNA floor. All 698 prior CTAs remain retained.
+BPY2/B/C independently of its RNA floor. The current versioned report lists every
+addition and removal; earlier candidate counts are historical.
 
 `cta_selection.sequence_dispositions()` exposes `direct_target_candidate` and
-`shared_sequence`: `allow` for CTA/Other and `exclude` for Unsafe. Every classified protein resolves; `review` remains only for sequences outside the universe or the nonhuman nominations.
+`shared_sequence`: `exclude` for Unsafe, `review` for held/incomplete assessments
+or unresolved identities, and `allow` for assessed identity-resolved CTA/Other.
+The 135 held/incomplete Other records in the 1.29 baseline require review even
+when their subtype is Nonreproductive. Keep the separate `role_policy_id` and
+`sequence_role_reasons` in downstream caches and reports.
 These roles describe this research screen. They do not establish peptide presentation,
 cover all isoforms or change the independently versioned legacy forbidden backgrounds.
 Downstream systems must preserve the policy/reference receipt and handle review explicitly.
@@ -193,7 +199,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Complete evaluation of the coding or established-ncORF universe under `oncoref.cta-selection.2026-10-31.1` |
+| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-03.1`; individual coverage/holds remain explicit |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 

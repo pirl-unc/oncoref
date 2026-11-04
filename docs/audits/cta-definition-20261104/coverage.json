@@ -1,0 +1,112 @@
+{
+  "taxon_id": 9606,
+  "species": "human",
+  "selection_status": "available",
+  "evidence_status": "partial",
+  "policy_id": "oncoref.cta-selection.2026-11-03.1",
+  "universe": "19604 classified protein-equivalence groups from 19863 input groups",
+  "universe_counts": {
+    "counting_unit": "selected_reference_protein_equivalence_group",
+    "input_groups": 19863,
+    "classified_groups": 19604,
+    "out_of_universe_groups": 259,
+    "input_gene_loci": 20099,
+    "classified_gene_loci": 19839,
+    "out_of_universe_gene_loci": 260,
+    "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add"
+  },
+  "reference": {
+    "annotation_release": "115",
+    "annotation_source": "Ensembl",
+    "assembly_accession": "GCA_000001405.29",
+    "content_provenance": {
+      "gtf": "02df5a2a8c7a41e513209e0780c56cf197941b6b35ef8bab3e9a6317eecd17ef",
+      "ncrna": "7825db09257902df82172928537c1da16cfe79edcca56425556f74f1507437a0",
+      "protein": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96",
+      "rna": "93af088ed22a46daa9645fc6292fb120c1e4ffe791d24abbcbd35062666c03f1"
+    },
+    "identifier_namespaces": {
+      "gene": "Ensembl gene",
+      "protein": "Ensembl protein",
+      "transcript": "Ensembl transcript"
+    },
+    "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
+    "schema": "openvax.reference",
+    "schema_version": 1,
+    "source_version": "Ensembl-115",
+    "taxon_id": 9606
+  },
+  "limitations": [
+    "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
+    "Developmental coverage is stage-limited; gastrulation and preimplantation measurements do not cover later fetal/postnatal development",
+    "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
+    "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
+    "Representative-protein equivalence is not exhaustive isoform identity",
+    "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
+    "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
+    "Other includes assessed noncandidates and held/incomplete cases. Subtype does not establish evidence completeness or sequence allowance.",
+    "Rare-cell screening uses the existing brain, spinal-cord, heart and selected lung CELLxGENE panels. At least 1% detection in a Vital population supplies exclusion evidence; Protected detection supplies a review hold. Detection frequency is not abundance. Unmeasured ages, organs and excluded lineages remain coverage limits, not allowances.",
+    "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply."
+  ],
+  "entities": 19604,
+  "counts": {
+    "CTA": 625,
+    "Unsafe": 18351,
+    "Other": 628,
+    "Unassigned": 0
+  },
+  "other_subtypes": {
+    "Nonreproductive": 550,
+    "Nested": 28,
+    "Held": 27,
+    "Contained": 19,
+    "Diffuse": 4
+  },
+  "evidence_categories": {
+    "nomination": {
+      "used_sources": 0,
+      "available_sources": 22,
+      "identified_sources": 22
+    },
+    "reproductive_expression": {
+      "used_sources": 5,
+      "available_sources": 5,
+      "identified_sources": 5
+    },
+    "developmental_expression": {
+      "used_sources": 2,
+      "available_sources": 2,
+      "identified_sources": 2
+    },
+    "tumor_expression": {
+      "used_sources": 2,
+      "available_sources": 2,
+      "identified_sources": 2
+    },
+    "normal_bulk_rna": {
+      "used_sources": 3,
+      "available_sources": 3,
+      "identified_sources": 3
+    },
+    "normal_cell_rna": {
+      "used_sources": 7,
+      "available_sources": 7,
+      "identified_sources": 7
+    },
+    "immune_rna": {
+      "used_sources": 3,
+      "available_sources": 3,
+      "identified_sources": 3
+    },
+    "normal_protein": {
+      "used_sources": 4,
+      "available_sources": 4,
+      "identified_sources": 4
+    },
+    "clinical_safety": {
+      "used_sources": 13,
+      "available_sources": 13,
+      "identified_sources": 13
+    }
+  }
+}
