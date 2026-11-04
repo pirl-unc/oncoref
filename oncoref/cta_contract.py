@@ -12,7 +12,7 @@ from copy import deepcopy
 
 import pandas as pd
 
-CONTRACT_ID = "oncoref.cta-decision-contract.2026-11-04.1"
+CONTRACT_ID = "oncoref.cta-decision-contract.2026-11-04.2"
 ROLE_POLICY_ID = "oncoref.sequence-roles.2026-11-04.1"
 
 _CONTRACT = {
@@ -36,6 +36,7 @@ _CONTRACT = {
         "screened": "Declared assessment completed; not exhaustive biological coverage",
         "incomplete_evidence": "Required coverage or evidence resolution is incomplete",
         "normal_evidence_hold": "Normal evidence requires review without establishing exclusion",
+        "translation_review": "Selected translation requires record-level qualification",
         "unassessed": "No applicable selection policy or no completed assessment",
     },
     "interpretation_states": {

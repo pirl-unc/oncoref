@@ -889,6 +889,7 @@ the service are `rare_cell_screened = False` and are never flagged.
 |---|---|---:|
 | `screened` | A CTA, Unsafe or named Other category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | {int(facts.category.notna().sum()):,} |
 | `incomplete_evidence` | Required normal coverage or evidence resolution is missing. Additional missing cancer/developmental measurements are reported separately and do not themselves prevent Other. | {missing.get("incomplete_evidence", 0):,} |
+| `translation_review` | Selected primary-locus translation requires qualification. Normal findings remain independently visible. | {missing.get("translation_review", 0):,} |
 | `normal_evidence_hold` | Required coverage is present, but a normal-screen hold remains, including Manageable ceiling failures. | {missing.get("normal_evidence_hold", 0):,} |
 | `unassessed` | No species-specific quantitative policy has been applied; used for native dog nominations. | 0 |
 

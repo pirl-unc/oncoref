@@ -16,6 +16,8 @@ import build_cta_contract_report
 import build_cta_migration_report
 import build_cta_selection_audit
 import build_cta_selection_release
+import build_cta_translation_report
+import build_current_normal_breadth
 import build_tcr_trial_report
 import render_cta_source_walkthrough
 from cta_report_common import input_hashes, sha256
@@ -28,6 +30,9 @@ def receipts() -> None:
     """Record the measurement replay and current exports without self-hashing."""
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/translation_qualification.py",
+        ROOT / "oncoref/data/translation-qualification.json",
+        ROOT / "oncoref/data/translation-qualification.csv.gz",
         ROOT / "oncoref/tissue_hazards.py",
         ROOT / "oncoref/data/normal-tissue-hazards.yaml",
         ROOT / "oncoref/data/normal-tissue-taxonomy.yaml",
@@ -176,6 +181,8 @@ def main() -> None:
     render_cta_source_walkthrough.build()
     build_cta_contract_report.build()
     build_cta_migration_report.build()
+    build_cta_translation_report.build()
+    build_current_normal_breadth.build()
     walkthrough_receipt()
 
 

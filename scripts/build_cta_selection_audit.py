@@ -93,6 +93,10 @@ TABLE_COLUMNS = {
     ],
 }
 HUMAN_RULES = {
+    "Translation qualification": (
+        "A complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. Failure requires review, never Unsafe.",
+        ["Ensembl-115"],
+    ),
     "Reproductive or developmental expression": (
         "Full Reproductive bulk ≥5 nTPM OR supported reproductive-cell RNA ≥5 nTPM (≥20 reads; indirect sites additionally need complete outside-cluster coverage and every outside value <5, with no curated normal-induction conflict) OR reliable mapped positive reproductive IHC for every member without an antibody conflict OR reviewed human reproductive protein covering every selected member OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Presence evidence never overrides normal exclusions.",
         [
@@ -643,6 +647,9 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                         "Detection frequency is not abundance or demonstrated receptor recognition."
                     ),
                 )
+            elif layer == "Translation qualification":
+                row["reason"] = r["translation_qualification_reasons"]
+                row["source_url"] = "https://pirl-unc.github.io/oncoref/translation-qualification/"
             elif layer == "Cancer expression":
                 row["reason"] = (
                     f"OncoRef tumor maximum {display(r['oncoref_maximum_tpm'])} TPM; HPA lower bound {display(r['hpa_tumor_group_lower_bound_ptpm'])} pTPM. No qualifying tumor RNA or reviewed protein evidence."
@@ -691,7 +698,7 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             decision="assignment",
             source_url=BASE_URL,
             reason=(
-                f"Normal screen passes; no candidate subtype qualifies. Category subtype: {r['subtype']}. Categorical assignment: {r['classification']}. Cancer or reproductive evidence can be missing without implying missing normal coverage."
+                f"Assessment status: {r['assessment_status']}; inspect independent evidence and holds. Category subtype: {r['subtype']}. Categorical assignment: {r['classification']}. Cancer or reproductive evidence can be missing without implying missing normal coverage."
                 if r["category"] == "Other"
                 else f"{r['assessment_status']}: "
                 + (

@@ -568,6 +568,10 @@ def build(audit: Path = AUDIT) -> None:
             "unsafe_sequence_overlap_pct": decisions.unsafe_sequence_overlap_pct.where(
                 decisions.category.ne("Unsafe")
             ),
+            "translation_qualified": decisions.translation_qualified,
+            "translation_qualification_reasons": decisions.translation_qualification_reasons,
+            "translation_qualification_policy": decisions.translation_qualification_policy,
+            "representative_sequence_sha256s": decisions.representative_sequence_sha256s,
         }
     )
     write_csv(profiles, DATA / "cta-selection-profiles-human.csv.gz")
