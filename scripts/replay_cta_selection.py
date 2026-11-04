@@ -29,6 +29,7 @@ from oncoref import (  # noqa: E402
     reference_data,
     reproductive_evidence,
     tcr_trials,
+    translation_qualification,
 )
 from oncoref import cta_selection_policy as policy  # noqa: E402
 from oncoref.cta_funnel import EvidenceLayer  # noqa: E402
@@ -847,6 +848,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     output.mkdir(parents=True, exist_ok=True)
     facts = read(FROZEN / "protein-group-classifications.csv.gz")
     facts = restrict_to_universe(facts, output)
+    facts = translation_qualification.annotate(facts)
     # Unnamed canonical loci retain their stable ID as the display label.
     facts["protein_group_label"] = facts.protein_group_label.fillna(facts.representative_gene_id)
     facts["previous_category"] = facts.category
@@ -897,6 +899,9 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     inputs = [
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/translation_qualification.py",
+        ROOT / "oncoref/data/translation-qualification.json",
+        ROOT / "oncoref/data/translation-qualification.csv.gz",
         ROOT / "oncoref/gene_knowledge.py",
         ROOT / "oncoref/data/gene-knowledge.json",
         ROOT / "oncoref/reproductive_evidence.py",
@@ -1039,6 +1044,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         EvidenceLayer("Tumor sample ≥2 TPM/pTPM", ~facts.tumor_union_ge2, empty),
         EvidenceLayer("Required RNA coverage", ~facts.required_coverage, empty),
         EvidenceLayer("Reproductive concentration", facts.reproductive_concentration_hold, empty),
+        EvidenceLayer("Translation qualification", ~facts.translation_qualified, empty),
     ]
     layers.insert(2, proteins[0])
     for assay in ASSAYS:

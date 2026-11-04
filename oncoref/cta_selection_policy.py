@@ -28,7 +28,7 @@ from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 from .tissue_hazards import context_tiers
 
-POLICY_ID = "oncoref.cta-selection.2026-11-04.1"
+POLICY_ID = "oncoref.cta-selection.2026-11-04.2"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 # Manageable-tier RNA above the highest Manageable ceiling (16 x 2^3 = 128 in
@@ -44,6 +44,7 @@ OTHER_SUBTYPE_RULES = {
     "Diffuse": "Reproductive presence and cancer presence pass, but the reproductive concentration gate fails. Inspect assessment status independently.",
     "Held": "Target gates pass, but an unresolved or marginal normal-tissue signal blocks CTA without establishing Unsafe.",
     "Nested": "A reference-CDS microprotein (under 50 residues) nested inside a same-strand protein-coding gene and not an established ncORF: its RNA signal belongs to the host, so it cannot be a CTA.",
+    "Translation": "The selected primary-locus reference translation needs qualification; this is not normal-tissue exclusion evidence.",
     "Contained": "Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist.",
 }
 CANDIDATE_ONLY_LAYERS = frozenset(
@@ -52,6 +53,7 @@ CANDIDATE_ONLY_LAYERS = frozenset(
         "Tumor sample ≥2 TPM/pTPM",
         "Cancer expression",
         "Required RNA coverage",
+        "Translation qualification",
         "Reproductive concentration",
     }
 )
@@ -470,8 +472,8 @@ def classify(
     """Classify every entity with normal exclusions taking precedence.
 
     Every entity receives CTA, Unsafe or Other. CTA means every gate passes.
-    Unsafe requires positive exclusion evidence, including reviewed unresolved
-    Protected-tissue findings and Manageable-tier excess above 128. Other is
+    Unsafe requires positive exclusion evidence, including accepted normal-cell
+    findings and Manageable-tier excess above 128. Other is
     everything else; assessment_status records whether its normal screen was
     complete, incomplete or held, and the Held subtype marks proteins whose
     target gates pass but whose normal signal is unresolved or marginal.
@@ -505,6 +507,7 @@ def classify(
     # Every protein ends as CTA, Unsafe or Other. Unsafe needs positive exclusion
     # evidence; unresolved or marginal normal evidence blocks CTA and is
     # disclosed in assessment_status, but is never a separate unassessed class.
+    translation_hold = holds.get("Translation qualification", pd.Series(False, index=facts.index))
     complete = facts.required_coverage & ~facts.unresolved_evidence
     eligible = ~(held | unsafe) & complete & ~safety_hold
     overlap = pd.Series(np.nan, index=facts.index)
@@ -526,10 +529,11 @@ def classify(
         result.loc[mask, "category"] = label
     result["assessment_status"] = np.select(
         [
-            unsafe | eligible | (other & complete & ~safety_hold),
+            unsafe | eligible | (other & complete & ~safety_hold & ~translation_hold),
+            translation_hold & ~unsafe,
             facts.unresolved_evidence | ~facts.required_coverage,
         ],
-        ["screened", "incomplete_evidence"],
+        ["screened", "translation_review", "incomplete_evidence"],
         default="normal_evidence_hold",
     )
     association_failed = holds.get("Reproductive / embryonic association", ~facts.positive_context)
@@ -544,11 +548,12 @@ def classify(
         [
             contained,
             other & nested,
+            other & translation_hold,
             other & association_failed,
             other & cancer_failed,
             other & concentration_hold,
         ],
-        ["Contained", "Nested", "Nonreproductive", "Reproductive", "Diffuse"],
+        ["Contained", "Nested", "Translation", "Nonreproductive", "Reproductive", "Diffuse"],
         default=np.where(other, "Held", ""),
     )
     result["classification"] = result.category.astype(str)

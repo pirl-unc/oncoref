@@ -24,13 +24,13 @@
   "inputs": {
     "scripts/build_current_normal_breadth.py": "9e6142a9c8728c42f1fd61c65a74ce325f383580644d9f76d68b7ccedeba7024",
     "oncoref/normal_expression_breadth.py": "2bc596f606469a90715512484e2a0f4e1815c0fd5f8006b6bc8a268880229f2c",
-    "oncoref/cta_selection_policy.py": "c719633edc627bc420da6624ba412ba561cd0432886234fda150f6ba4a38f490",
+    "oncoref/cta_selection_policy.py": "6bb0924106833a215cc067e974017ccca8ffa5c6782cf9f32dfe699197555795",
     "oncoref/data/normal-tissue-hazards.yaml": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
     "oncoref/tissue_hazards.py": "61e7e94d4f2c7c353a84d84d27b3c2d98a4216be64dbbd6967c2f7af23ffdeb8",
     "oncoref/data/normal-tissue-taxonomy.yaml": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",
     "oncoref/data/cta-policy.json": "6844f3ae196d2bc91e996dfb8024db24da4c4f0ffb81439c87c652e7207fcfc6",
     "oncoref/data/cta-donor-rna.csv": "4df91d972bab43c3d4419d1d90bc18f311dc131b8e028295da4eb71bdb0f31b5",
-    "oncoref/data/cta-selection-human.csv.gz": "29a52c8f129ef4a2b959e1e3d6bccf3494dacbbbf6bae500657952130c6b37b5"
+    "oncoref/data/cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd"
   },
   "outputs": {
     "before-after.csv.gz": "6ea250e37be43e28cfa2d02f66ae0f59cc309aebcc8db3d948a652615bd81e14",

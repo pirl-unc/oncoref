@@ -46,6 +46,7 @@ def build(root: Path, output: Path) -> None:
         ("Reproductive presence", ~facts.positive_context | facts.nested_microprotein),
         ("Cancer presence", ~facts.cancer_association),
         ("Reproductive concentration", facts.reproductive_concentration_hold),
+        ("Translation qualification", ~facts.translation_qualified),
         (
             "Unsafe sequence containment",
             facts.unsafe_sequence_overlap_pct.ge(100 * CONTAINED_FLOOR),
@@ -185,8 +186,8 @@ def build(root: Path, output: Path) -> None:
     fig.text(
         0.055,
         0.178,
-        f"{table.iloc[1].new_Other:,} lack reproductive evidence / are nested; {table.iloc[3].new_Other:,} fail concentration; {table.iloc[4].new_Other:,} have Unsafe sequence containment.",
-        fontsize=14,
+        f"{table.iloc[1].new_Other:,} lack reproductive evidence / are nested; {table.iloc[3].new_Other:,} fail concentration; {table.iloc[4].new_Other:,} need translation review; {table.iloc[5].new_Other:,} have Unsafe sequence containment.",
+        fontsize=12,
         color=ink,
         weight="bold",
     )

@@ -415,6 +415,7 @@ def test_other_subtypes_are_exhaustive_and_normal_holds_never_become_unsafe():
         "Held",
         "Contained",
         "Nested",
+        "Translation",
     }
     names = ["Nonreproductive", "Reproductive", "Diffuse"]
     facts = pd.concat([profiles().iloc[:1]] * len(names), ignore_index=True)
@@ -582,3 +583,22 @@ def test_nested_microprotein_is_other_nested_never_cta():
     )
     result = policy.classify(facts, layers, entity_column="entity").classifications
     assert result.classification.tolist()[:2] == ["CTA", "Other:Nested"]
+
+
+def test_translation_failure_blocks_admission_without_erasing_unsafe():
+    facts = pd.concat([profiles().iloc[:1]] * 2, ignore_index=True)
+    facts["entity"] = ["held", "unsafe"]
+    facts["positive_context"] = True
+    no = pd.Series(False, index=facts.index)
+    yes = ~no
+    layers = [
+        EvidenceLayer("Translation qualification", yes, no),
+        EvidenceLayer("Normal", no, pd.Series([False, True])),
+    ]
+    result = policy.classify(facts, layers, entity_column="entity").classifications
+    assert result.classification.tolist() == ["Other:Translation", "Unsafe"]
+    assert result.assessment_status.tolist() == ["translation_review", "screened"]
+    with pytest.raises(ValueError, match="admission requirement"):
+        policy.classify(
+            facts, [EvidenceLayer("Translation qualification", yes, yes)], entity_column="entity"
+        )

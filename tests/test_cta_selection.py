@@ -54,7 +54,9 @@ def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate(
     assert facts.loc[unsafe, safety].any(axis=1).all()
     held = removed[kept.loc[removed, "classification"].eq("Other:Held")]
     assert (facts.loc[held, "rare_cell_hold"] | facts.loc[held, "knowledge_normal_hold"]).all()
-    assert set(removed) == set(unsafe) | set(held)
+    translation = removed[kept.loc[removed, "classification"].eq("Other:Translation")]
+    assert not facts.loc[translation, "translation_qualified"].any()
+    assert set(removed) == set(unsafe) | set(held) | set(translation)
     overlap = profiles.unsafe_sequence_overlap_pct
     assert overlap.loc[kept.index[contained]].ge(95).all()
     assert contained.sum() <= 40
@@ -128,6 +130,7 @@ def test_exhaustive_categorical_labels_and_legacy_query_alias():
         "Held",
         "Contained",
         "Nested",
+        "Translation",
     }
     with pytest.raises(ValueError, match="subtype"):
         cta_selection.results(category="Unsafe", subtype="Low")
@@ -152,4 +155,7 @@ def test_full_reproductive_and_cell_support_preserve_independent_gates():
     rows = cta_selection.results().set_index("label")
     assert rows.loc[["MAGEA11", "FOXR2", "CAGE1", "PRDM9", "XKR5"], "category"].eq("CTA").all()
     assert rows.loc[["IFNA2", "IFNA14"], "classification"].eq("Unsafe").all()
-    assert rows.loc[["CDY1/B", "OR2T7"], "classification"].eq("CTA").all()
+    assert rows.loc["CDY1/B", "classification"] == "CTA"
+    assert rows.loc["OR2T7", "classification"] == "Other:Translation"
+    profile = cta_selection.profiles().set_index("label").loc["OR2T7"]
+    assert profile.reproductive_evidence and not profile.translation_qualified

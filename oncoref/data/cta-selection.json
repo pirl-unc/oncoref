@@ -3,8 +3,8 @@
   "schema_version": 1,
   "release": "1.29.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "29a52c8f129ef4a2b959e1e3d6bccf3494dacbbbf6bae500657952130c6b37b5",
-    "cta-selection-profiles-human.csv.gz": "1de4365178b7d032c7b5dcdaf3097cc8dc7599acf17aa591b5a5cbc9cbc3c135",
+    "cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd",
+    "cta-selection-profiles-human.csv.gz": "ca60328f147447ab8200b4db2ed8809cd5b852bc638d730de87a5a5dd4b652c2",
     "cta-selection-sources.csv": "92a0ce6f1dfe339c65c16130970d251b4219ba871c06050fea6a5ccf568f46a8",
     "cta-rare-cell-screen.csv.gz": "f33ad87ec64ff642658bea506644fc6788305783aecb90ce6eb8d84084fcb6e1"
   },
@@ -12,7 +12,7 @@
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-11-04.1",
+      "policy_id": "oncoref.cta-selection.2026-11-04.2",
       "universe": "19604 classified protein-equivalence groups from 19863 input groups",
       "universe_counts": {
         "counting_unit": "selected_reference_protein_equivalence_group",
@@ -132,9 +132,9 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "c2294382878b1c0f7959d9140d4bf79a0fe6086e00826460ab9d503cda08e07d",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "f3876561b1423ab4094611aa307e1d8f34b55f7abd8b364b27fd1f3c0e2f33d2",
     "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
-    "report_manifest": "5df0cbaae9cdc6122af50edc0f78e18ad3475680e22545ffe60b6067f6833902",
+    "report_manifest": "d9b8d3e5f615ada0b5e6fe05d668e1ff302a88aed374c3bf1d7a867e794d35f9",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"
