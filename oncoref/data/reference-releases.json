@@ -391,6 +391,23 @@
           "reviewed_on": "2026-10-29"
         }
       }
+    },
+    "tcr_trial_magea3_reexamination_2021": {
+      "description": "Re-examination of MAGE-A3 as a T-cell Therapeutic Target",
+      "filename": "PMID33284140.json",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "snapshot-2026-11-04",
+      "versions": {
+        "snapshot-2026-11-04": {
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:33284140%20AND%20SRC:MED&format=json&resultType=core",
+          "sha256": "8bccfc08fd0c1e67d74bd8a6b69462c122ba81737d154b307d25d7faafb4a99c",
+          "archive_sha256": "8bccfc08fd0c1e67d74bd8a6b69462c122ba81737d154b307d25d7faafb4a99c",
+          "bytes": 7561,
+          "taxon_id": 9606,
+          "reviewed_on": "2026-11-04"
+        }
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **625 CTA proteins, 18,351 Unsafe and 628 Other (550 Nonreproductive, 27 Held, 28 Nested, 19 Contained, 4 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. Every human protein group has a category; its evidence may still be incomplete or held. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [decision and consumer-role contract](audits/cta-definition-20261104/index.md) separates classification from uncertainty and sequence use. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **622 CTA proteins, 18,243 Unsafe and 739 Other (658 Nonreproductive, 30 Held, 28 Nested, 19 Contained, 4 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. Every human protein group has a category; its evidence may still be incomplete or held. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [decision and consumer-role contract](audits/cta-definition-20261104/index.md) separates classification from uncertainty and sequence use. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
 
 ## Safety, cancer expression and Reproductive evidence
 
@@ -58,21 +58,23 @@ transcripts (mostly readthrough genes) and 5 supported by a single Ribo-seq stud
 They are listed with their reason in `out-of-universe.csv.gz`, so none disappears
 silently. Rebuild the gene table with `scripts/build_cta_protein_universe.py`.
 
-**Downstream semantics.** CTA is targeted. Unsafe blacklists any matching subsequence
-from a CTA. Other is ignored for targeting. Unsafe therefore needs positive evidence,
-or an essential unknown, and never rests on missing optional panels.
+**Downstream semantics.** CTA is a direct-target candidate within its qualified
+sequence scope. Unsafe supplies exclusion evidence for shared sequence. Other is
+not targeted; unresolved Other records require sequence review. A reviewed hold
+does not establish normal production or become Unsafe by itself.
 
 | What puts a protein in Unsafe | Example |
 |---|---|
 | Vital/Protected expression above the tissue/IHC ceiling | Established adult protein or localized RNA with function |
 | **Manageable-tier excess above 128** (the top Manageable ceiling) | Resolved Manageable compartments above the 128 ceiling |
-| **Reviewed unresolved Protected-tissue finding** (an essential unknown) | Findings marked “resolve before shared-sequence clearance” |
-| Reviewed clinical safety exclusion | MAGEA12 |
+| Rare Vital-cell expression under the declared detection rule | MAGEA12, independently of clinical peptide attribution |
+| A separately adjudicated gene-level clinical exclusion | Product injury alone does not establish this |
 
 Below 128, Manageable excess and unresolved HPA protein evidence block CTA only;
 the protein becomes Other and keeps its reasons. Clinical history stays
-receptor-specific: the titin and MAGE-A12 cross-reactivities of anti-MAGE-A3 TCRs
-are peptide liabilities, so MAGEA3 is assessed on its own expression.
+receptor-specific. The neurological MAGE-A3 TCR has competing MAGEA12 and EPS8L2
+causal explanations; its fatal injury does not uniquely identify a gene. MAGEA3
+is assessed on its own expression. The separate HLA-A*01 a3a product implicated titin.
 
 ## Cell-type tiers and the rare vital-tissue screen
 
@@ -94,8 +96,9 @@ Pooled panels average away rare normal cells, so a protein can read near zero in
 every bulk, cluster and immune measurement while a small population expresses it.
 **MAGEA12** is the reference case: its HPA bulk, GTEx and single-nucleus cluster
 values are near zero, but 293 of 19,760 midbrain dopaminergic neurons (1.5%)
-express it in the CELLxGENE summaries, matching the rare positive neurons reported
-after anti-MAGE-A3 TCR neurotoxicity.
+express it in the CELLxGENE summaries. This RNA finding is independent of the
+disputed clinical attribution; it does not establish peptide presentation or
+prove that these cells initiated the neurological injury.
 
 The available genes are screened (`scripts/build_cta_rare_cell_screen.py`) against
 CELLxGENE normal-sample summaries in brain, spinal cord, heart and selected lung

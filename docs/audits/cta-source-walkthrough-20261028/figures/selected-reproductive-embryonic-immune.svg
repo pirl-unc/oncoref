@@ -69,9 +69,6 @@ z
      <use xlink:href="#C0_0_a87c227e06" x="485.94889" y="407.105098" style="fill: #69cd5b; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
     </g>
     <g clip-path="url(#p16f26e5486)">
-     <use xlink:href="#C0_0_a87c227e06" x="563.631231" y="296.991808" style="fill: #482677; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
-    </g>
-    <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="514.734756" y="354.534961" style="fill: #2c738e; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
     </g>
     <g clip-path="url(#p16f26e5486)">
@@ -97,9 +94,6 @@ z
     </g>
     <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="602.412955" y="431.307632" style="fill: #481c6e; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
-    </g>
-    <g clip-path="url(#p16f26e5486)">
-     <use xlink:href="#C0_0_a87c227e06" x="531.297004" y="289.427653" style="fill: #21918c; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
     </g>
     <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="669.253966" y="369.912612" style="fill: #25848e; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
@@ -259,9 +253,6 @@ z
     </g>
     <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="565.142718" y="326.091113" style="fill: #1fa287; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
-    </g>
-    <g clip-path="url(#p16f26e5486)">
-     <use xlink:href="#C0_0_a87c227e06" x="608.528046" y="344.600271" style="fill: #20928c; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
     </g>
     <g clip-path="url(#p16f26e5486)">
      <use xlink:href="#C0_0_a87c227e06" x="535.418299" y="354.38691" style="fill: #1fa088; fill-opacity: 0.85; stroke: #ffffff; stroke-opacity: 0.85; stroke-width: 0.4"/>
@@ -2654,10 +2645,10 @@ z
    <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #172b3a" x="51.84" y="48.356719" transform="rotate(-0 51.84 48.356719)">Selected CTA: adult/placental versus embryonic RNA</text>
   </g>
   <g id="text_34">
-   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="51.84" y="80.358281" transform="rotate(-0 51.84 80.358281)">All 625 selected proteins · color: non-disposable healthy maximum (TPM); gray: color unavailable</text>
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #617481" x="51.84" y="80.358281" transform="rotate(-0 51.84 80.358281)">All 622 selected proteins · color: non-disposable healthy maximum (TPM); gray: color unavailable</text>
   </g>
   <g id="text_35">
-   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 677.33209)">583 measured on both axes; 42 shown in the missing-embryonic band. Band height is categorical, not expression.</text>
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 677.33209)">580 measured on both axes; 42 shown in the missing-embryonic band. Band height is categorical, not expression.</text>
    <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 688.134551)">Embryonic TPM combines source-separated preimplantation and gastrulation contexts. Missing rows are not zero.</text>
    <text style="font-size: 9px; font-family: 'DejaVu Sans'; fill: #617481" transform="translate(51.84 698.937012)">Labels: widely studied antigens. Companion panels label every selected protein ≥5 on both axes. No mixed-unit color maximum.</text>
   </g>

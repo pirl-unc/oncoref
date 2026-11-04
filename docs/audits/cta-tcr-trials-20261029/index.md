@@ -61,15 +61,15 @@ grades remain null. Case reports do not supply new treated-cohort denominators.
 | MAGEA1: CTA | [IMA202](https://doi.org/10.1136/jitc-2023-008668) | Fatal dyspnea. | One step, capped |
 | MAGEA10: CTA | [ADP-A2M10 / MAGE-A10 c796](https://doi.org/10.1136/jitc-2021-003581) | Grade 4 CRS. Fatal marrow aplasia, sepsis and respiratory distress after repeat infusion. | One step, capped |
 | CTAG1A: CTA; CTAG1B: CTA; CTAG2: CTA | [TBI-1301](https://doi.org/10.1136/jitc-2021-003811) | Steroid-responsive lung injury with TCR-T infiltration. | None |
-| MAGEA3: Unsafe; MAGEA9: CTA; MAGEA12: Unsafe; MAGEA9B: CTA | [NCI HLA-A*02-restricted MAGE-A3/A9/A12-reactive TCR](https://pubmed.ncbi.nlm.nih.gov/23377668/) | Fatal neurological injury; MAGE-A12 cross-recognition implicated. | None |
+| MAGEA3: Unsafe; MAGEA9: CTA; MAGEA12: Unsafe; MAGEA9B: CTA | [NCI HLA-A*02-restricted MAGE-A3/A9/A12-reactive TCR](https://pubmed.ncbi.nlm.nih.gov/23377668/) | Fatal neurological injury after MAGE-A3/A9/A12-reactive TCR; causal peptide unresolved. | None |
 
-The MAGE-A3 **a3a** cardiac cases implicated **titin (TTN)**, an unintended target; the separate NCI MAGE-A3/A9 receptor neurological cases implicated the cross-recognized **MAGE-A12** peptide. These findings do not establish that MAGE-A3 itself was present in heart or brain. TBI-1301's grade 3 lung injury retains an unresolved-specificity hold for that product. c259's late cardiac death and Guillain-Barre cases remain caveats without an established peptide-specific mechanism.
+The MAGE-A3 **a3a** cardiac cases implicated **titin (TTN)**, an unintended target; the separate NCI MAGE-A3/A9 receptor neurological cases initially implicated **MAGE-A12**, while the [2021 re-examination](https://pmc.ncbi.nlm.nih.gov/articles/PMC7946352/) supports **EPS8L2** as a competing, unproven cause. Product-specific injury remains established; unique peptide causality does not. MAGEA12 retains an independent rare-cell exclusion. TBI-1301's grade 3 lung injury retains an unresolved-specificity hold for that product. c259's late cardiac death and Guillain-Barre cases remain caveats without an established peptide-specific mechanism.
 
 [Full attribution, epitope/HLA mappings, cohort denominators and limitations](index.md). A favorable reviewed product supplies one capped RNA step, never protein or clinical-injury clearance. The exact tested peptide matters: NY-ESO-1 and **CTAG2/LAGE-1A** share SLLMWITQC; this does not clear LAGE-1B or other CTAG2 peptides.
 
 ## Measured impact
 
-**1405 protein category changes** versus the pinned oncoref.cta-selection.2026-10-29.3 snapshot. This is a release-to-release comparison, not an estimate of clinical-credit effects; the 1.25 IHC/fallback changes also contribute. [Membership comparison](membership-changes.csv). RNA-ceiling changes and individual exclusion effects are in the linked context and assay tables; a changed ceiling need not change the final category.
+**1408 protein category changes** versus the pinned oncoref.cta-selection.2026-10-29.3 snapshot. This is a release-to-release comparison, not an estimate of clinical-credit effects; the 1.25 IHC/fallback changes also contribute. [Membership comparison](membership-changes.csv). RNA-ceiling changes and individual exclusion effects are in the linked context and assay tables; a changed ceiling need not change the final category.
 
 
 ## Letetresgene autoleucel / NY-ESO-1 c259
@@ -199,7 +199,7 @@ HLA: HLA-A*02:01, HLA-A*02:06.
 
 ## NCI HLA-A*02-restricted MAGE-A3/A9/A12-reactive TCR
 
-**RNA credit: none.** Primary abstract and indexed full-text epitope/mechanism passages; normal neuronal antigen attribution remains proposed.
+**RNA credit: none.** Original 2013 neurological cohort and 2021 EPS8L2 re-examination. Fatal product-specific injury remains; causal peptide unresolved. This is separate from the HLA-A*01 a3a/titin product.
 
 HLA: HLA-A*02:01.
 
@@ -212,10 +212,10 @@ HLA: HLA-A*02:01.
 - **MAGEA9B** (`ENSG00000267978`): `KVAELVHFL`. Reference-verified shared peptide; MAGE-A9 protein-identical partner, not separately attributed clinical expression.
 
 
-**9 treated**, Advanced cancers. Three neurological events, including two fatal cases. Authors implicated cross-recognized MAGE-A12 in brain. Brain staining recognized multiple MAGE-family proteins; MAGE-A12 attribution is supported but not uniquely proven. Published cohort snapshot; later trials are not pooled. [Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy](https://pubmed.ncbi.nlm.nih.gov/23377668/).
+**9 treated**, Advanced cancers. Two deaths among three neurological cases in nine treated patients. The original MAGE-A12 attribution is challenged by later EPS8L2 cross-reactivity evidence; neither is established as the unique clinical cause. Severe product-specific injury remains a block on favorable credit. Brain staining recognized multiple MAGE-family proteins; MAGE-A12 attribution is supported but not uniquely proven. Published cohort snapshot; later trials are not pooled. [Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy](https://pubmed.ncbi.nlm.nih.gov/23377668/).
 
 
-**Fatal neurological injury; MAGE-A12 cross-recognition implicated** (2 patient(s); grade 5). Treatment attribution: related. Specificity: suspected. Two deaths among three neurological cases in nine treated patients; the third recovered. Attribution of normal brain antigen to MAGE-A12 is proposed rather than exclusive. [Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy](https://pubmed.ncbi.nlm.nih.gov/23377668/).
+**Fatal neurological injury after MAGE-A3/A9/A12-reactive TCR; causal peptide unresolved** (2 patient(s); grade 5). Treatment attribution: related. Specificity: suspected. Two deaths among three neurological cases in nine treated patients. The original MAGE-A12 attribution is challenged by later EPS8L2 cross-reactivity evidence; neither is established as the unique clinical cause. Severe product-specific injury remains a block on favorable credit. [Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy](https://pubmed.ncbi.nlm.nih.gov/23377668/).
 
 
 ## API, source storage and reproduction
@@ -246,4 +246,4 @@ on each build. New evidence requires an explicit reviewed ledger update.
 [Context-level RNA effects](clinical-credit-contexts.csv.gz) · [RNA effects by assay](clinical-credit-impact.csv)
 
 
-[PDF report](cta-tcr-safety-1.29.0.pdf)
+[PDF report](cta-tcr-safety-current.pdf)

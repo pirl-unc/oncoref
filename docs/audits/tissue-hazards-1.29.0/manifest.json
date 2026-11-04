@@ -43,5 +43,18 @@
     "registry.json": "df0aa3d2d6ee74374a912b423ad2b7a6e05bf9ad8d45d1ad80094611da62ef6e",
     "report.html": "59fd7ddb81ce5b5d282588badb1e730603c9d82c00ef753e2c2c8c51c0cbad35",
     "tissue-hazard-ontology.pdf": "7801f09a74c39ebdabf43abfa0c00de378c2f9ae271e296819ba9eeaa6560116"
+  },
+  "input_snapshots": [
+    "oncoref/data/normal-tissue-hazards.yaml",
+    "oncoref/data/normal-tissue-taxonomy.yaml",
+    "oncoref/data/normal-tissue-mappings.csv",
+    "oncoref/tissue_hazards.py",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
+    "docs/audits/cta-selection-20261028/normal-peak-evidence.csv.gz",
+    "scripts/build_tissue_hazard_report.py"
+  ],
+  "input_snapshot_archive": {
+    "path": "inputs-1.29.0.zip",
+    "sha256": "97519c00205f57a2742280316c01c8ee9b044b5ce368c7bceea73a2ad2a8ec63"
   }
 }

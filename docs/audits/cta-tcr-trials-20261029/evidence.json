@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.tcr-trial-evidence",
   "schema_version": 1,
-  "reviewed_on": "2026-10-29",
+  "reviewed_on": "2026-11-04",
   "coverage": "Targeted initial review, not an exhaustive trial or adverse-event database. Unlisted proteins/products are unreviewed, not negative.",
   "clinical_credit": "One RNA ladder step, capped at rank 3; research prioritization, not a clinically validated limit.",
   "sources": {
@@ -100,6 +100,17 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/23377668/",
       "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:23377668%20AND%20SRC:MED&format=json&resultType=core",
       "sha256": "0acb2511db53c762ae3b6f467b39e336ed89df03516cc4a9daadfdb1d0db1f56"
+    },
+    "magea3_reexamination_2021": {
+      "source_id": "tcr_trial_magea3_reexamination_2021",
+      "version": "snapshot-2026-11-04",
+      "title": "Re-examination of MAGE-A3 as a T-cell Therapeutic Target",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7946352/",
+      "artifact_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:33284140%20AND%20SRC:MED&format=json&resultType=core",
+      "sha256": "8bccfc08fd0c1e67d74bd8a6b69462c122ba81737d154b307d25d7faafb4a99c",
+      "review_depth": "Full text Methods, Results, Figures 1-4, Tables 1-3 and Discussion; supplementary experiments cited but not independently reanalysed",
+      "full_text_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7946352/fullTextXML",
+      "full_text_sha256": "bd3a2fc3a14356c4403176ef1727398d664cfca8bb98fc63923fe50437c431da"
     }
   },
   "products": [
@@ -711,7 +722,7 @@
       "identity_sources": [
         "magea3_neuro_2013"
       ],
-      "review_scope": "Primary abstract and indexed full-text epitope/mechanism passages; normal neuronal antigen attribution remains proposed."
+      "review_scope": "Original 2013 neurological cohort and 2021 EPS8L2 re-examination. Fatal product-specific injury remains; causal peptide unresolved. This is separate from the HLA-A*01 a3a/titin product."
     }
   ],
   "cohorts": [
@@ -892,7 +903,7 @@
       "grade45_specificity": "suspected_or_confirmed",
       "follow_up": "Published cohort snapshot; later trials are not pooled.",
       "overlap_note": "One cohort per publication; repeated infusions and mechanistic follow-up do not add patients.",
-      "finding": "Three neurological events, including two fatal cases. Authors implicated cross-recognized MAGE-A12 in brain.",
+      "finding": "Two deaths among three neurological cases in nine treated patients. The original MAGE-A12 attribution is challenged by later EPS8L2 cross-reactivity evidence; neither is established as the unique clinical cause. Severe product-specific injury remains a block on favorable credit.",
       "qualification": "Brain staining recognized multiple MAGE-family proteins; MAGE-A12 attribution is supported but not uniquely proven.",
       "trial_registration_urls": [
         "https://clinicaltrials.gov/study/NCT01273181"
@@ -1086,22 +1097,52 @@
       "cohort_id": "magea3_a2_neuro_9",
       "source": "magea3_neuro_2013",
       "source_sections": "Safety; Discussion",
-      "event": "Fatal neurological injury; MAGE-A12 cross-recognition implicated",
+      "event": "Fatal neurological injury after MAGE-A3/A9/A12-reactive TCR; causal peptide unresolved",
       "patients": 2,
       "grade": 5,
       "grade_basis": "Fatal outcome",
       "treatment_attribution": "related",
       "specificity_attribution": "suspected",
-      "mechanism": "cross_recognized_family_peptide",
+      "mechanism": "cross_reactivity_with_competing_causal_peptides",
       "affected_tissue": "brain",
-      "recognized_protein": "MAGEA12",
-      "details": "Two deaths among three neurological cases in nine treated patients; the third recovered. Attribution of normal brain antigen to MAGE-A12 is proposed rather than exclusive.",
-      "seriousness_basis": "fatal_outcome"
+      "recognized_protein": null,
+      "details": "Two deaths among three neurological cases in nine treated patients. The original MAGE-A12 attribution is challenged by later EPS8L2 cross-reactivity evidence; neither is established as the unique clinical cause. Severe product-specific injury remains a block on favorable credit.",
+      "seriousness_basis": "fatal_outcome",
+      "causal_findings": [
+        {
+          "protein": "MAGEA12",
+          "peptide": "KMAELVHFL",
+          "hla": "HLA-A*02:01",
+          "source": "magea3_neuro_2013",
+          "interpretation_status": "unresolved",
+          "evidence": "Original brain RNA, pan-MAGE neuronal staining and receptor cross-recognition supported MAGE-A12 attribution.",
+          "limitations": "Family-reactive staining does not identify MAGE-A12; unique initiating peptide not demonstrated."
+        },
+        {
+          "protein": "EPS8L2",
+          "peptide": "SAAELVHFL",
+          "hla": "HLA-A*02:01",
+          "source": "magea3_reexamination_2021",
+          "interpretation_status": "unresolved",
+          "evidence": "Later RNA FISH challenged abundant rare MAGE-A12-positive brain cells. Peptide assays, HLA immunopeptidomics and HLA-A*02-dependent killing of EPS8L2-expressing CAPAN-2 cells support an alternative target.",
+          "limitations": "Engineered cell-line/HLA assays do not establish the patient brain target; rare MAGE-A12 cells, other off-target peptides and assay sensitivity remain possible."
+        }
+      ],
+      "gene_level_consequence": "No unique gene-level clinical-causality inference. MAGEA12 retains its independent rare-Vital-cell exclusion; the implicated receptor receives no favorable clinical credit."
     }
   ],
   "sequence_audit": {
     "source_url": "https://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz",
     "sha256": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96",
     "scope": "Verified listed peptide-to-locus/isoform links; not an exhaustive proteome-wide epitope search."
-  }
+  },
+  "gene_exclusions": [
+    {
+      "gene_id": "ENSG00000213401",
+      "symbol": "MAGEA12",
+      "effect": "context",
+      "event_id": "magea3_neurological_deaths",
+      "rationale": "No unique gene-level clinical-causality inference. MAGEA12 retains its independent rare-Vital-cell exclusion; the implicated receptor receives no favorable clinical credit."
+    }
+  ]
 }

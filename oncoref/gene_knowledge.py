@@ -28,6 +28,15 @@ def validate(records: list[dict]) -> None:
             raise ValueError("Knowledge requires exact Ensembl gene identities")
         if row["effect"] not in EFFECTS or row["review_status"] != "accepted":
             raise ValueError("Unreviewed leads cannot enter the knowledge reference")
+        interpretation = row.get(
+            "interpretation_status", "unresolved" if row["effect"] == "review" else "accepted"
+        )
+        if interpretation not in {"accepted", "unresolved", "rejected"}:
+            raise ValueError("Unknown finding interpretation")
+        if interpretation != "accepted" and row["effect"] in {"exclude", "reproductive"}:
+            raise ValueError(
+                "Unresolved or rejected interpretations cannot establish positive evidence"
+            )
         if not all(
             row.get(k)
             for k in [
@@ -82,6 +91,21 @@ def findings(gene: str | None = None, *, taxonomy_id: int = 9606) -> pd.DataFram
             r
             for r in rows
             if gene in r["gene_ids"] or gene.casefold() in {s.casefold() for s in r["gene_symbols"]}
+        ]
+    return pd.DataFrame(rows, columns=data["columns"])
+
+
+def historical_dispositions(gene: str | None = None) -> pd.DataFrame:
+    """One explicit migration decision per original finding; original bytes stay frozen.
+
+    A revised policy effect does not resolve the underlying observation's identity.
+    The original status, review depth and limitations remain in ``original``.
+    """
+    data = json.loads(files("oncoref").joinpath("data/cta-finding-migrations.json").read_text())
+    rows = data["migrations"]
+    if gene is not None:
+        rows = [
+            r for r in rows if r["gene_id"] == gene or r["symbol"].casefold() == gene.casefold()
         ]
     return pd.DataFrame(rows, columns=data["columns"])
 
