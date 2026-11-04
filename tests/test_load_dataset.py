@@ -88,6 +88,42 @@ def test_reference_expression_csv_shards_are_compacted_before_concatenation(tmp_
     assert all(isinstance(frame["source_cohort"].dtype, pd.CategoricalDtype) for frame in loaded)
 
 
+def test_shard_override_isolates_reads_writes_recovery_and_source_changes(tmp_path, monkeypatch):
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
+    default = tmp_path / ".cache/oncoref/shard_cache"
+    default.mkdir(parents=True)
+    sentinel = default / "example.parquet"
+    sentinel.write_bytes(b"leave this unrelated cache untouched")
+    before = (sentinel.read_bytes(), sentinel.stat().st_mtime_ns, sentinel.stat().st_atime_ns)
+    isolated = tmp_path / "isolated"
+    monkeypatch.setenv("ONCOREF_SHARD_CACHE_DIR", str(isolated))
+    source = tmp_path / "one/example"
+    source.mkdir(parents=True)
+    (source / "a.csv").write_text("value\n1\n")
+    first = load_dataset._load_shard_directory(source)
+    assert first.value.tolist() == [1]
+    original_reader = load_dataset._read_shards_for_cache
+    with monkeypatch.context() as patch:
+        patch.setattr(
+            load_dataset, "_read_shards_for_cache", lambda *args: pytest.fail("cache miss")
+        )
+        pd.testing.assert_frame_equal(load_dataset._load_shard_directory(source), first)
+    (isolated / "example.parquet").write_bytes(b"corrupt")
+    with pytest.warns(UserWarning, match="rebuilding unreadable"):
+        pd.testing.assert_frame_equal(load_dataset._load_shard_directory(source), first)
+    (source / "b.csv").write_text("value\n2\n")
+    assert load_dataset._load_shard_directory(source).value.tolist() == [1, 2]
+    other = tmp_path / "two/example"
+    other.mkdir(parents=True)
+    (other / "a.csv").write_text("value\n9\n")
+    assert load_dataset._load_shard_directory(other).value.tolist() == [9]
+    assert load_dataset._read_shards_for_cache is original_reader
+    # Check metadata before reading the sentinel again (which could update atime).
+    assert (sentinel.stat().st_mtime_ns, sentinel.stat().st_atime_ns) == before[1:]
+    assert sentinel.read_bytes() == before[0]
+    assert list(default.iterdir()) == [sentinel]
+
+
 def test_ncbi_synonym_loader_preserves_na_like_aliases():
     load_dataset._clear_cache()
     synonyms = load_dataset.get_data("ncbi-symbol-synonyms")
