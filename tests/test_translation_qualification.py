@@ -7,6 +7,17 @@ import pandas as pd
 from oncoref.translation_qualification import annotate, qualify, records, valid_segments
 
 
+def test_current_candidate_and_exclusion_results_keep_qualification_independent():
+    from oncoref import cta_selection
+
+    profiles = cta_selection.profiles().set_index("label")
+    assert profiles.loc[profiles.category.eq("CTA"), "translation_qualified"].all()
+    assert profiles.loc["SERPINA2", "classification"] == "Other:Translation"
+    assert not profiles.loc["SERPINA2", "translation_qualified"]
+    assert profiles.loc["MROH5", "classification"] == "Unsafe"
+    assert not profiles.loc["MROH5", "translation_qualified"]
+
+
 def annotation(**changes):
     return {
         "contig": "1",
