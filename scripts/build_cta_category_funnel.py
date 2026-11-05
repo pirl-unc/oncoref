@@ -43,7 +43,10 @@ def build(root: Path, output: Path) -> None:
     rows = []
     for label, failure in [
         ("Normal safety + coverage", pd.Series(False, index=facts.index)),
-        ("Reproductive presence", ~facts.positive_context | facts.nested_microprotein),
+        (
+            "Reproductive/developmental presence",
+            ~facts.positive_context | facts.nested_microprotein,
+        ),
         ("Cancer presence", ~facts.cancer_association),
         ("Reproductive concentration", facts.reproductive_concentration_hold),
         ("Translation qualification", ~facts.translation_qualified),
@@ -139,7 +142,10 @@ def build(root: Path, output: Path) -> None:
     yy = np.arange(len(table))
     ax.barh(yy, table.eligible, color=colors["eligible"], height=0.61)
     ax.barh(yy, table.Other, left=table.eligible, color=colors["Other"], height=0.61)
-    ax.set_yticks(yy, table.stage, fontsize=12, color=ink)
+    labels = table.stage.str.replace(
+        "Reproductive/developmental presence", "Reproductive/developmental\npresence", regex=False
+    )
+    ax.set_yticks(yy, labels, fontsize=12, color=ink)
     ax.tick_params(axis="y", length=0, pad=15)
     ax.set_xlim(0, int(normal_pass.sum()))
     ax.set_ylim(len(table) - 0.4, -0.6)

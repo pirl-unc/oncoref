@@ -77,17 +77,19 @@ def build():
     text = f"""# CTA decision and sequence-role contract
 
 [Read the illustrated, searchable report](report.html) · [Download the PDF](cta-definition.pdf)
-· [Final release receipt](release-receipt.json) · [Full report data](report-data.json).
+· [Current report receipt](release-receipt.json) · [Full report data](report-data.json).
 
 Current selection policy: `{coverage["policy_id"]}`. Consumer-role policy:
 `{definition["role_policy_id"]}`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
 
-**{universe["input_groups"]:,} input protein groups → {universe["classified_groups"]:,}
-classified groups + {universe["out_of_universe_groups"]:,} out-of-universe groups.**
+**{universe["input_groups"]:,} candidate protein records → {universe["classified_groups"]:,}
+classified proteins + {universe["out_of_universe_groups"]:,} out-of-universe records.**
 The classified results are **{counts.get("CTA", 0):,} CTA,
 {counts.get("Unsafe", 0):,} Unsafe and {counts.get("Other", 0):,} Other**.
-These counts use protein-equivalence groups, not literature nominations or patients.
+Identical selected reference sequences count together; member gene loci remain
+traceable. These are representative proteins, not a complete inventory of splice
+isoforms or modified proteoforms. [Universe entry rules and excluded records](../../cta-selection.md#stage-0-universe).
 
 {definition["definition"]}
 
@@ -100,7 +102,7 @@ assessments require review. Only assessed, identity-resolved records receive `al
 Allowance means no exclusion from that record under this policy; other occurrences
 can still exclude shared sequence.
 
-| Role | Protein groups |
+| Role | Proteins |
 |---|---:|
 | Exclude | {role_counts.get("exclude", 0):,} |
 | Review | {role_counts.get("review", 0):,} |

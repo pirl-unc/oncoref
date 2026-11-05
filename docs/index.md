@@ -2,7 +2,7 @@
 
 [Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
 
-The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 protein-equivalence groups**. The input inventory contains 19,863 groups; 259 remain explicitly outside the universe. Every classified human group has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 proteins** (identical selected reference sequences counted together; member loci retained). The input inventory contains 19,863 candidate protein records; 259 remain explicitly outside the universe. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
 
 [Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Verified sequence records](sequence-bundle.md).
 

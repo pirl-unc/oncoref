@@ -1,17 +1,19 @@
 # CTA decision and sequence-role contract
 
 [Read the illustrated, searchable report](report.html) · [Download the PDF](cta-definition.pdf)
-· [Final release receipt](release-receipt.json) · [Full report data](report-data.json).
+· [Current report receipt](release-receipt.json) · [Full report data](report-data.json).
 
 Current selection policy: `oncoref.cta-selection.2026-11-04.2`. Consumer-role policy:
 `oncoref.sequence-roles.2026-11-04.1`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
 
-**19,863 input protein groups → 19,604
-classified groups + 259 out-of-universe groups.**
+**19,863 candidate protein records → 19,604
+classified proteins + 259 out-of-universe records.**
 The classified results are **602 CTA,
 18,243 Unsafe and 759 Other**.
-These counts use protein-equivalence groups, not literature nominations or patients.
+Identical selected reference sequences count together; member gene loci remain
+traceable. These are representative proteins, not a complete inventory of splice
+isoforms or modified proteoforms. [Universe entry rules and excluded records](../../cta-selection.md#stage-0-universe).
 
 An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. Sequence realization requires separately qualified translation records.
 
@@ -24,7 +26,7 @@ assessments require review. Only assessed, identity-resolved records receive `al
 Allowance means no exclusion from that record under this policy; other occurrences
 can still exclude shared sequence.
 
-| Role | Protein groups |
+| Role | Proteins |
 |---|---:|
 | Exclude | 18,243 |
 | Review | 339 |
