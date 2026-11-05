@@ -21,7 +21,7 @@ figures must implement the same contract.
 | Historical findings and clinical causality | [#666](https://github.com/pirl-unc/oncoref/pull/666) | Merged |
 | Translation qualification | [#667](https://github.com/pirl-unc/oncoref/pull/667) | Merged |
 | Verified sequence bundle | [#668](https://github.com/pirl-unc/oncoref/pull/668) | Merged |
-| Public definition and coordinated release | This final report PR | 1.30.0 reports and release assets |
+| Public definition and coordinated release | [#669](https://github.com/pirl-unc/oncoref/pull/669) | 1.30.0 reports and release assets |
 
 The final policy yields **602 CTA, 18,243 Unsafe and 759 Other groups**, with
 646 selected member loci. Complete and cached scientific replays are byte-identical.
