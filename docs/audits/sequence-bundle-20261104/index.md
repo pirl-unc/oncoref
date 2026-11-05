@@ -14,7 +14,7 @@ all matching occurrences. Record counts are not protein-group counts.
 Selection policy: `oncoref.cta-selection.2026-11-04.2`.
 Role policy: `oncoref.sequence-roles.2026-11-04.1`.
 Translation policy: `oncoref.translation-qualification.2026-11-04.1`.
-Bundle identity: `oncoref:sequence-bundle:v1:sha256:d6aa098096892d9566a47c8c1200711d9ac06cd1988554ab79ecddc1f12452ed`.
+Bundle identity: `oncoref:sequence-bundle:v1:sha256:84795d3f6348701b392fb04baab309513850e814bb3361827927e31f24b6ff55`.
 Reference identity: `openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9`.
 Native ORFdata identity: `dbd1dd752e24ea08f4d787e48fe04e3464ebce248190572782d6e356e010822f`.
 

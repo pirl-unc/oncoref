@@ -40,7 +40,7 @@
     },
     "reference_id": "openvax:reference:v1:sha256:0fefb51755788901693be9987fadc31e61f945cd53c08a170e0e1d4ad4a09b61"
   },
-  "current_bundle_id": "oncoref:sequence-bundle:v1:sha256:d6aa098096892d9566a47c8c1200711d9ac06cd1988554ab79ecddc1f12452ed",
+  "current_bundle_id": "oncoref:sequence-bundle:v1:sha256:84795d3f6348701b392fb04baab309513850e814bb3361827927e31f24b6ff55",
   "comparison_unit": "SHA-256 of full original amino-acid strings; no partial-segment or approximate equivalence",
   "counts": [
     {

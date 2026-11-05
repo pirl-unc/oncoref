@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **622 CTA proteins, 18,243 Unsafe and 739 Other (658 Nonreproductive, 30 Held, 28 Nested, 19 Contained, 4 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. Every human protein group has a category; its evidence may still be incomplete or held. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [decision and consumer-role contract](audits/cta-definition-20261104/index.md) separates classification from uncertainty and sequence use. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 protein-equivalence groups**. The input inventory contains 19,863 groups; 259 remain explicitly outside the universe. Every classified human group has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-04.2`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions.
 
 ## Safety, cancer expression and Reproductive evidence
 
@@ -22,8 +22,7 @@ The former maximum-versus-maximum restriction rule is removed. The
 [continuous diffuseness gate](audits/cta-unassigned-20261029/diffuseness-impact.md)
 uses **HPA v23 consensus**: average `N / (N + R)` over **29 equally weighted
 anatomical units / 38 contexts**. R is the highest adult/placental Reproductive
-nTPM in the same matrix. Disposable tissues count; **Permissive thymus** belongs
-to neither the comparator nor the Reproductive reference. Its safety tier is unchanged.
+nTPM in the same matrix. Disposable tissues count. **Thymus is excluded from both sides of this concentration score**; its hazard tier remains **Protected**.
 
 A score **above 10%** blocks a qualifying adult/placental route when R is positive
 and the full HPA comparison is measured. RNA-only admission still requires **5 nTPM**;
@@ -204,7 +203,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-03.1`; individual coverage/holds remain explicit |
+| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-04.2`; individual coverage/holds remain explicit |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 

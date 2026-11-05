@@ -10,9 +10,8 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [current CTA/oncofetal selection](docs/audits/cta-source-walkthrough-20261028/index.md)
-contains **625 selected proteins**. The 19,604-protein coding or established-ncORF
-universe receives **625 CTA / 18,351 Unsafe / 628 Other** decisions; none is unassessed.
+The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 protein-equivalence groups**. The input inventory contains 19,863 groups; 259 remain explicitly outside the universe. Every classified human group has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf).
 
 The [normal-tissue hazard ontology](docs/tissue-hazards.md) centralizes evidence-linked
 bulk and cell-subset calls with generated reports, figures and a Python API.

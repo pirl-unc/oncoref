@@ -1,5 +1,8 @@
 # CTA decision and sequence-role contract
 
+[Read the illustrated, searchable report](report.html) · [Download the PDF](cta-definition.pdf)
+· [Final release receipt](release-receipt.json) · [Full report data](report-data.json).
+
 Current selection policy: `oncoref.cta-selection.2026-11-04.2`. Consumer-role policy:
 `oncoref.sequence-roles.2026-11-04.1`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
@@ -48,9 +51,9 @@ claim every assay is measured. The current [decision audit](../../cta-selection.
 retains source observations and overlapping reasons. [Definitions](contract.json),
 [coverage](coverage.json) and [reproduction receipt](manifest.json) are machine readable.
 
-These are representative-protein decisions. The upcoming sequence qualification
-and verified-record loader in the [implementation roadmap](../../plans/cta-definition-roadmap.md)
-must establish usable translation records and all source occurrences. A gene mapping,
+These are representative-protein decisions. [Translation qualification](../translation-qualification-20261104/index.md)
+and the [verified-record loader](../../sequence-bundle.md)
+retain usable translation records, original sequences and all source occurrences. A gene mapping,
 CTA label or exact sequence match does not validate every isoform or an approximate
 patient-HLA similarity threshold. Existing historical FASTA bundles keep their own
 policy and reference identities.

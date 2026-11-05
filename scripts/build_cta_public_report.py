@@ -22,6 +22,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Image,
+    KeepTogether,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -78,9 +79,9 @@ def figures(facts, roles, coverage):
     ax.axis("off")
     ax.set(xlim=(0, 1), ylim=(0, 1))
     boxes = [
-        (0.02, 0.59, 0.25, 0.26, f"{u['input_groups']:,}\nInput protein groups", INK),
+        (0.02, 0.59, 0.25, 0.26, f"{u['input_groups']:,}\nInput\nprotein groups", INK),
         (0.37, 0.59, 0.25, 0.26, f"{len(facts):,}\nClassified groups", TEAL),
-        (0.37, 0.13, 0.25, 0.23, f"{u['out_of_universe_groups']:,}\nOutside the universe", MUTED),
+        (0.37, 0.13, 0.25, 0.23, f"{u['out_of_universe_groups']:,}\nOutside\nthe universe", MUTED),
     ]
     for i, (category, color) in enumerate([("CTA", TEAL), ("Other", AMBER), ("Unsafe", RUST)]):
         boxes.append((0.75, 0.73 - i * 0.28, 0.23, 0.2, f"{counts[category]:,}\n{category}", color))
@@ -165,6 +166,11 @@ def figures(facts, roles, coverage):
     bottom.set_yticks(range(len(names)), [n.removeprefix("hold:") for n in names])
     bottom.set_xticks(range(len(combinations)), [str(i + 1) for i in range(len(combinations))])
     bottom.set_xlabel("Most common combinations across the nine largest exclusion/hold layers")
+    bottom.set_title(
+        "Red: recorded hold or exclusion; gray: no recorded trigger in this layer",
+        fontsize=10,
+        pad=10,
+    )
     fig.tight_layout()
     figure("independent-evidence", fig)
     table = (
@@ -174,7 +180,7 @@ def figures(facts, roles, coverage):
     )
     fig, ax = plt.subplots(figsize=(10, 4.8))
     ax.imshow(np.log1p(table), cmap="Blues")
-    ax.set_xticks(range(3), ["Allow under policy", "Review required", "Exclude"])
+    ax.set_xticks(range(3), ["Allow under\npolicy", "Review\nrequired", "Exclude"])
     ax.set_yticks(range(3), table.index)
     for i in range(3):
         for j in range(3):
@@ -214,6 +220,17 @@ def figures(facts, roles, coverage):
 
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
+    bundle_manifest = json.loads(
+        (ROOT / "docs/audits/sequence-bundle-20261104/manifest.json").read_text()
+    )
+    if (
+        bundle_manifest["bundle_id"] != sequence_bundle.descriptor()["bundle_id"]
+        or sequence_bundle.content_id(bundle_manifest) != bundle_manifest["bundle_id"]
+    ):
+        raise ValueError("Public report requires the current verified sequence bundle")
+    for name, expected in bundle_manifest["package_dependencies"].items():
+        if digest(ROOT / "oncoref/data" / name) != expected:
+            raise ValueError("Rebuild the sequence bundle before the public report: " + name)
     facts = pd.read_csv(
         ROOT / "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
         keep_default_na=False,
@@ -341,6 +358,7 @@ def build():
         "bundle": sequence_bundle.descriptor(),
         "criteria": criteria.to_dict("records"),
         "registry_references": len(tissue_hazards.references()),
+        "tier_definitions": tissue_hazards.registry()["tier_definitions"],
         "rows": roles[
             [
                 "entity_id",
@@ -389,7 +407,8 @@ def build():
             if p.is_file() and p.name not in ["manifest.json", "release-receipt.json"]
         },
         "generated_documentation": {
-            name: digest(ROOT / name) for name in ["README.md", "docs/cta-selection.md"]
+            name: digest(ROOT / name)
+            for name in ["README.md", "docs/cta-selection.md", "docs/index.md"]
         },
     }
     (OUT / "release-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
@@ -447,6 +466,36 @@ def update_current_docs(data):
     )
     text = re.sub(r"`oncoref\.cta-selection\.2026-\d\d-\d\d\.\d+`", f"`{policy}`", text)
     path.write_text(text)
+    path = ROOT / "docs/index.md"
+    text = path.read_text()
+    start = text.index("[Normal-tissue hazard ontology]")
+    end = text.index("The [343-group harmonized funnel]", start)
+    text = (
+        text[:start]
+        + (
+            "[Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.\n\n"
+            + "The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies "
+            + summary
+            + "\n\n[Illustrated report](audits/cta-definition-20261104/report.html) · "
+            + "[PDF](audits/cta-definition-20261104/cta-definition.pdf) · "
+            + "[Verified sequence records](sequence-bundle.md).\n\n"
+            + "The normal screen, cancer presence, reproductive/developmental association, "
+            + "coverage, translation and sequence-overlap gates remain distinct. Accepted "
+            + "exclusion evidence establishes Unsafe; unresolved evidence requires review. "
+            + "[Current release notes](cta-release-1.30.0.md) and the "
+            + "[source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.\n\n"
+        )
+        + text[end:]
+    )
+    text = text.replace(
+        "[Continuous normal-expression breadth](audits/normal-breadth-20261026/index.md)",
+        "[Current normal-expression breadth](audits/normal-breadth-20261104/index.md)",
+    )
+    text = text.replace(
+        "[Completed antibody adjudications](audits/cta-adjudication-20261025/index.md) cover all 178 remaining discrepancy cases. Older reports below retain their dated policies.",
+        "[Historical antibody reviews](audits/cta-adjudication-20261025/index.md) retain their original findings. The [current migration ledger](audits/cta-evidence-migration-20261104/index.md) explains all revised dispositions without claiming experimental resolution of every reagent conflict. Older reports retain their dated policies.",
+    )
+    path.write_text(text)
 
 
 def render_html(data):
@@ -468,6 +517,15 @@ def render_html(data):
             + "</h2>"
             + "".join("<p>" + esc(p) + "</p>" for p in paragraphs)
         )
+        if title == "Normal-tissue consequences and expression evidence":
+            chunks.append(
+                "<dl>"
+                + "".join(
+                    "<dt><b>" + esc(tier.title()) + "</b></dt><dd>" + esc(definition) + "</dd>"
+                    for tier, definition in data["tier_definitions"].items()
+                )
+                + "</dl>"
+            )
         if fig:
             chunks.append(f'<figure><img src="figures/{fig}.svg" alt="{esc(title)}"></figure>')
         chunks.append("</section>")
@@ -551,7 +609,10 @@ def render_pdf(data):
     )
     styles = getSampleStyleSheet()
     for style in styles.byName.values():
-        style.fontName = "DejaVu-Bold" if "Bold" in style.fontName else "DejaVu"
+        if hasattr(style, "fontName"):
+            style.fontName = "DejaVu-Bold" if "Bold" in style.fontName else "DejaVu"
+    styles["Heading1"].keepWithNext = True
+    styles["Heading2"].keepWithNext = True
     styles.add(
         ParagraphStyle(
             name="BodyReport",
@@ -574,14 +635,33 @@ def render_pdf(data):
 
     story += [
         Paragraph("From the candidate universe to CTAs", styles["Title"]),
-        paragraph("OncoRef " + data["release"] + " | 4 November 2026"),
-        paragraph(data["contract"]["definition"]),
+        paragraph("OncoRef " + data["release"] + " | 5 November 2026"),
         paragraph("Research candidate selection, evidence status and verified sequence use."),
         Spacer(1, 16),
     ]
     for title, paragraphs, fig in data["sections"]:
         story.append(Paragraph(html.escape(title), styles["Heading1"]))
         story.extend(paragraph(p) for p in paragraphs)
+        if title == "Normal-tissue consequences and expression evidence":
+            for tier, definition in data["tier_definitions"].items():
+                story.append(
+                    Paragraph(
+                        "<b>" + html.escape(tier.title()) + ":</b> " + html.escape(definition), body
+                    )
+                )
+            story.append(
+                Paragraph(
+                    '<a href="https://pirl-unc.github.io/oncoref/tissue-hazards/">Central tissue registry, compartment rationales and primary references</a>',
+                    small,
+                )
+            )
+        if title == "Evidence has multiple independent meanings":
+            story.append(
+                Paragraph(
+                    '<a href="https://pubmed.ncbi.nlm.nih.gov/23377668/">Morgan et al. 2013: neurological injury report</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7946352/">Martin et al. 2021: MAGEA12/EPS8L2 re-examination</a>',
+                    small,
+                )
+            )
         if fig:
             story.append(
                 Image(
@@ -591,13 +671,24 @@ def render_pdf(data):
                     kind="proportional",
                 )
             )
-        story.append(PageBreak())
+        if title != "Research parameters and coverage limits":
+            story.append(PageBreak())
     story.append(Paragraph("Complete executable gate rules", styles["Heading1"]))
     for r in data["criteria"]:
-        story.append(Paragraph(html.escape(r["stage"]), styles["Heading2"]))
-        story.append(paragraph(r["rule"]))
-        story.append(paragraph("Sources: " + ", ".join(r["source_ids"]), small))
-    story.append(PageBreak())
+        source_text = (
+            ", ".join(r["source_ids"])
+            or "Declared policy; see linked source walkthrough and coverage audit."
+        )
+        story.append(
+            KeepTogether(
+                [
+                    Paragraph(html.escape(r["stage"]), styles["Heading2"]),
+                    paragraph(r["rule"]),
+                    paragraph("Sources: " + source_text, small),
+                ]
+            )
+        )
+    story.append(Spacer(1, 14))
     story.append(Paragraph("Worked decisions and primary sources", styles["Heading1"]))
     for case in data["worked"]:
         story.append(
@@ -611,7 +702,7 @@ def render_pdf(data):
                 + "; sequence role: "
                 + case["sequence_role"]
                 + ". Reasons: "
-                + "; ".join(case["reasons"])
+                + ("; ".join(case["reasons"]) or "All declared gates pass.")
             )
         )
         story.append(

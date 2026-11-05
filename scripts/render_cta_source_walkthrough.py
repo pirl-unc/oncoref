@@ -830,15 +830,15 @@ evidence are separate requirements. Only safety evidence can establish Unsafe.**
 Cancer needs one qualifying measured sample, without a tumor-versus-normal ratio.
 The reproductive-versus-normal maximum veto has been removed. Whole-profile
 HPA diffuseness above 10% blocks a completely measured adult/placental identity
-route. Thymus is Permissive and excluded; Disposable tissues count. Supported
+route. Thymus is excluded from this score; its hazard tier remains Protected. Disposable tissues count. Supported
 embryonic evidence remains independent and its concentration is unassessed.
 [Rule, changed proteins and sensitivity](../cta-unassigned-20261029/diffuseness-impact.md). [Definitions and logic](../../cta-evidence-axes.md).
 
 ![Three separate CTA requirements](../../images/cta-evidence-axes.png)
 
-- **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage and acceptable normal expression all pass.
-- **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, a reviewed unresolved Protected-tissue finding, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
-- **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` records whether coverage was incomplete or a hold applied.
+- **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage, qualified selected translations, sequence-overlap rules and acceptable normal expression all pass.
+- **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, accepted reviewed normal-cell evidence, or retained clinical exclusion evidence. Unresolved findings require review without independently establishing Unsafe. This is a research-policy exclusion, not demonstrated toxicity.
+- **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` independently records missing coverage, normal-evidence holds or translation review.
 - **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
 
 The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
@@ -1004,7 +1004,7 @@ Adult normal panels do not establish pediatric safety. Tyser contains one gastru
     (OUTPUT / "index.md").write_text(overview)
     (OUTPUT / "policy-review.md").write_text("""# Current policy and IHC matching
 
-The baseline RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess blocks CTA but does not automatically establish Other.
+The baseline RNA grid is Vital 4/8/16/32, Protected 8/16/32/64, Manageable 16/32/64/128 across missing, Approved-negative, Supported-negative and Enhanced-negative IHC. There is one boundary; equality passes. Above-ceiling Vital/Protected evidence is Unsafe. Manageable excess up to 128 blocks CTA with a normal-evidence hold; above 128 supplies Unsafe evidence.
 
 Reviewed TCR-T evidence can add one RNA step, capped at Enhanced: Vital 8/16/32/32, Protected 16/32/64/64, Manageable 32/64/128/128. The IHC label stays unchanged. Clinical credit carries the exact peptide/HLA/product limits and does not override normal-protein or clinical-injury exclusions. [Trial and SAE review](../cta-tcr-trials-20261029/index.md).
 
@@ -1106,7 +1106,7 @@ All results are packaged and checksum-verified. Frozen release audits remain sep
         "unannotated": counts.get("CTA", 0) - annotated,
         "other_subtypes": summary["other_subtypes"],
         "tumor_restricted_leads": int(facts.tumor_restricted_lead.sum()),
-        "assessment_statuses": missing,
+        "assessment_statuses": facts.assessment_status.value_counts().to_dict(),
         "normal_gap_counts": records(normal_gaps),
         "evidence_gap_counts": {name: int(incomplete[name].sum()) for name in gap_columns},
     }

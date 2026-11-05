@@ -1,15 +1,12 @@
 # oncoref
 
-[Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls, with searchable and PDF reports.
+[Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
 
-**Current research selection: [CTA funnel](audits/cta-source-walkthrough-20261028/index.md)**,
-with explicit CTA / Unsafe / Neither decisions or unassigned evidence status.
-[Independent requirements](cta-evidence-axes.md) distinguish normal-tissue safety,
-cancer expression and Reproductive evidence. Reproductive includes adult reproductive,
-placental, extraembryonic, embryonic and fetal contexts. Only safety establishes Unsafe.
-[Common coverage, diffuseness and unassigned reasons](audits/cta-unassigned-20261029/index.md)
-explains the required GTEx panel and the proposed continuous identity score.
-[Published 1.22.0 notes](cta-release-1.22.0.md) retain the previous policy.
+The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 protein-equivalence groups**. The input inventory contains 19,863 groups; 259 remain explicitly outside the universe. Every classified human group has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+
+[Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Verified sequence records](sequence-bundle.md).
+
+The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.30.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
 
 The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
 [1,416-gene biological membership comparison](audits/cta-membership-20261026/index.md)
@@ -18,11 +15,11 @@ retain their dated rules for comparison.
 The [released 213-gene expression policy and protein references](audits/cta-policy-20261025/index.md)
 retain their normal-expression findings and sequence-background semantics.
 
-[Continuous normal-expression breadth](audits/normal-breadth-20261026/index.md)
+[Current normal-expression breadth](audits/normal-breadth-20261104/index.md)
 supports review priority without changing memberships.
 [Developmental-target sources](developmental-targets.md) documents the brachyury follow-up.
 
-[Completed antibody adjudications](audits/cta-adjudication-20261025/index.md) cover all 178 remaining discrepancy cases. Older reports below retain their dated policies.
+[Historical antibody reviews](audits/cta-adjudication-20261025/index.md) retain their original findings. The [current migration ledger](audits/cta-evidence-migration-20261104/index.md) explains all revised dispositions without claiming experimental resolution of every reagent conflict. Older reports retain their dated policies.
 
 [Full CTA evidence atlas and gene PDF catalogs](audits/cta-atlas-20261024/index.md)
 cover all 2,540 mapped candidates, cancer occurrence, retained-gene normal-tissue

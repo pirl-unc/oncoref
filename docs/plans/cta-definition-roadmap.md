@@ -1,7 +1,6 @@
 # CTA definition and release roadmap
 
-Approved on 4 November 2026 against OncoRef 1.29.0 (`3f6d8b5`). Implementation
-has begun with the decision contract. The series comprises six dependent PRs
+Approved on 4 November 2026 against OncoRef 1.29.0 (`3f6d8b5`). The implementation now accompanies the coordinated 1.30.0 release. The series comprises six dependent PRs
 and one independent cache PR; unresolved scientific cases require the explicit
 adjudication described below.
 
@@ -11,6 +10,30 @@ CTA, Unsafe or Other. Evidence curation, sequence exports, documentation and
 figures must implement the same contract.
 
 ![Proposed PR dependencies](cta-definition-roadmap.svg)
+
+## Implementation status
+
+| Work | Pull request | Result |
+|---|---|---|
+| Decision contract | [#662](https://github.com/pirl-unc/oncoref/pull/662) | Merged |
+| Cache isolation | [#663](https://github.com/pirl-unc/oncoref/pull/663) | Merged |
+| Current and historical breadth | [#664](https://github.com/pirl-unc/oncoref/pull/664) | Merged |
+| Historical findings and clinical causality | [#666](https://github.com/pirl-unc/oncoref/pull/666) | Merged |
+| Translation qualification | [#667](https://github.com/pirl-unc/oncoref/pull/667) | Merged |
+| Verified sequence bundle | [#668](https://github.com/pirl-unc/oncoref/pull/668) | Merged |
+| Public definition and coordinated release | This final report PR | 1.30.0 reports and release assets |
+
+The final policy yields **602 CTA, 18,243 Unsafe and 759 Other groups**, with
+646 selected member loci. Complete and cached scientific replays are byte-identical.
+The [release receipt](../audits/cta-definition-20261104/release-receipt.json)
+binds the reports to their packaged data and source audits. The sections below
+retain the original problem statement and acceptance criteria against 1.29.0.
+
+The migration preserves uncertainty: MAGEC2, LGALS13 and PLCZ1 retain holds;
+MAGEA12/EPS8L2 clinical attribution remains unresolved. The records identify which
+sources were available only as abstracts. This completes the requested migration,
+not every outstanding literature investigation. NUTM source recovery (#604/#665)
+remains separate and is not represented as rebuilt in this release.
 
 ## The definition to establish
 
@@ -290,3 +313,41 @@ independently because its acceptance condition is unchanged scientific output.
 The roadmap figure is a dependency diagram, not a scientific result or a promise
 of final counts. Regenerate it with
 `python scripts/build_cta_definition_roadmap.py`.
+
+## Reproducing the coordinated release
+
+Use a repository-local environment with the `quantitative` and `reports` extras,
+verified source caches and an isolated `ONCOREF_SHARD_CACHE_DIR`. Run the scientific
+replay only when its evidence or policy changes:
+
+```sh
+python scripts/regenerate_cta_walkthrough.py --verify-replay
+python scripts/build_cta_contract_report.py
+python scripts/build_cta_sequence_bundle.py SOURCE BUNDLE --release 1.30.0
+python scripts/build_cta_sequence_transition.py HISTORICAL BUNDLE
+python scripts/build_cta_sequence_report.py
+python scripts/build_cta_public_report.py
+```
+
+`SOURCE` is the verified native ORFdata source snapshot, `BUNDLE` is the output
+directory and `HISTORICAL` contains the pinned historical sequence assets. The
+[sequence audit](../audits/sequence-bundle-20261104/index.md) records their identities.
+The slide builder requires the documented Artifact Tool runtime through
+`RUNTIME_NODE_MODULES`, `ONCOREF_PRESENTATIONS_SKILL` and `RUNTIME_PYTHON`.
+Finalize presentation assets before binding the final receipts:
+
+```sh
+python scripts/render_cta_source_walkthrough.py
+CTA_SLIDE_BUILD_DIR=tmp/cta-source-slides-130 node scripts/build_cta_source_slides.mjs
+python scripts/slides/assemble_pdf.py tmp/cta-source-slides-130 \
+  docs/audits/cta-source-walkthrough-20261028/cta-selection-1.30.0.pdf
+python scripts/render_cta_source_walkthrough.py
+python scripts/regenerate_cta_walkthrough.py --finalize-receipts
+python scripts/build_cta_public_report.py
+```
+
+The last rendering pass updates links to the finalized deck and PDF. It does not
+recalculate biological evidence. The final public report then binds those outputs
+through the walkthrough receipt. Full scientific replay and cached replay must
+agree before publication; presentation edits alone do not require a second full
+source ingestion.
