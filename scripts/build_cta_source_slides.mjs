@@ -9,9 +9,11 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const audit=path.join(root,'docs/audits/cta-source-walkthrough-20261028');
-const build=process.env.CTA_SLIDE_BUILD_DIR||path.join(root,'tmp/cta-source-slides-expanded');
+const build=path.resolve(root,process.env.CTA_SLIDE_BUILD_DIR||'tmp/cta-source-slides-expanded');
 const data=JSON.parse(await fs.readFile(path.join(audit,'presentation-data.json'),'utf8'));
 const trials=JSON.parse(await fs.readFile(path.join(root,'oncoref/data/tcr-trial-evidence.json'),'utf8'));
+const definition=JSON.parse(await fs.readFile(path.join(root,'docs/audits/cta-definition-20261104/report-data.json'),'utf8'));
+const sequences=JSON.parse(await fs.readFile(path.join(root,'docs/audits/sequence-bundle-20261104/manifest.json'),'utf8'));
 const skill=process.env.ONCOREF_PRESENTATIONS_SKILL;
 const runtime=process.env.RUNTIME_NODE_MODULES;
 if(!skill||!runtime) throw Error('Set presentation skill and runtime paths');
@@ -59,7 +61,7 @@ function slide(title,section,notes=''){
  const s=p.slides.add();s.background.fill=C.white;current={title,text:[],links:[{url:URL,x:64,y:670,w:1100,h:24}]};pages.push(current);
  text(s,section.toUpperCase(),64,28,1152,25,16,C.teal,true);
  text(s,title,64,72,1152,85,42,C.ink,true);
- text(s,'OncoRef CTA evidence walkthrough   •   3 November 2026',64,670,1100,26,16,C.muted);
+ text(s,'OncoRef CTA evidence walkthrough   •   5 November 2026',64,670,1100,26,16,C.muted);
  text(s,String(pages.length).padStart(2,'0'),1174,668,42,30,19,C.muted,true);
  s.speakerNotes.text=`${title}\n${notes}\nReport: ${URL}\nPolicy: ${data.summary.policy}\nDecision snapshot SHA256: ${data.report_sha256}`;
  return s;
@@ -97,7 +99,7 @@ table(s,[['Assessment','Question','Current rule'],['Safety','Concerning normal e
 note(s,'Only safety establishes Unsafe. Coverage and normal review holds remain explicit in assessment_status.',580,25);
 }
 {
-const s=slide('Diffuse expression is an identity question','HPA profile identity','The old normal-maximum veto is removed. Diffuseness averages N/(N+R) across fixed weighted normal contexts, including Disposable. The active 10% adult/placental identity boundary requires complete HPA measurements and an RNA- or IHC-supported positive reference. Thymus is Permissive and excluded. Supported embryonic evidence retains its separate route with unassessed concentration.');
+const s=slide('Diffuse expression is an identity question','HPA profile identity','The old normal-maximum veto is removed. Diffuseness averages N/(N+R) across fixed weighted normal contexts, including Disposable. The active 10% adult/placental identity boundary requires complete HPA measurements and an RNA- or IHC-supported positive reference. Thymus is excluded from concentration; its hazard tier remains Protected. Supported embryonic evidence retains its separate route with unassessed concentration.');
 table(s,[['Term','Meaning'],['N','HPA v23 normal-tissue nTPM'],['R','Highest Reproductive nTPM in HPA v23 (adult/placental)'],['N / (N + R)','Average across 29 organs / 38 contexts; thymus excluded'],['Active boundary','Average >10%, with a supported positive R and complete comparison']],{widths:[335,817],size:27,h:320,y:170});
 note(s,'MTCP1 is Other:Diffuse at 24.53%. Thymus is excluded. Embryonic concentration remains unassessed.',565,26);
 }
@@ -109,7 +111,7 @@ note(s,'The fixed GTEx core is an inspectable profile, not a separate admission 
 {
 const s=slide('ZNF730: panel composition matters','Calculation audit','Full tissue tables: '+URL.replace('cta-source-walkthrough-20261028/','cta-unassigned-20261029/znf730/')+' . Original panels differ; scores are not a controlled assay comparison.');
 table(s,[['Calculation','HPA v23','GTEx v11'],['Reproductive reference (testis)','4.9 nTPM','4.91414 TPM'],['Full source panel','9.53%: 29 anatomy units','1.65%: 23 anatomy units'],['Same 20 anatomy units','6.36%','1.71%']],{widths:[460,346,346],size:28,h:280,y:180});
-text(s,'Thymus is Permissive: excluded from both sides of the score',64,505,1152,70,28,C.teal,true);
+text(s,'Thymus is excluded from both sides of the concentration score',64,505,1152,70,28,C.teal,true);
 note(s,'Thymus exclusion changes HPA 10.34% → 9.53%. Independent safety evidence keeps ZNF730 Unsafe.',592,25);
 }
 {
@@ -156,12 +158,12 @@ note(s,'Protein and clinical-injury exclusions remain. This is protein-profile c
 }
 {
 const s=slide('Serious events and antigen specificity','Clinical safety',Object.values(trials.sources).map(r=>`${r.title}: ${r.url}`).join('\n'));
-table(s,[['Targeted CTA epitope','Important event','Specificity attribution'],['MAGE-A3 / a3a','Two fatal cardiac injuries','Titin cross-recognition implicated'],['MAGE-A3/A9 / NCI receptor','Three neurological cases; two deaths','MAGE-A12 brain recognition implicated'],['NY-ESO-1 / LAGE-1A, c259','Late cardiac death; two GBS cases','Peptide-specific mechanism not established'],['NY-ESO-1 / TBI-1301','Grade 3 lung injury','Unresolved; no credit for this product'],['MAGE-A4 / afami-cel','Aplasia and stroke deaths in phase 1','No demonstrated antigen-specific mechanism'],['MAGE-A10 / ADP-A2M10','Grade 4 CRS; fatal aplasia after repeat treatment','Conditioning favored for marrow injury']],{widths:[355,410,387],size:21,h:405});
+table(s,[['Targeted CTA epitope','Important event','Specificity attribution'],['MAGE-A3 / a3a','Two fatal cardiac injuries','Titin cross-recognition implicated'],['MAGE-A3/A9 / NCI receptor','Three neurological cases; two deaths','MAGE-A12 / EPS8L2 attribution unresolved'],['NY-ESO-1 / LAGE-1A, c259','Late cardiac death; two GBS cases','Peptide-specific mechanism not established'],['NY-ESO-1 / TBI-1301','Grade 3 lung injury','Unresolved; no credit for this product'],['MAGE-A4 / afami-cel','Aplasia and stroke deaths in phase 1','No demonstrated antigen-specific mechanism'],['MAGE-A10 / ADP-A2M10','Grade 4 CRS; fatal aplasia after repeat treatment','Conditioning favored for marrow injury']],{widths:[355,410,387],size:21,h:405});
 note(s,'Clinical trial and SAE review. Seriousness differs from severity; this is a selected summary, not a pooled event rate.',602,23);
 }
 {
 const s=slide('Other records an unmet admission gate','Categorical decisions','Safety and coverage are assessed independently. Other reasons use reproductive presence, cancer presence, then concentration. No gene is admitted or excluded by an abundance label.');
-const meanings={Nonreproductive:'No qualifying reproductive evidence',Reproductive:'No qualifying cancer evidence',Diffuse:'Reproductive concentration fails',Held:'Target gates pass; normal review hold remains',Nested:'Nested short reference-CDS product',Contained:'At least 95% of 9-mers occur in Unsafe proteins'};
+const meanings={Nonreproductive:'No qualifying reproductive evidence',Reproductive:'No qualifying cancer evidence',Diffuse:'Reproductive concentration fails',Translation:'Selected primary translation requires review',Held:'Target gates pass; normal review hold remains',Nested:'Nested short reference-CDS product',Contained:'At least 95% of 9-mers occur in Unsafe proteins'};
 table(s,[['Reason','Meaning','Proteins'],...Object.entries(data.other_subtypes).filter(([,v])=>v>0).map(([k,v])=>[k,meanings[k]||k,v])],{widths:[290,722,140],size:23,h:380});
 note(s,'Normal RNA level, tumor support and Disposable expression remain separate attributes.',580,25);
 }
@@ -179,6 +181,22 @@ note(s,'Indirect support identifies the sample site, not the producing cell. Nor
 const s=slide('Reviewed normal-cell knowledge','Literature evidence','OncoRef 1.26.0: https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/ ; pDC protein: https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2022.814627/full ; human olfactory atlas: https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/');
 table(s,[['Evidence','Consequence'],['Established normal production','Vital/Protected protein or localized RNA plus orthogonal cell function can establish Unsafe'],['Unresolved normal findings','Sparse RNA, uncertain species/stage or isoforms remain review holds'],['Reproductive protein','Supplies presence below the RNA floor; safety and concentration still apply'],['Search and curation','All 611 baseline Other genes searched; accepted findings remain separate from search leads']],{widths:[340,812],size:25,h:370});
 note(s,'Rare normal cells and activation states count. Expression exclusions do not assert clinical injury.',590,25);
+}
+{
+const s=slide('Historical findings retain explicit dispositions','Evidence migration','All historical findings and prior adjudications: https://pirl-unc.github.io/oncoref/audits/cta-evidence-migration-20261104/ . MAGE-A12/EPS8L2 counterevidence: https://pmc.ncbi.nlm.nih.gov/articles/PMC7946352/ .');
+table(s,[['Case','Current result','Reason retained'],['MAGEC2','Other:Held','Purkinje-cell reagent specificity remains unresolved'],['LGALS13','Other:Held','Adult/fetal and galectin identity remain unresolved'],['PLCZ1','Other:Held','Pancreatic RNA is unresolved; CFTR staining is not PLCZ1 protein'],['MAGEA12','Unsafe','Independent rare-cell exclusion; clinical peptide attribution remains unresolved']],{widths:[220,245,687],size:24,h:360});
+note(s,'A completed review can retain uncertainty. Unresolved evidence requires review without establishing Unsafe.',590,24);
+}
+{
+const s=slide('Selected translations require qualification','Reference sequence','Exact reference records and qualification rules: https://pirl-unc.github.io/oncoref/audits/translation-qualification-20261104/ . Conservative AA20 support does not establish absent biological production.');
+const names=['SERPINA2','MROH5','SELENOV'];
+table(s,[['Record','Current classification','Selected translation'],...names.map(name=>{const r=definition.worked.find(x=>x.label===name);return [name,r.classification,name==='SERPINA2'?'Incomplete primary LoF record; alternate locus cannot rescue it':name==='MROH5'?'Interrupted primary record; normal exclusion still takes precedence':'Selenocysteine requires review under the AA20 contract']})],{widths:[220,330,602],size:25,h:310});
+note(s,'Qualification reviews the selected reference sequence. Original interrupted and alternate records remain available.',560,26);
+}
+{
+const s=slide('Sequence roles preserve every occurrence','Verified sequence bundle','Verified loader, coverage gaps and historical transition: https://pirl-unc.github.io/oncoref/sequence-bundle/ . Bundle identity: '+sequences.bundle_id);
+table(s,[['Role','Source records','Meaning'],['Exclude',n(sequences.record_roles.exclude),'Applicable normal exclusion takes precedence'],['Review',n(sequences.record_roles.review),'Unresolved decision, isoform or translation'],['Allow',n(sequences.record_roles.allow),'Qualified assessed representative under this policy']],{widths:[230,250,672],size:26,h:300});
+note(s,`${n(sequences.record_count)} original records and all source occurrences survive. AA20 segments retain coordinates and never bridge ambiguity.`,555,26);
 }
 {
 const s=slide('High tumor expression does not establish CTA identity','Four requested proteins','Pinned normal atlas peaks are source-supported summaries, not exhaustive rare-cell or donor maxima. OR10A4 also has normal human nasal RNA in two primary studies.');
@@ -228,7 +246,7 @@ figure(s,'widely-studied-antigens-'+name+'-slide',48,160,1184,475);
 }
 {
 const s=slide('Assessment status is separate from category','Reading the results','A category can be assigned despite gaps in optional or irrelevant sources. Screened does not mean clinically safe or fully measured. MAGE-A3 has measured colon counterevidence. An independent developmental measurement cannot erase it.');
-table(s,[['API status','Meaning','Human proteins'],['screened','Classification with a resolved applicable screen',n(counts.CTA+counts.Unsafe+counts.Other-(data.assessment_statuses.incomplete_evidence||0)-(data.assessment_statuses.normal_evidence_hold||0))],['incomplete_evidence','Classified with disclosed evidence gaps',n(data.assessment_statuses.incomplete_evidence)],['normal_evidence_hold','Required normal coverage passes; a normal-screen hold remains',n(data.assessment_statuses.normal_evidence_hold)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:24,h:335});
+table(s,[['API status','Meaning','Human proteins'],['screened','Classification with a resolved applicable screen',n(data.assessment_statuses.screened)],['incomplete_evidence','Classified with disclosed evidence gaps',n(data.assessment_statuses.incomplete_evidence)],['normal_evidence_hold','Required normal coverage passes; a normal-screen hold remains',n(data.assessment_statuses.normal_evidence_hold)],['translation_review','Selected primary translation needs qualification',n(data.assessment_statuses.translation_review)],['unassessed','No species-specific selection policy applied','0']],{widths:[360,622,170],size:22,h:355});
 note(s,'Other includes review holds and sequence rules. No human protein has a null category.',585,26);
 }
 {
@@ -249,7 +267,7 @@ note(s,'Published nominations need independent normal/tumor filtering and postna
 {
 const s=slide('Common API with native evidence underneath','API','Human, dog and mouse share schema and explicit unavailable states. Data are offline and checksum-verified. Frozen release reports remain unchanged.');
 text(s,'results = cta_selection.results(species="human")\naudit = cta_selection.audit(species="human")\naudit.sources    audit.overlaps    audit.funnel\naudit.explain("PRAME")',64,180,1152,200,31,C.teal,true);
-table(s,[['Field','Meaning'],['category','CTA / Unsafe / Other; classification gives the named category'],['assessment_status','Screened, incomplete evidence, normal hold, or unassessed'],['classification / subtype','One categorical label; Other subtype always populated']],{y:400,h:190,widths:[335,817],size:25});
+table(s,[['Field','Meaning'],['category','CTA / Unsafe / Other; classification gives the named category'],['assessment_status','Screened, evidence/translation review, or unassessed'],['classification / subtype','One categorical label; Other subtype always populated']],{y:400,h:190,widths:[335,817],size:25});
 note(s,'Source-specific native units, tissue/cell context, confidence and coverage remain inspectable.',610,24);
 }
 {

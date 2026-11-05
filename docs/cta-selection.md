@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **622 CTA proteins, 18,243 Unsafe and 739 Other (658 Nonreproductive, 30 Held, 28 Nested, 19 Contained, 4 Diffuse)** across 19,604 proteins in the coding or established-ncORF universe. Every human protein group has a category; its evidence may still be incomplete or held. These are research-policy assignments, not demonstrated clinical safety. The [current report](audits/cta-source-walkthrough-20261028/index.md) includes sources, figures, the funnel and tissue-specific explanations. The [decision and consumer-role contract](audits/cta-definition-20261104/index.md) separates classification from uncertainty and sequence use. The [1.21.0 report](audits/cta-release-1.21.0/index.md) remains frozen.
+The current policy supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 protein-equivalence groups**. The input inventory contains 19,863 groups; 259 remain explicitly outside the universe. Every classified human group has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-04.2`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions.
 
 ## Safety, cancer expression and Reproductive evidence
 
@@ -22,8 +22,7 @@ The former maximum-versus-maximum restriction rule is removed. The
 [continuous diffuseness gate](audits/cta-unassigned-20261029/diffuseness-impact.md)
 uses **HPA v23 consensus**: average `N / (N + R)` over **29 equally weighted
 anatomical units / 38 contexts**. R is the highest adult/placental Reproductive
-nTPM in the same matrix. Disposable tissues count; **Permissive thymus** belongs
-to neither the comparator nor the Reproductive reference. Its safety tier is unchanged.
+nTPM in the same matrix. Disposable tissues count. **Thymus is excluded from both sides of this concentration score**; its hazard tier remains **Protected**.
 
 A score **above 10%** blocks a qualifying adult/placental route when R is positive
 and the full HPA comparison is measured. RNA-only admission still requires **5 nTPM**;
@@ -47,6 +46,7 @@ the display order changes attrition attribution, not the final category or reaso
 | 1. Safety | Does normal-tissue, reviewed or clinical evidence exclude it? | **Unsafe** |
 | 2. Target space | Does it have reproductive evidence, cancer expression and concentration? | Otherwise **Other** with the unmet requirement as its subtype |
 | 2a. Nested microprotein | Is it a reference-CDS protein under 50 residues inside a same-strand protein-coding gene, without ncORF evidence? | **Other:Nested**: its RNA belongs to the host gene |
+| 2b. Translation | Does the exact selected primary-locus record qualify? | **Other:Translation** and explicit review when annotation or sequence integrity is insufficient; this never creates Unsafe |
 | 3. Sequence | Is at least 95% of its 9-mers inside Unsafe proteins? | **Other:Contained**: Unsafe sequence is blacklisted, so almost no peptide survives |
 | 4. Outcome | Did everything pass with no unresolved normal signal? | **CTA**; a pass blocked only by a normal-tissue hold is **Other:Held** |
 
@@ -169,14 +169,15 @@ species, stage or isoform evidence receive a review hold, with reconsideration r
 A search hit or annotation alone is not accepted protein evidence. Normal findings take
 precedence over reproductive protein or cancer presence.
 
-Cancer RNA now needs only **>0** in one compatible measured sample. This admits CDY1/B
-and OR2T7 without claiming high tumor abundance. Reviewed germ-cell protein supports
+Cancer RNA needs **>0** in one compatible measured sample. CDY1/B and OR2T7 pass
+this presence gate without a claim of high tumor abundance; OR2T7 separately requires
+translation review. Reviewed germ-cell protein supports
 BPY2/B/C independently of its RNA floor. The current versioned report lists every
 addition and removal; earlier candidate counts are historical.
 
 `cta_selection.sequence_dispositions()` exposes `direct_target_candidate` and
 `shared_sequence`: `exclude` for Unsafe, `review` for held/incomplete assessments
-or unresolved identities, and `allow` for assessed identity-resolved CTA/Other.
+or unresolved identities/translations, and `allow` for assessed identity-resolved CTA/Other.
 The 135 held/incomplete Other records in the 1.29 baseline require review even
 when their subtype is Nonreproductive. Keep the separate `role_policy_id` and
 `sequence_role_reasons` in downstream caches and reports.
@@ -202,7 +203,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-03.1`; individual coverage/holds remain explicit |
+| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-04.2`; individual coverage/holds remain explicit |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 

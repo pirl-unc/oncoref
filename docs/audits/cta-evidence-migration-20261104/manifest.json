@@ -5,7 +5,7 @@
     "oncoref/data/cta-finding-migrations.json": "14c54e4a8c9320f0a5babfc05ed1bd048b0e4a3f2bac2cc3b2c66c5582a507ee",
     "oncoref/data/tcr-trial-evidence.json": "7ef47d7a23e57364bdeff10d4508703451f0e2831834dcbe88bee0c90d3a6413",
     "oncoref/data/cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd",
-    "oncoref/data/cta-selection.json": "14a87612396b11705dd97b6f1aba61d43a07e98f435697651f26eb3876410496"
+    "oncoref/data/cta-selection.json": "fe455b9176d98edacb9e2248a2b3e07d99f39ff2c76b77ecb72813b83b4ce1a2"
   },
   "outputs": {
     "baseline-contract-pr.csv.gz": "1fdd7e5fb7778b5af81f4dcb198bb847defcff3815afe906c1de931e989a8a46",

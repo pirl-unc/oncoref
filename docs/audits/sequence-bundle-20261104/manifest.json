@@ -36,7 +36,7 @@
   },
   "direct_target_records": 903,
   "package_dependencies": {
-    "cta-selection.json": "14a87612396b11705dd97b6f1aba61d43a07e98f435697651f26eb3876410496",
+    "cta-selection.json": "fe455b9176d98edacb9e2248a2b3e07d99f39ff2c76b77ecb72813b83b4ce1a2",
     "cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd",
     "cta-selection-audit.json": "a1d1326b5bf6d1053e7294b9bc45dcb9a8bff7b20ff8757783925bb4ff561348",
     "gene-knowledge.json": "b230ceda243bc77c5ca926abe394d3aa9400b1e174561bcd5dee744fac95305f",
@@ -66,5 +66,5 @@
       "sha256": "40e6c374ba8cf5bcc39fce4ade5b037b60346fbab4a6ea029dbcccb193b751fa"
     }
   },
-  "bundle_id": "oncoref:sequence-bundle:v1:sha256:d6aa098096892d9566a47c8c1200711d9ac06cd1988554ab79ecddc1f12452ed"
+  "bundle_id": "oncoref:sequence-bundle:v1:sha256:84795d3f6348701b392fb04baab309513850e814bb3361827927e31f24b6ff55"
 }

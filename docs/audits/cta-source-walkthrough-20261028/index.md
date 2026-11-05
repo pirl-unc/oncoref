@@ -2,7 +2,7 @@
 
 **602 CTA proteins (646 loci), 18,243 Unsafe, and 759 Other (27 of them Held)**, with evidence status recorded independently, across 19,604 proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; 259 out-of-universe groups are listed separately). Policy: `oncoref.cta-selection.2026-11-04.2`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[PDF slides, 1.27.0 (not regenerated for 1.29.0)](cta-selection-1.27.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.29.0-validated-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[PDF slides](cta-selection-1.30.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.30.0-validated-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 [Simplified decisions and four target reviews](../cta-simplification-20261031/index.md).
 [1.26 literature audit and decisions](../cta-other-literature-20261030/index.md).
@@ -15,15 +15,15 @@ evidence are separate requirements. Only safety evidence can establish Unsafe.**
 Cancer needs one qualifying measured sample, without a tumor-versus-normal ratio.
 The reproductive-versus-normal maximum veto has been removed. Whole-profile
 HPA diffuseness above 10% blocks a completely measured adult/placental identity
-route. Thymus is Permissive and excluded; Disposable tissues count. Supported
+route. Thymus is excluded from this score; its hazard tier remains Protected. Disposable tissues count. Supported
 embryonic evidence remains independent and its concentration is unassessed.
 [Rule, changed proteins and sensitivity](../cta-unassigned-20261029/diffuseness-impact.md). [Definitions and logic](../../cta-evidence-axes.md).
 
 ![Three separate CTA requirements](../../images/cta-evidence-axes.png)
 
-- **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage and acceptable normal expression all pass.
-- **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, a reviewed unresolved Protected-tissue finding, or retained clinical exclusion evidence. This is a research-policy exclusion, not demonstrated toxicity.
-- **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` records whether coverage was incomplete or a hold applied.
+- **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage, qualified selected translations, sequence-overlap rules and acceptable normal expression all pass.
+- **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, accepted reviewed normal-cell evidence, or retained clinical exclusion evidence. Unresolved findings require review without independently establishing Unsafe. This is a research-policy exclusion, not demonstrated toxicity.
+- **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` independently records missing coverage, normal-evidence holds or translation review.
 - **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
 
 The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.

@@ -766,6 +766,7 @@
   },
   "tumor_restricted_leads": 66,
   "assessment_statuses": {
+    "screened": 19265,
     "normal_evidence_hold": 118,
     "translation_review": 116,
     "incomplete_evidence": 105

@@ -76,6 +76,9 @@ def build():
     universe = coverage["universe_counts"]
     text = f"""# CTA decision and sequence-role contract
 
+[Read the illustrated, searchable report](report.html) · [Download the PDF](cta-definition.pdf)
+· [Final release receipt](release-receipt.json) · [Full report data](report-data.json).
+
 Current selection policy: `{coverage["policy_id"]}`. Consumer-role policy:
 `{definition["role_policy_id"]}`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
@@ -124,9 +127,9 @@ claim every assay is measured. The current [decision audit](../../cta-selection.
 retains source observations and overlapping reasons. [Definitions](contract.json),
 [coverage](coverage.json) and [reproduction receipt](manifest.json) are machine readable.
 
-These are representative-protein decisions. The upcoming sequence qualification
-and verified-record loader in the [implementation roadmap](../../plans/cta-definition-roadmap.md)
-must establish usable translation records and all source occurrences. A gene mapping,
+These are representative-protein decisions. [Translation qualification](../translation-qualification-20261104/index.md)
+and the [verified-record loader](../../sequence-bundle.md)
+retain usable translation records, original sequences and all source occurrences. A gene mapping,
 CTA label or exact sequence match does not validate every isoform or an approximate
 patient-HLA similarity threshold. Existing historical FASTA bundles keep their own
 policy and reference identities.
@@ -144,7 +147,15 @@ policy and reference identities.
     manifest = {
         "inputs": {str(p.relative_to(ROOT)): digest(p) for p in inputs},
         "outputs": {
-            p.name: digest(p) for p in sorted(OUTPUT.iterdir()) if p.name != "manifest.json"
+            name: digest(OUTPUT / name)
+            for name in [
+                "contract.json",
+                "coverage.json",
+                "gate-catalog.csv",
+                "sequence-roles.csv.gz",
+                "changes-from-1.29.0.csv",
+                "index.md",
+            ]
         },
     }
     (OUTPUT / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

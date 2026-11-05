@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-04T15:30:15.180634</dc:date>
+    <dc:date>2026-11-05T12:18:36.752490</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -317,7 +317,7 @@ z
    <text style="font-weight: 700; font-size: 26px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="28.512" transform="rotate(-0 59.4 28.512)">Where proteins become CTA or Other</text>
   </g>
   <g id="text_31">
-   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="51.9552" transform="rotate(-0 59.4 51.9552)">OncoRef 1.29.0  |  19,604 representative proteins  |  Normal assessment first</text>
+   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="51.9552" transform="rotate(-0 59.4 51.9552)">OncoRef 1.30.0  |  19,604 representative proteins  |  Normal assessment first</text>
   </g>
   <g id="text_32">
    <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #087e8b" x="74.52" y="101.376" transform="rotate(-0 74.52 101.376)">602</text>

@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.29.0",
+  "release": "1.30.0",
   "data_sha256": {
     "cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd",
     "cta-selection-profiles-human.csv.gz": "ca60328f147447ab8200b4db2ed8809cd5b852bc638d730de87a5a5dd4b652c2",
