@@ -16,12 +16,158 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import FancyBboxPatch
 
+from oncoref import cta_selection_audit
 from oncoref.cta_selection_policy import (
     CANDIDATE_ONLY_LAYERS,
     CONTAINED_FLOOR,
     translation_admission,
 )
 from oncoref.version import __version__
+
+
+def publication_funnel(facts, stage_masks, output):
+    """Follow every registered paper's overlapping candidates through the same gates."""
+    audit = cta_selection_audit.audit()
+    ids = facts.protein_equivalence_group_id
+    nominated = set(audit.memberships.entity_id)
+    assert nominated <= set(ids)
+    rows = []
+    for source in audit.sources.itertuples():
+        members = set(
+            audit.memberships.loc[audit.memberships.source_id.eq(source.source_id), "entity_id"]
+        )
+        rows.append(
+            (
+                source.source_id,
+                source.citation,
+                source.source_url,
+                source.evidence_scope,
+                "paper",
+                ids.isin(members),
+            )
+        )
+    rows.extend(
+        [
+            (
+                "registered_union",
+                "Registered-paper union",
+                "",
+                "Unique proteins across all registered nomination papers",
+                "union",
+                ids.isin(nominated),
+            ),
+            (
+                "unannotated",
+                "No registered-paper annotation",
+                "",
+                "No membership in the current nomination registry; not a claim of novelty",
+                "unannotated",
+                ~ids.isin(nominated),
+            ),
+            (
+                "inventory",
+                "Complete inventory",
+                "",
+                "Every classified candidate protein record",
+                "inventory",
+                pd.Series(True, index=facts.index),
+            ),
+        ]
+    )
+    table = pd.DataFrame(
+        [
+            {
+                "source_id": source,
+                "citation": citation,
+                "source_url": url,
+                "evidence_scope": scope,
+                "source_kind": kind,
+                **{stage: int((members & mask).sum()) for stage, mask in stage_masks.items()},
+                "Final Unsafe": int((members & facts.category.eq("Unsafe")).sum()),
+                "Final Other": int((members & facts.category.eq("Other")).sum()),
+            }
+            for source, citation, url, scope, kind, members in rows
+        ]
+    )
+    stages = list(stage_masks)
+    by_id = table.set_index("source_id")
+    assert (by_id.loc["registered_union", stages] + by_id.loc["unannotated", stages]).equals(
+        by_id.loc["inventory", stages]
+    )
+    table.to_csv(output / "publication-funnel.csv", index=False)
+    (output / "publication-funnel.json").write_text(
+        json.dumps(table.to_dict("records"), indent=2) + "\n"
+    )
+    values = table[stages].to_numpy(dtype=int)
+    fractions = values / np.maximum(values[:, :1], 1)
+    fig, ax = plt.subplots(figsize=(13.5, 9.4), facecolor="white")
+    ax.imshow(fractions, cmap="Blues", vmin=0, vmax=1, aspect="auto")
+    ax.set_yticks(range(len(table)), table.citation, fontsize=15)
+    ax.set_xticks(
+        range(len(stages)),
+        [
+            "Input",
+            "Normal\nassessment",
+            "Cancer\npresence",
+            "Repro. / dev.",
+            "Concentration",
+            "Translation",
+            "Final CTA",
+        ],
+        fontsize=14,
+    )
+    ax.xaxis.tick_top()
+    ax.tick_params(length=0, pad=9)
+    for r in range(len(table)):
+        for c in range(len(stages)):
+            ax.text(
+                c,
+                r,
+                f"{values[r, c]:,}",
+                ha="center",
+                va="center",
+                fontsize=15,
+                color="white" if fractions[r, c] > 0.55 else "#173B55",
+            )
+    ax.axhline(len(audit.sources) - 0.5, color="#173B55", linewidth=1.5)
+    ax.set_title(
+        "Every registered nomination paper follows the same admission gates",
+        loc="left",
+        fontsize=18,
+        color="#173B55",
+        pad=62,
+    )
+    fig.text(
+        0.03,
+        0.075,
+        "Counts are cumulative. Color shows the fraction of each row's input remaining.",
+        fontsize=11,
+        color="#536675",
+    )
+    fig.text(
+        0.03,
+        0.049,
+        "Paper rows overlap and must not be added. The union and unannotated rows partition the full inventory.",
+        fontsize=11,
+        color="#536675",
+    )
+    fig.text(
+        0.03,
+        0.023,
+        "Nomination scopes include CTA, germ-cell, placental and vascular lists. Membership records provenance; measured evidence determines admission.",
+        fontsize=11,
+        color="#536675",
+    )
+    fig.subplots_adjust(left=0.28, right=0.98, top=0.84, bottom=0.12)
+    for extension in ["png", "svg"]:
+        fig.savefig(
+            output / ("publication-funnel." + extension),
+            dpi=180,
+            facecolor="white",
+            metadata={"Date": None} if extension == "svg" else {},
+        )
+    plt.close(fig)
+    return table
 
 
 def build(root: Path, output: Path) -> None:
@@ -45,13 +191,14 @@ def build(root: Path, output: Path) -> None:
     eligible = normal_pass.copy()
     other = pd.Series(False, index=facts.index)
     rows = []
+    stage_masks = {"Inventory": pd.Series(True, index=facts.index)}
     for label, failure in [
         ("Normal safety + coverage", pd.Series(False, index=facts.index)),
+        ("Cancer presence", ~facts.cancer_association),
         (
             "Reproductive/developmental presence",
             ~facts.positive_context | facts.nested_microprotein,
         ),
-        ("Cancer presence", ~facts.cancer_association),
         ("Reproductive concentration", facts.reproductive_concentration_hold),
         ("Translation qualification", ~translation_admission(facts)),
         (
@@ -62,6 +209,7 @@ def build(root: Path, output: Path) -> None:
         new_other = eligible & failure
         other |= new_other
         eligible &= ~failure
+        stage_masks[label] = eligible.copy()
         rows.append(
             {
                 "stage": label,
@@ -80,6 +228,7 @@ def build(root: Path, output: Path) -> None:
     assert table[["eligible", "Other", "Unsafe", "Unresolved"]].sum(axis=1).eq(len(facts)).all()
     output.mkdir(parents=True, exist_ok=True)
     table.to_csv(output / "category-funnel.csv", index=False)
+    publication_funnel(facts, stage_masks, output)
     colors = {
         "eligible": "#087E8B",
         "Unsafe": "#AC493B",
@@ -169,7 +318,8 @@ def build(root: Path, output: Path) -> None:
             weight="bold",
             fontsize=15,
         )
-        if row.Other:
+        # Narrow segments retain their count in the right-hand increment label.
+        if row.Other >= normal_pass.sum() * 0.04:
             ax.text(
                 row.eligible + row.Other / 2,
                 i,
@@ -196,7 +346,7 @@ def build(root: Path, output: Path) -> None:
     fig.text(
         0.055,
         0.178,
-        f"{table.iloc[1].new_Other:,} lack reproductive evidence / are nested; {table.iloc[3].new_Other:,} fail concentration; {table.iloc[4].new_Other:,} need translation review; {table.iloc[5].new_Other:,} have Unsafe sequence containment.",
+        f"{table.iloc[1].new_Other:,} lacks cancer evidence; {table.iloc[2].new_Other:,} fail reproductive/developmental presence; {table.iloc[3].new_Other:,} fail concentration; {table.iloc[4].new_Other:,} need translation review; {table.iloc[5].new_Other:,} are contained.",
         fontsize=12,
         color=ink,
         weight="bold",
@@ -204,7 +354,7 @@ def build(root: Path, output: Path) -> None:
     fig.text(
         0.055,
         0.142,
-        f"Cancer presence moves {table.iloc[2].new_Other:,} additional proteins into Other; {table.iloc[2].eligible:,} remain eligible.",
+        f"Cumulative counts: cancer presence retains {table.iloc[1].eligible:,}; reproductive/developmental presence narrows these to {table.iloc[2].eligible:,}.",
         fontsize=11,
         color=muted,
     )
@@ -235,6 +385,9 @@ def build(root: Path, output: Path) -> None:
                 "final_counts": counts,
                 "normal_first_display_only": True,
                 "rare_vital_only_unsafe": rare_only,
+                "publication_memberships_sha256": hashlib.sha256(
+                    (root / "oncoref/data/cta-selection-audit-human.json.gz").read_bytes()
+                ).hexdigest(),
             },
             indent=2,
         )

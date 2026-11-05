@@ -70,8 +70,8 @@ z
    </g>
    <g id="patch_7">
     <path d="M 181.932812 151.422705 
-L 514.516236 151.422705 
-L 514.516236 108.343081 
+L 756.348214 151.422705 
+L 756.348214 108.343081 
 L 181.932812 108.343081 
 z
 " clip-path="url(#p7698a2ada6)" style="fill: #087e8b"/>
@@ -207,7 +207,8 @@ L -3.5 0
       </g>
      </g>
      <g id="text_12">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="174.932812" y="187.911134" transform="rotate(-0 174.932812 187.911134)">Cancer presence</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(16.300781 181.861026)">Reproductive/developmental</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(124.614687 195.063175)">presence</text>
      </g>
     </g>
     <g id="ytick_5">
@@ -217,8 +218,7 @@ L -3.5 0
       </g>
      </g>
      <g id="text_13">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(16.300781 128.011496)">Reproductive/developmental</text>
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(124.614687 141.213645)">presence</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="174.932812" y="134.061604" transform="rotate(-0 174.932812 134.061604)">Cancer presence</text>
      </g>
     </g>
     <g id="ytick_6">
@@ -250,7 +250,7 @@ L 848.852813 382.437187
     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="519.672568" y="186.589844" transform="rotate(-0 519.672568 186.589844)">645</text>
    </g>
    <g id="text_19">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="519.672568" y="132.740315" transform="rotate(-0 519.672568 132.740315)">645</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="761.504546" y="132.740315" transform="rotate(-0 761.504546 132.740315)">1,114</text>
    </g>
    <g id="text_20">
     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="762.020179" y="78.890785" transform="rotate(-0 762.020179 78.890785)">1,115</text>

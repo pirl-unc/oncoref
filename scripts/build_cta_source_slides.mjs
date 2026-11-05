@@ -11,6 +11,8 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const audit=path.join(root,'docs/audits/cta-source-walkthrough-20261028');
 const build=path.resolve(root,process.env.CTA_SLIDE_BUILD_DIR||'tmp/cta-source-slides-expanded');
 const data=JSON.parse(await fs.readFile(path.join(audit,'presentation-data.json'),'utf8'));
+const publicationFunnel=JSON.parse(await fs.readFile(path.join(audit,'figures/publication-funnel.json'),'utf8'));
+const papers=publicationFunnel.filter(r=>r.source_kind==='paper');
 const trials=JSON.parse(await fs.readFile(path.join(root,'oncoref/data/tcr-trial-evidence.json'),'utf8'));
 const definition=JSON.parse(await fs.readFile(path.join(root,'docs/audits/cta-definition-20261104/report-data.json'),'utf8'));
 const inventory=JSON.parse(await fs.readFile(path.join(root,'docs/audits/cta-inventory-20261105/summary.json'),'utf8'));
@@ -27,7 +29,7 @@ const C={ink:'#173B55',muted:'#536675',teal:'#087E8B',amber:'#A76708',rust:'#AC4
 const URL='https://pirl-unc.github.io/oncoref/audits/cta-source-walkthrough-20261028/';
 const pages=[],tableOwners=[],chartOwners=[];let current;
 const linksByName=new Map([
- ...data.papers.map(r=>[r.citation,r.source_url]),
+ ...papers.map(r=>[r.citation,r.source_url]),
  ...(data.paper_titles||[]).flatMap(r=>[[r.citation,'https://doi.org/'+r.doi],[r.title,'https://doi.org/'+r.doi]]),
  ['HPA v23','https://v23.proteinatlas.org/about/download'],
  ['GTEx v11','https://gtexportal.org/home/downloads/adult-gtex'],
@@ -117,13 +119,13 @@ text(s,'Thymus is excluded from both sides of the concentration score',64,505,11
 note(s,'Thymus exclusion changes HPA 10.34% → 9.53%. Independent safety evidence keeps ZNF730 Unsafe.',592,25);
 }
 {
-const s=slide('Published candidate lists','Human annotations',data.papers.map(r=>`${r.citation}: ${r.source_url}`).join('\n'));
-table(s,[['Paper','Proteins','CTA','Unsafe','Other','Unassigned'],...data.papers.map(r=>[r.citation,n(r.mapped_entities),r.CTA,r.Unsafe,r.Other,r.Unassigned])],{widths:[390,150,140,160,150,162],size:19,h:420,y:158});
+const s=slide('All registered nomination papers','Human annotations',papers.map(r=>`${r.citation}: ${r.source_url}\nScope: ${r.evidence_scope}`).join('\n'));
+table(s,[['Paper','Proteins','CTA','Unsafe','Other'],...papers.map(r=>[r.citation,n(r.Inventory),r['Unsafe sequence containment'],r['Final Unsafe'],r['Final Other']])],{widths:[480,168,168,168,168],size:19,h:420,y:158});
 note(s,`Union: ${n(data.paper_union_groups)} proteins / ${n(data.paper_union_loci)} loci. ${data.annotated} selected proteins have an annotation; ${data.unannotated} do not.`,600,23);
 }
 {
 const s=slide('Broader published nominations','Publication scope','Sasaroli et al. (2011) https://doi.org/10.4161/cbt.12.3.16260 . Hirbo et al. (2015) https://doi.org/10.1371/journal.pone.0144155 . Exact extracted rows and matching receipts accompany the report.');
-table(s,[['Paper','Published scope','Identity accounting'],['Sasaroli et al. (2011)','13 detailed tumor-vascular candidates','13 matched genes'],['Hirbo et al. (2015)','86 placenta-enriched genes, including 30 fast-evolving','82 matched, 4 unresolved'],['Compact source view','Bai, Boël and Bradley covered by larger sets','All memberships retained'],['Garg et al. (2007)','Still uniquely contributes SPAG9','Retained in main view']],{widths:[290,570,292],size:25,h:350});
+table(s,[['Paper','Published scope','Identity accounting'],['Sasaroli et al. (2011)','13 detailed tumor-vascular candidates','13 matched genes'],['Hirbo et al. (2015)','86 placenta-enriched genes, including 30 fast-evolving','82 matched, 4 unresolved'],['Overlapping small lists','Bai, Boël and Bradley covered by larger sets','All shown in the funnel'],['Garg et al. (2007)','Uniquely contributes SPAG9 in the registry','Retained with its scope']],{widths:[290,570,292],size:25,h:350});
 note(s,'Vascular and placental nominations retain their scope. Paper membership never bypasses the quantitative funnel.',580,26);
 }
 {
@@ -221,6 +223,18 @@ const s=slide('Other accumulates as identity gates fail','Coarse category funnel
 figure(s,'category-funnel',64,158,1152,475);
 }
 {
+const s=slide('Candidates with and without prior nominations','Candidate provenance','All registered publication memberships are retained. A prior nomination is not required for CTA admission. Absence from this finite registry does not establish novelty. Counts use the same cumulative gates as the coarse funnel.');
+const rows=publicationFunnel.filter(r=>r.source_kind!=='paper');
+table(s,[['Provenance','Input','Normal','Cancer','Repro. / dev.','Final CTA'],...rows.map(r=>[r.citation,n(r.Inventory),n(r['Normal safety + coverage']),n(r['Cancer presence']),n(r['Reproductive/developmental presence']),n(r['Unsafe sequence containment'])])],{widths:[400,155,145,145,157,150],size:24,h:280,y:180});
+note(s,'The paper union and unannotated complement partition every stage. Overlapping paper rows must not be added.',535,27);
+}
+for(let page=0;page<2;page++){
+const rows=papers.slice(page*8,page*8+8);
+const s=slide(`Registered papers through admission: ${page+1} of 2`,'Publication funnel',rows.map(r=>`${r.citation}: ${r.source_url}\nScope: ${r.evidence_scope}`).join('\n'));
+table(s,[['Paper','Input','Normal','Cancer','Repro. / dev.','Final CTA'],...rows.map(r=>[r.citation,n(r.Inventory),n(r['Normal safety + coverage']),n(r['Cancer presence']),n(r['Reproductive/developmental presence']),n(r['Unsafe sequence containment'])])],{widths:[400,155,145,145,157,150],size:22,h:390,y:165});
+note(s,'Each row follows the same cumulative gates. Final CTA also requires concentration, translation and sequence qualification.',580,25);
+}
+{
 const s=slide('Every filtering layer can contribute','Human funnel','The gray segment contains proteins pending final assignment. All layers evaluate every protein. Final human categories contain no unassigned proteins.');
 const shortLabels={'Reproductive / embryonic association':'Reproductive evidence','Cancer expression':'Cancer expression','HPA normal protein':'HPA protein','Required RNA coverage':'Coverage','Reproductive concentration':'Concentration','Normal bulk':'Bulk RNA','HPA tissue clusters':'Tissue clusters','Monaco immune':'Monaco','DICE immune':'DICE','Adult cornea':'Cornea','Accepted normal-protein evidence':'Curated protein','Reviewed normal-cell knowledge':'Normal-cell knowledge','Clinical safety exclusion':'Clinical safety','External validated normal protein':'External IHC','Rare vital-tissue cell expression':'Rare Vital cells','Rare Protected-cell expression review':'Rare Protected cells','CTA and Other assignments':'Final categories'};
 const labels=data.funnel.map(r=>shortLabels[r.layer]||r.layer);
@@ -295,7 +309,7 @@ for(const [i,s] of p.slides.items.entries()){
 await fs.writeFile(path.join(build,'manifest.json'),JSON.stringify({policy:data.summary.policy,commit:'report-sha256:'+data.report_sha256,slideSize:{width:1280,height:720},pages},null,2));
 const candidate=path.join(build,'candidate.pptx');
 await(await PresentationFile.exportPptx(p)).save(candidate);
-const finalPath=path.join(audit,'slides',process.env.CTA_SLIDE_FILENAME||`cta-evidence-walkthrough-${release}-validated-final.pptx`);
+const finalPath=path.join(audit,'slides',process.env.CTA_SLIDE_FILENAME||`cta-evidence-walkthrough-${release}-provenance-validated-final.pptx`);
 await finalizePresentation({workspaceDir:root,candidatePath:candidate,finalPath,pythonExecutable:process.env.RUNTIME_PYTHON,
  integrityValidatorPath:path.join(skill,'container_tools/inspect_presentation_package_integrity.py'),layoutValidatorPath:path.join(skill,'container_tools/inspect_presentation_layout_geometry.py'),
  layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-bullet-geometry','--validate-heading-fit',...tableOwners.flatMap(n=>['--require-native-table-slide',String(n)])],

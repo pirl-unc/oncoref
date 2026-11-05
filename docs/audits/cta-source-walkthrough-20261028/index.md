@@ -2,7 +2,7 @@
 
 **602 CTA proteins (646 loci), 18,255 Unsafe, and 1,006 Other (27 of them Held)**, with evidence status recorded independently, across all 19,863 candidate proteins (identical selected reference sequences counted together; every record enters classification). Translation support and reference quality are CTA admission gates; 0 records are outside the classification path. Policy: `oncoref.cta-selection.2026-11-05.1`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[PDF slides](cta-selection-1.31.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.31.0-validated-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[PDF slides](cta-selection-1.31.0-provenance.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.31.0-provenance-validated-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 [Simplified decisions and four target reviews](../cta-simplification-20261031/index.md).
 [1.26 literature audit and decisions](../cta-other-literature-20261030/index.md).
@@ -42,7 +42,7 @@ Every protein has one categorical assignment: CTA, Unsafe or a named Other categ
 | Other:Translation | The selected primary-locus reference translation needs qualification; this is not normal-tissue exclusion evidence. | 362 |
 | Other:Contained | Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist. | 15 |
 
-Other reasons follow the unmet identity requirements: reproductive presence, cancer presence, then concentration. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
+Other subtypes retain their policy priority: reproductive presence, cancer presence, then concentration. The presentation shows the broader cancer-presence gate first; this does not change subtype assignment. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
 
 [Full categorical table and individual changes](../cta-neither-20261030/update-1.25.0.md). The current admission fixes use the full mapped Reproductive bulk panel plus supported reproductive-lineage cells. Generic/immune cells can provide indirect sample-site evidence only with a complete same-source outside panel, every outside cluster <5 nTPM, and no curated normal-induction conflict. This does not identify the producing cell; macrophages may carry passenger RNA. All safety and concentration gates remain independent.
 
@@ -133,13 +133,16 @@ These published lists annotate the selection; they do not provide a gene-specifi
 | [Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155) | 78 | 8 | 67 | 3 | 0 | [Source](https://doi.org/10.1371/journal.pone.0144155) |
 | [Seager et al. (2024)](https://doi.org/10.1186/s12967-024-04918-0) | 15 | 10 | 3 | 2 | 0 | [Source](https://doi.org/10.1186/s12967-024-04918-0) |
 | [Sasaroli et al. (2011)](https://doi.org/10.4161/cbt.12.3.16260) | 13 | 0 | 13 | 0 | 0 | [Source](https://doi.org/10.4161/cbt.12.3.16260) |
+| [Bradley et al. (2020)](https://doi.org/10.1038/s41467-020-19141-w) | 9 | 0 | 9 | 0 | 0 | [Source](https://doi.org/10.1038/s41467-020-19141-w) |
 | [Garg et al. (2007)](https://doi.org/10.1158/1078-0432.CCR-06-2340) | 5 | 3 | 2 | 0 | 0 | [Source](https://doi.org/10.1158/1078-0432.CCR-06-2340) |
+| [Boël et al. (1995)](https://doi.org/10.1016/s1074-7613(95)80053-0) | 2 | 1 | 1 | 0 | 0 | [Source](https://doi.org/10.1016/s1074-7613(95)80053-0) |
+| [Bai et al. (2016)](https://doi.org/10.1158/0008-5472.CAN-16-0225) | 1 | 0 | 1 | 0 | 0 | [Source](https://doi.org/10.1158/0008-5472.CAN-16-0225) |
 
-### Broader nominations and a compact primary-source list
+### Nomination scopes and overlapping sources
 
 [Sasaroli et al. (2011)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3230481/) contributes its 13 detailed tumor-vascular candidates, all mapped. [Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155) contributes 86 placenta-enriched nominations: 82 mapped identities and four unresolved names. Its 30 fast-evolving genes are a nested subset, not 30 additional genes. Noncoding mapped rows remain in the intake audit but do not enter protein-group counts. These are vascular and placental nomination scopes, not proof of CTA restriction.
 
-EGFL6 now occurs in Sasaroli, Hirbo and Bai. The main source table and plots omit fully redundant single-digit sets: Bai, Boël and Bradley. Their memberships and citations remain in the downloadable provenance. Garg stays because it uniquely contributes SPAG9 in the current registry. A source is retired from the main view only if the retained sources cover its entire mapped set; the union is unchanged by this presentation choice.
+EGFL6 now occurs in Sasaroli, Hirbo and Bai. The source table and publication funnel include Bai, Boël and Bradley even though larger sets cover all their mapped proteins. The compact overlap plot retains its historical display subset; the table below records which sources cover those small sets. Garg uniquely contributes SPAG9 in the current registry. All memberships and citations remain traceable, and the source union is deduplicated.
 
 | citation | mapped_entities | covered_by | source_url |
 | --- | --- | --- | --- |
@@ -291,8 +294,45 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 ![Coarse category funnel](figures/category-funnel.png)
 
-The normal screen is evaluated first in this view. Other accumulates as identity
-requirements fail. [Counts at each stage](figures/category-funnel.csv).
+The normal screen is evaluated first in this view. The counts are cumulative:
+**1,115** pass normal assessment,
+**1,114** also pass cancer presence, and
+**645** also pass reproductive/developmental presence.
+Cancer presence is the broader gate, so it appears first. The previous order showed
+645 at both presence gates because every reproductive/developmental survivor already
+had cancer evidence. [Counts at each stage](figures/category-funnel.csv).
+
+### Every registered nomination paper through the same gates
+
+![Registered papers through cumulative admission gates](figures/publication-funnel.png)
+
+All 15 registered papers appear, including overlapping small lists.
+Prior nomination is provenance, not a required admission gate. Publication measurements
+can satisfy a named evidence rule after assessment; a list label alone does not.
+The unannotated row means absent from this registry, not novel or absent from all literature.
+Paper rows overlap. Only their deduplicated union and the unannotated complement partition
+the inventory. [Every count, source URL and extraction scope](figures/publication-funnel.csv).
+
+| citation | Input | Normal assessment | Cancer presence | Reproductive/developmental | Final CTA |
+| --- | --- | --- | --- | --- | --- |
+| da Silva et al. (2017) | 1017 | 512 | 512 | 432 | 411 |
+| Wang et al. (2016) | 988 | 292 | 292 | 279 | 269 |
+| Chang et al. (2019) | 985 | 292 | 292 | 289 | 281 |
+| Gong et al. (2021) | 729 | 370 | 370 | 357 | 346 |
+| Bruggeman et al. (2018) | 692 | 12 | 12 | 12 | 12 |
+| Jamin et al. (2021) | 469 | 39 | 39 | 38 | 33 |
+| Loriot et al. (2025) | 202 | 86 | 86 | 86 | 83 |
+| Carter et al. (2023) | 103 | 54 | 54 | 54 | 53 |
+| Hirbo et al. (2015) | 78 | 10 | 10 | 10 | 8 |
+| Seager et al. (2024) | 15 | 11 | 11 | 11 | 10 |
+| Sasaroli et al. (2011) | 13 | 0 | 0 | 0 | 0 |
+| Bradley et al. (2020) | 9 | 0 | 0 | 0 | 0 |
+| Garg et al. (2007) | 5 | 3 | 3 | 3 | 3 |
+| Boël et al. (1995) | 2 | 1 | 1 | 1 | 1 |
+| Bai et al. (2016) | 1 | 0 | 0 | 0 | 0 |
+| Registered-paper union | 2514 | 592 | 592 | 505 | 480 |
+| No registered-paper annotation | 17349 | 523 | 522 | 140 | 122 |
+| Complete inventory | 19863 | 1115 | 1114 | 645 | 602 |
 
 The detailed layer view below retains the historical display order; its temporary
 holds are resolved into final categories only after all safety layers are evaluated.

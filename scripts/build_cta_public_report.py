@@ -6,6 +6,7 @@ from __future__ import annotations
 import html
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -44,7 +45,7 @@ from oncoref import (  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
-PRESENTATION_REVISION = "2026-11-05.2"
+PRESENTATION_REVISION = "2026-11-05.3"
 INK = "#173B55"
 TEAL = "#087E8B"
 AMBER = "#A76708"
@@ -157,6 +158,13 @@ def figures(facts, roles, coverage):
     )
     fig.tight_layout()
     figure("admission-flow", fig)
+    for suffix in ["png", "svg"]:
+        shutil.copyfile(
+            ROOT
+            / "docs/audits/cta-source-walkthrough-20261028/figures"
+            / f"publication-funnel.{suffix}",
+            OUT / "figures" / f"publication-funnel.{suffix}",
+        )
     holds = facts[[c for c in facts if c.startswith("hold:")]].astype(bool)
     names = holds.sum().nlargest(9).index.tolist()
     combinations = holds[names].apply(lambda r: tuple(r.astype(int)), axis=1).value_counts().head(9)
@@ -268,6 +276,14 @@ def build():
         raise ValueError("Out-of-universe records disagree with current coverage")
     contract = cta_selection.contract()
     counts = facts.category.value_counts().to_dict()
+    publication_funnel = pd.read_csv(
+        ROOT / "docs/audits/cta-source-walkthrough-20261028/figures/publication-funnel.csv"
+    ).fillna("")
+    publication_union = publication_funnel.set_index("source_id").loc["registered_union"]
+    unannotated = publication_funnel.set_index("source_id").loc["unannotated"]
+    admission = pd.read_csv(
+        ROOT / "docs/audits/cta-source-walkthrough-20261028/figures/category-funnel.csv"
+    ).set_index("stage")
     levels = tissue_hazards.assessments().level.value_counts().to_dict()
     migrated_count = len(gene_knowledge.historical_dispositions())
     figures(facts, roles, coverage)
@@ -326,9 +342,19 @@ def build():
                 f"All {coverage['universe_counts']['input_groups']:,} candidate records enter the same normal-evidence and admission path. The {sum(support_counts.values()):,} records formerly removed at entry stay visible: {support_counts.get('nmd_or_cds_not_defined_only', 0):,} have only NMD/CDS-not-defined reference transcripts and {support_counts.get('single_study_ribo_seq', 0):,} have only single-study Ribo-seq support. Insufficient translation support does not establish absence or normal-tissue safety.",
                 "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. An annotated coding sequence is not experimental proof of protein production.",
                 "Apply all normal-tissue evidence independently. Accepted exclusion evidence establishes Unsafe. Unresolved findings or missing required coverage prevent admission and require review; they do not establish Unsafe. Every target must also pass reproductive/developmental association, cancer presence, concentration, translation qualification and sequence-containment rules.",
-                "The chart presents one readable order. Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Other includes assessed noncandidates and unresolved records; its subtype cannot replace its independent assessment status.",
+                f"The chart uses cumulative counts. Of {admission.loc['Normal safety + coverage', 'eligible']:,} proteins passing normal assessment, cancer presence retains {admission.loc['Cancer presence', 'eligible']:,}; reproductive/developmental presence then narrows these to {admission.loc['Reproductive/developmental presence', 'eligible']:,}. The previous order showed 645 at both gates because every reproductive/developmental survivor already met cancer presence. One compatible positive tumor RNA sample or reviewed tumor protein makes cancer presence a broad gate, not an abundance or prevalence requirement.",
+                "Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Display order changes neither final classifications nor the priority used to assign Other subtypes.",
             ],
             "admission-flow",
+        ),
+        (
+            "Published nominations through the funnel",
+            [
+                f"All {len(publication_funnel[publication_funnel.source_kind.eq('paper')])} registered nomination papers appear in the companion funnel. Their union contains {publication_union['Inventory']:,} proteins: {publication_union['Unsafe sequence containment']:,} finish as CTA, {publication_union['Final Unsafe']:,} as Unsafe and {publication_union['Final Other']:,} as Other. A protein can occur in several papers, so individual paper rows must not be summed.",
+                f"The {unannotated['Inventory']:,} candidates without a registered-paper annotation undergo the same assessment and contribute {unannotated['Unsafe sequence containment']:,} CTAs. Prior nomination is recorded provenance, not a required admission gate. Absence from this finite registry does not establish novelty or absence from the literature.",
+                "A publication's measured evidence can support reproductive/developmental association, tumor expression, translation or normal-tissue counterevidence when it meets the corresponding evidence rule. A list label alone does not establish those facts. Germ-cell, testis-biased, placental and tumor-vascular lists retain their original scope alongside CTA nominations.",
+            ],
+            "publication-funnel",
         ),
         (
             "Normal-tissue consequences and expression evidence",
@@ -383,7 +409,7 @@ def build():
                 f"Selection policy: {coverage['policy_id']}. Role policy: {contract['role_policy_id']}. Translation policy: {translation_qualification.POLICY_ID}.",
                 "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. No target CTA count is an acceptance criterion.",
                 "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-                f"Presentation revision {PRESENTATION_REVISION} moves every candidate record into classification, retains translation as a CTA admission requirement, and separates preliminary expression-profile matches from normal-evidence exclusions. Earlier release assets remain frozen.",
+                f"Presentation revision {PRESENTATION_REVISION} places the broader cancer-presence gate first after normal assessment and follows every registered nomination paper through the same cumulative gates. Classifications, thresholds and sequence roles are unchanged. Earlier release assets remain frozen.",
             ],
             None,
         ),
@@ -391,6 +417,7 @@ def build():
     data = {
         "release": __version__,
         "presentation_revision": PRESENTATION_REVISION,
+        "publication_funnel": publication_funnel.to_dict("records"),
         "out_of_universe_reasons": outside_counts,
         "translation_support_reasons": support_counts,
         "contract": contract,
@@ -578,6 +605,22 @@ def render_html(data):
             )
         if fig:
             chunks.append(f'<figure><img src="figures/{fig}.svg" alt="{esc(title)}"></figure>')
+        if title == "Published nominations through the funnel":
+            chunks.append(
+                '<p><a href="../cta-source-walkthrough-20261028/figures/publication-funnel.csv">All paper-by-gate counts</a> · <a href="../cta-source-walkthrough-20261028/human-memberships.csv.gz">Protein memberships</a></p><table><thead><tr><th>Paper</th><th>Extracted scope</th></tr></thead><tbody>'
+            )
+            for row in data["publication_funnel"]:
+                if row["source_kind"] == "paper":
+                    chunks.append(
+                        '<tr><td><a href="'
+                        + esc(row["source_url"], quote=True)
+                        + '">'
+                        + esc(row["citation"])
+                        + "</a></td><td>"
+                        + esc(row["evidence_scope"])
+                        + "</td></tr>"
+                    )
+            chunks.append("</tbody></table>")
         chunks.append("</section>")
     chunks.append(
         '<h2>Complete gate rules</h2><div class="scroller"><table><thead><tr><th>Gate</th><th>Rule</th><th>Sources</th></tr></thead><tbody>'
@@ -717,10 +760,38 @@ def render_pdf(data):
                 Image(
                     str(OUT / "figures" / f"{fig}.png"),
                     width=500,
-                    height=330 if fig == "independent-evidence" else 250,
+                    height=350
+                    if fig == "publication-funnel"
+                    else 330
+                    if fig == "independent-evidence"
+                    else 250,
                     kind="proportional",
                 )
             )
+        if title == "Published nominations through the funnel":
+            story.append(
+                Paragraph(
+                    '<a href="https://pirl-unc.github.io/oncoref/audits/cta-source-walkthrough-20261028/figures/publication-funnel.csv">Download every paper-by-gate count and its source scope</a>',
+                    small,
+                )
+            )
+            story.append(PageBreak())
+            story.append(
+                Paragraph("Registered nomination papers and extraction scope", styles["Heading1"])
+            )
+            for row in data["publication_funnel"]:
+                if row["source_kind"] == "paper":
+                    story.append(
+                        Paragraph(
+                            '<a href="'
+                            + html.escape(row["source_url"], quote=True)
+                            + '">'
+                            + html.escape(row["citation"])
+                            + "</a>: "
+                            + html.escape(row["evidence_scope"]),
+                            small,
+                        )
+                    )
         if title != "Research parameters and coverage limits":
             story.append(PageBreak())
     story.append(Paragraph("Complete executable gate rules", styles["Heading1"]))
