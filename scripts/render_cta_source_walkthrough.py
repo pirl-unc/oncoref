@@ -28,6 +28,8 @@ from oncoref import cta_selection  # noqa: E402
 from oncoref.cta_selection_policy import OTHER_SUBTYPE_RULES  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
+PRESENTATION_SUFFIX = "-provenance"
+
 
 def markdown(frame: pd.DataFrame) -> str:
     """Write a compact Markdown table without an optional tabulate dependency."""
@@ -562,6 +564,8 @@ def build() -> None:
     summary = json.loads((RELEASE / "summary.json").read_text())
     audit, dog = cta_selection.audit(), cta_selection.audit(species="dog")
     figures(facts, audit)
+    publication_funnel = pd.read_csv(OUTPUT / "figures/publication-funnel.csv").fillna("")
+    admission = pd.read_csv(OUTPUT / "figures/category-funnel.csv").set_index("stage")
     counts = summary["categories"]
     selected = facts[facts.category.eq("CTA")]
     embryo_measured_count = int(selected.developmental_all_lineage_max_tpm.notna().sum())
@@ -810,11 +814,13 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
         }
     ).sort_values("% of cells", ascending=False)
     funnel = pd.read_csv(RELEASE / "filtering-funnel.csv")
-    pdf_link = presentation_link("PDF slides", "cta-selection-*.pdf", "cta-selection-{v}.pdf")
+    pdf_link = presentation_link(
+        "PDF slides", "cta-selection-*.pdf", "cta-selection-{v}" + PRESENTATION_SUFFIX + ".pdf"
+    )
     deck_link = presentation_link(
         "Editable slides",
         "slides/cta-evidence-walkthrough-*-final.pptx",
-        "slides/cta-evidence-walkthrough-{v}-validated-final.pptx",
+        "slides/cta-evidence-walkthrough-{v}" + PRESENTATION_SUFFIX + "-validated-final.pptx",
     )
     overview = f"""# CTA and oncofetal selection
 
@@ -852,7 +858,7 @@ Every protein has one categorical assignment: CTA, Unsafe or a named Other categ
 
 {markdown(pd.DataFrame([{"Category": "Other:" + name, "Meaning": description, "Proteins": summary["other_subtypes"].get(name, 0)} for name, description in OTHER_SUBTYPE_RULES.items()]))}
 
-Other reasons follow the unmet identity requirements: reproductive presence, cancer presence, then concentration. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
+Other subtypes retain their policy priority: reproductive presence, cancer presence, then concentration. The presentation shows the broader cancer-presence gate first; this does not change subtype assignment. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
 
 [Full categorical table and individual changes](../cta-neither-20261030/update-1.25.0.md). The current admission fixes use the full mapped Reproductive bulk panel plus supported reproductive-lineage cells. Generic/immune cells can provide indirect sample-site evidence only with a complete same-source outside panel, every outside cluster <5 nTPM, and no curated normal-induction conflict. This does not identify the producing cell; macrophages may carry passenger RNA. All safety and concentration gates remain independent.
 
@@ -908,13 +914,13 @@ Among the {len(incomplete):,} incomplete assessments, gaps overlap:
 
 These published lists annotate the selection; they do not provide a gene-specific admission bypass. The union is **{audit.memberships.entity_id.nunique():,} mapped proteins / {len({g for ids in audit.memberships.gene_ids for g in ids}):,} loci**. **{annotated}** selected proteins have a listed-paper annotation; **{counts.get("CTA", 0) - annotated}** do not. Source contribution counts overlap. **Mapped proteins means curated nominations linked to the current reference, not newly discovered genes or selected CTAs.** The CTA column reports the subset passing the current funnel.
 
-{markdown(audit.sources[audit.sources.primary_source][["citation", "mapped_entities", "CTA", "Unsafe", "Other", "Unassigned", "source_url"]])}
+{markdown(audit.sources[["citation", "mapped_entities", "CTA", "Unsafe", "Other", "Unassigned", "source_url"]])}
 
-### Broader nominations and a compact primary-source list
+### Nomination scopes and overlapping sources
 
 [Sasaroli et al. (2011)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3230481/) contributes its 13 detailed tumor-vascular candidates, all mapped. [Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155) contributes 86 placenta-enriched nominations: 82 mapped identities and four unresolved names. Its 30 fast-evolving genes are a nested subset, not 30 additional genes. Noncoding mapped rows remain in the intake audit but do not enter protein-group counts. These are vascular and placental nomination scopes, not proof of CTA restriction.
 
-EGFL6 now occurs in Sasaroli, Hirbo and Bai. The main source table and plots omit fully redundant single-digit sets: Bai, Boël and Bradley. Their memberships and citations remain in the downloadable provenance. Garg stays because it uniquely contributes SPAG9 in the current registry. A source is retired from the main view only if the retained sources cover its entire mapped set; the union is unchanged by this presentation choice.
+EGFL6 now occurs in Sasaroli, Hirbo and Bai. The source table and publication funnel include Bai, Boël and Bradley even though larger sets cover all their mapped proteins. The compact overlap plot retains its historical display subset; the table below records which sources cover those small sets. Garg uniquely contributes SPAG9 in the current registry. All memberships and citations remain traceable, and the source union is deduplicated.
 
 {markdown(audit.sources[~audit.sources.primary_source][["citation", "mapped_entities", "covered_by", "source_url"]])}
 
@@ -953,8 +959,26 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 ![Coarse category funnel](figures/category-funnel.png)
 
-The normal screen is evaluated first in this view. Other accumulates as identity
-requirements fail. [Counts at each stage](figures/category-funnel.csv).
+The normal screen is evaluated first in this view. The counts are cumulative:
+**{admission.loc["Normal safety + coverage", "eligible"]:,}** pass normal assessment,
+**{admission.loc["Cancer presence", "eligible"]:,}** also pass cancer presence, and
+**{admission.loc["Reproductive/developmental presence", "eligible"]:,}** also pass reproductive/developmental presence.
+Cancer presence is the broader gate, so it appears first. The previous order showed
+645 at both presence gates because every reproductive/developmental survivor already
+had cancer evidence. [Counts at each stage](figures/category-funnel.csv).
+
+### Every registered nomination paper through the same gates
+
+![Registered papers through cumulative admission gates](figures/publication-funnel.png)
+
+All {len(audit.sources)} registered papers appear, including overlapping small lists.
+Prior nomination is provenance, not a required admission gate. Publication measurements
+can satisfy a named evidence rule after assessment; a list label alone does not.
+The unannotated row means absent from this registry, not novel or absent from all literature.
+Paper rows overlap. Only their deduplicated union and the unannotated complement partition
+the inventory. [Every count, source URL and extraction scope](figures/publication-funnel.csv).
+
+{markdown(publication_funnel[["citation", "Inventory", "Normal safety + coverage", "Cancer presence", "Reproductive/developmental presence", "Unsafe sequence containment"]].rename(columns={"Inventory": "Input", "Normal safety + coverage": "Normal assessment", "Reproductive/developmental presence": "Reproductive/developmental", "Unsafe sequence containment": "Final CTA"}))}
 
 The detailed layer view below retains the historical display order; its temporary
 holds are resolved into final categories only after all safety layers are evaluated.

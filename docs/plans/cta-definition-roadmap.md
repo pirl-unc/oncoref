@@ -323,6 +323,11 @@ Other:Translation and 12 Unsafe calls, with no changes to the earlier 19,604
 classifications. Preliminary tumor-restriction matches now have explicit
 dispositions after independent normal evidence.
 
+Presentation revision 2026-11-05.3 puts cancer presence before reproductive/developmental
+presence after normal assessment and follows all 15 registered nomination papers
+through the same gates. It retains overlapping memberships, their deduplicated union
+and candidates without a registered annotation. No selection rules or classifications change.
+
 Use a repository-local environment with the `quantitative` and `reports` extras,
 verified source caches and an isolated `ONCOREF_SHARD_CACHE_DIR`. Run the scientific
 replay only when its evidence or policy changes:
@@ -345,9 +350,9 @@ Finalize presentation assets before binding the final receipts:
 
 ```sh
 python scripts/render_cta_source_walkthrough.py
-CTA_SLIDE_BUILD_DIR=tmp/cta-source-slides-131 node scripts/build_cta_source_slides.mjs
-python scripts/slides/assemble_pdf.py tmp/cta-source-slides-131 \
-  docs/audits/cta-source-walkthrough-20261028/cta-selection-1.31.0.pdf
+CTA_SLIDE_BUILD_DIR=tmp/cta-provenance-slides node scripts/build_cta_source_slides.mjs
+python scripts/slides/assemble_pdf.py tmp/cta-provenance-slides \
+  docs/audits/cta-source-walkthrough-20261028/cta-selection-1.31.0-provenance.pdf
 python scripts/render_cta_source_walkthrough.py
 python scripts/regenerate_cta_walkthrough.py --finalize-receipts
 python scripts/build_cta_public_report.py

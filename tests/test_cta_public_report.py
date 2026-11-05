@@ -43,7 +43,35 @@ def test_final_receipt_binds_source_audits_figures_and_public_documentation():
         for name, expected in receipt[key].items():
             assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
     assert {"report.html", "report-data.json", "cta-definition.pdf"} <= set(receipt["outputs"])
-    assert len([name for name in receipt["outputs"] if name.endswith(".svg")]) == 4
+    assert len([name for name in receipt["outputs"] if name.endswith(".svg")]) == 5
+
+
+def test_publication_funnel_preserves_all_sources_overlap_and_unannotated_candidates():
+    import pandas as pd
+
+    audit = cta_selection.audit()
+    report = json.loads((REPORT / "report-data.json").read_text())
+    table = pd.DataFrame(report["publication_funnel"]).set_index("source_id")
+    papers = table[table.source_kind.eq("paper")]
+    assert set(papers.index) == set(audit.sources.source_id)
+    current = audit.sources.set_index("source_id")
+    for source, row in papers.iterrows():
+        assert row.Inventory == current.loc[source, "mapped_entities"]
+        assert row["Unsafe sequence containment"] == current.loc[source, "CTA"]
+        assert row["Final Unsafe"] == current.loc[source, "Unsafe"]
+        assert row["Final Other"] == current.loc[source, "Other"]
+    count_columns = table.select_dtypes("number").columns
+    assert (
+        table.loc["registered_union", count_columns] + table.loc["unannotated", count_columns]
+    ).equals(table.loc["inventory", count_columns])
+    assert table.loc["registered_union", "Inventory"] == audit.memberships.entity_id.nunique()
+    assert (
+        table.loc["inventory", "Unsafe sequence containment"]
+        == (cta_selection.results().category == "CTA").sum()
+    )
+    # A source is allowed to overlap another source; the union is deduplicated.
+    assert papers.Inventory.sum() > table.loc["registered_union", "Inventory"]
+    assert table.loc["unannotated", "Unsafe sequence containment"] > 0
 
 
 def test_walkthrough_slide_status_counts_cover_every_classified_group():
