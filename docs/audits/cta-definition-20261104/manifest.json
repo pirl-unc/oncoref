@@ -1,9 +1,9 @@
 {
   "inputs": {
-    "oncoref/cta_contract.py": "83c26c8ed2cc37c8c99bd020db66357ef072762bc99026dc412042439aa04bca",
-    "oncoref/cta_selection.py": "31f3510fbafe5d55116354c447ba26716a8daa561c55e652ece36dcf9f75ade3",
-    "oncoref/data/cta-selection.json": "18e324fdde781235fb175faaa31f187640f5244b26295a9a4f73054f30923ecf",
-    "oncoref/data/cta-selection-human.csv.gz": "29a52c8f129ef4a2b959e1e3d6bccf3494dacbbbf6bae500657952130c6b37b5",
+    "oncoref/cta_contract.py": "7a550a0b015c97a885f659795abc5a8aac63d2f92fc27a0669fb550689f78f98",
+    "oncoref/cta_selection.py": "8f985ac674bb2fdf5d0a20cf90c6b88fd71f27914e5f817fa80495c797b3a86a",
+    "oncoref/data/cta-selection.json": "14a87612396b11705dd97b6f1aba61d43a07e98f435697651f26eb3876410496",
+    "oncoref/data/cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd",
     "scripts/build_cta_contract_report.py": "3da412d727f5cd55380d57ca944d0440e98e63d0f98db34d4a3aeca7f2542c62",
     "docs/audits/cta-definition-20261104/baseline.json": "779f21ee949c0ca7d2ecd61dd418881280604d9a4e96389cb31aef661a3307a5",
     "docs/audits/cta-definition-20261104/baseline-1.29.0.csv.gz": "4e6291d896d596c498da9144e0c1fd47f9e26110cc0a06632614aefdbbb82ffb"
@@ -11,11 +11,11 @@
   "outputs": {
     "baseline-1.29.0.csv.gz": "4e6291d896d596c498da9144e0c1fd47f9e26110cc0a06632614aefdbbb82ffb",
     "baseline.json": "779f21ee949c0ca7d2ecd61dd418881280604d9a4e96389cb31aef661a3307a5",
-    "changes-from-1.29.0.csv": "48f670706283bc452503530597a714d0e16d1108bb0ce7598803b38bcbdb0a5e",
-    "contract.json": "f0358f9ac64f5afdbc432cc2c52d56757d0577dcfc750737e47710b2d44df5e6",
-    "coverage.json": "4724c39461e8116e38c1390bdd4c1ad5512ed09081f2f831e2763f54b3687160",
+    "changes-from-1.29.0.csv": "0b2ce061459ebb07f4e275372a8a17d5e9100032d741bc96f53c325b3bcc63ff",
+    "contract.json": "df867c8e2f952d708157d1eaf983f77c53b1883eb522c15d86f39716cb5cc736",
+    "coverage.json": "1a6f3a67e1f2c91891c155eb33f26e1cdb4d791c258ae3fdfa6d1544a4107b2c",
     "gate-catalog.csv": "793bd76ee0b6ae1e0918ef697fb2fa0379df583aa4333bd1e1af97830f5ab36e",
-    "index.md": "9c3c84c445ba22fca8b8ed56e50777791420579adb92867e9175656d12d17e21",
-    "sequence-roles.csv.gz": "853fbb48a44328af9c2ce3d6886195b5247ab0a96c653b4dc9a63bf7dce8a21e"
+    "index.md": "64e209709aacc6bb219b67e3682d546efdea6c0300e87d3d0a1268a6b02bdf27",
+    "sequence-roles.csv.gz": "21f438af9892b935d3a211df7ca90d961a38fe5a2c85c2e004f1e24a79857ff1"
   }
 }

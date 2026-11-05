@@ -41,10 +41,20 @@ from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
 Category = Literal["CTA", "Unsafe", "Other", "Neither"]
-OtherSubtype = Literal["Nonreproductive", "Reproductive", "Diffuse", "Held", "Contained", "Nested"]
+OtherSubtype = Literal[
+    "Nonreproductive", "Reproductive", "Diffuse", "Held", "Contained", "Nested", "Translation"
+]
 SpeciesLike = Species | str | int
 CATEGORIES = ("CTA", "Unsafe", "Other")
-OTHER_SUBTYPES = ("Nonreproductive", "Reproductive", "Diffuse", "Held", "Contained", "Nested")
+OTHER_SUBTYPES = (
+    "Nonreproductive",
+    "Reproductive",
+    "Diffuse",
+    "Held",
+    "Contained",
+    "Nested",
+    "Translation",
+)
 CANDIDATE_CATEGORIES = ("CTA",)
 EVIDENCE_CATEGORIES = (
     "nomination",
@@ -255,6 +265,9 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
     ``unsafe_sequence_overlap_pct`` is the percentage of a protein's 9-mers that also
     occur in an Unsafe protein; at 95% or more a would-be CTA is ``Other:Contained``.
     It is missing for Unsafe proteins, which lie inside the Unsafe set by definition.
+    ``translation_qualified`` checks the selected primary-locus reference sequence;
+    its reasons, policy and sequence hashes remain separate from normal evidence.
+    Qualification is annotation-based admission, not experimental translation proof.
     """
     selected = resolve_species(species)
     result = results(species=selected)
@@ -284,6 +297,10 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         "rare_cell_max_pct",
         "rare_cell_type",
         "unsafe_sequence_overlap_pct",
+        "translation_qualified",
+        "translation_qualification_reasons",
+        "translation_qualification_policy",
+        "representative_sequence_sha256s",
     ]
     if selected.taxon_id == 9606:
         evidence = _checked_table("cta-selection-profiles-human.csv.gz")
@@ -292,7 +309,13 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         if set(evidence.entity_id) != set(result.entity_id):
             raise ValueError("Protein profiles do not cover the current selection")
         for column in columns[1:]:
-            if column == "rare_cell_type":
+            if column == "representative_sequence_sha256s":
+                evidence[column] = evidence[column].map(lambda value: tuple(json.loads(value)))
+            elif column in {
+                "rare_cell_type",
+                "translation_qualification_reasons",
+                "translation_qualification_policy",
+            }:
                 evidence[column] = evidence[column].astype("string").replace("", pd.NA)
             elif (
                 column.endswith(("_tpm", "_ntpm", "_ptpm", "_cp10k", "_pct"))

@@ -4,17 +4,18 @@ Cancer expression,6,0,17623,0,0,1981
 HPA normal protein,12044,10160,5579,10160,0,3865
 Required RNA coverage,45,0,5534,10160,0,3910
 Reproductive concentration,1007,0,4527,10160,0,4917
-Normal bulk,3514,7476,1013,17636,0,955
-HPA tissue clusters,236,365,777,18001,0,826
-HPA immune,14,27,763,18028,0,813
-Monaco immune,12,21,751,18049,0,804
-DICE immune,16,35,735,18084,0,785
-Adult cornea,2,5,733,18089,0,782
-Accepted normal-protein evidence,3,2,730,18091,0,783
-Reviewed normal-cell knowledge,3,31,727,18122,0,755
-Clinical safety exclusion,0,0,727,18122,0,755
-Rare vital-tissue cell expression,80,121,647,18243,0,714
-Rare Protected-cell expression review,6,0,641,18243,0,720
-External validated normal protein,0,0,641,18243,0,720
-Unsafe sequence containment,19,0,622,18243,0,739
-CTA and Other assignments,0,0,622,18243,739,0
+Translation qualification,118,0,4409,10160,0,5035
+Normal bulk,3434,7476,975,17636,0,993
+HPA tissue clusters,232,365,743,18001,0,860
+HPA immune,12,27,731,18028,0,845
+Monaco immune,11,21,720,18049,0,835
+DICE immune,15,35,705,18084,0,815
+Adult cornea,2,5,703,18089,0,812
+Accepted normal-protein evidence,3,2,700,18091,0,813
+Reviewed normal-cell knowledge,3,31,697,18122,0,785
+Clinical safety exclusion,0,0,697,18122,0,785
+Rare vital-tissue cell expression,74,121,623,18243,0,738
+Rare Protected-cell expression review,6,0,617,18243,0,744
+External validated normal protein,0,0,617,18243,0,744
+Unsafe sequence containment,15,0,602,18243,0,759
+CTA and Other assignments,0,0,602,18243,759,0

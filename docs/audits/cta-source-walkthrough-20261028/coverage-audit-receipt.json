@@ -2,7 +2,7 @@
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
     "scripts/audit_cta_source_coverage.py": "4f1f0e73022c6adef0240041db3ddb8aa3970a09985fe045c6bad32dcf53c8d7",
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "c2294382878b1c0f7959d9140d4bf79a0fe6086e00826460ab9d503cda08e07d",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "f3876561b1423ab4094611aa307e1d8f34b55f7abd8b364b27fd1f3c0e2f33d2",
     "docs/audits/cta-selection-20261028/hpa-protein-evidence.csv.gz": "6012c9ae46114dff6b43753389007213870a72150e8a004ef0dc930f7bf4cb5e",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/manifest.json": "2de97ad9daa6ff4baeb3179c90366f131ae91e77ee5f92caa5d10dd27d148b86",
     "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
@@ -313,14 +313,14 @@
   ],
   "identity_catalog_sha256": "3f6e446737df45838a3f086418b740040b34e047969ca0fa0ceb0c210c84c702",
   "outputs": {
-    "normal-panel-coverage-gaps.csv.gz": "a605802aee0573a031468a9420df01ffbcaaba9632917c477974cdfd250ffc96",
-    "normal-panel-member-coverage.csv.gz": "8178d2a5866cddb3bd8bef93903c2d9556a5c923e0af4aca0d4d862addb4d47a",
-    "coverage-identity-matches.csv.gz": "83bf98ab3b9c1891edb77b5b47ede117e3fe15c917268b618fab86cef2bae003",
-    "embryonic-coverage-gaps.csv.gz": "744b6ec942a6e7f5c6afe19a28e2c8befc5e51c29652ce34c5be07a057e5d552",
+    "normal-panel-coverage-gaps.csv.gz": "be1285ec810f774c9543553c924726008cc2416d867b1437acb1f44298491234",
+    "normal-panel-member-coverage.csv.gz": "511c05a4c5ce99410ca9cc0f9c8628ccb669d97cdc11de146d439f6a307a7633",
+    "coverage-identity-matches.csv.gz": "349eedf1bb19d2895506548a50baa520c9f5e64b1a7f828a90bcb84b939ac4c8",
+    "embryonic-coverage-gaps.csv.gz": "f901136584393c934f31d7a0973a4bbd51a44fdacef513eb28009762db3de9b3",
     "combined-rna-coverage.csv.gz": "2cc03fa8ff39520268c16746d3a641fea4b063bc924627941baa502a751a0f44",
-    "tumor-cohort-coverage.csv.gz": "492dd4021aff57bdb91f0170d25b81c088e971fb8702f4044a44c2aeb6c37e35",
+    "tumor-cohort-coverage.csv.gz": "de28fe35d6c943f66345164a7c451a9eb500fed5058a8ac23aeb80aec0e17af0",
     "tumor-missing-identity-candidates.csv.gz": "ba8777a4ccf0e86ba4f3d39db5eaac98efce0921d2bac2f9be61eaabb600f981",
     "unresolved-protein-contexts.csv.gz": "01d137fd968f2a9c27c0e963de62e9f4772592733a3cd2f0c81f10cad74dc317",
-    "normal-panel-gap-counts.csv": "b0599d649ed0f86b933baade867e9e2c176cc9609efbef7bb6684411dc1864d4"
+    "normal-panel-gap-counts.csv": "860d622aad1a2618bce70518634aba3451013ea5ad6ba79b054f6cca2f1cb19f"
   }
 }

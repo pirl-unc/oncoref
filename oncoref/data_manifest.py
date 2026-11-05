@@ -235,6 +235,10 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "translation-qualification": (
+        "protein",
+        "Pinned Ensembl peptide records with primary-locus CDS and sequence qualification, source identities and review reasons",
+    ),
     "cta-selection-profiles-human": (
         "protein",
         "Current protein evidence attributes: native-unit RNA, tumor support and adult Disposable pattern",

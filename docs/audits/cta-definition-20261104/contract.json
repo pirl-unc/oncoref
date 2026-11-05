@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-decision-contract",
   "schema_version": 1,
-  "contract_id": "oncoref.cta-decision-contract.2026-11-04.1",
+  "contract_id": "oncoref.cta-decision-contract.2026-11-04.2",
   "role_policy_id": "oncoref.sequence-roles.2026-11-04.1",
   "title": "CTA and oncofetal candidate selection",
   "definition": "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. Sequence realization requires separately qualified translation records.",
@@ -14,6 +14,7 @@
     "screened": "Declared assessment completed; not exhaustive biological coverage",
     "incomplete_evidence": "Required coverage or evidence resolution is incomplete",
     "normal_evidence_hold": "Normal evidence requires review without establishing exclusion",
+    "translation_review": "Selected translation requires record-level qualification",
     "unassessed": "No applicable selection policy or no completed assessment"
   },
   "interpretation_states": {
@@ -50,7 +51,7 @@
   ],
   "taxon_id": 9606,
   "species": "human",
-  "selection_policy_id": "oncoref.cta-selection.2026-11-04.1",
+  "selection_policy_id": "oncoref.cta-selection.2026-11-04.2",
   "selection_status": "available",
   "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
 }
