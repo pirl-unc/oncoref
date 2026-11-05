@@ -3,19 +3,21 @@
 [Read the illustrated, searchable report](report.html) · [Download the PDF](cta-definition.pdf)
 · [Current report receipt](release-receipt.json) · [Full report data](report-data.json).
 
-Current selection policy: `oncoref.cta-selection.2026-11-04.2`. Consumer-role policy:
+Current selection policy: `oncoref.cta-selection.2026-11-05.1`. Consumer-role policy:
 `oncoref.sequence-roles.2026-11-04.1`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
 
-**19,863 candidate protein records → 19,604
-classified proteins + 259 out-of-universe records.**
+**All 19,863 candidate protein records enter classification.**
+Translation support is an admission requirement; 259
+records lack the former coding/established-ncORF entry evidence and remain visible
+as Unsafe or Other. No record is removed before the normal-evidence assessment.
 The classified results are **602 CTA,
-18,243 Unsafe and 759 Other**.
+18,255 Unsafe and 1,006 Other**.
 Identical selected reference sequences count together; member gene loci remain
 traceable. These are representative proteins, not a complete inventory of splice
-isoforms or modified proteoforms. [Universe entry rules and excluded records](../../cta-selection.md#stage-0-universe).
+isoforms or modified proteoforms. [Inventory and translation admission](../../cta-selection.md#complete-candidate-inventory).
 
-An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. Sequence realization requires separately qualified translation records.
+An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and qualification of the exact selected translation. Every input record is assessed, including those with insufficient translation support.
 
 ## Evidence status and consumer roles
 
@@ -28,12 +30,12 @@ can still exclude shared sequence.
 
 | Role | Proteins |
 |---|---:|
-| Exclude | 18,243 |
-| Review | 339 |
+| Exclude | 18,255 |
+| Review | 586 |
 | Allow under this policy | 1,022 |
 
-Compared with the pinned 1.29.0 snapshot, **225
-classifications and 339 roles change**.
+Compared with the pinned 1.29.0 snapshot, **484
+classifications and 598 roles change**.
 [Every changed record](changes-from-1.29.0.csv) retains baseline/current values.
 The [full role table](sequence-roles.csv.gz) preserves identity, reasons and policy.
 

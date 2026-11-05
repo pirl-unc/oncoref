@@ -2,11 +2,11 @@
 
 [Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
 
-The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 proteins** (identical selected reference sequences counted together; member loci retained). The input inventory contains 19,863 candidate protein records; 259 remain explicitly outside the universe. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,255 Unsafe / 1,006 Other** across **19,863 proteins** (identical selected reference sequences counted together; member loci retained). All 19,863 candidate protein records enter classification; translation support is a CTA admission requirement. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
 
 [Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Verified sequence records](sequence-bundle.md).
 
-The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.30.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
+The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.31.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
 
 The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
 [1,416-gene biological membership comparison](audits/cta-membership-20261026/index.md)

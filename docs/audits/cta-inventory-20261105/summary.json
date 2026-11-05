@@ -1,0 +1,58 @@
+{
+  "policy_id": "oncoref.cta-selection.2026-11-05.1",
+  "input_records": 19863,
+  "counts": {
+    "Unsafe": 18255,
+    "Other": 1006,
+    "CTA": 602
+  },
+  "restored_records": 259,
+  "restored_classifications": {
+    "Other:Translation": 247,
+    "Unsafe": 12
+  },
+  "existing_classification_changes": 0,
+  "restored_historical_exclusions_reassessed": [
+    {
+      "protein_group_label": "P2RX5-TAX1BP3",
+      "historical_pre_diffuseness_Unsafe_reasons": "DICE immune",
+      "classification": "Other:Translation"
+    },
+    {
+      "protein_group_label": "ENSG00000258461",
+      "historical_pre_diffuseness_Unsafe_reasons": "DICE immune",
+      "classification": "Other:Translation"
+    }
+  ],
+  "stored_zero_rna_screen": {
+    "cancer_present_required_bulk_complete": 19312,
+    "adult_and_reproductive_bulk_zero": 40,
+    "also_developmental_measured": 22,
+    "developmental_measurement_missing": 18,
+    "also_developmental_zero": 0,
+    "also_no_recorded_adult_protein": 0,
+    "interpretation": "Stored RNA summary values equal zero; no claim of whole-protein absence or exhaustive normal-cell coverage."
+  },
+  "preliminary_expression_profile": {
+    "matches": 66,
+    "classification_counts": {
+      "Other:Nonreproductive": 55,
+      "Unsafe": 6,
+      "Other:Translation": 5
+    },
+    "disposition_counts": {
+      "normal_coverage_review_required": 40,
+      "normal_evidence_hold": 15,
+      "excluded_by_normal_evidence": 6,
+      "translation_review": 5
+    },
+    "interpretation": "Existing numerical screen: replicated tumor RNA at least 10 TPM in two samples (or reviewed tumor protein), measured adult RNA below nominal 2-unit assay floors, no positive adult protein call in the profile's measurement inputs, measured developmental lineage means below 2 TPM, and no qualifying reproductive/developmental association. Curated knowledge and rare-cell counterevidence is assessed separately and overrides the screen."
+  },
+  "limitations": [
+    "Required bulk coverage does not establish coverage of every cell type, age, physiological state or protein assay.",
+    "Routine tissue summaries and developmental lineage means are not maxima across all donors or individual cells.",
+    "Small positive developmental RNA values can reflect assay/mapping uncertainty; stored-zero screening is not a biological detection limit.",
+    "Missing measurements are reported as gaps, never imputed to zero.",
+    "No numerical RNA profile establishes translation, HLA presentation, receptor specificity or clinical safety."
+  ]
+}

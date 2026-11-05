@@ -12,7 +12,7 @@ from copy import deepcopy
 
 import pandas as pd
 
-CONTRACT_ID = "oncoref.cta-decision-contract.2026-11-04.2"
+CONTRACT_ID = "oncoref.cta-decision-contract.2026-11-05.1"
 ROLE_POLICY_ID = "oncoref.sequence-roles.2026-11-04.1"
 
 _CONTRACT = {
@@ -25,7 +25,9 @@ _CONTRACT = {
         "An OncoRef CTA candidate is a reference-resolved protein with supported "
         "cancer expression and qualifying reproductive or developmental association "
         "that passes the named normal-tissue evidence, coverage and selection rules. "
-        "Sequence realization requires separately qualified translation records."
+        "CTA admission requires qualifying coding annotation or supported ncORF evidence "
+        "and qualification of the exact selected translation. Every input record is "
+        "assessed, including those with insufficient translation support."
     ),
     "categories": {
         "CTA": "Candidate under the named policy; not presentation or clinical clearance",
@@ -36,7 +38,7 @@ _CONTRACT = {
         "screened": "Declared assessment completed; not exhaustive biological coverage",
         "incomplete_evidence": "Required coverage or evidence resolution is incomplete",
         "normal_evidence_hold": "Normal evidence requires review without establishing exclusion",
-        "translation_review": "Selected translation requires record-level qualification",
+        "translation_review": "Translation support or the selected record requires qualification",
         "unassessed": "No applicable selection policy or no completed assessment",
     },
     "interpretation_states": {
@@ -75,7 +77,7 @@ _CONTRACT = {
 # Stable IDs describe independent questions. Display order never determines an
 # entity's final class; all applicable evidence remains in the decision audit.
 _GATES = (
-    ("universe", "Reference and protein universe", "identity"),
+    ("universe", "Reference and complete candidate inventory", "identity"),
     ("normal_bulk", "Normal bulk", "normal_evidence"),
     ("normal_clusters", "HPA tissue clusters", "normal_evidence"),
     ("normal_hpa_immune", "HPA immune", "normal_evidence"),

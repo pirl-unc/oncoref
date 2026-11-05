@@ -2,7 +2,7 @@
 
 Descriptive policy `oncoref.normal-expression-breadth.2026-11-04.1` uses bulk tiers from
 `oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda`. **No admission cutoff or membership change is introduced.**
-The report covers 19,839 distinct member loci in the qualified reference
+The report covers 20,099 distinct member loci in the qualified reference
 universe, each once; these are gene profiles, not protein-group counts.
 
 Skin, spleen and thymus now resolve to **Protected**. The historical October panel

@@ -88,12 +88,49 @@ def test_contract_is_detached_and_nonhuman_selection_remains_unavailable():
     )
 
 
-def test_universe_accounting_distinguishes_input_inventory_and_classified_groups():
+def test_entire_inventory_is_classified_with_translation_support_separate():
     summary = cta_selection.coverage()
     counts = summary["universe_counts"]
     assert counts["classified_groups"] == len(cta_selection.results())
     assert counts["input_groups"] == counts["classified_groups"] + counts["out_of_universe_groups"]
     assert counts["classified_gene_loci"] <= counts["input_gene_loci"]
-    assert counts["out_of_universe_groups"] > 0
-    assert counts["out_of_universe_gene_loci"] > 0
+    assert counts["out_of_universe_groups"] == 0
+    assert counts["out_of_universe_gene_loci"] == 0
+    assert counts["input_groups"] == counts["classified_groups"]
+    assert counts["translation_support_insufficient_groups"] == 259
     assert summary["universe"].startswith(str(counts["classified_groups"]))
+
+
+def test_insufficient_translation_support_does_not_hide_normal_exclusion():
+    import json
+    from pathlib import Path
+
+    import pandas as pd
+
+    root = Path(__file__).resolve().parents[1]
+    prior = pd.read_csv(root / "docs/audits/cta-inventory-20261105/formerly-out-of-universe.csv.gz")
+    profiles = cta_selection.profiles().set_index("entity_id")
+    restored = profiles.loc[prior.protein_equivalence_group_id]
+    assert len(restored) == 259
+    assert not restored.translation_qualified.any()
+    assert not restored.translation_support_eligible.any()
+    assert set(restored.classification) <= {"Unsafe", "Other:Translation"}
+    assert restored.gene_ids.map(len).gt(0).all()
+    roles = cta_selection.sequence_dispositions().set_index("entity_id").loc[restored.index]
+    assert roles.loc[restored.category.eq("Unsafe"), "shared_sequence"].eq("exclude").all()
+    assert roles.loc[restored.category.eq("Other"), "shared_sequence"].eq("review").all()
+    assert not roles.direct_target_candidate.any()
+    frozen = pd.read_csv(
+        root / "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz"
+    )
+    members = frozen.set_index("protein_equivalence_group_id").member_gene_ids.map(json.loads)
+    assert restored.gene_ids.map(list).equals(members.loc[restored.index].rename("gene_ids"))
+
+
+def test_expression_profile_never_labels_known_normal_production_as_restricted():
+    profiles = cta_selection.profiles().set_index("label")
+    examples = profiles.loc[["IFNW1", "IFNA4", "MRGPRX4", "CNGA2", "SCN10A", "GFRAL"]]
+    assert examples.preliminary_tumor_restriction_profile.all()
+    assert examples.category.eq("Unsafe").all()
+    assert examples.tumor_restriction_status.eq("excluded_by_normal_evidence").all()
+    assert not examples.evidence_flags.map(lambda flags: "tumor_restricted_lead" in flags).any()

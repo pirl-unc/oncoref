@@ -4,16 +4,16 @@
     "oncoref/data/gene-knowledge.json": "b230ceda243bc77c5ca926abe394d3aa9400b1e174561bcd5dee744fac95305f",
     "oncoref/data/cta-finding-migrations.json": "14c54e4a8c9320f0a5babfc05ed1bd048b0e4a3f2bac2cc3b2c66c5582a507ee",
     "oncoref/data/tcr-trial-evidence.json": "7ef47d7a23e57364bdeff10d4508703451f0e2831834dcbe88bee0c90d3a6413",
-    "oncoref/data/cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd",
-    "oncoref/data/cta-selection.json": "fe455b9176d98edacb9e2248a2b3e07d99f39ff2c76b77ecb72813b83b4ce1a2"
+    "oncoref/data/cta-selection-human.csv.gz": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d",
+    "oncoref/data/cta-selection.json": "5559f23910bb16dc1468b5ca7f0ed74befc886c5bb95d0498a6fb4c9d882d2e7"
   },
   "outputs": {
     "baseline-contract-pr.csv.gz": "1fdd7e5fb7778b5af81f4dcb198bb847defcff3815afe906c1de931e989a8a46",
     "baseline.json": "4bf7bc5c71c9501e8c2231eb3420c96ced9c4df2444ec0f1b4af31dce289e959",
-    "changes-from-contract-pr.csv": "5f6f6113eea710ccacc4e81af281cf5852ff6a734520c4b176fd5595f3dbc249",
+    "changes-from-contract-pr.csv": "37e5dfe812372ebff47764b4eb9d572f218cfa5bf085de642e584c1d83de96ed",
     "clinical-counterevidence.json": "7ef47d7a23e57364bdeff10d4508703451f0e2831834dcbe88bee0c90d3a6413",
     "current-findings.csv.gz": "ab98f89578cd699507a3fde71e215562a78ac15f4ac2d4a7b4ae280f94bdc7d1",
     "historical-dispositions.csv": "fbb3a62edfa301c226f7faf2b6f54980e7d3ff3fa85e6eb6dca9ee13ace3727a",
-    "index.md": "c14686890f38e9ba880b2bee6aa3091f8cbee7de795b0c255af3b06f72f50784"
+    "index.md": "60be6ca6a070850d69c7c1fe4eb253b1f5e7d1b5e1e06c0beea9133ea11555e5"
   }
 }

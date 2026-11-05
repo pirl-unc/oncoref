@@ -137,7 +137,10 @@ def missing_expression_strip(ax, frame: pd.DataFrame, x: str, *, color=None, nor
     ax.set_ylim(0, 1)
     ax.set_yticks([])
     ax.set_title(
-        f"Embryonic measurement unavailable · {len(band):,} groups", loc="left", fontsize=11, pad=8
+        f"Embryonic measurement unavailable · {len(band):,} proteins",
+        loc="left",
+        fontsize=11,
+        pad=8,
     )
     labels = highlight_antigens(ax, band, x, "band_position")
     return labels
@@ -296,7 +299,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
         style.title(
             fig,
             "Selected CTA with adult/placental and embryonic RNA ≥5",
-            f"Labels {number} of 3 · {len(part)} of {len(high)} groups · color: healthy maximum nTPM",
+            f"Labels {number} of 3 · {len(part)} of {len(high)} proteins · color: healthy maximum nTPM",
         )
         ax.scatter(high[reproductive], high[embryo], c="#C8D0D6", alpha=0.35, s=28)
         points = ax.scatter(
@@ -322,7 +325,7 @@ def expression_figures(facts: pd.DataFrame, out: Path) -> None:
             None,
             out,
             f"selected-high-both-{number}",
-            "Colored points and labels cover one third of the selected proteins ≥5 on both axes; gray points show the other groups.\nPanels share the same axes. This descriptive threshold does not replace developmental cell-support requirements.",
+            "Colored points and labels cover one third of the selected proteins ≥5 on both axes; gray points show the other proteins.\nPanels share the same axes. This descriptive threshold does not replace developmental cell-support requirements.",
             colorbar=colorbar,
         )
     selected["embryonic_plot_status"] = np.where(
@@ -815,7 +818,7 @@ This audit distinguishes absent accepted rows, partial tissue coverage and unres
     )
     overview = f"""# CTA and oncofetal selection
 
-**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, and {counts.get("Other", 0):,} Other ({held_other:,} of them Held)**, with evidence status recorded independently, across {len(facts):,} proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; {n_out_of_universe:,} out-of-universe groups are listed separately). Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**{counts.get("CTA", 0):,} CTA proteins ({summary["selected_member_loci"]:,} loci), {counts.get("Unsafe", 0):,} Unsafe, and {counts.get("Other", 0):,} Other ({held_other:,} of them Held)**, with evidence status recorded independently, across all {len(facts):,} candidate proteins (identical selected reference sequences counted together; every record enters classification). Translation support and reference quality are CTA admission gates; {n_out_of_universe:,} records are outside the classification path. Policy: `{summary["policy"]}`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
 {pdf_link} · {deck_link} · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
@@ -839,9 +842,9 @@ embryonic evidence remains independent and its concentration is unassessed.
 - **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage, qualified selected translations, sequence-overlap rules and acceptable normal expression all pass.
 - **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, accepted reviewed normal-cell evidence, or retained clinical exclusion evidence. Unresolved findings require review without independently establishing Unsafe. This is a research-policy exclusion, not demonstrated toxicity.
 - **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` independently records missing coverage, normal-evidence holds or translation review.
-- **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
+- **Every record classified:** missing optional panels alone do not block CTA admission; observed evidence still applies, and no human protein has a null category.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels contribute measured evidence; their missing coverage alone does not block CTA admission.
 
 ## Other categories
 
@@ -1089,6 +1092,9 @@ gtex.tissue_rna("v11")                          # native matrix + provenance
 
 All results are packaged and checksum-verified. Frozen release audits remain separately accessible; changing the current policy does not rewrite their categories or figures.
 """)
+    concentration_example = facts.loc[facts.protein_group_label.eq("MTCP1")].iloc[0]
+    profiles = cta_selection.profiles()
+    profile_matches = profiles[profiles.preliminary_tumor_restriction_profile]
     presentation = {
         "summary": summary,
         "report_sha256": hashlib.sha256(
@@ -1105,7 +1111,14 @@ All results are packaged and checksum-verified. Frozen release audits remain sep
         "annotated": annotated,
         "unannotated": counts.get("CTA", 0) - annotated,
         "other_subtypes": summary["other_subtypes"],
-        "tumor_restricted_leads": int(facts.tumor_restricted_lead.sum()),
+        "preliminary_tumor_restriction_profile_matches": len(profile_matches),
+        "tumor_restriction_statuses": profile_matches.tumor_restriction_status.value_counts().to_dict(),
+        "concentration_example": {
+            "label": concentration_example.protein_group_label,
+            "classification": concentration_example.classification,
+            "diffuseness_pct": 100 * concentration_example.hpa_diffuseness,
+            "unsafe_reasons": concentration_example.Unsafe_reasons,
+        },
         "assessment_statuses": facts.assessment_status.value_counts().to_dict(),
         "normal_gap_counts": records(normal_gaps),
         "evidence_gap_counts": {name: int(incomplete[name].sum()) for name in gap_columns},

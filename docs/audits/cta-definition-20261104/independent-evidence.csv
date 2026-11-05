@@ -1,10 +1,10 @@
 combination,groups,Normal bulk,HPA tissue clusters,Rare vital-tissue cell expression,Rare Protected-cell expression review,HPA normal protein,Adult cornea,DICE immune,Monaco immune,HPA immune
 1,5586,True,True,True,True,True,True,True,True,True
 2,1761,True,True,True,True,True,True,True,True,False
-3,1361,False,False,False,False,False,False,False,False,False
+3,1607,False,False,False,False,False,False,False,False,False
 4,946,True,True,True,True,False,True,True,True,True
 5,768,True,True,True,True,True,True,False,False,False
 6,503,True,True,True,True,True,True,True,False,False
 7,498,True,True,True,True,True,False,False,False,False
 8,497,True,True,True,False,False,False,False,False,False
-9,433,True,False,False,False,False,False,False,False,False
+9,435,True,False,False,False,False,False,False,False,False

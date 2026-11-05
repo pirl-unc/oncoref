@@ -55,8 +55,8 @@ z
    <g id="patch_5">
     <path d="M 368.545604 220.622172 
 L 424.702382 220.622172 
-L 424.702382 178.978525 
-L 368.545604 178.978525 
+L 424.702382 171.451459 
+L 368.545604 171.451459 
 z
 " clip-path="url(#p4afc5bc871)" style="fill: #173b55"/>
    </g>
@@ -103,8 +103,8 @@ z
    <g id="patch_11">
     <path d="M 789.721437 220.622172 
 L 845.878215 220.622172 
-L 845.878215 207.373311 
-L 789.721437 207.373311 
+L 845.878215 207.312116 
+L 789.721437 207.312116 
 z
 " clip-path="url(#p4afc5bc871)" style="fill: #173b55"/>
    </g>
@@ -275,7 +275,7 @@ L 852.897812 41.156719
     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="326.428021" y="164.337049" transform="rotate(-0 326.428021 164.337049)">1,761</text>
    </g>
    <g id="text_10">
-    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="396.623993" y="176.576181" transform="rotate(-0 396.623993 176.576181)">1,361</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="396.623993" y="169.049115" transform="rotate(-0 396.623993 169.049115)">1,607</text>
    </g>
    <g id="text_11">
     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="466.819965" y="189.274281" transform="rotate(-0 466.819965 189.274281)">946</text>
@@ -293,7 +293,7 @@ L 852.897812 41.156719
     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="747.603854" y="203.012707" transform="rotate(-0 747.603854 203.012707)">497</text>
    </g>
    <g id="text_16">
-    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="817.799826" y="204.970968" transform="rotate(-0 817.799826 204.970968)">433</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="817.799826" y="204.909772" transform="rotate(-0 817.799826 204.909772)">435</text>
    </g>
    <g id="text_17">
     <text style="font-size: 21px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="221.134062" y="23.156719" transform="rotate(-0 221.134062 23.156719)">Overlapping reasons survive the funnel</text>

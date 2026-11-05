@@ -66,8 +66,13 @@ def build():
 
 Policy `{meta["policy_id"]}` assesses **{meta["records"]:,} Ensembl 115 peptide records**;
 **{meta["qualified_records"]:,}** pass the record-level target rule. Across the
-{len(facts):,} classified groups, **{qualified:,} selected representatives qualify**.
+{len(facts):,} classified proteins, **{qualified:,} selected representatives qualify**.
 This is annotation-based admission, not experimental proof of production.
+
+Every candidate record receives a classification. The former entry requirement
+for coding annotation or established ncORF support is now a CTA admission gate;
+{int((~facts.translation_support_eligible).sum()):,} records fail that requirement
+and remain assessed for normal evidence. [Complete inventory audit](../cta-inventory-20261105/index.md).
 
 ## What qualifies
 

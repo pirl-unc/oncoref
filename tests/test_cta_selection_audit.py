@@ -379,8 +379,7 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     # Later reviewed cell rules can release tissue/immune RNA exclusions;
     # they cannot erase clinical injury, positive protein or bulk exclusions.
     left = old_unsafe - new_unsafe
-    outside = set(pd.read_csv(RELEASE / "out-of-universe.csv.gz").protein_equivalence_group_id)
-    cell_released = left - outside
+    cell_released = left
     cell_layers = [
         "unsafe:HPA tissue clusters",
         "unsafe:HPA immune",
@@ -390,7 +389,18 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     other_layers = [c for c in before if c.startswith("unsafe:") and c not in cell_layers]
     assert before.loc[sorted(cell_released), cell_layers].astype(bool).any(axis=1).all()
     assert not before.loc[sorted(cell_released), other_layers].astype(bool).any(axis=None)
-    assert len(cell_released) <= 15
+    previous_inventory = set(
+        pd.read_csv(
+            ROOT / "docs/audits/cta-inventory-20261105/baseline-1.30.0.csv.gz",
+            usecols=["protein_equivalence_group_id"],
+        ).protein_equivalence_group_id
+    )
+    assert len(cell_released & previous_inventory) <= 15
+    # Restoring the complete inventory exposes two older DICE exclusions that
+    # do not meet the current cell rule. Their translations still require review.
+    restored = after.loc[sorted(cell_released - previous_inventory)]
+    assert set(restored.representative_gene_id) == {"ENSG00000258461", "ENSG00000257950"}
+    assert restored.classification.eq("Other:Translation").all()
     unsafe_layers = [c for c in after if c.startswith("unsafe:")]
     assert after.loc[sorted(new_unsafe - old_unsafe), unsafe_layers].any(axis=1).all()
     changed = frozen.category.fillna("Unassigned").ne(before.category.fillna("Unassigned"))

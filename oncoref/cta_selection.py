@@ -104,7 +104,10 @@ def _checked_table(name: str) -> pd.DataFrame:
         raise ValueError(f"CTA selection artifact checksum mismatch: {name}")
     with path.open("rb") as handle:
         return pd.read_csv(
-            handle, compression="gzip" if name.endswith(".gz") else None, keep_default_na=False
+            handle,
+            compression="gzip" if name.endswith(".gz") else None,
+            keep_default_na=False,
+            low_memory=False,
         )
 
 
@@ -268,6 +271,16 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
     ``translation_qualified`` checks the selected primary-locus reference sequence;
     its reasons, policy and sequence hashes remain separate from normal evidence.
     Qualification is annotation-based admission, not experimental translation proof.
+    All candidate records enter classification. ``translation_support_eligible``
+    records the former coding/established-ncORF entry rule; its reasons remain
+    visible even when normal evidence independently establishes Unsafe.
+    ``preliminary_tumor_restriction_profile`` describes a numerical RNA/protein
+    screen only. ``tumor_restriction_status`` applies the independent exclusions,
+    evidence holds and translation review before any restriction claim. A low
+    routine-panel maximum cannot negate localized normal protein production.
+    ``adult_normal_protein_detected`` covers the profile's measurement inputs;
+    separate curated normal-cell findings can establish production even when
+    that flag is false. Consult findings and the final classification together.
     """
     selected = resolve_species(species)
     result = results(species=selected)
@@ -279,6 +292,8 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         "replicated_tumor_rna",
         "reliable_tumor_protein",
         "cancer_evidence",
+        "preliminary_tumor_restriction_profile",
+        "tumor_restriction_status",
         "normal_max_ntpm",
         "normal_max_tpm",
         "normal_max_cp10k",
@@ -298,6 +313,8 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         "rare_cell_type",
         "unsafe_sequence_overlap_pct",
         "translation_qualified",
+        "translation_support_eligible",
+        "translation_support_reasons",
         "translation_qualification_reasons",
         "translation_qualification_policy",
         "representative_sequence_sha256s",
@@ -315,6 +332,8 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
                 "rare_cell_type",
                 "translation_qualification_reasons",
                 "translation_qualification_policy",
+                "translation_support_reasons",
+                "tumor_restriction_status",
             }:
                 evidence[column] = evidence[column].astype("string").replace("", pd.NA)
             elif (

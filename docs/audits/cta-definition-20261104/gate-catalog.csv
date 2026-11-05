@@ -1,5 +1,5 @@
 gate_id,name,axis
-universe,Reference and protein universe,identity
+universe,Reference and complete candidate inventory,identity
 normal_bulk,Normal bulk,normal_evidence
 normal_clusters,HPA tissue clusters,normal_evidence
 normal_hpa_immune,HPA immune,normal_evidence

@@ -94,7 +94,7 @@ TABLE_COLUMNS = {
 }
 HUMAN_RULES = {
     "Translation qualification": (
-        "A complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. Failure requires review, never Unsafe.",
+        "Qualifying reference coding annotation or supported ncORF evidence is required for CTA admission, followed by a complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. All candidate records still undergo normal-evidence assessment. Translation failure requires review, never Unsafe.",
         ["Ensembl-115"],
     ),
     "Reproductive or developmental expression": (
@@ -117,7 +117,7 @@ HUMAN_RULES = {
         ["hpa_normal_tissue"],
     ),
     "Reproductive concentration": (
-        "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
+        "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding thymus; thymus remains Protected for hazard assessment. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
         ["hpa_rna_consensus"],
     ),
     "Rare vital-tissue cell expression": (
@@ -133,7 +133,7 @@ HUMAN_RULES = {
         [],
     ),
     "Required RNA coverage": (
-        "Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the only blocking requirement: every nonreproductive tissue concept measured for every protein member. The GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels are used when present and never block a label.",
+        "Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the required RNA coverage panel: every nonreproductive tissue concept measured for every protein member. Missing coverage in the separate GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels does not itself block admission; observed normal evidence from these panels still applies.",
         [
             "hpa_rna_consensus",
             "hpa_brain",
@@ -648,7 +648,10 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
                     ),
                 )
             elif layer == "Translation qualification":
-                row["reason"] = r["translation_qualification_reasons"]
+                row["reason"] = (
+                    f"Translation support: {r['translation_support_reasons']}; "
+                    f"exact-record qualification: {r['translation_qualification_reasons']}"
+                )
                 row["source_url"] = "https://pirl-unc.github.io/oncoref/translation-qualification/"
             elif layer == "Cancer expression":
                 row["reason"] = (

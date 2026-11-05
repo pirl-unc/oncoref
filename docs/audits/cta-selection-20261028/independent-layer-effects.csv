@@ -1,15 +1,15 @@
 layer,candidate_exclusions_anywhere,Unsafe_evidence_anywhere,CTA_added_if_layer_removed,Unsafe_reclassified_if_layer_removed
-Reproductive / embryonic association,1975,0,400,0
-Cancer expression,65,0,0,0
-HPA normal protein,12359,10160,41,41
-Required RNA coverage,292,0,4,0
+Reproductive / embryonic association,2175,0,400,0
+Cancer expression,81,0,0,0
+HPA normal protein,12360,10161,41,42
+Required RNA coverage,550,0,4,0
 Reproductive concentration,2884,0,4,0
-Translation qualification,529,0,24,0
-Normal bulk,17533,17528,153,455
+Translation qualification,788,0,24,0
+Normal bulk,17535,17530,153,457
 HPA tissue clusters,17065,17056,81,153
 HPA immune,8009,7978,8,11
 Monaco immune,11306,11271,6,15
-DICE immune,11698,11626,14,30
+DICE immune,11708,11635,14,39
 Adult cornea,12098,12098,1,4
 Accepted normal-protein evidence,9,8,3,2
 Reviewed normal-cell knowledge,148,32,3,30

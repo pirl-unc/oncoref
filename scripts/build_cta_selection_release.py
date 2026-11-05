@@ -438,6 +438,11 @@ def universe_counts(decisions: pd.DataFrame, audit: Path) -> dict:
         "classified_gene_loci": len(inside_genes),
         "out_of_universe_gene_loci": len(outside_genes),
         "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
+        "translation_support_eligible_groups": int(decisions.translation_support_eligible.sum()),
+        "translation_support_insufficient_groups": int(
+            (~decisions.translation_support_eligible).sum()
+        ),
+        "scope_note": "Every candidate record enters classification; translation support is a CTA admission requirement, not an inventory exclusion.",
     }
 
 
@@ -464,7 +469,6 @@ def build(audit: Path = AUDIT) -> None:
         "knowledge_reproductive_support",
         "tumor_restricted_rna_support",
         "reliable_tumor_protein",
-        "tumor_restricted_lead",
     ]
     for row in decisions.to_dict("records"):
         identities = [
@@ -546,6 +550,21 @@ def build(audit: Path = AUDIT) -> None:
             "replicated_tumor_rna": decisions.tumor_restricted_rna_support,
             "reliable_tumor_protein": decisions.reliable_tumor_protein,
             "cancer_evidence": decisions.cancer_association,
+            "preliminary_tumor_restriction_profile": decisions.tumor_restricted_profile,
+            "tumor_restriction_status": decisions.apply(
+                lambda r: (
+                    "not_profile_match"
+                    if not r.tumor_restricted_profile
+                    else "excluded_by_normal_evidence"
+                    if r.category == "Unsafe"
+                    else r.assessment_status
+                    if r.assessment_status != "screened"
+                    else "reviewed_panel_restriction"
+                    if r.normal_restriction_reviewed
+                    else "normal_coverage_review_required"
+                ),
+                axis=1,
+            ),
             "normal_max_ntpm": decisions.healthy_maximum_ntpm,
             "normal_max_tpm": decisions.healthy_maximum_tpm,
             "normal_max_cp10k": decisions.healthy_maximum_cp10k,
@@ -569,6 +588,8 @@ def build(audit: Path = AUDIT) -> None:
                 decisions.category.ne("Unsafe")
             ),
             "translation_qualified": decisions.translation_qualified,
+            "translation_support_eligible": decisions.translation_support_eligible,
+            "translation_support_reasons": decisions.translation_support_reasons,
             "translation_qualification_reasons": decisions.translation_qualification_reasons,
             "translation_qualification_policy": decisions.translation_qualification_policy,
             "representative_sequence_sha256s": decisions.representative_sequence_sha256s,

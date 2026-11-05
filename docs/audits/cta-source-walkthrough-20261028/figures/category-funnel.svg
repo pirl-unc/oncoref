@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-05T13:09:26.884418</dc:date>
+    <dc:date>2026-11-05T14:23:37.823804</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -35,7 +35,7 @@ L 945 465.696
 L 945 243.936 
 L 307.8 243.936 
 z
-" style="fill: #ffffff"/>
+" style="fill: #f7f9f8"/>
    </g>
    <g id="patch_3">
     <path d="M 307.8 254.487484 
@@ -43,7 +43,7 @@ L 945 254.487484
 L 945 276.305806 
 L 307.8 276.305806 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #087e8b"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_4">
     <path d="M 307.8 290.255226 
@@ -51,7 +51,7 @@ L 676.404484 290.255226
 L 676.404484 312.073548 
 L 307.8 312.073548 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #087e8b"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_5">
     <path d="M 307.8 326.022968 
@@ -59,7 +59,7 @@ L 676.404484 326.022968
 L 676.404484 347.84129 
 L 307.8 347.84129 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #087e8b"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_6">
     <path d="M 307.8 361.79071 
@@ -67,7 +67,7 @@ L 674.118565 361.79071
 L 674.118565 383.609032 
 L 307.8 383.609032 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #087e8b"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_7">
     <path d="M 307.8 397.558452 
@@ -75,7 +75,7 @@ L 660.403049 397.558452
 L 660.403049 419.376774 
 L 307.8 419.376774 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #087e8b"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_8">
     <path d="M 307.8 433.326194 
@@ -83,7 +83,7 @@ L 651.830852 433.326194
 L 651.830852 455.144516 
 L 307.8 455.144516 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #087e8b"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_9">
     <path d="M 945 254.487484 
@@ -91,7 +91,7 @@ L 945 254.487484
 L 945 276.305806 
 L 945 276.305806 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #b18335"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_10">
     <path d="M 676.404484 290.255226 
@@ -99,7 +99,7 @@ L 945 290.255226
 L 945 312.073548 
 L 676.404484 312.073548 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #b18335"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_11">
     <path d="M 676.404484 326.022968 
@@ -107,7 +107,7 @@ L 945 326.022968
 L 945 347.84129 
 L 676.404484 347.84129 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #b18335"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_12">
     <path d="M 674.118565 361.79071 
@@ -115,7 +115,7 @@ L 945 361.79071
 L 945 383.609032 
 L 674.118565 383.609032 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #b18335"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_13">
     <path d="M 660.403049 397.558452 
@@ -123,7 +123,7 @@ L 945 397.558452
 L 945 419.376774 
 L 660.403049 419.376774 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #b18335"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_14">
     <path d="M 651.830852 433.326194 
@@ -131,7 +131,7 @@ L 945 433.326194
 L 945 455.144516 
 L 651.830852 455.144516 
 z
-" clip-path="url(#pf0fbb8f3b6)" style="fill: #b18335"/>
+" clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
@@ -318,7 +318,7 @@ z
    <text style="font-weight: 700; font-size: 26px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="28.512" transform="rotate(-0 59.4 28.512)">Where proteins become CTA or Other</text>
   </g>
   <g id="text_31">
-   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="51.9552" transform="rotate(-0 59.4 51.9552)">OncoRef 1.30.0  |  19,604 representative proteins  |  Normal assessment first</text>
+   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="51.9552" transform="rotate(-0 59.4 51.9552)">OncoRef 1.31.0  |  19,863 representative proteins  |  Normal assessment first</text>
   </g>
   <g id="text_32">
    <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #087e8b" x="74.52" y="101.376" transform="rotate(-0 74.52 101.376)">602</text>
@@ -327,7 +327,7 @@ z
    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="74.52" y="129.888" transform="rotate(-0 74.52 129.888)">CTA</text>
   </g>
   <g id="text_34">
-   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #ac493b" x="325.08" y="101.376" transform="rotate(-0 325.08 101.376)">18,243</text>
+   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #ac493b" x="325.08" y="101.376" transform="rotate(-0 325.08 101.376)">18,255</text>
   </g>
   <g id="text_35">
    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="325.08" y="129.888" transform="rotate(-0 325.08 129.888)">Unsafe</text>
@@ -342,7 +342,7 @@ z
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="575.64" y="146.9952" transform="rotate(-0 575.64 146.9952)">passed the normal screen, failed a target gate</text>
   </g>
   <g id="text_39">
-   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #8995a4" x="826.2" y="101.376" transform="rotate(-0 826.2 101.376)">246</text>
+   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #8995a4" x="826.2" y="101.376" transform="rotate(-0 826.2 101.376)">493</text>
   </g>
   <g id="text_40">
    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="826.2" y="129.888" transform="rotate(-0 826.2 129.888)">Unresolved</text>
@@ -354,7 +354,7 @@ z
    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="184.3776" transform="rotate(-0 59.4 184.3776)">Follow the 1,115 proteins that pass normal safety and coverage</text>
   </g>
   <g id="text_43">
-   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="205.2864" transform="rotate(-0 59.4 205.2864)">18,243 Unsafe and 246 Other proteins with an unresolved normal screen stay outside this track; none is unassessed.</text>
+   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="205.2864" transform="rotate(-0 59.4 205.2864)">18,255 Unsafe and 493 Other proteins with an unresolved normal screen stay outside this track; none is unassessed.</text>
   </g>
   <g id="text_44">
    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #087e8b" x="313.2" y="234.432" transform="rotate(-0 313.2 234.432)">CTA-eligible so far</text>
@@ -377,7 +377,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="pf0fbb8f3b6">
+  <clipPath id="p9fcbca50c5">
    <rect x="307.8" y="243.936" width="637.2" height="221.76"/>
   </clipPath>
  </defs>

@@ -33,7 +33,7 @@ Native ORFdata identity: `{m["orfdata_identity"]}`.
 The peptide inventory has **{len(c["source_gene_loci_without_current_decision"]):,} source loci
 without a current decision**; these require review. **{len(c["classified_gene_loci_without_translation"]):,}
 classified loci have no translation in this inventory**. The coverage payload retains
-all **{len(c["out_of_universe_groups"]):,} out-of-universe groups** and
+**{len(c["out_of_universe_groups"]):,} records outside the classification path** and
 **{len(c["nc_orf_nominations_without_sequence_in_this_reference_bundle"]):,} ncORF nominations**
 without claiming an empirical ncORF sequence inventory. These lists are different
 coverage questions and must not be added together as a disjoint denominator.
@@ -49,7 +49,7 @@ occurrence's exclusion. Missing records never supply implicit allowance.
 Build from the verified native ORFdata snapshot and exact reference manifest:
 
 ```sh
-python scripts/build_cta_sequence_bundle.py SOURCE BUNDLE --release 1.30.0
+python scripts/build_cta_sequence_bundle.py SOURCE BUNDLE --release {m["release"]}
 python scripts/build_cta_sequence_transition.py HISTORICAL BUNDLE
 ```
 

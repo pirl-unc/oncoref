@@ -602,3 +602,15 @@ def test_translation_failure_blocks_admission_without_erasing_unsafe():
         policy.classify(
             facts, [EvidenceLayer("Translation qualification", yes, yes)], entity_column="entity"
         )
+
+
+def test_translation_admission_requires_support_and_exact_record_qualification():
+    facts = pd.DataFrame(
+        {
+            "translation_support_eligible": [True, False, True, False],
+            "translation_qualified": [True, True, False, False],
+        }
+    )
+    assert policy.translation_admission(facts).tolist() == [True, False, False, False]
+    with pytest.raises(ValueError, match="boolean translation evidence"):
+        policy.translation_admission(facts.assign(translation_support_eligible=None))

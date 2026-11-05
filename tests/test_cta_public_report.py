@@ -54,3 +54,33 @@ def test_walkthrough_slide_status_counts_cover_every_classified_group():
         presentation["assessment_statuses"]
         == cta_selection.results().assessment_status.value_counts().to_dict()
     )
+    example = presentation["concentration_example"]
+    current = cta_selection.results().set_index("label").loc[example["label"]]
+    assert example["classification"] == current.classification
+    profiles = cta_selection.profiles()
+    matches = profiles[profiles.preliminary_tumor_restriction_profile]
+    assert presentation["preliminary_tumor_restriction_profile_matches"] == len(matches)
+    assert (
+        presentation["tumor_restriction_statuses"]
+        == matches.tumor_restriction_status.value_counts().to_dict()
+    )
+
+
+def test_inventory_audit_retains_baseline_and_discloses_restriction_conflicts():
+    audit = ROOT / "docs/audits/cta-inventory-20261105"
+    receipt = json.loads((audit / "manifest.json").read_text())
+    for key, base in [("inputs", ROOT), ("outputs", audit)]:
+        for name, expected in receipt[key].items():
+            assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
+    summary = json.loads((audit / "summary.json").read_text())
+    assert summary["input_records"] == len(cta_selection.results())
+    assert summary["existing_classification_changes"] == 0
+    assert sum(summary["restored_classifications"].values()) == summary["restored_records"]
+    preliminary = summary["preliminary_expression_profile"]
+    assert sum(preliminary["disposition_counts"].values()) == preliminary["matches"]
+    assert preliminary["disposition_counts"]["excluded_by_normal_evidence"] == 6
+    zero = summary["stored_zero_rna_screen"]
+    assert zero["adult_and_reproductive_bulk_zero"] == (
+        zero["also_developmental_measured"] + zero["developmental_measurement_missing"]
+    )
+    assert zero["developmental_measurement_missing"] > 0

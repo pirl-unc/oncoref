@@ -40,7 +40,7 @@ Exact sequence grouping is not a validated approximate similarity rule.
 An Unsafe gene conservatively excludes its source isoforms, while positive
 allowance requires the qualified selected representative. Other isoforms require
 review. Gene-level evidence does not demonstrate isoform-specific production.
-Missing translations, source genes without decisions, out-of-universe groups and
+Missing translations, source genes without decisions, the empty legacy outside-inventory list and
 ncORF nominations without supplied peptide bytes remain explicit in `coverage`.
 
 The optional `oncoref[quantitative]` extra supports `bundle.as_orfdata()`. It loads
