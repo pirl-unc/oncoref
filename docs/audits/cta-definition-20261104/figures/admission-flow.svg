@@ -161,7 +161,7 @@ L 0 3.5
      </g>
     </g>
     <g id="text_8">
-     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="515.392812" y="412.795469" transform="rotate(-0 515.392812 412.795469)">Groups still eligible after this presentation stage</text>
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="515.392812" y="412.795469" transform="rotate(-0 515.392812 412.795469)">Proteins still eligible after this presentation stage</text>
     </g>
    </g>
    <g id="matplotlib.axis_2">
@@ -217,7 +217,8 @@ L -3.5 0
       </g>
      </g>
      <g id="text_13">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="174.932812" y="134.062033" transform="rotate(-0 174.932812 134.062033)">Reproductive presence</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(16.300781 128.011496)">Reproductive/developmental</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(124.614687 141.213645)">presence</text>
      </g>
     </g>
     <g id="ytick_6">

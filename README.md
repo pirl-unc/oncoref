@@ -10,7 +10,7 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 protein-equivalence groups**. The input inventory contains 19,863 groups; 259 remain explicitly outside the universe. Every classified human group has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 proteins** (identical selected reference sequences counted together; member loci retained). The input inventory contains 19,863 candidate protein records; 259 remain explicitly outside the universe. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
 [Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf).
 
 The [normal-tissue hazard ontology](docs/tissue-hazards.md) centralizes evidence-linked
@@ -52,8 +52,9 @@ all occurrences, ambiguity segments, coverage gaps and current policy roles.
 Earlier 215-, 447- and 1,416-gene accessors are frozen comparisons. The historical
 protein background remains separately pinned to the
 [v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
-and their explicit exclusion recipe. Candidate protein-equivalence groups
-represent identical chosen reference proteins, not every splice isoform.
+and their explicit exclusion recipe. Candidate proteins count identical selected
+reference sequences together and retain every member locus; the count does not
+enumerate every splice isoform or modified proteoform.
 [Normal-expression breadth](docs/audits/normal-breadth-20261104/index.md)
 remains a descriptive measure with missing-coverage bounds.
 

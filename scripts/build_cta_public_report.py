@@ -44,6 +44,7 @@ from oncoref import (  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
+PRESENTATION_REVISION = "2026-11-05.1"
 INK = "#173B55"
 TEAL = "#087E8B"
 AMBER = "#A76708"
@@ -79,8 +80,8 @@ def figures(facts, roles, coverage):
     ax.axis("off")
     ax.set(xlim=(0, 1), ylim=(0, 1))
     boxes = [
-        (0.02, 0.59, 0.25, 0.26, f"{u['input_groups']:,}\nInput\nprotein groups", INK),
-        (0.37, 0.59, 0.25, 0.26, f"{len(facts):,}\nClassified groups", TEAL),
+        (0.02, 0.59, 0.25, 0.26, f"{u['input_groups']:,}\nCandidate\nprotein records", INK),
+        (0.37, 0.59, 0.25, 0.26, f"{len(facts):,}\nClassified proteins", TEAL),
         (0.37, 0.13, 0.25, 0.23, f"{u['out_of_universe_groups']:,}\nOutside\nthe universe", MUTED),
     ]
     for i, (category, color) in enumerate([("CTA", TEAL), ("Other", AMBER), ("Unsafe", RUST)]):
@@ -118,7 +119,7 @@ def figures(facts, roles, coverage):
     ax.text(
         0.02,
         0.02,
-        "Literature nominations are an overlay. Group counts are disjoint; gene-locus memberships can overlap.",
+        "Identical selected reference sequences count together. Member loci remain separately traceable.",
         color=MUTED,
         fontsize=11,
     )
@@ -127,12 +128,15 @@ def figures(facts, roles, coverage):
         ROOT / "docs/audits/cta-source-walkthrough-20261028/figures/category-funnel.csv"
     )
     fig, ax = plt.subplots(figsize=(12, 6))
-    ax.barh(funnel.stage[::-1], funnel.eligible[::-1], color=TEAL)
+    labels = funnel.stage.str.replace(
+        "Reproductive/developmental presence", "Reproductive/developmental\npresence", regex=False
+    )
+    ax.barh(labels[::-1], funnel.eligible[::-1], color=TEAL)
     for i, value in enumerate(funnel.eligible[::-1]):
         ax.text(value + 10, i, f"{value:,}", va="center")
     ax.set_xlim(0, max(funnel.eligible) * 1.16)
     ax.spines[["top", "right", "left"]].set_visible(False)
-    ax.set_xlabel("Groups still eligible after this presentation stage")
+    ax.set_xlabel("Proteins still eligible after this presentation stage")
     ax.set_title(
         "Admission gates: every applicable requirement must pass",
         loc="left",
@@ -151,7 +155,7 @@ def figures(facts, roles, coverage):
     top.bar(range(len(combinations)), combinations.values, color=INK)
     for i, n in enumerate(combinations.values):
         top.text(i, n, f"{n:,}", ha="center", va="bottom", fontsize=10)
-    top.set_ylabel("Protein groups")
+    top.set_ylabel("Proteins")
     top.set_title(
         "Overlapping reasons survive the funnel", loc="left", fontsize=21, color=INK, pad=18
     )
@@ -238,6 +242,11 @@ def build():
     )
     roles = cta_selection.sequence_dispositions()
     coverage = cta_selection.coverage()
+    outside_path = ROOT / "docs/audits/cta-selection-20261028/out-of-universe.csv.gz"
+    outside = pd.read_csv(outside_path)
+    outside_counts = outside.reason.value_counts().to_dict()
+    if len(outside) != coverage["universe_counts"]["out_of_universe_groups"]:
+        raise ValueError("Out-of-universe records disagree with current coverage")
     contract = cta_selection.contract()
     counts = facts.category.value_counts().to_dict()
     levels = tissue_hazards.assessments().level.value_counts().to_dict()
@@ -287,15 +296,16 @@ def build():
             "What OncoRef calls a CTA",
             [
                 contract["definition"],
-                f"The current human policy produces {counts['CTA']:,} CTA, {counts['Unsafe']:,} Unsafe and {counts['Other']:,} Other groups. It evaluates {len(facts):,} protein-equivalence groups after the universe gate. CTA is a research candidate designation; it does not establish peptide-HLA presentation, receptor recognition, therapeutic abundance or clinical safety.",
-                "The reproductive umbrella includes testicular, other reproductive, placental and embryonic/fetal support. These routes remain distinguishable; developmental association does not imply adult testis restriction. A literature CTA name is a nomination, not an exemption from normal-tissue evidence.",
+                f"The current human policy produces {counts['CTA']:,} CTA, {counts['Unsafe']:,} Unsafe and {counts['Other']:,} Other proteins. It evaluates {len(facts):,} proteins after the universe gate, counting identical selected reference sequences together and retaining every member locus. This is not a complete inventory of splice isoforms or modified proteoforms.",
+                "CTA is a research candidate designation; it does not establish peptide-HLA presentation, receptor recognition, therapeutic abundance or clinical safety. Reproductive/developmental support includes adult reproductive tissues, placenta, extraembryonic tissues, embryo and fetus. These routes remain distinguishable; developmental association does not imply adult testis restriction.",
             ],
             "universe-accounting",
         ),
         (
             "From candidates to CTAs",
             [
-                "Begin with the pinned annotation and explicit gene/protein identities. Keep out-of-universe records visible. Collapse only the declared representative-sequence equivalence groups; preserve member loci and do not equate a group with every splice isoform.",
+                f"Begin with the pinned annotation and explicit gene/protein identities. Of {coverage['universe_counts']['input_groups']:,} candidate protein records, {len(outside):,} remain outside the universe: {outside_counts['nmd_or_cds_not_defined_only']:,} have reference CDS only in transcripts annotated for nonsense-mediated decay (NMD) or with CDS not defined; {outside_counts['single_study_ribo_seq']:,} have only single-study Ribo-seq support. These records fail the current entry rule; this does not establish absence or Unsafe status.",
+                "Entry requires a reference CDS from a qualifying coding-biotype transcript, or a noncanonical ORF with mass-spectrometry peptide evidence or at least two independent Ribo-seq studies. Count identical selected reference sequences together, preserve member loci and keep every out-of-universe record visible.",
                 "Apply all normal-tissue evidence independently. Accepted exclusion evidence establishes Unsafe. Unresolved findings or missing required coverage prevent admission and require review; they do not establish Unsafe. Every target must also pass reproductive/developmental association, cancer presence, concentration, translation qualification and sequence-containment rules.",
                 "The chart presents one readable order. Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Other includes assessed noncandidates and unresolved records; its subtype cannot replace its independent assessment status.",
             ],
@@ -339,17 +349,29 @@ def build():
             None,
         ),
         (
+            "Does CTA mean expressed only in cancer?",
+            [
+                "No. CTA admission requires cancer expression plus qualifying reproductive or developmental association. The CTA total is not a count of proteins absent from all normal tissues, including testis, placenta, embryo and fetus. Passing normal-tissue thresholds is not a claim of zero normal expression.",
+                "OncoRef does not currently certify or enumerate proteins expressed only in cancer and never elsewhere. A measurable restriction claim must name the normal tissues, cell populations, developmental stages, physiological states, assays and detection limits. Undetected RNA does not prove absent protein, and an unmeasured context is not negative evidence.",
+                "Cancer-specific altered sequences and peptides require a separate analysis from these reference-protein counts. A mutation, fusion or alternative transcript can create a target sequence even when the source gene is normally expressed; evidence for one such sequence cannot establish exclusivity of every product of the gene.",
+            ],
+            None,
+        ),
+        (
             "Reproduction and version changes",
             [
                 f"Selection policy: {coverage['policy_id']}. Role policy: {contract['role_policy_id']}. Translation policy: {translation_qualification.POLICY_ID}.",
                 "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. No target CTA count is an acceptance criterion.",
                 "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
+                f"Presentation revision {PRESENTATION_REVISION} clarifies protein counts, universe exclusions and reproductive/developmental scope. Scientific decisions and the published release assets are unchanged.",
             ],
             None,
         ),
     ]
     data = {
         "release": __version__,
+        "presentation_revision": PRESENTATION_REVISION,
+        "out_of_universe_reasons": outside_counts,
         "contract": contract,
         "coverage": coverage,
         "counts": counts,
@@ -389,6 +411,7 @@ def build():
         OUT / "manifest.json",
         ROOT / "docs/audits/cta-selection-20261028/manifest.json",
         ROOT / "docs/audits/cta-selection-20261028/reproducibility.json",
+        outside_path,
         ROOT / "docs/audits/cta-source-walkthrough-20261028/manifest.json",
         ROOT / "docs/audits/cta-evidence-migration-20261104/manifest.json",
         ROOT / "docs/audits/translation-qualification-20261104/manifest.json",
@@ -398,6 +421,7 @@ def build():
     ]
     receipt = {
         "release": __version__,
+        "presentation_revision": PRESENTATION_REVISION,
         "selection_policy_id": coverage["policy_id"],
         "bundle_id": data["bundle"]["bundle_id"],
         "inputs": {str(p.relative_to(ROOT)): digest(p) for p in inputs},
@@ -426,10 +450,11 @@ def update_current_docs(data):
     policy = data["coverage"]["policy_id"]
     summary = (
         f"**{counts['CTA']:,} CTA / {counts['Unsafe']:,} Unsafe / {counts['Other']:,} Other** "
-        f"across **{universe['classified_groups']:,} protein-equivalence groups**. "
-        f"The input inventory contains {universe['input_groups']:,} groups; "
+        f"across **{universe['classified_groups']:,} proteins** "
+        "(identical selected reference sequences counted together; member loci retained). "
+        f"The input inventory contains {universe['input_groups']:,} candidate protein records; "
         f"{universe['out_of_universe_groups']:,} remain explicitly outside the universe. "
-        "Every classified human group has a category, with independent evidence status "
+        "Every classified human protein has a category, with independent evidence status "
         "and sequence role. CTA denotes a research candidate under the declared policy."
     )
     path = ROOT / "README.md"
@@ -506,9 +531,11 @@ def render_html(data):
         + '</small><h1>From the candidate universe<br>to CTAs</h1><p>Traceable evidence. Explicit uncertainty. Qualified sequence records.</p><div class="counts">'
     ]
     for category in ["CTA", "Unsafe", "Other"]:
-        chunks.append(f"<div><strong>{data['counts'][category]:,}</strong>{category} groups</div>")
+        chunks.append(
+            f"<div><strong>{data['counts'][category]:,}</strong>{category} proteins</div>"
+        )
     chunks.append(
-        '</div><p><a href="cta-definition.pdf">Download PDF</a> · <a href="release-receipt.json">Release receipt</a> · <a href="report-data.json">Report data</a> · <a href="../../tissue-hazards/">Tissue ontology</a></p></header>'
+        '</div><p><a href="cta-definition.pdf">Download PDF</a> · <a href="release-receipt.json">Report receipt</a> · <a href="report-data.json">Report data</a> · <a href="../cta-selection-20261028/out-of-universe.csv.gz">Out-of-universe records</a> · <a href="../../tissue-hazards/">Tissue ontology</a></p></header>'
     )
     for title, paragraphs, fig in data["sections"]:
         chunks.append(
@@ -575,13 +602,13 @@ def render_html(data):
             )
         chunks.append("</details>")
     chunks.append(
-        '<h2>Explore every classified group</h2><p>Search labels, gene IDs or reasons. Results retain all overlapping reasons.</p><input id="query" aria-label="Search groups" placeholder="Gene, group, reason"><select id="category" aria-label="Classification"><option value="">All categories</option><option>CTA</option><option>Unsafe</option><option>Other</option></select><p id="matched" aria-live="polite"></p><div class="scroller"><table><thead><tr><th>Group</th><th>Classification</th><th>Status / role</th><th>All recorded reasons</th></tr></thead><tbody id="results"></tbody></table></div>'
+        '<h2>Explore every classified protein</h2><p>Search labels, gene IDs or reasons. Results retain all overlapping reasons.</p><input id="query" aria-label="Search proteins" placeholder="Protein, gene, reason"><select id="category" aria-label="Classification"><option value="">All categories</option><option>CTA</option><option>Unsafe</option><option>Other</option></select><p id="matched" aria-live="polite"></p><div class="scroller"><table><thead><tr><th>Protein</th><th>Classification</th><th>Status / role</th><th>All recorded reasons</th></tr></thead><tbody id="results"></tbody></table></div>'
     )
     rows = json.dumps(data["rows"], separators=(",", ":")).replace("<", "\\u003c")
     chunks.append(
         '<script type="application/json" id="records">'
         + rows
-        + '</script><script>const rows=JSON.parse(document.getElementById("records").textContent);function render(){const q=document.getElementById("query").value.toLowerCase();const c=document.getElementById("category").value;const found=rows.filter(r=>(!c||r.classification.split(":")[0]===c)&&JSON.stringify(r).toLowerCase().includes(q));document.getElementById("matched").textContent=found.length.toLocaleString()+" matching groups; showing the first 100.";const target=document.getElementById("results");target.replaceChildren();for(const r of found.slice(0,100)){const tr=document.createElement("tr");for(const t of [r.label+" · "+r.gene_ids.join(", "),r.classification,r.assessment_status+" / "+r.shared_sequence,r.reasons.join("; ")||"All declared gates pass"]){const td=document.createElement("td");td.textContent=t;tr.append(td)}target.append(tr)}}document.getElementById("query").addEventListener("input",render);document.getElementById("category").addEventListener("change",render);render();</script>'
+        + '</script><script>const rows=JSON.parse(document.getElementById("records").textContent);function render(){const q=document.getElementById("query").value.toLowerCase();const c=document.getElementById("category").value;const found=rows.filter(r=>(!c||r.classification.split(":")[0]===c)&&JSON.stringify(r).toLowerCase().includes(q));document.getElementById("matched").textContent=found.length.toLocaleString()+" matching proteins; showing the first 100.";const target=document.getElementById("results");target.replaceChildren();for(const r of found.slice(0,100)){const tr=document.createElement("tr");for(const t of [r.label+" · "+r.gene_ids.join(", "),r.classification,r.assessment_status+" / "+r.shared_sequence,r.reasons.join("; ")||"All declared gates pass"]){const td=document.createElement("td");td.textContent=t;tr.append(td)}target.append(tr)}}document.getElementById("query").addEventListener("input",render);document.getElementById("category").addEventListener("change",render);render();</script>'
     )
     chunks.append(
         '<footer>Sources and audits: <a href="../cta-evidence-migration-20261104/">historical findings and clinical causality</a> · <a href="../translation-qualification-20261104/">translation qualification</a> · <a href="../sequence-bundle-20261104/">verified sequence bundle</a> · <a href="../normal-breadth-20261104/">normal breadth</a> · <a href="../../tissue-hazards/">tissue registry and primary references</a><p><code>'

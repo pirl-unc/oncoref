@@ -1,8 +1,8 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 protein-equivalence groups**. The input inventory contains 19,863 groups; 259 remain explicitly outside the universe. Every classified human group has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-04.2`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions.
+The current policy supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 proteins** (identical selected reference sequences counted together; member loci retained). The input inventory contains 19,863 candidate protein records; 259 remain explicitly outside the universe. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-04.2`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions.
 
-## Safety, cancer expression and Reproductive evidence
+## Safety, cancer expression and reproductive/developmental evidence
 
 **Only safety can establish Unsafe.** Cancer expression and Reproductive evidence
 are separate admission requirements. Every protein receives CTA, Unsafe or Other; missing coverage is disclosed in `assessment_status`, never as a separate class.
@@ -10,6 +10,9 @@ are separate admission requirements. Every protein receives CTA, Unsafe or Other
 **Reproductive** is the umbrella for adult reproductive, placental, extraembryonic,
 embryonic and fetal contexts. Branches describe the actual tissue and stage;
 “embryonic-only evidence” does not prove absence from unmeasured branches.
+The current funnel spells this out as **Reproductive/developmental presence**.
+The separate concentration gate uses the adult/placental comparison; it does not
+require low embryonic or fetal expression.
 
 | Assessment | Question | Current rule |
 |---|---|---|
@@ -50,13 +53,41 @@ the display order changes attrition attribution, not the final category or reaso
 | 3. Sequence | Is at least 95% of its 9-mers inside Unsafe proteins? | **Other:Contained**: Unsafe sequence is blacklisted, so almost no peptide survives |
 | 4. Outcome | Did everything pass with no unresolved normal signal? | **CTA**; a pass blocked only by a normal-tissue hold is **Other:Held** |
 
-**Stage 0 universe.** The universe is 19,604 protein groups: Ensembl 115 reference CDS
+### Stage 0 universe
+
+The universe is 19,604 proteins: Ensembl 115 reference CDS
 from a coding-biotype transcript, plus non-canonical ORFs that orfdata records with
 mass-spectrometry peptides or at least two independent Ribo-seq studies. The 259
-groups left out are 254 whose only reference CDS comes from NMD or CDS-not-defined
+candidate records left out are 254 whose only reference CDS comes from NMD or CDS-not-defined
 transcripts (mostly readthrough genes) and 5 supported by a single Ribo-seq study.
-They are listed with their reason in `out-of-universe.csv.gz`, so none disappears
-silently. Rebuild the gene table with `scripts/build_cta_protein_universe.py`.
+NMD means nonsense-mediated decay. These records lack qualifying entry evidence
+under the current policy; exclusion from the universe does not establish absence
+of translation or an Unsafe classification. The
+[full excluded-record list](audits/cta-selection-20261028/out-of-universe.csv.gz)
+retains each identity and reason. Rebuild the gene table with
+`scripts/build_cta_protein_universe.py`.
+
+Here **proteins** means selected reference proteins with identical selected
+sequences counted together and every member locus retained. The internal API calls
+these `protein_equivalence_group` records. It does not enumerate all splice
+isoforms, sequence variants or post-translationally modified proteoforms.
+
+### Does CTA mean expressed only in cancer?
+
+No. Admission requires cancer expression **and** qualifying reproductive or
+developmental association. The 602 CTAs are not a count of proteins absent from
+every normal tissue and developmental stage. Passing a normal-expression
+threshold also does not mean zero normal expression.
+
+OncoRef does not currently report a count certified as “only in cancer and never
+elsewhere.” An operational count must name its normal tissue/cell panel, stages,
+physiological states, assays, coverage requirements and detection limits. Missing
+measurements cannot count as absence; RNA and protein evidence remain distinct.
+Cancer-specific altered sequences and peptides require their own assessment,
+even when their source genes are normally expressed. For examples of this
+sequence-level evidence, see the primary studies of
+[noncanonical tumor peptides](https://www.nature.com/articles/s41467-020-14968-9)
+and [transposable-element antigens](https://www.nature.com/articles/s41588-023-01349-3).
 
 **Downstream semantics.** CTA is a direct-target candidate within its qualified
 sequence scope. Unsafe supplies exclusion evidence for shared sequence. Other is
@@ -203,7 +234,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe groups listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-04.2`; individual coverage/holds remain explicit |
+| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe records listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-04.2`; individual coverage/holds remain explicit |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 
