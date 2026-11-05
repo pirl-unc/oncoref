@@ -42,13 +42,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-quantitative = ["orfdata>=0.42.2,<1"]
+quantitative = ["orfdata>=0.49.0,<1"]
 reports = ["reportlab>=4", "pypdf>=5", "Pillow", "xlrd>=2", "Markdown>=3.5"]
 genome = [
     "pyensembl>=2.27.0",
 ]
 dev = [
-    "orfdata>=0.42.2,<1; python_version >= '3.11'",
+    "orfdata>=0.49.0,<1; python_version >= '3.11'",
     "reportlab>=4",
     "pypdf>=5",
     "Pillow",
@@ -99,6 +99,7 @@ oncoref = [
     "data/tcr-trial-evidence.json",
     "data/gene-knowledge.json",
     "data/translation-qualification.json",
+    "data/sequence-bundle.json",
     "data/cta-finding-migrations.json",
     "data/cta-selection-audit.json",
     "data/cta-selection-audit-*.json.gz",
