@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **602 CTA / 18,243 Unsafe / 759 Other** across **19,604 proteins** (identical selected reference sequences counted together; member loci retained). The input inventory contains 19,863 candidate protein records; 259 remain explicitly outside the universe. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-04.2`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions.
+The current policy supplies **602 CTA / 18,255 Unsafe / 1,006 Other** across **19,863 proteins** (identical selected reference sequences counted together; member loci retained). All 19,863 candidate protein records enter classification; translation support is a CTA admission requirement. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-05.1`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions.
 
 ## Safety, cancer expression and reproductive/developmental evidence
 
@@ -45,7 +45,7 @@ the display order changes attrition attribution, not the final category or reaso
 
 | Stage | Question | Outcome |
 |---|---|---|
-| 0. Universe | Is the protein translated from a coding transcript or an established ncORF? | Otherwise it is **out of universe** and not classified. |
+| 0. Inventory | Is the candidate reference identity recorded? | Every candidate enters normal-evidence and admission assessment. |
 | 1. Safety | Does normal-tissue, reviewed or clinical evidence exclude it? | **Unsafe** |
 | 2. Target space | Does it have reproductive evidence, cancer expression and concentration? | Otherwise **Other** with the unmet requirement as its subtype |
 | 2a. Nested microprotein | Is it a reference-CDS protein under 50 residues inside a same-strand protein-coding gene, without ncORF evidence? | **Other:Nested**: its RNA belongs to the host gene |
@@ -53,24 +53,28 @@ the display order changes attrition attribution, not the final category or reaso
 | 3. Sequence | Is at least 95% of its 9-mers inside Unsafe proteins? | **Other:Contained**: Unsafe sequence is blacklisted, so almost no peptide survives |
 | 4. Outcome | Did everything pass with no unresolved normal signal? | **CTA**; a pass blocked only by a normal-tissue hold is **Other:Held** |
 
-### Stage 0 universe
+### Complete candidate inventory
 
-The universe is 19,604 proteins: Ensembl 115 reference CDS
-from a coding-biotype transcript, plus non-canonical ORFs that orfdata records with
-mass-spectrometry peptides or at least two independent Ribo-seq studies. The 259
-candidate records left out are 254 whose only reference CDS comes from NMD or CDS-not-defined
-transcripts (mostly readthrough genes) and 5 supported by a single Ribo-seq study.
-NMD means nonsense-mediated decay. These records lack qualifying entry evidence
-under the current policy; exclusion from the universe does not establish absence
-of translation or an Unsafe classification. The
-[full excluded-record list](audits/cta-selection-20261028/out-of-universe.csv.gz)
-retains each identity and reason. Rebuild the gene table with
-`scripts/build_cta_protein_universe.py`.
+All **19,863 candidate protein records** enter the main assessment. The 259 records
+formerly omitted at entry now receive **247 Other:Translation** and **12 Unsafe**
+calls. All original 19,604 classifications remain unchanged. The
+[complete inventory audit](audits/cta-inventory-20261105/index.md) preserves their
+identities, translation evidence, normal findings and historical dispositions.
 
-Here **proteins** means selected reference proteins with identical selected
-sequences counted together and every member locus retained. The internal API calls
-these `protein_equivalence_group` records. It does not enumerate all splice
-isoforms, sequence variants or post-translationally modified proteoforms.
+The translation rule remains a CTA admission requirement: a qualifying coding
+reference CDS or a noncanonical ORF with mass-spectrometry peptide support or at
+least two independent Ribo-seq studies, followed by qualification of the exact
+selected reference sequence. The former exclusions comprised 254
+NMD/CDS-not-defined-only records and 5 single-study Ribo-seq ORFs. NMD means
+nonsense-mediated decay. Insufficient support does not establish absence or
+normal-tissue safety; applicable exclusion evidence takes precedence. Otherwise,
+insufficient translation qualification produces **Other:Translation** and sequence
+review. Annotation is not experimental proof of protein production.
+
+Here **proteins** means candidate selected reference proteins with identical
+selected sequences counted together and every member locus retained. The internal
+API calls these `protein_equivalence_group` records. It does not enumerate all
+splice isoforms, sequence variants or post-translationally modified proteoforms.
 
 ### Does CTA mean expressed only in cancer?
 
@@ -79,13 +83,18 @@ developmental association. The 602 CTAs are not a count of proteins absent from
 every normal tissue and developmental stage. Passing a normal-expression
 threshold also does not mean zero normal expression.
 
-OncoRef does not currently report a count certified as “only in cancer and never
-elsewhere.” An operational count must name its normal tissue/cell panel, stages,
-physiological states, assays, coverage requirements and detection limits. Missing
-measurements cannot count as absence; RNA and protein evidence remain distinct.
-Cancer-specific altered sequences and peptides require their own assessment,
-even when their source genes are normally expressed. For examples of this
-sequence-level evidence, see the primary studies of
+The [observed-expression audit](audits/cta-inventory-20261105/index.md) reports
+stored-zero RNA counts and the existing low-normal/high-tumor expression screen,
+with missing developmental measurements retained as gaps. Preliminary profile
+matches are separately assigned normal-evidence exclusions, normal review holds,
+translation review or coverage review. A low routine-panel maximum cannot negate
+localized normal protein production.
+
+An operational count must name its normal tissue/cell panel, stages, physiological
+states, assays and detection limits. Missing measurements cannot count as absence;
+RNA and protein evidence remain distinct. Cancer-specific altered sequences and
+peptides require their own assessment, even when their source genes are normally
+expressed. See the primary studies of
 [noncanonical tumor peptides](https://www.nature.com/articles/s41467-020-14968-9)
 and [transposable-element antigens](https://www.nature.com/articles/s41588-023-01349-3).
 
@@ -234,7 +243,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,604 proteins (identical selected reference sequences collapsed; 259 out-of-universe records listed separately) | Available; evidence partial | Category assignment across the coding or established-ncORF universe under `oncoref.cta-selection.2026-11-04.2`; individual coverage/holds remain explicit |
+| Human | 19,863 candidate proteins (identical selected reference sequences counted together; all records classified) | Available; evidence partial | Category assignment across the complete candidate inventory under `oncoref.cta-selection.2026-11-05.1`; individual coverage/holds remain explicit |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 
@@ -304,13 +313,15 @@ Adult human fibroblasts and differentiated bowel epithelium use Protected; intes
 
 The decision follows these questions, in this order:
 
-1. **Is the protein in the universe?** Otherwise it is not classified.
-2. **Does normal-tissue or applicable clinical evidence trigger exclusion?** Assign **Unsafe**. This includes Manageable excess above 128 and reviewed unresolved Protected findings.
-3. **Is there qualifying reproductive evidence?** Otherwise assign **Other:Nonreproductive**. Reproductive includes placenta, embryo and fetus; the label records an unmet evidence requirement, not demonstrated absence.
-4. **Is there measured cancer expression?** Otherwise assign **Other:Reproductive**.
-5. **Does reproductive concentration pass?** Otherwise assign **Other:Diffuse**.
-6. **Is at least 95% of its sequence inside Unsafe proteins?** Then assign **Other:Contained**: its peptides are blacklisted.
-7. **Is the normal screen complete and unresolved-free?** Passing everything assigns **CTA**. If target gates pass but a marginal or unresolved normal signal remains, assign **Other:Held**, and `assessment_status` records whether coverage was incomplete or a hold applied.
+1. **Is the candidate in the input inventory?** Every inventory record receives a classification, even when translation support is insufficient.
+2. **Does normal-tissue or applicable clinical evidence trigger exclusion?** Assign **Unsafe**. Applicable exclusion takes precedence over every admission failure.
+3. **Is this a nested microprotein under the declared rule?** Assign **Other:Nested**.
+4. **Does translation support and exact-record qualification pass?** Otherwise assign **Other:Translation** and require sequence review.
+5. **Is there qualifying reproductive evidence?** Otherwise assign **Other:Nonreproductive**. Reproductive includes placenta, embryo and fetus; the label records an unmet evidence requirement, not demonstrated absence.
+6. **Is there measured cancer expression?** Otherwise assign **Other:Reproductive**.
+7. **Does reproductive concentration pass?** Otherwise assign **Other:Diffuse**.
+8. **Is the normal screen complete and unresolved-free?** A marginal or unresolved normal signal leaves **Other:Held** when the preceding admission gates pass. `assessment_status` records coverage and review limitations independently of subtype.
+9. **Does an otherwise eligible protein share at least 95% of its sequence 9-mers with Unsafe proteins?** Assign **Other:Contained**; otherwise assign **CTA**.
 
 All safety layers evaluate every protein, even when an identity requirement fails.
 The RNA/IHC safety ceilings and the reproductive/cancer presence requirements

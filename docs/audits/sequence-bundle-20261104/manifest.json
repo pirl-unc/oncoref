@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.sequence-bundle",
   "schema_version": 1,
-  "release": "1.30.0",
+  "release": "1.31.0",
   "reference": {
     "schema": "openvax.reference",
     "schema_version": 1,
@@ -23,22 +23,22 @@
     },
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
-  "selection_policy_id": "oncoref.cta-selection.2026-11-04.2",
+  "selection_policy_id": "oncoref.cta-selection.2026-11-05.1",
   "role_policy_id": "oncoref.sequence-roles.2026-11-04.1",
   "translation_policy_id": "oncoref.translation-qualification.2026-11-04.1",
   "orfdata_identity": "dbd1dd752e24ea08f4d787e48fe04e3464ebce248190572782d6e356e010822f",
   "record_count": 245535,
   "occurrence_count": 245535,
   "record_roles": {
-    "exclude": 230619,
+    "exclude": 230648,
     "allow": 1375,
-    "review": 13541
+    "review": 13512
   },
   "direct_target_records": 903,
   "package_dependencies": {
-    "cta-selection.json": "fe455b9176d98edacb9e2248a2b3e07d99f39ff2c76b77ecb72813b83b4ce1a2",
-    "cta-selection-human.csv.gz": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd",
-    "cta-selection-audit.json": "a1d1326b5bf6d1053e7294b9bc45dcb9a8bff7b20ff8757783925bb4ff561348",
+    "cta-selection.json": "5559f23910bb16dc1468b5ca7f0ed74befc886c5bb95d0498a6fb4c9d882d2e7",
+    "cta-selection-human.csv.gz": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d",
+    "cta-selection-audit.json": "1d111e59afb75c920a92d9c144ae765c6dfe672479abed646e5b3b7918380bf7",
     "gene-knowledge.json": "b230ceda243bc77c5ca926abe394d3aa9400b1e174561bcd5dee744fac95305f",
     "cta-finding-migrations.json": "14c54e4a8c9320f0a5babfc05ed1bd048b0e4a3f2bac2cc3b2c66c5582a507ee",
     "tcr-trial-evidence.json": "7ef47d7a23e57364bdeff10d4508703451f0e2831834dcbe88bee0c90d3a6413",
@@ -50,21 +50,21 @@
   "builder_sha256": "f16c31d5993ab9e96f44e5aab59d47a47ab6279a4323e8e4fbff3bfae2805f7f",
   "payloads": {
     "coverage.json": {
-      "bytes": 306727,
-      "sha256": "d027f547e3e695dbb1783cb097cf4e5791925f9e5008123bb0b6080cf44f720f"
+      "bytes": 249554,
+      "sha256": "ddf5cdacdbb6ce87c744a0f76025e08c67432939ace9c30441ee96ff482616ff"
     },
     "decisions.csv.gz": {
-      "bytes": 1137686,
-      "sha256": "7afa804f5cf4791d1ce4922fe6a98dfa20ff5ee4c132f139f002102d21e26edd"
+      "bytes": 1146998,
+      "sha256": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d"
     },
     "orfdata-proteome.json.gz": {
       "bytes": 44691817,
       "sha256": "efdc40cd73c1af9c8aad5f15901d143a3a117a595555d6b008b640370296dad9"
     },
     "records.jsonl.gz": {
-      "bytes": 80852124,
-      "sha256": "40e6c374ba8cf5bcc39fce4ade5b037b60346fbab4a6ea029dbcccb193b751fa"
+      "bytes": 80859478,
+      "sha256": "f4f8846a40a2bb041092df4e5b9be7cc7918a39b7936629cc88f18766cf8d832"
     }
   },
-  "bundle_id": "oncoref:sequence-bundle:v1:sha256:84795d3f6348701b392fb04baab309513850e814bb3361827927e31f24b6ff55"
+  "bundle_id": "oncoref:sequence-bundle:v1:sha256:607c4ede9af40e33657ce84b58eff11087e66be7942a9a156a81480e8d06335a"
 }

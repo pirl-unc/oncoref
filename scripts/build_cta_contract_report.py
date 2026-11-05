@@ -83,13 +83,15 @@ Current selection policy: `{coverage["policy_id"]}`. Consumer-role policy:
 `{definition["role_policy_id"]}`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
 
-**{universe["input_groups"]:,} candidate protein records → {universe["classified_groups"]:,}
-classified proteins + {universe["out_of_universe_groups"]:,} out-of-universe records.**
+**All {universe["input_groups"]:,} candidate protein records enter classification.**
+Translation support is an admission requirement; {universe["translation_support_insufficient_groups"]:,}
+records lack the former coding/established-ncORF entry evidence and remain visible
+as Unsafe or Other. No record is removed before the normal-evidence assessment.
 The classified results are **{counts.get("CTA", 0):,} CTA,
 {counts.get("Unsafe", 0):,} Unsafe and {counts.get("Other", 0):,} Other**.
 Identical selected reference sequences count together; member gene loci remain
 traceable. These are representative proteins, not a complete inventory of splice
-isoforms or modified proteoforms. [Universe entry rules and excluded records](../../cta-selection.md#stage-0-universe).
+isoforms or modified proteoforms. [Inventory and translation admission](../../cta-selection.md#complete-candidate-inventory).
 
 {definition["definition"]}
 

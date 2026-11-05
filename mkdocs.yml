@@ -11,7 +11,8 @@ nav:
       - Translation qualification: audits/translation-qualification-20261104/index.md
       - Verified sequence records: sequence-bundle.md
       - Historical evidence dispositions: audits/cta-evidence-migration-20261104/index.md
-      - Current release 1.30.0: cta-release-1.30.0.md
+      - Current release 1.31.0: cta-release-1.31.0.md
+      - Complete candidate inventory: audits/cta-inventory-20261105/index.md
       - Previous release 1.29.0: cta-release-1.29.0.md
       - Previous release 1.28.0: cta-release-1.28.0.md
       - Previous release 1.27.0: cta-release-1.27.0.md

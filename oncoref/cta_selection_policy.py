@@ -28,7 +28,7 @@ from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 from .tissue_hazards import context_tiers
 
-POLICY_ID = "oncoref.cta-selection.2026-11-04.2"
+POLICY_ID = "oncoref.cta-selection.2026-11-05.1"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 # Manageable-tier RNA above the highest Manageable ceiling (16 x 2^3 = 128 in
@@ -460,6 +460,15 @@ def tumor_restricted_evidence(facts: pd.DataFrame) -> pd.DataFrame:
     d["tumor_restricted_identity"] = d.tumor_restricted_profile & d.normal_restriction_reviewed
     d["tumor_restricted_lead"] = d.tumor_restricted_profile & ~d.normal_restriction_reviewed
     return d
+
+
+def translation_admission(facts: pd.DataFrame) -> pd.Series:
+    """Require both entry support and qualification of the exact selected record."""
+    columns = ["translation_support_eligible", "translation_qualified"]
+    for column in columns:
+        if facts[column].isna().any() or facts[column].dtype != bool:
+            raise ValueError("Complete boolean translation evidence required")
+    return facts[columns].all(axis=1)
 
 
 def classify(

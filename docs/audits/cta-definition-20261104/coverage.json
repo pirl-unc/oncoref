@@ -3,17 +3,20 @@
   "species": "human",
   "selection_status": "available",
   "evidence_status": "partial",
-  "policy_id": "oncoref.cta-selection.2026-11-04.2",
-  "universe": "19604 classified protein-equivalence groups from 19863 input groups",
+  "policy_id": "oncoref.cta-selection.2026-11-05.1",
+  "universe": "19863 classified protein-equivalence groups from 19863 input groups",
   "universe_counts": {
     "counting_unit": "selected_reference_protein_equivalence_group",
     "input_groups": 19863,
-    "classified_groups": 19604,
-    "out_of_universe_groups": 259,
+    "classified_groups": 19863,
+    "out_of_universe_groups": 0,
     "input_gene_loci": 20099,
-    "classified_gene_loci": 19839,
-    "out_of_universe_gene_loci": 260,
-    "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add"
+    "classified_gene_loci": 20099,
+    "out_of_universe_gene_loci": 0,
+    "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
+    "translation_support_eligible_groups": 19604,
+    "translation_support_insufficient_groups": 259,
+    "scope_note": "Every candidate record enters classification; translation support is a CTA admission requirement, not an inventory exclusion."
   },
   "reference": {
     "annotation_release": "115",
@@ -48,16 +51,16 @@
     "Rare-cell screening uses the existing brain, spinal-cord, heart and selected lung CELLxGENE panels. At least 1% detection in a Vital population supplies exclusion evidence; Protected detection supplies a review hold. Detection frequency is not abundance. Unmeasured ages, organs and excluded lineages remain coverage limits, not allowances.",
     "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply."
   ],
-  "entities": 19604,
+  "entities": 19863,
   "counts": {
     "CTA": 602,
-    "Unsafe": 18243,
-    "Other": 759,
+    "Unsafe": 18255,
+    "Other": 1006,
     "Unassigned": 0
   },
   "other_subtypes": {
     "Nonreproductive": 570,
-    "Translation": 115,
+    "Translation": 362,
     "Nested": 28,
     "Held": 27,
     "Contained": 15,

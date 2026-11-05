@@ -316,6 +316,13 @@ of final counts. Regenerate it with
 
 ## Reproducing the coordinated release
 
+The 1.31.0 follow-up moves all 259 formerly omitted records into classification
+and retains translation support as CTA admission evidence. The
+[inventory audit](../audits/cta-inventory-20261105/index.md) records 247
+Other:Translation and 12 Unsafe calls, with no changes to the earlier 19,604
+classifications. Preliminary tumor-restriction matches now have explicit
+dispositions after independent normal evidence.
+
 Use a repository-local environment with the `quantitative` and `reports` extras,
 verified source caches and an isolated `ONCOREF_SHARD_CACHE_DIR`. Run the scientific
 replay only when its evidence or policy changes:
@@ -323,7 +330,7 @@ replay only when its evidence or policy changes:
 ```sh
 python scripts/regenerate_cta_walkthrough.py --verify-replay
 python scripts/build_cta_contract_report.py
-python scripts/build_cta_sequence_bundle.py SOURCE BUNDLE --release 1.30.0
+python scripts/build_cta_sequence_bundle.py SOURCE BUNDLE --release 1.31.0
 python scripts/build_cta_sequence_transition.py HISTORICAL BUNDLE
 python scripts/build_cta_sequence_report.py
 python scripts/build_cta_public_report.py
@@ -338,9 +345,9 @@ Finalize presentation assets before binding the final receipts:
 
 ```sh
 python scripts/render_cta_source_walkthrough.py
-CTA_SLIDE_BUILD_DIR=tmp/cta-source-slides-130 node scripts/build_cta_source_slides.mjs
-python scripts/slides/assemble_pdf.py tmp/cta-source-slides-130 \
-  docs/audits/cta-source-walkthrough-20261028/cta-selection-1.30.0.pdf
+CTA_SLIDE_BUILD_DIR=tmp/cta-source-slides-131 node scripts/build_cta_source_slides.mjs
+python scripts/slides/assemble_pdf.py tmp/cta-source-slides-131 \
+  docs/audits/cta-source-walkthrough-20261028/cta-selection-1.31.0.pdf
 python scripts/render_cta_source_walkthrough.py
 python scripts/regenerate_cta_walkthrough.py --finalize-receipts
 python scripts/build_cta_public_report.py

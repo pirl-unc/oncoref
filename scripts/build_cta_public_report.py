@@ -44,7 +44,7 @@ from oncoref import (  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
-PRESENTATION_REVISION = "2026-11-05.1"
+PRESENTATION_REVISION = "2026-11-05.2"
 INK = "#173B55"
 TEAL = "#087E8B"
 AMBER = "#A76708"
@@ -66,6 +66,8 @@ def figure(name, fig):
 
 def figures(facts, roles, coverage):
     (OUT / "figures").mkdir(exist_ok=True)
+    # The walkthrough renderer may run in the same process with its own style.
+    plt.rcdefaults()
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
@@ -82,7 +84,6 @@ def figures(facts, roles, coverage):
     boxes = [
         (0.02, 0.59, 0.25, 0.26, f"{u['input_groups']:,}\nCandidate\nprotein records", INK),
         (0.37, 0.59, 0.25, 0.26, f"{len(facts):,}\nClassified proteins", TEAL),
-        (0.37, 0.13, 0.25, 0.23, f"{u['out_of_universe_groups']:,}\nOutside\nthe universe", MUTED),
     ]
     for i, (category, color) in enumerate([("CTA", TEAL), ("Other", AMBER), ("Unsafe", RUST)]):
         boxes.append((0.75, 0.73 - i * 0.28, 0.23, 0.2, f"{counts[category]:,}\n{category}", color))
@@ -102,19 +103,29 @@ def figures(facts, roles, coverage):
         )
     for a, b in [
         ((0.28, 0.72), (0.35, 0.72)),
-        ((0.28, 0.65), (0.35, 0.25)),
         ((0.63, 0.72), (0.73, 0.83)),
         ((0.63, 0.69), (0.73, 0.55)),
         ((0.63, 0.66), (0.73, 0.27)),
     ]:
         ax.annotate("", xy=b, xytext=a, arrowprops={"arrowstyle": "->", "color": MUTED, "lw": 2})
     ax.set_title(
-        "Count the universe before counting CTAs",
+        "Every candidate record receives a classification",
         loc="left",
         fontsize=22,
         fontweight="bold",
         color=INK,
         pad=20,
+    )
+    restored = facts.loc[~facts.translation_support_eligible, "category"].value_counts()
+    ax.text(
+        0.02,
+        0.32,
+        f"Includes all {u['translation_support_insufficient_groups']:,} records with insufficient translation support:\n"
+        f"{restored.get('Other', 0):,} Other:Translation and {restored.get('Unsafe', 0):,} Unsafe.\n"
+        "Translation controls CTA admission; normal exclusions take precedence.",
+        color=INK,
+        fontsize=12,
+        linespacing=1.7,
     )
     ax.text(
         0.02,
@@ -224,6 +235,9 @@ def figures(facts, roles, coverage):
 
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
+    inventory = json.loads((ROOT / "docs/audits/cta-inventory-20261105/summary.json").read_text())
+    zero = inventory["stored_zero_rna_screen"]
+    preliminary = inventory["preliminary_expression_profile"]
     bundle_manifest = json.loads(
         (ROOT / "docs/audits/sequence-bundle-20261104/manifest.json").read_text()
     )
@@ -245,6 +259,11 @@ def build():
     outside_path = ROOT / "docs/audits/cta-selection-20261028/out-of-universe.csv.gz"
     outside = pd.read_csv(outside_path)
     outside_counts = outside.reason.value_counts().to_dict()
+    support_counts = (
+        facts.loc[~facts.translation_support_eligible, "translation_support_reasons"]
+        .value_counts()
+        .to_dict()
+    )
     if len(outside) != coverage["universe_counts"]["out_of_universe_groups"]:
         raise ValueError("Out-of-universe records disagree with current coverage")
     contract = cta_selection.contract()
@@ -296,7 +315,7 @@ def build():
             "What OncoRef calls a CTA",
             [
                 contract["definition"],
-                f"The current human policy produces {counts['CTA']:,} CTA, {counts['Unsafe']:,} Unsafe and {counts['Other']:,} Other proteins. It evaluates {len(facts):,} proteins after the universe gate, counting identical selected reference sequences together and retaining every member locus. This is not a complete inventory of splice isoforms or modified proteoforms.",
+                f"The current human policy produces {counts['CTA']:,} CTA, {counts['Unsafe']:,} Unsafe and {counts['Other']:,} Other proteins. It evaluates {len(facts):,} candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. This is not a complete inventory of splice isoforms or modified proteoforms.",
                 "CTA is a research candidate designation; it does not establish peptide-HLA presentation, receptor recognition, therapeutic abundance or clinical safety. Reproductive/developmental support includes adult reproductive tissues, placenta, extraembryonic tissues, embryo and fetus. These routes remain distinguishable; developmental association does not imply adult testis restriction.",
             ],
             "universe-accounting",
@@ -304,8 +323,8 @@ def build():
         (
             "From candidates to CTAs",
             [
-                f"Begin with the pinned annotation and explicit gene/protein identities. Of {coverage['universe_counts']['input_groups']:,} candidate protein records, {len(outside):,} remain outside the universe: {outside_counts['nmd_or_cds_not_defined_only']:,} have reference CDS only in transcripts annotated for nonsense-mediated decay (NMD) or with CDS not defined; {outside_counts['single_study_ribo_seq']:,} have only single-study Ribo-seq support. These records fail the current entry rule; this does not establish absence or Unsafe status.",
-                "Entry requires a reference CDS from a qualifying coding-biotype transcript, or a noncanonical ORF with mass-spectrometry peptide evidence or at least two independent Ribo-seq studies. Count identical selected reference sequences together, preserve member loci and keep every out-of-universe record visible.",
+                f"All {coverage['universe_counts']['input_groups']:,} candidate records enter the same normal-evidence and admission path. The {sum(support_counts.values()):,} records formerly removed at entry stay visible: {support_counts.get('nmd_or_cds_not_defined_only', 0):,} have only NMD/CDS-not-defined reference transcripts and {support_counts.get('single_study_ribo_seq', 0):,} have only single-study Ribo-seq support. Insufficient translation support does not establish absence or normal-tissue safety.",
+                "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. An annotated coding sequence is not experimental proof of protein production.",
                 "Apply all normal-tissue evidence independently. Accepted exclusion evidence establishes Unsafe. Unresolved findings or missing required coverage prevent admission and require review; they do not establish Unsafe. Every target must also pass reproductive/developmental association, cancer presence, concentration, translation qualification and sequence-containment rules.",
                 "The chart presents one readable order. Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Other includes assessed noncandidates and unresolved records; its subtype cannot replace its independent assessment status.",
             ],
@@ -352,7 +371,8 @@ def build():
             "Does CTA mean expressed only in cancer?",
             [
                 "No. CTA admission requires cancer expression plus qualifying reproductive or developmental association. The CTA total is not a count of proteins absent from all normal tissues, including testis, placenta, embryo and fetus. Passing normal-tissue thresholds is not a claim of zero normal expression.",
-                "OncoRef does not currently certify or enumerate proteins expressed only in cancer and never elsewhere. A measurable restriction claim must name the normal tissues, cell populations, developmental stages, physiological states, assays and detection limits. Undetected RNA does not prove absent protein, and an unmeasured context is not negative evidence.",
+                f"The current data do support an observed-expression count: {zero['adult_and_reproductive_bulk_zero']} cancer-expressed records have complete required bulk coverage and zero stored adult/reproductive RNA summaries. Of these, {zero['also_developmental_measured']} have developmental measurements and {zero['also_developmental_zero']} also have zero developmental RNA; {zero['developmental_measurement_missing']} lack developmental measurements. Stored zeros are not proof of absent protein, and tiny positive RNA values are not validated protein production.",
+                f"The separate low-expression screen finds {preliminary['matches']} preliminary matches. Independent normal-cell evidence excludes {preliminary['disposition_counts'].get('excluded_by_normal_evidence', 0)} of them. A numerical profile match is not a final cancer-only designation; remaining matches retain explicit review or coverage requirements. The inventory audit lists every record, counterevidence source and measurement gap.",
                 "Cancer-specific altered sequences and peptides require a separate analysis from these reference-protein counts. A mutation, fusion or alternative transcript can create a target sequence even when the source gene is normally expressed; evidence for one such sequence cannot establish exclusivity of every product of the gene.",
             ],
             None,
@@ -363,7 +383,7 @@ def build():
                 f"Selection policy: {coverage['policy_id']}. Role policy: {contract['role_policy_id']}. Translation policy: {translation_qualification.POLICY_ID}.",
                 "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. No target CTA count is an acceptance criterion.",
                 "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-                f"Presentation revision {PRESENTATION_REVISION} clarifies protein counts, universe exclusions and reproductive/developmental scope. Scientific decisions and the published release assets are unchanged.",
+                f"Presentation revision {PRESENTATION_REVISION} moves every candidate record into classification, retains translation as a CTA admission requirement, and separates preliminary expression-profile matches from normal-evidence exclusions. Earlier release assets remain frozen.",
             ],
             None,
         ),
@@ -372,9 +392,11 @@ def build():
         "release": __version__,
         "presentation_revision": PRESENTATION_REVISION,
         "out_of_universe_reasons": outside_counts,
+        "translation_support_reasons": support_counts,
         "contract": contract,
         "coverage": coverage,
         "counts": counts,
+        "inventory_audit": inventory,
         "sections": sections,
         "worked": worked,
         "bundle": sequence_bundle.descriptor(),
@@ -411,6 +433,7 @@ def build():
         OUT / "manifest.json",
         ROOT / "docs/audits/cta-selection-20261028/manifest.json",
         ROOT / "docs/audits/cta-selection-20261028/reproducibility.json",
+        ROOT / "docs/audits/cta-inventory-20261105/manifest.json",
         outside_path,
         ROOT / "docs/audits/cta-source-walkthrough-20261028/manifest.json",
         ROOT / "docs/audits/cta-evidence-migration-20261104/manifest.json",
@@ -452,8 +475,8 @@ def update_current_docs(data):
         f"**{counts['CTA']:,} CTA / {counts['Unsafe']:,} Unsafe / {counts['Other']:,} Other** "
         f"across **{universe['classified_groups']:,} proteins** "
         "(identical selected reference sequences counted together; member loci retained). "
-        f"The input inventory contains {universe['input_groups']:,} candidate protein records; "
-        f"{universe['out_of_universe_groups']:,} remain explicitly outside the universe. "
+        f"All {universe['input_groups']:,} candidate protein records enter classification; "
+        "translation support is a CTA admission requirement. "
         "Every classified human protein has a category, with independent evidence status "
         "and sequence role. CTA denotes a research candidate under the declared policy."
     )
@@ -507,7 +530,7 @@ def update_current_docs(data):
             + "The normal screen, cancer presence, reproductive/developmental association, "
             + "coverage, translation and sequence-overlap gates remain distinct. Accepted "
             + "exclusion evidence establishes Unsafe; unresolved evidence requires review. "
-            + "[Current release notes](cta-release-1.30.0.md) and the "
+            + f"[Current release notes](cta-release-{__version__}.md) and the "
             + "[source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.\n\n"
         )
         + text[end:]
@@ -535,7 +558,7 @@ def render_html(data):
             f"<div><strong>{data['counts'][category]:,}</strong>{category} proteins</div>"
         )
     chunks.append(
-        '</div><p><a href="cta-definition.pdf">Download PDF</a> · <a href="release-receipt.json">Report receipt</a> · <a href="report-data.json">Report data</a> · <a href="../cta-selection-20261028/out-of-universe.csv.gz">Out-of-universe records</a> · <a href="../../tissue-hazards/">Tissue ontology</a></p></header>'
+        '</div><p><a href="cta-definition.pdf">Download PDF</a> · <a href="release-receipt.json">Report receipt</a> · <a href="report-data.json">Report data</a> · <a href="../cta-inventory-20261105/">Full inventory and expression-profile audit</a> · <a href="../../tissue-hazards/">Tissue ontology</a></p></header>'
     )
     for title, paragraphs, fig in data["sections"]:
         chunks.append(

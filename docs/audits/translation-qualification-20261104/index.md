@@ -2,8 +2,13 @@
 
 Policy `oncoref.translation-qualification.2026-11-04.1` assesses **245,535 Ensembl 115 peptide records**;
 **185,993** pass the record-level target rule. Across the
-19,604 classified groups, **19,075 selected representatives qualify**.
+19,863 classified proteins, **19,075 selected representatives qualify**.
 This is annotation-based admission, not experimental proof of production.
+
+Every candidate record receives a classification. The former entry requirement
+for coding annotation or established ncORF support is now a CTA admission gate;
+259 records fail that requirement
+and remain assessed for normal evidence. [Complete inventory audit](../cta-inventory-20261105/index.md).
 
 ## What qualifies
 
@@ -45,7 +50,7 @@ record table is available offline through `translation_qualification.records()`.
 
 Against the pinned evidence PR: **115
 classification-label changes**, **93
-sequence-role changes**, and **529 reason changes**.
+sequence-role changes**, and **788 reason changes**.
 Label changes include Other subtype changes; inspect category transitions in the
 [series-wide report](../cta-definition-20261104/index.md).
 [Every changed record](changes-from-evidence-pr.csv) and

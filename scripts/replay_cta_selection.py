@@ -82,7 +82,7 @@ class ContextCollector:
 
     def collect(self, frame: pd.DataFrame, assay: str) -> None:
         credit = self.facts.set_index("representative_gene_id")
-        # Out-of-universe groups were dropped at stage 0; their genes carry no credit.
+        # Every inventory record receives the same normal-context assessment.
         frame = frame[frame.gene_id.isin(credit.index)].copy()
         for column in [
             "clinical_rna_credit",
@@ -796,58 +796,65 @@ def required_rna_coverage(facts: pd.DataFrame, output: Path) -> None:
     write_csv(coverage, output / "combined-rna-coverage.csv.gz")
 
 
-def restrict_to_universe(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
-    """Keep only proteins translated from coding transcripts or established ncORFs.
+def annotate_translation_support(facts: pd.DataFrame, output: Path) -> pd.DataFrame:
+    """Keep the complete inventory; record the former entry rule as evidence.
 
-    Stage 0 of the funnel. A protein group is in the universe when any member
-    gene has a coding reference CDS or an established non-canonical ORF. Dropped
-    groups are written to ``out-of-universe.csv.gz`` with the reason, so no
-    protein disappears silently.
+    Reference annotation and ncORF support do not bypass the exact-record quality
+    gate. Insufficient support must not hide a normal-tissue exclusion from the
+    classification or its downstream sequence role.
     """
     universe = read(UNIVERSE).set_index("gene_id")
-    members = facts.member_gene_ids.map(json.loads)
-    status = members.map(lambda ids: [universe.universe.get(g, "excluded") for g in ids])
-    keep = status.map(lambda values: "coding" in values)
-    source = members.map(
-        lambda ids: next(
-            (
-                universe.protein_source[g]
-                for g in ids
-                if universe.universe.get(g) == "coding"
-                and universe.protein_source[g] == "reference_cds"
-            ),
-            next(
-                ("nc_orf" for g in ids if universe.universe.get(g) == "coding"),
-                "none",
-            ),
-        )
+    result = facts.copy()
+    members = result.member_gene_ids.map(json.loads)
+    result["translation_support_eligible"] = members.map(
+        lambda ids: any(universe.universe.get(g) == "coding" for g in ids)
     )
-    reason = members.map(
+    result["translation_support_reasons"] = members.map(
         lambda ids: ";".join(
             sorted({universe.evidence.get(g, "no_translated_sequence") for g in ids})
         )
     )
-    dropped = facts.loc[~keep, ["protein_equivalence_group_id", "protein_group_label"]].assign(
-        reason=reason[~keep], previous_category=facts.category[~keep]
+    result["protein_source"] = members.map(
+        lambda ids: ";".join(sorted({universe.protein_source.get(g, "none") for g in ids}))
     )
-    write_csv(dropped, output / "out-of-universe.csv.gz")
-    facts = facts.loc[keep].reset_index(drop=True)
-    facts["protein_source"] = source[keep].to_numpy()
-    kept_status = members[keep].map(
-        lambda ids: [universe.evidence[g] for g in ids if universe.universe.get(g) == "coding"]
+    result["nested_microprotein"] = members.map(
+        lambda ids: (
+            bool(ids) and all(universe.evidence.get(g) == "nested_microprotein" for g in ids)
+        )
     )
-    facts["nested_microprotein"] = kept_status.map(
-        lambda values: bool(values) and all(v == "nested_microprotein" for v in values)
-    ).to_numpy()
-    print(f"Universe: kept {len(facts)}, dropped {len(dropped)}", flush=True)
-    return facts
+    columns = [
+        "protein_equivalence_group_id",
+        "protein_group_label",
+        "member_gene_ids",
+        "protein_source",
+        "translation_support_eligible",
+        "translation_support_reasons",
+    ]
+    write_csv(result[columns], output / "translation-support-inventory.csv.gz")
+    # Keep the legacy export shape for consumers, with no records outside the path.
+    write_csv(
+        pd.DataFrame(
+            columns=[
+                "protein_equivalence_group_id",
+                "protein_group_label",
+                "reason",
+                "previous_category",
+            ]
+        ),
+        output / "out-of-universe.csv.gz",
+    )
+    print(
+        f"Inventory: assessing all {len(result)} records; {(~result.translation_support_eligible).sum()} lack qualifying translation support",
+        flush=True,
+    )
+    return result
 
 
 def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     """Regenerate decisions, complete profile evidence and all counting exports."""
     output.mkdir(parents=True, exist_ok=True)
     facts = read(FROZEN / "protein-group-classifications.csv.gz")
-    facts = restrict_to_universe(facts, output)
+    facts = annotate_translation_support(facts, output)
     facts = translation_qualification.annotate(facts)
     # Unnamed canonical loci retain their stable ID as the display label.
     facts["protein_group_label"] = facts.protein_group_label.fillna(facts.representative_gene_id)
@@ -910,6 +917,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         ROOT / "oncoref/data/tcr-trial-evidence.json",
         ROOT / "oncoref/gene_matching.py",
         CROSSWALK,
+        UNIVERSE,
         FROZEN / "protein-group-classifications.csv.gz",
         FROZEN / "bulk-contexts.csv.gz",
         FROZEN / "immune-cornea-contexts.csv.gz",
@@ -1044,7 +1052,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         EvidenceLayer("Tumor sample ≥2 TPM/pTPM", ~facts.tumor_union_ge2, empty),
         EvidenceLayer("Required RNA coverage", ~facts.required_coverage, empty),
         EvidenceLayer("Reproductive concentration", facts.reproductive_concentration_hold, empty),
-        EvidenceLayer("Translation qualification", ~facts.translation_qualified, empty),
+        EvidenceLayer("Translation qualification", ~policy.translation_admission(facts), empty),
     ]
     layers.insert(2, proteins[0])
     for assay in ASSAYS:

@@ -1,9 +1,9 @@
 {
   "schema": "oncoref.sequence-bundle-asset",
   "schema_version": 1,
-  "bundle_id": "oncoref:sequence-bundle:v1:sha256:84795d3f6348701b392fb04baab309513850e814bb3361827927e31f24b6ff55",
-  "url": "https://github.com/pirl-unc/oncoref/releases/download/v1.30.0/oncoref-sequences-1.30.0.zip",
-  "archive_bytes": 126992187,
-  "archive_sha256": "0f58ce2ecd9de53fb0b58048728bd6fae26ae4a14c8e6cbe8839a3062eb5b5e2",
-  "unpacked_bytes": 126991621
+  "bundle_id": "oncoref:sequence-bundle:v1:sha256:607c4ede9af40e33657ce84b58eff11087e66be7942a9a156a81480e8d06335a",
+  "url": "https://github.com/pirl-unc/oncoref/releases/download/v1.31.0/oncoref-sequences-1.31.0.zip",
+  "archive_bytes": 126951680,
+  "archive_sha256": "983f95c9f7a7e69715f44bc4f34cf0f190405819152e412853b5c46cff84a7c3",
+  "unpacked_bytes": 126951114
 }

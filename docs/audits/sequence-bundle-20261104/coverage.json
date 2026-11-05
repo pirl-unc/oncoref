@@ -3,18 +3,14 @@
   "scope": "all Ensembl 115 peptide FASTA records, including alternate loci and NMD/LoF/incomplete records",
   "classified_gene_loci_without_translation": [],
   "source_gene_loci_without_current_decision": [
-    "ENSG00000026036",
     "ENSG00000096150",
     "ENSG00000096155",
     "ENSG00000096171",
-    "ENSG00000100101",
     "ENSG00000111971",
     "ENSG00000112459",
     "ENSG00000112461",
     "ENSG00000112474",
     "ENSG00000112493",
-    "ENSG00000125695",
-    "ENSG00000135747",
     "ENSG00000137197",
     "ENSG00000137313",
     "ENSG00000137332",
@@ -23,9 +19,6 @@
     "ENSG00000137394",
     "ENSG00000137397",
     "ENSG00000137403",
-    "ENSG00000141979",
-    "ENSG00000159239",
-    "ENSG00000167807",
     "ENSG00000168384",
     "ENSG00000168452",
     "ENSG00000168468",
@@ -37,7 +30,6 @@
     "ENSG00000183311",
     "ENSG00000183574",
     "ENSG00000184494",
-    "ENSG00000188223",
     "ENSG00000188403",
     "ENSG00000196101",
     "ENSG00000196231",
@@ -45,7 +37,6 @@
     "ENSG00000198457",
     "ENSG00000203623",
     "ENSG00000203624",
-    "ENSG00000204003",
     "ENSG00000204197",
     "ENSG00000204221",
     "ENSG00000204359",
@@ -55,7 +46,6 @@
     "ENSG00000204689",
     "ENSG00000204690",
     "ENSG00000204692",
-    "ENSG00000205236",
     "ENSG00000205274",
     "ENSG00000206206",
     "ENSG00000206208",
@@ -455,7 +445,6 @@
     "ENSG00000211976",
     "ENSG00000211979",
     "ENSG00000212866",
-    "ENSG00000213297",
     "ENSG00000215048",
     "ENSG00000215077",
     "ENSG00000215328",
@@ -702,7 +691,6 @@
     "ENSG00000228116",
     "ENSG00000228128",
     "ENSG00000228131",
-    "ENSG00000228144",
     "ENSG00000228163",
     "ENSG00000228177",
     "ENSG00000228186",
@@ -1027,7 +1015,6 @@
     "ENSG00000234836",
     "ENSG00000234846",
     "ENSG00000234852",
-    "ENSG00000234857",
     "ENSG00000234876",
     "ENSG00000234920",
     "ENSG00000234947",
@@ -1218,7 +1205,6 @@
     "ENSG00000239855",
     "ENSG00000239862",
     "ENSG00000239865",
-    "ENSG00000239920",
     "ENSG00000239927",
     "ENSG00000239951",
     "ENSG00000239974",
@@ -1279,11 +1265,9 @@
     "ENSG00000243441",
     "ENSG00000243466",
     "ENSG00000243496",
-    "ENSG00000243501",
     "ENSG00000243570",
     "ENSG00000243594",
     "ENSG00000243612",
-    "ENSG00000243696",
     "ENSG00000243719",
     "ENSG00000243804",
     "ENSG00000243897",
@@ -1295,7 +1279,6 @@
     "ENSG00000244575",
     "ENSG00000244672",
     "ENSG00000248496",
-    "ENSG00000248710",
     "ENSG00000249103",
     "ENSG00000250036",
     "ENSG00000250364",
@@ -1308,94 +1291,34 @@
     "ENSG00000253534",
     "ENSG00000254167",
     "ENSG00000254405",
-    "ENSG00000254413",
-    "ENSG00000254536",
-    "ENSG00000254553",
-    "ENSG00000254673",
-    "ENSG00000254732",
     "ENSG00000254778",
-    "ENSG00000254806",
-    "ENSG00000254870",
     "ENSG00000254875",
     "ENSG00000254899",
-    "ENSG00000254959",
-    "ENSG00000254995",
-    "ENSG00000255054",
-    "ENSG00000255073",
-    "ENSG00000255152",
-    "ENSG00000255292",
-    "ENSG00000255339",
     "ENSG00000255419",
-    "ENSG00000255508",
     "ENSG00000255569",
-    "ENSG00000255663",
-    "ENSG00000255819",
-    "ENSG00000255872",
-    "ENSG00000256029",
-    "ENSG00000256206",
     "ENSG00000256553",
-    "ENSG00000256566",
     "ENSG00000256590",
-    "ENSG00000256861",
-    "ENSG00000256950",
-    "ENSG00000256966",
-    "ENSG00000257062",
-    "ENSG00000257065",
-    "ENSG00000257207",
     "ENSG00000257215",
     "ENSG00000257232",
-    "ENSG00000257355",
     "ENSG00000257473",
-    "ENSG00000257520",
-    "ENSG00000257524",
     "ENSG00000257770",
-    "ENSG00000257950",
     "ENSG00000258002",
-    "ENSG00000258052",
-    "ENSG00000258064",
-    "ENSG00000258388",
-    "ENSG00000258461",
-    "ENSG00000258466",
-    "ENSG00000258539",
     "ENSG00000258543",
-    "ENSG00000258555",
     "ENSG00000258589",
     "ENSG00000258635",
-    "ENSG00000258677",
-    "ENSG00000258830",
-    "ENSG00000258864",
     "ENSG00000258880",
-    "ENSG00000258984",
-    "ENSG00000259040",
     "ENSG00000259092",
     "ENSG00000259101",
-    "ENSG00000259164",
     "ENSG00000259261",
-    "ENSG00000259288",
     "ENSG00000259303",
-    "ENSG00000259316",
     "ENSG00000259490",
-    "ENSG00000259522",
     "ENSG00000259680",
-    "ENSG00000259753",
-    "ENSG00000259900",
-    "ENSG00000260092",
-    "ENSG00000260234",
-    "ENSG00000260729",
-    "ENSG00000260851",
     "ENSG00000260873",
-    "ENSG00000261147",
-    "ENSG00000261459",
-    "ENSG00000261582",
-    "ENSG00000261611",
-    "ENSG00000261732",
     "ENSG00000261846",
     "ENSG00000261852",
     "ENSG00000261862",
-    "ENSG00000261884",
     "ENSG00000261893",
     "ENSG00000261897",
-    "ENSG00000261915",
     "ENSG00000261936",
     "ENSG00000261958",
     "ENSG00000261968",
@@ -1418,7 +1341,6 @@
     "ENSG00000262218",
     "ENSG00000262221",
     "ENSG00000262243",
-    "ENSG00000262302",
     "ENSG00000262315",
     "ENSG00000262327",
     "ENSG00000262334",
@@ -1426,26 +1348,21 @@
     "ENSG00000262418",
     "ENSG00000262446",
     "ENSG00000262473",
-    "ENSG00000262481",
     "ENSG00000262505",
     "ENSG00000262512",
     "ENSG00000262520",
     "ENSG00000262525",
-    "ENSG00000262526",
     "ENSG00000262542",
-    "ENSG00000262560",
     "ENSG00000262573",
     "ENSG00000262594",
     "ENSG00000262599",
     "ENSG00000262607",
     "ENSG00000262611",
     "ENSG00000262612",
-    "ENSG00000262633",
     "ENSG00000262634",
     "ENSG00000262635",
     "ENSG00000262647",
     "ENSG00000262666",
-    "ENSG00000262730",
     "ENSG00000262731",
     "ENSG00000262748",
     "ENSG00000262749",
@@ -1496,61 +1413,16 @@
     "ENSG00000263324",
     "ENSG00000263328",
     "ENSG00000263341",
-    "ENSG00000263809",
-    "ENSG00000264187",
-    "ENSG00000264324",
     "ENSG00000264619",
-    "ENSG00000264813",
-    "ENSG00000265690",
-    "ENSG00000265818",
     "ENSG00000266027",
-    "ENSG00000266076",
-    "ENSG00000266086",
     "ENSG00000266286",
-    "ENSG00000266302",
     "ENSG00000266442",
-    "ENSG00000266728",
-    "ENSG00000266997",
-    "ENSG00000267022",
-    "ENSG00000267110",
-    "ENSG00000267120",
-    "ENSG00000267127",
-    "ENSG00000267303",
-    "ENSG00000267314",
-    "ENSG00000267385",
-    "ENSG00000267426",
-    "ENSG00000267477",
-    "ENSG00000267552",
     "ENSG00000267635",
-    "ENSG00000267645",
-    "ENSG00000267699",
-    "ENSG00000267706",
     "ENSG00000267728",
     "ENSG00000267954",
-    "ENSG00000268107",
-    "ENSG00000268193",
-    "ENSG00000268279",
-    "ENSG00000268400",
-    "ENSG00000268614",
     "ENSG00000268674",
-    "ENSG00000268797",
-    "ENSG00000268975",
     "ENSG00000269167",
-    "ENSG00000269179",
-    "ENSG00000269237",
-    "ENSG00000269242",
-    "ENSG00000269307",
-    "ENSG00000269403",
-    "ENSG00000269469",
-    "ENSG00000269476",
-    "ENSG00000269693",
-    "ENSG00000269755",
     "ENSG00000269823",
-    "ENSG00000269891",
-    "ENSG00000270099",
-    "ENSG00000270106",
-    "ENSG00000270136",
-    "ENSG00000270149",
     "ENSG00000270185",
     "ENSG00000270451",
     "ENSG00000270467",
@@ -1564,41 +1436,20 @@
     "ENSG00000271254",
     "ENSG00000271317",
     "ENSG00000271336",
-    "ENSG00000271698",
-    "ENSG00000271723",
-    "ENSG00000271741",
-    "ENSG00000271793",
-    "ENSG00000271949",
     "ENSG00000272000",
-    "ENSG00000272162",
     "ENSG00000272295",
-    "ENSG00000272305",
-    "ENSG00000272410",
-    "ENSG00000272442",
     "ENSG00000272532",
     "ENSG00000272670",
     "ENSG00000272712",
-    "ENSG00000272741",
     "ENSG00000272765",
     "ENSG00000272803",
     "ENSG00000272805",
     "ENSG00000272835",
-    "ENSG00000272896",
-    "ENSG00000272897",
     "ENSG00000272901",
-    "ENSG00000272916",
-    "ENSG00000272921",
-    "ENSG00000273003",
     "ENSG00000273086",
     "ENSG00000273092",
-    "ENSG00000273259",
-    "ENSG00000273269",
-    "ENSG00000273294",
     "ENSG00000273326",
-    "ENSG00000273331",
-    "ENSG00000273345",
     "ENSG00000273397",
-    "ENSG00000273398",
     "ENSG00000273431",
     "ENSG00000273457",
     "ENSG00000273494",
@@ -1640,7 +1491,6 @@
     "ENSG00000273707",
     "ENSG00000273713",
     "ENSG00000273722",
-    "ENSG00000273734",
     "ENSG00000273735",
     "ENSG00000273737",
     "ENSG00000273738",
@@ -1685,7 +1535,6 @@
     "ENSG00000274036",
     "ENSG00000274042",
     "ENSG00000274047",
-    "ENSG00000274049",
     "ENSG00000274050",
     "ENSG00000274053",
     "ENSG00000274058",
@@ -1734,7 +1583,6 @@
     "ENSG00000274305",
     "ENSG00000274311",
     "ENSG00000274320",
-    "ENSG00000274322",
     "ENSG00000274324",
     "ENSG00000274327",
     "ENSG00000274332",
@@ -2021,7 +1869,6 @@
     "ENSG00000275758",
     "ENSG00000275760",
     "ENSG00000275777",
-    "ENSG00000275778",
     "ENSG00000275779",
     "ENSG00000275786",
     "ENSG00000275791",
@@ -2084,7 +1931,6 @@
     "ENSG00000276082",
     "ENSG00000276084",
     "ENSG00000276086",
-    "ENSG00000276087",
     "ENSG00000276111",
     "ENSG00000276114",
     "ENSG00000276125",
@@ -2147,7 +1993,6 @@
     "ENSG00000276395",
     "ENSG00000276405",
     "ENSG00000276416",
-    "ENSG00000276418",
     "ENSG00000276420",
     "ENSG00000276421",
     "ENSG00000276423",
@@ -2170,7 +2015,6 @@
     "ENSG00000276469",
     "ENSG00000276480",
     "ENSG00000276482",
-    "ENSG00000276490",
     "ENSG00000276491",
     "ENSG00000276495",
     "ENSG00000276497",
@@ -2375,7 +2219,6 @@
     "ENSG00000277596",
     "ENSG00000277600",
     "ENSG00000277607",
-    "ENSG00000277611",
     "ENSG00000277614",
     "ENSG00000277615",
     "ENSG00000277616",
@@ -2432,9 +2275,7 @@
     "ENSG00000277949",
     "ENSG00000277953",
     "ENSG00000277956",
-    "ENSG00000277957",
     "ENSG00000277964",
-    "ENSG00000277971",
     "ENSG00000277974",
     "ENSG00000277982",
     "ENSG00000277983",
@@ -2617,8 +2458,6 @@
     "ENSG00000279552",
     "ENSG00000279566",
     "ENSG00000279643",
-    "ENSG00000279956",
-    "ENSG00000280148",
     "ENSG00000280411",
     "ENSG00000280477",
     "ENSG00000280479",
@@ -2627,7 +2466,6 @@
     "ENSG00000280514",
     "ENSG00000280516",
     "ENSG00000280529",
-    "ENSG00000280537",
     "ENSG00000280548",
     "ENSG00000280549",
     "ENSG00000280563",
@@ -2655,7 +2493,6 @@
     "ENSG00000280831",
     "ENSG00000280858",
     "ENSG00000280866",
-    "ENSG00000280893",
     "ENSG00000280899",
     "ENSG00000280905",
     "ENSG00000280908",
@@ -2697,7 +2534,6 @@
     "ENSG00000281320",
     "ENSG00000281324",
     "ENSG00000281345",
-    "ENSG00000281348",
     "ENSG00000281385",
     "ENSG00000281395",
     "ENSG00000281429",
@@ -2715,7 +2551,6 @@
     "ENSG00000281536",
     "ENSG00000281540",
     "ENSG00000281573",
-    "ENSG00000281593",
     "ENSG00000281601",
     "ENSG00000281614",
     "ENSG00000281618",
@@ -2742,7 +2577,6 @@
     "ENSG00000281861",
     "ENSG00000281877",
     "ENSG00000281879",
-    "ENSG00000281883",
     "ENSG00000281886",
     "ENSG00000281894",
     "ENSG00000281917",
@@ -2751,7 +2585,6 @@
     "ENSG00000281933",
     "ENSG00000281934",
     "ENSG00000281935",
-    "ENSG00000281938",
     "ENSG00000281939",
     "ENSG00000281940",
     "ENSG00000281943",
@@ -2777,7 +2610,6 @@
     "ENSG00000282017",
     "ENSG00000282019",
     "ENSG00000282025",
-    "ENSG00000282034",
     "ENSG00000282035",
     "ENSG00000282040",
     "ENSG00000282042",
@@ -3049,9 +2881,7 @@
     "ENSG00000283150",
     "ENSG00000283153",
     "ENSG00000283216",
-    "ENSG00000283228",
     "ENSG00000283231",
-    "ENSG00000283239",
     "ENSG00000283284",
     "ENSG00000283292",
     "ENSG00000283302",
@@ -3067,13 +2897,9 @@
     "ENSG00000283465",
     "ENSG00000283488",
     "ENSG00000283510",
-    "ENSG00000283515",
-    "ENSG00000283563",
-    "ENSG00000283580",
     "ENSG00000283589",
     "ENSG00000283630",
     "ENSG00000283649",
-    "ENSG00000283663",
     "ENSG00000283702",
     "ENSG00000283708",
     "ENSG00000283714",
@@ -3113,7 +2939,6 @@
     "ENSG00000283869",
     "ENSG00000283870",
     "ENSG00000283875",
-    "ENSG00000283877",
     "ENSG00000283878",
     "ENSG00000283882",
     "ENSG00000283883",
@@ -3125,7 +2950,6 @@
     "ENSG00000283903",
     "ENSG00000283915",
     "ENSG00000283918",
-    "ENSG00000283930",
     "ENSG00000283934",
     "ENSG00000283937",
     "ENSG00000283946",
@@ -3199,25 +3023,20 @@
     "ENSG00000284320",
     "ENSG00000284330",
     "ENSG00000284333",
-    "ENSG00000284337",
     "ENSG00000284340",
-    "ENSG00000284341",
     "ENSG00000284342",
     "ENSG00000284347",
     "ENSG00000284365",
     "ENSG00000284369",
     "ENSG00000284371",
     "ENSG00000284383",
-    "ENSG00000284393",
     "ENSG00000284400",
     "ENSG00000284401",
     "ENSG00000284408",
     "ENSG00000284426",
-    "ENSG00000284431",
     "ENSG00000284454",
     "ENSG00000284457",
     "ENSG00000284460",
-    "ENSG00000284461",
     "ENSG00000284466",
     "ENSG00000284468",
     "ENSG00000284476",
@@ -3247,28 +3066,22 @@
     "ENSG00000284588",
     "ENSG00000284589",
     "ENSG00000284598",
-    "ENSG00000284626",
-    "ENSG00000284686",
-    "ENSG00000284695",
     "ENSG00000284749",
     "ENSG00000284752",
     "ENSG00000284754",
     "ENSG00000284764",
     "ENSG00000284765",
-    "ENSG00000284772",
     "ENSG00000284774",
     "ENSG00000284781",
     "ENSG00000284792",
     "ENSG00000284796",
     "ENSG00000284799",
-    "ENSG00000284800",
     "ENSG00000284806",
     "ENSG00000284807",
     "ENSG00000284810",
     "ENSG00000284814",
     "ENSG00000284816",
     "ENSG00000284818",
-    "ENSG00000284820",
     "ENSG00000284827",
     "ENSG00000284832",
     "ENSG00000284835",
@@ -3302,9 +3115,7 @@
     "ENSG00000284938",
     "ENSG00000284939",
     "ENSG00000284944",
-    "ENSG00000284946",
     "ENSG00000284949",
-    "ENSG00000284952",
     "ENSG00000284953",
     "ENSG00000284958",
     "ENSG00000284965",
@@ -3315,11 +3126,8 @@
     "ENSG00000284982",
     "ENSG00000284983",
     "ENSG00000284984",
-    "ENSG00000284987",
-    "ENSG00000284989",
     "ENSG00000284990",
     "ENSG00000284991",
-    "ENSG00000285000",
     "ENSG00000285007",
     "ENSG00000285011",
     "ENSG00000285013",
@@ -3358,7 +3166,6 @@
     "ENSG00000285147",
     "ENSG00000285152",
     "ENSG00000285154",
-    "ENSG00000285171",
     "ENSG00000285172",
     "ENSG00000285176",
     "ENSG00000285181",
@@ -3371,7 +3178,6 @@
     "ENSG00000285221",
     "ENSG00000285222",
     "ENSG00000285226",
-    "ENSG00000285238",
     "ENSG00000285241",
     "ENSG00000285243",
     "ENSG00000285246",
@@ -3380,7 +3186,6 @@
     "ENSG00000285250",
     "ENSG00000285251",
     "ENSG00000285252",
-    "ENSG00000285269",
     "ENSG00000285272",
     "ENSG00000285281",
     "ENSG00000285286",
@@ -3392,7 +3197,6 @@
     "ENSG00000285326",
     "ENSG00000285327",
     "ENSG00000285328",
-    "ENSG00000285329",
     "ENSG00000285339",
     "ENSG00000285341",
     "ENSG00000285343",
@@ -3424,7 +3228,6 @@
     "ENSG00000285438",
     "ENSG00000285442",
     "ENSG00000285443",
-    "ENSG00000285444",
     "ENSG00000285449",
     "ENSG00000285451",
     "ENSG00000285456",
@@ -3438,42 +3241,14 @@
     "ENSG00000285497",
     "ENSG00000285501",
     "ENSG00000285502",
-    "ENSG00000285505",
     "ENSG00000285507",
     "ENSG00000285516",
-    "ENSG00000285528",
-    "ENSG00000285558",
-    "ENSG00000285589",
-    "ENSG00000285602",
     "ENSG00000285617",
-    "ENSG00000285629",
-    "ENSG00000285635",
-    "ENSG00000285645",
-    "ENSG00000285713",
-    "ENSG00000285779",
-    "ENSG00000285791",
     "ENSG00000285795",
-    "ENSG00000285816",
     "ENSG00000285832",
-    "ENSG00000285839",
-    "ENSG00000285854",
-    "ENSG00000285897",
-    "ENSG00000285901",
-    "ENSG00000285932",
-    "ENSG00000285942",
     "ENSG00000285962",
-    "ENSG00000285978",
-    "ENSG00000285991",
-    "ENSG00000286007",
-    "ENSG00000286088",
-    "ENSG00000286132",
     "ENSG00000286139",
     "ENSG00000286184",
-    "ENSG00000286231",
-    "ENSG00000286239",
-    "ENSG00000287694",
-    "ENSG00000287725",
-    "ENSG00000287908",
     "ENSG00000288113",
     "ENSG00000288114",
     "ENSG00000288118",
@@ -3516,7 +3291,6 @@
     "ENSG00000288202",
     "ENSG00000288204",
     "ENSG00000288206",
-    "ENSG00000288208",
     "ENSG00000288210",
     "ENSG00000288213",
     "ENSG00000288214",
@@ -3530,7 +3304,6 @@
     "ENSG00000288249",
     "ENSG00000288250",
     "ENSG00000288257",
-    "ENSG00000288258",
     "ENSG00000288259",
     "ENSG00000288260",
     "ENSG00000288261",
@@ -3630,36 +3403,9 @@
     "ENSG00000288513",
     "ENSG00000288516",
     "ENSG00000288517",
-    "ENSG00000288534",
-    "ENSG00000288550",
-    "ENSG00000288564",
-    "ENSG00000288591",
-    "ENSG00000288622",
-    "ENSG00000288643",
     "ENSG00000288650",
-    "ENSG00000288669",
     "ENSG00000288673",
-    "ENSG00000288674",
-    "ENSG00000288683",
-    "ENSG00000288698",
-    "ENSG00000288699",
-    "ENSG00000288710",
-    "ENSG00000288711",
-    "ENSG00000288725",
-    "ENSG00000289503",
-    "ENSG00000289517",
-    "ENSG00000289565",
-    "ENSG00000289695",
-    "ENSG00000289701",
-    "ENSG00000289716",
-    "ENSG00000289720",
     "ENSG00000289723",
-    "ENSG00000289758",
-    "ENSG00000290146",
-    "ENSG00000290180",
-    "ENSG00000290230",
-    "ENSG00000290263",
-    "ENSG00000291240",
     "ENSG00000291347",
     "ENSG00000291348",
     "ENSG00000291350",
@@ -3995,7 +3741,6 @@
     "ENSG00000292271",
     "ENSG00000292275",
     "ENSG00000292276",
-    "ENSG00000292277",
     "ENSG00000292279",
     "ENSG00000292284",
     "ENSG00000292286",
@@ -4027,1569 +3772,9 @@
     "ENSG00000293545",
     "ENSG00000293547",
     "ENSG00000293551",
-    "ENSG00000293553",
-    "ENSG00000293604",
-    "ENSG00000293626",
-    "ENSG00000310525",
-    "ENSG00000310583",
-    "ENSG00000310592"
+    "ENSG00000293604"
   ],
-  "out_of_universe_groups": [
-    {
-      "protein_equivalence_group_id": "PEG:b13f18e9d640fc3b6802",
-      "protein_group_label": "RTEL1-TNFRSF6B",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:86152713d3ddf3afa3ce",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6f5dfad4e74ec5c6e595",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9166cd6f862d27a50362",
-      "protein_group_label": "ZNF670-ZNF695",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:ffd2a2f6cbe8f66781ff",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:752c8e996914729d45c2",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e6a1ca4ff8417f6c8fdf",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e6662cc772b4f3b3fd24",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:aac88ae18596db2c955f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:d5eda110316979ebe4f8",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:d61a0f144b4ace78c167",
-      "protein_group_label": "ZNF625-ZNF20",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:26b6fd740a3750c8d707",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:1e9829de34a0aed67aa6",
-      "protein_group_label": "HNRNPUL2-BSCL2",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:cb5e48f902c181382c20",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:35f2fd48bdc07710ecd6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:99703f3de90df22a2416",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Unsafe"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c79528d7fae97f62f5e0",
-      "protein_group_label": "TRIM59-IFT80",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:50d9736082cb7ad9399e",
-      "protein_group_label": "CHKB-CPT1B",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f8ce03797f1032b85eb8",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:25a70e118e2b3561bbf2",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c92b66a188b6bf75e905",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:612a90782f6810fdde30",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7cee66d0015bccd17644",
-      "protein_group_label": "SYS1-DBNDD2",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3744fc3ce040a2777b30",
-      "protein_group_label": "ATP6V1G2-DDX39B",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0e487a72a990cee53b86",
-      "protein_group_label": "INMT-MINDY4",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6c8aa97fe3893ab0350a",
-      "protein_group_label": "STX16-NPEPL1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Unsafe"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9bf3b7c997acd7a94507",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:04a62adc38773c853f40",
-      "protein_group_label": "ZFP91-CNTF",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:d5e8fa90308b699bc6a1",
-      "protein_group_label": "MSH5-SAPCD1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:00aa3ab109d9f400e386",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a90bf7e7d8b112fa65cd",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f3c9c85cb770b6041c73",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:68761cf49bdd42e8e4a1",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0fcadcef9a7bfe41224b",
-      "protein_group_label": "KLRC4-KLRK1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Unsafe"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:251ff8f37211c5392b76",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f85b514872d6f0f6ef4a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a81bd13a6667e37a6476",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:725a4ff84a0e72e1c2cf",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4d6b0dc88f63f86fef4d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:cb3953e5387b359c6a0a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:ea22ceb67afb9afc18c7",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3114e77afb26d84fc415",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f84cf7a025e9c36fe763",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a64ea394e039cdfda9a5",
-      "protein_group_label": "ENSG00000257207/84337",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4f2722e5f21f99af417f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7dfd5f227917fcd47c12",
-      "protein_group_label": "SFTA3",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c7addbe7503d7ab03188",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Unsafe"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7bfda2e2f4fcc3deaeb0",
-      "protein_group_label": "P2RX5-TAX1BP3",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:465ff0d30e8bfd51dd58",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:554181c8007d0e937825",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:07b60c9bacc5a9d58a63",
-      "protein_group_label": "PPT2-EGFL8",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:060d4e5c720ba34787e0",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Unsafe"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b7cefcd5805e64c5ed9e",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:2bc5134160d3fc27d053",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:af9eaa07c5be7668923d",
-      "protein_group_label": "SPECC1L-ADORA2A",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:df8b683d893c68c262b0",
-      "protein_group_label": "",
-      "reason": "single_study_ribo_seq",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0b90fee4cc45b9e8315c",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8f92599556950964001d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5f318aa44fb3e873bbf1",
-      "protein_group_label": "UBE2F-SCLY",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:75cac6bcfead610e0b00",
-      "protein_group_label": "BLOC1S5-TXNDC5",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5830f6896cbb01335e32",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8346f28de14f003037d1",
-      "protein_group_label": "BUB1B-PAK6",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a49d07da86dc6b18c997",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c5fdf240029cfd40a6ba",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8408b226258a6741175a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:864a7d5669b311f2fa71",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5d99828739547e8a40f8",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:72727dd24e720faa9b47",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9c1463595f22bb659002",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:66d037cf65ef0ec75a85",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f488384cc4af7558bf3d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f2769be51a8aaad682a7",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:badfdfc2a327c47f8298",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:eb124cbed8f12d0072f6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c7cd1ec22b84f72a545a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:cf0a5c5080b48f0e3645",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Unsafe"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0dd94f881214bd837c95",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b05b95e2528e4bd1100a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3d5f6efdd6ae55548022",
-      "protein_group_label": "TMEM256-PLSCR3",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:64c82b873a457b5335f9",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bc241b7be3fd8589a611",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3d53a06b0fa0addf33e4",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:462d00c4785b9cf841a4",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:ef88a436c92632b344d3",
-      "protein_group_label": "",
-      "reason": "single_study_ribo_seq",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:495586d66bb217b0591b",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bc684d5f4e5e416eb1d6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:22cce627b20e0c8f978f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:1503034e1b922d58846d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4e9515ca68880d81d6c6",
-      "protein_group_label": "EEF1E1-BLOC1S5",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:adca3cc4d68212c7e6bc",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:31f2a6d6e91ab909a2aa",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a888e092ee6706bca2af",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:db034edaa645c5981d6d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7483ef146b1af1b73e64",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3985b4f79832ed73b3e3",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0346e0400aaae7e1d7b6",
-      "protein_group_label": "",
-      "reason": "single_study_ribo_seq",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4a0c8f6ef1f661f0be00",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:df222bbd72e2a4df1927",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c8299579611a57fb1f6a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f69b47d6699c94ff9e82",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:01b6790ced9efd75759d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4bc716acc3115d40a1d9",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:09bf1496ec2164ace3cf",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3e7c0562f9bdb30b98b4",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8b7f6c32403613f164b7",
-      "protein_group_label": "POLR2J2-UPK3BL1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:1264eb039da4b7dc15e9",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0ed0d9811c0584714778",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:928650dadf66a48773cc",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a0c33ffce9aa63044d19",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5ce75902ef59aaa39126",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9b89dd93d243df0ee135",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:53db630844dd6037225f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c7addca6a96ea1534110",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:d54b3ca2147c8d24fecd",
-      "protein_group_label": "MIA-RAB4B",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:47948ea7f15c736a2885",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:17fe32a2a526258d31e4",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:421058349fd1fd2b8a2e",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:57baf4135cfba0953fd7",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b3c231794a1d1791887b",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:600e07d77479b0175f80",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e07da141c5bd817b8c50",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:ad9f76fcf708f6195bd1",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:21839a1deea435b24066",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e77ea1d2704c4f7386a4",
-      "protein_group_label": "ARHGAP19-SLIT1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:413fd3c5331234198d05",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7999f2609f9115c735a0",
-      "protein_group_label": "TSNAX-DISC1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e3f0aef34ec1218acab1",
-      "protein_group_label": "MICOS10-NBL1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:504229148f1b113cffdd",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f4ece2408ca608ad8f41",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b508d533e2fed2ed8687",
-      "protein_group_label": "MROH7-TTC4",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e5abd9dd8abe6a9815d5",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:66a0a21ee5365eecef1d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:74470a58373e221f9dba",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:535edf6ca8e779d14257",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:444ee296752495876301",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:60daf1c727705c885d85",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:19596429b9a2be522cf1",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b1677ad8bccdced2043d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:648e57b4ed723f5e97b5",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:117e2cef55f4dcbe1ff6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7789b418e59e44845a94",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:28fb2de1c09988d7c4d8",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bcc0a7d2685e46c9e7c7",
-      "protein_group_label": "ARL2-SNX15",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:60a26e615f0c3d508267",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:ecdab7692059d0554970",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bf50e5f5891dd8fa68c8",
-      "protein_group_label": "C1QTNF3-AMACR",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:583dfec368b8effc9e5f",
-      "protein_group_label": "TM4SF19-DYNLT2B",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:572f408e7f995747713d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:d90b5a09af91729c24cc",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:230245dd1ba4fb2301ad",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:01b51be325a7a121de24",
-      "protein_group_label": "INO80B-WBP1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bd2606846b435afbcf29",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f8a2c282d9151af8b06b",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Unsafe"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:cb610837f19d42c2e6cd",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:883983063aaa49b17b79",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8426a83db45e4475fad1",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:44b68bc1ae5576ad63ae",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6a4bd91d3dab663401c3",
-      "protein_group_label": "SENP3-EIF4A1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:dce19195b569b9b1acec",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:fcf255f25709fde57ad2",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:73a6928f747770475615",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:fe41d0da636aa3872174",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:638cf3aeeb221b903047",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:67880e538243d30e4a25",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:95a48b4525eed7d44a56",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:db49a4ed2c60865145b9",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9d536e151824577d3cb3",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5fed54c4294a643f5255",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4fafa2e0a0310284b7d6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:aa755a4e5549c23e9b59",
-      "protein_group_label": "KBTBD11-OT1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f7196750c2943bc60932",
-      "protein_group_label": "",
-      "reason": "single_study_ribo_seq",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:713871de1b2900861770",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:16fdc4e6ed57038f4a4a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:57768176a2371e44b03f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:1bc69864342bfd6f7e7a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:686c2e083375a0c26c27",
-      "protein_group_label": "PLD5P1",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:13122f7432bda2d8190a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:163ec3a0abe72dfcddef",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:973fc7f939f7e8d78b8e",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:2ac9f9301dbd7ab0b6f9",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:604ea9129c287763be40",
-      "protein_group_label": "",
-      "reason": "single_study_ribo_seq",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9a1431c107f0f53f805a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6f88a158cd3481900515",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7ce9b2ce1cfc7dd2288f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:27126fb03e2a9e7cd9c5",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5aa04a50af9fcd8bd8dd",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b43499dc7a7802fbc7e6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:98cab9f6d9b50e276510",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a3d162f9d7c72fa85462",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:fc39dac673e88b71f625",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5a540a79ec01817713ef",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:ce89909683effc2680a4",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:16a49d1c1a9798348661",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:06889ec4b213d253b533",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4e21b294b2761be843d3",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3be376c7d7fc7c720b3f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bfac78846ed3043918fc",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:58c6261ae1b432304226",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b2827e1a64749e04902a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:d72f00d2f4c82ba664b8",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:1b288b3b66923a112fb2",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e0da88944f75f5c0c6f4",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6d9d57347b246868b286",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:23ca3422bcf671b29118",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9eddef18584f7edda923",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:42cecd627419b4a3ed17",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8cc427c57a133c585c77",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e575cf6fd70ed2a1d38c",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f5d3bae542f58ea1b600",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:2eca5513be86cfbcf87c",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0dcb417bfa9194be5de6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8de4d7319c02a1a453b7",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7d3f6e0f7c49764e0311",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:97f09d064d33061c5697",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a6f4cc61fc300cc0e3f1",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:81d9487ac187a8cb1e0a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:40f5b97e09f80cee689e",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6852ce7cfbb5d6adfca6",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bba658135c8d8b5766b5",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8a02cc30704d7fa294f2",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:79780745ef33af565c7d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5830d8ec99c11acd3a07",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b2ccf34ac56dca81a48d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:8b1b7e77422fdcc27aa2",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c8cb5d871a62747a366c",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c98c49e8ca8e7f84a022",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:40d37fc26a21e792779f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:561f595ff78ee3e936fe",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:f4cf24f34e72bb786fd0",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6c7e6d44526b186c1b6f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:ea0e86810b8859806c04",
-      "protein_group_label": "PDCD6-AHRR",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:3b208ccedcbe06abcda4",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:2e4178c5df07a6c6825e",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:0a1620884d7c7665c3a8",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:77ae52eecf058151e048",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:bbc8d6ecffcfc4f8d00b",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e46f0948e444cf9d2956",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:649bdd08a623e7187e39",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:b6363652a0befad35d8b",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:c534894ec8fdc1982283",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:a08f85760a49f5f50997",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:53814c729ffe9fe7a45b",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:54432f8f1b31ee6e80d5",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6b03ce3b74d00ecac025",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:acf2e5b6e0047bb5e8f7",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:6a5500c4126dced1a43b",
-      "protein_group_label": "XNDC1N-ZNF705EP-ALG1L9P",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:9317657949cf92947c8a",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:834c0efa398c5c733964",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:e0ee6688579c922c17cb",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:50ed02039823b552504d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:4cd3eba260b8d8a0fd54",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:08d7a0a8fffadb76fa12",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:64447cdc9071752db7e2",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:809834d9138e8f09359f",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:7f16fc3b5008e2fea44c",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:5efd68149647beaa485d",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:19356d92b1e336c2e0bb",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:58b28ff037e0110ce062",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    },
-    {
-      "protein_equivalence_group_id": "PEG:22f89c4acac6ae81bfed",
-      "protein_group_label": "",
-      "reason": "nmd_or_cds_not_defined_only",
-      "previous_category": "Neither"
-    }
-  ],
+  "out_of_universe_groups": [],
   "nc_orf_nominations_without_sequence_in_this_reference_bundle": [
     {
       "gene_id": "ENSG00000099869",

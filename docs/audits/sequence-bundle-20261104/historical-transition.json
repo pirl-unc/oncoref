@@ -40,7 +40,7 @@
     },
     "reference_id": "openvax:reference:v1:sha256:0fefb51755788901693be9987fadc31e61f945cd53c08a170e0e1d4ad4a09b61"
   },
-  "current_bundle_id": "oncoref:sequence-bundle:v1:sha256:84795d3f6348701b392fb04baab309513850e814bb3361827927e31f24b6ff55",
+  "current_bundle_id": "oncoref:sequence-bundle:v1:sha256:607c4ede9af40e33657ce84b58eff11087e66be7942a9a156a81480e8d06335a",
   "comparison_unit": "SHA-256 of full original amino-acid strings; no partial-segment or approximate equivalence",
   "counts": [
     {
@@ -51,12 +51,12 @@
     {
       "historical_forbidden": false,
       "current_role": "exclude",
-      "sequences": 1697
+      "sequences": 1707
     },
     {
       "historical_forbidden": false,
       "current_role": "review",
-      "sequences": 2124
+      "sequences": 2114
     },
     {
       "historical_forbidden": true,
@@ -66,12 +66,12 @@
     {
       "historical_forbidden": true,
       "current_role": "exclude",
-      "sequences": 154107
+      "sequences": 154113
     },
     {
       "historical_forbidden": true,
       "current_role": "review",
-      "sequences": 1985
+      "sequences": 1979
     }
   ],
   "notes": [
@@ -80,6 +80,6 @@
     "Current record roles are combined with exclude > review > allow across all occurrences.",
     "This comparison does not validate an approximate peptide-matching rule."
   ],
-  "output_sha256": "4530dcc05273943822c87dca46af1833c60536928e10f8c912f2b87f41b87691",
+  "output_sha256": "7808089918dc8485a0494aefd4cdf92fe1a5fccf1f2246d0ed83a4a9af5b97a5",
   "generator_sha256": "39ab619adf0c9bfd3008d4b2adefc9105842180da5f67489b61bc0066a680fd5"
 }

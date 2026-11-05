@@ -13,6 +13,7 @@ from pathlib import Path
 
 import audit_cta_source_coverage
 import build_cta_contract_report
+import build_cta_inventory_report
 import build_cta_migration_report
 import build_cta_selection_audit
 import build_cta_selection_release
@@ -30,6 +31,7 @@ def receipts() -> None:
     """Record the measurement replay and current exports without self-hashing."""
     inputs = [
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/data/cta-protein-universe.csv",
         ROOT / "oncoref/translation_qualification.py",
         ROOT / "oncoref/data/translation-qualification.json",
         ROOT / "oncoref/data/translation-qualification.csv.gz",
@@ -175,6 +177,7 @@ def main() -> None:
     )
     receipts()
     build_cta_selection_release.build(OUTPUT)
+    build_cta_inventory_report.build()
     audit_cta_source_coverage.build()
     build_cta_selection_audit.build()
     build_tcr_trial_report.build()

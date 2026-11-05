@@ -1,8 +1,8 @@
 # CTA and oncofetal selection
 
-**602 CTA proteins (646 loci), 18,243 Unsafe, and 759 Other (27 of them Held)**, with evidence status recorded independently, across 19,604 proteins in the coding or established-ncORF universe (identical selected reference sequences collapsed; 259 out-of-universe groups are listed separately). Policy: `oncoref.cta-selection.2026-11-04.2`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
+**602 CTA proteins (646 loci), 18,255 Unsafe, and 1,006 Other (27 of them Held)**, with evidence status recorded independently, across all 19,863 candidate proteins (identical selected reference sequences counted together; every record enters classification). Translation support and reference quality are CTA admission gates; 0 records are outside the classification path. Policy: `oncoref.cta-selection.2026-11-05.1`. This is the current policy; the [1.21.0 release](../cta-release-1.21.0/index.md) remains a frozen comparison.
 
-[PDF slides](cta-selection-1.30.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.30.0-validated-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
+[PDF slides](cta-selection-1.31.0.pdf) · [Editable slides](slides/cta-evidence-walkthrough-1.31.0-validated-final.pptx) · [TCR-T serious-event review and PDF](../cta-tcr-trials-20261029/index.md) · [Unassigned proteins and diffuseness](../cta-unassigned-20261029/index.md) · [Papers and database versions](references.md) · [Dog evidence](dog.md) · [Shared API](api.md) · [Policy and IHC matching](policy-review.md) · [All decisions](../cta-selection-20261028/protein-group-classifications.csv.gz) · [Changed decisions](../cta-selection-20261028/classification-changes.csv.gz)
 
 [Simplified decisions and four target reviews](../cta-simplification-20261031/index.md).
 [1.26 literature audit and decisions](../cta-other-literature-20261030/index.md).
@@ -24,9 +24,9 @@ embryonic evidence remains independent and its concentration is unassessed.
 - **CTA:** qualifying association after the concentration check, one measured cancer sample, required coverage, qualified selected translations, sequence-overlap rules and acceptable normal expression all pass.
 - **Unsafe:** above the single RNA ceiling in Vital/Protected, Manageable-tier RNA above 128, accepted non-Low protein in those compartments, accepted reviewed normal-cell evidence, or retained clinical exclusion evidence. Unresolved findings require review without independently establishing Unsafe. This is a research-policy exclusion, not demonstrated toxicity.
 - **Other:** every protein that is neither CTA nor Unsafe. Its subtype names the first unmet identity gate (Nonreproductive, Reproductive, Diffuse); **Held** means every target gate passes but a marginal or unresolved normal signal blocks CTA. `assessment_status` independently records missing coverage, normal-evidence holds or translation review.
-- **No unassessed class:** missing optional panels never block a label, and no human protein has a null category.
+- **Every record classified:** missing optional panels alone do not block CTA admission; observed evidence still applies, and no human protein has a null category.
 
-The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels count when present but never block a label.
+The separate **2× Strong boundary is removed**. Every layer evaluates every protein; Other includes assessed noncandidates and held/incomplete cases. Required coverage is combined bulk (HPA consensus, HPA brain and [GTEx v11](https://gtexportal.org/home/downloads/adult-gtex)) for every protein member. Cell-cluster, immune, DICE and corneal panels contribute measured evidence; their missing coverage alone does not block CTA admission.
 
 ## Other categories
 
@@ -39,7 +39,7 @@ Every protein has one categorical assignment: CTA, Unsafe or a named Other categ
 | Other:Diffuse | Reproductive presence and cancer presence pass, but the reproductive concentration gate fails. Inspect assessment status independently. | 4 |
 | Other:Held | Target gates pass, but an unresolved or marginal normal-tissue signal blocks CTA without establishing Unsafe. | 27 |
 | Other:Nested | A reference-CDS microprotein (under 50 residues) nested inside a same-strand protein-coding gene and not an established ncORF: its RNA signal belongs to the host, so it cannot be a CTA. | 28 |
-| Other:Translation | The selected primary-locus reference translation needs qualification; this is not normal-tissue exclusion evidence. | 115 |
+| Other:Translation | The selected primary-locus reference translation needs qualification; this is not normal-tissue exclusion evidence. | 362 |
 | Other:Contained | Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist. | 15 |
 
 Other reasons follow the unmet identity requirements: reproductive presence, cancer presence, then concentration. Abundance, replicated tumor support and adult Disposable expression are independent attributes in `cta_selection.profiles()`. Disposable designates permitted adult tissue; developmental expression and missing developmental measurements never change that adult designation. Native RNA units remain separate. [Simple rules and four-protein review](../cta-simplification-20261031/index.md).
@@ -96,9 +96,9 @@ the service are `rare_cell_screened = False` and are never flagged.
 
 | API status | Meaning | Human proteins |
 |---|---|---:|
-| `screened` | A CTA, Unsafe or named Other category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | 19,604 |
+| `screened` | A CTA, Unsafe or named Other category has been assigned by this policy. It does not mean safe, clinically validated or complete coverage of every source. | 19,863 |
 | `incomplete_evidence` | Required normal coverage or evidence resolution is missing. Additional missing cancer/developmental measurements are reported separately and do not themselves prevent Other. | 105 |
-| `translation_review` | Selected primary-locus translation requires qualification. Normal findings remain independently visible. | 116 |
+| `translation_review` | Selected primary-locus translation requires qualification. Normal findings remain independently visible. | 363 |
 | `normal_evidence_hold` | Required coverage is present, but a normal-screen hold remains, including Manageable ceiling failures. | 118 |
 | `unassessed` | No species-specific quantitative policy has been applied; used for native dog nominations. | 0 |
 
@@ -124,7 +124,7 @@ These published lists annotate the selection; they do not provide a gene-specifi
 | --- | --- | --- | --- | --- | --- | --- |
 | [da Silva et al. (2017)](https://doi.org/10.18632/oncotarget.21715) | 1017 | 411 | 466 | 140 | 0 | [Source](https://doi.org/10.18632/oncotarget.21715) |
 | [Wang et al. (2016)](https://doi.org/10.1038/ncomms10499) | 988 | 269 | 683 | 36 | 0 | [Source](https://doi.org/10.1038/ncomms10499) |
-| [Chang et al. (2019)](https://doi.org/10.1002/cam4.2223) | 985 | 281 | 676 | 27 | 1 | [Source](https://doi.org/10.1002/cam4.2223) |
+| [Chang et al. (2019)](https://doi.org/10.1002/cam4.2223) | 985 | 281 | 676 | 28 | 0 | [Source](https://doi.org/10.1002/cam4.2223) |
 | [Gong et al. (2021)](https://doi.org/10.1038/s41467-021-22695-y) | 729 | 346 | 343 | 40 | 0 | [Source](https://doi.org/10.1038/s41467-021-22695-y) |
 | [Bruggeman et al. (2018)](https://doi.org/10.1038/s41388-018-0357-2) | 692 | 12 | 679 | 1 | 0 | [Source](https://doi.org/10.1038/s41388-018-0357-2) |
 | [Jamin et al. (2021)](https://doi.org/10.1002/1878-0261.12900) | 469 | 33 | 429 | 7 | 0 | [Source](https://doi.org/10.1002/1878-0261.12900) |
@@ -165,7 +165,7 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 | route | entrants | CTA |
 | --- | --- | --- |
 | Adult/placental evidence only | 4686 | 400 |
-| Embryonic-only evidence | 400 | 92 |
+| Embryonic-only evidence | 459 | 92 |
 | Both measured routes | 12546 | 110 |
 
 [Tyser et al. (2021)](https://doi.org/10.1038/s41586-021-04158-y), [HPA v23 downloads](https://v23.proteinatlas.org/about/download).
@@ -242,9 +242,9 @@ EGFL6 is excluded by lung bulk RNA (24.8 nTPM), lung smooth-muscle RNA (363.3 nT
 | Reproductive or developmental expression | Full Reproductive bulk ≥5 nTPM OR supported reproductive-cell RNA ≥5 nTPM (≥20 reads; indirect sites additionally need complete outside-cluster coverage and every outside value <5, with no curated normal-induction conflict) OR reliable mapped positive reproductive IHC for every member without an antibody conflict OR reviewed human reproductive protein covering every selected member OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Presence evidence never overrides normal exclusions. |
 | Cancer expression | At least one measured compatible tumor sample >0 in native TPM or HPA pTPM OR reviewed reliable tumor protein. This establishes presence, not therapeutic abundance; do not add maxima from different samples. |
 | HPA normal protein | Reliable non-Low positives in Vital/Protected supply Unsafe evidence; Manageable positives block CTA only; uncertain evidence remains unresolved. Low is flagged. |
-| Required RNA coverage | Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the only blocking requirement: every nonreproductive tissue concept measured for every protein member. The GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels are used when present and never block a label. |
-| Reproductive concentration | HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence. |
-| Translation qualification | A complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. Failure requires review, never Unsafe. |
+| Required RNA coverage | Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the required RNA coverage panel: every nonreproductive tissue concept measured for every protein member. Missing coverage in the separate GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels does not itself block admission; observed normal evidence from these panels still applies. |
+| Reproductive concentration | HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding thymus; thymus remains Protected for hazard assessment. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence. |
+| Translation qualification | Qualifying reference coding annotation or supported ncORF evidence is required for CTA admission, followed by a complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. All candidate records still undergo normal-evidence assessment. Translation failure requires review, never Unsafe. |
 | Normal bulk | One inclusive tissue/IHC ceiling: above it in Vital/Protected supplies Unsafe evidence; above it in Manageable blocks CTA, and above 128 (the top Manageable ceiling) supplies Unsafe evidence. No second RNA boundary. |
 | HPA tissue clusters | RNA requires ≥20 reads and uses the single ceiling. IHC credit requires an exact or declared compartment match; unrelated cells in the same tissue cannot inherit it. |
 | HPA immune | Central cell-specific tiers with native nTPM limits and no matched negative-IHC credit; reproductive/placental location remains neutral. |
@@ -268,26 +268,26 @@ The negative-IHC columns require a usable profile control, complete group-member
 
 | layer | new_candidate_removals | new_Unsafe | CTA_eligible_so_far | Unsafe | Other | Unassigned |
 | --- | --- | --- | --- | --- | --- | --- |
-| Reproductive / embryonic association | 1975 | 0 | 17629 | 0 | 0 | 1975 |
-| Cancer expression | 6 | 0 | 17623 | 0 | 0 | 1981 |
-| HPA normal protein | 12044 | 10160 | 5579 | 10160 | 0 | 3865 |
-| Required RNA coverage | 45 | 0 | 5534 | 10160 | 0 | 3910 |
-| Reproductive concentration | 1007 | 0 | 4527 | 10160 | 0 | 4917 |
-| Translation qualification | 118 | 0 | 4409 | 10160 | 0 | 5035 |
-| Normal bulk | 3434 | 7476 | 975 | 17636 | 0 | 993 |
-| HPA tissue clusters | 232 | 365 | 743 | 18001 | 0 | 860 |
-| HPA immune | 12 | 27 | 731 | 18028 | 0 | 845 |
-| Monaco immune | 11 | 21 | 720 | 18049 | 0 | 835 |
-| DICE immune | 15 | 35 | 705 | 18084 | 0 | 815 |
-| Adult cornea | 2 | 5 | 703 | 18089 | 0 | 812 |
-| Accepted normal-protein evidence | 3 | 2 | 700 | 18091 | 0 | 813 |
-| Reviewed normal-cell knowledge | 3 | 31 | 697 | 18122 | 0 | 785 |
-| Clinical safety exclusion | 0 | 0 | 697 | 18122 | 0 | 785 |
-| Rare vital-tissue cell expression | 74 | 121 | 623 | 18243 | 0 | 738 |
-| Rare Protected-cell expression review | 6 | 0 | 617 | 18243 | 0 | 744 |
-| External validated normal protein | 0 | 0 | 617 | 18243 | 0 | 744 |
-| Unsafe sequence containment | 15 | 0 | 602 | 18243 | 0 | 759 |
-| CTA and Other assignments | 0 | 0 | 602 | 18243 | 759 | 0 |
+| Reproductive / embryonic association | 2175 | 0 | 17688 | 0 | 0 | 2175 |
+| Cancer expression | 8 | 0 | 17680 | 0 | 0 | 2183 |
+| HPA normal protein | 12044 | 10161 | 5636 | 10161 | 0 | 4066 |
+| Required RNA coverage | 102 | 0 | 5534 | 10161 | 0 | 4168 |
+| Reproductive concentration | 1007 | 0 | 4527 | 10161 | 0 | 5175 |
+| Translation qualification | 118 | 0 | 4409 | 10161 | 0 | 5293 |
+| Normal bulk | 3434 | 7478 | 975 | 17639 | 0 | 1249 |
+| HPA tissue clusters | 232 | 365 | 743 | 18004 | 0 | 1116 |
+| HPA immune | 12 | 27 | 731 | 18031 | 0 | 1101 |
+| Monaco immune | 11 | 21 | 720 | 18052 | 0 | 1091 |
+| DICE immune | 15 | 44 | 705 | 18096 | 0 | 1062 |
+| Adult cornea | 2 | 5 | 703 | 18101 | 0 | 1059 |
+| Accepted normal-protein evidence | 3 | 2 | 700 | 18103 | 0 | 1060 |
+| Reviewed normal-cell knowledge | 3 | 31 | 697 | 18134 | 0 | 1032 |
+| Clinical safety exclusion | 0 | 0 | 697 | 18134 | 0 | 1032 |
+| Rare vital-tissue cell expression | 74 | 121 | 623 | 18255 | 0 | 985 |
+| Rare Protected-cell expression review | 6 | 0 | 617 | 18255 | 0 | 991 |
+| External validated normal protein | 0 | 0 | 617 | 18255 | 0 | 991 |
+| Unsafe sequence containment | 15 | 0 | 602 | 18255 | 0 | 1006 |
+| CTA and Other assignments | 0 | 0 | 602 | 18255 | 1006 | 0 |
 
 ![Coarse category funnel](figures/category-funnel.png)
 

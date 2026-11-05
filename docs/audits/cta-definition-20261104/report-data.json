@@ -1,17 +1,18 @@
 {
-  "release": "1.30.0",
-  "presentation_revision": "2026-11-05.1",
-  "out_of_universe_reasons": {
+  "release": "1.31.0",
+  "presentation_revision": "2026-11-05.2",
+  "out_of_universe_reasons": {},
+  "translation_support_reasons": {
     "nmd_or_cds_not_defined_only": 254,
     "single_study_ribo_seq": 5
   },
   "contract": {
     "schema": "oncoref.cta-decision-contract",
     "schema_version": 1,
-    "contract_id": "oncoref.cta-decision-contract.2026-11-04.2",
+    "contract_id": "oncoref.cta-decision-contract.2026-11-05.1",
     "role_policy_id": "oncoref.sequence-roles.2026-11-04.1",
     "title": "CTA and oncofetal candidate selection",
-    "definition": "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. Sequence realization requires separately qualified translation records.",
+    "definition": "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and qualification of the exact selected translation. Every input record is assessed, including those with insufficient translation support.",
     "categories": {
       "CTA": "Candidate under the named policy; not presentation or clinical clearance",
       "Unsafe": "Normal-tissue or applicable clinical evidence establishes policy exclusion",
@@ -21,7 +22,7 @@
       "screened": "Declared assessment completed; not exhaustive biological coverage",
       "incomplete_evidence": "Required coverage or evidence resolution is incomplete",
       "normal_evidence_hold": "Normal evidence requires review without establishing exclusion",
-      "translation_review": "Selected translation requires record-level qualification",
+      "translation_review": "Translation support or the selected record requires qualification",
       "unassessed": "No applicable selection policy or no completed assessment"
     },
     "interpretation_states": {
@@ -58,7 +59,7 @@
     ],
     "taxon_id": 9606,
     "species": "human",
-    "selection_policy_id": "oncoref.cta-selection.2026-11-04.2",
+    "selection_policy_id": "oncoref.cta-selection.2026-11-05.1",
     "selection_status": "available",
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
@@ -67,17 +68,20 @@
     "species": "human",
     "selection_status": "available",
     "evidence_status": "partial",
-    "policy_id": "oncoref.cta-selection.2026-11-04.2",
-    "universe": "19604 classified protein-equivalence groups from 19863 input groups",
+    "policy_id": "oncoref.cta-selection.2026-11-05.1",
+    "universe": "19863 classified protein-equivalence groups from 19863 input groups",
     "universe_counts": {
       "counting_unit": "selected_reference_protein_equivalence_group",
       "input_groups": 19863,
-      "classified_groups": 19604,
-      "out_of_universe_groups": 259,
+      "classified_groups": 19863,
+      "out_of_universe_groups": 0,
       "input_gene_loci": 20099,
-      "classified_gene_loci": 19839,
-      "out_of_universe_gene_loci": 260,
-      "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add"
+      "classified_gene_loci": 20099,
+      "out_of_universe_gene_loci": 0,
+      "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
+      "translation_support_eligible_groups": 19604,
+      "translation_support_insufficient_groups": 259,
+      "scope_note": "Every candidate record enters classification; translation support is a CTA admission requirement, not an inventory exclusion."
     },
     "reference": {
       "annotation_release": "115",
@@ -112,16 +116,16 @@
       "Rare-cell screening uses the existing brain, spinal-cord, heart and selected lung CELLxGENE panels. At least 1% detection in a Vital population supplies exclusion evidence; Protected detection supplies a review hold. Detection frequency is not abundance. Unmeasured ages, organs and excluded lineages remain coverage limits, not allowances.",
       "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply."
     ],
-    "entities": 19604,
+    "entities": 19863,
     "counts": {
       "CTA": 602,
-      "Unsafe": 18243,
-      "Other": 759,
+      "Unsafe": 18255,
+      "Other": 1006,
       "Unassigned": 0
     },
     "other_subtypes": {
       "Nonreproductive": 570,
-      "Translation": 115,
+      "Translation": 362,
       "Nested": 28,
       "Held": 27,
       "Contained": 15,
@@ -176,16 +180,74 @@
     }
   },
   "counts": {
-    "Unsafe": 18243,
-    "Other": 759,
+    "Unsafe": 18255,
+    "Other": 1006,
     "CTA": 602
+  },
+  "inventory_audit": {
+    "policy_id": "oncoref.cta-selection.2026-11-05.1",
+    "input_records": 19863,
+    "counts": {
+      "Unsafe": 18255,
+      "Other": 1006,
+      "CTA": 602
+    },
+    "restored_records": 259,
+    "restored_classifications": {
+      "Other:Translation": 247,
+      "Unsafe": 12
+    },
+    "existing_classification_changes": 0,
+    "restored_historical_exclusions_reassessed": [
+      {
+        "protein_group_label": "P2RX5-TAX1BP3",
+        "historical_pre_diffuseness_Unsafe_reasons": "DICE immune",
+        "classification": "Other:Translation"
+      },
+      {
+        "protein_group_label": "ENSG00000258461",
+        "historical_pre_diffuseness_Unsafe_reasons": "DICE immune",
+        "classification": "Other:Translation"
+      }
+    ],
+    "stored_zero_rna_screen": {
+      "cancer_present_required_bulk_complete": 19312,
+      "adult_and_reproductive_bulk_zero": 40,
+      "also_developmental_measured": 22,
+      "developmental_measurement_missing": 18,
+      "also_developmental_zero": 0,
+      "also_no_recorded_adult_protein": 0,
+      "interpretation": "Stored RNA summary values equal zero; no claim of whole-protein absence or exhaustive normal-cell coverage."
+    },
+    "preliminary_expression_profile": {
+      "matches": 66,
+      "classification_counts": {
+        "Other:Nonreproductive": 55,
+        "Unsafe": 6,
+        "Other:Translation": 5
+      },
+      "disposition_counts": {
+        "normal_coverage_review_required": 40,
+        "normal_evidence_hold": 15,
+        "excluded_by_normal_evidence": 6,
+        "translation_review": 5
+      },
+      "interpretation": "Existing numerical screen: replicated tumor RNA at least 10 TPM in two samples (or reviewed tumor protein), measured adult RNA below nominal 2-unit assay floors, no positive adult protein call in the profile's measurement inputs, measured developmental lineage means below 2 TPM, and no qualifying reproductive/developmental association. Curated knowledge and rare-cell counterevidence is assessed separately and overrides the screen."
+    },
+    "limitations": [
+      "Required bulk coverage does not establish coverage of every cell type, age, physiological state or protein assay.",
+      "Routine tissue summaries and developmental lineage means are not maxima across all donors or individual cells.",
+      "Small positive developmental RNA values can reflect assay/mapping uncertainty; stored-zero screening is not a biological detection limit.",
+      "Missing measurements are reported as gaps, never imputed to zero.",
+      "No numerical RNA profile establishes translation, HLA presentation, receptor specificity or clinical safety."
+    ]
   },
   "sections": [
     [
       "What OncoRef calls a CTA",
       [
-        "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. Sequence realization requires separately qualified translation records.",
-        "The current human policy produces 602 CTA, 18,243 Unsafe and 759 Other proteins. It evaluates 19,604 proteins after the universe gate, counting identical selected reference sequences together and retaining every member locus. This is not a complete inventory of splice isoforms or modified proteoforms.",
+        "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and qualification of the exact selected translation. Every input record is assessed, including those with insufficient translation support.",
+        "The current human policy produces 602 CTA, 18,255 Unsafe and 1,006 Other proteins. It evaluates 19,863 candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. This is not a complete inventory of splice isoforms or modified proteoforms.",
         "CTA is a research candidate designation; it does not establish peptide-HLA presentation, receptor recognition, therapeutic abundance or clinical safety. Reproductive/developmental support includes adult reproductive tissues, placenta, extraembryonic tissues, embryo and fetus. These routes remain distinguishable; developmental association does not imply adult testis restriction."
       ],
       "universe-accounting"
@@ -193,8 +255,8 @@
     [
       "From candidates to CTAs",
       [
-        "Begin with the pinned annotation and explicit gene/protein identities. Of 19,863 candidate protein records, 259 remain outside the universe: 254 have reference CDS only in transcripts annotated for nonsense-mediated decay (NMD) or with CDS not defined; 5 have only single-study Ribo-seq support. These records fail the current entry rule; this does not establish absence or Unsafe status.",
-        "Entry requires a reference CDS from a qualifying coding-biotype transcript, or a noncanonical ORF with mass-spectrometry peptide evidence or at least two independent Ribo-seq studies. Count identical selected reference sequences together, preserve member loci and keep every out-of-universe record visible.",
+        "All 19,863 candidate records enter the same normal-evidence and admission path. The 259 records formerly removed at entry stay visible: 254 have only NMD/CDS-not-defined reference transcripts and 5 have only single-study Ribo-seq support. Insufficient translation support does not establish absence or normal-tissue safety.",
+        "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. An annotated coding sequence is not experimental proof of protein production.",
         "Apply all normal-tissue evidence independently. Accepted exclusion evidence establishes Unsafe. Unresolved findings or missing required coverage prevent admission and require review; they do not establish Unsafe. Every target must also pass reproductive/developmental association, cancer presence, concentration, translation qualification and sequence-containment rules.",
         "The chart presents one readable order. Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Other includes assessed noncandidates and unresolved records; its subtype cannot replace its independent assessment status."
       ],
@@ -241,7 +303,8 @@
       "Does CTA mean expressed only in cancer?",
       [
         "No. CTA admission requires cancer expression plus qualifying reproductive or developmental association. The CTA total is not a count of proteins absent from all normal tissues, including testis, placenta, embryo and fetus. Passing normal-tissue thresholds is not a claim of zero normal expression.",
-        "OncoRef does not currently certify or enumerate proteins expressed only in cancer and never elsewhere. A measurable restriction claim must name the normal tissues, cell populations, developmental stages, physiological states, assays and detection limits. Undetected RNA does not prove absent protein, and an unmeasured context is not negative evidence.",
+        "The current data do support an observed-expression count: 40 cancer-expressed records have complete required bulk coverage and zero stored adult/reproductive RNA summaries. Of these, 22 have developmental measurements and 0 also have zero developmental RNA; 18 lack developmental measurements. Stored zeros are not proof of absent protein, and tiny positive RNA values are not validated protein production.",
+        "The separate low-expression screen finds 66 preliminary matches. Independent normal-cell evidence excludes 6 of them. A numerical profile match is not a final cancer-only designation; remaining matches retain explicit review or coverage requirements. The inventory audit lists every record, counterevidence source and measurement gap.",
         "Cancer-specific altered sequences and peptides require a separate analysis from these reference-protein counts. A mutation, fusion or alternative transcript can create a target sequence even when the source gene is normally expressed; evidence for one such sequence cannot establish exclusivity of every product of the gene."
       ],
       null
@@ -249,10 +312,10 @@
     [
       "Reproduction and version changes",
       [
-        "Selection policy: oncoref.cta-selection.2026-11-04.2. Role policy: oncoref.sequence-roles.2026-11-04.1. Translation policy: oncoref.translation-qualification.2026-11-04.1.",
+        "Selection policy: oncoref.cta-selection.2026-11-05.1. Role policy: oncoref.sequence-roles.2026-11-04.1. Translation policy: oncoref.translation-qualification.2026-11-04.1.",
         "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. No target CTA count is an acceptance criterion.",
         "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-        "Presentation revision 2026-11-05.1 clarifies protein counts, universe exclusions and reproductive/developmental scope. Scientific decisions and the published release assets are unchanged."
+        "Presentation revision 2026-11-05.2 moves every candidate record into classification, retains translation as a CTA admission requirement, and separates preliminary expression-profile matches from normal-evidence exclusions. Earlier release assets remain frozen."
       ],
       null
     ]
@@ -435,11 +498,11 @@
   "bundle": {
     "schema": "oncoref.sequence-bundle-asset",
     "schema_version": 1,
-    "bundle_id": "oncoref:sequence-bundle:v1:sha256:84795d3f6348701b392fb04baab309513850e814bb3361827927e31f24b6ff55",
-    "url": "https://github.com/pirl-unc/oncoref/releases/download/v1.30.0/oncoref-sequences-1.30.0.zip",
-    "archive_bytes": 126992187,
-    "archive_sha256": "0f58ce2ecd9de53fb0b58048728bd6fae26ae4a14c8e6cbe8839a3062eb5b5e2",
-    "unpacked_bytes": 126991621
+    "bundle_id": "oncoref:sequence-bundle:v1:sha256:607c4ede9af40e33657ce84b58eff11087e66be7942a9a156a81480e8d06335a",
+    "url": "https://github.com/pirl-unc/oncoref/releases/download/v1.31.0/oncoref-sequences-1.31.0.zip",
+    "archive_bytes": 126951680,
+    "archive_sha256": "983f95c9f7a7e69715f44bc4f34cf0f190405819152e412853b5c46cff84a7c3",
+    "unpacked_bytes": 126951114
   },
   "criteria": [
     {
@@ -479,7 +542,7 @@
       "gate_id": "required_coverage",
       "stage": "Required RNA coverage",
       "status": "evaluated",
-      "rule": "Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the only blocking requirement: every nonreproductive tissue concept measured for every protein member. The GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels are used when present and never block a label.",
+      "rule": "Combined normal bulk (HPA consensus, HPA brain, GTEx v11) is the required RNA coverage panel: every nonreproductive tissue concept measured for every protein member. Missing coverage in the separate GTEx 52-context core, HPA tissue-cell, immune, DICE and cornea panels does not itself block admission; observed normal evidence from these panels still applies.",
       "source_ids": [
         "hpa_rna_consensus",
         "hpa_brain",
@@ -493,7 +556,7 @@
       "gate_id": "reproductive_concentration",
       "stage": "Reproductive concentration",
       "status": "evaluated",
-      "rule": "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding Permissive thymus. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
+      "rule": "HPA v23 average normal/(normal+Reproductive maximum) above 10% blocks the adult/placental route when its reference is positive and the comparison is complete. Use 38 contexts/29 anatomy units, including Disposable and excluding thymus; thymus remains Protected for hazard assessment. Supported embryonic evidence remains independent; its contrast is unassessed. This is not safety evidence.",
       "source_ids": [
         "hpa_rna_consensus"
       ]
@@ -502,7 +565,7 @@
       "gate_id": "translation_qualification",
       "stage": "Translation qualification",
       "status": "evaluated",
-      "rule": "A complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. Failure requires review, never Unsafe.",
+      "rule": "Qualifying reference coding annotation or supported ncORF evidence is required for CTA admission, followed by a complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. All candidate records still undergo normal-evidence assessment. Translation failure requires review, never Unsafe.",
       "source_ids": [
         "Ensembl-115"
       ]
@@ -10255,6 +10318,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:b13f18e9d640fc3b6802",
+      "label": "RTEL1-TNFRSF6B",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000026036"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -43685,6 +43763,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:86152713d3ddf3afa3ce",
+      "label": "ENSG00000100101",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000100101"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -109708,6 +109801,21 @@
       ]
     },
     {
+      "entity_id": "PEG:6f5dfad4e74ec5c6e595",
+      "label": "ENSG00000125695",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000125695"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:5ae43e7816bbe02e3d2c",
       "label": "ATG4C",
       "classification": "Unsafe",
@@ -136437,6 +136545,21 @@
       ]
     },
     {
+      "entity_id": "PEG:9166cd6f862d27a50362",
+      "label": "ZNF670-ZNF695",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000135747"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:91e12a96336b0253dc09",
       "label": "PCNX2",
       "classification": "Unsafe",
@@ -156258,6 +156381,21 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:ffd2a2f6cbe8f66781ff",
+      "label": "ENSG00000141979",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000141979"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -195332,6 +195470,21 @@
       ]
     },
     {
+      "entity_id": "PEG:752c8e996914729d45c2",
+      "label": "ENSG00000159239",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000159239"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:5a15e2462c1e71aa4a6b",
       "label": "GJD2",
       "classification": "Unsafe",
@@ -229260,6 +229413,21 @@
         "Reproductive / embryonic association",
         "Normal bulk",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:e6a1ca4ff8417f6c8fdf",
+      "label": "ENSG00000167807",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000167807"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -296936,6 +297104,20 @@
       ]
     },
     {
+      "entity_id": "PEG:e6662cc772b4f3b3fd24",
+      "label": "ENSG00000188223",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000188223"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:0e05c1b6baabe3cb3c64",
       "label": "ZNF793",
       "classification": "Unsafe",
@@ -317623,6 +317805,21 @@
       ]
     },
     {
+      "entity_id": "PEG:aac88ae18596db2c955f",
+      "label": "ENSG00000204003",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000204003"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:078e251f335ff1fbd8d2",
       "label": "C1orf185",
       "classification": "CTA",
@@ -322265,6 +322462,21 @@
       ]
     },
     {
+      "entity_id": "PEG:d5eda110316979ebe4f8",
+      "label": "ENSG00000205236",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000205236"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:d6bc1832aff9fa1f252b",
       "label": "SPDYE2",
       "classification": "Unsafe",
@@ -325712,6 +325924,20 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:d61a0f144b4ace78c167",
+      "label": "ZNF625-ZNF20",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000213297"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -332698,6 +332924,20 @@
       ]
     },
     {
+      "entity_id": "PEG:26b6fd740a3750c8d707",
+      "label": "ENSG00000228144",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000228144"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:3f8b92c393590c253e4c",
       "label": "OR2M3",
       "classification": "Unsafe",
@@ -334882,6 +335122,21 @@
       ]
     },
     {
+      "entity_id": "PEG:1e9829de34a0aed67aa6",
+      "label": "HNRNPUL2-BSCL2",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000234857"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:b5b8c83593c67b801a0e",
       "label": "APOC2",
       "classification": "Unsafe",
@@ -336609,6 +336864,20 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:cb5e48f902c181382c20",
+      "label": "ENSG00000239920",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000239920"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -338699,6 +338968,20 @@
       ]
     },
     {
+      "entity_id": "PEG:35f2fd48bdc07710ecd6",
+      "label": "ENSG00000243501",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000243501"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:eb3dc39395e929add1d9",
       "label": "TNFRSF6B",
       "classification": "Unsafe",
@@ -338872,6 +339155,22 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:99703f3de90df22a2416",
+      "label": "ENSG00000243696",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000243696"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
       ]
     },
     {
@@ -340319,6 +340618,20 @@
         "Reproductive / embryonic association",
         "Monaco immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:c79528d7fae97f62f5e0",
+      "label": "TRIM59-IFT80",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000248710"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -342674,6 +342987,20 @@
       ]
     },
     {
+      "entity_id": "PEG:50d9736082cb7ad9399e",
+      "label": "CHKB-CPT1B",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254413"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:46845806db95c29c38b4",
       "label": "SIGLEC14",
       "classification": "Unsafe",
@@ -342811,6 +343138,21 @@
       ]
     },
     {
+      "entity_id": "PEG:f8ce03797f1032b85eb8",
+      "label": "ENSG00000254536",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254536"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:18d7d0b590a21fd8bb5b",
       "label": "OMP",
       "classification": "Unsafe",
@@ -342822,6 +343164,21 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:25a70e118e2b3561bbf2",
+      "label": "ENSG00000254553",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254553"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -342913,6 +343270,21 @@
       ]
     },
     {
+      "entity_id": "PEG:c92b66a188b6bf75e905",
+      "label": "ENSG00000254673",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254673"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:5fac4a8293baac1b105a",
       "label": "FPGT",
       "classification": "Unsafe",
@@ -342997,6 +343369,20 @@
       ]
     },
     {
+      "entity_id": "PEG:612a90782f6810fdde30",
+      "label": "ENSG00000254732",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254732"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:118559484230e27e43a6",
       "label": "OR10G4",
       "classification": "Unsafe",
@@ -343044,6 +343430,20 @@
         "HPA immune",
         "Monaco immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:7cee66d0015bccd17644",
+      "label": "SYS1-DBNDD2",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254806"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -343112,6 +343512,21 @@
       ]
     },
     {
+      "entity_id": "PEG:3744fc3ce040a2777b30",
+      "label": "ATP6V1G2-DDX39B",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254870"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:b4bd28f5119eeccbb903",
       "label": "BORCS8",
       "classification": "Unsafe",
@@ -343130,6 +343545,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:0e487a72a990cee53b86",
+      "label": "INMT-MINDY4",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254959"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -343168,6 +343598,22 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:6c8aa97fe3893ab0350a",
+      "label": "STX16-NPEPL1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000254995"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
       ]
     },
     {
@@ -343247,6 +343693,21 @@
       ]
     },
     {
+      "entity_id": "PEG:9bf3b7c997acd7a94507",
+      "label": "ENSG00000255054",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255054"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:4897c2c0fbd5b7622bf2",
       "label": "SAA2-SAA4",
       "classification": "Unsafe",
@@ -343275,6 +343736,20 @@
         "Normal bulk",
         "HPA immune",
         "Monaco immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:04a62adc38773c853f40",
+      "label": "ZFP91-CNTF",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255073"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -343329,6 +343804,21 @@
       "reasons": [
         "Monaco immune",
         "DICE immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:d5e8fa90308b699bc6a1",
+      "label": "MSH5-SAPCD1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255152"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -343419,6 +343909,20 @@
       ]
     },
     {
+      "entity_id": "PEG:00aa3ab109d9f400e386",
+      "label": "ENSG00000255292",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255292"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:eb0bbb8162555f02052f",
       "label": "OR8G5",
       "classification": "Unsafe",
@@ -343484,6 +343988,20 @@
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:a90bf7e7d8b112fa65cd",
+      "label": "ENSG00000255339",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255339"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -343649,6 +344167,20 @@
       ]
     },
     {
+      "entity_id": "PEG:f3c9c85cb770b6041c73",
+      "label": "ENSG00000255508",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255508"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:25a25ebeea59815e05b2",
       "label": "NPIPB8",
       "classification": "Unsafe",
@@ -343779,6 +344311,20 @@
       ]
     },
     {
+      "entity_id": "PEG:68761cf49bdd42e8e4a1",
+      "label": "ENSG00000255663",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255663"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e05783ba7614a30c1730",
       "label": "TRIL",
       "classification": "Unsafe",
@@ -343835,6 +344381,22 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:0fcadcef9a7bfe41224b",
+      "label": "KLRC4-KLRK1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000255819"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
       ]
     },
     {
@@ -343895,6 +344457,21 @@
       ]
     },
     {
+      "entity_id": "PEG:251ff8f37211c5392b76",
+      "label": "ENSG00000255872",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255872"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:859e6a5decb82c7d8f05",
       "label": "CYP2A6",
       "classification": "Unsafe",
@@ -343908,6 +344485,21 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:f85b514872d6f0f6ef4a",
+      "label": "ENSG00000256029",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000256029"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -344035,6 +344627,21 @@
         "Reproductive / embryonic association",
         "Normal bulk",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:a81bd13a6667e37a6476",
+      "label": "ENSG00000256206",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000256206"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -344289,6 +344896,21 @@
       ]
     },
     {
+      "entity_id": "PEG:725a4ff84a0e72e1c2cf",
+      "label": "ENSG00000256566",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000256566"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:ceee96d9598d409a0417",
       "label": "OR13A1",
       "classification": "Other:Nonreproductive",
@@ -344490,6 +345112,21 @@
       ]
     },
     {
+      "entity_id": "PEG:4d6b0dc88f63f86fef4d",
+      "label": "ENSG00000256861",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000256861"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:1b9eeb1d3d6afae289c7",
       "label": "SLC5A8",
       "classification": "Unsafe",
@@ -344503,6 +345140,36 @@
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:cb3953e5387b359c6a0a",
+      "label": "ENSG00000256950",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000256950"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:ea22ceb67afb9afc18c7",
+      "label": "ENSG00000256966",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000256966"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -344579,6 +345246,36 @@
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:3114e77afb26d84fc415",
+      "label": "ENSG00000257062",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000257062"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:f84cf7a025e9c36fe763",
+      "label": "ENSG00000257065",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000257065"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -344680,6 +345377,22 @@
       ]
     },
     {
+      "entity_id": "PEG:a64ea394e039cdfda9a5",
+      "label": "ENSG00000257207/84337",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000257207",
+        "ENSG00000284337"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:5063eb86b586acb942d8",
       "label": "GATC",
       "classification": "Unsafe",
@@ -344733,6 +345446,20 @@
         "DICE immune",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:4f2722e5f21f99af417f",
+      "label": "ENSG00000257355",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000257355"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -344796,6 +345523,36 @@
         "ENSG00000257446"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:7dfd5f227917fcd47c12",
+      "label": "SFTA3",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000257520"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:c7addbe7503d7ab03188",
+      "label": "ENSG00000257524",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000257524"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
+      ]
     },
     {
       "entity_id": "PEG:d992625b22fdd5d35c64",
@@ -344954,6 +345711,21 @@
       ]
     },
     {
+      "entity_id": "PEG:7bfda2e2f4fcc3deaeb0",
+      "label": "P2RX5-TAX1BP3",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000257950"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:7b7c99528c8f1a3de1a6",
       "label": "SPMIP11",
       "classification": "Unsafe",
@@ -344964,6 +345736,36 @@
       ],
       "reasons": [
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:465ff0d30e8bfd51dd58",
+      "label": "ENSG00000258052",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258052"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:554181c8007d0e937825",
+      "label": "ENSG00000258064",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258064"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345108,6 +345910,21 @@
       ]
     },
     {
+      "entity_id": "PEG:07b60c9bacc5a9d58a63",
+      "label": "PPT2-EGFL8",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258388"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:7c0b0532ae9c0e60bbbe",
       "label": "ZNF578",
       "classification": "Unsafe",
@@ -345174,6 +345991,22 @@
       ]
     },
     {
+      "entity_id": "PEG:060d4e5c720ba34787e0",
+      "label": "ENSG00000258461",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258461"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
+      ]
+    },
+    {
       "entity_id": "PEG:8da43d019d321b11a998",
       "label": "ENSG00000258465",
       "classification": "Unsafe",
@@ -345186,6 +346019,20 @@
         "Reproductive / embryonic association",
         "Translation qualification",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:b7cefcd5805e64c5ed9e",
+      "label": "ENSG00000258466",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258466"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345248,6 +346095,36 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:2bc5134160d3fc27d053",
+      "label": "ENSG00000258539",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258539"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:af9eaa07c5be7668923d",
+      "label": "SPECC1L-ADORA2A",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258555"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345358,6 +346235,21 @@
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:df8b683d893c68c262b0",
+      "label": "ENSG00000258677",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258677"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345483,6 +346375,21 @@
       ]
     },
     {
+      "entity_id": "PEG:0b90fee4cc45b9e8315c",
+      "label": "ENSG00000258830",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258830"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:2db93ce0015d6dd014e7",
       "label": "MC1R",
       "classification": "Unsafe",
@@ -345499,6 +346406,20 @@
         "DICE immune",
         "Adult cornea",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:8f92599556950964001d",
+      "label": "ENSG00000258864",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258864"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345563,6 +346484,21 @@
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:5f318aa44fb3e873bbf1",
+      "label": "UBE2F-SCLY",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000258984"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345649,6 +346585,21 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:75cac6bcfead610e0b00",
+      "label": "BLOC1S5-TXNDC5",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000259040"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345749,6 +346700,21 @@
       ]
     },
     {
+      "entity_id": "PEG:5830f6896cbb01335e32",
+      "label": "ENSG00000259164",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000259164"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:bab88575d003ac6bdd1e",
       "label": "ENSG00000259171",
       "classification": "Unsafe",
@@ -345794,6 +346760,21 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:8346f28de14f003037d1",
+      "label": "BUB1B-PAK6",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000259288"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:c23d4bed42fdf6e112ce",
       "label": "ZHX1-C8orf76",
       "classification": "Unsafe",
@@ -345807,6 +346788,20 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea"
+      ]
+    },
+    {
+      "entity_id": "PEG:a49d07da86dc6b18c997",
+      "label": "ENSG00000259316",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000259316"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -345944,6 +346939,21 @@
       ]
     },
     {
+      "entity_id": "PEG:c5fdf240029cfd40a6ba",
+      "label": "ENSG00000259522",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000259522"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:db1ea441160851620214",
       "label": "ENSG00000259529/RNF31",
       "classification": "Unsafe",
@@ -345977,6 +346987,20 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:8408b226258a6741175a",
+      "label": "ENSG00000259753",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000259753"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -346023,6 +347047,21 @@
         "Reproductive / embryonic association",
         "Normal bulk",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:864a7d5669b311f2fa71",
+      "label": "ENSG00000259900",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000259900"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -346109,6 +347148,21 @@
       ]
     },
     {
+      "entity_id": "PEG:5d99828739547e8a40f8",
+      "label": "ENSG00000260092",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000260092"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:98cd2f43005330db3b9d",
       "label": "SPDYE6",
       "classification": "Unsafe",
@@ -346169,6 +347223,21 @@
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:72727dd24e720faa9b47",
+      "label": "ENSG00000260234",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000260234"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -346400,6 +347469,21 @@
       ]
     },
     {
+      "entity_id": "PEG:9c1463595f22bb659002",
+      "label": "ENSG00000260729",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000260729"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:5fa0d20468b9241ac78f",
       "label": "TLE7",
       "classification": "CTA",
@@ -346448,6 +347532,21 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:66d037cf65ef0ec75a85",
+      "label": "ENSG00000260851",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000260851"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -346550,6 +347649,21 @@
         "Translation qualification",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:f488384cc4af7558bf3d",
+      "label": "ENSG00000261147",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000261147"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -346717,6 +347831,37 @@
       ]
     },
     {
+      "entity_id": "PEG:f2769be51a8aaad682a7",
+      "label": "ENSG00000261459",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000261459"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:badfdfc2a327c47f8298",
+      "label": "ENSG00000261582",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000261582"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
+      ]
+    },
+    {
       "entity_id": "PEG:4deb88170e92bf9e4a8a",
       "label": "TMEM249",
       "classification": "Unsafe",
@@ -346761,6 +347906,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:eb124cbed8f12d0072f6",
+      "label": "ENSG00000261611",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000261611"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -346857,6 +348017,21 @@
         "HPA tissue clusters",
         "HPA immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:c7cd1ec22b84f72a545a",
+      "label": "ENSG00000261732",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000261732"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -346982,6 +348157,36 @@
       ]
     },
     {
+      "entity_id": "PEG:cf0a5c5080b48f0e3645",
+      "label": "ENSG00000261884",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000261884"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:0dd94f881214bd837c95",
+      "label": "ENSG00000261915",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000261915"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e71d244f0b445dabaac0",
       "label": "PCDHGA9",
       "classification": "Unsafe",
@@ -347102,6 +348307,21 @@
       ]
     },
     {
+      "entity_id": "PEG:b05b95e2528e4bd1100a",
+      "label": "ENSG00000262302",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000262302"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:afab002b4338ef17ae62",
       "label": "ENSG00000262304/SHPK",
       "classification": "Unsafe",
@@ -347139,6 +348359,21 @@
       ]
     },
     {
+      "entity_id": "PEG:3d5f6efdd6ae55548022",
+      "label": "TMEM256-PLSCR3",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000262481"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:8a5a12939ec93b832684",
       "label": "CCER2",
       "classification": "Unsafe",
@@ -347156,6 +348391,20 @@
       ]
     },
     {
+      "entity_id": "PEG:64c82b873a457b5335f9",
+      "label": "ENSG00000262526",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000262526"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:cf76a95a78d9079ba8a9",
       "label": "SMIM28",
       "classification": "Other:Nonreproductive",
@@ -347166,6 +348415,21 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:bc241b7be3fd8589a611",
+      "label": "ENSG00000262560",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000262560"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -347193,6 +348457,20 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:3d53a06b0fa0addf33e4",
+      "label": "ENSG00000262633",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000262633"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -347243,6 +348521,21 @@
         "HPA immune",
         "Monaco immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:462d00c4785b9cf841a4",
+      "label": "ENSG00000262730",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000262730"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -347536,6 +348829,21 @@
       ]
     },
     {
+      "entity_id": "PEG:ef88a436c92632b344d3",
+      "label": "ENSG00000263809",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000263809"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:9222f940401db10c9928",
       "label": "LASP1NB",
       "classification": "Unsafe",
@@ -347628,6 +348936,21 @@
       ]
     },
     {
+      "entity_id": "PEG:495586d66bb217b0591b",
+      "label": "ENSG00000264187",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000264187"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:3330ad791e13333db0b1",
       "label": "ANXA8L1",
       "classification": "Unsafe",
@@ -347642,6 +348965,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:bc684d5f4e5e416eb1d6",
+      "label": "ENSG00000264324",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000264324"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -347747,6 +349085,21 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:22cce627b20e0c8f978f",
+      "label": "ENSG00000264813",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000264813"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -347929,6 +349282,21 @@
       ]
     },
     {
+      "entity_id": "PEG:1503034e1b922d58846d",
+      "label": "ENSG00000265690",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000265690"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:390a8829c73d11c117e6",
       "label": "ZNF488",
       "classification": "Unsafe",
@@ -347979,6 +349347,21 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:4e9515ca68880d81d6c6",
+      "label": "EEF1E1-BLOC1S5",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000265818"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -348040,6 +349423,35 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:adca3cc4d68212c7e6bc",
+      "label": "ENSG00000266076",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000266076"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:31f2a6d6e91ab909a2aa",
+      "label": "ENSG00000266086",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000266086"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -348125,6 +349537,21 @@
         "ENSG00000266265"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:a888e092ee6706bca2af",
+      "label": "ENSG00000266302",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000266302"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:79cc23630727dd71cdab",
@@ -348225,6 +349652,21 @@
       ]
     },
     {
+      "entity_id": "PEG:db034edaa645c5981d6d",
+      "label": "ENSG00000266728",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000266728"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:6176aa2810a16ba8ed15",
       "label": "IGBP1C",
       "classification": "CTA",
@@ -348290,6 +349732,20 @@
       ]
     },
     {
+      "entity_id": "PEG:7483ef146b1af1b73e64",
+      "label": "ENSG00000266997",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000266997"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:24dc8fb4394ad3d01a3c",
       "label": "ENSG00000267001",
       "classification": "Unsafe",
@@ -348305,6 +349761,21 @@
         "HPA tissue clusters",
         "HPA immune",
         "Monaco immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:3985b4f79832ed73b3e3",
+      "label": "ENSG00000267022",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267022"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -348362,6 +349833,52 @@
         "HPA tissue clusters",
         "Monaco immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:0346e0400aaae7e1d7b6",
+      "label": "ENSG00000267110",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267110"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:4a0c8f6ef1f661f0be00",
+      "label": "ENSG00000267120",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267120"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:df222bbd72e2a4df1927",
+      "label": "ENSG00000267127",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000267127"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "Normal bulk"
       ]
     },
     {
@@ -348516,6 +350033,35 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:c8299579611a57fb1f6a",
+      "label": "ENSG00000267303",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267303"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:f69b47d6699c94ff9e82",
+      "label": "ENSG00000267314",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267314"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:14061ebc424711b8a073",
       "label": "ENSG00000267318",
       "classification": "Unsafe",
@@ -348562,6 +350108,36 @@
       ]
     },
     {
+      "entity_id": "PEG:01b6790ced9efd75759d",
+      "label": "ENSG00000267385",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267385"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:4bc716acc3115d40a1d9",
+      "label": "ENSG00000267426",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267426"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:1e7af7b95be40d2dc9b6",
       "label": "APOC4",
       "classification": "Unsafe",
@@ -348574,6 +350150,21 @@
         "Reproductive / embryonic association",
         "Normal bulk",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:09bf1496ec2164ace3cf",
+      "label": "ENSG00000267477",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267477"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -348610,6 +350201,21 @@
         "Monaco immune",
         "DICE immune",
         "Adult cornea"
+      ]
+    },
+    {
+      "entity_id": "PEG:3e7c0562f9bdb30b98b4",
+      "label": "ENSG00000267552",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267552"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -348657,6 +350263,20 @@
       ]
     },
     {
+      "entity_id": "PEG:8b7f6c32403613f164b7",
+      "label": "POLR2J2-UPK3BL1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267645"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:556acc74065d040e1b00",
       "label": "FDX2",
       "classification": "Unsafe",
@@ -348695,6 +350315,36 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:1264eb039da4b7dc15e9",
+      "label": "ENSG00000267699",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267699"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:0ed0d9811c0584714778",
+      "label": "ENSG00000267706",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000267706"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -348909,6 +350559,21 @@
       ]
     },
     {
+      "entity_id": "PEG:928650dadf66a48773cc",
+      "label": "ENSG00000268107",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000268107"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:46ff85396cd4645b877d",
       "label": "ENSG00000268133",
       "classification": "Other:Translation",
@@ -348974,6 +350639,21 @@
       ]
     },
     {
+      "entity_id": "PEG:a0c33ffce9aa63044d19",
+      "label": "ENSG00000268193",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000268193"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:edd9f1eb7db205dcbe55",
       "label": "ARL14EPL",
       "classification": "Unsafe",
@@ -348997,6 +350677,21 @@
         "ENSG00000268235"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:5ce75902ef59aaa39126",
+      "label": "ENSG00000268279",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000268279"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
+      ]
     },
     {
       "entity_id": "PEG:16076b6d2ded81eeb597",
@@ -349023,6 +350718,20 @@
       ],
       "reasons": [
         "Reproductive / embryonic association",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:9b89dd93d243df0ee135",
+      "label": "ENSG00000268400",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000268400"
+      ],
+      "reasons": [
+        "Required RNA coverage",
         "Translation qualification"
       ]
     },
@@ -349102,6 +350811,21 @@
         "Normal bulk",
         "Monaco immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:53db630844dd6037225f",
+      "label": "ENSG00000268614",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000268614"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -349186,6 +350910,21 @@
       ]
     },
     {
+      "entity_id": "PEG:c7addca6a96ea1534110",
+      "label": "ENSG00000268797",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000268797"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:f81660f5d0ba8d019f27",
       "label": "H3Y2",
       "classification": "Unsafe",
@@ -349257,6 +350996,21 @@
         "ENSG00000268964"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:d54b3ca2147c8d24fecd",
+      "label": "MIA-RAB4B",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000268975"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:2e8b622596f38971496e",
@@ -349368,6 +351122,21 @@
       ]
     },
     {
+      "entity_id": "PEG:47948ea7f15c736a2885",
+      "label": "ENSG00000269179",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269179"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:6cbabf03375ad809a7e2",
       "label": "FBXO17",
       "classification": "Unsafe",
@@ -349397,6 +351166,49 @@
         "Required RNA coverage",
         "DICE immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:17fe32a2a526258d31e4",
+      "label": "ENSG00000269237",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269237"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:421058349fd1fd2b8a2e",
+      "label": "ENSG00000269242",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269242"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:57baf4135cfba0953fd7",
+      "label": "ENSG00000269307",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269307"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -349456,6 +351268,21 @@
       ]
     },
     {
+      "entity_id": "PEG:b3c231794a1d1791887b",
+      "label": "ENSG00000269403",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000269403"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
+      ]
+    },
+    {
       "entity_id": "PEG:2b5d07b153cdb2d163e5",
       "label": "SPIB",
       "classification": "Unsafe",
@@ -349484,6 +351311,35 @@
         "ENSG00000269466"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:600e07d77479b0175f80",
+      "label": "ENSG00000269469",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269469"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:e07da141c5bd817b8c50",
+      "label": "ENSG00000269476",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269476"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:9d6abe9ca1723310d8dc",
@@ -349568,6 +351424,21 @@
         "Reproductive / embryonic association",
         "Translation qualification",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:ad9f76fcf708f6195bd1",
+      "label": "ENSG00000269693",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269693"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -349674,6 +351545,21 @@
       ]
     },
     {
+      "entity_id": "PEG:21839a1deea435b24066",
+      "label": "ENSG00000269755",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269755"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:ea823e3df7ad633094bf",
       "label": "ENSG00000269825",
       "classification": "Unsafe",
@@ -349720,6 +351606,20 @@
         "DICE immune",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:e77ea1d2704c4f7386a4",
+      "label": "ARHGAP19-SLIT1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000269891"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -349780,6 +351680,65 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:413fd3c5331234198d05",
+      "label": "ENSG00000270099",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000270099"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:7999f2609f9115c735a0",
+      "label": "TSNAX-DISC1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000270106"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:e3f0aef34ec1218acab1",
+      "label": "MICOS10-NBL1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000270136"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:504229148f1b113cffdd",
+      "label": "ENSG00000270149",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000270149"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -350207,6 +352166,64 @@
       ]
     },
     {
+      "entity_id": "PEG:f4ece2408ca608ad8f41",
+      "label": "ENSG00000271698",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000271698"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:b508d533e2fed2ed8687",
+      "label": "MROH7-TTC4",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000271723"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:e5abd9dd8abe6a9815d5",
+      "label": "ENSG00000271741",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000271741"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:66a0a21ee5365eecef1d",
+      "label": "ENSG00000271793",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000271793"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:b15cc35ce4b58fcf6e74",
       "label": "ENSG00000271810",
       "classification": "Other:Translation",
@@ -350233,6 +352250,21 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:74470a58373e221f9dba",
+      "label": "ENSG00000271949",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000271949"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -350287,6 +352319,21 @@
       ]
     },
     {
+      "entity_id": "PEG:535edf6ca8e779d14257",
+      "label": "ENSG00000272162",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272162"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:5f2f2cbf77c4c810a029",
       "label": "ENSG00000272297",
       "classification": "Unsafe",
@@ -350298,6 +352345,21 @@
       "reasons": [
         "Translation qualification",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:444ee296752495876301",
+      "label": "ENSG00000272305",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272305"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -350396,6 +352458,21 @@
       ]
     },
     {
+      "entity_id": "PEG:60daf1c727705c885d85",
+      "label": "ENSG00000272410",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272410"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:9e67c9582b29d8c4c410",
       "label": "FAM47E-STBD1",
       "classification": "Unsafe",
@@ -350408,6 +352485,21 @@
         "HPA normal protein",
         "Normal bulk",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:19596429b9a2be522cf1",
+      "label": "ENSG00000272442",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272442"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -350514,6 +352606,21 @@
       ]
     },
     {
+      "entity_id": "PEG:b1677ad8bccdced2043d",
+      "label": "ENSG00000272741",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272741"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:18f308f94f568b111342",
       "label": "ENSG00000272772",
       "classification": "Unsafe",
@@ -350595,6 +352702,36 @@
       ]
     },
     {
+      "entity_id": "PEG:648e57b4ed723f5e97b5",
+      "label": "ENSG00000272896",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272896"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:117e2cef55f4dcbe1ff6",
+      "label": "ENSG00000272897",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272897"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:7e6fb413d3a01f0a57d5",
       "label": "SPMIP1",
       "classification": "Unsafe",
@@ -350607,6 +352744,35 @@
         "Reproductive concentration",
         "Normal bulk",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:7789b418e59e44845a94",
+      "label": "ENSG00000272916",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272916"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:28fb2de1c09988d7c4d8",
+      "label": "ENSG00000272921",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000272921"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -350651,6 +352817,21 @@
       ],
       "reasons": [
         "Reproductive / embryonic association",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:bcc0a7d2685e46c9e7c7",
+      "label": "ARL2-SNX15",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273003"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
         "Translation qualification"
       ]
     },
@@ -350883,6 +353064,36 @@
       ]
     },
     {
+      "entity_id": "PEG:60a26e615f0c3d508267",
+      "label": "ENSG00000273259",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273259"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:ecdab7692059d0554970",
+      "label": "ENSG00000273269",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273269"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:316c3bbf4e6f41002d6e",
       "label": "ZBTB8B",
       "classification": "Unsafe",
@@ -350914,6 +353125,21 @@
       ]
     },
     {
+      "entity_id": "PEG:bf50e5f5891dd8fa68c8",
+      "label": "C1QTNF3-AMACR",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273294"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:f63571db6a3b567840b0",
       "label": "RBAKDN",
       "classification": "Unsafe",
@@ -350926,6 +353152,51 @@
         "Reproductive / embryonic association",
         "Required RNA coverage",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:583dfec368b8effc9e5f",
+      "label": "TM4SF19-DYNLT2B",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273331"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:572f408e7f995747713d",
+      "label": "ENSG00000273345",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000273345"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:d90b5a09af91729c24cc",
+      "label": "ENSG00000273398",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273398"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -351061,6 +353332,21 @@
       ]
     },
     {
+      "entity_id": "PEG:230245dd1ba4fb2301ad",
+      "label": "ENSG00000273734",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273734"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:bb5626531bb813e4e841",
       "label": "CYFIP1",
       "classification": "Unsafe",
@@ -351191,6 +353477,21 @@
         "ENSG00000273976"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:01b51be325a7a121de24",
+      "label": "INO80B-WBP1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000274049"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:d972a1a5b0bf31e6354b",
@@ -351332,6 +353633,21 @@
         "HPA tissue clusters",
         "DICE immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:bd2606846b435afbcf29",
+      "label": "ENSG00000274322",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000274322"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -352041,6 +354357,21 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:f8a2c282d9151af8b06b",
+      "label": "ENSG00000275778",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000275778"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "HPA normal protein",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e504fdef0ec658b79978",
       "label": "RIMBP3",
       "classification": "Unsafe",
@@ -352264,6 +354595,21 @@
       ]
     },
     {
+      "entity_id": "PEG:cb610837f19d42c2e6cd",
+      "label": "ENSG00000276087",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000276087"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:efbce240c9d576fc0186",
       "label": "OR13C2",
       "classification": "Other:Nonreproductive",
@@ -352424,6 +354770,36 @@
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:883983063aaa49b17b79",
+      "label": "ENSG00000276418",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000276418"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:8426a83db45e4475fad1",
+      "label": "ENSG00000276490",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000276490"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -352763,6 +355139,21 @@
       ]
     },
     {
+      "entity_id": "PEG:44b68bc1ae5576ad63ae",
+      "label": "ENSG00000277611",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000277611"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:ebbcc18a126ce4708aa4",
       "label": "CCL3",
       "classification": "Unsafe",
@@ -352857,6 +355248,35 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Reviewed normal-cell knowledge"
+      ]
+    },
+    {
+      "entity_id": "PEG:6a4bd91d3dab663401c3",
+      "label": "SENP3-EIF4A1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000277957"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:dce19195b569b9b1acec",
+      "label": "ENSG00000277971",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000277971"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -353468,6 +355888,21 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:fcf255f25709fde57ad2",
+      "label": "ENSG00000279956",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000279956"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:ce396169d3f8ed57c13e",
       "label": "OR8U3",
       "classification": "Other:Nonreproductive",
@@ -353533,6 +355968,20 @@
       ]
     },
     {
+      "entity_id": "PEG:73a6928f747770475615",
+      "label": "ENSG00000280148",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000280148"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:66a589d540bd1e9e3755",
       "label": "OR1S1",
       "classification": "Other:Nonreproductive",
@@ -353570,6 +356019,21 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Reviewed normal-cell knowledge"
+      ]
+    },
+    {
+      "entity_id": "PEG:fe41d0da636aa3872174",
+      "label": "ENSG00000280537",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000280537"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -353637,6 +356101,20 @@
       ]
     },
     {
+      "entity_id": "PEG:638cf3aeeb221b903047",
+      "label": "ENSG00000280893",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000280893"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:0a48677ce4d9f60fb792",
       "label": "RPS4Y2",
       "classification": "Other:Nonreproductive",
@@ -353684,6 +356162,20 @@
       ]
     },
     {
+      "entity_id": "PEG:67880e538243d30e4a25",
+      "label": "ENSG00000281348",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000281348"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:1e6786cbb97c7ec3b795",
       "label": "BLACAT1",
       "classification": "Unsafe",
@@ -353699,6 +356191,21 @@
       ]
     },
     {
+      "entity_id": "PEG:95a48b4525eed7d44a56",
+      "label": "ENSG00000281593",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000281593"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:eb4392b3d184a7ca2ba5",
       "label": "ENSG00000281613",
       "classification": "Other:Translation",
@@ -353708,6 +356215,21 @@
         "ENSG00000281613"
       ],
       "reasons": [
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:db49a4ed2c60865145b9",
+      "label": "ENSG00000281883",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000281883"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
         "Translation qualification"
       ]
     },
@@ -353729,6 +356251,21 @@
       ]
     },
     {
+      "entity_id": "PEG:9d536e151824577d3cb3",
+      "label": "ENSG00000281938",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000281938"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:ef24b9ce19af24d55f02",
       "label": "TMEM265",
       "classification": "Unsafe",
@@ -353742,6 +356279,21 @@
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:5fed54c4294a643f5255",
+      "label": "ENSG00000282034",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000282034"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -354084,6 +356636,35 @@
       ]
     },
     {
+      "entity_id": "PEG:4fafa2e0a0310284b7d6",
+      "label": "ENSG00000283228",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283228"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:aa755a4e5549c23e9b59",
+      "label": "KBTBD11-OT1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283239"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e9d269856740c4e02fbe",
       "label": "CCDC201",
       "classification": "CTA",
@@ -354303,6 +356884,20 @@
       ]
     },
     {
+      "entity_id": "PEG:f7196750c2943bc60932",
+      "label": "ENSG00000283515",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283515"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:dcf96e813b46e0ebc77e",
       "label": "LITAFD",
       "classification": "CTA",
@@ -354355,6 +356950,21 @@
       ]
     },
     {
+      "entity_id": "PEG:713871de1b2900861770",
+      "label": "ENSG00000283563",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283563"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:239b064b509fe82b6379",
       "label": "C19orf85",
       "classification": "CTA",
@@ -354364,6 +356974,21 @@
         "ENSG00000283567"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:16fdc4e6ed57038f4a4a",
+      "label": "ENSG00000283580",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283580"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:0cdb0a22be33b9d10a9a",
@@ -354419,6 +357044,21 @@
         "ENSG00000283654"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:57768176a2371e44b03f",
+      "label": "ENSG00000283663",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283663"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:729c289281b5bd337034",
@@ -354592,6 +357232,36 @@
         "ENSG00000283873"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:1bc69864342bfd6f7e7a",
+      "label": "ENSG00000283877",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283877"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:686c2e083375a0c26c27",
+      "label": "PLD5P1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000283930"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:bb95002fcf9cea6acc15",
@@ -354829,6 +357499,21 @@
       ]
     },
     {
+      "entity_id": "PEG:13122f7432bda2d8190a",
+      "label": "ENSG00000284341",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284341"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:fadadaf0b61c9923b89c",
       "label": "TAF11L2",
       "classification": "Other:Nonreproductive",
@@ -354839,6 +357524,20 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:163ec3a0abe72dfcddef",
+      "label": "ENSG00000284393",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284393"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -354853,6 +357552,21 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Reviewed normal-cell knowledge"
+      ]
+    },
+    {
+      "entity_id": "PEG:973fc7f939f7e8d78b8e",
+      "label": "ENSG00000284431",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284431"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -354877,6 +357591,21 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:2ac9f9301dbd7ab0b6f9",
+      "label": "ENSG00000284461",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284461"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -355002,6 +357731,21 @@
       ]
     },
     {
+      "entity_id": "PEG:604ea9129c287763be40",
+      "label": "ENSG00000284626",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284626"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:136d6d02e21edca5cd74",
       "label": "SCYGR1",
       "classification": "Other:Nonreproductive",
@@ -355108,6 +357852,21 @@
       ]
     },
     {
+      "entity_id": "PEG:9a1431c107f0f53f805a",
+      "label": "ENSG00000284686",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284686"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:eda5e8f983901310faab",
       "label": "CD300H",
       "classification": "Unsafe",
@@ -355141,6 +357900,21 @@
         "Monaco immune",
         "DICE immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:6f88a158cd3481900515",
+      "label": "ENSG00000284695",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284695"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -355301,6 +358075,21 @@
       ]
     },
     {
+      "entity_id": "PEG:7ce9b2ce1cfc7dd2288f",
+      "label": "ENSG00000284772",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284772"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e49ed58418195250ce54",
       "label": "ENSG00000284773",
       "classification": "Unsafe",
@@ -355373,6 +358162,35 @@
       "reasons": [
         "Normal bulk",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:27126fb03e2a9e7cd9c5",
+      "label": "ENSG00000284800",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284800"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:5aa04a50af9fcd8bd8dd",
+      "label": "ENSG00000284820",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284820"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -355518,6 +358336,36 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:b43499dc7a7802fbc7e6",
+      "label": "ENSG00000284946",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284946"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:98cab9f6d9b50e276510",
+      "label": "ENSG00000284952",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284952"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:b63364141361fe265304",
       "label": "ENSG00000284956",
       "classification": "Unsafe",
@@ -355565,6 +358413,51 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:a3d162f9d7c72fa85462",
+      "label": "ENSG00000284987",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284987"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:fc39dac673e88b71f625",
+      "label": "ENSG00000284989",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284989"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:5a540a79ec01817713ef",
+      "label": "ENSG00000285000",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285000"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -355725,6 +358618,21 @@
       ]
     },
     {
+      "entity_id": "PEG:ce89909683effc2680a4",
+      "label": "ENSG00000285171",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285171"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:49ed5c3f9343e0f734b5",
       "label": "ENSG00000285218",
       "classification": "Unsafe",
@@ -355752,6 +358660,20 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:16a49d1c1a9798348661",
+      "label": "ENSG00000285238",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285238"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -355784,6 +358706,22 @@
         "Required RNA coverage",
         "Normal bulk",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:06889ec4b213d253b533",
+      "label": "ENSG00000285269",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000285269"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "Normal bulk"
       ]
     },
     {
@@ -355833,6 +358771,20 @@
         "HPA normal protein",
         "Required RNA coverage",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:4e21b294b2761be843d3",
+      "label": "ENSG00000285329",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285329"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -355900,6 +358852,21 @@
       ]
     },
     {
+      "entity_id": "PEG:3be376c7d7fc7c720b3f",
+      "label": "ENSG00000285444",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285444"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:1608ec10039d716e9e35",
       "label": "ENSG00000285446",
       "classification": "Other:Translation",
@@ -355940,6 +358907,21 @@
       ],
       "reasons": [
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:bfac78846ed3043918fc",
+      "label": "ENSG00000285505",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285505"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -355988,6 +358970,21 @@
       ]
     },
     {
+      "entity_id": "PEG:58c6261ae1b432304226",
+      "label": "ENSG00000285528",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285528"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:f01cd28faeaf9a2b25d8",
       "label": "ENSG00000285542",
       "classification": "Unsafe",
@@ -356021,6 +359018,21 @@
       ]
     },
     {
+      "entity_id": "PEG:b2827e1a64749e04902a",
+      "label": "ENSG00000285558",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285558"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:a2206bad8a66a6b6d03c",
       "label": "ENSG00000285566",
       "classification": "Other:Nonreproductive",
@@ -356031,6 +359043,35 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:d72f00d2f4c82ba664b8",
+      "label": "ENSG00000285589",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285589"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:1b288b3b66923a112fb2",
+      "label": "ENSG00000285602",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285602"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356062,6 +359103,36 @@
       ]
     },
     {
+      "entity_id": "PEG:e0da88944f75f5c0c6f4",
+      "label": "ENSG00000285629",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285629"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:6d9d57347b246868b286",
+      "label": "ENSG00000285635",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285635"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:c66425df5949430d6a18",
       "label": "ENSG00000285641/RAB13",
       "classification": "Unsafe",
@@ -356083,6 +359154,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:23ca3422bcf671b29118",
+      "label": "ENSG00000285645",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285645"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356126,6 +359212,21 @@
         "Reproductive / embryonic association",
         "Required RNA coverage",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:9eddef18584f7edda923",
+      "label": "ENSG00000285713",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285713"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356202,6 +359303,36 @@
       ]
     },
     {
+      "entity_id": "PEG:42cecd627419b4a3ed17",
+      "label": "ENSG00000285779",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285779"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:8cc427c57a133c585c77",
+      "label": "ENSG00000285791",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285791"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:4e8dae55d697db1cf1c4",
       "label": "FAM90A14",
       "classification": "Other:Nonreproductive",
@@ -356227,6 +359358,21 @@
         "Reproductive / embryonic association",
         "Required RNA coverage",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:e575cf6fd70ed2a1d38c",
+      "label": "ENSG00000285816",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285816"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356259,6 +359405,36 @@
         "Required RNA coverage",
         "Normal bulk",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:f5d3bae542f58ea1b600",
+      "label": "ENSG00000285839",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285839"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:2eca5513be86cfbcf87c",
+      "label": "ENSG00000285854",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285854"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356306,6 +359482,35 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:0dcb417bfa9194be5de6",
+      "label": "ENSG00000285897",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285897"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:8de4d7319c02a1a453b7",
+      "label": "ENSG00000285901",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285901"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:b2db3e67238322cd3565",
       "label": "ENSG00000285920/NUSAP1",
       "classification": "Unsafe",
@@ -356330,6 +359535,21 @@
       ]
     },
     {
+      "entity_id": "PEG:7d3f6e0f7c49764e0311",
+      "label": "ENSG00000285932",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285932"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:25435452e3e373ae40dc",
       "label": "FAM90A8",
       "classification": "Other:Nonreproductive",
@@ -356340,6 +359560,21 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:97f09d064d33061c5697",
+      "label": "ENSG00000285942",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285942"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356452,6 +359687,20 @@
       ]
     },
     {
+      "entity_id": "PEG:a6f4cc61fc300cc0e3f1",
+      "label": "ENSG00000285978",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285978"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:84a071fdb277a3568c7c",
       "label": "ENSG00000285982",
       "classification": "Unsafe",
@@ -356468,6 +359717,21 @@
       ]
     },
     {
+      "entity_id": "PEG:81d9487ac187a8cb1e0a",
+      "label": "ENSG00000285991",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000285991"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:9da56ef77ac4e3dee830",
       "label": "ENSG00000286001",
       "classification": "Other:Translation",
@@ -356477,6 +359741,22 @@
         "ENSG00000286001"
       ],
       "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:40f5b97e09f80cee689e",
+      "label": "ENSG00000286007",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000286007"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
         "Required RNA coverage",
         "Translation qualification"
       ]
@@ -356595,6 +359875,21 @@
       ]
     },
     {
+      "entity_id": "PEG:6852ce7cfbb5d6adfca6",
+      "label": "ENSG00000286088",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000286088"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:96caa5dc3f086755f1e2",
       "label": "SPEGNB",
       "classification": "Unsafe",
@@ -356698,6 +359993,21 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage"
+      ]
+    },
+    {
+      "entity_id": "PEG:bba658135c8d8b5766b5",
+      "label": "ENSG00000286132",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000286132"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356871,6 +360181,21 @@
       ]
     },
     {
+      "entity_id": "PEG:8a02cc30704d7fa294f2",
+      "label": "ENSG00000286231",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000286231"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e7087b80b6a3c536204e",
       "label": "ENSG00000286235",
       "classification": "Other:Nonreproductive",
@@ -356882,6 +360207,21 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage"
+      ]
+    },
+    {
+      "entity_id": "PEG:79780745ef33af565c7d",
+      "label": "ENSG00000286239",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000286239"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -356978,6 +360318,36 @@
       ]
     },
     {
+      "entity_id": "PEG:5830d8ec99c11acd3a07",
+      "label": "ENSG00000287694",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000287694"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:b2ccf34ac56dca81a48d",
+      "label": "ENSG00000287725",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000287725"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:6a5ecee98b8368802f12",
       "label": "ENSG00000287839",
       "classification": "Unsafe",
@@ -357010,6 +360380,21 @@
       ]
     },
     {
+      "entity_id": "PEG:8b1b7e77422fdcc27aa2",
+      "label": "ENSG00000287908",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000287908"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:0267071656008edd5a19",
       "label": "ENSG00000288000",
       "classification": "Unsafe",
@@ -357037,6 +360422,35 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage"
+      ]
+    },
+    {
+      "entity_id": "PEG:c8cb5d871a62747a366c",
+      "label": "ENSG00000288208",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288208"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:c98c49e8ca8e7f84a022",
+      "label": "ENSG00000288258",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288258"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -357082,6 +360496,35 @@
       ]
     },
     {
+      "entity_id": "PEG:40d37fc26a21e792779f",
+      "label": "ENSG00000288534",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288534"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:561f595ff78ee3e936fe",
+      "label": "ENSG00000288550",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288550"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e2dcf89c5bb5d37e6849",
       "label": "DUS4L-BCAP29",
       "classification": "Unsafe",
@@ -357098,6 +360541,21 @@
       ]
     },
     {
+      "entity_id": "PEG:f4cf24f34e72bb786fd0",
+      "label": "ENSG00000288564",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288564"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:d1d6744d183331e23530",
       "label": "ENSG00000288570",
       "classification": "Unsafe",
@@ -357110,6 +360568,22 @@
         "Reproductive / embryonic association",
         "Required RNA coverage",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:6c7e6d44526b186c1b6f",
+      "label": "ENSG00000288591",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288591"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -357169,6 +360643,21 @@
         "Required RNA coverage",
         "Normal bulk",
         "HPA immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:ea0e86810b8859806c04",
+      "label": "PDCD6-AHRR",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288622"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -357315,6 +360804,22 @@
       ]
     },
     {
+      "entity_id": "PEG:3b208ccedcbe06abcda4",
+      "label": "ENSG00000288643",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288643"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:8adb1dbdf121a80b2b8e",
       "label": "ENSG00000288644",
       "classification": "Unsafe",
@@ -357418,6 +360923,21 @@
       ]
     },
     {
+      "entity_id": "PEG:2e4178c5df07a6c6825e",
+      "label": "ENSG00000288669",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288669"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:df8320766d6499f4ef35",
       "label": "ENSG00000288671",
       "classification": "Other:Translation",
@@ -357425,6 +360945,21 @@
       "shared_sequence": "review",
       "gene_ids": [
         "ENSG00000288671"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:0a1620884d7c7665c3a8",
+      "label": "ENSG00000288674",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288674"
       ],
       "reasons": [
         "Reproductive / embryonic association",
@@ -357493,6 +361028,22 @@
       ]
     },
     {
+      "entity_id": "PEG:77ae52eecf058151e048",
+      "label": "ENSG00000288683",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288683"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e847dd5aff435401f12c",
       "label": "ENSG00000288684",
       "classification": "Other:Nonreproductive",
@@ -357519,6 +361070,36 @@
         "Reproductive / embryonic association",
         "Required RNA coverage",
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:bbc8d6ecffcfc4f8d00b",
+      "label": "ENSG00000288698",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288698"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:e46f0948e444cf9d2956",
+      "label": "ENSG00000288699",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288699"
+      ],
+      "reasons": [
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -357597,6 +361178,37 @@
       ]
     },
     {
+      "entity_id": "PEG:649bdd08a623e7187e39",
+      "label": "ENSG00000288710",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288710"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:b6363652a0befad35d8b",
+      "label": "ENSG00000288711",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288711"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:d1ec1322453356e09ee8",
       "label": "ENSG00000288712",
       "classification": "Other:Nested",
@@ -357659,6 +361271,21 @@
         "Monaco immune",
         "DICE immune",
         "Adult cornea"
+      ]
+    },
+    {
+      "entity_id": "PEG:c534894ec8fdc1982283",
+      "label": "ENSG00000288725",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288725"
+      ],
+      "reasons": [
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -357929,6 +361556,35 @@
       ]
     },
     {
+      "entity_id": "PEG:a08f85760a49f5f50997",
+      "label": "ENSG00000289503",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289503"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:53814c729ffe9fe7a45b",
+      "label": "ENSG00000289517",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289517"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:bb614b16d4e2122128ba",
       "label": "PPIAL4D",
       "classification": "Other:Nonreproductive",
@@ -357939,6 +361595,20 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:54432f8f1b31ee6e80d5",
+      "label": "ENSG00000289565",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289565"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -358049,6 +361719,21 @@
       ]
     },
     {
+      "entity_id": "PEG:6b03ce3b74d00ecac025",
+      "label": "ENSG00000289695",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289695"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:4599475c7e6d43b117ea",
       "label": "ENSG00000289697",
       "classification": "Unsafe",
@@ -358081,6 +361766,21 @@
       ]
     },
     {
+      "entity_id": "PEG:acf2e5b6e0047bb5e8f7",
+      "label": "ENSG00000289701",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289701"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:212fc63db910a6bb56df",
       "label": "ENSG00000289710",
       "classification": "Other:Nonreproductive",
@@ -358107,6 +361807,35 @@
         "Reproductive / embryonic association",
         "Normal bulk",
         "Monaco immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:6a5500c4126dced1a43b",
+      "label": "XNDC1N-ZNF705EP-ALG1L9P",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289716"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:9317657949cf92947c8a",
+      "label": "ENSG00000289720",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289720"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -358186,6 +361915,22 @@
         "Required RNA coverage",
         "Translation qualification",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:834c0efa398c5c733964",
+      "label": "ENSG00000289758",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000289758"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -358340,6 +362085,21 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:e0ee6688579c922c17cb",
+      "label": "ENSG00000290146",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000290146"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:14315a4358ef4d2bcf1b",
       "label": "ENSG00000290149",
       "classification": "Other:Nonreproductive",
@@ -358352,6 +362112,22 @@
         "Reproductive / embryonic association",
         "Cancer expression",
         "Required RNA coverage"
+      ]
+    },
+    {
+      "entity_id": "PEG:50ed02039823b552504d",
+      "label": "ENSG00000290180",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000290180"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -358400,6 +362176,37 @@
         "Cancer expression",
         "Required RNA coverage",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:4cd3eba260b8d8a0fd54",
+      "label": "ENSG00000290230",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000290230"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:08d7a0a8fffadb76fa12",
+      "label": "ENSG00000290263",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000290263"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -358527,6 +362334,22 @@
         "Reproductive / embryonic association",
         "Cancer expression",
         "Required RNA coverage"
+      ]
+    },
+    {
+      "entity_id": "PEG:64447cdc9071752db7e2",
+      "label": "ENSG00000291240",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000291240"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -358701,6 +362524,22 @@
       ]
     },
     {
+      "entity_id": "PEG:809834d9138e8f09359f",
+      "label": "ENSG00000292277",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000292277"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:fe3fcbcbf860652fb061",
       "label": "MSL3B",
       "classification": "Other:Nonreproductive",
@@ -358789,6 +362628,22 @@
         "Required RNA coverage",
         "Translation qualification",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:7f16fc3b5008e2fea44c",
+      "label": "ENSG00000293553",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000293553"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -358970,6 +362825,21 @@
       ]
     },
     {
+      "entity_id": "PEG:5efd68149647beaa485d",
+      "label": "ENSG00000293626",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000293626"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:99d2d615699d37cc2d61",
       "label": "ENSG00000293642",
       "classification": "Other:Nonreproductive",
@@ -359121,6 +362991,22 @@
       ]
     },
     {
+      "entity_id": "PEG:19356d92b1e336c2e0bb",
+      "label": "ENSG00000310525",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000310525"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:b92b3b9aec69fa11b56f",
       "label": "ENSG00000310558",
       "classification": "Other:Nonreproductive",
@@ -359214,6 +363100,22 @@
       ]
     },
     {
+      "entity_id": "PEG:58b28ff037e0110ce062",
+      "label": "ENSG00000310583",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000310583"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:abf60bc4b17230cd3c7a",
       "label": "ENSG00000310590",
       "classification": "Other:Nested",
@@ -359226,6 +363128,22 @@
         "Reproductive / embryonic association",
         "Cancer expression",
         "Required RNA coverage"
+      ]
+    },
+    {
+      "entity_id": "PEG:22f89c4acac6ae81bfed",
+      "label": "ENSG00000310592",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000310592"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {

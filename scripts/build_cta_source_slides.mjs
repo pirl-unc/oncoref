@@ -13,6 +13,7 @@ const build=path.resolve(root,process.env.CTA_SLIDE_BUILD_DIR||'tmp/cta-source-s
 const data=JSON.parse(await fs.readFile(path.join(audit,'presentation-data.json'),'utf8'));
 const trials=JSON.parse(await fs.readFile(path.join(root,'oncoref/data/tcr-trial-evidence.json'),'utf8'));
 const definition=JSON.parse(await fs.readFile(path.join(root,'docs/audits/cta-definition-20261104/report-data.json'),'utf8'));
+const inventory=JSON.parse(await fs.readFile(path.join(root,'docs/audits/cta-inventory-20261105/summary.json'),'utf8'));
 const sequences=JSON.parse(await fs.readFile(path.join(root,'docs/audits/sequence-bundle-20261104/manifest.json'),'utf8'));
 const skill=process.env.ONCOREF_PRESENTATIONS_SKILL;
 const runtime=process.env.RUNTIME_NODE_MODULES;
@@ -101,7 +102,8 @@ note(s,'Only safety establishes Unsafe. Coverage and normal review holds remain 
 {
 const s=slide('Diffuse expression is an identity question','HPA profile identity','The old normal-maximum veto is removed. Diffuseness averages N/(N+R) across fixed weighted normal contexts, including Disposable. The active 10% adult/placental identity boundary requires complete HPA measurements and an RNA- or IHC-supported positive reference. Thymus is excluded from concentration; its hazard tier remains Protected. Supported embryonic evidence retains its separate route with unassessed concentration.');
 table(s,[['Term','Meaning'],['N','HPA v23 normal-tissue nTPM'],['R','Highest Reproductive nTPM in HPA v23 (adult/placental)'],['N / (N + R)','Average across 29 organs / 38 contexts; thymus excluded'],['Active boundary','Average >10%, with a supported positive R and complete comparison']],{widths:[335,817],size:27,h:320,y:170});
-note(s,'MTCP1 is Other:Diffuse at 24.53%. Thymus is excluded. Embryonic concentration remains unassessed.',565,26);
+const example=data.concentration_example;
+note(s,`${example.label}: ${example.classification} (${example.unsafe_reasons}); diffuseness ${example.diffuseness_pct.toFixed(2)}%. Embryonic concentration remains unassessed.`,565,26);
 }
 {
 const s=slide('Required and optional RNA coverage','Coverage','Combined bulk HPA consensus, HPA brain and GTEx coverage is required for every member locus. Cell, immune and corneal panels contribute measured evidence without imposing coverage requirements.');
@@ -188,6 +190,17 @@ table(s,[['Case','Current result','Reason retained'],['MAGEC2','Other:Held','Pur
 note(s,'A completed review can retain uncertainty. Unresolved evidence requires review without establishing Unsafe.',590,24);
 }
 {
+const s=slide('Every candidate receives a classification','Complete inventory','Full record-level audit and historical omission ledger: https://pirl-unc.github.io/oncoref/audits/cta-inventory-20261105/ . Qualifying coding annotation is not experimental proof of protein production.');
+table(s,[['Candidate records','Count','Current treatment'],['Previously classified',n(inventory.input_records-inventory.restored_records),'All previous classifications unchanged'],['Restored: Other:Translation',n(inventory.restored_classifications['Other:Translation']),'Translation admission fails; sequence review required'],['Restored: Unsafe',n(inventory.restored_classifications.Unsafe),'Normal exclusion takes precedence'],['Complete inventory',n(inventory.input_records),'All records enter the same assessment']],{widths:[355,145,652],size:25,h:360});
+note(s,'Translation is a CTA admission gate. Insufficient support cannot hide normal-tissue evidence.',590,25);
+}
+{
+const q=inventory.preliminary_expression_profile,z=inventory.stored_zero_rna_screen;
+const s=slide('Expression-screen matches and counterevidence','Cancer restriction','Record-level matches, review statuses, counterevidence and stored-zero RNA audit: https://pirl-unc.github.io/oncoref/audits/cta-inventory-20261105/ . Normal findings for IFNW1, IFNA4, MRGPRX4, CNGA2, SCN10A and GFRAL are retained with original sources.');
+table(s,[['Numerical screen','Count','Interpretation'],['Low normal expression profile',n(q.matches),'Preliminary matches; every independent exclusion still applies'],['Normal-cell counterevidence',n(q.disposition_counts.excluded_by_normal_evidence),'Unsafe despite a routine-panel profile match'],['Stored adult/reproductive RNA = 0',n(z.adult_and_reproductive_bulk_zero),'Cancer present and required normal bulk coverage complete'],['Also developmental RNA = 0',n(z.also_developmental_zero),`${n(z.developmental_measurement_missing)} adult-zero records lack developmental measurements`]],{widths:[425,115,612],size:24,h:370});
+note(s,'Stored RNA zeros do not establish protein absence. CTA counts are not cancer-only protein counts.',590,24);
+}
+{
 const s=slide('Selected translations require qualification','Reference sequence','Exact reference records and qualification rules: https://pirl-unc.github.io/oncoref/audits/translation-qualification-20261104/ . Conservative AA20 support does not establish absent biological production.');
 const names=['SERPINA2','MROH5','SELENOV'];
 table(s,[['Record','Current classification','Selected translation'],...names.map(name=>{const r=definition.worked.find(x=>x.label===name);return [name,r.classification,name==='SERPINA2'?'Incomplete primary LoF record; alternate locus cannot rescue it':name==='MROH5'?'Interrupted primary record; normal exclusion still takes precedence':'Selenocysteine requires review under the AA20 contract']})],{widths:[220,330,602],size:25,h:310});
@@ -236,7 +249,7 @@ figure(s,`selected-high-both-${number}-slide`,48,160,1184,475);
 }
 {
 const s=slide('Complementary embryonic measurements','Developmental coverage','Tyser E-MTAB-9388 https://doi.org/10.1038/s41586-021-04158-y . Petropoulos E-MTAB-3929 https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results . Sources retain their own stage, cell support and donor counts.');
-table(s,[['Source','Measured cells / embryos','Developmental scope'],['Tyser et al. (2021)','1,195 cells / 1 embryo','Gastrulation, Carnegie stage 7'],['Petropoulos et al. (2016)','1,519 cells / 88 embryos','Preimplantation, days 3–7'],['Recovered coverage','683 of 1,006 earlier missing groups','Measured TPM, including familiar CTAs']],{widths:[360,420,372],size:26,h:320});
+table(s,[['Source','Measured cells / embryos','Developmental scope'],['Tyser et al. (2021)','1,195 cells / 1 embryo','Gastrulation, Carnegie stage 7'],['Petropoulos et al. (2016)','1,519 cells / 88 embryos','Preimplantation, days 3–7'],['Recovered coverage','683 of 1,006 earlier missing proteins','Measured TPM, including familiar CTAs']],{widths:[360,420,372],size:26,h:320});
 text(s,'PRAME, MAGE-A4, CTAG1A/B, XAGE1A/B and CT83 now have TPM rows',64,525,1152,70,28,C.teal,true);
 note(s,'Each source keeps its own stages. Neither atlas covers all fetal or pediatric development.',610,23);
 }
@@ -251,7 +264,7 @@ note(s,'Other includes review holds and sequence rules. No human protein has a n
 }
 {
 const s=slide('Which sources have incomplete evidence','Coverage audit','Source versions, complete missing tissue/cell contexts, member ENSG IDs, historical IDs, synonyms and tumor cohort coverage: '+URL+'coverage/ . Counts overlap and do not sum to a total.');
-table(s,[['Source or unresolved evidence','Proteins'],...data.normal_gap_counts.map(r=>[r.source,r.groups]),['Combined Tyser + Petropoulos TPM',data.evidence_gap_counts.embryonic_measurement_missing],['No tumor measurement: OncoRef + HPA',data.evidence_gap_counts.tumor_measurement_missing],['Measured tumor, incomplete group profile',data.evidence_gap_counts.tumor_group_profile_incomplete],['HPA v23 Uncertain normal-tissue IHC',data.evidence_gap_counts.unresolved_evidence]],{widths:[970,182],size:22,h:395,y:170});
+table(s,[['Source or unresolved evidence','Proteins'],...data.normal_gap_counts.map(r=>[r.source,r.groups]),['Combined Tyser + Petropoulos TPM',data.evidence_gap_counts.embryonic_measurement_missing],['No tumor measurement: OncoRef + HPA',data.evidence_gap_counts.tumor_measurement_missing],['Measured tumor, incomplete member coverage',data.evidence_gap_counts.tumor_group_profile_incomplete],['HPA v23 Uncertain normal-tissue IHC',data.evidence_gap_counts.unresolved_evidence]],{widths:[970,182],size:22,h:395,y:170});
 note(s,`Overlapping gaps within ${n(data.assessment_statuses.incomplete_evidence)} proteins with incomplete evidence. DICE and corneal coverage are optional.`,600,24);
 }
 {

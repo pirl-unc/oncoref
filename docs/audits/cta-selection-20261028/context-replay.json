@@ -1,8 +1,8 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/replay_cta_selection.py": "f9fe9b7ecf7db495ec626d3c35410b25b461ed24c6e3eb13e231ca79324c9ca5",
-    "oncoref/cta_selection_policy.py": "6bb0924106833a215cc067e974017ccca8ffa5c6782cf9f32dfe699197555795",
+    "scripts/replay_cta_selection.py": "0f13a1c80af885a9e77887dfa5eb79cfb4fb8265b6fc7768e09880da478c8e28",
+    "oncoref/cta_selection_policy.py": "ee9fa363970c35ca6e94e92ffcab5ec005fdcc8fab2ecc1caeb7114d17ba58e6",
     "oncoref/translation_qualification.py": "6e612be63f0fb16eec840702b9a66a597778295f07a25e964bf0245ea60caa8a",
     "oncoref/data/translation-qualification.json": "3b5bd7192154d2da6a11de8a27960357db0a4a136652910097eb0f00202a33aa",
     "oncoref/data/translation-qualification.csv.gz": "d19a92dd22885be72047435da16d87ef9d4b8f74600c1b056b5025c06b260164",
@@ -14,6 +14,7 @@
     "oncoref/data/tcr-trial-evidence.json": "7ef47d7a23e57364bdeff10d4508703451f0e2831834dcbe88bee0c90d3a6413",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
     "oncoref/data/cta-ihc-compartments.csv": "8233e0a50394680b429d8333a3995611f161e5e881160481f1b81c8c3b062182",
+    "oncoref/data/cta-protein-universe.csv": "8d22887bc80356432ee2531a8278e4cadb14dbd26cf60b51ed3c2f085d44d442",
     "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
     "docs/audits/cta-release-1.21.0/bulk-contexts.csv.gz": "568b29e3c27ec3403d634d3b83c748d46b5bf2f0335bc670605d79e9ff7efdd7",
     "docs/audits/cta-release-1.21.0/immune-cornea-contexts.csv.gz": "f46543d6021025640a1c176ab61849efd0506c31ef1f4d2741660ef016567871",
@@ -44,16 +45,16 @@
       "name": "hpa_normal_tissue",
       "version": "v23",
       "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
-      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"
+      "sha256": null
     }
   ],
   "outputs": {
-    "assay-assessments.csv.gz": "8a0627c3e30891455dd781ece2f01c7efc108809b819c0b1c7d00137a33072fe",
-    "normal-peak-evidence.csv.gz": "5d132c55889b6275ee23b5dcfad2f32f921fc862f51487ead3070784a1913697",
-    "widely-studied-contexts.csv.gz": "4d85cacf991cb6e5e211cad0eebd2ce21e158edc7825c914ba1557597be2fb46",
-    "compartment-ihc-matches.csv.gz": "29b3a3b1df734bfe389f0d00fb99f5bbd376dec2eab14f66a0d9f739d708ea55",
-    "manageable-breadth.csv.gz": "50f1ea70d67e9d6b6d2327dfae5507f910dfb4722dc6aab860465b02921e19b5",
-    "reproductive-cell-evidence.csv.gz": "c28d3dd0953827d8dae28cccf5b6e7e91af49fcac5180a6c7b844a13c5c52718",
-    "outside-reproductive-cluster-coverage.csv.gz": "037d2b4431cd5dca66cbe3b326eaae5644b2ef39be88222e036690de1155dc11"
+    "assay-assessments.csv.gz": "74c399c5f27322a9bb6e2d68ffb6fac414be4119d4da235c25921ae32a6283d9",
+    "normal-peak-evidence.csv.gz": "4f58985626abd048a95cf710222696c84de4d01413164ccff3b39da5578a5e1b",
+    "widely-studied-contexts.csv.gz": "27c45a09601e43f4e96e44c1d202d9871f3773140980f761ef72b70b03907154",
+    "compartment-ihc-matches.csv.gz": "2f91582eb7bcda916139337f2a4c00f7ca4514d10a3453d6e9c86396cf808dd4",
+    "manageable-breadth.csv.gz": "1502c6c120d115535c3b6ccc5d7a00ef1144f8ac57b5fd6c49d97602744a805d",
+    "reproductive-cell-evidence.csv.gz": "4be4a9e637a1ed43cad1b427dfea21d8da95d3ed77a7e87db6a74d38098b7f22",
+    "outside-reproductive-cluster-coverage.csv.gz": "09dc633e0885c09e91b7847bf4c4400d498273715b28da314366afe664616951"
   }
 }

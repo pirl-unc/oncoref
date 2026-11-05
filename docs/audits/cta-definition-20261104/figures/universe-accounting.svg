@@ -55,19 +55,6 @@ z
 " clip-path="url(#pe5a02dc24b)" style="fill: #087e8b"/>
    </g>
    <g id="patch_4">
-    <path d="M 254.952 336.639763 
-L 422.352 336.639763 
-Q 429.048 336.639763 429.048 333.313363 
-L 429.048 256.806163 
-Q 429.048 253.479763 422.352 253.479763 
-L 254.952 253.479763 
-Q 248.256 253.479763 248.256 256.806163 
-L 248.256 333.313363 
-Q 248.256 336.639763 254.952 336.639763 
-z
-" clip-path="url(#pe5a02dc24b)" style="fill: #536675"/>
-   </g>
-   <g id="patch_5">
     <path d="M 509.4 137.055763 
 L 663.408 137.055763 
 Q 670.104 137.055763 670.104 133.729363 
@@ -80,7 +67,7 @@ Q 502.704 137.055763 509.4 137.055763
 z
 " clip-path="url(#pe5a02dc24b)" style="fill: #087e8b"/>
    </g>
-   <g id="patch_6">
+   <g id="patch_5">
     <path d="M 509.4 230.194963 
 L 663.408 230.194963 
 Q 670.104 230.194963 670.104 226.868563 
@@ -93,7 +80,7 @@ Q 502.704 230.194963 509.4 230.194963
 z
 " clip-path="url(#pe5a02dc24b)" style="fill: #a76708"/>
    </g>
-   <g id="patch_7">
+   <g id="patch_6">
     <path d="M 509.4 323.334163 
 L 663.408 323.334163 
 Q 670.104 323.334163 670.104 320.007763 
@@ -112,27 +99,22 @@ z
     <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(30.254344 161.876427)">protein records</text>
    </g>
    <g id="text_2">
-    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(305.852625 131.269454)">19,604</text>
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(305.852625 131.269454)">19,863</text>
     <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(249.655672 151.674102)">Classified proteins</text>
    </g>
    <g id="text_3">
-    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(320.909578 279.07113)">259</text>
-    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(301.489734 299.475778)">Outside</text>
-    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(278.475984 319.880427)">the universe</text>
-   </g>
-   <g id="text_4">
     <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(568.661578 94.679718)">602</text>
     <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(568.449078 115.083038)">CTA</text>
    </g>
-   <g id="text_5">
-    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(568.661578 187.818254)">759</text>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(559.518766 187.818254)">1,006</text>
     <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(559.107047 208.222902)">Other</text>
    </g>
-   <g id="text_6">
-    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(553.604625 280.957454)">18,243</text>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(553.604625 280.957454)">18,255</text>
     <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; fill: #ffffff" transform="translate(553.192906 301.362102)">Unsafe</text>
    </g>
-   <g id="patch_8">
+   <g id="patch_7">
     <path d="M 196.687727 137.055763 
 Q 218.122837 137.055763 237.321879 137.055763 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
@@ -141,16 +123,7 @@ L 237.321879 137.055763
 L 232.921879 139.255763 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
    </g>
-   <g id="patch_9">
-    <path d="M 195.353145 162.228717 
-Q 218.124489 226.869951 240.152878 289.402152 
-" style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
-    <path d="M 240.76595 284.521154 
-L 240.152878 289.402152 
-L 236.615923 285.983096 
-" style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
-   </g>
-   <g id="patch_10">
+   <g id="patch_8">
     <path d="M 430.801286 136.097676 
 Q 462.527075 118.761068 492.290652 102.496713 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
@@ -159,7 +132,7 @@ L 492.290652 102.496713
 L 489.484489 106.53719 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
    </g>
-   <g id="patch_11">
+   <g id="patch_9">
     <path d="M 430.686853 148.174758 
 Q 462.528121 170.319847 492.533645 191.188205 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
@@ -168,7 +141,7 @@ L 492.533645 191.188205
 L 487.66524 190.482065 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
    </g>
-   <g id="patch_12">
+   <g id="patch_10">
     <path d="M 429.965512 158.791768 
 Q 462.52824 221.879427 494.065377 282.980087 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
@@ -177,11 +150,16 @@ L 494.065377 282.980087
 L 490.092333 280.079237 
 " style="fill: none; stroke: #536675; stroke-width: 2; stroke-linecap: round"/>
    </g>
+   <g id="text_6">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #173b55" transform="translate(20.592 229.311763)">Includes all 259 records with insufficient translation support:</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #173b55" transform="translate(20.592 250.874263)">247 Other:Translation and 12 Unsafe.</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; fill: #173b55" transform="translate(20.592 270.111762)">Translation controls CTA admission; normal exclusions take precedence.</text>
+   </g>
    <g id="text_7">
     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="20.592" y="369.903763" transform="rotate(-0 20.592 369.903763)">Identical selected reference sequences count together. Member loci remain separately traceable.</text>
    </g>
    <g id="text_8">
-    <text style="font-weight: 700; font-size: 22px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="7.2" y="23.916562" transform="rotate(-0 7.2 23.916562)">Count the universe before counting CTAs</text>
+    <text style="font-weight: 700; font-size: 22px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="7.2" y="23.916562" transform="rotate(-0 7.2 23.916562)">Every candidate record receives a classification</text>
    </g>
   </g>
  </g>

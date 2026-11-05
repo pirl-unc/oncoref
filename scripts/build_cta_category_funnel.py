@@ -16,7 +16,11 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import FancyBboxPatch
 
-from oncoref.cta_selection_policy import CANDIDATE_ONLY_LAYERS, CONTAINED_FLOOR
+from oncoref.cta_selection_policy import (
+    CANDIDATE_ONLY_LAYERS,
+    CONTAINED_FLOOR,
+    translation_admission,
+)
 from oncoref.version import __version__
 
 
@@ -49,7 +53,7 @@ def build(root: Path, output: Path) -> None:
         ),
         ("Cancer presence", ~facts.cancer_association),
         ("Reproductive concentration", facts.reproductive_concentration_hold),
-        ("Translation qualification", ~facts.translation_qualified),
+        ("Translation qualification", ~translation_admission(facts)),
         (
             "Unsafe sequence containment",
             facts.unsafe_sequence_overlap_pct.ge(100 * CONTAINED_FLOOR),
