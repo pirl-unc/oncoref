@@ -58,6 +58,88 @@ def test_source_values_do_not_turn_missing_observations_into_zero(report):
     assert saw_zero and saw_missing
 
 
+def test_biology_categories_retain_evidence_and_overlap(report):
+    ctas = [r for r in report["rows"] if r["category"] == "CTA"]
+    assert len(ctas) == 602
+    categories = {c["id"] for c in report["biology"]["categories"]}
+    sources = {s["source_id"] for s in report["sources"]}
+    for row in report["rows"]:
+        assert bool(row["biology_categories"]) == (row["category"] == "CTA")
+        assert set(row["biology_categories"]) <= categories
+        evidence_categories = {e["category_id"] for e in row["biology_evidence"]}
+        assert evidence_categories == set(row["biology_categories"]) - {"uncategorized"}
+        for evidence in row["biology_evidence"]:
+            assert evidence["basis"] and evidence["model"]
+            assert (
+                evidence.get("source_url", "").startswith("https://")
+                or evidence.get("source_id") in sources
+            )
+            assert set(evidence["gene_ids"]) & set(row["gene_ids"])
+    for category in report["biology_counts"]:
+        assert category["all"] == sum(category["id"] in r["biology_categories"] for r in ctas)
+        assert category["unlisted"] == sum(
+            category["id"] in r["biology_categories"] for r in ctas if not r["papers"]
+        )
+        assert category["registered"] + category["unlisted"] == category["all"]
+    by_label = {r["label"]: r for r in ctas}
+    assert by_label["WEE2"]["route"] == "Developmental only"
+    assert "oocyte_maternal" in by_label["WEE2"]["biology_categories"]
+    for gene in ["PATE1", "WFDC8", "RNASE9", "SEMG2"]:
+        assert "reproductive_secretion" in by_label[gene]["biology_categories"]
+        assert any(
+            e["kind"] == "Publication" and e["category_id"] == "reproductive_secretion"
+            for e in by_label[gene]["biology_evidence"]
+        )
+    assert any("Mouse" in e["model"] for e in by_label["PABPN1L"]["biology_evidence"])
+    exported = pd.read_csv(OUT / "cta-biology-categories.csv")
+    assert set(exported.entity_id) == {r["entity_id"] for r in ctas}
+
+
+def test_biology_rna_uses_all_contexts_before_the_top_five_cut():
+    spec = importlib.util.spec_from_file_location(
+        "explorer_biology_builder", ROOT / "scripts/build_cta_evidence_explorer.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    collector = module.BiologyCollector(pd.DataFrame({"representative_gene_id": ["g"]}))
+    frame = pd.DataFrame(
+        [
+            {
+                "gene_id": "g",
+                "source": "hpa_single_cell_tissue",
+                "unit": "nTPM",
+                "tissue": "testis",
+                "cell_type": f"cell {i}",
+                "value": 100 - i,
+            }
+            for i in range(6)
+        ]
+        + [
+            {
+                "gene_id": "g",
+                "source": "hpa_single_cell_tissue",
+                "unit": "nTPM",
+                "tissue": "ovary",
+                "cell_type": "oocytes",
+                "value": 6,
+            },
+            {
+                "gene_id": "g",
+                "source": "hpa_single_cell_tissue",
+                "unit": "nTPM",
+                "tissue": "ovary",
+                "cell_type": "oocytes",
+                "value": None,
+                "raw_maximum": 900,
+            },
+        ]
+    )
+    collector.collect(frame, "HPA tissue clusters")
+    selected = pd.concat(collector.parts)
+    assert len(selected) == 7
+    assert selected.loc[selected.cell_type.eq("oocytes"), "value"].tolist() == [6]
+
+
 def test_top_contexts_are_unique_within_source_unit_and_scope():
     d = pd.read_csv(OUT / "normal-top-contexts.csv.gz", low_memory=False)
     keys = ["gene_id", "source", "unit", "scope"]

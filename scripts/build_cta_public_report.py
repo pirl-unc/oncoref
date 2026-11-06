@@ -45,8 +45,25 @@ from oncoref import (  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
-PRESENTATION_REVISION = "2026-11-06.1"
+PRESENTATION_REVISION = "2026-11-06.2"
 GUIDE_URL = "https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html"
+DISPLAY_LABELS = {
+    "allow": "No exclusion recorded",
+    "review": "Unresolved",
+    "exclude": "Exclude",
+    "context": "Context only",
+    "screened": "Screened",
+    "normal_evidence_hold": "Normal evidence unresolved",
+    "translation_review": "Translation unresolved",
+    "incomplete_evidence": "Missing measurements",
+    "unassessed": "Not assessed",
+}
+
+
+def display_label(value):
+    return DISPLAY_LABELS.get(value, value.replace("_", " "))
+
+
 GATE_SOURCES = {
     "rare_vital": ("CELLxGENE",),
     "rare_protected": ("CELLxGENE",),
@@ -55,19 +72,19 @@ GATE_SOURCES = {
 }
 TIER_EXAMPLES = {
     "vital": (
-        "Heart and alveolar injury: direct human T-cell injury and animal depletion evidence support high-consequence concerns; neither estimates a universal fatality rate.",
+        "Engineered T-cell treatment caused fatal cardiac injury in the cited human study. AT2-cell depletion caused lethal pulmonary edema in the cited mouse study.",
         ("linette2013", "garcia2016"),
     ),
     "protected": (
-        "Persistent salivary injury and impaired ciliary function illustrate lasting functional consequences. Disease and depletion models are not interchangeable with immune killing.",
+        "The cited studies document persistent salivary injury, ciliary dysfunction and impaired airway clearance.",
         ("warner2019", "halbeisen2022", "pardo2015"),
     ),
     "manageable": (
-        "B-cell depletion and thyroid injury have clinical replacement or supportive-treatment precedent. Management remains conditional on the exact compartment and treatment.",
+        "Clinical B-cell depletion is managed with infection monitoring and immunoglobulin replacement when needed. Thyroid hormone replaces thyroid endocrine function.",
         ("maude2018", "iyer2018"),
     ),
     "disposable": (
-        "Gallbladder removal provides a narrow surgical precedent. Melanocyte-targeted T cells also damaged eye and ear tissues: a cutaneous allowance cannot extend to every melanocyte compartment.",
+        "Gallbladder removal is a clinical example of tolerated organ loss. Melanocyte-targeted T cells caused eye and ear injury, so the cutaneous category is restricted to skin.",
         ("niddk_gallbladder", "johnson2009"),
     ),
 }
@@ -365,16 +382,16 @@ def build():
             "What OncoRef calls a CTA",
             [
                 contract["definition"],
-                f"The current human policy produces {counts['CTA']:,} CTA, {counts['Unsafe']:,} Unsafe and {counts['Other']:,} Other proteins. It evaluates {len(facts):,} candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. This is not a complete inventory of splice isoforms or modified proteoforms.",
-                "CTA is a research candidate designation; it does not establish peptide-HLA presentation, receptor recognition, therapeutic abundance or clinical safety. Reproductive/developmental support includes adult reproductive tissues, placenta, extraembryonic tissues, embryo and fetus. These routes remain distinguishable; developmental association does not imply adult testis restriction.",
+                f"The current human policy produces {counts['CTA']:,} CTA, {counts['Unsafe']:,} Unsafe and {counts['Other']:,} Other proteins. It evaluates {len(facts):,} candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. Splice isoforms and post-translational modifications are outside this inventory.",
+                "CTA admission combines cancer expression, reproductive or developmental association, translation qualification and normal-tissue assessment. The biological categories identify the tissue, cell population or developmental program associated with each protein.",
             ],
             "universe-accounting",
         ),
         (
             "From candidates to CTAs",
             [
-                f"All {coverage['universe_counts']['input_groups']:,} candidate records enter the same normal-evidence and admission path. The {sum(support_counts.values()):,} records formerly removed at entry stay visible: {support_counts.get('nmd_or_cds_not_defined_only', 0):,} have only NMD/CDS-not-defined reference transcripts and {support_counts.get('single_study_ribo_seq', 0):,} have only single-study Ribo-seq support. Insufficient translation support does not establish absence or normal-tissue safety.",
-                "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. An annotated coding sequence is not experimental proof of protein production.",
+                f"All {coverage['universe_counts']['input_groups']:,} candidate records enter the same normal-evidence and admission path. The {sum(support_counts.values()):,} records formerly removed at entry stay visible: {support_counts.get('nmd_or_cds_not_defined_only', 0):,} have only NMD/CDS-not-defined reference transcripts and {support_counts.get('single_study_ribo_seq', 0):,} have only single-study Ribo-seq support. Translation support is assessed at CTA admission.",
+                "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. The translation rule accepts qualifying coding annotation and supported noncanonical ORFs.",
                 "Apply all normal-tissue evidence independently. Accepted exclusion evidence establishes Unsafe. Unresolved findings or missing required coverage prevent admission and require review; they do not establish Unsafe. Every target must also pass reproductive/developmental association, cancer presence, concentration, translation qualification and sequence-containment rules.",
                 f"The chart uses cumulative counts. Of {admission.loc['Normal safety + coverage', 'eligible']:,} proteins passing normal assessment, cancer presence retains {admission.loc['Cancer presence', 'eligible']:,}; reproductive/developmental presence then narrows these to {admission.loc['Reproductive/developmental presence', 'eligible']:,}. The previous order showed 645 at both gates because every reproductive/developmental survivor already met cancer presence. One compatible positive tumor RNA sample or reviewed tumor protein makes cancer presence a broad gate, not an abundance or prevalence requirement.",
                 "Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Display order changes neither final classifications nor the priority used to assign Other subtypes.",
@@ -385,17 +402,25 @@ def build():
             "Published nominations through the funnel",
             [
                 f"All {len(publication_funnel[publication_funnel.source_kind.eq('paper')])} registered nomination papers appear in the companion funnel. Their union contains {publication_union['Inventory']:,} proteins: {publication_union['Unsafe sequence containment']:,} finish as CTA, {publication_union['Final Unsafe']:,} as Unsafe and {publication_union['Final Other']:,} as Other. A protein can occur in several papers, so individual paper rows must not be summed.",
-                f"The {unannotated['Inventory']:,} candidates without a registered-paper annotation undergo the same assessment and contribute {unannotated['Unsafe sequence containment']:,} CTAs. Prior nomination is recorded provenance, not a required admission gate. Absence from this finite registry does not establish novelty or absence from the literature.",
+                f"The {unannotated['Inventory']:,} candidates without a registered-paper annotation undergo the same assessment and contribute {unannotated['Unsafe sequence containment']:,} CTAs. Prior nomination is recorded separately from the admission gates. The evidence guide identifies additional publications for proteins outside this registry.",
                 "A publication's measured evidence can support reproductive/developmental association, tumor expression, translation or normal-tissue counterevidence when it meets the corresponding evidence rule. A list label alone does not establish those facts. Germ-cell, testis-biased, placental and tumor-vascular lists retain their original scope alongside CTA nominations.",
             ],
             "publication-funnel",
         ),
         (
+            "Biological categories of CTAs",
+            [
+                "The CTA tables group proteins by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories.",
+                "Each tag links to a publication or a supported RNA observation. The detail view records the species, tissue, cell population or developmental stage. Biological categories are separate from the admission route and the CTA, Unsafe or Other classification.",
+            ],
+            None,
+        ),
+        (
             "Normal-tissue consequences and expression evidence",
             [
-                "Vital, Protected, Manageable and Disposable describe the consequence and tolerability of injury to a specified tissue/cell compartment. They are qualitative research priorities, not measured fatality probabilities. Immediate function, regenerative reserve, persistent depletion, anatomy and inflammatory amplification all matter.",
+                "Vital, Protected, Manageable and Disposable describe the consequence and tolerability of injury to a specified tissue/cell compartment. Assignments use immediate function, repair capacity, persistent injury, anatomy and inflammatory effects.",
                 f"The central registry distinguishes {levels['bulk']} bulk tissues and {levels['cell']} cell populations, with source-linked rationale. A cell-level exception requires resolved tissue and cell identity. An unresolved or mixed label cannot earn a narrower allowance; reproductive/developmental membership is a separate anatomical axis.",
-                "RNA detection, accessible surface protein, peptide-HLA presentation, functional recognition and demonstrated injury are distinct evidence levels. CAR and TCR target availability are different questions. A weak initiating target can still produce inflammatory injury in other cells. Missing evidence is never measured zero.",
+                "The evidence records distinguish RNA, surface protein, peptide-HLA presentation, receptor recognition and tissue injury. Missing measurements and measured zeros have separate values.",
             ],
             None,
         ),
@@ -403,7 +428,7 @@ def build():
             "Evidence has multiple independent meanings",
             [
                 "Review completion, interpretation and policy effect are separate. A completed review can retain an unresolved interpretation. A rejected protein claim remains visible with its rationale; rejecting that claim does not prove normal-tissue absence.",
-                f"All {migrated_count} historical findings have linked current dispositions. MAGEC2, LGALS13 and PLCZ1 retain material holds. Their evidence access depth, reagent identity, adult/fetal and isoform limits are stated explicitly. The broader literature review remains incomplete.",
+                f"All {migrated_count} historical findings have linked current dispositions. MAGEC2, LGALS13 and PLCZ1 retain material holds. Each record lists the source, reagent, tissue, developmental stage and unresolved question.",
                 "Fatal neurological injury in the MAGE-A3-reactive TCR cohort remains product-specific evidence. The MAGEA12 and EPS8L2 explanations are both retained as unresolved. MAGEA12 remains Unsafe under an independent rare-cell finding. Neither receptor causality nor favorable clinical credit transfers across a gene family.",
             ],
             "independent-evidence",
@@ -411,8 +436,8 @@ def build():
         (
             "Translation, identity and downstream sequence use",
             [
-                "Translation qualification asks whether the exact selected primary-locus record supports target sequence use. Complete coding annotation, start/stop codons, biotype and sequence integrity are assessed separately from normal-tissue hazard. An alternate-locus protein cannot silently rescue an incomplete primary record.",
-                "The verified bundle retains original sequences, every source occurrence, qualification reasons and coverage gaps. It supplies contiguous AA20 segments with original coordinates and never joins across ambiguity, internal stops or different records. Selenocysteine-containing records require review under this AA20 contract; this is not a claim that the protein is unexpressed.",
+                "Translation qualification asks whether the exact selected primary-locus record supports target sequence use. Complete coding annotation, start/stop codons, biotype and sequence integrity are assessed separately from normal-tissue hazard. Qualification applies to the selected primary-locus record.",
+                "The verified bundle retains original sequences, every source occurrence, qualification reasons and coverage gaps. It supplies contiguous AA20 segments with original coordinates and never joins across ambiguity, internal stops or different records. Selenocysteine-containing records require review under the AA20 sequence contract.",
                 "Across occurrences, exclude takes precedence over review, then allow. Unsafe sequence remains exclusion evidence even in an incomplete record. Allow means no exclusion from the assessed record under this policy. Exact matching does not validate an approximate similarity cutoff or patient-HLA decision. The historical Unsafe plus additional-forbidden assets retain their older policy identity.",
             ],
             "category-role-matrix",
@@ -420,8 +445,8 @@ def build():
         (
             "Research parameters and coverage limits",
             [
-                "Without usable matching protein staining, the upper RNA limits start at 4 for Vital, 8 for Protected and 16 for Manageable tissues, in the source's own TPM or nTPM units. Approved, Supported and Enhanced negative IHC respectively multiply the starting limit by 2, 4 and 8. Reviewed product-specific clinical evidence can add one doubling within the same cap. A value must be above the limit to trigger this RNA rule. Corneal CP10K uses separate limits, not a TPM conversion. These are policy choices, not measured safe exposures.",
-                "One compatible tumor sample above zero establishes the current cancer-presence criterion, not sufficient target abundance or cohort prevalence. Reproductive RNA uses a 5-unit criterion with assay-specific support requirements; reliable reproductive IHC and reviewed protein provide separate routes. Adult/placental diffuseness above 10% can block identity, never establish Unsafe.",
+                "Without usable matching protein staining, the upper RNA limits start at 4 for Vital, 8 for Protected and 16 for Manageable tissues, in the source's own TPM or nTPM units. Approved, Supported and Enhanced negative IHC respectively multiply the starting limit by 2, 4 and 8. Reviewed product-specific clinical evidence can add one doubling within the same cap. A value must be above the limit to trigger this RNA rule. Corneal CP10K uses separate limits. These screening thresholds are set by OncoRef policy.",
+                "Cancer presence requires one compatible tumor sample above zero or reviewed tumor protein. Reproductive RNA uses a 5-unit criterion with assay-specific support requirements; reliable reproductive IHC and reviewed protein provide separate routes. Adult/placental diffuseness above 10% can block identity, never establish Unsafe.",
                 "The rare-cell panel uses a 1% detection screen with cell-support rules. Detection frequency is not abundance. Coverage is limited by sampled organs, donor age, activation states, paralog mapping and assay resolution. Optional panels remain disclosed when missing. A 95% Unsafe 9-mer overlap blocks practical candidate admission, but is not a clinical cross-reactivity validation.",
                 "The complete gate table below retains the actual executable rules and source IDs. Human thresholds are not transferred to dog or mouse; their native nominations remain unassessed until supported by a species-specific policy.",
             ],
@@ -441,9 +466,9 @@ def build():
             "Reproduction and version changes",
             [
                 f"Selection policy: {coverage['policy_id']}. Role policy: {contract['role_policy_id']}. Translation policy: {translation_qualification.POLICY_ID}.",
-                "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. No target CTA count is an acceptance criterion.",
+                "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. Counts are recalculated from the evidence and rules.",
                 "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-                f"Presentation revision {PRESENTATION_REVISION} places the broader cancer-presence gate first after normal assessment and follows every registered nomination paper through the same cumulative gates. Classifications, thresholds and sequence roles are unchanged. Earlier release assets remain frozen.",
+                f"Presentation revision {PRESENTATION_REVISION} adds biological categories, linked per-protein evidence and simpler report text. It retains the 1.31.0 classifications, thresholds and sequence roles.",
             ],
             None,
         ),
@@ -468,6 +493,9 @@ def build():
         "tier_references": tissue_hazards.references().set_index("reference_id").to_dict("index"),
         "unlisted_comparison": json.loads(
             (ROOT / "docs/audits/cta-evidence-guide-20261106/comparison.json").read_text()
+        ),
+        "biology": json.loads(
+            (ROOT / "docs/audits/cta-evidence-guide-20261106/biology-categories.json").read_text()
         ),
         "rows": roles[
             [
@@ -622,7 +650,7 @@ def render_html(data):
     chunks = [
         '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OncoRef CTA definition</title><style>body{margin:0;background:#f4f6f7;color:#173b55;font:17px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:50px 30px}header{border-top:8px solid #087e8b;padding-top:24px}h1{font-size:46px;line-height:1.1}h2{font-size:28px;margin-top:48px}p{max-width:83ch}figure{margin:30px 0;background:white;padding:16px}img{width:100%;height:auto}small,.muted{color:#536675}table{border-collapse:collapse;width:100%;background:white;font-size:14px}td,th{padding:12px;text-align:left;border-bottom:1px solid #d9e2e8;vertical-align:top}th{background:#173b55;color:white}a{color:#087e8b}input,select{font:inherit;padding:10px;border:1px solid #8995a4;border-radius:4px}details{background:white;padding:18px;margin:16px 0;border-left:4px solid #a76708}summary{font-weight:700;cursor:pointer}.counts{display:flex;gap:30px;flex-wrap:wrap;font-size:24px}.counts strong{font-size:36px;display:block}code{overflow-wrap:anywhere;font-size:13px}.scroller{overflow:auto}footer{margin:60px 0 10px;border-top:1px solid #8995a4;padding-top:20px}</style><main><header><small>ONCOREF / RESEARCH DEFINITION / '
         + esc(data["release"])
-        + '</small><h1>From the candidate universe<br>to CTAs</h1><p>Traceable evidence. Explicit uncertainty. Qualified sequence records.</p><div class="counts">'
+        + '</small><h1>From the candidate universe<br>to CTAs</h1><p>Measurements, publications and classification rules for every candidate protein.</p><div class="counts">'
     ]
     for category in ["CTA", "Unsafe", "Other"]:
         chunks.append(
@@ -638,6 +666,31 @@ def render_html(data):
             + "</h2>"
             + "".join("<p>" + esc(p) + "</p>" for p in paragraphs)
         )
+        if title == "Biological categories of CTAs":
+            chunks.append(
+                '<figure><img src="../cta-evidence-guide-20261106/biology-categories.svg" alt="Biological categories of the 602 CTAs"></figure>'
+                '<p><a href="'
+                + GUIDE_URL
+                + '#biology">Filter CTAs by biological category and inspect the evidence</a></p>'
+                "<table><thead><tr><th>Category</th><th>All CTAs</th><th>In papers</th><th>Outside collection</th></tr></thead><tbody>"
+            )
+            for category in (c for c in data["biology"]["counts"] if c["all"]):
+                chunks.append(
+                    '<tr><td><a href="'
+                    + GUIDE_URL
+                    + "?biology="
+                    + category["id"]
+                    + '#explorer">'
+                    + esc(category["label"])
+                    + "</a></td>"
+                    + "".join(
+                        f"<td>{category[key]}</td>" for key in ["all", "registered", "unlisted"]
+                    )
+                    + "</tr>"
+                )
+            chunks.append(
+                "</tbody></table><p>Categories overlap; each column counts proteins carrying that tag.</p>"
+            )
         if title == "Normal-tissue consequences and expression evidence":
             chunks.append(
                 "<dl>"
@@ -662,9 +715,9 @@ def render_html(data):
                     )
                 chunks.append("</p>")
             chunks.append(
-                '<p>These are policy judgments supported by mechanisms and scoped evidence, not validated clinical risk classes. <a href="'
+                '<p>The registry records the evidence for each tissue and cell population. <a href="'
                 + GUIDE_URL
-                + '#ontology">All tissue/cell rationales and reference limitations</a>.</p>'
+                + '#ontology">Tissue and cell rationales with references</a>.</p>'
             )
         if title == "Evidence has multiple independent meanings":
             chunks.append(
@@ -726,18 +779,20 @@ def render_html(data):
                 + " · "
                 + case["classification"]
                 + " · sequence "
-                + case["sequence_role"]
+                + display_label(case["sequence_role"])
             )
             + "</summary><p>"
-            + esc(case["assessment_status"] + ": " + "; ".join(case["reasons"]))
+            + esc(display_label(case["assessment_status"]) + ": " + "; ".join(case["reasons"]))
             + "</p><p>Translation: "
-            + esc(case["translation_reasons"] or "qualified selected record")
+            + esc(display_label(case["translation_reasons"]) or "Qualified selected record")
             + "</p>"
         )
         for f in case["findings"]:
             chunks.append(
                 "<p><b>"
-                + esc(f["interpretation_status"] + " / " + f["effect"])
+                + esc(
+                    display_label(f["interpretation_status"]) + " / " + display_label(f["effect"])
+                )
                 + "</b>: "
                 + esc(f["decision_reason"])
                 + ' <a href="'
@@ -805,13 +860,37 @@ def render_pdf(data):
 
     story += [
         Paragraph("From the candidate universe to CTAs", styles["Title"]),
-        paragraph("OncoRef " + data["release"] + " | 5 November 2026"),
+        paragraph("OncoRef " + data["release"] + " | 6 November 2026"),
         paragraph("Research candidate selection, evidence status and verified sequence use."),
         Spacer(1, 16),
     ]
     for title, paragraphs, fig in data["sections"]:
         story.append(Paragraph(html.escape(title), styles["Heading1"]))
         story.extend(paragraph(p) for p in paragraphs)
+        if title == "Biological categories of CTAs":
+            story.append(
+                Image(
+                    str(ROOT / "docs/audits/cta-evidence-guide-20261106/biology-categories.png"),
+                    width=500,
+                    height=247,
+                )
+            )
+            for category in (c for c in data["biology"]["counts"] if c["all"]):
+                story.append(
+                    paragraph(
+                        f"{category['label']}: {category['all']} of 602 CTAs; "
+                        f"{category['unlisted']} of the 122 outside the paper collection.",
+                        small,
+                    )
+                )
+            story.append(
+                Paragraph(
+                    '<a href="'
+                    + GUIDE_URL
+                    + '#biology">Filter the CTA table by biological category and open the supporting evidence</a>',
+                    small,
+                )
+            )
         if title == "Normal-tissue consequences and expression evidence":
             for tier, definition in data["tier_definitions"].items():
                 story.append(
@@ -920,17 +999,17 @@ def render_pdf(data):
     )
     story.append(
         paragraph(
-            "The 602 released CTAs include 480 proteins in the 15-paper nomination union and 122 outside it (123 loci). Absence from this finite collection does not establish novelty or absence from the literature."
+            "The 602 CTAs include 480 proteins in the 15-paper nomination registry and 122 outside it. The 122 represent 123 loci. The review found additional cancer-target publications for TBXT, SEMG2 and PATE1."
         )
     )
     story.append(
         paragraph(
-            "Of the 122, 60 qualify through developmental evidence alone, 49 through adult reproductive evidence alone and 13 through both. Only 34 of the 480 registered proteins use the developmental-only route. These are admission routes in the measured datasets, not exclusive biological identities."
+            "Of the 122, 60 qualify through developmental evidence alone, 49 through adult reproductive evidence alone and 13 through both. Only 34 of the 480 registered proteins use the developmental-only route. The biological categories record their tissue and developmental associations separately."
         )
     )
     story.append(
         paragraph(
-            f"Median highest tumor RNA is {comparison['unlisted']['tumor_max_median_tpm']:.1f} versus {comparison['registered']['tumor_max_median_tpm']:.1f} TPM. This does not suggest uniformly weaker tumor maxima, but maxima do not measure prevalence, replication or specificity. All 122 pass the annotation-based translation rule; none has a released gene-knowledge finding. An empty ledger is not a negative literature review."
+            f"Median highest tumor RNA is {comparison['unlisted']['tumor_max_median_tpm']:.1f} versus {comparison['registered']['tumor_max_median_tpm']:.1f} TPM. All 122 pass the reference-coding translation rule. Their released gene-knowledge ledger contains no findings. Tumor prevalence and experimental protein detection are separate measurements."
         )
     )
     story.append(
@@ -973,15 +1052,13 @@ def render_pdf(data):
                     small,
                 )
             )
-        finding_block.append(
-            paragraph("Scope: " + finding["model"] + ". Limits: " + finding["limitation"], small)
-        )
+        finding_block.append(paragraph(finding["model"] + ". " + finding["limitation"], small))
         story.append(KeepTogether(finding_block))
     story.append(Spacer(1, 20))
     story.append(Paragraph("Plain-language sequence decisions", styles["Heading1"]))
     story.append(
         paragraph(
-            "No exclusion recorded (allow): the assessed record has no policy exclusion; this is not a target recommendation. Unresolved (review): do not automatically clear the sequence until the relevant questions are answered. Exclude: retain as exclusion evidence; this takes precedence over review and allow."
+            "No exclusion recorded (allow): the assessed sequence has no recorded exclusion. Unresolved (review): one or more evidence questions remain. Exclude: retain the sequence as exclusion evidence. Exclude takes precedence over review and allow."
         )
     )
     for label, explanation in [
@@ -1050,33 +1127,41 @@ def render_pdf(data):
     story.append(PageBreak())
     story.append(Paragraph("Worked decisions and primary sources", styles["Heading1"]))
     for case in data["worked"]:
-        story.append(
+        case_block = []
+        case_block.append(
             Paragraph(
                 html.escape(case["label"] + " - " + case["classification"]), styles["Heading2"]
             )
         )
-        story.append(
+        case_block.append(
             paragraph(
-                case["assessment_status"]
-                + "; sequence role: "
-                + case["sequence_role"]
+                display_label(case["assessment_status"])
+                + "; sequence: "
+                + display_label(case["sequence_role"])
                 + ". Reasons: "
                 + ("; ".join(case["reasons"]) or "All declared gates pass.")
             )
         )
-        story.append(
+        case_block.append(
             paragraph(
                 "Translation: "
-                + (case["translation_reasons"] or "Qualified selected primary-locus record.")
+                + (
+                    display_label(case["translation_reasons"])
+                    or "Qualified selected primary-locus record."
+                )
             )
         )
         for f in case["findings"]:
-            story.append(
+            case_block.append(
                 paragraph(
-                    f["interpretation_status"] + " / " + f["effect"] + ": " + f["decision_reason"]
+                    display_label(f["interpretation_status"])
+                    + " / "
+                    + display_label(f["effect"])
+                    + ": "
+                    + f["decision_reason"]
                 )
             )
-            story.append(
+            case_block.append(
                 Paragraph(
                     '<a href="'
                     + html.escape(f["source_url"], quote=True)
@@ -1086,7 +1171,9 @@ def render_pdf(data):
                     small,
                 )
             )
-            story.append(paragraph(f["review_depth"] + ". " + f["limitations"], small))
+            case_block.append(paragraph(f["review_depth"] + ". " + f["limitations"], small))
+
+        story.append(KeepTogether(case_block))
 
     def footer(canvas, doc):
         canvas.setFont("DejaVu", 7)
