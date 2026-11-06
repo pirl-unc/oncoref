@@ -47,6 +47,23 @@ from oncoref.version import __version__  # noqa: E402
 OUT = ROOT / "docs/audits/cta-definition-20261104"
 PRESENTATION_REVISION = "2026-11-06.2"
 GUIDE_URL = "https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html"
+DISPLAY_LABELS = {
+    "allow": "No exclusion recorded",
+    "review": "Unresolved",
+    "exclude": "Exclude",
+    "context": "Context only",
+    "screened": "Screened",
+    "normal_evidence_hold": "Normal evidence unresolved",
+    "translation_review": "Translation unresolved",
+    "incomplete_evidence": "Missing measurements",
+    "unassessed": "Not assessed",
+}
+
+
+def display_label(value):
+    return DISPLAY_LABELS.get(value, value.replace("_", " "))
+
+
 GATE_SOURCES = {
     "rare_vital": ("CELLxGENE",),
     "rare_protected": ("CELLxGENE",),
@@ -762,18 +779,20 @@ def render_html(data):
                 + " · "
                 + case["classification"]
                 + " · sequence "
-                + case["sequence_role"]
+                + display_label(case["sequence_role"])
             )
             + "</summary><p>"
-            + esc(case["assessment_status"] + ": " + "; ".join(case["reasons"]))
+            + esc(display_label(case["assessment_status"]) + ": " + "; ".join(case["reasons"]))
             + "</p><p>Translation: "
-            + esc(case["translation_reasons"] or "qualified selected record")
+            + esc(display_label(case["translation_reasons"]) or "Qualified selected record")
             + "</p>"
         )
         for f in case["findings"]:
             chunks.append(
                 "<p><b>"
-                + esc(f["interpretation_status"] + " / " + f["effect"])
+                + esc(
+                    display_label(f["interpretation_status"]) + " / " + display_label(f["effect"])
+                )
                 + "</b>: "
                 + esc(f["decision_reason"])
                 + ' <a href="'
@@ -1116,9 +1135,9 @@ def render_pdf(data):
         )
         case_block.append(
             paragraph(
-                case["assessment_status"]
-                + "; sequence role: "
-                + case["sequence_role"]
+                display_label(case["assessment_status"])
+                + "; sequence: "
+                + display_label(case["sequence_role"])
                 + ". Reasons: "
                 + ("; ".join(case["reasons"]) or "All declared gates pass.")
             )
@@ -1126,13 +1145,20 @@ def render_pdf(data):
         case_block.append(
             paragraph(
                 "Translation: "
-                + (case["translation_reasons"] or "Qualified selected primary-locus record.")
+                + (
+                    display_label(case["translation_reasons"])
+                    or "Qualified selected primary-locus record."
+                )
             )
         )
         for f in case["findings"]:
             case_block.append(
                 paragraph(
-                    f["interpretation_status"] + " / " + f["effect"] + ": " + f["decision_reason"]
+                    display_label(f["interpretation_status"])
+                    + " / "
+                    + display_label(f["effect"])
+                    + ": "
+                    + f["decision_reason"]
                 )
             )
             case_block.append(
