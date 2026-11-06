@@ -18,6 +18,7 @@ def test_large_archived_downloads_keep_exact_bytes_and_immutable_links(tmp_path)
     files = {
         archive: b"x" * pages.MINIMUM_BYTES,
         current: b"y" * pages.MINIMUM_BYTES,
+        next(iter(pages.ARCHIVED_REPORT_DOWNLOADS)): b"p" * pages.MINIMUM_BYTES,
         "audits/old/small.csv": b"a,b\n1,2\n",
         "audits/old/data.json.gz": b"z" * pages.MINIMUM_BYTES,
     }
