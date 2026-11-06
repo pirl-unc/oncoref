@@ -1,10 +1,12 @@
 {
   "release": "1.31.0",
-  "presentation_revision": "2026-11-05.3",
+  "presentation_revision": "2026-11-06.1",
   "selection_policy_id": "oncoref.cta-selection.2026-11-05.1",
   "bundle_id": "oncoref:sequence-bundle:v1:sha256:607c4ede9af40e33657ce84b58eff11087e66be7942a9a156a81480e8d06335a",
   "inputs": {
-    "scripts/build_cta_public_report.py": "6dd17dc5160ba834c214ce62a23e130ae206ad4b0dc61286aea283f8eb54c257",
+    "scripts/build_cta_public_report.py": "c5c7c1ac65abbddc79eef09ed96887ea86b69ce52105e10620b787c839dcfb01",
+    "scripts/build_cta_evidence_explorer.py": "b13d49a00cf21b1901f67a0bee6f1b7b0472c7940db1675b277360dedaafe8be",
+    "docs/audits/cta-evidence-guide-20261106/manifest.json": "92cde204582077739fea8ed28bbd8d39072208232755817827b222efcf81c5f2",
     "oncoref/cta_contract.py": "e70d62cfe760683848eb7b5193d23fc282cc9956f90c5781b04f639fe75d2ffd",
     "oncoref/cta_selection_policy.py": "ee9fa363970c35ca6e94e92ffcab5ec005fdcc8fab2ecc1caeb7114d17ba58e6",
     "oncoref/data/cta-selection.json": "5559f23910bb16dc1468b5ca7f0ed74befc886c5bb95d0498a6fb4c9d882d2e7",
@@ -34,11 +36,11 @@
     "changes-from-1.29.0.csv": "734d454b3729ceea02157cb757d0f62f1c5a8fc50e91a091198e415ec862d5b7",
     "contract.json": "f97e3489820b7f2676ceab28533fa2c02a10e9db6895777d02f53c1f2ae0f450",
     "coverage.json": "6bb48e64f34af91539ccb522dec93a77b8294ad37c17696e41c11aaa766f36b6",
-    "cta-definition.pdf": "ce2f24038a8de7da00bfa9ba546a1a2768e6439a8abccaa7b6435f7665ee7e9c",
+    "cta-definition.pdf": "3ff63c32597714819a13322a2b4545e0a7bf1ec9ecf0b918d3a282e322a7b492",
     "figures/admission-flow.png": "bad2e4082398afa3867a7abc248985dc1c2a0f1b19847e97fd72e1523fa1f517",
     "figures/admission-flow.svg": "8e30906b315ca387290f5be67116ffeb7bfda07db11871eb7c9d22e77c542d84",
-    "figures/category-role-matrix.png": "dcdd5f1c512405c5ef1493741438f6da60549c894d9a3e9775ae3b4122f6723f",
-    "figures/category-role-matrix.svg": "eed0337bf9bfe5c63d897a4d632f77e5d72c508972ffd16c893f1e459f0de70b",
+    "figures/category-role-matrix.png": "d18735d1e86d1825c16304a2ff097a51175182ccd20f731d6ded4ec5879f90a7",
+    "figures/category-role-matrix.svg": "bdaa452eebf7c58f632ce28893f7211a3685fb70165f8376442a66bda33bd700",
     "figures/independent-evidence.png": "44876eea80b66aa43713b1fa55cb381dbd581e4b255f56e7f365e511a213ca62",
     "figures/independent-evidence.svg": "23b5946426792c2c7ef1ea73473bdead171eac1dd30db2dbf260a5429b1c9101",
     "figures/publication-funnel.png": "925a7a2ef391fb5a00934b0fab3c9562d1378349a36e2cb23384ae5b758a2910",
@@ -47,16 +49,16 @@
     "figures/universe-accounting.svg": "8afee6497ea9747a6d5a983d0b18799a47170e5c65b02a43a352abef027b2d93",
     "gate-catalog.csv": "ed0cc6df2d07bf8883b2753e2c3e9e0974bb577279daad374ba323330e47c252",
     "independent-evidence.csv": "3527b658602ba5181fa6d8598ceedb375f381551619d83517bb8248f8c995113",
-    "index.md": "435a83d10949daabca2ecc8505c3b958b3c350d4acadcbd4a6cf5d18eccda188",
-    "report-data.json": "f14f9b2a506c57a1d1a4478a05365ae51c4c49f31da37ae6911b63c65b624ccb",
-    "report.html": "ba38bae5e5ef657dbcc73c95eaac3d8691aa765a50b211a59de82dcba4ef4eaa",
-    "rule-catalog.csv": "3ecd97126a9d079f43e28f6621d545dfa33efd9f7171a6fa80a5712530b7f563",
+    "index.md": "d3f5bcf5eac9bdc40dd55f4cd55597ec304f80de59c13cac07f1e16c6c9fc121",
+    "report-data.json": "b3920f5f4b68e16d422fb913b9ccf2624490025199f898326558e324d577540a",
+    "report.html": "1de276314cf189feb4f8527cd59b29b93f5c351f8461e27c1c5111f0a2908030",
+    "rule-catalog.csv": "994c05b265f3883339537d59e82c5686dfbccae74b5234a9bd99faac205dfb49",
     "sequence-roles.csv.gz": "f24997a328ea94bc933c582b1b38eeb8ff217292071eb0cd3f1ea1d504d9e77f",
     "worked-decisions.csv.gz": "19c1a9d7246d342f33e77aa56156e3d2c99f8bb6abcd37165b2dbcf4222a3afe"
   },
   "generated_documentation": {
-    "README.md": "8a5ca9697f466558daa8fd15c1db44d9425470cf26ce1d7e12ee0b96f53e167c",
-    "docs/cta-selection.md": "9cce5ee2fca63c8970db94be91ebf3d9bb93d2244ac963d2899ad87232b9e171",
-    "docs/index.md": "85c7ecebdd95d8fa731570bee90dac7ad0928f13ca84727b0dd820cd97fa7bd1"
+    "README.md": "9e0969a170e17310d1031ac5738df7983af88bab555df4f8e641c1e2cb727b6d",
+    "docs/cta-selection.md": "56a1b06a5fd9b5898a22f04520527ac9085e94e7a0afdc8f9971ec9325025140",
+    "docs/index.md": "15b5a3ad11b9eaf7f709bb93f9f96f45e5e45d80791d6e530573f44376ee3ed1"
   }
 }
