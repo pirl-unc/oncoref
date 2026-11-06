@@ -1,6 +1,6 @@
 {
   "release": "1.31.0",
-  "presentation_revision": "2026-11-05.3",
+  "presentation_revision": "2026-11-06.1",
   "publication_funnel": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -592,7 +592,7 @@
     [
       "Research parameters and coverage limits",
       [
-        "The nominal RNA bases are 4, 8 and 16 TPM/nTPM for Vital, Protected and Manageable contexts. Matched negative IHC can raise a ceiling by 0-3 doubling steps; reviewed product evidence adds at most one step within that cap. Corneal CP10K keeps its separately declared scale. These are policy choices, not calibrated clinical toxicity limits.",
+        "Without usable matching protein staining, the upper RNA limits start at 4 for Vital, 8 for Protected and 16 for Manageable tissues, in the source's own TPM or nTPM units. Approved, Supported and Enhanced negative IHC respectively multiply the starting limit by 2, 4 and 8. Reviewed product-specific clinical evidence can add one doubling within the same cap. A value must be above the limit to trigger this RNA rule. Corneal CP10K uses separate limits, not a TPM conversion. These are policy choices, not measured safe exposures.",
         "One compatible tumor sample above zero establishes the current cancer-presence criterion, not sufficient target abundance or cohort prevalence. Reproductive RNA uses a 5-unit criterion with assay-specific support requirements; reliable reproductive IHC and reviewed protein provide separate routes. Adult/placental diffuseness above 10% can block identity, never establish Unsafe.",
         "The rare-cell panel uses a 1% detection screen with cell-support rules. Detection frequency is not abundance. Coverage is limited by sampled organs, donor age, activation states, paralog mapping and assay resolution. Optional panels remain disclosed when missing. A 95% Unsafe 9-mer overlap blocks practical candidate admission, but is not a clinical cross-reactivity validation.",
         "The complete gate table below retains the actual executable rules and source IDs. Human thresholds are not transferred to dog or mouse; their native nominations remain unassessed until supported by a species-specific policy."
@@ -615,7 +615,7 @@
         "Selection policy: oncoref.cta-selection.2026-11-05.1. Role policy: oncoref.sequence-roles.2026-11-04.1. Translation policy: oncoref.translation-qualification.2026-11-04.1.",
         "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. No target CTA count is an acceptance criterion.",
         "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-        "Presentation revision 2026-11-05.3 places the broader cancer-presence gate first after normal assessment and follows every registered nomination paper through the same cumulative gates. Classifications, thresholds and sequence roles are unchanged. Earlier release assets remain frozen."
+        "Presentation revision 2026-11-06.1 places the broader cancer-presence gate first after normal assessment and follows every registered nomination paper through the same cumulative gates. Classifications, thresholds and sequence roles are unchanged. Earlier release assets remain frozen."
       ],
       null
     ]
@@ -958,14 +958,18 @@
       "stage": "Rare vital-tissue cell expression",
       "status": "evaluated",
       "rule": "At least 1% detection in a centrally assigned Vital population in the existing brain/spinal-cord/heart/lung CELLxGENE panel supplies Unsafe evidence. At least 3,000 cells and 10 expressing cells are required. Excluded or unmeasured populations are coverage limits, not allowances. Detection frequency is distinct from abundance.",
-      "source_ids": []
+      "source_ids": [
+        "CELLxGENE"
+      ]
     },
     {
       "gate_id": "rare_protected",
       "stage": "Rare Protected-cell expression review",
       "status": "evaluated",
       "rule": "At least 1% detection in a centrally assigned Protected population in the existing CELLxGENE panel blocks CTA admission without itself establishing Unsafe. The same cell-support criteria apply. Source age restrictions and detection artifacts remain limitations.",
-      "source_ids": []
+      "source_ids": [
+        "CELLxGENE"
+      ]
     },
     {
       "gate_id": "normal_external_protein",
@@ -981,7 +985,10 @@
       "stage": "Unsafe sequence containment",
       "status": "evaluated",
       "rule": "A would-be CTA with at least 95% of its 9-mers also present in Unsafe proteins becomes Other:Contained: Unsafe sequence is blacklisted, so almost no peptide survives. Computed over all protein-coding transcripts of Ensembl 115. This is a sequence rule, not expression evidence.",
-      "source_ids": []
+      "source_ids": [
+        "Ensembl-115",
+        "unsafe_sequences"
+      ]
     },
     {
       "gate_id": "final_assignment",
@@ -989,11 +996,7 @@
       "status": "evaluated",
       "rule": "CTA requires all applicable admission gates, required coverage and resolved normal evidence. Unsafe exclusion takes precedence. Other includes assessed noncandidates, held/incomplete evidence, nested microproteins and sequence-contained candidates. Subtype and assessment_status answer different questions; an identity failure cannot erase a normal-evidence hold. Sequence roles require that independent status.",
       "source_ids": [
-        "hpa_rna_consensus",
-        "hpa_single_cell_tissue",
-        "tyser_E-MTAB-9388",
-        "oncoref_tumor_union",
-        "hpa_normal_tissue"
+        "current_decisions"
       ]
     }
   ],
@@ -1003,6 +1006,1291 @@
     "protected": "Persistent functional or structural injury is a major concern; compensation is incomplete or direct immune-depletion evidence is insufficient.",
     "manageable": "A defined compartment has credible replacement, compensation or supportive-treatment precedent; acute inflammation and persistent recognition still require review.",
     "disposable": "Narrow conditional allowance for loss of a specified compartment; does not imply painless, reversible or inflammation-free ablation."
+  },
+  "source_guide": [
+    {
+      "taxon_id": 9606,
+      "source_id": "gene-knowledge",
+      "name": "Reviewed human gene knowledge: normal cells and reproductive protein",
+      "evidence_category": "normal_protein, normal_cell_rna, reproductive_expression",
+      "status": "used_in_selection",
+      "native_unit": "source-native qualitative and quantitative observations",
+      "stage": "explicit per-finding stage and activation state",
+      "source_url": "https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/",
+      "limitations": "Exact gene/protein attribution; sparse RNA and unresolved species/isoforms remain review holds. Search leads are not accepted findings."
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "olfactory_durante_supplement",
+      "name": "Durante et al. 2020 adult human olfactory atlas supplementary tables",
+      "evidence_category": "normal_cell_rna",
+      "status": "used_in_selection",
+      "native_unit": "positive neurons; cluster detection fraction",
+      "stage": "adult",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/",
+      "limitations": "Exact reported genes enter knowledge review holds; sparse detection is not TPM, protein, donor replication or proof of absence for unlisted genes."
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "olfactory_verbeurgt_cq",
+      "name": "Verbeurgt et al. 2014 whole human olfactory mucosa",
+      "evidence_category": "normal_cell_rna",
+      "status": "used_in_selection",
+      "native_unit": "native qPCR Cq; assay IDs and donor identity",
+      "stage": "adult; 26 donor samples",
+      "source_url": "https://doi.org/10.1371/journal.pone.0096333",
+      "limitations": "OR10A4 normal RNA supplies a reviewed hold. Native values are not TPM, protein or a clinical toxicity estimate; unlisted genes are not measured zero."
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "olfactory_verbeurgt_copies",
+      "name": "Verbeurgt et al. 2014 whole human olfactory mucosa",
+      "evidence_category": "normal_cell_rna",
+      "status": "used_in_selection",
+      "native_unit": "estimated RNA copies per 20 ng total RNA",
+      "stage": "adult; 26 donor samples",
+      "source_url": "https://doi.org/10.1371/journal.pone.0096333",
+      "limitations": "OR10A4 normal RNA supplies a reviewed hold. Native values are not TPM, protein or a clinical toxicity estimate; unlisted genes are not measured zero."
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "normal-induction-evidence",
+      "name": "Published human normal immune induction contexts",
+      "evidence_category": "reproductive_expression, normal_cell_rna",
+      "status": "used_in_selection",
+      "native_unit": "qualitative reported RNA induction",
+      "stage": "adult; activated",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/",
+      "limitations": "Qualitative counterevidence to indirect reproductive-site restriction; no TPM or clinical-toxicity inference"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_rna_consensus",
+      "name": "HPA v23 / GTEx consensus",
+      "evidence_category": "normal_bulk_rna, reproductive_expression",
+      "status": "used_in_selection",
+      "native_unit": "nTPM",
+      "stage": "adult; placenta handled separately",
+      "source_url": "https://v23.proteinatlas.org/about/download",
+      "limitations": "Bulk source summaries; not exhaustive pediatric, pregnancy or rare-cell coverage"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tyser_E-MTAB-9388",
+      "name": "Tyser human gastrulation atlas",
+      "evidence_category": "developmental_expression",
+      "status": "used_in_selection",
+      "native_unit": "TPM",
+      "stage": "Carnegie stage 7",
+      "source_url": "https://doi.org/10.1038/s41586-021-04158-y",
+      "limitations": "One embryo; cell support does not establish independent-donor replication"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "petropoulos_E-MTAB-3929",
+      "name": "Petropoulos preimplantation atlas",
+      "evidence_category": "developmental_expression",
+      "status": "used_in_selection",
+      "native_unit": "TPM",
+      "stage": "3\u20137 days, stage \u00d7 inferred lineage",
+      "source_url": "https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results",
+      "limitations": "1,519 measured cells; stage and embryo counts retained; not coverage of all fetal stages"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_brain",
+      "name": "HPA v23 human brain, 193 subregions",
+      "evidence_category": "normal_bulk_rna",
+      "status": "used_in_selection",
+      "native_unit": "nTPM",
+      "stage": "adult",
+      "source_url": "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+      "limitations": "Maximum subregion mean after within-context group sums; no automatic negative-IHC credit"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "gtex_tissue_rna",
+      "name": "Direct GTEx v11 tissue medians",
+      "evidence_category": "normal_bulk_rna",
+      "status": "used_in_selection",
+      "native_unit": "TPM",
+      "stage": "adult",
+      "source_url": "https://gtexportal.org/home/downloads/adult-gtex",
+      "limitations": "52 native whole-organ contexts; 14 microdissected and two cultured/transformed contexts remain outside this adapter. Exact whole-organ HPA negative-IHC grades apply; donor medians do not exclude donor outliers. Native reader preserves all 68 contexts."
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "oncoref_tumor_union",
+      "name": "OncoRef source-mapped tumor union",
+      "evidence_category": "tumor_expression",
+      "status": "used_in_selection",
+      "native_unit": "TPM",
+      "stage": "cohort-specific",
+      "source_url": "https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/cta-expanded-funnel-20261027/tumor-union",
+      "limitations": "132 compatible cohorts; source namespaces deduplicate views, not patients across studies"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_cancer",
+      "name": "HPA v23 cancer sample measurements",
+      "evidence_category": "tumor_expression",
+      "status": "used_in_selection",
+      "native_unit": "pTPM",
+      "stage": "cohort-specific",
+      "source_url": "https://v23.proteinatlas.org/about/download",
+      "limitations": "Protein-coding RNA denominator; no numerical protein or peptide abundance"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_single_cell_tissue",
+      "name": "HPA v23 tissue/cell clusters",
+      "evidence_category": "normal_cell_rna, reproductive_expression",
+      "status": "used_in_selection",
+      "native_unit": "nTPM",
+      "stage": "source-labelled adult; reproductive locations explicit",
+      "source_url": "https://v23.proteinatlas.org/about/download",
+      "limitations": "At least 20 reads; missing cell types and disease states remain uncovered"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_immune_cell",
+      "name": "HPA v23 immune summaries",
+      "evidence_category": "immune_rna",
+      "status": "used_in_selection",
+      "native_unit": "nTPM",
+      "stage": "adult",
+      "source_url": "https://v23.proteinatlas.org/about/download",
+      "limitations": "Sorted populations retain native units; no matched negative-IHC relaxation"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_immune_monaco",
+      "name": "Monaco immune summaries via HPA v23",
+      "evidence_category": "immune_rna",
+      "status": "used_in_selection",
+      "native_unit": "TPM",
+      "stage": "adult",
+      "source_url": "https://v23.proteinatlas.org/about/download",
+      "limitations": "Sorted populations retain native units; no matched negative-IHC relaxation"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "dice",
+      "name": "DICE immune distributions",
+      "evidence_category": "immune_rna",
+      "status": "used_in_selection",
+      "native_unit": "TPM",
+      "stage": "adult",
+      "source_url": "https://dice-database.org/",
+      "limitations": "15 distributions; third-highest value; unpaired locus distributions retain bounds; optional coverage"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "GSE155683_adult",
+      "name": "Collin adult corneal atlas",
+      "evidence_category": "normal_cell_rna",
+      "status": "used_in_selection",
+      "native_unit": "CP10K",
+      "stage": "adult",
+      "source_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683",
+      "limitations": "Two supported sample groups; optional coverage; CP10K is not length-normalized TPM"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "hpa_normal_tissue",
+      "name": "HPA v23 normal-tissue IHC",
+      "evidence_category": "normal_protein, reproductive_expression",
+      "status": "used_in_selection",
+      "native_unit": "HPA categorical level and reliability",
+      "stage": "adult",
+      "source_url": "https://v23.proteinatlas.org/about/assays%2Bannotation",
+      "limitations": "Reliability describes evidence support, not a calibrated false-negative probability"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "external_ihc",
+      "name": "Curated external staining observations",
+      "evidence_category": "normal_protein",
+      "status": "used_in_selection",
+      "native_unit": "native categorical findings",
+      "stage": "source-specific",
+      "source_url": "https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027",
+      "limitations": "Reagent, tissue, cell type and validation scope remain explicit; no inherited HPA grade"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "cta_policy_findings",
+      "name": "Reviewed normal protein and clinical exclusions",
+      "evidence_category": "normal_protein, clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "categorical reviewed findings",
+      "stage": "source-specific",
+      "source_url": "https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv",
+      "limitations": "Qualitative reported Low is distinct from HPA Low and numerical intensity; clinical evidence is product-specific"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_lete_mrcls_2025",
+      "name": "Letetresgene Autoleucel in Advanced/Metastatic Myxoid/Round Cell Liposarcoma",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1200/JCO-24-01466",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_ima203_2025",
+      "name": "Autologous T cell therapy for PRAME+ advanced solid tumors in HLA-A*02+ patients: a phase 1 trial",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1038/s41591-025-03650-6",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_afami_phase1_2023",
+      "name": "Autologous T cell therapy for MAGE-A4+ solid cancers in HLA-A*02+ patients: a phase 1 trial",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1038/s41591-022-02128-z",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_spearhead1_2024",
+      "name": "SPEARHEAD-1: a single-arm phase 2 trial of afamitresgene autoleucel in advanced synovial sarcoma and myxoid/round cell liposarcoma",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1016/S0140-6736(24)00319-2",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_magea3_titin_2013",
+      "name": "Identification of a Titin-Derived HLA-A1-Presented Peptide as a Cross-Reactive Target for Engineered MAGE A3-Directed T Cells",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1126/scitranslmed.3006034",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_lete_gbs_2019",
+      "name": "Guillain-Barre syndrome observed with adoptive transfer of lymphocytes genetically engineered with an NY-ESO-1 reactive T-cell receptor",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1186/s40425-019-0759-x",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_lete_protocol",
+      "name": "NCT03709706 protocol: NY-ESO-1/LAGE-1A shared peptide and c259 receptor",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://cdn.clinicaltrials.gov/large-docs/06/NCT03709706/Prot_000.pdf",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_afami_protocol",
+      "name": "NCT03132922 protocol: MAGE-A4 c1032 target peptide",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://cdn.clinicaltrials.gov/large-docs/22/NCT03132922/Prot_000.pdf",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_magea1_2024",
+      "name": "First-in-human dose escalation trial to evaluate the clinical safety and efficacy of an anti-MAGEA1 autologous TCR-transgenic T cell therapy in relapsed and refractory solid tumors",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1136/jitc-2023-008668",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_magea10_2022",
+      "name": "Phase I clinical trial evaluating the safety and efficacy of ADP-A2M10 SPEAR T cells in patients with MAGE-A10+ advanced non-small cell lung cancer",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1136/jitc-2021-003581",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_tbi1301_2022",
+      "name": "NY-ESO-1-specific redirected T cells with endogenous TCR knockdown mediate tumor response and cytokine release syndrome",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://doi.org/10.1136/jitc-2021-003811",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_magea3_neuro_2013",
+      "name": "Cancer regression and neurological toxicity following anti-MAGE-A3 TCR gene therapy",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/23377668/",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "tcr_trial_magea3_reexamination_2021",
+      "name": "Re-examination of MAGE-A3 as a T-cell Therapeutic Target",
+      "evidence_category": "clinical_safety",
+      "status": "used_in_selection",
+      "native_unit": "reviewed clinical attribution",
+      "stage": "adult clinical cohort",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7946352/",
+      "limitations": "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Gong2021_placenta_PC",
+      "name": "Gong et al., Nature Communications (2021)",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1038/s41467-021-22695-y",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Gong2021_placenta_ncRNA",
+      "name": "Gong et al., Nature Communications (2021)",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1038/s41467-021-22695-y",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Bradley2020_CPA",
+      "name": "Bradley et al., Nature Communications (2020)",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1038/s41467-020-19141-w",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Wang2016_CT",
+      "name": "Wang 2016",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1038/ncomms10499",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Bruggeman2018_GC",
+      "name": "Bruggeman 2018",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1038/s41388-018-0357-2",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "daSilva2017_testis_biased",
+      "name": "da Silva 2017 \u00b7 testis-biased",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.18632/oncotarget.21715",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "daSilva2017_CT",
+      "name": "da Silva 2017 \u00b7 CT",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.18632/oncotarget.21715",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Jamin2021_CT",
+      "name": "Jamin 2021",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1002/1878-0261.12900",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Jamin2021_core",
+      "name": "Jamin 2021 \u00b7 core",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1002/1878-0261.12900",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Chang2019_TGCT",
+      "name": "Chang 2019 \u00b7 TGCT",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1002/cam4.2223",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Carter2023_CT",
+      "name": "Carter 2023",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1136/jitc-2023-007935",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Seager2024_CTA",
+      "name": "Seager 2024 \u00b7 panel",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1186/s12967-024-04918-0",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Loriot2025_S1",
+      "name": "Loriot 2025 \u00b7 strict",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1371/journal.pgen.1011734",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Loriot2025_S2",
+      "name": "Loriot 2025 \u00b7 preferential",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1371/journal.pgen.1011734",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Gong2021_reproductive_PC",
+      "name": "Gong 2021 \u00b7 reproductive coding",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1038/s41467-021-22695-y",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Gong2021_reproductive_ncRNA",
+      "name": "Gong 2021 \u00b7 reproductive noncoding",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1038/s41467-021-22695-y",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "daSilva2017_tumor_proteomics",
+      "name": "da Silva 2017 \u00b7 tumor proteomics",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.18632/oncotarget.21715",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Bai2016_EGFL6",
+      "name": "Bai 2016",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1158/0008-5472.CAN-16-0225",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Boel1995_BAGE",
+      "name": "Bo\u00ebl et al., Immunity (1995)",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1016/s1074-7613(95)80053-0",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Garg2007_SPAG9",
+      "name": "Garg et al., Clinical Cancer Research (2007)",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1158/1078-0432.CCR-06-2340",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Sasaroli2011_vascular",
+      "name": "Sasaroli et al. (2011)",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.4161/cbt.12.3.16260",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "Hirbo2015_placenta",
+      "name": "Hirbo et al. (2015)",
+      "evidence_category": "nomination",
+      "status": "annotation",
+      "native_unit": "gene-list membership",
+      "stage": "publication-specific",
+      "source_url": "https://doi.org/10.1371/journal.pone.0144155",
+      "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
+    },
+    {
+      "source_id": "CELLxGENE",
+      "name": "CELLxGENE rare-cell screen",
+      "native_unit": "% cells with detected RNA",
+      "source_url": "https://cellxgene.cziscience.com/",
+      "limitations": "Existing brain/spinal-cord, heart and lung panel only; >=3,000 cells and >=10 positive cells. >=1% detection is a policy trigger, not an abundance measurement or proof of receptor recognition.",
+      "stage": "source-specific",
+      "evidence_category": "computed screen",
+      "status": "used_in_selection"
+    },
+    {
+      "source_id": "Ensembl-115",
+      "name": "Ensembl 115 coding translations",
+      "native_unit": "annotation / amino-acid sequence",
+      "source_url": "https://sep2025.archive.ensembl.org/Homo_sapiens/Info/Index",
+      "limitations": "Qualifying annotated CDS is accepted translation support; it does not prove protein detection in a tumor. Exact selected sequence and every member locus must qualify.",
+      "stage": "source-specific",
+      "evidence_category": "translation annotation",
+      "status": "used_in_selection"
+    },
+    {
+      "source_id": "unsafe_sequences",
+      "name": "Sequence overlap with released Unsafe proteins",
+      "native_unit": "% shared 9-mers",
+      "source_url": "../sequence-bundle-20261104/",
+      "limitations": "Computed from Ensembl 115 coding translations and current Unsafe assignments. >=95% containment blocks CTA admission; it does not itself establish tissue expression.",
+      "stage": "source-specific",
+      "evidence_category": "computed screen",
+      "status": "used_in_selection"
+    },
+    {
+      "source_id": "current_decisions",
+      "name": "All released decision gates",
+      "native_unit": "classification / reasons",
+      "source_url": "../cta-definition-20261104/report.html",
+      "limitations": "Derived result, not an independent experimental source. Unsafe takes precedence over CTA admission; Other retains its evidence status.",
+      "stage": "source-specific",
+      "evidence_category": "computed screen",
+      "status": "used_in_selection"
+    },
+    {
+      "source_id": "10.18632/oncotarget.21715",
+      "name": "da Silva et al. (2017)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.18632/oncotarget.21715",
+      "limitations": "At least 90% normal-tissue RNA attributable to testis; tumor positivity not required; Gene-labelled tumor proteomics; unique-locus peptide assignment is not established; RSEM >1 in at least 10% of samples in a tumor type; RNA nomination",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1038/ncomms10499",
+      "name": "Wang et al. (2016)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1038/ncomms10499",
+      "limitations": "Cancer-associated RNA nomination; no antigen validation asserted",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1002/cam4.2223",
+      "name": "Chang et al. (2019)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1002/cam4.2223",
+      "limitations": "Testis-specific coding gene expressed in at least 1% of TGCT; no broad somatic-cancer claim",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1038/s41467-021-22695-y",
+      "name": "Gong et al. (2021)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1038/s41467-021-22695-y",
+      "limitations": "Normal reproductive-tissue enrichment; no tumor validation; Placental RNA enrichment; no tumor-antigen validation",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1038/s41388-018-0357-2",
+      "name": "Bruggeman et al. (2018)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1038/s41388-018-0357-2",
+      "limitations": "GC RNA nomination across cancer types; no antigen validation asserted; GC RNA nomination; inclusion depends on TGCT under this study's thresholds",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1002/1878-0261.12900",
+      "name": "Jamin et al. (2021)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1002/1878-0261.12900",
+      "limitations": "CT-pattern microarray nomination; tumor upregulation with no corresponding normal-tissue detection; Core CT annotation; underlying microarray probes may recognize several loci",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1371/journal.pgen.1011734",
+      "name": "Loriot et al. (2025)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1371/journal.pgen.1011734",
+      "limitations": "Cancer-germline RNA nomination; strict and preferential classes remain distinct",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1136/jitc-2023-007935",
+      "name": "Carter et al. (2023)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1136/jitc-2023-007935",
+      "limitations": "Final CT-expression set without detectable thymic expression; functional vaccination evidence is not assigned to every gene",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1371/journal.pone.0144155",
+      "name": "Hirbo et al. (2015)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1371/journal.pone.0144155",
+      "limitations": "HPA v13 placenta-enriched nominations; 30/86 fast-evolving subset retained as metadata; not tumor validation",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1186/s12967-024-04918-0",
+      "name": "Seager et al. (2024)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1186/s12967-024-04918-0",
+      "limitations": "Member of the published 17-target CTA profiling panel; includes differentiation antigen MLANA",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.4161/cbt.12.3.16260",
+      "name": "Sasaroli et al. (2011)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.4161/cbt.12.3.16260",
+      "limitations": "Tumor-vascular candidate list; includes secreted and transmembrane proteins; not a CTA-restricted list",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1038/s41467-020-19141-w",
+      "name": "Bradley et al. (2020)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1038/s41467-020-19141-w",
+      "limitations": "CPA expression nominations; HLA peptide and antigen-specific T-cell validation for VGLL1",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1158/1078-0432.CCR-06-2340",
+      "name": "Garg et al. (2007)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1158/1078-0432.CCR-06-2340",
+      "limitations": "Ovarian-cancer RNA/protein expression and patient antibody responses; no HLA presentation or T-cell validation claimed",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1016/s1074-7613(95)80053-0",
+      "name": "Bo\u00ebl et al. (1995)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1016/s1074-7613(95)80053-0",
+      "limitations": "Original BAGE tumor-antigen nomination and autologous CTL recognition; contemporary paralog resolution is not inferred",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    },
+    {
+      "source_id": "10.1158/0008-5472.CAN-16-0225",
+      "name": "Bai et al. (2016)",
+      "native_unit": "publication membership",
+      "source_url": "https://doi.org/10.1158/0008-5472.CAN-16-0225",
+      "limitations": "Ovarian-tumor and vascular expression/function; no normal-tissue exclusivity claim",
+      "stage": "publication-specific",
+      "evidence_category": "nomination",
+      "status": "annotation"
+    }
+  ],
+  "tier_references": {
+    "pardo2015": {
+      "title": "Parent stem cells can serve as niches for their daughter cells",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4521991/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Approximately 79% ciliated-cell depletion did not accelerate replacement; basal and secretory populations persisted.",
+      "limitation": "Large-airway homeostasis experiment, not human immune killing or a validated tolerability threshold.",
+      "checked": "2026-11-03"
+    },
+    "dumm2019": {
+      "title": "Non-lytic clearance of influenza B virus from infected cells preserves epithelial barrier function",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6377627/",
+      "model": "mouse",
+      "design": "infection_and_ablation",
+      "finding": "Depletion of infection-surviving, predominantly ciliated-like cells worsened epithelial permeability and recovery.",
+      "limitation": "Mixed survivor population in an infected lung; not selective depletion of healthy mature ciliated cells.",
+      "checked": "2026-11-03"
+    },
+    "perl2011": {
+      "title": "Conditional Depletion of Airway Progenitor Cells Induces Peribronchiolar Fibrosis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3056226/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Sustained club-compartment depletion caused persistent peribronchiolar fibrosis despite later epithelial regeneration.",
+      "limitation": "Promoter-defined compartment and toxin exposure do not quantify human receptor-specific risk.",
+      "checked": "2026-11-03"
+    },
+    "guild2023": {
+      "title": "Evidence for lung barrier regeneration by differentiation prior to binucleated and stem cell division",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10579698/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "AT2 differentiation rapidly compensated AT1 loss; repeated injury produced abnormal epithelial hyperplasia.",
+      "limitation": "Intact repair under finite experimental insults is not proof of tolerance to persistent T-cell attack.",
+      "checked": "2026-11-03"
+    },
+    "garcia2016": {
+      "title": "Targeted Type 2 Alveolar Cell Depletion: A Dynamic Functional Model for Lung Injury Repair",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4821031/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "AT2 depletion produced recovery, fibrosis or lethal edema depending on severity and kinetics.",
+      "limitation": "Drug toxicity and model kinetics prevent transfer of depletion percentages to clinical thresholds.",
+      "checked": "2026-11-03"
+    },
+    "zhao2000": {
+      "title": "Alveolar epithelial cell chemokine expression triggered by antigen-specific cytolytic CD8+ T cell recognition",
+      "url": "https://www.jci.org/articles/view/9786",
+      "model": "mouse",
+      "design": "antigen_specific_t_cells",
+      "finding": "Alveolar antigen recognition initiated inflammatory recruitment and progressive lethal lung injury.",
+      "limitation": "Transgenic antigen and transferred T cells; not a human engineered-TCR clinical risk estimate.",
+      "checked": "2026-11-03"
+    },
+    "haas2023": {
+      "title": "Two cases of severe pulmonary toxicity from highly active mesothelin-directed CAR T cells",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10422001/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Two severe pulmonary toxicities, one fatal, implicated benign pneumocyte expression in injured lung.",
+      "limitation": "AT1 versus AT2 initiation was not resolved; product, dose and pre-existing injury matter.",
+      "checked": "2026-11-03"
+    },
+    "halbeisen2022": {
+      "title": "Lung function from school age to adulthood in primary ciliary dyskinesia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9582507/",
+      "model": "human",
+      "design": "functional_disease_cohort",
+      "finding": "Lung function declined on average in 486 patients, with heterogeneous trajectories despite treatment.",
+      "limitation": "Inherited ciliary dysfunction is not epithelial ablation or an immune-toxicity model.",
+      "checked": "2026-11-03"
+    },
+    "roy2014": {
+      "title": "Muc5b is required for airway defence",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4001806/",
+      "model": "mouse",
+      "design": "functional_gene_deletion",
+      "finding": "Muc5b deficiency impaired clearance and host defence, unlike Muc5ac deficiency.",
+      "limitation": "Mucin deletion is not goblet-cell killing; multiple secretory populations produce MUC5B.",
+      "checked": "2026-11-03"
+    },
+    "tata2013": {
+      "title": "Dedifferentiation of committed epithelial cells into stem cells in vivo",
+      "url": "https://www.nature.com/articles/nature12777",
+      "model": "mouse",
+      "design": "selective_ablation_and_lineage_tracing",
+      "finding": "Secretory cells restored basal stem cells after basal-cell depletion.",
+      "limitation": "Alternative repair depends on surviving populations and does not establish tolerance to repeated recognition.",
+      "checked": "2026-11-03"
+    },
+    "clad2023": {
+      "title": "JAK-STAT activation contributes to cytotoxic T cell-mediated basal cell death in human chronic lung allograft dysfunction",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36946463/",
+      "model": "human",
+      "design": "disease_tissue_and_mechanistic",
+      "finding": "Basal-cell MHC-I induction and cytotoxic T-cell killing were linked to airway-centered allograft injury.",
+      "limitation": "Alloreactivity affects multiple compartments and is not an isolated engineered-receptor trial.",
+      "checked": "2026-11-03"
+    },
+    "bergmann2009": {
+      "title": "Evidence for cardiomyocyte renewal in humans",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2991140/",
+      "model": "human",
+      "design": "cell_turnover",
+      "finding": "Carbon dating demonstrated limited adult cardiomyocyte renewal.",
+      "limitation": "Renewal is nonzero; a turnover estimate does not measure replacement during acute destructive injury.",
+      "checked": "2026-11-03"
+    },
+    "linette2013": {
+      "title": "Cardiovascular toxicity and titin cross-reactivity of affinity-enhanced T cells in myeloma and melanoma",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3743463/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Titin cross-recognition by an engineered TCR caused fatal cardiac toxicity.",
+      "limitation": "Receptor-specific cross-reactivity; not evidence that every MAGEA3-directed receptor recognizes heart.",
+      "checked": "2026-11-03"
+    },
+    "morgan2013": {
+      "title": "Cancer regression and neurologic toxicity following anti-MAGE-A3 TCR gene therapy",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3581823/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Severe neurological injury was associated with a cross-reactive TCR and neural MAGEA12 expression.",
+      "limitation": "Peptide and receptor specificity matter; rare RNA detection alone does not reproduce this evidence.",
+      "checked": "2026-11-03"
+    },
+    "wharram2005": {
+      "title": "Podocyte depletion causes glomerulosclerosis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16107576/",
+      "model": "rat",
+      "design": "selective_ablation",
+      "finding": "Increasing podocyte depletion caused persistent proteinuria, sclerosis and renal dysfunction.",
+      "limitation": "Model depletion thresholds are not human safety cutoffs.",
+      "checked": "2026-11-03"
+    },
+    "grgic2012": {
+      "title": "Targeted proximal tubule injury triggers interstitial fibrosis and glomerulosclerosis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3480325/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Repeated tubular injury caused chronic atrophy, fibrosis and secondary glomerular injury.",
+      "limitation": "Cre distribution and toxin sensitivity qualify compartment specificity; not clinical immune targeting.",
+      "checked": "2026-11-03"
+    },
+    "raven2017": {
+      "title": "Cholangiocytes act as facultative liver stem cells during impaired hepatocyte regeneration",
+      "url": "https://www.nature.com/articles/nature23015",
+      "model": "mouse",
+      "design": "lineage_tracing_and_injury",
+      "finding": "Biliary cells contributed hepatocytes when hepatocyte proliferation was impaired.",
+      "limitation": "Compensatory plasticity does not establish tolerance of combined biliary and hepatocyte destruction.",
+      "checked": "2026-11-03"
+    },
+    "parkhurst2011": {
+      "title": "T cells targeting carcinoembryonic antigen can mediate regression of metastatic colorectal cancer but induce severe transient colitis",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3048186/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "CEA-directed TCR treatment caused severe transient colitis in all three treated patients.",
+      "limitation": "Recovery in a small product-specific trial does not establish general controllability of persistent mucosal targeting.",
+      "checked": "2026-11-03"
+    },
+    "tian2011": {
+      "title": "A reserve stem cell population in small intestine renders Lgr5-positive cells dispensable",
+      "url": "https://www.nature.com/articles/nature10408",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Alternative progenitors maintained intestinal epithelium during Lgr5-cell depletion.",
+      "limitation": "An Lgr5-specific insult is narrower than destroying all crypt regenerative populations.",
+      "checked": "2026-11-03"
+    },
+    "maude2018": {
+      "title": "Tisagenlecleucel in Children and Young Adults with B-Cell Lymphoblastic Leukemia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5996391/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Responders developed B-cell aplasia; immunoglobulin replacement was commonly used.",
+      "limitation": "Manageability requires support; this does not generalize to all lymphocytes or marrow progenitors.",
+      "checked": "2026-11-03"
+    },
+    "tran2013": {
+      "title": "Immune targeting of fibroblast activation protein triggers recognition of multipotent bone marrow stromal cells and cachexia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3674706/",
+      "model": "mouse",
+      "design": "car_t_experiment",
+      "finding": "FAP-reactive T cells recognized marrow stromal cells and caused severe systemic toxicity.",
+      "limitation": "Target distribution and receptor properties matter; not all fibroblasts or all FAP products have equivalent effects.",
+      "checked": "2026-11-03"
+    },
+    "roberts2013": {
+      "title": "Depletion of stromal cells expressing fibroblast activation protein-alpha from skeletal muscle and bone marrow results in cachexia and anemia",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3674708/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Distributed FAP-positive stromal depletion disrupted muscle and hematopoietic support.",
+      "limitation": "Distributed target-defined cells differ from a localized dermal fibroblast population.",
+      "checked": "2026-11-03"
+    },
+    "wang2014": {
+      "title": "Targeting Fibroblast Activation Protein in Tumor Stroma with Chimeric Antigen Receptor T Cells Can Inhibit Tumor Growth and Augment Host Immunity Without Severe Toxicity",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24778279/",
+      "model": "mouse",
+      "design": "car_t_experiment",
+      "finding": "A different FAP CAR achieved antitumor effects without the severe toxicity of other models.",
+      "limitation": "Counterevidence emphasizes receptor/epitope and target-density dependence, not universal stromal safety.",
+      "checked": "2026-11-03"
+    },
+    "sambasivan2011": {
+      "title": "Pax7-expressing satellite cells are indispensable for adult skeletal muscle regeneration",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21828093/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Satellite-cell depletion prevented normal muscle regeneration after injury.",
+      "limitation": "Localized experimental depletion does not estimate human systemic immune toxicity.",
+      "checked": "2026-11-03"
+    },
+    "murphy2011": {
+      "title": "Satellite cells, connective tissue fibroblasts and their interactions are crucial for muscle regeneration",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3152921/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Fibroblast depletion altered satellite-cell dynamics and impaired regenerated myofibers.",
+      "limitation": "Niche-specific dependence cannot be generalized to all fibroblast populations.",
+      "checked": "2026-11-03"
+    },
+    "stamatouli2018": {
+      "title": "Collateral Damage: Insulin-Dependent Diabetes Induced With Checkpoint Inhibitors",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6054443/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Checkpoint treatment was associated with insulin deficiency and frequent ketoacidosis at presentation.",
+      "limitation": "Checkpoint autoimmunity is not selective engineered-TCR beta-cell killing; insulin replacement is ongoing support.",
+      "checked": "2026-11-03"
+    },
+    "iyer2018": {
+      "title": "Immune-Related Thyroiditis with Immune Checkpoint Inhibitors",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6157359/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Destructive thyroiditis often progressed to hypothyroidism requiring hormone replacement.",
+      "limitation": "Controlling hormone deficiency does not establish control of acute inflammatory injury.",
+      "checked": "2026-11-03"
+    },
+    "hypophysitis2021": {
+      "title": "Immune checkpoint inhibitor related hypophysitis: diagnostic criteria and recovery patterns",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8183642/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Pituitary hormone deficits showed limited recovery, particularly the adrenal axis.",
+      "limitation": "Anatomical swelling, affected axes and hormone support distinguish patients; not a cell-specific ablation trial.",
+      "checked": "2026-11-03"
+    },
+    "rama2010": {
+      "title": "Limbal Stem-Cell Therapy and Long-Term Corneal Regeneration",
+      "url": "https://www.nejm.org/doi/abs/10.1056/NEJMoa0905955",
+      "model": "human",
+      "design": "regenerative_clinical",
+      "finding": "Limbal-cell grafts restored corneal epithelial maintenance after destructive injury.",
+      "limitation": "Successful transplantation does not make spontaneous limbal recovery reliable or treat retinal injury.",
+      "checked": "2026-11-03"
+    },
+    "golub2012": {
+      "title": "Hair Cell Replacement in Adult Mouse Utricles after Targeted Ablation of Hair Cells with Diphtheria Toxin",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3544304/",
+      "model": "mouse",
+      "design": "selective_ablation",
+      "finding": "Adult vestibular hair-cell loss was followed by limited replacement.",
+      "limitation": "Utricular findings do not establish restoration of human cochlear hearing.",
+      "checked": "2026-11-03"
+    },
+    "shin2011": {
+      "title": "Hedgehog/Wnt feedback supports regenerative proliferation of epithelial stem cells in bladder",
+      "url": "https://www.nature.com/articles/nature09851",
+      "model": "mouse",
+      "design": "injury_and_lineage_tracing",
+      "finding": "Urothelial and stromal signaling supported epithelial regeneration after injury.",
+      "limitation": "Repair after finite injury is not evidence that continuous urothelial killing is tolerable.",
+      "checked": "2026-11-03"
+    },
+    "spalding2008": {
+      "title": "Dynamics of fat cell turnover in humans",
+      "url": "https://www.nature.com/articles/nature06902",
+      "model": "human",
+      "design": "cell_turnover",
+      "finding": "Adult adipocytes turn over while population size is regulated.",
+      "limitation": "Turnover does not establish the metabolic tolerability of generalized adipocyte destruction.",
+      "checked": "2026-11-03"
+    },
+    "johnson2009": {
+      "title": "Gene therapy with human and mouse T-cell receptors mediates cancer regression and targets normal tissues expressing cognate antigen",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2929689/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Melanocyte-antigen TCR therapy injured skin, eye and ear compartments.",
+      "limitation": "Cutaneous depigmentation cannot justify ocular or cochlear melanocyte depletion.",
+      "checked": "2026-11-03"
+    },
+    "warner2019": {
+      "title": "Sicca Syndrome Associated with Immune Checkpoint Inhibitor Therapy",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30996010/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Checkpoint-associated sicca included persistent salivary hypofunction.",
+      "limitation": "Symptom improvement did not guarantee restoration of secretion; not selective receptor targeting.",
+      "checked": "2026-11-03"
+    },
+    "kristinsson2014": {
+      "title": "Long-term risks after splenectomy among 8149 cancer-free American veterans",
+      "url": "https://haematologica.org/article/view/6942",
+      "model": "human",
+      "design": "surgical_cohort",
+      "finding": "Splenectomy was associated with lasting infection and thromboembolic risks.",
+      "limitation": "Observational organ-removal evidence is not systemic immune-cell depletion.",
+      "checked": "2026-11-03"
+    },
+    "kooshesh2023": {
+      "title": "Health Consequences of Thymus Removal in Adults",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10557034/",
+      "model": "human",
+      "design": "surgical_cohort",
+      "finding": "Adult thymectomy was associated with adverse long-term health outcomes.",
+      "limitation": "Observational association, potential confounding and adult context limit causal inference.",
+      "checked": "2026-11-03"
+    },
+    "heinemeier2016": {
+      "title": "Radiocarbon dating reveals minimal collagen turnover in both healthy and osteoarthritic human cartilage",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27384346/",
+      "model": "human",
+      "design": "matrix_turnover",
+      "finding": "Adult articular collagen showed very limited turnover.",
+      "limitation": "Matrix turnover is not chondrocyte turnover or a direct immune-injury experiment.",
+      "checked": "2026-11-03"
+    },
+    "braaten2020": {
+      "title": "Immune checkpoint inhibitor-induced inflammatory arthritis persists after immunotherapy cessation",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7031780/",
+      "model": "human",
+      "design": "checkpoint_clinical_cohort",
+      "finding": "Inflammatory arthritis could persist after checkpoint treatment stopped.",
+      "limitation": "Mixed joint tissues; not selective cartilage-cell ablation.",
+      "checked": "2026-11-03"
+    },
+    "nhs_tonsillectomy": {
+      "title": "Making a decision about recurrent tonsillitis in children and adults",
+      "url": "https://www.england.nhs.uk/wp-content/uploads/2023/10/decision-support-tool-making-a-decision-about-recurrent-tonsillitis-in-children-and-adults.pdf",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Tonsil removal is an established treatment with recognized procedural risks.",
+      "limitation": "Local removal is not systemic lymphocyte depletion.",
+      "checked": "2026-11-03"
+    },
+    "nhs_appendix": {
+      "title": "Appendicitis",
+      "url": "https://www.nhs.uk/conditions/appendicitis/",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Appendectomy permits survival without the appendix.",
+      "limitation": "Removal does not establish tolerance of in-situ perforation or shared intestinal targeting.",
+      "checked": "2026-11-03"
+    },
+    "niddk_gallbladder": {
+      "title": "Treatment for Gallstones",
+      "url": "https://www.niddk.nih.gov/health-information/digestive-diseases/gallstones/treatment",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Cholecystectomy is an established treatment for symptomatic gallstones.",
+      "limitation": "Does not justify bile-duct or liver targeting, or uncontrolled in-situ inflammation.",
+      "checked": "2026-11-03"
+    },
+    "niddk_adrenal": {
+      "title": "Definition and Facts of Adrenal Insufficiency and Addison's Disease",
+      "url": "https://www.niddk.nih.gov/health-information/endocrine-diseases/adrenal-insufficiency-addisons-disease/definition-facts",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Adrenal insufficiency can cause crisis and requires hormone replacement.",
+      "limitation": "Replacement availability does not establish acute-injury control.",
+      "checked": "2026-11-03"
+    },
+    "nci_lymph_nodes": {
+      "title": "Sentinel Lymph Node Biopsy",
+      "url": "https://www.cancer.gov/about-cancer/diagnosis-staging/staging/sentinel-node-biopsy-fact-sheet",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Regional nodal surgery can cause lymphatic morbidity.",
+      "limitation": "Regional excision is narrower than distributed lymphatic injury.",
+      "checked": "2026-11-03"
+    },
+    "sitc2021": {
+      "title": "SITC clinical practice guideline on immune checkpoint inhibitor-related adverse events",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8237720/",
+      "model": "human",
+      "design": "clinical_guidance",
+      "finding": "Immune injuries span organ-specific acute and persistent consequences.",
+      "limitation": "Checkpoint-toxicity management cannot validate engineered-cell killing for an untested compartment.",
+      "checked": "2026-11-03"
+    },
+    "hpa_tissues": {
+      "title": "Human Protein Atlas tissue and cell-type definitions",
+      "url": "https://www.proteinatlas.org/humanproteome/tissue/data",
+      "model": "human",
+      "design": "anatomy_reference",
+      "finding": "Defines tissue and cell annotations used for expression mapping.",
+      "limitation": "Anatomy supports identity, not tolerability or receptor recognition.",
+      "checked": "2026-11-03"
+    },
+    "openstax_female": {
+      "title": "Anatomy and Physiology: Female Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/27-2-anatomy-and-physiology-of-the-female-reproductive-system",
+      "model": "human",
+      "design": "anatomy_reference",
+      "finding": "Defines female reproductive organs and physiological functions.",
+      "limitation": "Reproductive membership is independent of clinical hazard.",
+      "checked": "2026-11-03"
+    },
+    "openstax_male": {
+      "title": "Anatomy and Physiology: Male Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/27-1-anatomy-and-physiology-of-the-male-reproductive-system",
+      "model": "human",
+      "design": "anatomy_reference",
+      "finding": "Defines male reproductive organs and physiological functions.",
+      "limitation": "Reproductive membership is independent of clinical hazard.",
+      "checked": "2026-11-03"
+    },
+    "purba2019": {
+      "title": "CDK4/6 inhibition mitigates stem cell damage in a novel model for taxane-induced alopecia",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31512803/",
+      "model": "human_ex_vivo",
+      "design": "injury_experiment",
+      "finding": "Hair-follicle stem-cell injury was investigated in an experimental chemotherapy model.",
+      "limitation": "Chemotherapy injury is not immune ablation; permanent alopecia remains possible.",
+      "checked": "2026-11-03"
+    },
+    "collin2021": {
+      "title": "A single cell atlas of human cornea that defines its development, limbal progenitor cells and their interactions with the immune cells",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8343164/",
+      "model": "human",
+      "design": "cell_atlas",
+      "finding": "Distinguishes corneal and limbal cell populations.",
+      "limitation": "Cell identity and expression alone do not measure toxicity.",
+      "checked": "2026-11-03"
+    },
+    "wang2021_bcma": {
+      "title": "Humoral immune reconstitution after anti-BCMA CAR T-cell therapy in relapsed/refractory multiple myeloma",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9153033/",
+      "model": "human",
+      "design": "cell_therapy_clinical",
+      "finding": "Normal marrow plasma-cell aplasia and prolonged hypogammaglobulinemia followed BCMA-directed CAR T-cell therapy.",
+      "limitation": "Myeloma, prior therapies and conditioning affect immune recovery; this is not an isolated healthy-plasma-cell ablation trial.",
+      "checked": "2026-11-03"
+    }
+  },
+  "unlisted_comparison": {
+    "registered": {
+      "proteins": 480,
+      "loci": 523,
+      "routes": {
+        "Adult reproductive only": 351,
+        "Adult reproductive + developmental": 95,
+        "Developmental only": 34
+      },
+      "tumor_max_median_tpm": 33.52667324030507,
+      "reproductive_max_median_ntpm": 13.05,
+      "developmental_max_median_tpm": 0.8716235610292445,
+      "normal_max_median_ntpm": 0.7,
+      "unconfirmed_normal_signal": 7,
+      "tumor_max_below_1": 0,
+      "tumor_max_below_10": 80,
+      "reviewed_tumor_protein": 0
+    },
+    "unlisted": {
+      "proteins": 122,
+      "loci": 123,
+      "routes": {
+        "Developmental only": 60,
+        "Adult reproductive only": 49,
+        "Adult reproductive + developmental": 13
+      },
+      "tumor_max_median_tpm": 35.64472154572741,
+      "reproductive_max_median_ntpm": 0.4,
+      "developmental_max_median_tpm": 11.204421797454327,
+      "normal_max_median_ntpm": 1.4,
+      "unconfirmed_normal_signal": 7,
+      "tumor_max_below_1": 1,
+      "tumor_max_below_10": 23,
+      "reviewed_tumor_protein": 0
+    }
   },
   "rows": [
     {

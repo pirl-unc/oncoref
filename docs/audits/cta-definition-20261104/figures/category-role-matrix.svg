@@ -53,8 +53,8 @@ L 0 3.5
       </g>
      </g>
      <g id="text_1">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(142.289844 312.052402)">Allow under</text>
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(158.635156 325.25541)">policy</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(139.870703 312.052402)">No exclusion</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(150.381719 325.25541)">recorded</text>
      </g>
     </g>
     <g id="xtick_2">
@@ -64,8 +64,7 @@ L 0 3.5
       </g>
      </g>
      <g id="text_2">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(241.028047 312.052402)">Review</text>
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'" transform="translate(237.607734 325.25541)">required</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="260.652734" y="310.951328" transform="rotate(-0 260.652734 310.951328)">Unresolved</text>
      </g>
     </g>
     <g id="xtick_3">

@@ -3,6 +3,10 @@
 [Read the illustrated, searchable report](report.html) · [Download the PDF](cta-definition.pdf)
 · [Current report receipt](release-receipt.json) · [Full report data](report-data.json).
 
+[Filterable candidate evidence table](../cta-evidence-guide-20261106/report.html#explorer) ·
+[The 122 CTAs outside the registered nomination papers](../cta-evidence-guide-20261106/report.html#analysis) ·
+[Data sources, review categories and cited tissue rationales](../cta-evidence-guide-20261106/report.html#sources).
+
 Current selection policy: `oncoref.cta-selection.2026-11-05.1`. Consumer-role policy:
 `oncoref.sequence-roles.2026-11-04.1`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
@@ -31,8 +35,8 @@ can still exclude shared sequence.
 | Role | Proteins |
 |---|---:|
 | Exclude | 18,255 |
-| Review | 586 |
-| Allow under this policy | 1,022 |
+| Unresolved (`review`) | 586 |
+| No exclusion recorded (`allow`) | 1,022 |
 
 Compared with the pinned 1.29.0 snapshot, **484
 classifications and 598 roles change**.

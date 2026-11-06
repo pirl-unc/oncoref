@@ -45,7 +45,32 @@ from oncoref import (  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
-PRESENTATION_REVISION = "2026-11-05.3"
+PRESENTATION_REVISION = "2026-11-06.1"
+GUIDE_URL = "https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html"
+GATE_SOURCES = {
+    "rare_vital": ("CELLxGENE",),
+    "rare_protected": ("CELLxGENE",),
+    "unsafe_containment": ("Ensembl-115", "unsafe_sequences"),
+    "final_assignment": ("current_decisions",),
+}
+TIER_EXAMPLES = {
+    "vital": (
+        "Heart and alveolar injury: direct human T-cell injury and animal depletion evidence support high-consequence concerns; neither estimates a universal fatality rate.",
+        ("linette2013", "garcia2016"),
+    ),
+    "protected": (
+        "Persistent salivary injury and impaired ciliary function illustrate lasting functional consequences. Disease and depletion models are not interchangeable with immune killing.",
+        ("warner2019", "halbeisen2022", "pardo2015"),
+    ),
+    "manageable": (
+        "B-cell depletion and thyroid injury have clinical replacement or supportive-treatment precedent. Management remains conditional on the exact compartment and treatment.",
+        ("maude2018", "iyer2018"),
+    ),
+    "disposable": (
+        "Gallbladder removal provides a narrow surgical precedent. Melanocyte-targeted T cells also damaged eye and ear tissues: a cutaneous allowance cannot extend to every melanocyte compartment.",
+        ("niddk_gallbladder", "johnson2009"),
+    ),
+}
 INK = "#173B55"
 TEAL = "#087E8B"
 AMBER = "#A76708"
@@ -203,7 +228,7 @@ def figures(facts, roles, coverage):
     )
     fig, ax = plt.subplots(figsize=(10, 4.8))
     ax.imshow(np.log1p(table), cmap="Blues")
-    ax.set_xticks(range(3), ["Allow under\npolicy", "Review\nrequired", "Exclude"])
+    ax.set_xticks(range(3), ["No exclusion\nrecorded", "Unresolved", "Exclude"])
     ax.set_yticks(range(3), table.index)
     for i in range(3):
         for j in range(3):
@@ -288,6 +313,15 @@ def build():
     migrated_count = len(gene_knowledge.historical_dispositions())
     figures(facts, roles, coverage)
     criteria = cta_selection_audit.audit().criteria
+    # Presentation source mappings fill formerly blank computed-rule entries;
+    # the scientific policy and released API records remain unchanged.
+    criteria = criteria.copy()
+    criteria["source_ids"] = criteria.apply(
+        lambda row: GATE_SOURCES.get(row.gate_id, row.source_ids), axis=1
+    )
+    from build_cta_evidence_explorer import source_guide
+
+    guide_sources = source_guide(cta_selection_audit.audit())
     write_table(criteria, OUT / "rule-catalog.csv")
     selected = roles.set_index("label")
     profile = facts.set_index("protein_group_label")
@@ -386,7 +420,7 @@ def build():
         (
             "Research parameters and coverage limits",
             [
-                "The nominal RNA bases are 4, 8 and 16 TPM/nTPM for Vital, Protected and Manageable contexts. Matched negative IHC can raise a ceiling by 0-3 doubling steps; reviewed product evidence adds at most one step within that cap. Corneal CP10K keeps its separately declared scale. These are policy choices, not calibrated clinical toxicity limits.",
+                "Without usable matching protein staining, the upper RNA limits start at 4 for Vital, 8 for Protected and 16 for Manageable tissues, in the source's own TPM or nTPM units. Approved, Supported and Enhanced negative IHC respectively multiply the starting limit by 2, 4 and 8. Reviewed product-specific clinical evidence can add one doubling within the same cap. A value must be above the limit to trigger this RNA rule. Corneal CP10K uses separate limits, not a TPM conversion. These are policy choices, not measured safe exposures.",
                 "One compatible tumor sample above zero establishes the current cancer-presence criterion, not sufficient target abundance or cohort prevalence. Reproductive RNA uses a 5-unit criterion with assay-specific support requirements; reliable reproductive IHC and reviewed protein provide separate routes. Adult/placental diffuseness above 10% can block identity, never establish Unsafe.",
                 "The rare-cell panel uses a 1% detection screen with cell-support rules. Detection frequency is not abundance. Coverage is limited by sampled organs, donor age, activation states, paralog mapping and assay resolution. Optional panels remain disclosed when missing. A 95% Unsafe 9-mer overlap blocks practical candidate admission, but is not a clinical cross-reactivity validation.",
                 "The complete gate table below retains the actual executable rules and source IDs. Human thresholds are not transferred to dog or mouse; their native nominations remain unassessed until supported by a species-specific policy.",
@@ -430,6 +464,11 @@ def build():
         "criteria": criteria.to_dict("records"),
         "registry_references": len(tissue_hazards.references()),
         "tier_definitions": tissue_hazards.registry()["tier_definitions"],
+        "source_guide": guide_sources,
+        "tier_references": tissue_hazards.references().set_index("reference_id").to_dict("index"),
+        "unlisted_comparison": json.loads(
+            (ROOT / "docs/audits/cta-evidence-guide-20261106/comparison.json").read_text()
+        ),
         "rows": roles[
             [
                 "entity_id",
@@ -448,6 +487,8 @@ def build():
     update_current_docs(data)
     inputs = [
         Path(__file__),
+        ROOT / "scripts/build_cta_evidence_explorer.py",
+        ROOT / "docs/audits/cta-evidence-guide-20261106/manifest.json",
         ROOT / "oncoref/cta_contract.py",
         ROOT / "oncoref/cta_selection_policy.py",
         ROOT / "oncoref/data/cta-selection.json",
@@ -517,7 +558,8 @@ def update_current_docs(data):
             "The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies "
             + summary
             + "\n[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) "
-            + "· [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf)."
+            + "· [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) "
+            + "· [Candidate evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html)."
         )
         + text[end:]
     )
@@ -534,6 +576,7 @@ def update_current_docs(data):
             + f" Selection policy: `{policy}`. "
             + "[Illustrated, searchable report](audits/cta-definition-20261104/report.html), "
             + "[PDF](audits/cta-definition-20261104/cta-definition.pdf), "
+            + "[filterable evidence table and the 122-protein review](audits/cta-evidence-guide-20261106/report.html), "
             + "[source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and "
             + "[verified sequences](sequence-bundle.md) describe the same versioned decisions."
         )
@@ -553,6 +596,7 @@ def update_current_docs(data):
             + summary
             + "\n\n[Illustrated report](audits/cta-definition-20261104/report.html) · "
             + "[PDF](audits/cta-definition-20261104/cta-definition.pdf) · "
+            + "[Candidate evidence explorer](audits/cta-evidence-guide-20261106/report.html) · "
             + "[Verified sequence records](sequence-bundle.md).\n\n"
             + "The normal screen, cancer presence, reproductive/developmental association, "
             + "coverage, translation and sequence-overlap gates remain distinct. Accepted "
@@ -603,6 +647,35 @@ def render_html(data):
                 )
                 + "</dl>"
             )
+            for tier, (rationale, reference_ids) in TIER_EXAMPLES.items():
+                chunks.append(
+                    "<p><b>" + esc(tier.title()) + " evidence:</b> " + esc(rationale) + " "
+                )
+                for reference_id in reference_ids:
+                    ref = data["tier_references"][reference_id]
+                    chunks.append(
+                        '<a href="'
+                        + esc(ref["url"], quote=True)
+                        + '">'
+                        + esc(ref["title"])
+                        + "</a>. "
+                    )
+                chunks.append("</p>")
+            chunks.append(
+                '<p>These are policy judgments supported by mechanisms and scoped evidence, not validated clinical risk classes. <a href="'
+                + GUIDE_URL
+                + '#ontology">All tissue/cell rationales and reference limitations</a>.</p>'
+            )
+        if title == "Evidence has multiple independent meanings":
+            chunks.append(
+                '<p><a href="https://pubmed.ncbi.nlm.nih.gov/23377668/">MAGE-A3-reactive TCR neurological injury report</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7946352/">MAGEA12/EPS8L2 causal re-examination</a></p>'
+            )
+        if title == "Research parameters and coverage limits":
+            chunks.append(
+                '<p><a href="'
+                + GUIDE_URL
+                + '#meaning">Plain-language decision categories and the complete RNA-limit table</a></p>'
+            )
         if fig:
             chunks.append(f'<figure><img src="figures/{fig}.svg" alt="{esc(title)}"></figure>')
         if title == "Published nominations through the funnel":
@@ -632,7 +705,16 @@ def render_html(data):
             + "</td><td>"
             + esc(r["rule"])
             + "</td><td>"
-            + esc(", ".join(r["source_ids"]))
+            + "; ".join(
+                '<a href="'
+                + GUIDE_URL
+                + "#source-"
+                + esc(sid, quote=True)
+                + '">'
+                + esc(next(s["name"] for s in data["source_guide"] if s["source_id"] == sid))
+                + "</a>"
+                for sid in r["source_ids"]
+            )
             + "</td></tr>"
         )
     chunks.append("</tbody></table></div><h2>Worked decisions</h2>")
@@ -668,13 +750,8 @@ def render_html(data):
             )
         chunks.append("</details>")
     chunks.append(
-        '<h2>Explore every classified protein</h2><p>Search labels, gene IDs or reasons. Results retain all overlapping reasons.</p><input id="query" aria-label="Search proteins" placeholder="Protein, gene, reason"><select id="category" aria-label="Classification"><option value="">All categories</option><option>CTA</option><option>Unsafe</option><option>Other</option></select><p id="matched" aria-live="polite"></p><div class="scroller"><table><thead><tr><th>Protein</th><th>Classification</th><th>Status / role</th><th>All recorded reasons</th></tr></thead><tbody id="results"></tbody></table></div>'
-    )
-    rows = json.dumps(data["rows"], separators=(",", ":")).replace("<", "\\u003c")
-    chunks.append(
-        '<script type="application/json" id="records">'
-        + rows
-        + '</script><script>const rows=JSON.parse(document.getElementById("records").textContent);function render(){const q=document.getElementById("query").value.toLowerCase();const c=document.getElementById("category").value;const found=rows.filter(r=>(!c||r.classification.split(":")[0]===c)&&JSON.stringify(r).toLowerCase().includes(q));document.getElementById("matched").textContent=found.length.toLocaleString()+" matching proteins; showing the first 100.";const target=document.getElementById("results");target.replaceChildren();for(const r of found.slice(0,100)){const tr=document.createElement("tr");for(const t of [r.label+" · "+r.gene_ids.join(", "),r.classification,r.assessment_status+" / "+r.shared_sequence,r.reasons.join("; ")||"All declared gates pass"]){const td=document.createElement("td");td.textContent=t;tr.append(td)}target.append(tr)}}document.getElementById("query").addEventListener("input",render);document.getElementById("category").addEventListener("change",render);render();</script>'
+        "<h2>Explore every classified protein</h2><p>The candidate table now includes source-by-source values, top-five tissue and cell contexts, Ensembl/HPA links, paper links, review reasons, sorting and CSV export.</p>"
+        '<p><a href="../cta-evidence-guide-20261106/report.html#explorer">Open the full filterable evidence table</a> · <a href="../cta-evidence-guide-20261106/report.html?subset=unlisted#analysis">Investigate the 122 CTAs outside the nomination-paper collection</a> · <a href="../cta-evidence-guide-20261106/report.html#sources">Data-source guide</a></p>'
     )
     chunks.append(
         '<footer>Sources and audits: <a href="../cta-evidence-migration-20261104/">historical findings and clinical causality</a> · <a href="../translation-qualification-20261104/">translation qualification</a> · <a href="../sequence-bundle-20261104/">verified sequence bundle</a> · <a href="../normal-breadth-20261104/">normal breadth</a> · <a href="../../tissue-hazards/">tissue registry and primary references</a><p><code>'
@@ -742,6 +819,22 @@ def render_pdf(data):
                         "<b>" + html.escape(tier.title()) + ":</b> " + html.escape(definition), body
                     )
                 )
+                rationale, reference_ids = TIER_EXAMPLES[tier]
+                story.append(paragraph(rationale, small))
+                refs = [data["tier_references"][reference_id] for reference_id in reference_ids]
+                story.append(
+                    Paragraph(
+                        "; ".join(
+                            '<a href="'
+                            + html.escape(ref["url"], quote=True)
+                            + '">'
+                            + html.escape(ref["title"])
+                            + "</a>"
+                            for ref in refs
+                        ),
+                        small,
+                    )
+                )
             story.append(
                 Paragraph(
                     '<a href="https://pirl-unc.github.io/oncoref/tissue-hazards/">Central tissue registry, compartment rationales and primary references</a>',
@@ -796,20 +889,165 @@ def render_pdf(data):
             story.append(PageBreak())
     story.append(Paragraph("Complete executable gate rules", styles["Heading1"]))
     for r in data["criteria"]:
-        source_text = (
-            ", ".join(r["source_ids"])
-            or "Declared policy; see linked source walkthrough and coverage audit."
+        source_text = "; ".join(
+            '<a href="'
+            + GUIDE_URL
+            + "#source-"
+            + html.escape(sid, quote=True)
+            + '">'
+            + html.escape(next(s["name"] for s in data["source_guide"] if s["source_id"] == sid))
+            + "</a>"
+            for sid in r["source_ids"]
         )
         story.append(
             KeepTogether(
                 [
                     Paragraph(html.escape(r["stage"]), styles["Heading2"]),
                     paragraph(r["rule"]),
-                    paragraph("Sources: " + source_text, small),
+                    Paragraph("Sources: " + source_text, small),
                 ]
             )
         )
-    story.append(Spacer(1, 14))
+    story.append(Spacer(1, 20))
+    story.append(Paragraph("The 122 CTAs outside the paper collection", styles["Heading1"]))
+    comparison = data["unlisted_comparison"]
+    story.append(
+        Image(
+            str(ROOT / "docs/audits/cta-evidence-guide-20261106/route-comparison.png"),
+            width=500,
+            height=177,
+        )
+    )
+    story.append(
+        paragraph(
+            "The 602 released CTAs include 480 proteins in the 15-paper nomination union and 122 outside it (123 loci). Absence from this finite collection does not establish novelty or absence from the literature."
+        )
+    )
+    story.append(
+        paragraph(
+            "Of the 122, 60 qualify through developmental evidence alone, 49 through adult reproductive evidence alone and 13 through both. Only 34 of the 480 registered proteins use the developmental-only route. These are admission routes in the measured datasets, not exclusive biological identities."
+        )
+    )
+    story.append(
+        paragraph(
+            f"Median highest tumor RNA is {comparison['unlisted']['tumor_max_median_tpm']:.1f} versus {comparison['registered']['tumor_max_median_tpm']:.1f} TPM. This does not suggest uniformly weaker tumor maxima, but maxima do not measure prevalence, replication or specificity. All 122 pass the annotation-based translation rule; none has a released gene-knowledge finding. An empty ledger is not a negative literature review."
+        )
+    )
+    story.append(
+        Paragraph(
+            '<a href="'
+            + GUIDE_URL
+            + '?subset=unlisted#analysis">Complete 122-protein table, route comparison, linked primary-literature findings and follow-up priorities</a>',
+            body,
+        )
+    )
+    literature = json.loads(
+        (ROOT / "scripts/cta_evidence_assets/literature-review.json").read_text()
+    )
+    story.append(paragraph(literature["scope"], small))
+    for finding in literature["findings"]:
+        finding_block = []
+        finding_block.append(
+            Paragraph(
+                html.escape(", ".join(finding["proteins"]) + " - " + finding["category"]),
+                styles["Heading2"],
+            )
+        )
+        finding_block.append(paragraph(finding["finding"]))
+        finding_block.append(
+            Paragraph(
+                '<a href="'
+                + html.escape(finding["url"], quote=True)
+                + '">'
+                + html.escape(finding["title"])
+                + "</a>",
+                small,
+            )
+        )
+        if finding.get("trial_url"):
+            finding_block.append(
+                Paragraph(
+                    '<a href="'
+                    + html.escape(finding["trial_url"], quote=True)
+                    + '">Trial record</a>',
+                    small,
+                )
+            )
+        finding_block.append(
+            paragraph("Scope: " + finding["model"] + ". Limits: " + finding["limitation"], small)
+        )
+        story.append(KeepTogether(finding_block))
+    story.append(Spacer(1, 20))
+    story.append(Paragraph("Plain-language sequence decisions", styles["Heading1"]))
+    story.append(
+        paragraph(
+            "No exclusion recorded (allow): the assessed record has no policy exclusion; this is not a target recommendation. Unresolved (review): do not automatically clear the sequence until the relevant questions are answered. Exclude: retain as exclusion evidence; this takes precedence over review and allow."
+        )
+    )
+    for label, explanation in [
+        (
+            "Missing measurements",
+            "Required normal tissues or member loci have missing observations.",
+        ),
+        (
+            "Conflicting or uncertain normal evidence",
+            "A normal signal, reagent result or causal interpretation remains unresolved.",
+        ),
+        ("Uncertain identity", "The gene, locus, transcript or source mapping is not resolved."),
+        ("Uncertain translation", "Coding support or translation completeness does not qualify."),
+        (
+            "Ambiguous sequence",
+            "Stops, ambiguous residues or non-AA20 characters prevent automatic exact-record use.",
+        ),
+        (
+            "Not assessed",
+            "The record or isoform lacks an applicable decision; the selected representative cannot clear every isoform.",
+        ),
+    ]:
+        story.append(Paragraph("<b>" + label + ":</b> " + explanation, body))
+    story.append(
+        Paragraph(
+            '<a href="'
+            + GUIDE_URL
+            + '#meaning">RNA-limit table and full decision explanations</a>',
+            body,
+        )
+    )
+    story.append(PageBreak())
+    story.append(Paragraph("Data-source guide", styles["Heading1"]))
+    story.append(
+        paragraph(
+            "Measurement datasets, literature nominations, reviewed findings and derived rules are distinct. Blank source cells in earlier reports did not mean evidence-free decisions: rare-cell rules use CELLxGENE, and sequence containment uses Ensembl translations plus current Unsafe assignments."
+        )
+    )
+    for source in data["source_guide"]:
+        if source["status"] == "annotation":
+            continue
+        url = source["source_url"]
+        if not url.startswith("https://"):
+            url = GUIDE_URL + "#source-" + source["source_id"]
+        story.append(
+            Paragraph(
+                '<a href="'
+                + html.escape(url, quote=True)
+                + '">'
+                + html.escape(source["name"])
+                + "</a>",
+                styles["Heading2"],
+            )
+        )
+        story.append(
+            paragraph(
+                "Measurement: "
+                + source["native_unit"]
+                + ". Scope: "
+                + source["stage"]
+                + ". "
+                + source["limitations"],
+                small,
+            )
+        )
+    story.append(PageBreak())
     story.append(Paragraph("Worked decisions and primary sources", styles["Heading1"]))
     for case in data["worked"]:
         story.append(

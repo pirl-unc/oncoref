@@ -11,7 +11,7 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,255 Unsafe / 1,006 Other** across **19,863 proteins** (identical selected reference sequences counted together; member loci retained). All 19,863 candidate protein records enter classification; translation support is a CTA admission requirement. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
-[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf).
+[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) · [Candidate evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html).
 
 The [normal-tissue hazard ontology](docs/tissue-hazards.md) centralizes evidence-linked
 bulk and cell-subset calls with generated reports, figures and a Python API.
