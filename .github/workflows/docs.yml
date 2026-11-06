@@ -38,6 +38,9 @@ jobs:
       - name: Build docs
         run: mkdocs build --strict
 
+      - name: Prepare immutable downloads and check Pages size
+        run: python scripts/prepare_pages_artifact.py --revision "$GITHUB_SHA"
+
       - name: Configure Pages
         uses: actions/configure-pages@v6
         with:
