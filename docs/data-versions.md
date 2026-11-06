@@ -58,6 +58,13 @@ HPA consensus and single-cell summary loaders now default to v25.1; both retain 
 
 ## Saved analyses pin their inputs
 
+Large historical CSV downloads on the documentation site link to the exact
+GitHub commit used to publish that site. The files remain in the repository,
+with their original paths and bytes, so saved manifests and local rebuilds
+remain reproducible. Current evidence-explorer downloads and interactive data
+remain on the documentation site. This keeps the published site within
+[GitHub Pages' 1 GB limit](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
+
 Resolve a default once, save the concrete version and checksum, and pass the concrete version when reproducing the analysis. Do not save the word `latest` as a scientific input identity.
 
 The [current CTA analysis](audits/cta-source-walkthrough-20261028/index.md) pins GTEx v11, HPA v23 normal panels, and the Tyser and Petropoulos snapshots. It does not pool v8, v10 and v11 as independent assays. Public loader defaults can advance without changing these saved choices. HPA nTPM and direct GTEx donor-median TPM remain separate evidence streams; a donor median is not a bound on every donor. The GTEx reader retains all 68 native contexts; the current whole-organ adapter uses 52 and explicitly reports the remaining microdissected/cultured contexts.
