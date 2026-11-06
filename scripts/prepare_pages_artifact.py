@@ -15,6 +15,10 @@ from pathlib import Path
 from urllib.parse import quote, urlsplit
 
 CURRENT_DOWNLOADS = "audits/cta-evidence-guide-20261106/"
+# This URL is embedded in an immutable archived PDF, not generated HTML.
+ARCHIVED_REPORT_DOWNLOADS = {
+    "audits/cta-unassigned-20261029/protein-diffuseness.csv.gz",
+}
 MINIMUM_BYTES = 1_000_000
 MAXIMUM_SITE_BYTES = 1_000_000_000
 HREF = re.compile(r"(\bhref\s*=\s*)([\"'])(.*?)(\2)", re.IGNORECASE)
@@ -53,6 +57,7 @@ def prepare(site_dir, docs_dir, revision):
             not source.is_file()
             or not relative.endswith((".csv", ".csv.gz"))
             or relative.startswith(CURRENT_DOWNLOADS)
+            or relative in ARCHIVED_REPORT_DOWNLOADS
             or source.stat().st_size < MINIMUM_BYTES
             or not built.is_file()
         ):
