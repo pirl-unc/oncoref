@@ -158,6 +158,45 @@ def replay(facts):
         replay_contexts(facts, scratch, collector=ExplorerCollector(facts))
 
 
+class BiologyCollector:
+    """Retain all supported category observations, before the display's top-five cut."""
+
+    def __init__(self, facts):
+        self.genes = set(facts.representative_gene_id)
+        self.parts = []
+
+    def collect(self, frame, assay):
+        if assay not in {"Normal bulk", "HPA tissue clusters"}:
+            return
+        selected = frame[
+            frame.gene_id.isin(self.genes)
+            & (frame.tissue.isin({"testis", "placenta"}) | frame.cell_type.eq("oocytes"))
+            & frame.value.ge(5)
+            & frame.unit.isin({"TPM", "nTPM"})
+        ].copy()
+        selected["scope"] = "Reproductive/developmental"
+        self.parts.append(selected.reindex(columns=[*CONTEXT, "value", "Read count", "version"]))
+
+    def finish(self):
+        result = pd.concat(self.parts, ignore_index=True).drop_duplicates(CONTEXT)
+        result = result.sort_values(CONTEXT)
+        write_csv(result, OUT / "biology-rna-contexts.csv.gz")
+        return result
+
+
+def replay_biology(facts):
+    from replay_cta_selection import replay_contexts
+
+    ctas = set(cta_selection.results(category="CTA").entity_id)
+    selected = facts[facts.protein_equivalence_group_id.isin(ctas)]
+    with tempfile.TemporaryDirectory(prefix="oncoref-biology-") as tmp:
+        scratch = Path(tmp)
+        for path in AUDIT.glob("*-accepted-identities.csv.gz"):
+            shutil.copyfile(path, scratch / path.name)
+        replay_contexts(selected, scratch, collector=BiologyCollector(selected))
+        shutil.copyfile(scratch / "cluster-source.json", OUT / "biology-rna-source.json")
+
+
 def route(row):
     adult, dev = bool(row.reproductive_route), bool(row.developmental_route)
     return (
@@ -183,6 +222,90 @@ def review_categories(row):
     if row.shared_sequence == "review" and not categories:
         categories.append("Not assessed")
     return categories
+
+
+def biological_categories(protein, fact, observations, developmental, registry):
+    """Attach biological context, retaining the exact observation behind each tag."""
+    if protein.category != "CTA":
+        return [], []
+    evidence = []
+    for assignment in registry["curated_assignments"]:
+        if set(protein.gene_ids) & set(assignment["gene_ids"]):
+            evidence.append({**assignment, "kind": "Publication"})
+    for observation in observations:
+        value = observation["value"]
+        if (
+            observation["scope"] != "Reproductive/developmental"
+            or observation["unit"] not in {"TPM", "nTPM"}
+            or not isinstance(value, (int, float))
+            or value < registry["rules"]["rna_minimum"]
+        ):
+            continue
+        tissue, cell = observation["tissue"], observation["cell_type"]
+        category = (
+            "oocyte_maternal"
+            if cell == "oocytes"
+            else "testis"
+            if tissue == "testis"
+            else "placenta"
+            if tissue == "placenta"
+            else None
+        )
+        if category:
+            evidence.append(
+                {
+                    "category_id": category,
+                    "kind": "RNA measurement",
+                    "source_id": observation["source"],
+                    "gene_ids": list(protein.gene_ids),
+                    "model": "Human reproductive tissue",
+                    "basis": f"{tissue} / {cell}: {value:g} {observation['unit']}",
+                }
+            )
+    for observation in developmental:
+        if observation["Mean TPM"] < registry["rules"]["rna_minimum"]:
+            continue
+        category = {
+            "petropoulos_E-MTAB-3929": "early_embryo",
+            "tyser_E-MTAB-9388": "gastrulation",
+        }.get(observation["source"])
+        if category:
+            evidence.append(
+                {
+                    "category_id": category,
+                    "kind": "RNA measurement",
+                    "source_id": observation["source"],
+                    "gene_ids": [observation["Gene ID"]],
+                    "model": "Human " + observation["stage"],
+                    "basis": f"{observation['Lineage']}: {observation['Mean TPM']:g} TPM",
+                }
+            )
+    assigned = {e["category_id"] for e in evidence}
+    for needed, category, specific in [
+        (
+            fact.reproductive_route,
+            "other_reproductive",
+            {"oocyte_maternal", "reproductive_secretion", "testis", "placenta"},
+        ),
+        (fact.developmental_route, "other_developmental", {"early_embryo", "gastrulation"}),
+    ]:
+        if needed and not assigned.intersection(specific):
+            assigned.add(category)
+            evidence.append(
+                {
+                    "category_id": category,
+                    "kind": "Released association",
+                    "source_id": "current_decisions",
+                    "gene_ids": list(protein.gene_ids),
+                    "model": "Released admission record",
+                    "basis": "Reproductive association"
+                    if category == "other_reproductive"
+                    else "Developmental association",
+                }
+            )
+    if not assigned:
+        assigned.add("uncategorized")
+    return [c["id"] for c in registry["categories"] if c["id"] in assigned], evidence
 
 
 def source_guide(audit):
@@ -259,6 +382,8 @@ def build(replay_contexts=False):
     facts = pd.read_csv(AUDIT / "protein-group-classifications.csv.gz", low_memory=False)
     if replay_contexts or not (OUT / "normal-top-contexts.csv.gz").exists():
         replay(facts)
+    if replay_contexts or not (OUT / "biology-rna-contexts.csv.gz").exists():
+        replay_biology(facts)
     profiles = cta_selection.profiles()
     roles = cta_selection.sequence_dispositions().set_index("entity_id")
     audit = cta_selection.audit()
@@ -270,6 +395,10 @@ def build(replay_contexts=False):
     top = {
         k: clean(v.drop(columns="gene_id").to_dict("records"))
         for k, v in normal.groupby("gene_id", sort=False)
+    }
+    biology_rna = {
+        gene: clean(part.drop(columns="gene_id").to_dict("records"))
+        for gene, part in pd.read_csv(OUT / "biology-rna-contexts.csv.gz").groupby("gene_id")
     }
     knowledge = gene_knowledge.findings()
     knowledge_by_gene = {}
@@ -289,6 +418,7 @@ def build(replay_contexts=False):
         ledger = pd.read_csv(path, keep_default_na=False)
         ledgers[sid] = {g: part.to_dict("records") for g, part in ledger.groupby(gene_column)}
     literature = json.loads((ASSETS / "literature-review.json").read_text())
+    biology = json.loads((ASSETS / "biology-categories.json").read_text())
     lit_by_label = {}
     for item in literature["findings"]:
         for label in item["proteins"]:
@@ -377,6 +507,9 @@ def build(replay_contexts=False):
         drows = []
         for gene in p.gene_ids:
             drows.extend(devtop.get(gene, []))
+        current["biology_categories"], current["biology_evidence"] = biological_categories(
+            p, f, biology_rna.get(f.representative_gene_id, []), drows, biology
+        )
         for source in ["tyser_E-MTAB-9388", "petropoulos_E-MTAB-3929"]:
             measured = [r["Mean TPM"] for r in drows if r["source"] == source]
             values[source] = max(measured) if measured and len(p.gene_ids) == 1 else None
@@ -443,15 +576,33 @@ def build(replay_contexts=False):
         "numeric_columns": numeric_columns,
         "paper_sources": audit.sources.to_dict("records"),
         "literature": literature,
+        "biology": biology,
     }
+    data["biology_counts"] = [
+        {
+            **category,
+            **{
+                scope: sum(
+                    category["id"] in r["biology_categories"]
+                    for r in rows
+                    if r["category"] == "CTA"
+                    and (scope == "all" or bool(r["papers"]) == (scope == "registered"))
+                )
+                for scope in ["all", "registered", "unlisted"]
+            },
+        }
+        for category in biology["categories"]
+    ]
     data["comparison"] = comparison(rows)
     comparison_figure(data["comparison"])
+    biology_figure(data["biology_counts"])
     data["tier_definitions"] = tissue_hazards.registry()["tier_definitions"]
     data["hazard_references"] = tissue_hazards.references().to_dict("records")
     data["hazard_assessments"] = tissue_hazards.assessments().to_dict("records")
     write_json(OUT / "data.json.gz", data, True)
     write_json(OUT / "unlisted-ctas.json", subset)
     write_json(OUT / "comparison.json", data["comparison"])
+    write_json(OUT / "biology-categories.json", {**biology, "counts": data["biology_counts"]})
     flat = []
     for row in rows:
         flat.append(
@@ -471,6 +622,7 @@ def build(replay_contexts=False):
                 item[key] = json.dumps(value, ensure_ascii=False)
     table = pd.DataFrame(flat)
     write_csv(table, OUT / "all-candidate-values.csv.gz")
+    write_csv(table[table.category.eq("CTA")], OUT / "cta-biology-categories.csv")
     write_csv(
         table[table.entity_id.isin([r["entity_id"] for r in subset])], OUT / "unlisted-ctas.csv"
     )
@@ -486,7 +638,7 @@ def build(replay_contexts=False):
     for name in ["report.html", "explorer.js", "style.css"]:
         shutil.copyfile(ASSETS / name, OUT / name)
     (OUT / "index.md").write_text(
-        "# CTA evidence guide\n\n[Open the filterable candidate table and analysis of the 122 CTAs](report.html).\n\n[All candidate values](all-candidate-values.csv.gz) · [122-protein table](unlisted-ctas.csv) · [Comparison](comparison.json)\n"
+        "# CTA evidence guide\n\n[Open the filterable candidate table and analysis of the 122 CTAs](report.html).\n\n[All candidate values](all-candidate-values.csv.gz) · [602 CTAs with biological categories](cta-biology-categories.csv) · [122-protein table](unlisted-ctas.csv) · [Comparison](comparison.json)\n"
     )
     write_json(
         OUT / "manifest.json",
@@ -502,6 +654,7 @@ def build(replay_contexts=False):
                 str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                 for p in [
                     Path(__file__),
+                    ROOT / "scripts/replay_cta_selection.py",
                     *sorted(ASSETS.glob("*")),
                     AUDIT / "protein-group-classifications.csv.gz",
                     AUDIT / "developmental-lineages.csv.gz",
@@ -585,13 +738,49 @@ def comparison_figure(comparison):
     ax.invert_yaxis()
     ax.set_xlim(0, 100)
     ax.set_xlabel("Percent of proteins within each set; labels show protein counts")
-    ax.set_title("Different admission routes, not a uniform evidence deficit", loc="left", pad=22)
+    ax.set_title("How the two CTA sets qualify", loc="left", pad=22)
     ax.legend(loc="upper center", bbox_to_anchor=(0.4, -0.36), frameon=False, ncol=2)
     ax.spines[["right", "top", "left"]].set_visible(False)
     fig.subplots_adjust(left=0.26, bottom=0.34, top=0.8)
     for extension in ["svg", "png"]:
         fig.savefig(
             OUT / f"route-comparison.{extension}",
+            dpi=160,
+            metadata={"Date": None} if extension == "svg" else None,
+        )
+    plt.close(fig)
+
+
+def biology_figure(counts):
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    matplotlib.rcParams["svg.hashsalt"] = "oncoref-cta-biology"
+    active = [c for c in counts if c["all"]]
+    fig, ax = plt.subplots(figsize=(9.5, 4.7))
+    y = np.arange(len(active))
+    for key, total, offset, color, label in [
+        ("registered", 480, -0.18, "#315875", "In nomination papers (480)"),
+        ("unlisted", 122, 0.18, "#087e8b", "Outside collection (122)"),
+    ]:
+        values = [100 * c[key] / total for c in active]
+        ax.barh(y + offset, values, height=0.32, color=color, label=label)
+        for row, value, category in zip(y, values, active, strict=True):
+            ax.text(value + 0.6, row + offset, str(category[key]), va="center", fontsize=9)
+    ax.set_yticks(y, [c["label"] for c in active])
+    ax.invert_yaxis()
+    ax.set_xlim(0, 108)
+    ax.set_xlabel("Percent of each set; labels show protein counts. Categories overlap.")
+    ax.set_title("Biological categories of the 602 CTAs", loc="left", pad=18)
+    ax.spines[["right", "top", "left"]].set_visible(False)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), frameon=False, ncol=2)
+    fig.subplots_adjust(left=0.27, bottom=0.24, top=0.87)
+    for extension in ["svg", "png"]:
+        fig.savefig(
+            OUT / f"biology-categories.{extension}",
             dpi=160,
             metadata={"Date": None} if extension == "svg" else None,
         )

@@ -1,6 +1,6 @@
 {
   "date": "2026-11-06",
-  "scope": "Focused primary-literature review of representative mechanisms and possible conflicts among the 122 released CTAs absent from the 15-paper nomination union. This is not an exhaustive literature search for all 122. Findings here are report annotations awaiting structured curation; they do not modify release 1.31.0 classifications or establish receptor recognition.",
+  "scope": "All 122 proteins have expression profiles in this report. The literature review covers 20 proteins and 19 publications or source records. Findings are linked to the released classifications; structured gene-level curation is pending.",
   "search_strategy": "Compare all 122 with the 480 registered CTAs using released admission routes and native expression summaries. Search exact symbols and established names with cancer/testis, tumor, embryonic, oocyte, epididymis and normal-cell terms. Prioritize known cancer targets, embryo-genome-activation factors and plausible omitted normal compartments. Follow primary publications; distinguish human tissue, human culture, animal experiments and fusion proteins. Do not infer absence from a search with no selected result.",
   "findings": [
     {
@@ -12,8 +12,8 @@
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4636967/",
       "trial_url": "https://clinicaltrials.gov/study/NCT01519817",
       "model": "Human clinical vaccine study",
-      "finding": "Brachyury was already a clinical cancer-vaccine target. Its absence from this nomination union is a collection gap, not evidence of novelty.",
-      "limitation": "Vaccine immunogenicity or tolerability does not establish safety of a particular engineered TCR, CAR or peptide. TBXT is also a developmental lineage regulator.",
+      "finding": "Brachyury was tested as a cancer-vaccine target in a human phase I trial. This publication is missing from the nomination collection.",
+      "limitation": "The product was a yeast-based vaccine; the trial did not test engineered CAR or TCR cells.",
       "next_action": "Add exact TBXT cancer-target provenance, retaining product and modality scope."
     },
     {
@@ -24,8 +24,8 @@
       "title": "SEMG1/2 augment energy metabolism of tumor cells",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7733513/",
       "model": "Human tumor data and cancer cell lines",
-      "finding": "The authors explicitly describe SEMG2 as a cancer-testis antigen and report tumor RNA and cancer-cell-line protein evidence.",
-      "limitation": "The label does not establish absence from every normal tissue, nor peptide presentation or clinical safety. Do not automatically extend SEMG1 findings to SEMG2.",
+      "finding": "The authors identify SEMG2 as a cancer-testis antigen and report tumor RNA and cancer-cell-line protein measurements.",
+      "limitation": "SEMG1 and SEMG2 results require separate attribution.",
       "next_action": "Add this primary nomination and separately curate the exact tumor protein experiments."
     },
     {
@@ -36,8 +36,8 @@
       "title": "Semenogelin I and II, the predominant human seminal plasma proteins, are also expressed in non-genital tissues",
       "url": "https://pubmed.ncbi.nlm.nih.gov/12200457/",
       "model": "Human tissue RT-PCR and immunohistochemistry",
-      "finding": "The study reports SgII transcripts outside reproductive organs, including trachea and kidney, and airway basal-cell staining with semenogelin-reactive antibodies. SEMG2 can therefore be both a published CTA nomination and a protein with normal-tissue counterevidence.",
-      "limitation": "The antibodies recognize both SgI and SgII, so the staining cannot be assigned exclusively to SEMG2. RNA, mixed-reactivity staining and exact protein attribution must be assessed separately.",
+      "finding": "SgII transcripts were reported in trachea and kidney. Airway basal cells stained with semenogelin-reactive antibodies.",
+      "limitation": "The antibodies recognize both SgI and SgII; the basal-cell staining is not specific to SEMG2.",
       "next_action": "Add the cancer nomination and normal counterevidence together; resolve paralog and reagent specificity before changing the released call."
     },
     {
@@ -48,8 +48,8 @@
       "title": "PATE, a gene expressed in prostate cancer, normal prostate, and testis, identified by a functional genomic approach",
       "url": "https://pubmed.ncbi.nlm.nih.gov/11880645/",
       "model": "Human tissue expression and functional genomics",
-      "finding": "The original PATE study explicitly joins cancer expression with normal prostate and testis expression. This is a reproductive-organ candidate, not necessarily a male-germ-cell-specific CTA.",
-      "limitation": "Resolve the historical PATE name to the exact present locus and translation before adding membership. Related PATE-family studies cannot be assigned indiscriminately to PATE1.",
+      "finding": "The original PATE study reported expression in prostate cancer, normal prostate and testis.",
+      "limitation": "The historical PATE name must be mapped to PATE1 at the exact locus.",
       "next_action": "Curate the historical symbol and distinguish reproductive organ secretion from germ-cell restriction."
     },
     {
@@ -61,8 +61,8 @@
       "title": "The human PRD-like homeobox gene LEUTX has a central role in embryo genome activation",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/",
       "model": "Human embryos and human embryonic stem-cell overexpression",
-      "finding": "LEUTX and DPRX participate in an early embryo transcriptional program. The paper also examines limited cancer-cell-line expression; it does not establish broad cancer restriction.",
-      "limitation": "Overexpression models and embryonic expression do not prove endogenous tumor protein. The reported cancer examples and disease-state expression require isoform-aware interpretation.",
+      "finding": "LEUTX and DPRX regulate an early-embryo transcriptional program. The paper also examines cancer-cell-line expression.",
+      "limitation": "Experiments include human embryo transcripts and embryonic stem-cell overexpression.",
       "next_action": "Register developmental-function evidence separately from CTA nomination; inspect endogenous tumor translation."
     },
     {
@@ -76,8 +76,8 @@
       "title": "Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/",
       "model": "Human embryo transcripts and human stem-cell functional assays",
-      "finding": "These genes are represented in a primary study of preimplantation homeobox factors. They belong to a literature organized around embryonic genome activation, rather than classical testis-biased cancer lists.",
-      "limitation": "The paper's expression scope is finite; its title is not proof of universal somatic absence. Transcript and construct function are not tumor antigen presentation.",
+      "finding": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "limitation": "Measurements include embryo transcripts and stem-cell functional assays.",
       "next_action": "Add an embryo-genome-activation evidence track with exact transcript mappings."
     },
     {
@@ -91,8 +91,8 @@
       "title": "Comprehensive characterization of the embryonic factor LEUTX",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/",
       "model": "Human cell models, proteomics and transcriptional assays",
-      "finding": "LEUTX regulates an early-development program including ZNF280A and TPRX2. The study highlights TPRX2's historical pseudogene annotation despite transcriptional and functional evidence.",
-      "limitation": "A response to experimentally induced LEUTX is not evidence that every downstream protein is naturally translated in tumors. Historical annotation changes may explain some list omissions, but do not prove why each source omitted a gene.",
+      "finding": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "limitation": "The downstream response was measured after experimentally induced LEUTX.",
       "next_action": "Reconcile historical gene models and add developmental provenance without inheriting CTA labels."
     },
     {
@@ -103,8 +103,8 @@
       "title": "Whole genome profiling of rare pediatric thoracic tumors elucidates a YAP1::LEUTX fusion in an unclassified biphasic embryonal neoplasm",
       "url": "https://pubmed.ncbi.nlm.nih.gov/39566337/",
       "model": "Human tumor case study",
-      "finding": "A YAP1::LEUTX fusion provides cancer relevance for LEUTX, in a specific molecular form.",
-      "limitation": "A fusion does not demonstrate expression or translation of the full-length reference LEUTX protein used by this release.",
+      "finding": "A pediatric thoracic tumor contained a YAP1::LEUTX fusion.",
+      "limitation": "The reported molecule is the fusion; this release uses the full-length reference LEUTX sequence.",
       "next_action": "Keep fusion and reference-protein evidence separate."
     },
     {
@@ -115,8 +115,8 @@
       "title": "Homozygous Mutations in WEE2 Cause Fertilization Failure and Female Infertility",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/",
       "model": "Human genetics, affected oocytes and rescue experiments",
-      "finding": "Human oocyte WEE2 has direct protein and functional support, including loss-of-function-associated fertilization failure and experimental rescue.",
-      "limitation": "This is strong reproductive-function evidence, not tumor translation or safety evidence. A developmental-only admission route in the current datasets does not mean the protein has no adult oocyte biology.",
+      "finding": "WEE2 mutations caused fertilization failure in human oocytes. The study measured WEE2 protein and tested experimental rescue.",
+      "limitation": "The evidence concerns human oocytes and fertilization. WEE2 enters this release through developmental RNA measurements.",
       "next_action": "Add female-germ-cell protein evidence; review tumor abundance and presentation independently."
     },
     {
@@ -127,8 +127,8 @@
       "title": "Identification of Maturation-Specific Proteins by Single-Cell Proteomics of Human Oocytes",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4974340/",
       "model": "Human oocyte proteomics",
-      "finding": "KHDC3L/ECAT1 was identified in human oocytes, supporting a female reproductive protein association.",
-      "limitation": "Protein identification in oocytes does not establish tumor protein or absence elsewhere. Historical ECAT1/C6orf221 aliases must retain exact identity.",
+      "finding": "KHDC3L/ECAT1 was identified by proteomics in human oocytes.",
+      "limitation": "ECAT1 and C6orf221 are historical aliases that require exact locus mapping.",
       "next_action": "Add oocyte proteomic provenance and aliases."
     },
     {
@@ -139,8 +139,8 @@
       "title": "NLRP14 deficiency causes female infertility with oocyte maturation defects and early embryonic arrest by impairing cytoplasmic UHRF1 abundance",
       "url": "https://www.sciencedirect.com/science/article/pii/S2211124723015437",
       "model": "Human infertility investigation and mechanistic experiments",
-      "finding": "NLRP14 has a dedicated female-fertility and early-development literature that a testis-centered nomination collection may underrepresent.",
-      "limitation": "Separate human observations from experimental model results when curating; this paper alone does not qualify a tumor antigen.",
+      "finding": "NLRP14 deficiency was associated with female infertility, oocyte maturation defects and early embryonic arrest.",
+      "limitation": "The study combines human infertility observations with mechanistic model experiments.",
       "next_action": "Extract human-specific reproductive evidence and evaluate tumor expression separately."
     },
     {
@@ -151,8 +151,8 @@
       "title": "PABPN1L mediates cytoplasmic mRNA decay as a placeholder during the maternal-to-zygotic transition",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/",
       "model": "Mouse oocytes and embryos",
-      "finding": "Pabpn1l knockout disrupts early embryonic development in mice, offering a mechanistic explanation for a maternal-to-zygotic expression pattern.",
-      "limitation": "Animal function cannot establish the human normal-tissue distribution or tumor translation. PABPN1L must not be conflated with PABPC1L.",
+      "finding": "Pabpn1l knockout disrupted the maternal-to-zygotic transition and early embryonic development in mice.",
+      "limitation": "The functional experiments used mice. PABPN1L and PABPC1L are different genes.",
       "next_action": "Retain as animal mechanistic support; seek exact human protein evidence."
     },
     {
@@ -164,8 +164,8 @@
       "title": "In-depth mapping of human testicular and epididymal proteins and their functional association with spermatozoa",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/",
       "model": "Human reproductive tissues and proteins",
-      "finding": "The study identifies epididymal enrichment for PATE1 and WFDC8. Male reproductive support includes somatic secretory compartments as well as germ cells.",
-      "limitation": "Sperm association does not imply synthesis by sperm; reproductive expression is not cancer specificity.",
+      "finding": "Human reproductive-tissue proteomics identified epididymal enrichment of PATE1 and WFDC8.",
+      "limitation": "The study distinguishes epididymal protein production from association with sperm.",
       "next_action": "Preserve tissue of synthesis and distinguish epididymal proteins from testis germ-cell proteins."
     },
     {
@@ -176,8 +176,8 @@
       "title": "Cloning, expression and location of RNase9 in human epididymis",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2669477/",
       "model": "Human tissue RNA and immunolocalization",
-      "finding": "Human epididymal RNASE9 was cloned and localized, with sperm-associated protein evidence.",
-      "limitation": "A finite tissue panel cannot establish absence everywhere else; binding to sperm is distinct from germ-cell production.",
+      "finding": "RNASE9 was cloned and localized in human epididymis; the study also reported sperm-associated protein.",
+      "limitation": "Measurements include tissue RNA and immunolocalization.",
       "next_action": "Add normal reproductive protein evidence with tissue, reagent and age scope."
     },
     {
@@ -188,8 +188,8 @@
       "title": "Activation of pruritogenic TGR5, MrgprA3, and MrgprC11 on colon-innervating afferents induces visceral hypersensitivity",
       "url": "https://insight.jci.org/articles/view/131712",
       "model": "Mouse mechanisms plus human dorsal-root-ganglion expression and functional assays",
-      "finding": "The human experiments report MRGPRX1 RNA in donor sensory ganglia, single-neuron detection and agonist-responsive neurons. This is a concrete normal sensory-neuron concern outside the current brain/heart/lung rare-cell panel.",
-      "limitation": "The study is not a receptor-specific T-cell toxicity experiment. Exact human cell attribution, functional specificity and policy disposition require structured review before changing the released call.",
+      "finding": "MRGPRX1 RNA was detected in human dorsal-root ganglia and in 79% of 85 sampled human sensory neurons; the study also tested agonist responses.",
+      "limitation": "The released rare-cell panel covers brain, spinal cord, heart and lung. It does not include dorsal-root ganglia.",
       "next_action": "Highest-priority normal-cell reassessment; examine sensory ganglia coverage and record the finding's disposition."
     },
     {
@@ -200,8 +200,8 @@
       "title": "Expression of alternatively spliced isoforms of human Sp7 in osteoblast-like cells",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/",
       "model": "Human primary osteoblast cultures, including adult cells",
-      "finding": "Human SP7/osterix has normal osteoblast-expression evidence. Bone-forming cells deserve specific evaluation rather than an inference from low routine bulk RNA.",
-      "limitation": "Cultured-cell expression is not a quantified in-vivo abundance or immune-injury threshold; isoforms and differentiation state matter.",
+      "finding": "SP7 was detected in human primary osteoblast cultures, including adult-derived cultures.",
+      "limitation": "The study measured cultured osteoblasts and splice variants; in-vivo adult tissue levels need extraction.",
       "next_action": "Review normal human bone-lineage protein/function and add appropriate tissue coverage."
     },
     {
@@ -212,8 +212,8 @@
       "title": "Regulatory variants at KLF14 influence type 2 diabetes risk via a female-specific effect on adipocyte size and body composition",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5935235/",
       "model": "Human adipose cohorts and primary cells, with mouse experiments",
-      "finding": "KLF14 has established normal human adipose expression and metabolic function; it should not be described as reproductive-only.",
-      "limitation": "The registry treats adipose as a conditional Manageable compartment. Normal function alone does not automatically imply Unsafe under that policy; abundance, exact cell scope and compensation must be reviewed.",
+      "finding": "Human adipose studies connect KLF14 expression and function with adipocyte size, insulin resistance and type 2 diabetes risk.",
+      "limitation": "Adipose is Manageable in the tissue registry. The expression amount and cell compartment determine the policy result.",
       "next_action": "Reconcile normal somatic evidence with the current tier and RNA limits."
     },
     {
@@ -224,8 +224,8 @@
       "title": "CALHM3 Is Essential for Rapid Ion Channel-Mediated Purinergic Neurotransmission of GPCR-Mediated Tastes",
       "url": "https://pubmed.ncbi.nlm.nih.gov/29681531/",
       "model": "Mouse taste-cell genetics and heterologous channel experiments",
-      "finding": "CALHM3 has a defined taste-signaling function, identifying a sensory compartment to investigate.",
-      "limitation": "Mouse taste-cell function and human constructs do not by themselves establish adult human tissue localization or immune-mediated toxicity.",
+      "finding": "Calhm3 was required for ATP-mediated taste signaling in mouse experiments.",
+      "limitation": "The functional evidence is from mice and heterologous constructs. Adult human taste-cell localization remains uncurated.",
       "next_action": "Seek human taste-cell localization; do not automatically transfer mouse evidence to a human exclusion."
     },
     {
@@ -236,8 +236,8 @@
       "title": "Human Protein Atlas: BTN1A1 staining in lactating breast",
       "url": "https://www.proteinatlas.org/ENSG00000124557-BTN1A1/tissue/lactating%2Bbreast",
       "model": "Current human tissue immunohistochemistry",
-      "finding": "The current HPA page reports High protein expression in lactating glandular cells, illustrating normal expression conditional on reproductive physiology.",
-      "limitation": "This live page is not the pinned HPA v23 input. Reagent reliability, version differences and the precise physiological compartment need review; lactation is not equivalent to fetal expression.",
+      "finding": "The live HPA page reports high BTN1A1 staining in lactating breast glandular cells.",
+      "limitation": "The page is newer than the pinned HPA v23 export. Version, physiological state and antibody data need reconciliation.",
       "next_action": "Compare the pinned and current evidence, and make lactation coverage explicit."
     }
   ]

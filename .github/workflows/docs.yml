@@ -57,3 +57,5 @@ jobs:
         uses: actions/deploy-pages@v5
         with:
           artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
+          # The first smaller deployment also prunes the old large archive.
+          timeout: 1800000

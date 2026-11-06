@@ -1,6 +1,6 @@
 {
   "release": "1.31.0",
-  "presentation_revision": "2026-11-06.1",
+  "presentation_revision": "2026-11-06.2",
   "publication_funnel": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -537,16 +537,16 @@
       "What OncoRef calls a CTA",
       [
         "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and qualification of the exact selected translation. Every input record is assessed, including those with insufficient translation support.",
-        "The current human policy produces 602 CTA, 18,255 Unsafe and 1,006 Other proteins. It evaluates 19,863 candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. This is not a complete inventory of splice isoforms or modified proteoforms.",
-        "CTA is a research candidate designation; it does not establish peptide-HLA presentation, receptor recognition, therapeutic abundance or clinical safety. Reproductive/developmental support includes adult reproductive tissues, placenta, extraembryonic tissues, embryo and fetus. These routes remain distinguishable; developmental association does not imply adult testis restriction."
+        "The current human policy produces 602 CTA, 18,255 Unsafe and 1,006 Other proteins. It evaluates 19,863 candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. Splice isoforms and post-translational modifications are outside this inventory.",
+        "CTA admission combines cancer expression, reproductive or developmental association, translation qualification and normal-tissue assessment. The biological categories identify the tissue, cell population or developmental program associated with each protein."
       ],
       "universe-accounting"
     ],
     [
       "From candidates to CTAs",
       [
-        "All 19,863 candidate records enter the same normal-evidence and admission path. The 259 records formerly removed at entry stay visible: 254 have only NMD/CDS-not-defined reference transcripts and 5 have only single-study Ribo-seq support. Insufficient translation support does not establish absence or normal-tissue safety.",
-        "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. An annotated coding sequence is not experimental proof of protein production.",
+        "All 19,863 candidate records enter the same normal-evidence and admission path. The 259 records formerly removed at entry stay visible: 254 have only NMD/CDS-not-defined reference transcripts and 5 have only single-study Ribo-seq support. Translation support is assessed at CTA admission.",
+        "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. The translation rule accepts qualifying coding annotation and supported noncanonical ORFs.",
         "Apply all normal-tissue evidence independently. Accepted exclusion evidence establishes Unsafe. Unresolved findings or missing required coverage prevent admission and require review; they do not establish Unsafe. Every target must also pass reproductive/developmental association, cancer presence, concentration, translation qualification and sequence-containment rules.",
         "The chart uses cumulative counts. Of 1,115 proteins passing normal assessment, cancer presence retains 1,114; reproductive/developmental presence then narrows these to 645. The previous order showed 645 at both gates because every reproductive/developmental survivor already met cancer presence. One compatible positive tumor RNA sample or reviewed tumor protein makes cancer presence a broad gate, not an abundance or prevalence requirement.",
         "Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Display order changes neither final classifications nor the priority used to assign Other subtypes."
@@ -557,17 +557,25 @@
       "Published nominations through the funnel",
       [
         "All 15 registered nomination papers appear in the companion funnel. Their union contains 2,514 proteins: 480 finish as CTA, 1,876 as Unsafe and 158 as Other. A protein can occur in several papers, so individual paper rows must not be summed.",
-        "The 17,349 candidates without a registered-paper annotation undergo the same assessment and contribute 122 CTAs. Prior nomination is recorded provenance, not a required admission gate. Absence from this finite registry does not establish novelty or absence from the literature.",
+        "The 17,349 candidates without a registered-paper annotation undergo the same assessment and contribute 122 CTAs. Prior nomination is recorded separately from the admission gates. The evidence guide identifies additional publications for proteins outside this registry.",
         "A publication's measured evidence can support reproductive/developmental association, tumor expression, translation or normal-tissue counterevidence when it meets the corresponding evidence rule. A list label alone does not establish those facts. Germ-cell, testis-biased, placental and tumor-vascular lists retain their original scope alongside CTA nominations."
       ],
       "publication-funnel"
     ],
     [
+      "Biological categories of CTAs",
+      [
+        "The CTA tables group proteins by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories.",
+        "Each tag links to a publication or a supported RNA observation. The detail view records the species, tissue, cell population or developmental stage. Biological categories are separate from the admission route and the CTA, Unsafe or Other classification."
+      ],
+      null
+    ],
+    [
       "Normal-tissue consequences and expression evidence",
       [
-        "Vital, Protected, Manageable and Disposable describe the consequence and tolerability of injury to a specified tissue/cell compartment. They are qualitative research priorities, not measured fatality probabilities. Immediate function, regenerative reserve, persistent depletion, anatomy and inflammatory amplification all matter.",
+        "Vital, Protected, Manageable and Disposable describe the consequence and tolerability of injury to a specified tissue/cell compartment. Assignments use immediate function, repair capacity, persistent injury, anatomy and inflammatory effects.",
         "The central registry distinguishes 39 bulk tissues and 68 cell populations, with source-linked rationale. A cell-level exception requires resolved tissue and cell identity. An unresolved or mixed label cannot earn a narrower allowance; reproductive/developmental membership is a separate anatomical axis.",
-        "RNA detection, accessible surface protein, peptide-HLA presentation, functional recognition and demonstrated injury are distinct evidence levels. CAR and TCR target availability are different questions. A weak initiating target can still produce inflammatory injury in other cells. Missing evidence is never measured zero."
+        "The evidence records distinguish RNA, surface protein, peptide-HLA presentation, receptor recognition and tissue injury. Missing measurements and measured zeros have separate values."
       ],
       null
     ],
@@ -575,7 +583,7 @@
       "Evidence has multiple independent meanings",
       [
         "Review completion, interpretation and policy effect are separate. A completed review can retain an unresolved interpretation. A rejected protein claim remains visible with its rationale; rejecting that claim does not prove normal-tissue absence.",
-        "All 196 historical findings have linked current dispositions. MAGEC2, LGALS13 and PLCZ1 retain material holds. Their evidence access depth, reagent identity, adult/fetal and isoform limits are stated explicitly. The broader literature review remains incomplete.",
+        "All 196 historical findings have linked current dispositions. MAGEC2, LGALS13 and PLCZ1 retain material holds. Each record lists the source, reagent, tissue, developmental stage and unresolved question.",
         "Fatal neurological injury in the MAGE-A3-reactive TCR cohort remains product-specific evidence. The MAGEA12 and EPS8L2 explanations are both retained as unresolved. MAGEA12 remains Unsafe under an independent rare-cell finding. Neither receptor causality nor favorable clinical credit transfers across a gene family."
       ],
       "independent-evidence"
@@ -583,8 +591,8 @@
     [
       "Translation, identity and downstream sequence use",
       [
-        "Translation qualification asks whether the exact selected primary-locus record supports target sequence use. Complete coding annotation, start/stop codons, biotype and sequence integrity are assessed separately from normal-tissue hazard. An alternate-locus protein cannot silently rescue an incomplete primary record.",
-        "The verified bundle retains original sequences, every source occurrence, qualification reasons and coverage gaps. It supplies contiguous AA20 segments with original coordinates and never joins across ambiguity, internal stops or different records. Selenocysteine-containing records require review under this AA20 contract; this is not a claim that the protein is unexpressed.",
+        "Translation qualification asks whether the exact selected primary-locus record supports target sequence use. Complete coding annotation, start/stop codons, biotype and sequence integrity are assessed separately from normal-tissue hazard. Qualification applies to the selected primary-locus record.",
+        "The verified bundle retains original sequences, every source occurrence, qualification reasons and coverage gaps. It supplies contiguous AA20 segments with original coordinates and never joins across ambiguity, internal stops or different records. Selenocysteine-containing records require review under the AA20 sequence contract.",
         "Across occurrences, exclude takes precedence over review, then allow. Unsafe sequence remains exclusion evidence even in an incomplete record. Allow means no exclusion from the assessed record under this policy. Exact matching does not validate an approximate similarity cutoff or patient-HLA decision. The historical Unsafe plus additional-forbidden assets retain their older policy identity."
       ],
       "category-role-matrix"
@@ -592,8 +600,8 @@
     [
       "Research parameters and coverage limits",
       [
-        "Without usable matching protein staining, the upper RNA limits start at 4 for Vital, 8 for Protected and 16 for Manageable tissues, in the source's own TPM or nTPM units. Approved, Supported and Enhanced negative IHC respectively multiply the starting limit by 2, 4 and 8. Reviewed product-specific clinical evidence can add one doubling within the same cap. A value must be above the limit to trigger this RNA rule. Corneal CP10K uses separate limits, not a TPM conversion. These are policy choices, not measured safe exposures.",
-        "One compatible tumor sample above zero establishes the current cancer-presence criterion, not sufficient target abundance or cohort prevalence. Reproductive RNA uses a 5-unit criterion with assay-specific support requirements; reliable reproductive IHC and reviewed protein provide separate routes. Adult/placental diffuseness above 10% can block identity, never establish Unsafe.",
+        "Without usable matching protein staining, the upper RNA limits start at 4 for Vital, 8 for Protected and 16 for Manageable tissues, in the source's own TPM or nTPM units. Approved, Supported and Enhanced negative IHC respectively multiply the starting limit by 2, 4 and 8. Reviewed product-specific clinical evidence can add one doubling within the same cap. A value must be above the limit to trigger this RNA rule. Corneal CP10K uses separate limits. These screening thresholds are set by OncoRef policy.",
+        "Cancer presence requires one compatible tumor sample above zero or reviewed tumor protein. Reproductive RNA uses a 5-unit criterion with assay-specific support requirements; reliable reproductive IHC and reviewed protein provide separate routes. Adult/placental diffuseness above 10% can block identity, never establish Unsafe.",
         "The rare-cell panel uses a 1% detection screen with cell-support rules. Detection frequency is not abundance. Coverage is limited by sampled organs, donor age, activation states, paralog mapping and assay resolution. Optional panels remain disclosed when missing. A 95% Unsafe 9-mer overlap blocks practical candidate admission, but is not a clinical cross-reactivity validation.",
         "The complete gate table below retains the actual executable rules and source IDs. Human thresholds are not transferred to dog or mouse; their native nominations remain unassessed until supported by a species-specific policy."
       ],
@@ -613,9 +621,9 @@
       "Reproduction and version changes",
       [
         "Selection policy: oncoref.cta-selection.2026-11-05.1. Role policy: oncoref.sequence-roles.2026-11-04.1. Translation policy: oncoref.translation-qualification.2026-11-04.1.",
-        "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. No target CTA count is an acceptance criterion.",
+        "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. Counts are recalculated from the evidence and rules.",
         "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-        "Presentation revision 2026-11-06.1 places the broader cancer-presence gate first after normal assessment and follows every registered nomination paper through the same cumulative gates. Classifications, thresholds and sequence roles are unchanged. Earlier release assets remain frozen."
+        "Presentation revision 2026-11-06.2 adds biological categories, linked per-protein evidence and simpler report text. It retains the 1.31.0 classifications, thresholds and sequence roles."
       ],
       null
     ]
@@ -2291,6 +2299,340 @@
       "tumor_max_below_10": 23,
       "reviewed_tumor_protein": 0
     }
+  },
+  "biology": {
+    "version": "2026-11-06.1",
+    "categories": [
+      {
+        "id": "early_embryo",
+        "label": "Early embryo",
+        "definition": "Human preimplantation embryo RNA or published embryo gene-activation evidence."
+      },
+      {
+        "id": "oocyte_maternal",
+        "label": "Oocyte / maternal",
+        "definition": "Oocyte RNA, oocyte protein, or published maternal-effect function; species is recorded for each finding."
+      },
+      {
+        "id": "reproductive_secretion",
+        "label": "Reproductive secretion",
+        "definition": "Curated publications identifying reproductive-tract secretions or sperm-associated proteins produced in the reproductive tract."
+      },
+      {
+        "id": "testis",
+        "label": "Testis / male germ cells",
+        "definition": "RNA in testis tissue or cells, including male germ cells."
+      },
+      {
+        "id": "placenta",
+        "label": "Placenta / trophoblast",
+        "definition": "RNA in placental tissue or cells, including trophoblast populations."
+      },
+      {
+        "id": "gastrulation",
+        "label": "Gastrulation",
+        "definition": "RNA in the human Carnegie-stage-7 embryo dataset."
+      },
+      {
+        "id": "other_reproductive",
+        "label": "Other reproductive",
+        "definition": "Released reproductive association without one of the more specific reproductive tags above."
+      },
+      {
+        "id": "other_developmental",
+        "label": "Other developmental",
+        "definition": "Released developmental association without a stage-specific tag in this annotation."
+      },
+      {
+        "id": "uncategorized",
+        "label": "Not categorized",
+        "definition": "No biological category has been assigned in this annotation."
+      }
+    ],
+    "rules": {
+      "rna_minimum": 5,
+      "rna_units": [
+        "TPM",
+        "nTPM"
+      ],
+      "normal_context_input": "All supported testis, placenta and oocyte contexts from the pinned normal-expression replay, before the display top-five limit",
+      "developmental_support": "At least 20 cells, 5 positive cells and 10% positive at 1 TPM; lineage mean at least 5 TPM",
+      "assignment": "Multiple tags per protein; evidence records retain the study, stage, compartment and measured value. Biological tags do not change CTA admission."
+    },
+    "curated_assignments": [
+      {
+        "gene_ids": [
+          "ENSG00000213921"
+        ],
+        "label": "LEUTX",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/",
+        "source_title": "The human PRD-like homeobox gene LEUTX has a central role in embryo genome activation",
+        "model": "Human embryos and human embryonic stem-cell overexpression",
+        "basis": "LEUTX and DPRX regulate an early-embryo transcriptional program. The paper also examines cancer-cell-line expression."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000204595"
+        ],
+        "label": "DPRX",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/",
+        "source_title": "The human PRD-like homeobox gene LEUTX has a central role in embryo genome activation",
+        "model": "Human embryos and human embryonic stem-cell overexpression",
+        "basis": "LEUTX and DPRX regulate an early-embryo transcriptional program. The paper also examines cancer-cell-line expression."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000204595"
+        ],
+        "label": "DPRX",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/",
+        "source_title": "Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos",
+        "model": "Human embryo transcripts and human stem-cell functional assays",
+        "basis": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000258873"
+        ],
+        "label": "DUXA",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/",
+        "source_title": "Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos",
+        "model": "Human embryo transcripts and human stem-cell functional assays",
+        "basis": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000282757"
+        ],
+        "label": "DUXB",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/",
+        "source_title": "Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos",
+        "model": "Human embryo transcripts and human stem-cell functional assays",
+        "basis": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000259009"
+        ],
+        "label": "TPRX2",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/",
+        "source_title": "Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos",
+        "model": "Human embryo transcripts and human stem-cell functional assays",
+        "basis": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000213921"
+        ],
+        "label": "LEUTX",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/",
+        "source_title": "Comprehensive characterization of the embryonic factor LEUTX",
+        "model": "Human cell models, proteomics and transcriptional assays",
+        "basis": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000169548"
+        ],
+        "label": "ZNF280A",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/",
+        "source_title": "Comprehensive characterization of the embryonic factor LEUTX",
+        "model": "Human cell models, proteomics and transcriptional assays",
+        "basis": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000259009"
+        ],
+        "label": "TPRX2",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/",
+        "source_title": "Comprehensive characterization of the embryonic factor LEUTX",
+        "model": "Human cell models, proteomics and transcriptional assays",
+        "basis": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000282757"
+        ],
+        "label": "DUXB",
+        "category_id": "early_embryo",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/",
+        "source_title": "Comprehensive characterization of the embryonic factor LEUTX",
+        "model": "Human cell models, proteomics and transcriptional assays",
+        "basis": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000214102"
+        ],
+        "label": "WEE2",
+        "category_id": "oocyte_maternal",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/",
+        "source_title": "Homozygous Mutations in WEE2 Cause Fertilization Failure and Female Infertility",
+        "model": "Human genetics, affected oocytes and rescue experiments",
+        "basis": "WEE2 mutations caused fertilization failure in human oocytes. The study measured WEE2 protein and tested experimental rescue."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000203908"
+        ],
+        "label": "KHDC3L",
+        "category_id": "oocyte_maternal",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4974340/",
+        "source_title": "Identification of Maturation-Specific Proteins by Single-Cell Proteomics of Human Oocytes",
+        "model": "Human oocyte proteomics",
+        "basis": "KHDC3L/ECAT1 was identified by proteomics in human oocytes."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000158077"
+        ],
+        "label": "NLRP14",
+        "category_id": "oocyte_maternal",
+        "source_url": "https://www.sciencedirect.com/science/article/pii/S2211124723015437",
+        "source_title": "NLRP14 deficiency causes female infertility with oocyte maturation defects and early embryonic arrest by impairing cytoplasmic UHRF1 abundance",
+        "model": "Human infertility investigation and mechanistic experiments",
+        "basis": "NLRP14 deficiency was associated with female infertility, oocyte maturation defects and early embryonic arrest."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000205022"
+        ],
+        "label": "PABPN1L",
+        "category_id": "oocyte_maternal",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/",
+        "source_title": "PABPN1L mediates cytoplasmic mRNA decay as a placeholder during the maternal-to-zygotic transition",
+        "model": "Mouse oocytes and embryos",
+        "basis": "Pabpn1l knockout disrupted the maternal-to-zygotic transition and early embryonic development in mice."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000171053"
+        ],
+        "label": "PATE1",
+        "category_id": "reproductive_secretion",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/",
+        "source_title": "In-depth mapping of human testicular and epididymal proteins and their functional association with spermatozoa",
+        "model": "Human reproductive tissues and proteins",
+        "basis": "Human reproductive-tissue proteomics identified epididymal enrichment of PATE1 and WFDC8."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000158901"
+        ],
+        "label": "WFDC8",
+        "category_id": "reproductive_secretion",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/",
+        "source_title": "In-depth mapping of human testicular and epididymal proteins and their functional association with spermatozoa",
+        "model": "Human reproductive tissues and proteins",
+        "basis": "Human reproductive-tissue proteomics identified epididymal enrichment of PATE1 and WFDC8."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000188655"
+        ],
+        "label": "RNASE9",
+        "category_id": "reproductive_secretion",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2669477/",
+        "source_title": "Cloning, expression and location of RNase9 in human epididymis",
+        "model": "Human tissue RNA and immunolocalization",
+        "basis": "RNASE9 was cloned and localized in human epididymis; the study also reported sperm-associated protein."
+      },
+      {
+        "gene_ids": [
+          "ENSG00000124157"
+        ],
+        "label": "SEMG2",
+        "category_id": "reproductive_secretion",
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/12200457/",
+        "source_title": "Semenogelin I and II, the predominant human seminal plasma proteins, are also expressed in non-genital tissues",
+        "model": "Human tissue RT-PCR and immunohistochemistry",
+        "basis": "Semenogelin II is a seminal-plasma protein."
+      }
+    ],
+    "counts": [
+      {
+        "id": "early_embryo",
+        "label": "Early embryo",
+        "definition": "Human preimplantation embryo RNA or published embryo gene-activation evidence.",
+        "all": 184,
+        "registered": 125,
+        "unlisted": 59
+      },
+      {
+        "id": "oocyte_maternal",
+        "label": "Oocyte / maternal",
+        "definition": "Oocyte RNA, oocyte protein, or published maternal-effect function; species is recorded for each finding.",
+        "all": 37,
+        "registered": 27,
+        "unlisted": 10
+      },
+      {
+        "id": "reproductive_secretion",
+        "label": "Reproductive secretion",
+        "definition": "Curated publications identifying reproductive-tract secretions or sperm-associated proteins produced in the reproductive tract.",
+        "all": 4,
+        "registered": 0,
+        "unlisted": 4
+      },
+      {
+        "id": "testis",
+        "label": "Testis / male germ cells",
+        "definition": "RNA in testis tissue or cells, including male germ cells.",
+        "all": 435,
+        "registered": 404,
+        "unlisted": 31
+      },
+      {
+        "id": "placenta",
+        "label": "Placenta / trophoblast",
+        "definition": "RNA in placental tissue or cells, including trophoblast populations.",
+        "all": 25,
+        "registered": 17,
+        "unlisted": 8
+      },
+      {
+        "id": "gastrulation",
+        "label": "Gastrulation",
+        "definition": "RNA in the human Carnegie-stage-7 embryo dataset.",
+        "all": 26,
+        "registered": 7,
+        "unlisted": 19
+      },
+      {
+        "id": "other_reproductive",
+        "label": "Other reproductive",
+        "definition": "Released reproductive association without one of the more specific reproductive tags above.",
+        "all": 49,
+        "registered": 34,
+        "unlisted": 15
+      },
+      {
+        "id": "other_developmental",
+        "label": "Other developmental",
+        "definition": "Released developmental association without a stage-specific tag in this annotation.",
+        "all": 3,
+        "registered": 3,
+        "unlisted": 0
+      },
+      {
+        "id": "uncategorized",
+        "label": "Not categorized",
+        "definition": "No biological category has been assigned in this annotation.",
+        "all": 0,
+        "registered": 0,
+        "unlisted": 0
+      }
+    ]
   },
   "rows": [
     {
