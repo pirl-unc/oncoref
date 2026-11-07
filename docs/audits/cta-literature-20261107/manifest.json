@@ -1,0 +1,130 @@
+{
+  "date": "2026-11-07",
+  "inputs": [
+    {
+      "path": "scripts/build_cta_literature_review.py",
+      "sha256": "3ba27fe309016af9a50d612816b0baab139d50666eebc721266cc7d230dbcd50"
+    },
+    {
+      "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
+      "sha256": "b5f29f13c73081f112e1cbd0e19891ff06b3eb524a344e6dc33643900548750f"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/individual-review-notes.json",
+      "sha256": "5346ad9f51a333ff9f9c4029447cd871c9c58fcd44f1bc227ce3080007fa73dc"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/review-bibliography.json",
+      "sha256": "24e2726530c7ab760879f7514ef4c6cb77db065aee4cb4b4d66f6b6bace7e42c"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/literature-source-policy.json",
+      "sha256": "5fbc6b96ff490ef6a1562992114c34742861ce9a3338a4069c985a1470ad22b1"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/program-source-rows.json.gz",
+      "sha256": "0a6b518984d6fa6ee991b32832ae0877e0c07799648eed1c23d088ac8fb94ed7"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/literature-review.json",
+      "sha256": "3a486867b95a51cc5c2091b24a7c715673d5b35c395ee9977b61904d7584f11a"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/catalog-review.json",
+      "sha256": "9256e267fc7759a64a1ce7da540d8d856b89ee3ba439543dada5afd8e6fd5962"
+    },
+    {
+      "path": "docs/audits/cta-literature-20261107/search-ledger.json",
+      "sha256": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed"
+    },
+    {
+      "path": "docs/audits/cta-literature-20261107/review-population.json",
+      "sha256": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01"
+    },
+    {
+      "path": "docs/audits/cta-source-walkthrough-20261028/human-memberships.csv.gz",
+      "sha256": "8c873e4a87373f6ee201d9fadbbf52731d7cc8af02b5e5f757286d89c82bdf95"
+    },
+    {
+      "path": "oncoref/data/cta-publication-sources.csv",
+      "sha256": "f62e6edfadcfe039ac8e05e7cf6f4029a0289fde8b609c3c1b7a2519967c2f04"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/literature/report.html",
+      "sha256": "e0c75d8105538a0619e00ecc9d8f3eb82c1274bbaa7d1587958b3f4c2208ac41"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/literature/review.js",
+      "sha256": "91803e08cec67a99e67ee3d7906fb7577ce92e137080f1e0b3dfc51935247eaa"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/literature/style.css",
+      "sha256": "c7ec6512f0edeea0d541e1446347086319cd55a75fe8e9c41eb4117ee55a8748"
+    }
+  ],
+  "counts": {
+    "reviewed": 96,
+    "baseline_no_match": 41,
+    "baseline_broad_only": 55,
+    "outcomes": {
+      "association_only": 14,
+      "paper_evidence": 33,
+      "identity_review": 11,
+      "normal_review": 18,
+      "related_only": 7,
+      "no_specific_paper": 13
+    },
+    "exact_human_studies_in_96": 65,
+    "with_citations_in_96": 76,
+    "core_papers": 82,
+    "catalog_core_papers": 14,
+    "individual_core_papers": 68,
+    "supplementary_sources": 68,
+    "covered_proteins": 3152,
+    "covered_ctas": 568,
+    "covered_unlisted_ctas": 88,
+    "ctas_without_exact_paper_coverage": 34,
+    "historical_catalog_proteins": 2514,
+    "historical_catalog_core": [
+      "10.1002/1878-0261.12900",
+      "10.1002/cam4.2223",
+      "10.1038/ncomms10499",
+      "10.1038/s41388-018-0357-2",
+      "10.1038/s41467-021-22695-y",
+      "10.1136/jitc-2023-007935",
+      "10.1158/1078-0432.CCR-06-2340",
+      "10.1186/s12967-024-04918-0",
+      "10.1371/journal.pgen.1011734",
+      "10.1371/journal.pone.0144155",
+      "10.18632/oncotarget.21715",
+      "10.4161/cbt.12.3.16260"
+    ],
+    "historical_cta_core": [
+      "10.1002/1878-0261.12900",
+      "10.1002/cam4.2223",
+      "10.1038/ncomms10499",
+      "10.1038/s41467-021-22695-y",
+      "10.1136/jitc-2023-007935",
+      "10.1186/s12967-024-04918-0",
+      "10.1371/journal.pgen.1011734",
+      "10.18632/oncotarget.21715"
+    ]
+  },
+  "outputs": {
+    "cta-paper-coverage.csv": "c9cddaeb26ee20c6c7f16d7132891a629014e08a75fc8e53811daf84da54ab09",
+    "followup-retrievals.json": "328dbf0c5fbceeedae4272bc33ade58b4dd8527a11aa5c46e92acfccb81e19db",
+    "fulltext-retrievals.json": "d505f7efcf8366fb5c5863c31fda28b582c447e980cc9be2e5e2fef580037822",
+    "index.md": "618aee9464c941db658536e8862cc4da98af19ad5822b360fbf33358c106d735",
+    "individual-reviews.csv": "0535d52a153f47e1638945128128232da6dbbd7a6caf9239b8fdb22c1ca6be50",
+    "registry.json.gz": "7b602b7eee1fc6b8334235dfcc54b187e5292d598dc8843d91ac1d2ce41bcba4",
+    "report.html": "e0c75d8105538a0619e00ecc9d8f3eb82c1274bbaa7d1587958b3f4c2208ac41",
+    "review-outcomes.svg": "8cf369e3ea68af33266d241075133f6914f895f9643f17effb2caff12c07fe65",
+    "review-population.json": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01",
+    "review.js": "91803e08cec67a99e67ee3d7906fb7577ce92e137080f1e0b3dfc51935247eaa",
+    "review.json": "89eea9846a4b583d79accdf492fc9bd272f9b81fecce8f6d809883ec88eb2089",
+    "search-ledger.json": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed",
+    "source-roles.svg": "1314b0324096e131296a3f90a9a6c9d6713a2fe5c1d771b6994b340d659d6827",
+    "sources.csv": "84714530826b77fca67c0ab892553d89ea3916bd43cc7da04f11f203e404f6cf",
+    "style.css": "c7ec6512f0edeea0d541e1446347086319cd55a75fe8e9c41eb4117ee55a8748"
+  }
+}

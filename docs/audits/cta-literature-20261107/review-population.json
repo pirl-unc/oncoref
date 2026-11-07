@@ -1,0 +1,2932 @@
+[
+  {
+    "entity_id": "PEG:aedba7beafdec5e50def",
+    "label": "ACCSL",
+    "gene_ids": [
+      "ENSG00000205126"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000205126",
+        "symbol": "ACCSL",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "ACCSL"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "ACCSL"
+    ]
+  },
+  {
+    "entity_id": "PEG:79201d664a6639b98efb",
+    "label": "AK4P3",
+    "gene_ids": [
+      "ENSG00000233381"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000233381",
+        "symbol": "AK4P3",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "AK3L2P",
+          "AK4P3"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "AK3L2P",
+      "AK4P3"
+    ]
+  },
+  {
+    "entity_id": "PEG:4ec273108e0908d9e2f3",
+    "label": "ATF7-NPFF",
+    "gene_ids": [
+      "ENSG00000267281"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000267281",
+        "symbol": "ATF7-NPFF",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "ATF7-NPFF"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "ATF7-NPFF"
+    ]
+  },
+  {
+    "entity_id": "PEG:d6a41ae2c249d16b2cd8",
+    "label": "BECN2",
+    "gene_ids": [
+      "ENSG00000196289"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000196289",
+        "symbol": "BECN2",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "BECN1L1",
+          "BECN1P1",
+          "BECN2"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "BECN1L1",
+      "BECN1P1",
+      "BECN2"
+    ]
+  },
+  {
+    "entity_id": "PEG:e3c5120a397732c8324b",
+    "label": "BTN1A1",
+    "gene_ids": [
+      "ENSG00000124557"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000124557",
+        "symbol": "BTN1A1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "BT",
+          "BTN",
+          "BTN1A1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "BTN1A1"
+    ]
+  },
+  {
+    "entity_id": "PEG:0e0c68a00f86804e1e28",
+    "label": "C12orf71",
+    "gene_ids": [
+      "ENSG00000214700"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000214700",
+        "symbol": "C12orf71",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "C12ORF71"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "C12ORF71",
+      "C12orf71"
+    ]
+  },
+  {
+    "entity_id": "PEG:e9d269856740c4e02fbe",
+    "label": "CCDC201",
+    "gene_ids": [
+      "ENSG00000283247"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000283247",
+        "symbol": "CCDC201",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CCDC201"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "oocyte_maternal",
+      "placenta"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "CCDC201"
+    ]
+  },
+  {
+    "entity_id": "PEG:7d3f2ee2de49d72c9bd8",
+    "label": "CDX4",
+    "gene_ids": [
+      "ENSG00000131264"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000131264",
+        "symbol": "CDX4",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CDX4"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "CDX4"
+    ]
+  },
+  {
+    "entity_id": "PEG:850fdd96c5da06df3e19",
+    "label": "CER1",
+    "gene_ids": [
+      "ENSG00000147869"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000147869",
+        "symbol": "CER1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CER1",
+          "DAND4"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "CER1",
+      "DAND4"
+    ]
+  },
+  {
+    "entity_id": "PEG:d576051097601567c804",
+    "label": "CIMIP3",
+    "gene_ids": [
+      "ENSG00000287363"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000287363",
+        "symbol": "CIMIP3",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CIMIP3",
+          "GUCA1ANB"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "CIMIP3",
+      "GUCA1ANB"
+    ]
+  },
+  {
+    "entity_id": "PEG:31c0e7ae49ba8a3975db",
+    "label": "CIROP",
+    "gene_ids": [
+      "ENSG00000283654"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000283654",
+        "symbol": "CIROP",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CIROP",
+          "HTX12",
+          "LMLN2"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "CIROP",
+      "HTX12",
+      "LMLN2"
+    ]
+  },
+  {
+    "entity_id": "PEG:a8499b20f9bac7488674",
+    "label": "CPSF4L",
+    "gene_ids": [
+      "ENSG00000187959"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000187959",
+        "symbol": "CPSF4L",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CPSF4L"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "CPSF4L"
+    ]
+  },
+  {
+    "entity_id": "PEG:5f39382f943b65a979ef",
+    "label": "CRIPTO3",
+    "gene_ids": [
+      "ENSG00000225366"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000225366",
+        "symbol": "CRIPTO3",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CR-3",
+          "CRIPTO-3",
+          "CRIPTO3",
+          "TDGF1P3",
+          "TDGF3"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "CR-3",
+      "CRIPTO-3",
+      "CRIPTO3",
+      "TDGF1P3",
+      "TDGF3"
+    ]
+  },
+  {
+    "entity_id": "PEG:db99ef5b43a7c07dff3e",
+    "label": "CST11",
+    "gene_ids": [
+      "ENSG00000125831"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000125831",
+        "symbol": "CST11",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CST11",
+          "CST8L",
+          "CTES2",
+          "SC13",
+          "dJ322G13.6"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "placenta"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "CST11",
+      "CST8L",
+      "CTES2",
+      "dJ322G13.6"
+    ]
+  },
+  {
+    "entity_id": "PEG:a8f90dfeb55ae984bf17",
+    "label": "CTAGE15",
+    "gene_ids": [
+      "ENSG00000271079"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000271079",
+        "symbol": "CTAGE15",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [
+          "ENSG00000176227"
+        ],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CTAGE15",
+          "CTAGE15P",
+          "cTAGE-15"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "CTAGE15",
+      "CTAGE15P",
+      "cTAGE-15"
+    ]
+  },
+  {
+    "entity_id": "PEG:7bad8fb4daf83a0e99c7",
+    "label": "CTXND2",
+    "gene_ids": [
+      "ENSG00000283324"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000283324",
+        "symbol": "CTXND2",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CTXND2"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "placenta"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "CTXND2"
+    ]
+  },
+  {
+    "entity_id": "PEG:051bbf6103905dd73ad1",
+    "label": "DEFB108B",
+    "gene_ids": [
+      "ENSG00000184276"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000184276",
+        "symbol": "DEFB108B",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "DEFB108B"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "DEFB108B"
+    ]
+  },
+  {
+    "entity_id": "PEG:d36602dc99457334ed43",
+    "label": "DEFB113",
+    "gene_ids": [
+      "ENSG00000214642"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000214642",
+        "symbol": "DEFB113",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "DEFB-13",
+          "DEFB113"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "DEFB-13",
+      "DEFB113"
+    ]
+  },
+  {
+    "entity_id": "PEG:2bef9ea650cd82da1af9",
+    "label": "DEFB132",
+    "gene_ids": [
+      "ENSG00000186458"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000186458",
+        "symbol": "DEFB132",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "BD-32",
+          "DEFB-32",
+          "DEFB132",
+          "DEFB32",
+          "KFLL827",
+          "UNQ827"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "BD-32",
+      "DEFB-32",
+      "DEFB132",
+      "DEFB32",
+      "KFLL827",
+      "UNQ827"
+    ]
+  },
+  {
+    "entity_id": "PEG:77e8d2e6a3e7d5fd510e",
+    "label": "DEFB136",
+    "gene_ids": [
+      "ENSG00000205884"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000205884",
+        "symbol": "DEFB136",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "DEFB136",
+          "DEFB137"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "DEFB136",
+      "DEFB137"
+    ]
+  },
+  {
+    "entity_id": "PEG:94c5fc911ad02b3b5e93",
+    "label": "DPEP2NB",
+    "gene_ids": [
+      "ENSG00000263201"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000263201",
+        "symbol": "DPEP2NB",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "DPEP2NB"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis",
+      "placenta"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "DPEP2NB"
+    ]
+  },
+  {
+    "entity_id": "PEG:ad22a7bf35b45ca0ec8a",
+    "label": "ENSG00000237378",
+    "gene_ids": [
+      "ENSG00000237378"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000237378",
+        "symbol": "",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "ENSG00000237378"
+    ]
+  },
+  {
+    "entity_id": "PEG:7a81a2cf3631c7adb27c",
+    "label": "ENSG00000241690",
+    "gene_ids": [
+      "ENSG00000241690"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000241690",
+        "symbol": "",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "ENSG00000241690"
+    ]
+  },
+  {
+    "entity_id": "PEG:24c69136cf11d62d3f1a",
+    "label": "ENSG00000258417",
+    "gene_ids": [
+      "ENSG00000258417"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000258417",
+        "symbol": "",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "ENSG00000258417"
+    ]
+  },
+  {
+    "entity_id": "PEG:1f1a10caec58d2d32020",
+    "label": "ENSG00000273155",
+    "gene_ids": [
+      "ENSG00000273155"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000273155",
+        "symbol": "",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "ENSG00000273155"
+    ]
+  },
+  {
+    "entity_id": "PEG:672e705b44fa7730dc51",
+    "label": "ENSG00000284934",
+    "gene_ids": [
+      "ENSG00000284934"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000284934",
+        "symbol": "",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "ENSG00000284934"
+    ]
+  },
+  {
+    "entity_id": "PEG:27ae484f4ec3a7675ba0",
+    "label": "ENSG00000289809",
+    "gene_ids": [
+      "ENSG00000289809"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000289809",
+        "symbol": "",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "ENSG00000289809"
+    ]
+  },
+  {
+    "entity_id": "PEG:4386ffaec87dfd475b81",
+    "label": "EVX1",
+    "gene_ids": [
+      "ENSG00000106038"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000106038",
+        "symbol": "EVX1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "EVX-1",
+          "EVX1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "EVX-1",
+      "EVX1"
+    ]
+  },
+  {
+    "entity_id": "PEG:5e2318ea560079897c32",
+    "label": "EXOC1L",
+    "gene_ids": [
+      "ENSG00000250821"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000250821",
+        "symbol": "EXOC1L",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "EXOC1L"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "EXOC1L"
+    ]
+  },
+  {
+    "entity_id": "PEG:9913d9543bc5181e808d",
+    "label": "FAM237A",
+    "gene_ids": [
+      "ENSG00000235118"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000235118",
+        "symbol": "FAM237A",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "FAM237A"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "FAM237A"
+    ]
+  },
+  {
+    "entity_id": "PEG:f181f56d8fe05eff74df",
+    "label": "FAM90A27P",
+    "gene_ids": [
+      "ENSG00000189348"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000189348",
+        "symbol": "FAM90A27P",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "FAM90A27P"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "FAM90A27P"
+    ]
+  },
+  {
+    "entity_id": "PEG:1289f6cdbadac0e27067",
+    "label": "FRG2",
+    "gene_ids": [
+      "ENSG00000205097"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000205097",
+        "symbol": "FRG2",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [
+          "ENSG00000259808",
+          "ENSG00000274972"
+        ],
+        "synonyms": [
+          "FRG2",
+          "FRG2A"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "FRG2",
+      "FRG2A"
+    ]
+  },
+  {
+    "entity_id": "PEG:09779ef303c2171255f1",
+    "label": "FRG2B",
+    "gene_ids": [
+      "ENSG00000225899"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000225899",
+        "symbol": "FRG2B",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "FRG2B"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "FRG2B"
+    ]
+  },
+  {
+    "entity_id": "PEG:150a14451459722067c0",
+    "label": "GALP",
+    "gene_ids": [
+      "ENSG00000197487"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000197487",
+        "symbol": "GALP",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "GALP"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "GALP"
+    ]
+  },
+  {
+    "entity_id": "PEG:02aeb82fd849bdf4a4be",
+    "label": "GOLGA6L24",
+    "gene_ids": [
+      "ENSG00000237850"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000237850",
+        "symbol": "GOLGA6L24",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "GOLGA6L24",
+          "GOLGA6L24P"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "GOLGA6L24",
+      "GOLGA6L24P"
+    ]
+  },
+  {
+    "entity_id": "PEG:db9dd693692e1353abe8",
+    "label": "GOLGA6L25",
+    "gene_ids": [
+      "ENSG00000227717"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000227717",
+        "symbol": "GOLGA6L25",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "GOLGA6L25",
+          "GOLGA6L25P"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "GOLGA6L25",
+      "GOLGA6L25P"
+    ]
+  },
+  {
+    "entity_id": "PEG:fd22ed0a7c36b0130000",
+    "label": "GOLGA8J",
+    "gene_ids": [
+      "ENSG00000179938"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000179938",
+        "symbol": "GOLGA8J",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [
+          "ENSG00000278119"
+        ],
+        "synonyms": [
+          "GOLGA8J"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "GOLGA8J"
+    ]
+  },
+  {
+    "entity_id": "PEG:65d2e038c688a823b5e0",
+    "label": "GOLGA8K",
+    "gene_ids": [
+      "ENSG00000249931"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000249931",
+        "symbol": "GOLGA8K",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "GOLGA8K"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "GOLGA8K"
+    ]
+  },
+  {
+    "entity_id": "PEG:cef2f2b2102163b3f577",
+    "label": "GOLGA8T",
+    "gene_ids": [
+      "ENSG00000261247"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000261247",
+        "symbol": "GOLGA8T",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "GOLGA8T"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "GOLGA8T"
+    ]
+  },
+  {
+    "entity_id": "PEG:5dca19749634c5267bc2",
+    "label": "H2AL1Q",
+    "gene_ids": [
+      "ENSG00000249467"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000249467",
+        "symbol": "H2AL1Q",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "H2A.L.1",
+          "H2AL1Q",
+          "H2AL1QP"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "H2A.L.1",
+      "H2AL1Q",
+      "H2AL1QP"
+    ]
+  },
+  {
+    "entity_id": "PEG:7c617bafd5f15ec944ca",
+    "label": "H3Y1",
+    "gene_ids": [
+      "ENSG00000269466"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000269466",
+        "symbol": "H3Y1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "H3.Y",
+          "H3.Y.1",
+          "H3Y1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "testis"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "H3.Y",
+      "H3.Y.1",
+      "H3Y1"
+    ]
+  },
+  {
+    "entity_id": "PEG:6d42c5be7b9168a8aa85",
+    "label": "HHLA1",
+    "gene_ids": [
+      "ENSG00000132297"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000132297",
+        "symbol": "HHLA1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "HHLA1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "HHLA1"
+    ]
+  },
+  {
+    "entity_id": "PEG:9c971079475b9f68ce59",
+    "label": "HMGB1P1",
+    "gene_ids": [
+      "ENSG00000124097"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000124097",
+        "symbol": "HMGB1P1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "HMG1L1",
+          "HMG1L7",
+          "HMGB1P1",
+          "dJ579F20.1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "HMG1L1",
+      "HMG1L7",
+      "HMGB1P1",
+      "dJ579F20.1"
+    ]
+  },
+  {
+    "entity_id": "PEG:616f17194f8722d560c9",
+    "label": "HOXB1",
+    "gene_ids": [
+      "ENSG00000120094"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000120094",
+        "symbol": "HOXB1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "HCFP3",
+          "HOX2I",
+          "HOXB1",
+          "Hox-2.9"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis",
+      "gastrulation"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "HCFP3",
+      "HOX2I",
+      "HOXB1",
+      "Hox-2.9"
+    ]
+  },
+  {
+    "entity_id": "PEG:2822479cf57db6bcc766",
+    "label": "IZUMO1R",
+    "gene_ids": [
+      "ENSG00000183560"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000183560",
+        "symbol": "IZUMO1R",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "FOLR4",
+          "FR-delta",
+          "Folbp3",
+          "IZUMO1R",
+          "JUNO"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "FOLR4",
+      "FR-delta",
+      "Folbp3",
+      "IZUMO1R"
+    ]
+  },
+  {
+    "entity_id": "PEG:c1785185f2736960b676",
+    "label": "KLF18",
+    "gene_ids": [
+      "ENSG00000283039"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000283039",
+        "symbol": "KLF18",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [
+          "ENSG00000239275"
+        ],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "KLF18"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "KLF18"
+    ]
+  },
+  {
+    "entity_id": "PEG:20fd0b963a82f5c51ebb",
+    "label": "KRTAP24-1",
+    "gene_ids": [
+      "ENSG00000188694"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000188694",
+        "symbol": "KRTAP24-1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "KAP24.1",
+          "KRTAP24-1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "KAP24.1",
+      "KRTAP24-1"
+    ]
+  },
+  {
+    "entity_id": "PEG:70f59520a0e26b23f88e",
+    "label": "LCN9",
+    "gene_ids": [
+      "ENSG00000148386"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000148386",
+        "symbol": "LCN9",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "HEL129",
+          "LCN9"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "HEL129",
+      "LCN9"
+    ]
+  },
+  {
+    "entity_id": "PEG:665416af37123848366d",
+    "label": "MANSC4",
+    "gene_ids": [
+      "ENSG00000205693"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000205693",
+        "symbol": "MANSC4",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "MANSC4"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "placenta"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "MANSC4"
+    ]
+  },
+  {
+    "entity_id": "PEG:2ada35b6f5f76e61df6d",
+    "label": "MINDY4B",
+    "gene_ids": [
+      "ENSG00000214237"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000214237",
+        "symbol": "MINDY4B",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "C3orf76",
+          "FAM188B2",
+          "MINDY4B"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "C3orf76",
+      "FAM188B2",
+      "MINDY4B"
+    ]
+  },
+  {
+    "entity_id": "PEG:b7668edb7de9a67040bb",
+    "label": "MSANTD5",
+    "gene_ids": [
+      "ENSG00000285891"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000285891",
+        "symbol": "MSANTD5",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "MSANTD5"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "testis"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "MSANTD5"
+    ]
+  },
+  {
+    "entity_id": "PEG:c820dbcb6ceebd07aa60",
+    "label": "MSGN1",
+    "gene_ids": [
+      "ENSG00000151379"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000151379",
+        "symbol": "MSGN1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "MSGN1",
+          "MSOG",
+          "pMsgn1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "MSGN1",
+      "pMsgn1"
+    ]
+  },
+  {
+    "entity_id": "PEG:0ffd0cd4b3717b5a62ce",
+    "label": "NANOGNB",
+    "gene_ids": [
+      "ENSG00000205857"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000205857",
+        "symbol": "NANOGNB",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "NANOGNB"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "NANOGNB"
+    ]
+  },
+  {
+    "entity_id": "PEG:7278598ea06d972facdd",
+    "label": "NLRP13",
+    "gene_ids": [
+      "ENSG00000173572"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000173572",
+        "symbol": "NLRP13",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "CLR19.7",
+          "NALP13",
+          "NLRP13",
+          "NOD14",
+          "PAN13"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "oocyte_maternal"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "CLR19.7",
+      "NALP13",
+      "NLRP13",
+      "NOD14",
+      "PAN13"
+    ]
+  },
+  {
+    "entity_id": "PEG:0c7f80687adb3c0d82e7",
+    "label": "NOTO",
+    "gene_ids": [
+      "ENSG00000214513"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000214513",
+        "symbol": "NOTO",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "NOTO"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "NOTO"
+    ]
+  },
+  {
+    "entity_id": "PEG:71c7273c6a0553fab3f1",
+    "label": "OBP2A",
+    "gene_ids": [
+      "ENSG00000122136"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000122136",
+        "symbol": "OBP2A",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "LCN13",
+          "OBP2A",
+          "OBP2C",
+          "OBPIIa",
+          "hOBPIIa"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis",
+      "placenta"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "LCN13",
+      "OBP2A",
+      "OBP2C",
+      "OBPIIa",
+      "hOBPIIa"
+    ]
+  },
+  {
+    "entity_id": "PEG:a90c8529360aad1a85c2",
+    "label": "OOSP4B",
+    "gene_ids": [
+      "ENSG00000255393"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000255393",
+        "symbol": "OOSP4B",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "OOSP4B"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "oocyte_maternal"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "OOSP4B"
+    ]
+  },
+  {
+    "entity_id": "PEG:f3b1dd82a8df176ef6cd",
+    "label": "OR1R1P",
+    "gene_ids": [
+      "ENSG00000180042"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000180042",
+        "symbol": "OR1R1P",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "OR1R1P"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "OR1R1P"
+    ]
+  },
+  {
+    "entity_id": "PEG:7090977fa5f42635531d",
+    "label": "OR51M1",
+    "gene_ids": [
+      "ENSG00000184698"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000184698",
+        "symbol": "OR51M1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "HOR5'Beta7",
+          "OR11-40",
+          "OR51M1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "oocyte_maternal"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "OR11-40",
+      "OR51M1"
+    ]
+  },
+  {
+    "entity_id": "PEG:0de483604947cb9e73f7",
+    "label": "OR5H1",
+    "gene_ids": [
+      "ENSG00000231192"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000231192",
+        "symbol": "OR5H1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "HSHTPCRX14",
+          "HTPCRX14",
+          "OR5H1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "HSHTPCRX14",
+      "HTPCRX14",
+      "OR5H1"
+    ]
+  },
+  {
+    "entity_id": "PEG:79e4b75bdef4defd0ff3",
+    "label": "PGAM4",
+    "gene_ids": [
+      "ENSG00000226784"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000226784",
+        "symbol": "PGAM4",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [
+          "ENSG00000269135"
+        ],
+        "synonyms": [
+          "PGAM3",
+          "PGAM4",
+          "dJ1000K24.1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "PGAM3",
+      "PGAM4",
+      "dJ1000K24.1"
+    ]
+  },
+  {
+    "entity_id": "PEG:65698b2ad8732f761478",
+    "label": "PRAMEF10",
+    "gene_ids": [
+      "ENSG00000187545"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000187545",
+        "symbol": "PRAMEF10",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [
+          "ENSG00000282663"
+        ],
+        "synonyms": [
+          "PRAMEF10"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "PRAMEF10"
+    ]
+  },
+  {
+    "entity_id": "PEG:9c53c0a8e90756eaa5f0",
+    "label": "PRAMEF17",
+    "gene_ids": [
+      "ENSG00000204479"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000204479",
+        "symbol": "PRAMEF17",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "PRAMEF17"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "PRAMEF17"
+    ]
+  },
+  {
+    "entity_id": "PEG:09ae2908a32167d7f9c6",
+    "label": "PRAMEF18",
+    "gene_ids": [
+      "ENSG00000279804"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000279804",
+        "symbol": "PRAMEF18",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [
+          "ENSG00000204491"
+        ],
+        "alternate_gene_ids": [
+          "ENSG00000282212"
+        ],
+        "synonyms": [
+          "PRAMEF18"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "PRAMEF18"
+    ]
+  },
+  {
+    "entity_id": "PEG:39099f3e417798616cca",
+    "label": "PTTG1IP2",
+    "gene_ids": [
+      "ENSG00000251154"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000251154",
+        "symbol": "PTTG1IP2",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "PTTG1IP2"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "PTTG1IP2"
+    ]
+  },
+  {
+    "entity_id": "PEG:cdbe9acee094e4d6bdc1",
+    "label": "RFPL3",
+    "gene_ids": [
+      "ENSG00000128276"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000128276",
+        "symbol": "RFPL3",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "RFPL3",
+          "RNF120"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "testis"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "RFPL3",
+      "RNF120"
+    ]
+  },
+  {
+    "entity_id": "PEG:ac3a8190661cefefa614",
+    "label": "RIPPLY3",
+    "gene_ids": [
+      "ENSG00000183145"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000183145",
+        "symbol": "RIPPLY3",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "DSCR6",
+          "RIPPLY3"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "DSCR6",
+      "RIPPLY3"
+    ]
+  },
+  {
+    "entity_id": "PEG:ef923d269534e28a7f52",
+    "label": "RLN1",
+    "gene_ids": [
+      "ENSG00000107018"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000107018",
+        "symbol": "RLN1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "H1RLX",
+          "RLN1",
+          "RLXH1",
+          "bA12D24.3.1",
+          "bA12D24.3.2"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "H1RLX",
+      "RLN1",
+      "RLXH1",
+      "bA12D24.3.1",
+      "bA12D24.3.2"
+    ]
+  },
+  {
+    "entity_id": "PEG:f8ba1f7eca054d1fa5fa",
+    "label": "SCGB1D4",
+    "gene_ids": [
+      "ENSG00000197745"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000197745",
+        "symbol": "SCGB1D4",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "IIS",
+          "SCGB1D4"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "SCGB1D4"
+    ]
+  },
+  {
+    "entity_id": "PEG:280811cfacab82ee6aaf",
+    "label": "SLC35G5",
+    "gene_ids": [
+      "ENSG00000177710"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000177710",
+        "symbol": "SLC35G5",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "AMAC",
+          "AMAC1L2",
+          "SLC35G5"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "AMAC1L2",
+      "SLC35G5"
+    ]
+  },
+  {
+    "entity_id": "PEG:712421ae3b845c315cac",
+    "label": "SLCO1B3-SLCO1B7",
+    "gene_ids": [
+      "ENSG00000257046"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000257046",
+        "symbol": "SLCO1B3-SLCO1B7",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "OATP1B3-1B7",
+          "SLCO1B3-SLCO1B7"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "OATP1B3-1B7",
+      "SLCO1B3-SLCO1B7"
+    ]
+  },
+  {
+    "entity_id": "PEG:8a28ffa790540fa9f225",
+    "label": "SMIM42",
+    "gene_ids": [
+      "ENSG00000288460"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000288460",
+        "symbol": "SMIM42",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SMIM42"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "SMIM42"
+    ]
+  },
+  {
+    "entity_id": "PEG:47ed981d53c2dfd72892",
+    "label": "SPADH",
+    "gene_ids": [
+      "ENSG00000286135"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000286135",
+        "symbol": "SPADH",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SPADH"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "SPADH"
+    ]
+  },
+  {
+    "entity_id": "PEG:6dba5bd9860eb7893ea1",
+    "label": "SRY",
+    "gene_ids": [
+      "ENSG00000184895"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000184895",
+        "symbol": "SRY",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [
+          "ENSG00000279710"
+        ],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SRXX1",
+          "SRXY1",
+          "SRY",
+          "TDF",
+          "TDY"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "SRXX1",
+      "SRXY1",
+      "SRY"
+    ]
+  },
+  {
+    "entity_id": "PEG:f9b97c7f8faf5a7950b0",
+    "label": "SSU72L1",
+    "gene_ids": [
+      "ENSG00000284438"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000284438",
+        "symbol": "SSU72L1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SSU72L1",
+          "SSU72P7"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "SSU72L1",
+      "SSU72P7"
+    ]
+  },
+  {
+    "entity_id": "PEG:28a89961ee80474f1996",
+    "label": "SSU72L2",
+    "gene_ids": [
+      "ENSG00000284306"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000284306",
+        "symbol": "SSU72L2",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SSU72L2",
+          "SSU72P2"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "SSU72L2",
+      "SSU72P2"
+    ]
+  },
+  {
+    "entity_id": "PEG:276090530a257361d2f0",
+    "label": "SSU72L3",
+    "gene_ids": [
+      "ENSG00000284546"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000284546",
+        "symbol": "SSU72L3",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SSU72L3",
+          "SSU72P3"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "SSU72L3",
+      "SSU72P3"
+    ]
+  },
+  {
+    "entity_id": "PEG:b6708d76c220960f3383",
+    "label": "SSU72L4",
+    "gene_ids": [
+      "ENSG00000283873"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000283873",
+        "symbol": "SSU72L4",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SSU72L4",
+          "SSU72P4"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "SSU72L4",
+      "SSU72P4"
+    ]
+  },
+  {
+    "entity_id": "PEG:77d4ac745a2951e13e16",
+    "label": "SSU72L5",
+    "gene_ids": [
+      "ENSG00000284018"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000284018",
+        "symbol": "SSU72L5",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "SSU72L5",
+          "SSU72P5"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "SSU72L5",
+      "SSU72P5"
+    ]
+  },
+  {
+    "entity_id": "PEG:642d515a9a34d19423e5",
+    "label": "TAF11L11",
+    "gene_ids": [
+      "ENSG00000283740"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000283740",
+        "symbol": "TAF11L11",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "TAF11L11"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "TAF11L11"
+    ]
+  },
+  {
+    "entity_id": "PEG:67dec9123a9456d1115e",
+    "label": "TAF11L13",
+    "gene_ids": [
+      "ENSG00000283776"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000283776",
+        "symbol": "TAF11L13",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "TAF11L13"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "TAF11L13"
+    ]
+  },
+  {
+    "entity_id": "PEG:bb4b19645fd0c3e6333b",
+    "label": "TAF11L14",
+    "gene_ids": [
+      "ENSG00000250782"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000250782",
+        "symbol": "TAF11L14",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "TAF11L14"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "TAF11L14"
+    ]
+  },
+  {
+    "entity_id": "PEG:3e0a4447822671dc1ca8",
+    "label": "TCP11X1",
+    "gene_ids": [
+      "ENSG00000268235"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000268235",
+        "symbol": "TCP11X1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [
+          "ENSG00000215046"
+        ],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "TCP11X1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "TCP11X1"
+    ]
+  },
+  {
+    "entity_id": "PEG:b4ec2d7535050e985fa1",
+    "label": "TCP11X2",
+    "gene_ids": [
+      "ENSG00000215029"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000215029",
+        "symbol": "TCP11X2",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [
+          "ENSG00000268029"
+        ],
+        "synonyms": [
+          "TCP11X2"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation",
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "TCP11X2"
+    ]
+  },
+  {
+    "entity_id": "PEG:6c783a0d5f840cd1c046",
+    "label": "TEDDM1",
+    "gene_ids": [
+      "ENSG00000203730"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000203730",
+        "symbol": "TEDDM1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "EDDM9",
+          "Epdd1",
+          "HE9",
+          "HEL-S-45e",
+          "TEDDM1",
+          "TMEM45C"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "EDDM9",
+      "Epdd1",
+      "HEL-S-45e",
+      "TEDDM1",
+      "TMEM45C"
+    ]
+  },
+  {
+    "entity_id": "PEG:1e1807a736855e4a0438",
+    "label": "TGM4",
+    "gene_ids": [
+      "ENSG00000163810"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000163810",
+        "symbol": "TGM4",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [
+          "ENSG00000281886"
+        ],
+        "synonyms": [
+          "TGM4",
+          "TGP",
+          "hTGP"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "TGM4",
+      "hTGP"
+    ]
+  },
+  {
+    "entity_id": "PEG:faca81e4e6e3b4de73a7",
+    "label": "TMEM269",
+    "gene_ids": [
+      "ENSG00000274386"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000274386",
+        "symbol": "TMEM269",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "TMEM269"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "testis"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "TMEM269"
+    ]
+  },
+  {
+    "entity_id": "PEG:0e36aa2dea5e617ca41b",
+    "label": "TRIM75",
+    "gene_ids": [
+      "ENSG00000250374"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000250374",
+        "symbol": "TRIM75",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "TRIM75",
+          "TRIM75P"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "TRIM75",
+      "TRIM75P"
+    ]
+  },
+  {
+    "entity_id": "PEG:9949fb47c4aa9a7cbc00",
+    "label": "TRIM77",
+    "gene_ids": [
+      "ENSG00000214414"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000214414",
+        "symbol": "TRIM77",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "TRIM77",
+          "TRIM77P"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "oocyte_maternal"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "TRIM77",
+      "TRIM77P"
+    ]
+  },
+  {
+    "entity_id": "PEG:49474c33cb94125c2178",
+    "label": "UBTFL1",
+    "gene_ids": [
+      "ENSG00000255009"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000255009",
+        "symbol": "UBTFL1",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "C11orf27",
+          "HMGPI",
+          "UBTFL1"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "C11orf27",
+      "UBTFL1"
+    ]
+  },
+  {
+    "entity_id": "PEG:03bda62781abc827aec1",
+    "label": "WFDC13",
+    "gene_ids": [
+      "ENSG00000168634"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000168634",
+        "symbol": "WFDC13",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "C20orf138",
+          "WAP13",
+          "WFDC13",
+          "dJ601O1.3"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "C20orf138",
+      "WAP13",
+      "WFDC13",
+      "dJ601O1.3"
+    ]
+  },
+  {
+    "entity_id": "PEG:82bbfdb131c123c8ed0c",
+    "label": "WNT8A",
+    "gene_ids": [
+      "ENSG00000061492"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000061492",
+        "symbol": "WNT8A",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "WNT8A",
+          "WNT8D"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "WNT8A",
+      "WNT8D"
+    ]
+  },
+  {
+    "entity_id": "PEG:39bcae6d3ad7d62b8040",
+    "label": "XKR5",
+    "gene_ids": [
+      "ENSG00000275591"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000275591",
+        "symbol": "XKR5",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [
+          "ENSG00000186530"
+        ],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "HARL2754",
+          "UNQ2754",
+          "XKR5",
+          "XRG5A",
+          "XRG5BM"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "HARL2754",
+      "UNQ2754",
+      "XKR5",
+      "XRG5A",
+      "XRG5BM"
+    ]
+  },
+  {
+    "entity_id": "PEG:70142db47caa200b3cf0",
+    "label": "ZACN",
+    "gene_ids": [
+      "ENSG00000186919"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000186919",
+        "symbol": "ZACN",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "LGICZ",
+          "LGICZ1",
+          "ZACN"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "route": "Developmental only",
+    "search_terms": [
+      "LGICZ",
+      "LGICZ1",
+      "ZACN"
+    ]
+  },
+  {
+    "entity_id": "PEG:4f82cc85ed024fd890e9",
+    "label": "ZNF99",
+    "gene_ids": [
+      "ENSG00000213973"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000213973",
+        "symbol": "ZNF99",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "C19orf9",
+          "F8281",
+          "ZNF99"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "testis"
+    ],
+    "route": "Adult reproductive only",
+    "search_terms": [
+      "C19orf9",
+      "F8281",
+      "ZNF99"
+    ]
+  },
+  {
+    "entity_id": "PEG:f91756cbc2d34669ae1a",
+    "label": "ZP4",
+    "gene_ids": [
+      "ENSG00000116996"
+    ],
+    "gene_identities": [
+      {
+        "gene_id": "ENSG00000116996",
+        "symbol": "ZP4",
+        "namespace": "Ensembl gene",
+        "historical_gene_ids": [],
+        "alternate_gene_ids": [],
+        "synonyms": [
+          "ZBP",
+          "ZP1B",
+          "ZP4",
+          "ZPB",
+          "ZPB2",
+          "Zp-4"
+        ],
+        "identity_status": "matched",
+        "history_status": "curated_snapshot"
+      }
+    ],
+    "biology_categories": [
+      "early_embryo",
+      "oocyte_maternal"
+    ],
+    "route": "Adult reproductive + developmental",
+    "search_terms": [
+      "ZP1B",
+      "ZP4",
+      "ZPB2",
+      "Zp-4"
+    ]
+  }
+]
