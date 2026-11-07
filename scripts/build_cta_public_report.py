@@ -45,14 +45,14 @@ from oncoref import (  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
-PRESENTATION_REVISION = "2026-11-06.2"
+PRESENTATION_REVISION = "2026-11-06.3"
 GUIDE_URL = "https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html"
 DISPLAY_LABELS = {
-    "allow": "No exclusion recorded",
+    "allow": "No sequence exclusion",
     "review": "Unresolved",
     "exclude": "Exclude",
     "context": "Context only",
-    "screened": "Screened",
+    "screened": "Checks complete",
     "normal_evidence_hold": "Normal evidence unresolved",
     "translation_review": "Translation unresolved",
     "incomplete_evidence": "Missing measurements",
@@ -412,6 +412,7 @@ def build():
             [
                 "The CTA tables group proteins by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories.",
                 "Each tag links to a publication or a supported RNA observation. The detail view records the species, tissue, cell population or developmental stage. Biological categories are separate from the admission route and the CTA, Unsafe or Other classification.",
+                "Reproductive secretion currently has four manually annotated proteins: PATE1, WFDC8, RNASE9 and SEMG2. This count reflects the focused literature review; the other CTAs have not been systematically checked against reproductive-secretion catalogs.",
             ],
             None,
         ),
@@ -427,6 +428,7 @@ def build():
         (
             "Evidence has multiple independent meanings",
             [
+                "Checks complete (screened) means the release's required assessment is complete. It describes completion, so CTA, Unsafe and Other proteins can all have this status. No sequence exclusion (allow) means the selected protein has a resolved identity, completed assessment and no Unsafe assignment. This can apply to CTA or Other; CTA admission has additional requirements. These labels describe the released checks, not every tissue, isoform or later publication.",
                 "Review completion, interpretation and policy effect are separate. A completed review can retain an unresolved interpretation. A rejected protein claim remains visible with its rationale; rejecting that claim does not prove normal-tissue absence.",
                 f"All {migrated_count} historical findings have linked current dispositions. MAGEC2, LGALS13 and PLCZ1 retain material holds. Each record lists the source, reagent, tissue, developmental stage and unresolved question.",
                 "Fatal neurological injury in the MAGE-A3-reactive TCR cohort remains product-specific evidence. The MAGEA12 and EPS8L2 explanations are both retained as unresolved. MAGEA12 remains Unsafe under an independent rare-cell finding. Neither receptor causality nor favorable clinical credit transfers across a gene family.",
@@ -476,6 +478,9 @@ def build():
     data = {
         "release": __version__,
         "presentation_revision": PRESENTATION_REVISION,
+        "catalog_review": json.loads(
+            (ROOT / "scripts/cta_evidence_assets/catalog-review.json").read_text()
+        ),
         "publication_funnel": publication_funnel.to_dict("records"),
         "out_of_universe_reasons": outside_counts,
         "translation_support_reasons": support_counts,
@@ -666,6 +671,35 @@ def render_html(data):
             + "</h2>"
             + "".join("<p>" + esc(p) + "</p>" for p in paragraphs)
         )
+        if title == "Published nominations through the funnel":
+            chunks.append("<h3>Additional cancer–embryo catalogs</h3>")
+            chunks.append(
+                "<p>Supplementary-table matching found 11 distinct proteins from the 122 across these two catalogs. These program memberships are separate from the release's 15-paper nomination collection.</p>"
+            )
+            for catalog in data["catalog_review"]["catalogs"]:
+                labels = sorted({m["protein"] for m in catalog["matches"]})
+                chunks.append(
+                    '<p><a href="'
+                    + esc(catalog["url"])
+                    + '">'
+                    + esc(catalog["citation"])
+                    + "</a> — "
+                    + esc(catalog["catalog"])
+                    + ": <b>"
+                    + str(len(labels))
+                    + "</b> matches: "
+                    + esc(", ".join(labels))
+                    + ". "
+                    + esc(catalog["model"])
+                    + "</p><p>"
+                    + esc(catalog["note"])
+                    + "</p>"
+                )
+            chunks.append(
+                '<p><a href="'
+                + GUIDE_URL
+                + '#catalogs">Matched source rows, download links and file hashes</a></p>'
+            )
         if title == "Biological categories of CTAs":
             chunks.append(
                 '<figure><img src="../cta-evidence-guide-20261106/biology-categories.svg" alt="Biological categories of the 602 CTAs"></figure>'
@@ -867,6 +901,44 @@ def render_pdf(data):
     for title, paragraphs, fig in data["sections"]:
         story.append(Paragraph(html.escape(title), styles["Heading1"]))
         story.extend(paragraph(p) for p in paragraphs)
+        if title == "Published nominations through the funnel":
+            story.append(Paragraph("Additional cancer-embryo catalogs", styles["Heading2"]))
+            story.append(
+                paragraph(
+                    "Supplementary-table matching found 11 distinct proteins from the 122 across these two catalogs. These program memberships are separate from the release's 15-paper nomination collection."
+                )
+            )
+            for catalog in data["catalog_review"]["catalogs"]:
+                labels = sorted({m["protein"] for m in catalog["matches"]})
+                story.append(
+                    Paragraph(
+                        '<a href="'
+                        + html.escape(catalog["url"], quote=True)
+                        + '">'
+                        + html.escape(catalog["citation"] + ": " + catalog["title"])
+                        + "</a>",
+                        small,
+                    )
+                )
+                story.append(
+                    paragraph(
+                        catalog["catalog"]
+                        + f": {len(labels)} matches: "
+                        + ", ".join(labels)
+                        + ". "
+                        + catalog["model"],
+                        small,
+                    )
+                )
+                story.append(paragraph(catalog["note"], small))
+            story.append(
+                Paragraph(
+                    '<a href="'
+                    + GUIDE_URL
+                    + '#catalogs">Matched source rows, download links and file hashes</a>',
+                    small,
+                )
+            )
         if title == "Biological categories of CTAs":
             story.append(
                 Image(
@@ -1058,7 +1130,7 @@ def render_pdf(data):
     story.append(Paragraph("Plain-language sequence decisions", styles["Heading1"]))
     story.append(
         paragraph(
-            "No exclusion recorded (allow): the assessed sequence has no recorded exclusion. Unresolved (review): one or more evidence questions remain. Exclude: retain the sequence as exclusion evidence. Exclude takes precedence over review and allow."
+            "Checks complete (screened): the release's required assessment is complete, regardless of whether it found an exclusion. No sequence exclusion (allow): the selected protein has a resolved identity, completed assessment and no Unsafe assignment. CTA and Other proteins can receive this role. Unresolved (review): one or more evidence questions remain. Exclude: retain the sequence as exclusion evidence. Exclude takes precedence over review and allow."
         )
     )
     for label, explanation in [

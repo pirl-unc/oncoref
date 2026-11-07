@@ -50,7 +50,7 @@ REVIEW_LABELS = {
     "translation_review": "Uncertain translation",
     "unassessed": "Not assessed",
 }
-ROLE_LABELS = {"allow": "No exclusion recorded", "review": "Unresolved", "exclude": "Exclude"}
+ROLE_LABELS = {"allow": "No sequence exclusion", "review": "Unresolved", "exclude": "Exclude"}
 
 
 def clean(value):
@@ -577,6 +577,7 @@ def build(replay_contexts=False):
         "paper_sources": audit.sources.to_dict("records"),
         "literature": literature,
         "biology": biology,
+        "catalog_review": json.loads((ASSETS / "catalog-review.json").read_text()),
     }
     data["biology_counts"] = [
         {
@@ -602,6 +603,7 @@ def build(replay_contexts=False):
     write_json(OUT / "data.json.gz", data, True)
     write_json(OUT / "unlisted-ctas.json", subset)
     write_json(OUT / "comparison.json", data["comparison"])
+    write_json(OUT / "catalog-review.json", data["catalog_review"])
     write_json(OUT / "biology-categories.json", {**biology, "counts": data["biology_counts"]})
     flat = []
     for row in rows:
