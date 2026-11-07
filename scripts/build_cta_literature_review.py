@@ -586,6 +586,24 @@ def integrate_evidence_guide():
         ).hexdigest()
         manifest["outputs"][name] = hashlib.sha256((GUIDE / name).read_bytes()).hexdigest()
     (GUIDE / "manifest.json").write_text(json.dumps(manifest, separators=(",", ":")) + "\n")
+    # The classification document retains its 1.31.0 data/figures. Its receipt
+    # also binds the living documentation and linked evidence-guide overlay.
+    public_receipt_path = ROOT / "docs/audits/cta-definition-20261104/release-receipt.json"
+    public_receipt = read(public_receipt_path)
+    for name in [
+        "scripts/build_cta_public_report.py",
+        "docs/audits/cta-evidence-guide-20261106/manifest.json",
+    ]:
+        public_receipt["inputs"][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+    public_receipt["generated_documentation"]["docs/index.md"] = hashlib.sha256(
+        (ROOT / "docs/index.md").read_bytes()
+    ).hexdigest()
+    public_receipt["documentation_update"] = {
+        "date": "2026-11-07",
+        "report": "docs/audits/cta-literature-20261107/report.html",
+        "scope": "Literature and documentation overlay; classification data and figures remain at the declared selection release.",
+    }
+    write_json(public_receipt_path, public_receipt)
 
 
 def write_figures(data):

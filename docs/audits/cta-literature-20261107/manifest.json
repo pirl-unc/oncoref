@@ -3,7 +3,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "3ba27fe309016af9a50d612816b0baab139d50666eebc721266cc7d230dbcd50"
+      "sha256": "06a1c4f0fd8ce14a6659a2a3d24858bbfaab588596b93d14908fde22f967853d"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
@@ -116,12 +116,12 @@
     "fulltext-retrievals.json": "d505f7efcf8366fb5c5863c31fda28b582c447e980cc9be2e5e2fef580037822",
     "index.md": "618aee9464c941db658536e8862cc4da98af19ad5822b360fbf33358c106d735",
     "individual-reviews.csv": "0535d52a153f47e1638945128128232da6dbbd7a6caf9239b8fdb22c1ca6be50",
-    "registry.json.gz": "7b602b7eee1fc6b8334235dfcc54b187e5292d598dc8843d91ac1d2ce41bcba4",
+    "registry.json.gz": "6f65410bf05f33900520c1f2c92cd90faa7a9d3a4b98d0d5dbc65ec3d0ef9669",
     "report.html": "e0c75d8105538a0619e00ecc9d8f3eb82c1274bbaa7d1587958b3f4c2208ac41",
     "review-outcomes.svg": "8cf369e3ea68af33266d241075133f6914f895f9643f17effb2caff12c07fe65",
     "review-population.json": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01",
     "review.js": "91803e08cec67a99e67ee3d7906fb7577ce92e137080f1e0b3dfc51935247eaa",
-    "review.json": "89eea9846a4b583d79accdf492fc9bd272f9b81fecce8f6d809883ec88eb2089",
+    "review.json": "69f8970f863024a76d7634ae6f7add9bc9c9b1085b12b06e7af999894c203882",
     "search-ledger.json": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed",
     "source-roles.svg": "1314b0324096e131296a3f90a9a6c9d6713a2fe5c1d771b6994b340d659d6827",
     "sources.csv": "84714530826b77fca67c0ab892553d89ea3916bd43cc7da04f11f203e404f6cf",

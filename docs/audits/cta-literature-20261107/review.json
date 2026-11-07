@@ -38422,7 +38422,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "3ba27fe309016af9a50d612816b0baab139d50666eebc721266cc7d230dbcd50"
+      "sha256": "06a1c4f0fd8ce14a6659a2a3d24858bbfaab588596b93d14908fde22f967853d"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",

@@ -42,7 +42,9 @@ from oncoref import (  # noqa: E402
     tissue_hazards,
     translation_qualification,
 )
-from oncoref.version import __version__  # noqa: E402
+
+# Evidence-only package releases can retain an earlier classification snapshot.
+SELECTION_RELEASE = cta_selection._metadata()["release"]
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
 PRESENTATION_REVISION = "2026-11-06.3"
@@ -476,7 +478,7 @@ def build():
         ),
     ]
     data = {
-        "release": __version__,
+        "release": SELECTION_RELEASE,
         "presentation_revision": PRESENTATION_REVISION,
         "catalog_review": json.loads(
             (ROOT / "scripts/cta_evidence_assets/catalog-review.json").read_text()
@@ -544,7 +546,7 @@ def build():
         ROOT / "docs/audits/sequence-bundle-20261104/historical-transition.json",
     ]
     receipt = {
-        "release": __version__,
+        "release": SELECTION_RELEASE,
         "presentation_revision": PRESENTATION_REVISION,
         "selection_policy_id": coverage["policy_id"],
         "bundle_id": data["bundle"]["bundle_id"],
@@ -562,7 +564,11 @@ def build():
     (OUT / "release-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(
         json.dumps(
-            {"counts": counts, "release": __version__, "bundle_id": data["bundle"]["bundle_id"]}
+            {
+                "counts": counts,
+                "release": SELECTION_RELEASE,
+                "bundle_id": data["bundle"]["bundle_id"],
+            }
         )
     )
 
@@ -634,7 +640,7 @@ def update_current_docs(data):
             + "The normal screen, cancer presence, reproductive/developmental association, "
             + "coverage, translation and sequence-overlap gates remain distinct. Accepted "
             + "exclusion evidence establishes Unsafe; unresolved evidence requires review. "
-            + f"[Current release notes](cta-release-{__version__}.md) and the "
+            + f"[Current release notes](cta-release-{SELECTION_RELEASE}.md) and the "
             + "[source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.\n\n"
         )
         + text[end:]
