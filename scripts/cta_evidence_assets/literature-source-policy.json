@@ -4,7 +4,7 @@
   "roles": {
     "catalog_nomination": "Published candidate list or explicit target nomination. Membership supplies provenance, not automatic CTA admission.",
     "cancer_embryo_program": "Defined embryo or DUX4 program used in cancer experiments. This is program membership, not proof that every member is tumor restricted.",
-    "reproductive_developmental": "Human reproductive or developmental biology; species, tissue and stage remain attached to each finding.",
+    "reproductive_developmental": "Reproductive or developmental biology; species, tissue and stage remain attached to each finding.",
     "normal_tissue": "Normal-cell or tissue findings used to review expression conflicts. Family, isoform and reagent limits remain explicit.",
     "tumor_expression": "Tumor RNA or protein observations. RNA, endogenous protein, constructs and fusions are distinguished.",
     "immune_recognition": "Antibody, vaccine, CAR or T-cell experiments, with the tested product and model retained.",
@@ -910,5 +910,274 @@
     "SLC35G5:11896452": "historical_identity"
   },
   "coverage_rule": "Exact human locus or gene-specific study, including explicitly labelled genomic associations. Broad screen rows, unresolved family/copy assays, animal-only studies and unverified leads do not supply exact-human paper coverage. Coverage is a reading/provenance measure, not a CTA admission gate.",
-  "core_rule": "Cover all eligible paper-to-protein memberships, with required unique contributions first, then largest uncovered contribution and deterministic tie breaking, followed by removal of redundant papers. The result is an inclusion-minimal cover, not a claimed minimum-cardinality solution. Supplementary papers retain evidence beyond name coverage."
+  "core_rule": "Cover all eligible paper-to-protein memberships, with required unique contributions first, then largest uncovered contribution and deterministic tie breaking, followed by removal of redundant papers. The result is an inclusion-minimal cover, not a claimed minimum-cardinality solution. Supplementary papers retain evidence beyond name coverage.",
+  "previous_edge_assessments": {
+    "TBXT:https://pmc.ncbi.nlm.nih.gov/articles/PMC4636967/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Brachyury was tested as a cancer-vaccine target in a human phase I trial. This publication is missing from the nomination collection.",
+      "identity_limit": "The product was a yeast-based vaccine; the trial did not test engineered CAR or TCR cells.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4636967/"
+      ]
+    },
+    "SEMG2:https://pmc.ncbi.nlm.nih.gov/articles/PMC7733513/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "The authors identify SEMG2 as a cancer-testis antigen and report tumor RNA and cancer-cell-line protein measurements.",
+      "identity_limit": "SEMG1 and SEMG2 results require separate attribution.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7733513/"
+      ]
+    },
+    "SEMG2:https://pubmed.ncbi.nlm.nih.gov/12200457/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Separate SgI and SgII transcript assays establish human SEMG2 paper coverage; the shared antibody does not resolve SEMG2-specific basal-cell protein.",
+      "identity_limit": "Gene-specific RNA and cross-reactive protein staining must be interpreted separately.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/12200457/"
+      ]
+    },
+    "PATE1:https://pubmed.ncbi.nlm.nih.gov/11880645/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "The cloned PATE cDNA accession AF462605 is a source sequence for PATE1 RefSeq NM_138294.3 / NP_612151.1; NCBI Gene 160065 links the paper and ENSG00000171053.",
+      "identity_limit": "PATE is resolved to PATE1. Normal prostate/testis RNA and tagged-protein experiments do not establish tumor restriction or endogenous protein abundance.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/11880645/",
+        "https://www.ncbi.nlm.nih.gov/gene/160065"
+      ]
+    },
+    "LEUTX:https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX and DPRX regulate an early-embryo transcriptional program. The paper also examines cancer-cell-line expression.",
+      "identity_limit": "Experiments include human embryo transcripts and embryonic stem-cell overexpression.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/"
+      ]
+    },
+    "DPRX:https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX and DPRX regulate an early-embryo transcriptional program. The paper also examines cancer-cell-line expression.",
+      "identity_limit": "Experiments include human embryo transcripts and embryonic stem-cell overexpression.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/"
+      ]
+    },
+    "DPRX:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "DUXA:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "DUXB:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "TPRX2:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "LEUTX:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "ZNF280A:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "TPRX2:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "DUXB:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "LEUTX:https://pubmed.ncbi.nlm.nih.gov/39566337/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "A pediatric thoracic tumor contained a YAP1::LEUTX fusion.",
+      "identity_limit": "The reported molecule is the fusion; this release uses the full-length reference LEUTX sequence.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/39566337/"
+      ]
+    },
+    "WEE2:https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "WEE2 mutations caused fertilization failure in human oocytes. The study measured WEE2 protein and tested experimental rescue.",
+      "identity_limit": "The evidence concerns human oocytes and fertilization. WEE2 enters this release through developmental RNA measurements.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/"
+      ]
+    },
+    "KHDC3L:https://pmc.ncbi.nlm.nih.gov/articles/PMC4974340/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "The human oocyte proteomics paper explicitly identifies ECAT1/KHDC3L, and NCBI Gene 154288 maps ECAT1 and C6orf221 to ENSG00000203908.",
+      "identity_limit": "The historical ECAT1/C6orf221 aliases are resolved to KHDC3L; the experiment concerns human oocytes.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4974340/",
+        "https://www.ncbi.nlm.nih.gov/gene/154288/"
+      ]
+    },
+    "NLRP14:https://www.sciencedirect.com/science/article/pii/S2211124723015437": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "NLRP14 deficiency was associated with female infertility, oocyte maturation defects and early embryonic arrest.",
+      "identity_limit": "The study combines human infertility observations with mechanistic model experiments.",
+      "references": [
+        "https://www.sciencedirect.com/science/article/pii/S2211124723015437"
+      ]
+    },
+    "PABPN1L:https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "The paper tests mouse Pabpn1l genetics, oocytes and biochemical mechanism. Human orthology mentioned in its introduction is not a direct human study.",
+      "identity_limit": "Mouse mechanism only for this membership; PABPN1L is distinct from PABPC1L.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/"
+      ]
+    },
+    "PATE1:https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "Human reproductive proteomics remains linked; the earlier extraction did not preserve the PATE1-specific peptide/accession row. The direct PATE1 cloning paper supplies coverage independently.",
+      "identity_limit": "Exact peptide/accession attribution for PATE1 in this proteomics source remains unextracted.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/"
+      ]
+    },
+    "WFDC8:https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human reproductive-tissue proteomics identified epididymal enrichment of PATE1 and WFDC8.",
+      "identity_limit": "The study distinguishes epididymal protein production from association with sperm.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/"
+      ]
+    },
+    "RNASE9:https://pmc.ncbi.nlm.nih.gov/articles/PMC2669477/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "RNASE9 was cloned and localized in human epididymis; the study also reported sperm-associated protein.",
+      "identity_limit": "Measurements include tissue RNA and immunolocalization.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC2669477/"
+      ]
+    },
+    "MRGPRX1:https://insight.jci.org/articles/view/131712": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human thoracolumbar DRG qPCR and single-cell RT-PCR directly measure MRGPRX1; mouse colon-afferent experiments are a separate part of the study.",
+      "identity_limit": "Human DRG expression qualifies as a paper link. The released rare-cell panel does not include DRG.",
+      "references": [
+        "https://insight.jci.org/articles/view/131712"
+      ]
+    },
+    "SP7:https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human SP7 cDNA cloning and isoform-specific RNA measurements resolve the human locus. Normal-expression interpretation is separate from paper coverage.",
+      "identity_limit": "RNA was detected in fetal/craniofacial osteoblasts and chondrocytes, but not adult femoral osteoblasts; low tissue RNA required sensitive amplification. This is not an adult normal-protein measurement.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/"
+      ]
+    },
+    "KLF14:https://pmc.ncbi.nlm.nih.gov/articles/PMC5935235/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human adipose studies connect KLF14 expression and function with adipocyte size, insulin resistance and type 2 diabetes risk.",
+      "identity_limit": "Adipose is Manageable in the tissue registry. The expression amount and cell compartment determine the policy result.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5935235/"
+      ]
+    },
+    "CALHM3:https://pubmed.ncbi.nlm.nih.gov/29681531/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "Mouse CALHM3 channel constructs and taste-cell genetics do not supply direct human-locus experiments.",
+      "identity_limit": "Mouse taste mechanism; human normal taste-cell expression is not established by this paper.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/29681531/"
+      ]
+    },
+    "BTN1A1:https://www.proteinatlas.org/ENSG00000124557-BTN1A1/tissue/lactating%2Bbreast": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "The live HPA page reports high BTN1A1 staining in lactating breast glandular cells.",
+      "identity_limit": "The page is newer than the pinned HPA v23 export. Version, physiological state and antibody data need reconciliation.",
+      "references": [
+        "https://www.proteinatlas.org/ENSG00000124557-BTN1A1/tissue/lactating%2Bbreast"
+      ]
+    }
+  },
+  "previous_source_assessments": {
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/": {
+      "inspection": "full_text_rechecked",
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "scope": "Human SP7 isoform cloning and RNA assays in osteoblast/chondrocyte cultures and tissue panels.",
+      "contribution": "Human SP7 gene and splice-isoform evidence. Fetal/craniofacial osteoblast RNA was detected; adult femoral osteoblast RNA was not detected in this study. Normal-tissue policy adjudication remains separate.",
+      "finding_update": {
+        "finding": "Human SP7 gene and splice-isoform evidence. Fetal/craniofacial osteoblast RNA was detected; adult femoral osteoblast RNA was not detected in this study. Normal-tissue policy adjudication remains separate.",
+        "model": "Human SP7 isoform cloning and RNA assays in osteoblast/chondrocyte cultures and tissue panels.",
+        "limitation": "The study measured RNA; adult femoral osteoblast RNA was not detected. These results do not establish adult normal-tissue protein abundance.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      }
+    },
+    "https://pubmed.ncbi.nlm.nih.gov/11880645/": {
+      "inspection": "abstract_figures_and_reference_identity_rechecked",
+      "roles": [
+        "catalog_nomination",
+        "tumor_expression",
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "scope": "Human prostate/testis and prostate-cancer RNA, cDNA cloning, in-vitro translation and tagged-protein expression.",
+      "contribution": "PATE is resolved to PATE1 through paper accession AF462605 and NCBI Gene 160065; supplies a prostate-cancer target nomination and normal reproductive-tissue findings.",
+      "finding_update": {
+        "finding": "PATE is resolved to PATE1 through paper accession AF462605 and NCBI Gene 160065; supplies a prostate-cancer target nomination and normal reproductive-tissue findings.",
+        "model": "Human prostate/testis and prostate-cancer RNA, cDNA cloning, in-vitro translation and tagged-protein expression.",
+        "limitation": "PATE is resolved to PATE1. Normal prostate/testis RNA and tagged-protein experiments do not establish tumor restriction or endogenous protein abundance.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      }
+    },
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/": {
+      "inspection": "full_text_rechecked",
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "scope": "Mouse Pabpn1l knockout, oocyte/embryo and biochemical mechanism.",
+      "contribution": "Mouse maternal-mRNA clearance mechanism; retained as supplementary species-specific evidence without direct-human coverage.",
+      "finding_update": {
+        "finding": "Mouse maternal-mRNA clearance mechanism; retained as supplementary species-specific evidence without direct-human coverage.",
+        "model": "Mouse Pabpn1l knockout, oocyte/embryo and biochemical mechanism.",
+        "limitation": "Mouse mechanism; the human ortholog mentioned in the introduction is not a direct human experiment.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      }
+    }
+  }
 }

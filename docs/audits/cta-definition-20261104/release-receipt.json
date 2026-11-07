@@ -6,7 +6,7 @@
   "inputs": {
     "scripts/build_cta_public_report.py": "39b2091dfb56566a69da510042176b96166bb4f0d39de24de0b63b48f4dfd507",
     "scripts/build_cta_evidence_explorer.py": "c0eb8a6f7fe89fcc21fc0ac37232f925bdb31c35f148dd8bdd4d75074f4e4682",
-    "docs/audits/cta-evidence-guide-20261106/manifest.json": "0bef7ba4a731d48ecdd03dc4d1b295d2026be2babbd7c18aa22ce1dff75e61f3",
+    "docs/audits/cta-evidence-guide-20261106/manifest.json": "73fabc8a889392b10b02139d3b7836c2ef482f79b84557e9a9ed89cded539e3a",
     "oncoref/cta_contract.py": "e70d62cfe760683848eb7b5193d23fc282cc9956f90c5781b04f639fe75d2ffd",
     "oncoref/cta_selection_policy.py": "ee9fa363970c35ca6e94e92ffcab5ec005fdcc8fab2ecc1caeb7114d17ba58e6",
     "oncoref/data/cta-selection.json": "5559f23910bb16dc1468b5ca7f0ed74befc886c5bb95d0498a6fb4c9d882d2e7",

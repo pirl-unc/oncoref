@@ -3,7 +3,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "06a1c4f0fd8ce14a6659a2a3d24858bbfaab588596b93d14908fde22f967853d"
+      "sha256": "d65b1eefa28011ad7ab2c8fc294662097a0f1bf128b16d8e161ab0326c737289"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
@@ -19,7 +19,7 @@
     },
     {
       "path": "scripts/cta_evidence_assets/literature-source-policy.json",
-      "sha256": "5fbc6b96ff490ef6a1562992114c34742861ce9a3338a4069c985a1470ad22b1"
+      "sha256": "a7b462818a6b9a32579942adc4f6b6039f6e65848001f7699fe954cf1f52e3c5"
     },
     {
       "path": "scripts/cta_evidence_assets/program-source-rows.json.gz",
@@ -76,14 +76,14 @@
     },
     "exact_human_studies_in_96": 65,
     "with_citations_in_96": 76,
-    "core_papers": 82,
+    "core_papers": 83,
     "catalog_core_papers": 14,
-    "individual_core_papers": 68,
-    "supplementary_sources": 68,
-    "covered_proteins": 3152,
-    "covered_ctas": 568,
-    "covered_unlisted_ctas": 88,
-    "ctas_without_exact_paper_coverage": 34,
+    "individual_core_papers": 69,
+    "supplementary_sources": 67,
+    "covered_proteins": 3153,
+    "covered_ctas": 569,
+    "covered_unlisted_ctas": 89,
+    "ctas_without_exact_paper_coverage": 33,
     "historical_catalog_proteins": 2514,
     "historical_catalog_core": [
       "10.1002/1878-0261.12900",
@@ -111,20 +111,20 @@
     ]
   },
   "outputs": {
-    "cta-paper-coverage.csv": "c9cddaeb26ee20c6c7f16d7132891a629014e08a75fc8e53811daf84da54ab09",
+    "cta-paper-coverage.csv": "1b0ae2c831aaa0400f0b451bb12cc61fb372de9d6654b516a5187e0749e6dea7",
     "followup-retrievals.json": "328dbf0c5fbceeedae4272bc33ade58b4dd8527a11aa5c46e92acfccb81e19db",
     "fulltext-retrievals.json": "d505f7efcf8366fb5c5863c31fda28b582c447e980cc9be2e5e2fef580037822",
-    "index.md": "618aee9464c941db658536e8862cc4da98af19ad5822b360fbf33358c106d735",
-    "individual-reviews.csv": "0535d52a153f47e1638945128128232da6dbbd7a6caf9239b8fdb22c1ca6be50",
-    "registry.json.gz": "6f65410bf05f33900520c1f2c92cd90faa7a9d3a4b98d0d5dbc65ec3d0ef9669",
+    "index.md": "7ccbe534869d94d2bbc1b5c744de93a93e805971e4f1141d90e504610f89924d",
+    "individual-reviews.csv": "44980e66feeb5f4892680d1a79479f7641f60bcce88c7bf426899af3101c1471",
+    "registry.json.gz": "8d5237e15cf27e7fbffcd96f2389619538e83ad63610d3dcbc43a79f983e8f85",
     "report.html": "e0c75d8105538a0619e00ecc9d8f3eb82c1274bbaa7d1587958b3f4c2208ac41",
     "review-outcomes.svg": "8cf369e3ea68af33266d241075133f6914f895f9643f17effb2caff12c07fe65",
     "review-population.json": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01",
     "review.js": "91803e08cec67a99e67ee3d7906fb7577ce92e137080f1e0b3dfc51935247eaa",
-    "review.json": "69f8970f863024a76d7634ae6f7add9bc9c9b1085b12b06e7af999894c203882",
+    "review.json": "796308484a3828ddcfb9c6396ed4bc032efc2d72aef51076e99a8e0ecba93ae1",
     "search-ledger.json": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed",
     "source-roles.svg": "1314b0324096e131296a3f90a9a6c9d6713a2fe5c1d771b6994b340d659d6827",
-    "sources.csv": "84714530826b77fca67c0ab892553d89ea3916bd43cc7da04f11f203e404f6cf",
+    "sources.csv": "a19e11b6dc2b6117b0b228cde15f66ac00df1c3d32e58495a0edbf588abd3a3a",
     "style.css": "c7ec6512f0edeea0d541e1446347086319cd55a75fe8e9c41eb4117ee55a8748"
   }
 }

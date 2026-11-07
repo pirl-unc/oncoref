@@ -132,6 +132,26 @@ def test_complete_program_tables_keep_unmapped_rows_and_upstream_provenance(data
     assert not any(e.get("table") == "S1" for e in data["memberships"])
 
 
+def test_human_paper_coverage_is_separate_from_normal_review_and_mouse_mechanism(data):
+    coverage = {r["protein"]: r for r in data["cta_coverage"]}
+    assert (
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/" in coverage["SP7"]["exact_paper_sources"]
+    )
+    assert "https://pubmed.ncbi.nlm.nih.gov/11880645/" in coverage["PATE1"]["exact_paper_sources"]
+    assert not coverage["PABPN1L"]["exact_paper_sources"]
+    assert not coverage["CALHM3"]["exact_paper_sources"]
+    pate = next(
+        e
+        for e in data["memberships"]
+        if e["protein"] == "PATE1" and e["source_id"].endswith("11880645/")
+    )
+    assert "AF462605" in pate["coverage_rationale"]
+    assert "https://www.ncbi.nlm.nih.gov/gene/160065" in pate["references"]
+    sp7 = next(s for s in data["sources"] if s["source_id"].endswith("PMC280673/"))
+    assert "normal_tissue" in sp7["roles"]
+    assert "not detected" in sp7["retention_reason"]
+
+
 def test_role_accessors_retain_noncore_normal_evidence_and_validate_filters(data):
     sources = {s["source_id"]: s for s in data["sources"]}
     assert len(sources) == len(data["sources"])

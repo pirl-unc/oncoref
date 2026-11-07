@@ -7,7 +7,7 @@
   "roles": {
     "catalog_nomination": "Published candidate list or explicit target nomination. Membership supplies provenance, not automatic CTA admission.",
     "cancer_embryo_program": "Defined embryo or DUX4 program used in cancer experiments. This is program membership, not proof that every member is tumor restricted.",
-    "reproductive_developmental": "Human reproductive or developmental biology; species, tissue and stage remain attached to each finding.",
+    "reproductive_developmental": "Reproductive or developmental biology; species, tissue and stage remain attached to each finding.",
     "normal_tissue": "Normal-cell or tissue findings used to review expression conflicts. Family, isoform and reagent limits remain explicit.",
     "tumor_expression": "Tumor RNA or protein observations. RNA, endogenous protein, constructs and fusions are distinguished.",
     "immune_recognition": "Antibody, vaccine, CAR or T-cell experiments, with the tested product and model retained.",
@@ -34,14 +34,14 @@
     },
     "exact_human_studies_in_96": 65,
     "with_citations_in_96": 76,
-    "core_papers": 82,
+    "core_papers": 83,
     "catalog_core_papers": 14,
-    "individual_core_papers": 68,
-    "supplementary_sources": 68,
-    "covered_proteins": 3152,
-    "covered_ctas": 568,
-    "covered_unlisted_ctas": 88,
-    "ctas_without_exact_paper_coverage": 34,
+    "individual_core_papers": 69,
+    "supplementary_sources": 67,
+    "covered_proteins": 3153,
+    "covered_ctas": 569,
+    "covered_unlisted_ctas": 89,
+    "ctas_without_exact_paper_coverage": 33,
     "historical_catalog_proteins": 2514,
     "historical_catalog_core": [
       "10.1002/1878-0261.12900",
@@ -14274,6 +14274,44 @@
       ]
     },
     {
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/",
+      "citation": "Expression of alternatively spliced isoforms of human Sp7 in osteoblast-like cells",
+      "title": "Expression of alternatively spliced isoforms of human Sp7 in osteoblast-like cells",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/",
+      "kind": "previous_individual_review",
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "scope": "Human SP7 isoform cloning and RNA assays in osteoblast/chondrocyte cultures and tissue panels.",
+      "inspection": "full_text_rechecked",
+      "retention_reason": "Human SP7 gene and splice-isoform evidence. Fetal/craniofacial osteoblast RNA was detected; adult femoral osteoblast RNA was not detected in this study. Normal-tissue policy adjudication remains separate.",
+      "contribution": "Human SP7 gene and splice-isoform evidence. Fetal/craniofacial osteoblast RNA was detected; adult femoral osteoblast RNA was not detected in this study. Normal-tissue policy adjudication remains separate.",
+      "finding_update": {
+        "finding": "Human SP7 gene and splice-isoform evidence. Fetal/craniofacial osteoblast RNA was detected; adult femoral osteoblast RNA was not detected in this study. Normal-tissue policy adjudication remains separate.",
+        "model": "Human SP7 isoform cloning and RNA assays in osteoblast/chondrocyte cultures and tissue panels.",
+        "limitation": "The study measured RNA; adult femoral osteoblast RNA was not detected. These results do not establish adult normal-tissue protein abundance.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      },
+      "collection": "core",
+      "linked_proteins": 1,
+      "covered_proteins": 1,
+      "covered_ctas": 1,
+      "covered_unlisted_ctas": 1,
+      "unique_proteins": 1,
+      "unique_ctas": 1,
+      "covered_by": [],
+      "proteins": [
+        "SP7"
+      ],
+      "coverage_proteins": [
+        "SP7"
+      ],
+      "core_witnesses": [
+        "SP7"
+      ]
+    },
+    {
       "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/",
       "citation": "Homozygous Mutations in WEE2 Cause Fertilization Failure and Female Infertility",
       "title": "Homozygous Mutations in WEE2 Cause Fertilization Failure and Female Infertility",
@@ -14395,17 +14433,27 @@
       ]
     },
     {
-      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/",
-      "citation": "PABPN1L mediates cytoplasmic mRNA decay as a placeholder during the maternal-to-zygotic transition",
-      "title": "PABPN1L mediates cytoplasmic mRNA decay as a placeholder during the maternal-to-zygotic transition",
-      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/",
+      "source_id": "https://pubmed.ncbi.nlm.nih.gov/11880645/",
+      "citation": "PATE, a gene expressed in prostate cancer, normal prostate, and testis, identified by a functional genomic approach",
+      "title": "PATE, a gene expressed in prostate cancer, normal prostate, and testis, identified by a functional genomic approach",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11880645/",
       "kind": "previous_individual_review",
       "roles": [
-        "reproductive_developmental"
+        "catalog_nomination",
+        "tumor_expression",
+        "normal_tissue",
+        "translation_identity"
       ],
-      "scope": "Mouse oocytes and embryos; The functional experiments used mice. PABPN1L and PABPC1L are different genes.",
-      "inspection": "previous_focused_review",
-      "retention_reason": "Pabpn1l knockout disrupted the maternal-to-zygotic transition and early embryonic development in mice.",
+      "scope": "Human prostate/testis and prostate-cancer RNA, cDNA cloning, in-vitro translation and tagged-protein expression.",
+      "inspection": "abstract_figures_and_reference_identity_rechecked",
+      "retention_reason": "PATE is resolved to PATE1 through paper accession AF462605 and NCBI Gene 160065; supplies a prostate-cancer target nomination and normal reproductive-tissue findings.",
+      "contribution": "PATE is resolved to PATE1 through paper accession AF462605 and NCBI Gene 160065; supplies a prostate-cancer target nomination and normal reproductive-tissue findings.",
+      "finding_update": {
+        "finding": "PATE is resolved to PATE1 through paper accession AF462605 and NCBI Gene 160065; supplies a prostate-cancer target nomination and normal reproductive-tissue findings.",
+        "model": "Human prostate/testis and prostate-cancer RNA, cDNA cloning, in-vitro translation and tagged-protein expression.",
+        "limitation": "PATE is resolved to PATE1. Normal prostate/testis RNA and tagged-protein experiments do not establish tumor restriction or endogenous protein abundance.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      },
       "collection": "core",
       "linked_proteins": 1,
       "covered_proteins": 1,
@@ -14415,13 +14463,13 @@
       "unique_ctas": 1,
       "covered_by": [],
       "proteins": [
-        "PABPN1L"
+        "PATE1"
       ],
       "coverage_proteins": [
-        "PABPN1L"
+        "PATE1"
       ],
       "core_witnesses": [
-        "PABPN1L"
+        "PATE1"
       ]
     },
     {
@@ -16857,17 +16905,25 @@
       "core_witnesses": []
     },
     {
-      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/",
-      "citation": "Expression of alternatively spliced isoforms of human Sp7 in osteoblast-like cells",
-      "title": "Expression of alternatively spliced isoforms of human Sp7 in osteoblast-like cells",
-      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/",
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/",
+      "citation": "PABPN1L mediates cytoplasmic mRNA decay as a placeholder during the maternal-to-zygotic transition",
+      "title": "PABPN1L mediates cytoplasmic mRNA decay as a placeholder during the maternal-to-zygotic transition",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/",
       "kind": "previous_individual_review",
       "roles": [
-        "normal_tissue"
+        "reproductive_developmental",
+        "function"
       ],
-      "scope": "Human primary osteoblast cultures, including adult cells; The study measured cultured osteoblasts and splice variants; in-vivo adult tissue levels need extraction.",
-      "inspection": "previous_focused_review",
-      "retention_reason": "SP7 was detected in human primary osteoblast cultures, including adult-derived cultures.",
+      "scope": "Mouse Pabpn1l knockout, oocyte/embryo and biochemical mechanism.",
+      "inspection": "full_text_rechecked",
+      "retention_reason": "Mouse maternal-mRNA clearance mechanism; retained as supplementary species-specific evidence without direct-human coverage.",
+      "contribution": "Mouse maternal-mRNA clearance mechanism; retained as supplementary species-specific evidence without direct-human coverage.",
+      "finding_update": {
+        "finding": "Mouse maternal-mRNA clearance mechanism; retained as supplementary species-specific evidence without direct-human coverage.",
+        "model": "Mouse Pabpn1l knockout, oocyte/embryo and biochemical mechanism.",
+        "limitation": "Mouse mechanism; the human ortholog mentioned in the introduction is not a direct human experiment.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      },
       "collection": "supplementary",
       "linked_proteins": 1,
       "covered_proteins": 0,
@@ -16877,34 +16933,7 @@
       "unique_ctas": 0,
       "covered_by": [],
       "proteins": [
-        "SP7"
-      ],
-      "coverage_proteins": [],
-      "core_witnesses": []
-    },
-    {
-      "source_id": "https://pubmed.ncbi.nlm.nih.gov/11880645/",
-      "citation": "PATE, a gene expressed in prostate cancer, normal prostate, and testis, identified by a functional genomic approach",
-      "title": "PATE, a gene expressed in prostate cancer, normal prostate, and testis, identified by a functional genomic approach",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/11880645/",
-      "kind": "previous_individual_review",
-      "roles": [
-        "catalog_nomination",
-        "tumor_expression"
-      ],
-      "scope": "Human tissue expression and functional genomics; The historical PATE name must be mapped to PATE1 at the exact locus.",
-      "inspection": "previous_focused_review",
-      "retention_reason": "The original PATE study reported expression in prostate cancer, normal prostate and testis.",
-      "collection": "supplementary",
-      "linked_proteins": 1,
-      "covered_proteins": 0,
-      "covered_ctas": 0,
-      "covered_unlisted_ctas": 0,
-      "unique_proteins": 0,
-      "unique_ctas": 0,
-      "covered_by": [],
-      "proteins": [
-        "PATE1"
+        "PABPN1L"
       ],
       "coverage_proteins": [],
       "core_witnesses": []
@@ -32250,10 +32279,10 @@
         "ENSG00000205022"
       ],
       "historical_sources": [],
-      "exact_paper_sources": [
+      "exact_paper_sources": [],
+      "other_sources": [
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/"
       ],
-      "other_sources": [],
       "biology_categories": [
         "early_embryo",
         "oocyte_maternal"
@@ -32374,10 +32403,11 @@
         "ENSG00000171053"
       ],
       "historical_sources": [],
-      "exact_paper_sources": [],
-      "other_sources": [
-        "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/",
+      "exact_paper_sources": [
         "https://pubmed.ncbi.nlm.nih.gov/11880645/"
+      ],
+      "other_sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/"
       ],
       "biology_categories": [
         "reproductive_secretion"
@@ -34318,10 +34348,10 @@
         "ENSG00000170374"
       ],
       "historical_sources": [],
-      "exact_paper_sources": [],
-      "other_sources": [
+      "exact_paper_sources": [
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/"
       ],
+      "other_sources": [],
       "biology_categories": [
         "other_reproductive"
       ],
@@ -38422,7 +38452,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "06a1c4f0fd8ce14a6659a2a3d24858bbfaab588596b93d14908fde22f967853d"
+      "sha256": "d65b1eefa28011ad7ab2c8fc294662097a0f1bf128b16d8e161ab0326c737289"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
@@ -38438,7 +38468,7 @@
     },
     {
       "path": "scripts/cta_evidence_assets/literature-source-policy.json",
-      "sha256": "5fbc6b96ff490ef6a1562992114c34742861ce9a3338a4069c985a1470ad22b1"
+      "sha256": "a7b462818a6b9a32579942adc4f6b6039f6e65848001f7699fe954cf1f52e3c5"
     },
     {
       "path": "scripts/cta_evidence_assets/program-source-rows.json.gz",

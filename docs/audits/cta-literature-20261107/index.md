@@ -4,7 +4,7 @@
 
 76 have linked primary or related papers; 65 have an exact-human study credited under the declared coverage rule. Evidence types are shown separately: a DNA association is not a protein experiment.
 
-The harmonized collection has 82 core papers and 68 supplementary sources. Its mapped coverage reaches 568 of the 602 released CTA records. 34 remain without qualifying paper coverage. The expression and reference datasets remain the basis of selection.
+The harmonized collection has 83 core papers and 67 supplementary sources. Its mapped coverage reaches 569 of the 602 released CTA records. 33 remain without qualifying paper coverage. The expression and reference datasets remain the basis of selection.
 
 The 1.31.0 classifications are frozen. Normal-expression and identity findings in this review require adjudication before the next classification release.
 

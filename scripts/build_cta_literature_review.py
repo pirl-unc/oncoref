@@ -219,6 +219,7 @@ def build_registry():
     # Previously reviewed papers remain in this one registry, with their original scope.
     for finding in old_review["findings"]:
         key = finding["url"]
+        source_assessment = policy["previous_source_assessments"].get(key, {})
         if "proteinatlas.org" in key:
             kind, roles = "measurement_annotation", ["normal_tissue"]
         else:
@@ -242,14 +243,13 @@ def build_registry():
             "roles": roles,
             "scope": finding["model"] + "; " + finding["limitation"],
             "inspection": "previous_focused_review",
-            "retention_reason": finding["finding"],
+            "retention_reason": source_assessment.get("contribution", finding["finding"]),
+            **source_assessment,
         }
         for label in finding["proteins"]:
             row = by_label[label]
-            # These old findings explicitly require gene/species resolution before exact attribution.
-            unresolved = (
-                label in {"PATE1", "SP7", "CALHM3"} or "fusion" in finding["category"].lower()
-            )
+            # Paper coverage is independent of normal-expression adjudication.
+            assessment = policy["previous_edge_assessments"][f"{label}:{key}"]
             edges.append(
                 {
                     "source_id": key,
@@ -257,9 +257,8 @@ def build_registry():
                     "protein": label,
                     "gene_ids": row["gene_ids"],
                     "kind": kind,
-                    "eligible_for_coverage": not unresolved and kind != "measurement_annotation",
-                    "scope": finding["finding"],
-                    "identity_limit": finding["limitation"],
+                    "scope": assessment["coverage_rationale"],
+                    **assessment,
                 }
             )
     pmid_sources = {}
@@ -486,7 +485,9 @@ def build_registry():
 
 def write_csv(path, rows, fields):
     with path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(
+            handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n"
+        )
         writer.writeheader()
         for row in rows:
             writer.writerow(

@@ -10,15 +10,15 @@ The assessments distinguish gene-specific studies, genomic/RNA associations,
 normal-expression findings, identity or translation conflicts, and related-species
 or family evidence.
 
-The source collection separates 14 core catalog/program papers and 68 focused
-studies from 68 supplementary sources. Every source has a role, a contribution,
+The source collection separates 14 core catalog/program papers and 69 focused
+studies from 67 supplementary sources. Every source has a role, a contribution,
 linked proteins and an overlap explanation. Twelve of the original 15 papers
 preserve all 2,514 mapped proteins; eight preserve their 480 released CTAs.
 Complete Chew and Smith program tables retain source occurrences, unmatched rows,
 historical identities and upstream gene-set provenance. The 12,697-gene Chew
 screening table does not count as a nomination list.
 
-The expanded paper links cover 568 of the 602 released CTA records. The 34 remaining
+The expanded paper links cover 569 of the 602 released CTA records. The 33 remaining
 coverage gaps are listed explicitly. Named genomic associations count as paper
 coverage but do not establish protein production.
 
