@@ -6,7 +6,7 @@
   "inputs": {
     "scripts/build_cta_public_report.py": "39b2091dfb56566a69da510042176b96166bb4f0d39de24de0b63b48f4dfd507",
     "scripts/build_cta_evidence_explorer.py": "c0eb8a6f7fe89fcc21fc0ac37232f925bdb31c35f148dd8bdd4d75074f4e4682",
-    "docs/audits/cta-evidence-guide-20261106/manifest.json": "73fabc8a889392b10b02139d3b7836c2ef482f79b84557e9a9ed89cded539e3a",
+    "docs/audits/cta-evidence-guide-20261106/manifest.json": "758bbed5a63d7d65493ceba5594d2aa627825f8790ba55e65608ffa61b37fbdf",
     "oncoref/cta_contract.py": "e70d62cfe760683848eb7b5193d23fc282cc9956f90c5781b04f639fe75d2ffd",
     "oncoref/cta_selection_policy.py": "ee9fa363970c35ca6e94e92ffcab5ec005fdcc8fab2ecc1caeb7114d17ba58e6",
     "oncoref/data/cta-selection.json": "5559f23910bb16dc1468b5ca7f0ed74befc886c5bb95d0498a6fb4c9d882d2e7",
@@ -59,7 +59,7 @@
   "generated_documentation": {
     "README.md": "9e0969a170e17310d1031ac5738df7983af88bab555df4f8e641c1e2cb727b6d",
     "docs/cta-selection.md": "56a1b06a5fd9b5898a22f04520527ac9085e94e7a0afdc8f9971ec9325025140",
-    "docs/index.md": "a62e8f2e56c4ab77e982b0187bd6ab9a5f77edc19bce7f257ebd7fd44300826a"
+    "docs/index.md": "355f35e96d44c9cc1a6cded728e60378590371a6d2d4385a3dd809ce57b23432"
   },
   "documentation_update": {
     "date": "2026-11-07",

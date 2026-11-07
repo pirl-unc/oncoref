@@ -652,11 +652,21 @@ cta_literature.sources(collection="core")
 cta_literature.sources(collection="supplementary", role="normal_tissue")
 cta_literature.cta_coverage()  # All 602 released CTA records; gaps remain explicit.
 cta_literature.memberships()  # Exact source occurrences, including unresolved links.
+cta_literature.gap_assessments()  # All 33 paper gaps: biology and measured support.
+cta_literature.concerns("SRY")  # Evidence type, next action and citations.
+cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
 ```
 
 The core preserves mapped paper coverage. Supplementary papers retain additional
 assays, normal-expression findings, identity questions and upstream gene-set
 provenance. Core placement does not determine which findings apply to selection.
+
+The localization table covers all 602 released CTAs. Its facets distinguish secretion,
+extracellular detection, cell-surface / integral plasma-membrane annotations, and
+intracellular compartments. Shared-entry and partial-member annotations remain
+separate. UniProt evidence codes, isoform notes, source version and primary-paper
+additions are preserved. These annotations do not establish localization of the
+selected sequence or accessibility of a tumor epitope.
 
 The current research set is available through the same species-scoped API:
 
