@@ -695,6 +695,14 @@ def render_html(data):
                     + esc(catalog["note"])
                     + "</p>"
                 )
+                if source := catalog.get("gene_set_source"):
+                    chunks.append(
+                        '<p>Gene-set source: <a href="'
+                        + esc(source["url"])
+                        + '">'
+                        + esc(source["citation"] + ": " + source["title"])
+                        + "</a>.</p>"
+                    )
             chunks.append(
                 '<p><a href="'
                 + GUIDE_URL
@@ -931,6 +939,17 @@ def render_pdf(data):
                     )
                 )
                 story.append(paragraph(catalog["note"], small))
+                if source := catalog.get("gene_set_source"):
+                    story.append(
+                        Paragraph(
+                            'Gene-set source: <a href="'
+                            + html.escape(source["url"], quote=True)
+                            + '">'
+                            + html.escape(source["citation"] + ": " + source["title"])
+                            + "</a>.",
+                            small,
+                        )
+                    )
             story.append(
                 Paragraph(
                     '<a href="'

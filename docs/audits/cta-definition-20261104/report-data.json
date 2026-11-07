@@ -79,7 +79,7 @@
         "title": "DUX4 expression in cancer induces a metastable early embryonic totipotent program",
         "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10578318/",
         "catalog": "Table S3A: zygotic gene activation and eight-cell-like gene sets",
-        "model": "Single-cell RNA sequencing of KLE and SUSA cancer cell lines; gene sets adopted from Taubenschmid-Stowers et al., 2022.",
+        "model": "Single-cell RNA sequencing of KLE and SUSA cancer cell lines using published zygotic gene activation and eight-cell-like gene sets.",
         "sources": [
           {
             "url": "https://ars.els-cdn.com/content/image/1-s2.0-S2211124723011257-mmc4.xlsx",
@@ -200,7 +200,12 @@
         ],
         "note": "Exact gene-symbol matches to the 122. Membership records the program evaluated in cancer cells; gene-level measurements and effect sizes need separate extraction. MBD3L2 is not substituted for MBD3L2B, and H3Y is not mapped to H3Y1 in this count.",
         "interpretation": "Add as an early-embryo program evaluated in cancer, with the original gene-set source retained.",
-        "matched_proteins": 9
+        "matched_proteins": 9,
+        "gene_set_source": {
+          "citation": "Taubenschmid-Stowers et al., 2022",
+          "title": "8C-like cells capture the human zygotic genome activation program in vitro",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/35216671/"
+        }
       }
     ]
   },
