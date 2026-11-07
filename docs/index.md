@@ -4,6 +4,8 @@
 
 The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,255 Unsafe / 1,006 Other** across **19,863 proteins** (identical selected reference sequences counted together; member loci retained). All 19,863 candidate protein records enter classification; translation support is a CTA admission requirement. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
 
+[Individual CTA literature reviews and harmonized source roles](audits/cta-literature-20261107/report.html) cover the 41 previously unmatched and 55 broad-table-only proteins, with linked core/supplementary papers and explicit coverage gaps.
+
 [Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Candidate evidence explorer](audits/cta-evidence-guide-20261106/report.html) · [Verified sequence records](sequence-bundle.md).
 
 The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.31.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.

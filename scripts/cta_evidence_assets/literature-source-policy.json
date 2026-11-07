@@ -1,0 +1,1183 @@
+{
+  "version": 1,
+  "date": "2026-11-07",
+  "roles": {
+    "catalog_nomination": "Published candidate list or explicit target nomination. Membership supplies provenance, not automatic CTA admission.",
+    "cancer_embryo_program": "Defined embryo or DUX4 program used in cancer experiments. This is program membership, not proof that every member is tumor restricted.",
+    "reproductive_developmental": "Reproductive or developmental biology; species, tissue and stage remain attached to each finding.",
+    "normal_tissue": "Normal-cell or tissue findings used to review expression conflicts. Family, isoform and reagent limits remain explicit.",
+    "tumor_expression": "Tumor RNA or protein observations. RNA, endogenous protein, constructs and fusions are distinguished.",
+    "immune_recognition": "Antibody, vaccine, CAR or T-cell experiments, with the tested product and model retained.",
+    "translation_identity": "Gene, transcript, proteoform or translation evidence, including evidence against a proposed coding assignment.",
+    "function": "Mechanistic or biochemical experiments; model-system results do not establish normal human expression.",
+    "association": "DNA variants, copy number, methylation or statistical associations. These do not establish protein production.",
+    "background_screen": "Broad measured/scored-gene table. A row is not a nomination or a gene-specific experiment.",
+    "upstream_program": "Original source of a reused gene set; reused memberships do not count as independent replication.",
+    "measurement": "Reference sequence and expression datasets used by the classification gates."
+  },
+  "paper_assessments": {
+    "34721544": {
+      "roles": [
+        "tumor_expression"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "DLBCL RNA-network prioritization of ACCSL; no antigen or protein assay."
+    },
+    "33971925": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "Long-read transcript structures and tagged-ORF translation for pseudogene-derived loci, including AK4P3 and HMGB1P1."
+    },
+    "27389689": {
+      "roles": [
+        "tumor_expression",
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "Retrocopy-specific transcript assays, including higher AK4P3 RNA in tested cancer cell lines."
+    },
+    "41207179": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "AK4P3-linked DNA-variant association with Takayasu-arteritis angiographic patterns."
+    },
+    "23954414": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "full_text",
+      "contribution": "Beclin 2 mechanism plus western blots of fetal and adult human brain; mouse knockout phenotypes are separate."
+    },
+    "37409929": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "BECN2\u2013ATG14 interaction and GPCR-degradation mechanism; additional biochemical evidence beyond the discovery paper."
+    },
+    "38485289": {
+      "roles": [
+        "immune_recognition",
+        "tumor_expression",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "BTN1A1 tumor checkpoint expression and antibody-blockade experiments; blockade does not test killing normal positive cells."
+    },
+    "33424347": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "full_text",
+      "contribution": "C12orf71 DNA methylation in HPV warts versus paired normal skin; no protein measurement."
+    },
+    "39192094": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "full_text",
+      "contribution": "Human CCDC201 stop-gain genetics, ovarian insufficiency and oocyte expression."
+    },
+    "42957802": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "full_text",
+      "model_limit": "mouse OMC1 mechanism",
+      "contribution": "Mouse OMC1/Ccdc201 chromosome-cohesion mechanism, supplementing human ovarian-insufficiency genetics."
+    },
+    "17068127": {
+      "roles": [
+        "tumor_expression",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human AML CDX4 RNA observations alongside mouse leukemia and progenitor experiments."
+    },
+    "35569347": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human stem-cell differentiation identifies CDX4-positive hemogenic mesoderm."
+    },
+    "10049596": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human CER1 cloning and chromosomal identity."
+    },
+    "32102328": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "full_text",
+      "contribution": "Human iPSC mesendoderm differentiation with NOTO and CER1 marker measurements."
+    },
+    "41764189": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "mouse sperm",
+      "contribution": "Mouse sperm doublet-microtubule structure and CIMIP3-associated machinery; no direct human tissue assay."
+    },
+    "34903892": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human CIROP variants in situs anomalies, with embryonic left-right-organizer mechanism in fish and frog."
+    },
+    "38371936": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "CPSF4L appears through SNP annotation in a microbiome\u2013acne genetic analysis."
+    },
+    "29762635": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "full_text",
+      "contribution": "Human leukocyte CPSF4L-region methylation associated with waist circumference."
+    },
+    "18835250": {
+      "roles": [
+        "catalog_nomination",
+        "tumor_expression",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "CRIPTO3 cancer transcripts and recombinant signaling activity; explicit historical pseudogene/retrogene identity."
+    },
+    "39518018": {
+      "roles": [
+        "catalog_nomination",
+        "normal_tissue",
+        "tumor_expression"
+      ],
+      "inspection": "full_text",
+      "contribution": "CRIPTO3-selective antibodies, tumor protein and normal-donor serum findings, separated from CRIPTO1."
+    },
+    "40835641": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "full_text",
+      "contribution": "Differential CRIPTO1/CRIPTO3 protein localization in human placenta, umbilical cord and fetal tissues."
+    },
+    "12072414": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human epididymal/sperm CST11 protein and recombinant antibacterial activity."
+    },
+    "12600824": {
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Defensin-family discovery; the DEFB108 testis/liver RNA finding requires copy-specific assay mapping."
+    },
+    "37340842": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "DEFB108B-associated gastric-cancer risk-locus annotation; genetic association does not measure protein."
+    },
+    "16033865": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "cross-species defensin catalog; reproductive assays mainly rat",
+      "contribution": "Cross-species defensin catalog; much of the reproductive tissue experimentation is in rat."
+    },
+    "35330821": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "full_text",
+      "model_limit": "nonhuman primate gingiva",
+      "contribution": "Defensin RNA in nonhuman-primate gingiva; retained as species-specific context."
+    },
+    "12620395": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human epididymal distribution of newly discovered defensin transcripts, including DEFB132."
+    },
+    "18390568": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Adult human epididymal cDNA catalog; independent reproductive transcript context."
+    },
+    "34481960": {
+      "roles": [
+        "function",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Recombinant human DEFB136 production, mass-spectrometric identification and antimicrobial/LPS-binding tests."
+    },
+    "36806146": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "full_text",
+      "contribution": "Human trophoblast RNA/enhancer regulation near DPEP2NB and DDX28."
+    },
+    "41098933": {
+      "roles": [
+        "tumor_expression"
+      ],
+      "inspection": "full_text",
+      "contribution": "Exact Ensembl-ID rows for DPEP2NB and GOLGA6L24/25 in a broad HNSCC differential-RNA table; not CTA nominations."
+    },
+    "22596233": {
+      "roles": [
+        "tumor_expression"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "EVX1 prostate-cancer methylation and demethylation-induced RNA; untreated tumor protein is not established."
+    },
+    "37626863": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "EXOC1L variants in a small fatal-familial-insomnia exome study; no brain expression assay."
+    },
+    "32713278": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Processed human FAM237A activates GPR83; native-tissue RNA annotations require separate tissue review."
+    },
+    "36853120": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Independent ligand-binding and receptor-internalization assays confirm mature human FAM237A\u2013GPR83 activity."
+    },
+    "31099189": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "full_text",
+      "contribution": "FAM90A27P lies in a reported breast-cancer copy-number region; genomic coverage only."
+    },
+    "15520407": {
+      "roles": [
+        "normal_tissue"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "FRG2-family RNA in differentiating FSHD myoblasts; duplicated-copy assay attribution remains limited."
+    },
+    "40637237": {
+      "roles": [
+        "normal_tissue",
+        "function",
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "FRG2/FRG2B transcript and translation analyses challenge protein-coding interpretation; FRG2A has a nucleolar RNA function."
+    },
+    "10601261": {
+      "roles": [
+        "function",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "GALP peptide discovery in pig and human cDNA information; species and splice-product identity are retained."
+    },
+    "16954604": {
+      "roles": [
+        "tumor_expression",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Alarin splice-product localization in human neuroblastic tumors; not interchangeable with full-length GALP."
+    },
+    "17535903": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Alarin vascular localization and vasoactive experiments; alternative product and animal results remain separate."
+    },
+    "38721139": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "GOLGA8J-linked genomic variants in autism/epilepsy families; no adult normal-brain protein claim."
+    },
+    "40020829": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Exome associations with leishmaniasis relapse, including GOLGA8K and MINDY4B; no expression inference."
+    },
+    "29329550": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "model_limit": "mouse histones",
+      "contribution": "Targeted mouse H2A.L.1 histone proteomics; not direct human H2AL1Q validation."
+    },
+    "36180920": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "nomenclature, not expression",
+      "contribution": "Standardized histone gene nomenclature; an identity resource rather than tissue-expression evidence."
+    },
+    "20819935": {
+      "roles": [
+        "normal_tissue",
+        "tumor_expression",
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "H3.Y-specific U2OS peptide evidence plus shared H3.X/Y hippocampal staining; normal assays do not isolate H3Y1."
+    },
+    "27016736": {
+      "roles": [
+        "function",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human H3.Y nucleosome structure and function, supplementing discovery and identity evidence."
+    },
+    "10329003": {
+      "roles": [
+        "tumor_expression",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Resolves HHLA1/OC90 intergenic splicing and HERV-H-driven transcripts in teratocarcinoma cells."
+    },
+    "8382789": {
+      "roles": [
+        "tumor_expression",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Original HERV-H/PLA2L fusion-transcript discovery, preceding later HHLA1/OC90 identity resolution."
+    },
+    "29290959": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "HHLA1-locus chromosomal gains detected by FISH in ovarian circulating tumor cells; genomic rather than protein evidence."
+    },
+    "22770981": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human HOXB1 congenital facial-paresis/hearing-loss genetics and functional assays; developmental scope."
+    },
+    "30517645": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human oocyte JUNO/IZUMO1R protein and fertilization experiments."
+    },
+    "36070373": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "MAIA/IZUMO1/JUNO interactions during human fertilization; independent reproductive mechanism."
+    },
+    "36972453": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "mouse Treg cells",
+      "contribution": "Mouse Izumo1R-dependent Treg regulation of skin inflammation; no automatic adult-human Treg attribution."
+    },
+    "24244731": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Computational KLF18-family gene predictions; predates experimental expression/function work."
+    },
+    "41986233": {
+      "roles": [
+        "function",
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "Human DUX4-induced KLF18 transcriptional-network experiments; endogenous protein-assay constraints remain explicit."
+    },
+    "17235325": {
+      "roles": [
+        "normal_tissue"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human KRTAP24-1 RNA and protein localization in the hair cuticle; living producer cells and mature hair differ."
+    },
+    "15363845": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "cross-species family evolution",
+      "contribution": "Epididymal lipocalin-family evolution; cross-species genomic context rather than direct human LCN9 function."
+    },
+    "34310634": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "mouse epididymis",
+      "contribution": "Mouse Lcn9-promoter Cre line with initial-segment epididymal expression."
+    },
+    "36428102": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "mouse lipocalin knockouts",
+      "contribution": "Mouse lipocalin knockouts and male-fertility phenotypes, supplementing family biology."
+    },
+    "38931433": {
+      "roles": [
+        "normal_tissue",
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "MANSC4-associated plasma-proteomic pQTL/MR analysis for type 1 diabetes; reagent identity and tissue source remain unresolved."
+    },
+    "41649226": {
+      "roles": [
+        "normal_tissue",
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "MANSC4-associated plasma-proteomic genetic analysis for glaucoma; a distinct dataset with the same reagent/localization question."
+    },
+    "31889940": {
+      "roles": [
+        "tumor_expression"
+      ],
+      "inspection": "full_text",
+      "contribution": "FAM188B2/MINDY4B-labelled plasma peptide findings in cancer/control comparisons; extract unique peptides before protein acceptance."
+    },
+    "38448978": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human MSGN1 variant and zebrafish gain-of-function developmental modeling."
+    },
+    "28446706": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "full_text",
+      "contribution": "Human preimplantation NANOGNB transcription and functional gene-regulation experiments."
+    },
+    "39720721": {
+      "roles": [
+        "immune_recognition"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Mutation-specific NANOGNB-associated neoantigen lead; does not establish wild-type shared-antigen recognition."
+    },
+    "36583259": {
+      "roles": [
+        "normal_tissue",
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human NLRP13 expression/methylation measurements in familial Mediterranean fever and controls."
+    },
+    "40066444": {
+      "roles": [
+        "normal_tissue"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "NLR-family expression analysis in Alzheimer disease brain datasets and mouse models; retain species and assay attribution."
+    },
+    "10607840": {
+      "roles": [
+        "normal_tissue"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human OBP2A-family discovery and normal-tissue expression; exact paralog assignment matters."
+    },
+    "39502293": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "full_text",
+      "contribution": "OBP2A protein in human skin/keratinocyte models and perturbation of epidermal barrier function."
+    },
+    "17134496": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "full_text",
+      "contribution": "OR1R1P in an esophageal-cancer genomic deletion/copy-number region; no protein assay."
+    },
+    "38917199": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human OR51M1 heterologous surface-expression and odorant-response assays; no endogenous tissue localization."
+    },
+    "38069004": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Circulating OR5H1 RNA association with pregnancy/preeclampsia; producer tissue and protein are unassigned."
+    },
+    "22590500": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "full_text",
+      "contribution": "Human PGAM4 testis/sperm RNA and protein, enzyme activity and infertility-associated variation."
+    },
+    "36576012": {
+      "roles": [
+        "tumor_expression",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "PGAM4 perturbation, glycolysis and temozolomide-resistance experiments in glioma models."
+    },
+    "35627305": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "PRAMEF10 genomic variation in an autism cohort; no neuronal expression or antigen evidence."
+    },
+    "38023213": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "full_text",
+      "contribution": "PRAMEF17 copy-number loss in four of nineteen olfactory neuroblastomas."
+    },
+    "31324852": {
+      "roles": [
+        "normal_tissue"
+      ],
+      "inspection": "full_text",
+      "contribution": "Combined PRAMEF18/PRAMEF19 microarray feature in stimulated human pulmonary-arterial smooth-muscle cells."
+    },
+    "25481043": {
+      "roles": [
+        "tumor_expression",
+        "function"
+      ],
+      "inspection": "full_text",
+      "contribution": "RFPL3 lung-cancer IHC and perturbation of hTERT/tumor-growth mechanisms."
+    },
+    "18656177": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "RFPL1/2/3 evolution and developing human neocortex RNA; family assays do not isolate adult RFPL3 protein."
+    },
+    "10814524": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human DSCR6/RIPPLY3 cloning, alternative transcripts and limited tissue-panel RNA."
+    },
+    "33452727": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "mouse pharyngeal arches",
+      "contribution": "Mouse Ripply3 retinoic-acid regulation during pharyngeal-arch development."
+    },
+    "8735594": {
+      "roles": [
+        "reproductive_developmental",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human RLN1/RLN2 transcript structures and a novel alternatively spliced relaxin transcript."
+    },
+    "38739617": {
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Selective relaxin immunoaffinity mass spectrometry; no endogenous REL1 in the tested samples despite RNA."
+    },
+    "15034037": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "SCGB1D4/IIS normal and activated immune-cell expression with chemotaxis/invasion experiments."
+    },
+    "21385388": {
+      "roles": [
+        "normal_tissue"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human nasal-explant SCGB1D4 RNA; the paper's SCGB3A2 protein staining is kept separate."
+    },
+    "17101974": {
+      "roles": [
+        "reproductive_developmental",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Primate retrogene/transduction history and reproductive transcript context for SLC35G5/AMAC1L2."
+    },
+    "11896452": {
+      "roles": [
+        "reproductive_developmental",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Historical chromosome-8 transcriptional map; exact AMAC1L2/SLC35G5 identity must be retained."
+    },
+    "29248594": {
+      "roles": [
+        "normal_tissue",
+        "function",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Exact OATP1B3\u20131B7 readthrough in human hepatocytes and liver microsomes, with transporter assays."
+    },
+    "31127008": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Readthrough-transporter effects on endoplasmic-reticulum access and ezetimibe metabolism."
+    },
+    "31509437": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Readthrough-transporter regulation by FXR ligands and bile-acid transport."
+    },
+    "32818652": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Genetic variation affecting the readthrough transporter's function; additional allelic mechanism."
+    },
+    "38909903": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "SMIM42 small-protein annotation and coding-potential case study; no tumor-specific native protein claim."
+    },
+    "22568433": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "full_text",
+      "contribution": "SRY immunostaining in adult male human midbrain neurons and catecholamine-regulation experiments."
+    },
+    "21078170": {
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "TAF11-like macrosatellite RNA in testis, fetal brain and whole brain; shared assays do not resolve individual copies."
+    },
+    "34290043": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "TCP11X1/X2 reference-transcript resolution and human GTEx RNA in primate X-palindrome analysis."
+    },
+    "40057485": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "contribution": "HiFi genomic profiling of highly similar TCP11X1/X2 and other paralogs; no native protein assay."
+    },
+    "16707773": {
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "mouse epididymal transcripts",
+      "contribution": "Mouse epididymis-specific transcript discovery related to TEDDM1."
+    },
+    "34193566": {
+      "roles": [
+        "catalog_nomination",
+        "immune_recognition",
+        "tumor_expression"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "TGM4 prostate-restricted antigen nomination with human immune assays and cancer-patient antibodies."
+    },
+    "8645175": {
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Normal human prostate-specific, androgen-regulated TGM4 expression."
+    },
+    "38643284": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "mouse maternal/ZGA function",
+      "contribution": "Mouse maternal Trim75 perturbation and zygotic-genome-activation phenotypes."
+    },
+    "36147661": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "model_limit": "recombinant TRIM75 domain; species/sequence requires review",
+      "contribution": "Recombinant TRIM75 coiled-coil structure; does not establish endogenous human embryo/tumor protein."
+    },
+    "34993129": {
+      "roles": [
+        "association"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "TRIM77 colorectal-cancer exome association with metastasis/prognosis; no expression inference."
+    },
+    "22144910": {
+      "roles": [
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Primate TRIM-gene evolutionary/genomic context, distinct from tumor assays."
+    },
+    "19915186": {
+      "roles": [
+        "function",
+        "translation_identity"
+      ],
+      "inspection": "full_text",
+      "model_limit": "mouse function; human homolog predictions",
+      "contribution": "Mouse Hmgpi preimplantation function and predicted human UBTFL homologs."
+    },
+    "12206714": {
+      "roles": [
+        "reproductive_developmental",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human chromosome-20 WFDC gene/transcript discovery; member-specific function is not inherited from WFDC2."
+    },
+    "11408932": {
+      "roles": [
+        "reproductive_developmental",
+        "tumor_expression",
+        "translation_identity"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human WNT8A cloning and RNA detection in NT2 teratocarcinoma within the tested panel."
+    },
+    "29910466": {
+      "roles": [
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "XKR5 interaction/phosphorylation and negative regulation of mutant KIT in experimental systems."
+    },
+    "12381728": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human zinc-activated channel discovery, electrophysiology and tissue RNA."
+    },
+    "16083862": {
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "Human ZACN/L2 brain-region RNA and neuronal immunostaining."
+    },
+    "39937414": {
+      "roles": [
+        "tumor_expression",
+        "function"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "ZACN kidney-cancer expression and cell-functional experiments; does not negate earlier normal-brain findings."
+    },
+    "41922334": {
+      "roles": [
+        "catalog_nomination",
+        "immune_recognition",
+        "tumor_expression"
+      ],
+      "inspection": "full_text",
+      "contribution": "ZNF99 in a germ-cell-tumor PhIP-Seq antibody signature; not endogenous peptide\u2013HLA validation."
+    },
+    "39980195": {
+      "roles": [
+        "catalog_nomination",
+        "immune_recognition",
+        "tumor_expression"
+      ],
+      "inspection": "abstract_or_indexed_record",
+      "contribution": "ZP4 tumor RNA/protein and CAR-T testing in TNBC cell/PDX models; preclinical, not a human safety trial."
+    }
+  },
+  "edge_limits": {
+    "DEFB108B:12600824": "family_assay",
+    "PRAMEF18:31324852": "shared_paralogs",
+    "TAF11L11:21078170": "family_assay",
+    "TAF11L13:21078170": "family_assay",
+    "TAF11L14:21078170": "family_assay",
+    "LCN9:15363845": "family_orthology",
+    "H2AL1Q:36180920": "nomenclature_only",
+    "DEFB113:16033865": "family_orthology",
+    "NANOGNB:39720721": "mutation_specific",
+    "GALP:16954604": "alternative_proteoform",
+    "GALP:17535903": "alternative_proteoform",
+    "FRG2B:15520407": "shared_paralogs",
+    "FAM237A:32713278": "native_expression_annotation_link",
+    "MANSC4:38931433": "reagent_identity_unresolved",
+    "MANSC4:41649226": "reagent_identity_unresolved",
+    "MINDY4B:31889940": "peptide_identity_unresolved",
+    "SLC35G5:11896452": "historical_identity"
+  },
+  "coverage_rule": "Exact human locus or gene-specific study, including explicitly labelled genomic associations. Broad screen rows, unresolved family/copy assays, animal-only studies and unverified leads do not supply exact-human paper coverage. Coverage is a reading/provenance measure, not a CTA admission gate.",
+  "core_rule": "Cover all eligible paper-to-protein memberships, with required unique contributions first, then largest uncovered contribution and deterministic tie breaking, followed by removal of redundant papers. The result is an inclusion-minimal cover, not a claimed minimum-cardinality solution. Supplementary papers retain evidence beyond name coverage.",
+  "previous_edge_assessments": {
+    "TBXT:https://pmc.ncbi.nlm.nih.gov/articles/PMC4636967/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Brachyury was tested as a cancer-vaccine target in a human phase I trial. This publication is missing from the nomination collection.",
+      "identity_limit": "The product was a yeast-based vaccine; the trial did not test engineered CAR or TCR cells.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4636967/"
+      ]
+    },
+    "SEMG2:https://pmc.ncbi.nlm.nih.gov/articles/PMC7733513/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "The authors identify SEMG2 as a cancer-testis antigen and report tumor RNA and cancer-cell-line protein measurements.",
+      "identity_limit": "SEMG1 and SEMG2 results require separate attribution.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7733513/"
+      ]
+    },
+    "SEMG2:https://pubmed.ncbi.nlm.nih.gov/12200457/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Separate SgI and SgII transcript assays establish human SEMG2 paper coverage; the shared antibody does not resolve SEMG2-specific basal-cell protein.",
+      "identity_limit": "Gene-specific RNA and cross-reactive protein staining must be interpreted separately.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/12200457/"
+      ]
+    },
+    "PATE1:https://pubmed.ncbi.nlm.nih.gov/11880645/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "The cloned PATE cDNA accession AF462605 is a source sequence for PATE1 RefSeq NM_138294.3 / NP_612151.1; NCBI Gene 160065 links the paper and ENSG00000171053.",
+      "identity_limit": "PATE is resolved to PATE1. Normal prostate/testis RNA and tagged-protein experiments do not establish tumor restriction or endogenous protein abundance.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/11880645/",
+        "https://www.ncbi.nlm.nih.gov/gene/160065"
+      ]
+    },
+    "LEUTX:https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX and DPRX regulate an early-embryo transcriptional program. The paper also examines cancer-cell-line expression.",
+      "identity_limit": "Experiments include human embryo transcripts and embryonic stem-cell overexpression.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/"
+      ]
+    },
+    "DPRX:https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX and DPRX regulate an early-embryo transcriptional program. The paper also examines cancer-cell-line expression.",
+      "identity_limit": "Experiments include human embryo transcripts and embryonic stem-cell overexpression.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/"
+      ]
+    },
+    "DPRX:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "DUXA:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "DUXB:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "TPRX2:https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "DPRX, DUXA, DUXB and TPRX2 are included in a study of human preimplantation homeobox factors.",
+      "identity_limit": "Measurements include embryo transcripts and stem-cell functional assays.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/"
+      ]
+    },
+    "LEUTX:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "ZNF280A:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "TPRX2:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "DUXB:https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "LEUTX regulates ZNF280A and TPRX2. The study reports TPRX2 transcription and function despite its historical pseudogene annotation.",
+      "identity_limit": "The downstream response was measured after experimentally induced LEUTX.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/"
+      ]
+    },
+    "LEUTX:https://pubmed.ncbi.nlm.nih.gov/39566337/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "A pediatric thoracic tumor contained a YAP1::LEUTX fusion.",
+      "identity_limit": "The reported molecule is the fusion; this release uses the full-length reference LEUTX sequence.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/39566337/"
+      ]
+    },
+    "WEE2:https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "WEE2 mutations caused fertilization failure in human oocytes. The study measured WEE2 protein and tested experimental rescue.",
+      "identity_limit": "The evidence concerns human oocytes and fertilization. WEE2 enters this release through developmental RNA measurements.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/"
+      ]
+    },
+    "KHDC3L:https://pmc.ncbi.nlm.nih.gov/articles/PMC4974340/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "The human oocyte proteomics paper explicitly identifies ECAT1/KHDC3L, and NCBI Gene 154288 maps ECAT1 and C6orf221 to ENSG00000203908.",
+      "identity_limit": "The historical ECAT1/C6orf221 aliases are resolved to KHDC3L; the experiment concerns human oocytes.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4974340/",
+        "https://www.ncbi.nlm.nih.gov/gene/154288/"
+      ]
+    },
+    "NLRP14:https://www.sciencedirect.com/science/article/pii/S2211124723015437": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "NLRP14 deficiency was associated with female infertility, oocyte maturation defects and early embryonic arrest.",
+      "identity_limit": "The study combines human infertility observations with mechanistic model experiments.",
+      "references": [
+        "https://www.sciencedirect.com/science/article/pii/S2211124723015437"
+      ]
+    },
+    "PABPN1L:https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "The paper tests mouse Pabpn1l genetics, oocytes and biochemical mechanism. Human orthology mentioned in its introduction is not a direct human study.",
+      "identity_limit": "Mouse mechanism only for this membership; PABPN1L is distinct from PABPC1L.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/"
+      ]
+    },
+    "PATE1:https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "Human reproductive proteomics remains linked; the earlier extraction did not preserve the PATE1-specific peptide/accession row. The direct PATE1 cloning paper supplies coverage independently.",
+      "identity_limit": "Exact peptide/accession attribution for PATE1 in this proteomics source remains unextracted.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/"
+      ]
+    },
+    "WFDC8:https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human reproductive-tissue proteomics identified epididymal enrichment of PATE1 and WFDC8.",
+      "identity_limit": "The study distinguishes epididymal protein production from association with sperm.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/"
+      ]
+    },
+    "RNASE9:https://pmc.ncbi.nlm.nih.gov/articles/PMC2669477/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "RNASE9 was cloned and localized in human epididymis; the study also reported sperm-associated protein.",
+      "identity_limit": "Measurements include tissue RNA and immunolocalization.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC2669477/"
+      ]
+    },
+    "MRGPRX1:https://insight.jci.org/articles/view/131712": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human thoracolumbar DRG qPCR and single-cell RT-PCR directly measure MRGPRX1; mouse colon-afferent experiments are a separate part of the study.",
+      "identity_limit": "Human DRG expression qualifies as a paper link. The released rare-cell panel does not include DRG.",
+      "references": [
+        "https://insight.jci.org/articles/view/131712"
+      ]
+    },
+    "SP7:https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human SP7 cDNA cloning and isoform-specific RNA measurements resolve the human locus. Normal-expression interpretation is separate from paper coverage.",
+      "identity_limit": "RNA was detected in fetal/craniofacial osteoblasts and chondrocytes, but not adult femoral osteoblasts; low tissue RNA required sensitive amplification. This is not an adult normal-protein measurement.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/"
+      ]
+    },
+    "KLF14:https://pmc.ncbi.nlm.nih.gov/articles/PMC5935235/": {
+      "eligible_for_coverage": true,
+      "coverage_rationale": "Human adipose studies connect KLF14 expression and function with adipocyte size, insulin resistance and type 2 diabetes risk.",
+      "identity_limit": "Adipose is Manageable in the tissue registry. The expression amount and cell compartment determine the policy result.",
+      "references": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5935235/"
+      ]
+    },
+    "CALHM3:https://pubmed.ncbi.nlm.nih.gov/29681531/": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "Mouse CALHM3 channel constructs and taste-cell genetics do not supply direct human-locus experiments.",
+      "identity_limit": "Mouse taste mechanism; human normal taste-cell expression is not established by this paper.",
+      "references": [
+        "https://pubmed.ncbi.nlm.nih.gov/29681531/"
+      ]
+    },
+    "BTN1A1:https://www.proteinatlas.org/ENSG00000124557-BTN1A1/tissue/lactating%2Bbreast": {
+      "eligible_for_coverage": false,
+      "coverage_rationale": "The live HPA page reports high BTN1A1 staining in lactating breast glandular cells.",
+      "identity_limit": "The page is newer than the pinned HPA v23 export. Version, physiological state and antibody data need reconciliation.",
+      "references": [
+        "https://www.proteinatlas.org/ENSG00000124557-BTN1A1/tissue/lactating%2Bbreast"
+      ]
+    }
+  },
+  "previous_source_assessments": {
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/": {
+      "inspection": "full_text_rechecked",
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "scope": "Human SP7 isoform cloning and RNA assays in osteoblast/chondrocyte cultures and tissue panels.",
+      "contribution": "Human SP7 gene and splice-isoform evidence. Fetal/craniofacial osteoblast RNA was detected; adult femoral osteoblast RNA was not detected in this study. Normal-tissue policy adjudication remains separate.",
+      "finding_update": {
+        "finding": "Human SP7 gene and splice-isoform evidence. Fetal/craniofacial osteoblast RNA was detected; adult femoral osteoblast RNA was not detected in this study. Normal-tissue policy adjudication remains separate.",
+        "model": "Human SP7 isoform cloning and RNA assays in osteoblast/chondrocyte cultures and tissue panels.",
+        "limitation": "The study measured RNA; adult femoral osteoblast RNA was not detected. These results do not establish adult normal-tissue protein abundance.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      }
+    },
+    "https://pubmed.ncbi.nlm.nih.gov/11880645/": {
+      "inspection": "abstract_figures_and_reference_identity_rechecked",
+      "roles": [
+        "catalog_nomination",
+        "tumor_expression",
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "scope": "Human prostate/testis and prostate-cancer RNA, cDNA cloning, in-vitro translation and tagged-protein expression.",
+      "contribution": "PATE is resolved to PATE1 through paper accession AF462605 and NCBI Gene 160065; supplies a prostate-cancer target nomination and normal reproductive-tissue findings.",
+      "finding_update": {
+        "finding": "PATE is resolved to PATE1 through paper accession AF462605 and NCBI Gene 160065; supplies a prostate-cancer target nomination and normal reproductive-tissue findings.",
+        "model": "Human prostate/testis and prostate-cancer RNA, cDNA cloning, in-vitro translation and tagged-protein expression.",
+        "limitation": "PATE is resolved to PATE1. Normal prostate/testis RNA and tagged-protein experiments do not establish tumor restriction or endogenous protein abundance.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      }
+    },
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/": {
+      "inspection": "full_text_rechecked",
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "scope": "Mouse Pabpn1l knockout, oocyte/embryo and biochemical mechanism.",
+      "contribution": "Mouse maternal-mRNA clearance mechanism; retained as supplementary species-specific evidence without direct-human coverage.",
+      "finding_update": {
+        "finding": "Mouse maternal-mRNA clearance mechanism; retained as supplementary species-specific evidence without direct-human coverage.",
+        "model": "Mouse Pabpn1l knockout, oocyte/embryo and biochemical mechanism.",
+        "limitation": "Mouse mechanism; the human ortholog mentioned in the introduction is not a direct human experiment.",
+        "next_action": "Use the source-specific evidence in the next classification adjudication."
+      }
+    }
+  }
+}

@@ -6,7 +6,6 @@ from collections import Counter
 from pathlib import Path
 
 from oncoref import cta_selection, sequence_bundle
-from oncoref.version import __version__
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "docs/audits/cta-definition-20261104"
@@ -15,7 +14,7 @@ REPORT = ROOT / "docs/audits/cta-definition-20261104"
 def test_public_counts_statuses_and_worked_cases_match_the_current_api():
     report = json.loads((REPORT / "report-data.json").read_text())
     roles = cta_selection.sequence_dispositions()
-    assert report["release"] == __version__
+    assert report["release"] == cta_selection._metadata()["release"]
     assert report["coverage"] == cta_selection.coverage()
     assert report["counts"] == roles.category.value_counts().to_dict()
     assert len(report["rows"]) == len(roles)
@@ -36,7 +35,7 @@ def test_public_counts_statuses_and_worked_cases_match_the_current_api():
 
 def test_final_receipt_binds_source_audits_figures_and_public_documentation():
     receipt = json.loads((REPORT / "release-receipt.json").read_text())
-    assert receipt["release"] == __version__
+    assert receipt["release"] == cta_selection._metadata()["release"]
     assert receipt["bundle_id"] == sequence_bundle.descriptor()["bundle_id"]
     assert receipt["selection_policy_id"] == cta_selection.coverage()["policy_id"]
     for key, base in [("inputs", ROOT), ("outputs", REPORT), ("generated_documentation", ROOT)]:

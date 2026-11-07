@@ -1,0 +1,834 @@
+[
+  {
+    "pmid": "10049596",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "10329003",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "10601261",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "10607840",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "10814524",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "11408932",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "11854508",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC122330/fullTextXML"
+  },
+  {
+    "pmid": "11896452",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "12072414",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "12206714",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1222987/fullTextXML"
+  },
+  {
+    "pmid": "12381728",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "12600824",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "12620395",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "12734011",
+    "pmcid": "PMC156587",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC156587/fullTextXML",
+    "cache_file": "PMC156587.xml",
+    "sha256": "95d6492cfe16d3a1ec908b9bbddaf74ef5b8598066cbf12b69e6827d5a33ee90"
+  },
+  {
+    "pmid": "15034037",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "15363845",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "15520407",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1735617/fullTextXML"
+  },
+  {
+    "pmid": "16033865",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "16083862",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "16707773",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "16954604",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "17068127",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "17101974",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1693794/fullTextXML"
+  },
+  {
+    "pmid": "17134496",
+    "pmcid": "PMC1687196",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1687196/fullTextXML",
+    "cache_file": "PMC1687196.xml",
+    "sha256": "8b8646a912823cc02199d769fe00f5b17b1bd24a947ca49d3536373e997e1d5a"
+  },
+  {
+    "pmid": "17235325",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "17535903",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1891251/fullTextXML"
+  },
+  {
+    "pmid": "18390568",
+    "pmcid": "PMC2650638",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2650638/fullTextXML",
+    "cache_file": "PMC2650638.xml",
+    "sha256": "c1267c29499e448ec81060ca341599db79d9c293537d992af409635271dc60bf"
+  },
+  {
+    "pmid": "18656177",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2495069/fullTextXML"
+  },
+  {
+    "pmid": "18835250",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "19915186",
+    "pmcid": "PMC2798723",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2798723/fullTextXML",
+    "cache_file": "PMC2798723.xml",
+    "sha256": "bd5b2a8af2ee05e0ff8d90e463e14bbb8cc1b4f02be549ad497e281e141c4ef1"
+  },
+  {
+    "pmid": "20819935",
+    "pmcid": "PMC2935562",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2935562/fullTextXML",
+    "cache_file": "PMC2935562.xml",
+    "sha256": "e49937be7a387cf5336df0551de3326936ab2fb70d44034084af7045d4c316b8"
+  },
+  {
+    "pmid": "21078170",
+    "pmcid": "PMC3018141",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3018141/fullTextXML",
+    "cache_file": "PMC3018141.xml",
+    "sha256": "ad4e79efaab1da86e3344b3856590ec29584e2b1b361a1cba6698f583af72dd7"
+  },
+  {
+    "pmid": "21385388",
+    "pmcid": "PMC3063214",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3063214/fullTextXML",
+    "cache_file": "PMC3063214.xml",
+    "sha256": "f5b88cb94474e4e3b1c9f5b42e405014396616bfc84d8739e807082efb6c5b32"
+  },
+  {
+    "pmid": "22144910",
+    "pmcid": "PMC3228819",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3228819/fullTextXML",
+    "cache_file": "PMC3228819.xml",
+    "sha256": "b7cca51bfb23086f20fc6ab702ea5dc6d54e549e965a983f8ef3fbd5824117a0"
+  },
+  {
+    "pmid": "22568433",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3529967/fullTextXML"
+  },
+  {
+    "pmid": "22590500",
+    "pmcid": "PMC3348931",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3348931/fullTextXML",
+    "cache_file": "PMC3348931.xml",
+    "sha256": "41ec185b9767e87459e791a0d4113abed4837ec7fbbc6e2791f6d56cd0d11915"
+  },
+  {
+    "pmid": "22596233",
+    "pmcid": "PMC3389415",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3389415/fullTextXML",
+    "cache_file": "PMC3389415.xml",
+    "sha256": "64f0adcdaade53ffaef1e71ffa2df98afed8f72df2ce4aac7b9089441b1fc712"
+  },
+  {
+    "pmid": "22770981",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3397264/fullTextXML"
+  },
+  {
+    "pmid": "23954414",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4231430/fullTextXML"
+  },
+  {
+    "pmid": "24244731",
+    "pmcid": "PMC3820594",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC3820594/fullTextXML",
+    "cache_file": "PMC3820594.xml",
+    "sha256": "c8124c149cf938de01de79b0c50f25d5f794197680789959773e7a3977435749"
+  },
+  {
+    "pmid": "25481043",
+    "pmcid": "PMC4322990",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4322990/fullTextXML",
+    "cache_file": "PMC4322990.xml",
+    "sha256": "28f6356319deddc160ce479ec7fc238745abc19fa87d632a09358cf179f0386a"
+  },
+  {
+    "pmid": "27016736",
+    "pmcid": "PMC5291245",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5291245/fullTextXML",
+    "cache_file": "PMC5291245.xml",
+    "sha256": "b49189ae3f8c32ecaf24a229311153008304e046f65ce3bc3e06420a31bf1e33"
+  },
+  {
+    "pmid": "27389689",
+    "pmcid": "PMC5010893",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5010893/fullTextXML",
+    "cache_file": "PMC5010893.xml",
+    "sha256": "a26fcccf6779d812a81cdad1e77c9dde31aec0a78dfcaaa6abb67f4a0378565d"
+  },
+  {
+    "pmid": "28446706",
+    "pmcid": "PMC5413911",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5413911/fullTextXML",
+    "cache_file": "PMC5413911.xml",
+    "sha256": "1cfe761a48c4d08a68d639dd9f77a4e973dff9edfc5951a666a961022be32329"
+  },
+  {
+    "pmid": "29248594",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "29290959",
+    "pmcid": "PMC5739744",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5739744/fullTextXML",
+    "cache_file": "PMC5739744.xml",
+    "sha256": "bd3229111d8e6d870a3353959725731fce17007b77718a392edae2739eee794a"
+  },
+  {
+    "pmid": "29329550",
+    "pmcid": "PMC5767011",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5767011/fullTextXML",
+    "cache_file": "PMC5767011.xml",
+    "sha256": "e7d8964d2722e0bd05284c4e1bbe94b7fa785d4ca20c3ed4746bbd219e1eae61"
+  },
+  {
+    "pmid": "29762635",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6070087/fullTextXML"
+  },
+  {
+    "pmid": "29910466",
+    "pmcid": "PMC6004359",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6004359/fullTextXML",
+    "cache_file": "PMC6004359.xml",
+    "sha256": "6f958072c889106448f8f73a9e1d20c354a37e88b8c5fccd1a66dac9e6d734f8"
+  },
+  {
+    "pmid": "30517645",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "31099189",
+    "pmcid": "PMC6625096",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6625096/fullTextXML",
+    "cache_file": "PMC6625096.xml",
+    "sha256": "cf1d077318793bff0052bba3efd0fcf9c6c428447c986a7af9f5a52f0c15748b"
+  },
+  {
+    "pmid": "31127008",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "31324852",
+    "pmcid": "PMC6642142",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6642142/fullTextXML",
+    "cache_file": "PMC6642142.xml",
+    "sha256": "99f6e062fbb326fb6182a2b99d8043e6791d108fe15a831cdb73b96b7501c5a2"
+  },
+  {
+    "pmid": "31509437",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "31889940",
+    "pmcid": "PMC6927194",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6927194/fullTextXML",
+    "cache_file": "PMC6927194.xml",
+    "sha256": "09ee961d891a9c5d6c95675645066fe568fa766e29b2d025aae803b1a71d42b7"
+  },
+  {
+    "pmid": "32102328",
+    "pmcid": "PMC7072849",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7072849/fullTextXML",
+    "cache_file": "PMC7072849.xml",
+    "sha256": "1ac2b4ffa5f2e2f898e6b94f6573d2a414aabe6d8c7acc6af84dc12099a24ec1"
+  },
+  {
+    "pmid": "32713278",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "32818652",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "33424347",
+    "pmcid": "PMC7783806",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7783806/fullTextXML",
+    "cache_file": "PMC7783806.xml",
+    "sha256": "35c418df255e9ab5aa437568d4e687cdb522b240deca53607b0427c6de513440"
+  },
+  {
+    "pmid": "33452727",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "33599278",
+    "pmcid": "PMC7939728",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7939728/fullTextXML",
+    "cache_file": "PMC7939728.xml",
+    "sha256": "be849fd6dad075f4f472b97c6411d0d304cd3f43c7e0830a43278ddcd5654bcd"
+  },
+  {
+    "pmid": "33971925",
+    "pmcid": "PMC8108447",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8108447/fullTextXML",
+    "cache_file": "PMC8108447.xml",
+    "sha256": "4e912df054a621f1284f0b3cb9050e859ad4d775a920cb11ef9f89765ab5426c"
+  },
+  {
+    "pmid": "34193566",
+    "pmcid": "PMC8246381",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8246381/fullTextXML",
+    "cache_file": "PMC8246381.xml",
+    "sha256": "6b93039ae9924526588b892930f2c344aa83cae2b95a5a61e749d447d731ec57"
+  },
+  {
+    "pmid": "34290043",
+    "pmcid": "PMC8327919",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8327919/fullTextXML",
+    "cache_file": "PMC8327919.xml",
+    "sha256": "bd34276edb07bacaa50e79957bb5eb9026048ddb6a18e9206ffdc05f5bca4f81"
+  },
+  {
+    "pmid": "34310634",
+    "pmcid": "PMC8312960",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8312960/fullTextXML",
+    "cache_file": "PMC8312960.xml",
+    "sha256": "d916531c7fada74b790fa4c41ceabff0efa60bea225189497b8eef3ea4c51846"
+  },
+  {
+    "pmid": "34481960",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "34721544",
+    "pmcid": "PMC8551569",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8551569/fullTextXML",
+    "cache_file": "PMC8551569.xml",
+    "sha256": "2658c3a89573f1b5a130413e054b8df3f125b47928fea71d4443c089164bda75"
+  },
+  {
+    "pmid": "34903892",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "34993129",
+    "pmcid": "PMC8724310",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8724310/fullTextXML",
+    "cache_file": "PMC8724310.xml",
+    "sha256": "4a7d7e5e4533bf7f7da3b86754b1b0a4267eec816e2f8512477b73d5dc862ba1"
+  },
+  {
+    "pmid": "35330821",
+    "pmcid": "PMC8940521",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8940521/fullTextXML",
+    "cache_file": "PMC8940521.xml",
+    "sha256": "265bf7dd5a621cef62421b9311e34cf60d66789e8c6f99c71fcaefab15954637"
+  },
+  {
+    "pmid": "35569347",
+    "pmcid": "PMC9193610",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9193610/fullTextXML",
+    "cache_file": "PMC9193610.xml",
+    "sha256": "5dcf6691f8dbd773897e24cd6a870dcaf9d97f79701944c2f6d6588f5d34f48e"
+  },
+  {
+    "pmid": "35627305",
+    "pmcid": "PMC9141003",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9141003/fullTextXML",
+    "cache_file": "PMC9141003.xml",
+    "sha256": "6d7f23d100bfeddac2f1a09df7df42d3a486c90a69d83285cf787b468b73d6c0"
+  },
+  {
+    "pmid": "36070373",
+    "pmcid": "PMC9451160",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9451160/fullTextXML",
+    "cache_file": "PMC9451160.xml",
+    "sha256": "3850373a96d0b8fe6ed5ba4554c1ccb4ef037217130e79243146a9975314e832"
+  },
+  {
+    "pmid": "36147661",
+    "pmcid": "PMC9471973",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9471973/fullTextXML",
+    "cache_file": "PMC9471973.xml",
+    "sha256": "f4d6ce5f3d36f4de4876c9e896cf45ea608fd2149da98c03cf112a087ea09edd"
+  },
+  {
+    "pmid": "36180920",
+    "pmcid": "PMC9526256",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9526256/fullTextXML",
+    "cache_file": "PMC9526256.xml",
+    "sha256": "0dd2a8ab04cf6f0301457a89b3c3031bdb7667519a0aa0715e0498593db56c2b"
+  },
+  {
+    "pmid": "36428102",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10506895/fullTextXML"
+  },
+  {
+    "pmid": "36576012",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "36583259",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "36806146",
+    "pmcid": "PMC10069462",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10069462/fullTextXML",
+    "cache_file": "PMC10069462.xml",
+    "sha256": "9440f037732078a3952279d8889fac1174d9330b187140c625bbb63f04885ee8"
+  },
+  {
+    "pmid": "36853120",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "36972453",
+    "pmcid": "PMC10083566",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10083566/fullTextXML",
+    "cache_file": "PMC10083566.xml",
+    "sha256": "586a10dac2bfd322b8f580efccc1d435ce6a5e98f4d5e8d8bdc13c534a982fff"
+  },
+  {
+    "pmid": "37340842",
+    "pmcid": "PMC10789951",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10789951/fullTextXML",
+    "cache_file": "PMC10789951.xml",
+    "sha256": "a8807734941f267a86aace25888157bf83e37db91def5a2e703892050caf14af"
+  },
+  {
+    "pmid": "37409929",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10549190/fullTextXML"
+  },
+  {
+    "pmid": "37626863",
+    "pmcid": "PMC10453322",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10453322/fullTextXML",
+    "cache_file": "PMC10453322.xml",
+    "sha256": "465e4362f5a65196a260088df5b2dccc62cdf2dae47034f04a93262b656f7a3f"
+  },
+  {
+    "pmid": "37904256",
+    "pmcid": "PMC10614308",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10614308/fullTextXML",
+    "cache_file": "PMC10614308.xml",
+    "sha256": "0d0e3cce89b77bc3d20099aeb325491d7310dbe5561c23a54331407a0a05a470"
+  },
+  {
+    "pmid": "38023213",
+    "pmcid": "PMC10646513",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10646513/fullTextXML",
+    "cache_file": "PMC10646513.xml",
+    "sha256": "906115364f11c2704eaa11fcefa85d3646ad6a3230b6f6937c836d65582a8258"
+  },
+  {
+    "pmid": "38069004",
+    "pmcid": "PMC10706743",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10706743/fullTextXML",
+    "cache_file": "PMC10706743.xml",
+    "sha256": "56a636846a5aee912cb6387cb00d1c67d2237ee711e112b691a7ad75276a7039"
+  },
+  {
+    "pmid": "38371936",
+    "pmcid": "PMC10869500",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10869500/fullTextXML",
+    "cache_file": "PMC10869500.xml",
+    "sha256": "ea09cbaae85d0f8642fe438309a80c3e564a6cadc466eef9d2cb7226507bbf40"
+  },
+  {
+    "pmid": "38448978",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "38485289",
+    "pmcid": "PMC10941171",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10941171/fullTextXML",
+    "cache_file": "PMC10941171.xml",
+    "sha256": "8b375a122ba3efeb74c1b7a8158775aa6e903dc4fedbe497e643891392aa8f9e"
+  },
+  {
+    "pmid": "38643284",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "38721139",
+    "pmcid": "PMC11075447",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11075447/fullTextXML",
+    "cache_file": "PMC11075447.xml",
+    "sha256": "dbda98a709ede9eb378eeb6bf185745a1951f4154be2e7136a36cb437133b7a0"
+  },
+  {
+    "pmid": "38739617",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "38777608",
+    "pmcid": "PMC11216401",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11216401/fullTextXML",
+    "cache_file": "PMC11216401.xml",
+    "sha256": "c4c57f76c82ceddb3a40857b1eb7d3ecdd56ae9fbeb3a7ca7c19adaa79756602"
+  },
+  {
+    "pmid": "38874019",
+    "pmcid": "PMC11200159",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11200159/fullTextXML",
+    "cache_file": "PMC11200159.xml",
+    "sha256": "cd5018e7bf6ecf05e0aecb11c607c0495355a3dcdaaef0e7bdb7d3b1f3eabb63"
+  },
+  {
+    "pmid": "38909903",
+    "pmcid": "PMC11305224",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11305224/fullTextXML",
+    "cache_file": "PMC11305224.xml",
+    "sha256": "cea8c0515e431ceef7b8aa43a2794b2f14729616e84f314fe92ee22dd387a98b"
+  },
+  {
+    "pmid": "38917199",
+    "pmcid": "PMC11198769",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11198769/fullTextXML",
+    "cache_file": "PMC11198769.xml",
+    "sha256": "ed3b467d6b55e818f808fd19ab885ecd9cf5829b2461c216217f1fdf64347ffe"
+  },
+  {
+    "pmid": "38931433",
+    "pmcid": "PMC11206317",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11206317/fullTextXML",
+    "cache_file": "PMC11206317.xml",
+    "sha256": "de42529e65b2a4dab122527cc2b6abb09a33dc88a1eed8b95fbbc16b2b1c2d52"
+  },
+  {
+    "pmid": "39192094",
+    "pmcid": "PMC11387189",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11387189/fullTextXML",
+    "cache_file": "PMC11387189.xml",
+    "sha256": "8c7b4d1560e4bdb18408c8f317ddeadfa68834ed075aa97a0a7de34a7bd68469"
+  },
+  {
+    "pmid": "39201364",
+    "pmcid": "PMC11354578",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11354578/fullTextXML",
+    "cache_file": "PMC11354578.xml",
+    "sha256": "939edcc5a69c0bcf80cf79e8707ca258ba9fa7d3186460b0ee959992988961d2"
+  },
+  {
+    "pmid": "39502293",
+    "pmcid": "PMC11536036",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11536036/fullTextXML",
+    "cache_file": "PMC11536036.xml",
+    "sha256": "237bc87960c717834a73fb5cf8ccf991c673f5b001a4becf50109d29454639d1"
+  },
+  {
+    "pmid": "39518018",
+    "pmcid": "PMC11545644",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11545644/fullTextXML",
+    "cache_file": "PMC11545644.xml",
+    "sha256": "7b3aa4dffc5ca561e05edfbed70a4eb091c253d27ac2f5d15d06fafe8d565b84"
+  },
+  {
+    "pmid": "39720721",
+    "pmcid": "PMC11666526",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11666526/fullTextXML",
+    "cache_file": "PMC11666526.xml",
+    "sha256": "d7cf68ea7cadee6edda7ce03f9030575838b95d00075ddaa831ec306c5bc1d35"
+  },
+  {
+    "pmid": "39937414",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "39980195",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11997509/fullTextXML"
+  },
+  {
+    "pmid": "39999729",
+    "pmcid": "PMC11908612",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11908612/fullTextXML",
+    "cache_file": "PMC11908612.xml",
+    "sha256": "f295c43737567ecf45e4bd946b467e4591835563434fb2ef8d6961b28ad04698"
+  },
+  {
+    "pmid": "40020829",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "40057485",
+    "pmcid": "PMC11890787",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11890787/fullTextXML",
+    "cache_file": "PMC11890787.xml",
+    "sha256": "0042d67e320501418a1da62987d071c74fe11b1854d89290a15b6cdc3ac2d562"
+  },
+  {
+    "pmid": "40066444",
+    "pmcid": "PMC11891040",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11891040/fullTextXML",
+    "cache_file": "PMC11891040.xml",
+    "sha256": "73f3ca1dce4511e1294f784a4e1b38f399f5096febad668b0d3e5df38ffd33bb"
+  },
+  {
+    "pmid": "40113982",
+    "pmcid": "PMC11926069",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11926069/fullTextXML",
+    "cache_file": "PMC11926069.xml",
+    "sha256": "ee99f2c324c8a583bb458ab9d859c562b39f3db6293c902798703f847905205a"
+  },
+  {
+    "pmid": "40637237",
+    "pmcid": "PMC12242771",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12242771/fullTextXML",
+    "cache_file": "PMC12242771.xml",
+    "sha256": "550c1f22f899ead75b778d15f4095fce92339e30c5c5c5b40c8f48c34226d794"
+  },
+  {
+    "pmid": "40835641",
+    "pmcid": "PMC12368005",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12368005/fullTextXML",
+    "cache_file": "PMC12368005.xml",
+    "sha256": "f1683fe13d8349673cfffbef999836ac25084d5f54b6ccfa859ea304df151d8b"
+  },
+  {
+    "pmid": "41098933",
+    "pmcid": "PMC12519442",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12519442/fullTextXML",
+    "cache_file": "PMC12519442.xml",
+    "sha256": "097e9d204ccf878fa2ba554c81876ad867958d03cf21bf14b042be0eb01547fa"
+  },
+  {
+    "pmid": "41207179",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "41208545",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12674652/fullTextXML"
+  },
+  {
+    "pmid": "41371958",
+    "pmcid": "PMC12696397",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12696397/fullTextXML",
+    "cache_file": "PMC12696397.xml",
+    "sha256": "608fe5c388b2fe62ab204e00e6ece7af4d843bc1d5ecca15b38a5e2bbeb135c3"
+  },
+  {
+    "pmid": "41649226",
+    "pmcid": "PMC12889185",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12889185/fullTextXML",
+    "cache_file": "PMC12889185.xml",
+    "sha256": "f30d652cb1c5e97f05a91822c08db59afaa827966948ce171fa3a7ca3126bd24"
+  },
+  {
+    "pmid": "41764189",
+    "pmcid": "PMC13066092",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13066092/fullTextXML",
+    "cache_file": "PMC13066092.xml",
+    "sha256": "8cdf9412109483406fb349e620d78e0312115e0b8914f06c18ae9e97205b2387"
+  },
+  {
+    "pmid": "41776587",
+    "pmcid": "PMC13063650",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13063650/fullTextXML",
+    "cache_file": "PMC13063650.xml",
+    "sha256": "31cf7f4f1ab1f6bd1b92fb289fd0546fc6b23d7fd380bb18aa01c2e74ae9ca14"
+  },
+  {
+    "pmid": "41922334",
+    "pmcid": "PMC13216328",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13216328/fullTextXML",
+    "cache_file": "PMC13216328.xml",
+    "sha256": "1538df7e5ee8b82d9551d1c283b8bc911754aeb0f76c5dffe604f61d2c0bc9d5"
+  },
+  {
+    "pmid": "41959721",
+    "pmcid": "PMC13056615",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13056615/fullTextXML",
+    "cache_file": "PMC13056615.xml",
+    "sha256": "87b52ed932f2734079db5f6ab78079e264b7510e97d2443ab76cfc3b64775a64"
+  },
+  {
+    "pmid": "41986233",
+    "pmcid": "PMC13224869",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13224869/fullTextXML",
+    "cache_file": "PMC13224869.xml",
+    "sha256": "49513d41d9f980ee65d721104771af2d552b543a4b4eb9b807fb86239ae1b8bd"
+  },
+  {
+    "pmid": "41995771",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "42293750",
+    "pmcid": "PMC13253961",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13253961/fullTextXML",
+    "cache_file": "PMC13253961.xml",
+    "sha256": "e7073628be59c0cfa7526d131e4bc4e3da0f91fa3969109297a233b38456bb80"
+  },
+  {
+    "pmid": "42509645",
+    "pmcid": "PMC13408019",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13408019/fullTextXML",
+    "cache_file": "PMC13408019.xml",
+    "sha256": "29752091fa580e6f832f108655c86e99502b9f432b4caa2ffd3f5d5a24a262f1"
+  },
+  {
+    "pmid": "42555814",
+    "pmcid": "PMC13443249",
+    "status": "retrieved",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC13443249/fullTextXML",
+    "cache_file": "PMC13443249.xml",
+    "sha256": "19a55cad0a5ebfa0a404557d00866085223640c2805b68494a1ecc24591d72ef"
+  },
+  {
+    "pmid": "42957802",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "7916568",
+    "status": "no_pmc_fulltext"
+  },
+  {
+    "pmid": "8382789",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC309075/fullTextXML"
+  },
+  {
+    "pmid": "8645175",
+    "status": "retrieval_failed",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1217292/fullTextXML"
+  },
+  {
+    "pmid": "8735594",
+    "status": "no_pmc_fulltext"
+  }
+]

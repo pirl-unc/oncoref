@@ -639,6 +639,25 @@ comparison plots and the downstream migration contract.
 
 ## CTA Antigens
 
+The [individual literature review and source registry](audits/cta-literature-20261107/report.html)
+records 96 follow-up assessments and distinct roles for core and supplementary
+papers. These are evidence annotations alongside the frozen 1.31.0 selection;
+normal-expression and identity findings still require classification adjudication.
+
+```python
+from oncoref import cta_literature
+
+cta_literature.reviews("SRY")
+cta_literature.sources(collection="core")
+cta_literature.sources(collection="supplementary", role="normal_tissue")
+cta_literature.cta_coverage()  # All 602 released CTA records; gaps remain explicit.
+cta_literature.memberships()  # Exact source occurrences, including unresolved links.
+```
+
+The core preserves mapped paper coverage. Supplementary papers retain additional
+assays, normal-expression findings, identity questions and upstream gene-set
+provenance. Core placement does not determine which findings apply to selection.
+
 The current research set is available through the same species-scoped API:
 
 ```python
@@ -649,7 +668,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-The human release selects **546 groups / 582 loci**. Dog nominations remain
+The human release selects **602 proteins / 646 loci**. Dog nominations remain
 unassigned/unassessed. Mouse returns one unassessed P1A nomination with partial
 evidence; quantitative mouse selection remains unavailable. The
 [selection guide](cta-selection.md) documents common fields, native units,
