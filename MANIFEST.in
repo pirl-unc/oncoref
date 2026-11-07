@@ -4,6 +4,7 @@
 # later milestone) would balloon the .tar.gz past PyPI's 100 MiB limit.
 recursive-include scripts *.py
 recursive-include tests *.py
+recursive-include tests/js *.cjs
 recursive-include tests/fixtures *.json *.csv *.yaml
 recursive-include tests/fixtures/human-cta-reference *.gz
 recursive-include tests/data/pfizer-assignments *.json *.gz *.tsv *.md
