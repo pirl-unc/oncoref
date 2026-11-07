@@ -17,6 +17,8 @@ import shutil
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from oncoref._cta_literature_followup import build_followup
+
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "scripts/cta_evidence_assets"
 OUT = ROOT / "docs/audits/cta-literature-20261107"
@@ -436,6 +438,10 @@ def build_registry():
         ASSETS / "program-source-rows.json.gz",
         ASSETS / "literature-review.json",
         ASSETS / "catalog-review.json",
+        ASSETS / "cta-followup-notes.json",
+        ASSETS / "cta-localization-input.json.gz",
+        ROOT / "oncoref/_cta_literature_followup.py",
+        ROOT / "scripts/import_cta_localization.py",
         OUT / "search-ledger.json",
         OUT / "review-population.json",
         ROOT / "docs/audits/cta-source-walkthrough-20261028/human-memberships.csv.gz",
@@ -444,7 +450,7 @@ def build_registry():
     ]
     return {
         "schema": "oncoref.cta-literature",
-        "version": 1,
+        "version": 2,
         "date": "2026-11-07",
         "baseline_release": "1.31.0",
         "classification_effect": "Evidence annotation only; findings requiring adjudication are not yet applied to the frozen selection.",
@@ -476,6 +482,13 @@ def build_registry():
         | {"gene_rows": len(broad_ids)},
         "measurement_sources": [s for s in guide["sources"] if s["source_id"] not in old_keys],
         "source_files": programs["source_files"],
+        **build_followup(
+            coverage,
+            reviews,
+            rows,
+            read(ASSETS / "cta-followup-notes.json"),
+            read(ASSETS / "cta-localization-input.json.gz"),
+        ),
         "inputs": [
             {"path": str(p.relative_to(ROOT)), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
             for p in inputs
@@ -555,6 +568,51 @@ def main():
             "admission_route",
         ],
     )
+    write_csv(
+        OUT / "paper-gap-assessments.csv",
+        data["gap_assessments"],
+        [
+            "protein",
+            "gene_ids",
+            "biological_group",
+            "admission_route",
+            "evidence_summary",
+            "identity_note",
+            "normal_question",
+            "exact_product_question",
+            "recommendation",
+            "translation_qualified",
+            "translation_basis",
+            "tumor_max_tpm",
+            "normal_max_ntpm",
+            "normal_max_tpm",
+            "developmental_lineage_max_tpm",
+            "reproductive_max_ntpm",
+            "other_sources",
+        ],
+    )
+    write_csv(
+        OUT / "review-concerns.csv",
+        data["concerns"],
+        ["protein", "gene_ids", "category", "outcome", "observation", "next_action", "citations"],
+    )
+    write_csv(
+        OUT / "cta-localization.csv",
+        data["localization"],
+        [
+            "protein",
+            "gene_ids",
+            "paper_gap",
+            "facets",
+            "partial_facets",
+            "shared_facets",
+            "facet_gene_ids",
+            "sequence_localization_verified",
+            "entries",
+            "annotations",
+            "paper_notes",
+        ],
+    )
     for name in ["report.html", "review.js", "style.css"]:
         shutil.copyfile(ASSETS / "literature" / name, OUT / name)
     write_figures(data)
@@ -608,7 +666,70 @@ def integrate_evidence_guide():
 
 
 def write_figures(data):
-    # A static vector figure can be exported without a browser or plotting dependency.
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    plt.rcParams.update({"svg.hashsalt": "oncoref-cta-gaps-v1", "font.family": "DejaVu Sans"})
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5), facecolor="#f7f5ef")
+    cohorts = [data["gap_comparison"][key] for key in ["paper_gap", "paper_covered"]]
+    labels = ["33 paper gaps", "569 with paper coverage"]
+    routes = ["Developmental only", "Adult reproductive only", "Adult reproductive + developmental"]
+    left = [0.0, 0.0]
+    for route, color, label in zip(
+        routes,
+        ["#216b72", "#bc8756", "#8a91a3"],
+        ["Developmental only", "Adult reproductive only", "Both"],
+    ):
+        values = [100 * c["routes"].get(route, 0) / c["proteins"] for c in cohorts]
+        axes[0].barh(labels, values, left=left, color=color, label=label)
+        for j, (value, start) in enumerate(zip(values, left)):
+            if value > 4:
+                axes[0].text(
+                    start + value / 2,
+                    j,
+                    str(cohorts[j]["routes"].get(route, 0)),
+                    ha="center",
+                    va="center",
+                    color="white",
+                    fontsize=11,
+                )
+        left = [a + b for a, b in zip(left, values)]
+    axes[0].set(xlim=(0, 100), xlabel="Share of proteins (%)", title="Admission route")
+    axes[0].invert_yaxis()
+    handles, legend_labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles,
+        legend_labels,
+        loc="lower left",
+        bbox_to_anchor=(0.16, 0.10),
+        ncol=3,
+        frameon=False,
+        fontsize=9,
+    )
+    maxima = [c["median_highest_tumor_tpm"] for c in cohorts]
+    axes[1].barh(labels, maxima, color=["#216b72", "#8a91a3"])
+    axes[1].invert_yaxis()
+    for j, value in enumerate(maxima):
+        axes[1].text(value + 0.7, j, f"{value:.1f}", va="center")
+    axes[1].set(xlim=(0, 41), xlabel="TPM", title="Median of each protein's highest tumor RNA")
+    for ax in axes:
+        ax.set_facecolor("#f7f5ef")
+        ax.spines[["top", "right"]].set_visible(False)
+    fig.suptitle(
+        "Paper gaps are enriched for developmental candidates", x=0.02, ha="left", fontsize=15
+    )
+    fig.text(
+        0.02,
+        0.01,
+        "Frozen 1.31.0 measurements. All 33 and all 569 pass the reference-coding rule. Tumor maxima do not measure prevalence.",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=(0, 0.22, 1, 0.94))
+    fig.savefig(OUT / "gap-comparison.svg", metadata={"Date": None})
+    plt.close(fig)
+    # The existing overview figures retain their compact vector layout.
     c = data["counts"]
     colors = ["#216b72", "#a14632", "#96651d", "#5f6681", "#718073", "#889298"]
     parts = [
@@ -648,6 +769,9 @@ The 1.31.0 classifications are frozen. Normal-expression and identity findings i
 - [Individual reviews](individual-reviews.csv)
 - [Core and supplementary sources, roles and overlap](sources.csv)
 - [Paper coverage for all 602 CTAs](cta-paper-coverage.csv)
+- [All 33 paper gaps: biology, measurements and assessment](paper-gap-assessments.csv)
+- [All 29 normal-expression and identity concerns](review-concerns.csv)
+- [Localization of all 602 CTAs, with evidence and mapping scope](cta-localization.csv)
 - [Complete registry, including source-row occurrences](registry.json.gz)
 - [Search queries and retrieval receipts](search-ledger.json)
 - [Figure: review outcomes](review-outcomes.svg)

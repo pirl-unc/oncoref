@@ -1,0 +1,438 @@
+{
+  "schema": "oncoref.cta-followup-notes",
+  "version": 1,
+  "date": "2026-11-07",
+  "scope": "Interpretation and localization of the frozen 602 CTA records; no classification changes.",
+  "gap_groups": [
+    {
+      "id": "regulatory_families",
+      "label": "Duplicated regulatory and antigen-related families",
+      "proteins": [
+        "SSU72L1",
+        "SSU72L2",
+        "SSU72L3",
+        "SSU72L4",
+        "SSU72L5",
+        "TAF11L11",
+        "TAF11L13",
+        "TAF11L14",
+        "UBTFL1",
+        "TRIM75",
+        "MSANTD5",
+        "PRAMEF18"
+      ],
+      "rationale": "Family annotations and developmental RNA explain their inclusion. Exact-copy human function is largely uncharacterized."
+    },
+    {
+      "id": "germ_cell_structure",
+      "label": "Germ-cell structure and chromatin",
+      "proteins": [
+        "CIMIP3",
+        "H2AL1Q"
+      ],
+      "rationale": "Mouse sperm or testis studies provide biological leads; they do not establish the exact human protein."
+    },
+    {
+      "id": "reproductive_secretory_family",
+      "label": "Reproductive secretory families",
+      "proteins": [
+        "DEFB113",
+        "LCN9",
+        "SPADH"
+      ],
+      "rationale": "Defensin, lipocalin and spermadhesin families. Human secretion is annotated for DEFB113 and LCN9; SPADH localization is unresolved."
+    },
+    {
+      "id": "maternal_oocyte",
+      "label": "Maternal / oocyte-associated proteins",
+      "proteins": [
+        "OOSP4B",
+        "PABPN1L"
+      ],
+      "rationale": "Oocyte-associated RNA and, for PABPN1L, mouse maternal-to-zygotic transition experiments."
+    },
+    {
+      "id": "poorly_characterized",
+      "label": "Other poorly characterized reproductive proteins",
+      "proteins": [
+        "CTAGE15",
+        "CTXND2",
+        "GOLGA8T",
+        "PTTG1IP2",
+        "TEDDM1",
+        "TMEM269"
+      ],
+      "rationale": "Measured reproductive association and coding annotations supply the main support; family names do not establish tumor specificity."
+    },
+    {
+      "id": "sensory_channel",
+      "label": "Sensory channel",
+      "proteins": [
+        "CALHM3"
+      ],
+      "rationale": "Mouse taste physiology identifies a normal-function question. The human taste-cell compartment remains to be resolved."
+    },
+    {
+      "id": "locus_readthrough",
+      "label": "Unnamed loci and a readthrough",
+      "proteins": [
+        "ENSG00000237378",
+        "ENSG00000241690",
+        "ENSG00000258417",
+        "ENSG00000273155",
+        "ENSG00000284934",
+        "ENSG00000289809",
+        "ATF7-NPFF"
+      ],
+      "rationale": "Six unnamed coding loci and the ATF7-NPFF readthrough. Lack of a stable name or a dedicated experiment does not negate a qualifying coding reference."
+    }
+  ],
+  "concern_groups": [
+    {
+      "id": "normal_protein",
+      "label": "Direct adult normal-tissue protein",
+      "review_outcome": "normal_review",
+      "next_action": "Adjudicate the tissue and cell findings against the normal-expression policy."
+    },
+    {
+      "id": "normal_compartment",
+      "label": "Physiological state or producing compartment",
+      "review_outcome": "normal_review",
+      "next_action": "Identify the expressing normal cell, physiological state and relevant protection tier."
+    },
+    {
+      "id": "normal_rna",
+      "label": "Normal RNA / function requires localization",
+      "review_outcome": "normal_review",
+      "next_action": "Resolve native human producing cells, protein abundance and assay specificity."
+    },
+    {
+      "id": "shared_normal_assay",
+      "label": "Normal assay cannot separate related copies",
+      "review_outcome": "normal_review",
+      "next_action": "Resolve the exact copy or proteoform before assigning a member-specific exclusion."
+    },
+    {
+      "id": "affinity_association",
+      "label": "Plasma affinity-assay association",
+      "review_outcome": "normal_review",
+      "next_action": "Verify the measured molecule, reagent specificity and normal source tissue."
+    },
+    {
+      "id": "little_characterization",
+      "label": "Unnamed locus; little characterization",
+      "review_outcome": "identity_review",
+      "next_action": "Keep the qualifying coding record; do not borrow a named paralog’s papers. Experimental characterization is a priority, not a new admission requirement."
+    },
+    {
+      "id": "shared_identity",
+      "label": "Shared protein annotation",
+      "review_outcome": "identity_review",
+      "next_action": "Map the observed protein sequence to the selected locus before transferring experiments."
+    },
+    {
+      "id": "readthrough",
+      "label": "Readthrough-specific evidence missing",
+      "review_outcome": "identity_review",
+      "next_action": "Verify junction-spanning RNA and the selected product; parent-gene experiments do not establish the readthrough."
+    },
+    {
+      "id": "coding_conflict",
+      "label": "Experimental challenge to protein-coding status",
+      "review_outcome": "identity_review",
+      "next_action": "Reconcile the noncoding interpretation with the selected reference translation."
+    },
+    {
+      "id": "proteoform",
+      "label": "Proteoform attribution",
+      "review_outcome": "identity_review",
+      "next_action": "Assign measurements to GALP or alarin and their specific sequences."
+    },
+    {
+      "id": "protein_nondetection",
+      "label": "RNA without selective protein detection",
+      "review_outcome": "identity_review",
+      "next_action": "Reconcile the tested samples and assay sensitivity with older cross-reactive protein claims."
+    }
+  ],
+  "concerns": [
+    {
+      "protein": "MANSC4",
+      "concern_group": "affinity_association",
+      "observation": "Plasma protein-affinity / pQTL associations nominate MANSC4.",
+      "next_action": "Verify the reagent’s target and the producing tissue; a plasma association is not tissue-localized protein evidence."
+    },
+    {
+      "protein": "FRG2",
+      "concern_group": "coding_conflict",
+      "observation": "Recent work supports a nucleolar long-noncoding-RNA interpretation of the FRG2 family and challenges translation claims.",
+      "next_action": "Review the exact locus and reading frame against the published experiments before retaining a protein-level claim."
+    },
+    {
+      "protein": "FRG2B",
+      "concern_group": "coding_conflict",
+      "observation": "Recent work supports a nucleolar long-noncoding-RNA interpretation of the FRG2 family and challenges translation claims.",
+      "next_action": "Review the exact locus and reading frame against the published experiments before retaining a protein-level claim."
+    },
+    {
+      "protein": "ENSG00000237378",
+      "concern_group": "little_characterization",
+      "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+    },
+    {
+      "protein": "ENSG00000241690",
+      "concern_group": "little_characterization",
+      "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+    },
+    {
+      "protein": "ENSG00000258417",
+      "concern_group": "little_characterization",
+      "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+    },
+    {
+      "protein": "ENSG00000284934",
+      "concern_group": "little_characterization",
+      "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+    },
+    {
+      "protein": "ENSG00000289809",
+      "concern_group": "little_characterization",
+      "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+    },
+    {
+      "protein": "BTN1A1",
+      "concern_group": "normal_compartment",
+      "observation": "Normal lactating breast expression; tumor antibody-blockade studies also identify a cell-surface target.",
+      "next_action": "Retain lactation and mammary-cell context in the normal-expression decision."
+    },
+    {
+      "protein": "CRIPTO3",
+      "concern_group": "normal_compartment",
+      "observation": "Reagent-discriminated protein findings include normal donor serum and fetal / placental contexts.",
+      "next_action": "Identify the adult producing tissue; serum detection alone does not locate the source cell."
+    },
+    {
+      "protein": "KRTAP24-1",
+      "concern_group": "normal_compartment",
+      "observation": "Human hair-cuticle RNA and protein findings.",
+      "next_action": "Distinguish mature hair from living follicular and regenerative cells."
+    },
+    {
+      "protein": "BECN2",
+      "concern_group": "normal_protein",
+      "observation": "Adult and fetal human brain immunoblots, with autophagy and receptor-turnover experiments.",
+      "next_action": "Assess normal brain protein expression and the cells producing it."
+    },
+    {
+      "protein": "OBP2A",
+      "concern_group": "normal_protein",
+      "observation": "Human keratinocyte / skin RNA and protein, with skin-barrier experiments.",
+      "next_action": "Assess normal epidermal protein and barrier function."
+    },
+    {
+      "protein": "SLCO1B3-SLCO1B7",
+      "concern_group": "normal_protein",
+      "observation": "The exact readthrough protein is reported in normal human hepatocytes and liver microsomes; native localization is largely endoplasmic reticulum.",
+      "next_action": "Apply the normal hepatocyte evidence to the readthrough, keeping native and overexpression localization separate."
+    },
+    {
+      "protein": "SRY",
+      "concern_group": "normal_protein",
+      "observation": "Adult male human midbrain immunostaining and catecholamine-related functional experiments.",
+      "next_action": "Assess the normal neuronal population and sex-specific expression."
+    },
+    {
+      "protein": "ZACN",
+      "concern_group": "normal_protein",
+      "observation": "Human brain RNA and neuronal protein staining; channel function studied in expression systems.",
+      "next_action": "Assess normal neuronal protein, antibody specificity and cell identity."
+    },
+    {
+      "protein": "FAM237A",
+      "concern_group": "normal_rna",
+      "observation": "A processed secreted GPR83 agonist; reported normal RNA includes pituitary, testis, heart and brain.",
+      "next_action": "Localize native human production and quantify protein; recombinant secretion does not establish native tissue abundance."
+    },
+    {
+      "protein": "NLRP13",
+      "concern_group": "normal_rna",
+      "observation": "Human RNA / methylation studies include brain and disease-control comparisons.",
+      "next_action": "Resolve normal cell expression; RNA association does not establish a protein or inflammasome function."
+    },
+    {
+      "protein": "SCGB1D4",
+      "concern_group": "normal_rna",
+      "observation": "Normal activated CD8/CD19-cell and nasal RNA.",
+      "next_action": "Resolve normal immune / airway protein; do not transfer SCGB3A2 staining to SCGB1D4."
+    },
+    {
+      "protein": "RLN1",
+      "concern_group": "protein_nondetection",
+      "observation": "Selective immunoaffinity mass spectrometry did not detect relaxin-1 in the tested samples despite RNA; older assays could cross-react with relaxin-2.",
+      "next_action": "Record sample scope and detection limits; nondetection in these samples does not prove universal absence or negate the coding annotation."
+    },
+    {
+      "protein": "GALP",
+      "concern_group": "proteoform",
+      "observation": "GALP and the alternatively spliced alarin product have distinct sequence and tissue interpretations.",
+      "next_action": "Map each assay and claimed normal compartment to the measured product."
+    },
+    {
+      "protein": "ATF7-NPFF",
+      "concern_group": "readthrough",
+      "observation": "The reference coding record qualifies, but no dedicated study verifies the exact readthrough product.",
+      "next_action": "Seek junction-spanning RNA and sequence-specific protein data; do not substitute ATF7 or NPFF measurements."
+    },
+    {
+      "protein": "ENSG00000273155",
+      "concern_group": "shared_identity",
+      "observation": "UniProt Q8TCC3 links this locus and two others to mitochondrial ribosomal protein uL30m.",
+      "next_action": "Resolve the selected locus / sequence before crediting uL30m experiments."
+    },
+    {
+      "protein": "DEFB108B",
+      "concern_group": "shared_normal_assay",
+      "observation": "A DEFB108 assay reports predominant testis RNA and low liver RNA without resolving the current copies.",
+      "next_action": "Resolve the DEFB108 copy measured in liver."
+    },
+    {
+      "protein": "H3Y1",
+      "concern_group": "shared_normal_assay",
+      "observation": "Normal hippocampal staining uses an antibody shared by H3.X and H3.Y; tumor-cell mass spectrometry resolves H3.Y.",
+      "next_action": "Resolve which histone variant accounts for normal neuronal staining."
+    },
+    {
+      "protein": "PRAMEF18",
+      "concern_group": "shared_normal_assay",
+      "observation": "A combined PRAMEF18/PRAMEF19 RNA feature appears in treated human pulmonary-arterial smooth-muscle cells.",
+      "next_action": "Resolve the copy and native expression; this is not exact PRAMEF18 protein evidence."
+    },
+    {
+      "protein": "TAF11L11",
+      "concern_group": "shared_normal_assay",
+      "observation": "TAF11-like macrosatellite RNA is reported in testis, fetal brain and whole brain; the assay does not resolve this copy.",
+      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion."
+    },
+    {
+      "protein": "TAF11L13",
+      "concern_group": "shared_normal_assay",
+      "observation": "TAF11-like macrosatellite RNA is reported in testis, fetal brain and whole brain; the assay does not resolve this copy.",
+      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion."
+    },
+    {
+      "protein": "TAF11L14",
+      "concern_group": "shared_normal_assay",
+      "observation": "TAF11-like macrosatellite RNA is reported in testis, fetal brain and whole brain; the assay does not resolve this copy.",
+      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion."
+    }
+  ],
+  "localization_notes": [
+    {
+      "protein": "ZP4",
+      "facets": [
+        "cell_surface"
+      ],
+      "pmids": [
+        "39980195"
+      ],
+      "evidence": "Experimental",
+      "scope": "Human ZP4 in transduced cells and TNBC cell / xenograft models; oocyte staining.",
+      "finding": "Antibodies bind the extracellular portion of ZP4 on transduced cells; ZP4 CAR-T cells recognize tumor models. The study supplies surface-recognition evidence.",
+      "apply_facets": [
+        "cell_surface"
+      ]
+    },
+    {
+      "protein": "BTN1A1",
+      "facets": [
+        "cell_surface"
+      ],
+      "pmids": [
+        "38485289"
+      ],
+      "evidence": "Experimental",
+      "scope": "Human cancer cell models; the normal lactating mammary compartment also expresses BTN1A1.",
+      "finding": "Cell-surface BTN1A1 and antibody-mediated checkpoint blockade are studied in cancer models.",
+      "apply_facets": [
+        "cell_surface"
+      ]
+    },
+    {
+      "protein": "CRIPTO3",
+      "facets": [
+        "extracellular_detection"
+      ],
+      "pmids": [
+        "39518018",
+        "18835250"
+      ],
+      "evidence": "Experimental",
+      "scope": "Reagent-discriminated CRIPTO3 in serum and experimental cell models.",
+      "finding": "Serum protein detection supports extracellular occurrence; it does not establish the producing tissue, active secretion or an exposed tumor-cell epitope.",
+      "apply_facets": [
+        "extracellular_detection"
+      ]
+    },
+    {
+      "protein": "FAM237A",
+      "facets": [
+        "secreted"
+      ],
+      "pmids": [
+        "32713278"
+      ],
+      "evidence": "Experimental",
+      "scope": "Engineered endocrine host cells and receptor assays.",
+      "finding": "A processed, amidated secreted product activates GPR83. Native human tissue abundance was not established by the recombinant secretion experiment.",
+      "apply_facets": [
+        "secreted"
+      ]
+    },
+    {
+      "protein": "SLCO1B3-SLCO1B7",
+      "facets": [],
+      "pmids": [
+        "29248594",
+        "32818652"
+      ],
+      "evidence": "Experimental",
+      "scope": "Native human hepatocytes / microsomes versus transfected cells.",
+      "finding": "Normal hepatocyte evidence places the readthrough in the endoplasmic reticulum. Cell-membrane annotation also includes model-dependent results and is not proof of an exposed tumor epitope.",
+      "apply_facets": []
+    },
+    {
+      "protein": "PRAME",
+      "facets": [],
+      "pmids": [
+        "16620968"
+      ],
+      "evidence": "Reported localization",
+      "scope": "Cell-membrane localization annotation without extracellular orientation.",
+      "finding": "Cell-membrane association alone does not establish an antibody-accessible extracellular region.",
+      "apply_facets": []
+    },
+    {
+      "protein": "SPADH",
+      "facets": [],
+      "pmids": [],
+      "evidence": "Unresolved",
+      "scope": "Exact human protein.",
+      "finding": "No localization annotation or specific human secretion experiment was verified. The spermadhesin family name does not supply that evidence.",
+      "apply_facets": []
+    },
+    {
+      "protein": "OOSP4B",
+      "facets": [],
+      "pmids": [],
+      "evidence": "Shared annotation",
+      "scope": "UniProt A0A2R8Y4Y8 maps two Ensembl loci.",
+      "finding": "The shared entry predicts secretion. This is a candidate localization, not exact-locus experimental secretion.",
+      "apply_facets": []
+    }
+  ]
+}

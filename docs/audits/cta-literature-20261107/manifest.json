@@ -3,7 +3,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "d65b1eefa28011ad7ab2c8fc294662097a0f1bf128b16d8e161ab0326c737289"
+      "sha256": "d79e8abed152590d5c4f64624f2ad56de8caedf9d5ad77ea93d58fd4e31df55c"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
@@ -34,6 +34,22 @@
       "sha256": "9256e267fc7759a64a1ce7da540d8d856b89ee3ba439543dada5afd8e6fd5962"
     },
     {
+      "path": "scripts/cta_evidence_assets/cta-followup-notes.json",
+      "sha256": "415d2ed34f388c8fede5104ff1958ec9e2cc66b34ea94f8fa9ce0b289ac419b6"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/cta-localization-input.json.gz",
+      "sha256": "0d4258d81c108993c951ffb65d527e8e1c4253a8f6214f327b28a8e3db3dc4ec"
+    },
+    {
+      "path": "oncoref/_cta_literature_followup.py",
+      "sha256": "8c485833d235ad5d98a08fed9f7fddf34b94fb18206311d2b8c5742ce599e1e1"
+    },
+    {
+      "path": "scripts/import_cta_localization.py",
+      "sha256": "0c25e8127eddfc351c44783db12f46988c00b350bf604facf8095c719a950857"
+    },
+    {
       "path": "docs/audits/cta-literature-20261107/search-ledger.json",
       "sha256": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed"
     },
@@ -51,11 +67,11 @@
     },
     {
       "path": "scripts/cta_evidence_assets/literature/report.html",
-      "sha256": "e0c75d8105538a0619e00ecc9d8f3eb82c1274bbaa7d1587958b3f4c2208ac41"
+      "sha256": "de43479a2d2581a3d4f6f6eb4774251f1737e7133c5861aae48090232c4d94bd"
     },
     {
       "path": "scripts/cta_evidence_assets/literature/review.js",
-      "sha256": "91803e08cec67a99e67ee3d7906fb7577ce92e137080f1e0b3dfc51935247eaa"
+      "sha256": "beacb7e4b411c52ba3091ceeb2e625f393e5d85b937392ea2cd2c2150a12191c"
     },
     {
       "path": "scripts/cta_evidence_assets/literature/style.css",
@@ -111,17 +127,21 @@
     ]
   },
   "outputs": {
+    "cta-localization.csv": "06602d9859a951d96c68bab828d2112151bf4acb5003520153a6e10ca944f69e",
     "cta-paper-coverage.csv": "1b0ae2c831aaa0400f0b451bb12cc61fb372de9d6654b516a5187e0749e6dea7",
     "followup-retrievals.json": "328dbf0c5fbceeedae4272bc33ade58b4dd8527a11aa5c46e92acfccb81e19db",
     "fulltext-retrievals.json": "d505f7efcf8366fb5c5863c31fda28b582c447e980cc9be2e5e2fef580037822",
-    "index.md": "7ccbe534869d94d2bbc1b5c744de93a93e805971e4f1141d90e504610f89924d",
+    "gap-comparison.svg": "40a26a657b34d6448475d8d1d7b5e14b982c9481c8e8515cb985209ef886eabe",
+    "index.md": "7add9e3e4ed60b87b143e13754261972ecdd6b0f947cab50de875fd2618392d6",
     "individual-reviews.csv": "44980e66feeb5f4892680d1a79479f7641f60bcce88c7bf426899af3101c1471",
-    "registry.json.gz": "8d5237e15cf27e7fbffcd96f2389619538e83ad63610d3dcbc43a79f983e8f85",
-    "report.html": "e0c75d8105538a0619e00ecc9d8f3eb82c1274bbaa7d1587958b3f4c2208ac41",
+    "paper-gap-assessments.csv": "81ab1ff97383f4afe0240748ac0c58470b47503747e11126c219b4b3aee8942d",
+    "registry.json.gz": "8b068def1c5b914d3848bba039e1e46a149ac4c3b50b7f804a314c6f666c29cd",
+    "report.html": "de43479a2d2581a3d4f6f6eb4774251f1737e7133c5861aae48090232c4d94bd",
+    "review-concerns.csv": "153d6ff896acf599152198b3f6e96a13d16ed46b679439ded70d30fa7c8c1218",
     "review-outcomes.svg": "8cf369e3ea68af33266d241075133f6914f895f9643f17effb2caff12c07fe65",
     "review-population.json": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01",
-    "review.js": "91803e08cec67a99e67ee3d7906fb7577ce92e137080f1e0b3dfc51935247eaa",
-    "review.json": "796308484a3828ddcfb9c6396ed4bc032efc2d72aef51076e99a8e0ecba93ae1",
+    "review.js": "beacb7e4b411c52ba3091ceeb2e625f393e5d85b937392ea2cd2c2150a12191c",
+    "review.json": "c184f9d6b83b0da4f70757d91e9485b5bac3d167ac27da781a183ff78aa8bb98",
     "search-ledger.json": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed",
     "source-roles.svg": "1314b0324096e131296a3f90a9a6c9d6713a2fe5c1d771b6994b340d659d6827",
     "sources.csv": "a19e11b6dc2b6117b0b228cde15f66ac00df1c3d32e58495a0edbf588abd3a3a",

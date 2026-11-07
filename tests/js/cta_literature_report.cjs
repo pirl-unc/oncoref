@@ -2,6 +2,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 class Element{constructor(id){this.id=id;this.value='';this.innerHTML='';this.textContent='';this.children=[];this.listeners={};}add(x){this.children.push(x)}addEventListener(t,fn){this.listeners[t]=fn}replaceChildren(){this.children=[]}appendChild(x){this.children.push(x)}scrollIntoView(){}}
 const nodes=new Map(),get=id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id)};
 get('collection').value='core';get('coverage-filter').value='missing';
+get('location-filter').value='extracellular';
 const data=JSON.parse(fs.readFileSync('docs/audits/cta-literature-20261107/review.json','utf8'));
 const context=vm.createContext({document:{getElementById:get,createElement:()=>new Element()},Option:class{constructor(t,v){this.text=t;this.value=v}},fetch:async()=>({ok:true,json:async()=>data}),URLSearchParams,location:{search:''},console});
 vm.runInContext(fs.readFileSync('scripts/cta_evidence_assets/literature/review.js','utf8'),context);
@@ -13,6 +14,17 @@ setImmediate(()=>{
  set('collection','supplementary');assert.equal(get('source-count').textContent,'67 of 150 paper and supporting-source records');set('role','normal_tissue');assert(!get('source-table').innerHTML.includes('No matching sources'));
  set('coverage-filter','all');assert.equal(get('coverage-count').textContent,'602 of 602 released CTA records');set('coverage-filter','unlisted');assert.equal(get('coverage-count').textContent,'122 of 602 released CTA records');
  get('review-pages').children[1].onclick();assert.equal(get('review-pages').children[2].textContent,'Page 2 of 7');
+ assert.equal(get('gap-count').textContent,'33 of 33 proteins without qualifying paper coverage');
+ set('gap-group','Maternal / oocyte-associated proteins');assert.equal(get('gap-count').textContent,'2 of 33 proteins without qualifying paper coverage');
+ set('gap-group','');set('gap-query','TAF11');assert.equal(get('gap-count').textContent,'3 of 33 proteins without qualifying paper coverage');
+ set('concern-kind','normal_review');assert.equal(get('concern-count').textContent,'18 of 29 flagged reviews');
+ set('concern-kind','identity_review');assert.equal(get('concern-count').textContent,'11 of 29 flagged reviews');
+ set('concern-query','FRG2B');assert.equal(get('concern-count').textContent,'1 of 29 flagged reviews');assert(get('concern-table').innerHTML.includes('40637237'));
+ assert.equal(get('location-count').textContent,'93 of 602 released CTAs · location categories can overlap');
+ set('location-scope','gaps');assert.equal(get('location-count').textContent,'3 of 602 released CTAs · location categories can overlap');
+ set('location-filter','shared');set('location-query','OOSP4B');assert.equal(get('location-count').textContent,'1 of 602 released CTAs · location categories can overlap');assert(get('location-table').innerHTML.includes('Also maps outside this record'));
+ set('location-scope','');set('location-filter','');set('location-query','CRIPTO3');assert(get('location-table').innerHTML.includes('39518018'));assert(get('location-table').innerHTML.includes('Physiological state or producing compartment'));
+ assert(get('concern-summary').innerHTML.includes('Unnamed locus; little characterization'));
  console.log('DOM rendering, baseline/outcome/source/coverage filters, gene/paper links and pagination passed.');
 });
 const explorerContext=vm.createContext({document:{getElementById:get},fetch:async()=>({ok:true,json:async()=>data})});
@@ -22,5 +34,8 @@ setImmediate(()=>{
  const html=vm.runInContext(`findingsHTML([{url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC280673/',proteins:['SP7'],finding:'outdated adult-positive claim',category:'Normal review',title:'SP7'}])`,explorerContext);
  assert(html.includes('adult femoral osteoblast RNA was not detected'));
  assert(!html.includes('outdated adult-positive claim'));
+ const localization=vm.runInContext(`localizationHTML('ZP4')`,explorerContext);
+ assert(localization.includes('39980195'));
+ assert(localization.includes('protein=ZP4#localization'));
  console.log('Updated source findings replace earlier explorer text without altering frozen measurements.');
 });

@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from oncoref import cta_literature
+from oncoref._cta_literature_followup import location_facet
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/audits/cta-literature-20261107"
@@ -181,3 +182,78 @@ def test_registry_and_report_reproduce_offline(data):
     )
     assert len(cta_literature.memberships()) == len(data["memberships"])
     assert len(cta_literature.cta_coverage()) == 602
+
+
+def test_gap_assessments_keep_coding_qualification_separate_from_missing_papers(data):
+    gaps = {r["protein"]: r for r in data["gap_assessments"]}
+    assert len(gaps) == 33
+    assert all(r["translation_qualified"] for r in gaps.values())
+    assert sum(r["normal_question"] for r in gaps.values()) == 5
+    assert sum(r["exact_product_question"] for r in gaps.values()) == 2
+    assert data["gap_comparison"]["paper_gap"]["routes"]["Developmental only"] == 18
+    assert len(cta_literature.gap_assessments("CALHM3")) == 1
+    concerns = {r["protein"]: r for r in data["concerns"]}
+    assert len(concerns) == 29
+    assert Counter(r["outcome"] for r in concerns.values()) == {
+        "normal_review": 18,
+        "identity_review": 11,
+    }
+    assert sum(r["concern_group"] == "little_characterization" for r in concerns.values()) == 5
+    assert concerns["FRG2"]["concern_group"] == "coding_conflict"
+    assert concerns["ENSG00000273155"]["concern_group"] == "shared_identity"
+    assert len(cta_literature.concerns("SRY")) == 1
+
+
+@pytest.mark.parametrize(
+    "name,topology,orientation,expected",
+    [
+        ("Secreted", "", "", "secreted"),
+        ("Cytoplasmic vesicle, secretory vesicle, acrosome", "", "", "intracellular"),
+        (
+            "Endoplasmic reticulum membrane",
+            "Multi-pass membrane protein",
+            "",
+            "intracellular_membrane",
+        ),
+        ("Membrane", "Multi-pass membrane protein", "", "membrane_unspecified"),
+        ("Cell membrane", "Peripheral membrane protein", "", "cell_membrane_unresolved"),
+        ("Cell membrane", "Lipid-anchor", "Cytoplasmic side", "cell_membrane_unresolved"),
+        ("Cell membrane", "GPI-anchor", "", "cell_surface"),
+        ("Cell membrane", "Multi-pass membrane protein", "", "cell_surface"),
+        ("Cell surface", "", "", "cell_surface"),
+    ],
+)
+def test_localization_does_not_turn_membranes_or_secretory_vesicles_into_surface_evidence(
+    name, topology, orientation, expected
+):
+    assert (
+        location_facet(
+            {
+                "location": {"value": name},
+                "topology": {"value": topology},
+                "orientation": {"value": orientation},
+            }
+        )
+        == expected
+    )
+
+
+def test_localization_keeps_shared_identity_model_and_evidence_scope(data):
+    locations = {r["protein"]: r for r in data["localization"]}
+    assert len(locations) == 602
+    for protein in ["OOSP4B", "EPPIN-WFDC6"]:
+        assert "secreted" in locations[protein]["shared_facets"]
+        assert "secreted" not in locations[protein]["facets"]
+    assert "cell_surface" not in locations["PRAME"]["facets"]
+    assert "cell_membrane_unresolved" in locations["PRAME"]["shared_facets"]
+    assert locations["SPADH"]["facets"] == ["unknown"]
+    assert locations["CALHM3"]["annotations"][0]["location_evidence"] == ["By similarity"]
+    assert "cell_surface" in locations["ZP4"]["facets"]
+    assert "extracellular_detection" in locations["CRIPTO3"]["facets"]
+    assert "cell_surface" not in locations["CRIPTO3"]["facets"]
+    readthrough = locations["SLCO1B3-SLCO1B7"]
+    assert "intracellular_membrane" in readthrough["facets"]
+    assert any("Native human hepatocytes" in n["scope"] for n in readthrough["paper_notes"])
+    assert all(not r["sequence_localization_verified"] for r in locations.values())
+    assert len(cta_literature.localization("ENSG00000255393")) == 1
+    assert cta_literature.localization("not-a-gene").empty

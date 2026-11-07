@@ -15,6 +15,7 @@ nav:
       - Complete candidate inventory: audits/cta-inventory-20261105/index.md
       - Candidate evidence explorer and 122-protein review: audits/cta-evidence-guide-20261106/index.md
       - Individual reviews and core paper sources: audits/cta-literature-20261107/index.md
+      - CTA gaps and localization release: cta-release-1.33.0.md
       - Literature and source-role release: cta-release-1.32.0.md
       - Previous release 1.29.0: cta-release-1.29.0.md
       - Previous release 1.28.0: cta-release-1.28.0.md

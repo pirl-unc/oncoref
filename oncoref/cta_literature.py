@@ -59,3 +59,30 @@ def memberships() -> pd.DataFrame:
 def cta_coverage() -> pd.DataFrame:
     """Paper coverage for all 602 released CTAs; empty lists are coverage gaps."""
     return pd.DataFrame(registry()["cta_coverage"])
+
+
+def _protein_rows(key: str, gene: str | None) -> pd.DataFrame:
+    result = pd.DataFrame(registry()[key])
+    if gene is not None:
+        result = result[result.protein.eq(gene) | result.gene_ids.map(lambda ids: gene in ids)]
+    return result.reset_index(drop=True)
+
+
+def gap_assessments(gene: str | None = None) -> pd.DataFrame:
+    """All 33 paper gaps: biology, released measurements and review recommendations."""
+    return _protein_rows("gap_assessments", gene)
+
+
+def concerns(gene: str | None = None) -> pd.DataFrame:
+    """The 29 flagged reviews, separated by evidence type and next action."""
+    return _protein_rows("concerns", gene)
+
+
+def localization(gene: str | None = None) -> pd.DataFrame:
+    """Gene-mapped locations for all 602 CTAs, with shared and partial scope.
+
+    Facets are annotation summaries, not validated tumor-surface epitopes or
+    selected-sequence localization. Native evidence, isoform notes and primary
+    paper additions are retained in each row.
+    """
+    return _protein_rows("localization", gene)
