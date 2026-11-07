@@ -14,7 +14,7 @@
     {
       "id": "reproductive_secretion",
       "label": "Reproductive secretion",
-      "definition": "Curated publications identifying reproductive-tract secretions or sperm-associated proteins produced in the reproductive tract."
+      "definition": "Reproductive-tract secretions or sperm-associated proteins identified in the focused publication review. Four proteins are currently annotated; a systematic secretion-catalog review is pending."
     },
     {
       "id": "testis",

@@ -1,6 +1,214 @@
 {
   "release": "1.31.0",
-  "presentation_revision": "2026-11-06.2",
+  "presentation_revision": "2026-11-06.3",
+  "catalog_review": {
+    "version": "2026-11-06.1",
+    "scope": "Supplementary-table matches for two additional cancer\u2013embryonic program catalogs. These proposals are separate from the 15 nomination papers used in release 1.31.0.",
+    "catalogs": [
+      {
+        "id": "chew2019",
+        "citation": "Chew et al., 2019",
+        "title": "DUX4 Suppresses MHC Class I to Promote Cancer Immune Evasion and Resistance to Checkpoint Blockade",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6736738/",
+        "catalog": "Table S3: high-confidence DUX4 targets",
+        "model": "DUX4-induced gene program evaluated in human cancers; target definition also used induced myoblast experiments.",
+        "sources": [
+          {
+            "url": "https://ars.els-cdn.com/content/image/1-s2.0-S1534580719305295-mmc4.xlsx",
+            "sha256": "4a176f519ae81388881b0a0c459725635774684eda0ba3b28de91c3c440cfb65"
+          },
+          {
+            "url": "https://ars.els-cdn.com/content/image/1-s2.0-S1534580719305295-mmc2.xlsx",
+            "sha256": "b8ae23bd27e6039abb2efb4a1d987fcceabe244d4e7d77e61d9f0230d7aedd6f"
+          }
+        ],
+        "matches": [
+          {
+            "protein": "DUXA",
+            "entity_id": "PEG:46851e6f1fed76681cb5",
+            "gene_id": "ENSG00000258873",
+            "source_symbol": "DUXA",
+            "source_gene_id": "ENSG00000258873",
+            "sheet": "Table S3",
+            "row": 6,
+            "match_method": "Ensembl ID"
+          },
+          {
+            "protein": "DUXB",
+            "entity_id": "PEG:d7c58dfc108d629cedf9",
+            "gene_id": "ENSG00000282757",
+            "source_symbol": "DUXB",
+            "source_gene_id": "DUXB",
+            "sheet": "Table S3",
+            "row": 7,
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "LEUTX",
+            "entity_id": "PEG:a4d1a78a6bc4d94dfff5",
+            "gene_id": "ENSG00000213921",
+            "source_symbol": "LEUTX",
+            "source_gene_id": "ENSG00000213921",
+            "sheet": "Table S3",
+            "row": 11,
+            "match_method": "Ensembl ID"
+          },
+          {
+            "protein": "PRAMEF25/6",
+            "entity_id": "PEG:e04fe268186dedc0faed",
+            "gene_id": "ENSG00000229571",
+            "source_symbol": "WI2-2994D6.2",
+            "source_gene_id": "ENSG00000229571",
+            "sheet": "Table S3",
+            "row": 40,
+            "match_method": "Ensembl ID"
+          }
+        ],
+        "note": "PRAMEF25 matches the historical WI2-2994D6.2 entry by Ensembl ID and is one member of the shared PRAMEF25/6 protein. DUXB matches by symbol; its source Gene ID is also DUXB. The paper reports DUXB expression in healthy tissues.",
+        "interpretation": "Add as a cancer\u2013embryonic program catalog, preserving each gene\u2019s normal-expression findings.",
+        "screen_table": {
+          "total_gene_rows": 12697,
+          "overlapping_gene_rows": 74,
+          "interpretation": "Table S1 is the full cancer-specificity scoring table. Its 74 matches are measured genes, not 74 CTA nominations."
+        },
+        "matched_proteins": 4
+      },
+      {
+        "id": "smith2023",
+        "citation": "Smith et al., 2023",
+        "title": "DUX4 expression in cancer induces a metastable early embryonic totipotent program",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10578318/",
+        "catalog": "Table S3A: zygotic gene activation and eight-cell-like gene sets",
+        "model": "Single-cell RNA sequencing of KLE and SUSA cancer cell lines using published zygotic gene activation and eight-cell-like gene sets.",
+        "sources": [
+          {
+            "url": "https://ars.els-cdn.com/content/image/1-s2.0-S2211124723011257-mmc4.xlsx",
+            "sha256": "70fbf0881a6ea959d28ed96f64c78bbd8133790b51c341a362ce86cde36a0394"
+          }
+        ],
+        "matches": [
+          {
+            "protein": "DUXA",
+            "entity_id": "PEG:46851e6f1fed76681cb5",
+            "gene_id": "ENSG00000258873",
+            "source_symbol": "DUXA",
+            "sheet": "A",
+            "row": 6,
+            "column": "ZGA genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "LEUTX",
+            "entity_id": "PEG:a4d1a78a6bc4d94dfff5",
+            "gene_id": "ENSG00000213921",
+            "source_symbol": "LEUTX",
+            "sheet": "A",
+            "row": 9,
+            "column": "ZGA genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "TAF11L12",
+            "entity_id": "PEG:fdd7f0c5ad8fcef88b57",
+            "gene_id": "ENSG00000249156",
+            "source_symbol": "TAF11L12",
+            "sheet": "A",
+            "row": 20,
+            "column": "ZGA genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "MBD3L2B",
+            "entity_id": "PEG:c5ea92999c5095d9ede4",
+            "gene_id": "ENSG00000196589",
+            "source_symbol": "MBD3L2B",
+            "sheet": "A",
+            "row": 9,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "OR10G3",
+            "entity_id": "PEG:4e6ed0a98e0f954e4366",
+            "gene_id": "ENSG00000169208",
+            "source_symbol": "OR10G3",
+            "sheet": "A",
+            "row": 157,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "LEUTX",
+            "entity_id": "PEG:a4d1a78a6bc4d94dfff5",
+            "gene_id": "ENSG00000213921",
+            "source_symbol": "LEUTX",
+            "sheet": "A",
+            "row": 186,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "ZNF280A",
+            "entity_id": "PEG:71fe1f30ebae17ffbd03",
+            "gene_id": "ENSG00000169548",
+            "source_symbol": "ZNF280A",
+            "sheet": "A",
+            "row": 301,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "ZNF878",
+            "entity_id": "PEG:f9a42776af304f6808d7",
+            "gene_id": "ENSG00000257446",
+            "source_symbol": "ZNF878",
+            "sheet": "A",
+            "row": 421,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "DUXA",
+            "entity_id": "PEG:46851e6f1fed76681cb5",
+            "gene_id": "ENSG00000258873",
+            "source_symbol": "DUXA",
+            "sheet": "A",
+            "row": 494,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "C19orf85",
+            "entity_id": "PEG:239b064b509fe82b6379",
+            "gene_id": "ENSG00000283567",
+            "source_symbol": "C19orf85",
+            "sheet": "A",
+            "row": 573,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          },
+          {
+            "protein": "CPHXL",
+            "entity_id": "PEG:8379cf8330d2c11fd9d7",
+            "gene_id": "ENSG00000283755",
+            "source_symbol": "CPHXL",
+            "sheet": "A",
+            "row": 659,
+            "column": "8C genes",
+            "match_method": "Exact symbol"
+          }
+        ],
+        "note": "Exact gene-symbol matches to the 122. Membership records the program evaluated in cancer cells; gene-level measurements and effect sizes need separate extraction. MBD3L2 is not substituted for MBD3L2B, and H3Y is not mapped to H3Y1 in this count.",
+        "interpretation": "Add as an early-embryo program evaluated in cancer, with the original gene-set source retained.",
+        "matched_proteins": 9,
+        "gene_set_source": {
+          "citation": "Taubenschmid-Stowers et al., 2022",
+          "title": "8C-like cells capture the human zygotic genome activation program in vitro",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/35216671/"
+        }
+      }
+    ]
+  },
   "publication_funnel": [
     {
       "source_id": "10.18632/oncotarget.21715",
@@ -566,7 +774,8 @@
       "Biological categories of CTAs",
       [
         "The CTA tables group proteins by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories.",
-        "Each tag links to a publication or a supported RNA observation. The detail view records the species, tissue, cell population or developmental stage. Biological categories are separate from the admission route and the CTA, Unsafe or Other classification."
+        "Each tag links to a publication or a supported RNA observation. The detail view records the species, tissue, cell population or developmental stage. Biological categories are separate from the admission route and the CTA, Unsafe or Other classification.",
+        "Reproductive secretion currently has four manually annotated proteins: PATE1, WFDC8, RNASE9 and SEMG2. This count reflects the focused literature review; the other CTAs have not been systematically checked against reproductive-secretion catalogs."
       ],
       null
     ],
@@ -582,6 +791,7 @@
     [
       "Evidence has multiple independent meanings",
       [
+        "Checks complete (screened) means the release's required assessment is complete. It describes completion, so CTA, Unsafe and Other proteins can all have this status. No sequence exclusion (allow) means the selected protein has a resolved identity, completed assessment and no Unsafe assignment. This can apply to CTA or Other; CTA admission has additional requirements. These labels describe the released checks, not every tissue, isoform or later publication.",
         "Review completion, interpretation and policy effect are separate. A completed review can retain an unresolved interpretation. A rejected protein claim remains visible with its rationale; rejecting that claim does not prove normal-tissue absence.",
         "All 196 historical findings have linked current dispositions. MAGEC2, LGALS13 and PLCZ1 retain material holds. Each record lists the source, reagent, tissue, developmental stage and unresolved question.",
         "Fatal neurological injury in the MAGE-A3-reactive TCR cohort remains product-specific evidence. The MAGEA12 and EPS8L2 explanations are both retained as unresolved. MAGEA12 remains Unsafe under an independent rare-cell finding. Neither receptor causality nor favorable clinical credit transfers across a gene family."
@@ -623,7 +833,7 @@
         "Selection policy: oncoref.cta-selection.2026-11-05.1. Role policy: oncoref.sequence-roles.2026-11-04.1. Translation policy: oncoref.translation-qualification.2026-11-04.1.",
         "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. Counts are recalculated from the evidence and rules.",
         "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-        "Presentation revision 2026-11-06.2 adds biological categories, linked per-protein evidence and simpler report text. It retains the 1.31.0 classifications, thresholds and sequence roles."
+        "Presentation revision 2026-11-06.3 adds biological categories, linked per-protein evidence and simpler report text. It retains the 1.31.0 classifications, thresholds and sequence roles."
       ],
       null
     ]
@@ -2316,7 +2526,7 @@
       {
         "id": "reproductive_secretion",
         "label": "Reproductive secretion",
-        "definition": "Curated publications identifying reproductive-tract secretions or sperm-associated proteins produced in the reproductive tract."
+        "definition": "Reproductive-tract secretions or sperm-associated proteins identified in the focused publication review. Four proteins are currently annotated; a systematic secretion-catalog review is pending."
       },
       {
         "id": "testis",
@@ -2579,7 +2789,7 @@
       {
         "id": "reproductive_secretion",
         "label": "Reproductive secretion",
-        "definition": "Curated publications identifying reproductive-tract secretions or sperm-associated proteins produced in the reproductive tract.",
+        "definition": "Reproductive-tract secretions or sperm-associated proteins identified in the focused publication review. Four proteins are currently annotated; a systematic secretion-catalog review is pending.",
         "all": 4,
         "registered": 0,
         "unlisted": 4

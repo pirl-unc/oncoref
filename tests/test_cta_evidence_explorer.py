@@ -58,6 +58,43 @@ def test_source_values_do_not_turn_missing_observations_into_zero(report):
     assert saw_zero and saw_missing
 
 
+def test_additional_catalog_matches_preserve_locus_and_source_scope(report):
+    unlisted = {
+        r["entity_id"]: r for r in report["rows"] if r["category"] == "CTA" and not r["papers"]
+    }
+    catalogs = {c["id"]: c for c in report["catalog_review"]["catalogs"]}
+    expected = {
+        "chew2019": {"DUXA", "DUXB", "LEUTX", "PRAMEF25/6"},
+        "smith2023": {
+            "C19orf85",
+            "CPHXL",
+            "DUXA",
+            "LEUTX",
+            "MBD3L2B",
+            "OR10G3",
+            "TAF11L12",
+            "ZNF280A",
+            "ZNF878",
+        },
+    }
+    for name, catalog in catalogs.items():
+        assert {m["protein"] for m in catalog["matches"]} == expected[name]
+        assert catalog["matched_proteins"] == len(expected[name])
+        for match in catalog["matches"]:
+            protein = unlisted[match["entity_id"]]
+            assert match["gene_id"] in protein["gene_ids"]
+            assert match["row"] >= 4
+            assert match["sheet"]
+            if match["match_method"] == "Ensembl ID":
+                assert match["source_gene_id"] == match["gene_id"]
+            else:
+                assert match["source_symbol"] in {g["symbol"] for g in protein["gene_identities"]}
+    shared = next(m for m in catalogs["chew2019"]["matches"] if m["protein"] == "PRAMEF25/6")
+    assert shared["gene_id"] == "ENSG00000229571"  # PRAMEF25 only, not every shared locus
+    assert catalogs["chew2019"]["screen_table"]["overlapping_gene_rows"] == 74
+    assert len(set.union(*expected.values())) == 11
+
+
 def test_biology_categories_retain_evidence_and_overlap(report):
     ctas = [r for r in report["rows"] if r["category"] == "CTA"]
     assert len(ctas) == 602

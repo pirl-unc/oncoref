@@ -141,6 +141,15 @@
     "tumor-missing-identity-candidates.csv.gz": "ba8777a4ccf0e86ba4f3d39db5eaac98efce0921d2bac2f9be61eaabb600f981",
     "unassigned-evidence-gaps.csv": "e0b7697d6f2cf2c4a2c31bf118858d6d3a6620b9127e3e2695d0eb9b74a03d24",
     "unresolved-protein-contexts.csv.gz": "01d137fd968f2a9c27c0e963de62e9f4772592733a3cd2f0c81f10cad74dc317",
-    "widely-studied-antigens.csv": "6867e4cdd7a5b00eb67e14dac9c886281fad454d472b06eb3a49c519890ca4a4"
+    "widely-studied-antigens.csv": "6867e4cdd7a5b00eb67e14dac9c886281fad454d472b06eb3a49c519890ca4a4",
+    "frozen-inputs-1.31.0-documentation.zip": "daabe635eb2a059c12447f0e2b568d4ed12a8f843d5900519ba89ea09396bdb8"
+  },
+  "input_snapshots": [
+    "docs/data-versions.md"
+  ],
+  "input_snapshot_archive": {
+    "path": "frozen-inputs-1.31.0-documentation.zip",
+    "sha256": "daabe635eb2a059c12447f0e2b568d4ed12a8f843d5900519ba89ea09396bdb8",
+    "reason": "Preserve the original linked documentation after the Pages hosting note was added; scientific inputs and existing report outputs are unchanged."
   }
 }
