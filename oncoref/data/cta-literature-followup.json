@@ -1,0 +1,29 @@
+{
+  "schema": "oncoref.cta-literature-followup",
+  "schema_version": 1,
+  "reviewed_on": "2026-11-08",
+  "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
+  "sources": [
+    {
+      "source_id": "10.1371/journal.pone.0007682",
+      "citation": "Moyer et al., 2009",
+      "title": "Expression of Genes Encoding Multi-Transmembrane Proteins in Specific Primate Taste Cell Populations",
+      "url": "https://doi.org/10.1371/journal.pone.0007682",
+      "roles": ["normal_tissue"],
+      "source_location": "Human taste-bud results and Figure 10D; Methods: human tissue collection and PCR",
+      "finding": "CALHM3 RNA was measured by semi-quantitative PCR in laser-captured human circumvallate taste buds, with no detectable or reduced expression in surrounding lingual epithelium.",
+      "limitations": "Human data are RNA from a microdissected compartment. Cell-subtype in situ experiments elsewhere in this paper used macaques. This is not human protein detection or a therapeutic depletion experiment.",
+      "retention_reason": "Corrects the earlier mouse-only assessment of CALHM3 and supplies human normal-compartment counterevidence. It is not a CTA nomination."
+    }
+  ],
+  "memberships": [
+    {
+      "source_id": "10.1371/journal.pone.0007682",
+      "gene_ids": ["ENSG00000183128"],
+      "protein": "CALHM3",
+      "eligible_for_coverage": true,
+      "scope": "Exact human gene, normal circumvallate taste-bud RNA; Figure 10D",
+      "recommendation": "Review hold: human normal taste-bud RNA plus the established mouse taste-channel function warrant a normal-compartment review before target clearance. Do not call this proven human protein or infer an injury outcome."
+    }
+  ]
+}

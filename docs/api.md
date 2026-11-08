@@ -639,6 +639,24 @@ comparison plots and the downstream migration contract.
 
 ## CTA Antigens
 
+Use the current representative accessor when selecting a transcript for a CTA:
+
+```python
+from oncoref import cta_representatives
+
+cta_representatives.records("BOLL", annotation_release=115)
+cta_representatives.records("ENSG00000152430")  # Same exact locus.
+cta_representatives.records()  # All approved CTA member transcripts.
+```
+
+Each row gives the exact versioned transcript and protein accession, sequence
+length and SHA-256, selection basis, reference identity, assembly and Ensembl
+release. It reads packaged tables without downloading the sequence bundle.
+A requested release other than the pinned release raises an error. Unknown
+genes and genes outside CTA return an empty table. Use `transcript_selection.records()`
+to inspect held or excluded genes. The legacy `cta_df().Canonical_Transcript_ID`
+column is not the current representative-selection contract.
+
 The [individual literature review and source registry](audits/cta-literature-20261107/report.html)
 records 96 follow-up assessments and distinct roles for core and supplementary
 papers. These are evidence annotations alongside the frozen 1.31.0 selection;
@@ -650,9 +668,11 @@ from oncoref import cta_literature
 cta_literature.reviews("SRY")
 cta_literature.sources(collection="core")
 cta_literature.sources(collection="supplementary", role="normal_tissue")
-cta_literature.cta_coverage()  # All 602 released CTA records; gaps remain explicit.
+cta_literature.cta_coverage()  # Frozen 602-protein catalog from 1.31.0.
+cta_literature.current_coverage()  # Current CTAs; exact member-locus scope retained.
+cta_literature.followup_findings()  # Dated corrections and review recommendations.
 cta_literature.memberships()  # Exact source occurrences, including unresolved links.
-cta_literature.gap_assessments()  # All 33 paper gaps: biology and measured support.
+cta_literature.gap_assessments()  # The historical 33 gaps, before current remapping.
 cta_literature.concerns("SRY")  # Evidence type, next action and citations.
 cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
 cta_literature.surface_domains("ZP4")  # External intervals, sizes, evidence and sequence match.
@@ -663,6 +683,14 @@ cta_literature.surface_cancer_ihc("BTN1A1")  # Separate scored-patient staining 
 The core preserves mapped paper coverage. Supplementary papers retain additional
 assays, normal-expression findings, identity questions and upstream gene-set
 provenance. Core placement does not determine which findings apply to selection.
+
+The [current reconciliation](audits/cta-current-review-20261108/index.md) reports
+487 nomination-covered proteins, 87 with other qualifying papers, and 33 gaps
+among the 607 current CTAs. `current_coverage()` distinguishes `all_members`,
+`some_members` and `no_paper`; `per_gene_sources` retains the underlying locus
+assignments. Five shared proteins have coverage for only some member loci.
+Paper coverage includes normal-function studies and counterevidence. It is
+separate from CTA nomination and does not change released classifications.
 
 The localization table covers all 602 released CTAs. Its facets distinguish secretion,
 extracellular detection, cell-surface / integral plasma-membrane annotations, and

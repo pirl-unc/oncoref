@@ -1,0 +1,928 @@
+[
+  {
+    "entity_id": "PEG:70f59520a0e26b23f88e",
+    "protein": "LCN9",
+    "gene_ids": [
+      "ENSG00000148386"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1016/j.gene.2004.06.027",
+      "10.1111/andr.13350",
+      "10.1371/journal.pone.0254802"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000148386"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000148386": []
+    },
+    "biological_group": "Reproductive secretory families",
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "evidence_summary": "LCN9 belongs to the epididymal lipocalin literature. Promoter-localization and knockout fertility experiments retrieved here are mouse studies; they support the biological category without establishing human tumor protein.",
+    "judgment": "Keep as an epididymal-secretory discovery candidate. Mouse reproductive studies support the category; human tumor secretion is unverified.",
+    "tumor_max_tpm": 85.4901,
+    "developmental_lineage_max_tpm": 0.0019506934,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:6c783a0d5f840cd1c046",
+    "protein": "TEDDM1",
+    "gene_ids": [
+      "ENSG00000203730"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1095/biolreprod.105.048058"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000203730"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000203730": []
+    },
+    "biological_group": "Other poorly characterized reproductive proteins",
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "evidence_summary": "The retrieved discovery work concerns mouse epididymis-specific transcripts. This supports a reproductive-family lead, while exact human TEDDM1 protein and tumor restriction remain unverified.",
+    "judgment": "Keep as an epididymal discovery candidate. Reproductive RNA is strong; the retrieved discovery experiment is mouse evidence, not human tumor protein evidence.",
+    "tumor_max_tpm": 15.1771,
+    "developmental_lineage_max_tpm": 0.1570119152,
+    "reproductive_max_ntpm": 562.1
+  },
+  {
+    "entity_id": "PEG:1a92fb62ff88120a4cea",
+    "protein": "PABPN1L",
+    "gene_ids": [
+      "ENSG00000205022"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000205022"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000205022": []
+    },
+    "biological_group": "Maternal / oocyte-associated proteins",
+    "biology_categories": [
+      "early_embryo",
+      "oocyte_maternal"
+    ],
+    "evidence_summary": "Pabpn1l knockout disrupted the maternal-to-zygotic transition and early embryonic development in mice.",
+    "judgment": "One of the more biologically coherent discovery candidates: mouse experiments establish a maternal-to-zygotic transition role and human RNA supports the developmental association. Human protein and tumor evidence remain the next steps.",
+    "tumor_max_tpm": 58.4644,
+    "developmental_lineage_max_tpm": 373.8994407841,
+    "reproductive_max_ntpm": 0.4
+  },
+  {
+    "entity_id": "PEG:d36602dc99457334ed43",
+    "protein": "DEFB113",
+    "gene_ids": [
+      "ENSG00000214642"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1152/physiolgenomics.00104.2005",
+      "10.3389/froh.2022.817249"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000214642"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000214642": []
+    },
+    "biological_group": "Reproductive secretory families",
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "evidence_summary": "A cross-species defensin catalog contains the human family member. The gingival-expression paper is a non-human primate experiment; much of the reproductive-expression work in the catalog is rat. Neither establishes normal human gingival protein.",
+    "judgment": "Keep as a reproductive-secretory discovery candidate, with low tumor-expression priority (about 2.3 TPM maximum). Human tumor secretion has not been established.",
+    "tumor_max_tpm": 2.2679,
+    "developmental_lineage_max_tpm": null,
+    "reproductive_max_ntpm": 46.1
+  },
+  {
+    "entity_id": "PEG:ad22a7bf35b45ca0ec8a",
+    "protein": "ENSG00000237378",
+    "gene_ids": [
+      "ENSG00000237378"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000237378"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000237378": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "early_embryo",
+      "gastrulation"
+    ],
+    "evidence_summary": "No exact-locus paper was found in the searched index. Retain the anonymous coding locus and its measured developmental expression; a stable name and sequence-linked literature mapping are still missing.",
+    "judgment": "Keep as an embryo-associated discovery CTA. Establish a sequence-linked identity and endogenous protein detection before stronger claims.",
+    "tumor_max_tpm": 8.1615011367,
+    "developmental_lineage_max_tpm": 15.833605134,
+    "reproductive_max_ntpm": 2.0
+  },
+  {
+    "entity_id": "PEG:7a81a2cf3631c7adb27c",
+    "protein": "ENSG00000241690",
+    "gene_ids": [
+      "ENSG00000241690"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000241690"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000241690": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "testis"
+    ],
+    "evidence_summary": "Present in the broad expression-scoring table, but no gene-specific paper was verified. The selected coding sequence and expression measurements are the current support.",
+    "judgment": "Keep as a testis-associated discovery CTA. Coding annotation and expression support inclusion; the broad scoring table supplies no independent functional validation.",
+    "tumor_max_tpm": 5.7012194598,
+    "developmental_lineage_max_tpm": null,
+    "reproductive_max_ntpm": 13.5
+  },
+  {
+    "entity_id": "PEG:5dca19749634c5267bc2",
+    "protein": "H2AL1Q",
+    "gene_ids": [
+      "ENSG00000249467"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1186/s13072-017-0172-y",
+      "10.1186/s13072-022-00467-2"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000249467"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000249467": []
+    },
+    "biological_group": "Germ-cell structure and chromatin",
+    "biology_categories": [
+      "testis"
+    ],
+    "evidence_summary": "The targeted H2A.L.1 proteomics paper studies mouse testis, not the human H2AL1Q locus. Histone nomenclature provides an identity reference but not human protein detection.",
+    "judgment": "Keep as a germ-cell histone discovery candidate. The retrieved proteomics is mouse evidence; human copy-specific protein detection is missing.",
+    "tumor_max_tpm": 4.0237682387,
+    "developmental_lineage_max_tpm": 0.0166299904,
+    "reproductive_max_ntpm": 7.7
+  },
+  {
+    "entity_id": "PEG:0e36aa2dea5e617ca41b",
+    "protein": "TRIM75",
+    "gene_ids": [
+      "ENSG00000250374"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1007/s11033-024-09349-0",
+      "10.1016/j.csbj.2022.08.069"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000250374"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000250374": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "Mouse Trim75 is studied as a maternal contributor to zygotic genome activation, and a structural study examines a TRIM75 coiled-coil. These do not establish endogenous human TRIM75 protein in embryos or tumors.",
+    "judgment": "Keep as an embryo-associated discovery CTA. Mouse maternal function and a recombinant domain support a biological lead, but not endogenous human production.",
+    "tumor_max_tpm": 10.262,
+    "developmental_lineage_max_tpm": 32.6444131168,
+    "reproductive_max_ntpm": 0.1
+  },
+  {
+    "entity_id": "PEG:bb4b19645fd0c3e6333b",
+    "protein": "TAF11L14",
+    "gene_ids": [
+      "ENSG00000250782"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1186/1471-2164-11-632"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000250782"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000250782": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "The same macrosatellite study supports family transcription in reproductive and neural tissues. No TAF11L14-specific protein result was verified; normal evidence remains unresolved at the individual copy.",
+    "judgment": "I recommend a normal-evidence review hold. The same unresolved neural/reproductive macrosatellite signal applies; a separate copy-specific assay is needed. The current released label remains CTA.",
+    "tumor_max_tpm": 38.6611,
+    "developmental_lineage_max_tpm": 7.8309512655,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:39099f3e417798616cca",
+    "protein": "PTTG1IP2",
+    "gene_ids": [
+      "ENSG00000251154"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000251154"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000251154": []
+    },
+    "biological_group": "Other poorly characterized reproductive proteins",
+    "biology_categories": [
+      "testis"
+    ],
+    "evidence_summary": "No dedicated study of PTTG1IP2 was verified. Extracellular-vesicle work on PTTG1IP concerns the parent gene and does not validate this paralog.",
+    "judgment": "Keep as a lower-priority discovery CTA: little characterization and about 3.2 TPM maximum tumor RNA. PTTG1IP/PBF experiments do not establish this paralog's function.",
+    "tumor_max_tpm": 3.2257464967,
+    "developmental_lineage_max_tpm": 0.1852074158,
+    "reproductive_max_ntpm": 9.3
+  },
+  {
+    "entity_id": "PEG:49474c33cb94125c2178",
+    "protein": "UBTFL1",
+    "gene_ids": [
+      "ENSG00000255009"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1093/hmg/ddp512"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000255009"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000255009": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "The Hmgpi discovery paper demonstrates preimplantation function in mouse and identifies three predicted human homologs, UBTFL1-3. That is a family/orthology link, not direct functional validation of human UBTFL1.",
+    "judgment": "Keep as an early-embryo discovery CTA. Mouse Hmgpi results support the family context; distinguish this human homolog from UBTFL2/3.",
+    "tumor_max_tpm": 26.9973358169,
+    "developmental_lineage_max_tpm": 47.1893328066,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:a90c8529360aad1a85c2",
+    "protein": "OOSP4B",
+    "gene_ids": [
+      "ENSG00000255393"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000255393"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000255393": []
+    },
+    "biological_group": "Maternal / oocyte-associated proteins",
+    "biology_categories": [
+      "early_embryo",
+      "oocyte_maternal"
+    ],
+    "evidence_summary": "No verified study of the exact human OOSP4B protein was found. The name suggests a reproductive family, but the retained oocyte category comes from measured RNA, not a borrowed OOSP-family function.",
+    "judgment": "Keep as a maternal/oocyte discovery CTA. Its category comes from measured RNA; OOSP1 or OOSP4A experiments do not validate OOSP4B.",
+    "tumor_max_tpm": 30.6163,
+    "developmental_lineage_max_tpm": 52.974036444,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:24c69136cf11d62d3f1a",
+    "protein": "ENSG00000258417",
+    "gene_ids": [
+      "ENSG00000258417"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000258417"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000258417": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "Present in the broad expression-scoring table without a verified dedicated study. Resolve sequence/transcript identity before transferring any named-gene publication.",
+    "judgment": "Keep as an embryo-associated discovery CTA. Resolve transcript and sequence identity before importing named-gene literature.",
+    "tumor_max_tpm": 6.7560681401,
+    "developmental_lineage_max_tpm": 6.6366257103,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:cef2f2b2102163b3f577",
+    "protein": "GOLGA8T",
+    "gene_ids": [
+      "ENSG00000261247"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000261247"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000261247": []
+    },
+    "biological_group": "Other poorly characterized reproductive proteins",
+    "biology_categories": [
+      "testis"
+    ],
+    "evidence_summary": "No dedicated expression, function or antigen paper was verified. Genome-duplication annotation and the released RNA observations remain the evidence base.",
+    "judgment": "Keep as a discovery CTA, prioritizing copy-specific mapping in this duplicated family. Family homology does not establish this copy's protein production.",
+    "tumor_max_tpm": 13.739955083,
+    "developmental_lineage_max_tpm": 0.7937234738,
+    "reproductive_max_ntpm": 6.7
+  },
+  {
+    "entity_id": "PEG:4ec273108e0908d9e2f3",
+    "protein": "ATF7-NPFF",
+    "gene_ids": [
+      "ENSG00000267281"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000267281"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000267281": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "gastrulation"
+    ],
+    "evidence_summary": "No dedicated study of the exact readthrough protein was verified. Expression-table search leads do not establish the fusion transcript, translated junction or protein.",
+    "judgment": "Keep as a discovery CTA. The coding reference passes; tumor RNA does not establish the readthrough junction or the exact protein. Junction and protein identity are the priority.",
+    "tumor_max_tpm": 79.6491184636,
+    "developmental_lineage_max_tpm": 5.1198668119,
+    "reproductive_max_ntpm": 0.2
+  },
+  {
+    "entity_id": "PEG:a8f90dfeb55ae984bf17",
+    "protein": "CTAGE15",
+    "gene_ids": [
+      "ENSG00000271079"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000271079"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000271079": []
+    },
+    "biological_group": "Other poorly characterized reproductive proteins",
+    "biology_categories": [
+      "testis"
+    ],
+    "evidence_summary": "No gene-specific functional or antigen study was verified. The cTAGE family name and broad transcriptomic search hits do not establish that this member is a cancer-testis antigen.",
+    "judgment": "Keep as a discovery CTA. Its cTAGE-family name is not antigen evidence. Verify this copy rather than borrowing other CTAGE results.",
+    "tumor_max_tpm": 31.0523532805,
+    "developmental_lineage_max_tpm": 0.0176977199,
+    "reproductive_max_ntpm": 7.8
+  },
+  {
+    "entity_id": "PEG:1f1a10caec58d2d32020",
+    "protein": "ENSG00000273155",
+    "gene_ids": [
+      "ENSG00000273155"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000273155"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000273155": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "early_embryo",
+      "gastrulation"
+    ],
+    "evidence_summary": "UniProt Q8TCC3 links this locus together with two other loci to mitochondrial ribosomal protein uL30m. That shared annotation cannot assign mitochondrial protein experiments to this selected locus or sequence.",
+    "judgment": "Prioritize identity review. A shared mitochondrial ribosomal-protein annotation makes it essential to distinguish this locus from MRPL30-associated records before transferring normal or tumor protein evidence.",
+    "tumor_max_tpm": 50.9227837603,
+    "developmental_lineage_max_tpm": 23.0908323586,
+    "reproductive_max_ntpm": 0.6
+  },
+  {
+    "entity_id": "PEG:faca81e4e6e3b4de73a7",
+    "protein": "TMEM269",
+    "gene_ids": [
+      "ENSG00000274386"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000274386"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000274386": []
+    },
+    "biological_group": "Other poorly characterized reproductive proteins",
+    "biology_categories": [
+      "early_embryo",
+      "testis"
+    ],
+    "evidence_summary": "No dedicated TMEM269 expression, function or antigen study was verified. Broad computational gene-list leads do not establish a protein-level finding.",
+    "judgment": "Keep as a reproductive/early-embryo discovery CTA. Membrane annotation alone does not establish tumor-surface localization or accessibility.",
+    "tumor_max_tpm": 22.8526,
+    "developmental_lineage_max_tpm": 5.8871511141,
+    "reproductive_max_ntpm": 0.9
+  },
+  {
+    "entity_id": "PEG:cd8eaef0aa7ffbe4d21b",
+    "protein": "ENSG00000274944",
+    "gene_ids": [
+      "ENSG00000274944"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000274944"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000274944": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "No verified exact-locus study. Complete 110-aa Ensembl canonical translation; TSL 2; developmental and tumor RNA.",
+    "judgment": "Keep as a lower-confidence discovery CTA. The 110-aa canonical protein passes, with TSL 2 and no MANE designation. No exact-locus study was verified; database links to MYCBP are not evidence for this protein.",
+    "tumor_max_tpm": 13.5360479633,
+    "developmental_lineage_max_tpm": 52.1614695681,
+    "reproductive_max_ntpm": 4.9
+  },
+  {
+    "entity_id": "PEG:09ae2908a32167d7f9c6",
+    "protein": "PRAMEF18",
+    "gene_ids": [
+      "ENSG00000279804"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1038/s41598-019-46981-4"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000279804"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000279804": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "A human pulmonary-arterial smooth-muscle microarray/network study lists a combined PRAMEF18/PRAMEF19 signal after cocaine/HIV-Tat exposure. It does not resolve PRAMEF18 alone or demonstrate protein.",
+    "judgment": "I recommend a normal-evidence review hold. A treated human vascular-cell study reports a combined PRAMEF18/PRAMEF19 feature; the responsible copy is unresolved. The current released label remains CTA.",
+    "tumor_max_tpm": 3.580192849,
+    "developmental_lineage_max_tpm": 137.5010848217,
+    "reproductive_max_ntpm": 0.1
+  },
+  {
+    "entity_id": "PEG:7bad8fb4daf83a0e99c7",
+    "protein": "CTXND2",
+    "gene_ids": [
+      "ENSG00000283324"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000283324"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000283324": []
+    },
+    "biological_group": "Other poorly characterized reproductive proteins",
+    "biology_categories": [
+      "placenta"
+    ],
+    "evidence_summary": "The review found annotation and nonspecific search leads, but no verified study of CTXND2 protein or function. Its current support remains the coding reference and measured expression datasets.",
+    "judgment": "Keep as a discovery CTA. Placental association and the coding reference are the support; function and protein localization are uncharacterized.",
+    "tumor_max_tpm": 16.246,
+    "developmental_lineage_max_tpm": 0.1824754186,
+    "reproductive_max_ntpm": 0.4
+  },
+  {
+    "entity_id": "PEG:642d515a9a34d19423e5",
+    "protein": "TAF11L11",
+    "gene_ids": [
+      "ENSG00000283740"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1186/1471-2164-11-632"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000283740"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000283740": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "The TAF11-like macrosatellite study detects family-level RNA in testis, fetal brain and whole brain. It does not resolve TAF11L11 individually. Keep the normal-brain signal as an unresolved family/identity finding.",
+    "judgment": "I recommend a normal-evidence review hold. The macrosatellite study reports family RNA in brain and testis without resolving this copy. The current released label remains CTA.",
+    "tumor_max_tpm": 35.5198,
+    "developmental_lineage_max_tpm": 158.524983005,
+    "reproductive_max_ntpm": 0.2
+  },
+  {
+    "entity_id": "PEG:67dec9123a9456d1115e",
+    "protein": "TAF11L13",
+    "gene_ids": [
+      "ENSG00000283776"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1186/1471-2164-11-632"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000283776"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000283776": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "Annotation-linked TAF11-like macrosatellite RNA is reported in testis and brain, including whole brain. The source lacks a TAF11L13-specific assay, so it creates a copy-resolution question rather than a proven member-specific exclusion.",
+    "judgment": "I recommend a normal-evidence review hold. Family-level brain RNA cannot be assigned to, or dismissed for, this copy. The current released label remains CTA.",
+    "tumor_max_tpm": 23.501952716,
+    "developmental_lineage_max_tpm": 11.1521473265,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:b6708d76c220960f3383",
+    "protein": "SSU72L4",
+    "gene_ids": [
+      "ENSG00000283873"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000283873"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000283873": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "No exact SSU72L4 study was verified. Search-engine leads for other CTD phosphatases were not accepted as evidence for this locus.",
+    "judgment": "Keep as an early-embryo discovery CTA. Substantial tumor RNA warrants follow-up; family-wide phosphatase literature is not exact-copy protein evidence.",
+    "tumor_max_tpm": 343.5100000008,
+    "developmental_lineage_max_tpm": 260.2370523191,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:77d4ac745a2951e13e16",
+    "protein": "SSU72L5",
+    "gene_ids": [
+      "ENSG00000284018"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000284018"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000284018": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "No exact SSU72L5 study was verified. A yeast CTD-phosphatase search hit is unrelated to this human locus.",
+    "judgment": "Keep as an early-embryo discovery CTA. Substantial tumor RNA warrants follow-up; endogenous protein production and exact-copy attribution remain unverified.",
+    "tumor_max_tpm": 413.8800000004,
+    "developmental_lineage_max_tpm": 218.6558478278,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:28a89961ee80474f1996",
+    "protein": "SSU72L2",
+    "gene_ids": [
+      "ENSG00000284306"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000284306"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000284306": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "No exact SSU72L2 protein study was verified. Nomenclature-resource coverage documents the name, not a functional or expression experiment.",
+    "judgment": "Keep as an early-embryo discovery CTA. It has the highest recorded tumor maximum in this gap set, but neither enzyme function nor endogenous protein follows from that RNA value.",
+    "tumor_max_tpm": 990.9100000014,
+    "developmental_lineage_max_tpm": 318.6106037429,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:f9b97c7f8faf5a7950b0",
+    "protein": "SSU72L1",
+    "gene_ids": [
+      "ENSG00000284438"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000284438"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000284438": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "No exact SSU72L1 functional or antigen study was verified after searching SSU72L1 and SSU72P7. Search leads about canonical SSU72/CTD phosphatases do not identify this copy.",
+    "judgment": "Keep as an early-embryo discovery CTA. Tumor and developmental RNA make it worth studying; copy-specific mapping and protein detection are the key gaps.",
+    "tumor_max_tpm": 387.7399999989,
+    "developmental_lineage_max_tpm": 92.4495397817,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:276090530a257361d2f0",
+    "protein": "SSU72L3",
+    "gene_ids": [
+      "ENSG00000284546"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000284546"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000284546": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "Exact-symbol, historical-alias and locus searches returned no verified gene-specific study. Its evidence remains reference annotation and the released embryo-associated RNA.",
+    "judgment": "Keep as an early-embryo discovery CTA. Its RNA pattern is promising; resolve this copy independently of SSU72 and the other SSU72L loci.",
+    "tumor_max_tpm": 362.7899999998,
+    "developmental_lineage_max_tpm": 145.8824778264,
+    "reproductive_max_ntpm": 0.0
+  },
+  {
+    "entity_id": "PEG:672e705b44fa7730dc51",
+    "protein": "ENSG00000284934",
+    "gene_ids": [
+      "ENSG00000284934"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000284934"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000284934": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "early_embryo"
+    ],
+    "evidence_summary": "A broad monkeypox/HEK293T omics search lead was found, but no exact-locus protein finding was verified. Current evidence remains annotation and expression measurements.",
+    "judgment": "Keep as an embryo-associated discovery CTA. Tumor RNA is substantial in at least one sample; exact-locus translation remains experimentally unverified.",
+    "tumor_max_tpm": 77.0687604092,
+    "developmental_lineage_max_tpm": 6.5781713732,
+    "reproductive_max_ntpm": 0.5
+  },
+  {
+    "entity_id": "PEG:b7668edb7de9a67040bb",
+    "protein": "MSANTD5",
+    "gene_ids": [
+      "ENSG00000285891"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000285891"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000285891": []
+    },
+    "biological_group": "Duplicated regulatory and antigen-related families",
+    "biology_categories": [
+      "early_embryo",
+      "testis"
+    ],
+    "evidence_summary": "No exact-symbol or locus paper was found in the searched index. Current RefSeq/Ensembl annotation establishes a coding record, while protein function and experimental tissue production remain unverified.",
+    "judgment": "Keep as an early-embryo discovery CTA, with low tumor-expression priority (about 3.4 TPM maximum). Its high developmental RNA does not establish protein function.",
+    "tumor_max_tpm": 3.4303121766,
+    "developmental_lineage_max_tpm": 848.6240078273,
+    "reproductive_max_ntpm": 0.7
+  },
+  {
+    "entity_id": "PEG:47ed981d53c2dfd72892",
+    "protein": "SPADH",
+    "gene_ids": [
+      "ENSG00000286135"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000286135"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000286135": []
+    },
+    "biological_group": "Reproductive secretory families",
+    "biology_categories": [
+      "other_reproductive"
+    ],
+    "evidence_summary": "No specific human SPADH protein study was verified. Search hits chiefly concerned nonhuman spermadhesins or unrelated plant abbreviations. Human secretion cannot be inferred from the family name.",
+    "judgment": "Keep as a reproductive discovery candidate. Human secretion and spermadhesin function need exact-sequence evidence; livestock spermadhesin studies do not establish them.",
+    "tumor_max_tpm": 11.7358280001,
+    "developmental_lineage_max_tpm": 4.3383706232,
+    "reproductive_max_ntpm": 115.4
+  },
+  {
+    "entity_id": "PEG:d576051097601567c804",
+    "protein": "CIMIP3",
+    "gene_ids": [
+      "ENSG00000287363"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [
+      "10.1038/s41467-026-69714-4"
+    ],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000287363"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000287363": []
+    },
+    "biological_group": "Germ-cell structure and chromatin",
+    "biology_categories": [
+      "testis"
+    ],
+    "evidence_summary": "A sperm doublet-microtubule structural study identifies CIMIP3 among shared microtubule-inner proteins in mouse sperm. It supplies a mechanistic lead, not direct human airway or tumor protein evidence.",
+    "judgment": "Keep as a discovery CTA with low tumor-expression priority. Mouse sperm structure supports its biological category; the recorded human tumor maximum is only about 1.2 TPM.",
+    "tumor_max_tpm": 1.201628737,
+    "developmental_lineage_max_tpm": 1.3795532356,
+    "reproductive_max_ntpm": 36.8
+  },
+  {
+    "entity_id": "PEG:27ae484f4ec3a7675ba0",
+    "protein": "ENSG00000289809",
+    "gene_ids": [
+      "ENSG00000289809"
+    ],
+    "nomination_sources": [],
+    "exact_paper_sources": [],
+    "related_sources": [],
+    "covered_gene_ids": [],
+    "uncovered_gene_ids": [
+      "ENSG00000289809"
+    ],
+    "paper_coverage": "no_paper",
+    "per_gene_sources": {
+      "ENSG00000289809": []
+    },
+    "biological_group": "Unnamed loci and a readthrough",
+    "biology_categories": [
+      "testis"
+    ],
+    "evidence_summary": "No exact-locus paper was found in the searched index. Its reference annotation and testis-associated RNA remain distinct from experimental translation or tumor-antigen evidence.",
+    "judgment": "Lowest tumor-expression priority in this set: the recorded maximum is about 0.068 TPM. It passes the presence rule, but that is very weak evidence of a useful tumor target.",
+    "tumor_max_tpm": 0.0678925289,
+    "developmental_lineage_max_tpm": null,
+    "reproductive_max_ntpm": 9.8
+  }
+]

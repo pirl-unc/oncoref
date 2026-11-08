@@ -1,5 +1,11 @@
 # Verified CTA sequence records
 
+For current CTA transcript and protein accessions without downloading the bundle,
+use `oncoref.cta_representatives.records("BOLL", annotation_release=115)`. The
+result includes sequence length, SHA-256 and the pinned reference. Use the bundle
+for amino-acid bytes and all source occurrences. The legacy
+`Canonical_Transcript_ID` annotation is not the current selection contract.
+
 The current sequence bundle binds source proteins and every occurrence to the
 selection, translation and consumer-role policies. It preserves original sequence
 bytes, ambiguous residues, incomplete records and explicit coverage gaps. The
