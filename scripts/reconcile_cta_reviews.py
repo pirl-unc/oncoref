@@ -295,6 +295,8 @@ def main():
     assert extras["ENST00000641364.1"] == extras["ENST00000641740.2"]
     # The reviewed UniProt variant features are exact, versioned sequence edits:
     # VSP_020811 substitutes residues 514..520; VSP_020812 removes 521..623.
+    uniprot_hash = cta_literature.surface_domains("GDPD4").iloc[0].uniprot_sequence_sha256
+    assert hashlib.sha256(extras["ENST00000376217.6"].encode()).hexdigest() == uniprot_hash
     gdpd4_iso2 = extras["ENST00000376217.6"][:513] + "SKNEEDR"
     assert gdpd4_iso2 == extras["ENST00000315938.5"]
     lookup = {r["label"]: r for r in profiles.to_dict("records")}
