@@ -321,6 +321,9 @@ def main():
                 ),
                 "judgment": judgments[r["protein"]],
                 "tumor_max_tpm": profile["tumor_max_tpm"],
+                "tumor_max_ptpm": profile["tumor_max_ptpm"],
+                "reliable_tumor_protein": profile["reliable_tumor_protein"],
+                "replicated_tumor_rna": profile["replicated_tumor_rna"],
                 "developmental_lineage_max_tpm": profile["developmental_lineage_max_tpm"],
                 "reproductive_max_ntpm": profile["reproductive_max_ntpm"],
             }
@@ -410,12 +413,13 @@ def main():
         "\n## A missed human normal-tissue paper\n",
         "**CALHM3:** Moyer et al. measured RNA in laser-captured human circumvallate taste buds (Figure 10D). The prior mouse-only assessment was incomplete. I recommend a normal-evidence review hold; the released classification is still CTA. The human result is RNA, while cell-subtype localization in this paper is macaque data. [Moyer et al., 2009](https://doi.org/10.1371/journal.pone.0007682).\n",
         "## Judgment of each remaining paper gap\n",
-        "These are discovery CTAs under the existing rule allowing a qualifying coding reference. Missing papers alone do not make them Unsafe. Tumor maxima below are single-sample RNA observations, not prevalence or protein abundance.\n",
-        "| Protein | Biological category | Maximum tumor RNA (TPM) | Judgment | Related paper |\n|---|---|---:|---|---|",
+        "These are discovery CTAs under the existing rule allowing a qualifying coding reference. Missing papers alone do not make them Unsafe. Tumor maxima below are single-sample RNA observations, not prevalence or protein abundance. TPM and HPA pTPM remain separate; a dash means unmeasured, not zero.\n",
+        "| Protein | Biological category | Maximum tumor TPM | Maximum HPA pTPM | Judgment | Related paper |\n|---|---|---:|---:|---|---|",
     ]
     for r in sorted(gaps, key=lambda r: r["protein"]):
+        ptpm = "—" if pd.isna(r["tumor_max_ptpm"]) else f"{r['tumor_max_ptpm']:.3g}"
         report.append(
-            f"| {gene_link(r['protein'], r['gene_ids'])} | {r['biological_group']} | {r['tumor_max_tpm']:.3g} | {r['judgment']} | {'; '.join(source_link(s, sources) for s in r['related_sources']) or '—'} |"
+            f"| {gene_link(r['protein'], r['gene_ids'])} | {r['biological_group']} | {r['tumor_max_tpm']:.3g} | {ptpm} | {r['judgment']} | {'; '.join(source_link(s, sources) for s in r['related_sources']) or '—'} |"
         )
     report += [
         "\n[Full gap evidence and judgments](paper-gap-judgments.json)\n",
@@ -452,6 +456,20 @@ def main():
         "Reproduce: `.venv/bin/python scripts/reconcile_cta_reviews.py --sequence-bundle /path/to/verified/bundle`. The historical literature API remains `cta_literature.cta_coverage()` (602 proteins); use `current_coverage()` for the current catalog.\n",
     ]
     (out / "index.md").write_text("\n".join(report))
+    if out.resolve() == (ROOT / "docs/audits/cta-current-review-20261108").resolve():
+        # The classification receipt also binds the living documentation index.
+        # Record this documentation overlay without altering its scientific outputs.
+        receipt_path = ROOT / "docs/audits/cta-definition-20261104/release-receipt.json"
+        receipt = json.loads(receipt_path.read_text())
+        receipt["generated_documentation"]["docs/index.md"] = hashlib.sha256(
+            (ROOT / "docs/index.md").read_bytes()
+        ).hexdigest()
+        receipt["documentation_update"] = {
+            "date": "2026-11-08",
+            "report": str((out / "index.md").relative_to(ROOT)),
+            "scope": "Current literature and representative-review overlay; classification data, figures and sequence pins remain at the declared release.",
+        }
+        dump(receipt_path, receipt)
     print(json.dumps(summary, indent=2))
 
 

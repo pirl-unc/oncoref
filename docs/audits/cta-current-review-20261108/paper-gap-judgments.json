@@ -27,6 +27,9 @@
     "evidence_summary": "LCN9 belongs to the epididymal lipocalin literature. Promoter-localization and knockout fertility experiments retrieved here are mouse studies; they support the biological category without establishing human tumor protein.",
     "judgment": "Keep as an epididymal-secretory discovery candidate. Mouse reproductive studies support the category; human tumor secretion is unverified.",
     "tumor_max_tpm": 85.4901,
+    "tumor_max_ptpm": 110.061,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 0.0019506934,
     "reproductive_max_ntpm": 0.0
   },
@@ -56,6 +59,9 @@
     "evidence_summary": "The retrieved discovery work concerns mouse epididymis-specific transcripts. This supports a reproductive-family lead, while exact human TEDDM1 protein and tumor restriction remain unverified.",
     "judgment": "Keep as an epididymal discovery candidate. Reproductive RNA is strong; the retrieved discovery experiment is mouse evidence, not human tumor protein evidence.",
     "tumor_max_tpm": 15.1771,
+    "tumor_max_ptpm": 20.3653,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 0.1570119152,
     "reproductive_max_ntpm": 562.1
   },
@@ -86,6 +92,9 @@
     "evidence_summary": "Pabpn1l knockout disrupted the maternal-to-zygotic transition and early embryonic development in mice.",
     "judgment": "One of the more biologically coherent discovery candidates: mouse experiments establish a maternal-to-zygotic transition role and human RNA supports the developmental association. Human protein and tumor evidence remain the next steps.",
     "tumor_max_tpm": 58.4644,
+    "tumor_max_ptpm": 18.5333,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 373.8994407841,
     "reproductive_max_ntpm": 0.4
   },
@@ -114,8 +123,11 @@
       "other_reproductive"
     ],
     "evidence_summary": "A cross-species defensin catalog contains the human family member. The gingival-expression paper is a non-human primate experiment; much of the reproductive-expression work in the catalog is rat. Neither establishes normal human gingival protein.",
-    "judgment": "Keep as a reproductive-secretory discovery candidate, with low tumor-expression priority (about 2.3 TPM maximum). Human tumor secretion has not been established.",
+    "judgment": "Keep as a reproductive-secretory discovery candidate. HPA tumor RNA reaches 63.7 pTPM despite a 2.3 TPM maximum in the separate tumor source. Human tumor secretion has not been established.",
     "tumor_max_tpm": 2.2679,
+    "tumor_max_ptpm": 63.7402,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": null,
     "reproductive_max_ntpm": 46.1
   },
@@ -144,6 +156,9 @@
     "evidence_summary": "No exact-locus paper was found in the searched index. Retain the anonymous coding locus and its measured developmental expression; a stable name and sequence-linked literature mapping are still missing.",
     "judgment": "Keep as an embryo-associated discovery CTA. Establish a sequence-linked identity and endogenous protein detection before stronger claims.",
     "tumor_max_tpm": 8.1615011367,
+    "tumor_max_ptpm": 10.5562,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 15.833605134,
     "reproductive_max_ntpm": 2.0
   },
@@ -171,6 +186,9 @@
     "evidence_summary": "Present in the broad expression-scoring table, but no gene-specific paper was verified. The selected coding sequence and expression measurements are the current support.",
     "judgment": "Keep as a testis-associated discovery CTA. Coding annotation and expression support inclusion; the broad scoring table supplies no independent functional validation.",
     "tumor_max_tpm": 5.7012194598,
+    "tumor_max_ptpm": 9.9904,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": null,
     "reproductive_max_ntpm": 13.5
   },
@@ -201,6 +219,9 @@
     "evidence_summary": "The targeted H2A.L.1 proteomics paper studies mouse testis, not the human H2AL1Q locus. Histone nomenclature provides an identity reference but not human protein detection.",
     "judgment": "Keep as a germ-cell histone discovery candidate. The retrieved proteomics is mouse evidence; human copy-specific protein detection is missing.",
     "tumor_max_tpm": 4.0237682387,
+    "tumor_max_ptpm": null,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 0.0166299904,
     "reproductive_max_ntpm": 7.7
   },
@@ -231,6 +252,9 @@
     "evidence_summary": "Mouse Trim75 is studied as a maternal contributor to zygotic genome activation, and a structural study examines a TRIM75 coiled-coil. These do not establish endogenous human TRIM75 protein in embryos or tumors.",
     "judgment": "Keep as an embryo-associated discovery CTA. Mouse maternal function and a recombinant domain support a biological lead, but not endogenous human production.",
     "tumor_max_tpm": 10.262,
+    "tumor_max_ptpm": 12.4255,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 32.6444131168,
     "reproductive_max_ntpm": 0.1
   },
@@ -260,6 +284,9 @@
     "evidence_summary": "The same macrosatellite study supports family transcription in reproductive and neural tissues. No TAF11L14-specific protein result was verified; normal evidence remains unresolved at the individual copy.",
     "judgment": "I recommend a normal-evidence review hold. The same unresolved neural/reproductive macrosatellite signal applies; a separate copy-specific assay is needed. The current released label remains CTA.",
     "tumor_max_tpm": 38.6611,
+    "tumor_max_ptpm": 27.9342,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 7.8309512655,
     "reproductive_max_ntpm": 0.0
   },
@@ -287,6 +314,9 @@
     "evidence_summary": "No dedicated study of PTTG1IP2 was verified. Extracellular-vesicle work on PTTG1IP concerns the parent gene and does not validate this paralog.",
     "judgment": "Keep as a lower-priority discovery CTA: little characterization and about 3.2 TPM maximum tumor RNA. PTTG1IP/PBF experiments do not establish this paralog's function.",
     "tumor_max_tpm": 3.2257464967,
+    "tumor_max_ptpm": 1.9395,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 0.1852074158,
     "reproductive_max_ntpm": 9.3
   },
@@ -316,6 +346,9 @@
     "evidence_summary": "The Hmgpi discovery paper demonstrates preimplantation function in mouse and identifies three predicted human homologs, UBTFL1-3. That is a family/orthology link, not direct functional validation of human UBTFL1.",
     "judgment": "Keep as an early-embryo discovery CTA. Mouse Hmgpi results support the family context; distinguish this human homolog from UBTFL2/3.",
     "tumor_max_tpm": 26.9973358169,
+    "tumor_max_ptpm": 7.7643,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 47.1893328066,
     "reproductive_max_ntpm": 0.0
   },
@@ -344,6 +377,9 @@
     "evidence_summary": "No verified study of the exact human OOSP4B protein was found. The name suggests a reproductive family, but the retained oocyte category comes from measured RNA, not a borrowed OOSP-family function.",
     "judgment": "Keep as a maternal/oocyte discovery CTA. Its category comes from measured RNA; OOSP1 or OOSP4A experiments do not validate OOSP4B.",
     "tumor_max_tpm": 30.6163,
+    "tumor_max_ptpm": 1.1848,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 52.974036444,
     "reproductive_max_ntpm": 0.0
   },
@@ -371,6 +407,9 @@
     "evidence_summary": "Present in the broad expression-scoring table without a verified dedicated study. Resolve sequence/transcript identity before transferring any named-gene publication.",
     "judgment": "Keep as an embryo-associated discovery CTA. Resolve transcript and sequence identity before importing named-gene literature.",
     "tumor_max_tpm": 6.7560681401,
+    "tumor_max_ptpm": 98.6164,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 6.6366257103,
     "reproductive_max_ntpm": 0.0
   },
@@ -398,6 +437,9 @@
     "evidence_summary": "No dedicated expression, function or antigen paper was verified. Genome-duplication annotation and the released RNA observations remain the evidence base.",
     "judgment": "Keep as a discovery CTA, prioritizing copy-specific mapping in this duplicated family. Family homology does not establish this copy's protein production.",
     "tumor_max_tpm": 13.739955083,
+    "tumor_max_ptpm": 1.3856,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 0.7937234738,
     "reproductive_max_ntpm": 6.7
   },
@@ -425,6 +467,9 @@
     "evidence_summary": "No dedicated study of the exact readthrough protein was verified. Expression-table search leads do not establish the fusion transcript, translated junction or protein.",
     "judgment": "Keep as a discovery CTA. The coding reference passes; tumor RNA does not establish the readthrough junction or the exact protein. Junction and protein identity are the priority.",
     "tumor_max_tpm": 79.6491184636,
+    "tumor_max_ptpm": 20.0396,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 5.1198668119,
     "reproductive_max_ntpm": 0.2
   },
@@ -452,6 +497,9 @@
     "evidence_summary": "No gene-specific functional or antigen study was verified. The cTAGE family name and broad transcriptomic search hits do not establish that this member is a cancer-testis antigen.",
     "judgment": "Keep as a discovery CTA. Its cTAGE-family name is not antigen evidence. Verify this copy rather than borrowing other CTAGE results.",
     "tumor_max_tpm": 31.0523532805,
+    "tumor_max_ptpm": 1.9817,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 0.0176977199,
     "reproductive_max_ntpm": 7.8
   },
@@ -480,6 +528,9 @@
     "evidence_summary": "UniProt Q8TCC3 links this locus together with two other loci to mitochondrial ribosomal protein uL30m. That shared annotation cannot assign mitochondrial protein experiments to this selected locus or sequence.",
     "judgment": "Prioritize identity review. A shared mitochondrial ribosomal-protein annotation makes it essential to distinguish this locus from MRPL30-associated records before transferring normal or tumor protein evidence.",
     "tumor_max_tpm": 50.9227837603,
+    "tumor_max_ptpm": 43.277,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 23.0908323586,
     "reproductive_max_ntpm": 0.6
   },
@@ -508,6 +559,9 @@
     "evidence_summary": "No dedicated TMEM269 expression, function or antigen study was verified. Broad computational gene-list leads do not establish a protein-level finding.",
     "judgment": "Keep as a reproductive/early-embryo discovery CTA. Membrane annotation alone does not establish tumor-surface localization or accessibility.",
     "tumor_max_tpm": 22.8526,
+    "tumor_max_ptpm": 40.4717,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 5.8871511141,
     "reproductive_max_ntpm": 0.9
   },
@@ -535,6 +589,9 @@
     "evidence_summary": "No verified exact-locus study. Complete 110-aa Ensembl canonical translation; TSL 2; developmental and tumor RNA.",
     "judgment": "Keep as a lower-confidence discovery CTA. The 110-aa canonical protein passes, with TSL 2 and no MANE designation. No exact-locus study was verified; database links to MYCBP are not evidence for this protein.",
     "tumor_max_tpm": 13.5360479633,
+    "tumor_max_ptpm": 82.1963,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 52.1614695681,
     "reproductive_max_ntpm": 4.9
   },
@@ -564,6 +621,9 @@
     "evidence_summary": "A human pulmonary-arterial smooth-muscle microarray/network study lists a combined PRAMEF18/PRAMEF19 signal after cocaine/HIV-Tat exposure. It does not resolve PRAMEF18 alone or demonstrate protein.",
     "judgment": "I recommend a normal-evidence review hold. A treated human vascular-cell study reports a combined PRAMEF18/PRAMEF19 feature; the responsible copy is unresolved. The current released label remains CTA.",
     "tumor_max_tpm": 3.580192849,
+    "tumor_max_ptpm": 10.4237,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 137.5010848217,
     "reproductive_max_ntpm": 0.1
   },
@@ -591,6 +651,9 @@
     "evidence_summary": "The review found annotation and nonspecific search leads, but no verified study of CTXND2 protein or function. Its current support remains the coding reference and measured expression datasets.",
     "judgment": "Keep as a discovery CTA. Placental association and the coding reference are the support; function and protein localization are uncharacterized.",
     "tumor_max_tpm": 16.246,
+    "tumor_max_ptpm": 29.0378,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 0.1824754186,
     "reproductive_max_ntpm": 0.4
   },
@@ -620,6 +683,9 @@
     "evidence_summary": "The TAF11-like macrosatellite study detects family-level RNA in testis, fetal brain and whole brain. It does not resolve TAF11L11 individually. Keep the normal-brain signal as an unresolved family/identity finding.",
     "judgment": "I recommend a normal-evidence review hold. The macrosatellite study reports family RNA in brain and testis without resolving this copy. The current released label remains CTA.",
     "tumor_max_tpm": 35.5198,
+    "tumor_max_ptpm": 110.972,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 158.524983005,
     "reproductive_max_ntpm": 0.2
   },
@@ -649,6 +715,9 @@
     "evidence_summary": "Annotation-linked TAF11-like macrosatellite RNA is reported in testis and brain, including whole brain. The source lacks a TAF11L13-specific assay, so it creates a copy-resolution question rather than a proven member-specific exclusion.",
     "judgment": "I recommend a normal-evidence review hold. Family-level brain RNA cannot be assigned to, or dismissed for, this copy. The current released label remains CTA.",
     "tumor_max_tpm": 23.501952716,
+    "tumor_max_ptpm": 11.9038,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 11.1521473265,
     "reproductive_max_ntpm": 0.0
   },
@@ -676,6 +745,9 @@
     "evidence_summary": "No exact SSU72L4 study was verified. Search-engine leads for other CTD phosphatases were not accepted as evidence for this locus.",
     "judgment": "Keep as an early-embryo discovery CTA. Substantial tumor RNA warrants follow-up; family-wide phosphatase literature is not exact-copy protein evidence.",
     "tumor_max_tpm": 343.5100000008,
+    "tumor_max_ptpm": 14.6817,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 260.2370523191,
     "reproductive_max_ntpm": 0.0
   },
@@ -703,6 +775,9 @@
     "evidence_summary": "No exact SSU72L5 study was verified. A yeast CTD-phosphatase search hit is unrelated to this human locus.",
     "judgment": "Keep as an early-embryo discovery CTA. Substantial tumor RNA warrants follow-up; endogenous protein production and exact-copy attribution remain unverified.",
     "tumor_max_tpm": 413.8800000004,
+    "tumor_max_ptpm": 9.9388,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 218.6558478278,
     "reproductive_max_ntpm": 0.0
   },
@@ -728,8 +803,11 @@
       "early_embryo"
     ],
     "evidence_summary": "No exact SSU72L2 protein study was verified. Nomenclature-resource coverage documents the name, not a functional or expression experiment.",
-    "judgment": "Keep as an early-embryo discovery CTA. It has the highest recorded tumor maximum in this gap set, but neither enzyme function nor endogenous protein follows from that RNA value.",
+    "judgment": "Keep as an early-embryo discovery CTA. It has the highest recorded tumor TPM maximum in this gap set, but neither enzyme function nor endogenous protein follows from that RNA value.",
     "tumor_max_tpm": 990.9100000014,
+    "tumor_max_ptpm": 29.3149,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 318.6106037429,
     "reproductive_max_ntpm": 0.0
   },
@@ -757,6 +835,9 @@
     "evidence_summary": "No exact SSU72L1 functional or antigen study was verified after searching SSU72L1 and SSU72P7. Search leads about canonical SSU72/CTD phosphatases do not identify this copy.",
     "judgment": "Keep as an early-embryo discovery CTA. Tumor and developmental RNA make it worth studying; copy-specific mapping and protein detection are the key gaps.",
     "tumor_max_tpm": 387.7399999989,
+    "tumor_max_ptpm": 29.4097,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 92.4495397817,
     "reproductive_max_ntpm": 0.0
   },
@@ -784,6 +865,9 @@
     "evidence_summary": "Exact-symbol, historical-alias and locus searches returned no verified gene-specific study. Its evidence remains reference annotation and the released embryo-associated RNA.",
     "judgment": "Keep as an early-embryo discovery CTA. Its RNA pattern is promising; resolve this copy independently of SSU72 and the other SSU72L loci.",
     "tumor_max_tpm": 362.7899999998,
+    "tumor_max_ptpm": 16.9457,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 145.8824778264,
     "reproductive_max_ntpm": 0.0
   },
@@ -811,6 +895,9 @@
     "evidence_summary": "A broad monkeypox/HEK293T omics search lead was found, but no exact-locus protein finding was verified. Current evidence remains annotation and expression measurements.",
     "judgment": "Keep as an embryo-associated discovery CTA. Tumor RNA is substantial in at least one sample; exact-locus translation remains experimentally unverified.",
     "tumor_max_tpm": 77.0687604092,
+    "tumor_max_ptpm": 28.9949,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 6.5781713732,
     "reproductive_max_ntpm": 0.5
   },
@@ -837,8 +924,11 @@
       "testis"
     ],
     "evidence_summary": "No exact-symbol or locus paper was found in the searched index. Current RefSeq/Ensembl annotation establishes a coding record, while protein function and experimental tissue production remain unverified.",
-    "judgment": "Keep as an early-embryo discovery CTA, with low tumor-expression priority (about 3.4 TPM maximum). Its high developmental RNA does not establish protein function.",
+    "judgment": "Keep as an early-embryo discovery CTA. Tumor maxima are 3.4 TPM and 12.2 HPA pTPM in separate sources. Its high developmental RNA establishes the association, while protein function remains uncharacterized.",
     "tumor_max_tpm": 3.4303121766,
+    "tumor_max_ptpm": 12.2279,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 848.6240078273,
     "reproductive_max_ntpm": 0.7
   },
@@ -866,6 +956,9 @@
     "evidence_summary": "No specific human SPADH protein study was verified. Search hits chiefly concerned nonhuman spermadhesins or unrelated plant abbreviations. Human secretion cannot be inferred from the family name.",
     "judgment": "Keep as a reproductive discovery candidate. Human secretion and spermadhesin function need exact-sequence evidence; livestock spermadhesin studies do not establish them.",
     "tumor_max_tpm": 11.7358280001,
+    "tumor_max_ptpm": 27.4119,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 4.3383706232,
     "reproductive_max_ntpm": 115.4
   },
@@ -893,8 +986,11 @@
       "testis"
     ],
     "evidence_summary": "A sperm doublet-microtubule structural study identifies CIMIP3 among shared microtubule-inner proteins in mouse sperm. It supplies a mechanistic lead, not direct human airway or tumor protein evidence.",
-    "judgment": "Keep as a discovery CTA with low tumor-expression priority. Mouse sperm structure supports its biological category; the recorded human tumor maximum is only about 1.2 TPM.",
+    "judgment": "Keep as a discovery CTA. Mouse sperm structure supports its biological category. Tumor maxima are 1.2 TPM and 55.4 HPA pTPM in separate sources, so the lower TPM value alone does not justify low priority.",
     "tumor_max_tpm": 1.201628737,
+    "tumor_max_ptpm": 55.3853,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 1.3795532356,
     "reproductive_max_ntpm": 36.8
   },
@@ -922,6 +1018,9 @@
     "evidence_summary": "No exact-locus paper was found in the searched index. Its reference annotation and testis-associated RNA remain distinct from experimental translation or tumor-antigen evidence.",
     "judgment": "Lowest tumor-expression priority in this set: the recorded maximum is about 0.068 TPM. It passes the presence rule, but that is very weak evidence of a useful tumor target.",
     "tumor_max_tpm": 0.0678925289,
+    "tumor_max_ptpm": null,
+    "reliable_tumor_protein": false,
+    "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": null,
     "reproductive_max_ntpm": 9.8
   }

@@ -1,5 +1,10 @@
 """Current paper coverage must retain locus scope and adverse source roles."""
 
+import json
+from pathlib import Path
+
+import pytest
+
 from oncoref import cta_literature
 
 
@@ -39,3 +44,15 @@ def test_current_nomination_adds_new_locus_without_changing_frozen_memberships()
     row = cta_literature._reconcile_coverage(profiles, nominations, [], []).iloc[0]
     assert row.paper_coverage == "all_members"
     assert row.nomination_sources == row.exact_paper_sources == ["catalog"]
+
+
+def test_gap_report_retains_hpa_signal_when_other_tumor_tpm_is_low():
+    path = (
+        Path(__file__).resolve().parents[1]
+        / "docs/audits/cta-current-review-20261108/paper-gap-judgments.json"
+    )
+    rows = {r["protein"]: r for r in json.loads(path.read_text())}
+    for gene, ptpm in {"CIMIP3": 55.3853, "DEFB113": 63.7402, "MSANTD5": 12.2279}.items():
+        assert rows[gene]["tumor_max_tpm"] < 4
+        assert rows[gene]["tumor_max_ptpm"] == pytest.approx(ptpm)
+    assert rows["ENSG00000289809"]["tumor_max_ptpm"] is None

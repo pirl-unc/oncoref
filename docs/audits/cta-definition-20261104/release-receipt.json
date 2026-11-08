@@ -59,6 +59,11 @@
   "generated_documentation": {
     "README.md": "7988237940896b093155c71543415047ac47ff936c37d2175525149d8828fc27",
     "docs/cta-selection.md": "83d67c462d4033ecff830eb52b6984b03c3cef3e549ce570f0eb735234ba0ad0",
-    "docs/index.md": "9d393916893f1c77b806ef07bc8422106dffcf322e33059eb25d8b5403fd8de3"
+    "docs/index.md": "9f44049b31c22d147f8943d6040ecf38f2ab974d5e4e3cf70368d441b26ac268"
+  },
+  "documentation_update": {
+    "date": "2026-11-08",
+    "report": "docs/audits/cta-current-review-20261108/index.md",
+    "scope": "Current literature and representative-review overlay; classification data, figures and sequence pins remain at the declared release."
   }
 }
