@@ -3,14 +3,14 @@
   "reviewed_on": "2026-11-08",
   "cta_proteins": 607,
   "nomination_paper_coverage": 487,
-  "any_qualifying_paper": 574,
+  "any_qualifying_paper": 577,
   "paper_coverage": {
-    "all_members": 569,
-    "no_paper": 33,
+    "all_members": 572,
+    "no_paper": 30,
     "some_members": 5
   },
-  "current_core_sources": 78,
-  "supplementary_sources": 73,
+  "current_core_sources": 81,
+  "supplementary_sources": 74,
   "core_objective": "All covered exact gene loci in the current CTA catalog; inclusion-minimal, not claimed globally smallest",
   "representative_review_loci": 563,
   "representative_review_classifications": {

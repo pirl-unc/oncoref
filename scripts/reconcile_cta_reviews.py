@@ -51,7 +51,7 @@ def gene_link(label, genes):
     return f"[{label}](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={genes[0]})"
 
 
-def figure(out, gap_rows):
+def figure(out, gap_rows, coverage):
     import matplotlib
 
     matplotlib.use("Agg")
@@ -60,8 +60,13 @@ def figure(out, gap_rows):
     fig, axes = plt.subplots(2, 1, figsize=(10, 7.2), gridspec_kw={"height_ratios": [1, 2]})
     colors = ["#236b68", "#80b2a8", "#d5a249"]
     left = 0
+    nominated = int(coverage.nomination_sources.map(bool).sum())
+    covered = int(coverage.exact_paper_sources.map(bool).sum())
     for number, label, color in zip(
-        [487, 87, 33], ["Catalog sources", "Other papers", "Paper gaps"], colors, strict=True
+        [nominated, covered - nominated, len(gap_rows)],
+        ["Catalog sources", "Other papers", "Paper gaps"],
+        colors,
+        strict=True,
     ):
         axes[0].barh([0], [number], left=left, color=color, label=f"{label}: {number}")
         axes[0].text(
@@ -90,7 +95,9 @@ def figure(out, gap_rows):
     axes[1].invert_yaxis()
     for i, (_, value) in enumerate(items):
         axes[1].text(value + 0.15, i, str(value), va="center")
-    axes[1].set(xlim=(0, 14), xlabel="Proteins", title="The 33 gaps by biological category")
+    axes[1].set(
+        xlim=(0, 14), xlabel="Proteins", title=f"The {len(gap_rows)} gaps by biological category"
+    )
     for ax in axes:
         ax.spines[["top", "right", "left"]].set_visible(False)
     fig.tight_layout(h_pad=3)
@@ -390,15 +397,17 @@ def main():
     csv(out / "verified-cta-transcripts.csv", verified)
     # Keep JSON values portable: unknown numerical measurements are null, not NaN.
     dump(out / "paper-gap-judgments.json", json.loads(pd.DataFrame(gaps).to_json(orient="records")))
-    figure(out, gaps)
+    figure(out, gaps, current)
+    covered = summary["any_qualifying_paper"]
+    nominated = summary["nomination_paper_coverage"]
     report = [
         "# Current CTA papers, representative review and API verification\n",
         "This review uses the released **607 CTA proteins in OncoRef 1.35.0**. It records new evidence and recommendations; it does not change released classifications.\n",
         "## Which papers cover the current CTAs?\n",
-        "**487** have membership in the 15 nomination-source collection. **87** more have qualifying papers in the broader review. **33** lack a verified qualifying exact-human paper. Thus **574/607** have paper coverage; **120** are outside the nomination collection.\n",
-        "The 574 comprise **569** proteins whose member loci all have coverage and **5** with coverage for only some member loci. A paper can describe normal function, disease association or counterevidence. Paper coverage is not a declaration that the paper nominated a CTA or demonstrated tumor protein.\n",
+        f"**{nominated}** have membership in the 15 nomination-source collection. **{covered - nominated}** more have qualifying papers in the broader review. **{len(gaps)}** lack a verified qualifying exact-human paper. Thus **{covered}/{len(current)}** have paper coverage; **{len(current) - nominated}** are outside the nomination collection.\n",
+        f"The {covered} comprise **{summary['paper_coverage']['all_members']}** proteins whose member loci all have coverage and **{summary['paper_coverage']['some_members']}** with coverage for only some member loci. A paper can describe normal function, disease association or counterevidence, including reviewed gene-level results in supplementary tables. Paper coverage is not a declaration that the paper nominated a CTA or demonstrated tumor protein.\n",
         "![Paper coverage and biological categories of the gaps](paper-coverage.png)\n",
-        "The old frozen report said 569/602 with 33 gaps. Remapping its memberships gives 573/607 with 34 gaps. The newly reviewed human CALHM3 paper closes one gap; newly admitted ENSG00000274944 adds one relative to the old list. The gap count is again 33, with different membership.\n",
+        "The old frozen report said 569/602 with 33 gaps. Remapping its memberships gives 573/607 with 34 gaps. Human CALHM3, TRIM75, TMEM269 and SSU72L1 findings close four gaps. The two latter findings are significant RNA results in supplementary tables, not focused target studies. A reported UBTFL1 embryo assay is rejected for coverage because its primers match mouse Sod1. [New evidence, source roles and proposed normal holds](../cta-candidate-evidence-20261108/index.md).\n",
         f"The current reading set has **{len(core)} core** and **{len(roles) - len(core)} supplementary** sources. The core covers every presently covered CTA locus and no core source can be removed without losing coverage. Supplementary sources retain normal findings, methods, mechanisms and independent measurements. This objective differs from the older 83-core/67-supplementary set, which also covered proteins outside CTA.\n",
         "[Every current CTA and its papers](current-paper-coverage.csv) · [All 120 outside nomination papers](outside-nomination-papers.csv) · [Sources, links and roles](source-roles-current.csv)\n",
         "| Shared protein | Member loci without qualifying paper coverage |\n|---|---|",
@@ -461,13 +470,14 @@ def main():
         # Record this documentation overlay without altering its scientific outputs.
         receipt_path = ROOT / "docs/audits/cta-definition-20261104/release-receipt.json"
         receipt = json.loads(receipt_path.read_text())
-        receipt["generated_documentation"]["docs/index.md"] = hashlib.sha256(
-            (ROOT / "docs/index.md").read_bytes()
-        ).hexdigest()
+        for name in ["docs/index.md", "docs/cta-selection.md"]:
+            receipt["generated_documentation"][name] = hashlib.sha256(
+                (ROOT / name).read_bytes()
+            ).hexdigest()
         receipt["documentation_update"] = {
             "date": "2026-11-08",
             "report": str((out / "index.md").relative_to(ROOT)),
-            "scope": "Current literature and representative-review overlay; classification data, figures and sequence pins remain at the declared release.",
+            "scope": "Literature, representative review and pending normal-evidence documentation; classification data, figures and sequence pins remain at the declared release.",
         }
         dump(receipt_path, receipt)
     print(json.dumps(summary, indent=2))

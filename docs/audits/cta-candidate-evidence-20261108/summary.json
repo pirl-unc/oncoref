@@ -1,0 +1,31 @@
+{
+  "released_categories": {
+    "Unsafe": 18259,
+    "Other": 1027,
+    "CTA": 607
+  },
+  "proposed_categories": {
+    "Unsafe": 18259,
+    "Other": 1029,
+    "CTA": 605
+  },
+  "status": "curation_replay_not_a_release",
+  "ssu72l2": {
+    "gene_id": "ENSG00000284306",
+    "protein": "SSU72L2",
+    "observed_sample_records": 14856,
+    "excluded_sample_records": 713,
+    "measured_samples": 14143,
+    "gt_0": 1190,
+    "ge_0_1": 605,
+    "ge_1": 50,
+    "ge_2": 24,
+    "ge_5": 6,
+    "ge_10": 3,
+    "ge_100": 1,
+    "maximum_tpm": 990.910000001422
+  },
+  "matrix_cohorts": 143,
+  "sample_count_unit": "source namespace/sample; overlapping views deduplicated; not patients",
+  "translation_rule": "Qualifying reference coding annotation remains sufficient; no experimental-protein requirement was added."
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "gene_id": "ENSG00000279804",
+    "protein": "PRAMEF18",
+    "biological_group": "Early embryo antigen-related family",
+    "uniprot": "Q5VWM3",
+    "protein_existence": "3: Inferred from homology",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000279804",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000279804-PRAMEF18",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/Q5VWM3/entry"
+  },
+  {
+    "gene_id": "ENSG00000284438",
+    "protein": "SSU72L1",
+    "biological_group": "Early embryo SSU72-like family",
+    "uniprot": "A0A1W2PQ27",
+    "protein_existence": "3: Inferred from homology",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284438",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000284438-SSU72L1",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/A0A1W2PQ27/entry"
+  },
+  {
+    "gene_id": "ENSG00000284306",
+    "protein": "SSU72L2",
+    "biological_group": "Early embryo SSU72-like family",
+    "uniprot": "A0A1W2PQD8",
+    "protein_existence": "3: Inferred from homology",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284306",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000284306-SSU72L2",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/A0A1W2PQD8/entry"
+  },
+  {
+    "gene_id": "ENSG00000284546",
+    "protein": "SSU72L3",
+    "biological_group": "Early embryo SSU72-like family",
+    "uniprot": "A0A1W2PQJ5",
+    "protein_existence": "3: Inferred from homology",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284546",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000284546-SSU72L3",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/A0A1W2PQJ5/entry"
+  },
+  {
+    "gene_id": "ENSG00000283873",
+    "protein": "SSU72L4",
+    "biological_group": "Early embryo SSU72-like family",
+    "uniprot": "A0A1W2PQC6",
+    "protein_existence": "3: Inferred from homology",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000283873",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000283873-SSU72L4",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/A0A1W2PQC6/entry"
+  },
+  {
+    "gene_id": "ENSG00000284018",
+    "protein": "SSU72L5",
+    "biological_group": "Early embryo SSU72-like family",
+    "uniprot": "A0A1W2PQ64",
+    "protein_existence": "3: Inferred from homology",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284018",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000284018-SSU72L5",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/A0A1W2PQ64/entry"
+  },
+  {
+    "gene_id": "ENSG00000203730",
+    "protein": "TEDDM1",
+    "biological_group": "Epididymal protein",
+    "uniprot": "Q5T9Z0",
+    "protein_existence": "1: Evidence at protein level",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000203730",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000203730-TEDDM1",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/Q5T9Z0/entry"
+  },
+  {
+    "gene_id": "ENSG00000274386",
+    "protein": "TMEM269",
+    "biological_group": "Reproductive / early embryo membrane candidate",
+    "uniprot": "A0A1B0GVZ9",
+    "protein_existence": "3: Inferred from homology",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000274386",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000274386-TMEM269",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/A0A1B0GVZ9/entry"
+  },
+  {
+    "gene_id": "ENSG00000250374",
+    "protein": "TRIM75",
+    "biological_group": "Early embryo regulatory family",
+    "uniprot": "A6NK02",
+    "protein_existence": "1: Evidence at protein level",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000250374",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000250374-TRIM75",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/A6NK02/entry"
+  },
+  {
+    "gene_id": "ENSG00000255009",
+    "protein": "UBTFL1",
+    "biological_group": "Early embryo regulatory family",
+    "uniprot": "P0CB47",
+    "protein_existence": "1: Evidence at protein level",
+    "ensembl_url": "https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000255009",
+    "hpa_url": "https://www.proteinatlas.org/ENSG00000255009-UBTFL1",
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/P0CB47/entry"
+  }
+]

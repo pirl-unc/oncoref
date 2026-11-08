@@ -16,6 +16,7 @@ nav:
       - Candidate evidence explorer and 122-protein review: audits/cta-evidence-guide-20261106/index.md
       - Individual reviews and core paper sources: audits/cta-literature-20261107/index.md
       - Current paper gaps and representative review: audits/cta-current-review-20261108/index.md
+      - Candidate evidence and SSU72L2 prevalence: audits/cta-candidate-evidence-20261108/index.md
       - CTA gaps and localization release: cta-release-1.33.0.md
       - CTA domains and cancer frequency release: cta-release-1.34.0.md
       - Transcript default audit: audits/cta-transcripts-20261108/index.md

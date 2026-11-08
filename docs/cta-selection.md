@@ -209,6 +209,15 @@ species, stage or isoform evidence receive a review hold, with reconsideration r
 A search hit or annotation alone is not accepted protein evidence. Normal findings take
 precedence over reproductive protein or cancer presence.
 
+Accepted findings awaiting the next selection build are available with
+`gene_knowledge.findings(gene, include_updates=True)`. The default returns the
+released evidence set. The next replay includes updates; `--released-knowledge`
+reproduces the earlier set. The [ten-candidate audit](audits/cta-candidate-evidence-20261108/index.md)
+demonstrates the consequences of ambiguous IHC, MS and copy-specific RNA:
+PRAMEF18 and TRIM75 move to Other:Held in the proposed replay, without new Unsafe
+assignments. These pending findings do not silently rewrite released sequences
+or classification tables.
+
 Cancer RNA needs **>0** in one compatible measured sample. CDY1/B and OR2T7 pass
 this presence gate without a claim of high tumor abundance; OR2T7 separately requires
 translation review. Reviewed germ-cell protein supports

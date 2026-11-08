@@ -73,19 +73,36 @@ def validate(records: list[dict]) -> None:
             raise ValueError("Measurements require native value and unit together")
 
 
-def findings(gene: str | None = None, *, taxonomy_id: int = 9606) -> pd.DataFrame:
+def findings(
+    gene: str | None = None, *, taxonomy_id: int = 9606, include_updates: bool = False
+) -> pd.DataFrame:
     """Return detached reviewed findings by exact gene ID or case-insensitive symbol.
 
     No findings means no curated evidence in this reference, not normal absence.
     Species are filtered explicitly; human findings never transfer by orthology.
     ``effect`` records the reviewed consequence: exclude, review, reproductive
     presence, or context only. Native units (including fold changes) are retained.
+    ``include_updates=True`` adds accepted curation queued for the next selection
+    build. It does not change the released classifications returned by
+    :mod:`cta_selection`. The default reproduces the released evidence set.
     """
     data = json.loads(files("oncoref").joinpath("data/gene-knowledge.json").read_text())
     if data["schema"] != "oncoref.gene-knowledge" or data["version"] != 1:
         raise ValueError("Unsupported gene knowledge schema")
-    validate(data["findings"])
-    rows = [r for r in data["findings"] if r["taxonomy_id"] == taxonomy_id]
+    records = data["findings"]
+    if include_updates:
+        updates = json.loads(
+            files("oncoref").joinpath("data/gene-knowledge-updates.json").read_text()
+        )
+        if (
+            updates["schema"] != "oncoref.gene-knowledge-updates"
+            or updates["version"] != 1
+            or updates["status"] != "pending_selection_build"
+        ):
+            raise ValueError("Unsupported knowledge update schema or status")
+        records = [*records, *updates["findings"]]
+    validate(records)
+    rows = [r for r in records if r["taxonomy_id"] == taxonomy_id]
     if gene is not None:
         rows = [
             r
@@ -136,9 +153,13 @@ def annotate(facts: pd.DataFrame, evidence: pd.DataFrame | None = None) -> pd.Da
                 group <= ids if effect == "reproductive" else bool(group & ids)
             )
         )
+    finding_ids_by_gene: dict[str, set[str]] = {}
+    for row in human.itertuples():
+        for gene in row.gene_ids:
+            finding_ids_by_gene.setdefault(gene, set()).add(row.id)
     d["knowledge_finding_ids"] = members.map(
         lambda group: json.dumps(
-            sorted(r.id for r in human.itertuples() if group & set(r.gene_ids))
+            sorted(set().union(*(finding_ids_by_gene.get(gene, set()) for gene in group)))
         )
     )
     return d

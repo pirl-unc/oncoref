@@ -1,0 +1,3 @@
+protein_group_label,representative_gene_id,released_classification,classification,assessment_status,knowledge_finding_ids
+TRIM75,ENSG00000250374,CTA,Other:Held,normal_evidence_hold,"[""GK-20261108-TRIM75-tears""]"
+PRAMEF18,ENSG00000279804,CTA,Other:Held,normal_evidence_hold,"[""GK-20261108-PRAMEF18-IHC"", ""GK-20261108-PRAMEF18-vascular""]"

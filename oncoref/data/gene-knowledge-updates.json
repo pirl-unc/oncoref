@@ -1,0 +1,195 @@
+{
+  "schema": "oncoref.gene-knowledge-updates",
+  "version": 1,
+  "status": "pending_selection_build",
+  "review_date": "2026-11-08",
+  "baseline_data_version": "5.23.27",
+  "findings": [
+    {
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "value": null,
+      "unit": null,
+      "review_status": "accepted",
+      "review_date": "2026-11-08",
+      "historical_finding_ids": [],
+      "review_depth": "Primary source and assay-identity review; named-candidate audit 2026-11-08",
+      "id": "GK-20261108-PRAMEF18-vascular",
+      "gene_ids": [
+        "ENSG00000279804"
+      ],
+      "gene_symbols": [
+        "PRAMEF18"
+      ],
+      "tissue": "pulmonary artery",
+      "cell_type": "cultured human pulmonary arterial smooth muscle cells",
+      "state": "cocaine and HIV Tat exposure",
+      "assay": "Arraystar Human LncRNA Array v4.0 mRNA probe signal",
+      "support": "ambiguous_normal_rna",
+      "tissue_tier": "vital",
+      "effect": "review",
+      "interpretation_status": "unresolved",
+      "finding": "Table 4 includes a downregulated feature labeled PRAMEF18/PRAMEF19 in treated nonmalignant human vascular-cell cultures.",
+      "decision_reason": "The combined feature leaves expression of PRAMEF18 in an induced normal-cell state unresolved; hold admission without assigning an Unsafe finding.",
+      "source_title": "Analysis of lncRNA-miRNA-mRNA Interactions in Hyper-proliferative Human Pulmonary Arterial Smooth Muscle Cells",
+      "source_url": "https://doi.org/10.1038/s41598-019-46981-4",
+      "source_location": "Table 4; mRNA array methods; Supplementary File I",
+      "limitations": "The assay does not separate PRAMEF18 from PRAMEF19. This is a treated nonmalignant culture, not basal healthy lung or protein detection. No exact-copy probe sequence was recovered from Supplementary File I; raw data are available from the authors on request."
+    },
+    {
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "value": null,
+      "unit": null,
+      "review_status": "accepted",
+      "review_date": "2026-11-08",
+      "historical_finding_ids": [],
+      "review_depth": "Primary source and assay-identity review; named-candidate audit 2026-11-08",
+      "id": "GK-20261108-PRAMEF18-IHC",
+      "gene_ids": [
+        "ENSG00000279804"
+      ],
+      "gene_symbols": [
+        "PRAMEF18"
+      ],
+      "tissue": "small intestine and duodenum",
+      "cell_type": "glandular cells; summary highlights endocrine cells",
+      "state": "adult normal tissue",
+      "assay": "immunohistochemistry; HPA057423",
+      "support": "ambiguous_normal_protein",
+      "tissue_tier": "vital",
+      "effect": "review",
+      "interpretation_status": "unresolved",
+      "finding": "HPA reports medium overall glandular-cell staining with strong intensity in small intestine and duodenum; the antibody reliability is Uncertain and targets more than one gene.",
+      "decision_reason": "Normal intestinal staining is a review hold until the recognized copy is resolved. Uncertain shared-antibody staining cannot establish PRAMEF18-specific normal protein production.",
+      "source_title": "Human Protein Atlas: PRAMEF18 tissue expression and antibody validation",
+      "source_url": "https://www.proteinatlas.org/ENSG00000279804-PRAMEF18/tissue",
+      "source_location": "HPA 25 XML retrieved 2026-11-08; antibody HPA057423; tissueExpression normal_tissue and validation summary",
+      "limitations": "The antibody is not gene-specific. RNA/staining consistency is very low. Neither positive nor negative staining with this reagent establishes exact-copy expression or absence; pinned HPA v23 selection evidence is retained separately."
+    },
+    {
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "value": null,
+      "unit": null,
+      "review_status": "accepted",
+      "review_date": "2026-11-08",
+      "historical_finding_ids": [],
+      "review_depth": "Primary source and assay-identity review; named-candidate audit 2026-11-08",
+      "id": "GK-20261108-TRIM75-tears",
+      "gene_ids": [
+        "ENSG00000250374"
+      ],
+      "gene_symbols": [
+        "TRIM75"
+      ],
+      "tissue": "tear fluid",
+      "cell_type": "producing cell unresolved",
+      "state": "breast cancer and healthy-control pools combined in the identification table",
+      "assay": "MALDI-TOF/TOF; MASCOT Swiss-Prot protein identification",
+      "support": "unresolved_sample_protein",
+      "tissue_tier": "unresolved",
+      "effect": "review",
+      "interpretation_status": "unresolved",
+      "finding": "Table II lists TRI75_HUMAN (TRIM75) among tear-fluid proteins in a study of 25 breast-cancer patients and 25 healthy women.",
+      "decision_reason": "Hold normal-restriction clearance until the contributing pool and peptide specificity are resolved. The merged table establishes neither a healthy-control positive nor cancer-specific protein.",
+      "source_title": "Comparison of tear protein levels in breast cancer patients and healthy controls using a de novo proteomic approach",
+      "source_url": "https://doi.org/10.3892/or.2012.1849",
+      "source_location": "Table II; pooled sampling and MALDI identification methods; Table III does not quantify TRIM75",
+      "limitations": "One pooled tear sample per clinical group. Table II merges identifications and does not assign TRIM75 to a pool or supply its peptide sequences. Tear-fluid detection does not localize the producing tissue or demonstrate a tumor origin."
+    },
+    {
+      "taxonomy_id": 9606,
+      "stage": "embryonic",
+      "value": null,
+      "unit": null,
+      "review_status": "accepted",
+      "review_date": "2026-11-08",
+      "historical_finding_ids": [],
+      "review_depth": "Primary source and assay-identity review; named-candidate audit 2026-11-08",
+      "id": "GK-20261108-UBTFL1-primer",
+      "gene_ids": [
+        "ENSG00000255009"
+      ],
+      "gene_symbols": [
+        "UBTFL1"
+      ],
+      "tissue": "preimplantation embryo",
+      "cell_type": "reported human eight-cell embryos",
+      "state": "KDM4A overexpression after tripronuclear zygote correction",
+      "assay": "reported RT-qPCR; primer identity check",
+      "support": "assay_identity_conflict",
+      "tissue_tier": "developmental",
+      "effect": "context",
+      "interpretation_status": "rejected",
+      "finding": "The Ubtfl1 row in Table I cites XM_021185540.2, a Mus caroli Sod1 transcript. Its two primer sequences do not match selected human UBTFL1 ENST00000530464.2 and both match mouse Sod1 ENSMUST00000023707.10.",
+      "decision_reason": "Do not count this assay as exact-human UBTFL1 support. Independent human embryo RNA and the qualifying coding reference retain their own evidence status.",
+      "source_title": "Histone demethylase KDM4A overexpression improved the efficiency of corrected human tripronuclear zygote development",
+      "source_url": "https://doi.org/10.1093/molehr/gaab012",
+      "source_location": "Table I Ubtfl1 primers; Figure 5; NCBI XM_021185540.2 and exact forward/reverse-complement cDNA comparisons",
+      "limitations": "This finding rejects attribution of this specific assay. It does not reject the other experiments in the paper or establish normal UBTFL1 expression. Mouse Hmgpi and human UBTFL2/3 results cannot be substituted for this copy."
+    },
+    {
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "value": 1.257588672,
+      "unit": "log2 fold change",
+      "review_status": "accepted",
+      "review_date": "2026-11-08",
+      "historical_finding_ids": [],
+      "review_depth": "Primary source and assay-identity review; named-candidate audit 2026-11-08",
+      "id": "GK-20261108-TMEM269-LIHC",
+      "gene_ids": [
+        "ENSG00000274386"
+      ],
+      "gene_symbols": [
+        "TMEM269"
+      ],
+      "tissue": "liver",
+      "cell_type": "hepatocellular carcinoma bulk tissue",
+      "state": "tumor versus normal comparison",
+      "assay": "TCGA RNA-seq differential-expression analysis",
+      "support": "tumor_rna",
+      "tissue_tier": "vital",
+      "effect": "context",
+      "interpretation_status": "accepted",
+      "finding": "Supplementary Table S3 includes TMEM269 as upregulated in TCGA LIHC, log2 fold change 1.257588672, logCPM -3.45323963 and FDR 1.69e-6.",
+      "decision_reason": "Add exact-symbol tumor RNA context. This paper does not nominate a CTA or demonstrate protein localization, antigen presentation or normal-tissue restriction.",
+      "source_title": "Identification of potential crucial genes associated with the pathogenesis and prognosis of liver hepatocellular carcinoma",
+      "source_url": "https://doi.org/10.1136/jclinpath-2020-206979",
+      "source_location": "Supplementary Table S3, PDF page 101; differential-expression table header on page 1",
+      "limitations": "The supplementary RNA comparison is a reanalysis of TCGA, not an independent tumor cohort. Low average RNA expression and a differential-expression statistic do not establish an accessible membrane protein."
+    },
+    {
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "value": 5.779251523,
+      "unit": "log2 fold change",
+      "review_status": "accepted",
+      "review_date": "2026-11-08",
+      "historical_finding_ids": [],
+      "review_depth": "Primary source and assay-identity review; named-candidate audit 2026-11-08",
+      "id": "GK-20261108-SSU72L1-CDCA8",
+      "gene_ids": [
+        "ENSG00000284438"
+      ],
+      "gene_symbols": [
+        "SSU72L1"
+      ],
+      "tissue": "ovary",
+      "cell_type": "A2780 ovarian-cancer cell line",
+      "state": "siCDCA8 versus negative control, 48 hours",
+      "assay": "RNA sequencing",
+      "support": "tumor_rna",
+      "tissue_tier": "reproductive",
+      "effect": "context",
+      "interpretation_status": "accepted",
+      "finding": "Table S2 lists SSU72P7, the previous symbol of SSU72L1, with log2 fold change 5.779251523 (54.91968795-fold) and adjusted P 9.14e-69 after CDCA8 knockdown.",
+      "decision_reason": "Add exact-copy-symbol cancer-cell RNA context, retaining the old symbol. A perturbation response does not establish baseline tumor prevalence, protein production or CTA identity.",
+      "source_title": "CDCA8, targeted by MYBL2, promotes malignant progression and olaparib insensitivity in ovarian cancer",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/",
+      "source_location": "Figure 4 and Table S2; combined publisher PDF page 45 (supplement page 18)",
+      "limitations": "The table reports a gene-level RNA result, not unique-read or peptide validation. SSU72 phosphatase experiments are not transferable to SSU72L1 or to SSU72L2-5."
+    }
+  ]
+}

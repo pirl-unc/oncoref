@@ -226,39 +226,6 @@
     "reproductive_max_ntpm": 7.7
   },
   {
-    "entity_id": "PEG:0e36aa2dea5e617ca41b",
-    "protein": "TRIM75",
-    "gene_ids": [
-      "ENSG00000250374"
-    ],
-    "nomination_sources": [],
-    "exact_paper_sources": [],
-    "related_sources": [
-      "10.1007/s11033-024-09349-0",
-      "10.1016/j.csbj.2022.08.069"
-    ],
-    "covered_gene_ids": [],
-    "uncovered_gene_ids": [
-      "ENSG00000250374"
-    ],
-    "paper_coverage": "no_paper",
-    "per_gene_sources": {
-      "ENSG00000250374": []
-    },
-    "biological_group": "Duplicated regulatory and antigen-related families",
-    "biology_categories": [
-      "early_embryo"
-    ],
-    "evidence_summary": "Mouse Trim75 is studied as a maternal contributor to zygotic genome activation, and a structural study examines a TRIM75 coiled-coil. These do not establish endogenous human TRIM75 protein in embryos or tumors.",
-    "judgment": "Keep as an embryo-associated discovery CTA. Mouse maternal function and a recombinant domain support a biological lead, but not endogenous human production.",
-    "tumor_max_tpm": 10.262,
-    "tumor_max_ptpm": 12.4255,
-    "reliable_tumor_protein": false,
-    "replicated_tumor_rna": false,
-    "developmental_lineage_max_tpm": 32.6444131168,
-    "reproductive_max_ntpm": 0.1
-  },
-  {
     "entity_id": "PEG:bb4b19645fd0c3e6333b",
     "protein": "TAF11L14",
     "gene_ids": [
@@ -329,7 +296,8 @@
     "nomination_sources": [],
     "exact_paper_sources": [],
     "related_sources": [
-      "10.1093/hmg/ddp512"
+      "10.1093/hmg/ddp512",
+      "10.1093/molehr/gaab012"
     ],
     "covered_gene_ids": [],
     "uncovered_gene_ids": [
@@ -344,7 +312,7 @@
       "early_embryo"
     ],
     "evidence_summary": "The Hmgpi discovery paper demonstrates preimplantation function in mouse and identifies three predicted human homologs, UBTFL1-3. That is a family/orthology link, not direct functional validation of human UBTFL1.",
-    "judgment": "Keep as an early-embryo discovery CTA. Mouse Hmgpi results support the family context; distinguish this human homolog from UBTFL2/3.",
+    "judgment": "Keep as an early-embryo discovery CTA on independent human embryo RNA and its coding reference. The claimed human Ubtfl1 qPCR assay in Zhu 2021 uses primers matching mouse Sod1; do not credit that assay. UniProt has protein-level evidence, but this review did not resolve tissue-specific peptides.",
     "tumor_max_tpm": 26.9973358169,
     "tumor_max_ptpm": 7.7643,
     "reliable_tumor_protein": false,
@@ -533,37 +501,6 @@
     "replicated_tumor_rna": false,
     "developmental_lineage_max_tpm": 23.0908323586,
     "reproductive_max_ntpm": 0.6
-  },
-  {
-    "entity_id": "PEG:faca81e4e6e3b4de73a7",
-    "protein": "TMEM269",
-    "gene_ids": [
-      "ENSG00000274386"
-    ],
-    "nomination_sources": [],
-    "exact_paper_sources": [],
-    "related_sources": [],
-    "covered_gene_ids": [],
-    "uncovered_gene_ids": [
-      "ENSG00000274386"
-    ],
-    "paper_coverage": "no_paper",
-    "per_gene_sources": {
-      "ENSG00000274386": []
-    },
-    "biological_group": "Other poorly characterized reproductive proteins",
-    "biology_categories": [
-      "early_embryo",
-      "testis"
-    ],
-    "evidence_summary": "No dedicated TMEM269 expression, function or antigen study was verified. Broad computational gene-list leads do not establish a protein-level finding.",
-    "judgment": "Keep as a reproductive/early-embryo discovery CTA. Membrane annotation alone does not establish tumor-surface localization or accessibility.",
-    "tumor_max_tpm": 22.8526,
-    "tumor_max_ptpm": 40.4717,
-    "reliable_tumor_protein": false,
-    "replicated_tumor_rna": false,
-    "developmental_lineage_max_tpm": 5.8871511141,
-    "reproductive_max_ntpm": 0.9
   },
   {
     "entity_id": "PEG:cd8eaef0aa7ffbe4d21b",
@@ -809,36 +746,6 @@
     "reliable_tumor_protein": false,
     "replicated_tumor_rna": true,
     "developmental_lineage_max_tpm": 318.6106037429,
-    "reproductive_max_ntpm": 0.0
-  },
-  {
-    "entity_id": "PEG:f9b97c7f8faf5a7950b0",
-    "protein": "SSU72L1",
-    "gene_ids": [
-      "ENSG00000284438"
-    ],
-    "nomination_sources": [],
-    "exact_paper_sources": [],
-    "related_sources": [],
-    "covered_gene_ids": [],
-    "uncovered_gene_ids": [
-      "ENSG00000284438"
-    ],
-    "paper_coverage": "no_paper",
-    "per_gene_sources": {
-      "ENSG00000284438": []
-    },
-    "biological_group": "Duplicated regulatory and antigen-related families",
-    "biology_categories": [
-      "early_embryo"
-    ],
-    "evidence_summary": "No exact SSU72L1 functional or antigen study was verified after searching SSU72L1 and SSU72P7. Search leads about canonical SSU72/CTD phosphatases do not identify this copy.",
-    "judgment": "Keep as an early-embryo discovery CTA. Tumor and developmental RNA make it worth studying; copy-specific mapping and protein detection are the key gaps.",
-    "tumor_max_tpm": 387.7399999989,
-    "tumor_max_ptpm": 29.4097,
-    "reliable_tumor_protein": false,
-    "replicated_tumor_rna": true,
-    "developmental_lineage_max_tpm": 92.4495397817,
     "reproductive_max_ntpm": 0.0
   },
   {

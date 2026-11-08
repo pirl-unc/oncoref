@@ -850,7 +850,9 @@ def annotate_translation_support(facts: pd.DataFrame, output: Path) -> pd.DataFr
     return result
 
 
-def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
+def build(
+    output: Path = OUTPUT, *, reuse_contexts: bool = False, include_knowledge_updates: bool = True
+) -> None:
     """Regenerate decisions, complete profile evidence and all counting exports."""
     output.mkdir(parents=True, exist_ok=True)
     facts = read(FROZEN / "protein-group-classifications.csv.gz")
@@ -918,6 +920,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         ROOT / "oncoref/data/translation-qualification.csv.gz",
         ROOT / "oncoref/gene_knowledge.py",
         ROOT / "oncoref/data/gene-knowledge.json",
+        ROOT / "oncoref/data/gene-knowledge-updates.json",
         ROOT / "oncoref/reproductive_evidence.py",
         ROOT / "oncoref/data/normal-induction-evidence.csv",
         ROOT / "oncoref/tcr_trials.py",
@@ -1045,7 +1048,11 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     facts["reproductive_cell_association"] = (
         facts.reproductive_cell_ntpm.ge(5) | facts.reproductive_cell_indirect_association
     )
-    facts = gene_knowledge.annotate(facts)
+    # New IHC, MS and localized RNA reviews enter the same normal-evidence gate.
+    # They cannot be bypassed by reproductive association or high tumor RNA.
+    facts = gene_knowledge.annotate(
+        facts, evidence=gene_knowledge.findings(include_updates=include_knowledge_updates)
+    )
     facts = cta_rare_cell.annotate(facts)
     facts = policy.association_evidence(facts)
     facts = policy.concentration_evidence(facts, profile_scores)
@@ -1175,6 +1182,7 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
     counts.setdefault("Unassigned", 0)  # no human protein is unassessed
     meta = {
         "policy": policy.POLICY_ID,
+        "knowledge_updates_included": include_knowledge_updates,
         "categories": counts,
         "selected_member_loci": int(result.loc[result.category.eq("CTA"), "member_count"].sum()),
         "other_subtypes": result.loc[result.category.eq("Other"), "subtype"]
@@ -1189,5 +1197,13 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reuse-contexts", action="store_true")
+    parser.add_argument(
+        "--released-knowledge",
+        action="store_true",
+        help="Reproduce the released knowledge set without accepted pending curation",
+    )
     args = parser.parse_args()
-    build(reuse_contexts=args.reuse_contexts)
+    build(
+        reuse_contexts=args.reuse_contexts,
+        include_knowledge_updates=not args.released_knowledge,
+    )

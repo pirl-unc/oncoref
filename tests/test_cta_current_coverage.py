@@ -46,6 +46,19 @@ def test_current_nomination_adds_new_locus_without_changing_frozen_memberships()
     assert row.nomination_sources == row.exact_paper_sources == ["catalog"]
 
 
+def test_named_human_results_and_rejected_assay_keep_distinct_coverage_roles():
+    followup = cta_literature.followup_findings()
+    sources = {r["source_id"]: r for r in followup["sources"]}
+    links = {r["protein"]: r for r in followup["memberships"]}
+    for protein in ["TRIM75", "TMEM269", "SSU72L1"]:
+        row = links[protein]
+        assert row["eligible_for_coverage"]
+        assert "catalog_nomination" not in sources[row["source_id"]]["roles"]
+    assert not links["UBTFL1"]["eligible_for_coverage"]
+    assert "Sod1" in links["UBTFL1"]["scope"]
+    assert "normal_tissue" in sources[links["TRIM75"]["source_id"]]["roles"]
+
+
 def test_gap_report_retains_hpa_signal_when_other_tumor_tpm_is_low():
     path = (
         Path(__file__).resolve().parents[1]

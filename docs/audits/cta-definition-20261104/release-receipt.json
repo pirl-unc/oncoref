@@ -58,12 +58,12 @@
   },
   "generated_documentation": {
     "README.md": "7988237940896b093155c71543415047ac47ff936c37d2175525149d8828fc27",
-    "docs/cta-selection.md": "83d67c462d4033ecff830eb52b6984b03c3cef3e549ce570f0eb735234ba0ad0",
-    "docs/index.md": "9f44049b31c22d147f8943d6040ecf38f2ab974d5e4e3cf70368d441b26ac268"
+    "docs/cta-selection.md": "7f3cbbbd40d07548d899ca26f01697dd62cccc0ee96e77f545e311545cc90ac3",
+    "docs/index.md": "07681be24a35d8b0051d597997d7ae59ba4d644c1b7e07a892b3dc71e1cc6857"
   },
   "documentation_update": {
     "date": "2026-11-08",
     "report": "docs/audits/cta-current-review-20261108/index.md",
-    "scope": "Current literature and representative-review overlay; classification data, figures and sequence pins remain at the declared release."
+    "scope": "Literature, representative review and pending normal-evidence documentation; classification data, figures and sequence pins remain at the declared release."
   }
 }
