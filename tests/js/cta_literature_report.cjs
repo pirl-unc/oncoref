@@ -5,6 +5,7 @@ get('collection').value='core';get('coverage-filter').value='missing';
 get('location-filter').value='extracellular';
 const data=JSON.parse(fs.readFileSync('docs/audits/cta-literature-20261107/review.json','utf8'));
 const context=vm.createContext({document:{getElementById:get,createElement:()=>new Element()},Option:class{constructor(t,v){this.text=t;this.value=v}},fetch:async()=>({ok:true,json:async()=>data}),URLSearchParams,location:{search:''},console});
+vm.runInContext(fs.readFileSync('scripts/cta_evidence_assets/literature/surface.js','utf8'),context);
 vm.runInContext(fs.readFileSync('scripts/cta_evidence_assets/literature/review.js','utf8'),context);
 setImmediate(()=>{
  assert.equal(get('review-count').textContent,'96 of 96 reviewed proteins');assert.equal(get('source-count').textContent,'83 of 150 paper and supporting-source records');assert.equal(get('coverage-count').textContent,'33 of 602 released CTA records');
@@ -19,12 +20,19 @@ setImmediate(()=>{
  set('gap-group','');set('gap-query','TAF11');assert.equal(get('gap-count').textContent,'3 of 33 proteins without qualifying paper coverage');
  set('concern-kind','normal_review');assert.equal(get('concern-count').textContent,'18 of 29 flagged reviews');
  set('concern-kind','identity_review');assert.equal(get('concern-count').textContent,'11 of 29 flagged reviews');
- set('concern-query','FRG2B');assert.equal(get('concern-count').textContent,'1 of 29 flagged reviews');assert(get('concern-table').innerHTML.includes('40637237'));
+ set('concern-query','FRG2B');assert.equal(get('concern-count').textContent,'2 of 29 flagged reviews');assert(get('concern-table').innerHTML.includes('40637237'));
  assert.equal(get('location-count').textContent,'93 of 602 released CTAs · location categories can overlap');
  set('location-scope','gaps');assert.equal(get('location-count').textContent,'3 of 602 released CTAs · location categories can overlap');
  set('location-filter','shared');set('location-query','OOSP4B');assert.equal(get('location-count').textContent,'1 of 602 released CTAs · location categories can overlap');assert(get('location-table').innerHTML.includes('Also maps outside this record'));
  set('location-scope','');set('location-filter','');set('location-query','CRIPTO3');assert(get('location-table').innerHTML.includes('39518018'));assert(get('location-table').innerHTML.includes('Physiological state or producing compartment'));
  assert(get('concern-summary').innerHTML.includes('Unnamed locus; little characterization'));
+ assert(get('concern-table').innerHTML.includes('FLAG'));
+ assert.equal(get('surface-count').textContent,'37 of 37 membrane candidates · RNA and IHC are separate cohorts');
+ set('surface-query','CT83');assert(get('surface-table').innerHTML.includes('174/346'));
+ set('surface-query','OR4M2');assert(get('surface-table').innerHTML.includes('0/'));assert(!get('surface-table').innerHTML.includes('No measurement for this cohort'));
+ set('surface-query','TEX38');assert(get('surface-table').innerHTML.includes('Unknown'));
+ set('surface-query','SLCO1B3-SLCO1B7');assert(get('surface-table').innerHTML.includes('Selected-sequence size: unknown'));
+ set('surface-cohort','validation');set('surface-cancer','not-a-cancer');assert(get('surface-table').innerHTML.includes('No measurement for this cohort/cancer'));
  console.log('DOM rendering, baseline/outcome/source/coverage filters, gene/paper links and pagination passed.');
 });
 const explorerContext=vm.createContext({document:{getElementById:get},fetch:async()=>({ok:true,json:async()=>data})});

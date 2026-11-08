@@ -440,6 +440,9 @@ def build_registry():
         ASSETS / "catalog-review.json",
         ASSETS / "cta-followup-notes.json",
         ASSETS / "cta-localization-input.json.gz",
+        ASSETS / "cta-surface-input.json.gz",
+        ROOT / "oncoref/_cta_surface.py",
+        ROOT / "scripts/import_cta_surface.py",
         ROOT / "oncoref/_cta_literature_followup.py",
         ROOT / "scripts/import_cta_localization.py",
         OUT / "search-ledger.json",
@@ -450,7 +453,7 @@ def build_registry():
     ]
     return {
         "schema": "oncoref.cta-literature",
-        "version": 2,
+        "version": 3,
         "date": "2026-11-07",
         "baseline_release": "1.31.0",
         "classification_effect": "Evidence annotation only; findings requiring adjudication are not yet applied to the frozen selection.",
@@ -488,6 +491,7 @@ def build_registry():
             rows,
             read(ASSETS / "cta-followup-notes.json"),
             read(ASSETS / "cta-localization-input.json.gz"),
+            read(ASSETS / "cta-surface-input.json.gz"),
         ),
         "inputs": [
             {"path": str(p.relative_to(ROOT)), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
@@ -594,8 +598,24 @@ def main():
     write_csv(
         OUT / "review-concerns.csv",
         data["concerns"],
-        ["protein", "gene_ids", "category", "outcome", "observation", "next_action", "citations"],
+        [
+            "protein",
+            "gene_ids",
+            "category",
+            "outcome",
+            "observation",
+            "evidence_details",
+            "interpretation",
+            "next_action",
+            "citations",
+        ],
     )
+    for key, name in [
+        ("surface_domains", "cta-surface-domains.csv"),
+        ("surface_cancer_rna", "cta-surface-cancer-rna.csv"),
+        ("surface_cancer_ihc", "cta-surface-cancer-ihc.csv"),
+    ]:
+        write_csv(OUT / name, data[key], list(data[key][0]))
     write_csv(
         OUT / "cta-localization.csv",
         data["localization"],
@@ -613,9 +633,10 @@ def main():
             "paper_notes",
         ],
     )
-    for name in ["report.html", "review.js", "style.css"]:
+    for name in ["report.html", "review.js", "surface.js", "style.css"]:
         shutil.copyfile(ASSETS / "literature" / name, OUT / name)
     write_figures(data)
+    write_surface_figure(data)
     write_index(data)
     integrate_evidence_guide()
     write_json(
@@ -632,6 +653,99 @@ def main():
         },
     )
     print(json.dumps(data["counts"], indent=2))
+
+
+def write_surface_figure(data):
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    plt.rcParams.update({"svg.hashsalt": "oncoref-cta-surface-v1", "font.family": "DejaVu Sans"})
+    rows = sorted(data["surface_domains"], key=lambda r: r["protein"])
+    cancers = sorted(
+        {r["cancer_code"] for r in data["surface_cancer_rna"] if r["cohort"] == "TCGA"}
+    )
+    lookup = {
+        (r["protein"], r["cancer_code"]): r
+        for r in data["surface_cancer_rna"]
+        if r["cohort"] == "TCGA"
+    }
+    matrix = np.full((len(rows), len(cancers)), np.nan)
+    for i, row in enumerate(rows):
+        for j, cancer in enumerate(cancers):
+            r = lookup.get((row["protein"], cancer))
+            if r and r["samples"]:
+                matrix[i, j] = 100 * r["expressed_samples_ptpm_ge_5"] / r["samples"]
+    fig, (ax, heat) = plt.subplots(
+        1, 2, figsize=(13, 13), gridspec_kw={"width_ratios": [1, 2.4]}, facecolor="#f7f5ef"
+    )
+    labels = []
+    for i, row in enumerate(rows):
+        suffix = "*" if row["sequence_match"] != "exact_sequence" else ""
+        labels.append(row["protein"] + suffix)
+        value = row["extracellular_longest_aa"]
+        if value is None:
+            ax.text(2, i, "Unknown", va="center", fontsize=8, color="#6a7373")
+        else:
+            ax.plot(value, i, "o", color="#a14632" if suffix else "#216b72", markersize=5)
+            ax.annotate(
+                str(value),
+                (value, i),
+                xytext=(7, 0),
+                textcoords="offset points",
+                fontsize=8,
+                va="center",
+            )
+    ax.set(
+        xscale="log",
+        xlim=(1, 3500),
+        ylim=(len(rows) - 0.5, -0.5),
+        yticks=range(len(rows)),
+        yticklabels=labels,
+        xlabel="Amino acids (log scale)",
+        title="Longest external segment\nUniProt reference sequence",
+    )
+    ax.tick_params(axis="y", labelsize=9)
+    ax.set_facecolor("#f7f5ef")
+    ax.spines[["top", "right"]].set_visible(False)
+    cmap = plt.get_cmap("YlGnBu").copy()
+    cmap.set_bad("#bdbdbd")
+    im = heat.imshow(np.ma.masked_invalid(matrix), aspect="auto", cmap=cmap, vmin=0, vmax=60)
+    heat.set(
+        xticks=range(len(cancers)),
+        xticklabels=cancers,
+        yticks=[],
+        title="Tumors with RNA ≥5 pTPM\nHPA 25.1 · TCGA · percent of measured samples",
+    )
+    heat.tick_params(axis="x", rotation=90, labelsize=9)
+    cb = fig.colorbar(im, ax=heat, fraction=0.035, pad=0.03)
+    cb.set_label("Percent ≥5 pTPM")
+    fig.suptitle(
+        "External sequence size and cancer RNA frequency are different properties",
+        x=0.02,
+        ha="left",
+        fontsize=14,
+    )
+    fig.text(
+        0.02,
+        0.055,
+        "* SPAM1: mature chain matches; anchor tail differs. SLCO1B3–SLCO1B7: different selected sequence.\n"
+        "GPI proteins use mature chains. ZP4 uses the 487-aa precursor region (mature chain: 444 aa).\n"
+        "TEX38/XKR3/XKR5 boundaries are unknown. Lightest color: 0%; gray would mean missing data.",
+        fontsize=9,
+        va="top",
+    )
+    fig.text(
+        0.02,
+        0.008,
+        "RNA does not establish surface protein. The table supplies counts, cancer names, sequence matches and feature evidence.",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=(0, 0.065, 1, 0.97))
+    fig.savefig(OUT / "surface-cancer.svg", metadata={"Date": None})
+    plt.close(fig)
 
 
 def integrate_evidence_guide():
@@ -772,6 +886,9 @@ The 1.31.0 classifications are frozen. Normal-expression and identity findings i
 - [All 33 paper gaps: biology, measurements and assessment](paper-gap-assessments.csv)
 - [All 29 normal-expression and identity concerns](review-concerns.csv)
 - [Localization of all 602 CTAs, with evidence and mapping scope](cta-localization.csv)
+- [External domain sizes and sequence attribution for 37 membrane candidates](cta-surface-domains.csv)
+- [Membrane candidate cancer RNA counts, with TCGA/validation separate](cta-surface-cancer-rna.csv)
+- [Separate scored-patient cancer staining counts](cta-surface-cancer-ihc.csv)
 - [Complete registry, including source-row occurrences](registry.json.gz)
 - [Search queries and retrieval receipts](search-ledger.json)
 - [Figure: review outcomes](review-outcomes.svg)

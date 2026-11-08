@@ -976,7 +976,7 @@
         "function"
       ],
       "summary": "Human post-mortem immunohistochemistry detects SRY in a subset of midbrain neurons in five male controls, with two female controls negative. Cell experiments link SRY to catecholamine regulation. Adult normal neural protein requires an explicit normal-evidence disposition.",
-      "identity": "SRY is not a SOX-family transcription factor; SOX-only search hits were rejected."
+      "identity": "SRY is the founding SOX-family transcription factor. Findings for other SOX genes do not establish SRY expression; SOX-only search hits were rejected."
     },
     {
       "protein": "SSU72L1",

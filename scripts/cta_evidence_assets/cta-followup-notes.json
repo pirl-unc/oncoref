@@ -160,175 +160,233 @@
       "protein": "MANSC4",
       "concern_group": "affinity_association",
       "observation": "Plasma protein-affinity / pQTL associations nominate MANSC4.",
-      "next_action": "Verify the reagent’s target and the producing tissue; a plasma association is not tissue-localized protein evidence."
+      "next_action": "Verify the reagent’s target and the producing tissue; a plasma association is not tissue-localized protein evidence.",
+      "evidence_details": "Plasma proteomic/pQTL studies associate the assay labelled MANSC4 with type-1 diabetes outcomes and, separately, normal-tension glaucoma. The glaucoma study combines UK Biobank Olink protein measurements with several pQTL cohorts and Mendelian-randomization analyses.",
+      "interpretation": "A plasma affinity signal and genetic association do not localize normal protein to a tissue. Genetic effects can concern protein abundance or assay binding. Verify reagent selectivity and use an orthogonal peptide assay before treating the signal as identified circulating MANSC4 or assigning a producing cell."
     },
     {
       "protein": "FRG2",
       "concern_group": "coding_conflict",
       "observation": "Recent work supports a nucleolar long-noncoding-RNA interpretation of the FRG2 family and challenges translation claims.",
-      "next_action": "Review the exact locus and reading frame against the published experiments before retaining a protein-level claim."
+      "next_action": "Review the exact locus and reading frame against the published experiments before retaining a protein-level claim.",
+      "evidence_details": "The 2025 study introduced N- or C-terminal FLAG tags into predicted FRG2-family ORFs in HeLa and HEK293 cells. Tagged transcripts were detected and induced by doxorubicin, but FLAG immunoblots did not detect protein. Ribosome-profile and proteomic searches, including a HeLa experiment detecting more than 6,000 proteins, also found no FRG2 protein. RNA experiments support nucleolar/chromatin functions.",
+      "interpretation": "This is affirmative experimental counterevidence to a protein interpretation, stronger than simply lacking a paper. The work examines several paralogs and edited bulk cell populations; align its tested transcripts/frames to the selected FRG2 or FRG2B sequence. Failure in those models is not a universal demonstration that no condition produces a protein."
     },
     {
       "protein": "FRG2B",
       "concern_group": "coding_conflict",
       "observation": "Recent work supports a nucleolar long-noncoding-RNA interpretation of the FRG2 family and challenges translation claims.",
-      "next_action": "Review the exact locus and reading frame against the published experiments before retaining a protein-level claim."
+      "next_action": "Review the exact locus and reading frame against the published experiments before retaining a protein-level claim.",
+      "evidence_details": "The 2025 study introduced N- or C-terminal FLAG tags into predicted FRG2-family ORFs in HeLa and HEK293 cells. Tagged transcripts were detected and induced by doxorubicin, but FLAG immunoblots did not detect protein. Ribosome-profile and proteomic searches, including a HeLa experiment detecting more than 6,000 proteins, also found no FRG2 protein. RNA experiments support nucleolar/chromatin functions.",
+      "interpretation": "This is affirmative experimental counterevidence to a protein interpretation, stronger than simply lacking a paper. The work examines several paralogs and edited bulk cell populations; align its tested transcripts/frames to the selected FRG2 or FRG2B sequence. Failure in those models is not a universal demonstration that no condition produces a protein."
     },
     {
       "protein": "ENSG00000237378",
       "concern_group": "little_characterization",
       "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
-      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization.",
+      "evidence_details": "The released record has a qualifying annotated coding sequence and measured RNA supporting its admission route. The recorded literature searches did not verify an exact-locus protein experiment.",
+      "interpretation": "An unnamed locus is poorly characterized, not experimentally shown to be noncoding. The existing rule accepts a qualifying reference CDS, so the absence of an experimental protein paper does not itself revoke CTA admission. Sequence-linked translation and function remain discovery work."
     },
     {
       "protein": "ENSG00000241690",
       "concern_group": "little_characterization",
       "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
-      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization.",
+      "evidence_details": "The released record has a qualifying annotated coding sequence and measured RNA supporting its admission route. The recorded literature searches did not verify an exact-locus protein experiment.",
+      "interpretation": "An unnamed locus is poorly characterized, not experimentally shown to be noncoding. The existing rule accepts a qualifying reference CDS, so the absence of an experimental protein paper does not itself revoke CTA admission. Sequence-linked translation and function remain discovery work."
     },
     {
       "protein": "ENSG00000258417",
       "concern_group": "little_characterization",
       "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
-      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization.",
+      "evidence_details": "The released record has a qualifying annotated coding sequence and measured RNA supporting its admission route. The recorded literature searches did not verify an exact-locus protein experiment.",
+      "interpretation": "An unnamed locus is poorly characterized, not experimentally shown to be noncoding. The existing rule accepts a qualifying reference CDS, so the absence of an experimental protein paper does not itself revoke CTA admission. Sequence-linked translation and function remain discovery work."
     },
     {
       "protein": "ENSG00000284934",
       "concern_group": "little_characterization",
       "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
-      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization.",
+      "evidence_details": "The released record has a qualifying annotated coding sequence and measured RNA supporting its admission route. The recorded literature searches did not verify an exact-locus protein experiment.",
+      "interpretation": "An unnamed locus is poorly characterized, not experimentally shown to be noncoding. The existing rule accepts a qualifying reference CDS, so the absence of an experimental protein paper does not itself revoke CTA admission. Sequence-linked translation and function remain discovery work."
     },
     {
       "protein": "ENSG00000289809",
       "concern_group": "little_characterization",
       "observation": "Qualifying reference coding sequence and measured RNA; no exact-locus protein experiment was verified.",
-      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization."
+      "next_action": "Retain as a discovery candidate under the existing translation rule; improve sequence-linked annotation and characterization.",
+      "evidence_details": "The released record has a qualifying annotated coding sequence and measured RNA supporting its admission route. The recorded literature searches did not verify an exact-locus protein experiment.",
+      "interpretation": "An unnamed locus is poorly characterized, not experimentally shown to be noncoding. The existing rule accepts a qualifying reference CDS, so the absence of an experimental protein paper does not itself revoke CTA admission. Sequence-linked translation and function remain discovery work."
     },
     {
       "protein": "BTN1A1",
       "concern_group": "normal_compartment",
       "observation": "Normal lactating breast expression; tumor antibody-blockade studies also identify a cell-surface target.",
-      "next_action": "Retain lactation and mammary-cell context in the normal-expression decision."
+      "next_action": "Retain lactation and mammary-cell context in the normal-expression decision.",
+      "evidence_details": "BTN1A1 is a component of the milk-fat-globule membrane and is expressed by normal lactating mammary epithelium. The tumor study separately investigates cell-surface BTN1A1 and antibody blockade.",
+      "interpretation": "Lactation is a normal physiological state that a resting adult-tissue panel can underrepresent. A tumor-surface observation does not establish cancer specificity. The normal decision must name lactating mammary cells rather than treating milk protein as evidence of no adult expression."
     },
     {
       "protein": "CRIPTO3",
       "concern_group": "normal_compartment",
       "observation": "Reagent-discriminated protein findings include normal donor serum and fetal / placental contexts.",
-      "next_action": "Identify the adult producing tissue; serum detection alone does not locate the source cell."
+      "next_action": "Identify the adult producing tissue; serum detection alone does not locate the source cell.",
+      "evidence_details": "Recent monoclonal-antibody studies distinguish CRIPTO3 from the closely related CRIPTO1. They report protein in normal donor serum as well as tumor samples. A separate study maps CRIPTO3 in human placenta, umbilical cord and multiple fetal tissues.",
+      "interpretation": "The fetal and placental findings support an oncofetal association. Normal adult serum establishes extracellular detection but does not identify the adult source cell, secretion route or a tumor-cell surface epitope. Those are separate questions."
     },
     {
       "protein": "KRTAP24-1",
       "concern_group": "normal_compartment",
       "observation": "Human hair-cuticle RNA and protein findings.",
-      "next_action": "Distinguish mature hair from living follicular and regenerative cells."
+      "next_action": "Distinguish mature hair from living follicular and regenerative cells.",
+      "evidence_details": "The human KAP24.1 study combines in-situ hybridization and antibody microscopy, locating expression in the middle/upper hair cuticle. The HPA extended hair panel also reports cuticle staining.",
+      "interpretation": "The finding is anatomically restricted. Mature hair is keratinized material, while its production involves differentiating follicular cells. Neither a blanket skin exclusion nor a blanket disposable-hair allowance follows without specifying the living cells recognized."
     },
     {
       "protein": "BECN2",
       "concern_group": "normal_protein",
       "observation": "Adult and fetal human brain immunoblots, with autophagy and receptor-turnover experiments.",
-      "next_action": "Assess normal brain protein expression and the cells producing it."
+      "next_action": "Assess normal brain protein expression and the cells producing it.",
+      "evidence_details": "The discovery study shows Beclin 2 immunoblots from fetal and adult human brain (Figure 1C). Autophagy and G-protein-coupled-receptor degradation were investigated in cell experiments; metabolic phenotypes were studied in mice.",
+      "interpretation": "This is a positive normal adult brain protein result. It directly contradicts a reproductive/developmental-only description. It does not identify every brain cell producing BECN2 or establish the consequences of selective human-cell depletion."
     },
     {
       "protein": "OBP2A",
       "concern_group": "normal_protein",
       "observation": "Human keratinocyte / skin RNA and protein, with skin-barrier experiments.",
-      "next_action": "Assess normal epidermal protein and barrier function."
+      "next_action": "Assess normal epidermal protein and barrier function.",
+      "evidence_details": "The original human odorant-binding-protein study describes secretory-tissue expression. The 2024 study detects OBP2A RNA and protein in human epidermal keratinocytes and skin and tests barrier effects after silencing. OBP2A is distinguished from its relative OBP2B.",
+      "interpretation": "Normal epidermal protein and a barrier-related function are stronger evidence than an isolated low RNA value. The normal skin finding belongs in the Protected-compartment decision; secretion does not remove the producing cells from that assessment."
     },
     {
       "protein": "SLCO1B3-SLCO1B7",
       "concern_group": "normal_protein",
       "observation": "The exact readthrough protein is reported in normal human hepatocytes and liver microsomes; native localization is largely endoplasmic reticulum.",
-      "next_action": "Apply the normal hepatocyte evidence to the readthrough, keeping native and overexpression localization separate."
+      "next_action": "Apply the normal hepatocyte evidence to the readthrough, keeping native and overexpression localization separate.",
+      "evidence_details": "The LST-3TM12 study verifies a transcript joining SLCO1B3 and SLCO1B7, liver-enriched RNA, hepatocyte endoplasmic-reticulum staining, and protein in human liver microsomes. In transfected HeLa cells, the product reaches both ER and plasma membrane and transports steroid conjugates.",
+      "interpretation": "This is evidence about a readthrough product, not just the parent genes. Native hepatocyte ER localization must not be described as demonstrated native tumor-cell surface exposure. The 748-aa selected sequence also differs from the 687-aa UniProt reference carrying the topology annotation; exact-proteoform attribution remains necessary."
     },
     {
       "protein": "SRY",
       "concern_group": "normal_protein",
       "observation": "Adult male human midbrain immunostaining and catecholamine-related functional experiments.",
-      "next_action": "Assess the normal neuronal population and sex-specific expression."
+      "next_action": "Assess the normal neuronal population and sex-specific expression.",
+      "evidence_details": "Post-mortem midbrain immunohistochemistry in five male controls and two female controls found SRY staining in a subset of male neurons, including catecholaminergic populations; the female controls were negative. Human cell experiments linked SRY to catecholamine synthesis and metabolism.",
+      "interpretation": "The normal-expression question is sex-specific adult neurons, not embryonic gonadal development. SRY is the founding SOX-family transcription factor; studies of other SOX genes cannot substitute for SRY-specific evidence."
     },
     {
       "protein": "ZACN",
       "concern_group": "normal_protein",
       "observation": "Human brain RNA and neuronal protein staining; channel function studied in expression systems.",
-      "next_action": "Assess normal neuronal protein, antibody specificity and cell identity."
+      "next_action": "Assess normal neuronal protein, antibody specificity and cell identity.",
+      "evidence_details": "The L2/ZAC study cloned cDNA from human caudate nucleus. Normal-tissue PCR included brain, pancreas, liver, lung, heart, kidney and skeletal muscle. Adult brain-region RNA and antipeptide immunostaining were reported, with prominent staining in hippocampal CA3 and the dentate-gyrus polymorphic layer. Glycosylation and membrane localization were tested in transfected HEK293 cells.",
+      "interpretation": "The neuronal staining is the protein-level concern; the other tissue PCR results are RNA evidence. Channel activity or tumor enrichment cannot erase normal neuronal expression. Antibody specificity and exact neuronal identity need a recorded classification decision."
     },
     {
       "protein": "FAM237A",
       "concern_group": "normal_rna",
       "observation": "A processed secreted GPR83 agonist; reported normal RNA includes pituitary, testis, heart and brain.",
-      "next_action": "Localize native human production and quantify protein; recombinant secretion does not establish native tissue abundance."
+      "next_action": "Localize native human production and quantify protein; recombinant secretion does not establish native tissue abundance.",
+      "evidence_details": "Engineered endocrine cells process FAM237A into a C-terminally cleaved, amidated approximately 9-kDa secreted agonist of GPR83. FAM237B undergoes related processing with lower potency. Reported normal-tissue RNA includes pituitary, testis, heart and lower brain expression.",
+      "interpretation": "The secretion and receptor assay establish biochemical capability in the expression system. They do not measure native circulating FAM237A or identify which normal human cells make it. Native protein/cell localization is the missing bridge from RNA to a normal-compartment call."
     },
     {
       "protein": "NLRP13",
       "concern_group": "normal_rna",
       "observation": "Human RNA / methylation studies include brain and disease-control comparisons.",
-      "next_action": "Resolve normal cell expression; RNA association does not establish a protein or inflammasome function."
+      "next_action": "Resolve normal cell expression; RNA association does not establish a protein or inflammasome function.",
+      "evidence_details": "The cited human studies analyze expression/methylation in disease-control comparisons, including familial Mediterranean fever and brain datasets. Their measurements are RNA or DNA methylation, not selective detection of normal NLRP13 protein.",
+      "interpretation": "Methylation association does not establish protein abundance. The NLRP family name, or a paper title calling it an inflammasome, is not a demonstrated NLRP13 inflammasome mechanism. Resolve the expressing normal cells and the exact protein."
     },
     {
       "protein": "SCGB1D4",
       "concern_group": "normal_rna",
       "observation": "Normal activated CD8/CD19-cell and nasal RNA.",
-      "next_action": "Resolve normal immune / airway protein; do not transfer SCGB3A2 staining to SCGB1D4."
+      "next_action": "Resolve normal immune / airway protein; do not transfer SCGB3A2 staining to SCGB1D4.",
+      "evidence_details": "The original IIS/SCGB1D4 study reports normal expression and induction in activated CD8 and CD19 cells. A human nasal-explant study detects SCGB1D4 RNA. The latter paper’s airway protein staining concerns SCGB3A2, a different gene.",
+      "interpretation": "Activation is a normal cell state that resting immune panels can miss. The RNA finding deserves follow-up, but SCGB3A2 staining cannot be credited as SCGB1D4 protein evidence."
     },
     {
       "protein": "RLN1",
       "concern_group": "protein_nondetection",
       "observation": "Selective immunoaffinity mass spectrometry did not detect relaxin-1 in the tested samples despite RNA; older assays could cross-react with relaxin-2.",
-      "next_action": "Record sample scope and detection limits; nondetection in these samples does not prove universal absence or negate the coding annotation."
+      "next_action": "Record sample scope and detection limits; nondetection in these samples does not prove universal absence or negate the coding annotation.",
+      "evidence_details": "The 2024 immunoaffinity-selected-reaction-monitoring study found RLN1/RLN2 RNA in prostate and breast cancer cell lines, but detected neither endogenous prorelaxin-1 nor mature relaxin-1 in the tested cell lines, seminal plasma or blood serum. The assay distinguished relaxin-2 and exposed cross-reactivity in older immunoassays.",
+      "interpretation": "This is selective protein nondetection in specified samples, not proof of universal nontranslation. The abstract’s 9.4-pg/mL serum limit refers to REL2; it must not be assigned to REL1. Keep RLN1 coding annotation, tested sample scope and exact assay limits separate."
     },
     {
       "protein": "GALP",
       "concern_group": "proteoform",
       "observation": "GALP and the alternatively spliced alarin product have distinct sequence and tissue interpretations.",
-      "next_action": "Map each assay and claimed normal compartment to the measured product."
+      "next_action": "Map each assay and claimed normal compartment to the measured product.",
+      "evidence_details": "Alternative splicing produces alarin, whose mature peptide shares its first five residues with GALP but has a different downstream sequence. The alarin study reports immunoreactivity in human dermal perivascular cells; its expression and vasoactivity experiments also include mice. Early GALP isolation was from porcine hypothalamus.",
+      "interpretation": "Assign each normal-tissue or tumor finding to GALP, alarin, or shared sequence. Human alarin staining cannot be relabelled as full-length selected GALP protein, and animal hypothalamic data cannot be relabelled as human tissue protein."
     },
     {
       "protein": "ATF7-NPFF",
       "concern_group": "readthrough",
       "observation": "The reference coding record qualifies, but no dedicated study verifies the exact readthrough product.",
-      "next_action": "Seek junction-spanning RNA and sequence-specific protein data; do not substitute ATF7 or NPFF measurements."
+      "next_action": "Seek junction-spanning RNA and sequence-specific protein data; do not substitute ATF7 or NPFF measurements.",
+      "evidence_details": "The readthrough passes the released reference-coding qualification. No dedicated exact-readthrough protein study was verified in the review; evidence for ATF7 and NPFF separately does not establish a translated fusion product.",
+      "interpretation": "Junction-spanning transcript evidence tests whether the readthrough RNA exists; readthrough-specific peptides test its protein. This is an evidence gap under the existing annotation-based admission rule, not a demonstrated coding failure or Unsafe finding."
     },
     {
       "protein": "ENSG00000273155",
       "concern_group": "shared_identity",
       "observation": "UniProt Q8TCC3 links this locus and two others to mitochondrial ribosomal protein uL30m.",
-      "next_action": "Resolve the selected locus / sequence before crediting uL30m experiments."
+      "next_action": "Resolve the selected locus / sequence before crediting uL30m experiments.",
+      "evidence_details": "UniProt Q8TCC3 annotates mitochondrial ribosomal protein uL30m and maps to ENSG00000185414, ENSG00000241962 and ENSG00000273155. Mitochondrial-ribosome experiments associated with that entry do not identify which locus supplied a measured peptide.",
+      "interpretation": "The shared protein annotation cannot establish translation or normal localization of this exact selected locus. Match peptide/sequence and transcript provenance before transferring uL30m experiments to this record."
     },
     {
       "protein": "DEFB108B",
       "concern_group": "shared_normal_assay",
       "observation": "A DEFB108 assay reports predominant testis RNA and low liver RNA without resolving the current copies.",
-      "next_action": "Resolve the DEFB108 copy measured in liver."
+      "next_action": "Resolve the DEFB108 copy measured in liver.",
+      "evidence_details": "The older DEFB108 assay reports strongest RNA in testis and lower RNA in liver. Its gene/copy definition predates the current duplicated-locus annotation. The later association study is genetic evidence, not selective protein detection.",
+      "interpretation": "The liver signal cannot be assigned automatically to DEFB108B or dismissed automatically. Re-map the assay sequence to the current copies and retain any ambiguity before making a member-specific exclusion."
     },
     {
       "protein": "H3Y1",
       "concern_group": "shared_normal_assay",
       "observation": "Normal hippocampal staining uses an antibody shared by H3.X and H3.Y; tumor-cell mass spectrometry resolves H3.Y.",
-      "next_action": "Resolve which histone variant accounts for normal neuronal staining."
+      "next_action": "Resolve which histone variant accounts for normal neuronal staining.",
+      "evidence_details": "The H3.X/H3.Y study identifies H3.Y-specific peptides in U2OS tumor cells. Human hippocampal neurons stain with an antibody recognizing both H3.X and H3.Y; neuronal identity is supported by NeuN co-staining. Stress experiments also induce the histone variants in U2OS cells.",
+      "interpretation": "Tumor-cell mass spectrometry resolves H3.Y, but the normal-neuron antibody does not separate H3Y1/H3.Y from H3.X. The brain finding is real family-level evidence with unresolved variant attribution, not a demonstrated H3Y1-specific normal-protein result."
     },
     {
       "protein": "PRAMEF18",
       "concern_group": "shared_normal_assay",
       "observation": "A combined PRAMEF18/PRAMEF19 RNA feature appears in treated human pulmonary-arterial smooth-muscle cells.",
-      "next_action": "Resolve the copy and native expression; this is not exact PRAMEF18 protein evidence."
+      "next_action": "Resolve the copy and native expression; this is not exact PRAMEF18 protein evidence.",
+      "evidence_details": "A human pulmonary-arterial smooth-muscle experiment reports a combined PRAMEF18/PRAMEF19 microarray feature after cocaine/HIV-Tat exposure. It is a cultured, induced normal-cell model.",
+      "interpretation": "The feature cannot identify which copy produced the RNA and does not measure protein. It supports an inducible normal vascular-cell question; it is not proof of constitutive PRAMEF18 protein in human lung."
     },
     {
       "protein": "TAF11L11",
       "concern_group": "shared_normal_assay",
       "observation": "TAF11-like macrosatellite RNA is reported in testis, fetal brain and whole brain; the assay does not resolve this copy.",
-      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion."
+      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion.",
+      "evidence_details": "The macrosatellite study uses RT-PCR across a 20-tissue human cDNA panel. The TAF11-like array is positive in testis, fetal brain and whole brain, with weaker fetal-liver/prostate signals. Its repeat units are highly similar and vary in copy number.",
+      "interpretation": "The experiment is about the repeated TAF11-like family. It neither identifies this current numbered copy nor detects its protein. Copy-specific brain evidence is needed for a member-level exclusion; the original family signal must remain visible."
     },
     {
       "protein": "TAF11L13",
       "concern_group": "shared_normal_assay",
       "observation": "TAF11-like macrosatellite RNA is reported in testis, fetal brain and whole brain; the assay does not resolve this copy.",
-      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion."
+      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion.",
+      "evidence_details": "The macrosatellite study uses RT-PCR across a 20-tissue human cDNA panel. The TAF11-like array is positive in testis, fetal brain and whole brain, with weaker fetal-liver/prostate signals. Its repeat units are highly similar and vary in copy number.",
+      "interpretation": "The experiment is about the repeated TAF11-like family. It neither identifies this current numbered copy nor detects its protein. Copy-specific brain evidence is needed for a member-level exclusion; the original family signal must remain visible."
     },
     {
       "protein": "TAF11L14",
       "concern_group": "shared_normal_assay",
       "observation": "TAF11-like macrosatellite RNA is reported in testis, fetal brain and whole brain; the assay does not resolve this copy.",
-      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion."
+      "next_action": "Obtain copy-specific normal brain evidence before assigning a member-specific exclusion.",
+      "evidence_details": "The macrosatellite study uses RT-PCR across a 20-tissue human cDNA panel. The TAF11-like array is positive in testis, fetal brain and whole brain, with weaker fetal-liver/prostate signals. Its repeat units are highly similar and vary in copy number.",
+      "interpretation": "The experiment is about the repeated TAF11-like family. It neither identifies this current numbered copy nor detects its protein. Copy-specific brain evidence is needed for a member-level exclusion; the original family signal must remain visible."
     }
   ],
   "localization_notes": [
