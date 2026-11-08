@@ -57,6 +57,7 @@ def figure(out, gap_rows, coverage):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    plt.rcParams["svg.hashsalt"] = "cta-current-review-20261108"
     fig, axes = plt.subplots(2, 1, figsize=(10, 7.2), gridspec_kw={"height_ratios": [1, 2]})
     colors = ["#236b68", "#80b2a8", "#d5a249"]
     left = 0
@@ -102,7 +103,7 @@ def figure(out, gap_rows, coverage):
         ax.spines[["top", "right", "left"]].set_visible(False)
     fig.tight_layout(h_pad=3)
     fig.savefig(out / "paper-coverage.png", dpi=160)
-    fig.savefig(out / "paper-coverage.svg")
+    fig.savefig(out / "paper-coverage.svg", metadata={"Date": None})
     plt.close(fig)
 
 
@@ -213,6 +214,11 @@ def audit_sequences(bundle, profiles, qualification, decisions):
 
 def triage(qualification, candidates):
     queue = pd.read_csv(OLD / "review-queue.csv.gz", keep_default_na=False)
+    uniform = {
+        gene: row.classification
+        for row in cta_selection.decisions().itertuples()
+        for gene in row.gene_ids
+    }
     primary = qualification.loc[qualification.contig.isin(transcript_selection.PRIMARY_CONTIGS)]
     by_gene = dict(iter(primary.groupby("gene_id")))
     q = qualification.set_index("transcript_accession")
@@ -268,7 +274,8 @@ def triage(qualification, candidates):
             {
                 "gene_id": row["gene_id"],
                 "protein": label,
-                "classification": row["classification"],
+                "classification": uniform[row["gene_id"]],
+                "released_classification": row["classification"],
                 "review_category": kind,
                 "decision": decision,
                 "source_url": source,
@@ -312,12 +319,17 @@ def main():
         (ROOT / "scripts/cta_evidence_assets/current-gap-judgments.json").read_text()
     )
     gaps = []
+    pending = pd.read_csv(
+        ROOT / "docs/audits/cta-candidate-evidence-20261108/uniform-protein-decisions.csv.gz"
+    ).set_index("protein_equivalence_group_id")
     for r in current[current.paper_coverage.eq("no_paper")].to_dict("records"):
         previous = old_gaps.get(r["protein"], {})
         profile = lookup[r["protein"]]
         gaps.append(
             {
                 **r,
+                "released_classification": profile["classification"],
+                "pending_classification": pending.loc[r["entity_id"], "classification"],
                 "biological_group": previous.get(
                     "biological_group", "Unnamed loci and a readthrough"
                 ),
@@ -420,15 +432,15 @@ def main():
         report.append(f"| {r['protein']} | {', '.join(links)} |")
     report += [
         "\n## A missed human normal-tissue paper\n",
-        "**CALHM3:** Moyer et al. measured RNA in laser-captured human circumvallate taste buds (Figure 10D). The prior mouse-only assessment was incomplete. I recommend a normal-evidence review hold; the released classification is still CTA. The human result is RNA, while cell-subtype localization in this paper is macaque data. [Moyer et al., 2009](https://doi.org/10.1371/journal.pone.0007682).\n",
+        "**CALHM3:** human taste-bud RNA in Figure 10D now supplies an **Other:Review** hold in the pending replay. The cell-subtype in situ experiments are macaque data. [Moyer et al., 2009](https://doi.org/10.1371/journal.pone.0007682). The same replay applies the shared normal-brain finding to all represented TAF11-like copies, including TAF11L12. [Seven category changes and their rationale](../cta-candidate-evidence-20261108/index.md#additional-normal-holds-found-in-pr-review).\n",
         "## Judgment of each remaining paper gap\n",
-        "These are discovery CTAs under the existing rule allowing a qualifying coding reference. Missing papers alone do not make them Unsafe. Tumor maxima below are single-sample RNA observations, not prevalence or protein abundance. TPM and HPA pTPM remain separate; a dash means unmeasured, not zero.\n",
-        "| Protein | Biological category | Maximum tumor TPM | Maximum HPA pTPM | Judgment | Related paper |\n|---|---|---:|---:|---|---|",
+        "These proteins are CTA in the released catalog under the rule allowing a qualifying coding reference. Biological programs and evidence gaps are annotations, not separate classes. Missing papers alone do not make them Unsafe. Tumor maxima below are single-sample RNA observations, not prevalence or protein abundance. TPM and HPA pTPM remain separate; a dash means unmeasured, not zero.\n",
+        "| Protein | Pending decision | Biological category | Maximum tumor TPM | Maximum HPA pTPM | Evidence / review | Related paper |\n|---|---|---|---:|---:|---|---|",
     ]
     for r in sorted(gaps, key=lambda r: r["protein"]):
         ptpm = "—" if pd.isna(r["tumor_max_ptpm"]) else f"{r['tumor_max_ptpm']:.3g}"
         report.append(
-            f"| {gene_link(r['protein'], r['gene_ids'])} | {r['biological_group']} | {r['tumor_max_tpm']:.3g} | {ptpm} | {r['judgment']} | {'; '.join(source_link(s, sources) for s in r['related_sources']) or '—'} |"
+            f"| {gene_link(r['protein'], r['gene_ids'])} | {r['pending_classification']} | {r['biological_group']} | {r['tumor_max_tpm']:.3g} | {ptpm} | {r['judgment']} | {'; '.join(source_link(s, sources) for s in r['related_sources']) or '—'} |"
         )
     report += [
         "\n[Full gap evidence and judgments](paper-gap-judgments.json)\n",

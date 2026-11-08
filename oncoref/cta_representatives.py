@@ -74,6 +74,7 @@ def records(
             record = translations.loc[tid]
             if (
                 record.gene_id != gid
+                or tid not in profile["representative_transcripts"]
                 or not record.target_qualified
                 or record.sequence_sha256 != chosen.selected_sequence_sha256
                 or record.sequence_sha256 not in profile["representative_sequence_sha256s"]

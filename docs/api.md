@@ -724,6 +724,23 @@ staining. All measurements are gene-level and do not establish selected-proteofo
 expression or epitope accessibility. Full source versions and hashes are in
 `cta_literature.registry()["surface_sources"]`.
 
+The uniform human decision view uses three categories and three Other reasons:
+
+```python
+from oncoref import cta_selection, cta_decision_flow
+
+all_proteins = cta_selection.decisions()
+review = cta_selection.decisions(category="Other", subtype="Review")
+contract = cta_decision_flow.definition()
+```
+
+`decisions()` returns CTA, Unsafe or Other:Review / Other:Expression / Other:Sequence.
+It preserves member genes, detailed evidence and the original `source_classification`.
+The raw `results()` accessor keeps the subtype labels of the published release.
+Both use released evidence; accepted pending curations are applied by the next
+selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
+contains 600 CTA after seven normal-evidence holds; it is not yet a release.
+
 The current research set is available through the same species-scoped API:
 
 ```python
@@ -734,7 +751,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-The human release selects **602 proteins / 646 loci**. Dog nominations remain
+The human release selects **607 proteins / 655 loci**. Dog nominations remain
 unassigned/unassessed. Mouse returns one unassessed P1A nomination with partial
 evidence; quantitative mouse selection remains unavailable. The
 [selection guide](cta-selection.md) documents common fields, native units,

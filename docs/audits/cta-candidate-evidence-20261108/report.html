@@ -1,7 +1,36 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ten CTA candidates: evidence review</title><style>body{font:16px/1.55 system-ui;color:#22313a;margin:30px auto;max-width:1180px;padding:0 20px}a{color:#126d80}h1{font-size:30px}h2{margin-top:2em}table{border-collapse:collapse;font-size:14px;display:block;overflow:auto}td,th{padding:9px 12px;border-bottom:1px solid #dce2e6;min-width:100px;text-align:left}th{background:#edf4f6}img{max-width:100%;height:auto}pre{overflow:auto;background:#f3f5f7;padding:16px}</style><main><h1>Ten CTA candidates: human normal evidence and tumor prevalence</h1>
-<p><strong>PRAMEF18 and TRIM75 need normal-expression review holds. TEDDM1, TMEM269, UBTFL1 and SSU72L1–5 retain their discovery-CTA classification under the existing coding-reference rule.</strong> None of the new findings establishes an Unsafe call.</p>
-<p>This audit starts from OncoRef <strong>1.35.0 / data 5.23.27</strong>. Replaying the existing gates with the six new curated findings changes <strong>607 CTA / 18,259 Unsafe / 1,027 Other</strong> to <strong>605 CTA / 18,259 Unsafe / 1,029 Other</strong>. These are proposed decisions, not a published replacement release. The <a href="classification-changes.csv">two changes</a> are both <code>Other:Held</code>, with <code>normal_evidence_hold</code> status.</p>
+<p><strong>PRAMEF18 and TRIM75 are Other:Review in the curation replay. TEDDM1, TMEM269, UBTFL1 and SSU72L1–5 are CTA under the existing coding-reference rule.</strong> None of the new findings establishes an Unsafe call.</p>
+<p>This audit starts from OncoRef <strong>1.35.0 / data 5.23.27</strong>. Replaying the existing gates with the eight new curated findings changes <strong>607 CTA / 18,259 Unsafe / 1,027 Other</strong> to <strong>600 CTA / 18,259 Unsafe / 1,034 Other</strong>. These are proposed decisions, not a published replacement release. The <a href="classification-changes.csv">seven category changes</a> are CALHM3, PRAMEF18, TRIM75 and TAF11L11/12/13/14, all <code>Other:Review</code> with <code>normal_evidence_hold</code> status. The ten-protein measurements below are unchanged.</p>
 <p><a href="table.html">Filterable measurements</a> · <a href="candidates.csv">Candidate CSV</a> · <a href="tumor-cohort-prevalence.csv">Every cohort</a> · <a href="ssu72l2-positive-samples.csv">SSU72L2 positive samples</a> · <a href="inputs/normal-contexts.csv">Top normal contexts</a> · <a href="manifest.json">Provenance</a></p>
+<h2>One decision flow</h2>
+<p>Every assessed human protein receives <strong>CTA</strong>, <strong>Other</strong> or <strong>Unsafe</strong>. Other has three subcategories:</p>
+<table>
+<thead>
+<tr>
+<th>Subcategory</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Other:Review</strong></td>
+<td>Required evidence is missing, conflicting or blocks admission without establishing Unsafe. Includes normal-expression holds, incomplete required coverage and translation/identity problems.</td>
+</tr>
+<tr>
+<td><strong>Other:Expression</strong></td>
+<td>Cancer presence, reproductive/developmental association or the applicable concentration requirement fails.</td>
+</tr>
+<tr>
+<td><strong>Other:Sequence</strong></td>
+<td>A nested microprotein lacks independent expression evidence, or at least 95% of its 9-mers occur in Unsafe proteins.</td>
+</tr>
+</tbody>
+</table>
+<p>Unsafe takes precedence over every admission failure. Review takes precedence over Expression or Sequence. Every specific failed gate remains attached to the decision. A paper nomination, experimental protein detection, biological program and tumor prevalence are evidence fields, not additional categories.</p>
+<p><img alt="Uniform CTA decision flow" src="decision-flow.png" /></p>
+<p>The <a href="uniform-protein-decisions.csv.gz">protein decisions</a> cover all <strong>19,893 proteins</strong>; the <a href="uniform-gene-decisions.csv.gz">gene decisions</a> retain all <strong>20,099 member loci</strong>. These exports include the pending curation above. The API <code>cta_selection.decisions()</code> uses the same categories and subcategories on released evidence; <code>results()</code> retains historical release labels. The <a href="decision-flow.json">machine-readable flow</a> defines the shared vocabulary.</p>
+<h3>Why SSU72L1–5 are CTA</h3>
+<p>All five have qualifying annotated coding references, complete approved 194-aa representative translations, supported human embryo expression, cancer RNA and complete required normal-RNA coverage. None has an accepted normal exclusion or review hold. They therefore pass CTA admission. Exact-copy experimental protein detection is unverified; the retained translation rule does not require it for every annotated coding gene. Their selected transcript and protein accessions and every relevant admission result are in the <a href="ssu72-admission.csv">SSU72 admission table</a>.</p>
 <h2>What the human data say</h2>
 <table>
 <thead>
@@ -15,57 +44,81 @@
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000279804-PRAMEF18/tissue">PRAMEF18</a></td>
 <td>The vascular-cell paper reports <strong>PRAMEF18/19 together</strong>. HPA057423 gives intestinal staining but has <strong>Uncertain</strong> reliability and recognizes more than one gene. Normal bulk and immune RNA are very low.</td>
-<td><strong>Hold.</strong> Neither low bulk RNA nor a combined antibody/probe result resolves which copy is produced in normal cells.</td>
+<td><strong>Other:Review.</strong> Neither low bulk RNA nor a combined antibody/probe result resolves which copy is produced in normal cells.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000203730-TEDDM1/tissue">TEDDM1</a></td>
 <td>Human epididymal RNA is <strong>562.1 nTPM in the pinned panel</strong>, 543.7 in the current HPA response. Cerebellum reaches 3.9 nTPM; Monaco basophils reach 2.0 TPM. UniProt Q5T9Z0 has protein-level evidence, but a tissue-resolved, exact-peptide human MS result was not verified here.</td>
-<td><strong>Keep as an epididymal discovery candidate.</strong> Its human reproductive RNA is strong. The early functional experiments were in rodents.</td>
+<td><strong>CTA.</strong> Its human reproductive RNA is strong. The early functional experiments were in rodents.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000274386-TMEM269/tissue">TMEM269</a></td>
 <td>Human late spermatids reach <strong>105.3 nTPM</strong>. Cerebellum reaches 2.8 nTPM and DICE naïve CD4 T cells 2.72 TPM, below their applicable limits. Human embryo mean reaches 5.89 TPM.</td>
-<td><strong>Keep as a reproductive/early-embryo candidate.</strong> A liver-cancer paper adds tumor RNA evidence. Membrane prediction does not locate an extracellular domain on tumor cells.</td>
+<td><strong>CTA.</strong> A liver-cancer paper adds tumor RNA evidence. Membrane prediction does not locate an extracellular domain on tumor cells.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000250374-TRIM75/tissue">TRIM75</a></td>
 <td>Human embryo mean reaches <strong>32.64 TPM</strong>; normal white matter reaches 0.4 nTPM. A human tear-MS paper lists TRIM75 but merges cancer and control identifications. UniProt A6NK02 has protein-level evidence.</td>
-<td><strong>Hold.</strong> Resolve the tear sample group and peptide identity before clearing normal restriction. The prior mouse-only description missed this human paper.</td>
+<td><strong>Other:Review.</strong> Resolve the tear sample group and peptide identity before clearing normal restriction. The prior mouse-only description missed this human paper.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000255009-UBTFL1/tissue">UBTFL1</a></td>
 <td>Human embryo mean reaches <strong>47.19 TPM</strong>; adult cortex and HPA plasmacytoid dendritic cells reach 0.4 nTPM. UniProt P0CB47 has protein-level evidence. A purported human-embryo qPCR assay has a primer-identity conflict.</td>
-<td><strong>Keep as an early-embryo candidate; reject that assay as UBTFL1 support.</strong> The independent human embryo RNA remains usable.</td>
+<td><strong>CTA.</strong> The independent human embryo RNA remains usable.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000284438-SSU72L1/tissue">SSU72L1</a></td>
 <td>Human embryo mean <strong>92.45 TPM</strong>; normal panels are mostly zero. An ovarian-cancer RNA perturbation paper reports the previous name <strong>SSU72P7</strong>.</td>
-<td><strong>Keep as an early-embryo candidate.</strong> Protein production and unique-read attribution remain unverified.</td>
+<td><strong>CTA.</strong> Protein production and unique-read attribution remain unverified.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000284306-SSU72L2/tissue">SSU72L2</a></td>
 <td>Human embryo mean <strong>318.61 TPM</strong>; normal thymus 0.1 nTPM. The 990.91 TPM tumor maximum is one embryonal rhabdomyosarcoma.</td>
-<td><strong>Keep as an early-embryo candidate with rare tumor RNA positives.</strong> A large maximum does not imply common expression.</td>
+<td><strong>CTA.</strong> A large maximum does not imply common expression.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000284546-SSU72L3/tissue">SSU72L3</a></td>
 <td>Human embryo mean <strong>145.88 TPM</strong>; normal thymus 0.1 nTPM and Monaco NK cells 0.3 TPM.</td>
-<td><strong>Keep as an early-embryo candidate.</strong> Distinguish SSU72L3/SSU72P3 from SSU72 and the other copies.</td>
+<td><strong>CTA.</strong> Distinguish SSU72L3/SSU72P3 from SSU72 and the other copies.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000283873-SSU72L4/tissue">SSU72L4</a></td>
 <td>Human embryo mean <strong>260.24 TPM</strong>; pinned normal rectum 0.2 nTPM.</td>
-<td><strong>Keep as an early-embryo candidate.</strong> No exact-copy protein experiment was verified.</td>
+<td><strong>CTA.</strong> No exact-copy protein experiment was verified.</td>
 </tr>
 <tr>
 <td><a href="https://www.proteinatlas.org/ENSG00000284018-SSU72L5/tissue">SSU72L5</a></td>
 <td>Human embryo mean <strong>218.66 TPM</strong>; normal liver 0.1 nTPM.</td>
-<td><strong>Keep as an early-embryo candidate.</strong> No exact-copy protein experiment was verified.</td>
+<td><strong>CTA.</strong> No exact-copy protein experiment was verified.</td>
 </tr>
 </tbody>
 </table>
 <p>The developmental values are supported lineage means from the pinned human embryo analysis, not single-cell maxima. The <a href="https://doi.org/10.1016/j.cell.2016.03.023">Petropoulos human preimplantation atlas</a> establishes a developmental expression program; it is not a tumor-antigen experiment. Native TPM and nTPM are reported separately. The <a href="inputs/normal-contexts.csv">normal-context table</a> retains the top five contexts per source and scope, read support, thresholds and missing values. An unsupported single-cell value is not replaced by zero.</p>
 <p>Only PRAMEF18 has an HPA tissue antibody among these ten; the other nine are <strong>not assayed</strong>, not IHC-negative. HPA's MS field is <strong>Not available</strong> for all ten. Current UniProt protein-existence evidence is PE1 for TEDDM1, TRIM75 and UBTFL1, and PE3 (homology) for PRAMEF18, TMEM269 and SSU72L1–5. A PE1 annotation does not identify the tissue or prove tumor production. The saved HPA XML and UniProt-derived annotations are date-stamped independently because HPA's imported protein-existence labels lag the retrieved UniProt entries.</p>
+<h2>Additional normal holds found in PR review</h2>
+<p>The same rule applies to findings elsewhere in the report:</p>
+<table>
+<thead>
+<tr>
+<th>Proteins</th>
+<th>Evidence</th>
+<th>Replay decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CALHM3</td>
+<td>Human taste-bud RNA from laser-captured tissue in three donors; <a href="https://doi.org/10.1371/journal.pone.0007682">Moyer et al., Figure 10D</a>. The human experiment is distinct from the paper's macaque cell-localization experiments.</td>
+<td>Other:Review pending protein/cell localization.</td>
+</tr>
+<tr>
+<td>TAF11L11/12/13/14</td>
+<td>Shared TAF11-like array RT-PCR signal in human whole brain; <a href="https://doi.org/10.1186/1471-2164-11-632">Tremblay et al., Figure 4</a>.</td>
+<td>Other:Review pending copy attribution.</td>
+</tr>
+</tbody>
+</table>
+<p>The TAF11-like finding covers all <a href="inputs/taf11-like-scope.csv">13 represented coding loci</a> in this chromosome 5 array. TAF11L12 receives the same review as the other copies despite having different paper coverage. Previously Other copies remain Other with a review reason; the shared TAF11L5/6/7/8/10 protein remains Unsafe from its existing evidence. A shared RNA assay does not prove that every copy is expressed.</p>
 <h2>How common is SSU72L2 in tumors?</h2>
 <p><strong>50 of 14,143 measured, quality-passing sample records have ≥1 TPM (0.354%); six have ≥5 TPM (0.042%); three have ≥10 TPM (0.021%).</strong> There are 1,190 values above zero, many below 1 TPM. These thresholds describe prevalence; they are not therapeutic-response thresholds.</p>
 <table>
@@ -144,7 +197,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">3.58</td>
-<td>Other:Held</td>
+<td>Other:Review</td>
 </tr>
 <tr>
 <td><a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284438">SSU72L1</a></td>
@@ -216,7 +269,7 @@
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">10.26</td>
-<td>Other:Held</td>
+<td>Other:Review</td>
 </tr>
 <tr>
 <td><a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000255009">UBTFL1</a></td>
@@ -301,7 +354,7 @@
 </tr>
 <tr>
 <td>Shared IHC reagent, combined-copy RNA feature, uncertain peptide identity, or unresolved normal/control sample assignment</td>
-<td><strong>Review hold → Other:Held.</strong> It blocks CTA admission without asserting established normal production.</td>
+<td><strong>Review hold → Other:Review.</strong> It blocks CTA admission without asserting established normal production.</td>
 </tr>
 <tr>
 <td>Measured normal RNA</td>
@@ -324,4 +377,4 @@
 <p>For future MS findings, review the actual sample and peptides, their false-discovery control, and uniqueness against the reference including indistinguishable I/L residues. The <a href="https://doi.org/10.1021/acs.jproteome.9b00542">HPP MS interpretation guidelines</a> use two distinct, uniquely mapping, non-nested peptides of at least nine amino acids for confident MS-based protein-existence claims. This is a review benchmark, not a new blanket requirement replacing OncoRef's coding-reference rule. A database protein name alone cannot resolve a paralog or localize its producing tissue.</p>
 <h2>Reproduction and files</h2>
 <p>Run <code>.venv/bin/python scripts/build_cta_candidate_evidence.py</code> to rebuild tables, figures, the filterable page and the curation replay from the committed inputs. <code>scripts/collect_cta_candidate_tumors.py</code> re-extracts the ten loci and sample QC from the pinned source matrices; it verifies their full-file hashes. Source matrices are listed by release asset and SHA-256 in <a href="inputs/matrix-provenance.json">matrix provenance</a>.</p>
-<p>The <a href="inputs/hpa-current-normal-rna.csv">current HPA RNA extraction</a> is separate from the frozen selection inputs. Each candidate's compressed original HPA XML is retained under <code>inputs/</code>. The <a href="inputs/UBTFL1-primer-check.json">primer-check receipt</a>, selected human cDNA and cited accession are also retained. The curation replay first reproduces every released classification from the stored gates, then adds only the six accepted new findings. Unsafe membership must remain unchanged before reusing its sequence-containment values.</p></main></html>
+<p>The <a href="inputs/hpa-current-normal-rna.csv">current HPA RNA extraction</a> is separate from the frozen selection inputs. Each candidate's compressed original HPA XML is retained under <code>inputs/</code>. The <a href="inputs/UBTFL1-primer-check.json">primer-check receipt</a>, selected human cDNA and cited accession are also retained. The curation replay first reproduces every released classification from the stored gates, then adds the eight accepted new findings. Unsafe membership must remain unchanged before reusing its sequence-containment values.</p></main></html>

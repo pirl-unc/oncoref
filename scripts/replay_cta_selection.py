@@ -851,7 +851,11 @@ def annotate_translation_support(facts: pd.DataFrame, output: Path) -> pd.DataFr
 
 
 def build(
-    output: Path = OUTPUT, *, reuse_contexts: bool = False, include_knowledge_updates: bool = True
+    output: Path = OUTPUT,
+    *,
+    reuse_contexts: bool = False,
+    include_knowledge_updates: bool = True,
+    legacy_subtypes: bool = False,
 ) -> None:
     """Regenerate decisions, complete profile evidence and all counting exports."""
     output.mkdir(parents=True, exist_ok=True)
@@ -921,6 +925,7 @@ def build(
         ROOT / "oncoref/gene_knowledge.py",
         ROOT / "oncoref/data/gene-knowledge.json",
         ROOT / "oncoref/data/gene-knowledge-updates.json",
+        ROOT / "oncoref/cta_decision_flow.py",
         ROOT / "oncoref/reproductive_evidence.py",
         ROOT / "oncoref/data/normal-induction-evidence.csv",
         ROOT / "oncoref/tcr_trials.py",
@@ -1149,13 +1154,18 @@ def build(
         cta_sequence_overlap.group_ninemers(facts.member_gene_ids), facts.index
     )
     result, funnel, independent = policy.classify(
-        facts, layers, entity_column="protein_equivalence_group_id", unsafe_overlap=overlap
+        facts,
+        layers,
+        entity_column="protein_equivalence_group_id",
+        unsafe_overlap=overlap,
+        legacy_subtypes=legacy_subtypes,
     )
     reverse = policy.classify(
         facts,
         list(reversed(layers)),
         entity_column="protein_equivalence_group_id",
         unsafe_overlap=overlap,
+        legacy_subtypes=legacy_subtypes,
     ).classifications
     if not result[["category", "subtype", "classification"]].equals(
         reverse[["category", "subtype", "classification"]]
@@ -1183,6 +1193,7 @@ def build(
     meta = {
         "policy": policy.POLICY_ID,
         "knowledge_updates_included": include_knowledge_updates,
+        "decision_flow_id": None if legacy_subtypes else policy.cta_decision_flow.FLOW_ID,
         "categories": counts,
         "selected_member_loci": int(result.loc[result.category.eq("CTA"), "member_count"].sum()),
         "other_subtypes": result.loc[result.category.eq("Other"), "subtype"]
@@ -1198,6 +1209,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reuse-contexts", action="store_true")
     parser.add_argument(
+        "--legacy-subtypes",
+        action="store_true",
+        help="Retain the seven historical Other labels for reproduction",
+    )
+    parser.add_argument(
         "--released-knowledge",
         action="store_true",
         help="Reproduce the released knowledge set without accepted pending curation",
@@ -1206,4 +1222,5 @@ if __name__ == "__main__":
     build(
         reuse_contexts=args.reuse_contexts,
         include_knowledge_updates=not args.released_knowledge,
+        legacy_subtypes=args.legacy_subtypes,
     )

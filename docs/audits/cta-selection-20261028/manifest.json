@@ -97,5 +97,15 @@
     "tumor-restricted-source-coverage.csv": "9d080c0fdfd80a600ad73a0e558cc0aeda90aceecbc7026478dc08ff82033daf",
     "tumor-restricted-support.csv.gz": "cf203e740a5da61b28f151cd35f3f87946d0d6d9ce234806c882f523b303eaef",
     "widely-studied-contexts.csv.gz": "4526acec11d86866724404aa7e490f995a5b6b9d6110c6a27c7eb84d456c6034"
+  },
+  "input_snapshots": [
+    "oncoref/cta_selection_policy.py",
+    "oncoref/gene_knowledge.py",
+    "scripts/replay_cta_selection.py"
+  ],
+  "input_snapshot_archive": {
+    "path": "release-inputs.zip",
+    "sha256": "bf8f22c90624b7e45ad5b5e93f4a921e522ab677e82aff628b74c0f074c1afe9",
+    "reason": "Original release inputs retained byte-for-byte while the live implementation advances. Scientific input/output digests are unchanged."
   }
 }

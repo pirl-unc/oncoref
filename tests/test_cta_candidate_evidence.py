@@ -31,19 +31,30 @@ def test_pending_curations_are_explicit_and_ambiguous_assays_cannot_exclude():
     assert gene_knowledge.findings("TRIM75", taxonomy_id=10090, include_updates=True).empty
 
 
-def test_complete_funnel_replay_holds_two_proteins_without_new_unsafe_calls():
+def test_complete_funnel_replay_holds_seven_proteins_without_new_unsafe_calls():
     baseline = pd.read_csv(
         ROOT / "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
         low_memory=False,
     )
     result = replay_updates(baseline).classifications
     changed = result[result.category.ne(baseline.category)]
-    assert set(changed.protein_group_label) == {"PRAMEF18", "TRIM75"}
-    assert changed.classification.eq("Other:Held").all()
+    assert set(changed.protein_group_label) == {
+        "CALHM3",
+        "PRAMEF18",
+        "TRIM75",
+        "TAF11L11",
+        "TAF11L12",
+        "TAF11L13",
+        "TAF11L14",
+    }
+    assert changed.classification.eq("Other:Review").all()
     assert changed.assessment_status.eq("normal_evidence_hold").all()
     pd.testing.assert_series_equal(
         result.category.eq("Unsafe"), baseline.category.eq("Unsafe"), check_dtype=False
     )
+    family = result[result.protein_group_label.str.startswith("TAF11L")]
+    assert family.knowledge_normal_hold.all()
+    assert family[family.category.ne("Unsafe")].classification.eq("Other:Review").all()
     # High developmental/tumor evidence remains present and cannot erase holds.
     assert changed.positive_context.all() and changed.cancer_association.all()
 
@@ -100,6 +111,8 @@ def test_sample_namespaces_aliases_quality_and_missingness():
     conflict.loc[1, "tpm"] = 11
     with pytest.raises(ValueError, match="disagree"):
         tumor_tables(conflict, qc, candidates, coverage)
+    with pytest.raises(ValueError, match="Duplicate"):
+        tumor_tables(pd.concat([raw, raw.iloc[:1]]), qc, candidates, coverage)
     with pytest.raises(ValueError, match="finite"):
         count_samples(pd.Series([1.0, float("nan")]))
 

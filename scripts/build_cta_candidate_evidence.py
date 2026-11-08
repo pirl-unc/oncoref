@@ -22,7 +22,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from cta_report_common import input_hashes, sha256, write_csv  # noqa: E402
 
-from oncoref import cancer_type_registry, gene_knowledge  # noqa: E402
+from oncoref import (  # noqa: E402
+    cancer_type_registry,
+    cta_decision_flow,
+    cta_representatives,
+    gene_knowledge,
+)
 from oncoref import cta_selection_policy as policy  # noqa: E402
 from oncoref.cta_funnel import EvidenceLayer  # noqa: E402
 
@@ -53,6 +58,8 @@ def tumor_tables(raw, qc, candidates, coverage):
     Cohort views overlap and must not be summed. Quality failures and non-TPM
     sources remain in the input ledger but cannot meet an absolute TPM floor.
     """
+    if raw.duplicated(["Ensembl_Gene_ID", "cohort", "sample"]).any():
+        raise ValueError("Duplicate locus/sample within a cohort")
     joined = raw.merge(
         qc,
         left_on=["cohort", "sample"],
@@ -135,6 +142,7 @@ def replay_updates(baseline):
         layers,
         entity_column="protein_equivalence_group_id",
         unsafe_overlap=unchanged_overlap,
+        legacy_subtypes=True,
     ).classifications
     if not reproduced.classification.equals(baseline.classification):
         raise ValueError("Stored gates and containment do not reproduce the released decisions")
@@ -183,6 +191,115 @@ def assay_coverage(inputs, candidates):
             }
         )
     return pd.DataFrame(rows)
+
+
+def uniform_decisions(out, revised):
+    """Export every assessed protein and its member loci using the same flow."""
+    contract = cta_decision_flow.definition()
+    (out / "decision-flow.json").write_text(json.dumps(contract, indent=2) + "\n")
+    columns = [
+        "protein_equivalence_group_id",
+        "protein_group_label",
+        "member_gene_ids",
+        "category",
+        "subtype",
+        "classification",
+        "assessment_status",
+        "source_classification",
+        "decision_flow_id",
+        "policy",
+        "exclusion_reasons",
+        "Unsafe_reasons",
+        "required_coverage",
+        "unresolved_evidence",
+        "positive_context",
+        "cancer_association",
+        "translation_support_eligible",
+        "translation_qualified",
+        "representative_selection_approved",
+        "representative_transcripts",
+        "knowledge_finding_ids",
+        "unsafe_sequence_overlap_pct",
+    ]
+    proteins = revised[columns].copy()
+    write_csv(proteins, out / "uniform-protein-decisions.csv.gz")
+    genes = proteins.assign(gene_id=proteins.member_gene_ids.map(json.loads)).explode("gene_id")
+    if genes.gene_id.isna().any() or not genes.gene_id.is_unique:
+        raise ValueError("Every member locus must have exactly one uniform decision")
+    write_csv(genes, out / "uniform-gene-decisions.csv.gz")
+    selected = revised[revised.protein_group_label.isin([f"SSU72L{i}" for i in range(1, 6)])]
+    proof = selected[
+        [
+            "protein_group_label",
+            "representative_gene_id",
+            "classification",
+            "developmental_mean_tpm",
+            "cancer_association",
+            "required_coverage",
+            "translation_support_eligible",
+            "translation_qualified",
+            "representative_selection_approved",
+            "assessment_status",
+            "exclusion_reasons",
+        ]
+    ].merge(
+        cta_representatives.records(),
+        left_on="representative_gene_id",
+        right_on="gene_id",
+        validate="one_to_one",
+    )
+    write_csv(proof, out / "ssu72-admission.csv")
+    fig, ax = plt.subplots(figsize=(12, 7.5), layout="constrained")
+    ax.set(xlim=(0, 12), ylim=(0, 7.5))
+    ax.axis("off")
+    ax.text(0.2, 7.1, "One decision for every assessed human protein", fontsize=18, weight="bold")
+    colors = {"Unsafe": "#943c41", "CTA": "#126c63"}
+    for step in contract["steps"]:
+        y = 6.2 - (step["order"] - 1) * 1.15
+        question = step["question"].replace(
+            "Cancer, reproductive/developmental or concentration",
+            "Cancer, reproductive/developmental\nor concentration",
+        )
+        ax.text(0.3, y, f"{step['order']}. {question}", va="center", fontsize=12)
+        ax.annotate(
+            "", xy=(8.9, y), xytext=(8.0, y), arrowprops={"arrowstyle": "->", "color": "#68737b"}
+        )
+        ax.text(
+            9.1,
+            y,
+            step["if_yes"],
+            va="center",
+            fontsize=13,
+            weight="bold",
+            color=colors.get(step["if_yes"], "#76542c"),
+        )
+        if step["order"] < 5:
+            ax.annotate(
+                "",
+                xy=(0.45, y - 0.83),
+                xytext=(0.45, y - 0.34),
+                arrowprops={"arrowstyle": "->", "color": "#68737b"},
+            )
+            ax.text(0.65, y - 0.6, "Otherwise", fontsize=9, color="#68737b")
+    ax.text(
+        0.3,
+        0.25,
+        "Paper coverage, protein detection, biological program and tumor prevalence remain separate evidence fields.",
+        fontsize=10,
+    )
+    for suffix in ("svg", "png"):
+        fig.savefig(
+            out / f"decision-flow.{suffix}",
+            dpi=150,
+            metadata={"Date": None} if suffix == "svg" else {},
+        )
+    plt.close(fig)
+    return {
+        "proteins": len(proteins),
+        "member_loci": len(genes),
+        "other_subtypes": proteins[proteins.category.eq("Other")].subtype.value_counts().to_dict(),
+        "flow_id": contract["flow_id"],
+    }
 
 
 def figures(out, counts, samples):
@@ -260,6 +377,7 @@ def build(out=DEFAULT):
     baseline = pd.read_csv(baseline_path, low_memory=False)
     result = replay_updates(baseline)
     revised = result.classifications
+    uniform_summary = uniform_decisions(out, revised)
     lookup = revised.set_index("representative_gene_id")
     candidate_table["released_category"] = candidate_table.gene_id.map(
         baseline.set_index("representative_gene_id").category
@@ -268,7 +386,7 @@ def build(out=DEFAULT):
     candidate_table["next_assessment_status"] = candidate_table.gene_id.map(
         lookup.assessment_status
     )
-    changed = revised[revised.classification.ne(baseline.classification)].copy()
+    changed = revised[revised.category.ne(baseline.category)].copy()
     changed["released_classification"] = baseline.loc[changed.index, "classification"]
     change_cols = [
         "protein_group_label",
@@ -306,6 +424,7 @@ def build(out=DEFAULT):
     summary = {
         "released_categories": baseline.category.value_counts().to_dict(),
         "proposed_categories": revised.category.value_counts().to_dict(),
+        "uniform_decisions": uniform_summary,
         "status": "curation_replay_not_a_release",
         "ssu72l2": counts[counts.protein.eq("SSU72L2")].iloc[0].to_dict(),
         "matrix_cohorts": int(cohorts.cohort.nunique()),
@@ -376,9 +495,6 @@ def build(out=DEFAULT):
         f' · <a href="{html.escape(r.uniprot_url)}">UniProt</a>'
         for r in candidate_table.itertuples()
     ]
-    candidate_view["next_classification"] = candidate_view.next_classification.replace(
-        {"Other:Held": "Review hold"}
-    )
     candidate_view.columns = [
         "Protein / sources",
         "Next decision",
@@ -443,6 +559,8 @@ body{font:15px/1.5 system-ui;margin:28px;color:#22313a}a{color:#126d80}table{bor
         ROOT / "scripts/collect_cta_candidate_tumors.py",
         ROOT / "oncoref/gene_knowledge.py",
         ROOT / "oncoref/cta_selection_policy.py",
+        ROOT / "oncoref/cta_decision_flow.py",
+        ROOT / "oncoref/cta_representatives.py",
         ROOT / "oncoref/data/gene-knowledge.json",
         ROOT / "oncoref/data/gene-knowledge-updates.json",
         ROOT / "oncoref/data/cancer-type-registry.csv",

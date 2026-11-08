@@ -1,3 +1,8 @@
 protein_group_label,representative_gene_id,released_classification,classification,assessment_status,knowledge_finding_ids
-TRIM75,ENSG00000250374,CTA,Other:Held,normal_evidence_hold,"[""GK-20261108-TRIM75-tears""]"
-PRAMEF18,ENSG00000279804,CTA,Other:Held,normal_evidence_hold,"[""GK-20261108-PRAMEF18-IHC"", ""GK-20261108-PRAMEF18-vascular""]"
+CALHM3,ENSG00000183128,CTA,Other:Review,normal_evidence_hold,"[""GK-20261108-CALHM3-taste""]"
+TAF11L12,ENSG00000249156,CTA,Other:Review,normal_evidence_hold,"[""GK-20261108-TAF11-like-brain""]"
+TRIM75,ENSG00000250374,CTA,Other:Review,normal_evidence_hold,"[""GK-20261108-TRIM75-tears""]"
+TAF11L14,ENSG00000250782,CTA,Other:Review,normal_evidence_hold,"[""GK-20261108-TAF11-like-brain""]"
+PRAMEF18,ENSG00000279804,CTA,Other:Review,normal_evidence_hold,"[""GK-20261108-PRAMEF18-IHC"", ""GK-20261108-PRAMEF18-vascular""]"
+TAF11L11,ENSG00000283740,CTA,Other:Review,normal_evidence_hold,"[""GK-20261108-TAF11-like-brain""]"
+TAF11L13,ENSG00000283776,CTA,Other:Review,normal_evidence_hold,"[""GK-20261108-TAF11-like-brain""]"

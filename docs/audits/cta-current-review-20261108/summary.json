@@ -15,8 +15,7 @@
   "representative_review_loci": 563,
   "representative_review_classifications": {
     "Unsafe": 182,
-    "Other:Translation": 380,
-    "Other:Nested": 1
+    "Other:Review": 381
   },
   "representative_review_categories": {
     "No qualifying primary alternative": 525,

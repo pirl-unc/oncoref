@@ -142,7 +142,13 @@ def test_every_protein_resolves_and_normal_holds_only_block_cta():
         entity_column="entity",
     )
     assert result.classifications.category.tolist() == ["Other"] * 5
-    assert result.classifications.subtype.tolist() == ["Nonreproductive"] * 5
+    assert result.classifications.subtype.tolist() == [
+        "Expression",
+        "Review",
+        "Expression",
+        "Review",
+        "Review",
+    ]
     assert result.classifications.assessment_status.tolist() == [
         "screened",
         "incomplete_evidence",
@@ -396,7 +402,7 @@ def test_diffuse_other_discloses_holds_and_incomplete_coverage_without_unsafe():
     first = policy.classify(facts, layers, entity_column="entity").classifications
     second = policy.classify(facts, list(reversed(layers)), entity_column="entity").classifications
     assert first.category.tolist() == ["Other", "Other", "Unsafe", "Other", "Other"]
-    assert first.subtype.tolist() == ["Diffuse", "Diffuse", "", "Diffuse", "Diffuse"]
+    assert first.subtype.tolist() == ["Expression", "Review", "", "Review", "Review"]
     assert first.assessment_status.tolist() == [
         "screened",
         "normal_evidence_hold",
@@ -408,15 +414,7 @@ def test_diffuse_other_discloses_holds_and_incomplete_coverage_without_unsafe():
 
 
 def test_other_subtypes_are_exhaustive_and_normal_holds_never_become_unsafe():
-    assert set(policy.OTHER_SUBTYPE_RULES) == {
-        "Nonreproductive",
-        "Reproductive",
-        "Diffuse",
-        "Held",
-        "Contained",
-        "Nested",
-        "Translation",
-    }
+    assert set(policy.cta_decision_flow.OTHER_SUBTYPES) == {"Review", "Expression", "Sequence"}
     names = ["Nonreproductive", "Reproductive", "Diffuse"]
     facts = pd.concat([profiles().iloc[:1]] * len(names), ignore_index=True)
     facts["entity"] = names
@@ -430,9 +428,13 @@ def test_other_subtypes_are_exhaustive_and_normal_holds_never_become_unsafe():
         EvidenceLayer("Normal", no, no),
     ]
     result = policy.classify(facts, layers, entity_column="entity").classifications
-    assert result.subtype.tolist() == names
-    assert result.classification.tolist() == ["Other:" + name for name in names]
-    # Target gates pass but a normal-tissue hold blocks CTA: Other:Held, not Unsafe.
+    assert result.subtype.tolist() == ["Expression"] * 3
+    assert result.classification.tolist() == ["Other:Expression"] * 3
+    legacy = policy.classify(
+        facts, layers, entity_column="entity", legacy_subtypes=True
+    ).classifications
+    assert legacy.classification.tolist() == ["Other:" + name for name in names]
+    # Target gates pass but a normal-tissue hold blocks CTA: Other:Review, not Unsafe.
     passing = facts.iloc[:1].copy()
     passing["positive_context"] = True
     one = pd.Series([True])
@@ -446,7 +448,7 @@ def test_other_subtypes_are_exhaustive_and_normal_holds_never_become_unsafe():
     held = policy.classify(
         passing, [*gates, EvidenceLayer("Normal", one, ~one)], entity_column="entity"
     ).classifications
-    assert held.classification.tolist() == ["Other:Held"]
+    assert held.classification.tolist() == ["Other:Review"]
     assert held.assessment_status.tolist() == ["normal_evidence_hold"]
     clear = policy.classify(
         passing, [*gates, EvidenceLayer("Normal", ~one, ~one)], entity_column="entity"
@@ -512,12 +514,12 @@ def test_cta_mostly_inside_unsafe_sequence_is_contained_not_unsafe():
     assert result.classification.tolist() == [
         "CTA",
         "CTA",
-        "Other:Contained",  # the 95% boundary is inclusive
+        "Other:Sequence",  # the 95% boundary is inclusive
         "CTA",  # undefined overlap (no 9-mer) is never contained
         "Unsafe",  # Unsafe is untouched by its own overlap
     ]
     assert seen[0] == [False, False, False, False, True]
-    assert result.subtype.tolist() == ["", "", "Contained", "", ""]
+    assert result.subtype.tolist() == ["", "", "Sequence", "", ""]
     assert result.assessment_status.tolist() == ["screened"] * 5
     assert result.unsafe_sequence_overlap_pct.tolist()[:3] == [0.0, 94.0, 95.0]
 
@@ -582,7 +584,7 @@ def test_nested_microprotein_is_other_nested_never_cta():
         "Reproductive / embryonic association", facts.nested_microprotein, layers[0][2]
     )
     result = policy.classify(facts, layers, entity_column="entity").classifications
-    assert result.classification.tolist()[:2] == ["CTA", "Other:Nested"]
+    assert result.classification.tolist()[:2] == ["CTA", "Other:Sequence"]
 
 
 def test_translation_failure_blocks_admission_without_erasing_unsafe():
@@ -596,7 +598,7 @@ def test_translation_failure_blocks_admission_without_erasing_unsafe():
         EvidenceLayer("Normal", no, pd.Series([False, True])),
     ]
     result = policy.classify(facts, layers, entity_column="entity").classifications
-    assert result.classification.tolist() == ["Other:Translation", "Unsafe"]
+    assert result.classification.tolist() == ["Other:Review", "Unsafe"]
     assert result.assessment_status.tolist() == ["translation_review", "screened"]
     with pytest.raises(ValueError, match="admission requirement"):
         policy.classify(

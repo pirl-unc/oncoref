@@ -22,6 +22,7 @@ from collections.abc import Callable, Collection, Sequence
 import numpy as np
 import pandas as pd
 
+from . import cta_decision_flow
 from .cell_rna_policy import EXPECTED_UNITS, GRADES, NEUTRAL_REPRODUCTIVE_IMMUNE, POSITIVE
 from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
@@ -38,7 +39,7 @@ MANAGEABLE_UNSAFE_FLOOR = 128.0
 # proteins is Other:Contained. Unsafe sequence is blacklisted, so such a protein
 # retains almost no usable peptide.
 CONTAINED_FLOOR = 0.95
-OTHER_SUBTYPE_RULES = {
+LEGACY_OTHER_SUBTYPE_RULES = {
     "Nonreproductive": "No qualifying reproductive, placental or embryonic/fetal evidence establishes CTA identity. Evidence completeness and normal holds are recorded independently; this is not proof of absence.",
     "Reproductive": "Reproductive presence is supported but cancer presence is unestablished. Inspect assessment status for independent normal-evidence gaps or holds.",
     "Diffuse": "Reproductive presence and cancer presence pass, but the reproductive concentration gate fails. Inspect assessment status independently.",
@@ -47,6 +48,9 @@ OTHER_SUBTYPE_RULES = {
     "Translation": "No complete, approved representative protein: annotation is incomplete or conflicting evidence remains unresolved.",
     "Contained": "Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist.",
 }
+# Compatibility for the frozen report generators. New decisions use the
+# three subtypes in cta_decision_flow; legacy_subtypes reproduces this vocabulary.
+OTHER_SUBTYPE_RULES = LEGACY_OTHER_SUBTYPE_RULES
 CANDIDATE_ONLY_LAYERS = frozenset(
     {
         "Reproductive / embryonic association",
@@ -481,6 +485,7 @@ def classify(
     *,
     entity_column: str,
     unsafe_overlap: Callable[[pd.Series], pd.Series] | None = None,
+    legacy_subtypes: bool = False,
 ) -> FunnelResult:
     """Classify every entity with normal exclusions taking precedence.
 
@@ -488,14 +493,14 @@ def classify(
     Unsafe requires positive exclusion evidence, including accepted normal-cell
     findings and Manageable-tier excess above 128. Other is
     everything else; assessment_status records whether its normal screen was
-    complete, incomplete or held, and the Held subtype marks proteins whose
-    target gates pass but whose normal signal is unresolved or marginal.
+    complete, incomplete or held. Other subtypes are Review, Expression and
+    Sequence. ``legacy_subtypes=True`` reproduces historical subtype labels.
     Cancer presence, specificity, developmental/reproductive association and
     coverage can block CTA admission but can never supply Unsafe evidence.
 
     ``unsafe_overlap`` maps the Unsafe mask to each entity's fraction of 9-mers
     that also occur in an Unsafe entity. A would-be CTA at or above
-    ``CONTAINED_FLOOR`` becomes ``Other:Contained``: Unsafe sequence is
+    ``CONTAINED_FLOOR`` becomes ``Other:Sequence``: Unsafe sequence is
     blacklisted, so a protein almost wholly inside it has no usable peptide.
     """
     if facts[entity_column].isna().any() or not facts[entity_column].is_unique:
@@ -643,4 +648,6 @@ def classify(
         }
     )
     result["policy"] = POLICY_ID
+    if not legacy_subtypes:
+        result = cta_decision_flow.apply(result)
     return FunnelResult(result, pd.DataFrame(sequential), pd.DataFrame(independent))

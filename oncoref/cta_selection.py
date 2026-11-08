@@ -36,13 +36,23 @@ from typing import Literal
 
 import pandas as pd
 
+from . import cta_decision_flow
 from .cta_contract import gates as gates
 from .cta_selection_audit import audit as audit
 from .species import Species, resolve_species
 
 Category = Literal["CTA", "Unsafe", "Other", "Neither"]
 OtherSubtype = Literal[
-    "Nonreproductive", "Reproductive", "Diffuse", "Held", "Contained", "Nested", "Translation"
+    "Nonreproductive",
+    "Reproductive",
+    "Diffuse",
+    "Held",
+    "Contained",
+    "Nested",
+    "Translation",
+    "Review",
+    "Expression",
+    "Sequence",
 ]
 SpeciesLike = Species | str | int
 CATEGORIES = ("CTA", "Unsafe", "Other")
@@ -198,7 +208,8 @@ def results(
         category = "Other"
     if category is not None and category not in CATEGORIES:
         raise ValueError(f"Unknown category {category!r}; choose from {CATEGORIES}")
-    if subtype is not None and (subtype not in OTHER_SUBTYPES or category not in {None, "Other"}):
+    known_subtypes = (*OTHER_SUBTYPES, *cta_decision_flow.OTHER_SUBTYPES)
+    if subtype is not None and (subtype not in known_subtypes or category not in {None, "Other"}):
         raise ValueError(f"Unknown or incompatible Other subtype {subtype!r}")
     if selected.taxon_id == 9606:
         frame = _checked_table("cta-selection-human.csv.gz")
@@ -214,7 +225,7 @@ def results(
         raise ValueError("Unknown packaged CTA decision")
     other = frame.category.eq("Other").fillna(False)
     if (
-        not frame.loc[other, "subtype"].isin(OTHER_SUBTYPES).all()
+        not frame.loc[other, "subtype"].isin(known_subtypes).all()
         or frame.loc[~other, "subtype"].notna().any()
     ):
         raise ValueError("Other requires a known subtype; other categories cannot have one")
@@ -241,6 +252,29 @@ def candidates(*, species: SpeciesLike = "human") -> pd.DataFrame:
     """
     frame = results(species=species)
     return frame.loc[frame.category.isin(CANDIDATE_CATEGORIES)].reset_index(drop=True)
+
+
+def decisions(*, category: Category | None = None, subtype: str | None = None) -> pd.DataFrame:
+    """All assessed human proteins under the uniform CTA / Other / Unsafe flow.
+
+    Other has exactly three subcategories: Review, Expression and Sequence.
+    Every detailed reason and member gene is retained. ``source_classification``
+    preserves the released label; ``results()`` remains the raw release accessor.
+    Experimental protein detection and paper coverage are annotations, not extra
+    classes. This view does not apply pending curation or alter the release.
+    """
+    if category is not None and category not in cta_decision_flow.CATEGORIES:
+        raise ValueError("Choose CTA, Other or Unsafe")
+    if subtype is not None and (
+        subtype not in cta_decision_flow.OTHER_SUBTYPES or category not in {None, "Other"}
+    ):
+        raise ValueError("Other subcategories are Review, Expression and Sequence")
+    frame = cta_decision_flow.apply(results(species="human"))
+    if category is not None:
+        frame = frame[frame.category.eq(category)]
+    if subtype is not None:
+        frame = frame[frame.subtype.eq(subtype)]
+    return frame.reset_index(drop=True)
 
 
 def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:

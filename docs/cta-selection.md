@@ -16,7 +16,7 @@ require low embryonic or fetal expression.
 
 | Assessment | Question | Current rule |
 |---|---|---|
-| Safety | Is normal-tissue expression concerning under the tissue/IHC policy? | Absolute RNA ceilings, separate positive-protein rules and reviewed clinical exclusions. Vital/Protected exclusions and Manageable excess above 128 establish Unsafe; lower Manageable excess blocks CTA and lands in Other:Held. |
+| Safety | Is normal-tissue expression concerning under the tissue/IHC policy? | Absolute RNA ceilings, separate positive-protein rules and reviewed clinical exclusions. Vital/Protected exclusions and Manageable excess above 128 establish Unsafe; lower Manageable excess blocks CTA and lands in Other:Review. |
 | Cancer expression | Is there expression in at least one measured cancer? | One sample >0 TPM or HPA pTPM, or reviewed reliable tumor protein. No tumor-versus-normal ratio. |
 | Reproductive evidence | Is there positive expression in a qualifying branch? | Full HPA reproductive bulk maximum ≥5 nTPM OR supported reproductive cell RNA ≥5 nTPM with ≥20 reads OR reliable positive reproductive IHC or reviewed reproductive protein OR supported embryonic lineage mean ≥5 TPM. |
 | Coverage | Is the comparison adequately observed? | Complete combined bulk (HPA consensus, HPA brain and GTEx v11) for every member locus. Cell-cluster, immune, DICE and cornea panels count when present but never block a label. |
@@ -35,7 +35,7 @@ eligible; its concentration needs a compatible developmental/adult panel. GTEx
 remains the required coverage core and a descriptive comparison, not a second veto.
 
 A complete diffuse profile with no remaining qualifying route and clear normal
-safety becomes **Other:Diffuse**. MTCP1 (24.53%) is one example. Diffuse identity alone never changes Unsafe membership. [Logic figure and examples](cta-evidence-axes.md).
+safety becomes **Other:Expression**. MTCP1 (24.53%) is one example. Diffuse identity alone never changes Unsafe membership. [Logic figure and examples](cta-evidence-axes.md).
 
 ## The selection funnel
 
@@ -48,15 +48,15 @@ the display order changes attrition attribution, not the final category or reaso
 | 0. Inventory | Is the candidate reference identity recorded? | Every candidate enters normal-evidence and admission assessment. |
 | 1. Safety | Does normal-tissue, reviewed or clinical evidence exclude it? | **Unsafe** |
 | 2. Target space | Does it have reproductive evidence, cancer expression and concentration? | Otherwise **Other** with the unmet requirement as its subtype |
-| 2a. Nested microprotein | Is it a reference-CDS protein under 50 residues inside a same-strand protein-coding gene, without ncORF evidence? | **Other:Nested**: its RNA belongs to the host gene |
-| 2b. Translation | Does the exact selected primary-locus record qualify? | **Other:Translation** and explicit review when annotation or sequence integrity is insufficient; this never creates Unsafe |
-| 3. Sequence | Is at least 95% of its 9-mers inside Unsafe proteins? | **Other:Contained**: Unsafe sequence is blacklisted, so almost no peptide survives |
-| 4. Outcome | Did everything pass with no unresolved normal signal? | **CTA**; a pass blocked only by a normal-tissue hold is **Other:Held** |
+| 2a. Nested microprotein | Is it a reference-CDS protein under 50 residues inside a same-strand protein-coding gene, without ncORF evidence? | **Other:Sequence**: its RNA belongs to the host gene |
+| 2b. Translation | Does the exact selected primary-locus record qualify? | **Other:Review** and explicit review when annotation or sequence integrity is insufficient; this never creates Unsafe |
+| 3. Sequence | Is at least 95% of its 9-mers inside Unsafe proteins? | **Other:Sequence**: Unsafe sequence is blacklisted, so almost no peptide survives |
+| 4. Outcome | Did everything pass with no unresolved normal signal? | **CTA**; a pass blocked only by a normal-tissue hold is **Other:Review** |
 
 ### Complete candidate inventory
 
 All **19,863 candidate protein records** enter the main assessment. The 259 records
-formerly omitted at entry now receive **247 Other:Translation** and **12 Unsafe**
+formerly omitted at entry now receive **247 Other:Review** and **12 Unsafe**
 calls. All original 19,604 classifications remain unchanged. The
 [complete inventory audit](audits/cta-inventory-20261105/index.md) preserves their
 identities, translation evidence, normal findings and historical dispositions.
@@ -68,7 +68,7 @@ selected reference sequence. The former exclusions comprised 254
 NMD/CDS-not-defined-only records and 5 single-study Ribo-seq ORFs. NMD means
 nonsense-mediated decay. Insufficient support does not establish absence or
 normal-tissue safety; applicable exclusion evidence takes precedence. Otherwise,
-insufficient translation qualification produces **Other:Translation** and sequence
+insufficient translation qualification produces **Other:Review** and sequence
 review. Annotation is not experimental proof of protein production.
 
 Here **proteins** means candidate selected reference proteins with identical
@@ -79,7 +79,7 @@ splice isoforms, sequence variants or post-translationally modified proteoforms.
 ### Does CTA mean expressed only in cancer?
 
 No. Admission requires cancer expression **and** qualifying reproductive or
-developmental association. The 602 CTAs are not a count of proteins absent from
+developmental association. The 607 released CTAs are not a count of proteins absent from
 every normal tissue and developmental stage. Passing a normal-expression
 threshold also does not mean zero normal expression.
 
@@ -180,14 +180,14 @@ protein against each filter.
 Unsafe proteins blacklist any matching subsequence from a CTA, so a protein whose
 sequence lies almost wholly inside Unsafe proteins has no usable peptide. A would-be
 CTA with **at least 95% of its 9-mers also present in an Unsafe protein** is assigned
-**Other:Contained** (the boundary is inclusive; an undefined overlap, meaning no
+**Other:Sequence** (the boundary is inclusive; an undefined overlap, meaning no
 9-mer, is never contained). It is a sequence rule, not expression evidence, and it
 never creates Unsafe. The floor is deliberately strict: copies that keep a few
 distinguishing 9-mers stay CTA, and their usable subsequences are for later review.
 
 The overlap uses every protein-coding transcript of Ensembl 115
 (`oncoref.cta_sequence_overlap`) and is reported as `unsafe_sequence_overlap_pct` in
-`cta_selection.profiles()`. **19 proteins are Contained**, among
+`cta_selection.profiles()`. **15 proteins meet the containment rule**, among
 them DAZ2/3, PRAMEF27, CT45A3, GAGE2E and TBC1D3G/H/K. Most multi-copy families such as
 the CT45, GAGE, PRAMEF and POTE copies stay CTA.
 
@@ -196,8 +196,7 @@ the CT45, GAGE, PRAMEF and POTE copies stay CTA.
 A reference-CDS protein under 50 residues nested inside a same-strand protein-coding
 gene, without ncORF evidence (two Ribo-seq studies or any mass-spectrometry peptide),
 has RNA that cannot be told from its host's. Its expression says nothing about the
-peptide, so it can never be a CTA: **28 proteins are Other:Nested** (48 such loci in the
-universe table, tagged `nested_microprotein`).
+peptide, so it can never be a CTA: **28 proteins are Other:Review** because they also lack an approved translation. The sequence restriction remains recorded. Eighteen other nested proteins are Unsafe from independent evidence.
 
 ## Reviewed normal-cell knowledge
 
@@ -214,7 +213,7 @@ Accepted findings awaiting the next selection build are available with
 released evidence set. The next replay includes updates; `--released-knowledge`
 reproduces the earlier set. The [ten-candidate audit](audits/cta-candidate-evidence-20261108/index.md)
 demonstrates the consequences of ambiguous IHC, MS and copy-specific RNA:
-PRAMEF18 and TRIM75 move to Other:Held in the proposed replay, without new Unsafe
+CALHM3, PRAMEF18, TRIM75 and TAF11L11/12/13/14 move to Other:Review in the proposed replay, without new Unsafe
 assignments. These pending findings do not silently rewrite released sequences
 or classification tables.
 
@@ -240,8 +239,8 @@ Downstream systems must preserve the policy/reference receipt and handle review 
 from oncoref import cta_selection
 
 selected = cta_selection.results(species="human", category="CTA")
-all_decisions = cta_selection.results(species=9606)
-other = cta_selection.results(category="Other")
+all_decisions = cta_selection.decisions()
+other = cta_selection.decisions(category="Other")
 profiles = cta_selection.profiles()
 labels = all_decisions[["label", "classification"]]
 scope = cta_selection.coverage(species="dog")
@@ -268,7 +267,7 @@ The contract is identical even when the evidence is not. Human thresholds, antib
 | `entity_id`, `entity_kind`, `label` | Stable result key; human protein-equivalence group versus native nomination; display label |
 | `gene_ids`, `gene_identities` | Every supported member/alternative; IDs, symbols, namespaces, historical/alternate IDs, synonyms and identity status |
 | `identity_status`, `reference_id` | Resolution completeness and exact reference receipt |
-| `category`, `subtype`, `classification` | CTA / Unsafe / Other or null; mutually exclusive Other subtype; flat label such as Other:Nonreproductive or Other:Held; human results never have a null category |
+| `category`, `subtype`, `classification` | CTA / Unsafe / Other or null; mutually exclusive Other subtype; flat labels in `decisions()` use Other:Review, Other:Expression or Other:Sequence; `results()` retains release labels; human decisions never have a null category |
 | `assessment_status`, `policy_id` | Screened, incomplete evidence or normal-evidence hold (why an Other was not cleared); versioned policy |
 | `reasons`, `evidence_flags` | All contributing exclusions and retained observations, including Low protein, antibody review and stem/progenitor expression |
 | `source_snapshot_id` | Content identity of the decision snapshot |
@@ -320,17 +319,27 @@ Adult human fibroblasts and differentiated bowel epithelium use Protected; intes
 
 ## Categorical assignments
 
-The decision follows these questions, in this order:
+Every assessed human protein receives **CTA**, **Other** or **Unsafe**. The shared
+contract is `cta_decision_flow.definition()`; `cta_selection.decisions()` exposes
+it for the released inventory. `results()` retains historical release subtypes.
 
-1. **Is the candidate in the input inventory?** Every inventory record receives a classification, even when translation support is insufficient.
-2. **Does normal-tissue or applicable clinical evidence trigger exclusion?** Assign **Unsafe**. Applicable exclusion takes precedence over every admission failure.
-3. **Is this a nested microprotein under the declared rule?** Assign **Other:Nested**.
-4. **Does translation support and exact-record qualification pass?** Otherwise assign **Other:Translation** and require sequence review.
-5. **Is there qualifying reproductive evidence?** Otherwise assign **Other:Nonreproductive**. Reproductive includes placenta, embryo and fetus; the label records an unmet evidence requirement, not demonstrated absence.
-6. **Is there measured cancer expression?** Otherwise assign **Other:Reproductive**.
-7. **Does reproductive concentration pass?** Otherwise assign **Other:Diffuse**.
-8. **Is the normal screen complete and unresolved-free?** A marginal or unresolved normal signal leaves **Other:Held** when the preceding admission gates pass. `assessment_status` records coverage and review limitations independently of subtype.
-9. **Does an otherwise eligible protein share at least 95% of its sequence 9-mers with Unsafe proteins?** Assign **Other:Contained**; otherwise assign **CTA**.
+1. **Normal-tissue or applicable clinical exclusion:** **Unsafe**. This overrides every admission failure.
+2. **Required evidence missing, conflicting or held:** **Other:Review**. Includes normal-expression holds, incomplete required coverage, and unresolved translation or identity.
+3. **Sequence restriction:** **Other:Sequence**. Covers nested microproteins without independent expression evidence and otherwise eligible proteins with at least 95% of their 9-mers in Unsafe proteins.
+4. **Expression requirement fails:** **Other:Expression**. Includes cancer presence, reproductive/developmental association and applicable concentration requirements.
+5. **Every applicable requirement passes:** **CTA**.
+
+All failed gates remain recorded even when an earlier reason determines the label.
+Paper coverage, experimental protein detection, biological program, tumor prevalence,
+surface localization and antigen presentation are separate evidence fields.
+A qualifying coding reference remains acceptable translation support; experimental
+protein detection is not mandatory for every annotated coding gene.
+
+**SSU72L1–5 are CTA.** Each has a complete approved coding translation, supported
+human embryo expression, cancer RNA and complete required normal coverage, with no
+accepted normal hold or exclusion. [Every admission check and selected transcript](audits/cta-candidate-evidence-20261108/ssu72-admission.csv).
+
+[Decision figure and all protein/gene decisions](audits/cta-candidate-evidence-20261108/index.md#one-decision-flow).
 
 All safety layers evaluate every protein, even when an identity requirement fails.
 The RNA/IHC safety ceilings and the reproductive/cancer presence requirements
@@ -344,7 +353,7 @@ questions. Their useful evidence is now available as independent attributes:
 ```python
 from oncoref import cta_selection
 
-results = cta_selection.results()
+results = cta_selection.decisions()
 profiles = cta_selection.profiles()
 # Example columns: tumor_max_tpm, replicated_tumor_rna, normal_max_ntpm,
 # adult_rna_below_floor, unconfirmed_normal_signal, adult_disposable_only,
@@ -365,7 +374,7 @@ profiles = cta_selection.profiles()
 policy.** It never requires low or measured embryonic/fetal/placental expression.
 A protein can have an adult Disposable-only pattern and also be expressed during
 development. These are separate observations. The pattern does not override an
-Unsafe decision or unresolved normal evidence. Whole skin is Manageable; mapped
+Unsafe decision or unresolved normal evidence. Whole skin is Protected; mapped
 hair follicles and cutaneous melanocytes have conditional Disposable allowances.
 
 The 2-unit descriptive floor answers whether a signal is appreciable for reporting;

@@ -143,5 +143,13 @@
     "unassigned-evidence-gaps.csv": "bb0f86cd5a6ab6f23fec24f5f64a14c7d0192c070b0f4d566500c72ee0786e57",
     "unresolved-protein-contexts.csv.gz": "01d137fd968f2a9c27c0e963de62e9f4772592733a3cd2f0c81f10cad74dc317",
     "widely-studied-antigens.csv": "6867e4cdd7a5b00eb67e14dac9c886281fad454d472b06eb3a49c519890ca4a4"
+  },
+  "input_snapshots": [
+    "docs/audits/cta-selection-20261028/manifest.json"
+  ],
+  "input_snapshot_archive": {
+    "path": "release-inputs.zip",
+    "sha256": "d64f445f7b7b2d4118085621a381ecd48189159b58663273f9f6332a20d4ed08",
+    "reason": "Original release inputs retained byte-for-byte while the live implementation advances. Scientific input/output digests are unchanged."
   }
 }
