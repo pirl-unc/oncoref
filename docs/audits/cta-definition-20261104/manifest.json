@@ -1,19 +1,19 @@
 {
   "inputs": {
-    "oncoref/cta_contract.py": "e70d62cfe760683848eb7b5193d23fc282cc9956f90c5781b04f639fe75d2ffd",
-    "oncoref/cta_selection.py": "6c4acf2da20c37a8fa34862563b1ac658f904cbb6516427d3b9f54798ab94216",
-    "oncoref/data/cta-selection.json": "5559f23910bb16dc1468b5ca7f0ed74befc886c5bb95d0498a6fb4c9d882d2e7",
-    "oncoref/data/cta-selection-human.csv.gz": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d",
+    "oncoref/cta_contract.py": "834157d149aeb3be99c42489984cf4aea7925bcfa7c0353a6b7fe313a3b44b9e",
+    "oncoref/cta_selection.py": "ee7b0e9b3074c032a660f346d72aef172ed5c5abdb34e12d42e2471b7049a2d2",
+    "oncoref/data/cta-selection.json": "6219fd63a59b6a8335c3b2431d68153b823195dea021523693825a1b74708c66",
+    "oncoref/data/cta-selection-human.csv.gz": "e996969018124bb510314cea5fb05c29eb1f3e8624dacc3cd073ab3ba8f3eb98",
     "scripts/build_cta_contract_report.py": "ca76ccdea7b1e56928f79b64f3b97c65f60848e6ec2ec35e4fc078b0d96937a2",
     "docs/audits/cta-definition-20261104/baseline.json": "779f21ee949c0ca7d2ecd61dd418881280604d9a4e96389cb31aef661a3307a5",
     "docs/audits/cta-definition-20261104/baseline-1.29.0.csv.gz": "4e6291d896d596c498da9144e0c1fd47f9e26110cc0a06632614aefdbbb82ffb"
   },
   "outputs": {
-    "contract.json": "f97e3489820b7f2676ceab28533fa2c02a10e9db6895777d02f53c1f2ae0f450",
-    "coverage.json": "6bb48e64f34af91539ccb522dec93a77b8294ad37c17696e41c11aaa766f36b6",
+    "contract.json": "ec771ce2db67affe9eb840c42554d17ea3fcca1d9f89aab521f2a0191a990375",
+    "coverage.json": "02b0b627383883266c36c311f75c354cfcbc1adfdc4cd76cad0496f6538ead57",
     "gate-catalog.csv": "ed0cc6df2d07bf8883b2753e2c3e9e0974bb577279daad374ba323330e47c252",
-    "sequence-roles.csv.gz": "f24997a328ea94bc933c582b1b38eeb8ff217292071eb0cd3f1ea1d504d9e77f",
-    "changes-from-1.29.0.csv": "734d454b3729ceea02157cb757d0f62f1c5a8fc50e91a091198e415ec862d5b7",
-    "index.md": "435a83d10949daabca2ecc8505c3b958b3c350d4acadcbd4a6cf5d18eccda188"
+    "sequence-roles.csv.gz": "a9705549ffa85f1189d17e60efb9679e0909a02425a742c594278bf1786948dc",
+    "changes-from-1.29.0.csv": "6d8bf433b8c18e355ed58af504aa12ba3a8f364d304fe9b330350273e50493f9",
+    "index.md": "68440d1cb8e2115ab54b44851cd5b2c09cf84ee6eb214eb8cbb984f633d03f6d"
   }
 }

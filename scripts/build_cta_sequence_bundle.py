@@ -17,7 +17,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from oncoref import cta_selection, translation_qualification  # noqa: E402
+from oncoref import cta_selection, transcript_selection, translation_qualification  # noqa: E402
 from oncoref.sequence_bundle import ROLE_ORDER, SCHEMA, content_id, digest, load  # noqa: E402
 
 
@@ -163,6 +163,9 @@ def build(source, output, release):
         "normal-tissue-taxonomy.yaml",
         "translation-qualification.json",
         "translation-qualification.csv.gz",
+        "transcript-selection.json",
+        "transcript-selection.csv.gz",
+        "transcript-evidence.json",
     ]
     manifest = {
         "schema": SCHEMA,
@@ -172,6 +175,7 @@ def build(source, output, release):
         "selection_policy_id": cta_selection.coverage()["policy_id"],
         "role_policy_id": cta_selection.contract()["role_policy_id"],
         "translation_policy_id": translation_qualification.POLICY_ID,
+        "representative_selection_policy_id": transcript_selection.POLICY_ID,
         "orfdata_identity": proteome.identity,
         "record_count": sum(roles.values()),
         "occurrence_count": occurrence_count,

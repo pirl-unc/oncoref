@@ -197,7 +197,7 @@ def test_cta_curation_and_pinned_bundle_versions():
     assert len(oncoref.cta_unfiltered_gene_ids()) == 2533
     # The protein-summary refresh changes the derived bundle, not CTA admission
     # or the source matrices used for annotation-independent gene identity.
-    assert DATA_VERSION == "5.23.26"
+    assert DATA_VERSION == "5.23.27"
     assert SOURCE_MATRIX_VERSION == "5.22.14"
 
 

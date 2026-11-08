@@ -35,6 +35,12 @@ def build():
         "translation_qualification_reasons",
         "representative_sequence_sha256s",
         "translation_qualification_policy",
+        "representative_selection_policy",
+        "representative_selection_approved",
+        "representative_selection_reasons",
+        "representative_candidate_sha256s",
+        "representative_evidence_ids",
+        "representative_transcripts",
     ]
     write_table(facts[columns], OUTPUT / "representatives.csv.gz")
     baseline = json.loads((OUTPUT / "baseline.json").read_text())
@@ -80,9 +86,11 @@ A target record must have an exact source gene/transcript/protein identity, a
 primary chromosome locus, a coding transcript without LoF or NMD annotation,
 annotated CDS and complete three-base start and stop codons, no incomplete tags,
 and an uninterrupted AA20 sequence beginning with methionine. One terminal `*`
-is permitted. The common longest primary-locus sequence must qualify for every
-member of the expression-equivalence group. Ties retain all common sequence hashes.
-A shorter isoform or an alternate locus does not silently validate that representative.
+is permitted. MANE Select supplies the representative when present on the primary
+locus; otherwise Ensembl canonical does. Every member must share the same approved
+sequence. Conflicting designated sequences or unresolved coding evidence require
+review. A shorter isoform or an alternate locus cannot silently replace a failed
+representative. [Selection method and reviewed exceptions](../cta-transcript-selection-20261108/index.md).
 
 Missing mappings, incomplete annotation, NMD, LoF and interrupted sequence create
 **translation review**, never normal-tissue Unsafe evidence. Existing Unsafe

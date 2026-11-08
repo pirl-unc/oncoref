@@ -1,16 +1,18 @@
 # Complete candidate inventory and cancer-restriction accounting
 
-All **19,863 candidate protein records** enter the main assessment under
-`oncoref.cta-selection.2026-11-05.1`. Identical selected reference sequences count together;
+All **19,893 candidate protein records** enter the main assessment under
+`oncoref.cta-selection.2026-11-08.1`. Identical selected reference sequences count together;
 member loci and original sequences remain traceable.
 
 ## Translation is an admission gate
 
-The 259 formerly omitted records now receive **247 Other:Translation**
+The loci in the 259 formerly omitted records now map to 260 protein
+identities: **248 Other:Translation**
 and **12 Unsafe** calls. None becomes CTA. Normal exclusion takes
 precedence; lack of translation support cannot erase it. Other:Translation requires
-sequence review and supplies no direct-target allowance. All 19,604 previously
-classified records retain their classifications: **0 changes**.
+sequence review and supplies no direct-target allowance. Comparing the 19,604
+previously classified identities with the current inventory gives **452
+changed or added/removed identity rows**. [Gene-level membership and default changes](../cta-transcript-selection-20261108/index.md).
 
 The older pre-diffuseness snapshot called 2 of these restored
 records Unsafe through DICE immune evidence: P2RX5-TAX1BP3, ENSG00000258461.
@@ -33,7 +35,7 @@ The data permit a reproducible **observed-expression screen**, with coverage lim
 
 | Stored-zero RNA screen | Records |
 |---|---:|
-| Cancer expression and complete required normal bulk coverage | 19,312 |
+| Cancer expression and complete required normal bulk coverage | 19,341 |
 | Also zero recorded adult RNA and reproductive/placental bulk RNA | 40 |
 | Also have developmental measurements | 22 |
 | Also zero recorded developmental RNA | 0 |

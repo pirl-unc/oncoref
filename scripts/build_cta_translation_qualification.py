@@ -65,6 +65,8 @@ def build(source):
             record["tags"] = sorted(set(record["tags"]) | {v for k, v in pairs if k == "tag"})
             if fields[2] == "transcript":
                 record.update(locus_start=int(fields[3]), locus_end=int(fields[4]))
+                for key in ("transcript_support_level", "ccds_id", "transcript_source"):
+                    record[key] = attrs.get(key, "")
             else:
                 key = {
                     "CDS": "cds_bases",

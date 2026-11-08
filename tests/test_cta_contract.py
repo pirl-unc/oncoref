@@ -97,7 +97,10 @@ def test_entire_inventory_is_classified_with_translation_support_separate():
     assert counts["out_of_universe_groups"] == 0
     assert counts["out_of_universe_gene_loci"] == 0
     assert counts["input_groups"] == counts["classified_groups"]
-    assert counts["translation_support_insufficient_groups"] == 259
+    assert (
+        counts["translation_support_insufficient_groups"]
+        == (~cta_selection.profiles().translation_support_eligible).sum()
+    )
     assert summary["universe"].startswith(str(counts["classified_groups"]))
 
 
@@ -110,8 +113,13 @@ def test_insufficient_translation_support_does_not_hide_normal_exclusion():
     root = Path(__file__).resolve().parents[1]
     prior = pd.read_csv(root / "docs/audits/cta-inventory-20261105/formerly-out-of-universe.csv.gz")
     profiles = cta_selection.profiles().set_index("entity_id")
-    restored = profiles.loc[prior.protein_equivalence_group_id]
-    assert len(restored) == 259
+    frozen = pd.read_csv(
+        root / "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz"
+    )
+    members = frozen.set_index("protein_equivalence_group_id").member_gene_ids.map(json.loads)
+    genes = {g for values in members.loc[prior.protein_equivalence_group_id] for g in values}
+    restored = profiles[profiles.gene_ids.map(lambda ids: bool(set(ids) & genes))]
+    assert genes <= {g for values in restored.gene_ids for g in values}
     assert not restored.translation_qualified.any()
     assert not restored.translation_support_eligible.any()
     assert set(restored.classification) <= {"Unsafe", "Other:Translation"}
@@ -120,11 +128,6 @@ def test_insufficient_translation_support_does_not_hide_normal_exclusion():
     assert roles.loc[restored.category.eq("Unsafe"), "shared_sequence"].eq("exclude").all()
     assert roles.loc[restored.category.eq("Other"), "shared_sequence"].eq("review").all()
     assert not roles.direct_target_candidate.any()
-    frozen = pd.read_csv(
-        root / "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz"
-    )
-    members = frozen.set_index("protein_equivalence_group_id").member_gene_ids.map(json.loads)
-    assert restored.gene_ids.map(list).equals(members.loc[restored.index].rename("gene_ids"))
 
 
 def test_expression_profile_never_labels_known_normal_production_as_restricted():

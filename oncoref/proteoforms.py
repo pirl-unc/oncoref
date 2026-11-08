@@ -42,8 +42,9 @@ A collapsed frame carries: ``proteoform_key`` (the identity above), ``Symbol``
 canonical-member ENSG, a real id for joining to per-gene Ensembl references), and
 ``proteoform_members`` (the sorted slash-joined member symbols, provenance only).
 
-How the shipped groups are defined: every gene is reduced to its **longest
-reference protein sequence**, and genes whose chosen protein is byte-identical form one group —
+How the shipped groups are defined: every gene is assigned a **qualified,
+evidence-reviewed MANE Select or Ensembl canonical reference protein**, and genes
+whose chosen protein is byte-identical form one group —
 so the key space is "one entry per distinct protein," and a group's proteoform-level
 expression is the **sum of its member genes' TPMs** (RNA-seq reads multi-map between
 identical-protein loci, so per-gene TPM under-counts the protein). ``scope`` selects
@@ -51,9 +52,9 @@ the gene universe: ``"cta"`` (the focused cancer-germline set, the shipped defau
 or ``"genome"`` (all protein-coding genes — histones, tubulins, the PAR X/Y pairs,
 …). Both registries ship; the genome one is the universal "do this for every gene".
 
-Length is not a MANE, Ensembl canonical, or transcript-support preference. The
-transcript-default audit in ``docs/audits/cta-transcripts-20261108`` documents
-the proposed migration and the affected sequence identities.
+The shared ``transcript_selection`` registry retains unresolved decisions and
+qualified alternatives. Gene-level RNA sums do not establish production of the
+selected proteoform. Length is not a selection criterion.
 
 GENE-LEVEL vs PROTEOFORM-LEVEL: an expression frame is one or the other, told apart
 by :func:`expression_level` (the ``proteoform_key`` column is present iff collapsed).
@@ -174,7 +175,7 @@ def proteoform_groups(*, scope: str = "cta") -> pd.DataFrame:
 
     Columns: ``proteoform_id`` (slash-joined sorted member symbols),
     ``member_symbol``, ``member_gene_id`` (unversioned Ensembl), ``protein_length``,
-    ``n_members``.
+    ``n_members``, exact ``sequence_sha256`` and ``selection_policy_id``.
 
     ``scope="genome"`` returns the genome-wide identical-protein grouping (every
     protein-coding family, not just CGAs). The default ``"cta"`` registry is a
@@ -209,9 +210,13 @@ def _proteoform_registry_metadata(scope: str) -> dict[str, str]:
         for label, members in sorted(proteoform_group_map(scope=scope).items())
     ]
     payload = json.dumps(groups, separators=(",", ":"), ensure_ascii=True)
+    from .transcript_selection import POLICY_ID
+
     return {
         "proteoform_scope": scope,
         "proteoform_registry_sha256": hashlib.sha256(payload.encode("ascii")).hexdigest(),
+        "representative_selection_policy": POLICY_ID,
+        "expression_resolution": "gene_locus_sum",
     }
 
 

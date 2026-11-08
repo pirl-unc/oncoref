@@ -2,12 +2,12 @@
 
 Policy `oncoref.translation-qualification.2026-11-04.1` assesses **245,535 Ensembl 115 peptide records**;
 **185,993** pass the record-level target rule. Across the
-19,863 classified proteins, **19,075 selected representatives qualify**.
+19,893 classified proteins, **19,334 selected representatives qualify**.
 This is annotation-based admission, not experimental proof of production.
 
 Every candidate record receives a classification. The former entry requirement
 for coding annotation or established ncORF support is now a CTA admission gate;
-259 records fail that requirement
+295 records fail that requirement
 and remain assessed for normal evidence. [Complete inventory audit](../cta-inventory-20261105/index.md).
 
 ## What qualifies
@@ -16,9 +16,11 @@ A target record must have an exact source gene/transcript/protein identity, a
 primary chromosome locus, a coding transcript without LoF or NMD annotation,
 annotated CDS and complete three-base start and stop codons, no incomplete tags,
 and an uninterrupted AA20 sequence beginning with methionine. One terminal `*`
-is permitted. The common longest primary-locus sequence must qualify for every
-member of the expression-equivalence group. Ties retain all common sequence hashes.
-A shorter isoform or an alternate locus does not silently validate that representative.
+is permitted. MANE Select supplies the representative when present on the primary
+locus; otherwise Ensembl canonical does. Every member must share the same approved
+sequence. Conflicting designated sequences or unresolved coding evidence require
+review. A shorter isoform or an alternate locus cannot silently replace a failed
+representative. [Selection method and reviewed exceptions](../cta-transcript-selection-20261108/index.md).
 
 Missing mappings, incomplete annotation, NMD, LoF and interrupted sequence create
 **translation review**, never normal-tissue Unsafe evidence. Existing Unsafe
@@ -48,9 +50,9 @@ record table is available offline through `translation_qualification.records()`.
 
 ## Changes and downstream use
 
-Against the pinned evidence PR: **115
-classification-label changes**, **93
-sequence-role changes**, and **788 reason changes**.
+Against the pinned evidence PR: **106
+classification-label changes**, **86
+sequence-role changes**, and **700 reason changes**.
 Label changes include Other subtype changes; inspect category transitions in the
 [series-wide report](../cta-definition-20261104/index.md).
 [Every changed record](changes-from-evidence-pr.csv) and

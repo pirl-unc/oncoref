@@ -24,6 +24,7 @@ all matching occurrences. Record counts are not protein-group counts.
 Selection policy: `{m["selection_policy_id"]}`.
 Role policy: `{m["role_policy_id"]}`.
 Translation policy: `{m["translation_policy_id"]}`.
+Representative policy: `{m.get("representative_selection_policy_id", "historical longest-sequence rule")}`.
 Bundle identity: `{m["bundle_id"]}`.
 Reference identity: `{m["reference"]["reference_id"]}`.
 Native ORFdata identity: `{m["orfdata_identity"]}`.

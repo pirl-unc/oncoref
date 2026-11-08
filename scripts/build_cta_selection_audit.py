@@ -94,8 +94,8 @@ TABLE_COLUMNS = {
 }
 HUMAN_RULES = {
     "Translation qualification": (
-        "Qualifying reference coding annotation or supported ncORF evidence is required for CTA admission, followed by a complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. All candidate records still undergo normal-evidence assessment. Translation failure requires review, never Unsafe.",
-        ["Ensembl-115"],
+        "CTA admission requires qualifying coding annotation or supported ncORF evidence and an approved reference protein: MANE Select first, Ensembl canonical second, with a complete primary-locus CDS and AA20 sequence. An incomplete designated transcript or unresolved coding conflict requires review; a shorter or alternate-locus protein cannot silently replace it. Every member must share the approved sequence. All candidates still undergo normal-evidence assessment; translation review does not establish Unsafe.",
+        ["Ensembl-115", "transcript-evidence"],
     ),
     "Reproductive or developmental expression": (
         "Full Reproductive bulk ≥5 nTPM OR supported reproductive-cell RNA ≥5 nTPM (≥20 reads; indirect sites additionally need complete outside-cluster coverage and every outside value <5, with no curated normal-induction conflict) OR reliable mapped positive reproductive IHC for every member without an antibody conflict OR reviewed human reproductive protein covering every selected member OR supported developmental stage/lineage mean ≥5 TPM; ≥20 cells, ≥5 positive and ≥10% positive at ≥1 TPM. Presence evidence never overrides normal exclusions.",
@@ -650,7 +650,8 @@ def human_explanations(facts: pd.DataFrame) -> pd.DataFrame:
             elif layer == "Translation qualification":
                 row["reason"] = (
                     f"Translation support: {r['translation_support_reasons']}; "
-                    f"exact-record qualification: {r['translation_qualification_reasons']}"
+                    f"exact-record qualification: {r['translation_qualification_reasons'] if pd.notna(r['translation_qualification_reasons']) else 'complete'}; "
+                    f"representative selection: {r['representative_selection_reasons'] if pd.notna(r['representative_selection_reasons']) else 'approved'}"
                 )
                 row["source_url"] = "https://pirl-unc.github.io/oncoref/translation-qualification/"
             elif layer == "Cancer expression":

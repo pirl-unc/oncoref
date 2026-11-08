@@ -6,7 +6,7 @@
 
 The harmonized collection has 83 core papers and 67 supplementary sources. Its mapped coverage reaches 569 of the 602 released CTA records. 33 remain without qualifying paper coverage. The expression and reference datasets remain the basis of selection.
 
-The 1.31.0 classifications are frozen. Normal-expression and identity findings in this review require adjudication before the next classification release.
+The 1.31.0 classifications here are frozen. [Current reference selection and coding reviews](../cta-transcript-selection-20261108/index.md) apply the GDPD4, SLCO1B3–SLCO1B7 and FRG2/FRG2B holds; use that report for current classifications and sequence coordinates.
 
 - [Individual reviews](individual-reviews.csv)
 - [Core and supplementary sources, roles and overlap](sources.csv)

@@ -47,7 +47,7 @@ from oncoref import (  # noqa: E402
 SELECTION_RELEASE = cta_selection._metadata()["release"]
 
 OUT = ROOT / "docs/audits/cta-definition-20261104"
-PRESENTATION_REVISION = "2026-11-06.3"
+PRESENTATION_REVISION = "2026-11-08.1"
 GUIDE_URL = "https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html"
 DISPLAY_LABELS = {
     "allow": "No sequence exclusion",
@@ -95,7 +95,20 @@ TEAL = "#087E8B"
 AMBER = "#A76708"
 RUST = "#AC493B"
 MUTED = "#536675"
-CASES = ["PRAME", "MAGEC2", "LGALS13", "PLCZ1", "MAGEA12", "SERPINA2", "MROH5", "SELENOV"]
+CASES = [
+    "PRAME",
+    "MAGEC2",
+    "LGALS13",
+    "PLCZ1",
+    "MAGEA12",
+    "SERPINA2",
+    "MROH5",
+    "SELENOV",
+    "GDPD4",
+    "SLCO1B3-SLCO1B7",
+    "FRG2",
+    "FRG2B",
+]
 
 
 def figure(name, fig):
@@ -362,7 +375,17 @@ def build():
                 "sequence_role": row.shared_sequence,
                 "reasons": list(row.reasons),
                 "translation_qualified": bool(fact.translation_qualified),
-                "translation_reasons": fact.translation_qualification_reasons,
+                "translation_reasons": " | ".join(
+                    dict.fromkeys(
+                        reason.strip()
+                        for reasons in [
+                            fact.translation_qualification_reasons,
+                            fact.representative_selection_reasons,
+                        ]
+                        for reason in str(reasons or "").split("|")
+                        if reason.strip()
+                    )
+                ),
                 "findings": findings[
                     [
                         "id",
@@ -410,9 +433,9 @@ def build():
             "publication-funnel",
         ),
         (
-            "Biological categories of CTAs",
+            "Biological categories in the historical 602-CTA snapshot",
             [
-                "The CTA tables group proteins by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories.",
+                "The historical 1.31.0 literature tables categorize 602 CTAs by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories. Current reference choices and coding holds are listed in the transcript-selection report.",
                 "Each tag links to a publication or a supported RNA observation. The detail view records the species, tissue, cell population or developmental stage. Biological categories are separate from the admission route and the CTA, Unsafe or Other classification.",
                 "Reproductive secretion currently has four manually annotated proteins: PATE1, WFDC8, RNASE9 and SEMG2. This count reflects the focused literature review; the other CTAs have not been systematically checked against reproductive-secretion catalogs.",
             ],
@@ -472,7 +495,7 @@ def build():
                 f"Selection policy: {coverage['policy_id']}. Role policy: {contract['role_policy_id']}. Translation policy: {translation_qualification.POLICY_ID}.",
                 "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. Counts are recalculated from the evidence and rules.",
                 "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-                f"Presentation revision {PRESENTATION_REVISION} adds biological categories, linked per-protein evidence and simpler report text. It retains the 1.31.0 classifications, thresholds and sequence roles.",
+                f"Release {SELECTION_RELEASE} applies MANE-first reference selection, coding-evidence review and recomputed protein identities. Its classifications and sequence roles use the current policy. The 602-protein literature analysis remains a labelled 1.31.0 snapshot.",
             ],
             None,
         ),
@@ -583,7 +606,7 @@ def update_current_docs(data):
         f"across **{universe['classified_groups']:,} proteins** "
         "(identical selected reference sequences counted together; member loci retained). "
         f"All {universe['input_groups']:,} candidate protein records enter classification; "
-        "translation support is a CTA admission requirement. "
+        "translation support and an approved MANE/canonical representative are CTA admission requirements. "
         "Every classified human protein has a category, with independent evidence status "
         "and sequence role. CTA denotes a research candidate under the declared policy."
     )
@@ -598,7 +621,8 @@ def update_current_docs(data):
             + summary
             + "\n[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) "
             + "· [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) "
-            + "· [Candidate evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html)."
+            + "· [Current transcript decisions](https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/table.html) "
+            + "· [Historical 602-CTA evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html)."
         )
         + text[end:]
     )
@@ -615,9 +639,10 @@ def update_current_docs(data):
             + f" Selection policy: `{policy}`. "
             + "[Illustrated, searchable report](audits/cta-definition-20261104/report.html), "
             + "[PDF](audits/cta-definition-20261104/cta-definition.pdf), "
-            + "[filterable evidence table and the 122-protein review](audits/cta-evidence-guide-20261106/report.html), "
+            + "[current reference choices](audits/cta-transcript-selection-20261108/index.md), "
             + "[source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and "
             + "[verified sequences](sequence-bundle.md) describe the same versioned decisions."
+            + " The [602-CTA evidence table and 122-protein review](audits/cta-evidence-guide-20261106/report.html) retain the 1.31.0 snapshot."
         )
         + text[end:]
     )
@@ -635,7 +660,8 @@ def update_current_docs(data):
             + summary
             + "\n\n[Illustrated report](audits/cta-definition-20261104/report.html) · "
             + "[PDF](audits/cta-definition-20261104/cta-definition.pdf) · "
-            + "[Candidate evidence explorer](audits/cta-evidence-guide-20261106/report.html) · "
+            + "[Current transcript table](audits/cta-transcript-selection-20261108/table.html) · "
+            + "[Historical 602-CTA evidence explorer](audits/cta-evidence-guide-20261106/report.html) · "
             + "[Verified sequence records](sequence-bundle.md).\n\n"
             + "The normal screen, cancer presence, reproductive/developmental association, "
             + "coverage, translation and sequence-overlap gates remain distinct. Accepted "
@@ -678,7 +704,7 @@ def render_html(data):
             + "".join("<p>" + esc(p) + "</p>" for p in paragraphs)
         )
         if title == "Published nominations through the funnel":
-            chunks.append("<h3>Additional cancer–embryo catalogs</h3>")
+            chunks.append("<h3>Additional cancer–embryo catalogs: 1.31.0 snapshot</h3>")
             chunks.append(
                 "<p>Supplementary-table matching found 11 distinct proteins from the 122 across these two catalogs. These program memberships are separate from the release's 15-paper nomination collection.</p>"
             )
@@ -714,7 +740,7 @@ def render_html(data):
                 + GUIDE_URL
                 + '#catalogs">Matched source rows, download links and file hashes</a></p>'
             )
-        if title == "Biological categories of CTAs":
+        if title == "Biological categories in the historical 602-CTA snapshot":
             chunks.append(
                 '<figure><img src="../cta-evidence-guide-20261106/biology-categories.svg" alt="Biological categories of the 602 CTAs"></figure>'
                 '<p><a href="'
@@ -853,8 +879,8 @@ def render_html(data):
             )
         chunks.append("</details>")
     chunks.append(
-        "<h2>Explore every classified protein</h2><p>The candidate table now includes source-by-source values, top-five tissue and cell contexts, Ensembl/HPA links, paper links, review reasons, sorting and CSV export.</p>"
-        '<p><a href="../cta-evidence-guide-20261106/report.html#explorer">Open the full filterable evidence table</a> · <a href="../cta-evidence-guide-20261106/report.html?subset=unlisted#analysis">Investigate the 122 CTAs outside the nomination-paper collection</a> · <a href="../cta-evidence-guide-20261106/report.html#sources">Data-source guide</a></p>'
+        "<h2>Explore the catalog</h2><p>The current transcript table shows classifications, approved defaults, support levels and review reasons for every classified locus. The historical 1.31.0 evidence table retains source-by-source values, top-five tissue and cell contexts, paper links and the original 122-protein literature analysis.</p>"
+        '<p><a href="../cta-transcript-selection-20261108/table.html">Current classifications and transcript decisions</a> · <a href="../cta-evidence-guide-20261106/report.html#explorer">Historical 1.31.0 evidence table</a> · <a href="../cta-evidence-guide-20261106/report.html?subset=unlisted#analysis">Historical 122-CTA literature analysis</a> · <a href="../cta-evidence-guide-20261106/report.html#sources">Data-source guide</a></p>'
     )
     chunks.append(
         '<footer>Sources and audits: <a href="../cta-evidence-migration-20261104/">historical findings and clinical causality</a> · <a href="../translation-qualification-20261104/">translation qualification</a> · <a href="../sequence-bundle-20261104/">verified sequence bundle</a> · <a href="../normal-breadth-20261104/">normal breadth</a> · <a href="../../tissue-hazards/">tissue registry and primary references</a><p><code>'
@@ -908,7 +934,7 @@ def render_pdf(data):
 
     story += [
         Paragraph("From the candidate universe to CTAs", styles["Title"]),
-        paragraph("OncoRef " + data["release"] + " | 6 November 2026"),
+        paragraph("OncoRef " + data["release"] + " | 8 November 2026"),
         paragraph("Research candidate selection, evidence status and verified sequence use."),
         Spacer(1, 16),
     ]
@@ -964,7 +990,7 @@ def render_pdf(data):
                     small,
                 )
             )
-        if title == "Biological categories of CTAs":
+        if title == "Biological categories in the historical 602-CTA snapshot":
             story.append(
                 Image(
                     str(ROOT / "docs/audits/cta-evidence-guide-20261106/biology-categories.png"),
@@ -1085,7 +1111,11 @@ def render_pdf(data):
             )
         )
     story.append(Spacer(1, 20))
-    story.append(Paragraph("The 122 CTAs outside the paper collection", styles["Heading1"]))
+    story.append(
+        Paragraph(
+            "Historical 1.31.0 review: 122 CTAs outside the paper collection", styles["Heading1"]
+        )
+    )
     comparison = data["unlisted_comparison"]
     story.append(
         Image(
@@ -1096,7 +1126,7 @@ def render_pdf(data):
     )
     story.append(
         paragraph(
-            "The 602 CTAs include 480 proteins in the 15-paper nomination registry and 122 outside it. The 122 represent 123 loci. The review found additional cancer-target publications for TBXT, SEMG2 and PATE1."
+            "The historical 602-CTA snapshot includes 480 proteins in the 15-paper nomination registry and 122 outside it. These are the counts for the original literature review, not the current selection. The 122 represent 123 loci. The review found additional cancer-target publications for TBXT, SEMG2 and PATE1."
         )
     )
     story.append(

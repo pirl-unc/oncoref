@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "1.34.0"
+__version__ = "1.35.0"
 
 # Version of the downloadable data bundle (the heavy per-cohort percentile +
 # representative shards). Bump when the DERIVED reference artifacts change — it pins
@@ -59,7 +59,8 @@ __version__ = "1.34.0"
 # 5.23.25 adds a receptor-defined primary BRCA_TNBC cohort, distinct from PAM50.
 # 5.23.26 refreshes all 143 cohorts' CTA protein summaries against the current
 # identical-protein registry, including RBMY1F/RBMY1J, with registry fingerprints.
-DATA_VERSION = "5.23.26"
+# 5.23.27 rebuilds protein summaries using approved MANE/canonical representatives.
+DATA_VERSION = "5.23.27"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION

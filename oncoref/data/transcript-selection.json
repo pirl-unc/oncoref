@@ -1,0 +1,32 @@
+{
+  "schema": "oncoref.transcript-selection",
+  "schema_version": 1,
+  "policy_id": "oncoref.transcript-selection.2026-11-08.1",
+  "records_sha256": "0793ccb17a4f6b54865a397491f7a2a1d499f0f69a19b90e6406e931c00d1bb2",
+  "json_columns": [
+    "selection_reasons",
+    "candidate_sequence_sha256s",
+    "candidate_transcripts",
+    "selected_transcripts",
+    "candidate_protein_ids",
+    "candidate_lengths",
+    "evidence_ids",
+    "unresolved_evidence_ids",
+    "candidate_support",
+    "support_flags"
+  ],
+  "dependencies": {
+    "translation-qualification.csv.gz": "82c53048bc40e161e8c0f2df1ff5a44e071f4d42035d41bd6646f9bd0dc43303",
+    "translation-qualification.json": "33ccea9c5e419a1aeff8f0262f6312c693efa16afd86fa5c2ee95b2657d7d108",
+    "transcript-evidence.json": "de9efbe6cbacec4bed04bf18cd8c96341d9c83f8f8b250670b90686f7a00f1bc"
+  },
+  "status_counts": {
+    "selected": 19539,
+    "review": 4330
+  },
+  "basis_counts": {
+    "MANE Select": 19226,
+    "No designated representative": 3360,
+    "Ensembl canonical": 1283
+  }
+}

@@ -44,9 +44,9 @@ a3a/titin cardiac cases involve a different receptor and peptide.
 
 ## Reproducible consequences
 
-Relative to the decision-contract PR: **225
-classification changes, 204 sequence-role
-changes and 792 reason changes**.
+Relative to the decision-contract PR: **216
+classification changes, 197 sequence-role
+changes and 704 reason changes**.
 [All changes](changes-from-contract-pr.csv) include unchanged categories with
 changed reasons. The [series-wide delta](../cta-definition-20261104/changes-from-1.29.0.csv)
 uses the frozen 1.29.0 baseline.

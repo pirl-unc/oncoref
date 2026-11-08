@@ -3,19 +3,19 @@
   "species": "human",
   "selection_status": "available",
   "evidence_status": "partial",
-  "policy_id": "oncoref.cta-selection.2026-11-05.1",
-  "universe": "19863 classified protein-equivalence groups from 19863 input groups",
+  "policy_id": "oncoref.cta-selection.2026-11-08.1",
+  "universe": "19893 classified protein-equivalence groups from 19893 input groups",
   "universe_counts": {
     "counting_unit": "selected_reference_protein_equivalence_group",
-    "input_groups": 19863,
-    "classified_groups": 19863,
+    "input_groups": 19893,
+    "classified_groups": 19893,
     "out_of_universe_groups": 0,
     "input_gene_loci": 20099,
     "classified_gene_loci": 20099,
     "out_of_universe_gene_loci": 0,
     "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
-    "translation_support_eligible_groups": 19604,
-    "translation_support_insufficient_groups": 259,
+    "translation_support_eligible_groups": 19598,
+    "translation_support_insufficient_groups": 295,
     "scope_note": "Every candidate record enters classification; translation support is a CTA admission requirement, not an inventory exclusion."
   },
   "reference": {
@@ -51,16 +51,16 @@
     "Rare-cell screening uses the existing brain, spinal-cord, heart and selected lung CELLxGENE panels. At least 1% detection in a Vital population supplies exclusion evidence; Protected detection supplies a review hold. Detection frequency is not abundance. Unmeasured ages, organs and excluded lineages remain coverage limits, not allowances.",
     "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply."
   ],
-  "entities": 19863,
+  "entities": 19893,
   "counts": {
-    "CTA": 602,
-    "Unsafe": 18255,
-    "Other": 1006,
+    "CTA": 607,
+    "Unsafe": 18259,
+    "Other": 1027,
     "Unassigned": 0
   },
   "other_subtypes": {
-    "Nonreproductive": 570,
-    "Translation": 362,
+    "Nonreproductive": 573,
+    "Translation": 380,
     "Nested": 28,
     "Held": 27,
     "Contained": 15,
@@ -111,6 +111,11 @@
       "used_sources": 14,
       "available_sources": 14,
       "identified_sources": 14
+    },
+    "translation_evidence": {
+      "used_sources": 2,
+      "available_sources": 2,
+      "identified_sources": 2
     }
   }
 }

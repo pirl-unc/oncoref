@@ -1,6 +1,6 @@
 {
-  "release": "1.31.0",
-  "presentation_revision": "2026-11-06.3",
+  "release": "1.35.0",
+  "presentation_revision": "2026-11-08.1",
   "catalog_review": {
     "version": "2026-11-06.1",
     "scope": "Supplementary-table matches for two additional cancer\u2013embryonic program catalogs. These proposals are separate from the 15 nomination papers used in release 1.31.0.",
@@ -221,10 +221,10 @@
       "Cancer presence": 512,
       "Reproductive/developmental presence": 432,
       "Reproductive concentration": 432,
-      "Translation qualification": 420,
-      "Unsafe sequence containment": 411,
+      "Translation qualification": 427,
+      "Unsafe sequence containment": 418,
       "Final Unsafe": 466,
-      "Final Other": 140
+      "Final Other": 133
     },
     {
       "source_id": "10.1038/ncomms10499",
@@ -237,10 +237,10 @@
       "Cancer presence": 292,
       "Reproductive/developmental presence": 279,
       "Reproductive concentration": 279,
-      "Translation qualification": 271,
-      "Unsafe sequence containment": 269,
+      "Translation qualification": 276,
+      "Unsafe sequence containment": 274,
       "Final Unsafe": 683,
-      "Final Other": 36
+      "Final Other": 31
     },
     {
       "source_id": "10.1002/cam4.2223",
@@ -253,10 +253,10 @@
       "Cancer presence": 292,
       "Reproductive/developmental presence": 289,
       "Reproductive concentration": 289,
-      "Translation qualification": 281,
-      "Unsafe sequence containment": 281,
+      "Translation qualification": 287,
+      "Unsafe sequence containment": 287,
       "Final Unsafe": 676,
-      "Final Other": 28
+      "Final Other": 22
     },
     {
       "source_id": "10.1038/s41467-021-22695-y",
@@ -269,10 +269,10 @@
       "Cancer presence": 370,
       "Reproductive/developmental presence": 357,
       "Reproductive concentration": 356,
-      "Translation qualification": 349,
-      "Unsafe sequence containment": 346,
+      "Translation qualification": 354,
+      "Unsafe sequence containment": 351,
       "Final Unsafe": 343,
-      "Final Other": 40
+      "Final Other": 35
     },
     {
       "source_id": "10.1038/s41388-018-0357-2",
@@ -301,10 +301,10 @@
       "Cancer presence": 39,
       "Reproductive/developmental presence": 38,
       "Reproductive concentration": 38,
-      "Translation qualification": 36,
-      "Unsafe sequence containment": 33,
+      "Translation qualification": 37,
+      "Unsafe sequence containment": 34,
       "Final Unsafe": 429,
-      "Final Other": 7
+      "Final Other": 6
     },
     {
       "source_id": "10.1371/journal.pgen.1011734",
@@ -333,10 +333,10 @@
       "Cancer presence": 54,
       "Reproductive/developmental presence": 54,
       "Reproductive concentration": 54,
-      "Translation qualification": 53,
-      "Unsafe sequence containment": 53,
+      "Translation qualification": 54,
+      "Unsafe sequence containment": 54,
       "Final Unsafe": 47,
-      "Final Other": 3
+      "Final Other": 2
     },
     {
       "source_id": "10.1371/journal.pone.0144155",
@@ -365,10 +365,10 @@
       "Cancer presence": 11,
       "Reproductive/developmental presence": 11,
       "Reproductive concentration": 11,
-      "Translation qualification": 10,
-      "Unsafe sequence containment": 10,
+      "Translation qualification": 11,
+      "Unsafe sequence containment": 11,
       "Final Unsafe": 3,
-      "Final Other": 2
+      "Final Other": 1
     },
     {
       "source_id": "10.4161/cbt.12.3.16260",
@@ -461,10 +461,10 @@
       "Cancer presence": 592,
       "Reproductive/developmental presence": 505,
       "Reproductive concentration": 504,
-      "Translation qualification": 490,
-      "Unsafe sequence containment": 480,
+      "Translation qualification": 497,
+      "Unsafe sequence containment": 487,
       "Final Unsafe": 1876,
-      "Final Other": 158
+      "Final Other": 151
     },
     {
       "source_id": "unannotated",
@@ -472,15 +472,15 @@
       "source_url": "",
       "evidence_scope": "No membership in the current nomination registry; not a claim of novelty",
       "source_kind": "unannotated",
-      "Inventory": 17349,
-      "Normal safety + coverage": 523,
-      "Cancer presence": 522,
-      "Reproductive/developmental presence": 140,
-      "Reproductive concentration": 137,
-      "Translation qualification": 127,
-      "Unsafe sequence containment": 122,
-      "Final Unsafe": 16379,
-      "Final Other": 848
+      "Inventory": 17379,
+      "Normal safety + coverage": 526,
+      "Cancer presence": 525,
+      "Reproductive/developmental presence": 141,
+      "Reproductive concentration": 138,
+      "Translation qualification": 125,
+      "Unsafe sequence containment": 120,
+      "Final Unsafe": 16383,
+      "Final Other": 876
     },
     {
       "source_id": "inventory",
@@ -488,21 +488,21 @@
       "source_url": "",
       "evidence_scope": "Every classified candidate protein record",
       "source_kind": "inventory",
-      "Inventory": 19863,
-      "Normal safety + coverage": 1115,
-      "Cancer presence": 1114,
-      "Reproductive/developmental presence": 645,
-      "Reproductive concentration": 641,
-      "Translation qualification": 617,
-      "Unsafe sequence containment": 602,
-      "Final Unsafe": 18255,
-      "Final Other": 1006
+      "Inventory": 19893,
+      "Normal safety + coverage": 1118,
+      "Cancer presence": 1117,
+      "Reproductive/developmental presence": 646,
+      "Reproductive concentration": 642,
+      "Translation qualification": 622,
+      "Unsafe sequence containment": 607,
+      "Final Unsafe": 18259,
+      "Final Other": 1027
     }
   ],
   "out_of_universe_reasons": {},
   "translation_support_reasons": {
-    "nmd_or_cds_not_defined_only": 254,
-    "single_study_ribo_seq": 5
+    "nmd_or_cds_not_defined_only": 285,
+    "single_study_ribo_seq": 10
   },
   "contract": {
     "schema": "oncoref.cta-decision-contract",
@@ -510,7 +510,7 @@
     "contract_id": "oncoref.cta-decision-contract.2026-11-05.1",
     "role_policy_id": "oncoref.sequence-roles.2026-11-04.1",
     "title": "CTA and oncofetal candidate selection",
-    "definition": "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and qualification of the exact selected translation. Every input record is assessed, including those with insufficient translation support.",
+    "definition": "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and a complete, approved MANE Select or Ensembl canonical representative, with any conflicting coding evidence resolved. Every input record is assessed, including those with insufficient translation support.",
     "categories": {
       "CTA": "Candidate under the named policy; not presentation or clinical clearance",
       "Unsafe": "Normal-tissue or applicable clinical evidence establishes policy exclusion",
@@ -520,7 +520,7 @@
       "screened": "Declared assessment completed; not exhaustive biological coverage",
       "incomplete_evidence": "Required coverage or evidence resolution is incomplete",
       "normal_evidence_hold": "Normal evidence requires review without establishing exclusion",
-      "translation_review": "Translation support or the selected record requires qualification",
+      "translation_review": "Incomplete annotation, uncertain translation or unresolved representative-protein evidence",
       "unassessed": "No applicable selection policy or no completed assessment"
     },
     "interpretation_states": {
@@ -557,7 +557,7 @@
     ],
     "taxon_id": 9606,
     "species": "human",
-    "selection_policy_id": "oncoref.cta-selection.2026-11-05.1",
+    "selection_policy_id": "oncoref.cta-selection.2026-11-08.1",
     "selection_status": "available",
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
@@ -566,19 +566,19 @@
     "species": "human",
     "selection_status": "available",
     "evidence_status": "partial",
-    "policy_id": "oncoref.cta-selection.2026-11-05.1",
-    "universe": "19863 classified protein-equivalence groups from 19863 input groups",
+    "policy_id": "oncoref.cta-selection.2026-11-08.1",
+    "universe": "19893 classified protein-equivalence groups from 19893 input groups",
     "universe_counts": {
       "counting_unit": "selected_reference_protein_equivalence_group",
-      "input_groups": 19863,
-      "classified_groups": 19863,
+      "input_groups": 19893,
+      "classified_groups": 19893,
       "out_of_universe_groups": 0,
       "input_gene_loci": 20099,
       "classified_gene_loci": 20099,
       "out_of_universe_gene_loci": 0,
       "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
-      "translation_support_eligible_groups": 19604,
-      "translation_support_insufficient_groups": 259,
+      "translation_support_eligible_groups": 19598,
+      "translation_support_insufficient_groups": 295,
       "scope_note": "Every candidate record enters classification; translation support is a CTA admission requirement, not an inventory exclusion."
     },
     "reference": {
@@ -614,16 +614,16 @@
       "Rare-cell screening uses the existing brain, spinal-cord, heart and selected lung CELLxGENE panels. At least 1% detection in a Vital population supplies exclusion evidence; Protected detection supplies a review hold. Detection frequency is not abundance. Unmeasured ages, organs and excluded lineages remain coverage limits, not allowances.",
       "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply."
     ],
-    "entities": 19863,
+    "entities": 19893,
     "counts": {
-      "CTA": 602,
-      "Unsafe": 18255,
-      "Other": 1006,
+      "CTA": 607,
+      "Unsafe": 18259,
+      "Other": 1027,
       "Unassigned": 0
     },
     "other_subtypes": {
-      "Nonreproductive": 570,
-      "Translation": 362,
+      "Nonreproductive": 573,
+      "Translation": 380,
       "Nested": 28,
       "Held": 27,
       "Contained": 15,
@@ -674,28 +674,33 @@
         "used_sources": 14,
         "available_sources": 14,
         "identified_sources": 14
+      },
+      "translation_evidence": {
+        "used_sources": 2,
+        "available_sources": 2,
+        "identified_sources": 2
       }
     }
   },
   "counts": {
-    "Unsafe": 18255,
-    "Other": 1006,
-    "CTA": 602
+    "Unsafe": 18259,
+    "Other": 1027,
+    "CTA": 607
   },
   "inventory_audit": {
-    "policy_id": "oncoref.cta-selection.2026-11-05.1",
-    "input_records": 19863,
+    "policy_id": "oncoref.cta-selection.2026-11-08.1",
+    "input_records": 19893,
     "counts": {
-      "Unsafe": 18255,
-      "Other": 1006,
-      "CTA": 602
+      "Unsafe": 18259,
+      "Other": 1027,
+      "CTA": 607
     },
-    "restored_records": 259,
+    "restored_records": 260,
     "restored_classifications": {
-      "Other:Translation": 247,
+      "Other:Translation": 248,
       "Unsafe": 12
     },
-    "existing_classification_changes": 0,
+    "existing_classification_changes": 452,
     "restored_historical_exclusions_reassessed": [
       {
         "protein_group_label": "P2RX5-TAX1BP3",
@@ -709,7 +714,7 @@
       }
     ],
     "stored_zero_rna_screen": {
-      "cancer_present_required_bulk_complete": 19312,
+      "cancer_present_required_bulk_complete": 19341,
       "adult_and_reproductive_bulk_zero": 40,
       "also_developmental_measured": 22,
       "developmental_measurement_missing": 18,
@@ -744,8 +749,8 @@
     [
       "What OncoRef calls a CTA",
       [
-        "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and qualification of the exact selected translation. Every input record is assessed, including those with insufficient translation support.",
-        "The current human policy produces 602 CTA, 18,255 Unsafe and 1,006 Other proteins. It evaluates 19,863 candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. Splice isoforms and post-translational modifications are outside this inventory.",
+        "An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and a complete, approved MANE Select or Ensembl canonical representative, with any conflicting coding evidence resolved. Every input record is assessed, including those with insufficient translation support.",
+        "The current human policy produces 607 CTA, 18,259 Unsafe and 1,027 Other proteins. It evaluates 19,893 candidate proteins in the complete inventory, counting identical selected reference sequences together and retaining every member locus. Splice isoforms and post-translational modifications are outside this inventory.",
         "CTA admission combines cancer expression, reproductive or developmental association, translation qualification and normal-tissue assessment. The biological categories identify the tissue, cell population or developmental program associated with each protein."
       ],
       "universe-accounting"
@@ -753,10 +758,10 @@
     [
       "From candidates to CTAs",
       [
-        "All 19,863 candidate records enter the same normal-evidence and admission path. The 259 records formerly removed at entry stay visible: 254 have only NMD/CDS-not-defined reference transcripts and 5 have only single-study Ribo-seq support. Translation support is assessed at CTA admission.",
+        "All 19,893 candidate records enter the same normal-evidence and admission path. The 295 records formerly removed at entry stay visible: 285 have only NMD/CDS-not-defined reference transcripts and 10 have only single-study Ribo-seq support. Translation support is assessed at CTA admission.",
         "CTA admission requires qualifying translation support and the separately qualified exact reference record. Applicable normal exclusion takes precedence and establishes Unsafe; otherwise insufficient translation qualification yields Other:Translation and sequence review. The translation rule accepts qualifying coding annotation and supported noncanonical ORFs.",
         "Apply all normal-tissue evidence independently. Accepted exclusion evidence establishes Unsafe. Unresolved findings or missing required coverage prevent admission and require review; they do not establish Unsafe. Every target must also pass reproductive/developmental association, cancer presence, concentration, translation qualification and sequence-containment rules.",
-        "The chart uses cumulative counts. Of 1,115 proteins passing normal assessment, cancer presence retains 1,114; reproductive/developmental presence then narrows these to 645. The previous order showed 645 at both gates because every reproductive/developmental survivor already met cancer presence. One compatible positive tumor RNA sample or reviewed tumor protein makes cancer presence a broad gate, not an abundance or prevalence requirement.",
+        "The chart uses cumulative counts. Of 1,118 proteins passing normal assessment, cancer presence retains 1,117; reproductive/developmental presence then narrows these to 646. The previous order showed 645 at both gates because every reproductive/developmental survivor already met cancer presence. One compatible positive tumor RNA sample or reviewed tumor protein makes cancer presence a broad gate, not an abundance or prevalence requirement.",
         "Every applicable evidence layer is still evaluated, including after an early exclusion. Unsafe takes precedence. Display order changes neither final classifications nor the priority used to assign Other subtypes."
       ],
       "admission-flow"
@@ -764,16 +769,16 @@
     [
       "Published nominations through the funnel",
       [
-        "All 15 registered nomination papers appear in the companion funnel. Their union contains 2,514 proteins: 480 finish as CTA, 1,876 as Unsafe and 158 as Other. A protein can occur in several papers, so individual paper rows must not be summed.",
-        "The 17,349 candidates without a registered-paper annotation undergo the same assessment and contribute 122 CTAs. Prior nomination is recorded separately from the admission gates. The evidence guide identifies additional publications for proteins outside this registry.",
+        "All 15 registered nomination papers appear in the companion funnel. Their union contains 2,514 proteins: 487 finish as CTA, 1,876 as Unsafe and 151 as Other. A protein can occur in several papers, so individual paper rows must not be summed.",
+        "The 17,379 candidates without a registered-paper annotation undergo the same assessment and contribute 120 CTAs. Prior nomination is recorded separately from the admission gates. The evidence guide identifies additional publications for proteins outside this registry.",
         "A publication's measured evidence can support reproductive/developmental association, tumor expression, translation or normal-tissue counterevidence when it meets the corresponding evidence rule. A list label alone does not establish those facts. Germ-cell, testis-biased, placental and tumor-vascular lists retain their original scope alongside CTA nominations."
       ],
       "publication-funnel"
     ],
     [
-      "Biological categories of CTAs",
+      "Biological categories in the historical 602-CTA snapshot",
       [
-        "The CTA tables group proteins by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories.",
+        "The historical 1.31.0 literature tables categorize 602 CTAs by early embryo, oocyte and maternal function, reproductive secretion, testis and male germ cells, placenta and trophoblast, and gastrulation. A protein can belong to several categories. Current reference choices and coding holds are listed in the transcript-selection report.",
         "Each tag links to a publication or a supported RNA observation. The detail view records the species, tissue, cell population or developmental stage. Biological categories are separate from the admission route and the CTA, Unsafe or Other classification.",
         "Reproductive secretion currently has four manually annotated proteins: PATE1, WFDC8, RNASE9 and SEMG2. This count reflects the focused literature review; the other CTAs have not been systematically checked against reproductive-secretion catalogs."
       ],
@@ -830,10 +835,10 @@
     [
       "Reproduction and version changes",
       [
-        "Selection policy: oncoref.cta-selection.2026-11-05.1. Role policy: oncoref.sequence-roles.2026-11-04.1. Translation policy: oncoref.translation-qualification.2026-11-04.1.",
+        "Selection policy: oncoref.cta-selection.2026-11-08.1. Role policy: oncoref.sequence-roles.2026-11-04.1. Translation policy: oncoref.translation-qualification.2026-11-04.1.",
         "The 1.29.0 comparison remains pinned. The evidence and translation PRs also retain adjacent baselines, separating changes in category, subtype, role, assessment status and reasons. Counts are recalculated from the evidence and rules.",
         "Use the public decision, finding and sequence APIs. The final release receipt binds the decision exports, ontology, curation, qualification, bundle and generated figures. Complete and cached scientific replays must be byte-identical. Historical reports keep their original inputs and policies.",
-        "Presentation revision 2026-11-06.3 adds biological categories, linked per-protein evidence and simpler report text. It retains the 1.31.0 classifications, thresholds and sequence roles."
+        "Release 1.35.0 applies MANE-first reference selection, coding-evidence review and recomputed protein identities. Its classifications and sequence roles use the current policy. The 602-protein literature analysis remains a labelled 1.31.0 snapshot."
       ],
       null
     ]
@@ -982,7 +987,7 @@
         "Translation qualification"
       ],
       "translation_qualified": false,
-      "translation_reasons": "incomplete_annotation_tag | incomplete_start | incomplete_stop | noncanonical_start_residue | nonqualifying_transcript_biotype",
+      "translation_reasons": "designated_translation_incomplete | incomplete_annotation_tag | incomplete_start | incomplete_stop | noncanonical_start_residue | nonqualifying_transcript_biotype",
       "findings": []
     },
     {
@@ -996,7 +1001,7 @@
         "Rare vital-tissue cell expression"
       ],
       "translation_qualified": false,
-      "translation_reasons": "ambiguous_or_interrupted_sequence | nonqualifying_transcript_biotype",
+      "translation_reasons": "ambiguous_or_interrupted_sequence | designated_translation_incomplete | nonqualifying_transcript_biotype",
       "findings": []
     },
     {
@@ -1009,18 +1014,70 @@
         "Translation qualification"
       ],
       "translation_qualified": false,
-      "translation_reasons": "ambiguous_or_interrupted_sequence",
+      "translation_reasons": "ambiguous_or_interrupted_sequence | designated_translation_incomplete",
+      "findings": []
+    },
+    {
+      "label": "GDPD4",
+      "entity_id": "PEG:30014bcbfca43879e8ab",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "sequence_role": "review",
+      "reasons": [
+        "Translation qualification"
+      ],
+      "translation_qualified": true,
+      "translation_reasons": "unresolved_translation_evidence",
+      "findings": []
+    },
+    {
+      "label": "SLCO1B3-SLCO1B7",
+      "entity_id": "PEG:712421ae3b845c315cac",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "sequence_role": "review",
+      "reasons": [
+        "Translation qualification"
+      ],
+      "translation_qualified": true,
+      "translation_reasons": "unresolved_translation_evidence",
+      "findings": []
+    },
+    {
+      "label": "FRG2",
+      "entity_id": "PEG:1289f6cdbadac0e27067",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "sequence_role": "review",
+      "reasons": [
+        "Translation qualification"
+      ],
+      "translation_qualified": true,
+      "translation_reasons": "unresolved_translation_evidence",
+      "findings": []
+    },
+    {
+      "label": "FRG2B",
+      "entity_id": "PEG:09779ef303c2171255f1",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "sequence_role": "review",
+      "reasons": [
+        "Translation qualification"
+      ],
+      "translation_qualified": true,
+      "translation_reasons": "unresolved_translation_evidence",
       "findings": []
     }
   ],
   "bundle": {
     "schema": "oncoref.sequence-bundle-asset",
     "schema_version": 1,
-    "bundle_id": "oncoref:sequence-bundle:v1:sha256:607c4ede9af40e33657ce84b58eff11087e66be7942a9a156a81480e8d06335a",
-    "url": "https://github.com/pirl-unc/oncoref/releases/download/v1.31.0/oncoref-sequences-1.31.0.zip",
-    "archive_bytes": 126951680,
-    "archive_sha256": "983f95c9f7a7e69715f44bc4f34cf0f190405819152e412853b5c46cff84a7c3",
-    "unpacked_bytes": 126951114
+    "bundle_id": "oncoref:sequence-bundle:v1:sha256:c8c060edab62e089fd4651065a857a8eaecb7c68816b016b3ac4c9fd06fa9525",
+    "url": "https://github.com/pirl-unc/oncoref/releases/download/v1.35.0/oncoref-sequences-1.35.0.zip",
+    "archive_bytes": 127896757,
+    "archive_sha256": "0371c0fe94193b06f12bd08bb8734bd67a6adaacdf6f290629b1bfdd07c779db",
+    "unpacked_bytes": 127896191
   },
   "criteria": [
     {
@@ -1083,9 +1140,10 @@
       "gate_id": "translation_qualification",
       "stage": "Translation qualification",
       "status": "evaluated",
-      "rule": "Qualifying reference coding annotation or supported ncORF evidence is required for CTA admission, followed by a complete primary-locus annotated coding translation with no LoF/NMD annotation, incomplete tags, internal stops or non-AA20 residues; the selected common longest sequence must qualify for every member. All candidate records still undergo normal-evidence assessment. Translation failure requires review, never Unsafe.",
+      "rule": "CTA admission requires qualifying coding annotation or supported ncORF evidence and an approved reference protein: MANE Select first, Ensembl canonical second, with a complete primary-locus CDS and AA20 sequence. An incomplete designated transcript or unresolved coding conflict requires review; a shorter or alternate-locus protein cannot silently replace it. Every member must share the approved sequence. All candidates still undergo normal-evidence assessment; translation review does not establish Unsafe.",
       "source_ids": [
-        "Ensembl-115"
+        "Ensembl-115",
+        "transcript-evidence"
       ]
     },
     {
@@ -1832,6 +1890,27 @@
       "limitations": "Comparison annotation only; no membership bypass of the quantitative funnel"
     },
     {
+      "source_id": "Ensembl-115",
+      "name": "Ensembl 115 coding translations",
+      "native_unit": "annotation / amino-acid sequence",
+      "source_url": "https://sep2025.archive.ensembl.org/Homo_sapiens/Info/Index",
+      "limitations": "MANE Select precedes Ensembl canonical; the exact primary-locus CDS must qualify and conflicting coding evidence must be resolved. Reference selection does not prove tumor protein production.",
+      "stage": "source-specific",
+      "evidence_category": "translation annotation",
+      "status": "used_in_selection"
+    },
+    {
+      "taxon_id": 9606,
+      "source_id": "transcript-evidence",
+      "name": "Reviewed coding and representative-protein findings",
+      "evidence_category": "translation_evidence",
+      "status": "used_in_selection",
+      "native_unit": "exact-reference, source-linked review",
+      "stage": "finding-specific",
+      "source_url": "https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/",
+      "limitations": "Gene or sequence scope, experimental setting and unresolved conflicts are retained."
+    },
+    {
       "source_id": "CELLxGENE",
       "name": "CELLxGENE rare-cell screen",
       "native_unit": "% cells with detected RNA",
@@ -1839,16 +1918,6 @@
       "limitations": "Existing brain/spinal-cord, heart and lung panel only; >=3,000 cells and >=10 positive cells. >=1% detection is a policy trigger, not an abundance measurement or proof of receptor recognition.",
       "stage": "source-specific",
       "evidence_category": "computed screen",
-      "status": "used_in_selection"
-    },
-    {
-      "source_id": "Ensembl-115",
-      "name": "Ensembl 115 coding translations",
-      "native_unit": "annotation / amino-acid sequence",
-      "source_url": "https://sep2025.archive.ensembl.org/Homo_sapiens/Info/Index",
-      "limitations": "Qualifying annotated CDS is accepted translation support; it does not prove protein detection in a tumor. Exact selected sequence and every member locus must qualify.",
-      "stage": "source-specific",
-      "evidence_category": "translation annotation",
       "status": "used_in_selection"
     },
     {
@@ -2884,26 +2953,6 @@
       ]
     },
     {
-      "entity_id": "PEG:3aaf6a62ba684546ad39",
-      "label": "ANKRD45/ENSG00000285777",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000183831",
-        "ENSG00000285777"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:914ce8b7272e9121e04c",
       "label": "APOBEC3D/ENSG00000284554",
       "classification": "Unsafe",
@@ -2937,6 +2986,28 @@
         "HPA tissue clusters",
         "Monaco immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:003f20cddfc1ec107377",
+      "label": "ARL17A/B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000185829",
+        "ENSG00000228696"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -2995,24 +3066,21 @@
       ]
     },
     {
-      "entity_id": "PEG:76af6a1a506fc9a22902",
-      "label": "BORCS7/-ASMT",
+      "entity_id": "PEG:885f4879b3eac7c5857f",
+      "label": "BOLA2/B",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000166275",
-        "ENSG00000270316"
+        "ENSG00000169627",
+        "ENSG00000183336"
       ],
       "reasons": [
         "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
         "Monaco immune",
-        "DICE immune",
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -3065,7 +3133,6 @@
       "reasons": [
         "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -3077,43 +3144,23 @@
       ]
     },
     {
-      "entity_id": "PEG:6cf5d6f0d321ed52bfa5",
-      "label": "CALM1/3",
+      "entity_id": "PEG:3a7128a9a70a26014da3",
+      "label": "CALM1/2/3",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
+        "ENSG00000143933",
         "ENSG00000160014",
         "ENSG00000198668"
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
         "Monaco immune",
         "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:440fcd7c03f8a59db724",
-      "label": "CCL15/-CCL14",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000275688",
-        "ENSG00000275718"
-      ],
-      "reasons": [
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -3131,7 +3178,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -3164,16 +3210,27 @@
       ]
     },
     {
-      "entity_id": "PEG:d9fb177ab4913d1e5356",
-      "label": "CDY1/B",
-      "classification": "CTA",
+      "entity_id": "PEG:550f61efa38a814061e6",
+      "label": "CDC42/ENSG00000289694",
+      "classification": "Unsafe",
       "assessment_status": "screened",
-      "shared_sequence": "allow",
+      "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000172288",
-        "ENSG00000172352"
+        "ENSG00000070831",
+        "ENSG00000289694"
       ],
-      "reasons": []
+      "reasons": [
+        "HPA normal protein",
+        "Required RNA coverage",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
     },
     {
       "entity_id": "PEG:020e4b93f993a54a4be8",
@@ -3188,22 +3245,20 @@
       "reasons": []
     },
     {
-      "entity_id": "PEG:240757027da4c6de08af",
-      "label": "CELF6/ENSG00000273025",
+      "entity_id": "PEG:00f62b121ce3ec510663",
+      "label": "CENPS/-CORT",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000140488",
-        "ENSG00000273025"
+        "ENSG00000175279",
+        "ENSG00000251503"
       ],
       "reasons": [
-        "Reproductive / embryonic association",
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
+        "Monaco immune",
+        "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -3224,26 +3279,6 @@
       ]
     },
     {
-      "entity_id": "PEG:fd99ae354aad45480099",
-      "label": "CFAP206/ENSG00000213204",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000213204",
-        "ENSG00000272514"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:8ba1687dc91f28db016e",
       "label": "CFAP91/ENSG00000285585",
       "classification": "Unsafe",
@@ -3256,7 +3291,6 @@
       "reasons": [
         "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -3298,49 +3332,18 @@
       ]
     },
     {
-      "entity_id": "PEG:80289a4dbe72d3f059fe",
-      "label": "CLN3/ENSG00000261832",
+      "entity_id": "PEG:3973bc9da5bf2b845b44",
+      "label": "CNPY1/ENSG00000283128",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000188603",
-        "ENSG00000261832"
+        "ENSG00000146910",
+        "ENSG00000283128"
       ],
       "reasons": [
-        "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:344ef1ad2edb3d00e308",
-      "label": "CRIP1/ENSG00000257341",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000213145",
-        "ENSG00000257341"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -3478,30 +3481,6 @@
       "reasons": []
     },
     {
-      "entity_id": "PEG:75a0c0413ed8fa0280cb",
-      "label": "DCAF7/ENSG00000288894",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000136485",
-        "ENSG00000288894"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:cb3d66771ad1a8b228e0",
       "label": "DEFA1/B",
       "classification": "Unsafe",
@@ -3632,22 +3611,21 @@
       ]
     },
     {
-      "entity_id": "PEG:4d38948e328d35fa9bd9",
-      "label": "DGCR6/ENSG00000278817",
+      "entity_id": "PEG:be326b4670da9bf422ad",
+      "label": "DET1/ENSG00000173867",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000183628",
-        "ENSG00000278817"
+        "ENSG00000140543",
+        "ENSG00000173867"
       ],
       "reasons": [
         "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
-        "HPA immune",
-        "Adult cornea",
+        "Monaco immune",
+        "DICE immune",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -3686,26 +3664,6 @@
       "reasons": [
         "Reproductive concentration",
         "Normal bulk"
-      ]
-    },
-    {
-      "entity_id": "PEG:360f64181b05310b2e58",
-      "label": "ECSCR/NSG00000279686",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000249751",
-        "ENSG00000279686"
-      ],
-      "reasons": [
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -3877,7 +3835,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -6548,6 +6505,27 @@
       ]
     },
     {
+      "entity_id": "PEG:93ca70cb900d2945dd8d",
+      "label": "IFRD1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000006652"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:11ea6fc2fc2900f1df6a",
       "label": "LGALS14",
       "classification": "Unsafe",
@@ -8539,7 +8517,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -8777,7 +8754,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -10726,25 +10702,6 @@
         "HPA tissue clusters",
         "Monaco immune",
         "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:e128e103b1cfca0a3517",
-      "label": "RGPD5",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000015568"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -14771,7 +14728,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -16125,7 +16081,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -16949,7 +16904,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -20278,7 +20232,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -22209,7 +22162,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -23611,7 +23563,6 @@
         "ENSG00000067955"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -25731,27 +25682,6 @@
       ]
     },
     {
-      "entity_id": "PEG:8abd76af545ddff6f91a",
-      "label": "CDC42",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000070831"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:fe9c957b0e770a312af8",
       "label": "OSBPL3",
       "classification": "Unsafe",
@@ -27236,7 +27166,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -28089,7 +28018,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -28735,7 +28663,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -30931,7 +30858,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -34191,7 +34117,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -41650,6 +41575,25 @@
       ]
     },
     {
+      "entity_id": "PEG:d443d878ea61e584492a",
+      "label": "RNF31",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000092098"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Monaco immune",
+        "DICE immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:dbaf685766955af76ea1",
       "label": "SCFD1",
       "classification": "Unsafe",
@@ -42098,7 +42042,6 @@
         "ENSG00000092847"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -43401,7 +43344,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -43443,7 +43385,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -44317,7 +44258,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -45451,11 +45391,31 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
         "DICE immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:4cf0a8dce10249079cd4",
+      "label": "SNRPD3",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000100028"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -49202,7 +49162,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -50065,6 +50024,26 @@
         "Monaco immune",
         "DICE immune",
         "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:835105082437558571da",
+      "label": "PRORP",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000100890"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -53516,7 +53495,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -54460,7 +54438,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -54534,7 +54511,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -56298,7 +56274,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -57278,7 +57253,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -60662,7 +60636,6 @@
         "ENSG00000104756"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -62517,7 +62490,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -63433,7 +63405,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -63962,7 +63933,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -64343,6 +64313,23 @@
       ]
     },
     {
+      "entity_id": "PEG:9eb8c4e1460d844c66c0",
+      "label": "PIK3R2",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000105647"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Reproductive concentration",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Rare vital-tissue cell expression"
+      ]
+    },
+    {
       "entity_id": "PEG:837c05b9d00bef74e86c",
       "label": "RAB3A",
       "classification": "Unsafe",
@@ -64357,6 +64344,24 @@
         "HPA tissue clusters",
         "DICE immune",
         "Rare vital-tissue cell expression"
+      ]
+    },
+    {
+      "entity_id": "PEG:07a21b2cf769b4225649",
+      "label": "PDE4C",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000105650"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Reproductive concentration",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -65194,7 +65199,6 @@
         "ENSG00000105829"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -65798,7 +65802,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -67017,7 +67020,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -67399,7 +67401,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -67579,6 +67580,27 @@
         "HPA normal protein",
         "Normal bulk",
         "HPA tissue clusters",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:aa083348cc2881fd0050",
+      "label": "PSMA2",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000106588"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -67837,7 +67859,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -67989,7 +68010,6 @@
         "ENSG00000106689"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -68922,7 +68942,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -71650,7 +71669,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -72758,7 +72776,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters"
       ]
@@ -73718,7 +73735,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -78394,7 +78410,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -79253,7 +79268,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -82139,7 +82153,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -82772,7 +82785,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -84093,7 +84105,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -84533,7 +84544,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -86697,7 +86707,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "HPA tissue clusters"
       ]
     },
@@ -86890,27 +86899,6 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
-      ]
-    },
-    {
-      "entity_id": "PEG:7541ff634d67fbefe43c",
-      "label": "FOXP1",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000114861"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -88930,7 +88918,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -89847,7 +89834,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -91598,7 +91584,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -96291,7 +96276,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -98225,7 +98209,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -99930,7 +99913,6 @@
       ],
       "reasons": [
         "Reproductive / embryonic association",
-        "Translation qualification",
         "Reviewed normal-cell knowledge"
       ]
     },
@@ -104688,7 +104670,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -105011,7 +104992,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -106758,7 +106738,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -109503,20 +109482,17 @@
       ]
     },
     {
-      "entity_id": "PEG:ce8281ac2dc9931e3e3f",
-      "label": "ENSG00000124593/PRICKLE4",
+      "entity_id": "PEG:d0fb3c094052fe3b069c",
+      "label": "ENSG00000124593",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000124593",
-        "ENSG00000278224"
+        "ENSG00000124593"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -109623,7 +109599,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -109669,6 +109644,24 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:1b90ba56a3627dd8672a",
+      "label": "MED20",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000124641"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea"
       ]
     },
     {
@@ -111505,7 +111498,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -111756,7 +111748,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -115971,7 +115962,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters"
       ]
@@ -116376,6 +116366,26 @@
       ]
     },
     {
+      "entity_id": "PEG:6f29a7e3d3d15463f577",
+      "label": "UQCR11",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000127540"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:9f40220fd54a1ce9115f",
       "label": "GFER",
       "classification": "Unsafe",
@@ -116407,7 +116417,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -116970,7 +116979,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -118063,7 +118071,6 @@
         "ENSG00000128512"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -119877,7 +119884,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -121977,7 +121983,6 @@
         "ENSG00000130294"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -122738,7 +122743,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -122977,7 +122981,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -124878,7 +124881,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -125157,7 +125159,6 @@
         "ENSG00000131165"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -126632,7 +126633,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -127726,6 +127726,27 @@
       ]
     },
     {
+      "entity_id": "PEG:6402feeaef11c4abd323",
+      "label": "TIMM10B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000132286"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:1ec60a660a041a6157dd",
       "label": "EFR3A",
       "classification": "Unsafe",
@@ -127946,7 +127967,6 @@
         "ENSG00000132341"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -128486,28 +128506,6 @@
       ]
     },
     {
-      "entity_id": "PEG:42a7cc22bf6a7ee3978f",
-      "label": "H3-3B",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000132475"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:61221fc5a7da31d476d4",
       "label": "UNK",
       "classification": "Unsafe",
@@ -128910,7 +128908,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -132299,7 +132296,6 @@
         "ENSG00000133872"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -132728,6 +132724,27 @@
         "HPA normal protein",
         "Normal bulk",
         "HPA tissue clusters",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:5640db074a2bf2c49a2f",
+      "label": "IER3IP1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000134049"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
         "Monaco immune",
         "DICE immune",
         "Adult cornea",
@@ -134347,7 +134364,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -134661,7 +134677,6 @@
         "ENSG00000134575"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -136948,7 +136963,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -141283,7 +141297,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -141394,6 +141407,27 @@
       ]
     },
     {
+      "entity_id": "PEG:d89e51db256b90af7fc5",
+      "label": "DCAF7",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000136485"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:7287ea88671f29bca85c",
       "label": "GH2",
       "classification": "Unsafe",
@@ -141469,7 +141503,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -141533,7 +141566,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -144805,7 +144837,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -145255,7 +145286,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -149870,7 +149900,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -151911,7 +151940,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -152537,7 +152565,6 @@
         "ENSG00000139719"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -153029,7 +153056,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -153983,7 +154009,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -154025,7 +154050,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -154541,6 +154565,24 @@
       ]
     },
     {
+      "entity_id": "PEG:e77dbb1e8f9a7b91d976",
+      "label": "CELF6",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000140488"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Reproductive concentration",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:683e2497f70ed13a01d7",
       "label": "SCAMP2",
       "classification": "Unsafe",
@@ -154754,24 +154796,6 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:4a30b9d2eb4ddbdcaaaa",
-      "label": "DET1",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000140543"
-      ],
-      "reasons": [
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
-        "DICE immune",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -156582,7 +156606,6 @@
         "ENSG00000141314"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -156807,7 +156830,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -157384,7 +157406,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -158094,7 +158115,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -158702,7 +158722,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -159265,7 +159284,6 @@
         "ENSG00000142396"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -159365,7 +159383,6 @@
       ],
       "reasons": [
         "Reproductive / embryonic association",
-        "Translation qualification",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -159521,7 +159538,6 @@
         "ENSG00000142515"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk"
       ]
     },
@@ -159621,7 +159637,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -160998,7 +161013,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -161771,7 +161785,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -162463,7 +162476,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -162880,6 +162892,27 @@
       "shared_sequence": "exclude",
       "gene_ids": [
         "ENSG00000143543"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:d5328cb1ed0b6fafeeea",
+      "label": "RAB13",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000143545"
       ],
       "reasons": [
         "HPA normal protein",
@@ -164229,27 +164262,6 @@
       ]
     },
     {
-      "entity_id": "PEG:8bb522397ab5cfb72c93",
-      "label": "CALM2",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000143933"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:456ec6b38746ece56e54",
       "label": "CHAC2",
       "classification": "Unsafe",
@@ -164465,6 +164477,27 @@
       "shared_sequence": "exclude",
       "gene_ids": [
         "ENSG00000144021"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:2d77f20e62b663d121d3",
+      "label": "ZNF514",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000144026"
       ],
       "reasons": [
         "HPA normal protein",
@@ -164777,7 +164810,6 @@
       ],
       "reasons": [
         "Reproductive / embryonic association",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -165581,7 +165613,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -171168,7 +171199,6 @@
         "ENSG00000146707"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -171594,21 +171624,6 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:2c1d2ba825ceb36abb83",
-      "label": "CNPY1",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000146910"
-      ],
-      "reasons": [
-        "Reproductive / embryonic association",
-        "Normal bulk",
-        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -173686,7 +173701,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -173778,7 +173792,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -173835,7 +173848,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -181828,7 +181840,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -183225,15 +183236,13 @@
     {
       "entity_id": "PEG:30dd9c54ba4ec034ad07",
       "label": "BOLL",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000152430"
       ],
-      "reasons": [
-        "Translation qualification"
-      ]
+      "reasons": []
     },
     {
       "entity_id": "PEG:9ab4a19bde6df86628e4",
@@ -189187,7 +189196,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -192987,7 +192995,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -193878,7 +193885,6 @@
         "ENSG00000157570"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -196836,7 +196842,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -198093,7 +198098,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -198274,7 +198278,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -198857,7 +198860,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -199333,6 +199335,7 @@
       ],
       "reasons": [
         "HPA normal protein",
+        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -199497,7 +199500,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -201035,7 +201037,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -201242,7 +201243,6 @@
       ],
       "reasons": [
         "Reproductive / embryonic association",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -203056,15 +203056,13 @@
     {
       "entity_id": "PEG:42232b8b0bac1990df60",
       "label": "IZUMO2",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000161652"
       ],
-      "reasons": [
-        "Translation qualification"
-      ]
+      "reasons": []
     },
     {
       "entity_id": "PEG:246efb3d7a16778cf545",
@@ -203422,7 +203420,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -205614,7 +205611,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -206611,7 +206607,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -208026,27 +208021,6 @@
       ]
     },
     {
-      "entity_id": "PEG:cfa476ed2fcb9efdd375",
-      "label": "H3-3A",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000163041"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:b66cf21e49f547ced5b3",
       "label": "ANKRD30BL",
       "classification": "Unsafe",
@@ -209330,7 +209304,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -210839,7 +210812,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -210974,7 +210946,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -211039,6 +211010,27 @@
         "HPA tissue clusters",
         "Monaco immune",
         "DICE immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:e9e771d03c6e1258d5ec",
+      "label": "SPICE1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000163611"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -215943,7 +215935,6 @@
         "ENSG00000164338"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -218467,7 +218458,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -218546,7 +218536,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -219469,7 +219458,6 @@
         "ENSG00000165131"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk"
       ]
     },
@@ -219899,7 +219887,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -223112,7 +223099,6 @@
         "ENSG00000165985"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -224502,6 +224488,27 @@
       ]
     },
     {
+      "entity_id": "PEG:dc6a6e641cf25a8ee680",
+      "label": "BORCS7",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000166275"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:359f649473693e6984f5",
       "label": "C2",
       "classification": "Unsafe",
@@ -224512,7 +224519,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -225256,7 +225262,6 @@
         "ENSG00000166435"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -226640,7 +226645,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -227133,7 +227137,6 @@
         "ENSG00000166863"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -227458,7 +227461,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -230099,6 +230101,25 @@
       ]
     },
     {
+      "entity_id": "PEG:8247bde65613271d586f",
+      "label": "RAB4B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000167578"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:afff4c2a0322529b6342",
       "label": "AQP2",
       "classification": "Unsafe",
@@ -231344,27 +231365,17 @@
       ]
     },
     {
-      "entity_id": "PEG:ba638cbe75a7536ee753",
-      "label": "ENSG00000167774/NDUFA7",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:6be2dda27d1ccf0496af",
+      "label": "ENSG00000167774",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000167774",
-        "ENSG00000267855"
+        "ENSG00000167774"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -231669,7 +231680,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -232437,7 +232447,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -232576,7 +232585,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -232617,7 +232625,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -236140,7 +236147,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -237183,7 +237189,6 @@
         "ENSG00000169139"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -239137,26 +239142,6 @@
       "reasons": [
         "Normal bulk",
         "HPA tissue clusters",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:e7191949bd9b73c75f79",
-      "label": "BOLA2B",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000169627"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -241591,6 +241576,23 @@
       ]
     },
     {
+      "entity_id": "PEG:9b2b366dd41ceea8a09f",
+      "label": "HSPB2",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000170276"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Adult cornea",
+        "Rare vital-tissue cell expression"
+      ]
+    },
+    {
       "entity_id": "PEG:5fef2cf6ae9c31cfbc13",
       "label": "C7orf33",
       "classification": "Unsafe",
@@ -242477,7 +242479,6 @@
         "ENSG00000170469"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -243162,7 +243163,6 @@
         "ENSG00000170627"
       ],
       "reasons": [
-        "Translation qualification",
         "HPA tissue clusters",
         "HPA immune",
         "Monaco immune",
@@ -247008,6 +247008,22 @@
       ]
     },
     {
+      "entity_id": "PEG:1ec440b015d545a09d46",
+      "label": "RAB4B-EGLN2",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000171570"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "Rare vital-tissue cell expression"
+      ]
+    },
+    {
       "entity_id": "PEG:c04a833c3c97f8ae5721",
       "label": "ZNF584",
       "classification": "Unsafe",
@@ -247763,7 +247779,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -248165,7 +248180,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -248277,6 +248291,26 @@
       ]
     },
     {
+      "entity_id": "PEG:0edd52147a9c690c04cc",
+      "label": "RNASEH1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000171865"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:b9aa2ee157ecd8ce9d27",
       "label": "PRNP",
       "classification": "Unsafe",
@@ -248354,7 +248388,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -248974,6 +249007,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:ddd40aa4dbc016cae604",
+      "label": "SERF1A",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000172058"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA immune",
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -249807,6 +249855,17 @@
       ]
     },
     {
+      "entity_id": "PEG:2a17bbbb8c6078d191b6",
+      "label": "CDY1",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
+      "gene_ids": [
+        "ENSG00000172288"
+      ],
+      "reasons": []
+    },
+    {
       "entity_id": "PEG:c80153e96bd6a4eeaf1f",
       "label": "OR10V1",
       "classification": "Other:Nonreproductive",
@@ -250134,6 +250193,17 @@
         "Normal bulk",
         "HPA tissue clusters"
       ]
+    },
+    {
+      "entity_id": "PEG:4c123db4009af1875f70",
+      "label": "CDY1B",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
+      "gene_ids": [
+        "ENSG00000172352"
+      ],
+      "reasons": []
     },
     {
       "entity_id": "PEG:78cbf2c719828860d8c4",
@@ -251526,7 +251596,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -253018,7 +253087,6 @@
         "ENSG00000173175"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -254568,6 +254636,27 @@
       ]
     },
     {
+      "entity_id": "PEG:7287530c74728f2d6e2b",
+      "label": "NUDT4",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000173598"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:676ca513ab3a81dabbc6",
       "label": "PC",
       "classification": "Unsafe",
@@ -255377,21 +255466,6 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:f3603661cdead1456b12",
-      "label": "ENSG00000173867",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000173867"
-      ],
-      "reasons": [
-        "Reproductive / embryonic association",
-        "Required RNA coverage",
-        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -256378,15 +256452,13 @@
     {
       "entity_id": "PEG:2ef56e07aebaa5e84547",
       "label": "ARL13A",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000174225"
       ],
-      "reasons": [
-        "Translation qualification"
-      ]
+      "reasons": []
     },
     {
       "entity_id": "PEG:c200b5f926ac545deab7",
@@ -259148,7 +259220,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -259619,30 +259690,11 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
         "Monaco immune",
         "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:8fa1b99611ec19da4f6f",
-      "label": "CENPS",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000175279"
-      ],
-      "reasons": [
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -262054,7 +262106,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -262126,7 +262177,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -263062,7 +263112,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -263690,7 +263739,6 @@
         "ENSG00000176715"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -265000,6 +265048,23 @@
         "ENSG00000177143"
       ],
       "reasons": []
+    },
+    {
+      "entity_id": "PEG:85a5226c45000bb5b036",
+      "label": "NUDT4B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000177144"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "Monaco immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
     },
     {
       "entity_id": "PEG:93797bdca25c3a355837",
@@ -266435,7 +266500,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -266884,7 +266948,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -267531,7 +267594,6 @@
         "ENSG00000178031"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -268452,7 +268514,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -268625,6 +268686,23 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:41f312e6f47f7064b08c",
+      "label": "TIMM23B-AGAP6",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000178440"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "DICE immune",
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -269447,13 +269525,15 @@
     {
       "entity_id": "PEG:30014bcbfca43879e8ab",
       "label": "GDPD4",
-      "classification": "CTA",
-      "assessment_status": "screened",
-      "shared_sequence": "allow",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
         "ENSG00000178795"
       ],
-      "reasons": []
+      "reasons": [
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:0f3eff7f530f10f273fd",
@@ -273142,7 +273222,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -277317,7 +277396,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -279165,7 +279243,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -280095,7 +280172,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -281168,24 +281244,6 @@
       ]
     },
     {
-      "entity_id": "PEG:d21020e3471293e1d2fd",
-      "label": "RGPD6",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000183054"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:2389965804b5efc4dc42",
       "label": "LYSMD4",
       "classification": "Unsafe",
@@ -282055,24 +282113,6 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
-      ]
-    },
-    {
-      "entity_id": "PEG:c8605ce0e0a59524c428",
-      "label": "BOLA2",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000183336"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA immune",
-        "Monaco immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -283036,6 +283076,24 @@
       ]
     },
     {
+      "entity_id": "PEG:2f5da444d17dfdd0060e",
+      "label": "DGCR6",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000183628"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:678dfbaf132aac2274b8",
       "label": "GOLGA8G",
       "classification": "CTA",
@@ -283059,19 +283117,6 @@
         "Reproductive / embryonic association",
         "Normal bulk",
         "HPA tissue clusters"
-      ]
-    },
-    {
-      "entity_id": "PEG:794284baddbc5f176233",
-      "label": "TP53TG3",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
-      "gene_ids": [
-        "ENSG00000183632"
-      ],
-      "reasons": [
-        "Translation qualification"
       ]
     },
     {
@@ -283541,7 +283586,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -284014,6 +284058,23 @@
       ]
     },
     {
+      "entity_id": "PEG:e631f4db801f5c589a24",
+      "label": "ANKRD45",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000183831"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:14bce37f08831b5b5b7b",
       "label": "PNMA3",
       "classification": "Unsafe",
@@ -284215,23 +284276,6 @@
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
-      ]
-    },
-    {
-      "entity_id": "PEG:01c5b24952eb4e4fa1fc",
-      "label": "ENSG00000183889/NPIPA9",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000183889",
-        "ENSG00000233024"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Normal bulk",
-        "Monaco immune"
       ]
     },
     {
@@ -286840,6 +286884,25 @@
       "reasons": []
     },
     {
+      "entity_id": "PEG:9e62c113a9262f59eb4d",
+      "label": "SEPTIN5",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000184702"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:2634e99285fc58a36bcf",
       "label": "EIF4ENIF1",
       "classification": "Unsafe",
@@ -287009,7 +287072,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -287811,7 +287873,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -289142,7 +289203,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -290077,7 +290137,6 @@
         "ENSG00000185565"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -291104,27 +291163,6 @@
       "shared_sequence": "exclude",
       "gene_ids": [
         "ENSG00000185825"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:7715e55f13cf2c9e7073",
-      "label": "ARL17A",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000185829"
       ],
       "reasons": [
         "HPA normal protein",
@@ -295028,7 +295066,6 @@
         "ENSG00000186897"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "Rare vital-tissue cell expression"
       ]
@@ -295280,7 +295317,6 @@
         "ENSG00000186973"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -296652,7 +296688,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -297024,6 +297059,23 @@
       ]
     },
     {
+      "entity_id": "PEG:7b6043eb02b76dcbf846",
+      "label": "ZNF286A",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000187607"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "Rare vital-tissue cell expression"
+      ]
+    },
+    {
       "entity_id": "PEG:0df5f6a7fbf587cabc3e",
       "label": "ISG15",
       "classification": "Unsafe",
@@ -297155,7 +297207,6 @@
         "ENSG00000187630"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -299647,7 +299698,6 @@
       ],
       "reasons": [
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -300482,6 +300532,26 @@
       ]
     },
     {
+      "entity_id": "PEG:6be82c61f3efbe37dc1a",
+      "label": "CLN3",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000188603"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:bba089545d269f52f034",
       "label": "FAM72B",
       "classification": "Unsafe",
@@ -301192,15 +301262,13 @@
     {
       "entity_id": "PEG:b154c71e081fc3b57ffc",
       "label": "CATSPER4",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000188782"
       ],
-      "reasons": [
-        "Translation qualification"
-      ]
+      "reasons": []
     },
     {
       "entity_id": "PEG:10282f090a7bce72298e",
@@ -301363,7 +301431,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -301826,7 +301893,6 @@
         "ENSG00000188958"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -302062,7 +302128,6 @@
       ],
       "reasons": [
         "Reproductive / embryonic association",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -302263,7 +302328,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -304614,25 +304678,6 @@
       ]
     },
     {
-      "entity_id": "PEG:80e38b32079574b1806c",
-      "label": "GTF2IRD2",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000196275"
-      ],
-      "reasons": [
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:7a2ad9442d32e050f428",
       "label": "GRM7",
       "classification": "Unsafe",
@@ -305667,27 +305712,6 @@
       "reasons": [
         "Normal bulk",
         "HPA tissue clusters",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:bb10ff37e01395aede67",
-      "label": "TRAPPC2",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000196459"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
         "Monaco immune",
         "DICE immune",
         "Adult cornea",
@@ -308448,7 +308472,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -309381,7 +309404,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune"
@@ -310081,6 +310103,25 @@
       ]
     },
     {
+      "entity_id": "PEG:ad706de3116026878de8",
+      "label": "SHPK",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000197417"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Monaco immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:dad1ad9a267cca4e9d78",
       "label": "OR51D1",
       "classification": "Other:Nonreproductive",
@@ -310262,7 +310303,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -311147,7 +311187,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -314525,7 +314564,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -315083,7 +315121,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -315760,7 +315797,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -316459,6 +316495,7 @@
       ],
       "reasons": [
         "HPA normal protein",
+        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -317948,7 +317985,6 @@
         "ENSG00000198885"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -320371,7 +320407,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -320438,6 +320473,25 @@
       "shared_sequence": "exclude",
       "gene_ids": [
         "ENSG00000204149"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:67c425aa90061f06ac27",
+      "label": "TIMM23B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000204152"
       ],
       "reasons": [
         "Normal bulk",
@@ -320883,7 +320937,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -321811,7 +321864,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune"
@@ -321987,7 +322039,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -323027,16 +323078,15 @@
     {
       "entity_id": "PEG:181a1aeebab95203424e",
       "label": "SPATA31J1",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
+      "classification": "Other:Nonreproductive",
+      "assessment_status": "incomplete_evidence",
       "shared_sequence": "review",
       "gene_ids": [
         "ENSG00000204661"
       ],
       "reasons": [
         "Reproductive / embryonic association",
-        "Required RNA coverage",
-        "Translation qualification"
+        "Required RNA coverage"
       ]
     },
     {
@@ -324309,13 +324359,15 @@
     {
       "entity_id": "PEG:1289f6cdbadac0e27067",
       "label": "FRG2",
-      "classification": "CTA",
-      "assessment_status": "screened",
-      "shared_sequence": "allow",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
         "ENSG00000205097"
       ],
-      "reasons": []
+      "reasons": [
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:43694d13ceb82e0c2017",
@@ -324840,14 +324892,15 @@
     {
       "entity_id": "PEG:4ab5f9a66d7646f20345",
       "label": "OR6C3",
-      "classification": "Other:Nonreproductive",
-      "assessment_status": "screened",
-      "shared_sequence": "allow",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
         "ENSG00000205329"
       ],
       "reasons": [
-        "Reproductive / embryonic association"
+        "Reproductive / embryonic association",
+        "Translation qualification"
       ]
     },
     {
@@ -325018,7 +325071,6 @@
         "ENSG00000205364"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -325384,6 +325436,19 @@
       ]
     },
     {
+      "entity_id": "PEG:4bef388b51f4574bef8b",
+      "label": "SERF1B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000205572"
+      ],
+      "reasons": [
+        "Normal bulk"
+      ]
+    },
+    {
       "entity_id": "PEG:9d99033f74e81bc21d6e",
       "label": "HMGN1",
       "classification": "Unsafe",
@@ -325633,7 +325698,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -325835,15 +325899,13 @@
     {
       "entity_id": "PEG:d8cf88f75a5754894d60",
       "label": "GAGE1",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000205777"
       ],
-      "reasons": [
-        "Translation qualification"
-      ]
+      "reasons": []
     },
     {
       "entity_id": "PEG:34c2a55af2fbd8289c20",
@@ -326228,7 +326290,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression",
@@ -326769,15 +326830,14 @@
     {
       "entity_id": "PEG:19757de2c03852d6875c",
       "label": "OR10C1",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "Other:Nonreproductive",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000206474"
       ],
       "reasons": [
-        "Reproductive / embryonic association",
-        "Translation qualification"
+        "Reproductive / embryonic association"
       ]
     },
     {
@@ -327150,7 +327210,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -327586,6 +327645,20 @@
       ]
     },
     {
+      "entity_id": "PEG:3128bdc57963a9194e10",
+      "label": "KLK9",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000213022"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk"
+      ]
+    },
+    {
       "entity_id": "PEG:60442ceecf2a43ebf91c",
       "label": "SYT3",
       "classification": "Unsafe",
@@ -327799,6 +327872,27 @@
       ]
     },
     {
+      "entity_id": "PEG:fb1e875051a2131e1456",
+      "label": "CRIP1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000213145"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:15da885620dbfa870144",
       "label": "KLHL23",
       "classification": "Unsafe",
@@ -327927,6 +328021,22 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:79c8485ed537ff02476f",
+      "label": "ENSG00000213204",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000213204"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -328357,6 +328467,24 @@
       ]
     },
     {
+      "entity_id": "PEG:7a1d469122b7690fb6b5",
+      "label": "KRT222",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000213424"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Reproductive concentration",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Adult cornea",
+        "Rare vital-tissue cell expression"
+      ]
+    },
+    {
       "entity_id": "PEG:02cd663822385667f759",
       "label": "OR5AC1",
       "classification": "Other:Translation",
@@ -328573,7 +328701,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -329011,7 +329138,6 @@
       "reasons": [
         "HPA normal protein",
         "Reproductive concentration",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "DICE immune",
@@ -329767,7 +329893,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -330092,23 +330217,17 @@
       ]
     },
     {
-      "entity_id": "PEG:9ad5a3fb4efe150e6d7b",
-      "label": "ENSG00000214265/SNURF",
+      "entity_id": "PEG:71fa391bae97f961b1c4",
+      "label": "ENSG00000214265",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000214265",
-        "ENSG00000273173"
+        "ENSG00000214265"
       ],
       "reasons": [
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -330238,6 +330357,23 @@
       ],
       "reasons": [
         "HPA tissue clusters"
+      ]
+    },
+    {
+      "entity_id": "PEG:2f6cdd313283cd737054",
+      "label": "MTCL3",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000214338"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -331260,15 +331396,13 @@
     {
       "entity_id": "PEG:97f71843ac3a51b578a3",
       "label": "C16orf90",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000215131"
       ],
-      "reasons": [
-        "Translation qualification"
-      ]
+      "reasons": []
     },
     {
       "entity_id": "PEG:96904847e5ebb513634f",
@@ -332426,7 +332560,6 @@
         "ENSG00000219438"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -334051,7 +334184,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -334378,13 +334510,15 @@
     {
       "entity_id": "PEG:09779ef303c2171255f1",
       "label": "FRG2B",
-      "classification": "CTA",
-      "assessment_status": "screened",
-      "shared_sequence": "allow",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
         "ENSG00000225899"
       ],
-      "reasons": []
+      "reasons": [
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:62d760ed46afe980f9ed",
@@ -335307,26 +335441,6 @@
       ]
     },
     {
-      "entity_id": "PEG:c4d924de88ceaf63a0bb",
-      "label": "ARL17B",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000228696"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:b53f768f081ac14ebb2f",
       "label": "DHFR",
       "classification": "Unsafe",
@@ -335683,6 +335797,19 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:e7585024a3a9614ad2b1",
+      "label": "OR4F3",
+      "classification": "Other:Nonreproductive",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
+      "gene_ids": [
+        "ENSG00000230178"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association"
       ]
     },
     {
@@ -336658,7 +336785,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk"
       ]
     },
@@ -337421,7 +337547,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -339191,7 +339316,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -339231,7 +339355,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -340846,7 +340969,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -341894,7 +342016,6 @@
         "ENSG00000244355"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk"
       ]
     },
@@ -342285,7 +342406,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -342569,15 +342689,14 @@
     {
       "entity_id": "PEG:4f985bc9efb6eea886ce",
       "label": "ENSG00000248235",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "Other:Nonreproductive",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000248235"
       ],
       "reasons": [
-        "Reproductive / embryonic association",
-        "Translation qualification"
+        "Reproductive / embryonic association"
       ]
     },
     {
@@ -343304,6 +343423,23 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:892b1502ccf7e71ed78b",
+      "label": "ECSCR",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000249751"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -344282,19 +344418,6 @@
       ]
     },
     {
-      "entity_id": "PEG:d9c8e5f826e33521316c",
-      "label": "CENPS-CORT",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000251503"
-      ],
-      "reasons": [
-        "Normal bulk"
-      ]
-    },
-    {
       "entity_id": "PEG:07388d8f5f8d88866af2",
       "label": "ENSG00000251537",
       "classification": "Unsafe",
@@ -345173,6 +345296,21 @@
       ]
     },
     {
+      "entity_id": "PEG:562bb3d31a254e902a57",
+      "label": "HSPB2-C11orf52",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000254445"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:5f68f2d0a35dd83c9604",
       "label": "OR4D10",
       "classification": "Other:Nonreproductive",
@@ -345893,6 +346031,21 @@
       ]
     },
     {
+      "entity_id": "PEG:2f0adc96cdf1cf4772e9",
+      "label": "ZNF286A-TBC1D26",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000255104"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:3a7761d6e34e7d2fa992",
       "label": "CHMP1B",
       "classification": "Unsafe",
@@ -346111,23 +346264,19 @@
       ]
     },
     {
-      "entity_id": "PEG:b439d5a0e262216392e3",
-      "label": "ENSG00000255330/MTCL3",
+      "entity_id": "PEG:19b8dd5c9417b0f25082",
+      "label": "ENSG00000255330",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000214338",
         "ENSG00000255330"
       ],
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -346683,26 +346832,6 @@
       ]
     },
     {
-      "entity_id": "PEG:58bb7f91deda6257b30f",
-      "label": "TRAPPC2B",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000256060"
-      ],
-      "reasons": [
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:66bb7208138333e12b53",
       "label": "DNAAF4",
       "classification": "Unsafe",
@@ -347082,27 +347211,18 @@
       ]
     },
     {
-      "entity_id": "PEG:fdbbd41efe823356223f",
-      "label": "ENSG00000256646/PSMA2",
+      "entity_id": "PEG:e8ab14c8eb6543655cdf",
+      "label": "ENSG00000256646",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000106588",
         "ENSG00000256646"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
         "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -347364,13 +347484,15 @@
     {
       "entity_id": "PEG:712421ae3b845c315cac",
       "label": "SLCO1B3-SLCO1B7",
-      "classification": "CTA",
-      "assessment_status": "screened",
-      "shared_sequence": "allow",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
         "ENSG00000257046"
       ],
-      "reasons": []
+      "reasons": [
+        "Translation qualification"
+      ]
     },
     {
       "entity_id": "PEG:d8c597ae2ddda1535471",
@@ -347517,14 +347639,13 @@
       ]
     },
     {
-      "entity_id": "PEG:a64ea394e039cdfda9a5",
-      "label": "ENSG00000257207/84337",
+      "entity_id": "PEG:962e72713aede7c4be43",
+      "label": "ENSG00000257207",
       "classification": "Other:Translation",
       "assessment_status": "translation_review",
       "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000257207",
-        "ENSG00000284337"
+        "ENSG00000257207"
       ],
       "reasons": [
         "Reproductive / embryonic association",
@@ -347585,6 +347706,21 @@
         "Monaco immune",
         "DICE immune",
         "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:b6ee57e853f551e2d2d9",
+      "label": "ENSG00000257341",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000257341"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification",
         "Rare Protected-cell expression review"
       ]
     },
@@ -347845,6 +347981,24 @@
         "HPA immune",
         "Monaco immune",
         "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:8d99c4ea03d6a4b2d024",
+      "label": "TEN1",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000257949"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA immune",
+        "Monaco immune",
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -348446,26 +348600,17 @@
       ]
     },
     {
-      "entity_id": "PEG:0b065926c4d5c3eae2b4",
-      "label": "ENSG00000258790/PRORP",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:c1c9ea42b977837df436",
+      "label": "ENSG00000258790",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000100890",
         "ENSG00000258790"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -349094,25 +349239,20 @@
       ]
     },
     {
-      "entity_id": "PEG:db1ea441160851620214",
-      "label": "ENSG00000259529/RNF31",
+      "entity_id": "PEG:c7b673e2151644173088",
+      "label": "ENSG00000259529",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000092098",
         "ENSG00000259529"
       ],
       "reasons": [
-        "HPA normal protein",
+        "Reproductive / embryonic association",
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
         "DICE immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -349602,7 +349742,6 @@
         "ENSG00000260691"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Rare vital-tissue cell expression"
@@ -349699,7 +349838,6 @@
         "ENSG00000260861"
       ],
       "reasons": [
-        "Translation qualification",
         "HPA immune",
         "Monaco immune"
       ]
@@ -349955,6 +350093,21 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:ed01fffbbcb335e7cac1",
+      "label": "TEN1-CDK3",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000261408"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -350263,6 +350416,19 @@
       ]
     },
     {
+      "entity_id": "PEG:1c3f953f064bbb98acef",
+      "label": "ENSG00000261832",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000261832"
+      ],
+      "reasons": [
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:07cf2f138b8aab207354",
       "label": "MIA",
       "classification": "Unsafe",
@@ -350462,25 +350628,18 @@
       ]
     },
     {
-      "entity_id": "PEG:afab002b4338ef17ae62",
-      "label": "ENSG00000262304/SHPK",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:62d12bf0e3a64d1149c2",
+      "label": "ENSG00000262304",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000197417",
         "ENSG00000262304"
       ],
       "reasons": [
-        "HPA normal protein",
+        "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -351056,23 +351215,18 @@
       ]
     },
     {
-      "entity_id": "PEG:fcad0414601f3fbecc11",
-      "label": "ENSG00000264058/KRT222",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:4b76fe6ed7e6b90ce55a",
+      "label": "ENSG00000264058",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000213424",
         "ENSG00000264058"
       ],
       "reasons": [
-        "HPA normal protein",
+        "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Adult cornea",
-        "Rare vital-tissue cell expression"
+        "Translation qualification"
       ]
     },
     {
@@ -351842,7 +351996,6 @@
         "ENSG00000266964"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Adult cornea",
@@ -351937,26 +352090,19 @@
       ]
     },
     {
-      "entity_id": "PEG:b57c866de3dfa33c4827",
-      "label": "ENSG00000267059/UQCR11",
+      "entity_id": "PEG:269e6ed83ab2681f52e0",
+      "label": "ENSG00000267059",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000127540",
         "ENSG00000267059"
       ],
       "reasons": [
+        "Reproductive / embryonic association",
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -352124,27 +352270,18 @@
       ]
     },
     {
-      "entity_id": "PEG:bba1f3971c4721020824",
-      "label": "ENSG00000267228/IER3IP1",
+      "entity_id": "PEG:5b9dd601860542e1a94d",
+      "label": "ENSG00000267228",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000134049",
         "ENSG00000267228"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -352572,6 +352709,27 @@
       ]
     },
     {
+      "entity_id": "PEG:8109b4a075e7c8a2d593",
+      "label": "NDUFA7",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000267855"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:87fed9bd6c94abae3902",
       "label": "ENSG00000267881",
       "classification": "Other:Translation",
@@ -352743,22 +352901,18 @@
       ]
     },
     {
-      "entity_id": "PEG:1c45b8fa12227cff6164",
-      "label": "ENSG00000268173/PIK3R2",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:2c077bf8791cd3556991",
+      "label": "ENSG00000268173",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000105647",
         "ENSG00000268173"
       ],
       "reasons": [
-        "HPA normal protein",
+        "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Rare vital-tissue cell expression"
+        "Translation qualification"
       ]
     },
     {
@@ -353293,22 +353447,6 @@
       ]
     },
     {
-      "entity_id": "PEG:0141d8ecc762b4f8fd0b",
-      "label": "TMSB15C",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000269226"
-      ],
-      "reasons": [
-        "Reproductive / embryonic association",
-        "Required RNA coverage",
-        "DICE immune",
-        "Rare vital-tissue cell expression"
-      ]
-    },
-    {
       "entity_id": "PEG:17fe32a2a526258d31e4",
       "label": "ENSG00000269237",
       "classification": "Other:Translation",
@@ -353649,21 +353787,18 @@
       ]
     },
     {
-      "entity_id": "PEG:a0f7e714792cd3a135a4",
-      "label": "ENSG00000269741/KLK9",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:408c7496f84403fda44e",
+      "label": "ENSG00000269741",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000213022",
         "ENSG00000269741"
       ],
       "reasons": [
         "Reproductive / embryonic association",
-        "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk"
+        "Translation qualification"
       ]
     },
     {
@@ -353960,6 +354095,22 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:43457e7a7ab4fe040009",
+      "label": "BORCS7-ASMT",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000270316"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -354643,6 +354794,23 @@
       ]
     },
     {
+      "entity_id": "PEG:cdee3483f638a6406aa7",
+      "label": "CFAP206",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000272514"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:74c8dd3ea0b0583fcc66",
       "label": "MUSTN1",
       "classification": "Unsafe",
@@ -354976,6 +355144,21 @@
       ]
     },
     {
+      "entity_id": "PEG:83fa001875bc6a069230",
+      "label": "ENSG00000273025",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000273025"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:d9ee1477e78473026787",
       "label": "C2orf15",
       "classification": "Unsafe",
@@ -355153,6 +355336,23 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:8ced6272ee4d2668a1eb",
+      "label": "SNURF",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000273173"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune"
       ]
     },
     {
@@ -356045,15 +356245,13 @@
     {
       "entity_id": "PEG:cd8eaef0aa7ffbe4d21b",
       "label": "ENSG00000274944",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
         "ENSG00000274944"
       ],
-      "reasons": [
-        "Translation qualification"
-      ]
+      "reasons": []
     },
     {
       "entity_id": "PEG:6f85d6532d9869ddddeb",
@@ -356416,6 +356614,20 @@
       ]
     },
     {
+      "entity_id": "PEG:4f9e2c2f6fe753f0a3e8",
+      "label": "CCL15-CCL14",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000275688"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:e10e42728803625d1ac9",
       "label": "AATF",
       "classification": "Unsafe",
@@ -356451,6 +356663,23 @@
         "HPA tissue clusters",
         "HPA immune",
         "Monaco immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:96dc0472ee8a181505b8",
+      "label": "CCL15",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000275718"
+      ],
+      "reasons": [
+        "Normal bulk",
+        "HPA tissue clusters",
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
@@ -356553,7 +356782,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -356561,23 +356789,6 @@
         "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:3ddf5a2fdf2d4e12a4f6",
-      "label": "ENSG00000275869/TP53TG3E/TP53TG3F",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
-      "gene_ids": [
-        "ENSG00000275034",
-        "ENSG00000275869",
-        "ENSG00000278848"
-      ],
-      "reasons": [
-        "Reproductive / embryonic association",
-        "Required RNA coverage",
-        "Translation qualification"
       ]
     },
     {
@@ -357531,6 +357742,23 @@
       ]
     },
     {
+      "entity_id": "PEG:f5fec3a592a94aa7ce9d",
+      "label": "PRICKLE4",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000278224"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Reproductive concentration",
+        "Normal bulk",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
       "entity_id": "PEG:4fa529652b688555a2dc",
       "label": "MYO19",
       "classification": "Unsafe",
@@ -358001,6 +358229,22 @@
       ],
       "reasons": [
         "Reproductive / embryonic association"
+      ]
+    },
+    {
+      "entity_id": "PEG:22d536ff3e89c1ac7d1a",
+      "label": "ENSG00000279686",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000279686"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification",
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -358611,7 +358855,6 @@
         "ENSG00000282988"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -358641,20 +358884,6 @@
         "ENSG00000283071"
       ],
       "reasons": [
-        "Normal bulk"
-      ]
-    },
-    {
-      "entity_id": "PEG:6ae5c3d5f8f07cba740d",
-      "label": "ENSG00000283128",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000283128"
-      ],
-      "reasons": [
-        "Translation qualification",
         "Normal bulk"
       ]
     },
@@ -359418,27 +359647,18 @@
       ]
     },
     {
-      "entity_id": "PEG:7789f5a55bf78c4bb53c",
-      "label": "ENSG00000283977/TIMM10B",
+      "entity_id": "PEG:b83c412f54bc64617741",
+      "label": "ENSG00000283977",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000132286",
         "ENSG00000283977"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -359636,6 +359856,21 @@
         "Monaco immune",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:dd30473847463771686b",
+      "label": "ENSG00000284337",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284337"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -359952,6 +360187,20 @@
       ]
     },
     {
+      "entity_id": "PEG:6b47d405bfd3097e6b5e",
+      "label": "OR4F16",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284662"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:9a196c5ba0eac5717094",
       "label": "SCYGR5",
       "classification": "Other:Nonreproductive",
@@ -360164,6 +360413,20 @@
       ]
     },
     {
+      "entity_id": "PEG:b9b7882ba2305bedae48",
+      "label": "OR4F29",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000284733"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Translation qualification"
+      ]
+    },
+    {
       "entity_id": "PEG:9e002bbd57b811a078b0",
       "label": "EEF1AKMT4",
       "classification": "Unsafe",
@@ -360194,23 +360457,6 @@
         "Required RNA coverage",
         "Normal bulk",
         "HPA tissue clusters",
-        "Rare vital-tissue cell expression"
-      ]
-    },
-    {
-      "entity_id": "PEG:ee6c5fb002562d4257f5",
-      "label": "TBCE",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000284770"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
         "Rare vital-tissue cell expression"
       ]
     },
@@ -360379,25 +360625,18 @@
       ]
     },
     {
-      "entity_id": "PEG:71a1af5009bcd2843e83",
-      "label": "ENSG00000284874/SEPTIN5",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:af49718c817c79c59ad8",
+      "label": "ENSG00000284874",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000184702",
         "ENSG00000284874"
       ],
       "reasons": [
-        "HPA normal protein",
+        "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -360645,36 +360884,37 @@
       ]
     },
     {
-      "entity_id": "PEG:7931f98332fc5038dac1",
-      "label": "ENSG00000285053",
+      "entity_id": "PEG:24b9f4df48d324d90e34",
+      "label": "ENSG00000285053/TBCE",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
+        "ENSG00000284770",
         "ENSG00000285053"
       ],
       "reasons": [
         "HPA normal protein",
         "Required RNA coverage",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "Monaco immune",
         "Rare vital-tissue cell expression"
       ]
     },
     {
-      "entity_id": "PEG:e237ae468d93f53ac29c",
-      "label": "ENSG00000285064/SMIM40",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:29b87d2d793c179b0111",
+      "label": "ENSG00000285064",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000285064",
-        "ENSG00000286920"
+        "ENSG00000285064"
       ],
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters"
+        "Translation qualification"
       ]
     },
     {
@@ -360689,7 +360929,6 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk",
         "Rare vital-tissue cell expression"
       ]
@@ -360770,6 +361009,21 @@
         "Reproductive / embryonic association",
         "Required RNA coverage",
         "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:29cb32a53aa6fca64a23",
+      "label": "PDE4C",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000285188"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "HPA tissue clusters",
+        "Rare vital-tissue cell expression"
       ]
     },
     {
@@ -361273,27 +361527,17 @@
       ]
     },
     {
-      "entity_id": "PEG:c66425df5949430d6a18",
-      "label": "ENSG00000285641/RAB13",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:24c98be2060a0bcc6fb7",
+      "label": "ENSG00000285641",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000143545",
         "ENSG00000285641"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -361340,18 +361584,26 @@
       ]
     },
     {
-      "entity_id": "PEG:8dcef411df6a2a5d66e7",
-      "label": "ENSG00000285708",
+      "entity_id": "PEG:15d46574693ac2c6fdc4",
+      "label": "ENSG00000285708/FOXP1",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
+        "ENSG00000114861",
         "ENSG00000285708"
       ],
       "reasons": [
-        "Reproductive / embryonic association",
+        "HPA normal protein",
         "Required RNA coverage",
-        "Rare vital-tissue cell expression"
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -361440,6 +361692,22 @@
         "Required RNA coverage",
         "Translation qualification",
         "Normal bulk"
+      ]
+    },
+    {
+      "entity_id": "PEG:98f15e4c49f293877609",
+      "label": "ENSG00000285777",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000285777"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -361663,7 +361931,6 @@
       "reasons": [
         "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -361718,27 +361985,17 @@
       ]
     },
     {
-      "entity_id": "PEG:bd86cf7c940715edfb32",
-      "label": "ENSG00000285943/SPICE1",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:51e0ace8e78893d1bcde",
+      "label": "SPICE1-CFAP44",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000163611",
         "ENSG00000285943"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -361820,7 +362077,6 @@
         "ENSG00000285976"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune"
@@ -361976,27 +362232,17 @@
       ]
     },
     {
-      "entity_id": "PEG:8fc1c374823fa2a4eecc",
-      "label": "ENSG00000286070/SNRPD3",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:0c7ca796d157e997df48",
+      "label": "ENSG00000286070",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000100028",
         "ENSG00000286070"
       ],
       "reasons": [
-        "HPA normal protein",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -362303,7 +362549,6 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
         "Rare vital-tissue cell expression"
       ]
     },
@@ -362393,26 +362638,32 @@
       ]
     },
     {
-      "entity_id": "PEG:1ee3ae49d6e519ebd8df",
-      "label": "ENSG00000286905/RNASEH1",
+      "entity_id": "PEG:6b35aa7a608b569cae8c",
+      "label": "ENSG00000286905",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000286905"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:cc2338afe43fe949a945",
+      "label": "SMIM40",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000171865",
-        "ENSG00000286905"
+        "ENSG00000286920"
       ],
       "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
+        "Reproductive / embryonic association",
         "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "HPA tissue clusters"
       ]
     },
     {
@@ -362920,27 +363171,19 @@
       ]
     },
     {
-      "entity_id": "PEG:4a9d2457ebad1e98167c",
-      "label": "ENSG00000288640/IFRD1",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:8038d89aeee62a74dda8",
+      "label": "ENSG00000288640",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000006652",
         "ENSG00000288640"
       ],
       "reasons": [
-        "HPA normal protein",
+        "Reproductive / embryonic association",
+        "Cancer expression",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -363393,24 +363636,18 @@
       ]
     },
     {
-      "entity_id": "PEG:0da4e96e624aab2a3ce1",
-      "label": "ENSG00000288721/MED20",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:de24e101f9e24ab0d817",
+      "label": "ENSG00000288721",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000124641",
         "ENSG00000288721"
       ],
       "reasons": [
+        "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea"
+        "Translation qualification"
       ]
     },
     {
@@ -363500,6 +363737,20 @@
       "reasons": [
         "Reproductive / embryonic association",
         "HPA immune"
+      ]
+    },
+    {
+      "entity_id": "PEG:2a9207f3e6562e9e1528",
+      "label": "ENSG00000288894",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000288894"
+      ],
+      "reasons": [
+        "Required RNA coverage",
+        "Translation qualification"
       ]
     },
     {
@@ -363634,19 +363885,25 @@
       ]
     },
     {
-      "entity_id": "PEG:76cdc48c6d65cd18af32",
-      "label": "ENSG00000289346",
+      "entity_id": "PEG:18afc9ef8976eeb1f49f",
+      "label": "ENSG00000289346/GTF2IRD2",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
+        "ENSG00000196275",
         "ENSG00000289346"
       ],
       "reasons": [
-        "Cancer expression",
         "Required RNA coverage",
         "Normal bulk",
-        "Monaco immune"
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -363784,27 +364041,18 @@
       ]
     },
     {
-      "entity_id": "PEG:efb8888303665a8cf0cd",
-      "label": "ENSG00000289685/ZNF514",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
+      "entity_id": "PEG:6b87cea065c426605889",
+      "label": "ENSG00000289685",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
       "gene_ids": [
-        "ENSG00000144026",
         "ENSG00000289685"
       ],
       "reasons": [
-        "HPA normal protein",
+        "Cancer expression",
         "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
+        "Translation qualification"
       ]
     },
     {
@@ -363838,24 +364086,6 @@
         "Translation qualification",
         "Normal bulk",
         "HPA immune"
-      ]
-    },
-    {
-      "entity_id": "PEG:3f2d41e012b2b8172cf5",
-      "label": "ENSG00000289694",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000289694"
-      ],
-      "reasons": [
-        "Cancer expression",
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Normal bulk",
-        "HPA immune",
-        "Monaco immune"
       ]
     },
     {
@@ -364766,7 +364996,6 @@
       "reasons": [
         "Reproductive / embryonic association",
         "Required RNA coverage",
-        "Translation qualification",
         "Normal bulk"
       ]
     },
@@ -365450,7 +365679,6 @@
         "ENSG00000188092"
       ],
       "reasons": [
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -365596,6 +365824,28 @@
         "HPA immune",
         "Monaco immune",
         "DICE immune",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
+      ]
+    },
+    {
+      "entity_id": "PEG:4c8831131fa04e8de4a7",
+      "label": "H3-3A/B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000132475",
+        "ENSG00000163041"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
         "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
@@ -365764,26 +366014,6 @@
       ]
     },
     {
-      "entity_id": "PEG:1856c7fad2afe974d4ae",
-      "label": "HSPB2/-C11orf52",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000170276",
-        "ENSG00000254445"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Adult cornea",
-        "Rare vital-tissue cell expression"
-      ]
-    },
-    {
       "entity_id": "PEG:9f945708570da8c0406d",
       "label": "IL3RA",
       "classification": "Unsafe",
@@ -365926,6 +366156,23 @@
       ]
     },
     {
+      "entity_id": "PEG:01c5b24952eb4e4fa1fc",
+      "label": "NPIPA6/9",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000183889",
+        "ENSG00000233024"
+      ],
+      "reasons": [
+        "HPA normal protein",
+        "Required RNA coverage",
+        "Normal bulk",
+        "Monaco immune"
+      ]
+    },
+    {
       "entity_id": "PEG:7b4080ed8e98dd11d2bc",
       "label": "NPIPA7/8",
       "classification": "Unsafe",
@@ -365940,29 +366187,6 @@
         "Normal bulk",
         "Monaco immune",
         "DICE immune",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:50ec162ff94e55aace67",
-      "label": "NUDT4/B",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000173598",
-        "ENSG00000177144"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
         "Rare Protected-cell expression review"
       ]
     },
@@ -366026,22 +366250,6 @@
       ]
     },
     {
-      "entity_id": "PEG:e23f4851cf6d63912f1d",
-      "label": "OR4F16/29/3",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
-      "gene_ids": [
-        "ENSG00000230178",
-        "ENSG00000284662",
-        "ENSG00000284733"
-      ],
-      "reasons": [
-        "Reproductive / embryonic association",
-        "Translation qualification"
-      ]
-    },
-    {
       "entity_id": "PEG:bd6b5c76d97bfc23fa6c",
       "label": "OR4M2-OT1/N4",
       "classification": "Other:Held",
@@ -366091,25 +366299,6 @@
         "HPA normal protein",
         "Normal bulk",
         "HPA tissue clusters"
-      ]
-    },
-    {
-      "entity_id": "PEG:14a1c4dd5490dc20579b",
-      "label": "PDE4C",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000105650",
-        "ENSG00000285188"
-      ],
-      "reasons": [
-        "HPA normal protein",
-        "Required RNA coverage",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -366239,28 +366428,6 @@
       "reasons": []
     },
     {
-      "entity_id": "PEG:efadd8313a93a93a108b",
-      "label": "RAB4B/-EGLN2",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000167578",
-        "ENSG00000171570"
-      ],
-      "reasons": [
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "DICE immune",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
       "entity_id": "PEG:cd342fe2dc49a99094d1",
       "label": "RBMY1F/J",
       "classification": "CTA",
@@ -366273,20 +366440,24 @@
       "reasons": []
     },
     {
-      "entity_id": "PEG:a8178aabcf3d61acd869",
-      "label": "SERF1A/B",
+      "entity_id": "PEG:c0931901e08da4374e0a",
+      "label": "RGPD5/6",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000172058",
-        "ENSG00000205572"
+        "ENSG00000015568",
+        "ENSG00000183054"
       ],
       "reasons": [
+        "HPA normal protein",
         "Normal bulk",
+        "HPA tissue clusters",
         "HPA immune",
         "Monaco immune",
-        "Rare vital-tissue cell expression"
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -366339,7 +366510,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -366546,59 +366716,18 @@
       ]
     },
     {
-      "entity_id": "PEG:dc58c0291dafd8206014",
-      "label": "TEN1/-CDK3",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000257949",
-        "ENSG00000261408"
-      ],
-      "reasons": [
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA immune",
-        "Monaco immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:9fa4f3691b3d1f631e7b",
-      "label": "TIMM23B/-AGAP6",
-      "classification": "Unsafe",
-      "assessment_status": "screened",
-      "shared_sequence": "exclude",
-      "gene_ids": [
-        "ENSG00000178440",
-        "ENSG00000204152"
-      ],
-      "reasons": [
-        "Required RNA coverage",
-        "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "Monaco immune",
-        "DICE immune",
-        "Adult cornea",
-        "Rare vital-tissue cell expression",
-        "Rare Protected-cell expression review"
-      ]
-    },
-    {
-      "entity_id": "PEG:df23fb4bd0d2e60e661f",
-      "label": "TMSB15A/B",
+      "entity_id": "PEG:57a57517907485c92225",
+      "label": "TMSB15A/B/C",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
         "ENSG00000158164",
-        "ENSG00000158427"
+        "ENSG00000158427",
+        "ENSG00000269226"
       ],
       "reasons": [
+        "Required RNA coverage",
         "Normal bulk",
         "HPA tissue clusters",
         "Monaco immune",
@@ -366607,18 +366736,41 @@
       ]
     },
     {
-      "entity_id": "PEG:232444cc412077957197",
-      "label": "TP53TG3B/C/D",
-      "classification": "Other:Translation",
-      "assessment_status": "translation_review",
-      "shared_sequence": "review",
+      "entity_id": "PEG:d1f439cd5f7047003879",
+      "label": "TP53TG3/B/C/D/E/F",
+      "classification": "CTA",
+      "assessment_status": "screened",
+      "shared_sequence": "allow",
       "gene_ids": [
+        "ENSG00000183632",
         "ENSG00000205456",
         "ENSG00000205457",
-        "ENSG00000261509"
+        "ENSG00000261509",
+        "ENSG00000275034",
+        "ENSG00000278848"
+      ],
+      "reasons": []
+    },
+    {
+      "entity_id": "PEG:bc88ff83e51a8166ea86",
+      "label": "TRAPPC2/B",
+      "classification": "Unsafe",
+      "assessment_status": "screened",
+      "shared_sequence": "exclude",
+      "gene_ids": [
+        "ENSG00000196459",
+        "ENSG00000256060"
       ],
       "reasons": [
-        "Translation qualification"
+        "HPA normal protein",
+        "Normal bulk",
+        "HPA tissue clusters",
+        "HPA immune",
+        "Monaco immune",
+        "DICE immune",
+        "Adult cornea",
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     },
     {
@@ -366677,7 +366829,6 @@
       ],
       "reasons": [
         "HPA normal protein",
-        "Translation qualification",
         "Normal bulk",
         "HPA tissue clusters",
         "HPA immune",
@@ -366790,23 +366941,37 @@
       ]
     },
     {
-      "entity_id": "PEG:b156bf4f077cf9354d56",
-      "label": "ZNF286A/-TBC1D26",
+      "entity_id": "PEG:926f974be1a3807390e4",
+      "label": "ENSG00000275869",
+      "classification": "Other:Translation",
+      "assessment_status": "translation_review",
+      "shared_sequence": "review",
+      "gene_ids": [
+        "ENSG00000275869"
+      ],
+      "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
+        "Required RNA coverage",
+        "Translation qualification"
+      ]
+    },
+    {
+      "entity_id": "PEG:fe5e6531aeb69b531601",
+      "label": "ENSG00000278817",
       "classification": "Unsafe",
       "assessment_status": "screened",
       "shared_sequence": "exclude",
       "gene_ids": [
-        "ENSG00000187607",
-        "ENSG00000255104"
+        "ENSG00000278817"
       ],
       "reasons": [
+        "Reproductive / embryonic association",
+        "Cancer expression",
         "Required RNA coverage",
         "Translation qualification",
-        "Normal bulk",
-        "HPA tissue clusters",
-        "HPA immune",
-        "Monaco immune",
-        "Rare vital-tissue cell expression"
+        "Rare vital-tissue cell expression",
+        "Rare Protected-cell expression review"
       ]
     }
   ]

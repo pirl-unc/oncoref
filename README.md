@@ -10,8 +10,8 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,255 Unsafe / 1,006 Other** across **19,863 proteins** (identical selected reference sequences counted together; member loci retained). All 19,863 candidate protein records enter classification; translation support is a CTA admission requirement. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
-[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) · [Candidate evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html).
+The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript decisions](https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/table.html) · [Historical 602-CTA evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html).
 
 The [normal-tissue hazard ontology](docs/tissue-hazards.md) centralizes evidence-linked
 bulk and cell-subset calls with generated reports, figures and a Python API.

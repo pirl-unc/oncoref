@@ -1,0 +1,1709 @@
+{
+  "reason": "Preserve the new policy fields through expression summary serialization",
+  "artifacts": [
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/ACC.parquet",
+      "before_sha256": "5abd9e2bbe9c0d2b50607886ee0cf005abb90b6b2d75ac0c650c45906f3c7038",
+      "after_sha256": "df67f0d818259b0570b00366d80a309b759774e398c85125848234709007db7d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/ACINIC.parquet",
+      "before_sha256": "7b89405726a08b9c3daaf9e160399642db1a1afce3206d48791136f57cbc98b4",
+      "after_sha256": "aa9aa6b55512615450b2797924897c3f10ef1ee87b57a4df4f34d5602df3facb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/ADCC.parquet",
+      "before_sha256": "b1e88624423028d6ba69cc603ddb57f314465670598c39af66e4edbe412ff2f9",
+      "after_sha256": "0508d5f8d644358e7a175db595ecd9d0dd82c997bbe26d6cbfaedb87bc36fd25",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/ATRT.parquet",
+      "before_sha256": "49482fce5980174cb79f9e8e1690f1ffb38e3aa939157799ec39472677cf04e9",
+      "after_sha256": "d1acd172d52c93db3d81c5fa25ea7fcd5d7e05a889e8ebb0be08a0a00ee16f35",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BCC.parquet",
+      "before_sha256": "013d735a2be5541556597732a80c81147bb4261f5eeb366639b66adef5a971ca",
+      "after_sha256": "5d4d68ee2646917ea36839d57215395a946c7ed9eb93d25fa1fb1345ce0d57c9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BL.parquet",
+      "before_sha256": "04759b8a1c63a2d0923a342cd3ecdc4db819c226a442f4131ff78cd933be6aa5",
+      "after_sha256": "60b049fcef1205e6e1b0b1196a436c8c0f65d5e1a8c0fcc5e9a2437cf73986fb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BLCA.parquet",
+      "before_sha256": "35b41191645c76506ea3f0835151f662207f8374695eaaea718433a3df121016",
+      "after_sha256": "946cd498e65d289f7fb016efb9154707c78960a732c27592717f4933be16fca7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BRCA.parquet",
+      "before_sha256": "ce691b3aff75bd5703e83e2f90ddf52d45e37da65cc91d16b1764cb0bf480f6d",
+      "after_sha256": "c194ba3437ada511779b53fe7edca579755f74f08b08f39226edb4822c35b247",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BRCA_Basal.parquet",
+      "before_sha256": "792ae02c5fc25d128c60777afa0f13c8bcc14bfce5fcd296ed126928d8a20ac2",
+      "after_sha256": "8a86f25eb34566a5d3e5a4db300ce28c1eb632fb1ef2c54ded5d9688261b0b3f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BRCA_HER2.parquet",
+      "before_sha256": "77661efc7196d372547f7790c2189f61d74055e053635f35e5930d6acc6ae0c0",
+      "after_sha256": "5f99088c6483186e4214f72804be1738702bbd17b4cc08d2c69e1a9688903a8c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BRCA_LumA.parquet",
+      "before_sha256": "b858f4b18258b271c248f8ad7afce29b09df7d2a7f0e41f70c2f24e85f2b84fb",
+      "after_sha256": "544097bbe3361328c81d05857acaba7dacbe46818b790c0461924bfacaa14a6a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BRCA_LumB.parquet",
+      "before_sha256": "7c1a16aed7f33ba36d7278865c410f57073df75ae528ff41b921cfd2f1166d20",
+      "after_sha256": "39f2893c72194828cb0098d38aed4a57503e06f3a2511e252ab54bd984fb3cd7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BRCA_Normal.parquet",
+      "before_sha256": "43f36fc8cb08c4fc6320ea6910d0edef6b0f4ec610d5a0c0d0717967ecea774c",
+      "after_sha256": "3233162d24aa5055b45d4087d1057e6ba53f5a93a9e6dcd2c683b2e929412c9d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/BRCA_TNBC.parquet",
+      "before_sha256": "2a1e2230593182ae4ca04f32937ca6ceba2af266392908b3f0d54d3ffe6639bc",
+      "after_sha256": "9370833cdb473592ca8b683030adf183c35758fb96530c938fa396a8fc47a169",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/B_ALL.parquet",
+      "before_sha256": "c0ea538d8bc228ec50a3a5b1a1556077f42739c503ac82aecf73e3489a26abd6",
+      "after_sha256": "88b607d8faa9f7cde805ff8ca95eb1c52dcecf52e887915ec721e11b730a1db2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/CESC.parquet",
+      "before_sha256": "4c1f2fc0e0af6c59eb19ad0fd5a4302b5338562d85b1faf99bb9beeb1ce34fc5",
+      "after_sha256": "1969fd60d1ece9a566db31cfdab55a95b4ee9659fe28a2ec86c7a3eca6e946b9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/CHOL.parquet",
+      "before_sha256": "2176d8de0a38513d85012d92bd7fe9480d93df34c18f3dcdaa8a7b8d9cf9d07b",
+      "after_sha256": "f7ad3bfab009ddf2b5e3113c6dea89825b57dbf845d069fb4d3b63382b568259",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/CLL.parquet",
+      "before_sha256": "d1607b88bad8380c763ad8a16df1d3cf8cfed68665ee67a1e53fecd8f9d7d478",
+      "after_sha256": "5626de52e56939f1024c2b184413fbbf760577a54d1fa71041331c4e931bfaa7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/CML.parquet",
+      "before_sha256": "b5d29d040d3b02cf44c6552386cc2c0c58afb9667a70c6b6d0d24ec1458a48e4",
+      "after_sha256": "4da3d327c315e4b0533b48dc5f7971d21972f1c9164cee8a170885ff8446afa7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/CMN.parquet",
+      "before_sha256": "9ba6f1c2f9c3a9ce7c71d34291d2236214e7cdbc301e6013303b4e72a0da7296",
+      "after_sha256": "7d2cfc9e6a01fda0c6b7841220f7cfb52d7eaf51262809c4ab88ee1d45d69d23",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/COAD.parquet",
+      "before_sha256": "33367783748eb4e0dd6258b8ecb1300e2a16d1dbb7e6ca118cbaeb8b80f63d16",
+      "after_sha256": "de41848a3fc1064c40175caec5ca136606e96bf29c6d3c9effb9b89347eef58d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/COAD_MSI.parquet",
+      "before_sha256": "d0d6f41ca962b21da38d8d8e8c6b2b3d7e92c370895237e059c2f456c4050f94",
+      "after_sha256": "d96336e17d4245446a8e328712b5d16a6244536c8093239ce6afcd8496005ef1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/COAD_MSS.parquet",
+      "before_sha256": "8e604abd7bf61016592798f0a685f06adb9d8e5383c24a598e8b8366b897b628",
+      "after_sha256": "8a66158853268ca2b69e6ee0bae6ac52a34475d2c3e2656f5bbd106a5f059027",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/CRANIO.parquet",
+      "before_sha256": "7e87135d3a080b3ec857e2319e7aa2359066287a7f588248c0153c529a76f962",
+      "after_sha256": "39b71dbcb1ccecfe96594c7e0930761890c9808f9405a5e0fea1dddb036fe000",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/CTCL.parquet",
+      "before_sha256": "67375817306314488c34a6bf23c9c86e3d9a59ffb239a9f43ae7f82ed100e2ae",
+      "after_sha256": "10571d2e7f98682fd5d9acddf9d78b6b75281d93c1e84364f9d9b6f2771ba2b7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/DIPG.parquet",
+      "before_sha256": "1117be98640b028be7e2691a4dee5f9ee221fd963f47f879b4d825e138b5088a",
+      "after_sha256": "fffa1e2e8c9c6632dc381f948042676a9474ca3b17cd883f19a2a6f4fbd08865",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/DLBC.parquet",
+      "before_sha256": "ca295bf69e54fa81632b4dd1eece5b824fd86b2a1f573d852c08a7aa711a990b",
+      "after_sha256": "83a7d3df7a11a8fd95d33cc3216626d5a1520fd3d6a9eb807e4a2c2ef932ca74",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/EPN.parquet",
+      "before_sha256": "1b38e12f33cc91f57639b5eb5e9240b51315409630e26fc40b6398ef9b320961",
+      "after_sha256": "119e60aa4fe2f8393876a095649163ff4e93fa67b057c780cb797dd8f4214cc9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/ESCA.parquet",
+      "before_sha256": "2a0fb3437e9b8ddfc3c105df91a9118b62a1f4194c690501d1827af4985f79e7",
+      "after_sha256": "8dff8c84eecdbfe1b7e93ca332c2a18e72c6a4d344a573fca622cd7871538a50",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/FL.parquet",
+      "before_sha256": "8d50fb2b27e50ef4b241967aff9fbfc534d3784fe8d20fe8ee22ca554b561699",
+      "after_sha256": "1cd45d693979b9dfefabe8c4d6582ad863fe2313e0c9a8dd6d5747c8160f4c02",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/GBC.parquet",
+      "before_sha256": "c77ddc6afe7b35999daff5a258275d208f530d0f603120028ab75c17e495db64",
+      "after_sha256": "c3fbd2a63457ec34867180aecf4ab1f4de3a574501643c3727d7e04270c4832e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/GBM.parquet",
+      "before_sha256": "38902fb18ef866a1662e774bfe1ab74f90721009a9bd02812332b28e053f46ae",
+      "after_sha256": "64f956331eddb7a97612841b5cf767f26cafdddb5e24510d648bcaa69510ec50",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/HCL.parquet",
+      "before_sha256": "1c1e586c9c746c9ff48ee3b541822e781194dda0282c065a95a515849a92228b",
+      "after_sha256": "8d00f4185b016e6f7ef44f9dfc32117398deb97cc0c0d2c32ce4d612b36ecd9f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/HEPB.parquet",
+      "before_sha256": "7ed6987efa0bc3983ba30203b1ece70a1c41b1e73bfa1dcc5090475c8dec6154",
+      "after_sha256": "81603ed31796584e215056719db15e81dcfb4073ce8910defea133d075781ad0",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/HL.parquet",
+      "before_sha256": "8390894e8d7d3de3b5abae24a1291250ecfe1a1fda6eecccaed78fb4a9f346eb",
+      "after_sha256": "cec21358246de820a9810dbda04aafa936dd89d17f459dd4e7aa57161db841ac",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/HNSC.parquet",
+      "before_sha256": "09c88d8cb70296dec761d9721f1bfe9d0aae4c7f321df6de013e562e31f50001",
+      "after_sha256": "17c6adbbd9b6484a136680e2d6ac4f750a304063de64138cbda69ab1d83f31fa",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/HNSC_HPVneg.parquet",
+      "before_sha256": "d609f7c93f324f872f89a3e0b0ae3b3c831222af09030ca3b6dc5f4df7a6f286",
+      "after_sha256": "e5e11759d4c60d8292b66895c8e350455aebdaa1dd81cd6efdddc706c66a5194",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/HNSC_HPVpos.parquet",
+      "before_sha256": "e79237dc79f8206b910db7160bdf4072e1b478b2cdd296fd88ab8b62b36866ac",
+      "after_sha256": "ef64923c5fbf30d4f7b4a8e79a6fc0e5c75f46f07d3d5a7228ba3b268c279f5d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/KICH.parquet",
+      "before_sha256": "341bc8fd0fb364563396528d0bfa8fc78e493988f1774df4c0f9c4a5ac61dcfa",
+      "after_sha256": "58773345e19752d118f770ccd21a3483e8c17ae3dfe2767e8e9ee4fc96aa1d76",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/KIRC.parquet",
+      "before_sha256": "02f7fda463753c1277671723749a7a39cdd5f251d3ebf6543c5b05a2a09ee7eb",
+      "after_sha256": "93e75bf73c0b0a98a3b5e36b9b247ee6f25d48616bc7855552a14fec481dd922",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/KIRP.parquet",
+      "before_sha256": "462a6ab802a472f3eb1812b71f1599a68e8cdfcaac6cf75ca03bf8937e9fbabb",
+      "after_sha256": "dda401d9aad86e882ec86cca23635c174ebfed6a51ebbb6a6b427afcb460247c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LAML.parquet",
+      "before_sha256": "e917a9f395e32f42961b364301d9880b51e38ebcf28f119322aa1a2b75e9fdd8",
+      "after_sha256": "9942df49e01007ab589a020151c1a82a0e0a9e4c265548b6e390de24fca347da",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LAML_APL.parquet",
+      "before_sha256": "51747622217ec396b4735e2af89bb5dff4e5e9fb9a16fa7a33f376cca5f43604",
+      "after_sha256": "f0c52f2d59c6f365d7ec743a46c70e84d23a22e5003463255644a5965dec7f57",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LAML_ELNadv.parquet",
+      "before_sha256": "48e0c6d6b43809cbc8a4735bb1c70ec3acf96b76bed4f2c849e89de9bf4985b4",
+      "after_sha256": "4dcf0dd36e03f38ff8ed2c6999a0a52e5925368120f5e89340079004ea6d9cab",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LAML_ELNfav.parquet",
+      "before_sha256": "82e2d6bf84fdb3db48fdd3e3559467b396dbe73959d4fd0789e77d80806f5358",
+      "after_sha256": "3232724c76fc09e7cf4f521de0ecb1f2f3a715762b269ec2a599098fad630aff",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LAML_ELNint.parquet",
+      "before_sha256": "ecab7313511be4cb6d38b62d186b0e421085358d239b549f937fec3ae2ac7513",
+      "after_sha256": "58c07af646e5bb2e3d38df741d025d624b30fa33c7458cf7b909fd18c6e9183e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LGG.parquet",
+      "before_sha256": "c5c6d3f387b1a62563c26df0eac886811e78a61f34616f7aaa1547d56a184071",
+      "after_sha256": "b7da803b00d4ec0bb71c1796e44e1fdf78ff4ad82927c0673f86cc4b86dc9b42",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LIHC.parquet",
+      "before_sha256": "fc2c83a9f3a4835f84ded50bf8f6f3c1172e5cf78b771ba3a58176ae307f0cde",
+      "after_sha256": "5b3e24a6b85304c10be3df9aa47339b3e141af39f350c82e96809c9d7b1cd6dd",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LUAD.parquet",
+      "before_sha256": "2246c4a0396ff4ab21e937e683dd0c768a06ba0d24d326b3d11bdc9c1e1e391a",
+      "after_sha256": "33a85406dce4e838ac8b7e8b5a659ed8f01043a2f58ec6e14aced95a1ec14fc2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LUAD_EGFR.parquet",
+      "before_sha256": "77b0f18862f1783817489b951cddfc54bdc2fcabddd7e24dffc49652af2faa5d",
+      "after_sha256": "da2940224b9cf5a9f21b22c56dfd92e72cc5a346edf9edfcef2836f7b9205159",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LUAD_KRAS.parquet",
+      "before_sha256": "0c20e58f9356f91b8407dc92075f452e8c89847334c2c100b16ec3b6a9d184da",
+      "after_sha256": "9a70ef88a6013beaa21cf1e358fe33ffe1896386a15a563f885e185cda026abe",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LUAD_STK11.parquet",
+      "before_sha256": "b4cfeb3f17a7b77b3872c1534bf02d0498cc9dba86a7215c7dcba280a1ad7917",
+      "after_sha256": "062b38cb8b500885c3f4aae4a5d94dadd62981b7beb789b1cec7b10c869e2d06",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/LUSC.parquet",
+      "before_sha256": "262a5a3077bedc9a2b806a89f11d72233134ba5cddb7578cd64db4007cac7e43",
+      "after_sha256": "473c62b410d112748cb4b1b9a76fafe8b01e43700252ba9a67576d3a481b1df5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MBL.parquet",
+      "before_sha256": "e4bf969e33154f514c511722c4b6da04671cea9aa4e7b2e606ca4de4be30a9e6",
+      "after_sha256": "94424c41d48988da1b4ec1a477e01a8d89b9f4672e2cfcaac5d6d199a44f7b22",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MBL_G3.parquet",
+      "before_sha256": "122261ab2c72150a46151c68faa58173fc2483f257b751c0ddecb8cdfd018b6e",
+      "after_sha256": "fa4859abe041a5bb507f2ba3737f31250b6fd616d8d748b26cc6afa6b511bc55",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MBL_G4.parquet",
+      "before_sha256": "16611f5f958bb60970199fb92f57910d12deb2bc9632704e60c486ba87b86ff2",
+      "after_sha256": "2f9a0d7f2c906494d79fd59f69fc5be6b12c53fb67558febceef413d5071f1cb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MBL_SHH.parquet",
+      "before_sha256": "53187dd4f26e4431671b8025dd3f097f7cb1236128563ce500bf800180330e17",
+      "after_sha256": "3ec35cf04c8516dba3b1f644887929126ad1d5d16ba2a300f97989cb6acf4ad2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MBL_WNT.parquet",
+      "before_sha256": "1c54ccf34accb524c2cd1e791531c54b16ded3ee38e88cdbbb7348618509a53e",
+      "after_sha256": "cab5a2d8ae533edfbb8e32267395d388fe80a92db44f97bfa35bfbb378725f9f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MCL.parquet",
+      "before_sha256": "5eccfb00a12acfd20f55e49b4023e0b1fb0a72def3afa933e52122b7eca294bb",
+      "after_sha256": "ce4abc72b6ba2eedd42e462ba252a5515d06855da255c9923e1b12ec3b785ef5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MDS.parquet",
+      "before_sha256": "1193c4ee0119efe072284869ebc47157e777971c008fc54beabe12f6575dae71",
+      "after_sha256": "9aac97f0dfed29a79eeefc15ff7a1d43fae707f00e7efbbbdccb13efdffb7ce2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MENINGIOMA.parquet",
+      "before_sha256": "87c5efba394562b265cf387f81c3d38d04519ef1cf144f1868b2e1811fdf3696",
+      "after_sha256": "c91b7787bacf5778650b13d7693e0dd5ff6bbeb5fc05ecd3ebb23f05b0e4fb81",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MESO.parquet",
+      "before_sha256": "c256bfbb4751cf10705970af2aeaa99a8dec645acee136f143efb2eba853e8e6",
+      "after_sha256": "ebe90fd2c6164d9fd3c992e8aa8f5360da7edae5cd29e0bb4dd85d6f7ae4a952",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MM.parquet",
+      "before_sha256": "1c0a9588005093d3c7b9269af8050f8cbaeabf52a7431f9e2717f7dd6ccb5789",
+      "after_sha256": "beaf2dc8e64df6c29b905da38c404c16b6eae96165d53445fed5f327f95af088",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MPN.parquet",
+      "before_sha256": "767992296aa0d76a69a4fc3f76cd47104f15f0e2af9432498b12a9fde2f0e5ce",
+      "after_sha256": "368750fada8eb3552523a31a0fced7a8e667a1677e2498e5e2077ddb2fe6530a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/MTC.parquet",
+      "before_sha256": "f64c256520a84805be863a12955d7ab009c6a14ecb6d9b420d87e56aecdf0021",
+      "after_sha256": "d9ce8f865715b179ee9c88a9a00572f1aec4b12a41e5632048db544f7f098770",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NBL.parquet",
+      "before_sha256": "e82980497d30239bd10212d07e8bd58ef7ad9d12a6fe374a6a5188da0dd8b066",
+      "after_sha256": "46bbf9ef3f1394fcde8cb699b1f62a4d2a2f332a93434131fe6c5dbfca88845d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NBL_MYCNamp.parquet",
+      "before_sha256": "2e20b1c054e4b61b96f00c27edf4ab9b97c734ac6b6b9560d99581a5fc101633",
+      "after_sha256": "a40b7a8adf789914763517807553939297d5434889b99827d71986df5e217ff1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NBL_MYCNnonamp.parquet",
+      "before_sha256": "f4bbf8da8dd1c0b82e0928fb7474329c6b2853bd33c628f1414d95372447c82b",
+      "after_sha256": "f70ca7659c78eb07228756c2bd4730a4e59ac0d6674102cc9da82ad0c702a3e2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NEC_LUNG_LARGECELL.parquet",
+      "before_sha256": "8abfa9b9a63788454ab3e98e58e1e44a558e432809b99ad50f1121b07cb69f62",
+      "after_sha256": "9a14bc51ff2d7f9839db743181ed1e9fbc6a85c5ee09d8be2e67c6d32e8ea225",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NEC_MERKEL.parquet",
+      "before_sha256": "5b11b0d10fd47a5a45a41b7598fc5704982998e23a9c0be303cd545bd26284d2",
+      "after_sha256": "6c0e9bca6830c44cb2a4bd1dad1bcfe8cb6ef2b6c70f8747017404ec551b692b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NET_LUNG.parquet",
+      "before_sha256": "72ef468db23259e6840b0db94760dc6e4181626cb9fd5785404e9bbc46577595",
+      "after_sha256": "acfe40bf66b694ff37db30f40f4781bd4ef3c63ff898b76d3f3970c471882462",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NET_MIDGUT.parquet",
+      "before_sha256": "d37f7f052a1a76658984613d4f75e9a923b31bce9fb3e4985384ca3a638dd1a0",
+      "after_sha256": "1271d4a980bb984215b89c00d53c26ddbe2efe38f774263bf9a432d7342873df",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NET_PANCREAS.parquet",
+      "before_sha256": "e40083fda796127203e8ddd87fe707fc8de45f17118dee34dfdb86dd6d0f24be",
+      "after_sha256": "296fe8563a3607732bd3947fa58055a4e16d59ad150b396425254b94539b4092",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NET_RECTAL.parquet",
+      "before_sha256": "783c84e0e0de4a095efd4c799abea97ccd7c12d8df8e36dd0942d4f131cc1197",
+      "after_sha256": "f69f9096e38b2173d43b335e7d226c4b08961bb1e1c32a1169596a463293ec5f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/NPC.parquet",
+      "before_sha256": "1c912f2fcc2695151c8a3e752a9a91d1a35ef3e0e5824ce1f53f81fcfd6340b0",
+      "after_sha256": "f969e73d65149e2e6d118b4476bb43aa30952637c7d1bb5251d55fdb485f7a46",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/OV.parquet",
+      "before_sha256": "7e6013e01c2004250506fb8e90324020769d56ddb3eaeec16b0ec922ba004402",
+      "after_sha256": "2f77f3b8e146db4474fd5c3e526fcfd8f7ceafc7125b316985df75463cce3041",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/PAAD.parquet",
+      "before_sha256": "9105b11156dc4ffbe235ff7d10c4e929e2bb132ea9be9c848c40222e606666d5",
+      "after_sha256": "7cca558091ed0a2f137f54920fdd368b9f6db2e61021d7126bfc17db8f505df5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/PCPG.parquet",
+      "before_sha256": "4618debe8f67bafb8956eee4798deada2c24576254d47cac55bc0ce3695555d7",
+      "after_sha256": "8c964f64d2fb6b5d87549c940851526a52e869c627598c6765122b951c0c1e8e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/PRAD.parquet",
+      "before_sha256": "bfc5ed739826fe07c377344e7fab0803d7e773ae9920e7db19bedf06346ff76a",
+      "after_sha256": "e8687d09e93eea3800e9a8d5a1374861ba72158b37d420a1013e9143e964f020",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/RB.parquet",
+      "before_sha256": "a465d9d7da856cab93214a3b3ad4a6e7736f663227a802998fde1ff31295c3b5",
+      "after_sha256": "d4db704b54f607d7e301788d733b2e8711df09cb777ece84d89c3dde051c540b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/READ.parquet",
+      "before_sha256": "dc8243568f8a83248281971c0a4dd9d4e78c44ba7eabfb7c0f7e5fcba5f1aa7e",
+      "after_sha256": "adbf514d18c4436246e41cf81b577d9e5c5695789e91d3cca3d7b73acbd212b1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/READ_MSI.parquet",
+      "before_sha256": "f236714feb2df570b4500b4ce35bab44564bc8bde43defe7a1ff6d1b9a4e81c7",
+      "after_sha256": "88375b2f6ab25ca72d71db82f0b9e95370189ad04531c16d9a3ded4867618c80",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/READ_MSS.parquet",
+      "before_sha256": "97c5b93fcd9db9679cb6360844cb19f69d11df781929b1b02fc41e6d796da521",
+      "after_sha256": "9f46dceabb6f89461d5526665bd6809d3d41428acea7bf373626540c9a53ca5e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/RT.parquet",
+      "before_sha256": "4d89a2065860f79359756676587c8f8af279bc13813f296d7a55e46856bd2824",
+      "after_sha256": "e2939ce288e178680aee3fdcc4e6c06611ea1221481fa38253b5ef88d2c9b713",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_ANGIO.parquet",
+      "before_sha256": "76c665fc9938b15e8f8b23df01c738e2db96af2aefd2b09b96bcf3e1e3611bab",
+      "after_sha256": "44ffa48718a244f436d3d3b39acafc2ddb1b0ca08748d5452a1529fc58ea0604",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_ASPS.parquet",
+      "before_sha256": "e37156ec542a6ce5bba231a655f4ef7c03dbe16a1d3e67bd96e057f38dac4284",
+      "after_sha256": "7f941b42689e682ccf4e322dfab03a13487b05bf3cb8606fde6fac1ab05b9212",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_CCS.parquet",
+      "before_sha256": "243b5bac342016d931c969a8454fa6ef472b2e752ed66184e4e0e5514f4467c1",
+      "after_sha256": "ce4306b18077b7fedad4082076c5792d9c5b0f3c0ae11699d0f9738856895f51",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_CHON.parquet",
+      "before_sha256": "7f802806263ec9d0ad3650ac3fb4143fcbf5bf116f234b4f803d1990e79bfad3",
+      "after_sha256": "cede4c3bbf7b584e697e6214fee0b0803a6b4b850e4ab2da2d71cecdd0c66537",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_CHOR.parquet",
+      "before_sha256": "6e9d12cd9964deadbc9b1c46640ba8dbfe99f79d0a242d66df4a6c38fec9b78b",
+      "after_sha256": "4a63d8a6b58cd69eb69043b61616884d23b836c985864e40558d15d85a6632b9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_DDLPS.parquet",
+      "before_sha256": "077ca45bc249e806895ad39176f87006e40d0e32c75204ecf6bddc23883aed96",
+      "after_sha256": "7b423b493db970326c8d876510b2edd5cc03818fe56fe88dfa85eb3752a91a10",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_DSRCT.parquet",
+      "before_sha256": "0d761e583aa23221b2c60a492e210bcfe855e9f64602d9c2c705a161658e85d8",
+      "after_sha256": "25fd84e29074e011a41103a66e8be1fb114f2a66dfd3b377ac709916f4bf011c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_EHE.parquet",
+      "before_sha256": "d740cef35e766b9dfe0a5c8d8395b6c5d3febe7bd9d52d21dfc8894ab14f0532",
+      "after_sha256": "dc2ecb1f3179990f4c1134b5bd7495a67d633db3155908497e4dd0a3f4251ba5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_EPITH.parquet",
+      "before_sha256": "c485ae7a285eb6e800dc323f8a154950cb63eb3ffa0a42d9fa8487999e9d201b",
+      "after_sha256": "6d39f0a963015bedfea6040f543338f96aaa58e6bbd46a6b908cc3947f8b4a71",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_ESS_HG.parquet",
+      "before_sha256": "86d6d129057508a14967c09fbce0a773226e689cb1eef0c5671eb4ecfdeb9b71",
+      "after_sha256": "840897b980d731ca4ca5603369bd4a5251b722add050376a5424589b945dd371",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_ESS_LG.parquet",
+      "before_sha256": "17f2498f266dc87af95554aaf69fd1c30c7c0192398ee6efc88ca5c753ed536b",
+      "after_sha256": "e7b73f0ecb226f7871ff133e3aee8fa2f1db32c44fddb9ae4aa04212784357bd",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_EWS.parquet",
+      "before_sha256": "11f26fcbf4cf595050c0c48f20226eb9a4fb0beb6b587383ff75354fa80fd66d",
+      "after_sha256": "27cfd34dc3d1649e2333bf2b06fba1ae4c99ba9f21644eb13f2212ce60fa08f9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_GIST.parquet",
+      "before_sha256": "633b64235034c96ef2c521dc304d3d5d695d49a5ded55559dcbad6615e2f762e",
+      "after_sha256": "cd76332419585ae758a54233178fac1f49bd25d9f911495e5b6ce47e458c7efc",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_IFS.parquet",
+      "before_sha256": "0216d545efeb7bfffa7253704e9036bf70c96f38fddcdf63197547c875b91c77",
+      "after_sha256": "29c3b47d91ca6b41e7705e684afd4d76520a36422780141bad295b25a6d1765f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_IMT.parquet",
+      "before_sha256": "ad678f01d1bd6048174a1f463189462661a93853536f1ce07d938df80bd4e0ca",
+      "after_sha256": "5f872f1641b52ad376ea393254f7055f60576c8c50cd33ffcd778da1a08a5127",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_KS.parquet",
+      "before_sha256": "ba1b8721561378c0dad536cf82a835c6f9fcbdaf030c43da30b41086c264a69a",
+      "after_sha256": "3fd3b1b2a157714a2ca2a619f6afc47812ce6167cb7a5e4992c88a5e53209daf",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_LGFMS.parquet",
+      "before_sha256": "2fc5362d6d4891d62637934c6878aaacdc0fa244b0803a0789d157046eccd29f",
+      "after_sha256": "c9577eec3113bd5d19699b25c3ed031dddea5b517010e8593c763e22f1567940",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_LMS.parquet",
+      "before_sha256": "7cd313b6d6527f393fa54fa1c341f311dc0e07e62e132a59993b2def4cf477f5",
+      "after_sha256": "25c3ce6d2df9334851e36aaf7712e1bbaa8c88469e389981fa2969cc2eab8b08",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_LPS_UNSPEC.parquet",
+      "before_sha256": "7fd56e627e6dde448f83b2cb8ce457f5a3def80a7690f2814fa50c0603f82f58",
+      "after_sha256": "e540f7c4606e3bc0b52250ba9e7df0a7cdf9d66b2a4735f60f1b95740177f4fe",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_MMNST.parquet",
+      "before_sha256": "3abe923cdc8e7f0a55efab74aa3b3491cadcddd5f0f88bfa26b607f04d6ef470",
+      "after_sha256": "e66e7eccc7976b8067ae8f7353fcb82073b12e3229b1b18918e4f4f7fc263350",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_MPNST.parquet",
+      "before_sha256": "b382cf18c94f708d51fde33555ee4d25e529d293f3044ead2e79ac479b75772e",
+      "after_sha256": "302113644cfea6bdd5eb17f14c565224848eaa06c487ff551b11d4dfabe5c465",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_MYXFIB.parquet",
+      "before_sha256": "4e5b6f2ba5811cf6edc1458bffd873fc0e71bd7c31eb606df13f71084fd8e061",
+      "after_sha256": "9b50faa92c51303cafc6ae3bdd7a3d53dee4f31b5a7d1b5ab90be38d01268f3f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_MYXLPS.parquet",
+      "before_sha256": "4b3fde4413f2273c522656796008cd7f8a649e5b1ed53a4b7d5de2f4950bf549",
+      "after_sha256": "1ee010b55f49342ec5c76d42da5a1b60280c91b99f37811d4048b035dd4dc996",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_OS.parquet",
+      "before_sha256": "603bf5cb7725ae205189d5a1006fc08c5bb6ca667b33250a16d3dc90ef7f81dc",
+      "after_sha256": "ee3641465024cdfcb5a6656b679d065b681feaf5a89d63496d87fe7f7b47b5b4",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_PEC.parquet",
+      "before_sha256": "29bf6a6774cb2fb9a914a7d593dfcf914ee971d8b1b0ff076fecffd05bf18870",
+      "after_sha256": "bc195097512c495269487a21c9957b63e20737cde15dd813b618aae523d63d96",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_PLEOLPS.parquet",
+      "before_sha256": "bc38d1be643a0deac691eb4e7eb262318862c2d198ce8583f84117fd6917b1b2",
+      "after_sha256": "2dfa2bea16fe26992f1caf8460ceefbc7c031c2f9233d426025cc2eef288fe5f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_RMS_ARMS.parquet",
+      "before_sha256": "2ddf703fba5a8841469cfd0f5c975915c45b6eb4f56db146a676f1de68d641b2",
+      "after_sha256": "79af20a541d00d7b57756744f58bed4022bfa97588c1caa3dba9bb6e413b566b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_RMS_ERMS.parquet",
+      "before_sha256": "07521ec84d8f550ceb609e12a332e9c533869c6b440c60ad474e2ac93692f14c",
+      "after_sha256": "871642a32970d289d3cf32cca409cbea579dc90dc49a7f4d9d08867b095e5e58",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_RMS_PRMS.parquet",
+      "before_sha256": "5f9c60e7d3ea80dbe0d68e0d78209ee71bbd02fa4ce5c9299719d5c1e3ed8fd6",
+      "after_sha256": "e96b5718fa7982ce8e403fad1a8f32d855832dc483e1d1bc172ba0499173f62e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_RMS_SSRMS.parquet",
+      "before_sha256": "6ff8dcbdfceec9b0b6ab61d907f86dd9dad1c1a725c78f8790a59d8496d27e76",
+      "after_sha256": "e82bad0fa3988879486d534bef326a48e255803f6cf3a7fb803410656f5eb616",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_SYN.parquet",
+      "before_sha256": "0de2897a4a34051d09bcfac428e2fc9d9685d69b7937c419ae645b2cd9a95ce4",
+      "after_sha256": "17101d342fc9e446305b9fcbfd0e96f944b348fb0d6b8f0951bb5bded69d4d61",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_UPS.parquet",
+      "before_sha256": "965b78fed9cfd4384d24e422f6f5c526fc4c869ac5db34674563f6ce9391431c",
+      "after_sha256": "dbbba5e511cd79dfe19d788dcecc962ddb6e14b650721247fdbce20b2206e46e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SARC_WDLPS.parquet",
+      "before_sha256": "1e2575cda18b26bd4b0023d4ef4aed9606b202fdb3785dc8ad8c555c75dc1abf",
+      "after_sha256": "41ed255f4cce498ba5328570b74f4d3a9b9f25c2979612d7a632c278a217000f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SCLC.parquet",
+      "before_sha256": "a5d6281f1c1945ac8188c6a7dbb389aee04f6bfd98925be6aa6c894f4b55794d",
+      "after_sha256": "5985048c22eff5653a24d4f8cb05f92327f106c9d2ff89788edeaea67baab41d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SCLC_ASCL1.parquet",
+      "before_sha256": "ef10a5f50ba8a70942508ed33c08216e5c4fe6e0e2a80dcb2cc2f85ecb33abdc",
+      "after_sha256": "72b27bbc66803f3371c7c902bcefdab19a927a4521f933150811ba20715b6ceb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SCLC_NEUROD1.parquet",
+      "before_sha256": "1ec59847de8545fe4b30b6ccf8f13de3962c9e54b9b31a49d439532c8866d21e",
+      "after_sha256": "36e462221a4b9c9af9bf316e0f1f71ba938f245804c6611d4dc9443676a8fd77",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SCLC_POU2F3.parquet",
+      "before_sha256": "f1d780571e58af307453a5f269483f713b55ce40ab8b8d4e0815fef1b16ad72b",
+      "after_sha256": "6edd9ae2ffb058076e104cb93e9cc5ffab6cbe77bb8b7f11b1c86f054a53661a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SCLC_YAP1.parquet",
+      "before_sha256": "0b1ffe086495e50be162387ed178cde116f8edc8fe54cd2beefa6a9becba73b9",
+      "after_sha256": "6ac97b18da62c794a965137fb6555eddcc1197413924581a58221e49b5cd0651",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/SKCM.parquet",
+      "before_sha256": "72c66df429743ccf90892fc3a5d7ed101b40585d0737e7526c94e19145fbb480",
+      "after_sha256": "62c9a63c28a45f80621ba8f76238cdcf3a22340b84cd8e08ce44f228f8289b8a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/STAD.parquet",
+      "before_sha256": "7151bec4cb440f91bd37f32e4f5c3bfa4618e494254d8dc27fc0132e44a4b104",
+      "after_sha256": "0078320791b94ed6e842242bf6e0abf232cc0ae07a7f496870d6b436f790be8d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/STAD_CIN.parquet",
+      "before_sha256": "738d88095334784985591a4c1d8c199f1a583bd44c1b8067357aa70cf5f92276",
+      "after_sha256": "87d93d02c6d3eed0d1351f967f70b4661af8051b46d58a8b9096b91588768200",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/STAD_EBV.parquet",
+      "before_sha256": "2785ecfe6a09d365281f81c2b3f6c72dea5c35a84dd83f3267e8c06a86e4938e",
+      "after_sha256": "a31ac80136516f9df1a9f67707aa50a371b3d8cffdca7a788391f66b1eff41c2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/STAD_GS.parquet",
+      "before_sha256": "ab089a862d6cee63117b1dbff4f4493177c02138e89282d9756d5c6b336fa856",
+      "after_sha256": "37cd656539a5ea5b0e6cbaf2a7400017bd700cf356bd078f84742e779873e954",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/STAD_MSI.parquet",
+      "before_sha256": "4ba05c43ca8c69e9d55fdd96b59beeec9be97a50c577c958094e9d11fc748ff9",
+      "after_sha256": "11ed85c097ca6d3855e6668777c2bb08ac59194ec64171acfe528ee84c509a05",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/TGCT.parquet",
+      "before_sha256": "abff04ca9e3cae02742bf799d167e9d0776cecaec59e231c14c3c97f9ede5316",
+      "after_sha256": "ee8ac21e0536497069960e706a2337706cd0270531dbd5a44c5ddd1aff0aad70",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/THCA.parquet",
+      "before_sha256": "a77cf1358e5cdc68632fa7301f85fc7dc17194fab7d6e20f35d9178814362ce9",
+      "after_sha256": "e4a5e530c094d36cce7f4221bcf375de91f3ab34e374ae21e1dcac89627c5a31",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/THYM.parquet",
+      "before_sha256": "ab3b1f6fcd2d4e7211b51f18439fda52d76db45330c03db78c8b125210e7d208",
+      "after_sha256": "940a0d549bf5949c3dcc437316fda356e2b0a147650c149d931250caefb2050a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/T_ALL.parquet",
+      "before_sha256": "56dbc8f00c59869bcde87d1172ed3c1d8ae9ddfb27fc2fef0d8be47e89a22303",
+      "after_sha256": "7468360a404b0805dead7cd6ad4fe4936367722b1bb1a5f88671625d56f18f26",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/UCEC.parquet",
+      "before_sha256": "c8e14672fb1e574338d832e3c49a87ee7fb5066e573d5d590ae370ce5428f773",
+      "after_sha256": "f9e80f770c549693bb89280741cfea258c59398a54f9ab39357071a5115ce5e9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/UCEC_CNH.parquet",
+      "before_sha256": "01538a3bbad027662a99db480254235bdb8e098d76884567360d43369bdc6f63",
+      "after_sha256": "757ab9ff3da9a2273a3da12a0075b227e665b0c7c149ef8d313e2e8cd96dbd3a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/UCEC_CNL.parquet",
+      "before_sha256": "0a74677606e1f9a8b35df4922c0fbf51b0f86dc113cb34cc64054548e07ff9fb",
+      "after_sha256": "5b12fb9642e731c7d074eb9f3b75b3db97f97d92a648d318f2b7fea22d1b1c35",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/UCEC_MSI.parquet",
+      "before_sha256": "99f93eac284646b284a15e33697481a9eddaaaf6b8a81350c258f5f928a07396",
+      "after_sha256": "2b00a9fe34224ecd6fcddb0820bcd9daa7a123cf2c6caa8b462c4b9a1b5cfe36",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/UCEC_POLE.parquet",
+      "before_sha256": "dbc08e3bc0f2808fe77cb742df663857a59c0eb371289373f7ce2ac305c87d83",
+      "after_sha256": "6711c02494a25992fe5bcf4470e25d03fd8c00f81e12155c9a161333a5ac6363",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/UCS.parquet",
+      "before_sha256": "527a9ce4b04339978f243d2e7e07a5ac730482975934d62874a5cc3d92b8945a",
+      "after_sha256": "eb870e075ad0c161f8a0289fa1fd010c0fe750fbb9e63762bd02d33b066473d5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/UVM.parquet",
+      "before_sha256": "e790acd89da0b7c5758d5fad038bfd3f27ce260b669d24ff435d51736e0c1a77",
+      "after_sha256": "09ff73c4668e78e185f51cc6c34426e722458cd2c8768dbb55e473624a7fbaae",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/VSCC.parquet",
+      "before_sha256": "5f873f24d0788702491574f77d11ffe72323019f77bb2cef94a1ea5c5f3aa7dc",
+      "after_sha256": "127ba461d4847eae2e69c36ef18de171cb64d2a4f71e2f0d8423516f0e29db3d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/WILMS.parquet",
+      "before_sha256": "0631940f5c0429d42ea600e6f09aab754776376ae95256bd2bd9298f7198c1fa",
+      "after_sha256": "e4b72b5bad2cefc000f8e627ab8dfe550fbeb9b7402ee2aad714c69b57dc04a2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-percentiles-proteoform-cta/cSCC.parquet",
+      "before_sha256": "0736dff746eaaf234b2ae577b6ba4ff5c1386ab20d6495504f42e8aa5473a085",
+      "after_sha256": "3d4ed070ff55133be4a28f785383bc59279a818b54b1f7d786d797b5fdc05387",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/ACC.parquet",
+      "before_sha256": "d2ff2c128d4d1774e680436783331e4d08eda1c1a2a5197dfdadb499b089c64d",
+      "after_sha256": "f6f5747dfce24b24b8ecab08fab9a500870a111561b34d512eed97e4740351cf",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/ACINIC.parquet",
+      "before_sha256": "594bce6b0724b1cb1c50d7e62f0383c15ea1484d6ed77b15131dc00c4101939b",
+      "after_sha256": "367a9bd9b1bba319189f45fb97fc0dd5d493a1a3192746ca25d4f18ad8679235",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/ADCC.parquet",
+      "before_sha256": "54e5d12255f5a553ace090dae9cf6fdece82b2e97f53860fcd3dbc8512a7782b",
+      "after_sha256": "4702203c4cdfafa4ccd3a6bfc9ff4d18072532c2be97e7397ef6d5d4f027a6b2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/ATRT.parquet",
+      "before_sha256": "0632647db6442149bf59385cd576724e33ee2997c89aab63bee651f5889d0810",
+      "after_sha256": "92a01cdc9978fd78ca27597cad35cf94f12af2e24342ec582743ce452248b2c7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BCC.parquet",
+      "before_sha256": "36d0206f942244fcf4705d7df8cf4dab63f90c689714be5e521f4ea5c8c75d55",
+      "after_sha256": "b31989e85ccd9f4bad59fcdaeb38c1b924adccdb79bdec7032fddf25cc1c4726",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BL.parquet",
+      "before_sha256": "a1b2b7f2ce3b26526ffb7115f0028ac7cbc322e8f652db9b05c9b3641594a153",
+      "after_sha256": "cb7312e1bb67cecb386e3edf29fd3c3dd57c097512d45e9bac275b39cd6a30df",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BLCA.parquet",
+      "before_sha256": "f6191583f6a54849f4752fab2cb0435b1dec5c762d84added56ac9227250ca5c",
+      "after_sha256": "ee44db8903f37e7420f38f55c81fefca55c493fd79b9362e16898066d41b0164",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BRCA.parquet",
+      "before_sha256": "1f05c029e93eb2fbdb1a877ad72332150936fc3636fb00f67bb4ec3ffb6b6de9",
+      "after_sha256": "f8258dbe19997995e97a0b3d37b393d7befa726e837e383052d861dfbda7e0ae",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BRCA_Basal.parquet",
+      "before_sha256": "5c30473da381a2b779b96b62cc803d3a8ed6f6f4f9df7cd41e5a9b19e019fd00",
+      "after_sha256": "9f2eb1fc2909c2e62047fdb6801f1d7177450ef12b099dfbd6c1992f25548b3b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BRCA_HER2.parquet",
+      "before_sha256": "8b92a563c13c004fc02143a3c256fa412e9dc6c64a86112fad3395df4b7daaf4",
+      "after_sha256": "7f69feab15f30ebc5641521af496d8f5fe0a4c532fb86d1b0d60411fd7b255bf",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BRCA_LumA.parquet",
+      "before_sha256": "3ab537b7be31d798ca47a5d6087fa2bd4d4a9f9f2a9a6f70300688d8733c18ca",
+      "after_sha256": "775e01b83fffac0913026fc76a8f2b0bdba28d64d06792eee1caf28650997dad",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BRCA_LumB.parquet",
+      "before_sha256": "633e36fe394d0d1e7784710330649dc4f6a80ffb82d77bd635efd4766dafffb6",
+      "after_sha256": "993f089edf088b66bba5a6d9381438e7d9e07bf8e1a54670908e7be8a684eb98",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BRCA_Normal.parquet",
+      "before_sha256": "886f89efa7f7c972605f56d18a44e479c213dfbb084221e399699447174d85c2",
+      "after_sha256": "aa2b513e2a281b39557cc08cb04d8c40b07ef46ce8c795ed1c6059a72cea6d47",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/BRCA_TNBC.parquet",
+      "before_sha256": "5a7ce0c279764bee3511fdec3ad486085ef5943b2011ea4f60a6368c0ce9b14d",
+      "after_sha256": "c5dddc4f46e188e929e0f9c044d3dbabc0b0e20ea74dad7e1fa3731ede6f4939",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/B_ALL.parquet",
+      "before_sha256": "edc7acebfc6233a175b42422a82ee8c1b4d5993c2ea66699f34d64ea0ba8a81e",
+      "after_sha256": "46171fb81b71442e5ddb97834be33d0a3930dca82ddc0736679dc049b948b3b8",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/CESC.parquet",
+      "before_sha256": "68dd89361cfa6dae658b1ac134ccf05b30cc971a3fe88ee7a8809b1abaa14d96",
+      "after_sha256": "09c149c6d9536564e71ecffd2c2f0c1bd5230757d5bce53d9263619b95acb4e7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/CHOL.parquet",
+      "before_sha256": "da6860e1106e75dc631675183955ce1c80dce67f739a4a9e6201d4a8416238ae",
+      "after_sha256": "b6e5d27688d42df4ab05e7251341bd2e1415817b50d51375fc0140087df328b8",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/CLL.parquet",
+      "before_sha256": "5e818080e5538803c924456c853f292952f2f9888cd8cc52c641bf8014e2d0dd",
+      "after_sha256": "caae1eaf69fb20bc8ed0f616b4294ab2a1e7715e00fbdd26658750460cf7dd3c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/CML.parquet",
+      "before_sha256": "dd0b9d804c94895eb67a7d34205c09a99c2eaf3c5ca818243627128c7002d580",
+      "after_sha256": "46bd78da05c685919a1bfeb3bdbf22b17b31bb8df2cd91b6b2b6daba94cb928a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/CMN.parquet",
+      "before_sha256": "ef23e7901479b84fa2d45a7b47b05c8485454daef4434ac612f5f2e610e15f7b",
+      "after_sha256": "0946f2b1dca1206daf01beeaa9ed06be9014ecfe63cc9458d42e34152b40bfdf",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/COAD.parquet",
+      "before_sha256": "a8fe7db3283f97b5530a842da1b14de35888211d6c7272894e1c446970fa5448",
+      "after_sha256": "358bbe9c2983451d59aa3b676c643776561afb2272311f0b803088dfa6954770",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/COAD_MSI.parquet",
+      "before_sha256": "3dc63e96072083cecbc45bdb2236ae5dec8719e25c55331121146232013aaaaf",
+      "after_sha256": "3b3c5f8116f8c4c51e68c8358e8c365a871e4ee743c44b716d41d1b9923040bb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/COAD_MSS.parquet",
+      "before_sha256": "d73340cf503c78b4c0a4988009965d888d5f5ff2090fe82368cf611dc75ba33c",
+      "after_sha256": "16e7c2a64056830b5816add952441b0112ece4f17244a07b619baa95240872fd",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/CRANIO.parquet",
+      "before_sha256": "fc17e7186acf1553da4bbfefebfdb611c3965bdaeb68356e70e4436321e0b26b",
+      "after_sha256": "7bea4a15b765970f408f9da20a396ad12e090b3f6ecebfe7d310f36ef9a498cb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/CTCL.parquet",
+      "before_sha256": "20c8b8f1c12b0a1b1180b080581eeedf93becb983514733c2b987f93a9584aa0",
+      "after_sha256": "b32749225df33579be7672a456bf3243dff21c6d10d3964690ef711ec3264a18",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/DIPG.parquet",
+      "before_sha256": "9d77fe9a438c80d953e44db2cc32c242c2dc7ea23ffd351dd16a862fdf2c2c0f",
+      "after_sha256": "70d0051f070126c8d7d41abaf2068bd13e8e90136a1ef85db1b3ee12ec1033e9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/DLBC.parquet",
+      "before_sha256": "2fbf4f9827d449ca6420554efd10b0be733e93e5da9f3eaf231514b3ef45b83f",
+      "after_sha256": "f243085fda9a05e4dceda3bc9346e1f1932bf7f94827a2c0e74cba501ca070ec",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/EPN.parquet",
+      "before_sha256": "eff13d20ca34be30fc833a22c54acc43fc8db1ea64e7a950359635c29cdefa73",
+      "after_sha256": "d0c38b4f22643a20b6b70a026a1a6644d09f06e37ebdcbba25adcc862f039659",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/ESCA.parquet",
+      "before_sha256": "68c010b6a7f8cb7eda44e2f59267a4f9bf2c592ef1317800eb84a69b806a0e4e",
+      "after_sha256": "ad320889b9db35be008f7efaa2fe7e27e4a9749e896d1bea78146b7334e9fa6b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/FL.parquet",
+      "before_sha256": "0cb33ee66e8fd560224a08fc335e5a510e6de1164d8da5a37ace495be7783c57",
+      "after_sha256": "217d354fc440f808162f586c0d7ebed7139127f98cc54e5129ea5f6509435ad5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/GBC.parquet",
+      "before_sha256": "76ed477d63d9588ec3b69e5b503835a1f031a99defedc830bd22d52dce780bd8",
+      "after_sha256": "7762297d70b6b2cb4be76bbc2d6be5146ba5eaf622866dd8d41b3377690280a7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/GBM.parquet",
+      "before_sha256": "b76520814b09ace153cb05cbdc56cb360cc017e5672ad24b1a368ff6749835ce",
+      "after_sha256": "5f8fd05f0014cada8c9dab7e71a00c748a459a246c8189c1f01f0b6d481a2b8f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/HCL.parquet",
+      "before_sha256": "d09b9b188834d43af31ac81018b294783ff22a3179df024c902f709ecf20fc26",
+      "after_sha256": "5c739122be735e880915ef0b02a3b78e839ab49fdea136e7eb450446b180da8e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/HEPB.parquet",
+      "before_sha256": "bccdddd4bc212d0d06f487c2ecbef1c8878af2fce6f927858568522f51dd1174",
+      "after_sha256": "fdf82a41778c028154c23ecfd1279461743d1849b47f04297d1dc8a0c723f1d3",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/HL.parquet",
+      "before_sha256": "473f580edc8c7e5290e99238416689e8387a35866efd19682ec955ba966415cf",
+      "after_sha256": "7a124d6bf82fed7c0d7c2ec31a118bee51cf5a87e1be6745cefef583efbb816b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/HNSC.parquet",
+      "before_sha256": "7d374f3dc872a6172e8c77c6da1da84f467c0a48effadfe9e0e84930cfe2f32e",
+      "after_sha256": "362694983faabf10a97655510b17cecc848863cc406341b11999d5b141f7df2b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/HNSC_HPVneg.parquet",
+      "before_sha256": "51e1543b0b5d0490fd26eea38e10144c6914ae3ccfabaab8488ac21c4f9e0b4e",
+      "after_sha256": "fa8148a36240b0f4664b3a2b2ec93281a114b3be44346fd7d8c4155ff7dcc85b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/HNSC_HPVpos.parquet",
+      "before_sha256": "a872a43a06a345af64c95718f1c3c5324dca7e4f826b2bde6365d56b0fc06b06",
+      "after_sha256": "67ff844a434df461c24bb04bd2d4721444ed52997c2bc287b9fba58535f4fb8b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/KICH.parquet",
+      "before_sha256": "92c02f2b5ff281699bd8d6bdefd8fc5c4d863bfdbb5d225756f842f7dd1d7d01",
+      "after_sha256": "4a20b9c3910dde5309bc72c3131358261a3d17a54a970be9a2c5bd7ef34777a8",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/KIRC.parquet",
+      "before_sha256": "1943b88c67c875373dac168435ce1fad9dd95c78d801be19baf949bbbfb1a709",
+      "after_sha256": "60a9762324f3ed4b789106dd423eff38c6ef848e886897a509edc797671224de",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/KIRP.parquet",
+      "before_sha256": "4276bd00cbd0873d6fe8bd57b732d693c25279b47755c4173768a64436b67718",
+      "after_sha256": "065df3effbcc268b391be5507cecac814abce7956492f673be015e85544cb039",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LAML.parquet",
+      "before_sha256": "7440b30e347377287ac024e616bd82a232b9dca4b5a5107376a6afc55c5d7dc0",
+      "after_sha256": "379ec274d3991dba7e0c5878a15978e158545b7fcef88b23574551a991d8742f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LAML_APL.parquet",
+      "before_sha256": "e5f85606e94a928fdf9e35ea083d6c2274b318ec5736be9ac78a9e0365880f68",
+      "after_sha256": "2c8eb3ff59b3366636fe36d0a7d023643a271c98e7936080becbc9c3490a17f7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LAML_ELNadv.parquet",
+      "before_sha256": "9933462f2ba2e983a123d9007127bfa34d7bbcfadabc65b97a8167713c743f86",
+      "after_sha256": "013520b0d6683ab208c5a763f551d17e6fe87e34e0e63e726ea9373b25aa315c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LAML_ELNfav.parquet",
+      "before_sha256": "143548260a70e1ca63868c72066a79cac7360f2dcdf96352bff1e698f6a20872",
+      "after_sha256": "f0f5be9ed0d14c887d646bb0f09e3602f56c943515341019a43a3cf779641231",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LAML_ELNint.parquet",
+      "before_sha256": "3c53e73b3fc200d64bbf443de6c6652519bafd5f1db0a289f7a6447764bfd6dd",
+      "after_sha256": "efc94b9687c998eda3968841d203cd7901ef060174c1e8809af0991f50bb09d6",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LGG.parquet",
+      "before_sha256": "47954471f060d63145682c7ef8f02868c4738979384f769b9b891ee58fbccb09",
+      "after_sha256": "e18f1b9c502d28cbcce42a3e056c6c5ec3bdbe77e0aca78315c738c0edafecf6",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LIHC.parquet",
+      "before_sha256": "e3abb66884765a5df6616c675a4e0b785d33de3c9356148736fd6c2efde5b51d",
+      "after_sha256": "fc3d104fc173797f09c73c98aae35c4c14a8364b4ec5f1440a2e58ca67399c87",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LUAD.parquet",
+      "before_sha256": "38cf2dabee03614c6afab1679ab71e40ec07f55e3b4cb030c6633835c9824a66",
+      "after_sha256": "9a2b6e65ce72293d6bf6db2eb3074ecbe8118b72cbfbe34a330e9d3755a61f42",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LUAD_EGFR.parquet",
+      "before_sha256": "3e52d5932323d29cb1cde6dbca6d8d1c8bd16ca6cb05821c2ea601e028f64eed",
+      "after_sha256": "e23633a47c5b65085f44a5c1e7669945ce280671916f6aea6dba1c7866d5a541",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LUAD_KRAS.parquet",
+      "before_sha256": "2d3f5e37227ce2132f81f2b4ca3c8f39f75fd3c94619c06828a787df78290be2",
+      "after_sha256": "a43404cbf98fa6e170756982aeaf96e6457aa6861233584a75e472d10712ebe0",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LUAD_STK11.parquet",
+      "before_sha256": "771d72730439c974526f8cb83089d41407048a9b954cfb73272dc3b80a93ad67",
+      "after_sha256": "68e5432c716bcb33135d1634f8a262ac5230c83b966c7fe53959c9880ff6f09c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/LUSC.parquet",
+      "before_sha256": "9e8135f20e8400ac6dde57a937d464bd7895dfe8d168e4db6b0a4b3e7a9322ba",
+      "after_sha256": "ca1d91c2568de55796d2540b9e8a6c6231f8a662a122a7bb50e70ba172fe2a93",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MBL.parquet",
+      "before_sha256": "0403fcc0d968a8e679a5a5d1327a23683024c00625d78ed14d69b8964262fc93",
+      "after_sha256": "137e2ec0900217986e539b4d4e5318a29940993fd172738259543599f42e5c3b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MBL_G3.parquet",
+      "before_sha256": "44025481c2624920f4e2ecb1d2c3196026bded53fac112ec9441936590a4e98a",
+      "after_sha256": "62d0a905bd380783236b192d078e77549e927a6d0e60bf789ab5af657a755769",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MBL_G4.parquet",
+      "before_sha256": "d41f16b2545c0116fffe5b4b9604e870d455e2c4f39ad3d74d4837696a1f9501",
+      "after_sha256": "8eeb27bfff91b8134c430d5181b31f564964f0512bf55a6bf658c0c4932d4dbb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MBL_SHH.parquet",
+      "before_sha256": "bab9361d9cd2d2a418a6c7fea7f3bd290ce89c55926603fa6f84ceec949de1dc",
+      "after_sha256": "91fe2d62563665c891f6fd021700b874306bd5736abc4903353d45e6e7660234",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MBL_WNT.parquet",
+      "before_sha256": "dc06c63f6dac5ecf72b68acd8d2b3aa3cbc2c99dadfebbeabad96d2d171f7f6e",
+      "after_sha256": "b22c514ff4f39d4d372318f6c44274a90b0a84a4dc76e7552362adad9887ad30",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MCL.parquet",
+      "before_sha256": "10f8695ae70052aa88344800c156c196b1313715446ab26d47aef9b876e42878",
+      "after_sha256": "cd81ab277fe4896fa26e142aa2d2c079676e3d6047e86a4b514e4207c22806eb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MDS.parquet",
+      "before_sha256": "2c35159f884be2898c750ff90f9bebed0a144a3e13e10361bdc06d937a64d05e",
+      "after_sha256": "9c5ae8cab5a72a29b20d7d93e0c153c84cd605046518b6a72075440461497527",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MENINGIOMA.parquet",
+      "before_sha256": "8a9159fbecd8925ce5becf24b450de52e2581d8fd9d82b6726c87762699bbe89",
+      "after_sha256": "823c6eb1d0291fc417f4e45dc5d3b751e004158eb71eee5a4f0cfce76e91b100",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MESO.parquet",
+      "before_sha256": "c54576f8f54bd91ecad2c264a9d2d8e4968996d629f718df0cbefa059916aff8",
+      "after_sha256": "d8050dcd581b3da649bce74ffeffea03d5df2bf0bc28319bc723a7ecb2318a67",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MM.parquet",
+      "before_sha256": "fc9fce936e4bbbb7af0f35284a151563e5997b657a5158f4b189a54936e73259",
+      "after_sha256": "36a12575130d8843bba5a9e703f85657c50a8924eb90c6a46913ca98d35a2af6",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MPN.parquet",
+      "before_sha256": "f74cfe40d027696c6475f8c653daf07f8ea00aa7f831d44b39622dab90150b8e",
+      "after_sha256": "3fbe50f3d843e415e129305d1ddb8ba87e224e5de8f2fcce4893454bf9350ddf",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/MTC.parquet",
+      "before_sha256": "019a4940ebd3f4504b10d83790cb55350da157a7c4fb6eba1f9a59704b691708",
+      "after_sha256": "50a09f00adef5cfb93d011e47dfc0c0e80c4b7e2c4690c93a0369676e7126146",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NBL.parquet",
+      "before_sha256": "c5359cf2c3c0494d09e182bd846dc06e6ee8ae0bfe7c67c449dc0215a3236a2c",
+      "after_sha256": "7e81c33bd9abcca23797924e3aa0af1e3ca07e9398fa9546aadd198360eb5ea9",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NBL_MYCNamp.parquet",
+      "before_sha256": "c2681fa881101c2575af90cfc4c34080b92322aa4a7d20db2eddaf60f645922a",
+      "after_sha256": "cdacb4025c4e48fa3b907b364bca4b8a59dea71abd9db94ac256c692f2270c39",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NBL_MYCNnonamp.parquet",
+      "before_sha256": "6bc7f616e1e1796fecad572c67f880e49ba81b83112b8d033bb4ece23947e4ed",
+      "after_sha256": "acf0bff419a13af3939b6a2d03a95e9728e5828abecfb53c4e2521ec59d25a67",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NEC_LUNG_LARGECELL.parquet",
+      "before_sha256": "aef1077ad2d3592249b22b0994b6c25818dd2c27097144d663bc90cb07c7fbcb",
+      "after_sha256": "23dbf38251cb58bfecdeb121b41b7361737cc45cdda468042dc50a992bf8579e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NEC_MERKEL.parquet",
+      "before_sha256": "1d30ce9930364ddc41cfb8f36d0407b4f2896a2f96b5ec90d4d108ecfd45f3d4",
+      "after_sha256": "77cfcb270aff9c5eb11e14aab36b6b76d249e92361268fae36bbbf7e1700fcb2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NET_LUNG.parquet",
+      "before_sha256": "914cde1cdc2a8ed8d39b405a991e5665b12f68bdd87b99a5226fe604b1b94834",
+      "after_sha256": "f674bff951084f4599a8f0c68b016cb85e18f14650c15893be146eaddfa51686",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NET_MIDGUT.parquet",
+      "before_sha256": "d458eaf7bceead582a1e7e03b563e212d2b992753bf3d3f551518328aed2322f",
+      "after_sha256": "34d7c616efc452487edea2caf62e334cb9b1184344e6b0c4a08b27ce58044401",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NET_PANCREAS.parquet",
+      "before_sha256": "a5595462f2501a2f90a5a6bf1f6c49fa0e4375478dcfd0e6be060a69cbda619f",
+      "after_sha256": "71a9b43d297e2bce9bedd002b4e097cfac95f3754e57acdb588999ac0062c795",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NET_RECTAL.parquet",
+      "before_sha256": "b0ac01f274e4ddca5efa3bacc4e70d9e0c15e2126a2beb3b40416b5415c98516",
+      "after_sha256": "f6de6b187e96ab567c7e032c3ef303eec1d171462032d2d9ca90be44d10903df",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/NPC.parquet",
+      "before_sha256": "e53af9dc436ad5db1486e3aa0fc8ed6ff39f0e562153356e4b3080362281cdff",
+      "after_sha256": "5e37ed736bd04ea11315d46edebfcd26d84dbaa1ebd1cd7cec2497359fdacd33",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/OV.parquet",
+      "before_sha256": "1b5ae9a3befe26cedd639addd1ac55f10451ec59d357982790d07fabc37aaf33",
+      "after_sha256": "89ea8aff4e9068cb40bdad8752105128ef31e5bc5238f217258fc5b41c5fc2dd",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/PAAD.parquet",
+      "before_sha256": "ff67ba9cad48bc874b98e571e59ad4ce1f81522c60e3094c53d31cbc7b0d3cad",
+      "after_sha256": "f76b75c15a9b04a4ed549a42bb4cb7b417eaf6cb01a26116b37679432fe96ac1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/PCPG.parquet",
+      "before_sha256": "78d4ede4d152fd44f9e6f9f5dfc1ba0e07e6e7ad3cf437320081cdc275dc9cb6",
+      "after_sha256": "ec6cc9ffb686595256c6f42eb02dccbaa74b83bdb74a6f5ee10019f9fd70299a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/PRAD.parquet",
+      "before_sha256": "2902cacabfc983eb769f3a4d7dab059996ee0039665ca77c8dd829f0e48b71d2",
+      "after_sha256": "5869e61a1afb6af4a03d2ebccc804ef66668539d901578a3c68e64a9bfb7162e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/RB.parquet",
+      "before_sha256": "0e98bcee33f9a79063f2ff0cbdf99532ad84af802e24f615d02a62a4955150b4",
+      "after_sha256": "c0cf8f1cfa6cbdee0e3b749d61470bd5efb8736a871e7c3b8b38da6c6bc67145",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/READ.parquet",
+      "before_sha256": "58ab0469be48a569e1f1291461e55d087c2a7b106b9383195e92abc893f414b6",
+      "after_sha256": "68d8e85501e664bcb88940c9217e011f0089c659b7923b5d604ae9ac3e34d8aa",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/READ_MSI.parquet",
+      "before_sha256": "ece003ab6eb95570a28b7cbc28f7288abb8546d34b659ba5114d8ee6f4371c12",
+      "after_sha256": "99e271404c5099dd5f0ce5ab2d388dc2a76bb3abf9d66eb31d4509646836c2cb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/READ_MSS.parquet",
+      "before_sha256": "0b840664c968c92f519698d8beeab2345dea8699bb25ef750d580f7205c30ac7",
+      "after_sha256": "e6f82d5de4464920b7c3ea6b94bcca6f575d6adfa36649dfc1704516ca5e298a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/RT.parquet",
+      "before_sha256": "492ebf6184dea959f59e841b51268b49ee5b297541a54e41ce28d90de9b1fdad",
+      "after_sha256": "f958c29e7c5f0d7d234d2c89589447858c36d704ab3f475af2009638fd106bab",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_ANGIO.parquet",
+      "before_sha256": "9c84e3e791a8bbb53ed96e5ccc35c8d27735a7c060dadee2da302df4f5efa2ce",
+      "after_sha256": "3e26fe5a42d31d731ea7e20b1f1047e96acaa521b39e37832fffc46fd894aac2",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_ASPS.parquet",
+      "before_sha256": "9f8307bd8951be0e08587f0725bc2b4434552e0084d4e6a275c61795a5123594",
+      "after_sha256": "510e752868d69cfded5a2a43cec3fe00f7a8f40dfc421bfe562188887794a2da",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_CCS.parquet",
+      "before_sha256": "80cb41712ac7a819213191a8727e1fa2ed8436f6d85c5205b66d8dadf3a314ec",
+      "after_sha256": "d4323feaea73728ff5d981688beb5a3b2eefecabb56d700c641390f24c6d7ff3",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_CHON.parquet",
+      "before_sha256": "acf6b48ddbcfb67721aa84073922c7e97e289d29ab5d7df1bad64074a91cbb8a",
+      "after_sha256": "e7499b730ec70cf8034e768aa056f6536c489619626081d2c7cd6df407b694a1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_CHOR.parquet",
+      "before_sha256": "37fedbf151610533b2f8f977787b55d562600ea492929a354716ce76fa2e53fa",
+      "after_sha256": "acd76815c2e8ce1a97614f5ba814f3d1f2689759c342c053f7acebdb75b16c99",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_DDLPS.parquet",
+      "before_sha256": "7169f6df725e9f71745a2bd83f0db44e2332987dd7226915ae581c6d289069b5",
+      "after_sha256": "cff7daf1a256978386d1817f624316f97677fdb3e59df822e9a58dd1d69b3b8a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_DSRCT.parquet",
+      "before_sha256": "d5ad70fdf03170f969717cc99bb6b4f6deb91a7bf07cb83be67e6c7e6a0d71f7",
+      "after_sha256": "ef2e8a24554ff558097727fc4cb4f8c05aebd57d064f7696e819853fdcaf3b4c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_EHE.parquet",
+      "before_sha256": "73a2050d4cc78395afb521d40adf6df046072c3b1f27cbc95aa7d7b305331938",
+      "after_sha256": "439735b25b0b1dff8fb3ec866fef93633530191aeeb647d6ae0bf9dda34525b6",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_EPITH.parquet",
+      "before_sha256": "26c95d9c7c5fd35f285a6268cfb8533b5f53a627758ec217d7cab17dfe3002e7",
+      "after_sha256": "f96423581a6f121f481dbfb3a9d82223c650e7a355f41c42980b960674474d8a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_ESS_HG.parquet",
+      "before_sha256": "17f2376de750859b3bcd2a9baa870c697e1fd2d1f09b7cd67c24d1d2249fbeed",
+      "after_sha256": "5e0f59f5a22c902319315dbb303f859df4bfe46f8994a1cf020e24d0df91eea1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_ESS_LG.parquet",
+      "before_sha256": "e5823058e6a8cf9e66e8a9a591cfef3a32204e8d8ed5299f143627c04ef5679a",
+      "after_sha256": "6f1b70822ed6dba2e66c0df765167ff0be7af0db6e9e8148a8a73b446f25ee3e",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_EWS.parquet",
+      "before_sha256": "2b2a349fc41fb7d4c3959b901caab8716e8f38de31e6956a906d912086267a69",
+      "after_sha256": "262782661e9abf1a5de0a7372574267a0cef12f766d0857bc6f269762e9b95b6",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_GIST.parquet",
+      "before_sha256": "20939b3ac8b4423e54bfb83b1af1e32b9e8161340923d32944b9a10ea9663941",
+      "after_sha256": "70685cdad840053ea6ce2ffeba9b9a5123cd2bcf6f0f5e43cd2e933d96f837d5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_IFS.parquet",
+      "before_sha256": "3dc8565249196e4ef9c465218671f26bc3587575d44ea376065fffafdf29e7cd",
+      "after_sha256": "99ae303a984b3de2191b42fc444cf933b42dd15318494a23bd016e3df41c0639",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_IMT.parquet",
+      "before_sha256": "72a67ff9a10fb2d65427e292a5891300d5d2a680e26b8ed7ff108794b8293ac3",
+      "after_sha256": "bc486376a4aa420ed631a218ca45263b4d1723623702578dcbbc1ce6004029d7",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_KS.parquet",
+      "before_sha256": "5372cb5be5045f1e616ddbeffe396994d699883c54ad4e37d87a28f44e4d6194",
+      "after_sha256": "0c52eb7868042eeb461ee8c828fb50e2057f1347dc495b49edc6f30d3f5381cb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_LGFMS.parquet",
+      "before_sha256": "cf33c9f7ab5e9572eadc12263cbb5ef760d3f96f31af0c4ae307f27b65d460fc",
+      "after_sha256": "ea90a5f6d69550a5d74492604860ca809d6e8ea60ef25aed0d1167898be74ff1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_LMS.parquet",
+      "before_sha256": "658eafd732d21459855f110dabecd557061a8d4f6075f3adf586280377963e4c",
+      "after_sha256": "6134666821ea3b4af09f3b2d5ca4c1aafc17074aef529b6280a371b27fe3a2ab",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_LPS_UNSPEC.parquet",
+      "before_sha256": "feacce0dd95b6eba8b31b9ec91e241b8a85b87699aadb73adde3263aeb9ef182",
+      "after_sha256": "d2f6b9cfd1776921011c972dffdbd423157b4248fbd3ff7210ca01d5950aeef6",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_MMNST.parquet",
+      "before_sha256": "b01133d7c666e25b3e9ca722824de06db2233cfbcd0b3de5797a18d3b8d34ae0",
+      "after_sha256": "3b06da5170712acb2e03b558d6a42a2ab7c0852fc0632377e1ecce33007db22f",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_MPNST.parquet",
+      "before_sha256": "487551203f60ae38e266a7712ba2a5d5d247f36fe4be7ec767a0ae8b3a0a73fc",
+      "after_sha256": "fca78cb0f325abf73af93d038d93b3a3588ef41d817aaf2cbf732d2a1d2b2edb",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_MYXFIB.parquet",
+      "before_sha256": "a91a4f990e43aff7d1fd490c7d5d392ca92f1d6ad0a56d7c7924ccc71f36666f",
+      "after_sha256": "de882e08dc6e653fc71ee6b85634d40b8d42b44c6710128416d0c036cf17039c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_MYXLPS.parquet",
+      "before_sha256": "d465cd1b3d1ab7f8fb917929d648c7103b5fdfc3193373a39fefbe2f36d492dd",
+      "after_sha256": "fb18bd734e64fa891c6cf20ee57ecdb5b0936bf868ab3ea26b69c2281b511bd0",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_OS.parquet",
+      "before_sha256": "d14705212d320ba0ede8120182a7d3746a5003fde85293e97e7344341646241d",
+      "after_sha256": "71e9f334b400d68d28e8dddcb7248badee3d5a16efd08764d3cc118a20c24756",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_PEC.parquet",
+      "before_sha256": "396e882ce2b381efccddfaceeeabcc57f2ea90800ae401be21bc6f419918d3a7",
+      "after_sha256": "10925b80e247555160b271ca7292aa98e932919fb4d689dec16e6422f1a064f1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_PLEOLPS.parquet",
+      "before_sha256": "144c6c721463f885c448476c231fc07fbcebbeb7d8e534811c8d3ae6557bb6d0",
+      "after_sha256": "bd2f59b759f691193b71f91fc0f2ccb29978cd21028c30ec8ccdd36f4371dc8d",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_RMS_ARMS.parquet",
+      "before_sha256": "160beb367bfa8b9c3a425c0c4d491ed51f171ee27333bd3b4f077b180183d099",
+      "after_sha256": "2839092a67156de398d5d657ce3dfabccf6cecff43effa7dc4f6c7f5ceb4c946",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_RMS_ERMS.parquet",
+      "before_sha256": "c3aaa2c03a78777576ac97ba4c27131dd8d9f0428e6fa9f12b346500d3e2de08",
+      "after_sha256": "e907232b057a2054bdc83010846722eee464601b3aae2754bec39a548b6c7625",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_RMS_PRMS.parquet",
+      "before_sha256": "930e972f3a03cdeda8369e23a5380ccc93a6ec74dbfcce1ad179f11d181acbdc",
+      "after_sha256": "f6f806f2b87b4c956a44e4cf7008f5c36c4a8b7c02ee02381a3d1fd1a3fa6abd",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_RMS_SSRMS.parquet",
+      "before_sha256": "67359d7e78b4e8e615ade1625db58584999c2639705eceb02f5a6a46011c117c",
+      "after_sha256": "ab36d65c9a6a169aacfe5f9a0f5668b0267f60da4cf3731c214ef738aa3dd1ee",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_SYN.parquet",
+      "before_sha256": "f538b94064892d05acac24c707ff8ad38674e8973f002c650786edae8a821de3",
+      "after_sha256": "cb98a417b8a2ee747eb9ff6ffffdb1a198a31ecb24bf85367448cd234e919afc",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_UPS.parquet",
+      "before_sha256": "e9a09138e04e213bb96fa433c75c4ea1d32db56eb22e900073f00c57d8c90694",
+      "after_sha256": "fa6c0390a189b7d50b48d22aadafd6ec6eecaa003c595512cbbde3171b183465",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SARC_WDLPS.parquet",
+      "before_sha256": "44a3063d76c616715a9a08305d06e95496d7cb97f6be4c1f4df82a66efee8c1b",
+      "after_sha256": "ff2eb29993be041327c56cdbaca1cca25e2adca906f270651c3f1b58ba219cb4",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SCLC.parquet",
+      "before_sha256": "8b0f5e241fed89043c4806408f30fe00f08c26e9a70542e79ae0924a052d02e1",
+      "after_sha256": "89acf5c65789a46f7accdae4c41edfbe96bb7fddde580312b5188557b84b938b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SCLC_ASCL1.parquet",
+      "before_sha256": "ca6b8f5096b979e3ce3aa44b07d6430849e329b4cdaf0b19fb55ea18c8558407",
+      "after_sha256": "dd16ea4b6d0e7b4932ac34a4f6eaf65170d6c9b1e3c2a0fcca532ccce03e8b0b",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SCLC_NEUROD1.parquet",
+      "before_sha256": "1505577841a369d3e9a1e2f9254512467a3740151d22e2c3f61a7c13fb87dd3e",
+      "after_sha256": "ee85ccf7be9cacff5516b51ecf53c1616630e46e0b49f6e55dee660d9f68c47c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SCLC_POU2F3.parquet",
+      "before_sha256": "b09f07530b0a1583fc6473e8b784b705b3a07642954c3333b08b6686054ed3cf",
+      "after_sha256": "703c54c05a122c3b9804eac69180f40d4d2c4e7daf8595b20121a2e3f599b190",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SCLC_YAP1.parquet",
+      "before_sha256": "7650f5bf32f0d02c29aff4cac22656ba00ae7d4af223bb4adaf6b2f3f334ad16",
+      "after_sha256": "fd7b63a09f799724cb5a864252ed5fdeb24714a4648e716802dd3a45a8b7e114",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/SKCM.parquet",
+      "before_sha256": "5a6aebb8120484b0fca37004cdef976950a591c8f41ac41afba4a6ea3db0d400",
+      "after_sha256": "0192247619bc72288097a9eed1be17a2265ab7bf4455a17635aa1da65687f0e0",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/STAD.parquet",
+      "before_sha256": "668436ec67bd2afaf50f090a6062f4ca4b8203ef13587b4224dec506147181db",
+      "after_sha256": "cd04fb10e5034e7aa218dadcf1844a1a63cda8005d178e2852e1d9508782d1f1",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/STAD_CIN.parquet",
+      "before_sha256": "fa3b75903284babd9959b8790fda38a562af761bcdb582c7e2d15b8e76c72fdb",
+      "after_sha256": "dc7d8e0c5877df8768b77df7758c289e7e4c68684813b7e94cb371be3f1924b3",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/STAD_EBV.parquet",
+      "before_sha256": "0bf866be86601aef90ab25f14b010eded597d33418703e3fc2652aeee7bfab1a",
+      "after_sha256": "3462c06661749f5271e86b85257757fb7909e8f538e534dba23cdb62dbca3ec4",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/STAD_GS.parquet",
+      "before_sha256": "afa805b2a7c2750d67bc1a1b6012cb5c1a5a04ff3b1de130dd240864ebe752b1",
+      "after_sha256": "2f1c10d075f192b7ed8fcf329dd1a0ba85c0b6658a9b7e376de69f988cae2fce",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/STAD_MSI.parquet",
+      "before_sha256": "fe60cb75ec53b884960348bb8846839d5db9dffa31a74c4cf8b03a2cfb66409c",
+      "after_sha256": "66714b7345c4af8815fd07a1e2cee803848b1ce85da132d6aaf04257b965aaf3",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/TGCT.parquet",
+      "before_sha256": "bfca1cb5ddfc4265e8aeab82f1f2d5c49909b5754fb5ee5ae8387a4b6d952f43",
+      "after_sha256": "021f40dfb95f7c97296c7437b59d0c4e9c07440410c477fde773a28d6e955411",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/THCA.parquet",
+      "before_sha256": "44715f77e49b7bac306930914296056de1b70f6d59017a342febc4f5f5e01fb2",
+      "after_sha256": "6476355eeac03d69d272396aff4f14dfcee0d244215dcbbb5cd11322911c107a",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/THYM.parquet",
+      "before_sha256": "72e38b38976d43e2429781c0c182e53f1733c2d053e596c90617ff28a08ea6cf",
+      "after_sha256": "2c431253317af5611f1de7436ba8fa19e5d39ac26d6a590da6ff6242181d11f5",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/T_ALL.parquet",
+      "before_sha256": "74486ad03c6bba2bc5064f4c41bbd18b3e974f1ec34b07eb64ea489179fd598d",
+      "after_sha256": "355d22c5d5a9ee7d9ef1249cb925a742b4bc538441c167bafc2342e7d56cdf65",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/UCEC.parquet",
+      "before_sha256": "bd964c6b721495079ec2aec6debeaf7654581250e367d73a522fe4ad72fda4bd",
+      "after_sha256": "7dff0f51066b12c770f39f04aa553e31cfac838fafa41aebc272951a9218c020",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/UCEC_CNH.parquet",
+      "before_sha256": "cf40a79864acdaf400e6f7798f9fd3d83fceef44e157044a12935775a00bd6bf",
+      "after_sha256": "31bf541d11d42ed7930e6297768b83a03362d96e2a6731a7aaac39cd3794ac51",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/UCEC_CNL.parquet",
+      "before_sha256": "7b37278eafa0eec87d99f1413cc36e0b3eab197f1614cb2f13642cea4dd78204",
+      "after_sha256": "8058cee7565fee360f505f4e18dbf75ede2f845677a1abdbe63a6dd9fc4dc5ea",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/UCEC_MSI.parquet",
+      "before_sha256": "29aa8c2f840517c4b6030a04ca882e20a6e6e96608f5a7690b32bb9e739e0aee",
+      "after_sha256": "36f3348d6faea918417b6bb13886ea946f2e267a1d14a1737fcd1a4f16b7a693",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/UCEC_POLE.parquet",
+      "before_sha256": "fbc4c73c01215a6740f26377fcc8e0b461f940606388875d9178b12b18f6041e",
+      "after_sha256": "49d04bef54f3e45936f446b7b9ab90b3a9935e3059c18762bd1a60a349ed09e6",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/UCS.parquet",
+      "before_sha256": "027902834ad2cd2d32e50b627d754b8203be1a9a5582334f1ff394c1dd901ba2",
+      "after_sha256": "446d7e24fa73c8d61a9b7af02f7bcf25a2c5b9e38be0d04f011868ac311abb94",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/UVM.parquet",
+      "before_sha256": "0d5f1eb6759ffd1fcdf4b9f6b1f5f937ff2a4e00c03c9f4710636c169dae9410",
+      "after_sha256": "2ea7767f1e78f1c540a077a6f2d3e04838cdf92572e928d8fe1ed9393ce1cc52",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/VSCC.parquet",
+      "before_sha256": "5c6d86ad8349a1b5761dd1152f5af1d0333f09b201ebde124b9283ef8a9e2a78",
+      "after_sha256": "cf8ca704ec0f27fbfb969f7dcc76e6f8d062c532511a99bee1ac47392822180c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/WILMS.parquet",
+      "before_sha256": "e0a8f4122d8616aa26032c0047547b2c4396deaa95d1dd79d13730880a97a98c",
+      "after_sha256": "b9ffe18571108a9f68420b2f4ff1bc34b724e6e6ab7bd7c192eb73b4e3313c4c",
+      "values_unchanged": true
+    },
+    {
+      "file": "cancer-reference-expression-within-sample-top5-proteoform-cta/cSCC.parquet",
+      "before_sha256": "12c0793541d95105b989b74889431cd931eb7878d1d9f2331de5945c3257b016",
+      "after_sha256": "7cce6b89e6525eb0ad17530b56a424a1f01637064e27315c316c9bdba80bd08c",
+      "values_unchanged": true
+    }
+  ]
+}

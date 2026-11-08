@@ -1,0 +1,44 @@
+{
+  "policy_id": "oncoref.transcript-selection.2026-11-08.1",
+  "baseline_commit": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+  "previous_categories": {
+    "Unsafe": 18255,
+    "Other": 1006,
+    "CTA": 602
+  },
+  "categories": {
+    "Unsafe": 18259,
+    "Other": 1027,
+    "CTA": 607
+  },
+  "protein_records": 19893,
+  "classified_loci": 20099,
+  "loci_with_changed_default": 8665,
+  "previous_cta_loci": 646,
+  "current_cta_loci": 655,
+  "cta_loci_added": [
+    "ENSG00000152430",
+    "ENSG00000161652",
+    "ENSG00000174225",
+    "ENSG00000183632",
+    "ENSG00000188782",
+    "ENSG00000205456",
+    "ENSG00000205457",
+    "ENSG00000205777",
+    "ENSG00000215131",
+    "ENSG00000261509",
+    "ENSG00000274944",
+    "ENSG00000275034",
+    "ENSG00000278848"
+  ],
+  "cta_loci_removed": [
+    "ENSG00000178795",
+    "ENSG00000205097",
+    "ENSG00000225899",
+    "ENSG00000257046"
+  ],
+  "representative_review_loci": 563,
+  "surface_exact_matches": 35,
+  "previous_sequence_bundle_id": "oncoref:sequence-bundle:v1:sha256:607c4ede9af40e33657ce84b58eff11087e66be7942a9a156a81480e8d06335a",
+  "sequence_bundle_id": "oncoref:sequence-bundle:v1:sha256:c8c060edab62e089fd4651065a857a8eaecb7c68816b016b3ac4c9fd06fa9525"
+}

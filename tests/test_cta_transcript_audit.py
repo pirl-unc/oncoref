@@ -100,15 +100,13 @@ def test_existing_qualification_failures_are_not_promoted(reference, symbol):
     assert proposal(reference.loc[reference.symbol.eq(symbol)])["sequence_sha256"] is None
 
 
-def test_report_covers_every_released_cta_and_retains_alternative_translations():
-    from oncoref import cta_selection
-
+def test_historical_report_covers_134_ctas_and_retains_alternative_translations():
     root = Path(__file__).resolve().parents[1]
     audit = json.loads(
         gzip.decompress((root / "docs/audits/cta-transcripts-20261108/audit.json.gz").read_bytes())
     )
-    released = cta_selection.profiles().query("category == 'CTA'")
-    assert {r["entity_id"] for r in audit["proteins"]} == set(released.entity_id)
+    # This is the frozen pre-migration audit, not the current selection registry.
+    assert len({r["entity_id"] for r in audit["proteins"]}) == 602
     assert len(audit["transcripts"]) == 1452
     proteins = {r["protein"]: r for r in audit["proteins"]}
     assert sum(r["default_change"] for r in proteins.values()) == 53

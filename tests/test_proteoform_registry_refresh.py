@@ -153,6 +153,20 @@ def test_recomputed_percentiles_do_not_claim_stale_artifact_qc(old_registry_shar
     assert out.attrs["artifact_sample_qc_verified"] is False
 
 
+@pytest.mark.parametrize("dataset_name", ["percentiles", "within_sample"])
+def test_explicitly_unavailable_artifact_cannot_be_served(old_registry_shards, dataset_name):
+    dataset = expression.SHARD_DATASETS[dataset_name]
+    path = old_registry_shards / dataset.subdir(proteoform=True) / "PRAD.parquet"
+    frame = pd.read_parquet(path)
+    frame.attrs.update(_proteoform_registry_metadata("cta"))
+    frame.attrs.update(artifact_status="unavailable", unavailable_reason="native scale invalid")
+    frame.to_parquet(path, index=False)
+    with pytest.raises(ValueError, match="unavailable: native scale invalid"):
+        expression._read_shard_or_recompute(
+            dataset, "PRAD", proteoform=True, auto_fetch=False, shard=path
+        )
+
+
 @pytest.fixture
 def stale_summary_source(tmp_path, monkeypatch, rbmy_expression):
     """Exercise real source loading/normalization/QC, not a pre-cleaned matrix stub."""

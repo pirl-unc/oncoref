@@ -39,8 +39,8 @@ from oncoref.gene_matching import (  # noqa: E402
     resolve_measurement_rows,
 )
 
-FROZEN = ROOT / "docs/audits/cta-release-1.21.0"
-BASE = ROOT / "docs/audits/cta-harmonized-20261027"
+FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
+BASE = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/regrouped"
 OUTPUT = ROOT / "docs/audits/cta-selection-20261028"
 CROSSWALK = ROOT / "oncoref/data/cta-ihc-compartments.csv"
 UNIVERSE = ROOT / "oncoref/data/cta-protein-universe.csv"
@@ -881,6 +881,8 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
             & maximum.notna()
             & (facts.oncoref_maximum_tpm.isna() | maximum.gt(facts.oncoref_maximum_tpm))
         )
+        if receipt.get("scope") == "complete_pinned_tumor_union":
+            better = facts.member_count.gt(1).eq(multi)
         for target, source in [
             ("oncoref_maximum_tpm", "maximum_tpm"),
             ("oncoref_maximum_sample", "maximum_sample"),
@@ -907,6 +909,11 @@ def build(output: Path = OUTPUT, *, reuse_contexts: bool = False) -> None:
         Path(__file__),
         ROOT / "oncoref/cta_selection_policy.py",
         ROOT / "oncoref/translation_qualification.py",
+        ROOT / "oncoref/transcript_selection.py",
+        ROOT / "oncoref/data/transcript-selection.json",
+        ROOT / "oncoref/data/transcript-selection.csv.gz",
+        ROOT / "oncoref/data/transcript-evidence.json",
+        ROOT / "oncoref/data/proteoform-groups-genome.csv",
         ROOT / "oncoref/data/translation-qualification.json",
         ROOT / "oncoref/data/translation-qualification.csv.gz",
         ROOT / "oncoref/gene_knowledge.py",

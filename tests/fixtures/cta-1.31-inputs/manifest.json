@@ -1,0 +1,50 @@
+{
+  "purpose": "Frozen 1.31.0 evidence-guide input bytes",
+  "files": {
+    "scripts/build_cta_evidence_explorer.py": {
+      "sha256": "c0eb8a6f7fe89fcc21fc0ac37232f925bdb31c35f148dd8bdd4d75074f4e4682",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 32284
+    },
+    "scripts/replay_cta_selection.py": {
+      "sha256": "0f13a1c80af885a9e77887dfa5eb79cfb4fb8265b6fc7768e09880da478c8e28",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 54388
+    },
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": {
+      "sha256": "d9b4b9cd2367dc60cf755b7daa9c8e3325e09efb1e33d7de3aa3bc34673e49a3",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 5480037
+    },
+    "docs/audits/cta-selection-20261028/context-replay.json": {
+      "sha256": "fa1af07ad86c0ce855806f85a0bc8e8a87738e4dd43c67bb11ea3dfc03ea0a17",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 5024
+    },
+    "docs/audits/cta-selection-20261028/hpa-protein-evidence.csv.gz": {
+      "sha256": "ca41fd52f978652fabfc8860c9bda00c3b30355414fc6632c0b06588fbd347bf",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 5181508
+    },
+    "oncoref/data/cta-selection-human.csv.gz": {
+      "sha256": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 1146998
+    },
+    "oncoref/data/cta-selection-profiles-human.csv.gz": {
+      "sha256": "c3b96f2e464415ab375853119d25feca1819e354af1dcaa6944766a432c3dda3",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 2244592
+    },
+    "oncoref/data/cta-selection-sources.csv": {
+      "sha256": "92a0ce6f1dfe339c65c16130970d251b4219ba871c06050fea6a5ccf568f46a8",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 30370
+    },
+    "oncoref/data/cta-selection-audit.json": {
+      "sha256": "1d111e59afb75c920a92d9c144ae765c6dfe672479abed646e5b3b7918380bf7",
+      "commit_or_tag": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+      "bytes": 3018
+    }
+  }
+}

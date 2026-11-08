@@ -1,0 +1,82 @@
+{
+  "schema": "oncoref.transcript-evidence",
+  "schema_version": 1,
+  "findings": [
+    {
+      "id": "transcript-review-20261108-gdpd4",
+      "gene_id": "ENSG00000178795",
+      "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
+      "scope": "exact_sequence",
+      "sequence_sha256s": [
+        "4d8d6c76bc7c1a403fed635da56123affea6c95fddc132677d5f32655f833b82"
+      ],
+      "disposition": "hold",
+      "evidence_kind": "reference_disagreement",
+      "reviewed_on": "2026-11-08",
+      "rationale": "MANE selects 520 aa; the pinned UniProt Q6W3E5 sequence is 623 aa. Resolve exact proteoform support and feature mapping before automatic target admission.",
+      "limitations": "This disagreement does not establish that either isoform is absent or unsafe.",
+      "sources": [
+        {
+          "title": "UniProt Q6W3E5: GDPD4",
+          "url": "https://www.uniprot.org/uniprotkb/Q6W3E5/entry"
+        }
+      ]
+    },
+    {
+      "id": "transcript-review-20261108-slco1b3-slco1b7",
+      "gene_id": "ENSG00000257046",
+      "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
+      "scope": "exact_sequence",
+      "sequence_sha256s": [
+        "69d2ed4318a3333449090adf7c11160e1d3ca92a42ad75eefab3e06e71e285d6"
+      ],
+      "disposition": "hold",
+      "evidence_kind": "reference_disagreement",
+      "reviewed_on": "2026-11-08",
+      "rationale": "The Ensembl canonical sequence is 748 aa, while the UniProt F5H094 and studied LST-3TM12 protein are 687 aa. The study cannot establish the selected 748-aa product.",
+      "limitations": "The native hepatocyte findings concern the studied product; normal-tissue hazard requires its independent assessment.",
+      "sources": [
+        {
+          "title": "LST-3TM12 is a member of the OATP1B family and a functional transporter",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29248594/"
+        }
+      ]
+    },
+    {
+      "id": "transcript-review-20261108-frg2",
+      "gene_id": "ENSG00000205097",
+      "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
+      "scope": "gene",
+      "sequence_sha256s": [],
+      "disposition": "hold",
+      "evidence_kind": "translation_challenge",
+      "reviewed_on": "2026-11-08",
+      "rationale": "The reviewed study challenges protein production with tagged endogenous-ORF experiments, Ribo-seq/proteomic analyses and evidence of RNA function. Coding annotation alone does not resolve this counterevidence.",
+      "limitations": "Negative results concern the tested systems and do not prove absence of protein in every tissue or tumor.",
+      "sources": [
+        {
+          "title": "FRG2/FRG2B experimental study, PMID 40637237",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12242771/"
+        }
+      ]
+    },
+    {
+      "id": "transcript-review-20261108-frg2b",
+      "gene_id": "ENSG00000225899",
+      "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
+      "scope": "gene",
+      "sequence_sha256s": [],
+      "disposition": "hold",
+      "evidence_kind": "translation_challenge",
+      "reviewed_on": "2026-11-08",
+      "rationale": "The reviewed study challenges protein production with tagged endogenous-ORF experiments, Ribo-seq/proteomic analyses and evidence of RNA function. Coding annotation alone does not resolve this counterevidence.",
+      "limitations": "Negative results concern the tested systems and do not prove absence of protein in every tissue or tumor.",
+      "sources": [
+        {
+          "title": "FRG2/FRG2B experimental study, PMID 40637237",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12242771/"
+        }
+      ]
+    }
+  ]
+}

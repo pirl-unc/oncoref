@@ -147,9 +147,7 @@ def build_registry():
                 key, "Retain the original list, assay scope and independent source provenance."
             ),
         }
-    with gzip.open(
-        ROOT / "docs/audits/cta-source-walkthrough-20261028/human-memberships.csv.gz", "rt"
-    ) as handle:
+    with gzip.open(ASSETS / "historical-paper-memberships.csv.gz", "rt") as handle:
         for row in csv.DictReader(handle):
             edges.append(
                 {
@@ -447,7 +445,8 @@ def build_registry():
         ROOT / "scripts/import_cta_localization.py",
         OUT / "search-ledger.json",
         OUT / "review-population.json",
-        ROOT / "docs/audits/cta-source-walkthrough-20261028/human-memberships.csv.gz",
+        ASSETS / "historical-paper-memberships.csv.gz",
+        ASSETS / "classification-baseline.json",
         ROOT / "oncoref/data/cta-publication-sources.csv",
         *sorted((ASSETS / "literature").glob("*")),
     ]
@@ -878,7 +877,7 @@ def write_index(data):
 
 The harmonized collection has {c["core_papers"]} core papers and {c["supplementary_sources"]} supplementary sources. Its mapped coverage reaches {c["covered_ctas"]} of the 602 released CTA records. {c["ctas_without_exact_paper_coverage"]} remain without qualifying paper coverage. The expression and reference datasets remain the basis of selection.
 
-The 1.31.0 classifications are frozen. Normal-expression and identity findings in this review require adjudication before the next classification release.
+The 1.31.0 classifications here are frozen. [Current reference selection and coding reviews](../cta-transcript-selection-20261108/index.md) apply the GDPD4, SLCO1B3–SLCO1B7 and FRG2/FRG2B holds; use that report for current classifications and sequence coordinates.
 
 - [Individual reviews](individual-reviews.csv)
 - [Core and supplementary sources, roles and overlap](sources.csv)

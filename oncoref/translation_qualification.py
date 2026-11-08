@@ -90,7 +90,7 @@ def records() -> pd.DataFrame:
     return frame
 
 
-def annotate(facts: pd.DataFrame, table: pd.DataFrame | None = None) -> pd.DataFrame:
+def annotate_legacy_longest(facts: pd.DataFrame, table: pd.DataFrame | None = None) -> pd.DataFrame:
     """Revalidate common longest primary-locus sequence under the pinned reference.
 
     An alternate-locus alias or a shorter complete isoform cannot silently rescue
@@ -124,4 +124,73 @@ def annotate(facts: pd.DataFrame, table: pd.DataFrame | None = None) -> pd.DataF
     result["translation_qualification_reasons"] = reasons
     result["representative_sequence_sha256s"] = hashes
     result["translation_qualification_policy"] = POLICY_ID
+    return result
+
+
+def annotate(
+    facts: pd.DataFrame, table: pd.DataFrame | None = None, *, ledger: dict | None = None
+) -> pd.DataFrame:
+    """Attach current representative decisions without conflating support and quality."""
+    from . import transcript_selection
+
+    selected = (
+        transcript_selection.records()
+        if table is None
+        else transcript_selection.select(
+            table, transcript_selection.evidence() if ledger is None else ledger
+        )
+    )
+    by_gene = selected.set_index("gene_id").to_dict("index")
+    rows = []
+    for ids in facts.member_gene_ids.map(json.loads):
+        candidates = [by_gene.get(g) for g in ids]
+        if not candidates or any(r is None for r in candidates):
+            rows.append(
+                {
+                    "translation_qualified": False,
+                    "translation_qualification_reasons": "missing_primary_translation",
+                    "representative_selection_approved": False,
+                    "representative_selection_reasons": "missing_primary_translation",
+                    "representative_sequence_sha256s": "[]",
+                    "representative_candidate_sha256s": "[]",
+                    "representative_evidence_ids": "[]",
+                    "representative_transcripts": "[]",
+                }
+            )
+            continue
+        common = set.intersection(*(set(r["candidate_sequence_sha256s"]) for r in candidates))
+        qualified = bool(common) and all(r["qualification_passed"] for r in candidates)
+        approved_hashes = {r["selected_sequence_sha256"] for r in candidates}
+        approved = (
+            all(r["selection_status"] == "selected" for r in candidates)
+            and len(approved_hashes) == 1
+        )
+        reasons = sorted({s for r in candidates for s in r["selection_reasons"]})
+        if not common:
+            reasons.append("representative_sequence_mismatch")
+        rows.append(
+            {
+                "translation_qualified": qualified,
+                "translation_qualification_reasons": ""
+                if qualified
+                else " | ".join(reasons or ["designated_translation_incomplete"]),
+                "representative_selection_approved": approved,
+                "representative_selection_reasons": " | ".join(sorted(set(reasons))),
+                "representative_sequence_sha256s": json.dumps(sorted(approved_hashes))
+                if approved
+                else "[]",
+                "representative_candidate_sha256s": json.dumps(sorted(common)),
+                "representative_evidence_ids": json.dumps(
+                    sorted({v for r in candidates for v in r["evidence_ids"]})
+                ),
+                "representative_transcripts": json.dumps(
+                    sorted({v for r in candidates for v in r["selected_transcripts"]})
+                ),
+            }
+        )
+    result = facts.copy()
+    for column in rows[0] if rows else []:
+        result[column] = [r[column] for r in rows]
+    result["translation_qualification_policy"] = POLICY_ID
+    result["representative_selection_policy"] = transcript_selection.POLICY_ID
     return result

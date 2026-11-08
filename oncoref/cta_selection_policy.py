@@ -28,7 +28,7 @@ from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
 from .tissue_hazards import context_tiers
 
-POLICY_ID = "oncoref.cta-selection.2026-11-05.1"
+POLICY_ID = "oncoref.cta-selection.2026-11-08.1"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
 APPRECIABLE_RNA = 2.0
 # Manageable-tier RNA above the highest Manageable ceiling (16 x 2^3 = 128 in
@@ -44,7 +44,7 @@ OTHER_SUBTYPE_RULES = {
     "Diffuse": "Reproductive presence and cancer presence pass, but the reproductive concentration gate fails. Inspect assessment status independently.",
     "Held": "Target gates pass, but an unresolved or marginal normal-tissue signal blocks CTA without establishing Unsafe.",
     "Nested": "A reference-CDS microprotein (under 50 residues) nested inside a same-strand protein-coding gene and not an established ncORF: its RNA signal belongs to the host, so it cannot be a CTA.",
-    "Translation": "The selected primary-locus reference translation needs qualification; this is not normal-tissue exclusion evidence.",
+    "Translation": "No complete, approved representative protein: annotation is incomplete or conflicting evidence remains unresolved.",
     "Contained": "Every CTA gate passes, but at least 95% of its 9-mers also occur in Unsafe proteins, so almost no peptide survives the Unsafe sequence blacklist.",
 }
 CANDIDATE_ONLY_LAYERS = frozenset(
@@ -464,7 +464,11 @@ def tumor_restricted_evidence(facts: pd.DataFrame) -> pd.DataFrame:
 
 def translation_admission(facts: pd.DataFrame) -> pd.Series:
     """Require both entry support and qualification of the exact selected record."""
-    columns = ["translation_support_eligible", "translation_qualified"]
+    columns = [
+        "translation_support_eligible",
+        "translation_qualified",
+        "representative_selection_approved",
+    ]
     for column in columns:
         if facts[column].isna().any() or facts[column].dtype != bool:
             raise ValueError("Complete boolean translation evidence required")

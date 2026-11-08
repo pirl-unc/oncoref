@@ -3,25 +3,21 @@
 [Read the illustrated, searchable report](report.html) · [Download the PDF](cta-definition.pdf)
 · [Current report receipt](release-receipt.json) · [Full report data](report-data.json).
 
-[Filterable candidate evidence table](../cta-evidence-guide-20261106/report.html#explorer) ·
-[The 122 CTAs outside the registered nomination papers](../cta-evidence-guide-20261106/report.html#analysis) ·
-[Data sources, review categories and cited tissue rationales](../cta-evidence-guide-20261106/report.html#sources).
-
-Current selection policy: `oncoref.cta-selection.2026-11-05.1`. Consumer-role policy:
+Current selection policy: `oncoref.cta-selection.2026-11-08.1`. Consumer-role policy:
 `oncoref.sequence-roles.2026-11-04.1`. These identities are separate because changing
 uncertainty handling need not change a biological classification.
 
-**All 19,863 candidate protein records enter classification.**
-Translation support is an admission requirement; 259
+**All 19,893 candidate protein records enter classification.**
+Translation support is an admission requirement; 295
 records lack the former coding/established-ncORF entry evidence and remain visible
 as Unsafe or Other. No record is removed before the normal-evidence assessment.
-The classified results are **602 CTA,
-18,255 Unsafe and 1,006 Other**.
+The classified results are **607 CTA,
+18,259 Unsafe and 1,027 Other**.
 Identical selected reference sequences count together; member gene loci remain
 traceable. These are representative proteins, not a complete inventory of splice
 isoforms or modified proteoforms. [Inventory and translation admission](../../cta-selection.md#complete-candidate-inventory).
 
-An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and qualification of the exact selected translation. Every input record is assessed, including those with insufficient translation support.
+An OncoRef CTA candidate is a reference-resolved protein with supported cancer expression and qualifying reproductive or developmental association that passes the named normal-tissue evidence, coverage and selection rules. CTA admission requires qualifying coding annotation or supported ncORF evidence and a complete, approved MANE Select or Ensembl canonical representative, with any conflicting coding evidence resolved. Every input record is assessed, including those with insufficient translation support.
 
 ## Evidence status and consumer roles
 
@@ -34,12 +30,12 @@ can still exclude shared sequence.
 
 | Role | Proteins |
 |---|---:|
-| Exclude | 18,255 |
-| Unresolved (`review`) | 586 |
-| No exclusion recorded (`allow`) | 1,022 |
+| Exclude | 18,259 |
+| Review | 605 |
+| Allow under this policy | 1,029 |
 
-Compared with the pinned 1.29.0 snapshot, **484
-classifications and 598 roles change**.
+Compared with the pinned 1.29.0 snapshot, **653
+classifications and 768 roles change**.
 [Every changed record](changes-from-1.29.0.csv) retains baseline/current values.
 The [full role table](sequence-roles.csv.gz) preserves identity, reasons and policy.
 

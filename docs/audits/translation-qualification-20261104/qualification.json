@@ -24,7 +24,7 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "orfdata_identity": "dbd1dd752e24ea08f4d787e48fe04e3464ebce248190572782d6e356e010822f",
-  "records_sha256": "d19a92dd22885be72047435da16d87ef9d4b8f74600c1b056b5025c06b260164",
+  "records_sha256": "82c53048bc40e161e8c0f2df1ff5a44e071f4d42035d41bd6646f9bd0dc43303",
   "records": 245535,
   "qualified_records": 185993,
   "reason_counts": {
@@ -37,8 +37,8 @@
     "alternate_or_unplaced_locus": 11540
   },
   "inputs": {
-    "scripts/build_cta_translation_qualification.py": "8372993daf88aa6a0e121906dff73607fcd910751734493ed45c3f6090ab282b",
-    "oncoref/translation_qualification.py": "6e612be63f0fb16eec840702b9a66a597778295f07a25e964bf0245ea60caa8a"
+    "scripts/build_cta_translation_qualification.py": "2fdcc911eaacd905b84f3f70d38ada9ede620dff7873a36b77121eb53c36c207",
+    "oncoref/translation_qualification.py": "968f579cfc9a0872e61298187b9b435033bc846ae4c072207ca2ccb0bc7ad517"
   },
   "limitations": [
     "Annotated translation competence, not experimental protein production",

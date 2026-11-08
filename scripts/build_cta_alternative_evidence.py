@@ -31,6 +31,10 @@ from oncoref.gene_matching import (  # noqa: E402
 
 DOWNLOADS = ROOT / "tmp/cta-source-consolidation"
 OUT = ROOT / "docs/audits/cta-selection-20261028/alternative-evidence"
+FACTS = (
+    ROOT
+    / "docs/audits/cta-transcript-selection-20261108/inputs/frozen/protein-group-classifications.csv.gz"
+)
 GTEX_SOURCE = "gtex_tissue_rna"
 GTEX_VERSION = "v11"  # This saved analysis pins its release; public loaders default to latest.
 GTEX_PIN = reference_data.REFERENCE_SOURCES[GTEX_SOURCE]["pins"][GTEX_VERSION]
@@ -150,7 +154,7 @@ def aggregate_bulk(
     across every source subregion, separately from the group-expression maximum.
     """
     facts = pd.read_csv(
-        ROOT / "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz",
+        FACTS,
         usecols=["member_gene_ids", "representative_gene_id", "member_count"],
     )
     member_to_rep = {
@@ -364,6 +368,7 @@ def build() -> None:
                 "inputs": input_hashes(
                     [
                         Path(__file__),
+                        FACTS,
                         ROOT / "oncoref/gene_matching.py",
                         ROOT / "oncoref/data/reference-releases.json",
                     ]

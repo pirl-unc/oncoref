@@ -1,0 +1,16 @@
+gene_id,source,reason
+ENSG00000168939,dice_b_cell_naive,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_monocytes,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_m2,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_nk,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_treg_mem,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_cd4_naive,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_cd4_stim,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_treg_naive,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_tfh,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_th1,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_thstar,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_th17,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_th2,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_cd8_naive,ambiguous replicate identity; no invented donor pairing
+ENSG00000168939,dice_cd8_stim,ambiguous replicate identity; no invented donor pairing

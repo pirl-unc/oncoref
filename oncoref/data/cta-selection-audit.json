@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-selection-audit",
   "version": 1,
-  "decision_policy": "oncoref.cta-selection.2026-11-05.1",
+  "decision_policy": "oncoref.cta-selection.2026-11-08.1",
   "columns": {
     "sources": [
       "source_id",
@@ -75,18 +75,18 @@
     ]
   },
   "files": {
-    "cta-selection-audit-human.json.gz": "f2e8b7e6dd6365d578d26c06267f7794ecbf88ecea799a35f0f2d33bb1e269f7",
+    "cta-selection-audit-human.json.gz": "e612b9544ecef574bc3d6cc1cd963a913f72d1180998bf5fd2603cba2869d802",
     "cta-selection-audit-dog.json.gz": "4f12cd209e677ebe4dda35501045e4b1bb92398364c7460c675794aece268375",
     "cta-selection-audit-mouse.json.gz": "0424b0b561be3d7d7e31ad38a5bec5ad334e47f2e59b18f67dafd69f41f5d1fd"
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/manifest.json": "c48fa0d4f7ab3a4c3b1f880645f220a2573a622fdf8c31a8f4c38eb4f86f83ba",
-    "scripts/build_cta_selection_audit.py": "d09e818e0181584173d131bf42e91c462e7cd78a6a041e173a7530ffe402d0a1",
+    "docs/audits/cta-selection-20261028/manifest.json": "6ad02f6feeadffe87769776d11c83b7b2dad440d4faf9fe7a939ec2296c94fd9",
+    "scripts/build_cta_selection_audit.py": "6e1496c22a371d46aca6a58e4fc8fa73515db06bede9196ed3b833bf6a217c95",
     "oncoref/data/cta-publication-sources.csv": "f62e6edfadcfe039ac8e05e7cf6f4029a0289fde8b609c3c1b7a2519967c2f04",
     "oncoref/data/cta-publication-membership.csv": "690adeecfff44d13d40fa7ec6ecfc74193adbf9b9286e54e9c498bae23e9f546",
-    "docs/audits/cta-selection-20261028/alternative-evidence/manifest.json": "4597fb0eb7532a92f035fbf8e14190738f3afd0e9e4d607c31b6e4bf9ebaad94",
+    "docs/audits/cta-selection-20261028/alternative-evidence/manifest.json": "dd00d67bfc334be86dbe60f9c50984db08138fe9593c5136d691cdb8182906d4",
     "oncoref/data/cta-publication-context.csv": "c6081d93bab5e5775546245fd61f529a5d7f63a24a13b4a792a7e4b7f722113a",
-    "docs/audits/cta-source-walkthrough-20261028/coverage-audit-receipt.json": "7a554743b88ac5685976da59d8d71a24b9b6eceec631b86f0cf406d694862d6f",
+    "docs/audits/cta-source-walkthrough-20261028/coverage-audit-receipt.json": "31e25d814516cbc360e463344ade02c8106aa612d5e2f6a625bb39160fec6de7",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

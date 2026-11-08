@@ -1,9 +1,7 @@
 {
-  "registered_cohorts": 7,
-  "compatible_cohorts": 7,
-  "used_cohorts": 7,
-  "sample_occurrences": 511,
-  "namespace_deduplicated_samples": 511,
-  "source_namespaces": 6,
-  "note": "Namespaces deduplicate shared source views, not patients across independent studies or HPA."
+  "scope": "complete_pinned_tumor_union",
+  "cohorts": 132,
+  "sample_occurrences": 17763,
+  "protein_membership_records_rebuilt": 229,
+  "baseline_commit": "ab30edd5565714433beb7245f8916bd7dbbdde96"
 }

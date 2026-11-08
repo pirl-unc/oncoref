@@ -330,7 +330,7 @@ def source_guide(audit):
             "Ensembl 115 coding translations",
             "annotation / amino-acid sequence",
             "https://sep2025.archive.ensembl.org/Homo_sapiens/Info/Index",
-            "Qualifying annotated CDS is accepted translation support; it does not prove protein detection in a tumor. Exact selected sequence and every member locus must qualify.",
+            "MANE Select precedes Ensembl canonical; the exact primary-locus CDS must qualify and conflicting coding evidence must be resolved. Reference selection does not prove tumor protein production.",
         ),
         (
             "unsafe_sequences",
