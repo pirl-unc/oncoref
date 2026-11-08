@@ -42,14 +42,18 @@ A collapsed frame carries: ``proteoform_key`` (the identity above), ``Symbol``
 canonical-member ENSG, a real id for joining to per-gene Ensembl references), and
 ``proteoform_members`` (the sorted slash-joined member symbols, provenance only).
 
-How the groups are defined: every gene is reduced to its **best (canonical, longest)
-protein sequence**, and genes whose best protein is byte-identical form one group —
+How the shipped groups are defined: every gene is reduced to its **longest
+reference protein sequence**, and genes whose chosen protein is byte-identical form one group —
 so the key space is "one entry per distinct protein," and a group's proteoform-level
 expression is the **sum of its member genes' TPMs** (RNA-seq reads multi-map between
 identical-protein loci, so per-gene TPM under-counts the protein). ``scope`` selects
 the gene universe: ``"cta"`` (the focused cancer-germline set, the shipped default)
 or ``"genome"`` (all protein-coding genes — histones, tubulins, the PAR X/Y pairs,
 …). Both registries ship; the genome one is the universal "do this for every gene".
+
+Length is not a MANE, Ensembl canonical, or transcript-support preference. The
+transcript-default audit in ``docs/audits/cta-transcripts-20261108`` documents
+the proposed migration and the affected sequence identities.
 
 GENE-LEVEL vs PROTEOFORM-LEVEL: an expression frame is one or the other, told apart
 by :func:`expression_level` (the ``proteoform_key`` column is present iff collapsed).
