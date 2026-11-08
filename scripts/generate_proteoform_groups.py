@@ -22,7 +22,7 @@ meaningful unit is the *proteoform* (the sum across member genes).
 
 By default this scans the cancer-testis-antigen universe (plus an explicit seed of
 known identical-protein partners that may not be in the CTA table yet), groups
-genes by their canonical (longest) protein sequence via pyensembl, and writes one
+genes by their longest protein sequence via pyensembl, and writes one
 row per member gene for every group of two or more.
 
 ``--scope genome`` instead scans *all* protein-coding genes in the release,
@@ -87,7 +87,11 @@ _ANCHOR_GROUPS: frozenset[str] = frozenset(
 
 
 def _canonical_protein(gene) -> str | None:
-    """Longest protein sequence among a gene's protein-coding transcripts."""
+    """Historical length-only choice; the name does not imply a canonical tag.
+
+    This legacy registry builder does not check transcript biotype or CDS
+    qualification. See audit_cta_transcripts.py before migrating its identities.
+    """
     seqs = [t.protein_sequence for t in gene.transcripts if t.protein_sequence]
     if not seqs:
         return None
