@@ -655,6 +655,9 @@ cta_literature.memberships()  # Exact source occurrences, including unresolved l
 cta_literature.gap_assessments()  # All 33 paper gaps: biology and measured support.
 cta_literature.concerns("SRY")  # Evidence type, next action and citations.
 cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
+cta_literature.surface_domains("ZP4")  # External intervals, sizes, evidence and sequence match.
+cta_literature.surface_cancer_rna("CT83", cohort="TCGA")  # Positive/measured tumors at native pTPM cutoffs.
+cta_literature.surface_cancer_ihc("BTN1A1")  # Separate scored-patient staining counts.
 ```
 
 The core preserves mapped paper coverage. Supplementary papers retain additional
@@ -667,6 +670,16 @@ intracellular compartments. Shared-entry and partial-member annotations remain
 separate. UniProt evidence codes, isoform notes, source version and primary-paper
 additions are preserved. These annotations do not establish localization of the
 selected sequence or accessibility of a tumor epitope.
+
+The [37-protein membrane table](audits/cta-literature-20261107/report.html#surface)
+adds UniProt 2026_04 feature coordinates. It reports total external residues and
+the longest continuous external segment, with GPI processing and selected-sequence
+matches recorded separately. Unknown boundaries remain missing. The HPA 25.1 RNA
+tables retain measured-sample denominators, native pTPM cutoffs and separate TCGA
+and validation cohorts. IHC counts cover 14 proteins; missing IHC is not negative
+staining. All measurements are gene-level and do not establish selected-proteoform
+expression or epitope accessibility. Full source versions and hashes are in
+`cta_literature.registry()["surface_sources"]`.
 
 The current research set is available through the same species-scoped API:
 

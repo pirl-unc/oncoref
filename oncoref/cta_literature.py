@@ -86,3 +86,36 @@ def localization(gene: str | None = None) -> pd.DataFrame:
     paper additions are retained in each row.
     """
     return _protein_rows("localization", gene)
+
+
+def surface_domains(gene: str | None = None) -> pd.DataFrame:
+    """37 membrane CTAs: inclusive extracellular coordinates and sequence attribution.
+
+    UniProt canonical dimensions and selected-sequence projections are separate.
+    Missing boundaries are unknown, not zero. Predicted topology is not measured
+    tumor-surface accessibility.
+    """
+    return _protein_rows("surface_domains", gene)
+
+
+def surface_cancer_rna(gene: str | None = None, *, cohort: str | None = None) -> pd.DataFrame:
+    """HPA 25.1 native-pTPM sample counts for the 37 membrane CTAs.
+
+    TCGA and validation cohorts remain separate. Numerators use >= thresholds;
+    denominators count measured samples, not the population prevalence of cancer.
+    """
+    if cohort not in {None, "TCGA", "validation"}:
+        raise ValueError("cohort must be TCGA, validation or None")
+    result = _protein_rows("surface_cancer_rna", gene)
+    if cohort is not None:
+        result = result[result.cohort.eq(cohort)]
+    return result.reset_index(drop=True)
+
+
+def surface_cancer_ihc(gene: str | None = None) -> pd.DataFrame:
+    """HPA scored-patient staining counts; retain unmeasured records explicitly.
+
+    These counts do not establish antibody specificity, subcellular localization,
+    the fraction of malignant cells positive, or selected-proteoform expression.
+    """
+    return _protein_rows("surface_cancer_ihc", gene)

@@ -3,7 +3,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "d79e8abed152590d5c4f64624f2ad56de8caedf9d5ad77ea93d58fd4e31df55c"
+      "sha256": "fb2dd004b158c1ff8ee8d5927656f9c9a675b565e55ac358fdc29c81500eaf5a"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
@@ -11,7 +11,7 @@
     },
     {
       "path": "scripts/cta_evidence_assets/individual-review-notes.json",
-      "sha256": "5346ad9f51a333ff9f9c4029447cd871c9c58fcd44f1bc227ce3080007fa73dc"
+      "sha256": "1d4c34ceeb5f8304538fac3ff52b930313083a59c379bf19c0fdfdd3f8355d19"
     },
     {
       "path": "scripts/cta_evidence_assets/review-bibliography.json",
@@ -35,15 +35,27 @@
     },
     {
       "path": "scripts/cta_evidence_assets/cta-followup-notes.json",
-      "sha256": "415d2ed34f388c8fede5104ff1958ec9e2cc66b34ea94f8fa9ce0b289ac419b6"
+      "sha256": "5c9f01d890eff448ec5bbac3bbd685566f4b40646b901c89777d8ba0e7ed16e9"
     },
     {
       "path": "scripts/cta_evidence_assets/cta-localization-input.json.gz",
       "sha256": "0d4258d81c108993c951ffb65d527e8e1c4253a8f6214f327b28a8e3db3dc4ec"
     },
     {
+      "path": "scripts/cta_evidence_assets/cta-surface-input.json.gz",
+      "sha256": "696c4882a500b12dfe75e6316b100abcdca7ee696e65a17187a598dcfbb23a05"
+    },
+    {
+      "path": "oncoref/_cta_surface.py",
+      "sha256": "5e5a754abadc9840f0ad2a0fc635563e6a8cd87d139738cc19efe2796cd2849e"
+    },
+    {
+      "path": "scripts/import_cta_surface.py",
+      "sha256": "a071a574c31ef45f782bcae1e8860e2fac93c0678277995957b8ad1b4002fbf5"
+    },
+    {
       "path": "oncoref/_cta_literature_followup.py",
-      "sha256": "8c485833d235ad5d98a08fed9f7fddf34b94fb18206311d2b8c5742ce599e1e1"
+      "sha256": "a04deb331b8fe12ef086547f84418931455ac5091c7b61c6b7faf588a6b8dcdb"
     },
     {
       "path": "scripts/import_cta_localization.py",
@@ -67,15 +79,19 @@
     },
     {
       "path": "scripts/cta_evidence_assets/literature/report.html",
-      "sha256": "de43479a2d2581a3d4f6f6eb4774251f1737e7133c5861aae48090232c4d94bd"
+      "sha256": "8edc51c0aaefb8975baa51969336e75dac87e823b3a237e59aca89cff54baca2"
     },
     {
       "path": "scripts/cta_evidence_assets/literature/review.js",
-      "sha256": "beacb7e4b411c52ba3091ceeb2e625f393e5d85b937392ea2cd2c2150a12191c"
+      "sha256": "8b9c517aa8aa4959384f16dbfc06f9bb117e47a53fd133f21ebb4581d44c8625"
     },
     {
       "path": "scripts/cta_evidence_assets/literature/style.css",
       "sha256": "c7ec6512f0edeea0d541e1446347086319cd55a75fe8e9c41eb4117ee55a8748"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/literature/surface.js",
+      "sha256": "3d08d53402a8f938ed51fab1186d5bfd244eb369e15d89bce1d86dd2ccc823d5"
     }
   ],
   "counts": {
@@ -129,22 +145,27 @@
   "outputs": {
     "cta-localization.csv": "06602d9859a951d96c68bab828d2112151bf4acb5003520153a6e10ca944f69e",
     "cta-paper-coverage.csv": "1b0ae2c831aaa0400f0b451bb12cc61fb372de9d6654b516a5187e0749e6dea7",
+    "cta-surface-cancer-ihc.csv": "34d659527d7367ae66ab67dd43011c7530cfb3a267f36ec3c6cae96cce44237d",
+    "cta-surface-cancer-rna.csv": "34a76f9ac861bdba0ee403fd380d461c581206b78718f7a9bd3f18b2a733efe8",
+    "cta-surface-domains.csv": "8660698f85e0929b6bfccde351eed1d29b8316aa72e4b72d65b3c85c4ea1fe77",
     "followup-retrievals.json": "328dbf0c5fbceeedae4272bc33ade58b4dd8527a11aa5c46e92acfccb81e19db",
     "fulltext-retrievals.json": "d505f7efcf8366fb5c5863c31fda28b582c447e980cc9be2e5e2fef580037822",
     "gap-comparison.svg": "40a26a657b34d6448475d8d1d7b5e14b982c9481c8e8515cb985209ef886eabe",
-    "index.md": "7add9e3e4ed60b87b143e13754261972ecdd6b0f947cab50de875fd2618392d6",
-    "individual-reviews.csv": "44980e66feeb5f4892680d1a79479f7641f60bcce88c7bf426899af3101c1471",
+    "index.md": "d20ec5319419fdf0e989010d0934da8dbb5920f1457719369e0e980fe7994346",
+    "individual-reviews.csv": "ea08c51e1e80e3ab7d9e261e5b513f97238ac134096aee6401fe57379896bfa8",
     "paper-gap-assessments.csv": "81ab1ff97383f4afe0240748ac0c58470b47503747e11126c219b4b3aee8942d",
-    "registry.json.gz": "8b068def1c5b914d3848bba039e1e46a149ac4c3b50b7f804a314c6f666c29cd",
-    "report.html": "de43479a2d2581a3d4f6f6eb4774251f1737e7133c5861aae48090232c4d94bd",
-    "review-concerns.csv": "153d6ff896acf599152198b3f6e96a13d16ed46b679439ded70d30fa7c8c1218",
+    "registry.json.gz": "ae2a72560f964f9d51e890390b5b110bff2e20d68a8dd129cd9feca31b0ed01b",
+    "report.html": "8edc51c0aaefb8975baa51969336e75dac87e823b3a237e59aca89cff54baca2",
+    "review-concerns.csv": "fa25be3cf3ecdbff75556b521e4b9652c9608311bf469aece161345ae751cf85",
     "review-outcomes.svg": "8cf369e3ea68af33266d241075133f6914f895f9643f17effb2caff12c07fe65",
     "review-population.json": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01",
-    "review.js": "beacb7e4b411c52ba3091ceeb2e625f393e5d85b937392ea2cd2c2150a12191c",
-    "review.json": "c184f9d6b83b0da4f70757d91e9485b5bac3d167ac27da781a183ff78aa8bb98",
+    "review.js": "8b9c517aa8aa4959384f16dbfc06f9bb117e47a53fd133f21ebb4581d44c8625",
+    "review.json": "e27f5686a81c2ee0311ba44e0ad6220bfdddcc02f55f7364b271fef1c49fa575",
     "search-ledger.json": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed",
     "source-roles.svg": "1314b0324096e131296a3f90a9a6c9d6713a2fe5c1d771b6994b340d659d6827",
     "sources.csv": "a19e11b6dc2b6117b0b228cde15f66ac00df1c3d32e58495a0edbf588abd3a3a",
-    "style.css": "c7ec6512f0edeea0d541e1446347086319cd55a75fe8e9c41eb4117ee55a8748"
+    "style.css": "c7ec6512f0edeea0d541e1446347086319cd55a75fe8e9c41eb4117ee55a8748",
+    "surface-cancer.svg": "0d3d7f4a9c5970bf61e4377c8938d1e2a81bb33904aed232f07844aafa87e629",
+    "surface.js": "3d08d53402a8f938ed51fab1186d5bfd244eb369e15d89bce1d86dd2ccc823d5"
   }
 }

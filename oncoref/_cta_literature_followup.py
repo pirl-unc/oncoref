@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from statistics import median
 
+from ._cta_surface import build_surface
+
 LOCATION_LABELS = {
     "secreted": "Secreted / extracellular matrix",
     "extracellular_detection": "Detected outside cells; route unresolved",
@@ -134,7 +136,7 @@ def build_localization(coverage, snapshot, notes):
     return result
 
 
-def build_followup(coverage, reviews, rows, notes, snapshot):
+def build_followup(coverage, reviews, rows, notes, snapshot, surface_snapshot):
     reviews = {r["protein"]: r for r in reviews}
     coverage_map = {r["protein"]: r for r in coverage}
     groups = {g["id"]: g for g in notes["concern_groups"]}
@@ -222,6 +224,7 @@ def build_followup(coverage, reviews, rows, notes, snapshot):
         }
     localization = build_localization(coverage, snapshot, notes["localization_notes"])
     return {
+        **build_surface(localization, rows, surface_snapshot),
         "gap_assessments": gaps,
         "gap_groups": notes["gap_groups"],
         "gap_comparison": comparison,
