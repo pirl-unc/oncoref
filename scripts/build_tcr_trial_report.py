@@ -114,14 +114,16 @@ def build() -> None:
         raise ValueError("Changed baseline selection snapshot")
     before = pd.read_csv(baseline_file, keep_default_na=False).set_index("entity_id")
     after = cta_selection.results().set_index("entity_id")
-    if not set(after.index) <= set(before.index):
-        raise ValueError("Clinical-credit comparison found groups absent from the baseline")
-    # Groups outside the coding/established-ncORF universe are explicit changes.
+    # Preserve additions and retired identities when transcript selection changes
+    # membership. These version deltas are not attributed solely to clinical credit.
+    identities = before.index.union(after.index)
     comparison = pd.DataFrame(
         {
-            "label": before.label,
-            "before": before.category,
-            "after": after.category.reindex(before.index).fillna("out_of_universe"),
+            "label": after.label.reindex(identities).combine_first(
+                before.label.reindex(identities)
+            ),
+            "before": before.category.reindex(identities).fillna("identity_not_in_baseline"),
+            "after": after.category.reindex(identities).fillna("identity_retired"),
         }
     )
     changes = comparison[comparison.before.ne(comparison.after)].reset_index()

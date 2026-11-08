@@ -23,18 +23,24 @@ def build():
     facts = pd.read_csv(REPLAY / "protein-group-classifications.csv.gz", low_memory=False)
     old = pd.read_csv(OUT / "baseline-1.30.0.csv.gz", low_memory=False)
     former = pd.read_csv(OUT / "formerly-out-of-universe.csv.gz")
-    restored = facts[
-        facts.protein_equivalence_group_id.isin(former.protein_equivalence_group_id)
-    ].copy()
     historical_path = ROOT / "docs/audits/cta-unassigned-20261029/before-diffuseness.csv.gz"
     historical = pd.read_csv(historical_path, low_memory=False).set_index(
         "protein_equivalence_group_id"
     )
+    former_genes = {
+        g
+        for value in historical.loc[former.protein_equivalence_group_id, "member_gene_ids"]
+        for g in json.loads(value)
+    }
+    restored = facts[
+        facts.member_gene_ids.map(lambda value: bool(set(json.loads(value)) & former_genes))
+    ].copy()
     for column in ["category", "Unsafe_reasons"]:
         restored["historical_pre_diffuseness_" + column] = restored[
             "protein_equivalence_group_id"
         ].map(historical[column])
-    assert len(restored) == len(former) == 259
+    assert len(former) == 259
+    assert former_genes <= {g for value in restored.member_gene_ids for g in json.loads(value)}
     assert not restored.category.eq("CTA").any()
     assert set(restored.classification) <= {"Unsafe", "Other:Translation"}
     write_table(restored, OUT / "restored-records.csv.gz")
@@ -43,9 +49,17 @@ def build():
     ]
     current = facts.set_index("protein_equivalence_group_id")
     previous = old.set_index("protein_equivalence_group_id")
-    changed = current.loc[previous.index].classification.ne(previous.classification)
+    comparison = current.reset_index().merge(
+        previous[["classification"]].rename(columns={"classification": "previous_classification"}),
+        left_on="protein_equivalence_group_id",
+        right_index=True,
+        how="outer",
+    )
+    changed = comparison.classification.fillna("not_in_current_inventory").ne(
+        comparison.previous_classification.fillna("not_in_previous_inventory")
+    )
     write_table(
-        current.loc[changed.index[changed]].reset_index(),
+        comparison.loc[changed],
         OUT / "existing-classification-changes.csv.gz",
     )
 
@@ -143,11 +157,13 @@ member loci and original sequences remain traceable.
 
 ## Translation is an admission gate
 
-The 259 formerly omitted records now receive **{restored_counts.get("Other:Translation", 0)} Other:Translation**
+The loci in the 259 formerly omitted records now map to {len(restored)} protein
+identities: **{restored_counts.get("Other:Translation", 0)} Other:Translation**
 and **{restored_counts.get("Unsafe", 0)} Unsafe** calls. None becomes CTA. Normal exclusion takes
 precedence; lack of translation support cannot erase it. Other:Translation requires
-sequence review and supplies no direct-target allowance. All {len(old):,} previously
-classified records retain their classifications: **{int(changed.sum())} changes**.
+sequence review and supplies no direct-target allowance. Comparing the {len(old):,}
+previously classified identities with the current inventory gives **{int(changed.sum())}
+changed or added/removed identity rows**. [Gene-level membership and default changes](../cta-transcript-selection-20261108/index.md).
 
 The older pre-diffuseness snapshot called {len(historical_reassessments)} of these restored
 records Unsafe through DICE immune evidence: {", ".join(historical_reassessments.protein_group_label)}.

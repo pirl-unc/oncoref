@@ -1,0 +1,31 @@
+{
+  "baseline_commit": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+  "baseline_sha256": "d9b4b9cd2367dc60cf755b7daa9c8e3325e09efb1e33d7de3aa3bc34673e49a3",
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "scripts/build_transcript_selection_report.py": "0697e660efc5a9b110057b3af2867e18473752d635ffbf5e5c4b9f8528c305e0",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
+    "oncoref/transcript_selection.py": "d6f2eca0bbac4c6fa5a25046318df610f30e3991693679714303812095627723",
+    "oncoref/data/sequence-bundle.json": "12187fd6480eecd85f7f2b972c25dbed38cb92dfdb20376e8c120ca1195f3217",
+    "oncoref/data/transcript-selection.json": "0d1b542093eb6677b8faa34df33f6041861d21ab3aad1757e136b40920c92264",
+    "oncoref/data/transcript-selection.csv.gz": "0793ccb17a4f6b54865a397491f7a2a1d499f0f69a19b90e6406e931c00d1bb2",
+    "oncoref/data/transcript-evidence.json": "de9efbe6cbacec4bed04bf18cd8c96341d9c83f8f8b250670b90686f7a00f1bc",
+    "oncoref/data/translation-qualification.json": "33ccea9c5e419a1aeff8f0262f6312c693efa16afd86fa5c2ee95b2657d7d108",
+    "oncoref/data/cta-literature.json.gz": "110c01134ddbef070d1f286fc907e18b24f774df8edd90a0661e0b2cc3eed5f9"
+  },
+  "outputs": {
+    "expression-metadata-finalization.json": "6d029b14bf97c4dfec12a8b79bb18fdede381f9705815eb0d0521851dd35ac77",
+    "expression-refresh.json": "c731d617e8092e4a99516a1368b31e18ecac09d3803d7d9e51e71f334fdcf776",
+    "gene-classification-changes.csv.gz": "5e3bc19d18fe19f01b362e567fd1f9a25cddf73e78b55724eeb00753de8aafca",
+    "gene-decisions.csv.gz": "a1e174f0e478e269b5af40568643f5f87def4b1f14ea340d0d67bc9d947045f8",
+    "gene-default-changes.csv.gz": "e9c99c126b2fcd6ead268cfb9f5e37dfa061ebb9da313b425ffbee1a4cc4b310",
+    "index.md": "a71445f9b9e1b24d7d64882f751c0098dcef2dd9ebc5c4556c6974f6b9cbbb84",
+    "method.png": "4a80c7a075e803d4c3515c9e4ea0e4c6d8bf388bfb8508af5be28b7dee315cf7",
+    "method.svg": "28ce8bfd37dc0622d78d6bbfee59ac3192e8b3263c0dd5342093f200dd694488",
+    "new-cta-review.csv": "bb490d19ebf14112dbda6d6a3846a824d21b2a4ea29f638fd6291ce0498e712f",
+    "review-queue.csv.gz": "321c313b4b041ab65bd9b03ab9380150a392ea25b93e3829e1d4d1356f0ba402",
+    "summary.json": "73bd362a28b532efe7a7f85b0849e09597c5bb10c3014ad169034f65649fafd9",
+    "surface-coordinate-review.csv": "59b95cac15da1cbe1ec17b75c3afd1a4821eb715de7a4a5b5c52d54e4fa1b0d5",
+    "table.html": "add1f325197329d4474f70fb9c89046b58152bc7c150941d80262994d67ebc43"
+  }
+}

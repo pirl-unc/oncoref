@@ -379,7 +379,9 @@ def test_diffuseness_changes_identity_without_changing_safety(audit):
     # Later reviewed cell rules can release tissue/immune RNA exclusions;
     # they cannot erase clinical injury, positive protein or bulk exclusions.
     left = old_unsafe - new_unsafe
-    cell_released = left
+    # Retired membership identities are compared separately in the transcript
+    # migration. A retired shared identity is not a released cell exclusion.
+    cell_released = left & set(after.index)
     cell_layers = [
         "unsafe:HPA tissue clusters",
         "unsafe:HPA immune",

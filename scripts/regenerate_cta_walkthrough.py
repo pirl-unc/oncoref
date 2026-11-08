@@ -22,7 +22,7 @@ import build_current_normal_breadth
 import build_tcr_trial_report
 import render_cta_source_walkthrough
 from cta_report_common import input_hashes, sha256
-from replay_cta_selection import OUTPUT, ROOT, build
+from replay_cta_selection import BASE, FROZEN, OUTPUT, ROOT, build
 
 from oncoref import reference_data
 
@@ -33,6 +33,12 @@ def receipts() -> None:
         ROOT / "oncoref/cta_selection_policy.py",
         ROOT / "oncoref/data/cta-protein-universe.csv",
         ROOT / "oncoref/translation_qualification.py",
+        ROOT / "oncoref/transcript_selection.py",
+        ROOT / "oncoref/data/transcript-selection.json",
+        ROOT / "oncoref/data/transcript-selection.csv.gz",
+        ROOT / "oncoref/data/transcript-evidence.json",
+        ROOT / "oncoref/data/proteoform-groups-genome.csv",
+        FROZEN / "protein-group-classifications.csv.gz",
         ROOT / "oncoref/data/translation-qualification.json",
         ROOT / "oncoref/data/translation-qualification.csv.gz",
         ROOT / "oncoref/tissue_hazards.py",
@@ -58,8 +64,7 @@ def receipts() -> None:
         ROOT / "scripts/replay_cta_selection.py",
         ROOT / "docs/audits/cta-release-1.21.0/manifest.json",
         ROOT / "docs/audits/cta-quantitative-20261026/developmental-lineages.csv.gz",
-        ROOT
-        / "docs/audits/cta-harmonized-20261027/group-normal/developmental-lineage-bounds.csv.gz",
+        BASE / "group-normal/developmental-lineage-bounds.csv.gz",
         ROOT / "docs/audits/external-ihc-20261027/assessed-evidence.csv.gz",
     ]
     profile_source = reference_data.provenance("hpa_rna_consensus", "v23", verify_content=True)

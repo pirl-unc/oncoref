@@ -1,6 +1,6 @@
 # Current CTA and oncofetal selection
 
-The current policy supplies **602 CTA / 18,255 Unsafe / 1,006 Other** across **19,863 proteins** (identical selected reference sequences counted together; member loci retained). All 19,863 candidate protein records enter classification; translation support is a CTA admission requirement. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-05.1`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [filterable evidence table and the 122-protein review](audits/cta-evidence-guide-20261106/report.html), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions.
+The current policy supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-08.1`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [current reference choices](audits/cta-transcript-selection-20261108/index.md), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions. The [602-CTA evidence table and 122-protein review](audits/cta-evidence-guide-20261106/report.html) retain the 1.31.0 snapshot.
 
 ## Safety, cancer expression and reproductive/developmental evidence
 
@@ -243,7 +243,7 @@ Equivalent bound accessors are `human.cta_selection()`, `canine.cta_selection()`
 
 | Species | Returned entities | Selection status | Meaning |
 |---|---:|---|---|
-| Human | 19,863 candidate proteins (identical selected reference sequences counted together; all records classified) | Available; evidence partial | Category assignment across the complete candidate inventory under `oncoref.cta-selection.2026-11-05.1`; individual coverage/holds remain explicit |
+| Human | 19,863 candidate proteins (identical selected reference sequences counted together; all records classified) | Available; evidence partial | Category assignment across the complete candidate inventory under `oncoref.cta-selection.2026-11-08.1`; individual coverage/holds remain explicit |
 | Dog | 14 curated native nominations | Unavailable; evidence partial | Unassigned / unassessed; these are assay or family nominations, not 14 proven CTA genes |
 | Mouse | 1 P1A/Trap1a nomination | Unavailable; evidence partial | Unassigned / unassessed; qualitative normal and tumor RNA, with strain and reference limits |
 

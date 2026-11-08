@@ -18,19 +18,19 @@
   "eligibility_changes": 0,
   "source": {
     "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
-    "sha256": null,
+    "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb",
     "version": "v23"
   },
   "inputs": {
     "scripts/build_current_normal_breadth.py": "9e6142a9c8728c42f1fd61c65a74ce325f383580644d9f76d68b7ccedeba7024",
     "oncoref/normal_expression_breadth.py": "2bc596f606469a90715512484e2a0f4e1815c0fd5f8006b6bc8a268880229f2c",
-    "oncoref/cta_selection_policy.py": "ee9fa363970c35ca6e94e92ffcab5ec005fdcc8fab2ecc1caeb7114d17ba58e6",
+    "oncoref/cta_selection_policy.py": "ea1e1745572fcd6bf7c69a2f49d3620b34963a003e9879f38bd30bca0dbda0b5",
     "oncoref/data/normal-tissue-hazards.yaml": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
     "oncoref/tissue_hazards.py": "61e7e94d4f2c7c353a84d84d27b3c2d98a4216be64dbbd6967c2f7af23ffdeb8",
     "oncoref/data/normal-tissue-taxonomy.yaml": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",
     "oncoref/data/cta-policy.json": "6844f3ae196d2bc91e996dfb8024db24da4c4f0ffb81439c87c652e7207fcfc6",
     "oncoref/data/cta-donor-rna.csv": "4df91d972bab43c3d4419d1d90bc18f311dc131b8e028295da4eb71bdb0f31b5",
-    "oncoref/data/cta-selection-human.csv.gz": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d"
+    "oncoref/data/cta-selection-human.csv.gz": "e996969018124bb510314cea5fb05c29eb1f3e8624dacc3cd073ab3ba8f3eb98"
   },
   "outputs": {
     "before-after.csv.gz": "c6aef38bd523baf28ff796dae245a83578bc5dd39ee08b5480065b5b8b822009",

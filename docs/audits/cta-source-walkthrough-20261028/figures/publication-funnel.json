@@ -10,10 +10,10 @@
     "Cancer presence": 512,
     "Reproductive/developmental presence": 432,
     "Reproductive concentration": 432,
-    "Translation qualification": 420,
-    "Unsafe sequence containment": 411,
+    "Translation qualification": 427,
+    "Unsafe sequence containment": 418,
     "Final Unsafe": 466,
-    "Final Other": 140
+    "Final Other": 133
   },
   {
     "source_id": "10.1038/ncomms10499",
@@ -26,10 +26,10 @@
     "Cancer presence": 292,
     "Reproductive/developmental presence": 279,
     "Reproductive concentration": 279,
-    "Translation qualification": 271,
-    "Unsafe sequence containment": 269,
+    "Translation qualification": 276,
+    "Unsafe sequence containment": 274,
     "Final Unsafe": 683,
-    "Final Other": 36
+    "Final Other": 31
   },
   {
     "source_id": "10.1002/cam4.2223",
@@ -42,10 +42,10 @@
     "Cancer presence": 292,
     "Reproductive/developmental presence": 289,
     "Reproductive concentration": 289,
-    "Translation qualification": 281,
-    "Unsafe sequence containment": 281,
+    "Translation qualification": 287,
+    "Unsafe sequence containment": 287,
     "Final Unsafe": 676,
-    "Final Other": 28
+    "Final Other": 22
   },
   {
     "source_id": "10.1038/s41467-021-22695-y",
@@ -58,10 +58,10 @@
     "Cancer presence": 370,
     "Reproductive/developmental presence": 357,
     "Reproductive concentration": 356,
-    "Translation qualification": 349,
-    "Unsafe sequence containment": 346,
+    "Translation qualification": 354,
+    "Unsafe sequence containment": 351,
     "Final Unsafe": 343,
-    "Final Other": 40
+    "Final Other": 35
   },
   {
     "source_id": "10.1038/s41388-018-0357-2",
@@ -90,10 +90,10 @@
     "Cancer presence": 39,
     "Reproductive/developmental presence": 38,
     "Reproductive concentration": 38,
-    "Translation qualification": 36,
-    "Unsafe sequence containment": 33,
+    "Translation qualification": 37,
+    "Unsafe sequence containment": 34,
     "Final Unsafe": 429,
-    "Final Other": 7
+    "Final Other": 6
   },
   {
     "source_id": "10.1371/journal.pgen.1011734",
@@ -122,10 +122,10 @@
     "Cancer presence": 54,
     "Reproductive/developmental presence": 54,
     "Reproductive concentration": 54,
-    "Translation qualification": 53,
-    "Unsafe sequence containment": 53,
+    "Translation qualification": 54,
+    "Unsafe sequence containment": 54,
     "Final Unsafe": 47,
-    "Final Other": 3
+    "Final Other": 2
   },
   {
     "source_id": "10.1371/journal.pone.0144155",
@@ -154,10 +154,10 @@
     "Cancer presence": 11,
     "Reproductive/developmental presence": 11,
     "Reproductive concentration": 11,
-    "Translation qualification": 10,
-    "Unsafe sequence containment": 10,
+    "Translation qualification": 11,
+    "Unsafe sequence containment": 11,
     "Final Unsafe": 3,
-    "Final Other": 2
+    "Final Other": 1
   },
   {
     "source_id": "10.4161/cbt.12.3.16260",
@@ -250,10 +250,10 @@
     "Cancer presence": 592,
     "Reproductive/developmental presence": 505,
     "Reproductive concentration": 504,
-    "Translation qualification": 490,
-    "Unsafe sequence containment": 480,
+    "Translation qualification": 497,
+    "Unsafe sequence containment": 487,
     "Final Unsafe": 1876,
-    "Final Other": 158
+    "Final Other": 151
   },
   {
     "source_id": "unannotated",
@@ -261,15 +261,15 @@
     "source_url": "",
     "evidence_scope": "No membership in the current nomination registry; not a claim of novelty",
     "source_kind": "unannotated",
-    "Inventory": 17349,
-    "Normal safety + coverage": 523,
-    "Cancer presence": 522,
-    "Reproductive/developmental presence": 140,
-    "Reproductive concentration": 137,
-    "Translation qualification": 127,
-    "Unsafe sequence containment": 122,
-    "Final Unsafe": 16379,
-    "Final Other": 848
+    "Inventory": 17379,
+    "Normal safety + coverage": 526,
+    "Cancer presence": 525,
+    "Reproductive/developmental presence": 141,
+    "Reproductive concentration": 138,
+    "Translation qualification": 125,
+    "Unsafe sequence containment": 120,
+    "Final Unsafe": 16383,
+    "Final Other": 876
   },
   {
     "source_id": "inventory",
@@ -277,14 +277,14 @@
     "source_url": "",
     "evidence_scope": "Every classified candidate protein record",
     "source_kind": "inventory",
-    "Inventory": 19863,
-    "Normal safety + coverage": 1115,
-    "Cancer presence": 1114,
-    "Reproductive/developmental presence": 645,
-    "Reproductive concentration": 641,
-    "Translation qualification": 617,
-    "Unsafe sequence containment": 602,
-    "Final Unsafe": 18255,
-    "Final Other": 1006
+    "Inventory": 19893,
+    "Normal safety + coverage": 1118,
+    "Cancer presence": 1117,
+    "Reproductive/developmental presence": 646,
+    "Reproductive concentration": 642,
+    "Translation qualification": 622,
+    "Unsafe sequence containment": 607,
+    "Final Unsafe": 18259,
+    "Final Other": 1027
   }
 ]

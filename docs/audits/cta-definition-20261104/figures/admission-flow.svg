@@ -38,40 +38,40 @@ z
    </g>
    <g id="patch_3">
     <path d="M 181.932812 366.820824 
-L 492.344008 366.820824 
-L 492.344008 323.7412 
+L 494.08231 366.820824 
+L 494.08231 323.7412 
 L 181.932812 323.7412 
 z
 " clip-path="url(#p7698a2ada6)" style="fill: #087e8b"/>
    </g>
    <g id="patch_4">
     <path d="M 181.932812 312.971294 
-L 500.078506 312.971294 
-L 500.078506 269.89167 
+L 501.796054 312.971294 
+L 501.796054 269.89167 
 L 181.932812 269.89167 
 z
 " clip-path="url(#p7698a2ada6)" style="fill: #087e8b"/>
    </g>
    <g id="patch_5">
     <path d="M 181.932812 259.121764 
-L 512.453703 259.121764 
-L 512.453703 216.04214 
+L 512.081045 259.121764 
+L 512.081045 216.04214 
 L 181.932812 216.04214 
 z
 " clip-path="url(#p7698a2ada6)" style="fill: #087e8b"/>
    </g>
    <g id="patch_6">
     <path d="M 181.932812 205.272235 
-L 514.516236 205.272235 
-L 514.516236 162.192611 
+L 514.138044 205.272235 
+L 514.138044 162.192611 
 L 181.932812 162.192611 
 z
 " clip-path="url(#p7698a2ada6)" style="fill: #087e8b"/>
    </g>
    <g id="patch_7">
     <path d="M 181.932812 151.422705 
-L 756.348214 151.422705 
-L 756.348214 108.343081 
+L 756.349597 151.422705 
+L 756.349597 108.343081 
 L 181.932812 108.343081 
 z
 " clip-path="url(#p7698a2ada6)" style="fill: #087e8b"/>
@@ -103,61 +103,61 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use xlink:href="#ma7b9cb3732" x="285.059455" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#ma7b9cb3732" x="284.782729" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="285.059455" y="397.794609" transform="rotate(-0 285.059455 397.794609)">200</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="284.782729" y="397.794609" transform="rotate(-0 284.782729 397.794609)">200</text>
      </g>
     </g>
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use xlink:href="#ma7b9cb3732" x="388.186098" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#ma7b9cb3732" x="387.632646" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="388.186098" y="397.794609" transform="rotate(-0 388.186098 397.794609)">400</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="387.632646" y="397.794609" transform="rotate(-0 387.632646 397.794609)">400</text>
      </g>
     </g>
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use xlink:href="#ma7b9cb3732" x="491.312741" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#ma7b9cb3732" x="490.482563" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="491.312741" y="397.794609" transform="rotate(-0 491.312741 397.794609)">600</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="490.482563" y="397.794609" transform="rotate(-0 490.482563 397.794609)">600</text>
      </g>
     </g>
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use xlink:href="#ma7b9cb3732" x="594.439384" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#ma7b9cb3732" x="593.332479" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="594.439384" y="397.794609" transform="rotate(-0 594.439384 397.794609)">800</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="593.332479" y="397.794609" transform="rotate(-0 593.332479 397.794609)">800</text>
      </g>
     </g>
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use xlink:href="#ma7b9cb3732" x="697.566027" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#ma7b9cb3732" x="696.182396" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="697.566027" y="397.794609" transform="rotate(-0 697.566027 397.794609)">1000</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="696.182396" y="397.794609" transform="rotate(-0 696.182396 397.794609)">1000</text>
      </g>
     </g>
     <g id="xtick_7">
      <g id="line2d_7">
       <g>
-       <use xlink:href="#ma7b9cb3732" x="800.69267" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#ma7b9cb3732" x="799.032313" y="382.437187" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="800.69267" y="397.794609" transform="rotate(-0 800.69267 397.794609)">1200</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="799.032313" y="397.794609" transform="rotate(-0 799.032313 397.794609)">1200</text>
      </g>
     </g>
     <g id="text_8">
@@ -234,26 +234,26 @@ L -3.5 0
    </g>
    <g id="patch_9">
     <path d="M 181.932812 382.437187 
-L 848.852813 382.437187 
+L 848.852812 382.437187 
 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_15">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="497.50034" y="348.138434" transform="rotate(-0 497.50034 348.138434)">602</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="499.224806" y="348.138434" transform="rotate(-0 499.224806 348.138434)">607</text>
    </g>
    <g id="text_16">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="505.234838" y="294.288904" transform="rotate(-0 505.234838 294.288904)">617</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="506.938549" y="294.288904" transform="rotate(-0 506.938549 294.288904)">622</text>
    </g>
    <g id="text_17">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="517.610035" y="240.439374" transform="rotate(-0 517.610035 240.439374)">641</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="517.223541" y="240.439374" transform="rotate(-0 517.223541 240.439374)">642</text>
    </g>
    <g id="text_18">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="519.672568" y="186.589844" transform="rotate(-0 519.672568 186.589844)">645</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="519.280539" y="186.589844" transform="rotate(-0 519.280539 186.589844)">646</text>
    </g>
    <g id="text_19">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="761.504546" y="132.740315" transform="rotate(-0 761.504546 132.740315)">1,114</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="761.492093" y="132.740315" transform="rotate(-0 761.492093 132.740315)">1,117</text>
    </g>
    <g id="text_20">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="762.020179" y="78.890785" transform="rotate(-0 762.020179 78.890785)">1,115</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="762.006343" y="78.890785" transform="rotate(-0 762.006343 78.890785)">1,118</text>
    </g>
    <g id="text_21">
     <text style="font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="181.932812" y="20.877187" transform="rotate(-0 181.932812 20.877187)">Admission gates: every applicable requirement must pass</text>

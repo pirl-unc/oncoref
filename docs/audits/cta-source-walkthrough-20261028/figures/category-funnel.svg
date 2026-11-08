@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-05T15:18:30.462383</dc:date>
+    <dc:date>2026-11-08T09:05:07.921542</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -47,40 +47,40 @@ z
    </g>
    <g id="patch_4">
     <path d="M 307.8 290.255226 
-L 944.42852 290.255226 
-L 944.42852 312.073548 
+L 944.430054 290.255226 
+L 944.430054 312.073548 
 L 307.8 312.073548 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_5">
     <path d="M 307.8 326.022968 
-L 676.404484 326.022968 
-L 676.404484 347.84129 
+L 675.985331 326.022968 
+L 675.985331 347.84129 
 L 307.8 347.84129 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_6">
     <path d="M 307.8 361.79071 
-L 674.118565 361.79071 
-L 674.118565 383.609032 
+L 673.705546 361.79071 
+L 673.705546 383.609032 
 L 307.8 383.609032 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_7">
     <path d="M 307.8 397.558452 
-L 660.403049 397.558452 
-L 660.403049 419.376774 
+L 662.306619 397.558452 
+L 662.306619 419.376774 
 L 307.8 419.376774 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
    </g>
    <g id="patch_8">
     <path d="M 307.8 433.326194 
-L 651.830852 433.326194 
-L 651.830852 455.144516 
+L 653.757424 433.326194 
+L 653.757424 455.144516 
 L 307.8 455.144516 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #087e8b"/>
@@ -94,42 +94,42 @@ z
 " clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_10">
-    <path d="M 944.42852 290.255226 
+    <path d="M 944.430054 290.255226 
 L 945 290.255226 
 L 945 312.073548 
-L 944.42852 312.073548 
+L 944.430054 312.073548 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_11">
-    <path d="M 676.404484 326.022968 
+    <path d="M 675.985331 326.022968 
 L 945 326.022968 
 L 945 347.84129 
-L 676.404484 347.84129 
+L 675.985331 347.84129 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_12">
-    <path d="M 674.118565 361.79071 
+    <path d="M 673.705546 361.79071 
 L 945 361.79071 
 L 945 383.609032 
-L 674.118565 383.609032 
+L 673.705546 383.609032 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_13">
-    <path d="M 660.403049 397.558452 
+    <path d="M 662.306619 397.558452 
 L 945 397.558452 
 L 945 419.376774 
-L 660.403049 419.376774 
+L 662.306619 419.376774 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
    <g id="patch_14">
-    <path d="M 651.830852 433.326194 
+    <path d="M 653.757424 433.326194 
 L 945 433.326194 
 L 945 455.144516 
-L 651.830852 455.144516 
+L 653.757424 455.144516 
 z
 " clip-path="url(#p9fcbca50c5)" style="fill: #b18335"/>
    </g>
@@ -143,31 +143,31 @@ z
     <g id="xtick_2">
      <g id="line2d_2"/>
      <g id="text_2">
-      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="450.669955" y="481.293656" transform="rotate(-0 450.669955 481.293656)">250</text>
+      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="450.286583" y="481.293656" transform="rotate(-0 450.286583 481.293656)">250</text>
      </g>
     </g>
     <g id="xtick_3">
      <g id="line2d_3"/>
      <g id="text_3">
-      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="593.53991" y="481.293656" transform="rotate(-0 593.53991 481.293656)">500</text>
+      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="592.773166" y="481.293656" transform="rotate(-0 592.773166 481.293656)">500</text>
      </g>
     </g>
     <g id="xtick_4">
      <g id="line2d_4"/>
      <g id="text_4">
-      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="736.409865" y="481.293656" transform="rotate(-0 736.409865 481.293656)">750</text>
+      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="735.25975" y="481.293656" transform="rotate(-0 735.25975 481.293656)">750</text>
      </g>
     </g>
     <g id="xtick_5">
      <g id="line2d_5"/>
      <g id="text_5">
-      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="879.279821" y="481.293656" transform="rotate(-0 879.279821 481.293656)">1000</text>
+      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="877.746333" y="481.293656" transform="rotate(-0 877.746333 481.293656)">1000</text>
      </g>
     </g>
     <g id="xtick_6">
      <g id="line2d_6"/>
      <g id="text_6">
-      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="945" y="481.293656" transform="rotate(-0 945 481.293656)">1115</text>
+      <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #536675" x="945" y="481.293656" transform="rotate(-0 945 481.293656)">1118</text>
      </g>
     </g>
     <g id="text_7">
@@ -214,46 +214,46 @@ z
     </g>
    </g>
    <g id="text_14">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="626.4" y="269.29313" transform="rotate(-0 626.4 269.29313)">1,115</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="626.4" y="269.29313" transform="rotate(-0 626.4 269.29313)">1,118</text>
    </g>
    <g id="text_15">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="626.11426" y="305.060871" transform="rotate(-0 626.11426 305.060871)">1,114</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="626.115027" y="305.060871" transform="rotate(-0 626.115027 305.060871)">1,117</text>
    </g>
    <g id="text_16">
     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="967.302" y="304.022239" transform="rotate(-0 967.302 304.022239)">+1 Other</text>
    </g>
    <g id="text_17">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="492.102242" y="340.828613" transform="rotate(-0 492.102242 340.828613)">645</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="491.892665" y="340.828613" transform="rotate(-0 491.892665 340.828613)">646</text>
    </g>
    <g id="text_18">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="810.702242" y="340.828613" transform="rotate(-0 810.702242 340.828613)">470</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="810.492665" y="340.828613" transform="rotate(-0 810.492665 340.828613)">472</text>
    </g>
    <g id="text_19">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="967.302" y="339.789981" transform="rotate(-0 967.302 339.789981)">+469 Other</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="967.302" y="339.789981" transform="rotate(-0 967.302 339.789981)">+471 Other</text>
    </g>
    <g id="text_20">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="490.959283" y="376.596355" transform="rotate(-0 490.959283 376.596355)">641</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="490.752773" y="376.596355" transform="rotate(-0 490.752773 376.596355)">642</text>
    </g>
    <g id="text_21">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="809.559283" y="376.596355" transform="rotate(-0 809.559283 376.596355)">474</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="809.352773" y="376.596355" transform="rotate(-0 809.352773 376.596355)">476</text>
    </g>
    <g id="text_22">
     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="967.302" y="375.557723" transform="rotate(-0 967.302 375.557723)">+4 Other</text>
    </g>
    <g id="text_23">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="484.101525" y="412.364097" transform="rotate(-0 484.101525 412.364097)">617</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="485.053309" y="412.364097" transform="rotate(-0 485.053309 412.364097)">622</text>
    </g>
    <g id="text_24">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="802.701525" y="412.364097" transform="rotate(-0 802.701525 412.364097)">498</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="803.653309" y="412.364097" transform="rotate(-0 803.653309 412.364097)">496</text>
    </g>
    <g id="text_25">
-    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="967.302" y="411.325464" transform="rotate(-0 967.302 411.325464)">+24 Other</text>
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="967.302" y="411.325464" transform="rotate(-0 967.302 411.325464)">+20 Other</text>
    </g>
    <g id="text_26">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="479.815426" y="448.131839" transform="rotate(-0 479.815426 448.131839)">602</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="480.778712" y="448.131839" transform="rotate(-0 480.778712 448.131839)">607</text>
    </g>
    <g id="text_27">
-    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="798.415426" y="448.131839" transform="rotate(-0 798.415426 448.131839)">513</text>
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="799.378712" y="448.131839" transform="rotate(-0 799.378712 448.131839)">511</text>
    </g>
    <g id="text_28">
     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="967.302" y="447.093206" transform="rotate(-0 967.302 447.093206)">+15 Other</text>
@@ -315,22 +315,22 @@ z
    <text style="font-weight: 700; font-size: 26px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="28.512" transform="rotate(-0 59.4 28.512)">Where proteins become CTA or Other</text>
   </g>
   <g id="text_30">
-   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="51.9552" transform="rotate(-0 59.4 51.9552)">OncoRef 1.31.0  |  19,863 representative proteins  |  Normal assessment first</text>
+   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="51.9552" transform="rotate(-0 59.4 51.9552)">OncoRef 1.35.0  |  19,893 representative proteins  |  Normal assessment first</text>
   </g>
   <g id="text_31">
-   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #087e8b" x="74.52" y="101.376" transform="rotate(-0 74.52 101.376)">602</text>
+   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #087e8b" x="74.52" y="101.376" transform="rotate(-0 74.52 101.376)">607</text>
   </g>
   <g id="text_32">
    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="74.52" y="129.888" transform="rotate(-0 74.52 129.888)">CTA</text>
   </g>
   <g id="text_33">
-   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #ac493b" x="325.08" y="101.376" transform="rotate(-0 325.08 101.376)">18,255</text>
+   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #ac493b" x="325.08" y="101.376" transform="rotate(-0 325.08 101.376)">18,259</text>
   </g>
   <g id="text_34">
    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="325.08" y="129.888" transform="rotate(-0 325.08 129.888)">Unsafe</text>
   </g>
   <g id="text_35">
-   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b18335" x="575.64" y="101.376" transform="rotate(-0 575.64 101.376)">513</text>
+   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b18335" x="575.64" y="101.376" transform="rotate(-0 575.64 101.376)">511</text>
   </g>
   <g id="text_36">
    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="575.64" y="129.888" transform="rotate(-0 575.64 129.888)">Other</text>
@@ -339,7 +339,7 @@ z
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="575.64" y="146.9952" transform="rotate(-0 575.64 146.9952)">passed the normal screen, failed a target gate</text>
   </g>
   <g id="text_38">
-   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #8995a4" x="826.2" y="101.376" transform="rotate(-0 826.2 101.376)">493</text>
+   <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #8995a4" x="826.2" y="101.376" transform="rotate(-0 826.2 101.376)">516</text>
   </g>
   <g id="text_39">
    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="826.2" y="129.888" transform="rotate(-0 826.2 129.888)">Unresolved</text>
@@ -348,10 +348,10 @@ z
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="826.2" y="146.9952" transform="rotate(-0 826.2 146.9952)">normal screen unresolved; also Other, not rejected</text>
   </g>
   <g id="text_41">
-   <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="184.3776" transform="rotate(-0 59.4 184.3776)">Follow the 1,115 proteins that pass normal safety and coverage</text>
+   <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="184.3776" transform="rotate(-0 59.4 184.3776)">Follow the 1,118 proteins that pass normal safety and coverage</text>
   </g>
   <g id="text_42">
-   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="205.2864" transform="rotate(-0 59.4 205.2864)">18,255 Unsafe and 493 Other proteins with an unresolved normal screen stay outside this track; none is unassessed.</text>
+   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="205.2864" transform="rotate(-0 59.4 205.2864)">18,259 Unsafe and 516 Other proteins with an unresolved normal screen stay outside this track; none is unassessed.</text>
   </g>
   <g id="text_43">
    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #087e8b" x="313.2" y="234.432" transform="rotate(-0 313.2 234.432)">CTA-eligible so far</text>
@@ -360,13 +360,13 @@ z
    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b18335" x="745.2" y="234.432" transform="rotate(-0 745.2 234.432)">Other (cumulative)</text>
   </g>
   <g id="text_45">
-   <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="520.8192" transform="rotate(-0 59.4 520.8192)">1 lacks cancer evidence; 469 fail reproductive/developmental presence; 4 fail concentration; 24 need translation review; 15 are contained.</text>
+   <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #173b55" x="59.4" y="520.8192" transform="rotate(-0 59.4 520.8192)">1 lacks cancer evidence; 471 fail reproductive/developmental presence; 4 fail concentration; 20 need translation review; 15 are contained.</text>
   </g>
   <g id="text_46">
-   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="543.6288" transform="rotate(-0 59.4 543.6288)">Cumulative counts: cancer presence retains 1,114; reproductive/developmental presence narrows these to 645.</text>
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="543.6288" transform="rotate(-0 59.4 543.6288)">Cumulative counts: cancer presence retains 1,117; reproductive/developmental presence narrows these to 646.</text>
   </g>
   <g id="text_47">
-   <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="565.1712" transform="rotate(-0 59.4 565.1712)">Rare vital-tissue cell expression (at least 1% in a named Vital population in the existing brain/spinal-cord/heart/lung panel) is the only Unsafe evidence for 121 proteins.</text>
+   <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #536675" x="59.4" y="565.1712" transform="rotate(-0 59.4 565.1712)">Rare vital-tissue cell expression (at least 1% in a named Vital population in the existing brain/spinal-cord/heart/lung panel) is the only Unsafe evidence for 131 proteins.</text>
   </g>
   <g id="text_48">
    <text style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #536675" transform="translate(59.4 585.92)">Reproductive includes placental and embryonic/fetal contexts. Unresolved proteins pass no CTA gate but are not Unsafe; Other:Held is the subset passing every target gate.</text>

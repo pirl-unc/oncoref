@@ -1,30 +1,30 @@
 {
   "schema": "oncoref.cta-selection",
   "schema_version": 1,
-  "release": "1.31.0",
+  "release": "1.35.0",
   "data_sha256": {
-    "cta-selection-human.csv.gz": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d",
-    "cta-selection-profiles-human.csv.gz": "c3b96f2e464415ab375853119d25feca1819e354af1dcaa6944766a432c3dda3",
-    "cta-selection-sources.csv": "92a0ce6f1dfe339c65c16130970d251b4219ba871c06050fea6a5ccf568f46a8",
+    "cta-selection-human.csv.gz": "e996969018124bb510314cea5fb05c29eb1f3e8624dacc3cd073ab3ba8f3eb98",
+    "cta-selection-profiles-human.csv.gz": "d963e53bd6198e009baf094d82f02dad8d004cd7affc6fac4db7e10158921d95",
+    "cta-selection-sources.csv": "d5734aed62c212dae50795dc0e621e46992598e6e50706e6c855517ee7441a34",
     "cta-rare-cell-screen.csv.gz": "f33ad87ec64ff642658bea506644fc6788305783aecb90ce6eb8d84084fcb6e1"
   },
   "species": {
     "human": {
       "selection_status": "available",
       "evidence_status": "partial",
-      "policy_id": "oncoref.cta-selection.2026-11-05.1",
-      "universe": "19863 classified protein-equivalence groups from 19863 input groups",
+      "policy_id": "oncoref.cta-selection.2026-11-08.1",
+      "universe": "19893 classified protein-equivalence groups from 19893 input groups",
       "universe_counts": {
         "counting_unit": "selected_reference_protein_equivalence_group",
-        "input_groups": 19863,
-        "classified_groups": 19863,
+        "input_groups": 19893,
+        "classified_groups": 19893,
         "out_of_universe_groups": 0,
         "input_gene_loci": 20099,
         "classified_gene_loci": 20099,
         "out_of_universe_gene_loci": 0,
         "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
-        "translation_support_eligible_groups": 19604,
-        "translation_support_insufficient_groups": 259,
+        "translation_support_eligible_groups": 19598,
+        "translation_support_insufficient_groups": 295,
         "scope_note": "Every candidate record enters classification; translation support is a CTA admission requirement, not an inventory exclusion."
       },
       "reference": {
@@ -135,9 +135,8 @@
     }
   },
   "inputs": {
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "d9b4b9cd2367dc60cf755b7daa9c8e3325e09efb1e33d7de3aa3bc34673e49a3",
-    "docs/audits/cta-release-1.21.0/protein-group-classifications.csv.gz": "1c6b72b6073e3fdc138ba0fc81796634c9c751158b2fff2f9eb5f428ca06a79a",
-    "report_manifest": "c48fa0d4f7ab3a4c3b1f880645f220a2573a622fdf8c31a8f4c38eb4f86f83ba",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
+    "report_manifest": "6ad02f6feeadffe87769776d11c83b7b2dad440d4faf9fe7a939ec2296c94fd9",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"

@@ -139048,7 +139048,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "fb2dd004b158c1ff8ee8d5927656f9c9a675b565e55ac358fdc29c81500eaf5a"
+      "sha256": "30791b8446a6a165b8c4b5fb37d7822d4b6d999df64d7e5eb8fa08a15edc353e"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
@@ -139115,8 +139115,12 @@
       "sha256": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01"
     },
     {
-      "path": "docs/audits/cta-source-walkthrough-20261028/human-memberships.csv.gz",
+      "path": "scripts/cta_evidence_assets/historical-paper-memberships.csv.gz",
       "sha256": "8c873e4a87373f6ee201d9fadbbf52731d7cc8af02b5e5f757286d89c82bdf95"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/classification-baseline.json",
+      "sha256": "d368eff04ebf93fa7bd50fe7538c7c59ce1c10e8e4894cc113bf3987f253c21e"
     },
     {
       "path": "oncoref/data/cta-publication-sources.csv",

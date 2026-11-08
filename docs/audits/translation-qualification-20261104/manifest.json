@@ -1,18 +1,18 @@
 {
   "inputs": {
-    "scripts/build_cta_translation_report.py": "87932d5d8d919f9f6d7b853f17e264b959cadbf81d12692093a6683997bcae46",
-    "oncoref/translation_qualification.py": "6e612be63f0fb16eec840702b9a66a597778295f07a25e964bf0245ea60caa8a",
-    "oncoref/data/translation-qualification.json": "3b5bd7192154d2da6a11de8a27960357db0a4a136652910097eb0f00202a33aa",
-    "oncoref/data/translation-qualification.csv.gz": "d19a92dd22885be72047435da16d87ef9d4b8f74600c1b056b5025c06b260164",
-    "oncoref/data/cta-selection-human.csv.gz": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d"
+    "scripts/build_cta_translation_report.py": "8fb46257f70480852d037a4146db09144c70ab80f9def06d2149f5abbec4e6b4",
+    "oncoref/translation_qualification.py": "968f579cfc9a0872e61298187b9b435033bc846ae4c072207ca2ccb0bc7ad517",
+    "oncoref/data/translation-qualification.json": "33ccea9c5e419a1aeff8f0262f6312c693efa16afd86fa5c2ee95b2657d7d108",
+    "oncoref/data/translation-qualification.csv.gz": "82c53048bc40e161e8c0f2df1ff5a44e071f4d42035d41bd6646f9bd0dc43303",
+    "oncoref/data/cta-selection-human.csv.gz": "e996969018124bb510314cea5fb05c29eb1f3e8624dacc3cd073ab3ba8f3eb98"
   },
   "outputs": {
     "baseline-evidence-pr.csv.gz": "853fbb48a44328af9c2ce3d6886195b5247ab0a96c653b4dc9a63bf7dce8a21e",
     "baseline.json": "318e8dda5948dae12057a2d1118698776b9aae48dfd1d49b39be7e3995fcca68",
-    "changes-from-evidence-pr.csv": "221c7500739d55761bced3f03529441c82923296f71fb53b0208b15b0d1fc810",
-    "index.md": "fa0b074db08aabaa3ead6d11a48b240b64d078d32f784c57578f3adc3e248fbf",
-    "qualification.json": "3b5bd7192154d2da6a11de8a27960357db0a4a136652910097eb0f00202a33aa",
-    "representatives.csv.gz": "4d8b09d449d230038f92c2d6bfaab62966aece752882b7939f57fdea22e2ee7e",
-    "worked-records.csv.gz": "af0601d159b00bbf18b02a399c74dcbbd7880f61b6bc7635e5f510d53028de86"
+    "changes-from-evidence-pr.csv": "bdf3fa0ef3b3d055254d922f418cea0e1b7026775725f87d1ffd4c9221ce36cc",
+    "index.md": "c1b6163c20bf8c8d1cb9b4dc4795c1ab7ab6639bfd31b8d4c04b9abf9b04ab13",
+    "qualification.json": "33ccea9c5e419a1aeff8f0262f6312c693efa16afd86fa5c2ee95b2657d7d108",
+    "representatives.csv.gz": "3def7c9801d2db2130f095f5f6ff03c82984791834d9c775cbeaba0569fa837d",
+    "worked-records.csv.gz": "2d45bea643fba1fde392e22b3ebc0f7a4e537ef8fb3aa5b6bc0c3a83889249b4"
   }
 }

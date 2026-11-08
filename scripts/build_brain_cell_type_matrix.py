@@ -94,7 +94,7 @@ def collect(out: Path, batch: int = 8) -> None:
                                 gene, tissue, info.get("name", cell), int(n),
                                 info.get("total_count"), whole.get("total_count"),
                                 summary.get("me"),
-                            )  # fmt: skip
+                            )
                         )
         pd.DataFrame(
             rows,

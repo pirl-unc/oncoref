@@ -93,3 +93,5 @@ Paper titles open the publication. Database names open the source's documentatio
 | [Garg et al., Clinical Cancer Research (2007)](https://doi.org/10.1158/1078-0432.CCR-06-2340) | nomination | gene-list membership | [Source](https://doi.org/10.1158/1078-0432.CCR-06-2340) |
 | [Sasaroli et al. (2011)](https://doi.org/10.4161/cbt.12.3.16260) | nomination | gene-list membership | [Source](https://doi.org/10.4161/cbt.12.3.16260) |
 | [Hirbo et al. (2015)](https://doi.org/10.1371/journal.pone.0144155) | nomination | gene-list membership | [Source](https://doi.org/10.1371/journal.pone.0144155) |
+| [Ensembl 115 coding annotations and MANE/canonical tags](https://ftp.ensembl.org/pub/release-115/) | translation_evidence | versioned CDS and protein sequence | [Source](https://ftp.ensembl.org/pub/release-115/) |
+| [Reviewed coding and representative-protein findings](https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/) | translation_evidence | exact-reference, source-linked review | [Source](https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/) |

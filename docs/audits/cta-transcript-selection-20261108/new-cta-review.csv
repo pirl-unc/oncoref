@@ -1,0 +1,14 @@
+protein,gene_id,previous_failure,selected_transcripts,lengths,support,selection_basis,cancer_maximum_tpm,cancer_cohort_at_maximum,current_classification
+BOLL,ENSG00000152430,incomplete_start,"[""ENST00000392296.9""]",[283],1 (assigned to previous version 8),MANE Select,20.1871,T_ALL,CTA
+IZUMO2,ENSG00000161652,ambiguous_or_interrupted_sequence | incomplete_annotation_tag | incomplete_start | noncanonical_start_residue,"[""ENST00000293405.8""]",[221],1 (assigned to previous version 7),MANE Select,39.421089866400145,NET_RECTAL,CTA
+ARL13A,ENSG00000174225,nonqualifying_transcript_biotype,"[""ENST00000450049.7""]",[256],5 (assigned to previous version 6),MANE Select,32.7993,BL,CTA
+TP53TG3/B/C/D/E/F,ENSG00000183632,incomplete_annotation_tag | incomplete_start | noncanonical_start_residue | nonqualifying_transcript_biotype,"[""ENST00000398682.5""]",[124],1 (assigned to previous version 4),MANE Select,240.59040801193805,NEC_LUNG_LARGECELL,CTA
+CATSPER4,ENSG00000188782,incomplete_annotation_tag | incomplete_stop,"[""ENST00000456354.7""]",[472],1 (assigned to previous version 6),MANE Select,8.0878,T_ALL,CTA
+TP53TG3/B/C/D/E/F,ENSG00000205456,nonqualifying_transcript_biotype,"[""ENST00000398664.5""]",[124],1 (assigned to previous version 4),MANE Select,240.59040801193805,NEC_LUNG_LARGECELL,CTA
+TP53TG3/B/C/D/E/F,ENSG00000205457,nonqualifying_transcript_biotype,"[""ENST00000561509.3""]",[124],1 (assigned to previous version 2),MANE Select,240.59040801193805,NEC_LUNG_LARGECELL,CTA
+GAGE1,ENSG00000205777,nonqualifying_transcript_biotype,"[""ENST00000381700.11""]",[117],1 (assigned to previous version 10),MANE Select,1181.9049505121604,SKCM,CTA
+C16orf90,ENSG00000215131,ambiguous_or_interrupted_sequence | incomplete_annotation_tag | incomplete_start | noncanonical_start_residue,"[""ENST00000437192.8""]",[182],5 (assigned to previous version 7),MANE Select,56.7036,B_ALL,CTA
+TP53TG3/B/C/D/E/F,ENSG00000261509,nonqualifying_transcript_biotype,"[""ENST00000341305.7""]",[124],1 (assigned to previous version 6),MANE Select,240.59040801193805,NEC_LUNG_LARGECELL,CTA
+ENSG00000274944,ENSG00000274944,nonqualifying_transcript_biotype,"[""ENST00000621281.1""]",[110],2,Ensembl canonical,13.536047963262552,MDS,CTA
+TP53TG3/B/C/D/E/F,ENSG00000275034,missing_primary_translation,"[""ENST00000623491.2""]",[124],1 (assigned to previous version 1),MANE Select,240.59040801193805,NEC_LUNG_LARGECELL,CTA
+TP53TG3/B/C/D/E/F,ENSG00000278848,missing_primary_translation,"[""ENST00000623042.2""]",[124],1 (assigned to previous version 1),MANE Select,240.59040801193805,NEC_LUNG_LARGECELL,CTA

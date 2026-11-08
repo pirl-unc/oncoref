@@ -1,7 +1,7 @@
 source_id,source,groups,example_genes
-hpa_rna_consensus,HPA v23 consensus bulk,88,TUBB8B; LINC03040; ZNF840P; MEIS3P2; OR10R2
-combined_normal_bulk,Combined normal bulk: HPA consensus + HPA brain + direct GTEx,85,LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156
-hpa_single_cell_tissue,HPA v23 tissue-cell clusters,69,LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156
-hpa_immune_cell,HPA v23 immune cells,45,LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156
-hpa_immune_monaco,Monaco immune cells via HPA v23,45,LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156
+hpa_rna_consensus,HPA v23 consensus bulk,89,TUBB8B; LINC03040; ZNF840P; MEIS3P2; OR10R2
+combined_normal_bulk,Combined normal bulk: HPA consensus + HPA brain + direct GTEx,86,LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356
+hpa_single_cell_tissue,HPA v23 tissue-cell clusters,70,LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356
+hpa_immune_cell,HPA v23 immune cells,46,LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356
+hpa_immune_monaco,Monaco immune cells via HPA v23,46,LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356
 gtex_core_panel,"GTEx v11 core panel (52 contexts; informational, not required)",58,ENSG00000284732; ENSG00000285404; ENSG00000285508; ENSG00000286022; TMEM217B

@@ -21,9 +21,9 @@ loci, so each gene's individual TPM under-counts the protein; the biologically
 meaningful unit is the *proteoform* (the sum across member genes).
 
 By default this scans the cancer-testis-antigen universe (plus an explicit seed of
-known identical-protein partners that may not be in the CTA table yet), groups
-genes by their longest protein sequence via pyensembl, and writes one
-row per member gene for every group of two or more.
+known identical-protein partners that may not be in the CTA table yet), matches
+the approved MANE Select or Ensembl canonical proteins from the pinned selection
+registry, and writes one row per member locus for every shared sequence.
 
 ``--scope genome`` instead scans *all* protein-coding genes in the release,
 producing the full identical-protein grouping (histone clusters, tubulins,
@@ -35,8 +35,8 @@ The genome registry is the opt-in variant (issue #12): genome-wide summation
 shifts many more genes' expression than the focused CTA subset, so it is offered,
 not shipped as the default for the percentile/within-sample artifacts.
 
-This generator requires the optional genome dependency (``pip install
-'oncoref[genome]'``); pyensembl is not part of oncoref's core dependency set. Run:
+The default generator uses packaged offline evidence. Only historical reproduction
+with ``--legacy-longest`` requires the optional pyensembl dependency. Run:
 
     python scripts/generate_proteoform_groups.py               # CTA-scoped (default)
     python scripts/generate_proteoform_groups.py --scope genome  # genome-wide
@@ -122,7 +122,9 @@ def _genes_for_scope(data, gene_ids: list[str] | None):
             continue
 
 
-def build_proteoform_groups(gene_ids: list[str] | None, ensembl_release: int, min_members: int):
+def build_legacy_proteoform_groups(
+    gene_ids: list[str] | None, ensembl_release: int, min_members: int
+):
     import pyensembl
 
     data = pyensembl.EnsemblRelease(ensembl_release)
@@ -160,9 +162,57 @@ def build_proteoform_groups(gene_ids: list[str] | None, ensembl_release: int, mi
     return out.sort_values(["proteoform_id", "member_symbol"]).reset_index(drop=True)
 
 
+def build_proteoform_groups(gene_ids: list[str] | None, ensembl_release: int, min_members: int):
+    """Group only qualified, approved default sequences from the shared registry."""
+    from oncoref import transcript_selection, translation_qualification
+
+    if ensembl_release != 115:
+        raise ValueError("Current transcript selection is pinned to Ensembl 115")
+    decisions = transcript_selection.records()
+    table = translation_qualification.records()
+    metadata = (
+        table.loc[table.contig.isin(translation_qualification.PRIMARY_CONTIGS)]
+        .drop_duplicates("gene_id")
+        .set_index("gene_id")
+    )
+    rows = decisions.loc[decisions.selection_status.eq("selected")].copy()
+    if gene_ids is not None:
+        rows = rows.loc[rows.gene_id.isin(gene_ids)]
+    rows = rows.loc[rows.gene_id.map(metadata.gene_biotype).eq("protein_coding")]
+    result = []
+    for sequence_hash, members in rows.groupby("selected_sequence_sha256", sort=True):
+        if len(members) < min_members:
+            continue
+        symbols = {g: metadata.loc[g].symbol or g for g in members.gene_id}
+        label = "/".join(sorted(symbols.values()))
+        lengths = {n for values in members.candidate_lengths for n in values}
+        if len(lengths) != 1:
+            raise ValueError("Identical sequence hashes have inconsistent lengths")
+        for gene, symbol in sorted(symbols.items()):
+            result.append(
+                {
+                    "proteoform_id": label,
+                    "member_symbol": symbol,
+                    "member_gene_id": gene,
+                    "protein_length": next(iter(lengths)),
+                    "n_members": len(members),
+                    "sequence_sha256": sequence_hash,
+                    "selection_policy_id": transcript_selection.POLICY_ID,
+                }
+            )
+    return (
+        pd.DataFrame(result)
+        .sort_values(["proteoform_id", "member_symbol", "member_gene_id"])
+        .reset_index(drop=True)
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--ensembl-release", type=int, default=112)
+    parser.add_argument("--ensembl-release", type=int, default=115)
+    parser.add_argument(
+        "--legacy-longest", action="store_true", help="Explicit historical reproduction only"
+    )
     parser.add_argument("--cta-csv", type=Path, default=_DEFAULT_CTA_CSV)
     parser.add_argument(
         "--scope",
@@ -183,7 +233,8 @@ def main() -> None:
     if args.output is None:
         args.output = _DEFAULT_OUTPUT if args.scope == "cta" else _DEFAULT_GENOME_OUTPUT
     gene_ids = None if args.scope == "genome" else _candidate_gene_ids(args.cta_csv)
-    groups = build_proteoform_groups(gene_ids, args.ensembl_release, args.min_members)
+    builder = build_legacy_proteoform_groups if args.legacy_longest else build_proteoform_groups
+    groups = builder(gene_ids, args.ensembl_release, args.min_members)
 
     missing_anchors = _ANCHOR_GROUPS - set(groups["proteoform_id"])
     if missing_anchors:

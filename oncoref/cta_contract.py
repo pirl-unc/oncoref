@@ -26,7 +26,8 @@ _CONTRACT = {
         "cancer expression and qualifying reproductive or developmental association "
         "that passes the named normal-tissue evidence, coverage and selection rules. "
         "CTA admission requires qualifying coding annotation or supported ncORF evidence "
-        "and qualification of the exact selected translation. Every input record is "
+        "and a complete, approved MANE Select or Ensembl canonical representative, "
+        "with any conflicting coding evidence resolved. Every input record is "
         "assessed, including those with insufficient translation support."
     ),
     "categories": {
@@ -38,7 +39,7 @@ _CONTRACT = {
         "screened": "Declared assessment completed; not exhaustive biological coverage",
         "incomplete_evidence": "Required coverage or evidence resolution is incomplete",
         "normal_evidence_hold": "Normal evidence requires review without establishing exclusion",
-        "translation_review": "Translation support or the selected record requires qualification",
+        "translation_review": "Incomplete annotation, uncertain translation or unresolved representative-protein evidence",
         "unassessed": "No applicable selection policy or no completed assessment",
     },
     "interpretation_states": {

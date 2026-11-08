@@ -546,7 +546,7 @@ def main() -> int:
         hl_dir = run_dir / label
         figure_style.set_highlight(code)
         try:
-            for family, name, fn_attr, kwargs in _highlight_jobs(availability):
+            for _family, name, fn_attr, kwargs in _highlight_jobs(availability):
                 out = hl_dir / f"{name}.png"
                 out.parent.mkdir(parents=True, exist_ok=True)
                 figure = None

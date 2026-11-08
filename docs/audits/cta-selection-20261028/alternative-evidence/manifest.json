@@ -1,9 +1,10 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/build_cta_alternative_evidence.py": "95241c7f81530e74ff186c90ffd6b29bcd974b0a9c0919f682c9a1866c8d7989",
+    "scripts/build_cta_alternative_evidence.py": "73653a6f8f3608a35de9d8ce8e086e530a13a93dbb9eecac8a1fb2091c59362d",
+    "docs/audits/cta-transcript-selection-20261108/inputs/frozen/protein-group-classifications.csv.gz": "3296218658fb0f9e5a28dcbdd130d2134d2cf98a8133e3ffb146d7a45fda278a",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
-    "oncoref/data/reference-releases.json": "5f48bb10b9dd0512ed9d178cab5c3cbdbb2aa2a69557121fef7416a254d969d6"
+    "oncoref/data/reference-releases.json": "405f05c3b5c1830a8e6cb4106879cabb253b0c832d8f3688153a4c240ab151f5"
   },
   "sources": [
     {
@@ -52,7 +53,7 @@
     "hpa_brain-identity.csv.gz": "dc1dbcdfab0d00a578e813bf478e5a31c1537e252ba6c79fa352ffb16d54a538",
     "hpa_brain-member-coverage.csv.gz": "e22a8dc9beabd8e7c3ea5055b4cde5897d5bcd290c35a622830236b8ee43f9b2",
     "hpa_brain-row-decisions.csv.gz": "48b67cecfa4e72e937ada805d2c1a803cd2d082eddc308f2c2770f69022e4bba",
-    "normal-bulk.csv.gz": "9a136024a6d48a2e7dc4a11505c1b1bdcdf0374c932b950242fabff241ca6d55",
+    "normal-bulk.csv.gz": "1fc0c409e9ee4c9e7e14faed065b361d1371109fadee57d0c008509814092be5",
     "petropoulos-measured-cell-metadata.csv.gz": "994812dc71b234b36d162c297398448d2c993f1965f16780048d274b0ac66f40",
     "petropoulos_E-MTAB-3929-identity.csv.gz": "cc05686b1b2e5cbe76a54bc6aca1762665215d911d2f3203ba6b1e447c80b804",
     "petropoulos_E-MTAB-3929-row-decisions.csv.gz": "9f9ee886e7be2e22a03c911f16a7344c6be825849631ab3797f728337e285a0e"

@@ -2,8 +2,8 @@
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
     "scripts/audit_cta_source_coverage.py": "4f1f0e73022c6adef0240041db3ddb8aa3970a09985fe045c6bad32dcf53c8d7",
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "d9b4b9cd2367dc60cf755b7daa9c8e3325e09efb1e33d7de3aa3bc34673e49a3",
-    "docs/audits/cta-selection-20261028/hpa-protein-evidence.csv.gz": "ca41fd52f978652fabfc8860c9bda00c3b30355414fc6632c0b06588fbd347bf",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
+    "docs/audits/cta-selection-20261028/hpa-protein-evidence.csv.gz": "57eafe9fb8fd029171773b5b32b2e955fae363a77ccb393a0ddb164fbc8a7e69",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/manifest.json": "2de97ad9daa6ff4baeb3179c90366f131ae91e77ee5f92caa5d10dd27d148b86",
     "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
     "docs/audits/cta-selection-20261028/hpa_single_cell_tissue-accepted-identities.csv.gz": "959cf1ee70f7f4426eea3a7564396df7232100872eb0782850c510110f1181ae",
@@ -12,9 +12,9 @@
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/ACC.csv.gz": "a92f9bb1aca7595620925b3eb827131b0d4e013e857b54c716a442842cc0986b",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/ACC.csv.gz": "9a211cd73528e7fe7d0ce557491d3d8969184aa10a7817ac75137c271d1cd516",
     "docs/audits/cta-selection-20261028/tumor-identity-repair/cohorts/ACINIC.csv.gz": "dbaa300d0d6bff5a76cfd48eee00d2e06477dbb2ec50049f58e76c966018bd9c",
-    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/ACINIC.csv.gz": "74215160255b77571d0f292022e12bb002bf0849a3495cce02deb62658164c58",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/ACINIC.csv.gz": "4248cfde7ec373f52ce50207734d26b5ee3751dc2ceefbc4c927726101594566",
     "docs/audits/cta-selection-20261028/tumor-identity-repair/cohorts/ADCC.csv.gz": "d7d05afe41fc42c4acf229d9588d98b8dc96add661e38d54b9f05956ae7ef77c",
-    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/ADCC.csv.gz": "74215160255b77571d0f292022e12bb002bf0849a3495cce02deb62658164c58",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/ADCC.csv.gz": "4248cfde7ec373f52ce50207734d26b5ee3751dc2ceefbc4c927726101594566",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/ATRT.csv.gz": "4ca814b10f9912eb7322ae06a284841f6867b2b29af4e3b7767f3255625b3a32",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/ATRT.csv.gz": "29bc73dd980b961a3a0e205e3bc09a8823568d12ee83b1fd80929093a5daa135",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/BL.csv.gz": "82f8494aaa02f29419ba0f20017ec81faebe1a081f30d1b5c3a7a7281b2699ec",
@@ -52,9 +52,9 @@
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/COAD_MSS.csv.gz": "f8b4c010f6c2814ea8d22ac4a49254abd8d747af6ae5773fd4b1c41b23db85b9",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/COAD_MSS.csv.gz": "fc8e9fb97a38b3db4f3adf605fa013888c05297a87f7487f31257d02f388ab1a",
     "docs/audits/cta-selection-20261028/tumor-identity-repair/cohorts/CRANIO.csv.gz": "135a2be8c7a61ebe8d715a5a59fea899545be68c080a2fb8f77ba421a84f69f7",
-    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/CRANIO.csv.gz": "07bbe048e22c4d2e599fba67f7ad7a871d390db048b506d203aff470a6e28441",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/CRANIO.csv.gz": "e1728bcd605528c561a8cdd43fd72c4e00ac44a7b352fcb05f35f8bd586ebdb5",
     "docs/audits/cta-selection-20261028/tumor-identity-repair/cohorts/DIPG.csv.gz": "55750cb20291804c33737c21c9b1bba0b4ac78142512d085911d1d7579d47cb1",
-    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/DIPG.csv.gz": "8a352708d23dfbbf53581717d2747a29c3cd91d6ad34d72e265aad584475685b",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/DIPG.csv.gz": "bff1892249bed28a4e52ade5f1e20b9141c77f82aaabc291c9a6701096ef36d3",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/DLBC.csv.gz": "1fa9c82d244f76a4f15cc83daa297aa8807895cc5e4e8e31adbdcae7ccde290d",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/DLBC.csv.gz": "9a211cd73528e7fe7d0ce557491d3d8969184aa10a7817ac75137c271d1cd516",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/ESCA.csv.gz": "fd10880eb41835690451749e2a2fda924bd4628521952277676229efe347fadc",
@@ -120,7 +120,7 @@
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/MDS.csv.gz": "e2cffc18e199f4760d8b9c91c192a5cfd48f7453e3d66ba735a86b20b010cd50",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/MDS.csv.gz": "da9cf0e093f47c2e375013c161e300b04d3fc50b95eb228b22632878b4b8d0c0",
     "docs/audits/cta-selection-20261028/tumor-identity-repair/cohorts/MENINGIOMA.csv.gz": "b35fcef48b185f08e8f46161289f33652ad5f4ca3139383b41c6e7f4313e4f3b",
-    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/MENINGIOMA.csv.gz": "da336c2695cef832b1711838426b8ff3326dfcf46011d100741c377d384aef38",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/MENINGIOMA.csv.gz": "1b8805b160c59909b64a08d77794b50d5da4c3519dff266b457a31a02170efc3",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/MESO.csv.gz": "e388e86cbcafc62bbae826809079cfc337094433daa9ae0465ca364a7c7eccc9",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/MESO.csv.gz": "9a211cd73528e7fe7d0ce557491d3d8969184aa10a7817ac75137c271d1cd516",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/MM.csv.gz": "be5a2aa89e77d8e9c93b6546f61fe827b74aea54a7ebb9e8b84708f55584ae6f",
@@ -200,7 +200,7 @@
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/SARC_LPS_UNSPEC.csv.gz": "347b63ced629d98ef36c71a84fa201b1129e6df72617c9571f60f61128c0b6df",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/SARC_LPS_UNSPEC.csv.gz": "29bc73dd980b961a3a0e205e3bc09a8823568d12ee83b1fd80929093a5daa135",
     "docs/audits/cta-selection-20261028/tumor-identity-repair/cohorts/SARC_MMNST.csv.gz": "2fb31548286d8cf6e7c60b066a775265ca97a3289167faae593017f7c4a48cc5",
-    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/SARC_MMNST.csv.gz": "58e2fe1e980a5f3bc65d442b1a877621e32012046f28728f7c903c67906becfd",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/SARC_MMNST.csv.gz": "d9341b0b691e815dd3e87f34fd4b3c000730aaadd6740f8040758412b0a7c4a3",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/SARC_MPNST.csv.gz": "efe5f61ea945d821edf1af85d359c43a0a2f20973b55174f713e8401a9f1cc8f",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/SARC_MPNST.csv.gz": "29bc73dd980b961a3a0e205e3bc09a8823568d12ee83b1fd80929093a5daa135",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/SARC_MYXFIB.csv.gz": "25604113c65a268b3df7f90e9c39690c673c31ac374a51b8500f58c981f89721",
@@ -270,7 +270,7 @@
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/UVM.csv.gz": "4167799ddd0e42431b817d3a1da7d8305c1ec6d558d91c6b81fb64483bd9a321",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/UVM.csv.gz": "9a211cd73528e7fe7d0ce557491d3d8969184aa10a7817ac75137c271d1cd516",
     "docs/audits/cta-selection-20261028/tumor-identity-repair/cohorts/VSCC.csv.gz": "e75529be14f634745164ce63d7a9814e385789d9146744a31fa2d99c03d0554b",
-    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/VSCC.csv.gz": "7709b7f0cacfc5ec310aeca41acac86338f3f37f34226e1e48947c5f9977e8d1",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/identity/VSCC.csv.gz": "9292c2d46d4895685139f28f0b85781e32a852276c1401e90d26cc9a82d5985e",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohorts/WILMS.csv.gz": "fba3063b2d36359250dd40a69e7acaa72cbbfbbe15d76b07a3de2212c7558f38",
     "docs/audits/cta-expanded-funnel-20261027/tumor-union/identity/WILMS.csv.gz": "f3d0300fd3032a2fcd0b0b790c4086735874e8da20911caf76c2d52d7f39323f"
   },
@@ -279,7 +279,7 @@
       "name": "hpa_rna_consensus",
       "version": "v23",
       "url": "https://v23.proteinatlas.org/download/rna_tissue_consensus.tsv.zip",
-      "sha256": null
+      "sha256": "c49b5b33a076e3b9c1eb4f7d15d063ee936e07045e192ceccfeb9edcf1d90ddb"
     },
     {
       "name": "hpa_single_cell_tissue",
@@ -313,14 +313,14 @@
   ],
   "identity_catalog_sha256": "3f6e446737df45838a3f086418b740040b34e047969ca0fa0ceb0c210c84c702",
   "outputs": {
-    "normal-panel-coverage-gaps.csv.gz": "5b1897c0df1cf3c8d031984bbeac091932f8110de7a6dfba6bb1cf511a952df5",
-    "normal-panel-member-coverage.csv.gz": "aa0f738fd88f18692438ed216c03f391fac9e48c0461e6ebd9f0d1e97c43d07e",
-    "coverage-identity-matches.csv.gz": "1ff6aa61539a1924dfe149e6eb4fe916badc40889676bce42fc8a2100fe16c86",
-    "embryonic-coverage-gaps.csv.gz": "5a5160132360fd93393d651af8ba1262521b748c9064e5c327d4ae53b39c2cd8",
-    "combined-rna-coverage.csv.gz": "31dcf27b17a10ee1ba446e10b27cda1437d25a4216a4311cf394117f7bc72ece",
-    "tumor-cohort-coverage.csv.gz": "0defeb5747356dd4389fa16490f7475415f5a769f6ea48fc9093eecbb4c7bacb",
-    "tumor-missing-identity-candidates.csv.gz": "ba8777a4ccf0e86ba4f3d39db5eaac98efce0921d2bac2f9be61eaabb600f981",
+    "normal-panel-coverage-gaps.csv.gz": "b44d429aa2343a7cdcbd7f90164b2bd355fca3d8b8bef1aa2dba9abf5b1c695a",
+    "normal-panel-member-coverage.csv.gz": "8687a74f30c38ad8f11e28b1a1baa66d084e0bc92dc85e65ddd7b33e47f1caac",
+    "coverage-identity-matches.csv.gz": "f6725d7e734e499528906969c77cc860fa32fb47bc5821b16b1a7bdc5e55247e",
+    "embryonic-coverage-gaps.csv.gz": "72209f62f6d97e2da993b195db49c5b6a3b61ab51d6b9d9c44889aaa0472f96e",
+    "combined-rna-coverage.csv.gz": "5d2b5df311cd0be81f58d927c224f829555b31664a763b362ea1d27a9b23c412",
+    "tumor-cohort-coverage.csv.gz": "de364699bc0568b5ef2ea1612baa9cea12b80ddf118f6be685f1d4449ee2e81d",
+    "tumor-missing-identity-candidates.csv.gz": "a57b44685009a791c63eb527ef1d2871c843169fb8961a0e2417792cd88845c5",
     "unresolved-protein-contexts.csv.gz": "01d137fd968f2a9c27c0e963de62e9f4772592733a3cd2f0c81f10cad74dc317",
-    "normal-panel-gap-counts.csv": "860d622aad1a2618bce70518634aba3451013ea5ad6ba79b054f6cca2f1cb19f"
+    "normal-panel-gap-counts.csv": "6f5e9dfa414493ed29f0af1d02cf249e9fd8b9ad84863a478aac54b2de90c379"
   }
 }

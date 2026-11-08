@@ -4,7 +4,13 @@ import json
 
 import pandas as pd
 
-from oncoref.translation_qualification import annotate, qualify, records, valid_segments
+from oncoref.translation_qualification import (
+    annotate,
+    annotate_legacy_longest,
+    qualify,
+    records,
+    valid_segments,
+)
 
 
 def test_current_candidate_and_exclusion_results_keep_qualification_independent():
@@ -64,9 +70,10 @@ def test_primary_record_cannot_be_rescued_by_longer_alternate():
     assert primary.transcript_accession.startswith("ENST00000553483.")
     assert not primary.target_qualified
     f = pd.DataFrame({"member_gene_ids": [json.dumps([primary.gene_id])]})
-    result = annotate(f, ser)
+    result = annotate(f)
     assert not result.translation_qualified.any()
-    assert json.loads(result.representative_sequence_sha256s.iloc[0]) == [primary.sequence_sha256]
+    assert json.loads(result.representative_candidate_sha256s.iloc[0]) == [primary.sequence_sha256]
+    assert json.loads(result.representative_sequence_sha256s.iloc[0]) == []
     mroh = table[table.symbol.eq("MROH5") & table.contig.eq("8")]
     assert not mroh.target_qualified.any()
     assert len(mroh) == 3
@@ -81,7 +88,7 @@ def test_missing_and_disagreeing_group_sequences_require_review():
         ]
     )
     f = pd.DataFrame({"member_gene_ids": [json.dumps(["A", "B"]), json.dumps(["unknown"])]})
-    result = annotate(f, table)
+    result = annotate_legacy_longest(f, table)
     assert not result.translation_qualified.any()
     assert result.translation_qualification_reasons.tolist() == [
         "representative_sequence_mismatch",

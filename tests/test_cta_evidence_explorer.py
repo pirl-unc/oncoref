@@ -9,8 +9,6 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from oncoref import cta_selection
-
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/audits/cta-evidence-guide-20261106"
 
@@ -20,14 +18,16 @@ def report():
     return json.loads(gzip.decompress((OUT / "data.json.gz").read_bytes()))
 
 
-def test_every_released_protein_and_exact_122_complement_are_preserved(report):
-    current = cta_selection.profiles().set_index("entity_id")
-    paper_entities = set(cta_selection.audit().memberships.entity_id)
+def test_frozen_131_proteins_and_exact_122_complement_are_preserved(report):
+    assets = ROOT / "scripts/cta_evidence_assets"
+    current = pd.read_csv(assets / "cta-selection-1.31.0.csv.gz").set_index("entity_id")
+    current["gene_ids"] = current.gene_ids.map(json.loads)
+    paper_entities = set(pd.read_csv(assets / "historical-paper-memberships.csv.gz").entity_id)
     rows = {r["entity_id"]: r for r in report["rows"]}
     assert set(rows) == set(current.index)
     for entity, row in rows.items():
         assert row["classification"] == current.loc[entity, "classification"]
-        assert tuple(row["gene_ids"]) == current.loc[entity, "gene_ids"]
+        assert row["gene_ids"] == current.loc[entity, "gene_ids"]
         assert bool(row["papers"]) == (entity in paper_entities)
     subset = [r for r in rows.values() if r["category"] == "CTA" and not r["papers"]]
     assert len(subset) == 122
@@ -218,11 +218,12 @@ def test_literature_annotations_do_not_pretend_all_122_were_reviewed(report):
     assert "conflict" in subset["MRGPRX1"]["literature_review"][0]["category"]
 
 
-def test_explorer_manifest_binds_outputs_and_source_artifacts():
+def test_explorer_manifest_binds_outputs_and_source_artifacts(historical_cta_input):
     manifest = json.loads((OUT / "manifest.json").read_text())
     for category, base in [("inputs", ROOT), ("outputs", OUT)]:
         for name, digest in manifest[category].items():
-            assert hashlib.sha256((base / name).read_bytes()).hexdigest() == digest, name
+            path = historical_cta_input(name, digest) if category == "inputs" else base / name
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, name
 
 
 def test_top_five_reduction_is_valid_across_chunks_and_retains_raw_unsupported_values():

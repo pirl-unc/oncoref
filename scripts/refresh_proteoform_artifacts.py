@@ -38,13 +38,15 @@ from oncoref.expression_engine import validate_nonnegative_expression
 from oncoref.proteoforms import _proteoform_registry_metadata, collapse_to_proteoforms
 
 
-def refresh(base: Path, out: Path) -> None:
+def refresh(base: Path, out: Path, *, unavailable: frozenset[str] = frozenset()) -> None:
     """Rebuild every base cohort; reject source, normalization or sample-QC drift."""
     if base.resolve() == out.resolve():
         raise ValueError("output must differ from the published base bundle")
     metadata = pd.read_csv(base / "expression-artifact-build-metadata.csv")
     qc = pd.read_csv(base / "source-matrix-sample-qc.csv")
     expected_codes = set(metadata["cancer_code"].astype(str))
+    if unavailable - expected_codes:
+        raise ValueError("Unavailable cohort must exist in the base bundle")
     builds = {
         "percentiles": cohort_percentile_vectors,
         "within_sample": within_sample_top_fractions,
@@ -65,6 +67,36 @@ def refresh(base: Path, out: Path) -> None:
         source = source_matrices.local_path(code)
         if not source.is_file():
             raise FileNotFoundError(f"{code}: cache the published source matrix at {source}")
+        if code in unavailable:
+            # Preserve historical bytes/registry identity without presenting a refresh.
+            # The normal reader rejects stale registry attrs and cannot consume these
+            # values. Retain the observed invalid-input exception as provenance.
+            try:
+                read_raw(source)
+            except ValueError as error:
+                reason = str(error)
+            else:
+                raise ValueError(f"{code}: unavailable exception no longer applies")
+            for dataset in builds:
+                spec = SHARD_DATASETS[dataset]
+                old = pd.read_parquet(base / spec.subdir(proteoform=True) / f"{code}.parquet")
+                old.attrs.update(artifact_status="unavailable", unavailable_reason=reason)
+                old.to_parquet(
+                    out / spec.subdir(proteoform=True) / f"{code}.parquet",
+                    index=False,
+                    compression="zstd",
+                )
+            audit.append(
+                {
+                    "cancer_code": code,
+                    "status": "unavailable",
+                    "reason": reason,
+                    "source_matrix": str(source),
+                    "gene_artifacts_verified": False,
+                }
+            )
+            print(f"{code}: unavailable; retained historical registry identity", flush=True)
+            continue
         raw = read_raw(source)
         raw_samples = sample_columns(raw)
         validate_nonnegative_expression(raw[raw_samples], context=f"{code}: linear TPM refresh")
@@ -96,6 +128,8 @@ def refresh(base: Path, out: Path) -> None:
         audit.append(
             {
                 "cancer_code": code,
+                "status": "refreshed",
+                "gene_artifacts_verified": True,
                 "source_matrix": str(source),
                 "n_samples": len(samples),
                 "n_genes": len(bio),
@@ -111,6 +145,9 @@ def refresh(base: Path, out: Path) -> None:
 
     bundle_metadata = json.loads((base / "expression-artifact-build-metadata.json").read_text())
     bundle_metadata["proteoform_registry"] = _proteoform_registry_metadata("cta")
+    bundle_metadata["unavailable_proteoform_cohorts"] = [
+        r for r in audit if r["status"] == "unavailable"
+    ]
     (out / "expression-artifact-build-metadata.json").write_text(
         json.dumps(bundle_metadata, indent=2, sort_keys=True) + "\n"
     )
@@ -121,8 +158,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--unavailable-cohort",
+        action="append",
+        default=[],
+        help="Explicitly retain an unusable historical shard when its native input fails validation",
+    )
     args = parser.parse_args()
-    refresh(args.base, args.out)
+    refresh(args.base, args.out, unavailable=frozenset(args.unavailable_cohort))
 
 
 if __name__ == "__main__":

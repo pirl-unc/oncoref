@@ -2,7 +2,8 @@
 
 This registry annotates the frozen 1.31.0 selection. A paper's placement in the
 core or supplementary reading set never determines whether its findings apply.
-Normal-expression and identity review findings are not yet classification edits.
+This frozen registry does not itself edit classifications. Current transcript
+decisions and reviewed coding holds are exposed by ``transcript_selection``.
 """
 
 from __future__ import annotations

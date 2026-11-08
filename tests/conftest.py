@@ -13,13 +13,18 @@ def historical_cta_input():
     root = Path(__file__).resolve().parents[1]
     archive = root / "tests/fixtures/cta-1.21-inputs"
     receipt = json.loads((archive / "manifest.json").read_text())
+    later = root / "tests/fixtures/cta-1.31-inputs"
+    later_receipt = json.loads((later / "manifest.json").read_text())
 
     def resolve(name, expected):
         current = root / name
         if hashlib.sha256(current.read_bytes()).hexdigest() == expected:
             return current
-        assert receipt["sha256"].get(name) == expected, name
-        frozen = archive / name
+        if later_receipt["files"].get(name, {}).get("sha256") == expected:
+            frozen = later / name
+        else:
+            assert receipt["sha256"].get(name) == expected, name
+            frozen = archive / name
         assert hashlib.sha256(frozen.read_bytes()).hexdigest() == expected, name
         return frozen
 

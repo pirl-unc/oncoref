@@ -38,8 +38,10 @@ def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate(
     root = Path(__file__).resolve().parents[1]
     old = pd.read_csv(root / "docs/audits/cta-neither-20261030/baseline-1.24.0.csv.gz")
     current = human.cta_selection().set_index("label")
-    previous_ctas = set(old.loc[old.category.eq("CTA"), "protein_group_label"])
-    kept = current.loc[sorted(previous_ctas)]
+    previous_genes = {
+        g for value in old.loc[old.category.eq("CTA"), "member_gene_ids"] for g in json.loads(value)
+    }
+    kept = current[current.gene_ids.map(lambda ids: bool(set(ids) & previous_genes))]
     # Earlier CTAs can leave under a revised tissue policy. Each removal must
     # retain a concrete exclusion or hold rather than silently losing evidence.
     profiles = cta_selection.profiles().set_index("label")
@@ -55,14 +57,17 @@ def test_restored_reproductive_protein_route_preserves_old_ctas_and_cancer_gate(
     held = removed[kept.loc[removed, "classification"].eq("Other:Held")]
     assert (facts.loc[held, "rare_cell_hold"] | facts.loc[held, "knowledge_normal_hold"]).all()
     translation = removed[kept.loc[removed, "classification"].eq("Other:Translation")]
-    assert not facts.loc[translation, "translation_qualified"].any()
+    assert (
+        ~facts.loc[translation, "translation_qualified"]
+        | ~facts.loc[translation, "representative_selection_approved"]
+    ).all()
     assert set(removed) == set(unsafe) | set(held) | set(translation)
     overlap = profiles.unsafe_sequence_overlap_pct
     assert overlap.loc[kept.index[contained]].ge(95).all()
     assert contained.sum() <= 40
     assert current.loc[["SAGE1", "GAGE10", "CDY2A/B"], "category"].eq("CTA").all()
     assert current.loc["CT45A2/8/9", "category"] == "CTA"  # below the 95% containment floor
-    assert current.loc["CDY1/B", "category"] == "CTA"
+    assert current.loc[["CDY1", "CDY1B"], "category"].eq("CTA").all()
     assert current.loc[["USP17L3", "FAM90A9"], "category"].eq("Other").all()
     candidates = cta_selection.candidates()
     assert set(candidates.category) <= set(cta_selection.CANDIDATE_CATEGORIES)
@@ -155,7 +160,7 @@ def test_full_reproductive_and_cell_support_preserve_independent_gates():
     rows = cta_selection.results().set_index("label")
     assert rows.loc[["MAGEA11", "FOXR2", "CAGE1", "PRDM9", "XKR5"], "category"].eq("CTA").all()
     assert rows.loc[["IFNA2", "IFNA14"], "classification"].eq("Unsafe").all()
-    assert rows.loc["CDY1/B", "classification"] == "CTA"
+    assert rows.loc[["CDY1", "CDY1B"], "classification"].eq("CTA").all()
     assert rows.loc["OR2T7", "classification"] == "Other:Translation"
     profile = cta_selection.profiles().set_index("label").loc["OR2T7"]
     assert profile.reproductive_evidence and not profile.translation_qualified

@@ -66,6 +66,7 @@ EVIDENCE_CATEGORIES = (
     "immune_rna",
     "normal_protein",
     "clinical_safety",
+    "translation_evidence",
 )
 RESULT_COLUMNS = (
     "taxon_id",
@@ -318,6 +319,12 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         "translation_qualification_reasons",
         "translation_qualification_policy",
         "representative_sequence_sha256s",
+        "representative_selection_policy",
+        "representative_selection_approved",
+        "representative_selection_reasons",
+        "representative_candidate_sha256s",
+        "representative_evidence_ids",
+        "representative_transcripts",
     ]
     if selected.taxon_id == 9606:
         evidence = _checked_table("cta-selection-profiles-human.csv.gz")
@@ -326,7 +333,12 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
         if set(evidence.entity_id) != set(result.entity_id):
             raise ValueError("Protein profiles do not cover the current selection")
         for column in columns[1:]:
-            if column == "representative_sequence_sha256s":
+            if column in {
+                "representative_sequence_sha256s",
+                "representative_candidate_sha256s",
+                "representative_evidence_ids",
+                "representative_transcripts",
+            }:
                 evidence[column] = evidence[column].map(lambda value: tuple(json.loads(value)))
             elif column in {
                 "rare_cell_type",
@@ -334,6 +346,8 @@ def profiles(*, species: SpeciesLike = "human") -> pd.DataFrame:
                 "translation_qualification_policy",
                 "translation_support_reasons",
                 "tumor_restriction_status",
+                "representative_selection_policy",
+                "representative_selection_reasons",
             }:
                 evidence[column] = evidence[column].astype("string").replace("", pd.NA)
             elif (

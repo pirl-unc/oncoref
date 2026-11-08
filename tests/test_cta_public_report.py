@@ -5,6 +5,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
+import pandas as pd
+
 from oncoref import cta_selection, sequence_bundle
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -101,7 +103,8 @@ def test_inventory_audit_retains_baseline_and_discloses_restriction_conflicts():
             assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
     summary = json.loads((audit / "summary.json").read_text())
     assert summary["input_records"] == len(cta_selection.results())
-    assert summary["existing_classification_changes"] == 0
+    changes = pd.read_csv(audit / "existing-classification-changes.csv.gz")
+    assert summary["existing_classification_changes"] == len(changes)
     assert sum(summary["restored_classifications"].values()) == summary["restored_records"]
     preliminary = summary["preliminary_expression_profile"]
     assert sum(preliminary["disposition_counts"].values()) == preliminary["matches"]

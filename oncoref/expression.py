@@ -5792,6 +5792,10 @@ def _read_shard_or_recompute(
 
             metadata = _proteoform_registry_metadata(scope)
             stale_registry = any(df.attrs.get(key) != value for key, value in metadata.items())
+        if df.attrs.get("artifact_status") == "unavailable":
+            raise ValueError(
+                f"{code}: stored {dataset.noun} unavailable: {df.attrs.get('unavailable_reason', 'source validation failed')}"
+            )
         if not stale_registry:
             df.attrs["source"] = "shard"
             return df

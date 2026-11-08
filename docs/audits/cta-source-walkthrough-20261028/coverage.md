@@ -1,13 +1,13 @@
 # Which sources have missing evidence?
 
-These counts describe the **105 classified proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
+These counts describe the **106 classified proteins with incomplete evidence**, not every gene in the reference. Sources overlap: their counts must not be added.
 
 | Evidence gap | Proteins |
 | --- | --- |
-| normal panel missing | 85 |
+| normal panel missing | 86 |
 | tumor measurement missing | 28 |
 | tumor group profile incomplete | 1 |
-| embryonic measurement missing | 57 |
+| embryonic measurement missing | 58 |
 | unresolved evidence | 20 |
 
 The earlier **71 tumor-measurement gaps** combined 41 groups without a mapped measurement and 30 measured groups with an incomplete low-expression profile. After the identity repair, **28** groups lack a mapped measurement, while **1** have measured tumor values but incomplete group coverage for the low-expression profile. Multi-locus group lower bounds cannot establish low expression. This restriction does not erase observed values and does not block tumor admission when a sample exceeds the floor.
@@ -18,11 +18,11 @@ The repair also fixes a source-name sentinel bug: the text `NaN` was interpreted
 
 | Source | Proteins | Examples |
 | --- | --- | --- |
-| HPA v23 consensus bulk | 88 | TUBB8B; LINC03040; ZNF840P; MEIS3P2; OR10R2 |
-| Combined normal bulk: HPA consensus + HPA brain + direct GTEx | 85 | LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156 |
-| HPA v23 tissue-cell clusters | 69 | LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156 |
-| HPA v23 immune cells | 45 | LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156 |
-| Monaco immune cells via HPA v23 | 45 | LINC03040; ZNF840P; MEIS3P2; ENSG00000206356; ENSG00000215156 |
+| HPA v23 consensus bulk | 89 | TUBB8B; LINC03040; ZNF840P; MEIS3P2; OR10R2 |
+| Combined normal bulk: HPA consensus + HPA brain + direct GTEx | 86 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
+| HPA v23 tissue-cell clusters | 70 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
+| HPA v23 immune cells | 46 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
+| Monaco immune cells via HPA v23 | 46 | LINC03040; ZNF840P; MEIS3P2; SPATA31J1; ENSG00000206356 |
 | GTEx v11 core panel (52 contexts; informational, not required) | 58 | ENSG00000284732; ENSG00000285404; ENSG00000285508; ENSG00000286022; TMEM217B |
 
 Bulk completeness now requires every nonreproductive tissue concept in the HPA consensus panel, using compatible measurements from HPA consensus, the separate HPA brain atlas, or direct GTEx v11. Only this combined bulk panel is required. The GTEx v11 core (52 native bulk contexts), the 426 HPA tissue/cell contexts, 19 HPA immune populations, 30 Monaco immune populations, DICE and adult cornea are reported when present but never make a protein incomplete. The table distinguishes single-export gaps from gaps remaining after the source union. A zero-valued row is measured coverage. A missing tissue row, unresolved identity or absent group member is not. Optional-panel gaps are disclosed per protein and do not contribute to the mandatory gap.
@@ -33,12 +33,12 @@ Bulk completeness now requires every nonreproductive tissue concept in the HPA c
 
 | Source | Cohort views | Groups without any mapped measurement |
 | --- | --- | --- |
-| HPA 25.1 | 31 | 68 |
+| HPA 25.1 | 31 | 69 |
 | OncoRef | 132 | 28 |
 
 [Per-protein, per-cohort coverage](tumor-cohort-coverage.csv.gz) identifies each OncoRef cohort view and HPA cancer/cohort, the measured-member count and missing member IDs. Cohort views can share biological samples. [Tumor identity alternatives](tumor-missing-identity-candidates.csv.gz) retains source rows matching the missing groups through any registered current/historical ID or known name candidate, including conflicts that cannot be substituted.
 
-Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **57** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
+Embryonic coverage now combines [Tyser et al. (2021), E-MTAB-9388](https://doi.org/10.1038/s41586-021-04158-y) (gastrulation) and [Petropoulos et al. (2016), E-MTAB-3929](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results) (preimplantation days 3–7). Both supply filtered gene-level TPM, with stages and source-specific lineages kept separate. Petropoulos contributes 1,519 measured cells from 88 embryos; the metadata-only ten additional cells are not inserted into the matrix. It recovers **683 of the previous 1,006 Tyser-missing groups**. The current **58** combined gaps are after reclassification and therefore have a changed denominator. [Coverage and missing member IDs for each atlas and their union](embryonic-coverage-gaps.csv.gz), [Petropoulos source](https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results), [download hashes and scope](../cta-selection-20261028/alternative-evidence/manifest.json). No later fetal atlas contributes yet. The author raw-count table remains a separate diagnostic, not a TPM substitute.
 
 The new identity pass recovers 19 gene rows omitted by the earlier exact-ID filter. It keeps 5 conflicting alternate-row cases unresolved. [Every attempted recovery and source ID](developmental-identity-recoveries.csv). Canonical rows take precedence; multiple alternative rows are accepted only when their entire cell-expression vectors agree. Different values are neither added nor arbitrarily selected.
 

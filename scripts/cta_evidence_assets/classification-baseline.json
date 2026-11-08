@@ -1,0 +1,14 @@
+{
+  "release": "1.31.0",
+  "source_commit": "ab30edd5565714433beb7245f8916bd7dbbdde96",
+  "files": {
+    "historical-paper-memberships.csv.gz": {
+      "source": "docs/audits/cta-source-walkthrough-20261028/human-memberships.csv.gz",
+      "sha256": "8c873e4a87373f6ee201d9fadbbf52731d7cc8af02b5e5f757286d89c82bdf95"
+    },
+    "cta-selection-1.31.0.csv.gz": {
+      "source": "oncoref/data/cta-selection-human.csv.gz",
+      "sha256": "a2d61c20caf289851487befc956fb23d8d8271daa3a1cb36e2bd28c21ce7b98d"
+    }
+  }
+}

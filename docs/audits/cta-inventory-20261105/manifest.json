@@ -1,21 +1,21 @@
 {
   "inputs": {
-    "scripts/build_cta_inventory_report.py": "c03db54eb98ca07066007d339ea14547f090677658eb188568071118ca03deb3",
-    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "d9b4b9cd2367dc60cf755b7daa9c8e3325e09efb1e33d7de3aa3bc34673e49a3",
+    "scripts/build_cta_inventory_report.py": "f52bc5c20925f740bb5ebdb708b5b65c57c5ccccbba01008218c09c8909fda2c",
+    "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
     "docs/audits/cta-inventory-20261105/baseline-1.30.0.csv.gz": "f3876561b1423ab4094611aa307e1d8f34b55f7abd8b364b27fd1f3c0e2f33d2",
     "docs/audits/cta-inventory-20261105/formerly-out-of-universe.csv.gz": "980f1d071288b9fab560133a0336a3f1e8170a031141a823fbfef0b55186556f",
     "docs/audits/cta-unassigned-20261029/before-diffuseness.csv.gz": "3bacb624b8fc6a9e691c869cc7df5237d71816eef4f38e76ade57c9aa0c7405a",
-    "oncoref/data/cta-selection.json": "5559f23910bb16dc1468b5ca7f0ed74befc886c5bb95d0498a6fb4c9d882d2e7",
+    "oncoref/data/cta-selection.json": "6219fd63a59b6a8335c3b2431d68153b823195dea021523693825a1b74708c66",
     "oncoref/data/gene-knowledge.json": "b230ceda243bc77c5ca926abe394d3aa9400b1e174561bcd5dee744fac95305f",
-    "scripts/build_cta_selection_release.py": "9d9aa16568ed613030222002e19309bcad537677fd219f6b3369082c866afb7c"
+    "scripts/build_cta_selection_release.py": "951431a2247e120f48f2dc703fb18d5ad91b7a5a389159395b17d20f144b795b"
   },
   "outputs": {
-    "adult-zero-rna-records.csv.gz": "40adeb088359a4e02f7be56fbf7481e7f69818423c66e365bb33e28d0c197fdf",
-    "existing-classification-changes.csv.gz": "b0b11f7d2a3aa23a00ac2a95e534263dcfd83f922c7a2c21b9604440908f1aad",
-    "index.md": "5704450076765f4d7a1c51044f875d28a1f87eb3884ed40ad0dce47e04ee00d7",
-    "preliminary-expression-profile-matches.csv.gz": "8aec85b28665986aff7143031259503076cd5c3c40d6feb9f2c9b6b6e74d8c76",
+    "adult-zero-rna-records.csv.gz": "35476d8dd4883812c8803facfefaa317747b5d69d0297ce10e733ba2a604c4c6",
+    "existing-classification-changes.csv.gz": "76ec23e0ea0da144a671cd8763e88bc51db3f7678b767774a4dc189b65397da8",
+    "index.md": "1bdd6abdec852a0284c03d985060b5569c383535c15dd1679c2b77732d967480",
+    "preliminary-expression-profile-matches.csv.gz": "71f102a9f92ef64e6510911f0f8dc487c89767a2b2a27c2dffb1d719f18917b9",
     "profile-counterevidence.csv": "efcf5b69306c3cf3bd892fdf8368a2bf7621d2c145976ef83431e9c1b1fdbd13",
-    "restored-records.csv.gz": "3bfd04ee93869f0e42b5cbffd7b05c18bb7c0368e989a794ab506cddbea40ffc",
-    "summary.json": "cc1aa901690ff7a0929e938aad288b11d0c23b2bc003b25222091bc83532b37c"
+    "restored-records.csv.gz": "8cf8465085e790c25db0bc9c3457d84060482f58b5a50c88d3c6b78beca45866",
+    "summary.json": "2f49c1fe8eade13c6ee603ec199233446025430c718be03e62e02213f246afed"
   }
 }

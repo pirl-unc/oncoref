@@ -1,17 +1,17 @@
 {
-  "policy_id": "oncoref.cta-selection.2026-11-05.1",
-  "input_records": 19863,
+  "policy_id": "oncoref.cta-selection.2026-11-08.1",
+  "input_records": 19893,
   "counts": {
-    "Unsafe": 18255,
-    "Other": 1006,
-    "CTA": 602
+    "Unsafe": 18259,
+    "Other": 1027,
+    "CTA": 607
   },
-  "restored_records": 259,
+  "restored_records": 260,
   "restored_classifications": {
-    "Other:Translation": 247,
+    "Other:Translation": 248,
     "Unsafe": 12
   },
-  "existing_classification_changes": 0,
+  "existing_classification_changes": 452,
   "restored_historical_exclusions_reassessed": [
     {
       "protein_group_label": "P2RX5-TAX1BP3",
@@ -25,7 +25,7 @@
     }
   ],
   "stored_zero_rna_screen": {
-    "cancer_present_required_bulk_complete": 19312,
+    "cancer_present_required_bulk_complete": 19341,
     "adult_and_reproductive_bulk_zero": 40,
     "also_developmental_measured": 22,
     "developmental_measurement_missing": 18,

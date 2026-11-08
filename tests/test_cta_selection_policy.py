@@ -609,8 +609,12 @@ def test_translation_admission_requires_support_and_exact_record_qualification()
         {
             "translation_support_eligible": [True, False, True, False],
             "translation_qualified": [True, True, False, False],
+            "representative_selection_approved": [True, True, True, True],
         }
     )
     assert policy.translation_admission(facts).tolist() == [True, False, False, False]
+    assert not policy.translation_admission(
+        facts.assign(representative_selection_approved=False)
+    ).any()
     with pytest.raises(ValueError, match="boolean translation evidence"):
         policy.translation_admission(facts.assign(translation_support_eligible=None))

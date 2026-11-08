@@ -3,7 +3,7 @@
   "inputs": [
     {
       "path": "scripts/build_cta_literature_review.py",
-      "sha256": "fb2dd004b158c1ff8ee8d5927656f9c9a675b565e55ac358fdc29c81500eaf5a"
+      "sha256": "30791b8446a6a165b8c4b5fb37d7822d4b6d999df64d7e5eb8fa08a15edc353e"
     },
     {
       "path": "docs/audits/cta-evidence-guide-20261106/data.json.gz",
@@ -70,8 +70,12 @@
       "sha256": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01"
     },
     {
-      "path": "docs/audits/cta-source-walkthrough-20261028/human-memberships.csv.gz",
+      "path": "scripts/cta_evidence_assets/historical-paper-memberships.csv.gz",
       "sha256": "8c873e4a87373f6ee201d9fadbbf52731d7cc8af02b5e5f757286d89c82bdf95"
+    },
+    {
+      "path": "scripts/cta_evidence_assets/classification-baseline.json",
+      "sha256": "d368eff04ebf93fa7bd50fe7538c7c59ce1c10e8e4894cc113bf3987f253c21e"
     },
     {
       "path": "oncoref/data/cta-publication-sources.csv",
@@ -151,16 +155,16 @@
     "followup-retrievals.json": "328dbf0c5fbceeedae4272bc33ade58b4dd8527a11aa5c46e92acfccb81e19db",
     "fulltext-retrievals.json": "d505f7efcf8366fb5c5863c31fda28b582c447e980cc9be2e5e2fef580037822",
     "gap-comparison.svg": "40a26a657b34d6448475d8d1d7b5e14b982c9481c8e8515cb985209ef886eabe",
-    "index.md": "d20ec5319419fdf0e989010d0934da8dbb5920f1457719369e0e980fe7994346",
+    "index.md": "5aaabe5667cffaa413df9343dae64dc35fea2e27955b1ce4728327678fd5ccc0",
     "individual-reviews.csv": "ea08c51e1e80e3ab7d9e261e5b513f97238ac134096aee6401fe57379896bfa8",
     "paper-gap-assessments.csv": "81ab1ff97383f4afe0240748ac0c58470b47503747e11126c219b4b3aee8942d",
-    "registry.json.gz": "ae2a72560f964f9d51e890390b5b110bff2e20d68a8dd129cd9feca31b0ed01b",
+    "registry.json.gz": "110c01134ddbef070d1f286fc907e18b24f774df8edd90a0661e0b2cc3eed5f9",
     "report.html": "8edc51c0aaefb8975baa51969336e75dac87e823b3a237e59aca89cff54baca2",
     "review-concerns.csv": "fa25be3cf3ecdbff75556b521e4b9652c9608311bf469aece161345ae751cf85",
     "review-outcomes.svg": "8cf369e3ea68af33266d241075133f6914f895f9643f17effb2caff12c07fe65",
     "review-population.json": "d818ff6f7020d7cfe57b1ec339fbc8201c1502eba69e85954933a5b8473fcd01",
     "review.js": "8b9c517aa8aa4959384f16dbfc06f9bb117e47a53fd133f21ebb4581d44c8625",
-    "review.json": "e27f5686a81c2ee0311ba44e0ad6220bfdddcc02f55f7364b271fef1c49fa575",
+    "review.json": "a43cb303333cbd0a8e3ac5bdab9fb4a5c43528599b8ede712a79fb6e75262b6c",
     "search-ledger.json": "c582238698beeac705ae0a2d71bcbffece02d0839c476b4ddab7f88e4b2e21ed",
     "source-roles.svg": "1314b0324096e131296a3f90a9a6c9d6713a2fe5c1d771b6994b340d659d6827",
     "sources.csv": "a19e11b6dc2b6117b0b228cde15f66ac00df1c3d32e58495a0edbf588abd3a3a",

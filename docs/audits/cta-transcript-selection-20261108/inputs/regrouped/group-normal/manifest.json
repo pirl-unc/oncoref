@@ -1,0 +1,167 @@
+{
+  "sources": [
+    {
+      "name": "hpa_normal_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+      "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"
+    },
+    {
+      "name": "rna_tissue_hpa",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_hpa.tsv.zip",
+      "sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c"
+    },
+    {
+      "name": "rna_tissue_gtex",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_gtex.tsv.zip",
+      "sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881"
+    },
+    {
+      "name": "hpa_single_cell_tissue",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_single_cell_type_tissue.tsv.zip",
+      "sha256": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7"
+    },
+    {
+      "name": "hpa_immune_cell",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell.tsv.zip",
+      "sha256": "206f4d2be7bb58731dfead00185081532b9b022164ce28e7878171e34372ccba"
+    },
+    {
+      "name": "hpa_immune_monaco",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_immune_cell_monaco.tsv.zip",
+      "sha256": "a8013c229261b87f19598827e0dc5334529d6f1c82f002825a77ba6c04f1dabd"
+    },
+    {
+      "name": "dice_b_cell_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/B_CELL_NAIVE_TPM.csv",
+      "sha256": "9d71a15fb22fb55f3f3f606179d3f267dcccb70868a028dbf2d45a29f2b2eed1"
+    },
+    {
+      "name": "dice_monocytes",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/MONOCYTES_TPM.csv",
+      "sha256": "fb1d82f9fbc61397d46520581877e74424f77c4db0ee468a0f3efa0aed4110dc"
+    },
+    {
+      "name": "dice_m2",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/M2_TPM.csv",
+      "sha256": "00960e38779fae323b059395613f3a5248d680a884d753f5bee6608b84c38e94"
+    },
+    {
+      "name": "dice_nk",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/NK_TPM.csv",
+      "sha256": "1d489470a78d5c96df60f15d4e2f626044409af3a8354de669315186f9a88765"
+    },
+    {
+      "name": "dice_treg_mem",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TREG_MEM_TPM.csv",
+      "sha256": "6b1710199210fe1178e48570425562cbb6af068c3c013bd1bc76da9bccec9419"
+    },
+    {
+      "name": "dice_cd4_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD4_NAIVE_TPM.csv",
+      "sha256": "94692f4d6ca8ea92bb4a37dd1d52607b174c1654316001c6d4e732789bec8820"
+    },
+    {
+      "name": "dice_cd4_stim",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD4_STIM_TPM.csv",
+      "sha256": "beaa9ab1497d176b1eb27580549ce1354a039f9c33abc0620f544764763d9f75"
+    },
+    {
+      "name": "dice_treg_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TREG_NAIVE_TPM.csv",
+      "sha256": "a320a4238010691b4af484e4697058e4b79cde4bc44d6890436b982508b3ff4b"
+    },
+    {
+      "name": "dice_tfh",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TFH_TPM.csv",
+      "sha256": "029ff1f86d7f14c9cebc97f7fe0c3125c3b9bc04ea5bbc1c0eabadc5f953de30"
+    },
+    {
+      "name": "dice_th1",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TH1_TPM.csv",
+      "sha256": "a73c666724a8efbc2e36efdd889b19d284b9aa35890f20d973d31a88e4c89e80"
+    },
+    {
+      "name": "dice_thstar",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/THSTAR_TPM.csv",
+      "sha256": "f9607b8a6637aca5f7acdacd74929911098c05d8ec72fc226515be59a1c3d2d0"
+    },
+    {
+      "name": "dice_th17",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TH17_TPM.csv",
+      "sha256": "d7d76987004bc565b4a1d14d89a52c6450e467d04dce3e576e8e4d30c6750137"
+    },
+    {
+      "name": "dice_th2",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/TH2_TPM.csv",
+      "sha256": "2eb57e51b6a77016dd97c9f338527bb1b96bd43146a626b059cb6f7367ea195a"
+    },
+    {
+      "name": "dice_cd8_naive",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD8_NAIVE_TPM.csv",
+      "sha256": "e9a4828d5cb0227cd45e8ba6df635a1db30268dbb1deef039d88d5128e2dd86c"
+    },
+    {
+      "name": "dice_cd8_stim",
+      "version": "DICE-DB1-20220223",
+      "url": "https://dice-database.org/download/CD8_STIM_TPM.csv",
+      "sha256": "99284b9a14c7562d48f944010f92c7b5999f6bd76df02989c0da9a29c90a0198"
+    },
+    {
+      "name": "cornea_collin_adult_counts",
+      "version": "GSE155683-20200804",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE155nnn/GSE155683/suppl/GSE155683_counts_adult_cornea.txt.gz",
+      "sha256": "030cfd2f7c2b5c001698c29bd1cb5d6304890e405b06b6080299224aea59f66e"
+    },
+    {
+      "name": "cornea_collin_adultcornea_cells",
+      "version": "HCA-20220228",
+      "url": "https://humancellatlas.s3.amazonaws.com/file/f001e7ffd9cce1dc584cf35241a4562bdcfcf6640159904609242f67eb028c78.sha256",
+      "sha256": "f001e7ffd9cce1dc584cf35241a4562bdcfcf6640159904609242f67eb028c78"
+    }
+  ],
+  "inputs": {
+    "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+    "scripts/cta_protein_group_normal.py": "938302b47b075c33eb5fc0691944cbfe8fd84cebc7023e3b215327e7df8110e3",
+    "oncoref/protein_equivalence.py": "0b3438d305a6a2a854320ea46ab74a41618a18d48b399a2f770fe670fa1fc7b0",
+    "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
+    "oncoref/cell_rna_policy.py": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
+    "docs/audits/cta-expanded-funnel-20261027/gene-classifications.csv.gz": "7bee1077e0489f56dcef4cbdfb42477aafe4db1618d28f8cfbaf9a8c42db5088",
+    "docs/audits/cta-quantitative-20261026/developmental-lineages.csv.gz": "91bab6202fbb43e860175c9dc6bd9d7ea0f15258179d5ebde8139442ec038a01"
+  },
+  "outputs": {
+    "hpa_immune_cell-contexts.csv.gz": "a0eea86075b956e81535b439dc48d9c38e197563c8b28641751fbaae3d74ddcb",
+    "protein-equivalence-groups.csv": "87491f5a6873d74dda3f93549ba31021f7e090657385d12922fc01ade2ead8f2",
+    "cornea-contexts.csv.gz": "c9c3063222756129f111de51fa8af4c45a37e9318efa56e599ce70614ad95e80",
+    "source-gene-identities.csv.gz": "3d6f21ef95c8096aa85aa4be3f00694109c2df58c3c6537ce10a14f8d62e4781",
+    "bulk-source-sums.csv.gz": "802eb2a01c3bf8cd8bf875cb087e35ac02ad91903764808ebc194f1d5f68d79a",
+    "cluster-contexts.csv.gz": "cc65c777bda10f8eb78cef4c3216f1e93d8369331f41b5b7a67c1353336cfade",
+    "cornea-detection-bounds.csv.gz": "d253218356d69c81280c7a498dc6d1cff1d7d0a21e99107ff9512ff22bccc7b2",
+    "normal-assessments.csv.gz": "a9c3325b1ad910870e0be80742e8836a467e8312b5f5928a01a3105c63dc2ae3",
+    "group-ihc.csv.gz": "78b62e0c7950ff8e59b92d61ebb08aa5cd6604c1ad94aa5eafb9d972d79ab01b",
+    "hpa_immune_monaco-contexts.csv.gz": "d9def6dc11a32b1097893349d81e0c5602f86a23c471722181285e6783200432",
+    "developmental-lineage-bounds.csv.gz": "4282f325b91cf16b9d1f8a2c7e5fa7bc7fe060b00ae1ec5c70b13f1df92cecd5",
+    "dice-rank-bounds.csv.gz": "b70e796bbdbe3d4affb21091011b476b74910bf384f73fa6f1d8e34f54584edf",
+    "normal-peak-evidence.csv.gz": "2827d577a9d212cb887917a39da4e1b822f48c31068eaaf12b38fc292b379fa1",
+    "bulk-contexts.csv.gz": "44adc365037bb533956799b2e0b25336afb90f8f6ff0d87db8f8280b6a6078f6"
+  }
+}

@@ -2,13 +2,11 @@
 
 [Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
 
-The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **602 CTA / 18,255 Unsafe / 1,006 Other** across **19,863 proteins** (identical selected reference sequences counted together; member loci retained). All 19,863 candidate protein records enter classification; translation support is a CTA admission requirement. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
 
-[Individual CTA literature reviews and harmonized source roles](audits/cta-literature-20261107/report.html) cover the 41 previously unmatched and 55 broad-table-only proteins, with linked core/supplementary papers, assessments of the 33 remaining paper gaps, a summary of all 29 concerns, and localization evidence for all 602 CTAs.
+[Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript table](audits/cta-transcript-selection-20261108/table.html) · [Historical 602-CTA evidence explorer](audits/cta-evidence-guide-20261106/report.html) · [Verified sequence records](sequence-bundle.md).
 
-[Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Candidate evidence explorer](audits/cta-evidence-guide-20261106/report.html) · [Verified sequence records](sequence-bundle.md).
-
-The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.31.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
+The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.35.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
 
 The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
 [1,416-gene biological membership comparison](audits/cta-membership-20261026/index.md)

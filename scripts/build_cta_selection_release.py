@@ -19,7 +19,7 @@ from oncoref.cta_selection import RESULT_COLUMNS  # noqa: E402
 from oncoref.expression_registry import expression_sources  # noqa: E402
 from oncoref.version import __version__  # noqa: E402
 
-AUDIT = ROOT / "docs/audits/cta-release-1.21.0"
+AUDIT = ROOT / "docs/audits/cta-selection-20261028"
 DATA = ROOT / "oncoref/data"
 
 
@@ -284,6 +284,28 @@ def source_inventory() -> pd.DataFrame:
             f"https://doi.org/{row.doi}" if pd.notna(row.doi) else row.source_url,
             "Comparison annotation only; no membership bypass of the quantitative funnel",
         )
+    add(
+        9606,
+        "Ensembl-115",
+        "Ensembl 115 coding annotations and MANE/canonical tags",
+        ["translation_evidence"],
+        "used_in_selection",
+        "versioned CDS and protein sequence",
+        "reference annotation",
+        "https://ftp.ensembl.org/pub/release-115/",
+        "Reference selection and completeness do not establish tissue-specific protein production.",
+    )
+    add(
+        9606,
+        "transcript-evidence",
+        "Reviewed coding and representative-protein findings",
+        ["translation_evidence"],
+        "used_in_selection",
+        "exact-reference, source-linked review",
+        "finding-specific",
+        "https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/",
+        "Gene or sequence scope, experimental setting and unresolved conflicts are retained.",
+    )
     dog_roles = {
         "bgee-srp009687": ["normal_bulk_rna", "reproductive_expression"],
         "bgee-srp181218": ["normal_bulk_rna", "reproductive_expression"],
@@ -593,6 +615,17 @@ def build(audit: Path = AUDIT) -> None:
             "translation_qualification_reasons": decisions.translation_qualification_reasons,
             "translation_qualification_policy": decisions.translation_qualification_policy,
             "representative_sequence_sha256s": decisions.representative_sequence_sha256s,
+            **{
+                name: decisions[name]
+                for name in [
+                    "representative_selection_policy",
+                    "representative_selection_approved",
+                    "representative_selection_reasons",
+                    "representative_candidate_sha256s",
+                    "representative_evidence_ids",
+                    "representative_transcripts",
+                ]
+            },
         }
     )
     write_csv(profiles, DATA / "cta-selection-profiles-human.csv.gz")
@@ -602,7 +635,7 @@ def build(audit: Path = AUDIT) -> None:
     metadata = {
         "schema": "oncoref.cta-selection",
         "schema_version": 1,
-        "release": "1.21.0" if audit == AUDIT else __version__,
+        "release": "1.21.0" if audit == ROOT / "docs/audits/cta-release-1.21.0" else __version__,
         "data_sha256": {
             name: sha256(DATA / name)
             for name in [
