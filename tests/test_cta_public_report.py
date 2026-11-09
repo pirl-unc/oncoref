@@ -36,13 +36,23 @@ def test_public_counts_statuses_and_worked_cases_match_the_current_api():
 
 
 def test_final_receipt_binds_source_audits_figures_and_public_documentation():
+    import zipfile
+
     receipt = json.loads((REPORT / "release-receipt.json").read_text())
     assert receipt["release"] == cta_selection._metadata()["release"]
     assert receipt["bundle_id"] == sequence_bundle.descriptor()["bundle_id"]
     assert receipt["selection_policy_id"] == cta_selection.coverage()["policy_id"]
     for key, base in [("inputs", ROOT), ("outputs", REPORT), ("generated_documentation", ROOT)]:
         for name, expected in receipt[key].items():
-            assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
+            if key == "inputs" and name in receipt.get("input_snapshots", []):
+                saved = receipt["input_snapshot_archive"]
+                path = REPORT / saved["path"]
+                assert hashlib.sha256(path.read_bytes()).hexdigest() == saved["sha256"]
+                with zipfile.ZipFile(path) as archive:
+                    content = archive.read(name)
+            else:
+                content = (base / name).read_bytes()
+            assert hashlib.sha256(content).hexdigest() == expected, name
     assert {"report.html", "report-data.json", "cta-definition.pdf"} <= set(receipt["outputs"])
     assert len([name for name in receipt["outputs"] if name.endswith(".svg")]) == 5
 

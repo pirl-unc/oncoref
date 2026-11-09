@@ -195,7 +195,7 @@ def test_the_layer_can_be_a_review_hold_instead_of_unsafe():
         EvidenceLayer("Rare vital-tissue cell expression", flag, no),
     ]
     result = policy.classify(facts, layers, entity_column="entity").classifications
-    assert result.classification.tolist() == ["CTA", "Other:Held"]
+    assert result.classification.tolist() == ["CTA", "Other:Review"]
 
 
 def test_protected_airway_expression_creates_hold_without_vital_flag(monkeypatch):

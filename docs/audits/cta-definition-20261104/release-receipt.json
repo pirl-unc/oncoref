@@ -58,7 +58,24 @@
   },
   "generated_documentation": {
     "README.md": "7988237940896b093155c71543415047ac47ff936c37d2175525149d8828fc27",
-    "docs/cta-selection.md": "83d67c462d4033ecff830eb52b6984b03c3cef3e549ce570f0eb735234ba0ad0",
-    "docs/index.md": "9d393916893f1c77b806ef07bc8422106dffcf322e33059eb25d8b5403fd8de3"
+    "docs/cta-selection.md": "c384ef3845112065c8fa1e0bb3eacc05e71f8451089c1d27c42e8f59de577d48",
+    "docs/index.md": "875932537789b110207f573aacd507b9fb9cc90353b45c25efeeb6f36572d97b"
+  },
+  "documentation_update": {
+    "date": "2026-11-08",
+    "report": "docs/audits/cta-current-review-20261108/index.md",
+    "scope": "Literature, representative review and pending normal-evidence documentation; classification data, figures and sequence pins remain at the declared release."
+  },
+  "input_snapshots": [
+    "docs/audits/cta-definition-20261104/manifest.json",
+    "docs/audits/cta-selection-20261028/manifest.json",
+    "docs/audits/cta-source-walkthrough-20261028/manifest.json",
+    "docs/audits/normal-breadth-20261104/manifest.json",
+    "oncoref/cta_selection_policy.py"
+  ],
+  "input_snapshot_archive": {
+    "path": "release-inputs.zip",
+    "sha256": "5ead421d55dfb93e9386234fd1805c4554b2e613a567ac5015b65e0f03b00609",
+    "reason": "Original scientific inputs preserved byte-for-byte as the live implementation advances."
   }
 }

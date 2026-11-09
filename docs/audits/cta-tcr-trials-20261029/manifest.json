@@ -31,5 +31,13 @@
     "membership-changes.csv": "76651c85d2d6fbe75724cf106d79c0787ac8d9b03b3c0349dec4479dc4015d9b",
     "sentinel-events.csv": "6c3e2dc4642f26ca14e4f2dd690bfc69ed557cb01bf8de37d068d5663b6d8c85",
     "tcr-trial-summary.csv": "14af57b8060eacca6f1c2d2acf706092cb002a8539a10a21af11fa8ecdab2fc0"
+  },
+  "input_snapshots": [
+    "oncoref/cta_selection_policy.py"
+  ],
+  "input_snapshot_archive": {
+    "path": "release-inputs.zip",
+    "sha256": "9bdd2325fd7f94b3c534564b491035f80acef1ca9e552ffec9e0db889fdd04c7",
+    "reason": "Original scientific inputs preserved byte-for-byte as the live implementation advances."
   }
 }

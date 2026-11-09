@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import gzip
 import json
+from collections import defaultdict
 from importlib.resources import files
 
 import pandas as pd
@@ -60,6 +61,70 @@ def memberships() -> pd.DataFrame:
 def cta_coverage() -> pd.DataFrame:
     """Paper coverage for all 602 released CTAs; empty lists are coverage gaps."""
     return pd.DataFrame(registry()["cta_coverage"])
+
+
+def followup_findings() -> dict:
+    """Dated literature corrections; recommendations do not change released labels."""
+    return json.loads(files("oncoref").joinpath("data/cta-literature-followup.json").read_text())
+
+
+def _reconcile_coverage(profiles, nominations, links, additions):
+    """Join exact loci, never transfer an old protein label to its other copies."""
+    nominated, covered, related = (defaultdict(set) for _ in range(3))
+    for row in nominations:
+        for gene in row["gene_ids"]:
+            nominated[gene].add(row["source_id"])
+            covered[gene].add(row["source_id"])
+    for row in [*links, *additions]:
+        target = covered if row["eligible_for_coverage"] else related
+        for gene in row["gene_ids"]:
+            target[gene].add(row["source_id"])
+    result = []
+    for row in profiles:
+        if row["category"] != "CTA":
+            continue
+        genes = sorted(row["gene_ids"])
+        matched = [g for g in genes if covered[g]]
+        result.append(
+            {
+                "entity_id": row["entity_id"],
+                "protein": row["label"],
+                "gene_ids": genes,
+                "nomination_sources": sorted(set().union(*(nominated[g] for g in genes))),
+                "exact_paper_sources": sorted(set().union(*(covered[g] for g in genes))),
+                "related_sources": sorted(set().union(*(related[g] for g in genes))),
+                "covered_gene_ids": matched,
+                "uncovered_gene_ids": [g for g in genes if g not in matched],
+                "paper_coverage": (
+                    "all_members"
+                    if len(matched) == len(genes)
+                    else "some_members"
+                    if matched
+                    else "no_paper"
+                ),
+                "per_gene_sources": {g: sorted(covered[g]) for g in genes},
+            }
+        )
+    return pd.DataFrame(result)
+
+
+def current_coverage() -> pd.DataFrame:
+    """Paper coverage of current CTAs, preserving exact member-locus scope.
+
+    Includes current nomination memberships, the frozen literature registry and
+    dated follow-up findings. A covered paper may concern normal function or
+    counterevidence; coverage does not establish CTA nomination or safety.
+    ``some_members`` means the shared protein has paper coverage for only some
+    source loci. The original 602-protein ``cta_coverage()`` remains reproducible.
+    """
+    from . import cta_selection
+
+    return _reconcile_coverage(
+        cta_selection.profiles().to_dict("records"),
+        cta_selection.audit().memberships.to_dict("records"),
+        registry()["memberships"],
+        followup_findings()["memberships"],
+    )
 
 
 def _protein_rows(key: str, gene: str | None) -> pd.DataFrame:

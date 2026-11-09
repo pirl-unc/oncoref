@@ -1,0 +1,19 @@
+{
+  "transcript": "ENST00000530464",
+  "primers": [
+    "CACTCTCAGGAGAGCATTCCA",
+    "CCCAGCATTTCCAGTCTTTG"
+  ],
+  "matches_selected_human_transcript": false,
+  "note": "No exact forward or reverse-complement match. Citation accession XM_021185540.2 resolves to Mus caroli Sod1.",
+  "mouse_exact_match_transcripts": [
+    "ENSMUST00000023707.10",
+    "ENSMUST00000232505.1"
+  ],
+  "mouse_gene": "ENSMUSG00000022982.10",
+  "mouse_symbol": "Sod1",
+  "accession_url": "https://www.ncbi.nlm.nih.gov/nuccore/XM_021185540.2",
+  "paper_url": "https://doi.org/10.1093/molehr/gaab012",
+  "human_transcript": "ENST00000530464.2",
+  "mouse_reference": "Ensembl Mus_musculus.GRCm38.cdna.all.fa; exact versioned transcripts retained in Sod1-mouse-primer-targets.json"
+}

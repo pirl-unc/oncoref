@@ -1,0 +1,551 @@
+gene_id,source,unit,scope,tissue,cell_type,value,raw_value,selection_tier,candidate_ceiling,candidate_exclusion,unsafe_evidence,unresolved_context,negative_ihc_grade,source_context,Read count,value_upper,bound_reason,statistic,version
+ENSG00000203730,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,562.1,562.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,late spermatids,105.3,105.3,reproductive,,False,False,False,Missing/uncertain,,67.0,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,early spermatids,11.3,11.3,reproductive,,False,False,False,Missing/uncertain,,58.0,,,,v23
+ENSG00000203730,hpa_brain,nTPM,Other normal,cerebellum,bulk,3.9,3.9,vital,4.0,False,False,False,Missing,flocculonodular lobe,,,,maximum of subregion means,v23
+ENSG00000274386,hpa_brain,nTPM,Other normal,cerebellum,bulk,2.8,2.8,vital,4.0,False,False,False,Missing,vermis,,,,maximum of subregion means,v23
+ENSG00000274386,dice,TPM,Other normal,blood,CD4_NAIVE,2.71541933083,3.01616699521,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,dice,TPM,Other normal,blood,B_CELL_NAIVE,2.5148604303999997,2.57347032954,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,gtex_tissue_rna,TPM,Reproductive/developmental,testis,bulk,2.47837,2.47837,reproductive,,False,False,False,Missing,Testis,,,,maximum of tissue donor medians,v11
+ENSG00000274386,dice,TPM,Other normal,blood,TFH,2.3245488647599997,2.58193379372,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,hpa_brain,nTPM,Other normal,white matter,bulk,2.3,2.3,vital,4.0,False,False,False,Missing,parieto-temporal junction (white matter),,,,maximum of subregion means,v23
+ENSG00000274386,dice,TPM,Other normal,blood,CD8_NAIVE,2.26269162353,2.60142229274,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,dice,TPM,Other normal,blood,TREG_MEM,2.22961754729,2.73647373627,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000203730,hpa_brain,nTPM,Other normal,amygdala,bulk,2.2,2.2,vital,4.0,False,False,False,Missing,corticomedial amygdala,,,,maximum of subregion means,v23
+ENSG00000203730,hpa_immune_monaco,TPM,Other normal,blood,basophil,2.0,2.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_brain,nTPM,Other normal,basal ganglia,bulk,1.9,1.9,vital,4.0,False,False,False,Missing,"stria terminalis, bed nucleus",,,,maximum of subregion means,v23
+ENSG00000203730,hpa_immune_monaco,TPM,Other normal,blood,neutrophil,1.9,1.9,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,1.9,1.9,vital,4.0,False,False,False,Missing,"anterior insular cortex, dorsal",,,,maximum of subregion means,v23
+ENSG00000274386,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,1.9,1.9,vital,4.0,False,False,False,Missing,area striata,,,,maximum of subregion means,v23
+ENSG00000274386,hpa_brain,nTPM,Other normal,basal ganglia,bulk,1.8,1.8,vital,4.0,False,False,False,Missing,nucleus accumbens,,,,maximum of subregion means,v23
+ENSG00000274386,hpa_brain,nTPM,Other normal,hippocampal formation,bulk,1.8,1.8,vital,4.0,False,False,False,Missing,"hippocampus, CA3",,,,maximum of subregion means,v23
+ENSG00000203730,hpa_brain,nTPM,Other normal,white matter,bulk,1.8,1.8,vital,4.0,False,False,False,Missing,temporal white matter,,,,maximum of subregion means,v23
+ENSG00000274386,hpa_immune_monaco,TPM,Other normal,blood,naive CD8 T-cell,1.4,1.4,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_monaco,TPM,Other normal,blood,Terminal effector memory CD4 T-cell,1.2,1.2,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,dice,TPM,Other normal,blood,B_CELL_NAIVE,1.12404191994,1.34448969536,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000203730,gtex_tissue_rna,TPM,Reproductive/developmental,testis,bulk,1.11475,1.11475,reproductive,,False,False,False,Missing,Testis,,,,maximum of tissue donor medians,v11
+ENSG00000203730,hpa_immune_monaco,TPM,Other normal,blood,Terminal effector memory CD4 T-cell,1.1,1.1,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,dice,TPM,Other normal,blood,TREG_NAIVE,1.0104414971200002,1.17161287032,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,hpa_rna_consensus,nTPM,Other normal,retina,bulk,1.0,1.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Reproductive/developmental,seminal vesicle,bulk,1.0,1.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_rna_consensus,nTPM,Reproductive/developmental,testis,bulk,0.9,0.9,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000274386,gtex_tissue_rna,TPM,Other normal,cerebellum,bulk,0.859574,0.859574,vital,4.0,False,False,False,Missing,Brain_Cerebellar_Hemisphere,,,,maximum of tissue donor medians,v11
+ENSG00000274386,hpa_immune_monaco,TPM,Other normal,blood,naive B-cell,0.8,0.8,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_immune_cell,nTPM,Other normal,blood,neutrophil,0.8,0.8,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Other normal,brain,excitatory neurons,0.8,0.8,vital,4.0,False,False,False,Missing/uncertain,,37.0,,,,v23
+ENSG00000274386,hpa_immune_monaco,TPM,Other normal,blood,Memory CD4 T-cell Th17,0.7,0.7,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_immune_monaco,TPM,Other normal,blood,NK-cell,0.7,0.7,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,dice,TPM,Other normal,blood,CD4_NAIVE,0.671591919972,0.809653725591,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,gtex_tissue_rna,TPM,Other normal,skin,bulk,0.667863,0.667863,protected,8.0,False,False,False,Missing,Skin_Sun_Exposed_Lower_leg,,,,maximum of tissue donor medians,v11
+ENSG00000250374,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.638799340459,0.8325180169230001,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.6,0.6,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,dice,TPM,Other normal,blood,M2,0.5662834185710001,0.620560774285,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,gtex_tissue_rna,TPM,Other normal,peripheral nerve,bulk,0.530302,0.530302,vital,4.0,False,False,False,Missing,Nerve_Tibial,,,,maximum of tissue donor medians,v11
+ENSG00000250374,dice,TPM,Other normal,blood,NK,0.5287403438220001,0.6416383842719999,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000203730,dice,TPM,Other normal,blood,TFH,0.503848114247,0.536675622522,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,hpa_rna_consensus,nTPM,Other normal,cerebellum,bulk,0.5,0.5,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_rna_consensus,nTPM,Other normal,skeletal muscle,bulk,0.5,0.5,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,dice,TPM,Other normal,blood,TREG_NAIVE,0.447017264349,0.716310259292,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000203730,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.407093,0.407093,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000250374,dice,TPM,Other normal,blood,CD8_STIM,0.404612906161,0.6360808449249999,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,hpa_immune_cell,nTPM,Other normal,blood,neutrophil,0.4,0.4,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_cell,nTPM,Other normal,blood,plasmacytoid DC,0.4,0.4,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.4,0.4,vital,4.0,False,False,False,Missing,postcentral gyrus,,,,maximum of subregion means,v23
+ENSG00000255009,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.4,0.4,vital,4.0,False,False,False,Missing,"area parastriata, superior",,,,maximum of subregion means,v23
+ENSG00000274386,hpa_rna_consensus,nTPM,Other normal,skin,bulk,0.4,0.4,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Reproductive/developmental,testis,bulk,0.4,0.4,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_brain,nTPM,Other normal,white matter,bulk,0.4,0.4,vital,4.0,False,False,False,Missing,occipital cortex (white matter),,,,maximum of subregion means,v23
+ENSG00000203730,gtex_tissue_rna,TPM,Other normal,cerebellum,bulk,0.395366,0.395366,vital,4.0,False,False,False,Missing,Brain_Cerebellum,,,,maximum of tissue donor medians,v11
+ENSG00000250374,dice,TPM,Other normal,blood,CD8_NAIVE,0.374968293614,0.5662895136420001,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000274386,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.368881,0.368881,reproductive,,False,False,False,Missing,Cervix_Endocervix,,,,maximum of tissue donor medians,v11
+ENSG00000274386,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.334544,0.334544,vital,4.0,False,False,False,Missing,Brain_Nucleus_accumbens_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000274386,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.327134,0.327134,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000274386,gtex_tissue_rna,TPM,Other normal,blood vessel,bulk,0.326904,0.326904,vital,4.0,False,False,False,Missing,Artery_Tibial,,,,maximum of tissue donor medians,v11
+ENSG00000274386,gtex_tissue_rna,TPM,Reproductive/developmental,vagina,bulk,0.321204,0.321204,reproductive,,False,False,False,Missing,Vagina,,,,maximum of tissue donor medians,v11
+ENSG00000274386,hpa_rna_consensus,nTPM,Other normal,basal ganglia,bulk,0.3,0.3,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.3,0.3,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.3,0.3,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_monaco,TPM,Other normal,blood,NK-cell,0.3,0.3,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.3,0.3,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_immune_monaco,TPM,Other normal,blood,classical monocyte,0.3,0.3,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.3,0.3,vital,4.0,False,False,False,Missing,vermis,,,,maximum of subregion means,v23
+ENSG00000250374,hpa_brain,nTPM,Other normal,medulla oblongata,bulk,0.3,0.3,vital,4.0,False,False,False,Missing,nucleus raphe obscurus,,,,maximum of subregion means,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Other normal,skeletal muscle,bulk,0.3,0.3,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.299684,0.299684,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000203730,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.298131,0.298131,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000203730,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.281522,0.281522,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000203730,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.265012,0.265012,reproductive,,False,False,False,Missing,Cervix_Endocervix,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Reproductive/developmental,testis,bulk,0.210654,0.210654,reproductive,,False,False,False,Missing,Testis,,,,maximum of tissue donor medians,v11
+ENSG00000250374,hpa_brain,nTPM,Other normal,amygdala,bulk,0.2,0.2,vital,4.0,False,False,False,Missing,lateral amygdala,,,,maximum of subregion means,v23
+ENSG00000203730,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.2,0.2,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_immune_cell,nTPM,Other normal,blood,eosinophil,0.2,0.2,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_monaco,TPM,Other normal,blood,plasmacytoid DC,0.2,0.2,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Other normal,brain,inhibitory neurons,0.2,0.2,vital,4.0,False,False,False,Missing/uncertain,,20.0,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Other normal,cerebellum,bulk,0.2,0.2,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Other normal,rectum,bulk,0.2,0.2,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,gtex_tissue_rna,TPM,Other normal,thyroid gland,bulk,0.171787,0.171787,manageable,16.0,False,False,False,Missing,Thyroid,,,,maximum of tissue donor medians,v11
+ENSG00000203730,gtex_tissue_rna,TPM,Other normal,peripheral nerve,bulk,0.152,0.152,vital,4.0,False,False,False,Missing,Nerve_Tibial,,,,maximum of tissue donor medians,v11
+ENSG00000203730,gtex_tissue_rna,TPM,Other normal,pituitary gland,bulk,0.134175,0.134175,vital,4.0,False,False,False,Missing,Pituitary,,,,maximum of tissue donor medians,v11
+ENSG00000203730,gtex_tissue_rna,TPM,Other normal,skin,bulk,0.111178,0.111178,protected,8.0,False,False,False,Missing,Skin_Sun_Exposed_Lower_leg,,,,maximum of tissue donor medians,v11
+ENSG00000203730,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.1,0.1,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.1,0.1,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_immune_cell,nTPM,Other normal,blood,memory B-cell,0.1,0.1,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_immune_cell,nTPM,Other normal,blood,naive B-cell,0.1,0.1,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Other normal,bone marrow,bulk,0.1,0.1,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000274386,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Reproductive/developmental,fallopian tube,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Other normal,liver,bulk,0.1,0.1,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_rna_consensus,nTPM,Reproductive/developmental,placenta,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Other normal,retina,bulk,0.1,0.1,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000203730,hpa_rna_consensus,nTPM,Other normal,skin,bulk,0.1,0.1,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_rna_consensus,nTPM,Reproductive/developmental,testis,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Reproductive/developmental,testis,bulk,0.1,0.1,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Other normal,thymus,bulk,0.1,0.1,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Other normal,thymus,bulk,0.1,0.1,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Other normal,thymus,bulk,0.1,0.1,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_brain,nTPM,Other normal,white matter,bulk,0.1,0.1,vital,4.0,False,False,False,Missing,area striata (white matter),,,,maximum of subregion means,v23
+ENSG00000279804,gtex_tissue_rna,TPM,Reproductive/developmental,testis,bulk,0.0915015,0.0915015,reproductive,,False,False,False,Missing,Testis,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.074925,0.074925,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Other normal,peripheral nerve,bulk,0.072636,0.072636,vital,4.0,False,False,False,Missing,Nerve_Tibial,,,,maximum of tissue donor medians,v11
+ENSG00000255009,gtex_tissue_rna,TPM,Other normal,pituitary gland,bulk,0.070122,0.070122,vital,4.0,False,False,False,Missing,Pituitary,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Other normal,cerebellum,bulk,0.052528,0.052528,vital,4.0,False,False,False,Missing,Brain_Cerebellum,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.051334,0.051334,reproductive,,False,False,False,Missing,Cervix_Endocervix,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Other normal,skeletal muscle,bulk,0.029182,0.029182,vital,4.0,False,False,False,Missing,Muscle_Skeletal,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.028038,0.028038,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Other normal,spleen,bulk,0.027318,0.027318,protected,8.0,False,False,False,Missing,Spleen,,,,maximum of tissue donor medians,v11
+ENSG00000250374,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.019171,0.019171,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000284306,dice,TPM,Other normal,blood,CD8_NAIVE,0.0,1.04095272573,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284438,dice,TPM,Other normal,blood,TH1,0.0,0.623276448429,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284546,dice,TPM,Other normal,blood,TREG_MEM,0.0,0.510242309362,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000255009,dice,TPM,Other normal,blood,TREG_MEM,0.0,0.49908434919,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284546,dice,TPM,Other normal,blood,CD4_STIM,0.0,0.452900980315,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284306,dice,TPM,Other normal,blood,TH17,0.0,0.444548271745,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284306,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.0,0.423023873908,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284306,dice,TPM,Other normal,blood,NK,0.0,0.420742382228,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284546,dice,TPM,Other normal,blood,NK,0.0,0.411269095686,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000255009,dice,TPM,Other normal,blood,CD8_STIM,0.0,0.2090897831439999,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000250374,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,gtex_tissue_rna,TPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,Adipose_Subcutaneous,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,Adipose_Subcutaneous,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,Adipose_Subcutaneous,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,Adipose_Subcutaneous,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,Adipose_Subcutaneous,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,Adipose_Subcutaneous,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Other normal,adipose tissue,bulk,0.0,0.0,manageable,16.0,False,False,False,Missing,Adipose_Subcutaneous,,,,maximum of tissue donor medians,v11
+ENSG00000250374,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,gtex_tissue_rna,TPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Adrenal_Gland,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Adrenal_Gland,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Adrenal_Gland,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Adrenal_Gland,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Adrenal_Gland,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Adrenal_Gland,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Other normal,adrenal gland,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Adrenal_Gland,,,,maximum of tissue donor medians,v11
+ENSG00000250374,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_brain,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,amygdala,,,,maximum of subregion means,v23
+ENSG00000279804,hpa_brain,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,amygdala,,,,maximum of subregion means,v23
+ENSG00000283873,hpa_brain,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,amygdala,,,,maximum of subregion means,v23
+ENSG00000284018,hpa_brain,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,amygdala,,,,maximum of subregion means,v23
+ENSG00000284306,hpa_brain,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,amygdala,,,,maximum of subregion means,v23
+ENSG00000284438,hpa_brain,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,amygdala,,,,maximum of subregion means,v23
+ENSG00000284546,hpa_brain,nTPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,amygdala,,,,maximum of subregion means,v23
+ENSG00000255009,gtex_tissue_rna,TPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Amygdala,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Amygdala,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Amygdala,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Amygdala,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Amygdala,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Amygdala,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Other normal,amygdala,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Amygdala,,,,maximum of tissue donor medians,v11
+ENSG00000250374,hpa_rna_consensus,nTPM,Other normal,appendix,bulk,0.0,0.0,disposable,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Other normal,appendix,bulk,0.0,0.0,disposable,,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Other normal,appendix,bulk,0.0,0.0,disposable,,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Other normal,appendix,bulk,0.0,0.0,disposable,,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Other normal,appendix,bulk,0.0,0.0,disposable,,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Other normal,appendix,bulk,0.0,0.0,disposable,,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Other normal,appendix,bulk,0.0,0.0,disposable,,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_rna_consensus,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_brain,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,caudate nucleus,,,,maximum of subregion means,v23
+ENSG00000279804,hpa_brain,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,caudate nucleus,,,,maximum of subregion means,v23
+ENSG00000283873,hpa_brain,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,caudate nucleus,,,,maximum of subregion means,v23
+ENSG00000284018,hpa_brain,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,caudate nucleus,,,,maximum of subregion means,v23
+ENSG00000284306,hpa_brain,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,caudate nucleus,,,,maximum of subregion means,v23
+ENSG00000284438,hpa_brain,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,caudate nucleus,,,,maximum of subregion means,v23
+ENSG00000284546,hpa_brain,nTPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,caudate nucleus,,,,maximum of subregion means,v23
+ENSG00000255009,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Other normal,basal ganglia,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Brain_Caudate_basal_ganglia,,,,maximum of tissue donor medians,v11
+ENSG00000255009,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.0,0.0,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000279804,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.0,0.0,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000283873,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.0,0.0,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284018,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.0,0.0,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284438,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.0,0.0,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284546,dice,TPM,Other normal,blood,B_CELL_NAIVE,0.0,0.0,manageable,16.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000255009,dice,TPM,Other normal,blood,CD4_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000279804,dice,TPM,Other normal,blood,CD4_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000283873,dice,TPM,Other normal,blood,CD4_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284018,dice,TPM,Other normal,blood,CD4_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284306,dice,TPM,Other normal,blood,CD4_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284438,dice,TPM,Other normal,blood,CD4_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284546,dice,TPM,Other normal,blood,CD4_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000255009,dice,TPM,Other normal,blood,CD4_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000279804,dice,TPM,Other normal,blood,CD4_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000283873,dice,TPM,Other normal,blood,CD4_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284018,dice,TPM,Other normal,blood,CD4_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284438,dice,TPM,Other normal,blood,CD4_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000279804,dice,TPM,Other normal,blood,CD8_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000283873,dice,TPM,Other normal,blood,CD8_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284018,dice,TPM,Other normal,blood,CD8_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284438,dice,TPM,Other normal,blood,CD8_NAIVE,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000279804,dice,TPM,Other normal,blood,CD8_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000283873,dice,TPM,Other normal,blood,CD8_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000284018,dice,TPM,Other normal,blood,CD8_STIM,0.0,0.0,protected,8.0,False,False,False,Missing/uncertain,,,,,,DICE-DB1-20220223
+ENSG00000250374,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_monaco,TPM,Other normal,blood,Central memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_monaco,TPM,Other normal,blood,Effector memory CD8 T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_monaco,TPM,Other normal,blood,Exhausted memory B-cell,0.0,0.0,manageable,16.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_cell,nTPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_monaco,TPM,Other normal,blood,MAIT T-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_monaco,TPM,Other normal,blood,Memory CD4 T-cell TFH,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_monaco,TPM,Other normal,blood,Memory CD4 T-cell TFH,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_monaco,TPM,Other normal,blood,Memory CD4 T-cell TFH,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_monaco,TPM,Other normal,blood,Memory CD4 T-cell TFH,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_monaco,TPM,Other normal,blood,Memory CD4 T-cell TFH,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_cell,nTPM,Other normal,blood,NK-cell,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_cell,nTPM,Other normal,blood,T-reg,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_cell,nTPM,Other normal,blood,basophil,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,gtex_tissue_rna,TPM,Other normal,blood,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Whole_Blood,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Other normal,blood,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Whole_Blood,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Other normal,blood,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Whole_Blood,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Other normal,blood,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Whole_Blood,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Other normal,blood,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Whole_Blood,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Other normal,blood,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,Whole_Blood,,,,maximum of tissue donor medians,v11
+ENSG00000250374,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_immune_cell,nTPM,Other normal,blood,classical monocyte,0.0,0.0,protected,8.0,False,False,False,Missing,,,,,,v23
+ENSG00000250374,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000250374,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000255009,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Reproductive/developmental,breast,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Breast_Mammary_Tissue,,,,maximum of tissue donor medians,v11
+ENSG00000255009,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,cerebellar cortex,,,,maximum of subregion means,v23
+ENSG00000279804,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,cerebellar cortex,,,,maximum of subregion means,v23
+ENSG00000283873,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,cerebellar cortex,,,,maximum of subregion means,v23
+ENSG00000284018,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,cerebellar cortex,,,,maximum of subregion means,v23
+ENSG00000284306,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,cerebellar cortex,,,,maximum of subregion means,v23
+ENSG00000284438,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,cerebellar cortex,,,,maximum of subregion means,v23
+ENSG00000284546,hpa_brain,nTPM,Other normal,cerebellum,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,cerebellar cortex,,,,maximum of subregion means,v23
+ENSG00000279804,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,angular gyrus,,,,maximum of subregion means,v23
+ENSG00000283873,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,angular gyrus,,,,maximum of subregion means,v23
+ENSG00000284018,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,angular gyrus,,,,maximum of subregion means,v23
+ENSG00000284306,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,angular gyrus,,,,maximum of subregion means,v23
+ENSG00000284438,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,angular gyrus,,,,maximum of subregion means,v23
+ENSG00000284546,hpa_brain,nTPM,Other normal,cerebral cortex,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,angular gyrus,,,,maximum of subregion means,v23
+ENSG00000250374,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Cervix_Ectocervix,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Cervix_Ectocervix,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Cervix_Ectocervix,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Cervix_Ectocervix,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Cervix_Ectocervix,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Cervix_Ectocervix,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Reproductive/developmental,cervix,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Cervix_Ectocervix,,,,maximum of tissue donor medians,v11
+ENSG00000279804,hpa_brain,nTPM,Other normal,choroid plexus,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,choroid plexus,,,,maximum of subregion means,v23
+ENSG00000283873,hpa_brain,nTPM,Other normal,choroid plexus,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,choroid plexus,,,,maximum of subregion means,v23
+ENSG00000284018,hpa_brain,nTPM,Other normal,choroid plexus,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,choroid plexus,,,,maximum of subregion means,v23
+ENSG00000284306,hpa_brain,nTPM,Other normal,choroid plexus,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,choroid plexus,,,,maximum of subregion means,v23
+ENSG00000284438,hpa_brain,nTPM,Other normal,choroid plexus,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,choroid plexus,,,,maximum of subregion means,v23
+ENSG00000284546,hpa_brain,nTPM,Other normal,choroid plexus,bulk,0.0,0.0,vital,4.0,False,False,False,Missing,choroid plexus,,,,maximum of subregion means,v23
+ENSG00000250374,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Reproductive/developmental,endometrium,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Uterus,,,,maximum of tissue donor medians,v11
+ENSG00000255009,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000279804,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Reproductive/developmental,epididymis,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,hpa_rna_consensus,nTPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000283873,hpa_rna_consensus,nTPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284018,hpa_rna_consensus,nTPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284306,hpa_rna_consensus,nTPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284438,hpa_rna_consensus,nTPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000284546,hpa_rna_consensus,nTPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,,,,,,v23
+ENSG00000255009,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000279804,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Reproductive/developmental,fallopian tube,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Fallopian_Tube,,,,maximum of tissue donor medians,v11
+ENSG00000255009,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000283873,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000284018,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000284306,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000284438,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000284546,gtex_tissue_rna,TPM,Reproductive/developmental,ovary,bulk,0.0,0.0,reproductive,,False,False,False,Missing,Ovary,,,,maximum of tissue donor medians,v11
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Other normal,esophagus,plasma cells,,5.2,protected,8.0,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Other normal,pancreas,exocrine glandular cells,,4.4,vital,4.0,False,False,False,Missing/uncertain,,2.0,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Other normal,eye,rod photoreceptor cells,,3.8,vital,4.0,False,False,False,Missing/uncertain,,10.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,late spermatids,,1.8,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,spermatocytes,,1.7,reproductive,,False,False,False,Missing/uncertain,,13.0,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Reproductive/developmental,endometrium,endometrial stromal cells,,1.4,reproductive,,False,False,False,Missing/uncertain,,5.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Other normal,eye,muller glia cells,,1.3,vital,4.0,False,False,False,Missing/uncertain,,3.0,,,,v23
+ENSG00000274386,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,spermatogonia,,1.2,reproductive,,False,False,False,Missing/uncertain,,11.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,early spermatids,,1.1,reproductive,,False,False,False,Missing/uncertain,,5.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,late spermatids,,1.0,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Other normal,kidney,macrophages,,0.9,protected,8.0,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,early spermatids,,0.9,reproductive,,False,False,False,Missing/uncertain,,4.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Reproductive/developmental,placenta,smooth muscle cells,,0.7,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Reproductive/developmental,ovary,granulosa cells,,0.6,reproductive,,False,False,False,Missing/uncertain,,4.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,early spermatids,,0.6,reproductive,,False,False,False,Missing/uncertain,,3.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,spermatocytes,,0.6,reproductive,,False,False,False,Missing/uncertain,,2.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Reproductive/developmental,testis,late spermatids,,0.5,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Other normal,breast,macrophages,,0.4,neutral_reproductive_immune,,False,False,False,Missing/uncertain,,2.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Other normal,bronchus,club cells,,0.4,vital,4.0,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Reproductive/developmental,placenta,extravillous trophoblasts,,0.4,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Other normal,prostate,macrophages,,0.2,neutral_reproductive_immune,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Reproductive/developmental,prostate,prostatic glandular cells,,0.2,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Other normal,salivary gland,serous glandular cells,,0.2,protected,8.0,False,False,False,Missing/uncertain,,2.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Reproductive/developmental,endometrium,glandular and luminal cells,,0.1,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Other normal,esophagus,squamous epithelial cells,,0.1,protected,8.0,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Other normal,esophagus,squamous epithelial cells,,0.1,protected,8.0,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000203730,hpa_single_cell_tissue,nTPM,Reproductive/developmental,ovary,smooth muscle cells,,0.1,reproductive,,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Other normal,vascular,smooth muscle cells,,0.1,vital,4.0,False,False,False,Missing/uncertain,,1.0,,,,v23
+ENSG00000274386,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,fibroblastic corneal endothelial cells,,0.0534444978889423,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000274386,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0377364186629232,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000274386,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0132950789594739,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000274386,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,limbal fibroblasts,,0.0085859314361859,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000274386,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0079487843924028,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000203730,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0024957142347304,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000203730,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,limbal superficial epithelium,,0.0007229129575207,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,adipocytes,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,b-cells,,0.0,manageable,16.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,dendritic cells,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000250374,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,fibroblasts,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,macrophages,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,macrophages,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,macrophages,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Other normal,adipose tissue,macrophages,,0.0,protected,8.0,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,adipocytes,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,adipocytes,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,adipocytes,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,adipocytes,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,adipocytes,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,adipocytes,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,adipocytes,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast glandular cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast glandular cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast glandular cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast glandular cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast glandular cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast glandular cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast glandular cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast myoepithelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000279804,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast myoepithelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast myoepithelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast myoepithelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast myoepithelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast myoepithelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,breast myoepithelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,endothelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,endothelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,endothelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,endothelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,endothelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284546,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,endothelial cells,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000255009,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,fibroblasts,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000283873,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,fibroblasts,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284018,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,fibroblasts,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284306,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,fibroblasts,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000284438,hpa_single_cell_tissue,nTPM,Reproductive/developmental,breast,fibroblasts,,0.0,reproductive,,False,False,False,Missing/uncertain,,0.0,,,,v23
+ENSG00000203730,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000250374,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000255009,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000279804,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000283873,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284018,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284306,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284438,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284546,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,blood vessels,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000203730,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000250374,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000255009,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000279804,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000283873,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284018,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284306,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284438,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284546,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000250374,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000255009,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000279804,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000283873,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284018,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284306,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284438,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284546,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,conjunctival superficial epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000203730,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000250374,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000255009,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000279804,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000283873,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284018,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284306,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284438,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284546,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal basal epithelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000250374,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000255009,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000279804,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000283873,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284018,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284306,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284438,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804
+ENSG00000284546,GSE155683_adult,CP10K,Other normal,cornea/conjunctiva,corneal endothelium,,0.0,vital,0.04,False,False,False,Missing/uncertain,,,,,,GSE155683-20200804

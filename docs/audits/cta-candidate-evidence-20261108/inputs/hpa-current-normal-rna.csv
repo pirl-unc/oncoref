@@ -1,0 +1,2761 @@
+protein,panel,context,value,unit
+TEDDM1,consensusTissue,Adipose tissue,0.0,nTPM
+TEDDM1,consensusTissue,Adrenal gland,0.0,nTPM
+TEDDM1,consensusTissue,Amygdala,0.0,nTPM
+TEDDM1,consensusTissue,Appendix,0.0,nTPM
+TEDDM1,consensusTissue,Basal ganglia,0.0,nTPM
+TEDDM1,consensusTissue,Blood vessel,0.0,nTPM
+TEDDM1,consensusTissue,Bone marrow,0.1,nTPM
+TEDDM1,consensusTissue,Breast,0.0,nTPM
+TEDDM1,consensusTissue,Cerebellum,0.2,nTPM
+TEDDM1,consensusTissue,Cerebral cortex,0.0,nTPM
+TEDDM1,consensusTissue,Cervix,0.1,nTPM
+TEDDM1,consensusTissue,Choroid plexus,0.0,nTPM
+TEDDM1,consensusTissue,Colon,0.0,nTPM
+TEDDM1,consensusTissue,Duodenum,0.0,nTPM
+TEDDM1,consensusTissue,Endometrium 1,0.0,nTPM
+TEDDM1,consensusTissue,Epididymis,543.7,nTPM
+TEDDM1,consensusTissue,Esophagus,0.0,nTPM
+TEDDM1,consensusTissue,Fallopian tube,0.1,nTPM
+TEDDM1,consensusTissue,Gallbladder,0.0,nTPM
+TEDDM1,consensusTissue,Heart muscle,0.0,nTPM
+TEDDM1,consensusTissue,Hippocampal formation,0.0,nTPM
+TEDDM1,consensusTissue,Hypothalamus,0.0,nTPM
+TEDDM1,consensusTissue,Kidney,0.0,nTPM
+TEDDM1,consensusTissue,Liver,0.0,nTPM
+TEDDM1,consensusTissue,Lung,0.0,nTPM
+TEDDM1,consensusTissue,Lymph node,0.0,nTPM
+TEDDM1,consensusTissue,Midbrain,0.0,nTPM
+TEDDM1,consensusTissue,Ovary,0.1,nTPM
+TEDDM1,consensusTissue,Pancreas,0.0,nTPM
+TEDDM1,consensusTissue,Parathyroid gland,0.0,nTPM
+TEDDM1,consensusTissue,Pituitary gland,0.0,nTPM
+TEDDM1,consensusTissue,Placenta,0.0,nTPM
+TEDDM1,consensusTissue,Prostate,0.0,nTPM
+TEDDM1,consensusTissue,Rectum,0.0,nTPM
+TEDDM1,consensusTissue,Retina,0.1,nTPM
+TEDDM1,consensusTissue,Salivary gland,0.0,nTPM
+TEDDM1,consensusTissue,Seminal vesicle,1.0,nTPM
+TEDDM1,consensusTissue,Skeletal muscle,0.3,nTPM
+TEDDM1,consensusTissue,Skin 1,0.1,nTPM
+TEDDM1,consensusTissue,Small intestine,0.0,nTPM
+TEDDM1,consensusTissue,Smooth muscle,0.0,nTPM
+TEDDM1,consensusTissue,Spinal cord,0.0,nTPM
+TEDDM1,consensusTissue,Spleen,0.0,nTPM
+TEDDM1,consensusTissue,Stomach 1,0.0,nTPM
+TEDDM1,consensusTissue,Testis,0.4,nTPM
+TEDDM1,consensusTissue,Thymus,0.0,nTPM
+TEDDM1,consensusTissue,Thyroid gland,0.1,nTPM
+TEDDM1,consensusTissue,Tongue,0.0,nTPM
+TEDDM1,consensusTissue,Tonsil,0.0,nTPM
+TEDDM1,consensusTissue,Urinary bladder,0.0,nTPM
+TEDDM1,consensusTissue,Vagina,0.1,nTPM
+TEDDM1,humanBrain,Amygdala,1.2,nTPM
+TEDDM1,humanBrain,Angular gyrus,1.4,nTPM
+TEDDM1,humanBrain,Angular gyrus (white matter),1.4,nTPM
+TEDDM1,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",1.3,nTPM
+TEDDM1,humanBrain,"Anterior cingulate cortex, supragenual-ventral",1.6,nTPM
+TEDDM1,humanBrain,"Anterior cochlear nucleus, ventral",1.5,nTPM
+TEDDM1,humanBrain,Anterior funiculus (white matter),1.0,nTPM
+TEDDM1,humanBrain,"Anterior insular cortex, dorsal",1.9,nTPM
+TEDDM1,humanBrain,"Anterior insular cortex, ventral",1.8,nTPM
+TEDDM1,humanBrain,"Anterior thalamic nucleus, ventral",0.9,nTPM
+TEDDM1,humanBrain,Arcuate nucleus,1.1,nTPM
+TEDDM1,humanBrain,"Area parastriata, inferior",1.5,nTPM
+TEDDM1,humanBrain,"Area parastriata, parietal",1.4,nTPM
+TEDDM1,humanBrain,"Area parastriata, superior",1.5,nTPM
+TEDDM1,humanBrain,"Area parastriata, temporal",1.6,nTPM
+TEDDM1,humanBrain,Area postrema,1.3,nTPM
+TEDDM1,humanBrain,Area striata,1.4,nTPM
+TEDDM1,humanBrain,Area striata (white matter),1.6,nTPM
+TEDDM1,humanBrain,Basal amygdala,1.8,nTPM
+TEDDM1,humanBrain,Caudate nucleus,1.6,nTPM
+TEDDM1,humanBrain,Central amygdala,1.5,nTPM
+TEDDM1,humanBrain,Centromedial thalamic nucleus,1.6,nTPM
+TEDDM1,humanBrain,Cerebellar cortex,3.4,nTPM
+TEDDM1,humanBrain,Cerebellar nuclei,0.9,nTPM
+TEDDM1,humanBrain,Cerebellar white matter,1.0,nTPM
+TEDDM1,humanBrain,"Cervical spinal cord, central gray",1.0,nTPM
+TEDDM1,humanBrain,"Cervical spinal cord, dorsal horn",1.3,nTPM
+TEDDM1,humanBrain,"Cervical spinal cord, ventral horn",1.0,nTPM
+TEDDM1,humanBrain,Choroid plexus,1.1,nTPM
+TEDDM1,humanBrain,Claustrum,1.5,nTPM
+TEDDM1,humanBrain,"Corpus callosum, genu (white matter)",1.1,nTPM
+TEDDM1,humanBrain,"Corpus callosum, splenium (white matter)",1.0,nTPM
+TEDDM1,humanBrain,Corticomedial amygdala,2.2,nTPM
+TEDDM1,humanBrain,Cuneiform nucleus,1.2,nTPM
+TEDDM1,humanBrain,Dentate gyrus,1.5,nTPM
+TEDDM1,humanBrain,Dorsal cochlear nucleus,1.3,nTPM
+TEDDM1,humanBrain,Dorsal funiculus (white matter),1.1,nTPM
+TEDDM1,humanBrain,Dorsal medullary reticular nucleus,1.2,nTPM
+TEDDM1,humanBrain,Dorsal motor vagal complex,1.4,nTPM
+TEDDM1,humanBrain,Dorsal raphe nucleus,1.0,nTPM
+TEDDM1,humanBrain,Dorsal tegmental nucleus,1.1,nTPM
+TEDDM1,humanBrain,Dorsolateral tegmental area,1.0,nTPM
+TEDDM1,humanBrain,Dorsomedial nucleus,1.2,nTPM
+TEDDM1,humanBrain,Entorhinal gyrus,1.4,nTPM
+TEDDM1,humanBrain,Flocculonodular lobe,3.9,nTPM
+TEDDM1,humanBrain,Frontal eye field,1.3,nTPM
+TEDDM1,humanBrain,Frontal operculum,1.5,nTPM
+TEDDM1,humanBrain,Fusiform gyrus,1.6,nTPM
+TEDDM1,humanBrain,"Gigantocellular reticular nuclei, medullary",1.3,nTPM
+TEDDM1,humanBrain,"Gigantocellular reticular nuclei, pars",1.2,nTPM
+TEDDM1,humanBrain,"Globus pallidus, externus",1.1,nTPM
+TEDDM1,humanBrain,"Globus pallidus, internus",1.3,nTPM
+TEDDM1,humanBrain,Habenula,1.5,nTPM
+TEDDM1,humanBrain,Hippocampus,1.1,nTPM
+TEDDM1,humanBrain,"Hippocampus, CA1",1.4,nTPM
+TEDDM1,humanBrain,"Hippocampus, CA2",1.3,nTPM
+TEDDM1,humanBrain,"Hippocampus, CA3",1.4,nTPM
+TEDDM1,humanBrain,Inferior colliculus,1.2,nTPM
+TEDDM1,humanBrain,"Inferior frontal gyrus, opercular",1.2,nTPM
+TEDDM1,humanBrain,Inferior olive,0.9,nTPM
+TEDDM1,humanBrain,Inferior parietal lobule,1.3,nTPM
+TEDDM1,humanBrain,Inferior temporal gyrus,1.6,nTPM
+TEDDM1,humanBrain,Intraparietal deep sulcus,1.4,nTPM
+TEDDM1,humanBrain,Kolliker-Fuse nucleus,1.0,nTPM
+TEDDM1,humanBrain,Lateral amygdala,1.6,nTPM
+TEDDM1,humanBrain,Lateral funiculus (white matter),0.8,nTPM
+TEDDM1,humanBrain,Lateral geniculate body,0.8,nTPM
+TEDDM1,humanBrain,Lateral hypothalamic area,1.0,nTPM
+TEDDM1,humanBrain,Lateral lemniscal nuclei,1.3,nTPM
+TEDDM1,humanBrain,Lateral medullary reticular nucleus,1.1,nTPM
+TEDDM1,humanBrain,Lateral parabrachial nucleus,1.1,nTPM
+TEDDM1,humanBrain,Lateral thalamic nuclei,1.0,nTPM
+TEDDM1,humanBrain,Lateral vestibular nucleus,1.2,nTPM
+TEDDM1,humanBrain,Lingual gyrus,1.6,nTPM
+TEDDM1,humanBrain,Locus coeruleus,1.2,nTPM
+TEDDM1,humanBrain,Mammillary body,0.8,nTPM
+TEDDM1,humanBrain,Medial dorsal thalamic nucleus,1.1,nTPM
+TEDDM1,humanBrain,Medial geniculate body,1.3,nTPM
+TEDDM1,humanBrain,Medial olivary nucleus,1.0,nTPM
+TEDDM1,humanBrain,Medial parabrachial nucleus,1.2,nTPM
+TEDDM1,humanBrain,Medial periolivary nuclei,1.1,nTPM
+TEDDM1,humanBrain,Medial vestibular nucleus,1.0,nTPM
+TEDDM1,humanBrain,Median raphe nucleus,1.2,nTPM
+TEDDM1,humanBrain,Middle cingulate cortex,1.5,nTPM
+TEDDM1,humanBrain,Middle temporal gyrus,1.5,nTPM
+TEDDM1,humanBrain,Motor facial nucleus,1.4,nTPM
+TEDDM1,humanBrain,Motor hypoglossal nucleus,1.2,nTPM
+TEDDM1,humanBrain,Motor trigeminal nucleus,1.4,nTPM
+TEDDM1,humanBrain,Nuclei of the trapezoid body,1.2,nTPM
+TEDDM1,humanBrain,Nucleus accumbens,1.6,nTPM
+TEDDM1,humanBrain,Nucleus ambiguus,1.0,nTPM
+TEDDM1,humanBrain,Nucleus basalis of Meynert,1.6,nTPM
+TEDDM1,humanBrain,Nucleus cuneatus,1.3,nTPM
+TEDDM1,humanBrain,Nucleus gracilis,1.6,nTPM
+TEDDM1,humanBrain,Nucleus of the diagonal band,1.6,nTPM
+TEDDM1,humanBrain,Nucleus raphe magnus,1.3,nTPM
+TEDDM1,humanBrain,Nucleus raphe obscurus,1.0,nTPM
+TEDDM1,humanBrain,Nucleus raphe pallidus,0.8,nTPM
+TEDDM1,humanBrain,Nucleus reuniens,1.4,nTPM
+TEDDM1,humanBrain,Nucleus rhomboideus,1.3,nTPM
+TEDDM1,humanBrain,Nucleus tractus solitarii,1.4,nTPM
+TEDDM1,humanBrain,Occipital cortex,1.4,nTPM
+TEDDM1,humanBrain,Occipital cortex (white matter),1.3,nTPM
+TEDDM1,humanBrain,Olfactory area,1.8,nTPM
+TEDDM1,humanBrain,Olfactory tubercle,1.7,nTPM
+TEDDM1,humanBrain,"Orbitofrontal gyrus, anterior",1.3,nTPM
+TEDDM1,humanBrain,"Paracentral lobule, anterior",1.2,nTPM
+TEDDM1,humanBrain,"Paracentral lobule, posterior",1.5,nTPM
+TEDDM1,humanBrain,Parahippocampal cortex,1.6,nTPM
+TEDDM1,humanBrain,Parahippocampal cortex (white matter),1.4,nTPM
+TEDDM1,humanBrain,Paramedian reticular nucleus,1.0,nTPM
+TEDDM1,humanBrain,Paraventricular nucleus,1.0,nTPM
+TEDDM1,humanBrain,Parietal operculum,1.8,nTPM
+TEDDM1,humanBrain,Parieto-insular cortex,1.7,nTPM
+TEDDM1,humanBrain,Parieto-occipital transitional area,1.5,nTPM
+TEDDM1,humanBrain,Parieto-temporal junction (white matter),1.3,nTPM
+TEDDM1,humanBrain,Parvicellular reticular nuclei,1.1,nTPM
+TEDDM1,humanBrain,"Parvicellular reticular nuclei, medullary",1.2,nTPM
+TEDDM1,humanBrain,Pedunculopontine tegmental nucleus,1.1,nTPM
+TEDDM1,humanBrain,"Periaquaductal grey, anterior",1.2,nTPM
+TEDDM1,humanBrain,"Periaquaductal grey, dorsal",1.3,nTPM
+TEDDM1,humanBrain,"Periaquaductal grey, lateral",1.5,nTPM
+TEDDM1,humanBrain,Perirhinal gyrus,1.7,nTPM
+TEDDM1,humanBrain,Peritrigeminal nucleus,0.9,nTPM
+TEDDM1,humanBrain,Piriform cortex,1.6,nTPM
+TEDDM1,humanBrain,Pontine nuclei,0.9,nTPM
+TEDDM1,humanBrain,Pontine raphe nucleus,1.1,nTPM
+TEDDM1,humanBrain,Postcentral gyrus,1.3,nTPM
+TEDDM1,humanBrain,"Postcentral gyrus, dorsal",1.3,nTPM
+TEDDM1,humanBrain,"Postcentral gyrus, middle",1.3,nTPM
+TEDDM1,humanBrain,"Postcentral gyrus, ventral",1.4,nTPM
+TEDDM1,humanBrain,Posterior cingulate cortex,1.2,nTPM
+TEDDM1,humanBrain,"Posterior cingulate cortex, dorsal",1.4,nTPM
+TEDDM1,humanBrain,"Posterior cingulate cortex, ventral",1.6,nTPM
+TEDDM1,humanBrain,Posterior insular cortex,1.8,nTPM
+TEDDM1,humanBrain,Posterior thalamic nucleus,1.0,nTPM
+TEDDM1,humanBrain,Posteroventral cochlear nucleus,1.3,nTPM
+TEDDM1,humanBrain,Precentral gyrus,1.3,nTPM
+TEDDM1,humanBrain,"Precentral gyrus, dorsal",1.7,nTPM
+TEDDM1,humanBrain,"Precentral gyrus, middle",1.3,nTPM
+TEDDM1,humanBrain,"Precentral gyrus, ventral",1.2,nTPM
+TEDDM1,humanBrain,Precuneus,1.5,nTPM
+TEDDM1,humanBrain,"Premotor cortex, dorsal",1.2,nTPM
+TEDDM1,humanBrain,"Premotor cortex, ventral",1.5,nTPM
+TEDDM1,humanBrain,Preoptic area,1.3,nTPM
+TEDDM1,humanBrain,Prepositus hypoglossal nucleus,1.0,nTPM
+TEDDM1,humanBrain,Pretectal area,1.2,nTPM
+TEDDM1,humanBrain,Principal sensory trigeminal nucleus,1.4,nTPM
+TEDDM1,humanBrain,Pulvinar,1.2,nTPM
+TEDDM1,humanBrain,Putamen,1.6,nTPM
+TEDDM1,humanBrain,Red nucleus,1.0,nTPM
+TEDDM1,humanBrain,"Reticular pontine nucleus, caudal",1.4,nTPM
+TEDDM1,humanBrain,"Reticular pontine nucleus, oral",0.9,nTPM
+TEDDM1,humanBrain,Reticulotegmental nucleus,1.4,nTPM
+TEDDM1,humanBrain,Retrosplenial cortex,1.2,nTPM
+TEDDM1,humanBrain,Septal nuclei,1.5,nTPM
+TEDDM1,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",1.5,nTPM
+TEDDM1,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.8,nTPM
+TEDDM1,humanBrain,"Spinal trigeminal nucleus, caudal",1.3,nTPM
+TEDDM1,humanBrain,"Spinal trigeminal nucleus, interpolar",1.1,nTPM
+TEDDM1,humanBrain,"Spinal trigeminal nucleus, oral",1.3,nTPM
+TEDDM1,humanBrain,Spinal vestibular nucleus,1.2,nTPM
+TEDDM1,humanBrain,"Stria terminalis, bed nucleus",1.9,nTPM
+TEDDM1,humanBrain,"Subcentral gyrus, S2",1.7,nTPM
+TEDDM1,humanBrain,Subcoeruleus area,1.4,nTPM
+TEDDM1,humanBrain,Subiculum,1.2,nTPM
+TEDDM1,humanBrain,Substantia nigra,1.0,nTPM
+TEDDM1,humanBrain,Subthalamic nucleus,1.3,nTPM
+TEDDM1,humanBrain,Superior colliculus,1.3,nTPM
+TEDDM1,humanBrain,Superior olive,1.2,nTPM
+TEDDM1,humanBrain,Superior parietal lobule,1.4,nTPM
+TEDDM1,humanBrain,Superior temporal gyrus,1.5,nTPM
+TEDDM1,humanBrain,Superior vestibular nucleus,1.1,nTPM
+TEDDM1,humanBrain,Supplementary motor cortex,1.4,nTPM
+TEDDM1,humanBrain,Supramarginal gyrus,1.7,nTPM
+TEDDM1,humanBrain,Supraoptic nucleus,0.8,nTPM
+TEDDM1,humanBrain,Temporal pole,1.4,nTPM
+TEDDM1,humanBrain,Temporal white matter,1.8,nTPM
+TEDDM1,humanBrain,"Temporo-insular cortex, parainsular gyrus",1.8,nTPM
+TEDDM1,humanBrain,Temporo-occipital transitional zone,1.7,nTPM
+TEDDM1,humanBrain,"Transversal temporal gyrus, anterior",1.6,nTPM
+TEDDM1,humanBrain,"Transversal temporal gyrus, posterior",1.6,nTPM
+TEDDM1,humanBrain,Ventral medullary reticular nucleus,1.4,nTPM
+TEDDM1,humanBrain,Ventral periolivary nuclei,1.4,nTPM
+TEDDM1,humanBrain,Ventral posterolateral thalamic nucleus,1.0,nTPM
+TEDDM1,humanBrain,Ventral posteromedial thalamic nucleus,1.3,nTPM
+TEDDM1,humanBrain,Ventral tegmental area,1.2,nTPM
+TEDDM1,humanBrain,Ventral thalamic nuclei,1.1,nTPM
+TEDDM1,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",1.1,nTPM
+TEDDM1,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",1.3,nTPM
+TEDDM1,humanBrain,Ventromedial nucleus,1.5,nTPM
+TEDDM1,humanBrain,Vermis,3.7,nTPM
+TEDDM1,humanBrain,Zona incerta,1.5,nTPM
+TEDDM1,humanBrainRegional,Amygdala,2.2,nTPM
+TEDDM1,humanBrainRegional,Basal ganglia,1.9,nTPM
+TEDDM1,humanBrainRegional,Cerebellum,3.9,nTPM
+TEDDM1,humanBrainRegional,Cerebral cortex,1.9,nTPM
+TEDDM1,humanBrainRegional,Choroid plexus,1.1,nTPM
+TEDDM1,humanBrainRegional,Hippocampal formation,1.5,nTPM
+TEDDM1,humanBrainRegional,Hypothalamus,1.5,nTPM
+TEDDM1,humanBrainRegional,Medulla oblongata,1.6,nTPM
+TEDDM1,humanBrainRegional,Midbrain,1.5,nTPM
+TEDDM1,humanBrainRegional,Pons,1.5,nTPM
+TEDDM1,humanBrainRegional,Spinal cord,1.3,nTPM
+TEDDM1,humanBrainRegional,Thalamus,1.6,nTPM
+TEDDM1,humanBrainRegional,White matter,1.8,nTPM
+TEDDM1,immuneCell,Basophil,0.2,nTPM
+TEDDM1,immuneCell,Classical monocyte,0.1,nTPM
+TEDDM1,immuneCell,Eosinophil,0.2,nTPM
+TEDDM1,immuneCell,GdT-cell,0.1,nTPM
+TEDDM1,immuneCell,Intermediate monocyte,0.0,nTPM
+TEDDM1,immuneCell,MAIT T-cell,0.0,nTPM
+TEDDM1,immuneCell,Memory B-cell,0.0,nTPM
+TEDDM1,immuneCell,Memory CD4 T-cell,0.0,nTPM
+TEDDM1,immuneCell,Memory CD8 T-cell,0.0,nTPM
+TEDDM1,immuneCell,Myeloid DC,0.0,nTPM
+TEDDM1,immuneCell,Naive B-cell,0.1,nTPM
+TEDDM1,immuneCell,Naive CD4 T-cell,0.1,nTPM
+TEDDM1,immuneCell,Naive CD8 T-cell,0.0,nTPM
+TEDDM1,immuneCell,Neutrophil,0.8,nTPM
+TEDDM1,immuneCell,NK-cell,0.1,nTPM
+TEDDM1,immuneCell,Non-classical monocyte,0.1,nTPM
+TEDDM1,immuneCell,Plasmacytoid DC,0.1,nTPM
+TEDDM1,immuneCell,T-reg,0.0,nTPM
+TEDDM1,immuneCell,Total PBMC,0.0,nTPM
+TMEM269,consensusTissue,Adipose tissue,0.1,nTPM
+TMEM269,consensusTissue,Adrenal gland,0.0,nTPM
+TMEM269,consensusTissue,Amygdala,0.1,nTPM
+TMEM269,consensusTissue,Appendix,0.0,nTPM
+TMEM269,consensusTissue,Basal ganglia,0.3,nTPM
+TMEM269,consensusTissue,Blood vessel,0.1,nTPM
+TMEM269,consensusTissue,Bone marrow,0.3,nTPM
+TMEM269,consensusTissue,Breast,0.1,nTPM
+TMEM269,consensusTissue,Cerebellum,0.4,nTPM
+TMEM269,consensusTissue,Cerebral cortex,0.1,nTPM
+TMEM269,consensusTissue,Cervix,0.1,nTPM
+TMEM269,consensusTissue,Choroid plexus,0.0,nTPM
+TMEM269,consensusTissue,Colon,0.0,nTPM
+TMEM269,consensusTissue,Duodenum,0.0,nTPM
+TMEM269,consensusTissue,Endometrium 1,0.0,nTPM
+TMEM269,consensusTissue,Epididymis,0.1,nTPM
+TMEM269,consensusTissue,Esophagus,0.0,nTPM
+TMEM269,consensusTissue,Fallopian tube,0.1,nTPM
+TMEM269,consensusTissue,Gallbladder,0.0,nTPM
+TMEM269,consensusTissue,Heart muscle,0.0,nTPM
+TMEM269,consensusTissue,Hippocampal formation,0.1,nTPM
+TMEM269,consensusTissue,Hypothalamus,0.1,nTPM
+TMEM269,consensusTissue,Kidney,0.0,nTPM
+TMEM269,consensusTissue,Liver,0.1,nTPM
+TMEM269,consensusTissue,Lung,0.1,nTPM
+TMEM269,consensusTissue,Lymph node,0.1,nTPM
+TMEM269,consensusTissue,Midbrain,0.1,nTPM
+TMEM269,consensusTissue,Ovary,0.0,nTPM
+TMEM269,consensusTissue,Pancreas,0.1,nTPM
+TMEM269,consensusTissue,Parathyroid gland,0.0,nTPM
+TMEM269,consensusTissue,Pituitary gland,0.1,nTPM
+TMEM269,consensusTissue,Placenta,0.0,nTPM
+TMEM269,consensusTissue,Prostate,0.1,nTPM
+TMEM269,consensusTissue,Rectum,0.1,nTPM
+TMEM269,consensusTissue,Retina,0.9,nTPM
+TMEM269,consensusTissue,Salivary gland,0.0,nTPM
+TMEM269,consensusTissue,Seminal vesicle,0.0,nTPM
+TMEM269,consensusTissue,Skeletal muscle,0.5,nTPM
+TMEM269,consensusTissue,Skin 1,0.3,nTPM
+TMEM269,consensusTissue,Small intestine,0.1,nTPM
+TMEM269,consensusTissue,Smooth muscle,0.0,nTPM
+TMEM269,consensusTissue,Spinal cord,0.1,nTPM
+TMEM269,consensusTissue,Spleen,0.1,nTPM
+TMEM269,consensusTissue,Stomach 1,0.0,nTPM
+TMEM269,consensusTissue,Testis,0.4,nTPM
+TMEM269,consensusTissue,Thymus,0.1,nTPM
+TMEM269,consensusTissue,Thyroid gland,0.0,nTPM
+TMEM269,consensusTissue,Tongue,0.0,nTPM
+TMEM269,consensusTissue,Tonsil,0.1,nTPM
+TMEM269,consensusTissue,Urinary bladder,0.0,nTPM
+TMEM269,consensusTissue,Vagina,0.1,nTPM
+TMEM269,humanBrain,Amygdala,1.4,nTPM
+TMEM269,humanBrain,Angular gyrus,1.6,nTPM
+TMEM269,humanBrain,Angular gyrus (white matter),1.7,nTPM
+TMEM269,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",1.4,nTPM
+TMEM269,humanBrain,"Anterior cingulate cortex, supragenual-ventral",1.7,nTPM
+TMEM269,humanBrain,"Anterior cochlear nucleus, ventral",1.8,nTPM
+TMEM269,humanBrain,Anterior funiculus (white matter),1.2,nTPM
+TMEM269,humanBrain,"Anterior insular cortex, dorsal",1.7,nTPM
+TMEM269,humanBrain,"Anterior insular cortex, ventral",1.6,nTPM
+TMEM269,humanBrain,"Anterior thalamic nucleus, ventral",1.5,nTPM
+TMEM269,humanBrain,Arcuate nucleus,1.6,nTPM
+TMEM269,humanBrain,"Area parastriata, inferior",1.8,nTPM
+TMEM269,humanBrain,"Area parastriata, parietal",1.7,nTPM
+TMEM269,humanBrain,"Area parastriata, superior",1.4,nTPM
+TMEM269,humanBrain,"Area parastriata, temporal",1.7,nTPM
+TMEM269,humanBrain,Area postrema,1.6,nTPM
+TMEM269,humanBrain,Area striata,1.9,nTPM
+TMEM269,humanBrain,Area striata (white matter),1.9,nTPM
+TMEM269,humanBrain,Basal amygdala,1.7,nTPM
+TMEM269,humanBrain,Caudate nucleus,1.7,nTPM
+TMEM269,humanBrain,Central amygdala,1.5,nTPM
+TMEM269,humanBrain,Centromedial thalamic nucleus,1.3,nTPM
+TMEM269,humanBrain,Cerebellar cortex,2.5,nTPM
+TMEM269,humanBrain,Cerebellar nuclei,1.2,nTPM
+TMEM269,humanBrain,Cerebellar white matter,1.7,nTPM
+TMEM269,humanBrain,"Cervical spinal cord, central gray",1.4,nTPM
+TMEM269,humanBrain,"Cervical spinal cord, dorsal horn",1.3,nTPM
+TMEM269,humanBrain,"Cervical spinal cord, ventral horn",1.4,nTPM
+TMEM269,humanBrain,Choroid plexus,1.2,nTPM
+TMEM269,humanBrain,Claustrum,1.7,nTPM
+TMEM269,humanBrain,"Corpus callosum, genu (white matter)",1.8,nTPM
+TMEM269,humanBrain,"Corpus callosum, splenium (white matter)",1.9,nTPM
+TMEM269,humanBrain,Corticomedial amygdala,1.7,nTPM
+TMEM269,humanBrain,Cuneiform nucleus,1.5,nTPM
+TMEM269,humanBrain,Dentate gyrus,1.6,nTPM
+TMEM269,humanBrain,Dorsal cochlear nucleus,1.4,nTPM
+TMEM269,humanBrain,Dorsal funiculus (white matter),1.6,nTPM
+TMEM269,humanBrain,Dorsal medullary reticular nucleus,1.5,nTPM
+TMEM269,humanBrain,Dorsal motor vagal complex,1.4,nTPM
+TMEM269,humanBrain,Dorsal raphe nucleus,1.3,nTPM
+TMEM269,humanBrain,Dorsal tegmental nucleus,1.4,nTPM
+TMEM269,humanBrain,Dorsolateral tegmental area,1.4,nTPM
+TMEM269,humanBrain,Dorsomedial nucleus,1.4,nTPM
+TMEM269,humanBrain,Entorhinal gyrus,1.5,nTPM
+TMEM269,humanBrain,Flocculonodular lobe,2.7,nTPM
+TMEM269,humanBrain,Frontal eye field,1.3,nTPM
+TMEM269,humanBrain,Frontal operculum,1.7,nTPM
+TMEM269,humanBrain,Fusiform gyrus,1.6,nTPM
+TMEM269,humanBrain,"Gigantocellular reticular nuclei, medullary",1.6,nTPM
+TMEM269,humanBrain,"Gigantocellular reticular nuclei, pars",1.6,nTPM
+TMEM269,humanBrain,"Globus pallidus, externus",1.3,nTPM
+TMEM269,humanBrain,"Globus pallidus, internus",1.6,nTPM
+TMEM269,humanBrain,Habenula,1.2,nTPM
+TMEM269,humanBrain,Hippocampus,1.4,nTPM
+TMEM269,humanBrain,"Hippocampus, CA1",1.5,nTPM
+TMEM269,humanBrain,"Hippocampus, CA2",1.5,nTPM
+TMEM269,humanBrain,"Hippocampus, CA3",1.8,nTPM
+TMEM269,humanBrain,Inferior colliculus,1.3,nTPM
+TMEM269,humanBrain,"Inferior frontal gyrus, opercular",1.3,nTPM
+TMEM269,humanBrain,Inferior olive,1.2,nTPM
+TMEM269,humanBrain,Inferior parietal lobule,1.6,nTPM
+TMEM269,humanBrain,Inferior temporal gyrus,1.7,nTPM
+TMEM269,humanBrain,Intraparietal deep sulcus,1.5,nTPM
+TMEM269,humanBrain,Kolliker-Fuse nucleus,1.4,nTPM
+TMEM269,humanBrain,Lateral amygdala,1.5,nTPM
+TMEM269,humanBrain,Lateral funiculus (white matter),1.6,nTPM
+TMEM269,humanBrain,Lateral geniculate body,1.3,nTPM
+TMEM269,humanBrain,Lateral hypothalamic area,1.3,nTPM
+TMEM269,humanBrain,Lateral lemniscal nuclei,1.6,nTPM
+TMEM269,humanBrain,Lateral medullary reticular nucleus,1.5,nTPM
+TMEM269,humanBrain,Lateral parabrachial nucleus,1.6,nTPM
+TMEM269,humanBrain,Lateral thalamic nuclei,1.3,nTPM
+TMEM269,humanBrain,Lateral vestibular nucleus,1.4,nTPM
+TMEM269,humanBrain,Lingual gyrus,1.6,nTPM
+TMEM269,humanBrain,Locus coeruleus,1.3,nTPM
+TMEM269,humanBrain,Mammillary body,1.2,nTPM
+TMEM269,humanBrain,Medial dorsal thalamic nucleus,1.2,nTPM
+TMEM269,humanBrain,Medial geniculate body,1.4,nTPM
+TMEM269,humanBrain,Medial olivary nucleus,1.6,nTPM
+TMEM269,humanBrain,Medial parabrachial nucleus,1.6,nTPM
+TMEM269,humanBrain,Medial periolivary nuclei,1.4,nTPM
+TMEM269,humanBrain,Medial vestibular nucleus,1.2,nTPM
+TMEM269,humanBrain,Median raphe nucleus,1.2,nTPM
+TMEM269,humanBrain,Middle cingulate cortex,1.5,nTPM
+TMEM269,humanBrain,Middle temporal gyrus,1.6,nTPM
+TMEM269,humanBrain,Motor facial nucleus,1.5,nTPM
+TMEM269,humanBrain,Motor hypoglossal nucleus,1.4,nTPM
+TMEM269,humanBrain,Motor trigeminal nucleus,1.6,nTPM
+TMEM269,humanBrain,Nuclei of the trapezoid body,1.6,nTPM
+TMEM269,humanBrain,Nucleus accumbens,1.8,nTPM
+TMEM269,humanBrain,Nucleus ambiguus,1.6,nTPM
+TMEM269,humanBrain,Nucleus basalis of Meynert,1.6,nTPM
+TMEM269,humanBrain,Nucleus cuneatus,1.5,nTPM
+TMEM269,humanBrain,Nucleus gracilis,1.4,nTPM
+TMEM269,humanBrain,Nucleus of the diagonal band,1.5,nTPM
+TMEM269,humanBrain,Nucleus raphe magnus,1.5,nTPM
+TMEM269,humanBrain,Nucleus raphe obscurus,1.6,nTPM
+TMEM269,humanBrain,Nucleus raphe pallidus,1.5,nTPM
+TMEM269,humanBrain,Nucleus reuniens,1.5,nTPM
+TMEM269,humanBrain,Nucleus rhomboideus,1.4,nTPM
+TMEM269,humanBrain,Nucleus tractus solitarii,1.6,nTPM
+TMEM269,humanBrain,Occipital cortex,1.6,nTPM
+TMEM269,humanBrain,Occipital cortex (white matter),1.8,nTPM
+TMEM269,humanBrain,Olfactory area,1.6,nTPM
+TMEM269,humanBrain,Olfactory tubercle,1.4,nTPM
+TMEM269,humanBrain,"Orbitofrontal gyrus, anterior",1.1,nTPM
+TMEM269,humanBrain,"Paracentral lobule, anterior",1.5,nTPM
+TMEM269,humanBrain,"Paracentral lobule, posterior",1.6,nTPM
+TMEM269,humanBrain,Parahippocampal cortex,1.6,nTPM
+TMEM269,humanBrain,Parahippocampal cortex (white matter),1.6,nTPM
+TMEM269,humanBrain,Paramedian reticular nucleus,1.4,nTPM
+TMEM269,humanBrain,Paraventricular nucleus,1.3,nTPM
+TMEM269,humanBrain,Parietal operculum,1.8,nTPM
+TMEM269,humanBrain,Parieto-insular cortex,1.5,nTPM
+TMEM269,humanBrain,Parieto-occipital transitional area,1.6,nTPM
+TMEM269,humanBrain,Parieto-temporal junction (white matter),2.3,nTPM
+TMEM269,humanBrain,Parvicellular reticular nuclei,1.6,nTPM
+TMEM269,humanBrain,"Parvicellular reticular nuclei, medullary",1.3,nTPM
+TMEM269,humanBrain,Pedunculopontine tegmental nucleus,1.5,nTPM
+TMEM269,humanBrain,"Periaquaductal grey, anterior",1.5,nTPM
+TMEM269,humanBrain,"Periaquaductal grey, dorsal",1.3,nTPM
+TMEM269,humanBrain,"Periaquaductal grey, lateral",1.4,nTPM
+TMEM269,humanBrain,Perirhinal gyrus,1.4,nTPM
+TMEM269,humanBrain,Peritrigeminal nucleus,1.2,nTPM
+TMEM269,humanBrain,Piriform cortex,1.8,nTPM
+TMEM269,humanBrain,Pontine nuclei,1.6,nTPM
+TMEM269,humanBrain,Pontine raphe nucleus,1.2,nTPM
+TMEM269,humanBrain,Postcentral gyrus,1.2,nTPM
+TMEM269,humanBrain,"Postcentral gyrus, dorsal",1.5,nTPM
+TMEM269,humanBrain,"Postcentral gyrus, middle",1.6,nTPM
+TMEM269,humanBrain,"Postcentral gyrus, ventral",1.6,nTPM
+TMEM269,humanBrain,Posterior cingulate cortex,1.6,nTPM
+TMEM269,humanBrain,"Posterior cingulate cortex, dorsal",1.6,nTPM
+TMEM269,humanBrain,"Posterior cingulate cortex, ventral",1.7,nTPM
+TMEM269,humanBrain,Posterior insular cortex,1.6,nTPM
+TMEM269,humanBrain,Posterior thalamic nucleus,1.1,nTPM
+TMEM269,humanBrain,Posteroventral cochlear nucleus,1.8,nTPM
+TMEM269,humanBrain,Precentral gyrus,1.2,nTPM
+TMEM269,humanBrain,"Precentral gyrus, dorsal",1.6,nTPM
+TMEM269,humanBrain,"Precentral gyrus, middle",1.4,nTPM
+TMEM269,humanBrain,"Precentral gyrus, ventral",1.5,nTPM
+TMEM269,humanBrain,Precuneus,1.7,nTPM
+TMEM269,humanBrain,"Premotor cortex, dorsal",1.6,nTPM
+TMEM269,humanBrain,"Premotor cortex, ventral",1.6,nTPM
+TMEM269,humanBrain,Preoptic area,1.4,nTPM
+TMEM269,humanBrain,Prepositus hypoglossal nucleus,1.0,nTPM
+TMEM269,humanBrain,Pretectal area,1.3,nTPM
+TMEM269,humanBrain,Principal sensory trigeminal nucleus,1.4,nTPM
+TMEM269,humanBrain,Pulvinar,1.3,nTPM
+TMEM269,humanBrain,Putamen,1.8,nTPM
+TMEM269,humanBrain,Red nucleus,1.4,nTPM
+TMEM269,humanBrain,"Reticular pontine nucleus, caudal",1.6,nTPM
+TMEM269,humanBrain,"Reticular pontine nucleus, oral",1.6,nTPM
+TMEM269,humanBrain,Reticulotegmental nucleus,1.6,nTPM
+TMEM269,humanBrain,Retrosplenial cortex,1.9,nTPM
+TMEM269,humanBrain,Septal nuclei,1.4,nTPM
+TMEM269,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",1.6,nTPM
+TMEM269,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",1.4,nTPM
+TMEM269,humanBrain,"Spinal trigeminal nucleus, caudal",1.5,nTPM
+TMEM269,humanBrain,"Spinal trigeminal nucleus, interpolar",1.3,nTPM
+TMEM269,humanBrain,"Spinal trigeminal nucleus, oral",1.5,nTPM
+TMEM269,humanBrain,Spinal vestibular nucleus,1.3,nTPM
+TMEM269,humanBrain,"Stria terminalis, bed nucleus",1.6,nTPM
+TMEM269,humanBrain,"Subcentral gyrus, S2",1.6,nTPM
+TMEM269,humanBrain,Subcoeruleus area,1.6,nTPM
+TMEM269,humanBrain,Subiculum,1.6,nTPM
+TMEM269,humanBrain,Substantia nigra,1.1,nTPM
+TMEM269,humanBrain,Subthalamic nucleus,1.4,nTPM
+TMEM269,humanBrain,Superior colliculus,1.5,nTPM
+TMEM269,humanBrain,Superior olive,1.7,nTPM
+TMEM269,humanBrain,Superior parietal lobule,1.4,nTPM
+TMEM269,humanBrain,Superior temporal gyrus,1.4,nTPM
+TMEM269,humanBrain,Superior vestibular nucleus,1.2,nTPM
+TMEM269,humanBrain,Supplementary motor cortex,1.5,nTPM
+TMEM269,humanBrain,Supramarginal gyrus,1.6,nTPM
+TMEM269,humanBrain,Supraoptic nucleus,1.1,nTPM
+TMEM269,humanBrain,Temporal pole,1.4,nTPM
+TMEM269,humanBrain,Temporal white matter,2.2,nTPM
+TMEM269,humanBrain,"Temporo-insular cortex, parainsular gyrus",1.8,nTPM
+TMEM269,humanBrain,Temporo-occipital transitional zone,1.4,nTPM
+TMEM269,humanBrain,"Transversal temporal gyrus, anterior",1.5,nTPM
+TMEM269,humanBrain,"Transversal temporal gyrus, posterior",1.6,nTPM
+TMEM269,humanBrain,Ventral medullary reticular nucleus,1.5,nTPM
+TMEM269,humanBrain,Ventral periolivary nuclei,1.6,nTPM
+TMEM269,humanBrain,Ventral posterolateral thalamic nucleus,1.3,nTPM
+TMEM269,humanBrain,Ventral posteromedial thalamic nucleus,1.3,nTPM
+TMEM269,humanBrain,Ventral tegmental area,1.3,nTPM
+TMEM269,humanBrain,Ventral thalamic nuclei,1.3,nTPM
+TMEM269,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",1.4,nTPM
+TMEM269,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",1.5,nTPM
+TMEM269,humanBrain,Ventromedial nucleus,1.4,nTPM
+TMEM269,humanBrain,Vermis,2.8,nTPM
+TMEM269,humanBrain,Zona incerta,1.5,nTPM
+TMEM269,humanBrainRegional,Amygdala,1.7,nTPM
+TMEM269,humanBrainRegional,Basal ganglia,1.8,nTPM
+TMEM269,humanBrainRegional,Cerebellum,2.8,nTPM
+TMEM269,humanBrainRegional,Cerebral cortex,1.9,nTPM
+TMEM269,humanBrainRegional,Choroid plexus,1.2,nTPM
+TMEM269,humanBrainRegional,Hippocampal formation,1.8,nTPM
+TMEM269,humanBrainRegional,Hypothalamus,1.6,nTPM
+TMEM269,humanBrainRegional,Medulla oblongata,1.6,nTPM
+TMEM269,humanBrainRegional,Midbrain,1.5,nTPM
+TMEM269,humanBrainRegional,Pons,1.8,nTPM
+TMEM269,humanBrainRegional,Spinal cord,1.4,nTPM
+TMEM269,humanBrainRegional,Thalamus,1.5,nTPM
+TMEM269,humanBrainRegional,White matter,2.3,nTPM
+TMEM269,immuneCell,Basophil,0.3,nTPM
+TMEM269,immuneCell,Classical monocyte,0.0,nTPM
+TMEM269,immuneCell,Eosinophil,0.0,nTPM
+TMEM269,immuneCell,GdT-cell,0.0,nTPM
+TMEM269,immuneCell,Intermediate monocyte,0.0,nTPM
+TMEM269,immuneCell,MAIT T-cell,0.0,nTPM
+TMEM269,immuneCell,Memory B-cell,0.1,nTPM
+TMEM269,immuneCell,Memory CD4 T-cell,0.0,nTPM
+TMEM269,immuneCell,Memory CD8 T-cell,0.0,nTPM
+TMEM269,immuneCell,Myeloid DC,0.0,nTPM
+TMEM269,immuneCell,Naive B-cell,0.1,nTPM
+TMEM269,immuneCell,Naive CD4 T-cell,0.1,nTPM
+TMEM269,immuneCell,Naive CD8 T-cell,0.0,nTPM
+TMEM269,immuneCell,Neutrophil,0.4,nTPM
+TMEM269,immuneCell,NK-cell,0.3,nTPM
+TMEM269,immuneCell,Non-classical monocyte,0.0,nTPM
+TMEM269,immuneCell,Plasmacytoid DC,0.1,nTPM
+TMEM269,immuneCell,T-reg,0.0,nTPM
+TMEM269,immuneCell,Total PBMC,0.0,nTPM
+TRIM75,consensusTissue,Adipose tissue,0.0,nTPM
+TRIM75,consensusTissue,Adrenal gland,0.0,nTPM
+TRIM75,consensusTissue,Amygdala,0.0,nTPM
+TRIM75,consensusTissue,Appendix,0.0,nTPM
+TRIM75,consensusTissue,Basal ganglia,0.0,nTPM
+TRIM75,consensusTissue,Blood vessel,0.0,nTPM
+TRIM75,consensusTissue,Bone marrow,0.0,nTPM
+TRIM75,consensusTissue,Breast,0.0,nTPM
+TRIM75,consensusTissue,Cerebellum,0.0,nTPM
+TRIM75,consensusTissue,Cerebral cortex,0.0,nTPM
+TRIM75,consensusTissue,Cervix,0.0,nTPM
+TRIM75,consensusTissue,Choroid plexus,0.0,nTPM
+TRIM75,consensusTissue,Colon,0.0,nTPM
+TRIM75,consensusTissue,Duodenum,0.0,nTPM
+TRIM75,consensusTissue,Endometrium 1,0.0,nTPM
+TRIM75,consensusTissue,Epididymis,0.0,nTPM
+TRIM75,consensusTissue,Esophagus,0.0,nTPM
+TRIM75,consensusTissue,Fallopian tube,0.0,nTPM
+TRIM75,consensusTissue,Gallbladder,0.0,nTPM
+TRIM75,consensusTissue,Heart muscle,0.0,nTPM
+TRIM75,consensusTissue,Hippocampal formation,0.0,nTPM
+TRIM75,consensusTissue,Hypothalamus,0.0,nTPM
+TRIM75,consensusTissue,Kidney,0.0,nTPM
+TRIM75,consensusTissue,Liver,0.0,nTPM
+TRIM75,consensusTissue,Lung,0.0,nTPM
+TRIM75,consensusTissue,Lymph node,0.0,nTPM
+TRIM75,consensusTissue,Midbrain,0.0,nTPM
+TRIM75,consensusTissue,Ovary,0.0,nTPM
+TRIM75,consensusTissue,Pancreas,0.0,nTPM
+TRIM75,consensusTissue,Parathyroid gland,0.0,nTPM
+TRIM75,consensusTissue,Pituitary gland,0.0,nTPM
+TRIM75,consensusTissue,Placenta,0.1,nTPM
+TRIM75,consensusTissue,Prostate,0.0,nTPM
+TRIM75,consensusTissue,Rectum,0.0,nTPM
+TRIM75,consensusTissue,Retina,0.0,nTPM
+TRIM75,consensusTissue,Salivary gland,0.0,nTPM
+TRIM75,consensusTissue,Seminal vesicle,0.0,nTPM
+TRIM75,consensusTissue,Skeletal muscle,0.0,nTPM
+TRIM75,consensusTissue,Skin 1,0.0,nTPM
+TRIM75,consensusTissue,Small intestine,0.0,nTPM
+TRIM75,consensusTissue,Smooth muscle,0.0,nTPM
+TRIM75,consensusTissue,Spinal cord,0.0,nTPM
+TRIM75,consensusTissue,Spleen,0.0,nTPM
+TRIM75,consensusTissue,Stomach 1,0.0,nTPM
+TRIM75,consensusTissue,Testis,0.1,nTPM
+TRIM75,consensusTissue,Thymus,0.0,nTPM
+TRIM75,consensusTissue,Thyroid gland,0.0,nTPM
+TRIM75,consensusTissue,Tongue,0.0,nTPM
+TRIM75,consensusTissue,Tonsil,0.0,nTPM
+TRIM75,consensusTissue,Urinary bladder,0.0,nTPM
+TRIM75,consensusTissue,Vagina,0.0,nTPM
+TRIM75,humanBrain,Amygdala,0.1,nTPM
+TRIM75,humanBrain,Angular gyrus,0.2,nTPM
+TRIM75,humanBrain,Angular gyrus (white matter),0.2,nTPM
+TRIM75,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.2,nTPM
+TRIM75,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.2,nTPM
+TRIM75,humanBrain,"Anterior cochlear nucleus, ventral",0.2,nTPM
+TRIM75,humanBrain,Anterior funiculus (white matter),0.1,nTPM
+TRIM75,humanBrain,"Anterior insular cortex, dorsal",0.2,nTPM
+TRIM75,humanBrain,"Anterior insular cortex, ventral",0.2,nTPM
+TRIM75,humanBrain,"Anterior thalamic nucleus, ventral",0.1,nTPM
+TRIM75,humanBrain,Arcuate nucleus,0.0,nTPM
+TRIM75,humanBrain,"Area parastriata, inferior",0.3,nTPM
+TRIM75,humanBrain,"Area parastriata, parietal",0.2,nTPM
+TRIM75,humanBrain,"Area parastriata, superior",0.1,nTPM
+TRIM75,humanBrain,"Area parastriata, temporal",0.1,nTPM
+TRIM75,humanBrain,Area postrema,0.2,nTPM
+TRIM75,humanBrain,Area striata,0.2,nTPM
+TRIM75,humanBrain,Area striata (white matter),0.1,nTPM
+TRIM75,humanBrain,Basal amygdala,0.1,nTPM
+TRIM75,humanBrain,Caudate nucleus,0.2,nTPM
+TRIM75,humanBrain,Central amygdala,0.1,nTPM
+TRIM75,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+TRIM75,humanBrain,Cerebellar cortex,0.2,nTPM
+TRIM75,humanBrain,Cerebellar nuclei,0.1,nTPM
+TRIM75,humanBrain,Cerebellar white matter,0.2,nTPM
+TRIM75,humanBrain,"Cervical spinal cord, central gray",0.1,nTPM
+TRIM75,humanBrain,"Cervical spinal cord, dorsal horn",0.1,nTPM
+TRIM75,humanBrain,"Cervical spinal cord, ventral horn",0.1,nTPM
+TRIM75,humanBrain,Choroid plexus,0.0,nTPM
+TRIM75,humanBrain,Claustrum,0.2,nTPM
+TRIM75,humanBrain,"Corpus callosum, genu (white matter)",0.2,nTPM
+TRIM75,humanBrain,"Corpus callosum, splenium (white matter)",0.2,nTPM
+TRIM75,humanBrain,Corticomedial amygdala,0.1,nTPM
+TRIM75,humanBrain,Cuneiform nucleus,0.1,nTPM
+TRIM75,humanBrain,Dentate gyrus,0.1,nTPM
+TRIM75,humanBrain,Dorsal cochlear nucleus,0.2,nTPM
+TRIM75,humanBrain,Dorsal funiculus (white matter),0.1,nTPM
+TRIM75,humanBrain,Dorsal medullary reticular nucleus,0.1,nTPM
+TRIM75,humanBrain,Dorsal motor vagal complex,0.1,nTPM
+TRIM75,humanBrain,Dorsal raphe nucleus,0.1,nTPM
+TRIM75,humanBrain,Dorsal tegmental nucleus,0.1,nTPM
+TRIM75,humanBrain,Dorsolateral tegmental area,0.1,nTPM
+TRIM75,humanBrain,Dorsomedial nucleus,0.1,nTPM
+TRIM75,humanBrain,Entorhinal gyrus,0.1,nTPM
+TRIM75,humanBrain,Flocculonodular lobe,0.2,nTPM
+TRIM75,humanBrain,Frontal eye field,0.2,nTPM
+TRIM75,humanBrain,Frontal operculum,0.2,nTPM
+TRIM75,humanBrain,Fusiform gyrus,0.3,nTPM
+TRIM75,humanBrain,"Gigantocellular reticular nuclei, medullary",0.1,nTPM
+TRIM75,humanBrain,"Gigantocellular reticular nuclei, pars",0.2,nTPM
+TRIM75,humanBrain,"Globus pallidus, externus",0.1,nTPM
+TRIM75,humanBrain,"Globus pallidus, internus",0.2,nTPM
+TRIM75,humanBrain,Habenula,0.1,nTPM
+TRIM75,humanBrain,Hippocampus,0.1,nTPM
+TRIM75,humanBrain,"Hippocampus, CA1",0.1,nTPM
+TRIM75,humanBrain,"Hippocampus, CA2",0.1,nTPM
+TRIM75,humanBrain,"Hippocampus, CA3",0.2,nTPM
+TRIM75,humanBrain,Inferior colliculus,0.1,nTPM
+TRIM75,humanBrain,"Inferior frontal gyrus, opercular",0.3,nTPM
+TRIM75,humanBrain,Inferior olive,0.1,nTPM
+TRIM75,humanBrain,Inferior parietal lobule,0.3,nTPM
+TRIM75,humanBrain,Inferior temporal gyrus,0.2,nTPM
+TRIM75,humanBrain,Intraparietal deep sulcus,0.2,nTPM
+TRIM75,humanBrain,Kolliker-Fuse nucleus,0.2,nTPM
+TRIM75,humanBrain,Lateral amygdala,0.2,nTPM
+TRIM75,humanBrain,Lateral funiculus (white matter),0.1,nTPM
+TRIM75,humanBrain,Lateral geniculate body,0.2,nTPM
+TRIM75,humanBrain,Lateral hypothalamic area,0.0,nTPM
+TRIM75,humanBrain,Lateral lemniscal nuclei,0.2,nTPM
+TRIM75,humanBrain,Lateral medullary reticular nucleus,0.1,nTPM
+TRIM75,humanBrain,Lateral parabrachial nucleus,0.1,nTPM
+TRIM75,humanBrain,Lateral thalamic nuclei,0.1,nTPM
+TRIM75,humanBrain,Lateral vestibular nucleus,0.1,nTPM
+TRIM75,humanBrain,Lingual gyrus,0.2,nTPM
+TRIM75,humanBrain,Locus coeruleus,0.1,nTPM
+TRIM75,humanBrain,Mammillary body,0.1,nTPM
+TRIM75,humanBrain,Medial dorsal thalamic nucleus,0.1,nTPM
+TRIM75,humanBrain,Medial geniculate body,0.2,nTPM
+TRIM75,humanBrain,Medial olivary nucleus,0.2,nTPM
+TRIM75,humanBrain,Medial parabrachial nucleus,0.2,nTPM
+TRIM75,humanBrain,Medial periolivary nuclei,0.1,nTPM
+TRIM75,humanBrain,Medial vestibular nucleus,0.1,nTPM
+TRIM75,humanBrain,Median raphe nucleus,0.1,nTPM
+TRIM75,humanBrain,Middle cingulate cortex,0.2,nTPM
+TRIM75,humanBrain,Middle temporal gyrus,0.2,nTPM
+TRIM75,humanBrain,Motor facial nucleus,0.1,nTPM
+TRIM75,humanBrain,Motor hypoglossal nucleus,0.1,nTPM
+TRIM75,humanBrain,Motor trigeminal nucleus,0.2,nTPM
+TRIM75,humanBrain,Nuclei of the trapezoid body,0.1,nTPM
+TRIM75,humanBrain,Nucleus accumbens,0.2,nTPM
+TRIM75,humanBrain,Nucleus ambiguus,0.1,nTPM
+TRIM75,humanBrain,Nucleus basalis of Meynert,0.2,nTPM
+TRIM75,humanBrain,Nucleus cuneatus,0.1,nTPM
+TRIM75,humanBrain,Nucleus gracilis,0.1,nTPM
+TRIM75,humanBrain,Nucleus of the diagonal band,0.1,nTPM
+TRIM75,humanBrain,Nucleus raphe magnus,0.2,nTPM
+TRIM75,humanBrain,Nucleus raphe obscurus,0.3,nTPM
+TRIM75,humanBrain,Nucleus raphe pallidus,0.2,nTPM
+TRIM75,humanBrain,Nucleus reuniens,0.2,nTPM
+TRIM75,humanBrain,Nucleus rhomboideus,0.1,nTPM
+TRIM75,humanBrain,Nucleus tractus solitarii,0.2,nTPM
+TRIM75,humanBrain,Occipital cortex,0.3,nTPM
+TRIM75,humanBrain,Occipital cortex (white matter),0.4,nTPM
+TRIM75,humanBrain,Olfactory area,0.2,nTPM
+TRIM75,humanBrain,Olfactory tubercle,0.1,nTPM
+TRIM75,humanBrain,"Orbitofrontal gyrus, anterior",0.2,nTPM
+TRIM75,humanBrain,"Paracentral lobule, anterior",0.2,nTPM
+TRIM75,humanBrain,"Paracentral lobule, posterior",0.3,nTPM
+TRIM75,humanBrain,Parahippocampal cortex,0.1,nTPM
+TRIM75,humanBrain,Parahippocampal cortex (white matter),0.2,nTPM
+TRIM75,humanBrain,Paramedian reticular nucleus,0.1,nTPM
+TRIM75,humanBrain,Paraventricular nucleus,0.1,nTPM
+TRIM75,humanBrain,Parietal operculum,0.3,nTPM
+TRIM75,humanBrain,Parieto-insular cortex,0.2,nTPM
+TRIM75,humanBrain,Parieto-occipital transitional area,0.2,nTPM
+TRIM75,humanBrain,Parieto-temporal junction (white matter),0.3,nTPM
+TRIM75,humanBrain,Parvicellular reticular nuclei,0.2,nTPM
+TRIM75,humanBrain,"Parvicellular reticular nuclei, medullary",0.1,nTPM
+TRIM75,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+TRIM75,humanBrain,"Periaquaductal grey, anterior",0.1,nTPM
+TRIM75,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+TRIM75,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+TRIM75,humanBrain,Perirhinal gyrus,0.1,nTPM
+TRIM75,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+TRIM75,humanBrain,Piriform cortex,0.2,nTPM
+TRIM75,humanBrain,Pontine nuclei,0.2,nTPM
+TRIM75,humanBrain,Pontine raphe nucleus,0.2,nTPM
+TRIM75,humanBrain,Postcentral gyrus,0.4,nTPM
+TRIM75,humanBrain,"Postcentral gyrus, dorsal",0.2,nTPM
+TRIM75,humanBrain,"Postcentral gyrus, middle",0.2,nTPM
+TRIM75,humanBrain,"Postcentral gyrus, ventral",0.2,nTPM
+TRIM75,humanBrain,Posterior cingulate cortex,0.2,nTPM
+TRIM75,humanBrain,"Posterior cingulate cortex, dorsal",0.2,nTPM
+TRIM75,humanBrain,"Posterior cingulate cortex, ventral",0.2,nTPM
+TRIM75,humanBrain,Posterior insular cortex,0.2,nTPM
+TRIM75,humanBrain,Posterior thalamic nucleus,0.1,nTPM
+TRIM75,humanBrain,Posteroventral cochlear nucleus,0.1,nTPM
+TRIM75,humanBrain,Precentral gyrus,0.2,nTPM
+TRIM75,humanBrain,"Precentral gyrus, dorsal",0.3,nTPM
+TRIM75,humanBrain,"Precentral gyrus, middle",0.1,nTPM
+TRIM75,humanBrain,"Precentral gyrus, ventral",0.3,nTPM
+TRIM75,humanBrain,Precuneus,0.2,nTPM
+TRIM75,humanBrain,"Premotor cortex, dorsal",0.1,nTPM
+TRIM75,humanBrain,"Premotor cortex, ventral",0.2,nTPM
+TRIM75,humanBrain,Preoptic area,0.1,nTPM
+TRIM75,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+TRIM75,humanBrain,Pretectal area,0.1,nTPM
+TRIM75,humanBrain,Principal sensory trigeminal nucleus,0.2,nTPM
+TRIM75,humanBrain,Pulvinar,0.2,nTPM
+TRIM75,humanBrain,Putamen,0.1,nTPM
+TRIM75,humanBrain,Red nucleus,0.2,nTPM
+TRIM75,humanBrain,"Reticular pontine nucleus, caudal",0.2,nTPM
+TRIM75,humanBrain,"Reticular pontine nucleus, oral",0.2,nTPM
+TRIM75,humanBrain,Reticulotegmental nucleus,0.1,nTPM
+TRIM75,humanBrain,Retrosplenial cortex,0.2,nTPM
+TRIM75,humanBrain,Septal nuclei,0.1,nTPM
+TRIM75,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.3,nTPM
+TRIM75,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.3,nTPM
+TRIM75,humanBrain,"Spinal trigeminal nucleus, caudal",0.1,nTPM
+TRIM75,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+TRIM75,humanBrain,"Spinal trigeminal nucleus, oral",0.1,nTPM
+TRIM75,humanBrain,Spinal vestibular nucleus,0.1,nTPM
+TRIM75,humanBrain,"Stria terminalis, bed nucleus",0.1,nTPM
+TRIM75,humanBrain,"Subcentral gyrus, S2",0.1,nTPM
+TRIM75,humanBrain,Subcoeruleus area,0.2,nTPM
+TRIM75,humanBrain,Subiculum,0.2,nTPM
+TRIM75,humanBrain,Substantia nigra,0.2,nTPM
+TRIM75,humanBrain,Subthalamic nucleus,0.1,nTPM
+TRIM75,humanBrain,Superior colliculus,0.1,nTPM
+TRIM75,humanBrain,Superior olive,0.1,nTPM
+TRIM75,humanBrain,Superior parietal lobule,0.2,nTPM
+TRIM75,humanBrain,Superior temporal gyrus,0.2,nTPM
+TRIM75,humanBrain,Superior vestibular nucleus,0.1,nTPM
+TRIM75,humanBrain,Supplementary motor cortex,0.1,nTPM
+TRIM75,humanBrain,Supramarginal gyrus,0.2,nTPM
+TRIM75,humanBrain,Supraoptic nucleus,0.1,nTPM
+TRIM75,humanBrain,Temporal pole,0.1,nTPM
+TRIM75,humanBrain,Temporal white matter,0.2,nTPM
+TRIM75,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.2,nTPM
+TRIM75,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+TRIM75,humanBrain,"Transversal temporal gyrus, anterior",0.1,nTPM
+TRIM75,humanBrain,"Transversal temporal gyrus, posterior",0.1,nTPM
+TRIM75,humanBrain,Ventral medullary reticular nucleus,0.2,nTPM
+TRIM75,humanBrain,Ventral periolivary nuclei,0.2,nTPM
+TRIM75,humanBrain,Ventral posterolateral thalamic nucleus,0.1,nTPM
+TRIM75,humanBrain,Ventral posteromedial thalamic nucleus,0.1,nTPM
+TRIM75,humanBrain,Ventral tegmental area,0.1,nTPM
+TRIM75,humanBrain,Ventral thalamic nuclei,0.1,nTPM
+TRIM75,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.1,nTPM
+TRIM75,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.1,nTPM
+TRIM75,humanBrain,Ventromedial nucleus,0.1,nTPM
+TRIM75,humanBrain,Vermis,0.3,nTPM
+TRIM75,humanBrain,Zona incerta,0.1,nTPM
+TRIM75,humanBrainRegional,Amygdala,0.2,nTPM
+TRIM75,humanBrainRegional,Basal ganglia,0.2,nTPM
+TRIM75,humanBrainRegional,Cerebellum,0.3,nTPM
+TRIM75,humanBrainRegional,Cerebral cortex,0.4,nTPM
+TRIM75,humanBrainRegional,Choroid plexus,0.0,nTPM
+TRIM75,humanBrainRegional,Hippocampal formation,0.2,nTPM
+TRIM75,humanBrainRegional,Hypothalamus,0.1,nTPM
+TRIM75,humanBrainRegional,Medulla oblongata,0.3,nTPM
+TRIM75,humanBrainRegional,Midbrain,0.2,nTPM
+TRIM75,humanBrainRegional,Pons,0.2,nTPM
+TRIM75,humanBrainRegional,Spinal cord,0.1,nTPM
+TRIM75,humanBrainRegional,Thalamus,0.2,nTPM
+TRIM75,humanBrainRegional,White matter,0.4,nTPM
+TRIM75,immuneCell,Basophil,0.0,nTPM
+TRIM75,immuneCell,Classical monocyte,0.0,nTPM
+TRIM75,immuneCell,Eosinophil,0.0,nTPM
+TRIM75,immuneCell,GdT-cell,0.0,nTPM
+TRIM75,immuneCell,Intermediate monocyte,0.0,nTPM
+TRIM75,immuneCell,MAIT T-cell,0.0,nTPM
+TRIM75,immuneCell,Memory B-cell,0.0,nTPM
+TRIM75,immuneCell,Memory CD4 T-cell,0.0,nTPM
+TRIM75,immuneCell,Memory CD8 T-cell,0.0,nTPM
+TRIM75,immuneCell,Myeloid DC,0.0,nTPM
+TRIM75,immuneCell,Naive B-cell,0.0,nTPM
+TRIM75,immuneCell,Naive CD4 T-cell,0.0,nTPM
+TRIM75,immuneCell,Naive CD8 T-cell,0.0,nTPM
+TRIM75,immuneCell,Neutrophil,0.0,nTPM
+TRIM75,immuneCell,NK-cell,0.0,nTPM
+TRIM75,immuneCell,Non-classical monocyte,0.0,nTPM
+TRIM75,immuneCell,Plasmacytoid DC,0.0,nTPM
+TRIM75,immuneCell,T-reg,0.0,nTPM
+TRIM75,immuneCell,Total PBMC,0.0,nTPM
+UBTFL1,consensusTissue,Adipose tissue,0.0,nTPM
+UBTFL1,consensusTissue,Adrenal gland,0.0,nTPM
+UBTFL1,consensusTissue,Amygdala,0.0,nTPM
+UBTFL1,consensusTissue,Appendix,0.0,nTPM
+UBTFL1,consensusTissue,Basal ganglia,0.0,nTPM
+UBTFL1,consensusTissue,Blood vessel,0.0,nTPM
+UBTFL1,consensusTissue,Bone marrow,0.0,nTPM
+UBTFL1,consensusTissue,Breast,0.0,nTPM
+UBTFL1,consensusTissue,Cerebellum,0.0,nTPM
+UBTFL1,consensusTissue,Cerebral cortex,0.0,nTPM
+UBTFL1,consensusTissue,Cervix,0.0,nTPM
+UBTFL1,consensusTissue,Choroid plexus,0.0,nTPM
+UBTFL1,consensusTissue,Colon,0.0,nTPM
+UBTFL1,consensusTissue,Duodenum,0.0,nTPM
+UBTFL1,consensusTissue,Endometrium 1,0.0,nTPM
+UBTFL1,consensusTissue,Epididymis,0.0,nTPM
+UBTFL1,consensusTissue,Esophagus,0.0,nTPM
+UBTFL1,consensusTissue,Fallopian tube,0.0,nTPM
+UBTFL1,consensusTissue,Gallbladder,0.0,nTPM
+UBTFL1,consensusTissue,Heart muscle,0.0,nTPM
+UBTFL1,consensusTissue,Hippocampal formation,0.0,nTPM
+UBTFL1,consensusTissue,Hypothalamus,0.0,nTPM
+UBTFL1,consensusTissue,Kidney,0.0,nTPM
+UBTFL1,consensusTissue,Liver,0.0,nTPM
+UBTFL1,consensusTissue,Lung,0.0,nTPM
+UBTFL1,consensusTissue,Lymph node,0.0,nTPM
+UBTFL1,consensusTissue,Midbrain,0.0,nTPM
+UBTFL1,consensusTissue,Ovary,0.0,nTPM
+UBTFL1,consensusTissue,Pancreas,0.0,nTPM
+UBTFL1,consensusTissue,Parathyroid gland,0.0,nTPM
+UBTFL1,consensusTissue,Pituitary gland,0.0,nTPM
+UBTFL1,consensusTissue,Placenta,0.0,nTPM
+UBTFL1,consensusTissue,Prostate,0.0,nTPM
+UBTFL1,consensusTissue,Rectum,0.0,nTPM
+UBTFL1,consensusTissue,Retina,0.0,nTPM
+UBTFL1,consensusTissue,Salivary gland,0.0,nTPM
+UBTFL1,consensusTissue,Seminal vesicle,0.0,nTPM
+UBTFL1,consensusTissue,Skeletal muscle,0.0,nTPM
+UBTFL1,consensusTissue,Skin 1,0.0,nTPM
+UBTFL1,consensusTissue,Small intestine,0.0,nTPM
+UBTFL1,consensusTissue,Smooth muscle,0.0,nTPM
+UBTFL1,consensusTissue,Spinal cord,0.0,nTPM
+UBTFL1,consensusTissue,Spleen,0.0,nTPM
+UBTFL1,consensusTissue,Stomach 1,0.0,nTPM
+UBTFL1,consensusTissue,Testis,0.0,nTPM
+UBTFL1,consensusTissue,Thymus,0.0,nTPM
+UBTFL1,consensusTissue,Thyroid gland,0.0,nTPM
+UBTFL1,consensusTissue,Tongue,0.0,nTPM
+UBTFL1,consensusTissue,Tonsil,0.0,nTPM
+UBTFL1,consensusTissue,Urinary bladder,0.0,nTPM
+UBTFL1,consensusTissue,Vagina,0.0,nTPM
+UBTFL1,humanBrain,Amygdala,0.0,nTPM
+UBTFL1,humanBrain,Angular gyrus,0.0,nTPM
+UBTFL1,humanBrain,Angular gyrus (white matter),0.0,nTPM
+UBTFL1,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0,nTPM
+UBTFL1,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0,nTPM
+UBTFL1,humanBrain,"Anterior cochlear nucleus, ventral",0.0,nTPM
+UBTFL1,humanBrain,Anterior funiculus (white matter),0.0,nTPM
+UBTFL1,humanBrain,"Anterior insular cortex, dorsal",0.0,nTPM
+UBTFL1,humanBrain,"Anterior insular cortex, ventral",0.0,nTPM
+UBTFL1,humanBrain,"Anterior thalamic nucleus, ventral",0.0,nTPM
+UBTFL1,humanBrain,Arcuate nucleus,0.0,nTPM
+UBTFL1,humanBrain,"Area parastriata, inferior",0.0,nTPM
+UBTFL1,humanBrain,"Area parastriata, parietal",0.0,nTPM
+UBTFL1,humanBrain,"Area parastriata, superior",0.4,nTPM
+UBTFL1,humanBrain,"Area parastriata, temporal",0.0,nTPM
+UBTFL1,humanBrain,Area postrema,0.0,nTPM
+UBTFL1,humanBrain,Area striata,0.0,nTPM
+UBTFL1,humanBrain,Area striata (white matter),0.1,nTPM
+UBTFL1,humanBrain,Basal amygdala,0.0,nTPM
+UBTFL1,humanBrain,Caudate nucleus,0.0,nTPM
+UBTFL1,humanBrain,Central amygdala,0.0,nTPM
+UBTFL1,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+UBTFL1,humanBrain,Cerebellar cortex,0.0,nTPM
+UBTFL1,humanBrain,Cerebellar nuclei,0.0,nTPM
+UBTFL1,humanBrain,Cerebellar white matter,0.0,nTPM
+UBTFL1,humanBrain,"Cervical spinal cord, central gray",0.0,nTPM
+UBTFL1,humanBrain,"Cervical spinal cord, dorsal horn",0.0,nTPM
+UBTFL1,humanBrain,"Cervical spinal cord, ventral horn",0.0,nTPM
+UBTFL1,humanBrain,Choroid plexus,0.0,nTPM
+UBTFL1,humanBrain,Claustrum,0.0,nTPM
+UBTFL1,humanBrain,"Corpus callosum, genu (white matter)",0.0,nTPM
+UBTFL1,humanBrain,"Corpus callosum, splenium (white matter)",0.0,nTPM
+UBTFL1,humanBrain,Corticomedial amygdala,0.0,nTPM
+UBTFL1,humanBrain,Cuneiform nucleus,0.0,nTPM
+UBTFL1,humanBrain,Dentate gyrus,0.0,nTPM
+UBTFL1,humanBrain,Dorsal cochlear nucleus,0.0,nTPM
+UBTFL1,humanBrain,Dorsal funiculus (white matter),0.0,nTPM
+UBTFL1,humanBrain,Dorsal medullary reticular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Dorsal motor vagal complex,0.0,nTPM
+UBTFL1,humanBrain,Dorsal raphe nucleus,0.0,nTPM
+UBTFL1,humanBrain,Dorsal tegmental nucleus,0.0,nTPM
+UBTFL1,humanBrain,Dorsolateral tegmental area,0.0,nTPM
+UBTFL1,humanBrain,Dorsomedial nucleus,0.0,nTPM
+UBTFL1,humanBrain,Entorhinal gyrus,0.0,nTPM
+UBTFL1,humanBrain,Flocculonodular lobe,0.0,nTPM
+UBTFL1,humanBrain,Frontal eye field,0.0,nTPM
+UBTFL1,humanBrain,Frontal operculum,0.0,nTPM
+UBTFL1,humanBrain,Fusiform gyrus,0.0,nTPM
+UBTFL1,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0,nTPM
+UBTFL1,humanBrain,"Gigantocellular reticular nuclei, pars",0.0,nTPM
+UBTFL1,humanBrain,"Globus pallidus, externus",0.0,nTPM
+UBTFL1,humanBrain,"Globus pallidus, internus",0.0,nTPM
+UBTFL1,humanBrain,Habenula,0.0,nTPM
+UBTFL1,humanBrain,Hippocampus,0.0,nTPM
+UBTFL1,humanBrain,"Hippocampus, CA1",0.0,nTPM
+UBTFL1,humanBrain,"Hippocampus, CA2",0.0,nTPM
+UBTFL1,humanBrain,"Hippocampus, CA3",0.0,nTPM
+UBTFL1,humanBrain,Inferior colliculus,0.0,nTPM
+UBTFL1,humanBrain,"Inferior frontal gyrus, opercular",0.0,nTPM
+UBTFL1,humanBrain,Inferior olive,0.0,nTPM
+UBTFL1,humanBrain,Inferior parietal lobule,0.0,nTPM
+UBTFL1,humanBrain,Inferior temporal gyrus,0.0,nTPM
+UBTFL1,humanBrain,Intraparietal deep sulcus,0.0,nTPM
+UBTFL1,humanBrain,Kolliker-Fuse nucleus,0.0,nTPM
+UBTFL1,humanBrain,Lateral amygdala,0.0,nTPM
+UBTFL1,humanBrain,Lateral funiculus (white matter),0.0,nTPM
+UBTFL1,humanBrain,Lateral geniculate body,0.0,nTPM
+UBTFL1,humanBrain,Lateral hypothalamic area,0.0,nTPM
+UBTFL1,humanBrain,Lateral lemniscal nuclei,0.0,nTPM
+UBTFL1,humanBrain,Lateral medullary reticular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Lateral parabrachial nucleus,0.0,nTPM
+UBTFL1,humanBrain,Lateral thalamic nuclei,0.0,nTPM
+UBTFL1,humanBrain,Lateral vestibular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Lingual gyrus,0.0,nTPM
+UBTFL1,humanBrain,Locus coeruleus,0.0,nTPM
+UBTFL1,humanBrain,Mammillary body,0.0,nTPM
+UBTFL1,humanBrain,Medial dorsal thalamic nucleus,0.0,nTPM
+UBTFL1,humanBrain,Medial geniculate body,0.0,nTPM
+UBTFL1,humanBrain,Medial olivary nucleus,0.0,nTPM
+UBTFL1,humanBrain,Medial parabrachial nucleus,0.0,nTPM
+UBTFL1,humanBrain,Medial periolivary nuclei,0.0,nTPM
+UBTFL1,humanBrain,Medial vestibular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Median raphe nucleus,0.0,nTPM
+UBTFL1,humanBrain,Middle cingulate cortex,0.0,nTPM
+UBTFL1,humanBrain,Middle temporal gyrus,0.0,nTPM
+UBTFL1,humanBrain,Motor facial nucleus,0.0,nTPM
+UBTFL1,humanBrain,Motor hypoglossal nucleus,0.0,nTPM
+UBTFL1,humanBrain,Motor trigeminal nucleus,0.0,nTPM
+UBTFL1,humanBrain,Nuclei of the trapezoid body,0.0,nTPM
+UBTFL1,humanBrain,Nucleus accumbens,0.0,nTPM
+UBTFL1,humanBrain,Nucleus ambiguus,0.0,nTPM
+UBTFL1,humanBrain,Nucleus basalis of Meynert,0.0,nTPM
+UBTFL1,humanBrain,Nucleus cuneatus,0.0,nTPM
+UBTFL1,humanBrain,Nucleus gracilis,0.0,nTPM
+UBTFL1,humanBrain,Nucleus of the diagonal band,0.0,nTPM
+UBTFL1,humanBrain,Nucleus raphe magnus,0.0,nTPM
+UBTFL1,humanBrain,Nucleus raphe obscurus,0.0,nTPM
+UBTFL1,humanBrain,Nucleus raphe pallidus,0.0,nTPM
+UBTFL1,humanBrain,Nucleus reuniens,0.0,nTPM
+UBTFL1,humanBrain,Nucleus rhomboideus,0.0,nTPM
+UBTFL1,humanBrain,Nucleus tractus solitarii,0.0,nTPM
+UBTFL1,humanBrain,Occipital cortex,0.0,nTPM
+UBTFL1,humanBrain,Occipital cortex (white matter),0.0,nTPM
+UBTFL1,humanBrain,Olfactory area,0.0,nTPM
+UBTFL1,humanBrain,Olfactory tubercle,0.0,nTPM
+UBTFL1,humanBrain,"Orbitofrontal gyrus, anterior",0.0,nTPM
+UBTFL1,humanBrain,"Paracentral lobule, anterior",0.0,nTPM
+UBTFL1,humanBrain,"Paracentral lobule, posterior",0.0,nTPM
+UBTFL1,humanBrain,Parahippocampal cortex,0.0,nTPM
+UBTFL1,humanBrain,Parahippocampal cortex (white matter),0.1,nTPM
+UBTFL1,humanBrain,Paramedian reticular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Paraventricular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Parietal operculum,0.0,nTPM
+UBTFL1,humanBrain,Parieto-insular cortex,0.0,nTPM
+UBTFL1,humanBrain,Parieto-occipital transitional area,0.0,nTPM
+UBTFL1,humanBrain,Parieto-temporal junction (white matter),0.0,nTPM
+UBTFL1,humanBrain,Parvicellular reticular nuclei,0.0,nTPM
+UBTFL1,humanBrain,"Parvicellular reticular nuclei, medullary",0.0,nTPM
+UBTFL1,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+UBTFL1,humanBrain,"Periaquaductal grey, anterior",0.0,nTPM
+UBTFL1,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+UBTFL1,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+UBTFL1,humanBrain,Perirhinal gyrus,0.0,nTPM
+UBTFL1,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+UBTFL1,humanBrain,Piriform cortex,0.0,nTPM
+UBTFL1,humanBrain,Pontine nuclei,0.0,nTPM
+UBTFL1,humanBrain,Pontine raphe nucleus,0.0,nTPM
+UBTFL1,humanBrain,Postcentral gyrus,0.0,nTPM
+UBTFL1,humanBrain,"Postcentral gyrus, dorsal",0.0,nTPM
+UBTFL1,humanBrain,"Postcentral gyrus, middle",0.0,nTPM
+UBTFL1,humanBrain,"Postcentral gyrus, ventral",0.0,nTPM
+UBTFL1,humanBrain,Posterior cingulate cortex,0.0,nTPM
+UBTFL1,humanBrain,"Posterior cingulate cortex, dorsal",0.0,nTPM
+UBTFL1,humanBrain,"Posterior cingulate cortex, ventral",0.0,nTPM
+UBTFL1,humanBrain,Posterior insular cortex,0.0,nTPM
+UBTFL1,humanBrain,Posterior thalamic nucleus,0.0,nTPM
+UBTFL1,humanBrain,Posteroventral cochlear nucleus,0.0,nTPM
+UBTFL1,humanBrain,Precentral gyrus,0.0,nTPM
+UBTFL1,humanBrain,"Precentral gyrus, dorsal",0.0,nTPM
+UBTFL1,humanBrain,"Precentral gyrus, middle",0.0,nTPM
+UBTFL1,humanBrain,"Precentral gyrus, ventral",0.0,nTPM
+UBTFL1,humanBrain,Precuneus,0.0,nTPM
+UBTFL1,humanBrain,"Premotor cortex, dorsal",0.0,nTPM
+UBTFL1,humanBrain,"Premotor cortex, ventral",0.0,nTPM
+UBTFL1,humanBrain,Preoptic area,0.0,nTPM
+UBTFL1,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+UBTFL1,humanBrain,Pretectal area,0.0,nTPM
+UBTFL1,humanBrain,Principal sensory trigeminal nucleus,0.0,nTPM
+UBTFL1,humanBrain,Pulvinar,0.0,nTPM
+UBTFL1,humanBrain,Putamen,0.0,nTPM
+UBTFL1,humanBrain,Red nucleus,0.0,nTPM
+UBTFL1,humanBrain,"Reticular pontine nucleus, caudal",0.0,nTPM
+UBTFL1,humanBrain,"Reticular pontine nucleus, oral",0.0,nTPM
+UBTFL1,humanBrain,Reticulotegmental nucleus,0.0,nTPM
+UBTFL1,humanBrain,Retrosplenial cortex,0.0,nTPM
+UBTFL1,humanBrain,Septal nuclei,0.0,nTPM
+UBTFL1,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0,nTPM
+UBTFL1,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.0,nTPM
+UBTFL1,humanBrain,"Spinal trigeminal nucleus, caudal",0.0,nTPM
+UBTFL1,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+UBTFL1,humanBrain,"Spinal trigeminal nucleus, oral",0.0,nTPM
+UBTFL1,humanBrain,Spinal vestibular nucleus,0.0,nTPM
+UBTFL1,humanBrain,"Stria terminalis, bed nucleus",0.0,nTPM
+UBTFL1,humanBrain,"Subcentral gyrus, S2",0.0,nTPM
+UBTFL1,humanBrain,Subcoeruleus area,0.0,nTPM
+UBTFL1,humanBrain,Subiculum,0.0,nTPM
+UBTFL1,humanBrain,Substantia nigra,0.0,nTPM
+UBTFL1,humanBrain,Subthalamic nucleus,0.0,nTPM
+UBTFL1,humanBrain,Superior colliculus,0.0,nTPM
+UBTFL1,humanBrain,Superior olive,0.0,nTPM
+UBTFL1,humanBrain,Superior parietal lobule,0.0,nTPM
+UBTFL1,humanBrain,Superior temporal gyrus,0.0,nTPM
+UBTFL1,humanBrain,Superior vestibular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Supplementary motor cortex,0.0,nTPM
+UBTFL1,humanBrain,Supramarginal gyrus,0.0,nTPM
+UBTFL1,humanBrain,Supraoptic nucleus,0.0,nTPM
+UBTFL1,humanBrain,Temporal pole,0.0,nTPM
+UBTFL1,humanBrain,Temporal white matter,0.0,nTPM
+UBTFL1,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.0,nTPM
+UBTFL1,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+UBTFL1,humanBrain,"Transversal temporal gyrus, anterior",0.0,nTPM
+UBTFL1,humanBrain,"Transversal temporal gyrus, posterior",0.0,nTPM
+UBTFL1,humanBrain,Ventral medullary reticular nucleus,0.0,nTPM
+UBTFL1,humanBrain,Ventral periolivary nuclei,0.0,nTPM
+UBTFL1,humanBrain,Ventral posterolateral thalamic nucleus,0.0,nTPM
+UBTFL1,humanBrain,Ventral posteromedial thalamic nucleus,0.0,nTPM
+UBTFL1,humanBrain,Ventral tegmental area,0.0,nTPM
+UBTFL1,humanBrain,Ventral thalamic nuclei,0.0,nTPM
+UBTFL1,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0,nTPM
+UBTFL1,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0,nTPM
+UBTFL1,humanBrain,Ventromedial nucleus,0.0,nTPM
+UBTFL1,humanBrain,Vermis,0.0,nTPM
+UBTFL1,humanBrain,Zona incerta,0.0,nTPM
+UBTFL1,humanBrainRegional,Amygdala,0.0,nTPM
+UBTFL1,humanBrainRegional,Basal ganglia,0.0,nTPM
+UBTFL1,humanBrainRegional,Cerebellum,0.0,nTPM
+UBTFL1,humanBrainRegional,Cerebral cortex,0.4,nTPM
+UBTFL1,humanBrainRegional,Choroid plexus,0.0,nTPM
+UBTFL1,humanBrainRegional,Hippocampal formation,0.0,nTPM
+UBTFL1,humanBrainRegional,Hypothalamus,0.0,nTPM
+UBTFL1,humanBrainRegional,Medulla oblongata,0.0,nTPM
+UBTFL1,humanBrainRegional,Midbrain,0.0,nTPM
+UBTFL1,humanBrainRegional,Pons,0.0,nTPM
+UBTFL1,humanBrainRegional,Spinal cord,0.0,nTPM
+UBTFL1,humanBrainRegional,Thalamus,0.0,nTPM
+UBTFL1,humanBrainRegional,White matter,0.1,nTPM
+UBTFL1,immuneCell,Basophil,0.0,nTPM
+UBTFL1,immuneCell,Classical monocyte,0.0,nTPM
+UBTFL1,immuneCell,Eosinophil,0.0,nTPM
+UBTFL1,immuneCell,GdT-cell,0.0,nTPM
+UBTFL1,immuneCell,Intermediate monocyte,0.0,nTPM
+UBTFL1,immuneCell,MAIT T-cell,0.0,nTPM
+UBTFL1,immuneCell,Memory B-cell,0.0,nTPM
+UBTFL1,immuneCell,Memory CD4 T-cell,0.0,nTPM
+UBTFL1,immuneCell,Memory CD8 T-cell,0.0,nTPM
+UBTFL1,immuneCell,Myeloid DC,0.0,nTPM
+UBTFL1,immuneCell,Naive B-cell,0.0,nTPM
+UBTFL1,immuneCell,Naive CD4 T-cell,0.0,nTPM
+UBTFL1,immuneCell,Naive CD8 T-cell,0.0,nTPM
+UBTFL1,immuneCell,Neutrophil,0.0,nTPM
+UBTFL1,immuneCell,NK-cell,0.0,nTPM
+UBTFL1,immuneCell,Non-classical monocyte,0.0,nTPM
+UBTFL1,immuneCell,Plasmacytoid DC,0.4,nTPM
+UBTFL1,immuneCell,T-reg,0.0,nTPM
+UBTFL1,immuneCell,Total PBMC,0.0,nTPM
+SSU72L1,consensusTissue,Adipose tissue,0.0,nTPM
+SSU72L1,consensusTissue,Adrenal gland,0.0,nTPM
+SSU72L1,consensusTissue,Amygdala,0.0,nTPM
+SSU72L1,consensusTissue,Appendix,0.0,nTPM
+SSU72L1,consensusTissue,Basal ganglia,0.0,nTPM
+SSU72L1,consensusTissue,Blood vessel,0.0,nTPM
+SSU72L1,consensusTissue,Bone marrow,0.0,nTPM
+SSU72L1,consensusTissue,Breast,0.0,nTPM
+SSU72L1,consensusTissue,Cerebellum,0.0,nTPM
+SSU72L1,consensusTissue,Cerebral cortex,0.0,nTPM
+SSU72L1,consensusTissue,Cervix,0.0,nTPM
+SSU72L1,consensusTissue,Choroid plexus,0.0,nTPM
+SSU72L1,consensusTissue,Colon,0.0,nTPM
+SSU72L1,consensusTissue,Duodenum,0.0,nTPM
+SSU72L1,consensusTissue,Endometrium 1,0.0,nTPM
+SSU72L1,consensusTissue,Epididymis,0.0,nTPM
+SSU72L1,consensusTissue,Esophagus,0.0,nTPM
+SSU72L1,consensusTissue,Fallopian tube,0.0,nTPM
+SSU72L1,consensusTissue,Gallbladder,0.0,nTPM
+SSU72L1,consensusTissue,Heart muscle,0.0,nTPM
+SSU72L1,consensusTissue,Hippocampal formation,0.0,nTPM
+SSU72L1,consensusTissue,Hypothalamus,0.0,nTPM
+SSU72L1,consensusTissue,Kidney,0.0,nTPM
+SSU72L1,consensusTissue,Liver,0.0,nTPM
+SSU72L1,consensusTissue,Lung,0.0,nTPM
+SSU72L1,consensusTissue,Lymph node,0.0,nTPM
+SSU72L1,consensusTissue,Midbrain,0.0,nTPM
+SSU72L1,consensusTissue,Ovary,0.0,nTPM
+SSU72L1,consensusTissue,Pancreas,0.0,nTPM
+SSU72L1,consensusTissue,Parathyroid gland,0.0,nTPM
+SSU72L1,consensusTissue,Pituitary gland,0.0,nTPM
+SSU72L1,consensusTissue,Placenta,0.0,nTPM
+SSU72L1,consensusTissue,Prostate,0.0,nTPM
+SSU72L1,consensusTissue,Rectum,0.0,nTPM
+SSU72L1,consensusTissue,Retina,0.0,nTPM
+SSU72L1,consensusTissue,Salivary gland,0.0,nTPM
+SSU72L1,consensusTissue,Seminal vesicle,0.0,nTPM
+SSU72L1,consensusTissue,Skeletal muscle,0.0,nTPM
+SSU72L1,consensusTissue,Skin 1,0.0,nTPM
+SSU72L1,consensusTissue,Small intestine,0.0,nTPM
+SSU72L1,consensusTissue,Smooth muscle,0.0,nTPM
+SSU72L1,consensusTissue,Spinal cord,0.0,nTPM
+SSU72L1,consensusTissue,Spleen,0.0,nTPM
+SSU72L1,consensusTissue,Stomach 1,0.0,nTPM
+SSU72L1,consensusTissue,Testis,0.0,nTPM
+SSU72L1,consensusTissue,Thymus,0.0,nTPM
+SSU72L1,consensusTissue,Thyroid gland,0.0,nTPM
+SSU72L1,consensusTissue,Tongue,0.0,nTPM
+SSU72L1,consensusTissue,Tonsil,0.0,nTPM
+SSU72L1,consensusTissue,Urinary bladder,0.0,nTPM
+SSU72L1,consensusTissue,Vagina,0.0,nTPM
+SSU72L1,humanBrain,Amygdala,0.0,nTPM
+SSU72L1,humanBrain,Angular gyrus,0.0,nTPM
+SSU72L1,humanBrain,Angular gyrus (white matter),0.0,nTPM
+SSU72L1,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0,nTPM
+SSU72L1,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0,nTPM
+SSU72L1,humanBrain,"Anterior cochlear nucleus, ventral",0.0,nTPM
+SSU72L1,humanBrain,Anterior funiculus (white matter),0.0,nTPM
+SSU72L1,humanBrain,"Anterior insular cortex, dorsal",0.0,nTPM
+SSU72L1,humanBrain,"Anterior insular cortex, ventral",0.0,nTPM
+SSU72L1,humanBrain,"Anterior thalamic nucleus, ventral",0.0,nTPM
+SSU72L1,humanBrain,Arcuate nucleus,0.0,nTPM
+SSU72L1,humanBrain,"Area parastriata, inferior",0.0,nTPM
+SSU72L1,humanBrain,"Area parastriata, parietal",0.0,nTPM
+SSU72L1,humanBrain,"Area parastriata, superior",0.0,nTPM
+SSU72L1,humanBrain,"Area parastriata, temporal",0.0,nTPM
+SSU72L1,humanBrain,Area postrema,0.0,nTPM
+SSU72L1,humanBrain,Area striata,0.0,nTPM
+SSU72L1,humanBrain,Area striata (white matter),0.0,nTPM
+SSU72L1,humanBrain,Basal amygdala,0.0,nTPM
+SSU72L1,humanBrain,Caudate nucleus,0.0,nTPM
+SSU72L1,humanBrain,Central amygdala,0.0,nTPM
+SSU72L1,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+SSU72L1,humanBrain,Cerebellar cortex,0.0,nTPM
+SSU72L1,humanBrain,Cerebellar nuclei,0.0,nTPM
+SSU72L1,humanBrain,Cerebellar white matter,0.0,nTPM
+SSU72L1,humanBrain,"Cervical spinal cord, central gray",0.0,nTPM
+SSU72L1,humanBrain,"Cervical spinal cord, dorsal horn",0.0,nTPM
+SSU72L1,humanBrain,"Cervical spinal cord, ventral horn",0.0,nTPM
+SSU72L1,humanBrain,Choroid plexus,0.0,nTPM
+SSU72L1,humanBrain,Claustrum,0.0,nTPM
+SSU72L1,humanBrain,"Corpus callosum, genu (white matter)",0.0,nTPM
+SSU72L1,humanBrain,"Corpus callosum, splenium (white matter)",0.0,nTPM
+SSU72L1,humanBrain,Corticomedial amygdala,0.0,nTPM
+SSU72L1,humanBrain,Cuneiform nucleus,0.0,nTPM
+SSU72L1,humanBrain,Dentate gyrus,0.0,nTPM
+SSU72L1,humanBrain,Dorsal cochlear nucleus,0.0,nTPM
+SSU72L1,humanBrain,Dorsal funiculus (white matter),0.0,nTPM
+SSU72L1,humanBrain,Dorsal medullary reticular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Dorsal motor vagal complex,0.0,nTPM
+SSU72L1,humanBrain,Dorsal raphe nucleus,0.0,nTPM
+SSU72L1,humanBrain,Dorsal tegmental nucleus,0.0,nTPM
+SSU72L1,humanBrain,Dorsolateral tegmental area,0.0,nTPM
+SSU72L1,humanBrain,Dorsomedial nucleus,0.0,nTPM
+SSU72L1,humanBrain,Entorhinal gyrus,0.0,nTPM
+SSU72L1,humanBrain,Flocculonodular lobe,0.0,nTPM
+SSU72L1,humanBrain,Frontal eye field,0.0,nTPM
+SSU72L1,humanBrain,Frontal operculum,0.0,nTPM
+SSU72L1,humanBrain,Fusiform gyrus,0.0,nTPM
+SSU72L1,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0,nTPM
+SSU72L1,humanBrain,"Gigantocellular reticular nuclei, pars",0.0,nTPM
+SSU72L1,humanBrain,"Globus pallidus, externus",0.0,nTPM
+SSU72L1,humanBrain,"Globus pallidus, internus",0.0,nTPM
+SSU72L1,humanBrain,Habenula,0.0,nTPM
+SSU72L1,humanBrain,Hippocampus,0.0,nTPM
+SSU72L1,humanBrain,"Hippocampus, CA1",0.0,nTPM
+SSU72L1,humanBrain,"Hippocampus, CA2",0.0,nTPM
+SSU72L1,humanBrain,"Hippocampus, CA3",0.0,nTPM
+SSU72L1,humanBrain,Inferior colliculus,0.0,nTPM
+SSU72L1,humanBrain,"Inferior frontal gyrus, opercular",0.0,nTPM
+SSU72L1,humanBrain,Inferior olive,0.0,nTPM
+SSU72L1,humanBrain,Inferior parietal lobule,0.0,nTPM
+SSU72L1,humanBrain,Inferior temporal gyrus,0.0,nTPM
+SSU72L1,humanBrain,Intraparietal deep sulcus,0.0,nTPM
+SSU72L1,humanBrain,Kolliker-Fuse nucleus,0.0,nTPM
+SSU72L1,humanBrain,Lateral amygdala,0.0,nTPM
+SSU72L1,humanBrain,Lateral funiculus (white matter),0.0,nTPM
+SSU72L1,humanBrain,Lateral geniculate body,0.0,nTPM
+SSU72L1,humanBrain,Lateral hypothalamic area,0.0,nTPM
+SSU72L1,humanBrain,Lateral lemniscal nuclei,0.0,nTPM
+SSU72L1,humanBrain,Lateral medullary reticular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Lateral parabrachial nucleus,0.0,nTPM
+SSU72L1,humanBrain,Lateral thalamic nuclei,0.0,nTPM
+SSU72L1,humanBrain,Lateral vestibular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Lingual gyrus,0.0,nTPM
+SSU72L1,humanBrain,Locus coeruleus,0.0,nTPM
+SSU72L1,humanBrain,Mammillary body,0.0,nTPM
+SSU72L1,humanBrain,Medial dorsal thalamic nucleus,0.0,nTPM
+SSU72L1,humanBrain,Medial geniculate body,0.0,nTPM
+SSU72L1,humanBrain,Medial olivary nucleus,0.0,nTPM
+SSU72L1,humanBrain,Medial parabrachial nucleus,0.0,nTPM
+SSU72L1,humanBrain,Medial periolivary nuclei,0.0,nTPM
+SSU72L1,humanBrain,Medial vestibular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Median raphe nucleus,0.0,nTPM
+SSU72L1,humanBrain,Middle cingulate cortex,0.0,nTPM
+SSU72L1,humanBrain,Middle temporal gyrus,0.0,nTPM
+SSU72L1,humanBrain,Motor facial nucleus,0.0,nTPM
+SSU72L1,humanBrain,Motor hypoglossal nucleus,0.0,nTPM
+SSU72L1,humanBrain,Motor trigeminal nucleus,0.0,nTPM
+SSU72L1,humanBrain,Nuclei of the trapezoid body,0.0,nTPM
+SSU72L1,humanBrain,Nucleus accumbens,0.0,nTPM
+SSU72L1,humanBrain,Nucleus ambiguus,0.0,nTPM
+SSU72L1,humanBrain,Nucleus basalis of Meynert,0.0,nTPM
+SSU72L1,humanBrain,Nucleus cuneatus,0.0,nTPM
+SSU72L1,humanBrain,Nucleus gracilis,0.0,nTPM
+SSU72L1,humanBrain,Nucleus of the diagonal band,0.0,nTPM
+SSU72L1,humanBrain,Nucleus raphe magnus,0.0,nTPM
+SSU72L1,humanBrain,Nucleus raphe obscurus,0.0,nTPM
+SSU72L1,humanBrain,Nucleus raphe pallidus,0.0,nTPM
+SSU72L1,humanBrain,Nucleus reuniens,0.0,nTPM
+SSU72L1,humanBrain,Nucleus rhomboideus,0.0,nTPM
+SSU72L1,humanBrain,Nucleus tractus solitarii,0.0,nTPM
+SSU72L1,humanBrain,Occipital cortex,0.0,nTPM
+SSU72L1,humanBrain,Occipital cortex (white matter),0.0,nTPM
+SSU72L1,humanBrain,Olfactory area,0.0,nTPM
+SSU72L1,humanBrain,Olfactory tubercle,0.0,nTPM
+SSU72L1,humanBrain,"Orbitofrontal gyrus, anterior",0.0,nTPM
+SSU72L1,humanBrain,"Paracentral lobule, anterior",0.0,nTPM
+SSU72L1,humanBrain,"Paracentral lobule, posterior",0.0,nTPM
+SSU72L1,humanBrain,Parahippocampal cortex,0.0,nTPM
+SSU72L1,humanBrain,Parahippocampal cortex (white matter),0.0,nTPM
+SSU72L1,humanBrain,Paramedian reticular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Paraventricular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Parietal operculum,0.0,nTPM
+SSU72L1,humanBrain,Parieto-insular cortex,0.0,nTPM
+SSU72L1,humanBrain,Parieto-occipital transitional area,0.0,nTPM
+SSU72L1,humanBrain,Parieto-temporal junction (white matter),0.0,nTPM
+SSU72L1,humanBrain,Parvicellular reticular nuclei,0.0,nTPM
+SSU72L1,humanBrain,"Parvicellular reticular nuclei, medullary",0.0,nTPM
+SSU72L1,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+SSU72L1,humanBrain,"Periaquaductal grey, anterior",0.0,nTPM
+SSU72L1,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+SSU72L1,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+SSU72L1,humanBrain,Perirhinal gyrus,0.0,nTPM
+SSU72L1,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+SSU72L1,humanBrain,Piriform cortex,0.0,nTPM
+SSU72L1,humanBrain,Pontine nuclei,0.0,nTPM
+SSU72L1,humanBrain,Pontine raphe nucleus,0.0,nTPM
+SSU72L1,humanBrain,Postcentral gyrus,0.0,nTPM
+SSU72L1,humanBrain,"Postcentral gyrus, dorsal",0.0,nTPM
+SSU72L1,humanBrain,"Postcentral gyrus, middle",0.0,nTPM
+SSU72L1,humanBrain,"Postcentral gyrus, ventral",0.0,nTPM
+SSU72L1,humanBrain,Posterior cingulate cortex,0.0,nTPM
+SSU72L1,humanBrain,"Posterior cingulate cortex, dorsal",0.0,nTPM
+SSU72L1,humanBrain,"Posterior cingulate cortex, ventral",0.0,nTPM
+SSU72L1,humanBrain,Posterior insular cortex,0.0,nTPM
+SSU72L1,humanBrain,Posterior thalamic nucleus,0.0,nTPM
+SSU72L1,humanBrain,Posteroventral cochlear nucleus,0.0,nTPM
+SSU72L1,humanBrain,Precentral gyrus,0.0,nTPM
+SSU72L1,humanBrain,"Precentral gyrus, dorsal",0.0,nTPM
+SSU72L1,humanBrain,"Precentral gyrus, middle",0.0,nTPM
+SSU72L1,humanBrain,"Precentral gyrus, ventral",0.0,nTPM
+SSU72L1,humanBrain,Precuneus,0.0,nTPM
+SSU72L1,humanBrain,"Premotor cortex, dorsal",0.0,nTPM
+SSU72L1,humanBrain,"Premotor cortex, ventral",0.0,nTPM
+SSU72L1,humanBrain,Preoptic area,0.0,nTPM
+SSU72L1,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+SSU72L1,humanBrain,Pretectal area,0.0,nTPM
+SSU72L1,humanBrain,Principal sensory trigeminal nucleus,0.0,nTPM
+SSU72L1,humanBrain,Pulvinar,0.0,nTPM
+SSU72L1,humanBrain,Putamen,0.0,nTPM
+SSU72L1,humanBrain,Red nucleus,0.0,nTPM
+SSU72L1,humanBrain,"Reticular pontine nucleus, caudal",0.0,nTPM
+SSU72L1,humanBrain,"Reticular pontine nucleus, oral",0.0,nTPM
+SSU72L1,humanBrain,Reticulotegmental nucleus,0.0,nTPM
+SSU72L1,humanBrain,Retrosplenial cortex,0.0,nTPM
+SSU72L1,humanBrain,Septal nuclei,0.0,nTPM
+SSU72L1,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0,nTPM
+SSU72L1,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.0,nTPM
+SSU72L1,humanBrain,"Spinal trigeminal nucleus, caudal",0.0,nTPM
+SSU72L1,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+SSU72L1,humanBrain,"Spinal trigeminal nucleus, oral",0.0,nTPM
+SSU72L1,humanBrain,Spinal vestibular nucleus,0.0,nTPM
+SSU72L1,humanBrain,"Stria terminalis, bed nucleus",0.0,nTPM
+SSU72L1,humanBrain,"Subcentral gyrus, S2",0.0,nTPM
+SSU72L1,humanBrain,Subcoeruleus area,0.0,nTPM
+SSU72L1,humanBrain,Subiculum,0.0,nTPM
+SSU72L1,humanBrain,Substantia nigra,0.0,nTPM
+SSU72L1,humanBrain,Subthalamic nucleus,0.0,nTPM
+SSU72L1,humanBrain,Superior colliculus,0.0,nTPM
+SSU72L1,humanBrain,Superior olive,0.0,nTPM
+SSU72L1,humanBrain,Superior parietal lobule,0.0,nTPM
+SSU72L1,humanBrain,Superior temporal gyrus,0.0,nTPM
+SSU72L1,humanBrain,Superior vestibular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Supplementary motor cortex,0.0,nTPM
+SSU72L1,humanBrain,Supramarginal gyrus,0.0,nTPM
+SSU72L1,humanBrain,Supraoptic nucleus,0.0,nTPM
+SSU72L1,humanBrain,Temporal pole,0.0,nTPM
+SSU72L1,humanBrain,Temporal white matter,0.0,nTPM
+SSU72L1,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.0,nTPM
+SSU72L1,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+SSU72L1,humanBrain,"Transversal temporal gyrus, anterior",0.0,nTPM
+SSU72L1,humanBrain,"Transversal temporal gyrus, posterior",0.0,nTPM
+SSU72L1,humanBrain,Ventral medullary reticular nucleus,0.0,nTPM
+SSU72L1,humanBrain,Ventral periolivary nuclei,0.0,nTPM
+SSU72L1,humanBrain,Ventral posterolateral thalamic nucleus,0.0,nTPM
+SSU72L1,humanBrain,Ventral posteromedial thalamic nucleus,0.0,nTPM
+SSU72L1,humanBrain,Ventral tegmental area,0.0,nTPM
+SSU72L1,humanBrain,Ventral thalamic nuclei,0.0,nTPM
+SSU72L1,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0,nTPM
+SSU72L1,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0,nTPM
+SSU72L1,humanBrain,Ventromedial nucleus,0.0,nTPM
+SSU72L1,humanBrain,Vermis,0.0,nTPM
+SSU72L1,humanBrain,Zona incerta,0.0,nTPM
+SSU72L1,humanBrainRegional,Amygdala,0.0,nTPM
+SSU72L1,humanBrainRegional,Basal ganglia,0.0,nTPM
+SSU72L1,humanBrainRegional,Cerebellum,0.0,nTPM
+SSU72L1,humanBrainRegional,Cerebral cortex,0.0,nTPM
+SSU72L1,humanBrainRegional,Choroid plexus,0.0,nTPM
+SSU72L1,humanBrainRegional,Hippocampal formation,0.0,nTPM
+SSU72L1,humanBrainRegional,Hypothalamus,0.0,nTPM
+SSU72L1,humanBrainRegional,Medulla oblongata,0.0,nTPM
+SSU72L1,humanBrainRegional,Midbrain,0.0,nTPM
+SSU72L1,humanBrainRegional,Pons,0.0,nTPM
+SSU72L1,humanBrainRegional,Spinal cord,0.0,nTPM
+SSU72L1,humanBrainRegional,Thalamus,0.0,nTPM
+SSU72L1,humanBrainRegional,White matter,0.0,nTPM
+SSU72L1,immuneCell,Basophil,0.0,nTPM
+SSU72L1,immuneCell,Classical monocyte,0.0,nTPM
+SSU72L1,immuneCell,Eosinophil,0.0,nTPM
+SSU72L1,immuneCell,GdT-cell,0.0,nTPM
+SSU72L1,immuneCell,Intermediate monocyte,0.0,nTPM
+SSU72L1,immuneCell,MAIT T-cell,0.0,nTPM
+SSU72L1,immuneCell,Memory B-cell,0.0,nTPM
+SSU72L1,immuneCell,Memory CD4 T-cell,0.0,nTPM
+SSU72L1,immuneCell,Memory CD8 T-cell,0.0,nTPM
+SSU72L1,immuneCell,Myeloid DC,0.0,nTPM
+SSU72L1,immuneCell,Naive B-cell,0.0,nTPM
+SSU72L1,immuneCell,Naive CD4 T-cell,0.0,nTPM
+SSU72L1,immuneCell,Naive CD8 T-cell,0.0,nTPM
+SSU72L1,immuneCell,Neutrophil,0.0,nTPM
+SSU72L1,immuneCell,NK-cell,0.0,nTPM
+SSU72L1,immuneCell,Non-classical monocyte,0.0,nTPM
+SSU72L1,immuneCell,Plasmacytoid DC,0.0,nTPM
+SSU72L1,immuneCell,T-reg,0.0,nTPM
+SSU72L1,immuneCell,Total PBMC,0.0,nTPM
+SSU72L2,consensusTissue,Adipose tissue,0.0,nTPM
+SSU72L2,consensusTissue,Adrenal gland,0.0,nTPM
+SSU72L2,consensusTissue,Amygdala,0.0,nTPM
+SSU72L2,consensusTissue,Appendix,0.0,nTPM
+SSU72L2,consensusTissue,Basal ganglia,0.0,nTPM
+SSU72L2,consensusTissue,Blood vessel,0.0,nTPM
+SSU72L2,consensusTissue,Bone marrow,0.0,nTPM
+SSU72L2,consensusTissue,Breast,0.0,nTPM
+SSU72L2,consensusTissue,Cerebellum,0.0,nTPM
+SSU72L2,consensusTissue,Cerebral cortex,0.0,nTPM
+SSU72L2,consensusTissue,Cervix,0.0,nTPM
+SSU72L2,consensusTissue,Choroid plexus,0.0,nTPM
+SSU72L2,consensusTissue,Colon,0.0,nTPM
+SSU72L2,consensusTissue,Duodenum,0.0,nTPM
+SSU72L2,consensusTissue,Endometrium 1,0.0,nTPM
+SSU72L2,consensusTissue,Epididymis,0.0,nTPM
+SSU72L2,consensusTissue,Esophagus,0.0,nTPM
+SSU72L2,consensusTissue,Fallopian tube,0.0,nTPM
+SSU72L2,consensusTissue,Gallbladder,0.0,nTPM
+SSU72L2,consensusTissue,Heart muscle,0.0,nTPM
+SSU72L2,consensusTissue,Hippocampal formation,0.0,nTPM
+SSU72L2,consensusTissue,Hypothalamus,0.0,nTPM
+SSU72L2,consensusTissue,Kidney,0.0,nTPM
+SSU72L2,consensusTissue,Liver,0.0,nTPM
+SSU72L2,consensusTissue,Lung,0.0,nTPM
+SSU72L2,consensusTissue,Lymph node,0.0,nTPM
+SSU72L2,consensusTissue,Midbrain,0.0,nTPM
+SSU72L2,consensusTissue,Ovary,0.0,nTPM
+SSU72L2,consensusTissue,Pancreas,0.0,nTPM
+SSU72L2,consensusTissue,Parathyroid gland,0.0,nTPM
+SSU72L2,consensusTissue,Pituitary gland,0.0,nTPM
+SSU72L2,consensusTissue,Placenta,0.0,nTPM
+SSU72L2,consensusTissue,Prostate,0.0,nTPM
+SSU72L2,consensusTissue,Rectum,0.0,nTPM
+SSU72L2,consensusTissue,Retina,0.0,nTPM
+SSU72L2,consensusTissue,Salivary gland,0.0,nTPM
+SSU72L2,consensusTissue,Seminal vesicle,0.0,nTPM
+SSU72L2,consensusTissue,Skeletal muscle,0.0,nTPM
+SSU72L2,consensusTissue,Skin 1,0.0,nTPM
+SSU72L2,consensusTissue,Small intestine,0.0,nTPM
+SSU72L2,consensusTissue,Smooth muscle,0.0,nTPM
+SSU72L2,consensusTissue,Spinal cord,0.0,nTPM
+SSU72L2,consensusTissue,Spleen,0.0,nTPM
+SSU72L2,consensusTissue,Stomach 1,0.0,nTPM
+SSU72L2,consensusTissue,Testis,0.0,nTPM
+SSU72L2,consensusTissue,Thymus,0.1,nTPM
+SSU72L2,consensusTissue,Thyroid gland,0.0,nTPM
+SSU72L2,consensusTissue,Tongue,0.0,nTPM
+SSU72L2,consensusTissue,Tonsil,0.0,nTPM
+SSU72L2,consensusTissue,Urinary bladder,0.0,nTPM
+SSU72L2,consensusTissue,Vagina,0.0,nTPM
+SSU72L2,humanBrain,Amygdala,0.0,nTPM
+SSU72L2,humanBrain,Angular gyrus,0.0,nTPM
+SSU72L2,humanBrain,Angular gyrus (white matter),0.0,nTPM
+SSU72L2,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0,nTPM
+SSU72L2,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0,nTPM
+SSU72L2,humanBrain,"Anterior cochlear nucleus, ventral",0.0,nTPM
+SSU72L2,humanBrain,Anterior funiculus (white matter),0.0,nTPM
+SSU72L2,humanBrain,"Anterior insular cortex, dorsal",0.0,nTPM
+SSU72L2,humanBrain,"Anterior insular cortex, ventral",0.0,nTPM
+SSU72L2,humanBrain,"Anterior thalamic nucleus, ventral",0.0,nTPM
+SSU72L2,humanBrain,Arcuate nucleus,0.0,nTPM
+SSU72L2,humanBrain,"Area parastriata, inferior",0.0,nTPM
+SSU72L2,humanBrain,"Area parastriata, parietal",0.0,nTPM
+SSU72L2,humanBrain,"Area parastriata, superior",0.0,nTPM
+SSU72L2,humanBrain,"Area parastriata, temporal",0.0,nTPM
+SSU72L2,humanBrain,Area postrema,0.0,nTPM
+SSU72L2,humanBrain,Area striata,0.0,nTPM
+SSU72L2,humanBrain,Area striata (white matter),0.0,nTPM
+SSU72L2,humanBrain,Basal amygdala,0.0,nTPM
+SSU72L2,humanBrain,Caudate nucleus,0.0,nTPM
+SSU72L2,humanBrain,Central amygdala,0.0,nTPM
+SSU72L2,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+SSU72L2,humanBrain,Cerebellar cortex,0.0,nTPM
+SSU72L2,humanBrain,Cerebellar nuclei,0.0,nTPM
+SSU72L2,humanBrain,Cerebellar white matter,0.0,nTPM
+SSU72L2,humanBrain,"Cervical spinal cord, central gray",0.0,nTPM
+SSU72L2,humanBrain,"Cervical spinal cord, dorsal horn",0.0,nTPM
+SSU72L2,humanBrain,"Cervical spinal cord, ventral horn",0.0,nTPM
+SSU72L2,humanBrain,Choroid plexus,0.0,nTPM
+SSU72L2,humanBrain,Claustrum,0.0,nTPM
+SSU72L2,humanBrain,"Corpus callosum, genu (white matter)",0.0,nTPM
+SSU72L2,humanBrain,"Corpus callosum, splenium (white matter)",0.0,nTPM
+SSU72L2,humanBrain,Corticomedial amygdala,0.0,nTPM
+SSU72L2,humanBrain,Cuneiform nucleus,0.0,nTPM
+SSU72L2,humanBrain,Dentate gyrus,0.0,nTPM
+SSU72L2,humanBrain,Dorsal cochlear nucleus,0.0,nTPM
+SSU72L2,humanBrain,Dorsal funiculus (white matter),0.0,nTPM
+SSU72L2,humanBrain,Dorsal medullary reticular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Dorsal motor vagal complex,0.0,nTPM
+SSU72L2,humanBrain,Dorsal raphe nucleus,0.0,nTPM
+SSU72L2,humanBrain,Dorsal tegmental nucleus,0.0,nTPM
+SSU72L2,humanBrain,Dorsolateral tegmental area,0.0,nTPM
+SSU72L2,humanBrain,Dorsomedial nucleus,0.0,nTPM
+SSU72L2,humanBrain,Entorhinal gyrus,0.0,nTPM
+SSU72L2,humanBrain,Flocculonodular lobe,0.0,nTPM
+SSU72L2,humanBrain,Frontal eye field,0.0,nTPM
+SSU72L2,humanBrain,Frontal operculum,0.0,nTPM
+SSU72L2,humanBrain,Fusiform gyrus,0.0,nTPM
+SSU72L2,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0,nTPM
+SSU72L2,humanBrain,"Gigantocellular reticular nuclei, pars",0.0,nTPM
+SSU72L2,humanBrain,"Globus pallidus, externus",0.0,nTPM
+SSU72L2,humanBrain,"Globus pallidus, internus",0.0,nTPM
+SSU72L2,humanBrain,Habenula,0.0,nTPM
+SSU72L2,humanBrain,Hippocampus,0.0,nTPM
+SSU72L2,humanBrain,"Hippocampus, CA1",0.0,nTPM
+SSU72L2,humanBrain,"Hippocampus, CA2",0.0,nTPM
+SSU72L2,humanBrain,"Hippocampus, CA3",0.0,nTPM
+SSU72L2,humanBrain,Inferior colliculus,0.0,nTPM
+SSU72L2,humanBrain,"Inferior frontal gyrus, opercular",0.0,nTPM
+SSU72L2,humanBrain,Inferior olive,0.0,nTPM
+SSU72L2,humanBrain,Inferior parietal lobule,0.0,nTPM
+SSU72L2,humanBrain,Inferior temporal gyrus,0.0,nTPM
+SSU72L2,humanBrain,Intraparietal deep sulcus,0.0,nTPM
+SSU72L2,humanBrain,Kolliker-Fuse nucleus,0.0,nTPM
+SSU72L2,humanBrain,Lateral amygdala,0.0,nTPM
+SSU72L2,humanBrain,Lateral funiculus (white matter),0.0,nTPM
+SSU72L2,humanBrain,Lateral geniculate body,0.0,nTPM
+SSU72L2,humanBrain,Lateral hypothalamic area,0.0,nTPM
+SSU72L2,humanBrain,Lateral lemniscal nuclei,0.0,nTPM
+SSU72L2,humanBrain,Lateral medullary reticular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Lateral parabrachial nucleus,0.0,nTPM
+SSU72L2,humanBrain,Lateral thalamic nuclei,0.0,nTPM
+SSU72L2,humanBrain,Lateral vestibular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Lingual gyrus,0.0,nTPM
+SSU72L2,humanBrain,Locus coeruleus,0.0,nTPM
+SSU72L2,humanBrain,Mammillary body,0.0,nTPM
+SSU72L2,humanBrain,Medial dorsal thalamic nucleus,0.0,nTPM
+SSU72L2,humanBrain,Medial geniculate body,0.0,nTPM
+SSU72L2,humanBrain,Medial olivary nucleus,0.0,nTPM
+SSU72L2,humanBrain,Medial parabrachial nucleus,0.0,nTPM
+SSU72L2,humanBrain,Medial periolivary nuclei,0.0,nTPM
+SSU72L2,humanBrain,Medial vestibular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Median raphe nucleus,0.0,nTPM
+SSU72L2,humanBrain,Middle cingulate cortex,0.0,nTPM
+SSU72L2,humanBrain,Middle temporal gyrus,0.0,nTPM
+SSU72L2,humanBrain,Motor facial nucleus,0.0,nTPM
+SSU72L2,humanBrain,Motor hypoglossal nucleus,0.0,nTPM
+SSU72L2,humanBrain,Motor trigeminal nucleus,0.0,nTPM
+SSU72L2,humanBrain,Nuclei of the trapezoid body,0.0,nTPM
+SSU72L2,humanBrain,Nucleus accumbens,0.0,nTPM
+SSU72L2,humanBrain,Nucleus ambiguus,0.0,nTPM
+SSU72L2,humanBrain,Nucleus basalis of Meynert,0.0,nTPM
+SSU72L2,humanBrain,Nucleus cuneatus,0.0,nTPM
+SSU72L2,humanBrain,Nucleus gracilis,0.0,nTPM
+SSU72L2,humanBrain,Nucleus of the diagonal band,0.0,nTPM
+SSU72L2,humanBrain,Nucleus raphe magnus,0.0,nTPM
+SSU72L2,humanBrain,Nucleus raphe obscurus,0.0,nTPM
+SSU72L2,humanBrain,Nucleus raphe pallidus,0.0,nTPM
+SSU72L2,humanBrain,Nucleus reuniens,0.0,nTPM
+SSU72L2,humanBrain,Nucleus rhomboideus,0.0,nTPM
+SSU72L2,humanBrain,Nucleus tractus solitarii,0.0,nTPM
+SSU72L2,humanBrain,Occipital cortex,0.0,nTPM
+SSU72L2,humanBrain,Occipital cortex (white matter),0.0,nTPM
+SSU72L2,humanBrain,Olfactory area,0.0,nTPM
+SSU72L2,humanBrain,Olfactory tubercle,0.0,nTPM
+SSU72L2,humanBrain,"Orbitofrontal gyrus, anterior",0.0,nTPM
+SSU72L2,humanBrain,"Paracentral lobule, anterior",0.0,nTPM
+SSU72L2,humanBrain,"Paracentral lobule, posterior",0.0,nTPM
+SSU72L2,humanBrain,Parahippocampal cortex,0.0,nTPM
+SSU72L2,humanBrain,Parahippocampal cortex (white matter),0.0,nTPM
+SSU72L2,humanBrain,Paramedian reticular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Paraventricular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Parietal operculum,0.0,nTPM
+SSU72L2,humanBrain,Parieto-insular cortex,0.0,nTPM
+SSU72L2,humanBrain,Parieto-occipital transitional area,0.0,nTPM
+SSU72L2,humanBrain,Parieto-temporal junction (white matter),0.0,nTPM
+SSU72L2,humanBrain,Parvicellular reticular nuclei,0.0,nTPM
+SSU72L2,humanBrain,"Parvicellular reticular nuclei, medullary",0.0,nTPM
+SSU72L2,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+SSU72L2,humanBrain,"Periaquaductal grey, anterior",0.0,nTPM
+SSU72L2,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+SSU72L2,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+SSU72L2,humanBrain,Perirhinal gyrus,0.0,nTPM
+SSU72L2,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+SSU72L2,humanBrain,Piriform cortex,0.0,nTPM
+SSU72L2,humanBrain,Pontine nuclei,0.0,nTPM
+SSU72L2,humanBrain,Pontine raphe nucleus,0.0,nTPM
+SSU72L2,humanBrain,Postcentral gyrus,0.0,nTPM
+SSU72L2,humanBrain,"Postcentral gyrus, dorsal",0.0,nTPM
+SSU72L2,humanBrain,"Postcentral gyrus, middle",0.0,nTPM
+SSU72L2,humanBrain,"Postcentral gyrus, ventral",0.0,nTPM
+SSU72L2,humanBrain,Posterior cingulate cortex,0.0,nTPM
+SSU72L2,humanBrain,"Posterior cingulate cortex, dorsal",0.0,nTPM
+SSU72L2,humanBrain,"Posterior cingulate cortex, ventral",0.0,nTPM
+SSU72L2,humanBrain,Posterior insular cortex,0.0,nTPM
+SSU72L2,humanBrain,Posterior thalamic nucleus,0.0,nTPM
+SSU72L2,humanBrain,Posteroventral cochlear nucleus,0.0,nTPM
+SSU72L2,humanBrain,Precentral gyrus,0.0,nTPM
+SSU72L2,humanBrain,"Precentral gyrus, dorsal",0.0,nTPM
+SSU72L2,humanBrain,"Precentral gyrus, middle",0.0,nTPM
+SSU72L2,humanBrain,"Precentral gyrus, ventral",0.0,nTPM
+SSU72L2,humanBrain,Precuneus,0.0,nTPM
+SSU72L2,humanBrain,"Premotor cortex, dorsal",0.0,nTPM
+SSU72L2,humanBrain,"Premotor cortex, ventral",0.0,nTPM
+SSU72L2,humanBrain,Preoptic area,0.0,nTPM
+SSU72L2,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+SSU72L2,humanBrain,Pretectal area,0.0,nTPM
+SSU72L2,humanBrain,Principal sensory trigeminal nucleus,0.0,nTPM
+SSU72L2,humanBrain,Pulvinar,0.0,nTPM
+SSU72L2,humanBrain,Putamen,0.0,nTPM
+SSU72L2,humanBrain,Red nucleus,0.0,nTPM
+SSU72L2,humanBrain,"Reticular pontine nucleus, caudal",0.0,nTPM
+SSU72L2,humanBrain,"Reticular pontine nucleus, oral",0.0,nTPM
+SSU72L2,humanBrain,Reticulotegmental nucleus,0.0,nTPM
+SSU72L2,humanBrain,Retrosplenial cortex,0.0,nTPM
+SSU72L2,humanBrain,Septal nuclei,0.0,nTPM
+SSU72L2,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0,nTPM
+SSU72L2,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.0,nTPM
+SSU72L2,humanBrain,"Spinal trigeminal nucleus, caudal",0.0,nTPM
+SSU72L2,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+SSU72L2,humanBrain,"Spinal trigeminal nucleus, oral",0.0,nTPM
+SSU72L2,humanBrain,Spinal vestibular nucleus,0.0,nTPM
+SSU72L2,humanBrain,"Stria terminalis, bed nucleus",0.0,nTPM
+SSU72L2,humanBrain,"Subcentral gyrus, S2",0.0,nTPM
+SSU72L2,humanBrain,Subcoeruleus area,0.0,nTPM
+SSU72L2,humanBrain,Subiculum,0.0,nTPM
+SSU72L2,humanBrain,Substantia nigra,0.0,nTPM
+SSU72L2,humanBrain,Subthalamic nucleus,0.0,nTPM
+SSU72L2,humanBrain,Superior colliculus,0.0,nTPM
+SSU72L2,humanBrain,Superior olive,0.0,nTPM
+SSU72L2,humanBrain,Superior parietal lobule,0.0,nTPM
+SSU72L2,humanBrain,Superior temporal gyrus,0.0,nTPM
+SSU72L2,humanBrain,Superior vestibular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Supplementary motor cortex,0.0,nTPM
+SSU72L2,humanBrain,Supramarginal gyrus,0.0,nTPM
+SSU72L2,humanBrain,Supraoptic nucleus,0.0,nTPM
+SSU72L2,humanBrain,Temporal pole,0.0,nTPM
+SSU72L2,humanBrain,Temporal white matter,0.0,nTPM
+SSU72L2,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.0,nTPM
+SSU72L2,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+SSU72L2,humanBrain,"Transversal temporal gyrus, anterior",0.0,nTPM
+SSU72L2,humanBrain,"Transversal temporal gyrus, posterior",0.0,nTPM
+SSU72L2,humanBrain,Ventral medullary reticular nucleus,0.0,nTPM
+SSU72L2,humanBrain,Ventral periolivary nuclei,0.0,nTPM
+SSU72L2,humanBrain,Ventral posterolateral thalamic nucleus,0.0,nTPM
+SSU72L2,humanBrain,Ventral posteromedial thalamic nucleus,0.0,nTPM
+SSU72L2,humanBrain,Ventral tegmental area,0.0,nTPM
+SSU72L2,humanBrain,Ventral thalamic nuclei,0.0,nTPM
+SSU72L2,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0,nTPM
+SSU72L2,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0,nTPM
+SSU72L2,humanBrain,Ventromedial nucleus,0.0,nTPM
+SSU72L2,humanBrain,Vermis,0.0,nTPM
+SSU72L2,humanBrain,Zona incerta,0.0,nTPM
+SSU72L2,humanBrainRegional,Amygdala,0.0,nTPM
+SSU72L2,humanBrainRegional,Basal ganglia,0.0,nTPM
+SSU72L2,humanBrainRegional,Cerebellum,0.0,nTPM
+SSU72L2,humanBrainRegional,Cerebral cortex,0.0,nTPM
+SSU72L2,humanBrainRegional,Choroid plexus,0.0,nTPM
+SSU72L2,humanBrainRegional,Hippocampal formation,0.0,nTPM
+SSU72L2,humanBrainRegional,Hypothalamus,0.0,nTPM
+SSU72L2,humanBrainRegional,Medulla oblongata,0.0,nTPM
+SSU72L2,humanBrainRegional,Midbrain,0.0,nTPM
+SSU72L2,humanBrainRegional,Pons,0.0,nTPM
+SSU72L2,humanBrainRegional,Spinal cord,0.0,nTPM
+SSU72L2,humanBrainRegional,Thalamus,0.0,nTPM
+SSU72L2,humanBrainRegional,White matter,0.0,nTPM
+SSU72L2,immuneCell,Basophil,0.0,nTPM
+SSU72L2,immuneCell,Classical monocyte,0.0,nTPM
+SSU72L2,immuneCell,Eosinophil,0.0,nTPM
+SSU72L2,immuneCell,GdT-cell,0.0,nTPM
+SSU72L2,immuneCell,Intermediate monocyte,0.0,nTPM
+SSU72L2,immuneCell,MAIT T-cell,0.0,nTPM
+SSU72L2,immuneCell,Memory B-cell,0.0,nTPM
+SSU72L2,immuneCell,Memory CD4 T-cell,0.0,nTPM
+SSU72L2,immuneCell,Memory CD8 T-cell,0.0,nTPM
+SSU72L2,immuneCell,Myeloid DC,0.0,nTPM
+SSU72L2,immuneCell,Naive B-cell,0.0,nTPM
+SSU72L2,immuneCell,Naive CD4 T-cell,0.0,nTPM
+SSU72L2,immuneCell,Naive CD8 T-cell,0.0,nTPM
+SSU72L2,immuneCell,Neutrophil,0.0,nTPM
+SSU72L2,immuneCell,NK-cell,0.0,nTPM
+SSU72L2,immuneCell,Non-classical monocyte,0.0,nTPM
+SSU72L2,immuneCell,Plasmacytoid DC,0.0,nTPM
+SSU72L2,immuneCell,T-reg,0.0,nTPM
+SSU72L2,immuneCell,Total PBMC,0.0,nTPM
+SSU72L3,consensusTissue,Adipose tissue,0.0,nTPM
+SSU72L3,consensusTissue,Adrenal gland,0.0,nTPM
+SSU72L3,consensusTissue,Amygdala,0.0,nTPM
+SSU72L3,consensusTissue,Appendix,0.0,nTPM
+SSU72L3,consensusTissue,Basal ganglia,0.0,nTPM
+SSU72L3,consensusTissue,Blood vessel,0.0,nTPM
+SSU72L3,consensusTissue,Bone marrow,0.0,nTPM
+SSU72L3,consensusTissue,Breast,0.0,nTPM
+SSU72L3,consensusTissue,Cerebellum,0.0,nTPM
+SSU72L3,consensusTissue,Cerebral cortex,0.0,nTPM
+SSU72L3,consensusTissue,Cervix,0.0,nTPM
+SSU72L3,consensusTissue,Choroid plexus,0.0,nTPM
+SSU72L3,consensusTissue,Colon,0.0,nTPM
+SSU72L3,consensusTissue,Duodenum,0.0,nTPM
+SSU72L3,consensusTissue,Endometrium 1,0.0,nTPM
+SSU72L3,consensusTissue,Epididymis,0.0,nTPM
+SSU72L3,consensusTissue,Esophagus,0.0,nTPM
+SSU72L3,consensusTissue,Fallopian tube,0.0,nTPM
+SSU72L3,consensusTissue,Gallbladder,0.0,nTPM
+SSU72L3,consensusTissue,Heart muscle,0.0,nTPM
+SSU72L3,consensusTissue,Hippocampal formation,0.0,nTPM
+SSU72L3,consensusTissue,Hypothalamus,0.0,nTPM
+SSU72L3,consensusTissue,Kidney,0.0,nTPM
+SSU72L3,consensusTissue,Liver,0.0,nTPM
+SSU72L3,consensusTissue,Lung,0.0,nTPM
+SSU72L3,consensusTissue,Lymph node,0.0,nTPM
+SSU72L3,consensusTissue,Midbrain,0.0,nTPM
+SSU72L3,consensusTissue,Ovary,0.0,nTPM
+SSU72L3,consensusTissue,Pancreas,0.0,nTPM
+SSU72L3,consensusTissue,Parathyroid gland,0.0,nTPM
+SSU72L3,consensusTissue,Pituitary gland,0.0,nTPM
+SSU72L3,consensusTissue,Placenta,0.0,nTPM
+SSU72L3,consensusTissue,Prostate,0.0,nTPM
+SSU72L3,consensusTissue,Rectum,0.0,nTPM
+SSU72L3,consensusTissue,Retina,0.0,nTPM
+SSU72L3,consensusTissue,Salivary gland,0.0,nTPM
+SSU72L3,consensusTissue,Seminal vesicle,0.0,nTPM
+SSU72L3,consensusTissue,Skeletal muscle,0.0,nTPM
+SSU72L3,consensusTissue,Skin 1,0.0,nTPM
+SSU72L3,consensusTissue,Small intestine,0.0,nTPM
+SSU72L3,consensusTissue,Smooth muscle,0.0,nTPM
+SSU72L3,consensusTissue,Spinal cord,0.0,nTPM
+SSU72L3,consensusTissue,Spleen,0.0,nTPM
+SSU72L3,consensusTissue,Stomach 1,0.0,nTPM
+SSU72L3,consensusTissue,Testis,0.0,nTPM
+SSU72L3,consensusTissue,Thymus,0.1,nTPM
+SSU72L3,consensusTissue,Thyroid gland,0.0,nTPM
+SSU72L3,consensusTissue,Tongue,0.0,nTPM
+SSU72L3,consensusTissue,Tonsil,0.0,nTPM
+SSU72L3,consensusTissue,Urinary bladder,0.0,nTPM
+SSU72L3,consensusTissue,Vagina,0.0,nTPM
+SSU72L3,humanBrain,Amygdala,0.0,nTPM
+SSU72L3,humanBrain,Angular gyrus,0.0,nTPM
+SSU72L3,humanBrain,Angular gyrus (white matter),0.0,nTPM
+SSU72L3,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0,nTPM
+SSU72L3,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0,nTPM
+SSU72L3,humanBrain,"Anterior cochlear nucleus, ventral",0.0,nTPM
+SSU72L3,humanBrain,Anterior funiculus (white matter),0.0,nTPM
+SSU72L3,humanBrain,"Anterior insular cortex, dorsal",0.0,nTPM
+SSU72L3,humanBrain,"Anterior insular cortex, ventral",0.0,nTPM
+SSU72L3,humanBrain,"Anterior thalamic nucleus, ventral",0.0,nTPM
+SSU72L3,humanBrain,Arcuate nucleus,0.0,nTPM
+SSU72L3,humanBrain,"Area parastriata, inferior",0.0,nTPM
+SSU72L3,humanBrain,"Area parastriata, parietal",0.0,nTPM
+SSU72L3,humanBrain,"Area parastriata, superior",0.0,nTPM
+SSU72L3,humanBrain,"Area parastriata, temporal",0.0,nTPM
+SSU72L3,humanBrain,Area postrema,0.0,nTPM
+SSU72L3,humanBrain,Area striata,0.0,nTPM
+SSU72L3,humanBrain,Area striata (white matter),0.0,nTPM
+SSU72L3,humanBrain,Basal amygdala,0.0,nTPM
+SSU72L3,humanBrain,Caudate nucleus,0.0,nTPM
+SSU72L3,humanBrain,Central amygdala,0.0,nTPM
+SSU72L3,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+SSU72L3,humanBrain,Cerebellar cortex,0.0,nTPM
+SSU72L3,humanBrain,Cerebellar nuclei,0.0,nTPM
+SSU72L3,humanBrain,Cerebellar white matter,0.0,nTPM
+SSU72L3,humanBrain,"Cervical spinal cord, central gray",0.0,nTPM
+SSU72L3,humanBrain,"Cervical spinal cord, dorsal horn",0.0,nTPM
+SSU72L3,humanBrain,"Cervical spinal cord, ventral horn",0.0,nTPM
+SSU72L3,humanBrain,Choroid plexus,0.0,nTPM
+SSU72L3,humanBrain,Claustrum,0.0,nTPM
+SSU72L3,humanBrain,"Corpus callosum, genu (white matter)",0.0,nTPM
+SSU72L3,humanBrain,"Corpus callosum, splenium (white matter)",0.0,nTPM
+SSU72L3,humanBrain,Corticomedial amygdala,0.0,nTPM
+SSU72L3,humanBrain,Cuneiform nucleus,0.0,nTPM
+SSU72L3,humanBrain,Dentate gyrus,0.0,nTPM
+SSU72L3,humanBrain,Dorsal cochlear nucleus,0.0,nTPM
+SSU72L3,humanBrain,Dorsal funiculus (white matter),0.0,nTPM
+SSU72L3,humanBrain,Dorsal medullary reticular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Dorsal motor vagal complex,0.0,nTPM
+SSU72L3,humanBrain,Dorsal raphe nucleus,0.0,nTPM
+SSU72L3,humanBrain,Dorsal tegmental nucleus,0.0,nTPM
+SSU72L3,humanBrain,Dorsolateral tegmental area,0.0,nTPM
+SSU72L3,humanBrain,Dorsomedial nucleus,0.0,nTPM
+SSU72L3,humanBrain,Entorhinal gyrus,0.0,nTPM
+SSU72L3,humanBrain,Flocculonodular lobe,0.0,nTPM
+SSU72L3,humanBrain,Frontal eye field,0.0,nTPM
+SSU72L3,humanBrain,Frontal operculum,0.0,nTPM
+SSU72L3,humanBrain,Fusiform gyrus,0.0,nTPM
+SSU72L3,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0,nTPM
+SSU72L3,humanBrain,"Gigantocellular reticular nuclei, pars",0.0,nTPM
+SSU72L3,humanBrain,"Globus pallidus, externus",0.0,nTPM
+SSU72L3,humanBrain,"Globus pallidus, internus",0.0,nTPM
+SSU72L3,humanBrain,Habenula,0.0,nTPM
+SSU72L3,humanBrain,Hippocampus,0.0,nTPM
+SSU72L3,humanBrain,"Hippocampus, CA1",0.0,nTPM
+SSU72L3,humanBrain,"Hippocampus, CA2",0.0,nTPM
+SSU72L3,humanBrain,"Hippocampus, CA3",0.0,nTPM
+SSU72L3,humanBrain,Inferior colliculus,0.0,nTPM
+SSU72L3,humanBrain,"Inferior frontal gyrus, opercular",0.0,nTPM
+SSU72L3,humanBrain,Inferior olive,0.0,nTPM
+SSU72L3,humanBrain,Inferior parietal lobule,0.0,nTPM
+SSU72L3,humanBrain,Inferior temporal gyrus,0.0,nTPM
+SSU72L3,humanBrain,Intraparietal deep sulcus,0.0,nTPM
+SSU72L3,humanBrain,Kolliker-Fuse nucleus,0.0,nTPM
+SSU72L3,humanBrain,Lateral amygdala,0.0,nTPM
+SSU72L3,humanBrain,Lateral funiculus (white matter),0.0,nTPM
+SSU72L3,humanBrain,Lateral geniculate body,0.0,nTPM
+SSU72L3,humanBrain,Lateral hypothalamic area,0.0,nTPM
+SSU72L3,humanBrain,Lateral lemniscal nuclei,0.0,nTPM
+SSU72L3,humanBrain,Lateral medullary reticular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Lateral parabrachial nucleus,0.0,nTPM
+SSU72L3,humanBrain,Lateral thalamic nuclei,0.0,nTPM
+SSU72L3,humanBrain,Lateral vestibular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Lingual gyrus,0.0,nTPM
+SSU72L3,humanBrain,Locus coeruleus,0.0,nTPM
+SSU72L3,humanBrain,Mammillary body,0.0,nTPM
+SSU72L3,humanBrain,Medial dorsal thalamic nucleus,0.0,nTPM
+SSU72L3,humanBrain,Medial geniculate body,0.0,nTPM
+SSU72L3,humanBrain,Medial olivary nucleus,0.0,nTPM
+SSU72L3,humanBrain,Medial parabrachial nucleus,0.0,nTPM
+SSU72L3,humanBrain,Medial periolivary nuclei,0.0,nTPM
+SSU72L3,humanBrain,Medial vestibular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Median raphe nucleus,0.0,nTPM
+SSU72L3,humanBrain,Middle cingulate cortex,0.0,nTPM
+SSU72L3,humanBrain,Middle temporal gyrus,0.0,nTPM
+SSU72L3,humanBrain,Motor facial nucleus,0.0,nTPM
+SSU72L3,humanBrain,Motor hypoglossal nucleus,0.0,nTPM
+SSU72L3,humanBrain,Motor trigeminal nucleus,0.0,nTPM
+SSU72L3,humanBrain,Nuclei of the trapezoid body,0.0,nTPM
+SSU72L3,humanBrain,Nucleus accumbens,0.0,nTPM
+SSU72L3,humanBrain,Nucleus ambiguus,0.0,nTPM
+SSU72L3,humanBrain,Nucleus basalis of Meynert,0.0,nTPM
+SSU72L3,humanBrain,Nucleus cuneatus,0.0,nTPM
+SSU72L3,humanBrain,Nucleus gracilis,0.0,nTPM
+SSU72L3,humanBrain,Nucleus of the diagonal band,0.0,nTPM
+SSU72L3,humanBrain,Nucleus raphe magnus,0.0,nTPM
+SSU72L3,humanBrain,Nucleus raphe obscurus,0.0,nTPM
+SSU72L3,humanBrain,Nucleus raphe pallidus,0.0,nTPM
+SSU72L3,humanBrain,Nucleus reuniens,0.0,nTPM
+SSU72L3,humanBrain,Nucleus rhomboideus,0.0,nTPM
+SSU72L3,humanBrain,Nucleus tractus solitarii,0.0,nTPM
+SSU72L3,humanBrain,Occipital cortex,0.0,nTPM
+SSU72L3,humanBrain,Occipital cortex (white matter),0.0,nTPM
+SSU72L3,humanBrain,Olfactory area,0.0,nTPM
+SSU72L3,humanBrain,Olfactory tubercle,0.0,nTPM
+SSU72L3,humanBrain,"Orbitofrontal gyrus, anterior",0.0,nTPM
+SSU72L3,humanBrain,"Paracentral lobule, anterior",0.0,nTPM
+SSU72L3,humanBrain,"Paracentral lobule, posterior",0.0,nTPM
+SSU72L3,humanBrain,Parahippocampal cortex,0.0,nTPM
+SSU72L3,humanBrain,Parahippocampal cortex (white matter),0.0,nTPM
+SSU72L3,humanBrain,Paramedian reticular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Paraventricular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Parietal operculum,0.0,nTPM
+SSU72L3,humanBrain,Parieto-insular cortex,0.0,nTPM
+SSU72L3,humanBrain,Parieto-occipital transitional area,0.0,nTPM
+SSU72L3,humanBrain,Parieto-temporal junction (white matter),0.0,nTPM
+SSU72L3,humanBrain,Parvicellular reticular nuclei,0.0,nTPM
+SSU72L3,humanBrain,"Parvicellular reticular nuclei, medullary",0.0,nTPM
+SSU72L3,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+SSU72L3,humanBrain,"Periaquaductal grey, anterior",0.0,nTPM
+SSU72L3,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+SSU72L3,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+SSU72L3,humanBrain,Perirhinal gyrus,0.0,nTPM
+SSU72L3,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+SSU72L3,humanBrain,Piriform cortex,0.0,nTPM
+SSU72L3,humanBrain,Pontine nuclei,0.0,nTPM
+SSU72L3,humanBrain,Pontine raphe nucleus,0.0,nTPM
+SSU72L3,humanBrain,Postcentral gyrus,0.0,nTPM
+SSU72L3,humanBrain,"Postcentral gyrus, dorsal",0.0,nTPM
+SSU72L3,humanBrain,"Postcentral gyrus, middle",0.0,nTPM
+SSU72L3,humanBrain,"Postcentral gyrus, ventral",0.0,nTPM
+SSU72L3,humanBrain,Posterior cingulate cortex,0.0,nTPM
+SSU72L3,humanBrain,"Posterior cingulate cortex, dorsal",0.0,nTPM
+SSU72L3,humanBrain,"Posterior cingulate cortex, ventral",0.0,nTPM
+SSU72L3,humanBrain,Posterior insular cortex,0.0,nTPM
+SSU72L3,humanBrain,Posterior thalamic nucleus,0.0,nTPM
+SSU72L3,humanBrain,Posteroventral cochlear nucleus,0.0,nTPM
+SSU72L3,humanBrain,Precentral gyrus,0.0,nTPM
+SSU72L3,humanBrain,"Precentral gyrus, dorsal",0.0,nTPM
+SSU72L3,humanBrain,"Precentral gyrus, middle",0.0,nTPM
+SSU72L3,humanBrain,"Precentral gyrus, ventral",0.0,nTPM
+SSU72L3,humanBrain,Precuneus,0.0,nTPM
+SSU72L3,humanBrain,"Premotor cortex, dorsal",0.0,nTPM
+SSU72L3,humanBrain,"Premotor cortex, ventral",0.0,nTPM
+SSU72L3,humanBrain,Preoptic area,0.0,nTPM
+SSU72L3,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+SSU72L3,humanBrain,Pretectal area,0.0,nTPM
+SSU72L3,humanBrain,Principal sensory trigeminal nucleus,0.0,nTPM
+SSU72L3,humanBrain,Pulvinar,0.0,nTPM
+SSU72L3,humanBrain,Putamen,0.0,nTPM
+SSU72L3,humanBrain,Red nucleus,0.0,nTPM
+SSU72L3,humanBrain,"Reticular pontine nucleus, caudal",0.0,nTPM
+SSU72L3,humanBrain,"Reticular pontine nucleus, oral",0.0,nTPM
+SSU72L3,humanBrain,Reticulotegmental nucleus,0.0,nTPM
+SSU72L3,humanBrain,Retrosplenial cortex,0.0,nTPM
+SSU72L3,humanBrain,Septal nuclei,0.0,nTPM
+SSU72L3,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0,nTPM
+SSU72L3,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.0,nTPM
+SSU72L3,humanBrain,"Spinal trigeminal nucleus, caudal",0.0,nTPM
+SSU72L3,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+SSU72L3,humanBrain,"Spinal trigeminal nucleus, oral",0.0,nTPM
+SSU72L3,humanBrain,Spinal vestibular nucleus,0.0,nTPM
+SSU72L3,humanBrain,"Stria terminalis, bed nucleus",0.0,nTPM
+SSU72L3,humanBrain,"Subcentral gyrus, S2",0.0,nTPM
+SSU72L3,humanBrain,Subcoeruleus area,0.0,nTPM
+SSU72L3,humanBrain,Subiculum,0.0,nTPM
+SSU72L3,humanBrain,Substantia nigra,0.0,nTPM
+SSU72L3,humanBrain,Subthalamic nucleus,0.0,nTPM
+SSU72L3,humanBrain,Superior colliculus,0.0,nTPM
+SSU72L3,humanBrain,Superior olive,0.0,nTPM
+SSU72L3,humanBrain,Superior parietal lobule,0.0,nTPM
+SSU72L3,humanBrain,Superior temporal gyrus,0.0,nTPM
+SSU72L3,humanBrain,Superior vestibular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Supplementary motor cortex,0.0,nTPM
+SSU72L3,humanBrain,Supramarginal gyrus,0.0,nTPM
+SSU72L3,humanBrain,Supraoptic nucleus,0.0,nTPM
+SSU72L3,humanBrain,Temporal pole,0.0,nTPM
+SSU72L3,humanBrain,Temporal white matter,0.0,nTPM
+SSU72L3,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.0,nTPM
+SSU72L3,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+SSU72L3,humanBrain,"Transversal temporal gyrus, anterior",0.0,nTPM
+SSU72L3,humanBrain,"Transversal temporal gyrus, posterior",0.0,nTPM
+SSU72L3,humanBrain,Ventral medullary reticular nucleus,0.0,nTPM
+SSU72L3,humanBrain,Ventral periolivary nuclei,0.0,nTPM
+SSU72L3,humanBrain,Ventral posterolateral thalamic nucleus,0.0,nTPM
+SSU72L3,humanBrain,Ventral posteromedial thalamic nucleus,0.0,nTPM
+SSU72L3,humanBrain,Ventral tegmental area,0.0,nTPM
+SSU72L3,humanBrain,Ventral thalamic nuclei,0.0,nTPM
+SSU72L3,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0,nTPM
+SSU72L3,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0,nTPM
+SSU72L3,humanBrain,Ventromedial nucleus,0.0,nTPM
+SSU72L3,humanBrain,Vermis,0.0,nTPM
+SSU72L3,humanBrain,Zona incerta,0.0,nTPM
+SSU72L3,humanBrainRegional,Amygdala,0.0,nTPM
+SSU72L3,humanBrainRegional,Basal ganglia,0.0,nTPM
+SSU72L3,humanBrainRegional,Cerebellum,0.0,nTPM
+SSU72L3,humanBrainRegional,Cerebral cortex,0.0,nTPM
+SSU72L3,humanBrainRegional,Choroid plexus,0.0,nTPM
+SSU72L3,humanBrainRegional,Hippocampal formation,0.0,nTPM
+SSU72L3,humanBrainRegional,Hypothalamus,0.0,nTPM
+SSU72L3,humanBrainRegional,Medulla oblongata,0.0,nTPM
+SSU72L3,humanBrainRegional,Midbrain,0.0,nTPM
+SSU72L3,humanBrainRegional,Pons,0.0,nTPM
+SSU72L3,humanBrainRegional,Spinal cord,0.0,nTPM
+SSU72L3,humanBrainRegional,Thalamus,0.0,nTPM
+SSU72L3,humanBrainRegional,White matter,0.0,nTPM
+SSU72L3,immuneCell,Basophil,0.0,nTPM
+SSU72L3,immuneCell,Classical monocyte,0.0,nTPM
+SSU72L3,immuneCell,Eosinophil,0.0,nTPM
+SSU72L3,immuneCell,GdT-cell,0.0,nTPM
+SSU72L3,immuneCell,Intermediate monocyte,0.0,nTPM
+SSU72L3,immuneCell,MAIT T-cell,0.0,nTPM
+SSU72L3,immuneCell,Memory B-cell,0.0,nTPM
+SSU72L3,immuneCell,Memory CD4 T-cell,0.0,nTPM
+SSU72L3,immuneCell,Memory CD8 T-cell,0.0,nTPM
+SSU72L3,immuneCell,Myeloid DC,0.0,nTPM
+SSU72L3,immuneCell,Naive B-cell,0.0,nTPM
+SSU72L3,immuneCell,Naive CD4 T-cell,0.0,nTPM
+SSU72L3,immuneCell,Naive CD8 T-cell,0.0,nTPM
+SSU72L3,immuneCell,Neutrophil,0.0,nTPM
+SSU72L3,immuneCell,NK-cell,0.0,nTPM
+SSU72L3,immuneCell,Non-classical monocyte,0.0,nTPM
+SSU72L3,immuneCell,Plasmacytoid DC,0.0,nTPM
+SSU72L3,immuneCell,T-reg,0.0,nTPM
+SSU72L3,immuneCell,Total PBMC,0.0,nTPM
+SSU72L4,consensusTissue,Adipose tissue,0.0,nTPM
+SSU72L4,consensusTissue,Adrenal gland,0.0,nTPM
+SSU72L4,consensusTissue,Amygdala,0.0,nTPM
+SSU72L4,consensusTissue,Appendix,0.0,nTPM
+SSU72L4,consensusTissue,Basal ganglia,0.0,nTPM
+SSU72L4,consensusTissue,Blood vessel,0.0,nTPM
+SSU72L4,consensusTissue,Bone marrow,0.0,nTPM
+SSU72L4,consensusTissue,Breast,0.0,nTPM
+SSU72L4,consensusTissue,Cerebellum,0.0,nTPM
+SSU72L4,consensusTissue,Cerebral cortex,0.0,nTPM
+SSU72L4,consensusTissue,Cervix,0.0,nTPM
+SSU72L4,consensusTissue,Choroid plexus,0.0,nTPM
+SSU72L4,consensusTissue,Colon,0.0,nTPM
+SSU72L4,consensusTissue,Duodenum,0.0,nTPM
+SSU72L4,consensusTissue,Endometrium 1,0.0,nTPM
+SSU72L4,consensusTissue,Epididymis,0.0,nTPM
+SSU72L4,consensusTissue,Esophagus,0.0,nTPM
+SSU72L4,consensusTissue,Fallopian tube,0.0,nTPM
+SSU72L4,consensusTissue,Gallbladder,0.0,nTPM
+SSU72L4,consensusTissue,Heart muscle,0.0,nTPM
+SSU72L4,consensusTissue,Hippocampal formation,0.0,nTPM
+SSU72L4,consensusTissue,Hypothalamus,0.0,nTPM
+SSU72L4,consensusTissue,Kidney,0.0,nTPM
+SSU72L4,consensusTissue,Liver,0.0,nTPM
+SSU72L4,consensusTissue,Lung,0.0,nTPM
+SSU72L4,consensusTissue,Lymph node,0.0,nTPM
+SSU72L4,consensusTissue,Midbrain,0.0,nTPM
+SSU72L4,consensusTissue,Ovary,0.0,nTPM
+SSU72L4,consensusTissue,Pancreas,0.0,nTPM
+SSU72L4,consensusTissue,Parathyroid gland,0.0,nTPM
+SSU72L4,consensusTissue,Pituitary gland,0.0,nTPM
+SSU72L4,consensusTissue,Placenta,0.0,nTPM
+SSU72L4,consensusTissue,Prostate,0.0,nTPM
+SSU72L4,consensusTissue,Rectum,0.1,nTPM
+SSU72L4,consensusTissue,Retina,0.0,nTPM
+SSU72L4,consensusTissue,Salivary gland,0.0,nTPM
+SSU72L4,consensusTissue,Seminal vesicle,0.0,nTPM
+SSU72L4,consensusTissue,Skeletal muscle,0.0,nTPM
+SSU72L4,consensusTissue,Skin 1,0.0,nTPM
+SSU72L4,consensusTissue,Small intestine,0.0,nTPM
+SSU72L4,consensusTissue,Smooth muscle,0.0,nTPM
+SSU72L4,consensusTissue,Spinal cord,0.0,nTPM
+SSU72L4,consensusTissue,Spleen,0.0,nTPM
+SSU72L4,consensusTissue,Stomach 1,0.0,nTPM
+SSU72L4,consensusTissue,Testis,0.0,nTPM
+SSU72L4,consensusTissue,Thymus,0.1,nTPM
+SSU72L4,consensusTissue,Thyroid gland,0.0,nTPM
+SSU72L4,consensusTissue,Tongue,0.0,nTPM
+SSU72L4,consensusTissue,Tonsil,0.0,nTPM
+SSU72L4,consensusTissue,Urinary bladder,0.0,nTPM
+SSU72L4,consensusTissue,Vagina,0.0,nTPM
+SSU72L4,humanBrain,Amygdala,0.0,nTPM
+SSU72L4,humanBrain,Angular gyrus,0.0,nTPM
+SSU72L4,humanBrain,Angular gyrus (white matter),0.0,nTPM
+SSU72L4,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0,nTPM
+SSU72L4,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0,nTPM
+SSU72L4,humanBrain,"Anterior cochlear nucleus, ventral",0.0,nTPM
+SSU72L4,humanBrain,Anterior funiculus (white matter),0.0,nTPM
+SSU72L4,humanBrain,"Anterior insular cortex, dorsal",0.0,nTPM
+SSU72L4,humanBrain,"Anterior insular cortex, ventral",0.0,nTPM
+SSU72L4,humanBrain,"Anterior thalamic nucleus, ventral",0.0,nTPM
+SSU72L4,humanBrain,Arcuate nucleus,0.0,nTPM
+SSU72L4,humanBrain,"Area parastriata, inferior",0.0,nTPM
+SSU72L4,humanBrain,"Area parastriata, parietal",0.0,nTPM
+SSU72L4,humanBrain,"Area parastriata, superior",0.0,nTPM
+SSU72L4,humanBrain,"Area parastriata, temporal",0.0,nTPM
+SSU72L4,humanBrain,Area postrema,0.0,nTPM
+SSU72L4,humanBrain,Area striata,0.0,nTPM
+SSU72L4,humanBrain,Area striata (white matter),0.0,nTPM
+SSU72L4,humanBrain,Basal amygdala,0.0,nTPM
+SSU72L4,humanBrain,Caudate nucleus,0.0,nTPM
+SSU72L4,humanBrain,Central amygdala,0.0,nTPM
+SSU72L4,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+SSU72L4,humanBrain,Cerebellar cortex,0.0,nTPM
+SSU72L4,humanBrain,Cerebellar nuclei,0.0,nTPM
+SSU72L4,humanBrain,Cerebellar white matter,0.0,nTPM
+SSU72L4,humanBrain,"Cervical spinal cord, central gray",0.0,nTPM
+SSU72L4,humanBrain,"Cervical spinal cord, dorsal horn",0.0,nTPM
+SSU72L4,humanBrain,"Cervical spinal cord, ventral horn",0.0,nTPM
+SSU72L4,humanBrain,Choroid plexus,0.0,nTPM
+SSU72L4,humanBrain,Claustrum,0.0,nTPM
+SSU72L4,humanBrain,"Corpus callosum, genu (white matter)",0.0,nTPM
+SSU72L4,humanBrain,"Corpus callosum, splenium (white matter)",0.0,nTPM
+SSU72L4,humanBrain,Corticomedial amygdala,0.0,nTPM
+SSU72L4,humanBrain,Cuneiform nucleus,0.0,nTPM
+SSU72L4,humanBrain,Dentate gyrus,0.0,nTPM
+SSU72L4,humanBrain,Dorsal cochlear nucleus,0.0,nTPM
+SSU72L4,humanBrain,Dorsal funiculus (white matter),0.0,nTPM
+SSU72L4,humanBrain,Dorsal medullary reticular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Dorsal motor vagal complex,0.0,nTPM
+SSU72L4,humanBrain,Dorsal raphe nucleus,0.0,nTPM
+SSU72L4,humanBrain,Dorsal tegmental nucleus,0.0,nTPM
+SSU72L4,humanBrain,Dorsolateral tegmental area,0.0,nTPM
+SSU72L4,humanBrain,Dorsomedial nucleus,0.0,nTPM
+SSU72L4,humanBrain,Entorhinal gyrus,0.0,nTPM
+SSU72L4,humanBrain,Flocculonodular lobe,0.0,nTPM
+SSU72L4,humanBrain,Frontal eye field,0.0,nTPM
+SSU72L4,humanBrain,Frontal operculum,0.0,nTPM
+SSU72L4,humanBrain,Fusiform gyrus,0.0,nTPM
+SSU72L4,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0,nTPM
+SSU72L4,humanBrain,"Gigantocellular reticular nuclei, pars",0.0,nTPM
+SSU72L4,humanBrain,"Globus pallidus, externus",0.0,nTPM
+SSU72L4,humanBrain,"Globus pallidus, internus",0.0,nTPM
+SSU72L4,humanBrain,Habenula,0.0,nTPM
+SSU72L4,humanBrain,Hippocampus,0.0,nTPM
+SSU72L4,humanBrain,"Hippocampus, CA1",0.0,nTPM
+SSU72L4,humanBrain,"Hippocampus, CA2",0.0,nTPM
+SSU72L4,humanBrain,"Hippocampus, CA3",0.0,nTPM
+SSU72L4,humanBrain,Inferior colliculus,0.0,nTPM
+SSU72L4,humanBrain,"Inferior frontal gyrus, opercular",0.0,nTPM
+SSU72L4,humanBrain,Inferior olive,0.0,nTPM
+SSU72L4,humanBrain,Inferior parietal lobule,0.0,nTPM
+SSU72L4,humanBrain,Inferior temporal gyrus,0.0,nTPM
+SSU72L4,humanBrain,Intraparietal deep sulcus,0.0,nTPM
+SSU72L4,humanBrain,Kolliker-Fuse nucleus,0.0,nTPM
+SSU72L4,humanBrain,Lateral amygdala,0.0,nTPM
+SSU72L4,humanBrain,Lateral funiculus (white matter),0.0,nTPM
+SSU72L4,humanBrain,Lateral geniculate body,0.0,nTPM
+SSU72L4,humanBrain,Lateral hypothalamic area,0.0,nTPM
+SSU72L4,humanBrain,Lateral lemniscal nuclei,0.0,nTPM
+SSU72L4,humanBrain,Lateral medullary reticular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Lateral parabrachial nucleus,0.0,nTPM
+SSU72L4,humanBrain,Lateral thalamic nuclei,0.0,nTPM
+SSU72L4,humanBrain,Lateral vestibular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Lingual gyrus,0.0,nTPM
+SSU72L4,humanBrain,Locus coeruleus,0.0,nTPM
+SSU72L4,humanBrain,Mammillary body,0.0,nTPM
+SSU72L4,humanBrain,Medial dorsal thalamic nucleus,0.0,nTPM
+SSU72L4,humanBrain,Medial geniculate body,0.0,nTPM
+SSU72L4,humanBrain,Medial olivary nucleus,0.0,nTPM
+SSU72L4,humanBrain,Medial parabrachial nucleus,0.0,nTPM
+SSU72L4,humanBrain,Medial periolivary nuclei,0.0,nTPM
+SSU72L4,humanBrain,Medial vestibular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Median raphe nucleus,0.0,nTPM
+SSU72L4,humanBrain,Middle cingulate cortex,0.0,nTPM
+SSU72L4,humanBrain,Middle temporal gyrus,0.0,nTPM
+SSU72L4,humanBrain,Motor facial nucleus,0.0,nTPM
+SSU72L4,humanBrain,Motor hypoglossal nucleus,0.0,nTPM
+SSU72L4,humanBrain,Motor trigeminal nucleus,0.0,nTPM
+SSU72L4,humanBrain,Nuclei of the trapezoid body,0.0,nTPM
+SSU72L4,humanBrain,Nucleus accumbens,0.0,nTPM
+SSU72L4,humanBrain,Nucleus ambiguus,0.0,nTPM
+SSU72L4,humanBrain,Nucleus basalis of Meynert,0.0,nTPM
+SSU72L4,humanBrain,Nucleus cuneatus,0.0,nTPM
+SSU72L4,humanBrain,Nucleus gracilis,0.0,nTPM
+SSU72L4,humanBrain,Nucleus of the diagonal band,0.0,nTPM
+SSU72L4,humanBrain,Nucleus raphe magnus,0.0,nTPM
+SSU72L4,humanBrain,Nucleus raphe obscurus,0.0,nTPM
+SSU72L4,humanBrain,Nucleus raphe pallidus,0.0,nTPM
+SSU72L4,humanBrain,Nucleus reuniens,0.0,nTPM
+SSU72L4,humanBrain,Nucleus rhomboideus,0.0,nTPM
+SSU72L4,humanBrain,Nucleus tractus solitarii,0.0,nTPM
+SSU72L4,humanBrain,Occipital cortex,0.0,nTPM
+SSU72L4,humanBrain,Occipital cortex (white matter),0.0,nTPM
+SSU72L4,humanBrain,Olfactory area,0.0,nTPM
+SSU72L4,humanBrain,Olfactory tubercle,0.0,nTPM
+SSU72L4,humanBrain,"Orbitofrontal gyrus, anterior",0.0,nTPM
+SSU72L4,humanBrain,"Paracentral lobule, anterior",0.0,nTPM
+SSU72L4,humanBrain,"Paracentral lobule, posterior",0.0,nTPM
+SSU72L4,humanBrain,Parahippocampal cortex,0.0,nTPM
+SSU72L4,humanBrain,Parahippocampal cortex (white matter),0.0,nTPM
+SSU72L4,humanBrain,Paramedian reticular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Paraventricular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Parietal operculum,0.0,nTPM
+SSU72L4,humanBrain,Parieto-insular cortex,0.0,nTPM
+SSU72L4,humanBrain,Parieto-occipital transitional area,0.0,nTPM
+SSU72L4,humanBrain,Parieto-temporal junction (white matter),0.0,nTPM
+SSU72L4,humanBrain,Parvicellular reticular nuclei,0.0,nTPM
+SSU72L4,humanBrain,"Parvicellular reticular nuclei, medullary",0.0,nTPM
+SSU72L4,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+SSU72L4,humanBrain,"Periaquaductal grey, anterior",0.0,nTPM
+SSU72L4,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+SSU72L4,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+SSU72L4,humanBrain,Perirhinal gyrus,0.0,nTPM
+SSU72L4,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+SSU72L4,humanBrain,Piriform cortex,0.0,nTPM
+SSU72L4,humanBrain,Pontine nuclei,0.0,nTPM
+SSU72L4,humanBrain,Pontine raphe nucleus,0.0,nTPM
+SSU72L4,humanBrain,Postcentral gyrus,0.0,nTPM
+SSU72L4,humanBrain,"Postcentral gyrus, dorsal",0.0,nTPM
+SSU72L4,humanBrain,"Postcentral gyrus, middle",0.0,nTPM
+SSU72L4,humanBrain,"Postcentral gyrus, ventral",0.0,nTPM
+SSU72L4,humanBrain,Posterior cingulate cortex,0.0,nTPM
+SSU72L4,humanBrain,"Posterior cingulate cortex, dorsal",0.0,nTPM
+SSU72L4,humanBrain,"Posterior cingulate cortex, ventral",0.0,nTPM
+SSU72L4,humanBrain,Posterior insular cortex,0.0,nTPM
+SSU72L4,humanBrain,Posterior thalamic nucleus,0.0,nTPM
+SSU72L4,humanBrain,Posteroventral cochlear nucleus,0.0,nTPM
+SSU72L4,humanBrain,Precentral gyrus,0.0,nTPM
+SSU72L4,humanBrain,"Precentral gyrus, dorsal",0.0,nTPM
+SSU72L4,humanBrain,"Precentral gyrus, middle",0.0,nTPM
+SSU72L4,humanBrain,"Precentral gyrus, ventral",0.0,nTPM
+SSU72L4,humanBrain,Precuneus,0.0,nTPM
+SSU72L4,humanBrain,"Premotor cortex, dorsal",0.0,nTPM
+SSU72L4,humanBrain,"Premotor cortex, ventral",0.0,nTPM
+SSU72L4,humanBrain,Preoptic area,0.0,nTPM
+SSU72L4,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+SSU72L4,humanBrain,Pretectal area,0.0,nTPM
+SSU72L4,humanBrain,Principal sensory trigeminal nucleus,0.0,nTPM
+SSU72L4,humanBrain,Pulvinar,0.0,nTPM
+SSU72L4,humanBrain,Putamen,0.0,nTPM
+SSU72L4,humanBrain,Red nucleus,0.0,nTPM
+SSU72L4,humanBrain,"Reticular pontine nucleus, caudal",0.0,nTPM
+SSU72L4,humanBrain,"Reticular pontine nucleus, oral",0.0,nTPM
+SSU72L4,humanBrain,Reticulotegmental nucleus,0.0,nTPM
+SSU72L4,humanBrain,Retrosplenial cortex,0.0,nTPM
+SSU72L4,humanBrain,Septal nuclei,0.0,nTPM
+SSU72L4,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0,nTPM
+SSU72L4,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.0,nTPM
+SSU72L4,humanBrain,"Spinal trigeminal nucleus, caudal",0.0,nTPM
+SSU72L4,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+SSU72L4,humanBrain,"Spinal trigeminal nucleus, oral",0.0,nTPM
+SSU72L4,humanBrain,Spinal vestibular nucleus,0.0,nTPM
+SSU72L4,humanBrain,"Stria terminalis, bed nucleus",0.0,nTPM
+SSU72L4,humanBrain,"Subcentral gyrus, S2",0.0,nTPM
+SSU72L4,humanBrain,Subcoeruleus area,0.0,nTPM
+SSU72L4,humanBrain,Subiculum,0.0,nTPM
+SSU72L4,humanBrain,Substantia nigra,0.0,nTPM
+SSU72L4,humanBrain,Subthalamic nucleus,0.0,nTPM
+SSU72L4,humanBrain,Superior colliculus,0.0,nTPM
+SSU72L4,humanBrain,Superior olive,0.0,nTPM
+SSU72L4,humanBrain,Superior parietal lobule,0.0,nTPM
+SSU72L4,humanBrain,Superior temporal gyrus,0.0,nTPM
+SSU72L4,humanBrain,Superior vestibular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Supplementary motor cortex,0.0,nTPM
+SSU72L4,humanBrain,Supramarginal gyrus,0.0,nTPM
+SSU72L4,humanBrain,Supraoptic nucleus,0.0,nTPM
+SSU72L4,humanBrain,Temporal pole,0.0,nTPM
+SSU72L4,humanBrain,Temporal white matter,0.0,nTPM
+SSU72L4,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.0,nTPM
+SSU72L4,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+SSU72L4,humanBrain,"Transversal temporal gyrus, anterior",0.0,nTPM
+SSU72L4,humanBrain,"Transversal temporal gyrus, posterior",0.0,nTPM
+SSU72L4,humanBrain,Ventral medullary reticular nucleus,0.0,nTPM
+SSU72L4,humanBrain,Ventral periolivary nuclei,0.0,nTPM
+SSU72L4,humanBrain,Ventral posterolateral thalamic nucleus,0.0,nTPM
+SSU72L4,humanBrain,Ventral posteromedial thalamic nucleus,0.0,nTPM
+SSU72L4,humanBrain,Ventral tegmental area,0.0,nTPM
+SSU72L4,humanBrain,Ventral thalamic nuclei,0.0,nTPM
+SSU72L4,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0,nTPM
+SSU72L4,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0,nTPM
+SSU72L4,humanBrain,Ventromedial nucleus,0.0,nTPM
+SSU72L4,humanBrain,Vermis,0.0,nTPM
+SSU72L4,humanBrain,Zona incerta,0.0,nTPM
+SSU72L4,humanBrainRegional,Amygdala,0.0,nTPM
+SSU72L4,humanBrainRegional,Basal ganglia,0.0,nTPM
+SSU72L4,humanBrainRegional,Cerebellum,0.0,nTPM
+SSU72L4,humanBrainRegional,Cerebral cortex,0.0,nTPM
+SSU72L4,humanBrainRegional,Choroid plexus,0.0,nTPM
+SSU72L4,humanBrainRegional,Hippocampal formation,0.0,nTPM
+SSU72L4,humanBrainRegional,Hypothalamus,0.0,nTPM
+SSU72L4,humanBrainRegional,Medulla oblongata,0.0,nTPM
+SSU72L4,humanBrainRegional,Midbrain,0.0,nTPM
+SSU72L4,humanBrainRegional,Pons,0.0,nTPM
+SSU72L4,humanBrainRegional,Spinal cord,0.0,nTPM
+SSU72L4,humanBrainRegional,Thalamus,0.0,nTPM
+SSU72L4,humanBrainRegional,White matter,0.0,nTPM
+SSU72L4,immuneCell,Basophil,0.0,nTPM
+SSU72L4,immuneCell,Classical monocyte,0.0,nTPM
+SSU72L4,immuneCell,Eosinophil,0.0,nTPM
+SSU72L4,immuneCell,GdT-cell,0.0,nTPM
+SSU72L4,immuneCell,Intermediate monocyte,0.0,nTPM
+SSU72L4,immuneCell,MAIT T-cell,0.0,nTPM
+SSU72L4,immuneCell,Memory B-cell,0.0,nTPM
+SSU72L4,immuneCell,Memory CD4 T-cell,0.0,nTPM
+SSU72L4,immuneCell,Memory CD8 T-cell,0.0,nTPM
+SSU72L4,immuneCell,Myeloid DC,0.0,nTPM
+SSU72L4,immuneCell,Naive B-cell,0.0,nTPM
+SSU72L4,immuneCell,Naive CD4 T-cell,0.0,nTPM
+SSU72L4,immuneCell,Naive CD8 T-cell,0.0,nTPM
+SSU72L4,immuneCell,Neutrophil,0.0,nTPM
+SSU72L4,immuneCell,NK-cell,0.0,nTPM
+SSU72L4,immuneCell,Non-classical monocyte,0.0,nTPM
+SSU72L4,immuneCell,Plasmacytoid DC,0.0,nTPM
+SSU72L4,immuneCell,T-reg,0.0,nTPM
+SSU72L4,immuneCell,Total PBMC,0.0,nTPM
+SSU72L5,consensusTissue,Adipose tissue,0.0,nTPM
+SSU72L5,consensusTissue,Adrenal gland,0.0,nTPM
+SSU72L5,consensusTissue,Amygdala,0.0,nTPM
+SSU72L5,consensusTissue,Appendix,0.0,nTPM
+SSU72L5,consensusTissue,Basal ganglia,0.0,nTPM
+SSU72L5,consensusTissue,Blood vessel,0.0,nTPM
+SSU72L5,consensusTissue,Bone marrow,0.0,nTPM
+SSU72L5,consensusTissue,Breast,0.0,nTPM
+SSU72L5,consensusTissue,Cerebellum,0.0,nTPM
+SSU72L5,consensusTissue,Cerebral cortex,0.0,nTPM
+SSU72L5,consensusTissue,Cervix,0.0,nTPM
+SSU72L5,consensusTissue,Choroid plexus,0.0,nTPM
+SSU72L5,consensusTissue,Colon,0.0,nTPM
+SSU72L5,consensusTissue,Duodenum,0.0,nTPM
+SSU72L5,consensusTissue,Endometrium 1,0.0,nTPM
+SSU72L5,consensusTissue,Epididymis,0.0,nTPM
+SSU72L5,consensusTissue,Esophagus,0.0,nTPM
+SSU72L5,consensusTissue,Fallopian tube,0.0,nTPM
+SSU72L5,consensusTissue,Gallbladder,0.0,nTPM
+SSU72L5,consensusTissue,Heart muscle,0.0,nTPM
+SSU72L5,consensusTissue,Hippocampal formation,0.0,nTPM
+SSU72L5,consensusTissue,Hypothalamus,0.0,nTPM
+SSU72L5,consensusTissue,Kidney,0.0,nTPM
+SSU72L5,consensusTissue,Liver,0.1,nTPM
+SSU72L5,consensusTissue,Lung,0.0,nTPM
+SSU72L5,consensusTissue,Lymph node,0.0,nTPM
+SSU72L5,consensusTissue,Midbrain,0.0,nTPM
+SSU72L5,consensusTissue,Ovary,0.0,nTPM
+SSU72L5,consensusTissue,Pancreas,0.0,nTPM
+SSU72L5,consensusTissue,Parathyroid gland,0.0,nTPM
+SSU72L5,consensusTissue,Pituitary gland,0.0,nTPM
+SSU72L5,consensusTissue,Placenta,0.0,nTPM
+SSU72L5,consensusTissue,Prostate,0.0,nTPM
+SSU72L5,consensusTissue,Rectum,0.0,nTPM
+SSU72L5,consensusTissue,Retina,0.0,nTPM
+SSU72L5,consensusTissue,Salivary gland,0.0,nTPM
+SSU72L5,consensusTissue,Seminal vesicle,0.0,nTPM
+SSU72L5,consensusTissue,Skeletal muscle,0.0,nTPM
+SSU72L5,consensusTissue,Skin 1,0.0,nTPM
+SSU72L5,consensusTissue,Small intestine,0.0,nTPM
+SSU72L5,consensusTissue,Smooth muscle,0.0,nTPM
+SSU72L5,consensusTissue,Spinal cord,0.0,nTPM
+SSU72L5,consensusTissue,Spleen,0.0,nTPM
+SSU72L5,consensusTissue,Stomach 1,0.0,nTPM
+SSU72L5,consensusTissue,Testis,0.0,nTPM
+SSU72L5,consensusTissue,Thymus,0.0,nTPM
+SSU72L5,consensusTissue,Thyroid gland,0.0,nTPM
+SSU72L5,consensusTissue,Tongue,0.0,nTPM
+SSU72L5,consensusTissue,Tonsil,0.0,nTPM
+SSU72L5,consensusTissue,Urinary bladder,0.0,nTPM
+SSU72L5,consensusTissue,Vagina,0.0,nTPM
+SSU72L5,humanBrain,Amygdala,0.0,nTPM
+SSU72L5,humanBrain,Angular gyrus,0.0,nTPM
+SSU72L5,humanBrain,Angular gyrus (white matter),0.0,nTPM
+SSU72L5,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0,nTPM
+SSU72L5,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0,nTPM
+SSU72L5,humanBrain,"Anterior cochlear nucleus, ventral",0.0,nTPM
+SSU72L5,humanBrain,Anterior funiculus (white matter),0.0,nTPM
+SSU72L5,humanBrain,"Anterior insular cortex, dorsal",0.0,nTPM
+SSU72L5,humanBrain,"Anterior insular cortex, ventral",0.0,nTPM
+SSU72L5,humanBrain,"Anterior thalamic nucleus, ventral",0.0,nTPM
+SSU72L5,humanBrain,Arcuate nucleus,0.0,nTPM
+SSU72L5,humanBrain,"Area parastriata, inferior",0.0,nTPM
+SSU72L5,humanBrain,"Area parastriata, parietal",0.0,nTPM
+SSU72L5,humanBrain,"Area parastriata, superior",0.0,nTPM
+SSU72L5,humanBrain,"Area parastriata, temporal",0.0,nTPM
+SSU72L5,humanBrain,Area postrema,0.0,nTPM
+SSU72L5,humanBrain,Area striata,0.0,nTPM
+SSU72L5,humanBrain,Area striata (white matter),0.0,nTPM
+SSU72L5,humanBrain,Basal amygdala,0.0,nTPM
+SSU72L5,humanBrain,Caudate nucleus,0.0,nTPM
+SSU72L5,humanBrain,Central amygdala,0.0,nTPM
+SSU72L5,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+SSU72L5,humanBrain,Cerebellar cortex,0.0,nTPM
+SSU72L5,humanBrain,Cerebellar nuclei,0.0,nTPM
+SSU72L5,humanBrain,Cerebellar white matter,0.0,nTPM
+SSU72L5,humanBrain,"Cervical spinal cord, central gray",0.0,nTPM
+SSU72L5,humanBrain,"Cervical spinal cord, dorsal horn",0.0,nTPM
+SSU72L5,humanBrain,"Cervical spinal cord, ventral horn",0.0,nTPM
+SSU72L5,humanBrain,Choroid plexus,0.0,nTPM
+SSU72L5,humanBrain,Claustrum,0.0,nTPM
+SSU72L5,humanBrain,"Corpus callosum, genu (white matter)",0.0,nTPM
+SSU72L5,humanBrain,"Corpus callosum, splenium (white matter)",0.0,nTPM
+SSU72L5,humanBrain,Corticomedial amygdala,0.0,nTPM
+SSU72L5,humanBrain,Cuneiform nucleus,0.0,nTPM
+SSU72L5,humanBrain,Dentate gyrus,0.0,nTPM
+SSU72L5,humanBrain,Dorsal cochlear nucleus,0.0,nTPM
+SSU72L5,humanBrain,Dorsal funiculus (white matter),0.0,nTPM
+SSU72L5,humanBrain,Dorsal medullary reticular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Dorsal motor vagal complex,0.0,nTPM
+SSU72L5,humanBrain,Dorsal raphe nucleus,0.0,nTPM
+SSU72L5,humanBrain,Dorsal tegmental nucleus,0.0,nTPM
+SSU72L5,humanBrain,Dorsolateral tegmental area,0.0,nTPM
+SSU72L5,humanBrain,Dorsomedial nucleus,0.0,nTPM
+SSU72L5,humanBrain,Entorhinal gyrus,0.0,nTPM
+SSU72L5,humanBrain,Flocculonodular lobe,0.0,nTPM
+SSU72L5,humanBrain,Frontal eye field,0.0,nTPM
+SSU72L5,humanBrain,Frontal operculum,0.0,nTPM
+SSU72L5,humanBrain,Fusiform gyrus,0.0,nTPM
+SSU72L5,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0,nTPM
+SSU72L5,humanBrain,"Gigantocellular reticular nuclei, pars",0.0,nTPM
+SSU72L5,humanBrain,"Globus pallidus, externus",0.0,nTPM
+SSU72L5,humanBrain,"Globus pallidus, internus",0.0,nTPM
+SSU72L5,humanBrain,Habenula,0.0,nTPM
+SSU72L5,humanBrain,Hippocampus,0.0,nTPM
+SSU72L5,humanBrain,"Hippocampus, CA1",0.0,nTPM
+SSU72L5,humanBrain,"Hippocampus, CA2",0.0,nTPM
+SSU72L5,humanBrain,"Hippocampus, CA3",0.0,nTPM
+SSU72L5,humanBrain,Inferior colliculus,0.0,nTPM
+SSU72L5,humanBrain,"Inferior frontal gyrus, opercular",0.0,nTPM
+SSU72L5,humanBrain,Inferior olive,0.0,nTPM
+SSU72L5,humanBrain,Inferior parietal lobule,0.0,nTPM
+SSU72L5,humanBrain,Inferior temporal gyrus,0.0,nTPM
+SSU72L5,humanBrain,Intraparietal deep sulcus,0.0,nTPM
+SSU72L5,humanBrain,Kolliker-Fuse nucleus,0.0,nTPM
+SSU72L5,humanBrain,Lateral amygdala,0.0,nTPM
+SSU72L5,humanBrain,Lateral funiculus (white matter),0.0,nTPM
+SSU72L5,humanBrain,Lateral geniculate body,0.0,nTPM
+SSU72L5,humanBrain,Lateral hypothalamic area,0.0,nTPM
+SSU72L5,humanBrain,Lateral lemniscal nuclei,0.0,nTPM
+SSU72L5,humanBrain,Lateral medullary reticular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Lateral parabrachial nucleus,0.0,nTPM
+SSU72L5,humanBrain,Lateral thalamic nuclei,0.0,nTPM
+SSU72L5,humanBrain,Lateral vestibular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Lingual gyrus,0.0,nTPM
+SSU72L5,humanBrain,Locus coeruleus,0.0,nTPM
+SSU72L5,humanBrain,Mammillary body,0.0,nTPM
+SSU72L5,humanBrain,Medial dorsal thalamic nucleus,0.0,nTPM
+SSU72L5,humanBrain,Medial geniculate body,0.0,nTPM
+SSU72L5,humanBrain,Medial olivary nucleus,0.0,nTPM
+SSU72L5,humanBrain,Medial parabrachial nucleus,0.0,nTPM
+SSU72L5,humanBrain,Medial periolivary nuclei,0.0,nTPM
+SSU72L5,humanBrain,Medial vestibular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Median raphe nucleus,0.0,nTPM
+SSU72L5,humanBrain,Middle cingulate cortex,0.0,nTPM
+SSU72L5,humanBrain,Middle temporal gyrus,0.0,nTPM
+SSU72L5,humanBrain,Motor facial nucleus,0.0,nTPM
+SSU72L5,humanBrain,Motor hypoglossal nucleus,0.0,nTPM
+SSU72L5,humanBrain,Motor trigeminal nucleus,0.0,nTPM
+SSU72L5,humanBrain,Nuclei of the trapezoid body,0.0,nTPM
+SSU72L5,humanBrain,Nucleus accumbens,0.0,nTPM
+SSU72L5,humanBrain,Nucleus ambiguus,0.0,nTPM
+SSU72L5,humanBrain,Nucleus basalis of Meynert,0.0,nTPM
+SSU72L5,humanBrain,Nucleus cuneatus,0.0,nTPM
+SSU72L5,humanBrain,Nucleus gracilis,0.0,nTPM
+SSU72L5,humanBrain,Nucleus of the diagonal band,0.0,nTPM
+SSU72L5,humanBrain,Nucleus raphe magnus,0.0,nTPM
+SSU72L5,humanBrain,Nucleus raphe obscurus,0.0,nTPM
+SSU72L5,humanBrain,Nucleus raphe pallidus,0.0,nTPM
+SSU72L5,humanBrain,Nucleus reuniens,0.0,nTPM
+SSU72L5,humanBrain,Nucleus rhomboideus,0.0,nTPM
+SSU72L5,humanBrain,Nucleus tractus solitarii,0.0,nTPM
+SSU72L5,humanBrain,Occipital cortex,0.0,nTPM
+SSU72L5,humanBrain,Occipital cortex (white matter),0.0,nTPM
+SSU72L5,humanBrain,Olfactory area,0.0,nTPM
+SSU72L5,humanBrain,Olfactory tubercle,0.0,nTPM
+SSU72L5,humanBrain,"Orbitofrontal gyrus, anterior",0.0,nTPM
+SSU72L5,humanBrain,"Paracentral lobule, anterior",0.0,nTPM
+SSU72L5,humanBrain,"Paracentral lobule, posterior",0.0,nTPM
+SSU72L5,humanBrain,Parahippocampal cortex,0.0,nTPM
+SSU72L5,humanBrain,Parahippocampal cortex (white matter),0.0,nTPM
+SSU72L5,humanBrain,Paramedian reticular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Paraventricular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Parietal operculum,0.0,nTPM
+SSU72L5,humanBrain,Parieto-insular cortex,0.0,nTPM
+SSU72L5,humanBrain,Parieto-occipital transitional area,0.0,nTPM
+SSU72L5,humanBrain,Parieto-temporal junction (white matter),0.0,nTPM
+SSU72L5,humanBrain,Parvicellular reticular nuclei,0.0,nTPM
+SSU72L5,humanBrain,"Parvicellular reticular nuclei, medullary",0.0,nTPM
+SSU72L5,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+SSU72L5,humanBrain,"Periaquaductal grey, anterior",0.0,nTPM
+SSU72L5,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+SSU72L5,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+SSU72L5,humanBrain,Perirhinal gyrus,0.0,nTPM
+SSU72L5,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+SSU72L5,humanBrain,Piriform cortex,0.0,nTPM
+SSU72L5,humanBrain,Pontine nuclei,0.0,nTPM
+SSU72L5,humanBrain,Pontine raphe nucleus,0.0,nTPM
+SSU72L5,humanBrain,Postcentral gyrus,0.0,nTPM
+SSU72L5,humanBrain,"Postcentral gyrus, dorsal",0.0,nTPM
+SSU72L5,humanBrain,"Postcentral gyrus, middle",0.0,nTPM
+SSU72L5,humanBrain,"Postcentral gyrus, ventral",0.0,nTPM
+SSU72L5,humanBrain,Posterior cingulate cortex,0.0,nTPM
+SSU72L5,humanBrain,"Posterior cingulate cortex, dorsal",0.0,nTPM
+SSU72L5,humanBrain,"Posterior cingulate cortex, ventral",0.0,nTPM
+SSU72L5,humanBrain,Posterior insular cortex,0.0,nTPM
+SSU72L5,humanBrain,Posterior thalamic nucleus,0.0,nTPM
+SSU72L5,humanBrain,Posteroventral cochlear nucleus,0.0,nTPM
+SSU72L5,humanBrain,Precentral gyrus,0.0,nTPM
+SSU72L5,humanBrain,"Precentral gyrus, dorsal",0.0,nTPM
+SSU72L5,humanBrain,"Precentral gyrus, middle",0.0,nTPM
+SSU72L5,humanBrain,"Precentral gyrus, ventral",0.0,nTPM
+SSU72L5,humanBrain,Precuneus,0.0,nTPM
+SSU72L5,humanBrain,"Premotor cortex, dorsal",0.0,nTPM
+SSU72L5,humanBrain,"Premotor cortex, ventral",0.0,nTPM
+SSU72L5,humanBrain,Preoptic area,0.0,nTPM
+SSU72L5,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+SSU72L5,humanBrain,Pretectal area,0.0,nTPM
+SSU72L5,humanBrain,Principal sensory trigeminal nucleus,0.0,nTPM
+SSU72L5,humanBrain,Pulvinar,0.0,nTPM
+SSU72L5,humanBrain,Putamen,0.0,nTPM
+SSU72L5,humanBrain,Red nucleus,0.0,nTPM
+SSU72L5,humanBrain,"Reticular pontine nucleus, caudal",0.0,nTPM
+SSU72L5,humanBrain,"Reticular pontine nucleus, oral",0.0,nTPM
+SSU72L5,humanBrain,Reticulotegmental nucleus,0.0,nTPM
+SSU72L5,humanBrain,Retrosplenial cortex,0.0,nTPM
+SSU72L5,humanBrain,Septal nuclei,0.0,nTPM
+SSU72L5,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0,nTPM
+SSU72L5,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.0,nTPM
+SSU72L5,humanBrain,"Spinal trigeminal nucleus, caudal",0.0,nTPM
+SSU72L5,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+SSU72L5,humanBrain,"Spinal trigeminal nucleus, oral",0.0,nTPM
+SSU72L5,humanBrain,Spinal vestibular nucleus,0.0,nTPM
+SSU72L5,humanBrain,"Stria terminalis, bed nucleus",0.0,nTPM
+SSU72L5,humanBrain,"Subcentral gyrus, S2",0.0,nTPM
+SSU72L5,humanBrain,Subcoeruleus area,0.0,nTPM
+SSU72L5,humanBrain,Subiculum,0.0,nTPM
+SSU72L5,humanBrain,Substantia nigra,0.0,nTPM
+SSU72L5,humanBrain,Subthalamic nucleus,0.0,nTPM
+SSU72L5,humanBrain,Superior colliculus,0.0,nTPM
+SSU72L5,humanBrain,Superior olive,0.0,nTPM
+SSU72L5,humanBrain,Superior parietal lobule,0.0,nTPM
+SSU72L5,humanBrain,Superior temporal gyrus,0.0,nTPM
+SSU72L5,humanBrain,Superior vestibular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Supplementary motor cortex,0.0,nTPM
+SSU72L5,humanBrain,Supramarginal gyrus,0.0,nTPM
+SSU72L5,humanBrain,Supraoptic nucleus,0.0,nTPM
+SSU72L5,humanBrain,Temporal pole,0.0,nTPM
+SSU72L5,humanBrain,Temporal white matter,0.0,nTPM
+SSU72L5,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.0,nTPM
+SSU72L5,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+SSU72L5,humanBrain,"Transversal temporal gyrus, anterior",0.0,nTPM
+SSU72L5,humanBrain,"Transversal temporal gyrus, posterior",0.0,nTPM
+SSU72L5,humanBrain,Ventral medullary reticular nucleus,0.0,nTPM
+SSU72L5,humanBrain,Ventral periolivary nuclei,0.0,nTPM
+SSU72L5,humanBrain,Ventral posterolateral thalamic nucleus,0.0,nTPM
+SSU72L5,humanBrain,Ventral posteromedial thalamic nucleus,0.0,nTPM
+SSU72L5,humanBrain,Ventral tegmental area,0.0,nTPM
+SSU72L5,humanBrain,Ventral thalamic nuclei,0.0,nTPM
+SSU72L5,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0,nTPM
+SSU72L5,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0,nTPM
+SSU72L5,humanBrain,Ventromedial nucleus,0.0,nTPM
+SSU72L5,humanBrain,Vermis,0.0,nTPM
+SSU72L5,humanBrain,Zona incerta,0.0,nTPM
+SSU72L5,humanBrainRegional,Amygdala,0.0,nTPM
+SSU72L5,humanBrainRegional,Basal ganglia,0.0,nTPM
+SSU72L5,humanBrainRegional,Cerebellum,0.0,nTPM
+SSU72L5,humanBrainRegional,Cerebral cortex,0.0,nTPM
+SSU72L5,humanBrainRegional,Choroid plexus,0.0,nTPM
+SSU72L5,humanBrainRegional,Hippocampal formation,0.0,nTPM
+SSU72L5,humanBrainRegional,Hypothalamus,0.0,nTPM
+SSU72L5,humanBrainRegional,Medulla oblongata,0.0,nTPM
+SSU72L5,humanBrainRegional,Midbrain,0.0,nTPM
+SSU72L5,humanBrainRegional,Pons,0.0,nTPM
+SSU72L5,humanBrainRegional,Spinal cord,0.0,nTPM
+SSU72L5,humanBrainRegional,Thalamus,0.0,nTPM
+SSU72L5,humanBrainRegional,White matter,0.0,nTPM
+SSU72L5,immuneCell,Basophil,0.0,nTPM
+SSU72L5,immuneCell,Classical monocyte,0.0,nTPM
+SSU72L5,immuneCell,Eosinophil,0.0,nTPM
+SSU72L5,immuneCell,GdT-cell,0.0,nTPM
+SSU72L5,immuneCell,Intermediate monocyte,0.0,nTPM
+SSU72L5,immuneCell,MAIT T-cell,0.0,nTPM
+SSU72L5,immuneCell,Memory B-cell,0.0,nTPM
+SSU72L5,immuneCell,Memory CD4 T-cell,0.0,nTPM
+SSU72L5,immuneCell,Memory CD8 T-cell,0.0,nTPM
+SSU72L5,immuneCell,Myeloid DC,0.0,nTPM
+SSU72L5,immuneCell,Naive B-cell,0.0,nTPM
+SSU72L5,immuneCell,Naive CD4 T-cell,0.0,nTPM
+SSU72L5,immuneCell,Naive CD8 T-cell,0.0,nTPM
+SSU72L5,immuneCell,Neutrophil,0.0,nTPM
+SSU72L5,immuneCell,NK-cell,0.0,nTPM
+SSU72L5,immuneCell,Non-classical monocyte,0.0,nTPM
+SSU72L5,immuneCell,Plasmacytoid DC,0.0,nTPM
+SSU72L5,immuneCell,T-reg,0.0,nTPM
+SSU72L5,immuneCell,Total PBMC,0.0,nTPM
+PRAMEF18,consensusTissue,Adipose tissue,0.0,nTPM
+PRAMEF18,consensusTissue,Adrenal gland,0.0,nTPM
+PRAMEF18,consensusTissue,Amygdala,0.0,nTPM
+PRAMEF18,consensusTissue,Appendix,0.0,nTPM
+PRAMEF18,consensusTissue,Basal ganglia,0.0,nTPM
+PRAMEF18,consensusTissue,Blood vessel,0.0,nTPM
+PRAMEF18,consensusTissue,Bone marrow,0.0,nTPM
+PRAMEF18,consensusTissue,Breast,0.0,nTPM
+PRAMEF18,consensusTissue,Cerebellum,0.0,nTPM
+PRAMEF18,consensusTissue,Cerebral cortex,0.0,nTPM
+PRAMEF18,consensusTissue,Cervix,0.0,nTPM
+PRAMEF18,consensusTissue,Choroid plexus,0.0,nTPM
+PRAMEF18,consensusTissue,Colon,0.0,nTPM
+PRAMEF18,consensusTissue,Duodenum,0.0,nTPM
+PRAMEF18,consensusTissue,Endometrium 1,0.0,nTPM
+PRAMEF18,consensusTissue,Epididymis,0.0,nTPM
+PRAMEF18,consensusTissue,Esophagus,0.0,nTPM
+PRAMEF18,consensusTissue,Fallopian tube,0.0,nTPM
+PRAMEF18,consensusTissue,Gallbladder,0.0,nTPM
+PRAMEF18,consensusTissue,Heart muscle,0.0,nTPM
+PRAMEF18,consensusTissue,Hippocampal formation,0.0,nTPM
+PRAMEF18,consensusTissue,Hypothalamus,0.0,nTPM
+PRAMEF18,consensusTissue,Kidney,0.0,nTPM
+PRAMEF18,consensusTissue,Liver,0.0,nTPM
+PRAMEF18,consensusTissue,Lung,0.0,nTPM
+PRAMEF18,consensusTissue,Lymph node,0.0,nTPM
+PRAMEF18,consensusTissue,Midbrain,0.0,nTPM
+PRAMEF18,consensusTissue,Ovary,0.0,nTPM
+PRAMEF18,consensusTissue,Pancreas,0.0,nTPM
+PRAMEF18,consensusTissue,Parathyroid gland,0.0,nTPM
+PRAMEF18,consensusTissue,Pituitary gland,0.0,nTPM
+PRAMEF18,consensusTissue,Placenta,0.0,nTPM
+PRAMEF18,consensusTissue,Prostate,0.0,nTPM
+PRAMEF18,consensusTissue,Rectum,0.0,nTPM
+PRAMEF18,consensusTissue,Retina,0.0,nTPM
+PRAMEF18,consensusTissue,Salivary gland,0.0,nTPM
+PRAMEF18,consensusTissue,Seminal vesicle,0.0,nTPM
+PRAMEF18,consensusTissue,Skeletal muscle,0.0,nTPM
+PRAMEF18,consensusTissue,Skin 1,0.0,nTPM
+PRAMEF18,consensusTissue,Small intestine,0.0,nTPM
+PRAMEF18,consensusTissue,Smooth muscle,0.0,nTPM
+PRAMEF18,consensusTissue,Spinal cord,0.0,nTPM
+PRAMEF18,consensusTissue,Spleen,0.0,nTPM
+PRAMEF18,consensusTissue,Stomach 1,0.0,nTPM
+PRAMEF18,consensusTissue,Testis,0.1,nTPM
+PRAMEF18,consensusTissue,Thymus,0.0,nTPM
+PRAMEF18,consensusTissue,Thyroid gland,0.0,nTPM
+PRAMEF18,consensusTissue,Tongue,0.0,nTPM
+PRAMEF18,consensusTissue,Tonsil,0.0,nTPM
+PRAMEF18,consensusTissue,Urinary bladder,0.0,nTPM
+PRAMEF18,consensusTissue,Vagina,0.0,nTPM
+PRAMEF18,humanBrain,Amygdala,0.0,nTPM
+PRAMEF18,humanBrain,Angular gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Angular gyrus (white matter),0.0,nTPM
+PRAMEF18,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0,nTPM
+PRAMEF18,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0,nTPM
+PRAMEF18,humanBrain,"Anterior cochlear nucleus, ventral",0.0,nTPM
+PRAMEF18,humanBrain,Anterior funiculus (white matter),0.0,nTPM
+PRAMEF18,humanBrain,"Anterior insular cortex, dorsal",0.0,nTPM
+PRAMEF18,humanBrain,"Anterior insular cortex, ventral",0.0,nTPM
+PRAMEF18,humanBrain,"Anterior thalamic nucleus, ventral",0.0,nTPM
+PRAMEF18,humanBrain,Arcuate nucleus,0.0,nTPM
+PRAMEF18,humanBrain,"Area parastriata, inferior",0.0,nTPM
+PRAMEF18,humanBrain,"Area parastriata, parietal",0.0,nTPM
+PRAMEF18,humanBrain,"Area parastriata, superior",0.0,nTPM
+PRAMEF18,humanBrain,"Area parastriata, temporal",0.0,nTPM
+PRAMEF18,humanBrain,Area postrema,0.0,nTPM
+PRAMEF18,humanBrain,Area striata,0.0,nTPM
+PRAMEF18,humanBrain,Area striata (white matter),0.0,nTPM
+PRAMEF18,humanBrain,Basal amygdala,0.0,nTPM
+PRAMEF18,humanBrain,Caudate nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Central amygdala,0.0,nTPM
+PRAMEF18,humanBrain,Centromedial thalamic nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Cerebellar cortex,0.0,nTPM
+PRAMEF18,humanBrain,Cerebellar nuclei,0.0,nTPM
+PRAMEF18,humanBrain,Cerebellar white matter,0.0,nTPM
+PRAMEF18,humanBrain,"Cervical spinal cord, central gray",0.0,nTPM
+PRAMEF18,humanBrain,"Cervical spinal cord, dorsal horn",0.0,nTPM
+PRAMEF18,humanBrain,"Cervical spinal cord, ventral horn",0.0,nTPM
+PRAMEF18,humanBrain,Choroid plexus,0.0,nTPM
+PRAMEF18,humanBrain,Claustrum,0.0,nTPM
+PRAMEF18,humanBrain,"Corpus callosum, genu (white matter)",0.0,nTPM
+PRAMEF18,humanBrain,"Corpus callosum, splenium (white matter)",0.0,nTPM
+PRAMEF18,humanBrain,Corticomedial amygdala,0.0,nTPM
+PRAMEF18,humanBrain,Cuneiform nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Dentate gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Dorsal cochlear nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Dorsal funiculus (white matter),0.0,nTPM
+PRAMEF18,humanBrain,Dorsal medullary reticular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Dorsal motor vagal complex,0.0,nTPM
+PRAMEF18,humanBrain,Dorsal raphe nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Dorsal tegmental nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Dorsolateral tegmental area,0.0,nTPM
+PRAMEF18,humanBrain,Dorsomedial nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Entorhinal gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Flocculonodular lobe,0.0,nTPM
+PRAMEF18,humanBrain,Frontal eye field,0.0,nTPM
+PRAMEF18,humanBrain,Frontal operculum,0.0,nTPM
+PRAMEF18,humanBrain,Fusiform gyrus,0.0,nTPM
+PRAMEF18,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0,nTPM
+PRAMEF18,humanBrain,"Gigantocellular reticular nuclei, pars",0.0,nTPM
+PRAMEF18,humanBrain,"Globus pallidus, externus",0.0,nTPM
+PRAMEF18,humanBrain,"Globus pallidus, internus",0.0,nTPM
+PRAMEF18,humanBrain,Habenula,0.0,nTPM
+PRAMEF18,humanBrain,Hippocampus,0.0,nTPM
+PRAMEF18,humanBrain,"Hippocampus, CA1",0.0,nTPM
+PRAMEF18,humanBrain,"Hippocampus, CA2",0.0,nTPM
+PRAMEF18,humanBrain,"Hippocampus, CA3",0.0,nTPM
+PRAMEF18,humanBrain,Inferior colliculus,0.0,nTPM
+PRAMEF18,humanBrain,"Inferior frontal gyrus, opercular",0.0,nTPM
+PRAMEF18,humanBrain,Inferior olive,0.0,nTPM
+PRAMEF18,humanBrain,Inferior parietal lobule,0.0,nTPM
+PRAMEF18,humanBrain,Inferior temporal gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Intraparietal deep sulcus,0.0,nTPM
+PRAMEF18,humanBrain,Kolliker-Fuse nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Lateral amygdala,0.0,nTPM
+PRAMEF18,humanBrain,Lateral funiculus (white matter),0.0,nTPM
+PRAMEF18,humanBrain,Lateral geniculate body,0.0,nTPM
+PRAMEF18,humanBrain,Lateral hypothalamic area,0.0,nTPM
+PRAMEF18,humanBrain,Lateral lemniscal nuclei,0.0,nTPM
+PRAMEF18,humanBrain,Lateral medullary reticular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Lateral parabrachial nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Lateral thalamic nuclei,0.0,nTPM
+PRAMEF18,humanBrain,Lateral vestibular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Lingual gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Locus coeruleus,0.0,nTPM
+PRAMEF18,humanBrain,Mammillary body,0.0,nTPM
+PRAMEF18,humanBrain,Medial dorsal thalamic nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Medial geniculate body,0.0,nTPM
+PRAMEF18,humanBrain,Medial olivary nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Medial parabrachial nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Medial periolivary nuclei,0.0,nTPM
+PRAMEF18,humanBrain,Medial vestibular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Median raphe nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Middle cingulate cortex,0.0,nTPM
+PRAMEF18,humanBrain,Middle temporal gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Motor facial nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Motor hypoglossal nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Motor trigeminal nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Nuclei of the trapezoid body,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus accumbens,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus ambiguus,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus basalis of Meynert,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus cuneatus,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus gracilis,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus of the diagonal band,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus raphe magnus,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus raphe obscurus,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus raphe pallidus,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus reuniens,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus rhomboideus,0.0,nTPM
+PRAMEF18,humanBrain,Nucleus tractus solitarii,0.0,nTPM
+PRAMEF18,humanBrain,Occipital cortex,0.0,nTPM
+PRAMEF18,humanBrain,Occipital cortex (white matter),0.0,nTPM
+PRAMEF18,humanBrain,Olfactory area,0.0,nTPM
+PRAMEF18,humanBrain,Olfactory tubercle,0.0,nTPM
+PRAMEF18,humanBrain,"Orbitofrontal gyrus, anterior",0.0,nTPM
+PRAMEF18,humanBrain,"Paracentral lobule, anterior",0.0,nTPM
+PRAMEF18,humanBrain,"Paracentral lobule, posterior",0.0,nTPM
+PRAMEF18,humanBrain,Parahippocampal cortex,0.0,nTPM
+PRAMEF18,humanBrain,Parahippocampal cortex (white matter),0.0,nTPM
+PRAMEF18,humanBrain,Paramedian reticular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Paraventricular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Parietal operculum,0.0,nTPM
+PRAMEF18,humanBrain,Parieto-insular cortex,0.0,nTPM
+PRAMEF18,humanBrain,Parieto-occipital transitional area,0.0,nTPM
+PRAMEF18,humanBrain,Parieto-temporal junction (white matter),0.0,nTPM
+PRAMEF18,humanBrain,Parvicellular reticular nuclei,0.0,nTPM
+PRAMEF18,humanBrain,"Parvicellular reticular nuclei, medullary",0.0,nTPM
+PRAMEF18,humanBrain,Pedunculopontine tegmental nucleus,0.0,nTPM
+PRAMEF18,humanBrain,"Periaquaductal grey, anterior",0.0,nTPM
+PRAMEF18,humanBrain,"Periaquaductal grey, dorsal",0.0,nTPM
+PRAMEF18,humanBrain,"Periaquaductal grey, lateral",0.0,nTPM
+PRAMEF18,humanBrain,Perirhinal gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Peritrigeminal nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Piriform cortex,0.0,nTPM
+PRAMEF18,humanBrain,Pontine nuclei,0.0,nTPM
+PRAMEF18,humanBrain,Pontine raphe nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Postcentral gyrus,0.0,nTPM
+PRAMEF18,humanBrain,"Postcentral gyrus, dorsal",0.0,nTPM
+PRAMEF18,humanBrain,"Postcentral gyrus, middle",0.0,nTPM
+PRAMEF18,humanBrain,"Postcentral gyrus, ventral",0.0,nTPM
+PRAMEF18,humanBrain,Posterior cingulate cortex,0.0,nTPM
+PRAMEF18,humanBrain,"Posterior cingulate cortex, dorsal",0.0,nTPM
+PRAMEF18,humanBrain,"Posterior cingulate cortex, ventral",0.0,nTPM
+PRAMEF18,humanBrain,Posterior insular cortex,0.0,nTPM
+PRAMEF18,humanBrain,Posterior thalamic nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Posteroventral cochlear nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Precentral gyrus,0.0,nTPM
+PRAMEF18,humanBrain,"Precentral gyrus, dorsal",0.0,nTPM
+PRAMEF18,humanBrain,"Precentral gyrus, middle",0.0,nTPM
+PRAMEF18,humanBrain,"Precentral gyrus, ventral",0.0,nTPM
+PRAMEF18,humanBrain,Precuneus,0.0,nTPM
+PRAMEF18,humanBrain,"Premotor cortex, dorsal",0.0,nTPM
+PRAMEF18,humanBrain,"Premotor cortex, ventral",0.0,nTPM
+PRAMEF18,humanBrain,Preoptic area,0.0,nTPM
+PRAMEF18,humanBrain,Prepositus hypoglossal nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Pretectal area,0.0,nTPM
+PRAMEF18,humanBrain,Principal sensory trigeminal nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Pulvinar,0.0,nTPM
+PRAMEF18,humanBrain,Putamen,0.0,nTPM
+PRAMEF18,humanBrain,Red nucleus,0.0,nTPM
+PRAMEF18,humanBrain,"Reticular pontine nucleus, caudal",0.0,nTPM
+PRAMEF18,humanBrain,"Reticular pontine nucleus, oral",0.0,nTPM
+PRAMEF18,humanBrain,Reticulotegmental nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Retrosplenial cortex,0.0,nTPM
+PRAMEF18,humanBrain,Septal nuclei,0.0,nTPM
+PRAMEF18,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0,nTPM
+PRAMEF18,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.0,nTPM
+PRAMEF18,humanBrain,"Spinal trigeminal nucleus, caudal",0.0,nTPM
+PRAMEF18,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0,nTPM
+PRAMEF18,humanBrain,"Spinal trigeminal nucleus, oral",0.0,nTPM
+PRAMEF18,humanBrain,Spinal vestibular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,"Stria terminalis, bed nucleus",0.0,nTPM
+PRAMEF18,humanBrain,"Subcentral gyrus, S2",0.0,nTPM
+PRAMEF18,humanBrain,Subcoeruleus area,0.0,nTPM
+PRAMEF18,humanBrain,Subiculum,0.0,nTPM
+PRAMEF18,humanBrain,Substantia nigra,0.0,nTPM
+PRAMEF18,humanBrain,Subthalamic nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Superior colliculus,0.0,nTPM
+PRAMEF18,humanBrain,Superior olive,0.0,nTPM
+PRAMEF18,humanBrain,Superior parietal lobule,0.0,nTPM
+PRAMEF18,humanBrain,Superior temporal gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Superior vestibular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Supplementary motor cortex,0.0,nTPM
+PRAMEF18,humanBrain,Supramarginal gyrus,0.0,nTPM
+PRAMEF18,humanBrain,Supraoptic nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Temporal pole,0.0,nTPM
+PRAMEF18,humanBrain,Temporal white matter,0.0,nTPM
+PRAMEF18,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.0,nTPM
+PRAMEF18,humanBrain,Temporo-occipital transitional zone,0.0,nTPM
+PRAMEF18,humanBrain,"Transversal temporal gyrus, anterior",0.0,nTPM
+PRAMEF18,humanBrain,"Transversal temporal gyrus, posterior",0.0,nTPM
+PRAMEF18,humanBrain,Ventral medullary reticular nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Ventral periolivary nuclei,0.0,nTPM
+PRAMEF18,humanBrain,Ventral posterolateral thalamic nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Ventral posteromedial thalamic nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Ventral tegmental area,0.0,nTPM
+PRAMEF18,humanBrain,Ventral thalamic nuclei,0.0,nTPM
+PRAMEF18,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0,nTPM
+PRAMEF18,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0,nTPM
+PRAMEF18,humanBrain,Ventromedial nucleus,0.0,nTPM
+PRAMEF18,humanBrain,Vermis,0.0,nTPM
+PRAMEF18,humanBrain,Zona incerta,0.0,nTPM
+PRAMEF18,humanBrainRegional,Amygdala,0.0,nTPM
+PRAMEF18,humanBrainRegional,Basal ganglia,0.0,nTPM
+PRAMEF18,humanBrainRegional,Cerebellum,0.0,nTPM
+PRAMEF18,humanBrainRegional,Cerebral cortex,0.0,nTPM
+PRAMEF18,humanBrainRegional,Choroid plexus,0.0,nTPM
+PRAMEF18,humanBrainRegional,Hippocampal formation,0.0,nTPM
+PRAMEF18,humanBrainRegional,Hypothalamus,0.0,nTPM
+PRAMEF18,humanBrainRegional,Medulla oblongata,0.0,nTPM
+PRAMEF18,humanBrainRegional,Midbrain,0.0,nTPM
+PRAMEF18,humanBrainRegional,Pons,0.0,nTPM
+PRAMEF18,humanBrainRegional,Spinal cord,0.0,nTPM
+PRAMEF18,humanBrainRegional,Thalamus,0.0,nTPM
+PRAMEF18,humanBrainRegional,White matter,0.0,nTPM
+PRAMEF18,immuneCell,Basophil,0.0,nTPM
+PRAMEF18,immuneCell,Classical monocyte,0.0,nTPM
+PRAMEF18,immuneCell,Eosinophil,0.0,nTPM
+PRAMEF18,immuneCell,GdT-cell,0.0,nTPM
+PRAMEF18,immuneCell,Intermediate monocyte,0.0,nTPM
+PRAMEF18,immuneCell,MAIT T-cell,0.0,nTPM
+PRAMEF18,immuneCell,Memory B-cell,0.0,nTPM
+PRAMEF18,immuneCell,Memory CD4 T-cell,0.0,nTPM
+PRAMEF18,immuneCell,Memory CD8 T-cell,0.0,nTPM
+PRAMEF18,immuneCell,Myeloid DC,0.0,nTPM
+PRAMEF18,immuneCell,Naive B-cell,0.0,nTPM
+PRAMEF18,immuneCell,Naive CD4 T-cell,0.0,nTPM
+PRAMEF18,immuneCell,Naive CD8 T-cell,0.0,nTPM
+PRAMEF18,immuneCell,Neutrophil,0.0,nTPM
+PRAMEF18,immuneCell,NK-cell,0.0,nTPM
+PRAMEF18,immuneCell,Non-classical monocyte,0.0,nTPM
+PRAMEF18,immuneCell,Plasmacytoid DC,0.0,nTPM
+PRAMEF18,immuneCell,T-reg,0.0,nTPM
+PRAMEF18,immuneCell,Total PBMC,0.0,nTPM

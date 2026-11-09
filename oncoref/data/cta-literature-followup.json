@@ -1,0 +1,127 @@
+{
+  "schema": "oncoref.cta-literature-followup",
+  "schema_version": 1,
+  "reviewed_on": "2026-11-08",
+  "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
+  "sources": [
+    {
+      "source_id": "10.1371/journal.pone.0007682",
+      "citation": "Moyer et al., 2009",
+      "title": "Expression of Genes Encoding Multi-Transmembrane Proteins in Specific Primate Taste Cell Populations",
+      "url": "https://doi.org/10.1371/journal.pone.0007682",
+      "roles": [
+        "normal_tissue"
+      ],
+      "source_location": "Human taste-bud results and Figure 10D; Methods: human tissue collection and PCR",
+      "finding": "CALHM3 RNA was measured by semi-quantitative PCR in laser-captured human circumvallate taste buds, with no detectable or reduced expression in surrounding lingual epithelium.",
+      "limitations": "Human data are RNA from a microdissected compartment. Cell-subtype in situ experiments elsewhere in this paper used macaques. This is not human protein detection or a therapeutic depletion experiment.",
+      "retention_reason": "Corrects the earlier mouse-only assessment of CALHM3 and supplies human normal-compartment counterevidence. It is not a CTA nomination."
+    },
+    {
+      "source_id": "10.3892/or.2012.1849",
+      "citation": "Böhm et al., 2012",
+      "title": "Comparison of tear protein levels in breast cancer patients and healthy controls using a de novo proteomic approach",
+      "url": "https://doi.org/10.3892/or.2012.1849",
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "source_location": "Table II; pooled sampling and MALDI identification methods; Table III does not quantify TRIM75",
+      "finding": "Table II lists TRI75_HUMAN (TRIM75) among tear-fluid proteins in a study of 25 breast-cancer patients and 25 healthy women.",
+      "limitations": "One pooled tear sample per clinical group. Table II merges identifications and does not assign TRIM75 to a pool or supply its peptide sequences. Tear-fluid detection does not localize the producing tissue or demonstrate a tumor origin.",
+      "retention_reason": "Hold normal-restriction clearance until the contributing pool and peptide specificity are resolved. The merged table establishes neither a healthy-control positive nor cancer-specific protein."
+    },
+    {
+      "source_id": "10.1093/molehr/gaab012",
+      "citation": "Zhu et al., 2021",
+      "title": "Histone demethylase KDM4A overexpression improved the efficiency of corrected human tripronuclear zygote development",
+      "url": "https://doi.org/10.1093/molehr/gaab012",
+      "roles": [
+        "translation_identity",
+        "reproductive_developmental"
+      ],
+      "source_location": "Table I Ubtfl1 primers; Figure 5; NCBI XM_021185540.2 and exact forward/reverse-complement cDNA comparisons",
+      "finding": "The Ubtfl1 row in Table I cites XM_021185540.2, a Mus caroli Sod1 transcript. Its two primer sequences do not match selected human UBTFL1 ENST00000530464.2 and both match mouse Sod1 ENSMUST00000023707.10.",
+      "limitations": "This finding rejects attribution of this specific assay. It does not reject the other experiments in the paper or establish normal UBTFL1 expression. Mouse Hmgpi and human UBTFL2/3 results cannot be substituted for this copy.",
+      "retention_reason": "Do not count this assay as exact-human UBTFL1 support. Independent human embryo RNA and the qualifying coding reference retain their own evidence status."
+    },
+    {
+      "source_id": "10.1136/jclinpath-2020-206979",
+      "citation": "Shi et al., 2020/2021",
+      "title": "Identification of potential crucial genes associated with the pathogenesis and prognosis of liver hepatocellular carcinoma",
+      "url": "https://doi.org/10.1136/jclinpath-2020-206979",
+      "roles": [
+        "tumor_expression"
+      ],
+      "source_location": "Supplementary Table S3, PDF page 101; differential-expression table header on page 1",
+      "finding": "Supplementary Table S3 includes TMEM269 as upregulated in TCGA LIHC, log2 fold change 1.257588672, logCPM -3.45323963 and FDR 1.69e-6.",
+      "limitations": "The supplementary RNA comparison is a reanalysis of TCGA, not an independent tumor cohort. Low average RNA expression and a differential-expression statistic do not establish an accessible membrane protein.",
+      "retention_reason": "Add exact-symbol tumor RNA context. This paper does not nominate a CTA or demonstrate protein localization, antigen presentation or normal-tissue restriction."
+    },
+    {
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/",
+      "citation": "Qi et al., 2021",
+      "title": "CDCA8, targeted by MYBL2, promotes malignant progression and olaparib insensitivity in ovarian cancer",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/",
+      "roles": [
+        "tumor_expression"
+      ],
+      "source_location": "Figure 4 and Table S2; combined publisher PDF page 45 (supplement page 18)",
+      "finding": "Table S2 lists SSU72P7, the previous symbol of SSU72L1, with log2 fold change 5.779251523 (54.91968795-fold) and adjusted P 9.14e-69 after CDCA8 knockdown.",
+      "limitations": "The table reports a gene-level RNA result, not unique-read or peptide validation. SSU72 phosphatase experiments are not transferable to SSU72L1 or to SSU72L2-5.",
+      "retention_reason": "Add exact-copy-symbol cancer-cell RNA context, retaining the old symbol. A perturbation response does not establish baseline tumor prevalence, protein production or CTA identity."
+    }
+  ],
+  "memberships": [
+    {
+      "source_id": "10.1371/journal.pone.0007682",
+      "gene_ids": [
+        "ENSG00000183128"
+      ],
+      "protein": "CALHM3",
+      "eligible_for_coverage": true,
+      "scope": "Exact human gene, normal circumvallate taste-bud RNA; Figure 10D",
+      "recommendation": "Review hold: human normal taste-bud RNA plus the established mouse taste-channel function warrant a normal-compartment review before target clearance. Do not call this proven human protein or infer an injury outcome."
+    },
+    {
+      "source_id": "10.3892/or.2012.1849",
+      "gene_ids": [
+        "ENSG00000250374"
+      ],
+      "protein": "TRIM75",
+      "eligible_for_coverage": true,
+      "scope": "Exact human protein label in a pooled tear-MS identification table; peptide and clinical-group attribution unresolved",
+      "recommendation": "Hold normal-restriction clearance until the contributing pool and peptide specificity are resolved. The merged table establishes neither a healthy-control positive nor cancer-specific protein."
+    },
+    {
+      "source_id": "10.1093/molehr/gaab012",
+      "gene_ids": [
+        "ENSG00000255009"
+      ],
+      "protein": "UBTFL1",
+      "eligible_for_coverage": false,
+      "scope": "Reported human assay rejected for exact-copy coverage: primers map to mouse Sod1, not human UBTFL1",
+      "recommendation": "Do not count this assay as exact-human UBTFL1 support. Independent human embryo RNA and the qualifying coding reference retain their own evidence status."
+    },
+    {
+      "source_id": "10.1136/jclinpath-2020-206979",
+      "gene_ids": [
+        "ENSG00000274386"
+      ],
+      "protein": "TMEM269",
+      "eligible_for_coverage": true,
+      "scope": "Exact human gene in a significant differential-expression result table; no focused gene experiment or CTA nomination",
+      "recommendation": "Add exact-symbol tumor RNA context. This paper does not nominate a CTA or demonstrate protein localization, antigen presentation or normal-tissue restriction."
+    },
+    {
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/",
+      "gene_ids": [
+        "ENSG00000284438"
+      ],
+      "protein": "SSU72L1",
+      "eligible_for_coverage": true,
+      "scope": "Exact previous human symbol SSU72P7 in a significant RNA perturbation result table; no selective protein validation",
+      "recommendation": "Add exact-copy-symbol cancer-cell RNA context, retaining the old symbol. A perturbation response does not establish baseline tumor prevalence, protein production or CTA identity."
+    }
+  ]
+}

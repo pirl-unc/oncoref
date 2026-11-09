@@ -1,0 +1,144 @@
+gene_id,protein,cohort,coverage,matrix_asset,observed_samples,excluded_samples,measured_samples,gt_0,ge_0_1,ge_1,ge_2,ge_5,ge_10,ge_100,maximum_tpm,cancer_type
+ENSG00000284306,SSU72L2,ACC,measured,source-v5.22.10/ACC.parquet,77,0,77,4.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0900993486850529,Adrenocortical Carcinoma
+ENSG00000284306,SSU72L2,ACINIC,measured,source-v5.22.10/ACINIC.parquet,3,1,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Acinic Cell Carcinoma
+ENSG00000284306,SSU72L2,ADCC,measured,source-v5.22.10/ADCC.parquet,57,0,57,16.0,4.0,1.0,0.0,0.0,0.0,0.0,1.2469530000698292,Adenoid Cystic Carcinoma
+ENSG00000284306,SSU72L2,ATRT,measured,source-v5.22.10/ATRT.parquet,4,0,4,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0300000000000044,Atypical Teratoid/Rhabdoid Tumor
+ENSG00000284306,SSU72L2,BCC,gene_absent,source-v5.22.10/BCC.parquet,0,0,0,,,,,,,,,Basal Cell Carcinoma
+ENSG00000284306,SSU72L2,BL,measured,source-v5.22.10/BL.parquet,184,2,182,30.0,29.0,5.0,2.0,0.0,0.0,0.0,2.6832,Burkitt Lymphoma
+ENSG00000284306,SSU72L2,BLCA,measured,source-v5.22.10/BLCA.parquet,407,0,407,23.0,5.0,2.0,1.0,0.0,0.0,0.0,4.470107101234314,Bladder Urothelial Carcinoma
+ENSG00000284306,SSU72L2,BRCA,measured,source-v5.22.10/BRCA.parquet,1099,1,1098,47.0,14.0,0.0,0.0,0.0,0.0,0.0,0.8401129180484763,Breast Invasive Carcinoma
+ENSG00000284306,SSU72L2,BRCA_Basal,measured,source-v5.22.10/BRCA_Basal.parquet,172,0,172,8.0,1.0,0.0,0.0,0.0,0.0,0.0,0.3300992688870039,Basal-like
+ENSG00000284306,SSU72L2,BRCA_HER2,measured,source-v5.22.10/BRCA_HER2.parquet,77,0,77,5.0,3.0,0.0,0.0,0.0,0.0,0.0,0.8401129180484763,HER2-enriched
+ENSG00000284306,SSU72L2,BRCA_LumA,measured,source-v5.22.10/BRCA_LumA.parquet,501,0,501,20.0,8.0,0.0,0.0,0.0,0.0,0.0,0.2501070778387833,Luminal A
+ENSG00000284306,SSU72L2,BRCA_LumB,measured,source-v5.22.10/BRCA_LumB.parquet,199,0,199,7.0,1.0,0.0,0.0,0.0,0.0,0.0,0.1401032193283362,Luminal B
+ENSG00000284306,SSU72L2,BRCA_Normal,measured,source-v5.22.10/BRCA_Normal.parquet,35,0,35,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0701018278026415,Normal-like
+ENSG00000284306,SSU72L2,BRCA_TNBC,measured,source-v5.22.14/BRCA_TNBC.parquet,157,0,157,10.0,3.0,0.0,0.0,0.0,0.0,0.0,0.3300992688870039,Triple-negative breast cancer
+ENSG00000284306,SSU72L2,B_ALL,measured,source-v5.22.10/B_ALL.parquet,154,1,153,15.0,11.0,0.0,0.0,0.0,0.0,0.0,0.4788,B-cell Acute Lymphoblastic Leukemia
+ENSG00000284306,SSU72L2,CESC,measured,source-v5.22.10/CESC.parquet,306,0,306,14.0,6.0,3.0,2.0,1.0,0.0,0.0,5.150269272287471,Cervical Squamous / Adenocarcinoma
+ENSG00000284306,SSU72L2,CHOL,measured,source-v5.22.10/CHOL.parquet,36,0,36,2.0,1.0,0.0,0.0,0.0,0.0,0.0,0.6100812474568316,Cholangiocarcinoma
+ENSG00000284306,SSU72L2,CRANIO,measured,source-v5.22.11/CRANIO.parquet,29,0,29,6.0,2.0,0.0,0.0,0.0,0.0,0.0,0.37,Craniopharyngioma
+ENSG00000284306,SSU72L2,DIPG,measured,source-v5.22.11/DIPG.parquet,32,0,32,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,Diffuse Midline Glioma H3 K27-altered
+ENSG00000284306,SSU72L2,CLL,measured,source-v5.22.10/CLL.parquet,708,0,708,24.0,16.0,0.0,0.0,0.0,0.0,0.0,0.573645,Chronic Lymphocytic Leukemia
+ENSG00000284306,SSU72L2,CML,gene_absent,source-v5.22.10/CML.parquet,0,0,0,,,,,,,,,Chronic Myeloid Leukemia
+ENSG00000284306,SSU72L2,COAD,measured,source-v5.22.10/COAD.parquet,290,0,290,7.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0601019914842309,Colon Adenocarcinoma
+ENSG00000284306,SSU72L2,COAD_MSI,measured,source-v5.22.10/COAD_MSI.parquet,50,0,50,2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0533654499183742,MSI-H Colon Adenocarcinoma
+ENSG00000284306,SSU72L2,COAD_MSS,measured,source-v5.22.10/COAD_MSS.parquet,226,0,226,5.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0601019914842309,MSS Colon Adenocarcinoma
+ENSG00000284306,SSU72L2,CTCL,gene_absent,source-v5.22.10/CTCL.parquet,0,0,0,,,,,,,,,Cutaneous T-cell Lymphoma
+ENSG00000284306,SSU72L2,DLBC,measured,source-v5.22.10/DLBC.parquet,47,0,47,2.0,1.0,0.0,0.0,0.0,0.0,0.0,0.2100978292708926,Diffuse Large B-cell Lymphoma
+ENSG00000284306,SSU72L2,ESCA,measured,source-v5.22.10/ESCA.parquet,182,0,182,16.0,4.0,0.0,0.0,0.0,0.0,0.0,0.2100978292708926,Esophageal Carcinoma
+ENSG00000284306,SSU72L2,EPN,gene_absent,source-v5.22.10/EPN.parquet,0,0,0,,,,,,,,,Ependymoma
+ENSG00000284306,SSU72L2,FL,gene_absent,source-v5.22.10/FL.parquet,0,0,0,,,,,,,,,Follicular Lymphoma
+ENSG00000284306,SSU72L2,GBC,measured,source-v5.22.10/GBC.parquet,10,0,10,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Gallbladder Carcinoma
+ENSG00000284306,SSU72L2,GBM,measured,source-v5.22.10/GBM.parquet,166,0,166,12.0,4.0,0.0,0.0,0.0,0.0,0.0,0.2001045619420509,Glioblastoma Multiforme
+ENSG00000284306,SSU72L2,HEPB,measured,source-v5.22.10/HEPB.parquet,20,0,20,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Hepatoblastoma
+ENSG00000284306,SSU72L2,HL,measured,source-v5.22.10/HL.parquet,5,2,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Hodgkin Lymphoma
+ENSG00000284306,SSU72L2,HCL,gene_absent,source-v5.22.10/HCL.parquet,0,0,0,,,,,,,,,Hairy Cell Leukemia
+ENSG00000284306,SSU72L2,HNSC,measured,source-v5.22.10/HNSC.parquet,520,0,520,37.0,14.0,3.0,1.0,0.0,0.0,0.0,4.050161273658067,Head and Neck Squamous Cell Carcinoma
+ENSG00000284306,SSU72L2,HNSC_HPVneg,measured,source-v5.22.10/HNSC_HPVneg.parquet,415,0,415,27.0,10.0,2.0,1.0,0.0,0.0,0.0,4.050161273658067,HPV- HNSC
+ENSG00000284306,SSU72L2,HNSC_HPVpos,measured,source-v5.22.10/HNSC_HPVpos.parquet,72,0,72,8.0,3.0,1.0,0.0,0.0,0.0,0.0,1.4300766262738476,HPV+ HNSC
+ENSG00000284306,SSU72L2,KICH,measured,source-v5.22.10/KICH.parquet,66,0,66,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0300997408972973,Kidney Chromophobe
+ENSG00000284306,SSU72L2,KIRC,measured,source-v5.22.10/KIRC.parquet,531,0,531,25.0,1.0,0.0,0.0,0.0,0.0,0.0,0.1900940788637155,Kidney Renal Clear Cell
+ENSG00000284306,SSU72L2,KIRP,measured,source-v5.22.10/KIRP.parquet,289,0,289,7.0,5.0,0.0,0.0,0.0,0.0,0.0,0.1600963522425964,Kidney Renal Papillary
+ENSG00000284306,SSU72L2,LAML,measured,source-v5.22.10/LAML.parquet,173,0,173,8.0,8.0,0.0,0.0,0.0,0.0,0.0,0.3200899397347356,Acute Myeloid Leukemia
+ENSG00000284306,SSU72L2,LAML_APL,measured,source-v5.22.10/LAML_APL.parquet,20,1,19,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.1233,Acute Promyelocytic Leukemia
+ENSG00000284306,SSU72L2,LAML_ELNadv,measured,source-v5.22.10/LAML_ELNadv.parquet,189,0,189,4.0,3.0,0.0,0.0,0.0,0.0,0.0,0.1851,AML ELN2017 Adverse
+ENSG00000284306,SSU72L2,LAML_ELNfav,measured,source-v5.22.10/LAML_ELNfav.parquet,238,0,238,6.0,6.0,0.0,0.0,0.0,0.0,0.0,0.2097,AML ELN2017 Favorable
+ENSG00000284306,SSU72L2,LAML_ELNint,measured,source-v5.22.10/LAML_ELNint.parquet,154,0,154,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.2864,AML ELN2017 Intermediate
+ENSG00000284306,SSU72L2,LGG,measured,source-v5.22.10/LGG.parquet,523,1,522,22.0,3.0,0.0,0.0,0.0,0.0,0.0,0.1600963522425964,Lower Grade Glioma
+ENSG00000284306,SSU72L2,LIHC,measured,source-v5.22.10/LIHC.parquet,368,0,368,24.0,12.0,0.0,0.0,0.0,0.0,0.0,0.5400998273102322,Liver Hepatocellular Carcinoma
+ENSG00000284306,SSU72L2,LUAD,measured,source-v5.22.10/LUAD.parquet,515,0,515,29.0,12.0,0.0,0.0,0.0,0.0,0.0,0.5101017265652992,Lung Adenocarcinoma
+ENSG00000284306,SSU72L2,LUAD_EGFR,measured,source-v5.22.10/LUAD_EGFR.parquet,67,0,67,2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0701018278026415,EGFR-mutant LUAD
+ENSG00000284306,SSU72L2,LUAD_KRAS,measured,source-v5.22.10/LUAD_KRAS.parquet,153,0,153,13.0,5.0,0.0,0.0,0.0,0.0,0.0,0.3300992688870039,KRAS-mutant LUAD
+ENSG00000284306,SSU72L2,LUAD_STK11,measured,source-v5.22.10/LUAD_STK11.parquet,142,0,142,17.0,8.0,0.0,0.0,0.0,0.0,0.0,0.3601073454048022,STK11/KEAP1 LUAD
+ENSG00000284306,SSU72L2,LUSC,measured,source-v5.22.10/LUSC.parquet,498,0,498,31.0,10.0,1.0,1.0,0.0,0.0,0.0,3.0801026843974295,Lung Squamous Cell Carcinoma
+ENSG00000284306,SSU72L2,MBL,measured,source-v5.22.10/MBL.parquet,125,0,125,33.0,16.0,3.0,3.0,0.0,0.0,0.0,4.150000000014793,Medulloblastoma
+ENSG00000284306,SSU72L2,MBL_G3,measured,source-v5.22.10/MBL_G3.parquet,44,0,44,17.0,9.0,1.0,1.0,0.0,0.0,0.0,3.94999999999229,Medulloblastoma Group 3
+ENSG00000284306,SSU72L2,MBL_G4,measured,source-v5.22.10/MBL_G4.parquet,39,0,39,10.0,7.0,2.0,2.0,0.0,0.0,0.0,4.150000000014793,Medulloblastoma Group 4
+ENSG00000284306,SSU72L2,MBL_SHH,measured,source-v5.22.10/MBL_SHH.parquet,25,0,25,3.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0500000000000016,Medulloblastoma SHH
+ENSG00000284306,SSU72L2,MBL_WNT,measured,source-v5.22.10/MBL_WNT.parquet,17,0,17,3.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0800000000001917,Medulloblastoma WNT
+ENSG00000284306,SSU72L2,MCL,gene_absent,source-v5.22.10/MCL.parquet,0,0,0,,,,,,,,,Mantle Cell Lymphoma
+ENSG00000284306,SSU72L2,MDS,measured,source-v5.22.10/MDS.parquet,82,1,81,2.0,2.0,0.0,0.0,0.0,0.0,0.0,0.4702716894151311,Myelodysplastic Syndrome
+ENSG00000284306,SSU72L2,MENINGIOMA,measured,source-v5.22.13/MENINGIOMA.parquet,384,5,379,109.0,81.0,7.0,2.0,0.0,0.0,0.0,4.722631241947511,Meningioma
+ENSG00000284306,SSU72L2,MESO,measured,source-v5.22.10/MESO.parquet,87,0,87,3.0,1.0,0.0,0.0,0.0,0.0,0.0,0.4301119860538542,Mesothelioma
+ENSG00000284306,SSU72L2,MM,measured,source-v5.22.10/MM.parquet,764,683,81,6.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0749,Multiple Myeloma
+ENSG00000284306,SSU72L2,MPN,measured,source-v5.22.10/MPN.parquet,45,0,45,3.0,3.0,0.0,0.0,0.0,0.0,0.0,0.5517854920640366,Myeloproliferative Neoplasms
+ENSG00000284306,SSU72L2,MTC,gene_absent,source-v5.22.10/MTC.parquet,0,0,0,,,,,,,,,Medullary Thyroid Carcinoma
+ENSG00000284306,SSU72L2,NBL,measured,source-v5.22.10/NBL.parquet,155,0,155,36.0,22.0,0.0,0.0,0.0,0.0,0.0,0.3581,Neuroblastoma
+ENSG00000284306,SSU72L2,NBL_MYCNamp,measured,source-v5.22.10/NBL_MYCNamp.parquet,33,0,33,7.0,6.0,0.0,0.0,0.0,0.0,0.0,0.2422,Neuroblastoma MYCN-amplified
+ENSG00000284306,SSU72L2,NBL_MYCNnonamp,measured,source-v5.22.10/NBL_MYCNnonamp.parquet,122,0,122,29.0,16.0,0.0,0.0,0.0,0.0,0.0,0.3581,Neuroblastoma MYCN-non-amplified
+ENSG00000284306,SSU72L2,NEC_LUNG_LARGECELL,measured,source-v5.22.10/NEC_LUNG_LARGECELL.parquet,69,0,69,22.0,19.0,2.0,1.0,1.0,0.0,0.0,8.423664253031372,Large-Cell Neuroendocrine Carcinoma Lung
+ENSG00000284306,SSU72L2,NEC_MERKEL,gene_absent,source-v5.22.10/NEC_MERKEL.parquet,0,0,0,,,,,,,,,Merkel Cell Carcinoma
+ENSG00000284306,SSU72L2,NET_LUNG,measured,source-v5.22.10/NET_LUNG.parquet,118,0,118,8.0,3.0,0.0,0.0,0.0,0.0,0.0,0.2590410336233978,Lung Typical/Atypical Carcinoid
+ENSG00000284306,SSU72L2,NET_MIDGUT,measured,source-v5.22.10/NET_MIDGUT.parquet,81,3,78,5.0,4.0,0.0,0.0,0.0,0.0,0.0,0.1947880583332981,Midgut / Small Bowel Carcinoid
+ENSG00000284306,SSU72L2,NET_PANCREAS,measured,source-v5.22.10/NET_PANCREAS.parquet,33,3,30,3.0,2.0,0.0,0.0,0.0,0.0,0.0,0.1426227380185295,Pancreatic Neuroendocrine Tumor
+ENSG00000284306,SSU72L2,NET_RECTAL,measured,source-v5.22.10/NET_RECTAL.parquet,18,0,18,7.0,2.0,0.0,0.0,0.0,0.0,0.0,0.2318198922926023,Rectal Neuroendocrine Tumor
+ENSG00000284306,SSU72L2,NPC,measured,source-v5.22.10/NPC.parquet,4,0,4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Nasopharyngeal Carcinoma
+ENSG00000284306,SSU72L2,NUTM,gene_absent,source-v5.22.10/NUTM.parquet,0,0,0,,,,,,,,,NUT Carcinoma
+ENSG00000284306,SSU72L2,OV,measured,source-v5.22.10/OV.parquet,426,0,426,33.0,4.0,1.0,0.0,0.0,0.0,0.0,1.5000750717092863,Ovarian Serous Cystadenocarcinoma
+ENSG00000284306,SSU72L2,PAAD,measured,source-v5.22.10/PAAD.parquet,179,1,178,5.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0601019914842309,Pancreatic Adenocarcinoma
+ENSG00000284306,SSU72L2,PCPG,measured,source-v5.22.10/PCPG.parquet,182,0,182,11.0,1.0,0.0,0.0,0.0,0.0,0.0,0.1300964805061193,Pheochromocytoma and Paraganglioma
+ENSG00000284306,SSU72L2,PRAD,measured,source-v5.22.10/PRAD.parquet,496,0,496,36.0,13.0,0.0,0.0,0.0,0.0,0.0,0.970070943410592,Prostate Adenocarcinoma
+ENSG00000284306,SSU72L2,RB,measured,source-v5.22.10/RB.parquet,15,0,15,2.0,1.0,0.0,0.0,0.0,0.0,0.0,0.1399999999999865,Retinoblastoma
+ENSG00000284306,SSU72L2,READ,measured,source-v5.22.10/READ.parquet,93,0,93,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0500985561629143,Rectum Adenocarcinoma
+ENSG00000284306,SSU72L2,READ_MSI,measured,source-v5.22.10/READ_MSI.parquet,2,0,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,MSI-H Rectum Adenocarcinoma
+ENSG00000284306,SSU72L2,READ_MSS,measured,source-v5.22.10/READ_MSS.parquet,83,0,83,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0500985561629143,MSS Rectum Adenocarcinoma
+ENSG00000284306,SSU72L2,RT,measured,source-v5.22.10/RT.parquet,63,0,63,17.0,11.0,1.0,0.0,0.0,0.0,0.0,1.0093,Rhabdoid Tumor
+ENSG00000284306,SSU72L2,SARC_ANGIO,measured,source-v5.22.10/SARC_ANGIO.parquet,20,0,20,3.0,3.0,2.0,1.0,1.0,1.0,0.0,18.470000000059784,Angiosarcoma
+ENSG00000284306,SSU72L2,SARC_ASPS,measured,source-v5.22.10/SARC_ASPS.parquet,3,0,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Alveolar Soft Part Sarcoma
+ENSG00000284306,SSU72L2,SARC_CCS,gene_absent,source-v5.22.10/SARC_CCS.parquet,0,0,0,,,,,,,,,Clear Cell Sarcoma
+ENSG00000284306,SSU72L2,SARC_CHON,measured,source-v5.22.10/SARC_CHON.parquet,54,7,47,3.0,3.0,2.0,2.0,0.0,0.0,0.0,2.0848058125099627,Chondrosarcoma
+ENSG00000284306,SSU72L2,SARC_CHOR,measured,source-v5.22.10/SARC_CHOR.parquet,20,0,20,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Chordoma
+ENSG00000284306,SSU72L2,SARC_DDLPS,measured,source-v5.22.10/SARC_DDLPS.parquet,48,0,48,3.0,1.0,1.0,0.0,0.0,0.0,0.0,1.6201179301860695,Dedifferentiated Liposarcoma
+ENSG00000284306,SSU72L2,SARC_DSRCT,measured,source-v5.22.10/SARC_DSRCT.parquet,9,0,9,2.0,1.0,0.0,0.0,0.0,0.0,0.0,0.6499999999998958,Desmoplastic Small Round Cell Tumor
+ENSG00000284306,SSU72L2,SARC_EHE,measured,source-v5.22.10/SARC_EHE.parquet,1,0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Epithelioid Hemangioendothelioma
+ENSG00000284306,SSU72L2,SARC_EPITH,measured,source-v5.22.10/SARC_EPITH.parquet,5,0,5,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0699999999999834,Epithelioid Sarcoma
+ENSG00000284306,SSU72L2,SARC_ESS_HG,gene_absent,source-v5.22.10/SARC_ESS_HG.parquet,0,0,0,,,,,,,,,High-grade Endometrial Stromal Sarcoma
+ENSG00000284306,SSU72L2,SARC_ESS_LG,gene_absent,source-v5.22.10/SARC_ESS_LG.parquet,0,0,0,,,,,,,,,Low-grade Endometrial Stromal Sarcoma
+ENSG00000284306,SSU72L2,SARC_EWS,measured,source-v5.22.10/SARC_EWS.parquet,101,0,101,17.0,2.0,0.0,0.0,0.0,0.0,0.0,0.1399999999999865,Ewing Sarcoma
+ENSG00000284306,SSU72L2,SARC_GIST,measured,source-v5.22.10/SARC_GIST.parquet,19,0,19,2.0,2.0,0.0,0.0,0.0,0.0,0.0,0.1399999999999865,Gastrointestinal Stromal Tumor
+ENSG00000284306,SSU72L2,SARC_IFS,measured,source-v5.22.10/SARC_IFS.parquet,2,0,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Infantile Fibrosarcoma
+ENSG00000284306,SSU72L2,CMN,gene_absent,source-v5.22.10/CMN.parquet,0,0,0,,,,,,,,,Congenital Mesoblastic Nephroma
+ENSG00000284306,SSU72L2,SARC_IMT,measured,source-v5.22.10/SARC_IMT.parquet,4,0,4,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0500000000000016,Inflammatory Myofibroblastic Tumor
+ENSG00000284306,SSU72L2,SARC_KS,measured,source-v5.22.10/SARC_KS.parquet,10,0,10,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Kaposi Sarcoma
+ENSG00000284306,SSU72L2,SARC_LGFMS,measured,source-v5.22.10/SARC_LGFMS.parquet,2,0,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Low-grade Fibromyxoid Sarcoma
+ENSG00000284306,SSU72L2,SARC_LMS,measured,source-v5.22.10/SARC_LMS.parquet,151,0,151,18.0,9.0,0.0,0.0,0.0,0.0,0.0,0.7001066346772007,Leiomyosarcoma
+ENSG00000284306,SSU72L2,SARC_LPS_UNSPEC,measured,source-v5.22.10/SARC_LPS_UNSPEC.parquet,92,0,92,6.0,4.0,1.0,0.0,0.0,0.0,0.0,1.6201179301860695,Liposarcoma (Unspecified / Aggregate)
+ENSG00000284306,SSU72L2,SARC_MMNST,measured,source-v5.22.10/SARC_MMNST.parquet,3,0,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Malignant Melanotic Nerve Sheath Tumor
+ENSG00000284306,SSU72L2,SARC_MPNST,measured,source-v5.22.10/SARC_MPNST.parquet,13,0,13,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0400000000000233,Malignant Peripheral Nerve Sheath Tumor
+ENSG00000284306,SSU72L2,SARC_MYXFIB,measured,source-v5.22.10/SARC_MYXFIB.parquet,41,0,41,7.0,5.0,0.0,0.0,0.0,0.0,0.0,0.1799999999999046,Myxofibrosarcoma
+ENSG00000284306,SSU72L2,SARC_MYXLPS,gene_absent,source-v5.22.10/SARC_MYXLPS.parquet,0,0,0,,,,,,,,,Myxoid Liposarcoma
+ENSG00000284306,SSU72L2,SARC_OS,measured,source-v5.22.10/SARC_OS.parquet,262,0,262,23.0,19.0,1.0,0.0,0.0,0.0,0.0,1.1700000000003694,Osteosarcoma
+ENSG00000284306,SSU72L2,SARC_PEC,gene_absent,source-v5.22.10/SARC_PEC.parquet,0,0,0,,,,,,,,,PEComa (Perivascular Epithelioid Cell Tumor)
+ENSG00000284306,SSU72L2,SARC_PLEOLPS,gene_absent,source-v5.22.10/SARC_PLEOLPS.parquet,0,0,0,,,,,,,,,Pleomorphic Liposarcoma
+ENSG00000284306,SSU72L2,SARC_RMS_ARMS,measured,source-v5.22.10/SARC_RMS_ARMS.parquet,73,0,73,17.0,8.0,1.0,1.0,0.0,0.0,0.0,3.82999999999649,Alveolar Rhabdomyosarcoma
+ENSG00000284306,SSU72L2,SARC_RMS_ERMS,measured,source-v5.22.10/SARC_RMS_ERMS.parquet,95,0,95,35.0,12.0,2.0,2.0,1.0,1.0,1.0,990.910000001422,Embryonal Rhabdomyosarcoma
+ENSG00000284306,SSU72L2,SARC_RMS_PRMS,measured,source-v5.22.10/SARC_RMS_PRMS.parquet,6,0,6,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Pleomorphic Rhabdomyosarcoma
+ENSG00000284306,SSU72L2,SARC_RMS_SSRMS,measured,source-v5.22.10/SARC_RMS_SSRMS.parquet,8,0,8,2.0,1.0,0.0,0.0,0.0,0.0,0.0,0.1099999999997065,Spindle Cell / Sclerosing Rhabdomyosarcoma
+ENSG00000284306,SSU72L2,SARC_SYN,measured,source-v5.22.10/SARC_SYN.parquet,50,0,50,14.0,9.0,1.0,0.0,0.0,0.0,0.0,1.869999999998084,Synovial Sarcoma
+ENSG00000284306,SSU72L2,SARC_UPS,measured,source-v5.22.10/SARC_UPS.parquet,110,0,110,13.0,9.0,0.0,0.0,0.0,0.0,0.0,0.5300000000000773,Undifferentiated Pleomorphic Sarcoma
+ENSG00000284306,SSU72L2,SARC_WDLPS,measured,source-v5.22.10/SARC_WDLPS.parquet,5,0,5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Well-Differentiated Liposarcoma
+ENSG00000284306,SSU72L2,SCLC,gene_absent,source-v5.22.10/SCLC.parquet,0,0,0,,,,,,,,,Small Cell Lung Cancer
+ENSG00000284306,SSU72L2,SCLC_ASCL1,gene_absent,source-v5.22.10/SCLC_ASCL1.parquet,0,0,0,,,,,,,,,SCLC ASCL1-dominant
+ENSG00000284306,SSU72L2,SCLC_NEUROD1,gene_absent,source-v5.22.10/SCLC_NEUROD1.parquet,0,0,0,,,,,,,,,SCLC NEUROD1-dominant
+ENSG00000284306,SSU72L2,SCLC_POU2F3,gene_absent,source-v5.22.10/SCLC_POU2F3.parquet,0,0,0,,,,,,,,,SCLC POU2F3-dominant
+ENSG00000284306,SSU72L2,SCLC_YAP1,gene_absent,source-v5.22.10/SCLC_YAP1.parquet,0,0,0,,,,,,,,,SCLC YAP1-dominant
+ENSG00000284306,SSU72L2,SKCM,measured,source-v5.22.10/SKCM.parquet,469,0,469,30.0,13.0,2.0,1.0,1.0,1.0,0.0,12.489951597651382,Skin Cutaneous Melanoma
+ENSG00000284306,SSU72L2,STAD,measured,source-v5.22.10/STAD.parquet,414,1,413,40.0,23.0,0.0,0.0,0.0,0.0,0.0,0.4800971035768007,Stomach Adenocarcinoma
+ENSG00000284306,SSU72L2,STAD_CIN,measured,source-v5.22.10/STAD_CIN.parquet,221,0,221,23.0,13.0,0.0,0.0,0.0,0.0,0.0,0.4800971035768007,Chromosomal Instability Stomach Adenocarcinoma
+ENSG00000284306,SSU72L2,STAD_EBV,measured,source-v5.22.10/STAD_EBV.parquet,30,0,30,4.0,2.0,0.0,0.0,0.0,0.0,0.0,0.1801048216830414,EBV-positive Stomach Adenocarcinoma
+ENSG00000284306,SSU72L2,STAD_GS,measured,source-v5.22.10/STAD_GS.parquet,50,0,50,7.0,4.0,0.0,0.0,0.0,0.0,0.0,0.3300992688870039,Genomically Stable Stomach Adenocarcinoma
+ENSG00000284306,SSU72L2,STAD_MSI,measured,source-v5.22.10/STAD_MSI.parquet,73,0,73,3.0,2.0,0.0,0.0,0.0,0.0,0.0,0.1500978507878119,MSI-H Stomach Adenocarcinoma
+ENSG00000284306,SSU72L2,TGCT,measured,source-v5.22.10/TGCT.parquet,154,0,154,52.0,38.0,0.0,0.0,0.0,0.0,0.0,0.9100854782809796,Testicular Germ Cell Tumors
+ENSG00000284306,SSU72L2,THCA,measured,source-v5.22.10/THCA.parquet,512,0,512,10.0,2.0,0.0,0.0,0.0,0.0,0.0,0.1201017673789153,Thyroid Carcinoma
+ENSG00000284306,SSU72L2,THYM,measured,source-v5.22.10/THYM.parquet,119,0,119,40.0,18.0,1.0,0.0,0.0,0.0,0.0,1.2201311421024688,Thymoma
+ENSG00000284306,SSU72L2,T_ALL,measured,source-v5.22.10/T_ALL.parquet,264,0,264,29.0,28.0,1.0,1.0,0.0,0.0,0.0,3.5891,T-cell Acute Lymphoblastic Leukemia
+ENSG00000284306,SSU72L2,UCEC,measured,source-v5.22.10/UCEC.parquet,181,0,181,15.0,9.0,2.0,1.0,0.0,0.0,0.0,2.2200857315536155,Uterine Corpus Endometrial Carcinoma
+ENSG00000284306,SSU72L2,UCEC_CNH,measured,source-v5.22.10/UCEC_CNH.parquet,85,0,85,4.0,1.0,1.0,0.0,0.0,0.0,0.0,1.1000889356075052,Endometrial Carcinoma Copy-Number-High (p53-abnormal)
+ENSG00000284306,SSU72L2,UCEC_CNL,measured,source-v5.22.10/UCEC_CNL.parquet,30,0,30,4.0,2.0,0.0,0.0,0.0,0.0,0.0,0.660089833270419,Endometrial Carcinoma Copy-Number-Low (NSMP)
+ENSG00000284306,SSU72L2,UCEC_MSI,measured,source-v5.22.10/UCEC_MSI.parquet,41,0,41,4.0,3.0,1.0,1.0,0.0,0.0,0.0,2.2200857315536155,Endometrial Carcinoma MSI-H/MMRd
+ENSG00000284306,SSU72L2,UCEC_POLE,measured,source-v5.22.10/UCEC_POLE.parquet,16,0,16,3.0,3.0,0.0,0.0,0.0,0.0,0.0,0.1801048216830414,Endometrial Carcinoma POLE-ultramutated
+ENSG00000284306,SSU72L2,UCS,measured,source-v5.22.10/UCS.parquet,57,0,57,8.0,4.0,1.0,0.0,0.0,0.0,0.0,1.1700665995545283,Uterine Carcinosarcoma
+ENSG00000284306,SSU72L2,UVM,measured,source-v5.22.10/UVM.parquet,79,0,79,3.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0701018278026415,Uveal Melanoma
+ENSG00000284306,SSU72L2,VSCC,measured,source-v5.22.12/VSCC.parquet,9,0,9,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0608212577797959,Vulvar Squamous Cell Carcinoma
+ENSG00000284306,SSU72L2,WILMS,measured,source-v5.22.10/WILMS.parquet,125,0,125,39.0,25.0,4.0,2.0,1.0,0.0,0.0,5.4056,Wilms Tumor / Nephroblastoma
+ENSG00000284306,SSU72L2,cSCC,gene_absent,source-v5.22.10/cSCC.parquet,0,0,0,,,,,,,,,Cutaneous Squamous Cell Carcinoma

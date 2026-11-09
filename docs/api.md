@@ -639,6 +639,24 @@ comparison plots and the downstream migration contract.
 
 ## CTA Antigens
 
+Use the current representative accessor when selecting a transcript for a CTA:
+
+```python
+from oncoref import cta_representatives
+
+cta_representatives.records("BOLL", annotation_release=115)
+cta_representatives.records("ENSG00000152430")  # Same exact locus.
+cta_representatives.records()  # All approved CTA member transcripts.
+```
+
+Each row gives the exact versioned transcript and protein accession, sequence
+length and SHA-256, selection basis, reference identity, assembly and Ensembl
+release. It reads packaged tables without downloading the sequence bundle.
+A requested release other than the pinned release raises an error. Unknown
+genes and genes outside CTA return an empty table. Use `transcript_selection.records()`
+to inspect held or excluded genes. The legacy `cta_df().Canonical_Transcript_ID`
+column is not the current representative-selection contract.
+
 The [individual literature review and source registry](audits/cta-literature-20261107/report.html)
 records 96 follow-up assessments and distinct roles for core and supplementary
 papers. These are evidence annotations alongside the frozen 1.31.0 selection;
@@ -650,9 +668,11 @@ from oncoref import cta_literature
 cta_literature.reviews("SRY")
 cta_literature.sources(collection="core")
 cta_literature.sources(collection="supplementary", role="normal_tissue")
-cta_literature.cta_coverage()  # All 602 released CTA records; gaps remain explicit.
+cta_literature.cta_coverage()  # Frozen 602-protein catalog from 1.31.0.
+cta_literature.current_coverage()  # Current CTAs; exact member-locus scope retained.
+cta_literature.followup_findings()  # Dated corrections and review recommendations.
 cta_literature.memberships()  # Exact source occurrences, including unresolved links.
-cta_literature.gap_assessments()  # All 33 paper gaps: biology and measured support.
+cta_literature.gap_assessments()  # The historical 33 gaps, before current remapping.
 cta_literature.concerns("SRY")  # Evidence type, next action and citations.
 cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
 cta_literature.surface_domains("ZP4")  # External intervals, sizes, evidence and sequence match.
@@ -663,6 +683,29 @@ cta_literature.surface_cancer_ihc("BTN1A1")  # Separate scored-patient staining 
 The core preserves mapped paper coverage. Supplementary papers retain additional
 assays, normal-expression findings, identity questions and upstream gene-set
 provenance. Core placement does not determine which findings apply to selection.
+
+The [current reconciliation](audits/cta-current-review-20261108/index.md) reports
+487 nomination-covered proteins, 90 with other qualifying papers, and 30 gaps
+among the 607 current CTAs. `current_coverage()` distinguishes `all_members`,
+`some_members` and `no_paper`; `per_gene_sources` retains the underlying locus
+assignments. Five shared proteins have coverage for only some member loci.
+Paper coverage includes normal-function studies and counterevidence. It is
+separate from CTA nomination and does not change released classifications.
+
+The [named-candidate evidence audit](audits/cta-candidate-evidence-20261108/index.md)
+adds human IHC, MS and RNA reviews and sample-level tumor prevalence. Read the
+accepted findings queued for the next selection build explicitly:
+
+```python
+from oncoref import gene_knowledge
+
+released = gene_knowledge.findings("PRAMEF18")
+with_updates = gene_knowledge.findings("PRAMEF18", include_updates=True)
+```
+
+The next selection replay includes these updates by default. The released
+classification and sequence APIs retain the published snapshot until a complete
+release rebuild. Ambiguous normal findings produce review holds, not Unsafe calls.
 
 The localization table covers all 602 released CTAs. Its facets distinguish secretion,
 extracellular detection, cell-surface / integral plasma-membrane annotations, and
@@ -681,6 +724,42 @@ staining. All measurements are gene-level and do not establish selected-proteofo
 expression or epitope accessibility. Full source versions and hashes are in
 `cta_literature.registry()["surface_sources"]`.
 
+The cancer-only audit reviews 47 proteins with cancer RNA and zero adult reproductive
+bulk RNA. It returns individual normal-tissue evidence, primary-source links,
+original assay scope and reviewed classifications:
+
+```python
+from oncoref import cancer_only
+
+reviews = cancer_only.records()
+one = cancer_only.records("OR5D18")
+selection = cancer_only.audit()["definition"]
+```
+
+The set has no confirmed cancer-only member. It includes three Unsafe proteins,
+36 Other:Review and eight Other:Expression under accepted pending curation.
+The [full report and filterable table](audits/cancer-only-20261109/report.html)
+retain all 66 starting matches, the 47 selected proteins, exact olfactory assay
+identities, supporting tumor observations and source receipts. These reviews are
+an evidence overlay on the named 1.35.0 classification snapshot.
+
+The uniform human decision view uses three categories and three Other reasons:
+
+```python
+from oncoref import cta_selection, cta_decision_flow
+
+all_proteins = cta_selection.decisions()
+review = cta_selection.decisions(category="Other", subtype="Review")
+contract = cta_decision_flow.definition()
+```
+
+`decisions()` returns CTA, Unsafe or Other:Review / Other:Expression / Other:Sequence.
+It preserves member genes, detailed evidence and the original `source_classification`.
+The raw `results()` accessor keeps the subtype labels of the published release.
+Both use released evidence; accepted pending curations are applied by the next
+selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
+contains 600 CTA after seven normal-evidence holds; it is not yet a release.
+
 The current research set is available through the same species-scoped API:
 
 ```python
@@ -691,7 +770,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-The human release selects **602 proteins / 646 loci**. Dog nominations remain
+The human release selects **607 proteins / 655 loci**. Dog nominations remain
 unassigned/unassessed. Mouse returns one unassessed P1A nomination with partial
 evidence; quantitative mouse selection remains unavailable. The
 [selection guide](cta-selection.md) documents common fields, native units,

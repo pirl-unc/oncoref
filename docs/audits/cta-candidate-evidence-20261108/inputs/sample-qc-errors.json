@@ -1,0 +1,6 @@
+[
+  {
+    "cohort": "NUTM",
+    "reason": "source-v5.22.10/NUTM.parquet: linear TPM: 2163 negative or infinite expression measurements are incompatible with the declared nonnegative scale. Verify the original input unit and rebuild the source; do not clip values or renormalize a transformed field as linear TPM."
+  }
+]

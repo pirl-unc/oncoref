@@ -1,0 +1,35 @@
+{
+  "catalog_version": "1.35.0",
+  "reviewed_on": "2026-11-08",
+  "cta_proteins": 607,
+  "nomination_paper_coverage": 487,
+  "any_qualifying_paper": 577,
+  "paper_coverage": {
+    "all_members": 572,
+    "no_paper": 30,
+    "some_members": 5
+  },
+  "current_core_sources": 81,
+  "supplementary_sources": 74,
+  "core_objective": "All covered exact gene loci in the current CTA catalog; inclusion-minimal, not claimed globally smallest",
+  "representative_review_loci": 563,
+  "representative_review_classifications": {
+    "Unsafe": 182,
+    "Other:Review": 381
+  },
+  "representative_review_categories": {
+    "No qualifying primary alternative": 525,
+    "Selenoprotein outside AA20 contract": 25,
+    "Qualified alternative available": 7,
+    "Reviewed evidence hold": 4,
+    "No primary reference translation": 2
+  },
+  "with_qualified_alternatives": 20,
+  "verified_cta_transcripts": 655,
+  "sequence_mismatches": 0,
+  "all_cta_sequences_AA20": true,
+  "gdpd4_isoform_2_exact_match": true,
+  "or6c3_same_sequence_alternative": true,
+  "sequence_bundle_id": "oncoref:sequence-bundle:v1:sha256:c8c060edab62e089fd4651065a857a8eaecb7c68816b016b3ac4c9fd06fa9525",
+  "classification_effect": "No released classification assets changed. Review recommendations are listed separately."
+}

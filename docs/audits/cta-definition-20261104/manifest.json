@@ -15,5 +15,13 @@
     "sequence-roles.csv.gz": "a9705549ffa85f1189d17e60efb9679e0909a02425a742c594278bf1786948dc",
     "changes-from-1.29.0.csv": "6d8bf433b8c18e355ed58af504aa12ba3a8f364d304fe9b330350273e50493f9",
     "index.md": "68440d1cb8e2115ab54b44851cd5b2c09cf84ee6eb214eb8cbb984f633d03f6d"
+  },
+  "input_snapshots": [
+    "oncoref/cta_selection.py"
+  ],
+  "input_snapshot_archive": {
+    "path": "release-inputs.zip",
+    "sha256": "5ead421d55dfb93e9386234fd1805c4554b2e613a567ac5015b65e0f03b00609",
+    "reason": "Original scientific inputs preserved byte-for-byte as the live implementation advances."
   }
 }

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import zipfile
 from pathlib import Path
 
 import pandas as pd
@@ -18,7 +19,15 @@ def test_current_breadth_receipt_and_policy():
     assert receipt["policy"] == normal_expression_breadth.policy()
     for kind, base in [("inputs", ROOT), ("outputs", REPORT)]:
         for name, expected in receipt[kind].items():
-            assert hashlib.sha256((base / name).read_bytes()).hexdigest() == expected, name
+            if kind == "inputs" and name in receipt.get("input_snapshots", []):
+                saved = receipt["input_snapshot_archive"]
+                path = REPORT / saved["path"]
+                assert hashlib.sha256(path.read_bytes()).hexdigest() == saved["sha256"]
+                with zipfile.ZipFile(path) as archive:
+                    content = archive.read(name)
+            else:
+                content = (base / name).read_bytes()
+            assert hashlib.sha256(content).hexdigest() == expected, name
     panels = pd.read_csv(REPORT / "panels.csv")
     assert (
         panels.groupby(["scenario", "brain_weight", "category"])

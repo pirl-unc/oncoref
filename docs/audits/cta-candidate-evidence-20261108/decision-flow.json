@@ -1,0 +1,50 @@
+{
+  "flow_id": "oncoref.cta-decision-flow.2026-11-08.1",
+  "categories": [
+    "CTA",
+    "Other",
+    "Unsafe"
+  ],
+  "other_subtypes": {
+    "Review": "Required evidence is missing, conflicting, or blocks admission without establishing Unsafe.",
+    "Expression": "Cancer presence, reproductive/developmental association or the applicable concentration rule fails.",
+    "Sequence": "A nested protein lacks independent expression evidence, or at least 95% of its 9-mers occur in Unsafe proteins."
+  },
+  "steps": [
+    {
+      "order": 1,
+      "question": "Normal or applicable clinical exclusion?",
+      "if_yes": "Unsafe"
+    },
+    {
+      "order": 2,
+      "question": "Required evidence missing, conflicting or held?",
+      "if_yes": "Other:Review"
+    },
+    {
+      "order": 3,
+      "question": "Nested or Unsafe-contained sequence?",
+      "if_yes": "Other:Sequence"
+    },
+    {
+      "order": 4,
+      "question": "Cancer, reproductive/developmental or concentration requirement fails?",
+      "if_yes": "Other:Expression"
+    },
+    {
+      "order": 5,
+      "question": "All applicable requirements pass",
+      "if_yes": "CTA"
+    }
+  ],
+  "translation_rule": "Qualifying coding reference or supported noncanonical ORF, plus a complete approved representative with conflicting coding evidence resolved. Experimental protein detection is not required for every annotated coding gene.",
+  "annotations_not_categories": [
+    "paper coverage",
+    "experimental protein detection",
+    "biological program",
+    "tumor prevalence",
+    "surface localization",
+    "antigen presentation"
+  ],
+  "scope": "Genes in the assessed human inventory; no transfer of human evidence to another species."
+}

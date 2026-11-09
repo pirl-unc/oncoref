@@ -1,0 +1,50 @@
+{
+  "schema": "oncoref.transcript-review-proposals",
+  "status": "reviewed; not applied to released assets",
+  "findings": [
+    {
+      "id": "transcript-followup-20261108-gdpd4",
+      "gene_id": "ENSG00000178795",
+      "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
+      "scope": "exact_sequence",
+      "sequence_sha256s": [
+        "4d8d6c76bc7c1a403fed635da56123affea6c95fddc132677d5f32655f833b82"
+      ],
+      "disposition": "resolved",
+      "evidence_kind": "reviewed_annotation_reconciliation",
+      "reviewed_on": "2026-11-08",
+      "rationale": "The MANE 520-aa sequence exactly matches UniProt Q6W3E5-2. UniProt explicitly cross-references this transcript, ENSP00000320815.4 and NP_878253.1 to isoform 2. The canonical 623-aa sequence is isoform 1; the difference does not challenge translation.",
+      "limitations": "Reference sequence reconciliation; does not establish tumor-specific protein production or remove normal-expression exclusions.",
+      "sources": [
+        {
+          "title": "GDPD4 exact reference annotation",
+          "url": "https://www.uniprot.org/uniprotkb/Q6W3E5/entry"
+        }
+      ],
+      "resolves": [
+        "transcript-review-20261108-gdpd4"
+      ]
+    },
+    {
+      "id": "transcript-followup-20261108-or6c3",
+      "gene_id": "ENSG00000205329",
+      "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9",
+      "scope": "exact_sequence",
+      "sequence_sha256s": [
+        "aa7bdba27f775fdcd3b9ebff43d70e6f80088e9d6e8958f4cafeff8267c428e8"
+      ],
+      "disposition": "prefer",
+      "evidence_kind": "reviewed_annotation_reconciliation",
+      "reviewed_on": "2026-11-08",
+      "rationale": "This qualified primary-locus CCDS31819 transcript encodes exactly the same 311-aa sequence as the MANE transcript ENST00000641740.2, which lacks a complete annotated stop feature. Select the identical sequence with its complete transcript occurrence.",
+      "limitations": "Reference sequence reconciliation; does not establish tumor-specific protein production or remove normal-expression exclusions.",
+      "sources": [
+        {
+          "title": "OR6C3 exact reference annotation",
+          "url": "https://www.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000641364.1"
+        }
+      ],
+      "resolves": []
+    }
+  ]
+}
