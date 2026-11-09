@@ -672,6 +672,7 @@ cta_literature.cta_coverage()  # Frozen 602-protein catalog from 1.31.0.
 cta_literature.current_coverage()  # Current CTAs; exact member-locus scope retained.
 cta_literature.followup_findings()  # Dated corrections and review recommendations.
 cta_literature.memberships()  # Exact source occurrences, including unresolved links.
+cta_literature.attestations()  # All occurrences joined to citations and original claim scope.
 cta_literature.gap_assessments()  # The historical 33 gaps, before current remapping.
 cta_literature.concerns("SRY")  # Evidence type, next action and citations.
 cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
@@ -743,7 +744,7 @@ retain all 66 starting matches, the 47 selected proteins, exact olfactory assay
 identities, supporting tumor observations and source receipts. These reviews are
 an evidence overlay on the named 1.35.0 classification snapshot.
 
-The uniform human decision view uses three categories and three Other reasons:
+The released human decision view uses three categories and three Other reasons:
 
 ```python
 from oncoref import cta_selection, cta_decision_flow
@@ -759,6 +760,23 @@ The raw `results()` accessor keeps the subtype labels of the published release.
 Both use released evidence; accepted pending curations are applied by the next
 selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
 contains 600 CTA after seven normal-evidence holds; it is not yet a release.
+
+The next [Cancer and Reproductive Antigen policy](target-selection.md) has a
+separate evaluator. Its catalog rebuild is pending:
+
+```python
+from oncoref import target_selection
+
+contract = target_selection.definition()
+# evidence = target_selection.assess_cancer_rna(tumors, normals, ...)
+# decisions = target_selection.classify(assessed_facts)
+```
+
+The new evaluator returns Cancer Antigen and Reproductive Antigen memberships,
+their intersection (CTA), their union (Target candidates), and one display
+category. It requires the new assessed inputs; it does not reinterpret released
+presence flags. `cta_literature.attestations()` preserves the paper links and
+claim scope independently of category.
 
 The current research set is available through the same species-scoped API:
 

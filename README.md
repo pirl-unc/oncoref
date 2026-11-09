@@ -10,24 +10,23 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [current CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+The [next target-selection policy](docs/target-selection.md) defines Cancer Antigens and Reproductive Antigens with one shared eligibility screen. CTA is their intersection; Target candidates is their union. Cancer RNA requires two independent patients above the compatible normal maximum (each ≥1), or one sample ≥5 × max(normal maximum, 1). The evaluator and illustrated contract are available; the catalog rebuild is pending.
+
+The [released 1.36.0 CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). These are the earlier policy's counts. All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role.
 [Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript decisions](https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/table.html) · [Historical 602-CTA evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html).
 
 The [normal-tissue hazard ontology](docs/tissue-hazards.md) centralizes evidence-linked
 bulk and cell-subset calls with generated reports, figures and a Python API.
-A would-be CTA with 95% or more of its sequence inside Unsafe proteins is
-`Other:Contained`, and a nested microprotein is `Other:Nested`. Expression in at least 1% of a
+A would-be target with 95% or more of its 9-mers inside Unsafe proteins is
+`Other:Sequence`, as is a nested microprotein without independent support. Expression in at least 1% of a
 Vital cell type in the existing brain, spinal-cord, heart and lung panel supplies
 Unsafe evidence. Protected rare-cell findings create a candidate review hold.
-[Independent requirements](docs/cta-evidence-axes.md) assess normal-tissue safety,
-cancer expression and Reproductive evidence, with complete required coverage.
-Reproductive includes reproductive organs, placenta, extraembryonic, embryonic and
-fetal contexts. Only safety can establish Unsafe. The old normal-maximum veto is
-removed; [continuous diffuseness](docs/audits/cta-unassigned-20261029/index.md) is
-active at >10% for complete HPA adult/placental profiles, excluding thymus.
-Every Other protein records its unmet admission requirement; supported embryonic routes remain independently eligible. PRAME, MAGEA4, CTAG1A/B, CTAG2,
-XAGE1A/B, SSX2/B, CT83 and TBXT retain CTA status. These are research assignments,
-not validated clinical safety limits.
+[Independent requirements](docs/cta-evidence-axes.md) separate normal exclusion,
+positive associations and published target support. Reproductive includes adult
+reproductive, placental, extraembryonic, embryonic and fetal contexts. The next
+policy makes the adult reproductive concentration score descriptive. Historical
+reports retain their dated gates. Curated protein–paper links and their attested
+claims are available through `cta_literature.attestations()`.
 
 ```python
 from oncoref import human, canine, mouse, cta_selection

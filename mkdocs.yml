@@ -6,6 +6,7 @@ theme:
   name: mkdocs
 nav:
   - Home: index.md
+  - Cancer and Reproductive Antigens: target-selection.md
   - CTA reports:
       - CTA definition and illustrated report: audits/cta-definition-20261104/index.md
       - Translation qualification: audits/translation-qualification-20261104/index.md
@@ -42,7 +43,7 @@ nav:
       - Source and decision audit API: audits/cta-source-walkthrough-20261028/api.md
       - Historical release 1.21.0: audits/cta-release-1.21.0/index.md
       - Selection API across species: cta-selection.md
-      - Safety and CTA identity: cta-evidence-axes.md
+      - Shared screen and antigen sets: cta-evidence-axes.md
       - TCR-T trial evidence and serious events: audits/cta-tcr-trials-20261029/index.md
       - Reviewed 463-group proposal: audits/cta-compartment-policy-20261027/index.md
       - Prior 343-group harmonized funnel: audits/cta-harmonized-20261027/index.md

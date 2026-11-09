@@ -1,4 +1,9 @@
-# Current CTA and oncofetal selection
+# Released CTA and oncofetal selection
+
+This page documents the **1.36.0 catalog and its 8 November policy**. The next
+[Cancer and Reproductive Antigen policy](target-selection.md) has an executable
+evaluator and a separate version. Its catalog rebuild is pending; the counts,
+data accessors and sequence downloads below retain the released policy.
 
 The current policy supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy. Selection policy: `oncoref.cta-selection.2026-11-08.1`. [Illustrated, searchable report](audits/cta-definition-20261104/report.html), [PDF](audits/cta-definition-20261104/cta-definition.pdf), [current reference choices](audits/cta-transcript-selection-20261108/index.md), [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) and [verified sequences](sequence-bundle.md) describe the same versioned decisions. The [602-CTA evidence table and 122-protein review](audits/cta-evidence-guide-20261106/report.html) retain the 1.31.0 snapshot.
 
@@ -19,7 +24,7 @@ require low embryonic or fetal expression.
 | Safety | Is normal-tissue expression concerning under the tissue/IHC policy? | Absolute RNA ceilings, separate positive-protein rules and reviewed clinical exclusions. Vital/Protected exclusions and Manageable excess above 128 establish Unsafe; lower Manageable excess blocks CTA and lands in Other:Review. |
 | Cancer expression | Is there expression in at least one measured cancer? | One sample >0 TPM or HPA pTPM, or reviewed reliable tumor protein. No tumor-versus-normal ratio. |
 | Reproductive evidence | Is there positive expression in a qualifying branch? | Full HPA reproductive bulk maximum ≥5 nTPM OR supported reproductive cell RNA ≥5 nTPM with ≥20 reads OR reliable positive reproductive IHC or reviewed reproductive protein OR supported embryonic lineage mean ≥5 TPM. |
-| Coverage | Is the comparison adequately observed? | Complete combined bulk (HPA consensus, HPA brain and GTEx v11) for every member locus. Cell-cluster, immune, DICE and cornea panels count when present but never block a label. |
+| Coverage | Is the comparison adequately observed? | Complete combined bulk (HPA consensus, HPA brain and GTEx v11) for every member locus. Missing supplemental cell-cluster, immune, DICE and cornea coverage does not itself block admission; observed findings can exclude or hold a protein. |
 
 The former maximum-versus-maximum restriction rule is removed. The
 [continuous diffuseness gate](audits/cta-unassigned-20261029/diffuseness-impact.md)
@@ -31,8 +36,9 @@ A score **above 10%** blocks a qualifying adult/placental route when R is positi
 and the full HPA comparison is measured. RNA-only admission still requires **5 nTPM**;
 reliable positive IHC can establish association below that floor. Missing comparisons
 are disclosed in `assessment_status`, never as a separate class. An independently supported embryonic route remains
-eligible; its concentration needs a compatible developmental/adult panel. GTEx
-remains the required coverage core and a descriptive comparison, not a second veto.
+eligible; its concentration needs a compatible developmental/adult panel. Combined
+normal bulk is the required coverage panel; the separate GTEx 52-context core
+records its own coverage and observed findings.
 
 A complete diffuse profile with no remaining qualifying route and clear normal
 safety becomes **Other:Expression**. MTCP1 (24.53%) is one example. Diffuse identity alone never changes Unsafe membership. [Logic figure and examples](cta-evidence-axes.md).
@@ -55,9 +61,10 @@ the display order changes attrition attribution, not the final category or reaso
 
 ### Complete candidate inventory
 
-All **19,863 candidate protein records** enter the main assessment. The 259 records
+At the 5 November inventory migration, all **19,863 candidate protein records**
+entered the main assessment. The 259 records
 formerly omitted at entry now receive **247 Other:Review** and **12 Unsafe**
-calls. All original 19,604 classifications remain unchanged. The
+calls. All original 19,604 classifications were unchanged at that migration. The
 [complete inventory audit](audits/cta-inventory-20261105/index.md) preserves their
 identities, translation evidence, normal findings and historical dispositions.
 

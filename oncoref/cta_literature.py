@@ -11,6 +11,7 @@ from __future__ import annotations
 import gzip
 import json
 from collections import defaultdict
+from copy import deepcopy
 from importlib.resources import files
 
 import pandas as pd
@@ -56,6 +57,87 @@ def reviews(gene: str | None = None) -> pd.DataFrame:
 def memberships() -> pd.DataFrame:
     """All paper-to-protein links, including unresolved and noncoverage links."""
     return pd.DataFrame(registry()["memberships"])
+
+
+def attestations(gene: str | None = None) -> pd.DataFrame:
+    """Protein-paper occurrences with their citations and original claim scope.
+
+    Includes current nominations, the frozen literature collection and subsequent
+    corrections, for every category. Nothing is dropped because a paper is
+    supplementary, redundant, adverse, or cannot resolve a related copy.
+    ``published_nomination`` is a curated catalog membership, not arbitrary paper
+    coverage. Source-level roles are explicitly distinguished from the claim on
+    the protein-paper link. Original records retain assay/identity limitations.
+    """
+    from . import cta_selection
+
+    literature = registry()
+    followup = followup_findings()
+    audit = cta_selection.audit()
+    catalog_sources = {r["source_id"]: r for r in audit.sources.to_dict("records")}
+    paper_sources = {r["source_id"]: r for r in literature["sources"]}
+    followup_sources = {r["source_id"]: r for r in followup["sources"]}
+    collections = [
+        ("current_nomination", audit.memberships.to_dict("records"), catalog_sources),
+        ("literature_registry", literature["memberships"], paper_sources),
+        ("literature_followup", followup["memberships"], followup_sources),
+    ]
+    rows = []
+    for origin, links, source_records in collections:
+        for link in links:
+            genes = list(link["gene_ids"])
+            protein = link.get("protein", link.get("label", ""))
+            if gene is not None and gene != protein and gene not in genes:
+                continue
+            sid = link["source_id"]
+            source = source_records[sid]
+            paper = paper_sources.get(sid, {})
+            nomination = (
+                (origin == "current_nomination" or link.get("kind") == "historical_catalog")
+                and link.get("eligible_for_coverage", True)
+                and "catalog_nomination" in paper.get("roles", [])
+            )
+            rows.append(
+                {
+                    "origin": origin,
+                    "source_id": sid,
+                    "source_url": source.get("url", source.get("source_url", "")),
+                    "citation": source.get("citation", ""),
+                    "title": source.get("title", paper.get("title", "")),
+                    "source_roles": list(source.get("roles", paper.get("roles", []))),
+                    "collection": paper.get("collection", ""),
+                    "protein": protein,
+                    "gene_ids": genes,
+                    "entity_id": link.get("entity_id", ""),
+                    "published_nomination": bool(nomination),
+                    "eligible_for_coverage": bool(
+                        link.get("eligible_for_coverage", origin == "current_nomination")
+                    ),
+                    "claim_scope": link.get("scope", source.get("evidence_scope", "")),
+                    "source_scope": source.get("scope", source.get("evidence_scope", "")),
+                    "membership_record": deepcopy(link),
+                    "source_record": deepcopy(source),
+                }
+            )
+    columns = [
+        "origin",
+        "source_id",
+        "source_url",
+        "citation",
+        "title",
+        "source_roles",
+        "collection",
+        "protein",
+        "gene_ids",
+        "entity_id",
+        "published_nomination",
+        "eligible_for_coverage",
+        "claim_scope",
+        "source_scope",
+        "membership_record",
+        "source_record",
+    ]
+    return pd.DataFrame(rows, columns=columns)
 
 
 def cta_coverage() -> pd.DataFrame:

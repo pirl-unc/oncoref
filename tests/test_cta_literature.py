@@ -20,6 +20,54 @@ def data():
     return cta_literature.registry()
 
 
+def test_attestations_preserve_every_link_and_its_exact_scope(data):
+    from oncoref import cta_selection
+
+    result = cta_literature.attestations()
+    followup = cta_literature.followup_findings()
+    assert result.groupby("origin").size().to_dict() == {
+        "current_nomination": len(cta_selection.audit().memberships),
+        "literature_registry": len(data["memberships"]),
+        "literature_followup": len(followup["memberships"]),
+    }
+    assert result.source_url.str.startswith(("https://", "http://")).all()
+    assert result.citation.str.len().gt(0).all()
+    assert result.claim_scope.str.len().gt(0).all()
+    assert (
+        result[result.origin.eq("literature_registry")].membership_record.tolist()
+        == data["memberships"]
+    )
+    assert (
+        result[result.origin.eq("literature_followup")].membership_record.tolist()
+        == followup["memberships"]
+    )
+    # A broad-program or exact biological paper is not a catalog nomination.
+    program = result.membership_record.map(lambda r: r.get("kind") == "program_membership")
+    assert program.any() and not result.loc[program, "published_nomination"].any()
+    reproductive_only = result.source_roles.map(
+        lambda roles: roles == ["reproductive_developmental"]
+    )
+    assert (
+        reproductive_only.any() and not result.loc[reproductive_only, "published_nomination"].any()
+    )
+    assert not result.loc[result.origin.eq("literature_followup"), "published_nomination"].any()
+    assert "supplementary" in set(result.collection)
+    # Preserve historical Unsafe nominations and counterevidence as well as CTA links.
+    unsafe = result.membership_record.map(lambda r: r.get("category") == "Unsafe")
+    assert result.loc[unsafe, "published_nomination"].any()
+
+
+def test_attestations_gene_filter_does_not_expand_related_copies():
+    rows = cta_literature.attestations("ENSG00000183128")
+    assert not rows.empty
+    assert rows.gene_ids.map(lambda ids: "ENSG00000183128" in ids).all()
+    correction = rows[rows.origin.eq("literature_followup")].iloc[0]
+    assert "taste" in correction.claim_scope
+    assert "limitations" in correction.source_record
+    assert not correction.published_nomination
+    assert cta_literature.attestations("unmapped-test-gene").empty
+
+
 def builder():
     spec = importlib.util.spec_from_file_location(
         "literature_builder", ROOT / "scripts/build_cta_literature_review.py"

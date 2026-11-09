@@ -1,4 +1,4 @@
-"""One public decision flow; detailed assay reasons remain attached to each row."""
+"""Released three-category flow; the next set contract is in target_selection."""
 
 from __future__ import annotations
 

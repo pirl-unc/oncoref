@@ -1,4 +1,7 @@
-"""Current CTA/oncofetal candidate decisions with explicit species coverage.
+"""Released CTA/oncofetal candidate decisions with explicit species coverage.
+
+This API retains the 1.36.0 catalog's selection policy. The next set-based policy
+is exposed by :mod:`oncoref.target_selection`; its catalog rebuild is pending.
 
 ``results``, ``coverage`` and ``sources`` use the same contract for human, dog
 and mouse. ``audit`` adds source-list accounting and measured decision contexts.
