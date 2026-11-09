@@ -10,7 +10,7 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [next target-selection policy](docs/target-selection.md) defines Cancer Antigens and Reproductive Antigens with one shared eligibility screen. CTA is their intersection; Target candidates is their union. Cancer RNA requires two independent patients above the compatible normal maximum (each ≥1), or one sample ≥5 × max(normal maximum, 1). The evaluator and illustrated contract are available; the catalog rebuild is pending.
+The [rebuilt target catalog](docs/audits/target-selection-20261109/rebuild/index.md) contains **632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only, 724 Other and 18,259 Unsafe**. [Cancer Antigens and Reproductive Antigens](docs/target-selection.md) share one eligibility screen: CTA is their intersection; Target candidates is their union. Cancer RNA requires two independent patients above the normal comparison maximum (each ≥1 TPM), or one sample ≥5 × max(normal maximum, 1). The rebuild uses native gene TPM; its comparison maximum comes from supported tissue/cell summaries. [Filterable table and migration downloads](docs/audits/target-selection-20261109/rebuild/report.html).
 
 The [released 1.36.0 CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). These are the earlier policy's counts. All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role.
 [Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript decisions](https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/table.html) · [Historical 602-CTA evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html).
@@ -23,10 +23,21 @@ Vital cell type in the existing brain, spinal-cord, heart and lung panel supplie
 Unsafe evidence. Protected rare-cell findings create a candidate review hold.
 [Independent requirements](docs/cta-evidence-axes.md) separate normal exclusion,
 positive associations and published target support. Reproductive includes adult
-reproductive, placental, extraembryonic, embryonic and fetal contexts. The next
+reproductive, placental, extraembryonic, embryonic and fetal contexts. The rebuilt
 policy makes the adult reproductive concentration score descriptive. Historical
 reports retain their dated gates. Curated protein–paper links and their attested
 claims are available through `cta_literature.attestations()`.
+
+```python
+from oncoref import target_selection
+
+selected = target_selection.results(category="CTA")
+all_decisions = target_selection.results()
+changes = target_selection.results(changed_only=True)
+labels = all_decisions[["protein_group_label", "classification"]]
+```
+
+The 1.36.0 compatibility snapshot and other species remain available separately:
 
 ```python
 from oncoref import human, canine, mouse, cta_selection

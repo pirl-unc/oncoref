@@ -761,13 +761,19 @@ Both use released evidence; accepted pending curations are applied by the next
 selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
 contains 600 CTA after seven normal-evidence holds; it is not yet a release.
 
-The next [Cancer and Reproductive Antigen policy](target-selection.md) has a
-separate evaluator. Its catalog rebuild is pending:
+The rebuilt [Cancer and Reproductive Antigen catalog](target-selection.md) has a
+separate API with 632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only,
+724 Other and 18,259 Unsafe:
 
 ```python
 from oncoref import target_selection
 
 contract = target_selection.definition()
+counts = target_selection.metadata()["summary"]
+catalog = target_selection.results()
+changes = target_selection.results(changed_only=True)
+cancer_only = target_selection.results(category="Cancer Antigen only")
+protein = target_selection.results("H2BW2")  # Exact protein label or member Ensembl ID.
 # evidence = target_selection.assess_cancer_rna(tumors, normals, ...)
 # decisions = target_selection.classify(assessed_facts)
 ```
@@ -778,7 +784,12 @@ category. It requires the new assessed inputs; it does not reinterpret released
 presence flags. `cta_literature.attestations()` preserves the paper links and
 claim scope independently of category.
 
-The current research set is available through the same species-scoped API:
+`results()` includes the selected transcripts and sequence hashes, tumor maximum,
+normal comparison maximum and its source contexts, patient support, reproductive
+measurements and paper references. Missing measurements stay missing. The 1.36.0
+`cta_selection` API and sequence assets remain a separate compatibility snapshot.
+
+The 1.36.0 compatibility snapshot is also available through the species-scoped API:
 
 ```python
 from oncoref import human, canine, mouse
@@ -788,7 +799,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-The human release selects **607 proteins / 655 loci**. Dog nominations remain
+That human snapshot selects **607 proteins / 655 loci**. Dog nominations remain
 unassigned/unassessed. Mouse returns one unassessed P1A nomination with partial
 evidence; quantitative mouse selection remains unavailable. The
 [selection guide](cta-selection.md) documents common fields, native units,

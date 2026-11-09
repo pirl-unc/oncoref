@@ -1,11 +1,13 @@
 # oncoref
 
-[Cancer and Reproductive Antigens](target-selection.md) defines the next policy:
+[Cancer and Reproductive Antigens](target-selection.md) defines the rebuilt policy:
 CTA is their intersection and Target candidates is their union, with the same
-normal-expression, coverage, translation and sequence checks. The evaluator and
-[illustrated report](audits/target-selection-20261109/report.html) are available;
-the catalog rebuild is pending. Curated protein–paper links remain attached to
-their specific claims.
+normal-expression, coverage, translation and sequence checks. The
+[rebuilt catalog](audits/target-selection-20261109/rebuild/index.md) contains
+**632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only, 724 Other and
+18,259 Unsafe**. [Filterable table](audits/target-selection-20261109/rebuild/report.html) ·
+[Illustrated rules](audits/target-selection-20261109/report.html).
+Curated protein–paper links remain attached to their specific claims.
 
 [Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
 

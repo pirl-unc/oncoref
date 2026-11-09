@@ -159,7 +159,7 @@ def test_replicates_and_duplicate_cohort_views_are_one_participant():
     assert result["status"] == "does_not_qualify"
     assert result["independent_participants_above_normal"] == 1
     tumors["participant_id"] = None
-    assert assess(tumors, normals)["status"] == "does_not_qualify"
+    assert assess(tumors, normals)["status"] == "unassessed"
     tumors.loc[0, "value"] = 5
     assert assess(tumors, normals)["routes"] == ["one_tumor_fivefold_above_normal"]
 

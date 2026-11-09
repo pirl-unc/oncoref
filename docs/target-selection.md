@@ -4,10 +4,12 @@
 Antigens. Both sets use the same normal-tissue, coverage, translation and sequence
 requirements. Their union is called Target candidates.**
 
-This is the next selection policy, `oncoref.target-selection.2026-11-09.1`.
-The evaluator is implemented; the catalog rebuild is pending. The
-[1.36.0 catalog](cta-selection.md) still contains 607 CTA, 18,259 Unsafe and 1,027
-Other under its released rules. Those counts are not counts under the new policy.
+The catalog has been rebuilt under `oncoref.target-selection.2026-11-09.1`:
+**632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only, 724 Other and
+18,259 Unsafe**. That gives 882 Cancer Antigens, 660 Reproductive Antigens and
+910 Target candidates. [Browse every protein and category change](audits/target-selection-20261109/rebuild/report.html).
+The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
+downloads as a separate versioned snapshot.
 
 [Illustrated report](audits/target-selection-20261109/report.html) ·
 [Machine-readable definition](audits/target-selection-20261109/definition.json)
@@ -170,12 +172,17 @@ Individual target experiments remain visible in their reviewed links and roles.
 `current_coverage()` reports broader paper coverage, which also includes biological
 and adverse evidence. A paper-covered protein is not necessarily a published target.
 
-## API and rebuild status
+## Rebuilt catalog and API
 
 ```python
 from oncoref import target_selection, cta_literature
 
 contract = target_selection.definition()
+counts = target_selection.metadata()["summary"]
+catalog = target_selection.results()
+changes = target_selection.results(changed_only=True)
+cancer_only = target_selection.results(category="Cancer Antigen only")
+h2bw2 = target_selection.results("H2BW2")
 links = cta_literature.attestations("ENSG00000183128")
 # target_selection.assess_cancer_rna(tumors, normals, ...) returns a cited receipt.
 # target_selection.classify(assessed_facts) returns both memberships and one category.
@@ -183,8 +190,23 @@ links = cta_literature.attestations("ENSG00000183128")
 
 The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
-A catalog rebuild must provide compatible normal/tumor comparisons and participant
-identities, replay the shared normal screen and curation, recompute association at
-1 unit, then regenerate categories, sequences, counts and reports together.
-Until then, `cta_selection.results()` and sequence downloads retain the released
-snapshot and its policy identity.
+The rebuild replays accepted normal-evidence curation, recomputes association at
+1 unit, resolves tumor locus identities and counts confirmed independent patients.
+All 957 proteins passing the shared screen have complete native-TPM comparison
+coverage across the required 36 nonreproductive anatomy contexts. The normal
+reference also includes measured brain subregions and immune-cell summaries.
+The 130 included tumor cohort views are deduplicated by physical sample and known
+participant identifiers.
+
+These are source-native gene TPM comparisons, without cross-study batch correction.
+N is the maximum of supported context summaries: tissue means, GTEx donor medians
+and supported immune statistics. It is not the maximum across all healthy donors.
+The stored three-sample NUTM matrix fails the nonnegative-TPM check and is excluded.
+[Comparison methods](audits/target-selection-20261109/rebuild/comparison.json) ·
+[Cohort coverage](audits/target-selection-20261109/rebuild/tumor-source-coverage.csv) ·
+[Input hashes](audits/target-selection-20261109/rebuild/inputs.json).
+
+The new `target_selection.results()` includes selected transcript IDs, sequence
+hashes, measurements and linked paper records. `cta_selection.results()` and
+sequence downloads retain the 1.36.0 snapshot and its policy identity; the new
+catalog does not silently change those assets.

@@ -1,6 +1,6 @@
 {
   "policy_id": "oncoref.target-selection.2026-11-09.1",
-  "status": "evaluator_available_catalog_rebuild_pending",
+  "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
     "CTA",

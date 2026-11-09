@@ -1,0 +1,213 @@
+{
+  "schema": "oncoref.target-selection",
+  "version": 1,
+  "summary": {
+    "policy_id": "oncoref.target-selection.2026-11-09.1",
+    "proteins": 19893,
+    "categories": {
+      "Unsafe": 18259,
+      "Other": 724,
+      "CTA": 632,
+      "Cancer Antigen only": 250,
+      "Reproductive Antigen only": 28
+    },
+    "classifications": {
+      "Unsafe": 18259,
+      "Other:Review": 669,
+      "CTA": 632,
+      "Cancer Antigen only": 250,
+      "Other:Sequence": 40,
+      "Reproductive Antigen only": 28,
+      "Other:Expression": 15
+    },
+    "memberships": {
+      "is_cancer_antigen": 882,
+      "is_reproductive_antigen": 660,
+      "is_cta": 632,
+      "is_target_candidate": 910
+    },
+    "changes": [
+      {
+        "released_category": "CTA",
+        "category": "CTA",
+        "proteins": 574
+      },
+      {
+        "released_category": "CTA",
+        "category": "Other",
+        "proteins": 7
+      },
+      {
+        "released_category": "CTA",
+        "category": "Reproductive Antigen only",
+        "proteins": 26
+      },
+      {
+        "released_category": "Other",
+        "category": "CTA",
+        "proteins": 58
+      },
+      {
+        "released_category": "Other",
+        "category": "Cancer Antigen only",
+        "proteins": 250
+      },
+      {
+        "released_category": "Other",
+        "category": "Other",
+        "proteins": 717
+      },
+      {
+        "released_category": "Other",
+        "category": "Reproductive Antigen only",
+        "proteins": 2
+      },
+      {
+        "released_category": "Unsafe",
+        "category": "Unsafe",
+        "proteins": 18259
+      }
+    ],
+    "shared_eligible": 957,
+    "comparison_required_contexts": [
+      "adipose tissue",
+      "adrenal gland",
+      "amygdala",
+      "basal ganglia",
+      "bone marrow",
+      "cerebellum",
+      "cerebral cortex",
+      "choroid plexus",
+      "colon",
+      "duodenum",
+      "esophagus",
+      "heart muscle",
+      "hippocampal formation",
+      "hypothalamus",
+      "kidney",
+      "liver",
+      "lung",
+      "lymph node",
+      "midbrain",
+      "pancreas",
+      "parathyroid gland",
+      "pituitary gland",
+      "rectum",
+      "retina",
+      "salivary gland",
+      "skeletal muscle",
+      "skin",
+      "small intestine",
+      "smooth muscle",
+      "spinal cord",
+      "spleen",
+      "stomach",
+      "thymus",
+      "thyroid gland",
+      "tongue",
+      "urinary bladder"
+    ],
+    "assessed_cancer_statuses": {
+      "qualifies": 882,
+      "unassessed": 53,
+      "does_not_qualify": 22
+    },
+    "published_nomination_by_category": {
+      "CTA": 466,
+      "Cancer Antigen only": 47,
+      "Other": 78,
+      "Reproductive Antigen only": 13,
+      "Unsafe": 1788
+    }
+  },
+  "comparison": {
+    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-09.1",
+    "unit": "TPM",
+    "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
+    "compatibility_basis": [
+      "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
+      "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
+      "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
+      "Complete 36-context combined nonreproductive normal anatomy panel, plus observed native-TPM normal immune and brain measurements"
+    ],
+    "normal_statistic": "Maximum supported context statistic: tissue/subregion means, GTEx v11 donor medians, and supported immune summaries including DICE third-highest TPM",
+    "batch_corrected": false,
+    "limitations": [
+      "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
+      "A maximum of tissue summaries is not a maximum over every healthy donor",
+      "Other assay scales continue to enforce the existing shared normal screen independently"
+    ],
+    "participant_identity": "TCGA, TARGET and MMRF participant schemes are resolved across aliquots/cohort views. Other source IDs support the single-sample route; unverified patient IDs cannot establish replication.",
+    "normal_sources": [
+      {
+        "source": "rna_tissue_hpa",
+        "version": "v23",
+        "url": "https://v23.proteinatlas.org/download/rna_tissue_hpa.tsv.zip",
+        "path": "tmp/target-rebuild-inputs/rna_tissue_hpa.tsv.zip",
+        "sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c",
+        "bytes": 6661353
+      },
+      {
+        "source": "rna_tissue_gtex",
+        "version": "v23",
+        "url": "https://v23.proteinatlas.org/download/rna_tissue_gtex.tsv.zip",
+        "path": "tmp/target-rebuild-inputs/rna_tissue_gtex.tsv.zip",
+        "sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881",
+        "bytes": 5960172
+      },
+      {
+        "source": "rna_brain_gtex",
+        "version": "v23",
+        "url": "https://v23.proteinatlas.org/download/rna_brain_gtex.tsv.zip",
+        "path": "tmp/target-rebuild-inputs/rna_brain_gtex.tsv.zip",
+        "sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592",
+        "bytes": 1633631
+      }
+    ],
+    "method_references": [
+      "https://v23.proteinatlas.org/about/assays%2Bannotation",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/"
+    ],
+    "required_contexts": [
+      "adipose tissue",
+      "adrenal gland",
+      "amygdala",
+      "basal ganglia",
+      "bone marrow",
+      "cerebellum",
+      "cerebral cortex",
+      "choroid plexus",
+      "colon",
+      "duodenum",
+      "esophagus",
+      "heart muscle",
+      "hippocampal formation",
+      "hypothalamus",
+      "kidney",
+      "liver",
+      "lung",
+      "lymph node",
+      "midbrain",
+      "pancreas",
+      "parathyroid gland",
+      "pituitary gland",
+      "rectum",
+      "retina",
+      "salivary gland",
+      "skeletal muscle",
+      "skin",
+      "small intestine",
+      "smooth muscle",
+      "spinal cord",
+      "spleen",
+      "stomach",
+      "thymus",
+      "thyroid gland",
+      "tongue",
+      "urinary bladder"
+    ],
+    "tumor_matrix_cache_sha256": "acec47c3eff58530fae12a06b68ff451a00dfce4073d49a5c069f143bac0e7f4"
+  },
+  "data_sha256": "6ee739a95fbecac0c1980e853bba6f6f9d2efcc0e9786bac1cce2a5280f33a17",
+  "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261109/rebuild/report.html"
+}

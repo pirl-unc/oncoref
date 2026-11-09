@@ -1,13 +1,16 @@
 """Cancer and Reproductive Antigen sets, with a shared eligibility screen.
 
-This is the next-policy evaluator, not a replacement for the frozen catalog
-returned by ``cta_selection.results()``. Inputs must be assessed under this
-contract; legacy >0 tumor presence and 5-unit reproductive flags are not inputs.
+``results()`` exposes the rebuilt set-based research catalog. The earlier
+``cta_selection.results()`` catalog remains a versioned compatibility snapshot.
+Evaluator inputs must follow this contract; legacy >0 tumor presence and 5-unit
+reproductive flags are not substitutes for the new evidence checks.
 """
 
 from __future__ import annotations
 
+import json
 from copy import deepcopy
+from importlib.resources import files
 
 import numpy as np
 import pandas as pd
@@ -28,10 +31,10 @@ SHARED_CHECKS = (
 
 
 def definition() -> dict:
-    """Return the versioned, machine-readable next-policy contract."""
+    """Return the versioned, machine-readable target-selection contract."""
     return {
         "policy_id": POLICY_ID,
-        "status": "evaluator_available_catalog_rebuild_pending",
+        "status": "research_catalog_rebuilt",
         "species": "human",
         "categories": list(CATEGORIES),
         "shared_checks": list(SHARED_CHECKS),
@@ -105,6 +108,37 @@ def definition() -> dict:
 def _require_columns(frame: pd.DataFrame, columns: set[str]) -> None:
     if missing := columns - set(frame):
         raise ValueError(f"Missing fields: {sorted(missing)}")
+
+
+def metadata() -> dict:
+    """Counts, comparison scope and the hash of the packaged rebuilt catalog."""
+    return json.loads(files("oncoref").joinpath("data/target-selection.json").read_text())
+
+
+def results(
+    gene: str | None = None, *, category: str | None = None, changed_only: bool = False
+) -> pd.DataFrame:
+    """Rebuilt human protein decisions, exact transcripts, values and paper links.
+
+    ``gene`` is an exact protein label or a member Ensembl gene ID. Category uses
+    the exclusive display labels in ``CATEGORIES``. ``is_cancer_antigen`` and
+    ``is_reproductive_antigen`` include their intersection, CTA. Missing values
+    remain missing; the released-category columns retain the migration baseline.
+    """
+    if category is not None and category not in CATEGORIES:
+        raise ValueError(f"Unknown category {category!r}; expected one of {CATEGORIES}")
+    with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
+        result = pd.read_csv(handle, compression="gzip", low_memory=False)
+    if gene is not None:
+        result = result[
+            result.protein_group_label.eq(gene)
+            | result.member_gene_ids.map(lambda ids: gene in json.loads(ids))
+        ]
+    if category is not None:
+        result = result[result.category.eq(category)]
+    if changed_only:
+        result = result[result.category.ne(result.released_category)]
+    return result.reset_index(drop=True)
 
 
 def _require_booleans(frame: pd.DataFrame, columns) -> None:
@@ -246,6 +280,8 @@ def assess_cancer_rna(
         ),
         "single_sample_threshold": None,
         "independent_participants_above_normal": 0,
+        "samples_above_normal": 0,
+        "unresolved_participant_samples_above_normal": 0,
         "supporting_tumors": [],
         "routes": [],
         "status": "unassessed",
@@ -264,7 +300,10 @@ def assess_cancer_rna(
     t["single_sample_pass"] = t.value.ge(threshold)
     known_participant = t.participant_id.map(lambda v: isinstance(v, str) and bool(v.strip()))
     participants = t.loc[t.above_normal & known_participant, "participant_id"].nunique()
+    unresolved = int((t.above_normal & ~known_participant).sum())
     receipt["independent_participants_above_normal"] = int(participants)
+    receipt["samples_above_normal"] = int(t.above_normal.sum())
+    receipt["unresolved_participant_samples_above_normal"] = unresolved
     receipt["supporting_tumors"] = t[t.above_normal | t.single_sample_pass].to_dict("records")
     if participants >= REPEATED_TUMORS:
         receipt["routes"].append("two_independent_tumors_above_normal")
@@ -274,4 +313,9 @@ def assess_cancer_rna(
     receipt["reason"] = (
         "Cancer RNA route qualifies" if receipt["routes"] else "No cancer RNA route qualifies"
     )
+    if not receipt["routes"] and unresolved and participants + unresolved >= REPEATED_TUMORS:
+        receipt["status"] = "unassessed"
+        receipt["reason"] = (
+            "Patient identity is unresolved for potentially qualifying repeated tumor samples"
+        )
     return deepcopy(receipt)

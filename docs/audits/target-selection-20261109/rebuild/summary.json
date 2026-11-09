@@ -1,0 +1,119 @@
+{
+  "policy_id": "oncoref.target-selection.2026-11-09.1",
+  "proteins": 19893,
+  "categories": {
+    "Unsafe": 18259,
+    "Other": 724,
+    "CTA": 632,
+    "Cancer Antigen only": 250,
+    "Reproductive Antigen only": 28
+  },
+  "classifications": {
+    "Unsafe": 18259,
+    "Other:Review": 669,
+    "CTA": 632,
+    "Cancer Antigen only": 250,
+    "Other:Sequence": 40,
+    "Reproductive Antigen only": 28,
+    "Other:Expression": 15
+  },
+  "memberships": {
+    "is_cancer_antigen": 882,
+    "is_reproductive_antigen": 660,
+    "is_cta": 632,
+    "is_target_candidate": 910
+  },
+  "changes": [
+    {
+      "released_category": "CTA",
+      "category": "CTA",
+      "proteins": 574
+    },
+    {
+      "released_category": "CTA",
+      "category": "Other",
+      "proteins": 7
+    },
+    {
+      "released_category": "CTA",
+      "category": "Reproductive Antigen only",
+      "proteins": 26
+    },
+    {
+      "released_category": "Other",
+      "category": "CTA",
+      "proteins": 58
+    },
+    {
+      "released_category": "Other",
+      "category": "Cancer Antigen only",
+      "proteins": 250
+    },
+    {
+      "released_category": "Other",
+      "category": "Other",
+      "proteins": 717
+    },
+    {
+      "released_category": "Other",
+      "category": "Reproductive Antigen only",
+      "proteins": 2
+    },
+    {
+      "released_category": "Unsafe",
+      "category": "Unsafe",
+      "proteins": 18259
+    }
+  ],
+  "shared_eligible": 957,
+  "comparison_required_contexts": [
+    "adipose tissue",
+    "adrenal gland",
+    "amygdala",
+    "basal ganglia",
+    "bone marrow",
+    "cerebellum",
+    "cerebral cortex",
+    "choroid plexus",
+    "colon",
+    "duodenum",
+    "esophagus",
+    "heart muscle",
+    "hippocampal formation",
+    "hypothalamus",
+    "kidney",
+    "liver",
+    "lung",
+    "lymph node",
+    "midbrain",
+    "pancreas",
+    "parathyroid gland",
+    "pituitary gland",
+    "rectum",
+    "retina",
+    "salivary gland",
+    "skeletal muscle",
+    "skin",
+    "small intestine",
+    "smooth muscle",
+    "spinal cord",
+    "spleen",
+    "stomach",
+    "thymus",
+    "thyroid gland",
+    "tongue",
+    "urinary bladder"
+  ],
+  "assessed_cancer_statuses": {
+    "qualifies": 882,
+    "unassessed": 53,
+    "does_not_qualify": 22
+  },
+  "published_nomination_by_category": {
+    "CTA": 466,
+    "Cancer Antigen only": 47,
+    "Other": 78,
+    "Reproductive Antigen only": 13,
+    "Unsafe": 1788
+  }
+}

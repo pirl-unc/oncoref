@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the next target-set contract without inventing rebuilt catalog counts."""
+"""Render the target-set contract and link its measured catalog rebuild."""
 
 from __future__ import annotations
 
@@ -156,9 +156,10 @@ code{{font-size:.9em}}a{{color:#176689}}.note{{color:#53636c}}</style><main>
 <h1>Cancer and Reproductive Antigens</h1>
 <p><strong>CTA = Cancer Antigens ∩ Reproductive Antigens.</strong><br>
 Target candidates = Cancer Antigens ∪ Reproductive Antigens.</p>
-<p class="status">Next-policy evaluator: <code>{html.escape(definition["policy_id"])}</code>.
-The catalog rebuild is pending. The released 1.36.0 counts—607 CTA, 18,259 Unsafe and
-1,027 Other—use the earlier policy.</p>
+<p class="status">Rebuilt catalog: <code>{html.escape(definition["policy_id"])}</code>.
+{", ".join(f"{target_selection.metadata()['summary']['categories'][c]:,} {c}" for c in target_selection.CATEGORIES)}.
+<a href="rebuild/report.html">Filterable protein table, measurements and category changes</a>.
+The released 1.36.0 catalog remains a separate snapshot under its earlier policy.</p>
 <figure>{svg("sets")}</figure>
 <h2>One shared eligibility screen</h2>
 <p>Accepted normal-tissue or applicable clinical exclusion → <strong>Unsafe</strong>.

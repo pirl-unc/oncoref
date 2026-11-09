@@ -6,10 +6,11 @@ and sequence checks.
 
 ![Shared eligibility and antigen sets](audits/target-selection-20261109/sets.svg)
 
-The [full next-policy definition](target-selection.md) gives the exact thresholds,
-source requirements, API and paper roles. The evaluator is implemented; the catalog
-rebuild is pending. The [released catalog](cta-selection.md) retains its prior
-policy and counts.
+The [full policy definition](target-selection.md) gives the exact thresholds,
+source requirements, API and paper roles. The [rebuilt catalog](audits/target-selection-20261109/rebuild/index.md)
+contains 882 Cancer Antigens and 660 Reproductive Antigens: 632 CTAs in their
+intersection and 910 Target candidates in their union. The
+[1.36.0 catalog](cta-selection.md) retains its prior policy and counts.
 
 | Evidence | Role |
 |---|---|
