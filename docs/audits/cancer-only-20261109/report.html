@@ -1,0 +1,627 @@
+<!doctype html><meta charset="utf-8"><title>Cancer-only audit</title><style>body{font:16px/1.55 system-ui;max-width:1150px;margin:30px auto;padding:0 24px;color:#22313a}a{color:#126d80}img{max-width:100%}td,th{padding:9px;border-bottom:1px solid #dde3e5;text-align:left}table{border-collapse:collapse}h3{margin-top:2.5em}input{font:inherit;padding:8px;width:350px}</style><h1>Cancer-only expression: individual normal-tissue audit</h1>
+<p><strong>No protein in this screen qualifies as Cancer-Only.</strong> The existing numerical screen has 66 matches. Forty-seven have zero adult reproductive bulk RNA and receive individual reviews below; the other 19 have measurable reproductive bulk RNA. All 47 have some recorded developmental RNA, and reproductive-cell coverage is incomplete. These small developmental values are observations, not proof of translated fetal protein.</p>
+<p><strong>Keep CTA, Other and Unsafe.</strong> Use cancer expression and reproductive/developmental expression as separate table fields. The numerical screen mixes normal sensory receptors, inducible immune proteins, uncertain assays and poorly characterized copies. It does not define a coherent fourth category.</p>
+<p>Reviewed calls: <strong>36 Other:Review</strong>, <strong>8 Other:Expression</strong>, <strong>3 Unsafe</strong>.</p>
+<p><img alt="Selection counts" src="selection.png" /></p>
+<p><a href="table.html">Filterable individual reviews</a> · <a href="protein-reviews.csv">All 47 reviews</a> · <a href="all-66-screen-matches.csv.gz">All 66 numerical matches</a> · <a href="normal-top-contexts.csv.gz">Top five normal contexts per source</a> · <a href="olfactory-assays.csv">Exact olfactory assay results</a> · <a href="current-hpa-rna.csv.gz">Current HPA RNA</a> · <a href="manifest.json">Provenance</a></p>
+<h2>How the set was selected</h2>
+<p>The starting set requires the existing normal-low profile and at least two distinct tumors at &gt;=10 native TPM, or reviewed tumor protein. The saved tumor count stops after two supporting observations: it is a <strong>lower bound</strong>, not prevalence. Zero adult reproductive bulk RNA defines the 47-protein audit, rather than calling a value below 5 nTPM absent. Placenta is included in the pinned reproductive bulk definition. Missing cell assays are never filled with zero.</p>
+<h2>Assay review</h2>
+<p>Every protein has a retained exact-symbol <a href="literature-search-ledger.csv">literature-search query and result count</a>, capped at 100 retrieved records per query. Search hits identify leads; accepted findings below require review of the human tissue, assay and exact gene. Full abstracts are not redistributed in the query metadata.</p>
+<p><a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014</a> supplies measured RNA-copy estimates in 26 human olfactory-mucosa donors. Expression counts below use the authors' &gt;=5 copies per 20 ng RNA rule. Raw Cq &lt;35 is recorded separately. OR52E6/OR52E8 and OR5D18/OR5D16 cross-react. OR5D18 has zero donors above the copy threshold in this study despite seven Cq values below 35; its gut-cell evidence is independent. <a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020</a> supplies observed olfactory-neuron counts, not a complete negative receptor panel. Neither experiment proves protein production.</p>
+<p>HPA responses were retrieved separately from pinned v23 selection data. Uncertain or shared IHC supplies a review question; unavailable IHC/MS supplies no negative result. An ectopic-expression experiment, recombinant protein, animal ortholog or family-wide annotation cannot establish exact human normal protein. New reviewed normal findings enter the same knowledge gate used for every protein.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014</a></td>
+<td>Donor-level olfactory qPCR, calibrated copy estimates and cross-reactivity controls.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020</a></td>
+<td>Positive adult olfactory-neuron counts and cell-enrichment tables.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1038/s41467-026-71595-6">Mbouamboua 2026</a></td>
+<td>Exact gene labels and positive fetal nasal-cell counts; six matches in this set.</td>
+</tr>
+<tr>
+<td><a href="https://www.proteinatlas.org/">Human Protein Atlas</a></td>
+<td>Forty-seven saved XML responses: current RNA, normal-tissue IHC validation and MS evidence labels. Cancer staining and pig RNA are excluded from normal-human observations.</td>
+</tr>
+<tr>
+<td><a href="https://www.uniprot.org/">UniProt</a></td>
+<td>Five saved gene-specific responses for SCYGR2/8, KRTAP21-1 and USP17L8/13: protein-existence annotations and primary-reference leads.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1038/s41467-026-75722-1">Song 2026 adult olfactory atlas</a></td>
+<td>Bibliographic discovery retained; processed gene-level tables were not retrieved. It contributes no positive or negative gene-level measurement here.</td>
+</tr>
+</tbody>
+</table>
+<h2>Individual decisions</h2>
+<h3>CLDN25</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000228607">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000228607/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0.65 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1297 TPM. Cancer maximum: 642.7 TPM.</p>
+<ul>
+<li>Durante reports enriched adult human olfactory-cell RNA, supplying the existing hold. Claudin-family function does not establish the localization or indispensability of this exact protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>The 2024 variant study (with a 2026 correction) examines a patient and transfected HEK293/canine MDCKII/mouse endothelial models. It adds a barrier-function question, without establishing adult human neural protein or cytotoxic-injury causality.</li>
+<li>Reported enriched RNA in a defined adult human olfactory population.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: NEC_LUNG_LARGECELL / S02269: 643 TPM; MENINGIOMA / I186: 17 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000228607/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1093/hmg/ddae038">CLDN25 variant and barrier-cell models (2024)</a> · <a href="https://doi.org/10.1093/hmg/ddaf192">Correction to the CLDN25 variant study (2026)</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/">Single cell analysis of olfactory neurogenesis and differentiation in adult humans</a></p>
+<h3>IFNA4</h3>
+<p><strong>Unsafe</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000236637">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000236637/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0.518 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.02136 TPM. Cancer maximum: 81.11 TPM.</p>
+<ul>
+<li>Activated normal immune-cell protein supplies the existing Unsafe finding. Highly homologous interferons and a shared HPA reagent require assay-specific attribution.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Reported secreted normal immune-cell protein, increased after activation.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_046.1_T_RNA: 81.1 TPM; NEC_MERKEL / MO_MCC_046.1_T_RNA.1: 81.1 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000236637/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2022.814627/full">Proteomic and Single-Cell Transcriptomic Dissection of Human Plasmacytoid Dendritic Cell Response to Influenza Virus</a></p>
+<h3>IFNW1</h3>
+<p><strong>Unsafe</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000177047">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000177047/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.5 nTPM; 0.781 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1449 TPM. Cancer maximum: 24.08 TPM.</p>
+<ul>
+<li>Activated normal immune-cell protein supplies the existing Unsafe finding. Resting bulk RNA misses induced production. Secretion does not identify every producing cell.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Reported secreted normal immune-cell protein, increased after activation.</li>
+</ul>
+<p>Supporting tumor observations: BL / BLGSP-71-19-00111-01A: 24.1 TPM; BL / BLGSP-71-27-00420-01A: 11.4 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000177047/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2022.814627/full">Proteomic and Single-Cell Transcriptomic Dissection of Human Plasmacytoid Dendritic Cell Response to Influenza Virus</a></p>
+<h3>KRTAP21-1</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000187005">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000187005/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0.491 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.05235 TPM. Cancer maximum: 17.2 TPM.</p>
+<ul>
+<li>Hair-family membership identifies the compartment to examine but is not exact-protein proof. HPA lists MS protein-existence evidence without tissue or peptide attribution in its XML, whereas the retrieved UniProt entry remains homology-based. Zhang 2014 reports gene-specific qPCR in LoVo cancer cells; the paper's HCEC experiments are not a KRTAP21-1 normal-cell result.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 17.2 TPM; NEC_LUNG_LARGECELL / S02271: 13.8 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000187005/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.3892/ol.2014.2151">Zhang 2014: parvovirus B19 and colorectal cancer cells</a> · <a href="https://doi.org/10.1186/s12862-023-02107-z">Litman and Stein 2023: KRTAP evolution and skin transcriptomics</a></p>
+<h3>MRGPRX4</h3>
+<p><strong>Unsafe</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000179817">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000179817/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03862 TPM. Cancer maximum: 187 TPM.</p>
+<ul>
+<li>Human dorsal-root-ganglion neuronal RNA and protein supply the existing Unsafe finding. The rare sensory-neuron compartment is absent from the ordinary bulk comparison.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Human normal DRG neurons show localized RNA and protein; approximately 6–8% of neurons are positive.</li>
+</ul>
+<p>Supporting tumor observations: SKCM / TCGA-D3-A3C7-06: 187 TPM; SKCM / TCGA-QB-AA9O-06: 108 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000179817/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://elifesciences.org/articles/48431">MRGPRX4 is a bile acid receptor for human cholestatic itch</a></p>
+<h3>OC90</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000253117">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000253117/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.8 nTPM; 0.227 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.3192 TPM. Cancer maximum: 142.8 TPM.</p>
+<ul>
+<li>Inner-ear otoconial biology is strongly established in mice. The principal source cloned human PLA2L/OC90 but obtained native protein from mouse tissue; retain the human localization hold.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Major protein of the otoconia, a calcium carbonate structure in the saccule and utricle of the ear. Together with OTOL1, acts as a scaffold for otoconia biomineralization: sequesters calcium and forms interconnecting fibrils between otoconia that are incorporated into the calcium crystal structure. Together with OTOL1, modulates calcite crystal morphology and growth kinetics. It is unlikely that this protein has phospholipase A2 activity </li>
+</ul>
+<p>Supporting tumor observations: MBL / THR20_0493_S01: 143 TPM; NEC_LUNG_LARGECELL / S02269: 11.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000253117/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC28045/">Otoconin-90 cloning and mammalian otoconial matrix protein (1998)</a> · <a href="https://www.uniprot.org/uniprotkb/Q02509/entry">Otoconin-90 — UniProtKB/Swiss-Prot 2026_03</a></p>
+<h3>OR10A5</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000166363">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000166363/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.9 nTPM; 0.3 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.2802 TPM. Cancer maximum: 120.5 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 26/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Durante Table 7 reports RNA in 1 adult human olfactory sensory neurons.</li>
+<li>Reported RNA in normal human olfactory sensory neurons.</li>
+<li>Normal human olfactory-mucosa assay labeled OR10A5: 26/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_046.2_T_RNA: 121 TPM; NEC_MERKEL / MO_MCC_061_T_RNA: 116 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000166363/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a> · <a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020: adult human olfactory single-cell atlas</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/">Single cell analysis of olfactory neurogenesis and differentiation in adult humans</a></p>
+<h3>OR11H1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000130538">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000130538/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.003374 TPM. Cancer maximum: 43.63 TPM.</p>
+<ul>
+<li>Zhao 2013 reports RNA in healthy-control PBMC and neurologically normal postmortem brain, with qPCR confirmation. This is normal non-olfactory RNA evidence; OR4M1 functional experiments do not establish OR11H1 protein or function.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Zhao 2013 reports RNA in healthy-control PBMC and neurologically normal postmortem brain, with qPCR confirmation. This is normal non-olfactory RNA evidence; OR4M1 functional experiments do not establish OR11H1 protein or function.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 26.6 TPM; NEC_MERKEL / MO_MCC_130.1_T_RNA: 43.6 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000130538/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3968322/">Zhao 2013: PBMC and normal brain olfactory-receptor RNA</a></p>
+<h3>OR11H12</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000257115">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000257115/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03796 TPM. Cancer maximum: 56.55 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_113_T_RNA: 56.5 TPM; NEC_MERKEL / MO_MCC_042_T_RNA: 17.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000257115/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>OR11H2</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000258453">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000258453/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.1 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03749 TPM. Cancer maximum: 24.68 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_042_T_RNA: 24.7 TPM; NEC_MERKEL / MO_MCC_058.1_T_RNA: 11.8 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000258453/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>OR11H6</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000176219">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000176219/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.1 nTPM; 0.653 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1343 TPM. Cancer maximum: 35.54 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 22/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Durante Table 7 reports RNA in 1 adult human olfactory sensory neurons.</li>
+<li>Reported RNA in normal human olfactory sensory neurons.</li>
+<li>Normal human olfactory-mucosa assay labeled OR11H6: 22/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 35.5 TPM; NEC_MERKEL / MO_MCC_061_T_RNA: 11.7 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000176219/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a> · <a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020: adult human olfactory single-cell atlas</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/">Single cell analysis of olfactory neurogenesis and differentiation in adult humans</a></p>
+<h3>OR12D2</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000280236">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000280236/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.1 nTPM; 0.0414 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.0682 TPM. Cancer maximum: 16.17 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 21/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR12D2: 21/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: CHOL / TCGA-W5-AA38-01: 11 TPM; GBC / GSM4146160: 16.2 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000280236/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR13H1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000171054">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000171054/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.4 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.06142 TPM. Cancer maximum: 72.35 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 2/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR13H1: 2/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_010_T_RNA: 72.3 TPM; NEC_MERKEL / MO_MCC_036_T_RNA: 65.9 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000171054/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR1D5</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000262628">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000262628/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.6 nTPM; 0.7 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03838 TPM. Cancer maximum: 55.5 TPM.</p>
+<ul>
+<li>The Parkinson nasal-marker paper validates OR1D5 RNA in treated RPMI-2650 carcinoma cells. Its patient/control nasal-fluid validation concerns other genes; it does not establish normal OR1D5 production.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_113_T_RNA: 55.5 TPM; T_ALL / TARGET-10-PATSIY-09A: 30.6 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000262628/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7408990/">Nasal epithelial Parkinson markers: carcinoma model and clinical validation (2020)</a></p>
+<h3>OR1L1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000173679">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000173679/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1 nTPM; 0.708 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.3341 TPM. Cancer maximum: 33.82 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 26/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR1L1: 26/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 33.8 TPM; NEC_MERKEL / MO_MCC_113.2_T_RNA: 17.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000173679/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR1L4</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000136939">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000136939/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.4 nTPM; 0.71 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.01303 TPM. Cancer maximum: 125.2 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 26/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR1L4: 26/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 38 TPM; HL / SRS3811192: 11.4 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000136939/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR1P1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000262085">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000262085/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.2 nTPM; 0.503 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.04744 TPM. Cancer maximum: 21.88 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: T_ALL / TARGET-10-PARLJA-09A: 21.9 TPM; T_ALL / TARGET-10-PATSIY-09A: 21.5 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000262085/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>OR2B2</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000168131">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000168131/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.5 nTPM; 0.339 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 1.84 TPM. Cancer maximum: 246.3 TPM.</p>
+<ul>
+<li>The linked-receptor testicular-expression paper found in the search studies pigs. It cannot establish reproductive expression of human OR2B2. No exact-symbol assay occurs in the human olfactory qPCR table.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_009_T_RNA: 246 TPM; NEC_MERKEL / MO_MCC_042_T_RNA: 239 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000168131/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/39915713/">MHC-linked receptors and pig testis (2025; species mismatch)</a></p>
+<h3>OR2M2</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000198601">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000198601/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.7 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1268 TPM. Cancer maximum: 22.52 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>The 2026 fetal nasal atlas reports 2 cells expressing this exact gene label at 7-12 post-conceptional weeks. These counts are not TPM, protein or copy-specific peptide evidence.</li>
+<li>Verbeurgt Table S3 reports 26/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Durante Table 7 reports RNA in 3 adult human olfactory sensory neurons.</li>
+<li>Reported RNA in normal human olfactory sensory neurons.</li>
+<li>Normal human olfactory-mucosa assay labeled OR2M2: 26/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 22.5 TPM; SARC_PEC / JNGR120: 11.5 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000198601/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1038/s41467-026-71595-6">Mbouamboua 2026: fetal human nasal atlas</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a> · <a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020: adult human olfactory single-cell atlas</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/">Single cell analysis of olfactory neurogenesis and differentiation in adult humans</a></p>
+<h3>OR2M5</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000162727">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000162727/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.9 nTPM; 0.328 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.01047 TPM. Cancer maximum: 40.95 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 3/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR2M5: 3/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: SARC_PEC / JNGR114: 40.9 TPM; SARC_PEC / JNGR95: 11.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000162727/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR2S2</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000278889">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000278889/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.4 nTPM; 0.0289 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.0296 TPM. Cancer maximum: 14.71 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 23/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR2S2: 23/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: SARC_CHON / L5364: 14.7 TPM; SARC_CHON / L4543: 13.8 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000278889/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR2T5</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000203661">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000203661/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.1 nTPM; 0.534 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.08594 TPM. Cancer maximum: 17.82 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: MCL / COHP_50477: 17.8 TPM; MCL / COHP_50508: 14.2 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000203661/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>OR4D10</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000254466">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000254466/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03373 TPM. Cancer maximum: 193.8 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>The 2026 fetal nasal atlas reports 1 cells expressing this exact gene label at 7-12 post-conceptional weeks. These counts are not TPM, protein or copy-specific peptide evidence.</li>
+<li>Verbeurgt Table S3 reports 17/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Durante Table 7 reports RNA in 2 adult human olfactory sensory neurons.</li>
+<li>Reported RNA in normal human olfactory sensory neurons.</li>
+<li>Normal human olfactory-mucosa assay labeled OR4D10: 17/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: BRCA / TCGA-AR-A1AV-01: 29.4 TPM; SARC_LPS_UNSPEC / TCGA-DX-A23Z-01: 194 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000254466/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1038/s41467-026-71595-6">Mbouamboua 2026: fetal human nasal atlas</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a> · <a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020: adult human olfactory single-cell atlas</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/">Single cell analysis of olfactory neurogenesis and differentiation in adult humans</a></p>
+<h3>OR4F21</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000176269">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000176269/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.1 nTPM; 0.3 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1625 TPM. Cancer maximum: 25.19 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 14 TPM; NEC_MERKEL / MO_MCC_064_T_RNA: 12.5 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000176269/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>OR51B2</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000279012">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000279012/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.3 nTPM; 0.7 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1003 TPM. Cancer maximum: 26.48 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 26/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR51B2: 26/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 26.5 TPM; HL / SRS3811192: 14.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000279012/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR51B6</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000176239">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000176239/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.8 nTPM; 0.627 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.5168 TPM. Cancer maximum: 27.72 TPM.</p>
+<ul>
+<li>The human leukocyte study includes OR51B6 in an OR56B4/OR52A4/OR51B6 antibody mixture. The positive mixed stain leaves exact-receptor attribution unresolved and supplies a review hold rather than an exact-protein exclusion.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>The human leukocyte study includes OR51B6 in an OR56B4/OR52A4/OR51B6 antibody mixture. The positive mixed stain leaves exact-receptor attribution unresolved and supplies a review hold rather than an exact-protein exclusion.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811192: 27.7 TPM; HL / SRS3811196: 14.2 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000176239/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/25624459/">Class I odorant and taste receptors in circulating human leukocytes (2015)</a></p>
+<h3>OR52E5</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000277932">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000277932/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0.127 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.4159 TPM. Cancer maximum: 11.95 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>The 2026 fetal nasal atlas reports 3 cells expressing this exact gene label at 7-12 post-conceptional weeks. These counts are not TPM, protein or copy-specific peptide evidence.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Durante Table 7 reports RNA in 2 adult human olfactory sensory neurons.</li>
+<li>Reported RNA in normal human olfactory sensory neurons.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_046.1_T_RNA: 12 TPM; NEC_MERKEL / MO_MCC_046.1_T_RNA.1: 12 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000277932/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1038/s41467-026-71595-6">Mbouamboua 2026: fetal human nasal atlas</a> · <a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020: adult human olfactory single-cell atlas</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/">Single cell analysis of olfactory neurogenesis and differentiation in adult humans</a></p>
+<h3>OR52E6</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000205409">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000205409/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.9156 TPM. Cancer maximum: 19.93 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 16/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>The authors cannot discriminate OR52E6 from OR52E8 with this assay. This is shared-assay evidence.</li>
+<li>Normal human olfactory-mucosa assay labeled OR52E6: 16/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_054.2_T_RNA: 19.9 TPM; NEC_MERKEL / NU_MCC_012_T_RNA: 11.4 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000205409/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR52E8</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000183269">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000183269/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0.0492 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1598 TPM. Cancer maximum: 21.69 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>The 2026 fetal nasal atlas reports 1 cells expressing this exact gene label at 7-12 post-conceptional weeks. These counts are not TPM, protein or copy-specific peptide evidence.</li>
+<li>Verbeurgt Table S3 reports 17/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>The authors cannot discriminate OR52E8 from OR52E6 with this assay. This is shared-assay evidence.</li>
+<li>Normal human olfactory-mucosa assay labeled OR52E8: 17/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_054.2_T_RNA: 21.7 TPM; NEC_MERKEL / MO_MCC_063_T_RNA: 12.2 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000183269/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1038/s41467-026-71595-6">Mbouamboua 2026: fetal human nasal atlas</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR56A5</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000188691">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000188691/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0.602 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.07528 TPM. Cancer maximum: 134 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 15/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR56A5: 15/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 53.6 TPM; NEC_MERKEL / MO_MCC_063_T_RNA: 134 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000188691/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR5C1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000148215">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000148215/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.9 nTPM; 0.449 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.009806 TPM. Cancer maximum: 50.64 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 26/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR5C1: 26/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_113.2_T_RNA: 50.6 TPM; NEC_MERKEL / MO_MCC_113_T_RNA: 43.6 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000148215/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR5D18</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186119">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000186119/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1123 TPM. Cancer maximum: 40.97 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 0/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>The authors cannot discriminate OR5D18 from OR5D16 with this assay. This is shared-assay evidence.</li>
+<li>Braun 2007 reports OR73/OR5D18 in laser-microdissected normal human gut enterochromaffin cells; cultured-cell functional experiments are separate.</li>
+<li>OR73/OR5D18 RNA is reported in laser-microdissected human mucosal enterochromaffin cells.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 27.9 TPM; NET_MIDGUT / SRS2197566: 41 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000186119/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1053/j.gastro.2007.02.036">Braun 2007: human gut enterochromaffin-cell receptors</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR6S1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000181803">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000181803/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0 nTPM; 0.1 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.411 TPM. Cancer maximum: 51.55 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 8/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Normal human olfactory-mucosa assay labeled OR6S1: 8/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 15.3 TPM; MCL / COHP_50518: 51.6 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000181803/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR6V1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000225781">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000225781/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.1 nTPM; 0.286 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.04206 TPM. Cancer maximum: 63.79 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>Verbeurgt Table S3 reports 26/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+<li>Multiple assays are retained individually. The gene-level donor count is their union, with each donor counted once.</li>
+<li>Normal human olfactory-mucosa assay labeled OR6V1: 26/26 donors at &gt;=5 estimated RNA copies/20 ng.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_061_T_RNA: 63.8 TPM; NEC_MERKEL / MO_MCC_058.1_T_RNA: 40.2 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000225781/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR7G3</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000170920">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000170920/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.007801 TPM. Cancer maximum: 29.21 TPM.</p>
+<ul>
+<li>A schizophrenia leukocyte RNA-seq study is an exact-symbol literature lead. A normal-control gene-specific result was not extracted, so this study supplies no normal-positive or normal-negative credit here.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 29.2 TPM; OV / TCGA-30-1866-01: 16.9 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000170920/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/32038049/">Schizophrenia leukocyte RNA-seq (2020; discovery lead)</a></p>
+<h3>OR8S1</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284723">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000284723/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.8 nTPM; 0.469 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1385 TPM. Cancer maximum: 14.16 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>The 2026 fetal nasal atlas reports 1 cells expressing this exact gene label at 7-12 post-conceptional weeks. These counts are not TPM, protein or copy-specific peptide evidence.</li>
+<li>Verbeurgt Table S3 reports 0/26 donors at &gt;=5 estimated copies per 20 ng RNA; the raw Cq &lt;35 count is recorded separately.</li>
+</ul>
+<p>Supporting tumor observations: BLCA / TCGA-ZF-AA51-01: 14.2 TPM; BLCA / TCGA-KQ-A41Q-01: 12 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000284723/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1038/s41467-026-71595-6">Mbouamboua 2026: fetal human nasal atlas</a> · <a href="https://doi.org/10.1371/journal.pone.0096333">Verbeurgt 2014: normal human olfactory-mucosa qPCR</a></p>
+<h3>OR9A1P</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000237621">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000237621/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.1 nTPM; 0.703 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.02013 TPM. Cancer maximum: 36.23 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: MENINGIOMA / TB70: 36.2 TPM; MENINGIOMA / TB30: 17.9 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000237621/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>OR9G1</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000174914">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000174914/tissue">HPA</a></p>
+<p>Pinned normal maxima: 1.5 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.008469 TPM. Cancer maximum: 109.4 TPM.</p>
+<ul>
+<li>Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>The 2026 fetal nasal atlas reports 1 cells expressing this exact gene label at 7-12 post-conceptional weeks. These counts are not TPM, protein or copy-specific peptide evidence.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Durante Table 7 reports RNA in 5 adult human olfactory sensory neurons.</li>
+<li>Reported RNA in normal human olfactory sensory neurons.</li>
+</ul>
+<p>Supporting tumor observations: SKCM / TCGA-Z2-AA3S-06: 109 TPM; SKCM / TCGA-ER-A3EV-06: 17.1 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000174914/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://doi.org/10.1038/s41467-026-71595-6">Mbouamboua 2026: fetal human nasal atlas</a> · <a href="https://doi.org/10.1038/s41593-020-0587-9">Durante 2020: adult human olfactory single-cell atlas</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/">Single cell analysis of olfactory neurogenesis and differentiation in adult humans</a></p>
+<h3>OTOR</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000125879">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000125879/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.1 nTPM; 0.426 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.02184 TPM. Cancer maximum: 5021 TPM.</p>
+<ul>
+<li>Human fetal cochlear cloning and mixed human/avian Northern evidence identify an inner-ear question; they do not establish adult human protein. Retain the stage-specific normal hold.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Human fetal cochlear cloning and human/avian Northern evidence require stage-specific adult human localization.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: SARC_RMS_ERMS / TH40_2212_S01: 5.02e+03 TPM; SARC_RMS_ERMS / THR24_2169_S01: 49.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000125879/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/10873378/">A novel conserved cochlear gene, OTOR: identification, expression analysis, and chromosomal mapping.</a></p>
+<h3>SCYGR2</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284643">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000284643/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.8 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.007395 TPM. Cancer maximum: 42.99 TPM.</p>
+<ul>
+<li>HPA assigns a hair-follicle-development RNA cluster and imports protein-existence evidence. This does not identify a tissue-specific endogenous peptide for the selected proteoform; exact normal protein localization remains unverified.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / NU_MCC_045_T_RNA: 43 TPM; NEC_MERKEL / MO_MCC_130.1_T_RNA: 42.7 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000284643/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>SCYGR8</h3>
+<p><strong>Other:Expression</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284635">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000284635/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.2 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.005652 TPM. Cancer maximum: 110.1 TPM.</p>
+<ul>
+<li>The former KRTAP28-8 name and predicted structural role identify a skin/hair question. Homology and recombinant products do not establish endogenous human hair expression; inspect the exact selected sequence.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / NU_MCC_045_T_RNA: 110 TPM; NEC_MERKEL / MO_MCC_054.2_T_RNA: 24.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000284635/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>
+<h3>TAAR6</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000146383">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000146383/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.2 nTPM; 0.303 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.5432 TPM. Cancer maximum: 71.26 TPM.</p>
+<ul>
+<li>Human normal-brain RT-PCR supplies the existing hold. Separate exact human TAAR6 from rodent receptor studies and schizophrenia association.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Human normal-brain RT-PCR requires compartment and protein assessment; association with schizophrenia is not itself a toxicity finding.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 17.5 TPM; NEC_MERKEL / MO_MCC_113_T_RNA: 71.3 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000146383/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/15329799/">Polymorphisms in the trace amine receptor 4 (TRAR4) gene on chromosome 6q23.2 are associated with susceptibility to schizophrenia.</a></p>
+<h3>TAAR8</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000146385">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000146385/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.238 TPM. Cancer maximum: 37.37 TPM.</p>
+<ul>
+<li>Human and rodent expression experiments must be separated. Recombinant human TAAR8 surface expression in COS-7 cells verifies a construct, not normal human tissue production.</li>
+<li>The current HPA response contains no tissue-IHC antibody assay for this protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Mixed human/rodent receptor-family study supports a normal-expression concern; no cross-species or paralog substitution is accepted.</li>
+</ul>
+<p>Supporting tumor observations: HL / SRS3811196: 20.2 TPM; NEC_MERKEL / NU_MCC_017_T_RNA: 37.4 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000146385/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4264187/">Human TAAR8 and murine Taar8b signaling and expression (2014)</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/11459929/">Trace amines: identification of a family of mammalian G protein-coupled receptors.</a></p>
+<h3>TAS2R42</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186136">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000186136/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0.962 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.04812 TPM. Cancer maximum: 106.4 TPM.</p>
+<ul>
+<li>Gene-specific adult human skin RNA supplies a normal-expression hold. The skin paper does not establish TAS2R42-specific protein, and other TAS2R staining cannot be borrowed.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+<li>Gene-specific TAS2R42 RNA is reported in normal adult human skin biopsies and donor skin RNA data.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_061_T_RNA: 33.2 TPM; NEC_MERKEL / NU_MCC_044.3_T_RNA: 29.4 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000186136/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/30332676/">Personalized expression of bitter receptors in human skin (2018)</a></p>
+<h3>TGM6</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000166948">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000166948/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.5 nTPM; 0.19 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.05328 TPM. Cancer maximum: 15.54 TPM.</p>
+<ul>
+<li>The neural/ataxia annotation and uncertain HPA neuronal staining require direct adult human localization; neither genetic disease nor rodent antibody experiments alone establish human protein.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Catalyzes the cross-linking of proteins and the conjugation of polyamines to proteins Spinocerebellar ataxia 35: A form of spinocerebellar ataxia, a clinically and genetically heterogeneous group of cerebellar disorders. Patients show progressive incoordination of gait and often poor coordination of hands, speech and eye movements, due to degeneration of the cerebellum with variable involvement of the brainstem and spinal cord. SCA35 patients commonly show upper limb involvement and torticollis. There is no cognitive impairment.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: BL / BLGSP-71-06-00166-01B: 11.8 TPM; BL / BLGSP-71-06-00080-01A: 11.1 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000166948/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://www.uniprot.org/uniprotkb/O95932/entry">Protein-glutamine gamma-glutamyltransferase 6 — UniProtKB/Swiss-Prot 2026_03</a></p>
+<h3>USP17L13</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000232399">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000232399/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.3 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.00769 TPM. Cancer maximum: 20.71 TPM.</p>
+<ul>
+<li>The current HPA antibody is uncertain and shared. A 2026 influenza study uses A549 cancer cells, CRISPR activation and overexpression; cytokine induction there cannot establish normal lung-cell production.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_036_T_RNA: 20.7 TPM; NEC_MERKEL / NU_MCC_006_T_RNA: 14.9 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000232399/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13211412/">USP17L13 and influenza replication in A549 cells (2026)</a></p>
+<h3>USP17L8</h3>
+<p><strong>Other:Review</strong> · <a href="https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000237038">Ensembl</a> · <a href="https://www.proteinatlas.org/ENSG00000237038/tissue">HPA</a></p>
+<p>Pinned normal maxima: 0.2 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.008196 TPM. Cancer maximum: 18.98 TPM.</p>
+<ul>
+<li>The HPA reagent is shared with related copies and gives uncertain normal staining. USP17L2/DUB3 functional literature cannot be transferred to USP17L8; retain an exact-copy normal-expression hold.</li>
+<li>HPA's MS field is unavailable; it supplies no protein-negative measurement.</li>
+<li>No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.</li>
+<li>Current HPA has positive normal staining with uncertain reagent reliability; it cannot establish exact protein production or absence.</li>
+<li>Positive normal-tissue HPA staining remains unresolved under uncertain antibody validation.</li>
+</ul>
+<p>Supporting tumor observations: NEC_MERKEL / MO_MCC_027_T_RNA: 19 TPM; NEC_MERKEL / MO_MCC_034_T_RNA: 18.6 TPM. Full source hashes and sample identities are in <a href="supporting-tumor-observations.csv">the observation table</a>.</p>
+<p><a href="https://www.proteinatlas.org/ENSG00000237038/tissue">HPA normal-tissue RNA, IHC and protein-evidence record</a></p>

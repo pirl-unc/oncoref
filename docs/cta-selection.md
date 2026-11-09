@@ -425,3 +425,17 @@ python scripts/regenerate_cta_walkthrough.py --finalize-receipts
 ```
 
 The slide script requires the runtime paths documented in its header. `--reuse-contexts` is permitted only when the complete-context replay inputs and output hashes verify. Frozen release files retain their original policy and code bytes. Current selection and audit exports are checksum-pinned separately from presentation artifacts.
+
+## Cancer expression without reproductive expression
+
+The [47-protein audit](audits/cancer-only-20261109/report.html) starts from the 66
+numerical matches to the normal-low tumor-expression screen. Forty-seven have zero
+adult reproductive bulk RNA, while 19 have measurable reproductive bulk RNA.
+Every selected protein has some developmental RNA and incomplete reproductive-cell
+coverage. None establishes cancer-only production.
+
+The reviewed decisions are three Unsafe, 36 Other:Review and eight Other:Expression.
+Normal olfactory neurons and mucosa, gut enterochromaffin cells, induced immune
+states, skin and the inner ear supply counterevidence or review questions.
+A new Cancer-Only category is unsupported. Cancer abundance and reproductive
+expression remain separate evidence fields in the tables and `cancer_only` API.

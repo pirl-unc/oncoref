@@ -724,6 +724,25 @@ staining. All measurements are gene-level and do not establish selected-proteofo
 expression or epitope accessibility. Full source versions and hashes are in
 `cta_literature.registry()["surface_sources"]`.
 
+The cancer-only audit reviews 47 proteins with cancer RNA and zero adult reproductive
+bulk RNA. It returns individual normal-tissue evidence, primary-source links,
+original assay scope and reviewed classifications:
+
+```python
+from oncoref import cancer_only
+
+reviews = cancer_only.records()
+one = cancer_only.records("OR5D18")
+selection = cancer_only.audit()["definition"]
+```
+
+The set has no confirmed cancer-only member. It includes three Unsafe proteins,
+36 Other:Review and eight Other:Expression under accepted pending curation.
+The [full report and filterable table](audits/cancer-only-20261109/report.html)
+retain all 66 starting matches, the 47 selected proteins, exact olfactory assay
+identities, supporting tumor observations and source receipts. These reviews are
+an evidence overlay on the named 1.35.0 classification snapshot.
+
 The uniform human decision view uses three categories and three Other reasons:
 
 ```python

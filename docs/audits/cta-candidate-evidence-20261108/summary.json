@@ -13,8 +13,8 @@
     "proteins": 19893,
     "member_loci": 20099,
     "other_subtypes": {
-      "Review": 616,
-      "Expression": 404,
+      "Review": 637,
+      "Expression": 383,
       "Sequence": 14
     },
     "flow_id": "oncoref.cta-decision-flow.2026-11-08.1"
