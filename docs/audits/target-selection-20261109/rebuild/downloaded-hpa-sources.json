@@ -1,0 +1,26 @@
+[
+  {
+    "source": "rna_tissue_hpa",
+    "version": "v23",
+    "url": "https://v23.proteinatlas.org/download/rna_tissue_hpa.tsv.zip",
+    "path": "tmp/target-rebuild-inputs/rna_tissue_hpa.tsv.zip",
+    "sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c",
+    "bytes": 6661353
+  },
+  {
+    "source": "rna_tissue_gtex",
+    "version": "v23",
+    "url": "https://v23.proteinatlas.org/download/rna_tissue_gtex.tsv.zip",
+    "path": "tmp/target-rebuild-inputs/rna_tissue_gtex.tsv.zip",
+    "sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881",
+    "bytes": 5960172
+  },
+  {
+    "source": "rna_brain_gtex",
+    "version": "v23",
+    "url": "https://v23.proteinatlas.org/download/rna_brain_gtex.tsv.zip",
+    "path": "tmp/target-rebuild-inputs/rna_brain_gtex.tsv.zip",
+    "sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592",
+    "bytes": 1633631
+  }
+]

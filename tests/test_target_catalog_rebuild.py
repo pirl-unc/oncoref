@@ -130,10 +130,23 @@ def test_packaged_snapshot_matches_report_metadata(catalog):
     path = ROOT / "oncoref/data/target-selection.csv.gz"
     assert hashlib.sha256(path.read_bytes()).hexdigest() == meta["data_sha256"]
     assert meta["summary"] == json.loads((OUT / "summary.json").read_text())
+    assert meta["comparison"]["normal_sources"] == json.loads(
+        (OUT / "downloaded-hpa-sources.json").read_text()
+    )
     assert catalog.policy.eq(policy.POLICY_ID).all()
     for category in policy.CATEGORIES:
         subset = pd.read_csv(OUT / (category.lower().replace(" ", "-") + ".csv.gz"))
         assert set(subset.entity_id) == set(catalog.loc[catalog.category.eq(category), "entity_id"])
+
+
+def test_report_provenance_manifest():
+    manifest = json.loads((OUT / "manifest.json").read_text())
+    for paths, base in [
+        (manifest["implementation_sha256"], ROOT),
+        (manifest["outputs_sha256"], OUT),
+    ]:
+        for path, digest in paths.items():
+            assert hashlib.sha256((base / path).read_bytes()).hexdigest() == digest, path
 
 
 def test_same_context_sum_and_missing_member_coverage():

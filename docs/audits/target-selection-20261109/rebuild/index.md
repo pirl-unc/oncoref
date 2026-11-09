@@ -68,7 +68,7 @@ The comparison uses source-native TPM and maxima of supported tissue/cell summar
 
 [Full protein decisions](protein-decisions.csv.gz) · [All member genes](gene-decisions.csv.gz) · [Normal comparison values](normal-comparison.csv.gz) · [Tumor witnesses](tumor-witnesses.csv.gz) · [Paper claims](paper-attestations.json.gz) · [Input hashes](inputs.json).
 
-With the pinned source files in the paths listed in `inputs.json`, run:
+The [pinned HPA download receipt](downloaded-hpa-sources.json) supplies exact URLs, paths and SHA-256 hashes for the newly retrieved native-TPM tables. With the pinned source files in the paths listed in `inputs.json`, run:
 
 ```sh
 python scripts/rebuild_target_catalog.py

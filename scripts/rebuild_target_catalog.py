@@ -131,6 +131,11 @@ def group_normal_rows(raw, facts, *, source, statistic, gene_col="gene_id"):
 
 def normal_panel(facts):
     rows = []
+    downloads = OUT / "downloaded-hpa-sources.json"
+    INPUTS[str(downloads.relative_to(ROOT))] = sha256(downloads)
+    for source in json.loads(downloads.read_text()):
+        if sha256(ROOT / source["path"]) != source["sha256"]:
+            raise ValueError(f"Changed normal source: {source['source']}")
     hpa_ids = read(BASE / "hpa_rna_consensus-accepted-identities.csv.gz")
     lookup = hpa_ids.set_index("source_gene_id").canonical_gene_id
     for name, context in [
@@ -641,7 +646,7 @@ def build():
             "Other assay scales continue to enforce the existing shared normal screen independently",
         ],
         "participant_identity": "TCGA, TARGET and MMRF participant schemes are resolved across aliquots/cohort views. Other source IDs support the single-sample route; unverified patient IDs cannot establish replication.",
-        "normal_sources": json.loads((RAW / "sources.json").read_text()),
+        "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
         "method_references": [
             "https://v23.proteinatlas.org/about/assays%2Bannotation",
             "https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/",

@@ -25,5 +25,6 @@
   "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohort-availability.csv": "dbaf442e5259940403f1cc809514a7808541f103e1436c5543b3d0f1b1d81443",
   "oncoref/data/cta-literature.json.gz": "110c01134ddbef070d1f286fc907e18b24f774df8edd90a0661e0b2cc3eed5f9",
   "oncoref/data/cta-literature-followup.json": "4320e47e44118a9690c6a03b52b97bda9a84e4b0c3b8fb172b30979f29f515dc",
-  "oncoref/data/cta-selection-audit.json": "55c4ce34a07a6e7eb41f1e1f697ccf565c2aedcab2a6782ee0315ffcd0421334"
+  "oncoref/data/cta-selection-audit.json": "55c4ce34a07a6e7eb41f1e1f697ccf565c2aedcab2a6782ee0315ffcd0421334",
+  "docs/audits/target-selection-20261109/rebuild/downloaded-hpa-sources.json": "979a66a01e645040214c663b4943805ba4f1c9d93335cbecf8ef255ae5291234"
 }

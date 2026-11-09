@@ -1,8 +1,8 @@
 {
   "policy_id": "oncoref.target-selection.2026-11-09.1",
   "implementation_sha256": {
-    "scripts/rebuild_target_catalog.py": "748cfe464b5cbd2ad17c936161fd83715d0e66a659fc8f59dad90b4d2299c5cf",
-    "scripts/render_target_catalog.py": "7c3b299341f30739ac2792bfb3382ac4286e2df4e55a9fc097e662cd368042f7",
+    "scripts/rebuild_target_catalog.py": "c9f82545e3573eefe9c0f87fef38245781dea17822f3a3d6bb1d8a0864c16012",
+    "scripts/render_target_catalog.py": "acc9ee8789259885c56b1970824896b29e8d1461b9da47b5f112ca63276782d3",
     "scripts/build_cta_candidate_evidence.py": "848c8952f442c4874018931ae47c4580eae8fc78345db3b3e5b1b720251d4261",
     "scripts/build_cta_alternative_evidence.py": "73653a6f8f3608a35de9d8ce8e086e530a13a93dbb9eecac8a1fb2091c59362d",
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
@@ -18,9 +18,10 @@
     "comparison.json": "dd5c7a095728c31cdf91a0e66fcb711dd03b3a253f16a80afd108be156e3e546",
     "counts.png": "fbf6ca7529341a27decc88f0c77eedd15b1d0d0815bbe3b1b27e7ddaaa5c9ec4",
     "cta.csv.gz": "cae90de09ce74fafd63488cf902e321c2550fea178d351f207796f376299dcf7",
+    "downloaded-hpa-sources.json": "979a66a01e645040214c663b4943805ba4f1c9d93335cbecf8ef255ae5291234",
     "gene-decisions.csv.gz": "066bda38a119eb7c5cd3e975c22bd2dd9f2288df32a45373d8f556ff096ee480",
-    "index.md": "9dccf1d91fa0131ea0007abf05b6836ac84db69056e70beae8284c93e7709668",
-    "inputs.json": "da3d349ca6c108a34afddba0a2220adf1dbe061d19fb376961ad30ac432e39e6",
+    "index.md": "1cfc0be37fccfcd9c50fa87768104565d2d9f91983cc0fac642d38213a68a39a",
+    "inputs.json": "bc8ed4b50058f008a6c5e60802a0a58a3a85b5ad53879296f649d5d11e7e0698",
     "normal-comparison.csv.gz": "3c3c296748775e4dcd9e0ddc35a762b5576d9cb593f74318622c6669bf7dbc3f",
     "other.csv.gz": "900296313212958b9e10683276413f4357c22fc9cc9b7a8f9cd5beb6248f9fa5",
     "paper-attestations.json.gz": "a0a452c0c27ffbc1572694f639cf91c092646ab0fe43173c4f86223c7ad05b14",
