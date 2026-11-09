@@ -42,5 +42,13 @@
     "index.md": "6822c2edfda25e3a0e0c204f63a210d8979ea8c853b98d63190e7a9dba816eff",
     "panels.csv": "1aa00c26aa574f0c7d77336323685321e61295a7d9426b7649afe72efbcd22a4",
     "policy.json": "9e31ab2cec7283ca4eec90415dad9d2f03818c93195d3887c51cc8365bc4bd49"
+  },
+  "input_snapshots": [
+    "oncoref/cta_selection_policy.py"
+  ],
+  "input_snapshot_archive": {
+    "path": "release-inputs.zip",
+    "sha256": "9bdd2325fd7f94b3c534564b491035f80acef1ca9e552ffec9e0db889fdd04c7",
+    "reason": "Original scientific inputs preserved byte-for-byte as the live policy implementation advances."
   }
 }

@@ -67,13 +67,15 @@
     "scope": "Literature, representative review and pending normal-evidence documentation; classification data, figures and sequence pins remain at the declared release."
   },
   "input_snapshots": [
+    "docs/audits/cta-definition-20261104/manifest.json",
     "docs/audits/cta-selection-20261028/manifest.json",
     "docs/audits/cta-source-walkthrough-20261028/manifest.json",
+    "docs/audits/normal-breadth-20261104/manifest.json",
     "oncoref/cta_selection_policy.py"
   ],
   "input_snapshot_archive": {
     "path": "release-inputs.zip",
-    "sha256": "7491d03a6ff2a9a8f66d68eac97a109c2765e2a6e75d603d5802a1ea58ffe913",
-    "reason": "Original scientific inputs preserved byte-for-byte as the live code advances."
+    "sha256": "5ead421d55dfb93e9386234fd1805c4554b2e613a567ac5015b65e0f03b00609",
+    "reason": "Original scientific inputs preserved byte-for-byte as the live implementation advances."
   }
 }
