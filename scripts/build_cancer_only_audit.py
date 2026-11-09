@@ -409,6 +409,11 @@ def build(apply_curation=False):
                 "tumor_support_samples_minimum": row.tumor_samples_ge10,
                 "normal_ntpm_max": row.healthy_maximum_ntpm,
                 "normal_tpm_max": row.healthy_maximum_tpm,
+                "translation_qualified": bool(row.translation_qualified),
+                "translation_qualification_reasons": row.translation_qualification_reasons
+                if pd.notna(row.translation_qualification_reasons)
+                else "",
+                "representative_selection_approved": bool(row.representative_selection_approved),
                 "hpa_antibodies": antibodies,
                 "hpa_positive_staining": positive,
                 "hpa_ms": ms,
@@ -437,7 +442,16 @@ def build(apply_curation=False):
     revised = replay_updates(facts).classifications.set_index("protein_equivalence_group_id")
     for record in records:
         r = revised.loc[record["entity_id"]]
-        record.update(classification=r.classification, assessment_status=r.assessment_status)
+        record.update(
+            classification=r.classification,
+            assessment_status=r.assessment_status,
+            admission_reasons=r.exclusion_reasons if pd.notna(r.exclusion_reasons) else "",
+        )
+        if not record["translation_qualified"]:
+            record["notes"].append(
+                "Translation review: the reference cannot supply a complete approved protein. "
+                "Recorded failures: " + record["translation_qualification_reasons"] + "."
+            )
     write_csv(pd.DataFrame(assay_rows), OUT / "olfactory-assays.csv")
     write_csv(pd.DataFrame(current_rna), OUT / "current-hpa-rna.csv.gz")
     write_csv(pool, OUT / "all-66-screen-matches.csv.gz")
@@ -599,6 +613,7 @@ def render(artifact):
                 f"### {name}\n",
                 f"**{r['classification']}** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={r['gene_id']}) · [HPA](https://www.proteinatlas.org/{r['gene_id']}/tissue)\n",
                 f"Pinned normal maxima: {r['normal_ntpm_max']:.3g} nTPM; {r['normal_tpm_max']:.3g} TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: {r['developmental_max_tpm']:.4g} TPM. Cancer maximum: {r['tumor_tpm_max']:.4g} TPM.\n",
+                f"Admission reasons: {r['admission_reasons']}. Assessment status: {r['assessment_status']}.\n",
                 *[f"- {note}" for note in r["notes"]],
                 "\nSupporting tumor observations: "
                 + "; ".join(
@@ -631,7 +646,9 @@ def render(artifact):
                     r["classification"],
                     f"{r['developmental_max_tpm']:.4g}",
                     f"{r['tumor_tpm_max']:.4g}",
-                    "<br>".join(html.escape(v) for v in r["notes"]),
+                    html.escape("Admission reasons: " + r["admission_reasons"])
+                    + "<br>"
+                    + "<br>".join(html.escape(v) for v in r["notes"]),
                     " · ".join(
                         f'<a href="{html.escape(url)}">{html.escape(source_title(url, artifact))}</a>'
                         for url in r["sources"]

@@ -39,6 +39,8 @@ HPA responses were retrieved separately from pinned v23 selection data. Uncertai
 
 Pinned normal maxima: 0.3 nTPM; 0.65 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1297 TPM. Cancer maximum: 642.7 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Durante reports enriched adult human olfactory-cell RNA, supplying the existing hold. Claudin-family function does not establish the localization or indispensability of this exact protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -58,6 +60,8 @@ Supporting tumor observations: NEC_LUNG_LARGECELL / S02269: 643 TPM; MENINGIOMA 
 
 Pinned normal maxima: 0.3 nTPM; 0.518 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.02136 TPM. Cancer maximum: 81.11 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: screened.
+
 - Activated normal immune-cell protein supplies the existing Unsafe finding. Highly homologous interferons and a shared HPA reagent require assay-specific attribution.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -76,6 +80,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_046.1_T_RNA: 81.1 TPM; NEC_ME
 
 Pinned normal maxima: 1.5 nTPM; 0.781 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1449 TPM. Cancer maximum: 24.08 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: screened.
+
 - Activated normal immune-cell protein supplies the existing Unsafe finding. Resting bulk RNA misses induced production. Secretion does not identify every producing cell.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -93,6 +99,8 @@ Supporting tumor observations: BL / BLGSP-71-19-00111-01A: 24.1 TPM; BL / BLGSP-
 
 Pinned normal maxima: 0.3 nTPM; 0.491 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.05235 TPM. Cancer maximum: 17.2 TPM.
 
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
+
 - Hair-family membership identifies the compartment to examine but is not exact-protein proof. HPA lists MS protein-existence evidence without tissue or peptide attribution in its XML, whereas the retrieved UniProt entry remains homology-based. Zhang 2014 reports gene-specific qPCR in LoVo cancer cells; the paper's HCEC experiments are not a KRTAP21-1 normal-cell result.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -107,6 +115,8 @@ Supporting tumor observations: HL / SRS3811196: 17.2 TPM; NEC_LUNG_LARGECELL / S
 **Unsafe** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000179817) · [HPA](https://www.proteinatlas.org/ENSG00000179817/tissue)
 
 Pinned normal maxima: 0.3 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03862 TPM. Cancer maximum: 187 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: screened.
 
 - Human dorsal-root-ganglion neuronal RNA and protein supply the existing Unsafe finding. The rare sensory-neuron compartment is absent from the ordinary bulk comparison.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -125,6 +135,8 @@ Supporting tumor observations: SKCM / TCGA-D3-A3C7-06: 187 TPM; SKCM / TCGA-QB-A
 
 Pinned normal maxima: 0.8 nTPM; 0.227 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.3192 TPM. Cancer maximum: 142.8 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Inner-ear otoconial biology is strongly established in mice. The principal source cloned human PLA2L/OC90 but obtained native protein from mouse tissue; retain the human localization hold.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -141,6 +153,8 @@ Supporting tumor observations: MBL / THR20_0493_S01: 143 TPM; NEC_LUNG_LARGECELL
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000166363) · [HPA](https://www.proteinatlas.org/ENSG00000166363/tissue)
 
 Pinned normal maxima: 1.9 nTPM; 0.3 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.2802 TPM. Cancer maximum: 120.5 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -161,6 +175,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_046.2_T_RNA: 121 TPM; NEC_MER
 
 Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.003374 TPM. Cancer maximum: 43.63 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Zhao 2013 reports RNA in healthy-control PBMC and neurologically normal postmortem brain, with qPCR confirmation. This is normal non-olfactory RNA evidence; OR4M1 functional experiments do not establish OR11H1 protein or function.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -177,6 +193,8 @@ Supporting tumor observations: HL / SRS3811196: 26.6 TPM; NEC_MERKEL / MO_MCC_13
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000257115) · [HPA](https://www.proteinatlas.org/ENSG00000257115/tissue)
 
 Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03796 TPM. Cancer maximum: 56.55 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -195,6 +213,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_113_T_RNA: 56.5 TPM; NEC_MERK
 
 Pinned normal maxima: 0.1 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03749 TPM. Cancer maximum: 24.68 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -211,6 +231,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_042_T_RNA: 24.7 TPM; NEC_MERK
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000176219) · [HPA](https://www.proteinatlas.org/ENSG00000176219/tissue)
 
 Pinned normal maxima: 0.1 nTPM; 0.653 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1343 TPM. Cancer maximum: 35.54 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -231,6 +253,8 @@ Supporting tumor observations: HL / SRS3811196: 35.5 TPM; NEC_MERKEL / MO_MCC_06
 
 Pinned normal maxima: 1.1 nTPM; 0.0414 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.0682 TPM. Cancer maximum: 16.17 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -247,6 +271,8 @@ Supporting tumor observations: CHOL / TCGA-W5-AA38-01: 11 TPM; GBC / GSM4146160:
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000171054) · [HPA](https://www.proteinatlas.org/ENSG00000171054/tissue)
 
 Pinned normal maxima: 0.4 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.06142 TPM. Cancer maximum: 72.35 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -265,6 +291,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_010_T_RNA: 72.3 TPM; NEC_MERK
 
 Pinned normal maxima: 0.6 nTPM; 0.7 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03838 TPM. Cancer maximum: 55.5 TPM.
 
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
+
 - The Parkinson nasal-marker paper validates OR1D5 RNA in treated RPMI-2650 carcinoma cells. Its patient/control nasal-fluid validation concerns other genes; it does not establish normal OR1D5 production.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -280,6 +308,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_113_T_RNA: 55.5 TPM; T_ALL / 
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000173679) · [HPA](https://www.proteinatlas.org/ENSG00000173679/tissue)
 
 Pinned normal maxima: 1 nTPM; 0.708 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.3341 TPM. Cancer maximum: 33.82 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -298,6 +328,8 @@ Supporting tumor observations: HL / SRS3811196: 33.8 TPM; NEC_MERKEL / MO_MCC_11
 
 Pinned normal maxima: 1.4 nTPM; 0.71 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.01303 TPM. Cancer maximum: 125.2 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -315,10 +347,13 @@ Supporting tumor observations: HL / SRS3811196: 38 TPM; HL / SRS3811192: 11.4 TP
 
 Pinned normal maxima: 0.2 nTPM; 0.503 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.04744 TPM. Cancer maximum: 21.88 TPM.
 
+Admission reasons: Reproductive / embryonic association | Translation qualification. Assessment status: translation_review.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
+- Translation review: the reference cannot supply a complete approved protein. Recorded failures: ambiguous_or_interrupted_sequence | designated_translation_incomplete | incomplete_stop | nonqualifying_transcript_biotype.
 
 Supporting tumor observations: T_ALL / TARGET-10-PARLJA-09A: 21.9 TPM; T_ALL / TARGET-10-PATSIY-09A: 21.5 TPM. Full source hashes and sample identities are in [the observation table](supporting-tumor-observations.csv).
 
@@ -330,6 +365,8 @@ Supporting tumor observations: T_ALL / TARGET-10-PARLJA-09A: 21.9 TPM; T_ALL / T
 **Other:Expression** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000168131) · [HPA](https://www.proteinatlas.org/ENSG00000168131/tissue)
 
 Pinned normal maxima: 0.5 nTPM; 0.339 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 1.84 TPM. Cancer maximum: 246.3 TPM.
+
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
 
 - The linked-receptor testicular-expression paper found in the search studies pigs. It cannot establish reproductive expression of human OR2B2. No exact-symbol assay occurs in the human olfactory qPCR table.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -346,6 +383,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_009_T_RNA: 246 TPM; NEC_MERKE
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000198601) · [HPA](https://www.proteinatlas.org/ENSG00000198601/tissue)
 
 Pinned normal maxima: 1.7 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1268 TPM. Cancer maximum: 22.52 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -367,6 +406,8 @@ Supporting tumor observations: HL / SRS3811196: 22.5 TPM; SARC_PEC / JNGR120: 11
 
 Pinned normal maxima: 1.9 nTPM; 0.328 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.01047 TPM. Cancer maximum: 40.95 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -383,6 +424,8 @@ Supporting tumor observations: SARC_PEC / JNGR114: 40.9 TPM; SARC_PEC / JNGR95: 
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000278889) · [HPA](https://www.proteinatlas.org/ENSG00000278889/tissue)
 
 Pinned normal maxima: 0.4 nTPM; 0.0289 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.0296 TPM. Cancer maximum: 14.71 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -401,6 +444,8 @@ Supporting tumor observations: SARC_CHON / L5364: 14.7 TPM; SARC_CHON / L4543: 1
 
 Pinned normal maxima: 0.1 nTPM; 0.534 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.08594 TPM. Cancer maximum: 17.82 TPM.
 
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -416,6 +461,8 @@ Supporting tumor observations: MCL / COHP_50477: 17.8 TPM; MCL / COHP_50508: 14.
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000254466) · [HPA](https://www.proteinatlas.org/ENSG00000254466/tissue)
 
 Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.03373 TPM. Cancer maximum: 193.8 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -437,6 +484,8 @@ Supporting tumor observations: BRCA / TCGA-AR-A1AV-01: 29.4 TPM; SARC_LPS_UNSPEC
 
 Pinned normal maxima: 1.1 nTPM; 0.3 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1625 TPM. Cancer maximum: 25.19 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -453,6 +502,8 @@ Supporting tumor observations: HL / SRS3811196: 14 TPM; NEC_MERKEL / MO_MCC_064_
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000279012) · [HPA](https://www.proteinatlas.org/ENSG00000279012/tissue)
 
 Pinned normal maxima: 1.3 nTPM; 0.7 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1003 TPM. Cancer maximum: 26.48 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -471,6 +522,8 @@ Supporting tumor observations: HL / SRS3811196: 26.5 TPM; HL / SRS3811192: 14.3 
 
 Pinned normal maxima: 0.8 nTPM; 0.627 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.5168 TPM. Cancer maximum: 27.72 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - The human leukocyte study includes OR51B6 in an OR56B4/OR52A4/OR51B6 antibody mixture. The positive mixed stain leaves exact-receptor attribution unresolved and supplies a review hold rather than an exact-protein exclusion.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -487,6 +540,8 @@ Supporting tumor observations: HL / SRS3811192: 27.7 TPM; HL / SRS3811196: 14.2 
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000277932) · [HPA](https://www.proteinatlas.org/ENSG00000277932/tissue)
 
 Pinned normal maxima: 0.3 nTPM; 0.127 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.4159 TPM. Cancer maximum: 11.95 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -507,6 +562,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_046.1_T_RNA: 12 TPM; NEC_MERK
 
 Pinned normal maxima: 0.3 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.9156 TPM. Cancer maximum: 19.93 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -525,6 +582,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_054.2_T_RNA: 19.9 TPM; NEC_ME
 
 Pinned normal maxima: 0.3 nTPM; 0.0492 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1598 TPM. Cancer maximum: 21.69 TPM.
 
+Admission reasons: Reproductive / embryonic association | Translation qualification | Reviewed normal-cell knowledge. Assessment status: translation_review.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -532,6 +591,7 @@ Pinned normal maxima: 0.3 nTPM; 0.0492 TPM. Adult reproductive bulk: 0 nTPM. Dev
 - Verbeurgt Table S3 reports 17/26 donors at >=5 estimated copies per 20 ng RNA; the raw Cq <35 count is recorded separately.
 - The authors cannot discriminate OR52E8 from OR52E6 with this assay. This is shared-assay evidence.
 - Normal human olfactory-mucosa assay labeled OR52E8: 17/26 donors at >=5 estimated RNA copies/20 ng.
+- Translation review: the reference cannot supply a complete approved protein. Recorded failures: designated_translation_incomplete | incomplete_stop.
 
 Supporting tumor observations: NEC_MERKEL / MO_MCC_054.2_T_RNA: 21.7 TPM; NEC_MERKEL / MO_MCC_063_T_RNA: 12.2 TPM. Full source hashes and sample identities are in [the observation table](supporting-tumor-observations.csv).
 
@@ -543,6 +603,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_054.2_T_RNA: 21.7 TPM; NEC_ME
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000188691) · [HPA](https://www.proteinatlas.org/ENSG00000188691/tissue)
 
 Pinned normal maxima: 0.3 nTPM; 0.602 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.07528 TPM. Cancer maximum: 134 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -561,6 +623,8 @@ Supporting tumor observations: HL / SRS3811196: 53.6 TPM; NEC_MERKEL / MO_MCC_06
 
 Pinned normal maxima: 1.9 nTPM; 0.449 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.009806 TPM. Cancer maximum: 50.64 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -577,6 +641,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_113.2_T_RNA: 50.6 TPM; NEC_ME
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186119) · [HPA](https://www.proteinatlas.org/ENSG00000186119/tissue)
 
 Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1123 TPM. Cancer maximum: 40.97 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -597,6 +663,8 @@ Supporting tumor observations: HL / SRS3811196: 27.9 TPM; NET_MIDGUT / SRS219756
 
 Pinned normal maxima: 0 nTPM; 0.1 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.411 TPM. Cancer maximum: 51.55 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -613,6 +681,8 @@ Supporting tumor observations: HL / SRS3811196: 15.3 TPM; MCL / COHP_50518: 51.6
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000225781) · [HPA](https://www.proteinatlas.org/ENSG00000225781/tissue)
 
 Pinned normal maxima: 0.1 nTPM; 0.286 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.04206 TPM. Cancer maximum: 63.79 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -632,6 +702,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_061_T_RNA: 63.8 TPM; NEC_MERK
 
 Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.007801 TPM. Cancer maximum: 29.21 TPM.
 
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
+
 - A schizophrenia leukocyte RNA-seq study is an exact-symbol literature lead. A normal-control gene-specific result was not extracted, so this study supplies no normal-positive or normal-negative credit here.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -647,6 +719,8 @@ Supporting tumor observations: HL / SRS3811196: 29.2 TPM; OV / TCGA-30-1866-01: 
 **Other:Expression** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000284723) · [HPA](https://www.proteinatlas.org/ENSG00000284723/tissue)
 
 Pinned normal maxima: 0.8 nTPM; 0.469 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.1385 TPM. Cancer maximum: 14.16 TPM.
+
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -665,10 +739,13 @@ Supporting tumor observations: BLCA / TCGA-ZF-AA51-01: 14.2 TPM; BLCA / TCGA-KQ-
 
 Pinned normal maxima: 1.1 nTPM; 0.703 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.02013 TPM. Cancer maximum: 36.23 TPM.
 
+Admission reasons: Reproductive / embryonic association | Translation qualification. Assessment status: translation_review.
+
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
+- Translation review: the reference cannot supply a complete approved protein. Recorded failures: ambiguous_or_interrupted_sequence | designated_translation_incomplete | nonqualifying_transcript_biotype.
 
 Supporting tumor observations: MENINGIOMA / TB70: 36.2 TPM; MENINGIOMA / TB30: 17.9 TPM. Full source hashes and sample identities are in [the observation table](supporting-tumor-observations.csv).
 
@@ -680,6 +757,8 @@ Supporting tumor observations: MENINGIOMA / TB70: 36.2 TPM; MENINGIOMA / TB30: 1
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000174914) · [HPA](https://www.proteinatlas.org/ENSG00000174914/tissue)
 
 Pinned normal maxima: 1.5 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.008469 TPM. Cancer maximum: 109.4 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Exact-copy olfactory expression is the principal normal-tissue question. Odorant responses in transfected cells establish receptor activity, not endogenous normal or tumor protein.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -700,6 +779,8 @@ Supporting tumor observations: SKCM / TCGA-Z2-AA3S-06: 109 TPM; SKCM / TCGA-ER-A
 
 Pinned normal maxima: 0.1 nTPM; 0.426 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.02184 TPM. Cancer maximum: 5021 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Human fetal cochlear cloning and mixed human/avian Northern evidence identify an inner-ear question; they do not establish adult human protein. Retain the stage-specific normal hold.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -718,6 +799,8 @@ Supporting tumor observations: SARC_RMS_ERMS / TH40_2212_S01: 5.02e+03 TPM; SARC
 
 Pinned normal maxima: 0.8 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.007395 TPM. Cancer maximum: 42.99 TPM.
 
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
+
 - HPA assigns a hair-follicle-development RNA cluster and imports protein-existence evidence. This does not identify a tissue-specific endogenous peptide for the selected proteoform; exact normal protein localization remains unverified.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -734,6 +817,8 @@ Supporting tumor observations: NEC_MERKEL / NU_MCC_045_T_RNA: 43 TPM; NEC_MERKEL
 
 Pinned normal maxima: 0.2 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.005652 TPM. Cancer maximum: 110.1 TPM.
 
+Admission reasons: Reproductive / embryonic association. Assessment status: screened.
+
 - The former KRTAP28-8 name and predicted structural role identify a skin/hair question. Homology and recombinant products do not establish endogenous human hair expression; inspect the exact selected sequence.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -749,6 +834,8 @@ Supporting tumor observations: NEC_MERKEL / NU_MCC_045_T_RNA: 110 TPM; NEC_MERKE
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000146383) · [HPA](https://www.proteinatlas.org/ENSG00000146383/tissue)
 
 Pinned normal maxima: 0.2 nTPM; 0.303 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.5432 TPM. Cancer maximum: 71.26 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Human normal-brain RT-PCR supplies the existing hold. Separate exact human TAAR6 from rodent receptor studies and schizophrenia association.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
@@ -767,6 +854,8 @@ Supporting tumor observations: HL / SRS3811196: 17.5 TPM; NEC_MERKEL / MO_MCC_11
 
 Pinned normal maxima: 0 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.238 TPM. Cancer maximum: 37.37 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - Human and rodent expression experiments must be separated. Recombinant human TAAR8 surface expression in COS-7 cells verifies a construct, not normal human tissue production.
 - The current HPA response contains no tissue-IHC antibody assay for this protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -783,6 +872,8 @@ Supporting tumor observations: HL / SRS3811196: 20.2 TPM; NEC_MERKEL / NU_MCC_01
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186136) · [HPA](https://www.proteinatlas.org/ENSG00000186136/tissue)
 
 Pinned normal maxima: 0.3 nTPM; 0.962 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.04812 TPM. Cancer maximum: 106.4 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - Gene-specific adult human skin RNA supplies a normal-expression hold. The skin paper does not establish TAS2R42-specific protein, and other TAS2R staining cannot be borrowed.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
@@ -802,6 +893,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_061_T_RNA: 33.2 TPM; NEC_MERK
 
 Pinned normal maxima: 0.5 nTPM; 0.19 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.05328 TPM. Cancer maximum: 15.54 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - The neural/ataxia annotation and uncertain HPA neuronal staining require direct adult human localization; neither genetic disease nor rodent antibody experiments alone establish human protein.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -820,6 +913,8 @@ Supporting tumor observations: BL / BLGSP-71-06-00166-01B: 11.8 TPM; BL / BLGSP-
 
 Pinned normal maxima: 0.3 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.00769 TPM. Cancer maximum: 20.71 TPM.
 
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
+
 - The current HPA antibody is uncertain and shared. A 2026 influenza study uses A549 cancer cells, CRISPR activation and overexpression; cytokine induction there cannot establish normal lung-cell production.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.
 - No exact-symbol assay occurs in the qPCR table; this supplies no negative measurement. Ambiguous legacy names are not reassigned.
@@ -836,6 +931,8 @@ Supporting tumor observations: NEC_MERKEL / MO_MCC_036_T_RNA: 20.7 TPM; NEC_MERK
 **Other:Review** · [Ensembl](https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000237038) · [HPA](https://www.proteinatlas.org/ENSG00000237038/tissue)
 
 Pinned normal maxima: 0.2 nTPM; 0 TPM. Adult reproductive bulk: 0 nTPM. Developmental maximum: 0.008196 TPM. Cancer maximum: 18.98 TPM.
+
+Admission reasons: Reproductive / embryonic association | Reviewed normal-cell knowledge. Assessment status: normal_evidence_hold.
 
 - The HPA reagent is shared with related copies and gives uncertain normal staining. USP17L2/DUB3 functional literature cannot be transferred to USP17L8; retain an exact-copy normal-expression hold.
 - HPA's MS field is unavailable; it supplies no protein-negative measurement.

@@ -1,7 +1,7 @@
 {
   "inputs": {
     "scripts/cta_report_common.py": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
-    "scripts/build_cancer_only_audit.py": "7638a75e56c698f99fc043328e2ad1d9480245ade868bc506d3049d15477bc4d",
+    "scripts/build_cancer_only_audit.py": "6ea848385abb8184ce9fa895b897e0e2d11e5d4461159e0e8146d1772751aba1",
     "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
     "docs/audits/cta-selection-20261028/tumor-restricted-observations.csv.gz": "eddaf3231c031e53e0625a95db0a8dce6956ee4edf594b83f79f62ca1fc186ac",
     "docs/audits/cta-selection-20261028/normal-peak-evidence.csv.gz": "6e85b03896475836728baae075be7fda352f5e13215480c9838d36533845755b",
@@ -118,18 +118,18 @@
   },
   "outputs": {
     "all-66-screen-matches.csv.gz": "a0e3992550e934a64102caca701a9404f1547613fa088be4991b7d295819300b",
-    "audit.json": "8c315a28497231ee69898f5125e389c1b687c90e2b67e0c7a56423e6181169ac",
+    "audit.json": "7426b38658d58930dfd112d8046a0493b6ca838d1c60aa8990b539fa545818d9",
     "curation-proposals.json": "20683abda114bc8b98c63bdf44a19c630598b0383879bdba2beced539ddd3be9",
     "current-hpa-rna.csv.gz": "b5fbaf2008740887bb0a6576e27607c0ab8ecc8556ee5679de841a339853fd34",
-    "index.md": "7ace35aafa1c97c339baaaa7159e44f99d033197c74e109ce4cb023fdde2610f",
+    "index.md": "53f3b71f5af607388c221b614a8232c648af9b1596cce5c93e1071fc355737b9",
     "literature-search-ledger.csv": "e4d1b425517deb581da159e86011fe620c2d1f7dba15244f9389008b0ed66881",
     "normal-top-contexts.csv.gz": "ad475f72887410495a63b7625d5a8723065e49022a4fb49a194e8b08ba8b9d2f",
     "olfactory-assays.csv": "aaa0f1543ddbbd6c3848611e0ed72f35f93e48672a9a1786a59824c5c31cf45e",
-    "protein-reviews.csv": "63a159dd7c3196d5d53563a909249279a7f88a9688aa497a287f0471000e2f30",
-    "report.html": "36ad576a68136fce4f7cc697a2728e3386768391c4b8a160e26afafc21b2b9a8",
+    "protein-reviews.csv": "e24dd6eeb50243bf3dece8d80782c006f68f3ba6276a17011ebe37f9b76e90ec",
+    "report.html": "4b597e6a49ff42973cd71bc97fb183b7bc62c2cfef3e81c29c9b94fb2c647d2a",
     "selection.png": "4e993236cc9e13e33e7d4a2d73aeb7563bc0716f9cf1c30090485feb77a11f6f",
     "selection.svg": "dafc0c01d184d479b3f8f89964c3a4555acbe19a4bd1c69645c2a3b060e87888",
     "supporting-tumor-observations.csv": "5c4f0ce7930639bd529871a37a63929fc7456ef6208fdba8e48489228ec8c8f5",
-    "table.html": "2663633b3e98f89d52400be3e52bbd87d935795acab2e91ea8e87fcc93dbc89e"
+    "table.html": "8c5460f9e5e6132cb70abc32d61826b0c37aa5c457a574376eaa4aaed652fbef"
   }
 }

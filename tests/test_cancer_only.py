@@ -28,6 +28,13 @@ def test_entire_measured_zero_reproductive_subset_is_reviewed_once():
     assert not result.confirmed_cancer_only.any()
     assert set(result.classification) <= {"Other:Review", "Other:Expression", "Unsafe"}
     assert result.notes.map(bool).all() and result.sources.map(bool).all()
+    assert result.admission_reasons.str.contains("Reproductive / embryonic association").all()
+    incomplete = result[result.protein.isin(["OR1P1", "OR9A1P"])]
+    assert not incomplete.translation_qualified.any()
+    assert incomplete.classification.eq("Other:Review").all()
+    assert incomplete.translation_qualification_reasons.str.contains(
+        "ambiguous_or_interrupted_sequence"
+    ).all()
     for observations in result.tumor_observations:
         assert len(observations) == len({o["sample_key"] for o in observations}) == 2
         assert all(o["unit"] == "TPM" and o["value"] >= 10 for o in observations)
