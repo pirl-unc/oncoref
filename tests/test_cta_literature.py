@@ -68,6 +68,21 @@ def test_attestations_gene_filter_does_not_expand_related_copies():
     assert cta_literature.attestations("unmapped-test-gene").empty
 
 
+def test_background_table_is_not_a_published_tumor_target_nomination():
+    background = cta_literature.attestations("KRTAP20-2")
+    background = background[background.source_id.eq("10.18632/oncotarget.21715")]
+    assert not background.empty and not background.published_nomination.any()
+    assert all(not genes for genes in background.nomination_gene_ids)
+    assert all(
+        {c["source_tag"] for c in claims} == {"daSilva2017_testis_biased"}
+        for claims in background.publication_claims
+    )
+    positive = cta_literature.attestations("OR1K1")
+    positive = positive[positive.source_id.eq("10.18632/oncotarget.21715")]
+    assert positive.published_nomination.all()
+    assert all("ENSG00000165204" in genes for genes in positive.nomination_gene_ids)
+
+
 def builder():
     spec = importlib.util.spec_from_file_location(
         "literature_builder", ROOT / "scripts/build_cta_literature_review.py"

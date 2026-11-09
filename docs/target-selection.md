@@ -11,6 +11,12 @@ The catalog has been rebuilt under `oncoref.target-selection.2026-11-09.1`:
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot.
 
+**The rebuild remains draft.** [The 250-protein audit](audits/target-selection-20261109/scrutiny/index.md)
+identifies tumor-source dependence, low-abundance matches and specialized normal
+compartments requiring review. The counts describe rule matches, not experimentally
+validated tumor antigens. Exact source-table claims now separate published target
+nominations from reproductive-only background lists.
+
 [Illustrated report](audits/target-selection-20261109/report.html) ·
 [Machine-readable definition](audits/target-selection-20261109/definition.json)
 
@@ -168,6 +174,10 @@ not constitute independent experimental replication.
 `cta_literature.attestations()` joins all retained occurrences to their citations
 and original claim records. `published_nomination` identifies curated catalog
 nominations; source-wide roles do not turn every gene in a paper into a target.
+`publication_claims` retains exact table tags, files, sheets and rows;
+`nomination_gene_ids` identifies the supported member loci. For example, da Silva's
+testis-biased background and tumor proteomics tables remain separate from its
+745-gene tumor-positive catalog. The source DOI alone cannot establish nomination.
 Individual target experiments remain visible in their reviewed links and roles.
 `current_coverage()` reports broader paper coverage, which also includes biological
 and adverse evidence. A paper-covered protein is not necessarily a published target.

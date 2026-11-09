@@ -784,6 +784,11 @@ category. It requires the new assessed inputs; it does not reinterpret released
 presence flags. `cta_literature.attestations()` preserves the paper links and
 claim scope independently of category.
 
+Paper occurrences include `publication_claims` (exact source-table records) and
+`nomination_gene_ids` (the supported member loci). Background-only rows retain their
+paper links with `published_nomination=False`; the paper's overall topic does not
+promote every listed gene to a target nomination.
+
 `results()` includes the selected transcripts and sequence hashes, tumor maximum,
 normal comparison maximum and its source contexts, patient support, reproductive
 measurements and paper references. Missing measurements stay missing. The 1.36.0

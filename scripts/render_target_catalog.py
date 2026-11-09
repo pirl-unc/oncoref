@@ -101,6 +101,7 @@ table{border-collapse:collapse;width:100%}th,td{padding:9px;text-align:left;bord
 .badge{font-weight:600;white-space:nowrap}.Unsafe{color:#a33532}.CTA{color:#20613c}#count{font-weight:bold}.pager{margin-top:12px;display:flex;gap:16px}
 </style><main><h1>Rebuilt antigen catalog</h1>
 <p>__TOTAL__ proteins assessed under <code>__POLICY__</code>. Identical selected reference proteins are counted together; every member locus remains listed.</p>
+<p class="note"><strong>Draft: expression support remains under review.</strong> These counts are outputs of the screening rules. The <a href="../scrutiny/">250-protein audit</a> documents cohort dependence, low tumor abundance, specialized normal compartments and the corrected publication flags.</p>
 <div class="summary"><table><thead><tr><th>Exclusive category</th><th>Proteins</th><th>With a curated target nomination</th></tr></thead><tbody>__COUNTS__</tbody></table>
 <p><strong>Cancer Antigens: __CA__ · Reproductive Antigens: __RA__ · CTA intersection: __CTA__ · Target candidates union: __UNION__.</strong></p></div>
 <p>Other: __OTHER_COUNTS__. Of the __RA_ONLY__ Reproductive Antigens only, __RA_UNRESOLVED__ have potentially qualifying repeated tumor measurements with unresolved patient identities. The remaining __RA_INSUFFICIENT__ do not meet either cancer RNA rule in the measured samples.</p>
@@ -194,6 +195,8 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
     )
     (OUT / "index.md").write_text(
         "# Rebuilt antigen catalog\n\n"
+        "**Draft: tumor-source comparability and specialized normal/developmental coverage remain under review.** "
+        "[Scrutiny of the 250 Cancer Antigens only](../scrutiny/index.md).\n\n"
         f"**{counts['CTA']} CTA, {counts['Cancer Antigen only']} Cancer Antigen only, "
         f"{counts['Reproductive Antigen only']} Reproductive Antigen only, {counts['Other']} Other "
         f"and {counts['Unsafe']:,} Unsafe.**\n\n"

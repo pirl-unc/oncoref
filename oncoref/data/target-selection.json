@@ -113,11 +113,11 @@
       "does_not_qualify": 22
     },
     "published_nomination_by_category": {
-      "CTA": 466,
-      "Cancer Antigen only": 47,
-      "Other": 78,
-      "Reproductive Antigen only": 13,
-      "Unsafe": 1788
+      "CTA": 406,
+      "Cancer Antigen only": 24,
+      "Other": 52,
+      "Reproductive Antigen only": 6,
+      "Unsafe": 1745
     }
   },
   "comparison": {
@@ -208,6 +208,11 @@
     ],
     "tumor_matrix_cache_sha256": "acec47c3eff58530fae12a06b68ff451a00dfce4073d49a5c069f143bac0e7f4"
   },
-  "data_sha256": "6ee739a95fbecac0c1980e853bba6f6f9d2efcc0e9786bac1cce2a5280f33a17",
-  "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261109/rebuild/report.html"
+  "data_sha256": "826e218484968145972fc6bdfb74469fcc6d8af3fde3cb87aa7885388ceaae68",
+  "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261109/rebuild/report.html",
+  "release_ready": false,
+  "open_reviews": [
+    "Tumor-source comparability and outlier support",
+    "Rare normal and developmental coverage"
+  ]
 }

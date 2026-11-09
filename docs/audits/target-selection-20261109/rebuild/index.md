@@ -1,5 +1,7 @@
 # Rebuilt antigen catalog
 
+**Draft: tumor-source comparability and specialized normal/developmental coverage remain under review.** [Scrutiny of the 250 Cancer Antigens only](../scrutiny/index.md).
+
 **632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only, 724 Other and 18,259 Unsafe.**
 
 [Filterable protein table](report.html) · [All category changes](category-changes.csv) · [Exact comparison scope](comparison.json)
@@ -8,7 +10,7 @@
 
 Cancer Antigens include 882 proteins; Reproductive Antigens include 660. Their intersection is CTA and their union contains 910 Target candidates.
 
-Other contains 669 review, 40 sequence, 15 expression. A curated published target nomination is retained for 466 CTAs and 47 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
+Other contains 669 review, 40 sequence, 15 expression. A curated published target nomination is retained for 406 CTAs and 24 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
 
 ## Category changes
 

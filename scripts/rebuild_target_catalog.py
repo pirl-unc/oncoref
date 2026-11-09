@@ -296,6 +296,8 @@ def annotate_papers(decisions):
         "cta-literature.json.gz",
         "cta-literature-followup.json",
         "cta-selection-audit.json",
+        "cta-publication-membership.csv",
+        "cta-publication-sources.csv",
     ]:
         path = ROOT / "oncoref/data" / name
         INPUTS[str(path.relative_to(ROOT))] = sha256(path)
@@ -308,8 +310,8 @@ def annotate_papers(decisions):
     for i, row in enumerate(rows):
         for gene in row["gene_ids"]:
             by_gene[gene].add(i)
-            if row["published_nomination"]:
-                nominations[gene].add(row["source_id"])
+        for gene in row["nomination_gene_ids"]:
+            nominations[gene].add(row["source_id"])
     result = decisions.copy()
     annotations = []
     for row in result.itertuples():
@@ -727,6 +729,11 @@ def build():
     metadata = {
         "schema": "oncoref.target-selection",
         "version": 1,
+        "release_ready": False,
+        "open_reviews": [
+            "Tumor-source comparability and outlier support",
+            "Rare normal and developmental coverage",
+        ],
         "summary": summary,
         "comparison": comparison,
         "data_sha256": sha256(ROOT / "oncoref/data/target-selection.csv.gz"),

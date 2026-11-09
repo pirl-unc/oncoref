@@ -114,15 +114,16 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         genes = set(json.loads(row.member_gene_ids))
         claims = [links[i] for i in ids]
         assert all(genes & set(c["gene_ids"]) for c in claims)
-        nominees = [c for c in claims if c["published_nomination"]]
+        nominees = [c for c in claims if genes & set(c["nomination_gene_ids"])]
         assert bool(nominees) == row.published_nomination
         assert {c["source_id"] for c in nominees} == set(json.loads(row.nomination_source_ids))
-        covered = set().union(*(set(c["gene_ids"]) for c in nominees)) & genes
+        covered = set().union(*(set(c["nomination_gene_ids"]) for c in nominees)) & genes
         assert covered == set(json.loads(row.nomination_member_ids))
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 466
+    assert catalog[catalog.is_cta].published_nomination.sum() == 406
+    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 24
 
 
 def test_packaged_snapshot_matches_report_metadata(catalog):
