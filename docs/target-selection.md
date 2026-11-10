@@ -11,6 +11,8 @@ The catalog has been rebuilt under `oncoref.target-selection.2026-11-09.1`:
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot.
 
+The [published-target and category audit](audits/target-selection-20261109/category-profiles/index.md) lists every curated published nomination, all Cancer Antigen only and Reproductive Antigen only genes, and the highest 20 normal-expression values in each category, including Disposable tissues.
+
 The [threshold inventory, patient-mapping correction and named CTA placements](audits/target-selection-20261109/policy-reference/index.md) explain the complete rules and current calls.
 
 **The rebuild remains draft.** [The original 250-protein audit](audits/target-selection-20261109/scrutiny/index.md)
