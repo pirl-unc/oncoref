@@ -9,6 +9,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from oncoref import samples as sample_api
 from oncoref import target_selection as policy
 
 ROOT = Path(__file__).parents[1]
@@ -28,10 +29,10 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
         "Unsafe": 18259,
-        "Other": 724,
-        "CTA": 632,
-        "Cancer Antigen only": 250,
-        "Reproductive Antigen only": 28,
+        "Other": 714,
+        "CTA": 638,
+        "Cancer Antigen only": 260,
+        "Reproductive Antigen only": 22,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
@@ -39,7 +40,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     )
     assert catalog.loc[catalog.is_target_candidate, list(policy.SHARED_CHECKS)].all().all()
     assert catalog.category.eq("Unsafe").equals(catalog.released_category.eq("Unsafe"))
-    assert len(policy.results(changed_only=True)) == 343
+    assert len(policy.results(changed_only=True)) == 347
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -122,7 +123,7 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 406
+    assert catalog[catalog.is_cta].published_nomination.sum() == 408
     assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 24
 
 
@@ -182,3 +183,11 @@ def test_same_context_sum_and_missing_member_coverage():
 )
 def test_documented_patient_identifiers_only(sample, expected):
     assert participant_id("source", sample) == expected
+
+
+def test_rebuild_patient_metadata_matches_shared_api():
+    metadata = pd.read_csv(OUT / "tumor-samples.csv.gz", keep_default_na=False)
+    expected = sample_api.sample_identities(metadata[["source_cohort", "sample_id"]])
+    pd.testing.assert_frame_equal(metadata[expected.columns], expected)
+    assert metadata.participant_id.ne("").sum() == 13164
+    assert metadata.patient_identity_status.eq("conflict").sum() == 0

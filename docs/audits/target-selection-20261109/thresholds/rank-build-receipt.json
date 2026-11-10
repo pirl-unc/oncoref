@@ -2,8 +2,8 @@
   "rank_universe": "All measured current-catalog protein records, including Unsafe and Other; members summed only within one sample; missing members leave the record unmeasured.",
   "rank_ties": "average",
   "candidate_matrix_sha256": "acec47c3eff58530fae12a06b68ff451a00dfce4073d49a5c069f143bac0e7f4",
-  "catalog_sha256": "826e218484968145972fc6bdfb74469fcc6d8af3fde3cb87aa7885388ceaae68",
-  "samples_sha256": "252e0a862e9b42dc9f01c2e9858fb3411a2cf092228cf7c0f4a8e3be876ba078",
+  "catalog_sha256": "cf00eee8cfa7985fa3ce95d682aca4b05e0c857fb480e5f8aa41ab19de1c7c1e",
+  "samples_sha256": "ff1dbc5cee60eb9e042d97562631b43340491ffc531a82fd14854d70c5dcc0d0",
   "source_matrices": {
     "/Users/iskander/.cache/oncoref/source-matrices/v5.22.10/ACC.parquet": "c871d0255d4aea60b55069da4eddbcea3d45a7e7b21358e77b829368df5b54f5",
     "/Users/iskander/code/oncoref/tmp/transcript-selection-rebuild/matrices/v5.22.10/ACINIC.parquet": "c96706605283e3a94091132f6b1c59f502d723e517f05d5e39b1ee5352681025",
@@ -108,6 +108,6 @@
   },
   "outputs_sha256": {
     "sample-ranks.parquet": "035fff7ba7237cf54b9315039374b60df27f625467f70de0f9850aabb990eba3",
-    "sample-rank-cutoffs.csv.gz": "b88056589dc8292f7968c04a6c7c235edb7ba20f4903b07e4a9b342588f117a8"
+    "sample-rank-cutoffs.csv.gz": "dc38d5e5c20179abae28dbe3265cec8881c7785d239a50a5da5fd8e84ceb2840"
   }
 }

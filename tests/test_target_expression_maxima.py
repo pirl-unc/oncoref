@@ -50,13 +50,13 @@ def test_tied_witnesses_are_retained_and_maxima_not_added():
 
 def test_counterfactual_report_counts_and_fingerprints():
     summary = json.loads((OUT / "summary.json").read_text())
-    assert summary["maximum_status"] == {"passes": 910}
+    assert summary["maximum_status"] == {"passes": 920}
     table = pd.read_csv(OUT / "cap-scenarios.csv").set_index("disposable_cap_tpm")
     assert table.loc[4, "moved_to_other"] == 2
     assert table.loc[16, "moved_to_other"] == 1
     assert table.loc[32, "moved_to_other"] == 0
     records = pd.read_csv(OUT / "protein-maxima.csv")
-    assert len(records) == records.entity_id.nunique() == 910
+    assert len(records) == records.entity_id.nunique() == 920
     assert records.disposable_max_tpm.notna().all()
     assert records[records.disposable_max_tpm.gt(16)].protein.tolist() == ["LCE3C"]
     assert summary["specific_registered_contexts_needing_hazard_review"] == []

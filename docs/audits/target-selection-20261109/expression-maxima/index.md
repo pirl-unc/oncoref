@@ -1,6 +1,6 @@
 # Expression maxima and Disposable caps
 
-**Requiring cancer or reproductive/developmental expression to exceed every measured nonreproductive value removes zero of the current 910 Target candidates.** This is an additional filter on the current catalog. The original cancer gate, reproductive association and shared eligibility rules still apply.
+**Requiring cancer or reproductive/developmental expression to exceed every measured nonreproductive value removes zero of the current 920 Target candidates.** This is an additional filter on the current catalog. The original cancer gate, reproductive association and shared eligibility rules still apply.
 
 For each protein, compare the largest tumor-sample TPM, adult reproductive-tissue TPM or supported developmental-lineage mean TPM against the largest nonreproductive normal or Disposable value. The target value must be at least 1 TPM and strictly greater; ties fail. One tumor sample can establish the maximum. Protein equivalence records retain the rebuild's within-context member aggregation; maxima from different samples are never added.
 
@@ -10,14 +10,14 @@ The cap is inclusive: a value equal to it passes. Exceeding it moves a candidate
 
 | Disposable cap (native TPM) | Move to Other | CTA remaining | Cancer Antigen only remaining | Reproductive Antigen only remaining |
 |---:|---:|---:|---:|---:|
-| None | 0 | 632 | 250 | 28 |
-| 1 | 10 | 627 | 246 | 27 |
-| 4 | 2 | 631 | 249 | 28 |
-| 8 | 1 | 632 | 249 | 28 |
-| 16 | 1 | 632 | 249 | 28 |
-| 32 | 0 | 632 | 250 | 28 |
-| 64 | 0 | 632 | 250 | 28 |
-| 128 | 0 | 632 | 250 | 28 |
+| None | 0 | 638 | 260 | 22 |
+| 1 | 10 | 633 | 256 | 21 |
+| 4 | 2 | 637 | 259 | 22 |
+| 8 | 1 | 638 | 259 | 22 |
+| 16 | 1 | 638 | 259 | 22 |
+| 32 | 0 | 638 | 260 | 22 |
+| 64 | 0 | 638 | 260 | 22 |
+| 128 | 0 | 638 | 260 | 22 |
 
 LCE3C has the highest Disposable value, **21.4 TPM in tonsil**. NLRP4 is next at **4.6 TPM in tonsil**. The [complete protein table](protein-maxima.csv) retains each maximum, source, tissue and tumor sample. [Every changed protein at every cap](proteins-moved-to-other.csv) is listed separately.
 
@@ -25,7 +25,7 @@ LCE3C has the highest Disposable value, **21.4 TPM in tonsil**. NLRP4 is next at
 
 The TPM panel's Disposable tissues are **appendix, gallbladder and tonsil**. It contains no isolated hair-follicle or cutaneous-melanocyte TPM measurement. Thus zero losses means zero in this measured panel, not a complete all-tissue result. Normal values include tissue means and donor medians; this is not a maximum over every healthy individual. The underlying [tumor-source comparability concerns](../scrutiny/index.md) remain.
 
-[HPA v23](https://v23.proteinatlas.org/about/download) has a **skin-melanocyte cluster** on a separate nTPM scale. 908 candidates have a mapped member observation there; 2 member loci are missing. No candidate has a positive signal meeting the existing 20-read requirement. The largest observed signal is **TSGA10IP: 24 nTPM, 14 reads**; it is retained as insufficiently supported, not converted to zero. HPA's source labels contain no hair-follicle cluster. [Cell observations and read support](hpa-disposable-cell-observations.csv), [missing members](hpa-disposable-cell-missing-members.csv) and [all source cell labels](hpa-cell-contexts.csv) are retained. TPM and nTPM are not pooled or treated as interchangeable. The cell result adds no supported cap exceedance on its own scale and does not fill the missing hair-follicle panel.
+[HPA v23](https://v23.proteinatlas.org/about/download) has a **skin-melanocyte cluster** on a separate nTPM scale. 918 candidates have a mapped member observation there; 2 member loci are missing. No candidate has a positive signal meeting the existing 20-read requirement. The largest observed signal is **TSGA10IP: 24 nTPM, 14 reads**; it is retained as insufficiently supported, not converted to zero. HPA's source labels contain no hair-follicle cluster. [Cell observations and read support](hpa-disposable-cell-observations.csv), [missing members](hpa-disposable-cell-missing-members.csv) and [all source cell labels](hpa-cell-contexts.csv) are retained. TPM and nTPM are not pooled or treated as interchangeable. The cell result adds no supported cap exceedance on its own scale and does not fill the missing hair-follicle panel.
 
 The proposed rule has two independent parts: **target expression must be highest**, and **Disposable expression must remain below a fixed ceiling**. A large tumor value cannot excuse unlimited Disposable expression. Required but missing normal measurements belong in Other:Review; an observed cap failure belongs in Other:Expression. The current required-coverage panel has not been expanded by this audit.
 

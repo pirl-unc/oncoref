@@ -3,10 +3,10 @@
   "rules": 86,
   "scenarios": 516,
   "physical_samples": 14440,
-  "known_patients": 10620,
-  "unknown_patient_samples": 3747,
+  "known_patients": 13034,
+  "unknown_patient_samples": 1276,
   "cohorts": 96,
-  "cohorts_with_20_known_patients": 42,
+  "cohorts_with_20_known_patients": 57,
   "disposable_ntpm_source": {
     "source": "hpa_rna_consensus:v23",
     "path": "/Users/iskander/.cache/oncoref/sources/hpa_rna_consensus/v23/rna_tissue_consensus.tsv",
@@ -17,7 +17,7 @@
   "input_sha256": {
     "tmp/target-catalog-cache/tumor-comparison.parquet": "acec47c3eff58530fae12a06b68ff451a00dfce4073d49a5c069f143bac0e7f4",
     "docs/audits/target-selection-20261109/rebuild/normal-comparison.csv.gz": "3c3c296748775e4dcd9e0ddc35a762b5576d9cb593f74318622c6669bf7dbc3f",
-    "oncoref/data/target-selection.csv.gz": "826e218484968145972fc6bdfb74469fcc6d8af3fde3cb87aa7885388ceaae68",
+    "oncoref/data/target-selection.csv.gz": "cf00eee8cfa7985fa3ce95d682aca4b05e0c857fb480e5f8aa41ab19de1c7c1e",
     "tmp/target-threshold-cache/sample-ranks.parquet": "035fff7ba7237cf54b9315039374b60df27f625467f70de0f9850aabb990eba3"
   }
 }

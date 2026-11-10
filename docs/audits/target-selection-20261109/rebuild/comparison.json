@@ -15,7 +15,8 @@
     "A maximum of tissue summaries is not a maximum over every healthy donor",
     "Other assay scales continue to enforce the existing shared normal screen independently"
   ],
-  "participant_identity": "TCGA, TARGET and MMRF participant schemes are resolved across aliquots/cohort views. Other source IDs support the single-sample route; unverified patient IDs cannot establish replication.",
+  "participant_identity": "Shared sample_identities API joins curated case/donor mappings and documented TCGA, TARGET, MMRF and Treehouse identifiers. Every sample retains identity status, basis and references. Unresolved or conflicting identities support only the single-sample route.",
+  "participant_identity_policy": "oncoref.patient-identity.2026-11-10.1",
   "normal_sources": [
     {
       "source": "rna_tissue_hpa",

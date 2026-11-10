@@ -1,27 +1,27 @@
 # Rebuilt antigen catalog
 
-**Draft: tumor-source comparability and specialized normal/developmental coverage remain under review.** [Scrutiny of the 250 Cancer Antigens only](../scrutiny/index.md).
+**Draft: tumor-source comparability and specialized normal/developmental coverage remain under review.** [Scrutiny of the original 250 Cancer Antigens only](../scrutiny/index.md).
 
-**632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only, 724 Other and 18,259 Unsafe.**
+**638 CTA, 260 Cancer Antigen only, 22 Reproductive Antigen only, 714 Other and 18,259 Unsafe.**
 
 [Filterable protein table](report.html) · [All category changes](category-changes.csv) · [Exact comparison scope](comparison.json)
 
 ![Rebuilt counts](counts.png)
 
-Cancer Antigens include 882 proteins; Reproductive Antigens include 660. Their intersection is CTA and their union contains 910 Target candidates.
+Cancer Antigens include 898 proteins; Reproductive Antigens include 660. Their intersection is CTA and their union contains 920 Target candidates.
 
-Other contains 669 review, 40 sequence, 15 expression. A curated published target nomination is retained for 406 CTAs and 24 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
+Other contains 659 review, 40 sequence, 15 expression. A curated published target nomination is retained for 408 CTAs and 24 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
 
 ## Category changes
 
 | Released category | Rebuilt category | Proteins |
 |---|---|---:|
-| CTA | CTA | 574 |
+| CTA | CTA | 580 |
 | CTA | Other | 7 |
-| CTA | Reproductive Antigen only | 26 |
+| CTA | Reproductive Antigen only | 20 |
 | Other | CTA | 58 |
-| Other | Cancer Antigen only | 250 |
-| Other | Other | 717 |
+| Other | Cancer Antigen only | 260 |
+| Other | Other | 707 |
 | Other | Reproductive Antigen only | 2 |
 | Unsafe | Unsafe | 18259 |
 
@@ -31,23 +31,19 @@ Former CTAs now requiring review: CALHM3, TAF11L12, TRIM75, TAF11L14, PRAMEF18, 
 
 ## Reproductive Antigens only
 
-21 have potentially qualifying tumor measurements but unresolved patient independence; none reaches the single-sample threshold. The remaining 7 do not meet either cancer RNA rule.
+15 have potentially qualifying tumor measurements but unresolved patient independence; none reaches the single-sample threshold. The remaining 7 do not meet either cancer RNA rule.
 
 | Protein | Tumor maximum TPM | Normal comparison TPM | Cancer assessment |
 |---|---:|---:|---|
-| DEFB106A/B | 1.51 | 0.1 | Patient identity unresolved |
 | SLC25A52 | 5.58 | 2.97 | Patient identity unresolved |
-| TKTL2 | 20.2 | 6.76 | Patient identity unresolved |
 | ZSWIM2 | 2.74 | 1.52 | Patient identity unresolved |
 | GARIN3 | 6.5 | 2.07 | Patient identity unresolved |
 | CDY1 | 1.6 | 0 | Below cancer rule |
 | CDY1B | 0.3 | 0.1 | Below cancer rule |
-| ARL13A | 32.8 | 7.3 | Patient identity unresolved |
 | MAGEB5 | 2.09 | 0.0392 | Patient identity unresolved |
 | FAM47B | 2.25 | 0 | Patient identity unresolved |
 | VN1R2 | 12.3 | 7.79 | Patient identity unresolved |
 | OR8G1 | 2.69 | 2.5 | Below cancer rule |
-| MINDY4B | 5.53 | 2.8 | Patient identity unresolved |
 | DEFB113 | 2.27 | 0 | Patient identity unresolved |
 | ZNF705B | 3.78 | 0 | Patient identity unresolved |
 | OR5H1 | 1.4 | 2.3 | Below cancer rule |
@@ -55,9 +51,7 @@ Former CTAs now requiring review: CALHM3, TAF11L12, TRIM75, TAF11L14, PRAMEF18, 
 | H2AL1Q | 4.02 | 2.6 | Patient identity unresolved |
 | P3R3URF | 16.5 | 3.4 | Patient identity unresolved |
 | PTTG1IP2 | 3.23 | 0.3 | Patient identity unresolved |
-| DPEP2NB | 6.86 | 3.1 | Patient identity unresolved |
 | ENSG00000274944 | 13.5 | 2.8 | Patient identity unresolved |
-| PRAMEF13 | 4.53 | 0 | Patient identity unresolved |
 | CCDC201 | 5.38 | 1.1 | Patient identity unresolved |
 | HSFX3 | 4.88 | 1.8 | Patient identity unresolved |
 | MSANTD5 | 3.43 | 2.2 | Below cancer rule |

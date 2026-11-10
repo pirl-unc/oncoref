@@ -56,12 +56,12 @@ def test_all_scenarios_keep_set_algebra_and_unsafe_membership():
     )
     assert (grid["Target candidates"] + grid.Other + grid.Unsafe).eq(19893).all()
     selected = grid[grid.id.eq("fold_L1_R1_S10") & grid.disposable_cap_tpm.eq(32)].iloc[0]
-    assert selected["Cancer Antigens"] == 849 and selected.CTA == 617
-    assert selected["Target candidates"] == 892 and selected.Other == 742
+    assert selected["Cancer Antigens"] == 880 and selected.CTA == 630
+    assert selected["Target candidates"] == 910 and selected.Other == 724
     changes = pd.read_csv(OUT / "recommended-category-changes.csv")
     assert changes.groupby(["category", "proposed_category"]).size().to_dict() == {
-        ("CTA", "Reproductive Antigen only"): 15,
-        ("Cancer Antigen only", "Other"): 18,
+        ("CTA", "Reproductive Antigen only"): 8,
+        ("Cancer Antigen only", "Other"): 10,
     }
     moved_to_other = changes[changes.proposed_category.eq("Other")]
     assert moved_to_other.proposed_classification.eq("Other:Review").all()

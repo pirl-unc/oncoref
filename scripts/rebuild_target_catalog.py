@@ -29,6 +29,9 @@ from oncoref import (  # noqa: E402
     target_selection,
     tissue_hazards,
 )
+from oncoref import (  # noqa: E402
+    samples as sample_api,
+)
 from oncoref.gene_matching import (  # noqa: E402
     harmonize_reference_expression,
     match_reference_genes,
@@ -279,14 +282,9 @@ def normal_panel(facts):
 
 
 def participant_id(namespace, sample):
-    """Only infer donor identity for documented project identifier schemes."""
-    if re.match(r"^TCGA-[A-Z0-9]{2}-[A-Z0-9]{4}(?:-|$)", sample):
-        return "TCGA:" + sample[:12]
-    if re.match(r"^TARGET-\d{2}-[A-Z0-9]{6}(?:-|$)", sample):
-        return "TARGET:" + "-".join(sample.split("-")[:3])
-    if re.match(r"^MMRF[_-]\d+[_-]", sample):
-        return "MMRF:" + re.split(r"[_-]", sample)[1]
-    return ""
+    """Compatibility wrapper; identity policy is owned by the public sample API."""
+    rows = pd.DataFrame([{"source_cohort": namespace, "sample_id": sample}])
+    return sample_api.sample_identities(rows).iloc[0].participant_id
 
 
 def annotate_papers(decisions):
@@ -440,10 +438,14 @@ def tumors(facts):
             raise ValueError("Overlapping cohort views disagree")
         combined = combined[~combined.index.duplicated()]
     sample_meta = samples.drop_duplicates(["namespace", "sample_id"]).copy()
-    sample_meta["sample_key"] = sample_meta.namespace + ":" + sample_meta.sample_id
-    sample_meta["participant_id"] = [
-        participant_id(r.namespace, r.sample_id) for r in sample_meta.itertuples()
-    ]
+    sample_meta = sample_api.sample_identities(sample_meta)
+    for name in [
+        "cancer-reference-expression-samples.csv.gz",
+        "cancer-reference-sample-molecular-provenance.csv",
+    ]:
+        path = ROOT / "oncoref/data" / name
+        INPUTS[str(path.relative_to(ROOT))] = sha256(path)
+    INPUTS["oncoref/samples.py"] = sha256(ROOT / "oncoref/samples.py")
     sample_meta = sample_meta[sample_meta.sample_key.isin(combined.index)]
     combined.index.name = "sample_key"
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -647,7 +649,8 @@ def build():
             "A maximum of tissue summaries is not a maximum over every healthy donor",
             "Other assay scales continue to enforce the existing shared normal screen independently",
         ],
-        "participant_identity": "TCGA, TARGET and MMRF participant schemes are resolved across aliquots/cohort views. Other source IDs support the single-sample route; unverified patient IDs cannot establish replication.",
+        "participant_identity": "Shared sample_identities API joins curated case/donor mappings and documented TCGA, TARGET, MMRF and Treehouse identifiers. Every sample retains identity status, basis and references. Unresolved or conflicting identities support only the single-sample route.",
+        "participant_identity_policy": sample_api.PATIENT_IDENTITY_POLICY,
         "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
         "method_references": [
             "https://v23.proteinatlas.org/about/assays%2Bannotation",

@@ -324,7 +324,8 @@ def build():
     shutil.copyfile(CACHE / "sample-rank-cutoffs.csv.gz", OUT / "sample-rank-cutoffs.csv.gz")
     shutil.copyfile(CACHE / "receipt.json", OUT / "rank-build-receipt.json")
     baseline = grid[grid.id.eq("fold_L1_R1_S5") & grid.disposable_cap_tpm.isna()].iloc[0]
-    assert baseline["Cancer Antigens"] == 882 and baseline.CTA == 632
+    assert baseline["Cancer Antigens"] == catalog.is_cancer_antigen.sum()
+    assert catalog.is_cta.sum() == baseline.CTA
     selected = [
         "fold_L1_R1_S5",
         "fold_L1_R2_S5",

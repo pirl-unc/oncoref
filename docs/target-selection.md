@@ -5,13 +5,15 @@ Antigens. Both sets use the same normal-tissue, coverage, translation and sequen
 requirements. Their union is called Target candidates.**
 
 The catalog has been rebuilt under `oncoref.target-selection.2026-11-09.1`:
-**632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only, 724 Other and
-18,259 Unsafe**. That gives 882 Cancer Antigens, 660 Reproductive Antigens and
-910 Target candidates. [Browse every protein and category change](audits/target-selection-20261109/rebuild/report.html).
+**638 CTA, 260 Cancer Antigen only, 22 Reproductive Antigen only, 714 Other and
+18,259 Unsafe**. That gives 898 Cancer Antigens, 660 Reproductive Antigens and
+920 Target candidates. [Browse every protein and category change](audits/target-selection-20261109/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot.
 
-**The rebuild remains draft.** [The 250-protein audit](audits/target-selection-20261109/scrutiny/index.md)
+The [threshold inventory, patient-mapping correction and named CTA placements](audits/target-selection-20261109/policy-reference/index.md) explain the complete rules and current calls.
+
+**The rebuild remains draft.** [The original 250-protein audit](audits/target-selection-20261109/scrutiny/index.md)
 identifies tumor-source dependence, low-abundance matches and specialized normal
 compartments requiring review. The counts describe rule matches, not experimentally
 validated tumor antigens. Exact source-table claims now separate published target
@@ -21,8 +23,8 @@ The [threshold comparison](audits/target-selection-20261109/thresholds/index.md)
 tests 516 combinations of abundance, enrichment, percentile and Disposable-cap
 rules. Its recommended next draft keeps the two-patient route, raises the
 single-tumor requirement from fivefold to tenfold, and adds independent Disposable
-caps of 32 TPM and 32 nTPM in their respective panels. That would give **617 CTA, 232 Cancer Antigen only,
-43 Reproductive Antigen only, 742 Other and 18,259 Unsafe**. These are proposed
+caps of 32 TPM and 32 nTPM in their respective panels. That would give **630 CTA, 250 Cancer Antigen only,
+30 Reproductive Antigen only, 724 Other and 18,259 Unsafe**. These are proposed
 counts; the current rebuilt catalog above has not been relabeled.
 
 [Illustrated report](audits/target-selection-20261109/report.html) ·
@@ -58,7 +60,7 @@ retain their own cell-specific assessment. An organ label does not exempt them.
 The [expression-maxima and Disposable-cap audit](audits/target-selection-20261109/expression-maxima/index.md)
 tests two additional requirements: cancer or reproductive/developmental expression
 must exceed every measured nonreproductive value, and Disposable expression must
-stay below a fixed cap. The maximum rule removes zero of the 910 candidates in
+stay below a fixed cap. The maximum rule removes zero of the 920 candidates in
 the current native-TPM panel; a 16-TPM Disposable cap removes LCE3C. This panel
 contains appendix, gallbladder and tonsil, with no isolated hair-follicle TPM
 measurements. The audit reports single-cell nTPM separately. These are

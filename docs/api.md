@@ -1300,6 +1300,35 @@ diagnosis-only Treehouse sample.
   confirmation status, expression availability, and access level.
 - `oncoref.samples.molecular_sample_counts(code)` reports libraries and distinct
   donors separately for each physical source cohort.
+- `oncoref.expression.sample_metadata(code, sample_qc="all")` returns one row
+  for each actual matrix column, in the same order and with the same QC selection
+  as `per_sample_expression`. It includes the physical sample key, patient ID,
+  identity status, mapping basis and source references. `oncoref.sample_metadata`
+  exposes the same function at the package root.
+- `oncoref.samples.sample_identities(rows)` applies that same patient mapping to
+  an existing table with `source_cohort` and `sample_id`. Use this when replaying
+  pinned matrices. It preserves unknown and conflicting identities explicitly.
+
+```python
+from oncoref import expression
+
+matrix = expression.per_sample_expression("LAML", normalize="tpm_raw", sample_qc="pass")
+metadata = expression.sample_metadata("LAML", sample_qc="pass")
+assert metadata.sample_id.tolist() == expression.sample_columns(matrix)
+known = metadata[metadata.patient_identity_status.eq("resolved")]
+# One patient may have several libraries or biopsies. Choose and record the
+# aggregation appropriate to the analysis; antigen screening uses a maximum.
+per_patient = matrix.set_index("Ensembl_Gene_ID")[known.sample_id].T.groupby(
+    known.set_index("sample_id").participant_id
+).max().T
+```
+
+Matrix columns represent samples/libraries, not necessarily independent patients.
+Patient mapping uses curated case/donor manifests and documented project IDs;
+a GEO `case_id` copied from its sample label is insufficient. Unresolved identity
+does not discard expression: a sample can still satisfy a single-tumor rule.
+Mappings cover the identifiers documented by each source; cross-study donors
+without a shared identifier are not automatically linked.
 
 The eleven historical `legacy-compat` tables remain importable but frozen.
 Typed accessors emit one `DeprecationWarning` per dataset per process and name
