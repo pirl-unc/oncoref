@@ -17,6 +17,14 @@ compartments requiring review. The counts describe rule matches, not experimenta
 validated tumor antigens. Exact source-table claims now separate published target
 nominations from reproductive-only background lists.
 
+The [threshold comparison](audits/target-selection-20261109/thresholds/index.md)
+tests 516 combinations of abundance, enrichment, percentile and Disposable-cap
+rules. Its recommended next draft keeps the two-patient route, raises the
+single-tumor requirement from fivefold to tenfold, and adds independent Disposable
+caps of 32 TPM and 32 nTPM in their respective panels. That would give **617 CTA, 232 Cancer Antigen only,
+43 Reproductive Antigen only, 742 Other and 18,259 Unsafe**. These are proposed
+counts; the current rebuilt catalog above has not been relabeled.
+
 [Illustrated report](audits/target-selection-20261109/report.html) ·
 [Machine-readable definition](audits/target-selection-20261109/definition.json)
 

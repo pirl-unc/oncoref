@@ -10,6 +10,7 @@ nav:
   - Rebuilt antigen catalog: audits/target-selection-20261109/rebuild/index.md
   - Cancer antigen support audit: audits/target-selection-20261109/scrutiny/index.md
   - Expression maxima and Disposable caps: audits/target-selection-20261109/expression-maxima/index.md
+  - Threshold comparison: audits/target-selection-20261109/thresholds/index.md
   - CTA reports:
       - CTA definition and illustrated report: audits/cta-definition-20261104/index.md
       - Translation qualification: audits/translation-qualification-20261104/index.md

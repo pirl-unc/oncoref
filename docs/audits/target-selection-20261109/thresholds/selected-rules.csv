@@ -1,0 +1,8 @@
+id,kind,floor,repeated_fold,single_fold,repeated_rank,single_rank,disposable_cap_tpm,disposable_cap_ntpm,Cancer Antigens,CTA,Cancer Antigen only,Reproductive Antigen only,Target candidates,Other,Unsafe,current_targets_to_other,cancer_membership_lost,published_cancer_nominations,published_cta_nominations,olfactory_cancer_only,krtap_cancer_only,cancer_lost_without_hl_merkel,cancer_lost_without_largest_sample,quantile,rule
+fold_L1_R1_S5,fold,1,1,5,0.0,0.0,,,882,632,250,28,910,724,18259,0,0,430,406,141,31,40,58,,"Current: two patients above normal, or one at 5×"
+fold_L1_R1_S10,fold,1,1,10,0.0,0.0,,,849,617,232,43,892,742,18259,18,33,425,401,126,29,31,49,,"Recommended: two patients above normal, or one at 10×"
+fold_L1_R1_S20,fold,1,1,20,0.0,0.0,,,821,608,213,52,873,761,18259,37,61,423,399,111,29,13,27,,"Two patients above normal, or one at 20×"
+fold_L1_R2_S5,fold,1,2,5,0.0,0.0,,,836,605,231,55,891,743,18259,19,46,418,394,129,30,86,101,,"Two patients at 2×, or one at 5×"
+rank_P80_P95_R1,rank,1,1,5,0.8,0.95,,,300,247,53,413,713,921,18259,197,582,168,159,19,5,41,81,,"Within-tumor p80 repeated / p95 single, plus current enrichment"
+cohort_Q95_L1_R1_S0,cohort,1,1,0,0.0,0.0,,,400,354,46,306,706,928,18259,204,482,261,249,17,2,0,1,0.95,"Across-patient p95 alone, in any eligible cancer cohort"
+cohort_Q95_L1_R1_S5,cohort,1,1,5,0.0,0.0,,,809,584,225,76,885,749,18259,25,73,403,380,126,28,107,122,0.95,"Across-patient p95, or one tumor at 5×"
