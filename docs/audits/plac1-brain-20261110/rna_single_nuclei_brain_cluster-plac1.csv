@@ -1,0 +1,261 @@
+Gene,Gene name,Brain region,Cluster,Cluster type,Read count,nCPM
+ENSG00000170965,PLAC1,amygdala,c-0,upper rhombic lip,0,0.0
+ENSG00000170965,PLAC1,amygdala,c-1,splatter,122,0.9
+ENSG00000170965,PLAC1,amygdala,c-2,amygdala excitatory,2201,1.6
+ENSG00000170965,PLAC1,amygdala,c-3,medium spiny neuron,145,1.0
+ENSG00000170965,PLAC1,amygdala,c-4,eccentric medium spiny neuron,182,1.0
+ENSG00000170965,PLAC1,amygdala,c-5,midbrain-derived inhibitory,0,0.0
+ENSG00000170965,PLAC1,amygdala,c-6,cge interneuron,302,1.2
+ENSG00000170965,PLAC1,amygdala,c-7,lamp5-lhx6 and chandelier,102,1.2
+ENSG00000170965,PLAC1,amygdala,c-8,mge interneuron,140,1.0
+ENSG00000170965,PLAC1,amygdala,c-9,deep-layer near-projecting,6,1.1
+ENSG00000170965,PLAC1,amygdala,c-10,deep-layer corticothalamic and 6b,179,1.3
+ENSG00000170965,PLAC1,amygdala,c-11,miscellaneous,16,1.1
+ENSG00000170965,PLAC1,amygdala,c-12,hippocampal ca1-3,27,0.7
+ENSG00000170965,PLAC1,amygdala,c-13,upper-layer intratelencephalic,378,3.5
+ENSG00000170965,PLAC1,amygdala,c-14,deep-layer intratelencephalic,494,1.1
+ENSG00000170965,PLAC1,amygdala,c-15,leukocyte,0,0.0
+ENSG00000170965,PLAC1,amygdala,c-16,oligodendrocyte,41,0.6
+ENSG00000170965,PLAC1,amygdala,c-17,committed oligodendrocyte precursor,3,1.7
+ENSG00000170965,PLAC1,amygdala,c-18,astrocyte,39,0.7
+ENSG00000170965,PLAC1,amygdala,c-19,oligodendrocyte precursor cell,75,1.3
+ENSG00000170965,PLAC1,amygdala,c-20,ependymal cell,3,1.7
+ENSG00000170965,PLAC1,amygdala,c-21,fibroblast,0,0.0
+ENSG00000170965,PLAC1,amygdala,c-22,pericyte,1,2.7
+ENSG00000170965,PLAC1,amygdala,c-23,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,amygdala,c-24,endothelial cell,0,0.0
+ENSG00000170965,PLAC1,amygdala,c-25,central nervous system macrophage,46,3.4
+ENSG00000170965,PLAC1,basal ganglia,c-0,upper rhombic lip,0,0.0
+ENSG00000170965,PLAC1,basal ganglia,c-1,splatter,567,0.9
+ENSG00000170965,PLAC1,basal ganglia,c-2,lower rhombic lip,1,1.2
+ENSG00000170965,PLAC1,basal ganglia,c-3,thalamic excitatory,10,0.6
+ENSG00000170965,PLAC1,basal ganglia,c-4,amygdala excitatory,16,2.3
+ENSG00000170965,PLAC1,basal ganglia,c-5,medium spiny neuron,3872,1.5
+ENSG00000170965,PLAC1,basal ganglia,c-6,eccentric medium spiny neuron,279,1.0
+ENSG00000170965,PLAC1,basal ganglia,c-7,midbrain-derived inhibitory,1,0.3
+ENSG00000170965,PLAC1,basal ganglia,c-8,cge interneuron,46,1.0
+ENSG00000170965,PLAC1,basal ganglia,c-9,lamp5-lhx6 and chandelier,17,1.2
+ENSG00000170965,PLAC1,basal ganglia,c-10,mge interneuron,45,1.1
+ENSG00000170965,PLAC1,basal ganglia,c-11,deep-layer near-projecting,20,1.9
+ENSG00000170965,PLAC1,basal ganglia,c-12,deep-layer corticothalamic and 6b,34,1.4
+ENSG00000170965,PLAC1,basal ganglia,c-13,miscellaneous,6,0.9
+ENSG00000170965,PLAC1,basal ganglia,c-14,upper-layer intratelencephalic,95,1.9
+ENSG00000170965,PLAC1,basal ganglia,c-15,deep-layer intratelencephalic,107,1.6
+ENSG00000170965,PLAC1,basal ganglia,c-16,leukocyte,2,2.3
+ENSG00000170965,PLAC1,basal ganglia,c-17,oligodendrocyte,106,0.7
+ENSG00000170965,PLAC1,basal ganglia,c-18,committed oligodendrocyte precursor,3,1.6
+ENSG00000170965,PLAC1,basal ganglia,c-19,astrocyte,42,0.6
+ENSG00000170965,PLAC1,basal ganglia,c-20,oligodendrocyte precursor cell,40,1.2
+ENSG00000170965,PLAC1,basal ganglia,c-21,ependymal cell,8,1.2
+ENSG00000170965,PLAC1,basal ganglia,c-22,choroid plexus epithelial cell,90,1.2
+ENSG00000170965,PLAC1,basal ganglia,c-23,fibroblast,3,0.6
+ENSG00000170965,PLAC1,basal ganglia,c-24,pericyte,0,0.0
+ENSG00000170965,PLAC1,basal ganglia,c-25,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,basal ganglia,c-26,endothelial cell,4,3.7
+ENSG00000170965,PLAC1,basal ganglia,c-27,central nervous system macrophage,49,1.5
+ENSG00000170965,PLAC1,cerebellum,c-0,upper rhombic lip,398,1.0
+ENSG00000170965,PLAC1,cerebellum,c-1,lower rhombic lip,1,3.2
+ENSG00000170965,PLAC1,cerebellum,c-2,splatter,82,1.3
+ENSG00000170965,PLAC1,cerebellum,c-3,miscellaneous,0,0.0
+ENSG00000170965,PLAC1,cerebellum,c-4,cerebellar inhibitory,157,1.1
+ENSG00000170965,PLAC1,cerebellum,c-5,midbrain-derived inhibitory,1,1.5
+ENSG00000170965,PLAC1,cerebellum,c-6,leukocyte,0,0.0
+ENSG00000170965,PLAC1,cerebellum,c-7,oligodendrocyte,91,0.8
+ENSG00000170965,PLAC1,cerebellum,c-8,committed oligodendrocyte precursor,0,0.0
+ENSG00000170965,PLAC1,cerebellum,c-9,astrocyte,12,0.5
+ENSG00000170965,PLAC1,cerebellum,c-10,bergmann glia,19,0.5
+ENSG00000170965,PLAC1,cerebellum,c-11,oligodendrocyte precursor cell,32,1.0
+ENSG00000170965,PLAC1,cerebellum,c-12,ependymal cell,0,0.0
+ENSG00000170965,PLAC1,cerebellum,c-13,fibroblast,0,0.0
+ENSG00000170965,PLAC1,cerebellum,c-14,pericyte,0,0.0
+ENSG00000170965,PLAC1,cerebellum,c-15,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,cerebellum,c-16,endothelial cell,2,1.5
+ENSG00000170965,PLAC1,cerebellum,c-17,central nervous system macrophage,23,1.5
+ENSG00000170965,PLAC1,cerebral cortex,c-0,oligodendrocyte,36,0.4
+ENSG00000170965,PLAC1,cerebral cortex,c-1,committed oligodendrocyte precursor,2,1.3
+ENSG00000170965,PLAC1,cerebral cortex,c-2,astrocyte,53,0.7
+ENSG00000170965,PLAC1,cerebral cortex,c-3,oligodendrocyte precursor cell,57,1.2
+ENSG00000170965,PLAC1,cerebral cortex,c-4,fibroblast,0,0.0
+ENSG00000170965,PLAC1,cerebral cortex,c-5,pericyte,1,1.9
+ENSG00000170965,PLAC1,cerebral cortex,c-6,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,cerebral cortex,c-7,endothelial cell,2,1.3
+ENSG00000170965,PLAC1,cerebral cortex,c-8,central nervous system macrophage,24,1.8
+ENSG00000170965,PLAC1,cerebral cortex,c-9,upper rhombic lip,0,0.0
+ENSG00000170965,PLAC1,cerebral cortex,c-10,splatter,25,0.8
+ENSG00000170965,PLAC1,cerebral cortex,c-11,thalamic excitatory,2,1.8
+ENSG00000170965,PLAC1,cerebral cortex,c-12,amygdala excitatory,694,1.6
+ENSG00000170965,PLAC1,cerebral cortex,c-13,medium spiny neuron,81,2.2
+ENSG00000170965,PLAC1,cerebral cortex,c-14,eccentric medium spiny neuron,35,1.3
+ENSG00000170965,PLAC1,cerebral cortex,c-15,cge interneuron,1008,1.2
+ENSG00000170965,PLAC1,cerebral cortex,c-16,lamp5-lhx6 and chandelier,212,1.3
+ENSG00000170965,PLAC1,cerebral cortex,c-17,mge interneuron,1041,1.0
+ENSG00000170965,PLAC1,cerebral cortex,c-18,deep-layer near-projecting,221,1.6
+ENSG00000170965,PLAC1,cerebral cortex,c-19,deep-layer corticothalamic and 6b,781,1.4
+ENSG00000170965,PLAC1,cerebral cortex,c-20,miscellaneous,186,1.4
+ENSG00000170965,PLAC1,cerebral cortex,c-21,hippocampal ca1-3,7,1.1
+ENSG00000170965,PLAC1,cerebral cortex,c-22,upper-layer intratelencephalic,7430,2.1
+ENSG00000170965,PLAC1,cerebral cortex,c-23,deep-layer intratelencephalic,2895,1.4
+ENSG00000170965,PLAC1,cerebral cortex,c-24,leukocyte,1,2.4
+ENSG00000170965,PLAC1,hippocampus,c-0,upper rhombic lip,0,0.0
+ENSG00000170965,PLAC1,hippocampus,c-1,splatter,18,1.4
+ENSG00000170965,PLAC1,hippocampus,c-2,amygdala excitatory,280,1.6
+ENSG00000170965,PLAC1,hippocampus,c-3,eccentric medium spiny neuron,2,0.8
+ENSG00000170965,PLAC1,hippocampus,c-4,cge interneuron,406,1.1
+ENSG00000170965,PLAC1,hippocampus,c-5,lamp5-lhx6 and chandelier,221,1.5
+ENSG00000170965,PLAC1,hippocampus,c-6,mge interneuron,407,1.2
+ENSG00000170965,PLAC1,hippocampus,c-7,medium spiny neuron,6,0.9
+ENSG00000170965,PLAC1,hippocampus,c-8,deep-layer near-projecting,4,1.3
+ENSG00000170965,PLAC1,hippocampus,c-9,deep-layer corticothalamic and 6b,584,1.6
+ENSG00000170965,PLAC1,hippocampus,c-10,miscellaneous,141,1.3
+ENSG00000170965,PLAC1,hippocampus,c-11,hippocampal ca1-3,3742,1.5
+ENSG00000170965,PLAC1,hippocampus,c-12,upper-layer intratelencephalic,96,3.0
+ENSG00000170965,PLAC1,hippocampus,c-13,deep-layer intratelencephalic,188,1.7
+ENSG00000170965,PLAC1,hippocampus,c-14,hippocampal dentate gyrus,3091,3.4
+ENSG00000170965,PLAC1,hippocampus,c-15,hippocampal ca4,394,1.2
+ENSG00000170965,PLAC1,hippocampus,c-16,leukocyte,0,0.0
+ENSG00000170965,PLAC1,hippocampus,c-17,oligodendrocyte,79,0.5
+ENSG00000170965,PLAC1,hippocampus,c-18,committed oligodendrocyte precursor,6,1.6
+ENSG00000170965,PLAC1,hippocampus,c-19,astrocyte,86,0.6
+ENSG00000170965,PLAC1,hippocampus,c-20,oligodendrocyte precursor cell,105,1.2
+ENSG00000170965,PLAC1,hippocampus,c-21,ependymal cell,9,0.9
+ENSG00000170965,PLAC1,hippocampus,c-22,choroid plexus epithelial cell,1,2.8
+ENSG00000170965,PLAC1,hippocampus,c-23,fibroblast,1,0.5
+ENSG00000170965,PLAC1,hippocampus,c-24,pericyte,0,0.0
+ENSG00000170965,PLAC1,hippocampus,c-25,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,hippocampus,c-26,endothelial cell,1,0.3
+ENSG00000170965,PLAC1,hippocampus,c-27,central nervous system macrophage,51,1.7
+ENSG00000170965,PLAC1,hypothalamus,c-0,upper rhombic lip,0,0.0
+ENSG00000170965,PLAC1,hypothalamus,c-1,splatter,1277,0.9
+ENSG00000170965,PLAC1,hypothalamus,c-2,mammillary body,519,1.1
+ENSG00000170965,PLAC1,hypothalamus,c-3,amygdala excitatory,44,0.9
+ENSG00000170965,PLAC1,hypothalamus,c-4,medium spiny neuron,119,0.8
+ENSG00000170965,PLAC1,hypothalamus,c-5,eccentric medium spiny neuron,45,0.7
+ENSG00000170965,PLAC1,hypothalamus,c-6,midbrain-derived inhibitory,36,0.9
+ENSG00000170965,PLAC1,hypothalamus,c-7,cge interneuron,26,0.7
+ENSG00000170965,PLAC1,hypothalamus,c-8,lamp5-lhx6 and chandelier,13,1.1
+ENSG00000170965,PLAC1,hypothalamus,c-9,mge interneuron,36,1.2
+ENSG00000170965,PLAC1,hypothalamus,c-10,deep-layer near-projecting,7,1.5
+ENSG00000170965,PLAC1,hypothalamus,c-11,deep-layer corticothalamic and 6b,14,1.5
+ENSG00000170965,PLAC1,hypothalamus,c-12,miscellaneous,21,1.7
+ENSG00000170965,PLAC1,hypothalamus,c-13,upper-layer intratelencephalic,117,1.6
+ENSG00000170965,PLAC1,hypothalamus,c-14,deep-layer intratelencephalic,30,1.3
+ENSG00000170965,PLAC1,hypothalamus,c-15,leukocyte,0,0.0
+ENSG00000170965,PLAC1,hypothalamus,c-16,oligodendrocyte,33,0.7
+ENSG00000170965,PLAC1,hypothalamus,c-17,committed oligodendrocyte precursor,5,3.4
+ENSG00000170965,PLAC1,hypothalamus,c-18,astrocyte,28,1.0
+ENSG00000170965,PLAC1,hypothalamus,c-19,oligodendrocyte precursor cell,24,1.5
+ENSG00000170965,PLAC1,hypothalamus,c-20,ependymal cell,0,0.0
+ENSG00000170965,PLAC1,hypothalamus,c-21,fibroblast,1,0.5
+ENSG00000170965,PLAC1,hypothalamus,c-22,pericyte,0,0.0
+ENSG00000170965,PLAC1,hypothalamus,c-23,vascular associated smooth muscle cell,1,2.1
+ENSG00000170965,PLAC1,hypothalamus,c-24,endothelial cell,0,0.0
+ENSG00000170965,PLAC1,hypothalamus,c-25,central nervous system macrophage,23,2.2
+ENSG00000170965,PLAC1,medulla oblongata,c-0,upper rhombic lip,48,0.8
+ENSG00000170965,PLAC1,medulla oblongata,c-1,splatter,361,0.8
+ENSG00000170965,PLAC1,medulla oblongata,c-2,lower rhombic lip,106,1.6
+ENSG00000170965,PLAC1,medulla oblongata,c-3,miscellaneous,0,0.0
+ENSG00000170965,PLAC1,medulla oblongata,c-4,cerebellar inhibitory,6,1.1
+ENSG00000170965,PLAC1,medulla oblongata,c-5,midbrain-derived inhibitory,2,1.6
+ENSG00000170965,PLAC1,medulla oblongata,c-6,leukocyte,0,0.0
+ENSG00000170965,PLAC1,medulla oblongata,c-7,oligodendrocyte,82,1.1
+ENSG00000170965,PLAC1,medulla oblongata,c-8,committed oligodendrocyte precursor,1,1.3
+ENSG00000170965,PLAC1,medulla oblongata,c-9,astrocyte,10,0.6
+ENSG00000170965,PLAC1,medulla oblongata,c-10,bergmann glia,0,0.0
+ENSG00000170965,PLAC1,medulla oblongata,c-11,oligodendrocyte precursor cell,8,0.8
+ENSG00000170965,PLAC1,medulla oblongata,c-12,ependymal cell,5,1.1
+ENSG00000170965,PLAC1,medulla oblongata,c-13,choroid plexus epithelial cell,5,0.7
+ENSG00000170965,PLAC1,medulla oblongata,c-14,fibroblast,0,0.0
+ENSG00000170965,PLAC1,medulla oblongata,c-15,pericyte,0,0.0
+ENSG00000170965,PLAC1,medulla oblongata,c-16,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,medulla oblongata,c-17,endothelial cell,3,3.1
+ENSG00000170965,PLAC1,medulla oblongata,c-18,central nervous system macrophage,10,1.4
+ENSG00000170965,PLAC1,midbrain,c-0,upper rhombic lip,27,1.0
+ENSG00000170965,PLAC1,midbrain,c-1,splatter,1536,0.9
+ENSG00000170965,PLAC1,midbrain,c-2,lower rhombic lip,12,1.1
+ENSG00000170965,PLAC1,midbrain,c-3,thalamic excitatory,50,0.8
+ENSG00000170965,PLAC1,midbrain,c-4,amygdala excitatory,0,0.0
+ENSG00000170965,PLAC1,midbrain,c-5,miscellaneous,10,0.7
+ENSG00000170965,PLAC1,midbrain,c-6,cerebellar inhibitory,1,0.3
+ENSG00000170965,PLAC1,midbrain,c-7,midbrain-derived inhibitory,299,1.0
+ENSG00000170965,PLAC1,midbrain,c-8,cge interneuron,9,1.5
+ENSG00000170965,PLAC1,midbrain,c-9,lamp5-lhx6 and chandelier,4,3.1
+ENSG00000170965,PLAC1,midbrain,c-10,mge interneuron,1,0.6
+ENSG00000170965,PLAC1,midbrain,c-11,deep-layer corticothalamic and 6b,0,0.0
+ENSG00000170965,PLAC1,midbrain,c-12,upper-layer intratelencephalic,3,1.9
+ENSG00000170965,PLAC1,midbrain,c-13,deep-layer intratelencephalic,0,0.0
+ENSG00000170965,PLAC1,midbrain,c-14,hippocampal dentate gyrus,10,1.9
+ENSG00000170965,PLAC1,midbrain,c-15,hippocampal ca4,6,3.0
+ENSG00000170965,PLAC1,midbrain,c-16,leukocyte,5,3.5
+ENSG00000170965,PLAC1,midbrain,c-17,oligodendrocyte,286,0.7
+ENSG00000170965,PLAC1,midbrain,c-18,committed oligodendrocyte precursor,3,2.5
+ENSG00000170965,PLAC1,midbrain,c-19,astrocyte,26,0.4
+ENSG00000170965,PLAC1,midbrain,c-20,bergmann glia,0,0.0
+ENSG00000170965,PLAC1,midbrain,c-21,oligodendrocyte precursor cell,41,0.6
+ENSG00000170965,PLAC1,midbrain,c-22,ependymal cell,1,0.6
+ENSG00000170965,PLAC1,midbrain,c-23,fibroblast,2,0.8
+ENSG00000170965,PLAC1,midbrain,c-24,pericyte,0,0.0
+ENSG00000170965,PLAC1,midbrain,c-25,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,midbrain,c-26,endothelial cell,1,0.9
+ENSG00000170965,PLAC1,midbrain,c-27,central nervous system macrophage,73,1.8
+ENSG00000170965,PLAC1,pons,c-0,upper rhombic lip,56,0.8
+ENSG00000170965,PLAC1,pons,c-1,splatter,557,0.8
+ENSG00000170965,PLAC1,pons,c-2,lower rhombic lip,1410,1.3
+ENSG00000170965,PLAC1,pons,c-3,miscellaneous,0,0.0
+ENSG00000170965,PLAC1,pons,c-4,cerebellar inhibitory,13,0.8
+ENSG00000170965,PLAC1,pons,c-5,midbrain-derived inhibitory,27,0.7
+ENSG00000170965,PLAC1,pons,c-6,leukocyte,1,0.9
+ENSG00000170965,PLAC1,pons,c-7,oligodendrocyte,162,0.6
+ENSG00000170965,PLAC1,pons,c-8,committed oligodendrocyte precursor,0,0.0
+ENSG00000170965,PLAC1,pons,c-9,astrocyte,11,0.4
+ENSG00000170965,PLAC1,pons,c-10,bergmann glia,1,1.4
+ENSG00000170965,PLAC1,pons,c-11,oligodendrocyte precursor cell,30,0.6
+ENSG00000170965,PLAC1,pons,c-12,ependymal cell,1,0.4
+ENSG00000170965,PLAC1,pons,c-13,choroid plexus epithelial cell,0,0.0
+ENSG00000170965,PLAC1,pons,c-14,fibroblast,1,0.3
+ENSG00000170965,PLAC1,pons,c-15,pericyte,2,1.4
+ENSG00000170965,PLAC1,pons,c-16,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,pons,c-17,endothelial cell,1,0.6
+ENSG00000170965,PLAC1,pons,c-18,central nervous system macrophage,25,1.5
+ENSG00000170965,PLAC1,spinal cord,c-0,upper rhombic lip,1,0.4
+ENSG00000170965,PLAC1,spinal cord,c-1,splatter,85,1.3
+ENSG00000170965,PLAC1,spinal cord,c-2,cerebellar inhibitory,0,0.0
+ENSG00000170965,PLAC1,spinal cord,c-3,leukocyte,0,0.0
+ENSG00000170965,PLAC1,spinal cord,c-4,oligodendrocyte,48,1.0
+ENSG00000170965,PLAC1,spinal cord,c-5,committed oligodendrocyte precursor,3,11.0
+ENSG00000170965,PLAC1,spinal cord,c-6,astrocyte,2,0.3
+ENSG00000170965,PLAC1,spinal cord,c-7,bergmann glia,0,0.0
+ENSG00000170965,PLAC1,spinal cord,c-8,oligodendrocyte precursor cell,6,0.9
+ENSG00000170965,PLAC1,spinal cord,c-9,ependymal cell,0,0.0
+ENSG00000170965,PLAC1,spinal cord,c-10,fibroblast,3,16.0
+ENSG00000170965,PLAC1,spinal cord,c-11,pericyte,0,0.0
+ENSG00000170965,PLAC1,spinal cord,c-12,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,spinal cord,c-13,endothelial cell,1,1.7
+ENSG00000170965,PLAC1,spinal cord,c-14,central nervous system macrophage,10,2.9
+ENSG00000170965,PLAC1,thalamus,c-0,upper rhombic lip,1,2.5
+ENSG00000170965,PLAC1,thalamus,c-1,splatter,677,1.1
+ENSG00000170965,PLAC1,thalamus,c-2,thalamic excitatory,2739,1.1
+ENSG00000170965,PLAC1,thalamus,c-3,amygdala excitatory,7,3.2
+ENSG00000170965,PLAC1,thalamus,c-4,medium spiny neuron,114,1.2
+ENSG00000170965,PLAC1,thalamus,c-5,eccentric medium spiny neuron,9,0.5
+ENSG00000170965,PLAC1,thalamus,c-6,midbrain-derived inhibitory,1982,1.3
+ENSG00000170965,PLAC1,thalamus,c-7,cge interneuron,28,1.1
+ENSG00000170965,PLAC1,thalamus,c-8,lamp5-lhx6 and chandelier,13,1.6
+ENSG00000170965,PLAC1,thalamus,c-9,mge interneuron,11,2.0
+ENSG00000170965,PLAC1,thalamus,c-10,deep-layer corticothalamic and 6b,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-11,miscellaneous,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-12,upper-layer intratelencephalic,1,1.1
+ENSG00000170965,PLAC1,thalamus,c-13,deep-layer intratelencephalic,3,6.4
+ENSG00000170965,PLAC1,thalamus,c-14,hippocampal dentate gyrus,12,6.2
+ENSG00000170965,PLAC1,thalamus,c-15,hippocampal ca4,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-16,leukocyte,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-17,oligodendrocyte,161,0.5
+ENSG00000170965,PLAC1,thalamus,c-18,committed oligodendrocyte precursor,2,0.5
+ENSG00000170965,PLAC1,thalamus,c-19,astrocyte,20,0.5
+ENSG00000170965,PLAC1,thalamus,c-20,oligodendrocyte precursor cell,24,0.6
+ENSG00000170965,PLAC1,thalamus,c-21,ependymal cell,3,1.2
+ENSG00000170965,PLAC1,thalamus,c-22,choroid plexus epithelial cell,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-23,fibroblast,4,0.5
+ENSG00000170965,PLAC1,thalamus,c-24,pericyte,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-25,vascular associated smooth muscle cell,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-26,endothelial cell,0,0.0
+ENSG00000170965,PLAC1,thalamus,c-27,central nervous system macrophage,38,1.9

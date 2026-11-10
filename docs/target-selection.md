@@ -241,3 +241,9 @@ The new `target_selection.results()` includes selected transcript IDs, sequence
 hashes, measurements and linked paper records. `cta_selection.results()` and
 sequence downloads retain the 1.36.0 snapshot and its policy identity; the new
 catalog does not silently change those assets.
+
+The [normal-cell reassessment](audits/normal-cell-atlas-20261110/index.md) records
+the source inventory, donor-level cerebellum results and sensitivity to 1%, 2%
+and 5% RNA detection cutoffs. It separates RNA assignments from protein evidence,
+checks age and feature coverage, and documents the QC still needed before rare-cell
+findings change a category. Its results do not modify this catalog snapshot.

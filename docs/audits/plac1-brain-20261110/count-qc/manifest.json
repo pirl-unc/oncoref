@@ -1,0 +1,7 @@
+{
+  "source_sha256": "099a96d362cc11d18870476933d5abe62745284cdc6c56e35403f070ee47ce52",
+  "n_adult_normal_granule": 16833,
+  "gene_mapping": "exact Ensembl IDs",
+  "classification_changed": false,
+  "interpretation": "Depth dependence and Poisson compatibility do not distinguish genuine weak RNA from background. No alignment or empty-droplet data were examined."
+}

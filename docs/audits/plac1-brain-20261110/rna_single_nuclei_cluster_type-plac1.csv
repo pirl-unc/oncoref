@@ -1,0 +1,35 @@
+Gene,Gene name,Cluster type,nCPM
+ENSG00000170965,PLAC1,amygdala excitatory,1.9
+ENSG00000170965,PLAC1,astrocyte,0.6
+ENSG00000170965,PLAC1,Bergmann glia,0.7
+ENSG00000170965,PLAC1,central nervous system macrophage,2.0
+ENSG00000170965,PLAC1,cerebellar inhibitory,0.7
+ENSG00000170965,PLAC1,CGE interneuron,1.1
+ENSG00000170965,PLAC1,choroid plexus epithelial cell,1.2
+ENSG00000170965,PLAC1,committed oligodendrocyte precursor,2.3
+ENSG00000170965,PLAC1,deep-layer corticothalamic and 6b,1.2
+ENSG00000170965,PLAC1,deep-layer intratelencephalic,1.4
+ENSG00000170965,PLAC1,deep-layer near-projecting,1.5
+ENSG00000170965,PLAC1,eccentric medium spiny neuron,0.9
+ENSG00000170965,PLAC1,endothelial cell,1.2
+ENSG00000170965,PLAC1,ependymal cell,0.8
+ENSG00000170965,PLAC1,fibroblast,1.7
+ENSG00000170965,PLAC1,hippocampal CA1-3,1.1
+ENSG00000170965,PLAC1,hippocampal CA4,2.1
+ENSG00000170965,PLAC1,hippocampal dentate gyrus,3.8
+ENSG00000170965,PLAC1,LAMP5-LHX6 and Chandelier,1.6
+ENSG00000170965,PLAC1,leukocyte,0.8
+ENSG00000170965,PLAC1,lower rhombic lip,1.3
+ENSG00000170965,PLAC1,mammillary body,1.1
+ENSG00000170965,PLAC1,medium spiny neuron,1.3
+ENSG00000170965,PLAC1,MGE interneuron,1.2
+ENSG00000170965,PLAC1,midbrain-derived inhibitory,0.9
+ENSG00000170965,PLAC1,miscellaneous,1.0
+ENSG00000170965,PLAC1,oligodendrocyte,0.7
+ENSG00000170965,PLAC1,oligodendrocyte precursor cell,1.0
+ENSG00000170965,PLAC1,pericyte,0.6
+ENSG00000170965,PLAC1,splatter,1.0
+ENSG00000170965,PLAC1,thalamic excitatory,1.1
+ENSG00000170965,PLAC1,upper rhombic lip,0.7
+ENSG00000170965,PLAC1,upper-layer intratelencephalic,2.1
+ENSG00000170965,PLAC1,vascular associated smooth muscle cell,0.2
