@@ -47,6 +47,15 @@ Expression in a Disposable compartment can coexist with either membership.
 Immune cells, blood vessels and other protected cells inside a reproductive organ
 retain their own cell-specific assessment. An organ label does not exempt them.
 
+The [expression-maxima and Disposable-cap audit](audits/target-selection-20261109/expression-maxima/index.md)
+tests two additional requirements: cancer or reproductive/developmental expression
+must exceed every measured nonreproductive value, and Disposable expression must
+stay below a fixed cap. The maximum rule removes zero of the 910 candidates in
+the current native-TPM panel; a 16-TPM Disposable cap removes LCE3C. This panel
+contains appendix, gallbladder and tonsil, with no isolated hair-follicle TPM
+measurements. The audit reports single-cell nTPM separately. These are
+counterfactual counts; no new cap has been applied to the catalog.
+
 Reference selection remains [MANE Select first, Ensembl canonical second, with
 completeness checks and reviewed exceptions](audits/cta-transcript-selection-20261108/index.md).
 An annotated coding reference can qualify without experimental protein detection.

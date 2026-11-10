@@ -9,7 +9,7 @@
     "oncoref/target_selection.py": "974e79d82f06c71d33b0be3d4ab0b262afd0025dce52d730576fecee016472d1",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
     "oncoref/cta_literature.py": "082bc2818dc3af6a779aca36a887962e67e7f3fed4ed5d96a8ca6ed43f02fa7b",
-    "oncoref/tissue_hazards.py": "61e7e94d4f2c7c353a84d84d27b3c2d98a4216be64dbbd6967c2f7af23ffdeb8"
+    "oncoref/tissue_hazards.py": "1191edcf20737bad612c39a9f1761f9c10cb00dc7e208fff689ba535c2650b61"
   },
   "outputs_sha256": {
     "cancer-antigen-only.csv.gz": "ad9753620a3a10bc3b1edec8615f436bb8a197ee4bf0c16eba6bc1f812a000a5",

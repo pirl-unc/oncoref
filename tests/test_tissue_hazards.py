@@ -60,6 +60,27 @@ def test_no_species_age_or_reproductive_safety_inference():
     assert h.assess("unknown")["tier"] == "unresolved"
 
 
+def test_inventory_separates_reproductive_scope_from_missing_hazard_calls():
+    inventory = h.anatomy_inventory().set_index("concept_id")
+    for concept in ["placenta", "trophoblast", "amnion", "yolk_sac", "embryo", "fetus"]:
+        row = inventory.loc[concept]
+        assert row.selection_category == "Reproductive"
+        assert "reproductive" in row.anatomical_membership
+        assert not row.requires_hazard_review
+    assert inventory.loc["embryo", "stage"] == "embryonic"
+    assert inventory.loc["fetus", "stage"] == "fetal"
+    assert inventory.loc["ovary", "tier"] == "protected"
+    assert inventory.loc["ovary", "selection_category"] == "Reproductive"
+    for concept in ["soft_tissue", "head", "foot"]:
+        row = inventory.loc[concept]
+        assert row.requires_localization
+        assert row.context_kind == "broad_location"
+        assert pd.isna(row.selection_category)
+        assert row.tier == "unresolved"
+    assert inventory.loc["skin", "selection_category"] == "Protected"
+    assert inventory.loc["hair_follicle", "selection_category"] == "Disposable"
+
+
 def test_registry_is_detached_and_rejects_uncited_or_duplicate_calls():
     doc = h.registry()
     for change in ("references", "id", "tier"):

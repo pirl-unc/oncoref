@@ -1,0 +1,230 @@
+tissue,cell_type,tier,reason
+adipose tissue,adipocytes,manageable,cell_rule
+adipose tissue,b-cells,manageable,cell_rule
+adipose tissue,dendritic cells,protected,cell_rule
+adipose tissue,fibroblasts,protected,cell_rule
+adipose tissue,macrophages,protected,cell_rule
+adipose tissue,monocytes,protected,cell_rule
+adipose tissue,nk-cells,protected,cell_rule
+adipose tissue,schwann cells,manageable,organ_fallback
+adipose tissue,smooth muscle cells,manageable,organ_fallback
+adipose tissue,t-cells,protected,cell_rule
+bone marrow,b-cells,manageable,cell_rule
+bone marrow,erythroid cells,vital,cell_rule
+bone marrow,macrophages,protected,cell_rule
+bone marrow,plasma cells,protected,cell_rule
+bone marrow,t-cells,protected,cell_rule
+brain,astrocytes,vital,cell_rule
+brain,excitatory neurons,vital,cell_rule
+brain,inhibitory neurons,vital,cell_rule
+brain,microglial cells,protected,cell_rule
+brain,oligodendrocyte precursor cells,vital,cell_rule
+brain,oligodendrocytes,vital,cell_rule
+breast,adipocytes,manageable,organ_fallback
+breast,breast glandular cells,manageable,organ_fallback
+breast,breast myoepithelial cells,manageable,organ_fallback
+breast,endothelial cells,manageable,organ_fallback
+breast,fibroblasts,manageable,organ_fallback
+breast,macrophages,manageable,organ_fallback
+breast,smooth muscle cells,manageable,organ_fallback
+breast,t-cells,manageable,organ_fallback
+bronchus,basal respiratory cells,vital,cell_rule
+bronchus,ciliated cells,protected,cell_rule
+bronchus,club cells,vital,cell_rule
+bronchus,ionocytes,protected,cell_rule
+bronchus,smooth muscle cells,vital,organ_fallback
+colon,distal enterocytes,protected,cell_rule
+colon,enteroendocrine cells,protected,cell_rule
+colon,intestinal goblet cells,protected,cell_rule
+colon,paneth cells,protected,cell_rule
+colon,t-cells,protected,cell_rule
+colon,undifferentiated cells,vital,cell_rule
+endometrium,ciliated cells,protected,organ_fallback
+endometrium,endometrial stromal cells,protected,organ_fallback
+endometrium,endothelial cells,protected,organ_fallback
+endometrium,glandular and luminal cells,protected,mixed_cell_label_organ_fallback
+endometrium,macrophages,protected,organ_fallback
+endometrium,smooth muscle cells,protected,organ_fallback
+endometrium,t-cells,protected,organ_fallback
+esophagus,b-cells,manageable,cell_rule
+esophagus,basal squamous epithelial cells,protected,organ_fallback
+esophagus,endothelial cells,vital,cell_rule
+esophagus,fibroblasts,protected,cell_rule
+esophagus,macrophages,protected,cell_rule
+esophagus,plasma cells,protected,cell_rule
+esophagus,schwann cells,protected,organ_fallback
+esophagus,smooth muscle cells,protected,organ_fallback
+esophagus,squamous epithelial cells,protected,organ_fallback
+esophagus,t-cells,protected,cell_rule
+eye,bipolar cells,vital,cell_rule
+eye,cone photoreceptor cells,vital,cell_rule
+eye,horizontal cells,vital,cell_rule
+eye,muller glia cells,vital,organ_fallback
+eye,rod photoreceptor cells,vital,cell_rule
+fallopian tube,ciliated cells,protected,organ_fallback
+fallopian tube,endothelial cells,protected,organ_fallback
+fallopian tube,fibroblasts,protected,organ_fallback
+fallopian tube,granulocytes,protected,organ_fallback
+fallopian tube,lymphatic endothelial cells,protected,organ_fallback
+fallopian tube,macrophages,protected,organ_fallback
+fallopian tube,neutrophils,protected,organ_fallback
+fallopian tube,plasma cells,protected,organ_fallback
+fallopian tube,secretory cells,protected,organ_fallback
+fallopian tube,smooth muscle cells,protected,organ_fallback
+fallopian tube,t-cells,protected,organ_fallback
+heart muscle,cardiomyocytes,vital,cell_rule
+heart muscle,endothelial cells,vital,cell_rule
+heart muscle,fibroblasts,protected,cell_rule
+heart muscle,smooth muscle cells,vital,organ_fallback
+kidney,b-cells,manageable,cell_rule
+kidney,collecting duct cells,vital,cell_rule
+kidney,distal tubular cells,vital,cell_rule
+kidney,macrophages,protected,cell_rule
+kidney,proximal tubular cells,vital,cell_rule
+kidney,t-cells,protected,cell_rule
+liver,b-cells,manageable,cell_rule
+liver,cholangiocytes,protected,cell_rule
+liver,endothelial cells,vital,cell_rule
+liver,erythroid cells,vital,organ_fallback
+liver,fibroblasts,protected,cell_rule
+liver,hepatocytes,vital,cell_rule
+liver,kupffer cells,vital,organ_fallback
+liver,plasma cells,protected,cell_rule
+liver,smooth muscle cells,vital,organ_fallback
+liver,t-cells,protected,cell_rule
+lung,alveolar cells type 1,vital,cell_rule
+lung,alveolar cells type 2,vital,cell_rule
+lung,b-cells,manageable,cell_rule
+lung,ciliated cells,protected,cell_rule
+lung,club cells,vital,cell_rule
+lung,endothelial cells,vital,cell_rule
+lung,fibroblasts,protected,cell_rule
+lung,granulocytes,vital,organ_fallback
+lung,macrophages,protected,cell_rule
+lung,smooth muscle cells,vital,organ_fallback
+lung,t-cells,protected,cell_rule
+lymph node,b-cells,manageable,cell_rule
+lymph node,mixed cell types,protected,mixed_cell_label_organ_fallback
+lymph node,t-cells,protected,cell_rule
+ovary,endothelial cells,protected,organ_fallback
+ovary,granulosa cells,protected,organ_fallback
+ovary,lymphatic endothelial cells,protected,organ_fallback
+ovary,mixed immune cells,protected,mixed_cell_label_organ_fallback
+ovary,oocytes,protected,organ_fallback
+ovary,ovarian stromal cells,protected,organ_fallback
+ovary,smooth muscle cells,protected,organ_fallback
+pancreas,ductal cells,protected,cell_rule
+pancreas,endothelial cells,vital,cell_rule
+pancreas,exocrine glandular cells,vital,organ_fallback
+pancreas,fibroblasts,protected,cell_rule
+pancreas,macrophages,protected,cell_rule
+pancreas,mixed cell types,vital,mixed_cell_label_organ_fallback
+pancreas,mixed immune cells,vital,mixed_cell_label_conservative_fallback
+pancreas,pancreatic endocrine cells,vital,organ_fallback
+pbmc,b-cells,unresolved,unresolved_anatomy
+pbmc,dendritic cells,unresolved,unresolved_anatomy
+pbmc,macrophages,unresolved,unresolved_anatomy
+pbmc,monocytes,unresolved,unresolved_anatomy
+pbmc,nk-cells,unresolved,unresolved_anatomy
+pbmc,platelets,unresolved,unresolved_anatomy
+pbmc,t-cells,unresolved,unresolved_anatomy
+placenta,cytotrophoblasts,unresolved,unreviewed_anatomy
+placenta,endothelial cells,unresolved,unreviewed_anatomy
+placenta,extravillous trophoblasts,unresolved,unreviewed_anatomy
+placenta,fibroblasts,unresolved,unreviewed_anatomy
+placenta,hofbauer cells,unresolved,unreviewed_anatomy
+placenta,mixed immune cells,unresolved,unreviewed_anatomy
+placenta,smooth muscle cells,unresolved,unreviewed_anatomy
+placenta,syncytiotrophoblasts,unresolved,unreviewed_anatomy
+placenta,t-cells,unresolved,unreviewed_anatomy
+prostate,basal prostatic cells,protected,organ_fallback
+prostate,club cells,protected,organ_fallback
+prostate,endothelial cells,protected,organ_fallback
+prostate,fibroblasts,protected,organ_fallback
+prostate,macrophages,protected,organ_fallback
+prostate,mixed cell types,protected,mixed_cell_label_organ_fallback
+prostate,prostatic glandular cells,protected,organ_fallback
+prostate,smooth muscle cells,protected,organ_fallback
+prostate,t-cells,protected,organ_fallback
+rectum,distal enterocytes,protected,cell_rule
+rectum,enteroendocrine cells,protected,cell_rule
+rectum,intestinal goblet cells,protected,cell_rule
+rectum,mixed immune cells,protected,mixed_cell_label_conservative_fallback
+rectum,paneth cells,protected,cell_rule
+rectum,undifferentiated cells,vital,cell_rule
+salivary gland,b-cells,manageable,cell_rule
+salivary gland,endothelial cells,vital,cell_rule
+salivary gland,fibroblasts,protected,cell_rule
+salivary gland,macrophages,protected,cell_rule
+salivary gland,mixed immune cells,protected,mixed_cell_label_conservative_fallback
+salivary gland,mucus glandular cells,protected,organ_fallback
+salivary gland,plasma cells,protected,cell_rule
+salivary gland,salivary duct cells,protected,cell_rule
+salivary gland,serous glandular cells,protected,cell_rule
+salivary gland,smooth muscle cells,protected,organ_fallback
+salivary gland,t-cells,protected,cell_rule
+skeletal muscle,endothelial cells,vital,cell_rule
+skeletal muscle,fibroblasts,protected,cell_rule
+skeletal muscle,macrophages,protected,cell_rule
+skeletal muscle,mixed cell types,vital,mixed_cell_label_organ_fallback
+skeletal muscle,skeletal myocytes,vital,organ_fallback
+skeletal muscle,smooth muscle cells,vital,organ_fallback
+skeletal muscle,t-cells,protected,cell_rule
+skin,b-cells,manageable,cell_rule
+skin,basal keratinocytes,protected,cell_rule
+skin,endothelial cells,vital,cell_rule
+skin,fibroblasts,protected,cell_rule
+skin,granulocytes,protected,organ_fallback
+skin,langerhans cells,protected,organ_fallback
+skin,macrophages,protected,cell_rule
+skin,melanocytes,disposable,cell_rule
+skin,smooth muscle cells,protected,organ_fallback
+skin,suprabasal keratinocytes,manageable,cell_rule
+skin,t-cells,protected,cell_rule
+small intestine,enteroendocrine cells,protected,cell_rule
+small intestine,intestinal goblet cells,protected,cell_rule
+small intestine,mixed immune cells,vital,mixed_cell_label_conservative_fallback
+small intestine,paneth cells,protected,cell_rule
+small intestine,proximal enterocytes,protected,cell_rule
+small intestine,undifferentiated cells,vital,cell_rule
+spleen,b-cells,manageable,cell_rule
+spleen,macrophages,protected,cell_rule
+spleen,plasma cells,protected,cell_rule
+spleen,t-cells,protected,cell_rule
+stomach,b-cells,manageable,cell_rule
+stomach,fibroblasts,protected,cell_rule
+stomach,gastric mucus-secreting cells,protected,organ_fallback
+stomach,macrophages,protected,cell_rule
+stomach,plasma cells,protected,cell_rule
+stomach,t-cells,protected,cell_rule
+testis,early spermatids,protected,organ_fallback
+testis,endothelial cells,protected,organ_fallback
+testis,late spermatids,protected,organ_fallback
+testis,leydig cells,protected,organ_fallback
+testis,macrophages,protected,organ_fallback
+testis,peritubular cells,protected,organ_fallback
+testis,sertoli cells,protected,organ_fallback
+testis,spermatocytes,protected,organ_fallback
+testis,spermatogonia,protected,organ_fallback
+thymus,b-cells,manageable,cell_rule
+thymus,endothelial cells,vital,cell_rule
+thymus,fibroblasts,protected,cell_rule
+thymus,macrophages,protected,cell_rule
+thymus,mesothelial cells,protected,organ_fallback
+thymus,plasma cells,protected,cell_rule
+thymus,smooth muscle cells,protected,organ_fallback
+thymus,t-cells,protected,cell_rule
+tongue,basal keratinocytes,protected,organ_fallback
+tongue,endothelial cells,vital,cell_rule
+tongue,granulocytes,protected,organ_fallback
+tongue,macrophages,protected,cell_rule
+tongue,serous glandular cells,protected,organ_fallback
+tongue,smooth muscle cells,protected,organ_fallback
+tongue,suprabasal keratinocytes,protected,organ_fallback
+tongue,t-cells,protected,cell_rule
+vascular,endothelial cells,vital,cell_rule
+vascular,fibroblasts,protected,cell_rule
+vascular,macrophages,protected,cell_rule
+vascular,schwann cells,vital,organ_fallback
+vascular,smooth muscle cells,vital,organ_fallback
+vascular,t-cells,protected,cell_rule

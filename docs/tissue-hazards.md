@@ -24,9 +24,16 @@ assert cell["assessment_id"] == "airway_ciliated"
 
 rules = tissue_hazards.assessments()  # rationale, acute/persistent loss, repair, references
 sources = tissue_hazards.references()  # design, model, supported finding, limitation
-inventory = tissue_hazards.anatomy_inventory()  # includes explicit unresolved concepts
+inventory = tissue_hazards.anatomy_inventory()  # selection scope, hazard tier, localization gaps
 policy = tissue_hazards.registry()  # detached data plus SHA-256 policy identity
 ```
+
+The current inventory's `selection_category` groups placental, extraembryonic,
+embryonic and fetal contexts under **Reproductive**. `tier` separately records
+the adult injury assessment where one exists. **Soft tissue, head and foot**
+require localization; they do not receive a permissive tier. The
+[current inventory and coverage audit](audits/target-selection-20261109/expression-maxima/index.md)
+separates these broad labels from specific compartments needing new curation.
 
 RNA and IHC use the same registry, with cellular resolution for HPA clusters/staining, sorted immune panels, DICE and the adult cornea panel. Bulk RNA cannot borrow a cell exception. Existing numeric thresholds remain research parameters; this review does not recalibrate them. Dog and mouse screening roots retain their previous compatibility assignments; the new human hazard API returns unresolved for nonhuman species.
 
