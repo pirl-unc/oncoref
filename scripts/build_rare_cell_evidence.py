@@ -41,6 +41,7 @@ SILETTI = ROOT / "docs/audits/normal-cell-atlas-20261110/siletti-granule-gene-de
 #: Census collection of the same study, so its donors are not a second study.
 SILETTI_SOURCE = "283d65eb-dd53-496d-adb7-7570c7caa443"
 RISK = DATA / "gene-mapping-risk.csv.gz"
+LITERATURE = DATA / "normal-expression-literature.json"
 BRAIN_BULK = {
     "amygdala", "basal ganglia", "caudate", "cerebellum", "cerebral cortex", "choroid plexus",
     "hippocampal formation", "hippocampus", "hypothalamus", "medulla oblongata", "midbrain",
@@ -152,7 +153,18 @@ def bulk_confirmation(proteins: pd.DataFrame) -> pd.DataFrame:
     )
 
 
+def published_organs() -> dict[str, set[str]]:
+    """Panel organs where reviewed literature reports the gene by a specific assay."""
+    entries = json.loads(LITERATURE.read_text())["entries"]
+    return {
+        e["entity_id"]: {e["decision_tissue"]}
+        for e in entries
+        if e["effect"] == "confirm_detection"
+    }
+
+
 def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
+    published = published_organs()
     by_gene = dict(iter(rows.groupby("gene_id")))
     floor = target_selection.DETECTION_FLOOR
     confirmed = bulk[bulk.bulk_tpm.ge(floor)].groupby("entity_id").organ.agg(set).to_dict()
@@ -169,29 +181,25 @@ def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
                 by_gene.get(gene, rows.iloc[:0]).drop(columns=["count_sum", "count_max"]),
                 mapping_risk=bool(flags.mapping_risk),
                 confirmed_tissues=confirmed.get(protein.entity_id, set()),
+                literature_tissues=published.get(protein.entity_id, set()),
             )
             if receipt["status"] == "unassessed":
                 # Measured in the panel, with no positive donor population to grade.
                 receipt["status"] = "below_screen"
             receipt["gene_id"] = gene
             receipts.append(receipt)
-        rank = {"unsafe": 0, "review": 1, "none": 2}
-        receipts.sort(key=lambda r: (rank[r["action"]], -(r["max_multi_molecule_pct"] or 0)))
+        rank = {"established": 0, "dismissed": 1, "below_screen": 2}
+        receipts.sort(key=lambda r: (rank[r["status"]], -(r["max_multi_molecule_pct"] or 0)))
         top = receipts[0] if receipts else None
         finding = top["findings"][0] if top and top["findings"] else {}
         flags = risk.loc[top["gene_id"]] if top else None
         key = (protein.entity_id, finding.get("tissue"))
         support = bulk_by.loc[key] if key in bulk_by.index else None
-        unresolved_because = []
-        if finding and finding["status"] == "unresolved":
-            if not finding["replicated"]:
-                unresolved_because.append("frequent multi-molecule signal in one study only")
-            if flags.paralog_ambiguous:
-                unresolved_because.append("sequence shared with another locus")
-            if flags.host_overlapped:
-                unresolved_because.append("exon inside another same-strand gene")
-            if not finding["orthogonal_confirmation"]:
-                unresolved_because.append("bulk RNA not confirmed in both HPA and GTEx")
+        notes = []
+        if finding and flags.paralog_ambiguous:
+            notes.append("sequence shared with another locus")
+        if finding and flags.host_overlapped:
+            notes.append("exon inside another same-strand gene")
         records.append(
             {
                 "entity_id": protein.entity_id,
@@ -201,7 +209,8 @@ def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
                 "rare_cell_action": top["action"] if top else "none",
                 "rare_cell_tier": top["tier"] if top else "",
                 "rare_cell_gene_id": top["gene_id"] if top else "",
-                "rare_cell_unresolved_because": " | ".join(unresolved_because),
+                "rare_cell_basis": finding.get("basis", ""),
+                "rare_cell_mapping_notes": " | ".join(notes),
                 "measured_member_gene_ids": json.dumps([g for g in members if g in measured_genes]),
                 "assessable_donor_populations": assessable if top else 0,
                 "max_detection_pct": top["max_detection_pct"] if top else None,
@@ -211,7 +220,11 @@ def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
                 "shared_kmer_fraction": flags.shared_kmer_fraction if top else None,
                 "sequence_partners": flags.sequence_partners if top else None,
                 "same_strand_hosts": flags.same_strand_hosts if top else None,
-                **{f"finding_{k}": v for k, v in finding.items() if k not in {"status", "tier"}},
+                **{
+                    f"finding_{k}": v
+                    for k, v in finding.items()
+                    if k not in {"status", "tier", "basis"}
+                },
                 "finding_bulk_tpm": support.bulk_tpm if support is not None else None,
                 "finding_bulk_context": (
                     f"{support.bulk_source}: {support.bulk_context}"
@@ -284,27 +297,32 @@ def render(evidence, findings, table, provenance):
         for r in table.itertuples()
     )
 
-    def rows(frame, reason):
+    def rows(frame):
         return "\n".join(
             f"| {r.protein_group_label} | {r.finding_tissue}: {r.finding_top_cell_type} | "
             f"{r.finding_studies_multi_molecule:.0f} / {r.finding_donors_multi_molecule:.0f} | "
             f"{r.finding_top_n_multi:,.0f}/{r.finding_top_n_cells:,.0f} "
             f"({r.finding_top_multi_molecule_pct:.1f}%) | "
             f"{'—' if pd.isna(r.finding_bulk_tpm) else f'{r.finding_bulk_tpm:.2g}'} | "
-            + (r.rare_cell_unresolved_because if reason else str(r.finding_bulk_context))
+            f"{r.rare_cell_basis}"
+            + (
+                f" ({r.rare_cell_mapping_notes})"
+                if isinstance(r.rare_cell_mapping_notes, str) and r.rare_cell_mapping_notes
+                else ""
+            )
             + " |"
             for r in frame.itertuples()
         )
 
     head = (
         "| Protein | Organ: strongest population | Studies / donors with multi-molecule cells | "
-        "Strongest donor: cells with ≥2 molecules | Bulk TPM reached in both HPA and GTEx | {} |\n"
+        "Strongest donor: cells with ≥2 molecules | Bulk TPM reached in both HPA and GTEx | Basis |\n"
         "|---|---|---:|---:|---:|---|\n"
     )
-    unsafe = evidence[evidence.rare_cell_action.eq("unsafe")].sort_values(
+    unsafe = evidence[evidence.rare_cell_status.eq("established")].sort_values(
         "finding_top_multi_molecule_pct", ascending=False
     )
-    review = evidence[evidence.rare_cell_action.eq("review")].sort_values(
+    dismissed = evidence[evidence.rare_cell_status.eq("dismissed")].sort_values(
         "finding_top_multi_molecule_pct", ascending=False
     )
     risk = provenance["mapping_risk"]
@@ -312,28 +330,32 @@ def render(evidence, findings, table, provenance):
 
 **{len(evidence):,} proteins were graded from {scope["cells"]:,} adult cells and nuclei of
 {scope["donors"]:,} donors in {scope["collections"]} collections, plus the directly analysed
-Siletti cerebellar granule nuclei. {len(unsafe)} have established Vital-cell RNA and
-{len(review)} need review.** Category consequences are in the
-[catalog rebuild](../../target-selection-20261110/rebuild/index.md).
+Siletti cerebellar granule nuclei. {len(unsafe)} have established normal-cell RNA and are
+Unsafe; {len(dismissed)} have a signal that is dismissed with its reason.** Category
+consequences are in the [catalog rebuild](../../target-selection-20261110/rebuild/index.md).
 
 A count matrix cannot show where a read aligned. One mis-assigned read per cell, from a
 paralog, a pseudogene or an overlapping gene, looks exactly like sparse expression. The
-grade therefore ignores single-molecule cells and asks four separate questions.
+grade therefore ignores single-molecule cells and asks five questions. Every outcome is
+terminal; nothing waits for review.
 
 | Question | Requirement |
 |---|---|
-| Is there a signal? | {rules["signal"]} |
+| Is there a signal? | {rules["signal"]} {rules["protected"]} |
 | Is it replicated? | {rules["replication"]} {rules["single_study"]} |
 | Could the reads belong elsewhere? | {rules["mapping_risk"]} |
 | Does another assay agree? | {rules["confirmation"]} |
+| Is it published? | {rules["literature"]} |
 
-| Grade | Meaning | Vital population | Protected population |
-|---|---|---|---|
-| Established | {rules["established"]} | Unsafe | Other:Review |
-| Unresolved | {rules["unresolved"]} | Other:Review | Recorded |
-| Below the screen | No replicated or frequent multi-molecule signal | No finding | No finding |
+| Outcome | Rule |
+|---|---|
+| Established | {rules["established"]} |
+| Dismissed | {rules["dismissed"]} |
+| Below the screen | No replicated or frequent multi-molecule signal. No finding. |
 
-Below the screen is not a demonstration of absence or safety. {rules["release"]}
+Below the screen is not a demonstration of absence or safety. The
+[literature review](../../target-selection-20261110/rebuild/literature.md) covers every
+candidate whose signal is dismissed or who left the pooled flag.
 Donors are never pooled, frequencies are never added across paralogs, and unmeasured
 genes stay unassessed.
 
@@ -364,13 +386,13 @@ not graded.
 |---|---:|---:|---:|---:|---:|
 {sens}
 
-## Established in a Vital population
+## Established
 
-{head.format("Bulk source")}{rows(unsafe, False)}
+{head}{rows(unsafe)}
 
-## Needing review
+## Dismissed
 
-{head.format("Unresolved because")}{rows(review, True)}
+{head}{rows(dismissed)}
 
 ## Scope and limits
 
@@ -497,6 +519,7 @@ def main():
         "rules": target_selection.definition()["rare_cell_rna"],
         "mapping_risk": risk_provenance,
         "confirmation_sources": sorted(bulk.bulk_source.unique()),
+        "literature_sha256": digest(LITERATURE),
         "panel": {
             "scope": "adult, known donor, UMI protocol, primary normal tissue",
             "vital_tissues": sorted(VITAL_TISSUES),

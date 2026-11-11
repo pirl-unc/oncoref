@@ -47,7 +47,8 @@ COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-09.1"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
-RARE_UNSAFE = "Established rare Vital-cell RNA"
+RARE_UNSAFE = "Established rare normal-cell RNA"
+LITERATURE_UNSAFE = "Published normal-tissue expression"
 #: Checks that must pass before tumor evidence and expression bounds are assessed.
 PRIOR_CHECKS = [c for c in target_selection.SHARED_CHECKS if c != "expression_bounds_pass"]
 DISPOSABLE_NTPM_TISSUES = ["appendix", "gallbladder", "tonsil"]
@@ -101,12 +102,27 @@ def shared_facts():
         & f.rare_cell_status.eq("unassessed")
         & ~other_unsafe
     )
+    path = ROOT / "oncoref/data/normal-expression-literature.json"
+    INPUTS["oncoref/data/normal-expression-literature.json"] = sha256(path)
+    if provenance["literature_sha256"] != sha256(path):
+        raise ValueError("Rare-cell evidence was graded with another literature review")
+    literature = pd.DataFrame(json.loads(path.read_text())["entries"]).set_index("entity_id")
+    for field in ["verdict", "effect", "rule", "decision_tissue", "decision_reason"]:
+        f["literature_" + field] = f.entity_id.map(literature[field])
+    f["literature_effect"] = f.literature_effect.fillna("not_reviewed")
+    literature_unsafe = f.literature_effect.eq("exclude")
     rare_unsafe = f.rare_cell_action.eq("unsafe")
     rare_review = f.rare_cell_action.eq("review") | f.rare_cell_legacy_only
-    f["unsafe"] = other_unsafe | rare_unsafe
+    f["unsafe"] = other_unsafe | rare_unsafe | literature_unsafe
     f["Unsafe_reasons"] = [
-        " | ".join([n for n, on in zip(kept, row) if on] + ([RARE_UNSAFE] if rare_hit else []))
-        for row, rare_hit in zip(f[["unsafe:" + n for n in kept]].to_numpy(), rare_unsafe)
+        " | ".join(
+            [n for n, on in zip(kept, row) if on]
+            + ([RARE_UNSAFE] if rare_hit else [])
+            + ([LITERATURE_UNSAFE] if published else [])
+        )
+        for row, rare_hit, published in zip(
+            f[["unsafe:" + n for n in kept]].to_numpy(), rare_unsafe, literature_unsafe
+        )
     ]
     ninemers = cta_sequence_overlap.group_ninemers(f.member_gene_ids)
     overlap = cta_sequence_overlap.unsafe_overlap(ninemers, f.index)
@@ -660,16 +676,12 @@ def build():
         "sequence_pass": "Nested or Unsafe-contained sequence",
     }
     bounds_failed = decisions.expression_bounds_status.eq("fail")
-    rare_text = {
-        "established": "Established rare-cell RNA in a Protected population",
-        "unresolved": "Unresolved rare Vital-cell RNA needs mapping, background or protein review",
-    }
+
     decisions["decision_reason"] = [
         str(r.Unsafe_reasons)
         if r.category == "Unsafe"
         else " | ".join(
             [text for field, text in reasons.items() if not getattr(r, field)]
-            + ([rare_text[r.rare_cell_status]] if r.rare_cell_action == "review" else [])
             + (
                 ["Pooled rare-cell flag could not be assessed per donor"]
                 if r.rare_cell_legacy_only
@@ -759,6 +771,7 @@ def build():
             "action": decisions.rare_cell_action.value_counts().to_dict(),
             "legacy_flag_unassessed": int(decisions.rare_cell_legacy_only.sum()),
         },
+        "literature": decisions.literature_effect.value_counts().to_dict(),
         "expression_bounds": decisions.expression_bounds_status.value_counts().to_dict(),
         "comparison_required_contexts": sorted(required),
         "assessed_cancer_statuses": evidence.cancer_evidence.value_counts().to_dict(),
@@ -831,7 +844,8 @@ def build():
         "rare_cell_action",
         "rare_cell_tier",
         "rare_cell_gene_id",
-        "rare_cell_unresolved_because",
+        "rare_cell_basis",
+        "rare_cell_mapping_notes",
         "finding_tissue",
         "finding_top_cell_type",
         "finding_studies_multi_molecule",
@@ -848,6 +862,11 @@ def build():
         "max_detection_pct",
         "max_multi_molecule_pct",
         "rare_cell_legacy_only",
+        "literature_effect",
+        "literature_verdict",
+        "literature_rule",
+        "literature_decision_tissue",
+        "literature_decision_reason",
         "expression_bounds_status",
         "target_peak_tpm",
         "disposable_max_tpm",
@@ -899,7 +918,7 @@ def build():
         "release_ready": False,
         "open_reviews": [
             "Tumor-source comparability and outlier support",
-            "Mapping, background and protein review of unresolved rare-cell RNA",
+            "Read-level confirmation of the rare-cell mapping-risk flags",
             "Hair-follicle normal-protein replay (#687)",
         ],
         "summary": summary,

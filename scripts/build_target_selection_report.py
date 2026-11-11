@@ -179,12 +179,14 @@ therefore never change a category.</p>
 <tr><td>Is it replicated?</td><td>{html.escape(rare["replication"])} {html.escape(rare["single_study"])}</td></tr>
 <tr><td>Could the reads belong elsewhere?</td><td>{html.escape(rare["mapping_risk"])}</td></tr>
 <tr><td>Does another assay agree?</td><td>{html.escape(rare["confirmation"])}</td></tr></tbody></table>
-<table><thead><tr><th>Grade</th><th>Meaning</th><th>Vital</th><th>Protected</th></tr></thead>
-<tbody><tr><td>Established</td><td>{html.escape(rare["established"])}</td><td>Unsafe</td><td>Other:Review</td></tr>
-<tr><td>Unresolved</td><td>{html.escape(rare["unresolved"])}</td><td>Other:Review</td><td>Recorded</td></tr>
-<tr><td>Below the screen</td><td>Neither</td><td colspan="2">No finding. This is not evidence of absence or safety.</td></tr></tbody></table>
-<p>1%, 2% and 5% detection remain reported comparison metrics. {html.escape(rare["release"])}
-<a href="../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a>.</p>
+<table><thead><tr><th>Outcome</th><th>Rule</th></tr></thead>
+<tbody><tr><td>Established</td><td>{html.escape(rare["established"])}</td></tr>
+<tr><td>Dismissed</td><td>{html.escape(rare["dismissed"])}</td></tr>
+<tr><td>Below the screen</td><td>No replicated or frequent multi-molecule signal. No finding; not evidence of absence or safety.</td></tr></tbody></table>
+<p>{html.escape(rare["protected"])} {html.escape(rare["literature"])} 1%, 2% and 5% detection
+remain reported comparison metrics. There is no review state.
+<a href="../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> ·
+<a href="rebuild/literature/">Literature review</a>.</p>
 <h2>Cancer evidence</h2>
 <p>Let N be the highest qualified nonexempt normal measurement in a complete, compatible
 comparison panel. Two independent patients each need T ≥1 and T &gt;N; alternatively,

@@ -25,16 +25,25 @@ DRAFT = ROOT / "docs/audits/target-selection-20261109/rebuild/protein-decisions.
 
 def funnel(data):
     """Sequential removal by the shared screen; every protein lands in one step."""
+    new_reasons = {"Established rare normal-cell RNA", "Published normal-tissue expression"}
+    only_new = data.Unsafe_reasons.fillna("").map(
+        lambda v: bool(v) and set(v.split(" | ")) <= new_reasons
+    )
+    unsafe = data.category.eq("Unsafe")
     steps = [
-        ("Accepted normal-tissue exclusion", data.category.eq("Unsafe"), "Unsafe"),
         (
-            "Unresolved rare-cell RNA",
-            data.classification.eq("Other:Review") & data.rare_cell_action.eq("review"),
-            "Other:Review",
+            "Bulk, cluster, immune, protein or reviewed normal exclusion",
+            unsafe & ~only_new,
+            "Unsafe",
         ),
         (
-            "Other normal evidence, coverage, identity or translation review",
-            data.classification.eq("Other:Review") & data.rare_cell_action.ne("review"),
+            "Established rare-cell RNA or published normal expression only",
+            unsafe & only_new,
+            "Unsafe",
+        ),
+        (
+            "Coverage, identity, translation or unresolved patient identity",
+            data.classification.eq("Other:Review"),
             "Other:Review",
         ),
         (
@@ -63,7 +72,7 @@ def funnel_figure(table, data, counts):
     fig, ax = plt.subplots(figsize=(11, 5.2))
     labels = ["All assessed proteins", *table.step, "Target candidates"]
     values = [len(data), *table.remaining, int(data.is_target_candidate.sum())]
-    colors = ["#6f7f89", "#ac5552", "#b88a3c", "#b88a3c", "#8d7aa8", "#9aabb5", "#3f8f6b"]
+    colors = ["#6f7f89", "#ac5552", "#ac5552", "#b88a3c", "#8d7aa8", "#9aabb5", "#3f8f6b"]
     ax.barh(labels[::-1], values[::-1], color=colors[::-1])
     removed = table.set_index("step").removed
     for i, (label, value) in enumerate(zip(labels[::-1], values[::-1])):
@@ -104,7 +113,10 @@ def build():
             "decision_reason",
             "published_nomination",
             "rare_cell_status",
-            "rare_cell_unresolved_because",
+            "rare_cell_basis",
+            "rare_cell_mapping_notes",
+            "literature_effect",
+            "literature_decision_reason",
             "finding_tissue",
             "finding_top_cell_type",
             "finding_studies_multi_molecule",
@@ -134,7 +146,10 @@ def build():
         "released_category",
         "decision_reason",
         "rare_cell_status",
-        "rare_cell_unresolved_because",
+        "rare_cell_basis",
+        "rare_cell_mapping_notes",
+        "literature_effect",
+        "literature_decision_reason",
         "finding_tissue",
         "finding_top_cell_type",
         "finding_studies_multi_molecule",
@@ -203,7 +218,7 @@ table{border-collapse:collapse;width:100%}th,td{padding:9px;text-align:left;bord
 .badge{font-weight:600;white-space:nowrap}.Unsafe{color:#a33532}.CTA{color:#20613c}#count{font-weight:bold}.pager{margin-top:12px;display:flex;gap:16px}
 </style><main><h1>Rebuilt antigen catalog</h1>
 <p>__TOTAL__ proteins assessed under <code>__POLICY__</code>. Identical selected reference proteins are counted together; every member locus remains listed.</p>
-<p class="note"><strong>These counts are outputs of screening rules, not validated tumor antigens.</strong> Rare normal-cell RNA is graded per adult donor; single-molecule cells never change a category, and unresolved signals wait in Other:Review. <a href="../../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> · <a href="changes-from-draft.csv">Every change from the 2026-11-09 draft</a> · <a href="../../target-selection-20261109/scrutiny/">Earlier 250-protein audit</a>.</p>
+<p class="note"><strong>These counts are outputs of screening rules, not validated tumor antigens.</strong> Rare normal-cell RNA is graded per adult donor; single-molecule cells never change a category, and every signal ends as established or dismissed with its reason. <a href="literature/">Literature review of the dismissed and released proteins</a>. <a href="../../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> · <a href="changes-from-draft.csv">Every change from the 2026-11-09 draft</a> · <a href="../../target-selection-20261109/scrutiny/">Earlier 250-protein audit</a>.</p>
 <div class="summary"><table><thead><tr><th>Exclusive category</th><th>Proteins</th><th>With a curated target nomination</th></tr></thead><tbody>__COUNTS__</tbody></table>
 <p><strong>Cancer Antigens: __CA__ · Reproductive Antigens: __RA__ · CTA intersection: __CTA__ · Target candidates union: __UNION__.</strong></p></div>
 <p>Other: __OTHER_COUNTS__. Of the __RA_ONLY__ Reproductive Antigens only, __RA_UNRESOLVED__ have potentially qualifying repeated tumor measurements with unresolved patient identities. The remaining __RA_INSUFFICIENT__ do not meet either cancer RNA rule in the measured samples.</p>
@@ -235,7 +250,7 @@ const pages=Math.max(1,Math.ceil(selected.length/size));page=Math.min(page,pages
 document.getElementById('count').textContent=selected.length.toLocaleString()+' proteins';
 document.getElementById('body').innerHTML=selected.slice(page*size,(page+1)*size).map(r=>`<tr><td><strong>${esc(r.protein_group_label)}</strong><br><small>${r.member_gene_ids.map(g=>link('https://www.ensembl.org/Homo_sapiens/Gene/Summary?g='+g,g)).join('<br>')}<br>${link('https://www.proteinatlas.org/'+r.representative_gene_id,'HPA')}</small></td>
 <td class="badge ${r.category==='Unsafe'?'Unsafe':r.category==='CTA'?'CTA':''}">${esc(r.classification)}</td><td>${esc(r.released_category)}</td><td>${fmt(r.normal_reference_tpm)}</td><td>${fmt(r.tumor_max_tpm)}<br><small>${esc(r.tumor_top_cancer_code)}</small></td><td>${fmt(r.independent_patients_above_normal)}</td><td>${fmt(r.reproductive_ntpm)}</td><td>${fmt(r.reproductive_cell_ntpm)}</td><td>${fmt(r.developmental_mean_tpm)}</td>
-<td><details><summary>${r.published_nomination?'Published nomination':'No catalog nomination'} · ${r.paper_source_ids.length} paper sources</summary><p>${esc(r.decision_reason)}</p><p>Cancer assessment: ${esc(r.cancer_evidence)}<br>${esc(r.cancer_routes)}<br>Samples above normal with unresolved patient IDs: ${fmt(r.unresolved_patient_samples_above_normal)}</p><p>Rare normal-cell RNA: ${esc(r.rare_cell_status)}${r.rare_cell_unresolved_because?' — '+esc(r.rare_cell_unresolved_because):''}${r.finding_tissue?'<br>'+esc(r.finding_tissue)+': '+esc(r.finding_top_cell_type)+', '+fmt(r.finding_studies_multi_molecule)+' studies, '+fmt(r.finding_top_multi_molecule_pct)+'% of the strongest donor’s cells with ≥2 molecules':''}<br>Highest single-donor detection ${fmt(r.max_detection_pct)}%; with ≥2 molecules ${fmt(r.max_multi_molecule_pct)}%</p><p>Reproductive/developmental routes: ${esc(r.reproductive_routes)}</p><p>Peak tumor sample: ${esc(r.tumor_top_sample)}</p><p>Selected transcript(s): ${esc(r.representative_transcripts)}</p><p>Normal maximum witnesses (up to 10):</p><ul>${r.normal_reference_contexts.map(x=>`<li>${esc(x.tissue)} / ${esc(x.cell_type)}: ${fmt(x.value)} TPM · ${esc(x.source_id)} · ${esc(x.statistic)}</li>`).join('')}</ul><p><strong>Target nominations</strong><br>${papers(r.nomination_source_ids)||'None recorded'}</p><p><strong>All paper roles, including counterevidence</strong><br>${papers(r.paper_source_ids)||'None recorded'}</p></details></td></tr>`).join('');
+<td><details><summary>${r.published_nomination?'Published nomination':'No catalog nomination'} · ${r.paper_source_ids.length} paper sources</summary><p>${esc(r.decision_reason)}</p><p>Cancer assessment: ${esc(r.cancer_evidence)}<br>${esc(r.cancer_routes)}<br>Samples above normal with unresolved patient IDs: ${fmt(r.unresolved_patient_samples_above_normal)}</p><p>Rare normal-cell RNA: ${esc(r.rare_cell_status)}${r.rare_cell_basis?' — '+esc(r.rare_cell_basis):''}${r.rare_cell_mapping_notes?' ('+esc(r.rare_cell_mapping_notes)+')':''}${r.literature_effect&&r.literature_effect!=='not_reviewed'?'<br>Literature: '+esc(r.literature_effect)+' — '+esc(r.literature_decision_reason):''}${r.finding_tissue?'<br>'+esc(r.finding_tissue)+': '+esc(r.finding_top_cell_type)+', '+fmt(r.finding_studies_multi_molecule)+' studies, '+fmt(r.finding_top_multi_molecule_pct)+'% of the strongest donor’s cells with ≥2 molecules':''}<br>Highest single-donor detection ${fmt(r.max_detection_pct)}%; with ≥2 molecules ${fmt(r.max_multi_molecule_pct)}%</p><p>Reproductive/developmental routes: ${esc(r.reproductive_routes)}</p><p>Peak tumor sample: ${esc(r.tumor_top_sample)}</p><p>Selected transcript(s): ${esc(r.representative_transcripts)}</p><p>Normal maximum witnesses (up to 10):</p><ul>${r.normal_reference_contexts.map(x=>`<li>${esc(x.tissue)} / ${esc(x.cell_type)}: ${fmt(x.value)} TPM · ${esc(x.source_id)} · ${esc(x.statistic)}</li>`).join('')}</ul><p><strong>Target nominations</strong><br>${papers(r.nomination_source_ids)||'None recorded'}</p><p><strong>All paper roles, including counterevidence</strong><br>${papers(r.paper_source_ids)||'None recorded'}</p></details></td></tr>`).join('');
 document.getElementById('page').textContent=`Page ${page+1} of ${pages}`;document.getElementById('previous').disabled=page===0;document.getElementById('next').disabled=page+1>=pages;}
 for(const id of ['search','category','changed','published'])document.getElementById(id).addEventListener(id==='search'?'input':'change',()=>render());
 document.getElementById('previous').onclick=()=>{page--;render(false)};document.getElementById('next').onclick=()=>{page++;render(false)};render();
@@ -308,11 +323,9 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
     )
     released = data[data.draft_classification.eq("Unsafe") & data.is_target_candidate]
     new_unsafe = data[data.draft_classification.ne("Unsafe") & data.category.eq("Unsafe")]
-    rare_review = data[
-        data.draft_classification.isin(["CTA", "Cancer Antigen only", "Reproductive Antigen only"])
-        & data.classification.eq("Other:Review")
-        & data.rare_cell_action.eq("review")
-    ].sort_values("finding_top_multi_molecule_pct", ascending=False)
+    dismissed = data[data.is_target_candidate & data.rare_cell_status.eq("dismissed")]
+    document = json.loads((ROOT / "oncoref/data/normal-expression-literature.json").read_text())
+    excluded = [e for e in document["entries"] if e["effect"] != "none"]
     rules = target_selection.definition()["rare_cell_rna"]
     (OUT / "index.md").write_text(
         "# Rebuilt antigen catalog\n\n"
@@ -333,7 +346,8 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "## The filters\n\n"
         "| Filter | Rule | Failure |\n|---|---|---|\n"
         "| Normal expression | Existing bulk, cluster, immune, cornea, protein and reviewed-knowledge rules, unchanged | Unsafe for accepted exclusions; otherwise Other:Review |\n"
-        f"| Rare normal-cell RNA | {rules['signal']} {rules['replication']} | Established in a Vital population: Unsafe. Unresolved: Other:Review |\n"
+        f"| Rare normal-cell RNA | {rules['signal']} {rules['replication']} | Established: Unsafe. Dismissed: no effect |\n"
+        "| Published normal expression | Gene-specific report in normal adult Vital or Protected tissue, by a fixed rubric | Unsafe |\n"
         "| Coverage, identity and translation | Unchanged | Other:Review |\n"
         "| Sequence | Fewer than 95% of 9-mers inside Unsafe proteins, recomputed for the new Unsafe set | Other:Sequence |\n"
         "| Expression bounds | Target maximum above every measured nonreproductive and Disposable value; Disposable at most 32 TPM and 32 nTPM | Other:Expression |\n"
@@ -342,27 +356,41 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "## Rare normal-cell RNA\n\n"
         "A count matrix cannot show where a read aligned, and one mis-assigned read per cell from a "
         "paralog, pseudogene or overlapping gene looks like sparse expression. "
-        f"{rules['single_molecules']} {rules['single_study']}\n\n"
-        f"- **Established:** {rules['established']} {rules['confirmation']}\n"
-        f"- **Unresolved:** {rules['unresolved']}\n"
+        f"{rules['single_molecules']} Every signal ends in one of two outcomes; nothing waits for review.\n\n"
+        f"- **Established, Unsafe:** {rules['established']}\n"
+        f"- **Dismissed, no effect:** {rules['dismissed']}\n"
         f"- **Mapping risk:** {rules['mapping_risk']}\n"
-        f"- **Leaving review:** {rules['release']}\n\n"
-        f"{len(rare_review)} draft candidates move to Other:Review on this rule, including "
-        + ", ".join(rare_review.protein_group_label.head(12))
-        + f". {len(new_unsafe)} becomes Unsafe: "
-        + ", ".join(new_unsafe.protein_group_label)
+        f"- **Bulk confirmation:** {rules['confirmation']}\n"
+        f"- **Literature:** {rules['literature']}\n\n"
+        f"{len(new_unsafe)} draft non-Unsafe proteins become Unsafe, among them "
+        + ", ".join(
+            new_unsafe[new_unsafe.draft_classification.isin(["CTA", "Cancer Antigen only"])]
+            .sort_values("finding_top_multi_molecule_pct", ascending=False)
+            .protein_group_label.head(14)
+        )
+        + f". {len(dismissed)} candidates carry a dismissed signal, among them "
+        + ", ".join(
+            dismissed.sort_values(
+                "finding_top_multi_molecule_pct", ascending=False
+            ).protein_group_label.head(10)
+        )
         + ".\n\n"
         f"**{len(released)} proteins that were Unsafe only through the pooled 1% detection flag are "
-        "candidates again.** Their donor-level signal is single-molecule, or multi-molecule in one "
-        "study below 5% of cells. They are "
+        "candidates again**: "
         + ", ".join(sorted(released.protein_group_label))
-        + ". This is the rule working as written, not a demonstration that these proteins are absent "
-        "from normal tissue. [Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md).\n\n"
+        + ". Each was taken through the literature review below and none has a gene-specific report "
+        "of expression in vital normal tissue. That is a search result, not proof of absence. "
+        "[Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md).\n\n"
+        "## Literature review\n\n"
+        f"{len(document['entries'])} proteins were reviewed: {document['scope'][0].lower()}{document['scope'][1:]} "
+        f"{len(excluded)} are Unsafe on published evidence: "
+        + "; ".join(f"{e['protein']} ({e['decision_tissue']}, {e['rule']})" for e in excluded)
+        + ". [Every protein, rubric, sources and quotes](literature.md).\n\n"
         "## Changes from the 2026-11-09 draft\n\n| Draft | Now | Proteins |\n|---|---|---:|\n"
         + transition_rows
         + "\n\nThe tenfold single-tumor rule accounts for the moves to Reproductive Antigen only and for "
-        "Cancer Antigens only that now lack a qualifying route. The target-maximum and Disposable-cap "
-        "checks remove no candidate.\n\n"
+        "Cancer Antigens only whose remaining route depends on unresolved patient identity. The "
+        "target-maximum and Disposable-cap checks remove no candidate.\n\n"
         f"Cancer Antigens include {members['is_cancer_antigen']} proteins; Reproductive Antigens include "
         f"{members['is_reproductive_antigen']}. Their intersection is CTA and their union contains "
         f"{members['is_target_candidate']} Target candidates.\n\n"
@@ -398,6 +426,37 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "all proteins. Temporary tumor matrices stay outside the published report. "
         "The new catalog is available through `target_selection.results()`; the `cta_selection` "
         "API and existing sequence downloads retain the 1.36.0 snapshot.\n"
+    )
+
+    def link(e):
+        return "; ".join(
+            f"[{(x['source_title'] or 'source')[:60]}]({x['url']})"
+            for x in e["evidence"][:3]
+            if x["url"]
+        )
+
+    order = {"exclude": 0, "confirm_detection": 0, "none": 1}
+    table = "\n".join(
+        f"| {e['protein']} | {e['verdict'].replace('_', ' ')} | "
+        f"{'Unsafe (' + e['rule'] + ', ' + e['decision_tissue'] + ')' if e['effect'] != 'none' else 'No effect'} | "
+        f"{e['decision_reason']} | {link(e)} |"
+        for e in sorted(document["entries"], key=lambda e: (order[e["effect"]], e["protein"]))
+    )
+    (OUT / "literature.md").write_text(
+        "# Literature review of normal expression\n\n"
+        f"**{len(document['entries'])} proteins reviewed on {document['review_date']}; {len(excluded)} are "
+        "Unsafe on published evidence.** Scope: "
+        + document["scope"]
+        + "\n\n## Rubric\n\n| Rule | Requirement |\n|---|---|\n"
+        + "\n".join(f"| {k} | {v} |" for k, v in document["rubric"].items())
+        + "\n\n## Limits\n\n"
+        + document["method"]
+        + "\n\n"
+        + "\n".join(f"- {x}." for x in document["limitations"])
+        + "\n\n## Decisions\n\n| Protein | Search verdict | Effect | Reason | Sources |\n|---|---|---|---|---|\n"
+        + table
+        + "\n\nSummaries, every evidence item and its quote are in "
+        "`oncoref/data/normal-expression-literature.json`.\n"
     )
     implementation = [
         "scripts/rebuild_target_catalog.py",

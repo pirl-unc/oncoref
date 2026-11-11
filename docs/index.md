@@ -4,8 +4,8 @@
 CTA is their intersection and Target candidates is their union, with the same
 normal-expression, coverage, translation, expression-bound and sequence checks. The
 [catalog](audits/target-selection-20261110/rebuild/index.md) contains
-**616 CTA, 244 Cancer Antigen only, 30 Reproductive Antigen only, 873 Other and
-18,130 Unsafe**. [Filterable table](audits/target-selection-20261110/rebuild/report.html) ·
+**641 CTA, 248 Cancer Antigen only, 31 Reproductive Antigen only, 753 Other and
+18,220 Unsafe**. [Filterable table](audits/target-selection-20261110/rebuild/report.html) ·
 [Illustrated rules](audits/target-selection-20261110/report.html) ·
 [Rare normal-cell RNA by donor](audits/normal-cell-atlas-20261110/rare-cell/index.md).
 Curated protein–paper links remain attached to their specific claims.

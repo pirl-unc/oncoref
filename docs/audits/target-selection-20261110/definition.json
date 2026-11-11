@@ -45,17 +45,17 @@
     "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
     "signal": ">= 1% of a donor's cells and >= 10 cells carry >= 2 molecules.",
     "replication": "The signal in >= 2 independent studies of the same organ. Donors of one study share its libraries and reference.",
-    "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. It can reach review, never Unsafe.",
+    "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules.",
+    "protected": "Protected populations need 2 times these frequencies.",
     "single_molecules": "Cells with one molecule never change a category. A mis-assigned read from a paralog, pseudogene or overlapping gene produces exactly this pattern.",
-    "mapping_risk": "Shared transcript sequence with another locus, or an exon inside another same-strand gene. A flagged gene cannot be established from counts.",
-    "confirmation": "Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets. Accepted protein evidence is assessed by its own rules.",
-    "established": "Replicated signal, no mapping risk, and confirmation.",
-    "unresolved": "A replicated signal lacking a clean mapping or confirmation, or a frequent signal from one study.",
+    "mapping_risk": "Shared transcript sequence with another locus, or an exon inside another same-strand gene. Counts for a flagged gene cannot be attributed to it.",
+    "confirmation": "Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment.",
+    "established": "A replicated signal at a locus without mapping risk, or any signal with bulk confirmation. Unsafe.",
+    "dismissed": "A signal that is neither: counts at a flagged locus, or from one study, that no other assay confirms. Recorded with its reason; no category effect.",
+    "literature": "Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts.",
     "consequences": {
-      "established Vital": "Unsafe",
-      "established Protected": "Other:Review",
-      "unresolved Vital": "Other:Review",
-      "unresolved Protected": "recorded; no category effect",
+      "established": "Unsafe",
+      "dismissed": "No finding; the reason and counts stay in the record.",
       "below_screen": "No finding. Not a demonstration of absence or safety.",
       "unassessed": "Recorded as unmeasured; never treated as negative."
     },
@@ -64,7 +64,6 @@
       2,
       5
     ],
-    "release": "Read-level review settles an unresolved signal: unique alignment and exonic or splice-spanning reads establish it; their absence dismisses it with the evidence.",
     "interpretation": "Detection frequency measures captured RNA, not the fraction of cells producing protein. No cutoff is a calibrated toxicity threshold."
   },
   "cancer_rna": {

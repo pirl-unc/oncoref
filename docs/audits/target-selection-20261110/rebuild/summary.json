@@ -2,37 +2,37 @@
   "policy_id": "oncoref.target-selection.2026-11-10.1",
   "proteins": 19893,
   "categories": {
-    "Unsafe": 18130,
-    "Other": 873,
-    "CTA": 616,
-    "Cancer Antigen only": 244,
-    "Reproductive Antigen only": 30
+    "Unsafe": 18220,
+    "Other": 753,
+    "CTA": 641,
+    "Cancer Antigen only": 248,
+    "Reproductive Antigen only": 31
   },
   "classifications": {
-    "Unsafe": 18130,
-    "Other:Review": 818,
-    "CTA": 616,
-    "Cancer Antigen only": 244,
-    "Other:Sequence": 40,
-    "Reproductive Antigen only": 30,
+    "Unsafe": 18220,
+    "Other:Review": 696,
+    "CTA": 641,
+    "Cancer Antigen only": 248,
+    "Other:Sequence": 42,
+    "Reproductive Antigen only": 31,
     "Other:Expression": 15
   },
   "memberships": {
-    "is_cancer_antigen": 860,
-    "is_reproductive_antigen": 646,
-    "is_cta": 616,
-    "is_target_candidate": 890
+    "is_cancer_antigen": 889,
+    "is_reproductive_antigen": 672,
+    "is_cta": 641,
+    "is_target_candidate": 920
   },
   "changes": [
     {
       "released_category": "CTA",
       "category": "CTA",
-      "proteins": 530
+      "proteins": 547
     },
     {
       "released_category": "CTA",
       "category": "Other",
-      "proteins": 50
+      "proteins": 7
     },
     {
       "released_category": "CTA",
@@ -42,42 +42,47 @@
     {
       "released_category": "CTA",
       "category": "Unsafe",
-      "proteins": 1
+      "proteins": 27
     },
     {
       "released_category": "Other",
       "category": "CTA",
-      "proteins": 55
+      "proteins": 57
     },
     {
       "released_category": "Other",
       "category": "Cancer Antigen only",
-      "proteins": 242
+      "proteins": 245
     },
     {
       "released_category": "Other",
       "category": "Other",
-      "proteins": 727
+      "proteins": 699
     },
     {
       "released_category": "Other",
       "category": "Reproductive Antigen only",
-      "proteins": 3
+      "proteins": 4
+    },
+    {
+      "released_category": "Other",
+      "category": "Unsafe",
+      "proteins": 22
     },
     {
       "released_category": "Unsafe",
       "category": "CTA",
-      "proteins": 31
+      "proteins": 37
     },
     {
       "released_category": "Unsafe",
       "category": "Cancer Antigen only",
-      "proteins": 2
+      "proteins": 3
     },
     {
       "released_category": "Unsafe",
       "category": "Other",
-      "proteins": 96
+      "proteins": 47
     },
     {
       "released_category": "Unsafe",
@@ -87,33 +92,38 @@
     {
       "released_category": "Unsafe",
       "category": "Unsafe",
-      "proteins": 18129
+      "proteins": 18171
     }
   ],
-  "shared_eligible": 926,
-  "assessed_for_cancer_evidence": 936,
+  "shared_eligible": 957,
+  "assessed_for_cancer_evidence": 967,
   "unsafe_changes": {
-    "released_unsafe_now_other": 130,
-    "newly_unsafe": 1
+    "released_unsafe_now_other": 88,
+    "newly_unsafe": 49
   },
   "rare_cell": {
     "status": {
       "not_extracted": 18089,
       "below_screen": 1468,
-      "unresolved": 287,
-      "unassessed": 36,
-      "established": 13
+      "dismissed": 193,
+      "established": 107,
+      "unassessed": 36
     },
     "action": {
-      "none": 19598,
-      "review": 282,
-      "unsafe": 13
+      "none": 19786,
+      "unsafe": 107
     },
     "legacy_flag_unassessed": 0
   },
+  "literature": {
+    "not_reviewed": 19818,
+    "none": 67,
+    "exclude": 7,
+    "confirm_detection": 1
+  },
   "expression_bounds": {
-    "unassessed": 18957,
-    "pass": 926,
+    "unassessed": 18926,
+    "pass": 957,
     "fail": 10
   },
   "comparison_required_contexts": [
@@ -155,15 +165,15 @@
     "urinary bladder"
   ],
   "assessed_cancer_statuses": {
-    "qualifies": 860,
-    "unassessed": 52,
+    "qualifies": 889,
+    "unassessed": 54,
     "does_not_qualify": 24
   },
   "published_nomination_by_category": {
-    "CTA": 401,
+    "CTA": 415,
     "Cancer Antigen only": 24,
-    "Other": 113,
+    "Other": 43,
     "Reproductive Antigen only": 6,
-    "Unsafe": 1689
+    "Unsafe": 1745
   }
 }

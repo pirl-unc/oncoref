@@ -5,9 +5,9 @@ Antigens. Both sets use the same normal-tissue, coverage, translation and sequen
 requirements. Their union is called Target candidates.**
 
 The catalog is built under `oncoref.target-selection.2026-11-10.1`:
-**616 CTA, 244 Cancer Antigen only, 30 Reproductive Antigen only, 873 Other and
-18,130 Unsafe**. That gives 860 Cancer Antigens, 646 Reproductive Antigens and
-890 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
+**641 CTA, 248 Cancer Antigen only, 31 Reproductive Antigen only, 753 Other and
+18,220 Unsafe**. That gives 889 Cancer Antigens, 672 Reproductive Antigens and
+920 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot. The counts describe rule matches, not
@@ -15,7 +15,8 @@ experimentally validated tumor antigens.
 
 [Illustrated rules](audits/target-selection-20261110/report.html) ·
 [Machine-readable definition](audits/target-selection-20261110/definition.json) ·
-[Donor-level rare-cell evidence](audits/normal-cell-atlas-20261110/rare-cell/index.md)
+[Donor-level rare-cell evidence](audits/normal-cell-atlas-20261110/rare-cell/index.md) ·
+[Literature review](audits/target-selection-20261110/rebuild/literature.md)
 
 ![Cancer and Reproductive Antigen sets](audits/target-selection-20261110/sets.svg)
 
@@ -26,7 +27,8 @@ experimentally validated tumor antigens.
 | One-tumor cancer route | T ≥ 5 × max(N, 1) | T ≥ 10 × max(N, 1) |
 | Target maximum | Not applied | Highest tumor, reproductive or developmental value above every measured nonreproductive and Disposable value |
 | Disposable cap | Not applied | At most 32 TPM and 32 nTPM, each on its own scale |
-| Rare normal-cell RNA | ≥1% detection pooled across donors, studies and ages → Unsafe | Per adult donor; multi-molecule cells only; replication across studies; mapping risk; bulk confirmation |
+| Rare normal-cell RNA | ≥1% detection pooled across donors, studies and ages → Unsafe | Per adult donor; multi-molecule cells only; replication across studies; mapping risk; bulk confirmation. Established or dismissed, never held for review |
+| Published normal expression | Reviewed case by case | Fixed rubric applied to every candidate with a dismissed or released rare-cell signal |
 | Sequence containment | Against the released Unsafe set | Recomputed against the new Unsafe set |
 
 The draft and the analyses behind these choices stay available as dated audits:
@@ -38,8 +40,8 @@ The draft and the analyses behind these choices stay available as dated audits:
 [draft catalog](audits/target-selection-20261109/rebuild/index.md). Their counts
 describe the draft.
 
-**Still open before release:** tumor-source comparability, read-level review of the
-unresolved rare-cell signals, and the hair-follicle normal-protein replay.
+**Still open before release:** tumor-source comparability, read-level confirmation
+of the mapping-risk flags, and the hair-follicle normal-protein replay.
 
 ## One shared eligibility screen
 
@@ -85,36 +87,56 @@ looks exactly like sparse expression. The grade therefore asks four questions.
 
 | Question | Requirement |
 |---|---|
-| Is there a signal? | At least 1% of a donor's cells, and at least ten, carry two or more molecules. Cells with one molecule never change a category. |
+| Is there a signal? | At least 1% of a donor's cells, and at least ten, carry two or more molecules. Cells with one molecule never change a category. Protected populations need twice the frequency. |
 | Is it replicated? | The signal appears in two or more independent studies of the same organ. Donors of one study share its libraries and reference. Without replication, only a signal in at least 5% of a donor's cells counts. |
 | Could the reads belong elsewhere? | The gene shares at least 10% of its transcript 31-mers, or of its 3′ kilobase, with another locus, or has an exon inside another same-strand gene. |
 | Does another assay agree? | Bulk RNA of at least 1 TPM in the same organ in both the HPA and GTEx sample sets. |
+| Is it published? | A reviewed paper reports the gene in the same organ by a gene-specific assay. |
 
-| Grade | Meaning | Vital | Protected |
-|---|---|---|---|
-| Established | Replicated signal, no mapping risk, bulk confirmation | Unsafe | Other:Review |
-| Unresolved | Replicated signal lacking either, or a frequent single-study signal | Other:Review | Recorded |
-| Below the screen | Neither | No finding | No finding |
+Every signal ends in one of two outcomes. Nothing is held for review.
+
+| Outcome | Rule | Effect |
+|---|---|---|
+| Established | A replicated signal at a locus without mapping risk; or any signal that bulk RNA confirms; or 1% detection in an organ where a gene-specific assay is published | Unsafe |
+| Dismissed | A signal at a flagged locus, or from one study, that neither bulk RNA nor a publication confirms | None; the counts and reason stay in the record |
+| Below the screen | No replicated or frequent multi-molecule signal | None |
 
 Below the screen is not evidence of absence or safety, and no cutoff is a measured
 toxicity threshold. Detection at 1%, 2% and 5% stays in the evidence tables as a
-comparison. Read-level review settles an unresolved signal: unique alignment with
-exonic or splice-spanning reads establishes it; their absence dismisses it with
-the evidence.
+comparison. The mapping flags are properties of the reference, not checks of the
+reads themselves.
 
-Of the 1,804 graded proteins, 13 are established and 287 unresolved, of which
-282 are held for review and five in Protected populations are recorded only.
-1,468 are below the screen and 36 have no measured gene. CBY3 becomes Unsafe. 60 draft candidates
-move to Other:Review, including ADAM7, HHLA1, TMEM269, TAS2R1 and KRTAP5-11. PLAC1
-moves from Unsafe to Other:Review: its signal is replicated and unflagged, but bulk
-RNA does not confirm it. PRAME, MAGE-A4, CTAG2, NUTM1 and SSX2 stay CTA.
+Of the 1,804 graded proteins, 107 are established, 193 dismissed and 1,468 below
+the screen; 36 have no measured gene. 49 draft proteins become Unsafe, including
+ADAM7, CBY3, ERICH6, TOPAZ1 and WNT8A. PLAC1 stays Unsafe: its signal is replicated
+in four studies at a locus with no mapping risk. TMEM269, TAS2R1 and HHLA1 carry
+dismissed signals and stay candidates. PRAME, MAGE-A4, CTAG2, NUTM1 and SSX2 stay CTA.
 
-**34 proteins that were Unsafe only through the pooled 1% flag are candidates
-again, including MAGEA12, CSAG1 and PABPC3.** Their donor-level signal is
-single-molecule, or multi-molecule in one study below 5% of cells. That is the rule
-working as written. It is not a demonstration that they are absent from normal
-tissue, and the MAGEA12 clinical history remains in its evidence record.
-[All 34 and every other change](audits/target-selection-20261110/rebuild/changes-from-draft.csv).
+### Published normal expression
+
+A dismissal or a release from the old pooled flag leaves a protein's candidacy
+resting on the absence of evidence, so each such protein is taken through a
+literature review with a fixed rubric. 75 proteins were reviewed.
+
+| Rule | Requirement | Effect |
+|---|---|---|
+| R1 | A primary source reports the gene in a panel organ by a gene-specific assay, and donor-level data detect it there | Rare-cell grade becomes established |
+| R2 | A primary source reports the gene by a gene-specific assay in normal adult Vital or Protected tissue, uncontradicted by a gene-specific panel or reliable IHC | Unsafe |
+| R3 | Human loss of function causes disease of a Vital tissue, and the ortholog is expressed in that adult tissue | Unsafe |
+
+Eight are Unsafe on published evidence: MAGEA12 (brain RNA by sequenced qRT-PCR, with
+our own detection; a later in situ study disputes it), AMBN and BTNL2 (gut),
+GDF9 (bone marrow, pituitary), SLC25A2 (liver), ITIH6 (kidney), MYH13 (extraocular
+and laryngeal muscle) and OTOG (inner ear). Several rest on one report or on an
+abstract; the rubric excludes on that, and the limits are recorded with each item.
+
+**41 proteins that were Unsafe only through the pooled 1% flag are candidates
+again, including CSAG1, PABPC3 and NKX2-6.** None has a gene-specific report of
+expression in vital normal tissue. That is the result of one search, not proof of
+absence. NKX2-6 is the closest call: one study shows it in over a third of a
+donor's cardiomyocytes, with no second study, bulk confirmation or publication.
+[Every protein, source and quote](audits/target-selection-20261110/rebuild/literature.md) ·
+[all changes](audits/target-selection-20261110/rebuild/changes-from-draft.csv).
 
 Reference selection remains [MANE Select first, Ensembl canonical second, with
 completeness checks and reviewed exceptions](audits/cta-transcript-selection-20261108/index.md).
@@ -279,7 +301,7 @@ The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
 The rebuild replays accepted normal-evidence curation, recomputes association at
 1 unit, resolves tumor locus identities and counts confirmed independent patients.
-All 936 proteins passing the prior shared checks have complete native-TPM comparison
+All 967 proteins passing the prior shared checks have complete native-TPM comparison
 coverage across the required 36 nonreproductive anatomy contexts. The normal
 reference also includes measured brain subregions and immune-cell summaries.
 The 130 included tumor cohort views are deduplicated by physical sample and known

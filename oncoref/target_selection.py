@@ -28,7 +28,9 @@ RARE_CELL_MULTI_MOLECULES = 2
 RARE_CELL_REPLICATE_STUDIES = 2
 #: Without replication, only a frequent multi-molecule signal is consequential.
 RARE_CELL_SINGLE_STUDY_PCT = 5.0
-RARE_CELL_STATUSES = ("established", "unresolved", "below_screen", "unassessed")
+#: Protected populations need twice the frequency, as their bulk ceiling is twice Vital's.
+RARE_CELL_PROTECTED_FACTOR = 2.0
+RARE_CELL_STATUSES = ("established", "dismissed", "below_screen", "unassessed")
 EVIDENCE_STATUSES = ("qualifies", "does_not_qualify", "unassessed")
 CATEGORIES = ("CTA", "Cancer Antigen only", "Reproductive Antigen only", "Other", "Unsafe")
 SHARED_CHECKS = (
@@ -88,7 +90,10 @@ def definition() -> dict:
             ),
             "single_study": (
                 f"Without replication, a signal counts only when >= {RARE_CELL_SINGLE_STUDY_PCT:g}% "
-                "of a donor's cells carry multiple molecules. It can reach review, never Unsafe."
+                "of a donor's cells carry multiple molecules."
+            ),
+            "protected": (
+                f"Protected populations need {RARE_CELL_PROTECTED_FACTOR:g} times these frequencies."
             ),
             "single_molecules": (
                 "Cells with one molecule never change a category. A mis-assigned read from a "
@@ -96,30 +101,33 @@ def definition() -> dict:
             ),
             "mapping_risk": (
                 "Shared transcript sequence with another locus, or an exon inside another "
-                "same-strand gene. A flagged gene cannot be established from counts."
+                "same-strand gene. Counts for a flagged gene cannot be attributed to it."
             ),
             "confirmation": (
                 f"Bulk RNA >= {DETECTION_FLOOR:g} native TPM in the same organ in both the HPA and "
-                "GTEx sample sets. Accepted protein evidence is assessed by its own rules."
+                "GTEx sample sets, a different assay with its own read assignment."
             ),
-            "established": "Replicated signal, no mapping risk, and confirmation.",
-            "unresolved": (
-                "A replicated signal lacking a clean mapping or confirmation, or a frequent "
-                "signal from one study."
+            "established": (
+                "A replicated signal at a locus without mapping risk, or any signal with bulk "
+                "confirmation. Unsafe."
+            ),
+            "dismissed": (
+                "A signal that is neither: counts at a flagged locus, or from one study, that no "
+                "other assay confirms. Recorded with its reason; no category effect."
+            ),
+            "literature": (
+                "Where a reviewed publication reports the gene in the same organ by a "
+                "gene-specific assay, 1% detection in one donor is established, single "
+                "molecules included: two assay types then agree. Published protein in a Vital "
+                "or Protected tissue excludes through the knowledge layer without any counts."
             ),
             "consequences": {
-                "established Vital": "Unsafe",
-                "established Protected": "Other:Review",
-                "unresolved Vital": "Other:Review",
-                "unresolved Protected": "recorded; no category effect",
+                "established": "Unsafe",
+                "dismissed": "No finding; the reason and counts stay in the record.",
                 "below_screen": "No finding. Not a demonstration of absence or safety.",
                 "unassessed": "Recorded as unmeasured; never treated as negative.",
             },
             "reported_sensitivity_cutoffs_pct": [1, 2, 5],
-            "release": (
-                "Read-level review settles an unresolved signal: unique alignment and exonic or "
-                "splice-spanning reads establish it; their absence dismisses it with the evidence."
-            ),
             "interpretation": (
                 "Detection frequency measures captured RNA, not the fraction of cells producing "
                 "protein. No cutoff is a calibrated toxicity threshold."
@@ -397,7 +405,11 @@ def assess_cancer_rna(
 
 
 def assess_rare_cell_rna(
-    observations: pd.DataFrame, *, mapping_risk: bool, confirmed_tissues: set[str]
+    observations: pd.DataFrame,
+    *,
+    mapping_risk: bool,
+    confirmed_tissues: set[str],
+    literature_tissues: frozenset[str] | set[str] = frozenset(),
 ) -> dict:
     """Grade sparse normal-cell RNA for one gene from donor-resolved molecule counts.
 
@@ -412,11 +424,14 @@ def assess_rare_cell_rna(
     reported and never graded: one mis-assigned read per cell is what a paralog
     or overlapping gene produces. ``mapping_risk`` says the reference makes such
     mis-assignment possible for this gene; ``confirmed_tissues`` lists organs with
-    orthogonal bulk-RNA support. A signal is ``established`` only when two
-    independent studies of the organ show it, without the risk and with
-    confirmation. A replicated signal lacking those, or a single-study signal in
-    at least 5% of a donor's cells, is ``unresolved``. A weaker single-study
-    signal is below the screen.
+    orthogonal bulk-RNA support. A signal is a multi-molecule frequency seen in
+    two independent studies of the organ, or in at least 5% of one donor's cells.
+    It is ``established`` when replicated at a locus without mapping risk, or
+    when bulk RNA confirms it; otherwise it is ``dismissed`` with its reason.
+    ``literature_tissues`` lists organs where a reviewed publication reports the
+    gene by a gene-specific assay. There, a second assay already vouches for the
+    locus, so 1% detection in one donor is enough, single molecules included.
+    Every outcome is terminal: there is no review state.
     """
     columns = {
         "gene_id",
@@ -473,28 +488,40 @@ def assess_rare_cell_rna(
     d["detected"] = d.n_positive.ge(RARE_CELL_MIN_CELLS) & d.detection_pct.ge(
         RARE_CELL_DETECTION_PCT
     )
-    d["multi_molecule"] = d.n_multi.ge(RARE_CELL_MIN_CELLS) & d.multi_molecule_pct.ge(
-        RARE_CELL_DETECTION_PCT
-    )
+    factor = d.tier.map({"vital": 1.0, "protected": RARE_CELL_PROTECTED_FACTOR})
+    enough = d.n_multi.ge(RARE_CELL_MIN_CELLS)
+    d["multi_molecule"] = enough & d.multi_molecule_pct.ge(RARE_CELL_DETECTION_PCT * factor)
+    d["frequent"] = enough & d.multi_molecule_pct.ge(RARE_CELL_SINGLE_STUDY_PCT * factor)
     d["donor"] = d.source_id + ":" + d.donor_id
     findings = []
     for (tier, tissue), group in d.groupby(["tier", "tissue"], sort=True):
         multi = group[group.multi_molecule]
         replicated = multi.source_id.nunique() >= RARE_CELL_REPLICATE_STUDIES
-        frequent = multi.multi_molecule_pct.ge(RARE_CELL_SINGLE_STUDY_PCT).any()
-        if not replicated and not frequent:
+        published = tissue in literature_tissues and group.detected.any()
+        if not replicated and not group.frequent.any() and not published:
             continue
         confirmed = tissue in confirmed_tissues
-        top = multi.sort_values("multi_molecule_pct", ascending=False).iloc[0]
+        if published:
+            status, basis = "established", "detection confirmed by a published gene-specific assay"
+        elif replicated and not mapping_risk:
+            status, basis = "established", "replicated signal at a locus without mapping risk"
+        elif confirmed:
+            status, basis = "established", "signal confirmed by bulk RNA"
+        elif mapping_risk:
+            status, basis = "dismissed", "counts cannot be attributed to this locus; no bulk RNA"
+        else:
+            status, basis = "dismissed", "one study only; no bulk RNA"
+        ranked = multi if len(multi) else group[group.detected]
+        top = ranked.sort_values(["multi_molecule_pct", "detection_pct"], ascending=False).iloc[0]
         findings.append(
             {
-                "status": (
-                    "established" if replicated and confirmed and not mapping_risk else "unresolved"
-                ),
-                "replicated": replicated,
+                "status": status,
+                "basis": basis,
                 "tier": tier,
                 "tissue": tissue,
+                "replicated": replicated,
                 "orthogonal_confirmation": confirmed,
+                "published_confirmation": published,
                 "studies_multi_molecule": int(multi.source_id.nunique()),
                 "donors_multi_molecule": int(multi.donor.nunique()),
                 "studies_detected": int(group.loc[group.detected, "source_id"].nunique()),
@@ -510,25 +537,12 @@ def assess_rare_cell_rna(
                 "top_multi_molecule_pct": float(top.multi_molecule_pct),
             }
         )
-    order = {
-        ("established", "vital"): 0,
-        ("established", "protected"): 1,
-        ("unresolved", "vital"): 2,
-        ("unresolved", "protected"): 3,
-    }
-    findings.sort(key=lambda f: (order[f["status"], f["tier"]], -f["top_multi_molecule_pct"]))
+    findings.sort(key=lambda f: (f["status"] != "established", -f["top_multi_molecule_pct"]))
     receipt["assessable_donor_populations"] = len(d)
     receipt["max_detection_pct"] = float(d.detection_pct.max())
     receipt["max_multi_molecule_pct"] = float(d.multi_molecule_pct.max())
     receipt["findings"] = findings
     receipt["status"] = findings[0]["status"] if findings else "below_screen"
     receipt["tier"] = findings[0]["tier"] if findings else ""
-    key = (receipt["status"], receipt["tier"])
-    receipt["action"] = (
-        "unsafe"
-        if key == ("established", "vital")
-        else "review"
-        if key in {("established", "protected"), ("unresolved", "vital")}
-        else "none"
-    )
+    receipt["action"] = "unsafe" if receipt["status"] == "established" else "none"
     return deepcopy(receipt)

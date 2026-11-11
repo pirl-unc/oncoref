@@ -44,11 +44,12 @@
     "policy.json": "9e31ab2cec7283ca4eec90415dad9d2f03818c93195d3887c51cc8365bc4bd49"
   },
   "input_snapshots": [
-    "oncoref/cta_selection_policy.py"
+    "oncoref/cta_selection_policy.py",
+    "oncoref/tissue_hazards.py"
   ],
   "input_snapshot_archive": {
     "path": "release-inputs.zip",
-    "sha256": "9bdd2325fd7f94b3c534564b491035f80acef1ca9e552ffec9e0db889fdd04c7",
+    "sha256": "2179c81f71bb48d5fe6377230c30d1dd5ba1980b9236e12aa7d7c2dc2f1010ea",
     "reason": "Original scientific inputs preserved byte-for-byte as the live policy implementation advances."
   }
 }

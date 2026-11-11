@@ -11,7 +11,7 @@ code{font-size:.9em}a{color:#176689}.note{color:#53636c}</style><main>
 <p><strong>CTA = Cancer Antigens ∩ Reproductive Antigens.</strong><br>
 Target candidates = Cancer Antigens ∪ Reproductive Antigens.</p>
 <p class="status">Rebuilt catalog: <code>oncoref.target-selection.2026-11-10.1</code>.
-616 CTA, 244 Cancer Antigen only, 30 Reproductive Antigen only, 873 Other, 18,130 Unsafe.
+641 CTA, 248 Cancer Antigen only, 31 Reproductive Antigen only, 753 Other, 18,220 Unsafe.
 <a href="rebuild/report.html">Filterable protein table, measurements and category changes</a>.
 The released 1.36.0 catalog remains a separate snapshot under its earlier policy.</p>
 <figure><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="628.2pt" height="402.48pt" viewBox="0 0 628.2 402.48" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -1955,15 +1955,17 @@ pseudogene or overlapping gene looks like sparse expression. Cells with a single
 therefore never change a category.</p>
 <table><thead><tr><th>Question</th><th>Requirement</th></tr></thead><tbody>
 <tr><td>Is there a signal?</td><td>&gt;= 1% of a donor&#x27;s cells and &gt;= 10 cells carry &gt;= 2 molecules.</td></tr>
-<tr><td>Is it replicated?</td><td>The signal in &gt;= 2 independent studies of the same organ. Donors of one study share its libraries and reference. Without replication, a signal counts only when &gt;= 5% of a donor&#x27;s cells carry multiple molecules. It can reach review, never Unsafe.</td></tr>
-<tr><td>Could the reads belong elsewhere?</td><td>Shared transcript sequence with another locus, or an exon inside another same-strand gene. A flagged gene cannot be established from counts.</td></tr>
-<tr><td>Does another assay agree?</td><td>Bulk RNA &gt;= 1 native TPM in the same organ in both the HPA and GTEx sample sets. Accepted protein evidence is assessed by its own rules.</td></tr></tbody></table>
-<table><thead><tr><th>Grade</th><th>Meaning</th><th>Vital</th><th>Protected</th></tr></thead>
-<tbody><tr><td>Established</td><td>Replicated signal, no mapping risk, and confirmation.</td><td>Unsafe</td><td>Other:Review</td></tr>
-<tr><td>Unresolved</td><td>A replicated signal lacking a clean mapping or confirmation, or a frequent signal from one study.</td><td>Other:Review</td><td>Recorded</td></tr>
-<tr><td>Below the screen</td><td>Neither</td><td colspan="2">No finding. This is not evidence of absence or safety.</td></tr></tbody></table>
-<p>1%, 2% and 5% detection remain reported comparison metrics. Read-level review settles an unresolved signal: unique alignment and exonic or splice-spanning reads establish it; their absence dismisses it with the evidence.
-<a href="../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a>.</p>
+<tr><td>Is it replicated?</td><td>The signal in &gt;= 2 independent studies of the same organ. Donors of one study share its libraries and reference. Without replication, a signal counts only when &gt;= 5% of a donor&#x27;s cells carry multiple molecules.</td></tr>
+<tr><td>Could the reads belong elsewhere?</td><td>Shared transcript sequence with another locus, or an exon inside another same-strand gene. Counts for a flagged gene cannot be attributed to it.</td></tr>
+<tr><td>Does another assay agree?</td><td>Bulk RNA &gt;= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment.</td></tr></tbody></table>
+<table><thead><tr><th>Outcome</th><th>Rule</th></tr></thead>
+<tbody><tr><td>Established</td><td>A replicated signal at a locus without mapping risk, or any signal with bulk confirmation. Unsafe.</td></tr>
+<tr><td>Dismissed</td><td>A signal that is neither: counts at a flagged locus, or from one study, that no other assay confirms. Recorded with its reason; no category effect.</td></tr>
+<tr><td>Below the screen</td><td>No replicated or frequent multi-molecule signal. No finding; not evidence of absence or safety.</td></tr></tbody></table>
+<p>Protected populations need 2 times these frequencies. Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts. 1%, 2% and 5% detection
+remain reported comparison metrics. There is no review state.
+<a href="../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> ·
+<a href="rebuild/literature/">Literature review</a>.</p>
 <h2>Cancer evidence</h2>
 <p>Let N be the highest qualified nonexempt normal measurement in a complete, compatible
 comparison panel. Two independent patients each need T ≥1 and T &gt;N; alternatively,

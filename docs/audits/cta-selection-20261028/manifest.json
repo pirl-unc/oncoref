@@ -101,11 +101,12 @@
   "input_snapshots": [
     "oncoref/cta_selection_policy.py",
     "oncoref/gene_knowledge.py",
+    "oncoref/tissue_hazards.py",
     "scripts/replay_cta_selection.py"
   ],
   "input_snapshot_archive": {
     "path": "release-inputs.zip",
-    "sha256": "bf8f22c90624b7e45ad5b5e93f4a921e522ab677e82aff628b74c0f074c1afe9",
+    "sha256": "175d013ba25431ab84c8956180038fe5f11e277b97e1517260a389e239d71366",
     "reason": "Original release inputs retained byte-for-byte while the live implementation advances. Scientific input/output digests are unchanged."
   }
 }

@@ -240,21 +240,45 @@ def grade(rows, risk=False, confirmed=("brain",)):
 TWO_STUDIES = [("s1", "a", "vital", 5000, 400, 50), ("s2", "b", "vital", 5000, 400, 50)]
 
 
-def test_rare_cell_signal_needs_molecules_replication_mapping_and_confirmation():
+def test_rare_cell_outcomes_are_terminal_and_explained():
     assert grade(TWO_STUDIES) == ("established", "unsafe")
-    # The same counts cannot establish a gene whose reads may belong elsewhere.
-    assert grade(TWO_STUDIES, risk=True) == ("unresolved", "review")
-    assert grade(TWO_STUDIES, confirmed=()) == ("unresolved", "review")
-    assert grade(TWO_STUDIES, confirmed=("heart",)) == ("unresolved", "review")
-    # Two donors of one study share its libraries and reference: a signal, not proof.
+    assert grade(TWO_STUDIES, confirmed=()) == ("established", "unsafe")
+    # Counts at an ambiguous locus decide nothing unless another assay confirms them.
+    assert grade(TWO_STUDIES, risk=True, confirmed=()) == ("dismissed", "none")
+    assert grade(TWO_STUDIES, risk=True, confirmed=("heart",)) == ("dismissed", "none")
+    assert grade(TWO_STUDIES, risk=True) == ("established", "unsafe")
+    # Two donors of one study share its libraries and reference.
     one_study = [("s1", d, *rest) for _, d, *rest in TWO_STUDIES]
     assert grade(one_study) == ("below_screen", "none")
-    # Unreplicated, a signal must be frequent: 5% of one donor's cells.
+    # Unreplicated, a signal must be frequent, and still needs bulk confirmation.
     assert grade([("s1", "a", "vital", 5000, 400, 249)]) == ("below_screen", "none")
-    assert grade([("s1", "a", "vital", 5000, 400, 250)]) == ("unresolved", "review")
+    assert grade([("s1", "a", "vital", 5000, 400, 250)]) == ("established", "unsafe")
+    assert grade([("s1", "a", "vital", 5000, 400, 250)], confirmed=()) == ("dismissed", "none")
+    # Protected populations need twice the frequency.
     protected = [(s, d, "protected", *rest) for s, d, _, *rest in TWO_STUDIES]
-    assert grade(protected) == ("established", "review")
-    assert grade(protected, risk=True) == ("unresolved", "none")
+    assert grade(protected) == ("below_screen", "none")
+    doubled = [(s, d, t, c, p, 100) for s, d, t, c, p, _ in protected]
+    assert grade(doubled) == ("established", "unsafe")
+    # A published gene-specific assay in the organ vouches for single molecules.
+    sparse = rare([("s1", "a", "vital", 14102, 459, 8)])
+    kwargs = {"mapping_risk": True, "confirmed_tissues": set()}
+    assert policy.assess_rare_cell_rna(sparse, **kwargs)["status"] == "below_screen"
+    published = policy.assess_rare_cell_rna(sparse, literature_tissues={"brain"}, **kwargs)
+    assert (published["status"], published["action"]) == ("established", "unsafe")
+    assert "published" in published["findings"][0]["basis"]
+    assert (
+        policy.assess_rare_cell_rna(sparse, literature_tissues={"heart"}, **kwargs)["status"]
+        == "below_screen"
+    )
+    undetected = rare([("s1", "a", "vital", 14102, 100, 0)])
+    assert (
+        policy.assess_rare_cell_rna(undetected, literature_tissues={"brain"}, **kwargs)["status"]
+        == "below_screen"
+    )
+    frame = rare(TWO_STUDIES)
+    receipt = policy.assess_rare_cell_rna(frame, mapping_risk=True, confirmed_tissues=set())
+    assert "cannot be attributed" in receipt["findings"][0]["basis"]
+    assert set(policy.RARE_CELL_STATUSES) >= {receipt["status"]}
 
 
 @pytest.mark.parametrize(

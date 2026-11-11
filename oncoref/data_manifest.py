@@ -426,6 +426,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "per-donor rare normal-cell RNA grades with multi-molecule support, study replication, mapping-risk flags and bulk confirmation",
     ),
+    "normal-expression-literature": (
+        "cta-evidence",
+        "reviewed publications on normal adult expression for candidates with dismissed or released rare-cell signals, with rubric outcome, URLs and quotes",
+    ),
     "gene-mapping-risk": (
         "cta-evidence",
         "per-gene shared transcript sequence and same-strand host overlap that can mis-assign sparse single-cell reads",
