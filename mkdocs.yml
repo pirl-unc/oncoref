@@ -9,6 +9,7 @@ nav:
   - Cancer and Reproductive Antigens: target-selection.md
   - Antigen catalog and curation funnel: audits/target-selection-20261110/rebuild/index.md
   - Curation summary in figures: audits/target-selection-20261110/rebuild/summary.md
+  - Gene-by-gene sanity review: audits/target-selection-20261110/sanity-review/index.md
   - Rare normal-cell RNA by donor: audits/normal-cell-atlas-20261110/rare-cell/index.md
   - Literature review of normal expression: audits/target-selection-20261110/rebuild/literature.md
   - Draft catalog 2026-11-09: audits/target-selection-20261109/rebuild/index.md
